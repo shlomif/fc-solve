@@ -45,6 +45,28 @@ my $builder = Module::Build->new(
     },
     add_to_cleanup      => [ 'Task-FreecellSolver-Testing-*' ],
     create_makefile_pl => 'traditional',
+    meta_merge =>
+    {
+        resources =>
+        {
+            repository => "https://bitbucket.org/shlomif/fc-solve",
+        },
+        keywords =>
+        [
+            "bundle",
+            "card",
+            "cards",
+            "freecell",
+            "game",
+            "games",
+            "patience",
+            "qa",
+            "solitaire",
+            "solver",
+            "task",
+            "testing",
+        ],
+    },
 );
 
 $builder->create_build_script();

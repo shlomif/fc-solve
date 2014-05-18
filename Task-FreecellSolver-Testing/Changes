@@ -2,6 +2,7 @@ Revision history for Task-FreecellSolver-Testing
 
 0.0.5   2014-05-18
         - Add MooX and MooX::late which are now required.
+        - Add resources and keywords to the META.yml.
 
 0.0.4   2014-01-31
         - Add configure_requires to Build.PL.
