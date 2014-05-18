@@ -3,7 +3,7 @@ package Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
 use strict;
 use warnings;
 
-use base 'Games::Solitaire::FC_Solve::DeltaStater';
+use parent 'Games::Solitaire::FC_Solve::DeltaStater';
 
 use Carp;
 
@@ -405,9 +405,7 @@ sub encode_composite
             my $base;
             if ($self->_is_bakers_dozen())
             {
-                my $card = Games::Solitaire::Verify::Card->new;
-                $card->rank($rank);
-                $card->suit($suits[$suit_idx]);
+                my $card = $self->_calc_card( $rank, $suit_idx, );
                 if (vec($self->_bakers_dozen_topmost_cards_lookup(), $self->_get_card_bitmask($card), 1))
                 {
                     next SUIT_IDX;
@@ -466,9 +464,10 @@ sub _fill_column_with_descendant_cards
             : qw(H D)
         )
         {
-            my $candidate_card = Games::Solitaire::Verify::Card->new;
-            $candidate_card->rank($parent_card->rank() - 1);
-            $candidate_card->suit($suit);
+            my $candidate_card = $self->_calc_card(
+                $parent_card->rank() - 1,
+                $self->_suit_get_suit_idx($suit),
+            );
 
             my $opt = $self->_get_card_verdict($candidate_card);
 
@@ -557,9 +556,7 @@ sub decode
     {
         foreach my $suit_idx (0 .. $#suits)
         {
-            my $card = Games::Solitaire::Verify::Card->new;
-            $card->rank($RANK_KING);
-            $card->suit($suits[$suit_idx]);
+            my $card = $self->_calc_card( $RANK_KING, $suit_idx, );
 
             if (! $is_in_foundations->($card))
             {
@@ -573,9 +570,7 @@ sub decode
         READ_SUITS:
         foreach my $suit_idx (0 .. $#suits)
         {
-            my $card = Games::Solitaire::Verify::Card->new;
-            $card->rank($rank);
-            $card->suit($suits[$suit_idx]);
+            my $card = $self->_calc_card( $rank, $suit_idx, );
 
             if ($self->_is_bakers_dozen())
             {

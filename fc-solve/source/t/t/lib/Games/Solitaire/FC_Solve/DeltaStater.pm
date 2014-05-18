@@ -173,11 +173,18 @@ my %suit_to_idx = do {
     (map { $s->[$_] => $_ } (0 .. $#$s)) ;
 };
 
+sub _suit_get_suit_idx
+{
+    my ($self, $suit) = @_;
+
+    return $suit_to_idx{$suit};
+}
+
 sub _get_suit_idx
 {
     my ($self, $card) = @_;
 
-    return $suit_to_idx{$card->suit()};
+    return $self->_suit_get_suit_idx($card->suit);
 }
 
 sub _get_card_bitmask
@@ -185,6 +192,22 @@ sub _get_card_bitmask
     my ($self, $card) = @_;
 
     return ($self->_get_suit_idx($card) | ($card->rank() << 2));
+}
+
+sub _calc_card
+{
+    my ($self, $rank, $suit_idx) = @_;
+
+    return Games::Solitaire::Verify::Card->new(
+            {
+                string =>
+                (
+                Games::Solitaire::Verify::Card->rank_to_string($rank)
+                    .
+                $suits[$suit_idx]
+            )
+        }
+    );
 }
 
 my $COL_TYPE_EMPTY = 0;
@@ -401,9 +424,9 @@ sub decode
     my $process_card_bits = sub {
         my $card_bits = shift;
 
-        my $card = Games::Solitaire::Verify::Card->new;
-        $card->rank($card_bits >> 2);
-        $card->suit($suits[$card_bits & ((1 << 2)-1)]);
+        my $card = $self->_calc_card(
+            ($card_bits >> 2), ($card_bits & ((1 << 2)-1)),
+        );
 
         return $process_card->($card);
     };
@@ -455,14 +478,11 @@ sub decode
             my $last_card = $col->pos(-1);
             for my $i (0 .. $num_cards_in_seq - 1)
             {
-                my $new_card = Games::Solitaire::Verify::Card->new;
                 my $suit_bit = $bit_reader->read(1);
 
-                $new_card->rank($last_card->rank()-1);
-                $new_card->suit(
-                    $suits[
-                    (($suit_bit << 1) | ($last_card->color eq "red" ? 1 : 0))
-                    ]
+                my $new_card = $self->_calc_card(
+                    ($last_card->rank()-1),
+                    (($suit_bit << 1) | ($last_card->color eq "red" ? 1 : 0)),
                 );
 
                 $col->push(
