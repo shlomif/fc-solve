@@ -7,12 +7,13 @@ Shlomi Fish <shlomif@cpan.org>
 Version 3.26.0: (Unknown)
 -------------------------
 
-1. Remove the files with duplicates with a .txt extension (e.g:
-+README+, +COPYING+, +AUTHORS+) from the source distribution, to save
-space. They are still being copied in the CMake BINARY_DIR directory.
+1. Remove the documents (e.g: +README+, +COPYING+, +AUTHORS+), which
+have duplicates with a .txt extension from the source distribution, to save
+space. They are still being copied to their location in the BINARY_DIR
+where cmake is invoked from.
 
 2. Fix a division/modulo by zero problem that yielded a floating-point
-exception as reported by the Mayhem team to the Debian bug tracker:
+exception, as reported by the Mayhem team to the Debian bug tracker:
 https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=715914 . Thanks!
 
 3. Fix +board_gen/pi-make-microsoft-freecell-board+
