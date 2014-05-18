@@ -38,8 +38,10 @@ but generates a very large stack with the deal in question (MS #384243 ).
 8. The +summarize-fc-solve+ script now accepts some game parameters followed
 by a double-dash ("--"), followed by preset parameters for the solver.
 
-9. Various fixes for warnings and errors for CMake-3.0.0-rc3 (what will become
-CMake-3.0.0).
+9. Various fixes for warnings and errors for the build process, while using
+CMake-3.0.0-rc3 (what will become CMake-3.0.0).
+
+10. Some cleanups, refactorings, modernisations, and minor optimisations.
 
 Version 3.24.0: (23-Feb-2014)
 -----------------------------
