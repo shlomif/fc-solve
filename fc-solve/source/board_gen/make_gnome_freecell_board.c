@@ -111,19 +111,19 @@ int main(int argc, char **argv) {
     int *deck;
     int  i;
     int print_ts = 0;
-    int arg;
 
-    if (argc == 1) {
-        srand(time(NULL));
-    } else {
-        arg = 1;
+    int arg = 1;
+    if (arg < argc)
+    {
         if (!strcmp(argv[arg], "-t"))
         {
             print_ts = 1;
             arg++;
         }
-        srand(atoi(argv[arg]));
     }
+    const int gamenumber = ((arg < argc) ? atoi(argv[arg++]) : time(NULL));
+
+    srand(gamenumber);
 
     deck = deck_shuffle();
 

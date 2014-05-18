@@ -141,6 +141,27 @@ my @valgrind_tests =
         ],
         blurb => qq{Make sure that the fc-pro program does not crash on a zero print_step},
     },
+    {
+        id => "board_gen__pi_make_ms__t_only",
+        prog => "board_gen/pi-make-microsoft-freecell-board",
+        argv => [qw(-t)
+        ],
+        blurb => qq{Board generation should not crash with only -t flag (pi-make-ms)},
+    },
+    {
+        id => "board_gen__aisleriot__t_only",
+        prog => "board_gen/make-aisleriot-freecell-board",
+        argv => [qw(-t)
+        ],
+        blurb => qq{Board generation should not crash with only -t flag (aisleriot)},
+    },
+    {
+        id => "board_gen__gnome__t_only",
+        prog => "board_gen/make-gnome-freecell-board",
+        argv => [qw(-t)
+        ],
+        blurb => qq{Board generation should not crash with only -t flag (gnome)},
+    },
 );
 
 sub _expand_catfile_arg

@@ -15,6 +15,12 @@ space. They are still being copied in the CMake BINARY_DIR directory.
 exception as reported by the Mayhem team to the Debian bug tracker:
 https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=715914 . Thanks!
 
+3. Fix +board_gen/pi-make-microsoft-freecell-board+
++board_gen/make-aisleriot-freecell-board+ and +
++board_gen/make-gnome-freecell-board+ from crashing if only a single "-t"
+flag is given. A crash was reported by the Mayhem team to the Debian
+bug tracker: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=716097 . Thanks!
+
 Version 3.24.0: (23-Feb-2014)
 -----------------------------
 

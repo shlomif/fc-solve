@@ -148,64 +148,58 @@ int main(int argc, char * argv[])
     int i, j, card_idx;
     int which_game = 0;
     int print_ts = 0;
-    int arg;
-
-    if (argc == 1)
+    int arg = 1;
+    if (arg < argc)
     {
-        srandom(time(NULL));
-    }
-    else
-    {
-        arg = 1;
         if (!strcmp(argv[arg], "-t"))
         {
             print_ts = 1;
             arg++;
         }
-        srandom(atoi(argv[arg]));
-        arg++;
-        if (arg < argc)
+    }
+    const int gamenumber = ((arg < argc) ? atoi(argv[arg++]) : time(NULL));
+    srandom(gamenumber);
+    if (arg < argc)
+    {
+        if (!strcmp(argv[arg], "klondike"))
         {
-            if (!strcmp(argv[arg], "klondike"))
-            {
-                which_game = GAME_KLONDIKE;
-            }
-            else if (
-                        (!strcmp(argv[arg], "freecell")) ||
-                        (!strcmp(argv[arg], "bakers_game"))
-                    )
-            {
-                which_game = GAME_FREECELL;
-            }
-            else if (
-                        (!strcmp(argv[arg], "eight_off"))
-                    )
-            {
-                which_game = GAME_EIGHT_OFF;
-            }
-            else if (
-                        (!strcmp(argv[arg], "seahaven"))
-                    )
-            {
-                which_game = GAME_SEAHAVEN;
-            }
-            else if (
-                        (!strcmp(argv[arg], "beleaguered_castle"))
-                    )
-            {
-                which_game = GAME_BELEAGUERED_CASTLE;
-            }
-            else if (
-                        (!strcmp(argv[arg], "streets_and_alleys"))
-                    )
-            {
-                which_game = GAME_STREETS_AND_ALLEYS;
-            }
-            else
-            {
-                fprintf(stderr, "Unknown game type \"%s\"!\n", argv[2]);
-                return -1;
-            }
+            which_game = GAME_KLONDIKE;
+        }
+        else if (
+                    (!strcmp(argv[arg], "freecell")) ||
+                    (!strcmp(argv[arg], "bakers_game"))
+                )
+        {
+            which_game = GAME_FREECELL;
+        }
+        else if (
+                    (!strcmp(argv[arg], "eight_off"))
+                )
+        {
+            which_game = GAME_EIGHT_OFF;
+        }
+        else if (
+                    (!strcmp(argv[arg], "seahaven"))
+                )
+        {
+            which_game = GAME_SEAHAVEN;
+        }
+        else if (
+                    (!strcmp(argv[arg], "beleaguered_castle"))
+                )
+        {
+            which_game = GAME_BELEAGUERED_CASTLE;
+        }
+        else if (
+                    (!strcmp(argv[arg], "streets_and_alleys"))
+                )
+        {
+            which_game = GAME_STREETS_AND_ALLEYS;
+        }
+        else
+        {
+            fprintf(stderr, "Unknown game type \"%s\"!\n", argv[2]);
+            return -1;
         }
     }
 
