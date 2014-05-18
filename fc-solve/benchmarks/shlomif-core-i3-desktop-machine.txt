@@ -388,6 +388,7 @@ gcc-4.9.1-0.20140514.1.mga5
 lib64google-perftools0-2.1-2.mga4
 
 9.25457096099854s
+9.25326490402222s
 
     Highlight: slightly newer gcc, and some optimisations and cleanups to
     threaded_range_solver.c .
@@ -404,4 +405,17 @@ Reached Board No. 24000 at 1400399701.004604 (total_num_iters=4619590)
 Reached Board No. 28000 at 1400399702.078508 (total_num_iters=5297565)
 Reached Board No. 32000 at 1400399703.348549 (total_num_iters=8128764)
 Finished at 1400399703.356921 (total_num_iters=11372658)
+</DUMP>
+<DUMP>
+Started at 1400403037.300492
+Reached Board No. 4000 at 1400403038.449033 (total_num_iters=358562)
+Reached Board No. 8000 at 1400403039.653056 (total_num_iters=1088061)
+Reached Board No. 12000 at 1400403040.775326 (total_num_iters=1427459)
+Unsolved Board No. 11982 at 1400403040.970557
+Reached Board No. 16000 at 1400403041.980884 (total_num_iters=1800815)
+Reached Board No. 20000 at 1400403043.106940 (total_num_iters=3251136)
+Reached Board No. 24000 at 1400403044.202943 (total_num_iters=3939491)
+Reached Board No. 28000 at 1400403045.276019 (total_num_iters=4618441)
+Reached Board No. 32000 at 1400403046.545494 (total_num_iters=7832751)
+Finished at 1400403046.553757 (total_num_iters=11372658)
 </DUMP>
