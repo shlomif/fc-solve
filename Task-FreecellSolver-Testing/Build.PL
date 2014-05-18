@@ -1,8 +1,10 @@
 use strict;
 use warnings;
-use Module::Build;
+use lib './inc';
 
-my $builder = Module::Build->new(
+use Test::Run::Builder;
+
+my $builder = Test::Run::Builder->new(
     module_name         => 'Task::FreecellSolver::Testing',
     license             => 'mit',
     dist_author         => q{Shlomi Fish <shlomif@shlomifish.org>},

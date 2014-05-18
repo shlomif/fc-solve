@@ -6,6 +6,7 @@ META.json
 META.yml
 Makefile.PL
 README
+inc/Test/Run/Builder.pm
 lib/Task/FreecellSolver/Testing.pm
 t/00-load.t
 t/cpan-changes.t
