@@ -4,8 +4,8 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
-Version 3.26.0: (Unknown)
--------------------------
+Version 3.26.0: (19-May-2014)
+-----------------------------
 
 1. Remove the documents (e.g: +README+, +COPYING+, +AUTHORS+), which
 have duplicates with a .txt extension from the source distribution, to save
