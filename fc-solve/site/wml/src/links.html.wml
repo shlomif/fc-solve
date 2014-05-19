@@ -253,8 +253,9 @@ APIs.
 <p>
 <a href="http://www.kde.org/kdegames/">kpat</a> - a Solitaire suite for
 the <a href="http://www.kde.org/">KDE</a> desktop for UNIXes.
-Uses Freecell Solver to solve its Freecell boards, starting of the
-version that was shipped with KDE 2.1.
+It used to use Freecell Solver to solve its Freecell boards, starting of the
+version that was shipped with KDE 2.1. After KDE 4.0, it converted to use
+a modified version of <a href="#patsolve">Tom Holroyd’s patsolve</a>.
 </p>
 </li>
 
@@ -277,8 +278,11 @@ as well as my own. <a href="don_woods.html">Source code</a> is available.
 <li>
 <p>
 <a href="http://pysolfc.sourceforge.net/">PySolFC</a> - a collection of more
-than 1,000 Solitaire card games originally based on PySol. Has optional support
-for playing using the Freecell Solver executable.
+than 1,000 Solitaire card games originally based on PySol. Open source under
+version 3 of the GPL. Has optional support for playing using the Freecell
+Solver executable. Note that Shlomi Fish maintains several
+<a href="https://github.com/shlomif/PySolFC">branches with enhancements</a>
+for it on GitHub.
 </p>
 </li>
 
@@ -350,13 +354,15 @@ We have competition. But there's nothing wrong with competition. ;-)
 </p>
 
 <ul>
-<li>
+<li id="patsolve">
 <p>
-<a href="http://members.tripod.com/professor_tom/archives/">patsolve</a> -
+<a href="https://bitbucket.org/shlomif/patsolve-shlomif">patsolve</a> -
 an ANSI C program that automatically solves games of Freecell and Seahaven
-Towers. Source code is available under the GPL. Its author, Tom Holroyd,
-and I discussed Freecell solving for quite a few E-mail transactions, before
-I established the mailing-list.
+Towers. The open source code is available - originally under the GPL,
+but later converted into the MIT/X11 licence, in hope of future integration
+with Freecell Solver. Its author, Tom Holroyd, and I discussed Freecell
+solving for quite a few E-mail transactions, before I established the
+mailing-list.
 </p>
 </li>
 
@@ -499,8 +505,9 @@ Freecell in Java.
 <li>
 <p>
 <a href="http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">Solver
-for "Black Hole" Solitaire</a> - a solver for the solitaire "Black Hole" in
-Perl 5 by the same author as Freecell Solver.
+for “Black Hole” Solitaire</a> - a solver for the patience games
+“Black Hole” and “All in a Row” in C (originally in Perl 5) by the same
+author as Freecell Solver.
 </p>
 </li>
 
