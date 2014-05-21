@@ -129,7 +129,7 @@ can be devised).
 You can try inspecting the code of Freecell Solver or one of the
 <a href="$(ROOT)/links.html#other_solvers">other solvers</a> for insights, but
 note that their code (and especially Freecell Solver's) may be somewhat
-complex, and hard to understand for people with relatively little experience.
+complex and hard to understand for people with relatively little experience.
 You can also pursue some of the
 <a href="$(ROOT)/docs/">Freecell Solver documentation</a> as well as the
 <a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">archives of
@@ -153,14 +153,17 @@ equivalence easily (using memcmp() or a similar function).
 <li>
 <p>
 Use an efficient data structure to hold the states in the collection such as
-a hash table or a self-balancing binary tree.
+a <a href="https://en.wikipedia.org/wiki/Hash_table">hash table</a> or a
+<a href="https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree">self-balancing
+binary search tree<a/>. There are libraries implementing them for most
+popular languages.
 </p>
 </li>
 
 <li>
 <p>
 Often randomising the solution (see Freecell Solver's Random-DFS scan
-which was inspired by a different solver called Freecell Tool can help
+which was inspired by a different solver called “Freecell Tool” can help
 a lot).
 </p>
 </li>
@@ -218,8 +221,8 @@ pre-emptive multi-tasking fashion.
 </p>
 
 <p>
-Good luck and let us know if you run into any trouble, or, alternatively,
-if you are successful.
+Good luck and please let us know if you run into any trouble, or,
+alternatively, if you are successful.
 </p>
 
 <h3 id="solutions_are_too_long">The Solutions I got are too long. What can I do?</h3>
@@ -397,7 +400,7 @@ have completed the Linux kernel, or if the
 <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox browser</a>
 is done. Freecell Solver is a fairly large and complex project and there is
 still a lot of room for improvement, and while I sometimes take a break
-from working on it, it does not mean I plan to have permanently stopped.
+from working on it, it does not mean I planned to have permanently stopped.
 </p>
 
 <p>
@@ -409,7 +412,7 @@ but it has been developed since the year 2000, while taking some breaks.
 
 <p>
 All that put aside, one should not conclude that Freecell Solver is an immature
-project or is unusable, just like KDE, the Linux kernel and Firefox are not
+project or is unusable, just like KDE, the Linux kernel, and Firefox are not
 immature or unusable. Freecell Solver is not perfect (and will probably
 never be) but it is still usable in its current state.
 </p>
