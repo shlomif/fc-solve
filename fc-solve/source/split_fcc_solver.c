@@ -1293,29 +1293,19 @@ int main(int argc, char * argv[])
 #endif
 
     long iters_delta_limit = -1;
-#if 0
-    long start_line = 1;
-#endif
     const char * mod_base64_fcc_fingerprint = NULL;
     const char * fingerprint_input_location_path = NULL;
     const char * path_to_output_dir = NULL;
     const char * filename = NULL, * offload_dir_path = NULL;
-    FILE * fh = NULL, * out_fh = NULL;
     char user_state[USER_STATE_SIZE];
-#if 0
-    fcs_dbm_record_t * token;
-#endif
     enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     fcs_state_keyval_pair_t init_state;
-#if 0
-    fcs_bool_t skip_queue_output = FALSE;
-#endif
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
     long pre_cache_max_count = 1000000;
     long caches_delta = 1000000;
-    char * dbm_store_path = "./fc_solve_dbm_store";
+    const char * dbm_store_path = "./fc_solve_dbm_store";
     const char * dbm_fcc_entry_points_path = "./fc_solve_fcc_entry_points_dbm_store";
 
     int num_threads = 1;
@@ -1488,15 +1478,17 @@ int main(int argc, char * argv[])
         exit(-1);
     }
 
-    fh = fopen(filename, "r");
-    if (fh == NULL)
     {
-        fprintf (stderr, "Could not open file '%s' for input.\n", filename);
-        exit(-1);
+        FILE * fh = fopen(filename, "r");
+        if (fh == NULL)
+        {
+            fprintf (stderr, "Could not open file '%s' for input.\n", filename);
+            exit(-1);
+        }
+        memset(user_state, '\0', sizeof(user_state));
+        fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE-1, fh);
+        fclose(fh);
     }
-    memset(user_state, '\0', sizeof(user_state));
-    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE-1, fh);
-    fclose(fh);
 
     fc_solve_initial_user_state_to_c(
         user_state,
@@ -1551,7 +1543,7 @@ int main(int argc, char * argv[])
     }
 
     {
-        out_fh = stdout;
+        FILE * out_fh = stdout;
 
         fcs_dbm_solver_instance_t instance;
         FccEntryPointNode * key_ptr = NULL;
