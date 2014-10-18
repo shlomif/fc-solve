@@ -1292,22 +1292,16 @@ int main(int argc, char * argv[])
     fc_solve_init_locs(&locs);
 #endif
 
-    long pre_cache_max_count;
-    long caches_delta;
     long iters_delta_limit = -1;
 #if 0
     long start_line = 1;
 #endif
-    const char * dbm_store_path;
     const char * mod_base64_fcc_fingerprint = NULL;
     const char * fingerprint_input_location_path = NULL;
-    int num_threads;
-    int arg;
     const char * path_to_output_dir = NULL;
     const char * filename = NULL, * offload_dir_path = NULL;
     FILE * fh = NULL, * out_fh = NULL;
     char user_state[USER_STATE_SIZE];
-    fc_solve_delta_stater_t * delta;
 #if 0
     fcs_dbm_record_t * token;
 #endif
@@ -1319,14 +1313,15 @@ int main(int argc, char * argv[])
 #endif
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
 
-    pre_cache_max_count = 1000000;
-    caches_delta = 1000000;
-    dbm_store_path = "./fc_solve_dbm_store";
+    long pre_cache_max_count = 1000000;
+    long caches_delta = 1000000;
+    char * dbm_store_path = "./fc_solve_dbm_store";
     const char * dbm_fcc_entry_points_path = "./fc_solve_fcc_entry_points_dbm_store";
 
-    num_threads = 1;
+    int num_threads = 1;
 
-    for (arg=1;arg < argc; arg++)
+    int arg = 1;
+    for (; arg < argc ; arg++)
     {
         if (!strcmp(argv[arg], "--pre-cache-max-count"))
         {
@@ -1537,7 +1532,8 @@ int main(int argc, char * argv[])
 
     /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth. */
 
-    delta = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_t * delta =
+        fc_solve_delta_stater_alloc(
             &init_state.s,
             STACKS_NUM,
             FREECELLS_NUM
@@ -1546,7 +1542,13 @@ int main(int argc, char * argv[])
                ? FCS_SEQ_BUILT_BY_RANK
                : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
 #endif
-    );
+        );
+
+    if (! delta)
+    {
+        fprintf(stderr, "%s\n", "could not allocate delta");
+        exit(-1);
+    }
 
     {
         out_fh = stdout;
