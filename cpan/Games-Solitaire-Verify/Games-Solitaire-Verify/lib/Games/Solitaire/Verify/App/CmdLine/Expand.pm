@@ -9,7 +9,7 @@ our $VERSION = '0.1300';
 
 use Data::Dumper qw(Dumper);
 
-# <<<<<{{{{use}}}}>>>>> Getopt::Long qw(GetOptionsFromArray);
+# use Getopt::Long qw(GetOptionsFromArray);
 
 use Games::Solitaire::Verify::VariantsMap;
 use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves;
