@@ -1511,15 +1511,17 @@ int main(int argc, char * argv[])
     fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask
         = {{'\0'}};
 
-    size_t fingerprint_data_len = 0;
-    base64_decode(
-        mod_base64_fcc_fingerprint, strlen(mod_base64_fcc_fingerprint),
-        fingerprint_which_irreversible_moves_bitmask.s, &fingerprint_data_len);
-
-    if (fingerprint_data_len != sizeof(fingerprint_which_irreversible_moves_bitmask))
     {
-        fprintf(stderr, "%s\n", "--fingerprint is invalid length.");
-        exit(-1);
+        size_t fingerprint_data_len = 0;
+        base64_decode(
+            mod_base64_fcc_fingerprint, strlen(mod_base64_fcc_fingerprint),
+            fingerprint_which_irreversible_moves_bitmask.s, &fingerprint_data_len);
+
+        if (fingerprint_data_len != sizeof(fingerprint_which_irreversible_moves_bitmask))
+        {
+            fprintf(stderr, "%s\n", "--fingerprint is invalid length.");
+            exit(-1);
+        }
     }
 
     /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth. */
