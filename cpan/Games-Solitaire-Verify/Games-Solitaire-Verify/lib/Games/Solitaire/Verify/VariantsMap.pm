@@ -3,7 +3,7 @@ package Games::Solitaire::Verify::VariantsMap;
 use strict;
 use warnings;
 
-require Games::Solitaire::Verify::VariantParams;
+use Games::Solitaire::Verify::VariantParams;
 
 use parent 'Games::Solitaire::Verify::Base';
 
