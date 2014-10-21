@@ -54,7 +54,7 @@ sub _GetOptionsFromArray
         for (my $r_idx = 0; $r_idx < @rules; $r_idx += 2)
         {
             my $spec = $rules[$r_idx];
-            my $cb = $rules[$r_idx];
+            my $cb = $rules[$r_idx+1];
 
             $spec =~ s/=.*//ms;
             my %h = (map { $_ => 1 } split(/\|/, $spec));
