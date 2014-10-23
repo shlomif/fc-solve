@@ -5,12 +5,9 @@ use warnings;
 
 use parent 'Test::Data::Split::Backend::Hash';
 
-use Test::More;
-use List::Util qw(first);
-use Carp;
-use Data::Dumper;
-use String::ShellQuote;
-use File::Spec;
+use Test::More ();
+use Carp ();
+use File::Spec ();
 use File::Temp qw( tempdir );
 
 my %valgrind_tests =
@@ -266,7 +263,7 @@ sub _test_using_valgrind
     }
     close ($read_from_valgrind);
 
-    if (ok (($found_error_summary && $found_malloc_free), $blurb))
+    if (Test::More::ok (($found_error_summary && $found_malloc_free), $blurb))
     {
         unlink($log_fn);
     }
