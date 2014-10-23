@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Carp;
+use Carp (qw/ confess /);
 
 sub run
 {
@@ -14,12 +14,13 @@ sub run
 	}
 }
 
-mkdir("B");
-chdir("B");
+my $build_dir = "B";
+mkdir($build_dir);
+chdir($build_dir);
 
 run(
 	[
-	qq{C:\\Program Files\\CMake 2.8\\bin\\CMake},
+	qq{C:/Program Files/CMake 2.8/bin/CMake},
 	"-G", "MinGW Makefiles",
     # These variables require libgmp which isn't provided by default.
     "-DFCS_WITH_TEST_SUITE=", "-DFCS_ENABLE_DBM_SOLVER=",
@@ -28,8 +29,8 @@ run(
 	]
 );
 
-my $make_path = "C:/strawberry/c/bin/mingw32-make";
 # my $make_path = "C:/Dwimperl/c/bin/mingw32-make";
+my $make_path = "C:/strawberry/c/bin/mingw32-make";
 
 run( [ $make_path, ] );
 
