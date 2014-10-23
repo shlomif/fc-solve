@@ -7,13 +7,21 @@ use autodie;
 use FindBin;
 use lib "$FindBin::Bin/../t/t/lib";
 
+use Test::Data::Split;
 use FC_Solve::Test::Valgrind;
 
-foreach my $valg_test_id (@{ FC_Solve::Test::Valgrind->list_ids() })
-{
-    my $id_quoted = quotemeta($valg_test_id);
-    open my $out_fh, '>', "t/valgrind--$valg_test_id.t";
-    print {$out_fh} <<"EOF";
+Test::Data::Split->new(
+    {
+        target_dir => 't',
+        filename_cb => sub {
+            my ($self, $args) = @_;
+
+            return "valgrind--$args->{id}.t";
+        },
+        contents_cb => sub {
+            my ($self, $args) = @_;
+            my $id_quoted = quotemeta($args->{id});
+            return <<"EOF";
 #!/usr/bin/perl
 
 use strict;
@@ -24,12 +32,14 @@ use Test::More tests => 1;
 use FC_Solve::Test::Valgrind;
 
 # TEST
-FC_Solve::Test::Valgrind->run_valgrind_id_test({ id => qq/$id_quoted/, });
+FC_Solve::Test::Valgrind->new->run_valgrind_id_test({ id => qq/$id_quoted/, });
 
 EOF
+        },
+        data_obj => FC_Solve::Test::Valgrind->new,
+    }
+)->run;
 
-    close ($out_fh);
-}
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2009 Shlomi Fish
