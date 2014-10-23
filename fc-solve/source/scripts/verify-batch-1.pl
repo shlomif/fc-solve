@@ -8,7 +8,7 @@ package Games::Solitaire::Verify::App::CmdLine;
 use strict;
 use warnings;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 use Getopt::Long qw(GetOptionsFromArray);
 

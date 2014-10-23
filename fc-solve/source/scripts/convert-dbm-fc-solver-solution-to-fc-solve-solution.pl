@@ -13,7 +13,7 @@ use warnings;
 
 package Games::Solitaire::Verify::App::From_DBM_FC_Solver;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::VariantsMap;
 use Games::Solitaire::Verify::Solution;

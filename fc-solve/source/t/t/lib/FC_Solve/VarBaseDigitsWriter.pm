@@ -3,7 +3,7 @@ package FC_Solve::VarBaseDigitsWriter;
 use strict;
 use warnings;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 use Math::BigInt try => 'GMP';
 

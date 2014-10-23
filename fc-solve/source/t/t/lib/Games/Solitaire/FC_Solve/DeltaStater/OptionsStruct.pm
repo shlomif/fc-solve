@@ -3,7 +3,7 @@ package Games::Solitaire::FC_Solve::DeltaStater::OptionsStruct;
 use strict;
 use warnings;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 my $UNKNOWN = 0;
 my $IMPOSSIBLE = 1;

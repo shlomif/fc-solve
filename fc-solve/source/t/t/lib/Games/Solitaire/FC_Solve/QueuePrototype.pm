@@ -3,7 +3,7 @@ package Games::Solitaire::FC_Solve::QueuePrototype;
 use strict;
 use warnings;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 __PACKAGE__->mk_acc_ref([qw(
         _num_items_per_page
@@ -156,7 +156,7 @@ use warnings;
 
 use Storable qw(nstore retrieve);
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 __PACKAGE__->mk_acc_ref([qw(
         _num_items_per_page

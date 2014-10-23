@@ -3,7 +3,7 @@ package Games::Solitaire::FC_Solve::SingleMoveSearch;
 use strict;
 use warnings;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 sub calc_move_half
 {

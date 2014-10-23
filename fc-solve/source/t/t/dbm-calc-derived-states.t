@@ -160,7 +160,7 @@ sub which_irrev_moves_as_hashref
 
 package DerivedStatesList;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 __PACKAGE__->mk_acc_ref([qw(
     states
@@ -193,7 +193,7 @@ sub find_by_string
 
 package DerivedStatesSearch;
 
-use base 'Games::Solitaire::FC_Solve::SingleMoveSearch';
+use parent 'Games::Solitaire::FC_Solve::SingleMoveSearch';
 
 use Test::More;
 

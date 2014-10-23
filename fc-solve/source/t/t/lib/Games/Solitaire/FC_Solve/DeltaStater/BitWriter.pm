@@ -3,7 +3,7 @@ package Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
 use strict;
 use warnings;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 __PACKAGE__->mk_acc_ref([qw(_bits_ref _bit_idx)]);
 

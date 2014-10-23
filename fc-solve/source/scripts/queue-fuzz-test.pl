@@ -7,7 +7,7 @@ use lib './t/t/lib';
 
 package RandGen;
 
-use base 'Games::ABC_Path::MicrosoftRand';
+use parent 'Games::ABC_Path::MicrosoftRand';
 
 sub rand30
 {

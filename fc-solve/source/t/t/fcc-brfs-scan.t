@@ -188,7 +188,7 @@ sub is_fcc_new_named_args
 
 package FccStartPointsList;
 
-use base 'Games::Solitaire::FC_Solve::SingleMoveSearch';
+use parent 'Games::Solitaire::FC_Solve::SingleMoveSearch';
 
 use List::MoreUtils qw(any uniq);
 

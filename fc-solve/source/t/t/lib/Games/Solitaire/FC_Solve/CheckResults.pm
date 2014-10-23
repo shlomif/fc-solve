@@ -3,9 +3,10 @@ package Games::Solitaire::FC_Solve::CheckResults;
 use strict;
 use warnings;
 
+use parent 'Games::Solitaire::Verify::Base';
+
 use YAML::XS qw(DumpFile LoadFile);
 
-use base 'Games::Solitaire::Verify::Base';
 use String::ShellQuote;
 use Carp;
 

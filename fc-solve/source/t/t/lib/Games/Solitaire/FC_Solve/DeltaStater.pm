@@ -8,8 +8,7 @@ use Games::Solitaire::Verify::Solution;
 use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
 use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
 
-
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
 my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
 
