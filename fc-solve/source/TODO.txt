@@ -7,6 +7,10 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
+* Investigate why the Win32 package does not run on Windows XP.
+** It runs fine on Windows 7.
+** Thanks to Manish Jain for the report.
+
 Non-pressing
 ------------
 
