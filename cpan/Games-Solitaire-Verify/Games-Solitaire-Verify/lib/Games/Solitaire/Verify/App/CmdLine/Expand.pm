@@ -9,7 +9,7 @@ our $VERSION = '0.1300';
 
 use Data::Dumper qw(Dumper);
 
-# use Getopt::Long qw(GetOptionsFromArray);
+use Getopt::Long qw(GetOptionsFromArray);
 
 use Games::Solitaire::Verify::VariantsMap;
 use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves;
@@ -23,50 +23,6 @@ __PACKAGE__->mk_acc_ref(
     ]
 );
 
-sub _GetOptionsFromArray
-{
-    my $cmd_line_args = shift;
-
-    my @rules = @_;
-
-    my $i = 0;
-
-    while (@$cmd_line_args)
-    {
-        my $arg = $cmd_line_args->[0];
-        if ($arg !~ s/\A-//)
-        {
-            return 1;
-        }
-        shift(@$cmd_line_args);
-
-        # Double dash
-        $arg =~ s/\A-//;
-
-        if (! @$cmd_line_args)
-        {
-            die "Missing param to $arg";
-        }
-
-        my $param = shift(@$cmd_line_args);
-
-        RULES:
-        for (my $r_idx = 0; $r_idx < @rules; $r_idx += 2)
-        {
-            my $spec = $rules[$r_idx];
-            my $cb = $rules[$r_idx+1];
-
-            $spec =~ s/=.*//ms;
-            my %h = (map { $_ => 1 } split(/\|/, $spec));
-            if (exists ($h{$arg}))
-            {
-                $cb->($arg, $param);
-                last RULES;
-            }
-        }
-    }
-}
-
 sub _init
 {
     my ($self, $args) = @_;
@@ -77,7 +33,7 @@ sub _init
 
     my $variant_params = $variant_map->get_variant_by_id("freecell");
 
-    _GetOptionsFromArray(
+    GetOptionsFromArray(
         $argv,
         'g|game|variant=s' => sub {
             my (undef, $game) = @_;
