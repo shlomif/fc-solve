@@ -3,9 +3,6 @@
 use strict;
 use warnings;
 
-use Getopt::Long qw(GetOptionsFromArray);
-
-use Games::Solitaire::Verify::VariantsMap;
 use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves;
 
 # make_pysol_freecell_board.py -F -t 24 | fc-solve -sam -sel -p -t
@@ -2239,11 +2236,7 @@ Total number of states checked is 137.
 This scan generated 191 states.
 END_OF_SOL
 
-my $filename = "sol.txt";
-open my $out_fh, '>', $filename;
-print {$out_fh} $input_text;
-close($out_fh);
-open my $fh, '<', $filename;
+open my $fh, '<', \$input_text;
 my $solution = Games::Solitaire::Verify::Solution::ExpandMultiCardMoves->new(
     {
         input_fh => $fh,
