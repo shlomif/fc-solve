@@ -5,7 +5,6 @@ use 5.008001;
 use strict;
 
 use Exception::Class::Base;
-use Scalar::Util qw(blessed);
 
 our $BASE_EXC_CLASS;
 BEGIN { $BASE_EXC_CLASS ||= 'Exception::Class::Base'; }
@@ -126,7 +125,10 @@ sub _make_subclass {
     my $code = <<"EOPERL";
 package $subclass;
 
-use base qw($isa);
+@{[join("\n", map { "use $_;"} split/ /, $isa)]}
+
+use vars qw(\@ISA);
+\@ISA = qw($isa);
 
 our \$$version_name = '1.1';
 
@@ -186,7 +188,7 @@ sub caught {
 
     return $e unless $_[1];
 
-    return unless blessed($e) && $e->isa( $_[1] );
+    return unless $e->isa( $_[1] );
     return $e;
 }
 

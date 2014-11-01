@@ -4,9 +4,8 @@ use strict;
 use warnings;
 
 use Class::Data::Inheritable 0.02;
-use Scalar::Util qw( blessed );
 
-use base qw(Class::Data::Inheritable);
+our @ISA = ( qw(Class::Data::Inheritable) );
 
 BEGIN {
     __PACKAGE__->mk_classdata('Trace');
@@ -25,10 +24,9 @@ BEGIN {
     sub Fields { () }
 }
 
-use overload
-
+# use overload
     # an exception is always true
-    bool => sub { 1 }, '""' => 'as_string', fallback => 1;
+    # bool => sub { 1 }, '""' => 'as_string', fallback => 1;
 
 # Create accessor routines
 BEGIN {
@@ -102,6 +100,8 @@ sub _initialize {
         $self->{package} = $self->{file} = $self->{line} = undef;
     }
     else {
+
+=begin Removed
         # CORE::time is important to fix an error with some versions of
         # Perl
         $self->{time} = CORE::time();
@@ -110,6 +110,10 @@ sub _initialize {
         $self->{euid} = $>;
         $self->{gid}  = $(;
         $self->{egid} = $);
+
+=end Removed
+
+=cut
 
         my @ignore_class   = (__PACKAGE__);
         my @ignore_package = 'Exception::Class';
@@ -225,7 +229,7 @@ sub caught {
 
     my $e = $@;
 
-    return unless defined $e && blessed($e) && $e->isa($class);
+    return unless defined $e && $e->isa($class);
     return $e;
 }
 
