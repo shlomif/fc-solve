@@ -335,12 +335,11 @@ sub _apply_move
         };
 
         my $past_first_output_state_promise = sub {
-            $self->_out_line("");
-            $self->_out($self->_state->to_string);
-            $self->_out_line("");
-            $self->_out_line("");
-            $self->_out_line("====================");
-            $self->_out_line("");
+            $self->_out(
+                "\n"
+                . $self->_state->to_string
+                . "\n\n====================\n\n"
+            );
 
             return;
         };
