@@ -23,6 +23,7 @@ lib/Games/Solitaire/Verify/KlondikeTalon.pm
 lib/Games/Solitaire/Verify/Move.pm
 lib/Games/Solitaire/Verify/Solution.pm
 lib/Games/Solitaire/Verify/Solution/ExpandMultiCardMoves.pm
+lib/Games/Solitaire/Verify/Solution/ExpandMultiCardMoves/Lax.pm
 lib/Games/Solitaire/Verify/State.pm
 lib/Games/Solitaire/Verify/VariantParams.pm
 lib/Games/Solitaire/Verify/VariantsMap.pm

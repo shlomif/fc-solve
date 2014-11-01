@@ -143,25 +143,9 @@ sub _calc_variant_args
     return \@ret;
 }
 
-sub _read_state
+sub _assign_read_new_state
 {
-    my $self = shift;
-
-    my $line = $self->_get_line();
-
-    if ($line ne "")
-    {
-        die "Non empty line before state";
-    }
-
-    $self->_out_line($line);
-
-    my $str = "";
-
-    while (($line = $self->_get_line()) && ($line ne ""))
-    {
-        $str .= $line . "\n";
-    }
+    my ($self, $str) = @_;
 
     my $new_state = Games::Solitaire::Verify::State->new(
             {
@@ -182,8 +166,34 @@ sub _read_state
             die "States don't match";
         }
     }
-    $self->_out($new_state->to_string());
     $self->_state($new_state);
+
+    return;
+}
+
+sub _read_state
+{
+    my $self = shift;
+
+    my $line = $self->_get_line();
+
+    if ($line ne "")
+    {
+        die "Non empty line before state";
+    }
+
+    $self->_out_line($line);
+
+    my $str = "";
+
+    while (($line = $self->_get_line()) && ($line ne ""))
+    {
+        $str .= $line . "\n";
+    }
+
+    $self->_assign_read_new_state($str);
+
+    $self->_out($str);
 
     $self->_out_line("");
     while (defined($line = $self->_get_line()) && ($line eq ""))
