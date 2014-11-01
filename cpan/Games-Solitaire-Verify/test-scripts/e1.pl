@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves;
+use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves::Lax;
 
 # make_pysol_freecell_board.py -F -t 24 | fc-solve -sam -sel -p -t
 my $input_text = <<'END_OF_SOL';
@@ -2237,7 +2237,7 @@ This scan generated 191 states.
 END_OF_SOL
 
 open my $fh, '<', \$input_text;
-my $solution = Games::Solitaire::Verify::Solution::ExpandMultiCardMoves->new(
+my $solution = Games::Solitaire::Verify::Solution::ExpandMultiCardMoves::Lax->new(
     {
         input_fh => $fh,
         variant => "freecell",
