@@ -334,6 +334,17 @@ sub _apply_move
             return;
         };
 
+        my $past_first_output_state_promise = sub {
+            $self->_out_line("");
+            $self->_out($self->_state->to_string);
+            $self->_out_line("");
+            $self->_out_line("");
+            $self->_out_line("====================");
+            $self->_out_line("");
+
+            return;
+        };
+
         my $add_move = sub {
             my ($move_line) = @_;
 
@@ -358,16 +369,7 @@ sub _apply_move
                 );
             }
 
-            $output_state_promise = sub {
-                $self->_out_line("");
-                $self->_out($self->_state->to_string);
-                $self->_out_line("");
-                $self->_out_line("");
-                $self->_out_line("====================");
-                $self->_out_line("");
-
-                return;
-            };
+            $output_state_promise = $past_first_output_state_promise;
 
             return;
         };
