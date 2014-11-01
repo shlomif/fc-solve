@@ -298,7 +298,7 @@ sub to_string
     return ($self->is_flipped ? "<$s>" : $s);
 }
 
-=head2 $class->fast_s()
+=head2 $card->fast_s()
 
 A cached string representation. (Use with care).
 
