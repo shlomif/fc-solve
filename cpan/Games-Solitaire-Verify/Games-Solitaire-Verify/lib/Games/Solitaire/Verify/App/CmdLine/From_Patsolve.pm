@@ -229,6 +229,15 @@ sub _find_col_card
     } (0 .. $self->_state->num_columns - 1);
 }
 
+sub _find_fc_card
+{
+    my ($self, $card_s) = @_;
+    my $dest_fc_idx = firstidx {
+        my $card = $self->_state->get_freecell($_);
+        defined ($card) ? ($card->fast_s eq $card_s) : 0;
+    } (0 .. $self->_state->num_freecells - 1);
+}
+
 sub _perform_move
 {
     my ($self, $move_line) = @_;
@@ -255,23 +264,49 @@ sub _perform_move
         );
 
     }
-    elsif (($src_card_s, (my $dest_card_s)) = $move_line =~ /\A(.[HCDS]) to (.[HCDS])\z/)
+    elsif (($src_card_s) = $move_line =~ /\A(.[HCDS]) out\z/)
     {
         my $src_col_idx = $self->_find_col_card($src_card_s);
-        # TODO : try to find a freecell card.
         if ($src_col_idx < 0)
         {
-            die "Cannot find card <$src_card_s>.";
+            die "Cannot find card.";
         }
+        else
+        {
+            # TODO : Handle FCs idx.
+
+            $self->_perform_and_output_move(
+                sprintf("Move a card from stack %d to the foundations", $src_col_idx, ),
+            );
+        }
+    }
+    elsif (($src_card_s, (my $dest_card_s)) = $move_line =~ /\A(.[HCDS]) to (.[HCDS])\z/)
+    {
         my $dest_col_idx = $self->_find_col_card($dest_card_s);
         if ($dest_col_idx < 0)
         {
             die "Cannot find card <$dest_card_s>.";
         }
 
-        $self->_perform_and_output_move(
-            sprintf("Move 1 cards from stack %d to stack %d", $src_col_idx, $dest_col_idx,),
-        );
+        my $src_col_idx = $self->_find_col_card($src_card_s);
+        # TODO : try to find a freecell card.
+        if ($src_col_idx < 0)
+        {
+            my $src_fc_idx = $self->_find_fc_card($src_card_s);
+            if ($src_fc_idx < 0)
+            {
+                die "Cannot find card <$src_card_s>.";
+            }
+            $self->_perform_and_output_move(
+                sprintf("Move a card from freecell %d to stack %d", $src_fc_idx, $dest_col_idx,),
+            );
+        }
+        else
+        {
+            $self->_perform_and_output_move(
+                sprintf("Move 1 cards from stack %d to stack %d", $src_col_idx, $dest_col_idx,),
+            );
+        }
     }
     else
     {
