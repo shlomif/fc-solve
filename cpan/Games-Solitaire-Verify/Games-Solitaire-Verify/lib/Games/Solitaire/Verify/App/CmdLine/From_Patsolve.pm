@@ -3,6 +3,8 @@ package Games::Solitaire::Verify::App::CmdLine::From_Patsolve;
 use strict;
 use warnings;
 
+use autodie;
+
 use parent 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::VariantsMap;
@@ -336,369 +338,34 @@ sub _perform_move
     }
 }
 
-sub run
+sub _process_main
 {
     my $self = shift;
 
-    my $filename = $self->_filename();
-    my $sol_filename = $self->_sol_filename;
-    my $variant_params = $self->_variant_params();
+    $self->_read_initial_state;
 
-    my $fh;
+    open my $in_fh, '<', $self->_sol_filename;
 
-    if ($filename eq "-")
+    while (my $l = <$in_fh>)
     {
-        $fh = *STDIN;
-    }
-    else
-    {
-        open $fh, "<", $filename
-            or die "Cannot open '$filename' - $!";
+        chomp($l);
+        $self->_perform_move($l);
     }
 
-    my $found = 0;
+    close($in_fh);
 
-    LINES_PREFIX:
-    while (my $line = <$fh>)
-    {
-        chomp($line);
-        if ($line eq "Success!")
-        {
-            $found = 1;
-            last LINES_PREFIX;
-        }
-    }
+    return;
+}
 
-    if (!$found)
-    {
-        close($fh);
-        die "State was not solved successfully.";
-    }
+sub run
+{
+    my ($self) = @_;
 
-    my $read_next_state = sub {
-        my $line = <$fh>;
-        chomp($line);
-        if ($line eq "END")
-        {
-            return;
-        }
-        elsif ($line ne "--------")
-        {
-            die "Incorrect format.";
-        }
+    $self->_process_main;
 
-        my $s = <$fh>;
-        LINES:
-        while ($line = <$fh>)
-        {
-            if ($line !~ /\S/)
-            {
-                last LINES;
-            }
-            $s .= $line;
-        }
-        $line = <$fh>;
-        chomp($line);
-        if ($line ne "==")
-        {
-            die "Cannot find '==' terminator";
-        }
+    print ${$self->_get_buffer};
 
-        return Games::Solitaire::Verify::State->new(
-            {
-                variant => "custom",
-                variant_params => $self->_variant_params(),
-                string => $s,
-            },
-        );
-    };
-
-    my $initial_state = $read_next_state->();
-
-    my $running_state = $initial_state->clone();
-
-    my @cols_iter = (0 .. ($running_state->num_columns() - 1));
-    my @fc_iter = (0 .. ($running_state->num_freecells() - 1));
-    my @cols_indexes = @cols_iter;
-    my @fc_indexes = @fc_iter;
-
-    print "-=-=-=-=-=-=-=-=-=-=-=-\n\n";
-
-    my $out_running_state = sub {
-        print $running_state->to_string();
-        print "\n\n====================\n\n";
-    };
-
-    my $perform_and_output_move = sub {
-        my ($move_s) = @_;
-
-        print "$move_s\n\n";
-
-        $running_state->verify_and_perform_move(
-            Games::Solitaire::Verify::Move->new(
-                {
-                    fcs_string => $move_s,
-                    game => $running_state->_variant(),
-                },
-            )
-        );
-        $out_running_state->();
-
-        return;
-    };
-
-    my $calc_foundation_to_put_card_on = sub {
-        my $card = shift;
-
-        DECKS_LOOP:
-        for my $deck (0 .. $running_state->num_decks() - 1)
-        {
-            if ($running_state->get_foundation_value($card->suit(), $deck) ==
-                $card->rank() - 1)
-            {
-                my $other_deck_idx;
-
-                for $other_deck_idx (0 ..
-                    (($running_state->num_decks() << 2) - 1)
-                )
-                {
-                    if ($running_state->get_foundation_value(
-                            $card->get_suits_seq->[$other_deck_idx % 4],
-                            ($other_deck_idx >> 2),
-                        ) < $card->rank() - 2 -
-                        (($card->color_for_suit(
-                            $card->get_suits_seq->[$other_deck_idx % 4]
-                        ) eq $card->color()) ? 1 : 0)
-                    )
-                    {
-                        next DECKS_LOOP;
-                    }
-                }
-                return [$card->suit(), $deck];
-            }
-        }
-        return;
-    };
-
-    $out_running_state->();
-    MOVES:
-    while (my $move_line = <$fh>)
-    {
-        chomp($move_line);
-
-        if ($move_line eq "END")
-        {
-            last MOVES;
-        }
-
-        # I thought I needed them, but I did not eventually.
-        #
-        # my @rev_cols_indexes;
-        # @rev_cols_indexes[@cols_indexes] = (0 .. $#cols_indexes);
-        # my @rev_fc_indexes;
-        # @rev_fc_indexes[@fc_indexes] = (0 .. $#fc_indexes);
-
-        my ($src, $dest);
-        my $dest_move;
-
-        my @tentative_fc_indexes = @fc_indexes;
-        my @tentative_cols_indexes = @cols_indexes;
-        if (($src, $dest) = $move_line =~ m{\AColumn (\d+) -> Freecell (\d+)\z})
-        {
-            $dest_move = "Move a card from stack $tentative_cols_indexes[$src] to freecell $tentative_fc_indexes[$dest]";
-        }
-        elsif (($src, $dest) = $move_line =~ m{\AColumn (\d+) -> Column (\d+)\z})
-        {
-            $dest_move = "Move 1 cards from stack $tentative_cols_indexes[$src] to stack $tentative_cols_indexes[$dest]";
-        }
-        elsif (($src, $dest) = $move_line =~ m{\AFreecell (\d+) -> Column (\d+)\z})
-        {
-            $dest_move = "Move a card from freecell $tentative_fc_indexes[$src] to stack $tentative_cols_indexes[$dest]";
-        }
-        elsif (($src) = $move_line =~ m{\AColumn (\d+) -> Foundation \d+\z})
-        {
-            $dest_move = "Move a card from stack $tentative_cols_indexes[$src] to the foundations";
-        }
-        elsif (($src) = $move_line =~ m{\AFreecell (\d+) -> Foundation \d+\z})
-        {
-            $dest_move = "Move a card from freecell $tentative_fc_indexes[$src] to the foundations";
-        }
-        else
-        {
-            die "Unrecognized Move line '$move_line'.";
-        }
-
-        $perform_and_output_move->($dest_move);
-
-        # Now do the horne's prune.
-        my $num_moved = 1; # Always iterate at least once.
-
-        my $perform_prune_move = sub {
-            my $prune_move = shift;
-
-            $num_moved++;
-            $perform_and_output_move->($prune_move);
-
-            return;
-        };
-
-        my $check_for_prune_move = sub {
-            my ($card, $prune_move) = @_;
-
-            if (defined($card))
-            {
-                my $f = $calc_foundation_to_put_card_on->($card);
-
-                if (defined($f))
-                {
-                    $perform_prune_move->($prune_move);
-                }
-            }
-
-            return;
-        };
-
-        while ($num_moved)
-        {
-            $num_moved = 0;
-            foreach my $idx (@cols_iter)
-            {
-                my $col = $running_state->get_column($idx);
-
-                $check_for_prune_move->(
-                    scalar($col->len() ? $col->top() : undef()),
-                    "Move a card from stack $idx to the foundations",
-                );
-            }
-
-            foreach my $idx (@fc_iter)
-            {
-                $check_for_prune_move->(
-                    $running_state->get_freecell($idx),
-                    "Move a card from freecell $idx to the foundations",
-                );
-            }
-        }
-
-        my $new_state = $read_next_state->();
-
-        my $populate_new_resource_indexes = sub {
-            my ($iter, $get_pivot_cb) = @_;
-
-            my @new_resources_indexes;
-
-            my %non_assigned_resources = (map { $_ => 1 } @$iter);
-            my %old_resources_map;
-
-            foreach my $idx (@$iter)
-            {
-                my $card = $get_pivot_cb->($running_state, $idx);
-
-                push @{$old_resources_map{$card}}, $idx;
-            }
-
-            foreach my $idx (@$iter)
-            {
-                my $card = $get_pivot_cb->($new_state, $idx);
-                my $aref = $old_resources_map{$card};
-
-                if ((!defined($aref)) or (! @$aref))
-                {
-                    $aref = $old_resources_map{''};
-                }
-                my $i = shift(@$aref);
-
-                $new_resources_indexes[$idx] = $i;
-                if (defined($i))
-                {
-                    delete($non_assigned_resources{$i});
-                }
-            }
-
-            my @non_assigned_resources_list =
-                sort { $a <=> $b } keys(%non_assigned_resources);
-
-            foreach my $resource_idx (@new_resources_indexes)
-            {
-                if (!defined($resource_idx))
-                {
-                    $resource_idx = shift(@non_assigned_resources_list);
-                }
-            }
-
-            return \@new_resources_indexes;
-        };
-
-        my $new_cols_indexes = $populate_new_resource_indexes->(
-            \@cols_iter,
-            sub {
-                my ($state, $idx) = @_;
-                my $col = $state->get_column($idx);
-                return ($col->len ? $col->pos(0)->to_string() : '');
-            },
-        );
-
-        my $new_fc_indexes = $populate_new_resource_indexes->(
-            \@fc_iter,
-            sub {
-                my ($state, $idx) = @_;
-                my $card_obj = $state->get_freecell($idx);
-                return (defined($card_obj) ? $card_obj->to_string() : '');
-            },
-        );
-
-        my $verify_state =
-            Games::Solitaire::Verify::State->new(
-                {
-                    variant => 'custom',
-                    variant_params => $self->_variant_params(),
-                }
-            );
-
-        foreach my $idx (@cols_iter)
-        {
-            $verify_state->add_column(
-                $running_state->get_column($new_cols_indexes->[$idx])->clone()
-            );
-        }
-
-        $verify_state->set_freecells(
-            Games::Solitaire::Verify::Freecells->new(
-                {
-                    count => $running_state->num_freecells(),
-                }
-            )
-        );
-
-        foreach my $idx (@fc_iter)
-        {
-            my $card_obj =
-                $running_state->get_freecell($new_fc_indexes->[$idx]);
-
-            if (defined($card_obj))
-            {
-                $verify_state->set_freecell($idx, $card_obj->clone());
-            }
-        }
-
-        $verify_state->set_foundations($running_state->_foundations->clone());
-
-        {
-            my $v_s = $verify_state->to_string();
-            my $n_s = $new_state->to_string();
-            if ($v_s ne $n_s)
-            {
-                die "States mismatch:\n<<\n$v_s\n>>\n vs:\n<<\n$n_s\n>>\n.";
-            }
-        }
-
-        @cols_indexes = @$new_cols_indexes;
-        @fc_indexes = @$new_fc_indexes;
-    }
-
-    print "This game is solveable.\n";
-
-    close($fh);
+    return;
 }
 
 1;
