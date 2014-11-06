@@ -10,6 +10,8 @@ use Games::Solitaire::Verify::Solution;
 use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 
+use List::MoreUtils qw(firstidx);
+
 use Getopt::Long qw(GetOptionsFromArray);
 
 __PACKAGE__->mk_acc_ref(
@@ -19,6 +21,7 @@ __PACKAGE__->mk_acc_ref(
             _filename
             _sol_filename
             _variant_params
+            _buffer_ref
         )
     ]
 );
@@ -129,7 +132,26 @@ sub _init
     $self->_filename($filename);
     $self->_sol_filename($sol_filename);
 
+    my $s = '';
+    $self->_buffer_ref(\$s);
+
     return;
+}
+
+sub _append
+{
+    my ($self, $text) = @_;
+
+    ${$self->_buffer_ref} .= $text;
+
+    return;
+}
+
+sub _get_buffer
+{
+    my ($self) = @_;
+
+    return ${$self->_buffer_ref};
 }
 
 sub _slurp
@@ -161,12 +183,76 @@ sub _read_initial_state
         )
     );
 
+    $self->_append("-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+
+    $self->_out_running_state;
+
     return;
 }
+
+sub _out_running_state
+{
+    my ($self) = @_;
+
+    $self->_append(
+        $self->_state->to_string(). "\n\n====================\n\n"
+    );
+
+    return;
+}
+
+sub _perform_and_output_move
+{
+    my ($self, $move_s) = @_;
+
+    $self->_append( "$move_s\n\n");
+
+    $self->_state->verify_and_perform_move(
+        Games::Solitaire::Verify::Move->new(
+            {
+                fcs_string => $move_s,
+                game => $self->_state->_variant(),
+            },
+        )
+    );
+    $self->_out_running_state;
+
+    return;
+};
 
 sub _perform_move
 {
     my ($self, $move_line) = @_;
+
+    if (my ($src_card_s) = $move_line =~ /\A(.[HCDS]) to temp\z/)
+    {
+        my $src_col_idx = firstidx {
+            $self->_state->get_column($_)->top->fast_s eq $src_card_s
+        } (0 .. $self->_state->num_columns - 1);
+
+        if ($src_col_idx < 0)
+        {
+            die "Cannot find card.";
+        }
+
+        my $dest_fc_idx = firstidx {
+            ! defined ($self->_state->get_freecell($_))
+        } (0 .. $self->_state->num_freecells - 1);
+
+        if ($dest_fc_idx < 0)
+        {
+            die "No empty freecell.";
+        }
+
+        $self->_perform_and_output_move(
+            sprintf("Move a card from stack %d to freecell %d", $src_col_idx, $dest_fc_idx,),
+        );
+
+    }
+    else
+    {
+        die "Unrecognised move_line <$move_line>";
+    }
 }
 
 sub run

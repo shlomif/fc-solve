@@ -16,6 +16,7 @@ my $builder = Test::Run::Builder->new(
     },
     build_requires => {
         'autodie' => 0,
+        'Test::Differences' => 0,
         'Test::More' => 0,
     },
     requires => {
