@@ -354,6 +354,8 @@ sub _process_main
 
     close($in_fh);
 
+    $self->_append("This game is solveable.\n");
+
     return;
 }
 
@@ -363,7 +365,7 @@ sub run
 
     $self->_process_main;
 
-    print ${$self->_get_buffer};
+    print $self->_get_buffer;
 
     return;
 }

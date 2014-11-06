@@ -2776,6 +2776,7 @@ Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
 
 ====================
 
+This game is solveable.
 EOF
         "After KS to empty pile move.",
     );
