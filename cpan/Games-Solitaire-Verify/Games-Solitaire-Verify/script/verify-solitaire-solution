@@ -23,7 +23,7 @@ solutions.
 
 =head1 OVERVIEW
 
-F<verify-solitaire-solution> is a command-line interface to 
+F<verify-solitaire-solution> is a command-line interface to
 L<Games::Solitaire::Verify>.
 
 =head1 COMMAND LINE OPTIONS
