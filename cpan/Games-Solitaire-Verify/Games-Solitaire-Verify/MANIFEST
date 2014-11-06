@@ -29,6 +29,7 @@ lib/Games/Solitaire/Verify/State.pm
 lib/Games/Solitaire/Verify/VariantParams.pm
 lib/Games/Solitaire/Verify/VariantsMap.pm
 script/bump-version-number.pl
+script/convert-patsolve-to-fc-solve-solution
 script/expand-solitaire-multi-card-moves
 script/play-and-verify-klondike
 script/tag-release.pl
