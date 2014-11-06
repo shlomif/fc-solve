@@ -13,6 +13,7 @@ inc/Test/Run/Builder.pm
 lib/Games/Solitaire/Verify.pm
 lib/Games/Solitaire/Verify/App/CmdLine.pm
 lib/Games/Solitaire/Verify/App/CmdLine/Expand.pm
+lib/Games/Solitaire/Verify/App/CmdLine/From_Patsolve.pm
 lib/Games/Solitaire/Verify/Base.pm
 lib/Games/Solitaire/Verify/Card.pm
 lib/Games/Solitaire/Verify/Column.pm
@@ -41,7 +42,9 @@ t/05-state.t
 t/06-verify-moves.t
 t/07-solution.t
 t/08-expand-solution.t
+t/09-to-patsolve.t
 t/cpan-changes.t
+t/data/boards/338741497.board
 t/data/sample-solutions/fcs-bakers-game-24.txt
 t/data/sample-solutions/fcs-eight-off-200-l-gi.txt
 t/data/sample-solutions/fcs-eight-off-200.txt
@@ -55,6 +58,7 @@ t/data/sample-solutions/fcs-larrysan-kings-only-0-freecells-unlimited-move.txt
 t/data/sample-solutions/fcs-relaxed-freecell-11982.txt
 t/data/sample-solutions/fcs-seahaven-towers-1977.txt
 t/data/sample-solutions/fcs-simple-simon-24.txt
+t/data/sample-solutions/patsolve-338741497-win-solution.txt
 t/pod-coverage.t
 t/pod.t
 t/style-trailing-space.t

@@ -1,6 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
-0.1300  2015-05-16
+0.1400  Not Released
+        - Add lib/Games/Solitaire/Verify/App/CmdLine/From_Patsolve.pm .
+
+0.1300  2014-05-16
         - Some optimizations after noticing that validating the solutions
         of the whole Microsoft Freecell 32K was time consuming.
         - Add examples/benchmark.pl which can be used to benchmark (requires

@@ -1,0 +1,128 @@
+2S to temp
+6C to temp
+9C to temp
+5C to 6D
+KS to temp
+7D to 8C
+6C to 7D
+2H to temp
+AC out
+2C out
+5H to 6C
+4S to 5H
+3D to 4S
+2S to 3D
+QS to temp
+TH to JS
+QC to KH
+QH to KC
+KS to empty pile
+QH to KS
+4D to 5C
+KC to temp
+9S to TH
+3C to 4H
+2H to 3C
+9H to temp
+3S to 4D
+2D to 3S
+JC to QH
+TD to JC
+9H to TC
+9C to TD
+5S to temp
+QD to temp
+KC to empty pile
+QD to KC
+9S to temp
+TH to temp
+JS to QD
+TH to JS
+9H to temp
+TC to JH
+9S to TH
+4C to temp
+9H to TC
+5D to temp
+AS out
+2S out
+4C to empty pile
+2D to temp
+3S out
+3D to 4C
+4S out
+5S out
+3D to temp
+4C to 5H
+3D to 4C
+4D to temp
+5C to empty pile
+4D to 5C
+2H to temp
+3C to 4D
+2H to 3C
+6D to temp
+6S out
+8S to 9H
+8H to 9S
+8D to 9C
+4H to empty pile
+7C to 8D
+7S out
+7H to 8S
+AD out
+2D out
+3D out
+7H to empty pile
+8S out
+2H to temp
+3C out
+4D out
+4C out
+5D out
+5C out
+6D out
+5H to temp
+6C out
+7D out
+7C out
+8D out
+8C out
+9C out
+9H to TS
+TC out
+TD to temp
+JC out
+QC out
+KH to empty pile
+QS to KH
+JH to QS
+3H to temp
+9D out
+TD out
+8H to empty pile
+9S out
+9H to temp
+TS out
+JD out
+TH to empty pile
+JS out
+QD out
+KC out
+KD out
+6H to empty pile
+AH out
+2H out
+3H out
+4H out
+5H out
+6H out
+7H out
+8H out
+9H out
+TH out
+JH out
+QS out
+QH out
+KH out
+KS out

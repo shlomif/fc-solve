@@ -181,7 +181,7 @@ multi-card moves.
 This is a module implementing a standalone command line app for expanding
 multi-card moves.
 
-=head1 EXPORTS
+=head1 METHODS
 
 =head2 run()
 
