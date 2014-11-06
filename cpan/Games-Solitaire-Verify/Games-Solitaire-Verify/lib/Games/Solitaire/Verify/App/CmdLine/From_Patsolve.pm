@@ -218,7 +218,16 @@ sub _perform_and_output_move
     $self->_out_running_state;
 
     return;
-};
+}
+
+sub _find_col_card
+{
+    my ($self, $card_s) = @_;
+
+    return firstidx {
+        $self->_state->get_column($_)->top->fast_s eq $card_s
+    } (0 .. $self->_state->num_columns - 1);
+}
 
 sub _perform_move
 {
@@ -226,10 +235,7 @@ sub _perform_move
 
     if (my ($src_card_s) = $move_line =~ /\A(.[HCDS]) to temp\z/)
     {
-        my $src_col_idx = firstidx {
-            $self->_state->get_column($_)->top->fast_s eq $src_card_s
-        } (0 .. $self->_state->num_columns - 1);
-
+        my $src_col_idx = $self->_find_col_card($src_card_s);
         if ($src_col_idx < 0)
         {
             die "Cannot find card.";
@@ -248,6 +254,24 @@ sub _perform_move
             sprintf("Move a card from stack %d to freecell %d", $src_col_idx, $dest_fc_idx,),
         );
 
+    }
+    elsif (($src_card_s, (my $dest_card_s)) = $move_line =~ /\A(.[HCDS]) to (.[HCDS])\z/)
+    {
+        my $src_col_idx = $self->_find_col_card($src_card_s);
+        # TODO : try to find a freecell card.
+        if ($src_col_idx < 0)
+        {
+            die "Cannot find card <$src_card_s>.";
+        }
+        my $dest_col_idx = $self->_find_col_card($dest_card_s);
+        if ($dest_col_idx < 0)
+        {
+            die "Cannot find card <$dest_card_s>.";
+        }
+
+        $self->_perform_and_output_move(
+            sprintf("Move 1 cards from stack %d to stack %d", $src_col_idx, $dest_col_idx,),
+        );
     }
     else
     {
