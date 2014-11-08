@@ -12,7 +12,7 @@ classes for G::S::Verify.
 
 use vars qw($VERSION);
 
-$VERSION = '0.1300';
+$VERSION = '0.1400';
 
 use Exception::Class (
     'Games::Solitaire::Verify::Exception',
