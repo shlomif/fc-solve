@@ -187,17 +187,5 @@ multi-card moves.
 
 Actually execute the command-line application.
 
-=head1 AUTHOR
-
-Shlomi Fish, L<http://www.shlomifish.org/>
-
-=head1 ACKNOWLEDGEMENTS
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2007 Shlomi Fish, all rights reserved.
-
-This program is released under the MIT X11 License.
-
 =cut
 

@@ -12,10 +12,6 @@ use parent 'Games::Solitaire::Verify::Base';
 Games::Solitaire::Verify::VariantsMap - a mapping from the variants to
 their parameters.
 
-=head1 VERSION
-
-Version 0.03
-
 =cut
 
 our $VERSION = '0.1300';
