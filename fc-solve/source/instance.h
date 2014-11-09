@@ -366,6 +366,8 @@ struct fc_solve_instance_struct
      *
      * */
     fcs_game_type_params_t game_params;
+    fcs_card_t game_variant_suit_mask;
+    fcs_card_t game_variant_desired_suit_value;
 
     /* The number of states that were checked by the solving algorithm. */
     fcs_int_limit_t num_checked_states;
@@ -720,6 +722,7 @@ enum FCS_SUPER_METHOD_TYPE
 
 typedef enum FCS_SUPER_METHOD_TYPE fcs_super_method_type_t;
 
+struct fc_solve__patsolve_thread_struct;
 
 struct fc_solve_soft_thread_struct
 {
@@ -884,6 +887,11 @@ struct fc_solve_soft_thread_struct
      * abstraction with several optional prunes.
      * */
     fcs_bool_t enable_pruning;
+
+    /*
+     * The patsolve soft_thread that is associated with this soft_thread.
+     * */
+    struct fc_solve__patsolve_thread_struct * pats_scan;
 };
 
 #define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var
@@ -1862,5 +1870,7 @@ extern void name( \
 #ifdef __cplusplus
 }
 #endif
+
+#include "pat.h"
 
 #endif /* FC_SOLVE__FCS_H */

@@ -214,7 +214,8 @@ ADD_CUSTOM_COMMAND(
 
 EXECUTE_PROCESS(COMMAND "perl" ${rate_state_args})
 
-SET (p_dir "${pats_dir}/patsolve")
+SET (patsolve_dir "${pats_dir}/patsolve")
+SET (p_dir "${patsolve_dir}")
 SET (FREECELL_SOLVER_LIB_MODULES
     app_str.c
     card.c
@@ -1114,7 +1115,7 @@ ADD_CUSTOM_TARGET(
     "--binary-dir" "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
-INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
+INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
 
 ADD_SUBDIRECTORY ("t")
 ADD_SUBDIRECTORY ("board_gen")
