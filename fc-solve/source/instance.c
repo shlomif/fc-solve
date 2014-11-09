@@ -194,6 +194,14 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     {
         free(soft_thread->name);
     }
+
+    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+
+    if ( pats_scan )
+    {
+        fc_solve_pats__recycle_soft_thread(pats_scan);
+        soft_thread->pats_scan = NULL;
+    }
 }
 
 static GCC_INLINE void accumulate_tests_by_ptr(

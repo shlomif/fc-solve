@@ -1465,6 +1465,10 @@ break;
             {
                 method = FCS_METHOD_RANDOM_DFS;
             }
+            else if (!strcmp((*arg), "patsolve"))
+            {
+                method = FCS_METHOD_PATSOLVE;
+            }
             else
             {
                 char * errstr;

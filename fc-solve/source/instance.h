@@ -718,6 +718,7 @@ enum FCS_SUPER_METHOD_TYPE
 {
     FCS_SUPER_METHOD_DFS,
     FCS_SUPER_METHOD_BEFS_BRFS,
+    FCS_SUPER_METHOD_PATSOLVE,
 };
 
 typedef enum FCS_SUPER_METHOD_TYPE fcs_super_method_type_t;
@@ -914,6 +915,8 @@ typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 #define FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS 3
 #define FCS_BEFS_WEIGHT_DEPTH 4
 #define FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS 5
+
+#include "pat.h"
 
 fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * meta_alloc);
 
@@ -1747,6 +1750,13 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
         fc_solve_PQueueFree( &(BEFS_VAR(soft_thread, pqueue)) );
 
         fc_solve_reset_soft_thread(soft_thread);
+
+        typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+
+        if ( pats_scan )
+        {
+            fc_solve_pats__recycle_soft_thread(pats_scan);
+        }
     }
 
     return;
@@ -1871,6 +1881,5 @@ extern void name( \
 }
 #endif
 
-#include "pat.h"
 
 #endif /* FC_SOLVE__FCS_H */

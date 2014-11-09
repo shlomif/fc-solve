@@ -1484,6 +1484,20 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
             super_method_type = FCS_SUPER_METHOD_DFS;
         }
         break;
+
+        case FCS_METHOD_PATSOLVE:
+        {
+            super_method_type = FCS_SUPER_METHOD_PATSOLVE;
+
+            if (! soft_thread->pats_scan)
+            {
+                typeof(soft_thread->pats_scan) pats_scan
+                    = soft_thread->pats_scan = SMALLOC1(soft_thread->pats_scan);
+                fc_solve_pats__init_soft_thread(pats_scan,
+                    soft_thread->hard_thread->instance);
+            }
+        }
+        break;
     }
 
     soft_thread->super_method_type = super_method_type;
@@ -1496,7 +1510,16 @@ static void apply_game_params_for_all_instances(
         )
 {
     FLARES_LOOP_START()
-        flare->obj->game_params = user->common_preset.game_params;
+    {
+        typeof(flare->obj) instance = flare->obj;
+        instance->game_params = user->common_preset.game_params;
+        instance->game_variant_suit_mask = FCS_PATS__COLOR;
+        instance->game_variant_desired_suit_value = FCS_PATS__COLOR;
+        if ((GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) == FCS_SEQ_BUILT_BY_SUIT)) {
+            instance->game_variant_suit_mask = FCS_PATS__SUIT;
+            instance->game_variant_desired_suit_value = 0;
+        }
+    }
     FLARES_LOOP_END()
 
     return;
