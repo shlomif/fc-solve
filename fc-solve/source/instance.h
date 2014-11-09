@@ -1219,6 +1219,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 }
 
 extern int fc_solve_soft_dfs_do_solve(fc_solve_soft_thread_t * soft_thread);
+extern int fc_solve_patsolve_do_solve(fc_solve_soft_thread_t * soft_thread);
 
 extern void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * soft_thread
@@ -1305,6 +1306,13 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
         {
             fc_solve_soft_thread_init_soft_dfs(soft_thread);
             fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
+
+            typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+            if (pats_scan)
+            {
+                fc_solve_pats__init_buckets(pats_scan);
+                fc_solve_pats__init_clusters(pats_scan);
+            }
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
         }
         switch(soft_thread->super_method_type)
@@ -1315,6 +1323,10 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 
             case FCS_SUPER_METHOD_BEFS_BRFS:
             ret = fc_solve_befs_or_bfs_do_solve(soft_thread);
+            break;
+
+            case FCS_SUPER_METHOD_PATSOLVE:
+            ret = fc_solve_patsolve_do_solve(soft_thread);
             break;
 
             default:

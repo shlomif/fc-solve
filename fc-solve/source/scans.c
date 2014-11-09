@@ -2361,3 +2361,25 @@ extern void fc_solve_sfs_check_state_end(
     return;
 }
 
+/*
+ * fc_solve_patsolve_do_solve() is the event loop of the
+ * Patsolve scan.
+ */
+int fc_solve_patsolve_do_solve(
+    fc_solve_soft_thread_t * const soft_thread
+    )
+{
+    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+
+    pats_scan->max_num_checked_states = soft_thread->hard_thread->max_num_checked_states;
+
+    fc_solve_pats__do_it(pats_scan);
+
+    const typeof(pats_scan->status) status = pats_scan->status;
+    return
+    (
+        (status == FCS_PATS__WIN) ? FCS_STATE_WAS_SOLVED
+        : (status == FCS_PATS__NOSOL) ? FCS_STATE_IS_NOT_SOLVEABLE
+        : FCS_STATE_SUSPEND_PROCESS
+    );
+}
