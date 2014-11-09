@@ -1312,6 +1312,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
             {
                 fc_solve_pats__init_buckets(pats_scan);
                 fc_solve_pats__init_clusters(pats_scan);
+                pats_scan->current_pos.s = instance->state_copy_ptr->s;
             }
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
         }
