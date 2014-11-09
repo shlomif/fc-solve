@@ -192,6 +192,15 @@ IF (FCS_ENABLE_RCS_STATES)
     SET (FCS_RCS_STATES 1)
 ENDIF (FCS_ENABLE_RCS_STATES)
 
+# Clone the patsolve repository with the appropriate branch.
+SET (pats_dir "patsolve-shlomif")
+
+IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
+    EXECUTE_PROCESS(COMMAND "hg" "clone" "-u" "make-code-suitable-for-fc-solve" "ssh://hg@bitbucket.org/shlomif/patsolve-shlomif" "${pats_dir}"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+ENDIF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
+
 SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/gen_rate_state_c.pl")
 SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
 # We do this so there will be no need to run "make" first.
@@ -205,6 +214,7 @@ ADD_CUSTOM_COMMAND(
 
 EXECUTE_PROCESS(COMMAND "perl" ${rate_state_args})
 
+SET (p_dir "${pats_dir}/patsolve")
 SET (FREECELL_SOLVER_LIB_MODULES
     app_str.c
     card.c
@@ -224,6 +234,12 @@ SET (FREECELL_SOLVER_LIB_MODULES
     simpsim.c
     split_cmd_line.c
     state.c
+
+    "${p_dir}/param.c"
+    "${p_dir}/pat.c"
+    "${p_dir}/patsolve.c"
+    "${p_dir}/tree.c"
+    "${p_dir}/util.c"
 )
 
 IF (FCS_FREECELL_ONLY)
@@ -1097,6 +1113,8 @@ ADD_CUSTOM_TARGET(
     "--source-dir" "${CMAKE_CURRENT_SOURCE_DIR}"
     "--binary-dir" "${CMAKE_CURRENT_BINARY_DIR}"
 )
+
+INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
 
 ADD_SUBDIRECTORY ("t")
 ADD_SUBDIRECTORY ("board_gen")

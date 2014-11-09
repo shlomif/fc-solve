@@ -55,6 +55,7 @@ fc-solve/source/fc-solve.6
 fc-solve/source/fc-solve.txt
 fc-solve/source/fc-solve.xml
 fc-solve/source/freecell-solver.spec
+fc-solve/source/patsolve-shlomif
 fc-solve/source/rate_state.c
 fc-solve/source/t/t/lib/FC_Solve/__init__.pyc
 fc-solve/source/t/t/lib/TAP/Simple.pyc
