@@ -1461,6 +1461,27 @@ int DLLEXPORT freecell_solver_user_get_current_depth(
     return (DFS_VAR(user->soft_thread, depth));
 }
 
+extern int DLLEXPORT freecell_solver_user_set_pats_xy_params(
+    void * api_instance,
+    const fcs_pats_xy_param_t * const xy_params,
+    char * * error_string
+    )
+{
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
+
+    fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
+    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+
+    if (! pats_scan)
+    {
+        *error_string = strdup("Not using the \"patsolve\" scan.");
+        return 1;
+    }
+
+    pats_scan->pats_solve_params = *xy_params;
+    return 0;
+}
+
 void DLLEXPORT freecell_solver_user_set_solving_method(
     void * api_instance,
     int method
@@ -1495,6 +1516,14 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
                     = soft_thread->pats_scan = SMALLOC1(soft_thread->pats_scan);
                 fc_solve_pats__init_soft_thread(pats_scan,
                     soft_thread->hard_thread->instance);
+
+                char * unused;
+
+                freecell_solver_user_set_pats_xy_params(
+                    api_instance,
+                    &(freecell_solver_pats__x_y_params_preset[FC_SOLVE_PATS__PARAM_PRESET__FreecellSpeed]),
+                    &unused
+                );
             }
         }
         break;
@@ -1504,6 +1533,17 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 }
 
 #ifndef FCS_FREECELL_ONLY
+static GCC_INLINE void calc_variant_suit_mask_and_desired_suit_value(
+    fc_solve_instance_t * const instance
+)
+{
+    instance->game_variant_suit_mask = FCS_PATS__COLOR;
+    instance->game_variant_desired_suit_value = FCS_PATS__COLOR;
+    if ((GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) == FCS_SEQ_BUILT_BY_SUIT)) {
+        instance->game_variant_suit_mask = FCS_PATS__SUIT;
+        instance->game_variant_desired_suit_value = 0;
+    }
+}
 
 static void apply_game_params_for_all_instances(
         fcs_user_t * const user
@@ -1513,12 +1553,7 @@ static void apply_game_params_for_all_instances(
     {
         typeof(flare->obj) instance = flare->obj;
         instance->game_params = user->common_preset.game_params;
-        instance->game_variant_suit_mask = FCS_PATS__COLOR;
-        instance->game_variant_desired_suit_value = FCS_PATS__COLOR;
-        if ((GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) == FCS_SEQ_BUILT_BY_SUIT)) {
-            instance->game_variant_suit_mask = FCS_PATS__SUIT;
-            instance->game_variant_desired_suit_value = 0;
-        }
+        calc_variant_suit_mask_and_desired_suit_value(instance);
     }
     FLARES_LOOP_END()
 
@@ -2327,6 +2362,7 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(
     return 0;
 }
 
+
 void DLLEXPORT freecell_solver_user_set_reparent_states(
     void * api_instance,
     int to_reparent_states
@@ -2377,6 +2413,7 @@ static int user_next_flare(fcs_user_t * user)
 
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_ptr(flare->obj, &(user->common_preset));
+    calc_variant_suit_mask_and_desired_suit_value(flare->obj);
 #endif
 
     user->ret_code = flare->ret_code =
