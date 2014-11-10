@@ -1,2 +1,2 @@
 #!/bin/bash
-ctags *.[ch]
+ctags *.[ch] patsolve-shlomif/patsolve/*.[ch]
