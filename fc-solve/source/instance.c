@@ -880,6 +880,11 @@ extern void fc_solve_trace_solution(
 #endif
 
         int i;
+        solution_moves_ptr->num_moves = num_moves;
+        solution_moves_ptr->moves = SREALLOC(
+            solution_moves_ptr->moves,
+            num_moves
+        );
         for (i = 0, mpp = mpp0; i < num_moves; i++, mpp++)
         {
             mp = *mpp;
@@ -958,7 +963,7 @@ extern void fc_solve_trace_solution(
                 stacks_num,
                 decks_num
             );
-            fcs_move_stack_push(solution_moves_ptr, out_move);
+            solution_moves_ptr->moves[num_moves-1-i] = out_move;
         }
 
         free(mpp0);
