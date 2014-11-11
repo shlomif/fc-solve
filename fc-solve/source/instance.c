@@ -720,6 +720,89 @@ static gint fc_solve_glib_hash_stack_compare (
 
 #endif /* defined(INDIRECT_STACK_STATES) */
 
+typedef struct {
+    int idx;
+    enum {
+        FREECELL,
+        COLUMN
+    } type;
+} find_card_ret_t;
+
+static GCC_INLINE int find_empty_col(
+    const fcs_state_t * const dynamic_state,
+    const int stacks_num
+)
+{
+    for (int i = 0 ; i < stacks_num ; i++)
+    {
+        fcs_cards_column_t col = fcs_state_get_col(*dynamic_state, i);
+        if (! fcs_col_len(col))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+static GCC_INLINE int find_col_card(
+    const fcs_state_t * const dynamic_state,
+    const fcs_card_t src_card_s,
+    const int stacks_num
+)
+{
+    for (int i = 0 ; i < stacks_num ; i++)
+    {
+        fcs_cards_column_t col = fcs_state_get_col(*dynamic_state, i);
+        const int col_len = fcs_col_len(col);
+        if (col_len > 0 && (fcs_col_get_card(col, col_len - 1) == src_card_s))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+static GCC_INLINE int find_fc_card(
+    const fcs_state_t * const dynamic_state,
+    const fcs_card_t src_card_s,
+    const int freecells_num
+)
+{
+    for (int dest = 0 ; dest < freecells_num ; dest++)
+    {
+        if (fcs_freecell_card(*dynamic_state, dest) == src_card_s)
+        {
+            return dest;
+        }
+    }
+
+    return -1;
+}
+
+static GCC_INLINE find_card_ret_t find_card_src_string(
+    const fcs_state_t * const dynamic_state,
+    const fcs_card_t src_card_s,
+    const int stacks_num,
+    const int freecells_num
+)
+{
+    const int src_col_idx = find_col_card(dynamic_state, src_card_s, stacks_num);
+    if (src_col_idx < 0)
+    {
+        int src_fc_idx = find_fc_card(dynamic_state, src_card_s, freecells_num);
+
+        const find_card_ret_t ret = {.idx = src_fc_idx, .type = FREECELL};
+        return ret;
+    }
+    else
+    {
+        const find_card_ret_t ret = {.idx = src_col_idx, .type = COLUMN};
+        return ret;
+    }
+}
+
 /*
  * This function traces the solution from the final state down
  * to the initial state
@@ -737,37 +820,180 @@ extern void fc_solve_trace_solution(
         instance->solution_moves.moves = NULL;
     }
 
+
     fcs_move_stack_init(instance->solution_moves);
 
-    fcs_collectible_state_t * s1 = instance->final_state;
-
     fcs_move_stack_t * const solution_moves_ptr = &(instance->solution_moves);
-    /* Retrace the step from the current state to its parents */
-    while (FCS_S_PARENT(s1) != NULL)
+    /*
+     * Handle the case if it's patsolve.
+     * */
+    typeof(instance->solving_soft_thread) solving_soft_thread = instance->solving_soft_thread;
+    if (
+        solving_soft_thread->super_method_type == FCS_SUPER_METHOD_PATSOLVE)
     {
-        /* Mark the state as part of the non-optimized solution */
-        FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
-
-        /* Each state->parent_state stack has an implicit CANONIZE
-         * move. */
-        fcs_move_stack_push(solution_moves_ptr, canonize_move);
-
-        /* Merge the move stack */
+        fcs_state_locs_struct_t locs;
+        fc_solve_init_locs(&(locs));
+        typeof(solving_soft_thread->pats_scan) pats_scan = solving_soft_thread->pats_scan;
+        fcs_pats_position_t *pos = pats_scan->win_pos;
+        fcs_pats_position_t *p;
+        fcs_pats__move_t *mp, **mpp, **mpp0;
+        int num_moves = 0;
+        for (p = pos; p->parent; p = p->parent)
         {
-            const fcs_move_stack_t * const stack = FCS_S_MOVES_TO_PARENT(s1);
-            const fcs_internal_move_t * const moves = stack->moves;
-            for (int move_idx=stack->num_moves-1 ; move_idx >= 0 ; move_idx--)
-            {
-                fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
-            }
+            num_moves++;
         }
-        /* Duplicate the state to a freshly malloced memory */
+        mpp0 = SMALLOC(mpp0, num_moves);
+        if (mpp0 == NULL)
+        {
+            return; /* how sad, so close... */
+        }
+        mpp = mpp0 + num_moves - 1;
+        for (p = pos; p->parent; p = p->parent)
+        {
+            *mpp-- = &p->move;
+        }
 
-        /* Move to the parent state */
-        s1 = FCS_S_PARENT(s1);
+        fcs_state_keyval_pair_t s_and_info;
+
+        DECLARE_IND_BUF_T(indirect_stacks_buffer)
+#define FCS_S_FC_LOCS(s) (locs->fc_locs)
+#define FCS_S_STACK_LOCS(s) (locs->stack_locs)
+
+        fcs_kv_state_t dynamic_state;
+        FCS_STATE_keyval_pair_to_kv(&(dynamic_state), &(s_and_info));
+        fcs_kv_state_t state_copy_ptr;
+        FCS_STATE_keyval_pair_to_kv(&(state_copy_ptr), instance->state_copy_ptr);
+
+        fcs_duplicate_kv_state( &(dynamic_state), &(state_copy_ptr) );
+
+        const int stacks_num = INSTANCE_STACKS_NUM;
+        const int freecells_num = INSTANCE_FREECELLS_NUM;
+        const int decks_num = INSTANCE_DECKS_NUM;
+
+        fcs_state_t * s = dynamic_state.key;
+
+#ifdef INDIRECT_STACK_STATES
+        for (int i=0 ; i < stacks_num ; i++)
+        {
+            fcs_copy_stack(*(dynamic_state.key), *(dynamic_state.val), i, indirect_stacks_buffer);
+        }
+#endif
+
+        int i;
+        for (i = 0, mpp = mpp0; i < num_moves; i++, mpp++)
+        {
+            mp = *mpp;
+            const fcs_card_t card = mp->card;
+            fcs_internal_move_t out_move = fc_solve_empty_move;
+            if (mp->totype == FCS_PATS__TYPE_FREECELL)
+            {
+                int src_col_idx;
+                for (src_col_idx = 0; src_col_idx < stacks_num ; src_col_idx++)
+                {
+                    fcs_cards_column_t src_col = fcs_state_get_col(*s, src_col_idx);
+                    const int src_cards_num = fcs_col_len(src_col);
+                    if (src_cards_num)
+                    {
+                        const fcs_card_t src_card = fcs_col_get_card(src_col, src_cards_num-1);
+                        if (card == src_card)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                int dest;
+                for (dest = 0 ; dest < freecells_num ; dest++)
+                {
+                    if (fcs_freecell_is_empty(*s, dest))
+                    {
+                        break;
+                    }
+                }
+                fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_STACK_TO_FREECELL);
+                fcs_int_move_set_src_stack(out_move, src_col_idx);
+                fcs_int_move_set_dest_freecell(out_move, dest);
+            }
+            else if (mp->totype == FCS_PATS__TYPE_FOUNDATION)
+            {
+                const find_card_ret_t src_s = find_card_src_string(s, card, stacks_num, freecells_num);
+                if (src_s.type == FREECELL)
+                {
+                    fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
+                    fcs_int_move_set_src_freecell(out_move, src_s.idx);
+                }
+                else
+                {
+                    fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
+                    fcs_int_move_set_src_stack(out_move, src_s.idx);
+                }
+                fcs_int_move_set_foundation(out_move, fcs_card_suit(card));
+            }
+            else
+            {
+                const fcs_card_t dest_card = mp->destcard;
+                const int dest_col_idx = (dest_card == fc_solve_empty_card)
+                    ? find_empty_col(s, stacks_num)
+                    : find_col_card(s, dest_card, stacks_num);
+                const find_card_ret_t src_s = find_card_src_string(s, card, stacks_num, freecells_num);
+                if (src_s.type == FREECELL)
+                {
+                    fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
+                    fcs_int_move_set_src_freecell(out_move, src_s.idx);
+                }
+                else
+                {
+                    fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_STACK_TO_STACK);
+                    fcs_int_move_set_src_stack(out_move, src_s.idx);
+                    fcs_int_move_set_num_cards_in_seq(out_move, 1);
+                }
+                fcs_int_move_set_dest_stack(out_move, dest_col_idx);
+            }
+
+            fc_solve_apply_move(
+                &dynamic_state,
+                &locs,
+                out_move,
+                freecells_num,
+                stacks_num,
+                decks_num
+            );
+            fcs_move_stack_push(solution_moves_ptr, out_move);
+        }
+
+        free(mpp0);
     }
-    /* There's one more state than there are move stacks */
-    FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
+    else
+    {
+        fcs_collectible_state_t * s1 = instance->final_state;
+
+        /* Retrace the step from the current state to its parents */
+        while (FCS_S_PARENT(s1) != NULL)
+        {
+            /* Mark the state as part of the non-optimized solution */
+            FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
+
+            /* Each state->parent_state stack has an implicit CANONIZE
+             * move. */
+            fcs_move_stack_push(solution_moves_ptr, canonize_move);
+
+            /* Merge the move stack */
+            {
+                const fcs_move_stack_t * const stack = FCS_S_MOVES_TO_PARENT(s1);
+                const fcs_internal_move_t * const moves = stack->moves;
+                for (int move_idx=stack->num_moves-1 ; move_idx >= 0 ; move_idx--)
+                {
+                    fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
+                }
+            }
+            /* Duplicate the state to a freshly malloced memory */
+
+            /* Move to the parent state */
+            s1 = FCS_S_PARENT(s1);
+        }
+        /* There's one more state than there are move stacks */
+        FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
+    }
 }
 
 #ifdef FCS_RCS_STATES

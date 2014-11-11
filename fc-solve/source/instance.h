@@ -343,6 +343,7 @@ typedef void (*fcs_instance_debug_iter_output_func_t)(
     fcs_int_limit_t parent_iter_num
 );
 
+typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
 struct fc_solve_instance_struct
 {
@@ -551,6 +552,13 @@ struct fc_solve_instance_struct
      * The meta allocator - see meta_alloc.h.
      * */
     fcs_meta_compact_allocator_t * meta_alloc;
+
+    /*
+     * The soft_thread that solved the state.
+     *
+     * Needed to trace the patsolve solutions.
+     * */
+    fc_solve_soft_thread_t * solving_soft_thread;
 };
 
 typedef struct fc_solve_instance_struct fc_solve_instance_t;
@@ -1408,6 +1416,11 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                  * */
                 ret = FCS_STATE_SUSPEND_PROCESS;
             }
+        }
+
+        if (ret == FCS_STATE_WAS_SOLVED)
+        {
+            instance->solving_soft_thread = soft_thread;
         }
 
         if ((ret == FCS_STATE_WAS_SOLVED) ||
