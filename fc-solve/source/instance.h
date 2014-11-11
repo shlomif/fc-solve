@@ -1313,6 +1313,25 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                 fc_solve_pats__init_buckets(pats_scan);
                 fc_solve_pats__init_clusters(pats_scan);
                 pats_scan->current_pos.s = instance->state_copy_ptr->s;
+#ifdef INDIRECT_STACK_STATES
+                memset(
+                    pats_scan->current_pos.indirect_stacks_buffer,
+                    '\0',
+                    sizeof(pats_scan->current_pos.indirect_stacks_buffer)
+                );
+                const int stacks_num = INSTANCE_STACKS_NUM;
+                for (int i=0 ; i < stacks_num ; i++)
+                {
+                    fcs_cards_column_t src_col = fcs_state_get_col(pats_scan->current_pos.s, i);
+                    char * dest = &( pats_scan->current_pos.indirect_stacks_buffer[i << 7] );
+                    memmove(
+                        dest,
+                        src_col,
+                        fcs_col_len(src_col)+1
+                    );
+                    fcs_state_get_col(pats_scan->current_pos.s, i) = dest;
+                }
+#endif
             }
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
         }
