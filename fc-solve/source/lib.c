@@ -781,7 +781,7 @@ static GCC_INLINE void init_stats(
     s->num_checked_states = s->num_states_in_collection = 0;
 }
 
-static void recycle_flare(
+static GCC_INLINE void recycle_flare(
     fcs_user_t * const user,
     fcs_flare_item_t * const flare
 )
