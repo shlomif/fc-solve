@@ -73,6 +73,8 @@ typedef struct
     fcs_moves_sequence_t moves_seq;
     fcs_moves_processed_t fc_pro_moves;
     fcs_stats_t obj_stats;
+    fcs_bool_t was_solution_traced;
+    fcs_state_locs_struct_t trace_solution_state_locs;
 } fcs_flare_item_t;
 
 enum
@@ -779,6 +781,18 @@ static GCC_INLINE void init_stats(
     s->num_checked_states = s->num_states_in_collection = 0;
 }
 
+static void recycle_flare(
+    fcs_user_t * const user,
+    fcs_flare_item_t * const flare
+)
+{
+    if (! flare->instance_is_ready)
+    {
+        fc_solve_recycle_instance(flare->obj);
+        flare->instance_is_ready = TRUE;
+    }
+}
+
 static void recycle_instance(
     fcs_user_t * const user,
     const int i
@@ -799,11 +813,7 @@ static void recycle_instance(
 
         if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
-            if (! flare->instance_is_ready)
-            {
-                fc_solve_recycle_instance(flare->obj);
-                flare->instance_is_ready = TRUE;
-            }
+            recycle_flare(user, flare);
             /*
              * We have to initialize init_num_checked_states to 0 here, because it may
              * not get initialized again, and now the num_checked_states of the instance
@@ -895,11 +905,61 @@ static int calc_moves_seq(
     return 0;
 }
 
+
+static void trace_flare_solution(
+    fcs_user_t * const user,
+    fcs_flare_item_t * const flare
+)
+{
+    if (flare->was_solution_traced)
+    {
+        return;
+    }
+
+    fc_solve_instance_t * instance =
+        flare->obj;
+
+    fc_solve_trace_solution(instance);
+    fcs_kv_state_t pass;
+    FCS_STATE_keyval_pair_to_kv(&(pass), &(user->state));
+    flare->trace_solution_state_locs = user->state_locs;
+    /*
+     * TODO : maybe only normalize the final moves' stack in
+     * order to speed things up.
+     * */
+    fc_solve_move_stack_normalize(
+        &(instance->solution_moves),
+        &(pass),
+        &(flare->trace_solution_state_locs),
+        INSTANCE_FREECELLS_NUM,
+        INSTANCE_STACKS_NUM,
+        INSTANCE_DECKS_NUM
+    );
+
+    calc_moves_seq(
+        &(instance->solution_moves),
+        &(flare->moves_seq)
+    );
+    flare->next_move = 0;
+    if (instance->solution_moves.moves)
+    {
+        fcs_move_stack_static_destroy(instance->solution_moves);
+        instance->solution_moves.moves = NULL;
+    }
+
+    flare->obj_stats.num_checked_states = flare->obj->num_checked_states;
+    flare->obj_stats.num_states_in_collection = flare->obj->num_states_in_collection;
+
+    recycle_flare(user, flare);
+    flare->was_solution_traced = TRUE;
+}
+
 static int get_flare_move_count(
     fcs_user_t * const user,
     fcs_flare_item_t * const flare
 )
 {
+    trace_flare_solution(user, flare);
     if (user->flares_choice == FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN)
     {
         return flare->moves_seq.num_moves;
@@ -1172,45 +1232,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
-
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-            fc_solve_instance_t * instance =
-                user->active_flare->obj;
-#endif
-
-            fcs_kv_state_t pass;
-            FCS_STATE_keyval_pair_to_kv(&(pass), &(user->state));
-            /*
-             * TODO : maybe only normalize the final moves' stack in
-             * order to speed things up.
-             * */
-            fc_solve_move_stack_normalize(
-                &(user->active_flare->obj->solution_moves),
-                &(pass),
-                &(user->trace_solution_state_locs),
-                INSTANCE_FREECELLS_NUM,
-                INSTANCE_STACKS_NUM,
-                INSTANCE_DECKS_NUM
-                );
-
-            calc_moves_seq(
-                &(user->active_flare->obj->solution_moves),
-                &(flare->moves_seq)
-            );
-            flare->next_move = 0;
-            if (flare->obj->solution_moves.moves)
-            {
-                fcs_move_stack_static_destroy(flare->obj->solution_moves);
-                flare->obj->solution_moves.moves = NULL;
-            }
-
-            user->active_flare->obj_stats.num_checked_states = user->active_flare->obj->num_checked_states;
-            user->active_flare->obj_stats.num_states_in_collection = user->active_flare->obj->num_states_in_collection;
-            fc_solve_recycle_instance(flare->obj);
-            flare->instance_is_ready = TRUE;
-
             user->trace_solution_state_locs = user->state_locs;
 
+            flare->was_solution_traced = FALSE;
 #define FLARE_MOVE_COUNT(idx) \
            (get_flare_move_count( \
                user, \
@@ -1312,6 +1336,8 @@ int DLLEXPORT freecell_solver_user_get_next_move(
             fcs_instance_item_t const * instance_item =
                 get_current_instance_item(user);
             fcs_flare_item_t * flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+
+            trace_flare_solution(user, flare);
 
             if (flare->next_move == flare->moves_seq.num_moves)
             {
