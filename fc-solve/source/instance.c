@@ -834,24 +834,7 @@ extern void fc_solve_trace_solution(
         fcs_state_locs_struct_t locs;
         fc_solve_init_locs(&(locs));
         typeof(solving_soft_thread->pats_scan) pats_scan = solving_soft_thread->pats_scan;
-        fcs_pats_position_t *pos = pats_scan->win_pos;
-        fcs_pats_position_t *p;
-        fcs_pats__move_t *mp, **mpp, **mpp0;
-        int num_moves = 0;
-        for (p = pos; p->parent; p = p->parent)
-        {
-            num_moves++;
-        }
-        mpp0 = SMALLOC(mpp0, num_moves);
-        if (mpp0 == NULL)
-        {
-            return; /* how sad, so close... */
-        }
-        mpp = mpp0 + num_moves - 1;
-        for (p = pos; p->parent; p = p->parent)
-        {
-            *mpp-- = &p->move;
-        }
+        typeof(pats_scan->num_moves_to_win) num_moves = pats_scan->num_moves_to_win;
 
         fcs_state_keyval_pair_t s_and_info;
 
@@ -879,15 +862,14 @@ extern void fc_solve_trace_solution(
         }
 #endif
 
-        int i;
         solution_moves_ptr->num_moves = num_moves;
         solution_moves_ptr->moves = SREALLOC(
             solution_moves_ptr->moves,
             num_moves
         );
-        for (i = 0, mpp = mpp0; i < num_moves; i++, mpp++)
+        typeof(pats_scan->moves_to_win) mp = pats_scan->moves_to_win;
+        for (int i = 0 ; i < num_moves; i++, mp++)
         {
-            mp = *mpp;
             const fcs_card_t card = mp->card;
             fcs_internal_move_t out_move = fc_solve_empty_move;
             if (mp->totype == FCS_PATS__TYPE_FREECELL)
@@ -965,8 +947,6 @@ extern void fc_solve_trace_solution(
             );
             solution_moves_ptr->moves[num_moves-1-i] = out_move;
         }
-
-        free(mpp0);
     }
     else
     {
