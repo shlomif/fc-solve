@@ -2369,11 +2369,19 @@ int fc_solve_patsolve_do_solve(
     fc_solve_soft_thread_t * const soft_thread
     )
 {
+    typeof(soft_thread->hard_thread) hard_thread = soft_thread->hard_thread;
     typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
 
-    pats_scan->max_num_checked_states = soft_thread->hard_thread->max_num_checked_states;
+    typeof(hard_thread->num_checked_states) delta =
+        hard_thread->max_num_checked_states - hard_thread->num_checked_states;
+
+    typeof (pats_scan->num_checked_states) start_from = pats_scan->num_checked_states;
+
+    pats_scan->max_num_checked_states += start_from + delta;
 
     fc_solve_pats__do_it(pats_scan);
+
+    hard_thread->num_checked_states += pats_scan->num_checked_states - start_from;
 
     const typeof(pats_scan->status) status = pats_scan->status;
     return
