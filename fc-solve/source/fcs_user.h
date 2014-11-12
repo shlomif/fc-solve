@@ -32,6 +32,7 @@
 #include "fcs_enums.h"
 #include "fcs_move.h"
 #include "fcs_limit.h"
+#include "fcs_pats_xy_param.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -401,6 +402,12 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
 DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
     void * user_instance,
     double new_factor
+);
+
+DLLEXPORT extern int freecell_solver_user_set_pats_xy_params(
+    void * api_instance,
+    const fcs_pats_xy_param_t * const xy_params,
+    char * * error_string
 );
 
 #ifdef __cplusplus
