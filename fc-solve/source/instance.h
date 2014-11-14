@@ -1340,6 +1340,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
                     fcs_state_get_col(pats_scan->current_pos.s, i) = dest;
                 }
 #endif
+                fc_solve_pats__initialize_solving_process(pats_scan);
             }
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
         }
