@@ -2379,6 +2379,8 @@ int fc_solve_patsolve_do_solve(
 
     pats_scan->max_num_checked_states = start_from + delta;
 
+    pats_scan->status = FCS_PATS__NOSOL;
+
     fc_solve_pats__do_it(pats_scan);
 
     hard_thread->num_checked_states += pats_scan->num_checked_states - start_from;
