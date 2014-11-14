@@ -1505,6 +1505,7 @@ extern int DLLEXPORT freecell_solver_user_set_pats_xy_params(
     }
 
     pats_scan->pats_solve_params = *xy_params;
+    pats_scan->cutoff = xy_params->x[FC_SOLVE_PATS__NUM_X_PARAM - 1];
     return 0;
 }
 
@@ -1542,6 +1543,8 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
                     = soft_thread->pats_scan = SMALLOC1(soft_thread->pats_scan);
                 fc_solve_pats__init_soft_thread(pats_scan,
                     soft_thread->hard_thread->instance);
+
+                pats_scan->to_stack = 1;
 
                 char * unused;
 
