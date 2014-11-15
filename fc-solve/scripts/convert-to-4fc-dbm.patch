@@ -1,0 +1,49 @@
+diff --git a/fc-solve/source/dbm_common.h b/fc-solve/source/dbm_common.h
+index 82211d3..a819ebc 100644
+--- a/fc-solve/source/dbm_common.h
++++ b/fc-solve/source/dbm_common.h
+@@ -44,7 +44,7 @@ enum fcs_dbm_variant_type_t
+     FCS_DBM_VARIANT_BAKERS_DOZEN,
+ };
+ 
+-#define FCS_DBM_FREECELLS_NUM 2
++#define FCS_DBM_FREECELLS_NUM 4
+ 
+ #ifdef FCS_FREECELL_ONLY
+ 
+diff --git a/fc-solve/source/dbm_solver_head.h b/fc-solve/source/dbm_solver_head.h
+index d1c42a9..15156a1 100644
+--- a/fc-solve/source/dbm_solver_head.h
++++ b/fc-solve/source/dbm_solver_head.h
+@@ -49,7 +49,7 @@ extern "C"
+ /*
+  * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
+  */
+-#if 1
++#if 0
+ #define FCS_DBM_SINGLE_THREAD 1
+ #endif
+ 
+diff --git a/fc-solve/source/scripts/Iterate-on-Seed.bash b/fc-solve/source/scripts/Iterate-on-Seed.bash
+index 5a4ed8d..1fda293 100644
+--- a/fc-solve/source/scripts/Iterate-on-Seed.bash
++++ b/fc-solve/source/scripts/Iterate-on-Seed.bash
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ 
+-board_num=17760
+-iters_limit=23000000
++board_num=454986654
++iters_limit=5000000
+ board_file="$board_num.board"
+ 
+ if ! test -e "$board_file" ; then
+@@ -11,7 +11,7 @@ fi
+ let seed=1
+ while true ; do
+     echo "Checking seed $seed"
+-    if ./fc-solve --freecells-num 2 --method random-dfs -to '[01ABCDEF]' -seed "$seed" -mi "$iters_limit" "$board_file" | grep -P '^This game is solveable' ; then
++    if ./fc-solve --freecells-num 4 --method random-dfs -to '[01ABCDEF]' -seed "$seed" -mi "$iters_limit" "$board_file" -p -t -sam -sel | grep -P '^This game is solveable' ; then
+         echo "Seed '$seed' is successful."
+         exit 0
+     fi
