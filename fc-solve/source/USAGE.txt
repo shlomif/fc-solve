@@ -611,6 +611,7 @@ board. Currently, the following methods are available:
 * +bfs+ - A Breadth-First Search (or BFS) scan
 * +dfs+ - A Depth-First Search (or DFS) scan
 * +random-dfs+ - A randomized DFS scan
+* +patsolve+ - uses the scan of patsolve.
 * +soft-dfs+ - A "soft" DFS scan
 
 Starting from recent Freecell Solver versions there is no difference between
@@ -706,6 +707,34 @@ This option becomes effective only if +--reparent-states+ is specified. What
 it does, is explicitly calculate the depth of the state by tracing its path
 to the initial state. This may make depth consideration more accurate.
 
+--patsolve-x-param [pos],[value]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Soft-thread-specific*
+
+Sets the patsolve’s scan X param (an integer) in position "pos" into "value".
+
+Examples:
+
+---------------------
+--patsolve-x-param 0,5
+--patsolve-x-param 2,100
+---------------------
+
+--patsolve-y-param [pos],[value]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Soft-thread-specific*
+
+Sets the patsolve Y param (a floating point number) in position "pos" into
+"value".
+
+Examples:
+
+---------------------
+--patsolve-y-param 0,0.5
+--patsolve-y-param 1,103.2
+---------------------
 
 Running Several Scans in Parallel
 ---------------------------------
