@@ -713,8 +713,31 @@ case 'p':
 { switch(*(p++)) {
 case 'a':
 {
-if (!strcmp(p, "tsolve-x-param")) {
+if (!strncmp(p, "tsolve-", 7)) {
+p += 7;
+{ switch(*(p++)) {
+case 'x':
+{
+if (!strcmp(p, "-param")) {
 opt = FCS_OPT_PATSOLVE_X_PARAM;
+
+}
+}
+
+break;
+
+case 'y':
+{
+if (!strcmp(p, "-param")) {
+opt = FCS_OPT_PATSOLVE_Y_PARAM;
+
+}
+}
+
+break;
+
+}
+}
 
 }
 }
@@ -2047,6 +2070,44 @@ break;
                     sprintf(
                             errstr,
                             "Error in patsolve X param setting!\n%s\n",
+                            fcs_user_errstr
+                           );
+                    free(fcs_user_errstr);
+
+                    *error_string = errstr;
+
+                    RET_ERROR_IN_ARG() ;
+                }
+            }
+        }
+        break;
+
+        case FCS_OPT_PATSOLVE_Y_PARAM: /* STRINGS=--patsolve-y-param; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            {
+                int position;
+                double y_param_val;
+
+                if (sscanf((*arg), "%d,%lf", &position, &y_param_val) != 2)
+                {
+                    *error_string = strdup("Wrong format for --patsolve-y-param");
+                    RET_ERROR_IN_ARG() ;
+                }
+                char * fcs_user_errstr;
+                const int ret = freecell_solver_user_set_patsolve_y_param(
+                    instance,
+                    position,
+                    y_param_val,
+                    &fcs_user_errstr
+                );
+                if (ret != 0)
+                {
+                    char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                    sprintf(
+                            errstr,
+                            "Error in patsolve Y param setting!\n%s\n",
                             fcs_user_errstr
                            );
                     free(fcs_user_errstr);

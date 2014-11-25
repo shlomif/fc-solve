@@ -411,6 +411,13 @@ DLLEXPORT extern int freecell_solver_user_set_patsolve_x_param(
     char * * error_string
 );
 
+DLLEXPORT extern int freecell_solver_user_set_patsolve_y_param(
+    void * api_instance,
+    const int position,
+    const double y_param_val,
+    char * * error_string
+);
+
 #ifdef __cplusplus
 }
 #endif

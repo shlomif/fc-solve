@@ -1516,6 +1516,34 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
     return 0;
 }
 
+extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
+    void * api_instance,
+    const int position,
+    const double y_param_val,
+    char * * error_string
+    )
+{
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
+
+    fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
+    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+
+    if (! pats_scan)
+    {
+        *error_string = strdup("Not using the \"patsolve\" scan.");
+        return 1;
+    }
+    if ( (position < 0) || (position >= COUNT(pats_scan->pats_solve_params.y)))
+    {
+        *error_string = strdup("Position out of range.");
+        return 2;
+    }
+
+    pats_scan->pats_solve_params.y[position] = y_param_val;
+
+    return 0;
+}
+
 void DLLEXPORT freecell_solver_user_set_solving_method(
     void * api_instance,
     int method
