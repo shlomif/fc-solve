@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 29;
+use Test::More tests => 30;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -333,6 +333,15 @@ verify_solution_test({
 # TEST
 verify_solution_test({deal => 246, theme => ["-l", "eo"],},
     "Solving Deal #246 with the enlightened-ostrich"
+);
+
+# TEST
+verify_solution_test(
+    {
+        deal => 24,
+        theme => ["--method", "patsolve",],
+    },
+    "Solving Deal #24 with patsolve"
 );
 
 =head1 COPYRIGHT AND LICENSE
