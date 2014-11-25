@@ -52,5 +52,5 @@ sub mk_acc_ref
 EOF
 perl -lp -i -0777 -MSQ -MIO::All -E 's#^sub mk_acc_ref\n(.*?)\n}\n#io()->file("mk_acc_ref.pl")->all#ems' "$BASE_LIB"/Games/Solitaire/Verify/Base.pm
 
-# perl -MCarp::Always perlito5.pl -Cjs -I src5/lib/ $(inc "Games-Solitaire-Verify") $(inc "POSIX--replacement") $(inc "Exception-Class--replacement") $(inc "Getopt-Long--replacement") $(inc "List-Util--replacement") $(inc "Class-XSAccessor--replacement")  "$gsv"/Games-Solitaire-Verify/script/expand-solitaire-multi-card-moves
-perl -MCarp::Always perlito5.pl -Cjs -I src5/lib/ -I "$BASE_LIB" "$gsv"/Games-Solitaire-Verify/script/expand-solitaire-multi-card-moves
+# perl -MCarp::Always perlito5.pl -Cjs -I src5/lib/ $(inc "Games-Solitaire-Verify") $(inc "POSIX--replacement") $(inc "Exception-Class--replacement") $(inc "Getopt-Long--replacement") $(inc "List-Util--replacement") $(inc "Class-XSAccessor--replacement")  "$gsv"/Games-Solitaire-Verify/bin/expand-solitaire-multi-card-moves
+perl -MCarp::Always perlito5.pl -Cjs -I src5/lib/ -I "$BASE_LIB" "$gsv"/Games-Solitaire-Verify/bin/expand-solitaire-multi-card-moves
