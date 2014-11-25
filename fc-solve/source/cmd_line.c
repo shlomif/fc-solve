@@ -710,9 +710,22 @@ break;
 break;
 
 case 'p':
+{ switch(*(p++)) {
+case 'a':
 {
-if (!strncmp(p, "re", 2)) {
-p += 2;
+if (!strcmp(p, "tsolve-x-param")) {
+opt = FCS_OPT_PATSOLVE_X_PARAM;
+
+}
+}
+
+break;
+
+case 'r':
+
+{
+if (*(p++) == 'e')
+{
 { switch(*(p++)) {
 case 'l':
 {
@@ -736,6 +749,12 @@ break;
 
 }
 }
+
+}
+
+}
+
+break;
 
 }
 }
@@ -2002,7 +2021,46 @@ break;
         }
         break;
 
+        case FCS_OPT_PATSOLVE_X_PARAM: /* STRINGS=--patsolve-x-param; */
+        {
+            PROCESS_OPT_ARG() ;
+
+            {
+                int position;
+                int x_param_val;
+
+                if (sscanf((*arg), "%d,%d", &position, &x_param_val) != 2)
+                {
+                    *error_string = strdup("Wrong format for --patsolve-x-param");
+                    RET_ERROR_IN_ARG() ;
+                }
+                char * fcs_user_errstr;
+                const int ret = freecell_solver_user_set_patsolve_x_param(
+                    instance,
+                    position,
+                    x_param_val,
+                    &fcs_user_errstr
+                );
+                if (ret != 0)
+                {
+                    char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                    sprintf(
+                            errstr,
+                            "Error in patsolve X param setting!\n%s\n",
+                            fcs_user_errstr
+                           );
+                    free(fcs_user_errstr);
+
+                    *error_string = errstr;
+
+                    RET_ERROR_IN_ARG() ;
+                }
+            }
         }
+        break;
+
+        }
+
         /* OPT-PARSE-END */
     }
 

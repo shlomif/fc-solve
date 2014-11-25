@@ -1487,9 +1487,10 @@ int DLLEXPORT freecell_solver_user_get_current_depth(
     return (DFS_VAR(user->soft_thread, depth));
 }
 
-extern int DLLEXPORT freecell_solver_user_set_pats_xy_params(
+extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
     void * api_instance,
-    const fcs_pats_xy_param_t * const xy_params,
+    const int position,
+    const int x_param_val,
     char * * error_string
     )
 {
@@ -1503,9 +1504,15 @@ extern int DLLEXPORT freecell_solver_user_set_pats_xy_params(
         *error_string = strdup("Not using the \"patsolve\" scan.");
         return 1;
     }
+    if ( (position < 0) || (position >= COUNT(pats_scan->pats_solve_params.x)))
+    {
+        *error_string = strdup("Position out of range.");
+        return 2;
+    }
 
-    pats_scan->pats_solve_params = *xy_params;
-    pats_scan->cutoff = xy_params->x[FC_SOLVE_PATS__NUM_X_PARAM - 1];
+    pats_scan->pats_solve_params.x[position] = x_param_val;
+    pats_scan->cutoff = pats_scan->pats_solve_params.x[FC_SOLVE_PATS__NUM_X_PARAM - 1];
+
     return 0;
 }
 
@@ -1546,13 +1553,8 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 
                 pats_scan->to_stack = 1;
 
-                char * unused;
-
-                freecell_solver_user_set_pats_xy_params(
-                    api_instance,
-                    &(freecell_solver_pats__x_y_params_preset[FC_SOLVE_PATS__PARAM_PRESET__FreecellSpeed]),
-                    &unused
-                );
+                pats_scan->pats_solve_params = (freecell_solver_pats__x_y_params_preset[FC_SOLVE_PATS__PARAM_PRESET__FreecellSpeed]);
+                pats_scan->cutoff = pats_scan->pats_solve_params.x[FC_SOLVE_PATS__NUM_X_PARAM - 1];
             }
         }
         break;

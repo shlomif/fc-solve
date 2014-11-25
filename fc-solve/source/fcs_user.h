@@ -404,9 +404,10 @@ DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
     double new_factor
 );
 
-DLLEXPORT extern int freecell_solver_user_set_pats_xy_params(
+DLLEXPORT extern int freecell_solver_user_set_patsolve_x_param(
     void * api_instance,
-    const fcs_pats_xy_param_t * const xy_params,
+    const int position,
+    const int x_param_val,
     char * * error_string
 );
 
