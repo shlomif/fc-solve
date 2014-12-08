@@ -3,6 +3,23 @@
 use strict;
 use warnings;
 
+sub _gen_accessors
+{
+    my ($words_str) = @_;
+
+    return join("\n\n", map { my $acc = $_ ; <<"EOF" } $words_str =~ /(\w+)/g);
+sub $acc
+{
+    my \$self = shift;
+    if (\@_)
+    {
+        \$self->{'$acc'} = shift;
+    }
+    return \$self->{'$acc'};
+}
+EOF
+}
+
 my $text = do
 {
     local $/;
@@ -13,4 +30,5 @@ $text =~ s#^use parent '([^']+)';#use $1 (); use vars qw(\@ISA); \@ISA = (qw($1)
 
 $text =~ s#^use Games::Solitaire::Verify::Exception;##gms;
 $text =~ s#([\w:]+)->throw\s*\((.*?)\)\s*;#die +(bless { $2 }, '$1')#gms;
+$text =~ s#^__PACKAGE__->mk_acc_ref\(\s*\[qw\(([\s\w]+)\)\s*\]\s*\)\s*;#_gen_accessors($1)#egms;
 print $text;
