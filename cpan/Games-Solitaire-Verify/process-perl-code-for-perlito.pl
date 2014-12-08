@@ -37,7 +37,7 @@ $text =~ s#^use parent '([^']+)';#use $1 (); use vars qw(\@ISA); \@ISA = (qw($1)
 
 $text =~ s#^use Games::Solitaire::Verify::Exception;##gms;
 $text =~ s#([\w:]+)->throw\s*\((.*?)\)\s*;#die +(bless { $2 }, '$1')#gms;
-$text =~ s#^__PACKAGE__->mk_acc_ref\(\s*\[qw\(([\s\w]+)\)\s*\]\s*\)\s*;#_gen_accessors($1)#egms;
+$text =~ s#^__PACKAGE__->mk_acc_ref\(\s*\[\s*qw\(([\s\w]+)\)\s*\]\s*\)\s*;#_gen_accessors($1)#egms;
 
 $text =~ s#^use\s+([\w:]+)\s+qw\(([\s\w]+)\)\s*;\s*$#_gen_use_call($1, $2);#egms;
 print $text;
