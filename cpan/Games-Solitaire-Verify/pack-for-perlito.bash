@@ -18,7 +18,7 @@ for bn in "Games-Solitaire-Verify" "POSIX--replacement" "Exception-Class--replac
     find "$p" -name '*.pm' | (while read fn ; do
         g="${fn##$p/}"
         mkdir -p "$BASE_LIB/$(dirname "$g")"
-        perl -lp -MSQ -e 's#\Ause parent $sq([^$sq]+)$sq;#use $1 (); use vars qw(\@ISA); \@ISA = (qw($1));#' < "$fn" > "$BASE_LIB/$g"
+        perl "$gsv/process-perl-code-for-perlito.pl" < "$fn" > "$BASE_LIB/$g"
     done)
 done
 cat <<'EOF' > 'mk_acc_ref.pl'
