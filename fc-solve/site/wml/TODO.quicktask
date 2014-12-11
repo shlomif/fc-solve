@@ -1,8 +1,6 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-    - Remove the PayPal that refers to berlios.de (defunct URL).
-      @ Added [Thu 2014-12-11]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
@@ -108,6 +106,8 @@ COMPLETED TASKS:
         * Page should be src/js-fc-solve/incompatible-browser.html
         * Added [Mon 2013-01-21]
         * DONE [Mon 2013-01-21]
+    - Remove the PayPal that refers to berlios.de (defunct URL).
+      @ Added [Thu 2014-12-11]
 
 
 
