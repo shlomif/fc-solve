@@ -1,6 +1,8 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - Remove the PayPal that refers to berlios.de (defunct URL).
+      @ Added [Thu 2014-12-11]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
