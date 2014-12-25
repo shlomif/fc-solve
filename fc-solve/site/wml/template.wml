@@ -205,6 +205,12 @@ td { vertical-align : top; }
 </div>
 </define-tag>
 
+<define-tag jquery_ui_head_elements>
+<script type="text/javascript" src="$(ROOT)/js/jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="$(ROOT)/js/jquery-ui/jquery-ui.min.css" media="screen, projection" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen, projection" />
+</define-tag>
+
 <latemp_after_main_title>
 <if "<match "$(LATEMP_FILENAME)" "^js-fc-solve/" action="report" />"
     ""
