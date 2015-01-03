@@ -43,4 +43,7 @@ $text =~ s#^use\s+([\w:]+)\s+qw\(([\s\w]+)\)\s*;\s*$#_gen_use_call($1, $2);#egms
 
 $text =~ s#open (\$\w+), ["']<["'], (\$\w+)#$1 = MainOpen::my_open($2)#gms;
 $text =~ s#readline *\(([^\n]+)\) *;#MainOpen::readline($1);#gms;
+
+$text =~ s#my \$err;\n\s*if\s*\(!\s*\$\@\).*?\n([ \t]+return\s*;)#if (\$\@) { die \$\@; }\n\n$1#gms;
+
 print $text;
