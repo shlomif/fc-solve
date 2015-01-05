@@ -46,4 +46,9 @@ $text =~ s#readline *\(([^\n]+)\) *;#MainOpen::readline($1);#gms;
 
 $text =~ s#my \$err;\n\s*if\s*\(!\s*\$\@\).*?\n([ \t]+return\s*;)#if (\$\@) { die \$\@; }\n\n$1#gms;
 
+$text =~ s#^(\s*)chomp\((\$[A-Za-z0-9]+)\);\s*$#$1$2 =~ s{\\n\\z}{};#gms;
+
+$text =~ s#\\A#^#g;
+$text =~ s#\\z#\$#g;
+
 print $text;
