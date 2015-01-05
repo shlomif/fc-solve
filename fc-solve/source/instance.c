@@ -200,6 +200,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
     if ( pats_scan )
     {
         fc_solve_pats__recycle_soft_thread(pats_scan);
+        fc_solve_pats__destroy_soft_thread(pats_scan);
         free( pats_scan );
         soft_thread->pats_scan = NULL;
     }
