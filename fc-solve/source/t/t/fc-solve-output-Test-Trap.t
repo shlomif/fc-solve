@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 5;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -12,6 +12,7 @@ use File::Temp qw( tempdir );
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 my $fc_solve_exe = File::Spec->catfile($ENV{FCS_PATH}, 'fc-solve');
+my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-pro-range-solve');
 
 {
     trap
@@ -62,6 +63,44 @@ my $fc_solve_exe = File::Spec->catfile($ENV{FCS_PATH}, 'fc-solve');
         $trap->stderr(),
         qr/^\Q$needle\E$/ms,
         "Option without space is not accepted."
+    );
+}
+
+{
+    trap
+    {
+        system(
+            $fc_pro_range_exe, '1', '3', '1',
+            '-l', 'as',
+        );
+    };
+
+    my @lines = split(/\n/, $trap->stdout());
+
+    # TEST
+    is_deeply(
+        [grep
+            { /\A\[\[Num FCS Moves\]\]=([0-9]+)\z/ ? (not ($1 > 0)) :
+                (die "Incorrect $_");
+            }
+            grep { /\A\[\[Num FCS Moves\]\]/ }
+            @lines
+        ],
+        [],
+        "All FCS Move counts are valid",
+    );
+
+    # TEST
+    is_deeply(
+        [grep
+            { /\A\[\[Num FCPro Moves\]\]=([0-9]+)\z/ ? (not ($1 > 0)) :
+                (die "Incorrect $_");
+            }
+            grep { /\A\[\[Num FCPro Moves\]\]/ }
+            @lines
+        ],
+        [],
+        "All FCPro Move counts are valid.",
     );
 }
 

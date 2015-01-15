@@ -1316,6 +1316,19 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     );
 }
 
+static GCC_INLINE fcs_flare_item_t * const calc_moves_flare(
+    fcs_user_t * const user
+)
+{
+    fcs_instance_item_t const * instance_item =
+        get_current_instance_item(user);
+    fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+
+    trace_flare_solution(user, flare);
+
+    return flare;
+}
+
 
 int DLLEXPORT freecell_solver_user_get_next_move(
     void * api_instance,
@@ -1333,12 +1346,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         {
             int ret;
 
-            fcs_instance_item_t const * instance_item =
-                get_current_instance_item(user);
-            fcs_flare_item_t * flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
-
-            trace_flare_solution(user, flare);
-
+            fcs_flare_item_t * const flare = calc_moves_flare(user);
             if (flare->next_move == flare->moves_seq.num_moves)
             {
                 ret = 1;
@@ -1779,7 +1787,10 @@ int DLLEXPORT freecell_solver_user_get_moves_left(void * api_instance)
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
-        return user->active_flare->moves_seq.num_moves - user->active_flare->next_move;
+    {
+        fcs_flare_item_t * const flare = calc_moves_flare(user);
+        return flare->moves_seq.num_moves - flare->next_move;
+    }
     else
         return 0;
 }
