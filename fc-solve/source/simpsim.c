@@ -1055,11 +1055,21 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     SIMPS_define_vacant_stacks_accessors();
     CALC_POSITIONS_BY_RANK();
 
+    /*
+     * We never fill empty stacks with junk cards in this move function,
+     * so as a result, after_junk_num_freestacks == num_vacant_stacks and
+     * is constant here.
+     * */
+    const int max_seq_move = calc_max_simple_simon_seq_move(num_vacant_stacks);
+
     STACK_SOURCE_LOOP_START(1)
-        int num_true_seqs;
-        if (get_seq_h(col, &num_true_seqs))
         {
-            continue;
+            int num_true_seqs;
+            if (   get_seq_h(col, &num_true_seqs)
+                || (max_seq_move < num_true_seqs))
+            {
+                continue;
+            }
         }
 #define h 0
         fcs_card_t card = fcs_col_get_card(col, h);
@@ -1097,51 +1107,46 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
             /* This is a suitable parent - let's check if there's a sequence above it. */
             sequences_analysis_t seqs;
 
-            if (! POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, dc, stack_idx, ds, TRUE))
-            {
-                continue;
-            }
-            /* This is a suitable parent - let's check if we
-             * have enough empty stacks to make the move feasible */
-            if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
-            {
-                continue;
-            }
-            /* We can do it - so let's move */
-
-            sfs_check_state_begin();
-
-            my_copy_stack(stack_idx);
-            my_copy_stack(ds);
-
-            /* Move the junk cards to their place */
-
-            for (int seq_index = 0;
-                seq_index < seqs.num_separate_false_seqs;
-                seq_index++
+            if (
+                POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, dc, stack_idx, ds, TRUE)
             )
             {
-                const int src_stack_idx = ds;
-                const int dest_stack_idx
-                    = seqs.junk_move_to_stacks[
-                        seq_index
-                    ];
+                /* We can do it - so let's move */
 
-                my_copy_stack(src_stack_idx);
-                my_copy_stack(dest_stack_idx);
+                sfs_check_state_begin();
 
-                fcs_move_sequence(
-                    dest_stack_idx,
-                    src_stack_idx,
-                    seqs.seq_points[seq_index],
-                    ((seq_index == 0) ? (dest_cards_num-1) : (seqs.seq_points[seq_index-1]-1))
-                );
-            }
+                my_copy_stack(stack_idx);
+                my_copy_stack(ds);
 
-            fcs_move_sequence( ds, stack_idx, h, cards_num-1);
+                /* Move the junk cards to their place */
 
-            sfs_check_state_end();
+                for (int seq_index = 0;
+                    seq_index < seqs.num_separate_false_seqs;
+                    seq_index++
+                )
+                {
+                    const int src_stack_idx = ds;
+                    const int dest_stack_idx
+                        = seqs.junk_move_to_stacks[
+                            seq_index
+                        ];
+
+                    my_copy_stack(src_stack_idx);
+                    my_copy_stack(dest_stack_idx);
+
+                    fcs_move_sequence(
+                        dest_stack_idx,
+                        src_stack_idx,
+                        seqs.seq_points[seq_index],
+                        ((seq_index == 0) ? (dest_cards_num-1) : (seqs.seq_points[seq_index-1]-1))
+                    );
+                }
+
+                fcs_move_sequence( ds, stack_idx, h, cards_num-1);
+
+                sfs_check_state_end();
 #undef h
+            }
         }
     STACK_SOURCE_LOOP_END()
 
