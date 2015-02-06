@@ -367,7 +367,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     STACK_SOURCE_LOOP_END()
 }
 
-static GCC_INLINE int get_seq_h(const fcs_cards_column_t col, int * num_true_seqs_out_ptr)
+static GCC_INLINE int get_seq_h(const fcs_cards_column_t col, int * const num_true_seqs_out_ptr)
 {
     const int cards_num = fcs_col_len(col);
 
