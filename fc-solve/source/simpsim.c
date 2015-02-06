@@ -367,7 +367,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     STACK_SOURCE_LOOP_END()
 }
 
-static GCC_INLINE int get_seq_h(const fcs_cards_column_t col, int * const num_true_seqs_out_ptr)
+static GCC_INLINE const int get_seq_h(const fcs_cards_column_t col, int * const num_true_seqs_out_ptr)
 {
     const int cards_num = fcs_col_len(col);
 
@@ -901,7 +901,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
     CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
-        int num_src_junk_true_seqs = 1;
+        int num_src_junk_true_seqs;
 
         int h = get_seq_h(col, &num_src_junk_true_seqs);
         if (! h)
@@ -940,14 +940,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 
             populate_seq_points(dest_col, dc, &seqs);
 
-            const fcs_bool_t verdict = generic_false_seq_index_loop(
-                LOCAL_STACKS_NUM, raw_ptr_state_raw, num_vacant_stacks,
-                dest_col, &seqs, stack_idx, ds, FALSE, TRUE,
-                fcs_col_get_card(col, end_of_junk+1), num_src_junk_true_seqs
-            );
-
             if (
-                verdict
+                generic_false_seq_index_loop(
+                    LOCAL_STACKS_NUM, raw_ptr_state_raw, num_vacant_stacks,
+                    dest_col, &seqs, stack_idx, ds, FALSE, TRUE,
+                    fcs_col_get_card(col, end_of_junk+1), num_src_junk_true_seqs
+                )
                 &&
                 (calc_max_simple_simon_seq_move(seqs.after_junk_num_freestacks) >= num_true_seqs)
             )
@@ -1076,7 +1074,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
             }
         }
 #define h 0
-        fcs_card_t card = fcs_col_get_card(col, h);
+        const fcs_card_t card = fcs_col_get_card(col, h);
 
         if (fcs_card_rank(card) == 13)
         {
@@ -1307,13 +1305,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 
     SIMPS_define_vacant_stacks_accessors();
 
+    const int max_seq_move = calc_max_simple_simon_seq_move(num_vacant_stacks);
+
     STACK_SOURCE_LOOP_START(1)
         int num_true_seqs;
-        int h = get_seq_h(col, &num_true_seqs);
+        const int h = get_seq_h(col, &num_true_seqs);
         /* Let's check if we have enough empty stacks to make the move
          * feasible.
          * */
-        if (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
+        if (max_seq_move < num_true_seqs)
         {
             continue;
         }
