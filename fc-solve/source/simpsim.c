@@ -415,19 +415,22 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
      * */
     SIMPS_define_vacant_stacks_accessors();
 
-    STACK_SOURCE_LOOP_START(1)
-        int num_true_seqs;
-        int h = get_seq_h(col, &num_true_seqs);
+    const int max_seq_move = calc_max_simple_simon_seq_move(num_vacant_stacks);
 
-        /* This means that the loop exited prematurely and the stack does
-         * not contain a sequence. */
-        if ((h > 0)
-            || (calc_max_simple_simon_seq_move(num_vacant_stacks) < num_true_seqs)
-        )
+    STACK_SOURCE_LOOP_START(1)
         {
-            continue;
+            int num_true_seqs;
+            /* This means that the loop exited prematurely and the stack does
+             * not contain a sequence. */
+            if ((get_seq_h(col, &num_true_seqs) > 0)
+                || (max_seq_move < num_true_seqs)
+            )
+            {
+                continue;
+            }
         }
 
+#define h 0
         const fcs_card_t card = fcs_col_get_card(col, h);
 
         STACK_DEST_LOOP_START(1)
@@ -452,6 +455,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
             sfs_check_state_end();
         STACK_DEST_LOOP_END()
+#undef h
     STACK_SOURCE_LOOP_END()
 
     return;
