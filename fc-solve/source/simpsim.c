@@ -138,7 +138,7 @@ static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent
 
 #define SIMPS_define_vacant_stacks_accessors() \
     SIMPS_define_accessors(); \
-    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks
+    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks
 
 static char * get_the_positions_by_rank_data__ss_generator(
     fc_solve_soft_thread_t * const soft_thread,
@@ -501,7 +501,7 @@ static GCC_INLINE void populate_seq_points(
 static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
     const int stacks_num,
     fcs_kv_state_t * const raw_ptr_state_raw,
-    int num_vacant_stacks,
+    const int num_vacant_stacks,
     const fcs_cards_column_t col,
     sequences_analysis_t * const seqs,
     const int stack_idx,
@@ -606,7 +606,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
 static GCC_INLINE const fcs_bool_t false_seq_index_loop(
     const int stacks_num,
     fcs_kv_state_t * const raw_ptr_state_raw,
-    int num_vacant_stacks,
+    const int num_vacant_stacks,
     const fcs_cards_column_t col,
     sequences_analysis_t * const seqs,
     const int stack_idx,
