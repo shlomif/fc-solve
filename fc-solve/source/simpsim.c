@@ -510,7 +510,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
     sequences_analysis_t * const seqs,
     const int stack_idx,
     const int ds,
-    const fcs_bool_t behaviour_flag,
+    const fcs_bool_t behavior_flag,
     const fcs_bool_t should_src_col,
     const fcs_card_t src_card,
     const int num_src_junk_true_seqs
@@ -574,7 +574,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
         if (clear_junk_dest_stack == stacks_num)
         {
             /* Check if there is a vacant stack */
-            if (behaviour_flag || (!
+            if (behavior_flag || (!
                 (
                     (num_vacant_stacks > 0)
                     &&
@@ -615,13 +615,13 @@ static GCC_INLINE const fcs_bool_t false_seq_index_loop(
     sequences_analysis_t * const seqs,
     const int stack_idx,
     const int ds,
-    const fcs_bool_t behaviour_flag
+    const fcs_bool_t behavior_flag
     )
 {
     return generic_false_seq_index_loop(
         stacks_num, raw_ptr_state_raw, num_vacant_stacks,
         col, seqs, stack_idx, ds,
-        behaviour_flag,
+        behavior_flag,
         /* Params that should be ignored in this case. */
         FALSE, fc_solve_empty_card, 0
     );
