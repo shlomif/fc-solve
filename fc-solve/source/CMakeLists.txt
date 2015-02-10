@@ -240,7 +240,6 @@ SET (FREECELL_SOLVER_LIB_MODULES
     "${p_dir}/pat.c"
     "${p_dir}/patsolve.c"
     "${p_dir}/tree.c"
-    "${p_dir}/util.c"
 )
 
 IF (FCS_FREECELL_ONLY)
