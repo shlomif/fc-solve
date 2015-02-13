@@ -32,6 +32,7 @@ has _total_iters => (isa => 'Int', is => 'rw');
 has _trace_cb => (isa => 'Maybe[CodeRef]', is => 'ro', init_arg => 'trace_cb');
 has _scans_meta_data => (isa => 'ArrayRef', is => 'ro', init_arg => 'scans');
 has _scans_iters_pdls => (isa => 'HashRef', is => 'rw', init_arg => 'scans_iters_pdls');
+has _stats_factors => (isa => 'HashRef', is => 'ro', init_arg => 'stats_factors', default => sub { return +{}; },);
 
 sub BUILD
 {
@@ -40,9 +41,13 @@ sub BUILD
     my $args = shift;
 
     my $scans_data = PDL::cat(
-        @{ $self->_scans_iters_pdls() }{
-            map { $_->id() } @{$self->_selected_scans()}
+        map {
+            my $id = $_->id();
+            my $pdl = $self->_scans_iters_pdls()->{$id};
+            my $factor = $self->_stats_factors->{$id};
+            (defined($factor) ? ($pdl / $factor) : $pdl);
         }
+        @{$self->_selected_scans()}
     );
 
     $self->_orig_scans_data($scans_data);
@@ -332,6 +337,26 @@ sub _get_num_scans
     return (($self->_scans_data()->dims())[$SCANS_DIM]);
 }
 
+sub _calc_chosen_scan
+{
+    my ($self, $selected_scan_idx, $iters_quota) = @_;
+
+    return
+    AI::Pathfinding::OptimizeMultiple::ScanRun->new(
+        {
+            iters => (
+                $iters_quota
+                * (
+                    $self->_stats_factors->{
+                        ($self->_selected_scans->[$selected_scan_idx]->id()),
+                    } // 1
+                )
+            ),
+            scan_idx => $selected_scan_idx,
+        }
+    );
+}
+
 sub calc_flares_meta_scan
 {
     my $self = shift;
@@ -430,13 +455,7 @@ sub calc_flares_meta_scan
 
         $last_avg = $min_avg;
 
-        push @{$self->chosen_scans()},
-            AI::Pathfinding::OptimizeMultiple::ScanRun->new(
-                {
-                    iters => $iters_quota,
-                    scan_idx => $selected_scan_idx,
-                }
-            );
+        push @{$self->chosen_scans()}, $self->_calc_chosen_scan($selected_scan_idx, $iters_quota);
 
         $flares_num_iters->set($selected_scan_idx, $flares_num_iters->at($selected_scan_idx)+$iters_quota);
         $self->_selected_scans()->[$selected_scan_idx]->mark_as_used();

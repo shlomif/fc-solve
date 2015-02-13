@@ -3,7 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Carp ();
+
+use Test::More tests => 2;
 
 use Test::Differences qw(eq_or_diff);
 
@@ -16,7 +18,7 @@ sub test_based_on_data
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my ($scans_aref, $quotas_aref, $want_results, $blurb) = @_;
+    my ($scans_aref, $quotas_aref, $want_results, $stats_factors, $blurb) = @_;
 
     my $results_aref = [];
 
@@ -34,13 +36,21 @@ sub test_based_on_data
         @{$scans_aref},
     ];
 
+    my %num_boards = (map { scalar(@{$_->{data}}) => 1 } @$scans_aref);
+
+    my @nums = keys(%num_boards);
+    if (@nums != 1)
+    {
+        Carp::confess( "num is not 1.");
+    }
+
     my $obj = AI::Pathfinding::OptimizeMultiple->new(
         {
             scans =>
             [
                 map { +{ name => $_->{name} } } @$scans_aref,
             ],
-            num_boards => 3,
+            num_boards => $nums[0],
             scans_iters_pdls =>
             {
                 map { $_->{name} => pdl($_->{data}), } @$scans_aref,
@@ -48,6 +58,7 @@ sub test_based_on_data
             quotas => $quotas_aref,
             selected_scans => $selected_scans,
             optimize_for => "speed",
+            ($stats_factors ? (stats_factors => $stats_factors) : ()),
         }
     );
 
@@ -101,7 +112,42 @@ sub test_based_on_data
                 iters => 500,
             },
         ],
+        undef(),
         'Basic test',
     );
 }
 
+{
+    # TEST*$test_based_on_data
+    test_based_on_data(
+        [
+            {
+                name => "first",
+                data => [50_000,100_000,100_000,1_000_000,2_000_000],
+            },
+            {
+                name => "second",
+                data => [100,200,200,300,300],
+            },
+            {
+                name => "third",
+                data => [2000,2000,2000,2000,2000],
+            },
+        ],
+        [100, 300,],
+        [
+            {
+                name => "first",
+                iters => 100_000,
+            },
+            {
+                name => "second",
+                iters => 300,
+            },
+        ],
+        {
+            first => 1000,
+        },
+        'Test the stats_factors',
+    );
+}

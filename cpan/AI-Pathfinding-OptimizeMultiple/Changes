@@ -1,3 +1,8 @@
+v0.0.12     Unknown
+    - Add the stats_factors option to the
+    lib/AI/Pathfinding/OptimizeMultiple.pm constructor.
+        - Contains some factors to normalise the iters of specific scans.
+
 v0.0.11     2014-03-29
     - Move the external-deps-using release tests to xt/ instead of t/
         - Better Kwalitee.

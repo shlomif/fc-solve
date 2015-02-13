@@ -37,13 +37,7 @@ sub attach_to
 sub get_chosen_struct
 {
     my $self = shift;
-    return
-        AI::Pathfinding::OptimizeMultiple::ScanRun->new(
-            {
-                iters => $self->_quota(),
-                scan_idx => $self->_scan_idx()
-            }
-        );
+    return $self->_main->_calc_chosen_scan($self->_scan_idx, $self->_quota);
 }
 
 
