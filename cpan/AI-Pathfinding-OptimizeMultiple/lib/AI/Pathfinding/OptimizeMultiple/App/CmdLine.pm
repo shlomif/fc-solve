@@ -37,6 +37,7 @@ has _should_rle_be_done => (isa => 'Bool', is => 'rw');
 has _should_trace_be_done => (isa => 'Bool', is => 'rw');
 has _simulate_to => (isa => 'Maybe[Str]', is => 'rw');
 has _start_board => (isa => 'Int', is => 'rw');
+has _stats_factors => (isa => 'HashRef', is => 'ro', default => sub { return +{}; },);
 
 my $_component_re = qr/[A-Za-z][A-Za-z0-9_]*/;
 my $_module_re = qr/$_component_re(?:::$_component_re)*/;
@@ -58,6 +59,7 @@ sub BUILD
     my $simulate_to = undef;
     my $_add_horne_prune = 0;
     my $input_obj_class = 'AI::Pathfinding::OptimizeMultiple::DataInputObj';
+    my %stats_factors;
 
     my $help = 0;
     my $man = 0;
@@ -77,6 +79,7 @@ sub BUILD
         "simulate-to=s" => \$simulate_to,
         "sprtf" => \$_add_horne_prune,
         "input-class=s" => \$input_obj_class,
+        "stats-factors=f" => \%stats_factors,
     ) or die "Extracting options from ARGV array failed - $!";
 
 
@@ -103,6 +106,7 @@ EOF
     $self->_offset_quotas($offset_quotas);
     $self->_simulate_to($simulate_to);
     $self->_add_horne_prune($_add_horne_prune);
+    $self->_stats_factors(\%stats_factors);
     $self->input_obj_class($input_obj_class);
 
     {
@@ -397,6 +401,7 @@ sub _init_arbitrator
                 'scans_iters_pdls' => $self->_calc_scans_iters_pdls(),
                 'trace_cb' => \&_arbitrator_trace_cb,
                 'optimize_for' => $self->_optimize_for(),
+                'stats_factors' => $self->_stats_factors(),
             }
         )
     );
