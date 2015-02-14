@@ -5,7 +5,7 @@ use warnings;
 
 use Carp ();
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use Test::Differences qw(eq_or_diff);
 
@@ -149,5 +149,40 @@ sub test_based_on_data
             first => 1000,
         },
         'Test the stats_factors',
+    );
+}
+
+{
+    # TEST*$test_based_on_data
+    test_based_on_data(
+        [
+            {
+                name => "first",
+                data => [50_000,99_500,100_000,1_000_000,2_000_000],
+            },
+            {
+                name => "second",
+                data => [100,200,200,300,300],
+            },
+            {
+                name => "third",
+                data => [2000,2000,2000,2000,2000],
+            },
+        ],
+        [100, 300,],
+        [
+            {
+                name => "first",
+                iters => 100_000,
+            },
+            {
+                name => "second",
+                iters => 300,
+            },
+        ],
+        {
+            first => 1000,
+        },
+        'Test fractional stats due to stats_factors',
     );
 }
