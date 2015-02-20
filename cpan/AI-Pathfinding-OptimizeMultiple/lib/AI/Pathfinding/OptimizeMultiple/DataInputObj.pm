@@ -123,8 +123,7 @@ sub _get_scans_data_helper
                     my $data_s = _slurp($scan->data_file_path());
                     my @array = unpack("l*", $data_s);
                     if (($array[$HEADER_START_BOARD_IDX] != 1) ||
-                        ($array[$HEADER_NUM_BOARDS] < $self->num_boards) ||
-                        ($array[$HEADER_ITERATIONS_LIMIT] != 100000)
+                        ($array[$HEADER_NUM_BOARDS] < $self->num_boards)
                     )
                     {
                         die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
@@ -152,9 +151,7 @@ sub _get_scans_data_helper
                 my $data_s = _slurp($src);
 
                 my @iters = unpack("l*", $data_s);
-                if (($iters[0] != 1) || ($iters[1] < $self->num_boards())
-                    || ($iters[2] != 100000)
-                )
+                if ( ($iters[0] != 1) || ($iters[1] < $self->num_boards()) )
                 {
                     die "Incorrect file format in scan " . $scan->id() . "!\n";
                 }
@@ -385,7 +382,9 @@ sub _get_scan_cmd_line
         qw(freecell-solver-fc-pro-range-solve),
         $min_board, $max_board, "20",
         @variant,
-        qw(--total-iterations-limit 100000 --binary-output-to),
+        '--total-iterations-limit',
+        ($ENV{FC_SOLVE_RANGE_ITERS_LIMIT} // 100000),
+        '--binary-output-to',
         "data/$id.data.bin",
         @$argv,
         @fc_num,
