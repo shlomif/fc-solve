@@ -929,24 +929,24 @@ typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * meta_alloc);
 
 extern void fc_solve_init_instance(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * const instance
 );
 
 extern void fc_solve_finish_instance(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * const instance
 );
 
 extern void fc_solve_start_instance_process_with_board(
-    fc_solve_instance_t * instance,
+    fc_solve_instance_t * const instance,
     fcs_state_keyval_pair_t * init_state_val
 );
 
 extern int fc_solve_befs_or_bfs_do_solve(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
 );
 
 extern void fc_solve_increase_dfs_max_depth(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
 );
 
 static GCC_INLINE void * memdup(void * src, size_t mysize)
@@ -981,7 +981,7 @@ static GCC_INLINE int update_col_cards_under_sequences(
 }
 
 static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
 )
 {
     fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
@@ -1115,11 +1115,11 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
 #undef unlimited_sequence_move
 
 static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
 )
 {
     fc_solve_soft_thread_update_initial_cards_val(soft_thread);
-    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
+    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
 
     fcs_state_keyval_pair_t * ptr_orig_state = instance->state_copy_ptr;
     /*
@@ -1226,30 +1226,27 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     return;
 }
 
-extern int fc_solve_soft_dfs_do_solve(fc_solve_soft_thread_t * soft_thread);
-extern int fc_solve_patsolve_do_solve(fc_solve_soft_thread_t * soft_thread);
+extern int fc_solve_soft_dfs_do_solve(fc_solve_soft_thread_t * const soft_thread);
+extern int fc_solve_patsolve_do_solve(fc_solve_soft_thread_t * const soft_thread);
 
 extern void fc_solve_soft_thread_init_befs_or_bfs(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
 );
 
 
-static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
+static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread)
 {
-    fc_solve_soft_thread_t * soft_thread;
-    fcs_int_limit_t num_checked_states_started_at;
-    int ret;
-    fc_solve_instance_t * instance = hard_thread->instance;
-    int * st_idx_ptr = &(hard_thread->st_idx);
+    fc_solve_instance_t * const instance = hard_thread->instance;
+    int * const st_idx_ptr = &(hard_thread->st_idx);
     /*
      * Again, making sure that not all of the soft_threads in this
      * hard thread are finished.
      * */
 
-    ret = FCS_STATE_SUSPEND_PROCESS;
+    int ret = FCS_STATE_SUSPEND_PROCESS;
     while(hard_thread->num_soft_threads_finished < hard_thread->num_soft_threads)
     {
-        soft_thread = &(hard_thread->soft_threads[*st_idx_ptr]);
+        fc_solve_soft_thread_t * const soft_thread = &(hard_thread->soft_threads[*st_idx_ptr]);
         /*
          * Move to the next thread if it's already finished
          * */
@@ -1293,7 +1290,8 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
          * Keep record of the number of iterations since this
          * thread started.
          * */
-        num_checked_states_started_at = hard_thread->num_checked_states;
+        const typeof(hard_thread->num_checked_states)
+            num_checked_states_started_at = hard_thread->num_checked_states;
         /*
          * Calculate a soft thread-wise limit for this hard
          * thread to run.
@@ -1448,15 +1446,15 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * hard_thread)
 }
 
 extern void fc_solve_trace_solution(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * const instance
 );
 
 extern void fc_solve_instance__init_hard_thread(
-    fc_solve_instance_t * instance,
-    fc_solve_hard_thread_t * hard_thread
+    fc_solve_instance_t * const instance,
+    fc_solve_hard_thread_t * const hard_thread
 );
 
-extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t * soft_thread);
+extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t * const soft_thread);
 
 static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
 {
@@ -1485,7 +1483,7 @@ static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
     states in the solution path.
 */
 static GCC_INLINE int fc_solve_optimize_solution(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * const instance
 )
 {
     fc_solve_soft_thread_t * soft_thread;
@@ -1559,11 +1557,10 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
 /* Resume a solution process that was stopped in the middle */
 static GCC_INLINE int fc_solve_resume_instance(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * const instance
 )
 {
     int ret = FCS_STATE_SUSPEND_PROCESS;
-    fc_solve_hard_thread_t * hard_thread;
 
     /*
      * If the optimization thread is defined, it means we are in the
@@ -1585,7 +1582,7 @@ static GCC_INLINE int fc_solve_resume_instance(
             instance->hard_threads + instance->num_hard_threads
             ;
 
-        hard_thread = instance->current_hard_thread;
+        fc_solve_hard_thread_t * hard_thread = instance->current_hard_thread;
         /*
          * instance->num_hard_threads_finished signals to us that
          * all the incomplete soft threads terminated. It is necessary
@@ -1665,7 +1662,7 @@ static GCC_INLINE int fc_solve_resume_instance(
     finish_instance() and free_instance().
   */
 static GCC_INLINE void fc_solve_unresume_instance(
-    fc_solve_instance_t * instance GCC_UNUSED
+    fc_solve_instance_t * const instance GCC_UNUSED
 )
 {
     /*
@@ -1679,7 +1676,7 @@ static GCC_INLINE void fc_solve_unresume_instance(
 
 static GCC_INLINE fc_solve_soft_thread_t *
 fc_solve_instance_get_first_soft_thread(
-    fc_solve_instance_t * instance
+    fc_solve_instance_t * const instance
 )
 {
     return &(instance->hard_threads[0].soft_threads[0]);
@@ -1829,7 +1826,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
 #ifdef FCS_RCS_STATES
 fcs_state_t * fc_solve_lookup_state_key_from_val(
-    fc_solve_instance_t * instance,
+    fc_solve_instance_t * const instance,
     fcs_collectible_state_t * ptr_state_val
 );
 
@@ -1847,12 +1844,12 @@ enum
     FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS
 };
 extern void fc_solve_foreach_soft_thread(
-    fc_solve_instance_t * instance,
+    fc_solve_instance_t * const instance,
     int callback_choice,
     void * context
 );
 
-static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t * hard_thread)
+static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t * const hard_thread)
 {
     if (likely(hard_thread->prelude_as_string))
     {
