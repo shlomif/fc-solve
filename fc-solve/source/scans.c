@@ -41,7 +41,7 @@
 #include "state.h"
 #include "scans.h"
 #include "meta_alloc.h"
-#include "check_and_add_state.h"
+#include "instance.h"
 #include "move_stack_compact_alloc.h"
 #include "freecell.h"
 #include "simpsim.h"

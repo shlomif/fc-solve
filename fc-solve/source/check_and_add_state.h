@@ -22,7 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * header file for fc_solve_check_and_add_state() .
+ * header file for fc_solve_check_and_add_state() . Deprecated - now it's
+ * in instance.h.
  */
 #ifndef FC_SOLVE__CHECK_AND_ADD_STATE_H
 #define FC_SOLVE__CHECK_AND_ADD_STATE_H
@@ -32,11 +33,9 @@ extern "C" {
 #endif
 
 #include "config.h"
-#include "bool.h"
-#include "state.h"
-#include "instance.h"
 
 /* #define FCS_USE_INLINE */
+#include "instance.h"
 
 /*
  * check_and_add_state is defined in check_and_add_state.c.
@@ -45,15 +44,6 @@ extern "C" {
  * Solver uses to solve a given board.
  * */
 
-fcs_bool_t fc_solve_check_and_add_state(
-    fc_solve_hard_thread_t * hard_thread,
-    fcs_kv_state_t * new_state_val,
-    fcs_kv_state_t * existing_state_val
-    );
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-extern guint fc_solve_hash_function(gconstpointer key);
-#endif
 
 #ifdef __cplusplus
 }
