@@ -568,6 +568,13 @@ struct fc_solve_instance_struct
      * Needed to trace the patsolve solutions.
      * */
     fc_solve_soft_thread_t * solving_soft_thread;
+
+    /*
+     * This is intended to be used by the patsolve scan which is
+     * sensitive to the ordering of the columns/stacks. This is an ugly hack
+     * but hopefully it will work.
+     * */
+    fcs_state_keyval_pair_t * initial_non_canonized_state;
 };
 
 typedef struct fc_solve_instance_struct fc_solve_instance_t;
@@ -1322,7 +1329,8 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
             {
                 fc_solve_pats__init_buckets(pats_scan);
                 fc_solve_pats__init_clusters(pats_scan);
-                pats_scan->current_pos.s = instance->state_copy_ptr->s;
+
+                pats_scan->current_pos.s = instance->initial_non_canonized_state->s;
 #ifdef INDIRECT_STACK_STATES
                 memset(
                     pats_scan->current_pos.indirect_stacks_buffer,
@@ -1924,11 +1932,13 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
   */
 static GCC_INLINE void fc_solve_start_instance_process_with_board(
     fc_solve_instance_t * const instance,
-    fcs_state_keyval_pair_t * const init_state
+    fcs_state_keyval_pair_t * const init_state,
+    fcs_state_keyval_pair_t * const initial_non_canonized_state
 )
 {
     fcs_state_keyval_pair_t * state_copy_ptr;
 
+    instance->initial_non_canonized_state = initial_non_canonized_state;
     /* Allocate the first state and initialize it to init_state */
     state_copy_ptr =
         (fcs_state_keyval_pair_t *)

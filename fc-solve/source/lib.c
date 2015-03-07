@@ -1202,7 +1202,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         if (is_start_of_flare_solving)
         {
             fc_solve_start_instance_process_with_board(
-                user->active_flare->obj, &(user->state)
+                user->active_flare->obj, &(user->state),
+                &(user->initial_non_canonized_state)
             );
         }
 
