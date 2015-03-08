@@ -45,7 +45,10 @@ sub BUILD
             my $id = $_->id();
             my $pdl = $self->_scans_iters_pdls()->{$id};
             my $factor = $self->_stats_factors->{$id};
-            (defined($factor) ? (($pdl / $factor)->ceil()) : $pdl);
+            (defined($factor)
+                ? (($pdl >= 0) * (($pdl / $factor)->ceil()) + ($pdl < 0) *  $pdl)
+                : $pdl
+            );
         }
         @{$self->_selected_scans()}
     );
