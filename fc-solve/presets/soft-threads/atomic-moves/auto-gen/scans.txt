@@ -19,3 +19,4 @@
 18	--method soft-dfs -to 01DECAB
 19	--method random-dfs -to [01][ABCDE] -seed 71
 20	--method patsolve --patsolve-x-param 0,4 --patsolve-x-param 1,1 --patsolve-x-param 2,8 --patsolve-x-param 3,-1 --patsolve-x-param 4,7 --patsolve-x-param 5,11 --patsolve-x-param 6,4 --patsolve-x-param 7,2 --patsolve-x-param 8,2 --patsolve-x-param 9,1 --patsolve-x-param 10,2 --patsolve-y-param 0,0.0032 --patsolve-y-param 1,0.32 --patsolve-y-param 2,-3
+21	--method patsolve --patsolve-x-param 0,2 --patsolve-x-param 1,4 --patsolve-x-param 2,7 --patsolve-x-param 3,-2 --patsolve-x-param 4,-2 --patsolve-x-param 5,1 --patsolve-x-param 6,0 --patsolve-x-param 7,-5 --patsolve-x-param 8,4 --patsolve-x-param 9,-1 --patsolve-x-param 10,1 --patsolve-y-param 0,-0.0024 --patsolve-y-param 1,0.22 --patsolve-y-param 2,0
