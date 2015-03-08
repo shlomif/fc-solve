@@ -74,7 +74,9 @@ typedef struct {
 #define LOCAL_DECKS_NUM HARD_CODED_NUM_DECKS
 #endif
 
-#ifndef FCS_FREECELL_ONLY
+#ifdef FCS_FREECELL_ONLY
+#define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#else
     /* sequences_are_built_by - (bits 0:1) - what two adjacent cards in the
      * same sequence can be.
      *

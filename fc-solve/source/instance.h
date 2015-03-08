@@ -376,8 +376,10 @@ struct fc_solve_instance_struct
      *
      * */
     fcs_game_type_params_t game_params;
+#ifndef FCS_FREECELL_ONLY
     fcs_card_t game_variant_suit_mask;
     fcs_card_t game_variant_desired_suit_value;
+#endif
 
     /* The number of states that were checked by the solving algorithm. */
     fcs_int_limit_t num_checked_states;
