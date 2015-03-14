@@ -71,17 +71,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent);
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack);
 
-enum PRUNE_RET
-{
-    PRUNE_RET_NOT_FOUND,
-    PRUNE_RET_FOLLOW_STATE
-};
 
-extern int fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t * const soft_thread,
-    fcs_kv_state_t * const raw_ptr_state_raw,
-    fcs_collectible_state_t * * const ptr_ptr_next_state
-);
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_do_nothing);
 

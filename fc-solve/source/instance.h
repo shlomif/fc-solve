@@ -1239,7 +1239,17 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     return;
 }
 
-extern int fc_solve_soft_dfs_do_solve(fc_solve_soft_thread_t * const soft_thread);
+extern int fc_solve_sfs_raymond_prune(
+    fc_solve_soft_thread_t * const soft_thread,
+    fcs_kv_state_t * const raw_ptr_state_raw,
+    fcs_collectible_state_t * * const ptr_ptr_next_state
+);
+
+enum PRUNE_RET
+{
+    PRUNE_RET_NOT_FOUND,
+    PRUNE_RET_FOLLOW_STATE
+};
 
 #include "scans_impl.h"
 
