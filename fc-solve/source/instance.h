@@ -1240,7 +1240,8 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 }
 
 extern int fc_solve_soft_dfs_do_solve(fc_solve_soft_thread_t * const soft_thread);
-extern int fc_solve_patsolve_do_solve(fc_solve_soft_thread_t * const soft_thread);
+
+#include "scans_impl.h"
 
 extern void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * const soft_thread
