@@ -4,13 +4,13 @@
 
 L<Freecell Solver|http://fc-solve.shlomifish.org/> is an open source
 (distributed under the MIT/X11 licence) library, written in C, for attempting
-to solve several variants of card Solitaire/Patience, including 
-L<Freecell|http://en.wikipedia.org/wiki/FreeCell> , 
+to solve several variants of card Solitaire/Patience, including
+L<Freecell|http://en.wikipedia.org/wiki/FreeCell> ,
 L<Baker’s Game|http://en.wikipedia.org/wiki/Baker%27s_Game> ,
 L<Seahaven Towers|http://en.wikipedia.org/wiki/Seahaven_Towers_%28solitaire%29>
-, and 
+, and
 L<Simple Simon|http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire> .
-Also contained are several command-line programs that use it, and the original 
+Also contained are several command-line programs that use it, and the original
 project also span some other code for testing and for support.
 
 =head1 Repository structure
