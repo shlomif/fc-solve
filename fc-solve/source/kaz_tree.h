@@ -63,7 +63,7 @@ typedef enum { dnode_red, dnode_black } dnode_color_t;
 typedef fcs_dbm_record_t dict_key_t;
 typedef dict_key_t * dict_ret_key_t;
 #else
-typedef const void * dict_key_t;
+typedef void * dict_key_t;
 typedef dict_key_t dict_ret_key_t;
 #endif
 

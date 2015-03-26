@@ -873,7 +873,7 @@ dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t 
  * deleted node is returned.
  */
 
-dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
+static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
 {
     dnode_t *nil = dict_nil(dict), *child, *delparent = target->parent;
 
@@ -1310,18 +1310,22 @@ void dict_process(dict_t *dict, void *context, dnode_process_t function)
 }
 #endif
 
+#if 0
 static void load_begin_internal(dict_load_t *load, dict_t *dict)
 {
     load->dictptr = dict;
     load->nilnode.left = &load->nilnode;
     load->nilnode.right = &load->nilnode;
 }
+#endif
 
-void dict_load_begin(dict_load_t *load, dict_t *dict)
+#if 0
+static void dict_load_begin(dict_load_t *load, dict_t *dict)
 {
     assert (dict_isempty(dict));
     load_begin_internal(load, dict);
 }
+#endif
 
 #ifdef NO_FC_SOLVE
 void dict_load_next(dict_load_t *load, dnode_t *newnode, const void *key)

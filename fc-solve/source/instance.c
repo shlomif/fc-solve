@@ -735,8 +735,7 @@ static GCC_INLINE int find_empty_col(
 {
     for (int i = 0 ; i < stacks_num ; i++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(*dynamic_state, i);
-        if (! fcs_col_len(col))
+        if (! fcs_col_len(fcs_state_get_col(*dynamic_state, i)))
         {
             return i;
         }
@@ -753,7 +752,7 @@ static GCC_INLINE int find_col_card(
 {
     for (int i = 0 ; i < stacks_num ; i++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(*dynamic_state, i);
+        fcs_const_cards_column_t col = fcs_state_get_col(*dynamic_state, i);
         const int col_len = fcs_col_len(col);
         if (col_len > 0 && (fcs_col_get_card(col, col_len - 1) == src_card_s))
         {

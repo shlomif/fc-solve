@@ -1251,6 +1251,18 @@ enum PRUNE_RET
     PRUNE_RET_FOLLOW_STATE
 };
 
+#ifdef FCS_RCS_STATES
+fcs_state_t * fc_solve_lookup_state_key_from_val(
+    fc_solve_instance_t * const instance,
+    fcs_collectible_state_t * ptr_state_val
+);
+
+extern int fc_solve_compare_lru_cache_keys(
+    const void * void_a, const void * void_b, void * param
+);
+
+#endif
+
 #include "scans_impl.h"
 
 extern void fc_solve_soft_thread_init_befs_or_bfs(
@@ -1849,17 +1861,6 @@ static GCC_INLINE void fc_solve_recycle_instance(
 }
 
 
-#ifdef FCS_RCS_STATES
-fcs_state_t * fc_solve_lookup_state_key_from_val(
-    fc_solve_instance_t * const instance,
-    fcs_collectible_state_t * ptr_state_val
-);
-
-extern int fc_solve_compare_lru_cache_keys(
-    const void * void_a, const void * void_b, void * param
-);
-
-#endif
 
 enum
 {

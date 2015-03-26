@@ -790,16 +790,16 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
                         new_pass.val = derived_iter->state_ptr
                 );
 #else
-            ptr_new_state = derived_iter->state_ptr;
-            new_pass.key = &(ptr_new_state->s);
-            new_pass.val = &(ptr_new_state->info);
+            FCS_SCANS_ptr_new_state = derived_iter->state_ptr;
+            new_pass.key = &(FCS_SCANS_ptr_new_state->s);
+            new_pass.val = &(FCS_SCANS_ptr_new_state->info);
 #endif
 
             if (method == FCS_METHOD_A_STAR)
             {
                 fc_solve_PQueuePush(
                     pqueue,
-                    ptr_new_state,
+                    FCS_SCANS_ptr_new_state,
                     befs_rate_state(
                         soft_thread,
                         WEIGHTING(soft_thread),
@@ -825,7 +825,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 
                 queue_last_item->next = last_item_next;
 
-                queue_last_item->s = ptr_new_state;
+                queue_last_item->s = FCS_SCANS_ptr_new_state;
                 last_item_next->next = NULL;
                 queue_last_item = last_item_next;
             }
