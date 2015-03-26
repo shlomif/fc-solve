@@ -1939,6 +1939,47 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
     free(instance);
 }
 
+#ifdef FCS_RCS_STATES
+
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
+
+static GCC_INLINE fcs_state_t * rcs_states_get_state(
+    fc_solve_instance_t * const instance,
+    fcs_collectible_state_t * const state
+)
+{
+    return (
+            (state == instance->tree_new_state)
+            ? instance->tree_new_state_key
+            : fc_solve_lookup_state_key_from_val(
+                instance,
+                state
+            )
+    );
+}
+
+static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b, void * param)
+{
+    fc_solve_instance_t * instance = (fc_solve_instance_t *)param;
+
+    return fc_solve_state_compare(
+        rcs_states_get_state(instance, (fcs_collectible_state_t *)void_a),
+        rcs_states_get_state(instance, (fcs_collectible_state_t *)void_b)
+    );
+}
+
+#endif
+
+#define STATE_STORAGE_TREE_COMPARE() fc_solve_rcs_states_compare
+#define STATE_STORAGE_TREE_CONTEXT() instance
+
+#else
+
+#define STATE_STORAGE_TREE_COMPARE() fc_solve_state_compare_with_context
+#define STATE_STORAGE_TREE_CONTEXT() NULL
+
+#endif
+
 /*
     This function associates a board with an fc_solve_instance_t and
     does other initialisations. After it, you must call
