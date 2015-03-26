@@ -7,7 +7,7 @@ use 5.012;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.11';
+our $VERSION = '0.0.12';
 
 has cmd_line => (isa => 'Str', is => 'ro', required => 1,);
 has id => (isa => 'Str', is => 'ro', required => 1,);

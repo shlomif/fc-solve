@@ -1,4 +1,4 @@
-v0.0.12     Unknown
+v0.0.12     2015-03-26
     - Add the stats_factors option to the
     lib/AI/Pathfinding/OptimizeMultiple.pm constructor.
         - Contains some factors to normalise the iters of specific scans.
