@@ -1,5 +1,8 @@
 Revision history for Task-FreecellSolver-Testing
 
+0.0.6   2015-04-06
+        - Add Test::Data::Split which is now required.
+
 0.0.5   2014-05-18
         - Add MooX and MooX::late which are now required.
         - Add resources and keywords to the META.yml.

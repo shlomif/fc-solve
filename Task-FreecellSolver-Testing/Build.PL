@@ -35,6 +35,7 @@ my $builder = Test::Run::Builder->new(
         "String::ShellQuote" => 0,
         "Task::Test::Run::AllPlugins" => 0,
         "Template" => 0,
+        "Test::Data::Split" => 0,
         "Test::Differences" => 0,
         "Test::More" => 0,
         "Test::Run::CmdLine::Plugin::TrimDisplayedFilenames" => 0,
