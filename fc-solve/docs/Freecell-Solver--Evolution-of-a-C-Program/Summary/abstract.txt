@@ -1,0 +1,169 @@
+
+1. Introduction
+    - I went out running and thought how I can automatically solve Freecell
+    using a computer.
+    - I tried implementing it in Perl, but it was too slow.
+    - The C implementation worked.
+    - I released version 0.2, and announced on Freshmeat.
+    - Since then, I worked on many subsequent versions, each one improving
+    speed, cleaning up the code and/or adding new features.
+    - What's this book about?
+        - It's about programming in general and C programming in particular.
+        - It's about the dynamics of a small open-source project.
+
+2. Freecell: Rules and Strategies
+    - Rules: 
+    - Strategies: define some common strategies
+
+3. The Version 0.2 Architecture
+    - Conclusions I came to while running
+        - A breadth-first search would be too slow, and depth-first search
+        has a bigger chance of being faster
+        - Moving one card between two subsequent positions would be too
+        slow. Better have meta-moves.
+        - Store the states that were already encountered, so they won't
+        be checked again.
+    - Initial version in Perl
+        - State collection as an unordered list
+        - States being serialized and de-serialized
+        - One monololithic search function
+        - Conclusion: Perl is slow for these kind of things
+    - Converting to C.
+        - A sorted C array with an unsorted sort margin
+            - qsorting it into the array
+        - Cards are {short, short}, stack len is int, etc.
+        - A monolithic function that performs a lot of tests
+            - Describe the tests
+        - A chunk of code duplicated across the function, that handles 
+        checking if a state already exists, inserting it there, and
+        recursing into it.
+        
+4. The States Collection
+    - Initial Perl Version - an unordered list
+        - O(1) insertion and O(n) lookup.
+        - O(n) lookup is very slow - unrecommended
+    - Sorted array with a sort margin that was qsorted in
+        - O(log(n)) lookup and O(n*log(n)) insertion.
+        - O(N^2*log(N)) accumulative time
+        - quite fast
+    - Same only with merging the sort margin using a 
+    binary-search based merge
+        - O(log(n)) lookup and O(n) insertion.
+        - O(N^2) accumulative time
+        - much faster
+    - An array of pointers instead of an array of structs.
+    - Balanced Binary Tree
+        - O(log(n)) lookup and O(log(n)) insertion
+        - O(N*log(N)) accumulative time
+        - I only had a vague idea how to implement it myself, but I found
+        pre-defined APIs on the web: libavl, libredblack, and glib's tree.
+        - faster by a ratio of 2 than the array.
+    - Can we do better than O(N*log(N))?
+        - If we want to keep the elements sorted - no.
+        - If we just want to tell if an element is in there or not, the
+        answer is usually.
+    - Hash
+        - What is a hash?
+        - First try with a 4-byte wide XOR checksum - slow as hell.
+        - Second try - writing my own hash (based on code I did for homework)
+        and this time using MD5 - acceptable performance
+        - On average O(1) lookup and an O(n) lookup.
+        - Converting the hash function from MD5 to something faster.
+        - Hash Optimizations:
+            - Storing the non-moduloed hash values along with the keys.
+            - Moving elements that were succesfully hit to the start of their
+            chains.
+            - When rehashing, use the same malloc'ed elements, only re-link
+            them to their new followers.
+            - A secondary hash function
+    - Summary
+        - A table comparing various operations between the schemes.
+    
+
+5. The States Representation
+    - Compact States
+    - Indirect Stack States
+        - Copy on write stacks
+    - Indices to the stack and freecells locations outside the main data
+    structure
+    
+* Moves
+    - Initial version: only states.
+    - The introduction of move stacks
+    
+* Generalizing the Game Rules
+    - Meta-moves generalization
+    - Simple Simon
+        - Initial try: atomic moves
+            - Failed because there were too many move possibilities
+        - Decision: always "reduce the entrophy" in any move that is made.
+        - Works very well - most boards are solved very quickly.
+    - Atomic Moves
+    - A variable number of Freecells and Stacks
+    - Generalized game rules
+        - The presets system
+
+* Autoconfisication and other monsters
+    - Initial version : a GNU-make makefile
+    - The makefile becomes very complex
+    - Conversion to Autoconf/Automake/Libtool
+    - An RPM package
+        - Integrating building the SPEC into the autoconf process (rpm -tb)
+    - A debian package
+        - The story of the acceptance into the Debian pool
+    - Other portability considerations:
+        - The NetBSD MD5 patch
+        - static const char const * 
+
+
+* Scans:
+    - Initial version: hard-DFS.
+    - Best-First-Search
+    - Soft-DFS take 1
+    - Soft-DFS take 2
+    - The BrFS Optimization Scan
+    - Random-DFS
+    - Organizing the states collection so a parent pointer and a moves_to_parent
+    are stored, and tracing the solution from there.
+    - The introduction of the derived states lists.
+
+* Documentation:
+    - The --help switch
+    - A README file.
+    - The USAGE file
+    - The INSTALL file
+    - Man pages (using perl POD), due to Debian's constraints
+    
+* The user-land API:
+    - First version - only a command-line application
+    - Version 1.0.0 - a user-land API.
+    - Stephan's and Markus' additions.
+    - Conversion of fc-solve to the API. (using your own dog-food)
+
+* Instantization and Parallelization:
+    - Putting all the global variables in a struct
+    - Suspending and resuming a scan.
+    - First try (dumped in favour of Simple Simon support)
+    - Poor man's parallelization (separate instances)
+    - Second try (successful)
+    - The soft-threading model
+        - Limitations (may or may not result in a synergy)
+    - The prelude
+
+* Memory Management
+    - The compact state allocation
+    - Hunting down memory leaks
+    - Compact allocation of state stacks and move stacks
+    - One move stack per hard thread.    
+    - Defining accessors -> instance->my_var ==> my_var
+
+* Ars-progrettica
+    - The four levels of value production
+    - The three levels of learning
+    - Is rewriting something from scratch a good idea?
+    - Lack of Design vs. Over-Engineering
+    - The Freshmeat Effect
+
+* Future Directions
+   
+

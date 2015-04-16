@@ -1,0 +1,332 @@
+<?xml version='1.0' ?>
+<!-- <!DOCTYPE DocBook> --> <!-- This comment is meant to settle gvim -->
+<chapter id="rules">
+        <title>Rules of the Game</title>        
+        <section id="basic_rules">
+            <title>
+                Basic Rules of the &fc; Variant
+            </title>
+
+        <para>
+            &fc; is played with a standard 52-card deck. At the beginning
+            of play, all cards are dealt to 8 columns (7 cards each in the first
+            four columns and 6 cards each in the other four) facing up.
+        </para>
+
+        <para>
+            Besides the columns (which will also be referred to as stacks), 
+            there are also four places to hold temporary cards (known as 
+            freecells) and four foundations, in which it is possible to place
+            cards of the same suit starting from Aces and ending with Kings. 
+        </para>
+
+        <para>
+            Sequences of cards on the tableau are built by placing cards on top
+            of cards of a higher rank and of a different colour (black or red).
+        </para>
+
+        <para>
+            An atomic move consists of any of the following:
+            <orderedlist>
+                <listitem>
+                    <para>
+                        
+                    Moving one card from the top of a column or from a 
+                    freecell to the foundation. (which is possible only if 
+                    its corresponding foundation's value is lower than it 
+                    by one)
+                   </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Moving a card from the top of a column to a vacant freecell.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    Moving a card from the top of a column or from a freecell
+                    to a parent card on top of a column.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    Moving a card from the top of a column or a freecell
+                    to an empty column.
+                    </para>
+                </listitem>
+            </orderedlist>
+        </para>
+
+        <para>
+            It is customary and helpful to group the movement of an entire 
+            sequence of cards, by moving intermediate cards to freecells or 
+            vacant columns. This will be refered to as a 
+            <glossterm>sequence move</glossterm>. If a sequence move involves 
+            temporarily moving a card to an empty column, it is known
+            as a <glossterm>supermove</glossterm>.
+        </para>
+
+        <para>
+            You should probably play a few games of &fc;, in case you
+            did not already, because knowing the rules alone is not
+            enough to have an intuitive feel of it. There are many available
+            &fc; implementations for various systems, and you should have 
+            no problems finding one that you can use. (chances are that it 
+            is already installed on your system)
+        </para>
+    </section>
+    <section id="techniques">
+        <title>
+            Techniques of Play
+        </title>
+        <para>
+            There are several strategies that become apparent after a large
+            amount of playing &fc;. One of them, is uncovering top
+            cards so a card can be moved to the foundations. Another one,
+            is doing the same only to move it to a parent card, or for
+            it to serve as the basis of another sequence.
+        </para>
+
+        <para>
+            Another technique, that can be helpful at times is moving
+            a card from the freecells back to the tableau, so it can serve
+            as the base for another sequence.             
+        </para>
+
+        <para>
+            FILL IN
+        </para>
+    </section>
+
+    <section id="variations">
+        <title>
+            Variations on &fc;
+        </title>
+        <para>
+            The game &fc; is not the only Solitaire of its kind nor
+            is the first historically. Using &fc; as a basis, several 
+            similar Solitaire variants can be constructed by adjusting some
+            of the basic rules:
+            <!-- TODO: Modify emphasis to something more logical styled -->
+            <orderedlist>
+                <listitem>
+                    <para>
+                    <emphasis>Sequence Parenthood</emphasis> - in some variants
+                    cards can be placed on consequent cards of the same suit,
+                    or of the cards of any suit whatsoever. Examples for this 
+                    are Baker's Game which is identical to &fc; except that
+                    sequences are built by suit.
+                </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    <emphasis>Policy of Filling Empty Columns</emphasis> - in 
+                    &fc; empty columns can be filled by any cards. In other
+                    variants, such as Seahaven Towers or Forecell, only kings 
+                    may be placed there. On other variants, they cannot be 
+                    filled at all.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    <emphasis>Policy of Moving Sequences</emphasis> - in 
+                    &fc;, the amount of cards that can be moved as a 
+                    sequence is determined by the number of vacant Freecells
+                    and columns present. In other variants such as Relaxed 
+                    &fc;, the amount of cards that can be moved as a 
+                    sequence is unlimited, regardless of how many vacant 
+                    resources exist on the board.                    
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    <emphasis>Variations in the number of Freecells, Columns
+                        or Decks</emphasis> - Some &fc; variants are
+                    played with two decks of cards. Many others varry on the 
+                    number of columns or freecells. &fc; itself is often
+                    played with less than 4 freecells, in order to make the
+                    game more challenging. (or vice versa)
+                    </para>
+                </listitem>
+            </orderedlist>
+        </para>
+        <para>
+            Below you can find a table that summarized the essential properties
+            of a large number of Solitaire games similar to &fc;. Their
+            names were taken from <ulink url="http://www.oberhumer.com/opensource/pysol/">PySol</ulink>, which is a free Solitaire suite written in Python.
+
+            <footnote id="pysol_variants">
+                <para>
+                Not all of these variants appear in PySol under the 
+                "FreeCell Type" category. As I noticed, many games were very
+                similar to &fc; in their spirit, despite the fact that they
+                were classified otherwise.
+            </para>
+            </footnote>
+        </para>
+
+        <para>
+            FILL IN the table
+            <table frame="all">
+                <title>&fc; Variants</title>
+                <tgroup cols="7" align="left" colsep="1" rowsep="1">
+                    <colspec colname="name"/>
+                    <colspec colname="num_columns"/>
+                    <colspec colname="num_fc"/>
+                    <colspec colname="num_decks"/>
+                    <colspec colname="sbb"/>
+                    <colspec colname="ec_fill"/>
+                    <colspec colname="seq_move"/>
+                    <thead>
+                        <row>
+                            <entry><emphasis>Name</emphasis></entry>
+                            <entry><emphasis>Columns Number</emphasis></entry>
+                            <entry><emphasis>Freecells Number</emphasis></entry>
+                            <entry><emphasis>Decks Number</emphasis></entry>
+                            <entry><emphasis>Sequence Parenthood</emphasis></entry>
+                            <entry><emphasis>Empty Columns Filled By</emphasis></entry>
+                            <entry><emphasis>Sequence Move</emphasis></entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>                            
+                            <entry>Bakers Dozen</entry>
+                            <entry>13</entry>
+                            <entry>0</entry>
+                            <entry>1</entry>
+                            <entry>Rank</entry>
+                            <entry>None</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Bakers Game</entry>
+                            <entry>8</entry>
+                            <entry>4</entry>
+                            <entry>1</entry>
+                            <entry>Suit</entry>
+                            <entry>Any Card</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Beleaguered Castle</entry>
+                            <entry>8</entry>
+                            <entry>0</entry>
+                            <entry>1</entry>
+                            <entry>Rank</entry>
+                            <entry>Any Card</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Cruel</entry>
+                            <entry>12</entry>
+                            <entry>0</entry>
+                            <entry>1</entry>
+                            <entry>Suit</entry>
+                            <entry>None</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Der Katzenschwanz</entry>
+                            <entry>9</entry>
+                            <entry>8</entry>
+                            <entry>2</entry>
+                            <entry>Alternate Colour</entry>
+                            <entry>None</entry>
+                            <entry>Limited</entry>
+                        </row>
+                        <row>
+                            <entry>Die Schlange</entry>
+                            <entry>9</entry>
+                            <entry>8</entry>
+                            <entry>2</entry>
+                            <entry>Alternate Colour</entry>
+                            <entry>None</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Eight Off</entry>
+                            <entry>8</entry>
+                            <entry>8</entry>
+                            <entry>1</entry>
+                            <entry>Suit</entry>
+                            <entry>Kings Only</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Fan</entry>
+                            <entry>18</entry>
+                            <entry>0</entry>
+                            <entry>1</entry>
+                            <entry>Suit</entry>
+                            <entry>Kings Only</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Forecell</entry>
+                            <entry>8</entry>
+                            <entry>4</entry>
+                            <entry>1</entry>
+                            <entry>Alternate Colour</entry>
+                            <entry>Kings Only</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>&fc;</entry>
+                            <entry>8</entry>
+                            <entry>4</entry>
+                            <entry>1</entry>
+                            <entry>Alternate Colour</entry>
+                            <entry>Any Card</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Good Measure</entry>
+                            <entry>10</entry>
+                            <entry>0</entry>
+                            <entry>1</entry>
+                            <entry>Rank</entry>
+                            <entry>None</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Kings Only Bakers Game</entry>
+                            <entry>8</entry>
+                            <entry>4</entry>
+                            <entry>1</entry>
+                            <entry>Suit</entry>
+                            <entry>Kings Only</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                        <row>
+                            <entry>Relaxed &fc;</entry>
+                            <entry>8</entry>
+                            <entry>4</entry>
+                            <entry>1</entry>
+                            <entry>Alternate Colour</entry>
+                            <entry>Any Card</entry>
+                            <entry>Limited</entry>
+                        </row>
+                        <row>
+                            <entry>Relaxed Seahaven Towers</entry>
+                            <entry>10</entry>
+                            <entry>4</entry>
+                            <entry>1</entry>
+                            <entry>Suit</entry>
+                            <entry>Kings Only</entry>
+                            <entry>Limited</entry>
+                        </row>
+                        <row>
+                            <entry>Seahaven Towers</entry>
+                            <entry>10</entry>
+                            <entry>4</entry>
+                            <entry>1</entry>
+                            <entry>Suit</entry>
+                            <entry>Kings Only</entry>
+                            <entry>Unlimited</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </para>
+    </section>
+</chapter>

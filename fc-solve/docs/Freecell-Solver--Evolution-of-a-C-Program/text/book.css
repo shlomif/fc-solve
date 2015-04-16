@@ -1,0 +1,22 @@
+a:hover { color: red }
+a.nav:link { color: green }
+a.nav:visited { color: DeepPink }
+a.nav:active { color: blue }
+b.nav { color : Black}
+b.plain {color : Black}
+i.orig { }
+/* i { color : purple } */
+body { background-color : #FFFFFF }
+a.contents:active { color: red }
+table.mycode { border-style : solid ; border-width : thin }
+td.mycode { width : 60em }
+table.mydemo { border-style : solid ; border-width : thin }
+td.mydemo { width : 60em }
+table.note { border-style : double ; border-width : 3}
+h3.notbold { font-weight: normal }
+font.menupath { font-family: monospace }
+b.menupathcomponent { color: red }
+font.menupathseparator { color: green }
+tt.mycode { color : BlueViolet }
+tt { color : BlueViolet }
+li.notbold { padding-bottom : 15 }

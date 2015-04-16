@@ -1,0 +1,247 @@
+<?xml version='1.0' ?>
+<!-- <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
+<!-- This comment is meant to settle gvim -->
+    <chapter id="states_collection">
+        <title>The States Collection</title>
+        <section id="overview">
+            <title>Overview</title>
+            <para>
+                Implementing a game AI system requires collectings the 
+                positions of the game that were reached so far, in order
+                to mark them and make sure they are not visited times and 
+                again.
+            </para>
+            <para>
+                Such a position (also known as a <glossterm>state</glossterm>)
+                has a 1-to-1 representation of the current state of the game.
+                A solver, human or computerized, given an intermediate position
+                in such form would be able to solve it without any other 
+                information.
+            </para>
+            <para>
+                The states collection of &fcs; evolved quite a bit since the
+                first version, and I believe many lessons about programming
+                efficient data structures can be learned from this evolution.
+                By playing around with it, I was able to witness great speed
+                improvements, and also come up with very good insights about
+                what data structures would comprise of a good collection or
+                dictionary.
+            </para>
+        </section>
+        <section id="unordered_list">
+            <title>Initial Perl Version - Unordered List</title>
+            <para>
+                The initial perl version sported a states collection 
+                implemented as an unordered list. I kept an array of states 
+                (it could have been a linked list, too) and whenever I 
+                encountered a newly visited state, I added it to the end of
+                the array. To search for the existence of a state in the state
+                collection, the list was scanned element by element.
+            </para>
+            <para>
+                Assuming a comparison and an assignment are &O_1; operations 
+                (an assumption which would be kept for the rest of this
+                chapter), then it can be seen that an insertion takes &O_1; 
+                time while a lookup take &O_n; time. Since we encounter many
+                states, then we want the lookup to be as fast as possible. But 
+                in this case it is &O_n;.
+            </para>
+            <para>
+                &O_n; is the worst possible lookup complexity for a collection,
+                and as more states are collected, it will become worse and 
+                worse to lookup one in it. 
+                I became aware of this fact, as I noticed that the perl 
+                program ran very slowly. &O_n; lookup is in most cases 
+                very unacceptable and you should avoid it whenever possible.
+            </para>
+        </section>
+        <section id="sorted_array">
+            <title>Sorted Array with a Q-Sorted Sort Margin</title>
+            <para>
+                The first C version featured a sorted array as a states 
+                collection. In order to avoid the costy operation of 
+                incrementing all the positions of the higher states by 1, 
+                whenever a new state was added, I kept a <glossterm>sort margin
+                </glossterm> that contained several unsorted states at the end.
+            </para>
+            <para>
+                A new state was first added to the end of the sort margin. When
+                enough states were collected there, I merged the sort margin
+                into the main array, by using the ANSI C 
+                <function>qsort()</function> function. This entire scheme had
+                an acceptable running time.
+            </para>
+            <para>
+                Let's analyze the complexity of everything involved. Lookup can
+                be done using a binary search on the sorted part followed by
+                a linear search on the unsorted part. Since the unsorted part
+                is at most a constant number of items, then going over it
+                is &O_1; and the entire operation is that of a binary search
+                which is an &O_logn; operation.
+            </para>
+            <para>
+                Assuming the number of elements collected in the sort margin is
+                k, then adding 
+                k elements, would take 
+                &O_nlogn; time, since the function <function>qsort()</function>
+                uses Quick-Sort which has this complexity on average.<footnote id="qsort_complexity">
+                    <para>
+                        Quick-Sort has a worst time complexity of &O_n2;, but
+                        it has an average of &O_nlogn;
+                    </para>
+                </footnote> &O_nlogn; divided by a constant is still &O_nlogn;
+                so an insertion of an element is &O_nlogn;.
+            </para>
+            <para>
+                The accumulative time for adding n elements is &O_n2logn; which
+                is the time for insertion multiplied by n.
+            </para>
+        </section>
+        <section id="merging_with_a_binsearch_merge">
+            <title>Merging the Sort Margin Using the "Merge" Algorithm</title>
+            <para>
+                Incidentally, I took a course about data structures and 
+                algorithms, the semester after I coded the first version of 
+                &fcs;. There I learned about the large complexity involved
+                in quick-sorting, and that there was a better algorithm for 
+                merging two arrays: Merge. The Merge algorithm works like this:
+            </para>
+            <para>
+                <orderedlist>
+                    <listitem>
+                        <para>
+                            Take as input two <emphasis>sorted</emphasis>
+                            arrays A and B and a result buffer R.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Keep two pointers to the arrays PA and PB, 
+                            initialized to the beginning of the arrays,
+                            and a pointer PR initialized to the beginning
+                            of R.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            If *PA &lt; *PB copy *PA to *PR and increment PA. 
+                            Else, copy *PB to *PR and increment PB. In any case, increment PR afterwards.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Repeat step No. 3 until PA reaches the end of A, or
+                            PB reaches the end of PB.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Copy what remains of the other array to R.
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </para>
+            <para>
+                This algorithm runs in linear time. I decided to use a 
+                variation of the algorithm, due to the fact that the sort
+                margin could become so much smaller than the main array.
+            </para>
+            <para>
+                In my variation, the sort margin is scanned linearily, but
+                the index of the corresponding element in the main array
+                is found using a binary search. Once found, all the elements 
+                up to it, are copied as is without comparison. That way, one
+                can hopefully save a lot of comparisons.
+            </para>
+            <para>
+                To facilitate the merge, the sort margin was kept sorted all 
+                the times, and middle elements pushed some of the elements
+                forward.
+            </para>
+            <para>
+                Lookup now is still &O_logn;, but this time insertion was 
+                reduced to &O_n; time. (the merging operation is &O_n; and it 
+                is done every constant number of elements) The accumulative 
+                time now is &O_n2; which is &O_n; multiplied by n.
+            </para>
+            <para>
+                This scheme ran much faster than the qsort one - by a factor
+                of 3 or so. While the qsort() scheme was adequate to give
+                good results most of the time, a merge of the sort margin
+                was a much wiser choice, algorithmically.
+            </para>
+        </section>
+        <section id="array_of_pointers">
+            <title>Array of Pointers instead of Array of Structs</title>
+            <para>
+                Freecell Solver 0.2 managed the states collection as an
+                array in which the states' structs appeared one adjacent
+                to the other. I also passed the entire struct as a paremeter
+                to &solve_for_state;. When I tried to run it on NT I realized
+                that sometimes the program ran out of stack, because it 
+                descended into a relatively large depth, while passing all
+                the structs in it. To avoid it, I decided to pass pass pointers
+                to the stacks, and to store the states as an array of pointers.
+            </para>
+            <para>
+                I did not want to individually malloc the structs, because
+                I knew memory was allocated in powers of 2, and so I can have
+                a lot of it wasted. I first tried to allocate the states by 
+                allocating them
+                from the end of one array that was realloced when necessary. 
+                However, I realized (after a long and frantic debugging 
+                session) that the newly allocated array may not retain its 
+                original place in memory, thus causing the pointers that 
+                were already collected to become defunct.
+            </para>
+            <para>
+                To avoid this, I devised a better scheme, in which I allocate
+                the states in packs of constant size, and allocate more packs
+                as necessary. Since the packs contain more than one state, and
+                their size can be adjusted to accomodate for the whims of the
+                underlying memory management, it was a good solution as could 
+                be found.
+                <footnote id="indices_instead_of_pointers">
+                    <para>
+                        What I could have also done was to manage indices to 
+                        the states inside the allocation block, instead of 
+                        pointers. However, I prefered not to use this scheme, 
+                        because I did not want the extra cost of looking up
+                        the real pointer from the index.
+                    </para>
+                </footnote>
+            </para>
+            <para>
+                With this management of memory, I converted the states
+                collection to use an array of pointers instead of an array
+                of structs. Not only did it consume less stack space, but
+                it also ran much faster. The reason is that swapping and 
+                re-organizing pointers (which take 4 or 8 bytes each) 
+                is done much more quickly than re-organizing large structs. 
+                Plus, passing pointers on the stack is more efficient than
+                passing and duplicating entire stacks.
+            </para>
+            <para>
+                This time the algorithmical order of growth was not reduced,
+                but still there can be a difference of heaven and earth 
+                between a large &O_n2; and a small &O_n2;...
+            </para>
+        </section>
+    </chapter>
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:4
+sgml-indent-data:t
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+sgml-parent-document: "fcs-book.xml"
+End:
+-->
