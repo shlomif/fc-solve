@@ -1,5 +1,5 @@
-DEBUG = 0
-PROFILE = 0
+DEBUG = 1
+PROFILE = 1
 WITH_TRACES = 0
 FREECELL_ONLY = 1
 DISABLE_SIMPLE_SIMON := 0
@@ -25,7 +25,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR)
+CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
@@ -199,6 +199,13 @@ OBJECTS :=                     \
 
 #>>>OBJECTS.END
 
+PAT_OBJECTS = \
+		  param.o \
+		  patsolve.o \
+		  pat.o \
+		  tree.o \
+
+
 ifeq ($(DISABLE_SIMPLE_SIMON),0)
 	OBJECTS += simpsim.o
 endif
@@ -213,6 +220,9 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 -include $(DEP_FILES)
 
 %.o: $(SRC_DIR)/%.c
+	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
+
+$(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
 	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
 
 STATIC_LIB_BASE = fcs
