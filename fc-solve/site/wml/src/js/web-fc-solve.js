@@ -320,14 +320,16 @@ Class('FC_Solve', {
 
                 my_append("-=-=-=-=-=-=-=-=-=-=-=-\n\n");
 
-                var _out_state = function (state_as_string) {
-                    my_append ( state_as_string +
-                        "\n\n====================\n\n"
-                    );
+
+                // A sequence to hold the moves and states for post-processing,
+                // such as expanding multi-card moves.
+                var states_and_moves_sequence = [];
+
+                var _out_state = function(s) {
+                    states_and_moves_sequence.push({ type: 's', str: s});
                 };
 
                 _out_state (get_state_str() );
-
 
                 var move_ret_code;
                 while ((move_ret_code = freecell_solver_user_get_next_move(that.obj, move_buffer)) == 0) {
@@ -342,10 +344,17 @@ Class('FC_Solve', {
                     var move_as_string = Module.Pointer_stringify(move_as_string_ptr);
                     c_free (move_as_string_ptr);
 
-                    my_append(move_as_string + "\n\n");
+                    states_and_moves_sequence.push({ type: 'm', str: move_as_string});
                     _out_state(state_as_string);
                 }
 
+                states_and_moves_sequence.forEach(function (x) {
+                    var t_ = x.type;
+                    var str = x.str;
+                    my_append ( str +
+                        (t_ == 's' ? "\n\n====================\n\n" : "\n\n")
+                    );
+                });
                 // Cleanup C resources
                 c_free(move_buffer);
                 freecell_solver_user_free(that.obj);
