@@ -92,18 +92,67 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
     var output_state_promise = function() { return; };
 
     var past_first_output_state_promise = function() {
+
         var state_string = foundations_str +
             "Freecells: " + (modified_state.f.map(function (fc) {
             return ((!fc) ? '    ' : (fc.t == 's') ? fc.s : ("  " + fc.c));
         }).join("")) + "\n" + (modified_state.c.map(function(col) {
             return ": " + col.join(" ") + "\n";
         }).join(""));
+
         ret_array.push(
             {
                 type: 's',
                 str: state_string,
             }
         );
+
+        return;
+    };
+
+    var render_move = function (my_move) {
+        var src = my_move.src.toString();
+        var dest = my_move.dest.toString();
+        if (my_move.t == 's2f') {
+            return ("Move a card from stack " + src + " to freecell" + dest);
+        } else if (my_move.t == 's2s') {
+            return ("Move 1 cards from stack " + src + " to stack" + dest);
+        } else {
+            return ("Move 1 cards from freecell " + src + " to stack" + dest);
+        }
+    };
+    var perform_move = function (my_move) {
+        var src = my_move.src;
+        var dest = my_move.dest;
+        if (my_move.t == 's2f') {
+            modified_state.f[dest] = { t: 'c', c: modified_state.c[src].pop() };
+        } else if (my_move.t = 's2s') {
+            modified_state.c[dest].push(modified_state.c[src].pop());
+        } else {
+            if (modified_state.f[src].t != 'c') {
+                throw "Wrong val in " + src + "Freecell.";
+            }
+            modified_state.c[dest].push(modified_state.f[src].c);
+            modified_state.f[src] = null;
+        }
+
+        return;
+    };
+    var add_move = function(my_move) {
+        output_state_promise();
+
+        ret_array.push(
+            {
+                type: 'm',
+                str: render_move(my_move),
+            }
+        );
+
+        perform_move(my_move);
+
+        output_state_promise = past_first_output_state_promise;
+
+        return;
     };
 
     return ret_array;
