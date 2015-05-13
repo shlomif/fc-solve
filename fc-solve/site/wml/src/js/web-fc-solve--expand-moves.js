@@ -167,7 +167,7 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
 
         for (var i = num_cards_thru_freecell-1 ; i >= 0 ; i--) {
             add_move(
-                { t: 'f2s', src: empty_fc_indexes[i]; dest: dest, })
+                { t: 'f2s', src: empty_fc_indexes[i], dest: dest, }
             );
         }
 
@@ -207,7 +207,7 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
                     source,
                     temp_dest,
                     count_cards,
-                    running_empty_cols,
+                    running_empty_cols
                 );
 
                 steps.push({ source: source, dest: temp_dest, count: count_cards });
@@ -224,7 +224,7 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
                 );
                 running_empty_cols.push(s.dest);
                 running_empty_cols.sort(function (a,b) { return a - b; });
-            }
+            });
             return;
         }
     };
@@ -232,7 +232,7 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
     recursive_move(
         ultimate_source, ultimate_dest,
         ultimate_num_cards,
-        empty_stack_indexes,
+        empty_stack_indexes
     );
 
     return ret_array;
