@@ -155,5 +155,25 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
         return;
     };
 
+    var move_using_freecells = function(source, dest, count) {
+
+        var num_cards_thru_freecell = count - 1;
+        for (var i=0 ; i < num_cards_thru_freecell; i++) {
+            add_move(
+                { t: 's2f', src: source, dest: empty_fc_indexes[i], }
+            );
+        }
+        add_move({ t: 's2s', src: source, dest: dest, });
+
+        for (var i = num_cards_thru_freecell-1 ; i >= 0 ; i--) {
+            add_move(
+                { t: 'f2s', src: empty_fc_indexes[i]; dest: dest, })
+            );
+        }
+
+        return;
+    };
+
+
     return ret_array;
 }
