@@ -52,4 +52,21 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
                 empty_stack_indexes.push(idx);
         }
     }
+
+    var num_cards_moved_at_each_stage = [];
+
+    var num_cards = 0;
+    num_cards_moved_at_each_stage.push( num_cards );
+    var step_width = 1 + empty_fc_indexes.length;
+    while (
+        (num_cards = Math.min(
+                num_cards + step_width,
+                ultimate_num_cards
+        ))
+        < ultimate_num_cards
+    ) {
+        num_cards_moved_at_each_stage.push( num_cards );
+    }
+    num_cards_moved_at_each_stage.push( num_cards );
+
 }
