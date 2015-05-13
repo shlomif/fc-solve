@@ -174,6 +174,66 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
         return;
     };
 
+    var _find_max_step = function(n) {
+        var x = 1;
+
+        while ((x << 1) < n)
+        {
+            x <<= 1;
+        }
+
+        return x;
+    };
+
+    var recursive_move;
+    recursive_move = function(source, dest, num_cards, empty_cols) {
+
+        if (num_cards <= 0) {
+            // Do nothing - the no-op.
+            return;
+        } else {
+            var running_empty_cols = empty_cols.slice(0);
+            var steps = [];
+
+            while (Math.ceil(num_cards / step_width) > 1)
+            {
+                // Top power of two in num_steps
+                var rec_num_steps = _find_max_step(
+                    Math.ceil( num_cards / step_width )
+                );
+                var count_cards = rec_num_steps * step_width;
+                var temp_dest = running_empty_cols.shift();
+                recursive_move(
+                    source,
+                    temp_dest,
+                    count_cards,
+                    running_empty_cols,
+                );
+
+                steps.push({ source: source, dest: temp_dest, count: count_cards });
+                num_cards -= count_cards;
+            }
+            move_using_freecells(source, dest, num_cards);
+
+            steps.reverse().forEach(function (s) {
+                recursive_move(
+                    s.dest,
+                    dest,
+                    s.count,
+                    running_empty_cols
+                );
+                running_empty_cols.push(s.dest);
+                running_empty_cols.sort(function (a,b) { return a - b; });
+            }
+            return;
+        }
+    };
+
+    recursive_move(
+        ultimate_source, ultimate_dest,
+        ultimate_num_cards,
+        empty_stack_indexes,
+    );
 
     return ret_array;
 }
