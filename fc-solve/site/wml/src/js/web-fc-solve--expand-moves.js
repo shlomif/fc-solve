@@ -55,9 +55,13 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
     for (var idx = 0 ; idx < num_stacks ; idx++) {
         var cards = col_matches[idx].match(/\w{2}/g);
 
+        if (!cards) {
+            cards = [];
+        }
+
         modified_state.c[idx] = cards;
         if ((idx != ultimate_dest) && (idx != ultimate_source) &&
-            (card.length == 0)) {
+            (cards.length == 0)) {
                 empty_stack_indexes.push(idx);
         }
     }
@@ -94,7 +98,7 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
     var past_first_output_state_promise = function() {
 
         var state_string = foundations_str +
-            "Freecells: " + (modified_state.f.map(function (fc) {
+            "Freecells:" + (modified_state.f.map(function (fc) {
             return ((!fc) ? '    ' : (fc.t == 's') ? fc.s : ("  " + fc.c));
         }).join("")) + "\n" + (modified_state.c.map(function(col) {
             return ": " + col.join(" ") + "\n";
@@ -114,11 +118,11 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
         var src = my_move.src.toString();
         var dest = my_move.dest.toString();
         if (my_move.t == 's2f') {
-            return ("Move a card from stack " + src + " to freecell" + dest);
+            return ("Move a card from stack " + src + " to freecell " + dest);
         } else if (my_move.t == 's2s') {
-            return ("Move 1 cards from stack " + src + " to stack" + dest);
+            return ("Move 1 cards from stack " + src + " to stack " + dest);
         } else {
-            return ("Move 1 cards from freecell " + src + " to stack" + dest);
+            return ("Move a card from freecell " + src + " to stack " + dest);
         }
     };
     var perform_move = function (my_move) {
@@ -126,7 +130,7 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
         var dest = my_move.dest;
         if (my_move.t == 's2f') {
             modified_state.f[dest] = { t: 'c', c: modified_state.c[src].pop() };
-        } else if (my_move.t = 's2s') {
+        } else if (my_move.t == 's2s') {
             modified_state.c[dest].push(modified_state.c[src].pop());
         } else {
             if (modified_state.f[src].t != 'c') {

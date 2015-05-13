@@ -52,6 +52,7 @@ Class('FC_Solve', {
         cmd_line_preset: { is: ro },
         current_iters_limit: { is: rw, init: 0 },
         set_output: { is: ro },
+        should_expand_moves: { is: ro, init: false, },
         obj: {
             is: rw,
             init: function() {
@@ -346,6 +347,24 @@ Class('FC_Solve', {
 
                     states_and_moves_sequence.push({ type: 'm', str: move_as_string});
                     _out_state(state_as_string);
+                }
+
+                if (that.should_expand_moves) {
+                    var new_array = [states_and_moves_sequence[0]];
+                    for (var i = 1; i < states_and_moves_sequence.length - 1; i+=2) {
+                        Array.prototype.push.apply(new_array,
+                            fc_solve_expand_move(
+                                8,
+                                4,
+                                states_and_moves_sequence[i-1].str,
+                                states_and_moves_sequence[i],
+                                states_and_moves_sequence[i+1].str
+                            )
+                        );
+                        new_array.push(states_and_moves_sequence[i+1]);
+                    }
+
+                    states_and_moves_sequence = new_array;
                 }
 
                 states_and_moves_sequence.forEach(function (x) {
