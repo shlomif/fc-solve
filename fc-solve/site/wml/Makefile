@@ -156,6 +156,9 @@ upload: all
 upload_temp: all
 	$(RSYNC) $(D)/ $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
 
+upload_local: all
+	$(RSYNC) $(D)/ /var/www/html/shlomif/fc-solve-temp
+
 test: all
 	prove Tests/*.t
 
