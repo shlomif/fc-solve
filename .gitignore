@@ -12,6 +12,16 @@ fc-solve/presets/soft-threads/meta-moves/auto-gen/2-cells-freecell/.data-len-pro
 fc-solve/presets/soft-threads/meta-moves/auto-gen/2-cells-freecell/.data-proc
 fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-len-proc
 fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-proc
+fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/MYMETA.json
+fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/MYMETA.yml
+fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/Makefile
+fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/blib/
+fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/pm_to_blib
+fc-solve/site/http-services/ajax-fc-solve/Games-FC_Solve-AJAX-Service/MYMETA.json
+fc-solve/site/http-services/ajax-fc-solve/Games-FC_Solve-AJAX-Service/MYMETA.yml
+fc-solve/site/http-services/ajax-fc-solve/Games-FC_Solve-AJAX-Service/Makefile
+fc-solve/site/http-services/ajax-fc-solve/Games-FC_Solve-AJAX-Service/blib/
+fc-solve/site/http-services/ajax-fc-solve/Games-FC_Solve-AJAX-Service/pm_to_blib
 fc-solve/site/wml/.sass-cache
 fc-solve/site/wml/dest
 fc-solve/site/wml/include.mak
