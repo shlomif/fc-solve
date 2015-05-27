@@ -1797,5 +1797,5 @@ int main(int argc, char * argv[])
     return 0;
 }
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
-#error DEFINED
+#error "FCS_KAZ_TREE_USE_RECORD_DICT_KEY was defined and this is incompatible"
 #endif
