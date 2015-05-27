@@ -47,12 +47,6 @@ extern "C" {
 
 typedef struct { unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS]; } fcs_encoded_state_buffer_t;
 
-#define FCS_PARENT_AND_MOVE__GET_MOVE(parent_and_move) \
-    ((parent_and_move).s[ \
-        (parent_and_move).s[0] + 1 \
-        ] \
-    )
-
 #if SIZEOF_VOID_P == 4
 #define FCS_EXPLICIT_REFCOUNT 1
 #endif
