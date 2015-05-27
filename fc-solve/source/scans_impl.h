@@ -245,7 +245,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #undef TRACE0
 
 #define STATE_TO_PASS() (&(pass))
-#define NEW_STATE_TO_PASS() (&(new_pass))
 
 #ifdef FCS_RCS_STATES
 

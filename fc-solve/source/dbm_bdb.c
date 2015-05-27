@@ -111,7 +111,6 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
     }
 }
 
-#define MAX_ITEMS_IN_TRANSACTION 10000
 extern void fc_solve_dbm_store_offload_pre_cache(
     fcs_dbm_store_t store,
     fcs_pre_cache_t * pre_cache

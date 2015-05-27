@@ -1218,17 +1218,18 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     return;
 }
 
-extern int fc_solve_sfs_raymond_prune(
+typedef enum
+{
+    PRUNE_RET_NOT_FOUND,
+    PRUNE_RET_FOLLOW_STATE
+} fcs_prune_ret_t;
+
+extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t * const soft_thread,
     fcs_kv_state_t * const raw_ptr_state_raw,
     fcs_collectible_state_t * * const ptr_ptr_next_state
 );
 
-enum PRUNE_RET
-{
-    PRUNE_RET_NOT_FOUND,
-    PRUNE_RET_FOLLOW_STATE
-};
 
 #ifdef FCS_RCS_STATES
 fcs_state_t * fc_solve_lookup_state_key_from_val(

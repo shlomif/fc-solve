@@ -1950,7 +1950,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
     return -1;
 }
 
-extern int fc_solve_sfs_raymond_prune(
+extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t * const soft_thread,
     fcs_kv_state_t * const raw_ptr_state_raw,
     fcs_collectible_state_t * * const ptr_next_state_val
@@ -2033,7 +2033,7 @@ extern int fc_solve_sfs_raymond_prune(
     sfs_check_state_end();
 #undef derived_states_list
 
-    register int ret_code;
+    register fcs_prune_ret_t ret_code;
 
     if (num_total_cards_moved)
     {
