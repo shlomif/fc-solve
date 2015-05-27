@@ -130,24 +130,6 @@ struct fcs_states_linked_list_item_struct
 typedef struct fcs_states_linked_list_item_struct fcs_states_linked_list_item_t;
 
 /*
- * Conventions for use of the tests' order flags:
- * A test that should be scanned sequentially should have both flags cleared.
- * The first test in its random group should have both flags set. All the
- * other tests in the group should contain the FLAG_RANDOM flag.
- *
- * For instance: 123(45)(67)8 translates into:
- * 1 , 2, 3, 4|RANDOM|START_RANDOM_GROUP, 5|RANDOM,
- * 6|RANDOM_START_RANDOM_GROUP, 7|RANDOM, 8
- *
- * */
-enum
-{
-    FCS_TEST_ORDER_NO_FLAGS_MASK = 0xFFFFFF,
-    FCS_TEST_ORDER_FLAG_RANDOM = 0x1000000,
-    FCS_TEST_ORDER_FLAG_START_RANDOM_GROUP = 0x2000000
-};
-
-/*
  * Declare these structures because they will be used within
  * fc_solve_instance, and they will contain a pointer to it.
  * */
