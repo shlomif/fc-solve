@@ -911,9 +911,6 @@ struct fc_solve_soft_thread_struct
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
-#define FC_SOLVE_IS_DFS(soft_thread) \
-    ((soft_thread)->super_method_type == FCS_SUPER_METHOD_DFS)
-
 /*
  * An enum that specifies the meaning of each BeFS weight.
  * */

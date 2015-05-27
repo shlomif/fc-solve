@@ -40,3 +40,7 @@ static GCC_INLINE void fc_solve_free_bfs_queue(fc_solve_soft_thread_t * soft_thr
     fc_solve_hash_t * talons_hash;
 
 #endif
+
+#define FC_SOLVE_IS_DFS(soft_thread) \
+    ((soft_thread)->super_method_type == FCS_SUPER_METHOD_DFS)
+
