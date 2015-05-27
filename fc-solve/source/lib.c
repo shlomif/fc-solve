@@ -77,12 +77,12 @@ typedef struct
     fcs_state_locs_struct_t trace_solution_state_locs;
 } fcs_flare_item_t;
 
-enum
+typedef enum
 {
     FLARES_PLAN_RUN_INDEFINITELY,
     FLARES_PLAN_RUN_COUNT_ITERS,
     FLARES_PLAN_CHECKPOINT,
-} FLARES_PLAN_TYPE;
+} flares_plan_type_t;
 
 enum FLARES_CHOICE_TYPE
 {
@@ -92,7 +92,7 @@ enum FLARES_CHOICE_TYPE
 
 typedef struct
 {
-    int type;
+    flares_plan_type_t type;
     int flare_idx;
     int count_iters;
 } flares_plan_item;
@@ -442,9 +442,9 @@ typedef enum
     FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
 } fcs_compile_flares_ret_t;
 
-static GCC_INLINE int add_to_plan(
+static GCC_INLINE flares_plan_type_t add_to_plan(
         fcs_instance_item_t * instance_item,
-        int mytype,
+        flares_plan_type_t mytype,
         int flare_idx,
         int count_iters
     )
@@ -463,7 +463,7 @@ static GCC_INLINE int add_to_plan(
     return mytype;
 }
 
-static GCC_INLINE int add_count_iters_to_plan(
+static GCC_INLINE flares_plan_type_t add_count_iters_to_plan(
         fcs_instance_item_t * instance_item,
         int flare_idx,
         int count_iters
@@ -475,7 +475,7 @@ static GCC_INLINE int add_count_iters_to_plan(
 }
 
 
-static GCC_INLINE int add_checkpoint_to_plan(
+static GCC_INLINE flares_plan_type_t add_checkpoint_to_plan(
         fcs_instance_item_t * instance_item
     )
 {
@@ -484,7 +484,7 @@ static GCC_INLINE int add_checkpoint_to_plan(
             );
 }
 
-static GCC_INLINE int add_run_indef_to_plan(
+static GCC_INLINE flares_plan_type_t add_run_indef_to_plan(
         fcs_instance_item_t * instance_item,
         int flare_idx
     )
@@ -545,7 +545,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
         /* Tough luck - gotta parse the string. ;-) */
         {
             char * item_start, * item_end, * cmd_end;
-            int last_item_type = -1;
+            flares_plan_type_t last_item_type;
 
             if (instance_item->plan)
             {
@@ -698,11 +698,9 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 item_start = item_end+1;
             } while (*item_end);
 
-            assert(last_item_type != -1);
-
             if (last_item_type != FLARES_PLAN_CHECKPOINT)
             {
-                last_item_type = add_checkpoint_to_plan(instance_item);
+                add_checkpoint_to_plan(instance_item);
             }
 
             instance_item->flares_plan_compiled = TRUE;
