@@ -660,30 +660,6 @@ void fc_solve_init_instance(fc_solve_instance_t * instance)
 */
 #if defined(INDIRECT_STACK_STATES)
 
-#if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_JUDY))
-#if (((FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH) \
-       && (defined(FCS_WITH_CONTEXT_VARIABLE)) \
-       && (!defined(FCS_INLINED_HASH_COMPARISON))) \
-            || \
-       (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE) \
-            || \
-       (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE) \
-    )
-
-static int fcs_stack_compare_for_comparison_with_context(
-    const void * v_s1,
-    const void * v_s2,
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
-    const
-#endif
-    void * context GCC_UNUSED
-)
-{
-    return fc_solve_stack_compare_for_comparison(v_s1, v_s2);
-}
-#endif
-#endif
-
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
 /* A hash calculation function for use in glib's hash */

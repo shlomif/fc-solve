@@ -1673,23 +1673,6 @@ static GCC_INLINE int fc_solve_resume_instance(
     return ret;
 }
 
-/*
-    Clean up a solving process that was terminated in the middle.
-    This function does not substitute for later calling
-    finish_instance() and free_instance().
-  */
-static GCC_INLINE void fc_solve_unresume_instance(
-    fc_solve_instance_t * const instance GCC_UNUSED
-)
-{
-    /*
-     * Do nothing - since finish_instance() can take care of solution_states
-     * and proto_solution_moves as they were created by these scans, then
-     * I don't need to do it here, too
-     *
-     * */
-}
-
 
 static GCC_INLINE fc_solve_soft_thread_t *
 fc_solve_instance_get_first_soft_thread(
@@ -1960,6 +1943,37 @@ static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b,
 
 #endif
 
+/* These are all stack comparison functions to be used for the stacks
+   cache when using INDIRECT_STACK_STATES
+*/
+#if defined(INDIRECT_STACK_STATES)
+
+#if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH) && (FCS_STACK_STORAGE != FCS_STACK_STORAGE_JUDY))
+#if (((FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH) \
+       && (defined(FCS_WITH_CONTEXT_VARIABLE)) \
+       && (!defined(FCS_INLINED_HASH_COMPARISON))) \
+            || \
+       (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE) \
+            || \
+       (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE) \
+    )
+
+static int fcs_stack_compare_for_comparison_with_context(
+    const void * v_s1,
+    const void * v_s2,
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
+    const
+#endif
+    void * context GCC_UNUSED
+)
+{
+    return fc_solve_stack_compare_for_comparison(v_s1, v_s2);
+}
+#endif
+#endif
+
+#endif
+
 /*
     This function associates a board with an fc_solve_instance_t and
     does other initialisations. After it, you must call
@@ -2021,8 +2035,8 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
     /* Initialize the data structure that will manage the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     instance->tree = rbinit(
-        fc_solve_state_extra_info_compare_with_context,
-        NULL
+        STATE_STORAGE_TREE_COMPARE(),
+        STATE_STORAGE_TREE_CONTEXT()
     );
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 

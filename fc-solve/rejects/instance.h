@@ -44,3 +44,20 @@ static GCC_INLINE void fc_solve_free_bfs_queue(fc_solve_soft_thread_t * soft_thr
 #define FC_SOLVE_IS_DFS(soft_thread) \
     ((soft_thread)->super_method_type == FCS_SUPER_METHOD_DFS)
 
+/*
+    Clean up a solving process that was terminated in the middle.
+    This function does not substitute for later calling
+    finish_instance() and free_instance().
+  */
+static GCC_INLINE void fc_solve_unresume_instance(
+    fc_solve_instance_t * const instance GCC_UNUSED
+)
+{
+    /*
+     * Do nothing - since finish_instance() can take care of solution_states
+     * and proto_solution_moves as they were created by these scans, then
+     * I don't need to do it here, too
+     *
+     * */
+}
+
