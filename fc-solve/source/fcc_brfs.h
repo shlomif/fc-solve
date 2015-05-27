@@ -52,13 +52,6 @@ extern "C"
 #include "dbm_solver.h"
 #include "dbm_calc_derived.h"
 
-enum FCC_brfs_scan_type
-{
-    FIND_FCC_START_POINTS,
-    FIND_MIN_BY_SORTING
-};
-
-
 struct fcs_FCC_start_point_struct
 {
     fcs_encoded_state_buffer_t enc_state;
