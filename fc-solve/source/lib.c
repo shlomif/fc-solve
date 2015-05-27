@@ -431,7 +431,7 @@ int DLLEXPORT freecell_solver_user_set_tests_order(
     );
 }
 
-enum FCS_COMPILE_FLARES_RET
+typedef enum
 {
     FCS_COMPILE_FLARES_RET_OK = 0,
     FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND,
@@ -440,7 +440,7 @@ enum FCS_COMPILE_FLARES_RET
     FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP,
     FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND,
     FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
-};
+} fcs_compile_flares_ret_t;
 
 static GCC_INLINE int add_to_plan(
         fcs_instance_item_t * instance_item,
@@ -494,7 +494,7 @@ static GCC_INLINE int add_run_indef_to_plan(
             );
 }
 
-static int user_compile_all_flares_plans(
+static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t * const user,
     int * const instance_list_index,
     char * * const error_string
@@ -746,7 +746,6 @@ int DLLEXPORT freecell_solver_user_solve_board(
     const char * state_as_string
     )
 {
-    int ret_code;
     char * error_string;
     int instance_list_index;
 
@@ -757,14 +756,13 @@ int DLLEXPORT freecell_solver_user_solve_board(
 
     user->current_instance_idx = 0;
 
-    ret_code =
+    if (
         user_compile_all_flares_plans(
             user,
             &instance_list_index,
             &error_string
-        );
-
-    if (ret_code != FCS_COMPILE_FLARES_RET_OK)
+        ) != FCS_COMPILE_FLARES_RET_OK
+    )
     {
         user->error_string = error_string;
 
