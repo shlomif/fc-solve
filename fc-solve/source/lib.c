@@ -442,6 +442,17 @@ typedef enum
     FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
 } fcs_compile_flares_ret_t;
 
+static GCC_INLINE flares_plan_item create_plan_item(
+    flares_plan_type_t mytype,
+    int flare_idx,
+    int count_iters
+)
+{
+    flares_plan_item ret = {.type = mytype, .flare_idx = flare_idx, .count_iters = count_iters};
+
+    return ret;
+}
+
 static GCC_INLINE flares_plan_type_t add_to_plan(
         fcs_instance_item_t * instance_item,
         flares_plan_type_t mytype,
@@ -456,9 +467,7 @@ static GCC_INLINE flares_plan_type_t add_to_plan(
     instance_item->plan =
         SREALLOC( instance_item->plan, ++(instance_item->num_plan_items));
 
-    instance_item->plan[next_item].type = mytype;
-    instance_item->plan[next_item].flare_idx = flare_idx;
-    instance_item->plan[next_item].count_iters = count_iters;
+    instance_item->plan[next_item] = create_plan_item(mytype, flare_idx, count_iters);
 
     return mytype;
 }
@@ -531,12 +540,8 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 instance_item->num_plan_items
             );
             /* Set to the first flare. */
-            instance_item->plan[0].type = FLARES_PLAN_RUN_INDEFINITELY;
-            instance_item->plan[0].flare_idx = 0;
-            instance_item->plan[0].count_iters = -1;
-            instance_item->plan[1].type = FLARES_PLAN_CHECKPOINT;
-            instance_item->plan[1].flare_idx = -1;
-            instance_item->plan[1].count_iters = -1;
+            instance_item->plan[0] = create_plan_item(FLARES_PLAN_RUN_INDEFINITELY, 0, -1);
+            instance_item->plan[1] = create_plan_item(FLARES_PLAN_CHECKPOINT, -1, -1);
 
             instance_item->flares_plan_compiled = TRUE;
             continue;
