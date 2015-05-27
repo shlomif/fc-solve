@@ -236,12 +236,12 @@ static GCC_INLINE void solver_state_free(
     cache_destroy(&(solver_state->cache));
 }
 
-enum STATUS
+typedef enum
 {
     FCC_SOLVED = 0,
     FCC_IMPOSSIBLE,
     FCC_INTERRUPTED
-};
+} fcc_status_t;
 
 static void instance_time_printf(
     fcs_dbm_solver_instance_t * instance,
@@ -285,7 +285,7 @@ static GCC_INLINE void instance_print_reached(
         );
 }
 
-static int instance_run_solver(
+static fcc_status_t instance_run_solver(
     fcs_dbm_solver_instance_t * instance,
     long max_num_elements_in_cache,
     fcs_state_keyval_pair_t * init_state,
@@ -302,7 +302,6 @@ static int instance_run_solver(
     fcs_fully_connected_component_t * fcc;
     int curr_depth;
     fcs_lru_cache_t * cache;
-    int ret;
     long next_count_num_processed_landmark = STEP;
     long FCCs_per_depth_milestone_step;
     fcs_fcc_moves_seq_t ret_moves_seq;
@@ -331,7 +330,7 @@ static int instance_run_solver(
         delta, local_variant, init_state, &init_state_enc
     );
 
-    ret = FCC_IMPOSSIBLE;
+    fcc_status_t ret = FCC_IMPOSSIBLE;
     ret_moves_seq.count = 0;
     ret_moves_seq.moves_list = NULL;
 
@@ -706,7 +705,6 @@ int main(int argc, char * argv[])
     fcs_state_keyval_pair_t init_state;
     fcs_fcc_moves_seq_t ret_moves_seq, init_moves_seq;
     long FCCs_per_depth_milestone_step;
-    int ret_code;
     fcs_fcc_moves_seq_allocator_t moves_list_allocator;
     fcs_compact_allocator_t moves_list_compact_alloc;
     fcs_meta_compact_allocator_t meta_alloc;
@@ -864,7 +862,7 @@ int main(int argc, char * argv[])
     signal(SIGUSR1, command_signal_handler);
 #endif
 
-    ret_code = instance_run_solver(
+    fcc_status_t ret_code = instance_run_solver(
         &instance,
         caches_delta,
         &init_state,
@@ -873,55 +871,60 @@ int main(int argc, char * argv[])
         &meta_alloc
     );
 
-    if (ret_code == FCC_SOLVED)
+    switch (ret_code)
     {
-        int i;
-        char move_buffer[500];
-        const fcs_fcc_moves_list_item_t * iter;
+        case FCC_SOLVED:
+        {
+            int i;
+            char move_buffer[500];
+            const fcs_fcc_moves_list_item_t * iter;
 
-        fprintf (out_fh, "VERDICT: %s\n", "Success!");
-        /* Now trace the solution */
-        iter = init_moves_seq.moves_list;
-        for (i = 0 ; i < init_moves_seq.count ;)
-        {
-            fprintf(out_fh, "==\n%s\n",
-                   move_to_string(
-                       iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM],
-                       move_buffer
-                   )
-            );
-            if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+            fprintf (out_fh, "VERDICT: %s\n", "Success!");
+            /* Now trace the solution */
+            iter = init_moves_seq.moves_list;
+            for (i = 0 ; i < init_moves_seq.count ;)
             {
-                iter = iter->next;
+                fprintf(out_fh, "==\n%s\n",
+                    move_to_string(
+                        iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM],
+                        move_buffer
+                    )
+                );
+                if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                {
+                    iter = iter->next;
+                }
             }
-        }
-        iter = ret_moves_seq.moves_list;
-        for (i = 0 ; i < ret_moves_seq.count ;)
-        {
-             fprintf(out_fh, "==\n%s\n",
-                   move_to_string(
-                       iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM],
-                       move_buffer
-                   )
-            );
-            if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+            iter = ret_moves_seq.moves_list;
+            for (i = 0 ; i < ret_moves_seq.count ;)
             {
-                iter = iter->next;
+                fprintf(out_fh, "==\n%s\n",
+                    move_to_string(
+                        iter->data.s[i%FCS_FCC_NUM_MOVES_IN_ITEM],
+                        move_buffer
+                    )
+                );
+                if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+                {
+                    iter = iter->next;
+                }
             }
+            fprintf (out_fh, "==\nEND\n");
         }
-        fprintf (out_fh, "==\nEND\n");
-    }
-    else if (ret_code == FCC_IMPOSSIBLE)
-    {
-        fprintf (out_fh, "VERDICT: %s\n", "Could not solve successfully.");
-    }
-    else if (ret_code == FCC_INTERRUPTED)
-    {
-        fprintf (out_fh, "VERDICT: %s\n", "Interrupted run after limit reached.");
-    }
-    else
-    {
-        fprintf (out_fh, "VERDICT: %s\n", "Unknown return code. ERROR.");
+        break;
+
+        case FCC_IMPOSSIBLE:
+
+        {
+            fprintf (out_fh, "VERDICT: %s\n", "Could not solve successfully.");
+        }
+        break;
+
+        case FCC_INTERRUPTED:
+        {
+            fprintf (out_fh, "VERDICT: %s\n", "Interrupted run after limit reached.");
+        }
+        break;
     }
 
     instance_time_printf(

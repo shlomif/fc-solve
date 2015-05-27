@@ -33,9 +33,6 @@
 #define FC_SOLVE__KAZ_TREE_H
 
 #include <limits.h>
-#ifdef KAZLIB_SIDEEFFECT_DEBUG
-#include "sfx.h"
-#endif
 
 #include "meta_alloc.h"
 /*
@@ -196,11 +193,7 @@ extern void dict_merge(dict_t *, dict_t *);
 #endif
 
 #if defined(DICT_IMPLEMENTATION) || !defined(KAZLIB_OPAQUE_DEBUG)
-#ifdef KAZLIB_SIDEEFFECT_DEBUG
-#define dict_isfull(D) (SFX_CHECK(D)->dict_nodecount == (D)->dict_maxcount)
-#else
 #define dict_isfull(D) ((D)->dict_nodecount == (D)->dict_maxcount)
-#endif
 #define dict_count(D) ((D)->dict_nodecount)
 #define dict_isempty(D) ((D)->dict_nodecount == 0)
 #define dnode_get(N) ((N)->dict_data)
