@@ -357,7 +357,7 @@ void fc_solve_instance__init_hard_thread(
     fc_solve_reset_hard_thread(hard_thread);
     fc_solve_compact_allocator_init(&(hard_thread->allocator), instance->meta_alloc);
 
-    fcs_move_stack_init(hard_thread->reusable_move_stack);
+    hard_thread->reusable_move_stack = fcs_move_stack__new();
 }
 
 
@@ -751,7 +751,7 @@ extern void fc_solve_trace_solution(
     }
 
 
-    fcs_move_stack_init(instance->solution_moves);
+    instance->solution_moves = fcs_move_stack__new();
 
     fcs_move_stack_t * const solution_moves_ptr = &(instance->solution_moves);
     /*

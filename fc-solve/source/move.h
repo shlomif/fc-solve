@@ -133,12 +133,10 @@ void fc_solve_apply_move(
     user positions.
 */
 
-/* This macro initialises an empty move stack */
-#define fcs_move_stack_init(ret) \
-{       \
-    ret.num_moves = 0;        \
-    /* Allocate some space for the moves */     \
-    ret.moves = (fcs_internal_move_t *)SMALLOC(ret.moves, FCS_MOVE_STACK_GROW_BY);  \
+static GCC_INLINE fcs_move_stack_t fcs_move_stack__new(void)
+{
+    fcs_move_stack_t ret = {.num_moves = 0, .moves = SMALLOC(ret.moves, FCS_MOVE_STACK_GROW_BY) };
+    return ret;
 }
 
 static GCC_INLINE void fc_solve_move_stack_swallow_stack(
@@ -154,12 +152,12 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
 }
 
 static GCC_INLINE void fc_solve_move_stack_normalize(
-    fcs_move_stack_t * moves,
-    fcs_kv_state_t * init_state,
-    fcs_state_locs_struct_t * locs,
-    int freecells_num,
-    int stacks_num,
-    int decks_num
+    fcs_move_stack_t * const moves,
+    const fcs_kv_state_t * const init_state,
+    fcs_state_locs_struct_t * const locs,
+    const int freecells_num,
+    const int stacks_num,
+    const int decks_num
     )
 {
     fcs_internal_move_t in_move;
@@ -167,9 +165,6 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_state_keyval_pair_t s_and_info;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-#ifdef INDIRECT_STACK_STATES
-    int i;
-#endif
 
 #define FCS_S_FC_LOCS(s) (locs->fc_locs)
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
@@ -183,14 +178,13 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_duplicate_kv_state( &(dynamic_state), init_state );
 
 #ifdef INDIRECT_STACK_STATES
-    for (i=0 ; i < stacks_num ; i++)
+    for (int i=0 ; i < stacks_num ; i++)
     {
         fcs_copy_stack(*(dynamic_state.key), *(dynamic_state.val), i, indirect_stacks_buffer);
     }
 #endif
 
-    fcs_move_stack_t temp_moves;
-    fcs_move_stack_init(temp_moves);
+    fcs_move_stack_t temp_moves = fcs_move_stack__new();
 
     while (
         fc_solve_move_stack_pop(
