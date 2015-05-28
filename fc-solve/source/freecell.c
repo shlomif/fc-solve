@@ -1433,11 +1433,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 
 }
 
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_do_nothing)
-{
-    return;
-}
-
 /* Disabling Yukon solving for the time being. */
 #if 0
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)

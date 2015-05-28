@@ -72,9 +72,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack);
 
 
-
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_do_nothing);
-
 #if 0
 extern void fc_solve_sfs_yukon_move_card_to_parent(
         fc_solve_soft_thread_t * soft_thread,
