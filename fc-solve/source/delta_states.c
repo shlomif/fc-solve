@@ -519,9 +519,9 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
 #endif
 
 static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
-    fc_solve_delta_stater_t * delta_stater,
-    fcs_state_keyval_pair_t * state,
-    unsigned char * out_enc_state
+    fc_solve_delta_stater_t * const delta_stater,
+    fcs_state_keyval_pair_t * const state,
+    unsigned char * const out_enc_state
 )
 {
     fc_solve_bit_writer_t bit_w;
