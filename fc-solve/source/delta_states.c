@@ -138,17 +138,14 @@ static GCC_INLINE void fc_solve_delta_stater_set_derived(fc_solve_delta_stater_t
     self->_derived_state = state;
 }
 
-
-typedef enum
-{
-    COL_TYPE_EMPTY,
-    COL_TYPE_ENTIRELY_NON_ORIG,
-    COL_TYPE_HAS_ORIG
-} col_type_t;
-
 typedef struct
 {
-    col_type_t type;
+    enum
+    {
+        COL_TYPE_EMPTY,
+        COL_TYPE_ENTIRELY_NON_ORIG,
+        COL_TYPE_HAS_ORIG
+    } type;
     fcs_uchar_t enc[4];
     fcs_uchar_t * end;
     int bit_in_char_idx;
