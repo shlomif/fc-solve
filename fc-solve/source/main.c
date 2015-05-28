@@ -494,12 +494,12 @@ static int cmd_line_callback(
     }
     else if (IS_ARG("-sn") || IS_ARG("--standard-notation"))
     {
-        dc->standard_notation = STANDARD_NOTATION_REGULAR;
+        dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_REGULAR;
 
     }
     else if (IS_ARG("-snx") || IS_ARG("--standard-notation-extended"))
     {
-        dc->standard_notation = STANDARD_NOTATION_EXTENDED;
+        dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_EXTENDED;
     }
     else if (IS_ARG("-sam") || IS_ARG("--display-states-and-moves"))
     {

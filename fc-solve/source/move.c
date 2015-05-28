@@ -34,6 +34,7 @@
 
 #include "move.h"
 #include "state.h"
+#include "fcs_enums.h"
 
 #include "inline.h"
 #include "unused.h"
@@ -176,20 +177,14 @@ static GCC_INLINE int convert_freecell_num(int fcn)
 }
 
 
-enum STANDARD_NOTATION_TYPE
-{
-    STANDARD_NOTATION_NO = 0,
-    STANDARD_NOTATION_REGULAR = 1,
-    STANDARD_NOTATION_EXTENDED = 2
-};
 
 char * fc_solve_move_to_string_w_state(
-        fcs_state_keyval_pair_t * state,
-        int freecells_num GCC_UNUSED,
-        int stacks_num GCC_UNUSED,
-        int decks_num GCC_UNUSED,
-        fcs_move_t move,
-        int standard_notation
+        fcs_state_keyval_pair_t * const state,
+        const int freecells_num GCC_UNUSED,
+        const int stacks_num GCC_UNUSED,
+        const int decks_num GCC_UNUSED,
+        const fcs_move_t move,
+        const int standard_notation
         )
 {
     char string[256];
@@ -198,7 +193,7 @@ char * fc_solve_move_to_string_w_state(
     switch(fcs_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
-            if ((standard_notation == STANDARD_NOTATION_EXTENDED) &&
+            if ((standard_notation == FC_SOLVE__STANDARD_NOTATION_EXTENDED) &&
                 /* More than one card was moved */
                 (fcs_move_get_num_cards_in_seq(move) > 1) &&
                 /* It was a move to an empty stack */

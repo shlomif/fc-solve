@@ -536,12 +536,12 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
     {
-        dc->standard_notation = STANDARD_NOTATION_REGULAR;
+        dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_REGULAR;
 
     }
     else if ((!strcmp(argv[arg], "-snx")) || (!strcmp(argv[arg], "--standard-notation-extended")))
     {
-        dc->standard_notation = STANDARD_NOTATION_EXTENDED;
+        dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_EXTENDED;
     }
     else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
     {

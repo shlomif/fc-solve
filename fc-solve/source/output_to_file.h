@@ -34,15 +34,11 @@ extern "C" {
 #endif
 
 #include <stdio.h>
+
 #include "inline.h"
 #include "bool.h"
 
-enum STANDARD_NOTATION_TYPE
-{
-    STANDARD_NOTATION_NO,
-    STANDARD_NOTATION_REGULAR,
-    STANDARD_NOTATION_EXTENDED
-};
+#include "fcs_enums.h"
 
 struct fc_solve_display_information_context_struct
 {
@@ -75,7 +71,7 @@ static void init_debug_context(
     dc->display_parent_iter_num = FALSE;
     dc->display_moves = FALSE;
     dc->display_states = TRUE;
-    dc->standard_notation = STANDARD_NOTATION_NO;
+    dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_NO;
     dc->output_filename = NULL;
     dc->show_exceeded_limits = FALSE;
 
