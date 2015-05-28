@@ -52,17 +52,15 @@ static GCC_INLINE void fc_solve_var_base_reader_init(
 }
 
 static GCC_INLINE void fc_solve_var_base_reader_start(
-    fcs_var_base_reader_t * s,
+    fcs_var_base_reader_t * const s,
     const unsigned char * data,
-    size_t data_len
+    const size_t data_len
 )
 {
-    size_t count;
-    unsigned long shift_count = 0;
-
     mpz_set_ui(s->data, 0);
 #define NUM_BITS 8
-    for (count = 0; count < data_len ; count++, shift_count += NUM_BITS)
+    unsigned long shift_count = 0;
+    for (size_t count = 0; count < data_len ; count++, shift_count += NUM_BITS)
     {
         mpz_set_ui(s->data_byte_offset, (unsigned long)data[count]);
         mpz_mul_2exp(s->data_byte_offset, s->data_byte_offset, shift_count);
