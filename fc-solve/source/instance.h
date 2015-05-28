@@ -1249,6 +1249,26 @@ extern void fc_solve_soft_thread_init_befs_or_bfs(
 );
 
 
+static GCC_INLINE int fc_solve__soft_thread__do_solve(
+    fc_solve_soft_thread_t * const soft_thread
+)
+{
+    switch(soft_thread->super_method_type)
+    {
+        case FCS_SUPER_METHOD_DFS:
+        return fc_solve_soft_dfs_do_solve(soft_thread);
+
+        case FCS_SUPER_METHOD_BEFS_BRFS:
+        return fc_solve_befs_or_bfs_do_solve(soft_thread);
+
+        case FCS_SUPER_METHOD_PATSOLVE:
+        return fc_solve_patsolve_do_solve(soft_thread);
+
+        default:
+        return  FCS_STATE_IS_NOT_SOLVEABLE;
+    }
+}
+
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread)
 {
     fc_solve_instance_t * const instance = hard_thread->instance;
@@ -1358,24 +1378,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
             }
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
         }
-        switch(soft_thread->super_method_type)
-        {
-            case FCS_SUPER_METHOD_DFS:
-            ret = fc_solve_soft_dfs_do_solve(soft_thread);
-            break;
-
-            case FCS_SUPER_METHOD_BEFS_BRFS:
-            ret = fc_solve_befs_or_bfs_do_solve(soft_thread);
-            break;
-
-            case FCS_SUPER_METHOD_PATSOLVE:
-            ret = fc_solve_patsolve_do_solve(soft_thread);
-            break;
-
-            default:
-            ret = FCS_STATE_IS_NOT_SOLVEABLE;
-            break;
-        }
+        ret = fc_solve__soft_thread__do_solve(soft_thread);
         /*
          * Determine how much iterations we still have left
          * */
