@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef FC_SOLVE__FCS_H
-#define FC_SOLVE__FCS_H
+#ifndef FC_SOLVE__INSTANCE_H
+#define FC_SOLVE__INSTANCE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -2207,4 +2207,4 @@ extern void name( \
 #endif
 
 
-#endif /* FC_SOLVE__FCS_H */
+#endif /* FC_SOLVE__INSTANCE_H */
