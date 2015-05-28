@@ -722,14 +722,12 @@ typedef struct {
     fcs_tests_by_depth_unit_t * by_depth_units;
 } fcs_tests_by_depth_array_t;
 
-enum FCS_SUPER_METHOD_TYPE
+typedef enum
 {
     FCS_SUPER_METHOD_DFS,
     FCS_SUPER_METHOD_BEFS_BRFS,
     FCS_SUPER_METHOD_PATSOLVE,
-};
-
-typedef enum FCS_SUPER_METHOD_TYPE fcs_super_method_type_t;
+} fcs_super_method_type_t;
 
 struct fc_solve__patsolve_thread_struct;
 
