@@ -42,10 +42,6 @@
 #include "bool.h"
 #include "indirect_buffer.h"
 
-
-#define     SUIT(card)      ((card) % 4)
-#define     VALUE(card)     ((card) / 4)
-
 static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, fcs_state_keyval_pair_t * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     get_board(gamenumber, state_string);

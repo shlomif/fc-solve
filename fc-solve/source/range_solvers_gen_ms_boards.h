@@ -80,8 +80,8 @@ static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_
 typedef int CARD;
 
 
-#define     SUIT(card)      ((card) % 4)
-#define     VALUE(card)     ((card) / 4)
+#define     SUIT(card)      ((card) & (4-1))
+#define     VALUE(card)     ((card) >> 2)
 
 #define     MAXPOS          7
 #define     MAXCOL          8
