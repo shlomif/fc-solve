@@ -817,6 +817,109 @@ static GCC_INLINE int fc_solve__soft_thread__do_solve(
     }
 }
 
+static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
+    fc_solve_soft_thread_t * const soft_thread
+)
+{
+    fc_solve_soft_thread_update_initial_cards_val(soft_thread);
+    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+
+    /*
+        Allocate some space for the states at depth 0.
+    */
+    DFS_VAR(soft_thread, depth) = 0;
+
+    fc_solve_increase_dfs_max_depth(soft_thread);
+
+    DFS_VAR(soft_thread, soft_dfs_info)[0].state
+        = FCS_STATE_keyval_pair_to_collectible(instance->state_copy_ptr);
+
+    fc_solve_rand_init(
+            &(DFS_VAR(soft_thread, rand_gen)),
+            DFS_VAR(soft_thread, rand_seed)
+    );
+
+    if (! DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units)
+    {
+        const fcs_bool_t master_to_randomize =
+            (soft_thread->method == FCS_METHOD_RANDOM_DFS)
+            ;
+
+        fcs_tests_by_depth_array_t * const arr_ptr = &(DFS_VAR(soft_thread, tests_by_depth_array));
+        arr_ptr->by_depth_units =
+            SMALLOC(
+                arr_ptr->by_depth_units,
+                (arr_ptr->num_units = soft_thread->by_depth_tests_order.num)
+            );
+
+        const fcs_by_depth_tests_order_t * const by_depth_tests_order =
+            soft_thread->by_depth_tests_order.by_depth_tests;
+
+        for (int depth_idx = 0 ;
+            depth_idx < soft_thread->by_depth_tests_order.num ;
+            depth_idx++)
+        {
+            arr_ptr->by_depth_units[depth_idx].max_depth =
+                by_depth_tests_order[depth_idx].max_depth;
+
+            fcs_tests_order_group_t * const tests_order_groups
+                = by_depth_tests_order[depth_idx].tests_order.groups;
+
+            const int tests_order_num = by_depth_tests_order[depth_idx].tests_order.num_groups;
+
+            fcs_tests_list_of_lists * const tests_list_of_lists =
+                &(arr_ptr->by_depth_units[depth_idx].tests);
+
+            tests_list_of_lists->num_lists = 0;
+            tests_list_of_lists->lists =
+                SMALLOC( tests_list_of_lists->lists, tests_order_num );
+
+            for (int group_idx = 0 ; group_idx < tests_order_num ; group_idx++)
+            {
+                const int num = tests_order_groups[group_idx].num;
+                const int * const tests_order_tests = tests_order_groups[group_idx].tests;
+                fc_solve_solve_for_state_test_t * const tests_list = SMALLOC(tests_list, num);
+                for (int i = 0; i < num ; i++)
+                {
+                    tests_list[i] = fc_solve_sfs_tests[ tests_order_tests[i] ];
+                }
+                /* TODO : convert to C99 struct initializers. */
+                fcs_tests_list_t * const tests_list_struct_ptr =
+                    &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
+                    ;
+
+                tests_list_struct_ptr->tests = tests_list;
+                tests_list_struct_ptr->num_tests = num;
+
+                tests_list_struct_ptr->shuffling_type =
+                    master_to_randomize
+                    ? tests_order_groups[group_idx].shuffling_type
+                    : FCS_NO_SHUFFLING;
+
+                if (tests_list_struct_ptr->shuffling_type == FCS_WEIGHTING)
+                {
+                    tests_list_struct_ptr->weighting =
+                        tests_order_groups[group_idx].weighting;
+
+                    fc_solve_initialize_befs_rater(
+                        soft_thread,
+                        &(tests_list_struct_ptr->weighting)
+                    );
+                }
+            }
+
+            tests_list_of_lists->lists =
+                SREALLOC(
+                        tests_list_of_lists->lists,
+                        tests_list_of_lists->num_lists
+                );
+
+        }
+    }
+
+    return;
+}
+
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread)
 {
     fc_solve_instance_t * const instance = hard_thread->instance;
