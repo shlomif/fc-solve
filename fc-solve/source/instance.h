@@ -1126,10 +1126,6 @@ extern void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * const soft_thread
 );
 
-extern void fc_solve_trace_solution(
-    fc_solve_instance_t * const instance
-);
-
 extern void fc_solve_instance__init_hard_thread(
     fc_solve_instance_t * const instance,
     fc_solve_hard_thread_t * const hard_thread

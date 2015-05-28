@@ -720,6 +720,10 @@ static GCC_INLINE void fc_solve_recycle_instance(
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 }
 
+extern void fc_solve_trace_solution(
+    fc_solve_instance_t * const instance
+);
+
 /*
     This function optimizes the solution path using a BFS scan on the
     states in the solution path.
