@@ -40,6 +40,42 @@ extern "C" {
 
 #include "preset.h"
 
+static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
+    fc_solve_instance_t * const instance
+)
+{
+    fc_solve_hard_thread_t * ret;
+    /* Make sure we are not exceeding the maximal number of soft threads
+     * for an instance. */
+    if (instance->next_soft_thread_id == MAX_NUM_SCANS)
+    {
+        return NULL;
+    }
+
+    instance->hard_threads =
+        SREALLOC( instance->hard_threads, instance->num_hard_threads+1 );
+
+    /* Since we SREALLOC()ed the hard_threads, their addresses changed,
+     * so we need to update it.
+     * */
+    HT_LOOP_START()
+    {
+        ST_LOOP_START()
+        {
+            soft_thread->hard_thread = hard_thread;
+        }
+    }
+
+    fc_solve_instance__init_hard_thread(
+        instance,
+        (ret = &(instance->hard_threads[instance->num_hard_threads]))
+    );
+
+    instance->num_hard_threads++;
+
+    return &(ret->soft_threads[0]);
+}
+
 /*
     This function allocates a Freecell Solver instance struct and set the
     default values in it. After the call to this function, the program can
