@@ -44,9 +44,9 @@ typedef struct
 typedef Pvoid_t store_t;
 
 static GCC_INLINE void delete_state(
-    store_t * store,
-    fcs_pdfs_lru_cache_t * cache,
-    fcs_cache_key_t * key)
+    store_t * const store,
+    fcs_pdfs_lru_cache_t * const cache,
+    fcs_cache_key_t * const key)
 {
     int Rc_int;
     fcs_pdfs_cache_insert(cache, &(key->s));
@@ -294,14 +294,13 @@ static GCC_INLINE void instance__print_coords_to_log(
         char * const state_as_string =
             fc_solve_state_as_string(
                 &(end_stack_item->curr_state->s),
-                &(end_stack_item->curr_state->info),
                 &locs,
                 FREECELLS_NUM,
                 STACKS_NUM,
                 DECKS_NUM,
-                1,
-                0,
-                1
+                TRUE,
+                FALSE,
+                TRUE
             );
         printf("Found State=<<'STATE'\n%s\nSTATE\n\n", state_as_string);
         fflush(stdout);

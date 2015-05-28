@@ -3,6 +3,8 @@ package FC_Solve::VarBaseDigitsWriter::XS;
 use strict;
 use warnings;
 
+use Config;
+
 use Inline (
     C => <<'EOF',
 #include "var_base_writer.h"
@@ -56,6 +58,7 @@ EOF
     INC => "-I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}",
     LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
     OPTIMIZE => '-g',
+    CCFLAGS => "$Config{ccflags} -std=gnu99"
 );
 
 sub new
