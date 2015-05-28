@@ -342,41 +342,6 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             fc_solve_get_the_positions_by_rank_data__freecell_generator \
         )
 
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
-{
-    tests_define_accessors();
-    tests_define_seqs_built_by();
-    tests_define_empty_stacks_fill();
-
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
-    SET_GAME_PARAMS();
-#endif
-
-    fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
-
-    int initial_derived_states_num_states = derived_states_list->num_states;
-
-    CALC_POSITIONS_BY_RANK();
-
-    /* Let's try to put cards in the freecells on top of stacks */
-
-    /* Scan the freecells */
-    for (int fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
-    {
-        fcs_card_t src_card = fcs_freecell_card(state, fc);
-
-        /* If the freecell is not empty and dest_card is its parent
-         * */
-        if (
-                /* The Cell should not be empty. */
-                fcs_card_is_valid(src_card)
-                &&
-                /* We cannot put a king anywhere. */
-                (fcs_card_rank(src_card) != 13)
-            )
-        {
-
 #define FCS_POS_BY_RANK_MAP(x) ((x) << 1)
 
 #ifdef FCS_FREECELL_ONLY
@@ -404,6 +369,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 #define FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card) FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card))
 #define FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP() FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
+#define FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS() \
+    const int suit_positions_by_rank_step = (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
+
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card) \
             char * pos_idx_to_check = &positions_by_rank[ \
                 (FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card))) \
@@ -415,9 +383,44 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                 ; \
                 pos_idx_to_check < last_pos_idx \
                 ; \
-                pos_idx_to_check += FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP() \
+                pos_idx_to_check += suit_positions_by_rank_step \
                )
 
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
+{
+    tests_define_accessors();
+    tests_define_seqs_built_by();
+    tests_define_empty_stacks_fill();
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    SET_GAME_PARAMS();
+#endif
+
+    fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
+    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+
+    int initial_derived_states_num_states = derived_states_list->num_states;
+
+    CALC_POSITIONS_BY_RANK();
+    FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS();
+
+    /* Let's try to put cards in the freecells on top of stacks */
+
+    /* Scan the freecells */
+    for (int fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
+    {
+        fcs_card_t src_card = fcs_freecell_card(state, fc);
+
+        /* If the freecell is not empty and dest_card is its parent
+         * */
+        if (
+                /* The Cell should not be empty. */
+                fcs_card_is_valid(src_card)
+                &&
+                /* We cannot put a king anywhere. */
+                (fcs_card_rank(src_card) != 13)
+            )
+        {
             FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
             {
                 int ds;
@@ -791,6 +794,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
         derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
+
+    FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS();
 
     /* Now let's try to move a card from one stack to the other     *
      * Note that it does not involve moving cards lower than king   *
@@ -1190,6 +1195,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     const int initial_derived_states_num_states = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
+
+    FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS();
 
     /* This time try to move cards that are already on top of a parent to a different parent */
 
