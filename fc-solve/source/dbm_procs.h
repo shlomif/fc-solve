@@ -39,7 +39,7 @@ extern "C"
 #ifndef FCS_DBM_WITHOUT_CACHES
 
 static int fc_solve_compare_pre_cache_keys(
-    const void * void_a, const void * void_b, void * context
+    const void * const void_a, const void * const void_b, void * const context
 )
 {
 #define GET_PARAM(p) ((((const fcs_pre_cache_key_val_pair_t *)(p))->key))
