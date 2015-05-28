@@ -91,21 +91,15 @@ typedef struct
 typedef struct FccEntryPointList FccEntryPointList;
 typedef struct FccEntryPointNode FccEntryPointNode;
 
-typedef union
+typedef struct
 {
+    /* We don't really need it. */
+    long location_in_file;
 #if 0
-    fcs_dbm_record_t reserve_space;
+    int depth;
+    int was_consumed: 1;
+    int is_reachable: 1;
 #endif
-    struct
-    {
-        /* We don't really need it. */
-        long location_in_file;
-#if 0
-        int depth;
-        int was_consumed: 1;
-        int is_reachable: 1;
-#endif
-    };
 } fcc_entry_point_value_t;
 
 typedef struct
@@ -1571,11 +1565,10 @@ int main(int argc, char * argv[])
 
         instance.fingerprint_line = NULL;
         instance.fingerprint_line_size = 0;
-        ssize_t read;
 
         long location_in_file = 0;
         fcs_bool_t was_init = FALSE;
-        while ((read = getline(&instance.fingerprint_line, &instance.fingerprint_line_size, fingerprint_fh)) != -1)
+        while (getline(&instance.fingerprint_line, &instance.fingerprint_line_size, fingerprint_fh) != -1)
         {
             char state_base64[100];
             int state_depth;
@@ -1695,7 +1688,7 @@ int main(int argc, char * argv[])
         fclose (instance.fcc_exit_points_out_fh);
         rename(fcc_exit_points_out_fn_temp, fcc_exit_points_out_fn);
 #if 0
-        while ((read = getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh)) != -1)
+        while (getline(&fingerprint_line, &fingerprint_line_size, fingerprint_fh) != -1)
         {
             char state_base64[100];
             FccEntryPointNode key;

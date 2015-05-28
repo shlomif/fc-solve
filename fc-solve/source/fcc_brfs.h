@@ -131,7 +131,7 @@ static void perform_FCC_brfs(
      */
     fcs_bool_t (*add_start_point)(
         fcs_encoded_state_buffer_t * enc_state,
-        const fcs_fcc_moves_seq_t * start_moves_seq,
+        const fcs_fcc_moves_seq_t * start_state_moves_seq,
         fcs_fcc_moves_seq_t * after_start_moves_seq,
         unsigned char extra_move,
         void * context

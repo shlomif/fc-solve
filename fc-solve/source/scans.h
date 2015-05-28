@@ -63,7 +63,7 @@ extern char * fc_solve_get_the_positions_by_rank_data(
 extern int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * const hard_thread,
     fcs_kv_state_t * const out_new_state_out,
-    fcs_kv_state_t * const raw_state_raw,
+    fcs_kv_state_t * const raw_ptr_state_raw,
     fcs_move_stack_t * const moves
     );
 
