@@ -79,15 +79,13 @@ static void init_debug_context(
 }
 
 static GCC_INLINE void fc_solve_output_result_to_file(
-    FILE * output_fh,
-    void * instance,
-    int ret,
-    fc_solve_display_information_context_t * dc_ptr
+    FILE * const output_fh,
+    void * const instance,
+    const int ret,
+    const fc_solve_display_information_context_t * const dc_ptr
 )
 {
-    fc_solve_display_information_context_t debug_context;
-
-    debug_context = (*dc_ptr);
+    const typeof(*dc_ptr) debug_context = (*dc_ptr);
     if (ret == FCS_STATE_WAS_SOLVED)
     {
         fprintf(output_fh, "-=-=-=-=-=-=-=-=-=-=-=-\n\n");
