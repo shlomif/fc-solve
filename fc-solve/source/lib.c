@@ -877,7 +877,7 @@ static GCC_INLINE fcs_internal_move_t user_move_to_internal_move(fcs_move_t user
 }
 #endif
 
-static int calc_moves_seq(
+static GCC_INLINE int calc_moves_seq(
     const fcs_move_stack_t * const solution_moves,
     fcs_moves_sequence_t * const moves_seq
 )
