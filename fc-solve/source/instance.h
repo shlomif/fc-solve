@@ -1112,7 +1112,6 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_soft_thread_update_initial_cards_val(soft_thread);
     fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
 
-    fcs_state_keyval_pair_t * ptr_orig_state = instance->state_copy_ptr;
     /*
         Allocate some space for the states at depth 0.
     */
@@ -1121,7 +1120,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_increase_dfs_max_depth(soft_thread);
 
     DFS_VAR(soft_thread, soft_dfs_info)[0].state
-        = FCS_STATE_keyval_pair_to_collectible(ptr_orig_state);
+        = FCS_STATE_keyval_pair_to_collectible(instance->state_copy_ptr);
 
     fc_solve_rand_init(
             &(DFS_VAR(soft_thread, rand_gen)),
@@ -1130,41 +1129,33 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
     if (! DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units)
     {
-        fcs_tests_list_of_lists * tests_list_of_lists;
-        fc_solve_solve_for_state_test_t * tests_list, * next_test;
-        fcs_tests_list_t * tests_list_struct_ptr;
-        fcs_tests_by_depth_array_t * arr_ptr;
-
-        int tests_order_num;
-        fcs_tests_order_group_t * tests_order_groups;
-        fcs_bool_t master_to_randomize =
+        const fcs_bool_t master_to_randomize =
             (soft_thread->method == FCS_METHOD_RANDOM_DFS)
             ;
-        int depth_idx;
-        fcs_by_depth_tests_order_t * by_depth_tests_order;
 
-        arr_ptr = &(DFS_VAR(soft_thread, tests_by_depth_array));
+        fcs_tests_by_depth_array_t * const arr_ptr = &(DFS_VAR(soft_thread, tests_by_depth_array));
         arr_ptr->by_depth_units =
             SMALLOC(
                 arr_ptr->by_depth_units,
                 (arr_ptr->num_units = soft_thread->by_depth_tests_order.num)
             );
 
-        by_depth_tests_order =
+        const fcs_by_depth_tests_order_t * const by_depth_tests_order =
             soft_thread->by_depth_tests_order.by_depth_tests;
 
-        for (depth_idx = 0 ;
+        for (int depth_idx = 0 ;
             depth_idx < soft_thread->by_depth_tests_order.num ;
             depth_idx++)
         {
             arr_ptr->by_depth_units[depth_idx].max_depth =
                 by_depth_tests_order[depth_idx].max_depth;
 
-            tests_order_groups = by_depth_tests_order[depth_idx].tests_order.groups;
+            fcs_tests_order_group_t * const tests_order_groups
+                = by_depth_tests_order[depth_idx].tests_order.groups;
 
-            tests_order_num = by_depth_tests_order[depth_idx].tests_order.num_groups;
+            const int tests_order_num = by_depth_tests_order[depth_idx].tests_order.num_groups;
 
-            tests_list_of_lists =
+            fcs_tests_list_of_lists * const tests_list_of_lists =
                 &(arr_ptr->by_depth_units[depth_idx].tests);
 
             tests_list_of_lists->num_lists = 0;
@@ -1173,15 +1164,15 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
             for (int group_idx = 0 ; group_idx < tests_order_num ; group_idx++)
             {
-                int num = tests_order_groups[group_idx].num;
-                int * tests_order_tests = tests_order_groups[group_idx].tests;
-                tests_list = SMALLOC(tests_list, num);
-                next_test = tests_list;
+                const int num = tests_order_groups[group_idx].num;
+                const int * const tests_order_tests = tests_order_groups[group_idx].tests;
+                fc_solve_solve_for_state_test_t * const tests_list = SMALLOC(tests_list, num);
                 for (int i = 0; i < num ; i++)
                 {
-                    *(next_test++) = fc_solve_sfs_tests[ tests_order_tests[i] ];
+                    tests_list[i] = fc_solve_sfs_tests[ tests_order_tests[i] ];
                 }
-                tests_list_struct_ptr =
+                /* TODO : convert to C99 struct initializers. */
+                fcs_tests_list_t * const tests_list_struct_ptr =
                     &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
                     ;
 
