@@ -99,7 +99,7 @@ typedef struct dict_t {
     /* Removed from fc-solve */
 #if 0
     dnode_alloc_t dict_allocnode;
-    dnode_free_t dict_freenode;
+    dnode_free_t dict_free_node;
 #else
     fcs_compact_allocator_t dict_allocator;
     dnode_t * dict_recycle_bin;
@@ -109,7 +109,7 @@ typedef struct dict_t {
     int dict_dupes;
 #endif
     #else
-    int dict_dummmy;
+    int dict_dummy;
     #endif
 } dict_t;
 
@@ -120,7 +120,7 @@ typedef struct dict_load_t {
     dict_t *dict_dictptr;
     dnode_t dict_nilnode;
     #else
-    int dict_dummmy;
+    int dict_dummy;
     #endif
 } dict_load_t;
 

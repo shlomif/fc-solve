@@ -72,7 +72,7 @@
 #define maxcount dict_maxcount
 #define compare dict_compare
 #define allocnode dict_allocnode
-#define freenode dict_freenode
+#define freenode dict_free_node
 #define context dict_context
 #define dupes dict_dupes
 
@@ -480,6 +480,7 @@ extern dict_t *dict_init_alloc(dict_t *dict, dictcount_t maxcount,
     return dict;
 }
 
+#ifdef NO_FC_SOLVE
 /*
  * Remove all nodes from the dictionary (without freeing them in any way).
  */
@@ -494,7 +495,7 @@ static void dict_clear(dict_t *dict)
     dict->nilnode.parent = &dict->nilnode;
     assert (dict->nilnode.color == dnode_black);
 }
-
+#endif
 
 
 /*
@@ -1257,7 +1258,7 @@ static void dnode_free(dnode_t *node, void *context)
     free(node);
 }
 
-dnode_t *dnode_create(void *data)
+dnode_t * const dnode_create(void * const data)
 {
     dnode_t *dnode = (dnode_t *) SMALLOC1(dnode)
     if (dnode) {
