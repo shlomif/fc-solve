@@ -939,9 +939,8 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
             }
 
             {
-                int a, j;
                 fcs_rating_with_index_t swap_save;
-                fcs_rating_with_index_t * rand_array, * ra_ptr;
+                fcs_rating_with_index_t * rand_array;
                 int num_states = derived_states_list->num_states;
 
                 if (num_states >
@@ -959,9 +958,9 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
                 VERIFY_PTR_STATE_TRACE0("Verify Panter");
 
-                for (a=0, ra_ptr = rand_array ; a < num_states ; a++)
+                for (int i=0 ; i < num_states ; i++)
                 {
-                    (*(ra_ptr++)).idx = a;
+                    rand_array[i].idx = i;
                 }
                 /* If we just conducted the tests for a random group -
                  * randomize. Else - keep those indexes as the unity vector.
@@ -978,21 +977,19 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     {
                         case FCS_RAND:
                             {
-                                a = num_states-1;
-                                while (a > 0)
+                                for (int i = num_states-1; i > 0; i--)
                                 {
-                                    j =
+                                    const typeof(i) j =
                                         (
                                             fc_solve_rand_get_random_number(
                                                 rand_gen
                                                 )
-                                            % (a+1)
+                                            % (i+1)
                                         );
 
-                                    swap_save = rand_array[a];
-                                    rand_array[a] = rand_array[j];
+                                    swap_save = rand_array[i];
+                                    rand_array[i] = rand_array[j];
                                     rand_array[j] = swap_save;
-                                    a--;
                                 }
                             }
                             break;
@@ -1004,20 +1001,20 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                                     fcs_derived_states_list_item_t * derived_states =
                                         derived_states_list->states;
                                     /* TODO : avoid excessive mallocing. */
-                                    for (a = 0 ; a < num_states ; a++)
+                                    for (int i = 0 ; i < num_states ; i++)
                                     {
-                                        rand_array[a].rating = befs_rate_state(
+                                        rand_array[i].rating = befs_rate_state(
                                             soft_thread,
                                             weighting,
 #ifdef FCS_RCS_STATES
                                             fc_solve_lookup_state_key_from_val(
                                                 instance,
-                                                derived_states[rand_array[a].idx].state_ptr
+                                                derived_states[rand_array[i].idx].state_ptr
                                             ),
 #else
-                                            &(derived_states[rand_array[a].idx].state_ptr->s),
+                                            &(derived_states[rand_array[i].idx].state_ptr->s),
 #endif
-                                            BEFS_MAX_DEPTH - calc_depth(derived_states[rand_array[a].idx].state_ptr)
+                                            BEFS_MAX_DEPTH - calc_depth(derived_states[rand_array[i].idx].state_ptr)
                                             );
                                     }
 
@@ -1046,21 +1043,19 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
         }
 
         {
-            int num_states = derived_states_list->num_states;
-            fcs_derived_states_list_item_t * derived_states =
+            const int num_states = derived_states_list->num_states;
+            fcs_derived_states_list_item_t * const derived_states =
                 derived_states_list->states;
             fcs_rating_with_index_t * rand_int_ptr =
                 the_soft_dfs_info->derived_states_random_indexes +
                 the_soft_dfs_info->current_state_index
                 ;
-            fcs_collectible_state_t * single_derived_state;
-
             VERIFY_PTR_STATE_TRACE0("Verify Klondike");
 
             while (the_soft_dfs_info->current_state_index <
                    num_states)
             {
-                single_derived_state = derived_states[
+                fcs_collectible_state_t * const single_derived_state = derived_states[
                     (*(rand_int_ptr++)).idx
                 ].state_ptr;
 

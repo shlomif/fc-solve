@@ -1953,7 +1953,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t * const soft_thread,
     fcs_kv_state_t * const raw_ptr_state_raw,
-    fcs_collectible_state_t * * const ptr_next_state_val
+    fcs_collectible_state_t * * const ptr_ptr_next_state
 )
 {
     tests_define_accessors();
@@ -2040,7 +2040,7 @@ extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
         register fcs_collectible_state_t * const ptr_next_state
             = derived_states_list_struct.states[0].state_ptr;
 
-        *ptr_next_state_val = ptr_next_state;
+        *ptr_ptr_next_state = ptr_next_state;
 
         /*
          * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
@@ -2054,7 +2054,7 @@ extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
     }
     else
     {
-        *ptr_next_state_val = NULL;
+        *ptr_ptr_next_state = NULL;
         ret_code = PRUNE_RET_NOT_FOUND;
     }
 
