@@ -114,7 +114,7 @@ struct FccEntryPointNode
     fcc_entry_point_t kv;
 };
 
-static int FccEntryPointNode_compare(FccEntryPointNode * a, FccEntryPointNode * b)
+static GCC_INLINE int FccEntryPointNode_compare(FccEntryPointNode * a, FccEntryPointNode * b)
 {
     return compare_enc_states(&(a->kv.key.key), &(b->kv.key.key));
 }

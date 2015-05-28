@@ -86,11 +86,10 @@ typedef int CARD;
 #define     MAXPOS          7
 #define     MAXCOL          8
 
-#ifndef FCS_WITHOUT_GET_BOARD
 static const char * card_to_string_values = "A23456789TJQK";
 static const char * card_to_string_suits = "CDHS";
 
-static GCC_INLINE char * card_to_string(char * s, const CARD card, const fcs_bool_t not_append_ws)
+static GCC_INLINE char * card_to_string(char * const s, const CARD card, const fcs_bool_t not_append_ws)
 {
     s[0] = card_to_string_values[VALUE(card)];
     s[1] = card_to_string_suits[SUIT(card)];
@@ -171,7 +170,6 @@ static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
     }
     *(append_to) = '\0';
 }
-#endif
 
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
 /* This is to settle gcc's -Wmissing-prototypes which complains about missing

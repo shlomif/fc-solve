@@ -84,11 +84,11 @@ typedef enum
     FLARES_PLAN_CHECKPOINT,
 } flares_plan_type_t;
 
-enum FLARES_CHOICE_TYPE
+typedef enum
 {
     FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN,
     FLARES_CHOICE_FCPRO_SOLUTION_LEN
-};
+} flares_choice_type_t;
 
 typedef struct
 {
@@ -162,7 +162,7 @@ typedef struct
     freecell_solver_user_iter_handler_t iter_handler;
     freecell_solver_user_long_iter_handler_t long_iter_handler;
     void * iter_handler_context;
-    enum FLARES_CHOICE_TYPE flares_choice;
+    flares_choice_type_t flares_choice;
     double flares_iters_factor;
 
     fc_solve_soft_thread_t * soft_thread;
