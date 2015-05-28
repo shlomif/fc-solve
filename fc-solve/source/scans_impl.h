@@ -49,7 +49,7 @@ extern "C" {
 #include "min_and_max.h"
 
 
-static int compare_rating_with_index(const void * void_a, const void * void_b)
+static int compare_rating_with_index(const void * const void_a, const void * const void_b)
 {
     const fcs_rating_with_index_t * const a = (const fcs_rating_with_index_t * const)void_a;
     const fcs_rating_with_index_t * const b = (const fcs_rating_with_index_t * const)void_b;
