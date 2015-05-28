@@ -537,8 +537,15 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
                 continue;
             }
 
-            const fcs_card_t clear_junk_dest_card = fcs_col_get_card(clear_junk_dest_col, clear_junk_stack_len-1);
-            if (fcs_is_ss_false_parent(clear_junk_dest_card, the_card))
+            if (
+                fcs_is_ss_false_parent(
+                    fcs_col_get_card(
+                        clear_junk_dest_col,
+                        clear_junk_stack_len-1
+                    ),
+                    the_card
+                )
+            )
             {
                 if (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >= the_num_true_seqs)
                 {
