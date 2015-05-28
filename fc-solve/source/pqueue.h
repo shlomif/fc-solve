@@ -165,7 +165,10 @@ static GCC_INLINE void fc_solve_PQueuePush(
     return;
 }
 
-#define PQueueIsEmpty(pq) ((pq)->CurrentSize == 0)
+static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(PQUEUE * pq)
+{
+    return (pq->CurrentSize == 0);
+}
 
 /* remove the first node from the pqueue and provide a pointer to it
  *
@@ -186,7 +189,7 @@ static GCC_INLINE void fc_solve_PQueuePop(
     pq_element_t pMaxElement;
     pq_element_t pLastElement;
 
-    if( PQueueIsEmpty( pq ) )
+    if( fc_solve_is_pqueue_empty(pq) )
     {
         *val = NULL;
         return;
