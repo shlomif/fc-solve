@@ -115,7 +115,6 @@ static GCC_INLINE fcs_bool_t is_whitespace(char c)
 int fc_solve_args_man_chop(args_man_t * manager, char * string)
 {
     char * s = string;
-    fcs_bool_t in_arg;
 
     manager->last_arg_ptr = manager->last_arg =
         SMALLOC(manager->last_arg, 1024);
@@ -125,7 +124,6 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
     {
         fcs_bool_t push_next_arg_flag = FALSE;
 
-        in_arg = FALSE;
         while (is_whitespace(*s))
         {
             s++;
@@ -136,7 +134,6 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
         }
         if (*s == '#')
         {
-            in_arg = FALSE;
             /* Skip to the next line */
             while((*s != '\0') && (*s != '\n'))
             {
@@ -147,6 +144,7 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
 
         {
             fcs_bool_t still_loop = TRUE;
+            fcs_bool_t in_arg = FALSE;
             while (still_loop)
             {
                 switch(*s)
@@ -254,7 +252,6 @@ int fc_solve_args_man_chop(args_man_t * manager, char * string)
         if (push_next_arg_flag)
         {
             push_args_last_arg(manager);
-            in_arg = FALSE;
 
             if (*s == '\0')
             {

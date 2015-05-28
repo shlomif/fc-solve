@@ -1890,9 +1890,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     return;
 }
 
-#define CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS() pass_new_state.key, card
-
-#define CALC_FOUNDATION_TO_PUT_CARD_ON() calc_foundation_to_put_card_on(soft_thread, CALC_FOUNDATION_TO_PUT_CARD_ON__STATE_PARAMS())
+#define CALC_FOUNDATION_TO_PUT_CARD_ON() \
+    calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card )
 
 #ifdef FCS_FREECELL_ONLY
 #define SEQS_ARE_BUILT_BY_RANK() FALSE
