@@ -104,12 +104,6 @@ void fc_solve_increase_dfs_max_depth(
 
 #ifdef FCS_RCS_STATES
 
-typedef struct
-{
-    fcs_cache_key_info_t * new_cache_state;
-    fcs_collectible_state_t * state_val;
-} cache_parents_stack_item_t;
-
 /* TODO : Unit-test this function as it had had a bug beforehand
  * because fcs_lru_side_t had been an unsigned long.
  * */
@@ -145,8 +139,11 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
     int parents_stack_len = 1;
     int parents_stack_max_len = 16;
 
-    cache_parents_stack_item_t * parents_stack
-        = SMALLOC(parents_stack, parents_stack_max_len);
+    struct
+    {
+        fcs_cache_key_info_t * new_cache_state;
+        fcs_collectible_state_t * state_val;
+    } * parents_stack = SMALLOC(parents_stack, parents_stack_max_len);
 
     parents_stack[0].state_val = orig_ptr_state_val;
 
