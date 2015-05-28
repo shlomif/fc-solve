@@ -245,10 +245,10 @@ char * fc_solve_move_to_string_w_state(
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
             if (standard_notation)
             {
-                register char src_c = (char)('a'+(char)convert_freecell_num(fcs_move_get_src_freecell(move)));
-                register char dest_c = (char)('a'+(char)convert_freecell_num(fcs_move_get_dest_freecell(move)));
-
-                sprintf(string, "%c%c", src_c, dest_c);
+                sprintf(string, "%c%c",
+( (char)('a'+(char)convert_freecell_num(fcs_move_get_src_freecell(move))) ),
+( (char)('a'+(char)convert_freecell_num(fcs_move_get_dest_freecell(move))) )
+                );
             }
             else
             {
