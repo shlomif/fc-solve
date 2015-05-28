@@ -34,7 +34,7 @@
 #include <assert.h>
 
 #include "state.h"
-#include "instance.h"
+#include "instance_for_lib.h"
 #include "preset.h"
 #include "fcs_user.h"
 #include "move_funcs_order.h"
