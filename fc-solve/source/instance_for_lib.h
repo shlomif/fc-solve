@@ -128,6 +128,163 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
 #endif
 }
 
+static GCC_INLINE void fc_solve__hard_thread__compile_prelude(
+    fc_solve_hard_thread_t * const hard_thread
+)
+{
+    fcs_bool_t last_one = FALSE;
+    int num_items = 0;
+    fcs_prelude_item_t * prelude = NULL;
+
+    const char * p  = hard_thread->prelude_as_string;
+
+    while (! last_one)
+    {
+        const int p_quota = atoi(p);
+        while((*p) && isdigit(*p))
+        {
+            p++;
+        }
+        if (*p != '@')
+        {
+            free(prelude);
+            return;
+        }
+        p++;
+        const char * const p_scan = p;
+        while((*p) && ((*p) != ','))
+        {
+            p++;
+        }
+        if ((*p) == '\0')
+        {
+            last_one = TRUE;
+        }
+        char * const p_scan_copy = strndup(p_scan, p-p_scan);
+        p++;
+
+        ST_LOOP_START()
+        {
+            if (soft_thread->name && (!strcmp(soft_thread->name, p_scan_copy)))
+            {
+                break;
+            }
+        }
+        free (p_scan_copy);
+        if (ST_LOOP__WAS_FINISHED())
+        {
+            free (prelude);
+            return;
+        }
+#define PRELUDE_GROW_BY 16
+        if (! (num_items & (PRELUDE_GROW_BY-1)))
+        {
+            prelude = SREALLOC(prelude, num_items+PRELUDE_GROW_BY);
+        }
+        prelude[num_items].scan_idx = ST_LOOP__GET_INDEX();
+        prelude[num_items].quota = p_quota;
+        num_items++;
+    }
+
+    hard_thread->prelude = SREALLOC(prelude, num_items);
+    hard_thread->prelude_num_items = num_items;
+    hard_thread->prelude_idx = 0;
+}
+
+static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instance)
+{
+    /* Initialize the state packs */
+    HT_LOOP_START()
+    {
+        /* The pointer to instance may change as the flares array get resized
+         * so the pointers need to be reassigned to it.
+         * */
+        hard_thread->instance = instance;
+        if (hard_thread->prelude_as_string)
+        {
+            if (!hard_thread->prelude)
+            {
+                fc_solve__hard_thread__compile_prelude(hard_thread);
+            }
+        }
+        hard_thread->num_checked_states_left_for_soft_thread =
+            hard_thread->soft_threads[0].num_checked_states_step;
+    }
+
+    {
+        int total_tests = 0;
+        fc_solve_foreach_soft_thread(
+            instance,
+            FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
+            &total_tests
+        );
+        fc_solve_foreach_soft_thread(
+            instance,
+            FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS,
+            &total_tests
+        );
+        if (!STRUCT_QUERY_FLAG(
+                instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET
+        ))
+        {
+            /*
+             *
+             * What this code does is convert the bit map of total_tests
+             * to a valid tests order.
+             *
+             * */
+            int num_tests = 0;
+            int * tests = SMALLOC(tests, sizeof(total_tests)*8);
+
+            for (int bit_idx=0 ;
+                total_tests != 0 ;
+                bit_idx++, total_tests >>= 1)
+            {
+                if ((total_tests & 0x1) != 0)
+                {
+                    tests[num_tests++] = bit_idx;
+                }
+            }
+            tests = SREALLOC(tests,
+                ((num_tests & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
+            );
+            instance->opt_tests_order.num_groups = 1;
+            instance->opt_tests_order.groups =
+                SMALLOC( instance->opt_tests_order.groups, TESTS_ORDER_GROW_BY);
+            instance->opt_tests_order.groups[0].tests = tests;
+            instance->opt_tests_order.groups[0].num =
+                num_tests;
+            instance->opt_tests_order.groups[0].shuffling_type = FCS_NO_SHUFFLING;
+            STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
+        }
+    }
+
+#ifdef FCS_RCS_STATES
+    {
+        fcs_lru_cache_t * cache = &(instance->rcs_states_cache);
+
+#if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
+        cache->states_values_to_keys_map = ((Pvoid_t) NULL);
+#elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
+        cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL, instance->meta_alloc);
+#else
+#error Unknown FCS_RCS_CACHE_STORAGE
+#endif
+
+        fc_solve_compact_allocator_init(
+            &(cache->states_values_to_keys_allocator),
+            instance->meta_alloc
+        );
+        cache->lowest_pri = NULL;
+        cache->highest_pri = NULL;
+        cache->recycle_bin = NULL;
+        cache->count_elements_in_cache = 0;
+    }
+
+#endif
+
+}
+
 #undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
 /* These are all stack comparison functions to be used for the stacks
    cache when using INDIRECT_STACK_STATES
@@ -498,6 +655,10 @@ fc_solve_instance_get_first_soft_thread(
 {
     return &(instance->hard_threads[0].soft_threads[0]);
 }
+
+extern void fc_solve_finish_instance(
+    fc_solve_instance_t * const instance
+);
 
 static GCC_INLINE void fc_solve_recycle_instance(
     fc_solve_instance_t * const instance

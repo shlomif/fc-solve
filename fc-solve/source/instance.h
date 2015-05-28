@@ -922,14 +922,6 @@ typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
 #include "pat.h"
 
-extern void fc_solve_init_instance(
-    fc_solve_instance_t * const instance
-);
-
-extern void fc_solve_finish_instance(
-    fc_solve_instance_t * const instance
-);
-
 extern int fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t * const soft_thread
 );
