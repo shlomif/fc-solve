@@ -1812,7 +1812,12 @@ DLLEXPORT char * freecell_solver_user_move_to_string(
     int standard_notation
     )
 {
-    return fc_solve_move_to_string(move, standard_notation);
+    return
+        fc_solve_move_to_string_w_state(
+            NULL, 4, 8, 1,
+            move,
+            (standard_notation == 2)?1:standard_notation
+            );
 }
 
 DLLEXPORT char * freecell_solver_user_move_to_string_w_state(

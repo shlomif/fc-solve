@@ -140,8 +140,8 @@ static GCC_INLINE fcs_move_stack_t fcs_move_stack__new(void)
 }
 
 static GCC_INLINE void fc_solve_move_stack_swallow_stack(
-    fcs_move_stack_t * stack,
-    fcs_move_stack_t * src_stack
+    fcs_move_stack_t * const stack,
+    fcs_move_stack_t * const src_stack
     )
 {
     fcs_internal_move_t move;
@@ -288,24 +288,13 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 }
 
 extern char * fc_solve_move_to_string_w_state(
-        fcs_state_keyval_pair_t * state,
-        int freecells_num,
-        int stacks_num,
-        int decks_num,
-        fcs_move_t move,
-        int standard_notation
+        fcs_state_keyval_pair_t * const state,
+        const int freecells_num,
+        const int stacks_num,
+        const int decks_num,
+        const fcs_move_t move,
+        const int standard_notation
         );
-
-static GCC_INLINE char * fc_solve_move_to_string(fcs_move_t move, int standard_notation)
-{
-    return
-        fc_solve_move_to_string_w_state(
-            NULL, 4, 8, 1,
-            move,
-            (standard_notation == 2)?1:standard_notation
-            );
-}
-
 
 typedef struct {
     fcs_collectible_state_t * state_ptr;
