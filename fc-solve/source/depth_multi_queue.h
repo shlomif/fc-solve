@@ -142,7 +142,7 @@ static GCC_INLINE void fcs_depth_multi_queue__init(
 }
 
 static GCC_INLINE void fcs_depth_multi_queue__destroy(
-    fcs_depth_multi_queue_t * queue
+    fcs_depth_multi_queue_t * const queue
     )
 {
     int limit = queue->max_depth - queue->min_depth;
@@ -160,9 +160,9 @@ static GCC_INLINE void fcs_depth_multi_queue__destroy(
 
 
 static GCC_INLINE fcs_bool_t fcs_depth_multi_queue__extract(
-    fcs_depth_multi_queue_t * queue,
-    int * return_depth,
-    fcs_offloading_queue_item_t * return_item
+    fcs_depth_multi_queue_t * const queue,
+    int * const return_depth,
+    fcs_offloading_queue_item_t * const return_item
 )
 {
     if (queue->num_items_in_queue == 0)
