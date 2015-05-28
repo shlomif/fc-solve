@@ -55,7 +55,6 @@ enum
     FCS_PRESET_RELAXED_SEAHAVEN_TOWERS,
     FCS_PRESET_SEAHAVEN_TOWERS,
     FCS_PRESET_SIMPLE_SIMON,
-    FCS_PRESET_YUKON,
     FCS_PRESET_BELEAGUERED_CASTLE
 };
 
@@ -400,10 +399,6 @@ static const fcs_preset_name_t fcs_preset_names[23] =
     {
         "streets_and_alleys",
         FCS_PRESET_BELEAGUERED_CASTLE,
-    },
-    {
-        "yukon",
-        FCS_PRESET_YUKON,
     },
 };
 
