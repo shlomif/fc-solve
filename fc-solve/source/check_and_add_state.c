@@ -114,7 +114,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
         /* Calculate the hash value for the stack */
         /* This hash function was ripped from the Perl source code.
          * (It is not derived work however). */
-        SFO_hash_value_t hash_value_int = 0;
+        fc_solve_hash_value_t hash_value_int = 0;
         {
             const char * s_ptr = (char*)(*(current_stack));
             const char * s_end = s_ptr+fcs_col_len(s_ptr)+1;
@@ -356,7 +356,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    SFO_hash_value_t hash_value_int = 0;
+    fc_solve_hash_value_t hash_value_int = 0;
     {
         const char * s_ptr = (char*)new_state_key;
         const char * s_end = s_ptr+sizeof(*new_state_key);
