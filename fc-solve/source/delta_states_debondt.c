@@ -382,7 +382,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
 {
     fcs_card_t parent_card = fcs_col_get_card(*col, fcs_col_len(*col)-1);
 
-    while (fcs_card_rank(parent_card))
+    while (fcs_card_is_valid(parent_card))
     {
         const int wanted_opt = (
             IS_BAKERS_DOZEN()
@@ -409,7 +409,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
             }
         }
 
-        if (fcs_card_rank(child_card))
+        if (fcs_card_is_valid(child_card))
         {
             fcs_col_push_card(*col, child_card);
         }
