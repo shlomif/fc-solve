@@ -32,9 +32,17 @@
 extern "C" {
 #endif
 
-#define check_num_states_in_collection(instance) \
-    ((instance)->active_num_states_in_collection >=       \
-            (instance)->effective_trim_states_in_collection_from)
+#include "inline.h"
+#include "bool.h"
+
+static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
+    const fc_solve_instance_t * const instance
+    )
+{
+    return (instance->active_num_states_in_collection >=
+            instance->effective_trim_states_in_collection_from
+            );
+}
 
 
 /*
