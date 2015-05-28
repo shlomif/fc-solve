@@ -939,9 +939,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
             }
 
             {
-                fcs_rating_with_index_t swap_save;
-                fcs_rating_with_index_t * rand_array;
-                int num_states = derived_states_list->num_states;
+                const int num_states = derived_states_list->num_states;
 
                 if (num_states >
                         the_soft_dfs_info->derived_states_random_indexes_max_size)
@@ -954,7 +952,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                             the_soft_dfs_info->derived_states_random_indexes_max_size
                             );
                 }
-                rand_array = the_soft_dfs_info->derived_states_random_indexes;
+                fcs_rating_with_index_t * const rand_array = the_soft_dfs_info->derived_states_random_indexes;
 
                 VERIFY_PTR_STATE_TRACE0("Verify Panter");
 
@@ -987,7 +985,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                                             % (i+1)
                                         );
 
-                                    swap_save = rand_array[i];
+                                    const typeof(rand_array[i]) swap_save = rand_array[i];
                                     rand_array[i] = rand_array[j];
                                     rand_array[j] = swap_save;
                                 }
@@ -1046,7 +1044,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
             const int num_states = derived_states_list->num_states;
             fcs_derived_states_list_item_t * const derived_states =
                 derived_states_list->states;
-            fcs_rating_with_index_t * rand_int_ptr =
+            const fcs_rating_with_index_t * rand_int_ptr =
                 the_soft_dfs_info->derived_states_random_indexes +
                 the_soft_dfs_info->current_state_index
                 ;
