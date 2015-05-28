@@ -1057,7 +1057,7 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
 #define unlimited_sequence_move FALSE
 #endif
 
-    double num_cards_out_factor =
+    const double num_cards_out_factor =
         normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
 
     double out_sum = 0.0;
