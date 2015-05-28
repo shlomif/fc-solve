@@ -1594,7 +1594,7 @@ static GCC_INLINE int fc_solve_resume_instance(
     }
     else
     {
-        fc_solve_hard_thread_t * end_of_hard_threads =
+        fc_solve_hard_thread_t * const end_of_hard_threads =
             instance->hard_threads + instance->num_hard_threads
             ;
 
