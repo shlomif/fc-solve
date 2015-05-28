@@ -290,3 +290,7 @@ static const char * const fc_solve_num_redeals_prefixes[] = { "Num-Redeals:", "R
         }
     }
 #endif
+
+#define fcs_freecell_rank(state, f) \
+    ( fcs_card_rank(fcs_freecell_card((state),(f))) )
+

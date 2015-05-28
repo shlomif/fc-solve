@@ -302,9 +302,6 @@ typedef char fcs_locs_t;
 #define fcs_col_get_rank(col, card_idx) \
     fcs_card_rank(fcs_col_get_card((col), (card_idx)))
 
-#define fcs_freecell_rank(state, f) \
-    ( fcs_card_rank(fcs_freecell_card((state),(f))) )
-
 #define fcs_freecell_card_suit(state, f) \
     ( fcs_card_suit(fcs_freecell_card((state),(f))) )
 
