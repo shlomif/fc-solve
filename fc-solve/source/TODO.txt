@@ -25,6 +25,11 @@ Invalid solution! at ../source/scripts/summarize-fc-solve line 83.
 Non-pressing
 ------------
 
+* Find how well the solver performs with different permutations of the
+order of columns/freecells.
+** See if it's possible to combine several scans on such different
+permutations.
+
 * Write a "simulator" for new flare-based runs to see how they improve on
 the existing runs. It will process the scans' command line based on their
 end results and performance and will generate the new estimated performance.
