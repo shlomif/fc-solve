@@ -941,9 +941,9 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
 
 static GCC_INLINE void assign_dest_stack_and_col_ptr(
     char * const positions_by_rank,
-    int dest_stack,
-    int dest_col,
-    fcs_card_t dest_card
+    const char dest_stack,
+    const char dest_col,
+    const fcs_card_t dest_card
 )
 {
     char * ptr = &positions_by_rank[
@@ -960,8 +960,8 @@ static GCC_INLINE void assign_dest_stack_and_col_ptr(
     }
 #endif
 
-    *(ptr++) = (char)dest_stack;
-    *(ptr) = (char)dest_col;
+    *(ptr++) = dest_stack;
+    *(ptr) = dest_col;
 }
 
 char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
