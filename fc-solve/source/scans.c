@@ -864,7 +864,7 @@ label_next_state:
             dump_pqueue(soft_thread, "before_pop", scan_specific.pqueue);
 #endif
             /* It is an BeFS scan */
-            fc_solve_PQueuePop(
+            fc_solve_pq_pop(
                 pqueue,
                 &(new_ptr_state)
                 );
@@ -914,28 +914,22 @@ my_return_label:
 #undef myreturn
 
 static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
 )
 {
-    switch(soft_thread->method)
+    if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
     {
-        case FCS_METHOD_SOFT_DFS:
-        case FCS_METHOD_RANDOM_DFS:
-            {
-                return &(
-                    DFS_VAR(soft_thread, soft_dfs_info)[
-                    DFS_VAR(soft_thread, depth)
-                    ].positions_by_rank
-                    );
-            }
-            break;
-        default:
-            {
-                return &(
-                    BEFS_M_VAR(soft_thread, befs_positions_by_rank)
-                    );
-            }
-            break;
+        return &(
+            DFS_VAR(soft_thread, soft_dfs_info)[
+            DFS_VAR(soft_thread, depth)
+            ].positions_by_rank
+        );
+    }
+    else
+    {
+        return &(
+            BEFS_M_VAR(soft_thread, befs_positions_by_rank)
+        );
     }
 }
 

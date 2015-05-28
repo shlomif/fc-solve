@@ -71,7 +71,7 @@ static GCC_INLINE void fc_solve_var_base_writer_write(
 
 static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
     fcs_var_base_writer_t * w,
-    unsigned char * exported
+    unsigned char * const exported
 )
 {
     size_t count = 0;

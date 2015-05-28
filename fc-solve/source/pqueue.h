@@ -177,7 +177,7 @@ static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(PQUEUE * pq)
  *
  * */
 
-static GCC_INLINE void fc_solve_PQueuePop(
+static GCC_INLINE void fc_solve_pq_pop(
     PQUEUE *pq,
     fcs_collectible_state_t * * val)
 {
