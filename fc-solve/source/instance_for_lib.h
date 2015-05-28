@@ -38,6 +38,97 @@ extern "C" {
 
 #include "instance.h"
 
+#include "preset.h"
+
+/*
+    This function allocates a Freecell Solver instance struct and set the
+    default values in it. After the call to this function, the program can
+    set parameters in it which are different from the default.
+
+    Afterwards fc_solve_init_instance() should be called in order
+    to really prepare it for solving.
+  */
+static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const instance, fcs_meta_compact_allocator_t * const meta_alloc)
+{
+    instance->meta_alloc = meta_alloc;
+
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
+    instance->num_indirect_prev_states = 0;
+#endif
+
+    instance->num_checked_states = 0;
+
+    instance->num_states_in_collection = 0;
+    instance->active_num_states_in_collection = 0;
+
+    instance->max_num_checked_states = -1;
+    instance->effective_max_num_checked_states = INT_MAX;
+    instance->max_depth = -1;
+    instance->max_num_states_in_collection = -1;
+    instance->effective_max_num_states_in_collection = INT_MAX;
+    instance->trim_states_in_collection_from = -1;
+    instance->effective_trim_states_in_collection_from = LONG_MAX;
+
+    instance->instance_tests_order.num_groups = 0;
+    instance->instance_tests_order.groups = NULL;
+
+    instance->list_of_vacant_states = NULL;
+
+
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
+
+    instance->opt_tests_order.num_groups = 0;
+    instance->opt_tests_order.groups = NULL;
+
+    instance->num_hard_threads = 0;
+    instance->hard_threads = NULL;
+
+#ifndef FCS_FREECELL_ONLY
+    fc_solve_apply_preset_by_name(instance, "freecell");
+#else
+    {
+        char * no_use;
+        fc_solve_apply_tests_order(
+            &(instance->instance_tests_order),
+            "[01][23456789]",
+            &no_use
+        );
+    }
+#endif
+
+    /****************************************/
+
+    instance->debug_iter_output_func = NULL;
+
+    instance->next_soft_thread_id = 0;
+
+    fc_solve_new_hard_thread(instance);
+
+    instance->solution_moves.moves = NULL;
+
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
+
+    instance->optimization_thread = NULL;
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
+
+    instance->num_hard_threads_finished = 0;
+
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+
+    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO );
+
+    /* Make the 1 the default, because otherwise scans will not cooperate
+     * with one another. */
+    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+
+#define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
+#ifdef FCS_RCS_STATES
+    instance->rcs_states_cache.max_num_elements_in_cache
+        = DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE;
+#endif
+}
+
+#undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
 /* These are all stack comparison functions to be used for the stacks
    cache when using INDIRECT_STACK_STATES
 */
