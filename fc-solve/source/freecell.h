@@ -73,17 +73,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack);
 
 
 #if 0
-extern void fc_solve_sfs_yukon_move_card_to_parent(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        );
-
-extern void fc_solve_sfs_yukon_move_kings_to_empty_stack(
-        fc_solve_soft_thread_t * soft_thread,
-        fcs_state_keyval_pair_t * ptr_state,
-        fcs_derived_states_list_t * derived_states_list
-        );
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent);
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack);
 #endif
 
 #ifdef __cplusplus
