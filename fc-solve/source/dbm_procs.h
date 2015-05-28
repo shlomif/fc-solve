@@ -98,8 +98,8 @@ static GCC_INLINE fcs_bool_t pre_cache_does_key_exist(
 }
 
 static GCC_INLINE void cache_populate_from_pre_cache(
-    fcs_lru_cache_t * cache,
-    fcs_pre_cache_t * pre_cache
+    fcs_lru_cache_t * const cache,
+    fcs_pre_cache_t * const pre_cache
 )
 {
 #ifdef FCS_DBM_USE_LIBAVL
