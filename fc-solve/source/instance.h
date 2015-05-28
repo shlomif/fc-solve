@@ -997,7 +997,7 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
 extern const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS];
 
 #ifdef FCS_FREECELL_ONLY
-#define is_filled_by_any_card() 1
+#define is_filled_by_any_card() TRUE
 #else
 #define is_filled_by_any_card() (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
 #endif
