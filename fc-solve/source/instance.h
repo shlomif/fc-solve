@@ -1740,39 +1740,6 @@ static GCC_INLINE void fc_solve_reset_soft_thread(
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
 }
 
-static GCC_INLINE void fc_solve_release_tests_list(
-    fc_solve_soft_thread_t * const soft_thread
-)
-{
-    /* Free the BeFS data. */
-    free (BEFS_M_VAR(soft_thread, tests_list));
-    BEFS_M_VAR(soft_thread, tests_list) = NULL;
-
-    /* Free the DFS data. */
-    int unit_idx;
-    fcs_tests_by_depth_array_t * arr;
-
-    arr = &(DFS_VAR(soft_thread, tests_by_depth_array));
-    for (unit_idx = 0 ; unit_idx < arr->num_units ; unit_idx++)
-    {
-        if (arr->by_depth_units[unit_idx].tests.lists)
-        {
-            fcs_tests_list_t * lists = arr->by_depth_units[unit_idx].tests.lists;
-            int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
-            int i;
-
-            for (i=0 ;
-                i < num_lists ;
-                i++)
-            {
-                free (lists[i].tests);
-            }
-            free (lists);
-        }
-    }
-    free(arr->by_depth_units);
-    arr->by_depth_units = NULL;
-}
 
 static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
     fc_solve_hard_thread_t * const hard_thread
@@ -1918,9 +1885,9 @@ static GCC_INLINE fcs_state_t * rcs_states_get_state(
     );
 }
 
-static int fc_solve_rcs_states_compare(const void * void_a, const void * void_b, void * param)
+static int fc_solve_rcs_states_compare(const void * const void_a, const void * const void_b, void * const param)
 {
-    fc_solve_instance_t * instance = (fc_solve_instance_t *)param;
+    fc_solve_instance_t * const instance = (fc_solve_instance_t *)param;
 
     return fc_solve_state_compare(
         rcs_states_get_state(instance, (fcs_collectible_state_t *)void_a),

@@ -144,6 +144,37 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
     return;
 }
 
+static GCC_INLINE void fc_solve_release_tests_list(
+    fc_solve_soft_thread_t * const soft_thread
+)
+{
+    /* Free the BeFS data. */
+    free (BEFS_M_VAR(soft_thread, tests_list));
+    BEFS_M_VAR(soft_thread, tests_list) = NULL;
+
+    /* Free the DFS data. */
+    fcs_tests_by_depth_array_t * const arr =
+        &(DFS_VAR(soft_thread, tests_by_depth_array));
+    for (int unit_idx = 0 ; unit_idx < arr->num_units ; unit_idx++)
+    {
+        if (arr->by_depth_units[unit_idx].tests.lists)
+        {
+            fcs_tests_list_t * const lists = arr->by_depth_units[unit_idx].tests.lists;
+            const int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
+
+            for (int i=0 ;
+                i < num_lists ;
+                i++)
+            {
+                free (lists[i].tests);
+            }
+            free (lists);
+        }
+    }
+    free(arr->by_depth_units);
+    arr->by_depth_units = NULL;
+}
+
 static GCC_INLINE void free_instance_soft_thread_callback(
     fc_solve_soft_thread_t * const soft_thread
 )
