@@ -49,17 +49,15 @@ char fc_solve_simple_simon_nothing;
 
 #include "meta_move_funcs_helpers.h"
 
-#define fcs_is_ss_false_parent(parent, child) \
-    (fcs_card_rank(parent) == fcs_card_rank(child)+1)
 
-#define fcs_suit_is_ss_true_parent(parent_suit, child_suit) \
-    ((parent_suit) == (child_suit))
+static GCC_INLINE const fcs_bool_t fcs_is_ss_false_parent(const fcs_card_t parent, const fcs_card_t child)
+{
+    return (fcs_card_rank(parent) == fcs_card_rank(child)+1);
+}
 
 static GCC_INLINE const fcs_bool_t fcs_is_ss_suit_true(const fcs_card_t parent, const fcs_card_t child)
 {
-    return fcs_suit_is_ss_true_parent(
-        fcs_card_suit(parent),fcs_card_suit(child)
-    );
+    return (fcs_card_suit(parent) == fcs_card_suit(child));
 }
 
 static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent, const fcs_card_t child)
