@@ -58,8 +58,9 @@ enum
     FCS_PRESET_BELEAGUERED_CASTLE
 };
 
-#define MAKE_GAME_PARAMS(fc, s, d, sbb, sm, esf) \
-    { fc, s, d, (sbb | (esf << 2) | (sm << 4))}
+#define MAKE_GAME_PARAMS(freecells_num, stacks_num, decks_num, seqs_build_by, seq_move, empty_stacks_fill) \
+    { freecells_num, stacks_num, decks_num, (seqs_build_by | (empty_stacks_fill << 2) | (seq_move << 4))}
+
 static const fcs_preset_t fcs_presets[16] =
 {
     {
