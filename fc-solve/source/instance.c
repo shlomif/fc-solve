@@ -499,9 +499,9 @@ static GCC_INLINE void compile_prelude(
             }
         }
         free (p_scan_copy);
-        if (ST_LOOP_FINISHED())
+        if (ST_LOOP__WAS_FINISHED())
         {
-            free(prelude);
+            free (prelude);
             return;
         }
 #define PRELUDE_GROW_BY 16
@@ -509,7 +509,7 @@ static GCC_INLINE void compile_prelude(
         {
             prelude = SREALLOC(prelude, num_items+PRELUDE_GROW_BY);
         }
-        prelude[num_items].scan_idx = ST_LOOP_INDEX();
+        prelude[num_items].scan_idx = ST_LOOP__GET_INDEX();
         prelude[num_items].quota = p_quota;
         num_items++;
     }

@@ -473,10 +473,10 @@ static GCC_INLINE flares_plan_type_t add_to_plan(
 }
 
 static GCC_INLINE flares_plan_type_t add_count_iters_to_plan(
-        fcs_instance_item_t * instance_item,
-        int flare_idx,
-        int count_iters
-    )
+        fcs_instance_item_t * const instance_item,
+        const int flare_idx,
+        const int count_iters
+)
 {
     return add_to_plan(instance_item,
             FLARES_PLAN_RUN_COUNT_ITERS, flare_idx, count_iters
@@ -485,7 +485,7 @@ static GCC_INLINE flares_plan_type_t add_count_iters_to_plan(
 
 
 static GCC_INLINE flares_plan_type_t add_checkpoint_to_plan(
-        fcs_instance_item_t * instance_item
+        fcs_instance_item_t * const instance_item
     )
 {
     return add_to_plan(instance_item,
@@ -494,8 +494,8 @@ static GCC_INLINE flares_plan_type_t add_checkpoint_to_plan(
 }
 
 static GCC_INLINE flares_plan_type_t add_run_indef_to_plan(
-        fcs_instance_item_t * instance_item,
-        int flare_idx
+        fcs_instance_item_t * const instance_item,
+        const int flare_idx
     )
 {
     return add_to_plan(instance_item,

@@ -167,16 +167,17 @@ extern guint fc_solve_hash_function(gconstpointer key);
 
 /* ST_LOOP == soft threads' loop - macros to abstract it. */
 #define ST_LOOP_START() \
-    fc_solve_soft_thread_t * soft_thread = hard_thread->soft_threads; \
-    fc_solve_soft_thread_t * const end_soft_thread = soft_thread + hard_thread->num_soft_threads; \
+    typeof(hard_thread->soft_threads[0]) * const ht_soft_threads = hard_thread->soft_threads; \
+    fc_solve_soft_thread_t * soft_thread = ht_soft_threads; \
+    fc_solve_soft_thread_t * const end_soft_thread = ht_soft_threads + hard_thread->num_soft_threads; \
     for ( ; \
          soft_thread < end_soft_thread ;  \
          soft_thread++ \
     )
 
-#define ST_LOOP_FINISHED() (soft_thread == end_soft_thread)
+#define ST_LOOP__WAS_FINISHED() (soft_thread == end_soft_thread)
 
-#define ST_LOOP_INDEX() (soft_thread - hard_thread->soft_threads)
+#define ST_LOOP__GET_INDEX() (soft_thread - ht_soft_threads)
 
 #define TESTS_ORDER_GROW_BY 16
 
