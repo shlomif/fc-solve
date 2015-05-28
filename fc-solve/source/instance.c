@@ -456,17 +456,7 @@ fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * con
 #undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
 
 
-
-
-
-enum
-{
-    FCS_COMPILE_PRELUDE_OK,
-    FCS_COMPILE_PRELUDE_NO_AT_SIGN,
-    FCS_COMPILE_PRELUDE_UNKNOWN_SCAN_ID
-};
-
-static GCC_INLINE int compile_prelude(
+static GCC_INLINE void compile_prelude(
     fc_solve_hard_thread_t * const hard_thread
 )
 {
@@ -486,7 +476,7 @@ static GCC_INLINE int compile_prelude(
         if (*p != '@')
         {
             free(prelude);
-            return FCS_COMPILE_PRELUDE_NO_AT_SIGN;
+            return;
         }
         p++;
         const char * const p_scan = p;
@@ -512,7 +502,7 @@ static GCC_INLINE int compile_prelude(
         if (ST_LOOP_FINISHED())
         {
             free(prelude);
-            return FCS_COMPILE_PRELUDE_UNKNOWN_SCAN_ID;
+            return;
         }
 #define PRELUDE_GROW_BY 16
         if (! (num_items & (PRELUDE_GROW_BY-1)))
@@ -527,8 +517,6 @@ static GCC_INLINE int compile_prelude(
     hard_thread->prelude = SREALLOC(prelude, num_items);
     hard_thread->prelude_num_items = num_items;
     hard_thread->prelude_idx = 0;
-
-    return FCS_COMPILE_PRELUDE_OK;
 }
 
 
