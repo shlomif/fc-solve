@@ -35,15 +35,21 @@ extern "C" {
 
 typedef long fcs_rand_t;
 
-static GCC_INLINE void fc_solve_rand_init(fcs_rand_t * my_rand, unsigned int seed)
+static GCC_INLINE void fc_solve_rand_init(fcs_rand_t * const my_rand, const unsigned int seed)
 {
     *my_rand = (long)seed;
 }
 
-static GCC_INLINE int fc_solve_rand_rand15(fcs_rand_t * my_rand)
+static GCC_INLINE const int fc_solve_rand_rand15(fcs_rand_t * const my_rand)
 {
-    *my_rand = ((*my_rand) * 214013 + 2531011);
-    return ((*my_rand) >> 16) & 0x7fff;
+    return
+    (
+        (
+            ((*my_rand) = ((*my_rand) * 214013 + 2531011))
+            >> 16
+        )
+        & 0x7fff
+    );
 }
 
 /*
@@ -52,13 +58,10 @@ static GCC_INLINE int fc_solve_rand_rand15(fcs_rand_t * my_rand)
  * 15-bit ones.
  *
  * */
-static GCC_INLINE int fc_solve_rand_get_random_number(fcs_rand_t * my_rand)
+static GCC_INLINE const int fc_solve_rand_get_random_number(fcs_rand_t * const my_rand)
 {
-    int one, two;
-    one = fc_solve_rand_rand15(my_rand);
-    two = fc_solve_rand_rand15(my_rand);
-
-    return (one | (two << 15));
+    const int one = fc_solve_rand_rand15(my_rand);
+    return (one | (fc_solve_rand_rand15(my_rand) << 15));
 }
 
 
