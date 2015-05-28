@@ -43,7 +43,7 @@ typedef struct
 } fcs_var_base_reader_t;
 
 static GCC_INLINE void fc_solve_var_base_reader_init(
-    fcs_var_base_reader_t * s
+    fcs_var_base_reader_t * const s
 )
 {
     mpz_init(s->data);

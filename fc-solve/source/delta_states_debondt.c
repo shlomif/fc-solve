@@ -688,7 +688,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
 }
 
 static GCC_INLINE void fcs_debondt_init_and_encode_state(
-    fc_solve_debondt_delta_stater_t * const  delta_stater,
+    fc_solve_debondt_delta_stater_t * const delta_stater,
     const enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * const state,
     fcs_encoded_state_buffer_t * const enc_state

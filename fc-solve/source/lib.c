@@ -2000,8 +2000,8 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
-    void * api_instance,
-    int my_index
+    void * const api_instance,
+    const int my_index
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;

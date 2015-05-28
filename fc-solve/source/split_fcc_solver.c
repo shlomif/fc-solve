@@ -91,27 +91,25 @@ typedef struct
 typedef struct FccEntryPointList FccEntryPointList;
 typedef struct FccEntryPointNode FccEntryPointNode;
 
-typedef struct
-{
-    /* We don't really need it. */
-    long location_in_file;
-#if 0
-    int depth;
-    int was_consumed: 1;
-    int is_reachable: 1;
-#endif
-} fcc_entry_point_value_t;
-
-typedef struct
-{
-    fcs_dbm_record_t key;
-    fcc_entry_point_value_t val;
-} fcc_entry_point_t;
 
 struct FccEntryPointNode
 {
     RB_ENTRY(FccEntryPointNode) entry_;
-    fcc_entry_point_t kv;
+    struct
+    {
+        fcs_dbm_record_t key;
+        /* fcc_entry_point_value_t */
+        struct
+        {
+            /* We don't really need it. */
+            long location_in_file;
+#if 0
+            int depth;
+            int was_consumed: 1;
+            int is_reachable: 1;
+#endif
+        } val;
+    } kv;
 };
 
 static GCC_INLINE int FccEntryPointNode_compare(FccEntryPointNode * a, FccEntryPointNode * b)

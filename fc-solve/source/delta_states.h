@@ -129,7 +129,7 @@ static GCC_INLINE void fcs_dbm_record_set_refcount(
 #endif
 
 static GCC_INLINE void fcs_dbm_record_increment_refcount(
-    fcs_dbm_record_t * rec
+    fcs_dbm_record_t * const rec
     )
 {
     fcs_dbm_record_set_refcount(

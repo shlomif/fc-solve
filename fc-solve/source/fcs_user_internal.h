@@ -72,8 +72,8 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
     );
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-    void * api_instance,
-    int depth_idx
+    void * const api_instance,
+    const int depth_idx
     );
 
 #endif

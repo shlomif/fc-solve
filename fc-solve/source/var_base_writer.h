@@ -42,7 +42,7 @@ typedef struct
     mpz_t remainder;
 } fcs_var_base_writer_t;
 
-static GCC_INLINE void fc_solve_var_base_writer_init(fcs_var_base_writer_t * s)
+static GCC_INLINE void fc_solve_var_base_writer_init(fcs_var_base_writer_t * const s)
 {
     mpz_init(s->data);
     mpz_init(s->multiplier);
@@ -88,7 +88,7 @@ static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
 }
 
 static GCC_INLINE void fc_solve_var_base_writer_release(
-    fcs_var_base_writer_t * w
+    fcs_var_base_writer_t * const w
 )
 {
     mpz_clear(w->data);
