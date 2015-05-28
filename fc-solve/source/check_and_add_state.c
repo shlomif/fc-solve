@@ -27,9 +27,6 @@
  *
  */
 
-#ifndef FC_SOLVE__CAAS_C
-#define FC_SOLVE__CAAS_C
-
 #define BUILDING_DLL 1
 
 #include <stdlib.h>
@@ -641,5 +638,3 @@ fcs_bool_t fc_solve_check_and_add_state(
 #error Unknown FCS_STATE_STORAGE. Please define it to a valid value.
 #endif
 }
-
-#endif /* #ifndef FC_SOLVE__CAAS_C */
