@@ -373,10 +373,10 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     const int suit_positions_by_rank_step = (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card) \
-            char * pos_idx_to_check = &positions_by_rank[ \
+            const char * pos_idx_to_check = &positions_by_rank[ \
                 (FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card))) \
             ]; \
-            char * last_pos_idx; \
+            const char * last_pos_idx; \
                  \
             for (last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH, \
                  pos_idx_to_check += FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card) \
