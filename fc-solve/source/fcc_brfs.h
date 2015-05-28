@@ -527,7 +527,6 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
     add_start_point_context_t * context = (add_start_point_context_t *)void_context;
     dict_t * tree = context->do_next_fcc_start_points_exist;
     const fcs_fcc_moves_list_item_t * const start_state_moves_item = start_state_moves_seq->moves_list;
-    int count_start_state_moves = start_state_moves_seq->count;
     fcs_encoded_state_buffer_t * key_to_add;
     fcs_fcc_moves_list_item_t const * start_iter;
     int pos_in_moves;
@@ -563,6 +562,7 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
      * in one go by jumps of FCS_FCC_NUM_MOVES_IN_ITEM
      * */
     start_iter = start_state_moves_item;
+    const int count_start_state_moves = start_state_moves_seq->count;
     for(
         ;
         pos_in_moves < count_start_state_moves
