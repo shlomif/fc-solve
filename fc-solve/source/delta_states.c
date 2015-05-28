@@ -215,46 +215,38 @@ static GCC_INLINE void fc_solve_get_column_encoding_composite(
     );
 }
 
-static void fc_solve_get_freecells_encoding(
-        fc_solve_delta_stater_t * self,
-        fc_solve_bit_writer_t * bit_w
+static GCC_INLINE void fc_solve_get_freecells_encoding(
+        fc_solve_delta_stater_t * const self,
+        fc_solve_bit_writer_t * const bit_w
         )
 {
+
+    const fcs_state_t * const derived = self->_derived_state;
+    const typeof(self->num_freecells) num_freecells = self->num_freecells;
+
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    int i, j, min_idx;
-    fcs_state_t * derived;
-    int num_freecells;
-    fcs_card_t min_card;
-
-    derived = self->_derived_state;
-    num_freecells = self->num_freecells;
-
-    for (i=0 ; i < num_freecells ; i++)
+    for (int i=0 ; i < num_freecells ; i++)
     {
         freecells[i] = fcs_freecell_card(*derived, i);
     }
 
     /* Sort the freecells using selection-sort. */
-    for (i=0 ; i < num_freecells ; i++)
+    for (int i=0 ; i < num_freecells ; i++)
     {
-        min_idx = i;
-        for (j=i+1 ; j < num_freecells ; j++)
+        int min_idx = i;
+        for (int j=i+1 ; j < num_freecells ; j++)
         {
             if (fcs_card2char(freecells[j]) < fcs_card2char(freecells[min_idx]))
             {
                 min_idx = j;
             }
         }
-        if (min_idx != i)
-        {
-            min_card = freecells[min_idx];
-            freecells[min_idx] = freecells[i];
-        }
-        else
-        {
-            min_card = freecells[i];
-        }
-        fc_solve_bit_writer_write(bit_w, 6, fcs_card2char(min_card));
+        fc_solve_bit_writer_write(bit_w, 6,
+            fcs_card2char(
+                (min_idx != i)
+                ? (freecells[min_idx] = freecells[i])
+                : freecells[i])
+        );
     }
 }
 
