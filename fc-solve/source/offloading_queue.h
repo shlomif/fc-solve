@@ -199,40 +199,38 @@ static GCC_INLINE void fcs_offloading_queue_page__destroy(
 }
 
 static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_extract(
-    fcs_offloading_queue_page_t * page
+    const fcs_offloading_queue_page_t * const page
 )
 {
     return (page->read_from_idx < page->write_to_idx);
 }
 
 static GCC_INLINE void fcs_offloading_queue_page__extract(
-    fcs_offloading_queue_page_t * page,
-    fcs_offloading_queue_item_t * out_item
+    fcs_offloading_queue_page_t * const page,
+    fcs_offloading_queue_item_t * const out_item
 )
 {
-    int read_from_idx;
-
-    read_from_idx = ((page->read_from_idx)++);
-
-    memcpy(out_item, page->data + sizeof(fcs_offloading_queue_item_t) * read_from_idx, sizeof(fcs_offloading_queue_item_t));
+    memcpy(
+        out_item,
+        (page->data + sizeof(*out_item) * ((page->read_from_idx)++)),
+        sizeof(*out_item)
+    );
 }
 
 static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_insert(
-    fcs_offloading_queue_page_t * page
+    const fcs_offloading_queue_page_t * const page
 )
 {
     return (page->write_to_idx < page->num_items_per_page);
 }
 
 static GCC_INLINE void fcs_offloading_queue_page__insert(
-    fcs_offloading_queue_page_t * page,
+    fcs_offloading_queue_page_t * const page,
     const fcs_offloading_queue_item_t * const in_item
     )
 {
-    int write_to_idx = ((page->write_to_idx)++);
-
     memcpy(
-        page->data+write_to_idx * sizeof(fcs_offloading_queue_item_t),
+        page->data + ((page->write_to_idx)++) * sizeof(*in_item),
         in_item,
         sizeof(*in_item)
     );
@@ -265,18 +263,15 @@ static GCC_INLINE void fcs_offloading_queue_page__bump(
 }
 
 static GCC_INLINE void fcs_offloading_queue_page__read_next_from_disk(
-    fcs_offloading_queue_page_t * page,
-    const char * offload_dir_path
+    fcs_offloading_queue_page_t * const page,
+    const char * const offload_dir_path
     )
 {
-    FILE * f;
-    char page_filename[PATH_MAX+1];
-
     fcs_offloading_queue_page__bump(page);
-
+    char page_filename[PATH_MAX+1];
     fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
 
-    f = fopen(page_filename, "rb");
+    FILE * const f = fopen(page_filename, "rb");
     fread( page->data, sizeof(fcs_offloading_queue_item_t),
            page->num_items_per_page, f
     );
@@ -292,8 +287,8 @@ static GCC_INLINE void fcs_offloading_queue_page__read_next_from_disk(
 }
 
 static GCC_INLINE void fcs_offloading_queue_page__offload(
-    fcs_offloading_queue_page_t * page,
-    const char * offload_dir_path
+    fcs_offloading_queue_page_t * const page,
+    const char * const offload_dir_path
     )
 {
     FILE * f;
