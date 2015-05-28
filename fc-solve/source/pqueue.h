@@ -178,16 +178,14 @@ static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(PQUEUE * pq)
  * */
 
 static GCC_INLINE void fc_solve_pq_pop(
-    PQUEUE *pq,
-    fcs_collectible_state_t * * val)
+    PQUEUE * const pq,
+    fcs_collectible_state_t * * const val
+)
 {
     int i;
     int child;
-    pq_element_t * Elements = pq->Elements;
-    int CurrentSize = pq->CurrentSize;
-
-    pq_element_t pMaxElement;
-    pq_element_t pLastElement;
+    pq_element_t * const Elements = pq->Elements;
+    typeof(pq->CurrentSize) CurrentSize = pq->CurrentSize;
 
     if( fc_solve_is_pqueue_empty(pq) )
     {
@@ -195,35 +193,32 @@ static GCC_INLINE void fc_solve_pq_pop(
         return;
     }
 
-    pMaxElement = Elements[PQ_FIRST_ENTRY];
+    pq_element_t pMaxElement = Elements[PQ_FIRST_ENTRY];
 
     /* get pointer to last element in tree */
-    pLastElement = Elements[ CurrentSize-- ];
+    pq_element_t pLastElement = Elements[ CurrentSize-- ];
 
+    /* code to pop an element from an ascending (top to bottom) pqueue */
+
+    /*  UNTESTED */
+
+    for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= CurrentSize; i=child )
     {
+        /* set child to the smaller of the two children... */
 
-        /* code to pop an element from an ascending (top to bottom) pqueue */
-
-        /*  UNTESTED */
-
-        for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= CurrentSize; i=child )
+        if( (child != CurrentSize) &&
+            (fcs_pq_rating(Elements[child + 1]) > fcs_pq_rating(Elements[child])) )
         {
-            /* set child to the smaller of the two children... */
+            child ++;
+        }
 
-            if( (child != CurrentSize) &&
-                (fcs_pq_rating(Elements[child + 1]) > fcs_pq_rating(Elements[child])) )
-            {
-                child ++;
-            }
-
-            if( fcs_pq_rating( pLastElement ) < fcs_pq_rating( Elements[ child ] ) )
-            {
-                Elements[ i ] = Elements[ child ];
-            }
-            else
-            {
-                break;
-            }
+        if( fcs_pq_rating( pLastElement ) < fcs_pq_rating( Elements[ child ] ) )
+        {
+            Elements[ i ] = Elements[ child ];
+        }
+        else
+        {
+            break;
         }
     }
 

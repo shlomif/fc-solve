@@ -1164,21 +1164,19 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
     fc_solve_soft_thread_t * const soft_thread
     )
 {
-    typeof(soft_thread->hard_thread) hard_thread = soft_thread->hard_thread;
-    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
+    struct fc_solve__patsolve_thread_struct * const pats_scan
+        = soft_thread->pats_scan;
 
-    typeof(hard_thread->num_checked_states) delta =
-        hard_thread->max_num_checked_states - hard_thread->num_checked_states;
+    const typeof (pats_scan->num_checked_states) start_from = pats_scan->num_checked_states;
 
-    typeof (pats_scan->num_checked_states) start_from = pats_scan->num_checked_states;
-
-    pats_scan->max_num_checked_states = start_from + delta;
+    pats_scan->max_num_checked_states = start_from + (hard_thread->max_num_checked_states - hard_thread->num_checked_states);
 
     pats_scan->status = FCS_PATS__NOSOL;
 
     fc_solve_pats__do_it(pats_scan);
 
-    typeof(start_from) after_scan_delta = pats_scan->num_checked_states - start_from;
+    const typeof(start_from) after_scan_delta = pats_scan->num_checked_states - start_from;
     hard_thread->num_checked_states += after_scan_delta;
     hard_thread->instance->num_checked_states += after_scan_delta;
 
