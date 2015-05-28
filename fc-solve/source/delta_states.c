@@ -46,9 +46,9 @@
 #include "dbm_common.h"
 #endif
 
-static int fc_solve_get_column_orig_num_cards(
-        fc_solve_delta_stater_t * self,
-        fcs_cards_column_t col
+static const int fc_solve_get_column_orig_num_cards(
+        fc_solve_delta_stater_t * const self,
+        fcs_const_cards_column_t col
         )
 {
     int num_cards;
@@ -151,31 +151,21 @@ typedef struct
     int bit_in_char_idx;
 } fc_solve_column_encoding_composite_t;
 
-static void fc_solve_get_column_encoding_composite(
-        fc_solve_delta_stater_t * self,
-        int col_idx,
-        fc_solve_column_encoding_composite_t * ret
+static GCC_INLINE void fc_solve_get_column_encoding_composite(
+        fc_solve_delta_stater_t * const self,
+        const int col_idx,
+        fc_solve_column_encoding_composite_t * const ret
         )
 {
-    fcs_state_t * derived;
-    fcs_cards_column_t col;
-    int num_orig_cards;
-    int col_len;
-    int num_derived_cards;
-    int num_cards_in_seq;
-    fcs_card_t init_card;
-    fc_solve_bit_writer_t bit_w;
-    int i;
+    const fcs_state_t * const derived = self->_derived_state;
+    fcs_const_cards_column_t col = fcs_state_get_col(*derived, col_idx);
 
-    derived = self->_derived_state;
-    col = fcs_state_get_col(*derived, col_idx);
+    const int num_orig_cards = fc_solve_get_column_orig_num_cards(self, col);
+    const int col_len = fcs_col_len(col);
+    const int num_derived_cards = col_len - num_orig_cards;
 
-    num_orig_cards = fc_solve_get_column_orig_num_cards(self, col);
-    col_len = fcs_col_len(col);
-    num_derived_cards = col_len - num_orig_cards;
-
-    num_cards_in_seq = num_derived_cards;
-    init_card = fc_solve_empty_card;
+    int num_cards_in_seq = num_derived_cards;
+    fcs_card_t init_card = fc_solve_empty_card;
 
     if ((num_orig_cards == 0) && num_derived_cards)
     {
@@ -184,6 +174,7 @@ static void fc_solve_get_column_encoding_composite(
     }
 
     /* Prepare the encoding. */
+    fc_solve_bit_writer_t bit_w;
     fc_solve_bit_writer_init(&bit_w, ret->enc);
 
     fc_solve_bit_writer_write(&bit_w,
@@ -201,7 +192,7 @@ static void fc_solve_get_column_encoding_composite(
         fc_solve_bit_writer_write(&bit_w, 6, fcs_card2char(init_card));
     }
 
-    for (i=col_len-num_cards_in_seq ; i<col_len; i++)
+    for (int i=col_len-num_cards_in_seq ; i<col_len; i++)
     {
 #define GET_SUIT_BIT(card) (( (fcs_card_suit(card)) & 0x2 ) >> 1 )
 
