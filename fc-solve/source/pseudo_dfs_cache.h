@@ -77,14 +77,14 @@ typedef struct
     fcs_pdfs_cache_key_info_t * recycle_bin;
 } fcs_pdfs_lru_cache_t;
 
-static GCC_INLINE void fcs_pdfs_cache_destroy(fcs_pdfs_lru_cache_t * cache)
+static GCC_INLINE void fcs_pdfs_cache_destroy(fcs_pdfs_lru_cache_t * const cache)
 {
     Word_t Rc_word;
     JHSFA(Rc_word, cache->states_values_to_keys_map);
     fc_solve_compact_allocator_finish(&(cache->states_values_to_keys_allocator));
 }
 
-static GCC_INLINE void fcs_pdfs_cache_init(fcs_pdfs_lru_cache_t * cache, long max_num_elements_in_cache, fcs_meta_compact_allocator_t * meta_alloc)
+static GCC_INLINE void fcs_pdfs_cache_init(fcs_pdfs_lru_cache_t * const cache, const long max_num_elements_in_cache, fcs_meta_compact_allocator_t * const meta_alloc)
 {
     cache->states_values_to_keys_map = ((Pvoid_t) NULL);
 
@@ -146,7 +146,7 @@ static GCC_INLINE fcs_bool_t fcs_pdfs_cache_does_key_exist(fcs_pdfs_lru_cache_t 
     }
 }
 
-static GCC_INLINE fcs_pdfs_cache_key_info_t * fcs_pdfs_cache_insert(fcs_pdfs_lru_cache_t * cache, fcs_pdfs_key_t * key)
+static GCC_INLINE fcs_pdfs_cache_key_info_t * fcs_pdfs_cache_insert(fcs_pdfs_lru_cache_t * const cache, fcs_pdfs_key_t * const key)
 {
     fcs_pdfs_cache_key_info_t * cache_key;
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
