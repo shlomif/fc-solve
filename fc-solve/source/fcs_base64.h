@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "inline.h"
+
 /* We modified the encoding table to have '_' instead of '/',
  * which interferes with UNIX paths.
  * */
@@ -26,7 +28,7 @@ static char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
 static char decoding_table[256];
 static int mod_table[] = {0, 2, 1};
 
-static void build_decoding_table(void)
+static GCC_INLINE void build_decoding_table(void)
 {
     for (int i = 0; i < 64; i++)
         decoding_table[(unsigned char) encoding_table[i]] = i;
