@@ -369,10 +369,8 @@ void fc_solve_instance__init_hard_thread(
     Afterwards fc_solve_init_instance() should be called in order
     to really prepare it for solving.
   */
-fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * const meta_alloc)
+void fc_solve_alloc_instance(fc_solve_instance_t * const instance, fcs_meta_compact_allocator_t * const meta_alloc)
 {
-    fc_solve_instance_t * instance = SMALLOC1(instance);
-
     instance->meta_alloc = meta_alloc;
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
@@ -449,8 +447,6 @@ fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * con
     instance->rcs_states_cache.max_num_elements_in_cache
         = DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE;
 #endif
-
-    return instance;
 }
 
 #undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
@@ -520,11 +516,15 @@ static GCC_INLINE void compile_prelude(
 }
 
 
-void fc_solve_init_instance(fc_solve_instance_t * instance)
+void fc_solve_init_instance(fc_solve_instance_t * const instance)
 {
     /* Initialize the state packs */
     HT_LOOP_START()
     {
+        /* The pointer to instance may change as the flares array get resized
+         * so the pointers need to be reassigned to it.
+         * */
+        hard_thread->instance = instance;
         if (hard_thread->prelude_as_string)
         {
             if (!hard_thread->prelude)

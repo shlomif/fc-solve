@@ -62,7 +62,7 @@ typedef struct {
 
 typedef struct
 {
-    fc_solve_instance_t * obj;
+    fc_solve_instance_t obj;
     int ret_code;
     /* Whether the instance is ready to be input with (i.e:
      * was recycled already.) */
@@ -281,7 +281,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 
     FLARES_LOOP_START()
         status = fc_solve_apply_preset_by_ptr(
-            flare->obj,
+            &(flare->obj),
             new_preset_ptr
             );
 
@@ -789,7 +789,7 @@ static GCC_INLINE void recycle_flare(
 {
     if (! flare->instance_is_ready)
     {
-        fc_solve_recycle_instance(flare->obj);
+        fc_solve_recycle_instance(&(flare->obj));
         flare->instance_is_ready = TRUE;
     }
 }
@@ -917,8 +917,8 @@ static void trace_flare_solution(
         return;
     }
 
-    fc_solve_instance_t * instance =
-        flare->obj;
+    fc_solve_instance_t * const instance =
+        &(flare->obj);
 
     fc_solve_trace_solution(instance);
     fcs_kv_state_t pass;
@@ -948,8 +948,8 @@ static void trace_flare_solution(
         instance->solution_moves.moves = NULL;
     }
 
-    flare->obj_stats.num_checked_states = flare->obj->num_checked_states;
-    flare->obj_stats.num_states_in_collection = flare->obj->num_states_in_collection;
+    flare->obj_stats.num_checked_states = flare->obj.num_checked_states;
+    flare->obj_stats.num_states_in_collection = flare->obj.num_states_in_collection;
 
     recycle_flare(user, flare);
     flare->was_solution_traced = TRUE;
@@ -1087,7 +1087,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         if (is_start_of_flare_solving)
         {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-            fc_solve_instance_t * instance = user->active_flare->obj;
+            fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
 
             if (FCS_USER_STATE_TO_C__SUCCESS !=
@@ -1152,7 +1152,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             user->trace_solution_state_locs = user->state_locs;
 
-            fc_solve_init_instance(user->active_flare->obj);
+            fc_solve_init_instance(&(user->active_flare->obj));
         }
 
 #define parameterized_fixed_limit(increment) \
@@ -1186,24 +1186,24 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             if (mymin < 0)
             {
-                user->active_flare->obj->max_num_checked_states = -1;
-                user->active_flare->obj->effective_max_num_checked_states = FCS_INT_LIMIT_MAX;
+                user->active_flare->obj.max_num_checked_states = -1;
+                user->active_flare->obj.effective_max_num_checked_states = FCS_INT_LIMIT_MAX;
             }
             else
             {
-                user->active_flare->obj->max_num_checked_states =
-                    user->active_flare->obj->effective_max_num_checked_states =
-                    (user->active_flare->obj->num_checked_states + mymin - user->iterations_board_started_at.num_checked_states);
+                user->active_flare->obj.max_num_checked_states =
+                    user->active_flare->obj.effective_max_num_checked_states =
+                    (user->active_flare->obj.num_checked_states + mymin - user->iterations_board_started_at.num_checked_states);
             }
         }
 
-        user->init_num_checked_states.num_checked_states = init_num_checked_states.num_checked_states = user->active_flare->obj->num_checked_states;
-        user->init_num_checked_states.num_states_in_collection = init_num_checked_states.num_states_in_collection = user->active_flare->obj->num_states_in_collection;
+        user->init_num_checked_states.num_checked_states = init_num_checked_states.num_checked_states = user->active_flare->obj.num_checked_states;
+        user->init_num_checked_states.num_states_in_collection = init_num_checked_states.num_states_in_collection = user->active_flare->obj.num_states_in_collection;
 
         if (is_start_of_flare_solving)
         {
             fc_solve_start_instance_process_with_board(
-                user->active_flare->obj, &(user->state),
+                &(user->active_flare->obj), &(user->state),
                 &(user->initial_non_canonized_state)
             );
         }
@@ -1217,7 +1217,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         {
             ret = user->ret_code =
                 flare->ret_code =
-                    fc_solve_resume_instance(user->active_flare->obj);
+                    fc_solve_resume_instance(&(user->active_flare->obj));
             flare->instance_is_ready = FALSE;
         }
 
@@ -1226,8 +1226,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->all_instances_were_suspended = FALSE;
         }
 
-        user->active_flare->obj_stats.num_checked_states = user->active_flare->obj->num_checked_states;
-        user->active_flare->obj_stats.num_states_in_collection = user->active_flare->obj->num_states_in_collection;
+        user->active_flare->obj_stats.num_checked_states = user->active_flare->obj.num_checked_states;
+        user->active_flare->obj_stats.num_states_in_collection = user->active_flare->obj.num_states_in_collection;
         user->iterations_board_started_at.num_checked_states += user->active_flare->obj_stats.num_checked_states - init_num_checked_states.num_checked_states;
         user->iterations_board_started_at.num_states_in_collection += user->active_flare->obj_stats.num_states_in_collection - init_num_checked_states.num_states_in_collection;
         user->init_num_checked_states = user->active_flare->obj_stats;
@@ -1261,7 +1261,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         {
             if (was_run_now)
             {
-                fc_solve_recycle_instance(user->active_flare->obj);
+                fc_solve_recycle_instance(&(user->active_flare->obj));
                 user->active_flare->instance_is_ready = TRUE;
             }
         }
@@ -1274,8 +1274,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             if (((user->current_iterations_limit >= 0) &&
                 (user->iterations_board_started_at.num_checked_states >=
                     user->current_iterations_limit)) ||
-                (user->active_flare->obj->num_states_in_collection >=
-                    user->active_flare->obj->effective_max_num_states_in_collection)
+                (user->active_flare->obj.num_states_in_collection >=
+                    user->active_flare->obj.effective_max_num_states_in_collection)
             )
             {
                 /* Bug fix:
@@ -1294,13 +1294,13 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * so, designate it as unsolvable.
              * */
             if ((local_limit() >= 0) &&
-                (user->active_flare->obj->num_checked_states >= local_limit())
+                (user->active_flare->obj.num_checked_states >= local_limit())
                )
             {
                 user->active_flare->obj_stats.num_checked_states =
-                    user->active_flare->obj->num_checked_states;
+                    user->active_flare->obj.num_checked_states;
                 user->active_flare->obj_stats.num_states_in_collection =
-                    user->active_flare->obj->num_states_in_collection;
+                    user->active_flare->obj.num_states_in_collection;
                 recycle_instance(user, user->current_instance_idx);
                 user->current_instance_idx++;
                 continue;
@@ -1341,8 +1341,8 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 
     {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        fc_solve_instance_t * instance =
-            user->active_flare->obj;
+        fc_solve_instance_t * const instance =
+            &(user->active_flare->obj);
 #endif
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
@@ -1393,7 +1393,7 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
 
     {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        fc_solve_instance_t * instance = user->active_flare->obj;
+        fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
 
         return
@@ -1425,10 +1425,10 @@ static void user_free_resources(
             (ret_code != FCS_STATE_INVALID_STATE) &&
             (! flare->instance_is_ready))
         {
-            fc_solve_finish_instance(flare->obj);
+            fc_solve_finish_instance(&(flare->obj));
         }
 
-        fc_solve_free_instance(flare->obj);
+        fc_solve_free_instance(&(flare->obj));
 
         if (flare->name)
         {
@@ -1620,7 +1620,7 @@ static void apply_game_params_for_all_instances(
 {
     FLARES_LOOP_START()
     {
-        typeof(flare->obj) instance = flare->obj;
+        typeof(&(flare->obj)) instance = &(flare->obj);
         instance->game_params = user->common_preset.game_params;
         calc_variant_suit_mask_and_desired_suit_value(instance);
     }
@@ -1769,7 +1769,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    return user->iterations_board_started_at.num_checked_states + max(user->active_flare->obj_stats.num_checked_states, user->active_flare->obj->num_checked_states) - user->init_num_checked_states.num_checked_states;
+    return user->iterations_board_started_at.num_checked_states + max(user->active_flare->obj_stats.num_checked_states, user->active_flare->obj.num_checked_states) - user->init_num_checked_states.num_checked_states;
 }
 
 int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
@@ -1781,7 +1781,7 @@ int DLLEXPORT freecell_solver_user_get_limit_iterations(void * api_instance)
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    return user->active_flare->obj->max_num_checked_states;
+    return user->active_flare->obj.max_num_checked_states;
 }
 
 int DLLEXPORT freecell_solver_user_get_moves_left(void * api_instance)
@@ -1804,7 +1804,7 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    STRUCT_SET_FLAG_TO(user->active_flare->obj, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
+    STRUCT_SET_FLAG_TO(&(user->active_flare->obj), FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
 
 DLLEXPORT char * freecell_solver_user_move_to_string(
@@ -1821,15 +1821,12 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
     int standard_notation
     )
 {
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
+
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-    fc_solve_instance_t * instance;
+    fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
 
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-    instance =
-        user->active_flare->obj;
-#endif
 
     return
         fc_solve_move_to_string_w_state(
@@ -1849,7 +1846,7 @@ void DLLEXPORT freecell_solver_user_limit_depth(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    user->active_flare->obj->max_depth = max_depth;
+    user->active_flare->obj.max_depth = max_depth;
 }
 
 int DLLEXPORT freecell_solver_user_get_max_num_freecells(void)
@@ -2053,7 +2050,7 @@ static void set_debug_iter_output_func_to_val(
 )
 {
     FLARES_LOOP_START()
-       flare->obj->debug_iter_output_func = value;
+       flare->obj.debug_iter_output_func = value;
     FLARES_LOOP_END()
 }
 
@@ -2118,7 +2115,7 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     fcs_user_t * const user = (fcs_user_t *)api_instance;
     fc_solve_instance_t * const instance =
-        user->active_flare->obj;
+        &(user->active_flare->obj);
 #endif
 
     return
@@ -2168,14 +2165,14 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
 
     if (max_num_states < 0)
     {
-        user->active_flare->obj->max_num_states_in_collection = -1;
-        user->active_flare->obj->effective_max_num_states_in_collection
+        user->active_flare->obj.max_num_states_in_collection = -1;
+        user->active_flare->obj.effective_max_num_states_in_collection
             = FCS_INT_LIMIT_MAX;
     }
     else
     {
-        user->active_flare->obj->effective_max_num_states_in_collection =
-            user->active_flare->obj->max_num_states_in_collection =
+        user->active_flare->obj.effective_max_num_states_in_collection =
+            user->active_flare->obj.max_num_states_in_collection =
                 max_num_states;
     }
 
@@ -2199,13 +2196,13 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
 
     if (max_num_states < 0)
     {
-        user->active_flare->obj->trim_states_in_collection_from = -1;
-        user->active_flare->obj->effective_trim_states_in_collection_from = LONG_MAX;
+        user->active_flare->obj.trim_states_in_collection_from = -1;
+        user->active_flare->obj.effective_trim_states_in_collection_from = LONG_MAX;
     }
     else
     {
-        user->active_flare->obj->effective_trim_states_in_collection_from =
-            user->active_flare->obj->trim_states_in_collection_from =
+        user->active_flare->obj.effective_trim_states_in_collection_from =
+            user->active_flare->obj.trim_states_in_collection_from =
             max_num_states;
     }
 
@@ -2247,7 +2244,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fc_solve_soft_thread_t * const soft_thread = fc_solve_new_hard_thread(user->active_flare->obj);
+    fc_solve_soft_thread_t * const soft_thread = fc_solve_new_hard_thread(&(user->active_flare->obj));
 
     if (soft_thread == NULL)
     {
@@ -2265,7 +2262,7 @@ int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    return user->active_flare->obj->next_soft_thread_id;
+    return user->active_flare->obj.next_soft_thread_id;
 }
 
 void DLLEXPORT freecell_solver_user_set_calc_real_depth(
@@ -2275,7 +2272,7 @@ void DLLEXPORT freecell_solver_user_set_calc_real_depth(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    STRUCT_SET_FLAG_TO(user->active_flare->obj, FCS_RUNTIME_CALC_REAL_DEPTH, calc_real_depth);
+    STRUCT_SET_FLAG_TO(&(user->active_flare->obj), FCS_RUNTIME_CALC_REAL_DEPTH, calc_real_depth);
 }
 
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(
@@ -2388,20 +2385,20 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fc_solve_free_tests_order(&(user->active_flare->obj->opt_tests_order));
+    fc_solve_free_tests_order(&(user->active_flare->obj.opt_tests_order));
 
-    STRUCT_CLEAR_FLAG(user->active_flare->obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
+    STRUCT_CLEAR_FLAG(&(user->active_flare->obj), FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 
     int ret =
         fc_solve_apply_tests_order(
-            &(user->active_flare->obj->opt_tests_order),
+            &(user->active_flare->obj.opt_tests_order),
             tests_order,
             error_string
             );
 
     if (!ret)
     {
-        STRUCT_TURN_ON_FLAG(user->active_flare->obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
+        STRUCT_TURN_ON_FLAG(&(user->active_flare->obj), FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
 
     return ret;
@@ -2442,7 +2439,7 @@ void DLLEXPORT freecell_solver_user_set_reparent_states(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    STRUCT_SET_FLAG_TO(user->active_flare->obj,
+    STRUCT_SET_FLAG_TO(&(user->active_flare->obj),
             FCS_RUNTIME_TO_REPARENT_STATES_PROTO, to_reparent_states);
 }
 
@@ -2453,7 +2450,7 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    STRUCT_SET_FLAG_TO(user->active_flare->obj, FCS_RUNTIME_SCANS_SYNERGY, synergy);
+    STRUCT_SET_FLAG_TO(&(user->active_flare->obj), FCS_RUNTIME_SCANS_SYNERGY, synergy);
 }
 
 int DLLEXPORT freecell_solver_user_next_instance(
@@ -2474,29 +2471,29 @@ static int user_next_flare(fcs_user_t * user)
     instance_item->limit = flare->limit = -1;
 
     user->active_flare = flare;
-    flare->obj = fc_solve_alloc_instance(&(user->meta_alloc));
+    fc_solve_alloc_instance(&(flare->obj), &(user->meta_alloc));
 
     /*
      * Switch the soft_thread variable so it won't refer to the old
      * instance
      * */
     user->soft_thread =
-        fc_solve_instance_get_first_soft_thread(user->active_flare->obj);
+        fc_solve_instance_get_first_soft_thread(&(user->active_flare->obj));
 
 #ifndef FCS_FREECELL_ONLY
-    fc_solve_apply_preset_by_ptr(flare->obj, &(user->common_preset));
-    calc_variant_suit_mask_and_desired_suit_value(flare->obj);
+    fc_solve_apply_preset_by_ptr(&(flare->obj), &(user->common_preset));
+    calc_variant_suit_mask_and_desired_suit_value(&(flare->obj));
 #endif
 
     user->ret_code = flare->ret_code =
         FCS_STATE_NOT_BEGAN_YET;
 
-    flare->obj->debug_iter_output_func =
+    flare->obj.debug_iter_output_func =
         ((user->iter_handler || user->long_iter_handler)
          ? iter_handler_wrapper
          : NULL
         );
-    flare->obj->debug_iter_output_context = user;
+    flare->obj.debug_iter_output_context = user;
     flare->moves_seq.num_moves = 0;
     flare->moves_seq.moves = NULL;
 
@@ -2567,7 +2564,7 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fc_solve_hard_thread_t * hard_thread = user->active_flare->obj->current_hard_thread;
+    fc_solve_hard_thread_t * const hard_thread = user->active_flare->obj.current_hard_thread;
 
     return hard_thread->soft_threads[hard_thread->st_idx].name;
 }
@@ -2598,7 +2595,7 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
     }
 
     FLARES_LOOP_START()
-        flare->obj->rcs_states_cache.max_num_elements_in_cache = limit;
+        flare->obj.rcs_states_cache.max_num_elements_in_cache = limit;
     FLARES_LOOP_END()
 
     return 0;

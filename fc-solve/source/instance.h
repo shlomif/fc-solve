@@ -922,7 +922,7 @@ typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
 #include "pat.h"
 
-fc_solve_instance_t * fc_solve_alloc_instance(fcs_meta_compact_allocator_t * meta_alloc);
+void fc_solve_alloc_instance(fc_solve_instance_t * const instance, fcs_meta_compact_allocator_t * const meta_alloc);
 
 extern void fc_solve_init_instance(
     fc_solve_instance_t * const instance
@@ -1897,8 +1897,6 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
         fcs_move_stack_static_destroy(instance->solution_moves);
         instance->solution_moves.moves = NULL;
     }
-
-    free(instance);
 }
 
 #ifdef FCS_RCS_STATES
