@@ -725,10 +725,10 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 #define MYMARGIN 2
 #define TRAILING_CHAR '\n'
 static GCC_INLINE char * duplicate_string_while_adding_a_trailing_newline(
-    const char * orig_str
+    const char * const orig_str
 )
 {
-    int len = strlen(orig_str);
+    const int len = strlen(orig_str);
     char * s = malloc(len + MYMARGIN);
     strcpy (s, orig_str);
     {
