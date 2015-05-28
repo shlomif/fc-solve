@@ -1501,9 +1501,6 @@ int main(int argc, char * argv[])
 
     fcs_which_moves_bitmask_t initial_which_irreversible_moves_bitmask
         = {{'\0'}};
-#if 0
-    int initial_irrev_moves_depth =
-#endif
     horne_prune(local_variant, &init_state,
         &initial_which_irreversible_moves_bitmask, NULL, NULL
     );

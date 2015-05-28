@@ -638,7 +638,7 @@ fcs_bool_t fc_solve_check_and_add_state(
         }
     }
 #else
-#error no define
+#error Unknown FCS_STATE_STORAGE. Please define it to something valid.
 #endif
 }
 

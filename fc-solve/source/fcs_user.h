@@ -109,11 +109,6 @@ DLLEXPORT extern int freecell_solver_user_get_num_times(
     void * user_instance
     );
 
-
-DLLEXPORT extern fcs_int_limit_t freecell_solver_user_get_limit_iterations_long(
-    void * user_instance
-    );
-
 DLLEXPORT extern int freecell_solver_user_get_limit_iterations(
     void * user_instance
     );

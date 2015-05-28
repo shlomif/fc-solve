@@ -82,39 +82,6 @@
 
 const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS] = {0.5, 0, 0.3, 0, 0.2, 0};
 
-static GCC_INLINE void normalize_befs_weights(
-    fc_solve_state_weighting_t * const weighting
-)
-{
-    /* Normalize the Best-First-Search Weights, so the sum of all of them would be 1. */
-
-    double sum = 0;
-
-#define my_befs_weights weighting->befs_weights
-    for (
-        int weight_idx = 0
-            ;
-        weight_idx < COUNT(my_befs_weights)
-            ;
-        weight_idx++
-    )
-    {
-        if (unlikely(my_befs_weights[weight_idx] < 0))
-        {
-            my_befs_weights[weight_idx] = fc_solve_default_befs_weights[weight_idx];
-        }
-        sum += my_befs_weights[weight_idx];
-    }
-    if (unlikely(sum < 1e-6))
-    {
-        sum = 1;
-    }
-    for (int weight_idx=0 ; weight_idx < COUNT(my_befs_weights) ; weight_idx++)
-    {
-        my_befs_weights[weight_idx] /= sum;
-    }
-}
-
 static GCC_INLINE void soft_thread_clean_soft_dfs(
     fc_solve_soft_thread_t * const soft_thread
 )
