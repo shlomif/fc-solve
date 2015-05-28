@@ -1050,7 +1050,7 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
 #endif
 
 #ifndef FCS_FREECELL_ONLY
-    fcs_bool_t bool_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+    const fcs_bool_t bool_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move bool_unlimited_sequence_move
 #else
 #define unlimited_sequence_move FALSE
