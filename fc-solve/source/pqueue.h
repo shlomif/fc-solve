@@ -55,7 +55,7 @@ extern "C" {
 
 #define FC_SOLVE_PQUEUE_MaxRating INT_MAX
 
-#define PGetRating(elem) ((elem).rating)
+#define fcs_pq_rating(elem) ((elem).rating)
 
 typedef int pq_rating_t;
 
@@ -109,7 +109,7 @@ static GCC_INLINE void fc_solve_PQueueFree( PQUEUE *pq )
 
 /* join a priority queue
    returns TRUE if succesful, FALSE if fails. (You fail by filling the pqueue.)
-   PGetRating is a function which returns the rating of the item you're adding for sorting purposes */
+   fcs_pq_rating is a function which returns the rating of the item you're adding for sorting purposes */
 
 static GCC_INLINE void fc_solve_PQueuePush(
         PQUEUE *pq,
@@ -144,7 +144,7 @@ static GCC_INLINE void fc_solve_PQueuePush(
             while( ( i==PQ_FIRST_ENTRY ?
                      (FC_SOLVE_PQUEUE_MaxRating) /* return biggest possible rating if first element */
                      :
-                     (PGetRating(Elements[ PQ_PARENT_INDEX(i) ]) )
+                     (fcs_pq_rating(Elements[ PQ_PARENT_INDEX(i) ]) )
                    )
                    < r
                  )
@@ -211,12 +211,12 @@ static GCC_INLINE void fc_solve_PQueuePop(
             /* set child to the smaller of the two children... */
 
             if( (child != CurrentSize) &&
-                (PGetRating(Elements[child + 1]) > PGetRating(Elements[child])) )
+                (fcs_pq_rating(Elements[child + 1]) > fcs_pq_rating(Elements[child])) )
             {
                 child ++;
             }
 
-            if( PGetRating( pLastElement ) < PGetRating( Elements[ child ] ) )
+            if( fcs_pq_rating( pLastElement ) < fcs_pq_rating( Elements[ child ] ) )
             {
                 Elements[ i ] = Elements[ child ];
             }
