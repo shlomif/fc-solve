@@ -849,9 +849,6 @@ extern void fc_solve_trace_solution(
             else
             {
                 const fcs_card_t dest_card = mp->destcard;
-                const int dest_col_idx = (dest_card == fc_solve_empty_card)
-                    ? find_empty_col(s, stacks_num)
-                    : find_col_card(s, dest_card, stacks_num);
                 const find_card_ret_t src_s = find_card_src_string(s, card, stacks_num, freecells_num);
                 if (src_s.type == FREECELL)
                 {
@@ -864,7 +861,13 @@ extern void fc_solve_trace_solution(
                     fcs_int_move_set_src_stack(out_move, src_s.idx);
                     fcs_int_move_set_num_cards_in_seq(out_move, 1);
                 }
-                fcs_int_move_set_dest_stack(out_move, dest_col_idx);
+                fcs_int_move_set_dest_stack(out_move,
+                    (
+                        (dest_card == fc_solve_empty_card)
+                        ? find_empty_col(s, stacks_num)
+                        : find_col_card(s, dest_card, stacks_num)
+                    )
+                );
             }
 
             fc_solve_apply_move(
