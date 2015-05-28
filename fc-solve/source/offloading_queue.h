@@ -291,12 +291,11 @@ static GCC_INLINE void fcs_offloading_queue_page__offload(
     const char * const offload_dir_path
     )
 {
-    FILE * f;
     char page_filename[PATH_MAX+1];
 
     fcs_offloading_queue_page__calc_filename(page, page_filename, offload_dir_path);
 
-    f = fopen(page_filename, "wb");
+    FILE * const f = fopen(page_filename, "wb");
     fwrite( page->data, sizeof(fcs_offloading_queue_item_t),
            page->num_items_per_page, f
     );
