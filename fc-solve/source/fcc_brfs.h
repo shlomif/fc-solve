@@ -205,9 +205,6 @@ static void perform_FCC_brfs(
     );
 
     traversed_states = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc, &tree_recycle_bin);
-#if 0
-    found_new_start_points = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL);
-#endif
 
     new_item =
         (fcs_dbm_queue_item_t *)
@@ -501,9 +498,6 @@ free_resources:
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
     fc_solve_delta_stater_free(delta_stater);
     fc_solve_kaz_tree_destroy(traversed_states);
-#if 0
-    fc_solve_kaz_tree_destroy(found_new_start_points);
-#endif
 }
 
 typedef struct
