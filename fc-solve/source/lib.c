@@ -316,8 +316,8 @@ void DLLEXPORT freecell_solver_user_limit_iterations(
 }
 
 void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
-    void * api_instance,
-    int max_iters
+    void * const api_instance,
+    const int max_iters
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -1489,10 +1489,10 @@ void DLLEXPORT freecell_solver_user_free(
 }
 
 int DLLEXPORT freecell_solver_user_get_current_depth(
-    void * api_instance
+    void * const api_instance
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
+    const fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     return (DFS_VAR(user->soft_thread, depth));
 }
@@ -1772,14 +1772,14 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
     return user->iterations_board_started_at.num_checked_states + max(user->active_flare->obj_stats.num_checked_states, user->active_flare->obj.num_checked_states) - user->init_num_checked_states.num_checked_states;
 }
 
-int DLLEXPORT freecell_solver_user_get_num_times(void * api_instance)
+int DLLEXPORT freecell_solver_user_get_num_times(void * const api_instance)
 {
     return (int)freecell_solver_user_get_num_times_long(api_instance);
 }
 
-int DLLEXPORT freecell_solver_user_get_limit_iterations(void * api_instance)
+int DLLEXPORT freecell_solver_user_get_limit_iterations(void * const api_instance)
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
+    const fcs_user_t * const user = (const fcs_user_t *)api_instance;
 
     return user->active_flare->obj.max_num_checked_states;
 }
@@ -2156,7 +2156,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_states_in_collection_long
     return user->iterations_board_started_at.num_states_in_collection + user->active_flare->obj_stats.num_states_in_collection - user->init_num_checked_states.num_states_in_collection;
 }
 
-int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * api_instance)
+int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * const api_instance)
 {
     return (int)freecell_solver_user_get_num_states_in_collection_long(api_instance);
 }
@@ -2262,10 +2262,10 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(
 }
 
 int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
-    void * api_instance
+    void * const api_instance
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
+    const fcs_user_t * const user = (const fcs_user_t *)api_instance;
 
     return user->active_flare->obj.next_soft_thread_id;
 }

@@ -494,7 +494,7 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
     (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END)
 
 static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
-        fc_solve_soft_thread_t * soft_thread
+        fc_solve_soft_thread_t * const soft_thread
         )
 {
     fcs_soft_dfs_stack_item_t * soft_dfs_info =
@@ -557,7 +557,7 @@ static fcs_bool_t free_states_should_delete(void * key, void * context)
 }
 #endif
 
-static GCC_INLINE void free_states(fc_solve_instance_t * instance)
+static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
 {
 #ifdef DEBUG
     printf("%s\n", "FREE_STATES HIT");
@@ -587,10 +587,12 @@ static GCC_INLINE void free_states(fc_solve_instance_t * instance)
                     1024
                 );
 
-                const int CurrentSize = BEFS_VAR(soft_thread, pqueue).CurrentSize;
+                pq_element_t * const Elements = BEFS_VAR(soft_thread, pqueue).Elements;
+                pq_element_t * const end_element = Elements + BEFS_VAR(soft_thread, pqueue).CurrentSize;
+
                 pq_element_t * next_element = BEFS_VAR(soft_thread, pqueue).Elements + PQ_FIRST_ENTRY;
 
-                for (int i = PQ_FIRST_ENTRY ; i <= CurrentSize ; i++, next_element++)
+                for (; next_element <= end_element ; next_element++)
                 {
                     if (! FCS_IS_STATE_DEAD_END((*next_element).val))
                     {
