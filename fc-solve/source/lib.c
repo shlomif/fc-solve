@@ -722,14 +722,14 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 /*
  * Add a trailing newline to the string if it does not exist.
  */
-#define MYMARGIN 2
+#define MY_MARGIN 2
 #define TRAILING_CHAR '\n'
 static GCC_INLINE char * duplicate_string_while_adding_a_trailing_newline(
     const char * const orig_str
 )
 {
     const int len = strlen(orig_str);
-    char * s = malloc(len + MYMARGIN);
+    char * s = malloc(len + MY_MARGIN);
     strcpy (s, orig_str);
     {
         char * s_end = s + len - 1;
@@ -742,7 +742,7 @@ static GCC_INLINE char * duplicate_string_while_adding_a_trailing_newline(
     return s;
 }
 #undef TRAILING_CHAR
-#undef MYMARGIN
+#undef MY_MARGIN
 
 int DLLEXPORT freecell_solver_user_solve_board(
     void * const api_instance,
@@ -2111,11 +2111,11 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 #endif
 
 DLLEXPORT char * freecell_solver_user_iter_state_as_string(
-    void * api_instance HARD_CODED_UNUSED,
-    void * ptr_state_void,
-    int parseable_output,
-    int canonized_order_output,
-    int display_10_as_t
+    void * const api_instance HARD_CODED_UNUSED,
+    void * const ptr_state_void,
+    const int parseable_output,
+    const int canonized_order_output,
+    const int display_10_as_t
 )
 {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))

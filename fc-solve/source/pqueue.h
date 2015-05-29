@@ -85,16 +85,16 @@ typedef struct
    entry in the pqueue depending on whether it is ascending or descending respectively. Finally the bool32 tells you whether
    the list is sorted ascending or descending... */
 
-static GCC_INLINE void fc_solve_PQueueInitialise(
-    PQUEUE *pq,
-    int MaxElements
+static GCC_INLINE void fc_solve_pq_init(
+    PQUEUE * const pq,
+    const int max_size
     )
 {
-    pq->max_size = MaxElements;
+    pq->max_size = max_size;
 
     pq->CurrentSize = 0;
 
-    pq->Elements = SMALLOC(pq->Elements, MaxElements + 1 );
+    pq->Elements = SMALLOC(pq->Elements, max_size + 1 );
 }
 
 static GCC_INLINE void fc_solve_PQueueFree( PQUEUE *pq )

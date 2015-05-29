@@ -582,7 +582,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
             else if (soft_thread->method == FCS_METHOD_A_STAR)
             {
                 PQUEUE new_pq;
-                fc_solve_PQueueInitialise(
+                fc_solve_pq_init(
                     &(new_pq),
                     1024
                 );

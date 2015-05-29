@@ -375,7 +375,7 @@ int main(int argc, char * argv[])
 #define LOG_FILENAME "fc-solve-pseudo-dfs.log.txt"
 
     {
-        FILE * last_line_fh = popen(("tail -1 " LOG_FILENAME), "r");
+        FILE * const last_line_fh = popen(("tail -1 " LOG_FILENAME), "r");
 
         if (last_line_fh)
         {
@@ -410,7 +410,7 @@ int main(int argc, char * argv[])
     {
         instance_run(&instance);
 
-        FILE * log_fh = fopen(LOG_FILENAME, "at");
+        FILE * const log_fh = fopen(LOG_FILENAME, "at");
         instance__print_coords_to_log(&instance, log_fh);
         fclose(log_fh);
 
