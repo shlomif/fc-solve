@@ -1174,17 +1174,18 @@ static GCC_INLINE void fc_solve_reset_soft_thread(
 }
 
 
-enum
+typedef enum
 {
     FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS,
     FOREACH_SOFT_THREAD_FREE_INSTANCE,
     FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
     FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS
-};
+} fcs_foreach_st_callback_choice_t;
+
 extern void fc_solve_foreach_soft_thread(
     fc_solve_instance_t * const instance,
-    int callback_choice,
-    void * context
+    const fcs_foreach_st_callback_choice_t callback_choice,
+    void * const context
 );
 
 /*

@@ -247,7 +247,7 @@ static GCC_INLINE void determine_scan_completeness(
 
 void fc_solve_foreach_soft_thread(
     fc_solve_instance_t * const instance,
-    const int callback_choice,
+    const fcs_foreach_st_callback_choice_t callback_choice,
     void * const context
 )
 {
