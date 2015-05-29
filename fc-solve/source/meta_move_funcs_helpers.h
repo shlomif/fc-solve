@@ -75,7 +75,6 @@ extern "C" {
 
 #define ptr_new_state &(pass_new_state)
 #define ptr_state_key (key_ptr_state_key)
-#define ptr_state_val (val_ptr_state_val)
 #define state_key (*key_ptr_state_key)
 #define state_val (*val_ptr_state_val)
 #define new_state_key (*(pass_new_state.key))

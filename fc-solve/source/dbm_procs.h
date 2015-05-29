@@ -161,10 +161,10 @@ static GCC_INLINE void pre_cache_offload_and_destroy(
 #ifndef FCS_DBM_CACHE_ONLY
 
 static GCC_INLINE void pre_cache_offload_and_reset(
-    fcs_pre_cache_t * pre_cache,
-    fcs_dbm_store_t store,
-    fcs_lru_cache_t * cache,
-    fcs_meta_compact_allocator_t * meta_alloc
+    fcs_pre_cache_t * const pre_cache,
+    const fcs_dbm_store_t store,
+    fcs_lru_cache_t * const cache,
+    fcs_meta_compact_allocator_t * const meta_alloc
 )
 {
     pre_cache_offload_and_destroy(pre_cache, store, cache);
@@ -299,10 +299,10 @@ static GCC_INLINE void instance_debug_out_state(
 #endif
 
 static void calc_trace(
-    fcs_dbm_solver_instance_t * instance,
-    fcs_dbm_record_t * ptr_initial_record,
-    fcs_encoded_state_buffer_t * * ptr_trace,
-    int * ptr_trace_num
+    fcs_dbm_solver_instance_t * const instance,
+    fcs_dbm_record_t * const ptr_initial_record,
+    fcs_encoded_state_buffer_t * * const ptr_trace,
+    int * const ptr_trace_num
     )
 {
     int trace_num;

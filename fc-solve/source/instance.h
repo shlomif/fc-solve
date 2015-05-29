@@ -1111,7 +1111,7 @@ extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
 #ifdef FCS_RCS_STATES
 fcs_state_t * fc_solve_lookup_state_key_from_val(
     fc_solve_instance_t * const instance,
-    fcs_collectible_state_t * ptr_state_val
+    fcs_collectible_state_t * const orig_ptr_state_val
 );
 
 extern int fc_solve_compare_lru_cache_keys(
