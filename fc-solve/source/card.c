@@ -157,16 +157,16 @@ fcs_card_t fc_solve_card_user2perl(const char * str)
  *
  * */
 #ifdef CARD_DEBUG_PRES
-static char card_map_3_10[14][4] = { "*", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-
-static char card_map_3_T[14][4] = { "*", "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K" };
-
+#define CARD_ZERO() "*"
 #else
-static char card_map_3_10[14][4] = { " ", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-
-static char card_map_3_T[14][4] = { " ", "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K" };
-
+#define CARD_ZERO() " "
 #endif
+
+#define GEN_CARD_MAP(t_card) { CARD_ZERO(), "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J", "Q", "K" }
+
+static char card_map_3_10[14][4] = GEN_CARD_MAP("10");
+
+static char card_map_3_T[14][4] = GEN_CARD_MAP("T");
 
 /*
  * Converts a rank from its internal representation to a string.
