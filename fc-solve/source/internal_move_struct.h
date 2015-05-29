@@ -63,7 +63,6 @@ typedef fcs_move_t fcs_internal_move_t;
 #define fcs_int_move_set_foundation(move,value)       (move).dest = ((unsigned int)(value));
 #define fcs_int_move_set_type(move,value)             (move).type = ((unsigned int)(value));
 #define fcs_int_move_set_num_cards_in_seq(move,value) (move).num_cards_in_seq = ((unsigned int)(value));
-#define fcs_int_move_set_num_cards_flipped(move,value) (move).num_cards_in_seq = ((unsigned int)(value));
 
 #define fcs_int_move_get_src_stack(move)              ((move).src)
 #define fcs_int_move_get_src_freecell(move)           ((move).src)
@@ -82,7 +81,6 @@ typedef fcs_move_t fcs_internal_move_t;
 #define fcs_int_move_set_foundation(move,value) fcs_move_set_foundation((move),(value))
 #define fcs_int_move_set_type(move,value) fcs_move_set_type((move),(value))
 #define fcs_int_move_set_num_cards_in_seq(move,value) fcs_move_set_num_cards_in_seq((move),(value))
-#define fcs_int_move_set_num_cards_flipped(move,value) fcs_move_set_num_cards_flipped((move),(value))
 
 #define fcs_int_move_get_src_stack(move) fcs_move_get_src_stack((move))
 #define fcs_int_move_get_src_freecell(move) fcs_move_get_src_freecell((move))

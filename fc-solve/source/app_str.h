@@ -50,21 +50,19 @@ typedef struct
 #define FC_SOLVE_APPEND_STRING_GROW_BY 4000
 #define FC_SOLVE_APPEND_STRING_MARGIN_SIZE 500
 
-static GCC_INLINE void fc_solve_append_string_init(fc_solve_append_string_t * app_str)
+static GCC_INLINE void fc_solve_append_string_init(fc_solve_append_string_t * const app_str)
 {
-    app_str->max_size = FC_SOLVE_APPEND_STRING_GROW_BY;
     app_str->end_of_buffer = app_str->buffer =
-        SMALLOC(app_str->buffer, app_str->max_size);
-
-    return;
+        SMALLOC(app_str->buffer,
+            app_str->max_size = FC_SOLVE_APPEND_STRING_GROW_BY
+            );
 }
 
 static GCC_INLINE char * fc_solve_append_string_finalize(
-    fc_solve_append_string_t * app_str
+    fc_solve_append_string_t * const app_str
     )
 {
-    char * ret;
-    ret = strdup(app_str->buffer);
+    char * const ret = strdup(app_str->buffer);
     free(app_str->buffer);
     return ret;
 }

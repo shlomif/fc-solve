@@ -245,12 +245,11 @@ typedef struct
     int num_finished_boards;
 } response_t;
 
-static int worker_func(int idx, worker_t w, void * instance)
+static GCC_INLINE int worker_func(const int idx, const worker_t w, void * const instance)
 {
     /* I'm one of the slaves */
     request_t request;
     response_t response;
-    int ret;
     fcs_state_string_t state_string;
     fcs_portable_time_t mytime;
 
@@ -276,32 +275,38 @@ static int worker_func(int idx, worker_t w, void * instance)
 
             freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
 
-            ret =
+            switch (
                 freecell_solver_user_solve_board(
                     instance,
                     state_string
-                    );
-
-            if (ret == FCS_STATE_SUSPEND_PROCESS)
+                    )
+            )
             {
-                FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-                fflush(stdout);
-            }
-            else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
-            {
-                const char * error_string;
+                case FCS_STATE_SUSPEND_PROCESS:
+                {
+                    FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
+                    fflush(stdout);
+                }
+                break;
+                case FCS_STATE_FLARES_PLAN_ERROR:
+                {
+                    const char * error_string;
 
-                error_string =
-                    freecell_solver_user_get_last_error_string(instance);
+                    error_string =
+                        freecell_solver_user_get_last_error_string(instance);
 
-                fprintf(stderr, "Flares Plan: %s\n", error_string);
+                    fprintf(stderr, "Flares Plan: %s\n", error_string);
 
-                continue;
-            }
-            else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-            {
-                FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
-                fflush(stdout);
+                    goto next_board;
+                }
+                break;
+
+                case FCS_STATE_IS_NOT_SOLVEABLE:
+                {
+                    FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+                    fflush(stdout);
+                }
+                break;
             }
 
             total_num_iters_temp += freecell_solver_user_get_num_times_long(instance);
@@ -311,6 +316,7 @@ static int worker_func(int idx, worker_t w, void * instance)
 
 #endif
 
+next_board:
             freecell_solver_user_recycle(instance);
         }
 #undef board_num
@@ -509,7 +515,7 @@ int main(int argc, char * argv[])
         response_t response;
         request_t request;
         int total_num_finished_boards = 0;
-        int total_num_boards_to_check = end_board - next_board_num + 1;
+        const int total_num_boards_to_check = end_board - next_board_num + 1;
         int next_milestone = next_board_num + stop_at;
 
         next_milestone -= (next_milestone % stop_at);

@@ -35,7 +35,7 @@ typedef struct
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
     dict_t * kaz_tree;
 #else
-#error unknown FCS_RCS_CACHE_STORAGE
+#error Unknown FCS_RCS_CACHE_STORAGE
 #endif
     fcs_compact_allocator_t states_values_to_keys_allocator;
     long count_elements_in_cache, max_num_elements_in_cache;

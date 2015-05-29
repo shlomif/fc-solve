@@ -65,7 +65,7 @@ static GCC_INLINE void insert_state(
 static GCC_INLINE const fcs_bool_t lookup_state(
     store_t * const store,
     fcs_pdfs_lru_cache_t * const cache,
-    const fcs_cache_key_t * const key)
+    fcs_cache_key_t * const key)
 {
     Word_t * PValue;
     JHSG(PValue, *store, &(key->s), sizeof(key->s));

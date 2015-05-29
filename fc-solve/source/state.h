@@ -139,11 +139,6 @@ static GCC_INLINE fcs_card_t fcs_char2card(unsigned char c)
 #define fcs_foundation_value(state, found) \
     ( (state).foundations[(found)] )
 
-#define fcs_card_set_suit(card, d) \
-    (card).suit = (d)
-
-#define fcs_card_set_rank(card, num) \
-    (card).rank = (num)
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_set_flipped(card, flipped) \
@@ -386,11 +381,6 @@ static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
     ( (card) >> 6 )
 #endif
 
-#define fcs_card_set_rank(card, num) \
-    (card) = ((fcs_card_t)(((card)&0x03)|((num)<<2)));
-
-#define fcs_card_set_suit(card, suit) \
-    (card) = ((fcs_card_t)(((card)&0xFC)|(suit)));
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
 #define fcs_card_set_flipped(card, flipped) \
@@ -1029,60 +1019,52 @@ enum
 };
 
 static GCC_INLINE int fc_solve_check_state_validity(
-    fcs_state_keyval_pair_t * state_pair,
-    int freecells_num,
-    int stacks_num,
-    int decks_num,
-    fcs_card_t * misplaced_card)
+    const fcs_state_keyval_pair_t * const state_pair,
+    const int freecells_num,
+    const int stacks_num,
+    const int decks_num,
+    fcs_card_t * const misplaced_card)
 {
     int cards[4][14];
-    int c, s, d, f;
-    int col_len;
 
-    fcs_state_t * state;
-    fcs_cards_column_t col;
-    fcs_card_t card;
-
-    state = &(state_pair->s);
+    const fcs_state_t * const state = &(state_pair->s);
 
     /* Initialize all cards to 0 */
-    for(d=0;d<4;d++)
+    for (int d = 0 ; d < 4 ; d++)
     {
-        for(c=1;c<=13;c++)
+        for(int c = 1 ; c <= 13 ; c++)
         {
             cards[d][c] = 0;
         }
     }
 
     /* Mark the cards in the decks */
-    for(d=0;d<decks_num*4;d++)
+    for (int d=0;d<decks_num*4;d++)
     {
-        for(c=1;c<=fcs_foundation_value(*state, d);c++)
+        for(int c=1;c<=fcs_foundation_value(*state, d);c++)
         {
             cards[d%4][c]++;
         }
     }
 
     /* Mark the cards in the freecells */
-    for(f=0;f<freecells_num;f++)
+    for(int f=0;f<freecells_num;f++)
     {
-        card = fcs_freecell_card(*state, f);
+        const fcs_card_t card = fcs_freecell_card(*state, f);
         if (fcs_card_is_valid(card))
         {
-            cards
-                [fcs_card_suit(card)]
-                [fcs_card_rank(card)] ++;
+            cards[fcs_card_suit(card)][fcs_card_rank(card)]++;
         }
     }
 
     /* Mark the cards in the stacks */
-    for(s=0;s<stacks_num;s++)
+    for (int s=0;s<stacks_num;s++)
     {
-        col = fcs_state_get_col(*state, s);
-        col_len = fcs_col_len(col);
-        for(c=0;c<col_len;c++)
+        const fcs_const_cards_column_t col = fcs_state_get_col(*state, s);
+        const int col_len = fcs_col_len(col);
+        for (int c=0;c<col_len;c++)
         {
-            card = fcs_col_get_card(col,c);
+            const fcs_card_t card = fcs_col_get_card(col,c);
             if (fcs_card_is_empty(card))
             {
                 *misplaced_card = fc_solve_empty_card;
@@ -1172,8 +1154,8 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * const v
     const fcs_card_t * const s1 = (const fcs_card_t * const)v_s1;
     const fcs_card_t * const s2 = (const fcs_card_t * const)v_s2;
 
-    const int min_len = min(s1[0], s2[0]);
     {
+        const int min_len = min(s1[0], s2[0]);
         for(int a=1 ; a <= min_len ; a++)
         {
             int ret = fc_solve_card_compare(s1[a],s2[a]);

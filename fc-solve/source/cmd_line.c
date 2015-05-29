@@ -60,12 +60,12 @@ static GCC_INLINE void nullify_newline(char * const line)
 /* TODO : Perhaps avoid allocating a pointer to args_man_t and instead
  * initialize it in-place.
  * */
-static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * const args_man, char * * const opened_files_dir_to_assign, const char * user_preset_dir)
+static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * const args_man, char * * const opened_files_dir_to_assign, const char * const user_preset_dir)
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * env_var_presetrc = NULL;
     const char * global_presetrc = NULL;
-    const char * * presetrc_pathes[5];
+    const char * const * presetrc_pathes[5];
     FILE * f = NULL;
     char * opened_files_dir = NULL;
 

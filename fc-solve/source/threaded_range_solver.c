@@ -263,7 +263,6 @@ static void * worker_thread(void * void_context)
         }
     }
 
-    int board_num;
     const int end_board = context->end_board;
     const int board_num_step = context->board_num_step;
     const int update_total_num_iters_threshold = context->update_total_num_iters_threshold;
@@ -272,6 +271,7 @@ static void * worker_thread(void * void_context)
     fcs_int_limit_t total_num_iters_temp = 0;
     const fcs_int_limit_t total_iterations_limit_per_board = context->total_iterations_limit_per_board;
     const int stop_at = context->stop_at;
+    int board_num;
     do
     {
         pthread_mutex_lock(&next_board_num_lock);
@@ -288,32 +288,38 @@ static void * worker_thread(void * void_context)
 
             freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
 
-            const int ret =
+            switch(
                 freecell_solver_user_solve_board(
                     user.instance,
                     state_string
-                    );
-
-            if (ret == FCS_STATE_SUSPEND_PROCESS)
+                    )
+            )
             {
-                FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-                fflush(stdout);
-            }
-            else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
-            {
-                const char * flares_error_string;
+                case FCS_STATE_SUSPEND_PROCESS:
+                {
+                    FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
+                    fflush(stdout);
+                }
+                break;
 
-                flares_error_string =
-                    freecell_solver_user_get_last_error_string(user.instance);
+                case FCS_STATE_FLARES_PLAN_ERROR:
+                {
+                    const char * flares_error_string;
 
-                fprintf(stderr, "Flares Plan: %s\n", flares_error_string);
+                    flares_error_string =
+                        freecell_solver_user_get_last_error_string(user.instance);
 
-                goto theme_error;
-            }
-            else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-            {
-                FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+                    fprintf(stderr, "Flares Plan: %s\n", flares_error_string);
 
+                    goto theme_error;
+                }
+                break;
+
+                case FCS_STATE_IS_NOT_SOLVEABLE:
+                {
+                    FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+                }
+                break;
             }
 
             total_num_iters_temp += freecell_solver_user_get_num_times_long(user.instance);

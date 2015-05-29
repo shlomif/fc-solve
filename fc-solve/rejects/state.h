@@ -303,3 +303,21 @@ static const char * const fc_solve_num_redeals_prefixes[] = { "Num-Redeals:", "R
 #define FCS_STATE_kv_to_pass(s) FCS_STATE_kv_to_collectible(s)
 
 #endif
+
+#ifdef DEBUG_STATES
+
+#define fcs_card_set_suit(card, d) \
+    (card).suit = (d)
+
+#define fcs_card_set_rank(card, num) \
+    (card).rank = (num)
+
+#else
+
+#define fcs_card_set_rank(card, num) \
+    (card) = ((fcs_card_t)(((card)&0x03)|((num)<<2)))
+
+#define fcs_card_set_suit(card, suit) \
+    (card) = ((fcs_card_t)(((card)&0xFC)|(suit)))
+
+#endif
