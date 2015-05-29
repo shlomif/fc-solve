@@ -702,7 +702,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     hard_thread_max_num_checked_states = hard_thread->max_num_checked_states; \
                 \
     {           \
-        fcs_int_limit_t lim = hard_thread->num_checked_states       \
+        const fcs_int_limit_t lim = hard_thread->num_checked_states       \
             + (instance->effective_max_num_checked_states - *(instance_num_checked_states_ptr)) \
             ; \
               \

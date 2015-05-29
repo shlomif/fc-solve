@@ -157,10 +157,15 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
      * with one another. */
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 
-#define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
 #ifdef FCS_RCS_STATES
+
+#define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
+
     instance->rcs_states_cache.max_num_elements_in_cache
         = DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE;
+
+#undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
+
 #endif
 }
 
@@ -321,7 +326,6 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
 
 }
 
-#undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
 /* These are all stack comparison functions to be used for the stacks
    cache when using INDIRECT_STACK_STATES
 */

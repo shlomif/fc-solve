@@ -81,7 +81,7 @@ typedef struct fcs_derived_state_struct fcs_derived_state_t;
 
 #define COPY_INDIRECT_COLS() \
 { \
-    for (copy_col_idx=0 ; copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++) \
+    for (int copy_col_idx=0 ; copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++) \
     { \
         copy_stack_col = fcs_state_get_col((ptr_new_state->state.s), copy_col_idx); \
         memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]), copy_stack_col, fcs_col_len(copy_stack_col)+1); \
@@ -397,7 +397,6 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_cards_column_t col, dest_col;
 #ifdef INDIRECT_STACK_STATES
     fcs_cards_column_t copy_stack_col;
-    int copy_col_idx;
 #endif
     fcs_card_t card, dest_card;
     int deck, suit;
