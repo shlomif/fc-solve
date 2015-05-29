@@ -37,6 +37,7 @@ extern "C" {
 #endif
 
 #include "instance.h"
+#include "scans_impl.h"
 
 #include "preset.h"
 

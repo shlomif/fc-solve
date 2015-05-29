@@ -1115,8 +1115,6 @@ extern int fc_solve_compare_lru_cache_keys(
 
 #endif
 
-#include "scans_impl.h"
-
 extern void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * const soft_thread
 );
