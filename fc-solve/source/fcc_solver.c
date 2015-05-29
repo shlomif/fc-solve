@@ -221,16 +221,15 @@ static GCC_INLINE void solver_state__free_dcc_depth(
 }
 
 static GCC_INLINE void solver_state_free(
-    fcs_fcc_solver_state * solver_state,
-    fcs_fcc_moves_seq_allocator_t * moves_list_allocator
+    fcs_fcc_solver_state * const solver_state,
+    fcs_fcc_moves_seq_allocator_t * const moves_list_allocator
 )
 {
-    int depth;
-    for (depth = 0; depth < MAX_FCC_DEPTH ; depth++)
+    for (int depth = 0; depth < MAX_FCC_DEPTH ; depth++)
     {
         solver_state__free_dcc_depth(solver_state, depth, moves_list_allocator);
     }
-    solver_state->curr_depth = depth;
+    solver_state->curr_depth = MAX_FCC_DEPTH;
     cache_destroy(&(solver_state->cache));
 }
 
@@ -494,7 +493,6 @@ static fcc_status_t instance_run_solver(
             {
                 int num_additional_moves;
                 fcs_state_keyval_pair_t state;
-                int start_point_new_FCC_depth;
                 fcs_encoded_state_buffer_t enc_state;
                 fcs_fcc_collection_by_depth * next_fcc_stage;
 
@@ -554,8 +552,7 @@ static fcc_status_t instance_run_solver(
                     );
 
                     next_fcc_stage = &(solver_state->FCCs_by_depth[
-                        start_point_new_FCC_depth =
-                            curr_depth + 1 + num_additional_moves
+                        curr_depth + 1 + num_additional_moves
                     ]);
 
                     if (!

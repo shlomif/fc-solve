@@ -9,35 +9,6 @@
 #include "min_and_max.h"
 #include "alloc_wrap.h"
 
-#if 0
-static const char * ranks_map = "0A23456789TJQK";
-
-static char * rank_to_string(int rank, char * buf)
-{
-    buf[0] = ranks_map[rank];
-    buf[1] = '\0';
-    return buf;
-}
-
-static const char * suits_map = "HCDS";
-
-static char * suit_to_string(int suit, char * buf)
-{
-    buf[0] = suits_map[suit];
-    buf[1] = '\0';
-    return buf;
-}
-
-static char * card_to_string(fcs_card_t card, char * buf)
-{
-    rank_to_string(card&0x0F,buf);
-    suit_to_string(card>>4,buf+1);
-
-    return buf;
-}
-
-#endif
-
 static GCC_INLINE int Cvtf89(int fcn)
 {
     return (fcn >= 7) ? (fcn+3) : fcn;

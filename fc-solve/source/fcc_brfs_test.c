@@ -43,12 +43,12 @@
 static void fc_solve_state_string_to_enc(
     enum fcs_dbm_variant_type_t local_variant,
     fc_solve_delta_stater_t * delta,
-    const char * state_s_proto,
+    const char * const state_s_proto,
     fcs_encoded_state_buffer_t * enc_state
 )
 {
     fcs_state_keyval_pair_t state;
-    DECLARE_IND_BUF_T(state_buffer)
+    DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
 
     fc_solve_initial_user_state_to_c(
         state_s_proto,
@@ -56,7 +56,7 @@ static void fc_solve_state_string_to_enc(
         FREECELLS_NUM,
         STACKS_NUM,
         DECKS_NUM,
-        state_buffer
+        state_indirect_stacks_buffer
         );
 
     fcs_init_and_encode_state(

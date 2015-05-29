@@ -507,9 +507,9 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 #ifdef DEBUG
 #if 0
 static void dump_pqueue (
-    fc_solve_soft_thread_t * soft_thread,
-    const char * stage_id,
-    PQUEUE * pq
+    fc_solve_soft_thread_t * const soft_thread,
+    const char * const stage_id,
+    PQUEUE * const pq
     )
 {
     int i;
@@ -625,7 +625,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         TRACE0("Start of loop");
 
 #ifdef DEBUG
-        dump_pqueue(soft_thread, "loop_start", scan_specific.pqueue);
+        dump_pqueue(soft_thread, "loop_start", pqueue);
 #endif
 
         /*
@@ -861,7 +861,7 @@ next_state:
         {
             fcs_collectible_state_t * new_ptr_state;
 #ifdef DEBUG
-            dump_pqueue(soft_thread, "before_pop", scan_specific.pqueue);
+            dump_pqueue(soft_thread, "before_pop", pqueue);
 #endif
             /* It is an BeFS scan */
             fc_solve_pq_pop(

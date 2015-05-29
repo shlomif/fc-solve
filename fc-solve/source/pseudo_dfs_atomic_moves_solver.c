@@ -91,7 +91,6 @@ typedef struct
 
     long pre_cache_max_count;
     /* The stack */
-    fcs_lock_t stack_lock;
     int stack_depth, max_stack_depth;
     pseduo_dfs_stack_item_t * stack;
     long count_num_processed, max_count_num_processed;
@@ -187,7 +186,6 @@ static GCC_INLINE void instance_init(
 )
 {
     instance->local_variant = local_variant;
-    FCS_INIT_LOCK(instance->stack_lock);
     FCS_INIT_LOCK(instance->storage_lock);
 
     instance->solution_was_found = FALSE;

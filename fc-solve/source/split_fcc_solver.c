@@ -1237,8 +1237,9 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 }
 
 
+#if 0
 static GCC_INLINE void release_starting_state_specific_instance_resources(
-    fcs_dbm_solver_instance_t * instance
+    fcs_dbm_solver_instance_t * const instance
 )
 {
     fcs_dbm_collection_by_depth_t * coll = &(instance->coll);
@@ -1274,6 +1275,7 @@ static GCC_INLINE void release_starting_state_specific_instance_resources(
         fc_solve_dbm_store_init(&(coll->store), instance->dbm_store_path, &(instance->tree_recycle_bin));
 #endif
 }
+#endif
 
 int main(int argc, char * argv[])
 {

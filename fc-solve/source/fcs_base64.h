@@ -86,13 +86,13 @@ static int base64_decode(
 
 #define DECODE() ( data[i] == '=' ? 0 & i++ : decoding_table[(size_t)(unsigned char)(data[i++])] )
 
-        uint32_t sextet_a = DECODE();
-        uint32_t sextet_b = DECODE();
-        uint32_t sextet_c = DECODE();
-        uint32_t sextet_d = DECODE();
+        const uint32_t sextet_a = DECODE();
+        const uint32_t sextet_b = DECODE();
+        const uint32_t sextet_c = DECODE();
+        const uint32_t sextet_d = DECODE();
 #undef DECODE
 
-        uint32_t triple = (sextet_a << 3 * 6)
+        const uint32_t triple = (sextet_a << 3 * 6)
         + (sextet_b << 2 * 6)
         + (sextet_c << 1 * 6)
         + (sextet_d << 0 * 6);

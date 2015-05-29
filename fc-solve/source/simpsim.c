@@ -992,22 +992,23 @@ typedef struct {
 } ds_dc_t;
 
 static GCC_INLINE void sort_ds_dcs(
-    ds_dc_t * ds_dcs,
+    ds_dc_t * const ds_dcs,
     const int len
 )
 {
-    ds_dc_t * start = ds_dcs;
-    ds_dc_t * limit = start + len;
+#define start ds_dcs
+    ds_dc_t * const limit = start + len;
 
     for (ds_dc_t * b = start+1 ; b < limit ; b++)
     {
         for (ds_dc_t * c = b ; (c > start) && (c[0].ds < c[-1].ds || (c[0].ds == c[-1].ds && c[0].dc > c[-1].dc)); c--)
         {
-            ds_dc_t temp = c[-1];
+            const typeof(c[-1]) temp = c[-1];
             c[-1] = c[0];
             c[0] = temp;
         }
     }
+#undef start
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above)

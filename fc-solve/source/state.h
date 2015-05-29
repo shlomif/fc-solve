@@ -554,7 +554,6 @@ typedef fcs_state_extra_info_t fcs_collectible_state_t;
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (&((s)->info))
 #define FCS_STATE_kv_to_collectible(s) ((s)->val)
-#define FCS_STATE_kv_to_pass(s) (s)
 
 static GCC_INLINE void
 FCS_STATE_collectible_to_kv(fcs_kv_state_t * ret, fcs_collectible_state_t * s)
@@ -584,7 +583,6 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (s)
 #define FCS_STATE_kv_to_collectible(s) ((fcs_collectible_state_t *)((s)->key))
-#define FCS_STATE_kv_to_pass(s) FCS_STATE_kv_to_collectible(s)
 
 #define FCS_STATE_collectible_to_kv(ret,s) FCS_STATE_keyval_pair_to_kv((ret),(s))
 

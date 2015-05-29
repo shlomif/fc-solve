@@ -1027,9 +1027,6 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
     {
         normalized_befs_weights[i] = ((befs_weights[i] /= sum) * INT_MAX);
     }
-#define pass (*raw_pass_raw)
-#define ptr_state_key (raw_pass_raw->key)
-
 #ifndef HARD_CODED_NUM_STACKS
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * const instance = hard_thread->instance;
@@ -1091,8 +1088,6 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
     );
 }
 
-#undef ptr_state_key
-#undef pass
 #undef unlimited_sequence_move
 
 typedef enum

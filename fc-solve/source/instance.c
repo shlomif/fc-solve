@@ -509,9 +509,7 @@ static GCC_INLINE find_card_ret_t find_card_src_string(
     const int src_col_idx = find_col_card(dynamic_state, src_card_s, stacks_num);
     if (src_col_idx < 0)
     {
-        int src_fc_idx = find_fc_card(dynamic_state, src_card_s, freecells_num);
-
-        const find_card_ret_t ret = {.idx = src_fc_idx, .type = FREECELL};
+        const find_card_ret_t ret = {.idx = (find_fc_card(dynamic_state, src_card_s, freecells_num)), .type = FREECELL};
         return ret;
     }
     else

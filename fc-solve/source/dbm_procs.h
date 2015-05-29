@@ -305,17 +305,12 @@ static void calc_trace(
     int * const ptr_trace_num
     )
 {
-    int trace_num;
-    int trace_max_num;
-    fcs_encoded_state_buffer_t * trace;
-    fcs_encoded_state_buffer_t * key_ptr;
-    fcs_dbm_record_t * record;
-
 #define GROW_BY 100
-    trace_num = 0;
-    trace = SMALLOC(trace, (trace_max_num = GROW_BY));
-    key_ptr = trace;
-    record = ptr_initial_record;
+    int trace_num = 0;
+    int trace_max_num = GROW_BY;
+    fcs_encoded_state_buffer_t * trace = SMALLOC(trace, trace_max_num);
+    fcs_encoded_state_buffer_t * key_ptr = trace;
+    fcs_dbm_record_t * record = ptr_initial_record;
 
     while (record)
     {
