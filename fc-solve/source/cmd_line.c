@@ -1850,7 +1850,7 @@ break;
 
                     RET_ERROR_IN_ARG() ;
                 }
-                fseek(f,0,SEEK_SET);
+                fseek(f, 0, SEEK_SET);
                 num_read = fread(buffer, 1, file_len, f);
                 fclose(f);
                 buffer[num_read] = '\0';

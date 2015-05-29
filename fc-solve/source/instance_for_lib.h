@@ -222,6 +222,7 @@ static GCC_INLINE void fc_solve__hard_thread__compile_prelude(
         {
             prelude = SREALLOC(prelude, num_items+PRELUDE_GROW_BY);
         }
+#undef PRELUDE_GROW_BY
         prelude[num_items].scan_idx = ST_LOOP__GET_INDEX();
         prelude[num_items].quota = p_quota;
         num_items++;

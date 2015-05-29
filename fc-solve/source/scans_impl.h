@@ -481,14 +481,18 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
     return num_vacant_stacks;
 }
 
-#define SHOULD_STATE_BE_PRUNED(enable_pruning, ptr_state) \
-    ( \
-        enable_pruning && \
-        (! (FCS_S_VISITED(ptr_state) & \
-            FCS_VISITED_GENERATED_BY_PRUNING \
-            ) \
-        ) \
-    )
+static GCC_INLINE const fcs_bool_t fcs__should_state_be_pruned(const fcs_bool_t enable_pruning, const fcs_collectible_state_t * const ptr_state)
+{
+    return
+    (
+        enable_pruning
+            &&
+        (! (FCS_S_VISITED(ptr_state) &
+            FCS_VISITED_GENERATED_BY_PRUNING
+            )
+        )
+    );
+}
 
 #define FCS_IS_STATE_DEAD_END(ptr_state) \
     (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END)
@@ -861,7 +865,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     num_vacant_stacks;
 
                 /* Perform the pruning. */
-                if (SHOULD_STATE_BE_PRUNED(enable_pruning, PTR_STATE))
+                if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
                 {
                     fcs_collectible_state_t * derived;
 

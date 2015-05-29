@@ -637,7 +637,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
          * Therefore, we prune before checking for the visited flags.
          * */
         TRACE0("Pruning");
-        if (SHOULD_STATE_BE_PRUNED(enable_pruning, PTR_STATE))
+        if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
         {
             fcs_collectible_state_t * after_pruning_state;
 
