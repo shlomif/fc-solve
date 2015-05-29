@@ -334,16 +334,43 @@ next_board:
     return 0;
 }
 
+static GCC_INLINE void write_request(
+    const int end_board,
+    const int board_num_step,
+    int * const next_board_num_ptr,
+    const worker_t * const workers,
+    const int idx
+)
+{
+    request_t request;
+    if ((*next_board_num_ptr) > end_board)
+    {
+        request.board_num = -1;
+    }
+    else
+    {
+        request.board_num = *(next_board_num_ptr);
+        if (((*next_board_num_ptr) += board_num_step) > end_board)
+        {
+            (*next_board_num_ptr) = end_board+1;
+        }
+        request.quota_end = (*next_board_num_ptr)-1;
+    }
+
+    write(
+        workers[idx].parent_to_child_pipe[WRITE_FD],
+        &request,
+        sizeof(request)
+    );
+}
+
 int main(int argc, char * argv[])
 {
-    int stop_at;
     int parser_ret;
     fcs_portable_time_t mytime;
 
     int num_workers = 3;
     worker_t * workers;
-    int next_board_num;
-    int end_board;
     int board_num_step = 1;
     char * error_string;
     pack_item_t user;
@@ -356,9 +383,9 @@ int main(int argc, char * argv[])
         print_help();
         exit(-1);
     }
-    next_board_num = atoi(argv[arg++]);
-    end_board = atoi(argv[arg++]);
-    stop_at = atoi(argv[arg++]);
+    int next_board_num = atoi(argv[arg++]);
+    const int end_board = atoi(argv[arg++]);
+    const int stop_at = atoi(argv[arg++]);
     if (stop_at <= 0)
     {
         fprintf(stderr, "print_step (the third argument) must be greater than 0.\n");
@@ -513,7 +540,6 @@ int main(int argc, char * argv[])
         int select_ret;
         int mymax = -1;
         response_t response;
-        request_t request;
         int total_num_finished_boards = 0;
         const int total_num_boards_to_check = end_board - next_board_num + 1;
         int next_milestone = next_board_num + stop_at;
@@ -534,30 +560,9 @@ int main(int argc, char * argv[])
 
         mymax++;
 
-#define WRITE_REQUEST() \
-                        if (next_board_num > end_board) \
-                        { \
-                            request.board_num = -1; \
-                        } \
-                        else \
-                        { \
-                            request.board_num = next_board_num; \
-                            if ((next_board_num += board_num_step) > end_board) \
-                            { \
-                                next_board_num = end_board+1; \
-                            } \
-                            request.quota_end = next_board_num-1; \
-                        } \
-      \
-                        write( \
-                                workers[idx].parent_to_child_pipe[WRITE_FD], \
-                                &request, \
-                                sizeof(request) \
-                        )
-
         for(idx=0; idx<num_workers; idx++)
         {
-            WRITE_REQUEST();
+            write_request(end_board, board_num_step, &next_board_num, workers, idx);
         }
 
         while (total_num_finished_boards < total_num_boards_to_check)
@@ -600,8 +605,7 @@ int main(int argc, char * argv[])
                         total_num_iters += response.num_iters;
                         total_num_finished_boards += response.num_finished_boards;
 
-                        WRITE_REQUEST();
-
+                        write_request(end_board, board_num_step, &next_board_num, workers, idx);
                     }
                 }
             }
