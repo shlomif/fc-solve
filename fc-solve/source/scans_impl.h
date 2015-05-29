@@ -1181,9 +1181,11 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 
     fc_solve_pats__do_it(pats_scan);
 
-    const typeof(start_from) after_scan_delta = pats_scan->num_checked_states - start_from;
-    hard_thread->num_checked_states += after_scan_delta;
-    hard_thread->instance->num_checked_states += after_scan_delta;
+    {
+        const typeof(start_from) after_scan_delta = pats_scan->num_checked_states - start_from;
+        hard_thread->num_checked_states += after_scan_delta;
+        hard_thread->instance->num_checked_states += after_scan_delta;
+    }
 
     const typeof(pats_scan->status) status = pats_scan->status;
     return

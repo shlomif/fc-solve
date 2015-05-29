@@ -326,16 +326,15 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
     *error_string = NULL;
 
-    freecell_solver_str_t * arg_argc = &(argv[argc]);
+    const freecell_solver_str_t * const arg_argc = &(argv[argc]);
 
-    freecell_solver_str_t * arg;
-    freecell_solver_str_t * known_param;
-    for (arg = &(argv[start_arg]) ; arg < arg_argc ; arg++)
+    freecell_solver_str_t * arg = &(argv[start_arg]);
+    for ( ; arg < arg_argc ; arg++)
     {
         /* First check for the parameters that the user recognizes */
         if (known_parameters)
         {
-            known_param = known_parameters;
+            typeof(known_parameters) known_param = known_parameters;
             while((*known_param) && strcmp(*known_param, (*arg)))
             {
                 known_param++;
