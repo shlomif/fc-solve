@@ -308,8 +308,8 @@ void DLLEXPORT freecell_solver_user_limit_iterations_long(
 }
 
 void DLLEXPORT freecell_solver_user_limit_iterations(
-    void * api_instance,
-    int max_iters
+    void * const api_instance,
+    const int max_iters
     )
 {
     return freecell_solver_user_limit_iterations_long(api_instance, (fcs_int_limit_t)max_iters);
@@ -1726,14 +1726,14 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 #endif
 
 int DLLEXPORT freecell_solver_user_set_game(
-    void * api_instance,
-    int freecells_num,
-    int stacks_num,
-    int decks_num,
-    int sequences_are_built_by,
-    int unlimited_sequence_move,
-    int empty_stacks_fill
-    )
+    void * const api_instance,
+    const int freecells_num,
+    const int stacks_num,
+    const int decks_num,
+    const int sequences_are_built_by,
+    const int unlimited_sequence_move,
+    const int empty_stacks_fill
+)
 {
     if (freecell_solver_user_set_num_freecells(api_instance, freecells_num))
     {
@@ -1808,8 +1808,8 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
 }
 
 DLLEXPORT char * freecell_solver_user_move_to_string(
-    fcs_move_t move,
-    int standard_notation
+    const fcs_move_t move,
+    const int standard_notation
     )
 {
     return
@@ -2012,20 +2012,21 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 #endif
 
 static void iter_handler_wrapper(
-    void * api_instance,
-    fcs_int_limit_t iter_num,
-    int depth,
+    void * const api_instance,
+    const fcs_int_limit_t iter_num,
+    const int depth,
     void * lp_instance GCC_UNUSED,
-    fcs_kv_state_t * ptr_state,
-    fcs_int_limit_t parent_iter_num
+    fcs_kv_state_t * const ptr_state,
+    const fcs_int_limit_t parent_iter_num
     )
 {
-    fcs_standalone_state_ptrs_t state_raw;
-
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
+    fcs_standalone_state_ptrs_t state_raw = {.key = ptr_state->key, .val = ptr_state->val};
+#if 0
     state_raw.key = ptr_state->key;
     state_raw.val = ptr_state->val;
+#endif
     fc_solve_init_locs(&(state_raw.locs));
 
 #define CALL(func_ptr) (func_ptr) \
@@ -2061,10 +2062,10 @@ static void set_debug_iter_output_func_to_val(
 
 
 static void set_any_iter_handler(
-    void * api_instance,
-    freecell_solver_user_long_iter_handler_t long_iter_handler,
-    freecell_solver_user_iter_handler_t iter_handler,
-    void * iter_handler_context
+    void * const api_instance,
+    const freecell_solver_user_long_iter_handler_t long_iter_handler,
+    const freecell_solver_user_iter_handler_t iter_handler,
+    void * const iter_handler_context
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2095,9 +2096,9 @@ void DLLEXPORT freecell_solver_user_set_iter_handler_long(
 
 
 void DLLEXPORT freecell_solver_user_set_iter_handler(
-    void * api_instance,
-    freecell_solver_user_iter_handler_t iter_handler,
-    void * iter_handler_context
+    void * const api_instance,
+    const freecell_solver_user_iter_handler_t iter_handler,
+    void * const iter_handler_context
     )
 {
     return set_any_iter_handler(api_instance, NULL, iter_handler, iter_handler_context);
@@ -2185,8 +2186,8 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
 }
 
 void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
-    void * api_instance,
-    int max_num_states
+    void * const api_instance,
+    const int max_num_states
     )
 {
     return freecell_solver_user_limit_num_states_in_collection_long(api_instance, (fcs_int_limit_t)max_num_states);
