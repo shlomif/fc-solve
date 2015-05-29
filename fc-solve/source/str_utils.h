@@ -36,7 +36,7 @@ extern "C"
 
 #include <string.h>
 
-static GCC_INLINE fcs_bool_t string_starts_with(
+static GCC_INLINE const fcs_bool_t string_starts_with(
     const char * const str,
     const char * const prefix,
     const char * const end

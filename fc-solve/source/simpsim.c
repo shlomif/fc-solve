@@ -529,7 +529,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
             clear_junk_dest_stack++
         )
         {
-            const fcs_cards_column_t clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
+            const fcs_const_cards_column_t clear_junk_dest_col = fcs_state_get_col(state, clear_junk_dest_stack);
             const int clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
 
             if (! ((clear_junk_stack_len > 0) && (! stacks_map[clear_junk_dest_stack])))

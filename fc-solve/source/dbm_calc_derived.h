@@ -497,7 +497,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         }
     }
 
-    int cards_num_min_limit =
+    const int cards_num_min_limit =
         ( (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 1 : 0 );
 
     /* Move stack card on top of a parent */

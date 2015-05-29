@@ -149,7 +149,7 @@ static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
 
     for (int stack=0 ; stack < 8 ; stack++ )
     {
-        const int lim = (6 + (stack<4)) - 1;
+        const int lim = ((6 - 1) + (stack<4));
         const CARD * const card_stack = card[stack];
         for (int c=0 ; c < lim ; c++)
         {
