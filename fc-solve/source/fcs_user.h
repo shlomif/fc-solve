@@ -192,7 +192,7 @@ DLLEXPORT extern int freecell_solver_user_set_sequence_move(
 
 DLLEXPORT extern int freecell_solver_user_set_a_star_weight(
     void * user_instance,
-    int index,
+    int my_index,
     double weight
     );
 

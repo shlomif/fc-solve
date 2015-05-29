@@ -146,13 +146,11 @@ typedef struct {
 } thread_arg_t;
 
 static GCC_INLINE void init_solver_state(
-    fcs_fcc_solver_state * solver_state,
-    long max_num_elements_in_cache,
-    fcs_meta_compact_allocator_t * meta_alloc
+    fcs_fcc_solver_state * const solver_state,
+    const long max_num_elements_in_cache,
+    fcs_meta_compact_allocator_t * const meta_alloc
     )
 {
-    int i;
-
     solver_state->curr_depth = 0;
     solver_state->max_num_elements_in_cache = max_num_elements_in_cache;
 
@@ -164,9 +162,9 @@ static GCC_INLINE void init_solver_state(
 
     solver_state->tree_recycle_bin = NULL;
 
-    for (i = 0 ; i < MAX_FCC_DEPTH ; i++)
+    for (int i = 0 ; i < MAX_FCC_DEPTH ; i++)
     {
-        fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[i]);
+        fcs_fcc_collection_by_depth * const fcc = &(solver_state->FCCs_by_depth[i]);
         fcc->queue = NULL;
         fcc->queue_recycle_bin = NULL;
         fc_solve_compact_allocator_init( &(fcc->queue_allocator), meta_alloc );

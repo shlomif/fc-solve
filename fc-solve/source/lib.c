@@ -1975,10 +1975,10 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
 }
 
 int DLLEXPORT freecell_solver_user_set_a_star_weight(
-    void * api_instance,
-    int my_index,
-    double weight
-    )
+    void * const api_instance,
+    const int my_index,
+    const double weight
+)
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 

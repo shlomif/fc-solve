@@ -250,46 +250,38 @@ static GCC_INLINE fcs_fcc_moves_list_item_t * fc_solve_fcc_alloc_moves_list_item
 
 /* Returns the number of amortized irreversible moves performed. */
 static GCC_INLINE int horne_prune(
-    enum fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t * init_state_kv_ptr,
+    const enum fcs_dbm_variant_type_t local_variant,
+    fcs_state_keyval_pair_t * const init_state_kv_ptr,
     fcs_which_moves_bitmask_t * const which_irreversible_moves_bitmask,
-    fcs_fcc_moves_seq_t * moves_seq,
-    fcs_fcc_moves_seq_allocator_t * allocator
+    fcs_fcc_moves_seq_t * const moves_seq,
+    fcs_fcc_moves_seq_allocator_t * const allocator
 )
 {
-    int stack_idx, fc;
-    fcs_cards_column_t col;
-    int cards_num;
-    int dest_foundation;
-    int num_cards_moved;
-    fcs_card_t card;
-#ifndef FCS_FREECELL_ONLY
-    /* needed by the macros. */
-    int sequences_are_built_by;
-#endif
-    /*  */
     fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];
     int count_moves_so_far = 0;
     int count_additional_irrev_moves = 0;
 
 #ifndef FCS_FREECELL_ONLY
-    sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
+    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
 
 #define the_state (init_state_kv_ptr->s)
+    int num_cards_moved;
     do {
         num_cards_moved = 0;
-        for ( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++ )
+        for ( int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++ )
         {
-            col = fcs_state_get_col(the_state, stack_idx);
-            cards_num = fcs_col_len(col);
+            fcs_cards_column_t col = fcs_state_get_col(the_state, stack_idx);
+            const int cards_num = fcs_col_len(col);
             if (cards_num)
             {
                 /* Get the top card in the stack */
-                card = fcs_col_get_card(col, cards_num-1);
-
-                if ((dest_foundation =
-                    calc_foundation_to_put_card_on(local_variant, &the_state, card)) >= 0)
+                const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
+                const int dest_foundation =
+                    calc_foundation_to_put_card_on(
+                        local_variant, &the_state, card
+                    );
+                if (dest_foundation >= 0)
                 {
                     if (! FROM_COL_IS_REVERSIBLE_MOVE())
                     {
@@ -313,13 +305,14 @@ static GCC_INLINE int horne_prune(
         }
 
         /* Now check the same for the free cells */
-        for ( fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
+        for ( int fc = 0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
         {
-            card = fcs_freecell_card(the_state, fc);
+            const fcs_card_t card = fcs_freecell_card(the_state, fc);
             if (fcs_card_is_valid(card))
             {
-                if ((dest_foundation =
-                    calc_foundation_to_put_card_on(local_variant, &the_state, card)) >= 0)
+                const int dest_foundation =
+                    calc_foundation_to_put_card_on(local_variant, &the_state, card);
+                if (dest_foundation >= 0)
                 {
                     num_cards_moved++;
                     fc_solve_add_to_irrev_moves_bitmask(
@@ -340,10 +333,7 @@ static GCC_INLINE int horne_prune(
     /* modify moves_seq in-place. */
     if (count_moves_so_far && moves_seq)
     {
-        fcs_fcc_moves_list_item_t * * iter;
-        int pos, count, pos_moves_so_far;
-
-        iter = &(moves_seq->moves_list);
+        fcs_fcc_moves_list_item_t * * iter = &(moves_seq->moves_list);
 
         /* Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
          * to point at the place to either write the new moves or alternatively
@@ -361,8 +351,8 @@ static GCC_INLINE int horne_prune(
          * to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
          *
          * */
-        count = moves_seq->count;
-        for (pos = 0 ;
+        const int count = moves_seq->count;
+        for (int pos = 0 ;
              pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM ;
              pos += FCS_FCC_NUM_MOVES_IN_ITEM
         )
@@ -370,9 +360,9 @@ static GCC_INLINE int horne_prune(
             iter = &((*iter)->next);
         }
 
-        pos = count;
+        int pos = count;
 
-        for (pos_moves_so_far = 0 ;
+        for (int pos_moves_so_far = 0 ;
              pos_moves_so_far < count_moves_so_far ;
              pos_moves_so_far++)
         {

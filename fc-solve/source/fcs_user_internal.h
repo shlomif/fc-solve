@@ -39,7 +39,7 @@ extern "C" {
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
     void * api_instance,
-    int index
+    int my_index
     );
 
 int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
