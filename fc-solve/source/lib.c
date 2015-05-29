@@ -442,27 +442,25 @@ typedef enum
     FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
 } fcs_compile_flares_ret_t;
 
-static GCC_INLINE flares_plan_item create_plan_item(
-    flares_plan_type_t mytype,
-    int flare_idx,
-    int count_iters
+static GCC_INLINE const flares_plan_item create_plan_item(
+    const flares_plan_type_t mytype,
+    const int flare_idx,
+    const int count_iters
 )
 {
-    flares_plan_item ret = {.type = mytype, .flare_idx = flare_idx, .count_iters = count_iters};
+    const flares_plan_item ret = {.type = mytype, .flare_idx = flare_idx, .count_iters = count_iters};
 
     return ret;
 }
 
-static GCC_INLINE flares_plan_type_t add_to_plan(
-        fcs_instance_item_t * instance_item,
-        flares_plan_type_t mytype,
-        int flare_idx,
-        int count_iters
+static GCC_INLINE const flares_plan_type_t add_to_plan(
+        fcs_instance_item_t * const instance_item,
+        const flares_plan_type_t mytype,
+        const int flare_idx,
+        const int count_iters
     )
 {
-    int next_item;
-
-    next_item = instance_item->num_plan_items;
+    const int next_item = instance_item->num_plan_items;
 
     instance_item->plan =
         SREALLOC( instance_item->plan, ++(instance_item->num_plan_items));
@@ -472,7 +470,7 @@ static GCC_INLINE flares_plan_type_t add_to_plan(
     return mytype;
 }
 
-static GCC_INLINE flares_plan_type_t add_count_iters_to_plan(
+static GCC_INLINE const flares_plan_type_t add_count_iters_to_plan(
         fcs_instance_item_t * const instance_item,
         const int flare_idx,
         const int count_iters
@@ -484,7 +482,7 @@ static GCC_INLINE flares_plan_type_t add_count_iters_to_plan(
 }
 
 
-static GCC_INLINE flares_plan_type_t add_checkpoint_to_plan(
+static GCC_INLINE const flares_plan_type_t add_checkpoint_to_plan(
         fcs_instance_item_t * const instance_item
     )
 {
@@ -493,7 +491,7 @@ static GCC_INLINE flares_plan_type_t add_checkpoint_to_plan(
             );
 }
 
-static GCC_INLINE flares_plan_type_t add_run_indef_to_plan(
+static GCC_INLINE const flares_plan_type_t add_run_indef_to_plan(
         fcs_instance_item_t * const instance_item,
         const int flare_idx
     )
