@@ -719,27 +719,25 @@ extern int fc_solve_u2p_suit(const char * deck);
 #endif
 
 static GCC_INLINE void fc_solve_state_init_proto(
-    fcs_state_keyval_pair_t * state,
-    int stacks_num
+    fcs_state_keyval_pair_t * const state,
+    const int stacks_num
     IND_BUF_T_PARAM(indirect_stacks_buffer)
     )
 {
-#if ((!defined(FCS_WITHOUT_CARD_FLIPPING)) || defined(INDIRECT_STACK_STATES))
-    int i;
-#endif
-
-
     memset(&(state->s), 0, sizeof(state->s));
 
 #ifdef INDIRECT_STACK_STATES
-    for(i=0;i<stacks_num;i++)
     {
-        state->s.stacks[i] = &indirect_stacks_buffer[i << 7];
-        memset(state->s.stacks[i], '\0', MAX_NUM_DECKS*52+1);
-    }
-    for(;i<MAX_NUM_STACKS;i++)
-    {
-        state->s.stacks[i] = NULL;
+        int i;
+        for(i=0;i<stacks_num;i++)
+        {
+            state->s.stacks[i] = &indirect_stacks_buffer[i << 7];
+            memset(state->s.stacks[i], '\0', MAX_NUM_DECKS*52+1);
+        }
+        for(;i<MAX_NUM_STACKS;i++)
+        {
+            state->s.stacks[i] = NULL;
+        }
     }
 #endif
     state->info.parent = NULL;
