@@ -343,14 +343,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             {
                 int ret;
 
-                const int callback_ret = callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context);
-                if (callback_ret == FCS_CMD_LINE_SKIP)
+                switch (callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context))
                 {
+                    case FCS_CMD_LINE_SKIP:
                     arg += num_to_skip-1;
-                    continue;
-                }
-                else if (callback_ret == FCS_CMD_LINE_STOP)
-                {
+                    goto end_of_arg_loop;
+
+                    case FCS_CMD_LINE_STOP:
                     *last_arg = arg-&(argv[0]);
                     return ret;
                 }
@@ -2123,6 +2122,8 @@ break;
         }
 
         /* OPT-PARSE-END */
+end_of_arg_loop:
+        ;
     }
 
     *last_arg = arg-&(argv[0]);
