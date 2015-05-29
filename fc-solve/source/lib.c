@@ -745,12 +745,11 @@ static GCC_INLINE char * duplicate_string_while_adding_a_trailing_newline(
 #undef MYMARGIN
 
 int DLLEXPORT freecell_solver_user_solve_board(
-    void * api_instance,
-    const char * state_as_string
+    void * const api_instance,
+    const char * const state_as_string
     )
 {
     char * error_string;
-    int instance_list_index;
 
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
@@ -759,6 +758,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
 
     user->current_instance_idx = 0;
 
+    int instance_list_index;
     if (
         user_compile_all_flares_plans(
             user,
@@ -1871,44 +1871,44 @@ int DLLEXPORT freecell_solver_user_get_max_num_decks(void)
 
 
 char * freecell_solver_user_get_invalid_state_error_string(
-    void * api_instance,
-    int print_ts
+    void * const api_instance,
+    const int print_ts
     )
 {
     char string[80];
 
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    if (user->state_validity_ret == FCS_STATE_VALIDITY__OK)
+    const typeof (user->state_validity_ret) ret = user->state_validity_ret;
+    switch (ret)
     {
+        case FCS_STATE_VALIDITY__OK:
         return strdup("");
-    }
 
-    if (user->state_validity_ret == FCS_STATE_VALIDITY__EMPTY_SLOT)
-    {
-        sprintf(string, "%s",
-            "There's an empty slot in one of the stacks."
+        case FCS_STATE_VALIDITY__EMPTY_SLOT:
+        strcpy(string, "There's an empty slot in one of the stacks.");
+        break;
+
+        case FCS_STATE_VALIDITY__MISSING_CARD:
+        case FCS_STATE_VALIDITY__EXTRA_CARD:
+        {
+            /*
+             * user->state_validity_card is only valid for these states,
+             * so we should call fc_solve_card_perl2user on there only.
+             * */
+            char card_str[10];
+            fc_solve_card_perl2user(user->state_validity_card, card_str, print_ts);
+
+            sprintf(string, "%s%s.",
+                ((ret == FCS_STATE_VALIDITY__EXTRA_CARD)? "There's an extra card: " : "There's a missing card: "),
+                card_str
             );
-    }
-    else if ((user->state_validity_ret == FCS_STATE_VALIDITY__EXTRA_CARD) ||
-           (user->state_validity_ret == FCS_STATE_VALIDITY__MISSING_CARD)
-          )
-    {
-        /*
-         * user->state_validity_card is only valid for these states,
-         * so we should call fc_solve_card_perl2user on there only.
-         * */
-        char card_str[10];
-        fc_solve_card_perl2user(user->state_validity_card, card_str, print_ts);
+        }
+        break;
 
-        sprintf(string, "%s%s.",
-            ((user->state_validity_ret == FCS_STATE_VALIDITY__EXTRA_CARD)? "There's an extra card: " : "There's a missing card: "),
-            card_str
-        );
-    }
-    else if (user->state_validity_ret == FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT)
-    {
-        sprintf(string, "%s.", "Not enough input");
+        case FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT:
+        strcpy(string, "Not enough input.");
+        break;
     }
     return strdup(string);
 }

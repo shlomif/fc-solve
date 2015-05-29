@@ -56,22 +56,31 @@ static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 #endif
 
 #ifdef COMPACT_STATES
+
 #define DECLARE_TEMP_STACK() char temp_stack[(MAX_NUM_CARDS_IN_A_STACK+1)]
 #define STACK_COMPARE(a,b) (fcs_stack_compare((a),(b)))
 #define GET_STACK(c) (state_key->data+(c)*(MAX_NUM_CARDS_IN_A_STACK+1))
 #define COPY_STACK(d,s) (memcpy(d, s, (MAX_NUM_CARDS_IN_A_STACK+1)))
 #define GET_FREECELL(c) (state_key->data[FCS_FREECELLS_OFFSET+(c)])
+
 #elif defined(DEBUG_STATES) || defined(INDIRECT_STACK_STATES)
+
 #ifdef DEBUG_STATES
+
 #define DECLARE_TEMP_STACK() fc_stack_t temp_stack
 #define STACK_COMPARE(a,b) (fcs_stack_compare((&(a)),(&(b))))
+
 #else
+
 #define DECLARE_TEMP_STACK() fcs_card_t * temp_stack
 #define STACK_COMPARE(a,b) (fc_solve_stack_compare_for_comparison(a,b))
+
 #endif
+
 #define GET_STACK(c) (state_key->stacks[c])
 #define COPY_STACK(d,s) (d = s)
 #define GET_FREECELL(c) (state_key->freecells[(c)])
+
 #endif
 
 void fc_solve_canonize_state(

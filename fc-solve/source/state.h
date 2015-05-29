@@ -776,31 +776,24 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
 #endif
 
 static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
-    const char * string,
-    fcs_state_keyval_pair_t * out_state,
-    int freecells_num,
-    int stacks_num,
-    int decks_num
+    const char * const string,
+    fcs_state_keyval_pair_t * const out_state,
+    const int freecells_num,
+    const int stacks_num,
+    const int decks_num
     IND_BUF_T_PARAM(indirect_stacks_buffer)
     )
 {
-    int s,c;
-    const char * str;
-    fcs_card_t card;
-    fcs_cards_column_t col;
-    int first_line;
-
     const char * const * prefix;
-    int decks_index[4];
 
     fc_solve_state_init(
         out_state,
         stacks_num,
         indirect_stacks_buffer
         );
-    str = string;
+    const char * str = string;
 
-    first_line = 1;
+    fcs_bool_t first_line = TRUE;
 
 #define ret (out_state->s)
 /* Handle the end of string - shouldn't happen */
@@ -812,7 +805,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
         } \
     }
 
-    for (s = 0 ; s < stacks_num ; s++)
+    for (int s = 0 ; s < stacks_num ; s++)
     {
         /* Move to the next stack */
         if (!first_line)
@@ -825,7 +818,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
             str++;
         }
 
-        first_line = 0;
+        first_line = FALSE;
 
         for (prefix = fc_solve_freecells_prefixes ; (*prefix) ; prefix++)
         {
@@ -838,13 +831,13 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
-            for (c = 0 ; c < freecells_num ; c++)
+            for (int c = 0 ; c < freecells_num ; c++)
             {
                 fcs_empty_freecell(ret, c);
             }
-            for (c = 0 ; c < freecells_num ; c++)
+            for (int c = 0 ; c < freecells_num ; c++)
             {
-                if (c!=0)
+                if (c != 0)
                 {
                     while(
                             ((*str) != ' ') &&
@@ -870,16 +863,13 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
                 if ((*str == '\r') || (*str == '\n'))
                     break;
 
-                if ((*str == '*') || (*str == '-'))
-                {
-                    card = fc_solve_empty_card;
-                }
-                else
-                {
-                    card = fc_solve_card_user2perl(str);
-                }
-
-                fcs_put_card_in_freecell(ret, c, card);
+                fcs_put_card_in_freecell(ret, c,
+                    (
+                        ((*str == '*') || (*str == '-'))
+                        ? fc_solve_empty_card
+                        : fc_solve_card_user2perl(str)
+                    )
+                );
             }
 
             while (*str != '\n')
@@ -909,6 +899,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
                 fcs_set_foundation(ret, d, 0);
             }
 
+            int decks_index[4];
             for(d=0;d<4;d++)
             {
                 decks_index[d] = 0;
@@ -925,7 +916,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
                     str++;
                 /* Workaround for fc_solve_u2p_rank's willingness
                  * to designate the string '0' as 10. */
-                c = ((str[0] == '0') ? 0 : fc_solve_u2p_rank(str));
+                const int c = ((str[0] == '0') ? 0 : fc_solve_u2p_rank(str));
                 while (
                         (*str != ' ') &&
                         (*str != '\t') &&
@@ -937,7 +928,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
                     str++;
                 }
 
-                fcs_set_foundation(ret, (decks_index[d]*4+d), c);
+                fcs_set_foundation(ret, ((decks_index[d]<<2)+d), c);
                 decks_index[d]++;
                 if (decks_index[d] >= decks_num)
                 {
@@ -955,11 +946,11 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
             str++;
         }
 
-        col = fcs_state_get_col(ret, s);
-        for(c=0 ; c < MAX_NUM_CARDS_IN_A_STACK ; c++)
+        fcs_cards_column_t col = fcs_state_get_col(ret, s);
+        for(int c=0 ; c < MAX_NUM_CARDS_IN_A_STACK ; c++)
         {
             /* Move to the next card */
-            if (c!=0)
+            if (c != 0)
             {
                 while(
                     ((*str) != ' ') &&
@@ -986,9 +977,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
             {
                 break;
             }
-            card = fc_solve_card_user2perl(str);
-
-            fcs_col_push_card(col, card);
+            fcs_col_push_card(col, fc_solve_card_user2perl(str));
         }
     }
 
