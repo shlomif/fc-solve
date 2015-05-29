@@ -247,8 +247,8 @@ static GCC_INLINE const char * fcs_offloading_queue_page__calc_filename(
 }
 
 static GCC_INLINE void fcs_offloading_queue_page__start_after(
-    fcs_offloading_queue_page_t * page,
-    fcs_offloading_queue_page_t * other_page
+    fcs_offloading_queue_page_t * const page,
+    const fcs_offloading_queue_page_t * const other_page
     )
 {
     page->page_index = other_page->page_index+1;

@@ -677,7 +677,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
                     )
                 )
             {
-                goto label_next_state;
+                goto next_state;
             }
         }
 
@@ -693,7 +693,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         {
             soft_thread->first_state_to_check = PTR_STATE;
 
-            TRACE0("myreturn - FCS_STATE_SUSPEND_PROCESS");
+            TRACE0("error_code - FCS_STATE_SUSPEND_PROCESS");
             error_code = FCS_STATE_SUSPEND_PROCESS;
             goto my_return_label;
         }
@@ -852,7 +852,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         FCS_S_VISITED_ITER(PTR_STATE) = *(instance_num_checked_states_ptr)-1;
 #endif
 
-label_next_state:
+next_state:
         TRACE0("Label next state");
         /*
             Extract the next item in the queue/priority queue.
@@ -910,8 +910,6 @@ my_return_label:
 
     return error_code;
 }
-
-#undef myreturn
 
 static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t * const soft_thread

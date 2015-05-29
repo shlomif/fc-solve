@@ -60,8 +60,8 @@ static GCC_INLINE const int fc_solve_rand_rand15(fcs_rand_t * const my_rand)
  * */
 static GCC_INLINE const int fc_solve_rand_get_random_number(fcs_rand_t * const my_rand)
 {
-    const int one = fc_solve_rand_rand15(my_rand);
-    return (one | (fc_solve_rand_rand15(my_rand) << 15));
+    const int first = fc_solve_rand_rand15(my_rand);
+    return (first | (fc_solve_rand_rand15(my_rand) << 15));
 }
 
 

@@ -193,7 +193,7 @@ static GCC_INLINE void fc_solve_pq_pop(
         return;
     }
 
-    pq_element_t pMaxElement = Elements[PQ_FIRST_ENTRY];
+    *val = Elements[PQ_FIRST_ENTRY].val;
 
     /* get pointer to last element in tree */
     pq_element_t pLastElement = Elements[ CurrentSize-- ];
@@ -225,7 +225,6 @@ static GCC_INLINE void fc_solve_pq_pop(
     Elements[i] = pLastElement;
     pq->CurrentSize = CurrentSize;
 
-    *val = pMaxElement.val;
 
     return;
 }

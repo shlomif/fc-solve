@@ -898,7 +898,7 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
     if (target->left != nil && target->right != nil) {
         dnode_t *next = fc_solve_kaz_tree_next(dict, target);
         dnode_t *nextparent = next->parent;
-        dnode_color_t nextcolor = next->color;
+        const dnode_color_t nextcolor = next->color;
 
         assert (next != nil);
         assert (next->parent != nil);

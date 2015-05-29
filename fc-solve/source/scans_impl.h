@@ -106,7 +106,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     const fc_solve_soft_thread_t * const soft_thread,
     const fc_solve_state_weighting_t * const weighting,
     const fcs_state_t * const state,
-    const int neg_depth
+    const int negated_depth
 )
 {
 #ifndef FCS_FREECELL_ONLY
@@ -120,8 +120,8 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #endif
 
 #ifndef FCS_FREECELL_ONLY
-    const fcs_bool_t int_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
-#define unlimited_sequence_move int_unlimited_sequence_move
+    const fcs_bool_t unlimited_sequence_move_var = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+#define unlimited_sequence_move unlimited_sequence_move_var
 #else
 #define unlimited_sequence_move FALSE
 #endif
@@ -129,7 +129,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     fc_solve_seq_cards_power_type_t seqs_over_renegade_cards = 0;
 
-    double sum = (max(0, neg_depth) * weighting->depth_factor);
+    double sum = (max(0, negated_depth) * weighting->depth_factor);
     if (weighting->num_cards_out_lookup_table[1])
     {
         const int num_founds = (LOCAL_DECKS_NUM<<2);
@@ -1146,7 +1146,6 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
 
 #undef state
-#undef myreturn
 
 
 #undef pass

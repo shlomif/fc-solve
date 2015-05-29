@@ -283,7 +283,7 @@ guint fc_solve_hash_function(gconstpointer key)
  *        5b. Add the new state and return TRUE.
  * */
 
-static GCC_INLINE void on_state_new(
+static GCC_INLINE void upon_new_state(
     fc_solve_instance_t * const instance,
     fc_solve_hard_thread_t * const hard_thread,
     fcs_state_extra_info_t * const new_state_info
@@ -322,7 +322,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 #define existing_state_val (existing_state_raw->val)
 #define new_state_key      (new_state->key)
 
-#define ON_STATE_NEW() on_state_new(instance, hard_thread, new_state->val);
+#define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
 
     fc_solve_instance_t * const instance = hard_thread->instance;
 

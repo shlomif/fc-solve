@@ -91,7 +91,7 @@ void fc_solve_compact_allocator_extend(
 
 void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
 {
-    char * * packs_end = (char * * curr_pack = allocator->packs) + allocator->max_num_packs;
+    char * * const packs_end = (char * * curr_pack = allocator->packs) + allocator->max_num_packs;
 
     for ( ; curr_pack < packs_end ; curr_pack++)
     {

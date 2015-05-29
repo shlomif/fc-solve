@@ -62,10 +62,10 @@ static GCC_INLINE void insert_state(
     *PValue = 1;
 }
 
-static GCC_INLINE fcs_bool_t lookup_state(
-    store_t * store,
-    fcs_pdfs_lru_cache_t * cache,
-    fcs_cache_key_t * key)
+static GCC_INLINE const fcs_bool_t lookup_state(
+    store_t * const store,
+    fcs_pdfs_lru_cache_t * const cache,
+    const fcs_cache_key_t * const key)
 {
     Word_t * PValue;
     JHSG(PValue, *store, &(key->s), sizeof(key->s));
@@ -273,7 +273,7 @@ static GCC_INLINE void instance_run(
 
 static GCC_INLINE void instance__print_coords_to_log(
     fcs_dbm_solver_instance_t * const instance,
-    FILE * log_fh
+    FILE * const log_fh
 )
 {
     const enum fcs_dbm_variant_type_t local_variant = instance->local_variant;
@@ -313,7 +313,7 @@ static GCC_INLINE void instance__print_coords_to_log(
 
 static GCC_INLINE void instance__load_coords_from_fh(
     fcs_dbm_solver_instance_t * const instance,
-    FILE * fh
+    FILE * const fh
 )
 {
     int coord_from_input;

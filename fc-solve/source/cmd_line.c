@@ -57,7 +57,10 @@ static GCC_INLINE void nullify_newline(char * const line)
     }
 }
 
-static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * args_man, char * * opened_files_dir_to_assign, const char * user_preset_dir)
+/* TODO : Perhaps avoid allocating a pointer to args_man_t and instead
+ * initialize it in-place.
+ * */
+static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * const args_man, char * * const opened_files_dir_to_assign, const char * user_preset_dir)
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * env_var_presetrc = NULL;

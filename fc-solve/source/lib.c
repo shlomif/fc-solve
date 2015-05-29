@@ -994,8 +994,8 @@ static GCC_INLINE fcs_instance_item_t * get_current_instance_item(
 
 typedef int flare_iters_quota_t;
 
-static GCC_INLINE flare_iters_quota_t normalize_iters_quota(
-    flare_iters_quota_t i
+static GCC_INLINE const flare_iters_quota_t normalize_iters_quota(
+    const flare_iters_quota_t i
 )
 {
     return max(i, 0);
@@ -1155,9 +1155,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fc_solve_init_instance(&(user->active_flare->obj));
         }
 
-#define parameterized_fixed_limit(increment) \
+#define PARAMETERIZED_FIXED_LIMIT(increment) \
     (user->iterations_board_started_at.num_checked_states + increment)
-#define parameterized_limit(increment) (((increment) < 0) ? (-1) : parameterized_fixed_limit(increment))
+#define PARAMETERIZED_LIMIT(increment) (((increment) < 0) ? (-1) : PARAMETERIZED_FIXED_LIMIT(increment))
 #define local_limit()  \
         (instance_item->limit)
 #define NUM_ITERS_LIMITS 3
@@ -1172,7 +1172,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             limits[0] = local_limit();
             limits[1] = user->current_iterations_limit;
-            limits[2] = parameterized_limit(flare_iters_quota);
+            limits[2] = PARAMETERIZED_LIMIT(flare_iters_quota);
 
             mymin = limits[0];
             for (limit_idx=1;limit_idx<NUM_ITERS_LIMITS;limit_idx++)

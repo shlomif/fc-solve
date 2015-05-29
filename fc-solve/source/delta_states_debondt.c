@@ -227,11 +227,11 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     {
         for (int suit_idx = 0 ; suit_idx < NUM_SUITS ; suit_idx++)
         {
-            int rank = fcs_foundation_value(*derived, suit_idx);
+            const int rank = fcs_foundation_value(*derived, suit_idx);
 
             fc_solve_var_base_writer_write(writer, FOUNDATION_BASE, rank);
 
-            int max_rank = ((rank < 1) ? 1 : rank);
+            const int max_rank = ((rank < 1) ? 1 : rank);
 
             for (int r = 1 ; r <= max_rank ; r++)
             {
@@ -589,8 +589,7 @@ static void fc_solve_debondt_delta_stater_decode(
             {
                 if (next_new_top_most_cards > 0)
                 {
-                    fcs_card_t new_top_card = new_top_most_cards[--next_new_top_most_cards];
-                    fcs_col_push_card(col, new_top_card);
+                    fcs_col_push_card(col, new_top_most_cards[--next_new_top_most_cards]);
 
                     fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
                         self, local_variant, &col);

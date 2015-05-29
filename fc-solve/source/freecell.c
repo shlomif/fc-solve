@@ -189,7 +189,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     fcs_kv_state_t * const kv_ptr_new_state,
     fcs_move_stack_t * const moves,
     const int cols_indexes[3],
-    const int nc1, const int nc2
+    const int num_cards_1, const int num_cards_2
 )
 {
 #define key_ptr_new_state_key (kv_ptr_new_state->key)
@@ -197,7 +197,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 #define temp_new_state_key (*key_ptr_new_state_key)
     int ret = -1;
 
-    int num_cards_to_move_from_columns[3] = {nc1, nc2, -1};
+    int num_cards_to_move_from_columns[3] = {num_cards_1, num_cards_2, -1};
 
     const int * col_idx = cols_indexes;
     int * col_num_cards = num_cards_to_move_from_columns;
@@ -304,8 +304,6 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 
             fcs_copy_stack(temp_new_state_key, *(kv_ptr_new_state->val), put_cards_in_col_idx, indirect_stacks_buffer);
 
-            const fcs_cards_column_t new_b_col
-                = fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx);
 
             const int col_idx_val = *col_idx;
             const fcs_cards_column_t new_from_which_col
@@ -313,6 +311,8 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 
             fcs_card_t top_card;
             fcs_col_pop_card(new_from_which_col, top_card);
+            const fcs_cards_column_t new_b_col
+                = fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx);
             fcs_col_push_card(new_b_col, top_card);
 
             fcs_push_1card_seq(

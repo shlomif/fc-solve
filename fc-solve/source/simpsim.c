@@ -344,7 +344,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     STACK_SOURCE_LOOP_END()
 }
 
-static GCC_INLINE const int get_seq_h(const fcs_cards_column_t col, int * const num_true_seqs_out_ptr)
+static GCC_INLINE const int get_seq_h(const fcs_const_cards_column_t col, int * const num_true_seqs_out_ptr)
 {
     const int cards_num = fcs_col_len(col);
 
@@ -1250,10 +1250,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                     const int source_idx
                         = seqs.junk_move_to_stacks[child_seq_index];
 
-                    const fcs_cards_column_t move_junk_to_col
-                        = fcs_state_get_col(new_state, source_idx);
-
-                    const int end = fcs_col_len(move_junk_to_col)-1;
+                    const int end =
+                        fcs_col_len(fcs_state_get_col(new_state, source_idx))-1;
 
                     my_copy_stack(source_idx);
 

@@ -284,15 +284,14 @@ static GCC_INLINE void instance_print_reached(
 }
 
 static fcc_status_t instance_run_solver(
-    fcs_dbm_solver_instance_t * instance,
-    long max_num_elements_in_cache,
-    fcs_state_keyval_pair_t * init_state,
-    fcs_fcc_moves_seq_t * out_moves_seq,
-    fcs_fcc_moves_seq_allocator_t * moves_list_allocator,
-    fcs_meta_compact_allocator_t * meta_alloc
+    fcs_dbm_solver_instance_t * const instance,
+    const long max_num_elements_in_cache,
+    fcs_state_keyval_pair_t * const init_state,
+    fcs_fcc_moves_seq_t * const out_moves_seq,
+    fcs_fcc_moves_seq_allocator_t * const moves_list_allocator,
+    fcs_meta_compact_allocator_t * const meta_alloc
 )
 {
-    enum fcs_dbm_variant_type_t local_variant;
     fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t init_state_enc;
     fcs_fcc_solver_state * solver_state;
@@ -305,7 +304,7 @@ static fcc_status_t instance_run_solver(
     fcs_fcc_moves_seq_t ret_moves_seq;
     fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
 
-    local_variant = instance->variant;
+    const enum fcs_dbm_variant_type_t local_variant = instance->variant;
     /* Initialize the state. */
     solver_state = &(instance->solver_state);
     init_solver_state(solver_state, max_num_elements_in_cache, meta_alloc);
@@ -687,8 +686,6 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
 
 int main(int argc, char * argv[])
 {
-    /* Temporarily #if'ed away until we finish working on instance_run_solver
-     * */
     enum fcs_dbm_variant_type_t local_variant;
     fcs_dbm_solver_instance_t instance;
     long caches_delta;

@@ -271,7 +271,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     const int max_num_elements_in_cache = 1000000;
     fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     fcs_encoded_state_buffer_t min_by_sorting;
-    long num_new_positions_temp;
     fcs_fcc_moves_seq_t init_moves_seq;
     add_start_point_context_t add_start_point_context;
     void * tree_recycle_bin = NULL;
@@ -387,21 +386,24 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     add_start_point_context.do_next_fcc_start_points_exist = do_next_fcc_start_points_exist;
     add_start_point_context.next_start_points_list = &start_points_list;
     add_start_point_context.moves_list_allocator = &moves_list_allocator;
-    perform_FCC_brfs(
-        local_variant,
-        &(init_state),
-        start_enc_state,
-        &init_moves_seq,
-        fc_solve_add_start_point_in_mem,
-        &add_start_point_context,
-        out_is_fcc_new,
-        &min_by_sorting,
-        does_min_by_sorting_exist,
-        &does_state_exist_in_any_FCC_cache,
-        &num_new_positions_temp,
-        &moves_list_allocator,
-        &meta_alloc
-    );
+    {
+        long num_new_positions_temp;
+        perform_FCC_brfs(
+            local_variant,
+            &(init_state),
+            start_enc_state,
+            &init_moves_seq,
+            fc_solve_add_start_point_in_mem,
+            &add_start_point_context,
+            out_is_fcc_new,
+            &min_by_sorting,
+            does_min_by_sorting_exist,
+            &does_state_exist_in_any_FCC_cache,
+            &num_new_positions_temp,
+            &moves_list_allocator,
+            &meta_alloc
+        );
+    }
 
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(temp_allocator));
