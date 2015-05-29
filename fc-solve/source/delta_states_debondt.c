@@ -400,9 +400,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__fill_column_with_descenden
             const fcs_card_t candidate_card =
                 fcs_make_card(candidate_rank, suit);
 
-            const int opt = self->card_states[CARD_POS(candidate_card)];
-
-            if (opt == wanted_opt)
+            if (self->card_states[CARD_POS(candidate_card)] == wanted_opt)
             {
                 child_card = candidate_card;
                 break;
