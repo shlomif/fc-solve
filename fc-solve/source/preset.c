@@ -558,23 +558,3 @@ int fc_solve_get_preset_by_name(
     }
 }
 
-int fc_solve_apply_preset_by_name(
-    fc_solve_instance_t * instance,
-    const char * name
-    )
-{
-    int ret;
-    const fcs_preset_t * preset_ptr;
-
-    ret = fc_solve_get_preset_by_name(
-        name,
-        &preset_ptr
-        );
-
-    if (ret != FCS_PRESET_CODE_OK)
-    {
-        return ret;
-    }
-
-    return fc_solve_apply_preset_by_ptr(instance, preset_ptr);
-}
