@@ -2136,8 +2136,8 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
 }
 
 void DLLEXPORT freecell_solver_user_set_random_seed(
-    void * api_instance,
-    int seed
+    void * const api_instance,
+    const int seed
 )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;

@@ -1,0 +1,34 @@
+Results of compiling Freecell Solver with gcc-2.95.3.
+
+Also see:
+
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/940
+
+======================================================================
+
+Using gcc-2.95.3:
+-----------------
+
+Compilation:
+
+{{{{
+5.74user 1.25system 0:08.40elapsed 83%CPU (0avgtext+0avgdata 0maxresident)k
+784inputs+8544outputs (0major+190805minor)pagefaults 0swaps
+}}}}
+
+Running the MS 32K: 285.193099021912
+
+Using gcc-4.3.2-5mnb2:
+----------------------
+
+Compilation:
+
+{{{{{
+12.35user 1.51system 0:15.07elapsed 91%CPU (0avgtext+0avgdata 0maxresident)k
+304inputs+2912outputs (1major+229206minor)pagefaults 0swaps
+
+12.45user 1.45system 0:15.05elapsed 92%CPU (0avgtext+0avgdata 0maxresident)k
+16inputs+2912outputs (0major+229205minor)pagefaults 0swaps
+}}}}}
+
+Running the MS 32K: 235.637364864349
