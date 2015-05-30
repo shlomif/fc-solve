@@ -34,13 +34,12 @@
 #include "instance.h"
 #include "move.h"
 
-static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(fc_solve_hard_thread_t * hard_thread, fcs_move_stack_t * old_move_stack_to_parent)
+static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(
+    fc_solve_hard_thread_t * const hard_thread,
+    fcs_move_stack_t * const old_move_stack_to_parent
+)
 {
-    char * ptr;
-    fcs_move_stack_t * new_move_stack_to_parent;
-    fcs_internal_move_t * new_moves_to_parent;
-
-    ptr =
+    char * const ptr =
         (char*)fcs_compact_alloc_ptr(
             &(hard_thread->allocator),
             (sizeof(fcs_move_stack_t) +
@@ -48,8 +47,8 @@ static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(fc_sol
             )
         );
 
-    new_move_stack_to_parent = (fcs_move_stack_t *)ptr;
-    new_moves_to_parent = (fcs_internal_move_t *)(ptr+sizeof(fcs_move_stack_t));
+    fcs_move_stack_t * const new_move_stack_to_parent = (fcs_move_stack_t *)ptr;
+    fcs_internal_move_t * const new_moves_to_parent = (fcs_internal_move_t *)(ptr+sizeof(fcs_move_stack_t));
     new_move_stack_to_parent->moves = new_moves_to_parent;
     new_move_stack_to_parent->num_moves =
         old_move_stack_to_parent->num_moves;

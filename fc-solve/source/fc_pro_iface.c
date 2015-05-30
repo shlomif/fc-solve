@@ -14,7 +14,7 @@ static GCC_INLINE int Cvtf89(int fcn)
     return (fcn >= 7) ? (fcn+3) : fcn;
 }
 
-char * fc_solve_moves_processed_render_move(fcs_extended_move_t move, char * string)
+char * fc_solve_moves_processed_render_move(const fcs_extended_move_t move, char * const string)
 {
     switch(fcs_move_get_type(move.move))
     {

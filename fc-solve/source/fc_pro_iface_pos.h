@@ -62,7 +62,7 @@ extern void fc_solve_moves_processed_gen(
 
 char * fc_solve_moves_processed_render_move(fcs_extended_move_t move, char * string);
 
-static GCC_INLINE int fc_solve_moves_processed_get_moves_left(fcs_moves_processed_t * moves)
+static GCC_INLINE const int fc_solve_moves_processed_get_moves_left(const fcs_moves_processed_t * const moves)
 {
     return moves->num_moves - moves->next_move_idx;
 }

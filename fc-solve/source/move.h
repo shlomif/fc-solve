@@ -94,7 +94,10 @@ static GCC_INLINE void fcs_push_1card_seq(fcs_move_stack_t * const stack,
     );
 }
 
-static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(fcs_move_stack_t * stack, fcs_internal_move_t * move)
+static GCC_INLINE const fcs_bool_t fc_solve_move_stack_pop(
+    fcs_move_stack_t * const stack,
+    fcs_internal_move_t * const move
+    )
 {
     if (stack->num_moves > 0)
     {
