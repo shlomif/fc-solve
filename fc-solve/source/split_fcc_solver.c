@@ -181,7 +181,6 @@ static GCC_INLINE void instance_init(
     long pre_cache_max_count,
     long caches_delta,
     const char * dbm_store_path,
-    const char * dbm_fcc_entry_points_path,
     long iters_delta_limit,
     const char * offload_dir_path,
     fcs_which_moves_bitmask_t * fingerprint_which_irreversible_moves_bitmask,
@@ -1300,7 +1299,6 @@ int main(int argc, char * argv[])
     long pre_cache_max_count = 1000000;
     long caches_delta = 1000000;
     const char * dbm_store_path = "./fc_solve_dbm_store";
-    const char * dbm_fcc_entry_points_path = "./fc_solve_fcc_entry_points_dbm_store";
 
     int num_threads = 1;
 
@@ -1547,7 +1545,7 @@ int main(int argc, char * argv[])
 
         instance_init(
             &instance, local_variant, pre_cache_max_count,
-            caches_delta, dbm_store_path, dbm_fcc_entry_points_path,
+            caches_delta, dbm_store_path,
             iters_delta_limit, offload_dir_path,
             &fingerprint_which_irreversible_moves_bitmask,
             out_fh

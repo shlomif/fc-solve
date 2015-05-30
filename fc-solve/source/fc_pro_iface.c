@@ -167,7 +167,7 @@ void fc_solve_moves_processed_gen(
                 }
                 for (col=0;col<8;col++)
                 {
-                    fcs_cards_column_t col_col = fcs_state_get_col(pos, col);
+                    const fcs_const_cards_column_t col_col = fcs_state_get_col(pos, col);
                     count = fcs_col_len(col_col);
                     for (i=0;i<count;i++)
                     {

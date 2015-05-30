@@ -40,14 +40,11 @@ extern "C"
 /* TODO: make sure the key is '\0'-padded. */
 #if defined(FCS_DBM_RECORD_POINTER_REPR) && (!defined(FCS_DEBONDT_DELTA_STATES))
 static int compare_records(
-    const void * void_a, const void * void_b, void * context
+    const void * const void_a, const void * const void_b, void * const context
 )
 {
-    const fcs_encoded_state_buffer_t * a, * b;
-
 #define GET_PARAM(p) (&(((const fcs_dbm_record_t *)(p))->key))
-    a = GET_PARAM(void_a);
-    b = GET_PARAM(void_b);
+    const fcs_encoded_state_buffer_t * const a = GET_PARAM(void_a), * const b = GET_PARAM(void_b);
 #undef GET_PARAM
 
     if (a->s[0] < b->s[0])
@@ -65,7 +62,7 @@ static int compare_records(
 }
 #else
 static int compare_records(
-    const void * void_a, const void * void_b, void * context
+    const void * const void_a, const void * const void_b, void * const context
 )
 {
 #define GET_PARAM(p) (((const fcs_dbm_record_t *)(p))->key)

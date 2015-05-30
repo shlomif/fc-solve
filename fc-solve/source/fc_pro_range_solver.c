@@ -496,7 +496,6 @@ int main(int argc, char * argv[])
         }
         else
         {
-            FILE * from_make_pysol;
             char command[1000];
             buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
 
@@ -505,7 +504,7 @@ int main(int argc, char * argv[])
                     variant
                    );
 
-            from_make_pysol = popen(command, "r");
+            FILE * const from_make_pysol = popen(command, "r");
             fread(buffer, sizeof(buffer[0]), BUF_SIZE-1, from_make_pysol);
             pclose(from_make_pysol);
 #undef BUF_SIZE
