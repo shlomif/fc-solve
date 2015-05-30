@@ -969,15 +969,12 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
 #ifndef FCS_FREECELL_ONLY
     const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
-    fcs_kv_state_t pass;
-
-    pass.key = &(instance->state_copy_ptr->s);
-    pass.val = &(instance->state_copy_ptr->info);
+    const typeof(&(instance->state_copy_ptr->s)) const s= &(instance->state_copy_ptr->s);
 
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     for (int a = 0 ; a < INSTANCE_STACKS_NUM ; a++)
     {
-        const fcs_cards_column_t col = fcs_state_get_col(*pass.key, a);
+        const fcs_const_cards_column_t col = fcs_state_get_col(*s, a);
         cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(
 #ifndef FCS_FREECELL_ONLY
                 sequences_are_built_by,
