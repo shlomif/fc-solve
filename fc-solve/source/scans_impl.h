@@ -49,6 +49,104 @@ extern "C" {
 #include "min_and_max.h"
 
 
+#define BEFS_MAX_DEPTH 20000
+
+extern const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS];
+
+#ifdef FCS_FREECELL_ONLY
+#define is_filled_by_any_card() TRUE
+#else
+#define is_filled_by_any_card() (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
+#endif
+static GCC_INLINE void fc_solve_initialize_befs_rater(
+    fc_solve_soft_thread_t * const soft_thread,
+    fc_solve_state_weighting_t * const weighting
+)
+{
+    double * const befs_weights = weighting->befs_weights;
+    double normalized_befs_weights[COUNT(weighting->befs_weights)];
+
+    /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
+    double sum = 0;
+    for (int i = 0 ; i < FCS_NUM_BEFS_WEIGHTS; i++)
+    {
+        if (befs_weights[i] < 0)
+        {
+            befs_weights[i] = fc_solve_default_befs_weights[i];
+        }
+        sum += befs_weights[i];
+    }
+    if (sum < 1e-6)
+    {
+        sum = 1;
+    }
+    for (int i=0 ; i < FCS_NUM_BEFS_WEIGHTS ; i++)
+    {
+        normalized_befs_weights[i] = ((befs_weights[i] /= sum) * INT_MAX);
+    }
+#ifndef HARD_CODED_NUM_STACKS
+    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t * const instance = hard_thread->instance;
+#endif
+
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
+    SET_GAME_PARAMS();
+#endif
+
+#ifndef FCS_FREECELL_ONLY
+    const fcs_bool_t bool_unlimited_sequence_move = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+#define unlimited_sequence_move bool_unlimited_sequence_move
+#else
+#define unlimited_sequence_move FALSE
+#endif
+
+    const double num_cards_out_factor =
+        normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
+
+    double out_sum = 0.0;
+    for (int i=0 ; i <= 13 ; i++, out_sum += num_cards_out_factor)
+    {
+        weighting->num_cards_out_lookup_table[i] = out_sum;
+    }
+
+    weighting->max_sequence_move_factor =
+        normalized_befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
+        (is_filled_by_any_card()
+         ? (unlimited_sequence_move
+            ? (LOCAL_FREECELLS_NUM+INSTANCE_STACKS_NUM)
+            : ((LOCAL_FREECELLS_NUM+1)<<(INSTANCE_STACKS_NUM))
+         )
+         :
+           (unlimited_sequence_move
+            ? LOCAL_FREECELLS_NUM
+            : 1
+           )
+        );
+
+
+    weighting->cards_under_sequences_factor =
+        normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] / soft_thread->initial_cards_under_sequences_value;
+
+    weighting->seqs_over_renegade_cards_factor =
+        normalized_befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] / FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM*(13*4));
+
+    weighting->depth_factor =
+        normalized_befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
+
+    weighting->num_cards_not_on_parents_factor =
+        normalized_befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] / (LOCAL_DECKS_NUM * 52);
+
+
+    weighting->should_go_over_stacks =
+    (
+        weighting->max_sequence_move_factor
+        || weighting->cards_under_sequences_factor
+        || weighting->seqs_over_renegade_cards_factor
+    );
+}
+
+#undef unlimited_sequence_move
+
 static int compare_rating_with_index(const void * const void_a, const void * const void_b)
 {
     const fcs_rating_with_index_t * const a = (const fcs_rating_with_index_t * const)void_a;
