@@ -1003,7 +1003,7 @@ extern const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS];
 #endif
 static GCC_INLINE void fc_solve_initialize_befs_rater(
     fc_solve_soft_thread_t * const soft_thread,
-    fc_solve_state_weighting_t * weighting
+    fc_solve_state_weighting_t * const weighting
 )
 {
     double * const befs_weights = weighting->befs_weights;
