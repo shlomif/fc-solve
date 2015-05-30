@@ -48,7 +48,65 @@
 #ifdef FCS_RCS_STATES
 #include "instance.h"
 #endif
-static GCC_INLINE void fc_solve_hash_rehash(fc_solve_hash_t * hash);
+
+/*
+    This function "rehashes" a hash. I.e: it increases the size of its
+    hash table, allowing for smaller chains, and faster lookup.
+
+  */
+static GCC_INLINE void fc_solve_hash_rehash(
+    fc_solve_hash_t * const hash
+    )
+{
+    const int old_size = hash->size;
+
+    const int new_size = old_size << 1;
+
+    /* Check for overflow. */
+    if (new_size < old_size)
+    {
+        hash->max_num_elems_before_resize = FCS_INT_LIMIT_MAX;
+        return;
+    }
+
+    const int new_size_bitmask = new_size - 1;
+
+    fc_solve_hash_symlink_t * const new_entries = calloc(new_size, sizeof(new_entries[0]));
+
+    /* Copy the items to the new hash while not allocating them again */
+    for (int i=0 ; i < old_size ; i++)
+    {
+        fc_solve_hash_symlink_item_t * item = hash->entries[i].first_item;
+        /* traverse the chain item by item */
+        while(item != NULL)
+        {
+            /* The place in the new hash table */
+            const int place = item->hash_value & new_size_bitmask;
+
+            /* Store the next item in the linked list in a safe place,
+               so we can retrieve it after the assignment */
+            fc_solve_hash_symlink_item_t * const next_item = item->next;
+            /* It is placed in front of the first element in the chain,
+               so it should link to it */
+            item->next = new_entries[place].first_item;
+
+            /* Make it the first item in its chain */
+            new_entries[place].first_item = item;
+
+            /* Move to the next item this one. */
+            item = next_item;
+        }
+    };
+
+    /* Free the entries of the old hash */
+    free(hash->entries);
+
+    /* Copy the new hash to the old one */
+    hash->entries = new_entries;
+    hash->size = new_size;
+    hash->size_bitmask = new_size_bitmask;
+    hash->max_num_elems_before_resize = (new_size << 1);
+}
 
 
 
@@ -184,64 +242,6 @@ fcs_bool_t fc_solve_hash_insert(
     return FALSE;
 }
 
-/*
-    This function "rehashes" a hash. I.e: it increases the size of its
-    hash table, allowing for smaller chains, and faster lookup.
-
-  */
-static GCC_INLINE void fc_solve_hash_rehash(
-    fc_solve_hash_t * const hash
-    )
-{
-    const int old_size = hash->size;
-
-    const int new_size = old_size << 1;
-
-    /* Check for overflow. */
-    if (new_size < old_size)
-    {
-        hash->max_num_elems_before_resize = FCS_INT_LIMIT_MAX;
-        return;
-    }
-
-    const int new_size_bitmask = new_size - 1;
-
-    fc_solve_hash_symlink_t * const new_entries = calloc(new_size, sizeof(new_entries[0]));
-
-    /* Copy the items to the new hash while not allocating them again */
-    for (int i=0 ; i < old_size ; i++)
-    {
-        fc_solve_hash_symlink_item_t * item = hash->entries[i].first_item;
-        /* traverse the chain item by item */
-        while(item != NULL)
-        {
-            /* The place in the new hash table */
-            const int place = item->hash_value & new_size_bitmask;
-
-            /* Store the next item in the linked list in a safe place,
-               so we can retrieve it after the assignment */
-            fc_solve_hash_symlink_item_t * const next_item = item->next;
-            /* It is placed in front of the first element in the chain,
-               so it should link to it */
-            item->next = new_entries[place].first_item;
-
-            /* Make it the first item in its chain */
-            new_entries[place].first_item = item;
-
-            /* Move to the next item this one. */
-            item = next_item;
-        }
-    };
-
-    /* Free the entries of the old hash */
-    free(hash->entries);
-
-    /* Copy the new hash to the old one */
-    hash->entries = new_entries;
-    hash->size = new_size;
-    hash->size_bitmask = new_size_bitmask;
-    hash->max_num_elems_before_resize = (new_size << 1);
-}
 
 #else
 

@@ -116,9 +116,9 @@ static GCC_INLINE char * card_to_string(char * const s, const CARD card, const f
  * we'll devise a header for this routine.
  *
  * */
-void DLLEXPORT fc_solve_get_board_l(long long gamenumber, char * ret);
+void DLLEXPORT fc_solve_get_board_l(const long long gamenumber, char * const ret);
 
-extern void DLLEXPORT fc_solve_get_board_l(long long gamenumber, char * ret)
+extern void DLLEXPORT fc_solve_get_board_l(const long long gamenumber, char * const ret)
 #else
 static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
 #endif

@@ -48,7 +48,7 @@
 
 static const int fc_solve_get_column_orig_num_cards(
         fc_solve_delta_stater_t * const self,
-        fcs_const_cards_column_t col
+        const fcs_const_cards_column_t col
         )
 {
     int num_cards;
@@ -133,7 +133,7 @@ static void fc_solve_delta_stater_free(fc_solve_delta_stater_t * self)
     free(self);
 }
 
-static GCC_INLINE void fc_solve_delta_stater_set_derived(fc_solve_delta_stater_t * self, fcs_state_t * state)
+static GCC_INLINE void fc_solve_delta_stater_set_derived(fc_solve_delta_stater_t * const self, fcs_state_t * const state)
 {
     self->_derived_state = state;
 }
@@ -251,8 +251,8 @@ static GCC_INLINE void fc_solve_get_freecells_encoding(
 }
 
 static void fc_solve_delta_stater_encode_composite(
-        fc_solve_delta_stater_t * self,
-        fc_solve_bit_writer_t * bit_w
+        fc_solve_delta_stater_t * const self,
+        fc_solve_bit_writer_t * const bit_w
         )
 {
     int cols_indexes[MAX_NUM_STACKS];
@@ -384,9 +384,9 @@ static void fc_solve_delta_stater_encode_composite(
 
 /* ret must be an empty state. */
 static void fc_solve_delta_stater_decode(
-        fc_solve_delta_stater_t * self,
-        fc_solve_bit_reader_t * bit_r,
-        fcs_state_t * ret
+        fc_solve_delta_stater_t * const self,
+        fc_solve_bit_reader_t * const bit_r,
+        fcs_state_t * const ret
         )
 {
 #define PROCESS_CARD(card) { if (fcs_card_rank(card) < foundations[fcs_card_suit(card)]) { foundations[fcs_card_suit(card)] = fcs_card_rank(card); } }

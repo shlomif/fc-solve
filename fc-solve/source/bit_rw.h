@@ -73,7 +73,10 @@ typedef struct
 } fc_solve_bit_reader_t;
 
 
-static GCC_INLINE void fc_solve_bit_reader_init(fc_solve_bit_reader_t * reader, const fcs_uchar_t * start)
+static GCC_INLINE void fc_solve_bit_reader_init(
+    fc_solve_bit_reader_t * const reader,
+    const fcs_uchar_t * const start
+)
 {
     reader->start = reader->current = start;
     reader->bit_in_char_idx = 0;
