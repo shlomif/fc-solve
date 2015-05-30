@@ -707,7 +707,7 @@ static GCC_INLINE void fcs_debondt_init_and_encode_state(
 
 static char * debondt_prepare_state_str(const char * const proto)
 {
-    char * ret = strdup(proto);
+    char * const ret = strdup(proto);
 
     /* Process the string in-place to make it available as input
      * to fc-solve again.

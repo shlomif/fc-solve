@@ -111,10 +111,10 @@ static GCC_INLINE void fc_solve_PQueueFree( PQUEUE *pq )
    returns TRUE if succesful, FALSE if fails. (You fail by filling the pqueue.)
    fcs_pq_rating is a function which returns the rating of the item you're adding for sorting purposes */
 
-static GCC_INLINE void fc_solve_PQueuePush(
-        PQUEUE *pq,
-        fcs_collectible_state_t * val,
-        pq_rating_t r
+static GCC_INLINE void fc_solve_pq_push(
+        PQUEUE * const pq,
+        fcs_collectible_state_t * const val,
+        const pq_rating_t r
         )
 {
     unsigned int i;

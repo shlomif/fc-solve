@@ -794,7 +794,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 
             if (method == FCS_METHOD_A_STAR)
             {
-                fc_solve_PQueuePush(
+                fc_solve_pq_push(
                     pqueue,
                     FCS_SCANS_ptr_new_state,
                     befs_rate_state(

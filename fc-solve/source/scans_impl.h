@@ -600,7 +600,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
                 {
                     if (! FCS_IS_STATE_DEAD_END((*next_element).val))
                     {
-                        fc_solve_PQueuePush(
+                        fc_solve_pq_push(
                             &new_pq,
                             (*next_element).val,
                             (*next_element).rating
