@@ -121,13 +121,11 @@ extern "C" {
  * This is a linked list item that is used to implement a queue for the BFS
  * scan.
  * */
-struct fcs_states_linked_list_item_struct
+typedef struct fcs_states_linked_list_item_struct
 {
     fcs_collectible_state_t * s;
     struct fcs_states_linked_list_item_struct * next;
-};
-
-typedef struct fcs_states_linked_list_item_struct fcs_states_linked_list_item_t;
+} fcs_states_linked_list_item_t;
 
 /*
  * Declare these structures because they will be used within

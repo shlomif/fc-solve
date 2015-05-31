@@ -162,7 +162,7 @@ typedef struct
 } fcs_offloading_queue_page_t;
 
 static GCC_INLINE void fcs_offloading_queue_page__recycle(
-    fcs_offloading_queue_page_t * page
+    fcs_offloading_queue_page_t * const page
     )
 {
     page->write_to_idx = 0;
@@ -170,26 +170,29 @@ static GCC_INLINE void fcs_offloading_queue_page__recycle(
 }
 
 static GCC_INLINE void fcs_offloading_queue_page__init(
-    fcs_offloading_queue_page_t * page,
-    int num_items_per_page,
-    long page_index,
-    long queue_id
+    fcs_offloading_queue_page_t * const page,
+    const int num_items_per_page,
+    const long page_index,
+    const long queue_id
     )
 {
-    page->num_items_per_page = num_items_per_page;
-    page->page_index = page_index;
-    page->queue_id = queue_id;
-
-    page->data = malloc(
-        sizeof(fcs_offloading_queue_item_t) * num_items_per_page
-    );
+    fcs_offloading_queue_page_t new_page =
+    {
+        .num_items_per_page = num_items_per_page,
+        .page_index = page_index,
+        .queue_id = queue_id,
+        .data = malloc(
+            sizeof(fcs_offloading_queue_item_t) * num_items_per_page
+        )
+    };
+    *page = new_page;
     fcs_offloading_queue_page__recycle(page);
 
     return;
 }
 
 static GCC_INLINE void fcs_offloading_queue_page__destroy(
-    fcs_offloading_queue_page_t * page
+    fcs_offloading_queue_page_t * const page
 )
 {
     free(page->data);
@@ -235,9 +238,9 @@ static GCC_INLINE void fcs_offloading_queue_page__insert(
 }
 
 static GCC_INLINE const char * fcs_offloading_queue_page__calc_filename(
-    fcs_offloading_queue_page_t * page,
-    char * buffer,
-    const char * offload_dir_path)
+    fcs_offloading_queue_page_t * const page,
+    char * const buffer,
+    const char * const offload_dir_path)
 {
     sprintf(buffer, "%s/fcs_queue%lXq_%020lX.page", offload_dir_path, page->queue_id, page->page_index);
 
@@ -254,7 +257,7 @@ static GCC_INLINE void fcs_offloading_queue_page__start_after(
 }
 
 static GCC_INLINE void fcs_offloading_queue_page__bump(
-    fcs_offloading_queue_page_t * page
+    fcs_offloading_queue_page_t * const page
 )
 {
     fcs_offloading_queue_page__start_after(page, page);

@@ -56,7 +56,7 @@
 #include "dbm_lru_cache.h"
 #include "fcc_brfs.h"
 
-struct fcs_fully_connected_component_struct
+typedef struct fcs_fully_connected_component_struct
 {
     /* The minimal state in the fully-connected component, according to
     the lexical sorting of the encoded state keys. This is used to identify
@@ -73,9 +73,7 @@ struct fcs_fully_connected_component_struct
     */
     fcs_fcc_moves_seq_t moves_seq_to_min_by_absolute_depth;
     struct fcs_fully_connected_component_struct * next;
-};
-
-typedef struct fcs_fully_connected_component_struct fcs_fully_connected_component_t;
+} fcs_fully_connected_component_t;
 
 typedef struct {
     /* All of these get recycled (and their memory reclaimed by the heap)

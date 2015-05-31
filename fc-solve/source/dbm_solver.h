@@ -21,16 +21,14 @@ extern "C"
 
 #include "dbm_lru_cache.h"
 
-union fcs_pre_cache_key_val_pair_struct
+typedef union fcs_pre_cache_key_val_pair_struct
 {
     struct {
         fcs_encoded_state_buffer_t key;
         fcs_encoded_state_buffer_t parent;
     };
     union fcs_pre_cache_key_val_pair_struct * next;
-};
-
-typedef union fcs_pre_cache_key_val_pair_struct fcs_pre_cache_key_val_pair_t;
+} fcs_pre_cache_key_val_pair_t;
 
 typedef struct {
     dict_t * kaz_tree;

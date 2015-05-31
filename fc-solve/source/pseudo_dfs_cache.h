@@ -53,7 +53,7 @@ extern "C"
 
 typedef fcs_state_t fcs_pdfs_key_t;
 
-struct fcs_pdfs_key_info_struct
+typedef struct fcs_pdfs_key_info_struct
 {
     fcs_pdfs_key_t key;
     /* lower_pri and higher_pri form a doubly linked list.
@@ -61,9 +61,7 @@ struct fcs_pdfs_key_info_struct
      * pri == priority.
      * */
     struct fcs_pdfs_key_info_struct * lower_pri, * higher_pri;
-};
-
-typedef struct fcs_pdfs_key_info_struct fcs_pdfs_cache_key_info_t;
+} fcs_pdfs_cache_key_info_t;
 
 typedef struct
 {
@@ -98,7 +96,7 @@ static GCC_INLINE void fcs_pdfs_cache_init(fcs_pdfs_lru_cache_t * const cache, c
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static GCC_INLINE fcs_bool_t fcs_pdfs_cache_does_key_exist(fcs_pdfs_lru_cache_t * cache, fcs_pdfs_key_t * key)
+static GCC_INLINE const fcs_bool_t fcs_pdfs_cache_does_key_exist(fcs_pdfs_lru_cache_t * const cache, fcs_pdfs_key_t * const key)
 {
     fcs_pdfs_cache_key_info_t * existing;
 
