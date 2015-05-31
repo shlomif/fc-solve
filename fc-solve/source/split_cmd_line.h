@@ -37,9 +37,9 @@ typedef struct
     char * last_arg, * last_arg_ptr, * last_arg_end;
 } args_man_t;
 
-extern args_man_t * fc_solve_args_man_alloc(void);
-extern void fc_solve_args_man_free(args_man_t * manager);
-extern int fc_solve_args_man_chop(args_man_t * manager, char * string);
+extern void fc_solve_args_man_alloc(args_man_t * const manager);
+extern void fc_solve_args_man_free(args_man_t * const manager);
+extern int fc_solve_args_man_chop(args_man_t * const manager, const char * const string);
 
 #endif /* #ifndef FC_SOLVE__SPLIT_CMD_LINE_H */
 

@@ -41,22 +41,22 @@
 int main(int argc, char * argv[])
 {
     char buffer[64 * 1024];
-    args_man_t * args;
+    args_man_t args;
     int i;
 
     memset(buffer, '\0', sizeof(buffer));
     fread(buffer, sizeof(buffer[0]), sizeof(buffer)-1, stdin);
 
-    args = fc_solve_args_man_alloc();
+    fc_solve_args_man_alloc(&args);
 
-    fc_solve_args_man_chop(args, buffer);
+    fc_solve_args_man_chop(&args, buffer);
 
-    for ( i=0 ; i < args->argc ; i++)
+    for ( i=0 ; i < args.argc ; i++)
     {
         const char * s;
         char * terminator;
 
-        s = args->argv[i];
+        s = args.argv[i];
         /* Handle terminal case of delimiting an argument */
         terminator = SMALLOC(terminator, strlen(s)+50);
         strcpy(terminator, "FCS_END_OF_STRING");
@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
         free(terminator);
     }
 
-    fc_solve_args_man_free(args);
+    fc_solve_args_man_free(&args);
 
     return 0;
 }

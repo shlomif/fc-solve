@@ -60,7 +60,7 @@ static GCC_INLINE void nullify_newline(char * const line)
 /* TODO : Perhaps avoid allocating a pointer to args_man_t and instead
  * initialize it in-place.
  * */
-static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * const args_man, char * * const opened_files_dir_to_assign, const char * const user_preset_dir)
+static GCC_INLINE int read_preset(const char * preset_name, args_man_t * const args_man, char * * const opened_files_dir_to_assign, const char * const user_preset_dir)
 {
     int ret_code = 1;
     char * home_dir_presetrc = NULL, * env_var_presetrc = NULL;
@@ -219,8 +219,8 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * * const
             {
                 if (read_next_preset)
                 {
-                    *args_man = fc_solve_args_man_alloc();
-                    fc_solve_args_man_chop(*args_man, line+8);
+                    fc_solve_args_man_alloc(args_man);
+                    fc_solve_args_man_chop(args_man, line+8);
 #if 0
                     fprintf(stderr, "man_chop for <<<%s>>>\n", line);
                     fflush(stderr);
@@ -269,7 +269,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     freecell_solver_str_t opened_files_dir
 )
 {
-    args_man_t * preset_args;
+    args_man_t preset_args;
     char * dir = NULL;
 
     if (read_preset(preset_name, &preset_args, &dir, NULL) != 0)
@@ -283,8 +283,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
 
         const int ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             instance,
-            preset_args->argc,
-            (freecell_solver_str_t *)(void *)(preset_args->argv),
+            preset_args.argc,
+            (freecell_solver_str_t *)(void *)(preset_args.argv),
             0,
             known_parameters,
             NULL,
@@ -299,7 +299,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
         {
             free(dir);
         }
-        fc_solve_args_man_free(preset_args);
+        fc_solve_args_man_free(&preset_args);
 
         return ret;
 
@@ -1781,7 +1781,7 @@ break;
                 long file_len;
                 int ret;
                 size_t num_read;
-                args_man_t * args_man;
+                args_man_t args_man;
                 int num_file_args_to_skip;
 
                 num_file_args_to_skip = 0;
@@ -1852,19 +1852,19 @@ break;
                 fclose(f);
                 buffer[num_read] = '\0';
 
-                args_man = fc_solve_args_man_alloc();
-                ret = fc_solve_args_man_chop(args_man, buffer);
+                fc_solve_args_man_alloc(&args_man);
+                ret = fc_solve_args_man_chop(&args_man, buffer);
                 free(buffer);
                 if (ret != 0)
                 {
                     *error_string =
                         strdup("Could not parse the file. Quitting\n");
-                    fc_solve_args_man_free(args_man);
+                    fc_solve_args_man_free(&args_man);
 
                     RET_ERROR_IN_ARG() ;
                 }
 
-                if (num_file_args_to_skip >= args_man->argc)
+                if (num_file_args_to_skip >= args_man.argc)
                 {
                     /* Do nothing */
                 }
@@ -1872,8 +1872,8 @@ break;
                 {
                     ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
-                        args_man->argc - num_file_args_to_skip,
-                        (freecell_solver_str_t *)(void *)(args_man->argv + num_file_args_to_skip),
+                        args_man.argc - num_file_args_to_skip,
+                        (freecell_solver_str_t *)(void *)(args_man.argv + num_file_args_to_skip),
                         0,
                         known_parameters,
                         callback,
@@ -1890,11 +1890,11 @@ break;
                     }
                     else if (ret != FCS_CMD_LINE_OK)
                     {
-                        fc_solve_args_man_free(args_man);
+                        fc_solve_args_man_free(&args_man);
                         return ret;
                     }
                 }
-                fc_solve_args_man_free(args_man);
+                fc_solve_args_man_free(&args_man);
             }
         }
         break;

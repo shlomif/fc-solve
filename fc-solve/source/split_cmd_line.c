@@ -41,15 +41,13 @@
 
 #define ARGS_MAN_GROW_BY 32
 
-args_man_t * fc_solve_args_man_alloc(void)
+void fc_solve_args_man_alloc(args_man_t * const manager)
 {
-    args_man_t * ret = SMALLOC1(ret);
-    ret->argc = 0;
-    ret->argv = SMALLOC(ret->argv, ARGS_MAN_GROW_BY);
-    return ret;
+    const args_man_t ret = {.argc = 0, .argv = SMALLOC(ret.argv, ARGS_MAN_GROW_BY) };
+    *manager = ret;
 }
 
-void fc_solve_args_man_free(args_man_t * manager)
+void fc_solve_args_man_free(args_man_t * const manager)
 {
     const typeof(manager->argc) argc = manager->argc;
     const typeof(manager->argv) argv = manager->argv;
@@ -59,7 +57,8 @@ void fc_solve_args_man_free(args_man_t * manager)
         free(argv[i]);
     }
     free(argv);
-    free(manager);
+    manager->argc = 0;
+    manager->argv = NULL;
 }
 
 static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
@@ -112,9 +111,9 @@ static GCC_INLINE const fcs_bool_t is_whitespace(const char c)
     return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
 }
 
-int fc_solve_args_man_chop(args_man_t * manager, char * string)
+int fc_solve_args_man_chop(args_man_t * const manager, const char * const string)
 {
-    char * s = string;
+    const char * s = string;
 
     manager->last_arg_ptr = manager->last_arg =
         SMALLOC(manager->last_arg, 1024);
