@@ -1,5 +1,5 @@
-DEBUG = 1
-PROFILE = 1
+DEBUG = 0
+PROFILE = 0
 WITH_TRACES = 0
 FREECELL_ONLY = 1
 DISABLE_SIMPLE_SIMON := 0
@@ -228,12 +228,14 @@ $(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
 STATIC_LIB_BASE = fcs
 STATIC_LIB = lib$(STATIC_LIB_BASE).a
 
-$(STATIC_LIB): $(OBJECTS)
-	ar r $@ $(OBJECTS)
+FCS_OBJECTS = $(OBJECTS) $(PAT_OBJECTS)
+
+$(STATIC_LIB): $(FCS_OBJECTS)
+	ar r $@ $^
 	ranlib $@
 
-$(FCS_SHARED_LIB): $(OBJECTS)
-	$(CREATE_SHARED) $(TCMALLOC_LINK) -o $@ $(OBJECTS) $(END_SHARED)
+$(FCS_SHARED_LIB): $(FCS_OBJECTS)
+	$(CREATE_SHARED) $(TCMALLOC_LINK) -o $@ $^ $(END_SHARED)
 	if ! test -e libfreecell-solver.so ; then \
 		ln -s $@ libfreecell-solver.so ; \
 	fi
