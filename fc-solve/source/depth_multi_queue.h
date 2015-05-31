@@ -64,8 +64,8 @@ typedef struct
 #define DEPTH_Q_GROW_BY 32
 
 static GCC_INLINE void fcs_depth_multi_queue__new_queue(
-    fcs_depth_multi_queue_t * queue,
-    fcs_offloading_queue_t * q
+    fcs_depth_multi_queue_t * const queue,
+    fcs_offloading_queue_t * const q
 )
 {
     fcs_offloading_queue__init(

@@ -51,7 +51,7 @@ extern "C"
 #include "indirect_buffer.h"
 #include "fcc_brfs_test.h"
 
-struct fcs_derived_state_struct
+typedef struct fcs_derived_state_struct
 {
     fcs_state_keyval_pair_t state;
     fcs_encoded_state_buffer_t key;
@@ -62,9 +62,7 @@ struct fcs_derived_state_struct
     fcs_fcc_move_t move;
     int num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-};
-
-typedef struct fcs_derived_state_struct fcs_derived_state_t;
+} fcs_derived_state_t;
 
 #define MAKE_MOVE(src, dest) ((src) | ((dest) << 4))
 #define COL2MOVE(idx) (idx)

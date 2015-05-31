@@ -72,7 +72,7 @@ void fc_solve_dbm_store_offload_pre_cache(
 
 void fc_solve_dbm_store_destroy(fcs_dbm_store_t store);
 
-struct fcs_dbm_queue_item_struct
+typedef struct fcs_dbm_queue_item_struct
 {
     fcs_encoded_state_buffer_t key;
     /* TODO : maybe get rid of moves_seq with FCS_DBM_WITHOUT_CACHES
@@ -83,9 +83,7 @@ struct fcs_dbm_queue_item_struct
 #endif
 
     struct fcs_dbm_queue_item_struct * next;
-};
-
-typedef struct fcs_dbm_queue_item_struct fcs_dbm_queue_item_t;
+} fcs_dbm_queue_item_t;
 
 enum TERMINATE_REASON
 {

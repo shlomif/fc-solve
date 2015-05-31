@@ -44,16 +44,14 @@ typedef unsigned char fcs_fcc_move_t;
 
 #define FCS_FCC_NUM_MOVES_IN_ITEM 8
 
-struct fcs_fcc_moves_list_item_struct
+typedef struct fcs_fcc_moves_list_item_struct
 {
     struct fcs_fcc_moves_list_item_struct * next;
     struct
     {
         fcs_fcc_move_t s[FCS_FCC_NUM_MOVES_IN_ITEM];
     } data;
-};
-
-typedef struct fcs_fcc_moves_list_item_struct fcs_fcc_moves_list_item_t;
+} fcs_fcc_moves_list_item_t;
 
 typedef struct {
     int count;

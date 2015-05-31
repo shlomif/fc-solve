@@ -83,8 +83,8 @@ static GCC_INLINE fcs_dbm_record_t * fcs_dbm_record_get_parent_ptr(
 #endif
 
 static GCC_INLINE void fcs_dbm_record_set_parent_ptr(
-    fcs_dbm_record_t * rec,
-    fcs_dbm_record_t * parent_ptr
+    fcs_dbm_record_t * const rec,
+    fcs_dbm_record_t * const parent_ptr
     )
 {
     rec->parent_and_refcount = ((uintptr_t)parent_ptr);
@@ -139,13 +139,11 @@ static GCC_INLINE void fcs_dbm_record_increment_refcount(
 }
 
 /* Returns the new value so we can tell if it is zero. */
-static GCC_INLINE unsigned char fcs_dbm_record_decrement_refcount(
-    fcs_dbm_record_t * rec
+static GCC_INLINE const unsigned char fcs_dbm_record_decrement_refcount(
+    fcs_dbm_record_t * const rec
     )
 {
-    unsigned char new_val;
-
-    new_val = fcs_dbm_record_get_refcount(rec) - 1;
+    const unsigned char new_val = fcs_dbm_record_get_refcount(rec) - 1;
 
     fcs_dbm_record_set_refcount(
         rec,
