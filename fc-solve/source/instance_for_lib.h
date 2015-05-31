@@ -40,6 +40,7 @@ extern "C" {
 #include "scans_impl.h"
 
 #include "preset.h"
+#include "move_funcs_order.h"
 
 static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     fc_solve_instance_t * const instance
