@@ -49,16 +49,16 @@ static GCC_INLINE void fc_solve_var_base_writer_init(fcs_var_base_writer_t * con
     mpz_init(s->remainder);
 }
 
-static GCC_INLINE void fc_solve_var_base_writer_start(fcs_var_base_writer_t * s)
+static GCC_INLINE void fc_solve_var_base_writer_start(fcs_var_base_writer_t * const s)
 {
     mpz_set_ui(s->data, 0);
     mpz_set_ui(s->multiplier, 1);
 }
 
 static GCC_INLINE void fc_solve_var_base_writer_write(
-    fcs_var_base_writer_t * w,
-    int base,
-    int item
+    fcs_var_base_writer_t * const w,
+    const int base,
+    const int item
 )
 {
     assert(item >= 0);

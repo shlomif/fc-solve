@@ -52,14 +52,12 @@ extern "C"
 #include "dbm_solver.h"
 #include "dbm_calc_derived.h"
 
-struct fcs_FCC_start_point_struct
+typedef struct fcs_FCC_start_point_struct
 {
     fcs_encoded_state_buffer_t enc_state;
     fcs_fcc_moves_seq_t moves_seq;
     struct fcs_FCC_start_point_struct * next;
-};
-
-typedef struct fcs_FCC_start_point_struct fcs_FCC_start_point_t;
+} fcs_FCC_start_point_t;
 
 typedef struct {
     fcs_FCC_start_point_t * list;

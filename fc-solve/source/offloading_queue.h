@@ -46,13 +46,11 @@ extern "C" {
 typedef const unsigned char * fcs_offloading_queue_item_t;
 #if !defined(FCS_DBM_USE_OFFLOADING_QUEUE)
 
-struct fcs_Q_item_wrapper_struct
+typedef struct fcs_Q_item_wrapper_struct
 {
     fcs_offloading_queue_item_t datum;
     struct fcs_Q_item_wrapper_struct * next;
-};
-
-typedef struct fcs_Q_item_wrapper_struct fcs_Q_item_wrapper_t;
+} fcs_Q_item_wrapper_t;
 
 typedef struct
 {
