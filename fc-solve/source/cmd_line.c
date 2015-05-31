@@ -261,11 +261,11 @@ have_preset:
 }
 
 DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
-    void * instance,
+    void * const instance,
     const char * const preset_name,
-    freecell_solver_str_t * known_parameters,
-    char * * error_string,
-    int file_nesting_count,
+    freecell_solver_str_t * const known_parameters,
+    char * * const error_string,
+    const int file_nesting_count,
     freecell_solver_str_t opened_files_dir
 )
 {
@@ -279,10 +279,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     }
     else
     {
-        int ret;
         int last_arg = 0;
 
-        ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+        const int ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             instance,
             preset_args->argc,
             (freecell_solver_str_t *)(void *)(preset_args->argv),
