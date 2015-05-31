@@ -219,8 +219,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * const a
             {
                 if (read_next_preset)
                 {
-                    *args_man = fc_solve_args_man_alloc();
-                    fc_solve_args_man_chop(args_man, line+8);
+                    *args_man = fc_solve_args_man_chop(line+8);
 #if 0
                     fprintf(stderr, "man_chop for <<<%s>>>\n", line);
                     fflush(stderr);
@@ -1851,17 +1850,8 @@ break;
                 fclose(f);
                 buffer[num_read] = '\0';
 
-                args_man_t args_man = fc_solve_args_man_alloc();
-                ret = fc_solve_args_man_chop(&args_man, buffer);
+                args_man_t args_man = fc_solve_args_man_chop(buffer);
                 free(buffer);
-                if (ret != 0)
-                {
-                    *error_string =
-                        strdup("Could not parse the file. Quitting\n");
-                    fc_solve_args_man_free(&args_man);
-
-                    RET_ERROR_IN_ARG() ;
-                }
 
                 if (num_file_args_to_skip >= args_man.argc)
                 {

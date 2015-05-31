@@ -103,13 +103,21 @@ static GCC_INLINE const fcs_bool_t is_whitespace(const char c)
     return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
 }
 
-int fc_solve_args_man_chop(args_man_t * const manager, const char * const string)
+static GCC_INLINE args_man_t fc_solve_args_man_alloc(void)
+{
+    const args_man_t ret = {.argc = 0, .argv = SMALLOC(ret.argv, FC_SOLVE__ARGS_MAN_GROW_BY) };
+    return ret;
+}
+
+args_man_t fc_solve_args_man_chop(const char * const string)
 {
     const char * s = string;
 
-    manager->last_arg_ptr = manager->last_arg =
-        SMALLOC(manager->last_arg, 1024);
-    manager->last_arg_end = manager->last_arg + 1023;
+    args_man_t manager = fc_solve_args_man_alloc();
+
+    manager.last_arg_ptr = manager.last_arg =
+        SMALLOC(manager.last_arg, 1024);
+    manager.last_arg_end = manager.last_arg + 1023;
 
     while (*s != '\0')
     {
@@ -172,7 +180,7 @@ int fc_solve_args_man_chop(args_man_t * const manager, const char * const string
                         }
                         else
                         {
-                            add_to_last_arg(manager, next_char);
+                            add_to_last_arg(&manager, next_char);
                         }
                     }
                     break;
@@ -190,7 +198,7 @@ int fc_solve_args_man_chop(args_man_t * const manager, const char * const string
                             next_char = *(++s);
                             if (next_char == '\0')
                             {
-                                push_args_last_arg(manager);
+                                push_args_last_arg(&manager);
 
                                 goto END_OF_LOOP;
                             }
@@ -200,17 +208,17 @@ int fc_solve_args_man_chop(args_man_t * const manager, const char * const string
                             }
                             else if ((next_char == '\\') || (next_char == '\"'))
                             {
-                                add_to_last_arg(manager, next_char);
+                                add_to_last_arg(&manager, next_char);
                             }
                             else
                             {
-                                add_to_last_arg(manager, '\\');
-                                add_to_last_arg(manager, next_char);
+                                add_to_last_arg(&manager, '\\');
+                                add_to_last_arg(&manager, next_char);
                             }
                         }
                         else
                         {
-                            add_to_last_arg(manager, *s);
+                            add_to_last_arg(&manager, *s);
                         }
                         s++;
                     }
@@ -232,7 +240,7 @@ int fc_solve_args_man_chop(args_man_t * const manager, const char * const string
                     default:
 
                     in_arg = TRUE;
-                    add_to_last_arg(manager, *s);
+                    add_to_last_arg(&manager, *s);
                     s++;
 
                     break;
@@ -242,7 +250,7 @@ int fc_solve_args_man_chop(args_man_t * const manager, const char * const string
 
         if (push_next_arg_flag)
         {
-            push_args_last_arg(manager);
+            push_args_last_arg(&manager);
 
             if (*s == '\0')
             {
@@ -252,15 +260,15 @@ int fc_solve_args_man_chop(args_man_t * const manager, const char * const string
     }
 
 END_OF_LOOP:
-    if (manager->last_arg_ptr != manager->last_arg)
+    if (manager.last_arg_ptr != manager.last_arg)
     {
-        push_args_last_arg(manager);
+        push_args_last_arg(&manager);
     }
 
-    free(manager->last_arg);
-    manager->last_arg = manager->last_arg_ptr = manager->last_arg_end = NULL;
+    free(manager.last_arg);
+    manager.last_arg = manager.last_arg_ptr = manager.last_arg_end = NULL;
 
-    return 0;
+    return manager;
 }
 
 #if 0

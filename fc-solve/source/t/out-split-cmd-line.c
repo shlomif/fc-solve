@@ -46,9 +46,7 @@ int main(int argc, char * argv[])
     memset(buffer, '\0', sizeof(buffer));
     fread(buffer, sizeof(buffer[0]), sizeof(buffer)-1, stdin);
 
-    args_man_t args = fc_solve_args_man_alloc();
-
-    fc_solve_args_man_chop(&args, buffer);
+    args_man_t args = fc_solve_args_man_chop(buffer);
 
     for ( i=0 ; i < args.argc ; i++)
     {
