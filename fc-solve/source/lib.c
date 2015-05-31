@@ -2192,8 +2192,8 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
 }
 
 DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
-    void * api_instance,
-    long max_num_states
+    void * const api_instance,
+    const long max_num_states
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
