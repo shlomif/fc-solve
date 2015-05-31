@@ -273,7 +273,10 @@ END_OF_LOOP:
     }
 
     free(manager.last_arg);
+#if 0
+    /* Not needed because they get discarded. */
     manager.last_arg = manager.last_arg_ptr = manager.last_arg_end = NULL;
+#endif
 
     return manager.args_man;
 }
