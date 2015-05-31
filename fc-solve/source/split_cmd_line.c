@@ -39,6 +39,13 @@
 #include "bool.h"
 #include "alloc_wrap.h"
 
+typedef struct
+{
+    args_man_t args_man;
+    /* These fields are for internal use only. */
+    char * last_arg, * last_arg_ptr, * last_arg_end;
+} args_man_wrapper_t;
+
 void fc_solve_args_man_free(args_man_t * const manager)
 {
     const typeof(manager->argc) argc = manager->argc;
@@ -53,7 +60,7 @@ void fc_solve_args_man_free(args_man_t * const manager)
     manager->argv = NULL;
 }
 
-static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
+static GCC_INLINE void add_to_last_arg(args_man_wrapper_t * manager, char c)
 {
     *(manager->last_arg_ptr++) = c;
 
@@ -70,7 +77,7 @@ static GCC_INLINE void add_to_last_arg(args_man_t * manager, char c)
     return;
 }
 
-static GCC_INLINE void push_args_last_arg(args_man_t * manager)
+static GCC_INLINE void push_args_last_arg(args_man_wrapper_t * manager)
 {
     const int length = manager->last_arg_ptr - manager->last_arg;
 
@@ -82,13 +89,13 @@ static GCC_INLINE void push_args_last_arg(args_man_t * manager)
     );
     new_arg[length] = '\0';
 
-    manager->argv[(manager->argc)++] = new_arg;
+    manager->args_man.argv[(manager->args_man.argc)++] = new_arg;
 
-    if (! (manager->argc & (FC_SOLVE__ARGS_MAN_GROW_BY-1)))
+    if (! (manager->args_man.argc & (FC_SOLVE__ARGS_MAN_GROW_BY-1)))
     {
-        manager->argv = SREALLOC(
-            manager->argv,
-            manager->argc + FC_SOLVE__ARGS_MAN_GROW_BY
+        manager->args_man.argv = SREALLOC(
+            manager->args_man.argv,
+            manager->args_man.argc + FC_SOLVE__ARGS_MAN_GROW_BY
         );
     }
 
@@ -113,7 +120,7 @@ args_man_t fc_solve_args_man_chop(const char * const string)
 {
     const char * s = string;
 
-    args_man_t manager = fc_solve_args_man_alloc();
+    args_man_wrapper_t manager = {.args_man = fc_solve_args_man_alloc()};
 
     manager.last_arg_ptr = manager.last_arg =
         SMALLOC(manager.last_arg, 1024);
@@ -268,7 +275,7 @@ END_OF_LOOP:
     free(manager.last_arg);
     manager.last_arg = manager.last_arg_ptr = manager.last_arg_end = NULL;
 
-    return manager;
+    return manager.args_man;
 }
 
 #if 0
