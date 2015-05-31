@@ -29,6 +29,11 @@
 #ifndef FC_SOLVE__SPLIT_CMD_LINE_H
 #define FC_SOLVE__SPLIT_CMD_LINE_H
 
+#include "inline.h"
+#include "alloc_wrap.h"
+
+#define FC_SOLVE__ARGS_MAN_GROW_BY 32
+
 typedef struct
 {
     int argc;
@@ -37,7 +42,12 @@ typedef struct
     char * last_arg, * last_arg_ptr, * last_arg_end;
 } args_man_t;
 
-extern void fc_solve_args_man_alloc(args_man_t * const manager);
+static GCC_INLINE args_man_t fc_solve_args_man_alloc(void)
+{
+    const args_man_t ret = {.argc = 0, .argv = SMALLOC(ret.argv, FC_SOLVE__ARGS_MAN_GROW_BY) };
+    return ret;
+}
+
 extern void fc_solve_args_man_free(args_man_t * const manager);
 extern int fc_solve_args_man_chop(args_man_t * const manager, const char * const string);
 

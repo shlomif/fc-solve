@@ -219,7 +219,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * const a
             {
                 if (read_next_preset)
                 {
-                    fc_solve_args_man_alloc(args_man);
+                    *args_man = fc_solve_args_man_alloc();
                     fc_solve_args_man_chop(args_man, line+8);
 #if 0
                     fprintf(stderr, "man_chop for <<<%s>>>\n", line);
@@ -1781,7 +1781,6 @@ break;
                 long file_len;
                 int ret;
                 size_t num_read;
-                args_man_t args_man;
                 int num_file_args_to_skip;
 
                 num_file_args_to_skip = 0;
@@ -1852,7 +1851,7 @@ break;
                 fclose(f);
                 buffer[num_read] = '\0';
 
-                fc_solve_args_man_alloc(&args_man);
+                args_man_t args_man = fc_solve_args_man_alloc();
                 ret = fc_solve_args_man_chop(&args_man, buffer);
                 free(buffer);
                 if (ret != 0)

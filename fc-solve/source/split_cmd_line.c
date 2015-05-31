@@ -39,14 +39,6 @@
 #include "bool.h"
 #include "alloc_wrap.h"
 
-#define ARGS_MAN_GROW_BY 32
-
-void fc_solve_args_man_alloc(args_man_t * const manager)
-{
-    const args_man_t ret = {.argc = 0, .argv = SMALLOC(ret.argv, ARGS_MAN_GROW_BY) };
-    *manager = ret;
-}
-
 void fc_solve_args_man_free(args_man_t * const manager)
 {
     const typeof(manager->argc) argc = manager->argc;
@@ -92,11 +84,11 @@ static GCC_INLINE void push_args_last_arg(args_man_t * manager)
 
     manager->argv[(manager->argc)++] = new_arg;
 
-    if (! (manager->argc & (ARGS_MAN_GROW_BY-1)))
+    if (! (manager->argc & (FC_SOLVE__ARGS_MAN_GROW_BY-1)))
     {
         manager->argv = SREALLOC(
             manager->argv,
-            manager->argc + ARGS_MAN_GROW_BY
+            manager->argc + FC_SOLVE__ARGS_MAN_GROW_BY
         );
     }
 

@@ -41,13 +41,12 @@
 int main(int argc, char * argv[])
 {
     char buffer[64 * 1024];
-    args_man_t args;
     int i;
 
     memset(buffer, '\0', sizeof(buffer));
     fread(buffer, sizeof(buffer[0]), sizeof(buffer)-1, stdin);
 
-    fc_solve_args_man_alloc(&args);
+    args_man_t args = fc_solve_args_man_alloc();
 
     fc_solve_args_man_chop(&args, buffer);
 
