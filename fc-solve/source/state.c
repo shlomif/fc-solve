@@ -216,7 +216,7 @@ void fc_solve_canonize_state_with_locs(
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-int fc_solve_state_compare_equal(const void * s1, const void * s2)
+int fc_solve_state_compare_equal(const void * const s1, const void * const s2)
 {
     return (!memcmp(s1,s2,sizeof(fcs_state_t)));
 }
@@ -233,7 +233,7 @@ int fc_solve_state_compare_with_context(
 
 #else
 
-int fc_solve_state_compare_indirect(const void * s1, const void * s2)
+int fc_solve_state_compare_indirect(const void * const s1, const void * const s2)
 {
     return memcmp(*(fcs_state_t * *)s1, *(fcs_state_t * *)s2, sizeof(fcs_state_t));
 }

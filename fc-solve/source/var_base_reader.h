@@ -53,7 +53,7 @@ static GCC_INLINE void fc_solve_var_base_reader_init(
 
 static GCC_INLINE void fc_solve_var_base_reader_start(
     fcs_var_base_reader_t * const s,
-    const unsigned char * data,
+    const unsigned char * const data,
     const size_t data_len
 )
 {
@@ -68,9 +68,9 @@ static GCC_INLINE void fc_solve_var_base_reader_start(
     }
 }
 
-static GCC_INLINE int fc_solve_var_base_reader_read(
-    fcs_var_base_reader_t * reader,
-    int base
+static GCC_INLINE const int fc_solve_var_base_reader_read(
+    fcs_var_base_reader_t * const reader,
+    const int base
 )
 {
     mpz_fdiv_qr_ui(reader->data, reader->r, reader->data, (unsigned long)base);

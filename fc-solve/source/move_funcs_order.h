@@ -52,14 +52,11 @@ static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
         );
 }
 
-static GCC_INLINE int fc_solve_string_to_test_num(const char * s)
+static GCC_INLINE const int fc_solve_string_to_test_num(const char * const s)
 {
-    fcs_test_aliases_mapping_t needle;
-    fcs_test_aliases_mapping_t * result;
+    const fcs_test_aliases_mapping_t needle = {.alias = s};
 
-    needle.alias = s;
-
-    result = (fcs_test_aliases_mapping_t *)
+    const fcs_test_aliases_mapping_t * const result = (fcs_test_aliases_mapping_t *)
         bsearch(
             &needle,
             fc_solve_sfs_tests_aliases,
