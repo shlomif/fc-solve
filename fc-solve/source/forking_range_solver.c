@@ -61,18 +61,15 @@
 
 struct fc_solve_display_information_context_struct
 {
-    int debug_iter_state_output;
-    int freecells_num;
-    int stacks_num;
-    int decks_num;
-    int parseable_output;
-    int canonized_order_output;
-    int display_10_as_t;
-    int display_parent_iter_num;
-    int debug_iter_output_on;
-    int display_moves;
-    int display_states;
-    int standard_notation;
+    fcs_bool_t debug_iter_state_output;
+    fcs_bool_t parseable_output;
+    fcs_bool_t canonized_order_output;
+    fcs_bool_t display_10_as_t;
+    fcs_bool_t display_parent_iter_num;
+    fcs_bool_t debug_iter_output_on;
+    fcs_bool_t display_moves;
+    fcs_bool_t display_states;
+    fcs_bool_t standard_notation;
 };
 
 typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
@@ -373,16 +370,8 @@ static GCC_INLINE void write_request(
 
 int main(int argc, char * argv[])
 {
-    int parser_ret;
-    fcs_portable_time_t mytime;
 
-    int num_workers = 3;
-    worker_t * workers;
-    int board_num_step = 1;
-    char * error_string;
-    pack_item_t user;
-
-    int arg = 1, idx;
+    int arg = 1;
 
     if (argc < 4)
     {
@@ -401,6 +390,8 @@ int main(int argc, char * argv[])
 
     }
 
+    int num_workers = 3;
+    int board_num_step = 1;
     for (;arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--total-iterations-limit"))
@@ -452,12 +443,14 @@ int main(int argc, char * argv[])
         }
     }
 
+    fcs_portable_time_t mytime;
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    user.instance = freecell_solver_user_alloc();
+    pack_item_t user = {.instance = freecell_solver_user_alloc(), .display_context = {.debug_iter_state_output = FALSE, .parseable_output = FALSE , .canonized_order_output = FALSE, .display_10_as_t = FALSE, .display_parent_iter_num = FALSE, .debug_iter_output_on = FALSE, .display_moves = FALSE, .display_states = FALSE , .standard_notation = FALSE } };
 
-    parser_ret =
+    char * error_string;
+    switch (
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
             argc,
@@ -468,75 +461,80 @@ int main(int argc, char * argv[])
             &user,
             &error_string,
             &arg
-        );
-
-    if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
+        )
+    )
     {
-        fprintf(stderr, "Unknown option: %s", argv[arg]);
-        return -1;
-    }
-    else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-    {
-        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+        case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
+        {
+            fprintf(stderr, "Unknown option: %s", argv[arg]);
+            return -1;
+        }
+        case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
+        {
+            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
                 " and was not supplied with one.\n", argv[arg]);
-        return -1;
-    }
-    else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-    {
-        if (error_string != NULL)
-        {
-            fprintf(stderr, "%s", error_string);
-            free(error_string);
+            return -1;
         }
-        return -1;
-    }
-
-    workers = SMALLOC(workers, num_workers);
-
-    for ( idx = 0 ; idx < num_workers ; idx++)
-    {
-        int fork_ret;
-
-        if (pipe(workers[idx].child_to_parent_pipe))
+        case FCS_CMD_LINE_ERROR_IN_ARG:
         {
-            fprintf(stderr, "C->P Pipe for worker No. %i failed! Exiting.\n", idx);
-            exit(-1);
-        }
-        if (pipe(workers[idx].parent_to_child_pipe))
-        {
-            fprintf(stderr, "P->C Pipe for worker No. %i failed! Exiting.\n", idx);
-            exit(-1);
-        }
-
-
-        fork_ret = fork();
-
-        if (fork_ret == -1)
-        {
-            fprintf(stderr, "Fork for worker No. %i failed! Exiting.\n", idx);
-            exit(-1);
-        }
-
-        if (! fork_ret)
-        {
-            /* I'm the child. */
-            close(workers[idx].parent_to_child_pipe[WRITE_FD]);
-            close(workers[idx].child_to_parent_pipe[READ_FD]);
-            break;
-        }
-        else
-        {
-            /* I'm the parent. */
-            close(workers[idx].parent_to_child_pipe[READ_FD]);
-            close(workers[idx].child_to_parent_pipe[WRITE_FD]);
+            if (error_string != NULL)
+            {
+                fprintf(stderr, "%s", error_string);
+                free(error_string);
+            }
+            return -1;
         }
     }
 
-    if (idx < num_workers)
+    worker_t * const workers = SMALLOC(workers, num_workers);
+
     {
-        worker_t w = workers[idx];
-        free(workers);
-        return worker_func(idx, w, user.instance);
+        int idx;
+        for ( idx = 0 ; idx < num_workers ; idx++)
+        {
+            int fork_ret;
+
+            if (pipe(workers[idx].child_to_parent_pipe))
+            {
+                fprintf(stderr, "C->P Pipe for worker No. %i failed! Exiting.\n", idx);
+                exit(-1);
+            }
+            if (pipe(workers[idx].parent_to_child_pipe))
+            {
+                fprintf(stderr, "P->C Pipe for worker No. %i failed! Exiting.\n", idx);
+                exit(-1);
+            }
+
+
+            fork_ret = fork();
+
+            if (fork_ret == -1)
+            {
+                fprintf(stderr, "Fork for worker No. %i failed! Exiting.\n", idx);
+                exit(-1);
+            }
+
+            if (! fork_ret)
+            {
+                /* I'm the child. */
+                close(workers[idx].parent_to_child_pipe[WRITE_FD]);
+                close(workers[idx].child_to_parent_pipe[READ_FD]);
+                break;
+            }
+            else
+            {
+                /* I'm the parent. */
+                close(workers[idx].parent_to_child_pipe[READ_FD]);
+                close(workers[idx].child_to_parent_pipe[WRITE_FD]);
+            }
+        }
+
+        if (idx < num_workers)
+        {
+            const worker_t w = workers[idx];
+            free(workers);
+            return worker_func(idx, w, user.instance);
+        }
     }
 
     freecell_solver_user_free(user.instance);
@@ -564,7 +562,7 @@ int main(int argc, char * argv[])
 
         next_milestone -= (next_milestone % stop_at);
 
-        for(idx=0; idx<num_workers; idx++)
+        for (int idx=0 ; idx < num_workers ; idx++)
         {
 #define GET_READ_FD(worker) ((worker).child_to_parent_pipe[READ_FD])
             const int fd = GET_READ_FD(workers[idx]);
@@ -589,7 +587,7 @@ int main(int argc, char * argv[])
         mymax++;
 #endif
 
-        for(idx=0; idx<num_workers; idx++)
+        for (int idx=0 ; idx < num_workers ; idx++)
         {
             write_request(end_board, board_num_step,
                 &next_board_num, &(workers[idx])
@@ -645,7 +643,7 @@ int main(int argc, char * argv[])
             }
             else if (select_ret)
             {
-                for(idx=0; idx<num_workers; idx++)
+                for(int idx = 0 ; idx < num_workers ; idx++)
                 {
                     int fd = workers[idx].child_to_parent_pipe[READ_FD];
 
@@ -674,7 +672,7 @@ int main(int argc, char * argv[])
 
     {
         int status;
-        for(idx=0; idx<num_workers; idx++)
+        for(int idx=0 ; idx < num_workers ; idx++)
         {
             wait(&status);
         }
