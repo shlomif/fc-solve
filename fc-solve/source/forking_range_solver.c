@@ -79,7 +79,6 @@ static void print_help(void)
           );
 }
 
-static fcs_int_limit_t total_iterations_limit_per_board = -1;
 
 static fcs_int64_t total_num_iters = 0;
 
@@ -262,6 +261,8 @@ int main(int argc, char * argv[])
 
     int num_workers = 3;
     int board_num_step = 1;
+    fcs_int_limit_t total_iterations_limit_per_board = -1;
+
     for (;arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--total-iterations-limit"))
