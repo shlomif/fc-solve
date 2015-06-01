@@ -1259,6 +1259,8 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
 
 #undef TRACE0
+
+#ifndef FCS_DISABLE_PATSOLVE
 /*
  * fc_solve_patsolve_do_solve() is the event loop of the
  * Patsolve scan.
@@ -1293,6 +1295,7 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
         : FCS_STATE_SUSPEND_PROCESS
     );
 }
+#endif
 
 #ifdef __cplusplus
 }

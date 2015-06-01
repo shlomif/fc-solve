@@ -680,12 +680,14 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
 
         fc_solve_reset_soft_thread(soft_thread);
 
+#ifndef FCS_DISABLE_PATSOLVE
         typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
 
         if ( pats_scan )
         {
             fc_solve_pats__recycle_soft_thread(pats_scan);
         }
+#endif
     }
 
     return;
@@ -820,8 +822,10 @@ static GCC_INLINE int fc_solve__soft_thread__do_solve(
         case FCS_SUPER_METHOD_BEFS_BRFS:
         return fc_solve_befs_or_bfs_do_solve(soft_thread);
 
+#ifndef FCS_DISABLE_PATSOLVE
         case FCS_SUPER_METHOD_PATSOLVE:
         return fc_solve_patsolve_do_solve(soft_thread);
+#endif
 
         default:
         return  FCS_STATE_IS_NOT_SOLVEABLE;
@@ -1010,6 +1014,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
             fc_solve_soft_thread_init_soft_dfs(soft_thread);
             fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
 
+#ifndef FCS_DISABLE_PATSOLVE
             typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
             if (pats_scan)
             {
@@ -1038,6 +1043,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
 #endif
                 fc_solve_pats__initialize_solving_process(pats_scan);
             }
+#endif
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
         }
         ret = fc_solve__soft_thread__do_solve(soft_thread);

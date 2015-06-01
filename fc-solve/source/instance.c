@@ -193,6 +193,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
         free(soft_thread->name);
     }
 
+#ifndef FCS_DISABLE_PATSOLVE
     typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
 
     if ( pats_scan )
@@ -202,6 +203,7 @@ static GCC_INLINE void free_instance_soft_thread_callback(
         free( pats_scan );
         soft_thread->pats_scan = NULL;
     }
+#endif
 }
 
 static GCC_INLINE void accumulate_tests_by_ptr(
@@ -361,7 +363,9 @@ static GCC_INLINE void init_soft_thread(
 
     soft_thread->enable_pruning = FALSE;
 
+#ifndef FCS_DISABLE_PATSOLVE
     soft_thread->pats_scan = NULL;
+#endif
 }
 
 void fc_solve_instance__init_hard_thread(
@@ -544,6 +548,7 @@ extern void fc_solve_trace_solution(
      * Handle the case if it's patsolve.
      * */
     typeof(instance->solving_soft_thread) solving_soft_thread = instance->solving_soft_thread;
+#ifndef FCS_DISABLE_PATSOLVE
     if (
         solving_soft_thread->super_method_type == FCS_SUPER_METHOD_PATSOLVE)
     {
@@ -668,6 +673,7 @@ extern void fc_solve_trace_solution(
         }
     }
     else
+#endif
     {
         fcs_collectible_state_t * s1 = instance->final_state;
 

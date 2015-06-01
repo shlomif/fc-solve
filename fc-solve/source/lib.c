@@ -1502,6 +1502,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
     char * * error_string
     )
 {
+#ifndef FCS_DISABLE_PATSOLVE
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
@@ -1520,7 +1521,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
 
     pats_scan->pats_solve_params.x[position] = x_param_val;
     pats_scan->cutoff = pats_scan->pats_solve_params.x[FC_SOLVE_PATS__NUM_X_PARAM - 1];
-
+#endif
     return 0;
 }
 
@@ -1531,6 +1532,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
     char * * error_string
     )
 {
+#ifndef FCS_DISABLE_PATSOLVE
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
@@ -1548,7 +1550,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
     }
 
     pats_scan->pats_solve_params.y[position] = y_param_val;
-
+#endif
     return 0;
 }
 
@@ -1576,6 +1578,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         }
         break;
 
+#ifndef FCS_DISABLE_PATSOLVE
         case FCS_METHOD_PATSOLVE:
         {
             super_method_type = FCS_SUPER_METHOD_PATSOLVE;
@@ -1594,6 +1597,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
             }
         }
         break;
+#endif
     }
 
     soft_thread->super_method_type = super_method_type;

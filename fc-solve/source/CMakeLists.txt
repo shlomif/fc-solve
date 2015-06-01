@@ -177,6 +177,7 @@ SET (FCS_WITHOUT_DEPTH_FIELD "" CACHE BOOL "Disable the depth field in each stat
 SET (FCS_WITHOUT_LOCS_FIELDS "" CACHE BOOL "Does not do anything (kept for backwards-compatibility)")
 SET (FCS_TRACE_MEM "" CACHE BOOL "Enable memory tracing in fc-solve.")
 SET (FCS_MAX_NUM_SCANS_BUCKETS "" CACHE STRING "The number of scan_visited buckets in fc-solve (safe to ignore).")
+SET (FCS_DISABLE_PATSOLVE "" CACHE BOOL "Disable the patsolve code")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")
@@ -216,6 +217,14 @@ EXECUTE_PROCESS(COMMAND "perl" ${rate_state_args})
 
 SET (patsolve_dir "${pats_dir}/patsolve")
 SET (p_dir "${patsolve_dir}")
+
+SET (patsolve_modules
+    "${p_dir}/param.c"
+    "${p_dir}/pat.c"
+    "${p_dir}/patsolve.c"
+    "${p_dir}/tree.c"
+    )
+
 SET (FREECELL_SOLVER_LIB_MODULES
     app_str.c
     card.c
@@ -236,11 +245,11 @@ SET (FREECELL_SOLVER_LIB_MODULES
     split_cmd_line.c
     state.c
 
-    "${p_dir}/param.c"
-    "${p_dir}/pat.c"
-    "${p_dir}/patsolve.c"
-    "${p_dir}/tree.c"
 )
+
+IF (NOT FCS_DISABLE_PATSOLVE)
+    LIST (APPEND FREECELL_SOLVER_LIB_MODULES ${patsolve_modules})
+ENDIF (NOT FCS_DISABLE_PATSOLVE)
 
 IF (FCS_FREECELL_ONLY)
     LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES preset.c)

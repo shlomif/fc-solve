@@ -95,6 +95,10 @@ extern "C" {
 #cmakedefine FCS_WITHOUT_VISITED_ITER
 
 /*
+ * Disable the patsolve code at compile time in case it isn't wanted.
+ * */
+#cmakedefine FCS_DISABLE_PATSOLVE
+/*
  * Get rid of the "depth" field on each state's extra_info. It is
  * used a little, but otherwise is not needed for the run-time
  * operation.

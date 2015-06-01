@@ -894,10 +894,12 @@ struct fc_solve_soft_thread_struct
      * */
     fcs_bool_t enable_pruning;
 
+#ifndef FCS_DISABLE_PATSOLVE
     /*
      * The patsolve soft_thread that is associated with this soft_thread.
      * */
     struct fc_solve__patsolve_thread_struct * pats_scan;
+#endif
 };
 
 #define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var
@@ -918,7 +920,9 @@ typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 #define FCS_BEFS_WEIGHT_DEPTH 4
 #define FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS 5
 
+#ifndef FCS_DISABLE_PATSOLVE
 #include "pat.h"
+#endif
 
 extern int fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t * const soft_thread
