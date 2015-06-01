@@ -452,3 +452,39 @@ Reached Board No. 28000 at 1433108364.122764 (total_num_iters=6017340)
 Reached Board No. 32000 at 1433108365.377601 (total_num_iters=10640140)
 Finished at 1433108365.384308 (total_num_iters=11372658)
 </DUMP>
+
+---------------------------------------------------------
+
+ARGS="--worker-step 16 -l as" bash scripts/time-threads-num.bash 4 4 x Several Times
+commit deaee75166257d2ddaee155e6c528b5aaed30bf1
+(commit Date:   Mon Jun 1 14:13:42 2015 +0300 )
+With Profile Guided Optimisation (PGO).
+./Tatzer -l ci7b --prefix=/home/shlomif/apps/fcs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+3.19.8-desktop-2.mga5
+gcc-4.9.2-4.mga5
+lib64google-perftools0-2.1-4.mga5
+
+9.11665105819702s
+
+    Highlight: Ran the benchmark again (after a reboot) and got a somewhat
+    better result. This was done after trying the FCS_DISABLE_PATSOLVE
+    compile-time flag (which didn't improve matters).
+
+    Ran strip on the executables and deleted the DUMPS-* before running it.
+
+<DUMP>
+Started at 1433157777.879670
+Reached Board No. 4000 at 1433157779.011159 (total_num_iters=361548)
+Reached Board No. 8000 at 1433157780.201745 (total_num_iters=1040985)
+Reached Board No. 12000 at 1433157781.304531 (total_num_iters=2117533)
+Unsolved Board No. 11982 at 1433157781.506290
+Reached Board No. 16000 at 1433157782.494765 (total_num_iters=3569452)
+Reached Board No. 20000 at 1433157783.603691 (total_num_iters=4988554)
+Reached Board No. 24000 at 1433157784.682727 (total_num_iters=6057167)
+Reached Board No. 28000 at 1433157785.738660 (total_num_iters=7814585)
+Reached Board No. 32000 at 1433157786.988979 (total_num_iters=10289284)
+Finished at 1433157786.996321 (total_num_iters=11372658)
+</DUMP>
