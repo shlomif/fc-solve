@@ -59,11 +59,6 @@
 #include "inline.h"
 #include "range_solvers_gen_ms_boards.h"
 
-typedef struct
-{
-    void * instance;
-} pack_item_t;
-
 #define BINARY_OUTPUT_NUM_INTS 16
 
 static void print_help(void)
@@ -313,12 +308,12 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    pack_item_t user = {.instance = freecell_solver_user_alloc() };
+    void * const instance = freecell_solver_user_alloc();
 
     char * error_string;
     switch (
         freecell_solver_user_cmd_line_parse_args(
-            user.instance,
+            instance,
             argc,
             (freecell_solver_str_t *)(void *)argv,
             arg,
@@ -386,7 +381,7 @@ int main(int argc, char * argv[])
                 free(workers);
                 close(w.parent_to_child_pipe[WRITE_FD]);
                 close(w.child_to_parent_pipe[READ_FD]);
-                return worker_func(idx, w, user.instance);
+                return worker_func(idx, w, instance);
             }
         }
         else
@@ -397,7 +392,7 @@ int main(int argc, char * argv[])
         }
     }
 
-    freecell_solver_user_free(user.instance);
+    freecell_solver_user_free(instance);
 
     {
         /* I'm the master. */
