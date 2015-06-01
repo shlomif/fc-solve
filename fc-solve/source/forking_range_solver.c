@@ -338,8 +338,7 @@ static GCC_INLINE void write_request(
     const int end_board,
     const int board_num_step,
     int * const next_board_num_ptr,
-    const worker_t * const workers,
-    const int idx
+    const worker_t * const worker
 )
 {
     request_t request;
@@ -358,7 +357,7 @@ static GCC_INLINE void write_request(
     }
 
     write(
-        workers[idx].parent_to_child_pipe[WRITE_FD],
+        worker->parent_to_child_pipe[WRITE_FD],
         &request,
         sizeof(request)
     );
@@ -562,7 +561,9 @@ int main(int argc, char * argv[])
 
         for(idx=0; idx<num_workers; idx++)
         {
-            write_request(end_board, board_num_step, &next_board_num, workers, idx);
+            write_request(end_board, board_num_step,
+                &next_board_num, &(workers[idx])
+            );
         }
 
         while (total_num_finished_boards < total_num_boards_to_check)
@@ -605,7 +606,9 @@ int main(int argc, char * argv[])
                         total_num_iters += response.num_iters;
                         total_num_finished_boards += response.num_finished_boards;
 
-                        write_request(end_board, board_num_step, &next_board_num, workers, idx);
+                        write_request(end_board, board_num_step,
+                            &next_board_num, &(workers[idx])
+                        );
                     }
                 }
             }
