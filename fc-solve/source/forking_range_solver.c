@@ -488,52 +488,46 @@ int main(int argc, char * argv[])
 
     worker_t * const workers = SMALLOC(workers, num_workers);
 
+    for ( int idx = 0 ; idx < num_workers ; idx++)
     {
-        int idx;
-        for ( idx = 0 ; idx < num_workers ; idx++)
+        int fork_ret;
+
+        if (pipe(workers[idx].child_to_parent_pipe))
         {
-            int fork_ret;
-
-            if (pipe(workers[idx].child_to_parent_pipe))
-            {
-                fprintf(stderr, "C->P Pipe for worker No. %i failed! Exiting.\n", idx);
-                exit(-1);
-            }
-            if (pipe(workers[idx].parent_to_child_pipe))
-            {
-                fprintf(stderr, "P->C Pipe for worker No. %i failed! Exiting.\n", idx);
-                exit(-1);
-            }
-
-
-            fork_ret = fork();
-
-            if (fork_ret == -1)
-            {
-                fprintf(stderr, "Fork for worker No. %i failed! Exiting.\n", idx);
-                exit(-1);
-            }
-
-            if (! fork_ret)
-            {
-                /* I'm the child. */
-                close(workers[idx].parent_to_child_pipe[WRITE_FD]);
-                close(workers[idx].child_to_parent_pipe[READ_FD]);
-                break;
-            }
-            else
-            {
-                /* I'm the parent. */
-                close(workers[idx].parent_to_child_pipe[READ_FD]);
-                close(workers[idx].child_to_parent_pipe[WRITE_FD]);
-            }
+            fprintf(stderr, "C->P Pipe for worker No. %i failed! Exiting.\n", idx);
+            exit(-1);
+        }
+        if (pipe(workers[idx].parent_to_child_pipe))
+        {
+            fprintf(stderr, "P->C Pipe for worker No. %i failed! Exiting.\n", idx);
+            exit(-1);
         }
 
-        if (idx < num_workers)
+
+        fork_ret = fork();
+
+        if (fork_ret == -1)
         {
-            const worker_t w = workers[idx];
-            free(workers);
-            return worker_func(idx, w, user.instance);
+            fprintf(stderr, "Fork for worker No. %i failed! Exiting.\n", idx);
+            exit(-1);
+        }
+
+        if (! fork_ret)
+        {
+            /* I'm the child. */
+            {
+                const worker_t w = workers[idx];
+                free(workers);
+                close(w.parent_to_child_pipe[WRITE_FD]);
+                close(w.child_to_parent_pipe[READ_FD]);
+                return worker_func(idx, w, user.instance);
+            }
+        }
+        else
+        {
+            /* I'm the parent. */
+            close(workers[idx].parent_to_child_pipe[READ_FD]);
+            close(workers[idx].child_to_parent_pipe[WRITE_FD]);
         }
     }
 
