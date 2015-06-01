@@ -569,6 +569,12 @@ int main(int argc, char * argv[])
         mymax++;
 #endif
 
+        int total_num_finished_boards = 0;
+        const int total_num_boards_to_check = end_board - next_board_num + 1;
+
+        int next_milestone = next_board_num + stop_at;
+        next_milestone -= (next_milestone % stop_at);
+
         for (int idx=0 ; idx < num_workers ; idx++)
         {
             write_request(end_board, board_num_step,
@@ -576,11 +582,6 @@ int main(int argc, char * argv[])
             );
         }
 
-        int total_num_finished_boards = 0;
-        const int total_num_boards_to_check = end_board - next_board_num + 1;
-
-        int next_milestone = next_board_num + stop_at;
-        next_milestone -= (next_milestone % stop_at);
 
         while (total_num_finished_boards < total_num_boards_to_check)
         {
