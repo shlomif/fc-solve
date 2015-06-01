@@ -131,7 +131,6 @@ static GCC_INLINE int worker_func(const int idx, const worker_t w, void * const 
         {
             get_board(board_num, state_string);
 
-            freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
 
             switch (
                 freecell_solver_user_solve_board(
@@ -347,6 +346,10 @@ int main(int argc, char * argv[])
         }
     }
 
+    freecell_solver_user_limit_iterations_long(
+        instance,
+        total_iterations_limit_per_board
+    );
     worker_t * const workers = SMALLOC(workers, num_workers);
 
     for ( int idx = 0 ; idx < num_workers ; idx++)
