@@ -59,153 +59,18 @@
 #include "inline.h"
 #include "range_solvers_gen_ms_boards.h"
 
-struct fc_solve_display_information_context_struct
+typedef struct
 {
-    fcs_bool_t debug_iter_state_output;
-    fcs_bool_t parseable_output;
-    fcs_bool_t canonized_order_output;
-    fcs_bool_t display_10_as_t;
-    fcs_bool_t display_parent_iter_num;
-    fcs_bool_t debug_iter_output_on;
-    fcs_bool_t display_moves;
-    fcs_bool_t display_states;
-    fcs_bool_t standard_notation;
-};
-
-typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
-
-static void my_iter_handler(
-    void * user_instance,
-    fcs_int_limit_t iter_num,
-    int depth,
-    void * ptr_state,
-    fcs_int_limit_t parent_iter_num,
-    void * lp_context
-    )
-{
-    fc_solve_display_information_context_t * context;
-    context = (fc_solve_display_information_context_t*)lp_context;
-
-    fprintf(stdout, "Iteration: %li\n", (long)iter_num);
-    fprintf(stdout, "Depth: %i\n", depth);
-    if (context->display_parent_iter_num)
-    {
-        fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
-    }
-    fprintf(stdout, "\n");
-
-
-    if (context->debug_iter_state_output)
-    {
-        char * state_string =
-            freecell_solver_user_iter_state_as_string(
-                user_instance,
-                ptr_state,
-                context->parseable_output,
-                context->canonized_order_output,
-                context->display_10_as_t
-                );
-        printf("%s\n---------------\n\n\n", state_string);
-        free((void*)state_string);
-    }
-
-}
-
-struct pack_item_struct
-{
-    fc_solve_display_information_context_t display_context;
     void * instance;
-};
-
-typedef struct pack_item_struct pack_item_t;
-
-
-static int cmd_line_callback(
-    void * instance,
-    int argc GCC_UNUSED,
-    freecell_solver_str_t argv[],
-    int arg,
-    int * num_to_skip,
-    int * ret GCC_UNUSED,
-    void * context
-    )
-{
-    pack_item_t * item;
-    fc_solve_display_information_context_t * dc;
-    item = (pack_item_t * )context;
-    dc = &(item->display_context);
-
-    *num_to_skip = 0;
-
-    if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
-    {
-        freecell_solver_user_set_iter_handler_long(
-            instance,
-            my_iter_handler,
-            dc
-            );
-        dc->debug_iter_output_on = 1;
-    }
-    else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
-    {
-        dc->debug_iter_state_output = 1;
-    }
-    else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
-    {
-        dc->parseable_output = 1;
-    }
-    else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
-    {
-        dc->canonized_order_output = 1;
-    }
-    else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
-    {
-        dc->display_10_as_t = 1;
-    }
-    else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
-    {
-        dc->display_moves = 1;
-        dc->display_states = 0;
-    }
-    else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
-    {
-        dc->standard_notation = 1;
-    }
-    else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
-    {
-        dc->display_moves = 1;
-        dc->display_states = 1;
-    }
-    else if ((!strcmp(argv[arg], "-pi")) || (!strcmp(argv[arg], "--display-parent-iter")))
-    {
-        dc->display_parent_iter_num = 1;
-    }
-    else
-    {
-        fprintf(stderr, "Unknown option %s!\n", argv[arg]);
-        exit(-1);
-        return 0;
-    }
-    *num_to_skip = 1;
-    return FCS_CMD_LINE_SKIP;
-}
-
-static const char * known_parameters[] = {
-    "-i", "--iter-output",
-    "-s", "--state-output",
-    "-p", "--parseable-output",
-    "-t", "--display-10-as-t",
-    "-pi", "--display-parent-iter",
-    NULL
-    };
+} pack_item_t;
 
 #define BINARY_OUTPUT_NUM_INTS 16
 
 static void print_help(void)
 {
     printf("\n%s",
-"freecell-solver-range-parallel-solve start end print_step\n"
-"   [--binary-output-to filename] [--total-iterations-limit limit]\n"
+"freecell-solver-fork-solve start end print_step\n"
+"    [--num-workers n] [--worker-step step] [--total-iterations-limit limit]\n"
 "   [fc-solve Arguments...]\n"
 "\n"
 "Solves a sequence of boards from the Microsoft/Freecell Pro Deals\n"
@@ -218,13 +83,6 @@ static void print_help(void)
 "     Limits each board for up to 'limit' iterations.\n"
           );
 }
-
-typedef struct {
-    int argc;
-    char * * argv;
-    int arg;
-    int stop_at;
-} context_t;
 
 static fcs_int_limit_t total_iterations_limit_per_board = -1;
 
@@ -445,16 +303,6 @@ int main(int argc, char * argv[])
             }
             board_num_step = atoi(argv[arg]);
         }
-        else if (!strcmp(argv[arg], "--iters-update-on"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--iters-update-on came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-        }
         else
         {
             break;
@@ -465,7 +313,7 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    pack_item_t user = {.instance = freecell_solver_user_alloc(), .display_context = {.debug_iter_state_output = FALSE, .parseable_output = FALSE , .canonized_order_output = FALSE, .display_10_as_t = FALSE, .display_parent_iter_num = FALSE, .debug_iter_output_on = FALSE, .display_moves = FALSE, .display_states = FALSE , .standard_notation = FALSE } };
+    pack_item_t user = {.instance = freecell_solver_user_alloc() };
 
     char * error_string;
     switch (
@@ -474,9 +322,9 @@ int main(int argc, char * argv[])
             argc,
             (freecell_solver_str_t *)(void *)argv,
             arg,
-            known_parameters,
-            cmd_line_callback,
-            &user,
+            NULL,
+            NULL,
+            NULL,
             &error_string,
             &arg
         )
