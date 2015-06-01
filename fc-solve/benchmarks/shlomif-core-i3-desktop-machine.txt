@@ -488,3 +488,37 @@ Reached Board No. 28000 at 1433157785.738660 (total_num_iters=7814585)
 Reached Board No. 32000 at 1433157786.988979 (total_num_iters=10289284)
 Finished at 1433157786.996321 (total_num_iters=11372658)
 </DUMP>
+
+---------------------------------------------------------
+
+ARGS="--worker-step 16 -l as" bash scripts/time-threads-num.bash -p 4 4 x Several Times
+commit deaee75166257d2ddaee155e6c528b5aaed30bf1
+(commit Date:   Mon Jun 1 14:13:42 2015 +0300 )
+With Profile Guided Optimisation (PGO).
+./Tatzer -l ci7b --prefix=/home/shlomif/apps/fcs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+3.19.8-desktop-2.mga5
+gcc-4.9.2-4.mga5
+lib64google-perftools0-2.1-4.mga5
+
+9.10390186309814s
+
+
+    Highlight: convert the forking range solver to the epoll API, and use it
+    instead of the multi-threaded solver. Strips the executable. Run inside
+    tmux in an xterm on JWM instead of the virtual console.
+
+<DUMP>
+Started at 1433163265.790692
+Reached Board No. 4000 at 1433163266.916103 (total_num_iters=1406500)
+Reached Board No. 8000 at 1433163268.110628 (total_num_iters=2875498)
+Reached Board No. 12000 at 1433163269.207698 (total_num_iters=4259269)
+Unsolved Board No. 11982 at 1433163269.407029
+Reached Board No. 16000 at 1433163270.405210 (total_num_iters=5743844)
+Reached Board No. 20000 at 1433163271.512625 (total_num_iters=7138881)
+Reached Board No. 24000 at 1433163272.557241 (total_num_iters=8472438)
+Reached Board No. 28000 at 1433163273.630015 (total_num_iters=9826959)
+Finished at 1433163274.894594 (total_num_iters=11372658)
+</DUMP>
