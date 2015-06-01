@@ -295,12 +295,7 @@ static GCC_INLINE int worker_func(const int idx, const worker_t w, void * const 
                 break;
                 case FCS_STATE_FLARES_PLAN_ERROR:
                 {
-                    const char * error_string;
-
-                    error_string =
-                        freecell_solver_user_get_last_error_string(instance);
-
-                    fprintf(stderr, "Flares Plan: %s\n", error_string);
+                    fprintf(stderr, "Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
 
                     goto next_board;
                 }
@@ -544,17 +539,10 @@ int main(int argc, char * argv[])
             exit(EXIT_FAILURE);
         }
 #else
-        fd_set readers, initial_readers;
+        fd_set initial_readers;
         FD_ZERO(&initial_readers);
         int mymax = -1;
-        int select_ret;
 #endif
-        response_t response;
-        int total_num_finished_boards = 0;
-        const int total_num_boards_to_check = end_board - next_board_num + 1;
-        int next_milestone = next_board_num + stop_at;
-
-        next_milestone -= (next_milestone % stop_at);
 
         for (int idx=0 ; idx < num_workers ; idx++)
         {
@@ -588,6 +576,12 @@ int main(int argc, char * argv[])
             );
         }
 
+        int total_num_finished_boards = 0;
+        const int total_num_boards_to_check = end_board - next_board_num + 1;
+
+        int next_milestone = next_board_num + stop_at;
+        next_milestone -= (next_milestone % stop_at);
+
         while (total_num_finished_boards < total_num_boards_to_check)
         {
             if (total_num_finished_boards >= next_milestone)
@@ -613,6 +607,7 @@ int main(int argc, char * argv[])
             for (int i = 0 ; i < nfds ; i++)
             {
                 const worker_t * const worker = events[i].data.ptr;
+                response_t response;
                 if (read (GET_READ_FD(*worker), &response, sizeof(response)) < sizeof(response))
                 {
                     continue;
@@ -627,9 +622,9 @@ int main(int argc, char * argv[])
             }
 
 #else
-            readers = initial_readers;
+            fd_set readers readers = initial_readers;
             /* I'm the master. */
-            select_ret = select (mymax, &readers, NULL, NULL, NULL);
+            const int select_ret = select (mymax, &readers, NULL, NULL, NULL);
 
             if (select_ret == -1)
             {
@@ -645,6 +640,7 @@ int main(int argc, char * argv[])
                     {
                         /* FD_ISSET can be set on EOF, so we check if
                          * read failed. */
+                        response_t response;
                         if (read (fd, &response, sizeof(response)) < sizeof(response))
                         {
                             continue;
