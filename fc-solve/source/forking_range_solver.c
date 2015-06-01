@@ -363,6 +363,29 @@ static GCC_INLINE void write_request(
     );
 }
 
+static GCC_INLINE void transaction(
+    const worker_t * const worker,
+    const int read_fd,
+    int * const total_num_finished_boards,
+    const int end_board,
+    const int board_num_step,
+    int * const next_board_num_ptr
+)
+{
+    response_t response;
+    if (read (read_fd, &response, sizeof(response)) < sizeof(response))
+    {
+        return;
+    }
+
+    total_num_iters += response.num_iters;
+    (*total_num_finished_boards) += response.num_finished_boards;
+
+    write_request(end_board, board_num_step,
+        next_board_num_ptr, worker
+    );
+}
+
 int main(int argc, char * argv[])
 {
 
@@ -608,17 +631,9 @@ int main(int argc, char * argv[])
             for (int i = 0 ; i < nfds ; i++)
             {
                 const worker_t * const worker = events[i].data.ptr;
-                response_t response;
-                if (read (GET_READ_FD(*worker), &response, sizeof(response)) < sizeof(response))
-                {
-                    continue;
-                }
-
-                total_num_iters += response.num_iters;
-                total_num_finished_boards += response.num_finished_boards;
-
-                write_request(end_board, board_num_step,
-                    &next_board_num, worker
+                transaction(
+                    worker, GET_READ_FD(*worker), &total_num_finished_boards,
+                    end_board, board_num_step, &next_board_num
                 );
             }
 
@@ -641,17 +656,9 @@ int main(int argc, char * argv[])
                     {
                         /* FD_ISSET can be set on EOF, so we check if
                          * read failed. */
-                        response_t response;
-                        if (read (fd, &response, sizeof(response)) < sizeof(response))
-                        {
-                            continue;
-                        }
-
-                        total_num_iters += response.num_iters;
-                        total_num_finished_boards += response.num_finished_boards;
-
-                        write_request(end_board, board_num_step,
-                            &next_board_num, &(workers[idx])
+                        transaction(
+                            &(workers[idx]), fd, &total_num_finished_boards,
+                            end_board, board_num_step, &next_board_num
                         );
                     }
                 }
