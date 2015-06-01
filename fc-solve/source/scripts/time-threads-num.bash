@@ -56,7 +56,6 @@ fi
 for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
     $PROG 1 "$MAX_BOARD" 4000 \
-        --iters-update-on 10000000 \
         --num-workers "$NUM" \
         $ARGS \
         | tee "$(printf "%s/dump%.3i" "$DUMPS_DIR" "$NUM")"
