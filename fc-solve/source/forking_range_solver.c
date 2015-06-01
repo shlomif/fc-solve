@@ -622,7 +622,7 @@ int main(int argc, char * argv[])
             }
 
 #else
-            fd_set readers readers = initial_readers;
+            fd_set readers = initial_readers;
             /* I'm the master. */
             const int select_ret = select (mymax, &readers, NULL, NULL, NULL);
 
@@ -634,7 +634,7 @@ int main(int argc, char * argv[])
             {
                 for(int idx = 0 ; idx < num_workers ; idx++)
                 {
-                    int fd = workers[idx].child_to_parent_pipe[READ_FD];
+                    const int fd = workers[idx].child_to_parent_pipe[READ_FD];
 
                     if (FD_ISSET(fd, &readers))
                     {
