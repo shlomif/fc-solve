@@ -34,6 +34,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __linux__
+#define USE_EPOLL
+#endif
+
 #include "alloc_wrap.h"
 #include "portable_int64.h"
 #include "portable_time.h"
@@ -44,6 +48,10 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+
+#ifdef USE_EPOLL
+#include <sys/epoll.h>
+#endif
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
@@ -535,9 +543,20 @@ int main(int argc, char * argv[])
 
     {
         /* I'm the master. */
+#ifdef USE_EPOLL
+#define MAX_EVENTS 10
+        struct epoll_event ev, events[MAX_EVENTS];
+        int epollfd = epoll_create1(0);
+        if (epollfd == -1) {
+            perror("epoll_create1");
+            exit(EXIT_FAILURE);
+        }
+#else
         fd_set readers, initial_readers;
-        int select_ret;
+        FD_ZERO(&initial_readers);
         int mymax = -1;
+        int select_ret;
+#endif
         response_t response;
         int total_num_finished_boards = 0;
         const int total_num_boards_to_check = end_board - next_board_num + 1;
@@ -545,19 +564,30 @@ int main(int argc, char * argv[])
 
         next_milestone -= (next_milestone % stop_at);
 
-        FD_ZERO(&initial_readers);
-
         for(idx=0; idx<num_workers; idx++)
         {
-            int fd = workers[idx].child_to_parent_pipe[READ_FD];
+#define GET_READ_FD(worker) ((worker).child_to_parent_pipe[READ_FD])
+            const int fd = GET_READ_FD(workers[idx]);
+#ifdef USE_EPOLL
+            ev.events = EPOLLIN;
+            ev.data.ptr = &(workers[idx]);
+
+            if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1) {
+                perror("epoll_ctl: listen_sock");
+                exit(EXIT_FAILURE);
+            }
+#else
             FD_SET(fd, &initial_readers);
             if (fd > mymax)
             {
                 mymax = fd;
             }
+#endif
         }
 
+#ifndef USE_EPOLL
         mymax++;
+#endif
 
         for(idx=0; idx<num_workers; idx++)
         {
@@ -580,6 +610,31 @@ int main(int argc, char * argv[])
                 next_milestone += stop_at;
             }
 
+#ifdef USE_EPOLL
+            const int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+            if (nfds == -1)
+            {
+                perror("epoll_pwait");
+                exit(EXIT_FAILURE);
+            }
+
+            for (int i = 0 ; i < nfds ; i++)
+            {
+                const worker_t * const worker = events[i].data.ptr;
+                if (read (GET_READ_FD(*worker), &response, sizeof(response)) < sizeof(response))
+                {
+                    continue;
+                }
+
+                total_num_iters += response.num_iters;
+                total_num_finished_boards += response.num_finished_boards;
+
+                write_request(end_board, board_num_step,
+                    &next_board_num, worker
+                );
+            }
+
+#else
             readers = initial_readers;
             /* I'm the master. */
             select_ret = select (mymax, &readers, NULL, NULL, NULL);
@@ -612,6 +667,7 @@ int main(int argc, char * argv[])
                     }
                 }
             }
+#endif
         }
     }
 
