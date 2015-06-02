@@ -2614,23 +2614,25 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
 
 
 int DLLEXPORT freecell_solver_user_get_moves_sequence(
-    void * api_instance,
+    void * const api_instance,
     fcs_moves_sequence_t * const moves_seq
 )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
+    const fcs_user_t * const user = (const fcs_user_t *)api_instance;
 
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
     {
         return -2;
     }
 
-    fcs_instance_item_t * const instance_item = get_current_instance_item(user);
-    fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+    const fcs_instance_item_t * const instance_item = get_current_instance_item(user);
+    const fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
 
-    moves_seq->num_moves = flare->moves_seq.num_moves;
-    moves_seq->moves = memdup(flare->moves_seq.moves,
-        sizeof(flare->moves_seq.moves[0]) * flare->moves_seq.num_moves);
+    moves_seq->moves = memdup(
+        flare->moves_seq.moves,
+        (sizeof(flare->moves_seq.moves[0])
+        * (moves_seq->num_moves = flare->moves_seq.num_moves))
+    );
 
     return 0;
 }
