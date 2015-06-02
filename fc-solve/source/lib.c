@@ -1786,17 +1786,19 @@ int DLLEXPORT freecell_solver_user_get_limit_iterations(void * const api_instanc
     return user->active_flare->obj.max_num_checked_states;
 }
 
-int DLLEXPORT freecell_solver_user_get_moves_left(void * api_instance)
+int DLLEXPORT freecell_solver_user_get_moves_left(void * const api_instance)
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
     {
-        fcs_flare_item_t * const flare = calc_moves_flare(user);
+        const fcs_flare_item_t * const flare = calc_moves_flare(user);
         return flare->moves_seq.num_moves - flare->next_move;
     }
     else
+    {
         return 0;
+    }
 }
 
 void DLLEXPORT freecell_solver_user_set_solution_optimization(
