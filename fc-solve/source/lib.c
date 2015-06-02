@@ -861,7 +861,7 @@ static GCC_INLINE fcs_move_t internal_move_to_user_move(fcs_internal_move_t inte
 #ifndef FCS_USE_COMPACT_MOVE_TOKENS
 #define user_move_to_internal_move(x) (x)
 #else
-static GCC_INLINE fcs_internal_move_t user_move_to_internal_move(fcs_move_t user_move)
+static GCC_INLINE const fcs_internal_move_t user_move_to_internal_move(const fcs_move_t user_move)
 {
     fcs_internal_move_t internal_move;
 
@@ -1348,8 +1348,6 @@ int DLLEXPORT freecell_solver_user_get_next_move(
     }
     else
     {
-        *user_move = flare->moves_seq.moves[flare->next_move++];
-
         fcs_kv_state_t pass;
         FCS_STATE_keyval_pair_to_kv(&(pass), &(user->running_state));
 
@@ -1360,7 +1358,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         fc_solve_apply_move(
             &(pass),
             NULL,
-            user_move_to_internal_move(*user_move),
+            user_move_to_internal_move(*user_move = flare->moves_seq.moves[flare->next_move++]),
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM,
             INSTANCE_DECKS_NUM
