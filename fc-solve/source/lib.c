@@ -1346,26 +1346,24 @@ int DLLEXPORT freecell_solver_user_get_next_move(
     {
         return 1;
     }
-    else
-    {
-        fcs_kv_state_t pass;
-        FCS_STATE_keyval_pair_to_kv(&(pass), &(user->running_state));
+
+    fcs_kv_state_t pass;
+    FCS_STATE_keyval_pair_to_kv(&(pass), &(user->running_state));
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        fc_solve_instance_t * const instance = &(user->active_flare->obj);
+    fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
 
-        fc_solve_apply_move(
-            &(pass),
-            NULL,
-            user_move_to_internal_move(*user_move = flare->moves_seq.moves[flare->next_move++]),
-            INSTANCE_FREECELLS_NUM,
-            INSTANCE_STACKS_NUM,
-            INSTANCE_DECKS_NUM
-        );
+    fc_solve_apply_move(
+        &(pass),
+        NULL,
+        user_move_to_internal_move(*user_move = flare->moves_seq.moves[flare->next_move++]),
+        INSTANCE_FREECELLS_NUM,
+        INSTANCE_STACKS_NUM,
+        INSTANCE_DECKS_NUM
+    );
 
-        return 0;
-    }
+    return 0;
 }
 
 DLLEXPORT char * freecell_solver_user_current_state_as_string(
