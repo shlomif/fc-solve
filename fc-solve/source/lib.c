@@ -1331,52 +1331,42 @@ static GCC_INLINE fcs_flare_item_t * const calc_moves_flare(
 
 
 int DLLEXPORT freecell_solver_user_get_next_move(
-    void * api_instance,
-    fcs_move_t * user_move
+    void * const api_instance,
+    fcs_move_t * const user_move
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
+    if (user->ret_code != FCS_STATE_WAS_SOLVED)
     {
+        return 1;
+    }
+    fcs_flare_item_t * const flare = calc_moves_flare(user);
+    if (flare->next_move == flare->moves_seq.num_moves)
+    {
+        return 1;
+    }
+    else
+    {
+        *user_move = flare->moves_seq.moves[flare->next_move++];
+
+        fcs_kv_state_t pass;
+        FCS_STATE_keyval_pair_to_kv(&(pass), &(user->running_state));
+
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        fc_solve_instance_t * const instance =
-            &(user->active_flare->obj);
+        fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
-        if (user->ret_code == FCS_STATE_WAS_SOLVED)
-        {
-            int ret;
 
-            fcs_flare_item_t * const flare = calc_moves_flare(user);
-            if (flare->next_move == flare->moves_seq.num_moves)
-            {
-                ret = 1;
-            }
-            else
-            {
-                ret = 0;
-                *user_move = flare->moves_seq.moves[flare->next_move++];
-            }
+        fc_solve_apply_move(
+            &(pass),
+            NULL,
+            user_move_to_internal_move(*user_move),
+            INSTANCE_FREECELLS_NUM,
+            INSTANCE_STACKS_NUM,
+            INSTANCE_DECKS_NUM
+        );
 
-            if (ret == 0)
-            {
-                fcs_kv_state_t pass;
-                FCS_STATE_keyval_pair_to_kv(&(pass), &(user->running_state));
-
-                fc_solve_apply_move(
-                    &(pass),
-                    NULL,
-                    user_move_to_internal_move(*user_move),
-                    INSTANCE_FREECELLS_NUM,
-                    INSTANCE_STACKS_NUM,
-                    INSTANCE_DECKS_NUM
-                    );
-            }
-            return ret;
-        }
-        else
-        {
-            return 1;
-        }
+        return 0;
     }
 }
 
