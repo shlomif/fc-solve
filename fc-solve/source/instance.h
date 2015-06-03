@@ -497,7 +497,9 @@ struct fc_solve_instance_struct
      * and doesn't allow a program to fully reach its solution.
      *
      * */
+#ifdef FC_SOLVE__WITH_MAX_DEPTH
     int max_depth;
+#endif
     fcs_int_limit_t max_num_checked_states;
     fcs_int_limit_t trim_states_in_collection_from;
 

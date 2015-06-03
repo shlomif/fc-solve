@@ -1835,13 +1835,15 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
 }
 
 void DLLEXPORT freecell_solver_user_limit_depth(
-    void * api_instance,
-    int max_depth
+    void * const api_instance GCC_UNUSED,
+    const int max_depth GCC_UNUSED
 )
 {
+#ifdef FC_SOLVE__WITH_MAX_DEPTH
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->active_flare->obj.max_depth = max_depth;
+#endif
 }
 
 int DLLEXPORT freecell_solver_user_get_max_num_freecells(void)
