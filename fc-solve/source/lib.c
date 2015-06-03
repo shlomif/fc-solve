@@ -2209,12 +2209,12 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
 }
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(
-    void * api_instance
+    void * const api_instance
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fc_solve_soft_thread_t * soft_thread = fc_solve_new_soft_thread(user->soft_thread->hard_thread);
+    fc_solve_soft_thread_t * const soft_thread = fc_solve_new_soft_thread(user->soft_thread->hard_thread);
 
     if (soft_thread == NULL)
     {
@@ -2237,7 +2237,7 @@ extern void DLLEXPORT freecell_solver_user_set_soft_thread_step(
 }
 
 int DLLEXPORT freecell_solver_user_next_hard_thread(
-    void * api_instance
+    void * const api_instance
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2264,8 +2264,8 @@ int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
 }
 
 void DLLEXPORT freecell_solver_user_set_calc_real_depth(
-    void * api_instance,
-    int calc_real_depth
+    void * const api_instance,
+    const int calc_real_depth
 )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2452,13 +2452,13 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 }
 
 int DLLEXPORT freecell_solver_user_next_instance(
-    void * api_instance
+    void * const api_instance
     )
 {
     return user_next_instance((fcs_user_t *)api_instance);
 }
 
-static int user_next_flare(fcs_user_t * user)
+static int user_next_flare(fcs_user_t * const user)
 {
     fcs_instance_item_t * const instance_item = get_current_instance_item(user);
 
@@ -2531,14 +2531,14 @@ static int user_next_instance(
 }
 
 int DLLEXPORT freecell_solver_user_next_flare(
-    void * api_instance
+    void * const api_instance
     )
 {
     return user_next_flare((fcs_user_t *)api_instance);
 }
 
 
-int DLLEXPORT freecell_solver_user_reset(void * api_instance)
+int DLLEXPORT freecell_solver_user_reset(void * const api_instance)
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
@@ -2578,19 +2578,18 @@ DLLEXPORT const char * freecell_solver_user_get_last_error_string(
 
 
 int DLLEXPORT freecell_solver_user_set_cache_limit(
-    void * api_instance,
-    long limit
+    void * const api_instance,
+    const long limit
     )
 {
 #ifndef FCS_RCS_STATES
     return 0;
 #else
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
     if (limit <= 0)
     {
         return -1;
     }
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     FLARES_LOOP_START()
         flare->obj.rcs_states_cache.max_num_elements_in_cache = limit;
