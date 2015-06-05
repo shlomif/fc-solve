@@ -2045,15 +2045,14 @@ break;
                     RET_ERROR_IN_ARG() ;
                 }
                 char * fcs_user_errstr;
-                const int ret = freecell_solver_user_set_patsolve_x_param(
+                if (freecell_solver_user_set_patsolve_x_param(
                     instance,
                     position,
                     x_param_val,
                     &fcs_user_errstr
-                );
-                if (ret != 0)
+                ) != 0)
                 {
-                    char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
                     sprintf(
                             errstr,
                             "Error in patsolve X param setting!\n%s\n",
@@ -2083,15 +2082,14 @@ break;
                     RET_ERROR_IN_ARG() ;
                 }
                 char * fcs_user_errstr;
-                const int ret = freecell_solver_user_set_patsolve_y_param(
+                if (freecell_solver_user_set_patsolve_y_param(
                     instance,
                     position,
                     y_param_val,
                     &fcs_user_errstr
-                );
-                if (ret != 0)
+                ) != 0)
                 {
-                    char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
                     sprintf(
                             errstr,
                             "Error in patsolve Y param setting!\n%s\n",

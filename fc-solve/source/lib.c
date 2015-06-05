@@ -1482,10 +1482,10 @@ int DLLEXPORT freecell_solver_user_get_current_depth(
 }
 
 extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
-    void * api_instance,
+    void * const api_instance,
     const int position,
     const int x_param_val,
-    char * * error_string
+    char * * const error_string
     )
 {
 #ifndef FCS_DISABLE_PATSOLVE
@@ -2288,15 +2288,15 @@ void DLLEXPORT freecell_solver_user_set_soft_thread_name(
 }
 
 void DLLEXPORT freecell_solver_user_set_flare_name(
-    void * api_instance,
-    freecell_solver_str_t name
+    void * const api_instance,
+    const freecell_solver_str_t const name
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fcs_instance_item_t * const instance_item = get_current_instance_item(user);
 
-    fcs_flare_item_t * flare = &(instance_item->flares[instance_item->num_flares-1]);
+    fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->num_flares-1]);
 
     if (flare->name != NULL)
     {
@@ -2309,18 +2309,17 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
 }
 
 int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
-    void * api_instance,
-    const char * prelude
+    void * const api_instance,
+    const char * const prelude
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fc_solve_hard_thread_t * hard_thread = user->soft_thread->hard_thread;
+    fc_solve_hard_thread_t * const hard_thread = user->soft_thread->hard_thread;
 
     if (hard_thread->prelude_as_string != NULL)
     {
-        free(hard_thread->prelude_as_string);
-        hard_thread->prelude_as_string = NULL;
+        free (hard_thread->prelude_as_string);
     }
     hard_thread->prelude_as_string = strdup(prelude);
 
@@ -2328,8 +2327,8 @@ int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
 }
 
 int DLLEXPORT freecell_solver_user_set_flares_plan(
-    void * api_instance,
-    const char * flares_plan_string
+    void * const api_instance,
+    const char * const flares_plan_string
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2376,9 +2375,9 @@ void DLLEXPORT freecell_solver_user_recycle(
 }
 
 int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
-    void * api_instance,
-    const char * tests_order,
-    char * * error_string
+    void * const api_instance,
+    const char * const tests_order,
+    char * * const error_string
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2387,7 +2386,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 
     STRUCT_CLEAR_FLAG(&(user->active_flare->obj), FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 
-    int ret =
+    const int ret =
         fc_solve_apply_tests_order(
             &(user->active_flare->obj.opt_tests_order),
             tests_order,
@@ -2648,8 +2647,8 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
 }
 
 DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
-    void * api_instance,
-    double new_factor
+    void * const api_instance,
+    const double new_factor
 )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
