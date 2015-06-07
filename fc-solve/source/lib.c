@@ -2430,8 +2430,8 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(
 
 
 void DLLEXPORT freecell_solver_user_set_reparent_states(
-    void * api_instance,
-    int to_reparent_states
+    void * const api_instance,
+    const int to_reparent_states
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2441,8 +2441,8 @@ void DLLEXPORT freecell_solver_user_set_reparent_states(
 }
 
 void DLLEXPORT freecell_solver_user_set_scans_synergy(
-    void * api_instance,
-    int synergy
+    void * const api_instance,
+    const int synergy
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;

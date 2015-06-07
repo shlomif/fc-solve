@@ -1697,20 +1697,16 @@ break;
 
         case FCS_OPT_OPTIMIZATION_TESTS_ORDER: /* STRINGS=-opt-to|--optimization-tests-order; */
         {
-            int ret;
-            char * fcs_user_errstr;
-
             PROCESS_OPT_ARG() ;
 
-            ret = freecell_solver_user_set_optimization_scan_tests_order(
+            char * fcs_user_errstr;
+            if (freecell_solver_user_set_optimization_scan_tests_order(
                     instance,
                     (*arg),
                     &fcs_user_errstr
-                    );
-
-            if (ret != 0)
+                    ) != 0)
             {
-                char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
                 sprintf(
                     errstr,
                     "Error in the optimization scan's tests' order!\n%s\n",
@@ -1970,20 +1966,16 @@ break;
 
         case FCS_OPT_SET_PRUNING: /* STRINGS=-sp|--set-pruning; */
         {
-            int ret;
-            char * fcs_user_errstr;
-
             PROCESS_OPT_ARG() ;
 
-            ret = freecell_solver_user_set_pruning(
+            char * fcs_user_errstr;
+            if (freecell_solver_user_set_pruning(
                     instance,
                     (*arg),
                     &fcs_user_errstr
-                    );
-
-            if (ret != 0)
+                    ) != 0)
             {
-                char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
                 sprintf(
                     errstr,
                     "Error in the optimization scan's pruning!\n%s\n",
