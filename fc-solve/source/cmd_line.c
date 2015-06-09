@@ -1504,15 +1504,15 @@ break;
             {
                 method = FCS_METHOD_RANDOM_DFS;
             }
+#ifndef FCS_DISABLE_PATSOLVE
             else if (!strcmp((*arg), "patsolve"))
             {
                 method = FCS_METHOD_PATSOLVE;
             }
+#endif
             else
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, strlen((*arg))+500);
+                char * const errstr = SMALLOC(errstr, strlen((*arg))+500);
 
                 sprintf(
                     errstr,

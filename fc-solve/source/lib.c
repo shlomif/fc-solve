@@ -1541,8 +1541,8 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
 }
 
 void DLLEXPORT freecell_solver_user_set_solving_method(
-    void * api_instance,
-    int method
+    void * const api_instance,
+    const int method
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -1552,7 +1552,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 
     if (method == FCS_METHOD_HARD_DFS)
     {
-        method = FCS_METHOD_SOFT_DFS;
+        return freecell_solver_user_set_solving_method(api_instance, FCS_METHOD_SOFT_DFS);
     }
 
     switch ((soft_thread->method = method))
@@ -1788,8 +1788,8 @@ int DLLEXPORT freecell_solver_user_get_moves_left(void * const api_instance)
 }
 
 void DLLEXPORT freecell_solver_user_set_solution_optimization(
-    void * api_instance,
-    int optimize
+    void * const api_instance,
+    const int optimize
 )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2227,8 +2227,8 @@ int DLLEXPORT freecell_solver_user_next_soft_thread(
 }
 
 extern void DLLEXPORT freecell_solver_user_set_soft_thread_step(
-    void * api_instance,
-    int num_checked_states_step
+    void * const api_instance,
+    const int num_checked_states_step
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
