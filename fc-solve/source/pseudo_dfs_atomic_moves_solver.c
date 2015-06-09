@@ -345,7 +345,6 @@ int main(int argc, char * argv[])
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
-    fcs_state_keyval_pair_t init_state_pair;
     fcs_cache_key_t * init_state_ptr;
 
     FILE * fh = fopen(filename, "r");
@@ -359,6 +358,7 @@ int main(int argc, char * argv[])
     fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE-1, fh);
     fclose(fh);
 
+    fcs_state_keyval_pair_t init_state_pair;
     fc_solve_initial_user_state_to_c(user_state, &init_state_pair, FREECELLS_NUM, STACKS_NUM, 1, NULL);
 
     init_state_ptr = &(init_state_pair);

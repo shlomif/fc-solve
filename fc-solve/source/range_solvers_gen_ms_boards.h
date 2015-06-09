@@ -57,7 +57,7 @@ static GCC_INLINE microsoft_rand_uint_t microsoft_rand_randp(microsoft_rand_t * 
     return ((*my_rand) >> 16) & 0xffff;
 }
 
-static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_rand_t * seedx_ptr, long long gnGameNumber)
+static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_rand_t * const seedx_ptr, const long long gnGameNumber)
 {
     if (gnGameNumber < 0x100000000LL)
     {

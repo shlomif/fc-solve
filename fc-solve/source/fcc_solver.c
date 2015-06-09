@@ -290,7 +290,6 @@ static fcc_status_t instance_run_solver(
 )
 {
     fc_solve_delta_stater_t * delta;
-    fcs_encoded_state_buffer_t init_state_enc;
     fcs_fcc_solver_state * solver_state;
     fcs_fcc_collection_by_depth * fcc_stage;
     fcs_fully_connected_component_t * fcc;
@@ -320,6 +319,7 @@ static fcc_status_t instance_run_solver(
 #endif
     );
 
+    fcs_encoded_state_buffer_t init_state_enc;
     fcs_init_and_encode_state(
         delta, local_variant, init_state, &init_state_enc
     );
