@@ -144,23 +144,21 @@ void fc_solve_canonize_state(
 
 
 void fc_solve_canonize_state_with_locs(
-    fcs_kv_state_t * state,
+    fcs_kv_state_t * const state,
 #define state_key (state->key)
-    fcs_state_locs_struct_t * locs,
-    int freecells_num,
-    int stacks_num)
+    fcs_state_locs_struct_t * const locs,
+    const int freecells_num,
+    const int stacks_num)
 {
-    int b,c;
-
     DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
     fcs_locs_t temp_loc;
 
     /* Insertion-sort the stacks */
 
-    for(b=1;b<stacks_num;b++)
+    for ( int b=1 ; b < stacks_num ; b++)
     {
-        c = b;
+        int c = b;
         while(
             (c>0)    &&
             ((STACK_COMPARE(
@@ -185,9 +183,9 @@ void fc_solve_canonize_state_with_locs(
 
     /* Insertion-sort the freecells */
 
-    for(b=1;b<freecells_num;b++)
+    for (int b=1 ; b < freecells_num ; b++)
     {
-        c = b;
+        int c = b;
 
         while(
             (c>0)    &&

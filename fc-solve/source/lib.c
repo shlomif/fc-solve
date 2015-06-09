@@ -1118,7 +1118,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             fcs_kv_state_t state_pass = FCS_STATE_keyval_pair_to_kv(&(user->state));
             /* running_state and initial_non_canonized_state are
-             * normalized state. So We're duplicating
+             * normalized states. So We're duplicating
              * state to it before state state_pass is canonized.
              * */
             {
