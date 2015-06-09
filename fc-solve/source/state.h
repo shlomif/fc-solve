@@ -513,11 +513,10 @@ typedef struct {
     fcs_state_extra_info_t * val;
 } fcs_kv_state_t;
 
-static GCC_INLINE void
-FCS_STATE_keyval_pair_to_kv(fcs_kv_state_t * ret, fcs_state_keyval_pair_t * s)
+static GCC_INLINE const fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(fcs_state_keyval_pair_t * const s)
 {
-    ret->key = &(s->s);
-    ret->val = &(s->info);
+    const fcs_kv_state_t ret = {.key = &(s->s), .val = &(s->info)};
+    return ret;
 }
 
 /*
@@ -574,7 +573,7 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 #define FCS_STATE_keyval_pair_to_collectible(s) (s)
 #define FCS_STATE_kv_to_collectible(s) ((fcs_collectible_state_t *)((s)->key))
 
-#define FCS_STATE_collectible_to_kv(ret,s) FCS_STATE_keyval_pair_to_kv((ret),(s))
+#define FCS_STATE_collectible_to_kv(ret,s) (*(ret)) = FCS_STATE_keyval_pair_to_kv((s))
 
 #endif
 

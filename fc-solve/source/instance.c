@@ -563,10 +563,8 @@ extern void fc_solve_trace_solution(
 #define FCS_S_FC_LOCS(s) (locs->fc_locs)
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 
-        fcs_kv_state_t dynamic_state;
-        FCS_STATE_keyval_pair_to_kv(&(dynamic_state), &(s_and_info));
-        fcs_kv_state_t state_copy_ptr;
-        FCS_STATE_keyval_pair_to_kv(&(state_copy_ptr), instance->state_copy_ptr);
+        fcs_kv_state_t dynamic_state = FCS_STATE_keyval_pair_to_kv(&(s_and_info));
+        fcs_kv_state_t state_copy_ptr = FCS_STATE_keyval_pair_to_kv(instance->state_copy_ptr);
 
         fcs_duplicate_kv_state( &(dynamic_state), &(state_copy_ptr) );
 
