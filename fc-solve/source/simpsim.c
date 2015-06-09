@@ -154,7 +154,7 @@ static char * get_the_positions_by_rank_data__ss_generator(
 }
 
 #define CALC_POSITIONS_BY_RANK() \
-    char * positions_by_rank = \
+    const char * const positions_by_rank = \
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
             ptr_state_key, \

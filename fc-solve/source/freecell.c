@@ -335,7 +335,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 }
 
 #define CALC_POSITIONS_BY_RANK() \
-    char * positions_by_rank = \
+    const char * const positions_by_rank = \
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
             ptr_state_key, \

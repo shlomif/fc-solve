@@ -36,6 +36,9 @@ extern "C" {
 #include "config.h"
 #include "instance.h"
 
+#include "inline.h"
+#include "likely.h"
+
 /* We need 2 chars per card - one for the column_idx and one
  * for the card_idx.
  *
@@ -51,14 +54,61 @@ extern char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
     const fcs_state_t * const ptr_state_key
 );
 
-extern char * fc_solve_get_the_positions_by_rank_data(
-        fc_solve_soft_thread_t * const soft_thread,
-        const fcs_state_t * const ptr_state_key,
-        char * (*generator)(
-            fc_solve_soft_thread_t * const soft_thread,
-            const fcs_state_t * const ptr_state_key
-        )
+static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
+    fc_solve_soft_thread_t * const soft_thread
+)
+{
+    if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
+    {
+        return &(
+            DFS_VAR(soft_thread, soft_dfs_info)[
+            DFS_VAR(soft_thread, depth)
+            ].positions_by_rank
         );
+    }
+    else
+    {
+        return &(
+            BEFS_M_VAR(soft_thread, befs_positions_by_rank)
+        );
+    }
+}
+
+/*
+ * fc_solve_get_the_positions_by_rank_data() :
+ *
+ * calculate, cache and return the positions_by_rank meta-data
+ * about the currently-evaluated state.
+ *
+ */
+static GCC_INLINE const char * const fc_solve_get_the_positions_by_rank_data(
+    fc_solve_soft_thread_t * const soft_thread,
+    const fcs_state_t * const ptr_state_key,
+    char * (*generator)(
+        fc_solve_soft_thread_t * const soft_thread,
+        const fcs_state_t * const ptr_state_key
+    )
+)
+{
+    char * * const positions_by_rank_location =
+        fc_solve_calc_positions_by_rank_location(soft_thread);
+
+#ifdef DEBUG
+    if (getenv("FCS_TRACE"))
+    {
+        printf("%s\n", "Verify Quux");
+        fflush(stdout);
+    }
+    VERIFY_STATE_SANITY();
+#endif
+
+    if (unlikely(! *positions_by_rank_location))
+    {
+        *positions_by_rank_location = generator(soft_thread, ptr_state_key);
+    }
+
+    return *positions_by_rank_location;
+}
 
 extern int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * const hard_thread,
