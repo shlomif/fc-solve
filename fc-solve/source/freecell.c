@@ -376,10 +376,9 @@ static GCC_INLINE int empty_two_cols_from_new_state(
             const char * pos_idx_to_check = &positions_by_rank[ \
                 (FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card))) \
             ]; \
-            const char * last_pos_idx; \
+            const char * const last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH; \
                  \
-            for (last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH, \
-                 pos_idx_to_check += FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card) \
+            for ( pos_idx_to_check += FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card) \
                 ; \
                 pos_idx_to_check < last_pos_idx \
                 ; \
@@ -713,7 +712,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                                 cols_indexes[1] = -1;
                                 cols_indexes[2] = -1;
 
-                                int last_dest = empty_two_cols_from_new_state(
+                                const int last_dest = empty_two_cols_from_new_state(
                                     soft_thread,
                                     NEW_STATE_BY_REF(),
                                     moves,
@@ -748,9 +747,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                                 }
                                 else
                                 {
-                                    fcs_cards_column_t new_source_col;
-
-                                    new_source_col = fcs_state_get_col(new_state, source_index);
+                                    fcs_cards_column_t new_source_col = fcs_state_get_col(new_state, source_index);
 
                                     fcs_col_pop_card(new_source_col, moved_card);
 

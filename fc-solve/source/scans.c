@@ -256,7 +256,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         fcs_kv_state_t pass, src_pass;
 
         fcs_collectible_state_t temp_new_state_val;
-        fcs_internal_move_t * next_move, * moves_end;
+        fcs_internal_move_t * next_move;
 
         new_cache_state = parents_stack[parents_stack_len-1].new_cache_state;
 
@@ -270,7 +270,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
         fcs_duplicate_state( &pass, &src_pass);
 
-        moves_end =
+        fcs_internal_move_t * const moves_end =
         (
             (next_move = stack_ptr_this_state_val->moves_to_parent->moves)
             +
@@ -787,9 +787,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
                         new_pass.val = derived_iter->state_ptr
                 );
 #else
-            FCS_SCANS_ptr_new_state = derived_iter->state_ptr;
-            new_pass.key = &(FCS_SCANS_ptr_new_state->s);
-            new_pass.val = &(FCS_SCANS_ptr_new_state->info);
+            new_pass = FCS_STATE_keyval_pair_to_kv(FCS_SCANS_ptr_new_state = derived_iter->state_ptr);
 #endif
 
             if (method == FCS_METHOD_A_STAR)

@@ -259,7 +259,7 @@ static void instance_time_printf(
 #define STEP (instance->positions_milestone_step)
 
 static GCC_INLINE void instance_print_processed_FCCs(
-    fcs_dbm_solver_instance_t * instance
+    fcs_dbm_solver_instance_t * const instance
     )
 {
     instance_time_printf(
@@ -271,7 +271,7 @@ static GCC_INLINE void instance_print_processed_FCCs(
 }
 
 static GCC_INLINE void instance_print_reached(
-    fcs_dbm_solver_instance_t * instance
+    fcs_dbm_solver_instance_t * const instance
     )
 {
     instance_time_printf(
@@ -383,7 +383,6 @@ static fcc_status_t instance_run_solver(
         {
             fcs_FCC_start_point_t * start_point_iter;
             fcs_FCC_start_points_list_t next_start_points_list;
-            fcs_bool_t is_fcc_new;
             fcs_encoded_state_buffer_t min_by_sorting;
             long num_new_positions;
             add_start_point_context_t add_start_point_context;
@@ -402,6 +401,7 @@ static fcc_status_t instance_run_solver(
             add_start_point_context.next_start_points_list = &next_start_points_list;
             add_start_point_context.moves_list_allocator = moves_list_allocator;
 
+            fcs_bool_t is_fcc_new;
             /* Now scan the new fcc */
             perform_FCC_brfs(
                 local_variant,
@@ -489,7 +489,6 @@ static fcc_status_t instance_run_solver(
                  start_point_iter = start_point_iter->next
                 )
             {
-                int num_additional_moves;
                 fcs_state_keyval_pair_t state;
                 fcs_encoded_state_buffer_t enc_state;
                 fcs_fcc_collection_by_depth * next_fcc_stage;
@@ -504,7 +503,7 @@ static fcc_status_t instance_run_solver(
                 );
                 /* Perform Horne's Prune on the position to see where it ends up at. */
                 /*  TODO : convert horne_prune to fcs_fcc_moves_seq_t . */
-                num_additional_moves =
+                const int num_additional_moves =
                     horne_prune(
                         local_variant,
                         &state,

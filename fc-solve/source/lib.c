@@ -841,7 +841,7 @@ static void recycle_instance(
 #ifndef FCS_USE_COMPACT_MOVE_TOKENS
 #define internal_move_to_user_move(x) (x)
 #else
-static GCC_INLINE fcs_move_t internal_move_to_user_move(fcs_internal_move_t internal_move)
+static GCC_INLINE const fcs_move_t internal_move_to_user_move(const fcs_internal_move_t internal_move)
 {
     fcs_move_t user_move;
 
@@ -996,7 +996,7 @@ static GCC_INLINE const flare_iters_quota_t normalize_iters_quota(
 }
 
 int DLLEXPORT freecell_solver_user_resume_solution(
-    void * api_instance
+    void * const api_instance
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;

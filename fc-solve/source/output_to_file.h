@@ -93,7 +93,6 @@ static GCC_INLINE void fc_solve_output_result_to_file(
             fcs_move_t move;
             FILE * move_dump;
             char * as_string;
-            int move_num = 0;
 
             move_dump = output_fh;
 
@@ -114,6 +113,7 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                 fprintf(move_dump, "%s", "\n====================\n\n");
             }
 
+            int move_num = 0;
             while (
                     freecell_solver_user_get_next_move(
                         instance,

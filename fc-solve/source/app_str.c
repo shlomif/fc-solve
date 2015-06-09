@@ -36,8 +36,8 @@
 #include "app_str.h"
 
 void fc_solve_append_string_sprintf(
-    fc_solve_append_string_t * app_str,
-    const char * format,
+    fc_solve_append_string_t * const app_str,
+    const char * const format,
     ...
     )
 {

@@ -120,29 +120,29 @@ void fc_solve_moves_processed_gen(
 #ifndef NDEBUG
     int virtual_freecell_len[12];
 #endif
-    int i, j, move_idx, num_back_end_moves;
+    int i, j, move_idx;
     fcs_move_t move, out_move, * next_move_ptr;
 
-    num_back_end_moves = moves_seq->num_moves;
+    const int num_back_end_moves = moves_seq->num_moves;
     next_move_ptr = moves_seq->moves;
 
     ret->num_moves = 0;
     ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);
     ret->next_move_idx = 0;
 
-    for(i=0;i<8;i++)
+    for ( i = 0 ; i < 8 ; i++)
     {
         fcs_cards_column_t col = fcs_state_get_col(pos, i);
         virtual_stack_len[i] = fcs_col_len(col);
     }
 #ifndef NDEBUG
-    for(i=0;i<num_freecells;i++)
+    for ( i=0 ; i < num_freecells ; i++)
     {
         virtual_freecell_len[i] = (! fcs_freecell_is_empty(pos, i)) ? 1 : 0;
     }
 #endif
 
-    for(move_idx=0; move_idx < num_back_end_moves ; move_idx ++)
+    for ( move_idx=0 ; move_idx < num_back_end_moves ; move_idx ++)
     {
         /*
          * Move safe cards to the foundations

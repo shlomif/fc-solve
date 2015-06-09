@@ -934,17 +934,15 @@ extern void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t * const soft_thread
 );
 
-static GCC_INLINE void * memdup(void * src, size_t mysize)
+static GCC_INLINE void * memdup(const void * const src, const size_t my_size)
 {
-    void * dest;
-
-    dest = malloc(mysize);
+    void * const dest = malloc(my_size);
     if (dest == NULL)
     {
         return NULL;
     }
 
-    memcpy(dest, src, mysize);
+    memcpy(dest, src, my_size);
 
     return dest;
 }
