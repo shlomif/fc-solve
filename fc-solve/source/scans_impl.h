@@ -104,9 +104,10 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
         normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] / (LOCAL_DECKS_NUM*52);
 
     double out_sum = 0.0;
+    typeof( weighting->num_cards_out_lookup_table[0] ) * const num_cards_out_lookup_table = weighting->num_cards_out_lookup_table;
     for (int i=0 ; i <= 13 ; i++, out_sum += num_cards_out_factor)
     {
-        weighting->num_cards_out_lookup_table[i] = out_sum;
+        num_cards_out_lookup_table[i] = out_sum;
     }
 
     weighting->max_sequence_move_factor =
@@ -228,12 +229,13 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     fc_solve_seq_cards_power_type_t seqs_over_renegade_cards = 0;
 
     double sum = (max(0, negated_depth) * weighting->depth_factor);
-    if (weighting->num_cards_out_lookup_table[1])
+    typeof( weighting->num_cards_out_lookup_table[0] ) * const num_cards_out_lookup_table = weighting->num_cards_out_lookup_table;
+    if (num_cards_out_lookup_table[1])
     {
         const int num_founds = (LOCAL_DECKS_NUM<<2);
         for (int found_idx = 0 ; found_idx < num_founds ; found_idx++)
         {
-            sum += weighting->num_cards_out_lookup_table[(int)(fcs_foundation_value((*state), found_idx))];
+            sum += num_cards_out_lookup_table[(int)(fcs_foundation_value((*state), found_idx))];
         }
     }
 

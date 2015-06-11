@@ -196,7 +196,7 @@ static GCC_INLINE void fc_solve_pq_pop(
     *val = Elements[PQ_FIRST_ENTRY].val;
 
     /* get pointer to last element in tree */
-    pq_element_t pLastElement = Elements[ CurrentSize-- ];
+    pq_element_t last_elem = Elements[ CurrentSize-- ];
 
     /* code to pop an element from an ascending (top to bottom) pqueue */
 
@@ -212,7 +212,7 @@ static GCC_INLINE void fc_solve_pq_pop(
             child ++;
         }
 
-        if( fcs_pq_rating( pLastElement ) < fcs_pq_rating( Elements[ child ] ) )
+        if( fcs_pq_rating( last_elem ) < fcs_pq_rating( Elements[ child ] ) )
         {
             Elements[ i ] = Elements[ child ];
         }
@@ -222,7 +222,7 @@ static GCC_INLINE void fc_solve_pq_pop(
         }
     }
 
-    Elements[i] = pLastElement;
+    Elements[i] = last_elem;
     pq->CurrentSize = CurrentSize;
 
 

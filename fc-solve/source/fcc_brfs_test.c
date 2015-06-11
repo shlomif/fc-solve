@@ -255,7 +255,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         const char * * min_states,
         /* NULL-terminated */
         const char * * states_in_cache,
-        fcs_bool_t * out_is_fcc_new
+        fcs_bool_t * const out_is_fcc_new
         )
 {
     fcs_state_keyval_pair_t init_state;

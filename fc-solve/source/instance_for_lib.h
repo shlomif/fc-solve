@@ -380,9 +380,9 @@ static GCC_INLINE fcs_state_t * rcs_states_get_state(
     );
 }
 
-static int fc_solve_rcs_states_compare(const void * const void_a, const void * const void_b, void * const param)
+static int fc_solve_rcs_states_compare(const void * const void_a, const void * const void_b, void * const context)
 {
-    fc_solve_instance_t * const instance = (fc_solve_instance_t *)param;
+    fc_solve_instance_t * const instance = (fc_solve_instance_t *)context;
 
     return fc_solve_state_compare(
         rcs_states_get_state(instance, (fcs_collectible_state_t *)void_a),

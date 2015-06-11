@@ -429,9 +429,7 @@ static int cmd_line_callback(
     }
     else if (IS_ARG("-h") || IS_ARG("--help"))
     {
-        const char * help_key;
-
-        help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
+        const char * help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
         if (help_key == NULL)
         {
             help_key = "summary";

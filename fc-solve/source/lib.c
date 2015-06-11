@@ -779,7 +779,6 @@ int DLLEXPORT freecell_solver_user_solve_board(
 }
 
 static GCC_INLINE void recycle_flare(
-    fcs_user_t * const user,
     fcs_flare_item_t * const flare
 )
 {
@@ -810,7 +809,7 @@ static void recycle_instance(
 
         if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
-            recycle_flare(user, flare);
+            recycle_flare( flare );
             /*
              * We have to initialize init_num_checked_states to 0 here, because it may
              * not get initialized again, and now the num_checked_states of the instance
@@ -945,7 +944,7 @@ static void trace_flare_solution(
     flare->obj_stats.num_checked_states = flare->obj.num_checked_states;
     flare->obj_stats.num_states_in_collection = flare->obj.num_states_in_collection;
 
-    recycle_flare(user, flare);
+    recycle_flare( flare );
     flare->was_solution_traced = TRUE;
 }
 

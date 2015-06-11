@@ -135,7 +135,6 @@ typedef struct
     enum TERMINATE_REASON should_terminate;
 #ifdef FCS_DBM_WITHOUT_CACHES
     fcs_dbm_record_t * queue_solution_ptr;
-    fcs_dbm_record_t physical_queue_solution;
 #else
     fcs_encoded_state_buffer_t queue_solution;
 

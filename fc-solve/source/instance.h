@@ -1012,7 +1012,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 );
 
 extern int fc_solve_compare_lru_cache_keys(
-    const void * void_a, const void * void_b, void * param
+    const void * const void_a, const void * const void_b, void * const context
 );
 
 #endif
