@@ -23,25 +23,31 @@ function test_idx(idx)
 
             var instance = new FC_Solve({
                 cmd_line_preset: preset,
-                should_expand_moves: true,
                 set_status_callback: function () { return; },
-                set_output: function (buffer) {
-                    success = true;
-                    // TEST
-                    if (buffer != data.ret_text) {
-                        $("#ajax_out").val(data.ret_text);
-                        $("#js_fcs_out").val(buffer);
-                        alert("Results mismatch for idx " + idx);
-                        success = false;
-                        throw ("Results mismatch: idx=" + idx);
-                    }
-                },
             });
 
             var solve_err_code = instance.do_solve(deal_ms_fc_board(idx));
 
             while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
                 solve_err_code = instance.resume_solution();
+            }
+
+            if (solve_err_code == FCS_STATE_WAS_SOLVED) {
+                instance.display_expanded_moves_solution(
+                    {
+                        output_cb: function (buffer) {
+                            success = true;
+                            // TEST
+                            if (buffer != data.ret_text) {
+                                $("#ajax_out").val(data.ret_text);
+                                $("#js_fcs_out").val(buffer);
+                                alert("Results mismatch for idx " + idx);
+                                success = false;
+                                throw ("Results mismatch: idx=" + idx);
+                            }
+                        }
+                    }
+                );
             }
 
             // TEST
