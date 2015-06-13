@@ -2266,7 +2266,7 @@ void DLLEXPORT freecell_solver_user_set_calc_real_depth(
 
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     void * const api_instance,
-    const freecell_solver_str_t const name
+    const freecell_solver_str_t name
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2280,7 +2280,7 @@ void DLLEXPORT freecell_solver_user_set_soft_thread_name(
 
 void DLLEXPORT freecell_solver_user_set_flare_name(
     void * const api_instance,
-    const freecell_solver_str_t const name
+    const freecell_solver_str_t name
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;

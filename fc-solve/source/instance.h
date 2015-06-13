@@ -910,8 +910,6 @@ struct fc_solve_soft_thread_struct
 #define BEFS_M_VAR(soft_thread,var) (soft_thread)->method_specific.befs.var
 #define BRFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.brfs.var
 
-typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
-
 /*
  * An enum that specifies the meaning of each BeFS weight.
  * */
@@ -971,7 +969,10 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
 #ifndef FCS_FREECELL_ONLY
     const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
-    const typeof(&(instance->state_copy_ptr->s)) const s= &(instance->state_copy_ptr->s);
+    /* We cannot use typeof here because clang complains about double
+     * const.
+     * */
+    const fcs_state_t * const s = &(instance->state_copy_ptr->s);
 
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     for (int a = 0 ; a < INSTANCE_STACKS_NUM ; a++)
