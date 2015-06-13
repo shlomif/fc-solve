@@ -9987,35 +9987,52 @@ function test_js_fc_solve_class()
 {
     module("FC_Solve.Algorithmic");
 
+    var test_for_equal = function(instance, board, expected_sol, blurb) {
+
+        var success = false;
+
+        var solve_err_code = instance.do_solve(board);
+
+        while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
+            solve_err_code = instance.resume_solution();
+        }
+
+        if (solve_err_code == FCS_STATE_WAS_SOLVED) {
+            instance.display_solution(
+                {
+                    output_cb: function (buffer) {
+                        success = true;
+
+                        equal (buffer, expected_sol,
+                            blurb
+                        );
+                    }
+                }
+            );
+        }
+
+        return success;
+    };
+
     test("FC_Solve main test", function() {
         expect(3);
 
         // TEST
         ok (true, "True is, well, true.");
 
-        var success = false;
-
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
             set_status_callback: function () { return; },
-            set_output: function (buffer) {
-                success = true;
-                // TEST
-                equal (buffer, solution_for_deal_24__default,
-                    "Solution is right"
-                );
-            },
         });
 
-        var solve_err_code = instance.do_solve(ms_deal_24);
-
-        while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
-            solve_err_code = instance.resume_solution();
-        }
-
-        // TEST
-        ok (success, "do_solve was successful.");
-
+        // TEST*2
+        ok (test_for_equal(instance,
+                ms_deal_24,
+                solution_for_deal_24__default,
+                "Solution is right."
+                ),
+            "do_solve was successful."
+            );
     });
 
     test("FC_Solve unicoded solution", function() {
@@ -10030,56 +10047,38 @@ function test_js_fc_solve_class()
             is_unicode_cards: true,
             cmd_line_preset: 'default',
             set_status_callback: function () { return; },
-            set_output: function (buffer) {
-                success = true;
-
-                // TEST
-                equal (buffer,
-                    solution_for_deal_24__default__with_unicoded_suits,
-                    "Unicode Solution is right"
-                );
-            },
         });
 
-        var solve_err_code = instance.do_solve(ms_deal_24);
-
-        while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
-            solve_err_code = instance.resume_solution();
-        }
-
-        // TEST
-        ok (success, "do_solve was successful.");
-
+        // TEST*2
+        ok (test_for_equal(
+                instance,
+                ms_deal_24,
+                solution_for_deal_24__default__with_unicoded_suits,
+                "Unicoded solution was right"
+                ),
+            "do_solve was successful."
+        );
     });
 
     test("FC_Solve arbitrary parameters - Solve Simple Simon.", function() {
         expect(2);
-
-        var success = false;
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
             string_params: '-g simple_simon',
             dir_base: 'fcs1',
             set_status_callback: function () { return; },
-            set_output: function (buffer) {
-                success = true;
-                // TEST
-                equal (buffer, solution_for_pysol_simple_simon_deal_24__default,
-                    "Simple Simon Solution is right"
-                );
-            },
         });
 
-        var solve_err_code = instance.do_solve(pysol_simple_simon_deal_24);
-
-        while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
-            solve_err_code = instance.resume_solution();
-        }
-
-        // TEST
-        ok (success, "do_solve was successful.");
-
+        // TEST*2
+        ok (test_for_equal(
+                instance,
+                pysol_simple_simon_deal_24,
+                solution_for_pysol_simple_simon_deal_24__default,
+                "Simple Simon Solution is right"
+                ),
+            "do_solve was successful."
+        );
     });
 
     test("FC_Solve solve board without a trailing newline", function() {
@@ -10088,32 +10087,21 @@ function test_js_fc_solve_class()
         // TEST
         ok (true, "True is, well, true.");
 
-        var success = false;
-
         var instance = new FC_Solve({
             is_unicode_cards: true,
             cmd_line_preset: "as",
             set_status_callback: function () { return; },
-            set_output: function (buffer) {
-                success = true;
-
-                // TEST
-                equal (buffer,
-                    solution_for_board_without_trailing_newline,
-                    "Board without a trailing newline solution is right."
-                );
-            },
         });
 
-        var solve_err_code = instance.do_solve(board_without_trailing_newline);
-
-        while (solve_err_code == FCS_STATE_SUSPEND_PROCESS) {
-            solve_err_code = instance.resume_solution();
-        }
-
-        // TEST
-        ok (success, "do_solve for no trailing newline was successful.");
-
+        // TEST*2
+        ok (test_for_equal(
+                instance,
+                board_without_trailing_newline,
+                solution_for_board_without_trailing_newline,
+                "Board without a trailing newline solution is right."
+                ),
+            "do_solve was successful."
+        );
     });
 
     test("FC_Solve Expanded Moves test", function() {
@@ -10127,7 +10115,6 @@ function test_js_fc_solve_class()
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
             set_status_callback: function () { return; },
-            set_output: null,
         });
 
         var solve_err_code = instance.do_solve(ms_deal_24);

@@ -112,7 +112,15 @@ Class('FC_Solve_UI',
             },
             _handle_err_code: function() {
                 var that = this;
-                if (that._solve_err_code == FCS_STATE_SUSPEND_PROCESS
+                if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
+                    that._instance.display_solution(
+                        {
+                            output_cb: function(buffer) {
+                                return that._webui_set_output(buffer);
+                            }
+                        }
+                    );
+                } else if (that._solve_err_code == FCS_STATE_SUSPEND_PROCESS
                     && !that._was_iterations_count_exceeded) {
                     that._enqueue_resume();
                 }
@@ -155,9 +163,6 @@ Class('FC_Solve_UI',
                         return that._webui_set_status_callback(myclass, mylabel);
                     },
                     is_unicode_cards: that._is_unicode_suits_checked(),
-                    set_output: function(buffer) {
-                        return that._webui_set_output(buffer);
-                    },
                     dir_base: 'fcs_ui',
                     string_params: that._get_string_params(),
                 });

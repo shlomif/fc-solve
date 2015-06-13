@@ -51,7 +51,6 @@ Class('FC_Solve', {
         is_unicode_cards: { is: ro, init: false, },
         cmd_line_preset: { is: ro },
         current_iters_limit: { is: rw, init: 0 },
-        set_output: { is: ro },
         obj: {
             is: rw,
             init: function() {
@@ -105,8 +104,6 @@ Class('FC_Solve', {
              else if (solve_err_code == FCS_STATE_WAS_SOLVED) {
 
                  that.set_status("solved", "Solved");
-
-                 that.display_solution();
 
                  return;
              }
@@ -361,6 +358,8 @@ Class('FC_Solve', {
                 return;
             }
 
+            that._calc_states_and_moves_seq();
+
             var states_and_moves_sequence = that._pre_expand_states_and_moves_seq;
             var new_array = [states_and_moves_sequence[0]];
             for (var i = 1; i < states_and_moves_sequence.length - 1; i+=2) {
@@ -407,13 +406,15 @@ Class('FC_Solve', {
             );
             return;
         },
-        display_solution: function() {
+        display_solution: function(args) {
             var that = this;
+
+            var output_cb = args.output_cb;
 
             try {
                 that._calc_states_and_moves_seq();
                 that.set_status("solved", "Solved");
-                that._display_specific_sol(that.set_output, that._pre_expand_states_and_moves_seq);
+                that._display_specific_sol(output_cb, that._pre_expand_states_and_moves_seq);
             }
             catch (e) {
                 return;
