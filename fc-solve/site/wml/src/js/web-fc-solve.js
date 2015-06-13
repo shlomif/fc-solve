@@ -52,7 +52,6 @@ Class('FC_Solve', {
         cmd_line_preset: { is: ro },
         current_iters_limit: { is: rw, init: 0 },
         set_output: { is: ro },
-        should_expand_moves: { is: ro, init: false, },
         obj: {
             is: rw,
             init: function() {
@@ -68,6 +67,8 @@ Class('FC_Solve', {
                 return ret_obj;
             },
         },
+        _pre_expand_states_and_moves_seq: { is: rw, init: null },
+        _post_expand_states_and_moves_seq: { is: rw, init: null },
     },
     methods: {
         set_status: function (myclass, mylabel) {
@@ -289,108 +290,147 @@ Class('FC_Solve', {
 
             return that._replace_found(that._replace_card(out_buffer));
         },
+        _calc_states_and_moves_seq: function() {
+            var that = this;
+
+            if (that._pre_expand_states_and_moves_seq) {
+                return;
+            }
+
+            // A sequence to hold the moves and states for post-processing,
+            // such as expanding multi-card moves.
+            var states_and_moves_sequence = [];
+
+            var _out_state = function(s) {
+                states_and_moves_sequence.push({ type: 's', str: s});
+            };
+
+            var get_state_str = function () {
+                var ptr = freecell_solver_user_current_state_as_string(that.obj, 1, 0, 1);
+
+                if (ptr == 0) {
+                    alert ("Failed to retrieve the current state (out of memory?)");
+                    throw "Foo";
+                }
+                var ret_string = Module.Pointer_stringify(ptr);
+                c_free(ptr);
+                return ret_string;
+            };
+
+            _out_state (get_state_str() );
+
+            var move_ret_code;
+            // 128 bytes are enough to hold a move.
+            var move_buffer = malloc(128);
+
+            if (move_buffer == 0) {
+                alert ("Failed to allocate a buffer for the move (out of memory?)");
+                throw "Foo";
+            }
+
+            while ((move_ret_code = freecell_solver_user_get_next_move(that.obj, move_buffer)) == 0) {
+                var state_as_string = get_state_str();
+                var move_as_string_ptr = freecell_solver_user_move_ptr_to_string_w_state(that.obj, move_buffer, 0);
+
+                if (move_as_string_ptr == 0) {
+                    alert ("Failed to retrieve the current move as string (out of memory?)");
+                    throw "Foo";
+                }
+
+                var move_as_string = Module.Pointer_stringify(move_as_string_ptr);
+                c_free (move_as_string_ptr);
+
+                states_and_moves_sequence.push({ type: 'm', str: move_as_string});
+                _out_state(state_as_string);
+            }
+
+            that._pre_expand_states_and_moves_seq = states_and_moves_sequence;
+            that._post_expand_states_and_moves_seq = null;
+
+            // Cleanup C resources
+            c_free(move_buffer);
+            freecell_solver_user_free(that.obj);
+            that.obj = 0;
+
+            return;
+        },
+        _calc_expanded_seq: function() {
+            var that = this;
+
+            if (that._post_expand_states_and_moves_seq) {
+                return;
+            }
+
+            var states_and_moves_sequence = that._pre_expand_states_and_moves_seq;
+            var new_array = [states_and_moves_sequence[0]];
+            for (var i = 1; i < states_and_moves_sequence.length - 1; i+=2) {
+                Array.prototype.push.apply(new_array,
+                    fc_solve_expand_move(
+                        8,
+                        4,
+                        states_and_moves_sequence[i-1].str,
+                        states_and_moves_sequence[i],
+                        states_and_moves_sequence[i+1].str
+                    )
+                );
+                new_array.push(states_and_moves_sequence[i+1]);
+            }
+
+            that._post_expand_states_and_moves_seq = new_array;
+
+
+            return;
+        },
+        _display_specific_sol: function(output_cb, seq) {
+            var that = this;
+
+            var out_buffer = '';
+
+            var my_append = function (str) {
+                out_buffer = out_buffer + str;
+            };
+
+            my_append("-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+
+            seq.forEach(function (x) {
+                var t_ = x.type;
+                var str = x.str;
+                my_append ( str +
+                    (t_ == 's' ? "\n\n====================\n\n" : "\n\n")
+                );
+            });
+
+            output_cb(
+                that.unicode_preprocess(
+                    out_buffer.replace(remove_trailing_space_re, '')
+                )
+            );
+            return;
+        },
         display_solution: function() {
             var that = this;
 
             try {
-                // 128 bytes are enough to hold a move.
-                var move_buffer = malloc(128);
-
-                if (move_buffer == 0) {
-                    alert ("Failed to allocate a buffer for the move (out of memory?)");
-                    throw "Foo";
-                }
-
-                var get_state_str = function () {
-                    var ptr = freecell_solver_user_current_state_as_string(that.obj, 1, 0, 1);
-
-                    if (ptr == 0) {
-                        alert ("Failed to retrieve the current state (out of memory?)");
-                        throw "Foo";
-                    }
-                    var ret_string = Module.Pointer_stringify(ptr);
-                    c_free(ptr);
-                    return ret_string;
-                };
-
-                var out_buffer = '';
-
-                var my_append = function (str) {
-                    out_buffer = out_buffer + str;
-                };
-
-                my_append("-=-=-=-=-=-=-=-=-=-=-=-\n\n");
-
-
-                // A sequence to hold the moves and states for post-processing,
-                // such as expanding multi-card moves.
-                var states_and_moves_sequence = [];
-
-                var _out_state = function(s) {
-                    states_and_moves_sequence.push({ type: 's', str: s});
-                };
-
-                _out_state (get_state_str() );
-
-                var move_ret_code;
-                while ((move_ret_code = freecell_solver_user_get_next_move(that.obj, move_buffer)) == 0) {
-                    var state_as_string = get_state_str();
-                    var move_as_string_ptr = freecell_solver_user_move_ptr_to_string_w_state(that.obj, move_buffer, 0);
-
-                    if (move_as_string_ptr == 0) {
-                        alert ("Failed to retrieve the current move as string (out of memory?)");
-                        throw "Foo";
-                    }
-
-                    var move_as_string = Module.Pointer_stringify(move_as_string_ptr);
-                    c_free (move_as_string_ptr);
-
-                    states_and_moves_sequence.push({ type: 'm', str: move_as_string});
-                    _out_state(state_as_string);
-                }
-
-                if (that.should_expand_moves) {
-                    var new_array = [states_and_moves_sequence[0]];
-                    for (var i = 1; i < states_and_moves_sequence.length - 1; i+=2) {
-                        Array.prototype.push.apply(new_array,
-                            fc_solve_expand_move(
-                                8,
-                                4,
-                                states_and_moves_sequence[i-1].str,
-                                states_and_moves_sequence[i],
-                                states_and_moves_sequence[i+1].str
-                            )
-                        );
-                        new_array.push(states_and_moves_sequence[i+1]);
-                    }
-
-                    states_and_moves_sequence = new_array;
-                }
-
-                states_and_moves_sequence.forEach(function (x) {
-                    var t_ = x.type;
-                    var str = x.str;
-                    my_append ( str +
-                        (t_ == 's' ? "\n\n====================\n\n" : "\n\n")
-                    );
-                });
-                // Cleanup C resources
-                c_free(move_buffer);
-                freecell_solver_user_free(that.obj);
-                that.obj = 0;
-
+                that._calc_states_and_moves_seq();
                 that.set_status("solved", "Solved");
-
-                that.set_output(
-                    that.unicode_preprocess(
-                        out_buffer.replace(remove_trailing_space_re, '')
-                    )
-                );
-                return;
+                that._display_specific_sol(that.set_output, that._pre_expand_states_and_moves_seq);
             }
             catch (e) {
                 return;
             }
+
+            return;
+        },
+        display_expanded_moves_solution: function(args) {
+            var that = this;
+
+            var output_cb = args.output_cb;
+
+            that._calc_expanded_seq();
+            that.set_status("solved", "Solved");
+            that._display_specific_sol(output_cb, that._post_expand_states_and_moves_seq);
+
+            return;
         },
     },
 });

@@ -10126,15 +10126,8 @@ function test_js_fc_solve_class()
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
-            should_expand_moves: true,
             set_status_callback: function () { return; },
-            set_output: function (buffer) {
-                success = true;
-                // TEST
-                equal (buffer, solution_for_deal_24__expanded_moves,
-                    "Expanded-moves Solution is right"
-                );
-            },
+            set_output: null,
         });
 
         var solve_err_code = instance.do_solve(ms_deal_24);
@@ -10143,6 +10136,17 @@ function test_js_fc_solve_class()
             solve_err_code = instance.resume_solution();
         }
 
+        instance.display_expanded_moves_solution(
+            {
+                output_cb: function (buffer) {
+                    success = true;
+                    // TEST
+                    equal (buffer, solution_for_deal_24__expanded_moves,
+                        "Expanded-moves Solution is right"
+                    );
+                },
+            }
+        );
         // TEST
         ok (success, "do_solve was successful.");
 
