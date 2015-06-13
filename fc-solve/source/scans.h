@@ -93,15 +93,6 @@ static GCC_INLINE const char * const fc_solve_get_the_positions_by_rank_data(
     char * * const positions_by_rank_location =
         fc_solve_calc_positions_by_rank_location(soft_thread);
 
-#ifdef DEBUG
-    if (getenv("FCS_TRACE"))
-    {
-        printf("%s\n", "Verify Quux");
-        fflush(stdout);
-    }
-    VERIFY_STATE_SANITY();
-#endif
-
     if (unlikely(! *positions_by_rank_location))
     {
         *positions_by_rank_location = generator(soft_thread, ptr_state_key);
