@@ -10,9 +10,12 @@ RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 EMBED_FILE_MUNGE_PL = $(SRC_DIR)/scripts/emscripten-embed-munge.pl
 
-LIB_C_FILES = app_str.c scans.c lib.c preset.c instance.c move_funcs_order.c  move_funcs_maps.c meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c fcs_hash.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c rate_state.c hacks_for_hlls.c
+PATS_C_FILES = pat.c patsolve.c tree.c
+
+LIB_C_FILES = app_str.c scans.c lib.c preset.c instance.c move_funcs_order.c  move_funcs_maps.c meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c fcs_hash.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c rate_state.c hacks_for_hlls.c $(PATS_C_FILES)
 
 C_FILES = main.c $(LIB_C_FILES)
+
 
 SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
 LLVM_BITCODE_FILES = $(patsubst %.c,%.bc,$(C_FILES))
@@ -44,7 +47,7 @@ OPT_FLAGS = -O2
 # OPT_FLAGS = -O1
 # OPT_FLAGS =
 
-CFLAGS = $(OPT_FLAGS) -I . -m32 -std=gnu99
+CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/patsolve-shlomif/patsolve/ -m32 -std=gnu99
 
 EMCC_CFLAGS = -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 
@@ -73,6 +76,11 @@ $(RESULT_JS_LIB): llvm_and_files
 
 $(TEST_HTML): $(RESULT_HTML) $(PROCESS_PL)
 	perl $(PROCESS_PL) < $< > $@
+
+SRC_PATS_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(PATS_C_FILES))
+
+$(SRC_PATS_C_FILES): $(SRC_DIR)/%.c: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
+	cp -f $< $@
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_HTML) $(RESULT_NODE_JS_EXE)
