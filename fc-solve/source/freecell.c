@@ -646,18 +646,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
             /* Do not move cards that are already found above a suitable
              * parent */
-            /* TODO : is this code safe for variants that are not Freecell? */
-            fcs_bool_t should_perform_move = TRUE;
-            if (c != 0)
-            {
-                fcs_card_t prev_card = fcs_col_get_card(col, c-1);
-                if ((fcs_card_rank(prev_card) == fcs_card_rank(card)+1) &&
-                    ((fcs_card_suit(prev_card) & 0x1) != (fcs_card_suit(card) & 0x1)))
-                {
-                   should_perform_move = FALSE;
-                }
-            }
-            if (should_perform_move)
+            if ((c == 0) || (!fcs_is_parent_card(card, fcs_col_get_card(col, c-1))))
             {
 #define ds stack_idx
 #define dest_col col
@@ -665,7 +654,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                 /* Check if it can be moved to something on the same stack */
                 for (int dc = 0 ; dc < c-1 ; dc++)
                 {
-                    fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+                    const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
                     if (fcs_is_parent_card(card, dest_card))
                     {
                         /* Corresponding cards - see if it is feasible to move

@@ -38,6 +38,7 @@ extern "C" {
 
 #include "fcs_move.h"
 #include "fcs_limit.h"
+#include "fcs_enums.h"
 
 #include "inline.h"
 #include "bool.h"
@@ -263,34 +264,6 @@ typedef char fcs_locs_t;
 
 /* These are macros that are common to all three _STATES types. */
 
-/*
- * This macro determines if child can be placed above parent.
- *
- * The variable sequences_are_built_by has to be initialized to
- * the sequences_are_built_by member of the instance.
- *
- * */
-
-#ifdef FCS_FREECELL_ONLY
-
-#define fcs_is_parent_card(child, parent) \
-    ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) && \
-            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1)) \
-    )
-
-#else
-
-#define fcs_is_parent_card(child, parent) \
-    ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) && \
-    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ?   \
-        1 :                                                          \
-        ((sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ?   \
-            (fcs_card_suit(child) == fcs_card_suit(parent)) :     \
-            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1))   \
-        ))                \
-    )
-
-#endif
 
 #define fcs_col_get_rank(col, card_idx) \
     fcs_card_rank(fcs_col_get_card((col), (card_idx)))
@@ -1177,5 +1150,42 @@ static void GCC_INLINE set_scan_visited(fcs_collectible_state_t * const ptr_stat
     (FCS_S_SCAN_VISITED(ptr_state))[scan_id>>FCS_CHAR_BIT_SIZE_LOG2]
         |= (1 << ((scan_id)&((1<<(FCS_CHAR_BIT_SIZE_LOG2))-1)));
 }
+
+/*
+ * This macro determines if child can be placed above parent.
+ *
+ * The variable sequences_are_built_by has to be initialized to
+ * the sequences_are_built_by member of the instance.
+ *
+ * */
+
+#ifdef FCS_FREECELL_ONLY
+
+static GCC_INLINE const fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child, const fcs_card_t parent)
+{
+    return
+    ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) && \
+            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1)) \
+    );
+}
+#define fcs_is_parent_card(child, parent) fcs_is_parent_card__helper(child, parent)
+
+#else
+
+static GCC_INLINE const fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child, const fcs_card_t parent, const int sequences_are_built_by)
+{
+    return
+    ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) &&
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ?
+        TRUE :
+        ((sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ?
+            (fcs_card_suit(child) == fcs_card_suit(parent)) :
+            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1))
+        ))
+    );
+}
+#define fcs_is_parent_card(child, parent) fcs_is_parent_card__helper(child, parent, sequences_are_built_by)
+
+#endif
 
 #endif /* FC_SOLVE__STATE_H */
