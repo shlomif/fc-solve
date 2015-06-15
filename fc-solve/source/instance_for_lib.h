@@ -205,17 +205,18 @@ static GCC_INLINE void fc_solve__hard_thread__compile_prelude(
         {
             last_one = TRUE;
         }
-        char * const p_scan_copy = strndup(p_scan, p-p_scan);
+        char p_scan_copy[FCS_MAX_IDENT_LEN];
+        strncpy(p_scan_copy, p_scan, COUNT(p_scan_copy));
+        p_scan_copy[min(p-p_scan, COUNT(p_scan_copy)-1)] = '\0';
         p++;
 
         ST_LOOP_START()
         {
-            if (soft_thread->name && (!strcmp(soft_thread->name, p_scan_copy)))
+            if (!strcmp(soft_thread->name, p_scan_copy))
             {
                 break;
             }
         }
-        free (p_scan_copy);
         if (ST_LOOP__WAS_FINISHED())
         {
             free (prelude);

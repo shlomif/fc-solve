@@ -188,11 +188,6 @@ static GCC_INLINE void free_instance_soft_thread_callback(
 
     fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
 
-    if (likely(soft_thread->name != NULL))
-    {
-        free(soft_thread->name);
-    }
-
 #ifndef FCS_DISABLE_PATSOLVE
     typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
 
@@ -359,7 +354,7 @@ static GCC_INLINE void init_soft_thread(
 
     fc_solve_reset_soft_thread(soft_thread);
 
-    soft_thread->name = NULL;
+    soft_thread->name[0] = '\0';
 
     soft_thread->enable_pruning = FALSE;
 

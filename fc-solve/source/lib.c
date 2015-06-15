@@ -2271,11 +2271,8 @@ void DLLEXPORT freecell_solver_user_set_soft_thread_name(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    if (user->soft_thread->name != NULL)
-    {
-        free(user->soft_thread->name);
-    }
-    user->soft_thread->name = strdup(name);
+    strncpy (user->soft_thread->name, name, COUNT(user->soft_thread->name));
+    user->soft_thread->name[COUNT(user->soft_thread->name)-1] = '\0';
 }
 
 void DLLEXPORT freecell_solver_user_set_flare_name(
@@ -2546,12 +2543,12 @@ DLLEXPORT const char * freecell_solver_user_get_lib_version(
 }
 
 DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
-    void * api_instance
+    void * const api_instance
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
+    const fcs_user_t * const user = (const fcs_user_t *)api_instance;
 
-    fc_solve_hard_thread_t * const hard_thread = user->active_flare->obj.current_hard_thread;
+    const fc_solve_hard_thread_t * const hard_thread = user->active_flare->obj.current_hard_thread;
 
     return hard_thread->soft_threads[hard_thread->st_idx].name;
 }

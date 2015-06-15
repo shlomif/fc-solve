@@ -114,6 +114,10 @@ extern "C" {
 
 #cmakedefine FCS_WITH_CONTEXT_VARIABLE
 
+/* This is an integer that specifies the maximal size of identifiers
+ * in chars/bytes. */
+#cmakedefine FCS_MAX_IDENT_LEN ${FCS_MAX_IDENT_LEN}
+
 /*
  * The size of void*.
  */

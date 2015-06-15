@@ -885,9 +885,9 @@ struct fc_solve_soft_thread_struct
     int num_checked_states_step;
 
     /*
-     * A malloced string that serves as an identification for the user.
+     * A string that serves as an identification for the user.
      * */
-    char * name;
+    char name[FCS_MAX_IDENT_LEN];
 
     /*
      * Whether pruning should be done.

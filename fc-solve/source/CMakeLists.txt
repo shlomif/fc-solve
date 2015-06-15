@@ -178,6 +178,7 @@ SET (FCS_WITHOUT_LOCS_FIELDS "" CACHE BOOL "Does not do anything (kept for backw
 SET (FCS_TRACE_MEM "" CACHE BOOL "Enable memory tracing in fc-solve.")
 SET (FCS_MAX_NUM_SCANS_BUCKETS "" CACHE STRING "The number of scan_visited buckets in fc-solve (safe to ignore).")
 SET (FCS_DISABLE_PATSOLVE "" CACHE BOOL "Disable the patsolve code")
+SET (FCS_MAX_IDENT_LEN "10" CACHE STRING "Maximal length of identifiers")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")
