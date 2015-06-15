@@ -39,8 +39,6 @@
 #include "str_utils.h"
 #include "inline.h"
 
-#include "fcs_strndup.h"
-
 int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
     const char * string,
