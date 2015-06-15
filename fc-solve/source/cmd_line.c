@@ -1534,10 +1534,6 @@ break;
             PROCESS_OPT_ARG() ;
 
             {
-                /* Initialize all the Best Frist Search weights at first
-                 * to 0 so
-                 * we won't have partial initialization.
-                 * */
                 double befs_weights[FCS_NUM_BEFS_WEIGHTS];
 
                 const char * const s = *arg;
