@@ -50,6 +50,8 @@
 
 #include "str_utils.h"
 
+#define FCS_MAX_FLARE_NAME_LEN 30
+
 typedef struct {
     fcs_int_limit_t num_checked_states;
     fcs_int_limit_t num_states_in_collection;
@@ -74,7 +76,7 @@ typedef struct
      * was recycled already.) */
     fcs_bool_t instance_is_ready;
     int limit;
-    char * name;
+    char name[FCS_MAX_FLARE_NAME_LEN];
     int next_move;
     fcs_moves_sequence_t moves_seq;
     fcs_moves_processed_t fc_pro_moves;
@@ -614,13 +616,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     found_flare = 0;
                     for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++)
                     {
-                        fcs_flare_item_t * flare;
-                        flare = &(instance_item->flares[flare_idx]);
-
-                        if (! flare->name)
-                        {
-                            continue;
-                        }
+                        fcs_flare_item_t * const flare = &(instance_item->flares[flare_idx]);
 
                         if (!strncmp(flare->name, after_at_sign, item_end-after_at_sign))
                         {
@@ -671,13 +667,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     found_flare = FALSE;
                     for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++)
                     {
-                        fcs_flare_item_t * flare;
-                        flare = &(instance_item->flares[flare_idx]);
-
-                        if (! flare->name)
-                        {
-                            continue;
-                        }
+                        fcs_flare_item_t * const flare = &(instance_item->flares[flare_idx]);
 
                         if (!strncmp(flare->name, cmd_end, item_end-cmd_end))
                         {
@@ -1405,11 +1395,7 @@ static void user_free_resources(
 
         fc_solve_free_instance(&(flare->obj));
 
-        if (flare->name)
-        {
-            free(flare->name);
-            flare->name = NULL;
-        }
+        flare->name[0] = '\0';
 
         if (flare->fc_pro_moves.moves)
         {
@@ -2286,12 +2272,8 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
 
     fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->num_flares-1]);
 
-    if (flare->name != NULL)
-    {
-        free(flare->name);
-    }
-
-    flare->name = strdup(name);
+    strncpy(flare->name, name, COUNT(flare->name));
+    flare->name[COUNT(flare->name)-1] = '\0';
 
     return;
 }
@@ -2481,7 +2463,7 @@ static int user_next_flare(fcs_user_t * const user)
     flare->moves_seq.num_moves = 0;
     flare->moves_seq.moves = NULL;
 
-    flare->name = NULL;
+    flare->name[0] = '\0';
     flare->fc_pro_moves.moves = NULL;
     flare->instance_is_ready = TRUE;
     flare->obj_stats = calc_initial_stats_t();
