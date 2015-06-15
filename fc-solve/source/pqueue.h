@@ -196,7 +196,7 @@ static GCC_INLINE void fc_solve_pq_pop(
     *val = Elements[PQ_FIRST_ENTRY].val;
 
     /* get pointer to last element in tree */
-    pq_element_t last_elem = Elements[ CurrentSize-- ];
+    const pq_element_t last_elem = Elements[ CurrentSize-- ];
 
     /* code to pop an element from an ascending (top to bottom) pqueue */
 

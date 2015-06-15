@@ -61,15 +61,8 @@ static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_
 {
     if (gnGameNumber < 0x100000000LL)
     {
-        microsoft_rand_uint_t ret = microsoft_rand_rand(seedx_ptr);
-        if (gnGameNumber < 0x80000000)
-        {
-            return ret;
-        }
-        else
-        {
-            return (ret | 0x8000);
-        }
+        const microsoft_rand_uint_t ret = microsoft_rand_rand(seedx_ptr);
+        return ((gnGameNumber < 0x80000000) ? ret : (ret | 0x8000));
     }
     else
     {

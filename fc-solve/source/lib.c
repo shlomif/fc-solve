@@ -2019,7 +2019,7 @@ static void iter_handler_wrapper(
 #undef CALL
 }
 
-static void set_debug_iter_output_func_to_val(
+static void GCC_INLINE set_debug_iter_output_func_to_val(
     fcs_user_t * const user,
     const fcs_instance_debug_iter_output_func_t value
 )
@@ -2030,7 +2030,7 @@ static void set_debug_iter_output_func_to_val(
 }
 
 
-static void set_any_iter_handler(
+static void GCC_INLINE set_any_iter_handler(
     void * const api_instance,
     const freecell_solver_user_long_iter_handler_t long_iter_handler,
     const freecell_solver_user_iter_handler_t iter_handler,
@@ -2042,15 +2042,13 @@ static void set_any_iter_handler(
     user->long_iter_handler = long_iter_handler;
     user->iter_handler = iter_handler;
 
+    fcs_instance_debug_iter_output_func_t cb = NULL;
     if (iter_handler || long_iter_handler)
     {
         user->iter_handler_context = iter_handler_context;
-        set_debug_iter_output_func_to_val(user, iter_handler_wrapper);
+        cb = iter_handler_wrapper;
     }
-    else
-    {
-        set_debug_iter_output_func_to_val(user, NULL);
-    }
+    set_debug_iter_output_func_to_val(user, cb);
 }
 
 void DLLEXPORT freecell_solver_user_set_iter_handler_long(

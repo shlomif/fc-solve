@@ -1912,9 +1912,9 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 
     for (int deck = 0 ; deck < INSTANCE_DECKS_NUM ; deck++)
     {
-        if (fcs_foundation_value(*my_ptr_state, (deck<<2)+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
+        const int ret_val = ((deck<<2)|fcs_card_suit(card));
+        if (fcs_foundation_value(*my_ptr_state, ret_val) == fcs_card_rank(card) - 1)
         {
-            int ret_val = (deck<<2)+fcs_card_suit(card);
             /* Always put on the foundation if it is built-by-suit */
 #ifndef FCS_FREECELL_ONLY
             if (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)

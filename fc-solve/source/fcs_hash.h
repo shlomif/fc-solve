@@ -194,7 +194,7 @@ static GCC_INLINE void fc_solve_hash_free(
 
 static GCC_INLINE void fc_solve_hash_foreach(
     fc_solve_hash_t * const hash,
-    fcs_bool_t (*should_delete_ptr)(void * key, void * context),
+    const fcs_bool_t (*should_delete_ptr)(void * const key, void * const context),
     void * const context
     )
 {

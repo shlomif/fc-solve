@@ -640,7 +640,7 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 }
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH))
-static fcs_bool_t free_states_should_delete(void * const key, void * const context)
+static const fcs_bool_t free_states_should_delete(void * const key, void * const context)
 {
     fc_solve_instance_t * const instance = (fc_solve_instance_t * const)context;
     fcs_collectible_state_t * const ptr_state = (fcs_collectible_state_t * const)key;

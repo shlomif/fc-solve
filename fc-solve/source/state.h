@@ -65,8 +65,6 @@ extern "C" {
 #define MAX_NUM_SCANS (FCS_MAX_NUM_SCANS_BUCKETS * (sizeof(unsigned char) * 8))
 
 #define is_scan_visited(ptr_state, scan_id) ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_CHAR_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_CHAR_BIT_SIZE_LOG2))-1))))
-#define set_scan_visited(ptr_state, scan_id) { (FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_CHAR_BIT_SIZE_LOG2] |= (1 << ((scan_id)&((1<<(FCS_CHAR_BIT_SIZE_LOG2))-1))); }
-
 
 #ifdef DEBUG_STATES
 
@@ -1173,5 +1171,11 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * const v
 }
 
 #endif
+
+static void GCC_INLINE set_scan_visited(fcs_collectible_state_t * const ptr_state, int scan_id)
+{
+    (FCS_S_SCAN_VISITED(ptr_state))[scan_id>>FCS_CHAR_BIT_SIZE_LOG2]
+        |= (1 << ((scan_id)&((1<<(FCS_CHAR_BIT_SIZE_LOG2))-1)));
+}
 
 #endif /* FC_SOLVE__STATE_H */
