@@ -1534,16 +1534,17 @@ break;
             PROCESS_OPT_ARG() ;
 
             {
-                int i;
                 /* Initialize all the Best Frist Search weights at first
                  * to 0 so
                  * we won't have partial initialization.
                  * */
                 double befs_weights[FCS_NUM_BEFS_WEIGHTS];
 
-                fc_solve_set_weights(*arg, befs_weights);
+                const char * const s = *arg;
 
-                for (i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
+                fc_solve_set_weights(s, strchr(s, '\0'), befs_weights);
+
+                for (int i=0 ; i<FCS_NUM_BEFS_WEIGHTS ; i++)
                 {
                     freecell_solver_user_set_a_star_weight(
                         instance,

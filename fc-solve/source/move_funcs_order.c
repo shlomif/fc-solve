@@ -151,12 +151,11 @@ int fc_solve_apply_tests_order(
                 }
                 if (tests_order->groups[tests_order->num_groups-1].shuffling_type == FCS_WEIGHTING)
                 {
-                    char * const copy = strndup(aft_open_paren, close_paren-aft_open_paren);
                     fc_solve_set_weights(
-                        copy,
+                        aft_open_paren,
+                        close_paren,
                         tests_order->groups[tests_order->num_groups-1].weighting.befs_weights
                     );
-                    free (copy);
                 }
                 else
                 {
