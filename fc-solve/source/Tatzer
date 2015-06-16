@@ -303,7 +303,7 @@ my @cmd= ("cmake",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
 
     (defined($pack_size) ? ("-DFCS_IA_PACK_SIZE=$pack_size") : ()),
-    ($test_suite ? ("-DFCS_WITH_TEST_SUITE=1") : ()),
+    ("-DFCS_WITH_TEST_SUITE=" . ($test_suite ? '1' : '')),
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
     ($omit_frame ? "-DOPTIMIZATION_OMIT_FRAME_POINTER=1" : ()),
     ($state_storage_libavl2_tree
