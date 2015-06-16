@@ -351,7 +351,7 @@ int main(int argc, char * argv[])
         instance,
         total_iterations_limit_per_board
     );
-    worker_t * const workers = SMALLOC(workers, num_workers);
+    worker_t workers[num_workers];
 
     for ( int idx = 0 ; idx < num_workers ; idx++)
     {
@@ -382,7 +382,6 @@ int main(int argc, char * argv[])
             /* I'm the child. */
             {
                 const worker_t w = workers[idx];
-                free(workers);
                 close(w.parent_to_child_pipe[WRITE_FD]);
                 close(w.child_to_parent_pipe[READ_FD]);
                 return worker_func(idx, w, instance);
@@ -524,8 +523,6 @@ int main(int argc, char * argv[])
     }
 
     FCS_PRINT_FINISHED(mytime, total_num_iters);
-
-    free(workers);
 
     return 0;
 }
