@@ -102,7 +102,7 @@ typedef struct
     int num_finished_boards;
 } response_t;
 
-static GCC_INLINE int worker_func(const int idx, const worker_t w, void * const instance)
+static GCC_INLINE int worker_func(const worker_t w, void * const instance)
 {
     /* I'm one of the slaves */
     request_t request;
@@ -384,7 +384,7 @@ int main(int argc, char * argv[])
                 const worker_t w = workers[idx];
                 close(w.parent_to_child_pipe[WRITE_FD]);
                 close(w.child_to_parent_pipe[READ_FD]);
-                return worker_func(idx, w, instance);
+                return worker_func(w, instance);
             }
         }
         else
