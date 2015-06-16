@@ -174,13 +174,12 @@ static GCC_INLINE void init_solver_state(
 }
 
 static GCC_INLINE void solver_state__free_dcc_depth(
-    fcs_fcc_solver_state * solver_state,
-    int depth,
-    fcs_fcc_moves_seq_allocator_t * moves_list_allocator
+    fcs_fcc_solver_state * const solver_state,
+    const int depth,
+    fcs_fcc_moves_seq_allocator_t * const moves_list_allocator
     )
 {
-    fcs_fcc_collection_by_depth * fcc = &(solver_state->FCCs_by_depth[depth]);
-    fcs_fully_connected_component_t * iter;
+    fcs_fcc_collection_by_depth * const fcc = &(solver_state->FCCs_by_depth[depth]);
 
     if (! fcc->does_min_by_sorting_exist)
     {
@@ -195,7 +194,7 @@ static GCC_INLINE void solver_state__free_dcc_depth(
      * memory by freeing the compact_allocator.
      * */
     for(
-        iter = fcc->queue;
+        fcs_fully_connected_component_t * iter = fcc->queue;
         iter;
         iter = iter->next
        )

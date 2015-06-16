@@ -333,10 +333,8 @@ static void * worker_thread(void * void_context)
 
             if (board_num % stop_at == 0)
             {
-                fcs_int64_t total_num_iters_copy;
-
                 pthread_mutex_lock(&total_num_iters_lock);
-                total_num_iters_copy = (total_num_iters += total_num_iters_temp);
+                fcs_int64_t total_num_iters_copy = (total_num_iters += total_num_iters_temp);
                 pthread_mutex_unlock(&total_num_iters_lock);
                 total_num_iters_temp = 0;
 

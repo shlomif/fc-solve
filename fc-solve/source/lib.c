@@ -514,15 +514,11 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     char * * const error_string
     )
 {
-    int user_inst_idx;
-
-    for(user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++)
+    for (int user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++)
     {
-        fcs_instance_item_t * instance_item;
-
         *instance_list_index = user_inst_idx;
 
-        instance_item = &(user->instances_list[user_inst_idx]);
+        fcs_instance_item_t * const instance_item = &(user->instances_list[user_inst_idx]);
 
         if (instance_item->flares_plan_compiled)
         {

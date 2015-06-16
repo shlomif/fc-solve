@@ -260,8 +260,6 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
         new_cache_state = parents_stack[parents_stack_len-1].new_cache_state;
 
-        fcs_collectible_state_t * stack_ptr_this_state_val =
-            parents_stack[parents_stack_len-1].state_val;
 
         pass.key = &(new_cache_state->key);
         pass.val = &(temp_new_state_val);
@@ -270,11 +268,13 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
         fcs_duplicate_state( &pass, &src_pass);
 
+        fcs_move_stack_t * const stack_ptr__moves_to_parent =
+            parents_stack[parents_stack_len-1].state_val->moves_to_parent;
         fcs_internal_move_t * const moves_end =
         (
-            (next_move = stack_ptr_this_state_val->moves_to_parent->moves)
+            (next_move = stack_ptr__moves_to_parent->moves)
             +
-            stack_ptr_this_state_val->moves_to_parent->num_moves
+            stack_ptr__moves_to_parent->num_moves
         );
 
 

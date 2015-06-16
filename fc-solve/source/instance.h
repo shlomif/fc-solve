@@ -1029,7 +1029,7 @@ extern void fc_solve_instance__init_hard_thread(
 
 extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t * const soft_thread);
 
-static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * orig)
+static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * const orig)
 {
     fcs_tests_order_t ret;
 

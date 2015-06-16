@@ -257,16 +257,17 @@ static GCC_INLINE pq_rating_t befs_rate_state(
                 continue;
             }
 
-            int c;
-            cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER((c = update_col_cards_under_sequences(
+            const int c =
+                update_col_cards_under_sequences(
 #ifndef FCS_FREECELL_ONLY
                         sequences_are_built_by,
 #endif
                         col,
                         cards_num-1
                         )
-                    )
-                );
+                ;
+
+            cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER(c);
             if (c > 0)
             {
                 seqs_over_renegade_cards +=

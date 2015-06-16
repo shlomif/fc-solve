@@ -271,7 +271,6 @@ int main(int argc, char * argv[])
     int board_num;
     int start_board, end_board, stop_at;
     const char * variant = "freecell";
-    char temp_str[10];
     fcs_portable_time_t mytime;
     char * buffer;
 
@@ -575,6 +574,7 @@ int main(int argc, char * argv[])
             len = 0;
             while (! fc_solve_moves_processed_get_next_move(&fc_pro_moves, &move))
             {
+                char temp_str[10];
                 fc_solve_moves_processed_render_move(move, temp_str);
                 printf("%s%c", temp_str,
                     ((((++len) % 10) == 0) ? '\n' : ' ')

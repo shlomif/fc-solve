@@ -129,12 +129,13 @@ static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
     }
 
     {
-        int  wLeft = 52;          /*  cards left to be chosen in shuffle */
+        int  num_cards_left = 52;          /*  cards left to be chosen in shuffle */
         for (int i = 0; i < 52; i++)
         {
-            const int j = microsoft_rand__game_num_rand(&seedx, gamenumber) % wLeft;
+            const int j
+                = microsoft_rand__game_num_rand(&seedx, gamenumber) % num_cards_left;
             card[(i%8)][i/8] = deck[j];
-            deck[j] = deck[--wLeft];
+            deck[j] = deck[--num_cards_left];
         }
     }
 

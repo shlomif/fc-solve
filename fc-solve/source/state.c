@@ -263,7 +263,7 @@ char * fc_solve_state_as_string(
     fcs_cards_column_t col;
     int col_len;
 
-    char str2[128], str3[128], * str2_ptr, * str3_ptr;
+    char str2[128], * str2_ptr;
 
     fc_solve_append_string_t app_str_struct;
 #define app_str (&app_str_struct)
@@ -315,8 +315,9 @@ char * fc_solve_state_as_string(
     {
         for(a=0;a<((freecells_num/4)+((freecells_num%4==0)?0:1));a++)
         {
+            char dashes_s[128];
+            char * dashes_ptr = dashes_s;
             str2_ptr = str2;
-            str3_ptr = str3;
             for(b=0;b<min(freecells_num-a*4, 4);b++)
             {
                 str2_ptr += sprintf(str2_ptr, "%3s ",
@@ -329,7 +330,8 @@ char * fc_solve_state_as_string(
                         display_10_as_t
                     )
                 );
-                str3_ptr += sprintf(str3_ptr, "--- ");
+                strcpy(dashes_ptr, "--- ");
+                dashes_ptr = strchr(dashes_ptr, '\0');
             }
             if (a < decks_num)
             {
@@ -352,7 +354,7 @@ char * fc_solve_state_as_string(
             }
             fc_solve_append_string_sprintf(
                 app_str,
-                "%s\n", str3
+                "%s\n", dashes_ptr
                 );
         }
         for(;a<decks_num;a++)
