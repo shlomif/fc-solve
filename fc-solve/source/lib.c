@@ -2015,7 +2015,7 @@ static void iter_handler_wrapper(
 #undef CALL
 }
 
-static void GCC_INLINE set_debug_iter_output_func_to_val(
+static GCC_INLINE void set_debug_iter_output_func_to_val(
     fcs_user_t * const user,
     const fcs_instance_debug_iter_output_func_t value
 )
@@ -2026,7 +2026,7 @@ static void GCC_INLINE set_debug_iter_output_func_to_val(
 }
 
 
-static void GCC_INLINE set_any_iter_handler(
+static GCC_INLINE void set_any_iter_handler(
     void * const api_instance,
     const freecell_solver_user_long_iter_handler_t long_iter_handler,
     const freecell_solver_user_iter_handler_t iter_handler,
