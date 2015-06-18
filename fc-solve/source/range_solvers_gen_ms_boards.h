@@ -31,7 +31,7 @@
 #ifndef FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
 #define FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
 
-#include <sys/types.h>
+#include "portable_int32.h"
 
 #include "inline.h"
 #include "fcs_dllexport.h"
