@@ -395,7 +395,7 @@ Reached Board No. 32000 at 1237466721.542229 (total_num_iters=18589554)
 With ./configure -r (internal_hash) and after extracting many functions,
 that were previusly complex macros.
 
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/extract-ansi-c-macros-into-functions/fc-solve/source
+https://github.com/shlomif/fc-solve/tree/extract-ansi-c-macros-into-functions
 
 Revision 1419
 
@@ -760,7 +760,7 @@ With "./configure -r --fc-only --states-type=COMPACT_STATES":
 
 In:
 
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/first-class-citizen-card-columns-objects
+https://github.com/shlomif/fc-solve/tree/first-class-citizen-card-columns-objects
 
 ( r1566 )
 
@@ -773,7 +773,7 @@ fcs_cards_column_t:
 
 In:
 
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/first-class-citizen-card-columns-objects
+https://github.com/shlomif/fc-solve/tree/first-class-citizen-card-columns-objects
 
 ( r1612 )
 
@@ -791,7 +791,7 @@ In the trunk (r1612) with "./configure -r --fc-only":
 
 In:
 
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/first-class-citizen-card-columns-objects
+https://github.com/shlomif/fc-solve/tree/first-class-citizen-card-columns-objects
 
 ( r1615 )
 
@@ -829,7 +829,7 @@ After the this_card = prev_card optimisation in scans.c:
 
 In:
 
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/switch-to-fcs_move_stack_push_params
+https://github.com/shlomif/fc-solve/tree/switch-to-fcs_move_stack_push_params
 
 With:
 
@@ -933,7 +933,7 @@ Finished at 1242387722.265880 (total_num_iters=18589554)
 
 ========================================================================
 
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/get_rid_of_max_num_in_growing_arrays
+https://github.com/shlomif/fc-solve/tree/get_rid_of_max_num_in_growing_arrays
 
 With two worker threads and ./configure -r --fc-only:
 
@@ -1385,7 +1385,7 @@ Threaded:
 ========================================================================
 
 r2895 ;
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/likely-addition/fc-solve/source
+https://github.com/shlomif/fc-solve/tree/likely-addition/fc-solve/source
 ./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by" ; \
 2.6.33.5-desktop-1mnb
 ssh console (while not running X-Windows).
@@ -1397,7 +1397,7 @@ Threaded:
 ========================================================================
 
 r2901 ;
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/likely-addition/fc-solve/source
+https://github.com/shlomif/fc-solve/tree/likely-addition/fc-solve/source
 ./Tatzer -l p4b ; after strip ; ARGS="--worker-step 16 -l by"
 2.6.33.5-desktop-1mnb
 virtual console (while not running X-Windows).

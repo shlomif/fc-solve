@@ -59,21 +59,21 @@ power management:
 ------------------------------
 
 the-iglu-cabal preset ; r2933 ;
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+https://github.com/shlomif/fc-solve/tree/add-depth-dependent-moves-order
 
 34.8752400875092s
 
 ------------------------------
 
 stuff.bash (with a -dto scan) ; r2933
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+https://github.com/shlomif/fc-solve/tree/add-depth-dependent-moves-order
 
 33.5600700378418s
 
 ------------------------------
 
 foss-nessy.bash (with two -dto scan) ; r2938
-https://svn.berlios.de/svnroot/repos/fc-solve/branches/add-depth-dependent-moves-order/fc-solve/source
+https://github.com/shlomif/fc-solve/tree/add-depth-dependent-moves-order
 
 33.366259098053s
 
