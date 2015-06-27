@@ -17,6 +17,7 @@
 <script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/web-fc-solve--expand-moves.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve-ui.js"></script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
@@ -157,7 +158,12 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 </p>
 
+
 <label for="output">Output:</label><br />
+
+<p>
+<button id="expand_moves_toggle" onclick="javascript:toggle_expand_moves()">Expand Moves</button>
+</p>
 
 <div class="output_form">
 <textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>

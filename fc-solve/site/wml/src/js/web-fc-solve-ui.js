@@ -30,7 +30,9 @@ Class('FC_Solve_UI',
             _instance: { is: rw },
             _solve_err_code: { is: rw },
             _was_iterations_count_exceeded: { is: rw, init: false },
-            _pristine_output: { is: rw },
+            _is_expanded: { is: rw, init: false },
+            _expanded_pristine_output: { is: rw },
+            _unexpanded_pristine_output: { is: rw },
         },
         methods: {
             _is_one_based_checked: function() {
@@ -59,7 +61,7 @@ Class('FC_Solve_UI',
                 var that = this;
 
                 that._webui_output_set_text(
-                    that._process_pristine_output(that._pristine_output)
+                    that._process_pristine_output(that._calc_pristine_output())
                 );
                 return;
             },
@@ -89,10 +91,42 @@ Class('FC_Solve_UI',
 
                 return;
             },
-            _webui_set_output: function(buffer) {
+            _calc_pristine_output: function(buffer) {
                 var that = this;
 
-                that._pristine_output = buffer;
+                if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
+                    if (that._is_expanded) {
+                        if (! that._expanded_pristine_output) {
+                            that._instance.display_expanded_moves_solution(
+                                {
+                                    output_cb: function(buffer) {
+                                        that._expanded_pristine_output = buffer;
+                                    }
+                                }
+                            );
+                        }
+                        return that._expanded_pristine_output;
+                    }
+                    else {
+                        if (! that._unexpanded_pristine_output) {
+                            that._instance.display_solution(
+                                {
+                                    output_cb: function(buffer) {
+                                        that._unexpanded_pristine_output = buffer;
+                                    }
+                                }
+                            );
+
+                        }
+                        return that._unexpanded_pristine_output;
+                    }
+                }
+                else {
+                    return "";
+                }
+            },
+            _webui_set_output: function(buffer) {
+                var that = this;
 
                 that._re_enable_output();
 
@@ -113,13 +147,7 @@ Class('FC_Solve_UI',
             _handle_err_code: function() {
                 var that = this;
                 if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
-                    that._instance.display_solution(
-                        {
-                            output_cb: function(buffer) {
-                                return that._webui_set_output(buffer);
-                            }
-                        }
-                    );
+                    that._webui_set_output();
                 } else if (that._solve_err_code == FCS_STATE_SUSPEND_PROCESS
                     && !that._was_iterations_count_exceeded) {
                     that._enqueue_resume();
@@ -154,6 +182,9 @@ Class('FC_Solve_UI',
             do_solve: function() {
                 var that = this;
 
+                that._expanded_pristine_output = null;
+                that._unexpanded_pristine_output = null;
+
                 that._disable_output_display();
                 that._was_iterations_count_exceeded = false;
 
@@ -175,6 +206,15 @@ Class('FC_Solve_UI',
 
                 return;
             },
+            toggle_expand: function() {
+                var that = this;
+
+                var ret = (that._is_expanded = ! that._is_expanded);
+
+                that._webui_set_output();
+
+                return ret;
+            }
         },
     }
 );
@@ -318,7 +358,7 @@ function toggle_advanced() {
 
     var set_text = function (my_text) {
         $("#fcs_advanced_toggle").text(my_text);
-    }
+    };
 
     set_text(
         ctl.hasClass("disabled") ? "Advanced ▼" : "Advanced ▲"
@@ -356,4 +396,14 @@ function on_toggle_one_based() {
 
 function clear_output() {
     return fcs_ui._webui_output_set_text('');
+}
+
+function toggle_expand_moves() {
+
+    var is_expanded = fcs_ui.toggle_expand();
+
+    $("#expand_moves_toggle").text(
+        is_expanded ? "Unexpand Moves" : "Expand Moves"
+    );
+    return;
 }
