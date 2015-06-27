@@ -147,7 +147,7 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 <textarea class="emscripten" id="string_params" cols="50" rows="30"></textarea>
 <p>
 (Format as a preset file, with backslashes at the end of lines. See the
-<a href="$(ROOT)/docs/">online documentation for information regarding syntax.</a>
+<a href="$(ROOT)/docs/">online documentation</a> for information regarding syntax.)
 </p>
 </div>
 
