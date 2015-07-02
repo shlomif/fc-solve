@@ -595,8 +595,10 @@ static GCC_INLINE const fcs_bool_t fcs__should_state_be_pruned(const fcs_bool_t 
     );
 }
 
-#define FCS_IS_STATE_DEAD_END(ptr_state) \
-    (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END)
+static GCC_INLINE const fcs_bool_t fcs__is_state_a_dead_end( const fcs_collectible_state_t * const ptr_state)
+{
+    return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
+}
 
 static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
         fc_solve_soft_thread_t * const soft_thread
@@ -628,7 +630,7 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 
         for( ; rand_index_ptr < end_rand_index_ptr ; rand_index_ptr++ )
         {
-            if (! FCS_IS_STATE_DEAD_END(states[rand_index_ptr->idx].state_ptr))
+            if (! fcs__is_state_a_dead_end(states[rand_index_ptr->idx].state_ptr))
             {
                 *(dest_rand_index_ptr++) = *(rand_index_ptr);
             }
@@ -646,7 +648,7 @@ static const fcs_bool_t free_states_should_delete(void * const key, void * const
     fc_solve_instance_t * const instance = (fc_solve_instance_t * const)context;
     fcs_collectible_state_t * const ptr_state = (fcs_collectible_state_t * const)key;
 
-    if (FCS_IS_STATE_DEAD_END(ptr_state))
+    if (fcs__is_state_a_dead_end(ptr_state))
     {
         FCS_S_NEXT(ptr_state) = instance->list_of_vacant_states;
         instance->list_of_vacant_states = ptr_state;
@@ -699,7 +701,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
 
                 for (; next_element <= end_element ; next_element++)
                 {
-                    if (! FCS_IS_STATE_DEAD_END((*next_element).val))
+                    if (! fcs__is_state_a_dead_end((*next_element).val))
                     {
                         fc_solve_pq_push(
                             &new_pq,
