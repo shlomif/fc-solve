@@ -666,6 +666,62 @@ static GCC_INLINE void free_instance_hard_thread_callback(fc_solve_hard_thread_t
     fc_solve_compact_allocator_finish(&(HT_FIELD(hard_thread, allocator)));
 }
 
+static GCC_INLINE void fc_solve_release_tests_list(
+    fc_solve_soft_thread_t * const soft_thread
+)
+{
+    /* Free the BeFS data. */
+    free (BEFS_M_VAR(soft_thread, tests_list));
+    BEFS_M_VAR(soft_thread, tests_list) = NULL;
+
+    /* Free the DFS data. */
+    fcs_tests_by_depth_array_t * const arr =
+        &(DFS_VAR(soft_thread, tests_by_depth_array));
+    for (int unit_idx = 0 ; unit_idx < arr->num_units ; unit_idx++)
+    {
+        if (arr->by_depth_units[unit_idx].tests.lists)
+        {
+            fcs_tests_list_t * const lists = arr->by_depth_units[unit_idx].tests.lists;
+            const int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
+
+            for (int i=0 ;
+                i < num_lists ;
+                i++)
+            {
+                free (lists[i].tests);
+            }
+            free (lists);
+        }
+    }
+    free(arr->by_depth_units);
+    arr->by_depth_units = NULL;
+}
+
+static GCC_INLINE void fc_solve_free_instance_soft_thread_callback(
+    fc_solve_soft_thread_t * const soft_thread
+)
+{
+    fc_solve_PQueueFree(
+        &(BEFS_VAR(soft_thread, pqueue))
+    );
+
+    fc_solve_release_tests_list(soft_thread);
+
+    fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
+
+#ifndef FCS_DISABLE_PATSOLVE
+    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+
+    if ( pats_scan )
+    {
+        fc_solve_pats__recycle_soft_thread(pats_scan);
+        fc_solve_pats__destroy_soft_thread(pats_scan);
+        free( pats_scan );
+        soft_thread->pats_scan = NULL;
+    }
+#endif
+}
+
 static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instance)
 {
     fc_solve_foreach_soft_thread(instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
@@ -676,7 +732,11 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
     }
 
 #ifdef FCS__SINGLE_HARD_THREAD
-    instance->is_optimization_st = FALSE;
+    if (instance->is_optimization_st)
+    {
+        fc_solve_free_instance_soft_thread_callback(&( instance->optimization_soft_thread ));
+        instance->is_optimization_st = FALSE;
+    }
 #else
     free(instance->hard_threads);
 
@@ -794,11 +854,12 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     if (! instance->is_optimization_st)
     {
-        fc_solve_init_soft_thread(instance, &(instance->optimization_soft_thread));
+        fc_solve_init_soft_thread(instance, optimization_soft_thread);
         /* Copy enable_pruning from the thread that reached the solution,
          * because otherwise -opt in conjunction with -sp r:tf will fail.
          * */
         optimization_soft_thread->enable_pruning = instance->hard_thread.soft_threads[instance->hard_thread.st_idx].enable_pruning;
+        instance->is_optimization_st = TRUE;
     }
 
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))

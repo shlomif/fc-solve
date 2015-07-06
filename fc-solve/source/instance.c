@@ -144,61 +144,7 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
     return;
 }
 
-static GCC_INLINE void fc_solve_release_tests_list(
-    fc_solve_soft_thread_t * const soft_thread
-)
-{
-    /* Free the BeFS data. */
-    free (BEFS_M_VAR(soft_thread, tests_list));
-    BEFS_M_VAR(soft_thread, tests_list) = NULL;
 
-    /* Free the DFS data. */
-    fcs_tests_by_depth_array_t * const arr =
-        &(DFS_VAR(soft_thread, tests_by_depth_array));
-    for (int unit_idx = 0 ; unit_idx < arr->num_units ; unit_idx++)
-    {
-        if (arr->by_depth_units[unit_idx].tests.lists)
-        {
-            fcs_tests_list_t * const lists = arr->by_depth_units[unit_idx].tests.lists;
-            const int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
-
-            for (int i=0 ;
-                i < num_lists ;
-                i++)
-            {
-                free (lists[i].tests);
-            }
-            free (lists);
-        }
-    }
-    free(arr->by_depth_units);
-    arr->by_depth_units = NULL;
-}
-
-static GCC_INLINE void free_instance_soft_thread_callback(
-    fc_solve_soft_thread_t * const soft_thread
-)
-{
-    fc_solve_PQueueFree(
-        &(BEFS_VAR(soft_thread, pqueue))
-    );
-
-    fc_solve_release_tests_list(soft_thread);
-
-    fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
-
-#ifndef FCS_DISABLE_PATSOLVE
-    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
-
-    if ( pats_scan )
-    {
-        fc_solve_pats__recycle_soft_thread(pats_scan);
-        fc_solve_pats__destroy_soft_thread(pats_scan);
-        free( pats_scan );
-        soft_thread->pats_scan = NULL;
-    }
-#endif
-}
 
 static GCC_INLINE void accumulate_tests_by_ptr(
     int * const tests_order,
@@ -291,7 +237,7 @@ void fc_solve_foreach_soft_thread(
                 break;
 
                 case FOREACH_SOFT_THREAD_FREE_INSTANCE:
-                    free_instance_soft_thread_callback( soft_thread );
+                    fc_solve_free_instance_soft_thread_callback( soft_thread );
                 break;
 
                 case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
