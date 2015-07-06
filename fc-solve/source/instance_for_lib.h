@@ -801,8 +801,6 @@ static GCC_INLINE void fc_solve_recycle_instance(
     fc_solve_instance_t * const instance
 )
 {
-    int ht_idx;
-
     fc_solve_finish_instance(instance);
 
     instance->i__num_checked_states = 0;
@@ -817,7 +815,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
         fc_solve_reset_soft_thread(&(instance->optimization_soft_thread));
     }
 #else
-    for(ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
+    for (int ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
     {
         fc_solve_instance__recycle_hard_thread(&(instance->hard_threads[ht_idx]));
     }
@@ -1159,13 +1157,13 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          * Keep record of the number of iterations since this
          * thread started.
          * */
-        const typeof(HT_FIELD(hard_thread, ht__num_checked_states))
-            num_checked_states_started_at = HT_FIELD(hard_thread, ht__num_checked_states);
+        const typeof(NUM_CHECKED_STATES)
+            num_checked_states_started_at = NUM_CHECKED_STATES;
         /*
          * Calculate a soft thread-wise limit for this hard
          * thread to run.
          * */
-        HT_FIELD(hard_thread, ht__max_num_checked_states) = HT_FIELD(hard_thread, ht__num_checked_states) + HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread);
+        HT_FIELD(hard_thread, ht__max_num_checked_states) = num_checked_states_started_at + HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread);
 
 
 
@@ -1218,7 +1216,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
         /*
          * Determine how much iterations we still have left
          * */
-        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) -= (HT_FIELD(hard_thread, ht__num_checked_states) - num_checked_states_started_at);
+        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) -= (NUM_CHECKED_STATES - num_checked_states_started_at);
 
         /*
          * I use <= instead of == because it is possible that

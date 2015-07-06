@@ -541,10 +541,17 @@ static GCC_INLINE void mark_as_dead_end(
     return;
 }
 
+#ifdef FCS__SINGLE_HARD_THREAD
+#define BUMP_NUM_CHECKED_STATES__HT()
+#else
+#define BUMP_NUM_CHECKED_STATES__HT() \
+    (*hard_thread_num_checked_states_ptr)++;
+#endif
+
 #define BUMP_NUM_CHECKED_STATES() \
 {       \
     (*instance_num_checked_states_ptr)++; \
-    (*hard_thread_num_checked_states_ptr)++; \
+    BUMP_NUM_CHECKED_STATES__HT() \
 }
 
 static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
@@ -802,17 +809,26 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
 
     fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->i__num_checked_states);
+#ifndef FCS__SINGLE_HARD_THREAD
     fcs_int_limit_t * const hard_thread_num_checked_states_ptr
         = &(HT_FIELD( hard_thread, ht__num_checked_states));
+#endif
+
+#ifdef FCS__SINGLE_HARD_THREAD
+#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER() \
+    (instance->effective_max_num_checked_states)
+#else
+#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER() \
+    ( HT_FIELD(hard_thread, ht__num_checked_states)       \
+      + (instance->effective_max_num_checked_states - *(instance_num_checked_states_ptr)) )
+#endif
 
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES() \
     hard_thread_max_num_checked_states = HT_FIELD(hard_thread, ht__max_num_checked_states); \
                 \
     {           \
-        const fcs_int_limit_t lim = HT_FIELD(hard_thread, ht__num_checked_states)       \
-            + (instance->effective_max_num_checked_states - *(instance_num_checked_states_ptr)) \
-            ; \
-              \
+        const fcs_int_limit_t lim = CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER(); \
+        \
         hard_thread_max_num_checked_states = min(hard_thread_max_num_checked_states, lim); \
     }
 
@@ -1280,7 +1296,8 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 
     const typeof (pats_scan->num_checked_states) start_from = pats_scan->num_checked_states;
 
-    pats_scan->max_num_checked_states = start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) - HT_FIELD(hard_thread, ht__num_checked_states));
+
+    pats_scan->max_num_checked_states = start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) - NUM_CHECKED_STATES);
 
     pats_scan->status = FCS_PATS__NOSOL;
 
@@ -1288,7 +1305,9 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 
     {
         const typeof(start_from) after_scan_delta = pats_scan->num_checked_states - start_from;
+#ifndef FCS__SINGLE_HARD_THREAD
         HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
+#endif
         HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
     }
 

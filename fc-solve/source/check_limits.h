@@ -44,6 +44,13 @@ static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
             );
 }
 
+#ifdef FCS__SINGLE_HARD_THREAD
+#define check_if_limits_exceeded__num() \
+        ((*instance_num_checked_states_ptr) == hard_thread_max_num_checked_states)
+#else
+#define check_if_limits_exceeded__num() \
+        ((*hard_thread_num_checked_states_ptr) == hard_thread_max_num_checked_states)
+#endif
 
 /*
  * This macro checks if we need to terminate from running this soft
@@ -52,7 +59,7 @@ static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
  * */
 #define check_if_limits_exceeded()                                    \
     (   \
-        ((*hard_thread_num_checked_states_ptr) == hard_thread_max_num_checked_states) \
+        check_if_limits_exceeded__num() \
             || \
         (instance->num_states_in_collection >=   \
             instance->effective_max_num_states_in_collection) \

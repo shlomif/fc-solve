@@ -368,6 +368,7 @@ struct fc_solve_hard_thread_struct
 
     struct fc_solve_soft_thread_struct * soft_threads;
 
+#ifndef FCS__SINGLE_HARD_THREAD
     /*
      * The hard thread count of how many states he checked himself. The
      * instance num_checked_states can be confusing because other threads modify it too.
@@ -376,6 +377,7 @@ struct fc_solve_hard_thread_struct
      * */
     fcs_int_limit_t ht__num_checked_states;
 
+#endif
     /*
      * The maximal limit for num_checked_states.
      * */
@@ -1105,7 +1107,9 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
     fc_solve_hard_thread_t * const hard_thread
 )
 {
+#ifndef FCS__SINGLE_HARD_THREAD
     HT_FIELD(hard_thread, ht__num_checked_states) = 0;
+#endif
     HT_FIELD(hard_thread, ht__max_num_checked_states) = INT_MAX;
     HT_FIELD(hard_thread, num_soft_threads_finished) = 0;
 }
@@ -1170,5 +1174,10 @@ extern void fc_solve_init_soft_thread(
 }
 #endif
 
+#ifdef FCS__SINGLE_HARD_THREAD
+#define NUM_CHECKED_STATES (HT_INSTANCE(hard_thread)->i__num_checked_states)
+#else
+#define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
+#endif
 
 #endif /* FC_SOLVE__INSTANCE_H */
