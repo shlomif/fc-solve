@@ -963,7 +963,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
-    optimization_thread->max_num_checked_states = INT_MAX;
+    optimization_thread->ht__max_num_checked_states = INT_MAX;
 
     fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
