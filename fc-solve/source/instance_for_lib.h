@@ -96,12 +96,12 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
     instance->num_indirect_prev_states = 0;
 #endif
 
-    instance->num_checked_states = 0;
+    instance->i__num_checked_states = 0;
 
     instance->num_states_in_collection = 0;
     instance->active_num_states_in_collection = 0;
 
-    instance->max_num_checked_states = -1;
+    instance->i__max_num_checked_states = -1;
     instance->effective_max_num_checked_states = INT_MAX;
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
     instance->max_depth = -1;
@@ -805,7 +805,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
     fc_solve_finish_instance(instance);
 
-    instance->num_checked_states = 0;
+    instance->i__num_checked_states = 0;
 
     instance->num_hard_threads_finished = 0;
 
@@ -889,7 +889,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
-    instance->hard_thread.max_num_checked_states = INT_MAX;
+    instance->hard_thread.ht__max_num_checked_states = INT_MAX;
 
     fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
@@ -1159,13 +1159,13 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          * Keep record of the number of iterations since this
          * thread started.
          * */
-        const typeof(HT_FIELD(hard_thread, num_checked_states))
-            num_checked_states_started_at = HT_FIELD(hard_thread, num_checked_states);
+        const typeof(HT_FIELD(hard_thread, ht__num_checked_states))
+            num_checked_states_started_at = HT_FIELD(hard_thread, ht__num_checked_states);
         /*
          * Calculate a soft thread-wise limit for this hard
          * thread to run.
          * */
-        HT_FIELD(hard_thread, max_num_checked_states) = HT_FIELD(hard_thread, num_checked_states) + HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread);
+        HT_FIELD(hard_thread, ht__max_num_checked_states) = HT_FIELD(hard_thread, ht__num_checked_states) + HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread);
 
 
 
@@ -1218,7 +1218,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
         /*
          * Determine how much iterations we still have left
          * */
-        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) -= (HT_FIELD(hard_thread, num_checked_states) - num_checked_states_started_at);
+        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) -= (HT_FIELD(hard_thread, ht__num_checked_states) - num_checked_states_started_at);
 
         /*
          * I use <= instead of == because it is possible that
@@ -1284,7 +1284,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
                  * if max_num_checked_states is greater than 0 */
                 (
                     (
-                        (instance->num_checked_states >= instance->effective_max_num_checked_states)
+                        (instance->i__num_checked_states >= instance->effective_max_num_checked_states)
                     ) ||
                     (instance->num_states_in_collection >=
                         instance->effective_max_num_states_in_collection
@@ -1373,7 +1373,7 @@ static GCC_INLINE int fc_solve_resume_instance(
                         /* There's a limit to the scan only
                          * if max_num_checked_states is greater than 0 */
                         (
-                            (instance->num_checked_states >= instance->effective_max_num_checked_states)
+                            (instance->i__num_checked_states >= instance->effective_max_num_checked_states)
                             ||
                             (instance->num_states_in_collection >= instance->effective_max_num_states_in_collection)
                         )

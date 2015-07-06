@@ -117,7 +117,7 @@ extern "C" {
 
 #include "meta_alloc.h"
 
-#if 0
+#if 1
 #define FCS__SINGLE_HARD_THREAD 1
 #endif
 
@@ -374,14 +374,14 @@ struct fc_solve_hard_thread_struct
      *
      * Thus, the soft thread switching should be done based on this variable
      * */
-    fcs_int_limit_t num_checked_states;
+    fcs_int_limit_t ht__num_checked_states;
 
     /*
      * The maximal limit for num_checked_states.
      * */
-    fcs_int_limit_t max_num_checked_states;
+    fcs_int_limit_t ht__max_num_checked_states;
 
-    fcs_int_limit_t num_checked_states_step;
+    fcs_int_limit_t ht__num_checked_states_step;
 
     /*
      * This is the number of iterations that still have to be done for
@@ -718,7 +718,7 @@ struct fc_solve_instance_struct
 #endif
 
     /* The number of states that were checked by the solving algorithm. */
-    fcs_int_limit_t num_checked_states;
+    fcs_int_limit_t i__num_checked_states;
 
     /*
      * Like max_num_checked_states only defaults to MAX_INT if below zero so it will
@@ -861,7 +861,7 @@ struct fc_solve_instance_struct
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
     int max_depth;
 #endif
-    fcs_int_limit_t max_num_checked_states;
+    fcs_int_limit_t i__max_num_checked_states;
     fcs_int_limit_t trim_states_in_collection_from;
 
     /*
@@ -1105,8 +1105,8 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
     fc_solve_hard_thread_t * const hard_thread
 )
 {
-    HT_FIELD(hard_thread, num_checked_states) = 0;
-    HT_FIELD(hard_thread, max_num_checked_states) = INT_MAX;
+    HT_FIELD(hard_thread, ht__num_checked_states) = 0;
+    HT_FIELD(hard_thread, ht__max_num_checked_states) = INT_MAX;
     HT_FIELD(hard_thread, num_soft_threads_finished) = 0;
 }
 

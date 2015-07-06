@@ -421,7 +421,7 @@ static GCC_INLINE void calculate_real_depth(
                     message, \
                     (long int)DFS_VAR(soft_thread, depth), \
                     (long int)(the_soft_dfs_info-DFS_VAR(soft_thread, soft_dfs_info)), \
-                    (long int)(instance->num_checked_states), \
+                    (long int)(instance->i__num_checked_states), \
                     the_soft_dfs_info->tests_list_index, \
                     the_soft_dfs_info->test_index, \
                     the_soft_dfs_info->current_state_index, \
@@ -801,15 +801,15 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     }
 
 
-    fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->num_checked_states);
+    fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->i__num_checked_states);
     fcs_int_limit_t * const hard_thread_num_checked_states_ptr
-        = &(hard_thread->num_checked_states);
+        = &(HT_FIELD( hard_thread, ht__num_checked_states));
 
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES() \
-    hard_thread_max_num_checked_states = hard_thread->max_num_checked_states; \
+    hard_thread_max_num_checked_states = HT_FIELD(hard_thread, ht__max_num_checked_states); \
                 \
     {           \
-        const fcs_int_limit_t lim = hard_thread->num_checked_states       \
+        const fcs_int_limit_t lim = HT_FIELD(hard_thread, ht__num_checked_states)       \
             + (instance->effective_max_num_checked_states - *(instance_num_checked_states_ptr)) \
             ; \
               \
@@ -1189,7 +1189,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     );
 
 #ifndef FCS_WITHOUT_VISITED_ITER
-                    FCS_S_VISITED_ITER(single_derived_state) = instance->num_checked_states;
+                    FCS_S_VISITED_ITER(single_derived_state) = instance->i__num_checked_states;
 #endif
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Golf");
@@ -1280,7 +1280,7 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 
     const typeof (pats_scan->num_checked_states) start_from = pats_scan->num_checked_states;
 
-    pats_scan->max_num_checked_states = start_from + (hard_thread->max_num_checked_states - hard_thread->num_checked_states);
+    pats_scan->max_num_checked_states = start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) - HT_FIELD(hard_thread, ht__num_checked_states));
 
     pats_scan->status = FCS_PATS__NOSOL;
 
@@ -1288,8 +1288,8 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 
     {
         const typeof(start_from) after_scan_delta = pats_scan->num_checked_states - start_from;
-        HT_FIELD(hard_thread, num_checked_states) += after_scan_delta;
-        HT_INSTANCE(hard_thread)->num_checked_states += after_scan_delta;
+        HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
+        HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
     }
 
     const typeof(pats_scan->status) status = pats_scan->status;

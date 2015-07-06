@@ -350,7 +350,7 @@ void fc_solve_instance__init_hard_thread(
     fc_solve_new_soft_thread(hard_thread);
 
     /* Set a limit on the Hard-Thread's scan. */
-    HT_FIELD(hard_thread, num_checked_states_step) = NUM_CHECKED_STATES_STEP;
+    HT_FIELD(hard_thread, ht__num_checked_states_step) = NUM_CHECKED_STATES_STEP;
 
 
     HT_FIELD(hard_thread, prelude_as_string) = NULL;

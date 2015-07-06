@@ -927,7 +927,7 @@ static void trace_flare_solution(
         instance->solution_moves.moves = NULL;
     }
 
-    flare->obj_stats.num_checked_states = flare->obj.num_checked_states;
+    flare->obj_stats.num_checked_states = flare->obj.i__num_checked_states;
     flare->obj_stats.num_states_in_collection = flare->obj.num_states_in_collection;
 
     recycle_flare( flare );
@@ -1162,18 +1162,18 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             if (mymin < 0)
             {
-                user->active_flare->obj.max_num_checked_states = -1;
+                user->active_flare->obj.i__max_num_checked_states = -1;
                 user->active_flare->obj.effective_max_num_checked_states = FCS_INT_LIMIT_MAX;
             }
             else
             {
-                user->active_flare->obj.max_num_checked_states =
+                user->active_flare->obj.i__max_num_checked_states =
                     user->active_flare->obj.effective_max_num_checked_states =
-                    (user->active_flare->obj.num_checked_states + mymin - user->iterations_board_started_at.num_checked_states);
+                    (user->active_flare->obj.i__num_checked_states + mymin - user->iterations_board_started_at.num_checked_states);
             }
         }
 
-        user->init_num_checked_states.num_checked_states = init_num_checked_states.num_checked_states = user->active_flare->obj.num_checked_states;
+        user->init_num_checked_states.num_checked_states = init_num_checked_states.num_checked_states = user->active_flare->obj.i__num_checked_states;
         user->init_num_checked_states.num_states_in_collection = init_num_checked_states.num_states_in_collection = user->active_flare->obj.num_states_in_collection;
 
         if (is_start_of_flare_solving)
@@ -1202,7 +1202,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->all_instances_were_suspended = FALSE;
         }
 
-        user->active_flare->obj_stats.num_checked_states = user->active_flare->obj.num_checked_states;
+        user->active_flare->obj_stats.num_checked_states = user->active_flare->obj.i__num_checked_states;
         user->active_flare->obj_stats.num_states_in_collection = user->active_flare->obj.num_states_in_collection;
         user->iterations_board_started_at.num_checked_states += user->active_flare->obj_stats.num_checked_states - init_num_checked_states.num_checked_states;
         user->iterations_board_started_at.num_states_in_collection += user->active_flare->obj_stats.num_states_in_collection - init_num_checked_states.num_states_in_collection;
@@ -1270,11 +1270,11 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * so, designate it as unsolvable.
              * */
             if ((local_limit() >= 0) &&
-                (user->active_flare->obj.num_checked_states >= local_limit())
+                (user->active_flare->obj.i__num_checked_states >= local_limit())
                )
             {
                 user->active_flare->obj_stats.num_checked_states =
-                    user->active_flare->obj.num_checked_states;
+                    user->active_flare->obj.i__num_checked_states;
                 user->active_flare->obj_stats.num_states_in_collection =
                     user->active_flare->obj.num_states_in_collection;
                 recycle_instance(user, user->current_instance_idx);
@@ -1730,7 +1730,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    return user->iterations_board_started_at.num_checked_states + max(user->active_flare->obj_stats.num_checked_states, user->active_flare->obj.num_checked_states) - user->init_num_checked_states.num_checked_states;
+    return user->iterations_board_started_at.num_checked_states + max(user->active_flare->obj_stats.num_checked_states, user->active_flare->obj.i__num_checked_states) - user->init_num_checked_states.num_checked_states;
 }
 
 int DLLEXPORT freecell_solver_user_get_num_times(void * const api_instance)
@@ -1742,7 +1742,7 @@ int DLLEXPORT freecell_solver_user_get_limit_iterations(void * const api_instanc
 {
     const fcs_user_t * const user = (const fcs_user_t *)api_instance;
 
-    return user->active_flare->obj.max_num_checked_states;
+    return user->active_flare->obj.i__max_num_checked_states;
 }
 
 int DLLEXPORT freecell_solver_user_get_moves_left(void * const api_instance)

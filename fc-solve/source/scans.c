@@ -593,8 +593,8 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
     const int method = soft_thread->method;
-    fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->num_checked_states);
-    fcs_int_limit_t * const hard_thread_num_checked_states_ptr = &(hard_thread->num_checked_states);
+    fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->i__num_checked_states);
+    fcs_int_limit_t * const hard_thread_num_checked_states_ptr = &(HT_FIELD(hard_thread, ht__num_checked_states));
 
     INITIALIZE_STATE();
 
