@@ -86,7 +86,7 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
     }
 #ifndef HARD_CODED_NUM_STACKS
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * const instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 #endif
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
@@ -209,7 +209,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 )
 {
 #ifndef FCS_FREECELL_ONLY
-    const fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+    const fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
     const int sequences_are_built_by =
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)
         ;
@@ -750,7 +750,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     )
 {
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * const instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 
     DECLARE_STATE();
 
@@ -1288,8 +1288,8 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 
     {
         const typeof(start_from) after_scan_delta = pats_scan->num_checked_states - start_from;
-        hard_thread->num_checked_states += after_scan_delta;
-        hard_thread->instance->num_checked_states += after_scan_delta;
+        HT_FIELD(hard_thread, num_checked_states) += after_scan_delta;
+        HT_INSTANCE(hard_thread)->num_checked_states += after_scan_delta;
     }
 
     const typeof(pats_scan->status) status = pats_scan->status;

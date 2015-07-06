@@ -1547,7 +1547,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
                 typeof(soft_thread->pats_scan) pats_scan
                     = soft_thread->pats_scan = SMALLOC1(soft_thread->pats_scan);
                 fc_solve_pats__init_soft_thread(pats_scan,
-                    soft_thread->hard_thread->instance);
+                    HT_INSTANCE(soft_thread->hard_thread));
 
                 pats_scan->to_stack = 1;
 
@@ -2211,6 +2211,9 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(
     void * const api_instance
     )
 {
+#ifdef FCS__SINGLE_HARD_THREAD
+    return freecell_solver_user_next_soft_thread(api_instance);
+#else
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = fc_solve_new_hard_thread(&(user->active_flare->obj));
@@ -2223,6 +2226,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(
     user->soft_thread = soft_thread;
 
     return 0;
+#endif
 }
 
 int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
@@ -2281,11 +2285,11 @@ int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
 
     fc_solve_hard_thread_t * const hard_thread = user->soft_thread->hard_thread;
 
-    if (hard_thread->prelude_as_string != NULL)
+    if (HT_FIELD(hard_thread, prelude_as_string) != NULL)
     {
-        free (hard_thread->prelude_as_string);
+        free (HT_FIELD(hard_thread, prelude_as_string));
     }
-    hard_thread->prelude_as_string = strdup(prelude);
+    HT_FIELD(hard_thread, prelude_as_string) = strdup(prelude);
 
     return 0;
 }
@@ -2524,9 +2528,13 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
 {
     const fcs_user_t * const user = (const fcs_user_t *)api_instance;
 
+#ifdef FCS__SINGLE_HARD_THREAD
+    const fc_solve_hard_thread_t * const hard_thread = &(user->active_flare->obj);
+#else
     const fc_solve_hard_thread_t * const hard_thread = user->active_flare->obj.current_hard_thread;
+#endif
 
-    return hard_thread->soft_threads[hard_thread->st_idx].name;
+    return HT_FIELD(hard_thread, soft_threads)[HT_FIELD(hard_thread, st_idx)].name;
 }
 
 DLLEXPORT const char * freecell_solver_user_get_last_error_string(

@@ -416,7 +416,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 #define NEW_BRFS_QUEUE_ITEM() \
     ((fcs_states_linked_list_item_t *) \
     fcs_compact_alloc_ptr( \
-        &(hard_thread->allocator), \
+        &(HT_FIELD(hard_thread, allocator)), \
         sizeof(fcs_states_linked_list_item_t) \
     ));
 
@@ -448,7 +448,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 {
     fc_solve_soft_thread_update_initial_cards_val(soft_thread);
 
-    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+    fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
 
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
@@ -514,7 +514,7 @@ static void dump_pqueue (
 {
     int i;
     char * s;
-    fc_solve_instance_t * instance = soft_thread->hard_thread->instance;
+    fc_solve_instance_t * instance = HT_INSTANCE(soft_thread->hard_thread);
 
     if (strcmp(soft_thread->name, "11"))
     {
@@ -560,7 +560,7 @@ static void dump_pqueue (
 int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 {
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * const instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 
     DECLARE_NEW_STATE();
     DECLARE_STATE();
@@ -945,7 +945,7 @@ char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
 #define FCS_SCANS_the_state state_key
 
 #if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+    fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
     SET_GAME_PARAMS();
 #endif
 
@@ -1036,9 +1036,9 @@ int fc_solve_sfs_check_state_begin(
 {
 #define ptr_state (raw_ptr_state_raw->val)
     fcs_collectible_state_t * raw_ptr_new_state;
-    fc_solve_instance_t * const instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 
-    if ((hard_thread->allocated_from_list =
+    if ((HT_FIELD(hard_thread, allocated_from_list) =
         (instance->list_of_vacant_states != NULL)))
     {
         raw_ptr_new_state = instance->list_of_vacant_states;
@@ -1048,7 +1048,7 @@ int fc_solve_sfs_check_state_begin(
     {
         raw_ptr_new_state =
             fcs_state_ia_alloc_into_var(
-                &(hard_thread->allocator)
+                &(HT_FIELD(hard_thread, allocator))
             );
     }
 
@@ -1097,7 +1097,7 @@ extern void fc_solve_sfs_check_state_end(
     )
 {
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * const instance = hard_thread->instance;
+    fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_runtime_flags_t calc_real_depth
         = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
@@ -1116,14 +1116,14 @@ extern void fc_solve_sfs_check_state_end(
         ))
     {
 #define existing_state_val (existing_state.val)
-        if (hard_thread->allocated_from_list)
+        if (HT_FIELD(hard_thread, allocated_from_list))
         {
             ptr_new_state_foo->parent = instance->list_of_vacant_states;
             instance->list_of_vacant_states = INFO_STATE_PTR(raw_ptr_new_state_raw);
         }
         else
         {
-            fcs_compact_alloc_release(&(hard_thread->allocator));
+            fcs_compact_alloc_release(&(HT_FIELD(hard_thread, allocator)));
         }
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD

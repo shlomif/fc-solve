@@ -79,14 +79,19 @@ static GCC_INLINE void fc_solve_cache_stacks(
         fcs_kv_state_t * const new_state
         )
 {
+#ifdef FCS__SINGLE_HARD_THREAD
+#define instance hard_thread
+#else
     fc_solve_instance_t * const instance = hard_thread->instance;
+#endif
+
 #ifndef HARD_CODED_NUM_STACKS
     SET_GAME_PARAMS();
 #endif
     register fcs_state_t * const new_state_key = new_state->key;
     register fcs_state_extra_info_t * const new_state_info = new_state->val;
 
-    fcs_compact_allocator_t * const stacks_allocator = &(hard_thread->allocator);
+    fcs_compact_allocator_t * const stacks_allocator = &(HT_FIELD(hard_thread, allocator));
 
     fcs_cards_column_t * current_stack = new_state_key->stacks;
 
@@ -237,6 +242,9 @@ static GCC_INLINE void fc_solve_cache_stacks(
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
     }
+#ifdef FCS__SINGLE_HARD_THREAD
+#undef instance
+#endif
 }
 
 #else /* #ifdef INDIRECT_STACK_STATES */
@@ -324,7 +332,11 @@ fcs_bool_t fc_solve_check_and_add_state(
 
 #define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
 
+#ifdef FCS__SINGLE_HARD_THREAD
+#define instance hard_thread
+#else
     fc_solve_instance_t * const instance = hard_thread->instance;
+#endif
 
     /* #if'ing out because it doesn't belong here. */
 #if 0
@@ -638,3 +650,6 @@ fcs_bool_t fc_solve_check_and_add_state(
 #error Unknown FCS_STATE_STORAGE. Please define it to a valid value.
 #endif
 }
+#ifdef FCS__SINGLE_HARD_THREAD
+#undef instance
+#endif

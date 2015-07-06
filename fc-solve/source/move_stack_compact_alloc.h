@@ -41,7 +41,7 @@ static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(
 {
     char * const ptr =
         (char*)fcs_compact_alloc_ptr(
-            &(hard_thread->allocator),
+            &(HT_FIELD(hard_thread, allocator)),
             (sizeof(fcs_move_stack_t) +
              sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves
             )

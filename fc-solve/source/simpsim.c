@@ -122,7 +122,7 @@ static char * get_the_positions_by_rank_data__ss_generator(
     const fcs_state_t * const the_state
 )
 {
-    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+    fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
     SET_GAME_PARAMS();
 
 #define FCS_SS_POS_BY_RANK_WIDTH (13+1)

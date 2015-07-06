@@ -247,7 +247,24 @@ void fc_solve_foreach_soft_thread(
     void * const context
 )
 {
-
+#ifdef FCS__SINGLE_HARD_THREAD
+    const int num_soft_threads = instance->hard_thread.num_soft_threads;
+    for (int st_idx = 0 ; st_idx <= num_soft_threads; st_idx++)
+    {
+        fc_solve_soft_thread_t * soft_thread;
+        if (st_idx < num_soft_threads)
+        {
+            soft_thread = &(instance->hard_thread.soft_threads[st_idx]);
+        }
+        else if (instance->is_optimization_st)
+        {
+            soft_thread = &(instance->optimization_soft_thread);
+        }
+        else
+        {
+            break;
+        }
+#else
     for (int ht_idx = 0 ; ht_idx<=instance->num_hard_threads; ht_idx++)
     {
         fc_solve_hard_thread_t * hard_thread;
@@ -263,8 +280,9 @@ void fc_solve_foreach_soft_thread(
         {
             break;
         }
-
         ST_LOOP_START()
+#endif
+
         {
             switch (callback_choice)
             {
@@ -285,7 +303,11 @@ void fc_solve_foreach_soft_thread(
                 break;
             }
         }
+#ifdef FCS__SINGLE_HARD_THREAD
     }
+#else
+    }
+#endif
 }
 
 static GCC_INLINE void clean_soft_dfs( fc_solve_instance_t * const instance )
@@ -297,15 +319,17 @@ static GCC_INLINE void clean_soft_dfs( fc_solve_instance_t * const instance )
     );
 }
 
-
-static GCC_INLINE void init_soft_thread(
+#ifndef FCS__SINGLE_HARD_THREAD
+static GCC_INLINE
+#endif
+void fc_solve_init_soft_thread(
     fc_solve_hard_thread_t * const hard_thread,
     fc_solve_soft_thread_t * const soft_thread
 )
 {
     soft_thread->hard_thread = hard_thread;
 
-    soft_thread->id = (hard_thread->instance->next_soft_thread_id)++;
+    soft_thread->id = (HT_INSTANCE(hard_thread)->next_soft_thread_id)++;
 
     DFS_VAR(soft_thread, dfs_max_depth) = 0;
 
@@ -349,7 +373,7 @@ static GCC_INLINE void init_soft_thread(
 
     soft_thread->num_checked_states_step = NUM_CHECKED_STATES_STEP;
 
-    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order = tests_order_dup(&(soft_thread->hard_thread->instance->instance_tests_order));
+    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order = tests_order_dup(&(HT_INSTANCE(soft_thread->hard_thread)->instance_tests_order));
 
     fc_solve_reset_soft_thread(soft_thread);
 
@@ -363,31 +387,41 @@ static GCC_INLINE void init_soft_thread(
 }
 
 void fc_solve_instance__init_hard_thread(
+#ifndef FCS__SINGLE_HARD_THREAD
     fc_solve_instance_t * const instance,
+#endif
     fc_solve_hard_thread_t * const hard_thread
 )
 {
+#ifndef FCS__SINGLE_HARD_THREAD
     hard_thread->instance = instance;
+#endif
 
-    hard_thread->num_soft_threads = 0;
+    HT_FIELD(hard_thread, num_soft_threads) = 0;
 
-    hard_thread->soft_threads = NULL;
+    HT_FIELD(hard_thread, soft_threads) = NULL;
 
     fc_solve_new_soft_thread(hard_thread);
 
     /* Set a limit on the Hard-Thread's scan. */
-    hard_thread->num_checked_states_step = NUM_CHECKED_STATES_STEP;
+    HT_FIELD(hard_thread, num_checked_states_step) = NUM_CHECKED_STATES_STEP;
 
 
-    hard_thread->prelude_as_string = NULL;
-    hard_thread->prelude = NULL;
-    hard_thread->prelude_num_items = 0;
-    hard_thread->prelude_idx = 0;
+    HT_FIELD(hard_thread, prelude_as_string) = NULL;
+    HT_FIELD(hard_thread, prelude) = NULL;
+    HT_FIELD(hard_thread, prelude_num_items) = 0;
+    HT_FIELD(hard_thread, prelude_idx) = 0;
 
     fc_solve_reset_hard_thread(hard_thread);
-    fc_solve_compact_allocator_init(&(hard_thread->allocator), instance->meta_alloc);
+    fc_solve_compact_allocator_init(&(HT_FIELD(hard_thread, allocator)),
+#ifdef FCS__SINGLE_HARD_THREAD
+        hard_thread->meta_alloc
+#else
+        instance->meta_alloc
+#endif
+        );
 
-    hard_thread->reusable_move_stack = fcs_move_stack__new();
+    HT_FIELD(hard_thread, reusable_move_stack) = fcs_move_stack__new();
 }
 
 
@@ -798,19 +832,19 @@ fc_solve_soft_thread_t * fc_solve_new_soft_thread(
 {
     /* Make sure we are not exceeding the maximal number of soft threads
      * for an instance. */
-    if (hard_thread->instance->next_soft_thread_id == MAX_NUM_SCANS)
+    if (HT_INSTANCE(hard_thread)->next_soft_thread_id == MAX_NUM_SCANS)
     {
         return NULL;
     }
 
-    hard_thread->soft_threads =
-        SREALLOC(hard_thread->soft_threads, hard_thread->num_soft_threads+1);
+    HT_FIELD(hard_thread, soft_threads) =
+        SREALLOC(HT_FIELD(hard_thread, soft_threads), HT_FIELD(hard_thread, num_soft_threads)+1);
 
     fc_solve_soft_thread_t * ret;
 
-    init_soft_thread(
+    fc_solve_init_soft_thread(
         hard_thread,
-        (ret = &(hard_thread->soft_threads[hard_thread->num_soft_threads++]))
+        (ret = &(HT_FIELD(hard_thread, soft_threads)[HT_FIELD(hard_thread, num_soft_threads)++]))
     );
 
     return ret;

@@ -189,8 +189,13 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #else
 
+#ifdef FCS__SINGLE_HARD_THREAD
+#define tests_define_accessors_freecell_only() \
+    fc_solve_instance_t * const instance = hard_thread;
+#else
 #define tests_define_accessors_freecell_only() \
     fc_solve_instance_t * const instance = hard_thread->instance;
+#endif
 
 #define tests__is_filled_by_any_card() \
     (empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
@@ -208,7 +213,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  * */
 #define tests_define_accessors_no_stacks()                                  \
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;        \
-    fcs_move_stack_t * const moves = &(hard_thread->reusable_move_stack);         \
+    fcs_move_stack_t * const moves = &(HT_FIELD(hard_thread, reusable_move_stack));         \
     int state_context_value = 0;                                            \
     fcs_kv_state_t pass_new_state;                                          \
     tests_define_accessors_freecell_only();   \
@@ -216,7 +221,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #ifdef INDIRECT_STACK_STATES
 #define tests_define_indirect_stack_states_accessors() \
-    char * indirect_stacks_buffer = hard_thread->indirect_stacks_buffer;
+    char * indirect_stacks_buffer = HT_FIELD(hard_thread, indirect_stacks_buffer);
 #else
 #define tests_define_indirect_stack_states_accessors()
 #endif

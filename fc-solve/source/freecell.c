@@ -203,11 +203,11 @@ static GCC_INLINE int empty_two_cols_from_new_state(
     int * col_num_cards = num_cards_to_move_from_columns;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_INSTANCE_GAME_PARAMS(soft_thread->hard_thread->instance);
+    SET_INSTANCE_GAME_PARAMS(HT_INSTANCE(soft_thread->hard_thread));
 #endif
 
 #ifdef INDIRECT_STACK_STATES
-    char * const indirect_stacks_buffer = soft_thread->hard_thread->indirect_stacks_buffer;
+    char * const indirect_stacks_buffer = HT_FIELD(soft_thread->hard_thread, indirect_stacks_buffer);
 #endif
 
 
@@ -1894,7 +1894,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 )
 {
 #ifndef FCS_FREECELL_ONLY
-    const fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+    const fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
 #endif
 
     tests_define_seqs_built_by();

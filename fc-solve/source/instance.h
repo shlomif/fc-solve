@@ -117,6 +117,10 @@ extern "C" {
 
 #include "meta_alloc.h"
 
+#if 0
+#define FCS__SINGLE_HARD_THREAD 1
+#endif
+
 /*
  * This is a linked list item that is used to implement a queue for the BFS
  * scan.
@@ -133,7 +137,7 @@ typedef struct fcs_states_linked_list_item_struct
  * */
 struct fc_solve_hard_thread_struct;
 struct fc_solve_soft_thread_struct;
-
+struct fc_solve_instance_struct;
 
 typedef void (*fc_solve_solve_for_state_test_t)(
     struct fc_solve_soft_thread_struct *,
@@ -141,7 +145,11 @@ typedef void (*fc_solve_solve_for_state_test_t)(
     fcs_derived_states_list_t *
 );
 
+#ifdef FCS__SINGLE_HARD_THREAD
+typedef struct fc_solve_instance_struct fc_solve_hard_thread_t;
+#else
 typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
+#endif
 
 extern fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t * const hard_thread,
@@ -155,6 +163,12 @@ extern guint fc_solve_hash_function(gconstpointer key);
 #include "move_funcs_maps.h"
 
 /* HT_LOOP == hard threads' loop - macros to abstract it. */
+#ifdef FCS__SINGLE_HARD_THREAD
+
+#define HT_LOOP_START() \
+    fc_solve_hard_thread_t * const hard_thread = instance; \
+
+#else
 #define HT_LOOP_START() \
     fc_solve_hard_thread_t * hard_thread = instance->hard_threads; \
     fc_solve_hard_thread_t * const end_hard_thread = hard_thread+instance->num_hard_threads; \
@@ -162,12 +176,13 @@ extern guint fc_solve_hash_function(gconstpointer key);
          hard_thread < end_hard_thread ;  \
          hard_thread++ \
     )
+#endif
 
 /* ST_LOOP == soft threads' loop - macros to abstract it. */
 #define ST_LOOP_START() \
-    typeof(hard_thread->soft_threads[0]) * const ht_soft_threads = hard_thread->soft_threads; \
+    fc_solve_soft_thread_t * const ht_soft_threads = HT_FIELD(hard_thread, soft_threads); \
     fc_solve_soft_thread_t * soft_thread = ht_soft_threads; \
-    fc_solve_soft_thread_t * const end_soft_thread = ht_soft_threads + hard_thread->num_soft_threads; \
+    fc_solve_soft_thread_t * const end_soft_thread = ht_soft_threads + HT_FIELD(hard_thread, num_soft_threads); \
     for ( ; \
          soft_thread < end_soft_thread ;  \
          soft_thread++ \
@@ -335,240 +350,9 @@ typedef void (*fcs_instance_debug_iter_output_func_t)(
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
-struct fc_solve_instance_struct
-{
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-    /* The sort-margin */
-    fcs_standalone_state_ptrs_t indirect_prev_states_margin[PREV_STATES_SORT_MARGIN];
-
-    /* The number of states in the sort margin */
-    int num_prev_states_margin;
-
-    /* The sorted cached states, and their number. The maximal
-     * size is calculated based on the number.
-     * */
-    fcs_standalone_state_ptrs_t * indirect_prev_states;
-    fcs_int_limit_t num_indirect_prev_states;
-#endif
-
-    /*
-     * The parameters of the game - see the declaration of
-     * fcs_game_type_params_t .
-     *
-     * */
-    fcs_game_type_params_t game_params;
-#ifndef FCS_FREECELL_ONLY
-    fcs_card_t game_variant_suit_mask;
-    fcs_card_t game_variant_desired_suit_value;
-#endif
-
-    /* The number of states that were checked by the solving algorithm. */
-    fcs_int_limit_t num_checked_states;
-
-    /*
-     * Like max_num_checked_states only defaults to MAX_INT if below zero so it will
-     * work without checking if it's zero.
-     *
-     * Normally should be used instead.
-     * */
-    fcs_int_limit_t effective_max_num_checked_states, effective_max_num_states_in_collection;
-    fcs_int_limit_t effective_trim_states_in_collection_from;
-    /*
-     * tree is the balanced binary tree that is used to store and index
-     * the checked states.
-     *
-     * */
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    struct rbtree * tree;
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
-    Pvoid_t judy_array;
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-    fcs_libavl2_states_tree_table_t * tree;
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-    GTree * tree;
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
-    dict_t * tree;
-#endif
-
-    /*
-     * hash is the hash table that is used to store the previous
-     * states of the scan.
-     * */
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-    GHashTable * hash;
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_t hash;
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-    fcs_states_google_hash_handle_t hash;
-#endif
-
-#if defined(INDIRECT_STACK_STATES)
-    /*
-     * The storage mechanism for the stacks assuming INDIRECT_STACK_STATES is
-     * used.
-     * */
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_t stacks_hash;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
-    fcs_libavl2_stacks_tree_table_t * stacks_tree;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
-    struct rbtree * stacks_tree;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
-    GTree * stacks_tree;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
-    GHashTable * stacks_hash;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-    fcs_columns_google_hash_handle_t stacks_hash;
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
-    Pvoid_t stacks_judy_array;
-#else
-#error FCS_STACK_STORAGE is not set to a good value.
-#endif
-#endif
-
-    fcs_collectible_state_t * list_of_vacant_states;
-    /*
-     * Storing using Berkeley DB is not operational for some reason so
-     * pay no attention to it for the while
-     * */
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
-    DB * db;
-#endif
-
-    fcs_runtime_flags_t runtime_flags;
-
-    /*
-     * This is the number of states in the state collection.
-     *
-     * It gives a rough estimate of the memory occupied by the instance.
-     * */
-    fcs_int_limit_t active_num_states_in_collection, num_states_in_collection;
-
-    /*
-     * A limit to the above.
-     * */
-    fcs_int_limit_t max_num_states_in_collection;
-
-    int num_hard_threads;
-    struct fc_solve_hard_thread_struct * hard_threads;
-    /*
-     * An iterator over the hard threads.
-     * */
-    fc_solve_hard_thread_t * current_hard_thread;
-
-    /*
-     * This is the master tests order. It is used to initialize all
-     * the new Soft-Threads.
-     * */
-    fcs_tests_order_t instance_tests_order;
-
-    /*
-     * This is the hard-thread used for the optimization scan.
-     * */
-    struct fc_solve_hard_thread_struct * optimization_thread;
-
-    /*
-     * A counter that determines how many of the hard threads that belong
-     * to this hard thread have already finished. If it becomes num_hard_threads
-     * the instance terminates.
-     * */
-    int num_hard_threads_finished;
-
-    /*
-     * The tests order for the optimization scan as specified by the user.
-     * */
-    fcs_tests_order_t opt_tests_order;
-
-#ifdef FCS_RCS_STATES
-    fcs_lru_cache_t rcs_states_cache;
-
-#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
-    fcs_state_t * tree_new_state_key;
-    fcs_collectible_state_t * tree_new_state;
-#endif
-
-#endif
-    /*
-     * Limits for the maximal depth and for the maximal number of checked
-     * states. max_num_checked_states is useful because it enables the process to
-     * stop before it consumes too much memory.
-     *
-     * max_depth is quite dangerous because it blocks some intermediate moves
-     * and doesn't allow a program to fully reach its solution.
-     *
-     * */
-#ifdef FC_SOLVE__WITH_MAX_DEPTH
-    int max_depth;
-#endif
-    fcs_int_limit_t max_num_checked_states;
-    fcs_int_limit_t trim_states_in_collection_from;
-
-    /*
-     * The debug_iter_output variables provide a programmer programmable way
-     * to debug the algorithm while it is running. This works well for DFS
-     * and Soft-DFS scans but at present support for BeFS and BFS is not
-     * too good, as its hard to tell which state came from which parent state.
-     *
-     * debug_iter_output_func is a pointer to the function that performs the
-     * debugging. If NULL, this feature is not used.
-     *
-     * debug_iter_output_context is a user-specified context for it, that
-     * may include data that is not included in the instance structure.
-     *
-     * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
-     * */
-    fcs_instance_debug_iter_output_func_t debug_iter_output_func;
-    fcs_instance_debug_iter_output_context_t debug_iter_output_context;
-
-    /*
-     * The next ID to allocate for a soft-thread.
-     * */
-    int next_soft_thread_id;
-
-    /* This is a place-holder for the initial state */
-    fcs_state_keyval_pair_t * state_copy_ptr;
-
-    /* This is the final state that the scan recommends to the
-     * interface
-     * */
-    fcs_collectible_state_t * final_state;
-
-
-    /*
-     * A move stack that contains the moves leading to the solution.
-     *
-     * It is created only after the solution was found by swallowing
-     * all the stacks of each depth.
-     * */
-    fcs_move_stack_t solution_moves;
-
-    /*
-     * The meta allocator - see meta_alloc.h.
-     * */
-    fcs_meta_compact_allocator_t * meta_alloc;
-
-    /*
-     * The soft_thread that solved the state.
-     *
-     * Needed to trace the patsolve solutions.
-     * */
-    fc_solve_soft_thread_t * solving_soft_thread;
-
-    /*
-     * This is intended to be used by the patsolve scan which is
-     * sensitive to the ordering of the columns/stacks. This is an ugly hack
-     * but hopefully it will work.
-     * */
-    fcs_state_keyval_pair_t * initial_non_canonized_state;
-};
-
 typedef struct fc_solve_instance_struct fc_solve_instance_t;
 
-
-
-
 /***************************************************/
-
 
 typedef struct
 {
@@ -578,7 +362,9 @@ typedef struct
 
 struct fc_solve_hard_thread_struct
 {
+#ifndef FCS__SINGLE_HARD_THREAD
     fc_solve_instance_t * instance;
+#endif
 
     struct fc_solve_soft_thread_struct * soft_threads;
 
@@ -657,6 +443,7 @@ struct fc_solve_hard_thread_struct
 };
 
 
+
 /********************************************/
 
 typedef struct {
@@ -731,7 +518,6 @@ typedef enum
 } fcs_super_method_type_t;
 
 struct fc_solve__patsolve_thread_struct;
-
 struct fc_solve_soft_thread_struct
 {
     fc_solve_hard_thread_t * hard_thread;
@@ -904,6 +690,262 @@ struct fc_solve_soft_thread_struct
 #endif
 };
 
+struct fc_solve_instance_struct
+{
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
+    /* The sort-margin */
+    fcs_standalone_state_ptrs_t indirect_prev_states_margin[PREV_STATES_SORT_MARGIN];
+
+    /* The number of states in the sort margin */
+    int num_prev_states_margin;
+
+    /* The sorted cached states, and their number. The maximal
+     * size is calculated based on the number.
+     * */
+    fcs_standalone_state_ptrs_t * indirect_prev_states;
+    fcs_int_limit_t num_indirect_prev_states;
+#endif
+
+    /*
+     * The parameters of the game - see the declaration of
+     * fcs_game_type_params_t .
+     *
+     * */
+    fcs_game_type_params_t game_params;
+#ifndef FCS_FREECELL_ONLY
+    fcs_card_t game_variant_suit_mask;
+    fcs_card_t game_variant_desired_suit_value;
+#endif
+
+    /* The number of states that were checked by the solving algorithm. */
+    fcs_int_limit_t num_checked_states;
+
+    /*
+     * Like max_num_checked_states only defaults to MAX_INT if below zero so it will
+     * work without checking if it's zero.
+     *
+     * Normally should be used instead.
+     * */
+    fcs_int_limit_t effective_max_num_checked_states, effective_max_num_states_in_collection;
+    fcs_int_limit_t effective_trim_states_in_collection_from;
+    /*
+     * tree is the balanced binary tree that is used to store and index
+     * the checked states.
+     *
+     * */
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
+    struct rbtree * tree;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
+    Pvoid_t judy_array;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
+    fcs_libavl2_states_tree_table_t * tree;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
+    GTree * tree;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
+    dict_t * tree;
+#endif
+
+    /*
+     * hash is the hash table that is used to store the previous
+     * states of the scan.
+     * */
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
+    GHashTable * hash;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+    fc_solve_hash_t hash;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+    fcs_states_google_hash_handle_t hash;
+#endif
+
+#if defined(INDIRECT_STACK_STATES)
+    /*
+     * The storage mechanism for the stacks assuming INDIRECT_STACK_STATES is
+     * used.
+     * */
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
+    fc_solve_hash_t stacks_hash;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
+    fcs_libavl2_stacks_tree_table_t * stacks_tree;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
+    struct rbtree * stacks_tree;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
+    GTree * stacks_tree;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
+    GHashTable * stacks_hash;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+    fcs_columns_google_hash_handle_t stacks_hash;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
+    Pvoid_t stacks_judy_array;
+#else
+#error FCS_STACK_STORAGE is not set to a good value.
+#endif
+#endif
+
+    fcs_collectible_state_t * list_of_vacant_states;
+    /*
+     * Storing using Berkeley DB is not operational for some reason so
+     * pay no attention to it for the while
+     * */
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
+    DB * db;
+#endif
+
+    fcs_runtime_flags_t runtime_flags;
+
+    /*
+     * This is the number of states in the state collection.
+     *
+     * It gives a rough estimate of the memory occupied by the instance.
+     * */
+    fcs_int_limit_t active_num_states_in_collection, num_states_in_collection;
+
+    /*
+     * A limit to the above.
+     * */
+    fcs_int_limit_t max_num_states_in_collection;
+
+#ifdef FCS__SINGLE_HARD_THREAD
+    struct fc_solve_hard_thread_struct hard_thread;
+    fcs_bool_t is_optimization_st;
+    struct fc_solve_soft_thread_struct optimization_soft_thread;
+#else
+    int num_hard_threads;
+    struct fc_solve_hard_thread_struct * hard_threads;
+    /*
+     * An iterator over the hard threads.
+     * */
+    fc_solve_hard_thread_t * current_hard_thread;
+
+    /*
+     * This is the hard-thread used for the optimization scan.
+     * */
+    struct fc_solve_hard_thread_struct * optimization_thread;
+#endif
+
+    /*
+     * This is the master tests order. It is used to initialize all
+     * the new Soft-Threads.
+     * */
+    fcs_tests_order_t instance_tests_order;
+
+    /*
+     * A counter that determines how many of the hard threads that belong
+     * to this hard thread have already finished. If it becomes num_hard_threads
+     * the instance terminates.
+     * */
+    int num_hard_threads_finished;
+
+    /*
+     * The tests order for the optimization scan as specified by the user.
+     * */
+    fcs_tests_order_t opt_tests_order;
+
+#ifdef FCS_RCS_STATES
+    fcs_lru_cache_t rcs_states_cache;
+
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
+    fcs_state_t * tree_new_state_key;
+    fcs_collectible_state_t * tree_new_state;
+#endif
+
+#endif
+    /*
+     * Limits for the maximal depth and for the maximal number of checked
+     * states. max_num_checked_states is useful because it enables the process to
+     * stop before it consumes too much memory.
+     *
+     * max_depth is quite dangerous because it blocks some intermediate moves
+     * and doesn't allow a program to fully reach its solution.
+     *
+     * */
+#ifdef FC_SOLVE__WITH_MAX_DEPTH
+    int max_depth;
+#endif
+    fcs_int_limit_t max_num_checked_states;
+    fcs_int_limit_t trim_states_in_collection_from;
+
+    /*
+     * The debug_iter_output variables provide a programmer programmable way
+     * to debug the algorithm while it is running. This works well for DFS
+     * and Soft-DFS scans but at present support for BeFS and BFS is not
+     * too good, as its hard to tell which state came from which parent state.
+     *
+     * debug_iter_output_func is a pointer to the function that performs the
+     * debugging. If NULL, this feature is not used.
+     *
+     * debug_iter_output_context is a user-specified context for it, that
+     * may include data that is not included in the instance structure.
+     *
+     * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
+     * */
+    fcs_instance_debug_iter_output_func_t debug_iter_output_func;
+    fcs_instance_debug_iter_output_context_t debug_iter_output_context;
+
+    /*
+     * The next ID to allocate for a soft-thread.
+     * */
+    int next_soft_thread_id;
+
+    /* This is a place-holder for the initial state */
+    fcs_state_keyval_pair_t * state_copy_ptr;
+
+    /* This is the final state that the scan recommends to the
+     * interface
+     * */
+    fcs_collectible_state_t * final_state;
+
+
+    /*
+     * A move stack that contains the moves leading to the solution.
+     *
+     * It is created only after the solution was found by swallowing
+     * all the stacks of each depth.
+     * */
+    fcs_move_stack_t solution_moves;
+
+    /*
+     * The meta allocator - see meta_alloc.h.
+     * */
+    fcs_meta_compact_allocator_t * meta_alloc;
+
+    /*
+     * The soft_thread that solved the state.
+     *
+     * Needed to trace the patsolve solutions.
+     * */
+    fc_solve_soft_thread_t * solving_soft_thread;
+
+    /*
+     * This is intended to be used by the patsolve scan which is
+     * sensitive to the ordering of the columns/stacks. This is an ugly hack
+     * but hopefully it will work.
+     * */
+    fcs_state_keyval_pair_t * initial_non_canonized_state;
+};
+
+
+
+
+
+
+#ifdef FCS__SINGLE_HARD_THREAD
+static GCC_INLINE fc_solve_instance_t * const fcs_st_instance(fc_solve_soft_thread_t * const soft_thread)
+{
+    return soft_thread->hard_thread;
+}
+#define HT_FIELD(ht, field) (ht)->hard_thread.field
+#define HT_INSTANCE(hard_thread) (hard_thread)
+#define INST_HT0(instance) ((instance)->hard_thread)
+#else
+static GCC_INLINE fc_solve_instance_t * const fcs_st_instance(fc_solve_soft_thread_t * const soft_thread)
+{
+    return soft_thread->hard_thread->instance;
+}
+#define HT_FIELD(hard_thread, field) (hard_thread)->field
+#define HT_INSTANCE(hard_thread) ((hard_thread)->instance)
+#define INST_HT0(instance) ((instance)->hard_threads[0])
+#endif
+
 #define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var
 #define BEFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.befs.var
 /* M is Methods-common. */
@@ -965,7 +1007,7 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
     fc_solve_soft_thread_t * const soft_thread
 )
 {
-    fc_solve_instance_t * const instance = soft_thread->hard_thread->instance;
+    fc_solve_instance_t * const instance = fcs_st_instance(soft_thread);
 #ifndef FCS_FREECELL_ONLY
     const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
@@ -1023,7 +1065,9 @@ extern void fc_solve_soft_thread_init_befs_or_bfs(
 );
 
 extern void fc_solve_instance__init_hard_thread(
+#ifndef FCS__SINGLE_HARD_THREAD
     fc_solve_instance_t * const instance,
+#endif
     fc_solve_hard_thread_t * const hard_thread
 );
 
@@ -1061,9 +1105,9 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
     fc_solve_hard_thread_t * const hard_thread
 )
 {
-    hard_thread->num_checked_states = 0;
-    hard_thread->max_num_checked_states = INT_MAX;
-    hard_thread->num_soft_threads_finished = 0;
+    HT_FIELD(hard_thread, num_checked_states) = 0;
+    HT_FIELD(hard_thread, max_num_checked_states) = INT_MAX;
+    HT_FIELD(hard_thread, num_soft_threads_finished) = 0;
 }
 
 static GCC_INLINE void fc_solve_reset_soft_thread(
@@ -1114,6 +1158,13 @@ extern void name( \
         fcs_kv_state_t * const raw_ptr_state_raw, \
         fcs_derived_states_list_t * const derived_states_list \
 )
+
+#ifdef FCS__SINGLE_HARD_THREAD
+extern void fc_solve_init_soft_thread(
+    fc_solve_hard_thread_t * const hard_thread,
+    fc_solve_soft_thread_t * const soft_thread
+);
+#endif
 
 #ifdef __cplusplus
 }
