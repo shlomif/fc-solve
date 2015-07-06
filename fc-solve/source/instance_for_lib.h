@@ -260,6 +260,11 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
          * */
 #ifndef FCS__SINGLE_HARD_THREAD
         hard_thread->instance = instance;
+#else
+        ST_LOOP_START()
+        {
+            soft_thread->hard_thread = instance;
+        }
 #endif
         if (HT_FIELD(hard_thread, prelude_as_string))
         {

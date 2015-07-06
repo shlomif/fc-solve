@@ -373,7 +373,7 @@ void fc_solve_init_soft_thread(
 
     soft_thread->num_checked_states_step = NUM_CHECKED_STATES_STEP;
 
-    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order = tests_order_dup(&(HT_INSTANCE(soft_thread->hard_thread)->instance_tests_order));
+    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order = tests_order_dup(&(fcs_st_instance(soft_thread)->instance_tests_order));
 
     fc_solve_reset_soft_thread(soft_thread);
 
