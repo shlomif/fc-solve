@@ -1097,6 +1097,33 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     return;
 }
 
+/*
+ * Switch to the next soft thread in the hard thread,
+ * since we are going to call continue and this is
+ * a while loop
+ * */
+static GCC_INLINE void switch_to_next_soft_thread(
+    fc_solve_hard_thread_t * const hard_thread,
+    int * const st_idx_ptr
+)
+{
+    if ((HT_FIELD(hard_thread, prelude) != NULL) &&
+        (HT_FIELD(hard_thread, prelude_idx) < HT_FIELD(hard_thread, prelude_num_items)))
+    {
+        (*st_idx_ptr) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].scan_idx;
+            HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].quota;
+            HT_FIELD(hard_thread, prelude_idx)++;
+    }
+    else
+    {
+        if ((++(*st_idx_ptr)) == HT_FIELD(hard_thread, num_soft_threads))
+        {
+            *(st_idx_ptr) = 0;
+        }
+        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = HT_FIELD(hard_thread, soft_threads)[*st_idx_ptr].num_checked_states_step;
+    }
+}
+
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -1119,36 +1146,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          * */
         if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED))
         {
-            /*
-             * Hmmpf - duplicate code. That's ANSI C for you.
-             * A macro, anyone?
-             * */
-
-#define switch_to_next_soft_thread() \
-            /*      \
-             * Switch to the next soft thread in the hard thread,   \
-             * since we are going to call continue and this is     \
-             * a while loop     \
-                             * */    \
-            if ((HT_FIELD(hard_thread, prelude) != NULL) &&    \
-                (HT_FIELD(hard_thread, prelude_idx) < HT_FIELD(hard_thread, prelude_num_items)))   \
-            {      \
-                (*st_idx_ptr) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].scan_idx; \
-                HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].quota; \
-                HT_FIELD(hard_thread, prelude_idx)++; \
-            }    \
-            else       \
-            {       \
-                if ((++(*st_idx_ptr)) == HT_FIELD(hard_thread, num_soft_threads))     \
-                {       \
-                    *(st_idx_ptr) = 0;  \
-                }      \
-                HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = HT_FIELD(hard_thread, soft_threads)[*st_idx_ptr].num_checked_states_step;  \
-            }
-
-
-
-            switch_to_next_soft_thread();
+            switch_to_next_soft_thread(hard_thread, st_idx_ptr);
 
             continue;
         }
@@ -1229,13 +1227,8 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          * */
         if (HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) <= 0)
         {
-            switch_to_next_soft_thread();
-            /*
-             * Reset num_checked_states_left_for_soft_thread
-             * */
-
+            switch_to_next_soft_thread(hard_thread, st_idx_ptr);
         }
-#undef switch_to_next_soft_thread
 
         /*
          * It this thread indicated that the scan was finished,
