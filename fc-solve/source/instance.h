@@ -384,13 +384,6 @@ struct fc_solve_hard_thread_struct
     fcs_int_limit_t ht__max_num_checked_states;
 
     /*
-     * This is the number of iterations that still have to be done for
-     * soft_threads[st_idx]. It is reset to (st_idx+1)->num_checked_states_step
-     * when st_idx is incremented.
-     * */
-    fcs_int_limit_t num_checked_states_left_for_soft_thread;
-
-    /*
      * These variables are used to compute the MD5 checksum of a state
      * that is about to be checked. I decided to make them globals so
      * they won't have to be re-allocated and freed all the time.

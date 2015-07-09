@@ -258,7 +258,11 @@ static GCC_INLINE void set_next_soft_thread(
 )
 {
     (*st_idx_ptr) = scan_idx;
-    HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = quota;
+    /*
+     * Calculate a soft thread-wise limit for this hard
+     * thread to run.
+     * */
+    HT_FIELD(hard_thread, ht__max_num_checked_states) = NUM_CHECKED_STATES + quota;
 }
 
 static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instance)
@@ -1191,20 +1195,6 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
         }
 
         /*
-         * Keep record of the number of iterations since this
-         * thread started.
-         * */
-        const typeof(NUM_CHECKED_STATES)
-            num_checked_states_started_at = NUM_CHECKED_STATES;
-        /*
-         * Calculate a soft thread-wise limit for this hard
-         * thread to run.
-         * */
-        HT_FIELD(hard_thread, ht__max_num_checked_states) = num_checked_states_started_at + HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread);
-
-
-
-        /*
          * Call the resume or solving function that is specific
          * to each scan
          *
@@ -1251,11 +1241,6 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
         }
         ret = fc_solve__soft_thread__do_solve(soft_thread);
         /*
-         * Determine how much iterations we still have left
-         * */
-        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) -= (NUM_CHECKED_STATES - num_checked_states_started_at);
-
-        /*
          * I use <= instead of == because it is possible that
          * there will be a few more iterations than what this
          * thread was allocated, due to the fact that
@@ -1264,7 +1249,8 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          *
          * It's a kludge, but it works.
          * */
-        if (HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) <= 0)
+        if (HT_FIELD(hard_thread, ht__num_checked_states)
+            >= HT_FIELD(hard_thread, ht__max_num_checked_states))
         {
             switch_to_next_soft_thread(hard_thread, num_soft_threads, soft_threads, prelude, prelude_num_items, st_idx_ptr);
         }
