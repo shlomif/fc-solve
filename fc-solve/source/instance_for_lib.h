@@ -1113,9 +1113,9 @@ static GCC_INLINE void switch_to_next_soft_thread(
 {
     if (HT_FIELD(hard_thread, prelude_idx) < prelude_num_items)
     {
-        (*st_idx_ptr) = prelude[HT_FIELD(hard_thread, prelude_idx)].scan_idx;
-        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = prelude[HT_FIELD(hard_thread, prelude_idx)].quota;
-        HT_FIELD(hard_thread, prelude_idx)++;
+        const fcs_prelude_item_t next_item = prelude[HT_FIELD(hard_thread, prelude_idx)++];
+        (*st_idx_ptr) = next_item.scan_idx;
+        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = next_item.quota;
     }
     else
     {
