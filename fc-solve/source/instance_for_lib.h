@@ -422,6 +422,17 @@ static int fc_solve_rcs_states_compare(const void * const void_a, const void * c
 
 #endif
 
+static GCC_INLINE void set_next_soft_thread(
+    fc_solve_hard_thread_t * const hard_thread,
+    const int scan_idx,
+    const int quota,
+    int * const st_idx_ptr
+)
+{
+    (*st_idx_ptr) = scan_idx;
+    HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = quota;
+}
+
 static GCC_INLINE void set_next_prelude_item(
     fc_solve_hard_thread_t * const hard_thread,
     const fcs_prelude_item_t * const prelude,
@@ -429,8 +440,12 @@ static GCC_INLINE void set_next_prelude_item(
 )
 {
     const fcs_prelude_item_t next_item = prelude[HT_FIELD(hard_thread, prelude_idx)++];
-    (*st_idx_ptr) = next_item.scan_idx;
-    HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = next_item.quota;
+    set_next_soft_thread(
+        hard_thread,
+        next_item.scan_idx,
+        next_item.quota,
+        st_idx_ptr
+    );
 }
 
 /*
@@ -1127,12 +1142,14 @@ static GCC_INLINE void switch_to_next_soft_thread(
     }
     else
     {
-        if ((++(*st_idx_ptr)) == num_soft_threads)
-        {
-            *(st_idx_ptr) = 0;
-        }
-        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread)
-            = soft_threads[*st_idx_ptr].num_checked_states_step;
+        const int proto_next_st_idx = 1 + (*st_idx_ptr);
+        const int next_st_idx = ((proto_next_st_idx == num_soft_threads) ? 0 : proto_next_st_idx);
+        set_next_soft_thread(
+            hard_thread,
+            next_st_idx,
+            soft_threads[next_st_idx].num_checked_states_step,
+            st_idx_ptr
+        );
     }
 }
 
