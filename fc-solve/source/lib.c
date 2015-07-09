@@ -2211,7 +2211,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(
     void * const api_instance
     )
 {
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     return freecell_solver_user_next_soft_thread(api_instance);
 #else
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2528,7 +2528,7 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
 {
     const fcs_user_t * const user = (const fcs_user_t *)api_instance;
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     const fc_solve_hard_thread_t * const hard_thread = &(user->active_flare->obj);
 #else
     const fc_solve_hard_thread_t * const hard_thread = user->active_flare->obj.current_hard_thread;

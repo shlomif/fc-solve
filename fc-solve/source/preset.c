@@ -448,7 +448,7 @@ int fc_solve_apply_preset_by_ptr(
      * soft threads are acceptable by the new preset.
      * */
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     if (instance->next_soft_thread_id)
 #endif
     {

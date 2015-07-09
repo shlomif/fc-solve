@@ -42,7 +42,7 @@ extern "C" {
 #include "preset.h"
 #include "move_funcs_order.h"
 
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
 static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
     fc_solve_instance_t * const instance
 )
@@ -122,7 +122,7 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
     instance->opt_tests_order.num_groups = 0;
     instance->opt_tests_order.groups = NULL;
 
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
     instance->num_hard_threads = 0;
     instance->hard_threads = NULL;
 #endif
@@ -147,7 +147,7 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
     instance->debug_iter_output_func = NULL;
 
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     fc_solve_instance__init_hard_thread(
         instance
     );
@@ -258,7 +258,7 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
         /* The pointer to instance may change as the flares array get resized
          * so the pointers need to be reassigned to it.
          * */
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
         hard_thread->instance = instance;
 #else
         ST_LOOP_START()
@@ -608,7 +608,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
         pass.val = &(state_copy_ptr->info);
 
         fc_solve_check_and_add_state(
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
             instance,
 #else
             instance->hard_threads,
@@ -619,7 +619,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
 
     }
 
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
     instance->current_hard_thread = instance->hard_threads;
 #endif
     {
@@ -731,7 +731,7 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
         free_instance_hard_thread_callback(hard_thread);
     }
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     if (instance->is_optimization_st)
     {
         fc_solve_free_instance_soft_thread_callback(&( instance->optimization_soft_thread ));
@@ -807,7 +807,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
 
     instance->num_hard_threads_finished = 0;
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     fc_solve_instance__recycle_hard_thread(instance);
 
     if (instance->is_optimization_st)
@@ -836,7 +836,7 @@ extern void fc_solve_trace_solution(
     This function optimizes the solution path using a BFS scan on the
     states in the solution path.
 */
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 static GCC_INLINE int fc_solve_optimize_solution(
     fc_solve_instance_t * const instance
 )
@@ -1099,7 +1099,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread)
 {
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
     fc_solve_instance_t * const instance = hard_thread->instance;
@@ -1297,7 +1297,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
 
     return ret;
 }
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #undef instance
 #endif
 
@@ -1319,7 +1319,7 @@ static GCC_INLINE int fc_solve_resume_instance(
     {
         ret =
             fc_solve_befs_or_bfs_do_solve(
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
                 &(instance->optimization_soft_thread)
 #else
                 &(instance->optimization_thread->soft_threads[0])
@@ -1328,7 +1328,7 @@ static GCC_INLINE int fc_solve_resume_instance(
     }
     else
     {
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #define hard_thread instance
 #define NUM_HARD_THREADS() 1
 #else
@@ -1354,7 +1354,7 @@ static GCC_INLINE int fc_solve_resume_instance(
              * 1. It is initialized before the first call to this function.
              * 2. It is reset to zero below.
              * */
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
             for (
                     ;
                 hard_thread < end_of_hard_threads
@@ -1382,13 +1382,13 @@ static GCC_INLINE int fc_solve_resume_instance(
                     goto end_of_hard_threads_loop;
                 }
             }
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
             hard_thread = instance->hard_threads;
 #endif
         }
 
         end_of_hard_threads_loop:
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
         instance->current_hard_thread = hard_thread;
 #endif
 
@@ -1417,7 +1417,7 @@ static GCC_INLINE int fc_solve_resume_instance(
 
     return ret;
 }
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #undef hard_thread
 #endif
 

@@ -79,7 +79,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
         fcs_kv_state_t * const new_state
         )
 {
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
     fc_solve_instance_t * const instance = hard_thread->instance;
@@ -242,7 +242,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
     }
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #undef instance
 #endif
 }
@@ -332,7 +332,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 
 #define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
     fc_solve_instance_t * const instance = hard_thread->instance;
@@ -650,6 +650,6 @@ fcs_bool_t fc_solve_check_and_add_state(
 #error Unknown FCS_STATE_STORAGE. Please define it to a valid value.
 #endif
 }
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #undef instance
 #endif

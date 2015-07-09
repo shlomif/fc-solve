@@ -193,7 +193,7 @@ void fc_solve_foreach_soft_thread(
     void * const context
 )
 {
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     const int num_soft_threads = instance->hard_thread.num_soft_threads;
     for (int st_idx = 0 ; st_idx <= num_soft_threads; st_idx++)
     {
@@ -249,7 +249,7 @@ void fc_solve_foreach_soft_thread(
                 break;
             }
         }
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     }
 #else
     }
@@ -265,7 +265,7 @@ static GCC_INLINE void clean_soft_dfs( fc_solve_instance_t * const instance )
     );
 }
 
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
 static GCC_INLINE
 #endif
 void fc_solve_init_soft_thread(
@@ -333,13 +333,13 @@ void fc_solve_init_soft_thread(
 }
 
 void fc_solve_instance__init_hard_thread(
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
     fc_solve_instance_t * const instance,
 #endif
     fc_solve_hard_thread_t * const hard_thread
 )
 {
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
     hard_thread->instance = instance;
 #endif
 
@@ -360,7 +360,7 @@ void fc_solve_instance__init_hard_thread(
 
     fc_solve_reset_hard_thread(hard_thread);
     fc_solve_compact_allocator_init(&(HT_FIELD(hard_thread, allocator)),
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
         hard_thread->meta_alloc
 #else
         instance->meta_alloc

@@ -189,7 +189,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #else
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #define tests_define_accessors_freecell_only() \
     fc_solve_instance_t * const instance = hard_thread;
 #else

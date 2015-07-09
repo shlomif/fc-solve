@@ -118,7 +118,7 @@ extern "C" {
 #include "meta_alloc.h"
 
 #if 1
-#define FCS__SINGLE_HARD_THREAD 1
+#define FCS_SINGLE_HARD_THREAD 1
 #endif
 
 /*
@@ -145,7 +145,7 @@ typedef void (*fc_solve_solve_for_state_test_t)(
     fcs_derived_states_list_t *
 );
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 typedef struct fc_solve_instance_struct fc_solve_hard_thread_t;
 #else
 typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
@@ -163,7 +163,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
 #include "move_funcs_maps.h"
 
 /* HT_LOOP == hard threads' loop - macros to abstract it. */
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 
 #define HT_LOOP_START() \
     fc_solve_hard_thread_t * const hard_thread = instance; \
@@ -362,13 +362,13 @@ typedef struct
 
 struct fc_solve_hard_thread_struct
 {
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
     fc_solve_instance_t * instance;
 #endif
 
     struct fc_solve_soft_thread_struct * soft_threads;
 
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
     /*
      * The hard thread count of how many states he checked himself. The
      * instance num_checked_states can be confusing because other threads modify it too.
@@ -806,7 +806,7 @@ struct fc_solve_instance_struct
      * */
     fcs_int_limit_t max_num_states_in_collection;
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
     struct fc_solve_hard_thread_struct hard_thread;
     fcs_bool_t is_optimization_st;
     struct fc_solve_soft_thread_struct optimization_soft_thread;
@@ -930,7 +930,7 @@ struct fc_solve_instance_struct
 
 
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 static GCC_INLINE fc_solve_instance_t * const fcs_st_instance(fc_solve_soft_thread_t * const soft_thread)
 {
     return soft_thread->hard_thread;
@@ -1067,7 +1067,7 @@ extern void fc_solve_soft_thread_init_befs_or_bfs(
 );
 
 extern void fc_solve_instance__init_hard_thread(
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
     fc_solve_instance_t * const instance,
 #endif
     fc_solve_hard_thread_t * const hard_thread
@@ -1107,7 +1107,7 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
     fc_solve_hard_thread_t * const hard_thread
 )
 {
-#ifndef FCS__SINGLE_HARD_THREAD
+#ifndef FCS_SINGLE_HARD_THREAD
     HT_FIELD(hard_thread, ht__num_checked_states) = 0;
 #endif
     HT_FIELD(hard_thread, ht__max_num_checked_states) = INT_MAX;
@@ -1163,7 +1163,7 @@ extern void name( \
         fcs_derived_states_list_t * const derived_states_list \
 )
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 extern void fc_solve_init_soft_thread(
     fc_solve_hard_thread_t * const hard_thread,
     fc_solve_soft_thread_t * const soft_thread
@@ -1174,7 +1174,7 @@ extern void fc_solve_init_soft_thread(
 }
 #endif
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #define NUM_CHECKED_STATES (HT_INSTANCE(hard_thread)->i__num_checked_states)
 #else
 #define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)

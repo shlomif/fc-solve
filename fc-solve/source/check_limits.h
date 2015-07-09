@@ -44,7 +44,7 @@ static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
             );
 }
 
-#ifdef FCS__SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
 #define check_if_limits_exceeded__num() \
         ((*instance_num_checked_states_ptr) == hard_thread_max_num_checked_states)
 #else
