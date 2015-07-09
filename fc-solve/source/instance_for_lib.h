@@ -635,6 +635,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
             else
             {
                 HT_FIELD(hard_thread, st_idx) = 0;
+                HT_FIELD(hard_thread, prelude_num_items) = -1;
             }
         }
     }
@@ -1107,12 +1108,11 @@ static GCC_INLINE void switch_to_next_soft_thread(
     int * const st_idx_ptr
 )
 {
-    if ((HT_FIELD(hard_thread, prelude) != NULL) &&
-        (HT_FIELD(hard_thread, prelude_idx) < HT_FIELD(hard_thread, prelude_num_items)))
+    if (HT_FIELD(hard_thread, prelude_idx) < HT_FIELD(hard_thread, prelude_num_items))
     {
         (*st_idx_ptr) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].scan_idx;
-            HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].quota;
-            HT_FIELD(hard_thread, prelude_idx)++;
+        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].quota;
+        HT_FIELD(hard_thread, prelude_idx)++;
     }
     else
     {
