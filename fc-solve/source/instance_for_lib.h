@@ -1249,8 +1249,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          *
          * It's a kludge, but it works.
          * */
-        if (HT_FIELD(hard_thread, ht__num_checked_states)
-            >= HT_FIELD(hard_thread, ht__max_num_checked_states))
+        if (NUM_CHECKED_STATES >= HT_FIELD(hard_thread, ht__max_num_checked_states))
         {
             switch_to_next_soft_thread(hard_thread, num_soft_threads, soft_threads, prelude, prelude_num_items, st_idx_ptr);
         }
@@ -1262,8 +1261,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
         if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
-            HT_FIELD(hard_thread, num_soft_threads_finished)++;
-            if (HT_FIELD(hard_thread, num_soft_threads_finished) == num_soft_threads)
+            if (++(HT_FIELD(hard_thread, num_soft_threads_finished)) == num_soft_threads)
             {
                 instance->num_hard_threads_finished++;
             }
