@@ -46,6 +46,7 @@ my $build_docs = 1;
 my $with_dbm_solver;
 my $max_num_stacks;
 my $disable_patsolve = 0;
+my $single_hard_thread = 0;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -80,7 +81,7 @@ _google_set_both("SPARSE");
 my %themes =
 (
     tt => [qw(-r --notest-suite --static)],
-    bench => [qw(-l tt --omit-frame --without-flip --without-visited-iter)],
+    bench => [qw(-l tt --omit-frame --without-flip --without-visited-iter --single-ht)],
     fc_bench => [qw(
         -l bench --fc-only --without-depth-field
         )
@@ -241,6 +242,7 @@ GetOptions(
     'build-docs!' => \$build_docs,
     'num-stacks=i' => \$max_num_stacks,
     'disable-patsolve!' => \$disable_patsolve,
+    'single-ht!' => \$single_hard_thread,
 ) or
     die "Wrong options";
 
@@ -344,6 +346,7 @@ my @cmd= ("cmake",
         : ()
     ),
     ($disable_patsolve ? ("-DFCS_DISABLE_PATSOLVE=1") : ()),
+    ($single_hard_thread ? ("-DFCS_SINGLE_HARD_THREAD=1") : ()),
 );
 
 

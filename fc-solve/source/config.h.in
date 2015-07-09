@@ -71,6 +71,8 @@ extern "C" {
 
 #cmakedefine FCS_DISABLE_SIMPLE_SIMON
 
+#cmakedefine FCS_SINGLE_HARD_THREAD
+
 /*
  * This macro disables the flipping card logic. The flipping card logic
  * was an experimental feature that aimed to give Freecell Solver the

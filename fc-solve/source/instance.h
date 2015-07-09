@@ -117,10 +117,6 @@ extern "C" {
 
 #include "meta_alloc.h"
 
-#if 1
-#define FCS_SINGLE_HARD_THREAD 1
-#endif
-
 /*
  * This is a linked list item that is used to implement a queue for the BFS
  * scan.
