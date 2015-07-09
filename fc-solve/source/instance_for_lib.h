@@ -1105,6 +1105,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
  * */
 static GCC_INLINE void switch_to_next_soft_thread(
     fc_solve_hard_thread_t * const hard_thread,
+    const int num_soft_threads,
     const fcs_int_limit_t prelude_num_items,
     int * const st_idx_ptr
 )
@@ -1117,7 +1118,7 @@ static GCC_INLINE void switch_to_next_soft_thread(
     }
     else
     {
-        if ((++(*st_idx_ptr)) == HT_FIELD(hard_thread, num_soft_threads))
+        if ((++(*st_idx_ptr)) == num_soft_threads)
         {
             *(st_idx_ptr) = 0;
         }
@@ -1140,7 +1141,8 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
      * */
 
     int ret = FCS_STATE_SUSPEND_PROCESS;
-    while(HT_FIELD(hard_thread, num_soft_threads_finished) < HT_FIELD(hard_thread, num_soft_threads))
+    const int num_soft_threads = HT_FIELD(hard_thread, num_soft_threads);
+    while(HT_FIELD(hard_thread, num_soft_threads_finished) < num_soft_threads)
     {
         fc_solve_soft_thread_t * const soft_thread = &(HT_FIELD(hard_thread, soft_threads)[*st_idx_ptr]);
         /*
@@ -1148,7 +1150,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          * */
         if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED))
         {
-            switch_to_next_soft_thread(hard_thread, prelude_num_items, st_idx_ptr);
+            switch_to_next_soft_thread(hard_thread, num_soft_threads, prelude_num_items, st_idx_ptr);
 
             continue;
         }
@@ -1229,7 +1231,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          * */
         if (HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) <= 0)
         {
-            switch_to_next_soft_thread(hard_thread, prelude_num_items, st_idx_ptr);
+            switch_to_next_soft_thread(hard_thread, num_soft_threads, prelude_num_items, st_idx_ptr);
         }
 
         /*
@@ -1240,7 +1242,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
         {
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
             HT_FIELD(hard_thread, num_soft_threads_finished)++;
-            if (HT_FIELD(hard_thread, num_soft_threads_finished) == HT_FIELD(hard_thread, num_soft_threads))
+            if (HT_FIELD(hard_thread, num_soft_threads_finished) == num_soft_threads)
             {
                 instance->num_hard_threads_finished++;
             }
