@@ -250,6 +250,17 @@ static GCC_INLINE void fc_solve__hard_thread__compile_prelude(
     HT_FIELD(hard_thread, prelude_idx) = 0;
 }
 
+static GCC_INLINE void set_next_soft_thread(
+    fc_solve_hard_thread_t * const hard_thread,
+    const int scan_idx,
+    const int quota,
+    int * const st_idx_ptr
+)
+{
+    (*st_idx_ptr) = scan_idx;
+    HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = quota;
+}
+
 static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instance)
 {
     /* Initialize the state packs */
@@ -273,8 +284,12 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
                 fc_solve__hard_thread__compile_prelude(hard_thread);
             }
         }
-        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) =
-            HT_FIELD(hard_thread, soft_threads)[0].num_checked_states_step;
+        set_next_soft_thread(
+            hard_thread,
+            0,
+            HT_FIELD(hard_thread, soft_threads)[0].num_checked_states_step,
+            &(HT_FIELD(hard_thread, st_idx))
+        );
     }
 
     {
@@ -422,16 +437,6 @@ static int fc_solve_rcs_states_compare(const void * const void_a, const void * c
 
 #endif
 
-static GCC_INLINE void set_next_soft_thread(
-    fc_solve_hard_thread_t * const hard_thread,
-    const int scan_idx,
-    const int quota,
-    int * const st_idx_ptr
-)
-{
-    (*st_idx_ptr) = scan_idx;
-    HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = quota;
-}
 
 static GCC_INLINE void set_next_prelude_item(
     fc_solve_hard_thread_t * const hard_thread,
@@ -663,7 +668,6 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
             }
             else
             {
-                HT_FIELD(hard_thread, st_idx) = 0;
                 HT_FIELD(hard_thread, prelude_num_items) = -1;
             }
         }
