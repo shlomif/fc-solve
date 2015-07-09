@@ -897,9 +897,6 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 
-    /* Initialize the optimization hard-thread and soft-thread */
-    instance->hard_thread.num_checked_states_left_for_soft_thread = 1000000;
-
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
     instance->hard_thread.ht__max_num_checked_states = INT_MAX;
@@ -970,9 +967,6 @@ static GCC_INLINE int fc_solve_optimize_solution(
     soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
 
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
-
-    /* Initialize the optimization hard-thread and soft-thread */
-    optimization_thread->num_checked_states_left_for_soft_thread = 1000000;
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
