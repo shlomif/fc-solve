@@ -215,6 +215,13 @@ run_tests("without-depth-field and rcs",
     }
 );
 
+run_tests("No FCS_SINGLE_HARD_THREAD",
+    {
+        tatzer_args =>
+        [qw(-l x64t --nosingle-ht)]
+    }
+);
+
 print colored("All tests successful.",
         ($ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green')
     ), "\n";
