@@ -383,8 +383,6 @@ struct fc_solve_hard_thread_struct
      * */
     fcs_int_limit_t ht__max_num_checked_states;
 
-    fcs_int_limit_t ht__num_checked_states_step;
-
     /*
      * This is the number of iterations that still have to be done for
      * soft_threads[st_idx]. It is reset to (st_idx+1)->num_checked_states_step
