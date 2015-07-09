@@ -1115,6 +1115,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 static GCC_INLINE void switch_to_next_soft_thread(
     fc_solve_hard_thread_t * const hard_thread,
     const int num_soft_threads,
+    const fc_solve_soft_thread_t * const soft_threads,
     const fcs_prelude_item_t * const prelude,
     const fcs_int_limit_t prelude_num_items,
     int * const st_idx_ptr
@@ -1130,7 +1131,8 @@ static GCC_INLINE void switch_to_next_soft_thread(
         {
             *(st_idx_ptr) = 0;
         }
-        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = HT_FIELD(hard_thread, soft_threads)[*st_idx_ptr].num_checked_states_step;
+        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread)
+            = soft_threads[*st_idx_ptr].num_checked_states_step;
     }
 }
 
@@ -1151,15 +1153,18 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
     int ret = FCS_STATE_SUSPEND_PROCESS;
     const int num_soft_threads = HT_FIELD(hard_thread, num_soft_threads);
     const fcs_prelude_item_t * const prelude = HT_FIELD(hard_thread, prelude);
+    fc_solve_soft_thread_t * const soft_threads
+        = HT_FIELD(hard_thread, soft_threads);
+
     while(HT_FIELD(hard_thread, num_soft_threads_finished) < num_soft_threads)
     {
-        fc_solve_soft_thread_t * const soft_thread = &(HT_FIELD(hard_thread, soft_threads)[*st_idx_ptr]);
+        fc_solve_soft_thread_t * const soft_thread = &(soft_threads[*st_idx_ptr]);
         /*
          * Move to the next thread if it's already finished
          * */
         if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED))
         {
-            switch_to_next_soft_thread(hard_thread, num_soft_threads, prelude, prelude_num_items, st_idx_ptr);
+            switch_to_next_soft_thread(hard_thread, num_soft_threads, soft_threads, prelude, prelude_num_items, st_idx_ptr);
 
             continue;
         }
@@ -1240,7 +1245,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
          * */
         if (HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) <= 0)
         {
-            switch_to_next_soft_thread(hard_thread, num_soft_threads, prelude, prelude_num_items, st_idx_ptr);
+            switch_to_next_soft_thread(hard_thread, num_soft_threads, soft_threads, prelude, prelude_num_items, st_idx_ptr);
         }
 
         /*
