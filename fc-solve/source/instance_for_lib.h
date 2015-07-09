@@ -421,6 +421,18 @@ static int fc_solve_rcs_states_compare(const void * const void_a, const void * c
 #define STATE_STORAGE_TREE_CONTEXT() NULL
 
 #endif
+
+static GCC_INLINE void set_next_prelude_item(
+    fc_solve_hard_thread_t * const hard_thread,
+    const fcs_prelude_item_t * const prelude,
+    int * const st_idx_ptr
+)
+{
+    const fcs_prelude_item_t next_item = prelude[HT_FIELD(hard_thread, prelude_idx)++];
+    (*st_idx_ptr) = next_item.scan_idx;
+    HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = next_item.quota;
+}
+
 /*
     This function associates a board with an fc_solve_instance_t and
     does other initialisations. After it, you must call
@@ -628,9 +640,11 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
             if (HT_FIELD(hard_thread, prelude) != NULL)
             {
                 HT_FIELD(hard_thread, prelude_idx) = 0;
-                HT_FIELD(hard_thread, st_idx) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].scan_idx;
-                HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = HT_FIELD(hard_thread, prelude)[HT_FIELD(hard_thread, prelude_idx)].quota;
-                HT_FIELD(hard_thread, prelude_idx)++;
+                set_next_prelude_item(
+                    hard_thread,
+                    HT_FIELD(hard_thread, prelude),
+                    &(HT_FIELD(hard_thread, st_idx))
+                );
             }
             else
             {
@@ -1098,6 +1112,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     return;
 }
 
+
 /*
  * Switch to the next soft thread in the hard thread,
  * since we are going to call continue and this is
@@ -1113,9 +1128,7 @@ static GCC_INLINE void switch_to_next_soft_thread(
 {
     if (HT_FIELD(hard_thread, prelude_idx) < prelude_num_items)
     {
-        const fcs_prelude_item_t next_item = prelude[HT_FIELD(hard_thread, prelude_idx)++];
-        (*st_idx_ptr) = next_item.scan_idx;
-        HT_FIELD(hard_thread, num_checked_states_left_for_soft_thread) = next_item.quota;
+        set_next_prelude_item(hard_thread, prelude, st_idx_ptr);
     }
     else
     {
