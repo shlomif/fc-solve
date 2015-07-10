@@ -82,7 +82,7 @@ typedef struct {
     char * * argv;
     int arg;
     int stop_at;
-    int end_board;
+    int past_end_board;
     int board_num_step;
     int update_total_num_iters_threshold;
     fcs_int_limit_t total_iterations_limit_per_board;
@@ -141,7 +141,6 @@ static void * worker_thread(void * void_context)
     }
     freecell_solver_user_limit_iterations_long(instance, context.total_iterations_limit_per_board);
 
-    const int past_end_board = context.end_board+1;
     fcs_portable_time_t mytime;
     fcs_int_limit_t total_num_iters_temp = 0;
     int board_num;
@@ -152,7 +151,7 @@ static void * worker_thread(void * void_context)
         const int proposed_quota_end = (next_board_num += context.board_num_step);
         pthread_mutex_unlock(&next_board_num_lock);
 
-        const int quota_end = min(proposed_quota_end, past_end_board);
+        const int quota_end = min(proposed_quota_end, context.past_end_board);
 
         for ( ; board_num < quota_end ; board_num++ )
         {
@@ -220,7 +219,7 @@ static void * worker_thread(void * void_context)
 
             freecell_solver_user_recycle(instance);
         }
-    } while (board_num <= context.end_board);
+    } while (board_num < context.past_end_board);
 
     pthread_mutex_lock(&total_num_iters_lock);
     total_num_iters += total_num_iters_temp;
@@ -245,7 +244,7 @@ int main(int argc, char * argv[])
         exit(-1);
     }
     next_board_num = atoi(argv[context.arg++]);
-    context.end_board = atoi(argv[context.arg++]);
+    context.past_end_board = 1 + atoi(argv[context.arg++]);
     ;
 
     if ((context.stop_at = atoi(argv[context.arg++])) <= 0)
