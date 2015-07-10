@@ -49,15 +49,18 @@ export FREECELL_SOLVER_PRESETRC="$(ls $(pwd)/"$p_dir"/presetrc)"
 
 if $RUN_SERIAL ; then
     echo "Testing Serial Run"
-    ./freecell-solver-range-parallel-solve 1 "$MAX_BOARD" 4000 $ARGS | tee "$DUMPS_DIR"/dump
+    # For letting the screen update.
+    sleep 1
+    ./freecell-solver-range-parallel-solve 1 "$MAX_BOARD" 4000 $ARGS > "$DUMPS_DIR"/dump
 fi
 
 
 for NUM in $(seq "$MIN" "$MAX") ; do
     echo "Testing $NUM"
+    # For letting the screen update.
+    sleep 1
     $PROG 1 "$MAX_BOARD" 4000 \
         --num-workers "$NUM" \
-        $ARGS \
-        | tee "$(printf "%s/dump%.3i" "$DUMPS_DIR" "$NUM")"
+        $ARGS > "$(printf "%s/dump%.3i" "$DUMPS_DIR" "$NUM")"
 done
 
