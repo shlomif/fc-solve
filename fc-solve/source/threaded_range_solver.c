@@ -139,6 +139,7 @@ static void * worker_thread(void * void_context)
             goto ret_label;
         }
     }
+    freecell_solver_user_limit_iterations_long(instance, context.total_iterations_limit_per_board);
 
     const int past_end_board = context.end_board+1;
     fcs_portable_time_t mytime;
@@ -158,7 +159,6 @@ static void * worker_thread(void * void_context)
             fcs_state_string_t state_string;
             get_board(board_num, state_string);
 
-            freecell_solver_user_limit_iterations_long(instance, context.total_iterations_limit_per_board);
 
             switch(
                 freecell_solver_user_solve_board(
