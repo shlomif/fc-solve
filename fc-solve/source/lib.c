@@ -305,13 +305,11 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 }
 
 void DLLEXPORT freecell_solver_user_limit_iterations_long(
-    void * api_instance,
+    void * const api_instance,
     const fcs_int_limit_t max_iters
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    user->current_iterations_limit = max_iters;
+    ((fcs_user_t * const)api_instance)->current_iterations_limit = max_iters;
 }
 
 void DLLEXPORT freecell_solver_user_limit_iterations(
