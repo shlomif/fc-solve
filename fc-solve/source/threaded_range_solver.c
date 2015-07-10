@@ -50,120 +50,6 @@
 
 #include "range_solvers_gen_ms_boards.h"
 
-typedef struct
-{
-    fcs_bool_t debug_iter_state_output;
-    fcs_bool_t parseable_output;
-    fcs_bool_t canonized_order_output;
-    fcs_bool_t display_10_as_t;
-    fcs_bool_t display_parent_iter_num;
-} fc_solve_display_information_context_t;
-
-static void my_iter_handler(
-    void * user_instance,
-    fcs_int_limit_t iter_num,
-    int depth,
-    void * ptr_state,
-    fcs_int_limit_t parent_iter_num,
-    void * lp_context
-    )
-{
-    fprintf(stdout, "Iteration: %li\n", (long)iter_num);
-    fprintf(stdout, "Depth: %i\n", depth);
-
-    const fc_solve_display_information_context_t * const context =
-        (const fc_solve_display_information_context_t * const)lp_context;
-
-    if (context->display_parent_iter_num)
-    {
-        fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
-    }
-    fprintf(stdout, "\n");
-
-    if (context->debug_iter_state_output)
-    {
-        char * const state_string =
-            freecell_solver_user_iter_state_as_string(
-                user_instance,
-                ptr_state,
-                context->parseable_output,
-                context->canonized_order_output,
-                context->display_10_as_t
-                );
-        printf("%s\n---------------\n\n\n", state_string);
-        free((void*)state_string);
-    }
-
-}
-
-typedef struct
-{
-    fc_solve_display_information_context_t display_context;
-    void * instance;
-} pack_item_t;
-
-
-static int cmd_line_callback(
-    void * instance,
-    int argc GCC_UNUSED,
-    const char * argv[],
-    int arg,
-    int * num_to_skip,
-    int * ret GCC_UNUSED,
-    void * context
-    )
-{
-    fc_solve_display_information_context_t * const dc = &(((pack_item_t *)context)->display_context);
-
-    *num_to_skip = 0;
-
-    if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
-    {
-        freecell_solver_user_set_iter_handler_long(
-            instance,
-            my_iter_handler,
-            dc
-            );
-    }
-    else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
-    {
-        dc->debug_iter_state_output = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
-    {
-        dc->parseable_output = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
-    {
-        dc->canonized_order_output = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
-    {
-        dc->display_10_as_t = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-pi")) || (!strcmp(argv[arg], "--display-parent-iter")))
-    {
-        dc->display_parent_iter_num = TRUE;
-    }
-    else
-    {
-        fprintf(stderr, "Unknown option %s!\n", argv[arg]);
-        exit(-1);
-        return 0;
-    }
-    *num_to_skip = 1;
-    return FCS_CMD_LINE_SKIP;
-}
-
-static const char * known_parameters[] = {
-    "-i", "--iter-output",
-    "-s", "--state-output",
-    "-p", "--parseable-output",
-    "-t", "--display-10-as-t",
-    "-pi", "--display-parent-iter",
-    NULL
-    };
-
 #define BINARY_OUTPUT_NUM_INTS 16
 
 static void print_help(void)
@@ -213,16 +99,7 @@ static void * worker_thread(void * void_context)
 
     const context_t * const context = (const context_t * const)void_context;
 
-    pack_item_t user =
-    {
-        .instance = freecell_solver_user_alloc(),
-        .display_context = {.debug_iter_state_output = FALSE,
-            .parseable_output = FALSE,
-            .canonized_order_output = FALSE,
-            .display_10_as_t = FALSE,
-            .display_parent_iter_num = FALSE
-        }
-    };
+    void * const instance = freecell_solver_user_alloc();
 
     {
         int arg = context->arg;
@@ -230,13 +107,13 @@ static void * worker_thread(void * void_context)
         char * * argv = (context->argv);
         const int parser_ret =
             freecell_solver_user_cmd_line_parse_args(
-                user.instance,
+                instance,
                 context->argc,
                 (const char * *)(void *)argv,
                 arg,
-                known_parameters,
-                cmd_line_callback,
-                &user,
+                NULL,
+                NULL,
+                NULL,
                 &error_string,
                 &arg
             );
@@ -286,11 +163,11 @@ static void * worker_thread(void * void_context)
             fcs_state_string_t state_string;
             get_board(board_num, state_string);
 
-            freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
+            freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
 
             switch(
                 freecell_solver_user_solve_board(
-                    user.instance,
+                    instance,
                     state_string
                     )
             )
@@ -307,7 +184,7 @@ static void * worker_thread(void * void_context)
                     const char * flares_error_string;
 
                     flares_error_string =
-                        freecell_solver_user_get_last_error_string(user.instance);
+                        freecell_solver_user_get_last_error_string(instance);
 
                     fprintf(stderr, "Flares Plan: %s\n", flares_error_string);
 
@@ -322,7 +199,7 @@ static void * worker_thread(void * void_context)
                 break;
             }
 
-            total_num_iters_temp += freecell_solver_user_get_num_times_long(user.instance);
+            total_num_iters_temp += freecell_solver_user_get_num_times_long(instance);
             if (total_num_iters_temp >= update_total_num_iters_threshold)
             {
                 pthread_mutex_lock(&total_num_iters_lock);
@@ -346,7 +223,7 @@ static void * worker_thread(void * void_context)
                 fflush(stdout);
             }
 
-            freecell_solver_user_recycle(user.instance);
+            freecell_solver_user_recycle(instance);
         }
     } while (board_num <= end_board);
 
@@ -355,7 +232,7 @@ static void * worker_thread(void * void_context)
     pthread_mutex_unlock(&total_num_iters_lock);
 
 theme_error:
-    freecell_solver_user_free(user.instance);
+    freecell_solver_user_free(instance);
 
 ret_label:
     return NULL;
