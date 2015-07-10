@@ -306,7 +306,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 
 void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void * api_instance,
-    fcs_int_limit_t max_iters
+    const fcs_int_limit_t max_iters
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
