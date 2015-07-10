@@ -492,8 +492,8 @@ Finished at 1433157786.996321 (total_num_iters=11372658)
 ---------------------------------------------------------
 
 ARGS="--worker-step 16 -l as" bash scripts/time-threads-num.bash -p 4 4 x Several Times
-commit deaee75166257d2ddaee155e6c528b5aaed30bf1
-(commit Date:   Mon Jun 1 14:13:42 2015 +0300 )
+commit 43f911ec218bac595e445c1520827e0a5a0b466b
+(commit Date:   Mon Jun 1 15:15:38 2015 +0300 )
 With Profile Guided Optimisation (PGO).
 ./Tatzer -l ci7b --prefix=/home/shlomif/apps/fcs
 (With -flto and -fwhole-program).
