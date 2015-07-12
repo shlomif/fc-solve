@@ -71,6 +71,8 @@ extern "C" {
 
 /* #undef FCS_DISABLE_SIMPLE_SIMON */
 
+#define FCS_SINGLE_HARD_THREAD
+
 /*
  * This macro disables the flipping card logic. The flipping card logic
  * was an experimental feature that aimed to give Freecell Solver the
@@ -95,6 +97,10 @@ extern "C" {
 #define FCS_WITHOUT_VISITED_ITER
 
 /*
+ * Disable the patsolve code at compile time in case it isn't wanted.
+ * */
+/* #undef FCS_DISABLE_PATSOLVE */
+/*
  * Get rid of the "depth" field on each state's extra_info. It is
  * used a little, but otherwise is not needed for the run-time
  * operation.
@@ -109,6 +115,10 @@ extern "C" {
 #define FCS_INT_BIT_SIZE_LOG2 5
 
 #define FCS_WITH_CONTEXT_VARIABLE
+
+/* This is an integer that specifies the maximal size of identifiers
+ * in chars/bytes. */
+#define FCS_MAX_IDENT_LEN 10
 
 /*
  * The size of void*.
@@ -209,6 +219,8 @@ extern "C" {
 
 #define HAVE_STRNDUP
 
+#define HAVE_STRNCASECMP
+
 /* Name of package */
 #define PACKAGE ""
 
@@ -228,7 +240,7 @@ extern "C" {
 #define PACKAGE_VERSION ""
 
 /* Version number of package */
-#define VERSION "3.17.3"
+#define VERSION "3.27.0"
 
 #ifndef FCS_INT_BIT_SIZE_LOG2
 #define FCS_INT_BIT_SIZE_LOG2 ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
