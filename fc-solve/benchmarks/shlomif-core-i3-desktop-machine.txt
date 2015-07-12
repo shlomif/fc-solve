@@ -577,16 +577,16 @@ lib64google-perftools0-2.1-4.mga5
     to a global, get rid of unused command line parsing code, consting/etc.
 
 <DUMP>
-Started at 1436486866.819107
-Reached Board No. 4000 at 1436486867.941445 (total_num_iters=363045)
-Reached Board No. 8000 at 1436486869.122009 (total_num_iters=1081861)
-Reached Board No. 12000 at 1436486870.216591 (total_num_iters=3437198)
-Unsolved Board No. 11982 at 1436486870.415985
-Reached Board No. 16000 at 1436486871.399761 (total_num_iters=4852100)
-Reached Board No. 20000 at 1436486872.500636 (total_num_iters=5572261)
-Reached Board No. 24000 at 1436486873.573400 (total_num_iters=6718820)
-Reached Board No. 28000 at 1436486874.622406 (total_num_iters=8742626)
-Reached Board No. 32000 at 1436486875.867227 (total_num_iters=10976664)
-Finished at 1436486875.874058 (total_num_iters=11372658)
+Started at 1436532553.593296
+Reached Board No. 4000 at 1436532554.706283 (total_num_iters=363319)
+Reached Board No. 8000 at 1436532555.878124 (total_num_iters=1052123)
+Reached Board No. 12000 at 1436532556.966876 (total_num_iters=3106024)
+Unsolved Board No. 11982 at 1436532557.163074
+Reached Board No. 16000 at 1436532558.139007 (total_num_iters=4484941)
+Reached Board No. 20000 at 1436532559.232034 (total_num_iters=6269454)
+Reached Board No. 24000 at 1436532560.296143 (total_num_iters=7057321)
+Reached Board No. 28000 at 1436532561.337914 (total_num_iters=8739929)
+Reached Board No. 32000 at 1436532562.571299 (total_num_iters=10872607)
+Finished at 1436532562.578157 (total_num_iters=11372658)
 </DUMP>
 
