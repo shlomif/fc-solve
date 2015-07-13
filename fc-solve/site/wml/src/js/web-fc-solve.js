@@ -66,6 +66,7 @@ Class('FC_Solve', {
                 return ret_obj;
             },
         },
+        _proto_states_and_moves_seq: { is: rw, init: null },
         _pre_expand_states_and_moves_seq: { is: rw, init: null },
         _post_expand_states_and_moves_seq: { is: rw, init: null },
     },
@@ -337,11 +338,17 @@ Class('FC_Solve', {
                 var move_as_string = Module.Pointer_stringify(move_as_string_ptr);
                 c_free (move_as_string_ptr);
 
-                states_and_moves_sequence.push({ type: 'm', str: move_as_string});
+                states_and_moves_sequence.push({ type: 'm', m: { type: 'm', str: move_as_string}, exp: null, is_exp: false});
                 _out_state(state_as_string);
             }
 
-            that._pre_expand_states_and_moves_seq = states_and_moves_sequence;
+            that._proto_states_and_moves_seq = states_and_moves_sequence;
+            that._pre_expand_states_and_moves_seq =
+                states_and_moves_sequence.map(
+                    function (item) {
+                        return (item.type == 'm' ? item.m : item);
+                    }
+                );
             that._post_expand_states_and_moves_seq = null;
 
             // Cleanup C resources
@@ -350,6 +357,23 @@ Class('FC_Solve', {
             that.obj = 0;
 
             return;
+        },
+        _calc_expanded_move: function(idx) {
+            var that = this;
+
+            var states_and_moves_sequence = that._proto_states_and_moves_seq;
+
+            if (! states_and_moves_sequence[idx].exp) {
+                states_and_moves_sequence[idx].exp =
+                    fc_solve_expand_move(
+                        8,
+                        4,
+                        states_and_moves_sequence[idx-1].str,
+                        states_and_moves_sequence[idx].m,
+                        states_and_moves_sequence[idx+1].str
+                    );
+            }
+            return states_and_moves_sequence[idx].exp;
         },
         _calc_expanded_seq: function() {
             var that = this;
@@ -360,18 +384,10 @@ Class('FC_Solve', {
 
             that._calc_states_and_moves_seq();
 
-            var states_and_moves_sequence = that._pre_expand_states_and_moves_seq;
+            var states_and_moves_sequence = that._proto_states_and_moves_seq;
             var new_array = [states_and_moves_sequence[0]];
             for (var i = 1; i < states_and_moves_sequence.length - 1; i+=2) {
-                Array.prototype.push.apply(new_array,
-                    fc_solve_expand_move(
-                        8,
-                        4,
-                        states_and_moves_sequence[i-1].str,
-                        states_and_moves_sequence[i],
-                        states_and_moves_sequence[i+1].str
-                    )
-                );
+                Array.prototype.push.apply(new_array, that._calc_expanded_move(i));
                 new_array.push(states_and_moves_sequence[i+1]);
             }
 
