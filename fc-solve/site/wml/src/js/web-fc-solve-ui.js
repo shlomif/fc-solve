@@ -63,6 +63,59 @@ Class('FC_Solve_UI',
                 that._webui_output_set_text(
                     that._process_pristine_output(that._calc_pristine_output())
                 );
+
+                if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
+                    var html = '';
+
+                    html = html + "<ol>\n";
+                    var seq = that._instance._proto_states_and_moves_seq;
+
+                    var _render_state = function(s) {
+                        return "<li class=\"state\"><pre>" + s.str + "</pre></li>\n\n";
+                    };
+
+                    var _out_state = function(i) {
+                        html = html + _render_state(seq[i]);
+                    };
+
+                    _out_state(0);
+                    for (var i = 1; i < seq.length - 1; i+=2) {
+                        html = html + "<li id=\"move_" + i + "\" class=\"move\"><span class=\"mega_move\">" + seq[i].m.str + "</span>\n<button id=\"expand_move_" + i + "\" class=\"expand_move\">Expand Move</button>\n</li>\n";
+
+                        _out_state(i+1);
+                    }
+                    $("#dynamic_output").html(html);
+
+                    $("#dynamic_output").on("click", "button.expand_move", function (event) {
+                        var button = $(this);
+                        var b_id = button.attr('id');
+                        var idx = parseInt(b_id.match(/^expand_move_([0-9]+)$/)[1]);
+
+                        if (! $("#move_" + idx).hasClass("expanded")) {
+                            var inner_moves = that._instance._calc_expanded_move(idx);
+
+                            var inner_html = '';
+
+                            inner_html = inner_html + "<ol class=\"inner_moves\">";
+
+                            var _out_inner_move = function(i) {
+                                inner_html = inner_html + "<li class=\"move\"><span class=\"inner_move\">" + inner_moves[i].str + "</span>\n</li>\n";
+                                return;
+                            }
+                            for (var i = 0; i < inner_moves.length-1 ; i += 2) {
+                                _out_inner_move(i);
+                                inner_html = inner_html + _render_state(inner_moves[i+1]);
+                            }
+                            _out_inner_move(inner_moves.length-1);
+                            inner_html = inner_html + "</ol>";
+                            $("#move_" + idx).append(
+                                inner_html
+                            );
+                            $("#move_" + idx).toggleClass("expanded");
+                        }
+                    }
+                    );
+                }
                 return;
             },
 

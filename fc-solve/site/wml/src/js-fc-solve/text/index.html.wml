@@ -166,6 +166,7 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 </p>
 
 <div class="output_form">
+<div id="dynamic_output"></div>
 <textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
 
 <div class="controls">
