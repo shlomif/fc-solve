@@ -42,12 +42,40 @@ extern "C" {
 
 #include "config.h"
 
-#include "check_limits.h"
 #include "inline.h"
 #include "likely.h"
 #include "bool.h"
 #include "min_and_max.h"
 
+static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
+    const fc_solve_instance_t * const instance
+    )
+{
+    return (instance->active_num_states_in_collection >=
+            instance->effective_trim_states_in_collection_from
+            );
+}
+
+#ifdef FCS_SINGLE_HARD_THREAD
+#define check_if_limits_exceeded__num() \
+        ((*instance_num_checked_states_ptr) == hard_thread_max_num_checked_states)
+#else
+#define check_if_limits_exceeded__num() \
+        ((*hard_thread_num_checked_states_ptr) == hard_thread_max_num_checked_states)
+#endif
+
+/*
+ * This macro checks if we need to terminate from running this soft
+ * thread and return to the soft thread manager with an
+ * FCS_STATE_SUSPEND_PROCESS
+ * */
+#define check_if_limits_exceeded()                                    \
+    (   \
+        check_if_limits_exceeded__num() \
+            || \
+        (instance->num_states_in_collection >=   \
+            effective_max_num_states_in_collection) \
+    )
 
 #define BEFS_MAX_DEPTH 20000
 

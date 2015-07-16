@@ -47,7 +47,6 @@
 #include "simpsim.h"
 #include "move_funcs_maps.h"
 
-#include "check_limits.h"
 #include "inline.h"
 #include "likely.h"
 #include "bool.h"
