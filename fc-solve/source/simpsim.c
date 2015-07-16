@@ -983,10 +983,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
     return;
 }
 
-typedef struct {
-    int ds;
-    int dc;
-} ds_dc_t;
+typedef pos_by_rank_t ds_dc_t;
 
 static GCC_INLINE void sort_ds_dcs(
     ds_dc_t * const ds_dcs,
@@ -998,7 +995,7 @@ static GCC_INLINE void sort_ds_dcs(
 
     for (ds_dc_t * b = start+1 ; b < limit ; b++)
     {
-        for (ds_dc_t * c = b ; (c > start) && (c[0].ds < c[-1].ds || (c[0].ds == c[-1].ds && c[0].dc > c[-1].dc)); c--)
+        for (ds_dc_t * c = b ; (c > start) && (c[0].col < c[-1].col || (c[0].col == c[-1].col && c[0].height > c[-1].height)); c--)
         {
             const typeof(c[-1]) temp = c[-1];
             c[-1] = c[0];
@@ -1073,9 +1070,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 continue;
             }
 
-            ds_dcs[len].ds = pos.col;
-            ds_dcs[len].dc = pos.height;
-            len++;
+            ds_dcs[len++] = pos;
         }
 
         /* This is done to preserve the original order in the solutions. */
@@ -1083,8 +1078,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
 
         for (int i=0 ; i < len ; i++)
         {
-            const int ds = ds_dcs[i].ds;
-            const int dc = ds_dcs[i].dc;
+            const int ds = ds_dcs[i].col;
+            const int dc = ds_dcs[i].height;
             const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
             const int dest_cards_num = fcs_col_len(dest_col);
 
