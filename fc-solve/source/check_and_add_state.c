@@ -40,8 +40,6 @@
 #include "inline.h"
 #include "likely.h"
 
-#include "check_limits.h"
-
 typedef  unsigned long  int  ub4;   /* unsigned 4-byte quantities */
 typedef  unsigned       char ub1;
 
