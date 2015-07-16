@@ -62,7 +62,7 @@ static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
         check_if_limits_exceeded__num() \
             || \
         (instance->num_states_in_collection >=   \
-            instance->effective_max_num_states_in_collection) \
+            effective_max_num_states_in_collection) \
     )
 
 #ifdef __cplusplus

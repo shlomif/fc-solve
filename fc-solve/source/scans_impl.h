@@ -773,6 +773,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     const fcs_tests_list_of_lists * the_tests_list_ptr;
     fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
     fcs_int_limit_t hard_thread_max_num_checked_states;
+    const typeof(instance->effective_max_num_states_in_collection) effective_max_num_states_in_collection = instance->effective_max_num_states_in_collection;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
