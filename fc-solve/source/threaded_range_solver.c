@@ -94,9 +94,6 @@ static pthread_mutex_t total_num_iters_lock;
 
 static void * worker_thread(void * GCC_UNUSED void_context)
 {
-    /* 52 cards of 3 chars (suit+rank+whitespace) each,
-     * plus 8 newlines, plus one '\0' terminator*/
-
     void * const instance = freecell_solver_user_alloc();
 
     {
