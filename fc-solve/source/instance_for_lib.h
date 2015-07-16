@@ -1150,8 +1150,7 @@ static GCC_INLINE void switch_to_next_soft_thread(
     }
     else
     {
-        const int proto_next_st_idx = 1 + (*st_idx_ptr);
-        const int next_st_idx = ((proto_next_st_idx == num_soft_threads) ? 0 : proto_next_st_idx);
+        const int next_st_idx = (( 1 + (*st_idx_ptr) ) % num_soft_threads);
         set_next_soft_thread(
             hard_thread,
             next_st_idx,

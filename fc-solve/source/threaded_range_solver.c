@@ -92,7 +92,7 @@ static context_t context = {.arg = 1, .board_num_step = 1, .update_total_num_ite
 static fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
-static void * worker_thread(void * void_context)
+static void * worker_thread(void * GCC_UNUSED void_context)
 {
     /* 52 cards of 3 chars (suit+rank+whitespace) each,
      * plus 8 newlines, plus one '\0' terminator*/
