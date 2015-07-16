@@ -50,8 +50,6 @@
 
 #include "range_solvers_gen_ms_boards.h"
 
-#define BINARY_OUTPUT_NUM_INTS 16
-
 static void print_help(void)
 {
     printf("\n%s",
@@ -88,10 +86,10 @@ typedef struct {
     fcs_int_limit_t total_iterations_limit_per_board;
 } context_t;
 
-context_t context = {.arg = 1, .board_num_step = 1, .update_total_num_iters_threshold = 1000000, .total_iterations_limit_per_board = -1};
+static context_t context = {.arg = 1, .board_num_step = 1, .update_total_num_iters_threshold = 1000000, .total_iterations_limit_per_board = -1};
 
 
-fcs_int64_t total_num_iters = 0;
+static fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
 static void * worker_thread(void * void_context)
