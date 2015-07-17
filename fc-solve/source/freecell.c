@@ -411,7 +411,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     /* Scan the freecells */
     for (int fc=0 ; fc < LOCAL_FREECELLS_NUM ; fc++)
     {
-        fcs_card_t src_card = fcs_freecell_card(state, fc);
+        const fcs_card_t src_card = fcs_freecell_card(state, fc);
 
         /* If the freecell is not empty and dest_card is its parent
          * */
@@ -454,9 +454,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                     )
                 )
                 {
-                    int cols_indexes[3];
                     /* We can move it */
-                    fcs_cards_column_t new_dest_col;
 
                     sfs_check_state_begin()
 
@@ -464,9 +462,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
                     my_copy_stack(ds);
 
-                    cols_indexes[0] = ds;
-                    cols_indexes[1] = -1;
-                    cols_indexes[2] = -1;
+                    const int cols_indexes[3] = {ds,-1,-1};
 
                     empty_two_cols_from_new_state(
                             soft_thread,
@@ -477,7 +473,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                             0
                     );
 
-                    new_dest_col = fcs_state_get_col(new_state, ds);
+                    fcs_cards_column_t new_dest_col
+                        = fcs_state_get_col(new_state, ds);
 
                     /* Now put the freecell card on top of the stack */
                     fcs_col_push_card(new_dest_col, src_card);
