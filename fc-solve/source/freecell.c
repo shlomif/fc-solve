@@ -395,10 +395,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     SET_GAME_PARAMS();
 #endif
 
-    fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    const fcs_game_limit_t num_vacant_slots =
+    (
+        soft_thread->num_vacant_freecells +
+        (tests__is_filled_by_any_card() ? soft_thread->num_vacant_stacks : 0)
+    );
 
-    int initial_derived_states_num_states = derived_states_list->num_states;
+    const int initial_derived_states_num_states = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
     FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS();
@@ -422,102 +425,82 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
         {
             FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
             {
-                int ds;
-                if ((ds = pos_idx_to_check[0]) == -1)
+                const int ds = pos_idx_to_check[0];
+                if (ds == -1)
                 {
                     continue;
                 }
-                int dc = pos_idx_to_check[1];
+                const int dc = pos_idx_to_check[1];
 
-                fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-                fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+                const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
 
-                int dest_cards_num = fcs_col_len(dest_col);
+                const int dest_cards_num = fcs_col_len(dest_col);
                 /* Let's check if we can put it there */
 
                 /* Check if the destination card is already below a
                  * suitable card */
-                fcs_bool_t is_seq_in_dest = FALSE;
-                if (dest_cards_num - 1 > dc)
+                const int next_dc = dc+1;
+                /* If dest_cards_num == next_dc then
+                 * dest_cards_num - next_dc == 0 <= 0 so the other check
+                 * cab be skipped.
+                 * */
+                if ((dest_cards_num == next_dc) ||
+                    (
+                        (!fcs_is_parent_card(fcs_col_get_card(dest_col, next_dc), dest_card))
+                        &&
+                        (dest_cards_num - next_dc <= num_vacant_slots)
+
+                    )
+                )
                 {
-                    fcs_card_t dest_below_card =
-                        fcs_col_get_card(dest_col, dc+1);
-                    if (fcs_is_parent_card(dest_below_card, dest_card))
-                    {
-                        is_seq_in_dest = TRUE;
-                    }
-                }
+                    int cols_indexes[3];
+                    /* We can move it */
+                    fcs_cards_column_t new_dest_col;
 
-                if (! is_seq_in_dest)
-                {
-                    int num_cards_to_relocate = dest_cards_num - dc - 1;
+                    sfs_check_state_begin()
 
-                    int freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
+                    /* Fill the freecells with the top cards */
 
-                    num_cards_to_relocate -= freecells_to_fill;
+                    my_copy_stack(ds);
 
-                    int freestacks_to_fill;
-                    if (tests__is_filled_by_any_card())
-                    {
-                        freestacks_to_fill = min(num_cards_to_relocate, num_vacant_stacks);
+                    cols_indexes[0] = ds;
+                    cols_indexes[1] = -1;
+                    cols_indexes[2] = -1;
 
-                        num_cards_to_relocate -= freestacks_to_fill;
-                    }
-                    else
-                    {
-                        freestacks_to_fill = 0;
-                    }
-
-                    if (num_cards_to_relocate == 0)
-                    {
-                        int cols_indexes[3];
-                        /* We can move it */
-                        fcs_cards_column_t new_dest_col;
-
-                        sfs_check_state_begin()
-
-                        /* Fill the freecells with the top cards */
-
-                        my_copy_stack(ds);
-
-                        cols_indexes[0] = ds;
-                        cols_indexes[1] = -1;
-                        cols_indexes[2] = -1;
-
-                        empty_two_cols_from_new_state(
-                                soft_thread,
-                                NEW_STATE_BY_REF(),
-                                moves,
-                                cols_indexes,
-                                dest_cards_num - dc - 1,
-                                0
-                        );
-
-                        new_dest_col = fcs_state_get_col(new_state, ds);
-
-                        /* Now put the freecell card on top of the stack */
-                        fcs_col_push_card(new_dest_col, src_card);
-                        fcs_empty_freecell(new_state, fc);
-
-                        fcs_move_stack_non_seq_push(
+                    empty_two_cols_from_new_state(
+                            soft_thread,
+                            NEW_STATE_BY_REF(),
                             moves,
-                            FCS_MOVE_TYPE_FREECELL_TO_STACK,
-                            fc,
-                            ds
-                        );
+                            cols_indexes,
+                            dest_cards_num - dc - 1,
+                            0
+                    );
 
-                        /*
-                         * This is to preserve the order that the
-                         * initial (non-optimized) version of the
-                         * function used - for backwards-compatibility
-                         * and consistency.
-                         * */
-                        state_context_value =
-                            ((ds << 16) | ((255-dc) << 8) | fc)
-                            ;
+                    new_dest_col = fcs_state_get_col(new_state, ds);
 
-                        sfs_check_state_end()
-                    }
+                    /* Now put the freecell card on top of the stack */
+                    fcs_col_push_card(new_dest_col, src_card);
+                    fcs_empty_freecell(new_state, fc);
+
+                    fcs_move_stack_non_seq_push(
+                        moves,
+                        FCS_MOVE_TYPE_FREECELL_TO_STACK,
+                        fc,
+                        ds
+                    );
+
+                    /*
+                     * This is to preserve the order that the
+                     * initial (non-optimized) version of the
+                     * function used - for backwards-compatibility
+                     * and consistency.
+                     * */
+                    state_context_value =
+                        ((ds << 16) | ((255-dc) << 8) | fc)
+                        ;
+
+                    sfs_check_state_end()
                 }
             }
         }
