@@ -975,13 +975,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                                 num_vacant_freecells - freecells_to_fill,
                                 num_vacant_stacks - freestacks_to_fill-1
                             );
-                        const int m = seq_end + 1 - max_seq_move;
+                        const int m = seq_end - max_seq_move;
+                        const int lim = min(m, seq_end);
                         int seq_start = c;
                         while (
-                            (seq_start < m)
-                                &&
-                            (seq_start <= seq_end)
-                            )
+                            seq_start <= lim
+                        )
                         {
                             seq_start++;
                         }
