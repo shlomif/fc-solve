@@ -729,8 +729,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
     const fcs_game_limit_t num_vacant_freecells
         = soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_vacant_stacks
-         = soft_thread->num_vacant_stacks;
+
+    const fcs_game_limit_t num_virtual_vacant_stacks
+        = tests__is_filled_by_any_card() ? soft_thread->num_vacant_stacks : 0
+        ;
 
     const int initial_derived_states_num_states =
         derived_states_list->num_states;
@@ -806,20 +808,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
                 num_cards_to_relocate -= freecells_to_fill;
 
-                int freestacks_to_fill;
-                if (tests__is_filled_by_any_card())
-                {
-                    freestacks_to_fill = min(num_cards_to_relocate, num_vacant_stacks);
-
-                    num_cards_to_relocate -= freestacks_to_fill;
-                }
-                else
-                {
-                    freestacks_to_fill = 0;
-                }
+                const int freestacks_to_fill = min(num_cards_to_relocate, num_virtual_vacant_stacks);
+                num_cards_to_relocate -= freestacks_to_fill;
 
                 if (unlikely((num_cards_to_relocate == 0) &&
-                   (calc_max_sequence_move(num_vacant_freecells-freecells_to_fill, num_vacant_stacks-freestacks_to_fill) >=
+                   (calc_max_sequence_move(num_vacant_freecells-freecells_to_fill, num_virtual_vacant_stacks-freestacks_to_fill) >=
                     seq_end - c + 1)))
                 {
                     sfs_check_state_begin()
@@ -880,6 +873,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 #endif
     const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+
+    const fcs_game_limit_t num_virtual_vacant_stacks
+        = tests__is_filled_by_any_card() ? num_vacant_stacks : 0
+        ;
 
     const int max_sequence_len = calc_max_sequence_move(num_vacant_freecells, num_vacant_stacks-1);
 
@@ -967,26 +964,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 
                     num_cards_to_relocate -= freecells_to_fill;
 
-                    int freestacks_to_fill;
-                    if (tests__is_filled_by_any_card())
-                    {
-                        freestacks_to_fill = min(num_cards_to_relocate, num_vacant_stacks);
+                    const int freestacks_to_fill = min(num_cards_to_relocate, num_virtual_vacant_stacks);
+                    num_cards_to_relocate -= freestacks_to_fill;
 
-                        num_cards_to_relocate -= freestacks_to_fill;
-                    }
-                    else
-                    {
-                        freestacks_to_fill = 0;
-                    }
-
-                    if ((num_cards_to_relocate == 0) && (num_vacant_stacks-freestacks_to_fill > 0))
+                    if ((num_cards_to_relocate == 0) && (num_vacant_stacks - freestacks_to_fill > 0))
                     {
                         /* We can move it */
                         int seq_start = c;
                         while (
                             (calc_max_sequence_move(
-                                num_vacant_freecells-freecells_to_fill,
-                                num_vacant_stacks-freestacks_to_fill-1) < seq_end-seq_start+1)
+                                num_vacant_freecells - freecells_to_fill,
+                                num_vacant_stacks - freestacks_to_fill-1) < seq_end-seq_start+1)
                                 &&
                             (seq_start <= seq_end)
                             )
@@ -997,7 +985,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                             ((tests__is_filled_by_kings_only()) ?
                                 (fcs_col_get_rank(col, seq_start)
                                     == 13) :
-                                1
+                                TRUE
                             )
                         )
                         {
