@@ -747,19 +747,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     {
         const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
 
+        const int col_len = fcs_col_len(col);
+        const int col_len_minus_1 = col_len-1;
         int seq_end;
-        for (int c=0 ; c<fcs_col_len(col) ; c=seq_end+1)
+        for (int c=0 ; c < col_len ; c=seq_end+1)
         {
             /* Check if there is a sequence here. */
-            for(seq_end=c ; seq_end<fcs_col_len(col)-1 ; seq_end++)
+            for(seq_end=c ; seq_end < col_len_minus_1 ; seq_end++)
             {
                 const fcs_card_t this_card = fcs_col_get_card(col, seq_end+1);
                 const fcs_card_t prev_card = fcs_col_get_card(col, seq_end);
 
-                if (fcs_is_parent_card(this_card,prev_card))
-                {
-                }
-                else
+                if (! fcs_is_parent_card(this_card,prev_card))
                 {
                     break;
                 }
@@ -772,7 +771,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     continue;
                 }
             }
-
+            const int col_num_cards = col_len_minus_1 - seq_end;
             /* Find a card which this card can be put on; */
 
             const fcs_card_t card = fcs_col_get_card(col, c);
@@ -798,9 +797,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 if ((ds >= 0) && (ds != stack_idx))
                 {
                 const int dc = pos_idx_to_check[1];
-                const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                const int dest_num_cards = fcs_col_len(dest_col) - dc - 1;
 
-                int num_cards_to_relocate = fcs_col_len(dest_col) - dc - 1 + fcs_col_len(col) - seq_end - 1;
+                int num_cards_to_relocate = dest_num_cards + col_num_cards;
 
                 const int freecells_to_fill = min(num_cards_to_relocate, num_vacant_freecells);
 
@@ -835,8 +835,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                             NEW_STATE_BY_REF(),
                             moves,
                             cols_indexes,
-                            fcs_col_len(dest_col) - dc - 1,
-                            fcs_col_len(col) - seq_end - 1
+                            dest_num_cards,
+                            col_num_cards
                         );
                     }
 
