@@ -970,11 +970,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     if ((num_cards_to_relocate == 0) && (num_vacant_stacks - freestacks_to_fill > 0))
                     {
                         /* We can move it */
+                        const int max_seq_move =
+                            calc_max_sequence_move(
+                                num_vacant_freecells - freecells_to_fill,
+                                num_vacant_stacks - freestacks_to_fill-1
+                            );
                         int seq_start = c;
                         while (
-                            (calc_max_sequence_move(
-                                num_vacant_freecells - freecells_to_fill,
-                                num_vacant_stacks - freestacks_to_fill-1) < seq_end-seq_start+1)
+                            (max_seq_move < seq_end-seq_start+1)
                                 &&
                             (seq_start <= seq_end)
                             )
