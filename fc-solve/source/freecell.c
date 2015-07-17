@@ -970,13 +970,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     if ((num_cards_to_relocate == 0) && (num_vacant_stacks - freestacks_to_fill > 0))
                     {
                         /* We can move it */
-                        const int max_seq_move =
+                        const int seq_start =
+                            ({
+                            const int max_seq_move =
                             calc_max_sequence_move(
                                 num_vacant_freecells - freecells_to_fill,
                                 num_vacant_stacks - freestacks_to_fill-1
                             );
-                        const int m = seq_end + 1 - max_seq_move;
-                        const int seq_start = max(m, c);
+                            const int m = seq_end + 1 - max_seq_move;
+                            max(m, c);
+                            });
                         if ((seq_start <= seq_end) &&
                             ((tests__is_filled_by_kings_only()) ?
                                 (fcs_col_get_rank(col, seq_start)
