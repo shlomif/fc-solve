@@ -1296,12 +1296,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 #endif
 
     const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
     /* Now, let's try to empty an entire stack into the freecells, so other cards can
      * inhabit it */
 
-    if (num_vacant_stacks == 0)
+    if (soft_thread->num_vacant_stacks == 0)
     {
         for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
         {
@@ -1507,9 +1506,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         return;
     }
 
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
-
-    if (num_vacant_stacks == 0)
+    if (soft_thread->num_vacant_stacks == 0)
     {
         return;
     }
@@ -1756,9 +1753,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         return;
     }
 
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
-
-    if (num_vacant_stacks == 0)
+    if (soft_thread->num_vacant_stacks == 0)
     {
         return;
     }
