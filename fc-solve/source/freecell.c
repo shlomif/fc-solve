@@ -975,12 +975,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                                 num_vacant_freecells - freecells_to_fill,
                                 num_vacant_stacks - freestacks_to_fill-1
                             );
-                        const int m = seq_end - max_seq_move;
-                        int seq_start = c;
-                        if ( seq_start <= m )
-                        {
-                            seq_start = m+1;
-                        }
+                        const int m = seq_end + 1 - max_seq_move;
+                        const int seq_start = max(m, c);
                         if ((seq_start <= seq_end) &&
                             ((tests__is_filled_by_kings_only()) ?
                                 (fcs_col_get_rank(col, seq_start)
