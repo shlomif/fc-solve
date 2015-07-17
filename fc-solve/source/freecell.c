@@ -1116,6 +1116,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     const fcs_game_limit_t num_vacant_freecells = soft_thread->num_vacant_freecells;
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
 
+    const fcs_game_limit_t num_virtual_vacant_stacks
+        = tests__is_filled_by_any_card() ? num_vacant_stacks : 0
+        ;
+
     const int initial_derived_states_num_states = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
@@ -1221,17 +1225,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
                 num_cards_to_relocate -= freecells_to_fill;
 
-                int freestacks_to_fill;
-                if (tests__is_filled_by_any_card())
-                {
-                    freestacks_to_fill = min(num_cards_to_relocate, num_vacant_stacks);
-
-                    num_cards_to_relocate -= freestacks_to_fill;
-                }
-                else
-                {
-                    freestacks_to_fill = 0;
-                }
+                const int freestacks_to_fill = min(num_cards_to_relocate, num_virtual_vacant_stacks);
+                num_cards_to_relocate -= freestacks_to_fill;
 
                 if (!(
                     (num_cards_to_relocate == 0)
