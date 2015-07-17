@@ -130,10 +130,9 @@ static char * get_the_positions_by_rank_data__ss_generator(
     SET_GAME_PARAMS();
 
 #define FCS_SS_POS_BY_RANK_WIDTH (13+1)
-#define FCS_SS_CELL_WIDTH 2
-#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * FCS_SS_CELL_WIDTH * 4 )
+#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
 #define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
-#define FCS_POS_IDX(rank, suit) ( ((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank)) * FCS_SS_CELL_WIDTH )
+#define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
 
     pos_by_rank_t * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
 
