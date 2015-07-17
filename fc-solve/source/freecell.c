@@ -977,11 +977,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                             );
                         const int m = seq_end - max_seq_move;
                         int seq_start = c;
-                        while (
-                            seq_start <= m
-                        )
+                        if ( seq_start <= m )
                         {
-                            seq_start++;
+                            seq_start = m+1;
                         }
                         if ((seq_start <= seq_end) &&
                             ((tests__is_filled_by_kings_only()) ?
