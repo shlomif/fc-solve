@@ -305,6 +305,19 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     }
 }
 
+static char * const calc_errstr_s(const int padding_len, const char * const format, const char * const arg)
+{
+    char * const errstr = SMALLOC(errstr, strlen(arg)+padding_len);
+
+    sprintf(
+        errstr,
+        format,
+        arg
+    );
+
+    return errstr;
+}
+
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,
     int argc,
@@ -1272,15 +1285,8 @@ break;
             ret = freecell_solver_user_set_tests_order(instance, (*arg), &fcs_user_errstr);
             if (ret != 0)
             {
-                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
-                sprintf(
-                    errstr,
-                    "Error in tests' order!\n%s\n",
-                    fcs_user_errstr
-                    );
+                *error_string = calc_errstr_s(50, "Error in tests' order!\n%s\n", fcs_user_errstr);
                 free(fcs_user_errstr);
-
-                *error_string = errstr;
 
                 RET_ERROR_IN_ARG() ;
             }
@@ -1414,53 +1420,40 @@ break;
             ret = freecell_solver_user_apply_preset(instance, (*arg));
             if (ret == FCS_PRESET_CODE_NOT_FOUND)
             {
-                char * const errstr = SMALLOC(errstr, strlen(*arg)+50);
-
-                sprintf(errstr, "Unknown game \"%s\"!\n\n", (*arg));
-                *error_string = errstr;
+                *error_string = calc_errstr_s(50,  "Unknown game \"%s\"!\n\n", (*arg));
 
                 RET_ERROR_IN_ARG() ;
             }
             else if (ret == FCS_PRESET_CODE_FREECELLS_EXCEED_MAX)
             {
-                char * const errstr = SMALLOC(errstr, strlen((*arg))+200);
-                sprintf(errstr, "The game \"%s\" exceeds the maximal number "
+                *error_string = calc_errstr_s(200,
+                    "The game \"%s\" exceeds the maximal number "
                         "of freecells in the program.\n"
                         "Modify the file \"config.h\" and recompile, "
                         "if you wish to solve one of its boards.\n",
                         (*arg)
-                        );
-
-                *error_string = errstr;
-
+                );
                 RET_ERROR_IN_ARG() ;
             }
             else if (ret == FCS_PRESET_CODE_STACKS_EXCEED_MAX)
             {
-                char * const errstr = SMALLOC(errstr, strlen((*arg))+200);
-
-                sprintf(errstr, "The game \"%s\" exceeds the maximal number "
-                        "of stacks in the program.\n"
-                        "Modify the file \"config.h\" and recompile, "
-                        "if you wish to solve one of its boards.\n",
-                        (*arg)
-                        );
-
-                *error_string = errstr;
+                *error_string = calc_errstr_s(200,
+                    "The game \"%s\" exceeds the maximal number "
+                    "of stacks in the program.\n"
+                    "Modify the file \"config.h\" and recompile, "
+                    "if you wish to solve one of its boards.\n",
+                    (*arg)
+                );
 
                 RET_ERROR_IN_ARG() ;
             }
             else if (ret != FCS_PRESET_CODE_OK)
             {
-                char * const errstr = SMALLOC(errstr, strlen((*arg))+200);
-
-                sprintf(errstr,
-                    "The game \"%s\" exceeds the limits of the program.\n"
+                *error_string = calc_errstr_s(200,
+"The game \"%s\" exceeds the limits of the program.\n"
                     "Modify the file \"config.h\" and recompile, if you wish to solve one of its boards.\n",
                     (*arg)
                 );
-
-                *error_string = errstr;
 
                 RET_ERROR_IN_ARG() ;
             }
@@ -1498,15 +1491,10 @@ break;
 #endif
             else
             {
-                char * const errstr = SMALLOC(errstr, strlen((*arg))+50);
-
-                sprintf(
-                    errstr,
+                *error_string = calc_errstr_s(50,
                     "Unknown solving method \"%s\".\n",
                     (*arg)
-                    );
-
-                *error_string = errstr;
+                );
 
                 RET_ERROR_IN_ARG() ;
             }
@@ -1685,15 +1673,11 @@ break;
                     &fcs_user_errstr
                     ) != 0)
             {
-                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+100);
-                sprintf(
-                    errstr,
+                *error_string = calc_errstr_s(100,
                     "Error in the optimization scan's tests' order!\n%s\n",
                     fcs_user_errstr
-                    );
+                );
                 free(fcs_user_errstr);
-
-                *error_string = errstr;
 
                 RET_ERROR_IN_ARG() ;
             }
@@ -1716,10 +1700,9 @@ break;
             }
             else
             {
-                char * const errstr = SMALLOC(errstr, strlen((*arg))+50);
-
-                sprintf(errstr, "Unknown scans' synergy type \"%s\"!\n", (*arg));
-                *error_string = errstr;
+                *error_string = calc_errstr_s(50,
+                    "Unknown scans' synergy type \"%s\"!\n", (*arg)
+                );
 
                 RET_ERROR_IN_ARG() ;
             }
@@ -1925,15 +1908,11 @@ break;
 
                 if (ret != 0)
                 {
-                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
-                    sprintf(
-                            errstr,
+                    *error_string = calc_errstr_s(50,
                             "Error in depth tests' order!\n%s\n",
                             fcs_user_errstr
-                           );
+                    );
                     free(fcs_user_errstr);
-
-                    *error_string = errstr;
 
                     RET_ERROR_IN_ARG() ;
                 }
@@ -1952,15 +1931,11 @@ break;
                     &fcs_user_errstr
                     ) != 0)
             {
-                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
-                sprintf(
-                    errstr,
+                *error_string = calc_errstr_s(50,
                     "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr
-                    );
+                );
                 free(fcs_user_errstr);
-
-                *error_string = errstr;
 
                 RET_ERROR_IN_ARG() ;
             }
@@ -1987,13 +1962,10 @@ break;
                 (*arg)
             ) != 0)
             {
-                char * errstr = SMALLOC(errstr, strlen(*arg)+50);
-                sprintf(
-                    errstr,
+                *error_string = calc_errstr_s(50,
                     "Unknown flares choice argument '%s'.\n",
                     (*arg)
                 );
-                *error_string = errstr;
 
                 RET_ERROR_IN_ARG() ;
             }
@@ -2021,15 +1993,11 @@ break;
                     &fcs_user_errstr
                 ) != 0)
                 {
-                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
-                    sprintf(
-                            errstr,
+                    *error_string = calc_errstr_s(50,
                             "Error in patsolve X param setting!\n%s\n",
                             fcs_user_errstr
-                           );
+                    );
                     free(fcs_user_errstr);
-
-                    *error_string = errstr;
 
                     RET_ERROR_IN_ARG() ;
                 }
@@ -2058,15 +2026,11 @@ break;
                     &fcs_user_errstr
                 ) != 0)
                 {
-                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
-                    sprintf(
-                            errstr,
+                    *error_string = calc_errstr_s(50,
                             "Error in patsolve Y param setting!\n%s\n",
                             fcs_user_errstr
-                           );
+                    );
                     free(fcs_user_errstr);
-
-                    *error_string = errstr;
 
                     RET_ERROR_IN_ARG() ;
                 }
