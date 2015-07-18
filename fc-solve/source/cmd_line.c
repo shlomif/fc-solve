@@ -1277,13 +1277,11 @@ break;
 
         case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */
         {
-            int ret;
             char * fcs_user_errstr;
 
             PROCESS_OPT_ARG() ;
 
-            ret = freecell_solver_user_set_tests_order(instance, (*arg), &fcs_user_errstr);
-            if (ret != 0)
+            if (freecell_solver_user_set_tests_order(instance, (*arg), &fcs_user_errstr) != 0)
             {
                 *error_string = calc_errstr_s(50, "Error in tests' order!\n%s\n", fcs_user_errstr);
                 free(fcs_user_errstr);
@@ -1413,11 +1411,9 @@ break;
 
         case FCS_OPT_GAME: /* STRINGS=--game|--preset|-g; */
         {
-            int ret;
-
             PROCESS_OPT_ARG() ;
 
-            ret = freecell_solver_user_apply_preset(instance, (*arg));
+            const int ret = freecell_solver_user_apply_preset(instance, (*arg));
             if (ret == FCS_PRESET_CODE_NOT_FOUND)
             {
                 *error_string = calc_errstr_s(50,  "Unknown game \"%s\"!\n\n", (*arg));
@@ -1577,15 +1573,10 @@ break;
         case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread; */
         case FCS_OPT_NEXT_HARD_THREAD: /* STRINGS=-nht|--next-hard-thread; */
         {
-            int ret;
-
-            ret =
-                (opt == FCS_OPT_NEXT_SOFT_THREAD)
+            if ((opt == FCS_OPT_NEXT_SOFT_THREAD)
                     ? freecell_solver_user_next_soft_thread(instance)
                     : freecell_solver_user_next_hard_thread(instance)
-                    ;
-
-            if (ret)
+            )
             {
                 *error_string = strdup("The maximal number of soft threads has been exceeded\n");
 
@@ -1734,7 +1725,6 @@ break;
                 char * buffer;
                 FILE * f;
                 long file_len;
-                int ret;
                 size_t num_read;
                 int num_file_args_to_skip;
 
@@ -1809,13 +1799,9 @@ break;
                 args_man_t args_man = fc_solve_args_man_chop(buffer);
                 free(buffer);
 
-                if (num_file_args_to_skip >= args_man.argc)
+                if (num_file_args_to_skip < args_man.argc)
                 {
-                    /* Do nothing */
-                }
-                else
-                {
-                    ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+                    const int ret = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         instance,
                         args_man.argc - num_file_args_to_skip,
                         (freecell_solver_str_t *)(void *)(args_man.argv + num_file_args_to_skip),
@@ -1848,7 +1834,7 @@ break;
         {
             PROCESS_OPT_ARG() ;
 
-            int ret = freecell_solver_user_cmd_line_read_cmd_line_preset(
+            const int ret = freecell_solver_user_cmd_line_read_cmd_line_preset(
                 instance,
                 (*arg),
                 known_parameters,
@@ -1881,14 +1867,9 @@ break;
             PROCESS_OPT_ARG() ;
 
             {
-                char * fcs_user_errstr;
-                int min_depth;
-                int ret;
-                const char * s;
+                int min_depth = 0;
 
-                min_depth = 0;
-
-                s = (*arg);
+                const char * s = (*arg);
                 while(isdigit(*s))
                 {
                     s++;
@@ -1898,15 +1879,24 @@ break;
                     min_depth = atoi((*arg));
                     s++;
                 }
+                else
+                {
+                    s = (*arg);
+                }
 
-                ret = freecell_solver_user_set_depth_tests_order(
+                /* Note: passing (*arg) instead of s to the
+                 * set_depth_tests_order is likely wrong, but when doing
+                 * it right, the tests fail.
+                 * */
+                char * fcs_user_errstr;
+                if (
+                    freecell_solver_user_set_depth_tests_order(
                         instance,
                         min_depth,
                         (*arg),
                         &fcs_user_errstr
-                        );
-
-                if (ret != 0)
+                    )
+                )
                 {
                     *error_string = calc_errstr_s(50,
                             "Error in depth tests' order!\n%s\n",
