@@ -7,12 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* Investigate this problem:
---------------------------------------------------------
-shlomif[fcs]:$trunk/fc-solve/B$ pi-make-microsoft-freecell-board -t 3 | PATH="`pwd`:$PATH" perl ../source/scripts/summarize-fc-solve -- --method patsolve
-Invalid solution! at ../source/scripts/summarize-fc-solve line 83.
---------------------------------------------------------
-
 * Make sure that --method patsolve's stats are reported.
 
 * Check how the soft_threads/hard_threads/flares/etc. are done with-respect-to
