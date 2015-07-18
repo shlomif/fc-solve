@@ -1272,7 +1272,7 @@ break;
             ret = freecell_solver_user_set_tests_order(instance, (*arg), &fcs_user_errstr);
             if (ret != 0)
             {
-                char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
                 sprintf(
                     errstr,
                     "Error in tests' order!\n%s\n",
@@ -1292,9 +1292,7 @@ break;
             PROCESS_OPT_ARG() ;
             if (freecell_solver_user_set_num_freecells(instance, atoi((*arg))) != 0)
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, 500);
+                char * const errstr = SMALLOC(errstr, 200);
                 sprintf(errstr,
                     "Error! The freecells\' number "
                     "exceeds the maximum of %i.\n"
@@ -1314,9 +1312,7 @@ break;
             PROCESS_OPT_ARG() ;
             if (freecell_solver_user_set_num_stacks(instance, atoi((*arg))) != 0)
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, 500);
+                char * const errstr = SMALLOC(errstr, 200);
                 sprintf(errstr,
                     "Error! The stacks\' number "
                     "exceeds the maximum of %i.\n"
@@ -1336,9 +1332,7 @@ break;
             PROCESS_OPT_ARG() ;
             if (freecell_solver_user_set_num_decks(instance, atoi((*arg))) != 0)
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, 500);
+                char * const errstr = SMALLOC(errstr, 200);
                 sprintf(errstr,
                     "Error! The decks\' number "
                     "exceeds the maximum of %i.\n"
@@ -1420,9 +1414,7 @@ break;
             ret = freecell_solver_user_apply_preset(instance, (*arg));
             if (ret == FCS_PRESET_CODE_NOT_FOUND)
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, strlen((*arg))+500);
+                char * const errstr = SMALLOC(errstr, strlen(*arg)+50);
 
                 sprintf(errstr, "Unknown game \"%s\"!\n\n", (*arg));
                 *error_string = errstr;
@@ -1431,9 +1423,7 @@ break;
             }
             else if (ret == FCS_PRESET_CODE_FREECELLS_EXCEED_MAX)
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, strlen((*arg))+500);
+                char * const errstr = SMALLOC(errstr, strlen((*arg))+200);
                 sprintf(errstr, "The game \"%s\" exceeds the maximal number "
                         "of freecells in the program.\n"
                         "Modify the file \"config.h\" and recompile, "
@@ -1447,9 +1437,7 @@ break;
             }
             else if (ret == FCS_PRESET_CODE_STACKS_EXCEED_MAX)
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, strlen((*arg))+500);
+                char * const errstr = SMALLOC(errstr, strlen((*arg))+200);
 
                 sprintf(errstr, "The game \"%s\" exceeds the maximal number "
                         "of stacks in the program.\n"
@@ -1464,9 +1452,7 @@ break;
             }
             else if (ret != FCS_PRESET_CODE_OK)
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, strlen((*arg))+500);
+                char * const errstr = SMALLOC(errstr, strlen((*arg))+200);
 
                 sprintf(errstr,
                     "The game \"%s\" exceeds the limits of the program.\n"
@@ -1512,7 +1498,7 @@ break;
 #endif
             else
             {
-                char * const errstr = SMALLOC(errstr, strlen((*arg))+500);
+                char * const errstr = SMALLOC(errstr, strlen((*arg))+50);
 
                 sprintf(
                     errstr,
@@ -1613,11 +1599,7 @@ break;
 
             if (ret)
             {
-                char * errstr;
-
-                errstr = strdup("The maximal number of soft threads has been exceeded\n");
-
-                *error_string = errstr;
+                *error_string = strdup("The maximal number of soft threads has been exceeded\n");
 
                 RET_ERROR_IN_ARG() ;
             }
@@ -1703,7 +1685,7 @@ break;
                     &fcs_user_errstr
                     ) != 0)
             {
-                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+100);
                 sprintf(
                     errstr,
                     "Error in the optimization scan's tests' order!\n%s\n",
@@ -1734,9 +1716,7 @@ break;
             }
             else
             {
-                char * errstr;
-
-                errstr = SMALLOC(errstr, strlen((*arg))+500);
+                char * const errstr = SMALLOC(errstr, strlen((*arg))+50);
 
                 sprintf(errstr, "Unknown scans' synergy type \"%s\"!\n", (*arg));
                 *error_string = errstr;
@@ -1945,7 +1925,7 @@ break;
 
                 if (ret != 0)
                 {
-                    char * errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
                     sprintf(
                             errstr,
                             "Error in depth tests' order!\n%s\n",
@@ -1972,7 +1952,7 @@ break;
                     &fcs_user_errstr
                     ) != 0)
             {
-                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
                 sprintf(
                     errstr,
                     "Error in the optimization scan's pruning!\n%s\n",
@@ -2007,7 +1987,7 @@ break;
                 (*arg)
             ) != 0)
             {
-                char * errstr = SMALLOC(errstr, strlen(*arg)+500);
+                char * errstr = SMALLOC(errstr, strlen(*arg)+50);
                 sprintf(
                     errstr,
                     "Unknown flares choice argument '%s'.\n",
@@ -2041,7 +2021,7 @@ break;
                     &fcs_user_errstr
                 ) != 0)
                 {
-                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
                     sprintf(
                             errstr,
                             "Error in patsolve X param setting!\n%s\n",
@@ -2078,7 +2058,7 @@ break;
                     &fcs_user_errstr
                 ) != 0)
                 {
-                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+500);
+                    char * const errstr = SMALLOC(errstr, strlen(fcs_user_errstr)+50);
                     sprintf(
                             errstr,
                             "Error in patsolve Y param setting!\n%s\n",
