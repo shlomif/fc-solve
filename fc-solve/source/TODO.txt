@@ -22,6 +22,9 @@ Invalid solution! at ../source/scripts/summarize-fc-solve line 83.
 ** It runs fine on Windows 7.
 ** Thanks to Manish Jain for the report.
 
+* Add -dto2 flag for a corrected depth tests' order because -dto 13,$FOO is
+equivalent to -dto2 13,13$FOO .
+
 Non-pressing
 ------------
 
