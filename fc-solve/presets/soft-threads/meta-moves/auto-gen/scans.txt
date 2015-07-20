@@ -33,3 +33,10 @@
 36	--method random-dfs -to [01]=asw(1)[23456789]=asw(1) -seed 268
 37	--method random-dfs -to 0123467 -dto 16,0[123467]=asw(1,0,0,0,0,0)
 38	--method random-dfs -to 01234567 -dto 13,[0187465]=asw(1) -dto 26,[0134587]=asw(1)
+39	--method soft-dfs -to 0123456789 -dto2 19,0126394875
+40	--method random-dfs -to 0123467 -dto2 16,0[123467]
+41	--method random-dfs -seed 500 -to 0123456789 -dto2 36,[01][23456789]
+42	--method random-dfs -seed 37 -to [0123]456789 -dto2 30,[342]0156789
+43	--method soft-dfs -to 01234567 -dto2 13,0187465 -dto2 26,0134587
+44	--method random-dfs -to 0123467 -dto2 16,0[123467]=asw(1,0,0,0,0,0)
+45	--method random-dfs -to 01234567 -dto2 13,[0187465]=asw(1) -dto2 26,[0134587]=asw(1)
