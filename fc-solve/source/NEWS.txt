@@ -1095,7 +1095,7 @@ Version 0.10.0 ( 09-Oct-2000 )
 Forecell, Seahaven Towers and Eight Off.
 
 2. It now can emits the moves themselves, instead of just the intermediate
-solutiosn.
+solutions.
 
 3. Several bug-fixes.
 
@@ -1126,10 +1126,10 @@ it could not solve previously.
 2. The order of the stacks and freecells is preserved throughout the
 solutions.
 
-3. There is now in abilitiy to limit to a certain number of iterations (so
+3. There is now an option to limit to a certain number of iterations (so
 Freecell Solver will stop before it consumes too much memory)
 
-4. Specify the order of the movements that will be tested. Usually, a test
+4. Specify the order of the moves that will be tested. Usually, a test
 order can be found that will solve a given board really quickly.
 
 Version 0.4 ( 06-Jun-2000 )
