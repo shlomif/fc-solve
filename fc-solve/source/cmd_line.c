@@ -441,8 +441,30 @@ break;
 
 case 'p':
 {
-if (!strcmp(p, "th-tests-order")) {
+if (!strncmp(p, "th-tests-order", 14)) {
+p += 14;
+{ switch(*(p++)) {
+case '\0':
+{
 opt = FCS_OPT_DEPTH_TESTS_ORDER;
+}
+
+break;
+
+case '2':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_DEPTH_TESTS_ORDER_2;
+}
+}
+
+break;
+
+}
+}
 
 }
 }
@@ -987,8 +1009,30 @@ break;
 
 case 'd':
 {
-if (!strcmp(p, "to")) {
+if (!strncmp(p, "to", 2)) {
+p += 2;
+{ switch(*(p++)) {
+case '\0':
+{
 opt = FCS_OPT_DEPTH_TESTS_ORDER;
+}
+
+break;
+
+case '2':
+
+{
+if (*p == '\0')
+{
+
+opt = FCS_OPT_DEPTH_TESTS_ORDER_2;
+}
+}
+
+break;
+
+}
+}
 
 }
 }
@@ -1863,6 +1907,7 @@ break;
         break;
 
         case FCS_OPT_DEPTH_TESTS_ORDER: /* STRINGS=-dto|--depth-tests-order; */
+        case FCS_OPT_DEPTH_TESTS_ORDER_2: /* STRINGS=-dto2|--depth-tests-order2; */
         {
             PROCESS_OPT_ARG() ;
 
@@ -1893,7 +1938,7 @@ break;
                     freecell_solver_user_set_depth_tests_order(
                         instance,
                         min_depth,
-                        (*arg),
+                        ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg)),
                         &fcs_user_errstr
                     )
                 )

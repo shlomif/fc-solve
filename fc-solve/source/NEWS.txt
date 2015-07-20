@@ -4,6 +4,13 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
+Version NEXT: (Unknown)
+-----------------------
+
+1. Add the +-dto2+ / +--depth-tests-order2+ flag to provide a corrected
+version of the depth-tests-order feature without the depth string and comma
+being prefixed to the tests order due to an oversight.
+
 Version 3.26.0: (19-May-2014)
 -----------------------------
 

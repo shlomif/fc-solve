@@ -3,12 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 9;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
 use File::Spec;
 use File::Temp qw( tempdir );
+use Test::Differences qw/ eq_or_diff /;
 
 sub trap_board
 {
@@ -100,6 +101,30 @@ sub trap_dbm
             Total\ number\ of\ states\ checked\ is\ 10\.\n
         /msx,
         "Checking that --show-exceeded-limits is working properly.",
+    );
+}
+
+{
+    my $trap = sub {
+        return trap_board(@_)->{out_lines};
+    };
+
+    my $want_output = $trap->({ deal => 24, theme => ['-to', '0123456789'], });
+    my $have_output = $trap->({ deal => 24, theme => ['-to', '0123456789', '-dto2', '9,0123456789',], });
+    my $long_have_output = $trap->({ deal => 24, theme => ['-to', '0123456789', '--depth-tests-order2', '9,0123456789',], });
+
+    # TEST
+    eq_or_diff(
+        $have_output,
+        $want_output,
+        '-dto2 yields the pristine tests order.',
+    );
+
+    # TEST
+    eq_or_diff(
+        $long_have_output,
+        $want_output,
+        '--depth-tests-order2 yields the pristine tests order.',
     );
 }
 

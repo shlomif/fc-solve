@@ -548,8 +548,8 @@ hand, if one specifies something like "=asw(5,0,5,0,0,5)", then the numbers
 inside the parentheses will be treated as weights for the same ordering
 function used by the +-asw+ flag (see below).
 
--dto [Min Depth],[Tests' Order] , --depth-tests-order [Min Depth],[Tests' Order]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-dto2 [Min Depth],[Tests' Order] , --depth-tests-order2 [Min Depth],[Tests' Order]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *Soft-thread-specific*
 
@@ -598,6 +598,19 @@ This randomises the tests from 10 onward.
 ---------------------
 
 This does the same thing as the previous example.
+
+*Note* : This option should be used instead of the older +-dto+ option given
+below which mutilates the tests order parameter and is still provided for
+backward compatibility.
+
+-dto [Min Depth],[Tests' Order] , --depth-tests-order [Min Depth],[Tests' Order]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is equivalent to specifying +-dto2 [Min Depth],[Min Depth],[Tests' Order]+
+- i.e: the "[Min Depth]," string is prefixed to the given tests order.
+
+This option is provided for backward compatibility with older versions of
+Freecell Solver.
 
 -me [Solving Method] , --method [Solving Method]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
