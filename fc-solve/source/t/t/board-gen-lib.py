@@ -1,7 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
-sys.path.append("./t/lib")
+import os
+
+sys.path.insert(0, os.environ['FCS_PY3_LIBDIR'])
 
 from TAP.Simple import *
 from ctypes import *
@@ -13,20 +15,20 @@ fc_solve_get_board_l = board_gen_lib.fc_solve_get_board_l
 
 def test_board(idx, want_string):
 
-    buffer = ("x" * 500)
+    buf = (b"x" * 500)
 
-    fc_solve_get_board(idx, c_char_p(buffer))
+    fc_solve_get_board(idx, c_char_p(buf))
 
-    ok (buffer[0:buffer.find("\0")] == want_string,
+    ok (buf[0:buf.find(b"\0")] == bytes(want_string, 'UTF-8'),
         ("board %d was generated fine" % (idx)))
 
 def test_board_l(idx, want_string):
 
-    buffer = ("x" * 500)
+    buf = (b"x" * 500)
 
-    fc_solve_get_board_l(c_longlong(idx), c_char_p(buffer))
+    fc_solve_get_board_l(c_longlong(idx), c_char_p(buf))
 
-    ok (buffer[0:buffer.find("\0")] == want_string,
+    ok (buf[0:buf.find(b"\0")] == bytes(want_string, 'UTF-8'),
         ("long board %d was generated fine" % (idx)))
 
 def main():
@@ -81,7 +83,7 @@ AH 5S 6S AD 8H JD
 """);
 
     # TEST
-    test_board_l(3000000000L,
+    test_board_l(3000000000,
     """8D TS JS TD JH JD JC
 4D QS TH AD 4S TC 3C
 9H KH QH 4C 5C KD AS
@@ -93,7 +95,7 @@ AH 5S 6S AD 8H JD
 """);
 
     # TEST
-    test_board_l(6000000000L,
+    test_board_l(6000000000,
             """2D 2C QS 8D KD 8C 4C
 3D AH 2H 4H TS 6H QD
 4D JS AD 6S JH JC JD

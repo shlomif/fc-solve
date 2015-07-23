@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 import sys
-sys.path.append("./t/lib");
+import os
+
+sys.path.insert(0, os.environ['FCS_PY2_LIBDIR'])
 
 from TAP.Simple import *
 # TEST:source "$^CURRENT_DIRNAME/lib/FC_Solve/__init__.py"
