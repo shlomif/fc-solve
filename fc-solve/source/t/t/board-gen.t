@@ -7,7 +7,7 @@ use Test::More tests => 26;
 use Test::Differences;
 
 {
-    my $bakers_dozen_24_got = `python ../board_gen/make_pysol_freecell_board.py -t 24 bakers_dozen`;
+    my $bakers_dozen_24_got = `../board_gen/make_pysol_freecell_board.py -t 24 bakers_dozen`;
 
     my $bakers_dozen_24_expected = <<"EOF";
 KD 8H AC AS
@@ -34,7 +34,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 10800 bakers_dozen`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 10800 bakers_dozen`;
 
     my $expected = <<"EOF";
 KC 3S AC AD
@@ -61,7 +61,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py 24 freecell`;
+    my $got = `../board_gen/make_pysol_freecell_board.py 24 freecell`;
 
     my $expected = <<"EOF";
 4C 2C 9C 8C QS 4S 2H
@@ -83,7 +83,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py 24 bakers_game`;
+    my $got = `../board_gen/make_pysol_freecell_board.py 24 bakers_game`;
 
     my $expected = <<"EOF";
 4C 2C 9C 8C QS 4S 2H
@@ -105,7 +105,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py 1977 forecell`;
+    my $got = `../board_gen/make_pysol_freecell_board.py 1977 forecell`;
 
     my $expected = <<"EOF";
 FC: 2D 8H 5S 6H
@@ -128,7 +128,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py 100 seahaven_towers`;
+    my $got = `../board_gen/make_pysol_freecell_board.py 100 seahaven_towers`;
 
     my $expected = <<"EOF";
 FC: - 9S 5S
@@ -153,7 +153,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py 250 simple_simon`;
+    my $got = `../board_gen/make_pysol_freecell_board.py 250 simple_simon`;
 
     my $expected = <<"EOF";
 6S 6C 10C JC 9H 8D 3C 5S
@@ -178,7 +178,7 @@ EOF
 
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 4200 fan`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 4200 fan`;
 
     my $expected = <<"EOF";
 7H 9H 3S
@@ -210,7 +210,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 314 eight_off`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 314 eight_off`;
 
     my $expected = <<"EOF";
 FC: TD - 8D - 5D - 6S -
@@ -233,7 +233,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 103 der_katzenschwantz`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 103 der_katzenschwantz`;
 
     my $expected = <<"EOF";
 JC JS AH 2H 3H 2S 2D 9D 9C 4C QD TH 6H 6S 9C 3C 5H JD 4H JH 9S 7D 4D 4C JH QH 9D 2D
@@ -256,7 +256,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 973 yukon`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 973 yukon`;
 
     my $expected = <<"EOF";
 TD
@@ -277,7 +277,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 99 beleaguered_castle`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 99 beleaguered_castle`;
 
     my $expected = <<"EOF";
 Foundations: H-A C-A D-A S-A
@@ -300,7 +300,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 1080 streets_and_alleys`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 1080 streets_and_alleys`;
 
     my $expected = <<"EOF";
 8D 5C KS KC 2C 7C AS
@@ -322,7 +322,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 1080 citadel`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 1080 citadel`;
 
     my $expected = <<"EOF";
 Foundations: H-2 C-2 D-2 S-2
@@ -345,7 +345,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 200 gypsy`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 200 gypsy`;
 
     my $expected = <<"EOF";
 Talon: 9C AD 6S KH 8D 3D TC QC AD QC 7S AH 6C QH 8S 5C KD 4H 2D 8C JD 9S 7H 4C JS JH 9D JC 4D 9S AC QS 5S KS TD 2H 4H KC TC 2C JD 3H 3D KD 7C 9C 8C 6D 4C 3S TH 2S 5D 7D 6H TH 8H JS 6S 2C 4S 3C JH 2D TD 3H 5C QS AH AC 4D 5H 2H 2S JC 9D AS QD 9H 6C
@@ -368,7 +368,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 460 klondike`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 460 klondike`;
 
     my $expected = <<"EOF";
 Talon: 3C AD AH KH KS 2H 3S 4D QS TD 8H AS 8D 6C 5D 4S 3H 6D 2C 7S AC 9S 7C TC
@@ -390,7 +390,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 468 small_harp`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 468 small_harp`;
 
     my $expected = <<"EOF";
 Talon: 8S AD 6S 7H AC 3S 9H 9D 8D TD 2S QH 4S JH 9C 4C QS AS AH 3H 4H KD 2D 5D
@@ -412,7 +412,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -t 7537454 simple_simon`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -t 7537454 simple_simon`;
 
     my $expected = <<"EOF";
 KD TH 7H 2H 3S 7D KC 6S
@@ -436,7 +436,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -F 800600`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -F 800600`;
 
     my $expected = <<"EOF";
 3H 10S QH 10D 8D JC AS
@@ -460,7 +460,7 @@ EOF
 
 {
     my $got =
-        `python ../board_gen/make_pysol_freecell_board.py --pysolfc 800600`
+        `../board_gen/make_pysol_freecell_board.py --pysolfc 800600`
         ;
 
     my $expected = <<"EOF";
@@ -484,7 +484,7 @@ EOF
 
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -F -t 800600`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -F -t 800600`;
 
     my $expected = <<"EOF";
 3H TS QH TD 8D JC AS
@@ -506,7 +506,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -F -t 2400240 simple_simon`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -F -t 2400240 simple_simon`;
 
     my $expected = <<"EOF";
 9D 5C 7D 4H TH 7S KH AC
@@ -530,7 +530,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py --pysolfc -t 45508856405861261758 black_hole`;
+    my $got = `../board_gen/make_pysol_freecell_board.py --pysolfc -t 45508856405861261758 black_hole`;
 
     my $expected = <<"EOF";
 Foundations: AS
@@ -562,7 +562,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py --ms -t 100000`;
+    my $got = `../board_gen/make_pysol_freecell_board.py --ms -t 100000`;
 
     my $expected = <<"EOF";
 5C 6S JC 2D 2C 8S 3C
@@ -584,7 +584,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py -M -t 100000`;
+    my $got = `../board_gen/make_pysol_freecell_board.py -M -t 100000`;
 
     my $expected = <<"EOF";
 5C 6S JC 2D 2C 8S 3C
@@ -606,7 +606,7 @@ EOF
 }
 
 {
-    my $got = `python ../board_gen/make_pysol_freecell_board.py --pysolfc -t 2 all_in_a_row`;
+    my $got = `../board_gen/make_pysol_freecell_board.py --pysolfc -t 2 all_in_a_row`;
 
     my $expected = <<"EOF";
 Foundations: -

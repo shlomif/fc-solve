@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #
 # make_pysol_freecell_board.py - Program to generate the boards of
 # PySol for input into Freecell Solver.
@@ -54,7 +54,7 @@
 
 # imports
 import sys, os, re, string, time, types
-import random
+import random2
 
 # PySol imports
 
@@ -65,7 +65,7 @@ import random
 # ************************************************************************/
 
 class PysolRandom:
-    MAX_SEED = 0L
+    MAX_SEED = 0
 
     ORIGIN_UNKNOWN  = 0
     ORIGIN_RANDOM   = 1
@@ -94,15 +94,15 @@ class PysolRandom:
 
     def setSeed(self, seed):
         seed = self._convertSeed(seed)
-        if type(seed) is not types.LongType:
-            raise TypeError, "seeds must be longs"
-        if not (0L <= seed <= self.MAX_SEED):
-            raise ValueError, "seed out of range"
+        if type(seed) is not int:
+            raise TypeError("seeds must be longs")
+        if not (0 <= seed <= self.MAX_SEED):
+            raise ValueError("seed out of range")
         self.seed = seed
         return seed
 
     def copy(self):
-        random = PysolRandom(0L)
+        random = PysolRandom(0)
         random.__class__ = self.__class__
         random.__dict__.update(self.__dict__)
         return random
@@ -131,16 +131,16 @@ class PysolRandom:
     #
 
     def _convertSeed(self, seed):
-        return long(seed)
+        return int(seed)
 
     def increaseSeed(self, seed):
         if seed < self.MAX_SEED:
-            return seed + 1L
-        return 0L
+            return seed + 1
+        return 0
 
     def _getRandomSeed(self):
-        t = long(time.time() * 256.0)
-        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1L)
+        t = int(time.time() * 256.0)
+        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1)
         return t
 
     #
@@ -166,16 +166,16 @@ class PysolRandom:
 # ************************************************************************/
 
 class LCRandom64(PysolRandom):
-    MAX_SEED = 0xffffffffffffffffL  # 64 bits
+    MAX_SEED = 0xffffffffffffffff  # 64 bits
 
     def str(self, seed):
-        s = repr(long(seed))[:-1]
+        s = repr(int(seed))[:-1]
         s = "0"*(20-len(s)) + s
         return s
 
     def random(self):
-        self.seed = (self.seed*6364136223846793005L + 1L) & self.MAX_SEED
-        return ((self.seed >> 21) & 0x7fffffffL) / 2147483648.0
+        self.seed = (self.seed*6364136223846793005 + 1) & self.MAX_SEED
+        return ((self.seed >> 21) & 0x7fffffff) / 2147483648.0
 
 
 
@@ -185,17 +185,17 @@ class LCRandom64(PysolRandom):
 # ************************************************************************/
 
 class LCRandom31(PysolRandom):
-    MAX_SEED = 0x7fffffffL          # 31 bits
+    MAX_SEED = 0x7fffffff          # 31 bits
 
     def str(self, seed):
         return "%05d" % int(seed)
 
     def random(self):
-        self.seed = (self.seed*214013L + 2531011L) & self.MAX_SEED
+        self.seed = (self.seed*214013 + 2531011) & self.MAX_SEED
         return (self.seed >> 16) / 32768.0
 
     def randint(self, a, b):
-        self.seed = (self.seed*214013L + 2531011L) & self.MAX_SEED
+        self.seed = (self.seed*214013 + 2531011) & self.MAX_SEED
         return a + (int(self.seed >> 16) % (b+1-a))
 
 # ************************************************************************
@@ -206,7 +206,7 @@ class LCRandom31(PysolRandom):
 class BasicRandom:
     #MAX_SEED = 0L
     #MAX_SEED = 0xffffffffffffffffL  # 64 bits
-    MAX_SEED = 100000000000000000000L # 20 digits
+    MAX_SEED = 100000000000000000000 # 20 digits
 
     ORIGIN_UNKNOWN  = 0
     ORIGIN_RANDOM   = 1
@@ -224,24 +224,24 @@ class BasicRandom:
         raise SubclassResponsibility
 
     def copy(self):
-        random = self.__class__(0L)
+        random = self.__class__(0)
         random.__dict__.update(self.__dict__)
         return random
 
     def increaseSeed(self, seed):
         if seed < self.MAX_SEED:
-            return seed + 1L
-        return 0L
+            return seed + 1
+        return 0
 
     def _getRandomSeed(self):
-        t = long(time.time() * 256.0)
-        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1L)
+        t = int(time.time() * 256.0)
+        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1)
         return t
 
-class MTRandom(BasicRandom, random.Random):
+class MTRandom(BasicRandom, random2.Random):
 
     def setSeed(self, seed):
-        random.Random.__init__(self, seed)
+        random2.Random.__init__(self, seed)
         self.initial_seed = seed
         self.initial_state = self.getstate()
         self.origin = self.ORIGIN_UNKNOWN
@@ -317,7 +317,7 @@ class Columns:
 
     def output(self):
         for column in self.cols:
-            print column_to_string(column)
+            print(column_to_string(column))
 
 class Board:
     def __init__(self, num_columns, with_freecells=False,
@@ -331,7 +331,7 @@ class Board:
         if (self.with_talon):
             self.talon = []
         if (self.with_foundations):
-            self.foundations = map(lambda s:empty_card(),range(4))
+            self.foundations = [empty_card() for s in range(4)]
 
     def reverse_cols(self):
         return self.columns.rev()
@@ -340,10 +340,10 @@ class Board:
         return self.columns.add(idx, card)
 
     def print_freecells(self):
-        print "FC: " + column_to_string(self.freecells)
+        print("FC: " + column_to_string(self.freecells))
 
     def print_talon(self):
-        print "Talon: " + column_to_string(self.talon)
+        print("Talon: " + column_to_string(self.talon))
 
     def print_foundations(self):
         cells = []
@@ -352,7 +352,7 @@ class Board:
                 cells.append(self.foundations[f].found_s())
 
         if len(cells):
-            print "Foundations:" + ("".join(map(lambda s: " "+s, cells)))
+            print("Foundations:" + ("".join([" "+s for s in cells])))
 
     def output(self):
         if (self.with_talon):
@@ -402,7 +402,7 @@ def createCards(num_decks, print_ts):
     return cards
 
 def column_to_list_of_strings(col):
-    return map( lambda c: c.to_s(), col)
+    return [c.to_s() for c in col]
 
 def column_to_string(col):
     return " ".join(column_to_list_of_strings(col))
@@ -460,7 +460,7 @@ class Game:
 
     def __init__(self, game_id, game_num, which_deals, print_ts):
         mymap = {}
-        for k in self.REVERSE_MAP.keys():
+        for k in list(self.REVERSE_MAP.keys()):
             if self.REVERSE_MAP[k] is None:
                 mymap[k] = k
             else:
@@ -514,7 +514,7 @@ class Game:
     def no_more_cards(self):
         return self.card_idx >= len(self.cards)
 
-    def next(self):
+    def __next__(self):
         if self.no_more_cards():
             raise StopIteration
         c = self.cards[self.card_idx]
@@ -533,7 +533,7 @@ class Game:
 
     def cyclical_deal(game, num_cards, num_cols, flipped=False):
         for i in range(num_cards):
-            game.add(i%num_cols, game.next().flip(flipped=flipped))
+            game.add(i%num_cols, next(game).flip(flipped=flipped))
         return i
 
     def add_all_to_talon(game):
@@ -544,7 +544,7 @@ class Game:
     ### Each one is a callback.
     def der_katz(game):
         if (game.game_id == "die_schlange"):
-            print "Foundations: H-A S-A D-A C-A H-A S-A D-A C-A"
+            print("Foundations: H-A S-A D-A C-A H-A S-A D-A C-A")
 
         game.board = Board(9)
         col_idx = 0
@@ -617,7 +617,7 @@ class Game:
 
         for r in range(1,num_cols):
             for s in range(num_cols-r):
-                game.add(s, game.next().flip())
+                game.add(s, next(game).flip())
 
         game.cyclical_deal(num_cols, num_cols)
 
@@ -633,18 +633,18 @@ class Game:
 
         while num_cards >= 3:
             for s in range(num_cards):
-                game.add(s, game.next())
+                game.add(s, next(game))
             num_cards = num_cards - 1
 
         for s in range(10):
-            game.add(s, game.next())
+            game.add(s, next(game))
 
     def fan(game):
         game.board = Board(18)
 
         game.cyclical_deal(52-1, 17)
 
-        game.add(17, game.next())
+        game.add(17, next(game))
 
     def _shuffleHookMoveSorter(self, cards, func, ncards):
         # note that we reverse the cards, so that smaller sort_orders
@@ -660,7 +660,7 @@ class Game:
             i = i - 1
         sitems.sort()
         sitems.reverse()
-        scards = map(lambda item: item[2], sitems)
+        scards = [item[2] for item in sitems]
         return cards, scards
 
     def _shuffleHookMoveToBottom(self, cards, func, ncards=999999):
@@ -679,10 +679,10 @@ class Game:
 
         # move Ace to bottom of the Talon (i.e. last cards to be dealt)
         game.cards = game._shuffleHookMoveToBottom(game.cards, lambda c: (c.id == 13, c.suit), 1)
-        game.next()
+        next(game)
         game.cyclical_deal(52-1, 17)
 
-        print "Foundations: AS"
+        print("Foundations: AS")
 
     def all_in_a_row(game):
         game.board = Board(13)
@@ -690,7 +690,7 @@ class Game:
         # move Ace to bottom of the Talon (i.e. last cards to be dealt)
         game.cards = game._shuffleHookMoveToTop(game.cards, lambda c: (c.id == 13, c.suit), 1)
         game.cyclical_deal(52, 13)
-        print "Foundations: -"
+        print("Foundations: -")
 
     def beleaguered_castle(game):
         aces_up = game.game_id in ("beleaguered_castle", "citadel")
@@ -711,7 +711,7 @@ class Game:
 
         for i in range(6):
             for s in range(8):
-                c = game.next()
+                c = next(game)
                 if (game.game_id == "citadel") and game.board.put_into_founds(c):
                     # Already dealt with this card
                     True
@@ -729,11 +729,11 @@ class Game:
 
         for i in range(1, num_cols):
             for j in range(i, num_cols):
-                game.add(j, game.next().flip())
+                game.add(j, next(game).flip())
 
         for i in range(4):
             for j in range(1,num_cols):
-                game.add(j, game.next())
+                game.add(j, next(game))
 
         game.cyclical_deal(num_cols, num_cols)
 
@@ -753,7 +753,7 @@ def shlomif_main(args):
         else:
             raise ValueError("Unknown flag " + args[1] + "!")
 
-    game_num = long(args[1])
+    game_num = int(args[1])
     if (len(args) >= 3):
         which_game = args[2]
     else:
