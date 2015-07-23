@@ -65,6 +65,10 @@ fc-solve/source/rate_state.c
 fc-solve/source/t/t/lib/FC_Solve/__init__.pyc
 fc-solve/source/t/t/lib/TAP/Simple.pyc
 fc-solve/source/t/t/lib/TAP/__init__.pyc
+fc-solve/source/t/t/lib-python3/FC_Solve/__pycache__
+fc-solve/source/t/t/lib-python3/TAP/Simple.pyc
+fc-solve/source/t/t/lib-python3/TAP/__init__.pyc
+fc-solve/source/t/t/lib-python3/TAP/__pycache__
 fc-solve/source/tags
 Task-FreecellSolver-Testing/Build
 Task-FreecellSolver-Testing/META.json
