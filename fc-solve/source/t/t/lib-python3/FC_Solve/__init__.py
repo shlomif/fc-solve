@@ -74,7 +74,7 @@ class FC_Solve:
 
         ret_code = self.fcs.freecell_solver_user_set_flares_plan(
                 self.user,
-                c_char_p(flares_plan_string)
+                c_char_p(bytes(flares_plan_string, 'UTF-8') if flares_plan_string else None)
                 )
 
         # TEST:$compile_flares_plan_ok++;
@@ -107,13 +107,16 @@ class FC_Solve:
         ok (want_num_items == got_num_items,
                 name + " - got_num_items.")
 
+    def _get_plan_type(self, item_idx):
+        f = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
+        f.restype = c_char_p
+
+        return f(self.user, item_idx)
+
     # TEST:$flare_plan_item_is_run_indef=0;
     def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
-        get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
-        get_plan_type.restype = c_char_p
-
         # TEST:$flare_plan_item_is_run_indef++;
-        ok (get_plan_type(self.user, item_idx) == "RunIndef",
+        ok (self._get_plan_type(item_idx) == b"RunIndef",
                 name + " - right type")
 
         got_flare_idx = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(self.user, item_idx);
@@ -124,11 +127,8 @@ class FC_Solve:
 
     # TEST:$flare_plan_item_is_run=0;
     def flare_plan_item_is_run(self, name, item_idx, flare_idx, iters_count):
-        get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
-        get_plan_type.restype = c_char_p
-
         # TEST:$flare_plan_item_is_run++;
-        ok (get_plan_type(self.user, item_idx) == "Run",
+        ok (self._get_plan_type(item_idx) == b"Run",
                 name + " - right type")
 
         got_flare_idx = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(self.user, item_idx);
@@ -145,11 +145,8 @@ class FC_Solve:
 
     # TEST:$flare_plan_item_is_checkpoint=0;
     def flare_plan_item_is_checkpoint(self, name, item_idx):
-        get_plan_type = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
-        get_plan_type.restype = c_char_p
-
         # TEST:$flare_plan_item_is_checkpoint++;
-        ok (get_plan_type(self.user, item_idx) == "CP",
+        ok (self._get_plan_type(item_idx) == b"CP",
                 name + " - right type")
 
     def num_by_depth_tests_order_is(self, name, want_num):
@@ -171,7 +168,7 @@ class FC_Solve:
     def solve_board(self, board):
         return self.fcs.freecell_solver_user_solve_board(
                 self.user,
-                (c_char_p)(board)
+                (c_char_p)(bytes(board, 'UTF-8'))
         )
 
     def resume_solution(self):
