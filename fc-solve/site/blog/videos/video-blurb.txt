@@ -11,4 +11,4 @@ Other software and material used:
 Hope you enjoy this screencast and try out PySolFC and Freecell Solver.
 
 
-Tags: freecell, solver, pysol, pysolfc, PySolFC, adam, singer, screencast, solitaire, solving, fc-solve, 
+Tags: freecell, solver, pysol, pysolfc, PySolFC, adam, singer, screencast, solitaire, solving, fc-solve,
