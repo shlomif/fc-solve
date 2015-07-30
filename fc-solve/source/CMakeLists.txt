@@ -887,8 +887,8 @@ MACRO(GEN_BOARD idx)
     SET(board "${idx}.board")
     ADD_CUSTOM_COMMAND(
         OUTPUT ${board}
-        COMMAND "python"
-        ARGS "${CMAKE_CURRENT_SOURCE_DIR}/board_gen/make_pysol_freecell_board.py" ${idx} ">" ${board}
+        COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/board_gen/make_pysol_freecell_board.py"
+        ARGS "${idx}" ">" "${board}"
     )
     LIST(APPEND BOARDS "${board}")
 ENDMACRO(GEN_BOARD idx)
@@ -897,8 +897,8 @@ MACRO(GEN_BOARD_NO_NEWLINE idx)
     SET(board "${idx}.no-newline.board")
     ADD_CUSTOM_COMMAND(
         OUTPUT "${board}"
-        COMMAND "python"
-        ARGS "${CMAKE_CURRENT_SOURCE_DIR}/board_gen/make_pysol_freecell_board.py" ${idx} "|" "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/perl-remove-trailing-newlines.pl" ">" ${board}
+        COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/board_gen/make_pysol_freecell_board.py"
+        ARGS "${idx}" "|" "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/perl-remove-trailing-newlines.pl" ">" "${board}"
     )
     LIST(APPEND BOARDS "${board}")
 ENDMACRO(GEN_BOARD_NO_NEWLINE idx)
