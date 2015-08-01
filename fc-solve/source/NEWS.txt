@@ -11,6 +11,10 @@ Version NEXT: (Unknown)
 version of the depth-tests-order feature without the depth string and comma
 being prefixed to the tests order due to an oversight.
 
+2. Convert the Python code (tests + board generation) to Python 3, because
+it seems that Python 2 is going away. To run it, we require the "random2"
+module from PyPI : https://pypi.python.org/pypi/random2 .
+
 Version 3.26.0: (19-May-2014)
 -----------------------------
 
