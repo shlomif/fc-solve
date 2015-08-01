@@ -420,9 +420,9 @@ static GCC_INLINE const int fcs_get_preset_id_by_name(
     return -1;
 }
 
-int fc_solve_apply_preset_by_ptr(
-    fc_solve_instance_t * instance,
-    const fcs_preset_t * preset_ptr
+const int fc_solve_apply_preset_by_ptr(
+    fc_solve_instance_t * const instance,
+    const fcs_preset_t * const preset_ptr
         )
 {
     char * no_use;
@@ -458,30 +458,24 @@ int fc_solve_apply_preset_by_ptr(
         {
             ST_LOOP_START()
             {
-                int num_valid_tests;
-                const char * s;
-                int depth_idx;
-                fcs_by_depth_tests_order_t * by_depth_tests_order;
-                int tests_order_num;
-                int * tests_order_tests;
-
                 /* Check every test */
 
-                by_depth_tests_order =
+                fcs_by_depth_tests_order_t * const by_depth_tests_order =
                     soft_thread->by_depth_tests_order.by_depth_tests;
 
-                for (depth_idx = 0 ;
+                for (int depth_idx = 0 ;
                     depth_idx < soft_thread->by_depth_tests_order.num ;
                     depth_idx++)
                 {
                     for (int group_idx = 0 ; group_idx < by_depth_tests_order[depth_idx].tests_order.num_groups ; group_idx++)
                     {
-                    tests_order_tests = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].tests;
-                    tests_order_num = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].num;
+                    const int * const tests_order_tests = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].tests;
+                    const int tests_order_num = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].num;
 
-                for(num_valid_tests=0;num_valid_tests < tests_order_num; num_valid_tests++)
+                for (int num_valid_tests=0 ; num_valid_tests < tests_order_num ; num_valid_tests++)
                 {
-                    for(s = preset.allowed_tests;*s != '\0';s++)
+                    const char * s;
+                    for (s = preset.allowed_tests; *s != '\0' ; s++)
                     {
                         test_name[0] = *s;
                         /* Check if this test corresponds to this character */
@@ -494,16 +488,13 @@ int fc_solve_apply_preset_by_ptr(
                      * this test is unacceptable by this preset. */
                     if (*s == '\0')
                     {
+                        fc_solve_apply_tests_order(
+                            &(by_depth_tests_order[depth_idx].tests_order),
+                            preset.tests_order,
+                            &no_use
+                        );
                         break;
                     }
-                }
-                if (num_valid_tests < tests_order_num)
-                {
-                    fc_solve_apply_tests_order(
-                        &(by_depth_tests_order[depth_idx].tests_order),
-                        preset.tests_order,
-                        &no_use
-                    );
                 }
                     }
                 }

@@ -50,9 +50,9 @@ typedef struct
     char allowed_tests[FCS_TESTS_NUM*3+1];
 } fcs_preset_t;
 
-extern int fc_solve_apply_preset_by_ptr(
-    fc_solve_instance_t * instance,
-    const fcs_preset_t * preset_ptr
+extern const int fc_solve_apply_preset_by_ptr(
+    fc_solve_instance_t * const instance,
+    const fcs_preset_t * const preset_ptr
     );
 
 extern int fc_solve_get_preset_by_name(
