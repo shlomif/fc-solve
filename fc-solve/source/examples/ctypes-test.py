@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
 import sys
 from ctypes import *
+
+def py_str_at(addr):
+    return string_at(addr).decode('UTF-8');
 
 def main(argv):
     fcs = CDLL("libfreecell-solver.so")
@@ -7,11 +11,11 @@ def main(argv):
 
     user = fcs.freecell_solver_user_alloc()
 
-    board = file(argv.pop(0)).read()
+    board = open(argv.pop(0)).read()
 
     fcs.freecell_solver_user_solve_board(user,
         c_char_p(
-           board
+           bytes(board, 'UTF-8')
         )
     )
 
@@ -27,17 +31,17 @@ def main(argv):
             user, 1, 0, 1
             )
 
-        print "%s\n\n====================\n" % (string_at(as_string)),
+        print("%s\n\n====================\n" % (py_str_at(as_string)))
 
         libc.free(as_string)
 
-    print "-=-=-=-=-=-=-=-=-=-=-=-\n\n",
+    print("-=-=-=-=-=-=-=-=-=-=-=-\n\n")
 
     print_state()
 
     while (fcs.freecell_solver_user_get_next_move(user, pointer(move)) == 0):
         as_string = fcs.freecell_solver_user_move_to_string_w_state(user, move, 0)
-        print "\n%s\n\n" % (string_at(as_string)),
+        print("\n%s\n\n" % (py_str_at(as_string)))
         libc.free(as_string)
         print_state()
     fcs.freecell_solver_user_free(user);
