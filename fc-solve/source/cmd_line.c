@@ -1457,45 +1457,59 @@ break;
         {
             PROCESS_OPT_ARG() ;
 
-            const int ret = freecell_solver_user_apply_preset(instance, (*arg));
-            if (ret == FCS_PRESET_CODE_NOT_FOUND)
+            const char * const s_arg = (*arg);
+            switch(freecell_solver_user_apply_preset(instance, s_arg))
             {
-                *error_string = calc_errstr_s(50,  "Unknown game \"%s\"!\n\n", (*arg));
+                case FCS_PRESET_CODE_OK:
+                break;
 
-                RET_ERROR_IN_ARG() ;
-            }
-            else if (ret == FCS_PRESET_CODE_FREECELLS_EXCEED_MAX)
-            {
-                *error_string = calc_errstr_s(200,
-                    "The game \"%s\" exceeds the maximal number "
+                case FCS_PRESET_CODE_NOT_FOUND:
+                {
+                    *error_string = calc_errstr_s(50,  "Unknown game \"%s\"!\n\n", s_arg);
+
+                    RET_ERROR_IN_ARG() ;
+                }
+                break;
+
+                case FCS_PRESET_CODE_FREECELLS_EXCEED_MAX:
+                {
+                    *error_string = calc_errstr_s(200,
+                        "The game \"%s\" exceeds the maximal number "
                         "of freecells in the program.\n"
                         "Modify the file \"config.h\" and recompile, "
                         "if you wish to solve one of its boards.\n",
-                        (*arg)
-                );
-                RET_ERROR_IN_ARG() ;
-            }
-            else if (ret == FCS_PRESET_CODE_STACKS_EXCEED_MAX)
-            {
-                *error_string = calc_errstr_s(200,
-                    "The game \"%s\" exceeds the maximal number "
-                    "of stacks in the program.\n"
-                    "Modify the file \"config.h\" and recompile, "
-                    "if you wish to solve one of its boards.\n",
-                    (*arg)
-                );
+                        s_arg
+                    );
+                    RET_ERROR_IN_ARG() ;
+                }
+                break;
 
-                RET_ERROR_IN_ARG() ;
-            }
-            else if (ret != FCS_PRESET_CODE_OK)
-            {
-                *error_string = calc_errstr_s(200,
-"The game \"%s\" exceeds the limits of the program.\n"
-                    "Modify the file \"config.h\" and recompile, if you wish to solve one of its boards.\n",
-                    (*arg)
-                );
+                case FCS_PRESET_CODE_STACKS_EXCEED_MAX:
+                {
+                    *error_string = calc_errstr_s(200,
+                        "The game \"%s\" exceeds the maximal number "
+                        "of stacks in the program.\n"
+                        "Modify the file \"config.h\" and recompile, "
+                        "if you wish to solve one of its boards.\n",
+                        s_arg
+                    );
 
-                RET_ERROR_IN_ARG() ;
+                    RET_ERROR_IN_ARG() ;
+                }
+                break;
+
+
+                default:
+                {
+                    *error_string = calc_errstr_s(200,
+                        "The game \"%s\" exceeds the limits of the program.\n"
+                        "Modify the file \"config.h\" and recompile, if you wish to solve one of its boards.\n",
+                        s_arg
+                    );
+
+                    RET_ERROR_IN_ARG() ;
+                }
+                break;
             }
         }
         break;
