@@ -536,18 +536,9 @@ const fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
     const fcs_preset_t * * const preset_ptr
     )
 {
-    const int preset_id = fcs_get_preset_id_by_name(name);
-
-    if (preset_id >= 0)
-    {
-        return fcs_get_preset_by_id(
-            preset_id,
-            preset_ptr
-            );
-    }
-    else
-    {
-        return FCS_PRESET_CODE_NOT_FOUND;
-    }
+    return fcs_get_preset_by_id(
+        fcs_get_preset_id_by_name(name),
+        preset_ptr
+    );
 }
 
