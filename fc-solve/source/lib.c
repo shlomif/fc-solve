@@ -165,7 +165,7 @@ typedef struct
     fcs_state_locs_struct_t initial_state_locs;
     int ret_code;
     fcs_bool_t all_instances_were_suspended;
-    int state_validity_ret;
+    fcs_state_validity_ret_t state_validity_ret;
     fcs_card_t state_validity_card;
     freecell_solver_user_iter_handler_t iter_handler;
     freecell_solver_user_long_iter_handler_t long_iter_handler;
@@ -1078,9 +1078,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 )
             )
             {
-                user->ret_code = FCS_STATE_INVALID_STATE;
                 user->state_validity_ret = FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
-                return user->ret_code;
+                return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
 
             user->state_validity_ret = fc_solve_check_state_validity(
@@ -1092,8 +1091,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             if (user->state_validity_ret != FCS_STATE_VALIDITY__OK)
             {
-                user->ret_code = FCS_STATE_INVALID_STATE;
-                return user->ret_code;
+                return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
 
             fc_solve_init_locs(&(user->initial_state_locs));

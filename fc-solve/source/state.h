@@ -966,16 +966,16 @@ extern char * fc_solve_state_as_string(
     fcs_bool_t display_10_as_t
     );
 
-enum
+typedef enum
 {
     FCS_STATE_VALIDITY__OK = 0,
     FCS_STATE_VALIDITY__MISSING_CARD = 1,
     FCS_STATE_VALIDITY__EXTRA_CARD = 2,
     FCS_STATE_VALIDITY__EMPTY_SLOT = 3,
     FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4
-};
+} fcs_state_validity_ret_t;
 
-static GCC_INLINE int fc_solve_check_state_validity(
+static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
     const fcs_state_keyval_pair_t * const state_pair,
     const int freecells_num,
     const int stacks_num,
