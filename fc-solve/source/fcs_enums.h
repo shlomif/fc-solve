@@ -72,14 +72,14 @@ enum
     FCS_STATE_FLARES_PLAN_ERROR
 };
 
-enum
+typedef enum
 {
     FCS_PRESET_CODE_OK,
     FCS_PRESET_CODE_NOT_FOUND,
     FCS_PRESET_CODE_FREECELLS_EXCEED_MAX,
     FCS_PRESET_CODE_STACKS_EXCEED_MAX,
     FCS_PRESET_CODE_DECKS_EXCEED_MAX
-};
+} fc_solve_preset_ret_code_t;
 
 enum
 {

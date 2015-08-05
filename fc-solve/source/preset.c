@@ -420,7 +420,7 @@ static GCC_INLINE const int fcs_get_preset_id_by_name(
     return -1;
 }
 
-const int fc_solve_apply_preset_by_ptr(
+const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     fc_solve_instance_t * const instance,
     const fcs_preset_t * const preset_ptr
         )
@@ -514,7 +514,7 @@ const int fc_solve_apply_preset_by_ptr(
     return FCS_PRESET_CODE_OK;
 }
 
-static GCC_INLINE const int fcs_get_preset_by_id(
+static GCC_INLINE const fc_solve_preset_ret_code_t fcs_get_preset_by_id(
     const int preset_id,
     const fcs_preset_t * * const preset_ptr
     )
@@ -531,14 +531,13 @@ static GCC_INLINE const int fcs_get_preset_by_id(
     return FCS_PRESET_CODE_NOT_FOUND;
 }
 
-int fc_solve_get_preset_by_name(
-    const char * name,
-    const fcs_preset_t * * preset_ptr
+const fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
+    const char * const name,
+    const fcs_preset_t * * const preset_ptr
     )
 {
-    int preset_id;
+    const int preset_id = fcs_get_preset_id_by_name(name);
 
-    preset_id = fcs_get_preset_id_by_name(name);
     if (preset_id >= 0)
     {
         return fcs_get_preset_by_id(
