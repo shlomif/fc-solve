@@ -1082,14 +1082,19 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
 
-            user->state_validity_ret = fc_solve_check_state_validity(
-                &(user->state),
-                INSTANCE_FREECELLS_NUM,
-                INSTANCE_STACKS_NUM,
-                INSTANCE_DECKS_NUM,
-                &(user->state_validity_card));
-
-            if (user->state_validity_ret != FCS_STATE_VALIDITY__OK)
+            if (
+                FCS_STATE_VALIDITY__OK
+                    !=
+                (
+                    user->state_validity_ret = fc_solve_check_state_validity(
+                        &(user->state),
+                        INSTANCE_FREECELLS_NUM,
+                        INSTANCE_STACKS_NUM,
+                        INSTANCE_DECKS_NUM,
+                        &(user->state_validity_card)
+                    )
+                )
+            )
             {
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
