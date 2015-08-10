@@ -622,12 +622,6 @@ extern int fc_solve_state_compare_with_context(const void * s1, const void * s2,
 extern int fc_solve_state_compare_indirect(const void * s1, const void * s2);
 extern int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);
 #endif
-enum
-{
-    FCS_USER_STATE_TO_C__SUCCESS = 0,
-    FCS_USER_STATE_TO_C__PREMATURE_END_OF_INPUT
-};
-
 
 /*
  * This function converts an entire card from its string representations
@@ -743,7 +737,7 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
     fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num)
 #endif
 
-static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
+static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     const char * const string,
     fcs_state_keyval_pair_t * const out_state,
     const int freecells_num,
@@ -769,7 +763,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
     { \
         if ((*str) == '\0') \
         {  \
-            return FCS_USER_STATE_TO_C__PREMATURE_END_OF_INPUT; \
+            return FALSE; \
         } \
     }
 
@@ -949,7 +943,7 @@ static GCC_INLINE int fc_solve_initial_user_state_to_c_proto(
         }
     }
 
-    return FCS_USER_STATE_TO_C__SUCCESS;
+    return TRUE;
 }
 
 #undef ret

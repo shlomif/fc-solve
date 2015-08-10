@@ -1067,7 +1067,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
 
-            if (FCS_USER_STATE_TO_C__SUCCESS !=
+            if (!
                 fc_solve_initial_user_state_to_c(
                     user->state_string_copy,
                     &(user->state),
