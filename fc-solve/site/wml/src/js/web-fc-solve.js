@@ -402,7 +402,7 @@ Class('FC_Solve', {
             var out_buffer = '';
 
             var my_append = function (str) {
-                out_buffer = out_buffer + str;
+                out_buffer += str;
             };
 
             my_append("-=-=-=-=-=-=-=-=-=-=-=-\n\n");
