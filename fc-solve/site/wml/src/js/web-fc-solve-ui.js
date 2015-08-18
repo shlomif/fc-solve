@@ -80,7 +80,7 @@ Class('FC_Solve_UI',
 
                     _out_state(0);
                     for (var i = 1; i < seq.length - 1; i+=2) {
-                        html = html + "<li id=\"move_" + i + "\" class=\"move\"><span class=\"mega_move\">" + seq[i].m.str + "</span>\n<button id=\"expand_move_" + i + "\" class=\"expand_move\">Expand Move</button>\n</li>\n";
+                        html = html + "<li id=\"move_" + i + "\" class=\"move unexpanded\"><span class=\"mega_move\">" + seq[i].m.str + "</span>\n<button id=\"expand_move_" + i + "\" class=\"expand_move\">Expand Move</button>\n</li>\n";
 
                         _out_state(i+1);
                     }
@@ -91,7 +91,9 @@ Class('FC_Solve_UI',
                         var b_id = button.attr('id');
                         var idx = parseInt(b_id.match(/^expand_move_([0-9]+)$/)[1]);
 
-                        if (! $("#move_" + idx).hasClass("expanded")) {
+                        var move_ctl = $("#move_" + idx);
+                        var calc_class = 'calced';
+                        if (! move_ctl.hasClass(calc_class)) {
                             var inner_moves = that._instance._calc_expanded_move(idx);
 
                             var inner_html = '';
@@ -108,11 +110,14 @@ Class('FC_Solve_UI',
                             }
                             _out_inner_move(inner_moves.length-1);
                             inner_html = inner_html + "</ol>";
-                            $("#move_" + idx).append(
+                            move_ctl.append(
                                 inner_html
                             );
-                            $("#move_" + idx).toggleClass("expanded");
+                            move_ctl.toggleClass(calc_class);
                         }
+                        move_ctl.toggleClass("expanded");
+                        move_ctl.toggleClass("unexpanded");
+                        button.text(move_ctl.hasClass("expanded") ? "Unexpand move" : "Expand move");
                     }
                     );
                 }
