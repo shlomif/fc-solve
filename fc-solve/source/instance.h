@@ -217,7 +217,7 @@ typedef enum
 typedef struct
 {
     int num;
-    int * tests;
+    int * order_group_tests;
     fcs_tests_group_type_t shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_order_group_t;
@@ -1074,9 +1074,9 @@ static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * const or
 
     for (int i = 0 ; i < ret.num_groups ; i++)
     {
-        ret.groups[i].tests = memdup(
-            ret.groups[i].tests,
-            sizeof(ret.groups[i].tests[0]) *
+        ret.groups[i].order_group_tests = memdup(
+            ret.groups[i].order_group_tests,
+            sizeof(ret.groups[i].order_group_tests[0]) *
             ((ret.groups[i].num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
         );
     }
@@ -1134,7 +1134,7 @@ static GCC_INLINE void fc_solve_free_tests_order(fcs_tests_order_t * tests_order
 {
     for (int group_idx = 0 ; group_idx < tests_order->num_groups ; group_idx++)
     {
-        free (tests_order->groups[group_idx].tests);
+        free (tests_order->groups[group_idx].order_group_tests);
     }
     free (tests_order->groups);
     tests_order->groups = NULL;

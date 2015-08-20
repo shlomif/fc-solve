@@ -155,7 +155,7 @@ static GCC_INLINE void accumulate_tests_by_ptr(
     const fcs_tests_order_group_t * const groups_end = group_ptr + st_tests_order->num_groups;
     for ( ; group_ptr < groups_end ; group_ptr++)
     {
-        const int * test_ptr = group_ptr->tests;
+        const int * test_ptr = group_ptr->order_group_tests;
         const int * const tests_end = test_ptr + group_ptr->num;
         for (; test_ptr < tests_end; test_ptr++)
         {

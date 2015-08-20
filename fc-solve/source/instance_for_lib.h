@@ -336,7 +336,7 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
             instance->opt_tests_order.num_groups = 1;
             instance->opt_tests_order.groups =
                 SMALLOC( instance->opt_tests_order.groups, TESTS_ORDER_GROW_BY);
-            instance->opt_tests_order.groups[0].tests = tests;
+            instance->opt_tests_order.groups[0].order_group_tests = tests;
             instance->opt_tests_order.groups[0].num =
                 num_tests;
             instance->opt_tests_order.groups[0].shuffling_type = FCS_NO_SHUFFLING;
@@ -1086,7 +1086,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             for (int group_idx = 0 ; group_idx < tests_order_num ; group_idx++)
             {
                 const int num = tests_order_groups[group_idx].num;
-                const int * const tests_order_tests = tests_order_groups[group_idx].tests;
+                const int * const tests_order_tests = tests_order_groups[group_idx].order_group_tests;
                 fc_solve_solve_for_state_test_t * const tests_list = SMALLOC(tests_list, num);
                 for (int i = 0; i < num ; i++)
                 {

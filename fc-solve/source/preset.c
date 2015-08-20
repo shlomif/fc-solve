@@ -469,7 +469,7 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                 {
                     for (int group_idx = 0 ; group_idx < by_depth_tests_order[depth_idx].tests_order.num_groups ; group_idx++)
                     {
-                    const int * const tests_order_tests = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].tests;
+                    const int * const tests_order_tests = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].order_group_tests;
                     const int tests_order_num = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].num;
 
                 for (int num_valid_tests=0 ; num_valid_tests < tests_order_num ; num_valid_tests++)
