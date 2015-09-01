@@ -171,14 +171,11 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
         fcs_card_t card
         )
 {
-#ifndef FCS_FREECELL_ONLY
-    /* needed by the macros. */
-    int sequences_are_built_by;
-#endif
     int deck;
 
 #ifndef FCS_FREECELL_ONLY
-    sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
+    /* needed by the macros. */
+    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
 
     for(deck=0;deck < INSTANCE_DECKS_NUM;deck++)
@@ -398,15 +395,12 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 #endif
     fcs_card_t card, dest_card;
     int deck, suit;
-#ifndef FCS_FREECELL_ONLY
-    /* needed by the macros. */
-    int sequences_are_built_by;
-#endif
     int empty_fc_idx = -1;
     int empty_stack_idx = -1;
 
 #ifndef FCS_FREECELL_ONLY
-    sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
+    /* needed by the macros. */
+    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
 
 #define the_state (init_state_kv_ptr->s)
