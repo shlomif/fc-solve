@@ -99,39 +99,45 @@ static void * worker_thread(void * GCC_UNUSED void_context)
     {
         int arg = context.arg;
         char * error_string;
-        char * * argv = (context.argv);
-        const int parser_ret =
+        switch(
             freecell_solver_user_cmd_line_parse_args(
                 instance,
                 context.argc,
-                (const char * *)(void *)argv,
+                (const char * *)(void *)context.argv,
                 arg,
                 NULL,
                 NULL,
                 NULL,
                 &error_string,
                 &arg
-            );
-
-        if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
+            )
+        )
         {
-            fprintf(stderr, "Unknown option: %s", argv[arg]);
-            goto ret_label;
-        }
-        else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-        {
-            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                " and was not supplied with one.\n", argv[arg]);
-            goto ret_label;
-        }
-        else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-        {
-            if (error_string != NULL)
+            case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
             {
-                fprintf(stderr, "%s", error_string);
-                free(error_string);
+                fprintf(stderr, "Unknown option: %s", context.argv[arg]);
+                goto ret_label;
             }
-            goto ret_label;
+            break;
+
+            case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
+            {
+                fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+                    " and was not supplied with one.\n", context.argv[arg]);
+                goto ret_label;
+            }
+            break;
+
+            case FCS_CMD_LINE_ERROR_IN_ARG:
+            {
+                if (error_string != NULL)
+                {
+                    fprintf(stderr, "%s", error_string);
+                    free(error_string);
+                }
+                goto ret_label;
+            }
+            break;
         }
     }
     freecell_solver_user_limit_iterations_long(instance, context.total_iterations_limit_per_board);
