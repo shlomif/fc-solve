@@ -180,11 +180,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
     return;
 }
 
+typedef struct {
+    int source_index;
+    fcs_bool_t is_col;
+} empty_two_cols_ret_t;
 /*
  * This function empties two stacks from the new state
  * into freeeclls and empty columns
  */
-static GCC_INLINE int empty_two_cols_from_new_state(
+static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
     const fc_solve_soft_thread_t * const soft_thread,
     fcs_kv_state_t * const kv_ptr_new_state,
     fcs_move_stack_t * const moves,
@@ -195,7 +199,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
 #define key_ptr_new_state_key (kv_ptr_new_state->key)
 #define my_new_out_state_key (*key_ptr_new_state_key)
 #define temp_new_state_key (*key_ptr_new_state_key)
-    int ret = -1;
+    empty_two_cols_ret_t ret = {.source_index = -1, .is_col = FALSE};
 
     int num_cards_to_move_from_columns[3] = {num_cards_1, num_cards_2, -1};
 
@@ -257,7 +261,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
                 dest_fc_idx
             );
 
-            ret = dest_fc_idx;
+            ret = (empty_two_cols_ret_t) {.source_index = dest_fc_idx, .is_col = FALSE};
 
             fcs_flip_top_card(*col_idx);
 
@@ -321,7 +325,7 @@ static GCC_INLINE int empty_two_cols_from_new_state(
                 put_cards_in_col_idx
             );
 
-            ret = (put_cards_in_col_idx | (1 << 8));
+            ret = (empty_two_cols_ret_t) {.source_index = put_cards_in_col_idx, .is_col = TRUE};
 
             fcs_flip_top_card(col_idx_val);
 
@@ -658,7 +662,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
                             const int cols_indexes[3] = {ds,-1,-1};
 
-                            const int last_dest = empty_two_cols_from_new_state(
+                            const empty_two_cols_ret_t last_dest = empty_two_cols_from_new_state(
                                 soft_thread,
                                 NEW_STATE_BY_REF(),
                                 moves,
@@ -667,8 +671,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                                 cards_num - c,
                                 0
                             );
-
-                            const int source_index = last_dest & 0xFF;
 
                             empty_two_cols_from_new_state(
                                 soft_thread,
@@ -680,7 +682,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                             );
 
                             fcs_card_t moved_card;
-                            if (!( (last_dest >> 8)&0x1))
+#define source_index last_dest.source_index
+                            if (last_dest.is_col)
+                            {
+                                fcs_cards_column_t new_source_col = fcs_state_get_col(new_state, source_index);
+
+                                fcs_col_pop_card(new_source_col, moved_card);
+
+                                fcs_push_1card_seq(moves, source_index, ds);
+                            }
+                            else
                             {
                                 moved_card = fcs_freecell_card(new_state, source_index);
                                 fcs_empty_freecell(new_state, source_index);
@@ -691,14 +702,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                                     source_index, ds
                                 );
                             }
-                            else
-                            {
-                                fcs_cards_column_t new_source_col = fcs_state_get_col(new_state, source_index);
-
-                                fcs_col_pop_card(new_source_col, moved_card);
-
-                                fcs_push_1card_seq(moves, source_index, ds);
-                            }
+#undef source_index
 
                             fcs_col_push_card(new_dest_col, moved_card);
 
@@ -997,7 +1001,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                         my_copy_stack(stack_idx);
 
                         const int cols_indexes[3] = {stack_idx,-1,-1};
-                        const int empty_ret = empty_two_cols_from_new_state(
+                        const empty_two_cols_ret_t empty_ret = empty_two_cols_from_new_state(
                             soft_thread,
                             NEW_STATE_BY_REF(),
                             moves,
@@ -1010,8 +1014,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                         /* Find a vacant stack */
                         for (
                                 b=(
-                                    ((empty_ret >> 8)&0x1)
-                                    ? (empty_ret&0xFF) + 1
+                                    empty_ret.is_col
+                                    ? empty_ret.source_index + 1
                                     : 0
                                   )
                                 ;
