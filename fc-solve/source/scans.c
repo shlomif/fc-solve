@@ -562,7 +562,6 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 
     DECLARE_NEW_STATE();
-    DECLARE_STATE();
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
@@ -589,6 +588,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     const fc_solve_solve_for_state_test_t * const tests_list_end
         = BEFS_M_VAR(soft_thread, tests_list_end);
 
+    DECLARE_STATE();
     ASSIGN_ptr_state(soft_thread->first_state_to_check);
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
@@ -597,8 +597,6 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 #ifndef FCS_SINGLE_HARD_THREAD
     fcs_int_limit_t * const hard_thread_num_checked_states_ptr = &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
-
-    INITIALIZE_STATE();
 
     if (method == FCS_METHOD_A_STAR)
     {

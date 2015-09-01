@@ -377,18 +377,16 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 
 #ifdef FCS_RCS_STATES
 
-#define INITIALIZE_STATE() pass.key = &(state_key)
 #define FCS_SCANS_the_state (state_key)
 #define VERIFY_DERIVED_STATE() {}
 #define FCS_ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define PTR_STATE (pass.val)
-#define DECLARE_STATE() fcs_state_t state_key; fcs_kv_state_t pass
+#define DECLARE_STATE() fcs_state_t state_key; fcs_kv_state_t pass = {.key = &(state_key)}
 #define DECLARE_NEW_STATE() fcs_kv_state_t new_pass
 #define FCS_SCANS_ptr_new_state (new_pass.val)
 
 #else
 
-#define INITIALIZE_STATE() {}
 #define FCS_SCANS_the_state (PTR_STATE->s)
 #define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
 #define FCS_ASSIGN_STATE_KEY() { pass.key = &(FCS_SCANS_the_state); pass.val = &(PTR_STATE->info); }
@@ -787,8 +785,6 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 
-    DECLARE_STATE();
-
     int by_depth_max_depth, by_depth_min_depth;
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
@@ -815,6 +811,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     int dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
     fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
+    DECLARE_STATE();
     ASSIGN_ptr_state (the_soft_dfs_info->state);
     fcs_derived_states_list_t * derived_states_list = &(the_soft_dfs_info->derived_states_list);
 
@@ -865,8 +862,6 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
     const fcs_instance_debug_iter_output_func_t debug_iter_output_func = instance->debug_iter_output_func;
     const fcs_instance_debug_iter_output_context_t debug_iter_output_context = instance->debug_iter_output_context;
-
-    INITIALIZE_STATE();
 
     fcs_tests_by_depth_unit_t * curr_by_depth_unit;
     {
