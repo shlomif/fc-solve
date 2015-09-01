@@ -31,15 +31,18 @@
 #ifndef FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
 #define FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable_int32.h"
 
 #include "inline.h"
 #include "fcs_dllexport.h"
 #include "bool.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <string.h>
+
 
 typedef u_int32_t microsoft_rand_uint_t;
 
@@ -82,20 +85,10 @@ typedef int CARD;
 static const char * card_to_string_values = "A23456789TJQK";
 static const char * card_to_string_suits = "CDHS";
 
-static GCC_INLINE char * card_to_string(char * const s, const CARD card, const fcs_bool_t not_append_ws)
+static GCC_INLINE void card_to_string(char * const s, const CARD card)
 {
     s[0] = card_to_string_values[VALUE(card)];
     s[1] = card_to_string_suits[SUIT(card)];
-
-    if (not_append_ws)
-    {
-        return &(s[2]);
-    }
-    else
-    {
-        s[2] = ' ';
-        return &(s[3]);
-    }
 }
 
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
@@ -111,13 +104,24 @@ static GCC_INLINE char * card_to_string(char * const s, const CARD card, const f
  * */
 void DLLEXPORT fc_solve_get_board_l(const long long gamenumber, char * const ret);
 
+const int size_maj_row = 3 * 7;
+const int size_min_row = 3 * 6;
 extern void DLLEXPORT fc_solve_get_board_l(const long long gamenumber, char * const ret)
 #else
 static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
 #endif
 {
     long long seedx = (microsoft_rand_uint_t)((gamenumber < 0x100000000LL) ? gamenumber : (gamenumber - 0x100000000LL));
-    CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
+    strcpy(ret,
+        "XX XX XX XX XX XX XX\n"
+        "XX XX XX XX XX XX XX\n"
+        "XX XX XX XX XX XX XX\n"
+        "XX XX XX XX XX XX XX\n"
+        "XX XX XX XX XX XX\n"
+        "XX XX XX XX XX XX\n"
+        "XX XX XX XX XX XX\n"
+        "XX XX XX XX XX XX\n"
+    );
 
     CARD deck[52];            /* deck of 52 unique cards */
 
@@ -134,35 +138,15 @@ static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
         {
             const int j
                 = microsoft_rand__game_num_rand(&seedx, gamenumber) % num_cards_left;
-            card[(i%8)][i/8] = deck[j];
+            const int col = (i & (8-1));
+            const int card_idx = i >> 3;
+            card_to_string(
+                &ret[3 * (col * 7 - ((col > 4) ? (col-4) : 0) + card_idx)],
+                deck[j]
+            );
             deck[j] = deck[--num_cards_left];
         }
     }
-
-    char * append_to = ret;
-
-    for (int stack=0 ; stack < 8 ; stack++ )
-    {
-        const int lim = ((6 - 1) + (stack<4));
-        const CARD * const card_stack = card[stack];
-        for (int c=0 ; c < lim ; c++)
-        {
-            append_to =
-                card_to_string(
-                    append_to,
-                    card_stack[c],
-                    FALSE
-                );
-        }
-        append_to =
-            card_to_string(
-                append_to,
-                card_stack[lim],
-                TRUE
-            );
-        *(append_to++) = '\n';
-    }
-    *(append_to) = '\0';
 }
 
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
