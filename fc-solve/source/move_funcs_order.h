@@ -54,7 +54,9 @@ static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
 
 static GCC_INLINE const int fc_solve_string_to_test_num(const char * const s)
 {
-    const fcs_move_func_aliases_mapping_t needle = {.alias = s};
+    fcs_move_func_aliases_mapping_t needle;
+    needle.alias[0] = s[0];
+    needle.alias[1] = '\0';
 
     const fcs_move_func_aliases_mapping_t * const result = (fcs_move_func_aliases_mapping_t *)
         bsearch(

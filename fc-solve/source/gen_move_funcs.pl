@@ -168,7 +168,7 @@ print {$num_fh} <<"EOF" ;
 
 typedef struct
 {
-    const char * alias;
+    char alias[2];
     int move_func_num;
 } fcs_move_func_aliases_mapping_t;
 
