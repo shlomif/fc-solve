@@ -59,8 +59,7 @@ typedef struct {
 
 static GCC_INLINE const fcs_stats_t calc_initial_stats_t(void)
 {
-    const fcs_stats_t ret = {.num_checked_states = 0, .num_states_in_collection = 0};
-    return ret;
+    return (const fcs_stats_t) {.num_checked_states = 0, .num_states_in_collection = 0};
 }
 
 /* A flare is an alternative scan algorithm to be tried. All flares in
@@ -453,9 +452,7 @@ static GCC_INLINE const flares_plan_item create_plan_item(
     const int count_iters
 )
 {
-    const flares_plan_item ret = {.type = mytype, .flare_idx = flare_idx, .count_iters = count_iters};
-
-    return ret;
+    return (const flares_plan_item) {.type = mytype, .flare_idx = flare_idx, .count_iters = count_iters};
 }
 
 static GCC_INLINE const flares_plan_type_t add_to_plan(

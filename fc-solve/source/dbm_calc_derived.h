@@ -67,7 +67,7 @@ typedef struct fcs_derived_state_struct
 #define MAKE_MOVE(src, dest) ((src) | ((dest) << 4))
 #define COL2MOVE(idx) (idx)
 #define FREECELL2MOVE(idx) (idx+8)
-#define FOUND2MOVE(idx) ((idx)+8+4)
+#define FOUND2MOVE(idx) ((idx)+(8+4))
 
 #define CALC_SEQUENCES_ARE_BUILT_BY() ( \
     (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) \

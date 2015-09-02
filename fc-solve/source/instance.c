@@ -483,13 +483,11 @@ static GCC_INLINE find_card_ret_t find_card_src_string(
     const int src_col_idx = find_col_card(dynamic_state, src_card_s, stacks_num);
     if (src_col_idx < 0)
     {
-        const find_card_ret_t ret = {.idx = (find_fc_card(dynamic_state, src_card_s, freecells_num)), .type = FREECELL};
-        return ret;
+        return (find_card_ret_t) {.idx = (find_fc_card(dynamic_state, src_card_s, freecells_num)), .type = FREECELL};
     }
     else
     {
-        const find_card_ret_t ret = {.idx = src_col_idx, .type = COLUMN};
-        return ret;
+        return (find_card_ret_t) {.idx = src_col_idx, .type = COLUMN};
     }
 }
 

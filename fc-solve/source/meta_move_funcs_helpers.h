@@ -125,8 +125,8 @@ extern "C" {
 #define fcs_flip_top_card(stack_idx) {}
 #endif
 
-static GCC_INLINE void fc_solve_move_sequence_function(
 #define STATE_KEY() (*(new_state_kv_ptr->key))
+static GCC_INLINE void fc_solve_move_sequence_function(
         fcs_kv_state_t * const new_state_kv_ptr,
         fcs_move_stack_t * const moves,
         const int dest_idx,
