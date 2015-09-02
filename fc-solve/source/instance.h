@@ -135,7 +135,7 @@ struct fc_solve_hard_thread_struct;
 struct fc_solve_soft_thread_struct;
 struct fc_solve_instance_struct;
 
-typedef void (*fc_solve_solve_for_state_test_t)(
+typedef void (*fc_solve_solve_for_state_move_func_t)(
     struct fc_solve_soft_thread_struct *,
     fcs_kv_state_t *,
     fcs_derived_states_list_t *
@@ -478,7 +478,7 @@ enum
 };
 
 typedef struct {
-    fc_solve_solve_for_state_test_t * tests;
+    fc_solve_solve_for_state_move_func_t * tests;
     int num_tests;
     int shuffling_type;
     fc_solve_state_weighting_t weighting;
@@ -599,7 +599,7 @@ struct fc_solve_soft_thread_struct
         struct
         {
             char * befs_positions_by_rank;
-            fc_solve_solve_for_state_test_t * tests_list, * tests_list_end;
+            fc_solve_solve_for_state_move_func_t * tests_list, * tests_list_end;
             struct
             {
                 struct

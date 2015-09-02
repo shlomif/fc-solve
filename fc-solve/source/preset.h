@@ -46,8 +46,8 @@ typedef struct
 
     fcs_game_type_params_t game_params;
 
-    char tests_order[FCS_TESTS_NUM*3+1];
-    char allowed_tests[FCS_TESTS_NUM*3+1];
+    char tests_order[FCS_MOVE_FUNCS_NUM*3+1];
+    char allowed_tests[FCS_MOVE_FUNCS_NUM*3+1];
 } fcs_preset_t;
 
 extern const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(

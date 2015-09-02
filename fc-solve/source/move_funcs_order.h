@@ -47,25 +47,25 @@ static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
 {
     return
         strcmp(
-            ((const fcs_test_aliases_mapping_t *)a)->alias,
-            ((const fcs_test_aliases_mapping_t *)b)->alias
+            ((const fcs_move_func_aliases_mapping_t *)a)->alias,
+            ((const fcs_move_func_aliases_mapping_t *)b)->alias
         );
 }
 
 static GCC_INLINE const int fc_solve_string_to_test_num(const char * const s)
 {
-    const fcs_test_aliases_mapping_t needle = {.alias = s};
+    const fcs_move_func_aliases_mapping_t needle = {.alias = s};
 
-    const fcs_test_aliases_mapping_t * const result = (fcs_test_aliases_mapping_t *)
+    const fcs_move_func_aliases_mapping_t * const result = (fcs_move_func_aliases_mapping_t *)
         bsearch(
             &needle,
-            fc_solve_sfs_tests_aliases,
-            FCS_TESTS_ALIASES_NUM,
-            sizeof(fc_solve_sfs_tests_aliases[0]),
+            fc_solve_sfs_move_funcs_aliases,
+            FCS_MOVE_FUNCS_ALIASES_NUM,
+            sizeof(fc_solve_sfs_move_funcs_aliases[0]),
             fc_solve_string_to_test_num_compare_func
             );
 
-    return (result ? result->test_num : 0);
+    return (result ? result->move_func_num : 0);
 }
 
 extern int fc_solve_apply_tests_order(

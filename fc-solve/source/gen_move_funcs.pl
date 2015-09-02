@@ -3,10 +3,10 @@
 use strict;
 use warnings;
 
-# The tests
+# The move functions
 # 'function' - The function name without the fc_solve_sfs_ prefix
-# 'aliases' - various aliases you wish to designate to this test.
-my @tests =
+# 'aliases' - various aliases you wish to designate to this move func.
+my @move_funcs =
 (
     {
         'function' => "move_top_stack_cards_to_founds",
@@ -107,34 +107,33 @@ my @tests =
     },
 );
 
-my (%declared_tests, %aliases);
-for(my $i=0;$i<scalar(@tests);$i++)
+my (%declared_move_funcs, %aliases);
+for(my $i=0;$i<scalar(@move_funcs);$i++)
 {
-    my $test_struct = $tests[$i];
-    if (!exists($test_struct->{'function'}))
+    my $move_func_struct = $move_funcs[$i];
+    if (!exists($move_func_struct->{'function'}))
     {
-        die "Test #$i does not have a function field";
+        die "Move function #$i does not have a function field";
     }
-    if (!exists($test_struct->{'aliases'}))
+    if (!exists($move_func_struct->{'aliases'}))
     {
-        die "Test #$i does not have an aliases field";
+        die "Move function #$i does not have an aliases field";
     }
-    if (!(ref($test_struct->{'aliases'}) eq "ARRAY"))
+    if (!(ref($move_func_struct->{'aliases'}) eq "ARRAY"))
     {
-        die "Test #$i 's aliases is not an array ref";
+        die "Move function #$i 's aliases is not an array ref";
     }
-    if (scalar(keys(%$test_struct)) > 2)
+    if (scalar(keys(%$move_func_struct)) > 2)
     {
-        die "Test #$i has excess elements";
+        die "Move function #$i has excess elements";
     }
-    my $f = $test_struct->{'function'};
-    my $test_aliases = $test_struct->{'aliases'};
-    if (exists($declared_tests{$f}))
+    my $f = $move_func_struct->{'function'};
+    if (exists($declared_move_funcs{$f}))
     {
-        die "Test $f was already declared!";
+        die "Move function $f was already declared!";
     }
-    $declared_tests{$f} = $i;
-    foreach my $alias (@$test_aliases)
+    $declared_move_funcs{$f} = $i;
+    foreach my $alias (@{ $move_func_struct->{'aliases'} })
     {
         if (exists($aliases{$alias}))
         {
@@ -144,12 +143,12 @@ for(my $i=0;$i<scalar(@tests);$i++)
     }
 }
 
-my $fcs_tests_num = scalar(@tests);
+my $fcs_move_funcs_num = scalar(@move_funcs);
 my $fcs_aliases_num = scalar(keys(%aliases));
 
 my $num_filename = 'move_funcs_maps.h';
 open my $num_fh, '>', $num_filename
-    or die "Cannot open '$num_filename' for writing - $!"
+    or die "Cannot open '$num_filename' for writing - $!";
 print {$num_fh} <<"EOF" ;
 
 /*
@@ -163,18 +162,18 @@ print {$num_fh} <<"EOF" ;
 
 #include "config.h"
 
-#define FCS_TESTS_NUM $fcs_tests_num
+#define FCS_MOVE_FUNCS_NUM $fcs_move_funcs_num
 
-#define FCS_TESTS_ALIASES_NUM $fcs_aliases_num
+#define FCS_MOVE_FUNCS_ALIASES_NUM $fcs_aliases_num
 
 typedef struct
 {
     const char * alias;
-    int test_num;
-} fcs_test_aliases_mapping_t;
+    int move_func_num;
+} fcs_move_func_aliases_mapping_t;
 
-extern fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM];
-extern fcs_test_aliases_mapping_t fc_solve_sfs_tests_aliases[FCS_TESTS_ALIASES_NUM];
+extern fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM];
+extern fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM];
 
 #endif
 EOF
@@ -195,12 +194,12 @@ sub func_name
     }
 }
 
-my $tests_string = join(",\n", (map { "    " . func_name($_->{'function'}) } @tests));
-my $aliases_string = join(",\n", (map { "    { \"$_\", " . $declared_tests{$aliases{$_}} . " }" } (sort { $a cmp $b } keys(%aliases))));
-my $tests_filename = 'move_funcs_maps.c';
-open my $tests_fh, '>', $tests_filename
-    or die "Cannot open '$tests_filename' for writing - $!";
-print {$tests_fh} <<"EOF" ;
+my $move_funcs_string = join(",\n", (map { "    " . func_name($_->{'function'}) } @move_funcs));
+my $aliases_string = join(",\n", (map { "    { \"$_\", " . $declared_move_funcs{$aliases{$_}} . " }" } (sort { $a cmp $b } keys(%aliases))));
+my $move_funcs_filename = 'move_funcs_maps.c';
+open my $move_funcs_fh, '>', $move_funcs_filename
+    or die "Cannot open '$move_funcs_filename' for writing - $!";
+print {$move_funcs_fh} <<"EOF" ;
 /*
     This file is generated from gen_move_funcs.pl.
 
@@ -217,19 +216,19 @@ print {$tests_fh} <<"EOF" ;
 #define WRAP_SIMPSIM(f) f
 #endif
 
-fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM] =
+fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM] =
 {
-$tests_string
+$move_funcs_string
 };
 
 
-fcs_test_aliases_mapping_t fc_solve_sfs_tests_aliases[FCS_TESTS_ALIASES_NUM] =
+fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM] =
 {
 $aliases_string
 };
 EOF
 ;
 
-close ($tests_fh);
+close ($move_funcs_fh);
 
 

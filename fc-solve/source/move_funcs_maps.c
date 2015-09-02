@@ -14,7 +14,7 @@
 #define WRAP_SIMPSIM(f) f
 #endif
 
-fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM] =
+fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM] =
 {
     fc_solve_sfs_move_top_stack_cards_to_founds,
     fc_solve_sfs_move_freecell_cards_to_founds,
@@ -43,7 +43,7 @@ fc_solve_solve_for_state_test_t fc_solve_sfs_tests[FCS_TESTS_NUM] =
 };
 
 
-fcs_test_aliases_mapping_t fc_solve_sfs_tests_aliases[FCS_TESTS_ALIASES_NUM] =
+fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM] =
 {
     { "0", 0 },
     { "1", 1 },

@@ -479,7 +479,7 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                     {
                         test_name[0] = *s;
                         /* Check if this test corresponds to this character */
-                        if (tests_order_tests[num_valid_tests] == (fc_solve_string_to_test_num(test_name)%FCS_TESTS_NUM))
+                        if (tests_order_tests[num_valid_tests] == (fc_solve_string_to_test_num(test_name) % FCS_MOVE_FUNCS_NUM))
                         {
                             break;
                         }

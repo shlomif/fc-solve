@@ -472,7 +472,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     if (! BEFS_M_VAR(soft_thread, tests_list))
     {
         int num = 0;
-        fc_solve_solve_for_state_test_t * tests_list =
+        fc_solve_solve_for_state_move_func_t * tests_list =
             SMALLOC(tests_list, 1);
 
         for (int group_idx = 0 ; group_idx < soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num_groups ; group_idx++)
@@ -487,7 +487,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
                 {
                     tests_list = SREALLOC(tests_list, ++num);
                     tests_list[num-1] =
-                        fc_solve_sfs_tests[
+                        fc_solve_sfs_move_funcs[
                             tests_order_tests[i]
                         ];
                 }
@@ -583,9 +583,9 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     derived.num_states = 0;
     derived.states = NULL;
 
-    const fc_solve_solve_for_state_test_t * const tests_list
+    const fc_solve_solve_for_state_move_func_t * const tests_list
         = BEFS_M_VAR(soft_thread, tests_list);
-    const fc_solve_solve_for_state_test_t * const tests_list_end
+    const fc_solve_solve_for_state_move_func_t * const tests_list_end
         = BEFS_M_VAR(soft_thread, tests_list_end);
 
     DECLARE_STATE();
@@ -747,7 +747,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
          * done for BFS and BeFS.
         */
         derived.num_states = 0;
-        for(const fc_solve_solve_for_state_test_t * next_test = tests_list;
+        for(const fc_solve_solve_for_state_move_func_t * next_test = tests_list;
             next_test < tests_list_end;
             next_test++
            )

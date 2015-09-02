@@ -1087,10 +1087,10 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             {
                 const int num = tests_order_groups[group_idx].num;
                 const int * const tests_order_tests = tests_order_groups[group_idx].order_group_tests;
-                fc_solve_solve_for_state_test_t * const tests_list = SMALLOC(tests_list, num);
+                fc_solve_solve_for_state_move_func_t * const tests_list = SMALLOC(tests_list, num);
                 for (int i = 0; i < num ; i++)
                 {
-                    tests_list[i] = fc_solve_sfs_tests[ tests_order_tests[i] ];
+                    tests_list[i] = fc_solve_sfs_move_funcs[ tests_order_tests[i] ];
                 }
                 /* TODO : convert to C99 struct initializers. */
                 fcs_tests_list_t * const tests_list_struct_ptr =
