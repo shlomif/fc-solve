@@ -111,10 +111,8 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
     }
 
     {
-        int bitmask, num_bits;
-
-        bitmask = 1;
-        num_bits = 0;
+        int bitmask = 1;
+        int num_bits = 0;
 
         while (bitmask <= max_num_cards)
         {

@@ -60,7 +60,7 @@ void fc_solve_args_man_free(args_man_t * const manager)
     manager->argv = NULL;
 }
 
-static GCC_INLINE void add_to_last_arg(args_man_wrapper_t * manager, char c)
+static GCC_INLINE void add_to_last_arg(args_man_wrapper_t * const manager, const char c)
 {
     *(manager->last_arg_ptr++) = c;
 
@@ -77,7 +77,7 @@ static GCC_INLINE void add_to_last_arg(args_man_wrapper_t * manager, char c)
     return;
 }
 
-static GCC_INLINE void push_args_last_arg(args_man_wrapper_t * manager)
+static GCC_INLINE void push_args_last_arg(args_man_wrapper_t * const manager)
 {
     const int length = manager->last_arg_ptr - manager->last_arg;
 

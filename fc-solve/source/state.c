@@ -485,6 +485,7 @@ char * fc_solve_state_as_string(
             fc_solve_append_string_sprintf(app_str, "%s", "\n");
         }
     }
+#undef app_str
 
     return fc_solve_append_string_finalize(&app_str_struct);
 }

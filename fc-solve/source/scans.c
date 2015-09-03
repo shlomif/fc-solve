@@ -63,14 +63,14 @@
 #include "scans_impl.h"
 
 
-static GCC_INLINE fcs_depth_t kv_calc_depth(fcs_kv_state_t * ptr_state)
+static GCC_INLINE const fcs_depth_t kv_calc_depth(fcs_kv_state_t * const ptr_state)
 {
     return calc_depth(FCS_STATE_kv_to_collectible(ptr_state));
 }
 
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
     )
 {
     const int new_dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY;
