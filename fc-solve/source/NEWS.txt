@@ -7,11 +7,15 @@ Shlomi Fish <shlomif@cpan.org>
 Version NEXT: (Unknown)
 -----------------------
 
-1. Add the +-dto2+ / +--depth-tests-order2+ flag to provide a corrected
+1. Integrate the scans of Tom Holroyd’s patsolve, for a faster atomic
+moves-based solver. See the +--method patsolve+, +--patsolve-x-param+
+and +--patsolve-y-param+ options in the +USAGE.txt+ file.
+
+2. Add the +-dto2+ / +--depth-tests-order2+ flag to provide a corrected
 version of the depth-tests-order feature without the depth string and comma
 being prefixed to the tests order due to an oversight.
 
-2. Convert the Python code (tests + board generation) to Python 3, because
+3. Convert the Python code (tests + board generation) to Python 3, because
 it seems that Python 2 is going away. To run it, we require the "random2"
 module from PyPI : https://pypi.python.org/pypi/random2 .
 
