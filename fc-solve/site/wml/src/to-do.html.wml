@@ -274,7 +274,7 @@ enjoy the power that the Freecell Solver framework gives them.
 Notice that my attempt at solving several talon-based games Solitaire Card
 games like Klondike or Gypsy was not successful. That does not mean it can't be
 done. Michael Mann was more successful with
-<a href="http://fc-solve.berlios.de/michael_mann/">his
+<a href="http://fc-solve.shlomifish.org/michael_mann/">his
     port of Freecell Solver</a>, and Stephan Kulow has an interesting
     heuristic
 for single-card-deal Klondike in kpat that can solve on average 50% of the
@@ -387,7 +387,7 @@ Automake and Libtool</a> as its build and installation system. However, these
 tools are incredibly idiosyncratic and painful to work with, and have
 caused many problems in the past. A more modern and superior tool is
 <a href="http://www.scons.org/">SCons</a>, and I had a pleasant experience
-working with it on <a href="http://web-cpan.berlios.de/latemp/">Latemp</a>.
+working with it on <a href="http://web-cpan.shlomifish.org/latemp/">Latemp</a>.
 </p>
 
 <p>
