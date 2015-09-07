@@ -2,6 +2,42 @@
 
 <latemp_subject "Freecell Solver Book" />
 
+<p>
+Back before 2006, I was planning to write a book titled
+<i>Freecell Solver - Evolution of a C Program</i>, but I didn't get too far,
+and the book is now <b>out-of-date</b>, <b>unmaintained</b> and
+<b>incomplete</b>.
+</p>
+
+<p>
+I have placed the latest copy I worked on at
+<a href="http://bitbucket.org/shlomif/fc-solve/src/c06f2a63f100f6472e40eb8f63219ccb38dc024d/fc-solve/docs/Freecell-Solver--Evolution-of-a-C-Program/?at=master">the <code>fc-solve/docs/Freecell-Solver--Evolution-of-a-C-Program</code>
+sub-directory</a> of the version control repository. You may wish to look into
+it, but please <b>don’t contact me</b> about it.
+</p>
+
+<p>
+Some more relevant links are:
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="docs/">The Documents directory of this site</a>.
+</p>
+</li>
+
+<li>
+<p>
+<a href="<get-var presentation_url />">A Talk</a> I prepared about the subject.
+</p>
+</li>
+
+</ul>
+
+<define-tag old>
+
 <div class="note">
 <h2>Recent Note (13-June-2006)</h2>
 I have stopped working on the book after only finishing a few chapters, and
@@ -11,8 +47,7 @@ page</a>.
 </div>
 
 <p>
-I am writing a book titled <i>Freecell Solver - Evolution of a C Program</i>
-that would cover the development of Freecell Solver, and various lessons
+I am writing a book titled that would cover the development of Freecell Solver, and various lessons
 I learned by working on it.
 </p>
 
@@ -31,4 +66,4 @@ a lecture</a>
 I prepared about the subject.
 </p>
 
-
+</define-tag>
