@@ -1,7 +1,7 @@
-<?xml version='1.0' ?>
+<?xml version='1.0' encoding='utf-8'?>
 <!-- <!DOCTYPE DocBook> --> <!-- This comment is meant to settle gvim -->
 <chapter id="rules">
-        <title>Rules of the Game</title>        
+        <title>Rules of the Game</title>
         <section id="basic_rules">
             <title>
                 Basic Rules of the &fc; Variant
@@ -14,10 +14,10 @@
         </para>
 
         <para>
-            Besides the columns (which will also be referred to as stacks), 
-            there are also four places to hold temporary cards (known as 
+            Besides the columns (which will also be referred to as stacks),
+            there are also four places to hold temporary cards (known as
             freecells) and four foundations, in which it is possible to place
-            cards of the same suit starting from Aces and ending with Kings. 
+            cards of the same suit starting from Aces and ending with Kings.
         </para>
 
         <para>
@@ -30,10 +30,10 @@
             <orderedlist>
                 <listitem>
                     <para>
-                        
-                    Moving one card from the top of a column or from a 
-                    freecell to the foundation. (which is possible only if 
-                    its corresponding foundation's value is lower than it 
+
+                    Moving one card from the top of a column or from a
+                    freecell to the foundation. (which is possible only if
+                    its corresponding foundation's value is lower than it
                     by one)
                    </para>
                 </listitem>
@@ -58,10 +58,10 @@
         </para>
 
         <para>
-            It is customary and helpful to group the movement of an entire 
-            sequence of cards, by moving intermediate cards to freecells or 
-            vacant columns. This will be refered to as a 
-            <glossterm>sequence move</glossterm>. If a sequence move involves 
+            It is customary and helpful to group the movement of an entire
+            sequence of cards, by moving intermediate cards to freecells or
+            vacant columns. This will be refered to as a
+            <glossterm>sequence move</glossterm>. If a sequence move involves
             temporarily moving a card to an empty column, it is known
             as a <glossterm>supermove</glossterm>.
         </para>
@@ -70,8 +70,8 @@
             You should probably play a few games of &fc;, in case you
             did not already, because knowing the rules alone is not
             enough to have an intuitive feel of it. There are many available
-            &fc; implementations for various systems, and you should have 
-            no problems finding one that you can use. (chances are that it 
+            &fc; implementations for various systems, and you should have
+            no problems finding one that you can use. (chances are that it
             is already installed on your system)
         </para>
     </section>
@@ -90,7 +90,7 @@
         <para>
             Another technique, that can be helpful at times is moving
             a card from the freecells back to the tableau, so it can serve
-            as the base for another sequence.             
+            as the base for another sequence.
         </para>
 
         <para>
@@ -104,7 +104,7 @@
         </title>
         <para>
             The game &fc; is not the only Solitaire of its kind nor
-            is the first historically. Using &fc; as a basis, several 
+            is the first historically. Using &fc; as a basis, several
             similar Solitaire variants can be constructed by adjusting some
             of the basic rules:
             <!-- TODO: Modify emphasis to something more logical styled -->
@@ -113,36 +113,36 @@
                     <para>
                     <emphasis>Sequence Parenthood</emphasis> - in some variants
                     cards can be placed on consequent cards of the same suit,
-                    or of the cards of any suit whatsoever. Examples for this 
+                    or of the cards of any suit whatsoever. Examples for this
                     are Baker's Game which is identical to &fc; except that
                     sequences are built by suit.
                 </para>
                 </listitem>
                 <listitem>
                     <para>
-                    <emphasis>Policy of Filling Empty Columns</emphasis> - in 
+                    <emphasis>Policy of Filling Empty Columns</emphasis> - in
                     &fc; empty columns can be filled by any cards. In other
-                    variants, such as Seahaven Towers or Forecell, only kings 
-                    may be placed there. On other variants, they cannot be 
+                    variants, such as Seahaven Towers or Forecell, only kings
+                    may be placed there. On other variants, they cannot be
                     filled at all.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                    <emphasis>Policy of Moving Sequences</emphasis> - in 
-                    &fc;, the amount of cards that can be moved as a 
+                    <emphasis>Policy of Moving Sequences</emphasis> - in
+                    &fc;, the amount of cards that can be moved as a
                     sequence is determined by the number of vacant Freecells
-                    and columns present. In other variants such as Relaxed 
-                    &fc;, the amount of cards that can be moved as a 
-                    sequence is unlimited, regardless of how many vacant 
-                    resources exist on the board.                    
+                    and columns present. In other variants such as Relaxed
+                    &fc;, the amount of cards that can be moved as a
+                    sequence is unlimited, regardless of how many vacant
+                    resources exist on the board.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
                     <emphasis>Variations in the number of Freecells, Columns
                         or Decks</emphasis> - Some &fc; variants are
-                    played with two decks of cards. Many others varry on the 
+                    played with two decks of cards. Many others varry on the
                     number of columns or freecells. &fc; itself is often
                     played with less than 4 freecells, in order to make the
                     game more challenging. (or vice versa)
@@ -157,7 +157,7 @@
 
             <footnote id="pysol_variants">
                 <para>
-                Not all of these variants appear in PySol under the 
+                Not all of these variants appear in PySol under the
                 "FreeCell Type" category. As I noticed, many games were very
                 similar to &fc; in their spirit, despite the fact that they
                 were classified otherwise.
@@ -189,7 +189,7 @@
                         </row>
                     </thead>
                     <tbody>
-                        <row>                            
+                        <row>
                             <entry>Bakers Dozen</entry>
                             <entry>13</entry>
                             <entry>0</entry>

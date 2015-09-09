@@ -1,4 +1,4 @@
-<?xml version='1.0' ?>
+<?xml version='1.0' encoding='utf-8'?>
 <!-- <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
 <!-- This comment is meant to settle gvim -->
     <chapter id="first_arch">
@@ -6,62 +6,62 @@
         <section id="running_conclusions">
             <title>Conclusions I Reached while Running</title>
             <para>
-                As I ran and thought about solving &fc; I reached several 
+                As I ran and thought about solving &fc; I reached several
                 conclusions. One of them was that moving card at a time would
                 probably be too slow to be effective, and that when going from
                 one board layout to the another, I should probably perform several
-                moves at once (such a composite of several moves is known as a 
-                <glossterm>meta-move</glossterm>). That way, I would hopefully 
+                moves at once (such a composite of several moves is known as a
+                <glossterm>meta-move</glossterm>). That way, I would hopefully
                 reach a solution more quickly.
             </para>
 
             <para>
-                Then, I speculated whether it would be better to searching 
-                "Depth First" or "Breadth First". By depth first, I mean that 
+                Then, I speculated whether it would be better to searching
+                "Depth First" or "Breadth First". By depth first, I mean that
                 whenever the solver reachs a new state (a state is a particular
-                configuration of the cards on the board), it will try to recurse 
+                configuration of the cards on the board), it will try to recurse
                 into further states before withdrawing from it. Breadth first
-                means that the states would be scanned according to their 
+                means that the states would be scanned according to their
                 vicinity to the initial state: first the states that are reachable
                 from it one move, then those that are reachable in two, etc.
             </para>
 
             <para>
-                I concluded that the number of states in every depth probably 
-                expands by a very large factor, and the nearest solution is 
-                relatively deep, so the latter strategy would not be very wise to 
+                I concluded that the number of states in every depth probably
+                expands by a very large factor, and the nearest solution is
+                relatively deep, so the latter strategy would not be very wise to
                 follow. A depth first search has a greater chance of returning
                 a valid path to the solution in a reasonable time.
             </para>
 
             <para>
                 Another thing I thought about was that I should store the states
-                that were already encountered in the search, so they won't be 
-                checked again and again. This would require implementing a 
+                that were already encountered in the search, so they won't be
+                checked again and again. This would require implementing a
                 collection of previous states
             </para>
-                
+
         </section>
         <section id="initial_perl_version">
             <title>
                 Initial Version in Perl
             </title>
             <para>
-                A short time after I ran, I started coding the solver in Perl 5. I 
+                A short time after I ran, I started coding the solver in Perl 5. I
                 wrote classes to represent a card and an entire &fc; board, and
                 made sure I could input and output boards from and to text.
             </para>
 
             <para>
-                Then I started to write the algorithm. There were several 
+                Then I started to write the algorithm. There were several
                 guiding prinicipals in the code:
             </para>
             <section id="perl_state_collection_unordered_list">
                 <title>State Collection as an Unordered List</title>
                 <para>
-                    I implemented the state collection as an unordered list of 
-                    states. A new element was added at the end of the list, and to 
-                    lookup an existing element, I had to compare it with every 
+                    I implemented the state collection as an unordered list of
+                    states. A new element was added at the end of the list, and to
+                    lookup an existing element, I had to compare it with every
                     element of the list.
                 </para>
             </section>
@@ -69,9 +69,9 @@
             <section id="perl_state_serialization">
                 <title>State Serialization and De-serialization</title>
                 <para>
-                    The states were serialized into a binary form, so they can be 
-                    stored and compared. They were de-serialized into a nested 
-                    Perl data structure so I could manipulate the cards on the 
+                    The states were serialized into a binary form, so they can be
+                    stored and compared. They were de-serialized into a nested
+                    Perl data structure so I could manipulate the cards on the
                     board.
                 </para>
             </section>
@@ -81,8 +81,8 @@
                 <para>
                     The code had one monolithic function for performing the search
                     and trying the moves on the board. The function was recursive
-                    and every time it realized it could perform a meta-move and 
-                    reach a new state it called itself with the new state as 
+                    and every time it realized it could perform a meta-move and
+                    reach a new state it called itself with the new state as
                     a parameter.
                 </para>
             </section>
@@ -98,12 +98,12 @@
 
                 <para>
                     Perl is an interpreted high-level languages and is itself
-                    written in C. Therefore, I had reason to believe that my 
-                    code would run faster if converted to C which is compiled. 
+                    written in C. Therefore, I had reason to believe that my
+                    code would run faster if converted to C which is compiled.
                     My code was littered with a large number of loops nested
                     inside each other, and looping is known to be much slower
                     in Perl. Plus, I believed that serializing and de-serializing
-                    the states was time-consuming, and there too, C is better, 
+                    the states was time-consuming, and there too, C is better,
                     because serial data structures are already serialized.
                 </para>
             </section>
@@ -141,8 +141,8 @@ typedef struct struct_card_t card_t;
 </programlisting>
                 </para>
                 <para>
-                    A column was represented as a structure containing an array of 
-                    19 cards (the maximal number that can be present in a column 
+                    A column was represented as a structure containing an array of
+                    19 cards (the maximal number that can be present in a column
                     in a game of freecell), preceded by an <type>int</type> that
                     specified the number of cards present:
                 </para>
@@ -155,12 +155,12 @@ struct struct_stack_t
     card_t cards[19];
 };
 
-typedef struct struct_stack_t fc_stack_t;    
+typedef struct struct_stack_t fc_stack_t;
 ]]>
 </programlisting>
                 </para>
                 <para>
-                    The structure representing a board layout contained 8 column 
+                    The structure representing a board layout contained 8 column
                     structures like that, 4 cards for the freecells and 4 integers
                     representing the rank of the cards in the foundations.
                 </para>
@@ -181,12 +181,12 @@ typedef struct struct_state_t state_t;
                 <para>
                     The code also contained several macros that were used to
                     manipulate this data and perform actions like querying cards,
-                    and states, and modifying them. For instance, 
-                    <function>stack_len(<parameter>state</parameter><parameter>s</parameter>)</function> 
-                    retrieved the length of the column with the index 
-                    <parameter>s</parameter> that belonged to the state 
-                    <parameter>state</parameter>. As another example, the 
-                    macro <function>pop_stack_card</function> was defined as 
+                    and states, and modifying them. For instance,
+                    <function>stack_len(<parameter>state</parameter><parameter>s</parameter>)</function>
+                    retrieved the length of the column with the index
+                    <parameter>s</parameter> that belonged to the state
+                    <parameter>state</parameter>. As another example, the
+                    macro <function>pop_stack_card</function> was defined as
                     follows:
                 </para>
                 <para>
@@ -234,7 +234,7 @@ Freecell-Solver(init_state)
         print "State was solved"
         while (state <- Pop(ret))
             print state
-    else        
+    else
         print "I could not solve this board";
 ]]>
 </programlisting>
@@ -242,7 +242,7 @@ Freecell-Solver(init_state)
                 <para>
                     The algorithm uses recursion to trace the solution
                     and it stores all the states it encountered in a state
-                    collection (called <varname>prev_states</varname> in the 
+                    collection (called <varname>prev_states</varname> in the
                     pseudocode), so they won't be checked again.
                 </para>
             </section>
@@ -250,35 +250,35 @@ Freecell-Solver(init_state)
                 <title>The States' Collection Implementation</title>
                 <para>
                     The states' collection of the C version was implemented as a
-                    sorted array of whole state structs 
+                    sorted array of whole state structs
                     (i.e: <literal>state_t * prev_states</literal>)
                     . At the end of that array a <glossterm>sort margin</glossterm>
                     was kept with unsorted states. After the sort margin grew
                     to a fixed size, the entire array, including the sort margin
-                    was sorted using the <function>qsort()</function> function. 
+                    was sorted using the <function>qsort()</function> function.
                     This yielded a bigger sorted array and an empty margin.
                 </para>
                 <para>
                     When a new state had to be added it was first added to the
                     end of the sort margin. Then, when the sort margin grew to
-                    a certain size, it was merged with the main array. When 
+                    a certain size, it was merged with the main array. When
                     the size of <varname>prev_states</varname> was exceeded,
                     it was realloced.
                 </para>
                 <para>
                     To lookup a state, I performed a binary search on the sorted
                     part of <varname>prev_states</varname> and then went over
-                    all the elements of the sort margin and checked them one by 
+                    all the elements of the sort margin and checked them one by
                     one.
                 </para>
             </section>
             <section id="moves">
                 <title>The Moves</title>
                 <para>
-                    The solver was built as one monolithic function 
-                    (named &solve_for_state;). The function 
+                    The solver was built as one monolithic function
+                    (named &solve_for_state;). The function
                     accepted a state and an integer that specified the depth
-                    of the recursion, and returned a boolean verdict whether 
+                    of the recursion, and returned a boolean verdict whether
                     the state was solvable or not. (<varname>prev_states</varname>
                     was implemented as a global variable)
                 </para>
@@ -296,16 +296,16 @@ Freecell-Solver(init_state)
                         </listitem>
                         <listitem>
                             <para>
-                                Put a freecell card on top of a parent card, 
-                                which is present on top of one of the columns. 
-                                (this does not involve moving a card from a 
+                                Put a freecell card on top of a parent card,
+                                which is present on top of one of the columns.
+                                (this does not involve moving a card from a
                                 freecell to an empty column)
                             </para>
                         </listitem>
                         <listitem>
                             <para>
                                 Move a sequence of cards from the top of a column
-                                to a parent card on a different column. (again, 
+                                to a parent card on a different column. (again,
                                 while not moving cards to a vacant column)
                             </para>
                         </listitem>
@@ -318,19 +318,19 @@ Freecell-Solver(init_state)
                         <listitem>
                             <para>
                                 Put cards that occupy a freecell in an empty
-                                stack.                            
+                                stack.
                             </para>
                         </listitem>
                         <listitem>
                             <para>
-                                Move a sequence of cards that is already on top of 
+                                Move a sequence of cards that is already on top of
                                 a valid parent to a different parent.
                             </para>
                         </listitem>
                         <listitem>
                             <para>
                                 Move a cards that is hidden under some cards, into
-                                the foundations, by moving cards above it to 
+                                the foundations, by moving cards above it to
                                 vacant freecells and columns.
                             </para>
                         </listitem>
@@ -346,32 +346,32 @@ Freecell-Solver(init_state)
             <section id="code_org">
                 <title>Code Organization</title>
                 <para>
-                    The code contained three modules and a header file that 
-                    implemented many macros. The module 
+                    The code contained three modules and a header file that
+                    implemented many macros. The module
                     <filename class="libraryfile">card.c</filename> contained several
                     routines for inputting and outputting cards. It knew how to
                     translate a user-readable format such as <literal>AH</literal>,
-                    <literal>10S</literal>, <literal>5C</literal> or 
+                    <literal>10S</literal>, <literal>5C</literal> or
                     <literal>QD</literal> to a card struct.
                 </para>
                 <para>
                     The header file <filename class="headerfile">state.h</filename>
                     defined the data structures used to represnt cards, columns
                     and states, and the macros that were used to query and
-                    manipulate them. The module 
+                    manipulate them. The module
                     <filename class="libraryfile">state.c</filename> implemented input
                     and output to entire states, as well as functions to compare
-                    cards and columns, and a function to "canonize" states. 
+                    cards and columns, and a function to "canonize" states.
                     (when canonizing means sorting the columns to avoid
                     duplicacies)
                 </para>
                 <para>
-                    The file <filename class="libraryfile">freecell.c</filename> 
-                    contained the &solve_for_state; 
-                    function and the <function>main</function> function. 
-                    &solve_for_state; called itself 
+                    The file <filename class="libraryfile">freecell.c</filename>
+                    contained the &solve_for_state;
+                    function and the <function>main</function> function.
+                    &solve_for_state; called itself
                     recursively, and contained a lot of duplicate code that
-                    searched for existing states and added them to the 
+                    searched for existing states and added them to the
                     collection. (I managed it using copy and paste)
                 </para>
             </section>
@@ -379,14 +379,14 @@ Freecell-Solver(init_state)
                 <title>Conclusion from the C Program</title>
                 <para>
                     The C Program ran quickly enough for most boards I tried it
-                    with. I generated a 1000 random boards, and invoked it upon 
+                    with. I generated a 1000 random boards, and invoked it upon
                     them one by one. Most of them ran fine, but for some boards
                     it got stuck thinking how to solve them.
                 </para>
                 <para>
                     Being happy from its relative success, I converted the code
-                    to pure ANSI C (it has been C-ish C++ when I started 
-                    writing it), wrote a README file and prepared a package. 
+                    to pure ANSI C (it has been C-ish C++ when I started
+                    writing it), wrote a README file and prepared a package.
                     I named the program "&fcs;", placed it on a page of its
                     own on my web-site, and posted an annoucement for it on
                     <ulink url="http://freshmeat.net/">Freshmeat</ulink>.
@@ -394,7 +394,7 @@ Freecell-Solver(init_state)
                 <para>
                     That was the humble beginning of &fcs;: humble because
                     since then, it has grown ten-folds in speed, feature-set
-                    and code size. But every journey of a thousand miles 
+                    and code size. But every journey of a thousand miles
                     begins with one small step...
                 </para>
             </section>
