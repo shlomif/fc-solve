@@ -23,5 +23,7 @@ $(BASE).zip: $(DEST_DIR)/index.html
 #fcs-book.pdf: $(XML_SOURCES)
 #	xmlto pdf -v --extensions -m glossterm.xsl $<
 
+pdf: fcs-book.pdf
+
 fcs-book.pdf: $(XML_SOURCES)
-	db2pdf $<
+	docmake -o $@ pdf $<
