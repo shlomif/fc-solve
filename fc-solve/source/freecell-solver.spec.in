@@ -38,6 +38,7 @@ BuildRequires: perl(Test::More)
 BuildRequires: perl(warnings)
 BuildRequires: perl(YAML::XS)
 BuildRequires: perl-devel
+BuildRequires: python3-random2
 BuildRequires: tap-devel
 BuildRequires: valgrind
 
