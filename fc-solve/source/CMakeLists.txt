@@ -32,7 +32,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/_CPack_Packages/"
     "/CMakeFiles/"
     "/.deps/"
-    "^${base_with_ver}(-Source|-Linux)?/"
+    "^${PROJECT_SOURCE_DIR}/${base_with_ver}(-Source|-Linux)?/"
     "${base_with_ver}.tar\\\\.(gz|bz2|Z|lzma|xz)$"
     "\\\\.o$"
     "~$"
@@ -63,6 +63,8 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/_Inline/"
     "/(build|BUILD|B)/"
     "/Presets/testing-presets"
+    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/\\\\.hg"
+    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(fc-solve\\\\.ico|dondorf-king\\\\.bmp|state\\\\.h|threaded_main\\\\.c|patmain\\\\.c|state\\\\.c|card\\\\.c|range_solvers_gen_ms_boards\\\\.h|internal_move_struct\\\\.h|run-tests\\\\.pl|portable_time\\\\.h|fcs_move\\\\.h|game_type_params\\\\.h|read_layout\\\\.h|print_layout\\\\.h|portable_int32\\\\.h|unused\\\\.h|inline\\\\.h|bool\\\\.h)$"
 )
 
 IF(WIN32 AND NOT UNIX)
@@ -251,9 +253,9 @@ SET (FREECELL_SOLVER_LIB_MODULES
 
 )
 
-IF (NOT FCS_DISABLE_PATSOLVE)
+IF (NOT "${FCS_DISABLE_PATSOLVE}")
     LIST (APPEND FREECELL_SOLVER_LIB_MODULES ${patsolve_modules})
-ENDIF (NOT FCS_DISABLE_PATSOLVE)
+ENDIF (NOT "${FCS_DISABLE_PATSOLVE}")
 
 IF (FCS_FREECELL_ONLY)
     LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES preset.c)
