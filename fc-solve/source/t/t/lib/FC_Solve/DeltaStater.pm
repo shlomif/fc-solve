@@ -1,12 +1,12 @@
-package Games::Solitaire::FC_Solve::DeltaStater;
+package FC_Solve::DeltaStater;
 
 use strict;
 use warnings;
 
 use Games::Solitaire::Verify::Solution;
 
-use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
-use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
+use FC_Solve::DeltaStater::BitWriter;
+use FC_Solve::DeltaStater::BitReader;
 
 use parent 'Games::Solitaire::Verify::Base';
 
@@ -372,7 +372,7 @@ sub encode_composite
     my $cols = $cols_struct->{cols};
     my $cols_indexes = $cols_struct->{cols_indexes};
 
-    my $bit_writer = Games::Solitaire::FC_Solve::DeltaStater::BitWriter->new;
+    my $bit_writer = FC_Solve::DeltaStater::BitWriter->new;
     foreach my $bit_spec (
         @{$self->get_freecells_encoding()},
         (map { @{$_->{enc}} } @{$cols}[@{$cols_indexes}]),
@@ -388,7 +388,7 @@ sub encode
 {
     my ($self) = @_;
 
-    my $bit_writer = Games::Solitaire::FC_Solve::DeltaStater::BitWriter->new;
+    my $bit_writer = FC_Solve::DeltaStater::BitWriter->new;
 
     foreach my $bit_spec (
         @{$self->get_freecells_encoding()},
@@ -405,7 +405,7 @@ sub decode
 {
     my ($self, $bits) = @_;
 
-    my $bit_reader = Games::Solitaire::FC_Solve::DeltaStater::BitReader->new({ bits => $bits });
+    my $bit_reader = FC_Solve::DeltaStater::BitReader->new({ bits => $bits });
 
     my %foundations = (map { $_ => 14 } @suits);
 

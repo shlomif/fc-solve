@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::SingleMoveSearch;
+package FC_Solve::SingleMoveSearch;
 
 use strict;
 use warnings;

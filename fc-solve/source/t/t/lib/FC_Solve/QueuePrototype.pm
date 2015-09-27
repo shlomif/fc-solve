@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::QueuePrototype;
+package FC_Solve::QueuePrototype;
 
 use strict;
 use warnings;
@@ -42,7 +42,7 @@ sub _init
     $self->_num_extracted(0);
 
     $self->_page_to_write_to(
-        Games::Solitaire::FC_Solve::QueuePrototype::Page->new(
+        FC_Solve::QueuePrototype::Page->new(
             {
                 num_items_per_page => $self->_num_items_per_page(),
                 page_index => 0,
@@ -51,7 +51,7 @@ sub _init
     );
 
     $self->_page_for_backup(
-        Games::Solitaire::FC_Solve::QueuePrototype::Page->new(
+        FC_Solve::QueuePrototype::Page->new(
             {
                 num_items_per_page => $self->_num_items_per_page(),
                 page_index => 0,
@@ -149,7 +149,7 @@ sub get_num_extracted
     return $self->_num_extracted();
 }
 
-package Games::Solitaire::FC_Solve::QueuePrototype::Page;
+package FC_Solve::QueuePrototype::Page;
 
 use strict;
 use warnings;

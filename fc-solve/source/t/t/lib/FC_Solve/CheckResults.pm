@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::CheckResults;
+package FC_Solve::CheckResults;
 
 use strict;
 use warnings;
@@ -11,7 +11,7 @@ use String::ShellQuote;
 use Carp;
 
 use Test::More;
-use Games::Solitaire::FC_Solve::ShaAndLen;
+use FC_Solve::ShaAndLen;
 
 __PACKAGE__->mk_acc_ref([qw(
     digests_storage_fn
@@ -138,7 +138,7 @@ sub verify_solution_test
             or Carp::confess("Could not open file for reading - $!");
     }
 
-    my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
+    my $sha = FC_Solve::ShaAndLen->new();
 
     if ($ENV{'FCS_DUMP_SOLS'})
     {

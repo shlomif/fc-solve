@@ -8,7 +8,7 @@ use File::Spec;
 use lib './t/lib';
 use File::Basename qw( dirname );
 
-use Games::Solitaire::FC_Solve::CheckResults;
+use FC_Solve::CheckResults;
 
 my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data');
 
@@ -16,7 +16,7 @@ my $digests_storage_fn = File::Spec->catfile(
     $data_dir, 'digests-and-lens-storage.yml'
 );
 
-my $verifier = Games::Solitaire::FC_Solve::CheckResults->new(
+my $verifier = FC_Solve::CheckResults->new(
     {
         data_filename => $digests_storage_fn,
     }

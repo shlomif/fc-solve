@@ -19,7 +19,7 @@ use File::Spec;
 
 use lib './t/lib';
 
-use Games::Solitaire::FC_Solve::CheckResults;
+use FC_Solve::CheckResults;
 
 my $data_dir = File::Spec->catdir(
     dirname( __FILE__), 'data'
@@ -27,7 +27,7 @@ my $data_dir = File::Spec->catdir(
 
 my $digests_storage_fn = "$data_dir/digests-and-lens-wo-stats-storage.yml";
 
-my $verifier = Games::Solitaire::FC_Solve::CheckResults->new(
+my $verifier = FC_Solve::CheckResults->new(
     {
         data_filename => $digests_storage_fn,
         trim_stats => 1,

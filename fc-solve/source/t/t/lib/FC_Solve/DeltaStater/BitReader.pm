@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::DeltaStater::BitReader;
+package FC_Solve::DeltaStater::BitReader;
 
 use strict;
 use warnings;

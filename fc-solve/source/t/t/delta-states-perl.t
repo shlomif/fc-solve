@@ -12,10 +12,10 @@ use String::ShellQuote;
 use File::Spec;
 use Test::Differences;
 
-use Games::Solitaire::FC_Solve::DeltaStater;
-use Games::Solitaire::FC_Solve::DeltaStater::BitReader;
-use Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
-use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
+use FC_Solve::DeltaStater;
+use FC_Solve::DeltaStater::BitReader;
+use FC_Solve::DeltaStater::BitWriter;
+use FC_Solve::DeltaStater::DeBondt;
 use FC_Solve::VarBaseDigitsReader;
 use FC_Solve::VarBaseDigitsReader::XS;
 use FC_Solve::VarBaseDigitsWriter;
@@ -54,7 +54,7 @@ sub _card_to_bin
 
 {
     # MS Freecell No. 982 Initial state.
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+    my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF"
 Foundations: H-0 C-0 D-A S-0$WS
@@ -149,7 +149,7 @@ EOF
 }
 
 {
-    my $bit_writer = Games::Solitaire::FC_Solve::DeltaStater::BitWriter->new;
+    my $bit_writer = FC_Solve::DeltaStater::BitWriter->new;
 
     # TEST
     ok ($bit_writer, 'Init bit_writer');
@@ -166,7 +166,7 @@ EOF
 }
 
 {
-    my $bit_reader = Games::Solitaire::FC_Solve::DeltaStater::BitReader->new({ bits => chr(3 | (4 << 3))});
+    my $bit_reader = FC_Solve::DeltaStater::BitReader->new({ bits => chr(3 | (4 << 3))});
 
     # TEST
     ok ($bit_reader, 'Init bit_reader');
@@ -180,7 +180,7 @@ EOF
 
 {
     # MS Freecell No. 982 Initial state.
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+    my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF"
 Foundations: H-0 C-0 D-A S-0$WS
@@ -258,7 +258,7 @@ EOF
 # pi-make-microsoft-freecell-board -t 24 | ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
 
 {
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+    my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF"
 Foundations: H-0 C-0 D-0 S-0$WS
@@ -354,7 +354,7 @@ EOF
 # Make sure encode_composite avoids permutations of empty columns
 # and completely-non-original states.
 {
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+    my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF",
 Foundations: H-K C-K D-J S-Q$WS
@@ -426,7 +426,7 @@ EOF
 #
 # Another edge-case.
 {
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
+    my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF",
 Foundations: H-K C-K D-J S-Q$WS
@@ -577,7 +577,7 @@ foreach my $classes_rec
 
 {
     # MS Freecell No. 982 Initial state.
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+    my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             init_state_str => <<"EOF"
 Foundations: H-0 C-0 D-A S-0$WS
@@ -653,7 +653,7 @@ EOF
 
     # MS Freecell No. 5 Initial state. - chosen because it has
     # an Ace at the topmost position in the stack.
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+    my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             init_state_str => $init_state,
         }
@@ -674,7 +674,7 @@ EOF
 
 {
     # PySol Baker's Dozen deal No. 24
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+    my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             variant => "bakers_dozen",
             init_state_str => <<"EOF",
@@ -737,7 +737,7 @@ EOF
 
 {
     # PySol Baker's Dozen deal No. 86
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+    my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             variant => "bakers_dozen",
             init_state_str => <<"EOF",
@@ -801,7 +801,7 @@ EOF
 
 {
     # PySol Baker's Dozen deal No. 86
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+    my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             variant => "bakers_dozen",
             init_state_str => <<"EOF",
@@ -865,7 +865,7 @@ EOF
 
 {
     # PySol Baker's Dozen deal No. 281
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+    my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             variant => "bakers_dozen",
             init_state_str => <<"EOF",
@@ -946,7 +946,7 @@ Freecells:$WS
 : 7S TH 8H 5S
 : 7H JH 8C
 EOF
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+    my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             variant => "bakers_dozen",
             init_state_str => $init_state_str,

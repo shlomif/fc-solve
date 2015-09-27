@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::DeltaStater::OptionsStruct;
+package FC_Solve::DeltaStater::OptionsStruct;
 
 use strict;
 use warnings;

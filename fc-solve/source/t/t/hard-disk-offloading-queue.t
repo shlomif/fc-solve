@@ -10,8 +10,8 @@ use File::Spec;
 use File::Path qw(mkpath);
 
 use lib './t/lib';
-use Games::Solitaire::FC_Solve::QueuePrototype;
-use Games::Solitaire::FC_Solve::QueueInC;
+use FC_Solve::QueuePrototype;
+use FC_Solve::QueueInC;
 
 my $queue_offload_dir_path = File::Spec->catdir(
     File::Spec->curdir(), "queue-offload-dir"
@@ -180,6 +180,6 @@ sub run_queue_tests
 # TEST:$run_queue_tests=$c;
 
 # TEST*$run_queue_tests
-run_queue_tests('Perl queue', 'Games::Solitaire::FC_Solve::QueuePrototype');
+run_queue_tests('Perl queue', 'FC_Solve::QueuePrototype');
 # TEST*$run_queue_tests
-run_queue_tests('C queue', 'Games::Solitaire::FC_Solve::QueueInC');
+run_queue_tests('C queue', 'FC_Solve::QueueInC');

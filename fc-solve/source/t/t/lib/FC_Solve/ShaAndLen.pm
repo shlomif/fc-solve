@@ -1,63 +1,99 @@
-package Games::Solitaire::FC_Solve::DeltaStater::BitWriter;
+package FC_Solve::ShaAndLen;
 
 use strict;
 use warnings;
 
+use Digest::SHA;
+
 use parent 'Games::Solitaire::Verify::Base';
 
-__PACKAGE__->mk_acc_ref([qw(_bits_ref _bit_idx)]);
+__PACKAGE__->mk_acc_ref([qw(
+    _len
+    _hasher
+    )]);
+
+sub new
+{
+    my $class = shift;
+    my $self = {};
+
+    bless $self, $class;
+
+    $self->_init(@_);
+
+    return $self;
+}
 
 sub _init
 {
     my $self = shift;
+    my $args = shift;
 
-    $self->_bits_ref(\(my $s = ''));
+    $self->_len(0);
+    $self->_hasher(Digest::SHA->new(256));
 
-    $self->_bit_idx(0);
+    return 0;
+}
+
+sub add
+{
+    my $self = shift;
+    my $string = shift;
+
+    $self->_len($self->_len()+length($string));
+    $self->_hasher->add($string);
 
     return;
 }
 
-sub _next_idx
+sub len
 {
     my $self = shift;
 
-    my $ret = $self->_bit_idx;
-
-    $self->_bit_idx($ret+1);
-
-    return $ret;
+    return $self->_len();
 }
 
-sub write
-{
-    my ($self, $len, $data) = @_;
-
-    while ($len)
-    {
-        vec(${$self->_bits_ref()}, $self->_next_idx(), 1) = ($data & 0b1);
-    }
-    continue
-    {
-        $len--;
-        $data >>= 1;
-    }
-
-    return;
-}
-
-sub get_bits
+sub hexdigest
 {
     my $self = shift;
 
-    return ${$self->_bits_ref()};
+    return $self->_hasher->clone()->hexdigest();
+}
+
+sub _unity
+{
+    return shift;
+}
+
+sub add_file
+{
+    my $self = shift;
+    my $fh = shift;
+
+    return $self->add_processed_slurp($fh, \&_unity);
+}
+
+sub add_processed_slurp
+{
+    my $self = shift;
+    my $fh = shift;
+    my $callback = shift;
+
+    my $buffer;
+    {
+        local $/;
+        $buffer = <$fh>;
+    }
+    return $self->add(scalar($callback->($buffer)));
 }
 
 1;
 
+
+
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2011 Shlomi Fish
+Copyright (c) 2000 Shlomi Fish
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -79,6 +115,8 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+
+
 
 =cut
 

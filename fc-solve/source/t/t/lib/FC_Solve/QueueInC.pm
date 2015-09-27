@@ -1,4 +1,4 @@
-package Games::Solitaire::FC_Solve::QueueInC;
+package FC_Solve::QueueInC;
 
 use strict;
 use warnings;
@@ -19,7 +19,7 @@ typedef struct
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue_id) {
         QueueInC * s;
         SV*      obj_ref = newSViv(0);
-        SV*      obj = newSVrv(obj_ref, "Games::Solitaire::FC_Solve::QueueInC");
+        SV*      obj = newSVrv(obj_ref, "FC_Solve::QueueInC");
 
         New(42, s, 1, QueueInC);
 
@@ -90,7 +90,7 @@ sub new
 {
     my ($class, $args) = @_;
 
-    return Games::Solitaire::FC_Solve::QueueInC::_proto_new($args->{num_items_per_page}, $args->{offload_dir_path}, ($args->{queue_id} || 0));
+    return FC_Solve::QueueInC::_proto_new($args->{num_items_per_page}, $args->{offload_dir_path}, ($args->{queue_id} || 0));
 }
 
 1;

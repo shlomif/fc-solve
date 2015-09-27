@@ -1,14 +1,14 @@
-package Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
+package FC_Solve::DeltaStater::DeBondt;
 
 use strict;
 use warnings;
 
-use parent 'Games::Solitaire::FC_Solve::DeltaStater';
+use parent 'FC_Solve::DeltaStater';
 
 use Carp;
 
 use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::FC_Solve::DeltaStater::OptionsStruct;
+use FC_Solve::DeltaStater::OptionsStruct;
 use FC_Solve::VarBaseDigitsReader;
 use FC_Solve::VarBaseDigitsWriter;
 
@@ -114,7 +114,7 @@ sub _initialize_card_states
         [
             map
             {
-                Games::Solitaire::FC_Solve::DeltaStater::OptionsStruct->new(
+                FC_Solve::DeltaStater::OptionsStruct->new(
                     {count => $num_opts, }
                 );
             }

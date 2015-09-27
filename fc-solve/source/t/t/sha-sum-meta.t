@@ -10,12 +10,12 @@ use File::Spec;
 
 use lib './t/lib';
 
-use Games::Solitaire::FC_Solve::ShaAndLen;
+use FC_Solve::ShaAndLen;
 
 {
     my $string = "HelloWorld";
 
-    my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
+    my $sha = FC_Solve::ShaAndLen->new();
 
     $sha->add($string);
 
@@ -30,7 +30,7 @@ use Games::Solitaire::FC_Solve::ShaAndLen;
 }
 
 {
-    my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
+    my $sha = FC_Solve::ShaAndLen->new();
 
     $sha->add("Hello");
     $sha->add("World");
@@ -46,7 +46,7 @@ use Games::Solitaire::FC_Solve::ShaAndLen;
 }
 
 {
-    my $sha = Games::Solitaire::FC_Solve::ShaAndLen->new();
+    my $sha = FC_Solve::ShaAndLen->new();
 
     my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data' );
 

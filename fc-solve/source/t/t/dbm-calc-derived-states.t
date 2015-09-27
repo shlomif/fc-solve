@@ -193,7 +193,7 @@ sub find_by_string
 
 package DerivedStatesSearch;
 
-use parent 'Games::Solitaire::FC_Solve::SingleMoveSearch';
+use parent 'FC_Solve::SingleMoveSearch';
 
 use Test::More;
 
