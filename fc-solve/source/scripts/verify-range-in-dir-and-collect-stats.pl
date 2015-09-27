@@ -1,9 +1,4 @@
-package main;
-
-use strict;
-use warnings;
-
-package Games::Solitaire::Verify::App::CmdLine;
+package RangeVerifyApp;
 
 use strict;
 use warnings;
@@ -15,15 +10,11 @@ use Getopt::Long qw(GetOptionsFromArray);
 use Games::Solitaire::Verify::VariantsMap;
 use Games::Solitaire::Verify::Solution;
 
-use List::Util qw(min max);
-
-use Math::BigInt lib => 'GMP';
 use Storable qw(nstore retrieve);
 
 use Fcntl qw(:flock);
 
 my $IDX_SOL_FORMAT = "%09d";
-my $MAX_MOMENT = 7;
 
 $SIG{__WARN__} = sub { Carp::confess $_[0]; };
 
@@ -229,15 +220,6 @@ sub run
     my $min_idx = $self->_min_idx;
     my $max_idx = $self->_max_idx;
 
-    my $get_data_struct = sub {
-        return +{
-            moments => [map { Math::BigInt->new(0) } (0 .. $MAX_MOMENT)] };
-    };
-
-    my $get_for_solved = sub {
-        return +{ map { $_ => $get_data_struct->() } qw(iters gen_states) };
-    };
-
     my %stats =
     (
         solved => { map { $_ => +{} } qw(gen_states iters sol_lens) },
@@ -351,45 +333,20 @@ sub run
     exit(0);
 }
 
-1;
-
 package main;
 
-Games::Solitaire::Verify::App::CmdLine->new({ argv => [@ARGV] })->run();
+use strict;
+use warnings;
 
-1;
+RangeVerifyApp->new({ argv => [@ARGV] })->run();
 
 =head1 NAME
 
-Games::Solitaire::Verify::App::CmdLine - a module implementing a standalone
-command line app for verifying the solutions of Solitaire games.
+RangeVerifyApp - verify a range of solutions and collect statistics.
 
 =head1 SYNOPSIS
 
-    $ perl -MGames::Solitaire::Verify::App::CmdLine -e 'Games::Solitaire::Verify::App::CmdLine->new({argv => \@ARGV})->run()' -- [ARGS]
-
-=head1 DESCRIPTION
-
-This is a module implementing a standalone command line app for verifying the
-solutions of Solitaire games.
-
-=head1 EXPORTS
-
-=head2 run()
-
-Actually executed the command-line application.
-
-=head1 AUTHOR
-
-Shlomi Fish, L<http://www.shlomifish.org/> .
-
-=head1 BUGS
-
-Please report any bugs or feature requests to
-C<bug-test-run-cmdline@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Test-Run-CmdLine>.
-I will be notified, and then you'll automatically be notified of progress on
-your bug as I make changes.
+B<TBD> - for internal use.
 
 =head1 ACKNOWLEDGEMENTS
 
