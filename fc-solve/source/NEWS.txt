@@ -4,8 +4,8 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-09-05
 :Revision: $Id$
 
-Version NEXT: (Unknown)
------------------------
+Version 4.0.0: (27-Sep-2015)
+----------------------------
 
 1. Integrate the scans of Tom Holroyd’s patsolve, for a faster atomic
 moves-based solver. See the +--method patsolve+, +--patsolve-x-param+
@@ -18,6 +18,10 @@ being prefixed to the tests order due to an oversight.
 3. Convert the Python code (tests + board generation) to Python 3, because
 it seems that Python 2 is going away. To run it, we require the "random2"
 module from PyPI : https://pypi.python.org/pypi/random2 .
+
+4. Many small cleanups and optimisations.
+
+5. Source tarball is now “.tar.xz”.
 
 Version 3.26.0: (19-May-2014)
 -----------------------------
