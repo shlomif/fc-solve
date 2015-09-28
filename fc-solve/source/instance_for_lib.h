@@ -90,44 +90,52 @@ static GCC_INLINE fc_solve_soft_thread_t * fc_solve_new_hard_thread(
   */
 static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const instance, fcs_meta_compact_allocator_t * const meta_alloc)
 {
-    instance->meta_alloc = meta_alloc;
-
+    *(instance) = (fc_solve_instance_t) {
+        .meta_alloc = meta_alloc,
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-    instance->num_indirect_prev_states = 0;
+            .num_indirect_prev_states = 0,
 #endif
-
-    instance->i__num_checked_states = 0;
-
-    instance->num_states_in_collection = 0;
-    instance->active_num_states_in_collection = 0;
-
-    instance->i__max_num_checked_states = -1;
-    instance->effective_max_num_checked_states = INT_MAX;
+            .i__num_checked_states = 0,
+            .num_states_in_collection = 0,
+            .active_num_states_in_collection = 0,
+            .i__max_num_checked_states = -1,
+            .effective_max_num_checked_states = INT_MAX,
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
-    instance->max_depth = -1;
+            .max_depth = -1,
 #endif
-    instance->max_num_states_in_collection = -1;
-    instance->effective_max_num_states_in_collection = INT_MAX;
-    instance->trim_states_in_collection_from = -1;
-    instance->effective_trim_states_in_collection_from = LONG_MAX;
+            .max_num_states_in_collection = -1,
+            .effective_max_num_states_in_collection = INT_MAX,
+            .trim_states_in_collection_from = -1,
+            .effective_trim_states_in_collection_from = LONG_MAX,
 
-    instance->instance_tests_order.num_groups = 0;
-    instance->instance_tests_order.groups = NULL;
+            .instance_tests_order = {.num_groups = 0, .groups = NULL,},
 
-    instance->list_of_vacant_states = NULL;
+            .list_of_vacant_states = NULL,
 
-
-    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
-
-    instance->opt_tests_order.num_groups = 0;
-    instance->opt_tests_order.groups = NULL;
+            .opt_tests_order = {.num_groups = 0, .groups = NULL, },
 
 #ifndef FCS_SINGLE_HARD_THREAD
-    instance->num_hard_threads = 0;
-    instance->hard_threads = NULL;
+            .num_hard_threads = 0,
+            .hard_threads = NULL,
 #endif
+            .next_soft_thread_id = 0,
+            .debug_iter_output_func = NULL,
+            .solution_moves = (fcs_move_stack_t) { .moves = NULL, .num_moves = 0 },
+            .num_hard_threads_finished = 0,
+    /* Make the 1 the default, because otherwise scans will not cooperate
+     * with one another. */
+            .runtime_flags = FCS_RUNTIME_SCANS_SYNERGY,
+#ifdef FCS_RCS_STATES
 
-    instance->next_soft_thread_id = 0;
+#define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
+
+            .rcs_states_cache.max_num_elements_in_cache
+                = DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE,
+
+#undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
+
+#endif
+    };
 
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_name(instance, "freecell");
@@ -143,10 +151,6 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
 #endif
 
     /****************************************/
-
-    instance->debug_iter_output_func = NULL;
-
-
 #ifdef FCS_SINGLE_HARD_THREAD
     fc_solve_instance__init_hard_thread(
         instance
@@ -155,33 +159,6 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
 #else
     fc_solve_new_hard_thread(instance);
     instance->optimization_thread = NULL;
-#endif
-
-    instance->solution_moves.moves = NULL;
-
-    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH);
-
-    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
-
-    instance->num_hard_threads_finished = 0;
-
-    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
-
-    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO );
-
-    /* Make the 1 the default, because otherwise scans will not cooperate
-     * with one another. */
-    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
-
-#ifdef FCS_RCS_STATES
-
-#define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
-
-    instance->rcs_states_cache.max_num_elements_in_cache
-        = DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE;
-
-#undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
-
 #endif
 }
 
