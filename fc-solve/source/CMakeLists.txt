@@ -184,6 +184,7 @@ SET (FCS_MAX_NUM_SCANS_BUCKETS "" CACHE STRING "The number of scan_visited bucke
 SET (FCS_DISABLE_PATSOLVE "" CACHE BOOL "Disable the patsolve code")
 SET (FCS_MAX_IDENT_LEN "10" CACHE STRING "Maximal length of identifiers")
 SET (FCS_SINGLE_HARD_THREAD "" CACHE BOOL "Enable single-hard-thread-per-instance (an optimization)")
+SET (FCS_DISABLE_DEBONDT_DELTA_STATES "" CACHE BOOL "Disable the DEBONDT delta states")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")
@@ -615,11 +616,14 @@ ENDMACRO (MY_FIND_GMP reason_why my_option)
 CMAKE_POLICY(SET CMP0054 NEW)
 
 SET (DEBONDT_DELTA_STATES )
-IF (FCS_ENABLE_DBM_SOLVER)
+IF ("${FCS_ENABLE_DBM_SOLVER}")
 
     MY_FIND_GMP ("to build the DBM solver." "FCS_ENABLE_DBM_SOLVER")
-    ADD_DEFINITIONS("-DFCS_DEBONDT_DELTA_STATES=1")
-    SET (DEBONDT_DELTA_STATES 1)
+    IF (NOT "${FCS_DISABLE_DEBONDT_DELTA_STATES}")
+        ADD_DEFINITIONS("-DFCS_DEBONDT_DELTA_STATES=1")
+        SET (DEBONDT_DELTA_STATES 1)
+    ENDIF (NOT  "${FCS_DISABLE_DEBONDT_DELTA_STATES}")
+
 
     SET (DBM_BACKEND_MODULES )
     SET (DBM_LIBS "pthread")
@@ -704,7 +708,7 @@ IF (FCS_ENABLE_DBM_SOLVER)
             PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
         )
     ENDFOREACH (TGT)
-ENDIF (FCS_ENABLE_DBM_SOLVER)
+ENDIF ("${FCS_ENABLE_DBM_SOLVER}")
 
 IF (CMAKE_USE_PTHREADS_INIT)
     FCS_ADD_EXEC(freecell-solver-multi-thread-solve threaded_range_solver.c)
@@ -1106,7 +1110,7 @@ IF (IS_DEBUG)
             SHARED
             app_str.c card.c state.c delta_states_debondt.c
         )
-        IF (FCS_ENABLE_DBM_SOLVER)
+        IF ("${FCS_ENABLE_DBM_SOLVER}")
             ADD_LIBRARY(fcs_dbm_calc_derived_test
                 SHARED
                 ${DBM_FCC_COMMON}
@@ -1118,7 +1122,7 @@ IF (IS_DEBUG)
                 ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
             )
             TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
-        ENDIF (FCS_ENABLE_DBM_SOLVER)
+        ENDIF ("${FCS_ENABLE_DBM_SOLVER}")
     ENDIF (NOT FCS_ENABLE_RCS_STATES)
 ENDIF (IS_DEBUG)
 

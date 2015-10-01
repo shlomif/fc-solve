@@ -78,7 +78,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
             GENERATED "1"
     )
 
-    IF (DEBONDT_DELTA_STATES)
+    IF ("${DEBONDT_DELTA_STATES}")
 
         SET (EXE_FILE "delta-states-debondt-test.t.exe")
 
@@ -97,7 +97,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
                 GENERATED "1"
         )
 
-    ELSE (DEBONDT_DELTA_STATES)
+    ELSE ("${DEBONDT_DELTA_STATES}")
 
         SET (EXE_FILE "delta-states-test.t.exe")
 
@@ -115,7 +115,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
                     "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
                 GENERATED "1"
         )
-    ENDIF (DEBONDT_DELTA_STATES)
+    ENDIF ("${DEBONDT_DELTA_STATES}")
 
     SET (EXE_FILE "dbm-kaztree-compare-records-test.t.exe")
 

@@ -30,7 +30,6 @@
 
 #include <tap.h>
 
-#define FCS_COMPILE_DEBUG_FUNCTIONS
 #include "../card.c"
 #include "../app_str.c"
 #include "../state.c"
@@ -43,7 +42,7 @@ static fcs_card_t make_card(int rank, int suit)
     return fcs_make_card(rank, suit);
 }
 
-static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
+static int test_encode_and_decode(const enum fcs_dbm_variant_type_t local_variant, fc_solve_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
 {
     int verdict;
     fcs_state_keyval_pair_t new_derived_state;
@@ -94,6 +93,7 @@ static int test_encode_and_decode(fc_solve_delta_stater_t * delta, fcs_state_key
 
 int main_tests()
 {
+    const enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     {
         fcs_state_keyval_pair_t s;
         fc_solve_delta_stater_t delta;
@@ -319,6 +319,7 @@ int main_tests()
         /* TEST
          * */
         test_encode_and_decode(
+            local_variant,
             delta,
             &derived_state,
             (
@@ -402,6 +403,7 @@ int main_tests()
         /* TEST
          * */
         test_encode_and_decode(
+            local_variant,
             delta,
             &derived_state,
             (
@@ -442,6 +444,7 @@ int main_tests()
         /* TEST
          * */
         test_encode_and_decode(
+            local_variant,
             delta,
             &derived_state,
             (
@@ -466,6 +469,7 @@ int main_tests()
         char * s;
 
         s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+            local_variant,
                 (
                  "Foundations: H-0 C-0 D-0 S-0 \n"
                  "Freecells:        \n"
@@ -575,6 +579,7 @@ int main_tests()
 
         fcs_init_and_encode_state(
             delta,
+            local_variant,
             &derived_state,
             &first_enc_state
             );
@@ -602,6 +607,7 @@ int main_tests()
 
         fcs_init_and_encode_state(
             delta,
+            local_variant,
             &derived_state,
             &second_enc_state
             );
@@ -676,6 +682,7 @@ int main_tests()
         fcs_encoded_state_buffer_t first_enc_state;
         fcs_init_and_encode_state(
             delta,
+            local_variant,
             &derived_state,
             &first_enc_state
             );
@@ -702,6 +709,7 @@ int main_tests()
         fcs_encoded_state_buffer_t second_enc_state;
         fcs_init_and_encode_state(
             delta,
+            local_variant,
             &derived_state,
             &second_enc_state
             );
@@ -720,7 +728,7 @@ int main_tests()
 
 int main(int argc, char * argv[])
 {
-    plan_tests(28);
+    plan_tests(25);
     main_tests();
     return exit_status();
 }

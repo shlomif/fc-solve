@@ -277,6 +277,108 @@ Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
 END
 EOF
 
+    my $needle_non_debondt = <<"EOF";
+Success!
+--------
+Foundations: H-T C-8 D-A S-J$WS
+Freecells:      7D
+: 3D
+: 4D
+: 5D
+: 6D
+: 2D KD QS JH TC 9D
+: KH QC JD
+: KC QH
+: KS QD JC TD 9C 8D
+
+==
+Column 4 -> Freecell 0
+--------
+Foundations: H-T C-8 D-A S-J$WS
+Freecells:  7D  9D
+: 3D
+: 4D
+: 5D
+: 6D
+: 2D KD QS JH TC
+: KH QC JD
+: KC QH
+: KS QD JC TD 9C 8D
+
+==
+Column 4 -> Column 5
+--------
+Foundations: H-T C-8 D-A S-J$WS
+Freecells:  7D  9D
+: 3D
+: 4D
+: 5D
+: 6D
+: 2D KD QS JH
+: KH QC JD TC
+: KC QH
+: KS QD JC TD 9C 8D
+
+==
+Freecell 1 -> Column 5
+--------
+Foundations: H-T C-8 D-A S-J$WS
+Freecells:      7D
+: 3D
+: 4D
+: 5D
+: 6D
+: 2D KD QS JH
+: KH QC JD TC 9D
+: KC QH
+: KS QD JC TD 9C 8D
+
+==
+Column 4 -> Foundation 0
+--------
+Foundations: H-J C-8 D-A S-J$WS
+Freecells:      7D
+: 3D
+: 4D
+: 5D
+: 6D
+: 2D KD QS
+: KH QC JD TC 9D
+: KC QH
+: KS QD JC TD 9C 8D
+
+==
+Column 4 -> Foundation 3
+--------
+Foundations: H-J C-8 D-A S-Q$WS
+Freecells:      7D
+: 3D
+: 4D
+: 5D
+: 6D
+: 2D KD
+: KH QC JD TC 9D
+: KC QH
+: KS QD JC TD 9C 8D
+
+==
+Column 4 -> Freecell 0
+--------
+Foundations: H-K C-K D-K S-K$WS
+Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+:$WS
+
+==
+END
+EOF
+
     my $dbm_output = trap_dbm(
         {
             board_fn =>
@@ -291,7 +393,8 @@ EOF
 
     # TEST
     ok (
-        (index( $output_text, $needle) >= 0),
+        scalar (index( $output_text, $needle) >= 0 or
+        index( $output_text, $needle_non_debondt) >= 0),
         "dbm_fc_solver invocation contains the solution's output."
     );
 }
