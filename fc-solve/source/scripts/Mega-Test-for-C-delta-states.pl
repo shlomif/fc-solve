@@ -17,9 +17,9 @@ use Inline (
 );
 
 use IO::Handle;
-use lib './t/t/lib';
-use Games::Solitaire::FC_Solve::DeltaStater;
-use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
+use lib "$ENV{FCS_SRC_PATH}/t/t/lib";
+use FC_Solve::DeltaStater;
+use FC_Solve::DeltaStater::DeBondt;
 
 use Parallel::ForkManager;
 
@@ -40,7 +40,7 @@ sub perl_debondt_enc_and_dec
 {
     my ($init_state_str, $state) = @_;
 
-    my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
+    my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             init_state_str => $init_state_str,
             (
@@ -80,14 +80,15 @@ sub _debondt_normalize
         ;
 }
 
+my $BIN_DIR = $ENV{FCS_PATH};
 sub test_freecell_deal
 {
     my ($deal_idx) = @_;
 
     my $open_cmd =
         $is_bakers_dozen
-        ? "./board_gen/make_pysol_freecell_board.py -t $deal_idx bakers_dozen | ./fc-solve -g bakers_dozen -p -t -sam -l three-eighty -mi $MAX_ITERS |"
-        : "./board_gen/pi-make-microsoft-freecell-board -t $deal_idx | ./fc-solve --freecells-num 2 -p -t -sam -l three-eighty -mi $MAX_ITERS |"
+        ? "$BIN_DIR/board_gen/make_pysol_freecell_board.py -t $deal_idx bakers_dozen | $BIN_DIR/fc-solve -g bakers_dozen -p -t -sam -l three-eighty -mi $MAX_ITERS |"
+        : "$BIN_DIR/board_gen/pi-make-microsoft-freecell-board -t $deal_idx | $BIN_DIR/fc-solve --freecells-num 2 -p -t -sam -l three-eighty -mi $MAX_ITERS |"
         ;
 
     my $variant_s = ($is_bakers_dozen ? "bakers_dozen" : "freecell");
@@ -142,8 +143,8 @@ sub test_freecell_deal
 
     $two_fc_variant->num_freecells($num_freecells);
 
-    my $delta_class = $is_debondt ? 'Games::Solitaire::FC_Solve::DeltaStater::DeBondt' :
-        'Games::Solitaire::FC_Solve::DeltaStater';
+    my $delta_class = $is_debondt ? 'FC_Solve::DeltaStater::DeBondt' :
+        'FC_Solve::DeltaStater';
     my $delta = $delta_class->new(
         {
             init_state_str => $init_state_str,
