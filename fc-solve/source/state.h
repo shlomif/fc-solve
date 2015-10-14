@@ -486,8 +486,7 @@ typedef struct {
 
 static GCC_INLINE const fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(fcs_state_keyval_pair_t * const s)
 {
-    const fcs_kv_state_t ret = {.key = &(s->s), .val = &(s->info)};
-    return ret;
+    return (const fcs_kv_state_t) {.key = &(s->s), .val = &(s->info)};
 }
 
 /*
