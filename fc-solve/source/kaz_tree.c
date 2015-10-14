@@ -558,9 +558,7 @@ int dict_similar(const dict_t *left, const dict_t *right)
 
 dict_key_t fc_solve_kaz_tree_lookup_value(dict_t *dict, dict_key_t key)
 {
-    dnode_t *dn;
-
-    dn = fc_solve_kaz_tree_lookup(dict, key);
+    dnode_t * const dn = fc_solve_kaz_tree_lookup(dict, key);
 
     return (dn ? dn->dict_key : NULL);
 }

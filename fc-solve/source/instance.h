@@ -406,13 +406,11 @@ struct fc_solve_hard_thread_struct
      * */
     fcs_move_stack_t reusable_move_stack;
 
-#ifdef INDIRECT_STACK_STATES
     /*
      * This is a buffer used to temporarily store the stacks of the duplicated
      * state.
      * */
-    dll_ind_buf_t indirect_stacks_buffer;
-#endif
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     fcs_int_limit_t prelude_num_items;
     int prelude_idx;

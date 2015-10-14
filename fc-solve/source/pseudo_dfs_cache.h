@@ -71,7 +71,7 @@ typedef struct
 
     fcs_pdfs_cache_key_info_t * lowest_pri, * highest_pri;
 
-#define RECYCLE_BIN_NEXT(el) ((el)->higher_pri)
+#define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
     fcs_pdfs_cache_key_info_t * recycle_bin;
 } fcs_pdfs_lru_cache_t;
 
