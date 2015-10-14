@@ -86,15 +86,19 @@ void fc_solve_increase_dfs_max_depth(
     fcs_soft_dfs_stack_item_t * const end_soft_dfs_info = soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY;
     for(; soft_dfs_info < end_soft_dfs_info ; soft_dfs_info++)
     {
-        soft_dfs_info->state = NULL;
-        soft_dfs_info->tests_list_index = 0;
-        soft_dfs_info->test_index = 0;
-        soft_dfs_info->current_state_index = 0;
-        soft_dfs_info->derived_states_list.num_states = 0;
-        soft_dfs_info->derived_states_list.states = NULL;
-        soft_dfs_info->derived_states_random_indexes = NULL;
-        soft_dfs_info->derived_states_random_indexes_max_size = 0;
-        soft_dfs_info->positions_by_rank = NULL;
+        *soft_dfs_info = (fcs_soft_dfs_stack_item_t) {
+            .state = NULL,
+            .tests_list_index = 0,
+            .test_index = 0,
+            .current_state_index = 0,
+            .derived_states_list = {
+                .num_states = 0,
+                .states = NULL,
+            },
+            .derived_states_random_indexes = NULL,
+            .derived_states_random_indexes_max_size = 0,
+            .positions_by_rank = NULL,
+        };
     }
 
     DFS_VAR(soft_thread, dfs_max_depth) = new_dfs_max_depth;
