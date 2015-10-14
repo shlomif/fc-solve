@@ -36,6 +36,7 @@
 #include <stdio.h>
 
 #include "fcs_dllexport.h"
+#include "count.h"
 #include "bit_rw.h"
 #include "state.h"
 #include "indirect_buffer.h"
@@ -128,8 +129,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__init_card_states(
     )
 {
     int * const card_states = self->card_states;
-    for (int i = 0 ; i < sizeof(self->card_states) / sizeof(self->card_states[0])
-         ; i++)
+    for (size_t i = 0 ; i < COUNT(self->card_states) ; i++)
     {
         card_states[i] = -1;
     }

@@ -299,7 +299,6 @@ static GCC_INLINE void instance_debug_out_state(
 #endif
 
 static void calc_trace(
-    fcs_dbm_solver_instance_t * const instance,
     fcs_dbm_record_t * const ptr_initial_record,
     fcs_encoded_state_buffer_t * * const ptr_trace,
     int * const ptr_trace_num

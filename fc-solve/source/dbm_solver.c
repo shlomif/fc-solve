@@ -30,6 +30,8 @@
  */
 
 #include "dbm_solver_head.h"
+#include "unused.h"
+#include "count.h"
 
 typedef struct
 {
@@ -73,8 +75,8 @@ typedef struct
 static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * instance,
     enum fcs_dbm_variant_type_t local_variant,
-    long pre_cache_max_count,
-    long caches_delta,
+    long pre_cache_max_count GCC_UNUSED,
+    long caches_delta GCC_UNUSED,
     const char * dbm_store_path,
     long max_count_of_items_in_queue,
     long iters_delta_limit,
@@ -182,13 +184,13 @@ static GCC_INLINE void instance_destroy(
 #include "dbm_procs.h"
 
 static GCC_INLINE void instance_check_key(
-    fcs_dbm_solver_thread_t * thread,
+    fcs_dbm_solver_thread_t * thread GCC_UNUSED,
     fcs_dbm_solver_instance_t * instance,
-    int key_depth,
+    int key_depth GCC_UNUSED,
     fcs_encoded_state_buffer_t * key,
     fcs_dbm_record_t * parent,
-    unsigned char move,
-    fcs_which_moves_bitmask_t * which_irreversible_moves_bitmask
+    unsigned char move GCC_UNUSED,
+    fcs_which_moves_bitmask_t * which_irreversible_moves_bitmask GCC_UNUSED
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif
@@ -279,7 +281,7 @@ static void * instance_run_solver_thread(void * void_arg)
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
 #endif
-    fcs_dbm_record_t * token;
+    fcs_dbm_record_t * token = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     thread_arg_t * const arg = (thread_arg_t *)void_arg;
@@ -907,7 +909,7 @@ static void trace_solution(
     fflush (out_fh);
     /* Now trace the solution */
 
-    calc_trace(instance, instance->queue_solution_ptr, &trace, &trace_num);
+    calc_trace(instance->queue_solution_ptr, &trace, &trace_num);
 
     fc_solve_init_locs(&locs);
 
@@ -989,16 +991,15 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 
             while (fcs_offloading_queue__extract(&(instance->queue), (fcs_offloading_queue_item_t *)(&token)))
             {
-                int i;
                 physical_item.key = token->key;
 
 #ifdef FCS_DEBONDT_DELTA_STATES
-                for (i=0; i < sizeof(item->key) ; i++)
+                for (size_t i=0; i < COUNT(item->key.s) ; i++)
                 {
                     fprintf(out_fh, "%.2X", (int)item->key.s[i]);
                 }
 #else
-                for (i=0; i < item->key.s[0] ; i++)
+                for (size_t i=0; i < item->key.s[0] ; i++)
                 {
                     fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
                 }
@@ -1024,14 +1025,14 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                     int trace_num;
                     fcs_encoded_state_buffer_t * trace;
 
-                    calc_trace(instance, token, &trace, &trace_num);
+                    calc_trace(token, &trace, &trace_num);
 
                     /*
                      * We stop at 1 because the deepest state does not contain
                      * a move (as it is the ultimate state).
                      * */
 #define PENULTIMATE_DEPTH 1
-                    for (i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
+                    for (int i = trace_num-1 ; i >= PENULTIMATE_DEPTH ; i--)
                     {
                         fprintf(out_fh, "%.2X,", get_move_from_parent_to_child(instance, delta, trace[i], trace[i-1]));
                     }

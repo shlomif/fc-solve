@@ -38,6 +38,7 @@ extern "C"
 #include "bool.h"
 #include "inline.h"
 #include "alloc_wrap.h"
+#include "unused.h"
 
 #include "state.h"
 #include "meta_alloc.h"
@@ -51,7 +52,7 @@ extern "C"
 
 /* TODO: make sure the key is '\0'-padded. */
 static int fc_solve_compare_lru_cache_keys(
-    const void * void_a, const void * void_b, void * context
+    const void * void_a, const void * void_b, void * context GCC_UNUSED
 )
 {
 #define GET_PARAM(p) ((((const fcs_cache_key_info_t *)(p))->key))

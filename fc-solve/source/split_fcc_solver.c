@@ -501,7 +501,7 @@ static GCC_INLINE void instance_check_key(
                     /* instance->storage_lock is already locked
                      * in instance_check_multiple_keys and we should not
                      * lock it here. */
-                    calc_trace(instance, token, &trace, &trace_num);
+                    calc_trace(token, &trace, &trace_num);
 
                     {
                         FccEntryPointNode fcc_entry_key;
@@ -1149,7 +1149,7 @@ static void trace_solution(
     fflush (out_fh);
     /* Now trace the solution */
 
-    calc_trace(instance, instance->queue_solution_ptr, &trace, &trace_num);
+    calc_trace(instance->queue_solution_ptr, &trace, &trace_num);
 
     fc_solve_init_locs(&locs);
 

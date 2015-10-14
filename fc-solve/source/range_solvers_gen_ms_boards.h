@@ -166,9 +166,9 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
 #endif
 {
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
-    return fc_solve_get_board_l((long long)gamenumber, ret);
+    fc_solve_get_board_l((long long)gamenumber, ret);
 #else
-    return get_board_l((long long)gamenumber, ret);
+    get_board_l((long long)gamenumber, ret);
 #endif
 }
 
