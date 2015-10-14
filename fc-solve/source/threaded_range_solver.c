@@ -118,7 +118,6 @@ static void * worker_thread(void * GCC_UNUSED void_context)
                 fprintf(stderr, "Unknown option: %s", context.argv[arg]);
                 goto ret_label;
             }
-            break;
 
             case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
             {
@@ -126,7 +125,6 @@ static void * worker_thread(void * GCC_UNUSED void_context)
                     " and was not supplied with one.\n", context.argv[arg]);
                 goto ret_label;
             }
-            break;
 
             case FCS_CMD_LINE_ERROR_IN_ARG:
             {
@@ -137,7 +135,6 @@ static void * worker_thread(void * GCC_UNUSED void_context)
                 }
                 goto ret_label;
             }
-            break;
         }
     }
     freecell_solver_user_limit_iterations_long(instance, context.total_iterations_limit_per_board);
@@ -185,7 +182,6 @@ static void * worker_thread(void * GCC_UNUSED void_context)
 
                     goto theme_error;
                 }
-                break;
 
                 case FCS_STATE_IS_NOT_SOLVEABLE:
                 {

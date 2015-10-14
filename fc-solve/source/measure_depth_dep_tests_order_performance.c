@@ -38,30 +38,13 @@
 #include "inline.h"
 #include "range_solvers_gen_ms_boards.h"
 
-struct pack_item_struct
-{
-    void * instance;
-};
-
-typedef struct pack_item_struct pack_item_t;
-
-#define BINARY_OUTPUT_NUM_INTS 16
-
-typedef struct
-{
-    FILE * file;
-    char * buffer;
-    char * buffer_end;
-    char * ptr;
-} binary_output_t;
-
-#define print_int_wrapper(i) { if (binary_output.file) { print_int(&binary_output, (i));  } }
-
 static void print_help(void)
 {
     printf("\n%s",
-"freecell-solver-range-parallel-solve start end print_step\n"
-"   [--binary-output-to filename] [--total-iterations-limit limit]\n"
+"measure-depth-dep-tests-order-performance start end\n"
+"   [--args-start] [--args-end] [--output-to]\n"
+"[--scan1-to] [--scan2-to] [--iters-limit]\n"
+"[--max-ver-depth]"
 "   [fc-solve Arguments...]\n"
 "\n"
 "Solves a sequence of boards from the Microsoft/Freecell Pro Deals\n"
@@ -90,7 +73,6 @@ static const char * known_parameters[] = {
 
 int main(int argc, char * argv[])
 {
-    pack_item_t user;
     /* char buffer[2048]; */
     int board_num;
     int start_board, end_board;
@@ -226,25 +208,25 @@ int main(int argc, char * argv[])
     for (min_depth_for_scan2 = 0; min_depth_for_scan2 < max_var_depth_to_check ;
             min_depth_for_scan2++)
     {
-        user.instance = freecell_solver_user_alloc();
+        void * const instance = freecell_solver_user_alloc();
 
         if (start_from_arg >= 0)
         {
             freecell_solver_user_cmd_line_parse_args(
-                user.instance,
+                instance,
                 end_args,
                 (freecell_solver_str_t *)(void *)argv,
                 start_from_arg,
                 known_parameters,
                 NULL,
-                &user,
+                NULL,
                 &error_string,
                 &arg
             );
         }
 
         if (freecell_solver_user_set_depth_tests_order(
-            user.instance,
+            instance,
             0,
             scan1_to,
             &error_string
@@ -255,7 +237,7 @@ int main(int argc, char * argv[])
             exit(-1);
         }
         if (freecell_solver_user_set_depth_tests_order(
-            user.instance,
+            instance,
             min_depth_for_scan2,
             scan2_to,
             &error_string
@@ -277,7 +259,7 @@ int main(int argc, char * argv[])
             get_board(board_num, state_string);
 
             freecell_solver_user_limit_iterations_long(
-                user.instance,
+                instance,
                 iters_limit
             );
 
@@ -285,19 +267,19 @@ int main(int argc, char * argv[])
 
             curr_result->verdict =
                 freecell_solver_user_solve_board(
-                    user.instance,
+                    instance,
                     state_string
                     );
 
             FCS_GET_TIME(curr_result->end_time);
 
             curr_result->num_iters
-                = freecell_solver_user_get_num_times_long(user.instance);
+                = freecell_solver_user_get_num_times_long(instance);
 
-            freecell_solver_user_recycle(user.instance);
+            freecell_solver_user_recycle(instance);
         }
 
-        freecell_solver_user_free(user.instance);
+        freecell_solver_user_free(instance);
 
         printf("Reached depth %d\n", min_depth_for_scan2);
 

@@ -162,7 +162,6 @@ static int cmd_line_callback(
     {
         fprintf(stderr, "Unknown option %s!\n", argv[arg]);
         exit(-1);
-        return 0;
     }
     *num_to_skip = 1;
     return FCS_CMD_LINE_SKIP;
