@@ -91,7 +91,7 @@ static int test_encode_and_decode(const enum fcs_dbm_variant_type_t local_varian
     return verdict;
 }
 
-int main_tests()
+static int main_tests(void)
 {
     const enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     {
