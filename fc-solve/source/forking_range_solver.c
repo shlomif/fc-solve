@@ -398,9 +398,7 @@ int main(int argc, char * argv[])
     {
         /* I'm the master. */
 #ifdef USE_EPOLL
-#define MAX_EVENTS 10
-        struct epoll_event ev, events[MAX_EVENTS];
-        int epollfd = epoll_create1(0);
+        const int epollfd = epoll_create1(0);
         if (epollfd == -1) {
             perror("epoll_create1");
             exit(EXIT_FAILURE);
@@ -416,9 +414,9 @@ int main(int argc, char * argv[])
 #define GET_READ_FD(worker) ((worker).child_to_parent_pipe[READ_FD])
             const int fd = GET_READ_FD(workers[idx]);
 #ifdef USE_EPOLL
-            ev.events = EPOLLIN;
-            ev.data.ptr = &(workers[idx]);
-
+            struct epoll_event ev = {.events = EPOLLIN,
+                .data.ptr = &(workers[idx]),
+            };
             if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1) {
                 perror("epoll_ctl: listen_sock");
                 exit(EXIT_FAILURE);
@@ -449,6 +447,10 @@ int main(int argc, char * argv[])
             );
         }
 
+#ifdef USE_EPOLL
+#define MAX_EVENTS 10
+        struct epoll_event events[MAX_EVENTS];
+#endif
 
         while (total_num_finished_boards < total_num_boards_to_check)
         {
