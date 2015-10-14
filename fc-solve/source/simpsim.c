@@ -850,6 +850,43 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
     return;
 }
 
+/*
+ * start, end, src_stack.
+ * */
+typedef struct {
+    int start;
+    int end;
+    int src_stack;
+} s_e_src_t;
+
+static GCC_INLINE const s_e_src_t calc_start_end_src_stack(
+    const int seq_index,
+    const sequences_analysis_t * const seqs,
+    const int after_end_of_junk,
+    const int cards_num,
+    const int stack_idx,
+    const int ds,
+    const int dest_cards_num
+)
+{
+    if (seq_index == seqs->num_separate_false_seqs)
+    {
+        return (const s_e_src_t) {
+            .start = after_end_of_junk,
+            .end = cards_num-1,
+            .src_stack = stack_idx
+        };
+    }
+    else
+    {
+        return (const s_e_src_t) {
+            .start = seqs->seq_points[seq_index],
+            .end = ((seq_index == 0) ? (dest_cards_num-1) : (seqs->seq_points[seq_index-1]-1)),
+            .src_stack = ds
+        };
+    }
+}
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above)
 {
     /*
@@ -891,6 +928,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
 
         fcs_card_t card = fcs_col_get_card(col, h);
 
+        const int after_end_of_junk = h;
         const int end_of_junk = (--h);
         int num_true_seqs = 1;
 
@@ -924,7 +962,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 generic_false_seq_index_loop(
                     LOCAL_STACKS_NUM, raw_ptr_state_raw, num_vacant_stacks,
                     dest_col, &seqs, stack_idx, ds, FALSE, TRUE,
-                    fcs_col_get_card(col, end_of_junk+1), num_src_junk_true_seqs
+                    fcs_col_get_card(col, after_end_of_junk), num_src_junk_true_seqs
                 )
                 &&
                 (calc_max_simple_simon_seq_move(seqs.after_junk_num_freestacks) >= num_true_seqs)
@@ -945,29 +983,22 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 seq_index++
             )
             {
-                int start;
-                int end;
-                int src_stack;
+                const s_e_src_t s_e = calc_start_end_src_stack(
+                    seq_index,
+                    &seqs,
+                    after_end_of_junk,
+                    cards_num,
+                    stack_idx,
+                    ds,
+                    dest_cards_num
+                );
 
-                if (seq_index == seqs.num_separate_false_seqs)
-                {
-                    start = end_of_junk+1;
-                    end = cards_num-1;
-                    src_stack = stack_idx;
-                }
-                else
-                {
-                    start = seqs.seq_points[seq_index];
-                    end = ((seq_index == 0) ? (dest_cards_num-1) : (seqs.seq_points[seq_index-1]-1));
-                    src_stack = ds;
-                }
-
-                my_copy_stack(src_stack);
+                my_copy_stack(s_e.src_stack);
 
                 const int dest_index = seqs.junk_move_to_stacks[seq_index];
                 my_copy_stack(dest_index);
 
-                fcs_move_sequence(dest_index, src_stack, start, end);
+                fcs_move_sequence(dest_index, s_e.src_stack, s_e.start, s_e.end);
             }
 
             /* Move the source seq on top of the dest seq */
