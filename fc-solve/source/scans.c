@@ -185,8 +185,6 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         }
 #else
         {
-            fcs_cache_key_info_t * existing_cache_state;
-
             if (cache->recycle_bin)
             {
                 new_cache_state = cache->recycle_bin;
@@ -202,7 +200,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             }
 
             new_cache_state->val_ptr = parents_stack[parents_stack_len-1].state_val;
-            existing_cache_state = (fcs_cache_key_info_t *)fc_solve_kaz_tree_alloc_insert(
+            fcs_cache_key_info_t * const existing_cache_state = (fcs_cache_key_info_t *)fc_solve_kaz_tree_alloc_insert(
                 cache->kaz_tree,
                 new_cache_state
             );
