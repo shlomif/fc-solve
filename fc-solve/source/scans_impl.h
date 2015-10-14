@@ -644,23 +644,25 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 
     for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
-        fcs_rating_with_index_t * rand_index_ptr, * dest_rand_index_ptr;
-        fcs_derived_states_list_item_t * const states =
-            soft_dfs_info->derived_states_list.states;
+        const typeof(soft_dfs_info->derived_states_random_indexes)
+            rand_indexes = soft_dfs_info->derived_states_random_indexes;
+
         /*
          * We start from current_state_index instead of current_state_index+1
          * because that is the next state to be checked - it is referenced
          * by current_state_index++ instead of ++current_state_index .
          * */
-        dest_rand_index_ptr = rand_index_ptr =
-            soft_dfs_info->derived_states_random_indexes
-            + soft_dfs_info->current_state_index
-            ;
+        fcs_rating_with_index_t * dest_rand_index_ptr =
+            rand_indexes + soft_dfs_info->current_state_index;
+        const fcs_rating_with_index_t * rand_index_ptr = dest_rand_index_ptr;
+
         fcs_rating_with_index_t * const end_rand_index_ptr =
-            soft_dfs_info->derived_states_random_indexes
+            rand_indexes
             + soft_dfs_info->derived_states_list.num_states
             ;
 
+        fcs_derived_states_list_item_t * const states =
+            soft_dfs_info->derived_states_list.states;
         for( ; rand_index_ptr < end_rand_index_ptr ; rand_index_ptr++ )
         {
             if (! fcs__is_state_a_dead_end(states[rand_index_ptr->idx].state_ptr))
@@ -669,7 +671,7 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
             }
         }
         soft_dfs_info->derived_states_list.num_states =
-            dest_rand_index_ptr - soft_dfs_info->derived_states_random_indexes;
+            dest_rand_index_ptr - rand_indexes;
     }
 
     return;
