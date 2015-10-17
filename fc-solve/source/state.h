@@ -621,11 +621,6 @@ extern int fc_solve_state_compare_indirect(const void * s1, const void * s2);
 extern int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);
 #endif
 
-/*
- * This function converts an entire card from its string representations
- * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
- * */
-extern fcs_card_t fc_solve_card_user2perl(const char * str);
 
 /*
  * Convert an entire card to its user representation.
@@ -671,6 +666,18 @@ extern int fc_solve_u2p_rank(const char * string);
  *
  * */
 extern int fc_solve_u2p_suit(const char * deck);
+
+/*
+ * This function converts an entire card from its string representations
+ * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
+ * */
+static GCC_INLINE fcs_card_t fc_solve_card_user2perl(const char * const str)
+{
+#ifndef FCS_WITHOUT_CARD_FLIPPING
+    fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
+#endif
+    return fcs_make_card(fc_solve_u2p_rank(str), fc_solve_u2p_suit(str));
+}
 
 #ifdef INDIRECT_STACK_STATES
 #define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer) \

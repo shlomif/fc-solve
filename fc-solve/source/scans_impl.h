@@ -699,6 +699,15 @@ static const fcs_bool_t free_states_should_delete(void * const key, void * const
 }
 #endif
 
+static GCC_INLINE void fc_solve_st_free_pq(
+    fc_solve_soft_thread_t * const soft_thread
+)
+{
+    fc_solve_PQueueFree(
+        &(BEFS_VAR(soft_thread, pqueue))
+    );
+}
+
 static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
 {
 #ifdef DEBUG
@@ -709,7 +718,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
 #else
     {
     /* First of all, let's make sure the soft_threads will no longer
-     * traverse to the freed states that are currently dead end.
+     * traverse to the freed states that are currently dead ends.
      * */
 
 
@@ -746,9 +755,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
                     }
                 }
 
-                fc_solve_PQueueFree(
-                    &(BEFS_VAR(soft_thread, pqueue))
-                );
+                fc_solve_st_free_pq(soft_thread);
 
                 BEFS_VAR(soft_thread, pqueue) = new_pq;
             }

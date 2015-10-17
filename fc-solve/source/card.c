@@ -133,19 +133,6 @@ static GCC_INLINE int fcs_u2p_flipped_status(const char * str)
 }
 #endif
 
-/*
- * This function converts an entire card from its string representations
- * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
- * */
-fcs_card_t fc_solve_card_user2perl(const char * str)
-{
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-    fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
-#endif
-    const int rank = fc_solve_u2p_rank(str);
-    const int suit = fc_solve_u2p_suit(str);
-    return fcs_make_card(rank, suit);
-}
 
 
 /*
