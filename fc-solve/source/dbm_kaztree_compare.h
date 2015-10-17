@@ -35,6 +35,7 @@ extern "C"
 {
 #endif
 
+#include "unused.h"
 #include "delta_states.h"
 
 /* TODO: make sure the key is '\0'-padded. */
@@ -62,7 +63,7 @@ static int compare_records(
 }
 #else
 static int compare_records(
-    const void * const void_a, const void * const void_b, void * const context
+    const void * const void_a, const void * const void_b, void * const context GCC_UNUSED
 )
 {
 #define GET_PARAM(p) (((const fcs_dbm_record_t *)(p))->key)

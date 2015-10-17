@@ -224,7 +224,7 @@ static GCC_INLINE void transaction(
 )
 {
     response_t response;
-    if (read (read_fd, &response, sizeof(response)) < sizeof(response))
+    if (read (read_fd, &response, sizeof(response)) < (ssize_t)(sizeof(response)))
     {
         return;
     }

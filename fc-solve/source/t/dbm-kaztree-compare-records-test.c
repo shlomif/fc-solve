@@ -35,14 +35,14 @@
 #endif
 
 #include "../dbm_kaztree_compare.h"
+#include "bool.h"
 
 static int main_tests(void)
 {
     {
-        int pos_idx;
-        int all_good = TRUE;
+        fcs_bool_t all_good = TRUE;
 
-        for (pos_idx = 1 ; pos_idx < sizeof( fcs_encoded_state_buffer_t ) ; pos_idx++)
+        for (size_t pos_idx = 1 ; pos_idx < sizeof( fcs_encoded_state_buffer_t ) ; pos_idx++)
         {
             fcs_dbm_record_t rec_a, rec_b;
 
@@ -59,13 +59,13 @@ static int main_tests(void)
 
             if (! (compare_records(&rec_a, &rec_b, NULL) > 0))
             {
-                diag("compare_records(rec_a, rec_b) returned a wrong value for position %d.\n", pos_idx);
+                diag("compare_records(rec_a, rec_b) returned a wrong value for position %zu.\n", pos_idx);
                 all_good = FALSE;
                 break;
             }
             if (! (compare_records(&rec_b, &rec_a, NULL) < 0))
             {
-                diag("compare_records(rec_b, rec_a) returned a wrong value for position %d.\n", pos_idx);
+                diag("compare_records(rec_b, rec_a) returned a wrong value for position %zu.\n", pos_idx);
                 all_good = FALSE;
                 break;
             }

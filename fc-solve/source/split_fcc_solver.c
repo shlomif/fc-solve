@@ -200,12 +200,11 @@ static GCC_INLINE void instance_init(
     {
         int curr_depth = 0;
         {
-            unsigned char c;
-            for (int i = 0 ;
+            for (size_t i = 0 ;
                 i < COUNT(fingerprint_which_irreversible_moves_bitmask->s) ;
                 i++)
             {
-                c = fingerprint_which_irreversible_moves_bitmask->s[i];
+                unsigned char c = fingerprint_which_irreversible_moves_bitmask->s[i];
                 while (c != 0)
                 {
                     curr_depth += (c & 0x3);
@@ -491,7 +490,7 @@ static GCC_INLINE void instance_check_key(
                     /* Calculate the new fingerprint to which the exit
                      * point belongs. */
                     fcs_which_moves_bitmask_t new_fingerprint = {{'\0'}};
-                    for (int i=0 ; i < COUNT(new_fingerprint.s) ; i++)
+                    for (size_t i=0 ; i < COUNT(new_fingerprint.s) ; i++)
                     {
                         new_fingerprint.s[i] = which_irreversible_moves_bitmask->s[i] + instance->fingerprint_which_irreversible_moves_bitmask.s[i];
                     }

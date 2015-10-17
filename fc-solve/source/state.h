@@ -574,14 +574,13 @@ typedef struct {
 
 extern fcs_card_t fc_solve_empty_card;
 #define DEFINE_fc_solve_empty_card() \
-    fcs_card_t fc_solve_empty_card = {0,0};
+    fcs_card_t fc_solve_empty_card = {0,0}
 
 #elif defined(COMPACT_STATES) || defined (INDIRECT_STACK_STATES)
 
 #define fc_solve_empty_card ((fcs_card_t)0)
 
-#define DEFINE_fc_solve_empty_card() \
-    ;
+#define DEFINE_fc_solve_empty_card()
 
 #endif
 

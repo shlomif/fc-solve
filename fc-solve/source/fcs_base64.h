@@ -45,7 +45,7 @@ static void base64_encode(
 
     *output_length = 4 * ((input_length + 2) / 3);
 
-    for (int i = 0, j = 0; i < input_length;) {
+    for (size_t i = 0, j = 0; i < input_length;) {
 
         const uint32_t octet_a = i < input_length ? data[i++] : 0;
         const uint32_t octet_b = i < input_length ? data[i++] : 0;
@@ -82,7 +82,7 @@ static int base64_decode(
     if (data[input_length - 1] == '=') (*output_length)--;
     if (data[input_length - 2] == '=') (*output_length)--;
 
-    for (int i = 0, j = 0; i < input_length;) {
+    for (size_t i = 0, j = 0; i < input_length;) {
 
 #define DECODE() ( data[i] == '=' ? 0 & i++ : decoding_table[(size_t)(unsigned char)(data[i++])] )
 

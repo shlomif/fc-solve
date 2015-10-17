@@ -1470,7 +1470,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
         *error_string = strdup("Not using the \"patsolve\" scan.");
         return 1;
     }
-    if ( (position < 0) || (position >= COUNT(pats_scan->pats_solve_params.x)))
+    if ( (position < 0) || (position >= (int)(COUNT(pats_scan->pats_solve_params.x))))
     {
         *error_string = strdup("Position out of range.");
         return 2;
@@ -1500,7 +1500,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
         *error_string = strdup("Not using the \"patsolve\" scan.");
         return 1;
     }
-    if ( (position < 0) || (position >= COUNT(pats_scan->pats_solve_params.y)))
+    if ( (position < 0) || (position >= (int)(COUNT(pats_scan->pats_solve_params.y))))
     {
         *error_string = strdup("Position out of range.");
         return 2;
@@ -1945,7 +1945,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    if ((my_index < 0) || (my_index >= COUNT(BEFS_VAR(user->soft_thread, weighting.befs_weights))))
+    if ((my_index < 0) || (my_index >= (int)(COUNT(BEFS_VAR(user->soft_thread, weighting.befs_weights)))))
     {
         return 1;
     }
