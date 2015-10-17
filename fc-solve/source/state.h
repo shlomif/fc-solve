@@ -626,11 +626,7 @@ extern int fc_solve_state_compare_indirect_with_context(const void * s1, const v
  * Convert an entire card to its user representation.
  *
  * */
-extern char * fc_solve_card_perl2user(
-    fcs_card_t card,
-    char * str,
-    fcs_bool_t t
-    );
+extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str, const fcs_bool_t t);
 
 /*
  * Converts a rank from its internal representation to a string.
@@ -641,13 +637,13 @@ extern char * fc_solve_card_perl2user(
  *      the card number is out of range or equal to zero
  * t - whether 10 should be printed as T or not.
  * */
-extern char * fc_solve_p2u_rank(
-    int rank_idx,
-    char * str,
-    fcs_bool_t * rank_is_null,
-    fcs_bool_t t
+extern void fc_solve_p2u_rank(
+    const int rank_idx,
+    char * const str,
+    fcs_bool_t * const rank_is_null,
+    const fcs_bool_t t
 #ifndef FCS_WITHOUT_CARD_FLIPPING
-    , fcs_bool_t flipped
+    , const fcs_bool_t flipped
 #endif
     );
 

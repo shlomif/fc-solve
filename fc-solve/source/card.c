@@ -165,7 +165,7 @@ static char card_map_3_T[14][4] = GEN_CARD_MAP("T");
  * t - whether 10 should be printed as T or not.
  * flipped - whether the card is face down
  * */
-char * fc_solve_p2u_rank(
+void fc_solve_p2u_rank(
     int rank_idx,
     char * str,
     fcs_bool_t * rank_is_null,
@@ -201,19 +201,18 @@ char * fc_solve_p2u_rank(
             *rank_is_null = TRUE;
         }
     }
-    return str;
 }
 
 /*
  * Converts a suit to its user representation.
  *
  * */
-static GCC_INLINE char * fc_solve_p2u_suit(
-        int suit,
-        char * str,
-        fcs_bool_t rank_is_null
+static GCC_INLINE void fc_solve_p2u_suit(
+        const int suit,
+        char * const str,
+        const fcs_bool_t rank_is_null
 #ifndef FCS_WITHOUT_CARD_FLIPPING
-        , fcs_bool_t flipped
+        , const fcs_bool_t flipped
 #endif
         )
 {
@@ -243,14 +242,13 @@ static GCC_INLINE char * fc_solve_p2u_suit(
         strncpy(str, "S", 2);
     else
         strncpy(str, " ", 2);
-    return str;
 }
 
 /*
  * Convert an entire card to its user representation.
  *
  * */
-char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
+void fc_solve_card_perl2user(const fcs_card_t card, char * const str, const fcs_bool_t t)
 {
 #ifdef CARD_DEBUG_PRES
     if (fcs_card_get_flipped(card))
@@ -292,6 +290,4 @@ char * fc_solve_card_perl2user(fcs_card_t card, char * str, fcs_bool_t t)
         strcat(str, ">");
     }
 #endif
-
-    return str;
 }

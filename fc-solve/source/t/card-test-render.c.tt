@@ -23,18 +23,12 @@ static int main_tests(void)
 %]
     {
         fcs_card_t mycard;
-        char * ret;
-
         mycard = fc_solve_empty_card;
 
         fcs_card_set_suit(mycard, [% suit.idx %]);
         fcs_card_set_rank(mycard, [% rank.idx %]);
 
-        ret = fc_solve_card_perl2user(mycard, buffer, [% t %]);
-        /* TEST */
-        [%- SET num_tests = num_tests + 1 -%]
-        ok (ret == buffer,
-           "Return value is the beginning of the buffer.");
+        fc_solve_card_perl2user(mycard, buffer, [% t %]);
         /* TEST */
         [%- SET num_tests = num_tests + 1 -%]
         ok (!strcmp(buffer, [% card_string %]),
@@ -44,11 +38,7 @@ static int main_tests(void)
     {
         fcs_card_t mycard = fcs_make_card([% rank.idx %], [% suit.idx %]);
 
-        char * ret = fc_solve_card_perl2user(mycard, buffer, [% t %]);
-        /* TEST */
-        [%- SET num_tests = num_tests + 1 -%]
-        ok (ret == buffer,
-           "fcs_make_card() - Return value is the beginning of the buffer.");
+        fc_solve_card_perl2user(mycard, buffer, [% t %]);
         /* TEST */
         [%- SET num_tests = num_tests + 1 -%]
         ok (!strcmp(buffer, [% card_string %]),

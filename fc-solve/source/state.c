@@ -320,16 +320,15 @@ char * fc_solve_state_as_string(
             str2_ptr = str2;
             for(b=0;b<min(freecells_num-a*4, 4);b++)
             {
-                str2_ptr += sprintf(str2_ptr, "%3s ",
-                    fc_solve_card_perl2user(
-                        fcs_freecell_card(
-                            *state,
-                            freecell_locs[a*4+b]
-                        ),
-                        freecell,
-                        display_10_as_t
-                    )
+                fc_solve_card_perl2user(
+                    fcs_freecell_card(
+                        *state,
+                        freecell_locs[a*4+b]
+                    ),
+                    freecell,
+                    display_10_as_t
                 );
+                str2_ptr += sprintf(str2_ptr, "%3s ", freecell);
                 strcpy(dashes_ptr, "--- ");
                 dashes_ptr = strchr(dashes_ptr, '\0');
             }
@@ -411,14 +410,15 @@ char * fc_solve_state_as_string(
                 }
                 else
                 {
+                    fc_solve_card_perl2user(
+                        fcs_col_get_card(col, card_idx),
+                        stack_card_str,
+                        display_10_as_t
+                    );
                     fc_solve_append_string_sprintf(
                         app_str,
                         "%3s ",
-                        fc_solve_card_perl2user(
-                            fcs_col_get_card(col, card_idx),
-                            stack_card_str,
-                            display_10_as_t
-                            )
+                        stack_card_str
                         );
                 }
             }
@@ -444,17 +444,18 @@ char * fc_solve_state_as_string(
 
         for(a=0;a<freecells_num;a++)
         {
+            fc_solve_card_perl2user(
+                fcs_freecell_card(
+                    *state,
+                    freecell_locs[a]
+                ),
+                freecell,
+                display_10_as_t
+            );
             fc_solve_append_string_sprintf(
                 app_str,
                 "%3s",
-                fc_solve_card_perl2user(
-                    fcs_freecell_card(
-                        *state,
-                        freecell_locs[a]
-                    ),
-                    freecell,
-                    display_10_as_t
-                )
+                freecell
             );
             if (a < freecells_num-1)
             {
