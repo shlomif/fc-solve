@@ -652,7 +652,7 @@ extern void fc_solve_p2u_rank(
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
-extern int fc_solve_u2p_rank(const char * string);
+extern const int fc_solve_u2p_rank(const char * string);
 
 /*
  * This function converts a string containing a suit letter (that is
@@ -661,7 +661,7 @@ extern int fc_solve_u2p_rank(const char * string);
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-extern int fc_solve_u2p_suit(const char * deck);
+extern const int fc_solve_u2p_suit(const char * deck);
 
 /*
  * This function converts an entire card from its string representations

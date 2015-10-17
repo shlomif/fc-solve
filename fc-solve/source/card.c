@@ -43,7 +43,7 @@ DEFINE_fc_solve_empty_card();
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
-int fc_solve_u2p_rank(const char * string)
+const int fc_solve_u2p_rank(const char * string)
 {
     while (1)
     {
@@ -96,7 +96,7 @@ int fc_solve_u2p_rank(const char * string)
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-int fc_solve_u2p_suit(const char * suit)
+const int fc_solve_u2p_suit(const char * suit)
 {
     while (TRUE)
     {
@@ -119,7 +119,7 @@ int fc_solve_u2p_suit(const char * suit)
 }
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
-static GCC_INLINE int fcs_u2p_flipped_status(const char * str)
+static GCC_INLINE const int fcs_u2p_flipped_status(const char * str)
 {
     while (*str)
     {
@@ -151,9 +151,9 @@ static GCC_INLINE int fcs_u2p_flipped_status(const char * str)
 
 #define GEN_CARD_MAP(t_card) { CARD_ZERO(), "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J", "Q", "K" }
 
-static char card_map_3_10[14][4] = GEN_CARD_MAP("10");
+static const char card_map_3_10[14][4] = GEN_CARD_MAP("10");
 
-static char card_map_3_T[14][4] = GEN_CARD_MAP("T");
+static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
 
 /*
  * Converts a rank from its internal representation to a string.
@@ -166,20 +166,16 @@ static char card_map_3_T[14][4] = GEN_CARD_MAP("T");
  * flipped - whether the card is face down
  * */
 void fc_solve_p2u_rank(
-    int rank_idx,
-    char * str,
-    fcs_bool_t * rank_is_null,
-    fcs_bool_t t
+    const int rank_idx,
+    char * const str,
+    fcs_bool_t * const rank_is_null,
+    const fcs_bool_t t
 #ifndef FCS_WITHOUT_CARD_FLIPPING
-    , fcs_bool_t flipped
+    , const fcs_bool_t flipped
 #endif
     )
 {
-    char (*card_map_3) [4] = card_map_3_10;
-    if (t)
-    {
-        card_map_3 = card_map_3_T;
-    }
+    const char (*card_map_3) [4] = (t ? card_map_3_T : card_map_3_10);
 #if defined(CARD_DEBUG_PRES) || defined(FCS_WITHOUT_CARD_FLIPPING)
 #else
     if (flipped)
