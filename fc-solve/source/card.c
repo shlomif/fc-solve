@@ -175,7 +175,6 @@ void fc_solve_p2u_rank(
 #endif
     )
 {
-    const char (*card_map_3) [4] = (t ? card_map_3_T : card_map_3_10);
 #if defined(CARD_DEBUG_PRES) || defined(FCS_WITHOUT_CARD_FLIPPING)
 #else
     if (flipped)
@@ -186,16 +185,9 @@ void fc_solve_p2u_rank(
     else
 #endif
     {
-        if ((rank_idx >= 0) && (rank_idx <= 13))
-        {
-            strcpy(str, card_map_3[rank_idx]);
-            *rank_is_null = (rank_idx == 0);
-        }
-        else
-        {
-            strncpy(str, card_map_3[0], strlen(card_map_3[0])+1);
-            *rank_is_null = TRUE;
-        }
+        const fcs_bool_t out_of_range = ((rank_idx < 1) || (rank_idx > 13));
+        strcpy(str, (t ? card_map_3_T : card_map_3_10)[out_of_range ? 0 : rank_idx]);
+        *rank_is_null = out_of_range;
     }
 }
 
