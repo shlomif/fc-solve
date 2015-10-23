@@ -19,7 +19,7 @@ static int main_tests(void)
     {
         fcs_card_t mycard;
 
-        mycard = fc_solve_card_user2perl([% card_string %]);
+        mycard = fc_solve_card_parse_str([% card_string %]);
         /* TEST */
         [%- SET num_tests = num_tests + 1 -%]
         ok (fcs_card_suit(mycard) == [% suit.idx %],

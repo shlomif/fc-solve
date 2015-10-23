@@ -667,7 +667,7 @@ extern const int fc_solve_u2p_suit(const char * deck);
  * This function converts an entire card from its string representations
  * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
  * */
-static GCC_INLINE fcs_card_t fc_solve_card_user2perl(const char * const str)
+static GCC_INLINE fcs_card_t fc_solve_card_parse_str(const char * const str)
 {
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
@@ -830,7 +830,7 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                     (
                         ((*str == '*') || (*str == '-'))
                         ? fc_solve_empty_card
-                        : fc_solve_card_user2perl(str)
+                        : fc_solve_card_parse_str(str)
                     )
                 );
             }
@@ -940,7 +940,7 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             {
                 break;
             }
-            fcs_col_push_card(col, fc_solve_card_user2perl(str));
+            fcs_col_push_card(col, fc_solve_card_parse_str(str));
         }
     }
 
