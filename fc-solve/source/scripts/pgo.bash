@@ -48,11 +48,9 @@ if test "$mode" = "total" ; then
 
     m_clean && \
     run_self "gen" && \
-    rm -f *.gcda && \
     run_timing 1 32000 4000 $theme && \
     m_clean && \
-    run_self "use" && \
-    rm -f *.gcda *.o
+    run_self "use"
 
     exit 0
 
