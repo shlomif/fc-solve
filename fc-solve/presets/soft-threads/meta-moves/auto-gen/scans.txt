@@ -30,3 +30,7 @@
 33	--method a-star -to 0123467589 -asw 0,0,0,0,0,100 -sp r:tf
 34	--method a-star -to 01234567 -asw 1
 35	--method random-dfs -dto2 7,01[23456]=asw(1,2)
+36	--method random-dfs -seed 3 -to 0[1]=asw(1)[23467]=asw(1)
+37	--method random-dfs -to [01]=asw(1)[23456789]=asw(1) -seed 268
+38	--method random-dfs -to 0123467 -dto 16,0[123467]=asw(1,0,0,0,0,0)
+39	--method random-dfs -to 01234567 -dto 13,[0187465]=asw(1) -dto 26,[0134587]=asw(1)
