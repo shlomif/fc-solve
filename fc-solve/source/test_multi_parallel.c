@@ -249,7 +249,7 @@ static int read_int(FILE * f, int * dest)
 
 int main(int argc, char * argv[])
 {
-    pack_item_t user;
+    pack_item_t user = {.display_context = INITIAL_DISPLAY_CONTEXT};
     /* char buffer[2048]; */
     int ret;
     int board_num;
@@ -294,8 +294,6 @@ int main(int argc, char * argv[])
         exit(-1);
 
     }
-
-    init_debug_context(&user.display_context);
 
     for (;arg < argc; arg++)
     {

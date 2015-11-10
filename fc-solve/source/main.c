@@ -514,7 +514,7 @@ static int cmd_line_callback(
     }
     else if (IS_ARG("--reset"))
     {
-        init_debug_context(dc);
+        *dc = INITIAL_DISPLAY_CONTEXT;
         freecell_solver_user_set_iter_handler_long(
             instance,
             NULL,
@@ -621,9 +621,7 @@ int main(int argc, char * argv[])
     char user_state[USER_STATE_SIZE];
     int ret;
 
-    fc_solve_display_information_context_t debug_context;
-
-    init_debug_context(&debug_context);
+    fc_solve_display_information_context_t debug_context = INITIAL_DISPLAY_CONTEXT;
 
     dc = &debug_context;
 

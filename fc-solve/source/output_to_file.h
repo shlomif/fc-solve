@@ -60,23 +60,19 @@ struct fc_solve_display_information_context_struct
 
 typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
 
-static void init_debug_context(
-    fc_solve_display_information_context_t * const dc
-    )
-{
-    *dc = (fc_solve_display_information_context_t) {
-        .debug_iter_state_output = FALSE,
-        .parseable_output = FALSE,
-        .canonized_order_output = FALSE,
-        .display_10_as_t = FALSE,
-        .display_parent_iter_num = FALSE,
-        .display_moves = FALSE,
-        .display_states = TRUE,
-        .standard_notation = FC_SOLVE__STANDARD_NOTATION_NO,
-        .output_filename = NULL,
-        .show_exceeded_limits = FALSE
-    };
-}
+static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT =
+(fc_solve_display_information_context_t) {
+    .debug_iter_state_output = FALSE,
+    .parseable_output = FALSE,
+    .canonized_order_output = FALSE,
+    .display_10_as_t = FALSE,
+    .display_parent_iter_num = FALSE,
+    .display_moves = FALSE,
+    .display_states = TRUE,
+    .standard_notation = FC_SOLVE__STANDARD_NOTATION_NO,
+    .output_filename = NULL,
+    .show_exceeded_limits = FALSE
+};
 
 static GCC_INLINE void fc_solve_output_result_to_file(
     FILE * const output_fh,
