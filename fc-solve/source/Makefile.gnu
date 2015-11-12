@@ -144,7 +144,8 @@ ifneq ($(PROFILE),0)
 		END_LFLAGS := -lm -lprofiler
 	else
 		END_OFLAGS := -pg
-		END_LFLAGS := -pg -lc_p -lm_p -static-libgcc
+		# END_LFLAGS := -pg -lc_p -lm_p -static-libgcc
+		END_LFLAGS := -pg -lm
 	endif
 endif
 
