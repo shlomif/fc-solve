@@ -454,20 +454,18 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
     fcs_state_keyval_pair_t * const initial_non_canonized_state
 )
 {
-    fcs_state_keyval_pair_t * state_copy_ptr;
-
     instance->initial_non_canonized_state = initial_non_canonized_state;
     /* Allocate the first state and initialize it to init_state */
-    state_copy_ptr =
+    fcs_state_keyval_pair_t * const state_copy_ptr =
         (fcs_state_keyval_pair_t *)
         fcs_compact_alloc_ptr(
             &(INST_HT0(instance).allocator),
             sizeof(*state_copy_ptr)
         );
 
+    fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr);
     {
-        fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr),
-                       pass_init = FCS_STATE_keyval_pair_to_kv(init_state);
+        fcs_kv_state_t pass_init = FCS_STATE_keyval_pair_to_kv(init_state);
 
         fcs_duplicate_kv_state( &(pass_copy), &(pass_init) );
     }
@@ -620,10 +618,6 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
 
     {
         fcs_kv_state_t no_use;
-        fcs_kv_state_t pass;
-
-        pass.key = &(state_copy_ptr->s);
-        pass.val = &(state_copy_ptr->info);
 
         fc_solve_check_and_add_state(
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -631,7 +625,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
 #else
             instance->hard_threads,
 #endif
-            &pass,
+            &pass_copy,
             &no_use
         );
 
