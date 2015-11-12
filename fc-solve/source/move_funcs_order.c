@@ -152,7 +152,7 @@ int fc_solve_apply_tests_order(
                     fc_solve_set_weights(
                         aft_open_paren,
                         close_paren,
-                        tests_order->groups[tests_order->num_groups-1].weighting.befs_weights
+                        tests_order->groups[tests_order->num_groups-1].weighting.befs_weights.weights
                     );
                 }
                 else

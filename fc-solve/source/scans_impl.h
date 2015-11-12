@@ -79,7 +79,7 @@ static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
 
 #define BEFS_MAX_DEPTH 20000
 
-extern const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS];
+extern const fcs_default_weights_t fc_solve_default_befs_weights;
 
 #ifdef FCS_FREECELL_ONLY
 #define is_filled_by_any_card() TRUE
@@ -91,8 +91,8 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
     fc_solve_state_weighting_t * const weighting
 )
 {
-    double * const befs_weights = weighting->befs_weights;
-    double normalized_befs_weights[COUNT(weighting->befs_weights)];
+    double * const befs_weights = weighting->befs_weights.weights;
+    double normalized_befs_weights[COUNT(weighting->befs_weights.weights)];
 
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
     double sum = 0;
@@ -100,7 +100,7 @@ static GCC_INLINE void fc_solve_initialize_befs_rater(
     {
         if (befs_weights[i] < 0)
         {
-            befs_weights[i] = fc_solve_default_befs_weights[i];
+            befs_weights[i] = fc_solve_default_befs_weights.weights[i];
         }
         sum += befs_weights[i];
     }

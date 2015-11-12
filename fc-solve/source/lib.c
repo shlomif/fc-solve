@@ -1945,7 +1945,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    if ((my_index < 0) || (my_index >= (int)(COUNT(BEFS_VAR(user->soft_thread, weighting.befs_weights)))))
+    if ((my_index < 0) || (my_index >= (int)(COUNT(BEFS_VAR(user->soft_thread, weighting).befs_weights.weights))))
     {
         return 1;
     }
@@ -1954,7 +1954,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
         return 2;
     }
 
-    BEFS_VAR(user->soft_thread, weighting.befs_weights)[my_index] = weight;
+    BEFS_VAR(user->soft_thread, weighting).befs_weights.weights[my_index] = weight;
 
     return 0;
 
@@ -1969,7 +1969,7 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    return BEFS_VAR(user->soft_thread, weighting.befs_weights)[my_index];
+    return BEFS_VAR(user->soft_thread, weighting).befs_weights.weights[my_index];
 }
 
 #endif

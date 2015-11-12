@@ -80,7 +80,7 @@
     a guideline for the user.
 */
 
-const double fc_solve_default_befs_weights[FCS_NUM_BEFS_WEIGHTS] = {0.5, 0, 0.3, 0, 0.2, 0};
+const fcs_default_weights_t fc_solve_default_befs_weights = (fcs_default_weights_t) { .weights = { 0.5, 0, 0.3, 0, 0.2, 0 } };
 
 static GCC_INLINE void soft_thread_clean_soft_dfs(
     fc_solve_soft_thread_t * const soft_thread
@@ -273,63 +273,76 @@ void fc_solve_init_soft_thread(
     fc_solve_soft_thread_t * const soft_thread
 )
 {
-    soft_thread->hard_thread = hard_thread;
-
-    soft_thread->id = (HT_INSTANCE(hard_thread)->next_soft_thread_id)++;
-
-    DFS_VAR(soft_thread, dfs_max_depth) = 0;
-
-    soft_thread->by_depth_tests_order.num = 1;
-    soft_thread->by_depth_tests_order.by_depth_tests =
-        SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests);
-
-    soft_thread->by_depth_tests_order.by_depth_tests[0].max_depth = INT_MAX;
-    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num_groups = 0;
-    soft_thread->by_depth_tests_order.by_depth_tests[0]
-        .tests_order.groups = NULL;
-
-    /* Initialize all the Soft-DFS stacks to NULL */
-    DFS_VAR(soft_thread, soft_dfs_info) = NULL;
-    DFS_VAR(soft_thread, depth) = 0;
-
-    DFS_VAR(soft_thread, tests_by_depth_array).num_units = 0;
-    DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units = NULL;
-    DFS_VAR(soft_thread, rand_seed) = 24;
-
-    BEFS_M_VAR(soft_thread, tests_list) = NULL;
-
-    /* The default solving method */
-    soft_thread->method = FCS_METHOD_SOFT_DFS;
-    soft_thread->super_method_type = FCS_SUPER_METHOD_DFS;
-
-    BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
-
-
-    memcpy(
-        BEFS_VAR(soft_thread, weighting.befs_weights),
-        fc_solve_default_befs_weights,
-        sizeof(fc_solve_default_befs_weights)
-    );
-
-    BEFS_VAR(soft_thread, pqueue).Elements = NULL;
-
-    BRFS_VAR(soft_thread, bfs_queue) =
-        BRFS_VAR(soft_thread, bfs_queue_last_item) =
-        NULL;
-
-    soft_thread->num_checked_states_step = NUM_CHECKED_STATES_STEP;
+    *soft_thread = (fc_solve_soft_thread_t)
+    {
+        .hard_thread = hard_thread,
+        .id = (HT_INSTANCE(hard_thread)->next_soft_thread_id)++,
+        .method_specific =
+        {
+            .soft_dfs =
+            {
+                .dfs_max_depth = 0,
+                .soft_dfs_info = NULL,
+                .depth = 0,
+                .tests_by_depth_array =
+                {
+                    .num_units = 0,
+                    .by_depth_units = NULL,
+                },
+                .rand_seed = 24,
+            },
+            .befs =
+            {
+                .tests_list = NULL,
+                .befs_positions_by_rank = NULL,
+                .meth =
+                {
+                    .befs =
+                    {
+                        .weighting =
+                        {
+                            .befs_weights = fc_solve_default_befs_weights,
+                        },
+                        .pqueue =
+                        {
+                            .Elements = NULL,
+                        },
+                    },
+                    .brfs =
+                    {
+                        .bfs_queue_last_item = NULL,
+                        .bfs_queue = NULL,
+                    },
+                },
+            },
+        },
+        .by_depth_tests_order =
+        {
+            .num = 1,
+            .by_depth_tests = SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
+        },
+        .method = FCS_METHOD_SOFT_DFS,
+        .super_method_type = FCS_SUPER_METHOD_DFS,
+        .num_checked_states_step = NUM_CHECKED_STATES_STEP,
+        .name = "",
+        .enable_pruning = FALSE,
+#ifndef FCS_DISABLE_PATSOLVE
+        .pats_scan = NULL,
+#endif
+    };
+    soft_thread->by_depth_tests_order.by_depth_tests[0] =
+        (typeof(soft_thread->by_depth_tests_order.by_depth_tests[0]))
+    {
+        .max_depth = INT_MAX,
+        .tests_order = {
+            .num_groups = 0,
+            .groups = NULL,
+        },
+    };
 
     soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order = tests_order_dup(&(fcs_st_instance(soft_thread)->instance_tests_order));
 
     fc_solve_reset_soft_thread(soft_thread);
-
-    soft_thread->name[0] = '\0';
-
-    soft_thread->enable_pruning = FALSE;
-
-#ifndef FCS_DISABLE_PATSOLVE
-    soft_thread->pats_scan = NULL;
-#endif
 }
 
 void fc_solve_instance__init_hard_thread(

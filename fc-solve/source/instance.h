@@ -190,6 +190,9 @@ extern guint fc_solve_hash_function(gconstpointer key);
 
 #define TESTS_ORDER_GROW_BY 16
 
+typedef struct {
+    double weights[FCS_NUM_BEFS_WEIGHTS];
+} fcs_default_weights_t;
 typedef struct
 {
     fcs_bool_t should_go_over_stacks;
@@ -204,7 +207,7 @@ typedef struct
      * The BeFS weights of the different BeFS tests. Those
      * weights determine the commulative priority of the state.
      * */
-    double befs_weights[FCS_NUM_BEFS_WEIGHTS];
+    fcs_default_weights_t befs_weights;
 } fc_solve_state_weighting_t;
 
 typedef enum
