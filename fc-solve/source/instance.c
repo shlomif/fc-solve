@@ -334,13 +334,8 @@ void fc_solve_init_soft_thread(
         (typeof(soft_thread->by_depth_tests_order.by_depth_tests[0]))
     {
         .max_depth = INT_MAX,
-        .tests_order = {
-            .num_groups = 0,
-            .groups = NULL,
-        },
+        .tests_order = tests_order_dup(&(fcs_st_instance(soft_thread)->instance_tests_order)),
     };
-
-    soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order = tests_order_dup(&(fcs_st_instance(soft_thread)->instance_tests_order));
 
     fc_solve_reset_soft_thread(soft_thread);
 }
