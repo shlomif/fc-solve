@@ -332,10 +332,16 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
     {
         fcs_lru_cache_t * cache = &(instance->rcs_states_cache);
 
+        *cache = (typeof(*cache))
+        {
+            .lowest_pri = NULL,
+            .highest_pri = NULL,
+            .recycle_bin = NULL,
+            .count_elements_in_cache = 0,
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
-        cache->states_values_to_keys_map = ((Pvoid_t) NULL);
+            .states_values_to_keys_map = ((Pvoid_t) NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
-        cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL, instance->meta_alloc);
+            .kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL, instance->meta_alloc);
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
@@ -344,10 +350,6 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
             &(cache->states_values_to_keys_allocator),
             instance->meta_alloc
         );
-        cache->lowest_pri = NULL;
-        cache->highest_pri = NULL;
-        cache->recycle_bin = NULL;
-        cache->count_elements_in_cache = 0;
     }
 
 #endif
@@ -464,12 +466,8 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
         );
 
     {
-        fcs_kv_state_t pass_copy, pass_init;
-
-        pass_copy.key = &(state_copy_ptr->s);
-        pass_copy.val = &(state_copy_ptr->info);
-        pass_init.key = &(init_state->s);
-        pass_init.val = &(init_state->info);
+        fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr),
+                       pass_init = FCS_STATE_keyval_pair_to_kv(init_state);
 
         fcs_duplicate_kv_state( &(pass_copy), &(pass_init) );
     }
