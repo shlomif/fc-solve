@@ -339,7 +339,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 }
 
 #define CALC_POSITIONS_BY_RANK() \
-    const char * const positions_by_rank = \
+    const fcs_pos_by_rank_t * const positions_by_rank = \
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
             ptr_state_key, \
@@ -377,10 +377,10 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
     const int suit_positions_by_rank_step = (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card) \
-            const char * pos_idx_to_check = &positions_by_rank[ \
+            const fcs_pos_by_rank_t * pos_idx_to_check = &positions_by_rank[ \
                 (FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card))) \
             ]; \
-            const char * const last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH; \
+            const fcs_pos_by_rank_t * const last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH; \
                  \
             for ( pos_idx_to_check += FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card) \
                 ; \
@@ -437,12 +437,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
         {
             FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
             {
-                const int ds = pos_idx_to_check[0];
-                if (ds == -1)
+                const typeof(*pos_idx_to_check) dest = (*pos_idx_to_check);
+                if (dest.col == -1)
                 {
                     continue;
                 }
-                const int dc = pos_idx_to_check[1];
+                const int ds = dest.col;
+                const int dc = dest.height;
 
                 const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
@@ -798,11 +799,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
-                const int ds = pos_idx_to_check[0];
+                const typeof(*pos_idx_to_check) dest = (*pos_idx_to_check);
+                const int ds = dest.col;
 
                 if ((ds >= 0) && (ds != stack_idx))
                 {
-                const int dc = pos_idx_to_check[1];
+                const int dc = dest.height;
                 const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 const int dest_num_cards = fcs_col_len(dest_col) - dc - 1;
 
@@ -1194,12 +1196,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
-                const int ds = pos_idx_to_check[0];
+                const typeof(*pos_idx_to_check) dest = (*pos_idx_to_check);
+                const int ds = dest.col;
                 if ((ds == -1) || (ds == stack_idx))
                 {
                     continue;
                 }
-                const int dc = pos_idx_to_check[1];
+                const int dc = dest.height;
 
                 fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 int dest_cards_num = fcs_col_len(dest_col);

@@ -117,11 +117,8 @@ static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent
     SIMPS_define_accessors(); \
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks
 
-typedef struct {
-    char col, height;
-} pos_by_rank_t;
 
-static char * get_the_positions_by_rank_data__ss_generator(
+static fcs_pos_by_rank_t * get_the_positions_by_rank_data__ss_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const the_state
 )
@@ -134,7 +131,7 @@ static char * get_the_positions_by_rank_data__ss_generator(
 #define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
 #define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
 
-    pos_by_rank_t * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
+    fcs_pos_by_rank_t * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
 
     memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
     for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
@@ -148,17 +145,17 @@ static char * get_the_positions_by_rank_data__ss_generator(
             const int suit = fcs_card_suit(card);
             const int rank = fcs_card_rank(card);
 
-            const pos_by_rank_t pos = {.col = ds, .height = dc};
+            const fcs_pos_by_rank_t pos = {.col = ds, .height = dc};
             positions_by_rank[FCS_POS_IDX(rank, suit)] = pos;
         }
     }
 
-    return (char *)positions_by_rank;
+    return positions_by_rank;
 }
 
 #define CALC_POSITIONS_BY_RANK() \
-    const pos_by_rank_t * const positions_by_rank = \
-        (const pos_by_rank_t * const)fc_solve_get_the_positions_by_rank_data( \
+    const fcs_pos_by_rank_t * const positions_by_rank = \
+        fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
             ptr_state_key, \
             get_the_positions_by_rank_data__ss_generator \
@@ -244,7 +241,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 #define LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card) \
     if (fcs_card_rank(card) < 13) \
     { \
-        const pos_by_rank_t pos = positions_by_rank[FCS_POS_IDX(fcs_card_rank(card)+1, fcs_card_suit(card))]; \
+        const fcs_pos_by_rank_t pos = positions_by_rank[FCS_POS_IDX(fcs_card_rank(card)+1, fcs_card_suit(card))]; \
         const int ds = pos.col;  \
         \
         if (ds != stack_idx) \
@@ -1013,7 +1010,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
     return;
 }
 
-typedef pos_by_rank_t ds_dc_t;
+typedef fcs_pos_by_rank_t ds_dc_t;
 
 static GCC_INLINE void sort_ds_dcs(
     ds_dc_t * const ds_dcs,
@@ -1093,7 +1090,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         int len = 0;
         for (int parent_suit = 0; parent_suit < 4 ; parent_suit++)
         {
-            const pos_by_rank_t pos = positions_by_rank[FCS_POS_IDX(fcs_card_rank(card)+1, parent_suit)];
+            const fcs_pos_by_rank_t pos = positions_by_rank[FCS_POS_IDX(fcs_card_rank(card)+1, parent_suit)];
 
             if ((pos.col < 0) || (pos.col == stack_idx))
             {

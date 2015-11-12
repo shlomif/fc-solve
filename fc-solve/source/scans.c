@@ -913,13 +913,13 @@ my_return_label:
 
 
 static GCC_INLINE void assign_dest_stack_and_col_ptr(
-    char * const positions_by_rank,
+    fcs_pos_by_rank_t * const positions_by_rank,
     const char dest_stack,
-    const char dest_col,
+    const char dest_h,
     const fcs_card_t dest_card
 )
 {
-    char * ptr = &positions_by_rank[
+    fcs_pos_by_rank_t * ptr = &positions_by_rank[
         (FCS_POS_BY_RANK_WIDTH *
          (fcs_card_rank(dest_card)-1)
         )
@@ -928,16 +928,15 @@ static GCC_INLINE void assign_dest_stack_and_col_ptr(
         ];
 
 #if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
-    for(;(*ptr) != -1;ptr += (4 << 1))
+    for(;ptr->col != -1;ptr += 4)
     {
     }
 #endif
 
-    *(ptr++) = dest_stack;
-    *(ptr) = dest_col;
+    *ptr = (typeof(*ptr)){.col = dest_stack, .height = dest_h};
 }
 
-char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
+fcs_pos_by_rank_t * fc_solve_get_the_positions_by_rank_data__freecell_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key
 )
@@ -967,7 +966,7 @@ char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
 #define FCS_POS_BY_RANK_LEN ( NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH )
 #define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
 
-    char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
+    fcs_pos_by_rank_t * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
 
     memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 

@@ -49,12 +49,13 @@ extern "C" {
  * */
 #define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
 
-extern char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
+extern fcs_pos_by_rank_t * fc_solve_get_the_positions_by_rank_data__freecell_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key
 );
 
-static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
+
+static GCC_INLINE fcs_pos_by_rank_t * * fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t * const soft_thread
 )
 {
@@ -74,6 +75,7 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
     }
 }
 
+
 /*
  * fc_solve_get_the_positions_by_rank_data() :
  *
@@ -81,16 +83,16 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
  * about the currently-evaluated state.
  *
  */
-static GCC_INLINE const char * const fc_solve_get_the_positions_by_rank_data(
+static GCC_INLINE const fcs_pos_by_rank_t * const fc_solve_get_the_positions_by_rank_data(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key,
-    char * (*generator)(
+    fcs_pos_by_rank_t * (*generator)(
         fc_solve_soft_thread_t * const soft_thread,
         const fcs_state_t * const ptr_state_key
     )
 )
 {
-    char * * const positions_by_rank_location =
+    fcs_pos_by_rank_t * * const positions_by_rank_location =
         fc_solve_calc_positions_by_rank_location(soft_thread);
 
     if (unlikely(! *positions_by_rank_location))
