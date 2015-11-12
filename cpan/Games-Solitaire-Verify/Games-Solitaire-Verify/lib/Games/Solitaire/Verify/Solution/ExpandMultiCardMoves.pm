@@ -13,7 +13,7 @@ moves.
 
 our $VERSION = '0.1400';
 
-use parent 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Solution::Base';
 
 # TODO : Merge with lib/Games/Solitaire/Verify/Solution.pm
 
@@ -27,14 +27,7 @@ use Games::Solitaire::Verify::State;
 use List::Util qw( min );
 
 __PACKAGE__->mk_acc_ref([qw(
-    _input_fh
-    _line_num
     _move_line
-    _variant
-    _variant_params
-    _state
-    _move
-    _reached_end
     _output_fh
     )]);
 
@@ -101,9 +94,9 @@ sub _init
             )
         );
     }
-    $self->_input_fh($args->{input_fh});
+    $self->_i($args->{input_fh});
     $self->_state(undef);
-    $self->_line_num(0);
+    $self->_ln(0);
     $self->_reached_end(0);
     $self->_output_fh($args->{output_fh});
 
@@ -123,7 +116,7 @@ sub _out_line
 {
     my ($self, $line) = @_;
 
-    return $self->_out("$line\n");
+    return $self->_out($line);
 }
 
 sub _calc_variant_args
@@ -171,9 +164,9 @@ sub _read_state
 {
     my $self = shift;
 
-    my $line = $self->_get_line();
+    my $line = $self->_l();
 
-    if ($line ne "")
+    if ($line ne "\n")
     {
         die "Non empty line before state";
     }
@@ -182,22 +175,22 @@ sub _read_state
 
     my $str = "";
 
-    while (($line = $self->_get_line()) && ($line ne ""))
+    while (($line = $self->_l()) && ($line ne "\n"))
     {
-        $str .= $line . "\n";
+        $str .= $line;
     }
 
     $self->_assign_read_new_state($str);
 
     $self->_out($str);
 
-    $self->_out_line("");
-    while (defined($line = $self->_get_line()) && ($line eq ""))
+    $self->_out_line("\n");
+    while (defined($line = $self->_l()) && ($line eq "\n"))
     {
         $self->_out_line($line);
     }
 
-    if ($line !~ m{\A={3,}\z})
+    if ($line !~ m{\A={3,}\n\z})
     {
         die "No ======== separator";
     }
@@ -210,29 +203,31 @@ sub _read_move
 {
     my $self = shift;
 
-    my $line = $self->_get_line();
+    my $line = $self->_l();
 
-    if ($line ne "")
+    if ($line ne "\n")
     {
         die "No empty line before move";
     }
 
     $self->_out_line($line);
 
-    $line = $self->_get_line();
+    $line = $self->_l();
 
-    if ($line eq "This game is solveable.")
+    if ($line eq "This game is solveable.\n")
     {
         $self->_reached_end(1);
         $self->_out_line($line);
 
-        while (defined($line = $self->_get_line()))
+        while (defined($line = $self->_l()))
         {
             $self->_out_line($line);
         }
 
         return "END";
     }
+
+    chomp($line);
 
     $self->_move_line($line);
 
@@ -356,7 +351,7 @@ sub _apply_move
             $output_state_promise->();
 
 
-            $self->_out_line($move_line);
+            $self->_out_line($move_line."\n");
 
             if (my $verdict = $self->_state()->verify_and_perform_move(
                     Games::Solitaire::Verify::Move->new(
@@ -463,7 +458,7 @@ sub _apply_move
     }
     else
     {
-        $self->_out_line( $self->_move_line );
+        $self->_out_line( $self->_move_line . "\n" );
         if (my $verdict = $self->_state()->verify_and_perform_move($self->_move()))
         {
             Games::Solitaire::Verify::Exception::VerifyMove->throw(
@@ -474,24 +469,6 @@ sub _apply_move
     }
 
     return;
-}
-
-sub _get_line
-{
-    my $self = shift;
-
-    $self->_line_num($self->_line_num()+1);
-
-    my $ret = readline($self->_input_fh());
-
-    if (!defined($ret))
-    {
-        return;
-    }
-
-    chomp($ret);
-
-    return $ret;
 }
 
 =head2 $solution->verify()
@@ -506,9 +483,9 @@ sub verify
 
     eval {
 
-        my $line = $self->_get_line();
+        my $line = $self->_l();
 
-        if ($line !~ m{\A(-=)+-\z})
+        if ($line !~ m{\A(-=)+-\n\z})
         {
             die "Incorrect start";
         }
@@ -531,7 +508,7 @@ sub verify
     elsif ($err =
         Exception::Class->caught('Games::Solitaire::Verify::Exception::VerifyMove'))
     {
-        return { error => $err, line_num => $self->_line_num(), };
+        return { error => $err, line_num => $self->_ln(), };
     }
     else
     {
