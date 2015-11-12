@@ -707,7 +707,7 @@ static GCC_INLINE void fc_solve_release_tests_list(
             free (lists);
         }
     }
-    free(arr->by_depth_units);
+    free (arr->by_depth_units);
     arr->by_depth_units = NULL;
 }
 
@@ -750,12 +750,12 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
         instance->is_optimization_st = FALSE;
     }
 #else
-    free(instance->hard_threads);
+    free (instance->hard_threads);
 
     if (instance->optimization_thread)
     {
         free_instance_hard_thread_callback(instance->optimization_thread);
-        free(instance->optimization_thread);
+        free (instance->optimization_thread);
     }
 #endif
     fc_solve_free_tests_order( &(instance->instance_tests_order) );
@@ -951,13 +951,18 @@ static GCC_INLINE int fc_solve_optimize_solution(
             fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
         }
 
-        soft_thread->by_depth_tests_order.num = 1;
-        soft_thread->by_depth_tests_order.by_depth_tests =
+        soft_thread->by_depth_tests_order = (typeof(soft_thread->by_depth_tests_order))
+        {
+            .num = 1,
+            .by_depth_tests =
             SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests);
-
-        soft_thread->by_depth_tests_order.by_depth_tests[0].max_depth = INT_MAX;
-        soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order =
-            tests_order_dup(&(instance->opt_tests_order));
+        };
+        soft_thread->by_depth_tests_order.by_depth_tests[0] =
+            (typeof( soft_thread->by_depth_tests_order.by_depth_tests[0] ))
+            {
+                .max_depth = INT_MAX,
+                .tests_order = tests_order_dup(&(instance->opt_tests_order)),
+            };
     }
 
     soft_thread->method = FCS_METHOD_OPTIMIZE;
@@ -1053,9 +1058,11 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             fcs_tests_list_of_lists * const tests_list_of_lists =
                 &(arr_ptr->by_depth_units[depth_idx].tests);
 
-            tests_list_of_lists->num_lists = 0;
-            tests_list_of_lists->lists =
-                SMALLOC( tests_list_of_lists->lists, tests_order_num );
+            *tests_list_of_lists = (typeof(*tests_list_of_lists))
+            {
+                .num_lists = 0,
+                .lists = SMALLOC( tests_list_of_lists->lists, tests_order_num ),
+            };
 
             for (int group_idx = 0 ; group_idx < tests_order_num ; group_idx++)
             {
@@ -1071,15 +1078,20 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                     &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
                     ;
 
-                tests_list_struct_ptr->tests = tests_list;
-                tests_list_struct_ptr->num_tests = num;
+                const int shuffling_type =
+                    (
+                        master_to_randomize
+                        ? tests_order_groups[group_idx].shuffling_type
+                        : FCS_NO_SHUFFLING
+                    );
+                *tests_list_struct_ptr = (typeof(*tests_list_struct_ptr))
+                {
+                    .tests = tests_list,
+                    .num_tests = num,
+                    .shuffling_type = shuffling_type,
+                };
 
-                tests_list_struct_ptr->shuffling_type =
-                    master_to_randomize
-                    ? tests_order_groups[group_idx].shuffling_type
-                    : FCS_NO_SHUFFLING;
-
-                if (tests_list_struct_ptr->shuffling_type == FCS_WEIGHTING)
+                if (shuffling_type == FCS_WEIGHTING)
                 {
                     tests_list_struct_ptr->weighting =
                         tests_order_groups[group_idx].weighting;
