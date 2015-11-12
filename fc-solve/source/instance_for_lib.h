@@ -114,9 +114,12 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
 
             .opt_tests_order = {.num_groups = 0, .groups = NULL, },
 
-#ifndef FCS_SINGLE_HARD_THREAD
+#ifdef FCS_SINGLE_HARD_THREAD
+            .is_optimization_st = FALSE,
+#else
             .num_hard_threads = 0,
             .hard_threads = NULL,
+            .optimization_thread = NULL,
 #endif
             .next_soft_thread_id = 0,
             .debug_iter_output_func = NULL,
@@ -155,10 +158,8 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
     fc_solve_instance__init_hard_thread(
         instance
     );
-    instance->is_optimization_st = FALSE;
 #else
     fc_solve_new_hard_thread(instance);
-    instance->optimization_thread = NULL;
 #endif
 }
 
