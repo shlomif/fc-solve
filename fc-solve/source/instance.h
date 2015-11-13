@@ -126,7 +126,6 @@ typedef struct {
 
 #define FCS_SS_POS_BY_RANK_WIDTH (13+1)
 #define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
-#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
 
 typedef struct {
     fcs_pos_by_rank_t p[FCS_POS_BY_RANK_LEN];

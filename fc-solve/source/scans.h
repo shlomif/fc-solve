@@ -70,17 +70,17 @@ static GCC_INLINE fcs_pos_by_rank_t * fc_solve_calc_positions_by_rank_location(
 }
 
 
-static GCC_INLINE fcs_pos_by_rank_t * fc_solve__calc_positions_by_rank_data(
+static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const the_state,
-    fcs_pos_by_rank_t * const positions_by_rank
+    fcs_positions_by_rank_map_t * const positions_by_rank
 )
 {
     fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
     SET_GAME_PARAMS();
 
 #define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
-    memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
+    memset(positions_by_rank, -1, sizeof(*positions_by_rank));
     for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
     {
         const fcs_const_cards_column_t dest_col = fcs_state_get_col(*the_state, ds);
@@ -93,11 +93,9 @@ static GCC_INLINE fcs_pos_by_rank_t * fc_solve__calc_positions_by_rank_data(
             const int rank = fcs_card_rank(card);
 
             const fcs_pos_by_rank_t pos = {.col = ds, .height = dc};
-            positions_by_rank[FCS_POS_IDX(rank, suit)] = pos;
+            positions_by_rank->p[FCS_POS_IDX(rank, suit)] = pos;
         }
     }
-
-    return positions_by_rank;
 }
 
 /*
