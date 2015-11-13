@@ -346,7 +346,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             fc_solve_get_the_positions_by_rank_data__freecell_generator \
         )
 
-#define FCS_POS_BY_RANK_MAP(x) ((x) << 1)
+#define FCS_POS_BY_RANK_MAP(x) (x)
 
 #ifdef FCS_FREECELL_ONLY
 

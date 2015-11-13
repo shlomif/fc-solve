@@ -924,7 +924,7 @@ static GCC_INLINE void assign_dest_stack_and_col_ptr(
          (fcs_card_rank(dest_card)-1)
         )
         +
-        (fcs_card_suit(dest_card)<<1)
+        (fcs_card_suit(dest_card))
         ];
 
 #if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
