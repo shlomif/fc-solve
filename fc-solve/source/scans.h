@@ -76,8 +76,10 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
     fcs_positions_by_rank_map_t * const positions_by_rank
 )
 {
+#ifndef HARD_CODED_NUM_STACKS
     fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
     SET_GAME_PARAMS();
+#endif
 
 #define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
     memset(positions_by_rank, -1, sizeof(*positions_by_rank));

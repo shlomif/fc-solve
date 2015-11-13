@@ -61,7 +61,7 @@ struct fc_solve_display_information_context_struct
 typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
 
 static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT =
-(fc_solve_display_information_context_t) {
+{
     .debug_iter_state_output = FALSE,
     .parseable_output = FALSE,
     .canonized_order_output = FALSE,
