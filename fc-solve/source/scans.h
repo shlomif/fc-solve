@@ -89,11 +89,9 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
         for (int dc = 0 ; dc < dest_cards_num ; dc++)
         {
             const fcs_card_t card = fcs_col_get_card(dest_col, dc);
-            const int suit = fcs_card_suit(card);
-            const int rank = fcs_card_rank(card);
-
-            const fcs_pos_by_rank_t pos = {.col = ds, .height = dc};
-            positions_by_rank->p[FCS_POS_IDX(rank, suit)] = pos;
+            positions_by_rank->p[
+                FCS_POS_IDX(fcs_card_rank(card), fcs_card_suit(card))
+            ] = (fcs_pos_by_rank_t) {.col = ds, .height = dc};
         }
     }
 }
