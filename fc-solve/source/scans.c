@@ -97,7 +97,6 @@ void fc_solve_increase_dfs_max_depth(
             },
             .derived_states_random_indexes = NULL,
             .derived_states_random_indexes_max_size = 0,
-            .positions_by_rank = NULL,
         };
     }
 
@@ -736,11 +735,11 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
 
-        if (BEFS_M_VAR(soft_thread, befs_positions_by_rank))
-        {
-            free(BEFS_M_VAR(soft_thread, befs_positions_by_rank));
-            BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
-        }
+        fc_solve__calc_positions_by_rank_data(
+            soft_thread,
+            &FCS_SCANS_the_state,
+            BEFS_M_VAR(soft_thread, befs_positions_by_rank).p
+        );
 
         TRACE0("perform_tests");
 
@@ -902,38 +901,7 @@ my_return_label:
         my_brfs_queue_last_item = queue_last_item;
     }
 
-    if (BEFS_M_VAR(soft_thread, befs_positions_by_rank))
-    {
-        free(BEFS_M_VAR(soft_thread, befs_positions_by_rank));
-        BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
-    }
-
     return error_code;
-}
-
-
-static GCC_INLINE void assign_dest_stack_and_col_ptr(
-    fcs_pos_by_rank_t * const positions_by_rank,
-    const char dest_stack,
-    const char dest_h,
-    const fcs_card_t dest_card
-)
-{
-    fcs_pos_by_rank_t * ptr = &positions_by_rank[
-        (FCS_POS_BY_RANK_WIDTH *
-         (fcs_card_rank(dest_card)-1)
-        )
-        +
-        (fcs_card_suit(dest_card))
-        ];
-
-#if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
-    for(;ptr->col != -1;ptr += 4)
-    {
-    }
-#endif
-
-    *ptr = (typeof(*ptr)){.col = dest_stack, .height = dest_h};
 }
 
 /*

@@ -49,48 +49,37 @@ extern "C" {
  * */
 #define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
 
-extern fcs_pos_by_rank_t * fc_solve__get_the_positions_by_rank_data__ss_generator(
-    fc_solve_soft_thread_t * const soft_thread,
-    const fcs_state_t * const ptr_state_key
-);
-
-
-static GCC_INLINE fcs_pos_by_rank_t * * fc_solve_calc_positions_by_rank_location(
+static GCC_INLINE fcs_pos_by_rank_t * fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t * const soft_thread
 )
 {
     if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
     {
-        return &(
+        return (
             DFS_VAR(soft_thread, soft_dfs_info)[
             DFS_VAR(soft_thread, depth)
-            ].positions_by_rank
+            ].positions_by_rank.p
         );
     }
     else
     {
-        return &(
+        return (
             BEFS_M_VAR(soft_thread, befs_positions_by_rank)
-        );
+        ).p;
     }
 }
 
 
 static GCC_INLINE fcs_pos_by_rank_t * fc_solve__calc_positions_by_rank_data(
     fc_solve_soft_thread_t * const soft_thread,
-    const fcs_state_t * const the_state
+    const fcs_state_t * const the_state,
+    fcs_pos_by_rank_t * const positions_by_rank
 )
 {
     fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
     SET_GAME_PARAMS();
 
-#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
-#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
-#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
 #define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
-
-    fcs_pos_by_rank_t * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
-
     memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
     for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
     {
@@ -123,15 +112,7 @@ static GCC_INLINE const fcs_pos_by_rank_t * const fc_solve_get_the_positions_by_
     const fcs_state_t * const ptr_state_key
 )
 {
-    fcs_pos_by_rank_t * * const positions_by_rank_location =
-        fc_solve_calc_positions_by_rank_location(soft_thread);
-
-    if (unlikely(! *positions_by_rank_location))
-    {
-        *positions_by_rank_location = fc_solve__calc_positions_by_rank_data(soft_thread, ptr_state_key);
-    }
-
-    return *positions_by_rank_location;
+    return fc_solve_calc_positions_by_rank_location(soft_thread);
 }
 
 extern int fc_solve_sfs_check_state_begin(
