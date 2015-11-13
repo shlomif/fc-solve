@@ -98,21 +98,6 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
     }
 }
 
-/*
- * fc_solve_get_the_positions_by_rank_data() :
- *
- * calculate, cache and return the positions_by_rank meta-data
- * about the currently-evaluated state.
- *
- */
-static GCC_INLINE const fcs_pos_by_rank_t * const fc_solve_get_the_positions_by_rank_data(
-    fc_solve_soft_thread_t * const soft_thread,
-    const fcs_state_t * const ptr_state_key
-)
-{
-    return fc_solve_calc_positions_by_rank_location(soft_thread);
-}
-
 extern int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * const hard_thread,
     fcs_kv_state_t * const out_new_state_out,

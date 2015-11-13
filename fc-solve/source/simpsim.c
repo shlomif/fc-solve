@@ -120,10 +120,7 @@ static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent
 
 #define CALC_POSITIONS_BY_RANK() \
     const fcs_pos_by_rank_t * const positions_by_rank = \
-        fc_solve_get_the_positions_by_rank_data( \
-            soft_thread, \
-            ptr_state_key \
-        )
+        fc_solve_calc_positions_by_rank_location(soft_thread)
 
 #define STACKS_MAP_LEN MAX_NUM_STACKS
 
@@ -233,7 +230,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 /*
  * TODO:
  *
- * Convert to fc_solve_get_the_positions_by_rank_data.
+ * Convert to fc_solve_get_the_positions_by_rank_location
  * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {

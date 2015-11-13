@@ -340,10 +340,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 
 #define CALC_POSITIONS_BY_RANK() \
     const fcs_pos_by_rank_t * const positions_by_rank = \
-        fc_solve_get_the_positions_by_rank_data( \
-            soft_thread, \
-            ptr_state_key \
-        )
+        fc_solve_calc_positions_by_rank_location( soft_thread )
 
 #define FCS_POS_BY_RANK_MAP(x) (x)
 
