@@ -49,7 +49,7 @@ extern "C" {
  * */
 #define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
 
-extern fcs_pos_by_rank_t * fc_solve_get_the_positions_by_rank_data__freecell_generator(
+extern fcs_pos_by_rank_t * fc_solve__get_the_positions_by_rank_data__ss_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key
 );

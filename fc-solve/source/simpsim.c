@@ -118,7 +118,7 @@ static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks
 
 
-static fcs_pos_by_rank_t * get_the_positions_by_rank_data__ss_generator(
+fcs_pos_by_rank_t * fc_solve__get_the_positions_by_rank_data__ss_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const the_state
 )
@@ -158,7 +158,7 @@ static fcs_pos_by_rank_t * get_the_positions_by_rank_data__ss_generator(
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
             ptr_state_key, \
-            get_the_positions_by_rank_data__ss_generator \
+            fc_solve__get_the_positions_by_rank_data__ss_generator \
         )
 
 #define STACKS_MAP_LEN MAX_NUM_STACKS

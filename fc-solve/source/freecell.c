@@ -343,7 +343,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
             ptr_state_key, \
-            fc_solve_get_the_positions_by_rank_data__freecell_generator \
+            fc_solve__get_the_positions_by_rank_data__ss_generator \
         )
 
 #define FCS_POS_BY_RANK_MAP(x) (x)
@@ -370,24 +370,17 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 
 #endif
 
-#define FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card) FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card))
 #define FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP() FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #define FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS() \
     const int suit_positions_by_rank_step = (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
-#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card) \
-            const fcs_pos_by_rank_t * pos_idx_to_check = &positions_by_rank[ \
-                (FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card))) \
-            ]; \
-            const fcs_pos_by_rank_t * const last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH; \
-                 \
-            for ( pos_idx_to_check += FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card) \
-                ; \
-                pos_idx_to_check < last_pos_idx \
-                ; \
-                pos_idx_to_check += suit_positions_by_rank_step \
-               )
+/* TODO : Merge with simpsim.c. */
+
+#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
+#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
+#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
+#define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
 
 static GCC_INLINE const fcs_game_limit_t calc_num_vacant_slots(
     const fc_solve_soft_thread_t * const soft_thread,
@@ -435,9 +428,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                 (fcs_card_rank(src_card) != 13)
             )
         {
-            FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
+            const int sought_rank = fcs_card_rank(src_card)+1;
+
+            for (int sought_suit = (FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card)); sought_suit < 4; sought_suit += suit_positions_by_rank_step)
             {
-                const typeof(*pos_idx_to_check) dest = (*pos_idx_to_check);
+                const fcs_pos_by_rank_t dest = positions_by_rank[FCS_POS_IDX(sought_rank, sought_suit)];
                 if (dest.col == -1)
                 {
                     continue;
@@ -797,16 +792,24 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 continue;
             }
 
-            FCS_POS_IDX_TO_CHECK_START_LOOP(card)
+            const int sought_rank = fcs_card_rank(card)+1;
+
+            for (int sought_suit = (FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)); sought_suit < 4; sought_suit += suit_positions_by_rank_step)
             {
-                const typeof(*pos_idx_to_check) dest = (*pos_idx_to_check);
+                const fcs_pos_by_rank_t dest = positions_by_rank[FCS_POS_IDX(sought_rank, sought_suit)];
                 const int ds = dest.col;
 
                 if ((ds >= 0) && (ds != stack_idx))
                 {
                 const int dc = dest.height;
                 const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
-                const int dest_num_cards = fcs_col_len(dest_col) - dc - 1;
+                const int dest_col_len = fcs_col_len(dest_col);
+                const int dest_num_cards = dest_col_len - dc - 1;
+
+                if ((dest_num_cards > 0) && fcs_is_parent_card(fcs_col_get_card(dest_col, dc+1), fcs_col_get_card(dest_col, dc)))
+                {
+                    continue;
+                }
 
                 int num_cards_to_relocate = dest_num_cards + col_num_cards;
 
@@ -1194,9 +1197,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
             }
 #endif
 
-            FCS_POS_IDX_TO_CHECK_START_LOOP(card)
+            const int sought_rank = fcs_card_rank(card)+1;
+
+            for (int sought_suit = (FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)); sought_suit < 4; sought_suit += suit_positions_by_rank_step)
             {
-                const typeof(*pos_idx_to_check) dest = (*pos_idx_to_check);
+                const fcs_pos_by_rank_t dest = positions_by_rank[FCS_POS_IDX(sought_rank, sought_suit)];
                 const int ds = dest.col;
                 if ((ds == -1) || (ds == stack_idx))
                 {
