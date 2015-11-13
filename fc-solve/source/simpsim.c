@@ -118,47 +118,11 @@ static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks
 
 
-fcs_pos_by_rank_t * fc_solve__get_the_positions_by_rank_data__ss_generator(
-    fc_solve_soft_thread_t * const soft_thread,
-    const fcs_state_t * const the_state
-)
-{
-    fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
-    SET_GAME_PARAMS();
-
-#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
-#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
-#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
-#define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
-
-    fcs_pos_by_rank_t * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
-
-    memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
-    for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
-    {
-        const fcs_const_cards_column_t dest_col = fcs_state_get_col(*the_state, ds);
-        const int dest_cards_num = fcs_col_len(dest_col);
-
-        for (int dc = 0 ; dc < dest_cards_num ; dc++)
-        {
-            const fcs_card_t card = fcs_col_get_card(dest_col, dc);
-            const int suit = fcs_card_suit(card);
-            const int rank = fcs_card_rank(card);
-
-            const fcs_pos_by_rank_t pos = {.col = ds, .height = dc};
-            positions_by_rank[FCS_POS_IDX(rank, suit)] = pos;
-        }
-    }
-
-    return positions_by_rank;
-}
-
 #define CALC_POSITIONS_BY_RANK() \
     const fcs_pos_by_rank_t * const positions_by_rank = \
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
-            ptr_state_key, \
-            fc_solve__get_the_positions_by_rank_data__ss_generator \
+            ptr_state_key \
         )
 
 #define STACKS_MAP_LEN MAX_NUM_STACKS

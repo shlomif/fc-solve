@@ -76,6 +76,41 @@ static GCC_INLINE fcs_pos_by_rank_t * * fc_solve_calc_positions_by_rank_location
 }
 
 
+static GCC_INLINE fcs_pos_by_rank_t * fc_solve__calc_positions_by_rank_data(
+    fc_solve_soft_thread_t * const soft_thread,
+    const fcs_state_t * const the_state
+)
+{
+    fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
+    SET_GAME_PARAMS();
+
+#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
+#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
+#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
+#define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
+
+    fcs_pos_by_rank_t * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
+
+    memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
+    for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+    {
+        const fcs_const_cards_column_t dest_col = fcs_state_get_col(*the_state, ds);
+        const int dest_cards_num = fcs_col_len(dest_col);
+
+        for (int dc = 0 ; dc < dest_cards_num ; dc++)
+        {
+            const fcs_card_t card = fcs_col_get_card(dest_col, dc);
+            const int suit = fcs_card_suit(card);
+            const int rank = fcs_card_rank(card);
+
+            const fcs_pos_by_rank_t pos = {.col = ds, .height = dc};
+            positions_by_rank[FCS_POS_IDX(rank, suit)] = pos;
+        }
+    }
+
+    return positions_by_rank;
+}
+
 /*
  * fc_solve_get_the_positions_by_rank_data() :
  *
@@ -85,11 +120,7 @@ static GCC_INLINE fcs_pos_by_rank_t * * fc_solve_calc_positions_by_rank_location
  */
 static GCC_INLINE const fcs_pos_by_rank_t * const fc_solve_get_the_positions_by_rank_data(
     fc_solve_soft_thread_t * const soft_thread,
-    const fcs_state_t * const ptr_state_key,
-    fcs_pos_by_rank_t * (*generator)(
-        fc_solve_soft_thread_t * const soft_thread,
-        const fcs_state_t * const ptr_state_key
-    )
+    const fcs_state_t * const ptr_state_key
 )
 {
     fcs_pos_by_rank_t * * const positions_by_rank_location =
@@ -97,7 +128,7 @@ static GCC_INLINE const fcs_pos_by_rank_t * const fc_solve_get_the_positions_by_
 
     if (unlikely(! *positions_by_rank_location))
     {
-        *positions_by_rank_location = generator(soft_thread, ptr_state_key);
+        *positions_by_rank_location = fc_solve__calc_positions_by_rank_data(soft_thread, ptr_state_key);
     }
 
     return *positions_by_rank_location;

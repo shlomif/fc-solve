@@ -342,8 +342,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
     const fcs_pos_by_rank_t * const positions_by_rank = \
         fc_solve_get_the_positions_by_rank_data( \
             soft_thread, \
-            ptr_state_key, \
-            fc_solve__get_the_positions_by_rank_data__ss_generator \
+            ptr_state_key \
         )
 
 #define FCS_POS_BY_RANK_MAP(x) (x)
@@ -374,13 +373,6 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 
 #define FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS() \
     const int suit_positions_by_rank_step = (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
-
-/* TODO : Merge with simpsim.c. */
-
-#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
-#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
-#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
-#define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
 
 static GCC_INLINE const fcs_game_limit_t calc_num_vacant_slots(
     const fc_solve_soft_thread_t * const soft_thread,
