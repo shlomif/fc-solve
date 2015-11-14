@@ -8,10 +8,10 @@ install:
     - sudo cpanm base Carp Cwd Data::Dumper Digest::SHA Env::Path File::Path File::Spec Games::Solitaire::Verify Games::Solitaire::Verify::Solution Inline Inline::C IPC::Open2 lib List::MoreUtils parent Storable strict String::ShellQuote Template Test::Data::Split Test::Data::Split::Backend::Hash Test::Differences Test::More warnings YAML::XS
     - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
     - tar -xvf libtap-1.12.0.tar.bz2
-    - mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install
+    - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )
 
 perl:
     - "5.22"
 python:
     - "3.5"
-script: "cd shlomif/fc-solve/fc-solve/source && perl scripts/multi_config_tests.pl"
+script: "ls -d * ; ls -d */* ; pwd; cd fc-solve/source && perl scripts/multi_config_tests.pl"
