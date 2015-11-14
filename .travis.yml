@@ -1,6 +1,6 @@
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -y ack-grep cmake libgmp-dev python3 python3-setuptools valgrind
+    - sudo apt-get install -y ack-grep cmake cpanminus libgmp-dev python3 python3-setuptools perl libperl-dev valgrind
     - sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
 install:
     - sudo easy_install3 pip
