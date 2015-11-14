@@ -46,7 +46,6 @@ extern "C" {
 #include "likely.h"
 #include "bool.h"
 #include "min_and_max.h"
-#include "scans.h"
 
 static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
     const fc_solve_instance_t * const instance
@@ -929,6 +928,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     mark_as_dead_end (scans_synergy, PTR_STATE);
                 }
 
+                free(the_soft_dfs_info->positions_by_rank);
                 if (unlikely(--DEPTH() < 0))
                 {
                     break;
@@ -1015,11 +1015,6 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 soft_thread->num_vacant_stacks =
                     the_soft_dfs_info->num_vacant_stacks =
                     num_vacant_stacks;
-                fc_solve__calc_positions_by_rank_data(
-                    soft_thread,
-                    &FCS_SCANS_the_state,
-                    &(the_soft_dfs_info->positions_by_rank)
-                );
 
                 /* Perform the pruning. */
                 if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
@@ -1267,8 +1262,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info->tests_list_index = 0;
                     the_soft_dfs_info->test_index = 0;
                     the_soft_dfs_info->current_state_index = 0;
-
-
+                    the_soft_dfs_info->positions_by_rank = NULL;
                     derived_states_list = &(the_soft_dfs_info->derived_states_list);
                     derived_states_list->num_states = 0;
 

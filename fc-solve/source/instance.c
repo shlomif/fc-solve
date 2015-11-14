@@ -105,6 +105,7 @@ static GCC_INLINE void soft_thread_clean_soft_dfs(
     {
         free (info_ptr->derived_states_list.states);
         free (info_ptr->derived_states_random_indexes);
+        free (info_ptr->positions_by_rank);
     }
     for ( ; info_ptr < dfs_max_info_ptr ; info_ptr++)
     {
@@ -293,6 +294,7 @@ void fc_solve_init_soft_thread(
             .befs =
             {
                 .tests_list = NULL,
+                .befs_positions_by_rank = NULL,
                 .meth =
                 {
                     .befs =

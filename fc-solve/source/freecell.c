@@ -339,10 +339,14 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 }
 
 #define CALC_POSITIONS_BY_RANK() \
-    const fcs_pos_by_rank_t * const positions_by_rank = \
-        fc_solve_calc_positions_by_rank_location( soft_thread )
+    const char * const positions_by_rank = \
+        fc_solve_get_the_positions_by_rank_data( \
+            soft_thread, \
+            ptr_state_key, \
+            fc_solve_get_the_positions_by_rank_data__freecell_generator \
+        )
 
-#define FCS_POS_BY_RANK_MAP(x) (x)
+#define FCS_POS_BY_RANK_MAP(x) ((x) << 1)
 
 #ifdef FCS_FREECELL_ONLY
 
@@ -366,10 +370,24 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 
 #endif
 
+#define FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card) FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card))
 #define FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP() FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #define FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS() \
     const int suit_positions_by_rank_step = (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
+
+#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card) \
+            const char * pos_idx_to_check = &positions_by_rank[ \
+                (FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card))) \
+            ]; \
+            const char * const last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH; \
+                 \
+            for ( pos_idx_to_check += FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card) \
+                ; \
+                pos_idx_to_check < last_pos_idx \
+                ; \
+                pos_idx_to_check += suit_positions_by_rank_step \
+               )
 
 static GCC_INLINE const fcs_game_limit_t calc_num_vacant_slots(
     const fc_solve_soft_thread_t * const soft_thread,
@@ -417,17 +435,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                 (fcs_card_rank(src_card) != 13)
             )
         {
-            const int sought_rank = fcs_card_rank(src_card)+1;
-
-            for (int sought_suit = (FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card)); sought_suit < 4; sought_suit += suit_positions_by_rank_step)
+            FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
             {
-                const fcs_pos_by_rank_t dest = positions_by_rank[FCS_POS_IDX(sought_rank, sought_suit)];
-                if (dest.col == -1)
+                const int ds = pos_idx_to_check[0];
+                if (ds == -1)
                 {
                     continue;
                 }
-                const int ds = dest.col;
-                const int dc = dest.height;
+                const int dc = pos_idx_to_check[1];
 
                 const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
@@ -781,24 +796,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 continue;
             }
 
-            const int sought_rank = fcs_card_rank(card)+1;
-
-            for (int sought_suit = (FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)); sought_suit < 4; sought_suit += suit_positions_by_rank_step)
+            FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
-                const fcs_pos_by_rank_t dest = positions_by_rank[FCS_POS_IDX(sought_rank, sought_suit)];
-                const int ds = dest.col;
+                const int ds = pos_idx_to_check[0];
 
                 if ((ds >= 0) && (ds != stack_idx))
                 {
-                const int dc = dest.height;
+                const int dc = pos_idx_to_check[1];
                 const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
-                const int dest_col_len = fcs_col_len(dest_col);
-                const int dest_num_cards = dest_col_len - dc - 1;
-
-                if ((dest_num_cards > 0) && fcs_is_parent_card(fcs_col_get_card(dest_col, dc+1), fcs_col_get_card(dest_col, dc)))
-                {
-                    continue;
-                }
+                const int dest_num_cards = fcs_col_len(dest_col) - dc - 1;
 
                 int num_cards_to_relocate = dest_num_cards + col_num_cards;
 
@@ -1186,17 +1192,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
             }
 #endif
 
-            const int sought_rank = fcs_card_rank(card)+1;
-
-            for (int sought_suit = (FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)); sought_suit < 4; sought_suit += suit_positions_by_rank_step)
+            FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
-                const fcs_pos_by_rank_t dest = positions_by_rank[FCS_POS_IDX(sought_rank, sought_suit)];
-                const int ds = dest.col;
+                const int ds = pos_idx_to_check[0];
                 if ((ds == -1) || (ds == stack_idx))
                 {
                     continue;
                 }
-                const int dc = dest.height;
+                const int dc = pos_idx_to_check[1];
 
                 fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 int dest_cards_num = fcs_col_len(dest_col);

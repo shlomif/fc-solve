@@ -97,6 +97,7 @@ void fc_solve_increase_dfs_max_depth(
             },
             .derived_states_random_indexes = NULL,
             .derived_states_random_indexes_max_size = 0,
+            .positions_by_rank = NULL,
         };
     }
 
@@ -735,11 +736,11 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
 
-        fc_solve__calc_positions_by_rank_data(
-            soft_thread,
-            &FCS_SCANS_the_state,
-            &(BEFS_M_VAR(soft_thread, befs_positions_by_rank))
-        );
+        if (BEFS_M_VAR(soft_thread, befs_positions_by_rank))
+        {
+            free(BEFS_M_VAR(soft_thread, befs_positions_by_rank));
+            BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
+        }
 
         TRACE0("perform_tests");
 
@@ -901,8 +902,128 @@ my_return_label:
         my_brfs_queue_last_item = queue_last_item;
     }
 
+    if (BEFS_M_VAR(soft_thread, befs_positions_by_rank))
+    {
+        free(BEFS_M_VAR(soft_thread, befs_positions_by_rank));
+        BEFS_M_VAR(soft_thread, befs_positions_by_rank) = NULL;
+    }
+
     return error_code;
 }
+
+
+static GCC_INLINE void assign_dest_stack_and_col_ptr(
+    char * const positions_by_rank,
+    const char dest_stack,
+    const char dest_col,
+    const fcs_card_t dest_card
+)
+{
+    char * ptr = &positions_by_rank[
+        (FCS_POS_BY_RANK_WIDTH *
+         (fcs_card_rank(dest_card)-1)
+        )
+        +
+        (fcs_card_suit(dest_card)<<1)
+        ];
+
+#if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
+    for(;(*ptr) != -1;ptr += (4 << 1))
+    {
+    }
+#endif
+
+    *(ptr++) = dest_stack;
+    *(ptr) = dest_col;
+}
+
+char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
+    fc_solve_soft_thread_t * const soft_thread,
+    const fcs_state_t * const ptr_state_key
+)
+{
+#define state_key (*ptr_state_key)
+#undef FCS_SCANS_the_state
+#define FCS_SCANS_the_state state_key
+
+#if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
+    fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
+    SET_GAME_PARAMS();
+#endif
+
+#ifndef FCS_FREECELL_ONLY
+    const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+#endif
+
+    /* We don't keep track of kings (rank == 13). */
+#define NUM_POS_BY_RANK_SLOTS 13
+    /* We need 2 chars per card - one for the column_idx and one
+     * for the card_idx.
+     *
+     * We also need it times 13 for each of the ranks.
+     *
+     * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+     * (-1,-1) (= end) padding.             * */
+#define FCS_POS_BY_RANK_LEN ( NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH )
+#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
+
+    char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
+
+    memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
+
+    {
+        /* Populate positions_by_rank by looping over the stacks and
+         * indices looking for the cards and filling them. */
+
+        for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+        {
+            const fcs_const_cards_column_t dest_col = fcs_state_get_col(FCS_SCANS_the_state, ds);
+            int top_card_idx = fcs_col_len(dest_col);
+
+            if (unlikely((top_card_idx--) == 0))
+            {
+                continue;
+            }
+
+            fcs_card_t dest_card;
+            {
+                fcs_card_t dest_below_card;
+                dest_card = fcs_col_get_card(dest_col, 0);
+                for (
+                    int dc=0
+                    ;
+                    dc < top_card_idx
+                    ;
+                    dc++,
+                    dest_card = dest_below_card
+                )
+                {
+                    dest_below_card = fcs_col_get_card(dest_col, dc+1);
+                    if (!fcs_is_parent_card(dest_below_card, dest_card))
+                    {
+                        assign_dest_stack_and_col_ptr(
+                            positions_by_rank,
+                            ds,
+                            dc,
+                            dest_card
+                        );
+                    }
+                }
+            }
+            assign_dest_stack_and_col_ptr(
+                positions_by_rank,
+                ds,
+                top_card_idx,
+                dest_card
+            );
+        }
+    }
+
+    return positions_by_rank;
+}
+#undef state_key
+#undef ptr_state_key
+
 
 /*
  * These functions are used by the move functions in freecell.c and

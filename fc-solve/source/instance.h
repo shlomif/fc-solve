@@ -118,20 +118,6 @@ extern "C" {
 #include "meta_alloc.h"
 
 /*
- * position by rank type for the positions_by_rank_t lookup functions.
- * */
-typedef struct {
-    char col, height;
-} fcs_pos_by_rank_t;
-
-#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
-#define FCS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
-
-typedef struct {
-    fcs_pos_by_rank_t p[FCS_POS_BY_RANK_LEN];
-} fcs_positions_by_rank_map_t;
-
-/*
  * This is a linked list item that is used to implement a queue for the BFS
  * scan.
  * */
@@ -464,9 +450,9 @@ typedef struct
     int test_index;
     int derived_states_random_indexes_max_size;
     fcs_rating_with_index_t * derived_states_random_indexes;
+    char * positions_by_rank;
     fcs_game_limit_t num_vacant_stacks;
     fcs_game_limit_t num_vacant_freecells;
-    fcs_positions_by_rank_map_t positions_by_rank;
 } fcs_soft_dfs_stack_item_t;
 
 enum
@@ -613,7 +599,7 @@ struct fc_solve_soft_thread_struct
         } soft_dfs;
         struct
         {
-            fcs_positions_by_rank_map_t befs_positions_by_rank;
+            char * befs_positions_by_rank;
             fc_solve_solve_for_state_move_func_t * tests_list, * tests_list_end;
             struct
             {
