@@ -39,22 +39,13 @@ extern "C" {
 #include "inline.h"
 #include "likely.h"
 
-/* We need 2 chars per card - one for the column_idx and one
- * for the card_idx.
- *
- * We also need it times 13 for each of the ranks.
- *
- * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
- * (-1,-1) (= end) padding.
- * */
-#define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
 
-extern char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
+extern fcs__positions_by_rank_t * fc_solve_get_the_positions_by_rank_data__freecell_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key
 );
 
-static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
+static GCC_INLINE fcs__positions_by_rank_t * * fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t * const soft_thread
 )
 {
@@ -81,16 +72,16 @@ static GCC_INLINE char * * fc_solve_calc_positions_by_rank_location(
  * about the currently-evaluated state.
  *
  */
-static GCC_INLINE const char * const fc_solve_get_the_positions_by_rank_data(
+static GCC_INLINE const fcs__positions_by_rank_t * const fc_solve_get_the_positions_by_rank_data(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key,
-    char * (*generator)(
+    fcs__positions_by_rank_t * (*generator)(
         fc_solve_soft_thread_t * const soft_thread,
         const fcs_state_t * const ptr_state_key
     )
 )
 {
-    char * * const positions_by_rank_location =
+    fcs__positions_by_rank_t * * const positions_by_rank_location =
         fc_solve_calc_positions_by_rank_location(soft_thread);
 
     if (unlikely(! *positions_by_rank_location))

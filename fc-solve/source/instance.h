@@ -117,6 +117,36 @@ extern "C" {
 
 #include "meta_alloc.h"
 
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
+#define FCS_SS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
+#endif
+
+/* We need 2 chars per card - one for the column_idx and one
+ * for the card_idx.
+ *
+ * We also need it times 13 for each of the ranks.
+ *
+ * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+ * (-1,-1) (= end) padding.
+ * */
+#define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
+
+/* We don't keep track of kings (rank == 13). */
+#define NUM_POS_BY_RANK_SLOTS 13
+#define FCS_POS_BY_RANK_LEN ( NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH )
+typedef struct {
+    char col, height;
+} fcs_pos_by_rank_t;
+
+typedef union
+{
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+    fcs_pos_by_rank_t simpsim[FCS_SS_POS_BY_RANK_LEN];
+#endif
+    char freecell[FCS_POS_BY_RANK_LEN];
+} fcs__positions_by_rank_t;
+
 /*
  * This is a linked list item that is used to implement a queue for the BFS
  * scan.
@@ -450,7 +480,7 @@ typedef struct
     int test_index;
     int derived_states_random_indexes_max_size;
     fcs_rating_with_index_t * derived_states_random_indexes;
-    char * positions_by_rank;
+    fcs__positions_by_rank_t * positions_by_rank;
     fcs_game_limit_t num_vacant_stacks;
     fcs_game_limit_t num_vacant_freecells;
 } fcs_soft_dfs_stack_item_t;
@@ -599,7 +629,7 @@ struct fc_solve_soft_thread_struct
         } soft_dfs;
         struct
         {
-            char * befs_positions_by_rank;
+            fcs__positions_by_rank_t * befs_positions_by_rank;
             fc_solve_solve_for_state_move_func_t * tests_list, * tests_list_end;
             struct
             {
@@ -1167,5 +1197,6 @@ extern void fc_solve_init_soft_thread(
 #else
 #define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
 #endif
+
 
 #endif /* FC_SOLVE__INSTANCE_H */

@@ -937,7 +937,7 @@ static GCC_INLINE void assign_dest_stack_and_col_ptr(
     *(ptr) = dest_col;
 }
 
-char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
+fcs__positions_by_rank_t * fc_solve_get_the_positions_by_rank_data__freecell_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key
 )
@@ -955,8 +955,6 @@ char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
     const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
 
-    /* We don't keep track of kings (rank == 13). */
-#define NUM_POS_BY_RANK_SLOTS 13
     /* We need 2 chars per card - one for the column_idx and one
      * for the card_idx.
      *
@@ -964,10 +962,9 @@ char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
      *
      * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
      * (-1,-1) (= end) padding.             * */
-#define FCS_POS_BY_RANK_LEN ( NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH )
-#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
+#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank->freecell[0]) * FCS_POS_BY_RANK_LEN)
 
-    char * const positions_by_rank = SMALLOC(positions_by_rank, FCS_POS_BY_RANK_LEN);
+    fcs__positions_by_rank_t * const positions_by_rank = SMALLOC1(positions_by_rank);
 
     memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 
@@ -1002,7 +999,7 @@ char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
                     if (!fcs_is_parent_card(dest_below_card, dest_card))
                     {
                         assign_dest_stack_and_col_ptr(
-                            positions_by_rank,
+                            positions_by_rank->freecell,
                             ds,
                             dc,
                             dest_card
@@ -1011,7 +1008,7 @@ char * fc_solve_get_the_positions_by_rank_data__freecell_generator(
                 }
             }
             assign_dest_stack_and_col_ptr(
-                positions_by_rank,
+                positions_by_rank->freecell,
                 ds,
                 top_card_idx,
                 dest_card
