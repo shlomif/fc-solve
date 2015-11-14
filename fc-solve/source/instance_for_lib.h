@@ -958,7 +958,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
         {
             .num = 1,
             .by_depth_tests =
-            SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests);
+            SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
         };
         soft_thread->by_depth_tests_order.by_depth_tests[0] =
             (typeof( soft_thread->by_depth_tests_order.by_depth_tests[0] ))
