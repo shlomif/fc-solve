@@ -67,7 +67,7 @@ static GCC_INLINE void fc_solve__assign_dest_stack_and_col_ptr(
 static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__freecell_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key,
-    fcs__positions_by_rank_t * const positions_by_rank
+    char * const positions_by_rank
 )
 {
 #define state_key (*ptr_state_key)
@@ -88,7 +88,7 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__freecell_generat
      *
      * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
      * (-1,-1) (= end) padding.             * */
-#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank->freecell[0]) * FCS_POS_BY_RANK_LEN)
+#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
 
     memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
 
@@ -123,7 +123,7 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__freecell_generat
                     if (!fcs_is_parent_card(dest_below_card, dest_card))
                     {
                         fc_solve__assign_dest_stack_and_col_ptr(
-                            positions_by_rank->freecell,
+                            positions_by_rank,
                             ds,
                             dc,
                             dest_card
@@ -132,7 +132,7 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__freecell_generat
                 }
             }
             fc_solve__assign_dest_stack_and_col_ptr(
-                positions_by_rank->freecell,
+                positions_by_rank,
                 ds,
                 top_card_idx,
                 dest_card
@@ -144,11 +144,11 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__freecell_generat
 #undef ptr_state_key
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-#define FCS_SS_POS_BY_RANK_SIZE (sizeof(positions_by_rank->simpsim[0]) * FCS_SS_POS_BY_RANK_LEN)
+#define FCS_SS_POS_BY_RANK_SIZE (sizeof(fcs_pos_by_rank_t) * FCS_SS_POS_BY_RANK_LEN)
 static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__ss_generator(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const the_state,
-    fcs__positions_by_rank_t * const positions_by_rank
+    char * const positions_by_rank
 )
 {
     fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
@@ -157,6 +157,7 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__ss_generator(
 #define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
 
     memset(positions_by_rank, -1, FCS_SS_POS_BY_RANK_SIZE);
+    fcs_pos_by_rank_t * const p_by_r = (fcs_pos_by_rank_t *)positions_by_rank;
     for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
     {
         const fcs_const_cards_column_t dest_col = fcs_state_get_col(*the_state, ds);
@@ -168,7 +169,7 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__ss_generator(
             const int suit = fcs_card_suit(card);
             const int rank = fcs_card_rank(card);
 
-            positions_by_rank->simpsim[FCS_POS_IDX(rank, suit)] = (fcs_pos_by_rank_t) {.col = ds, .height = dc};
+            p_by_r[FCS_POS_IDX(rank, suit)] = (fcs_pos_by_rank_t) {.col = ds, .height = dc};
         }
     }
 }
@@ -177,7 +178,7 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__ss_generator(
 static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key,
-    fcs__positions_by_rank_t * const positions_by_rank
+    fcs__positions_by_rank_t positions_by_rank
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     , const fcs_bool_t is_simple_simon
 #endif
@@ -204,13 +205,13 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
 }
 
 
-static GCC_INLINE fcs__positions_by_rank_t * fc_solve_calc_positions_by_rank_location(
+static GCC_INLINE const char * const fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t * const soft_thread
 )
 {
     if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
     {
-        return &(
+        return (
             DFS_VAR(soft_thread, soft_dfs_info)[
             DFS_VAR(soft_thread, depth)
             ].positions_by_rank
@@ -218,7 +219,7 @@ static GCC_INLINE fcs__positions_by_rank_t * fc_solve_calc_positions_by_rank_loc
     }
     else
     {
-        return &(
+        return (
             BEFS_M_VAR(soft_thread, befs_positions_by_rank)
         );
     }

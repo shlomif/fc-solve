@@ -1023,7 +1023,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 fc_solve__calc_positions_by_rank_data(
                     soft_thread,
                     &FCS_SCANS_the_state,
-                    &(the_soft_dfs_info->positions_by_rank)
+                    (the_soft_dfs_info->positions_by_rank)
 #ifndef FCS_DISABLE_SIMPLE_SIMON
                     , is_simple_simon
 #endif

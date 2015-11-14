@@ -118,8 +118,8 @@ static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks
 
 #define CALC_POSITIONS_BY_RANK() \
-    const fcs__positions_by_rank_t * const positions_by_rank = \
-        fc_solve_calc_positions_by_rank_location( soft_thread )
+    const fcs_pos_by_rank_t * const positions_by_rank = \
+        (const fcs_pos_by_rank_t *) fc_solve_calc_positions_by_rank_location( soft_thread )
 
 #define STACKS_MAP_LEN MAX_NUM_STACKS
 
@@ -201,7 +201,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 #define LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card) \
     if (fcs_card_rank(card) < 13) \
     { \
-        const fcs_pos_by_rank_t pos = positions_by_rank->simpsim[FCS_POS_IDX(fcs_card_rank(card)+1, fcs_card_suit(card))]; \
+        const fcs_pos_by_rank_t pos = positions_by_rank[FCS_POS_IDX(fcs_card_rank(card)+1, fcs_card_suit(card))]; \
         const int ds = pos.col;  \
         \
         if (ds != stack_idx) \
@@ -1050,7 +1050,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
         int len = 0;
         for (int parent_suit = 0; parent_suit < 4 ; parent_suit++)
         {
-            const fcs_pos_by_rank_t pos = positions_by_rank->simpsim[FCS_POS_IDX(fcs_card_rank(card)+1, parent_suit)];
+            const fcs_pos_by_rank_t pos = positions_by_rank[FCS_POS_IDX(fcs_card_rank(card)+1, parent_suit)];
 
             if ((pos.col < 0) || (pos.col == stack_idx))
             {

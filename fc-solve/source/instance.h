@@ -139,13 +139,13 @@ typedef struct {
     char col, height;
 } fcs_pos_by_rank_t;
 
-typedef union
-{
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-    fcs_pos_by_rank_t simpsim[FCS_SS_POS_BY_RANK_LEN];
+#define FCS_BOTH__POS_BY_RANK__SIZE (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank_t), FCS_POS_BY_RANK_LEN))
+#else
+#define FCS_BOTH__POS_BY_RANK__SIZE FCS_POS_BY_RANK_LEN
 #endif
-    char freecell[FCS_POS_BY_RANK_LEN];
-} fcs__positions_by_rank_t;
+
+typedef char fcs__positions_by_rank_t[FCS_BOTH__POS_BY_RANK__SIZE];
 
 /*
  * This is a linked list item that is used to implement a queue for the BFS

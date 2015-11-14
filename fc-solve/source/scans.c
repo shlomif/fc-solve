@@ -741,7 +741,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         fc_solve__calc_positions_by_rank_data(
             soft_thread,
             &FCS_SCANS_the_state,
-            &(BEFS_M_VAR(soft_thread, befs_positions_by_rank))
+            (BEFS_M_VAR(soft_thread, befs_positions_by_rank))
 #ifndef FCS_DISABLE_SIMPLE_SIMON
             , is_simple_simon
 #endif
