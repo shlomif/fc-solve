@@ -14,4 +14,4 @@ perl:
     - "5.22"
 python:
     - "3.5"
-script: cd fc-solve/source && perl scripts/multi_config_tests.pl
+script: "cd shlomif/fc-solve/fc-solve/source && perl scripts/multi_config_tests.pl"
