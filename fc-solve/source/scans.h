@@ -143,6 +143,7 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__freecell_generat
 #undef state_key
 #undef ptr_state_key
 
+#ifndef FCS_DISABLE_SIMPLE_SIMON
 #define FCS_SS_POS_BY_RANK_SIZE (sizeof(positions_by_rank->simpsim[0]) * FCS_SS_POS_BY_RANK_LEN)
 static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__ss_generator(
     fc_solve_soft_thread_t * const soft_thread,
@@ -171,6 +172,8 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__ss_generator(
         }
     }
 }
+#endif
+
 static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key,
