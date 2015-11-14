@@ -138,6 +138,9 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
 #undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
 
 #endif
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+            .is_simple_simon = FALSE,
+#endif
     };
 
 #ifndef FCS_FREECELL_ONLY

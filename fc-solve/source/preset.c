@@ -442,6 +442,9 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     }
 
     instance->game_params = preset.game_params;
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+    instance->is_simple_simon = (preset.preset_id == FCS_PRESET_SIMPLE_SIMON);
+#endif
 
     /*
      * This code makes sure that all the tests in all the existing
