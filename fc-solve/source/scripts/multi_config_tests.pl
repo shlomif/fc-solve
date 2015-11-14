@@ -140,7 +140,7 @@ package main;
 use strict;
 use warnings;
 
-use Cwd;
+use Cwd qw(getcwd);
 use File::Path qw(rmtree);
 
 use Term::ANSIColor qw(colored);
@@ -169,11 +169,24 @@ sub run_tests
     return;
 }
 
-local $ENV{LIBAVL2_SOURCE_DIR} = "$ENV{HOME}/Download/unpack/prog/c/avl-2.0.3/";
+if ($ENV{FC_SOLVE_GIT_CHECKOUT})
+{
+    $ENV{LIBAVL2_SOURCE_DIR} = "$ENV{HOME}/Download/unpack/prog/c/avl-2.0.3/";
 
-run_cmd('git checkout', {cmd => [qw(git checkout master)],});
-run_cmd('git pull', {cmd => [qw(git pull --ff-only origin master)],});
-
+    run_cmd('git checkout', {cmd => [qw(git checkout master)],});
+    run_cmd('git pull', {cmd => [qw(git pull --ff-only origin master)],});
+}
+else
+{
+    if (! -d "avl-2.0.3")
+    {
+        run_cmd('wget avl', {cmd => [qw(wget ftp://ftp.gnu.org/pub/gnu/avl/avl-2.0.3.tar.gz)]}
+        );
+        run_cmd('untar avl', {cmd => [qw(tar -xvf avl-2.0.3.tar.gz)]});
+        system(q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#);
+    }
+    $ENV{LIBAVL2_SOURCE_DIR} = getcwd() . "/avl-2.0.3";
+}
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
 
