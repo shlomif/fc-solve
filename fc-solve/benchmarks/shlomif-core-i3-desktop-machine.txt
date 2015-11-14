@@ -622,3 +622,36 @@ Reached Board No. 28000 at 1445877712.559667 (total_num_iters=8366251)
 Reached Board No. 32000 at 1445877713.790471 (total_num_iters=10253959)
 Finished at 1445877713.799795 (total_num_iters=11372658)
 </DUMP>
+
+---------------------------------------------------------
+
+ARGS="--worker-step 16 -l as" bash scripts/time-threads-num.bash 4 4 x Several Times
+commit 8942727881afd3d48543a313ea0c847fa1bcb931
+(commit Date: Sat Nov 14 14:37:02 2015 +0200 )
+With Profile Guided Optimisation (PGO).
+../source/Tatzer -l ci7b --prefix=/home/shlomif/apps/fcs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+4.2.6-desktop-1.mga6
+gcc-4.9.3 (built from source).
+lib64google-perftools-devel-2.4-1.mga6
+
+8.782390832901s
+
+    Highlight: the removal of the fcs_is_parent checks in freecell.c because
+    they are already present in the positions_by_rank lookup.
+
+<DUMP>
+Started at 1447502060.551685
+Reached Board No. 4000 at 1447502061.641332 (total_num_iters=354611)
+Reached Board No. 8000 at 1447502062.785507 (total_num_iters=1046834)
+Reached Board No. 12000 at 1447502063.849207 (total_num_iters=3122483)
+Unsolved Board No. 11982 at 1447502064.039545
+Reached Board No. 16000 at 1447502064.994579 (total_num_iters=4553860)
+Reached Board No. 20000 at 1447502066.061696 (total_num_iters=5904102)
+Reached Board No. 24000 at 1447502067.100605 (total_num_iters=6965262)
+Reached Board No. 28000 at 1447502068.118999 (total_num_iters=8640730)
+Reached Board No. 32000 at 1447502069.323223 (total_num_iters=10893444)
+Finished at 1447502069.334076 (total_num_iters=11372658)
+</DUMP>
