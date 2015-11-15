@@ -131,8 +131,22 @@ sub run_cmd
     {
         $self->emit_all();
     }
+    elsif ($ENV{FC_SOLVE__MULT_CONFIG_TESTS__TRACE})
+    {
+        $self->trace_all();
+    }
 
     return $self;
+}
+
+sub trace_all
+{
+    my ($self) = @_;
+
+    print "Trace of @{[$self->blurb()]} executing [@{$self->cmd_line()}].\n";
+    print ($self->all_info());
+
+    return;
 }
 
 package main;
