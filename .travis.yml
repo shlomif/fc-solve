@@ -1,6 +1,6 @@
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -y ack-grep cmake cpanminus libgmp-dev python3 python3-setuptools perl libperl-dev valgrind
+    - sudo apt-get install -y ack-grep cpanminus libgmp-dev mercurial python3 python3-setuptools perl libperl-dev valgrind
     - sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
 install:
     - sudo easy_install3 pip
@@ -9,10 +9,10 @@ install:
     - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
     - tar -xvf libtap-1.12.0.tar.bz2
     - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )
+    - ( mkdir B2 && cd B2 && hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules && cd shlomif-cmake-modules/shlomif-cmake-modules && sudo cp "$(pwd)"/Shlomif_Common.cmake /usr/share/cmake/Modules/ )
 
 perl:
     - "5.22"
 python:
     - "3.5"
 script: "export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 ; cd fc-solve/source && perl scripts/multi_config_tests.pl"
-
