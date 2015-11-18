@@ -5,7 +5,7 @@ before_install:
       # For cmake-3.x
     - sudo add-apt-repository ppa:george-edison55/precise-backports -y
     - sudo apt-get update -q
-    - sudo apt-get install -y cmake
+    - sudo apt-get install -y cmake cmake-data ninja-build
 install:
     - ( cd fc-solve/source && hg clone -u make-code-suitable-for-fc-solve https://bitbucket.org/shlomif/patsolve-shlomif )
     - sudo easy_install3 pip
