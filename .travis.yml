@@ -3,7 +3,7 @@ before_install:
     - sudo apt-get install -y ack-grep cpanminus libgmp-dev mercurial python3 python3-setuptools perl libperl-dev valgrind
     - sudo dpkg-divert --local --divert /usr/bin/ack --rename --add /usr/bin/ack-grep
       # For cmake-3.x
-    - sudo add-apt-repository ppa:george-edison55/precise-backports
+    - sudo add-apt-repository ppa:george-edison55/precise-backports -y
     - sudo apt-get update -q
     - sudo apt-get install -y cmake
 install:
