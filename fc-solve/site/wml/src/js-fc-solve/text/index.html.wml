@@ -15,11 +15,17 @@
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
+<define-tag expanded_scripts>
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve--expand-moves.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve-ui.js"></script>
+</define-tag>
+<define-tag production_scripts>
+<script type="text/javascript" src="$(ROOT)/js/web-fcs.min.js"></script>
+</define-tag>
+<if "$(PRODUCTION)" "<production_scripts />" "<expanded_scripts />" />
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
 </page_extra_head_elements>
 

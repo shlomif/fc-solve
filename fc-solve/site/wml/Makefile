@@ -8,12 +8,23 @@ WITH_DEVEL_VERSION = 1
 
 DEVEL_VER_USE_CACHE = 1
 
+# Toggle to generate production code with compressed and merged JS code/etc.
+PROD = 0
+
 RSYNC = rsync --progress --verbose --rsh=ssh -a --inplace
 
 D = ./dest
 WML_FLAGS = -DBERLIOS=BERLIOS
 
 #D = /home/httpd/html/ip-noise
+
+ifeq ($(PROD),1)
+
+	D = ./dest-prod
+
+	WML_FLAGS += -DPRODUCTION=1
+
+endif
 
 IMAGES_PRE1 = $(SRC_IMAGES)
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
@@ -58,6 +69,8 @@ DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(D)/js $(D)/js-f
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
+
+DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
 dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
@@ -120,15 +133,19 @@ $(LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA)
 clean_js:
 	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.js $(LIBFREECELL_SOLVER_JS_DIR)/*.bc
 
+JSMIN = ./scripts/jsmin
+
+$(JSMIN): lib/jsmin/jsmin.c
+	gcc -O3 -o $@ $<
+
 MULTI_YUI = ./scripts/Run-YUI-Compressor
 
 $(DEST_LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS)
-	$(MULTI_YUI) -o $(DEST_LIBFREECELL_SOLVER_JS) $(LIBFREECELL_SOLVER_JS)
+	$(JSMIN) < $(LIBFREECELL_SOLVER_JS) > $(DEST_LIBFREECELL_SOLVER_JS)
 
 $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 	$(MULTI_YUI) -o $@ $<
 
-DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
 WEB_FCS_UI_JS_SOURCES = src/js/ms-rand.js src/js/gen-ms-fc-board.js src/js/web-fc-solve--expand-moves--mega-test.js src/js/web-fc-solve.js src/js/web-fc-solve-ui.js
 
