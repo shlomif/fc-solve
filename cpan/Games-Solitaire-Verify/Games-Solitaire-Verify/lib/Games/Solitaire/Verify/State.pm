@@ -927,16 +927,12 @@ sub to_string
 {
     my $self = shift;
 
-    return join("",
-        map { "$_\n" }
+    return join("\n",
         (
-            $self->_stringify_foundations(),
-            $self->_stringify_freecells(),
-            (
-                map { $self->get_column($_)->to_string() }
-                (0 .. ($self->num_columns()-1))
-            )
-        )
+            map { $_->to_string() }
+            $self->_foundations(), $self->_freecells(), @{$self->_columns()}
+        ),
+        ""
     );
 }
 
