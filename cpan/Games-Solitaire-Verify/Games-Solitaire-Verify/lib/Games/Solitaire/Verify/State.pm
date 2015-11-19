@@ -902,21 +902,6 @@ sub _verify_and_perform_move_main
     }
 }
 
-sub _stringify_freecells
-{
-    my $self = shift;
-
-    return $self->_freecells()->to_string();
-}
-
-
-sub _stringify_foundations
-{
-    my $self = shift;
-
-    return $self->_foundations()->to_string();
-}
-
 =head2 $self->to_string()
 
 Stringifies the board into the Freecell Solver solution display notation.
