@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use lib '../Games-Solitaire-Verify/lib';
+
 use Inline (
     C => 'DATA',
     CLEAN_AFTER_BUILD => 0,
