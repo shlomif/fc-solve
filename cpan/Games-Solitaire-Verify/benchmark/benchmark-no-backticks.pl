@@ -40,11 +40,12 @@ if ($separator < 0)
 my @game_params = @args[0 .. $separator - 1];
 my @fc_solve_args = (@game_params, @args[$separator+1 .. $#args]);
 
+my $FIRST_INDEX = ($ENV{F} || 1);
 my $LAST_INDEX = ($ENV{L} || 100);
 
 fc_solve_init(\@fc_solve_args);
 
-foreach my $board_idx (1 .. $LAST_INDEX)
+foreach my $board_idx ($FIRST_INDEX .. $LAST_INDEX)
 {
     solve (\@game_params, $board_idx);
 }
