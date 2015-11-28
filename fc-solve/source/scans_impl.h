@@ -741,7 +741,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
                 );
 
                 pq_element_t * const Elements = BEFS_VAR(soft_thread, pqueue).Elements;
-                pq_element_t * const end_element = Elements + BEFS_VAR(soft_thread, pqueue).CurrentSize;
+                pq_element_t * const end_element = Elements + BEFS_VAR(soft_thread, pqueue).current_size;
 
                 pq_element_t * next_element = BEFS_VAR(soft_thread, pqueue).Elements + PQ_FIRST_ENTRY;
 

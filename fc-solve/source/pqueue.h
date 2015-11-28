@@ -67,8 +67,8 @@ typedef struct
 
 typedef struct
 {
-    int max_size;
-    int CurrentSize;
+    unsigned int max_size;
+    unsigned int current_size;
     pq_element_t * Elements; /* pointer to void pointers */
 } PQUEUE;
 
@@ -87,12 +87,12 @@ typedef struct
 
 static GCC_INLINE void fc_solve_pq_init(
     PQUEUE * const pq,
-    const int max_size
+    const unsigned int max_size
     )
 {
     pq->max_size = max_size;
 
-    pq->CurrentSize = 0;
+    pq->current_size = 0;
 
     pq->Elements = SMALLOC(pq->Elements, max_size + 1 );
 }
@@ -117,21 +117,16 @@ static GCC_INLINE void fc_solve_pq_push(
         const pq_rating_t r
         )
 {
-    unsigned int i;
-    pq_element_t * Elements = pq->Elements;
+    typeof(pq->current_size) i = ++(pq->current_size);
 
-    int CurrentSize = pq->CurrentSize;
-
-    if (CurrentSize == pq->max_size )
+    if (i > pq->max_size )
     {
-        pq->Elements = Elements = (pq_element_t *)SREALLOC( Elements, (pq->max_size += 256)+1);
+        pq->Elements = (pq_element_t *)SREALLOC( pq->Elements, (pq->max_size += 256)+1);
     }
 
+    pq_element_t * const Elements = pq->Elements;
     {
-        /* set i to the first unused element and increment CurrentSize */
-
-        i = (++CurrentSize);
-
+        /* set i to the first unused element and increment current_size */
         /* while the parent of the space we're putting the new node into is worse than
            our new node, swap the space with the worse node. We keep doing that until we
            get to a worse node or until we get to the top
@@ -159,15 +154,11 @@ static GCC_INLINE void fc_solve_pq_push(
         Elements[i].val = val;
         Elements[i].rating = r;
     }
-
-    pq->CurrentSize = CurrentSize;
-
-    return;
 }
 
 static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(PQUEUE * pq)
 {
-    return (pq->CurrentSize == 0);
+    return (pq->current_size == 0);
 }
 
 /* remove the first node from the pqueue and provide a pointer to it
@@ -185,7 +176,7 @@ static GCC_INLINE void fc_solve_pq_pop(
     int i;
     int child;
     pq_element_t * const Elements = pq->Elements;
-    typeof(pq->CurrentSize) CurrentSize = pq->CurrentSize;
+    typeof(pq->current_size) current_size = pq->current_size;
 
     if( fc_solve_is_pqueue_empty(pq) )
     {
@@ -196,17 +187,17 @@ static GCC_INLINE void fc_solve_pq_pop(
     *val = Elements[PQ_FIRST_ENTRY].val;
 
     /* get pointer to last element in tree */
-    const pq_element_t last_elem = Elements[ CurrentSize-- ];
+    const pq_element_t last_elem = Elements[ current_size-- ];
 
     /* code to pop an element from an ascending (top to bottom) pqueue */
 
     /*  UNTESTED */
 
-    for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= CurrentSize; i=child )
+    for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= current_size; i=child )
     {
         /* set child to the smaller of the two children... */
 
-        if( (child != CurrentSize) &&
+        if( (child != current_size) &&
             (fcs_pq_rating(Elements[child + 1]) > fcs_pq_rating(Elements[child])) )
         {
             child ++;
@@ -223,7 +214,7 @@ static GCC_INLINE void fc_solve_pq_pop(
     }
 
     Elements[i] = last_elem;
-    pq->CurrentSize = CurrentSize;
+    pq->current_size = current_size;
 
 
     return;
