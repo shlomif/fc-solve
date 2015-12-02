@@ -221,6 +221,8 @@ extern "C" {
 
 #cmakedefine HAVE_STRNCASECMP
 
+#cmakedefine HAVE_VASPRINTF
+
 /* Name of package */
 #define PACKAGE "${PACKAGE}"
 

@@ -28,6 +28,14 @@
 
 #define BUILDING_DLL 1
 
+#include "config.h"
+
+#ifdef HAVE_VASPRINTF
+#define _GNU_SOURCE
+#else
+#include "asprintf.h"
+#endif
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -305,15 +313,15 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     }
 }
 
-static char * const calc_errstr_s(const int padding_len, const char * const format, const char * const arg)
+static GCC_INLINE char * const calc_errstr_s(const char * const format, ...)
 {
-    char * const errstr = SMALLOC(errstr, strlen(arg)+padding_len);
+    va_list my_va_list;
 
-    sprintf(
-        errstr,
-        format,
-        arg
-    );
+    va_start(my_va_list, format);
+
+    char * errstr;
+
+    vasprintf(&errstr, format, my_va_list);
 
     return errstr;
 }
@@ -1327,7 +1335,7 @@ break;
 
             if (freecell_solver_user_set_tests_order(instance, (*arg), &fcs_user_errstr) != 0)
             {
-                *error_string = calc_errstr_s(50, "Error in tests' order!\n%s\n", fcs_user_errstr);
+                *error_string = calc_errstr_s("Error in tests' order!\n%s\n", fcs_user_errstr);
                 free(fcs_user_errstr);
 
                 RET_ERROR_IN_ARG() ;
@@ -1465,7 +1473,7 @@ break;
 
                 case FCS_PRESET_CODE_NOT_FOUND:
                 {
-                    *error_string = calc_errstr_s(50,  "Unknown game \"%s\"!\n\n", s_arg);
+                    *error_string = calc_errstr_s("Unknown game \"%s\"!\n\n", s_arg);
 
                     RET_ERROR_IN_ARG() ;
                 }
@@ -1473,7 +1481,7 @@ break;
 
                 case FCS_PRESET_CODE_FREECELLS_EXCEED_MAX:
                 {
-                    *error_string = calc_errstr_s(200,
+                    *error_string = calc_errstr_s(
                         "The game \"%s\" exceeds the maximal number "
                         "of freecells in the program.\n"
                         "Modify the file \"config.h\" and recompile, "
@@ -1486,7 +1494,7 @@ break;
 
                 case FCS_PRESET_CODE_STACKS_EXCEED_MAX:
                 {
-                    *error_string = calc_errstr_s(200,
+                    *error_string = calc_errstr_s(
                         "The game \"%s\" exceeds the maximal number "
                         "of stacks in the program.\n"
                         "Modify the file \"config.h\" and recompile, "
@@ -1501,7 +1509,7 @@ break;
 
                 default:
                 {
-                    *error_string = calc_errstr_s(200,
+                    *error_string = calc_errstr_s(
                         "The game \"%s\" exceeds the limits of the program.\n"
                         "Modify the file \"config.h\" and recompile, if you wish to solve one of its boards.\n",
                         s_arg
@@ -1545,7 +1553,7 @@ break;
 #endif
             else
             {
-                *error_string = calc_errstr_s(50,
+                *error_string = calc_errstr_s(
                     "Unknown solving method \"%s\".\n",
                     (*arg)
                 );
@@ -1722,7 +1730,7 @@ break;
                     &fcs_user_errstr
                     ) != 0)
             {
-                *error_string = calc_errstr_s(100,
+                *error_string = calc_errstr_s(
                     "Error in the optimization scan's tests' order!\n%s\n",
                     fcs_user_errstr
                 );
@@ -1749,7 +1757,7 @@ break;
             }
             else
             {
-                *error_string = calc_errstr_s(50,
+                *error_string = calc_errstr_s(
                     "Unknown scans' synergy type \"%s\"!\n", (*arg)
                 );
 
@@ -1957,7 +1965,7 @@ break;
                     )
                 )
                 {
-                    *error_string = calc_errstr_s(50,
+                    *error_string = calc_errstr_s(
                             "Error in depth tests' order!\n%s\n",
                             fcs_user_errstr
                     );
@@ -1980,7 +1988,7 @@ break;
                     &fcs_user_errstr
                     ) != 0)
             {
-                *error_string = calc_errstr_s(50,
+                *error_string = calc_errstr_s(
                     "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr
                 );
@@ -2011,7 +2019,7 @@ break;
                 (*arg)
             ) != 0)
             {
-                *error_string = calc_errstr_s(50,
+                *error_string = calc_errstr_s(
                     "Unknown flares choice argument '%s'.\n",
                     (*arg)
                 );
@@ -2042,7 +2050,7 @@ break;
                     &fcs_user_errstr
                 ) != 0)
                 {
-                    *error_string = calc_errstr_s(50,
+                    *error_string = calc_errstr_s(
                             "Error in patsolve X param setting!\n%s\n",
                             fcs_user_errstr
                     );
@@ -2075,7 +2083,7 @@ break;
                     &fcs_user_errstr
                 ) != 0)
                 {
-                    *error_string = calc_errstr_s(50,
+                    *error_string = calc_errstr_s(
                             "Error in patsolve Y param setting!\n%s\n",
                             fcs_user_errstr
                     );
