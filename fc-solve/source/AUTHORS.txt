@@ -132,3 +132,8 @@ reporting some failures of Freecell Solver executables to handle
 malformed input in the Debian Bug Tracker, e.g:
 https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=715914 with
 steps to reproduce.
+
+* http://insanecoding.blogspot.com/[“Insane Coder”] - providing the alternative
+vasprintf() and asprintf() implementation, that was placed under the
++asprintf-1.0+ directory and used in case the host system does not provide
+such a function.
