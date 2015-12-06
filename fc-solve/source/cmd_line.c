@@ -323,6 +323,8 @@ static GCC_INLINE char * const calc_errstr_s(const char * const format, ...)
 
     vasprintf(&errstr, format, my_va_list);
 
+    va_end(my_va_list);
+
     return errstr;
 }
 

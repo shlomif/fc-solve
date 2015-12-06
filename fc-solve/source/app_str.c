@@ -45,6 +45,8 @@ void fc_solve_append_string_sprintf(
 
     va_start(my_va_list, format);
     app_str->end_of_buffer += vsprintf(app_str->end_of_buffer, format, my_va_list);
+    va_end(my_va_list);
+
     /*
      * Check to see if we don't have enough space in which case we should
      * resize
