@@ -19,8 +19,8 @@ for rev in $(seq "$start_rev" "$end_rev") ; do
         mv -f CMakeLists.txt.orig CMakeLists.txt
     fi
     svn up -r "$rev" -q
-    cp -f CMakeLists.txt CMakeLists.txt.orig 
-    perl -ni.bak -le 'print qq{LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")\n} if m{SET \(IDX 1\)}; print;' CMakeLists.txt 
+    cp -f CMakeLists.txt CMakeLists.txt.orig
+    perl -ni.bak -le 'print qq{LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")\n} if m{SET \(IDX 1\)}; print;' CMakeLists.txt
     ./Tatzer -l p4b --prefix="$HOME/fcs"
     make
     make install
@@ -29,7 +29,7 @@ for rev in $(seq "$start_rev" "$end_rev") ; do
     echo
 
     ARGS="--worker-step 16 -l tic" time bash scripts/time-threads-num.bash 2 2
-    
+
     echo "Times of $rev"
 
     perl scripts/time-fcs.pl *DUMPS*/*
@@ -38,7 +38,7 @@ for rev in $(seq "$start_rev" "$end_rev") ; do
     echo
 
     ARGS="--worker-step 16 -l tic" time bash scripts/time-threads-num.bash 2 2
-    
+
     echo "Second Times of $rev"
 
     perl scripts/time-fcs.pl *DUMPS*/*

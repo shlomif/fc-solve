@@ -8,9 +8,9 @@ my $total_num = 0;
 
 my $max_num_iterations = 1_500_000;
 
-my %stats = 
+my %stats =
 (
-    'solved' => 
+    'solved' =>
     {
         'all' => [],
         'all_iters' => [],
@@ -22,7 +22,7 @@ my %stats =
     {
         'all' => [],
         'all_iters' => [],
-        'stats' => [ (map { [] } @limits) ],       
+        'stats' => [ (map { [] } @limits) ],
         'sum' => 0,
         'sum_squares' => 0,
     },
@@ -70,7 +70,7 @@ while (!eof(I))
             push @{$stats{'stuck'}}, $num;
             next;
         }
-        
+
         push @{$which->{'all'}}, $num;
         my $bucket = 0;
         while ($limits[$bucket] < $num_iters)
@@ -94,10 +94,10 @@ foreach my $is_solved (1, 0)
     my $which = $stats{$is_solved ? "solved" : "not_solved"};
     $which->{'all_iters'} = [ (sort { $a <=> $b } @{$which->{'all_iters'}}) ];
     print ($is_solved ? "Solved:\n-------\n\n" : "Not-Solved:\n-----------\n\n");
-    
+
 
     my $num = scalar(@{$which->{'all'}});
-    
+
     print "Num: " . $num . " (" . sprintf("%.1f", ($num/$total_num*100)) . "%)\n";
     print "Average Iters Num.: " . sprintf("%.2f", ($which->{'sum'}/$num)) . "\n";
     print "Median Iters Num.: " . $which->{'all_iters'}->[int($num/2)] . "\n";
@@ -105,10 +105,10 @@ foreach my $is_solved (1, 0)
     for my $bucket (0 .. $#limits)
     {
         my $num_in_bucket = scalar(@{$which->{'stats'}->[$bucket]});
-        print "In the range " . 
+        print "In the range " .
             sprintf("%8s", (($bucket == 0) ? 0 : $limits[$bucket-1])) . " - " .
-            sprintf("%8s", $limits[$bucket]) . " : " . 
-            sprintf("%5s", $num_in_bucket) . 
+            sprintf("%8s", $limits[$bucket]) . " : " .
+            sprintf("%5s", $num_in_bucket) .
             " (" . sprintf("%5.1f", ($num_in_bucket/$num*100)) . "%)"."\n";
     }
     print "\n\n";

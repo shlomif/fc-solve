@@ -1,10 +1,10 @@
 #!/usr/bin/ruby
 
 # Copyright 2012 by Shlomi Fish
-# 
+#
 # This program is distributed under the MIT (X11) License:
 # L<http://www.opensource.org/licenses/mit-license.php>
-# 
+#
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
 # files (the "Software"), to deal in the Software without
@@ -13,10 +13,10 @@
 # copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following
 # conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -27,7 +27,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 # This script should be run on dumps like these:
-# 
+#
 # http://fc-solve.shlomifish.org/downloads/fc-solve/data/2fc-solvability/dbm-fc-solver-2fc-results.tar.xz
 #
 # It produces a report like this:
@@ -37,9 +37,9 @@
 daj_results = <<'EOF';
 Of the 33 you have listed, he [= Danny A. Jones] reported:
 8 impossible (891, 7214, 14445, 15957, 16462, 17184, 19678, 27799),
-11 intractable (982, 3129, 11266, 12038, 12064, 14790, 15804, 20792, 21779, 26124, 
+11 intractable (982, 3129, 11266, 12038, 12064, 14790, 15804, 20792, 21779, 26124,
 29577),
-14 solved (5435, 6090, 7728, 9034, 13659, 13705, 14262, 16322, 17684, 17760, 17880, 
+14 solved (5435, 6090, 7728, 9034, 13659, 13705, 14262, 16322, 17684, 17760, 17880,
 18446, 19671, 28188)
 EOF
 
@@ -51,9 +51,9 @@ daj_results.scan(
 end
 
 deals = []
-Dir.glob("*.dump").each do |fn| 
-    if not fn =~ /^(\d+)\.dump$/ then 
-        raise "#{fn} is wrong." 
+Dir.glob("*.dump").each do |fn|
+    if not fn =~ /^(\d+)\.dump$/ then
+        raise "#{fn} is wrong."
     end
     deals << $1.to_i
 end

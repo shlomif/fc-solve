@@ -5,7 +5,7 @@ package Log2;
 # Sample invocation and result:
 #
 # $ perl -MLog2 -e 'plog2(4 => 14, 44 => 5, 4 => 1, 4 => 3)'
-# log2(14) * 4 + log2(5) * 44 + log2(1) * 4 + log2(3) * 4 = 
+# log2(14) * 4 + log2(5) * 44 + log2(1) * 4 + log2(3) * 4 =
 #    123.734105866159 bits (bytes: 16)
 
 use strict;

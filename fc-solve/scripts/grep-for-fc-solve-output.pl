@@ -62,11 +62,11 @@ while (!eof($in))
 
     $check = sub {
         return (
-            1 && #($foundations =~ /D-7/) && 
+            1 && #($foundations =~ /D-7/) &&
             ($foundations =~ /C-A/) &&
             ($foundations =~ /H-2/) &&
             (grep { m/KH QH JH/ } @stacks) &&
-            (grep { m/7H 6H 5H 4H/ } @stacks) && 
+            (grep { m/7H 6H 5H 4H/ } @stacks) &&
             (grep { m/JC 10C/ } @stacks) &&
             (grep { m/JH 10H 9H 8H 7H/ } @stacks) &&
             (grep { m/KS QS JS/ } @stacks) &&

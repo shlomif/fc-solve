@@ -6,5 +6,5 @@ seq 1 5000 |
         make_pysol_freecell_board.py "$SEED" seahaven |
             fc-solve -l gi --game seahaven -mi 1500000 |
                 tail -3
-    done) | 
+    done) |
     tee total.dump.txt
