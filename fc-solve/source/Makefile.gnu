@@ -26,7 +26,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
+CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve -DHAVE_VASPRINTF
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
