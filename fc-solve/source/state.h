@@ -244,14 +244,10 @@ typedef struct fcs_struct_state_t fcs_state_t;
         }     \
     }
 
-#define fcs_duplicate_state_extra(ptr_dest, ptr_src)  \
+#define fcs_duplicate_state_extra(dest_info)  \
     {   \
-        (ptr_dest)->info.stacks_copy_on_write_flags = 0; \
+        (dest_info).stacks_copy_on_write_flags = 0; \
     }
-#define fcs_duplicate_kv_state_extra(ptr_dest, ptr_src) \
-{ \
-    ptr_dest->stacks_copy_on_write_flags = 0; \
-}
 
 typedef char fcs_locs_t;
 
@@ -302,10 +298,7 @@ typedef char fcs_locs_t;
 
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
 
-#define fcs_duplicate_state_extra(ptr_dest, ptr_src) \
-    {}
-
-#define fcs_duplicate_kv_state_extra(ptr_dest, ptr_src) \
+#define fcs_duplicate_state_extra(dest_info)  \
     {}
 
 #define fcs_copy_stack(state_key, state_val, idx, buffer) {}
@@ -506,7 +499,7 @@ typedef fcs_state_extra_info_t fcs_collectible_state_t;
     { \
     *((ptr_dest)->key) = *((ptr_src)->key); \
     *((ptr_dest)->val) = *((ptr_src)->val); \
-    fcs_duplicate_state_extra(((ptr_dest)->val), ((ptr_src)->val));   \
+    fcs_duplicate_state_extra(*((ptr_dest)->val));   \
     }
 
 #define fcs_duplicate_kv_state(x,y) fcs_duplicate_state(x,y)
@@ -529,7 +522,7 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 #define fcs_duplicate_state(ptr_dest, ptr_src) \
     { \
     *(ptr_dest) = *(ptr_src); \
-    fcs_duplicate_state_extra(ptr_dest, ptr_src);   \
+    fcs_duplicate_state_extra((ptr_dest)->info);   \
     }
 
 
@@ -537,7 +530,7 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
     { \
     *((ptr_dest)->key) = *((ptr_src)->key); \
     *((ptr_dest)->val) = *((ptr_src)->val); \
-    fcs_duplicate_kv_state_extra(((ptr_dest)->val), ((ptr_src)->val));   \
+    fcs_duplicate_state_extra(*((ptr_dest)->val));   \
     }
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (s)
