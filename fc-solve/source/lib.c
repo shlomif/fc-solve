@@ -896,7 +896,6 @@ static void trace_flare_solution(
         &(flare->obj);
 
     fc_solve_trace_solution(instance);
-    fcs_kv_state_t pass = FCS_STATE_keyval_pair_to_kv(&(user->state));
     flare->trace_solution_state_locs = user->state_locs;
     /*
      * TODO : maybe only normalize the final moves' stack in
@@ -904,7 +903,7 @@ static void trace_flare_solution(
      * */
     fc_solve_move_stack_normalize(
         &(instance->solution_moves),
-        &(pass),
+        &(user->state),
         &(flare->trace_solution_state_locs),
         INSTANCE_FREECELLS_NUM,
         INSTANCE_STACKS_NUM,
@@ -1104,17 +1103,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * normalized states. So We're duplicating
              * state to it before state state_pass is canonized.
              * */
-            {
-                fcs_kv_state_t pass = FCS_STATE_keyval_pair_to_kv(&(user->running_state));
-
-                fcs_duplicate_kv_state(&pass, &state_pass);
-            }
-
-            {
-                fcs_kv_state_t initial_pass = FCS_STATE_keyval_pair_to_kv(&(user->initial_non_canonized_state));
-
-                fcs_duplicate_kv_state(&initial_pass, &state_pass);
-            }
+            FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
+            FCS_STATE__DUP_keyval_pair(user->initial_non_canonized_state, user->state);
 
             fc_solve_canonize_state_with_locs
                 (

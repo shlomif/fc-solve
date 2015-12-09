@@ -1176,4 +1176,10 @@ static GCC_INLINE const fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t c
 
 #endif
 
+#define FCS_STATE__DUP_keyval_pair(dest, src) \
+    { \
+    (dest) = (src); \
+    fcs_duplicate_state_extra((dest).info);   \
+    }
+
 #endif /* FC_SOLVE__STATE_H */

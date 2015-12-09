@@ -537,21 +537,18 @@ extern void fc_solve_trace_solution(
 #define FCS_S_FC_LOCS(s) (locs->fc_locs)
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 
+        FCS_STATE__DUP_keyval_pair(s_and_info, *(instance->state_copy_ptr));
         fcs_kv_state_t dynamic_state = FCS_STATE_keyval_pair_to_kv(&(s_and_info));
-        fcs_kv_state_t state_copy_ptr = FCS_STATE_keyval_pair_to_kv(instance->state_copy_ptr);
-
-        fcs_duplicate_kv_state( &(dynamic_state), &(state_copy_ptr) );
 
         const int stacks_num = INSTANCE_STACKS_NUM;
         const int freecells_num = INSTANCE_FREECELLS_NUM;
         const int decks_num = INSTANCE_DECKS_NUM;
 
-        fcs_state_t * s = dynamic_state.key;
-
+        fcs_state_t * const s = &(s_and_info.s);
 #ifdef INDIRECT_STACK_STATES
         for (int i=0 ; i < stacks_num ; i++)
         {
-            fcs_copy_stack(*(dynamic_state.key), *(dynamic_state.val), i, indirect_stacks_buffer);
+            fcs_copy_stack(s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);
         }
 #endif
 
@@ -570,7 +567,7 @@ extern void fc_solve_trace_solution(
                 int src_col_idx;
                 for (src_col_idx = 0; src_col_idx < stacks_num ; src_col_idx++)
                 {
-                    fcs_cards_column_t src_col = fcs_state_get_col(*s, src_col_idx);
+                    fcs_cards_column_t src_col = fcs_state_get_col(s_and_info.s, src_col_idx);
                     const int src_cards_num = fcs_col_len(src_col);
                     if (src_cards_num)
                     {
@@ -585,7 +582,7 @@ extern void fc_solve_trace_solution(
                 int dest;
                 for (dest = 0 ; dest < freecells_num ; dest++)
                 {
-                    if (fcs_freecell_is_empty(*s, dest))
+                    if (fcs_freecell_is_empty(s_and_info.s, dest))
                     {
                         break;
                     }
@@ -596,7 +593,7 @@ extern void fc_solve_trace_solution(
             }
             else if (mp->totype == FCS_PATS__TYPE_FOUNDATION)
             {
-                const find_card_ret_t src_s = find_card_src_string(s, card, stacks_num, freecells_num);
+                const find_card_ret_t src_s = find_card_src_string(&(s_and_info.s), card, stacks_num, freecells_num);
                 if (src_s.type == FREECELL)
                 {
                     fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);

@@ -464,12 +464,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
             sizeof(*state_copy_ptr)
         );
 
-    fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr);
-    {
-        fcs_kv_state_t pass_init = FCS_STATE_keyval_pair_to_kv(init_state);
-
-        fcs_duplicate_kv_state( &(pass_copy), &(pass_init) );
-    }
+    FCS_STATE__DUP_keyval_pair(*state_copy_ptr, *init_state);
 
 #ifdef INDIRECT_STACK_STATES
     {
@@ -619,6 +614,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
 
     {
         fcs_kv_state_t no_use;
+        fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr);
 
         fc_solve_check_and_add_state(
 #ifdef FCS_SINGLE_HARD_THREAD

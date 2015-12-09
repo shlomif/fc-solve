@@ -156,7 +156,7 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
 
 static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_t * const moves,
-    const fcs_kv_state_t * const init_state,
+    const fcs_state_keyval_pair_t * const init_state,
     fcs_state_locs_struct_t * const locs,
     const int freecells_num,
     const int stacks_num,
@@ -172,12 +172,14 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #define FCS_S_FC_LOCS(s) (locs->fc_locs)
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 
+    /* TODO : Get rid of dynamic_state */
+
     fcs_kv_state_t dynamic_state = FCS_STATE_keyval_pair_to_kv(&(s_and_info));
 
     fcs_internal_move_t out_move = fc_solve_empty_move;
 
 
-    fcs_duplicate_kv_state( &(dynamic_state), init_state );
+    FCS_STATE__DUP_keyval_pair(s_and_info, *init_state);
 
 #ifdef INDIRECT_STACK_STATES
     for (int i=0 ; i < stacks_num ; i++)

@@ -480,7 +480,6 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     char * s_ptr;
     fcs_encoded_state_buffer_t final_stack_encoded_state;
     int hex_digits;
-    fcs_kv_state_t kv_init, kv_running;
     fcs_encoded_state_buffer_t running_key;
     fcs_dbm_record_t * running_parent;
     fcs_state_keyval_pair_t running_state;
@@ -532,9 +531,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     /* Skip the '|'. */
     s_ptr++;
 
-    kv_init = FCS_STATE_keyval_pair_to_kv(init_state_ptr);
-    kv_running = FCS_STATE_keyval_pair_to_kv(&running_state);
-    fcs_duplicate_kv_state(&kv_running, &kv_init);
+    FCS_STATE__DUP_keyval_pair(running_state, *init_state_ptr);
 
     /* The NULL parent and move for indicating this is the initial
      * state. */
