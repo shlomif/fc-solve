@@ -101,13 +101,9 @@ void fc_solve_moves_processed_gen(
     fcs_state_keyval_pair_t pos_proto;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    fcs_kv_state_t orig_pass;
-    orig_pass.key = &(orig->s);
-    orig_pass.val = &(orig->info);
+    fcs_kv_state_t orig_pass = FCS_STATE_keyval_pair_to_kv(orig);
 
-    fcs_kv_state_t pos_pass;
-    pos_pass.key = &(pos_proto.s);
-    pos_pass.val = &(pos_proto.info);
+    fcs_kv_state_t pos_pass = FCS_STATE_keyval_pair_to_kv(&pos_proto);
 
     fcs_duplicate_kv_state(&pos_pass, &orig_pass);
     for (int i = 0 ; i < 8 ; i++)

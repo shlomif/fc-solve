@@ -532,10 +532,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     /* Skip the '|'. */
     s_ptr++;
 
-    kv_init.key = &(init_state_ptr->s);
-    kv_init.val = &(init_state_ptr->info);
-    kv_running.key = &(running_state.s);
-    kv_running.val = &(running_state.info);
+    kv_init = FCS_STATE_keyval_pair_to_kv(init_state_ptr);
+    kv_running = FCS_STATE_keyval_pair_to_kv(&running_state);
     fcs_duplicate_kv_state(&kv_running, &kv_init);
 
     /* The NULL parent and move for indicating this is the initial
