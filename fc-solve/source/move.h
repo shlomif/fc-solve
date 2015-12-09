@@ -169,8 +169,8 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-#define FCS_S_FC_LOCS(s) (locs->fc_locs)
-#define FCS_S_STACK_LOCS(s) (locs->stack_locs)
+#define FCS_S_FC_LOCS() (locs->fc_locs)
+#define FCS_S_STACK_LOCS() (locs->stack_locs)
 
     /* TODO : Get rid of dynamic_state */
 
@@ -221,7 +221,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             )
         {
             fcs_int_move_set_src_stack(out_move,
-                (FCS_S_STACK_LOCS(&dynamic_state))[
+                (FCS_S_STACK_LOCS())[
                     (int)fcs_int_move_get_src_stack(in_move)
                 ]
             );
@@ -232,7 +232,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             (move_type == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION))
         {
             fcs_int_move_set_src_freecell(out_move,
-                (FCS_S_FC_LOCS(&dynamic_state))[
+                (FCS_S_FC_LOCS())[
                     (int)fcs_int_move_get_src_freecell(in_move)
                 ]
             );
@@ -244,7 +244,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             )
         {
             fcs_int_move_set_dest_stack(out_move,
-                (FCS_S_STACK_LOCS(&dynamic_state))[
+                (FCS_S_STACK_LOCS())[
                     (int)fcs_int_move_get_dest_stack(in_move)
                 ]
             );
@@ -255,7 +255,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             )
         {
             fcs_int_move_set_dest_freecell(out_move,
-                FCS_S_FC_LOCS(&dynamic_state)[
+                FCS_S_FC_LOCS()[
                     (int)fcs_int_move_get_dest_freecell(in_move)
                 ]
             );
@@ -290,6 +290,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fc_solve_move_stack_swallow_stack(moves, (&temp_moves));
     fcs_move_stack_static_destroy(temp_moves);
 }
+
+#undef FCS_S_FC_LOCS
+#undef FCS_S_STACK_LOCS
 
 extern char * fc_solve_move_to_string_w_state(
         fcs_state_keyval_pair_t * const state,
