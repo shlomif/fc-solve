@@ -64,37 +64,62 @@ static GCC_INLINE void fc_solve__assign_dest_stack_and_col_ptr(
     *(ptr) = dest_col;
 }
 
-static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__freecell_generator(
+
+static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
     fc_solve_soft_thread_t * const soft_thread,
     const fcs_state_t * const ptr_state_key,
-    char * const positions_by_rank
+    fcs__positions_by_rank_t positions_by_rank
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+    , const fcs_bool_t is_simple_simon
+#endif
 )
 {
-#define state_key (*ptr_state_key)
-
-#if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
+#if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS) && defined(FCS_DISABLE_SIMPLE_SIMON)))
     fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
     SET_GAME_PARAMS();
 #endif
 
+    memset(positions_by_rank, -1, sizeof(fcs__positions_by_rank_t));
+
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+    if (is_simple_simon)
+    {
+#define FCS_SS_POS_BY_RANK_SIZE (sizeof(fcs_pos_by_rank_t) * FCS_SS_POS_BY_RANK_LEN)
+#define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
+        fcs_pos_by_rank_t * const p_by_r = (fcs_pos_by_rank_t *)positions_by_rank;
+        for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+        {
+            const fcs_const_cards_column_t dest_col = fcs_state_get_col(*ptr_state_key, ds);
+            const int dest_cards_num = fcs_col_len(dest_col);
+
+            for (int dc = 0 ; dc < dest_cards_num ; dc++)
+            {
+                const fcs_card_t card = fcs_col_get_card(dest_col, dc);
+                const int suit = fcs_card_suit(card);
+                const int rank = fcs_card_rank(card);
+
+                p_by_r[FCS_POS_IDX(rank, suit)] = (fcs_pos_by_rank_t) {.col = ds, .height = dc};
+            }
+        }
+    }
+    else
+#endif
+    {
+#define state_key (*ptr_state_key)
+
 #ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+        const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
 
-    /* We need 2 chars per card - one for the column_idx and one
-     * for the card_idx.
-     *
-     * We also need it times 13 for each of the ranks.
-     *
-     * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
-     * (-1,-1) (= end) padding.             * */
-#define FCS_POS_BY_RANK_SIZE (sizeof(positions_by_rank[0]) * FCS_POS_BY_RANK_LEN)
-
-    memset(positions_by_rank, -1, FCS_POS_BY_RANK_SIZE);
-
-    {
-        /* Populate positions_by_rank by looping over the stacks and
-         * indices looking for the cards and filling them. */
+        /* We need 2 chars per card - one for the column_idx and one
+         * for the card_idx.
+         *
+         * We also need it times 13 for each of the ranks.
+         *
+         * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+         * (-1,-1) (= end) padding.             * */
+            /* Populate positions_by_rank by looping over the stacks and
+             * indices looking for the cards and filling them. */
 
         for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
         {
@@ -139,69 +164,8 @@ static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__freecell_generat
             );
         }
     }
-}
 #undef state_key
 #undef ptr_state_key
-
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-#define FCS_SS_POS_BY_RANK_SIZE (sizeof(fcs_pos_by_rank_t) * FCS_SS_POS_BY_RANK_LEN)
-static GCC_INLINE void fc_solve_get_the_positions_by_rank_data__ss_generator(
-    fc_solve_soft_thread_t * const soft_thread,
-    const fcs_state_t * const the_state,
-    char * const positions_by_rank
-)
-{
-    fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
-    SET_GAME_PARAMS();
-
-#define FCS_POS_IDX(rank, suit) ( (suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank) )
-
-    memset(positions_by_rank, -1, FCS_SS_POS_BY_RANK_SIZE);
-    fcs_pos_by_rank_t * const p_by_r = (fcs_pos_by_rank_t *)positions_by_rank;
-    for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
-    {
-        const fcs_const_cards_column_t dest_col = fcs_state_get_col(*the_state, ds);
-        const int dest_cards_num = fcs_col_len(dest_col);
-
-        for (int dc = 0 ; dc < dest_cards_num ; dc++)
-        {
-            const fcs_card_t card = fcs_col_get_card(dest_col, dc);
-            const int suit = fcs_card_suit(card);
-            const int rank = fcs_card_rank(card);
-
-            p_by_r[FCS_POS_IDX(rank, suit)] = (fcs_pos_by_rank_t) {.col = ds, .height = dc};
-        }
-    }
-}
-#endif
-
-static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
-    fc_solve_soft_thread_t * const soft_thread,
-    const fcs_state_t * const ptr_state_key,
-    fcs__positions_by_rank_t positions_by_rank
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-    , const fcs_bool_t is_simple_simon
-#endif
-)
-{
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-    if (is_simple_simon)
-    {
-        fc_solve_get_the_positions_by_rank_data__ss_generator(
-            soft_thread,
-            ptr_state_key,
-            positions_by_rank
-        );
-    }
-    else
-#endif
-    {
-        fc_solve_get_the_positions_by_rank_data__freecell_generator(
-            soft_thread,
-            ptr_state_key,
-            positions_by_rank
-        );
-    }
 }
 
 
