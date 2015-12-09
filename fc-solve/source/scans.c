@@ -261,7 +261,8 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         new_cache_state = parents_stack[parents_stack_len-1].new_cache_state;
 
 
-        pass.key = &(new_cache_state->key);
+        fcs_state_t * const pass_key = &(new_cache_state->key);
+        pass.key = pass_key;
         pass.val = &(temp_new_state_val);
         src_pass.key = &(parents_stack[parents_stack_len].new_cache_state->key);
         src_pass.val = parents_stack[parents_stack_len].state_val;
@@ -295,7 +296,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
         /* The state->parent_state moves stack has an implicit canonize
          * suffix move. */
         fc_solve_canonize_state(
-            &(pass),
+            pass_key,
             LOCAL_FREECELLS_NUM,
             LOCAL_STACKS_NUM
         );

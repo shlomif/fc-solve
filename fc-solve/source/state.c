@@ -84,21 +84,19 @@ static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 #endif
 
 void fc_solve_canonize_state(
-    fcs_kv_state_t * state_raw,
-    int freecells_num,
-    int stacks_num)
+    fcs_state_t * const ptr_state_key,
+    const int freecells_num,
+    const int stacks_num)
 {
-    int b,c;
-
     DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
 
-#define state_key (state_raw->key)
+#define state_key (ptr_state_key)
     /* Insertion-sort the stacks */
 
-    for(b=1;b<stacks_num;b++)
+    for (int b=1 ; b < stacks_num ; b++)
     {
-        c = b;
+        int c = b;
         while(
             (c>0)    &&
             ((STACK_COMPARE(
@@ -119,9 +117,9 @@ void fc_solve_canonize_state(
 
     /* Insertion-sort the freecells */
 
-    for(b=1;b<freecells_num;b++)
+    for(int b=1 ; b < freecells_num ; b++)
     {
-        c = b;
+        int c = b;
 
         while(
             (c>0)    &&

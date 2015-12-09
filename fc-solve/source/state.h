@@ -578,9 +578,9 @@ extern fcs_card_t fc_solve_empty_card;
 #endif
 
 extern void fc_solve_canonize_state(
-    fcs_kv_state_t * state_raw,
-    int freecells_num,
-    int stacks_num
+    fcs_state_t * const ptr_state_key,
+    const int freecells_num,
+    const int stacks_num
     );
 
 void fc_solve_canonize_state_with_locs(

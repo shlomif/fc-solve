@@ -349,7 +349,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 
     {
         fc_solve_canonize_state(
-            new_state,
+            new_state_key,
             INSTANCE_FREECELLS_NUM,
             INSTANCE_STACKS_NUM
             );

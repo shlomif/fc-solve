@@ -159,7 +159,7 @@ void fc_solve_apply_move(
             }
             else
             {
-                fc_solve_canonize_state (state, freecells_num, stacks_num);
+                fc_solve_canonize_state (state_key, freecells_num, stacks_num);
             }
         }
         break;
