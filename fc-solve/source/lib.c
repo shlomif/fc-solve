@@ -1098,17 +1098,16 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fc_solve_init_locs(&(user->initial_state_locs));
             user->state_locs = user->initial_state_locs;
 
-            fcs_kv_state_t state_pass = FCS_STATE_keyval_pair_to_kv(&(user->state));
             /* running_state and initial_non_canonized_state are
              * normalized states. So We're duplicating
-             * state to it before state state_pass is canonized.
+             * state to it before user->state is canonized.
              * */
             FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
             FCS_STATE__DUP_keyval_pair(user->initial_non_canonized_state, user->state);
 
             fc_solve_canonize_state_with_locs
                 (
-                 &state_pass,
+                 &(user->state.s),
                 &(user->state_locs),
                 INSTANCE_FREECELLS_NUM,
                 INSTANCE_STACKS_NUM

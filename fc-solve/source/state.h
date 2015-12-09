@@ -584,10 +584,10 @@ extern void fc_solve_canonize_state(
     );
 
 void fc_solve_canonize_state_with_locs(
-    fcs_kv_state_t * state,
-    fcs_state_locs_struct_t * locs,
-    int freecells_num,
-    int stacks_num);
+    fcs_state_t * const ptr_state_key,
+    fcs_state_locs_struct_t * const locs,
+    const int freecells_num,
+    const int stacks_num);
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 

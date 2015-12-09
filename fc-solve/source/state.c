@@ -142,8 +142,8 @@ void fc_solve_canonize_state(
 
 
 void fc_solve_canonize_state_with_locs(
-    fcs_kv_state_t * const state,
-#define state_key (state->key)
+    fcs_state_t * const ptr_state_key,
+#define state_key (ptr_state_key)
     fcs_state_locs_struct_t * const locs,
     const int freecells_num,
     const int stacks_num)

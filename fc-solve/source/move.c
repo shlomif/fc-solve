@@ -152,7 +152,7 @@ void fc_solve_apply_move(
             if (locs)
             {
                 fc_solve_canonize_state_with_locs(
-                    state,
+                    state_key,
                     locs,
                     freecells_num, stacks_num
                 );
