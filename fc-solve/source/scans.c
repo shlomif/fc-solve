@@ -523,7 +523,7 @@ static void dump_pqueue (
 
     printf("<pqueue_dump stage=\"%s\">\n\n", stage_id);
 
-    for (i = PQ_FIRST_ENTRY ; i < pq->CurrentSize ; i++)
+    for (i = PQ_FIRST_ENTRY ; i < pq->current_size ; i++)
     {
         printf("Rating[%d] = %d\nState[%d] = <<<\n", i, pq->Elements[i].rating, i);
         s = fc_solve_state_as_string(pq->Elements[i].val,
