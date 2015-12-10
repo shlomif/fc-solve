@@ -253,29 +253,18 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
 
     for (parents_stack_len--; parents_stack_len > 0; parents_stack_len--)
     {
-        fcs_kv_state_t pass, src_pass;
-
-        fcs_collectible_state_t temp_new_state_val;
-        fcs_internal_move_t * next_move;
 
         new_cache_state = parents_stack[parents_stack_len-1].new_cache_state;
 
-
         fcs_state_t * const pass_key = &(new_cache_state->key);
-        pass.key = pass_key;
-        pass.val = &(temp_new_state_val);
-        src_pass.key = &(parents_stack[parents_stack_len].new_cache_state->key);
-        src_pass.val = parents_stack[parents_stack_len].state_val;
+        *pass_key = parents_stack[parents_stack_len].new_cache_state->key;
 
-        fcs_duplicate_state( &pass, &src_pass);
-
-        fcs_move_stack_t * const stack_ptr__moves_to_parent =
+        const fcs_move_stack_t * const stack_ptr__moves_to_parent =
             parents_stack[parents_stack_len-1].state_val->moves_to_parent;
-        fcs_internal_move_t * const moves_end =
+        const fcs_internal_move_t * next_move = stack_ptr__moves_to_parent->moves;
+        const fcs_internal_move_t * const moves_end =
         (
-            (next_move = stack_ptr__moves_to_parent->moves)
-            +
-            stack_ptr__moves_to_parent->num_moves
+            next_move + stack_ptr__moves_to_parent->num_moves
         );
 
 
