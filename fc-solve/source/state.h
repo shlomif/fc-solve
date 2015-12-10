@@ -509,7 +509,7 @@ typedef fcs_state_extra_info_t fcs_collectible_state_t;
 #define FCS_STATE_kv_to_collectible(s) ((s)->val)
 
 static GCC_INLINE void
-FCS_STATE_collectible_to_kv(fcs_kv_state_t * ret, fcs_collectible_state_t * s)
+FCS_STATE_collectible_to_kv(fcs_kv_state_t * const ret, fcs_collectible_state_t * const s)
 {
     ret->val = s;
 }
