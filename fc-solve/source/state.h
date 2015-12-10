@@ -482,6 +482,14 @@ static GCC_INLINE const fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(fcs_state_key
     return (const fcs_kv_state_t) {.key = &(s->s), .val = &(s->info)};
 }
 
+/* Always the same. */
+#define fcs_duplicate_kv_state(ptr_dest, ptr_src) \
+    { \
+    *((ptr_dest)->key) = *((ptr_src)->key); \
+    *((ptr_dest)->val) = *((ptr_src)->val); \
+    fcs_duplicate_state_extra(*((ptr_dest)->val));   \
+    }
+
 /*
  * This type is the struct that is collectible inside the hash.
  *
@@ -495,14 +503,7 @@ static GCC_INLINE const fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(fcs_state_key
 typedef fcs_state_extra_info_t fcs_collectible_state_t;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 
-#define fcs_duplicate_state(ptr_dest, ptr_src) \
-    { \
-    *((ptr_dest)->key) = *((ptr_src)->key); \
-    *((ptr_dest)->val) = *((ptr_src)->val); \
-    fcs_duplicate_state_extra(*((ptr_dest)->val));   \
-    }
-
-#define fcs_duplicate_kv_state(x,y) fcs_duplicate_state(x,y)
+#define fcs_duplicate_state(x,y) fcs_duplicate_kv_state((x),(y))
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (&((s)->info))
 #define FCS_STATE_kv_to_collectible(s) ((s)->val)
@@ -526,12 +527,6 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
     }
 
 
-#define fcs_duplicate_kv_state(ptr_dest, ptr_src) \
-    { \
-    *((ptr_dest)->key) = *((ptr_src)->key); \
-    *((ptr_dest)->val) = *((ptr_src)->val); \
-    fcs_duplicate_state_extra(*((ptr_dest)->val));   \
-    }
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (s)
 #define FCS_STATE_kv_to_collectible(s) ((fcs_collectible_state_t *)((s)->key))
