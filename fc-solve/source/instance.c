@@ -538,11 +538,9 @@ extern void fc_solve_trace_solution(
 #define FCS_S_STACK_LOCS(s) (locs->stack_locs)
 
         FCS_STATE__DUP_keyval_pair(s_and_info, *(instance->state_copy_ptr));
-        fcs_kv_state_t dynamic_state = FCS_STATE_keyval_pair_to_kv(&(s_and_info));
 
         const int stacks_num = INSTANCE_STACKS_NUM;
         const int freecells_num = INSTANCE_FREECELLS_NUM;
-        const int decks_num = INSTANCE_DECKS_NUM;
 
         fcs_state_t * const s = &(s_and_info.s);
 #ifdef INDIRECT_STACK_STATES
@@ -631,12 +629,11 @@ extern void fc_solve_trace_solution(
             }
 
             fc_solve_apply_move(
-                &dynamic_state,
+                &(s_and_info.s),
                 &locs,
                 out_move,
                 freecells_num,
-                stacks_num,
-                decks_num
+                stacks_num
             );
             solution_moves_ptr->moves[num_moves-1-i] = out_move;
         }

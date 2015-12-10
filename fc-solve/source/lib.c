@@ -1312,19 +1312,16 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         return 1;
     }
 
-    fcs_kv_state_t pass = FCS_STATE_keyval_pair_to_kv(&(user->running_state));
-
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
 
     fc_solve_apply_move(
-        &(pass),
+        &(user->running_state.s),
         NULL,
         user_move_to_internal_move(*user_move = flare->moves_seq.moves[flare->next_move++]),
         INSTANCE_FREECELLS_NUM,
-        INSTANCE_STACKS_NUM,
-        INSTANCE_DECKS_NUM
+        INSTANCE_STACKS_NUM
     );
 
     return 0;

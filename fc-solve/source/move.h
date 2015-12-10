@@ -121,12 +121,11 @@ static GCC_INLINE const fcs_bool_t fc_solve_move_stack_pop(
 }
 
 void fc_solve_apply_move(
-    fcs_kv_state_t * state_raw,
-    fcs_state_locs_struct_t * locs,
-    fcs_internal_move_t move,
-    int freecells_num,
-    int stacks_num,
-    int decks_num
+    fcs_state_t * const ptr_state_key,
+    fcs_state_locs_struct_t * const locs,
+    const fcs_internal_move_t move,
+    const int freecells_num,
+    const int stacks_num
 );
 
 
@@ -172,10 +171,6 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #define FCS_S_FC_LOCS() (locs->fc_locs)
 #define FCS_S_STACK_LOCS() (locs->stack_locs)
 
-    /* TODO : Get rid of dynamic_state */
-
-    fcs_kv_state_t dynamic_state = FCS_STATE_keyval_pair_to_kv(&(s_and_info));
-
     fcs_internal_move_t out_move = fc_solve_empty_move;
 
 
@@ -197,12 +192,11 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             ) == 0)
     {
         fc_solve_apply_move(
-            &dynamic_state,
+            &(s_and_info.s),
             locs,
             in_move,
             freecells_num,
-            stacks_num,
-            decks_num
+            stacks_num
             );
 
         const int move_type = fcs_int_move_get_type(in_move);

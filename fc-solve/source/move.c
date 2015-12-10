@@ -49,28 +49,28 @@ const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
  * This function performs a given move on a state
  */
 void fc_solve_apply_move(
-    fcs_kv_state_t * state,
-    fcs_state_locs_struct_t * locs,
-    fcs_internal_move_t move,
-    int freecells_num,
-    int stacks_num,
-    int decks_num GCC_UNUSED
+    fcs_state_t * const ptr_state_key,
+    fcs_state_locs_struct_t * const locs,
+    const fcs_internal_move_t move,
+    const int freecells_num,
+    const int stacks_num
 )
 {
     fcs_card_t card;
     fcs_cards_column_t col;
 
-#define state_key (state->key)
+#define state_key (ptr_state_key)
     switch(fcs_int_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
         {
             fcs_cards_column_t dest_col;
-            int i;
 
             col = fcs_state_get_col(*state_key, fcs_int_move_get_src_stack(move));
             dest_col = fcs_state_get_col(*state_key, fcs_int_move_get_dest_stack(move));
-            for(i=0 ; i<fcs_int_move_get_num_cards_in_seq(move) ; i++)
+
+            const int count = fcs_int_move_get_num_cards_in_seq(move);
+            for (int i=0 ; i < count ; i++)
             {
                 fcs_col_push_col_card(
                     dest_col,
@@ -78,7 +78,7 @@ void fc_solve_apply_move(
                     fcs_col_len(col) - fcs_int_move_get_num_cards_in_seq(move)+i
                 );
             }
-            for(i=0 ; i<fcs_int_move_get_num_cards_in_seq(move) ; i++)
+            for (int i=0 ; i < count ; i++)
             {
                 fcs_col_pop_top(col);
             }
@@ -125,18 +125,18 @@ void fc_solve_apply_move(
         }
         break;
 
+#ifndef FCS_FREECELL_ONLY
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
         {
-            int i;
-
             col = fcs_state_get_col(*state_key, fcs_int_move_get_src_stack(move));
-            for (i=0 ; i<13 ; i++)
+            for (int i=0 ; i<13 ; i++)
             {
                 fcs_col_pop_top(col);
                 fcs_increment_foundation(*state_key, fcs_int_move_get_foundation(move));
             }
         }
         break;
+#endif
 
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         case FCS_MOVE_TYPE_FLIP_CARD:
