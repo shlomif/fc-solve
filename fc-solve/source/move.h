@@ -159,8 +159,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     const fcs_state_keyval_pair_t * const init_state,
     fcs_state_locs_struct_t * const locs,
     const int freecells_num,
-    const int stacks_num,
-    const int decks_num
+    const int stacks_num
     )
 {
     fcs_internal_move_t in_move;

@@ -906,8 +906,7 @@ static void trace_flare_solution(
         &(user->state),
         &(flare->trace_solution_state_locs),
         INSTANCE_FREECELLS_NUM,
-        INSTANCE_STACKS_NUM,
-        INSTANCE_DECKS_NUM
+        INSTANCE_STACKS_NUM
     );
 
     calc_moves_seq(
