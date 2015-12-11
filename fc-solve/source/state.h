@@ -572,17 +572,34 @@ extern fcs_card_t fc_solve_empty_card;
 
 #endif
 
+#ifdef HARD_CODED_NUM_FREECELLS
+#define PASS_FREECELLS(arg)
+#else
+#define PASS_FREECELLS(arg) , arg
+#endif
+
+#define FREECELLS_NUM__ARG PASS_FREECELLS(const int freecells_num)
+
+#ifdef HARD_CODED_NUM_FREECELLS
+#define PASS_STACKS(arg)
+#else
+#define PASS_STACKS(arg) , arg
+#endif
+
+#define STACKS_NUM__ARG PASS_STACKS(const int stacks_num)
+
+#define FREECELLS_AND_STACKS_ARGS() FREECELLS_NUM__ARG STACKS_NUM__ARG
+
 extern void fc_solve_canonize_state(
-    fcs_state_t * const ptr_state_key,
-    const int freecells_num,
-    const int stacks_num
-    );
+    fcs_state_t * const ptr_state_key
+    FREECELLS_AND_STACKS_ARGS()
+);
 
 void fc_solve_canonize_state_with_locs(
     fcs_state_t * const ptr_state_key,
-    fcs_state_locs_struct_t * const locs,
-    const int freecells_num,
-    const int stacks_num);
+    fcs_state_locs_struct_t * const locs
+    FREECELLS_AND_STACKS_ARGS()
+);
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 

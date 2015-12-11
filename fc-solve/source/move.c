@@ -48,6 +48,8 @@ const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
 /*
  * This function performs a given move on a state
  */
+/* TODO : Convert to PASS_STACKS and PASS_FREECELLS.
+ * */
 void fc_solve_apply_move(
     fcs_state_t * const ptr_state_key,
     fcs_state_locs_struct_t * const locs,
@@ -153,13 +155,17 @@ void fc_solve_apply_move(
             {
                 fc_solve_canonize_state_with_locs(
                     state_key,
-                    locs,
-                    freecells_num, stacks_num
+                    locs
+                    PASS_FREECELLS(freecells_num)
+                    PASS_STACKS(stacks_num)
                 );
             }
             else
             {
-                fc_solve_canonize_state (state_key, freecells_num, stacks_num);
+                fc_solve_canonize_state (state_key
+                    PASS_FREECELLS(freecells_num)
+                    PASS_STACKS(stacks_num)
+                );
             }
         }
         break;

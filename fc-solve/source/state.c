@@ -83,10 +83,18 @@ static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 
 #endif
 
+#ifdef HARD_CODED_NUM_FREECELLS
+#define freecells_num HARD_CODED_NUM_FREECELLS
+#endif
+
+#ifdef HARD_CODED_NUM_STACKS
+#define stacks_num HARD_CODED_NUM_STACKS
+#endif
+
 void fc_solve_canonize_state(
-    fcs_state_t * const ptr_state_key,
-    const int freecells_num,
-    const int stacks_num)
+    fcs_state_t * const ptr_state_key
+    FREECELLS_AND_STACKS_ARGS()
+)
 {
     DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
@@ -144,9 +152,9 @@ void fc_solve_canonize_state(
 void fc_solve_canonize_state_with_locs(
     fcs_state_t * const ptr_state_key,
 #define state_key (ptr_state_key)
-    fcs_state_locs_struct_t * const locs,
-    const int freecells_num,
-    const int stacks_num)
+    fcs_state_locs_struct_t * const locs
+    FREECELLS_AND_STACKS_ARGS()
+)
 {
     DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
@@ -208,6 +216,13 @@ void fc_solve_canonize_state_with_locs(
 }
 #undef state_key
 
+#ifdef HARD_CODED_NUM_FREECELLS
+#undef freecells_num
+#endif
+
+#ifdef HARD_CODED_NUM_STACKS
+#undef stacks_num
+#endif
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 

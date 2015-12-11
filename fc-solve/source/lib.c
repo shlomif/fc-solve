@@ -1108,9 +1108,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             fc_solve_canonize_state_with_locs
                 (
                  &(user->state.s),
-                &(user->state_locs),
-                INSTANCE_FREECELLS_NUM,
-                INSTANCE_STACKS_NUM
+                &(user->state_locs)
+                PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+                PASS_STACKS(INSTANCE_STACKS_NUM)
                 );
 
             user->trace_solution_state_locs = user->state_locs;
