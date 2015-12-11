@@ -257,8 +257,8 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 #endif
 
 char * fc_solve_state_as_string(
-    fcs_state_t * const state,
-    fcs_state_locs_struct_t * const state_locs,
+    const fcs_state_t * const state,
+    const fcs_state_locs_struct_t * const state_locs,
 #define FCS_S_STACK_LOCS() (state_locs->stack_locs)
 #define FCS_S_FC_LOCS() (state_locs->fc_locs)
     const int freecells_num,

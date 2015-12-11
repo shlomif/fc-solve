@@ -959,15 +959,15 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 #undef handle_eos
 
 extern char * fc_solve_state_as_string(
-    fcs_state_t * key,
-    fcs_state_locs_struct_t * state_locs,
-    int freecells_num,
-    int stacks_num,
-    int decks_num,
-    fcs_bool_t parseable_output,
-    fcs_bool_t canonized_order_output,
-    fcs_bool_t display_10_as_t
-    );
+    const fcs_state_t * const state,
+    const fcs_state_locs_struct_t * const state_locs,
+    const int freecells_num,
+    const int stacks_num,
+    const int decks_num,
+    const fcs_bool_t parseable_output,
+    const fcs_bool_t canonized_order_output,
+    const fcs_bool_t display_10_as_t
+);
 
 typedef enum
 {
