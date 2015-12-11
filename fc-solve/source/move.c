@@ -183,9 +183,6 @@ static GCC_INLINE int convert_freecell_num(int fcn)
 
 char * fc_solve_move_to_string_w_state(
         fcs_state_keyval_pair_t * const state,
-        const int freecells_num GCC_UNUSED,
-        const int stacks_num GCC_UNUSED,
-        const int decks_num GCC_UNUSED,
         const fcs_move_t move,
         const int standard_notation
         )

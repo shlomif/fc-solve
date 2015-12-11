@@ -138,9 +138,9 @@ DLLEXPORT extern char * freecell_solver_user_move_to_string(
     );
 
 DLLEXPORT extern char * freecell_solver_user_move_to_string_w_state(
-    void * user_instance,
-    fcs_move_t move,
-    int standard_notation
+    void * const user_instance,
+    const fcs_move_t move,
+    const int standard_notation
     );
 
 DLLEXPORT extern void freecell_solver_user_limit_depth(

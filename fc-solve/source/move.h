@@ -291,9 +291,6 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 
 extern char * fc_solve_move_to_string_w_state(
         fcs_state_keyval_pair_t * const state,
-        const int freecells_num,
-        const int stacks_num,
-        const int decks_num,
         const fcs_move_t move,
         const int standard_notation
         );

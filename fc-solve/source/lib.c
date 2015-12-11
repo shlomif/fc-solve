@@ -1761,31 +1761,23 @@ DLLEXPORT char * freecell_solver_user_move_to_string(
 {
     return
         fc_solve_move_to_string_w_state(
-            NULL, 4, 8, 1,
+            NULL,
             move,
             (standard_notation == 2)?1:standard_notation
             );
 }
 
 DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
-    void * api_instance,
-    fcs_move_t move,
-    int standard_notation
+    void * const api_instance,
+    const fcs_move_t move,
+    const int standard_notation
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-    fc_solve_instance_t * const instance = &(user->active_flare->obj);
-#endif
-
-
     return
         fc_solve_move_to_string_w_state(
             &(user->running_state),
-            INSTANCE_FREECELLS_NUM,
-            INSTANCE_STACKS_NUM,
-            INSTANCE_DECKS_NUM,
             move,
             standard_notation
             );

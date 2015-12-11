@@ -743,6 +743,9 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
     fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num)
 #endif
 
+/*
+ * TODO: convert to PASS_STACKS and PASS_FREECELLS.
+ * */
 static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     const char * const string,
     fcs_state_keyval_pair_t * const out_state,
