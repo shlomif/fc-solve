@@ -904,9 +904,9 @@ static void trace_flare_solution(
     fc_solve_move_stack_normalize(
         &(instance->solution_moves),
         &(user->state),
-        &(flare->trace_solution_state_locs),
-        INSTANCE_FREECELLS_NUM,
-        INSTANCE_STACKS_NUM
+        &(flare->trace_solution_state_locs)
+        PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+        PASS_STACKS(INSTANCE_STACKS_NUM)
     );
 
     calc_moves_seq(

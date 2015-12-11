@@ -157,10 +157,9 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
 static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_t * const moves,
     const fcs_state_keyval_pair_t * const init_state,
-    fcs_state_locs_struct_t * const locs,
-    const int freecells_num,
-    const int stacks_num
-    )
+    fcs_state_locs_struct_t * const locs
+    FREECELLS_AND_STACKS_ARGS()
+)
 {
     fcs_internal_move_t in_move;
 
@@ -176,11 +175,19 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 
     FCS_STATE__DUP_keyval_pair(s_and_info, *init_state);
 
+#ifdef HARD_CODED_NUM_STACKS
+#define stacks_num HARD_CODED_NUM_STACKS
+#endif
+
 #ifdef INDIRECT_STACK_STATES
     for (int i=0 ; i < stacks_num ; i++)
     {
         fcs_copy_stack(s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);
     }
+#endif
+
+#ifdef HARD_CODED_NUM_STACKS
+#undef stacks_num
 #endif
 
     fcs_move_stack_t temp_moves = fcs_move_stack__new();
