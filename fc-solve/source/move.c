@@ -48,21 +48,18 @@ const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
 /*
  * This function performs a given move on a state
  */
-/* TODO : Convert to PASS_STACKS and PASS_FREECELLS.
- * */
 void fc_solve_apply_move(
     fcs_state_t * const ptr_state_key,
     fcs_state_locs_struct_t * const locs,
-    const fcs_internal_move_t move,
-    const int freecells_num,
-    const int stacks_num
+    const fcs_internal_move_t move
+    FREECELLS_AND_STACKS_ARGS()
 )
 {
     fcs_card_t card;
     fcs_cards_column_t col;
 
 #define state_key (ptr_state_key)
-    switch(fcs_int_move_get_type(move))
+    switch (fcs_int_move_get_type(move))
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
         {

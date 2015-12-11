@@ -123,9 +123,8 @@ static GCC_INLINE const fcs_bool_t fc_solve_move_stack_pop(
 void fc_solve_apply_move(
     fcs_state_t * const ptr_state_key,
     fcs_state_locs_struct_t * const locs,
-    const fcs_internal_move_t move,
-    const int freecells_num,
-    const int stacks_num
+    const fcs_internal_move_t move
+    FREECELLS_AND_STACKS_ARGS()
 );
 
 
@@ -153,6 +152,8 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
     }
 }
 
+/* TODO : Convert to PASS_STACKS and PASS_FREECELLS.
+ * */
 static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_t * const moves,
     const fcs_state_keyval_pair_t * const init_state,
@@ -194,9 +195,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
         fc_solve_apply_move(
             &(s_and_info.s),
             locs,
-            in_move,
-            freecells_num,
-            stacks_num
+            in_move
+            PASS_FREECELLS(freecells_num)
+            PASS_STACKS(stacks_num)
             );
 
         const int move_type = fcs_int_move_get_type(in_move);

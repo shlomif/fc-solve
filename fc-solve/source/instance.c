@@ -631,9 +631,9 @@ extern void fc_solve_trace_solution(
             fc_solve_apply_move(
                 &(s_and_info.s),
                 &locs,
-                out_move,
-                freecells_num,
-                stacks_num
+                out_move
+                PASS_FREECELLS(freecells_num)
+                PASS_STACKS(stacks_num)
             );
             solution_moves_ptr->moves[num_moves-1-i] = out_move;
         }

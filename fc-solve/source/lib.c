@@ -1319,9 +1319,9 @@ int DLLEXPORT freecell_solver_user_get_next_move(
     fc_solve_apply_move(
         &(user->running_state.s),
         NULL,
-        user_move_to_internal_move(*user_move = flare->moves_seq.moves[flare->next_move++]),
-        INSTANCE_FREECELLS_NUM,
-        INSTANCE_STACKS_NUM
+        user_move_to_internal_move(*user_move = flare->moves_seq.moves[flare->next_move++])
+        PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+        PASS_STACKS(INSTANCE_STACKS_NUM)
     );
 
     return 0;
