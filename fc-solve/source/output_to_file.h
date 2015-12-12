@@ -43,9 +43,6 @@ extern "C" {
 struct fc_solve_display_information_context_struct
 {
     fcs_bool_t debug_iter_state_output;
-    int freecells_num;
-    int stacks_num;
-    int decks_num;
     fcs_bool_t parseable_output;
     fcs_bool_t canonized_order_output;
     fcs_bool_t display_10_as_t;
