@@ -87,10 +87,6 @@ static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 #define freecells_num HARD_CODED_NUM_FREECELLS
 #endif
 
-#ifdef HARD_CODED_NUM_STACKS
-#define stacks_num HARD_CODED_NUM_STACKS
-#endif
-
 void fc_solve_canonize_state(
     fcs_state_t * const ptr_state_key
     FREECELLS_AND_STACKS_ARGS()
@@ -102,7 +98,7 @@ void fc_solve_canonize_state(
 #define state_key (ptr_state_key)
     /* Insertion-sort the stacks */
 
-    for (int b=1 ; b < stacks_num ; b++)
+    for (int b=1 ; b < STACKS_NUM__VAL ; b++)
     {
         int c = b;
         while(
@@ -162,7 +158,7 @@ void fc_solve_canonize_state_with_locs(
 
     /* Insertion-sort the stacks */
 
-    for ( int b=1 ; b < stacks_num ; b++)
+    for ( int b=1 ; b < STACKS_NUM__VAL ; b++)
     {
         int c = b;
         while(
@@ -279,18 +275,18 @@ char * fc_solve_state_as_string(
 
     if (canonized_order_output)
     {
-        for(a=0;a<stacks_num;a++)
+        for (a = 0 ; a < STACKS_NUM__VAL ; a++)
         {
             stack_locs[a] = a;
         }
-        for(a=0;a<freecells_num;a++)
+        for (a = 0 ; a < freecells_num ; a++)
         {
             freecell_locs[a] = a;
         }
     }
     else
     {
-        for(a=0;a<stacks_num;a++)
+        for (a = 0 ; a < STACKS_NUM__VAL ; a++)
         {
             stack_locs[(int)((FCS_S_STACK_LOCS())[a])] = a;
         }
@@ -380,7 +376,7 @@ char * fc_solve_state_as_string(
             "\n\n"
             );
 
-        for(s=0;s<stacks_num;s++)
+        for (s = 0 ; s < STACKS_NUM__VAL ; s++)
         {
             fc_solve_append_string_sprintf(app_str, "%s", " -- ");
         }
@@ -391,7 +387,7 @@ char * fc_solve_state_as_string(
             );
 
         max_num_cards = 0;
-        for(s=0;s<stacks_num;s++)
+        for(s=0;s<STACKS_NUM__VAL;s++)
         {
             col = fcs_state_get_col(*state, stack_locs[s]);
             col_len = fcs_col_len(col);
@@ -403,7 +399,7 @@ char * fc_solve_state_as_string(
 
         for (card_idx = 0 ; card_idx < max_num_cards ; card_idx++)
         {
-            for(s = 0; s<stacks_num; s++)
+            for(s = 0; s<STACKS_NUM__VAL; s++)
             {
                 col = fcs_state_get_col(*state, stack_locs[s]);
                 col_len = fcs_col_len(col);
@@ -470,7 +466,7 @@ char * fc_solve_state_as_string(
         }
         fc_solve_append_string_sprintf(app_str, "%s", "\n");
 
-        for(s=0;s<stacks_num;s++)
+        for(s=0;s<STACKS_NUM__VAL;s++)
         {
             col = fcs_state_get_col(*state, stack_locs[s]);
             col_len = fcs_col_len(col);
@@ -499,10 +495,6 @@ char * fc_solve_state_as_string(
 
 #ifdef HARD_CODED_NUM_FREECELLS
 #undef freecells_num
-#endif
-
-#ifdef HARD_CODED_NUM_STACKS
-#undef stacks_num
 #endif
 
 #undef FCS_S_FC_LOCS

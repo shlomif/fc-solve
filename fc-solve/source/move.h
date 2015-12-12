@@ -173,19 +173,11 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 
     FCS_STATE__DUP_keyval_pair(s_and_info, *init_state);
 
-#ifdef HARD_CODED_NUM_STACKS
-#define stacks_num HARD_CODED_NUM_STACKS
-#endif
-
 #ifdef INDIRECT_STACK_STATES
-    for (int i=0 ; i < stacks_num ; i++)
+    for (int i=0 ; i < STACKS_NUM__VAL; i++)
     {
         fcs_copy_stack(s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);
     }
-#endif
-
-#ifdef HARD_CODED_NUM_STACKS
-#undef stacks_num
 #endif
 
     fcs_move_stack_t temp_moves = fcs_move_stack__new();
