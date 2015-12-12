@@ -1198,13 +1198,18 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
 
                 pats_scan->current_pos.s = instance->initial_non_canonized_state->s;
 #ifdef INDIRECT_STACK_STATES
+
                 memset(
                     pats_scan->current_pos.indirect_stacks_buffer,
                     '\0',
                     sizeof(pats_scan->current_pos.indirect_stacks_buffer)
                 );
+
+#ifndef HARD_CODED_NUM_STACKS
                 const int stacks_num = INSTANCE_STACKS_NUM;
-                for (int i=0 ; i < stacks_num ; i++)
+#endif
+
+                for (int i=0 ; i < STACKS_NUM__VAL ; i++)
                 {
                     fcs_cards_column_t src_col = fcs_state_get_col(pats_scan->current_pos.s, i);
                     char * dest = &( pats_scan->current_pos.indirect_stacks_buffer[i << 7] );
