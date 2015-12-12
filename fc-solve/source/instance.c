@@ -464,11 +464,11 @@ static GCC_INLINE int find_col_card(
 
 static GCC_INLINE int find_fc_card(
     const fcs_state_t * const dynamic_state,
-    const fcs_card_t src_card_s,
-    const int freecells_num
+    const fcs_card_t src_card_s
+    FREECELLS_NUM__ARG
 )
 {
-    for (int dest = 0 ; dest < freecells_num ; dest++)
+    for (int dest = 0 ; dest < FREECELLS_NUM__VAL ; dest++)
     {
         if (fcs_freecell_card(*dynamic_state, dest) == src_card_s)
         {
@@ -488,7 +488,7 @@ static GCC_INLINE find_card_ret_t find_card_src_string(
     const int src_col_idx = find_col_card(dynamic_state, src_card_s PASS_STACKS(STACKS_NUM__VAL));
     if (src_col_idx < 0)
     {
-        return (find_card_ret_t) {.idx = (find_fc_card(dynamic_state, src_card_s, FREECELLS_NUM__VAL)), .type = FREECELL};
+        return (find_card_ret_t) {.idx = (find_fc_card(dynamic_state, src_card_s PASS_FREECELLS(FREECELLS_NUM__VAL))), .type = FREECELL};
     }
     else
     {
