@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+# TODO :
+# Merge with generate-individual-verify-test-scripts.pl
+#
 use strict;
 use warnings;
 use autodie;
@@ -32,7 +35,7 @@ use Test::More tests => 1;
 use FC_Solve::Test::Valgrind;
 
 # TEST
-FC_Solve::Test::Valgrind->new->run_valgrind_id_test({ id => qq/$id_quoted/, });
+FC_Solve::Test::Valgrind->new->run_id({ id => qq/$id_quoted/, });
 
 EOF
         },

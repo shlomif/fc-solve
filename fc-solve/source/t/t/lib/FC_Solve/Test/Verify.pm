@@ -160,7 +160,7 @@ sub _run_test
     return $test_verdict;
 }
 
-sub run_verify_id_test
+sub run_id
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 

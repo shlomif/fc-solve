@@ -206,7 +206,7 @@ sub _expand_arg
     }
 }
 
-sub _test_using_valgrind
+sub _run_test
 {
     my ($id, $args) = @_;
 
@@ -273,7 +273,7 @@ sub _test_using_valgrind
     }
 }
 
-sub run_valgrind_id_test
+sub run_id
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
@@ -281,7 +281,7 @@ sub run_valgrind_id_test
 
     my $id = $args->{id};
 
-    return _test_using_valgrind($id, $self->lookup_data($id))
+    return _run_test($id, $self->lookup_data($id))
 }
 
 =head1 COPYRIGHT AND LICENSE

@@ -35,7 +35,7 @@ use Test::More tests => 1;
 use FC_Solve::Test::Verify;
 
 # TEST
-FC_Solve::Test::Verify->new->run_verify_id_test({ id => qq/$id_quoted/, });
+FC_Solve::Test::Verify->new->run_id({ id => qq/$id_quoted/, });
 
 EOF
         },
