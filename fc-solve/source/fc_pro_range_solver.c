@@ -53,9 +53,6 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t stat
 struct fc_solve_display_information_context_struct
 {
     fcs_bool_t debug_iter_state_output;
-    int freecells_num;
-    int stacks_num;
-    int decks_num;
     fcs_bool_t parseable_output;
     fcs_bool_t canonized_order_output;
     fcs_bool_t display_10_as_t;
@@ -63,7 +60,6 @@ struct fc_solve_display_information_context_struct
     fcs_bool_t debug_iter_output_on;
     fcs_bool_t display_moves;
     fcs_bool_t display_states;
-    fcs_bool_t standard_notation;
 };
 
 typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
@@ -159,10 +155,6 @@ static int cmd_line_callback(
     {
         dc->display_moves = TRUE;
         dc->display_states = FALSE;
-    }
-    else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
-    {
-        dc->standard_notation = TRUE;
     }
     else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
     {
