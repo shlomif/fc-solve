@@ -580,10 +580,12 @@ extern fcs_card_t fc_solve_empty_card;
 
 #define FREECELLS_NUM__ARG PASS_FREECELLS(const int freecells_num)
 
-#ifdef HARD_CODED_NUM_FREECELLS
+#ifdef HARD_CODED_NUM_STACKS
 #define PASS_STACKS(arg)
+#define STACKS_NUM__VAL HARD_CODED_NUM_STACKS
 #else
 #define PASS_STACKS(arg) , arg
+#define STACKS_NUM__VAL stacks_num
 #endif
 
 #define STACKS_NUM__ARG PASS_STACKS(const int stacks_num)
@@ -682,15 +684,15 @@ static GCC_INLINE fcs_card_t fc_solve_card_parse_str(const char * const str)
 
 #ifdef INDIRECT_STACK_STATES
 #define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer) \
-    fc_solve_state_init_proto(state, stacks_num, indirect_stacks_buffer)
+    fc_solve_state_init_proto(state PASS_STACKS(stacks_num) , indirect_stacks_buffer)
 #else
 #define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer) \
-    fc_solve_state_init_proto(state, stacks_num)
+    fc_solve_state_init_proto(state PASS_STACKS(stacks_num))
 #endif
 
 static GCC_INLINE void fc_solve_state_init_proto(
-    fcs_state_keyval_pair_t * const state,
-    const int stacks_num
+    fcs_state_keyval_pair_t * const state
+    STACKS_NUM__ARG
     IND_BUF_T_PARAM(indirect_stacks_buffer)
     )
 {
@@ -699,10 +701,12 @@ static GCC_INLINE void fc_solve_state_init_proto(
 #ifdef INDIRECT_STACK_STATES
     {
         int i;
-        for(i=0;i<stacks_num;i++)
+        for ( i = 0 ; i < STACKS_NUM__VAL ; i++)
         {
-            state->s.stacks[i] = &indirect_stacks_buffer[i << 7];
-            memset(state->s.stacks[i], '\0', MAX_NUM_DECKS*52+1);
+            memset(
+                state->s.stacks[i] = &indirect_stacks_buffer[i << 7],
+                 '\0', MAX_NUM_DECKS*52+1
+            );
         }
         for(;i<MAX_NUM_STACKS;i++)
         {
