@@ -445,11 +445,11 @@ static GCC_INLINE int find_empty_col(
 
 static GCC_INLINE int find_col_card(
     const fcs_state_t * const dynamic_state,
-    const fcs_card_t src_card_s,
-    const int stacks_num
+    const fcs_card_t src_card_s
+    STACKS_NUM__ARG
 )
 {
-    for (int i = 0 ; i < stacks_num ; i++)
+    for (int i = 0 ; i < STACKS_NUM__VAL ; i++)
     {
         fcs_const_cards_column_t col = fcs_state_get_col(*dynamic_state, i);
         const int col_len = fcs_col_len(col);
@@ -486,7 +486,7 @@ static GCC_INLINE find_card_ret_t find_card_src_string(
     const int stacks_num
 )
 {
-    const int src_col_idx = find_col_card(dynamic_state, src_card_s, stacks_num);
+    const int src_col_idx = find_col_card(dynamic_state, src_card_s PASS_STACKS(stacks_num));
     if (src_col_idx < 0)
     {
         return (find_card_ret_t) {.idx = (find_fc_card(dynamic_state, src_card_s, freecells_num)), .type = FREECELL};
@@ -623,7 +623,7 @@ extern void fc_solve_trace_solution(
                     (
                         (dest_card == fc_solve_empty_card)
                         ? find_empty_col(s, stacks_num)
-                        : find_col_card(s, dest_card, stacks_num)
+                        : find_col_card(s, dest_card PASS_STACKS(stacks_num))
                     )
                 );
             }
