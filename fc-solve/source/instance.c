@@ -481,15 +481,14 @@ static GCC_INLINE int find_fc_card(
 
 static GCC_INLINE find_card_ret_t find_card_src_string(
     const fcs_state_t * const dynamic_state,
-    const fcs_card_t src_card_s,
-    const int freecells_num,
-    const int stacks_num
+    const fcs_card_t src_card_s
+    FREECELLS_AND_STACKS_ARGS()
 )
 {
-    const int src_col_idx = find_col_card(dynamic_state, src_card_s PASS_STACKS(stacks_num));
+    const int src_col_idx = find_col_card(dynamic_state, src_card_s PASS_STACKS(STACKS_NUM__VAL));
     if (src_col_idx < 0)
     {
-        return (find_card_ret_t) {.idx = (find_fc_card(dynamic_state, src_card_s, freecells_num)), .type = FREECELL};
+        return (find_card_ret_t) {.idx = (find_fc_card(dynamic_state, src_card_s, FREECELLS_NUM__VAL)), .type = FREECELL};
     }
     else
     {
@@ -591,7 +590,7 @@ extern void fc_solve_trace_solution(
             }
             else if (mp->totype == FCS_PATS__TYPE_FOUNDATION)
             {
-                const find_card_ret_t src_s = find_card_src_string(&(s_and_info.s), card, freecells_num, stacks_num);
+                const find_card_ret_t src_s = find_card_src_string(&(s_and_info.s), card PASS_FREECELLS(freecells_num) PASS_STACKS(stacks_num));
                 if (src_s.type == FREECELL)
                 {
                     fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
@@ -607,7 +606,7 @@ extern void fc_solve_trace_solution(
             else
             {
                 const fcs_card_t dest_card = mp->destcard;
-                const find_card_ret_t src_s = find_card_src_string(s, card, freecells_num, stacks_num);
+                const find_card_ret_t src_s = find_card_src_string(s, card PASS_FREECELLS(freecells_num) PASS_STACKS(stacks_num));
                 if (src_s.type == FREECELL)
                 {
                     fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
