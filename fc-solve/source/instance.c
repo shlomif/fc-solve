@@ -428,11 +428,11 @@ typedef struct {
 } find_card_ret_t;
 
 static GCC_INLINE int find_empty_col(
-    const fcs_state_t * const dynamic_state,
-    const int stacks_num
+    const fcs_state_t * const dynamic_state
+    STACKS_NUM__ARG
 )
 {
-    for (int i = 0 ; i < stacks_num ; i++)
+    for (int i = 0 ; i < STACKS_NUM__VAL ; i++)
     {
         if (! fcs_col_len(fcs_state_get_col(*dynamic_state, i)))
         {
@@ -622,7 +622,7 @@ extern void fc_solve_trace_solution(
                 fcs_int_move_set_dest_stack(out_move,
                     (
                         (dest_card == fc_solve_empty_card)
-                        ? find_empty_col(s, stacks_num)
+                        ? find_empty_col(s PASS_STACKS(stacks_num))
                         : find_col_card(s, dest_card PASS_STACKS(stacks_num))
                     )
                 );
