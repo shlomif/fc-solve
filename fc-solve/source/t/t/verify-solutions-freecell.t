@@ -3,11 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 30;
-use Carp;
-use Data::Dumper;
-use String::ShellQuote;
-use File::Spec;
+use Test::More tests => 17;
+use Carp (qw/confess/);
+use Data::Dumper (qw/Dumper/);
+use String::ShellQuote (qw/shell_quote/);
+use File::Spec ();
 use File::Basename qw( dirname );
 
 use Games::Solitaire::Verify::Solution;
@@ -74,75 +74,6 @@ sub verify_solution_test
 
     return $test_verdict;
 }
-
-# 24 is my lucky number. (Shlomif)
-# TEST
-verify_solution_test({deal => 24}, "Verifying the solution of deal #24");
-
-# TEST
-verify_solution_test({deal => 1941}, "Verifying 1941 (The Hardest Deal)");
-
-# TEST
-verify_solution_test({deal => 24, theme => [],},
-    "Solving Deal #24 with the default heuristic"
-);
-
-# TEST
-verify_solution_test({deal => 617, theme => ["-l", "john-galt-line"],},
-    "Solving Deal #617 with the john-galt-line"
-);
-
-# TEST
-verify_solution_test({deal => 24, variant => "bakers_game", theme => [],},
-    "Baker's Game Deal #24"
-);
-
-# TEST
-verify_solution_test({deal => 1941, theme => ["-l", "amateur-star", ],},
-    "Freecell Dal No. 1941 with the amateur-star preset"
-);
-
-# TEST
-verify_solution_test({deal => 1099, variant => "forecell", theme => [],},
-    "Forecell Deal #1099"
-);
-
-
-# TEST
-verify_solution_test({deal => 11982, variant => "relaxed_freecell", },
-    "Relaxed Freecell Deal #11982"
-);
-
-
-# TEST
-verify_solution_test(
-    {
-        deal => 1977,
-        variant => "seahaven_towers",
-        theme => ["-l", "fools-gold",],
-    },
-    "Seahaven Towers #1977"
-);
-
-# TEST
-verify_solution_test({deal => 200, variant => "eight_off", },
-    "Eight Off #200 with -l gi"
-);
-
-# TEST
-verify_solution_test({deal => 200, variant => "eight_off", theme => [],},
-    "Eight Off #200 with default heuristic"
-);
-
-# TEST
-verify_solution_test({deal => 24, theme => ["-opt"],},
-    "-opt should work."
-);
-
-# TEST
-verify_solution_test({deal => 24, theme => ["-opt", "-sp", "r:tf",],},
-    "-opt in conjunction with --set-pruning r:tf should work."
-);
 
 my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data' );
 

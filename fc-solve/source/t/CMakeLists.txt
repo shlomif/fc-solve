@@ -146,5 +146,20 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         generate_valgrind_tests ALL
         DEPENDS "${valg_out}"
     )
+
+    SET (perl_script "${PROJECT_SOURCE_DIR}/scripts/generate-individual-verify-test-scripts.pl")
+    SET (valg_out  "${CMAKE_CURRENT_BINARY_DIR}/t/verify--id24.t")
+
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${valg_out}"
+        COMMAND "perl" "${perl_script}"
+        MAIN_DEPENDENCY "${perl_script}"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Verify.pm"
+    )
+
+    ADD_CUSTOM_TARGET(
+        generate_verify_tests ALL
+        DEPENDS "${valg_out}"
+    )
 ENDIF(FCS_WITH_TEST_SUITE)
 
