@@ -216,13 +216,6 @@ void fc_solve_canonize_state_with_locs(
 }
 #undef state_key
 
-#ifdef HARD_CODED_NUM_FREECELLS
-#undef freecells_num
-#endif
-
-#ifdef HARD_CODED_NUM_STACKS
-#undef stacks_num
-#endif
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 
@@ -258,11 +251,11 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 
 char * fc_solve_state_as_string(
     const fcs_state_t * const state,
-    const fcs_state_locs_struct_t * const state_locs,
+    const fcs_state_locs_struct_t * const state_locs
 #define FCS_S_STACK_LOCS() (state_locs->stack_locs)
 #define FCS_S_FC_LOCS() (state_locs->fc_locs)
-    const int freecells_num,
-    const int stacks_num,
+    FREECELLS_AND_STACKS_ARGS()
+    ,
     const int decks_num,
     const fcs_bool_t parseable_output,
     const fcs_bool_t canonized_order_output,
@@ -503,6 +496,14 @@ char * fc_solve_state_as_string(
 
     return fc_solve_append_string_finalize(&app_str_struct);
 }
+
+#ifdef HARD_CODED_NUM_FREECELLS
+#undef freecells_num
+#endif
+
+#ifdef HARD_CODED_NUM_STACKS
+#undef stacks_num
+#endif
 
 #undef FCS_S_FC_LOCS
 #undef FCS_S_STACK_LOCS

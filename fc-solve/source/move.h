@@ -152,8 +152,6 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
     }
 }
 
-/* TODO : Convert to PASS_STACKS and PASS_FREECELLS.
- * */
 static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_t * const moves,
     const fcs_state_keyval_pair_t * const init_state,
