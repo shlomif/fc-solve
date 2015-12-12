@@ -1084,9 +1084,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                     user->state_validity_ret = fc_solve_check_state_validity(
                         &(user->state)
                         PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                        PASS_STACKS(INSTANCE_STACKS_NUM),
-                        INSTANCE_DECKS_NUM,
-                        &(user->state_validity_card)
+                        PASS_STACKS(INSTANCE_STACKS_NUM)
+                        PASS_DECKS(INSTANCE_DECKS_NUM)
+                        , &(user->state_validity_card)
                     )
                 )
             )
@@ -1345,8 +1345,8 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
                 &(user->running_state.s),
                 &(user->initial_state_locs)
                 PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                PASS_STACKS(INSTANCE_STACKS_NUM),
-                INSTANCE_DECKS_NUM,
+                PASS_STACKS(INSTANCE_STACKS_NUM)
+                PASS_DECKS(INSTANCE_DECKS_NUM),
                 parseable_output,
                 canonized_order_output,
                 display_10_as_t
@@ -2067,8 +2067,8 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
             ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
             &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs)
             PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-            PASS_STACKS(INSTANCE_STACKS_NUM),
-            INSTANCE_DECKS_NUM,
+            PASS_STACKS(INSTANCE_STACKS_NUM)
+            PASS_DECKS(INSTANCE_DECKS_NUM),
             parseable_output,
             canonized_order_output,
             display_10_as_t

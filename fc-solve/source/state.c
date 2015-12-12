@@ -246,9 +246,7 @@ char * fc_solve_state_as_string(
     const fcs_state_locs_struct_t * const state_locs
 #define FCS_S_STACK_LOCS() (state_locs->stack_locs)
 #define FCS_S_FC_LOCS() (state_locs->fc_locs)
-    FREECELLS_AND_STACKS_ARGS()
-    ,
-    const int decks_num,
+    FREECELLS_STACKS_DECKS__ARGS(),
     const fcs_bool_t parseable_output,
     const fcs_bool_t canonized_order_output,
     const fcs_bool_t display_10_as_t
@@ -292,7 +290,7 @@ char * fc_solve_state_as_string(
         }
     }
 
-    for(a=0;a<decks_num*4;a++)
+    for (a = 0 ; a < (DECKS_NUM__VAL<<2) ; a++)
     {
         fc_solve_p2u_rank(
             fcs_foundation_value(*state, a),
@@ -330,7 +328,7 @@ char * fc_solve_state_as_string(
                 strcpy(dashes_ptr, "--- ");
                 dashes_ptr = strchr(dashes_ptr, '\0');
             }
-            if (a < decks_num)
+            if (a < DECKS_NUM__VAL)
             {
                 fc_solve_append_string_sprintf(
                     app_str,
@@ -354,7 +352,7 @@ char * fc_solve_state_as_string(
                 "%s\n", dashes_ptr
                 );
         }
-        for(;a<decks_num;a++)
+        for(;a<DECKS_NUM__VAL;a++)
         {
             fc_solve_append_string_sprintf(
                 app_str,
@@ -426,7 +424,7 @@ char * fc_solve_state_as_string(
     else
     {
         fc_solve_append_string_sprintf(app_str, "%s", "Foundations: ");
-        for(a=0;a<decks_num;a++)
+        for(a=0;a<DECKS_NUM__VAL;a++)
         {
             fc_solve_append_string_sprintf(
                 app_str,

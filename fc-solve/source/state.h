@@ -592,7 +592,18 @@ extern fcs_card_t fc_solve_empty_card;
 
 #define STACKS_NUM__ARG PASS_STACKS(const int stacks_num)
 
+#ifdef HARD_CODED_NUM_DECKS
+#define PASS_DECKS(arg)
+#define DECKS_NUM__VAL HARD_CODED_NUM_DECKS
+#else
+#define PASS_DECKS(arg) , arg
+#define DECKS_NUM__VAL decks_num
+#endif
+
+#define DECKS_NUM__ARG PASS_DECKS(const int decks_num)
+
 #define FREECELLS_AND_STACKS_ARGS() FREECELLS_NUM__ARG STACKS_NUM__ARG
+#define FREECELLS_STACKS_DECKS__ARGS() FREECELLS_AND_STACKS_ARGS() DECKS_NUM__ARG
 
 extern void fc_solve_canonize_state(
     fcs_state_t * const ptr_state_key
@@ -745,8 +756,8 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
     fc_solve_initial_user_state_to_c_proto( \
         string, out_state \
         PASS_FREECELLS(freecells_num) \
-        PASS_STACKS(stacks_num),\
-        decks_num \
+        PASS_STACKS(stacks_num) \
+        PASS_DECKS(decks_num) \
         PASS_IND_BUF_T(indirect_stacks_buffer) \
         )
 
@@ -756,8 +767,7 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
 static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     const char * const string,
     fcs_state_keyval_pair_t * const out_state
-    FREECELLS_AND_STACKS_ARGS(),
-    const int decks_num
+    FREECELLS_STACKS_DECKS__ARGS()
     IND_BUF_T_PARAM(indirect_stacks_buffer)
     )
 {
@@ -871,16 +881,12 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
         {
             int d;
 
-            for(d=0;d<decks_num*4;d++)
+            for (d = 0 ; d < (DECKS_NUM__VAL << 2) ; d++)
             {
                 fcs_set_foundation(ret, d, 0);
             }
 
-            int decks_index[4];
-            for(d=0;d<4;d++)
-            {
-                decks_index[d] = 0;
-            }
+            int decks_index[4] = {0,0,0,0};
             while (1)
             {
                 while((*str == ' ') || (*str == '\t'))
@@ -907,7 +913,7 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
                 fcs_set_foundation(ret, ((decks_index[d]<<2)+d), c);
                 decks_index[d]++;
-                if (decks_index[d] >= decks_num)
+                if (decks_index[d] >= DECKS_NUM__VAL)
                 {
                     decks_index[d] = 0;
                 }
@@ -967,9 +973,7 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 extern char * fc_solve_state_as_string(
     const fcs_state_t * const state,
     const fcs_state_locs_struct_t * const state_locs
-    FREECELLS_AND_STACKS_ARGS()
-    ,
-    const int decks_num,
+    FREECELLS_STACKS_DECKS__ARGS(),
     const fcs_bool_t parseable_output,
     const fcs_bool_t canonized_order_output,
     const fcs_bool_t display_10_as_t
@@ -986,8 +990,7 @@ typedef enum
 
 static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
     const fcs_state_keyval_pair_t * const state_pair
-    FREECELLS_AND_STACKS_ARGS(),
-    const int decks_num,
+    FREECELLS_STACKS_DECKS__ARGS(),
     fcs_card_t * const misplaced_card)
 {
     int cards[4][14];
@@ -1004,7 +1007,7 @@ static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
     }
 
     /* Mark the cards in the decks */
-    for (int d=0;d<decks_num*4;d++)
+    for (int d=0 ; d < (DECKS_NUM__VAL << 2) ; d++)
     {
         for(int c=1;c<=fcs_foundation_value(*state, d);c++)
         {
@@ -1048,10 +1051,10 @@ static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
     {
         for (int rank = 1; rank <= FCS_MAX_RANK ; rank++)
         {
-            if (cards[suit_idx][rank] != decks_num)
+            if (cards[suit_idx][rank] != DECKS_NUM__VAL)
             {
                 *misplaced_card = fcs_make_card(rank, suit_idx);
-                return ((cards[suit_idx][rank] < decks_num)
+                return ((cards[suit_idx][rank] < DECKS_NUM__VAL)
                     ? FCS_STATE_VALIDITY__MISSING_CARD
                     : FCS_STATE_VALIDITY__EXTRA_CARD
                     )
