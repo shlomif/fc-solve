@@ -25,6 +25,20 @@ MACRO(MY_ADD_EXE EXE_FILE C_FILE)
 
 ENDMACRO(MY_ADD_EXE EXE_FILE C_FILE)
 
+MACRO(GEN_INDIVIDUAL_TESTS target_name perl_script valg_out module)
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${valg_out}"
+        COMMAND "perl" "${perl_script}"
+        MAIN_DEPENDENCY "${perl_script}"
+        DEPENDS "${module}"
+    )
+
+    ADD_CUSTOM_TARGET(
+        "${target_name}" ALL
+        DEPENDS "${valg_out}"
+    )
+ENDMACRO()
+
 IF (FCS_WITH_TEST_SUITE)
 
     FIND_LIBRARY(LIBTAP_LIB tap)
@@ -132,34 +146,18 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         )
     TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})
 
-    SET (perl_script "${PROJECT_SOURCE_DIR}/scripts/generate-individual-valgrind-test-scripts.pl")
-    SET (valg_out  "${CMAKE_CURRENT_BINARY_DIR}/t/valgrind--range_parallel_solve__11982_opt.t")
-
-    ADD_CUSTOM_COMMAND(
-        OUTPUT "${valg_out}"
-        COMMAND "perl" "${perl_script}"
-        MAIN_DEPENDENCY "${perl_script}"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Valgrind.pm"
+    GEN_INDIVIDUAL_TESTS(
+        "generate_valgrind_tests"
+        "${PROJECT_SOURCE_DIR}/scripts/generate-individual-valgrind-test-scripts.pl"
+        "${CMAKE_CURRENT_BINARY_DIR}/t/valgrind--range_parallel_solve__11982_opt.t"
+        "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Valgrind.pm"
     )
+    GEN_INDIVIDUAL_TESTS(
+        "generate_verify_tests"
+        "${PROJECT_SOURCE_DIR}/scripts/generate-individual-verify-test-scripts.pl"
+        "${CMAKE_CURRENT_BINARY_DIR}/t/verify--id24.t"
 
-    ADD_CUSTOM_TARGET(
-        generate_valgrind_tests ALL
-        DEPENDS "${valg_out}"
-    )
-
-    SET (perl_script "${PROJECT_SOURCE_DIR}/scripts/generate-individual-verify-test-scripts.pl")
-    SET (valg_out  "${CMAKE_CURRENT_BINARY_DIR}/t/verify--id24.t")
-
-    ADD_CUSTOM_COMMAND(
-        OUTPUT "${valg_out}"
-        COMMAND "perl" "${perl_script}"
-        MAIN_DEPENDENCY "${perl_script}"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Verify.pm"
-    )
-
-    ADD_CUSTOM_TARGET(
-        generate_verify_tests ALL
-        DEPENDS "${valg_out}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Verify.pm"
     )
 ENDIF(FCS_WITH_TEST_SUITE)
 
