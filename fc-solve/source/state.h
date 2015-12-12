@@ -741,22 +741,22 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
 #endif
 #endif
 
-#ifdef INDIRECT_STACK_STATES
 #define fc_solve_initial_user_state_to_c(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) \
-    fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer)
-#else
-#define fc_solve_initial_user_state_to_c(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) \
-    fc_solve_initial_user_state_to_c_proto(string, out_state, freecells_num, stacks_num, decks_num)
-#endif
+    fc_solve_initial_user_state_to_c_proto( \
+        string, out_state \
+        PASS_FREECELLS(freecells_num) \
+        PASS_STACKS(stacks_num),\
+        decks_num \
+        PASS_IND_BUF_T(indirect_stacks_buffer) \
+        )
 
 /*
  * TODO: convert to PASS_STACKS and PASS_FREECELLS.
  * */
 static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     const char * const string,
-    fcs_state_keyval_pair_t * const out_state,
-    const int freecells_num,
-    const int stacks_num,
+    fcs_state_keyval_pair_t * const out_state
+    FREECELLS_AND_STACKS_ARGS(),
     const int decks_num
     IND_BUF_T_PARAM(indirect_stacks_buffer)
     )
@@ -765,7 +765,7 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
     fc_solve_state_init(
         out_state,
-        stacks_num,
+        STACKS_NUM__VAL,
         indirect_stacks_buffer
         );
     const char * str = string;
@@ -782,7 +782,7 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
         } \
     }
 
-    for (int s = 0 ; s < stacks_num ; s++)
+    for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
     {
         /* Move to the next stack */
         if (!first_line)
@@ -808,11 +808,11 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
-            for (int c = 0 ; c < freecells_num ; c++)
+            for (int c = 0 ; c < FREECELLS_NUM__VAL ; c++)
             {
                 fcs_empty_freecell(ret, c);
             }
-            for (int c = 0 ; c < freecells_num ; c++)
+            for (int c = 0 ; c < FREECELLS_NUM__VAL ; c++)
             {
                 if (c != 0)
                 {
