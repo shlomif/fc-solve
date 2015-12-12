@@ -1373,7 +1373,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
     fcs_cards_column_t dest_col, col;
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    const int stacks_num = INSTANCE_STACKS_NUM;
 #endif
 
     fcs_internal_move_t temp_move;
@@ -1381,10 +1381,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
     tests_define_accessors();
 
     temp_move = fc_solve_empty_move;
-
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
 
     for( ds=0 ; ds < LOCAL_STACKS_NUM ; ds++ )
     {
@@ -1447,8 +1443,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
     fcs_cards_column_t col;
 
 #ifndef HARD_CODED_NUM_STACKS
-    int stacks_num;
+    const int stacks_num = INSTANCE_STACKS_NUM;
 #endif
+
     fcs_game_limit_t num_vacant_stacks;
 
     fcs_internal_move_t temp_move;
@@ -1462,10 +1459,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
     {
         return;
     }
-
-#ifndef HARD_CODED_NUM_STACKS
-    stacks_num = INSTANCE_STACKS_NUM;
-#endif
 
     for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
     {
