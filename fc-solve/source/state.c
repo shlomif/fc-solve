@@ -83,10 +83,6 @@ static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 
 #endif
 
-#ifdef HARD_CODED_NUM_FREECELLS
-#define freecells_num HARD_CODED_NUM_FREECELLS
-#endif
-
 void fc_solve_canonize_state(
     fcs_state_t * const ptr_state_key
     FREECELLS_AND_STACKS_ARGS()
@@ -121,11 +117,11 @@ void fc_solve_canonize_state(
 
     /* Insertion-sort the freecells */
 
-    for(int b=1 ; b < freecells_num ; b++)
+    for (int b=1 ; b < FREECELLS_NUM__VAL ; b++)
     {
         int c = b;
 
-        while(
+        while (
             (c>0)    &&
             ((fc_solve_card_compare(
                 (GET_FREECELL(c)),
@@ -185,7 +181,7 @@ void fc_solve_canonize_state_with_locs(
 
     /* Insertion-sort the freecells */
 
-    for (int b=1 ; b < freecells_num ; b++)
+    for (int b=1 ; b < FREECELLS_NUM__VAL ; b++)
     {
         int c = b;
 
@@ -279,7 +275,7 @@ char * fc_solve_state_as_string(
         {
             stack_locs[a] = a;
         }
-        for (a = 0 ; a < freecells_num ; a++)
+        for (a = 0 ; a < FREECELLS_NUM__VAL ; a++)
         {
             freecell_locs[a] = a;
         }
@@ -290,7 +286,7 @@ char * fc_solve_state_as_string(
         {
             stack_locs[(int)((FCS_S_STACK_LOCS())[a])] = a;
         }
-        for(a=0;a<freecells_num;a++)
+        for (a = 0 ; a < FREECELLS_NUM__VAL ; a++)
         {
             freecell_locs[(int)((FCS_S_FC_LOCS())[a])] = a;
         }
@@ -315,12 +311,12 @@ char * fc_solve_state_as_string(
 
     if(!parseable_output)
     {
-        for(a=0;a<((freecells_num/4)+((freecells_num%4==0)?0:1));a++)
+        for(a=0;a<((FREECELLS_NUM__VAL/4)+((FREECELLS_NUM__VAL%4==0)?0:1));a++)
         {
             char dashes_s[128];
             char * dashes_ptr = dashes_s;
             str2_ptr = str2;
-            for(b=0;b<min(freecells_num-a*4, 4);b++)
+            for(b=0;b<min(FREECELLS_NUM__VAL-a*4, 4);b++)
             {
                 fc_solve_card_perl2user(
                     fcs_freecell_card(
@@ -444,7 +440,7 @@ char * fc_solve_state_as_string(
 
         fc_solve_append_string_sprintf(app_str, "%s", "\nFreecells: ");
 
-        for(a=0;a<freecells_num;a++)
+        for(a=0;a<FREECELLS_NUM__VAL;a++)
         {
             fc_solve_card_perl2user(
                 fcs_freecell_card(
@@ -459,7 +455,7 @@ char * fc_solve_state_as_string(
                 "%3s",
                 freecell
             );
-            if (a < freecells_num-1)
+            if (a < FREECELLS_NUM__VAL-1)
             {
                 fc_solve_append_string_sprintf(app_str, "%s", " ");
             }
@@ -492,10 +488,6 @@ char * fc_solve_state_as_string(
 
     return fc_solve_append_string_finalize(&app_str_struct);
 }
-
-#ifdef HARD_CODED_NUM_FREECELLS
-#undef freecells_num
-#endif
 
 #undef FCS_S_FC_LOCS
 #undef FCS_S_STACK_LOCS

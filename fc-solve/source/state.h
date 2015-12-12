@@ -574,8 +574,10 @@ extern fcs_card_t fc_solve_empty_card;
 
 #ifdef HARD_CODED_NUM_FREECELLS
 #define PASS_FREECELLS(arg)
+#define FREECELLS_NUM__VAL HARD_CODED_NUM_FREECELLS
 #else
 #define PASS_FREECELLS(arg) , arg
+#define FREECELLS_NUM__VAL freecells_num
 #endif
 
 #define FREECELLS_NUM__ARG PASS_FREECELLS(const int freecells_num)
