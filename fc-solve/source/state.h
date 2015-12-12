@@ -985,9 +985,8 @@ typedef enum
 } fcs_state_validity_ret_t;
 
 static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
-    const fcs_state_keyval_pair_t * const state_pair,
-    const int freecells_num,
-    const int stacks_num,
+    const fcs_state_keyval_pair_t * const state_pair
+    FREECELLS_AND_STACKS_ARGS(),
     const int decks_num,
     fcs_card_t * const misplaced_card)
 {
@@ -1014,7 +1013,7 @@ static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
     }
 
     /* Mark the cards in the freecells */
-    for(int f=0;f<freecells_num;f++)
+    for (int f=0;f<FREECELLS_NUM__VAL;f++)
     {
         const fcs_card_t card = fcs_freecell_card(*state, f);
         if (fcs_card_is_valid(card))
@@ -1024,7 +1023,7 @@ static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
     }
 
     /* Mark the cards in the stacks */
-    for (int s=0;s<stacks_num;s++)
+    for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
     {
         const fcs_const_cards_column_t col = fcs_state_get_col(*state, s);
         const int col_len = fcs_col_len(col);
@@ -1045,7 +1044,7 @@ static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
 
     /* Now check if there are extra or missing cards */
 
-    for(int suit_idx = 0; suit_idx < 4; suit_idx ++)
+    for (int suit_idx = 0; suit_idx < 4; suit_idx ++)
     {
         for (int rank = 1; rank <= FCS_MAX_RANK ; rank++)
         {

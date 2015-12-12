@@ -1082,9 +1082,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                     !=
                 (
                     user->state_validity_ret = fc_solve_check_state_validity(
-                        &(user->state),
-                        INSTANCE_FREECELLS_NUM,
-                        INSTANCE_STACKS_NUM,
+                        &(user->state)
+                        PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+                        PASS_STACKS(INSTANCE_STACKS_NUM),
                         INSTANCE_DECKS_NUM,
                         &(user->state_validity_card)
                     )
