@@ -1,20 +1,64 @@
-#!/usr/bin/perl
+package FC_Solve::SplitTests;
 
 use strict;
 use warnings;
 use autodie;
 
-use FindBin;
-use lib "$FindBin::Bin/../t/t/lib";
+use Test::Data::Split;
 
-use FC_Solve::SplitTests;
+sub gen
+{
+    my ($self, $args) = @_;
 
-FC_Solve::SplitTests->gen(
+    my $module = $args->{module};
+    my $fn_prefix = $args->{prefix};
+
+    if ($module !~ /\A[A-Z][a-zA-Z_0-9:]+\z/)
     {
-        prefix => 'valgrind',
-        module => 'FC_Solve::Test::Valgrind',
-    },
-);
+        die "module should be the name of a module.";
+    }
+    if ($fn_prefix !~ /\A[a-z]+\z/)
+    {
+        die "prefix is wrong.";
+    }
+
+    eval "use $module;";
+
+    Test::Data::Split->new(
+        {
+            target_dir => 't',
+            filename_cb => sub {
+                my ($self, $args) = @_;
+
+                return "${fn_prefix}--$args->{id}.t";
+            },
+            contents_cb => sub {
+                my ($self, $args) = @_;
+                my $id_quoted = quotemeta($args->{id});
+                return <<"EOF";
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Test::More tests => 1;
+
+use $module;
+
+# TEST
+$module->new->run_id({ id => qq/$id_quoted/, });
+
+EOF
+        },
+        data_obj => $module->new,
+    }
+)->run;
+
+}
+
+1;
+
+__END__
 
 =head1 COPYRIGHT AND LICENSE
 

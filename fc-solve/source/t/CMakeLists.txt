@@ -30,7 +30,9 @@ MACRO(GEN_INDIVIDUAL_TESTS target_name perl_script valg_out module)
         OUTPUT "${valg_out}"
         COMMAND "perl" "${perl_script}"
         MAIN_DEPENDENCY "${perl_script}"
-        DEPENDS "${module}"
+        DEPENDS
+            "${module}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/SplitTests.pm"
     )
 
     ADD_CUSTOM_TARGET(
