@@ -538,12 +538,16 @@ extern void fc_solve_trace_solution(
 
         FCS_STATE__DUP_keyval_pair(s_and_info, *(instance->state_copy_ptr));
 
+#ifndef HARD_CODED_NUM_STACKS
         const int stacks_num = INSTANCE_STACKS_NUM;
+#endif
+#ifndef HARD_CODED_NUM_FREECELLS
         const int freecells_num = INSTANCE_FREECELLS_NUM;
+#endif
 
         fcs_state_t * const s = &(s_and_info.s);
 #ifdef INDIRECT_STACK_STATES
-        for (int i=0 ; i < stacks_num ; i++)
+        for (int i=0 ; i < STACKS_NUM__VAL ; i++)
         {
             fcs_copy_stack(s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);
         }
@@ -562,7 +566,7 @@ extern void fc_solve_trace_solution(
             if (mp->totype == FCS_PATS__TYPE_FREECELL)
             {
                 int src_col_idx;
-                for (src_col_idx = 0; src_col_idx < stacks_num ; src_col_idx++)
+                for (src_col_idx = 0; src_col_idx < STACKS_NUM__VAL ; src_col_idx++)
                 {
                     fcs_cards_column_t src_col = fcs_state_get_col(s_and_info.s, src_col_idx);
                     const int src_cards_num = fcs_col_len(src_col);
@@ -577,7 +581,7 @@ extern void fc_solve_trace_solution(
                 }
 
                 int dest;
-                for (dest = 0 ; dest < freecells_num ; dest++)
+                for (dest = 0 ; dest < FREECELLS_NUM__VAL ; dest++)
                 {
                     if (fcs_freecell_is_empty(s_and_info.s, dest))
                     {
@@ -590,7 +594,7 @@ extern void fc_solve_trace_solution(
             }
             else if (mp->totype == FCS_PATS__TYPE_FOUNDATION)
             {
-                const find_card_ret_t src_s = find_card_src_string(&(s_and_info.s), card PASS_FREECELLS(freecells_num) PASS_STACKS(stacks_num));
+                const find_card_ret_t src_s = find_card_src_string(&(s_and_info.s), card PASS_FREECELLS(FREECELLS_NUM__VAL) PASS_STACKS(STACKS_NUM__VAL));
                 if (src_s.type == FREECELL)
                 {
                     fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
@@ -606,7 +610,7 @@ extern void fc_solve_trace_solution(
             else
             {
                 const fcs_card_t dest_card = mp->destcard;
-                const find_card_ret_t src_s = find_card_src_string(s, card PASS_FREECELLS(freecells_num) PASS_STACKS(stacks_num));
+                const find_card_ret_t src_s = find_card_src_string(s, card PASS_FREECELLS(FREECELLS_NUM__VAL) PASS_STACKS(STACKS_NUM__VAL));
                 if (src_s.type == FREECELL)
                 {
                     fcs_int_move_set_type(out_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
@@ -621,8 +625,8 @@ extern void fc_solve_trace_solution(
                 fcs_int_move_set_dest_stack(out_move,
                     (
                         (dest_card == fc_solve_empty_card)
-                        ? find_empty_col(s PASS_STACKS(stacks_num))
-                        : find_col_card(s, dest_card PASS_STACKS(stacks_num))
+                        ? find_empty_col(s PASS_STACKS(STACKS_NUM__VAL))
+                        : find_col_card(s, dest_card PASS_STACKS(STACKS_NUM__VAL))
                     )
                 );
             }
@@ -631,8 +635,8 @@ extern void fc_solve_trace_solution(
                 &(s_and_info.s),
                 &locs,
                 out_move
-                PASS_FREECELLS(freecells_num)
-                PASS_STACKS(stacks_num)
+                PASS_FREECELLS(FREECELLS_NUM__VAL)
+                PASS_STACKS(STACKS_NUM__VAL)
             );
             solution_moves_ptr->moves[num_moves-1-i] = out_move;
         }
