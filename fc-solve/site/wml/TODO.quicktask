@@ -17,6 +17,11 @@ CURRENT TASKS:
         * See how they do it on the other emscripten demos.
         * http://www.mkyong.com/jquery/how-to-load-javascript-at-runtime-with-jquery/
         * Added [Mon 2013-01-14]
+    - Map the output in the states/moves display using Unicode suits/etc.
+      @ Added [Sun 2015-12-13]
+    - Pick a better colour for the states in js-fc-solve than the light pink.
+      @ Added [Sun 2015-12-13]
+
 
 LONG TERM:
     - Prepare the solver with the GUI.
