@@ -474,3 +474,5 @@ Invalid solution! at ../source/scripts/summarize-fc-solve line 83.
 * Check how the soft_threads/hard_threads/flares/etc. are done with-respect-to
 +--method patsolve+ .
 
+* Add -dto2 flag for a corrected depth tests' order because -dto 13,$FOO is
+equivalent to -dto2 13,13$FOO .
