@@ -31,8 +31,7 @@ Class('FC_Solve_UI',
             _solve_err_code: { is: rw },
             _was_iterations_count_exceeded: { is: rw, init: false },
             _is_expanded: { is: rw, init: false },
-            _expanded_pristine_output: { is: rw },
-            _unexpanded_pristine_output: { is: rw },
+            _pristine_outputs: { is: rw },
         },
         methods: {
             _is_one_based_checked: function() {
@@ -163,33 +162,19 @@ Class('FC_Solve_UI',
                 var that = this;
 
                 if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
-                    if (that._is_expanded) {
-                        if (! that._expanded_pristine_output) {
-                            that._instance.generic_display_sol(
-                                {
-                                    output_cb: function(buffer) {
-                                        that._expanded_pristine_output = buffer;
-                                    },
-                                    expand: true,
-                                }
-                            );
-                        }
-                        return that._expanded_pristine_output;
+                    var _expand = that._is_expanded;
+                    var _k = _expand ? 1 : 0;
+                    if (! that._pristine_outputs[_k]) {
+                        that._instance.generic_display_sol(
+                            {
+                                output_cb: function(buffer) {
+                                    that._pristine_outputs[_k] = buffer;
+                                },
+                                expand: _expand,
+                            }
+                        );
                     }
-                    else {
-                        if (! that._unexpanded_pristine_output) {
-                            that._instance.generic_display_sol(
-                                {
-                                    output_cb: function(buffer) {
-                                        that._unexpanded_pristine_output = buffer;
-                                    },
-                                    expand: false,
-                                }
-                            );
-
-                        }
-                        return that._unexpanded_pristine_output;
-                    }
+                    return that._pristine_outputs[_k];
                 }
                 else {
                     return "";
@@ -252,8 +237,7 @@ Class('FC_Solve_UI',
             do_solve: function() {
                 var that = this;
 
-                that._expanded_pristine_output = null;
-                that._unexpanded_pristine_output = null;
+                that._pristine_outputs = [null,null];
 
                 that._disable_output_display();
                 that._was_iterations_count_exceeded = false;
