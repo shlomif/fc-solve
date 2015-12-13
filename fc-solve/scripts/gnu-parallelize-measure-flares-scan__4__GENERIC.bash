@@ -13,5 +13,5 @@
 prefix="$1"
 shift
 
-seq 0 3199 | parallel --ungroup -j2 \
+seq 0 3199 | parallel --ungroup -j4 \
     bash "$(pwd)/gnu-par-wrapper.bash" "{}" "$prefix" "$@"
