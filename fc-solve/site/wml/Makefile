@@ -147,7 +147,7 @@ $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 	$(MULTI_YUI) -o $@ $<
 
 
-WEB_FCS_UI_JS_SOURCES = src/js/ms-rand.js src/js/gen-ms-fc-board.js src/js/web-fc-solve--expand-moves--mega-test.js src/js/web-fc-solve.js src/js/web-fc-solve-ui.js
+WEB_FCS_UI_JS_SOURCES = src/js/ms-rand.js src/js/gen-ms-fc-board.js src/js/web-fc-solve--expand-moves.js src/js/web-fc-solve.js src/js/web-fc-solve-ui.js
 
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
