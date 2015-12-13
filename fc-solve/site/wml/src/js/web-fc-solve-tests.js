@@ -9998,16 +9998,10 @@ function test_js_fc_solve_class()
         }
 
         if (solve_err_code == FCS_STATE_WAS_SOLVED) {
-            instance.display_solution(
-                {
-                    output_cb: function (buffer) {
-                        success = true;
-
-                        equal (buffer, expected_sol,
-                            blurb
-                        );
-                    }
-                }
+            var buffer = instance.display_solution( {} );
+            success = true;
+            equal (buffer, expected_sol,
+                blurb
             );
         }
 
@@ -10123,17 +10117,14 @@ function test_js_fc_solve_class()
             solve_err_code = instance.resume_solution();
         }
 
-        instance.display_expanded_moves_solution(
-            {
-                output_cb: function (buffer) {
-                    success = true;
-                    // TEST
-                    equal (buffer, solution_for_deal_24__expanded_moves,
-                        "Expanded-moves Solution is right"
-                    );
-                },
-            }
+        var buffer = instance.display_expanded_moves_solution( {} );
+
+        success = true;
+        // TEST
+        equal (buffer, solution_for_deal_24__expanded_moves,
+            "Expanded-moves Solution is right"
         );
+
         // TEST
         ok (success, "do_solve was successful.");
 

@@ -164,17 +164,15 @@ Class('FC_Solve_UI',
                 if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
                     var _expand = that._is_expanded;
                     var _k = _expand ? 1 : 0;
-                    if (! that._pristine_outputs[_k]) {
-                        that._instance.generic_display_sol(
-                            {
-                                output_cb: function(buffer) {
-                                    that._pristine_outputs[_k] = buffer;
-                                },
-                                expand: _expand,
-                            }
-                        );
-                    }
-                    return that._pristine_outputs[_k];
+                    var _o = that._pristine_outputs;
+                    return (
+                        _o[_k] = (_o[_k] || that._instance.generic_display_sol(
+                                {
+                                    expand: _expand,
+                                }
+                            )
+                        )
+                    );
                 }
                 else {
                     return "";

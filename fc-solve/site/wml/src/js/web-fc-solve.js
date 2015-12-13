@@ -396,7 +396,7 @@ Class('FC_Solve', {
 
             return;
         },
-        _display_specific_sol: function(output_cb, seq) {
+        _display_specific_sol: function(seq) {
             var that = this;
 
             var out_buffer = '';
@@ -415,39 +415,32 @@ Class('FC_Solve', {
                 );
             });
 
-            output_cb(
-                that.unicode_preprocess(
-                    out_buffer.replace(remove_trailing_space_re, '')
-                )
+            return that.unicode_preprocess(
+                out_buffer.replace(remove_trailing_space_re, '')
             );
-            return;
         },
         display_solution: function(args) {
             var that = this;
 
-            var output_cb = args.output_cb;
+            var ret;
 
             try {
                 that._calc_states_and_moves_seq();
                 that.set_status("solved", "Solved");
-                that._display_specific_sol(output_cb, that._pre_expand_states_and_moves_seq);
+                ret = that._display_specific_sol(that._pre_expand_states_and_moves_seq);
             }
             catch (e) {
                 return;
             }
 
-            return;
+            return ret;
         },
         display_expanded_moves_solution: function(args) {
             var that = this;
 
-            var output_cb = args.output_cb;
-
             that._calc_expanded_seq();
             that.set_status("solved", "Solved");
-            that._display_specific_sol(output_cb, that._post_expand_states_and_moves_seq);
-
-            return;
+            return that._display_specific_sol(that._post_expand_states_and_moves_seq);
         },
         generic_display_sol: function(args) {
             var that = this;
