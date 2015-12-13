@@ -11,8 +11,6 @@ Pressing
 ** It runs fine on Windows 7.
 ** Thanks to Manish Jain for the report.
 
-* Grep for GCC_UNUSED and remove such parameters if possible.
-
 Non-pressing
 ------------
 

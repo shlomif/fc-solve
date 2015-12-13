@@ -68,10 +68,20 @@ Class('FC_Solve_UI',
                     var html = '';
 
                     html += "<ol>\n";
-                    var seq = that._instance._proto_states_and_moves_seq;
+
+                    var inst = that._instance;
+                    var seq = inst._proto_states_and_moves_seq;
+
+                    var _filt = function(str) {
+                        return that._process_pristine_output(
+                            inst.unicode_preprocess(
+                                str
+                            )
+                        );
+                    };
 
                     var _render_state = function(s) {
-                        return "<li class=\"state\"><pre>" + s.str + "</pre></li>\n\n";
+                        return "<li class=\"state\"><pre>" + _filt(s.str) + "</pre></li>\n\n";
                     };
 
                     var _out_state = function(i) {
@@ -80,7 +90,7 @@ Class('FC_Solve_UI',
 
                     _out_state(0);
                     for (var i = 1; i < seq.length - 1; i+=2) {
-                        html += "<li id=\"move_" + i + "\" class=\"move unexpanded\"><span class=\"mega_move\">" + seq[i].m.str + "</span>\n<button id=\"expand_move_" + i + "\" class=\"expand_move\">Expand Move</button>\n</li>\n";
+                        html += "<li id=\"move_" + i + "\" class=\"move unexpanded\"><span class=\"mega_move\">" + _filt(seq[i].m.str) + "</span>\n<button id=\"expand_move_" + i + "\" class=\"expand_move\">Expand Move</button>\n</li>\n";
 
                         _out_state(i+1);
                     }
@@ -94,14 +104,14 @@ Class('FC_Solve_UI',
                         var move_ctl = $("#move_" + idx);
                         var calc_class = 'calced';
                         if (! move_ctl.hasClass(calc_class)) {
-                            var inner_moves = that._instance._calc_expanded_move(idx);
+                            var inner_moves = inst._calc_expanded_move(idx);
 
                             var inner_html = '';
 
                             inner_html += "<ol class=\"inner_moves\">";
 
                             var _out_inner_move = function(i) {
-                                inner_html += "<li class=\"move\"><span class=\"inner_move\">" + inner_moves[i].str + "</span>\n</li>\n";
+                                inner_html += "<li class=\"move\"><span class=\"inner_move\">" + _filt(inner_moves[i].str) + "</span>\n</li>\n";
                                 return;
                             }
                             for (var i = 0; i < inner_moves.length-1 ; i += 2) {
