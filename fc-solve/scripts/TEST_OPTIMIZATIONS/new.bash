@@ -1,0 +1,1 @@
+export SRC_DIR="$(pwd)/../source/" ARGS="--worker-step 16 --read-from-file 4,$(pwd)/as-modified-1.sh" num_cpus="$(cat /proc/cpuinfo | grep -P '^processor\s*:' | wc -l)"; bash "${SRC_DIR:-.}"/scripts/time-threads-num.bash "$num_cpus" "$num_cpus"
