@@ -449,6 +449,12 @@ Class('FC_Solve', {
 
             return;
         },
+        generic_display_sol: function(args) {
+            var that = this;
+
+            return args.expand ? that.display_expanded_moves_solution(args)
+                : that.display_solution(args);
+        },
     },
 });
 

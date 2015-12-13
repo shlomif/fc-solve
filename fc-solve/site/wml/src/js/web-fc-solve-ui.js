@@ -165,11 +165,12 @@ Class('FC_Solve_UI',
                 if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
                     if (that._is_expanded) {
                         if (! that._expanded_pristine_output) {
-                            that._instance.display_expanded_moves_solution(
+                            that._instance.generic_display_sol(
                                 {
                                     output_cb: function(buffer) {
                                         that._expanded_pristine_output = buffer;
-                                    }
+                                    },
+                                    expand: true,
                                 }
                             );
                         }
@@ -177,11 +178,12 @@ Class('FC_Solve_UI',
                     }
                     else {
                         if (! that._unexpanded_pristine_output) {
-                            that._instance.display_solution(
+                            that._instance.generic_display_sol(
                                 {
                                     output_cb: function(buffer) {
                                         that._unexpanded_pristine_output = buffer;
-                                    }
+                                    },
+                                    expand: false,
                                 }
                             );
 
