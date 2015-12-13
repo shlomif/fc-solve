@@ -14,6 +14,8 @@ fc-solve/presets/soft-threads/meta-moves/auto-gen/2-cells-freecell/.data-len-pro
 fc-solve/presets/soft-threads/meta-moves/auto-gen/2-cells-freecell/.data-proc
 fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-len-proc
 fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-proc
+fc-solve/scripts/TEST_OPTIMIZATIONS/DUMPS-*
+fc-solve/scripts/TEST_OPTIMIZATIONS/__p
 fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/MYMETA.json
 fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/MYMETA.yml
 fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/Makefile
