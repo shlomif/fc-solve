@@ -86,7 +86,7 @@ int main(int argc, char * argv[])
     int parser_ret;
     fcs_bool_t variant_is_freecell;
 
-    int arg = 1, start_from_arg;
+    int arg = 1;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -134,11 +134,7 @@ int main(int argc, char * argv[])
         }
     }
 
-    start_from_arg = arg;
-
     user.instance = freecell_solver_user_alloc();
-
-    arg = start_from_arg;
 
     parser_ret =
         freecell_solver_user_cmd_line_parse_args(
