@@ -39,7 +39,6 @@
 #include "unused.h"
 #include "bool.h"
 #include "count.h"
-#include "indirect_buffer.h"
 
 struct pack_item_struct
 {
@@ -83,12 +82,9 @@ int main(int argc, char * argv[])
     fcs_int64_t total_num_iters = 0;
 
     char * error_string;
-    int parser_ret;
     fcs_bool_t variant_is_freecell;
 
     int arg = 1;
-
-    DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     while (arg < argc && (strcmp(argv[arg], "--")))
     {
@@ -136,7 +132,7 @@ int main(int argc, char * argv[])
 
     user.instance = freecell_solver_user_alloc();
 
-    parser_ret =
+    const int parser_ret =
         freecell_solver_user_cmd_line_parse_args(
             user.instance,
             argc,
@@ -144,7 +140,7 @@ int main(int argc, char * argv[])
             arg,
             NULL,
             NULL,
-            &user,
+            NULL,
             &error_string,
             &arg
             );
