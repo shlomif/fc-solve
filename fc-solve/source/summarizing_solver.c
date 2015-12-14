@@ -72,9 +72,7 @@ int main(int argc, char * argv[])
 {
     pack_item_t user;
     int ret;
-    int len;
-    int board_num;
-    int start_board, end_board, stop_at;
+    long board_num;
     const char * variant = "freecell";
 
     char * error_string;
@@ -86,7 +84,7 @@ int main(int argc, char * argv[])
     {
         if (num_deals == COUNT(deals))
         {
-            fprintf(stderr, "Number of deals exceeded %d!\n", COUNT(deals));
+            fprintf(stderr, "Number of deals exceeded %ld!\n", (long)(COUNT(deals)));
             exit(-1);
         }
         deals[num_deals++] = atol(argv[arg++]);
@@ -180,7 +178,7 @@ int main(int argc, char * argv[])
         else
         {
             char command[1000];
-            sprintf(command, "make_pysol_freecell_board.py -F -t %d %s",
+            sprintf(command, "make_pysol_freecell_board.py -F -t %ld %s",
                     board_num,
                     variant
                    );
