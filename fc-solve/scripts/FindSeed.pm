@@ -36,11 +36,14 @@ use List::UtilsBy qw/min_by/;
 use bytes;
 use integer;
 
+use Cwd ();
 sub f { return $_[0] =~ /Solved.*?Iters: ([0-9]+)/ ? $1 : 1e6 }
 
 sub find
 {
     my ($self, $args) = @_;
+
+    $ENV{PATH} .= ":" . Cwd::getcwd();
 
     my @deals = @{$args->{deals}};
     my $scan_arg = $args->{scan};
@@ -84,8 +87,9 @@ sub find
         my @new_ = (map {
                 my $scan = $_;
                 my @l = sort { $a->iters <=> $b->iters } map {
-                    my $deal = $_;
-                    my $s = `pi-make-microsoft-freecell-board -t $deal | ../../source/scripts/summarize-fc-solve -- $scan -seed "$seed" -sp r:tf -mi "$iters"` =~ s/\n+\z//r;
+                    my $s = $_;
+                    $s =~ s#\A([0-9]+) = ##;
+                    my $deal = $1;
                     FindSeed::DealAndSeedResult->new(
                         {
                             deal => $deal,
@@ -93,7 +97,11 @@ sub find
                             seed => $seed,
                         }
                         );
-                } @deals;
+                } do {
+                    my @l = `summary-fc-solve @deals -- $scan -seed "$seed" -sp r:tf -mi "$iters"`;
+                    chomp(@l);
+                    @l;
+                };
                 my $v = $l[$threshold-1]->iters;
                 FindSeed::ScanResult->new(
                     {
