@@ -41,94 +41,12 @@
 #include "count.h"
 #include "indirect_buffer.h"
 
-struct fc_solve_display_information_context_struct
-{
-    fcs_bool_t debug_iter_state_output;
-    fcs_bool_t parseable_output;
-    fcs_bool_t canonized_order_output;
-    fcs_bool_t display_10_as_t;
-    fcs_bool_t display_parent_iter_num;
-    fcs_bool_t debug_iter_output_on;
-    fcs_bool_t display_moves;
-    fcs_bool_t display_states;
-};
-
-typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
-
 struct pack_item_struct
 {
-    fc_solve_display_information_context_t display_context;
     void * instance;
 };
 
 typedef struct pack_item_struct pack_item_t;
-
-
-static int cmd_line_callback(
-    void * instance,
-    int argc GCC_UNUSED,
-    freecell_solver_str_t argv[],
-    int arg,
-    int * num_to_skip,
-    int * ret GCC_UNUSED,
-    void * context
-    )
-{
-    pack_item_t * item;
-    fc_solve_display_information_context_t * dc;
-    item = (pack_item_t * )context;
-    dc = &(item->display_context);
-
-    *num_to_skip = 0;
-
-    if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
-    {
-        dc->debug_iter_state_output = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
-    {
-        dc->parseable_output = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
-    {
-        dc->canonized_order_output = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
-    {
-        dc->display_10_as_t = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
-    {
-        dc->display_moves = TRUE;
-        dc->display_states = FALSE;
-    }
-    else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
-    {
-        dc->display_moves = TRUE;
-        dc->display_states = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-pi")) || (!strcmp(argv[arg], "--display-parent-iter")))
-    {
-        dc->display_parent_iter_num = TRUE;
-    }
-    else
-    {
-        fprintf(stderr, "Unknown option %s!\n", argv[arg]);
-        exit(-1);
-        return 0;
-    }
-    *num_to_skip = 1;
-    return FCS_CMD_LINE_SKIP;
-}
-
-static const char * known_parameters[] = {
-    "-i", "--iter-output",
-    "-s", "--state-output",
-    "-p", "--parseable-output",
-    "-t", "--display-10-as-t",
-    "-pi", "--display-parent-iter",
-    NULL
-    };
 
 static void print_help(void)
 {
@@ -228,8 +146,8 @@ int main(int argc, char * argv[])
             argc,
             (freecell_solver_str_t *)(void *)argv,
             arg,
-            known_parameters,
-            cmd_line_callback,
+            NULL,
+            NULL,
             &user,
             &error_string,
             &arg
