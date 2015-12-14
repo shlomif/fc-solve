@@ -24,5 +24,5 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -to "[01][23468]" -seed 1547 -step 500 -sp r:tf --st-name s1 -nst \
 --method random-dfs -to "[01][23468]" -seed 3709 -step 500 -sp r:tf --st-name s2 -nst \
 --method random-dfs -to "[01][2345][6789]" -seed 332838 -step 500 -sp r:tf --st-name s3 -nst \
---method random-dfs -to "[01][23456789]" -seed 923 -step 500 -sp r:tf --st-name s4 \
+--method random-dfs -to "01[2345789]" -seed 923 -step 500 -sp r:tf --st-name s4 \
 --prelude "380@24,380@5,380@9,760@32,380@12,380@24,380@10,380@5,200@s1,120@s2,200@new,380@3,380@9,380@24,380@18,760@20,100@s3,171@s4,380@11,380@12,380@5,760@24,380@21,380@4,380@9,380@11,380@9,380@10,380@4,380@5,380@15,380@5,760@15,380@18,380@21,380@15,380@18,380@20,380@22,760@23,380@24,380@32,1520@12,760@18,1520@32,1520@24,2280@10,2280@24,4560@12"
