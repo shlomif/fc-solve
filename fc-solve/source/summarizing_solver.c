@@ -35,20 +35,11 @@
 #include "fcs_user.h"
 #include "fcs_cl.h"
 
-#include "fc_pro_iface_pos.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "unused.h"
 #include "bool.h"
 #include "count.h"
 #include "indirect_buffer.h"
-
-static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, fcs_state_keyval_pair_t * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
-{
-    get_board(gamenumber, state_string);
-    fc_solve_initial_user_state_to_c(
-        state_string, pos, 4, 8, 1, indirect_stacks_buffer
-    );
-}
 
 struct fc_solve_display_information_context_struct
 {
@@ -277,7 +268,6 @@ int main(int argc, char * argv[])
 
     int arg = 1, start_from_arg;
 
-    fcs_state_keyval_pair_t pos;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     while (arg < argc && (strcmp(argv[arg], "--")))
@@ -376,11 +366,7 @@ int main(int argc, char * argv[])
         if (variant_is_freecell)
         {
             buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
-            fc_pro_get_board(board_num, buffer, &(pos)
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
-                );
+            get_board_l(board_num, buffer);
         }
         else
         {
@@ -410,9 +396,6 @@ int main(int argc, char * argv[])
         free(buffer);
 
         long num_moves;
-        fcs_moves_processed_t fc_pro_moves;
-        fc_pro_moves.moves = NULL;
-
         const char * verdict;
 
         if (ret == FCS_STATE_SUSPEND_PROCESS)
