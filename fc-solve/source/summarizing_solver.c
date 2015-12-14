@@ -55,42 +55,6 @@ struct fc_solve_display_information_context_struct
 
 typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
 
-static void my_iter_handler(
-    void * user_instance,
-    fcs_int_limit_t iter_num,
-    int depth,
-    void * ptr_state,
-    fcs_int_limit_t parent_iter_num,
-    void * lp_context
-    )
-{
-    fc_solve_display_information_context_t * context;
-    context = (fc_solve_display_information_context_t*)lp_context;
-
-    fprintf(stdout, "Iteration: %li\n", (long)iter_num);
-    fprintf(stdout, "Depth: %i\n", depth);
-    if (context->display_parent_iter_num)
-    {
-        fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
-    }
-    fprintf(stdout, "\n");
-
-
-    if (context->debug_iter_state_output)
-    {
-        char * state_string =
-            freecell_solver_user_iter_state_as_string(
-                user_instance,
-                ptr_state,
-                context->parseable_output,
-                context->canonized_order_output,
-                context->display_10_as_t
-                );
-        printf("%s\n---------------\n\n\n", state_string);
-        free((void*)state_string);
-    }
-}
-
 struct pack_item_struct
 {
     fc_solve_display_information_context_t display_context;
@@ -117,16 +81,7 @@ static int cmd_line_callback(
 
     *num_to_skip = 0;
 
-    if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
-    {
-        freecell_solver_user_set_iter_handler_long(
-            instance,
-            my_iter_handler,
-            dc
-            );
-        dc->debug_iter_output_on = TRUE;
-    }
-    else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
+    if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
     {
         dc->debug_iter_state_output = TRUE;
     }
