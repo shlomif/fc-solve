@@ -4,6 +4,33 @@ use strict;
 use warnings;
 use autodie;
 
+package FindSeed::DealAndSeedResult;
+
+use MooX qw/late/;
+
+has 'deal' => (is => 'ro');
+has 'output' => (is => 'ro', lazy => 1);
+has 'iters' => (is => 'ro', lazy => 1, default => sub { my $self = shift; return FindSeed::f($self->output); }, );
+has 'seed' => (is => 'ro');
+
+sub as_str
+{
+    my $self = shift;
+
+    return sprintf("[%s %s %s]", $self->deal, $self->output, $self->seed);
+}
+
+package FindSeed::ScanResult;
+
+use MooX qw/late/;
+
+has 'scan' => (is => 'ro');
+has 'seed' => (is => 'ro');
+has 'results' => (is => 'ro');
+has 'iters' => (is => 'ro');
+
+package FindSeed;
+
 use List::Util qw/max/;
 use List::UtilsBy qw/min_by/;
 use bytes;
@@ -19,6 +46,13 @@ sub find
     my $scan_arg = $args->{scan};
 
     my @scans = ((ref($scan_arg) eq '') ? ($scan_arg) : @$scan_arg);
+
+    my $threshold = $args->{threshold};
+
+    if ($threshold > @scans)
+    {
+        $threshold = @scans;
+    }
 
     # my @deals = (14249, 10692);
     # my @deals = (14249);
@@ -36,7 +70,7 @@ sub find
 
     my $LAST_SEED = ((1 << 31)-1);
     my $iters = 100000;
-    my @old_line;
+    my $old_line;
 
     # 4086 923 Verdict: Solved ; Iters: 170 ; Length: 142
     # my $scan = q#--method random-dfs -to "01[2345789]"#;
@@ -49,20 +83,37 @@ sub find
 
         my @new_ = (map {
                 my $scan = $_;
-                my @l = map { "$seed " . `pi-make-microsoft-freecell-board -t $_ | ../../source/scripts/summarize-fc-solve -- $scan -seed "$seed" -sp r:tf -mi "$iters"` =~ s/\n+\z//r } @deals;
-                my $v = max ( map { f($_) } @l);
-                [$scan,\@l, $v ]
+                my @l = sort { $a->iters <=> $b->iters } map {
+                    my $deal = $_;
+                    my $s = `pi-make-microsoft-freecell-board -t $deal | ../../source/scripts/summarize-fc-solve -- $scan -seed "$seed" -sp r:tf -mi "$iters"` =~ s/\n+\z//r;
+                    FindSeed::DealAndSeedResult->new(
+                        {
+                            deal => $deal,
+                            output => $s,
+                            seed => $seed,
+                        }
+                        );
+                } @deals;
+                my $v = $l[$threshold-1]->iters;
+                FindSeed::ScanResult->new(
+                    {
+                        seed => $seed,
+                        scan => $scan,
+                        results => (\@l),
+                        iters => $v,
+                    }
+                );
             } @scans
         );
-        my $new_scan = min_by { $_->[2] } @new_;
-        my $new = $new_scan->[2];
+        my $new_scan = min_by { $_->iters } @new_;
+        my $new = $new_scan->iters;
 
         if ($new < $iters)
         {
-            @old_line = @$new_scan;
+            $old_line = $new_scan;
             $iters = $new;
         }
-        print "$seed @{$old_line[1]} ; $old_line[0]\n";
+        print "$seed @{[$old_line->seed]} @{[map { $_->as_str } @{$old_line->results}[0 .. $threshold - 1]]} ; @{[$old_line->scan]}\n";
 
         return;
     };
