@@ -30,8 +30,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "portable_int64.h"
-
 #include "fcs_user.h"
 #include "fcs_cl.h"
 
@@ -78,8 +76,6 @@ int main(int argc, char * argv[])
     int board_num;
     int start_board, end_board, stop_at;
     const char * variant = "freecell";
-
-    fcs_int64_t total_num_iters = 0;
 
     char * error_string;
     fcs_bool_t variant_is_freecell;
