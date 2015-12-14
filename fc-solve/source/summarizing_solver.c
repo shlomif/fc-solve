@@ -130,38 +130,6 @@ static const char * known_parameters[] = {
     NULL
     };
 
-#define BINARY_OUTPUT_NUM_INTS 16
-
-typedef struct
-{
-    FILE * file;
-    char * buffer;
-    char * buffer_end;
-    char * ptr;
-} binary_output_t;
-
-static void print_int(binary_output_t * bin, int val)
-{
-    unsigned char * buffer = (unsigned char *)bin->ptr;
-    int p;
-
-    for(p=0;p<4;p++)
-    {
-        buffer[p] = (unsigned char)(val & 0xFF);
-        val >>= 8;
-    }
-    bin->ptr += 4;
-    if (bin->ptr == bin->buffer_end)
-    {
-        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->file);
-        fflush(bin->file);
-        /* Reset ptr to the beginning */
-        bin->ptr = bin->buffer;
-    }
-}
-
-#define print_int_wrapper(i) { if (binary_output.file) { print_int(&binary_output, (i));  } }
-
 static void print_help(void)
 {
     printf("\n%s",
@@ -182,21 +150,6 @@ static void print_help(void)
           );
 }
 
-static int read_int(FILE * f, int * dest)
-{
-    unsigned char buffer[4];
-    int num_read;
-
-    num_read = fread(buffer, 1, 4, f);
-    if (num_read != 4)
-    {
-        return 1;
-    }
-    *dest = (buffer[0]+((buffer[1]+((buffer[2]+((buffer[3])<<8))<<8))<<8));
-
-    return 0;
-}
-
 static long deals[32000];
 static int num_deals = 0;
 
@@ -208,18 +161,12 @@ int main(int argc, char * argv[])
     int board_num;
     int start_board, end_board, stop_at;
     const char * variant = "freecell";
-    char * buffer;
 
     fcs_int64_t total_num_iters = 0;
 
     char * error_string;
     int parser_ret;
     fcs_bool_t variant_is_freecell;
-
-
-    char * binary_output_filename = NULL;
-
-    binary_output_t binary_output;
 
     int arg = 1, start_from_arg;
 
@@ -314,20 +261,19 @@ int main(int argc, char * argv[])
 
     ret = 0;
 
+#define BUF_SIZE 2000
+    char buffer[BUF_SIZE];
+
     for (int deal_idx=0;deal_idx < num_deals; deal_idx++)
     {
         board_num = deals[deal_idx];
-#define BUF_SIZE 2000
         if (variant_is_freecell)
         {
-            buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
             get_board_l(board_num, buffer);
         }
         else
         {
             char command[1000];
-            buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
-
             sprintf(command, "make_pysol_freecell_board.py -F -t %d %s",
                     board_num,
                     variant
@@ -342,13 +288,13 @@ int main(int argc, char * argv[])
         printf("%s\n", buffer);
 #endif
 
+        buffer[COUNT(buffer)-1] = '\0';
+
         ret =
             freecell_solver_user_solve_board(
                 user.instance,
                 buffer
                 );
-
-        free(buffer);
 
         long num_moves;
         const char * verdict;
