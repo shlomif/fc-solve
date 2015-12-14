@@ -30,7 +30,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "portable_time.h"
 #include "portable_int64.h"
 
 #include "fcs_user.h"
@@ -263,7 +262,6 @@ int main(int argc, char * argv[])
     int board_num;
     int start_board, end_board, stop_at;
     const char * variant = "freecell";
-    fcs_portable_time_t mytime;
     char * buffer;
 
     fcs_int64_t total_num_iters = 0;
