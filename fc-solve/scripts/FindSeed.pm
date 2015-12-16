@@ -44,6 +44,13 @@ sub add
     return;
 }
 
+sub get
+{
+    my ($self, $idx) = @_;
+
+    return $self->by_threshold->[$idx];
+}
+
 package FindSeed;
 
 use List::Util qw/max/;
@@ -113,7 +120,7 @@ sub find
     my $handle = sub {
         my ($seed) = @_;
 
-        my $max_iters = $iters_agg->by_threshold->[$MAX_THRESHOLD-1]->iters;
+        my $max_iters = $iters_agg->get($MAX_THRESHOLD-1)->iters;
 
         my @new_ = (map {
                 my $scan = $_;
@@ -156,20 +163,20 @@ sub find
             } @scans
         );
         my @new_scans = map { my $threshold = $_;
-            min_by { $_->by_threshold->[$threshold]->iters } @new_;
+            min_by { $_->get($threshold)->iters } @new_;
         } 0 .. $MAX_THRESHOLD - 1;
         for my $threshold (0 .. $MAX_THRESHOLD-1)
         {
-            my $new = $new_scans[$threshold]->by_threshold->[$threshold];
-            if ($new->iters < $iters_agg->by_threshold->[$threshold]->iters)
+            my $new = $new_scans[$threshold]->get($threshold);
+            if ($new->iters < $iters_agg->get($threshold)->iters)
             {
                 $iters_agg->by_threshold->[$threshold] = $new;
             }
         }
         print "SUMMARY[$seed] = ", join(" ",
             map { my $th = $_; sprintf("[%d=%d\@seed=%d]", $th+1,
-                $iters_agg->by_threshold->[$th]->iters,
-                $iters_agg->by_threshold->[$th]->seed,
+                $iters_agg->get($th)->iters,
+                $iters_agg->get($th)->seed,
                 )
             } 0 .. $MAX_THRESHOLD-1), "\n";
         for my $threshold (0 .. $MAX_THRESHOLD-1)
@@ -177,7 +184,7 @@ sub find
             printf(" ==> %d = %s\n",
                 $threshold+1,
                 join(" ", map { my $th = $_; sprintf("{%d %d}", $th+1,
-                        $iters_agg->by_threshold->[$threshold]->results->[$th]->iters,
+                        $iters_agg->get($threshold)->results->[$th]->iters,
                         ); } (0 .. $threshold)
                 )
             );
