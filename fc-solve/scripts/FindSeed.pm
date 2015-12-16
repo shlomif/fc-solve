@@ -60,6 +60,37 @@ sub create
     return $self;
 }
 
+sub from_lines
+{
+    my ($pkg, $args) = @_;
+
+    my $seed = $args->{seed};
+
+    return $pkg->create(
+        {
+            %$args,
+            results =>
+            [
+                sort { $a->iters <=> $b->iters }
+                map
+                {
+                    my $s = $_;
+                    $s =~ s#\A([0-9]+) = ##;
+                    my $deal = $1;
+                    FindSeed::DealAndSeedResult->new(
+                        {
+                            deal => $deal,
+                            output => $s,
+                            seed => $seed,
+                        }
+                    );
+                }
+                @{$args->{lines}},
+            ],
+        }
+    );
+}
+
 sub add
 {
     my ($self, $item) = @_;
@@ -135,24 +166,11 @@ sub find
     }
 
     my $LAST_SEED = ((1 << 31)-1);
-    my $iters_agg = FindSeed::ThresholdAgg->create(
+    my $iters_agg = FindSeed::ThresholdAgg->from_lines(
         {
             seed => -1,
             scan => '',
-            results =>
-            [
-                map
-                {
-                    FindSeed::DealAndSeedResult->new(
-                    {
-                        deal => $_,
-                        output => '',
-                        seed => -1,
-                    }
-                    )
-                }
-                @deals
-            ],
+            lines => [ map { "$_ = " } @deals],
         }
     );
 
@@ -171,29 +189,14 @@ sub find
 
         foreach my $scan (@scans)
         {
-            my @l = sort { $a->iters <=> $b->iters } map {
-                my $s = $_;
-                $s =~ s#\A([0-9]+) = ##;
-                my $deal = $1;
-                FindSeed::DealAndSeedResult->new(
-                {
-                    deal => $deal,
-                    output => $s,
-                    seed => $seed,
-                }
-                );
-            } do {
-                # print {*STDERR} "Checking Seed=$seed Scan=$scan\n";
-                my @l = `summary-fc-solve @deals -- $scan -seed "$seed" -sp r:tf -mi "$max_iters"`;
-                chomp(@l);
-                @l;
-            };
-
-            my $agg = FindSeed::ThresholdAgg->create(
+            my $agg = FindSeed::ThresholdAgg->from_lines(
                 {
                     seed => $seed,
                     scan => $scan,
-                    results => (\@l),
+                    lines => do {
+                        chomp(my @l = `summary-fc-solve @deals -- $scan -seed "$seed" -sp r:tf -mi "$max_iters"`);
+                        \@l;
+                    },
                 }
             );
 
