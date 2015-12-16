@@ -10,7 +10,7 @@ use MIME::Base64 qw/encode_base64 decode_base64/;
 sub enc
 {
     my ($item) = @_;
-    return encode_base64(nfreeze($item));
+    return ( encode_base64(nfreeze($item)) =~ s/\n+//gr);
 }
 
 sub dec
