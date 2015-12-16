@@ -151,6 +151,8 @@ sub find
         $MAX_THRESHOLD = @scans;
     }
 
+    my $MAX_TH = $MAX_THRESHOLD - 1;
+
     # my @deals = (14249, 10692);
     # my @deals = (14249);
 
@@ -185,7 +187,7 @@ sub find
     my $handle = sub {
         my ($seed) = @_;
 
-        my $max_iters = $iters_agg->get($MAX_THRESHOLD-1)->iters;
+        my $max_iters = $iters_agg->get($MAX_TH)->iters;
 
         foreach my $scan (@scans)
         {
@@ -210,8 +212,8 @@ sub find
                     $result->iters,
                     $result->seed,
                 )
-            } 0 .. $MAX_THRESHOLD-1), "\n";
-        for my $threshold (0 .. $MAX_THRESHOLD-1)
+            } 0 .. $MAX_TH), "\n";
+        for my $threshold (0 .. $MAX_TH)
         {
             my $result = $iters_agg->get($threshold);
             printf(" ==> %d = %s ; (%s)\n",
