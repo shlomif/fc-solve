@@ -203,19 +203,29 @@ sub find
             $iters_agg->merge_from($agg);
         }
         print "SUMMARY[$seed] = ", join(" ",
-            map { my $th = $_; sprintf("[%d=%d\@seed=%d]", $th+1,
-                $iters_agg->get($th)->iters,
-                $iters_agg->get($th)->seed,
+            map { my $th = $_;
+                my $result = $iters_agg->get($th);
+                sprintf("[%d=%d\@seed=%d]",
+                    $th+1,
+                    $result->iters,
+                    $result->seed,
                 )
             } 0 .. $MAX_THRESHOLD-1), "\n";
         for my $threshold (0 .. $MAX_THRESHOLD-1)
         {
-            printf(" ==> %d = %s\n",
+            my $result = $iters_agg->get($threshold);
+            printf(" ==> %d = %s ; (%s)\n",
                 $threshold+1,
-                join(" ", map { my $th = $_; sprintf("{%d %d}", $th+1,
-                        $iters_agg->get($threshold)->results->[$th]->iters,
-                        ); } (0 .. $threshold)
-                )
+                join(" ", map {
+                        my $th = $_;
+                        sprintf("{%d %d}",
+                            $th+1,
+                            $result->results->[$th]->iters,
+                        );
+                    }
+                    (0 .. $threshold)
+                ),
+                $result->scan,
             );
         }
         return;
