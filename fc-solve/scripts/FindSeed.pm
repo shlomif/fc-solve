@@ -162,15 +162,17 @@ sub find
                 $agg;
             } @scans
         );
-        my @new_scans = map { my $threshold = $_;
-            scalar( min_by { $_->get($threshold)->iters } @new_);
-        } 0 .. $MAX_THRESHOLD - 1;
-        for my $threshold (0 .. $MAX_THRESHOLD-1)
+        foreach my $scan (
+            @new_
+        )
         {
-            my $new = $new_scans[$threshold]->get($threshold);
-            if ($new->iters < $iters_agg->get($threshold)->iters)
+            for my $threshold (0 .. $MAX_THRESHOLD-1)
             {
-                $iters_agg->by_threshold->[$threshold] = $new;
+                my $new = $scan->get($threshold);
+                if ($new->iters < $iters_agg->get($threshold)->iters)
+                {
+                    $iters_agg->by_threshold->[$threshold] = $new;
+                }
             }
         }
         print "SUMMARY[$seed] = ", join(" ",
