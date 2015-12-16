@@ -35,6 +35,31 @@ use MooX qw/late/;
 
 has 'by_threshold' => (is => 'ro', default => sub { return []; },);
 
+sub create
+{
+    my ($pkg, $args) = @_;
+
+    my $seed = $args->{seed};
+    my $scan = $args->{scan};
+    my $results = $args->{results};
+
+    my $self = $pkg->new;
+
+    push @{$self->by_threshold},
+    map {
+        FindSeed::ScanResult->new(
+            {
+                seed => $seed,
+                scan => $scan,
+                results => $results,
+                iters => $_->iters,
+            }
+        );
+    } @$results;
+
+    return $self;
+}
+
 sub add
 {
     my ($self, $item) = @_;
@@ -75,7 +100,7 @@ use bytes;
 use integer;
 
 use Cwd ();
-sub f { return $_[0] =~ /Solved.*?Iters: ([0-9]+)/ ? $1 : 1e6 }
+sub f { return $_[0] =~ /Solved.*?Iters: ([0-9]+)/ ? $1 : 100_000 }
 
 sub find
 {
@@ -110,21 +135,27 @@ sub find
     }
 
     my $LAST_SEED = ((1 << 31)-1);
-    my $iters_agg = FindSeed::ThresholdAgg->new;
-
-    for my $threshold (1 .. $MAX_THRESHOLD)
-    {
-        $iters_agg->add(
-            FindSeed::ScanResult->new(
+    my $iters_agg = FindSeed::ThresholdAgg->create(
+        {
+            seed => -1,
+            scan => '',
+            results =>
+            [
+                map
                 {
-                    seed => 0,
-                    scan => '',
-                    results => [],
-                    iters => 100_000,
+                    FindSeed::DealAndSeedResult->new(
+                    {
+                        deal => $_,
+                        output => '',
+                        seed => -1,
+                    }
+                    )
                 }
-            )
-        );
-    }
+                @deals
+            ],
+        }
+    );
+
     my $old_line;
 
     # 4086 923 Verdict: Solved ; Iters: 170 ; Length: 142
@@ -158,22 +189,13 @@ sub find
                 @l;
             };
 
-            my $agg = FindSeed::ThresholdAgg->new;
-
-            for my $threshold (0 .. $MAX_THRESHOLD-1)
-            {
-                my $v = $l[$threshold]->iters;
-                $agg->add(
-                    FindSeed::ScanResult->new(
-                        {
-                            seed => $seed,
-                            scan => $scan,
-                            results => (\@l),
-                            iters => $v,
-                        }
-                    )
-                );
-            }
+            my $agg = FindSeed::ThresholdAgg->create(
+                {
+                    seed => $seed,
+                    scan => $scan,
+                    results => (\@l),
+                }
+            );
 
             $iters_agg->merge_from($agg);
         }
