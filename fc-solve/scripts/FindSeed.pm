@@ -123,6 +123,72 @@ sub merge_from
     return;
 }
 
+sub output_to_fh
+{
+    my ($iters_agg, $MAX_TH, $seed, $fh) = @_;
+
+    $fh->print( "SUMMARY[$seed] = ", join(" ",
+            map { my $th = $_;
+                my $result = $iters_agg->get($th);
+                sprintf("[%d=%d\@seed=%d]",
+                $th+1,
+                $result->iters,
+                $result->seed,
+                )
+            } 0 .. $MAX_TH), "\n");
+
+    for my $threshold (0 .. $MAX_TH)
+    {
+        my $result = $iters_agg->get($threshold);
+        $fh->printf(" ==> %d = %s ; (%s)\n",
+            $threshold+1,
+            join(" ", map {
+                    my $th = $_;
+                    sprintf("{%d %d}",
+                    $th+1,
+                    $result->results->[$th]->iters,
+                    );
+                }
+                (0 .. $threshold)
+            ),
+            $result->scan,
+        );
+    }
+
+    return;
+}
+
+sub run_scans
+{
+    my ($iters_agg, $args) = @_;
+
+    my $MAX_TH = $args->{MAX_TH};
+    my $seed = $args->{seed};
+    my $scans = $args->{scans};
+    my $deals = $args->{deals};
+
+    my $max_iters = $iters_agg->get($MAX_TH)->iters;
+
+    foreach my $scan (@$scans)
+    {
+        $iters_agg->merge_from(
+            scalar FindSeed::ThresholdAgg->from_lines(
+                {
+                    seed => $seed,
+                    scan => $scan,
+                    lines => do {
+                        chomp(my @l = `summary-fc-solve @$deals -- $scan -seed "$seed" -sp r:tf -mi "$max_iters"`);
+                        \@l;
+                    },
+                }
+            )
+        );
+    }
+
+    return;
+}
+
+
 package FindSeed;
 
 use List::Util qw/max/;
@@ -187,49 +253,16 @@ sub find
     my $handle = sub {
         my ($seed) = @_;
 
-        my $max_iters = $iters_agg->get($MAX_TH)->iters;
+        $iters_agg->run_scans(
+            {
+                seed => $seed,
+                scans => \@scans,
+                deals => \@deals,
+                MAX_TH => $MAX_TH,
+            }
+        );
 
-        foreach my $scan (@scans)
-        {
-            my $agg = FindSeed::ThresholdAgg->from_lines(
-                {
-                    seed => $seed,
-                    scan => $scan,
-                    lines => do {
-                        chomp(my @l = `summary-fc-solve @deals -- $scan -seed "$seed" -sp r:tf -mi "$max_iters"`);
-                        \@l;
-                    },
-                }
-            );
-
-            $iters_agg->merge_from($agg);
-        }
-        print "SUMMARY[$seed] = ", join(" ",
-            map { my $th = $_;
-                my $result = $iters_agg->get($th);
-                sprintf("[%d=%d\@seed=%d]",
-                    $th+1,
-                    $result->iters,
-                    $result->seed,
-                )
-            } 0 .. $MAX_TH), "\n";
-        for my $threshold (0 .. $MAX_TH)
-        {
-            my $result = $iters_agg->get($threshold);
-            printf(" ==> %d = %s ; (%s)\n",
-                $threshold+1,
-                join(" ", map {
-                        my $th = $_;
-                        sprintf("{%d %d}",
-                            $th+1,
-                            $result->results->[$th]->iters,
-                        );
-                    }
-                    (0 .. $threshold)
-                ),
-                $result->scan,
-            );
-        }
+        $iters_agg->output_to_fh($MAX_TH, $seed, \*STDOUT);
         return;
     };
 
