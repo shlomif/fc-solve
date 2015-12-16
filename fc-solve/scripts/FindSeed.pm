@@ -29,6 +29,12 @@ has 'seed' => (is => 'ro');
 has 'results' => (is => 'ro');
 has 'iters' => (is => 'ro');
 
+package FindSeed::ThresholdAgg;
+
+use MooX qw/late/;
+
+has 'by_threshold' => (is => 'ro', default => sub { return []; },);
+
 package FindSeed;
 
 use List::Util qw/max/;
@@ -50,11 +56,11 @@ sub find
 
     my @scans = ((ref($scan_arg) eq '') ? ($scan_arg) : @$scan_arg);
 
-    my $threshold = $args->{threshold};
+    my $MAX_THRESHOLD = $args->{threshold};
 
-    if ($threshold > @scans)
+    if ($MAX_THRESHOLD > @scans)
     {
-        $threshold = @scans;
+        $MAX_THRESHOLD = @scans;
     }
 
     # my @deals = (14249, 10692);
@@ -72,7 +78,20 @@ sub find
     }
 
     my $LAST_SEED = ((1 << 31)-1);
-    my $iters = 100000;
+    my $iters_agg = FindSeed::ThresholdAgg->new;
+
+    for my $threshold (1 .. $MAX_THRESHOLD)
+    {
+        push @{$iters_agg->by_threshold},
+        FindSeed::ScanResult->new(
+            {
+                seed => 0,
+                scan => '',
+                results => [],
+                iters => 100_000,
+            }
+        );
+    }
     my $old_line;
 
     # 4086 923 Verdict: Solved ; Iters: 170 ; Length: 142
@@ -83,6 +102,8 @@ sub find
 
     my $handle = sub {
         my ($seed) = @_;
+
+        my $max_iters = $iters_agg->by_threshold->[$MAX_THRESHOLD-1]->iters;
 
         my @new_ = (map {
                 my $scan = $_;
@@ -98,31 +119,58 @@ sub find
                         }
                         );
                 } do {
-                    my @l = `summary-fc-solve @deals -- $scan -seed "$seed" -sp r:tf -mi "$iters"`;
+                    # print {*STDERR} "Checking Seed=$seed Scan=$scan\n";
+                    my @l = `summary-fc-solve @deals -- $scan -seed "$seed" -sp r:tf -mi "$max_iters"`;
                     chomp(@l);
                     @l;
                 };
-                my $v = $l[$threshold-1]->iters;
-                FindSeed::ScanResult->new(
-                    {
-                        seed => $seed,
-                        scan => $scan,
-                        results => (\@l),
-                        iters => $v,
-                    }
-                );
+
+                my $agg = FindSeed::ThresholdAgg->new;
+
+                for my $threshold (1 .. $MAX_THRESHOLD)
+                {
+                    my $v = $l[$threshold-1]->iters;
+                    push @{$agg->by_threshold},
+                        FindSeed::ScanResult->new(
+                        {
+                            seed => $seed,
+                            scan => $scan,
+                            results => (\@l),
+                            iters => $v,
+                        }
+                    );
+                }
+
+                $agg;
             } @scans
         );
-        my $new_scan = min_by { $_->iters } @new_;
-        my $new = $new_scan->iters;
-
-        if ($new < $iters)
+        my @new_scans = map { my $threshold = $_;
+            min_by { $_->by_threshold->[$threshold]->iters } @new_;
+        } 0 .. $MAX_THRESHOLD - 1;
+        for my $threshold (1 .. $MAX_THRESHOLD)
         {
-            $old_line = $new_scan;
-            $iters = $new;
+            my $new_iters = $new_scans[$threshold-1]->by_threshold->[$threshold-1]->iters;
+            if ($new_iters < $iters_agg->by_threshold->[$threshold-1]->iters)
+            {
+                $iters_agg->by_threshold->[$threshold-1] = $new_scans[$threshold-1]->by_threshold->[$threshold-1];
+            }
         }
-        print "$seed @{[$old_line->seed]} @{[map { $_->as_str } @{$old_line->results}[0 .. $threshold - 1]]} ; @{[$old_line->scan]}\n";
-
+        print "SUMMARY[$seed] = ", join(" ",
+            map { my $th = $_; sprintf("[%d=%d\@seed=%d]", $th+1,
+                $iters_agg->by_threshold->[$th]->iters,
+                $iters_agg->by_threshold->[$th]->seed,
+                )
+            } 0 .. $MAX_THRESHOLD-1), "\n";
+        for my $threshold (0 .. $MAX_THRESHOLD-1)
+        {
+            printf(" ==> %d = %s\n",
+                $threshold+1,
+                join(" ", map { my $th = $_; sprintf("{%d %d}", $th+1,
+                        $iters_agg->by_threshold->[$threshold]->results->[$th]->iters,
+                        ); } (0 .. $threshold)
+                )
+            );
+        }
         return;
     };
 
