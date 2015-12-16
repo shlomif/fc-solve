@@ -122,53 +122,46 @@ sub find
 
         my $max_iters = $iters_agg->get($MAX_THRESHOLD-1)->iters;
 
-        my @new_ = (map {
-                my $scan = $_;
-                my @l = sort { $a->iters <=> $b->iters } map {
-                    my $s = $_;
-                    $s =~ s#\A([0-9]+) = ##;
-                    my $deal = $1;
-                    FindSeed::DealAndSeedResult->new(
-                        {
-                            deal => $deal,
-                            output => $s,
-                            seed => $seed,
-                        }
-                        );
-                } do {
-                    # print {*STDERR} "Checking Seed=$seed Scan=$scan\n";
-                    my @l = `summary-fc-solve @deals -- $scan -seed "$seed" -sp r:tf -mi "$max_iters"`;
-                    chomp(@l);
-                    @l;
-                };
-
-                my $agg = FindSeed::ThresholdAgg->new;
-
-                for my $threshold (0 .. $MAX_THRESHOLD-1)
-                {
-                    my $v = $l[$threshold]->iters;
-                    $agg->add(
-                        FindSeed::ScanResult->new(
-                            {
-                                seed => $seed,
-                                scan => $scan,
-                                results => (\@l),
-                                iters => $v,
-                            }
-                        )
-                    );
-                }
-
-                $agg;
-            } @scans
-        );
-        foreach my $scan (
-            @new_
-        )
+        foreach my $scan (@scans)
         {
+            my @l = sort { $a->iters <=> $b->iters } map {
+                my $s = $_;
+                $s =~ s#\A([0-9]+) = ##;
+                my $deal = $1;
+                FindSeed::DealAndSeedResult->new(
+                {
+                    deal => $deal,
+                    output => $s,
+                    seed => $seed,
+                }
+                );
+            } do {
+                # print {*STDERR} "Checking Seed=$seed Scan=$scan\n";
+                my @l = `summary-fc-solve @deals -- $scan -seed "$seed" -sp r:tf -mi "$max_iters"`;
+                chomp(@l);
+                @l;
+            };
+
+            my $agg = FindSeed::ThresholdAgg->new;
+
             for my $threshold (0 .. $MAX_THRESHOLD-1)
             {
-                my $new = $scan->get($threshold);
+                my $v = $l[$threshold]->iters;
+                $agg->add(
+                    FindSeed::ScanResult->new(
+                        {
+                            seed => $seed,
+                            scan => $scan,
+                            results => (\@l),
+                            iters => $v,
+                        }
+                    )
+                );
+            }
+
+            for my $threshold (0 .. $MAX_THRESHOLD-1)
+            {
+                my $new = $agg->get($threshold);
                 if ($new->iters < $iters_agg->get($threshold)->iters)
                 {
                     $iters_agg->by_threshold->[$threshold] = $new;
