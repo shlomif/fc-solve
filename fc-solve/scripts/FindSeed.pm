@@ -223,14 +223,30 @@ sub find
     # my @deals = (14249);
 
     my $first_seed = $ENV{FIRST_SEED} || 1;
-    my $check_seed = $ENV{CHECK_SEED} || $first_seed;
+    my $check_seed__str = $ENV{CHECK_SEED} || $first_seed;
+
+    my @check_seeds = split/\s+/, $check_seed__str;
 
     {
         my $prev = shift(@ARGV);
         if (defined($prev))
         {
-            ($first_seed, $check_seed) = ($prev =~ /\A([0-9]+)\s+([0-9]+)/);
+            my $seeds_str;
+
+            if (($first_seed, $seeds_str) = ($prev =~ /\ASUMMARY\[([0-9]+)\] = ((?:\[[0-9]+=[0-9]+\@seed=[0-9]+\]\s*)+)\z/))
+            {
+                @check_seeds = map { s#\Aseed=##r } ($seeds_str =~ /(seed=[0-9]+)/g);
+            }
+            else
+            {
+                die "Argument is malformatted.";
+            }
         }
+    }
+
+    if (@check_seeds != $MAX_THRESHOLD)
+    {
+        die "Number of checked seeds is wrong.";
     }
 
     my $LAST_SEED = ((1 << 31)-1);
@@ -266,7 +282,10 @@ sub find
         return;
     };
 
-    $handle->($check_seed);
+    for my $seed (@check_seeds)
+    {
+        $handle->($seed);
+    }
     for my $seed ($first_seed .. $LAST_SEED)
     {
         $handle->($seed);
