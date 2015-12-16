@@ -127,9 +127,9 @@ sub find
 
                 my $agg = FindSeed::ThresholdAgg->new;
 
-                for my $threshold (1 .. $MAX_THRESHOLD)
+                for my $threshold (0 .. $MAX_THRESHOLD-1)
                 {
-                    my $v = $l[$threshold-1]->iters;
+                    my $v = $l[$threshold]->iters;
                     push @{$agg->by_threshold},
                         FindSeed::ScanResult->new(
                         {
@@ -147,12 +147,12 @@ sub find
         my @new_scans = map { my $threshold = $_;
             min_by { $_->by_threshold->[$threshold]->iters } @new_;
         } 0 .. $MAX_THRESHOLD - 1;
-        for my $threshold (1 .. $MAX_THRESHOLD)
+        for my $threshold (0 .. $MAX_THRESHOLD-1)
         {
-            my $new_iters = $new_scans[$threshold-1]->by_threshold->[$threshold-1]->iters;
-            if ($new_iters < $iters_agg->by_threshold->[$threshold-1]->iters)
+            my $new = $new_scans[$threshold]->by_threshold->[$threshold];
+            if ($new->iters < $iters_agg->by_threshold->[$threshold]->iters)
             {
-                $iters_agg->by_threshold->[$threshold-1] = $new_scans[$threshold-1]->by_threshold->[$threshold-1];
+                $iters_agg->by_threshold->[$threshold] = $new;
             }
         }
         print "SUMMARY[$seed] = ", join(" ",
