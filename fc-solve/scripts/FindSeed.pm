@@ -35,6 +35,15 @@ use MooX qw/late/;
 
 has 'by_threshold' => (is => 'ro', default => sub { return []; },);
 
+sub add
+{
+    my ($self, $item) = @_;
+
+    push @{$self->by_threshold}, $item;
+
+    return;
+}
+
 package FindSeed;
 
 use List::Util qw/max/;
@@ -82,14 +91,15 @@ sub find
 
     for my $threshold (1 .. $MAX_THRESHOLD)
     {
-        push @{$iters_agg->by_threshold},
-        FindSeed::ScanResult->new(
-            {
-                seed => 0,
-                scan => '',
-                results => [],
-                iters => 100_000,
-            }
+        $iters_agg->add(
+            FindSeed::ScanResult->new(
+                {
+                    seed => 0,
+                    scan => '',
+                    results => [],
+                    iters => 100_000,
+                }
+            )
         );
     }
     my $old_line;
@@ -130,14 +140,15 @@ sub find
                 for my $threshold (0 .. $MAX_THRESHOLD-1)
                 {
                     my $v = $l[$threshold]->iters;
-                    push @{$agg->by_threshold},
+                    $agg->add(
                         FindSeed::ScanResult->new(
-                        {
-                            seed => $seed,
-                            scan => $scan,
-                            results => (\@l),
-                            iters => $v,
-                        }
+                            {
+                                seed => $seed,
+                                scan => $scan,
+                                results => (\@l),
+                                iters => $v,
+                            }
+                        )
                     );
                 }
 
