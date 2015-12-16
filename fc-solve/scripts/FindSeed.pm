@@ -163,7 +163,7 @@ sub find
             } @scans
         );
         my @new_scans = map { my $threshold = $_;
-            min_by { $_->get($threshold)->iters } @new_;
+            scalar( min_by { $_->get($threshold)->iters } @new_);
         } 0 .. $MAX_THRESHOLD - 1;
         for my $threshold (0 .. $MAX_THRESHOLD-1)
         {
