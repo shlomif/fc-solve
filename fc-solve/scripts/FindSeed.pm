@@ -51,6 +51,22 @@ sub get
     return $self->by_threshold->[$idx];
 }
 
+sub merge_from
+{
+    my ($self, $agg) = @_;
+
+    for my $th (keys (@{$self->by_threshold}))
+    {
+        my $new = $agg->get($th);
+        if ($new->iters < $self->get($th)->iters)
+        {
+            $self->by_threshold->[$th] = $new;
+        }
+    }
+
+    return;
+}
+
 package FindSeed;
 
 use List::Util qw/max/;
@@ -159,14 +175,7 @@ sub find
                 );
             }
 
-            for my $threshold (0 .. $MAX_THRESHOLD-1)
-            {
-                my $new = $agg->get($threshold);
-                if ($new->iters < $iters_agg->get($threshold)->iters)
-                {
-                    $iters_agg->by_threshold->[$threshold] = $new;
-                }
-            }
+            $iters_agg->merge_from($agg);
         }
         print "SUMMARY[$seed] = ", join(" ",
             map { my $th = $_; sprintf("[%d=%d\@seed=%d]", $th+1,
