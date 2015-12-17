@@ -33,13 +33,13 @@ games). Also append these options:
 
 5. Type +make install+.
 
-6. Type +bash pgo.bash+ to prepare a GCC Profile-Guided Optimizations (PGO)
+6. Type +export FCS_PGO_THEME="-l as" ;  bash pgo.bash+ to prepare a GCC Profile-Guided Optimizations (PGO)
 executable.
 
 7. Then you can run a shell script like this one:
 +
 --------------------------------------
-num_threads=4 ; for t in $(seq 1 8) ; do sudo_renice bash -c "ARGS='--worker-step 16 -l as' bash ../source/scripts/time-threads-num.bash $num_threads $num_threads" ; done
+num_threads=4 ; for t in $(seq 1 8) ; do sudo_renice bash -c "$(printf 'ARGS="--worker-step 16 $FCS_PGO_THEME" bash ../source/scripts/time-threads-num.bash %d %d' $num_threads $num_threads)" ; done
 --------------------------------------
 +
 Where sudo_renice is something like:

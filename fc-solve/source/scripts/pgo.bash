@@ -15,7 +15,7 @@ src="$(perl -e 'use File::Basename qw(dirname); use File::Spec; print File::Spec
 
 # theme="-l te"
 # theme="--read-from-file 4,$(pwd)/Presets/testing-presets/all-star-4.sh"
-theme="-l as"
+theme="$FCS_PGO_THEME"
 
 run_make()
 {
