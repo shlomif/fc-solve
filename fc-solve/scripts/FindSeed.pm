@@ -345,11 +345,6 @@ sub find
         }
     }
 
-    if (@check_seeds != $MAX_THRESHOLD)
-    {
-        die "Number of checked seeds is wrong.";
-    }
-
     my $LAST_SEED = ((1 << 31)-1);
     my $iters_agg = FindSeed::ThresholdAgg->from_lines(
         {
@@ -438,11 +433,6 @@ sub parallel_find
         }
     }
 
-    if (@check_seeds != $MAX_THRESHOLD)
-    {
-        die "Number of checked seeds is wrong.";
-    }
-
     my $LAST_SEED = ((1 << 31)-1);
     my $iters_agg = FindSeed::ThresholdAgg->from_lines(
         {
@@ -506,7 +496,7 @@ has 'scans' => (is => 'rw');
 has 'deals' => (is => 'rw');
 has 'max_th' => (is => 'rw');
 has '_next_seed' => (is => 'rw');
-has 'range_size' => (is => 'rw', default => sub { return 10; });
+has 'range_size' => (is => 'rw', default => sub { return 40; });
 has 'pq' => (is => 'rw', default => sub { return []; });
 
 # A singleton.
