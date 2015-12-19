@@ -422,3 +422,26 @@ Also see <a href="http://shlomif-tech.livejournal.com/2011/03/12/">an
 earlier blog post</a> about “Finished Projects, Maintained Projects and Those
 that are Up For Adoption”.
 </p>
+
+<h3 id="wasnt_freecell_solved_yet">“‘Freecell Solver’? Hasn’t Freecell been
+solved yet?”</h3>
+
+<p>
+This question shows a basic misunderstanding of what Freecell is, and the
+purpose of a solver for it. Just to clarify the matters,
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> is a single-player
+card game, with some rules about what constitutes a legal move, and since there
+are 52 cards (Ace-to-King in the four suits), which are usually placed in
+8 columns (although a different number is possible), there are about
+1.75 × 10<sup>64</sup> distinct initial layout (according to the Wikipedia
+page), and many more if we consider mid-play layouts.
+</p>
+
+<p>
+The primary purpose of solvers such as this one is to attempt to solve any
+arbitrary layouts, while optionally giving the moves to completion. Note
+that due to the nature of the game, it may be
+<a href="#solve_all_games">impossible and/or time consuming</a> for
+some layouts, but hopefully the chance of this risk can be minimised
+with the more advanced searches.
+</p>
