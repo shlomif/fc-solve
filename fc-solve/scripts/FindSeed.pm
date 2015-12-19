@@ -170,6 +170,8 @@ sub output_to_fh
         );
     }
 
+    $fh->flush();
+
     return;
 }
 
