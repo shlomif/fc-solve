@@ -151,7 +151,9 @@ static GCC_INLINE const int fcs_u2p_flipped_status(const char * str)
 
 #define GEN_CARD_MAP(t_card) { CARD_ZERO(), "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J", "Q", "K" }
 
+#ifndef FCS_IMPLICIT_T_RANK
 static const char card_map_3_10[14][4] = GEN_CARD_MAP("10");
+#endif
 
 static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
 
