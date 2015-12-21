@@ -1178,8 +1178,8 @@ static void trace_solution(
                 STACKS_NUM,
                 DECKS_NUM,
                 1,
-                0,
-                1
+                0
+                PASS_T(TRUE)
                 );
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n",

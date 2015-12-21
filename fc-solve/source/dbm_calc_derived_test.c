@@ -134,8 +134,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             STACKS_NUM,
             DECKS_NUM,
             1,
-            0,
-            1
+            0
+            PASS_T(TRUE)
             );
         debug_ret[idx].move = iter->move;
         debug_ret[idx].core_irreversible_moves_count
@@ -197,8 +197,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
             STACKS_NUM,
             DECKS_NUM,
             1,
-            0,
-            1
+            0
+            PASS_T(TRUE)
             );
 
     return prune_ret;

@@ -168,8 +168,8 @@ static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
 void fc_solve_p2u_rank(
     const int rank_idx,
     char * const str,
-    fcs_bool_t * const rank_is_null,
-    const fcs_bool_t t
+    fcs_bool_t * const rank_is_null
+    PASS_T(const fcs_bool_t t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     , const fcs_bool_t flipped
 #endif
@@ -186,7 +186,13 @@ void fc_solve_p2u_rank(
 #endif
     {
         const fcs_bool_t out_of_range = ((rank_idx < 1) || (rank_idx > 13));
-        strcpy(str, (t ? card_map_3_T : card_map_3_10)[out_of_range ? 0 : rank_idx]);
+        strcpy(str,
+#ifdef FCS_IMPLICIT_T_RANK
+            card_map_3_T
+#else
+            (t ? card_map_3_T : card_map_3_10)
+#endif
+            [out_of_range ? 0 : rank_idx]);
         *rank_is_null = out_of_range;
     }
 }
@@ -236,7 +242,9 @@ static GCC_INLINE void fc_solve_p2u_suit(
  * Convert an entire card to its user representation.
  *
  * */
-void fc_solve_card_perl2user(const fcs_card_t card, char * const str, const fcs_bool_t t)
+void fc_solve_card_perl2user(const fcs_card_t card, char * const str
+    PASS_T(const fcs_bool_t t)
+)
 {
 #ifdef CARD_DEBUG_PRES
     if (fcs_card_get_flipped(card))
@@ -250,8 +258,8 @@ void fc_solve_card_perl2user(const fcs_card_t card, char * const str, const fcs_
     fc_solve_p2u_rank(
         fcs_card_rank(card),
         str,
-        &rank_is_null,
-        t
+        &rank_is_null
+        PASS_T(t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         ,
         fcs_card_get_flipped(card)

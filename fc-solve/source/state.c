@@ -248,8 +248,8 @@ char * fc_solve_state_as_string(
 #define FCS_S_FC_LOCS() (state_locs->fc_locs)
     FREECELLS_STACKS_DECKS__ARGS(),
     const fcs_bool_t parseable_output,
-    const fcs_bool_t canonized_order_output,
-    const fcs_bool_t display_10_as_t
+    const fcs_bool_t canonized_order_output
+    PASS_T(const fcs_bool_t display_10_as_t)
     )
 {
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
@@ -295,8 +295,8 @@ char * fc_solve_state_as_string(
         fc_solve_p2u_rank(
             fcs_foundation_value(*state, a),
             decks[a],
-            &rank_is_null,
-            display_10_as_t
+            &rank_is_null
+            PASS_T(display_10_as_t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
             ,0
 #endif
@@ -321,8 +321,8 @@ char * fc_solve_state_as_string(
                         *state,
                         freecell_locs[a*4+b]
                     ),
-                    freecell,
-                    display_10_as_t
+                    freecell
+                    PASS_T(display_10_as_t)
                 );
                 str2_ptr += sprintf(str2_ptr, "%3s ", freecell);
                 strcpy(dashes_ptr, "--- ");
@@ -408,8 +408,8 @@ char * fc_solve_state_as_string(
                 {
                     fc_solve_card_perl2user(
                         fcs_col_get_card(col, card_idx),
-                        stack_card_str,
-                        display_10_as_t
+                        stack_card_str
+                        PASS_T(display_10_as_t)
                     );
                     fc_solve_append_string_sprintf(
                         app_str,
@@ -445,8 +445,8 @@ char * fc_solve_state_as_string(
                     *state,
                     freecell_locs[a]
                 ),
-                freecell,
-                display_10_as_t
+                freecell
+                PASS_T(display_10_as_t)
             );
             fc_solve_append_string_sprintf(
                 app_str,
@@ -470,8 +470,8 @@ char * fc_solve_state_as_string(
             {
                 fc_solve_card_perl2user(
                     fcs_col_get_card(col, card_idx),
-                    stack_card_str,
-                    display_10_as_t
+                    stack_card_str
+                    PASS_T(display_10_as_t)
                 );
                 fc_solve_append_string_sprintf(app_str, "%s", stack_card_str);
                 if (card_idx < col_len-1)

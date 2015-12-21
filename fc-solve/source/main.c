@@ -79,8 +79,10 @@ static void my_iter_handler(
                 user_instance,
                 ptr_state,
                 context->parseable_output,
-                context->canonized_order_output,
+                context->canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
                 context->display_10_as_t
+#endif
                 );
         printf("%s\n---------------\n\n\n", state_string);
         free((void*)state_string);
@@ -483,7 +485,9 @@ static int cmd_line_callback(
     }
     else if (IS_ARG("-t") || IS_ARG("--display-10-as-t"))
     {
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
         dc->display_10_as_t = TRUE;
+#endif
     }
     else if (IS_ARG("-m") || IS_ARG("--display-moves"))
     {
@@ -740,8 +744,10 @@ int main(int argc, char * argv[])
 
         error_string =
             freecell_solver_user_get_invalid_state_error_string(
-                instance,
-                debug_context.display_10_as_t
+                instance
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                , debug_context.display_10_as_t
+#endif
                 );
         printf("%s\n", error_string);
         free(error_string);

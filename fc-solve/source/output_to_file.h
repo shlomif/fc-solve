@@ -45,7 +45,9 @@ struct fc_solve_display_information_context_struct
     fcs_bool_t debug_iter_state_output;
     fcs_bool_t parseable_output;
     fcs_bool_t canonized_order_output;
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     fcs_bool_t display_10_as_t;
+#endif
     fcs_bool_t display_parent_iter_num;
     fcs_bool_t debug_iter_output_on;
     fcs_bool_t display_moves;
@@ -62,7 +64,9 @@ static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT =
     .debug_iter_state_output = FALSE,
     .parseable_output = FALSE,
     .canonized_order_output = FALSE,
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     .display_10_as_t = FALSE,
+#endif
     .display_parent_iter_num = FALSE,
     .display_moves = FALSE,
     .display_states = TRUE,
@@ -95,8 +99,10 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                     freecell_solver_user_current_state_as_string(
                             instance,
                             debug_context.parseable_output,
-                            debug_context.canonized_order_output,
-                            debug_context.display_10_as_t
+                            debug_context.canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                            , debug_context.display_10_as_t
+#endif
                             );
 
                 fprintf(move_dump, "%s\n", as_string);
@@ -158,8 +164,10 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                         freecell_solver_user_current_state_as_string(
                                 instance,
                                 debug_context.parseable_output,
-                                debug_context.canonized_order_output,
-                                debug_context.display_10_as_t
+                                debug_context.canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                                , debug_context.display_10_as_t
+#endif
                                 );
 
                     fprintf(move_dump, "%s\n", as_string);

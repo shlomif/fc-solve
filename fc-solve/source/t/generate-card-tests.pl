@@ -20,6 +20,23 @@ sub rank_normalize
     }
 }
 
+sub _slurp
+{
+    my $filename = shift;
+
+    open my $in, '<', $filename
+        or die "Cannot open '$filename' for slurping - $!";
+
+    local $/;
+    my $contents = <$in>;
+
+    close($in);
+
+    return $contents;
+}
+
+my $implicit_t = (_slurp("../fcs_back_compat.h") =~ /^#define FCS_BREAK_BACKWARD_COMPAT_1$/ms ? 1 : 0);
+
 my @suits = (qw(H C D S));
 my @ranks =  ("A", (2 .. 9),
     {
@@ -49,6 +66,7 @@ my $args =
 {
     'suits' => indexify(0, \@suits),
     'ranks' => indexify(1, \@ranks),
+    'implicit_t' => $implicit_t,
 };
 
 $template->process(

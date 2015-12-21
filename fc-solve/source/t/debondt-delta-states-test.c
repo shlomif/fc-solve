@@ -78,8 +78,8 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
             STACKS_NUM,
             DECKS_NUM,
             1,
-            0,
-            1
+            0
+            PASS_T(TRUE)
             );
 
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))

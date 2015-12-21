@@ -935,8 +935,10 @@ static void trace_solution(
                 STACKS_NUM,
                 DECKS_NUM,
                 1,
-                0,
-                1
+                0
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                , 1
+#endif
                 );
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n",
