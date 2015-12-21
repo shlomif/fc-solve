@@ -605,6 +605,16 @@ extern fcs_card_t fc_solve_empty_card;
 #define FREECELLS_AND_STACKS_ARGS() FREECELLS_NUM__ARG STACKS_NUM__ARG
 #define FREECELLS_STACKS_DECKS__ARGS() FREECELLS_AND_STACKS_ARGS() DECKS_NUM__ARG
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define FCS_IMPLICIT_T_RANK
+#endif
+
+#ifdef FCS_IMPLICIT_T_RANK
+#define PASS_T(arg)
+#else
+#define PASS_T(arg) , arg
+#endif
+
 extern void fc_solve_canonize_state(
     fcs_state_t * const ptr_state_key
     FREECELLS_AND_STACKS_ARGS()
@@ -646,7 +656,8 @@ extern int fc_solve_state_compare_indirect_with_context(const void * s1, const v
  * Convert an entire card to its user representation.
  *
  * */
-extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str, const fcs_bool_t t);
+extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str
+    PASS_T(const fcs_bool_t t));
 
 /*
  * Converts a rank from its internal representation to a string.
@@ -660,8 +671,8 @@ extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str, con
 extern void fc_solve_p2u_rank(
     const int rank_idx,
     char * const str,
-    fcs_bool_t * const rank_is_null,
-    const fcs_bool_t t
+    fcs_bool_t * const rank_is_null
+    PASS_T(const fcs_bool_t t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     , const fcs_bool_t flipped
 #endif
@@ -975,8 +986,8 @@ extern char * fc_solve_state_as_string(
     const fcs_state_locs_struct_t * const state_locs
     FREECELLS_STACKS_DECKS__ARGS(),
     const fcs_bool_t parseable_output,
-    const fcs_bool_t canonized_order_output,
-    const fcs_bool_t display_10_as_t
+    const fcs_bool_t canonized_order_output
+    PASS_T(const fcs_bool_t display_10_as_t)
 );
 
 typedef enum

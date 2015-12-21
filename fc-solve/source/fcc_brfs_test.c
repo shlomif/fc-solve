@@ -228,8 +228,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
                 PASS_STACKS(STACKS_NUM)
                 PASS_DECKS(DECKS_NUM),
                 1,
-                0,
-                1
+                0
+                PASS_T(TRUE)
             );
 
         iter = iter->next;

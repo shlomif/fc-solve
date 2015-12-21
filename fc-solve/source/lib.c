@@ -1337,8 +1337,10 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 DLLEXPORT char * freecell_solver_user_current_state_as_string(
     void * api_instance,
     int parseable_output,
-    int canonized_order_output,
-    int display_10_as_t
+    int canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+    , int display_10_as_t
+#endif
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -1356,8 +1358,10 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
                 PASS_STACKS(INSTANCE_STACKS_NUM)
                 PASS_DECKS(INSTANCE_DECKS_NUM),
                 parseable_output,
-                canonized_order_output,
-                display_10_as_t
+                canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                , display_10_as_t
+#endif
                 );
     }
 }
@@ -1827,8 +1831,11 @@ int DLLEXPORT freecell_solver_user_get_max_num_decks(void)
 
 
 char * freecell_solver_user_get_invalid_state_error_string(
-    void * const api_instance,
+    void * const api_instance
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+    ,
     const int print_ts
+#endif
     )
 {
     char string[80];
@@ -1853,7 +1860,11 @@ char * freecell_solver_user_get_invalid_state_error_string(
              * so we should call fc_solve_card_perl2user on there only.
              * */
             char card_str[4];
-            fc_solve_card_perl2user(user->state_validity_card, card_str, print_ts);
+            fc_solve_card_perl2user(user->state_validity_card, card_str
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                , print_ts
+#endif
+                );
 
             sprintf(string, "%s%s.",
                 ((ret == FCS_STATE_VALIDITY__EXTRA_CARD)? "There's an extra card: " : "There's a missing card: "),
@@ -2089,8 +2100,8 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
     void * const api_instance HARD_CODED_UNUSED,
     void * const ptr_state_void,
     const int parseable_output,
-    const int canonized_order_output,
-    const int display_10_as_t
+    const int canonized_order_output
+    PASS_T(const int display_10_as_t)
 )
 {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
@@ -2107,8 +2118,10 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
             PASS_STACKS(INSTANCE_STACKS_NUM)
             PASS_DECKS(INSTANCE_DECKS_NUM),
             parseable_output,
-            canonized_order_output,
-            display_10_as_t
+            canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+            , display_10_as_t
+#endif
             );
 }
 

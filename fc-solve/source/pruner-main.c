@@ -75,8 +75,10 @@ static void my_iter_handler(
                 user_instance,
                 ptr_state,
                 1,
-                0,
-                1
+                0
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                , 1
+#endif
                 );
         printf("%s\n---------------\n\n\n", state_string);
 
@@ -205,7 +207,9 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
         dc->display_10_as_t = TRUE;
+#endif
     }
     else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
     {
@@ -451,8 +455,10 @@ int main(int argc, char * argv[])
 
         error_string =
             freecell_solver_user_get_invalid_state_error_string(
-                instance,
-                debug_context.display_10_as_t
+                instance
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                , debug_context.display_10_as_t
+#endif
                 );
         printf("%s\n", error_string);
         free(error_string);

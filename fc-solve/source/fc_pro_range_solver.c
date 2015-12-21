@@ -92,8 +92,10 @@ static void my_iter_handler(
                 user_instance,
                 ptr_state,
                 context->parseable_output,
-                context->canonized_order_output,
-                context->display_10_as_t
+                context->canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                , context->display_10_as_t
+#endif
                 );
         printf("%s\n---------------\n\n\n", state_string);
         free((void*)state_string);

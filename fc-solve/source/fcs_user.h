@@ -88,8 +88,10 @@ DLLEXPORT extern int freecell_solver_user_get_next_move(
 DLLEXPORT extern char * freecell_solver_user_current_state_as_string(
     void * user_instance,
     int parseable_output,
-    int canonized_order_output,
-    int display_10_as_t
+    int canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+    , int display_10_as_t
+#endif
     );
 
 DLLEXPORT extern void freecell_solver_user_free(
@@ -183,8 +185,10 @@ DLLEXPORT extern int freecell_solver_user_get_max_num_decks(void);
 
 
 DLLEXPORT extern char * freecell_solver_user_get_invalid_state_error_string(
-    void * user_instance,
-    int print_ts
+    void * user_instance
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+    , int print_ts
+#endif
     );
 
 DLLEXPORT extern int freecell_solver_user_set_sequences_are_built_by_type(
@@ -249,8 +253,10 @@ DLLEXPORT extern char * freecell_solver_user_iter_state_as_string(
     void * const user_instance,
     void * const ptr_state,
     const int parseable_output,
-    const int canonized_order_output,
-    const int display_10_as_t
+    const int canonized_order_output
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+    , const int display_10_as_t
+#endif
     );
 
 DLLEXPORT extern void freecell_solver_user_set_random_seed(

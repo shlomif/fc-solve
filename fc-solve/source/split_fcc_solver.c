@@ -1178,9 +1178,9 @@ static void trace_solution(
                 PASS_STACKS(STACKS_NUM)
                 PASS_DECKS(DECKS_NUM),
                 1,
-                0,
-                1
-            );
+                0
+                PASS_T(TRUE)
+                );
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n",
                 state_as_str,
