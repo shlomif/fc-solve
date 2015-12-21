@@ -12,18 +12,41 @@ if ($@)
 }
 else
 {
-    plan tests => 1;
+    plan tests => 2;
 }
 
-my $finder = Test::TrailingSpace->new(
-    {
-        root => '.',
-        filename_regex => qr/(?:(?:\.(?:t|pm|pl|PL|yml|json|arc|vim))|README|Changes|LICENSE)\z/,
-    },
+my %common =
+(
+    filename_regex => qr/(?:(?:\.(?:t|pm|pl|PL|yml|json|arc|vim))|README|Changes|LICENSE)\z/,
 );
 
-# TEST
-$finder->no_trailing_space(
-    "No trailing space was found."
-);
+{
+    my $finder = Test::TrailingSpace->new(
+        {
+            root => '.',
+            %common,
+        },
+    );
+
+    # TEST
+    $finder->no_trailing_space(
+        "No trailing space was found."
+    );
+
+}
+
+{
+    my $finder = Test::TrailingSpace->new(
+        {
+            root => $ENV{FCS_PATH},
+            %common,
+        },
+    );
+
+    # TEST
+    $finder->no_trailing_space(
+        "No trailing space was found in FCS_PATH"
+    );
+
+}
 
