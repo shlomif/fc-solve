@@ -12,7 +12,7 @@ of Freecell Solver (or a similar solve)
 
 =cut
 
-our $VERSION = '0.1400';
+our $VERSION = '0.1500';
 
 use parent 'Games::Solitaire::Verify::Solution::Base';
 

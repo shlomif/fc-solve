@@ -11,48 +11,60 @@ use Games::Solitaire::Verify::Foundations;
 
 package KlondikeBoard;
 
-use MooX qw/late/;
+use parent 'Games::Solitaire::Verify::Base';
 
-has 'foundations' => (isa => 'Games::Solitaire::Verify::Foundations',
-    is => 'ro',
-    default => sub {
-        return Games::Solitaire::Verify::Foundations->new(
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            foundations
+            orig_talon_string
+            talon
+            orig_columns_strings
+        )
+    ]
+);
+
+sub _init
+{
+    my ($self, $args) = @_;
+
+    $self->foundations(
+        Games::Solitaire::Verify::Foundations->new(
             {
                 num_decks => 1,
             }
-        );
-    },
-);
+        )
+    );
 
-has 'orig_talon_string' => (isa => 'Str', required => 1, is => 'ro',);
-has 'talon' => (isa => 'Games::Solitaire::Verify::KlondikeTalon',
-    lazy => 1,
-    is => 'ro',
-    default => sub {
-        my $self = shift;
-        return Games::Solitaire::Verify::KlondikeTalon->new({
+    my $orig_talon_string = $args->{orig_talon_string}
+        or die "orig_talon_string not specified.";
+    $self->orig_talon_string($orig_talon_string);
+
+    $self->talon(
+        Games::Solitaire::Verify::KlondikeTalon->new({
                 string => $self->orig_talon_string(),
                 max_num_redeals => 3,
-            });
-        }
-);
+            })
+    );
 
-has 'orig_columns_strings' => (isa => 'ArrayRef[Str]', required => 1, is => 'ro',);
+    $self->orig_columns_strings(
+        $args->{orig_columns_strings}
+    );
 
-has 'columns' => (isa => 'ArrayRef[Games::Solitaire::Verify::Column]', lazy => 1, is => 'ro',
-    default => sub {
-        my $self = shift;
-        return [
+    $self->columns(
+        [
             map
             {
                 Games::Solitaire::Verify::Column->new(
-                   { string => $_ }
+                    { string => $_ }
                 )
             }
             @{$self->orig_columns_strings()}
-        ];
-    }
-);
+        ]
+    );
+
+    return;
+}
 
 sub try_to_put_in_foundations
 {
