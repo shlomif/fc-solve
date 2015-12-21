@@ -175,20 +175,20 @@ class FC_Solve:
         return self.fcs.freecell_solver_user_resume_solution(self.user)
 
     def limit_iterations(self, max_iters):
-        self.fcs.freecell_solver_user_limit_iterations(
+        self.fcs.freecell_solver_user_limit_iterations_long(
             self.user,
-            (c_int)(max_iters)
+            (c_long)(max_iters)
         )
         return
 
     def get_num_times(self):
-        return c_int(
-            self.fcs.freecell_solver_user_get_num_times(self.user)
+        return c_long(
+            self.fcs.freecell_solver_user_get_num_times_long(self.user)
         ).value
 
     def get_num_states_in_col(self):
-        return c_int(
-            self.fcs.freecell_solver_user_get_num_states_in_collection(self.user)
+        return c_long(
+            self.fcs.freecell_solver_user_get_num_states_in_collection_long(self.user)
         ).value
 
     def recycle(self):
