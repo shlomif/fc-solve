@@ -21,6 +21,7 @@ MACRO(MY_ADD_EXE EXE_FILE C_FILE)
         COMMAND "perl" ARGS "${CMAKE_CURRENT_SOURCE_DIR}/generate-card-tests.pl"
         MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/${C_FILE}.tt"
         DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/generate-card-tests.pl"
+            "${CMAKE_CURRENT_BINARY_DIR}/../fcs_back_compat.h"
     )
 
 ENDMACRO(MY_ADD_EXE EXE_FILE C_FILE)
