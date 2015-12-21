@@ -47,6 +47,7 @@ my $with_dbm_solver;
 my $max_num_stacks;
 my $disable_patsolve = 0;
 my $single_hard_thread = 0;
+my $break_back_compat_1 = 0;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -243,6 +244,7 @@ GetOptions(
     'num-stacks=i' => \$max_num_stacks,
     'disable-patsolve!' => \$disable_patsolve,
     'single-ht!' => \$single_hard_thread,
+    'break-back-compat-1!' => \$break_back_compat_1,
 ) or
     die "Wrong options";
 
@@ -347,6 +349,7 @@ my @cmd= ("cmake",
     ),
     ($disable_patsolve ? ("-DFCS_DISABLE_PATSOLVE=1") : ()),
     ($single_hard_thread ? ("-DFCS_SINGLE_HARD_THREAD=1") : ()),
+    ($break_back_compat_1 ? ("-DFCS_BREAK_BACKWARD_COMPAT_1=1") : ()),
 );
 
 
