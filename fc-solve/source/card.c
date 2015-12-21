@@ -153,9 +153,11 @@ static GCC_INLINE const int fcs_u2p_flipped_status(const char * str)
 
 #ifndef FCS_IMPLICIT_T_RANK
 static const char card_map_3_10[14][4] = GEN_CARD_MAP("10");
-#endif
 
 static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
+#else
+static const char cards_char_map[15] = ( CARD_ZERO() "A23456789TJQK" );
+#endif
 
 /*
  * Converts a rank from its internal representation to a string.
@@ -188,13 +190,16 @@ void fc_solve_p2u_rank(
 #endif
     {
         const fcs_bool_t out_of_range = ((rank_idx < 1) || (rank_idx > 13));
-        strcpy(str,
+#define INDEX() (out_of_range ? 0 : rank_idx)
 #ifdef FCS_IMPLICIT_T_RANK
-            card_map_3_T
+        str[0] = cards_char_map[INDEX()];
+        str[1] = '\0';
 #else
+        strcpy(str,
             (t ? card_map_3_T : card_map_3_10)
+            [INDEX()]);
 #endif
-            [out_of_range ? 0 : rank_idx]);
+#undef INDEX
         *rank_is_null = out_of_range;
     }
 }
