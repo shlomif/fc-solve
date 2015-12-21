@@ -1,5 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
+0.1500  2015-12-21
+        - Remove dependency on MooX::late (and Moo)
+        - Some optimizations and cleanups.
+        - Removed order prefixes from t/*.t files.
+
 0.1400  2014-11-08
         - Convert to Dist-Zilla
         - Add lib/Games/Solitaire/Verify/App/CmdLine/From_Patsolve.pm and
