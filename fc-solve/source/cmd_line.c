@@ -1315,14 +1315,12 @@ break;
         *last_arg = arg-&(argv[0]); \
         return FCS_CMD_LINE_ERROR_IN_ARG;
 
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
         case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
         {
             PROCESS_OPT_ARG() ;
             freecell_solver_user_limit_depth(instance, atoi((*arg)));
         }
         break;
-#endif
 
         case FCS_OPT_MAX_ITERS: /* STRINGS=-mi|--max-iters; */
         {
