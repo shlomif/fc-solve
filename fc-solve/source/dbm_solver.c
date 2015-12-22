@@ -893,7 +893,6 @@ static void trace_solution(
     int trace_num;
     int i;
     fcs_state_keyval_pair_t state;
-    char * state_as_str;
     char move_buffer[500];
     fcs_state_locs_struct_t locs;
     enum fcs_dbm_variant_type_t local_variant;
@@ -927,17 +926,18 @@ static void trace_solution(
             );
         }
 
-        state_as_str =
-            fc_solve_state_as_string(
-                &(state.s),
-                &locs
-                PASS_FREECELLS(FREECELLS_NUM)
-                PASS_STACKS(STACKS_NUM)
-                PASS_DECKS(DECKS_NUM)
-                FC_SOLVE__PASS_PARSABLE(TRUE)
-                , FALSE
-                FC_SOLVE__PASS_T(TRUE)
-                );
+        char state_as_str[1000];
+        fc_solve_state_as_string(
+            state_as_str,
+            &(state.s),
+            &locs
+            PASS_FREECELLS(FREECELLS_NUM)
+            PASS_STACKS(STACKS_NUM)
+            PASS_DECKS(DECKS_NUM)
+            FC_SOLVE__PASS_PARSABLE(TRUE)
+            , FALSE
+            FC_SOLVE__PASS_T(TRUE)
+        );
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n",
                 state_as_str,
@@ -946,8 +946,6 @@ static void trace_solution(
                 : "END"
                );
         fflush (out_fh);
-
-        free(state_as_str);
     }
     free (trace);
 }

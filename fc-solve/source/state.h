@@ -977,7 +977,8 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 #undef ret
 #undef handle_eos
 
-extern char * fc_solve_state_as_string(
+extern void fc_solve_state_as_string(
+    char * output_s,
     const fcs_state_t * const state,
     const fcs_state_locs_struct_t * const state_locs
     FREECELLS_STACKS_DECKS__ARGS()

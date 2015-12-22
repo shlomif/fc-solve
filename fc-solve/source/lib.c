@@ -1348,17 +1348,19 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
         fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
 
-        return
-            fc_solve_state_as_string(
-                &(user->running_state.s),
-                &(user->initial_state_locs)
-                PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                PASS_STACKS(INSTANCE_STACKS_NUM)
-                PASS_DECKS(INSTANCE_DECKS_NUM)
-                FC_SOLVE__PASS_PARSABLE(parseable_output)
-                , canonized_order_output
-                FC_SOLVE__PASS_T(display_10_as_t)
-                );
+        char * state_as_string = SMALLOC(state_as_string, 1000);
+        fc_solve_state_as_string(
+            state_as_string,
+            &(user->running_state.s),
+            &(user->initial_state_locs)
+            PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+            PASS_STACKS(INSTANCE_STACKS_NUM)
+            PASS_DECKS(INSTANCE_DECKS_NUM)
+            FC_SOLVE__PASS_PARSABLE(parseable_output)
+            , canonized_order_output
+            FC_SOLVE__PASS_T(display_10_as_t)
+        );
+        return state_as_string;
     }
 }
 
@@ -2104,17 +2106,19 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
         &(user->active_flare->obj);
 #endif
 
-    return
-        fc_solve_state_as_string(
-            ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
-            &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs)
-            PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-            PASS_STACKS(INSTANCE_STACKS_NUM)
-            PASS_DECKS(INSTANCE_DECKS_NUM)
-            FC_SOLVE__PASS_PARSABLE(parseable_output)
-            , canonized_order_output
-            PASS_T(display_10_as_t)
-            );
+    char * state_as_string = SMALLOC(state_as_string, 1000);
+    fc_solve_state_as_string(
+        state_as_string,
+        ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
+        &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs)
+        PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+        PASS_STACKS(INSTANCE_STACKS_NUM)
+        PASS_DECKS(INSTANCE_DECKS_NUM)
+        FC_SOLVE__PASS_PARSABLE(parseable_output)
+        , canonized_order_output
+        PASS_T(display_10_as_t)
+    );
+    return state_as_string;
 }
 
 void DLLEXPORT freecell_solver_user_set_random_seed(

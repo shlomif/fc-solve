@@ -126,17 +126,18 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     iter = derived_list;
     while (iter)
     {
-        debug_ret[idx].state_string =
-            fc_solve_state_as_string(
-                &(iter->state.s),
-                &locs
-                PASS_FREECELLS(FREECELLS_NUM)
-                PASS_STACKS(STACKS_NUM)
-                PASS_DECKS(DECKS_NUM)
-                FC_SOLVE__PASS_PARSABLE(TRUE)
-                , FALSE
-                PASS_T(TRUE)
-            );
+        debug_ret[idx].state_string = SMALLOC(debug_ret[idx].state_string, 1000);
+        fc_solve_state_as_string(
+            debug_ret[idx].state_string,
+            &(iter->state.s),
+            &locs
+            PASS_FREECELLS(FREECELLS_NUM)
+            PASS_STACKS(STACKS_NUM)
+            PASS_DECKS(DECKS_NUM)
+            FC_SOLVE__PASS_PARSABLE(TRUE)
+            , FALSE
+            PASS_T(TRUE)
+        );
         debug_ret[idx].move = iter->move;
         debug_ret[idx].core_irreversible_moves_count
             = iter->core_irreversible_moves_count;
@@ -189,17 +190,18 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
         fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
         prune_ret = horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     }
-    *ret_state_s =
-        fc_solve_state_as_string(
-            &(init_state.s),
-            &locs
-            PASS_FREECELLS(FREECELLS_NUM)
-            PASS_STACKS(STACKS_NUM)
-            PASS_DECKS(DECKS_NUM)
-            FC_SOLVE__PASS_PARSABLE(TRUE)
-            , FALSE
-            PASS_T(TRUE)
-            );
+    *ret_state_s = SMALLOC(*ret_state_s, 1000);
+    fc_solve_state_as_string(
+        *ret_state_s,
+        &(init_state.s),
+        &locs
+        PASS_FREECELLS(FREECELLS_NUM)
+        PASS_STACKS(STACKS_NUM)
+        PASS_DECKS(DECKS_NUM)
+        FC_SOLVE__PASS_PARSABLE(TRUE)
+        , FALSE
+        PASS_T(TRUE)
+    );
 
     return prune_ret;
 }
