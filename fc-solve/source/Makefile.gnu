@@ -184,7 +184,6 @@ dummy:
 
 #<<<OBJECTS.START
 OBJECTS :=                     \
-          app_str.o           \
           card.o              \
           check_and_add_state.o \
           cmd_line.o          \
@@ -277,7 +276,7 @@ FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
 freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FC_PRO_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
 
-FCC_SOLVER_OBJS = fcc_solver.o libavl/avl.o app_str.o card.o meta_alloc.o state.o
+FCC_SOLVER_OBJS = fcc_solver.o libavl/avl.o card.o meta_alloc.o state.o
 
 fcc_fc_solver: $(FCC_SOLVER_OBJS)
 	$(CC) -static $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FCC_SOLVER_OBJS) $(END_LFLAGS)
