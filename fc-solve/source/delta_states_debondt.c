@@ -803,10 +803,10 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     new_derived_as_str =
         fc_solve_state_as_string(
             &(new_derived_state.s),
-            &locs,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM
+            &locs
+            PASS_FREECELLS(FREECELLS_NUM)
+            PASS_STACKS(STACKS_NUM)
+            PASS_DECKS(DECKS_NUM)
             FC_SOLVE__PASS_PARSABLE(TRUE)
             , FALSE
             FC_SOLVE__PASS_T(TRUE)

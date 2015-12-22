@@ -127,15 +127,15 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     while (iter)
     {
         debug_ret[idx].state_string =
-        fc_solve_state_as_string(
-            &(iter->state.s),
-            &locs,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM
-            FC_SOLVE__PASS_PARSABLE(TRUE)
-            , FALSE
-            PASS_T(TRUE)
+            fc_solve_state_as_string(
+                &(iter->state.s),
+                &locs
+                PASS_FREECELLS(FREECELLS_NUM)
+                PASS_STACKS(STACKS_NUM)
+                PASS_DECKS(DECKS_NUM)
+                FC_SOLVE__PASS_PARSABLE(TRUE)
+                , FALSE
+                PASS_T(TRUE)
             );
         debug_ret[idx].move = iter->move;
         debug_ret[idx].core_irreversible_moves_count
@@ -192,10 +192,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     *ret_state_s =
         fc_solve_state_as_string(
             &(init_state.s),
-            &locs,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM
+            &locs
+            PASS_FREECELLS(FREECELLS_NUM)
+            PASS_STACKS(STACKS_NUM)
+            PASS_DECKS(DECKS_NUM)
             FC_SOLVE__PASS_PARSABLE(TRUE)
             , FALSE
             PASS_T(TRUE)

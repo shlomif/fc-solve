@@ -73,14 +73,14 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
     as_str =
         fc_solve_state_as_string(
             &(new_derived_state.s),
-            &locs,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM
+            &locs
+            PASS_FREECELLS(FREECELLS_NUM)
+            PASS_STACKS(STACKS_NUM)
+            PASS_DECKS(DECKS_NUM)
             FC_SOLVE__PASS_PARSABLE(TRUE)
             , FALSE
             PASS_T(TRUE)
-            );
+        );
 
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
     {
