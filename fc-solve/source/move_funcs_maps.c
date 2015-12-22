@@ -9,7 +9,7 @@
 #include "simpsim.h"
 
 #ifdef FCS_DISABLE_SIMPLE_SIMON
-#define WRAP_SIMPSIM(f) NULL
+#define WRAP_SIMPSIM(f) fc_solve_sfs_move_top_stack_cards_to_founds
 #else
 #define WRAP_SIMPSIM(f) f
 #endif
