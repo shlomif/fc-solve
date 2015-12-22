@@ -242,24 +242,23 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 #endif
 
 char * fc_solve_state_as_string(
-    const fcs_state_t * const state,
-    const fcs_state_locs_struct_t * const state_locs
+    const fcs_state_t * const state
+    , const fcs_state_locs_struct_t * const state_locs
 #define FCS_S_STACK_LOCS() (state_locs->stack_locs)
 #define FCS_S_FC_LOCS() (state_locs->fc_locs)
-    FREECELLS_STACKS_DECKS__ARGS(),
-    const fcs_bool_t parseable_output,
-    const fcs_bool_t canonized_order_output
+    FREECELLS_STACKS_DECKS__ARGS()
+    FC_SOLVE__PASS_PARSABLE(const fcs_bool_t parseable_output)
+    , const fcs_bool_t canonized_order_output
     PASS_T(const fcs_bool_t display_10_as_t)
     )
 {
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
-    int a, b;
+    int a;
     fcs_bool_t rank_is_null;
-    int max_num_cards, s, card_idx;
+    int s, card_idx;
     fcs_cards_column_t col;
     int col_len;
 
-    char str2[128], * str2_ptr;
 
     fc_solve_append_string_t app_str_struct;
 #define app_str (&app_str_struct)
@@ -307,14 +306,16 @@ char * fc_solve_state_as_string(
 
     fc_solve_append_string_init(&app_str_struct);
 
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     if(!parseable_output)
     {
         for(a=0;a<((FREECELLS_NUM__VAL/4)+((FREECELLS_NUM__VAL%4==0)?0:1));a++)
         {
             char dashes_s[128];
             char * dashes_ptr = dashes_s;
-            str2_ptr = str2;
-            for(b=0;b<min(FREECELLS_NUM__VAL-a*4, 4);b++)
+            char str2[128];
+            char * str2_ptr = str2;
+            for (int b = 0 ; b < min(FREECELLS_NUM__VAL-a*4, 4) ; b++)
             {
                 fc_solve_card_perl2user(
                     fcs_freecell_card(
@@ -380,7 +381,7 @@ char * fc_solve_state_as_string(
             "\n"
             );
 
-        max_num_cards = 0;
+        int max_num_cards = 0;
         for(s=0;s<STACKS_NUM__VAL;s++)
         {
             col = fcs_state_get_col(*state, stack_locs[s]);
@@ -422,6 +423,7 @@ char * fc_solve_state_as_string(
         }
     }
     else
+#endif
     {
         fc_solve_append_string_sprintf(app_str, "%s", "Foundations: ");
         for(a=0;a<DECKS_NUM__VAL;a++)

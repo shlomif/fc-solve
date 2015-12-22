@@ -934,8 +934,8 @@ static void trace_solution(
                 PASS_FREECELLS(FREECELLS_NUM)
                 PASS_STACKS(STACKS_NUM)
                 PASS_DECKS(DECKS_NUM),
-                1,
-                0
+                FC_SOLVE__PASS_PARSABLE(TRUE)
+                , FALSE
                 FC_SOLVE__PASS_T(TRUE)
                 );
 

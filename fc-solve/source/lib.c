@@ -1335,9 +1335,9 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 }
 
 DLLEXPORT char * freecell_solver_user_current_state_as_string(
-    void * api_instance,
-    int parseable_output,
-    int canonized_order_output
+    void * api_instance
+    FC_SOLVE__PASS_PARSABLE(int parseable_output)
+    , int canonized_order_output
     FC_SOLVE__PASS_T(int display_10_as_t)
     )
 {
@@ -1354,9 +1354,9 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
                 &(user->initial_state_locs)
                 PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
                 PASS_STACKS(INSTANCE_STACKS_NUM)
-                PASS_DECKS(INSTANCE_DECKS_NUM),
-                parseable_output,
-                canonized_order_output
+                PASS_DECKS(INSTANCE_DECKS_NUM)
+                FC_SOLVE__PASS_PARSABLE(parseable_output)
+                , canonized_order_output
                 FC_SOLVE__PASS_T(display_10_as_t)
                 );
     }
@@ -2092,9 +2092,9 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 
 DLLEXPORT char * freecell_solver_user_iter_state_as_string(
     void * const api_instance HARD_CODED_UNUSED,
-    void * const ptr_state_void,
-    const int parseable_output,
-    const int canonized_order_output
+    void * const ptr_state_void
+    FC_SOLVE__PASS_PARSABLE(const int parseable_output)
+    , const int canonized_order_output
     PASS_T(const int display_10_as_t)
 )
 {
@@ -2110,12 +2110,10 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
             &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs)
             PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
             PASS_STACKS(INSTANCE_STACKS_NUM)
-            PASS_DECKS(INSTANCE_DECKS_NUM),
-            parseable_output,
-            canonized_order_output
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-            , display_10_as_t
-#endif
+            PASS_DECKS(INSTANCE_DECKS_NUM)
+            FC_SOLVE__PASS_PARSABLE(parseable_output)
+            , canonized_order_output
+            PASS_T(display_10_as_t)
             );
 }
 

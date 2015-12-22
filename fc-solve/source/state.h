@@ -980,8 +980,8 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 extern char * fc_solve_state_as_string(
     const fcs_state_t * const state,
     const fcs_state_locs_struct_t * const state_locs
-    FREECELLS_STACKS_DECKS__ARGS(),
-    const fcs_bool_t parseable_output,
+    FREECELLS_STACKS_DECKS__ARGS()
+    FC_SOLVE__PASS_PARSABLE(const fcs_bool_t parseable_output),
     const fcs_bool_t canonized_order_output
     PASS_T(const fcs_bool_t display_10_as_t)
 );

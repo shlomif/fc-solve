@@ -1173,12 +1173,12 @@ static void trace_solution(
         state_as_str =
             fc_solve_state_as_string(
                 &(state.s),
-                &locs
+                &locs,
                 PASS_FREECELLS(FREECELLS_NUM)
                 PASS_STACKS(STACKS_NUM)
-                PASS_DECKS(DECKS_NUM),
-                1,
-                0
+                PASS_DECKS(DECKS_NUM)
+                FC_SOLVE__PASS_PARSABLE(TRUE)
+                , FALSE
                 PASS_T(TRUE)
                 );
 

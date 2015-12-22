@@ -39,11 +39,14 @@ extern "C" {
 #include "bool.h"
 
 #include "fcs_enums.h"
+#include "fcs_user.h"
 
 struct fc_solve_display_information_context_struct
 {
     fcs_bool_t debug_iter_state_output;
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     fcs_bool_t parseable_output;
+#endif
     fcs_bool_t canonized_order_output;
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
     fcs_bool_t display_10_as_t;
@@ -62,7 +65,9 @@ typedef struct fc_solve_display_information_context_struct fc_solve_display_info
 static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT =
 {
     .debug_iter_state_output = FALSE,
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     .parseable_output = FALSE,
+#endif
     .canonized_order_output = FALSE,
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
     .display_10_as_t = FALSE,
@@ -97,9 +102,9 @@ static GCC_INLINE void fc_solve_output_result_to_file(
             {
                 as_string =
                     freecell_solver_user_current_state_as_string(
-                            instance,
-                            debug_context.parseable_output,
-                            debug_context.canonized_order_output
+                            instance
+                            FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
+                            , debug_context.canonized_order_output
                             FC_SOLVE__PASS_T(debug_context.display_10_as_t)
                             );
 
@@ -160,9 +165,9 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                 {
                     as_string =
                         freecell_solver_user_current_state_as_string(
-                                instance,
-                                debug_context.parseable_output,
-                                debug_context.canonized_order_output
+                                instance
+                                FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
+                                , debug_context.canonized_order_output
                                 FC_SOLVE__PASS_T(debug_context.display_10_as_t)
                                 );
 

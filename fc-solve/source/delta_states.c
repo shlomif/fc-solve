@@ -635,8 +635,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
             PASS_FREECELLS(FREECELLS_NUM)
             PASS_STACKS(STACKS_NUM)
             PASS_DECKS(DECKS_NUM),
-            1,
-            0
+            FC_SOLVE__PASS_PARSABLE(TRUE)
+            , FALSE
             PASS_T(TRUE)
             );
 

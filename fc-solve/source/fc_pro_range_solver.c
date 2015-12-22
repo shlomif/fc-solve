@@ -53,9 +53,13 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t stat
 struct fc_solve_display_information_context_struct
 {
     fcs_bool_t debug_iter_state_output;
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     fcs_bool_t parseable_output;
+#endif
     fcs_bool_t canonized_order_output;
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
     fcs_bool_t display_10_as_t;
+#endif
     fcs_bool_t display_parent_iter_num;
     fcs_bool_t debug_iter_output_on;
     fcs_bool_t display_moves;
@@ -90,9 +94,9 @@ static void my_iter_handler(
         char * state_string =
             freecell_solver_user_iter_state_as_string(
                 user_instance,
-                ptr_state,
-                context->parseable_output,
-                context->canonized_order_output
+                ptr_state
+                FC_SOLVE__PASS_PARSABLE(context->parseable_output)
+                , context->canonized_order_output
                 FC_SOLVE__PASS_T(context->display_10_as_t)
                 );
         printf("%s\n---------------\n\n\n", state_string);
@@ -141,7 +145,9 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
     {
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
         dc->parseable_output = TRUE;
+#endif
     }
     else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
     {
@@ -149,7 +155,9 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
         dc->display_10_as_t = TRUE;
+#endif
     }
     else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
     {

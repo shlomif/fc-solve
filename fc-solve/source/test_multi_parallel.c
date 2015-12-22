@@ -78,9 +78,9 @@ static void my_iter_handler(
         char * state_string =
             freecell_solver_user_iter_state_as_string(
                 user_instance,
-                ptr_state,
-                context->parseable_output,
-                context->canonized_order_output
+                ptr_state
+                FC_SOLVE__PASS_PARSABLE(context->parseable_output)
+                , context->canonized_order_output
                 FC_SOLVE__PASS_T(context->display_10_as_t)
                 );
         printf("%s\n---------------\n\n\n", state_string);
@@ -130,7 +130,9 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
     {
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
         dc->parseable_output = TRUE;
+#endif
     }
     else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
     {
