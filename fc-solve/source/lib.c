@@ -1338,9 +1338,7 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
     void * api_instance,
     int parseable_output,
     int canonized_order_output
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-    , int display_10_as_t
-#endif
+    FC_SOLVE__PASS_T(int display_10_as_t)
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -1359,9 +1357,7 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
                 PASS_DECKS(INSTANCE_DECKS_NUM),
                 parseable_output,
                 canonized_order_output
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-                , display_10_as_t
-#endif
+                FC_SOLVE__PASS_T(display_10_as_t)
                 );
     }
 }
@@ -1861,9 +1857,7 @@ char * freecell_solver_user_get_invalid_state_error_string(
              * */
             char card_str[4];
             fc_solve_card_perl2user(user->state_validity_card, card_str
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-                , print_ts
-#endif
+                FC_SOLVE__PASS_T(print_ts)
                 );
 
             sprintf(string, "%s%s.",

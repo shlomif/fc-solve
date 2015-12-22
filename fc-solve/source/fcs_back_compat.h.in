@@ -38,6 +38,16 @@ extern "C" {
 
 #cmakedefine FCS_BREAK_BACKWARD_COMPAT_1
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define FC_SOLVE_IMPLICIT_T_RANK
+#endif
+
+#ifdef FC_SOLVE_IMPLICIT_T_RANK
+#define FC_SOLVE__PASS_T(arg)
+#else
+#define FC_SOLVE__PASS_T(arg) , arg
+#endif
+
 #ifdef __cplusplus
 }
 #endif

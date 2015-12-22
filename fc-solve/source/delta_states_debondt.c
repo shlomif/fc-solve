@@ -809,9 +809,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
             DECKS_NUM,
             1,
             0
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-            , 1
-#endif
+            FC_SOLVE__PASS_T(TRUE)
             );
 
     free(init_state_s);

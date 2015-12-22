@@ -76,9 +76,7 @@ static void my_iter_handler(
                 ptr_state,
                 1,
                 0
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-                , 1
-#endif
+                FC_SOLVE__PASS_T(TRUE)
                 );
         printf("%s\n---------------\n\n\n", state_string);
 
@@ -207,7 +205,7 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
         dc->display_10_as_t = TRUE;
 #endif
     }
@@ -456,9 +454,7 @@ int main(int argc, char * argv[])
         error_string =
             freecell_solver_user_get_invalid_state_error_string(
                 instance
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-                , debug_context.display_10_as_t
-#endif
+                FC_SOLVE__PASS_T(debug_context.display_10_as_t)
                 );
         printf("%s\n", error_string);
         free(error_string);
