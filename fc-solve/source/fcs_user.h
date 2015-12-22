@@ -58,10 +58,12 @@ DLLEXPORT extern void freecell_solver_user_limit_iterations_long(
     fcs_int_limit_t max_iters
     );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern void freecell_solver_user_limit_iterations(
     void * user_instance,
     int max_iters
     );
+#endif
 
 DLLEXPORT extern int freecell_solver_user_set_tests_order(
     void * user_instance,
@@ -111,6 +113,7 @@ DLLEXPORT extern fcs_int_limit_t freecell_solver_user_get_num_times_long(
     void * user_instance
     );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern int freecell_solver_user_get_num_times(
     void * user_instance
     );
@@ -118,11 +121,13 @@ DLLEXPORT extern int freecell_solver_user_get_num_times(
 DLLEXPORT extern int freecell_solver_user_get_limit_iterations(
     void * user_instance
     );
+#endif
 
 DLLEXPORT extern int freecell_solver_user_get_moves_left(
     void * user_instance
     );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern int freecell_solver_user_set_game(
     void * user_instance,
     int freecells_num,
@@ -132,16 +137,19 @@ DLLEXPORT extern int freecell_solver_user_set_game(
     int unlimited_sequence_move,
     int empty_stacks_fill
     );
+#endif
 
 DLLEXPORT extern void freecell_solver_user_set_solution_optimization(
-    void * user_instance,
-    int optimize
+    void * const user_instance,
+    const int optimize
 );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern char * freecell_solver_user_move_to_string(
     fcs_move_t move,
     int standard_notation
     );
+#endif
 
 DLLEXPORT extern char * freecell_solver_user_move_to_string_w_state(
     void * const user_instance,
@@ -149,10 +157,12 @@ DLLEXPORT extern char * freecell_solver_user_move_to_string_w_state(
     const int standard_notation
     );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern void freecell_solver_user_limit_depth(
     void * user_instance,
     int max_depth
     );
+#endif
 
 DLLEXPORT extern int freecell_solver_user_set_num_freecells(
     void * user_instance,
@@ -199,11 +209,12 @@ DLLEXPORT extern int freecell_solver_user_set_sequence_move(
     );
 
 DLLEXPORT extern int freecell_solver_user_set_a_star_weight(
-    void * user_instance,
-    int my_index,
-    double weight
+    void * const user_instance,
+    const int my_index,
+    const double weight
     );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 typedef void (*freecell_solver_user_iter_handler_t)
     (
      void * user_instance,
@@ -213,6 +224,7 @@ typedef void (*freecell_solver_user_iter_handler_t)
      int parent_iter_num,
      void * context
      );
+#endif
 
 typedef void (*freecell_solver_user_long_iter_handler_t)
     (
@@ -224,11 +236,13 @@ typedef void (*freecell_solver_user_long_iter_handler_t)
      void * context
      );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern void freecell_solver_user_set_iter_handler(
     void * user_instance,
     freecell_solver_user_iter_handler_t iter_handler,
     void * iter_handler_context
     );
+#endif
 
 DLLEXPORT extern void freecell_solver_user_set_iter_handler_long(
     void * user_instance,
@@ -238,37 +252,41 @@ DLLEXPORT extern void freecell_solver_user_set_iter_handler_long(
 
 
 DLLEXPORT extern char * freecell_solver_user_iter_state_as_string(
-    void * user_instance,
-    void * ptr_state
+    void * const user_instance,
+    void * const ptr_state
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-    , int parseable_output
+    , const int parseable_output
 #endif
-    , int canonized_order_output
+    , const int canonized_order_output
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
-    , int display_10_as_t
+    , const int display_10_as_t
 #endif
     );
 
 DLLEXPORT extern void freecell_solver_user_set_random_seed(
-    void * user_instance,
-    int seed
+    void * const user_instance,
+    const int seed
     );
 
-DLLEXPORT fcs_int_limit_t freecell_solver_user_get_num_states_in_collection_long(void * user_instance);
+DLLEXPORT fcs_int_limit_t freecell_solver_user_get_num_states_in_collection_long(void * const user_instance);
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern int freecell_solver_user_get_num_states_in_collection(
-    void * user_instance
+    void * const user_instance
     );
+#endif
 
 DLLEXPORT extern void freecell_solver_user_limit_num_states_in_collection_long(
     void * user_instance,
     fcs_int_limit_t max_num_states
     );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern void freecell_solver_user_limit_num_states_in_collection(
     void * user_instance,
     int max_num_states
     );
+#endif
 
 DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     void * user_instance,
@@ -280,61 +298,61 @@ DLLEXPORT extern int freecell_solver_user_next_soft_thread(
     );
 
 DLLEXPORT extern void freecell_solver_user_set_soft_thread_step(
-    void * user_instance,
-    int num_checked_states_step
+    void * const user_instance,
+    const int num_checked_states_step
     );
 
 DLLEXPORT extern int freecell_solver_user_next_hard_thread(
-    void * user_instance
+    void * const user_instance
     );
 
 DLLEXPORT extern int freecell_solver_user_get_num_soft_threads_in_instance(
-    void * user_instance
+    void * const user_instance
     );
 
 DLLEXPORT extern void freecell_solver_user_set_calc_real_depth(
-    void * user_instance,
-    int calc_real_depth
+    void * const user_instance,
+    const int calc_real_depth
     );
 
 DLLEXPORT extern void freecell_solver_user_set_soft_thread_name(
-    void * user_instance,
+    void * const user_instance,
     freecell_solver_str_t name
     );
 
 DLLEXPORT extern void freecell_solver_user_set_flare_name(
-    void * user_instance,
+    void * const user_instance,
     freecell_solver_str_t name
     );
 
 DLLEXPORT extern int freecell_solver_user_set_hard_thread_prelude(
-    void * user_instance,
+    void * const user_instance,
     freecell_solver_str_t prelude
     );
 
 DLLEXPORT extern int freecell_solver_user_set_flares_plan(
-    void * api_instance,
+    void * const api_instance,
     freecell_solver_str_t prelude
     );
 
 DLLEXPORT extern void freecell_solver_user_recycle(
-    void * user_instance
+    void * const user_instance
     );
 
 DLLEXPORT extern int freecell_solver_user_set_optimization_scan_tests_order(
-    void * user_instance,
-    const char * tests_order,
-    char * * error_string
+    void * const user_instance,
+    const char * const tests_order,
+    char * * const error_string
     );
 
 DLLEXPORT extern void freecell_solver_user_set_reparent_states(
-    void * user_instance,
-    int to_reparent_states
+    void * const user_instance,
+    const int to_reparent_states
     );
 
 DLLEXPORT extern void freecell_solver_user_set_scans_synergy(
-    void * user_instance,
-    int synergy
+    void * const user_instance,
+    const int synergy
     );
 
 DLLEXPORT extern void freecell_solver_user_limit_current_instance_iterations(
@@ -343,11 +361,11 @@ DLLEXPORT extern void freecell_solver_user_limit_current_instance_iterations(
     );
 
 DLLEXPORT extern int freecell_solver_user_next_instance(
-    void * user_instance
+    void * const user_instance
     );
 
 DLLEXPORT extern int freecell_solver_user_next_flare(
-    void * api_instance
+    void * const api_instance
     );
 
 /*
@@ -355,16 +373,16 @@ DLLEXPORT extern int freecell_solver_user_next_flare(
  * all the previous command line arguments it encountered
  * */
 DLLEXPORT extern int freecell_solver_user_reset(
-    void * user_instance
+    void * const user_instance
     );
 
 
 DLLEXPORT const char * freecell_solver_user_get_lib_version(
-    void * user_instance
+    void * const user_instance
     );
 
 DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
-    void * user_instance
+    void * const user_instance
     );
 
 /*
@@ -372,57 +390,57 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
  * to reuse it. Otherwise, it is constant.
  * */
 DLLEXPORT const char * freecell_solver_user_get_last_error_string(
-    void * api_instance
+    void * const api_instance
     );
 
 /*
  * This sets the tests_order from min_depth onwards.
  * */
 DLLEXPORT extern int freecell_solver_user_set_depth_tests_order(
-    void * user_instance,
-    int min_depth,
-    const char * tests_order,
-    char * * error_string
+    void * const user_instance,
+    const int min_depth,
+    const char * const tests_order,
+    char * * const error_string
     );
 
 DLLEXPORT extern int freecell_solver_user_set_pruning(
-    void * user_instance,
-    const char * pruning,
-    char * * error_string
+    void * const user_instance,
+    const char * const pruning,
+    char * * const error_string
     );
 
 DLLEXPORT extern int freecell_solver_user_set_cache_limit(
-    void * user_instance,
+    void * const user_instance,
     long limit
     );
 
 DLLEXPORT extern int freecell_solver_user_get_moves_sequence(
-    void * user_instance,
+    void * const user_instance,
     fcs_moves_sequence_t * const moves_seq
 );
 
 DLLEXPORT extern int freecell_solver_user_set_flares_choice(
-    void * user_instance,
+    void * const user_instance,
     const char * const new_flares_choice_string
 );
 
 DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
-    void * user_instance,
-    double new_factor
+    void * const user_instance,
+    const double new_factor
 );
 
 DLLEXPORT extern int freecell_solver_user_set_patsolve_x_param(
-    void * api_instance,
+    void * const api_instance,
     const int position,
     const int x_param_val,
-    char * * error_string
+    char * * const error_string
 );
 
 DLLEXPORT extern int freecell_solver_user_set_patsolve_y_param(
-    void * api_instance,
+    void * const api_instance,
     const int position,
     const double y_param_val,
-    char * * error_string
+    char * * const error_string
 );
 
 #ifdef __cplusplus

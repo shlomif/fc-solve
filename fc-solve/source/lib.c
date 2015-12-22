@@ -33,6 +33,8 @@
 #include <ctype.h>
 #include <assert.h>
 
+#include "config.h"
+
 #include "state.h"
 #include "instance_for_lib.h"
 #include "preset.h"
@@ -166,7 +168,9 @@ typedef struct
     fcs_bool_t all_instances_were_suspended;
     fcs_state_validity_ret_t state_validity_ret;
     fcs_card_t state_validity_card;
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     freecell_solver_user_iter_handler_t iter_handler;
+#endif
     freecell_solver_user_long_iter_handler_t long_iter_handler;
     void * iter_handler_context;
     flares_choice_type_t flares_choice;
@@ -238,7 +242,9 @@ static void user_initialize(
     user->instances_list = NULL;
     user->num_instances = 0;
     user->long_iter_handler = NULL;
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     user->iter_handler = NULL;
+#endif
     user->current_iterations_limit = -1;
 
     user->state_string_copy = NULL;
@@ -311,6 +317,7 @@ void DLLEXPORT freecell_solver_user_limit_iterations_long(
     ((fcs_user_t * const)api_instance)->current_iterations_limit = max_iters;
 }
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 void DLLEXPORT freecell_solver_user_limit_iterations(
     void * const api_instance,
     const int max_iters
@@ -318,6 +325,7 @@ void DLLEXPORT freecell_solver_user_limit_iterations(
 {
     return freecell_solver_user_limit_iterations_long(api_instance, (fcs_int_limit_t)max_iters);
 }
+#endif
 
 void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
     void * const api_instance,
@@ -1671,6 +1679,7 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 
 #endif
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_set_game(
     void * const api_instance,
     const int freecells_num,
@@ -1708,6 +1717,7 @@ int DLLEXPORT freecell_solver_user_set_game(
 
     return 0;
 }
+#endif
 
 fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
     void * api_instance
@@ -1718,6 +1728,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
     return user->iterations_board_started_at.num_checked_states + max(user->active_flare->obj_stats.num_checked_states, user->active_flare->obj.i__num_checked_states) - user->init_num_checked_states.num_checked_states;
 }
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_get_num_times(void * const api_instance)
 {
     return (int)freecell_solver_user_get_num_times_long(api_instance);
@@ -1729,6 +1740,7 @@ int DLLEXPORT freecell_solver_user_get_limit_iterations(void * const api_instanc
 
     return user->active_flare->obj.i__max_num_checked_states;
 }
+#endif
 
 int DLLEXPORT freecell_solver_user_get_moves_left(void * const api_instance)
 {
@@ -1755,6 +1767,7 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
     STRUCT_SET_FLAG_TO(&(user->active_flare->obj), FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT char * freecell_solver_user_move_to_string(
     const fcs_move_t move,
     const int standard_notation
@@ -1767,6 +1780,7 @@ DLLEXPORT char * freecell_solver_user_move_to_string(
             (standard_notation == 2)?1:standard_notation
             );
 }
+#endif
 
 DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
     void * const api_instance,
@@ -1784,6 +1798,7 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
             );
 }
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 void DLLEXPORT freecell_solver_user_limit_depth(
     void * const api_instance GCC_UNUSED,
     const int max_depth GCC_UNUSED
@@ -1795,6 +1810,7 @@ void DLLEXPORT freecell_solver_user_limit_depth(
     user->active_flare->obj.max_depth = max_depth;
 #endif
 }
+#endif
 
 int DLLEXPORT freecell_solver_user_get_max_num_freecells(void)
 {
@@ -1986,6 +2002,9 @@ static void iter_handler_wrapper(
       user->iter_handler_context \
     )
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+    CALL(user->long_iter_handler);
+#else
     if (user->long_iter_handler)
     {
         CALL(user->long_iter_handler);
@@ -1994,6 +2013,7 @@ static void iter_handler_wrapper(
     {
         CALL(user->iter_handler);
     }
+#endif
 #undef CALL
 }
 
@@ -2011,17 +2031,26 @@ static GCC_INLINE void set_debug_iter_output_func_to_val(
 static GCC_INLINE void set_any_iter_handler(
     void * const api_instance,
     const freecell_solver_user_long_iter_handler_t long_iter_handler,
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     const freecell_solver_user_iter_handler_t iter_handler,
+#endif
     void * const iter_handler_context
     )
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->long_iter_handler = long_iter_handler;
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     user->iter_handler = iter_handler;
+#endif
 
     fcs_instance_debug_iter_output_func_t cb = NULL;
-    if (iter_handler || long_iter_handler)
+    if (
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+        iter_handler ||
+#endif
+        long_iter_handler
+    )
     {
         user->iter_handler_context = iter_handler_context;
         cb = iter_handler_wrapper;
@@ -2035,11 +2064,18 @@ void DLLEXPORT freecell_solver_user_set_iter_handler_long(
     void * iter_handler_context
     )
 {
-    return set_any_iter_handler(api_instance, long_iter_handler, NULL, iter_handler_context);
+    return set_any_iter_handler(
+        api_instance,
+        long_iter_handler,
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+        NULL,
+#endif
+        iter_handler_context
+        );
 }
 
 
-
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 void DLLEXPORT freecell_solver_user_set_iter_handler(
     void * const api_instance,
     const freecell_solver_user_iter_handler_t iter_handler,
@@ -2048,6 +2084,7 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 {
     return set_any_iter_handler(api_instance, NULL, iter_handler, iter_handler_context);
 }
+#endif
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
 #define HARD_CODED_UNUSED
@@ -2104,10 +2141,12 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_states_in_collection_long
     return user->iterations_board_started_at.num_states_in_collection + user->active_flare->obj_stats.num_states_in_collection - user->init_num_checked_states.num_states_in_collection;
 }
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_get_num_states_in_collection(void * const api_instance)
 {
     return (int)freecell_solver_user_get_num_states_in_collection_long(api_instance);
 }
+#endif
 
 void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
     void * api_instance,
@@ -2132,6 +2171,7 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
     return;
 }
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
     void * const api_instance,
     const int max_num_states
@@ -2139,6 +2179,7 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
 {
     return freecell_solver_user_limit_num_states_in_collection_long(api_instance, (fcs_int_limit_t)max_num_states);
 }
+#endif
 
 DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     void * const api_instance,
@@ -2437,7 +2478,13 @@ static int user_next_flare(fcs_user_t * const user)
         FCS_STATE_NOT_BEGAN_YET;
 
     flare->obj.debug_iter_output_func =
-        ((user->iter_handler || user->long_iter_handler)
+        ((
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                user->iter_handler
+                ||
+#endif
+                user->long_iter_handler
+         )
          ? iter_handler_wrapper
          : NULL
         );
