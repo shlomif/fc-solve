@@ -828,9 +828,9 @@ static void trace_solution(
                 &locs,
                 FREECELLS_NUM,
                 STACKS_NUM,
-                DECKS_NUM,
-                1,
-                0
+                DECKS_NUM
+                FC_SOLVE__PASS_PARSABLE(TRUE)
+                , FALSE
                 PASS_T(TRUE)
                 );
 

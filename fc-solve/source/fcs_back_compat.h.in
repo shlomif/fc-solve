@@ -48,6 +48,16 @@ extern "C" {
 #define FC_SOLVE__PASS_T(arg) , arg
 #endif
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
+#endif
+
+#ifdef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
+#define FC_SOLVE__PASS_PARSABLE(arg)
+#else
+#define FC_SOLVE__PASS_PARSABLE(arg) , arg
+#endif
+
 #ifdef __cplusplus
 }
 #endif

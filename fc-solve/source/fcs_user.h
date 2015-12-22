@@ -86,9 +86,11 @@ DLLEXPORT extern int freecell_solver_user_get_next_move(
     );
 
 DLLEXPORT extern char * freecell_solver_user_current_state_as_string(
-    void * user_instance,
-    int parseable_output,
-    int canonized_order_output
+    void * user_instance
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
+    , int parseable_output
+#endif
+    , int canonized_order_output
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
     , int display_10_as_t
 #endif
@@ -251,9 +253,11 @@ DLLEXPORT extern void freecell_solver_user_set_iter_handler_long(
 
 DLLEXPORT extern char * freecell_solver_user_iter_state_as_string(
     void * const user_instance,
-    void * const ptr_state,
-    const int parseable_output,
-    const int canonized_order_output
+    void * const ptr_state
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
+    , const int parseable_output
+#endif
+    , const int canonized_order_output
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
     , const int display_10_as_t
 #endif
