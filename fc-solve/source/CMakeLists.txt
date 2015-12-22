@@ -234,7 +234,6 @@ SET (patsolve_modules
     )
 
 SET (FREECELL_SOLVER_LIB_MODULES
-    app_str.c
     card.c
     check_and_add_state.c
     cmd_line.c
@@ -611,7 +610,7 @@ FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tes
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 FCS_ADD_EXEC_NO_INSTALL(summary-fc-solve summarizing_solver.c)
 
-SET (DBM_FCC_COMMON app_str.c card.c meta_alloc.c state.c)
+SET (DBM_FCC_COMMON card.c meta_alloc.c state.c)
 
 MACRO (MY_FIND_GMP reason_why my_option)
     FIND_LIBRARY(LIBGMP_LIB gmp)
@@ -1123,12 +1122,12 @@ IF (IS_DEBUG)
         # The delta-states testing library
         ADD_LIBRARY(fcs_delta_states_test
             SHARED
-            app_str.c card.c state.c delta_states.c
+            card.c state.c delta_states.c
         )
         # The DeBondt delta-states testing library
         ADD_LIBRARY(fcs_debondt_delta_states_test
             SHARED
-            app_str.c card.c state.c delta_states_debondt.c
+            card.c state.c delta_states_debondt.c
         )
         IF ("${FCS_ENABLE_DBM_SOLVER}")
             ADD_LIBRARY(fcs_dbm_calc_derived_test

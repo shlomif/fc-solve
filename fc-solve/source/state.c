@@ -35,7 +35,6 @@
 #include "config.h"
 #include "state.h"
 #include "fcs_enums.h"
-#include "app_str.h"
 #include "unused.h"
 #include "inline.h"
 
@@ -241,7 +240,8 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 
 #endif
 
-char * fc_solve_state_as_string(
+void fc_solve_state_as_string(
+    char * output_s,
     const fcs_state_t * const state
     , const fcs_state_locs_struct_t * const state_locs
 #define FCS_S_STACK_LOCS() (state_locs->stack_locs)
@@ -260,8 +260,8 @@ char * fc_solve_state_as_string(
     int col_len;
 
 
-    fc_solve_append_string_t app_str_struct;
-#define app_str (&app_str_struct)
+#define fc_solve_append_string_sprintf(unused, ...) output_s += sprintf(output_s, __VA_ARGS__)
+#define app_str 1
 
     int stack_locs[MAX_NUM_STACKS];
     int freecell_locs[MAX_NUM_FREECELLS];
@@ -304,7 +304,9 @@ char * fc_solve_state_as_string(
             decks[a][0] = '0';
     }
 
+#if 0
     fc_solve_append_string_init(&app_str_struct);
+#endif
 
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     if(!parseable_output)
@@ -486,7 +488,9 @@ char * fc_solve_state_as_string(
     }
 #undef app_str
 
+#if 0
     return fc_solve_append_string_finalize(&app_str_struct);
+#endif
 }
 
 #undef FCS_S_FC_LOCS

@@ -220,17 +220,18 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
             }
         }
         fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), state_indirect_stacks_buffer);
-        ret[i].state_as_string =
+        ret[i].state_as_string = SMALLOC(ret[i].state_as_string, 1000);
         fc_solve_state_as_string(
+            ret[i].state_as_string,
             &(state.s),
-            &locs,
+            &locs
             PASS_FREECELLS(FREECELLS_NUM)
             PASS_STACKS(STACKS_NUM)
             PASS_DECKS(DECKS_NUM)
             FC_SOLVE__PASS_PARSABLE(TRUE)
             , FALSE
             PASS_T(TRUE)
-            );
+        );
 
         iter = iter->next;
     }

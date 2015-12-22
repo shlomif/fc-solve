@@ -46,7 +46,6 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
     int verdict;
     fcs_state_keyval_pair_t new_derived_state;
     fcs_encoded_state_buffer_t enc_state;
-    char * as_str;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
     enum fcs_dbm_variant_type_t local_variant;
@@ -70,17 +69,18 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
         new_derived_indirect_stacks_buffer
     );
 
-    as_str =
-        fc_solve_state_as_string(
-            &(new_derived_state.s),
-            &locs,
-            PASS_FREECELLS(FREECELLS_NUM)
-            PASS_STACKS(STACKS_NUM)
-            PASS_DECKS(DECKS_NUM),
-            FC_SOLVE__PASS_PARSABLE(TRUE)
-            , FALSE
-            PASS_T(TRUE)
-            );
+    char as_str[1000];
+    fc_solve_state_as_string(
+        as_str,
+        &(new_derived_state.s),
+        &locs
+        PASS_FREECELLS(FREECELLS_NUM)
+        PASS_STACKS(STACKS_NUM)
+        PASS_DECKS(DECKS_NUM)
+        FC_SOLVE__PASS_PARSABLE(TRUE)
+        , FALSE
+        PASS_T(TRUE)
+    );
 
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
     {
@@ -89,8 +89,6 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
                 expected_str
             );
     }
-
-    free(as_str);
 
     return verdict;
 }

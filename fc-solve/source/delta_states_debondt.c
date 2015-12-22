@@ -743,7 +743,6 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
     fc_solve_debondt_delta_stater_t * delta;
     fcs_uchar_t enc_state[24];
-    char * new_derived_as_str;
     fcs_state_locs_struct_t locs;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -800,17 +799,18 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 
     fc_solve_init_locs(&locs);
 
-    new_derived_as_str =
-        fc_solve_state_as_string(
-            &(new_derived_state.s),
-            &locs
-            PASS_FREECELLS(FREECELLS_NUM)
-            PASS_STACKS(STACKS_NUM)
-            PASS_DECKS(DECKS_NUM)
-            FC_SOLVE__PASS_PARSABLE(TRUE)
-            , FALSE
-            FC_SOLVE__PASS_T(TRUE)
-            );
+    char * new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
+    fc_solve_state_as_string(
+        new_derived_as_str,
+        &(new_derived_state.s),
+        &locs
+        PASS_FREECELLS(FREECELLS_NUM)
+        PASS_STACKS(STACKS_NUM)
+        PASS_DECKS(DECKS_NUM)
+        FC_SOLVE__PASS_PARSABLE(TRUE)
+        , FALSE
+        FC_SOLVE__PASS_T(TRUE)
+    );
 
     free(init_state_s);
     free(derived_state_s);
