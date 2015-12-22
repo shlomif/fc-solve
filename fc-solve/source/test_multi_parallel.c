@@ -81,9 +81,7 @@ static void my_iter_handler(
                 ptr_state,
                 context->parseable_output,
                 context->canonized_order_output
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-                , context->display_10_as_t
-#endif
+                FC_SOLVE__PASS_T(context->display_10_as_t)
                 );
         printf("%s\n---------------\n\n\n", state_string);
         free((void*)state_string);
@@ -140,7 +138,7 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
     {
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
         dc->display_10_as_t = TRUE;
 #endif
     }

@@ -89,7 +89,7 @@ DLLEXPORT extern char * freecell_solver_user_current_state_as_string(
     void * user_instance,
     int parseable_output,
     int canonized_order_output
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
     , int display_10_as_t
 #endif
     );
@@ -186,7 +186,7 @@ DLLEXPORT extern int freecell_solver_user_get_max_num_decks(void);
 
 DLLEXPORT extern char * freecell_solver_user_get_invalid_state_error_string(
     void * user_instance
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
     , int print_ts
 #endif
     );
@@ -254,7 +254,7 @@ DLLEXPORT extern char * freecell_solver_user_iter_state_as_string(
     void * const ptr_state,
     const int parseable_output,
     const int canonized_order_output
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
     , const int display_10_as_t
 #endif
     );
