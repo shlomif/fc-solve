@@ -256,6 +256,13 @@ run_tests("No FCS_SINGLE_HARD_THREAD",
     }
 );
 
+run_tests("Break Backward Compatibility #1",
+    {
+        tatzer_args =>
+        [qw(-l x64t --break-back-compat-1)]
+    }
+);
+
 print colored("All tests successful.",
         ($ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green')
     ), "\n";
