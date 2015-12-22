@@ -221,15 +221,15 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         }
         fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), state_indirect_stacks_buffer);
         ret[i].state_as_string =
-        fc_solve_state_as_string(
-            &(state.s),
-            &locs,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM,
-            1,
-            0,
-            1
+            fc_solve_state_as_string(
+                &(state.s),
+                &locs
+                PASS_FREECELLS(FREECELLS_NUM)
+                PASS_STACKS(STACKS_NUM)
+                PASS_DECKS(DECKS_NUM),
+                1,
+                0,
+                1
             );
 
         iter = iter->next;

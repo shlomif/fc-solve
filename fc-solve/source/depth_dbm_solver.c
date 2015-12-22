@@ -825,14 +825,14 @@ static void trace_solution(
         state_as_str =
             fc_solve_state_as_string(
                 &(state.s),
-                &locs,
-                FREECELLS_NUM,
-                STACKS_NUM,
-                DECKS_NUM,
+                &locs
+                PASS_FREECELLS(FREECELLS_NUM)
+                PASS_STACKS(STACKS_NUM)
+                PASS_DECKS(DECKS_NUM),
                 1,
                 0,
                 1
-                );
+            );
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n",
                 state_as_str,
