@@ -3,7 +3,6 @@ ifeq ($(SRC_DIR),)
 endif
 
 DATA_DESTDIR = __DESTDIR
-TEST_HTML = my-modified-fc-solve-test.html
 RESULT_NODE_JS_EXE = fc-solve.js
 RESULT_JS_LIB = libfreecell-solver.js
 RESULT_HTML = fc-solve-test.html
@@ -21,7 +20,7 @@ SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
 LLVM_BITCODE_FILES = $(patsubst %.c,%.bc,$(C_FILES))
 LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.bc,$(LIB_C_FILES))
 
-all: $(TEST_HTML) $(RESULT_NODE_JS_EXE) $(RESULT_JS_LIB)
+all: $(RESULT_NODE_JS_EXE) $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS = \
 	free \
@@ -73,9 +72,6 @@ $(RESULT_NODE_JS_EXE): llvm_and_files
 
 $(RESULT_JS_LIB): llvm_and_files
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(EMCC_POST_FLAGS)
-
-$(TEST_HTML): $(RESULT_HTML) $(PROCESS_PL)
-	perl $(PROCESS_PL) < $< > $@
 
 SRC_PATS_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(PATS_C_FILES))
 
