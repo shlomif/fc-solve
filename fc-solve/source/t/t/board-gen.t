@@ -46,10 +46,12 @@ EOF
     }
 );
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 10800 bakers_dozen`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Testing for good Baker's Dozen",
+        cmd => [qw(-t 10800 bakers_dozen)],
+        expected => <<"EOF",
 KC 3S AC AD
 JD 9H 6H JS
 KS 8D 8S QH
@@ -64,14 +66,8 @@ AS 5S 6D 8C
 2D QD QS TH
 KD 6S AH JH
 EOF
-
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Testing for good Baker's Dozen",
-    );
-}
+    }
+);
 
 {
     my $got = `../board_gen/make_pysol_freecell_board.py 24 freecell`;
