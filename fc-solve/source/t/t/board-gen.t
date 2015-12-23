@@ -69,10 +69,12 @@ EOF
     }
 );
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py 24 freecell`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Testing for Freecell",
+        cmd => [qw(24 freecell)],
+        expected => <<"EOF",
 4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
 QC 9S 6H 9H 3S KS 3D
@@ -82,19 +84,16 @@ QC 9S 6H 9H 3S KS 3D
 AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Testing for Freecell",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py 24 bakers_game`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Testing for Bakers' Game",
+        cmd => [qw(24 bakers_game)],
+        expected => <<"EOF",
 4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
 QC 9S 6H 9H 3S KS 3D
@@ -104,19 +103,16 @@ QC 9S 6H 9H 3S KS 3D
 AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Testing for Bakers' Game",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py 1977 forecell`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Testing for Forecell",
+        cmd => [qw(1977 forecell)],
+        expected => <<"EOF",
 FC: 2D 8H 5S 6H
 QH JC 7D 8S 4D 2C
 JD JH KS 9C QD 2S
@@ -127,19 +123,16 @@ JS QC 8D 7C 7S 6S
 3D AH 3H 10H 4H AS
 KC QS 5D 5H 9H KH
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Testing for Forecell",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py 100 seahaven_towers`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Seahaven 100 Output",
+        cmd => [qw(100 seahaven_towers)],
+        expected => <<"EOF",
 FC: - 9S 5S
 AD 5C 9C 9H 2C
 JS 9D 6H 7H 2H
@@ -152,19 +145,16 @@ JH QS 6C 10C QD
 QH 7S 4D 5D 8S
 10S 8H 2S 3H KC
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Seahaven 100 Output",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py 250 simple_simon`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Simple Simon 250",
+        cmd => [qw(250 simple_simon)],
+        expected => <<"EOF",
 6S 6C 10C JC 9H 8D 3C 5S
 JH 2S KH 10S 7D 4D 8S 5D
 9D 8H 4S KC 7C 4C QS 5C
@@ -176,20 +166,17 @@ KD JD KS
 9C 3D
 AH
 EOF
-
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Simple Simon 250",
-    );
-}
+    }
+);
 
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 4200 fan`;
 
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Fan 4200",
+        cmd => [qw(-t 4200 fan)],
+        expected => <<"EOF",
 7H 9H 3S
 4C 8H 8C
 TH TS 3H
@@ -209,19 +196,16 @@ TD 6H 7D
 6C 8D QH
 AD
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Fan 4200",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 314 eight_off`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Eight Off 314",
+        cmd => [qw(-t 314 eight_off)],
+        expected => <<"EOF",
 FC: TD - 8D - 5D - 6S -
 7C QD 8H AS AD 2S
 5C 5H 2C QH 8C TS
@@ -232,19 +216,16 @@ TH TC 7H 9D 3D 4H
 4D JC KC 7S JH 9S
 7D 6D 2D KH KS AC
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Eight Off 314",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 103 der_katzenschwantz`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "der_katzenschwantz 103",
+        cmd => [qw(-t 103 der_katzenschwantz)],
+        expected => <<"EOF",
 JC JS AH 2H 3H 2S 2D 9D 9C 4C QD TH 6H 6S 9C 3C 5H JD 4H JH 9S 7D 4D 4C JH QH 9D 2D
 KC
 KH 6D 9S 2C 3H
@@ -255,19 +236,16 @@ KS 8C 7S QC QH 5C JS 7C 2C TS 7S 4H 9H 7D 4S 6C QD AD TD 8C 3C
 KC 7H TC 3S 3D 8H JC
 KH
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "der_katzenschwantz 103",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 973 yukon`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "yukon 973",
+        cmd => [qw(-t 973 yukon)],
+        expected => <<"EOF",
 TD
 <QC> 5H TH 9C 7H 4D
 <6S> <KS> 9D 4H KH TC 8D
@@ -276,19 +254,16 @@ TD
 <7C> <6C> <2C> <TS> <QS> 2D AD AC 7S AH
 <6D> <9H> <JS> <2S> <3S> <2H> 9S QD 3C JH 8H
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "yukon 973",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 99 beleaguered_castle`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "beleaguered_castle 99",
+        cmd => [qw(-t 99 beleaguered_castle)],
+        expected => <<"EOF",
 Foundations: H-A C-A D-A S-A
 KD 3D JS 8C JC 6C
 8H TH 9C 8D 6S TD
@@ -299,19 +274,16 @@ JH KC 2C 7C 7H 9D
 4C QC 5C 4D JD 6D
 TS 9H 2D 3H TC 5H
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "beleaguered_castle 99",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 1080 streets_and_alleys`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "streets_and_alleys 1080",
+        cmd => [qw(-t 1080 streets_and_alleys)],
+        expected => <<"EOF",
 8D 5C KS KC 2C 7C AS
 3H 8S 8C AD 4D TC 9C
 JD AC 5D 6D 7S 6S QC
@@ -321,19 +293,16 @@ JD AC 5D 6D 7S 6S QC
 4H QS 5H 6H 3S AH
 KD 2H 4S KH 9H TH
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "streets_and_alleys 1080",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 1080 citadel`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "streets_and_alleys 1080",
+        cmd => [qw(-t 1080 citadel)],
+        expected => <<"EOF",
 Foundations: H-2 C-2 D-2 S-2
 8D 5C 8C 6D 7S 6S
 3H 8S 5D 8H JC 7H
@@ -344,19 +313,16 @@ JD 3C 6C JH 4C 5S
 4H 4S 7C QC
 KD KS KC 4D TC TD
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "streets_and_alleys 1080",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 200 gypsy`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "gypsy 200",
+        cmd => [qw(-t 200 gypsy)],
+        expected => <<"EOF",
 Talon: 9C AD 6S KH 8D 3D TC QC AD QC 7S AH 6C QH 8S 5C KD 4H 2D 8C JD 9S 7H 4C JS JH 9D JC 4D 9S AC QS 5S KS TD 2H 4H KC TC 2C JD 3H 3D KD 7C 9C 8C 6D 4C 3S TH 2S 5D 7D 6H TH 8H JS 6S 2C 4S 3C JH 2D TD 3H 5C QS AH AC 4D 5H 2H 2S JC 9D AS QD 9H 6C
 <3S> <7H> 7D
 <5H> <8D> 8S
@@ -367,19 +333,16 @@ Talon: 9C AD 6S KH 8D 3D TC QC AD QC 7S AH 6C QH 8S 5C KD 4H 2D 8C JD 9S 7H 4C J
 <6H> <3C> 5D
 <7C> <TS> KH
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "gypsy 200",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 460 klondike`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "klondike 460",
+        cmd => [qw(-t 460 klondike)],
+        expected => <<"EOF",
 Talon: 3C AD AH KH KS 2H 3S 4D QS TD 8H AS 8D 6C 5D 4S 3H 6D 2C 7S AC 9S 7C TC
 QC
 <4H> 6S
@@ -389,19 +352,16 @@ QC
 <JC> <6H> <7D> <3D> <JS> 8C
 <9C> <5S> <QH> <9D> <QD> <4C> 7H
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "klondike 460",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 468 small_harp`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "small_harp 468",
+        cmd => [qw(-t 468 small_harp)],
+        expected => <<"EOF",
 Talon: 8S AD 6S 7H AC 3S 9H 9D 8D TD 2S QH 4S JH 9C 4C QS AS AH 3H 4H KD 2D 5D
 <2H> <5C> <TH> <6C> <5S> <TS> 7D
 <JC> <2C> <3C> <3D> <TC> 7C
@@ -411,19 +371,16 @@ Talon: 8S AD 6S 7H AC 3S 9H 9D 8D TD 2S QH 4S JH 9C 4C QS AS AH 3H 4H KD 2D 5D
 <6H> KH
 JS
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "small_harp 468",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -t 7537454 simple_simon`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Simple Simon 7537454 (Long seed)",
+        cmd => [qw(-t 7537454 simple_simon)],
+        expected => <<"EOF",
 KD TH 7H 2H 3S 7D KC 6S
 QD JC 5C TS 8H TD 5D 4C
 JS AH KS 6H 5S 9S 9D 2D
@@ -435,19 +392,16 @@ AD AS JH
 3H 4D
 9H
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Simple Simon 7537454 (Long seed)",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -F 800600`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Freecell PySolFC 800600",
+        cmd => [qw(-F 800600)],
+        expected => <<"EOF",
 3H 10S QH 10D 8D JC AS
 3S KC 2D 6D 5S 10H 5C
 JH 6S 4D 8S 7H 7D 6H
@@ -457,22 +411,17 @@ JH 6S 4D 8S 7H 7D 6H
 JS 9C 4S 9S 10C 2S
 JD QS QC KH 3C 6C
 EOF
-
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Freecell PySolFC 800600",
-    );
-}
+    }
+);
 
 
-{
-    my $got =
-        `../board_gen/make_pysol_freecell_board.py --pysolfc 800600`
-        ;
 
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Freecell PySolFC 800600 (Long flag).",
+        cmd => [qw(--pysolfc 800600)],
+        expected => <<"EOF",
 3H 10S QH 10D 8D JC AS
 3S KC 2D 6D 5S 10H 5C
 JH 6S 4D 8S 7H 7D 6H
@@ -482,20 +431,15 @@ JH 6S 4D 8S 7H 7D 6H
 JS 9C 4S 9S 10C 2S
 JD QS QC KH 3C 6C
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Freecell PySolFC 800600 (Long flag).",
-    );
-}
-
-
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -F -t 800600`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Freecell PySolFC 800600",
+        cmd => [qw(-F -t 800600)],
+        expected => <<"EOF",
 3H TS QH TD 8D JC AS
 3S KC 2D 6D 5S TH 5C
 JH 6S 4D 8S 7H 7D 6H
@@ -505,19 +449,16 @@ JH 6S 4D 8S 7H 7D 6H
 JS 9C 4S 9S TC 2S
 JD QS QC KH 3C 6C
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Freecell PySolFC 800600",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -F -t 2400240 simple_simon`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "Freecell PySolFC 2400240 Simple Simon",
+        cmd => [qw(-F -t 2400240 simple_simon)],
+        expected => <<"EOF",
 9D 5C 7D 4H TH 7S KH AC
 TC KD AD 5S 9C 5D AH QC
 2C 3H JH 5H 8D JC 9H JD
@@ -529,19 +470,16 @@ KC 8C TD
 6C 7H
 3S
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "Freecell PySolFC 2400240 Simple Simon",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py --pysolfc -t 45508856405861261758 black_hole`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "PySolFC 45508856405861261758 black_hole",
+        cmd => [qw(--pysolfc -t 45508856405861261758 black_hole)],
+        expected => <<"EOF",
 Foundations: AS
 2S 3D 6S
 2C 5D 7H
@@ -561,19 +499,16 @@ AD 9S QS
 6H KS TH
 5S 9H 8C
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "PySolFC 45508856405861261758 black_hole",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py --ms -t 100000`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "make_pysol --ms board No. 100 - the FC-Pro board.",
+        cmd => [qw(--ms -t 100000)],
+        expected => <<"EOF",
 5C 6S JC 2D 2C 8S 3C
 QS 7S 9C QD JD 9D AS
 8C TH 3H 4C TS 2H QC
@@ -583,19 +518,16 @@ TD 4D TC 6H 8D 2S
 KC AH JH 8H KH 6C
 3S AC 9H KS 5H 9S
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "make_pysol --ms board No. 100 - the FC-Pro board.",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py -M -t 100000`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "make_pysol -M board No. 100 - the FC-Pro board.",
+        cmd => [qw(-M -t 100000)],
+        expected => <<"EOF",
 5C 6S JC 2D 2C 8S 3C
 QS 7S 9C QD JD 9D AS
 8C TH 3H 4C TS 2H QC
@@ -605,19 +537,16 @@ TD 4D TC 6H 8D 2S
 KC AH JH 8H KH 6C
 3S AC 9H KS 5H 9S
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "make_pysol -M board No. 100 - the FC-Pro board.",
-    );
-}
 
-{
-    my $got = `../board_gen/make_pysol_freecell_board.py --pysolfc -t 2 all_in_a_row`;
-
-    my $expected = <<"EOF";
+# TEST
+_test_out(
+    {
+        blurb => "PySolFC black_hole 2",
+        cmd => [qw(--pysolfc -t 2 all_in_a_row)],
+        expected => <<"EOF",
 Foundations: -
 QD 6D KS 2H
 QC 2D 7C 3H
@@ -633,14 +562,9 @@ JS QH 3S TH
 6H 7S TS JH
 QS 9D 9H AS
 EOF
+    }
+);
 
-    # TEST
-    eq_or_diff (
-        $got,
-        $expected,
-        "PySolFC black_hole 2",
-    );
-}
 
 =head1 COPYRIGHT AND LICENSE
 
