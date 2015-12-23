@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 12;
 use Carp (qw/confess/);
 use Data::Dumper (qw/Dumper/);
 use String::ShellQuote (qw/shell_quote/);
@@ -122,47 +122,6 @@ verify_solution_test(
     },
     "sequence move unlimited is indeed unlimited (even if not esf-by-any)."
 );
-
-# TEST
-verify_solution_test(
-    {deal => 24, variant => "simple_simon",
-        theme => [],
-    },
-    "Simple Simon #24 with default theme",
-);
-
-# TEST
-verify_solution_test(
-    {deal => 19806, variant => "simple_simon",
-        theme => [],
-    },
-    "Simple Simon #19806 with default theme",
-);
-
-# TEST
-verify_solution_test(
-    {deal => 1, variant => "simple_simon",
-        theme => ["-to", "abcdefghi",],
-    },
-    "Simple Simon #1 with abcdefghi (move seq to false parent)",
-);
-
-# TEST
-verify_solution_test(
-    {deal => 1, variant => "simple_simon",
-        theme => ["-to", "abcdefgh", "-ni", "-to", "abcdefghi",],
-    },
-    "Simple Simon #1 using an -ni",
-);
-
-# TEST
-verify_solution_test(
-    {deal => 1, variant => "simple_simon",
-        theme => ["-to", "abcdefgh", "--next-instance", "-to", "abcdefghi",],
-    },
-    "Simple Simon #1 using an -ni",
-);
-
 
 # TEST
 verify_solution_test(

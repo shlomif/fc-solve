@@ -89,6 +89,39 @@ my %verify_tests =
         args => {deal => 24, theme => ["-opt", "-sp", "r:tf",],},
         msg => "-opt in conjunction with --set-pruning r:tf should work.",
     },
+    '24_simple_simon__default' =>
+    {
+        args => { deal => 24, variant => "simple_simon", theme => [], },
+        msg => "Simple Simon #24 with default theme",
+    },
+    '19806_simple_simon__default' =>
+    {
+        args => { deal => 19806, variant => "simple_simon", theme => [], },
+        msg => "Simple Simon #19806 with default theme",
+    },
+    '1_simple_simon__abcdefghi' =>
+    {
+        args => {
+            deal => 1, variant => "simple_simon",
+            theme => ["-to", "abcdefghi",],
+        },
+        msg => "Simple Simon #1 with abcdefghi (move seq to false parent)",
+    },
+    '1_simple_simon__ni' =>
+    {
+        args => {
+            deal => 1, variant => "simple_simon",
+            theme => ["-to", "abcdefgh", "-ni", "-to", "abcdefghi",],
+        },
+        msg => "Simple Simon #1 using an -ni",
+    },
+    'simple_simon__next_instance' =>
+    {
+        args => {deal => 1, variant => "simple_simon",
+            theme => ["-to", "abcdefgh", "--next-instance", "-to", "abcdefghi",],
+        },
+        msg => "Simple Simon #1 using an -ni",
+    },
 );
 
 sub get_hash
