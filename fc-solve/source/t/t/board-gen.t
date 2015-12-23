@@ -6,10 +6,29 @@ use warnings;
 use Test::More tests => 26;
 use Test::Differences;
 
+sub _test_out
 {
-    my $bakers_dozen_24_got = `../board_gen/make_pysol_freecell_board.py -t 24 bakers_dozen`;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my $bakers_dozen_24_expected = <<"EOF";
+    my ($args) = @_;
+
+    my $cmd_line_args = $args->{cmd};
+
+    my $got = `../board_gen/make_pysol_freecell_board.py @$cmd_line_args`;
+
+    eq_or_diff(
+        $got,
+        $args->{expected},
+        $args->{blurb}
+    );
+}
+
+# TEST
+_test_out(
+    {
+        blurb => "Testing for good Baker's Dozen",
+        cmd => [qw(-t 24 bakers_dozen)],
+        expected => <<'EOF',
 KD 8H AC AS
 KC 3D 8C 2S
 QD TD 7D 9S
@@ -24,14 +43,8 @@ KS TS 9C 5D
 4S 5C 5S 5H
 8S 9H JS 4C
 EOF
-
-    # TEST
-    eq_or_diff (
-        $bakers_dozen_24_got,
-        $bakers_dozen_24_expected,
-        "Testing for good Baker's Dozen",
-    );
-}
+    }
+);
 
 {
     my $got = `../board_gen/make_pysol_freecell_board.py -t 10800 bakers_dozen`;
