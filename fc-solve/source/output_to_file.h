@@ -94,24 +94,21 @@ static GCC_INLINE void fc_solve_output_result_to_file(
         {
             fcs_move_t move;
             FILE * move_dump;
-            char * as_string;
+            char state_as_string[1000];
 
             move_dump = output_fh;
 
             if (debug_context.display_states)
             {
-                as_string =
-                    freecell_solver_user_current_state_as_string(
-                            instance
+                    freecell_solver_user_current_state_stringify(
+                            instance,
+                            state_as_string
                             FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
                             , debug_context.canonized_order_output
                             FC_SOLVE__PASS_T(debug_context.display_10_as_t)
                             );
 
-                fprintf(move_dump, "%s\n", as_string);
-
-                free(as_string);
-
+                fprintf(move_dump, "%s\n", state_as_string);
                 fprintf(move_dump, "%s", "\n====================\n\n");
             }
 
@@ -125,7 +122,7 @@ static GCC_INLINE void fc_solve_output_result_to_file(
             {
                 if (debug_context.display_moves)
                 {
-                    as_string =
+                    char * move_as_string =
                         freecell_solver_user_move_to_string_w_state(
                                 instance,
                                 move,
@@ -143,7 +140,7 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                              "%s " :
                              "%s\n"
                             ),
-                            as_string
+                            move_as_string
                            );
                     move_num++;
                     if (debug_context.standard_notation)
@@ -155,25 +152,23 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                     }
                     if (debug_context.display_states)
                     {
-                        fprintf(move_dump, "\n");
+                        fprintf (move_dump, "\n");
                     }
-                    fflush(move_dump);
-                    free(as_string);
+                    fflush (move_dump);
+                    free (move_as_string);
                 }
 
                 if (debug_context.display_states)
                 {
-                    as_string =
-                        freecell_solver_user_current_state_as_string(
-                                instance
-                                FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
-                                , debug_context.canonized_order_output
-                                FC_SOLVE__PASS_T(debug_context.display_10_as_t)
-                                );
+                    freecell_solver_user_current_state_stringify(
+                        instance,
+                        state_as_string
+                        FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
+                        , debug_context.canonized_order_output
+                        FC_SOLVE__PASS_T(debug_context.display_10_as_t)
+                    );
 
-                    fprintf(move_dump, "%s\n", as_string);
-
-                    free(as_string);
+                    fprintf(move_dump, "%s\n", state_as_string);
                 }
 
                 if (debug_context.display_states || (!debug_context.standard_notation))

@@ -85,8 +85,22 @@ DLLEXPORT extern int freecell_solver_user_get_next_move(
     fcs_move_t * move
     );
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern char * freecell_solver_user_current_state_as_string(
     void * user_instance
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
+    , int parseable_output
+#endif
+    , int canonized_order_output
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
+    , int display_10_as_t
+#endif
+    );
+#endif
+
+DLLEXPORT extern void freecell_solver_user_current_state_stringify(
+    void * user_instance,
+    char * const output_string
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     , int parseable_output
 #endif
@@ -250,9 +264,23 @@ DLLEXPORT extern void freecell_solver_user_set_iter_handler_long(
     void * iter_handler_context
     );
 
-
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern char * freecell_solver_user_iter_state_as_string(
     void * const user_instance,
+    void * const ptr_state
+#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
+    , const int parseable_output
+#endif
+    , const int canonized_order_output
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
+    , const int display_10_as_t
+#endif
+    );
+#endif
+
+DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
+    void * const user_instance,
+    char * output_string,
     void * const ptr_state
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     , const int parseable_output

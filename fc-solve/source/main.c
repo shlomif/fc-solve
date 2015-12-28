@@ -74,16 +74,16 @@ static void my_iter_handler(
 
     if (context->debug_iter_state_output)
     {
-        char * state_string =
-            freecell_solver_user_iter_state_as_string(
+        char state_string[1000];
+        freecell_solver_user_iter_state_stringify(
                 user_instance,
+                state_string,
                 ptr_state
                 FC_SOLVE__PASS_PARSABLE(context->parseable_output)
                 , context->canonized_order_output
                 FC_SOLVE__PASS_T(context->display_10_as_t)
                 );
         printf("%s\n---------------\n\n\n", state_string);
-        free((void*)state_string);
     }
 }
 

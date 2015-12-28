@@ -1334,8 +1334,9 @@ int DLLEXPORT freecell_solver_user_get_next_move(
     return 0;
 }
 
-DLLEXPORT char * freecell_solver_user_current_state_as_string(
-    void * api_instance
+DLLEXPORT void freecell_solver_user_current_state_stringify(
+    void * api_instance,
+    char * const output_string
     FC_SOLVE__PASS_PARSABLE(int parseable_output)
     , int canonized_order_output
     FC_SOLVE__PASS_T(int display_10_as_t)
@@ -1343,26 +1344,43 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-        fc_solve_instance_t * const instance = &(user->active_flare->obj);
+    fc_solve_instance_t * const instance = &(user->active_flare->obj);
 #endif
 
-        char * state_as_string = SMALLOC(state_as_string, 1000);
-        fc_solve_state_as_string(
-            state_as_string,
-            &(user->running_state.s),
-            &(user->initial_state_locs)
-            PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-            PASS_STACKS(INSTANCE_STACKS_NUM)
-            PASS_DECKS(INSTANCE_DECKS_NUM)
-            FC_SOLVE__PASS_PARSABLE(parseable_output)
-            , canonized_order_output
-            FC_SOLVE__PASS_T(display_10_as_t)
-        );
-        return state_as_string;
-    }
+    fc_solve_state_as_string(
+        output_string,
+        &(user->running_state.s),
+        &(user->initial_state_locs)
+        PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+        PASS_STACKS(INSTANCE_STACKS_NUM)
+        PASS_DECKS(INSTANCE_DECKS_NUM)
+        FC_SOLVE__PASS_PARSABLE(parseable_output)
+        , canonized_order_output
+        FC_SOLVE__PASS_T(display_10_as_t)
+    );
 }
+
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+DLLEXPORT char * freecell_solver_user_current_state_as_string(
+    void * api_instance
+    FC_SOLVE__PASS_PARSABLE(int parseable_output)
+    , int canonized_order_output
+    FC_SOLVE__PASS_T(int display_10_as_t)
+    )
+{
+    char * state_as_string = SMALLOC(state_as_string, 1000);
+
+    freecell_solver_user_current_state_stringify(
+        api_instance,
+        state_as_string
+        FC_SOLVE__PASS_PARSABLE(parseable_output)
+        , canonized_order_output
+        FC_SOLVE__PASS_T(display_10_as_t)
+    )
+    return state_as_string;
+}
+#endif
 
 static void user_free_resources(
     fcs_user_t * const user
@@ -2092,13 +2110,14 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
 #define HARD_CODED_UNUSED GCC_UNUSED
 #endif
 
-DLLEXPORT char * freecell_solver_user_iter_state_as_string(
+DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
     void * const api_instance HARD_CODED_UNUSED,
+    char * output_string,
     void * const ptr_state_void
     FC_SOLVE__PASS_PARSABLE(const int parseable_output)
     , const int canonized_order_output
     PASS_T(const int display_10_as_t)
-)
+    )
 {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
     fcs_user_t * const user = (fcs_user_t *)api_instance;
@@ -2106,9 +2125,8 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
         &(user->active_flare->obj);
 #endif
 
-    char * state_as_string = SMALLOC(state_as_string, 1000);
     fc_solve_state_as_string(
-        state_as_string,
+        output_string,
         ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
         &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs)
         PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
@@ -2118,8 +2136,29 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
         , canonized_order_output
         PASS_T(display_10_as_t)
     );
+}
+
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+DLLEXPORT char * freecell_solver_user_iter_state_as_string(
+    void * const api_instance,
+    void * const ptr_state_void
+    FC_SOLVE__PASS_PARSABLE(const int parseable_output)
+    , const int canonized_order_output
+    PASS_T(const int display_10_as_t)
+)
+{
+    char * state_as_string = SMALLOC(state_as_string, 1000);
+    freecell_solver_user_iter_state_stringify(
+        api_instance,
+        state_as_string,
+        ptr_state_void
+        FC_SOLVE__PASS_PARSABLE(const int parseable_output)
+        , const int canonized_order_output
+        PASS_T(const int display_10_as_t)
+    );
     return state_as_string;
 }
+#endif
 
 void DLLEXPORT freecell_solver_user_set_random_seed(
     void * const api_instance,

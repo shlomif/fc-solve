@@ -70,9 +70,10 @@ static void my_iter_handler(
 
     if (context->debug_iter_state_output)
     {
-        char * state_string =
-            freecell_solver_user_iter_state_as_string(
+        char state_string[1000];
+            freecell_solver_user_iter_state_stringify(
                 user_instance,
+                state_string,
                 ptr_state
                 FC_SOLVE__PASS_PARSABLE(TRUE)
                 , FALSE
@@ -132,8 +133,6 @@ static void my_iter_handler(
 
             freecell_solver_user_free(pruner);
         }
-
-        free((void*)state_string);
     }
 }
 
