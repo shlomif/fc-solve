@@ -17,6 +17,7 @@ use Getopt::Long;
 my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
 (
     'avoid-tcmalloc' => 'FCS_AVOID_TCMALLOC',
+    'break-back-compat-1' => 'FCS_BREAK_BACKWARD_COMPAT_1',
     'disable-patsolve' => 'FCS_DISABLE_PATSOLVE',
     'disable-simple-simon' => 'FCS_DISABLE_SIMPLE_SIMON',
     'fc-only' => 'FCS_FREECELL_ONLY',
