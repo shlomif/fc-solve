@@ -16,8 +16,17 @@ use Getopt::Long;
 
 my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
 (
-    'fc-only' => 'FCS_FREECELL_ONLY',
+    'avoid-tcmalloc' => 'FCS_AVOID_TCMALLOC',
+    'disable-patsolve' => 'FCS_DISABLE_PATSOLVE',
     'disable-simple-simon' => 'FCS_DISABLE_SIMPLE_SIMON',
+    'fc-only' => 'FCS_FREECELL_ONLY',
+    'omit-frame' => 'OPTIMIZATION_OMIT_FRAME_POINTER',
+    'rcs' => 'FCS_ENABLE_RCS_STATES',
+    'secondary' => 'FCS_ENABLE_SECONDARY_HASH_VALUE',
+    'single-ht' => 'FCS_SINGLE_HARD_THREAD',
+    'tracemem' => 'FCS_TRACE_MEM',
+    'with-compact-moves' => 'FCS_USE_COMPACT_MOVE_TOKENS',
+    'without-depth-field' => 'FCS_WITHOUT_DEPTH_FIELD',
     'without-visited-iter' => 'FCS_WITHOUT_VISITED_ITER',
 );
 
@@ -33,31 +42,22 @@ my $stack_storage;
 my $state_storage;
 my $rcs_cache_storage;
 my $prefix = "/usr";
-my $secondary_hash_value = 0;
 my $build_static_lib = 0;
 my $states_type;
 my $test_suite = 1;
 my $cpu_arch;
-my $omit_frame;
 my $state_storage_libavl2_tree;
 my $stack_storage_libavl2_tree;
 my $without_flipping = 1;
-my $without_depth_field = 0;
 my $with_context_var = 1;
-my $with_compact_moves = 0;
 my $max_bench_threads_num = 4;
 my $pack_size;
 my $link_to_static = 0;
 my $hard_coded_num_freecells;
-my $avoid_tcmalloc = 0;
-my $rcs_states = 0;
-my $trace_mem = 0;
 my $scan_buckets_num;
 my $build_docs = 1;
 my $with_dbm_solver;
 my $max_num_stacks;
-my $disable_patsolve = 0;
-my $single_hard_thread = 0;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -198,7 +198,6 @@ GetOptions(
     'libavl2-p=s' => \$state_storage_libavl2_tree,
     'libavl2-c=s' => \$stack_storage_libavl2_tree,
     'prefix=s' => \$prefix,
-    'secondary!' => \$secondary_hash_value,
     'test-suite!' => \$test_suite,
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
@@ -213,10 +212,6 @@ GetOptions(
     },
     'static' => \$build_static_lib,
     'states-type=s' => \$states_type,
-    'rcs!' => sub {
-        $rcs_states = 1;
-        $states_type = "COMPACT_STATES";
-    },
     'profile' => sub {
         my ($opt, $val) = @_;
         if ($val)
@@ -234,23 +229,16 @@ GetOptions(
         return;
     },
     'arch=s' => \$cpu_arch,
-    'omit-frame!' => \$omit_frame,
     'without-flip!' => \$without_flipping,
-    'without-depth-field!' => \$without_depth_field,
-    'with-compact-moves!' => \$with_compact_moves,
     'with-ctx-var!' => \$with_context_var,
     'max-bench-threads-num=i' => \$max_bench_threads_num,
     'pack-size=i' => \$pack_size,
     'static!' => \$link_to_static,
     'nfc=i' => \$hard_coded_num_freecells,
-    'avoid-tcmalloc!' => \$avoid_tcmalloc,
     'dbm=s' => \$with_dbm_solver,
-    'tracemem!' => \$trace_mem,
     'scan-buckets-num=i' => \$scan_buckets_num,
     'build-docs!' => \$build_docs,
     'num-stacks=i' => \$max_num_stacks,
-    'disable-patsolve!' => \$disable_patsolve,
-    'single-ht!' => \$single_hard_thread,
     (map {; "$_!" => \($bool_opts_with_false_defaults__values{$_}) } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
 ) or
     die "Wrong options";
@@ -269,6 +257,11 @@ if (@ARGV)
 else
 {
     $path_to_source_dir = dirname($0);
+}
+
+if ($bool_opts_with_false_defaults__values{rcs})
+{
+    $states_type = 'COMPACT';
 }
 
 if ($state_storage_libavl2_tree)
@@ -301,19 +294,14 @@ my @cmd= ("cmake",
     "-DDATADIR=$prefix/share",
     (defined($max_num_stacks) ? ("-DMAX_NUM_STACKS=$max_num_stacks") : ()),
     ($without_flipping ? ("-DFCS_WITHOUT_CARD_FLIPPING=1") : ()),
-    ($without_depth_field ? ("-DFCS_WITHOUT_DEPTH_FIELD=1") : ()),
-    ($with_compact_moves ? ("-DFCS_USE_COMPACT_MOVE_TOKENS=1") : ()),
     ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
-    ($secondary_hash_value ? ("-DFCS_ENABLE_SECONDARY_HASH_VALUE=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
-    ($rcs_states ? ("-DFCS_ENABLE_RCS_STATES=1") : ()),
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
 
     (defined($pack_size) ? ("-DFCS_IA_PACK_SIZE=$pack_size") : ()),
     ("-DFCS_WITH_TEST_SUITE=" . ($test_suite ? '1' : '')),
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
-    ($omit_frame ? "-DOPTIMIZATION_OMIT_FRAME_POINTER=1" : ()),
     ($state_storage_libavl2_tree
         ? "-DFCS_STATE_STORAGE_LIBAVL2_TREE_TYPE=$state_storage_libavl2_tree"
         : ()
@@ -340,19 +328,12 @@ my @cmd= ("cmake",
         ? ("-DFCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY=$hard_coded_num_freecells")
         : ()
     ),
-    ($avoid_tcmalloc
-        ? ("-DFCS_AVOID_TCMALLOC=1")
-        : ()
-    ),
-    ($trace_mem ? ("-DFCS_TRACE_MEM=1") : ()),
     ($scan_buckets_num ? ("-DFCS_MAX_NUM_SCANS_BUCKETS=$scan_buckets_num") : ()),
     ($build_docs ? () : ("-DFCS_BUILD_DOCS=")),
     ($with_dbm_solver
         ? ("-DFCS_ENABLE_DBM_SOLVER=1", "-DFCS_DBM_BACKEND=$with_dbm_solver",)
         : ()
     ),
-    ($disable_patsolve ? ("-DFCS_DISABLE_PATSOLVE=1") : ()),
-    ($single_hard_thread ? ("-DFCS_SINGLE_HARD_THREAD=1") : ()),
     (map { $bool_opts_with_false_defaults__values{$_} ? ("-D" . $BOOL_OPTS_WITH_FALSE_DEFAULTS{$_} . "=1") : () } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
 );
 
