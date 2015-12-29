@@ -24,6 +24,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'rcs' => 'FCS_ENABLE_RCS_STATES',
     'secondary' => 'FCS_ENABLE_SECONDARY_HASH_VALUE',
     'single-ht' => 'FCS_SINGLE_HARD_THREAD',
+    'static' => 'FCS_LINK_TO_STATIC',
     'tracemem' => 'FCS_TRACE_MEM',
     'with-compact-moves' => 'FCS_USE_COMPACT_MOVE_TOKENS',
     'without-depth-field' => 'FCS_WITHOUT_DEPTH_FIELD',
@@ -42,7 +43,6 @@ my $stack_storage;
 my $state_storage;
 my $rcs_cache_storage;
 my $prefix = "/usr";
-my $build_static_lib = 0;
 my $states_type;
 my $test_suite = 1;
 my $cpu_arch;
@@ -52,7 +52,6 @@ my $without_flipping = 1;
 my $with_context_var = 1;
 my $max_bench_threads_num = 4;
 my $pack_size;
-my $link_to_static = 0;
 my $hard_coded_num_freecells;
 my $scan_buckets_num;
 my $build_docs = 1;
@@ -210,7 +209,6 @@ GetOptions(
         set_both("GOOGLE_DENSE_HASH");
         _google_set_both("SPARSE");
     },
-    'static' => \$build_static_lib,
     'states-type=s' => \$states_type,
     'profile' => sub {
         my ($opt, $val) = @_;
@@ -233,7 +231,6 @@ GetOptions(
     'with-ctx-var!' => \$with_context_var,
     'max-bench-threads-num=i' => \$max_bench_threads_num,
     'pack-size=i' => \$pack_size,
-    'static!' => \$link_to_static,
     'nfc=i' => \$hard_coded_num_freecells,
     'dbm=s' => \$with_dbm_solver,
     'scan-buckets-num=i' => \$scan_buckets_num,
@@ -292,9 +289,9 @@ my @cmd= ("cmake",
     "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
     "-DDATADIR=$prefix/share",
+    "-DBUILD_STATIC_LIBRARY=",
     (defined($max_num_stacks) ? ("-DMAX_NUM_STACKS=$max_num_stacks") : ()),
     ($without_flipping ? ("-DFCS_WITHOUT_CARD_FLIPPING=1") : ()),
-    ((!$build_static_lib) ? ("-DBUILD_STATIC_LIBRARY=") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
@@ -319,10 +316,6 @@ my @cmd= ("cmake",
     ($with_context_var
         ? "-DFCS_WITH_CONTEXT_VARIABLE=1"
         : "-DFCS_WITH_CONTEXT_VARIABLE="
-    ),
-    ($link_to_static
-        ? ("-DFCS_LINK_TO_STATIC=1")
-        : ("-DFCS_LINK_TO_STATIC=")
     ),
     (defined($hard_coded_num_freecells)
         ? ("-DFCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY=$hard_coded_num_freecells")
