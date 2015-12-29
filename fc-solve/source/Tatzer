@@ -38,6 +38,24 @@ my %bool_opts_with_false_defaults__values =
     map { $_ => 0 } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS
 );
 
+my %INT_OPTS =
+(
+    'max-bench-threads-num' => 'MAX_NUM_BENCHMARK_THREADS',
+    'nfc' => 'FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY',
+    'num-stacks' => 'MAX_NUM_STACKS',
+    'pack-size' => 'FCS_IA_PACK_SIZE',
+    'scan-buckets-num' => 'FCS_MAX_NUM_SCANS_BUCKETS',
+);
+
+my @INT_OPS__KEYS = keys %INT_OPTS;
+
+my %int_opts__values =
+(
+    map { $_ => undef() } @INT_OPS__KEYS
+);
+$int_opts__values{'max-bench-threads-num'} = 4;
+
+
 my $build_type = "debug";
 my $stack_storage;
 my $state_storage;
@@ -50,13 +68,8 @@ my $state_storage_libavl2_tree;
 my $stack_storage_libavl2_tree;
 my $without_flipping = 1;
 my $with_context_var = 1;
-my $max_bench_threads_num = 4;
-my $pack_size;
-my $hard_coded_num_freecells;
-my $scan_buckets_num;
 my $build_docs = 1;
 my $with_dbm_solver;
-my $max_num_stacks;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -228,14 +241,10 @@ GetOptions(
     'arch=s' => \$cpu_arch,
     'without-flip!' => \$without_flipping,
     'with-ctx-var!' => \$with_context_var,
-    'max-bench-threads-num=i' => \$max_bench_threads_num,
-    'pack-size=i' => \$pack_size,
-    'nfc=i' => \$hard_coded_num_freecells,
     'dbm=s' => \$with_dbm_solver,
-    'scan-buckets-num=i' => \$scan_buckets_num,
     'build-docs!' => \$build_docs,
-    'num-stacks=i' => \$max_num_stacks,
     (map {; "$_!" => \($bool_opts_with_false_defaults__values{$_}) } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
+    (map {; "$_=i" => \($int_opts__values{$_}) } @INT_OPS__KEYS),
 ) or
     die "Wrong options";
 
@@ -284,18 +293,15 @@ my @cmd= ("cmake",
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DFCS_STATE_STORAGE=FCS_STATE_STORAGE_$state_storage",
     "-DFCS_RCS_CACHE_STORAGE=FCS_RCS_CACHE_STORAGE_$rcs_cache_storage",
-    "-DMAX_NUM_BENCHMARK_THREADS=$max_bench_threads_num",
     "-DFCS_STACK_STORAGE=FCS_STACK_STORAGE_$stack_storage",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
     "-DDATADIR=$prefix/share",
     "-DBUILD_STATIC_LIBRARY=",
-    (defined($max_num_stacks) ? ("-DMAX_NUM_STACKS=$max_num_stacks") : ()),
     ($without_flipping ? ("-DFCS_WITHOUT_CARD_FLIPPING=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
 
-    (defined($pack_size) ? ("-DFCS_IA_PACK_SIZE=$pack_size") : ()),
     ("-DFCS_WITH_TEST_SUITE=" . ($test_suite ? '1' : '')),
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
     ($state_storage_libavl2_tree
@@ -316,17 +322,13 @@ my @cmd= ("cmake",
         ? "-DFCS_WITH_CONTEXT_VARIABLE=1"
         : "-DFCS_WITH_CONTEXT_VARIABLE="
     ),
-    (defined($hard_coded_num_freecells)
-        ? ("-DFCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY=$hard_coded_num_freecells")
-        : ()
-    ),
-    ($scan_buckets_num ? ("-DFCS_MAX_NUM_SCANS_BUCKETS=$scan_buckets_num") : ()),
     ($build_docs ? () : ("-DFCS_BUILD_DOCS=")),
     ($with_dbm_solver
         ? ("-DFCS_ENABLE_DBM_SOLVER=1", "-DFCS_DBM_BACKEND=$with_dbm_solver",)
         : ()
     ),
     (map { $bool_opts_with_false_defaults__values{$_} ? ("-D" . $BOOL_OPTS_WITH_FALSE_DEFAULTS{$_} . "=1") : () } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
+    (map { defined($int_opts__values{$_}) ? ("-D" . $INT_OPTS{$_} . "=" . $int_opts__values{$_}) : () } @INT_OPS__KEYS),
 );
 
 
