@@ -1791,12 +1791,14 @@ DLLEXPORT char * freecell_solver_user_move_to_string(
     const int standard_notation
     )
 {
-    return
-        fc_solve_move_to_string_w_state(
-            NULL,
-            move,
-            (standard_notation == 2)?1:standard_notation
-            );
+    char * ret = SMALLOC(ret, 256);
+    fc_solve_move_to_string_w_state(
+        ret,
+        NULL,
+        move,
+        (standard_notation == 2)?1:standard_notation
+    );
+    return ret;
 }
 #endif
 
@@ -1806,14 +1808,17 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
     const int standard_notation
     )
 {
+    char * ret = SMALLOC(ret, 256);
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    return
-        fc_solve_move_to_string_w_state(
-            &(user->running_state),
-            move,
-            standard_notation
-            );
+    fc_solve_move_to_string_w_state(
+        ret,
+        &(user->running_state),
+        move,
+        standard_notation
+    );
+
+    return ret;
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1

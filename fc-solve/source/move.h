@@ -39,6 +39,7 @@ extern "C" {
  * max. (which is the case for the Microsoft C Compiler)
  * */
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "state.h"
 #include "internal_move_struct.h"
@@ -285,11 +286,160 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #undef FCS_S_FC_LOCS
 #undef FCS_S_STACK_LOCS
 
-extern char * fc_solve_move_to_string_w_state(
-        fcs_state_keyval_pair_t * const state,
-        const fcs_move_t move,
-        const int standard_notation
-        );
+static GCC_INLINE int fc_solve_move__convert_freecell_num(int fcn)
+{
+    if (fcn >= 7)
+        return (fcn+3);
+    else
+        return fcn;
+}
+
+static GCC_INLINE void fc_solve_move_to_string_w_state(
+    char * const string,
+    fcs_state_keyval_pair_t * const state,
+    const fcs_move_t move,
+    const int standard_notation
+)
+{
+#define state_key (&(state->s))
+    switch(fcs_move_get_type(move))
+    {
+        case FCS_MOVE_TYPE_STACK_TO_STACK:
+            if ((standard_notation == FC_SOLVE__STANDARD_NOTATION_EXTENDED) &&
+                /* More than one card was moved */
+                (fcs_move_get_num_cards_in_seq(move) > 1) &&
+                /* It was a move to an empty stack */
+                (fcs_col_len(fcs_state_get_col(*state_key, fcs_move_get_dest_stack(move))) ==
+                 fcs_move_get_num_cards_in_seq(move))
+               )
+            {
+                sprintf(string, "%i%iv%x",
+                    1+fcs_move_get_src_stack(move),
+                    1+fcs_move_get_dest_stack(move),
+                    fcs_move_get_num_cards_in_seq(move)
+                   );
+            }
+            else if (standard_notation)
+            {
+                sprintf(string, "%i%i",
+                    1+fcs_move_get_src_stack(move),
+                    1+fcs_move_get_dest_stack(move)
+                    );
+            }
+            else
+            {
+                sprintf(string, "Move %i cards from stack %i to stack %i",
+                    fcs_move_get_num_cards_in_seq(move),
+                    fcs_move_get_src_stack(move),
+                    fcs_move_get_dest_stack(move)
+                );
+            }
+        break;
+
+        case FCS_MOVE_TYPE_FREECELL_TO_STACK:
+            if (standard_notation)
+            {
+                sprintf(string, "%c%i",
+                    ('a'+fc_solve_move__convert_freecell_num(fcs_move_get_src_freecell(move))),
+                    1+fcs_move_get_dest_stack(move)
+                    );
+            }
+            else
+            {
+                sprintf(string, "Move a card from freecell %i to stack %i",
+                    fcs_move_get_src_freecell(move),
+                    fcs_move_get_dest_stack(move)
+                    );
+            }
+
+        break;
+
+        case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
+            if (standard_notation)
+            {
+                sprintf(string, "%c%c",
+( (char)('a'+(char)fc_solve_move__convert_freecell_num(fcs_move_get_src_freecell(move))) ),
+( (char)('a'+(char)fc_solve_move__convert_freecell_num(fcs_move_get_dest_freecell(move))) )
+                );
+            }
+            else
+            {
+                sprintf(string, "Move a card from freecell %i to freecell %i",
+                    fcs_move_get_src_freecell(move),
+                    fcs_move_get_dest_freecell(move)
+                    );
+            }
+
+        break;
+
+        case FCS_MOVE_TYPE_STACK_TO_FREECELL:
+            if (standard_notation)
+            {
+                sprintf(string, "%i%c",
+                    1+fcs_move_get_src_stack(move),
+                    ('a'+fc_solve_move__convert_freecell_num(fcs_move_get_dest_freecell(move)))
+                    );
+            }
+            else
+            {
+                sprintf(string, "Move a card from stack %i to freecell %i",
+                    fcs_move_get_src_stack(move),
+                    fcs_move_get_dest_freecell(move)
+                    );
+            }
+
+        break;
+
+        case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
+            if (standard_notation)
+            {
+                sprintf(string, "%ih", 1+fcs_move_get_src_stack(move));
+            }
+            else
+            {
+                sprintf(string, "Move a card from stack %i to the foundations",
+                    fcs_move_get_src_stack(move)
+                    );
+            }
+
+        break;
+
+
+        case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
+            if (standard_notation)
+            {
+                sprintf(string, "%ch", ('a'+fc_solve_move__convert_freecell_num(fcs_move_get_src_freecell(move))));
+            }
+            else
+            {
+                sprintf(string,
+                    "Move a card from freecell %i to the foundations",
+                    fcs_move_get_src_freecell(move)
+                    );
+            }
+
+        break;
+
+        case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
+            if (standard_notation)
+            {
+                sprintf(string, "%ih", fcs_move_get_src_stack(move));
+            }
+            else
+            {
+                sprintf(string,
+                    "Move the sequence on top of Stack %i to the foundations",
+                    fcs_move_get_src_stack(move)
+                    );
+            }
+        break;
+
+        default:
+            string[0] = '\0';
+        break;
+    }
+#undef state_key
+}
 
 typedef struct {
     fcs_collectible_state_t * state_ptr;
