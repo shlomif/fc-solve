@@ -755,7 +755,7 @@ EOF
 
     # TEST
     is (
-        $ret->[1],
+       scalar($ret->[1] =~ s# +(\n|\z)#$1#gr),
         <<"EOF"
 Foundations: H-2 C-0 D-0 S-A
 Freecells:

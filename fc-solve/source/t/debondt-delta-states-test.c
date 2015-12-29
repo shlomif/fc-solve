@@ -114,6 +114,7 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
                 }
             }
         }
+        *(dest++) = '\0';
     }
 
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
