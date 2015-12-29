@@ -94,7 +94,7 @@ static GCC_INLINE void fc_solve_output_result_to_file(
         {
             fcs_move_t move;
             FILE * move_dump;
-            char state_as_string[1000];
+            char as_string[1000];
 
             move_dump = output_fh;
 
@@ -102,13 +102,13 @@ static GCC_INLINE void fc_solve_output_result_to_file(
             {
                     freecell_solver_user_current_state_stringify(
                             instance,
-                            state_as_string
+                            as_string
                             FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
                             , debug_context.canonized_order_output
                             FC_SOLVE__PASS_T(debug_context.display_10_as_t)
                             );
 
-                fprintf(move_dump, "%s\n", state_as_string);
+                fprintf(move_dump, "%s\n", as_string);
                 fprintf(move_dump, "%s", "\n====================\n\n");
             }
 
@@ -122,25 +122,24 @@ static GCC_INLINE void fc_solve_output_result_to_file(
             {
                 if (debug_context.display_moves)
                 {
-                    char * move_as_string =
-                        freecell_solver_user_move_to_string_w_state(
-                                instance,
-                                move,
-                                debug_context.standard_notation
-                                );
-
                     if (debug_context.display_states && debug_context.standard_notation)
                     {
                         fprintf(move_dump, "Move: ");
                     }
 
+                    freecell_solver_user_stringify_move_w_state(
+                        instance,
+                        as_string,
+                        move,
+                        debug_context.standard_notation
+                    );
                     fprintf(
                             move_dump,
                             (debug_context.standard_notation ?
                              "%s " :
                              "%s\n"
                             ),
-                            move_as_string
+                            as_string
                            );
                     move_num++;
                     if (debug_context.standard_notation)
@@ -155,20 +154,19 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                         fprintf (move_dump, "\n");
                     }
                     fflush (move_dump);
-                    free (move_as_string);
                 }
 
                 if (debug_context.display_states)
                 {
                     freecell_solver_user_current_state_stringify(
                         instance,
-                        state_as_string
+                        as_string
                         FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
                         , debug_context.canonized_order_output
                         FC_SOLVE__PASS_T(debug_context.display_10_as_t)
                     );
 
-                    fprintf(move_dump, "%s\n", state_as_string);
+                    fprintf(move_dump, "%s\n", as_string);
                 }
 
                 if (debug_context.display_states || (!debug_context.standard_notation))

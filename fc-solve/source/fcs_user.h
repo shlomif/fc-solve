@@ -163,10 +163,17 @@ DLLEXPORT extern char * freecell_solver_user_move_to_string(
     fcs_move_t move,
     int standard_notation
     );
-#endif
 
 DLLEXPORT extern char * freecell_solver_user_move_to_string_w_state(
     void * const user_instance,
+    const fcs_move_t move,
+    const int standard_notation
+    );
+#endif
+
+DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
+    void * const user_instance,
+    char * const output_string,
     const fcs_move_t move,
     const int standard_notation
     );

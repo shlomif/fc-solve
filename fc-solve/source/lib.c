@@ -1785,6 +1785,23 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
     STRUCT_SET_FLAG_TO(&(user->active_flare->obj), FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
 
+DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
+    void * const api_instance,
+    char * const output_string,
+    const fcs_move_t move,
+    const int standard_notation
+    )
+{
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
+
+    fc_solve_move_to_string_w_state(
+        output_string,
+        &(user->running_state),
+        move,
+        standard_notation
+    );
+}
+
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT char * freecell_solver_user_move_to_string(
     const fcs_move_t move,
@@ -1800,7 +1817,6 @@ DLLEXPORT char * freecell_solver_user_move_to_string(
     );
     return ret;
 }
-#endif
 
 DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
     void * const api_instance,
@@ -1809,17 +1825,15 @@ DLLEXPORT char * freecell_solver_user_move_to_string_w_state(
     )
 {
     char * ret = SMALLOC(ret, 256);
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    fc_solve_move_to_string_w_state(
+    freecell_solver_user_stringify_move_w_state(
+        api_instance,
         ret,
-        &(user->running_state),
         move,
         standard_notation
     );
-
     return ret;
 }
+#endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 void DLLEXPORT freecell_solver_user_limit_depth(
