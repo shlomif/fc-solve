@@ -187,7 +187,7 @@ sub find_by_string
     my $derived_state_s = shift;
 
     return DerivedStatesSearch->new({
-        states => [grep { $_->get_state_string() eq $derived_state_s } @{$self->states}]
+        states => [grep { ($_->get_state_string() =~ s# +(\n)#$1#gr) eq $derived_state_s } @{$self->states}]
     });
 }
 
@@ -317,8 +317,6 @@ sub is_which_irrev_moves_equal_to
 }
 package main;
 
-my $WS = ' ';
-
 use Test::More;
 
 my $TRUE = 1;
@@ -326,14 +324,14 @@ my $FALSE = 0;
 
 {
     my $freecell_24_initial_layout_s = <<"EOF";
-4C 2C 9C 8C QS 4S 2H$WS
-5H QH 3C AC 3H 4H QD$WS
-QC 9S 6H 9H 3S KS 3D$WS
-5D 2S JC 5C JH 6D AS$WS
-2D KD TH TC TD 8D$WS
-7H JS KH TS KC 7C$WS
-AH 5S 6S AD 8H JD$WS
-7S 6C 7D 4D 8S 9D$WS
+4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
 EOF
 
     my $fc_24_init = DerivedStatesList->new(
@@ -352,7 +350,7 @@ EOF
 
     {
         my $results = $fc_24_init->find_by_string(<<"EOF"
-Foundations: H-0 C-0 D-0 S-0$WS
+Foundations: H-0 C-0 D-0 S-0
 Freecells:      9D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
@@ -389,8 +387,8 @@ EOF
     # Check move from stack to foundations
     {
         my $results = $fc_24_init->find_by_string(<<"EOF"
-Foundations: H-0 C-0 D-0 S-A$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-A
+Freecells:
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -428,7 +426,7 @@ EOF
 
     {
         my $results = $fc_24_init_with_prune->find_by_string(<<"EOF"
-Foundations: H-0 C-0 D-0 S-A$WS
+Foundations: H-0 C-0 D-0 S-A
 Freecells:      9D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
@@ -468,16 +466,16 @@ EOF
 
 {
     my $freecell_24_middle_layout = <<"EOF";
-Foundations: H-Q C-8 D-8 S-Q$WS
-Freecells:  KD$WS$WS$WS$WS
+Foundations: H-Q C-8 D-8 S-Q
+Freecells:  KD
 : KH QC JD TC 9D
 : KC
-:$WS
+:
 : KS QD JC TD 9C
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
 EOF
 
     my $fc_24 = DerivedStatesList->new(
@@ -489,15 +487,15 @@ EOF
 
     {
         my $results = $fc_24->find_by_string(<<"EOF"
-Foundations: H-Q C-8 D-8 S-Q$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-Q C-8 D-8 S-Q
+Freecells:
 : KH QC JD TC 9D
 : KC
-:$WS
+:
 : KS QD JC TD 9C
-:$WS
-:$WS
-:$WS
+:
+:
+:
 : KD
 EOF
         );
@@ -529,12 +527,12 @@ EOF
 # originating item
 {
     my $freecell_24_middle_layout = <<"EOF";
-Foundations: H-0 C-0 D-0 S-2$WS
+Foundations: H-0 C-0 D-0 S-2
 Freecells:  JH  8D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD JC TD
 : QC 9S 6H 9H 3S KS 3D
-:$WS
+:
 : 2D KD TH
 : 7H JS KH TS KC 7C 6D 5C 4D
 : AH 5S 6S AD 8H JD TC 9D 8S 7D
@@ -550,7 +548,7 @@ EOF
 
     {
         my $results = $fc_24->find_by_string(<<"EOF"
-Foundations: H-0 C-0 D-0 S-2$WS
+Foundations: H-0 C-0 D-0 S-2
 Freecells:  JH  8D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD JC
@@ -588,7 +586,7 @@ EOF
 
     {
         my $results = $fc_24->find_by_string(<<"EOF"
-Foundations: H-0 C-0 D-0 S-2$WS
+Foundations: H-0 C-0 D-0 S-2
 Freecells:  JH  8D
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD JC TD
@@ -641,8 +639,8 @@ EOF
 
     {
         my $results = $fc_24->find_by_string(<<"EOF"
-Foundations: H-0 C-0 D-0 S-A$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-A
+Freecells:
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -673,15 +671,15 @@ EOF
 
 {
     my $freecell_24ish_layout = <<"EOF";
-Foundations: H-2 C-0 D-0 S-0$WS
-4C 2C 9C 8C QS 4S$WS
-5H QH 3C AC 4H QD 3H$WS
-QC 9S 6H 9H 3S KS 3D$WS
-5D 2S JC 5C JH 6D AS$WS
-2D KD TH TC TD 8D$WS
-7H JS KH TS KC 7C$WS
-5S 6S AD 8H JD$WS
-7S 6C 7D 4D 8S 9D$WS
+Foundations: H-2 C-0 D-0 S-0
+4C 2C 9C 8C QS 4S
+5H QH 3C AC 4H QD 3H
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
 EOF
 
     my $fc = DerivedStatesList->new(
@@ -693,8 +691,8 @@ EOF
 
     {
         my $results = $fc->find_by_string(<<"EOF"
-Foundations: H-3 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-3 C-0 D-0 S-0
+Freecells:
 : 4C 2C 9C 8C QS 4S
 : 5H QH 3C AC 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -759,8 +757,8 @@ EOF
     is (
         $ret->[1],
         <<"EOF"
-Foundations: H-2 C-0 D-0 S-A$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-2 C-0 D-0 S-A
+Freecells:
 : 4C 2C 9C 8C QS 3H 4S
 : 5H QH 3C AC 4H QD
 : QC 9S 6H 9H 3S KS 3D

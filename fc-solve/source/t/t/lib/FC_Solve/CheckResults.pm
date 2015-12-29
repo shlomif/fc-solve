@@ -132,7 +132,7 @@ sub verify_solution_test
     {
         if (system("$cl_prefix -o " . shell_quote($output_file) . " $cl_suffix"))
         {
-            Carp::confess"Error could not execute the fc-solve pipeline.";
+            Carp::confess "Error could not execute the fc-solve pipeline.";
         }
         open $fc_solve_output, "<", $output_file
             or Carp::confess("Could not open file for reading - $!");
@@ -152,21 +152,18 @@ sub verify_solution_test
 
         return ok(1, $msg);
     }
-    if ($self->trim_stats)
-    {
-        $sha->add_processed_slurp(
-            $fc_solve_output,
-            sub {
-                my $s = shift;
+    $sha->add_processed_slurp(
+        $fc_solve_output,
+        sub {
+            my $s = shift;
+            if ($self->trim_stats)
+            {
                 $s =~ s/^(This game is solveable\.\n).*/$1/ms;
-                return $s;
             }
-        );
-    }
-    else
-    {
-        $sha->add_file($fc_solve_output);
-    }
+            $s =~ s/ +(\n)/$1/g;
+            return $s;
+        }
+    );
 
     close ($fc_solve_output);
 

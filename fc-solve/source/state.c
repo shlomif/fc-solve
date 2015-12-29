@@ -427,22 +427,43 @@ void fc_solve_state_as_string(
     else
 #endif
     {
-        fc_solve_append_string_sprintf(app_str, "%s", "Foundations: ");
+        fc_solve_append_string_sprintf(app_str, "%s", "Foundations:");
         for(a=0;a<DECKS_NUM__VAL;a++)
         {
             fc_solve_append_string_sprintf(
                 app_str,
-                "H-%s C-%s D-%s S-%s ",
+                " H-%s C-%s D-%s S-%s",
                 decks[a*4],
                 decks[a*4+1],
                 decks[a*4+2],
                 decks[a*4+3]
                 );
         }
+#ifndef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
+        fc_solve_append_string_sprintf(app_str, " ");
+#endif
 
-        fc_solve_append_string_sprintf(app_str, "%s", "\nFreecells: ");
+        fc_solve_append_string_sprintf(app_str, "%s", "\nFreecells:");
 
-        for(a=0;a<FREECELLS_NUM__VAL;a++)
+#ifdef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
+        int max_freecell_idx = -1;
+        for (a = FREECELLS_NUM__VAL-1;a>=0;a--)
+        {
+            if (fcs_card_is_valid(fcs_freecell_card(*state, freecell_locs[a])))
+            {
+                max_freecell_idx = a;
+                break;
+            }
+        }
+#else
+        const int max_freecell_idx = FREECELLS_NUM__VAL - 1;
+#endif
+
+        if (max_freecell_idx >= 0)
+        {
+            fc_solve_append_string_sprintf(app_str, " ");
+        }
+        for (a = 0 ; a <= max_freecell_idx ; a++)
         {
             fc_solve_card_perl2user(
                 fcs_freecell_card(
@@ -457,7 +478,7 @@ void fc_solve_state_as_string(
                 "%3s",
                 freecell
             );
-            if (a < FREECELLS_NUM__VAL-1)
+            if (a < max_freecell_idx)
             {
                 fc_solve_append_string_sprintf(app_str, "%s", " ");
             }
@@ -468,7 +489,7 @@ void fc_solve_state_as_string(
         {
             col = fcs_state_get_col(*state, stack_locs[s]);
             col_len = fcs_col_len(col);
-            fc_solve_append_string_sprintf(app_str, "%s", ": ");
+            fc_solve_append_string_sprintf(app_str, "%s", ":");
 
             for (card_idx = 0 ; card_idx < col_len ; card_idx++)
             {
@@ -477,12 +498,15 @@ void fc_solve_state_as_string(
                     stack_card_str
                     PASS_T(display_10_as_t)
                 );
-                fc_solve_append_string_sprintf(app_str, "%s", stack_card_str);
-                if (card_idx < col_len-1)
-                {
-                    fc_solve_append_string_sprintf(app_str, "%s", " ");
-                }
+                fc_solve_append_string_sprintf(app_str, " %s", stack_card_str);
             }
+
+#ifndef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
+            if (! col_len)
+            {
+                fc_solve_append_string_sprintf(app_str, " ");
+            }
+#endif
             fc_solve_append_string_sprintf(app_str, "%s", "\n");
         }
     }

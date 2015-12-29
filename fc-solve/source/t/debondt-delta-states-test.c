@@ -82,6 +82,40 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
         PASS_T(TRUE)
     );
 
+    /* Always trim trailing whitespace */
+    {
+        char * dest = as_str;
+        char * src = as_str;
+
+        while (1)
+        {
+            while (! (*(src) == ' ' || *(src) == '\0'))
+            {
+                *(dest++) = *(src++);
+            }
+            if (*(src) == '\0')
+            {
+                break;
+            }
+            char * prev_src = src;
+            while (*src == ' ')
+            {
+                src++;
+            }
+            if (*(src) == '\0')
+            {
+                break;
+            }
+            if (*src != '\n')
+            {
+                while (*prev_src == ' ')
+                {
+                    *(dest++) = *(prev_src++);
+                }
+            }
+        }
+    }
+
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
     {
         diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
@@ -140,7 +174,7 @@ static int main_tests(void)
 
         fc_solve_initial_user_state_to_c(
                 (
-                 "Foundations: H-0 C-2 D-A S-0 \n"
+                 "Foundations: H-0 C-2 D-A S-0\n"
                  "Freecells:  8D  QD\n"
                  "6D 3C 3H KD 8C 5C\n"
                  "TC 9C 9H 8S\n"
@@ -169,7 +203,7 @@ static int main_tests(void)
             db_delta,
             &derived_state,
             (
-"Foundations: H-0 C-2 D-A S-0 \n"
+"Foundations: H-0 C-2 D-A S-0\n"
 "Freecells:  8D  QD\n"
 ": 6D 3C 3H KD 8C 5C\n"
 ": TC 9C 9H 8S\n"
@@ -199,8 +233,8 @@ static int main_tests(void)
         /* MS Freecell No. 24 Initial state.
          * */
         fc_solve_initial_user_state_to_c(
-("Foundations: H-0 C-0 D-0 S-0 \n"
-"Freecells:        \n"
+("Foundations: H-0 C-0 D-0 S-0\n"
+"Freecells:\n"
 "4C 2C 9C 8C QS 4S 2H\n"
 "5H QH 3C AC 3H 4H QD\n"
 "QC 9S 6H 9H 3S KS 3D\n"
@@ -228,7 +262,7 @@ static int main_tests(void)
 
         fc_solve_initial_user_state_to_c(
             (
-"Foundations: H-0 C-0 D-0 S-4 \n"
+"Foundations: H-0 C-0 D-0 S-4\n"
 "Freecells:  KS  TD\n"
 "2C\n"
 "5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
@@ -252,7 +286,7 @@ static int main_tests(void)
             db_delta,
             &derived_state,
             (
-"Foundations: H-0 C-0 D-0 S-4 \n"
+"Foundations: H-0 C-0 D-0 S-4\n"
 "Freecells:  TD  KS\n"
 ": 2C\n"
 ": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
@@ -261,7 +295,7 @@ static int main_tests(void)
 ": 2D KD QS JH TC 9D 8S\n"
 ": 7H JS KH TS KC 7C 6D 5C 4D\n"
 ": AH 5S 6S AD 8H JD\n"
-": \n"
+":\n"
             ),
             "DeBonodt: encode_composite + decode test No. 2 (deal #24)"
         );

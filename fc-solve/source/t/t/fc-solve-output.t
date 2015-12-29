@@ -174,12 +174,11 @@ sub trap_dbm
 
 {
 
-    my $WS = ' ';
     my $needle = <<"EOF";
 Success!
 --------
-Foundations: H-T C-8 D-A S-J$WS
-Freecells:  7D$WS$WS$WS$WS
+Foundations: H-T C-8 D-A S-J
+Freecells:  7D
 : KH QC JD
 : KC QH
 : 3D
@@ -192,7 +191,7 @@ Freecells:  7D$WS$WS$WS$WS
 ==
 Column 4 -> Freecell 1
 --------
-Foundations: H-T C-8 D-A S-J$WS
+Foundations: H-T C-8 D-A S-J
 Freecells:  7D  9D
 : KH QC JD
 : KC QH
@@ -206,7 +205,7 @@ Freecells:  7D  9D
 ==
 Column 4 -> Column 0
 --------
-Foundations: H-T C-8 D-A S-J$WS
+Foundations: H-T C-8 D-A S-J
 Freecells:  7D  9D
 : KH QC JD TC
 : KC QH
@@ -220,8 +219,8 @@ Freecells:  7D  9D
 ==
 Freecell 1 -> Column 0
 --------
-Foundations: H-T C-8 D-A S-J$WS
-Freecells:  7D$WS$WS$WS$WS
+Foundations: H-T C-8 D-A S-J
+Freecells:  7D
 : KH QC JD TC 9D
 : KC QH
 : 3D
@@ -234,8 +233,8 @@ Freecells:  7D$WS$WS$WS$WS
 ==
 Column 4 -> Foundation 0
 --------
-Foundations: H-J C-8 D-A S-J$WS
-Freecells:  7D$WS$WS$WS$WS
+Foundations: H-J C-8 D-A S-J
+Freecells:  7D
 : KH QC JD TC 9D
 : KC QH
 : 3D
@@ -248,8 +247,8 @@ Freecells:  7D$WS$WS$WS$WS
 ==
 Column 4 -> Foundation 3
 --------
-Foundations: H-J C-8 D-A S-Q$WS
-Freecells:  7D$WS$WS$WS$WS
+Foundations: H-J C-8 D-A S-Q
+Freecells:  7D
 : KH QC JD TC 9D
 : KC QH
 : 3D
@@ -262,16 +261,16 @@ Freecells:  7D$WS$WS$WS$WS
 ==
 Column 4 -> Freecell 1
 --------
-Foundations: H-K C-K D-K S-K$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
+Foundations: H-K C-K D-K S-K
+Freecells:
+:
+:
+:
+:
+:
+:
+:
+:
 
 ==
 END
@@ -280,7 +279,7 @@ EOF
     my $needle_non_debondt = <<"EOF";
 Success!
 --------
-Foundations: H-T C-8 D-A S-J$WS
+Foundations: H-T C-8 D-A S-J
 Freecells:      7D
 : 3D
 : 4D
@@ -294,7 +293,7 @@ Freecells:      7D
 ==
 Column 4 -> Freecell 0
 --------
-Foundations: H-T C-8 D-A S-J$WS
+Foundations: H-T C-8 D-A S-J
 Freecells:  7D  9D
 : 3D
 : 4D
@@ -308,7 +307,7 @@ Freecells:  7D  9D
 ==
 Column 4 -> Column 5
 --------
-Foundations: H-T C-8 D-A S-J$WS
+Foundations: H-T C-8 D-A S-J
 Freecells:  7D  9D
 : 3D
 : 4D
@@ -322,7 +321,7 @@ Freecells:  7D  9D
 ==
 Freecell 1 -> Column 5
 --------
-Foundations: H-T C-8 D-A S-J$WS
+Foundations: H-T C-8 D-A S-J
 Freecells:      7D
 : 3D
 : 4D
@@ -336,7 +335,7 @@ Freecells:      7D
 ==
 Column 4 -> Foundation 0
 --------
-Foundations: H-J C-8 D-A S-J$WS
+Foundations: H-J C-8 D-A S-J
 Freecells:      7D
 : 3D
 : 4D
@@ -350,7 +349,7 @@ Freecells:      7D
 ==
 Column 4 -> Foundation 3
 --------
-Foundations: H-J C-8 D-A S-Q$WS
+Foundations: H-J C-8 D-A S-Q
 Freecells:      7D
 : 3D
 : 4D
@@ -364,16 +363,16 @@ Freecells:      7D
 ==
 Column 4 -> Freecell 0
 --------
-Foundations: H-K C-K D-K S-K$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
+Foundations: H-K C-K D-K S-K
+Freecells:
+:
+:
+:
+:
+:
+:
+:
+:
 
 ==
 END
@@ -390,6 +389,8 @@ EOF
     );
 
     my $output_text = join('', @{$dbm_output->{out_lines}});
+
+    $output_text =~ s# +(\n|\z)#$1#g;
 
     # TEST
     ok (
