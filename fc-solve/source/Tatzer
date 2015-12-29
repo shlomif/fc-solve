@@ -261,7 +261,7 @@ else
 
 if ($bool_opts_with_false_defaults__values{rcs})
 {
-    $states_type = 'COMPACT';
+    $states_type = 'COMPACT_STATES';
 }
 
 if ($state_storage_libavl2_tree)
