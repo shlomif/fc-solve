@@ -1377,7 +1377,8 @@ DLLEXPORT char * freecell_solver_user_current_state_as_string(
         FC_SOLVE__PASS_PARSABLE(parseable_output)
         , canonized_order_output
         FC_SOLVE__PASS_T(display_10_as_t)
-    )
+    );
+
     return state_as_string;
 }
 #endif
@@ -2171,9 +2172,9 @@ DLLEXPORT char * freecell_solver_user_iter_state_as_string(
         api_instance,
         state_as_string,
         ptr_state_void
-        FC_SOLVE__PASS_PARSABLE(const int parseable_output)
-        , const int canonized_order_output
-        PASS_T(const int display_10_as_t)
+        FC_SOLVE__PASS_PARSABLE(parseable_output)
+        , canonized_order_output
+        PASS_T(display_10_as_t)
     );
     return state_as_string;
 }
