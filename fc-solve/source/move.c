@@ -171,16 +171,6 @@ void fc_solve_apply_move(
 #undef state_key
 }
 
-static GCC_INLINE int convert_freecell_num(int fcn)
-{
-    if (fcn >= 7)
-        return (fcn+3);
-    else
-        return fcn;
-}
-
-
-
 
 #define DERIVED_STATES_LIST_GROW_BY 16
 void fc_solve_derived_states_list_add_state(
