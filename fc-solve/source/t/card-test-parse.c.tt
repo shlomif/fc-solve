@@ -21,11 +21,11 @@ static int main_tests(void)
 
         mycard = fc_solve_card_parse_str([% card_string %]);
         /* TEST */
-        [%- SET num_tests = num_tests + 1 -%]
+        [%- SET num_tests = num_tests + 1 %]
         ok (fcs_card_suit(mycard) == [% suit.idx %],
             "Parsing the suit of card " [% card_string %]);
         /* TEST */
-        [%- SET num_tests = num_tests + 1 -%]
+        [%- SET num_tests = num_tests + 1 %]
         ok (fcs_card_rank(mycard) == [% rank.idx %],
             "Parsing the rank of card " [% card_string %]);
     }
