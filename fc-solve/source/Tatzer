@@ -41,7 +41,7 @@ my %bool_opts_with_false_defaults__values =
 my $build_type = "debug";
 my $stack_storage;
 my $state_storage;
-my $rcs_cache_storage;
+my $rcs_cache_storage = "KAZ_TREE";
 my $prefix = "/usr";
 my $states_type;
 my $test_suite = 1;
@@ -75,7 +75,6 @@ sub set_hash
 }
 
 set_hash();
-$rcs_cache_storage = "KAZ_TREE";
 
 sub _google_set_both
 {
