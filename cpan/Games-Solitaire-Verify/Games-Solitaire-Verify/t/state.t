@@ -6,8 +6,6 @@ use warnings;
 use Test::More tests => 31;
 use Games::Solitaire::Verify::State;
 
-my $WS = ' ';
-
 {
     my $string = <<"EOF";
 Foundations: H-6 C-A D-A S-4
@@ -74,15 +72,15 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-T C-7 D-6 S-J$WS
-Freecells:  KH      KD$WS$WS$WS$WS
+Foundations: H-T C-7 D-6 S-J
+Freecells:  KH      KD
 : 9C 8D
 : KS QH JC TD
 : QC JH TC 9D 8C 7D
-:$WS
-:$WS
+:
+:
 : KC QD
-:$WS
+:
 : QS JD
 EOF
 
@@ -99,15 +97,15 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-T C-7 D-6 S-J$WS
-Freecells:  KH      KD$WS$WS$WS$WS
+Foundations: H-T C-7 D-6 S-J
+Freecells:  KH      KD
 : 9C 8D
 : KS QH JC TD
 : QC JH TC 9D 8C 7D
-:$WS
-:$WS
+:
+:
 : KC QD
-:$WS
+:
 : QS JD
 EOF
 
@@ -161,7 +159,7 @@ EOF
     $board->set_freecell(1, $board->get_column(3)->pop());
 
     my $new_board = <<"EOF";
-Foundations: H-6 C-A D-A S-4$WS
+Foundations: H-6 C-A D-A S-4
 Freecells:  3D  3C  JH  9H
 : 4C 2C 9C 8C QS JD
 : KS QH
@@ -179,8 +177,8 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -204,8 +202,8 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -239,8 +237,8 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 ==<foo>== 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -460,7 +458,7 @@ EOF
     my $num_freecells = 2;
 
     my $string = <<"EOF";
-Foundations: H-6 C-A D-A S-4$WS
+Foundations: H-6 C-A D-A S-4
 Freecells:  3D  JH
 : 4C 2C 9C 8C QS JD
 : KS QH 9H

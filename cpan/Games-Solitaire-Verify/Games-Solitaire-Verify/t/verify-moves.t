@@ -8,12 +8,11 @@ use Games::Solitaire::Verify::State;
 use Games::Solitaire::Verify::Move;
 use Games::Solitaire::Verify::Exception;
 
-my $WS = ' ';
 {
     # Initial MS Freecell Position No. 24
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -122,12 +121,12 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-6 C-A D-A S-7$WS
+Foundations: H-6 C-A D-A S-7
 Freecells:  3D          9H
 : 4C 2C 9C 8C QS JD
 : KS QH
 : QC JH
-:$WS
+:
 : 2D KD TH TC TD 8D 7C 6D 5C 4D 3C
 : 7H JS KH TS KC QD JC
 : 9D 8S 7D 6C 5D
@@ -187,7 +186,7 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-6 C-6 D-A S-8$WS
+Foundations: H-6 C-6 D-A S-8
 Freecells:  3D  4D  9S  5D
 : 9C 8H
 : KS QH JC
@@ -232,7 +231,7 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-6 C-6 D-A S-8$WS
+Foundations: H-6 C-6 D-A S-8
 Freecells:  3D  4D  9S  5D
 : 9C 8H
 : KS QH JC
@@ -296,7 +295,7 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-A S-A$WS
+Foundations: H-0 C-0 D-A S-A
 Freecells:  JD  8H  2H  4S
 : 4C 2C 9C 8C QS
 : 5H QH 3C AC 3H 4H QD
@@ -341,7 +340,7 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-A S-A$WS
+Foundations: H-0 C-0 D-A S-A
 Freecells:  JD  8H  2H  4S
 : 4C 2C 9C 8C QS
 : 5H QH 3C AC 3H 4H QD
@@ -410,10 +409,10 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-5 C-A D-A S-A$WS
+Foundations: H-5 C-A D-A S-A
 Freecells:  6S  8H  3C  4S
 : 4C 2C 9C 8C QS JD
-:$WS
+:
 : QC 9S 6H 9H 3S KS 3D
 : 5D 2S JC 5C JH 6D 5S
 : 2D KD TH TC TD 8D 7C
@@ -459,10 +458,10 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-5 C-A D-A S-A$WS
+Foundations: H-5 C-A D-A S-A
 Freecells:  6S  8H  3C  4S
 : 4C 2C 9C 8C QS JD
-:$WS
+:
 : QC 9S 6H 9H 3S KS 3D
 : 5D 2S JC 5C JH 6D 5S
 : 2D KD TH TC TD 8D 7C
@@ -525,8 +524,8 @@ EOF
 {
     # Initial MS Freecell Position No. 24
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C 2C 9C 8C QS 4S 2H
 : 8D QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -588,7 +587,7 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-2 C-0 D-A S-A$WS
+Foundations: H-2 C-0 D-A S-A
 Freecells:  8D  8H  6S  5S
 : 4C 2C 9C 8C QS 4S
 : 5H QH 3C AC 3H 4H QD JD
@@ -596,7 +595,7 @@ Freecells:  8D  8H  6S  5S
 : 5D 2S JC 5C JH 6D
 : 2D KD TH TC TD
 : 7H JS KH TS KC 7C
-:$WS
+:
 : 7S 6C 7D 4D 8S 9D
 EOF
 
@@ -624,7 +623,7 @@ EOF
 
     # TEST
     is ($board->to_string(), <<"EOF", "New board is OK.");
-Foundations: H-2 C-0 D-A S-A$WS
+Foundations: H-2 C-0 D-A S-A
 Freecells:  8D  8H  6S  5S
 : 4C 2C 9C 8C QS 4S
 : 5H QH 3C AC 3H 4H QD JD TD
@@ -632,7 +631,7 @@ Freecells:  8D  8H  6S  5S
 : 5D 2S JC 5C JH 6D
 : 2D KD TH TC
 : 7H JS KH TS KC 7C
-:$WS
+:
 : 7S 6C 7D 4D 8S 9D
 EOF
 }
@@ -640,8 +639,8 @@ EOF
 {
     # Initial MS Freecell Position No. 24
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -703,7 +702,7 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-A S-A$WS
+Foundations: H-0 C-0 D-A S-A
 Freecells:  JD      2H  4S
 : 4C 2C 9C 8C QS 8H
 : 5H QH 3C AC 3H 4H QD
@@ -767,7 +766,7 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-6 C-6 D-A S-8$WS
+Foundations: H-6 C-6 D-A S-8
 Freecells:  3D  4D      5D
 : 9C 8H
 : KS QH JC 9S
@@ -831,10 +830,10 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-5 C-A D-A S-A$WS
+Foundations: H-5 C-A D-A S-A
 Freecells:  6S  8H  3C  4S
 : 4C 2C 9C 8C QS JD
-:$WS
+:
 : QC 9S 6H 9H 3S KS 3D
 : 5D 2S JC 5C JH 6D 5S
 : 2D KD TH TC TD 8D 7C
@@ -895,9 +894,9 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-6 C-4 D-A S-7$WS
+Foundations: H-6 C-4 D-A S-7
 Freecells:  3D  QS  9C  JD
-:$WS
+:
 : KS QH JC
 : QC JH
 : KC QD
@@ -959,9 +958,9 @@ EOF
 
 {
     my $string = <<"EOF";
-Foundations: H-6 C-4 D-A S-7$WS
+Foundations: H-6 C-4 D-A S-7
 Freecells:  3D  QS  9C  JD
-:$WS
+:
 : KS QH JC
 : QC JH
 : KC QD
@@ -1026,8 +1025,8 @@ EOF
 #   fc-solve -g simple_simon -p -t -sam
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C QH 3C 8C AD JH 8S KS
 : 5H 9S 6H AC 4D TD 4S 6D
 : QC 2S JC 9H QS KC 4H 8D
@@ -1078,8 +1077,8 @@ EOF
 #   fc-solve -g simple_simon -p -t -sam
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C QH 3C 8C AD JH 8S KS
 : 5H 9S 6H AC 4D TD 4S 6D
 : QC 2S JC 9H QS KC 4H
@@ -1115,8 +1114,8 @@ EOF
     );
 
     my $result = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C QH 3C 8C AD JH 8S KS
 : 5H 9S 6H AC 4D TD 4S 6D
 : QC 2S JC 9H QS KC 4H
@@ -1126,7 +1125,7 @@ Freecells:$WS
 : AH 6C 7D 2H AS
 : 7S 9C QD JD
 : 2C 3D
-:$WS
+:
 EOF
 
     # TEST
@@ -1139,8 +1138,8 @@ EOF
 #   fc-solve -g simple_simon -p -t -sam
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C QH 3C 8C AD JH 8S KS
 : 5H 9S 6H AC 4D TD 4S 3S
 : QC 2S JC 9H QS KC 4H
@@ -1150,7 +1149,7 @@ Freecells:$WS
 : AH 6C 7D 2H AS
 : 7S 9C QD JD
 : 2C 3D
-:$WS
+:
 EOF
 
     my $board = Games::Solitaire::Verify::State->new(
@@ -1176,8 +1175,8 @@ EOF
     );
 
     my $result = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C QH 3C 8C AD JH 8S KS
 : 5H 9S 6H AC 4D TD 4S 3S
 : QC 2S JC 9H QS KC 4H
@@ -1187,7 +1186,7 @@ Freecells:$WS
 : AH 6C 7D 2H AS
 : 7S 9C QD JD TS 9D 8D
 : 2C 3D
-:$WS
+:
 EOF
 
     # TEST
@@ -1200,17 +1199,17 @@ EOF
 #   fc-solve -g simple_simon -p -t -sam
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C QH 3C 2C AC
 : KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD
-:$WS
+:
 : 5D KD QD JD TD 9D 8D 7D 6D
-:$WS
+:
 : JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH
-:$WS
+:
 : KH
-:$WS
+:
 : KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S AS
 EOF
 
@@ -1237,18 +1236,18 @@ EOF
     );
 
     my $result = <<"EOF";
-Foundations: H-0 C-0 D-0 S-K$WS
-Freecells:$WS
+Foundations: H-0 C-0 D-0 S-K
+Freecells:
 : 4C QH 3C 2C AC
 : KC QC JC TC 9C 8C 7C 6C 5C 4D 3D 2D AD
-:$WS
+:
 : 5D KD QD JD TD 9D 8D 7D 6D
-:$WS
+:
 : JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH
-:$WS
+:
 : KH
-:$WS
-:$WS
+:
+:
 EOF
 
     # TEST
@@ -1263,17 +1262,17 @@ EOF
 # But tweaked manually.
 {
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C QH 3C 2C AC
 : KC QC JC TC 9C 8C 7C 6C 5C 4S 3S 2S AS
-:$WS
+:
 : 5D KD QD JD TD 9D 8D 7D 6D
-:$WS
+:
 : JH TH 9H 8H 7H 6H 5H 4H 3H 2H AH
-:$WS
+:
 : KH
-:$WS
+:
 : KS QS JS TS 9S 8S 7S 6S 5S 4D 3D 2D AD
 EOF
 
@@ -1324,8 +1323,8 @@ EOF
 {
     # Initial MS Freecell Position No. 24
     my $string = <<"EOF";
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D

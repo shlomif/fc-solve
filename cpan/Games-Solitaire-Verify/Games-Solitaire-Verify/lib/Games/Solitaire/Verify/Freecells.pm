@@ -46,9 +46,14 @@ sub _input_from_string
         );
     }
 
+    POS:
     for my $pos (0 .. ($self->count()-1))
     {
-        if ($str =~ m{\G  (..)}gms)
+        if ($str =~ m{\G\z}cg)
+        {
+            last POS;
+        }
+        elsif ($str =~ m{\G  (..)}gms)
         {
             my $card_s = $1;
             $self->assign($pos, $self->_parse_freecell_card($card_s))
@@ -151,12 +156,14 @@ sub to_string
 {
     my $self = shift;
 
-    return "Freecells:" . (($self->count() == 0) ? " " :
+    my $ret = "Freecells:" . (($self->count() == 0) ? "" :
     join("",
         map { "  " . (defined($_) ? $_->fast_s() : "  ") }
         map { $self->cell($_) }
         (0 .. ($self->count()-1))
     ));
+
+    return ($ret =~ s# +\z##r);
 }
 
 =head2 $self->cell_clone($pos)

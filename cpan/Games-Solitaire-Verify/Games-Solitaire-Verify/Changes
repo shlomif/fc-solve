@@ -1,5 +1,11 @@
 Revision history for Games-Solitaire-Verify
 
+0.1600  Unknown
+        - Alter output to exclude trailing whitespace.
+        - Alter input to automatically remove trailing whitespace.
+            - These changes are for an upcoming compilation flag in Freecell
+            Solver of removing trailing whitespace from output.
+
 0.1500  2015-12-21
         - Remove dependency on MooX::late (and Moo)
         - Some optimizations and cleanups.

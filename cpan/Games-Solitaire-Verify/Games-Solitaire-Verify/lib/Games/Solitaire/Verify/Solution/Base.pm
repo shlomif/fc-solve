@@ -32,7 +32,9 @@ sub _l
     # We use this instead of the accessor for speed.
     $s->{_ln}++;
 
-    return scalar readline($s->{_i});
+    my $ret = scalar (readline($s->{_i}));
+
+    return defined($ret) ? ($ret =~ s# +(\n?)\z#$1#r) : $ret;
 }
 
 1;

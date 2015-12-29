@@ -217,10 +217,9 @@ sub _recalc
 {
     my $self = shift;
 
-    # We need the single trailing space in an empty line ': ' for
-    # Freecell Solver compatibility
     $self->_s(
-        ': ' . join(' ',
+        join(' ',
+            ':',
             (map
                 { $_->fast_s() }
                 @{$self->_cards()}

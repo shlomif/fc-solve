@@ -130,7 +130,7 @@ use Games::Solitaire::Verify::Column;
     is ($column->len(), 0, "Column has zero cards");
 
     # TEST
-    is ($column->to_string(), ": ", "Trailing space on empty column");
+    is ($column->to_string(), ":", "No trailing space on empty column");
 }
 
 {

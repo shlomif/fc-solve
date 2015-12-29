@@ -43,6 +43,7 @@ sub _input_from_string
 
     if($str !~ m{\AFoundations: H-($rank_re) C-($rank_re) D-($rank_re) S-($rank_re) *\z}ms)
     {
+        die "str=<$str>";
         Games::Solitaire::Verify::Exception::Parse::State::Foundations->throw(
             error => "Wrong Foundations",
         );
@@ -169,8 +170,6 @@ sub to_string
 
     return   "Foundations:"
            . join("", @{$self->_foundations_strings()})
-           . " " # We need the trailing space for compatibility with
-                 # Freecell Solver.
            ;
 }
 
