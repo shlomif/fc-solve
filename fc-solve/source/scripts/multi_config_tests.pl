@@ -91,12 +91,19 @@ sub emit_all
 {
     my $self = shift;
 
-    print "Error with @{[$self->blurb()]} executing [@{$self->cmd_line()}].\n";
+    my $err_s = "Error with @{[$self->blurb()]} executing [@{$self->cmd_line()}].\n";
+
+    my $out = sub {
+        print $err_s;
+    };
+
+    $out->();
     print ($self->all_info());
 
     Carp::cluck("Error.");
     print colored("Error!", ($ENV{'HARNESS_SUMMARY_COLOR_FAIL'} || 'bold red')),
         "\n";
+    $out->();
     exit(-1);
 }
 
