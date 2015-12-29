@@ -23,7 +23,6 @@ use FC_Solve::VarBaseDigitsWriter::XS;
 
 package main;
 
-my $WS = ' ';
 my $RANK_J = 11;
 my $RANK_Q = 12;
 my $RANK_K = 13;
@@ -57,8 +56,8 @@ sub _card_to_bin
     my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF"
-Foundations: H-0 C-0 D-A S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-A S-0
+Freecells:
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 4S JC 6H 5H
 : 2H 2D 3S 5D 9D QS KS
@@ -77,7 +76,7 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF"
-Foundations: H-0 C-2 D-A S-0$WS
+Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -183,8 +182,8 @@ EOF
     my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF"
-Foundations: H-0 C-0 D-A S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-A S-0
+Freecells:
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 4S JC 6H 5H
 : 2H 2D 3S 5D 9D QS KS
@@ -203,7 +202,7 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF"
-Foundations: H-0 C-2 D-A S-0$WS
+Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -221,7 +220,7 @@ EOF
     eq_or_diff(
         scalar($delta->decode($delta->encode())->to_string()),
         <<"EOF",
-Foundations: H-0 C-2 D-A S-0$WS
+Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -239,7 +238,7 @@ EOF
     eq_or_diff(
         scalar($delta->decode($delta->encode_composite())->to_string()),
         <<"EOF",
-Foundations: H-0 C-2 D-A S-0$WS
+Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -261,8 +260,8 @@ EOF
     my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF"
-Foundations: H-0 C-0 D-0 S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-0 S-0
+Freecells:
 : 4C 2C 9C 8C QS 4S 2H
 : 5H QH 3C AC 3H 4H QD
 : QC 9S 6H 9H 3S KS 3D
@@ -281,12 +280,12 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF"
-Foundations: H-0 C-0 D-0 S-4$WS
+Foundations: H-0 C-0 D-0 S-4
 Freecells:  KS  TD
 : 2C
 : 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S
 : QC 9S 6H 9H 8C 7D 6C 5D 4C 3D
-:$WS
+:
 : 2D KD QS JH TC 9D 8S
 : 7H JS KH TS KC 7C 6D 5C 4D
 : AH 5S 6S AD 8H JD
@@ -300,9 +299,9 @@ EOF
     eq_or_diff(
         scalar($delta->decode($delta->encode_composite())->to_string()),
         <<"EOF",
-Foundations: H-0 C-0 D-0 S-4$WS
+Foundations: H-0 C-0 D-0 S-4
 Freecells:  KS  TD
-:$WS
+:
 : 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S
 : QC 9S 6H 9H 8C 7D 6C 5D 4C 3D
 : 2H
@@ -317,7 +316,7 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF"
-Foundations: H-0 C-0 D-0 S-2$WS
+Foundations: H-0 C-0 D-0 S-2
 Freecells:  TD  4C
 : 8S
 : 5H QH 3C AC 3H 4H 3S 2H
@@ -335,7 +334,7 @@ EOF
     eq_or_diff(
         scalar($delta->decode($delta->encode_composite())->to_string()),
         <<"EOF",
-Foundations: H-0 C-0 D-0 S-2$WS
+Foundations: H-0 C-0 D-0 S-2
 Freecells:  TD  4C
 : 5C 4D
 : 5H QH 3C AC 3H 4H 3S 2H
@@ -357,16 +356,16 @@ EOF
     my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF",
-Foundations: H-K C-K D-J S-Q$WS
-Freecells:  KD$WS$WS$WS$WS
-:$WS
-:$WS
-:$WS
+Foundations: H-K C-K D-J S-Q
+Freecells:  KD
+:
+:
+:
 : KS QD
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
 EOF
         },
     );
@@ -374,16 +373,16 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF",
-Foundations: H-K C-K D-J S-Q$WS
+Foundations: H-K C-K D-J S-Q
 Freecells:  QD  KD
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
+:
 : KS
-:$WS
-:$WS
+:
+:
 EOF
         },
     );
@@ -397,15 +396,15 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF",
-Foundations: H-K C-K D-J S-Q$WS
+Foundations: H-K C-K D-J S-Q
 Freecells:  QD  KD
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
+:
+:
+:
 : KS
 EOF
         }
@@ -429,16 +428,16 @@ EOF
     my $delta = FC_Solve::DeltaStater->new(
         {
             init_state_str => <<"EOF",
-Foundations: H-K C-K D-J S-Q$WS
-Freecells:  KD$WS$WS$WS$WS
-:$WS
-:$WS
-:$WS
+Foundations: H-K C-K D-J S-Q
+Freecells:  KD
+:
+:
+:
 : KS QD
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
 EOF
         },
     );
@@ -446,16 +445,16 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF",
-Foundations: H-K C-K D-J S-Q$WS
+Foundations: H-K C-K D-J S-Q
 Freecells:  QD  KD
 : KS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
+:
+:
+:
 EOF
         },
     );
@@ -469,15 +468,15 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF",
-Foundations: H-K C-K D-J S-Q$WS
+Foundations: H-K C-K D-J S-Q
 Freecells:  QD  KD
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
+:
+:
+:
 : KS
 EOF
         }
@@ -580,8 +579,8 @@ foreach my $classes_rec
     my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
             init_state_str => <<"EOF"
-Foundations: H-0 C-0 D-A S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-A S-0
+Freecells:
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 4S JC 6H 5H
 : 2H 2D 3S 5D 9D QS KS
@@ -600,7 +599,7 @@ EOF
     $delta->set_derived(
         {
             state_str => <<"EOF"
-Foundations: H-0 C-2 D-A S-0$WS
+Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -621,7 +620,7 @@ EOF
     eq_or_diff(
         scalar($delta->decode($delta->encode_composite())->to_string()),
         <<"EOF",
-Foundations: H-0 C-2 D-A S-0$WS
+Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -639,8 +638,8 @@ EOF
 {
 
     my $init_state = <<"EOF";
-Foundations: H-0 C-0 D-A S-0$WS
-Freecells:$WS$WS$WS$WS$WS$WS$WS$WS
+Foundations: H-0 C-0 D-A S-0
+Freecells:
 : AH 5C 3S TD 5S 2H 9S
 : 8S AS 5D 7S QH TC
 : 2D 9C KC JD 8C TH 7C
@@ -678,8 +677,8 @@ EOF
         {
             variant => "bakers_dozen",
             init_state_str => <<"EOF",
-Foundations: H-A C-2 D-0 S-A$WS
-Freecells:$WS
+Foundations: H-A C-2 D-0 S-A
+Freecells:
 : 2H JH 6S QH
 : 4H TC 6C QC
 : 4S 5C 5S 5H
@@ -701,8 +700,8 @@ EOF
     ok ($delta, 'Baker Dozen Object was initialized correctly.');
 
     my $derived_str = <<"EOF";
-Foundations: H-A C-5 D-5 S-2$WS
-Freecells:$WS
+Foundations: H-A C-5 D-5 S-2
+Freecells:
 : 2H JH
 : 4H TC 6C QC
 : 4S
@@ -741,8 +740,8 @@ EOF
         {
             variant => "bakers_dozen",
             init_state_str => <<"EOF",
-Foundations: H-0 C-2 D-A S-0$WS
-Freecells:$WS
+Foundations: H-0 C-2 D-A S-0
+Freecells:
 : QH TD QD JH
 : 4C 4D 3D 9C
 : KH 2D QC 8D
@@ -764,8 +763,8 @@ EOF
     ok ($delta, 'Baker Dozen Object was initialized correctly.');
 
     my $derived_str = <<"EOF";
-Foundations: H-0 C-2 D-A S-0$WS
-Freecells:$WS
+Foundations: H-0 C-2 D-A S-0
+Freecells:
 : QH TD QD JH
 : 4C 4D 3D 9C
 : KH 2D QC 8D
@@ -805,8 +804,8 @@ EOF
         {
             variant => "bakers_dozen",
             init_state_str => <<"EOF",
-Foundations: H-0 C-2 D-A S-0$WS
-Freecells:$WS
+Foundations: H-0 C-2 D-A S-0
+Freecells:
 : QH TD QD JH
 : 4C 4D 3D 9C
 : KH 2D QC 8D
@@ -828,10 +827,10 @@ EOF
     ok ($delta, 'Baker Dozen Object was initialized correctly.');
 
     my $derived_str = <<"EOF";
-Foundations: H-0 C-4 D-4 S-2$WS
-Freecells:$WS
+Foundations: H-0 C-4 D-4 S-2
+Freecells:
 : QH TD QD JH TS
-:$WS
+:
 : KH
 : 4S 8H 6C 5D
 : 6S JC
@@ -869,8 +868,8 @@ EOF
         {
             variant => "bakers_dozen",
             init_state_str => <<"EOF",
-Foundations: H-2 C-0 D-0 S-2$WS
-Freecells:$WS
+Foundations: H-2 C-0 D-0 S-2
+Freecells:
 : JC 3S 9D 4H
 : KC QC 6D QS
 : QH JH TS
@@ -892,8 +891,8 @@ EOF
     ok ($delta, 'Baker Dozen Object was initialized correctly.');
 
     my $derived_str = <<"EOF";
-Foundations: H-2 C-0 D-0 S-2$WS
-Freecells:$WS
+Foundations: H-2 C-0 D-0 S-2
+Freecells:
 : JC 3S 9D 4H
 : KC QC 6D QS
 : QH JH TS
@@ -930,13 +929,13 @@ EOF
 {
     # PySol Baker's Dozen deal No. 26698
     my $init_state_str = <<"EOF";
-Foundations: H-0 C-2 D-2 S-2$WS
-Freecells:$WS
+Foundations: H-0 C-2 D-2 S-2
+Freecells:
 : 9C 7D TC 8D
 : JS 9D JC 4S
 : 5H 3H 6H 5C
 : 5D 6C 4H 8S
-:$WS
+:
 : JD TD QS 9S
 : QC QH 6S 4C
 : 3C AH 9H
