@@ -11,7 +11,7 @@ Games::Solitaire::Verify - verify solutions for solitaire games.
 
 =cut
 
-our $VERSION = '0.1500';
+our $VERSION = '0.1600';
 
 =head1 SYNOPSIS
 
