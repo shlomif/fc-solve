@@ -14,7 +14,7 @@ their parameters.
 
 =cut
 
-our $VERSION = '0.1600';
+our $VERSION = '0.1601';
 
 sub _init
 {

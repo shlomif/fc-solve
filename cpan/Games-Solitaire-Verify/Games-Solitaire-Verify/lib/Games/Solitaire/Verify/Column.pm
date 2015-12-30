@@ -10,7 +10,7 @@ columns that are composed of a sequence of cards.
 
 =cut
 
-our $VERSION = '0.1600';
+our $VERSION = '0.1601';
 
 use parent 'Games::Solitaire::Verify::Base';
 
