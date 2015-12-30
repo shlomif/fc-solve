@@ -1,5 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
+0.1601  2015-12-30
+        - Fix compatibility with older perls (down to 5.8.9).
+            - Several CPAN Tester reports were received.
+            - The problem was the /r flag to s///.
+
 0.1600  2015-12-29
         - Alter output to exclude trailing whitespace.
         - Alter input to automatically remove trailing whitespace.
