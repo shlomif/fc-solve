@@ -50,8 +50,6 @@ sub _calc_cmd_line
     my $variant = ($args->{variant}  ||= "freecell");
     my $is_custom = ($variant eq "custom");
     my $variant_s = $is_custom ? "" : "-g $variant";
-    my $msdeals = $args->{msdeals};
-    my $pysolfc_deals = $args->{pysolfc_deals};
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
@@ -69,8 +67,6 @@ sub _calc_cmd_line
         deal => $deal,
         cmd_line => $cmd_line,
         is_custom => $is_custom,
-        msdeals => $msdeals,
-        pysolfc_deals => $pysolfc_deals,
         theme => $theme,
         variant_s => $variant_s,
         variant => $variant,
