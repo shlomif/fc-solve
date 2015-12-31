@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 9;
+use FC_Solve::GetOutput ();
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -15,44 +16,7 @@ sub trap_board
 {
     my $args = shift;
 
-    my $board = $args->{board};
-    my $deal = $args->{deal};
-    my $msdeals = $args->{msdeals};
-    my $pysolfc_deals = $args->{pysolfc_deals};
-
-    if (! defined($board))
-    {
-        if (!defined($deal))
-        {
-            confess "Neither Deal nor board are specified";
-        }
-        if ($deal !~ m{\A[1-9][0-9]*\z})
-        {
-            confess "Invalid deal $deal";
-        }
-    }
-
-    my $theme = $args->{theme} || ["-l", "gi"];
-
-    my $variant = $args->{variant}  || "freecell";
-    my $is_custom = ($variant eq "custom");
-    my $variant_s = $is_custom ? "" : "-g $variant";
-
-    my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
-
-    open my $fc_solve_output,
-        ($msdeals ?
-            "pi-make-microsoft-freecell-board -t $deal | " :
-            ($board ? "" :
-                ("make_pysol_freecell_board.py -t" .
-                    ($pysolfc_deals ? " -F " : "") .
-                    " $deal $variant | ")
-            )
-        ) .
-        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
-        ($board ? shell_quote($board) : "") .
-        " |"
-        or Carp::confess "Error! Could not open the fc-solve pipeline";
+    my $fc_solve_output = FC_Solve::GetOutput->open_cmd_line($args)->{fh};
 
     my @lines = <$fc_solve_output>;
 

@@ -33,14 +33,20 @@ sub _calc_cmd_line
     my $is_custom = ($variant eq "custom");
     my $variant_s = $is_custom ? "" : "-g $variant";
     my $msdeals = $args->{msdeals};
+    my $pysolfc_deals = $args->{pysolfc_deals};
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
     my $cmd_line =
     (
-        ($msdeals ?
-            "pi-make-microsoft-freecell-board -t $deal | " :
-            ($board ? "" : "make_pysol_freecell_board.py -t $deal $variant | ")
+        ($board ? "" :
+            (
+                ($msdeals ?
+                    "pi-make-microsoft-freecell-board -t $deal | " :
+                    ("make_pysol_freecell_board.py -t" .
+                        ($pysolfc_deals ? " -F " : "") . " $deal $variant | ")
+                )
+            )
         ) .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
         ($board ? shell_quote($board) : "") .
@@ -54,6 +60,7 @@ sub _calc_cmd_line
         cmd_line => $cmd_line,
         is_custom => $is_custom,
         msdeals => $msdeals,
+        pysolfc_deals => $pysolfc_deals,
         theme => $theme,
         variant_s => $variant_s,
         variant => $variant,
