@@ -1,10 +1,28 @@
 package FC_Solve::GetOutput;
 
 use strict;
-use warnings;
+use warnings 'FATAL';
 
 use Carp qw/confess/;
 use String::ShellQuote qw/shell_quote/;
+
+sub board_gen_prefix
+{
+    my ($self, $args) = @_;
+
+    my $deal = $args->{deal};
+
+    return
+    ($args->{board} ? "" :
+        (
+            ($args->{msdeals} ?
+                "pi-make-microsoft-freecell-board -t $deal | " :
+                ("make_pysol_freecell_board.py -t" .
+                    ($args->{pysolfc_deals} ? " -F " : "") . " $deal $args->{variant} | ")
+            )
+        )
+    );
+}
 
 sub _calc_cmd_line
 {
@@ -27,9 +45,9 @@ sub _calc_cmd_line
         }
     }
 
-    my $theme = $args->{theme} || ["-l", "gi"];
+    my $theme = ($args->{theme} ||= ["-l", "gi"]);
 
-    my $variant = $args->{variant}  || "freecell";
+    my $variant = ($args->{variant}  ||= "freecell");
     my $is_custom = ($variant eq "custom");
     my $variant_s = $is_custom ? "" : "-g $variant";
     my $msdeals = $args->{msdeals};
@@ -39,15 +57,7 @@ sub _calc_cmd_line
 
     my $cmd_line =
     (
-        ($board ? "" :
-            (
-                ($msdeals ?
-                    "pi-make-microsoft-freecell-board -t $deal | " :
-                    ("make_pysol_freecell_board.py -t" .
-                        ($pysolfc_deals ? " -F " : "") . " $deal $variant | ")
-                )
-            )
-        ) .
+        $self->board_gen_prefix($args) .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
         ($board ? shell_quote($board) : "") .
         " |"

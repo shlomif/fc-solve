@@ -12,6 +12,7 @@ use Carp;
 
 use Test::More;
 use FC_Solve::ShaAndLen;
+use FC_Solve::GetOutput ();
 
 __PACKAGE__->mk_acc_ref([qw(
     digests_storage_fn
@@ -96,25 +97,21 @@ sub verify_solution_test
         confess "Invalid deal $deal";
     }
 
-    my $theme = $args->{theme} || ["-l", "gi"];
+    my $theme = ($args->{theme} ||= ["-l", "gi"]);
 
-    my $variant = $args->{variant}  || "freecell";
+    my $variant = ($args->{variant}  ||= "freecell");
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
     my $fc_solve_output;
 
-    my $cl_prefix =
-        ($msdeals
-                ? "pi-make-microsoft-freecell-board -t $deal | "
-                : "make_pysol_freecell_board.py -t $deal $variant | "
-        ) . $fc_solve_exe . " ";
+    my $board_gen_prefix = FC_Solve::GetOutput->board_gen_prefix($args);
 
     my $cl_suffix = "-g $variant " . shell_quote(@$theme) . " -p -t -sam";
 
+    my $cl_prefix = "$board_gen_prefix $fc_solve_exe";
     if (defined($board))
     {
-        $cl_prefix = $fc_solve_exe;
         $cl_suffix .= " " . shell_quote($board);
     }
 
