@@ -6,8 +6,9 @@ use warnings;
 use Test::More tests => 11;
 use Carp;
 use Data::Dumper;
-use String::ShellQuote;
 use File::Spec;
+
+use FC_Solve::GetOutput ();
 
 
 #
@@ -20,26 +21,8 @@ sub assert_directly_ascending_iters
     my $args = shift;
     my $msg = shift;
 
-    my $board = $args->{board};
-    my $deal = $args->{deal};
-
-    if (! defined($board))
-    {
-        if (!defined($deal))
-        {
-            confess "Neither Deal nor board are specified";
-        }
-        if ($deal !~ m{\A[1-9][0-9]*\z})
-        {
-            confess "Invalid deal $deal";
-        }
-    }
-
-    my $theme = $args->{theme} || ["-l", "cj"];
-
-    my $variant = $args->{variant}  || "freecell";
-    my $is_custom = ($variant eq "custom");
-    my $variant_s = $is_custom ? "" : "-g $variant";
+    $args->{theme} ||= ["-l", "cj"];
+    local $args->{theme} = [ @{$args->{theme}}, '-s', '-i'];
 
     my $scan_id;
     my $scan_id_max_iter = -1;
@@ -52,19 +35,8 @@ sub assert_directly_ascending_iters
 
     my $expected_iters_count = $args->{iters_count};
 
-    my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
-
-    my $fc_solve_cmd_line =
-    (
-        ($board ? "" : "make_pysol_freecell_board.py -t $deal $variant | ") .
-        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -s -i -p -t -sam " .
-        ($board ? shell_quote($board) : "")
-    );
-
-    open my $fc_solve_output,
-        "$fc_solve_cmd_line |"
-        or Carp::confess "Error! Could not open the fc-solve pipeline";
-
+    my $cmd_line_args = FC_Solve::GetOutput->open_cmd_line($args);
+    my $fc_solve_output = $cmd_line_args->{fh};
     my $verdict = 1;
     my $diag = "";
     {
