@@ -24,14 +24,24 @@ sub board_gen_prefix
     );
 }
 
-sub _calc_cmd_line
+sub fc_solve_params_suffix
 {
-    my $self = shift;
+    my ($self, $args) = @_;
 
-    my $args = shift;
+    my $board = $args->{board};
+
+    return "$args->{variant_s} " . shell_quote(@{$args->{theme}})
+        . " -p -t -sam " .  ($board ? shell_quote($board) : "");
+}
+
+sub compile_args
+{
+    my ($self, $args) = @_;
 
     my $board = $args->{board};
     my $deal = $args->{deal};
+
+    $args->{theme} ||= ["-l", "gi"];
 
     if (! defined($board))
     {
@@ -45,31 +55,37 @@ sub _calc_cmd_line
         }
     }
 
-    my $theme = ($args->{theme} ||= ["-l", "gi"]);
 
     my $variant = ($args->{variant}  ||= "freecell");
-    my $is_custom = ($variant eq "custom");
-    my $variant_s = $is_custom ? "" : "-g $variant";
+    $args->{variant_s} =
+    (
+        ($args->{is_custom} = ($variant eq "custom"))
+        ? "" : "-g $variant"
+    );
+
+    return;
+}
+
+sub _calc_cmd_line
+{
+    my $self = shift;
+
+    my $args = shift;
+
+    $self->compile_args($args);
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
     my $cmd_line =
     (
         $self->board_gen_prefix($args) .
-        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
-        ($board ? shell_quote($board) : "") .
-        " |"
+        "$fc_solve_exe " . $self->fc_solve_params_suffix($args) . " |"
     );
 
     return
     +{
-        board => $board,
-        deal => $deal,
+        %$args,
         cmd_line => $cmd_line,
-        is_custom => $is_custom,
-        theme => $theme,
-        variant_s => $variant_s,
-        variant => $variant,
     };
 }
 

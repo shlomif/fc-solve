@@ -86,34 +86,20 @@ sub verify_solution_test
 
     my $id = $args->{id};
 
-    my $board = $args->{board};
-    my $deal = $args->{deal};
-    my $msdeals = $args->{msdeals};
     my $output_file = $args->{output_file};
     my $complete_command = $args->{complete_command};
-
-    if ($deal !~ m{\A[1-9][0-9]*\z})
-    {
-        confess "Invalid deal $deal";
-    }
-
-    my $theme = ($args->{theme} ||= ["-l", "gi"]);
-
-    my $variant = ($args->{variant}  ||= "freecell");
 
     my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
     my $fc_solve_output;
 
+    FC_Solve::GetOutput->compile_args($args);
+
     my $board_gen_prefix = FC_Solve::GetOutput->board_gen_prefix($args);
 
-    my $cl_suffix = "-g $variant " . shell_quote(@$theme) . " -p -t -sam";
+    my $cl_suffix = FC_Solve::GetOutput->fc_solve_params_suffix($args);
 
     my $cl_prefix = "$board_gen_prefix $fc_solve_exe";
-    if (defined($board))
-    {
-        $cl_suffix .= " " . shell_quote($board);
-    }
 
     if ($complete_command)
     {
