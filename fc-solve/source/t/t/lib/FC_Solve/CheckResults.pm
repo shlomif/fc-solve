@@ -89,17 +89,7 @@ sub verify_solution_test
     my $output_file = $args->{output_file};
     my $complete_command = $args->{complete_command};
 
-    my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
-
     my $fc_solve_output;
-
-    FC_Solve::GetOutput->compile_args($args);
-
-    my $board_gen_prefix = FC_Solve::GetOutput->board_gen_prefix($args);
-
-    my $cl_suffix = FC_Solve::GetOutput->fc_solve_params_suffix($args);
-
-    my $cl_prefix = "$board_gen_prefix $fc_solve_exe";
 
     if ($complete_command)
     {
@@ -108,14 +98,14 @@ sub verify_solution_test
     }
     elsif (! $output_file)
     {
-        open $fc_solve_output, "$cl_prefix $cl_suffix |"
-            or Carp::confess "Error! Could not open the fc-solve pipeline";
+        $fc_solve_output = FC_Solve::GetOutput->open_cmd_line($args)->{fh};
     }
     else
     {
-        if (system("$cl_prefix -o " . shell_quote($output_file) . " $cl_suffix"))
+        local $args->{theme} = ['-o', $output_file, @{$args->{theme} || [qw(-l gi)]}];
+        if (system(FC_Solve::GetOutput->calc_cmd_line($args)->{cmd_line}))
         {
-            Carp::confess "Error could not execute the fc-solve pipeline.";
+            Carp::confess "Error: could not execute the fc-solve pipeline.";
         }
         open $fc_solve_output, "<", $output_file
             or Carp::confess("Could not open file for reading - $!");

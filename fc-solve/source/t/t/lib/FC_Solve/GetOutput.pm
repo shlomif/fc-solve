@@ -66,7 +66,9 @@ sub compile_args
     return;
 }
 
-sub _calc_cmd_line
+my $FC_SOLVE_EXE = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
+
+sub calc_cmd_line
 {
     my $self = shift;
 
@@ -74,12 +76,10 @@ sub _calc_cmd_line
 
     $self->compile_args($args);
 
-    my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
-
     my $cmd_line =
     (
         $self->board_gen_prefix($args) .
-        "$fc_solve_exe " . $self->fc_solve_params_suffix($args) . " |"
+        " $FC_SOLVE_EXE " . $self->fc_solve_params_suffix($args)
     );
 
     return
@@ -93,9 +93,9 @@ sub open_cmd_line
 {
     my ($self, $args) = @_;
 
-    my $cmd_line_args = $self->_calc_cmd_line($args);
+    my $cmd_line_args = $self->calc_cmd_line($args);
 
-    open my $fc_solve_output, "$cmd_line_args->{cmd_line}"
+    open my $fc_solve_output, "$cmd_line_args->{cmd_line} |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     $cmd_line_args->{fh} = $fc_solve_output;
