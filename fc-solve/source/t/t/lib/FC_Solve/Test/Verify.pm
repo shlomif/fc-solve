@@ -6,11 +6,8 @@ use warnings;
 use parent 'Test::Data::Split::Backend::Hash';
 
 use Test::More ();
-use Carp (qw/confess/);
 use Data::Dumper (qw/Dumper/);
-use String::ShellQuote (qw/shell_quote/);
-use File::Spec ();
-use File::Basename qw( dirname );
+use FC_Solve::GetOutput ();
 
 my %verify_tests =
 (
@@ -135,39 +132,10 @@ sub _run_test
 
     my ($id, $args, $msg) = @_;
 
-    my $board = $args->{board};
-    my $deal = $args->{deal};
-    my $msdeals = $args->{msdeals};
-
-    if (! defined($board))
-    {
-        if (!defined($deal))
-        {
-            confess "Neither Deal nor board are specified";
-        }
-        if ($deal !~ m{\A[1-9][0-9]*\z})
-        {
-            confess "Invalid deal $deal";
-        }
-    }
-
-    my $theme = $args->{theme} || ["-l", "gi"];
-
-    my $variant = $args->{variant}  || "freecell";
-    my $is_custom = ($variant eq "custom");
-    my $variant_s = $is_custom ? "" : "-g $variant";
-
-    my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
-
-    open my $fc_solve_output,
-        ($msdeals ?
-            "pi-make-microsoft-freecell-board -t $deal | " :
-            ($board ? "" : "make_pysol_freecell_board.py -t $deal $variant | ")
-        ) .
-        "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
-        ($board ? shell_quote($board) : "") .
-        " |"
-        or Carp::confess "Error! Could not open the fc-solve pipeline";
+    my $cmd_line_args = FC_Solve::GetOutput->open_cmd_line($args);
+    my $fc_solve_output = $cmd_line_args->{fh};
+    my $variant = $cmd_line_args->{variant};
+    my $is_custom = $cmd_line_args->{is_custom};
 
     require Games::Solitaire::Verify::Solution;
 
