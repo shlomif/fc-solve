@@ -56,7 +56,7 @@ sub assert_directly_ascending_iters
 
     my $fc_solve_cmd_line =
     (
-        ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ") .
+        ($board ? "" : "make_pysol_freecell_board.py -t $deal $variant | ") .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -s -i -p -t -sam " .
         ($board ? shell_quote($board) : "")
     );

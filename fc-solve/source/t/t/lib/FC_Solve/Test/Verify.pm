@@ -161,8 +161,8 @@ sub _run_test
 
     open my $fc_solve_output,
         ($msdeals ?
-            "pi-make-microsoft-freecell-board $deal | " :
-            ($board ? "" : "make_pysol_freecell_board.py $deal $variant | ")
+            "pi-make-microsoft-freecell-board -t $deal | " :
+            ($board ? "" : "make_pysol_freecell_board.py -t $deal $variant | ")
         ) .
         "$fc_solve_exe $variant_s " . shell_quote(@$theme) . " -p -t -sam " .
         ($board ? shell_quote($board) : "") .

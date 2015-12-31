@@ -106,8 +106,8 @@ sub verify_solution_test
 
     my $cl_prefix =
         ($msdeals
-                ? "pi-make-microsoft-freecell-board $deal | "
-                : "make_pysol_freecell_board.py $deal $variant | "
+                ? "pi-make-microsoft-freecell-board -t $deal | "
+                : "make_pysol_freecell_board.py -t $deal $variant | "
         ) . $fc_solve_exe . " ";
 
     my $cl_suffix = "-g $variant " . shell_quote(@$theme) . " -p -t -sam";

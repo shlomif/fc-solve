@@ -8,9 +8,14 @@
 static int main_tests(void)
 {
 [%- SET num_tests = 0 -%]
+[% IF implicit_t %]
+[% SET t_array = [1] %]
+[% ELSE %]
+[% SET t_array = [0,1] %]
+[% END %]
 [% FOREACH suit = suits %]
 [% FOREACH rank = ranks %]
-[% FOREACH t = [0,1] %]
+[% FOREACH t = t_array %]
 [%- SET t_key = t ? "t" : "non_t" -%]
 [%- SET card_string = ('"'
             _   rank.value.${t_key}

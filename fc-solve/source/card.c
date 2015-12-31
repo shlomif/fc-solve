@@ -43,11 +43,17 @@ DEFINE_fc_solve_empty_card();
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
+#ifdef FC_SOLVE__STRICTER_BOARD_PARSING
+#define FCS_MAP_CHAR(c) (c)
+#else
+#define FCS_MAP_CHAR(c) (toupper(c))
+#endif
+
 const int fc_solve_u2p_rank(const char * string)
 {
     while (1)
     {
-        switch (toupper(*string))
+        switch (FCS_MAP_CHAR(*string))
         {
             case '\0':
             case ' ':
@@ -61,10 +67,14 @@ const int fc_solve_u2p_rank(const char * string)
                 return 12;
             case 'K':
                 return 13;
+#ifndef FC_SOLVE__STRICTER_BOARD_PARSING
             case '1':
                 return (string[1] == '0')?10:1;
+#endif
             case 'T':
+#ifndef FC_SOLVE__STRICTER_BOARD_PARSING
             case '0':
+#endif
                 return 10;
             case '2':
                 return 2;
@@ -100,7 +110,7 @@ const int fc_solve_u2p_suit(const char * suit)
 {
     while (TRUE)
     {
-        switch(toupper(*suit))
+        switch(FCS_MAP_CHAR(*suit))
         {
             case 'H':
             case ' ':

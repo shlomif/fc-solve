@@ -42,9 +42,9 @@ sub trap_board
 
     open my $fc_solve_output,
         ($msdeals ?
-            "pi-make-microsoft-freecell-board $deal | " :
+            "pi-make-microsoft-freecell-board -t $deal | " :
             ($board ? "" :
-                ("make_pysol_freecell_board.py" .
+                ("make_pysol_freecell_board.py -t" .
                     ($pysolfc_deals ? " -F " : "") .
                     " $deal $variant | ")
             )

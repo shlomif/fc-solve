@@ -62,6 +62,10 @@ extern "C" {
 #define FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
 #endif
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define FC_SOLVE__STRICTER_BOARD_PARSING
+#endif
+
 #ifdef __cplusplus
 }
 #endif
