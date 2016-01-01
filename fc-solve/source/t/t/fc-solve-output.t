@@ -16,8 +16,7 @@ sub trap_board
 {
     my $args = shift;
 
-    my $fc_solve_output = FC_Solve::GetOutput->open_cmd_line($args)->{fh};
-
+    my $fc_solve_output = FC_Solve::GetOutput->new($args)->open_cmd_line->{fh};
     my @lines = <$fc_solve_output>;
 
     close($fc_solve_output);

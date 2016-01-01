@@ -20,11 +20,12 @@ sub verify_solution_test
     my $args = shift;
     my $msg = shift;
 
-    my $cmd_line_args = FC_Solve::GetOutput->open_cmd_line($args);
+    my $cmd_line = FC_Solve::GetOutput->new($args);
+    my $cmd_line_args = $cmd_line->open_cmd_line;
 
     my $fc_solve_output = $cmd_line_args->{fh};
-    my $variant = $cmd_line_args->{variant};
-    my $is_custom = $cmd_line_args->{is_custom};
+    my $variant = $cmd_line->variant;
+    my $is_custom = $cmd_line->is_custom;
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(

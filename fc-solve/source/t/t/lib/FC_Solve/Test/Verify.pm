@@ -132,10 +132,10 @@ sub _run_test
 
     my ($id, $args, $msg) = @_;
 
-    my $cmd_line_args = FC_Solve::GetOutput->open_cmd_line($args);
-    my $fc_solve_output = $cmd_line_args->{fh};
-    my $variant = $cmd_line_args->{variant};
-    my $is_custom = $cmd_line_args->{is_custom};
+    my $cmd_line = FC_Solve::GetOutput->new($args);
+    my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
+    my $variant = $cmd_line->variant;
+    my $is_custom = $cmd_line->is_custom;
 
     require Games::Solitaire::Verify::Solution;
 

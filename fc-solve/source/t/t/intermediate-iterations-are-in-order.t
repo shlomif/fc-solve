@@ -35,7 +35,7 @@ sub assert_directly_ascending_iters
 
     my $expected_iters_count = $args->{iters_count};
 
-    my $cmd_line_args = FC_Solve::GetOutput->open_cmd_line($args);
+    my $cmd_line_args = FC_Solve::GetOutput->new($args)->open_cmd_line;
     my $fc_solve_output = $cmd_line_args->{fh};
     my $verdict = 1;
     my $diag = "";

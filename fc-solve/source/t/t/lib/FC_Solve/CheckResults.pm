@@ -98,12 +98,12 @@ sub verify_solution_test
     }
     elsif (! $output_file)
     {
-        $fc_solve_output = FC_Solve::GetOutput->open_cmd_line($args)->{fh};
+        $fc_solve_output = FC_Solve::GetOutput->new($args)->open_cmd_line->{fh};
     }
     else
     {
         local $args->{theme} = ['-o', $output_file, @{$args->{theme} || [qw(-l gi)]}];
-        if (system(FC_Solve::GetOutput->calc_cmd_line($args)->{cmd_line}))
+        if (system(FC_Solve::GetOutput->new($args)->calc_cmd_line->{cmd_line}))
         {
             Carp::confess "Error: could not execute the fc-solve pipeline.";
         }

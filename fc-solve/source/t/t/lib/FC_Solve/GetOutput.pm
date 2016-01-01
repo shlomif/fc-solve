@@ -1,47 +1,32 @@
 package FC_Solve::GetOutput;
 
 use strict;
-use warnings 'FATAL';
+use warnings;
+
+use parent 'Games::Solitaire::Verify::Base';
 
 use Carp qw/confess/;
 use String::ShellQuote qw/shell_quote/;
 
-sub board_gen_prefix
+__PACKAGE__->mk_acc_ref([qw(
+        board
+        deal
+        is_custom
+        msdeals
+        pysolfc_deals
+        theme
+        variant
+        variant_s
+        )]);
+
+sub _init
 {
     my ($self, $args) = @_;
 
-    my $deal = $args->{deal};
+    my $board = $self->board($args->{board});
+    my $deal = $self->deal($args->{deal});
 
-    return
-    ($args->{board} ? "" :
-        (
-            ($args->{msdeals} ?
-                "pi-make-microsoft-freecell-board -t $deal | " :
-                ("make_pysol_freecell_board.py -t" .
-                    ($args->{pysolfc_deals} ? " -F " : "") . " $deal $args->{variant} | ")
-            )
-        )
-    );
-}
-
-sub fc_solve_params_suffix
-{
-    my ($self, $args) = @_;
-
-    my $board = $args->{board};
-
-    return "$args->{variant_s} " . shell_quote(@{$args->{theme}})
-        . " -p -t -sam " .  ($board ? shell_quote($board) : "");
-}
-
-sub compile_args
-{
-    my ($self, $args) = @_;
-
-    my $board = $args->{board};
-    my $deal = $args->{deal};
-
-    $args->{theme} ||= ["-l", "gi"];
+    $self->theme($args->{theme} || ["-l", "gi"]);
 
     if (! defined($board))
     {
@@ -56,52 +41,77 @@ sub compile_args
     }
 
 
-    my $variant = ($args->{variant}  ||= "freecell");
-    $args->{variant_s} =
-    (
-        ($args->{is_custom} = ($variant eq "custom"))
+    my $variant = $self->variant($args->{variant} || "freecell");
+    $self->variant_s(
+        $self->is_custom(scalar ($variant eq "custom"))
         ? "" : "-g $variant"
     );
 
+    $self->msdeals($args->{msdeals});
+    $self->pysolfc_deals($args->{pysolfc_deals});
+
     return;
+}
+
+sub board_gen_prefix
+{
+    my ($self) = @_;
+
+    my $deal = $self->deal;
+
+    return
+    ($self->board ? "" :
+        (
+            ($self->msdeals ?
+                "pi-make-microsoft-freecell-board -t $deal | " :
+                ("make_pysol_freecell_board.py -t" .
+                    ($self->pysolfc_deals ? " -F " : "") . " $deal @{[$self->variant]} | ")
+            )
+        )
+    );
+}
+
+sub fc_solve_params_suffix
+{
+    my ($self) = @_;
+
+    my $board = $self->board;
+
+    return $self->variant_s . ' ' . shell_quote(@{$self->theme})
+        . " -p -t -sam " . ($board ? shell_quote($board) : "");
 }
 
 my $FC_SOLVE_EXE = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
 
 sub calc_cmd_line
 {
-    my $self = shift;
-
-    my $args = shift;
-
-    $self->compile_args($args);
+    my ($self) = @_;
 
     my $cmd_line =
     (
-        $self->board_gen_prefix($args) .
-        " $FC_SOLVE_EXE " . $self->fc_solve_params_suffix($args)
+        $self->board_gen_prefix() .
+        " $FC_SOLVE_EXE " . $self->fc_solve_params_suffix()
     );
 
     return
     +{
-        %$args,
         cmd_line => $cmd_line,
     };
 }
 
 sub open_cmd_line
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
 
-    my $cmd_line_args = $self->calc_cmd_line($args);
+    my $cmd_line_args = $self->calc_cmd_line;
 
     open my $fc_solve_output, "$cmd_line_args->{cmd_line} |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
-
     $cmd_line_args->{fh} = $fc_solve_output;
 
     return $cmd_line_args;
 }
+
 1;
 
 =head1 COPYRIGHT & LICENSE
