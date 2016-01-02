@@ -6,8 +6,6 @@ use warnings;
 use parent 'Test::Data::Split::Backend::Hash';
 
 use Test::More ();
-use Data::Dumper (qw/Dumper/);
-use FC_Solve::GetOutput ();
 
 my %verify_tests =
 (
@@ -132,6 +130,7 @@ sub _run_test
 
     my ($id, $args, $msg) = @_;
 
+    require FC_Solve::GetOutput;
     my $cmd_line = FC_Solve::GetOutput->new($args);
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
     my $variant = $cmd_line->variant;
@@ -153,7 +152,8 @@ sub _run_test
 
     if (!$test_verdict)
     {
-        Test::More::diag("Verdict == " . Dumper($verdict));
+        require Data::Dumper;
+        Test::More::diag("Verdict == " . Data::Dumper::Dumper($verdict));
     }
 
     close($fc_solve_output);
