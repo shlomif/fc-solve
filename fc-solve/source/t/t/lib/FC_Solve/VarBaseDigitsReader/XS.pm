@@ -6,33 +6,35 @@ use warnings;
 use FC_Solve::InlineWrap (
     C => <<'EOF',
 #include "var_base_reader.h"
+#include "inline.h"
 
 SV* _proto_new(SV * data_proto) {
-        fcs_var_base_reader_t * s;
-        unsigned char * data;
-        STRLEN data_len;
-        SV*      obj_ref = newSViv(0);
-        SV*      obj = newSVrv(obj_ref, "FC_Solve::VarBaseDigitsReader::XS");
 
+        fcs_var_base_reader_t * s;
         New(42, s, 1, fcs_var_base_reader_t);
 
-        data = (unsigned char *)sv_2pvbyte(data_proto, &data_len);
+        STRLEN data_len;
+        unsigned char * const data = (unsigned char *)sv_2pvbyte(data_proto, &data_len);
         fc_solve_var_base_reader_init(s);
         fc_solve_var_base_reader_start(s, data, data_len);
 
+        SV * const obj_ref = newSViv(0);
+        SV * const obj = newSVrv(obj_ref, "FC_Solve::VarBaseDigitsReader::XS");
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         return obj_ref;
 }
 
-#define DEREF() ((fcs_var_base_reader_t *)SvIV(SvRV(obj)))
+static GCC_INLINE fcs_var_base_reader_t * _var_base_deref(SV * const obj) {
+    return ((fcs_var_base_reader_t *)SvIV(SvRV(obj)));
+}
 
 int _var_base_reader__read(SV* obj, int base) {
-    return fc_solve_var_base_reader_read(DEREF(), base);
+    return fc_solve_var_base_reader_read(_var_base_deref(obj), base);
 }
 
 void DESTROY(SV* obj) {
-    fcs_var_base_reader_t * s = DEREF();
+    fcs_var_base_reader_t * const s = _var_base_deref(obj);
     fc_solve_var_base_reader_release(s);
     Safefree(s);
 }

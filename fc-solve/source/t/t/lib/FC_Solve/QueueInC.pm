@@ -18,62 +18,52 @@ typedef struct
 
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue_id) {
         QueueInC * s;
-        SV*      obj_ref = newSViv(0);
-        SV*      obj = newSVrv(obj_ref, "FC_Solve::QueueInC");
 
         New(42, s, 1, QueueInC);
 
         fcs_offloading_queue__init(&(s->q), num_items_per_page, strdup(offload_dir_path), queue_id);
+        SV*      obj_ref = newSViv(0);
+        SV*      obj = newSVrv(obj_ref, "FC_Solve::QueueInC");
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         return obj_ref;
 }
 
-#define QUEUE_PTR() (&(((QueueInC*)SvIV(SvRV(obj)))->q))
+static GCC_INLINE QueueInC * deref(SV * const obj) {
+    return (QueueInC*)SvIV(SvRV(obj));
+}
+
+static GCC_INLINE fcs_offloading_queue_t * q(SV * const obj) {
+    return &(deref(obj)->q);
+}
 
 void insert(SV* obj, int item_i) {
-    fcs_offloading_queue_item_t item;
-
-    item = (fcs_offloading_queue_item_t)item_i;
-    fcs_offloading_queue__insert(
-        QUEUE_PTR(), &item);
-
-    return;
+    fcs_offloading_queue_item_t item = (fcs_offloading_queue_item_t)item_i;
+    fcs_offloading_queue__insert(q(obj), &item);
 }
 
 SV* extract(SV* obj) {
-    fcs_bool_t is_valid;
     fcs_offloading_queue_item_t item;
-    SV *ret;
 
-    is_valid = fcs_offloading_queue__extract(QUEUE_PTR(), &item);
-
-    if (is_valid)
-    {
-        ret = newSViv((int)item);
-    }
-    else
-    {
-        ret = &PL_sv_undef;
-    }
-
-    return ret;
+    return (fcs_offloading_queue__extract(q(obj), &item))
+    ? newSViv((int)item)
+    : &PL_sv_undef;
 }
 
 long get_num_inserted(SV* obj) {
-    return QUEUE_PTR()->num_inserted;
+    return q(obj)->num_inserted;
 }
 
 long get_num_items_in_queue(SV* obj) {
-    return QUEUE_PTR()->num_items_in_queue;
+    return q(obj)->num_items_in_queue;
 }
 
 long get_num_extracted(SV* obj) {
-    return QUEUE_PTR()->num_extracted;
+    return q(obj)->num_extracted;
 }
 
 void DESTROY(SV* obj) {
-  QueueInC * s = (QueueInC*)SvIV(SvRV(obj));
+  QueueInC * s = deref(obj);
   free(s->q.offload_dir_path);
   fcs_offloading_queue__destroy(&s->q);
   Safefree(s);
