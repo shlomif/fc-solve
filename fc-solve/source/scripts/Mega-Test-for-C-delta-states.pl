@@ -6,18 +6,58 @@ use warnings;
 use Config;
 use Cwd;
 
-use Inline (
-    C => 'DATA',
-    CLEAN_AFTER_BUILD => 0,
-    INC => "-I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}",
+use lib "$ENV{FCS_SRC_PATH}/t/t/lib";
+
+use FC_Solve::InlineWrap (
+    C => <<'EOF',
+#include "delta_states_iface.h"
+#include "debondt_delta_states_iface.h"
+#include <string.h>
+
+static enum fcs_dbm_variant_type_t variant_from_string(const char * variant_s)
+{
+    return (
+        (!strcmp(variant_s, "bakers_dozen"))
+        ? FCS_DBM_VARIANT_BAKERS_DOZEN
+        : FCS_DBM_VARIANT_2FC_FREECELL
+    );
+}
+
+SV* enc_and_dec(const char * variant_s, char * init_state_s, char * derived_state_s) {
+    SV * ret;
+    char * s;
+    s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
+
+    ret = newSVpv(s, 0);
+    free(s);
+    return ret;
+}
+
+SV* debondt_enc_and_dec(const char * variant_s, char * init_state_s, char * derived_state_s) {
+    SV * ret;
+    char * s;
+    s = fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
+
+    ret = newSVpv(s, 0);
+    free(s);
+    return ret;
+}
+
+SV* horne_prune(const char * variant_s, char * init_state_s) {
+    SV * ret;
+    char * s;
+    int count_moves;
+    count_moves = fc_solve_user_INTERNAL_perform_horne_prune(variant_from_string(variant_s), init_state_s, &s);
+
+    ret = newSVpv(s, 0);
+    free(s);
+    return ret;
+}
+EOF
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_delta_states_test -lfcs_debondt_delta_states_test -lfcs_dbm_calc_derived_test -lgmp",
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
-    # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
 );
 
 use IO::Handle;
-use lib "$ENV{FCS_SRC_PATH}/t/t/lib";
 use FC_Solve::DeltaStater;
 use FC_Solve::DeltaStater::DeBondt;
 
@@ -280,49 +320,3 @@ else
     $pm->wait_all_children;
 }
 
-__DATA__
-__C__
-
-#include "delta_states_iface.h"
-#include "debondt_delta_states_iface.h"
-#include <string.h>
-
-static enum fcs_dbm_variant_type_t variant_from_string(const char * variant_s)
-{
-    return (
-        (!strcmp(variant_s, "bakers_dozen"))
-        ? FCS_DBM_VARIANT_BAKERS_DOZEN
-        : FCS_DBM_VARIANT_2FC_FREECELL
-    );
-}
-
-SV* enc_and_dec(const char * variant_s, char * init_state_s, char * derived_state_s) {
-    SV * ret;
-    char * s;
-    s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
-
-    ret = newSVpv(s, 0);
-    free(s);
-    return ret;
-}
-
-SV* debondt_enc_and_dec(const char * variant_s, char * init_state_s, char * derived_state_s) {
-    SV * ret;
-    char * s;
-    s = fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
-
-    ret = newSVpv(s, 0);
-    free(s);
-    return ret;
-}
-
-SV* horne_prune(const char * variant_s, char * init_state_s) {
-    SV * ret;
-    char * s;
-    int count_moves;
-    count_moves = fc_solve_user_INTERNAL_perform_horne_prune(variant_from_string(variant_s), init_state_s, &s);
-
-    ret = newSVpv(s, 0);
-    free(s);
-    return ret;
-}
