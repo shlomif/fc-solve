@@ -94,7 +94,7 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
 }
 
 static GCC_INLINE DerivedState * deref(SV * const obj) {
-    return ((DerivedState*)SvIV(SvRV(obj)));
+    return ((DerivedState *)SvIV(SvRV(obj)));
 }
 
 char* get_state_string(SV* obj) {
