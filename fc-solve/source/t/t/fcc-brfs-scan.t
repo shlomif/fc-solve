@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use lib './t/lib';
 
 use Test::More;
 
@@ -16,16 +17,10 @@ BEGIN
         plan skip_all => "Test object shared object not found - incompatible.";
     }
 }
-use lib './t/lib';
-
-use Config;
-use Cwd;
 
 package FccStartPoint;
 
-use Config;
-
-use Inline (
+use FC_Solve::InlineWrap (
     C => <<"EOF",
 #include "fcc_brfs_test.h"
 
@@ -98,20 +93,12 @@ void DESTROY(SV* obj) {
   Safefree(s);
 }
 EOF
-    CLEAN_AFTER_BUILD => 0,
-    INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
-    # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
-    CCFLAGS => "$Config{ccflags} -std=gnu99",
 );
 
 package FccIsNew;
 
-use Config;
-
-use Inline (
+use FC_Solve::InlineWrap (
     C => <<"EOF",
 #include "fcc_brfs_test.h"
 
@@ -170,13 +157,7 @@ int is_fcc_new(char * init_state_s, char * start_state_s, AV * min_states_av, AV
 }
 
 EOF
-    CLEAN_AFTER_BUILD => 0,
-    INC => "-I" . $ENV{FCS_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
-    # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
-    # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
-    # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
-    CCFLAGS => "$Config{ccflags} -std=gnu99",
 );
 
 sub is_fcc_new_named_args
@@ -190,7 +171,7 @@ package FccStartPointsList;
 
 use parent 'FC_Solve::SingleMoveSearch';
 
-use List::MoreUtils qw(any uniq);
+use List::MoreUtils qw(uniq);
 
 use Test::More;
 
@@ -249,7 +230,7 @@ sub get_num_new_positions
 package main;
 
 my $WS = ' ';
-use List::MoreUtils qw(any uniq none);
+use List::MoreUtils qw(any none);
 
 {
     # MS Freecell Board No. 24.
