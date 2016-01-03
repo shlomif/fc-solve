@@ -28,6 +28,11 @@ sub import
 
     eval "{ package $pkg; Inline->bind(\@inline_params); }";
 
+    if ($@)
+    {
+        die $@;
+    }
+
     return;
 }
 
