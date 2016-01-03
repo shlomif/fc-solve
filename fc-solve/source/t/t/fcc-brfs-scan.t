@@ -23,6 +23,7 @@ package FccStartPoint;
 use FC_Solve::InlineWrap (
     C => <<"EOF",
 #include "fcc_brfs_test.h"
+#include "inline.h"
 
 typedef struct
 {
@@ -72,22 +73,26 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
     return newRV((SV *)results);
 }
 
+static GCC_INLINE FccStartPoint * deref(SV * const obj) {
+    return ((FccStartPoint *)SvIV(SvRV(obj)));
+}
+
 char* get_state_string(SV* obj) {
-    return ((FccStartPoint*)SvIV(SvRV(obj)))->state_as_string;
+    return deref(obj)->state_as_string;
 }
 
 SV* get_moves(SV* obj) {
     SV * ret = newSV(0);
-    SvSetSV(ret, (((FccStartPoint*)SvIV(SvRV(obj)))->moves));
+    SvSetSV(ret, (deref(obj)->moves));
     return ret;
 }
 
 long get_num_new_positions(SV* obj) {
-    return ((FccStartPoint*)SvIV(SvRV(obj)))->num_new_positions;
+    return deref(obj)->num_new_positions;
 }
 
 void DESTROY(SV* obj) {
-  FccStartPoint* s = (FccStartPoint*)SvIV(SvRV(obj));
+  FccStartPoint* s = deref(obj);
   Safefree(s->state_as_string);
   sv_free(s->moves);
   Safefree(s);
