@@ -3,9 +3,7 @@ package FC_Solve::VarBaseDigitsReader::XS;
 use strict;
 use warnings;
 
-use Config;
-
-use Inline (
+use FC_Solve::InlineWrap (
     C => <<'EOF',
 #include "var_base_reader.h"
 
@@ -40,12 +38,7 @@ void DESTROY(SV* obj) {
 }
 
 EOF
-    NAME => "FC_Solve::VarBaseDigitsReader::XS",
-    CLEAN_AFTER_BUILD => 0,
-    INC => "-I" . $ENV{FCS_PATH} . " -I" . $ENV{FCS_SRC_PATH},
     LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
-    OPTIMIZE => '-g',
-    CCFLAGS => "$Config{ccflags} -std=gnu99"
 );
 
 sub new
@@ -61,6 +54,7 @@ sub read
 
     return _var_base_reader__read($self, $base);
 }
+
 1;
 
 =head1 COPYRIGHT AND LICENSE
