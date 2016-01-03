@@ -32,26 +32,28 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_
         return obj_ref;
 }
 
-#define QUEUE_PTR() (&(((QueueInC*)SvIV(SvRV(obj)))->q))
+static GCC_INLINE QueueInC * deref(SV * const obj) {
+    return (QueueInC*)SvIV(SvRV(obj));
+}
+
+static GCC_INLINE fcs_offloading_queue_t * q(SV * const obj) {
+    return &(deref(obj)->q);
+}
 
 void insert(SV* obj, int depth, int item_i) {
-    fcs_offloading_queue_item_t item;
+    fcs_offloading_queue_item_t item = (fcs_offloading_queue_item_t)item_i;
 
-    item = (fcs_offloading_queue_item_t)item_i;
-    fcs_depth_multi_queue__insert( QUEUE_PTR(), depth, &item );
+    fcs_depth_multi_queue__insert( q(obj), depth, &item );
 
     return;
 }
 
 AV* extract_proto(SV* obj) {
-    fcs_bool_t is_valid;
     fcs_offloading_queue_item_t item;
     int ret_depth;
-    AV *ret = newAV();
+    AV * const ret = newAV();
 
-    is_valid = fcs_depth_multi_queue__extract(QUEUE_PTR(), &ret_depth, &item);
-
-    if (is_valid)
+    if (fcs_depth_multi_queue__extract(q(obj), &ret_depth, &item))
     {
         av_push(ret, newSViv(ret_depth));
         av_push(ret, newSViv((int)item));
@@ -61,19 +63,19 @@ AV* extract_proto(SV* obj) {
 }
 
 long get_num_inserted(SV* obj) {
-    return QUEUE_PTR()->num_inserted;
+    return q(obj)->num_inserted;
 }
 
 long get_num_items_in_queue(SV* obj) {
-    return QUEUE_PTR()->num_items_in_queue;
+    return q(obj)->num_items_in_queue;
 }
 
 long get_num_extracted(SV* obj) {
-    return QUEUE_PTR()->num_extracted;
+    return q(obj)->num_extracted;
 }
 
 void DESTROY(SV* obj) {
-  QueueInC * s = (QueueInC*)SvIV(SvRV(obj));
+  QueueInC * s = deref(obj);
   free(s->q.offload_dir_path);
   fcs_depth_multi_queue__destroy(&(s->q));
   Safefree(s);
