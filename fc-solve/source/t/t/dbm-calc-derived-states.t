@@ -114,9 +114,9 @@ SV * get_which_irreversible_moves_bitmask(SV* obj) {
 }
 
 void DESTROY(SV* obj) {
-  DerivedState* soldier = (DerivedState*)SvIV(SvRV(obj));
-  Safefree(soldier->state_string);
-  Safefree(soldier);
+  DerivedState* const s = (DerivedState*)SvIV(SvRV(obj));
+  Safefree(s->state_string);
+  Safefree(s);
 }
 EOF
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_dbm_calc_derived_test",
