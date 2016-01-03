@@ -26,6 +26,7 @@ package DerivedState;
 use FC_Solve::InlineWrap (
     C => <<"EOF",
 #include "dbm_calc_derived_iface.h"
+#include "inline.h"
 
 typedef struct
 {
@@ -92,29 +93,33 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
     return newRV((SV *)results);
 }
 
+static GCC_INLINE DerivedState * deref(SV * const obj) {
+    return ((DerivedState*)SvIV(SvRV(obj)));
+}
+
 char* get_state_string(SV* obj) {
-    return ((DerivedState*)SvIV(SvRV(obj)))->state_string;
+    return deref(obj)->state_string;
 }
 
 int get_move(SV* obj) {
-    return (((DerivedState*)SvIV(SvRV(obj)))->move + (int)0);
+    return (deref(obj)->move + (int)0);
 }
 
 int get_core_irreversible_moves_count(SV* obj) {
-  return ((DerivedState*)SvIV(SvRV(obj)))->core_irreversible_moves_count;
+  return deref(obj)->core_irreversible_moves_count;
 }
 
 int get_num_non_reversible_moves_including_prune(SV* obj) {
-  return ((DerivedState*)SvIV(SvRV(obj)))->num_non_reversible_moves_including_prune;
+  return deref(obj)->num_non_reversible_moves_including_prune;
 }
 
 SV * get_which_irreversible_moves_bitmask(SV* obj) {
-  DerivedState* s = ((DerivedState*)SvIV(SvRV(obj)));
+  DerivedState* s = deref(obj);
   return newSVpvn(s->which_irreversible_moves_bitmask.s, sizeof(s->which_irreversible_moves_bitmask));
 }
 
 void DESTROY(SV* obj) {
-  DerivedState* const s = (DerivedState*)SvIV(SvRV(obj));
+  DerivedState* const s = deref(obj);
   Safefree(s->state_string);
   Safefree(s);
 }
