@@ -23,31 +23,23 @@ SV* _proto_new() {
         return obj_ref;
 }
 
-#define DEREF() ((fcs_var_base_writer_t*)SvIV(SvRV(obj)))
+static GCC_INLINE fcs_var_base_writer_t * deref(SV * const obj) {
+    return (fcs_var_base_writer_t *)SvIV(SvRV(obj));
+}
 
 void _proto_write(SV* obj, int base, int item) {
-    fcs_var_base_writer_t * w;
-    w = DEREF();
-
-    fc_solve_var_base_writer_write(w, base, item);
+    fc_solve_var_base_writer_write(deref(obj), base, item);
 }
 
 SV * _proto_get_data(SV* obj) {
-    SV * ret;
     unsigned char exported[800];
-    size_t count;
+    size_t count = fc_solve_var_base_writer_get_data(deref(obj), exported);
 
-    fcs_var_base_writer_t * w = DEREF();
-
-    count = fc_solve_var_base_writer_get_data(w, exported);
-
-    ret = newSVpvn(exported, count);
-
-    return ret;
+    return newSVpvn(exported, count);
 }
 
 void DESTROY(SV* obj) {
-  fcs_var_base_writer_t * s = DEREF();
+  fcs_var_base_writer_t * s = deref(obj);
   fc_solve_var_base_writer_release(s);
   Safefree(s);
 }
