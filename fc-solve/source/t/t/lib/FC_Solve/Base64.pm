@@ -3,7 +3,7 @@ package FC_Solve::Base64;
 use strict;
 use warnings;
 
-use Inline (
+use FC_Solve::InlineWrap (
     C => <<'EOF',
 #include "fcs_base64.h"
 
@@ -38,11 +38,7 @@ void _fcs_base64_build_decoding_table() {
 }
 
 EOF
-    NAME => "FC_Solve::Base64",
-    CLEAN_AFTER_BUILD => 0,
-    INC => "-I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}",
     LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
-    OPTIMIZE => '-g -std=gnu99',
 );
 
 
