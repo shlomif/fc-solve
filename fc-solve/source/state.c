@@ -253,7 +253,6 @@ void fc_solve_state_as_string(
     )
 {
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
-    int a;
     fcs_bool_t rank_is_null;
     fcs_cards_column_t col;
     int col_len;
@@ -310,18 +309,19 @@ void fc_solve_state_as_string(
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     if(!parseable_output)
     {
-        for(a=0;a<((FREECELLS_NUM__VAL/4)+((FREECELLS_NUM__VAL%4==0)?0:1));a++)
+        int i;
+        for ( i = 0 ; i < ((FREECELLS_NUM__VAL/4)+((FREECELLS_NUM__VAL%4==0)?0:1)) ; i++)
         {
             char dashes_s[128];
             char * dashes_ptr = dashes_s;
             char str2[128];
             char * str2_ptr = str2;
-            for (int b = 0 ; b < min(FREECELLS_NUM__VAL-a*4, 4) ; b++)
+            for (int b = 0 ; b < min(FREECELLS_NUM__VAL-i*4, 4) ; b++)
             {
                 fc_solve_card_perl2user(
                     fcs_freecell_card(
                         *state,
-                        freecell_locs[a*4+b]
+                        freecell_locs[i*4+b]
                     ),
                     freecell
                     PASS_T(display_10_as_t)
@@ -330,16 +330,16 @@ void fc_solve_state_as_string(
                 strcpy(dashes_ptr, "--- ");
                 dashes_ptr = strchr(dashes_ptr, '\0');
             }
-            if (a < DECKS_NUM__VAL)
+            if (i < DECKS_NUM__VAL)
             {
                 fc_solve_append_string_sprintf(
                     app_str,
                     "%-16s        H-%1s C-%1s D-%1s S-%1s\n",
                     str2,
-                    decks[a*4],
-                    decks[a*4+1],
-                    decks[a*4+2],
-                    decks[a*4+3]
+                    decks[i*4],
+                    decks[i*4+1],
+                    decks[i*4+2],
+                    decks[i*4+3]
                     );
             }
             else
@@ -354,16 +354,16 @@ void fc_solve_state_as_string(
                 "%s\n", dashes_ptr
                 );
         }
-        for(;a<DECKS_NUM__VAL;a++)
+        for ( ; i < DECKS_NUM__VAL ; i++)
         {
             fc_solve_append_string_sprintf(
                 app_str,
                 "%-16s        H-%1s C-%1s D-%1s S-%1s\n",
                 "",
-                decks[a*4],
-                decks[a*4+1],
-                decks[a*4+2],
-                decks[a*4+3]
+                decks[i*4],
+                decks[i*4+1],
+                decks[i*4+2],
+                decks[i*4+3]
                 );
         }
         fc_solve_append_string_sprintf(
