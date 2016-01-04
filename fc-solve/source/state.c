@@ -252,7 +252,8 @@ void fc_solve_state_as_string(
     PASS_T(const fcs_bool_t display_10_as_t)
     )
 {
-    char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
+    typedef char one_card_buffer[4];
+    char decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
     fcs_bool_t rank_is_null;
     fcs_cards_column_t col;
     int col_len;
@@ -318,6 +319,7 @@ void fc_solve_state_as_string(
             char * str2_ptr = str2;
             for (int b = 0 ; b < min(FREECELLS_NUM__VAL-i*4, 4) ; b++)
             {
+                one_card_buffer freecell;
                 fc_solve_card_perl2user(
                     fcs_freecell_card(
                         *state,
@@ -464,6 +466,7 @@ void fc_solve_state_as_string(
         }
         for (int i = 0 ; i <= max_freecell_idx ; i++)
         {
+            one_card_buffer freecell;
             fc_solve_card_perl2user(
                 fcs_freecell_card(
                     *state,
