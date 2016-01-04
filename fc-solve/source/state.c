@@ -255,7 +255,6 @@ void fc_solve_state_as_string(
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
     int a;
     fcs_bool_t rank_is_null;
-    int card_idx;
     fcs_cards_column_t col;
     int col_len;
 
@@ -394,7 +393,7 @@ void fc_solve_state_as_string(
             }
         }
 
-        for (card_idx = 0 ; card_idx < max_num_cards ; card_idx++)
+        for (int card_idx = 0 ; card_idx < max_num_cards ; card_idx++)
         {
             for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
             {
@@ -491,7 +490,7 @@ void fc_solve_state_as_string(
             col_len = fcs_col_len(col);
             fc_solve_append_string_sprintf(app_str, "%s", ":");
 
-            for (card_idx = 0 ; card_idx < col_len ; card_idx++)
+            for (int card_idx = 0 ; card_idx < col_len ; card_idx++)
             {
                 fc_solve_card_perl2user(
                     fcs_col_get_card(col, card_idx),
