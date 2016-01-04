@@ -350,7 +350,7 @@ void fc_solve_state_as_string(
             }
             fc_solve_append_string_sprintf(
                 app_str,
-                "%s\n", dashes_ptr
+                "%s\n", dashes_s
                 );
         }
         for ( ; i < DECKS_NUM__VAL ; i++)
