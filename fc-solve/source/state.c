@@ -256,8 +256,6 @@ void fc_solve_state_as_string(
     char decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
     fcs_bool_t rank_is_null;
     fcs_cards_column_t col;
-    int col_len;
-
 
 #define fc_solve_append_string_sprintf(unused, ...) output_s += sprintf(output_s, __VA_ARGS__)
 #define app_str 1
@@ -388,7 +386,7 @@ void fc_solve_state_as_string(
         for (int s=0 ; s < STACKS_NUM__VAL ; s++)
         {
             col = fcs_state_get_col(*state, stack_locs[s]);
-            col_len = fcs_col_len(col);
+            const int col_len = fcs_col_len(col);
             if (col_len > max_num_cards)
             {
                 max_num_cards = col_len;
@@ -400,7 +398,7 @@ void fc_solve_state_as_string(
             for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
             {
                 col = fcs_state_get_col(*state, stack_locs[s]);
-                col_len = fcs_col_len(col);
+                const int col_len = fcs_col_len(col);
                 if (card_idx >= col_len)
                 {
                     fc_solve_append_string_sprintf(
@@ -490,7 +488,7 @@ void fc_solve_state_as_string(
         for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
         {
             col = fcs_state_get_col(*state, stack_locs[s]);
-            col_len = fcs_col_len(col);
+            const int col_len = fcs_col_len(col);
             fc_solve_append_string_sprintf(app_str, "%s", ":");
 
             for (int card_idx = 0 ; card_idx < col_len ; card_idx++)
