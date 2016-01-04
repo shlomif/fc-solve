@@ -255,7 +255,7 @@ void fc_solve_state_as_string(
     char freecell[10], decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
     int a;
     fcs_bool_t rank_is_null;
-    int s, card_idx;
+    int card_idx;
     fcs_cards_column_t col;
     int col_len;
 
@@ -268,40 +268,40 @@ void fc_solve_state_as_string(
 
     if (canonized_order_output)
     {
-        for (a = 0 ; a < STACKS_NUM__VAL ; a++)
+        for (int i = 0 ; i < STACKS_NUM__VAL ; i++)
         {
-            stack_locs[a] = a;
+            stack_locs[i] = i;
         }
-        for (a = 0 ; a < FREECELLS_NUM__VAL ; a++)
+        for (int i = 0 ; i < FREECELLS_NUM__VAL ; i++)
         {
-            freecell_locs[a] = a;
+            freecell_locs[i] = i;
         }
     }
     else
     {
-        for (a = 0 ; a < STACKS_NUM__VAL ; a++)
+        for (int i = 0 ; i < STACKS_NUM__VAL ; i++)
         {
-            stack_locs[(int)((FCS_S_STACK_LOCS())[a])] = a;
+            stack_locs[(int)((FCS_S_STACK_LOCS())[i])] = i;
         }
-        for (a = 0 ; a < FREECELLS_NUM__VAL ; a++)
+        for (int i = 0 ; i < FREECELLS_NUM__VAL ; i++)
         {
-            freecell_locs[(int)((FCS_S_FC_LOCS())[a])] = a;
+            freecell_locs[(int)((FCS_S_FC_LOCS())[i])] = i;
         }
     }
 
-    for (a = 0 ; a < (DECKS_NUM__VAL<<2) ; a++)
+    for (int i = 0 ; i < (DECKS_NUM__VAL<<2) ; i++)
     {
         fc_solve_p2u_rank(
-            fcs_foundation_value(*state, a),
-            decks[a],
+            fcs_foundation_value(*state, i),
+            decks[i],
             &rank_is_null
             PASS_T(display_10_as_t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
             ,0
 #endif
             );
-        if (decks[a][0] == ' ')
-            decks[a][0] = '0';
+        if (decks[i][0] == ' ')
+            decks[i][0] = '0';
     }
 
 #if 0
@@ -373,7 +373,7 @@ void fc_solve_state_as_string(
             "\n\n"
             );
 
-        for (s = 0 ; s < STACKS_NUM__VAL ; s++)
+        for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
         {
             fc_solve_append_string_sprintf(app_str, "%s", " -- ");
         }
@@ -384,7 +384,7 @@ void fc_solve_state_as_string(
             );
 
         int max_num_cards = 0;
-        for(s=0;s<STACKS_NUM__VAL;s++)
+        for (int s=0 ; s < STACKS_NUM__VAL ; s++)
         {
             col = fcs_state_get_col(*state, stack_locs[s]);
             col_len = fcs_col_len(col);
@@ -396,7 +396,7 @@ void fc_solve_state_as_string(
 
         for (card_idx = 0 ; card_idx < max_num_cards ; card_idx++)
         {
-            for(s = 0; s<STACKS_NUM__VAL; s++)
+            for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
             {
                 col = fcs_state_get_col(*state, stack_locs[s]);
                 col_len = fcs_col_len(col);
@@ -428,15 +428,15 @@ void fc_solve_state_as_string(
 #endif
     {
         fc_solve_append_string_sprintf(app_str, "%s", "Foundations:");
-        for(a=0;a<DECKS_NUM__VAL;a++)
+        for (int i = 0 ; i < (DECKS_NUM__VAL<<2) ; i+= 4)
         {
             fc_solve_append_string_sprintf(
                 app_str,
                 " H-%s C-%s D-%s S-%s",
-                decks[a*4],
-                decks[a*4+1],
-                decks[a*4+2],
-                decks[a*4+3]
+                decks[i],
+                decks[i+1],
+                decks[i+2],
+                decks[i+3]
                 );
         }
 #ifndef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
@@ -447,11 +447,11 @@ void fc_solve_state_as_string(
 
 #ifdef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
         int max_freecell_idx = -1;
-        for (a = FREECELLS_NUM__VAL-1;a>=0;a--)
+        for (int i = FREECELLS_NUM__VAL-1;i>=0;i--)
         {
-            if (fcs_card_is_valid(fcs_freecell_card(*state, freecell_locs[a])))
+            if (fcs_card_is_valid(fcs_freecell_card(*state, freecell_locs[i])))
             {
-                max_freecell_idx = a;
+                max_freecell_idx = i;
                 break;
             }
         }
@@ -463,12 +463,12 @@ void fc_solve_state_as_string(
         {
             fc_solve_append_string_sprintf(app_str, " ");
         }
-        for (a = 0 ; a <= max_freecell_idx ; a++)
+        for (int i = 0 ; i <= max_freecell_idx ; i++)
         {
             fc_solve_card_perl2user(
                 fcs_freecell_card(
                     *state,
-                    freecell_locs[a]
+                    freecell_locs[i]
                 ),
                 freecell
                 PASS_T(display_10_as_t)
@@ -478,14 +478,14 @@ void fc_solve_state_as_string(
                 "%3s",
                 freecell
             );
-            if (a < max_freecell_idx)
+            if (i < max_freecell_idx)
             {
                 fc_solve_append_string_sprintf(app_str, "%s", " ");
             }
         }
         fc_solve_append_string_sprintf(app_str, "%s", "\n");
 
-        for(s=0;s<STACKS_NUM__VAL;s++)
+        for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
         {
             col = fcs_state_get_col(*state, stack_locs[s]);
             col_len = fcs_col_len(col);
