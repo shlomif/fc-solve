@@ -254,7 +254,6 @@ void fc_solve_state_as_string(
 {
     typedef char one_card_buffer[4];
     char decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
-    fcs_bool_t rank_is_null;
     fcs_cards_column_t col;
 
 #define fc_solve_append_string_sprintf(unused, ...) output_s += sprintf(output_s, __VA_ARGS__)
@@ -288,10 +287,11 @@ void fc_solve_state_as_string(
 
     for (int i = 0 ; i < (DECKS_NUM__VAL<<2) ; i++)
     {
+        fcs_bool_t unused__rank_is_null;
         fc_solve_p2u_rank(
             fcs_foundation_value(*state, i),
             decks[i],
-            &rank_is_null
+            &unused__rank_is_null
             PASS_T(display_10_as_t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
             ,0
