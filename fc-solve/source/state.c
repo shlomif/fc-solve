@@ -253,8 +253,7 @@ void fc_solve_state_as_string(
     )
 {
     typedef char one_card_buffer[4];
-    char decks[MAX_NUM_DECKS*4][10], stack_card_str[10];
-    fcs_cards_column_t col;
+    char decks[MAX_NUM_DECKS*4][10];
 
 #define fc_solve_append_string_sprintf(unused, ...) output_s += sprintf(output_s, __VA_ARGS__)
 #define app_str 1
@@ -385,7 +384,7 @@ void fc_solve_state_as_string(
         int max_num_cards = 0;
         for (int s=0 ; s < STACKS_NUM__VAL ; s++)
         {
-            col = fcs_state_get_col(*state, stack_locs[s]);
+            fcs_const_cards_column_t col = fcs_state_get_col(*state, stack_locs[s]);
             const int col_len = fcs_col_len(col);
             if (col_len > max_num_cards)
             {
@@ -397,7 +396,7 @@ void fc_solve_state_as_string(
         {
             for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
             {
-                col = fcs_state_get_col(*state, stack_locs[s]);
+                fcs_const_cards_column_t col = fcs_state_get_col(*state, stack_locs[s]);
                 const int col_len = fcs_col_len(col);
                 if (card_idx >= col_len)
                 {
@@ -408,6 +407,7 @@ void fc_solve_state_as_string(
                 }
                 else
                 {
+                    one_card_buffer stack_card_str;
                     fc_solve_card_perl2user(
                         fcs_col_get_card(col, card_idx),
                         stack_card_str
@@ -487,12 +487,13 @@ void fc_solve_state_as_string(
 
         for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
         {
-            col = fcs_state_get_col(*state, stack_locs[s]);
+            fcs_const_cards_column_t col = fcs_state_get_col(*state, stack_locs[s]);
             const int col_len = fcs_col_len(col);
             fc_solve_append_string_sprintf(app_str, "%s", ":");
 
             for (int card_idx = 0 ; card_idx < col_len ; card_idx++)
             {
+                one_card_buffer stack_card_str;
                 fc_solve_card_perl2user(
                     fcs_col_get_card(col, card_idx),
                     stack_card_str
