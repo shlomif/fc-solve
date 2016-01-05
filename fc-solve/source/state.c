@@ -257,6 +257,7 @@ void fc_solve_state_as_string(
 
 #define fc_solve_append_string_sprintf(unused, ...) output_s += sprintf(output_s, __VA_ARGS__)
 #define app_str 1
+#define append_char(c) *(output_s++) = (c)
 
     int stack_locs[MAX_NUM_STACKS];
     int freecell_locs[MAX_NUM_FREECELLS];
@@ -375,11 +376,7 @@ void fc_solve_state_as_string(
         {
             fc_solve_append_string_sprintf(app_str, "%s", " -- ");
         }
-        fc_solve_append_string_sprintf(
-            app_str,
-            "%s",
-            "\n"
-            );
+        append_char('\n');
 
         int max_num_cards = 0;
         for (int s=0 ; s < STACKS_NUM__VAL ; s++)
@@ -439,7 +436,7 @@ void fc_solve_state_as_string(
                 );
         }
 #ifndef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
-        fc_solve_append_string_sprintf(app_str, " ");
+        append_char(' ');
 #endif
 
         fc_solve_append_string_sprintf(app_str, "%s", "\nFreecells:");
@@ -460,7 +457,7 @@ void fc_solve_state_as_string(
 
         if (max_freecell_idx >= 0)
         {
-            fc_solve_append_string_sprintf(app_str, " ");
+            append_char(' ');
         }
         for (int i = 0 ; i <= max_freecell_idx ; i++)
         {
@@ -480,16 +477,16 @@ void fc_solve_state_as_string(
             );
             if (i < max_freecell_idx)
             {
-                fc_solve_append_string_sprintf(app_str, "%s", " ");
+                append_char(' ');
             }
         }
-        fc_solve_append_string_sprintf(app_str, "%s", "\n");
+        append_char('\n');
 
         for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
         {
             fcs_const_cards_column_t col = fcs_state_get_col(*state, stack_locs[s]);
             const int col_len = fcs_col_len(col);
-            fc_solve_append_string_sprintf(app_str, "%s", ":");
+            append_char(':');
 
             for (int card_idx = 0 ; card_idx < col_len ; card_idx++)
             {
@@ -505,13 +502,15 @@ void fc_solve_state_as_string(
 #ifndef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
             if (! col_len)
             {
-                fc_solve_append_string_sprintf(app_str, " ");
+                append_char(' ');
             }
 #endif
-            fc_solve_append_string_sprintf(app_str, "%s", "\n");
+            append_char('\n');
         }
     }
 #undef app_str
+
+    *(output_s) = '\0';
 
 #if 0
     return fc_solve_append_string_finalize(&app_str_struct);
