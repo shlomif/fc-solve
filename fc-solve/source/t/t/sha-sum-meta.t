@@ -55,11 +55,11 @@ use FC_Solve::ShaAndLen;
     close($in);
 
     # TEST
-    is ($sha->len(), 32280, "Length for add_file() is 32280");
+    is ($sha->len(), 31811, "Length for add_file() is 32280");
 
     # TEST
     is ($sha->hexdigest(),
-        "17abf343aac1dec42b924b968588f2fa4e07632aab6932f5d084a6c754d61956",
+        "e838102eafd8984dad80528e5bad1abe9f1cc669628495fce2c58e61cf2c3558",
         "Hex digest is OK for add_file()"
     );
 }
