@@ -258,11 +258,11 @@ and compatible compilers. This
 includes
 the libfreecell-solver library, most of the user-facing executables
 using it, and some other related code. Aside from that, there's quite a lot
-of support code for testing (a.k.a: “quality-assurance”), automation, building
-, results analysis, and other tasks, written in
+of support code for testing (a.k.a: “quality-assurance”), automation, building,
+results analysis, and other tasks, written in
 <a href="https://en.wikipedia.org/wiki/Perl">Perl 5</a>,
 <a href="https://en.wikipedia.org/wiki/CMake">CMake</a>,
-<a href="https://en.wikipedia.org/wiki/Python_%28programming_language%29">Python 2.x</a>,
+<a href="https://en.wikipedia.org/wiki/Python_%28programming_language%29">Python 3.x</a>,
 <a href="https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29">the GNU Bash
 shell</a>,
 <a href="https://en.wikipedia.org/wiki/Ruby_%28programming_language%29">Ruby</a>,
