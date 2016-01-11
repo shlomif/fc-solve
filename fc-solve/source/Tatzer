@@ -298,12 +298,13 @@ my @cmd= ("cmake",
     "-DCMAKE_INSTALL_PREFIX=$prefix",
     "-DDATADIR=$prefix/share",
     "-DBUILD_STATIC_LIBRARY=",
-    ($without_flipping ? ("-DFCS_WITHOUT_CARD_FLIPPING=1") : ()),
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
 
-    ("-DFCS_WITH_TEST_SUITE=" . ($test_suite ? '1' : '')),
+    ('-DFCS_WITH_TEST_SUITE=' . ($test_suite ? '1' : '')),
+    ('-DFCS_WITH_CONTEXT_VARIABLE=' . ($with_context_var ? '1' : '')),
+    ('-DFCS_WITHOUT_CARD_FLIPPING=' . ($without_flipping ? '1' : '')),
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
     ($state_storage_libavl2_tree
         ? "-DFCS_STATE_STORAGE_LIBAVL2_TREE_TYPE=$state_storage_libavl2_tree"
@@ -318,10 +319,6 @@ my @cmd= ("cmake",
     ((($state_storage_libavl2_tree || $stack_storage_libavl2_tree) && exists($ENV{"LIBAVL2_SOURCE_DIR"}))
         ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
         : ()
-    ),
-    ($with_context_var
-        ? "-DFCS_WITH_CONTEXT_VARIABLE=1"
-        : "-DFCS_WITH_CONTEXT_VARIABLE="
     ),
     ($build_docs ? () : ("-DFCS_BUILD_DOCS=")),
     ($with_dbm_solver
