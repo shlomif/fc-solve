@@ -39,6 +39,16 @@ my %bool_opts_with_false_defaults__values =
     map { $_ => 0 } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS
 );
 
+my %TRUE_BOOL_OPTS =
+(
+    'build-docs' => 'FCS_BUILD_DOCS',
+    'test-suite' => 'FCS_WITH_TEST_SUITE',
+    'with-ctx-var' => 'FCS_WITH_CONTEXT_VARIABLE',
+    'without-flip' => 'FCS_WITHOUT_CARD_FLIPPING',
+);
+my @TRUE_BOOL_KEYS = keys %TRUE_BOOL_OPTS;
+my %true_bool_opts__values = map { $_ => 1 } @TRUE_BOOL_KEYS;
+
 my %INT_OPTS =
 (
     'max-bench-threads-num' => 'MAX_NUM_BENCHMARK_THREADS',
@@ -63,13 +73,9 @@ my $state_storage;
 my $rcs_cache_storage = "KAZ_TREE";
 my $prefix = "/usr";
 my $states_type;
-my $test_suite = 1;
 my $cpu_arch;
 my $state_storage_libavl2_tree;
 my $stack_storage_libavl2_tree;
-my $without_flipping = 1;
-my $with_context_var = 1;
-my $build_docs = 1;
 my $with_dbm_solver;
 
 my $google_stack_storage;
@@ -210,7 +216,6 @@ GetOptions(
     'libavl2-p=s' => \$state_storage_libavl2_tree,
     'libavl2-c=s' => \$stack_storage_libavl2_tree,
     'prefix=s' => \$prefix,
-    'test-suite!' => \$test_suite,
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
@@ -240,11 +245,9 @@ GetOptions(
         return;
     },
     'arch=s' => \$cpu_arch,
-    'without-flip!' => \$without_flipping,
-    'with-ctx-var!' => \$with_context_var,
     'dbm=s' => \$with_dbm_solver,
-    'build-docs!' => \$build_docs,
     (map {; "$_!" => \($bool_opts_with_false_defaults__values{$_}) } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
+    (map {; "$_!" => \($true_bool_opts__values{$_}) } @TRUE_BOOL_KEYS),
     (map {; "$_=i" => \($int_opts__values{$_}) } @INT_OPS__KEYS),
 ) or
     die "Wrong options";
@@ -302,10 +305,6 @@ my @cmd= ("cmake",
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
 
-    ('-DFCS_WITH_TEST_SUITE=' . ($test_suite ? '1' : '')),
-    ('-DFCS_WITH_CONTEXT_VARIABLE=' . ($with_context_var ? '1' : '')),
-    ('-DFCS_WITHOUT_CARD_FLIPPING=' . ($without_flipping ? '1' : '')),
-    ('-DFCS_BUILD_DOCS=' . ($build_docs ? '1' : '')),
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
     ($state_storage_libavl2_tree
         ? "-DFCS_STATE_STORAGE_LIBAVL2_TREE_TYPE=$state_storage_libavl2_tree"
@@ -326,6 +325,7 @@ my @cmd= ("cmake",
         : ()
     ),
     (map { $bool_opts_with_false_defaults__values{$_} ? ("-D" . $BOOL_OPTS_WITH_FALSE_DEFAULTS{$_} . "=1") : () } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
+    (map { '-D' . $TRUE_BOOL_OPTS{$_} . '=' . ($true_bool_opts__values{$_} ? '1': '') } @TRUE_BOOL_KEYS),
     (map { defined($int_opts__values{$_}) ? ("-D" . $INT_OPTS{$_} . "=" . $int_opts__values{$_}) : () } @INT_OPS__KEYS),
 );
 
