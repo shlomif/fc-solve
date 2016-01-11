@@ -305,6 +305,7 @@ my @cmd= ("cmake",
     ('-DFCS_WITH_TEST_SUITE=' . ($test_suite ? '1' : '')),
     ('-DFCS_WITH_CONTEXT_VARIABLE=' . ($with_context_var ? '1' : '')),
     ('-DFCS_WITHOUT_CARD_FLIPPING=' . ($without_flipping ? '1' : '')),
+    ('-DFCS_BUILD_DOCS=' . ($build_docs ? '1' : '')),
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
     ($state_storage_libavl2_tree
         ? "-DFCS_STATE_STORAGE_LIBAVL2_TREE_TYPE=$state_storage_libavl2_tree"
@@ -320,7 +321,6 @@ my @cmd= ("cmake",
         ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
         : ()
     ),
-    ($build_docs ? () : ("-DFCS_BUILD_DOCS=")),
     ($with_dbm_solver
         ? ("-DFCS_ENABLE_DBM_SOLVER=1", "-DFCS_DBM_BACKEND=$with_dbm_solver",)
         : ()
