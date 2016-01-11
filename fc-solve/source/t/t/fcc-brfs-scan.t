@@ -234,7 +234,6 @@ sub get_num_new_positions
 
 package main;
 
-my $WS = ' ';
 use List::MoreUtils qw(any none);
 
 {
@@ -242,14 +241,14 @@ use List::MoreUtils qw(any none);
     my $obj = FccStartPointsList->new(
         {
             start => <<"EOF",
-4C 2C 9C 8C QS 4S 2H$WS
-5H QH 3C AC 3H 4H QD$WS
-QC 9S 6H 9H 3S KS 3D$WS
-5D 2S JC 5C JH 6D AS$WS
-2D KD TH TC TD 8D$WS
-7H JS KH TS KC 7C$WS
-AH 5S 6S AD 8H JD$WS
-7S 6C 7D 4D 8S 9D$WS
+4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
 EOF
         }
     );
@@ -264,15 +263,15 @@ EOF
     my $obj = FccStartPointsList->new(
         {
             start => <<"EOF",
-Foundations: H-Q C-8 D-5 S-Q$WS
+Foundations: H-Q C-8 D-5 S-Q
 Freecells:  KD  7D
 : KH QC JD TC 9D
 : KC
-:$WS
+:
 : KS QD JC TD 9C 8D
-:$WS
-:$WS
-:$WS
+:
+:
+:
 : 6D
 EOF
         }
@@ -293,14 +292,14 @@ EOF
     };
 
     my $canonized_state = $canonize_state_sub->(<<"EOF");
-Foundations: H-Q C-8 D-5 S-Q$WS
+Foundations: H-Q C-8 D-5 S-Q
 Freecells:  KD  7D
 : KH QC JD TC 9D
 : KC
-:$WS
+:
 : KS QD JC TD 9C
-:$WS
-:$WS
+:
+:
 : 8D
 : 6D
 EOF
@@ -338,16 +337,16 @@ EOF
     my $obj = FccStartPointsList->new(
         {
             start => <<"EOF",
-Foundations: H-K C-K D-J S-Q$WS
-Freecells:  KD$WS$WS$WS$WS
-:$WS
-:$WS
-:$WS
+Foundations: H-K C-K D-J S-Q
+Freecells:  KD
+:
+:
+:
 : KS QD
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
 EOF
         }
     );
@@ -376,27 +375,27 @@ EOF
 
 {
     my $init_state_s = <<"EOF";
-4C 2C 9C 8C QS 4S 2H$WS
-5H QH 3C AC 3H 4H QD$WS
-QC 9S 6H 9H 3S KS 3D$WS
-5D 2S JC 5C JH 6D AS$WS
-2D KD TH TC TD 8D$WS
-7H JS KH TS KC 7C$WS
-AH 5S 6S AD 8H JD$WS
-7S 6C 7D 4D 8S 9D$WS
+4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
 EOF
 
     my $start_state_s = <<"EOF";
-Foundations: H-K C-K D-J S-Q$WS
-Freecells:  KD$WS$WS$WS$WS
-:$WS
-:$WS
-:$WS
+Foundations: H-K C-K D-J S-Q
+Freecells:  KD
+:
+:
+:
 : KS QD
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
 EOF
 
     # Empty.
@@ -434,16 +433,16 @@ EOF
                 start_state => $start_state_s,
                 min_states => [],
                 states_in_cache => [<<"EOF"],
-Foundations: H-K C-K D-J S-Q$WS
-Freecells:  KD$WS$WS$WS$WS
-:$WS
-:$WS
+Foundations: H-K C-K D-J S-Q
+Freecells:  KD
+:
+:
 : QD
 : KS
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
 EOF
             }
         )),
@@ -457,37 +456,37 @@ EOF
 if (0)
 {
     my $init_state_s = <<"EOF";
-4C 2C 9C 8C QS 4S 2H$WS
-5H QH 3C AC 3H 4H QD$WS
-QC 9S 6H 9H 3S KS 3D$WS
-5D 2S JC 5C JH 6D AS$WS
-2D KD TH TC TD 8D$WS
-7H JS KH TS KC 7C$WS
-AH 5S 6S AD 8H JD$WS
-7S 6C 7D 4D 8S 9D$WS
+4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
 EOF
 
     my $start_state_s = <<"EOF";
-Foundations: H-Q C-8 D-5 S-Q$WS
+Foundations: H-Q C-8 D-5 S-Q
 Freecells:  KD  7D
 : KH QC JD TC 9D
 : KC
-:$WS
+:
 : KS QD JC TD 9C 8D
-:$WS
-:$WS
-:$WS
+:
+:
+:
 : 6D
 EOF
 
     # The minimal state in the FCC as determined by gdb.
     my $min_state_s = <<"EOF";
-Foundations: H-Q C-8 D-5 S-Q$WS
+Foundations: H-Q C-8 D-5 S-Q
 Freecells:  6D  KH
-:$WS
-:$WS
-:$WS
-:$WS
+:
+:
+:
+:
 : 7D
 : KC
 : KD QC JD TC 9D
