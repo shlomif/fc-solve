@@ -64,7 +64,8 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/(build|BUILD|B)/"
     "/Presets/testing-presets"
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/\\\\.hg"
-    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(fc-solve\\\\.ico|dondorf-king\\\\.bmp|state\\\\.h|threaded_main\\\\.c|patmain\\\\.c|state\\\\.c|card\\\\.c|range_solvers_gen_ms_boards\\\\.h|internal_move_struct\\\\.h|run-tests\\\\.pl|portable_time\\\\.h|fcs_move\\\\.h|game_type_params\\\\.h|read_layout\\\\.h|print_layout\\\\.h|portable_int32\\\\.h|unused\\\\.h|inline\\\\.h|bool\\\\.h)$"
+    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolva/ga"
+    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(COPYING|Manifest|count\\\\.h|check_layout|convert_[a-z]+|fc-solve\\\\.ico|dondorf-king\\\\.bmp|state\\\\.h|threaded_main\\\\.c|patmain\\\\.c|state\\\\.c|card\\\\.c|range_solvers_gen_ms_boards\\\\.h|internal_move_struct\\\\.h|run-tests\\\\.pl|portable_int64\\\\.h|portable_time\\\\.h|fcs_move\\\\.h|game_type_params\\\\.h|read_layout\\\\.h|print_layout\\\\.h|portable_int32\\\\.h|unused\\\\.h|inline\\\\.h|bool\\\\.h)$"
 )
 
 IF(WIN32 AND NOT UNIX)
