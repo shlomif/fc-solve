@@ -146,7 +146,7 @@ sub _from_string
 
     my $is_flipped = 0;
 
-    if ($str =~ s{\A<(.*)>\z}{$1}ms)
+    if ($str =~ s{\A<((?:.|\n)*)>\z}{$1})
     {
         $is_flipped = 1;
     }

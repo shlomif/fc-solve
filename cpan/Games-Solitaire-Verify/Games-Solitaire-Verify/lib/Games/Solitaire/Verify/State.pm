@@ -146,7 +146,7 @@ sub _from_string
 
     my $rank_re = '[0A1-9TJQK]';
 
-    if ($str !~ m{\A(Foundations:[^\n]*)\n}g)
+    if ($str !~ s{\A(Foundations:[^\n]*)\n}{})
     {
         Games::Solitaire::Verify::Exception::Parse::State::Foundations->throw(
             error => "Wrong Foundations",
@@ -163,7 +163,7 @@ sub _from_string
         )
     );
 
-    if ($str !~ m{\G(Freecells:[^\n]*)\n}g)
+    if ($str !~ s{\A(Freecells:[^\n]*)\n}{})
     {
         Games::Solitaire::Verify::Exception::Parse::State::Freecells->throw(
             error => "Wrong Freecell String",
@@ -173,7 +173,7 @@ sub _from_string
 
     foreach my $col_idx (0 .. ($self->num_columns()-1))
     {
-        if ($str !~ m{\G(:[^\n]*)\n}msg)
+        if ($str !~ s{\A(:[^\n]*)\n}{})
         {
             Games::Solitaire::Verify::Exception::Parse::State::Column->throw(
                 error => "Cannot parse column",

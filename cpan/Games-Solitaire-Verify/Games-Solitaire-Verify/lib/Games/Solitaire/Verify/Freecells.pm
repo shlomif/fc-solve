@@ -39,7 +39,7 @@ sub _input_from_string
     my $self = shift;
     my $str = shift;
 
-    if ($str !~ m{\AFreecells:}g)
+    if ($str !~ s{\AFreecells:}{})
     {
         Games::Solitaire::Verify::Exception::Parse::State::Freecells->throw(
             error => "Wrong Freecell String",
@@ -49,11 +49,11 @@ sub _input_from_string
     POS:
     for my $pos (0 .. ($self->count()-1))
     {
-        if ($str =~ m{\G\z}cg)
+        if (! length $str)
         {
             last POS;
         }
-        elsif ($str =~ m{\G  (..)}g)
+        if ($str =~ s{\A  (..)}{})
         {
             my $card_s = $1;
             $self->assign($pos, $self->_parse_freecell_card($card_s))

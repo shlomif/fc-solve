@@ -63,4 +63,5 @@ $text =~ s#^(\s*)chomp\((\$[A-Za-z0-9]+)\);\s*$#$1$2 =~ s{\\n\\z}{};#gms;
 $text =~ s#\\A#^#g;
 $text =~ s#\\z#\$#g;
 
+$text =~ s#(first|firstidx)(\s*)\{([^\}]*)\}(.*?);#$1(${2}sub {$3},$4);#gms;
 print $text;
