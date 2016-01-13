@@ -8,7 +8,7 @@ my @file_handles;
 sub enqueue_file
 {
     my ($fh) = @_;
-    push @file_handles, $fh;
+    push @file_handles, (bless $fh, 'MainOpen');
 }
 
 sub my_open
@@ -21,6 +21,13 @@ sub readline
     my ($fh) = @_;
 
     return shift(@$fh);
+}
+
+sub getline
+{
+    my ($fh) = @_;
+
+    return $fh->readline();
 }
 
 1;

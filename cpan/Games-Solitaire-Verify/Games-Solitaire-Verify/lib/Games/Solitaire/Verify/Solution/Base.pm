@@ -33,7 +33,7 @@ sub _l
     $s->{_ln}++;
 
     my $ret;
-    if (defined ( $ret = scalar (readline($s->{_i})) ))
+    if (defined ( $ret = scalar ($s->{_i}->getline()) ))
     {
         $ret =~ s# +(\n?)\z#$1#;
     }
