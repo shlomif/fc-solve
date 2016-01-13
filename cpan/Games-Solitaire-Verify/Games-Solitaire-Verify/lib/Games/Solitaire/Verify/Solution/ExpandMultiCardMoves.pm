@@ -107,7 +107,7 @@ sub _out
 {
     my ($self, $text) = @_;
 
-    print { $self->_output_fh() } $text;
+    $self->_output_fh()->print($text);
 
     return;
 }
