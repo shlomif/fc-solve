@@ -20,11 +20,23 @@ sub $acc
 EOF
 }
 
+sub _gen_use_function_call
+{
+    my ($mod, $f) = @_;
+
+    if ($mod eq 'List::Util' and $f eq 'first')
+    {
+        return "sub $f(&@) { my \$cb = shift; return &${mod}::$f(\$cb , \@_); }";
+    }
+
+    return "sub $f { return ${mod}::$f(\@_) }";
+}
+
 sub _gen_use_call
 {
     my ($mod, $words_str) = @_;
 
-    return "use $mod;\n\n" . join("\n\n", map { my $f = $_; "sub $f { return ${mod}::$f(\@_) }" } $words_str =~ /(\w+)/g);
+    return "use $mod;\n\n" . join("\n\n", map { my $f = $_; _gen_use_function_call($mod, $f); } $words_str =~ /(\w+)/g);
 }
 
 my $text = do
