@@ -41,7 +41,7 @@ sub _input_from_string
 
     my $rank_re = '[0A1-9TJQK]';
 
-    if($str !~ m{\AFoundations: H-($rank_re) C-($rank_re) D-($rank_re) S-($rank_re) *\z}ms)
+    if($str !~ m{\AFoundations: H-($rank_re) C-($rank_re) D-($rank_re) S-($rank_re) *\z})
     {
         die "str=<$str>";
         Games::Solitaire::Verify::Exception::Parse::State::Foundations->throw(

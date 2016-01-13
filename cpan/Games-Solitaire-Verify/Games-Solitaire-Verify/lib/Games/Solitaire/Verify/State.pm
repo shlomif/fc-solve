@@ -146,7 +146,7 @@ sub _from_string
 
     my $rank_re = '[0A1-9TJQK]';
 
-    if ($str !~ m{\A(Foundations:[^\n]*)\n}gms)
+    if ($str !~ m{\A(Foundations:[^\n]*)\n}g)
     {
         Games::Solitaire::Verify::Exception::Parse::State::Foundations->throw(
             error => "Wrong Foundations",
@@ -163,7 +163,7 @@ sub _from_string
         )
     );
 
-    if ($str !~ m{\G(Freecells:[^\n]*)\n}gms)
+    if ($str !~ m{\G(Freecells:[^\n]*)\n}g)
     {
         Games::Solitaire::Verify::Exception::Parse::State::Freecells->throw(
             error => "Wrong Freecell String",

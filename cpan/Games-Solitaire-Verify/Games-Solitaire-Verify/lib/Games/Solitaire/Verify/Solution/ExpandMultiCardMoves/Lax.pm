@@ -47,7 +47,7 @@ sub _assign_read_new_state
         {
             input_fh => $input_fh,
             variant => "freecell",
-            output_fh => \*STDOUT,
+            output_fh => *main::STDOUT,
         },
     );
 

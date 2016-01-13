@@ -148,7 +148,7 @@ sub run
             input_fh => $fh,
             variant => "custom",
             variant_params => $variant_params,
-            output_fh => \*STDOUT,
+            output_fh => *main::STDOUT,
         },
     );
 
