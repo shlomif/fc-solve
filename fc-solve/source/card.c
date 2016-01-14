@@ -143,23 +143,6 @@ static GCC_INLINE const int fcs_u2p_flipped_status(const char * str)
 }
 #endif
 
-
-
-/*
- * Those strings contain the string representations of the different cards.
- * If CARD_DEBUG_PRES is defined then an asterisk is printed as an empty card.
- *
- * Notice that there are two of them: one prints 10 and one prints T for the
- * 10 card.
- *
- * */
-#ifdef CARD_DEBUG_PRES
-#define CARD_ZERO() "*"
-#else
-#define CARD_ZERO() " "
-#endif
-
-
 /*
  * Converts a suit to its user representation.
  *
