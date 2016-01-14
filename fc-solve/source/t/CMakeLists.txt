@@ -24,7 +24,7 @@ MACRO(MY_ADD_EXE EXE_FILE C_FILE)
             "${CMAKE_CURRENT_BINARY_DIR}/../fcs_back_compat.h"
     )
 
-ENDMACRO(MY_ADD_EXE EXE_FILE C_FILE)
+ENDMACRO ()
 
 MACRO(GEN_INDIVIDUAL_TESTS target_name perl_script valg_out module)
     ADD_CUSTOM_COMMAND(
@@ -40,7 +40,7 @@ MACRO(GEN_INDIVIDUAL_TESTS target_name perl_script valg_out module)
         "${target_name}" ALL
         DEPENDS "${valg_out}"
     )
-ENDMACRO()
+ENDMACRO ()
 
 IF (FCS_WITH_TEST_SUITE)
 
@@ -50,7 +50,7 @@ IF (FCS_WITH_TEST_SUITE)
 "You must install libtap ( http://www.shlomifish.org/open-source/projects/libtap/ ) and its development package or headers to run the test suite.
 If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUITE= flag."
     )
-    ENDIF (NOT LIBTAP_LIB)
+    ENDIF ()
     MY_FIND_GMP ("to run the test suite." "FCS_WITH_TEST_SUITE")
 
     INCLUDE_DIRECTORIES (BEFORE "${CMAKE_BINARY_DIR}")
@@ -114,7 +114,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
                 GENERATED "1"
         )
 
-    ELSE ("${DEBONDT_DELTA_STATES}")
+    ELSE ()
 
         SET (EXE_FILE "delta-states-test.t.exe")
 
@@ -132,7 +132,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
                     "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
                 GENERATED "1"
         )
-    ENDIF ("${DEBONDT_DELTA_STATES}")
+    ENDIF ()
 
     SET (EXE_FILE "dbm-kaztree-compare-records-test.t.exe")
 
@@ -162,5 +162,5 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
 
         "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Verify.pm"
     )
-ENDIF(FCS_WITH_TEST_SUITE)
+ENDIF ()
 
