@@ -79,7 +79,7 @@ interactive installer will start.
 
 <p>
 Type <tt>apt-get install freecell-solver</tt> as root. The version may be
-somewhat old, but hopefully mostly bug-free. Alse see the
+somewhat old, but hopefully mostly bug-free. Also see the
 <a href="http://packages.debian.org/source/squeeze/freecell-solver">Debian Package page</a>.
 </p>
 
