@@ -791,10 +791,7 @@ static void recycle_instance(
 
         flare = &(instance_item->flares[flare_idx]);
 
-        if (flare->fc_pro_moves.moves)
-        {
-            fc_solve_moves_processed_free(&(flare->fc_pro_moves));
-        }
+        fc_solve_moves_processed_free(&(flare->fc_pro_moves));
 
         if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
@@ -1405,10 +1402,7 @@ static void user_free_resources(
 
         flare->name[0] = '\0';
 
-        if (flare->fc_pro_moves.moves)
-        {
-            fc_solve_moves_processed_free(&(flare->fc_pro_moves));
-        }
+        fc_solve_moves_processed_free(&(flare->fc_pro_moves));
 
         if (flare->moves_seq.moves)
         {

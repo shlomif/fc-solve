@@ -77,7 +77,7 @@ static GCC_INLINE fcs_bool_t fc_solve_moves_processed_get_next_move(fcs_moves_pr
     return FALSE;
 }
 
-static GCC_INLINE void fc_solve_moves_processed_free(fcs_moves_processed_t * moves)
+static GCC_INLINE void fc_solve_moves_processed_free(fcs_moves_processed_t * const moves)
 {
     free(moves->moves);
     moves->moves = NULL;
