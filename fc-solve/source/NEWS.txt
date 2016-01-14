@@ -1,8 +1,19 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2009-09-05
+:Date: 2016-01-14
 :Revision: $Id$
+
+Version 4.0.1: (14-Jan-2016)
+----------------------------
+
+1. Fix the tests for the new Games-Solitaire-Verify (0.1601).
+
+2. Apply a patch from http://www.mageia.org/[Mageia] to prevent underlinking
+during build. Thanks!
+
+3. Disable linking to the gperftools’ tcmalloc library if the test suite
+is enabled due to https://github.com/gperftools/gperftools/issues/758 .
 
 Version 4.0.0: (27-Sep-2015)
 ----------------------------
