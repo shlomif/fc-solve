@@ -28,6 +28,13 @@ my $RANK_J = 11;
 my $RANK_Q = 12;
 my $RANK_K = 13;
 
+sub _remove_trailing_ws
+{
+    my $s = shift;
+    $s =~ s#[ \t]+$##gms;
+    return $s;
+}
+
 {
 my @suits = (qw(H C D S));
 my %suit_to_idx = do {
@@ -219,8 +226,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode())->to_string()),
-        <<"EOF",
+        _remove_trailing_ws(scalar($delta->decode($delta->encode())->to_string())),
+        _remove_trailing_ws(<<"EOF"),
 Foundations: H-0 C-2 D-A S-0$WS
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
@@ -237,8 +244,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
-        <<"EOF",
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
+        _remove_trailing_ws(<<"EOF"),
 Foundations: H-0 C-2 D-A S-0$WS
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
@@ -298,8 +305,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
-        <<"EOF",
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
+        _remove_trailing_ws(<<"EOF"),
 Foundations: H-0 C-0 D-0 S-4$WS
 Freecells:  KS  TD
 :$WS
@@ -333,9 +340,9 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
         <<"EOF",
-Foundations: H-0 C-0 D-0 S-2$WS
+Foundations: H-0 C-0 D-0 S-2
 Freecells:  TD  4C
 : 5C 4D
 : 5H QH 3C AC 3H 4H 3S 2H
@@ -619,9 +626,9 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
         <<"EOF",
-Foundations: H-0 C-2 D-A S-0$WS
+Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
 : 6D 3C 3H KD 8C 5C
 : TC 9C 9H 8S
@@ -666,8 +673,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
-        $init_state,
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
+        _remove_trailing_ws($init_state),
         'DeBondt encode_composite()+decode() test for leading Aces',
     );
 }
@@ -729,8 +736,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
-        $derived_str,
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
+        _remove_trailing_ws($derived_str),
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 1.",
     );
 }
@@ -793,8 +800,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
-        $derived_str,
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
+        _remove_trailing_ws($derived_str),
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 2.",
     );
 }
@@ -857,8 +864,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
-        $derived_str,
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
+        _remove_trailing_ws($derived_str),
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 3.",
     );
 }
@@ -921,8 +928,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
-        $derived_str,
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
+        _remove_trailing_ws($derived_str),
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 4.",
     );
 }
@@ -970,8 +977,8 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
-        $derived_str,
+        _remove_trailing_ws(scalar($delta->decode($delta->encode_composite())->to_string())),
+        _remove_trailing_ws($derived_str),
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 5.",
     );
 }
