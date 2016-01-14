@@ -50,7 +50,7 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t stat
     );
 }
 
-struct fc_solve_display_information_context_struct
+typedef struct
 {
     fcs_bool_t debug_iter_state_output;
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
@@ -64,9 +64,7 @@ struct fc_solve_display_information_context_struct
     fcs_bool_t debug_iter_output_on;
     fcs_bool_t display_moves;
     fcs_bool_t display_states;
-};
-
-typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
+} fc_solve_display_information_context_t;
 
 static void my_iter_handler(
     void * user_instance,

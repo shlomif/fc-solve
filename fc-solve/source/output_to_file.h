@@ -41,7 +41,7 @@ extern "C" {
 #include "fcs_enums.h"
 #include "fcs_user.h"
 
-struct fc_solve_display_information_context_struct
+typedef struct
 {
     fcs_bool_t debug_iter_state_output;
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
@@ -58,9 +58,7 @@ struct fc_solve_display_information_context_struct
     fcs_bool_t show_exceeded_limits;
     int standard_notation;
     const char * output_filename;
-};
-
-typedef struct fc_solve_display_information_context_struct fc_solve_display_information_context_t;
+} fc_solve_display_information_context_t;
 
 static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT =
 {
