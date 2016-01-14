@@ -22,6 +22,10 @@ sub GetOptionsFromArray
         {
             return 1;
         }
+        if (! length($arg))
+        {
+            return 1;
+        }
         shift(@$cmd_line_args);
 
         # Double dash

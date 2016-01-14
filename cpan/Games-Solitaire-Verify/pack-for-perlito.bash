@@ -54,4 +54,6 @@ perl -lp -i -0777 -MSQ -MIO::All -E 's#^sub mk_acc_ref\n(.*?)\n}\n#io()->file("m
 
 # perl -MCarp::Always perlito5.pl -Cjs -I src5/lib/ $(inc "Games-Solitaire-Verify") $(inc "POSIX--replacement") $(inc "Exception-Class--replacement") $(inc "Getopt-Long--replacement") $(inc "List-Util--replacement") $(inc "Class-XSAccessor--replacement")  "$gsv"/Games-Solitaire-Verify/bin/expand-solitaire-multi-card-moves
 perl -MCarp::Always "$gsv/process-expand-code-for-perlito.pl" < "$gsv"/Games-Solitaire-Verify/bin/expand-solitaire-multi-card-moves > "$BASE_LIB"/expand-solitaire-multi-card-moves
+cp -f "$gsv"/Games-Solitaire-Verify/bin/verify-solitaire-solution "$BASE_LIB"/verify-solitaire-solution
 perl -MCarp::Always perlito5.pl --bootstrapping -Cjs -I src5/lib/ -I "$BASE_LIB" "$BASE_LIB"/expand-solitaire-multi-card-moves > foo.js
+perl -MCarp::Always perlito5.pl --bootstrapping -Cjs -I src5/lib/ -I "$BASE_LIB" "$BASE_LIB"/verify-solitaire-solution > bar.js

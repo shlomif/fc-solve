@@ -135,7 +135,7 @@ sub run
 
     if ($filename eq "-")
     {
-        $fh = *STDIN;
+        $fh = *main::STDIN;
     }
     else
     {

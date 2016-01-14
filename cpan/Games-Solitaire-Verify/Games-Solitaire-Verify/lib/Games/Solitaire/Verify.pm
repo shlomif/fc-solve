@@ -19,7 +19,7 @@ our $VERSION = '0.1601';
 
     my $verifier = Games::Solitaire::Verify::Solution->new();
 
-    $verifier->verify_solution({ fh => \*STDIN });
+    $verifier->verify_solution({ fh => *main::STDIN });
 
 =head1 DESCRIPTION
 
