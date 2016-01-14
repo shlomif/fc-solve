@@ -207,12 +207,22 @@ DLLEXPORT extern int freecell_solver_user_set_num_decks(
 DLLEXPORT extern int freecell_solver_user_get_max_num_decks(void);
 
 
+DLLEXPORT void freecell_solver_user_get_invalid_state_error_into_string(
+    void * const api_instance
+    , char * const string
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
+    , const int print_ts
+#endif
+);
+
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern char * freecell_solver_user_get_invalid_state_error_string(
     void * user_instance
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
     , int print_ts
 #endif
     );
+#endif
 
 DLLEXPORT extern int freecell_solver_user_set_sequences_are_built_by_type(
     void * user_instance,

@@ -450,16 +450,14 @@ int main(int argc, char * argv[])
 
     if (ret == FCS_STATE_INVALID_STATE)
     {
-        char * error_string;
+        char error_string[80];
 
-        error_string =
-            freecell_solver_user_get_invalid_state_error_string(
-                instance
-                FC_SOLVE__PASS_T(debug_context.display_10_as_t)
-                );
+        freecell_solver_user_get_invalid_state_error_into_string(
+            instance,
+            error_string
+            FC_SOLVE__PASS_T(debug_context.display_10_as_t)
+        );
         printf("%s\n", error_string);
-        free(error_string);
-        error_string = NULL;
     }
     else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
     {

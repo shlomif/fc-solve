@@ -1865,24 +1865,22 @@ int DLLEXPORT freecell_solver_user_get_max_num_decks(void)
     return MAX_NUM_DECKS;
 }
 
-
-char * freecell_solver_user_get_invalid_state_error_string(
+void freecell_solver_user_get_invalid_state_error_into_string(
     void * const api_instance
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-    ,
-    const int print_ts
+    , char * const string
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
+    , const int print_ts
 #endif
     )
 {
-    char string[80];
-
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     const typeof (user->state_validity_ret) ret = user->state_validity_ret;
     switch (ret)
     {
         case FCS_STATE_VALIDITY__OK:
-        return strdup("");
+        string[0] = '\0';
+        break;
 
         case FCS_STATE_VALIDITY__EMPTY_SLOT:
         strcpy(string, "There's an empty slot in one of the stacks.");
@@ -1911,8 +1909,25 @@ char * freecell_solver_user_get_invalid_state_error_string(
         strcpy(string, "Not enough input.");
         break;
     }
-    return strdup(string);
 }
+
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+char * freecell_solver_user_get_invalid_state_error_string(
+    void * const api_instance
+#ifndef FC_SOLVE_IMPLICIT_T_RANK
+    , const int print_ts
+#endif
+    )
+{
+    char * ret = malloc(80);
+    freecell_solver_user_get_invalid_state_error_into_string(
+        api_instance,
+        ret
+        PASS_T(print_ts)
+    );
+    return ret;
+}
+#endif
 
 int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     void * api_instance,
