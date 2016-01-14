@@ -299,7 +299,7 @@ static GCC_INLINE void instance_check_key(
 struct fcs_dbm_solver_thread_struct
 {
     fcs_dbm_solver_instance_t * instance;
-    fc_solve_delta_stater_t * delta_stater;
+    fc_solve_delta_stater_t delta_stater;
     fcs_meta_compact_allocator_t thread_meta_alloc;
 };
 
@@ -336,7 +336,7 @@ static void * instance_run_solver_thread(void * void_arg)
     arg = (thread_arg_t *)void_arg;
     thread = arg->thread;
     instance = thread->instance;
-    delta_stater = thread->delta_stater;
+    delta_stater = &(thread->delta_stater);
     local_variant = instance->variant;
 
     prev_item = item = NULL;
@@ -548,16 +548,15 @@ static void instance_run_all_threads(
 #endif
     for (i=0; i < num_threads ; i++)
     {
-        threads[i].thread.instance = instance;
-        threads[i].thread.delta_stater =
-            fc_solve_delta_stater_alloc(
-                &(init_state->s),
-                STACKS_NUM,
-                FREECELLS_NUM
+        fc_solve_delta_stater_init(
+            &(threads[i].thread.delta_stater),
+            &(init_state->s),
+            STACKS_NUM,
+            FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-            );
+        );
 
         fc_solve_meta_compact_allocator_init(
             &(threads[i].thread.thread_meta_alloc)
@@ -658,7 +657,7 @@ static void instance_run_all_threads(
 
     for (i=0; i < num_threads ; i++)
     {
-        fc_solve_delta_stater_free(threads[i].thread.delta_stater);
+        fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
         fc_solve_meta_compact_allocator_finish(
             &(threads[i].thread.thread_meta_alloc)
         );
@@ -898,7 +897,7 @@ int main(int argc, char * argv[])
           * offload_dir_path = NULL;
     FILE * fh = NULL, * out_fh = NULL;
     char user_state[USER_STATE_SIZE];
-    fc_solve_delta_stater_t * delta;
+    fc_solve_delta_stater_t delta;
     fcs_dbm_record_t * token;
     enum fcs_dbm_variant_type_t local_variant;
 
@@ -1082,7 +1081,8 @@ int main(int argc, char * argv[])
         horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     }
 
-    delta = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_init(
+            &delta,
             &init_state.s,
             STACKS_NUM,
             FREECELLS_NUM
@@ -1105,7 +1105,7 @@ int main(int argc, char * argv[])
                       out_fh);
 
         key_ptr = &(instance.first_key);
-        fcs_init_and_encode_state(delta, local_variant, &(init_state), KEY_PTR());
+        fcs_init_and_encode_state(&delta, local_variant, &(init_state), KEY_PTR());
 
         /* The NULL parent_state_enc and move for indicating this is the
          * initial state. */
@@ -1127,11 +1127,10 @@ int main(int argc, char * argv[])
         instance.count_of_items_in_queue++;
 
         instance_run_all_threads(&instance, &init_state, NUM_THREADS());
-        handle_and_destroy_instance_solution(&instance, out_fh, delta);
+        handle_and_destroy_instance_solution(&instance, out_fh, &delta);
     }
 
-    fc_solve_delta_stater_free(delta);
-    delta = NULL;
+    fc_solve_delta_stater_release(&delta);
 
     if (out_filename)
     {

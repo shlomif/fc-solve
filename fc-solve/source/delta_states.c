@@ -369,11 +369,10 @@ static void fc_solve_delta_stater_encode_composite(
     fc_solve_get_freecells_encoding(self, bit_w);
     for ( i=0 ; i < num_columns ; i++)
     {
-        fc_solve_column_encoding_composite_t * col_enc;
-        fcs_uchar_t * enc;
-
-        col_enc = (cols + cols_indexes[i]);
-        for (enc = col_enc->enc ; enc < col_enc->end ; enc++)
+        const fc_solve_column_encoding_composite_t * const col_enc = (cols + cols_indexes[i]);
+        const fcs_uchar_t * enc;
+        const fcs_uchar_t * const end = col_enc->end;
+        for (enc = col_enc->enc ; enc < end ; enc++)
         {
             fc_solve_bit_writer_write(bit_w, NUM_BITS_IN_BYTES, (*enc));
         }

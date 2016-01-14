@@ -45,28 +45,31 @@ extern "C" {
 #define fc_solve_delta_stater_decode_into_state(a,b,c,d) fc_solve_debondt_delta_stater_decode_into_state(local_variant,a,b,c,d)
 #define fcs_init_and_encode_state(a,b,c,d) fcs_debondt_init_and_encode_state(a,b,c,d)
 #ifdef FCS_FREECELL_ONLY
-static GCC_INLINE fc_solve_debondt_delta_stater_t *
-    fc_solve_delta_stater_alloc(
-        fcs_state_t * const init_state,
-        const int num_columns,
-        const int num_freecells
+static GCC_INLINE void fc_solve_delta_stater_init(
+    fc_solve_debondt_delta_stater_t * const delta,
+    fcs_state_t * const init_state,
+    const int num_columns,
+    const int num_freecells
 )
 {
-    return fc_solve_debondt_delta_stater_alloc(
+    return fc_solve_debondt_delta_stater_init(
+        delta,
         FCS_DBM_VARIANT_2FC_FREECELL,
         init_state,num_columns,num_freecells
         );
 }
 #else
-static GCC_INLINE fc_solve_debondt_delta_stater_t *
-    fc_solve_delta_stater_alloc(
+static GCC_INLINE void
+    fc_solve_delta_stater_init(
+        fc_solve_debondt_delta_stater_t * const delta,
         fcs_state_t * const init_state,
         const int num_columns,
         const int num_freecells,
         const int sequences_are_built_by
 )
 {
-    return fc_solve_debondt_delta_stater_alloc(
+    return fc_solve_debondt_delta_stater_init(
+        delta,
         FCS_DBM_VARIANT_2FC_FREECELL,
         init_state,
         num_columns,
@@ -75,7 +78,7 @@ static GCC_INLINE fc_solve_debondt_delta_stater_t *
         );
 }
 #endif
-#define fc_solve_delta_stater_free(a) fc_solve_debondt_delta_stater_free(a)
+#define fc_solve_delta_stater_release(a) fc_solve_debondt_delta_stater_release(a)
 #endif
 
 #ifdef __cplusplus

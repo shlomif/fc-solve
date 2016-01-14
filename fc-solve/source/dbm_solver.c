@@ -266,7 +266,7 @@ static GCC_INLINE void instance_check_key(
 struct fcs_dbm_solver_thread_struct
 {
     fcs_dbm_solver_instance_t * instance;
-    fc_solve_delta_stater_t * delta_stater;
+    fc_solve_delta_stater_t delta_stater;
 };
 
 typedef struct {
@@ -287,7 +287,7 @@ static void * instance_run_solver_thread(void * void_arg)
     thread_arg_t * const arg = (thread_arg_t *)void_arg;
     fcs_dbm_solver_thread_t * const thread = arg->thread;
     fcs_dbm_solver_instance_t * const instance = thread->instance;
-    fc_solve_delta_stater_t * const delta_stater = thread->delta_stater;
+    fc_solve_delta_stater_t * const delta_stater = &(thread->delta_stater);
 
     fcs_dbm_queue_item_t * item = NULL, * prev_item = NULL;
     int queue_num_extracted_and_processed = 0;
@@ -741,15 +741,15 @@ static void instance_run_all_threads(
     for (i=0; i < num_threads ; i++)
     {
         threads[i].thread.instance = instance;
-        threads[i].thread.delta_stater =
-            fc_solve_delta_stater_alloc(
-                &(init_state->s),
-                STACKS_NUM,
-                FREECELLS_NUM
+        fc_solve_delta_stater_init(
+            &(threads[i].thread.delta_stater),
+            &(init_state->s),
+            STACKS_NUM,
+            FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-            );
+        );
         threads[i].arg.thread = &(threads[i].thread);
         check = pthread_create(
             &(threads[i].id),
@@ -771,7 +771,7 @@ static void instance_run_all_threads(
     for (i=0; i < num_threads ; i++)
     {
         pthread_join(threads[i].id, NULL);
-        fc_solve_delta_stater_free(threads[i].thread.delta_stater);
+        fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
     }
     free(threads);
 
@@ -1101,7 +1101,7 @@ int main(int argc, char * argv[])
           * intermediate_input_filename = NULL, * offload_dir_path = NULL;
     FILE * fh = NULL, * out_fh = NULL, * intermediate_in_fh = NULL;
     char user_state[USER_STATE_SIZE];
-    fc_solve_delta_stater_t * delta;
+    fc_solve_delta_stater_t delta;
     fcs_dbm_record_t * token;
     enum fcs_dbm_variant_type_t local_variant;
 
@@ -1291,7 +1291,8 @@ int main(int argc, char * argv[])
         horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     }
 
-    delta = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_init(
+            &delta,
             &init_state.s,
             STACKS_NUM,
             FREECELLS_NUM
@@ -1357,7 +1358,7 @@ int main(int argc, char * argv[])
                     fcs_encoded_state_buffer_t parent_state_enc;
                     if (!populate_instance_with_intermediate_input_line(
                         &limit_instance,
-                        delta,
+                        &delta,
                         &init_state,
                         line,
                         line_num,
@@ -1373,7 +1374,7 @@ int main(int argc, char * argv[])
 
                     if (limit_instance.queue_solution_was_found)
                     {
-                        trace_solution(&limit_instance, out_fh, delta);
+                        trace_solution(&limit_instance, out_fh, &delta);
                         skip_queue_output = TRUE;
                         queue_solution_was_found = TRUE;
                     }
@@ -1402,7 +1403,7 @@ int main(int argc, char * argv[])
                     fcs_encoded_state_buffer_t parent_state_enc;
                     if (!populate_instance_with_intermediate_input_line(
                         &queue_instance,
-                        delta,
+                        &delta,
                         &init_state,
                         line,
                         line_num,
@@ -1419,7 +1420,7 @@ int main(int argc, char * argv[])
                     if (handle_and_destroy_instance_solution(
                         &queue_instance,
                         out_fh,
-                        delta
+                        &delta
                     ))
                     {
                         queue_solution_was_found = TRUE;
@@ -1460,7 +1461,7 @@ int main(int argc, char * argv[])
                       iters_delta_limit, offload_dir_path, out_fh);
 
         key_ptr = &(instance.first_key);
-        fcs_init_and_encode_state(delta, local_variant, &(init_state), KEY_PTR());
+        fcs_init_and_encode_state(&delta, local_variant, &(init_state), KEY_PTR());
 
         /* The NULL parent_state_enc and move for indicating this is the
          * initial state. */
@@ -1481,11 +1482,10 @@ int main(int argc, char * argv[])
         instance.count_of_items_in_queue++;
 
         instance_run_all_threads(&instance, &init_state, NUM_THREADS());
-        handle_and_destroy_instance_solution(&instance, out_fh, delta);
+        handle_and_destroy_instance_solution(&instance, out_fh, &delta);
     }
 
-    fc_solve_delta_stater_free(delta);
-    delta = NULL;
+    fc_solve_delta_stater_release(&delta);
 
     if (out_filename)
     {

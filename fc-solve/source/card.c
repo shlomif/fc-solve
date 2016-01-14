@@ -174,8 +174,6 @@ static const char cards_char_map[15] = ( CARD_ZERO() "A23456789TJQK" );
  *
  * rank_idx - the card number
  * str - the string to output to.
- * rank_is_null - a pointer to a bool that indicates whether
- *      the card number is out of range or equal to zero
  * t - whether 10 should be printed as T or not.
  * flipped - whether the card is face down
  * */

@@ -288,7 +288,6 @@ static fcc_status_t instance_run_solver(
     fcs_meta_compact_allocator_t * const meta_alloc
 )
 {
-    fc_solve_delta_stater_t * delta;
     fcs_fcc_solver_state * solver_state;
     fcs_fcc_collection_by_depth * fcc_stage;
     fcs_fully_connected_component_t * fcc;
@@ -309,7 +308,9 @@ static fcc_status_t instance_run_solver(
     FCCs_per_depth_milestone_step = instance->FCCs_per_depth_milestone_step;
 
     /* Initialize local variables. */
-    delta = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_t delta;
+    fc_solve_delta_stater_init(
+        &delta,
         &(init_state->s),
         STACKS_NUM,
         FREECELLS_NUM
@@ -320,7 +321,7 @@ static fcc_status_t instance_run_solver(
 
     fcs_encoded_state_buffer_t init_state_enc;
     fcs_init_and_encode_state(
-        delta, local_variant, init_state, &init_state_enc
+        &delta, local_variant, init_state, &init_state_enc
     );
 
     fcc_status_t ret = FCC_IMPOSSIBLE;
@@ -495,7 +496,7 @@ static fcc_status_t instance_run_solver(
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
                 fc_solve_delta_stater_decode_into_state(
-                    delta,
+                    &delta,
                     start_point_iter->enc_state.s,
                     &(state),
                     indirect_stacks_buffer
@@ -541,7 +542,7 @@ static fcc_status_t instance_run_solver(
 #undef SUIT_LIMIT
 
                 fcs_init_and_encode_state(
-                    delta,
+                    &delta,
                     local_variant,
                     &(state),
                     &enc_state
@@ -654,7 +655,7 @@ fcc_loop_cleanup:
 
 free_resources:
     solver_state_free(solver_state, moves_list_allocator);
-    fc_solve_delta_stater_free(delta);
+    fc_solve_delta_stater_release(&delta);
 
     *(out_moves_seq) = ret_moves_seq;
 

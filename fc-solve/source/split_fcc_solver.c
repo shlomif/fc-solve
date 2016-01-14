@@ -387,7 +387,7 @@ static unsigned char get_move_from_parent_to_child(
 struct fcs_dbm_solver_thread_struct
 {
     fcs_dbm_solver_instance_t * instance;
-    fc_solve_delta_stater_t * delta_stater;
+    fc_solve_delta_stater_t delta_stater;
     fcs_meta_compact_allocator_t thread_meta_alloc;
     int state_depth;
 };
@@ -555,7 +555,7 @@ static GCC_INLINE void instance_check_key(
                         moves_to_state[moves_to_state_len+trace_num-1-i] =
                             get_move_from_parent_to_child(
                                 instance,
-                                thread->delta_stater,
+                                &(thread->delta_stater),
                                 trace[i],
                                 trace[i-1]
                             );
@@ -613,7 +613,7 @@ static GCC_INLINE void instance_check_key(
                         fcs_state_keyval_pair_t state;
                         DECLARE_IND_BUF_T(indirect_stacks_buffer)
                         fc_solve_delta_stater_decode_into_state(
-                            thread->delta_stater,
+                            &(thread->delta_stater),
                             key->s,
                             &state,
                             indirect_stacks_buffer
@@ -675,7 +675,6 @@ static void * instance_run_solver_thread(void * void_arg)
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
-    fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
     FILE * out_fh;
     char * base64_encoding_buffer = NULL;
@@ -692,7 +691,7 @@ static void * instance_run_solver_thread(void * void_arg)
     arg = (thread_arg_t *)void_arg;
     thread = arg->thread;
     instance = thread->instance;
-    delta_stater = thread->delta_stater;
+    fc_solve_delta_stater_t * const delta_stater = &(thread->delta_stater);
     local_variant = instance->variant;
 
     prev_item = item = NULL;
@@ -994,15 +993,15 @@ static void instance_run_all_threads(
     for (i=0; i < num_threads ; i++)
     {
         threads[i].thread.instance = instance;
-        threads[i].thread.delta_stater =
-            fc_solve_delta_stater_alloc(
-                &(init_state->s),
-                STACKS_NUM,
-                FREECELLS_NUM
+        fc_solve_delta_stater_init(
+            &(threads[i].thread.delta_stater),
+            &(init_state->s),
+            STACKS_NUM,
+            FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-            );
+        );
 
         fc_solve_meta_compact_allocator_init(
             &(threads[i].thread.thread_meta_alloc)
@@ -1106,7 +1105,7 @@ static void instance_run_all_threads(
 
     for (i=0; i < num_threads ; i++)
     {
-        fc_solve_delta_stater_free(threads[i].thread.delta_stater);
+        fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
         fc_solve_meta_compact_allocator_finish(
             &(threads[i].thread.thread_meta_alloc)
         );
@@ -1511,23 +1510,18 @@ int main(int argc, char * argv[])
 
     /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth. */
 
-    fc_solve_delta_stater_t * delta =
-        fc_solve_delta_stater_alloc(
-            &init_state.s,
-            STACKS_NUM,
-            FREECELLS_NUM
+    fc_solve_delta_stater_t delta;
+    fc_solve_delta_stater_init(
+        &delta,
+        &init_state.s,
+        STACKS_NUM,
+        FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-            , ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
-               ? FCS_SEQ_BUILT_BY_RANK
-               : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
+        , ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
+            ? FCS_SEQ_BUILT_BY_RANK
+            : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
 #endif
-        );
-
-    if (! delta)
-    {
-        fprintf(stderr, "%s\n", "could not allocate delta");
-        exit(-1);
-    }
+    );
 
     {
         FILE * out_fh = stdout;
@@ -1768,15 +1762,14 @@ int main(int argc, char * argv[])
         }
 #endif
         fclose(fingerprint_fh);
-        handle_and_destroy_instance_solution(&instance, out_fh, delta);
+        handle_and_destroy_instance_solution(&instance, out_fh, &delta);
         free (instance.moves_to_state);
         free (instance.moves_base64_encoding_buffer);
         free (instance.fingerprint_line);
     }
 
 
-    fc_solve_delta_stater_free(delta);
-    delta = NULL;
+    fc_solve_delta_stater_release(&delta);
 
     return 0;
 }

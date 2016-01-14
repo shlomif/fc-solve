@@ -53,7 +53,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         )
 {
     fcs_state_keyval_pair_t init_state;
-    fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
     fcs_state_locs_struct_t locs;
     fcs_derived_state_t * derived_list = NULL;
@@ -76,7 +75,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             indirect_stacks_buffer
             );
 
-    delta = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_t delta;
+    fc_solve_delta_stater_init(
+        &delta,
             &(init_state.s),
             STACKS_NUM,
             FREECELLS_NUM
@@ -86,7 +87,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             );
 
     fcs_init_and_encode_state(
-        delta,
+        &delta,
         local_variant,
         &(init_state),
         &enc_state
@@ -155,7 +156,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fc_solve_compact_allocator_finish(&allocator);
     fc_solve_meta_compact_allocator_finish( &meta_alloc );
 
-    fc_solve_delta_stater_free (delta);
+    fc_solve_delta_stater_release(&delta);
 
     return 0;
 }

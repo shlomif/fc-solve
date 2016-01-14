@@ -72,7 +72,6 @@ int main(int argc, char * argv[])
 {
     pack_item_t user;
     int ret;
-    long board_num;
     const char * variant = "freecell";
 
     char * error_string;
@@ -168,9 +167,9 @@ int main(int argc, char * argv[])
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
 
-    for (int deal_idx=0;deal_idx < num_deals; deal_idx++)
+    for (int deal_idx=0 ; deal_idx < num_deals ; deal_idx++)
     {
-        board_num = deals[deal_idx];
+        const typeof(deals[deal_idx]) board_num = deals[deal_idx];
         if (variant_is_freecell)
         {
             get_board_l(board_num, buffer);

@@ -80,7 +80,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         )
 {
     fcs_state_keyval_pair_t init_state;
-    fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
     fcs_state_locs_struct_t locs;
     int i;
@@ -113,7 +112,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
             indirect_stacks_buffer
             );
 
-    delta = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_t delta;
+    fc_solve_delta_stater_init(
+        &delta,
             &(init_state.s),
             STACKS_NUM,
             FREECELLS_NUM
@@ -123,7 +124,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
             );
 
     fcs_init_and_encode_state(
-        delta,
+        &delta,
         local_variant,
         &(init_state),
         &enc_state
@@ -219,7 +220,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
                 }
             }
         }
-        fc_solve_delta_stater_decode_into_state(delta, iter->enc_state.s, &(state), state_indirect_stacks_buffer);
+        fc_solve_delta_stater_decode_into_state(&delta, iter->enc_state.s, &(state), state_indirect_stacks_buffer);
         ret[i].state_as_string = SMALLOC(ret[i].state_as_string, 1000);
         fc_solve_state_as_string(
             ret[i].state_as_string,
@@ -239,7 +240,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(moves_list_compact_alloc));
 
-    fc_solve_delta_stater_free (delta);
+    fc_solve_delta_stater_release(&delta);
     fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
     fc_solve_kaz_tree_destroy(does_min_by_sorting_exist);
     cache_destroy(&does_state_exist_in_any_FCC_cache);
@@ -260,7 +261,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         )
 {
     fcs_state_keyval_pair_t init_state;
-    fc_solve_delta_stater_t * delta;
     fcs_encoded_state_buffer_t enc_state;
     fcs_encoded_state_buffer_t start_enc_state;
     fcs_meta_compact_allocator_t meta_alloc;
@@ -287,7 +287,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
             indirect_stacks_buffer
             );
 
-    delta = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_t delta;
+    fc_solve_delta_stater_init(
+            &delta,
             &(init_state.s),
             STACKS_NUM,
             FREECELLS_NUM
@@ -297,7 +299,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
             );
 
     fcs_init_and_encode_state(
-        delta,
+        &delta,
         local_variant,
         &(init_state),
         &enc_state
@@ -305,7 +307,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
     fc_solve_state_string_to_enc(
         local_variant,
-        delta,
+        &delta,
         start_state_str_proto,
         &(start_enc_state)
     );
@@ -343,7 +345,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
             fc_solve_state_string_to_enc(
                 local_variant,
-                delta,
+                &delta,
                 *(min_states_iter),
                 min_enc_state
             );
@@ -372,7 +374,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
             fc_solve_state_string_to_enc(
                 local_variant,
-                delta,
+                &delta,
                 *(min_states_iter),
                 min_enc_state
             );
@@ -409,7 +411,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(temp_allocator));
 
-    fc_solve_delta_stater_free (delta);
+    fc_solve_delta_stater_release(&delta);
     fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
     fc_solve_kaz_tree_destroy(does_min_by_sorting_exist);
     cache_destroy(&does_state_exist_in_any_FCC_cache);

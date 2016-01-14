@@ -74,7 +74,8 @@ enum
 
 #define IS_BAKERS_DOZEN() (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
 
-static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
+static void fc_solve_debondt_delta_stater_init(
+        fc_solve_debondt_delta_stater_t * const self,
         const enum fcs_dbm_variant_type_t local_variant,
         fcs_state_t * const init_state,
         const int num_columns,
@@ -84,8 +85,6 @@ static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
 #endif
         )
 {
-    fc_solve_debondt_delta_stater_t * const self = SMALLOC1(self);
-
 #ifndef FCS_FREECELL_ONLY
     self->sequences_are_built_by = sequences_are_built_by;
 #endif
@@ -120,8 +119,6 @@ static fc_solve_debondt_delta_stater_t * fc_solve_debondt_delta_stater_alloc(
             }
         }
     }
-
-    return self;
 }
 
 static GCC_INLINE void fc_solve_debondt_delta_stater__init_card_states(
@@ -135,12 +132,11 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__init_card_states(
     }
 }
 
-static void fc_solve_debondt_delta_stater_free(
+static void fc_solve_debondt_delta_stater_release(
     fc_solve_debondt_delta_stater_t * const self)
 {
     fc_solve_var_base_reader_release(&(self->r));
     fc_solve_var_base_writer_release(&(self->w));
-    free(self);
 }
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_set_derived(
@@ -741,7 +737,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 {
     char * init_state_s, * derived_state_s;
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
-    fc_solve_debondt_delta_stater_t * delta;
+    fc_solve_debondt_delta_stater_t delta;
     fcs_uchar_t enc_state[24];
     fcs_state_locs_struct_t locs;
 
@@ -770,7 +766,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
             derived_stacks_buffer
             );
 
-    delta = fc_solve_debondt_delta_stater_alloc(
+    fc_solve_debondt_delta_stater_init(
+            &delta,
             local_variant,
             &(init_state.s),
             STACKS_NUM,
@@ -780,7 +777,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 #endif
             );
 
-    fc_solve_debondt_delta_stater_set_derived(delta, &(derived_state.s));
+    fc_solve_debondt_delta_stater_set_derived(&delta, &(derived_state.s));
 
     fc_solve_state_init(
         &new_derived_state,
@@ -788,13 +785,13 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
         new_derived_indirect_stacks_buffer
     );
 
-    fc_solve_var_base_writer_start(&(delta->w));
-    fc_solve_debondt_delta_stater_encode_composite(delta, local_variant, &(delta->w));
+    fc_solve_var_base_writer_start(&(delta.w));
+    fc_solve_debondt_delta_stater_encode_composite(&delta, local_variant, &(delta.w));
     memset(enc_state, '\0', sizeof(enc_state));
-    fc_solve_var_base_writer_get_data(&(delta->w), enc_state);
+    fc_solve_var_base_writer_get_data(&(delta.w), enc_state);
 
-    fc_solve_var_base_reader_start(&(delta->r), enc_state, sizeof(enc_state));
-    fc_solve_debondt_delta_stater_decode(delta, local_variant, &(delta->r),
+    fc_solve_var_base_reader_start(&(delta.r), enc_state, sizeof(enc_state));
+    fc_solve_debondt_delta_stater_decode(&delta, local_variant, &(delta.r),
                                          &(new_derived_state.s));
 
     fc_solve_init_locs(&locs);
@@ -815,7 +812,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     free(init_state_s);
     free(derived_state_s);
 
-    fc_solve_debondt_delta_stater_free (delta);
+    fc_solve_debondt_delta_stater_release (&delta);
 
     return new_derived_as_str;
 }

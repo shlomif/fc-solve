@@ -169,7 +169,6 @@ static void perform_FCC_brfs(
     fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
                         * derived_iter, * next_derived_iter;
     dict_t * traversed_states;
-    fc_solve_delta_stater_t * delta_stater;
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
@@ -193,7 +192,9 @@ static void perform_FCC_brfs(
     queue_recycle_bin = NULL;
 
     /* TODO : maybe pass delta_stater as an argument  */
-    delta_stater = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_t delta_stater;
+    fc_solve_delta_stater_init(
+        &delta_stater,
         &(init_state->s),
         STACKS_NUM,
         FREECELLS_NUM
@@ -263,7 +264,7 @@ static void perform_FCC_brfs(
 
         /* Handle item. */
         fc_solve_delta_stater_decode_into_state(
-            delta_stater,
+            &delta_stater,
             extracted_item->key.s,
             &(state),
             indirect_stacks_buffer
@@ -332,7 +333,7 @@ static void perform_FCC_brfs(
 
 
             fcs_init_and_encode_state(
-                delta_stater,
+                &delta_stater,
                 local_variant,
                 &(derived_iter->state),
                 &(new_item->key)
@@ -494,7 +495,7 @@ static void perform_FCC_brfs(
 free_resources:
     fc_solve_compact_allocator_finish(&(queue_allocator));
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
-    fc_solve_delta_stater_free(delta_stater);
+    fc_solve_delta_stater_release(&delta_stater);
     fc_solve_kaz_tree_destroy(traversed_states);
 }
 

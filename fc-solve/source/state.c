@@ -331,8 +331,8 @@ void fc_solve_state_as_string(
         {
             char dashes_s[128];
             char * dashes_ptr = dashes_s;
-            char str2[128];
-            char * str2_ptr = str2;
+            char freecells_s[128];
+            char * freecells_s_end = freecells_s;
             for (int b = 0 ; b < min(FREECELLS_NUM__VAL-i*4, 4) ; b++)
             {
                 one_card_buffer freecell;
@@ -344,7 +344,7 @@ void fc_solve_state_as_string(
                     freecell
                     PASS_T(display_10_as_t)
                 );
-                str2_ptr += sprintf(str2_ptr, "%3s ", freecell);
+                freecells_s_end += sprintf(freecells_s_end, "%3s ", freecell);
                 strcpy(dashes_ptr, "--- ");
                 dashes_ptr = strchr(dashes_ptr, '\0');
             }
@@ -353,7 +353,7 @@ void fc_solve_state_as_string(
                 fc_solve_append_string_sprintf(
                     app_str,
                     "%-16s        H-%1s C-%1s D-%1s S-%1s\n",
-                    str2,
+                    freecells_s,
                     decks[i*4],
                     decks[i*4+1],
                     decks[i*4+2],
@@ -364,7 +364,7 @@ void fc_solve_state_as_string(
             {
                 fc_solve_append_string_sprintf(
                     app_str,
-                    "%s\n", str2
+                    "%s\n", freecells_s
                     );
             }
             fc_solve_append_string_sprintf(

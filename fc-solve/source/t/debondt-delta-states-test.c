@@ -135,7 +135,6 @@ static int main_tests(void)
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     {
-        fc_solve_debondt_delta_stater_t * db_delta;
         fcs_state_keyval_pair_t init_state, derived_state;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
@@ -159,7 +158,9 @@ static int main_tests(void)
             indirect_stacks_buffer
         );
 
-        db_delta = fc_solve_debondt_delta_stater_alloc(
+        fc_solve_debondt_delta_stater_t db_delta;
+        fc_solve_debondt_delta_stater_init(
+            &db_delta,
                 local_variant,
                 &init_state.s,
                 STACKS_NUM,
@@ -168,10 +169,6 @@ static int main_tests(void)
                 , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
                 );
-
-        /* TEST
-         *  */
-        ok (db_delta, "Debondt-Delta was created.");
 
         fc_solve_initial_user_state_to_c(
                 (
@@ -193,7 +190,7 @@ static int main_tests(void)
                 derived_indirect_stacks_buffer
         );
 
-        fc_solve_debondt_delta_stater_set_derived(db_delta, &(derived_state.s));
+        fc_solve_debondt_delta_stater_set_derived(&db_delta, &(derived_state.s));
 
 #define SUIT_HC 0
 #define SUIT_DS 1
@@ -201,7 +198,7 @@ static int main_tests(void)
         /* TEST
          * */
         debondt_test_encode_and_decode(
-            db_delta,
+            &db_delta,
             &derived_state,
             (
 "Foundations: H-0 C-2 D-A S-0\n"
@@ -217,7 +214,7 @@ static int main_tests(void)
             ),
             "DeBondt: encode_composite + decode test"
         );
-        fc_solve_debondt_delta_stater_free (db_delta);
+        fc_solve_debondt_delta_stater_release (&db_delta);
     }
 
 /* More encode_composite tests - this time from the output of:
@@ -225,7 +222,6 @@ static int main_tests(void)
  *      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
  */
     {
-        fc_solve_debondt_delta_stater_t * db_delta;
         fcs_state_keyval_pair_t init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -251,15 +247,17 @@ static int main_tests(void)
             indirect_stacks_buffer
         );
 
-        db_delta = fc_solve_debondt_delta_stater_alloc(
-                local_variant,
-                &init_state.s,
-                STACKS_NUM,
-                FREECELLS_NUM
+        fc_solve_debondt_delta_stater_t db_delta;
+        fc_solve_debondt_delta_stater_init(
+            &db_delta,
+            local_variant,
+            &init_state.s,
+            STACKS_NUM,
+            FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-                );
+        );
 
         fc_solve_initial_user_state_to_c(
             (
@@ -284,7 +282,7 @@ static int main_tests(void)
         /* TEST
          * */
         debondt_test_encode_and_decode(
-            db_delta,
+            &db_delta,
             &derived_state,
             (
 "Foundations: H-0 C-0 D-0 S-4\n"
@@ -302,7 +300,7 @@ static int main_tests(void)
         );
 
 
-        fc_solve_debondt_delta_stater_free (db_delta);
+        fc_solve_debondt_delta_stater_release (&db_delta);
     }
 
     return 0;
@@ -310,7 +308,7 @@ static int main_tests(void)
 
 int main(int argc, char * argv[])
 {
-    plan_tests(3);
+    plan_tests(2);
     main_tests();
     return exit_status();
 }
