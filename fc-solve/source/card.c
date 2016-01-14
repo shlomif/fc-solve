@@ -181,8 +181,7 @@ static const char cards_char_map[15] = ( CARD_ZERO() "A23456789TJQK" );
  * */
 void fc_solve_p2u_rank(
     const int rank_idx,
-    char * const str,
-    fcs_bool_t * const rank_is_null
+    char * const str
     PASS_T(const fcs_bool_t t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     , const fcs_bool_t flipped
@@ -194,13 +193,11 @@ void fc_solve_p2u_rank(
     if (flipped)
     {
         strncpy(str, "*", 2);
-        *rank_is_null = FALSE;
     }
     else
 #endif
     {
-        const fcs_bool_t out_of_range = ((rank_idx < 1) || (rank_idx > 13));
-#define INDEX() (out_of_range ? 0 : rank_idx)
+#define INDEX() (rank_idx)
 #ifdef FCS_IMPLICIT_T_RANK
         str[0] = cards_char_map[INDEX()];
         str[1] = '\0';
@@ -210,7 +207,6 @@ void fc_solve_p2u_rank(
             [INDEX()]);
 #endif
 #undef INDEX
-        *rank_is_null = out_of_range;
     }
 }
 
@@ -220,8 +216,7 @@ void fc_solve_p2u_rank(
  * */
 static GCC_INLINE void fc_solve_p2u_suit(
         const int suit,
-        char * const str,
-        const fcs_bool_t rank_is_null
+        char * str
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         , const fcs_bool_t flipped
 #endif
@@ -234,25 +229,10 @@ static GCC_INLINE void fc_solve_p2u_suit(
     }
     else
 #endif
-    if (suit == 0)
     {
-        if (rank_is_null)
-#ifdef CARD_DEBUG_PRES
-            strncpy(str, "*", 2);
-#else
-            strncpy(str, " ", 2);
-#endif
-        else
-            strncpy(str, "H", 2);
+        *(str++) = "HCDS"[suit];
+        *(str) = '\0';
     }
-    else if (suit == 1)
-        strncpy(str, "C", 2);
-    else if (suit == 2)
-        strncpy(str, "D", 2);
-    else if (suit == 3)
-        strncpy(str, "S", 2);
-    else
-        strncpy(str, " ", 2);
 }
 
 /*
@@ -270,27 +250,18 @@ void fc_solve_card_perl2user(const fcs_card_t card, char * const str
         str++;
     }
 #endif
-    fcs_bool_t rank_is_null;
-
     fc_solve_p2u_rank(
         fcs_card_rank(card),
-        str,
-        &rank_is_null
+        str
         PASS_T(t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         ,
         fcs_card_get_flipped(card)
 #endif
         );
-    /*
-     * Notice that if rank_is_null is found to be true
-     * it will affect the output of the suit too.
-     *
-     * */
     fc_solve_p2u_suit(
         fcs_card_suit(card),
-        str+strlen(str),
-        rank_is_null
+        str+strlen(str)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
         ,
         fcs_card_get_flipped(card)

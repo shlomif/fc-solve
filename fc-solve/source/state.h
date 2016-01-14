@@ -666,8 +666,7 @@ extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str
  * */
 extern void fc_solve_p2u_rank(
     const int rank_idx,
-    char * const str,
-    fcs_bool_t * const rank_is_null
+    char * const str
     PASS_T(const fcs_bool_t t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     , const fcs_bool_t flipped

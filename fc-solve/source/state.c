@@ -240,6 +240,26 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 
 #endif
 
+static GCC_INLINE void render_freecell_card(
+    const fcs_card_t card
+    , char * const freecell
+    PASS_T(const fcs_bool_t display_10_as_t)
+)
+{
+    if (fcs_card_is_empty(card))
+    {
+        freecell[0] = '\0';
+    }
+    else
+    {
+        fc_solve_card_perl2user(
+            card,
+            freecell
+            PASS_T(display_10_as_t)
+        );
+    }
+}
+
 void fc_solve_state_as_string(
     char * output_s,
     const fcs_state_t * const state
@@ -287,11 +307,9 @@ void fc_solve_state_as_string(
 
     for (int i = 0 ; i < (DECKS_NUM__VAL<<2) ; i++)
     {
-        fcs_bool_t unused__rank_is_null;
         fc_solve_p2u_rank(
             fcs_foundation_value(*state, i),
-            decks[i],
-            &unused__rank_is_null
+            decks[i]
             PASS_T(display_10_as_t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
             ,0
@@ -318,7 +336,7 @@ void fc_solve_state_as_string(
             for (int b = 0 ; b < min(FREECELLS_NUM__VAL-i*4, 4) ; b++)
             {
                 one_card_buffer freecell;
-                fc_solve_card_perl2user(
+                render_freecell_card(
                     fcs_freecell_card(
                         *state,
                         freecell_locs[i*4+b]
@@ -462,11 +480,8 @@ void fc_solve_state_as_string(
         for (int i = 0 ; i <= max_freecell_idx ; i++)
         {
             one_card_buffer freecell;
-            fc_solve_card_perl2user(
-                fcs_freecell_card(
-                    *state,
-                    freecell_locs[i]
-                ),
+            render_freecell_card(
+                fcs_freecell_card( *state, freecell_locs[i]),
                 freecell
                 PASS_T(display_10_as_t)
             );
