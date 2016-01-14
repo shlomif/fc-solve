@@ -1129,6 +1129,7 @@ IF (IS_DEBUG)
             SHARED
             card.c state.c delta_states_debondt.c
         )
+        TARGET_LINK_LIBRARIES(fcs_debondt_delta_states_test ${LIBGMP_LIB})
         IF ("${FCS_ENABLE_DBM_SOLVER}")
             ADD_LIBRARY(fcs_dbm_calc_derived_test
                 SHARED
