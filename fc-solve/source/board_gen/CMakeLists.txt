@@ -53,7 +53,7 @@ IF (UNIX)
     INSTALL_MAN ("make-gnome-freecell-board.6" 6)
     INSTALL_MAN ("make_pysol_freecell_board.py.6" 6)
     INSTALL_MAN ("pi-make-microsoft-freecell-board.6" 6)
-ENDIF (UNIX)
+ENDIF ()
 
 INSTALL(
     TARGETS

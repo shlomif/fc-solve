@@ -83,10 +83,10 @@ IF(WIN32 AND NOT UNIX)
     SET(CPACK_NSIS_MUI_UNIICON ${CPACK_NSIS_MUI_ICON})
     SET(CPACK_PACKAGE_ICON ${CPACK_NSIS_MUI_ICON})
     SET(CPACK_NSIS_MODIFY_PATH "ON")
-ELSE(WIN32 AND NOT UNIX)
+ELSE()
   SET(CPACK_STRIP_FILES "fc-solve")
   SET(CPACK_SOURCE_STRIP_FILES "")
-ENDIF(WIN32 AND NOT UNIX)
+ENDIF()
 
 SET(CPACK_PACKAGE_EXECUTABLES
     "fc-solve" "Single-Game Solver"
@@ -190,17 +190,17 @@ SET (FCS_BREAK_BACKWARD_COMPAT_1 "" CACHE BOOL "Break some backward compatibilit
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")
-ENDIF(NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
+ENDIF()
 
 SET (${STATES_TYPE} 1)
 
 IF (FCS_WITH_TEST_SUITE)
     SET (FCS_ENABLE_DBM_SOLVER 1)
-ENDIF (FCS_WITH_TEST_SUITE)
+ENDIF ()
 
 IF (FCS_ENABLE_RCS_STATES)
     SET (FCS_RCS_STATES 1)
-ENDIF (FCS_ENABLE_RCS_STATES)
+ENDIF ()
 
 # Clone the patsolve repository with the appropriate branch.
 SET (pats_dir "patsolve-shlomif")
@@ -209,7 +209,7 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
     EXECUTE_PROCESS(COMMAND "hg" "clone" "-u" "make-code-suitable-for-fc-solve" "ssh://hg@bitbucket.org/shlomif/patsolve-shlomif" "${pats_dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
-ENDIF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
+ENDIF ()
 
 SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/gen_rate_state_c.pl")
 SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -257,16 +257,16 @@ SET (FREECELL_SOLVER_LIB_MODULES
 
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
     LIST (APPEND FREECELL_SOLVER_LIB_MODULES ${patsolve_modules})
-ENDIF (NOT "${FCS_DISABLE_PATSOLVE}")
+ENDIF ()
 
 IF (FCS_FREECELL_ONLY)
     LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES preset.c)
     SET (FCS_DISABLE_SIMPLE_SIMON 1)
-ENDIF (FCS_FREECELL_ONLY)
+ENDIF ()
 
 IF (FCS_DISABLE_SIMPLE_SIMON)
     LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES simpsim.c)
-ENDIF (FCS_DISABLE_SIMPLE_SIMON)
+ENDIF ()
 
 INCLUDE(CheckSymbolExists)
 
@@ -281,7 +281,7 @@ ENDIF ()
 IF (NOT ("${STATES_TYPE}" STREQUAL "INDIRECT_STACK_STATES"))
     # FCS_STACK_STORAGE in this case is irrelevant and should be ignored.
     SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_NULL")
-ENDIF (NOT ("${STATES_TYPE}" STREQUAL "INDIRECT_STACK_STATES"))
+ENDIF ()
 
 # Add the fcs_hash.c module if (and only if) it is being used.
 #
@@ -290,8 +290,7 @@ IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR
 
     LIST(APPEND FREECELL_SOLVER_LIB_MODULES fcs_hash.c)
 
-ENDIF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR
-    ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_INTERNAL_HASH"))
+ENDIF ()
 
 # Add the kaz_tree.c module if (and only if) it is being used.
 #
@@ -300,9 +299,7 @@ IF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_KAZ_TREE" OR
 
     LIST(APPEND FREECELL_SOLVER_LIB_MODULES kaz_tree.c)
 
-ENDIF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_KAZ_TREE" OR
-    (FCS_RCS_STATES AND ("${FCS_RCS_CACHE_STORAGE}" STREQUAL "FCS_RCS_CACHE_STORAGE_KAZ_TREE")))
-
+ENDIF ()
 
 # Add the google_hash.cpp if (and only if) it is being used.
 #
@@ -311,14 +308,13 @@ IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_GOOGLE_DENSE_HASH") OR
 
     LIST(APPEND FREECELL_SOLVER_LIB_MODULES google_hash.cpp)
 
-ENDIF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_GOOGLE_DENSE_HASH") OR
-    ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_GOOGLE_DENSE_HASH"))
+ENDIF ()
 
 # Add fcs_dm.c if (and only if) it is being used.
 #
 IF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_INDIRECT")
     LIST(APPEND FREECELL_SOLVER_LIB_MODULES fcs_dm.c)
-ENDIF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_INDIRECT")
+ENDIF ()
 
 # Search for libredblack if appropriate.
 IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
@@ -326,8 +322,7 @@ IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
 
     FIND_LIBRARY(LIBREDBLACK_LIB redblack)
 
-ENDIF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
-    ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_LIBREDBLACK_TREE"))
+ENDIF ()
 
 SET (WITH_JUDY )
 
@@ -341,11 +336,7 @@ IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_JUDY") OR
     FIND_LIBRARY(LIBJUDY_LIB Judy)
 
     SET (WITH_JUDY 1)
-ENDIF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_JUDY") OR
-    ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_JUDY") OR
-    (FCS_RCS_STATES AND ("${FCS_RCS_CACHE_STORAGE}" STREQUAL "FCS_RCS_CACHE_STORAGE_JUDY")
-    )
-)
+ENDIF ()
 
 SET (LIBAVL2_COPIED_MODULES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libavl2")
 
@@ -355,9 +346,10 @@ SET (LIBAVL2_TREE_TYPES )
 MACRO(ADD_TREE_TYPE TREE_TYPE)
     LIST(APPEND LIBAVL2_TREE_TYPES "${TREE_TYPE}")
     LIST(REMOVE_DUPLICATES LIBAVL2_TREE_TYPES)
-ENDMACRO(ADD_TREE_TYPE TREE_TYPE)
+ENDMACRO()
 
 IF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
+
     SET (TREE_TYPE "${FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE}")
     ADD_TREE_TYPE("${TREE_TYPE}")
     FILE (MAKE_DIRECTORY "${LIBAVL2_COPIED_MODULES_DIR}")
@@ -380,9 +372,10 @@ typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
 "
 )
 
-ENDIF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
+ENDIF ()
 
 IF ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_LIBAVL2_TREE")
+
     SET (TREE_TYPE "${FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE}")
     ADD_TREE_TYPE("${TREE_TYPE}")
     FILE (MAKE_DIRECTORY "${LIBAVL2_COPIED_MODULES_DIR}")
@@ -404,7 +397,7 @@ typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
 "
     )
 
-ENDIF ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_LIBAVL2_TREE")
+ENDIF ()
 
 IF (LIBAVL2_TREE_TYPES)
     INCLUDE_DIRECTORIES(BEFORE "${LIBAVL2_COPIED_MODULES_DIR}")
@@ -420,8 +413,8 @@ IF (LIBAVL2_TREE_TYPES)
             COPYONLY
         )
         LIST(APPEND FREECELL_SOLVER_LIB_MODULES "${LIBAVL2_COPIED_MODULES_DIR}/${C_FN}")
-    ENDFOREACH (TREE_TYPE ${LIBAVL2_TREE_TYPES})
-ENDIF (LIBAVL2_TREE_TYPES)
+    ENDFOREACH ()
+ENDIF ()
 
 SET (MY_LINK_FLAGS )
 SET (MY_TO_PROFILE "")
@@ -431,14 +424,14 @@ IF (CMAKE_BUILD_TYPE STREQUAL profile)
     LIST (APPEND MY_LINK_FLAGS "-pg" "-static-libgcc")
     SET (BUILD_STATIC_LIBRARY "1")
     SET (MY_TARGET_LINK_LIBS "freecell-solver-static" "m_p" "c_p")
-ELSE (CMAKE_BUILD_TYPE STREQUAL profile)
+ELSE ()
     IF (FCS_LINK_TO_STATIC)
         SET (BUILD_STATIC_LIBRARY "1")
         SET (MY_TARGET_LINK_LIBS "freecell-solver-static")
-    ELSE (FCS_LINK_TO_STATIC)
+    ELSE ()
         SET (MY_TARGET_LINK_LIBS "freecell-solver")
-    ENDIF(FCS_LINK_TO_STATIC)
-ENDIF (CMAKE_BUILD_TYPE STREQUAL profile)
+    ENDIF()
+ENDIF ()
 
 
 INCLUDE(CPack)
@@ -452,17 +445,17 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 IF (MSVC)
     MESSAGE(FATAL_ERROR "Error! You are using Microsoft Visual C++ and Freecell Solver Requires a compiler that supports C99 and some GCC extensions. Possible alternatives are GCC, clang and Intel C++ Compiler")
-ENDIF (MSVC)
+ENDIF ()
 
 SET (COMPILER_FLAGS_TO_CHECK "-fvisibility=hidden")
 
 IF (CPU_ARCH)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-march=${CPU_ARCH}")
-ENDIF (CPU_ARCH)
+ENDIF ()
 
 IF (OPTIMIZATION_OMIT_FRAME_POINTER)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-fomit-frame-pointer")
-ENDIF(OPTIMIZATION_OMIT_FRAME_POINTER)
+ENDIF()
 
 SET (IS_DEBUG)
 IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
@@ -470,7 +463,7 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     # This slows down the program considerably.
     IF (CMAKE_BUILD_TYPE STREQUAL debug)
         LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
-    ENDIF (CMAKE_BUILD_TYPE STREQUAL debug)
+    ENDIF ()
 
     # Removed these flags because they emitted spurious warnings, which were of
     # no use to us:
@@ -479,20 +472,20 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
 
     IF (${CMAKE_COMPILER_IS_GNUCC})
         ADD_GCC_DEBUG_WARNING_FLAGS()
-    ENDIF (${CMAKE_COMPILER_IS_GNUCC})
-ENDIF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
+    ENDIF ()
+ENDIF ()
 
 IF (IS_DEBUG OR FCS_WITH_TEST_SUITE)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
-ENDIF (IS_DEBUG OR FCS_WITH_TEST_SUITE)
+ENDIF ()
 
 IF (${CMAKE_COMPILER_IS_GNUCC})
     ADD_DEFINITIONS("-std=gnu99")
-ENDIF (${CMAKE_COMPILER_IS_GNUCC})
+ENDIF ()
 
 IF (CMAKE_BUILD_TYPE STREQUAL release)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-flto" "-ffat-lto-objects")
-ENDIF (CMAKE_BUILD_TYPE STREQUAL release)
+ENDIF ()
 
 SET (IDX 1)
 FOREACH (CFLAG_TO_CHECK ${COMPILER_FLAGS_TO_CHECK})
@@ -502,16 +495,16 @@ FOREACH (CFLAG_TO_CHECK ${COMPILER_FLAGS_TO_CHECK})
     IF (${FLAG_EXISTS_VAR})
         ADD_DEFINITIONS(${CFLAG_TO_CHECK})
         LIST(APPEND MY_LINK_FLAGS "${CFLAG_TO_CHECK}")
-    ENDIF (${FLAG_EXISTS_VAR})
-ENDFOREACH(CFLAG_TO_CHECK)
+    ENDIF ()
+ENDFOREACH()
 
 IF (FCS_TRACE_MEM)
     ADD_DEFINITIONS("-DFCS_TRACE_MEM=1")
-ENDIF (FCS_TRACE_MEM)
+ENDIF ()
 
 IF (FCS_MAX_NUM_SCANS_BUCKETS)
     ADD_DEFINITIONS("-DFCS_MAX_NUM_SCANS_BUCKETS=${FCS_MAX_NUM_SCANS_BUCKETS}")
-ENDIF (FCS_MAX_NUM_SCANS_BUCKETS)
+ENDIF ()
 
 SET (MY_EXE_FLAGS)
 FOREACH (CFLAG_TO_CHECK "-fwhole-program")
@@ -520,8 +513,8 @@ FOREACH (CFLAG_TO_CHECK "-fwhole-program")
     CHECK_C_COMPILER_FLAG("${CFLAG_TO_CHECK}" ${FLAG_EXISTS_VAR})
     IF (${FLAG_EXISTS_VAR})
         LIST(APPEND MY_EXE_FLAGS "${CFLAG_TO_CHECK}")
-    ENDIF (${FLAG_EXISTS_VAR})
-ENDFOREACH(CFLAG_TO_CHECK)
+    ENDIF ()
+ENDFOREACH ()
 
 # So it can find the includes when building libavl.avl.h.
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -552,7 +545,7 @@ IF (BUILD_STATIC_LIBRARY)
         ${FREECELL_SOLVER_LIBS}
         PROPERTIES CLEAN_DIRECT_OUTPUT 1
     )
-ENDIF (BUILD_STATIC_LIBRARY)
+ENDIF ()
 
 ADD_LIBRARY (fcs_gen_ms_freecell_boards
     SHARED
@@ -565,9 +558,9 @@ SET_TARGET_PROPERTIES(freecell-solver
 
 IF (UNIX)
     SET(MATH_LIB "m")
-ELSE(UNIX)
+ELSE()
     SET(MATH_LIB )
-ENDIF(UNIX)
+ENDIF()
 
 SET(LIBTCMALLOC_LIB_LIST)
 
@@ -581,11 +574,11 @@ IF ((NOT ("${FCS_AVOID_TCMALLOC}")) AND (NOT "${FCS_WITH_TEST_SUITE}") AND ( NOT
 
     IF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
         # Do nothing.
-    ELSE(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+    ELSE()
         # Cancelling for now to see if it helps with the valgrind problem.
         # TODO : restore
         SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
-    ENDIF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+    ENDIF()
 ENDIF ()
 
 SET(FREECELL_SOLVER_EXECUTABLES )
@@ -595,12 +588,12 @@ MACRO(FCS_ADD_EXEC_NO_INSTALL target)
     ADD_EXECUTABLE(${target} ${modules})
     LIST(APPEND FREECELL_SOLVER_EXECUTABLES ${target})
     TARGET_LINK_LIBRARIES (${target} ${MY_TARGET_LINK_LIBS})
-ENDMACRO(FCS_ADD_EXEC_NO_INSTALL target)
+ENDMACRO()
 
 MACRO(FCS_ADD_EXEC target)
     FCS_ADD_EXEC_NO_INSTALL(${ARGV})
     INSTALL (TARGETS ${target} DESTINATION "bin")
-ENDMACRO(FCS_ADD_EXEC)
+ENDMACRO()
 
 
 FCS_ADD_EXEC(fc-solve main.c)
@@ -620,8 +613,8 @@ MACRO (MY_FIND_GMP reason_why my_option)
 "You must install libgmp ( http://gmplib.org/ ) and its development package ${reason_why}.
 If you're not interested in building it, run cmake with the -D${my_option}= flag."
         )
-    ENDIF (NOT LIBGMP_LIB)
-ENDMACRO (MY_FIND_GMP reason_why my_option)
+    ENDIF ()
+ENDMACRO ()
 
 # We also need to put the CMAKE_POLICY invocation here or else it still warns.
 CMAKE_POLICY(SET CMP0054 NEW)
@@ -633,8 +626,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
     IF (NOT "${FCS_DISABLE_DEBONDT_DELTA_STATES}")
         ADD_DEFINITIONS("-DFCS_DEBONDT_DELTA_STATES=1")
         SET (DEBONDT_DELTA_STATES 1)
-    ENDIF (NOT  "${FCS_DISABLE_DEBONDT_DELTA_STATES}")
-
+    ENDIF ()
 
     SET (DBM_BACKEND_MODULES )
     SET (DBM_LIBS "pthread")
@@ -644,7 +636,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
     IF (FCS_DBM_USE_RWLOCK)
         LIST(APPEND DBM_LIBS "pthread_rwlock_fcfs")
         ADD_DEFINITIONS("-DFCS_DBM_USE_RWLOCK=1")
-    ENDIF (FCS_DBM_USE_RWLOCK)
+    ENDIF ()
 
     SET (DBM_DEFINITIONS )
 
@@ -653,9 +645,9 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1")
         LIST (APPEND DBM_DEFINITIONS "FCS_LIBAVL_STORE_WHOLE_KEYS=1"
             "FCS_DBM_RECORD_POINTER_REPR=1")
-    ELSE (FCS_DBM_TREE_BACKEND STREQUAL "kaztree")
+    ELSE ()
         SET (BIN_TREE_MODULE "kaz_tree.c")
-    ENDIF (FCS_DBM_TREE_BACKEND STREQUAL "libavl2")
+    ENDIF ()
 
     IF (FCS_DBM_BACKEND STREQUAL "bdb")
         LIST(APPEND DBM_BACKEND_MODULES "dbm_bdb.c" ${BIN_TREE_MODULE})
@@ -664,12 +656,12 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         LIST(APPEND DBM_BACKEND_MODULES "dbm_kaztree.c" ${BIN_TREE_MODULE})
         # ADD_DEFINITIONS("-DFCS_DBM_CACHE_ONLY=1")
         ADD_DEFINITIONS("-DFCS_DBM_WITHOUT_CACHES=1")
-    ELSE (FCS_DBM_BACKEND STREQUAL "bdb")
+    ELSE ()
         LIST(APPEND DBM_BACKEND_MODULES "dbm_leveldb.cpp" ${BIN_TREE_MODULE})
         INCLUDE_DIRECTORIES(BEFORE "${LEVELDB_SOURCE_DIR}/include")
         LINK_DIRECTORIES("${LEVELDB_SOURCE_DIR}")
         LIST (INSERT DBM_LIBS 0 "leveldb")
-    ENDIF (FCS_DBM_BACKEND STREQUAL "bdb")
+    ENDIF ()
 
     ADD_EXECUTABLE(dbm_fc_solver
         dbm_solver.c
@@ -704,13 +696,13 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         )
         TARGET_LINK_LIBRARIES("pseudo_dfs_fc_solver" ${LIBJUDY_LIB})
         LIST(APPEND EXTRA_SOLVERS "pseudo_dfs_fc_solver")
-    ENDIF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES") AND "${WITH_JUDY}")
+    ENDIF ()
 
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
 
     FOREACH (TGT "dbm_fc_solver" "fcc_fc_solver" "depth_dbm_fc_solver" "split_fcc_fc_solver" ${EXTRA_SOLVERS})
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB})
-    ENDFOREACH (TGT)
+    ENDFOREACH ()
 
     # We cannot set it on fcc_fc_solver because it relies on cache_insert
     # which uses a tree with a different item type.
@@ -718,32 +710,30 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         SET_TARGET_PROPERTIES("${TGT}"
             PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
         )
-    ENDFOREACH (TGT)
-ENDIF ("${FCS_ENABLE_DBM_SOLVER}")
+    ENDFOREACH ()
+ENDIF ()
 
 IF (CMAKE_USE_PTHREADS_INIT)
     FCS_ADD_EXEC(freecell-solver-multi-thread-solve threaded_range_solver.c)
     TARGET_LINK_LIBRARIES(freecell-solver-multi-thread-solve "pthread")
-ENDIF (CMAKE_USE_PTHREADS_INIT)
+ENDIF ()
 
 IF (UNIX)
     FCS_ADD_EXEC_NO_INSTALL(
         freecell-solver-fork-solve "forking_range_solver.c"
     )
-ENDIF (UNIX)
+ENDIF ()
 
-
+SET (TARGETS "freecell-solver")
 IF (FCS_LINK_TO_STATIC)
-    SET (TARGETS "freecell-solver" ${FREECELL_SOLVER_EXECUTABLES})
-ELSE (FCS_LINK_TO_STATIC)
-    SET (TARGETS "freecell-solver")
-ENDIF(FCS_LINK_TO_STATIC)
+    LIST (APPEND TARGETS ${FREECELL_SOLVER_EXECUTABLES})
+ENDIF()
 
 FOREACH (TGT ${TARGETS})
     TARGET_LINK_LIBRARIES (${TGT}
         ${MATH_LIB} ${LIBTCMALLOC_LIB_LIST} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
     )
-ENDFOREACH (TGT)
+ENDFOREACH ()
 
 
 SET (MY_EXES_LINK_FLAGS ${MY_LINK_FLAGS} ${MY_EXE_FLAGS})
@@ -754,7 +744,7 @@ IF (MY_LIBS_LINK_FLAGS)
         ${FREECELL_SOLVER_LIBS}
         PROPERTIES LINK_FLAGS "${MY_LIBS_LINK_FLAGS_STRING}"
     )
-ENDIF (MY_LIBS_LINK_FLAGS)
+ENDIF ()
 
 IF (MY_EXES_LINK_FLAGS)
     STRING (REPLACE ";" " "  MY_EXES_LINK_FLAGS_STRING "${MY_EXES_LINK_FLAGS}")
@@ -762,7 +752,7 @@ IF (MY_EXES_LINK_FLAGS)
         ${FREECELL_SOLVER_EXECUTABLES}
         PROPERTIES LINK_FLAGS "${MY_EXES_LINK_FLAGS_STRING}"
     )
-ENDIF (MY_EXES_LINK_FLAGS)
+ENDIF ()
 
 CHECK_FUNCTION_EXISTS(pow HAVE_POW)
 CHECK_FUNCTION_EXISTS(strndup HAVE_STRNDUP)
@@ -788,7 +778,7 @@ WHILE ( NOT ("${TEMP_SIZE}" STREQUAL "${INT_SIZE_IN_BITS}") )
     MATH(EXPR TEMP2 "${FCS_INT_BIT_SIZE_LOG2} + 1")
     SET(FCS_INT_BIT_SIZE_LOG2 "${TEMP2}")
 
-ENDWHILE ( NOT ("${TEMP_SIZE}" STREQUAL "${INT_SIZE_IN_BITS}") )
+ENDWHILE ()
 
 # Inspired from /usr/share/autoconf/autoconf/c.m4
 FOREACH(KEYWORD "inline" "__inline__" "__inline")
@@ -799,9 +789,9 @@ FOREACH(KEYWORD "inline" "__inline__" "__inline")
      IF(C_HAS_${KEYWORD})
        SET(HAVE_C_INLINE TRUE)
        SET(FCS_INLINE_KEYWORD "${KEYWORD}")
-     ENDIF(C_HAS_${KEYWORD})
-   ENDIF(NOT DEFINED HAVE_C_INLINE)
-ENDFOREACH(KEYWORD)
+     ENDIF()
+   ENDIF()
+ENDFOREACH()
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
@@ -849,7 +839,7 @@ IF (WIN32 AND NOT UNIX)
         TARGETS "freecell-solver"
         DESTINATION "bin"
     )
-ENDIF (WIN32 AND NOT UNIX)
+ENDIF ()
 
 INSTALL(
     FILES "${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_NAME}-config"
@@ -921,7 +911,7 @@ MACRO(GEN_BOARD idx)
         ARGS "-t" "${idx}" ">" "${board}"
     )
     LIST(APPEND BOARDS "${board}")
-ENDMACRO(GEN_BOARD idx)
+ENDMACRO()
 
 MACRO(GEN_BOARD_NO_NEWLINE idx)
     SET(board "${idx}.no-newline.board")
@@ -931,7 +921,7 @@ MACRO(GEN_BOARD_NO_NEWLINE idx)
         ARGS "-t" "${idx}" "|" "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/perl-remove-trailing-newlines.pl" ">" "${board}"
     )
     LIST(APPEND BOARDS "${board}")
-ENDMACRO(GEN_BOARD_NO_NEWLINE idx)
+ENDMACRO()
 
 FOREACH(idx 24 1941)
     GEN_BOARD(${idx})
@@ -964,7 +954,7 @@ ADD_CUSTOM_TARGET(
 
 IF (FCS_BUILD_DOCS)
     FIND_PACKAGE(Asciidoc)
-ENDIF (FCS_BUILD_DOCS)
+ENDIF ()
 
 SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
     "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" "${_fc_solve_txt}"
@@ -975,7 +965,7 @@ FOREACH(_file ${_docfiles})
     GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
     SET(_full_file "${CMAKE_CURRENT_BINARY_DIR}/${_file_we}")
     LIST(APPEND docs_to_install ${_full_file})
-ENDFOREACH(_file)
+ENDFOREACH()
 
 IF(ASCIIDOC_FOUND)
 
@@ -1000,13 +990,13 @@ IF(ASCIIDOC_FOUND)
                 COMMENT "Asciidoc ${_in}"
                 )
             LIST (APPEND htmls "${_html_out}")
-        ENDIF (NOT "${_file}" STREQUAL "${_fc_solve_txt}")
+        ENDIF ()
 
 
         SET (TO_DOCBOOK_EXTRA_FLAGS )
         IF ("${_file}" STREQUAL "${_fc_solve_txt}")
             LIST (APPEND TO_DOCBOOK_EXTRA_FLAGS "-d" "manpage")
-        ENDIF ("${_file}" STREQUAL "${_fc_solve_txt}")
+        ENDIF ()
 
         ADD_CUSTOM_COMMAND(
             OUTPUT "${_docbook_out}"
@@ -1045,7 +1035,7 @@ IF(ASCIIDOC_FOUND)
 
         LIST(APPEND _pdf_targets ${_in}_pdf)
 
-    ENDFOREACH(_file)
+    ENDFOREACH()
 
     # MESSAGE ("PDF_TARGETS == ${_pdf_targets}")
 
@@ -1068,7 +1058,7 @@ IF(ASCIIDOC_FOUND)
     ADD_CUSTOM_TARGET("fc_solve_man" ALL echo -n
         DEPENDS "${_manpage}"
     )
-ENDIF(ASCIIDOC_FOUND)
+ENDIF ()
 
 IF (FCS_WITH_TEST_SUITE)
 
@@ -1084,7 +1074,7 @@ IF (FCS_WITH_TEST_SUITE)
         "perl" "${CMAKE_CURRENT_SOURCE_DIR}/run-tests.pl"
     )
 
-ENDIF(FCS_WITH_TEST_SUITE)
+ENDIF ()
 
 # For Makefile.gnu in pgo.bash (see below)
 FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/.deps")
@@ -1117,34 +1107,32 @@ ADD_CUSTOM_TARGET(
 )
 
 
-IF (IS_DEBUG)
-    IF (NOT FCS_ENABLE_RCS_STATES)
-        # The delta-states testing library
-        ADD_LIBRARY(fcs_delta_states_test
+IF ("${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STATES}"))
+    # The delta-states testing library
+    ADD_LIBRARY(fcs_delta_states_test
+        SHARED
+        card.c state.c delta_states.c
+    )
+    # The DeBondt delta-states testing library
+    ADD_LIBRARY(fcs_debondt_delta_states_test
+        SHARED
+        card.c state.c delta_states_debondt.c
+    )
+    TARGET_LINK_LIBRARIES(fcs_debondt_delta_states_test ${LIBGMP_LIB})
+    IF ("${FCS_ENABLE_DBM_SOLVER}")
+        ADD_LIBRARY(fcs_dbm_calc_derived_test
             SHARED
-            card.c state.c delta_states.c
+            ${DBM_FCC_COMMON}
+            dbm_calc_derived_test.c
         )
-        # The DeBondt delta-states testing library
-        ADD_LIBRARY(fcs_debondt_delta_states_test
+        TARGET_LINK_LIBRARIES(fcs_dbm_calc_derived_test ${LIBGMP_LIB})
+        ADD_LIBRARY(fcs_fcc_brfs_test
             SHARED
-            card.c state.c delta_states_debondt.c
+            ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
         )
-        TARGET_LINK_LIBRARIES(fcs_debondt_delta_states_test ${LIBGMP_LIB})
-        IF ("${FCS_ENABLE_DBM_SOLVER}")
-            ADD_LIBRARY(fcs_dbm_calc_derived_test
-                SHARED
-                ${DBM_FCC_COMMON}
-                dbm_calc_derived_test.c
-            )
-            TARGET_LINK_LIBRARIES(fcs_dbm_calc_derived_test ${LIBGMP_LIB})
-            ADD_LIBRARY(fcs_fcc_brfs_test
-                SHARED
-                ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
-            )
-            TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
-        ENDIF ("${FCS_ENABLE_DBM_SOLVER}")
-    ENDIF (NOT FCS_ENABLE_RCS_STATES)
-ENDIF (IS_DEBUG)
+        TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
+    ENDIF ()
+ENDIF ()
 
 ADD_CUSTOM_TARGET(
     "dist"
