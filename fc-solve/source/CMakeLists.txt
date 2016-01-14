@@ -559,23 +559,22 @@ ENDIF(UNIX)
 
 SET(LIBTCMALLOC_LIB_LIST)
 
-IF (NOT ((CMAKE_BUILD_TYPE STREQUAL "debug") OR (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo") ) )
+# Avoid linking to tcmalloc if the test suite is enabled due to:
+# https://github.com/gperftools/gperftools/issues/758
+IF ((NOT ("${FCS_AVOID_TCMALLOC}")) AND (NOT "${FCS_WITH_TEST_SUITE}") AND ( NOT ((CMAKE_BUILD_TYPE STREQUAL "debug") OR (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo") ) ))
+    # Optionally link against Google's TCMalloc if it's available:
+    # http://goog-perftools.sourceforge.net/
+    # This gives better performance for the threaded programs.
+    FIND_LIBRARY(LIBTCMALLOC_LIB tcmalloc)
 
-    IF (NOT FCS_AVOID_TCMALLOC)
-        # Optionally link against Google's TCMalloc if it's available:
-        # http://goog-perftools.sourceforge.net/
-        # This gives better performance for the threaded programs.
-        FIND_LIBRARY(LIBTCMALLOC_LIB tcmalloc)
-
-        IF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
-            # Do nothing.
-        ELSE(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
-            # Cancelling for now to see if it helps with the valgrind problem.
-            # TODO : restore
-            SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
-        ENDIF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
-    ENDIF (NOT FCS_AVOID_TCMALLOC)
-ENDIF (NOT ((CMAKE_BUILD_TYPE STREQUAL "debug") OR (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo") ) )
+    IF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+        # Do nothing.
+    ELSE(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+        # Cancelling for now to see if it helps with the valgrind problem.
+        # TODO : restore
+        SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
+    ENDIF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
+ENDIF ()
 
 SET(FREECELL_SOLVER_EXECUTABLES )
 MACRO(FCS_ADD_EXEC_NO_INSTALL target)
