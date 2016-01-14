@@ -659,23 +659,68 @@ extern int fc_solve_state_compare_indirect_with_context(const void * s1, const v
 extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str
     PASS_T(const fcs_bool_t t));
 
+
+/*
+ * Those strings contain the string representations of the different cards.
+ * If CARD_DEBUG_PRES is defined then an asterisk is printed as an empty card.
+ *
+ * Notice that there are two of them: one prints 10 and one prints T for the
+ * 10 card.
+ *
+ * */
+#ifdef CARD_DEBUG_PRES
+#define CARD_ZERO() "*"
+#else
+#define CARD_ZERO() " "
+#endif
+
 /*
  * Converts a rank from its internal representation to a string.
  *
  * rank_idx - the rank
  * str - the string to output to.
- * rank_is_null - a pointer to a bool that indicates whether
- *      the card number is out of range or equal to zero
  * t - whether 10 should be printed as T or not.
  * */
-extern void fc_solve_p2u_rank(
+#define GEN_CARD_MAP(t_card) { CARD_ZERO(), "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J", "Q", "K" }
+
+#ifndef FCS_IMPLICIT_T_RANK
+static const char card_map_3_10[14][4] = GEN_CARD_MAP("10");
+
+static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
+#else
+static const char cards_char_map[15] = ( CARD_ZERO() "A23456789TJQK" );
+#endif
+
+static GCC_INLINE void fc_solve_p2u_rank(
     const int rank_idx,
     char * const str
     PASS_T(const fcs_bool_t t)
 #ifndef FCS_WITHOUT_CARD_FLIPPING
     , const fcs_bool_t flipped
 #endif
-    );
+    )
+{
+#if defined(CARD_DEBUG_PRES) || defined(FCS_WITHOUT_CARD_FLIPPING)
+#else
+    if (flipped)
+    {
+        strncpy(str, "*", 2);
+    }
+    else
+#endif
+    {
+#define INDEX() (rank_idx)
+#ifdef FCS_IMPLICIT_T_RANK
+        str[0] = cards_char_map[INDEX()];
+        str[1] = '\0';
+#else
+        strcpy(str,
+            (t ? card_map_3_T : card_map_3_10)
+            [INDEX()]);
+#endif
+#undef INDEX
+    }
+}
 
 /*
  * This function converts a card number from its user representation
