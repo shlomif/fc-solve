@@ -38,6 +38,8 @@
 #include "unused.h"
 #include "inline.h"
 
+#include "p2u_rank.h"
+
 #ifdef DEBUG_STATES
 static GCC_INLINE int fcs_stack_compare(const void * s1, const void * s2)
 {

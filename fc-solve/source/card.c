@@ -36,6 +36,8 @@
 #include "inline.h"
 #include "bool.h"
 
+#include "p2u_rank.h"
+
 DEFINE_fc_solve_empty_card();
 
 /*
