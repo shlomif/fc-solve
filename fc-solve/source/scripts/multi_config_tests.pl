@@ -163,25 +163,40 @@ use warnings;
 
 use Cwd qw(getcwd);
 use File::Path qw(rmtree);
+use File::Spec ();
 
 use Term::ANSIColor qw(colored);
 
 local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 
+my $test_index = 1;
+my $NUM_PROCESSORS = 4;
+
 sub run_tests
 {
-    my ($blurb_base, $args) = @_;
+    my ($blurb_base_base, $args) = @_;
+
+    my $idx = $test_index++;
+    my $blurb_base = "$blurb_base_base [idx=$idx]";
 
     my $tatzer_args = $args->{'tatzer_args'};
 
     my $cwd = getcwd();
-    my $build_path = 'build';
+    my $build_path = File::Spec->rel2abs(
+        File::Spec->catdir(
+            File::Spec->curdir(), File::Spec->updir(), "build-$idx"
+        )
+    );
 
     mkdir($build_path);
     chdir($build_path);
 
-    run_cmd("$blurb_base : Tatzer", {cmd => ['../Tatzer', @$tatzer_args, '..']});
-    run_cmd("$blurb_base : make", {cmd => [qw(make -j2)]});
+    local %ENV = %ENV;
+    delete($ENV{FCS_USE_TEST_RUN});
+    $ENV{TEST_JOBS} = $NUM_PROCESSORS;
+
+    run_cmd("$blurb_base : Tatzer", {cmd => ['../source/Tatzer', @$tatzer_args]});
+    run_cmd("$blurb_base : make", {cmd => ['make', "-j$NUM_PROCESSORS"]});
     run_cmd("$blurb_base : test", {cmd => [$^X, "$cwd/run-tests.pl"]});
 
     chdir($cwd);
