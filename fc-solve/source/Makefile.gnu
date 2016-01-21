@@ -39,6 +39,8 @@ else
 endif
 
 LTO_FLAGS := -flto -ffat-lto-objects
+AR := ar
+RANLIB := ranlib
 
 ifeq ($(COMPILER),gcc)
 	CC = gcc
@@ -47,8 +49,12 @@ ifeq ($(COMPILER),gcc)
 else ifeq ($(COMPILER),clang)
 	CC = clang
 	GCC_COMPAT := 1
-	CFLAGS += -Werror=implicit-function-declaration
+	# CFLAGS += -Werror=implicit-function-declaration -std=gnu99 -fuse-ld=gold
+	CFLAGS += -Werror=implicit-function-declaration -std=gnu99
+	# LTO_FLAGS := -flto
 	LTO_FLAGS :=
+	AR := llvm-ar
+	RANLIB := llvm-ranlib
 else ifeq ($(COMPILER),icc)
 	CC = icc
 	GCC_COMPAT := 1
@@ -240,8 +246,8 @@ ifeq ($(DISABLE_PATSOLVE),0)
 endif
 
 $(STATIC_LIB): $(FCS_OBJECTS)
-	ar r $@ $^
-	ranlib $@
+	$(AR) r $@ $^
+	$(RANLIB) $@
 
 $(FCS_SHARED_LIB): $(FCS_OBJECTS)
 	$(CREATE_SHARED) $(TCMALLOC_LINK) -o $@ $^ $(END_SHARED)
