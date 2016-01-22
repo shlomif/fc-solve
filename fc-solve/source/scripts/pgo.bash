@@ -2,10 +2,16 @@
 
 # This is a script for PGO - Profile Guided Optimisations in gcc.
 
-compiler="$1"
+real_compiler="$1"
 shift
 mode="$1"
 shift
+
+if test "$real_compiler" = "clang" ; then
+    compiler="gcc"
+else
+    compiler="$real_compiler"
+fi
 
 pgo_flags=""
 make_vars=()
@@ -32,7 +38,7 @@ run_self()
     local cmd="$1"
     shift
 
-    bash "$src"/scripts/pgo.bash "$compiler" "$cmd"
+    bash "$src"/scripts/pgo.bash "$real_compiler" "$cmd"
 }
 
 run_timing()
@@ -77,13 +83,17 @@ elif test "$mode" = "gen" ; then
         echo "Unknown compiler '$compiler'!" 1>&2
         exit -1
     fi
-
 else
     echo "Unknown mode '$mode'!" 1>&2
     exit -1
 fi
 
+if test \( "$real_compiler" = "clang" \) -a \( "$mode" = "use" \) ; then
+    llvm-profdata merge -output default.profdata default.profraw
+fi
+
 run_make FREECELL_ONLY=1 \
     EXTRA_CFLAGS="$pgo_flags" \
-    COMPILER="$compiler" \
+    COMPILER="$real_compiler" \
     $make_vars
+
