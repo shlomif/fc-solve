@@ -1,3 +1,5 @@
+os: linux
+dist: trusty
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -y ack-grep cpanminus libgmp-dev mercurial python3 python3-setuptools perl libperl-dev valgrind
