@@ -11,7 +11,6 @@ Summary: The Freecell Solver Executable
 BuildRequires: ack
 BuildRequires: cmake
 BuildRequires: gmp-devel
-BuildRequires: perl(base)
 BuildRequires: perl(Carp)
 BuildRequires: perl(Cwd)
 BuildRequires: perl(Data::Dumper)
