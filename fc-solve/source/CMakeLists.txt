@@ -928,6 +928,15 @@ FOREACH(idx 24 1941)
 ENDFOREACH(idx)
 GEN_BOARD_NO_NEWLINE(24)
 
+
+SET(board "empty.board")
+ADD_CUSTOM_COMMAND(
+    OUTPUT "${board}"
+    COMMAND "${CMAKE_COMMAND}"
+    ARGS "-E" "touch" "${board}"
+)
+LIST(APPEND BOARDS "${board}")
+
 ADD_CUSTOM_TARGET(
     boards
     DEPENDS ${BOARDS}

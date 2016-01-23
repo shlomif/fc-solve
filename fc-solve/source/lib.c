@@ -721,15 +721,24 @@ static GCC_INLINE char * duplicate_string_while_adding_a_trailing_newline(
 )
 {
     const int len = strlen(orig_str);
-    char * s = malloc(len + MY_MARGIN);
-    strcpy (s, orig_str);
+    char * const s = malloc(len + MY_MARGIN);
+    /*
+     * If orig_str is the empty string then there is no
+     * penultimate character.
+     * */
+    if (len)
     {
+        strcpy (s, orig_str);
         char * s_end = s + len - 1;
         if ((*s_end) != TRAILING_CHAR)
         {
             *(++s_end) = TRAILING_CHAR;
             *(++s_end) = '\0';
         }
+    }
+    else
+    {
+        strcpy(s, "\n");
     }
     return s;
 }

@@ -22,6 +22,17 @@ my %valgrind_tests =
         ],
         blurb => qq{dbm_fc_solver from 24-mid-with-colons.},
     },
+    'empty_board' =>
+    {
+        prog => "fc-solve",
+        argv => [
+            {
+                type => 'catfile',
+                args => [{ type => 'ENV', arg => 'FCS_PATH'}, 'empty.board'],
+            },
+        ],
+        blurb => "Sanity of running on an empty board input.",
+    },
     'fc-solve-crashy-preset-1' =>
     {
         prog => "fc-solve",
