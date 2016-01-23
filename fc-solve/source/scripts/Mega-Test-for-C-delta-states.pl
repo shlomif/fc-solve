@@ -24,32 +24,26 @@ static enum fcs_dbm_variant_type_t variant_from_string(const char * variant_s)
 }
 
 SV* enc_and_dec(const char * variant_s, char * init_state_s, char * derived_state_s) {
-    SV * ret;
-    char * s;
-    s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
+    char * const s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
 
-    ret = newSVpv(s, 0);
+    SV * const ret = newSVpv(s, 0);
     free(s);
     return ret;
 }
 
 SV* debondt_enc_and_dec(const char * variant_s, char * init_state_s, char * derived_state_s) {
-    SV * ret;
-    char * s;
-    s = fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
+    char * const s = fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(variant_from_string(variant_s), init_state_s, derived_state_s);
 
-    ret = newSVpv(s, 0);
+    SV * const ret = newSVpv(s, 0);
     free(s);
     return ret;
 }
 
 SV* horne_prune(const char * variant_s, char * init_state_s) {
-    SV * ret;
     char * s;
-    int count_moves;
-    count_moves = fc_solve_user_INTERNAL_perform_horne_prune(variant_from_string(variant_s), init_state_s, &s);
+    fc_solve_user_INTERNAL_perform_horne_prune(variant_from_string(variant_s), init_state_s, &s);
 
-    ret = newSVpv(s, 0);
+    SV * const ret = newSVpv(s, 0);
     free(s);
     return ret;
 }
