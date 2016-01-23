@@ -7,7 +7,7 @@ sub _run_test
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my ($id, $args, $msg) = @_;
+    my ($args, $msg) = @_;
 
     require FC_Solve::GetOutput;
     my $cmd_line = FC_Solve::GetOutput->new($args);
@@ -42,11 +42,9 @@ sub run_id
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my ($self, $args) = @_;
+    my ($s, $args) = @_;
 
-    my $data = $args->{data};
-
-    return _run_test($args->{id}, $data->{args}, $data->{msg});
+    return _run_test(@{ $args->{data} }{qw(args msg)});
 }
 
 1;
