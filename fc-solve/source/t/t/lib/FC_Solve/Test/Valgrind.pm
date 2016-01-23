@@ -48,6 +48,21 @@ sub _expand_arg
     }
 }
 
+sub _slurp
+{
+    my $filename = shift;
+
+    open my $in, '<', $filename
+        or die "Cannot open '$filename' for slurping - $!";
+
+    local $/;
+    my $contents = <$in>;
+
+    close($in);
+
+    return $contents;
+}
+
 sub _run_test
 {
     my ($id, $args) = @_;
@@ -57,20 +72,10 @@ sub _run_test
         Carp::confess("args must be a HASH (wrong ID)?.");
     }
 
-    # $args = { argv => $args, prog => "freecell-solver-range-parallel-solve", };
-
-    my $log_fn = "valgrind--$id.log";
-
     if (!defined($id))
     {
         Carp::confess("Missing id");
     }
-
-    my $cmd_line_args = [
-        map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}
-    ];
-
-    my $prog = $args->{prog};
 
     my $blurb = $args->{blurb};
     if ((!defined($blurb)) or ref($blurb) ne '' or length($blurb) == 0)
@@ -78,34 +83,24 @@ sub _run_test
         Carp::confess("Blurb is wrong.");
     }
 
+    my $log_fn = "valgrind--$id.log";
+
     system(
         "valgrind",
         "--track-origins=yes",
         "--leak-check=yes",
         "--log-file=$log_fn",
-        $ENV{'FCS_PATH'} . "/$prog",
-        @$cmd_line_args,
+        "$ENV{FCS_PATH}/$args->{prog}",
+        (map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}),
     );
 
-    open my $read_from_valgrind, "<", $log_fn
-        or die "Cannot open valgrind.log for reading";
-    my $found_error_summary = 0;
-    my $found_malloc_free = 0;
-    LINES_LOOP:
-    while (my $l = <$read_from_valgrind>)
-    {
-        if (index($l, q{ERROR SUMMARY: 0 errors from 0 contexts}) >= 0)
-        {
-            $found_error_summary = 1;
-        }
-        elsif (index($l, q{in use at exit: 0 bytes}) >= 0)
-        {
-            $found_malloc_free = 1;
-        }
-    }
-    close ($read_from_valgrind);
-
-    if (Test::More::ok (($found_error_summary && $found_malloc_free), $blurb))
+    my $out_text = _slurp( $log_fn );
+    if (Test::More::ok (
+            (index($out_text, q{ERROR SUMMARY: 0 errors from 0 contexts}) >= 0)
+                &&
+            (index($out_text, q{in use at exit: 0 bytes}) >= 0)
+            , $blurb)
+    )
     {
         unlink($log_fn);
     }
@@ -121,7 +116,7 @@ sub run_id
 
     my (undef, $args) = @_;
 
-    return _run_test($args->{id}, $args->{data});
+    return _run_test(@$args{qw(id data)});
 }
 
 1;
