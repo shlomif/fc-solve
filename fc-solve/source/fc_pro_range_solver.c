@@ -182,10 +182,6 @@ static int cmd_line_callback(
     return FCS_CMD_LINE_SKIP;
 }
 
-#if 0
-#define total_iterations_limit_per_board 100000
-#endif
-
 static const char * known_parameters[] = {
     "-i", "--iter-output",
     "-s", "--state-output",
@@ -479,6 +475,8 @@ int main(int argc, char * argv[])
 
     ret = 0;
 
+    freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
+
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
 
@@ -508,8 +506,6 @@ int main(int argc, char * argv[])
         }
 
         buffer[COUNT(buffer)-1] = '\0';
-
-        freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
 
         ret =
             freecell_solver_user_solve_board(
