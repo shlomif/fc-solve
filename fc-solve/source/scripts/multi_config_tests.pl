@@ -63,13 +63,6 @@ sub _stringify_value
     }
 }
 
-=head2 $trapper->diag_all()
-
-Calls L<Test::More>'s diag() with alll the trapped fields, like stdout,
-stderr, etc.
-
-=cut
-
 sub all_info
 {
     my $self = shift;
@@ -106,13 +99,6 @@ sub emit_all
     $out->();
     exit(-1);
 }
-
-=head2 my $got = Test::Run::Trap::Obj->trap_run({class => $class, args => \@args, run_func => $func})
-
-Runs C<$class->$func()> with the arguments @args placed into a hash-ref,
-traps the results and returns a results object.
-
-=cut
 
 sub run_cmd
 {
