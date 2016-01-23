@@ -12,8 +12,6 @@ sub _run_test
     require FC_Solve::GetOutput;
     my $cmd_line = FC_Solve::GetOutput->new($args);
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
-    my $variant = $cmd_line->variant;
-    my $is_custom = $cmd_line->is_custom;
 
     require Games::Solitaire::Verify::Solution;
 
@@ -21,8 +19,8 @@ sub _run_test
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => $fc_solve_output,
-            variant => $variant,
-            ($is_custom ? (variant_params => $args->{variant_params}) : ()),
+            variant => $cmd_line->variant,
+            ($cmd_line->is_custom ? (variant_params => $args->{variant_params}) : ()),
         },
     );
 
