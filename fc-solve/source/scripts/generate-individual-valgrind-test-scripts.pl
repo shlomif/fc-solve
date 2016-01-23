@@ -13,6 +13,7 @@ FC_Solve::SplitTests->gen(
     {
         prefix => 'valgrind',
         module => 'FC_Solve::Test::Valgrind',
+        data_module => 'FC_Solve::Test::Valgrind::Data',
     },
 );
 

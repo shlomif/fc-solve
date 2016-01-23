@@ -13,6 +13,7 @@ FC_Solve::SplitTests->gen(
     {
         prefix => 'verify',
         module => 'FC_Solve::Test::Verify',
+        data_module => 'FC_Solve::Test::Verify::Data',
     },
 );
 

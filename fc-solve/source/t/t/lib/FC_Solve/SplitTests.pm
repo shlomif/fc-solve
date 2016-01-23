@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Data::Dumper ();
+
 use Test::Data::Split;
 
 sub gen
@@ -11,18 +13,25 @@ sub gen
     my ($self, $args) = @_;
 
     my $module = $args->{module};
+    my $data_module = $args->{data_module};
     my $fn_prefix = $args->{prefix};
 
     if ($module !~ /\A[A-Z][a-zA-Z_0-9:]+\z/)
     {
         die "module should be the name of a module.";
     }
+    if ($data_module !~ /\A[A-Z][a-zA-Z_0-9:]+\z/)
+    {
+        die "data_module should be the name of a module.";
+    }
     if ($fn_prefix !~ /\A[a-z]+\z/)
     {
         die "prefix is wrong.";
     }
 
-    eval "use $module;";
+    eval "use $data_module;";
+
+    my $data_obj = $data_module->new;
 
     Test::Data::Split->new(
         {
@@ -34,7 +43,9 @@ sub gen
             },
             contents_cb => sub {
                 my ($self, $args) = @_;
-                my $id_quoted = quotemeta($args->{id});
+                my $id = $args->{id};
+                my $id_quoted = quotemeta($id);
+                my $data = Data::Dumper->new([$data_obj->lookup_data($id)])->Terse(1)->Dump;
                 return <<"EOF";
 #!/usr/bin/perl
 
@@ -46,11 +57,11 @@ use Test::More tests => 1;
 use $module;
 
 # TEST
-$module->new->run_id({ id => qq/$id_quoted/, });
+$module->run_id({ id => qq/$id_quoted/, data => $data, });
 
 EOF
         },
-        data_obj => $module->new,
+        data_obj => $data_obj,
     }
 )->run;
 
