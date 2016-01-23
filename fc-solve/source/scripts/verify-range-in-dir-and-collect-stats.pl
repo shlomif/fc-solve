@@ -164,22 +164,8 @@ sub _init
     return;
 }
 
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, "<", $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
-
 use Data::Dumper;
+use Path::Tiny;
 
 sub _verify_contents
 {
@@ -229,7 +215,7 @@ sub run
     foreach my $idx ($min_idx .. $max_idx)
     {
         my $filename = sprintf("%s/$IDX_SOL_FORMAT.sol", $solutions_dir, $idx);
-        my $contents = _slurp($filename);
+        my $contents = path($filename)->slurp_utf8;
 
         my $solved = $contents =~ m{solveable};
 

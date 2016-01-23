@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use FC_Solve::SplitCmdLine;
+use Path::Tiny;
 
 use MooX qw( late );
 
@@ -16,21 +17,6 @@ sub _build_argv
 
 has input_argv => (is => 'ro', isa => 'ArrayRef[Str]', required => 1, );
 has argv => (is => 'ro', isa => 'ArrayRef[Str]', lazy => 1, default => \&_build_argv);
-
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, '<', $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
 
 sub _process_cmd_line
 {
@@ -58,7 +44,7 @@ sub _process_cmd_line
                 $filename = "$ENV{FCS_SRC_PATH}/Presets/presets/$filename";
             }
 
-            my $text = _slurp($filename);
+            my $text = path($filename)->slurp_utf8;
             my $argv_to_process = FC_Solve::SplitCmdLine->split_cmd_line_string(
                 $text
             );

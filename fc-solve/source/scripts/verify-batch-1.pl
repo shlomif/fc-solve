@@ -124,22 +124,8 @@ sub _init
     return;
 }
 
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, "<", $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
-
 use Data::Dumper;
+use Path::Tiny;
 
 sub run
 {
@@ -149,7 +135,7 @@ sub run
 
     foreach my $filename (@{$self->_filenames()})
     {
-        my $contents = _slurp($filename);
+        my $contents = path($filename)->slurp_raw;
 
         if ($contents =~ m{solveable})
         {

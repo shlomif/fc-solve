@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Statistics::Descriptive;
+use Path::Tiny;
 
 my $filename = shift(@ARGV);
 
@@ -22,22 +23,7 @@ foreach my $f (@fields)
     $f->{'s'} = Statistics::Descriptive::Full->new();
 }
 
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, "<", $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
-
-my $dump = _slurp($filename);
+my $dump = path($filename)->slurp_utf8;
 
 foreach my $f (@fields)
 {

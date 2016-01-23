@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Template;
+use Path::Tiny;
 use FindBin;
 
 sub rank_normalize
@@ -20,22 +21,7 @@ sub rank_normalize
     }
 }
 
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, '<', $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
-
-my $implicit_t = (_slurp("../fcs_back_compat.h") =~ /^#define FCS_BREAK_BACKWARD_COMPAT_1$/ms ? 1 : 0);
+my $implicit_t = (path("../fcs_back_compat.h")->slurp_utf8 =~ /^#define FCS_BREAK_BACKWARD_COMPAT_1$/ms ? 1 : 0);
 
 my @suits = (qw(H C D S));
 my @ranks =  ("A", (2 .. 9),

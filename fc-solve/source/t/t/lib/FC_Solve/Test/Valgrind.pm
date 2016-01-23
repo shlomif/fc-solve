@@ -7,6 +7,7 @@ use Test::More ();
 use Carp ();
 use File::Spec ();
 use File::Temp qw( tempdir );
+use Path::Tiny;
 
 sub _expand_catfile_arg
 {
@@ -48,21 +49,6 @@ sub _expand_arg
     }
 }
 
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, '<', $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
-
 sub _run_test
 {
     my ($id, $args) = @_;
@@ -94,7 +80,7 @@ sub _run_test
         (map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}),
     );
 
-    my $out_text = _slurp( $log_fn );
+    my $out_text = path( $log_fn )->slurp_utf8;
     if (Test::More::ok (
             (index($out_text, q{ERROR SUMMARY: 0 errors from 0 contexts}) >= 0)
                 &&

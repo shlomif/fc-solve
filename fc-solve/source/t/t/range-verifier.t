@@ -8,6 +8,7 @@ use Test::Differences;
 
 use File::Spec;
 use File::Basename qw( dirname );
+use Path::Tiny;
 
 use Storable qw(retrieve);
 
@@ -56,21 +57,6 @@ _test_range_verifier(
     "1-10 Script was run successfully.",
 );
 
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, "<", $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
-
 sub _mysplit
 {
     my $string = shift;
@@ -80,7 +66,7 @@ sub _mysplit
 
 # TEST
 eq_or_diff(
-    _mysplit(_slurp($summary_file)),
+    _mysplit(path($summary_file)->slurp_utf8),
     _mysplit(<<'EOF'),
 Solved Range: Start=1 ; End=10
 EOF

@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Getopt::Long;
+use Path::Tiny;
 
 =head1 NAME
 
@@ -16,21 +17,6 @@ generic documents such as C<README.txt> or C<USAGE.txt>.
 
 =cut
 
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, "<", $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
-
 my ($readme_path, $usage_path, $out_path);
 
 GetOptions(
@@ -40,8 +26,8 @@ GetOptions(
 )
     or die "Cannot process arguments.";
 
-my $readme = _slurp($readme_path);
-my $usage = _slurp($usage_path);
+my $readme = path($readme_path)->slurp_utf8;
+my $usage = path($usage_path)->slurp_utf8;
 
 $usage =~ s{\A.*?(^The programs *$)}{$1}ms;
 
