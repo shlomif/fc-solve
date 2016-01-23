@@ -45,7 +45,7 @@ sub gen
                 my ($self, $args) = @_;
                 my $id = $args->{id};
                 my $id_quoted = quotemeta($id);
-                my $data = Data::Dumper->new([$data_obj->lookup_data($id)])->Terse(1)->Dump;
+                my $data = Data::Dumper->new([$data_obj->lookup_data($id)])->Terse(1)->Indent(0)->Dump;
                 return <<"EOF";
 #!/usr/bin/perl
 
