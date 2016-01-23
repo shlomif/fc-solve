@@ -41,6 +41,7 @@
 #include "unused.h"
 #include "bool.h"
 #include "indirect_buffer.h"
+#include "count.h"
 
 static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, fcs_state_keyval_pair_t * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
@@ -270,7 +271,6 @@ int main(int argc, char * argv[])
     int start_board, end_board, stop_at;
     const char * variant = "freecell";
     fcs_portable_time_t mytime;
-    char * buffer;
 
     fcs_int64_t total_num_iters = 0;
 
@@ -479,12 +479,13 @@ int main(int argc, char * argv[])
 
     ret = 0;
 
-    for(board_num=start_board;board_num<=end_board;board_num++)
-    {
 #define BUF_SIZE 2000
+    char buffer[BUF_SIZE];
+
+    for (board_num = start_board ; board_num <= end_board ; board_num++)
+    {
         if (variant_is_freecell)
         {
-            buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
             fc_pro_get_board(board_num, buffer, &(pos)
 #ifdef INDIRECT_STACK_STATES
                 , indirect_stacks_buffer
@@ -494,7 +495,6 @@ int main(int argc, char * argv[])
         else
         {
             char command[1000];
-            buffer = calloc(BUF_SIZE, sizeof(buffer[0]));
 
             sprintf(command, "make_pysol_freecell_board.py -F -t %d %s",
                     board_num,
@@ -506,9 +506,8 @@ int main(int argc, char * argv[])
             pclose(from_make_pysol);
 #undef BUF_SIZE
         }
-#if 0
-        printf("%s\n", buffer);
-#endif
+
+        buffer[COUNT(buffer)-1] = '\0';
 
         freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
 
@@ -517,8 +516,6 @@ int main(int argc, char * argv[])
                 user.instance,
                 buffer
                 );
-
-        free(buffer);
 
         int num_iters;
         int num_moves;

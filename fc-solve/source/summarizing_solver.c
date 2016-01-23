@@ -187,9 +187,6 @@ int main(int argc, char * argv[])
             pclose(from_make_pysol);
 #undef BUF_SIZE
         }
-#if 0
-        printf("%s\n", buffer);
-#endif
 
         buffer[COUNT(buffer)-1] = '\0';
 
