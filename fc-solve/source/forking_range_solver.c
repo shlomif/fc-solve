@@ -195,7 +195,11 @@ static GCC_INLINE void write_request(
     request_t request;
     if ((*next_board_num_ptr) > end_board)
     {
-        request.board_num = -1;
+        /* We only absolutely need to initialize .board_num here, but the
+         * Coverity Scan scanner complains about quota_end being uninitialized
+         * when passed to write() so we initialize it here as well.
+         * */
+        request = (request_t) {.board_num = -1, .quota_end = -1};
     }
     else
     {
