@@ -78,8 +78,6 @@ if ($is_solvable)
 
     if ($verdict)
     {
-        # require Data::Dumper;
-        # die "Verdict == " . Dumper($verdict);
         die "Invalid solution!";
     }
 }
