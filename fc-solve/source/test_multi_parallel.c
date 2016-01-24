@@ -45,6 +45,7 @@
 #include "bool.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "output_to_file.h"
+#include "handle_parsing.h"
 
 #ifdef FCS_TRACE_MEM
 #include "portable_time.h"
@@ -257,8 +258,6 @@ int main(int argc, char * argv[])
     fcs_portable_time_t mytime;
 
     fcs_int64_t total_num_iters = 0;
-    char * error_string;
-    int parser_ret;
 
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
@@ -419,41 +418,14 @@ int main(int argc, char * argv[])
             = NULL;
     }
 
-    user.instance = freecell_solver_user_alloc();
-
-    parser_ret =
-        freecell_solver_user_cmd_line_parse_args(
-            user.instance,
-            argc,
-            (freecell_solver_str_t *)(void *)argv,
-            arg,
-            known_parameters,
-            cmd_line_callback,
-            &user,
-            &error_string,
-            &arg
-            );
-
-    if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
-    {
-        fprintf(stderr, "Unknown option: %s", argv[arg]);
-        return (-1);
-    }
-    else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-    {
-        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                " and was not supplied with one.\n", argv[arg]);
-        return (-1);
-    }
-    else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-    {
-        if (error_string != NULL)
-        {
-            fprintf(stderr, "%s", error_string);
-            free(error_string);
-        }
-        return (-1);
-    }
+    user.instance = alloc_instance_and_parse(
+        argc,
+        argv,
+        &arg,
+        known_parameters,
+        cmd_line_callback,
+        &user
+    );
 
     ret = 0;
 

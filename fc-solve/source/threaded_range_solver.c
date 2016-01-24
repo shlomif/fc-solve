@@ -49,6 +49,7 @@
 #include "min_and_max.h"
 
 #include "range_solvers_gen_ms_boards.h"
+#include "handle_parsing.h"
 
 static void print_help(void)
 {
@@ -94,49 +95,15 @@ static pthread_mutex_t total_num_iters_lock;
 
 static void * worker_thread(void * GCC_UNUSED void_context)
 {
-    void * const instance = freecell_solver_user_alloc();
-
-    {
-        int arg = context.arg;
-        char * error_string;
-        switch(
-            freecell_solver_user_cmd_line_parse_args(
-                instance,
-                context.argc,
-                (const char * *)(void *)context.argv,
-                arg,
-                NULL,
-                NULL,
-                NULL,
-                &error_string,
-                &arg
-            )
-        )
-        {
-            case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
-            {
-                fprintf(stderr, "Unknown option: %s", context.argv[arg]);
-                goto ret_label;
-            }
-
-            case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
-            {
-                fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                    " and was not supplied with one.\n", context.argv[arg]);
-                goto ret_label;
-            }
-
-            case FCS_CMD_LINE_ERROR_IN_ARG:
-            {
-                if (error_string != NULL)
-                {
-                    fprintf(stderr, "%s", error_string);
-                    free(error_string);
-                }
-                goto ret_label;
-            }
-        }
-    }
+    int arg = context.arg;
+    void * const instance = alloc_instance_and_parse(
+        context.argc,
+        context.argv,
+        &arg,
+        NULL,
+        NULL,
+        NULL
+    );
     freecell_solver_user_limit_iterations_long(instance, context.total_iterations_limit_per_board);
 
     fcs_portable_time_t mytime;
@@ -225,7 +192,6 @@ static void * worker_thread(void * GCC_UNUSED void_context)
 theme_error:
     freecell_solver_user_free(instance);
 
-ret_label:
     return NULL;
 }
 

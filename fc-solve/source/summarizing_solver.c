@@ -37,6 +37,7 @@
 #include "unused.h"
 #include "bool.h"
 #include "count.h"
+#include "handle_parsing.h"
 
 static void print_help(void)
 {
@@ -57,7 +58,6 @@ static int num_deals = 0;
 int main(int argc, char * argv[])
 {
     const char * variant = "freecell";
-    char * error_string;
     int arg = 1;
 
     while (arg < argc && (strcmp(argv[arg], "--")))
@@ -102,37 +102,14 @@ int main(int argc, char * argv[])
         }
     }
 
-    void * const instance = freecell_solver_user_alloc();
-
-    switch( freecell_solver_user_cmd_line_parse_args(
-            instance,
-            argc,
-            (freecell_solver_str_t *)(void *)argv,
-            arg,
-            NULL,
-            NULL,
-            NULL,
-            &error_string,
-            &arg
-    ))
-    {
-        case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
-        fprintf(stderr, "Unknown option: %s", argv[arg]);
-        return (-1);
-
-        case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
-        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                " and was not supplied with one.\n", argv[arg]);
-        return (-1);
-
-        case FCS_CMD_LINE_ERROR_IN_ARG:
-        if (error_string)
-        {
-            fprintf(stderr, "%s", error_string);
-            free(error_string);
-        }
-        return (-1);
-    }
+    void * const instance = alloc_instance_and_parse(
+        argc,
+        argv,
+        &arg,
+        NULL,
+        NULL,
+        NULL
+    );
 
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(instance, variant);
