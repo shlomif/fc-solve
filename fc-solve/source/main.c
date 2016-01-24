@@ -405,8 +405,6 @@ static int cmd_line_callback(
     void * context
     )
 {
-    /* TODO: extract a macro IS_ARG("string") for IS_ARG("string")
-     * */
     fc_solve_display_information_context_t * dc;
     const char * arg_str;
 
