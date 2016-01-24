@@ -616,7 +616,6 @@ int main(int argc, char * argv[])
 {
     FILE * file;
     char user_state[USER_STATE_SIZE];
-    int ret;
 
     fc_solve_display_information_context_t debug_context = INITIAL_DISPLAY_CONTEXT;
 
@@ -686,6 +685,7 @@ int main(int argc, char * argv[])
 #endif
 
 #if 0
+    int ret;
     {
         fcs_int_limit_t limit = 500;
         freecell_solver_user_limit_iterations_long(instance, limit);
@@ -698,11 +698,13 @@ int main(int argc, char * argv[])
         }
     }
 #else
-    ret = freecell_solver_user_solve_board(instance, user_state);
+    int ret = freecell_solver_user_solve_board(instance, user_state);
 #endif
 
-    if (ret == FCS_STATE_INVALID_STATE)
+    switch (ret)
     {
+        case FCS_STATE_INVALID_STATE:
+        {
         char error_string[80];
 
         freecell_solver_user_get_invalid_state_error_into_string(
@@ -711,17 +713,15 @@ int main(int argc, char * argv[])
             FC_SOLVE__PASS_T(debug_context.display_10_as_t)
         );
         printf("%s\n", error_string);
-    }
-    else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
-    {
-        const char * error_string;
+        }
+        break;
 
-        error_string = freecell_solver_user_get_last_error_string(instance);
+        case FCS_STATE_FLARES_PLAN_ERROR:
+        printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
+        break;
 
-        printf("Flares Plan: %s\n", error_string);
-    }
-    else
-    {
+        default:
+        {
         FILE * output_fh;
 
         if (debug_context.output_filename)
@@ -750,6 +750,8 @@ int main(int argc, char * argv[])
             fclose(output_fh);
             output_fh = NULL;
         }
+        }
+        break;
     }
 
     freecell_solver_user_free(instance);
