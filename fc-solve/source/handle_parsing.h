@@ -90,6 +90,22 @@ static GCC_INLINE void * const alloc_instance_and_parse(
     return instance;
 }
 
+static GCC_INLINE void * const simple_alloc_and_parse(
+    const int argc,
+    char * * const argv,
+    int * const arg_ptr)
+{
+    return alloc_instance_and_parse(
+        argc,
+        argv,
+        arg_ptr,
+        NULL,
+        NULL,
+        NULL,
+        TRUE
+    );
+}
+
 #ifdef __cplusplus
 }
 #endif

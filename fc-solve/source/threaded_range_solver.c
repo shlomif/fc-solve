@@ -96,14 +96,8 @@ static pthread_mutex_t total_num_iters_lock;
 static void * worker_thread(void * GCC_UNUSED void_context)
 {
     int arg = context.arg;
-    void * const instance = alloc_instance_and_parse(
-        context.argc,
-        context.argv,
-        &arg,
-        NULL,
-        NULL,
-        NULL,
-        TRUE
+    void * const instance = simple_alloc_and_parse(
+        context.argc, context.argv, &arg
     );
     freecell_solver_user_limit_iterations_long(instance, context.total_iterations_limit_per_board);
 

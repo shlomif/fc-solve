@@ -313,14 +313,8 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    void * const instance = alloc_instance_and_parse(
-        argc,
-        argv,
-        &arg,
-        NULL,
-        NULL,
-        NULL,
-        TRUE
+    void * const instance = simple_alloc_and_parse(
+        argc, argv, &arg
     );
     freecell_solver_user_limit_iterations_long(
         instance,
