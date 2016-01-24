@@ -44,6 +44,7 @@
 #endif
 
 #include "output_to_file.h"
+#include "handle_parsing.h"
 
 static void my_iter_handler(
     void * user_instance,
@@ -379,10 +380,6 @@ help_screen_t help_screens[] = {
 }
 ;
 
-enum
-{
-    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
-};
 
 static void print_help_string(const char * key)
 {
@@ -619,8 +616,6 @@ static freecell_solver_str_t known_parameters[] = {
 
 int main(int argc, char * argv[])
 {
-    int parser_ret;
-    int arg;
     FILE * file;
     char user_state[USER_STATE_SIZE];
     int ret;
@@ -629,48 +624,18 @@ int main(int argc, char * argv[])
 
     dc = &debug_context;
 
-    void * const instance = freecell_solver_user_alloc();
+    int arg = 1;
+    void * const instance = alloc_instance_and_parse(
+        argc,
+        argv,
+        &arg,
+        known_parameters,
+        cmd_line_callback,
+        &debug_context,
+        FALSE
+    );
 
     current_instance = instance;
-
-
-    {
-        char * error_string;
-        parser_ret =
-            freecell_solver_user_cmd_line_parse_args(
-                instance,
-                argc,
-                (freecell_solver_str_t *)(void *)argv,
-                1,
-                (freecell_solver_str_t *)known_parameters,
-                cmd_line_callback,
-                &debug_context,
-                &error_string,
-                &arg
-                );
-
-        if (parser_ret == EXIT_AND_RETURN_0)
-        {
-            freecell_solver_user_free(instance);
-            return 0;
-        }
-        else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-        {
-            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                    " and was not supplied with one.\n", argv[arg]);
-            return (-1);
-        }
-        else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-        {
-            if (error_string != NULL)
-            {
-                fprintf(stderr, "%s", error_string);
-                free(error_string);
-            }
-            freecell_solver_user_free(instance);
-            return -1;
-        }
-    }
 
     if ((arg == argc) || (!strcmp(argv[arg], "-")))
     {

@@ -40,6 +40,11 @@ extern "C" {
 
 #include "fcs_cl.h"
 
+enum
+{
+    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
+};
+
 static GCC_INLINE void * const alloc_instance_and_parse(
     const int argc,
     char * * const argv,
@@ -67,6 +72,10 @@ static GCC_INLINE void * const alloc_instance_and_parse(
         )
     )
     {
+        case EXIT_AND_RETURN_0:
+        freecell_solver_user_free(instance);
+        exit(0);
+
         case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
         if (only_recognized)
         {
