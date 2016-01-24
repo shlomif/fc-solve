@@ -2,6 +2,10 @@ ifeq ($(SRC_DIR),)
 	SRC_DIR := .
 endif
 
+ifeq ($(CMAKE_DIR),)
+	CMAKE_DIR := .
+endif
+
 DATA_DESTDIR = __DESTDIR
 RESULT_NODE_JS_EXE = fc-solve.js
 RESULT_JS_LIB = libfreecell-solver.js
@@ -46,7 +50,7 @@ OPT_FLAGS = -O2
 # OPT_FLAGS = -O1
 # OPT_FLAGS =
 
-CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/patsolve-shlomif/patsolve/ -m32 -std=gnu99
+CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve-shlomif/patsolve/ -I $(CMAKE_DIR) -m32 -std=gnu99
 
 EMCC_CFLAGS = -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 

@@ -871,9 +871,9 @@ INSTALL(
         "share/doc/freecell-solver/"
 )
 
+SET (dest "include/freecell-solver")
 INSTALL(
     FILES
-        "fcs_back_compat.h"
         "fcs_cl.h"
         "fcs_dllexport.h"
         "fcs_enums.h"
@@ -882,9 +882,15 @@ INSTALL(
         "fcs_user.h"
         "${p_dir}/fcs_pats_xy_param.h"
     DESTINATION
-        "include/freecell-solver"
+        "${dest}"
 )
 
+INSTALL(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/fcs_back_compat.h"
+    DESTINATION
+        "${dest}"
+)
 
 INSTALL(
     FILES
