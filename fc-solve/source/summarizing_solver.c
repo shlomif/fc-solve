@@ -63,7 +63,6 @@ static int num_deals = 0;
 
 int main(int argc, char * argv[])
 {
-    int ret;
     const char * variant = "freecell";
 
     char * error_string;
@@ -154,7 +153,6 @@ int main(int argc, char * argv[])
     variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(instance, variant);
 
-    ret = 0;
 
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
@@ -182,30 +180,27 @@ int main(int argc, char * argv[])
 
         buffer[COUNT(buffer)-1] = '\0';
 
-        ret =
-            freecell_solver_user_solve_board(
-                instance,
-                buffer
-                );
-
         long num_moves;
         const char * verdict;
-
-        if (ret == FCS_STATE_SUSPEND_PROCESS)
+        switch( freecell_solver_user_solve_board(
+            instance,
+            buffer
+        ))
         {
+            case FCS_STATE_SUSPEND_PROCESS:
             num_moves  = -1;
             verdict = "Intractable";
-        }
-        else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-        {
+            break;
+
+            case FCS_STATE_IS_NOT_SOLVEABLE:
             num_moves = -1;
             verdict = "Unsolved";
-        }
-        else
-        {
-            num_moves = freecell_solver_user_get_moves_left(instance);
+            break;
 
+            default:
+            num_moves = freecell_solver_user_get_moves_left(instance);
             verdict = "Solved";
+            break;
         }
         printf("%ld = Verdict: %s ; Iters: %ld ; Length: %ld\n",
             board_num, verdict, freecell_solver_user_get_num_times_long(instance), num_moves
