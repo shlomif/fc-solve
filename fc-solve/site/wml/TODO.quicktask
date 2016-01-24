@@ -21,6 +21,14 @@ CURRENT TASKS:
       @ Added [Sun 2015-12-13]
     - Pick a better colour for the states in js-fc-solve than the light pink.
       @ Added [Sun 2015-12-13]
+    - Add spell checking support to test for spelling.
+      @ Added [Sun 2016-01-24]
+    - Make sure the makefile uses the right upload URL on PROD=1 vs. not.
+      @ Added [Sun 2016-01-24]
+    - Test that the web-site build on Travis-CI/etc.
+      @ Added [Sun 2016-01-24]
+    - Add a "Contribute" page (perhaps a nav-tree category)
+      @ Added [Sun 2016-01-24]
 
 
 LONG TERM:
