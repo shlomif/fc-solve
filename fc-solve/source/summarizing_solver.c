@@ -108,7 +108,8 @@ int main(int argc, char * argv[])
         &arg,
         NULL,
         NULL,
-        NULL
+        NULL,
+        TRUE
     );
 
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));

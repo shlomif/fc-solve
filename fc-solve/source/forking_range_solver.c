@@ -319,7 +319,8 @@ int main(int argc, char * argv[])
         &arg,
         NULL,
         NULL,
-        NULL
+        NULL,
+        TRUE
     );
     freecell_solver_user_limit_iterations_long(
         instance,

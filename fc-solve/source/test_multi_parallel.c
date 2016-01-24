@@ -424,7 +424,8 @@ int main(int argc, char * argv[])
         &arg,
         known_parameters,
         cmd_line_callback,
-        &user
+        &user,
+        TRUE
     );
 
     ret = 0;

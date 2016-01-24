@@ -102,7 +102,8 @@ static void * worker_thread(void * GCC_UNUSED void_context)
         &arg,
         NULL,
         NULL,
-        NULL
+        NULL,
+        TRUE
     );
     freecell_solver_user_limit_iterations_long(instance, context.total_iterations_limit_per_board);
 

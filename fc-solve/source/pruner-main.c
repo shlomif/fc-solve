@@ -40,6 +40,7 @@
 #endif
 
 #include "output_to_file.h"
+#include "handle_parsing.h"
 
 static void my_iter_handler(
     void * user_instance,
@@ -136,11 +137,6 @@ static void my_iter_handler(
     }
 }
 
-enum
-{
-    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
-};
-
 static int cmd_line_callback(
     void * instance,
     int argc,
@@ -156,16 +152,7 @@ static int cmd_line_callback(
 
     dc = (fc_solve_display_information_context_t * )context;
 
-    if (!strcmp(argv[arg], "--version"))
-    {
-        printf(
-            "fc-solve\nlibfreecell-solver version %s\n",
-            freecell_solver_user_get_lib_version(instance)
-        );
-        *ret = EXIT_AND_RETURN_0;
-        return FCS_CMD_LINE_STOP;
-    }
-    else if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
+    if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
     {
 #define set_iter_handler() \
         freecell_solver_user_set_iter_handler_long(   \
@@ -322,7 +309,6 @@ static freecell_solver_str_t known_parameters[] = {
     "-pi", "--display-parent-iter",
     "-o", "--output",
     "--reset",
-    "--version",
     NULL
     };
 
@@ -330,9 +316,6 @@ static freecell_solver_str_t known_parameters[] = {
 
 int main(int argc, char * argv[])
 {
-    int parser_ret;
-    void * instance;
-    int arg;
     FILE * file;
     char user_state[USER_STATE_SIZE];
     int ret;
@@ -341,48 +324,18 @@ int main(int argc, char * argv[])
 
     dc = &debug_context;
 
-    instance = freecell_solver_user_alloc();
+    int arg = 1;
+    void * const instance = alloc_instance_and_parse(
+        argc,
+        argv,
+        &arg,
+        known_parameters,
+        cmd_line_callback,
+        &debug_context,
+        FALSE
+    );
 
     current_instance = instance;
-
-
-    {
-        char * error_string;
-        parser_ret =
-            freecell_solver_user_cmd_line_parse_args(
-                instance,
-                argc,
-                (freecell_solver_str_t *)(void *)argv,
-                1,
-                (freecell_solver_str_t *)known_parameters,
-                cmd_line_callback,
-                &debug_context,
-                &error_string,
-                &arg
-                );
-
-        if (parser_ret == EXIT_AND_RETURN_0)
-        {
-            freecell_solver_user_free(instance);
-            return 0;
-        }
-        else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-        {
-            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                    " and was not supplied with one.\n", argv[arg]);
-            return (-1);
-        }
-        else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-        {
-            if (error_string != NULL)
-            {
-                fprintf(stderr, "%s", error_string);
-                free(error_string);
-            }
-            freecell_solver_user_free(instance);
-            return -1;
-        }
-    }
 
     if ((arg == argc) || (!strcmp(argv[arg], "-")))
     {

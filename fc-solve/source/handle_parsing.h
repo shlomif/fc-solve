@@ -46,7 +46,8 @@ static GCC_INLINE void * const alloc_instance_and_parse(
     int * const arg_ptr,
     freecell_solver_str_t * const known_parameters,
     const freecell_solver_user_cmd_line_known_commands_callback_t callback,
-    void * const callback_context
+    void * const callback_context,
+    fcs_bool_t only_recognized
 )
 {
     void * const instance = freecell_solver_user_alloc();
@@ -67,25 +68,23 @@ static GCC_INLINE void * const alloc_instance_and_parse(
     )
     {
         case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
+        if (only_recognized)
         {
-            fprintf(stderr, "Unknown option: %s", argv[*arg_ptr]);
+            fprintf(stderr, "Unknown option: %s\n", argv[*arg_ptr]);
             exit(-1);
         }
+        break;
         case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
-        {
-            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                " and was not supplied with one.\n", argv[*arg_ptr]);
-            exit(-1);
-        }
+        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+            " and was not supplied with one.\n", argv[*arg_ptr]);
+        exit(-1);
         case FCS_CMD_LINE_ERROR_IN_ARG:
+        if (error_string)
         {
-            if (error_string)
-            {
-                fprintf(stderr, "%s", error_string);
-                free(error_string);
-            }
-            exit(-1);
+            fprintf(stderr, "%s", error_string);
+            free(error_string);
         }
+        exit(-1);
     }
 
     return instance;
