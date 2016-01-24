@@ -67,8 +67,18 @@ to provide links back to the Subversion repository's URLs</a>
 
 <li>
 <p>
+<a href="https://github.com/shlomif/fc-solve">Project Page on GitHub</a> -
+contains the canonical Git repository of Freecell Solver (forks and
+pull requests are welcome!), as well as an issue tracker (which is less
+preferable than the <a href="#bitbucket_proj">BitBucket one</a>, a wiki,
+and some graphs.
+</p>
+</li>
+
+<li id="bitbucket_proj">
+<p>
 <a href="http://bitbucket.org/shlomif/fc-solve">Project Page on BitBucket</a> -
-contains the version control repository (based on Git), a bug/issue tracker,
+contains a mirror of the version control repository, a bug/issue tracker,
 and other resources.
 </p>
 </li>
@@ -108,7 +118,7 @@ used in open-source and proprietary code.
 <p>
 <a href="http://libredblack.sourceforge.net/">libredblack</a> - an
 ANSI C implementation of a Red-Black tree. Takes some modifications to
-compile on Win32. LGPL, so can be used by a code of any license.
+compile on Win32. LGPL, so can be used by code of any licence.
 </p>
 </li>
 
@@ -223,8 +233,12 @@ Used for preparing Microsoft Windows packages.
 
 <li>
 <p>
-<a href="http://dwimperl.com/">DWIM Perl for Windows</a> - a comprehensive
-and open-source distribution of Perl 5 for Windows. Based on <a href="http://strawberryperl.com/">Strawberry Perl</a>.
+<a href="http://strawberryperl.com/">Strawberry Perl</a> - an open source
+distribution of Perl 5 for Windows, which is used to help build the Freecell
+Solver’s package there. For a while, we also used
+<a href="http://dwimperl.com/">DWIM Perl for Windows</a>, which is
+based on Strawberry and is more encompassing, but it fell out
+of maintenance.
 </p>
 </li>
 
@@ -241,6 +255,14 @@ foreign function interface (FFI) for Python. Used for automated testing.
 allows one to write Perl subrourtines in C. Freecell Solver uses it
 for automated testing and for wrapping some of the internal and external C
 APIs.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://travis-ci.org/">Travis CI</a> - an open source and
+hosted <a href="http://en.wikipedia.org/wiki/Continuous_integration">continuous integration (“CI”)</a> service, provided free-of-charge for
+public GitHub projects.
 </p>
 </li>
 
