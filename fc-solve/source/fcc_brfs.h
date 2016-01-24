@@ -175,11 +175,11 @@ static void perform_FCC_brfs(
      * and its context.
      */
     fcs_bool_t (*add_start_point)(
-        fcs_encoded_state_buffer_t * enc_state,
-        const fcs_fcc_moves_seq_t * start_state_moves_seq,
-        fcs_fcc_moves_seq_t * after_start_moves_seq,
-        unsigned char extra_move,
-        void * context
+        const fcs_encoded_state_buffer_t * const enc_state,
+        const fcs_fcc_moves_seq_t * const start_state_moves_seq,
+        fcs_fcc_moves_seq_t * const after_start_moves_seq,
+        const unsigned char extra_move,
+        void * const context
     ),
     void * add_start_point_context,
 #endif
@@ -406,7 +406,6 @@ static void perform_FCC_brfs(
             )
             {
                 fcs_fcc_moves_list_item_t * moves_list, * * end_moves_iter;
-                int pos_in_moves;
                 fcs_encoded_state_buffer_t * key_to_add;
 
                 key_to_add =
@@ -426,10 +425,10 @@ static void perform_FCC_brfs(
 
                 /* Fill in the moves. */
                 end_moves_iter = &(moves_list);
-                pos_in_moves = 0;
 
                 if (is_reversible)
                 {
+                    int pos_in_moves = 0;
                     fc_solve__internal__copy_moves(
                         &(extracted_item->moves_seq),
                         &pos_in_moves,
@@ -526,18 +525,15 @@ typedef struct
  * Returns if already exist (the NOT of if the state is new).
  */
 static fcs_bool_t fc_solve_add_start_point_in_mem(
-    fcs_encoded_state_buffer_t * enc_state,
-    const fcs_fcc_moves_seq_t * start_state_moves_seq,
-    fcs_fcc_moves_seq_t * after_start_moves_seq,
-    unsigned char extra_move,
-    void * void_context
+    const fcs_encoded_state_buffer_t * const enc_state,
+    const fcs_fcc_moves_seq_t * const start_state_moves_seq,
+    fcs_fcc_moves_seq_t * const after_start_moves_seq,
+    const unsigned char extra_move,
+    void * const void_context
 )
 {
-    add_start_point_context_t * context = (add_start_point_context_t *)void_context;
-    dict_t * tree = context->do_next_fcc_start_points_exist;
-    fcs_encoded_state_buffer_t * key_to_add;
-    fcs_fcc_moves_list_item_t const * start_iter;
-    int pos_in_moves;
+    add_start_point_context_t * const context = (add_start_point_context_t *)void_context;
+    dict_t * const tree = context->do_next_fcc_start_points_exist;
     fcs_fcc_moves_list_item_t * moves_list, * * end_moves_iter;
     fcs_fcc_moves_seq_allocator_t * moves_list_allocator = context->moves_list_allocator;
     fcs_FCC_start_point_t * new_start_point;
@@ -552,7 +548,7 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
         return TRUE;
     }
 
-    key_to_add =
+    fcs_encoded_state_buffer_t * const key_to_add =
         fcs_compact_alloc_ptr(
             &(tree->dict_allocator),
             sizeof(*key_to_add)
@@ -564,12 +560,12 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
         );
     /* Fill in the moves. */
     end_moves_iter = &(moves_list);
-    pos_in_moves = 0;
+    int pos_in_moves = 0;
     /*
      * TODO : optimise the loop so the data will be copied
      * in one go by jumps of FCS_FCC_NUM_MOVES_IN_ITEM
      * */
-    start_iter = start_state_moves_seq->moves_list;
+    const fcs_fcc_moves_list_item_t * start_iter = start_state_moves_seq->moves_list;
     const int count_start_state_moves = start_state_moves_seq->count;
     for(
         ;
