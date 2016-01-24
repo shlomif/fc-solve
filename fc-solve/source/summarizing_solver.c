@@ -41,21 +41,14 @@
 static void print_help(void)
 {
     printf("\n%s",
-"freecell-solver-range-parallel-solve start end print_step\n"
-"   [--binary-output-to filename] [--total-iterations-limit limit]\n"
-"   [fc-solve Arguments...]\n"
+"summary-fc-solve [deal1_idx] [deal2_idx] .. -- \n"
+"   [--variant variant_str] [fc-solve theme args]\n"
 "\n"
-"Solves a sequence of boards from the Microsoft/Freecell Pro Deals\n"
-"\n"
-"start - the first board in the sequence\n"
-"end - the last board in the sequence (inclusive)\n"
-"print_step - at which division to print a status line\n"
-"\n"
-"--binary-output-to   filename\n"
-"     Outputs statistics to binary file 'filename'\n"
-"--total-iterations-limit  limit\n"
-"     Limits each board for up to 'limit' iterations.\n"
+"Attempts to solve several arbitary deal indexes from the Microsoft/Freecell\n"
+"Pro deals using the fc-solve's theme and reports a summary of their results\n"
+"to STDOUT\n"
           );
+    exit(-1);
 }
 
 static long deals[32000];
@@ -94,7 +87,6 @@ int main(int argc, char * argv[])
             {
                 fprintf(stderr, "--variant came without an argument!\n");
                 print_help();
-                exit(-1);
             }
             variant = argv[arg];
 
@@ -102,7 +94,6 @@ int main(int argc, char * argv[])
             {
                 fprintf(stderr, "--variant's argument is too long!\n");
                 print_help();
-                exit(-1);
             }
         }
         else
