@@ -534,10 +534,6 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
 {
     add_start_point_context_t * const context = (add_start_point_context_t *)void_context;
     dict_t * const tree = context->do_next_fcc_start_points_exist;
-    fcs_fcc_moves_list_item_t * moves_list, * * end_moves_iter;
-    fcs_fcc_moves_seq_allocator_t * moves_list_allocator = context->moves_list_allocator;
-    fcs_FCC_start_point_t * new_start_point;
-    fcs_FCC_start_points_list_t * fcc_start_points = context->next_start_points_list;
 
     if (fc_solve_kaz_tree_lookup_value(
             tree,
@@ -559,7 +555,8 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
         key_to_add
         );
     /* Fill in the moves. */
-    end_moves_iter = &(moves_list);
+    fcs_fcc_moves_list_item_t * moves_list;
+    fcs_fcc_moves_list_item_t * * end_moves_iter = &moves_list;
     int pos_in_moves = 0;
     /*
      * TODO : optimise the loop so the data will be copied
@@ -567,6 +564,7 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
      * */
     const fcs_fcc_moves_list_item_t * start_iter = start_state_moves_seq->moves_list;
     const int count_start_state_moves = start_state_moves_seq->count;
+    fcs_fcc_moves_seq_allocator_t * moves_list_allocator = context->moves_list_allocator;
     for(
         ;
         pos_in_moves < count_start_state_moves
@@ -597,6 +595,8 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
     );
 
     /* Enqueue the new FCC start point. */
+    fcs_FCC_start_points_list_t * const fcc_start_points = context->next_start_points_list;
+    fcs_FCC_start_point_t * new_start_point;
     if (fcc_start_points->recycle_bin)
     {
         new_start_point = fcc_start_points->recycle_bin;
