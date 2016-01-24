@@ -64,10 +64,7 @@ static int num_deals = 0;
 int main(int argc, char * argv[])
 {
     const char * variant = "freecell";
-
     char * error_string;
-    fcs_bool_t variant_is_freecell;
-
     int arg = 1;
 
     while (arg < argc && (strcmp(argv[arg], "--")))
@@ -116,8 +113,7 @@ int main(int argc, char * argv[])
 
     void * const instance = freecell_solver_user_alloc();
 
-    const int parser_ret =
-        freecell_solver_user_cmd_line_parse_args(
+    switch( freecell_solver_user_cmd_line_parse_args(
             instance,
             argc,
             (freecell_solver_str_t *)(void *)argv,
@@ -127,22 +123,19 @@ int main(int argc, char * argv[])
             NULL,
             &error_string,
             &arg
-            );
-
-    if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
+    ))
     {
+        case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
         fprintf(stderr, "Unknown option: %s", argv[arg]);
         return (-1);
-    }
-    else if (parser_ret == FCS_CMD_LINE_PARAM_WITH_NO_ARG)
-    {
+
+        case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
         fprintf(stderr, "The command line parameter \"%s\" requires an argument"
                 " and was not supplied with one.\n", argv[arg]);
         return (-1);
-    }
-    else if (parser_ret == FCS_CMD_LINE_ERROR_IN_ARG)
-    {
-        if (error_string != NULL)
+
+        case FCS_CMD_LINE_ERROR_IN_ARG:
+        if (error_string)
         {
             fprintf(stderr, "%s", error_string);
             free(error_string);
@@ -150,7 +143,7 @@ int main(int argc, char * argv[])
         return (-1);
     }
 
-    variant_is_freecell = (!strcmp(variant, "freecell"));
+    const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(instance, variant);
 
 
