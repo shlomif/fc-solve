@@ -116,13 +116,9 @@ static GCC_INLINE void fc_solve__internal__copy_moves(
     int pos_in_moves = *ptr_to_pos_in_moves;
     typeof (*ptr_to_end_moves_iter) end_moves_iter = (*ptr_to_end_moves_iter);
     const fcs_fcc_moves_list_item_t * copy_from_iter = moves_seq->moves_list;
+    const typeof(moves_seq->count) count = moves_seq->count;
 
-    for(
-        int copy_from_idx = 0
-        ;
-        copy_from_idx < moves_seq->count
-        ;
-    )
+    for ( int copy_from_idx = 0 ; copy_from_idx < count ; )
     {
         if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
         {
