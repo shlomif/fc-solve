@@ -68,36 +68,35 @@ typedef struct
 } fc_solve_display_information_context_t;
 
 static void my_iter_handler(
-    void * user_instance,
-    fcs_int_limit_t iter_num,
-    int depth,
-    void * ptr_state,
-    fcs_int_limit_t parent_iter_num,
+    void * const user_instance,
+    const fcs_int_limit_t iter_num,
+    const int depth,
+    void * const ptr_state,
+    const fcs_int_limit_t parent_iter_num,
     void * lp_context
     )
 {
-    fc_solve_display_information_context_t * context;
-    context = (fc_solve_display_information_context_t*)lp_context;
+    const fc_solve_display_information_context_t * const dc = (const fc_solve_display_information_context_t * const)lp_context;
 
     fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
-    if (context->display_parent_iter_num)
+    if (dc->display_parent_iter_num)
     {
         fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
     }
     fprintf(stdout, "\n");
 
 
-    if (context->debug_iter_state_output)
+    if (dc->debug_iter_state_output)
     {
         char state_string[1000];
             freecell_solver_user_iter_state_stringify(
                 user_instance,
                 state_string,
                 ptr_state
-                FC_SOLVE__PASS_PARSABLE(context->parseable_output)
-                , context->canonized_order_output
-                FC_SOLVE__PASS_T(context->display_10_as_t)
+                FC_SOLVE__PASS_PARSABLE(dc->parseable_output)
+                , dc->canonized_order_output
+                FC_SOLVE__PASS_T(dc->display_10_as_t)
                 );
         printf("%s\n---------------\n\n\n", state_string);
     }
@@ -122,10 +121,8 @@ static int cmd_line_callback(
     void * context
     )
 {
-    pack_item_t * item;
-    fc_solve_display_information_context_t * dc;
-    item = (pack_item_t * )context;
-    dc = &(item->display_context);
+    pack_item_t * const item = (typeof(item))context;
+    fc_solve_display_information_context_t * const dc = &(item->display_context);
 
     *num_to_skip = 0;
 
