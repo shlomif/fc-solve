@@ -38,13 +38,6 @@
 #include "bool.h"
 #include "count.h"
 
-struct pack_item_struct
-{
-    void * instance;
-};
-
-typedef struct pack_item_struct pack_item_t;
-
 static void print_help(void)
 {
     printf("\n%s",
@@ -70,7 +63,6 @@ static int num_deals = 0;
 
 int main(int argc, char * argv[])
 {
-    pack_item_t user;
     int ret;
     const char * variant = "freecell";
 
@@ -123,11 +115,11 @@ int main(int argc, char * argv[])
         }
     }
 
-    user.instance = freecell_solver_user_alloc();
+    void * const instance = freecell_solver_user_alloc();
 
     const int parser_ret =
         freecell_solver_user_cmd_line_parse_args(
-            user.instance,
+            instance,
             argc,
             (freecell_solver_str_t *)(void *)argv,
             arg,
@@ -160,7 +152,7 @@ int main(int argc, char * argv[])
     }
 
     variant_is_freecell = (!strcmp(variant, "freecell"));
-    freecell_solver_user_apply_preset(user.instance, variant);
+    freecell_solver_user_apply_preset(instance, variant);
 
     ret = 0;
 
@@ -192,7 +184,7 @@ int main(int argc, char * argv[])
 
         ret =
             freecell_solver_user_solve_board(
-                user.instance,
+                instance,
                 buffer
                 );
 
@@ -211,19 +203,19 @@ int main(int argc, char * argv[])
         }
         else
         {
-            num_moves = freecell_solver_user_get_moves_left(user.instance);
+            num_moves = freecell_solver_user_get_moves_left(instance);
 
             verdict = "Solved";
         }
         printf("%ld = Verdict: %s ; Iters: %ld ; Length: %ld\n",
-            board_num, verdict, freecell_solver_user_get_num_times_long(user.instance), num_moves
+            board_num, verdict, freecell_solver_user_get_num_times_long(instance), num_moves
         );
         fflush(stdout);
 
-        freecell_solver_user_recycle(user.instance);
+        freecell_solver_user_recycle(instance);
     }
 
-    freecell_solver_user_free(user.instance);
+    freecell_solver_user_free(instance);
 
     return 0;
 }

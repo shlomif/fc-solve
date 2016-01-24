@@ -89,14 +89,10 @@ static void my_iter_handler(
 
 }
 
-struct pack_item_struct
-{
+typedef struct {
     fc_solve_display_information_context_t display_context;
     void * instance;
-};
-
-typedef struct pack_item_struct pack_item_t;
-
+}pack_item_t;
 
 static int cmd_line_callback(
     void * instance,
