@@ -261,10 +261,8 @@ static int read_int(FILE * f, int * dest)
 int main(int argc, char * argv[])
 {
     pack_item_t user;
-    int ret;
     int len;
     int board_num;
-    int start_board, end_board, stop_at;
     const char * variant = "freecell";
     fcs_portable_time_t mytime;
 
@@ -289,9 +287,9 @@ int main(int argc, char * argv[])
         print_help();
         exit(-1);
     }
-    start_board = atoi(argv[arg++]);
-    end_board = atoi(argv[arg++]);
-    stop_at = atoi(argv[arg++]);
+    int start_board = atoi(argv[arg++]);
+    int end_board = atoi(argv[arg++]);
+    const int stop_at = atoi(argv[arg++]);
     if (stop_at <= 0)
     {
         fprintf(stderr, "print_step (the third argument) must be greater than 0.\n");
@@ -476,8 +474,6 @@ int main(int argc, char * argv[])
     variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(user.instance, variant);
 
-    ret = 0;
-
     freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
 
 #define BUF_SIZE 2000
@@ -510,31 +506,29 @@ int main(int argc, char * argv[])
 
         buffer[COUNT(buffer)-1] = '\0';
 
-        ret =
-            freecell_solver_user_solve_board(
-                user.instance,
-                buffer
-                );
-
         int num_iters;
         int num_moves;
         int num_fcpro_moves;
-        fcs_moves_processed_t fc_pro_moves;
-        fc_pro_moves.moves = NULL;
+        fcs_moves_processed_t fc_pro_moves = {.moves = NULL};
 
-        if (ret == FCS_STATE_SUSPEND_PROCESS)
+        switch(
+            freecell_solver_user_solve_board(
+                user.instance,
+                buffer
+                )
+        )
         {
+            case FCS_STATE_SUSPEND_PROCESS:
             FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-
             num_iters = num_moves = num_fcpro_moves = -1;
-        }
-        else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-        {
+            break;
+
+            case FCS_STATE_IS_NOT_SOLVEABLE:
             FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
             num_iters = num_moves = num_fcpro_moves = -1;
-        }
-        else
-        {
+            break;
+
+            default:
             num_iters = (int)freecell_solver_user_get_num_times_long(user.instance);
             num_moves = freecell_solver_user_get_moves_left(user.instance);
 
@@ -557,6 +551,7 @@ int main(int argc, char * argv[])
             {
                 num_fcpro_moves = num_moves;
             }
+            break;
         }
         print_int_wrapper(num_iters);
         printf("[[Num Iters]]=%d\n[[Num FCS Moves]]=%d\n[[Num FCPro Moves]]=%d\n", num_iters, num_moves, num_fcpro_moves);
