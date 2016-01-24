@@ -23,8 +23,6 @@ CURRENT TASKS:
       @ Added [Sun 2015-12-13]
     - Add spell checking support to test for spelling.
       @ Added [Sun 2016-01-24]
-    - Make sure the makefile uses the right upload URL on PROD=1 vs. not.
-      @ Added [Sun 2016-01-24]
     - Test that the web-site build on Travis-CI/etc.
       @ Added [Sun 2016-01-24]
     - Add a "Contribute" page (perhaps a nav-tree category)
@@ -121,6 +119,9 @@ COMPLETED TASKS:
         * DONE [Mon 2013-01-21]
     - Remove the PayPal that refers to berlios.de (defunct URL).
       @ Added [Thu 2014-12-11]
+    - Make sure the makefile uses the right upload URL on PROD=1 vs. not.
+        @ DONE [Sun 2016-01-24]
+      @ Added [Sun 2016-01-24]
 
 
 
