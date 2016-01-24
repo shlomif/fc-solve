@@ -271,7 +271,7 @@ int main(int argc, char * argv[])
     fcs_int_limit_t total_iterations_limit_per_board = -1;
     const char * binary_output_filename = NULL;
     binary_output_t binary_output;
-    int arg = 1, start_from_arg;
+    int arg = 1;
 
     fcs_state_keyval_pair_t pos;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -341,10 +341,6 @@ int main(int argc, char * argv[])
         }
     }
 
-    start_from_arg = arg;
-
-
-
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
@@ -413,8 +409,6 @@ int main(int argc, char * argv[])
     }
 
     user.instance = freecell_solver_user_alloc();
-
-    arg = start_from_arg;
 
     char * error_string;
     switch(

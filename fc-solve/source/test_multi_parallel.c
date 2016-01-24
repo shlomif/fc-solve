@@ -274,7 +274,7 @@ int main(int argc, char * argv[])
     const char * solutions_directory = NULL;
     char * solution_filename = NULL;
 
-    int arg = 1, start_from_arg;
+    int arg = 1;
 #ifdef FCS_TRACE_MEM
     int rss_found = 0;
     long max_rss_delta_deal = -1;
@@ -344,8 +344,6 @@ int main(int argc, char * argv[])
             break;
         }
     }
-
-    start_from_arg = arg;
 
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
@@ -426,8 +424,6 @@ int main(int argc, char * argv[])
     }
 
     user.instance = freecell_solver_user_alloc();
-
-    arg = start_from_arg;
 
     parser_ret =
         freecell_solver_user_cmd_line_parse_args(
