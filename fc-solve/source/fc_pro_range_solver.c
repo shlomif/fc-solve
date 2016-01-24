@@ -201,17 +201,16 @@ typedef struct
     char * ptr;
 } binary_output_t;
 
-static void print_int(binary_output_t * bin, int val)
+#define SIZE_INT 4
+static void print_int(binary_output_t * const bin, int val)
 {
-    unsigned char * buffer = (unsigned char *)bin->ptr;
-    int p;
-
-    for(p=0;p<4;p++)
+    unsigned char * const buffer = (unsigned char * const)bin->ptr;
+    for (int p=0 ; p < SIZE_INT ; p++)
     {
         buffer[p] = (unsigned char)(val & 0xFF);
         val >>= 8;
     }
-    bin->ptr += 4;
+    bin->ptr += SIZE_INT;
     if (bin->ptr == bin->buffer_end)
     {
         fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->file);
@@ -243,13 +242,10 @@ static void print_help(void)
           );
 }
 
-static int read_int(FILE * f, int * dest)
+static GCC_INLINE int read_int(FILE * const f, int * const dest)
 {
-    unsigned char buffer[4];
-    int num_read;
-
-    num_read = fread(buffer, 1, 4, f);
-    if (num_read != 4)
+    unsigned char buffer[SIZE_INT];
+    if (fread(buffer, 1, SIZE_INT, f) != SIZE_INT)
     {
         return 1;
     }
@@ -258,24 +254,26 @@ static int read_int(FILE * f, int * dest)
     return 0;
 }
 
+static void read_int_wrapper(FILE * const in, int * const var)
+{
+    if (read_int(in, var))
+    {
+        fprintf(stderr, "%s",
+            "Output file is too short to deduce the configuration!\n"
+        );
+        exit(-1);
+    }
+}
+
 int main(int argc, char * argv[])
 {
     pack_item_t user;
-    int len;
-    int board_num;
     const char * variant = "freecell";
     fcs_portable_time_t mytime;
-
     fcs_int64_t total_num_iters = 0;
-
-    fcs_bool_t variant_is_freecell;
-
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-
-    char * binary_output_filename = NULL;
-
+    const char * binary_output_filename = NULL;
     binary_output_t binary_output;
-
     int arg = 1, start_from_arg;
 
     fcs_state_keyval_pair_t pos;
@@ -378,27 +376,16 @@ int main(int argc, char * argv[])
         }
         else
         {
-            long file_len;
-#define read_int_wrapper(var) \
-            {       \
-                if (read_int(in, &var))  \
-                {        \
-                    fprintf(stderr, "%s", \
-                        "Output file is too short to deduce the configuration!\n"    \
-                           );     \
-                    exit(-1);       \
-                }       \
-            }
-            read_int_wrapper(start_board);
-            read_int_wrapper(end_board);
+            read_int_wrapper(in, &start_board);
+            read_int_wrapper(in, &end_board);
             {
                 int val;
-                read_int_wrapper(val);
+                read_int_wrapper(in, &val);
                 total_iterations_limit_per_board = (fcs_int_limit_t)val;
             }
 
             fseek(in, 0, SEEK_END);
-            file_len = ftell(in);
+            const long file_len = ftell(in);
             if (file_len % 4 != 0)
             {
                 fprintf(stderr, "%s", "Output file has an invalid length. Terminating.\n");
@@ -471,7 +458,7 @@ int main(int argc, char * argv[])
         }
     }
 
-    variant_is_freecell = (!strcmp(variant, "freecell"));
+    const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(user.instance, variant);
 
     freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
@@ -479,7 +466,7 @@ int main(int argc, char * argv[])
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
 
-    for (board_num = start_board ; board_num <= end_board ; board_num++)
+    for (int board_num = start_board ; board_num <= end_board ; board_num++)
     {
         if (variant_is_freecell)
         {
@@ -560,7 +547,7 @@ int main(int argc, char * argv[])
         if (fc_pro_moves.moves)
         {
             fcs_extended_move_t move;
-            len = 0;
+            int len = 0;
             while (! fc_solve_moves_processed_get_next_move(&fc_pro_moves, &move))
             {
                 char temp_str[10];
@@ -583,7 +570,6 @@ int main(int argc, char * argv[])
                 total_num_iters
             );
             fflush(stdout);
-
         }
 
         freecell_solver_user_recycle(user.instance);
