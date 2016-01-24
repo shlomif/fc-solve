@@ -105,6 +105,57 @@ static GCC_INLINE void fc_solve_fcc_release_moves_seq(
     moves_seq->count = -1;
 }
 
+static GCC_INLINE void fc_solve__internal__copy_moves(
+    fcs_fcc_moves_seq_t * const moves_seq,
+    int * const ptr_to_pos_in_moves,
+    fcs_fcc_moves_list_item_t * * * const ptr_to_end_moves_iter,
+    const unsigned char extra_move,
+    fcs_fcc_moves_seq_allocator_t * const moves_list_allocator
+)
+{
+    int pos_in_moves = *ptr_to_pos_in_moves;
+    typeof (*ptr_to_end_moves_iter) end_moves_iter = (*ptr_to_end_moves_iter);
+    const fcs_fcc_moves_list_item_t * copy_from_iter = moves_seq->moves_list;
+
+    for(
+        int copy_from_idx = 0
+        ;
+        copy_from_idx < moves_seq->count
+        ;
+    )
+    {
+        if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+        {
+            (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
+        }
+        (*end_moves_iter)->data.s[
+            pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
+            ] = copy_from_iter->data.s[
+            copy_from_idx % FCS_FCC_NUM_MOVES_IN_ITEM
+            ];
+        if ((++pos_in_moves) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+        {
+            end_moves_iter = &((*end_moves_iter)->next);
+        }
+        if ((++copy_from_idx) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+        {
+            copy_from_iter = copy_from_iter->next;
+        }
+    }
+
+    /* Append the remaining moves. */
+    if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
+    {
+        (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
+    }
+    (*end_moves_iter)->data.s[
+        (pos_in_moves++) % FCS_FCC_NUM_MOVES_IN_ITEM
+        ] = extra_move;
+
+    *ptr_to_pos_in_moves = pos_in_moves;
+    *ptr_to_end_moves_iter = end_moves_iter;
+}
+
 static void perform_FCC_brfs(
     enum fcs_dbm_variant_type_t local_variant,
     /* The first state in the game, from which all states are encoded. */
@@ -383,44 +434,13 @@ static void perform_FCC_brfs(
 
                 if (is_reversible)
                 {
-                    int copy_from_idx;
-                    fcs_fcc_moves_list_item_t const * copy_from_iter =
-                        extracted_item->moves_seq.moves_list;
-
-                    for(
-                        copy_from_idx = 0
-                        ;
-                        copy_from_idx < extracted_item->moves_seq.count
-                        ;
-                       )
-                    {
-                        if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-                        {
-                            (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
-                        }
-                        (*end_moves_iter)->data.s[
-                            pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
-                            ] = copy_from_iter->data.s[
-                            copy_from_idx % FCS_FCC_NUM_MOVES_IN_ITEM
-                            ];
-                        if ((++pos_in_moves) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-                        {
-                            end_moves_iter = &((*end_moves_iter)->next);
-                        }
-                        if ((++copy_from_idx) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-                        {
-                            copy_from_iter = copy_from_iter->next;
-                        }
-                    }
-
-                    /* Append the remaining moves. */
-                    if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-                    {
-                        (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
-                    }
-                    (*end_moves_iter)->data.s[
-                        (pos_in_moves++) % FCS_FCC_NUM_MOVES_IN_ITEM
-                    ] = extra_move;
+                    fc_solve__internal__copy_moves(
+                        &(extracted_item->moves_seq),
+                        &pos_in_moves,
+                        &end_moves_iter,
+                        extra_move,
+                        moves_list_allocator
+                    );
 
                     new_item->moves_seq.count = pos_in_moves;
                     new_item->moves_seq.moves_list = moves_list;
@@ -576,44 +596,14 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
             start_iter = start_iter->next;
         }
     }
-    {
-        int copy_from_idx;
-        fcs_fcc_moves_list_item_t const * copy_from_iter = after_start_moves_seq->moves_list;
+    fc_solve__internal__copy_moves(
+        after_start_moves_seq,
+        &pos_in_moves,
+        &end_moves_iter,
+        extra_move,
+        moves_list_allocator
+    );
 
-        for(
-            copy_from_idx = 0
-            ;
-            copy_from_idx < after_start_moves_seq->count
-            ;
-           )
-        {
-            if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-            {
-                (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
-            }
-            (*end_moves_iter)->data.s[
-                pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
-                ] = copy_from_iter->data.s[
-                copy_from_idx % FCS_FCC_NUM_MOVES_IN_ITEM
-                ];
-            if ((++pos_in_moves) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-            {
-                end_moves_iter = &((*end_moves_iter)->next);
-            }
-            if ((++copy_from_idx) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-            {
-                copy_from_iter = copy_from_iter->next;
-            }
-        }
-    }
-    /* Append the remaining moves. */
-    if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-    {
-        (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
-    }
-    (*end_moves_iter)->data.s[
-        (pos_in_moves++) % FCS_FCC_NUM_MOVES_IN_ITEM
-        ] = extra_move;
     /* Enqueue the new FCC start point. */
     if (fcc_start_points->recycle_bin)
     {
