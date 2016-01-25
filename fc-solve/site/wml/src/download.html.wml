@@ -134,6 +134,19 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 <ifneq "$(WITH_DEVEL_VERSION)" ""
     "<develversion />" />
 
+<h2 id="vcs-version">Latest Version from Git (= the Version Control System)</h2>
+
+<ul>
+<li>
+<p>
+<a href="http://github.com/shlomif/fc-solve">fc-solve GitHub Repository</a>
+- one can get the latest development version of the code from the GitHub link
+using a <a href="http://en.wikipedia.org/wiki/Git_%28software%29">Git</a>
+client. Please consult the in-repository documentation to get it to build and
+up-and-running.
+</p>
+</li>
+</ul>
 
 <h2 id="download_other_solvers">Other Solvers</h2>
 
