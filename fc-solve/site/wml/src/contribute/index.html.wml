@@ -1,0 +1,9 @@
+#include '../template.wml'
+
+<latemp_subject "Contribute to Freecell Solver" />
+
+<p>
+This page is intended to provide information about how to <b>contribute</b>
+to Freecell Solver.
+</p>
+

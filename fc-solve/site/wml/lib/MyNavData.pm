@@ -89,25 +89,33 @@ my $tree_contents =
             'title' => "A List of Freecell Solver Features",
         },
         {
-            'text' => "To Do List",
-            'url' => "to-do.html",
-            'title' => "A List of Major Tasks that can be Performed by Interesetd Developers",
+            'text' => "Contribute",
+            'url' => "contribute/",
+            'title' => "Information about contributing to Freecell Solver",
+            subs =>
+            [
+                {
+                    'text' => "To Do List",
+                    'url' => "to-do.html",
+                    'title' => "A List of Major Tasks that can be Performed by Interesetd Developers",
+                },
+                {
+                    'text' => "Code of Conduct",
+                    'url' => "code-of-conduct/",
+                    'title' => "Code of Conduct and Diversity Statement",
+                },
+                {
+                    'text' => "Give or Get Academic Credit",
+                    'url' => "getting-credit.html",
+                    'title' => ("Getting or Giving Academic Credit for " .
+                        "Working on Freecell Solver"),
+                },
+            ],
         },
         {
             'text' => "Support",
             'url' => "support.html",
             'title' => "Report bugs, get help and get other support",
-        },
-        {
-            'text' => "Code of Conduct",
-            'url' => "code-of-conduct/",
-            'title' => "Code of Conduct and Diversity Statement",
-        },
-        {
-            'text' => "Give or Get Academic Credit",
-            'url' => "getting-credit.html",
-            'title' => ("Getting or Giving Academic Credit for " .
-                "Working on Freecell Solver"),
         },
         {
             'separator' => 1,
