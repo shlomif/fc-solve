@@ -7,3 +7,27 @@ This page is intended to provide information about how to <b>contribute</b>
 to Freecell Solver.
 </p>
 
+<h2 id="vcs-version">Latest Version from Git (= the Version Control System)</h2>
+
+<ul>
+<li>
+<p>
+<a href="http://github.com/shlomif/fc-solve">fc-solve GitHub Repository</a>
+- one can get the latest development version of the code from the GitHub link
+using a <a href="http://en.wikipedia.org/wiki/Git_%28software%29">Git</a>
+client. Please consult the in-repository documentation to get it to build and
+up-and-running.
+</p>
+</li>
+</ul>
+
+<h2 id="coding-conventions">Coding Conventions</h2>
+
+<p>
+One can read the
+<a href="http://www.shlomifish.org/open-source/resources/how-to-contribute-to-my-projects/">coding
+conventions</a> and contribution guidelines. Please follow them when sending
+a patch or pull-request.
+</p>
+
+</p>
