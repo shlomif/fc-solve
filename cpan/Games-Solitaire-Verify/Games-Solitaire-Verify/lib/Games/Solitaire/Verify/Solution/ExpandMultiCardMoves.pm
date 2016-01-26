@@ -82,20 +82,6 @@ sub _init
 
     $self->SUPER::_init($args);
 
-    $self->_variant($args->{variant});
-
-    if ($self->_variant() eq "custom")
-    {
-        $self->_variant_params($args->{variant_params});
-    }
-    else
-    {
-        $self->_variant_params(
-            Games::Solitaire::Verify::VariantsMap->get_variant_by_id(
-                $self->_variant()
-            )
-        );
-    }
     $self->_st(undef);
     $self->_reached_end(0);
     $self->_output_fh($args->{output_fh});
@@ -119,19 +105,6 @@ sub _out_line
     return $self->_out($line);
 }
 
-sub _calc_variant_args
-{
-    my $self = shift;
-
-    my @ret;
-    if ($self->_variant() eq "custom")
-    {
-        push @ret, ('variant_params' => $self->_variant_params());
-    }
-    push @ret, (variant => $self->_variant());
-    return \@ret;
-}
-
 sub _assign_read_new_state
 {
     my ($self, $str) = @_;
@@ -139,7 +112,7 @@ sub _assign_read_new_state
     my $new_state = Games::Solitaire::Verify::State->new(
             {
                 string => $str,
-                @{$self->_calc_variant_args()},
+                @{$self->_V},
             }
         );
 

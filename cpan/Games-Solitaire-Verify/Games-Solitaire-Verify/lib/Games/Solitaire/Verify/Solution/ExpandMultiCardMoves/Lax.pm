@@ -24,7 +24,7 @@ sub _assign_read_new_state
             Games::Solitaire::Verify::State->new(
                 {
                     string => $str,
-                    @{$self->_calc_variant_args()},
+                    @{$self->_V},
                 }
             )
         );
