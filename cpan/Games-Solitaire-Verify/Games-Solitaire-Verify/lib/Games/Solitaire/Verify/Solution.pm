@@ -78,7 +78,7 @@ sub _init
     {
         $self->_variant_params($args->{variant_params});
     }
-    $self->_state(undef);
+    $self->_st(undef);
     $self->_reached_end(0);
 
     return 0;
@@ -116,20 +116,20 @@ sub _read_state
     }
 
 
-    if (!defined($self->_state()))
+    if (!defined($self->_st()))
     {
-        my $new_state = Games::Solitaire::Verify::State->new(
+        $self->_st(
+            Games::Solitaire::Verify::State->new(
                 {
                     string => $str,
                     @{$self->_calc_variant_args()},
                 }
-            );
-
-        $self->_state($new_state);
+            )
+        );
     }
     else
     {
-        if ($self->_state()->to_string() ne $str)
+        if ($self->_st()->to_string() ne $str)
         {
             die "States don't match";
         }
@@ -184,7 +184,7 @@ sub _apply_move
 {
     my $self = shift;
 
-    if (my $verdict = $self->_state()->verify_and_perform_move($self->_move()))
+    if (my $verdict = $self->_st()->verify_and_perform_move($self->_move()))
     {
         Games::Solitaire::Verify::Exception::VerifyMove->throw(
             error => "Wrong Move",

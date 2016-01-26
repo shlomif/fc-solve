@@ -96,7 +96,7 @@ sub _init
             )
         );
     }
-    $self->_state(undef);
+    $self->_st(undef);
     $self->_reached_end(0);
     $self->_output_fh($args->{output_fh});
 
@@ -143,19 +143,19 @@ sub _assign_read_new_state
             }
         );
 
-    if (!defined($self->_state()))
+    if (!defined($self->_st()))
     {
         # Do nothing.
 
     }
     else
     {
-        if ($self->_state()->to_string() ne $str)
+        if ($self->_st()->to_string() ne $str)
         {
             die "States don't match";
         }
     }
-    $self->_state($new_state);
+    $self->_st($new_state);
 
     return;
 }
@@ -296,18 +296,18 @@ sub _apply_move
         my @empty_fc_indexes;
         my @empty_stack_indexes;
 
-        foreach my $idx (0 .. ($self->_state->num_freecells()-1))
+        foreach my $idx (0 .. ($self->_st->num_freecells()-1))
         {
-            if (!defined($self->_state->get_freecell($idx)))
+            if (!defined($self->_st->get_freecell($idx)))
             {
                 push @empty_fc_indexes, $idx;
             }
         }
 
-        foreach my $idx (0 .. ($self->_state->num_columns()-1))
+        foreach my $idx (0 .. ($self->_st->num_columns()-1))
         {
             if (($idx != $ultimate_dest) && ($idx != $ultimate_source) &&
-                (! $self->_state->get_column($idx)->len()))
+                (! $self->_st->get_column($idx)->len()))
             {
                 push @empty_stack_indexes, $idx;
             }
@@ -338,7 +338,7 @@ sub _apply_move
         my $past_first_output_state_promise = sub {
             $self->_out(
                 "\n"
-                . $self->_state->to_string
+                . $self->_st->to_string
                 . "\n\n====================\n\n"
             );
 
@@ -353,7 +353,7 @@ sub _apply_move
 
             $self->_out_line($move_line."\n");
 
-            if (my $verdict = $self->_state()->verify_and_perform_move(
+            if (my $verdict = $self->_st()->verify_and_perform_move(
                     Games::Solitaire::Verify::Move->new(
                         {
                             fcs_string => $move_line,
@@ -459,7 +459,7 @@ sub _apply_move
     else
     {
         $self->_out_line( $self->_move_line . "\n" );
-        if (my $verdict = $self->_state()->verify_and_perform_move($self->_move()))
+        if (my $verdict = $self->_st()->verify_and_perform_move($self->_move()))
         {
             Games::Solitaire::Verify::Exception::VerifyMove->throw(
                 error => "Wrong Move",

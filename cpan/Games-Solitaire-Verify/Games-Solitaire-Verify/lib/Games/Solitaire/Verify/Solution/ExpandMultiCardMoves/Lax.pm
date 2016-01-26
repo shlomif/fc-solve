@@ -18,9 +18,9 @@ sub _assign_read_new_state
 {
     my ($self, $str) = @_;
 
-    if (!defined($self->_state()))
+    if (!defined($self->_st()))
     {
-        $self->_state(
+        $self->_st(
             Games::Solitaire::Verify::State->new(
                 {
                     string => $str,

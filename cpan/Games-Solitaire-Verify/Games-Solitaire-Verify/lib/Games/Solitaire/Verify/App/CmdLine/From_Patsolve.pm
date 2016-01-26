@@ -19,7 +19,7 @@ use Getopt::Long qw(GetOptionsFromArray);
 __PACKAGE__->mk_acc_ref(
     [
         qw(
-            _state
+            _st
             _filename
             _sol_filename
             _variant_params
@@ -175,7 +175,7 @@ sub _read_initial_state
 {
     my $self = shift;
 
-    $self->_state(
+    $self->_st(
         Games::Solitaire::Verify::State->new(
             {
                 string => scalar(_slurp($self->_filename)),
@@ -197,7 +197,7 @@ sub _out_running_state
     my ($self) = @_;
 
     $self->_append(
-        $self->_state->to_string(). "\n\n====================\n\n"
+        $self->_st->to_string(). "\n\n====================\n\n"
     );
 
     return;
@@ -209,11 +209,11 @@ sub _perform_and_output_move
 
     $self->_append( "$move_s\n\n");
 
-    $self->_state->verify_and_perform_move(
+    $self->_st->verify_and_perform_move(
         Games::Solitaire::Verify::Move->new(
             {
                 fcs_string => $move_s,
-                game => $self->_state->_variant(),
+                game => $self->_st->_variant(),
             },
         )
     );
@@ -227,9 +227,9 @@ sub _find_col_card
     my ($self, $card_s) = @_;
 
     return firstidx {
-        my $col = $self->_state->get_column($_);
+        my $col = $self->_st->get_column($_);
         ($col->len == 0) ? 0 : $col->top->fast_s eq $card_s
-    } (0 .. $self->_state->num_columns - 1);
+    } (0 .. $self->_st->num_columns - 1);
 }
 
 sub _find_empty_col
@@ -237,17 +237,17 @@ sub _find_empty_col
     my ($self) = @_;
 
     return firstidx {
-        $self->_state->get_column($_)->len == 0
-    } (0 .. $self->_state->num_columns - 1);
+        $self->_st->get_column($_)->len == 0
+    } (0 .. $self->_st->num_columns - 1);
 }
 
 sub _find_fc_card
 {
     my ($self, $card_s) = @_;
     my $dest_fc_idx = firstidx {
-        my $card = $self->_state->get_freecell($_);
+        my $card = $self->_st->get_freecell($_);
         defined ($card) ? ($card->fast_s eq $card_s) : 0;
-    } (0 .. $self->_state->num_freecells - 1);
+    } (0 .. $self->_st->num_freecells - 1);
 }
 
 sub _find_card_src_string
@@ -284,8 +284,8 @@ sub _perform_move
         }
 
         my $dest_fc_idx = firstidx {
-            ! defined ($self->_state->get_freecell($_))
-        } (0 .. $self->_state->num_freecells - 1);
+            ! defined ($self->_st->get_freecell($_))
+        } (0 .. $self->_st->num_freecells - 1);
 
         if ($dest_fc_idx < 0)
         {

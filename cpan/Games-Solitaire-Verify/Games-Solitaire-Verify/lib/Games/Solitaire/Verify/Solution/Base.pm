@@ -13,13 +13,14 @@ all Games::Solitaire::Verify::Solution::* classes.
 use parent 'Games::Solitaire::Verify::Base';
 
 # "_ln" is line number
+# "_st" is the "state" (or board/layout).
 # "_i" is input filehandle.
 __PACKAGE__->mk_acc_ref([qw(
     _i
     _ln
     _variant
     _variant_params
-    _state
+    _st
     _move
     _reached_end
     )]);
