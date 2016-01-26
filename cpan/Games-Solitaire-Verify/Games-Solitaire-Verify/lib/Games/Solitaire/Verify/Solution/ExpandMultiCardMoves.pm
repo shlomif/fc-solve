@@ -80,6 +80,8 @@ sub _init
 {
     my ($self, $args) = @_;
 
+    $self->SUPER::_init($args);
+
     $self->_variant($args->{variant});
 
     if ($self->_variant() eq "custom")
@@ -94,9 +96,7 @@ sub _init
             )
         );
     }
-    $self->_i($args->{input_fh});
     $self->_state(undef);
-    $self->_ln(0);
     $self->_reached_end(0);
     $self->_output_fh($args->{output_fh});
 

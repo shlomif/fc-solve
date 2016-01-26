@@ -32,12 +32,24 @@ sub _l
     # We use this instead of the accessor for speed.
     $s->{_ln}++;
 
-    my $ret;
-    if (defined ( $ret = scalar ($s->{_i}->getline()) ))
-    {
-        $ret =~ s# +(\n?)\z#$1#;
-    }
-    return $ret;
+    return shift(@{$s->{_i}});
+}
+
+sub _init
+{
+    my ($self, $args) = @_;
+
+    $self->_i(
+        [ split /^/ms, do {
+                local $/;
+                my $t = readline($args->{input_fh});
+                $t =~ s/ +$//gms;
+                $t;
+            }
+    ]);
+    $self->_ln(0);
+
+    return;
 }
 
 1;

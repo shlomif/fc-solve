@@ -1,5 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
+0.1602  Unknown
+        - Convert file input to slurping+splitting.
+            - This provides a significant (3m05s instead of over 4m)
+            speed boost.
+
 0.1601  2015-12-30
         - Fix compatibility with older perls (down to 5.8.9).
             - Several CPAN Tester reports were received.
