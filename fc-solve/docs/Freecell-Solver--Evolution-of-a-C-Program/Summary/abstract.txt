@@ -140,7 +140,7 @@
     - Stephan's and Markus' additions.
     - Conversion of fc-solve to the API. (using your own dog-food)
 
-* Instantization and Parallelization:
+* Instantiation and Parallelization:
     - Putting all the global variables in a struct
     - Suspending and resuming a scan.
     - First try (dumped in favour of Simple Simon support)
