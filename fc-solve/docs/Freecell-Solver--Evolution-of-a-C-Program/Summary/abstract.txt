@@ -12,7 +12,7 @@
         - It's about the dynamics of a small open-source project.
 
 2. Freecell: Rules and Strategies
-    - Rules: 
+    - Rules:
     - Strategies: define some common strategies
 
 3. The Version 0.2 Architecture
@@ -34,10 +34,10 @@
         - Cards are {short, short}, stack len is int, etc.
         - A monolithic function that performs a lot of tests
             - Describe the tests
-        - A chunk of code duplicated across the function, that handles 
+        - A chunk of code duplicated across the function, that handles
         checking if a state already exists, inserting it there, and
         recursing into it.
-        
+
 4. The States Collection
     - Initial Perl Version - an unordered list
         - O(1) insertion and O(n) lookup.
@@ -46,7 +46,7 @@
         - O(log(n)) lookup and O(n*log(n)) insertion.
         - O(N^2*log(N)) accumulative time
         - quite fast
-    - Same only with merging the sort margin using a 
+    - Same only with merging the sort margin using a
     binary-search based merge
         - O(log(n)) lookup and O(n) insertion.
         - O(N^2) accumulative time
@@ -78,7 +78,7 @@
             - A secondary hash function
     - Summary
         - A table comparing various operations between the schemes.
-    
+
 
 5. The States Representation
     - Compact States
@@ -86,11 +86,11 @@
         - Copy on write stacks
     - Indices to the stack and freecells locations outside the main data
     structure
-    
+
 * Moves
     - Initial version: only states.
     - The introduction of move stacks
-    
+
 * Generalizing the Game Rules
     - Meta-moves generalization
     - Simple Simon
@@ -113,7 +113,7 @@
         - The story of the acceptance into the Debian pool
     - Other portability considerations:
         - The NetBSD MD5 patch
-        - static const char const * 
+        - static const char const *
 
 
 * Scans:
@@ -133,7 +133,7 @@
     - The USAGE file
     - The INSTALL file
     - Man pages (using perl POD), due to Debian's constraints
-    
+
 * The user-land API:
     - First version - only a command-line application
     - Version 1.0.0 - a user-land API.
@@ -154,7 +154,7 @@
     - The compact state allocation
     - Hunting down memory leaks
     - Compact allocation of state stacks and move stacks
-    - One move stack per hard thread.    
+    - One move stack per hard thread.
     - Defining accessors -> instance->my_var ==> my_var
 
 * Ars-progrettica
@@ -165,5 +165,5 @@
     - The Freshmeat Effect
 
 * Future Directions
-   
+
 
