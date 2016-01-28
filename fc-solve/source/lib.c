@@ -2603,17 +2603,17 @@ static int user_next_instance(
 
     user->current_instance_idx = user->num_instances-1;
 
-    fcs_instance_item_t * const instance_item = get_current_instance_item(user);
-    instance_item->num_flares = 0;
-    instance_item->flares = NULL;
-    instance_item->plan = NULL;
-    instance_item->num_plan_items = 0;
-    instance_item->flares_plan_string = NULL;
-    instance_item->flares_plan_compiled = FALSE;
-
-    instance_item->current_plan_item_idx = 0;
-    instance_item->minimal_solution_flare_idx = -1;
-    instance_item->all_plan_items_finished_so_far = 1;
+    *(get_current_instance_item(user)) = (fcs_instance_item_t) {
+        .num_flares = 0,
+        .flares = NULL,
+        .plan = NULL,
+        .num_plan_items = 0,
+        .flares_plan_string = NULL,
+        .flares_plan_compiled = FALSE,
+        .current_plan_item_idx = 0,
+        .minimal_solution_flare_idx = -1,
+        .all_plan_items_finished_so_far = 1,
+    };
 
     /* ret_code and limit are set at user_next_flare(). */
 
@@ -2752,33 +2752,27 @@ DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
 int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
-    void * api_instance,
-    int * instance_list_index,
-    char * * error_string
+    void * const api_instance,
+    int * const instance_list_index,
+    char * * const error_string
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    return user_compile_all_flares_plans(user, instance_list_index, error_string);
+    return user_compile_all_flares_plans((fcs_user_t * const)api_instance, instance_list_index, error_string);
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
-    void * api_instance
+    void * const api_instance
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    return get_current_instance_item(user)->num_plan_items;
+    return get_current_instance_item((fcs_user_t * const)api_instance)->num_plan_items;
 }
 
 const DLLEXPORT char * fc_solve_user_INTERNAL_get_flares_plan_item_type(
-    void * api_instance,
-    int item_idx
+    void * const api_instance,
+    const int item_idx
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    switch (get_current_instance_item(user)->plan[item_idx].type)
+    switch (get_current_instance_item((fcs_user_t * const)api_instance)->plan[item_idx].type)
     {
         case FLARES_PLAN_RUN_INDEFINITELY:
             return "RunIndef";
@@ -2798,42 +2792,34 @@ const DLLEXPORT char * fc_solve_user_INTERNAL_get_flares_plan_item_type(
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
-    void * api_instance,
-    int item_idx
+    void * const api_instance,
+    const int item_idx
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    return get_current_instance_item(user)->plan[item_idx].flare_idx;
+    return get_current_instance_item((fcs_user_t * const)api_instance)->plan[item_idx].flare_idx;
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
-    void * api_instance,
-    int item_idx
+    void * const api_instance,
+    const int item_idx
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    return get_current_instance_item(user)->plan[item_idx].count_iters;
+    return get_current_instance_item((fcs_user_t * const)api_instance)->plan[item_idx].count_iters;
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
-    void * api_instance
+    void * const api_instance
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    return user->soft_thread->by_depth_tests_order.num;
+    return (((fcs_user_t * const)api_instance)->soft_thread->by_depth_tests_order.num);
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-    void * api_instance,
-    int depth_idx
+    void * const api_instance,
+    const int depth_idx
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    return user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].max_depth;
+    return (((fcs_user_t * const)api_instance)->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].max_depth);
 }
 
 #endif
