@@ -2560,7 +2560,7 @@ static int user_next_flare(fcs_user_t * const user)
      * instance
      * */
     user->soft_thread =
-        fc_solve_instance_get_first_soft_thread(&(user->active_flare->obj));
+        fc_solve_instance_get_first_soft_thread(&(flare->obj));
 
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_ptr(&(flare->obj), &(user->common_preset));
