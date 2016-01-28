@@ -425,7 +425,7 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     const fcs_preset_t * const preset_ptr
         )
 {
-    char * no_use;
+    char no_use[120];
 
 #define preset (*preset_ptr)
     if (preset.game_params.freecells_num > MAX_NUM_FREECELLS)
@@ -494,7 +494,7 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                         fc_solve_apply_tests_order(
                             &(by_depth_tests_order[depth_idx].tests_order),
                             preset.tests_order,
-                            &no_use
+                            no_use
                         );
                         break;
                     }
@@ -511,7 +511,7 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
         fc_solve_apply_tests_order(
             &(instance->instance_tests_order),
             preset.tests_order,
-            &no_use);
+            no_use);
     }
 #undef preset
     return FCS_PRESET_CODE_OK;

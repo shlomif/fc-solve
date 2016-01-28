@@ -73,7 +73,7 @@ static GCC_INLINE const int fc_solve_string_to_test_num(const char * const s)
 extern int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
     const char * string,
-    char * * error_string
+    char * const error_string
     );
 
 #ifdef __cplusplus

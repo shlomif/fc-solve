@@ -405,12 +405,18 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     user->soft_thread->
         by_depth_tests_order.by_depth_tests[depth_idx].max_depth = INT_MAX;
 
+    char static_error_string[120];
     ret_code =
         fc_solve_apply_tests_order(
             &(user->soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].tests_order),
             tests_order,
-            error_string
+            static_error_string
             );
+
+    if (static_error_string[0])
+    {
+        *error_string = strdup(static_error_string);
+    }
 
     {
         int further_depth_idx;
@@ -2455,12 +2461,22 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 
     STRUCT_CLEAR_FLAG(&(user->active_flare->obj), FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET );
 
+    char static_error_string[120];
     const int ret =
         fc_solve_apply_tests_order(
             &(user->active_flare->obj.opt_tests_order),
             tests_order,
-            error_string
+            static_error_string
             );
+
+    if (static_error_string[0])
+    {
+        *error_string = strdup(static_error_string);
+    }
+    else
+    {
+        *error_string = NULL;
+    }
 
     if (!ret)
     {
