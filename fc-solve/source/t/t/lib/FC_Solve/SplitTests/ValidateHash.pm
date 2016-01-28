@@ -19,7 +19,7 @@ sub populate
     {
         confess("Input length is not even.");
     }
-    foreach my $i (grep { $_ & 0x1 == 0 } 0 .. $l)
+    foreach my $i (grep { ($_ & 0x1) == 0 } 0 .. ($l-1))
     {
         my ($key, $val) = @$array_ref[$i,$i+1];
         if (exists($tests->{$key}))
