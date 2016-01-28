@@ -37,10 +37,8 @@
 #include <unistd.h>
 #endif
 
-#include "alloc_wrap.h"
 #include "portable_int64.h"
 #include "portable_time.h"
-
 #include "fcs_user.h"
 #include "fcs_cl.h"
 #include "unused.h"
@@ -273,7 +271,7 @@ int main(int argc, char * argv[])
     context.argc = argc;
     context.argv = argv;
 
-    pthread_t * const workers = SMALLOC(workers, num_workers);
+    pthread_t workers[num_workers];
 
     for ( int idx = 0 ; idx < num_workers ; idx++)
     {
@@ -300,8 +298,6 @@ int main(int argc, char * argv[])
     }
 
     FCS_PRINT_FINISHED(mytime, total_num_iters);
-
-    free(workers);
 
     return 0;
 }
