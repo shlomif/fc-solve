@@ -35,7 +35,6 @@
 #endif
 
 #include "../card.c"
-#include "../app_str.c"
 #include "../state.c"
 #include "../delta_states_debondt.c"
 #include "../dbm_solver_key.h"
