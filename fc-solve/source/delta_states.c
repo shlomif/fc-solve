@@ -35,6 +35,7 @@
 #include <stdio.h>
 
 #include "fcs_dllexport.h"
+#include "alloc_wrap.h"
 #include "bit_rw.h"
 #include "state.h"
 #include "indirect_buffer.h"

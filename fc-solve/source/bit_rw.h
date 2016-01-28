@@ -30,7 +30,6 @@
 #include "config.h"
 #include "state.h"
 #include "fcs_enums.h"
-#include "app_str.h"
 #include "unused.h"
 #include "inline.h"
 

@@ -36,11 +36,13 @@
 #include <unistd.h>
 #include <limits.h>
 #include <signal.h>
+#include <stdarg.h>
 
 #include "config.h"
 
 #undef FCS_RCS_STATES
 
+#include "alloc_wrap.h"
 #include "bool.h"
 #include "inline.h"
 #include "portable_time.h"
