@@ -102,17 +102,15 @@ static void my_iter_handler(
 
         /* Now pass it to a secondary user_instance prune it. */
         {
-            void * pruner;
-            char * error_string;
-            int ret;
-
-            pruner = freecell_solver_user_alloc();
+            void * const pruner = freecell_solver_user_alloc();
 
             freecell_solver_user_set_num_freecells(pruner, 2);
+            char * error_string;
             freecell_solver_user_set_tests_order(pruner, "01ABCDE", &error_string);
+            free(error_string);
             freecell_solver_user_limit_iterations_long(pruner, 128*1024);
 
-            ret = freecell_solver_user_solve_board(pruner, state_string);
+            const int ret = freecell_solver_user_solve_board(pruner, state_string);
             if (ret == FCS_STATE_SUSPEND_PROCESS)
             {
                 printf ("\n\nVerdict: INDETERMINATE\n\n");
@@ -414,11 +412,7 @@ int main(int argc, char * argv[])
     }
     else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
     {
-        const char * error_string;
-
-        error_string = freecell_solver_user_get_last_error_string(instance);
-
-        printf("Flares Plan: %s\n", error_string);
+        printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
     }
     else
     {
