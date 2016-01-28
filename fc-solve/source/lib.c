@@ -2662,12 +2662,10 @@ DLLEXPORT const char * freecell_solver_user_get_current_soft_thread_name(
 }
 
 DLLEXPORT const char * freecell_solver_user_get_last_error_string(
-    void * api_instance
+    void * const api_instance
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    return user->error_string;
+    return (((fcs_user_t * const)api_instance)->error_string);
 }
 
 
