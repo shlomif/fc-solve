@@ -147,11 +147,11 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
     fc_solve_apply_preset_by_name(instance, "freecell");
 #else
     {
-        char * no_use;
+        char no_use[120];
         fc_solve_apply_tests_order(
             &(instance->instance_tests_order),
             "[01][23456789]",
-            &no_use
+            no_use
         );
     }
 #endif
