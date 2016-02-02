@@ -607,13 +607,17 @@ sub verify_and_perform_move
 {
     my ($self, $move) = @_;
 
-    $self->_temp_move($move);
-
-    my $ret = $self->_verify_and_perform_move_main();
-
-    $self->_temp_move(undef());
-
-    return $ret;
+    if (my $method = $self->can("_perform_move__" . $move->source_type . "_to_" . $move->dest_type))
+    {
+        $self->_temp_move($move);
+        my $ret = $method->($self);
+        $self->_temp_move(undef());
+        return $ret;
+    }
+    else
+    {
+        die "Cannot handle this move type";
+    }
 }
 
 sub _perform_move__stack_to_foundation
@@ -878,27 +882,6 @@ sub _perform_move__freecell_to_stack
     $self->clear_freecell($fc_idx);
 
     return 0;
-}
-
-sub _verify_and_perform_move_main
-{
-    my $self = shift;
-
-    my $move = $self->_temp_move();
-
-    my $src = $move->source_type();
-    my $dest = $move->dest_type();
-
-    my $method = $self->can("_perform_move__${src}_to_${dest}");
-
-    if ($method)
-    {
-        return $method->($self);
-    }
-    else
-    {
-        die "Cannot handle this move type";
-    }
 }
 
 =head2 $self->to_string()
