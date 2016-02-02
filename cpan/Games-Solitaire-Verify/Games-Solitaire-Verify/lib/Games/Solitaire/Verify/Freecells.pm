@@ -156,11 +156,10 @@ sub to_string
 {
     my $self = shift;
 
-    my $ret = "Freecells:" . (($self->count() == 0) ? "" :
+    my $ret = "Freecells:" . (
         join("",
             map { "  " . (defined($_) ? $_->fast_s() : "  ") }
-            map { $self->cell($_) }
-            (0 .. ($self->count()-1))
+            @{$self->_cells}
         ));
     $ret =~ s# +\z##;
 
