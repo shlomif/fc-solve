@@ -607,7 +607,7 @@ sub verify_and_perform_move
 {
     my ($self, $move) = @_;
 
-    if (my $method = $self->can("_perform_move__" . $move->source_type . "_to_" . $move->dest_type))
+    if (my $method = $self->can("_mv_" . $move->source_type . "_to_" . $move->dest_type))
     {
         $self->_temp_move($move);
         my $ret = $method->($self);
@@ -620,7 +620,7 @@ sub verify_and_perform_move
     }
 }
 
-sub _perform_move__stack_to_foundation
+sub _mv_stack_to_foundation
 {
     my $self = shift;
 
@@ -653,7 +653,7 @@ sub _perform_move__stack_to_foundation
     }
 }
 
-sub _perform_move__stack_seq_to_foundation
+sub _mv_stack_seq_to_foundation
 {
     my $self = shift;
 
@@ -719,7 +719,7 @@ sub _perform_move__stack_seq_to_foundation
     }
 }
 
-sub _perform_move__stack_to_freecell
+sub _mv_stack_to_freecell
 {
     my $self = shift;
     my $move = $self->_temp_move();
@@ -748,7 +748,7 @@ sub _perform_move__stack_to_freecell
     return 0;
 }
 
-sub _perform_move__stack_to_stack
+sub _mv_stack_to_stack
 {
     my $self = shift;
     my $move = $self->_temp_move();
@@ -816,7 +816,7 @@ sub _perform_move__stack_to_stack
     return 0;
 }
 
-sub _perform_move__freecell_to_foundation
+sub _mv_freecell_to_foundation
 {
     my $self = shift;
     my $move = $self->_temp_move();
@@ -856,7 +856,7 @@ sub _perform_move__freecell_to_foundation
     }
 }
 
-sub _perform_move__freecell_to_stack
+sub _mv_freecell_to_stack
 {
     my $self = shift;
     my $move = $self->_temp_move();
