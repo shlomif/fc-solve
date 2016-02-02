@@ -801,15 +801,10 @@ sub _perform_move__stack_to_stack
     }
 
     # Now let's actually move them.
-    my @cards;
-    foreach my $i (1 .. $num_cards)
-    {
-        push @cards, $sc->pop();
-    }
     $dc->append(
         Games::Solitaire::Verify::Column->new(
             {
-                cards => [reverse @cards],
+                cards => $sc->popN($num_cards),
             }
         )
     );

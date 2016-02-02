@@ -207,6 +207,24 @@ sub pop
     return $card;
 }
 
+=head2 my [@cards] = $column->popN($num_cards)
+
+Pops $num_cards cards from the top of the column and returns them (as an
+array reference) in their original order in the column.
+
+=cut
+
+sub popN
+{
+    my ($S, $c) = @_;
+
+    my @r = splice(@{$S->_cards()}, -$c);
+
+    $S->_recalc;
+
+    return \@r;
+}
+
 =head2 $column->to_string()
 
 Converts to a string.
