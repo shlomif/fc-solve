@@ -154,9 +154,23 @@ sub clone
     return $new_col;
 }
 
+=head2 $base_column->append_cards(\@cards)
+
+Appends the cards in the argument array reference to the column.
+
+=cut
+
+sub append_cards
+{
+    my ($S, $c) = @_;
+    push @{$S->_cards()}, @$c;
+    $S->_recalc;
+    return;
+}
+
 =head2 $base_column->append($column_with_more_cards)
 
-Appends the column $column_with_more_cards to $base_column .
+Appends the column $column_with_more_cards to $base_column . B<DEPRECATED>.
 
 =cut
 
@@ -166,11 +180,7 @@ sub append
 
     my $more_copy = $more_cards->clone();
 
-    push @{$self->_cards()}, @{$more_copy->_cards()};
-
-    $self->_recalc;
-
-    return;
+    return $self->append_cards($more_copy->_cards);
 }
 
 =head2 $column->push($card)

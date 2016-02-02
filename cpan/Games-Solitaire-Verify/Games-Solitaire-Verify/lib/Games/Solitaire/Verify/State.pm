@@ -805,13 +805,7 @@ sub _mv_stack_to_stack
     }
 
     # Now let's actually move them.
-    $dc->append(
-        Games::Solitaire::Verify::Column->new(
-            {
-                cards => $sc->popN($num_cards),
-            }
-        )
-    );
+    $dc->append_cards( $sc->popN($num_cards) );
 
     return 0;
 }
