@@ -6,7 +6,7 @@ use autodie;
 
 my $FIRST_INDEX = ($ENV{F} || 1);
 my $LAST_INDEX = ($ENV{L} || 32000);
-my $STEP = 5;
+my $STEP = 4;
 my $next_i = $FIRST_INDEX;
 my @game_params;
 
@@ -32,6 +32,7 @@ my @game_params;
             {
                 $e = $LAST_INDEX;
             }
+            $next_i++;
 
             $self->send_command(calc => "$s-$e");
         }
