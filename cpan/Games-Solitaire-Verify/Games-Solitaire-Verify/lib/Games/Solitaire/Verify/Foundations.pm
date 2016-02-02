@@ -152,25 +152,23 @@ sub _foundations_strings
     my $self = shift;
 
     return [
-        map {
-            sprintf(qq{ %s-%s},
-                $_,
-                Games::Solitaire::Verify::Card->rank_to_string(
-                    $self->value($_, 0)
-                ),
-            )
-        }
-        (@{$self->_get_suits_seq()})
     ];
 }
 
 sub to_string
 {
-    my $self = shift;
+    my $S = shift;
 
     return   "Foundations:"
-           . join("", @{$self->_foundations_strings()})
-           ;
+    . join("",
+        map {
+            " $_-".
+            Games::Solitaire::Verify::Card->rank_to_string(
+                $S->value($_, 0)
+            )
+        }
+        @{Games::Solitaire::Verify::Card->get_suits_seq()}
+    );
 }
 
 
