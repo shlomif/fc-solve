@@ -24,6 +24,9 @@ __PACKAGE__->mk_acc_ref([qw(
     _founds
     )]);
 
+# Suits sequence:
+my @SS = (@{Games::Solitaire::Verify::Card->get_suits_seq()});
+
 =head1 SYNOPSIS
 
     use Games::Solitaire::Verify::Foundations;
@@ -51,7 +54,7 @@ sub _input_from_string
     {
         my @founds_strings = ($1, $2, $3, $4);
 
-        foreach my $suit (@{$self->_get_suits_seq()})
+        foreach my $suit (@SS)
         {
             $self->assign($suit, 0,
                 Games::Solitaire::Verify::Card->calc_rank_with_0(
@@ -77,7 +80,7 @@ sub _init
         +{
             map
             { $_ => [(0) x $self->_num_decks()], }
-            @{$self->_get_suits_seq()}
+            @SS
         }
     );
 
@@ -87,13 +90,6 @@ sub _init
     }
 
     return;
-}
-
-sub _get_suits_seq
-{
-    my $class = shift;
-
-    return Games::Solitaire::Verify::Card->get_suits_seq();
 }
 
 =head2 $self->value($suit, $index)
@@ -167,7 +163,7 @@ sub to_string
                 $S->value($_, 0)
             )
         }
-        @{Games::Solitaire::Verify::Card->get_suits_seq()}
+        @SS
     );
 }
 
@@ -189,7 +185,7 @@ sub clone
             }
         );
 
-    foreach my $suit (@{$self->_get_suits_seq()})
+    foreach my $suit (@SS)
     {
         foreach my $deck_idx (0 .. ($self->_num_decks()-1))
         {
