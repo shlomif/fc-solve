@@ -14,7 +14,8 @@ my @game_params;
 	package FC_Solve::Par::Child;
 	use parent qw(Process::Async::Child);
 
-	sub finished { $_[0]->{finished} ||= $_[0]->loop->new_future }
+    # Finished.
+	sub _f { $_[0]->{_f} ||= $_[0]->loop->new_future }
 
 	sub cmd_done {
         my $self = shift;
@@ -22,7 +23,7 @@ my @game_params;
         if ($next_i > $LAST_INDEX)
         {
             $self->send_command(end => 1);
-            $self->finished->done(1);
+            $self->_f->done(1);
         }
         else
         {
@@ -119,7 +120,7 @@ sub main
     }
     foreach my $child (@children)
     {
-        $child->finished->get;
+        $child->_f->get;
     }
 
     return;
