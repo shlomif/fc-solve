@@ -31,6 +31,6 @@ fc_solve_init(\@fc_solve_args);
 
 foreach my $board_idx ($FIRST_INDEX .. $LAST_INDEX)
 {
-    solve (\@game_params, $board_idx);
+    print solve (\@game_params, $board_idx);
 }
 

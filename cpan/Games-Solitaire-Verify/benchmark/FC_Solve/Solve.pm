@@ -31,7 +31,7 @@ sub solve
 {
     my ($game_params, $board_idx) = @_;
 
-    print "== $board_idx ==\n";
+    my $ret = "== $board_idx ==\n";
     # my $fc_solve_output = `pi-make-microsoft-freecell-board -t $board_idx | fc-solve -p -t -sam -sel @fc_solve_args`;
     my $fc_solve_output = fc_solve_solve($board_idx);
 
@@ -84,14 +84,12 @@ sub solve
     }
 
     my ($num_iters) = ($fc_solve_output =~ m{^Total number of states checked is (\d+)\.$}ms);
-    print "Verdict: " .
+    return $ret . "Verdict: " .
     ($is_solvable ? "Solved"
         : $intractable ? "Intractable"
         : "Unsolved"
     )
     . " ; Iters: $num_iters ; Length: $sol_len\n";
-
-    return;
 }
 
 
