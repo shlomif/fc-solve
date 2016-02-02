@@ -753,7 +753,11 @@ sub _perform_move__stack_to_stack
     my $dest = $move->dest();
     my $num_cards = $move->num_cards();
 
-    my $source_len = $self->get_column($source)->len() ;
+    # Source column
+    my $sc = $self->get_column($source);
+    my $dc = $self->get_column($dest);
+
+    my $source_len = $sc->len();
 
     if ($source_len < $num_cards)
     {
@@ -775,7 +779,7 @@ sub _perform_move__stack_to_stack
 
     if (my $verdict = $self->_can_put_on_column(
             $dest,
-            $self->get_column($source)->pos($source_len-$num_cards)
+            $sc->pos($source_len-$num_cards)
         ))
     {
         return $verdict;
@@ -786,7 +790,7 @@ sub _perform_move__stack_to_stack
 
     if ($num_seq_components > $self->_calc_max_sequence_move(
             {
-                to_empty => ($self->get_column($dest)->len() == 0),
+                to_empty => ($dc->len() == 0),
             }
             ))
     {
@@ -800,9 +804,9 @@ sub _perform_move__stack_to_stack
     my @cards;
     foreach my $i (1 .. $num_cards)
     {
-        push @cards, $self->get_column($source)->pop();
+        push @cards, $sc->pop();
     }
-    $self->get_column($dest)->append(
+    $dc->append(
         Games::Solitaire::Verify::Column->new(
             {
                 cards => [reverse @cards],
