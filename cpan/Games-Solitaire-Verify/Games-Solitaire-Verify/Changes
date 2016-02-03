@@ -1,6 +1,6 @@
 Revision history for Games-Solitaire-Verify
 
-0.1602  Unknown
+0.1700  Unknown
         - Convert file input to slurping+splitting.
             - This provides a significant (3m05s instead of over 4m)
             speed boost.
@@ -9,6 +9,7 @@ Revision history for Games-Solitaire-Verify
         appending.
         - Add Games::Solitaire::Verify::Column->popN for popping multiple
         cards from the top.
+        - Add Games::Solitaire::Verify::Card->get_ranks_strings().
 
 0.1601  2015-12-30
         - Fix compatibility with older perls (down to 5.8.9).

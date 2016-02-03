@@ -19,13 +19,19 @@ use Games::Solitaire::Verify::Card;
 
 use List::Util qw(first);
 
+# _s is the string.
 __PACKAGE__->mk_acc_ref([qw(
     _num_decks
     _founds
+    _s
     )]);
 
 # Suits sequence:
 my @SS = (@{Games::Solitaire::Verify::Card->get_suits_seq()});
+# Reverse.
+my %RS = (map { $SS[$_] => $_ } (0 .. $#SS));
+# Ranks
+my @R = (@{Games::Solitaire::Verify::Card->get_ranks_strings()});
 
 =head1 SYNOPSIS
 
@@ -84,10 +90,13 @@ sub _init
         }
     );
 
+    $self->_s($self->_init_s);
+
     if (exists($args->{string}))
     {
         $self->_input_from_string($args->{string});
     }
+
 
     return;
 }
@@ -118,6 +127,8 @@ sub assign
 
     $self->_founds()->{$suit}->[$idx] = $rank;
 
+    # Replace the rank in place.
+    substr($self->{_s}, (length('Foundations:') + 3) + ($RS{$suit} << 2), 1, $R[$rank]);
     return;
 }
 
@@ -132,7 +143,7 @@ sub increment
 {
     my ($self, $suit, $idx) = @_;
 
-    $self->_founds()->{$suit}->[$idx]++;
+    substr($self->{_s}, (length('Foundations:') + 3) + ($RS{$suit} << 2), 1, $R[++($self->_founds()->{$suit}->[$idx])]);
 
     return;
 }
@@ -153,15 +164,17 @@ sub _foundations_strings
 
 sub to_string
 {
+    return $_[0]->_s;
+}
+
+sub _init_s
+{
     my $S = shift;
 
     return   "Foundations:"
     . join("",
         map {
-            " $_-".
-            Games::Solitaire::Verify::Card->rank_to_string(
-                $S->value($_, 0)
-            )
+            " $_-".  $R[ $S->value($_, 0) ]
         }
         @SS
     );

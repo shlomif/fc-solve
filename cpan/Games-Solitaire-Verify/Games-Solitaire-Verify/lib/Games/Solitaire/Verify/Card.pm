@@ -309,10 +309,19 @@ sub fast_s
 
 Converts the rank to a string.
 
+=head2 my [@ranks] = $class->get_ranks_strings()
+
+Returns an (effectively constant) array reference of rank strings.
+
 =cut
 
 {
     my @_t_nums = ('0', (map { $_->{t} } @card_nums));
+
+sub get_ranks_strings
+{
+    return \@_t_nums;
+}
 
 sub rank_to_string
 {
