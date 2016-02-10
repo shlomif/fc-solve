@@ -1,7 +1,7 @@
 #!/bin/bash
 for BOARD_NUM in 5376 16039 17880 22894 31465 31975 ; do
-    pi-make-microsoft-freecell-board "$BOARD_NUM" | \
-        ./fc-solve "$@" -mi 100000 | \
+    pi-make-microsoft-freecell-board -t "$BOARD_NUM" | \
+        ./fc-solve -p -t -sam "$@" -mi 100000 | \
         tail -3 | \
         perl -0777 -e \
         '$_=<STDIN>; /Total number of states checked is (\d+)/; $n = $1;
