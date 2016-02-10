@@ -69,21 +69,26 @@ $int_opts__values{'max-bench-threads-num'} = 4;
 my %STR_OPTS =
 (
     'c|cols' => {prefix => 'FCS_STATE_STORAGE_', param => 'FCS_STATE_STORAGE'},
+    'libavl2-c' => { param => 'FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE' },
+    'libavl2-p' => { param => 'FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE' },
+    'prefix' => {param => 'CMAKE_INSTALL_PREFIX',},
     'p|pos' => {prefix => 'FCS_STACK_STORAGE_', param => 'FCS_STACK_STORAGE'},
+    'rcs-cache-storage' => { prefix => 'FCS_RCS_CACHE_STORAGE_', param => 'FCS_RCS_CACHE_STORAGE' },
 );
+
 my @STR_OPTS__KEYS = keys %STR_OPTS;
 for my $k (@STR_OPTS__KEYS)
 {
     $STR_OPTS{$k}{'value'} = undef();
+    $STR_OPTS{$k}{'prefix'} //= '';
 }
 
+$STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
+$STR_OPTS{'prefix'}{value} = '/usr';
+
 my $build_type = "debug";
-my $rcs_cache_storage = "KAZ_TREE";
-my $prefix = "/usr";
 my $states_type;
 my $cpu_arch;
-my $state_storage_libavl2_tree;
-my $stack_storage_libavl2_tree;
 my $with_dbm_solver;
 
 my $google_stack_storage;
@@ -219,11 +224,7 @@ GetOptions(
 
         return;
     },
-    'rcs-cache-storage=s' => \$rcs_cache_storage,
-    'kazlib' => sub { $STR_OPTS{'p|pos'}{value} = 'KAZ_TREE'; $rcs_cache_storage = "KAZ_TREE",},
-    'libavl2-p=s' => \$state_storage_libavl2_tree,
-    'libavl2-c=s' => \$stack_storage_libavl2_tree,
-    'prefix=s' => \$prefix,
+    'kazlib' => sub { $STR_OPTS{'p|pos'}{value} = $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE'; },
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
@@ -282,12 +283,12 @@ if ($bool_opts_with_false_defaults__values{rcs})
     $states_type = 'COMPACT_STATES';
 }
 
-if ($state_storage_libavl2_tree)
+if ($STR_OPTS{'livavl2-p'}{value})
 {
     $STR_OPTS{'p|pos'}{value} = 'LIBAVL2_TREE';
 }
 
-if ($stack_storage_libavl2_tree)
+if ($STR_OPTS{'livavl2-c'}{value})
 {
     $STR_OPTS{'c|cols'}{value} = 'LIBAVL2_TREE';
 }
@@ -304,26 +305,16 @@ unlink(glob("*.so"));
 
 my @cmd= ("cmake",
     "-DCMAKE_BUILD_TYPE=$build_type",
-    "-DFCS_RCS_CACHE_STORAGE=FCS_RCS_CACHE_STORAGE_$rcs_cache_storage",
-    "-DCMAKE_INSTALL_PREFIX=$prefix",
-    "-DDATADIR=$prefix/share",
+    "-DDATADIR=$STR_OPTS{prefix}{value}/share",
     "-DBUILD_STATIC_LIBRARY=",
     (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
 
     (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
-    ($state_storage_libavl2_tree
-        ? "-DFCS_STATE_STORAGE_LIBAVL2_TREE_TYPE=$state_storage_libavl2_tree"
-        : ()
-    ),
-    ($stack_storage_libavl2_tree
-        ? "-DFCS_STACK_STORAGE_LIBAVL2_TREE_TYPE=$stack_storage_libavl2_tree"
-        : ()
-    ),
     # Specifying a -D variable explicitly if it's not used gives a warning,
     # so we need to check that it is used.
-    ((($state_storage_libavl2_tree || $stack_storage_libavl2_tree) && exists($ENV{"LIBAVL2_SOURCE_DIR"}))
+    ((($STR_OPTS{'libavl2-c'}{value} || $STR_OPTS{'libavl2-p'}{value}) && exists($ENV{"LIBAVL2_SOURCE_DIR"}))
         ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
         : ()
     ),
