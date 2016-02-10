@@ -74,6 +74,7 @@ my %STR_OPTS =
     'prefix' => {param => 'CMAKE_INSTALL_PREFIX',},
     'p|pos' => {prefix => 'FCS_STACK_STORAGE_', param => 'FCS_STACK_STORAGE'},
     'rcs-cache-storage' => { prefix => 'FCS_RCS_CACHE_STORAGE_', param => 'FCS_RCS_CACHE_STORAGE' },
+    'states-type' => { param => 'STATES_TYPE', },
 );
 
 my @STR_OPTS__KEYS = keys %STR_OPTS;
@@ -87,7 +88,6 @@ $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
 $STR_OPTS{'prefix'}{value} = '/usr';
 
 my $build_type = "debug";
-my $states_type;
 my $cpu_arch;
 my $with_dbm_solver;
 
@@ -236,7 +236,6 @@ GetOptions(
         set_both("GOOGLE_DENSE_HASH");
         _google_set_both("SPARSE");
     },
-    'states-type=s' => \$states_type,
     'profile' => sub {
         my ($opt, $val) = @_;
         if ($val)
@@ -280,7 +279,7 @@ else
 
 if ($bool_opts_with_false_defaults__values{rcs})
 {
-    $states_type = 'COMPACT_STATES';
+    $STR_OPTS{'states-type'}{'value'} = 'COMPACT_STATES';
 }
 
 if ($STR_OPTS{'livavl2-p'}{value})
@@ -307,7 +306,6 @@ my @cmd= ("cmake",
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DDATADIR=$STR_OPTS{prefix}{value}/share",
     "-DBUILD_STATIC_LIBRARY=",
-    (defined($states_type) ? ("-DSTATES_TYPE=$states_type") : ()),
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
 
