@@ -119,8 +119,13 @@ sub _google_set_both
 
     return;
 }
-
 _google_set_both("SPARSE");
+sub _set_to_google_hash
+{
+    set_both("GOOGLE_DENSE_HASH");
+    _google_set_both(shift);
+    return;
+}
 
 my %themes =
 (
@@ -228,14 +233,8 @@ GetOptions(
     'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
-    'dense' => sub {
-        set_both("GOOGLE_DENSE_HASH");
-        _google_set_both("DENSE");
-    },
-    'sparse' => sub {
-        set_both("GOOGLE_DENSE_HASH");
-        _google_set_both("SPARSE");
-    },
+    'dense' => sub { return _set_to_google_hash("DENSE"); },
+    'sparse' => sub { return _set_to_google_hash("SPARSE"); },
     'profile' => sub {
         my ($opt, $val) = @_;
         if ($val)
