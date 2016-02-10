@@ -3,13 +3,16 @@
 # What this script does is shorten the fc_solve_.* identifiers in the
 # *.c and *.h files to be very short (while still starting with "fc_solve_").
 # It was meant as an experiment to see how well it reduces the size of the
-# generated libraries considerably.
+# generated libraries.
 #
 # The savings are:
 # Before: 108,028 bytes.
 # After: 105,820 bytes.
 #
 # A bad side-effect of this script is that it reallly obfuscates the code.
+#
+# Copyright 2009, Shlomi Fish.
+# Under the https://opensource.org/licenses/mit-license.php .
 
 $map = Hash.new
 $next_num = 0

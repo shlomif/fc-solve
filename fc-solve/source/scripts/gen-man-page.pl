@@ -45,9 +45,7 @@ $readme =~ s/\AFreecell Solver Readme File\n(=+)\n/
     $man_title . "\n" . '=' x length($man_title) . "\n"/ge;
 $readme =~ s/(:Revision[^\n]*\n)/$1$manify_text/ms;
 
-open my $out, '>', $out_path;
-print {$out} $readme, "\n\n", $usage;
-close($out);
+path($out_path)->spew_utf8($readme, "\n\n", $usage);
 
 =head1 COPYRIGHT AND LICENSE
 
