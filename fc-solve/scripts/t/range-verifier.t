@@ -28,7 +28,7 @@ sub delete_summary
 
 delete_summary();
 
-my $ranger_verifier = $ENV{'FCS_SRC_PATH'} . '/scripts/verify-range-in-dir-and-collect-stats.pl';
+my $ranger_verifier = './verify-range-in-dir-and-collect-stats.pl';
 
 sub _test_range_verifier
 {
