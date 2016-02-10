@@ -46,16 +46,16 @@ DEFINE_fc_solve_empty_card();
  * the program.
  * */
 #ifdef FC_SOLVE__STRICTER_BOARD_PARSING
-#define FCS_MAP_CHAR(c) (c)
+#define FC_SOLVE_MAP_CHAR(c) (c)
 #else
-#define FCS_MAP_CHAR(c) (toupper(c))
+#define FC_SOLVE_MAP_CHAR(c) (toupper(c))
 #endif
 
 const int fc_solve_u2p_rank(const char * string)
 {
     while (1)
     {
-        switch (FCS_MAP_CHAR(*string))
+        switch (FC_SOLVE_MAP_CHAR(*string))
         {
             case '\0':
             case ' ':
@@ -96,36 +96,6 @@ const int fc_solve_u2p_rank(const char * string)
                 return 9;
             default:
                 string++;
-        }
-    }
-}
-
-
-/*
- * This function converts a string containing a suit letter (that is
- * one of H,S,D,C) into its suit ID.
- *
- * The suit letter may come somewhat after the beginning of the string.
- *
- * */
-const int fc_solve_u2p_suit(const char * suit)
-{
-    while (TRUE)
-    {
-        switch(FCS_MAP_CHAR(*suit))
-        {
-            case 'H':
-            case ' ':
-            case '\0':
-                return 0;
-            case 'C':
-                return 1;
-            case 'D':
-                return 2;
-            case 'S':
-                return 3;
-            default:
-                suit++;
         }
     }
 }

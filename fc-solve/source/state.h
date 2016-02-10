@@ -666,6 +666,12 @@ extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str
  * */
 extern const int fc_solve_u2p_rank(const char * string);
 
+#ifdef FC_SOLVE__STRICTER_BOARD_PARSING
+#define FC_SOLVE_MAP_CHAR(c) (c)
+#else
+#define FC_SOLVE_MAP_CHAR(c) (toupper(c))
+#endif
+
 /*
  * This function converts a string containing a suit letter (that is
  * one of H,S,D,C) into its suit ID.
@@ -673,7 +679,27 @@ extern const int fc_solve_u2p_rank(const char * string);
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-extern const int fc_solve_u2p_suit(const char * deck);
+static GCC_INLINE const int fc_solve_u2p_suit(const char * suit)
+{
+    while (TRUE)
+    {
+        switch(FC_SOLVE_MAP_CHAR(*suit))
+        {
+            case 'H':
+            case ' ':
+            case '\0':
+                return 0;
+            case 'C':
+                return 1;
+            case 'D':
+                return 2;
+            case 'S':
+                return 3;
+            default:
+                suit++;
+        }
+    }
+}
 
 /*
  * This function converts an entire card from its string representations
