@@ -68,6 +68,7 @@ $int_opts__values{'max-bench-threads-num'} = 4;
 
 my %STR_OPTS =
 (
+    'arch' => { param => 'CPU_ARCH', },
     'c|cols' => {prefix => 'FCS_STATE_STORAGE_', param => 'FCS_STATE_STORAGE'},
     'libavl2-c' => { param => 'FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE' },
     'libavl2-p' => { param => 'FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE' },
@@ -88,7 +89,6 @@ $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
 $STR_OPTS{'prefix'}{value} = '/usr';
 
 my $build_type = "debug";
-my $cpu_arch;
 my $with_dbm_solver;
 
 my $google_stack_storage;
@@ -252,7 +252,6 @@ GetOptions(
         $build_type = "MinSizeRel";
         return;
     },
-    'arch=s' => \$cpu_arch,
     'dbm=s' => \$with_dbm_solver,
     (map {; "$_!" => \($bool_opts_with_false_defaults__values{$_}) } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
     (map {; "$_!" => \($true_bool_opts__values{$_}) } @TRUE_BOOL_KEYS),
@@ -308,8 +307,6 @@ my @cmd= ("cmake",
     "-DBUILD_STATIC_LIBRARY=",
     "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
     "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
-
-    (defined($cpu_arch) ? ("-DCPU_ARCH=$cpu_arch") : ()),
     # Specifying a -D variable explicitly if it's not used gives a warning,
     # so we need to check that it is used.
     ((($STR_OPTS{'libavl2-c'}{value} || $STR_OPTS{'libavl2-p'}{value}) && exists($ENV{"LIBAVL2_SOURCE_DIR"}))
