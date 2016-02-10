@@ -7,34 +7,34 @@ use Carp (qw/ confess /);
 
 sub run
 {
-	my $cmd = shift;
-	if (system(@$cmd))
-	{
-		confess ("[@{$cmd}] failed! $! $?");
-	}
+    my $cmd = shift;
+    if (system(@$cmd))
+    {
+        confess ("[@{$cmd}] failed! $! $?");
+    }
 }
 
-my $build_dir = "B";
+my $build_dir = 'B';
 mkdir($build_dir);
 chdir($build_dir);
 
 run(
-	[
-	qq{C:/Program Files/CMake 2.8/bin/CMake},
-	"-G", "MinGW Makefiles",
-    # These variables require libgmp which isn't provided by default.
-    "-DFCS_WITH_TEST_SUITE=", "-DFCS_ENABLE_DBM_SOLVER=",
-	@ARGV,
-	".."
-	]
+    [
+        qq{C:/Program Files/CMake 3.4/bin/CMake},
+        '-G', 'MinGW Makefiles',
+        # These variables require libgmp which isn't provided by default.
+        '-DFCS_WITH_TEST_SUITE=', '-DFCS_ENABLE_DBM_SOLVER=',
+        @ARGV,
+        '..'
+    ]
 );
 
 # my $make_path = "C:/Dwimperl/c/bin/mingw32-make";
-my $make_path = "C:/strawberry/c/bin/mingw32-make";
+my $make_path = 'C:/strawberry/c/bin/mingw32-make';
 
 run( [ $make_path, ] );
 
-run( [ $make_path, "package", ] );
+run( [ $make_path, 'package', ] );
 
 
 
