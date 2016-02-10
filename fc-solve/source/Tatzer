@@ -70,6 +70,7 @@ my %STR_OPTS =
 (
     'arch' => { param => 'CPU_ARCH', },
     'c|cols' => {prefix => 'FCS_STATE_STORAGE_', param => 'FCS_STATE_STORAGE'},
+    'dbm' => { param => 'FCS_DBM_BACKEND', },
     'libavl2-c' => { param => 'FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE' },
     'libavl2-p' => { param => 'FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE' },
     'prefix' => {param => 'CMAKE_INSTALL_PREFIX',},
@@ -89,7 +90,6 @@ $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
 $STR_OPTS{'prefix'}{value} = '/usr';
 
 my $build_type = "debug";
-my $with_dbm_solver;
 
 my $google_stack_storage;
 my $google_state_storage;
@@ -252,7 +252,6 @@ GetOptions(
         $build_type = "MinSizeRel";
         return;
     },
-    'dbm=s' => \$with_dbm_solver,
     (map {; "$_!" => \($bool_opts_with_false_defaults__values{$_}) } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
     (map {; "$_!" => \($true_bool_opts__values{$_}) } @TRUE_BOOL_KEYS),
     (map {; "$_=i" => \($int_opts__values{$_}) } @INT_OPS__KEYS),
@@ -293,7 +292,7 @@ if ($STR_OPTS{'livavl2-c'}{value})
 
 if ($build_type eq "debug")
 {
-    $with_dbm_solver ||= 'kaztree';
+    $STR_OPTS{dbm}{value} ||= 'kaztree';
 }
 
 # This cache is sometimes causing problems.
@@ -313,10 +312,7 @@ my @cmd= ("cmake",
         ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
         : ()
     ),
-    ($with_dbm_solver
-        ? ("-DFCS_ENABLE_DBM_SOLVER=1", "-DFCS_DBM_BACKEND=$with_dbm_solver",)
-        : ()
-    ),
+    ($STR_OPTS{dbm}{value} ? ("-DFCS_ENABLE_DBM_SOLVER=1") : ()),
     (map { $bool_opts_with_false_defaults__values{$_} ? ("-D" . $BOOL_OPTS_WITH_FALSE_DEFAULTS{$_} . "=1") : () } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
     (map { '-D' . $TRUE_BOOL_OPTS{$_} . '=' . ($true_bool_opts__values{$_} ? '1': '') } @TRUE_BOOL_KEYS),
     (map { defined($int_opts__values{$_}) ? ("-D" . $INT_OPTS{$_} . "=" . $int_opts__values{$_}) : () } @INT_OPS__KEYS),
