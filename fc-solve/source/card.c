@@ -45,11 +45,6 @@ DEFINE_fc_solve_empty_card();
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
-#ifdef FC_SOLVE__STRICTER_BOARD_PARSING
-#define FC_SOLVE_MAP_CHAR(c) (c)
-#else
-#define FC_SOLVE_MAP_CHAR(c) (toupper(c))
-#endif
 
 const int fc_solve_u2p_rank(const char * string)
 {
