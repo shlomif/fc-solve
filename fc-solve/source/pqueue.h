@@ -44,11 +44,12 @@ extern "C" {
 #endif
 
 #include <limits.h>
+#include <stdlib.h>
 
 #include "state.h"
-
 #include "inline.h"
 #include "bool.h"
+#include "alloc_wrap.h"
 
 /* manage a priority queue as a heap
    the heap is implemented as a fixed size array of pointers to your data */
@@ -104,8 +105,6 @@ static GCC_INLINE void fc_solve_PQueueFree( PQUEUE *pq )
 }
 
 
-#include <stdio.h>
-#include <stdlib.h>
 
 /* Join a priority queue
    "r" is the rating of the item you're adding for sorting purposes */
