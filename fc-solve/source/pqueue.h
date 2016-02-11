@@ -107,9 +107,8 @@ static GCC_INLINE void fc_solve_PQueueFree( PQUEUE *pq )
 #include <stdio.h>
 #include <stdlib.h>
 
-/* join a priority queue
-   returns TRUE if succesful, FALSE if fails. (You fail by filling the pqueue.)
-   fcs_pq_rating is a function which returns the rating of the item you're adding for sorting purposes */
+/* Join a priority queue
+   "r" is the rating of the item you're adding for sorting purposes */
 
 static GCC_INLINE void fc_solve_pq_push(
         PQUEUE * const pq,
