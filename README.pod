@@ -13,6 +13,8 @@ L<Simple Simon|http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire> .
 Also contained are several command-line programs that use it, and the original
 project also span some other code for testing and for support.
 
+=for HTML <a href="https://travis-ci.org/shlomif/fc-solve"><img src="https://travis-ci.org/shlomif/fc-solve.svg?branch=master" alt="Build Status"></a>
+
 =head1 Repository structure
 
 =head2 fc-solve/source/
