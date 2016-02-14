@@ -1,0 +1,54 @@
+shlomif[fcs]:$trunk/cpan/Games-Solitaire-Verify/benchmark$ sudo_renice time
+bash -c "export FCS_PATH=\"$b\"; export FCS_SRC_PATH=\"$c_src\"; perl
+bench-par.pl -- -l as 2>/dev/null"
+541.31user 0.35system 3:00.54elapsed 300%CPU (0avgtext+0avgdata
+248080maxresident)k
+0inputs+0outputs (0major+32693minor)pagefaults 0swaps
+
+shlomif[fcs]:$trunk/cpan/Games-Solitaire-Verify/benchmark$ git st -s .
+?? notes.txt
+shlomif[fcs]:$trunk/cpan/Games-Solitaire-Verify/benchmark$ . par-Source-Me.bash ^C
+shlomif[fcs]:$trunk/cpan/Games-Solitaire-Verify/benchmark$
+real    3m17.104s
+user    13m0.815s
+sys     0m4.308s
+
+After optimisation with the Freecells to_string:
+
+real    3m10.195s
+user    12m33.032s
+sys     0m4.346s
+
+After inlining and optimising _foundations_strings.
+
+real    3m4.576s
+user    12m10.638s
+sys     0m4.480s
+shlomif[fcs]:$trunk/cpan/Games-Solitaire-Verify/benchmark$
+
+real    2m58.723s
+user    11m47.386s
+sys     0m4.480s
+
+real    2m57.699s
+user    11m42.516s
+sys     0m4.361s
+
+After converting to append_cards().
+
+real    2m47.837s
+user    11m3.686s
+sys     0m4.405s
+
+real    2m38.665s
+user    10m26.374s
+sys     0m4.802s
+
+real    2m37.220s
+user    10m21.238s
+sys     0m4.557s
+
+real    2m37.120s
+user    10m21.285s
+sys     0m4.144s
+ 
