@@ -52,3 +52,9 @@ real    2m37.120s
 user    10m21.285s
 sys     0m4.144s
 
+After optimising ::Freecells->to_string.
+
+real    2m32.502s
+user    10m2.866s
+sys     0m4.119s
+

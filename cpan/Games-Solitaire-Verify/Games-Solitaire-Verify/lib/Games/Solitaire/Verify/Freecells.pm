@@ -19,9 +19,11 @@ use Games::Solitaire::Verify::Card;
 
 use List::Util qw(first);
 
+# _s is the string.
 __PACKAGE__->mk_acc_ref([qw(
     _count
     _cells
+    _s
     )]);
 
 =head1 SYNOPSIS
@@ -78,6 +80,8 @@ sub _init
 
     $self->_count($args->{count});
 
+    $self->_s('Freecells:' . ('    ' x $self->_count));
+
     $self->_cells([(undef) x $self->_count()]);
 
     if (exists($args->{string}))
@@ -133,7 +137,7 @@ sub cell
 =head2 $self->assign($index, $card)
 
 Sets the card in the freecell with the index $index to $card, which
-should be a L<Games::Solitaire::Verify::Card> object.
+should be a L<Games::Solitaire::Verify::Card> object or undef.
 
 =cut
 
@@ -142,6 +146,7 @@ sub assign
     my ($self, $idx, $card) = @_;
 
     $self->_cells()->[$idx] = $card;
+    substr($self->{_s}, length('Freecells:')+($idx << 2)+2,2,(defined($card) ? $card->fast_s : '  '));
 
     return;
 }
@@ -154,16 +159,8 @@ Stringifies the freecells into the Freecell Solver solution display notation.
 
 sub to_string
 {
-    my $self = shift;
-
-    my $ret = "Freecells:" . (
-        join("",
-            map { "  " . (defined($_) ? $_->fast_s() : "  ") }
-            @{$self->_cells}
-        ));
-    $ret =~ s# +\z##;
-
-    return $ret;
+    (my $r = $_[0]->{_s}) =~ s# +\z##;
+    return $r;
 }
 
 =head2 $self->cell_clone($pos)
@@ -191,7 +188,7 @@ sub clear
 {
     my ($self, $pos) = @_;
 
-    undef($self->_cells()->[$pos]);
+    $self->assign($pos, undef());
 
     return;
 }
