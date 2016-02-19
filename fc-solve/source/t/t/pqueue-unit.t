@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use lib './t/lib';
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use Test::Differences (qw( eq_or_diff ));
 
@@ -43,6 +43,12 @@ int is_empty(SV * obj) {
     return fc_solve_is_pqueue_empty(q(obj));
 }
 
+void push(SV * obj, char * val, int rating) {
+    SV * const sv = newSVpv(val, 0);
+
+    fc_solve_pq_push(q(obj), (fcs_collectible_state_t *)sv, rating);
+}
+
 EOF
     LIBS => "-L" . $ENV{FCS_PATH} . " ",
 );
@@ -59,4 +65,9 @@ package main;
 
     # TEST
     ok (scalar($pq->is_empty()), "PQ is empty upon init.");
+
+    $pq->push("Hello", 24);
+
+    # TEST
+    ok (scalar(! $pq->is_empty()), "PQ is not empty upon insertion.");
 }
