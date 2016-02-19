@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use lib './t/lib';
 
-use Test::More tests => 5;
+use Test::More tests => 9;
 
 use Test::Differences (qw( eq_or_diff ));
 
@@ -94,4 +94,25 @@ package main;
 
     # TEST
     ok (!defined($pq->pop()), "Item is null.");
+}
+
+{
+    my $pq = PQ->new;
+
+    # TEST
+    ok (!defined($pq->pop()), "Popped item is null upon empty");
+}
+
+{
+    my $pq = PQ->new;
+
+    $pq->push("ShouldBeFirst", 1000);
+    $pq->push("ShouldBeSecond", 1);
+
+    # TEST
+    is (scalar($pq->pop()), "ShouldBeFirst", "First string out on in-order insert.");
+    # TEST
+    is (scalar($pq->pop()), "ShouldBeSecond", "Second string out on in-order insert.");
+    # TEST
+    ok (scalar($pq->is_empty()), "PQ is empty again after popping.");
 }
