@@ -52,7 +52,7 @@ static GCC_INLINE void * const alloc_instance_and_parse(
     freecell_solver_str_t * const known_parameters,
     const freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void * const callback_context,
-    fcs_bool_t only_recognized
+    const fcs_bool_t only_recognized
 )
 {
     void * const instance = freecell_solver_user_alloc();
