@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use lib './t/lib';
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 
 use Test::Differences (qw( eq_or_diff ));
 
@@ -113,6 +113,20 @@ package main;
     is (scalar($pq->pop()), "ShouldBeFirst", "First string out on in-order insert.");
     # TEST
     is (scalar($pq->pop()), "ShouldBeSecond", "Second string out on in-order insert.");
+    # TEST
+    ok (scalar($pq->is_empty()), "PQ is empty again after popping.");
+}
+
+{
+    my $pq = PQ->new;
+
+    $pq->push("ShouldBeSecond", 1);
+    $pq->push("ShouldBeFirst", 1000);
+
+    # TEST
+    is (scalar($pq->pop()), "ShouldBeFirst", "First string out on reverse-order insert.");
+    # TEST
+    is (scalar($pq->pop()), "ShouldBeSecond", "Second string out on reverse-order insert.");
     # TEST
     ok (scalar($pq->is_empty()), "PQ is empty again after popping.");
 }
