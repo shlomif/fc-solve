@@ -735,10 +735,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
             else if (soft_thread->method == FCS_METHOD_A_STAR)
             {
                 PQUEUE new_pq;
-                fc_solve_pq_init(
-                    &(new_pq),
-                    1024
-                );
+                fc_solve_pq_init( &(new_pq) );
 
                 pq_element_t * const Elements = BEFS_VAR(soft_thread, pqueue).Elements;
                 pq_element_t * const end_element = Elements + BEFS_VAR(soft_thread, pqueue).current_size;

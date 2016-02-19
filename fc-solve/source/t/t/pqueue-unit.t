@@ -25,7 +25,7 @@ SV* _proto_new() {
         SV*      obj = newSVrv(obj_ref, "PQ");
         New(42, s, 1, PqInC);
 
-        fc_solve_pq_init(&(s->pq), 500);
+        fc_solve_pq_init(&(s->pq));
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         return obj_ref;

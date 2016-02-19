@@ -442,10 +442,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     if (soft_thread->method == FCS_METHOD_A_STAR)
     {
         /* Initialize the priotity queue of the BeFS scan */
-        fc_solve_pq_init(
-            &(BEFS_VAR(soft_thread, pqueue)),
-            1024
-        );
+        fc_solve_pq_init( &(BEFS_VAR(soft_thread, pqueue)) );
 
 #define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
 

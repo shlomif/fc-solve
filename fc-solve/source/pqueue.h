@@ -87,15 +87,11 @@ typedef struct
    the list is sorted ascending or descending... */
 
 static GCC_INLINE void fc_solve_pq_init(
-    PQUEUE * const pq,
-    const unsigned int max_size
+    PQUEUE * const pq
     )
 {
-    pq->max_size = max_size;
-
     pq->current_size = 0;
-
-    pq->Elements = SMALLOC(pq->Elements, max_size + 1 );
+    pq->Elements = SMALLOC(pq->Elements, (pq->max_size = 1024) + 1 );
 }
 
 static GCC_INLINE void fc_solve_PQueueFree( PQUEUE *pq )
