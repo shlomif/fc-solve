@@ -851,34 +851,35 @@ next_state:
         /*
             Extract the next item in the queue/priority queue.
         */
-        if (method == FCS_METHOD_A_STAR)
         {
             fcs_collectible_state_t * new_ptr_state;
-#ifdef DEBUG
-            dump_pqueue(soft_thread, "before_pop", pqueue);
-#endif
-            /* It is an BeFS scan */
-            fc_solve_pq_pop(
-                pqueue,
-                &(new_ptr_state)
-                );
-
-            ASSIGN_ptr_state(new_ptr_state);
-        }
-        else
-        {
-            save_item = queue->next;
-            if (save_item != queue_last_item)
+            if (method == FCS_METHOD_A_STAR)
             {
-                ASSIGN_ptr_state(save_item->s);
-                queue->next = save_item->next;
-                save_item->next = my_brfs_recycle_bin;
-                my_brfs_recycle_bin = save_item;
+#ifdef DEBUG
+                dump_pqueue(soft_thread, "before_pop", pqueue);
+#endif
+                /* It is an BeFS scan */
+                fc_solve_pq_pop(
+                    pqueue,
+                    &(new_ptr_state)
+                );
             }
             else
             {
-                ASSIGN_ptr_state(NULL);
+                save_item = queue->next;
+                if (save_item != queue_last_item)
+                {
+                    new_ptr_state = save_item->s;
+                    queue->next = save_item->next;
+                    save_item->next = my_brfs_recycle_bin;
+                    my_brfs_recycle_bin = save_item;
+                }
+                else
+                {
+                    new_ptr_state = NULL;
+                }
             }
+            ASSIGN_ptr_state(new_ptr_state);
         }
     }
 
