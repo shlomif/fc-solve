@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use lib './t/lib';
 
-use Test::More tests => 2;
+use Test::More tests => 5;
 
 use Test::Differences (qw( eq_or_diff ));
 
@@ -49,6 +49,21 @@ void push(SV * obj, char * val, int rating) {
     fc_solve_pq_push(q(obj), (fcs_collectible_state_t *)sv, rating);
 }
 
+SV * pop(SV * obj) {
+    fcs_collectible_state_t * val;
+
+    fc_solve_pq_pop(q(obj), &val);
+
+    if (!val)
+    {
+        return &PL_sv_undef;
+    }
+    else
+    {
+        return (SV *)val;
+    }
+}
+
 EOF
     LIBS => "-L" . $ENV{FCS_PATH} . " ",
 );
@@ -70,4 +85,13 @@ package main;
 
     # TEST
     ok (scalar(! $pq->is_empty()), "PQ is not empty upon insertion.");
+
+    # TEST
+    is (scalar($pq->pop()), "Hello", "Received the right item after pop.");
+
+    # TEST
+    ok (scalar($pq->is_empty()), "PQ is empty again after popping.");
+
+    # TEST
+    ok (!defined($pq->pop()), "Item is null.");
 }
