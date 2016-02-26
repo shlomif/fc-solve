@@ -1,6 +1,6 @@
 Revision history for Games-Solitaire-Verify
 
-0.1700  Unknown
+0.1700  2016-02-26
         - Convert file input to slurping+splitting.
             - This provides a significant (3m05s instead of over 4m)
             speed boost.

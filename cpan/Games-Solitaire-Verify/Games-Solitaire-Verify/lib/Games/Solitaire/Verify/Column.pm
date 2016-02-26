@@ -158,6 +158,8 @@ sub clone
 
 Appends the cards in the argument array reference to the column.
 
+( Added in version 0.17 .)
+
 =cut
 
 sub append_cards
@@ -170,7 +172,8 @@ sub append_cards
 
 =head2 $base_column->append($column_with_more_cards)
 
-Appends the column $column_with_more_cards to $base_column . B<DEPRECATED>.
+Appends the column $column_with_more_cards to $base_column . B<NOTE:>
+append_cards() is faster.
 
 =cut
 
@@ -221,6 +224,8 @@ sub pop
 
 Pops $num_cards cards from the top of the column and returns them (as an
 array reference) in their original order in the column.
+
+( Added in version 0.17 .)
 
 =cut
 

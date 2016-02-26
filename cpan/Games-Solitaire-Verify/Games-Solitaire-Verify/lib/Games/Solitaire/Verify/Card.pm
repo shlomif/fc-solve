@@ -313,6 +313,8 @@ Converts the rank to a string.
 
 Returns an (effectively constant) array reference of rank strings.
 
+( Added in version 0.17 .)
+
 =cut
 
 {
