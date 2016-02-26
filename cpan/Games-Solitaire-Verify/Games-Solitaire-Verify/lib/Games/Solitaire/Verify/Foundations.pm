@@ -10,7 +10,7 @@ foundations (or home-cells) in a Solitaire game.
 
 =cut
 
-our $VERSION = '0.1601';
+our $VERSION = '0.1700';
 
 use parent 'Games::Solitaire::Verify::Base';
 
