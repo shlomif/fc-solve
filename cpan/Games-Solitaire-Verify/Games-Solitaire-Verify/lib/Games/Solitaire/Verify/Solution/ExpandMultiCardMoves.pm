@@ -18,6 +18,8 @@ use parent 'Games::Solitaire::Verify::Solution::Base';
 # TODO : Merge with lib/Games/Solitaire/Verify/Solution.pm
 
 use POSIX qw( ceil );
+use IO::Handle; # For $fh->print(...)
+
 use Games::Solitaire::Verify::Exception;
 use Games::Solitaire::Verify::Card;
 use Games::Solitaire::Verify::Column;

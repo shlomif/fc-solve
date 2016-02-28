@@ -1,5 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
+0.1701  2016-02-28
+        - Fix the tests (and the code) of method ->print could not be found in
+        IO::Handle/IO::File on older perls.
+            - Reported in some CPAN Testers reports.
+
 0.1700  2016-02-26
         - Convert file input to slurping+splitting.
             - This provides a significant (3m05s instead of over 4m)
