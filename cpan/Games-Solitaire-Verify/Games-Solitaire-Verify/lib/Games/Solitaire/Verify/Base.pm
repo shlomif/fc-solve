@@ -11,7 +11,7 @@ Games::Solitaire::Verify::Base - a base class.
 
 use vars qw($VERSION);
 
-$VERSION = '0.1700';
+$VERSION = '0.1701';
 
 use Class::XSAccessor;
 

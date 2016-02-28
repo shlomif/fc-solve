@@ -12,7 +12,7 @@ laxer expansion.
 
 =cut
 
-our $VERSION = '0.1700';
+our $VERSION = '0.1701';
 
 sub _assign_read_new_state
 {

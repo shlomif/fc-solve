@@ -11,7 +11,7 @@ moves.
 
 =cut
 
-our $VERSION = '0.1700';
+our $VERSION = '0.1701';
 
 use parent 'Games::Solitaire::Verify::Solution::Base';
 

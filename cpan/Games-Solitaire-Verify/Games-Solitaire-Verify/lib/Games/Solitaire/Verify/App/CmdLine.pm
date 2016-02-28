@@ -12,7 +12,7 @@ use Getopt::Long qw(GetOptionsFromArray);
 use Games::Solitaire::Verify::VariantsMap;
 use Games::Solitaire::Verify::Solution;
 
-our $VERSION = '0.1700';
+our $VERSION = '0.1701';
 
 __PACKAGE__->mk_acc_ref(
     [

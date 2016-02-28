@@ -10,7 +10,7 @@ Freecells in games such as Freecell, Baker's Game, or Seahaven Towers
 
 =cut
 
-our $VERSION = '0.1700';
+our $VERSION = '0.1701';
 
 use parent 'Games::Solitaire::Verify::Base';
 
