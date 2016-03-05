@@ -294,13 +294,20 @@ sub par_handle_seed
 
 package FindSeed;
 
-use List::Util qw/max/;
+use List::Util qw/max min/;
 use List::UtilsBy qw/min_by/;
 use bytes;
 use integer;
 
 use Cwd ();
 sub f { return $_[0] =~ /Solved.*?Iters: ([0-9]+)/ ? $1 : 100_000 }
+
+sub _calc_MAX_TH
+{
+    my ($self, $args) = @_;
+
+    return min($args->{threshold}, scalar(@{$args->{deals}})) - 1;
+}
 
 sub find
 {
@@ -313,18 +320,7 @@ sub find
 
     my @scans = ((ref($scan_arg) eq '') ? ($scan_arg) : @$scan_arg);
 
-    my $MAX_THRESHOLD = $args->{threshold};
-
-    if ($MAX_THRESHOLD > @deals)
-    {
-        $MAX_THRESHOLD = @deals;
-    }
-
-    my $MAX_TH = $MAX_THRESHOLD - 1;
-
-    # my @deals = (14249, 10692);
-    # my @deals = (14249);
-
+    my $MAX_TH = $self->_calc_MAX_TH($args);
     my $first_seed = $ENV{FIRST_SEED} || 1;
     my $check_seed__str = $ENV{CHECK_SEED} || $first_seed;
 
@@ -401,17 +397,7 @@ sub parallel_find
 
     my @scans = ((ref($scan_arg) eq '') ? ($scan_arg) : @$scan_arg);
 
-    my $MAX_THRESHOLD = $args->{threshold};
-
-    if ($MAX_THRESHOLD > @scans)
-    {
-        $MAX_THRESHOLD = @scans;
-    }
-
-    my $MAX_TH = $MAX_THRESHOLD - 1;
-
-    # my @deals = (14249, 10692);
-    # my @deals = (14249);
+    my $MAX_TH = $self->_calc_MAX_TH($args);
 
     my $first_seed = $ENV{FIRST_SEED} || 1;
     my $check_seed__str = $ENV{CHECK_SEED} || $first_seed;
