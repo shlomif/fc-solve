@@ -1,4 +1,8 @@
 cpan/AI-Pathfinding-OptimizeMultiple/.build
+cpan/Games-Solitaire-Verify/benchmark/.ninja_deps
+cpan/Games-Solitaire-Verify/benchmark/.ninja_log
+cpan/Games-Solitaire-Verify/benchmark/build.ninja
+cpan/Games-Solitaire-Verify/benchmark/par2.mak
 cpan/Games-Solitaire-Verify/benchmark/_Inline/
 cpan/Games-Solitaire-Verify/benchmark/Results/*.res
 cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/.build
