@@ -1,0 +1,41 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use List::MoreUtils qw/any/;
+use Getopt::Long qw/GetOptions/;
+
+my $theme_fn;
+my $dump_fn;
+my $iters_fn;
+my $analysis_fn;
+
+GetOptions(
+    'theme=s' => \$theme_fn,
+    'dump=s' => \$dump_fn,
+    'iters=s' => \$iters_fn,
+    'analysis=s' => \$analysis_fn,
+) or die "Unknown options - $!";
+
+if (any { !defined ($_ ) } ($theme_fn , $dump_fn, $iters_fn, $analysis_fn))
+{
+    die "Unspecified variable!";
+}
+
+sub sys
+{
+    my $args = shift;
+
+    STDERR->print(@$args, "\n");
+
+    system(@$args) and die "Failed to run [@$args]!";
+
+    return;
+}
+
+sys([ "./freecell-solver-fc-pro-range-solve 1 32000 1 --read-from-file 4,$theme_fn > $dump_fn", ]);
+
+sys([ "cat \"$dump_fn\" | perl -lanE 'print \$1 if /\\Q[[Num Iters]]=\\E(-?\\d+)/' | cat -n | sort -n -k 2 > \"$iters_fn\"" , ]);
+
+sys([ qq#ruby ./how-many-each-scan-solved.rb --theme="$theme_fn" --iters="$iters_fn" > "$analysis_fn"# , ]);

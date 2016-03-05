@@ -1,5 +1,24 @@
+require 'getoptlong'
+
+opts = GetoptLong.new(
+    [ '--theme', GetoptLong::REQUIRED_ARGUMENT ],
+    [ '--iters', GetoptLong::REQUIRED_ARGUMENT ],
+);
+
+theme_fn = ''
+iters_fn = ''
+
+opts.each do |opt, arg|
+    case opt
+    when '--theme'
+        theme_fn = arg
+    when '--iters'
+        iters_fn = arg
+    end
+end
+
 quotas = Array.new
-File.open("./as-modified-14.sh", "r") do |file|
+File.open(theme_fn, "r") do |file|
     while (l = file.gets)
         if (m = /--prelude "([^"]+)"/.match(l))
             prelude = m[1]
@@ -16,7 +35,7 @@ end
 
 start_at = 0
 found_quotas = Array.new
-File.open("./iters.txt", "r") do |file|
+File.open(iters_fn, "r") do |file|
     while (l = file.gets)
         if (m = /\A\s*([0-9]+)\s+(-?[0-9]+)\s*\z/.match(l))
             scan = m[1].to_i;
