@@ -315,9 +315,9 @@ sub find
 
     my $MAX_THRESHOLD = $args->{threshold};
 
-    if ($MAX_THRESHOLD > @scans)
+    if ($MAX_THRESHOLD > @deals)
     {
-        $MAX_THRESHOLD = @scans;
+        $MAX_THRESHOLD = @deals;
     }
 
     my $MAX_TH = $MAX_THRESHOLD - 1;
