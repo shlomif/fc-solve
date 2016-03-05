@@ -58,3 +58,12 @@ real    2m32.502s
 user    10m2.866s
 sys     0m4.119s
 
+shlomif[fcs]:$trunk/cpan/Games-Solitaire-Verify/benchmark$ time ninja
+[320/320] F=31701 L=31800 perl benchma...l -- -l as -ni -l fg >
+Results/318.res
+
+real    2m35.736s
+user    10m14.517s
+sys     0m6.252s
+shlomif[fcs]:$trunk/cpan/Games-Solitaire-Verify/benchmark$
+
