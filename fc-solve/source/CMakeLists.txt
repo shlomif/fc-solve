@@ -968,7 +968,9 @@ ADD_CUSTOM_TARGET(
 )
 
 IF (FCS_BUILD_DOCS)
-    FIND_PACKAGE(Asciidoc REQUIRED)
+    # Asciidoc is optional so should not be "REQUIRED" because we include
+    # these files in the source distribution.
+    FIND_PACKAGE(Asciidoc)
 ENDIF ()
 
 SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
