@@ -968,7 +968,7 @@ ADD_CUSTOM_TARGET(
 )
 
 IF (FCS_BUILD_DOCS)
-    FIND_PACKAGE(Asciidoc)
+    FIND_PACKAGE(Asciidoc REQUIRED)
 ENDIF ()
 
 SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
