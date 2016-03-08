@@ -4,6 +4,12 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2016-01-14
 :Revision: $Id$
 
+Version 4.2.0: (FILL IN)
+------------------------
+
+1. Remove FCS_STATE_STORAGE_INDIRECT - it was old and slow and the hash lookup
+or a balanced binary tree should be used instead.
+
 Version 4.0.2: (14-Jan-2016)
 ----------------------------
 

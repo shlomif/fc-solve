@@ -61,3 +61,11 @@ static GCC_INLINE void normalize_befs_weights(
         my_befs_weights[weight_idx] /= sum;
     }
 }
+
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
+    instance->num_prev_states_margin = 0;
+
+    instance->num_indirect_prev_states = 0;
+
+    free(instance->indirect_prev_states);
+    instance->indirect_prev_states = NULL;

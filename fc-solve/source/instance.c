@@ -702,13 +702,6 @@ void fc_solve_finish_instance( fc_solve_instance_t * const instance )
     fc_solve_hash_free(&(instance->hash));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     fc_solve_states_google_hash_free(instance->hash);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-    instance->num_prev_states_margin = 0;
-
-    instance->num_indirect_prev_states = 0;
-
-    free(instance->indirect_prev_states);
-    instance->indirect_prev_states = NULL;
 #else
 #error not defined
 #endif

@@ -627,30 +627,21 @@ void fc_solve_canonize_state_with_locs(
     FREECELLS_AND_STACKS_ARGS()
 );
 
-#if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
-
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_LIBREDBLACK_TREE)
 typedef void * fcs_compare_context_t;
 #else
 typedef const void * fcs_compare_context_t;
 #endif
 
-#if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
 static GCC_INLINE int fc_solve_state_compare(const void * s1, const void * s2)
 {
     return memcmp(s1,s2,sizeof(fcs_state_t));
 }
-#endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 extern int fc_solve_state_compare_equal(const void * s1, const void * s2);
 #endif
 extern int fc_solve_state_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
-
-#else
-extern int fc_solve_state_compare_indirect(const void * s1, const void * s2);
-extern int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);
-#endif
 
 
 /*

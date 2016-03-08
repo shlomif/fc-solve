@@ -321,3 +321,15 @@ static const char * const fc_solve_num_redeals_prefixes[] = { "Num-Redeals:", "R
     (card) = ((fcs_card_t)(((card)&0xFC)|(suit)))
 
 #endif
+
+#else
+extern int fc_solve_state_compare_indirect(const void * s1, const void * s2);
+extern int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s2, void * context);
+#endif
+
+#if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_INDIRECT)
+static GCC_INLINE int fc_solve_state_compare(const void * s1, const void * s2)
+{
+    return memcmp(s1,s2,sizeof(fcs_state_t));
+}
+#endif

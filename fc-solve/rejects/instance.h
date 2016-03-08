@@ -61,3 +61,16 @@ static GCC_INLINE void fc_solve_unresume_instance(
      * */
 }
 
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
+    /* The sort-margin */
+    fcs_standalone_state_ptrs_t indirect_prev_states_margin[PREV_STATES_SORT_MARGIN];
+
+    /* The number of states in the sort margin */
+    int num_prev_states_margin;
+
+    /* The sorted cached states, and their number. The maximal
+     * size is calculated based on the number.
+     * */
+    fcs_standalone_state_ptrs_t * indirect_prev_states;
+    fcs_int_limit_t num_indirect_prev_states;
+#endif

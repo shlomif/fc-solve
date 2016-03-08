@@ -92,9 +92,6 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
 {
     *(instance) = (fc_solve_instance_t) {
         .meta_alloc = meta_alloc,
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-            .num_indirect_prev_states = 0,
-#endif
             .i__num_checked_states = 0,
             .num_states_in_collection = 0,
             .active_num_states_in_collection = 0,
@@ -540,10 +537,6 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
 #endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
      instance->hash = fc_solve_states_google_hash_new();
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INDIRECT)
-    instance->num_prev_states_margin = 0;
-
-    instance->indirect_prev_states = NULL;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     /* Do nothing because it is allocated elsewhere. */
 #else
