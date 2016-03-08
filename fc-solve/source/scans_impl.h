@@ -1032,11 +1032,10 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     fcs_collectible_state_t * derived;
 
                     if (fc_solve_sfs_raymond_prune(
-                        soft_thread,
-                        STATE_TO_PASS(),
-                        &derived
-                        ) == PRUNE_RET_FOLLOW_STATE
-                    )
+                            soft_thread,
+                            STATE_TO_PASS(),
+                            &derived
+                    ))
                     {
                         the_soft_dfs_info->tests_list_index =
                             THE_TESTS_LIST.num_lists;

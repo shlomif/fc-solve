@@ -1869,7 +1869,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
     return -1;
 }
 
-extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
+extern fcs_bool_t fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t * const soft_thread,
     fcs_kv_state_t * const raw_ptr_state_raw,
     fcs_collectible_state_t * * const ptr_ptr_next_state
@@ -1952,8 +1952,6 @@ extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
     sfs_check_state_end();
 #undef derived_states_list
 
-    register fcs_prune_ret_t ret_code;
-
     if (num_total_cards_moved)
     {
         register fcs_collectible_state_t * const ptr_next_state
@@ -1968,16 +1966,12 @@ extern fcs_prune_ret_t fc_solve_sfs_raymond_prune(
          * it is already "prune-perfect".
          * */
         FCS_S_VISITED(ptr_next_state) |= FCS_VISITED_GENERATED_BY_PRUNING;
-
-        ret_code = PRUNE_RET_FOLLOW_STATE;
     }
     else
     {
         *ptr_ptr_next_state = NULL;
-        ret_code = PRUNE_RET_NOT_FOUND;
     }
 
     free(derived_states_list_struct.states);
-
-    return ret_code;
+    return (num_total_cards_moved != 0);
 }

@@ -472,7 +472,7 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                 {
                     for (int group_idx = 0 ; group_idx < by_depth_tests_order[depth_idx].tests_order.num_groups ; group_idx++)
                     {
-                    const int * const tests_order_tests = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].order_group_tests;
+                    const int * const move_funcs_idxs = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].order_group_tests;
                     const int tests_order_num = by_depth_tests_order[depth_idx].tests_order.groups[group_idx].num;
 
                 for (int num_valid_tests=0 ; num_valid_tests < tests_order_num ; num_valid_tests++)
@@ -482,7 +482,7 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                     {
                         test_name[0] = *s;
                         /* Check if this test corresponds to this character */
-                        if (tests_order_tests[num_valid_tests] == (fc_solve_string_to_test_num(test_name) % FCS_MOVE_FUNCS_NUM))
+                        if (move_funcs_idxs[num_valid_tests] == (fc_solve_string_to_test_num(test_name) % FCS_MOVE_FUNCS_NUM))
                         {
                             break;
                         }

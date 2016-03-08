@@ -629,8 +629,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
                     soft_thread,
                     STATE_TO_PASS(),
                     &after_pruning_state
-                ) == PRUNE_RET_FOLLOW_STATE
-            )
+            ))
             {
                 ASSIGN_ptr_state(after_pruning_state);
             }
