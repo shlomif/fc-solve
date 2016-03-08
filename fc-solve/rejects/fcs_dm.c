@@ -38,7 +38,7 @@
     fc_solve_bsearch - an improved binary search function. Highlights:
 
     * The comparison function accepts a common context argument that
-    is passed to SFO_bsearch.
+    is passed to fc_solve_bsearch.
     * If the item was not found the function returns the place in which
     it should be placed, while setting *found to 0. If it was found
       (*found) is set to 1.
