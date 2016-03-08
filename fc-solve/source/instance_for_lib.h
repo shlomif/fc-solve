@@ -1063,13 +1063,14 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
             for (int group_idx = 0 ; group_idx < tests_order_num ; group_idx++)
             {
-                const int num = tests_order_groups[group_idx].num;
-                const int * const tests_order_tests = tests_order_groups[group_idx].order_group_tests;
-                fc_solve_solve_for_state_move_func_t * const tests_list = SMALLOC(tests_list, num);
-                for (int i = 0; i < num ; i++)
-                {
-                    tests_list[i] = fc_solve_sfs_move_funcs[ tests_order_tests[i] ];
-                }
+                int num = 0;
+                fc_solve_solve_for_state_move_func_t * tests_list = NULL;
+                add_to_move_funcs_list(
+                    &tests_list,
+                    &num,
+                    tests_order_groups[group_idx].order_group_tests,
+                    tests_order_groups[group_idx].num
+                );
                 /* TODO : convert to C99 struct initializers. */
                 fcs_tests_list_t * const tests_list_struct_ptr =
                     &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
