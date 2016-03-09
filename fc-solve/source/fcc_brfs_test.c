@@ -41,7 +41,7 @@
 #include "fcc_brfs_test.h"
 
 static void fc_solve_state_string_to_enc(
-    enum fcs_dbm_variant_type_t local_variant,
+    const enum fcs_dbm_variant_type_t local_variant,
     fc_solve_delta_stater_t * delta,
     const char * const state_s_proto,
     fcs_encoded_state_buffer_t * enc_state
@@ -71,31 +71,25 @@ static void fc_solve_state_string_to_enc(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
-        enum fcs_dbm_variant_type_t local_variant,
+        const enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         const int start_state_moves_count,
         const fcs_fcc_move_t * const start_state_moves,
-        fcs_FCC_start_point_result_t * * out_fcc_start_points,
-        long * out_num_new_positions
+        fcs_FCC_start_point_result_t * * const out_fcc_start_points,
+        long * const out_num_new_positions
         )
 {
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;
     fcs_state_locs_struct_t locs;
-    int i;
-    fcs_meta_compact_allocator_t meta_alloc;
     fcs_FCC_start_points_list_t start_points_list;
     dict_t * do_next_fcc_start_points_exist;
     dict_t * does_min_by_sorting_exist;
     fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     const int max_num_elements_in_cache = 1000;
-    fcs_bool_t is_min_by_sorting_new;
     fcs_encoded_state_buffer_t min_by_sorting;
     fcs_fcc_moves_seq_allocator_t moves_list_allocator;
     fcs_fcc_moves_seq_t start_state_moves_seq;
-    int states_count = 0;
-    fcs_FCC_start_point_t * iter;
-    fcs_FCC_start_point_result_t * ret;
     add_start_point_context_t add_start_point_context;
     void * tree_recycle_bin = NULL;
 
@@ -132,6 +126,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     start_points_list.list = NULL;
     start_points_list.recycle_bin = NULL;
+    fcs_meta_compact_allocator_t meta_alloc;
     fc_solve_meta_compact_allocator_init( &meta_alloc );
     fc_solve_compact_allocator_init(&(start_points_list.allocator), &meta_alloc);
 
@@ -152,7 +147,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     start_state_moves_seq.moves_list = NULL;
     {
         fcs_fcc_moves_list_item_t * * moves_iter = &(start_state_moves_seq.moves_list);
-        for ( i=0 ; i < start_state_moves_count ; )
+        for ( int i=0 ; i < start_state_moves_count ; )
         {
             if (i % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
             {
@@ -170,6 +165,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     add_start_point_context.next_start_points_list = &start_points_list;
     add_start_point_context.moves_list_allocator = &moves_list_allocator;
 
+    fcs_bool_t is_min_by_sorting_new;
     perform_FCC_brfs(
         local_variant,
         &(init_state),
@@ -186,22 +182,23 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         &meta_alloc
     );
 
-    iter = start_points_list.list;
+    const fcs_FCC_start_point_t * iter = start_points_list.list;
 
+    int states_count = 0;
     while (iter)
     {
         states_count++;
         iter = iter->next;
     }
 
-    *out_fcc_start_points = ret = SMALLOC(ret, states_count+1);
+    fcs_FCC_start_point_result_t * const ret = *out_fcc_start_points = SMALLOC(ret, states_count+1);
 
     ret[states_count].count = 0;
 
     fc_solve_init_locs(&locs);
 
     iter = start_points_list.list;
-    for (i = 0; i < states_count ; i++)
+    for (int i = 0; i < states_count ; i++)
     {
         fcs_state_keyval_pair_t state;
         DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
@@ -250,7 +247,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 }
 
 DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
-        enum fcs_dbm_variant_type_t local_variant,
+        const enum fcs_dbm_variant_type_t local_variant,
         const char * init_state_str_proto,
         const char * start_state_str_proto,
         /* NULL-terminated */
@@ -263,7 +260,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;
     fcs_encoded_state_buffer_t start_enc_state;
-    fcs_meta_compact_allocator_t meta_alloc;
     fcs_FCC_start_points_list_t start_points_list;
     dict_t * do_next_fcc_start_points_exist;
     dict_t * does_min_by_sorting_exist;
@@ -313,6 +309,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     );
 
 
+    fcs_meta_compact_allocator_t meta_alloc;
     fc_solve_meta_compact_allocator_init( &meta_alloc );
 
     start_points_list.list = NULL;
