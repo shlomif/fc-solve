@@ -906,7 +906,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 }
             }
 
-            if ((fcs_col_get_rank(col, c) != 13) &&
+            if ((! fcs_col_is_king(col, c)) &&
                 (tests__is_filled_by_kings_only()))
             {
                 continue;
@@ -924,8 +924,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 if (
                     (c > 0) &&
                     ((tests__is_filled_by_kings_only()) ?
-                        (fcs_col_get_rank(col, c) == 13) :
-                        1
+                        fcs_col_is_king(col, c) :
+                        TRUE
                     )
                    )
                 {
@@ -967,10 +967,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                         max(m, c);
                         });
                     if ((seq_start <= seq_end) &&
-                        ((tests__is_filled_by_kings_only()) ?
-                            (fcs_col_get_rank(col, seq_start)
-                                == 13) :
-                            TRUE
+                        ((tests__is_filled_by_kings_only())
+                            ? fcs_col_is_king(col, seq_start)
+                            : TRUE
                         )
                     )
                     {

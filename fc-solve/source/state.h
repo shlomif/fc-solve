@@ -73,8 +73,7 @@ extern "C" {
 typedef struct
 {
     short rank;
-    char suit;
-    char flags;
+    short suit;
 } fcs_card_t;
 
 typedef struct
@@ -100,7 +99,7 @@ typedef int fcs_locs_t;
 
 static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 {
-    fcs_card_t ret = { .rank = rank, .suit = suit, .flags = 0 };
+    fcs_card_t ret = { .rank = rank, .suit = suit };
 
     return ret;
 }
@@ -247,11 +246,8 @@ typedef char fcs_locs_t;
           #elif defined INDIRECT_STACK_STATES
         */
 
-/* These are macros that are common to all three _STATES types. */
+/* These are macros or functions that are common to all three _STATES types. */
 
-
-#define fcs_col_get_rank(col, card_idx) \
-    fcs_card_rank(fcs_col_get_card((col), (card_idx)))
 
 #define fcs_freecell_card_suit(state, f) \
     ( fcs_card_suit(fcs_freecell_card((state),(f))) )
@@ -325,6 +321,17 @@ static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
     ( (card) & 0x03 )
 
 #endif
+
+static GCC_INLINE fcs_card_t fcs_col_get_rank(const fcs_const_cards_column_t col, const int card_idx)
+{
+    return fcs_card_rank(fcs_col_get_card(col, card_idx));
+}
+#define FCS_RANK_KING 13
+
+static GCC_INLINE fcs_bool_t fcs_col_is_king(const fcs_const_cards_column_t col, const int card_idx)
+{
+    return (fcs_col_get_rank(col, card_idx) == FCS_RANK_KING);
+}
 
 struct fcs_state_keyval_pair_struct;
 
