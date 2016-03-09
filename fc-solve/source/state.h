@@ -1189,4 +1189,17 @@ static GCC_INLINE const fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t c
     fcs_duplicate_state_extra((dest).info);   \
     }
 
+static GCC_INLINE void fcs_col_transfer_cards(fcs_cards_column_t dest_col, fcs_cards_column_t src_col, const int cards_num)
+{
+    const int base_idx = fcs_col_len(src_col)-cards_num;
+    for (int i=0;i<cards_num;i++)
+    {
+        fcs_col_push_col_card(dest_col, src_col, base_idx+i);
+    }
+    for (int i=0;i<cards_num;i++)
+    {
+        fcs_col_pop_top(src_col);
+    }
+}
+
 #endif /* FC_SOLVE__STATE_H */

@@ -111,21 +111,10 @@ static GCC_INLINE void fc_solve_move_sequence_function(
         const int end
         )
 {
-    fcs_cards_column_t new_src_col = fcs_state_get_col(STATE_KEY(), source_idx);
-    fcs_cards_column_t new_dest_col = fcs_state_get_col(STATE_KEY(), dest_idx);
-
-    for ( int i = start ; i <= end ; i++)
-    {
-        fcs_col_push_col_card(new_dest_col, new_src_col, i);
-    }
-
-    for ( int i = start ; i <= end ; i++)
-    {
-        fcs_col_pop_top(new_src_col);
-    }
-
+    const int cards_num = end-start+1;
+    fcs_col_transfer_cards(fcs_state_get_col(STATE_KEY(), dest_idx), fcs_state_get_col(STATE_KEY(), source_idx), cards_num);
     fcs_move_stack_params_push(moves, FCS_MOVE_TYPE_STACK_TO_STACK,
-        source_idx, dest_idx, end-start+1);
+        source_idx, dest_idx, cards_num);
 }
 #undef STATE_KEY
 

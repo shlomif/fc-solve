@@ -414,14 +414,7 @@ void fc_solve_moves_processed_gen(
                                 ext_move.to_empty_stack = (fcs_col_len(dest_col) == 0);
                                 moves_processed_add_new_move(ret, ext_move);
                             }
-                            for(i=0;i<num_cards;i++)
-                            {
-                                fcs_col_push_col_card(dest_col, src_col, fcs_col_len(src_col)-num_cards+i);
-                            }
-                            for(i=0;i<num_cards;i++)
-                            {
-                                fcs_col_pop_top(src_col);
-                            }
+                            fcs_col_transfer_cards(dest_col, src_col, num_cards);
                             virtual_stack_len[dest] += num_cards;
                             virtual_stack_len[src] -= num_cards;
                         }

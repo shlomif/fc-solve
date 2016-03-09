@@ -63,24 +63,7 @@ void fc_solve_apply_move(
     {
         case FCS_MOVE_TYPE_STACK_TO_STACK:
         {
-            fcs_cards_column_t dest_col;
-
-            col = fcs_state_get_col(*state_key, fcs_int_move_get_src_stack(move));
-            dest_col = fcs_state_get_col(*state_key, fcs_int_move_get_dest_stack(move));
-
-            const int count = fcs_int_move_get_num_cards_in_seq(move);
-            for (int i=0 ; i < count ; i++)
-            {
-                fcs_col_push_col_card(
-                    dest_col,
-                    col,
-                    fcs_col_len(col) - fcs_int_move_get_num_cards_in_seq(move)+i
-                );
-            }
-            for (int i=0 ; i < count ; i++)
-            {
-                fcs_col_pop_top(col);
-            }
+            fcs_col_transfer_cards(fcs_state_get_col(*state_key, fcs_int_move_get_dest_stack(move)), fcs_state_get_col(*state_key, fcs_int_move_get_src_stack(move)), fcs_int_move_get_num_cards_in_seq(move));
         }
         break;
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
