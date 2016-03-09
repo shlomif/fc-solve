@@ -116,13 +116,6 @@ void fc_solve_card_perl2user(const fcs_card_t card, char * const str
     PASS_T(const fcs_bool_t t)
 )
 {
-#ifdef CARD_DEBUG_PRES
-    if (fcs_card_get_flipped(card))
-    {
-        *str = '<';
-        str++;
-    }
-#endif
     fc_solve_p2u_rank(
         fcs_card_rank(card),
         str
@@ -132,11 +125,4 @@ void fc_solve_card_perl2user(const fcs_card_t card, char * const str
         fcs_card_suit(card),
         str+strlen(str)
         );
-
-#ifdef CARD_DEBUG_PRES
-    if (fcs_card_get_flipped(card))
-    {
-        strcat(str, ">");
-    }
-#endif
 }
