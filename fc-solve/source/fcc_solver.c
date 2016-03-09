@@ -853,16 +853,14 @@ int main(int argc, char * argv[])
     signal(SIGUSR1, command_signal_handler);
 #endif
 
-    fcc_status_t ret_code = instance_run_solver(
-        &instance,
-        caches_delta,
-        &init_state,
-        &ret_moves_seq,
-        &moves_list_allocator,
-        &meta_alloc
-    );
-
-    switch (ret_code)
+    switch (instance_run_solver(
+            &instance,
+            caches_delta,
+            &init_state,
+            &ret_moves_seq,
+            &moves_list_allocator,
+            &meta_alloc
+    ))
     {
         case FCC_SOLVED:
         {
