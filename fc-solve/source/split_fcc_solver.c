@@ -1528,9 +1528,6 @@ int main(int argc, char * argv[])
 
         fcs_dbm_solver_instance_t instance;
         FccEntryPointNode * key_ptr = NULL;
-
-#define KEY_PTR() (key_ptr)
-
         fcs_encoded_state_buffer_t parent_state_enc;
 
         instance_init(
@@ -1558,14 +1555,14 @@ int main(int argc, char * argv[])
         fcs_bool_t was_init = FALSE;
         while (getline(&instance.fingerprint_line, &instance.fingerprint_line_size, fingerprint_fh) != -1)
         {
-            char state_base64[100];
-            int state_depth;
-            FccEntryPointNode * entry_point =
+            FccEntryPointNode * const entry_point =
                 fcs_compact_alloc_ptr(
                     &(instance.fcc_entry_points_allocator),
                     sizeof(*entry_point)
                 );
             fcs_dbm_record_set_parent_ptr(&(entry_point->kv.key), NULL);
+            char state_base64[100];
+            int state_depth;
             sscanf(instance.fingerprint_line, "%99s %d",
                 state_base64,
                 &state_depth
