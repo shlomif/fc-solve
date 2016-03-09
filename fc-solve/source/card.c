@@ -95,21 +95,6 @@ const int fc_solve_u2p_rank(const char * string)
     }
 }
 
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-static GCC_INLINE const int fcs_u2p_flipped_status(const char * str)
-{
-    while (*str)
-    {
-        if ((*str != ' ') && (*str != '\t'))
-        {
-            return (*str == '<');
-        }
-        str++;
-    }
-    return FALSE;
-}
-#endif
-
 /*
  * Converts a suit to its user representation.
  *
@@ -117,22 +102,10 @@ static GCC_INLINE const int fcs_u2p_flipped_status(const char * str)
 static GCC_INLINE void fc_solve_p2u_suit(
         const int suit,
         char * str
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-        , const fcs_bool_t flipped
-#endif
         )
 {
-#if !defined(CARD_DEBUG_PRES) && !defined(FCS_WITHOUT_CARD_FLIPPING)
-    if (flipped)
-    {
-        strncpy(str, "*", 2);
-    }
-    else
-#endif
-    {
-        *(str++) = "HCDS"[suit];
-        *(str) = '\0';
-    }
+    *(str++) = "HCDS"[suit];
+    *(str) = '\0';
 }
 
 /*
@@ -154,18 +127,10 @@ void fc_solve_card_perl2user(const fcs_card_t card, char * const str
         fcs_card_rank(card),
         str
         PASS_T(t)
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-        ,
-        fcs_card_get_flipped(card)
-#endif
         );
     fc_solve_p2u_suit(
         fcs_card_suit(card),
         str+strlen(str)
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-        ,
-        fcs_card_get_flipped(card)
-#endif
         );
 
 #ifdef CARD_DEBUG_PRES

@@ -81,15 +81,6 @@ extern "C" {
  * ability to solve Gypsy and Klondike-like games. In practice, this
  * didn't happen due to other technical difficulties.
  * */
-/*
- * This flag used to slow things down a little:
- *
- * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/941
- *
- * However, now it seems that it makes the program a little faster, as it
- * should, so you should enable it.
- * */
-#cmakedefine FCS_WITHOUT_CARD_FLIPPING
 
 /*
  * Get rid of the visited_iter counter on each state's extra_info. It is
@@ -150,12 +141,6 @@ extern "C" {
 #define HARD_CODED_NUM_DECKS 1
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 #define FCS_DISABLE_SIMPLE_SIMON
-#endif
-
-#if 0
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-#define FCS_WITHOUT_CARD_FLIPPING
-#endif
 #endif
 
 #endif

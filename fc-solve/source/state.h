@@ -128,25 +128,13 @@ static GCC_INLINE fcs_card_t fcs_char2card(unsigned char c)
 #define fcs_card_suit(card) \
     ((int)( (card).suit ))
 
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-#define fcs_card_get_flipped(card) \
-    ( (card).flags )
-#endif
-
 #define fcs_freecell_card(state, f) \
     ( (state).freecells[(f)] )
 
 #define fcs_foundation_value(state, found) \
     ( (state).foundations[(found)] )
 
-
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-#define fcs_card_set_flipped(card, flipped) \
-    (card).flags = (flipped)
-#endif
-
 #elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
-
 
 typedef char fcs_card_t;
 typedef fcs_card_t * fcs_cards_column_t;
@@ -312,11 +300,6 @@ typedef char fcs_locs_t;
 #define fcs_empty_freecell(state, f) \
     fcs_put_card_in_freecell((state), (f), fc_solve_empty_card)
 
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-#define fcs_col_flip_card(col, c) \
-    (fcs_card_set_flipped(fcs_col_get_card((col), (c)), 0))
-#endif
-
 /* These are macros that are common to COMPACT_STATES and
  * INDIRECT_STACK_STATES */
 #if defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
@@ -340,17 +323,6 @@ static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 
 #define fcs_card_suit(card) \
     ( (card) & 0x03 )
-
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-#define fcs_card_get_flipped(card) \
-    ( (card) >> 6 )
-#endif
-
-
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-#define fcs_card_set_flipped(card, flipped) \
-    (card) = ((fcs_card_t)(((card)&((fcs_card_t)0x3F))|((fcs_card_t)((flipped)<<6))))
-#endif
 
 #endif
 
@@ -699,9 +671,6 @@ static GCC_INLINE const int fc_solve_u2p_suit(const char * suit)
  * */
 static GCC_INLINE fcs_card_t fc_solve_card_parse_str(const char * const str)
 {
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-    fcs_card_set_flipped(card, fcs_u2p_flipped_status(str));
-#endif
     return fcs_make_card(fc_solve_u2p_rank(str), fc_solve_u2p_suit(str));
 }
 

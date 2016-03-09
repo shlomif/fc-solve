@@ -75,19 +75,8 @@ static GCC_INLINE void fc_solve_p2u_rank(
     const int rank_idx,
     char * const str
     PASS_T(const fcs_bool_t t)
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-    , const fcs_bool_t flipped
-#endif
-    )
+)
 {
-#if defined(CARD_DEBUG_PRES) || defined(FCS_WITHOUT_CARD_FLIPPING)
-#else
-    if (flipped)
-    {
-        strncpy(str, "*", 2);
-    }
-    else
-#endif
     {
 #define INDEX() (rank_idx)
 #ifdef FCS_IMPLICIT_T_RANK

@@ -101,8 +101,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
                         deck*4+fcs_card_suit(card)
                     );
 
-                    fcs_flip_top_card(stack_idx);
-
                     sfs_check_state_end()
                     break;
                 }
@@ -262,9 +260,6 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             );
 
             ret = (empty_two_cols_ret_t) {.source_index = dest_fc_idx, .is_col = FALSE};
-
-            fcs_flip_top_card(*col_idx);
-
             (*col_num_cards)--;
             dest_fc_idx++;
         }
@@ -326,9 +321,6 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             );
 
             ret = (empty_two_cols_ret_t) {.source_index = put_cards_in_col_idx, .is_col = TRUE};
-
-            fcs_flip_top_card(col_idx_val);
-
             (*col_num_cards)--;
             put_cards_in_col_idx++;
         }
@@ -593,9 +585,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
                             FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
                             dest_found
                         );
-
-                        fcs_flip_top_card(stack_idx);
-
                         sfs_check_state_end()
                     }
                     break;
@@ -786,15 +775,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
             /* Find a card which this card can be put on; */
 
             const fcs_card_t card = fcs_col_get_card(col, c);
-
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-            /* Make sure the card is not flipped or else we can't move it */
-            if (fcs_card_get_flipped(card))
-            {
-                continue;
-            }
-#endif
-
             /* Skip if it's a King - nothing to put it on. */
             if (unlikely(fcs_card_rank(card) == 13))
             {
@@ -841,11 +821,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                             col_num_cards
                         );
                     }
-
                     fcs_move_sequence(ds, stack_idx, c, seq_end);
-
-                    fcs_flip_top_card(stack_idx);
-
                     /*
                      * This is to preserve the order that the
                      * initial (non-optimized) version of the
@@ -1186,17 +1162,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
             /* Find a card which this card can be put on; */
 
             const fcs_card_t card = fcs_col_get_card(col, c);
-
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-            /*
-             * Do not move cards that are flipped.
-             * */
-            if (fcs_card_get_flipped(card))
-            {
-                continue;
-            }
-#endif
-
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
                 const int ds = pos_idx_to_check[0];
@@ -1400,12 +1365,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
                 for( c=cards_num-1 ; c >= 0 ; c--)
                 {
                     card = fcs_col_get_card(col, c);
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-                    if (fcs_card_get_flipped(card))
-                    {
-                        break;
-                    }
-#endif
                     if (fcs_is_parent_card(card, dest_card))
                     {
 
@@ -1416,14 +1375,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
                         {
                             /* Let's move it */
                             sfs_check_state_begin();
-
                             my_copy_stack(stack_idx);
                             my_copy_stack(ds);
-
                             fcs_move_sequence(ds, stack_idx, c, cards_num-1);
-
-                            fcs_flip_top_card(stack_idx);
-
                             sfs_check_state_end();
                         }
 
@@ -1477,23 +1431,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
         for( c=cards_num-1 ; c >= 1 ; c--)
         {
             card = fcs_col_get_card(col, c);
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-            if (fcs_card_get_flipped(card))
-            {
-                break;
-            }
-#endif
             if (fcs_card_rank(card) == 13)
             {
                 /* It's a King - so let's move it */
                 sfs_check_state_begin();
-
                 my_copy_stack(stack_idx);
                 my_copy_stack(ds);
                 fcs_move_sequence(ds, stack_idx, c, cards_num-1);
-
-                fcs_flip_top_card(stack_idx);
-
                 sfs_check_state_end();
             }
         }
@@ -1918,8 +1862,6 @@ extern fcs_bool_t fc_solve_sfs_raymond_prune(
                     fcs_move_stack_non_seq_push(moves,
                         FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
                         dest_foundation);
-
-                    fcs_flip_top_card(stack_idx);
                 }
             }
         }

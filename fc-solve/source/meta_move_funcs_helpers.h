@@ -100,30 +100,6 @@ extern "C" {
     This macro checks if the top card in the stack is a flipped card
     , and if so flips it so its face is up.
   */
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-#define fcs_flip_top_card(stack_idx)                                   \
-{                                                                  \
-    fcs_cards_column_t flip_top_card_col;                                        \
-    flip_top_card_col = fcs_state_get_col(new_state, stack_idx);                 \
-                                                                   \
-    if (fcs_col_len(flip_top_card_col) > 0)                                             \
-    {                                                              \
-        if (fcs_card_get_flipped(                                  \
-                fcs_col_get_card(flip_top_card_col, fcs_col_len(flip_top_card_col)-1)        \
-                ) == 1                                             \
-           )                                                       \
-        {                                                          \
-            fcs_col_flip_card(flip_top_card_col, fcs_col_len(flip_top_card_col)-1);                   \
-            fcs_int_move_set_type(temp_move, FCS_MOVE_TYPE_FLIP_CARD); \
-            fcs_int_move_set_src_stack(temp_move, stack_idx);              \
-                                                                   \
-            fcs_move_stack_push(moves, temp_move);                 \
-        }                                                          \
-    }                                                              \
-}
-#else
-#define fcs_flip_top_card(stack_idx) {}
-#endif
 
 #define STATE_KEY() (*(new_state_kv_ptr->key))
 static GCC_INLINE void fc_solve_move_sequence_function(

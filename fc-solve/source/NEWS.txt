@@ -10,6 +10,9 @@ Version 4.2.0: (FILL IN)
 1. Remove FCS_STATE_STORAGE_INDIRECT - it was old and slow and the hash lookup
 or a balanced binary tree should be used instead.
 
+2. Remove the experimental flipping support and made the default for cards
+not to be flippable at all. (It didn't build with it anyway.)
+
 Version 4.0.2: (14-Jan-2016)
 ----------------------------
 

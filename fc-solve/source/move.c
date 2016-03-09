@@ -137,15 +137,6 @@ void fc_solve_apply_move(
         break;
 #endif
 
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-        case FCS_MOVE_TYPE_FLIP_CARD:
-        {
-            col = fcs_state_get_col(*state_key, fcs_int_move_get_src_stack(move));
-            fcs_col_flip_card(col, fcs_col_len(col)-1);
-        }
-        break;
-#endif
-
         case FCS_MOVE_TYPE_CANONIZE:
         {
             if (locs)

@@ -44,7 +44,6 @@ my %TRUE_BOOL_OPTS =
     'build-docs' => 'FCS_BUILD_DOCS',
     'test-suite' => 'FCS_WITH_TEST_SUITE',
     'with-ctx-var' => 'FCS_WITH_CONTEXT_VARIABLE',
-    'without-flip' => 'FCS_WITHOUT_CARD_FLIPPING',
 );
 my @TRUE_BOOL_KEYS = keys %TRUE_BOOL_OPTS;
 my %true_bool_opts__values = map { $_ => 1 } @TRUE_BOOL_KEYS;

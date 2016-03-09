@@ -297,9 +297,6 @@ void fc_solve_state_as_string(
             fcs_foundation_value(*state, i),
             decks[i]
             PASS_T(display_10_as_t)
-#ifndef FCS_WITHOUT_CARD_FLIPPING
-            ,0
-#endif
             );
         if (decks[i][0] == ' ')
             decks[i][0] = '0';
