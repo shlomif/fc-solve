@@ -781,22 +781,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                         /* Let's boogie - we can move everything */
 
                         /* Move the junk cards to their place */
-
-                        for (int seq_index = 0;
-                            seq_index < seqs.num_separate_false_seqs;
-                            seq_index++
-                        )
-                        {
-                            const int dest_index = seqs.junk_move_to_stacks[seq_index];
-
-                            my_copy_stack(dest_index);
-
-                            fcs_move_sequence(
-                                dest_index,
-                                stack_idx,
-                                (((seq_index == 0) ? cards_num : seqs.seq_points[seq_index-1]) -  seqs.seq_points[seq_index])
-                            );
-                        }
+                        move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, stack_idx, cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
                         fcs_move_sequence(ds, stack_idx, end_of_src_seq-src_card_height);
 
@@ -1092,25 +1077,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 my_copy_stack(ds);
 
                 /* Move the junk cards to their place */
-
-                for (int seq_index = 0;
-                    seq_index < seqs.num_separate_false_seqs;
-                    seq_index++
-                )
-                {
-                    const int dest_stack_idx
-                        = seqs.junk_move_to_stacks[
-                            seq_index
-                        ];
-
-                    my_copy_stack(dest_stack_idx);
-
-                    fcs_move_sequence(
-                        dest_stack_idx,
-                        ds,
-                        (((seq_index == 0) ? dest_cards_num : seqs.seq_points[seq_index-1]) - seqs.seq_points[seq_index])
-                    );
-                }
+                move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, ds, dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
                 fcs_move_sequence( ds, stack_idx, cards_num-h);
 
@@ -1212,22 +1179,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 /* Move the junk cards to their place */
 
                 my_copy_stack(stack_idx);
-
-                for (int seq_index = 0;
-                     seq_index < seqs.num_separate_false_seqs;
-                     seq_index++
-                    )
-                {
-                    const int dest_idx
-                        = seqs.junk_move_to_stacks[seq_index];
-                    my_copy_stack(dest_idx);
-
-                    fcs_move_sequence (
-                        dest_idx,
-                        stack_idx,
-                        (((seq_index == 0) ? cards_num : seqs.seq_points[seq_index-1])-seqs.seq_points[seq_index])
-                    );
-                }
+                move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, stack_idx, cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
                 {
                     const int source_idx
