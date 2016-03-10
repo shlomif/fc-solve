@@ -107,27 +107,18 @@ static GCC_INLINE void fc_solve_move_sequence_function(
         fcs_move_stack_t * const moves,
         const int dest_idx,
         const int source_idx,
-        const int start,
-        const int end
+        const int cards_num
         )
 {
-    const int cards_num = end-start+1;
     fcs_col_transfer_cards(fcs_state_get_col(STATE_KEY(), dest_idx), fcs_state_get_col(STATE_KEY(), source_idx), cards_num);
     fcs_move_stack_params_push(moves, FCS_MOVE_TYPE_STACK_TO_STACK,
         source_idx, dest_idx, cards_num);
 }
 #undef STATE_KEY
 
-/*
- * dest is the destination stack
- * source is the source stack
- * start is the start height
- * end is the end height
- * a is the iterator
- * */
-#define fcs_move_sequence(dest_idx, source_idx, start_idx, end_idx) \
+#define fcs_move_sequence(dest_idx, source_idx, start_height, end_height) \
     {   \
-        fc_solve_move_sequence_function(&pass_new_state, moves, dest_idx, source_idx, start_idx, end_idx); \
+        fc_solve_move_sequence_function(&pass_new_state, moves, dest_idx, source_idx, ((end_height)-(start_height)+1)); \
     }
 
 #ifdef FCS_RCS_STATES
