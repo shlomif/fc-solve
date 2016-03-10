@@ -333,3 +333,7 @@ static GCC_INLINE int fc_solve_state_compare(const void * s1, const void * s2)
     return memcmp(s1,s2,sizeof(fcs_state_t));
 }
 #endif
+
+#define fcs_col_push_col_card(dest_col, src_col, card_idx) \
+    fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
+

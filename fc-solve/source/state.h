@@ -274,9 +274,6 @@ typedef char fcs_locs_t;
   fcs_col_get_card((col), ((fcs_col_len(col))++)) = (from); \
 }
 
-#define fcs_col_push_col_card(dest_col, src_col, card_idx) \
-    fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
-
 #define fcs_card_is_empty(card) (fcs_card_rank(card) == 0)
 #define fcs_card_is_valid(card) (fcs_card_rank(card) != 0)
 #define fcs_freecell_is_empty(state, idx) (fcs_card_is_empty(fcs_freecell_card(state, idx)))

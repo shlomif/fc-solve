@@ -137,8 +137,7 @@ void fc_solve_apply_move(
 
 static GCC_INLINE fcs_move_stack_t fcs_move_stack__new(void)
 {
-    fcs_move_stack_t ret = {.num_moves = 0, .moves = SMALLOC(ret.moves, FCS_MOVE_STACK_GROW_BY) };
-    return ret;
+    return (fcs_move_stack_t) {.num_moves = 0, .moves = malloc(sizeof(fcs_move_t) * FCS_MOVE_STACK_GROW_BY) };
 }
 
 static GCC_INLINE void fc_solve_move_stack_swallow_stack(

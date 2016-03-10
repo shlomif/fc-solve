@@ -111,20 +111,20 @@ static GCC_INLINE unsigned char fcs_dbm_record_get_refcount(
 
 #ifdef FCS_EXPLICIT_REFCOUNT
 static GCC_INLINE void fcs_dbm_record_set_refcount(
-    fcs_dbm_record_t * rec,
-    unsigned char new_val
+    fcs_dbm_record_t * const rec,
+    const unsigned char new_val
     )
 {
     rec->refcount = new_val;
 }
 #else
 static GCC_INLINE void fcs_dbm_record_set_refcount(
-    fcs_dbm_record_t * rec,
-    unsigned char new_val
+    fcs_dbm_record_t * const rec,
+    const unsigned char new_val
     )
 {
-    rec->parent_and_refcount &= (~(((uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT));
-    rec->parent_and_refcount |= (((uintptr_t)new_val) << FCS_DBM_RECORD_SHIFT);
+    rec->parent_and_refcount &= (~(((const uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT));
+    rec->parent_and_refcount |= (((const uintptr_t)new_val) << FCS_DBM_RECORD_SHIFT);
 }
 #endif
 
