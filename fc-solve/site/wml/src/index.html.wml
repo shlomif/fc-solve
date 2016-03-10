@@ -1,6 +1,7 @@
 #include '../template.wml'
 
 <latemp_subject "Freecell Solver" />
+<latemp_more_keywords "Seahaven Towers solver, Baker's Game solver, Baker's Dozen solver, solitaire solver" />
 
 <ul class="emphasis">
 <li><a href="$(ROOT)/js-fc-solve/text/">Try Freecell Solver Online!</a></li>
