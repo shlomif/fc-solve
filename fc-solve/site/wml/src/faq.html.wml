@@ -45,7 +45,7 @@ in Freecell using the formula
 from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
 in order to filter solutions and produce ones with multi-card moves
 expanded into many single-card moves. If you are on Microsoft Windows, you can
-install <a href="http://dwimperl.com/">DWIM Perl</a> and run it.
+install <a href="http://strawberryperl.com/">Strawberry Perl</a> and run it.
 </p>
 
 <h3 id="abuse_of_fc_solve">I think I found an abuse of Freecell Solver. What should I do?</h3>
