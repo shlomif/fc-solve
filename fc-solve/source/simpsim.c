@@ -709,8 +709,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
 
                     sfs_check_state_begin();
 
-                    my_copy_stack(ds);
                     my_copy_stack(stack_idx);
+                    my_copy_stack(ds);
 
                     /* Move the junk cards to their place */
                     move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, ds, dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
