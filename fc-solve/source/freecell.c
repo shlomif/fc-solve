@@ -821,7 +821,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                             col_num_cards
                         );
                     }
-                    fcs_move_sequence(ds, stack_idx, c, seq_end);
+                    fcs_move_sequence(ds, stack_idx, seq_end-c+1);
                     /*
                      * This is to preserve the order that the
                      * initial (non-optimized) version of the
@@ -934,10 +934,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     my_copy_stack(dest_stack_idx);
                     my_copy_stack(stack_idx);
 
-                    fcs_move_sequence(
-                        dest_stack_idx,
-                        stack_idx, c, cards_num-1
-                    );
+                    fcs_move_sequence( dest_stack_idx, stack_idx, cards_num-c );
 
                     sfs_check_state_end()
                 }
@@ -1014,7 +1011,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 
                         my_copy_stack(b);
 
-                        fcs_move_sequence(b, stack_idx, seq_start, seq_end);
+                        fcs_move_sequence(b, stack_idx, seq_end - seq_start + 1);
 
                         sfs_check_state_end();
                     }
@@ -1243,7 +1240,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
                     my_copy_stack(stack_idx);
 
-                    fcs_move_sequence(ds, stack_idx, c, cards_num-1);
+                    fcs_move_sequence(ds, stack_idx, cards_num-c);
 
                     state_context_value =
                         ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);

@@ -274,7 +274,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
                 my_copy_stack(ds);
 
 
-                fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+                fcs_move_sequence(ds, stack_idx, cards_num-h-1);
                 sfs_check_state_end();
             LOOK_FOR_TRUE_PARENT_AT_TOP__END()
             /* Stop if we reached the bottom of the stack */
@@ -389,7 +389,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
             my_copy_stack(stack_idx);
             my_copy_stack(ds);
 
-            fcs_move_sequence(ds, stack_idx, h, cards_num-1);
+            fcs_move_sequence(ds, stack_idx, cards_num-h);
 
             sfs_check_state_end();
         STACK_DEST_LOOP_END()
@@ -699,13 +699,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                         fcs_move_sequence(
                             dest_index,
                             ds,
-                            seqs.seq_points[seq_index],
-                            ((seq_index == 0) ? (dest_cards_num-1) : (seqs.seq_points[seq_index-1]-1))
+                            ((seq_index == 0) ? (dest_cards_num) : (seqs.seq_points[seq_index-1])) - seqs.seq_points[seq_index]
                         );
                     }
 
                     /* Move the source seq on top of the dest seq */
-                    fcs_move_sequence(ds, stack_idx, h+1, cards_num-1);
+                    fcs_move_sequence(ds, stack_idx, cards_num-h-1);
 
                     sfs_check_state_end();
                     }
@@ -783,12 +782,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                             fcs_move_sequence(
                                 dest_index,
                                 stack_idx,
-                                seqs.seq_points[seq_index],
-                                ((seq_index == 0) ? (cards_num-1) : (seqs.seq_points[seq_index-1]-1))
+                                (((seq_index == 0) ? cards_num : seqs.seq_points[seq_index-1]) -  seqs.seq_points[seq_index])
                             );
                         }
 
-                        fcs_move_sequence(ds, stack_idx, src_card_height, end_of_src_seq-1);
+                        fcs_move_sequence(ds, stack_idx, end_of_src_seq-src_card_height);
 
                         sfs_check_state_end();
                     }
@@ -955,11 +953,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 const int dest_index = seqs.junk_move_to_stacks[seq_index];
                 my_copy_stack(dest_index);
 
-                fcs_move_sequence(dest_index, s_e.src_stack, s_e.start, s_e.end);
+                fcs_move_sequence(dest_index, s_e.src_stack, s_e.end-s_e.start+1);
             }
 
             /* Move the source seq on top of the dest seq */
-            fcs_move_sequence(ds, stack_idx, h, end_of_junk);
+            fcs_move_sequence(ds, stack_idx, end_of_junk-h+1);
 
             sfs_check_state_end();
             }
@@ -1103,12 +1101,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                     fcs_move_sequence(
                         dest_stack_idx,
                         src_stack_idx,
-                        seqs.seq_points[seq_index],
-                        ((seq_index == 0) ? (dest_cards_num-1) : (seqs.seq_points[seq_index-1]-1))
+                        (((seq_index == 0) ? dest_cards_num : seqs.seq_points[seq_index-1]) - seqs.seq_points[seq_index])
                     );
                 }
 
-                fcs_move_sequence( ds, stack_idx, h, cards_num-1);
+                fcs_move_sequence( ds, stack_idx, cards_num-h);
 
                 sfs_check_state_end();
 #undef h
@@ -1221,25 +1218,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                     fcs_move_sequence (
                         dest_idx,
                         stack_idx,
-                        seqs.seq_points[seq_index],
-                        ((seq_index == 0) ? (cards_num-1) : (seqs.seq_points[seq_index-1]-1))
+                        (((seq_index == 0) ? cards_num : seqs.seq_points[seq_index-1])-seqs.seq_points[seq_index])
                     );
                 }
 
                 {
                     const int source_idx
                         = seqs.junk_move_to_stacks[child_seq_index];
-
-                    const int end =
-                        fcs_col_len(fcs_state_get_col(new_state, source_idx))-1;
-
                     my_copy_stack(source_idx);
-
                     fcs_move_sequence(
                         stack_idx,
                         source_idx,
-                        end-(end_of_child_seq-child_card_height),
-                        end
+                        end_of_child_seq-child_card_height+1
                     );
                 }
 
@@ -1298,7 +1288,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
             my_copy_stack(stack_idx);
             my_copy_stack(ds);
 
-            fcs_move_sequence(ds, stack_idx, h, cards_num-1);
+            fcs_move_sequence(ds, stack_idx, cards_num-h);
             sfs_check_state_end();
         STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()

@@ -116,9 +116,9 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 }
 #undef STATE_KEY
 
-#define fcs_move_sequence(dest_idx, source_idx, start_height, end_height) \
+#define fcs_move_sequence(dest_idx, source_idx, cards_num) \
     {   \
-        fc_solve_move_sequence_function(&pass_new_state, moves, dest_idx, source_idx, ((end_height)-(start_height)+1)); \
+        fc_solve_move_sequence_function(&pass_new_state, moves, dest_idx, source_idx, cards_num); \
     }
 
 #ifdef FCS_RCS_STATES
