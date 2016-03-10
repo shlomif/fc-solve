@@ -1191,15 +1191,19 @@ static GCC_INLINE const fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t c
 
 static GCC_INLINE void fcs_col_transfer_cards(fcs_cards_column_t dest_col, fcs_cards_column_t src_col, const int cards_num)
 {
-    const int base_idx = fcs_col_len(src_col)-cards_num;
-    for (int i=0;i<cards_num;i++)
-    {
-        fcs_col_push_col_card(dest_col, src_col, base_idx+i);
-    }
-    for (int i=0;i<cards_num;i++)
-    {
-        fcs_col_pop_top(src_col);
-    }
+    const int dest_col_len = fcs_col_len(dest_col);
+    const int src_col_len = fcs_col_len(src_col);
+    const int base_idx = src_col_len-cards_num;
+    fcs_card_t * const src_cards_ptr = &fcs_col_get_card(src_col, base_idx);
+    const size_t cards_size = (((size_t)cards_num) * sizeof(fcs_card_t));
+    memcpy(
+        &fcs_col_get_card(dest_col, dest_col_len),
+        src_cards_ptr,
+        cards_size
+    );
+    fcs_col_len(dest_col) += cards_num;
+    memset(src_cards_ptr, 0, cards_size);
+    fcs_col_len(src_col) -= cards_num;
 }
 
 #endif /* FC_SOLVE__STATE_H */
