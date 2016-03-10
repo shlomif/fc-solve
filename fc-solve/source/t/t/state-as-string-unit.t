@@ -77,10 +77,9 @@ EOF
     }
     else
     {
-        my $trim_trail_ws = $output_s;
-        $trim_trail_ws =~ s/[ \t]+$//gms;
+        use FC_Solve::Trim qw/trim_trail_ws/;
         eq_or_diff(
-            $trim_trail_ws,
+            trim_trail_ws($output_s),
             <<'EOF',
                         H-0 C-0 D-0 S-0
 --- --- --- ---
