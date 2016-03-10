@@ -1089,18 +1089,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                     seq_index++
                 )
                 {
-                    const int src_stack_idx = ds;
                     const int dest_stack_idx
                         = seqs.junk_move_to_stacks[
                             seq_index
                         ];
 
-                    my_copy_stack(src_stack_idx);
                     my_copy_stack(dest_stack_idx);
 
                     fcs_move_sequence(
                         dest_stack_idx,
-                        src_stack_idx,
+                        ds,
                         (((seq_index == 0) ? dest_cards_num : seqs.seq_points[seq_index-1]) - seqs.seq_points[seq_index])
                     );
                 }
