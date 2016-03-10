@@ -651,24 +651,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
     CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
-        fcs_card_t card = fcs_col_get_card(col, cards_num-1);
-
         int num_true_seqs = 1;
 
         for (int h=cards_num-2 ; h>=-1 ; h--)
         {
-            fcs_card_t h_above_card;
+            const fcs_card_t card = fcs_col_get_card(col, h+1);
             fcs_bool_t should_search = TRUE;
             fcs_bool_t should_increment_num_true_seqs = FALSE;
-            fcs_bool_t should_break = FALSE;
+            fcs_bool_t should_break;
             /* Stop if we reached the bottom of the stack */
-            if (h == -1)
+            if (! ((should_break = (h == -1))))
             {
-                should_break = TRUE;
-            }
-            else
-            {
-                h_above_card = fcs_col_get_card(col, h);
+                const fcs_card_t h_above_card = fcs_col_get_card(col, h);
                 /* If this is no longer a sequence - move to the next stack */
                 if (! fcs_is_ss_false_parent(h_above_card, card))
                 {
@@ -731,7 +725,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             {
                 num_true_seqs++;
             }
-            card = h_above_card;
         }
     STACK_SOURCE_LOOP_END()
 
