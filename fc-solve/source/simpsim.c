@@ -590,6 +590,33 @@ static GCC_INLINE const fcs_bool_t false_seq_index_loop(
      IS_false_seq_index_loop(col, behavior_flag, stack_idx, ds); \
      })
 
+static GCC_INLINE void move_sequences_analysis_seqs_loop(
+    fcs_kv_state_t * const ptr_to_pass_new_state,
+    fcs_move_stack_t * const moves,
+    const sequences_analysis_t * const seqs_ptr,
+    int source_col_idx,
+    int source_col_cards_num
+    IND_BUF_T_PARAM(indirect_stacks_buffer)
+)
+{
+#define pass_new_state (*ptr_to_pass_new_state)
+    for (int seq_index = 0;
+        seq_index < seqs_ptr->num_separate_false_seqs;
+        seq_index++
+    )
+    {
+        const int dest_index = seqs_ptr->junk_move_to_stacks[seq_index];
+        my_copy_stack(dest_index);
+
+        fcs_move_sequence(
+            dest_index,
+            source_col_idx,
+            ((seq_index == 0) ? source_col_cards_num : seqs_ptr->seq_points[seq_index-1]) - seqs_ptr->seq_points[seq_index]
+        );
+    }
+#undef pass_new_state
+}
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
     /*
@@ -685,23 +712,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                     my_copy_stack(ds);
                     my_copy_stack(stack_idx);
 
-
                     /* Move the junk cards to their place */
-
-                    for (int seq_index = 0;
-                        seq_index < seqs.num_separate_false_seqs;
-                        seq_index++
-                    )
-                    {
-                        const int dest_index = seqs.junk_move_to_stacks[seq_index];
-                        my_copy_stack(dest_index);
-
-                        fcs_move_sequence(
-                            dest_index,
-                            ds,
-                            ((seq_index == 0) ? (dest_cards_num) : (seqs.seq_points[seq_index-1])) - seqs.seq_points[seq_index]
-                        );
-                    }
+                    move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, ds, dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
                     /* Move the source seq on top of the dest seq */
                     fcs_move_sequence(ds, stack_idx, cards_num-h-1);
