@@ -809,8 +809,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
  * start, end, src_stack.
  * */
 typedef struct {
-    int start;
-    int end;
+    int cards_num;
     int src_stack;
 } s_e_src_t;
 
@@ -827,16 +826,14 @@ static GCC_INLINE const s_e_src_t calc_start_end_src_stack(
     if (seq_index == seqs->num_separate_false_seqs)
     {
         return (const s_e_src_t) {
-            .start = after_end_of_junk,
-            .end = cards_num-1,
+            .cards_num = cards_num-after_end_of_junk,
             .src_stack = stack_idx
         };
     }
     else
     {
         return (const s_e_src_t) {
-            .start = seqs->seq_points[seq_index],
-            .end = ((seq_index == 0) ? (dest_cards_num-1) : (seqs->seq_points[seq_index-1]-1)),
+            .cards_num = (((seq_index == 0) ? dest_cards_num : seqs->seq_points[seq_index-1]) - seqs->seq_points[seq_index]),
             .src_stack = ds
         };
     }
@@ -953,7 +950,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_abov
                 const int dest_index = seqs.junk_move_to_stacks[seq_index];
                 my_copy_stack(dest_index);
 
-                fcs_move_sequence(dest_index, s_e.src_stack, s_e.end-s_e.start+1);
+                fcs_move_sequence(dest_index, s_e.src_stack, s_e.cards_num);
             }
 
             /* Move the source seq on top of the dest seq */
