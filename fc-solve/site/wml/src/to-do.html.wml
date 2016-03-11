@@ -9,8 +9,7 @@ While Freecell Solver is a fairly usable package that satisfies the needs of
 a large part of the users, it is by no means complete. This page hopes to
 address some of the long-term, primary issues in which I'd like to enhance it
 in the future. It is based on the
-<a href="http://code.google.com/p/fc-solve/source/browse/fc-solve/source/TODO.txt">TODO</a>
-file, but is more elaborated and detailed.
+<a href="http://github.com/shlomif/fc-solve/blob/master/fc-solve/source/TODO.txt">to-do list file</a>, but is more elaborated and detailed.
 </p>
 
 <p>
@@ -137,7 +136,7 @@ as a whole.
 </p>
 
 <p>
-The codebase foundation for thread-enabling is already in the code, based on
+The code-base foundation for thread-enabling is already in the code, based on
 the distinction between soft-threads that encompass a single scan, and
 hard-threads - a collection of soft-threads that share some resources. Every
 hard-thread can run only one of its soft-thread at the time, but several
@@ -147,7 +146,7 @@ locking mechanisms are in place.
 
 <p>
 A <a href="http://groups.yahoo.com/group/fc-solve-discuss/message/377">scheme
-for Mulit-threading Freecell Solver</a> was proposed by Shlomi Fish, but the
+for Multi-threading Freecell Solver</a> was proposed by Shlomi Fish, but the
 actual implementation of the locking was not implemented yet. To do so, one
 should write an abstraction of threading and locking mechanisms
 (<tt>fc_solve_thread_*</tt>), which will either default to doing nothing,
@@ -179,7 +178,7 @@ C optimizations that Freecell Solver has), would be a very cool thing. I did
 not get to do it yet, because I keep having new ideas for improving the C
 versions. Note that as far as the graphical user-interface is concerned, there
 should not be too much problem, because there's already <a href="http://javaboutique.internet.com/JSolitaire/">an open-source
-    Solitaire Suite written in Java</a>, with Freecell and many other games.
+Solitaire Suite written in Java</a>, with Freecell and many other games.
 </p>
 
 <p>
@@ -221,7 +220,7 @@ Dave Goehrig in which he claimed multi-processing in Linux was more efficient
 than multi-threading. (a claim I saw elsewhere). I believe the Game AI model
 gives way to multi-threading better because all scans operating on the
 same states collection need access to all the states present in it. However,
-it is posssible that a multi-processed model will still work better.
+it is possible that a multi-processed model will still work better.
 </p>
 
 <p>
@@ -275,8 +274,8 @@ Notice that my attempt at solving several talon-based games Solitaire Card
 games like Klondike or Gypsy was not successful. That does not mean it can't be
 done. Michael Mann was more successful with
 <a href="http://fc-solve.shlomifish.org/michael_mann/">his
-    port of Freecell Solver</a>, and Stephan Kulow has an interesting
-    heuristic
+port of Freecell Solver</a>, and Stephan Kulow has an interesting
+heuristic
 for single-card-deal Klondike in kpat that can solve on average 50% of the
 games. (I don't think it is a back-tracking heuristic, though).
 </p>
@@ -299,16 +298,16 @@ a base for similar projects with the needed subset of functionality.
 Note that Freecell Solver was not the first computerized solver for Freecell to
 be written. (One of the first was <a href="don_woods.html">the one by Don Woods</a>, and Woods is very famous for many of his
 other endeavours.) It will also not the last that will be written (there is in
-fact an AI course in the University of Massachustes, given each year, in which
+fact an AI course in the University of Massachusetts, given each year, in which
 the students are assigned to write a Freecell solver as one of their work
 assignments). I recommend reading Eric Raymond's
 <a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">The
 Cathedral and the Bazaar</a> to understand why adding more features can
-still be a good idea. CatB discusses fetchmail which is still actively
+still be a good idea. IT discusses fetchmail which is still actively
 developed, despite the fact it will give anything most users will need and
 more. I don't see a reason to stop developing Freecell Solver just because it
-has reached a similar state. So people, hack on! (on Freecell Solver or
-something else)
+has reached a similar state. So people, hack on! (On Freecell Solver or
+something else.)
 </p>
 
 <hr />
@@ -346,28 +345,28 @@ engineer, will make things easier in the long run.
 </p>
 
 <p>
-There are several type of tests I have in mind:
+There are several types of tests I have in mind:
 </p>
 
 <ol>
-    <li>
-    Regression Tests - making sure the output of various runs of Freecell
-    Solver is identical to runs of previous versions (by comparing MD5
-    checksums). The solving algorithm was known to change from release
-    to release, but it is still expected to be the same unless explicitly
-    modified. If it does, one can re-initialize the checksums.
-    </li>
-    <li>
-    Unit Tests - making sure every module of Freecell Solver is not broken
-    by explicitly testing its interface.
-    </li>
-    <li>
-    Validity and Stability Tests - making sure various runs of Freecell
-    Solver do not crash and produce valid output. (that can be verified by
-    playing the solution, or analyzing the run-time trace). Also, making
-    sure that too virtually identical runs (differing only in insignificant
-    parameters) produce identical results.
-    </li>
+<li>
+Regression Tests - making sure the output of various runs of Freecell
+Solver is identical to runs of previous versions (by comparing MD5
+checksums). The solving algorithm was known to change from release
+to release, but it is still expected to be the same unless explicitly
+modified. If it does, one can re-initialize the checksums.
+</li>
+<li>
+Unit Tests - making sure every module of Freecell Solver is not broken
+by explicitly testing its interface.
+</li>
+<li>
+Validity and Stability Tests - making sure various runs of Freecell
+Solver do not crash and produce valid output. (that can be verified by
+playing the solution, or analysing the run-time trace). Also, making
+sure that too virtually identical runs (differing only in insignificant
+parameters) produce identical results.
+</li>
 </ol>
 
 <p>
@@ -417,14 +416,14 @@ solutions.
 <p>
 PySol is written in Python, a high-level cross-platform language.
 Integrating Freecell Solver into PySol will require creating Python bindings
-for some of Freeecell Solver API (a large part of it can be encapsulated by
+for some of Freecell Solver API (a large part of it can be encapsulated by
 calls to its internal command line arguments-based configurator), and then
 creating the appropriate interface within the core PySol code.
 </p>
 
 <p>
 As of January 2, 2003, PySol 4.81 is available on its site, and is ready
-to run and stable. Markus mentions there that he is working on PySol5, which
+to run and stable. Markus mentions there that he is working on PySol 5, which
 would be based on wxPython, and include many improvements. Assuming you are
 interested in integrating it, the choice is yours whether to patch
 PySol 4.81 or wait for a beta of PySol 5.x to be released.
@@ -437,7 +436,7 @@ Freecell Solver for all of the variants that the latter supports. The
 integration was done by calling the fc-solve command-line solver, and parsing
 its output, which was not how I thought of doing it, but still is a good
 way to achieve the integration. The original developer of PySol now recommends
-PySolFC instead on the PySol homepage, and I've been happy with it too.
+PySolFC instead on the PySol homepage, and I have been happy with it as well.
 </p>
 
 <p>
@@ -451,7 +450,7 @@ At the moment, each flag in the command line is checked by comparing for
 each of the command line options accepted by Freecell Solver, one after the
 other. This is sub-optimal because it is possible the relevant command line
 option will be looked up only at the end, and also because this long process
-needs to be done for each option that was inputted on the command line.
+needs to be done for each option that was input on the command line.
 </p>
 
 <p>

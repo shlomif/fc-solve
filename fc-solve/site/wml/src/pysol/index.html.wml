@@ -65,7 +65,7 @@ enabled the use of Freecell Solver for Der Katzenschwanz and Die Schlange
 or Streets and Alleys. The latter may require translating moves
 to single-card moves, as Freecell Solver may move the cards one sequence at
 a time. Plus, Simple Simon cannot work because Freecell Solver
-also moves non-homogenous sequences as one, so it was not enabled at the
+also moves non-homogeneous sequences as one, so it was not enabled at the
 moment.
 </p>
 

@@ -101,7 +101,7 @@ well as several bug-fixes.
             'html' => '
 <p>Freecell Solver version 1.0.0 was released. This version can solve more
 game types, and can be compiled so it will be less memory intensive which is
-especially good for such games as Die Schlange or Der Katzenschwantz.</p>
+especially good for such games as Die Schlange or Der Katzenschwanz.</p>
 
 <p>Now there is also a library interface for use with games, which supports
 suspending a solution process and resuming it from its last position. And
@@ -139,7 +139,7 @@ developers who are interested to look under its hood.
           {
             'html' => '
 <p>
-I have setup a <a href="http://fc-solve.berlios.de/">mirror</a> for Freecell
+I have set up a <a href="http://fc-solve.berlios.de/">mirror</a> for Freecell
 Solver at <a href="http://developer.berlios.de/">BerliOS</a>. It will
 contain much of the same contents as this one, but will not be updated as
 frequently.
@@ -147,7 +147,7 @@ frequently.
 
 <p>
 The motivation for setting up the mirror was because I noticed that the
-connectivity at the Technion was not failsafe, and I want a backup site.
+connectivity at the Technion was not fail-safe, and I want a backup site.
 </p>
 
 ',
@@ -263,7 +263,7 @@ enhancements and additions:
 Alleys.</li>
 <li>Re-factoring of the scans code to make it simpler.</li>
 <li>Added many functions to the programmer\'s library.</li>
-<li>fc-solve now uses it, so it is fully independant of the library it is
+<li>fc-solve now uses it, so it is fully independent of the library it is
 linked against.</li>
 <li>Added a randomized DFS scan (with a user-defined seed).</li>
 <li>Win32 Makefile can now generate a working DLL</li>
@@ -282,7 +282,7 @@ Freecell Solver 2.2.0 came into the world today. This release features
 several improvements and fixes to the library\'s internals - it now resides
 solely in the "freecell_solver_" namespace, has a more robust state output,
 and has a simplified and more modular scans\' code. Aside from that, the
-maintainance of the package became more integrated and now it is
+maintenance of the package became more integrated and now it is
 possible to build an RPM by typing executing rpm -ta on the archive.
 </p>
 
@@ -331,7 +331,7 @@ and cleaned up, which makes Freecell Solver much faster than it was before.
 <p>
 Freecell Solver 2.8.0 has been released. This version features a better
 documentation and help screens, a preset system, and an option to read
-paramters from files. Plus, it is possible to run one instance of the
+parameters from files. Plus, it is possible to run one instance of the
 solver after the other in case the other one has returned a negative
 verdict.
 </p>
