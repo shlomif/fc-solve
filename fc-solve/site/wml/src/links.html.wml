@@ -70,14 +70,14 @@ to provide links back to the Subversion repository's URLs</a>
 <a href="https://github.com/shlomif/fc-solve">Project Page on GitHub</a> -
 contains the canonical Git repository of Freecell Solver (forks and
 pull requests are welcome!), as well as an issue tracker (which is less
-preferable than the <a href="#bitbucket_proj">BitBucket one</a>, a wiki,
+preferable than the <a href="#bitbucket_proj">Bitbucket one</a>, a wiki,
 and some graphs.
 </p>
 </li>
 
 <li id="bitbucket_proj">
 <p>
-<a href="http://bitbucket.org/shlomif/fc-solve">Project Page on BitBucket</a> -
+<a href="http://bitbucket.org/shlomif/fc-solve">Project Page on Bitbucket</a> -
 contains a mirror of the version control repository, a bug/issue tracker,
 and other resources.
 </p>
@@ -86,7 +86,7 @@ and other resources.
 <li>
 <p>
 <a href="http://code.google.com/p/fc-solve/">Google Code Project Page</a> -
-contains the old Subversion respository.
+contains the old Subversion repository.
 </p>
 </li>
 
@@ -127,7 +127,7 @@ compile on Win32. LGPL, so can be used by code of any licence.
 <a href="http://www.gtk.org/">glib</a> - a C library used by gtk+, which
 can also be used separately (as is the case with Freecell Solver). Contains
 implementations of a hash, and an unoptimized balanced binary tree. Both
-are slower than libavl/libredblack or the internal hash implmentation, and
+are slower than libavl/libredblack or the internal hash implementation, and
 it is less programmer-friendly.
 </p>
 </li>
@@ -151,7 +151,7 @@ a library to trace memory leaks. Freecell Solver used to have some of those
 in various stages of its development, and this library helped to remove
 them. It has a rather awkward output, and I had to use a debugger
 interactively to complement it, but it is still quite helpful. Now mostly
-superceded by <a href="#valgrind">Valgrind</a>.
+superseded by <a href="#valgrind">Valgrind</a>.
 </p>
 </li>
 
@@ -186,7 +186,7 @@ cross-platform text editor with many powerful features.
 <p>
 <a href="http://subversion.tigris.org/">Subversion</a> - an Open-Source
 version control management system that has been used in maintaining the
-Freecell Solver codebase. It replaced <a
+Freecell Solver code-base. It replaced <a
 href="http://www.cvshome.org/">CVS</a> which is older and much more limited.
 </p>
 </li>
@@ -252,7 +252,7 @@ foreign function interface (FFI) for Python. Used for automated testing.
 <li>
 <p>
 <a href="https://metacpan.org/module/Inline::C">Inline::C</a> - Inline::C
-allows one to write Perl subrourtines in C. Freecell Solver uses it
+allows one to write Perl subroutines in C. Freecell Solver uses it
 for automated testing and for wrapping some of the internal and external C
 APIs.
 </p>
@@ -331,7 +331,7 @@ I still hold discussions about FCS in the mailing-list or in private.
 
 <li>
 <p>
-<a href="http://www.heyes-jones.com/">Justin Heyes-Jones</a> - I learned about the A* scan through his webpage,
+<a href="http://www.heyes-jones.com/">Justin Heyes-Jones</a> - I learned about the A* scan through his web-page,
 and he allowed me to incorporate his binary heap code into Freecell Solver.
 </p>
 </li>
@@ -471,7 +471,7 @@ course project and contains a final report.
 <p>
 <a href="<doxygen:url />">C++ Port of Freecell Solver by Michael Mann</a> -
 Michael Mann ported FCS to C++ and used
-<a href="http://www.doxygen.org/">doxygen</a> to cross-reference and
+<a href="http://www.doxygen.org/">Doxygen</a> to cross-reference and
 document the code. Covers version 2.2.x of the program.
 </p>
 </li>
@@ -546,7 +546,7 @@ Open source under the restrictive GPLv3 licence.
 <a href="http://www.solitairey.com/">Solitairey online patience game</a> - contains
 a Freecell solver written in JavaScript. The
 <a href="https://github.com/pharrington/Solitairey">source code</a> for it is
-available on github, under the open source FreeBSD licence.
+available on GitHub, under the open source FreeBSD licence.
 </p>
 </li>
 
