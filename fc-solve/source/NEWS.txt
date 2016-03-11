@@ -626,7 +626,7 @@ were absent.
 2. Many small memory/speed optimisations.
 
 3. Removed a lot of unnecessary code and merged a lot of code. Used:
-scripts/find-ids.rb for finding uncommonly occuring identifiers.
+scripts/find-ids.rb for finding uncommonly occurring identifiers.
 
 4. Converted many macros to inline functions.
 
