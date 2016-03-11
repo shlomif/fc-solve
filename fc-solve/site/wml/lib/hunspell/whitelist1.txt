@@ -63,6 +63,7 @@ CPAN
 CSS
 CTO
 CVS
+Callan
 CouchDB
 DFS
 DLL
@@ -113,6 +114,7 @@ Gergely
 Gfreecell
 GitHub
 Goehrig
+Goikhman
 Google
 Google's
 Greenspun
@@ -163,6 +165,7 @@ MP
 Mageia
 Mandriva
 Markus
+Mikhael
 MinGW
 MinGW-w64
 Mohican
@@ -247,6 +250,7 @@ Web-UI
 Webmaster
 Webscale
 Wikia
+Wikibooks
 Wikipedia
 Win32
 X11
@@ -285,7 +289,9 @@ dbm_fc_solver
 demos
 depth_dbm_fc_solver
 depth_dbm_fc_solver
+disinforming
 dmalloc
+don_woods_solver
 emscripten
 enum
 eo
@@ -332,6 +338,7 @@ i3
 icc
 icc's
 inline
+installment
 items_in_queue
 jQuery
 jquery-querystring
@@ -425,6 +432,7 @@ toons-for-twenty-somethings
 two-freecell
 typedefs
 urpmi
+vapourware
 ve
 vs
 wc

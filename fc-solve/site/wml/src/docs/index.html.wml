@@ -31,7 +31,7 @@ Freecell Solver.
 <p>
 A lecture given to the <a href="http://www.haifux.org/">Haifa Linux Club</a>
 about Freecell Solver. Covers various highlights from the history of the
-codebase and the community.
+code-base and the community.
 </p>
 
 <h4 class="plain"><a href="http://www.shlomifish.org/lecture/Freecell-Solver/The-Next-Pres/">Lecture: Freecell Solver - The Next Presentation</a></h4>
@@ -66,7 +66,7 @@ same, (mostly without thinking too much about it), what I did differently, and w
 A book I'd like to write and publish online about the evolution of the code
 and to lesser extent my interaction with its users, contributors and
 co-developers. Since I did not find a suitable publisher yet, I have kept the
-book offline and only send it to a privately-controlled mailing list. I also
+book off-line and only send it to a privately-controlled mailing list. I also
 only started to write it, and it is largely vapourware.
 </p>
 
@@ -88,7 +88,7 @@ Editorial: Time to Rethink your Help Flag?</a></h3>
 
 <p>
 A Freecode editorial I wrote about what I had planned to do with the
-exteremely long help display that Freecell Solver used to have.
+extremely long help display that Freecell Solver used to have.
 </p>
 
 <h3 class="plain"><a href="Freecell-Solver-TAOUP.txt">Musings about Freecell Solver after Reading "The Art of UNIX Programming"</a></h3>
