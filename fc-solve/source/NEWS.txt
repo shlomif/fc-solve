@@ -965,7 +965,7 @@ http://freshmeat.net/articles/time-to-rethink-your-help-flag
 
 2. A preset system - see the "-l" flag in USAGE.
 
-3. An option to read paramters from files. See "--read-from-file" in USAGE.
+3. An option to read parameters from files. See "--read-from-file" in USAGE.
 
 4. Finally, it is now possible to run one instance of the solver after the
 other in case the other one has returned a negative verdict. This is useful
