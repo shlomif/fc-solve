@@ -92,7 +92,7 @@ FC: 3H QC
 will specify that the cards 3 of hearts and queen of clubs are present in
 the freecells. To specify an empty freecell use a "-" as its designator.
 
-If there's another "FC:" line, the previous line will be overriden.
+If there's another "FC:" line, the previous line will be overridden.
 
 You can specify the contents of the foundations by prefixing the line with
 "Founds:" or with "Foundations:" and then using a format as follows:

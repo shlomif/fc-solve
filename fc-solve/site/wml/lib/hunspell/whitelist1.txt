@@ -412,6 +412,7 @@ freecell_solver_
 freecell_solver_user_
 freecells
 freeware
+front_ends
 gcc
 gcc's
 gcc-compatible
@@ -475,6 +476,7 @@ num_vacant_freecells
 online
 org
 orig_calc_states
+overrided
 palm_patience_getgame
 param
 parsable-output
@@ -591,6 +593,10 @@ xargs
 xpat2
 xpat2-1
 xz
+
+==== In: dest/docs/distro/README.html
+
+Readme
 
 ==== In: dest/docs/distro/README.html , dest/docs/distro/USAGE.html
 
