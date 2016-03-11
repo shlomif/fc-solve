@@ -1,4 +1,4 @@
-Freecell Solver Readme File
+Freecell Solver README File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
 :Date: 2012-10-31
