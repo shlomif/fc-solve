@@ -634,7 +634,7 @@ recurse into randomly. Its behaviour will differ depending on the seed you
 supply to it.  (see the "-seed" option below.)
 
 BFS does not yield good results, and +a-star+ has a mixed behaviour, so for
-the time being I recommend using Soft-DFS or Andom-DFS.
+the time being I recommend using Soft-DFS or Random-DFS.
 
 The Random-DFS scan processes every tests' random group, randomizes the
 states that it found and recurses into them one by one. Standalone tests
@@ -879,7 +879,7 @@ are some examples:
 --flares-plan "RunIndef:FlareyFlare"
 ------------
 
-This plan will run the flare with the name +FlareyFlare+ indefinetely, until it
+This plan will run the flare with the name +FlareyFlare+ indefinitely, until it
 terminates. Once a RunIndef action is encountered, the rest of the plan is
 ignored.
 
@@ -978,7 +978,7 @@ Meta-Options
 *Global*
 
 This option resets the program to its initial state, losing all the
-configuration logic that was inputted to it up to that state. Afterwards,
+configuration logic that was input to it up to that state. Afterwards,
 it can be set to a different configuration, again.
 
 

@@ -315,7 +315,7 @@ enum
      * This flag indicates whether scans should or should not reparent the
      * states their encounter to a lower depth in the depth tree
      *
-     * _proto is the one inputted by the user.
+     * _proto is the one input by the user.
      * _real is calculated based on other factors such as whether the
      * scan method is FCS_METHOD_OPTIMIZE.
      * */
