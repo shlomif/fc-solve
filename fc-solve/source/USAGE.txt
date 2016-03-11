@@ -992,7 +992,7 @@ of the file is similar to that used by the UNIX Bourne Shell. (i.e:
 spaces denote separate arguments, double-quotes encompass arguments,
 backslash escapes characters).
 
-The filename can be preceeded by an optional number of the arguments to
+The filename can be preceded by an optional number of the arguments to
 skip followed by a comma. (the default is 0)
 
 
