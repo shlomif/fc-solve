@@ -2,6 +2,7 @@
 
 'print
 's
+--flares-iters-factor
 --max-iters
 --pysolfc
 --tracemem
@@ -128,6 +129,7 @@ Solvability
 Stats
 StoneAge
 Sudoku
+Superheroic
 TODO
 Technion
 Technion's
@@ -177,6 +179,7 @@ fc-solve-discuss
 fc_solve_
 fc_solve_thread_
 fcc_fc_solver
+fcpro
 fcs
 fcs_
 fcs_dllexport
@@ -201,6 +204,7 @@ homesite
 icc
 icc's
 inline
+items_in_queue
 kazlib
 kpat
 larrysan
@@ -254,6 +258,7 @@ src
 strdup
 struct
 svn
+synergetic
 tarball
 tcc
 tcmalloc
