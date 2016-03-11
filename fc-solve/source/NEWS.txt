@@ -720,7 +720,7 @@ Version 2.28.0 (17-May-2009)
 1. Several cleanups, refactoring and optimizations - especially to the
 freecell.c file.
 
-2. Converted more move functions ot positions_by_rank.
+2. Converted more move functions to positions_by_rank.
 
 3. Changed the hash function from Bob Jenkins's to perl 5's and inlined it.
 These were substantial optimizations.
