@@ -92,7 +92,7 @@ s a lot of logic  in the code that has nothing to do with anything else. Many
 people think <a href="http://www.joelonsofsoftware.com/">Joel Spolsky</a> does
 not know what he's talking about, when he
 <a href="http://www.joelonsoftware.com/articles/fog0000000069.html">advises
-against rewriting a large codebase from scratch</a>  or that it
+against rewriting a large code-base from scratch</a>  or that it
 does not apply to Open-Source. But rewriting is costly.
 <a href="http://www.joelonsoftware.com/articles/fog0000000348.html">Refactoring
 is much quicker</a> (again, a link to Joel-on-Software), even if you are left
@@ -151,7 +151,7 @@ hated to see Google and other search engines clogged like this.
 <p>
 On my TODO list I had an item of "Integrate with PySol and/or GNOME Freecell
 and/or GNOME AisleRiot and/or kpat". I actually tried to push it so the
-GNOME guys would accept it. (At that point GNOME Freecell was my favorite
+GNOME guys would accept it. (At that point GNOME Freecell was my favourite
 solitaire implementation. My favourite is PySol, now). Eventually, I contacted
 a developer directly, and he referred me to the maintainer. The latter was to
 o busy to do anything with it.
@@ -253,7 +253,7 @@ and actually found it encouraging and boosting.
 <p>
 Now for some discussion of the license in respect to all that. All the people
 who integrated Freecell Solver into their products (at least those that
-I know of) mentioned Freecell Solver and its homepage in their "About" dialog
+I know of) mentioned Freecell Solver and its homepage in their "About" dialogue
 box. I don't know how I'm going to feel if someone integrated Freecell Solver
 there and did not acknowledge me, but I'd rather have it under a GPL
 compatible license than try to make it otherwise. (See the
@@ -279,7 +279,7 @@ future.
 </p>
 
 <p>
-I really don't have a policy against people forking a GPL-ed copy.
+I really don't have a policy against people forking a GPLed copy.
 However, I do ask them that unless they intend to make it proprietary,
 to keep it under the Public Domain. So far, all contributors respected
 that.
@@ -301,7 +301,7 @@ usually is a bad idea)
 </li>
 
 <li>
-I like working on Freecell Solver, and albeit am not overposessive
+I like working on Freecell Solver, and albeit am not over-possessive
 about the code, I do like to do things on my own.
 </li>
 
@@ -401,7 +401,7 @@ He tends to be very kind and restrained.
 </li>
 
 <li>
-Tom Holroyd - the author of patsolve, another solve rfor Freecell and
+Tom Holroyd - the author of patsolve, another solve for Freecell and
 Freecell-like games, he makes very few posts, usually related to patsolve,
 somehow. He is a formidable computer scientist and also a good Freecell and
 Seahaven Towers enthusiast.
@@ -412,7 +412,7 @@ Seahaven Towers enthusiast.
 <p>
 So, all in all, fc-solve-discuss, has its niche in the world and you are most
 welcome to join it if the topic interests you. Contributions to the Freecell
-Solver codebase are welcome, but are not absolutely necessary.
+Solver code-base are welcome, but are not absolutely necessary.
 </p>
 
 <h2 id="publish-or-perish">Publish or Perish</h2>
@@ -429,7 +429,7 @@ latter.
 <p>
 I kept a news section dedicated to what's new in every stable version of
 Freecell Solver, and kept all the old news items. I also kept posting
-regularily to Freshmat, sometimes to announce a non-stable release that was
+regularly to Freshmeat, sometimes to announce a non-stable release that was
 a milestone as far as new features and stability was concerned.
 </p>
 

@@ -91,6 +91,7 @@ API
 APIs
 AVL
 Adrian_Ettlinger
+Advogato
 Affero
 Aharoni
 AisleRiot
@@ -124,6 +125,7 @@ BrFS
 Brumley
 BuildRequires
 C99
+CC-by-sa-licensed
 CFLAGS
 CHECK_C_COMPILER_FLAG
 CI
@@ -141,6 +143,7 @@ CREATE_SHARED
 CSS
 CTO
 CVS
+Calahan
 Callan
 CheckResults
 CouchDB
@@ -158,6 +161,7 @@ Dimitri
 DocBook
 Doxygen
 EE
+ESR
 EXE
 Egele
 Emscripten
@@ -214,6 +218,7 @@ GPL
 GPLed
 GPLv2
 GPLv3
+GeYong
 Gergely
 Gfreecell
 GitHub
@@ -286,6 +291,7 @@ Makefile's
 Mandriva
 Manish
 Markus
+Microsoft-Freecell-compatible
 Mikhael
 MinGW
 MinGW-w64
@@ -340,8 +346,11 @@ Random-DFS
 Random-DFS-based
 Rebert
 Refactored
+Refactoring
 Risko
 RunIndef
+S1
+S2
 SCons
 SIGABRT
 SLOCCount
@@ -358,6 +367,7 @@ Soft-DFS
 Solitairey
 Solvability
 Sourceforge
+Spolsky
 Stats
 StoneAge
 Sudoku
@@ -386,6 +396,7 @@ Valgrind
 Veit's
 Vi
 WIN32
+Warmenhoven
 Web-UI
 Webmaster
 Webscale
@@ -525,6 +536,7 @@ fcs_state_extra_info_t
 fcs_user
 fetchmail
 filename
+flamatory
 fomalhaut
 foo
 forecell
@@ -560,6 +572,7 @@ google
 gperftools
 grep
 gtk
+gvim
 gz
 hard_dfs
 hoc
@@ -754,6 +767,7 @@ strncasecmp
 strndup
 struct
 structs
+stylesheets
 summarize-fc-solve
 svn
 synergetic
@@ -779,6 +793,7 @@ two-freecell
 two-freecells
 txt
 typedefs
+un-user-friendly
 underlinking
 unmalloced
 unspecifying
@@ -804,6 +819,7 @@ wrt
 www
 www
 wxPython
+wxWindows
 x86
 x86-64
 x86-linux
@@ -818,7 +834,6 @@ Archlinux
 BSDLed
 Bondt
 Bortnik
-GeYong
 Gergeley
 Hai
 Jurij
@@ -836,7 +851,6 @@ Rivest
 ShareAlike
 Stannered
 Tzafrir
-Warmenhoven
 Yotam
 burtleburtle
 debondt
