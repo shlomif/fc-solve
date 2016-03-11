@@ -34,7 +34,7 @@
 -DFCS_BUILD_DOCS
 -DFCS_WITHOUT_DEPTH_FIELD
 -DFCS_WITH_SUITE
--USR!
+-USR1
 -Werror
 -Y's
 -Ysystem
@@ -60,7 +60,9 @@
 -std
 -tb
 -tmss
+0-rc3
 0-win32
+01-Jul-2013
 0rc5
 100K
 12-Jul-2002
@@ -101,6 +103,7 @@ Autoconf's
 Automake
 Autotools
 BFS
+BINARY_DIR
 BUILDING_DLL
 BUILD_TYPE
 Barthlet
@@ -113,6 +116,7 @@ Bitbucket
 Blog
 Blogger
 BrFS
+BuildRequires
 C99
 CFLAGS
 CHECK_C_COMPILER_FLAG
@@ -163,6 +167,7 @@ FCS_FREECELL_ONLY
 FCS_MAX_RANK
 FCS_RANK_ACE
 FCS_RCS_STATES
+FCS_STATE_STORAGE_INDIRECT
 FCS_STATE_STORAGE_INTERNAL_HASH
 FCS_STATE_STORAGE_LIBAVL2_TREE
 FCS_STATE_SUSPEND_PROCESS
@@ -275,6 +280,7 @@ Markus
 Mikhael
 MinGW
 MinGW-w64
+Mingw32
 Mohican
 Mohicans
 MongoDB
@@ -304,6 +310,7 @@ Petrea
 Phil
 Plaintext
 Presets
+PyPI
 PySol
 PySol's
 PySolFC
@@ -395,6 +402,7 @@ apps
 arithmetics
 asw
 autofree
+automagically
 automatic-build-for-982-2fc-solving
 avl
 backend
@@ -414,10 +422,13 @@ blp
 bmake
 board_file
 board_gen
+bugreport
 build-on-win32
 bz2
 c's
 cd
+cgi
+cgi-bin
 change_ver
 cleanup
 cleanups
@@ -526,6 +537,7 @@ gmplib
 gnu99
 good_measure
 google
+gperftools
 grep
 gtk
 gz
@@ -574,8 +586,10 @@ linuxmafia
 llvm
 llvma
 lowercase
+mak
 make-aisleriot-freecell-board
 make-gnome-freecell-board
+make_microsoft_freecell_board
 make_pysol_freecell_board
 make_pysol_freecll_board
 malloc
@@ -645,12 +659,14 @@ presets
 pro-bono
 pseudo-DFS
 pseudo-Freecell
+pseudo_dfs_atomic_moves_solver
 pthreads
 ptr
 ptr_state_extra_info_t
 ptr_state_t
 ptr_state_with_locations_t
 py
+pypi
 pysol
 pysol-4
 qs
@@ -658,6 +674,7 @@ qsi
 qsi
 random-DFS
 random-dfs
+random2
 rb
 rcs_state_storage
 realloc
@@ -741,6 +758,7 @@ two-freecell
 two-freecells
 txt
 typedefs
+underlinking
 unmalloced
 unspecifying
 urpmi
@@ -781,6 +799,8 @@ xz
 14-Jul-2010
 24-Jun-2009
 25-Jun-2009
+26-Jun-2013
+27-Sep-2015
 28-Jul-2000
 
 ==== In: dest/docs/distro/README.html
