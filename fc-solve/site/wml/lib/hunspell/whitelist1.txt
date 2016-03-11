@@ -1,5 +1,7 @@
 ==== GLOBAL:
 
+'01234567
+'1
 'print
 's
 --calc-real-depth
@@ -48,6 +50,7 @@
 -tmss
 0-win32
 0rc5
+100K
 2-Freecells-based
 2-freecell
 2010s
@@ -110,11 +113,14 @@ Emscripten
 Ettlinger
 Ettlinger
 Ettlinger's
+FC
 FC-Pro
 FCCs
 FCELL
 FCS
 FCS_FREECELL_ONLY
+FCS_MAX_RANK
+FCS_RANK_ACE
 FCS_RCS_STATES
 FFI
 FREECELL_SOLVER_PRESETRC
@@ -138,6 +144,7 @@ Freenode's
 Freshmeat
 Freshports
 GCC
+GCC_INLINE-ing
 GDB
 GMP
 GNU99
@@ -174,8 +181,10 @@ IST
 Ido
 Inc
 Inline
+Iters
 JCP
 JS-FCS
+Jain
 Joose
 KDE's
 KPatience
@@ -199,9 +208,11 @@ Lingyun
 LiveJournal
 Luc
 MD5
+MIT_License
 MP
 Mageia
 Mandriva
+Manish
 Markus
 Mikhael
 MinGW
@@ -244,6 +255,7 @@ RCS
 RCS-like
 README
 RPM
+RTF
 Railroad
 Random-DFS
 Random-DFS-based
@@ -298,15 +310,19 @@ Win32
 X11
 XHTML
 XML
+XP
 YahooGroups
 YouTube
 Zakai
+__int128
 abra-kadabra
 ad-hoc
 ak
 alternate_color
 analyzed
 ansic
+apps
+arithmetics
 asw
 autofree
 backend
@@ -322,22 +338,27 @@ bitcode
 blog
 blogspot
 bmake
+board_file
+board_gen
 bz2
 cd
 cleanup
 cleanups
 cmake
+colored
 com
 com's
 config
 configurator
 const
 cpan
+cpb
 cpp
 ctypes
 curr_depth
 dbm-freecell-solver-2fc-results-on-Amadiro-machine
 dbm_fc_solver
+delta_states
 delta_states_debondt
 demos
 depth_dbm_fc_solver
@@ -351,6 +372,7 @@ don_woods_solver
 earthlink
 eight_off
 emscripten
+end_ptr
 enum
 eo
 etc
@@ -358,6 +380,7 @@ exe
 fallback
 fc-pro
 fc-solve
+fc-solve's
 fc-solve-discuss
 fc_solve
 fc_solve_
@@ -369,6 +392,7 @@ fcs
 fcs_
 fcs_cl
 fcs_dllexport
+fcs_hash
 fetchmail
 filename
 fomalhaut
@@ -401,6 +425,7 @@ hoc
 homepages
 homesite
 honor
+https
 i1
 i2
 i2
@@ -442,6 +467,7 @@ myname
 namespace
 naïve
 non-GCC
+nu42
 num
 num_skip
 num_vacant_columns
@@ -451,6 +477,7 @@ org
 orig_calc_states
 palm_patience_getgame
 param
+parsable-output
 passé
 patsolve
 patsolve's
@@ -462,6 +489,7 @@ plaintext
 plspider
 plugin
 pos
+positions_by_rank
 pqueue
 prc
 predate
@@ -470,6 +498,7 @@ presetrc
 presets
 pro-bono
 pseudo-Freecell
+ptr
 ptr_state_extra_info_t
 ptr_state_t
 ptr_state_with_locations_t
@@ -477,6 +506,8 @@ py
 pysol
 pysol-4
 qs
+qsi
+qsi
 random-DFS
 random-dfs
 realloc
@@ -506,6 +537,7 @@ shlomifish
 simple_simon
 soft-dfs
 solvability
+split-dbm-solver
 src
 st1
 st2
@@ -514,6 +546,7 @@ startup
 strdup
 streets_and_alleys
 struct
+summarize-fc-solve
 svn
 synergetic
 tarball
@@ -532,6 +565,7 @@ two-freecell
 two-freecells
 txt
 typedefs
+unmalloced
 unspecifying
 urpmi
 vapourware
@@ -542,8 +576,13 @@ wc
 weblog
 webscalability
 whitelisted
+whitespace
 wiki
+wikipedia
 world-writable
+wrt
+www
+www
 wxPython
 x86
 x86-64
