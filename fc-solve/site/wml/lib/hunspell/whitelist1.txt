@@ -34,6 +34,9 @@
 -DFCS_BUILD_DOCS
 -DFCS_WITHOUT_DEPTH_FIELD
 -DFCS_WITH_SUITE
+-DMAX_NUM_FREECELLS
+-DMAX_NUM_INITIAL_CARDS_IN_A_STACK
+-DMAX_NUM_STACKS
 -USR1
 -Werror
 -Y's
@@ -91,6 +94,7 @@ Adrian_Ettlinger
 Affero
 Aharoni
 AisleRiot
+Alexandre
 Alon
 Amadiro
 Amadiro's
@@ -102,6 +106,7 @@ Autoconf
 Autoconf's
 Automake
 Autotools
+Avgerinos
 BFS
 BINARY_DIR
 BUILDING_DLL
@@ -116,6 +121,7 @@ Bitbucket
 Blog
 Blogger
 BrFS
+Brumley
 BuildRequires
 C99
 CFLAGS
@@ -138,6 +144,7 @@ CVS
 Callan
 CheckResults
 CouchDB
+Cylab
 DEBUG_STATES
 DFS
 DLL
@@ -152,6 +159,7 @@ DocBook
 Doxygen
 EE
 EXE
+Egele
 Emscripten
 Ettlinger
 Ettlinger
@@ -249,6 +257,7 @@ Kanner's
 Katzenschwanz
 Keller's
 Kentish
+Kil
 KingCell
 Known_Bugs
 Kulow
@@ -280,13 +289,16 @@ Markus
 Mikhael
 MinGW
 MinGW-w64
+MinGW32
 Mingw32
 Mohican
 Mohicans
 MongoDB
+Movie
 MyFlare
 NSIS
 NUL
+NUM
 NUM_COLUMNS
 NUM_DECKS
 Nadav
@@ -326,6 +338,7 @@ RTF
 Railroad
 Random-DFS
 Random-DFS-based
+Rebert
 Refactored
 Risko
 RunIndef
@@ -357,6 +370,7 @@ Technion
 Technion's
 Tel
 TenDRA
+Thanassis
 Trac
 Tunstall-Pedoe's
 Tuo
@@ -400,6 +414,8 @@ analyzed
 ansic
 apps
 arithmetics
+asprintf
+asprintf-1
 asw
 autofree
 automagically
@@ -414,6 +430,7 @@ befs
 beleaguered_castle
 berlios
 bfs
+bitbucket
 bitcode
 bitcodes
 blog
@@ -426,6 +443,8 @@ bugreport
 build-on-win32
 bz2
 c's
+ccmake
+ccmake
 cd
 cgi
 cgi-bin
@@ -434,6 +453,7 @@ cleanup
 cleanups
 cmake
 cmake-2
+cmake-gui
 cmd_line
 color
 colored
@@ -703,6 +723,7 @@ segfaults
 segfaults
 sh
 shlomif
+shlomif-cmake-modules
 shlomifish
 simple
 simple-simon-stats-analysis
@@ -764,6 +785,7 @@ unspecifying
 urpmi
 valgrind
 vapourware
+vasprintf
 ve
 ver
 visited_iter
@@ -789,6 +811,54 @@ xargs
 xpat2
 xpat2-1
 xz
+
+==== In: dest/docs/distro/AUTHORS.html
+
+Archlinux
+BSDLed
+Bondt
+Bortnik
+GeYong
+Gergeley
+Hai
+Jurij
+Kaz
+Kontra
+Kruk
+Kylheku
+MAX_NUM_CARDS_IN_A_STACK
+Magnus
+Michiel
+RPMs
+Radchenko
+Reftel
+Rivest
+ShareAlike
+Stannered
+Tzafrir
+Warmenhoven
+Yotam
+burtleburtle
+debondt
+der
+don_woods
+freecellgamesolutions
+h6ex
+homelinux
+icynic
+ik
+kaz
+kylheku
+larrysan45
+lookup2
+math
+nl
+numin8r
+pysolfc
+pythack
+ru
+wikimedia
+xrl
 
 ==== In: dest/docs/distro/NEWS.html
 
