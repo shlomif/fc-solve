@@ -489,7 +489,7 @@ etc.) by default.
 +const char *+.
 
 6. +pqueue.h+ was converted to the MIT/X11 license, with the permission of its
-author. Freecell Solver is now fullly MIT/X11.
+author. Freecell Solver is now fully MIT/X11.
 
 7. Fixed a Best-First-Search recycling memory leak that was reported by
 valgrind.
@@ -539,7 +539,7 @@ Version 2.38.0: (29-Dec-2009)
 -----------------------------
 
 1. Made sure that one can build Freecell Solver outside the source directory
-without needing AsciiDoc. (That was a major build-sytem problem).
+without needing AsciiDoc. (That was a major build-system problem).
 
 2. Add a missing newline at the end of one of the lines of the help.
 
