@@ -38,7 +38,7 @@ option below. Each flare consists of several hard threads.
 the +--next-hard-thread+ option below. Each hard thread consists of several
 soft threads.
 
-5. Soft-thread-specific - affects only the curent soft thread.
+5. Soft-thread-specific - affects only the current soft thread.
 
 Getting Help
 ------------
