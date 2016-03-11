@@ -49,7 +49,7 @@ goes on until it ends.
 suit, and to traverse only the possible parents or children based on the
 suit.
 
-* Investigate ways to perform more pointer arithematics and
+* Investigate ways to perform more pointer arithmetics and
 (ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
 
 * In the states handling, there's still some room for pointer arithmetics.
@@ -117,7 +117,8 @@ Verdict: Solved ; Iters: 615 ; Length: 77
 * PySolFC deal 26892246862786948900:
 
 --------------------------------------------------------
-shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 26892246862786948900 | perl scripts/summarize-fc-solve -l qsi --flares-choice fc_solveVerdict: Solved ; Iters: 195331 ; Length: 98
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 26892246862786948900 | perl scripts/summarize-fc-solve -l qsi --flares-choice fc_solve
+Verdict: Solved ; Iters: 195331 ; Length: 98
 shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 26892246862786948900 | perl scripts/summarize-fc-solve --method a-star -asw '1,0,4,0,4'   --flares-choice fc_solve
 Verdict: Solved ; Iters: 111 ; Length: 92
 --------------------------------------------------------
