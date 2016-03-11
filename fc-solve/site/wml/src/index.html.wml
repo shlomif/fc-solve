@@ -59,7 +59,7 @@ to the game.
 </li>
 <li>
 <a href="http://www.solitairelaboratory.com/freecell.html">Michael
-Keller's Freecell site</a> -
+Keller’s Freecell site</a> -
 contains the
 <a href="http://www.solitairelaboratory.com/fcfaq.html">Freecell FAQ
 (Frequently Asked Questions)</a> and other stuff.
@@ -75,8 +75,7 @@ An unsolvable instance of Freecell</a> - why not all possible initial Freecell
 boards can be solved.
 </li>
 <li>
-<a href="http://www.heyes-jones.com/astar.html">Justin-Heyes
-Jones' A* page</a> - a page about the A* scan.
+<a href="http://www.heyes-jones.com/astar.html">Justin Heyes-Jones’s A* page</a> - a page about the A* scan.
 </li>
 <li>
 <a href="$(ROOT)/download.html#download_other_solvers">

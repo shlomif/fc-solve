@@ -54,7 +54,7 @@ compilers such as GCC and LLVM/clang.
 </li>
 
 <li>
-Full compatiblity between dynamically-linked third-party applications to the
+Full compatibility between dynamically-linked third-party applications to the
 version of the library that is used.
 </li>
 
@@ -86,7 +86,7 @@ the available tests.
 
 <li>
 With the A* scan, one can specify the weights of the different state
-evalutaion parameters.
+evaluation parameters.
 </li>
 
 <li>
@@ -124,7 +124,7 @@ perpetual loop.
 
 <li>
 With the random-DFS scan, it is possible to specify a different moves selection
-for each depth in the DFS-stack.
+for each depth in the DFS stack.
 </li>
 
 </ul>
