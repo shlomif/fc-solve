@@ -11,12 +11,18 @@
 --trim-max-stored-states
 -Y's
 -Ysystem
+-fif
 -lne
 -sam
 -sel
+-std
+-tb
+0-win32
 0rc5
+2-Freecells-based
 2-freecell
 2010s
+3D
 4GHz
 6th
 82-fcs-path-0
@@ -49,6 +55,7 @@ Bitbucket
 Blog
 Blogger
 BrFS
+C99
 CI
 CMake
 COM
@@ -67,6 +74,7 @@ Dimitri
 DocBook
 Doxygen
 EE
+Emscripten
 Ettlinger
 Ettlinger
 Ettlinger's
@@ -92,9 +100,11 @@ Freecode
 Freenode
 Freenode's
 Freshmeat
+Freshports
 GCC
 GDB
 GMP
+GNU99
 GPL
 GPLed
 GPLv2
@@ -122,6 +132,7 @@ Horne's
 IE10
 IMO
 IRC
+Ido
 Inc
 Inline
 JCP
@@ -129,6 +140,7 @@ JS-FCS
 Joose
 KDE's
 KPatience
+Kanner's
 Katzenschwanz
 Keller's
 Kentish
@@ -148,6 +160,7 @@ LiveJournal
 Luc
 MD5
 MP
+Mageia
 Mandriva
 Markus
 MinGW
@@ -168,6 +181,7 @@ OpenID
 PDF
 PDFs
 POSIX
+PalmOS
 Patsolve
 Patsolve's
 Pellico
@@ -176,6 +190,8 @@ Perl
 Perl's
 Petrea
 Phil
+Plaintext
+Presets
 PySol
 PySol's
 PySolFC
@@ -184,11 +200,14 @@ Pythack
 QUnit
 RCS
 RCS-like
+README
 RPM
 Railroad
+Random-DFS
 Random-DFS-based
 Risko
 SCons
+SLOCCount
 SQL
 Schlange
 Screencast
@@ -207,6 +226,7 @@ Sudoku
 Superheroic
 SusoSight's
 TODO
+Tcl
 Technion
 Technion's
 Tel
@@ -218,6 +238,7 @@ Turnage
 Tuxedo
 UI
 UNIXes
+Ubuntu
 Unported
 Valgrind
 Veit's
@@ -235,6 +256,7 @@ YahooGroups
 YouTube
 Zakai
 ad-hoc
+ansic
 asw
 autofree
 backend
@@ -255,8 +277,10 @@ com's
 configurator
 const
 cpan
+cpp
 ctypes
 curr_depth
+dbm-freecell-solver-2fc-results-on-Amadiro-machine
 dbm_fc_solver
 demos
 depth_dbm_fc_solver
@@ -276,12 +300,16 @@ fcc_fc_solver
 fcpro
 fcs
 fcs_
+fcs_cl
 fcs_dllexport
 fetchmail
 foss-nessy
 freecell
 freecell-only
+freecell-solver
 freecell-solver-2
+freecell-solver-3
+freecell-solver-4
 freecell-solver-fc-pro-range-solve
 freecell-solver-multi-thread-solve
 freecell-solver-range-parallel-solve
@@ -319,6 +347,8 @@ make_pysol_freecell_board
 malloc
 malloced
 markup
+max_cards
+memcmp
 mf
 mis-calculated
 mkdir
@@ -327,17 +357,24 @@ movie
 movie's
 msec
 namespace
+naïve
 non-GCC
+num_vacant_columns
+num_vacant_freecells
 online
 org
+palm_patience_getgame
 passé
 patsolve
+patsolve-shlomif-3
 pcc
 perl
+pi-make-microsoft-freecell-board
 plaintext
 plspider
 plugin
 pqueue
+prc
 predate
 preset
 presets
@@ -349,14 +386,17 @@ ptr_state_with_locations_t
 py
 pysol
 pysol-4
+qs
 random-DFS
 random-dfs
 realloc
 refactoring
 refactorings
+relicensed
 rengolin
 reparent
 rpm
+rpmbuild
 screencast
 screencasts
 scriptable
@@ -384,6 +424,7 @@ todate
 toons-for-twenty-somethings
 two-freecell
 typedefs
+urpmi
 ve
 vs
 wc
@@ -398,6 +439,9 @@ x86
 x86-64
 x86-linux
 xargs
+xpat2
+xpat2-1
+xz
 
 ==== In: dest/index.html , dest/old-news.html
 
