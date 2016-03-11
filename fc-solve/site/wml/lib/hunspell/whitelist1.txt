@@ -14,6 +14,7 @@
 --max-depth
 --max-iters
 --max-stored-states
+--parseable-output
 --patsolve-x-param
 --patsolve-y-param
 --preset
@@ -39,6 +40,8 @@
 -nst
 -sam
 -sel
+-sn
+-snx
 -sp
 -std
 -tb
@@ -335,6 +338,7 @@ ctypes
 curr_depth
 dbm-freecell-solver-2fc-results-on-Amadiro-machine
 dbm_fc_solver
+delta_states_debondt
 demos
 depth_dbm_fc_solver
 depth_dbm_fc_solver
@@ -344,6 +348,7 @@ die_schlange
 disinforming
 dmalloc
 don_woods_solver
+earthlink
 eight_off
 emscripten
 enum
@@ -356,6 +361,7 @@ fc-solve
 fc-solve-discuss
 fc_solve
 fc_solve_
+fc_solve_compare_lru_cache_keys
 fc_solve_thread_
 fcc_fc_solver
 fcpro
@@ -365,6 +371,7 @@ fcs_cl
 fcs_dllexport
 fetchmail
 filename
+fomalhaut
 foo
 forecell
 foss-nessy
@@ -384,6 +391,7 @@ freeware
 gcc
 gcc's
 gcc-compatible
+gmplib
 gnu99
 good_measure
 grep
@@ -401,6 +409,7 @@ icc
 icc's
 inline
 installment
+ints
 items_in_queue
 jQuery
 john-galt-line
@@ -429,6 +438,7 @@ movie
 movie's
 msec
 myboard
+myname
 namespace
 naïve
 non-GCC
@@ -438,6 +448,7 @@ num_vacant_columns
 num_vacant_freecells
 online
 org
+orig_calc_states
 palm_patience_getgame
 param
 passé
@@ -499,6 +510,7 @@ src
 st1
 st2
 st3
+startup
 strdup
 streets_and_alleys
 struct
@@ -540,6 +552,64 @@ xargs
 xpat2
 xpat2-1
 xz
+
+==== In: dest/docs/distro/README.html , dest/docs/distro/USAGE.html
+
+10C
+10D
+10H
+10S
+2C
+2D
+2H
+2S
+3C
+3H
+3S
+4C
+4D
+4H
+4S
+5C
+5D
+5H
+5S
+6C
+6D
+6H
+6S
+7C
+7D
+7H
+7S
+8C
+8D
+8H
+8S
+9C
+9D
+9H
+9S
+AC
+AD
+AH
+AS
+JC
+JD
+JH
+JS
+KC
+KD
+KH
+KS
+QC
+QD
+QH
+QS
+TC
+TD
+TH
+TS
 
 ==== In: dest/docs/distro/USAGE.html
 
