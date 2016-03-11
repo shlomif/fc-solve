@@ -465,7 +465,7 @@ script for statistical analysis of the solution length.
 
 6. Refactored the +split_cmd_line.c+ module.
 
-7. Renamed many "a_star" and "A*" occurences in the code to "BeFS", because
+7. Renamed many "a_star" and "A*" occurrences in the code to "BeFS", because
 what was thought to be the A* scan was actually Best-First-Search.
 
 8. Convert the soft-DFS tests' order to a list-of-lists-of-tests, and no
