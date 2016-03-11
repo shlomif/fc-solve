@@ -87,7 +87,7 @@ from scratch. Nor do I intend or think it is the right thing to do. Open
 Source Projects were known to survive a re-write. (that's one of the advantages
 of Open-Source) Nevertheless, I'm too attached to the code to throw it all
 away so fast. I can much more easily refactor or rewrite the parts I need to
-while still conver the code back to a working condition after a while. There'
+while still convert the code back to a working condition after a while. There'
 s a lot of logic  in the code that has nothing to do with anything else. Many
 people think <a href="http://www.joelonsofsoftware.com/">Joel Spolsky</a> does
 not know what he's talking about, when he

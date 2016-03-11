@@ -215,6 +215,7 @@ GLib
 GMP
 GNU99
 GPL
+GPL'd
 GPLed
 GPLv2
 GPLv3
@@ -381,6 +382,7 @@ Technion's
 Tel
 TenDRA
 Thanassis
+Torvalds
 Trac
 Tunstall-Pedoe's
 Tuo
@@ -690,6 +692,7 @@ preset
 presetrc
 presets
 pro-bono
+programmatically
 pseudo-DFS
 pseudo-Freecell
 pseudo_dfs_atomic_moves_solver
@@ -713,6 +716,7 @@ rcs_state_storage
 realloc
 recurse
 recurses
+refactor
 refactored
 refactoring
 refactorings
@@ -827,6 +831,18 @@ xargs
 xpat2
 xpat2-1
 xz
+
+==== In: dest/code-of-conduct/index.html
+
+BY-SA
+Clichés
+Dreamwidth
+bloggers
+crafters
+geeks
+labor
+neurodiversity
+technopeasant
 
 ==== In: dest/docs/distro/AUTHORS.html
 

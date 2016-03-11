@@ -32,7 +32,7 @@ was unable to solve, thus making me improve the algorithm.
 * *Markus F. X. J. Oberhumer* - writing PySol, on whose code I based the board
 generation program for it. He also contributed some patches.
 
-* *Justin-Heyes Jones* - wrote a nice introduction to the A* algorithm, and
+* *Justin Heyes-Jones* - wrote a nice introduction to the A* algorithm, and
 wrote the basis for the pqueue.c code.
 
 * *Stephan Kulow* - integrated Freecell Solver into the kpat Solitaire suite for

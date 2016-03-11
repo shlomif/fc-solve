@@ -139,7 +139,7 @@ Version 3.20.0: (26-Jun-2013)
 ones where a lookup is now O(1) instead of O(num_cards). The Simple Simon
 code was in general heavily refactored and cleaned up.
 
-2. Some bugs in the Simple Simon alogrithms were fixed, slightly modifying
+2. Some bugs in the Simple Simon algorithms were fixed, slightly modifying
 the outputted solutions.
 
 3. Add missing BuildRequires to the RPM .spec .
@@ -205,7 +205,7 @@ only for flares-based presets.
 Version 3.14.1: (01-Nov-2012)
 -----------------------------
 
-1. Fix the build on Windows with Dwimperl and its Mingw32 (+strndup()+
+1. Fix the build on Windows with DWIM Perl and its Mingw32 (+strndup()+
 was missing).
 
 Version 3.14.0: (31-Oct-2012)
@@ -382,7 +382,7 @@ crash the solver. (See the +Known_Bugs.txt+ file).
 7. Added support for -fwhole-program and static linking the Freecell Solver
 executables. This yielded another speed boost.
 
-8. Forward ported hte Google Dense Hash / Google Sparse Hash support for
+8. Forward ported the Google Dense Hash / Google Sparse Hash support for
 the positions and columns.
 
 9. Forward ported COMPACT_STATES.
@@ -458,7 +458,7 @@ that optimize on solution length (based on flares).
 
 3. Add +scripts/tag-fc-solve-release.bash+ to tag using svn.
 
-4. Updated the CMake version in the build-on-win32.pl scritp.
+4. Updated the CMake version in the build-on-win32.pl script.
 
 5. Add +scripts/stat-analysis-2.pl+ which is a faster version of the
 script for statistical analysis of the solution length.
