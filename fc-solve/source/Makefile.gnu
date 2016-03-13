@@ -105,7 +105,7 @@ ifeq ($(GCC_COMPAT),1)
 	else ifeq ($(OPT_AND_DEBUG),1)
 		CFLAGS += -g -O2 $(MARCH_FLAG) $(LTO_FLAGS)
 	else
-		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS)
+		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS)
 	endif
 	CFLAGS += -fPIC
 endif
