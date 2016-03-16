@@ -74,6 +74,11 @@ extern "C" {
 #endif
 #endif
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#ifndef FC_SOLVE__REMOVE_OLD_API_1
+#define FC_SOLVE__REMOVE_OLD_API_1
+#endif
+#endif
 #ifdef __cplusplus
 }
 #endif

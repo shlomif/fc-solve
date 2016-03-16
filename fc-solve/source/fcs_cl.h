@@ -31,6 +31,7 @@
 
 #include "fcs_dllexport.h"
 #include "fcs_user.h"
+#include "fcs_back_compat.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,6 +60,10 @@ enum
     FCS_CMD_LINE_USER = 0x10000
 };
 
+/* One should use freecell_solver_user_cmd_line_parse_args_with_file_nesting_count()
+ * instead.
+ * */
+#ifndef FC_SOLVE__REMOVE_OLD_API_1
 DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
@@ -70,6 +75,7 @@ DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args(
     char * * error_string,
     int * last_arg
     );
+#endif
 
 DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * instance,

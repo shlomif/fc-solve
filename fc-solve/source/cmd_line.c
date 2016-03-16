@@ -2109,6 +2109,7 @@ end_of_arg_loop:
     return FCS_CMD_LINE_OK;
 }
 
+#ifndef FC_SOLVE__REMOVE_OLD_API_1
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args(
     void * instance,
     int argc,
@@ -2135,4 +2136,5 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args(
         NULL
         );
 }
+#endif
 
