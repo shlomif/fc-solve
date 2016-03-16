@@ -408,7 +408,7 @@ int main(int argc, char * argv[])
 
     char * error_string;
     switch(
-        freecell_solver_user_cmd_line_parse_args(
+        freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             user.instance,
             argc,
             (freecell_solver_str_t *)(void *)argv,
@@ -417,7 +417,9 @@ int main(int argc, char * argv[])
             cmd_line_callback,
             &user,
             &error_string,
-            &arg
+            &arg,
+            -1,
+            NULL
             )
     )
     {

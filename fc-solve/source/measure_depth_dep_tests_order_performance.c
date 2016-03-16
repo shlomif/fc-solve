@@ -212,7 +212,7 @@ int main(int argc, char * argv[])
 
         if (start_from_arg >= 0)
         {
-            freecell_solver_user_cmd_line_parse_args(
+            freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 instance,
                 end_args,
                 (freecell_solver_str_t *)(void *)argv,
@@ -221,7 +221,9 @@ int main(int argc, char * argv[])
                 NULL,
                 NULL,
                 &error_string,
-                &arg
+                &arg,
+                -1,
+                NULL
             );
         }
 

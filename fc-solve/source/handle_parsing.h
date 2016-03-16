@@ -59,7 +59,7 @@ static GCC_INLINE void * const alloc_instance_and_parse(
 
     char * error_string;
     switch (
-        freecell_solver_user_cmd_line_parse_args(
+        freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             instance,
             argc,
             (freecell_solver_str_t *)(void *)argv,
@@ -68,7 +68,9 @@ static GCC_INLINE void * const alloc_instance_and_parse(
             callback,
             callback_context,
             &error_string,
-            arg_ptr
+            arg_ptr,
+            -1,
+            NULL
         )
     )
     {

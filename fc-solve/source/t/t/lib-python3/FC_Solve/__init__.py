@@ -20,10 +20,11 @@ class FC_Solve:
         last_arg = c_int()
         error_string = c_char_p()
         known_params = c_char_p(None)
+        opened_files_dir = c_char_p(None)
 
         cmd_line_args_tuple = tuple(cmd_line_args)
 
-        self.fcs.freecell_solver_user_cmd_line_parse_args(
+        self.fcs.freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             self.user, # instance
             len(cmd_line_args),    # argc
             ((c_char_p * len(cmd_line_args))(*tuple(bytes(s, 'UTF-8') for s in cmd_line_args_tuple))),  # argv
@@ -32,7 +33,9 @@ class FC_Solve:
             None,   # callback
             None,   # callback_context
             byref(error_string),  # error_string
-            byref(last_arg)    # last_arg
+            byref(last_arg),    # last_arg
+            c_int(-1), # file_nesting_count
+            opened_files_dir
         )
 
         # TEST:$input_cmd_line++;
