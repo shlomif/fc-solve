@@ -339,11 +339,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void * callback_context,
     char * * error_string,
     int * last_arg,
-    int file_nesting_count,
+    const int file_nesting_count,
     freecell_solver_str_t opened_files_dir
     )
 {
-    int num_to_skip;
     const char * p;
 
     *error_string = NULL;
@@ -363,8 +362,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             if ((*known_param) != NULL )
             {
-                int ret;
-
+                int ret, num_to_skip;
                 switch (callback(instance, argc, argv, arg-&(argv[0]), &num_to_skip, &ret, callback_context))
                 {
                     case FCS_CMD_LINE_SKIP:
