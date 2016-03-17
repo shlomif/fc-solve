@@ -507,7 +507,7 @@ extern void fc_solve_trace_solution(
     fcs_internal_move_t canonize_move = fc_solve_empty_move;
     fcs_int_move_set_type(canonize_move, FCS_MOVE_TYPE_CANONIZE);
 
-    if (instance->solution_moves.moves != NULL)
+    if (instance->solution_moves.moves)
     {
         fcs_move_stack_static_destroy(instance->solution_moves);
         instance->solution_moves.moves = NULL;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 7;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -12,6 +12,7 @@ use File::Temp qw( tempdir );
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 my $fc_solve_exe = File::Spec->catfile($ENV{FCS_PATH}, 'fc-solve');
+my $summary_exe = File::Spec->catfile($ENV{FCS_PATH}, 'summary-fc-solve');
 my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-pro-range-solve');
 
 {
@@ -104,6 +105,30 @@ my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-p
     );
 }
 
+{
+    trap
+    {
+        system(
+            $summary_exe, 1591, 1592, 1593,
+            qw(-- --method random-dfs -to [0123456789] -sp r:tf -opt -opt-to 0123456789ABCDE -seed 24 -mi 10000)
+        );
+    };
+
+    my $out = $trap->stdout();
+    # TEST
+    like (
+        $out,
+        qr/^1591 = Verdict: Intractable.*?^1592 = Verdict: Solved.*?^1593 = Verdict: Solved/ms,
+        "All deals in summary-fc-solve are either intractable or solved.",
+    );
+
+    # TEST
+    unlike (
+        $out,
+        qr/Verdict: Unsolved/,
+        'No deal is unsolved, because that makes no sense.',
+    );
+}
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2008 Shlomi Fish

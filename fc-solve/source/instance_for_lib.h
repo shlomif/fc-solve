@@ -805,6 +805,15 @@ static GCC_INLINE void fc_solve_recycle_instance(
 {
     fc_solve_finish_instance(instance);
 
+    /* TODO : This duplicate piece of code appears several times.
+     * Extract a method. */
+    if (instance->solution_moves.moves)
+    {
+        fcs_move_stack_static_destroy(instance->solution_moves);
+        instance->solution_moves.moves = NULL;
+    }
+    /* END TODO */
+
     instance->i__num_checked_states = 0;
 
     instance->num_hard_threads_finished = 0;
