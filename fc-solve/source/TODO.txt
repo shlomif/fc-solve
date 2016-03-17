@@ -11,6 +11,35 @@ Pressing
 ** It runs fine on Windows 7.
 ** Thanks to Manish Jain for the report.
 
+* Erroneous summary-fc-solve output:
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/B$ ./summary-fc-solve $(seq 1592 1600) -- --method random-dfs -to '[0123456789]' -sp r:tf -opt -opt-to '0123456789ABCDE' -seed 24 -mi 10000
+1592 = Verdict: Solved ; Iters: 305 ; Length: 153
+1593 = Verdict: Solved ; Iters: 2678 ; Length: 147
+1594 = Verdict: Solved ; Iters: 459 ; Length: 160
+1595 = Verdict: Solved ; Iters: 2928 ; Length: 138
+1596 = Verdict: Solved ; Iters: 503 ; Length: 172
+1597 = Verdict: Solved ; Iters: 173 ; Length: 143
+1598 = Verdict: Solved ; Iters: 361 ; Length: 136
+1599 = Verdict: Solved ; Iters: 7809 ; Length: 172
+1600 = Verdict: Solved ; Iters: 193 ; Length: 137
+shlomif[fcs]:$trunk/fc-solve/B$ ./summary-fc-solve $(seq 1591 1600) -- --method random-dfs -to '[0123456789]' -sp r:tf -opt -opt-to '0123456789ABCDE' -seed 24 -mi 10000
+1591 = Verdict: Intractable ; Iters: 10000 ; Length: -1
+1592 = Verdict: Unsolved ; Iters: 223 ; Length: -1
+1593 = Verdict: Unsolved ; Iters: 2598 ; Length: -1
+1594 = Verdict: Unsolved ; Iters: 367 ; Length: -1
+1595 = Verdict: Unsolved ; Iters: 2852 ; Length: -1
+1596 = Verdict: Unsolved ; Iters: 401 ; Length: -1
+1597 = Verdict: Unsolved ; Iters: 93 ; Length: -1
+1598 = Verdict: Unsolved ; Iters: 285 ; Length: -1
+1599 = Verdict: Unsolved ; Iters: 7691 ; Length: -1
+1600 = Verdict: Unsolved ; Iters: 119 ; Length: -1
+shlomif[fcs]:$trunk/fc-solve/B$
+--------------------------------------------------------
+
+“Verdict: Unsolved” should never appear because all these games can be solved
+by the scan, but may be intaractable.
+
 Non-pressing
 ------------
 
