@@ -724,6 +724,15 @@ static GCC_INLINE void fc_solve_free_instance_soft_thread_callback(
 #endif
 }
 
+static GCC_INLINE void instance_free_solution_moves(fc_solve_instance_t * const instance)
+{
+    if (instance->solution_moves.moves)
+    {
+        fcs_move_stack_static_destroy(instance->solution_moves);
+        instance->solution_moves.moves = NULL;
+    }
+}
+
 static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instance)
 {
     fc_solve_foreach_soft_thread(instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
@@ -754,12 +763,9 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
         fc_solve_free_tests_order( &(instance->opt_tests_order) );
     }
 
-    if (instance->solution_moves.moves)
-    {
-        fcs_move_stack_static_destroy(instance->solution_moves);
-        instance->solution_moves.moves = NULL;
-    }
+    instance_free_solution_moves(instance);
 }
+
 
 static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
     fc_solve_hard_thread_t * const hard_thread
@@ -804,15 +810,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
 )
 {
     fc_solve_finish_instance(instance);
-
-    /* TODO : This duplicate piece of code appears several times.
-     * Extract a method. */
-    if (instance->solution_moves.moves)
-    {
-        fcs_move_stack_static_destroy(instance->solution_moves);
-        instance->solution_moves.moves = NULL;
-    }
-    /* END TODO */
+    instance_free_solution_moves(instance);
 
     instance->i__num_checked_states = 0;
 

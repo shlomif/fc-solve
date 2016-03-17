@@ -933,13 +933,8 @@ static void trace_flare_solution(
         &(instance->solution_moves),
         &(flare->moves_seq)
     );
+    instance_free_solution_moves(instance);
     flare->next_move = 0;
-    if (instance->solution_moves.moves)
-    {
-        fcs_move_stack_static_destroy(instance->solution_moves);
-        instance->solution_moves.moves = NULL;
-    }
-
     flare->obj_stats.num_checked_states = flare->obj.i__num_checked_states;
     flare->obj_stats.num_states_in_collection = flare->obj.num_states_in_collection;
 
