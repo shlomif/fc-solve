@@ -445,3 +445,40 @@ that due to the nature of the game, it may be
 some layouts, but hopefully the chance of this risk can be minimised
 with the more advanced searches.
 </p>
+
+<h3 id="is_fc_solve_written_in_perl">Is Freecell Solver written in Perl?</h3>
+
+<p>
+For some reason, some people assume that I (= Shlomi Fish) wrote Freecell
+Solver in Perl. That may stem from the fact that I've written a lot of
+Perl 5 code (see <a href="http://perlresume.org/shlomif">my “Perl Résumé”</a>
+over at perlresume.org), but it is not, in essence, the case for Freecell
+Solver.
+</p>
+
+<p>
+In fact, the core C libfreecell-solver library, some of the command line
+executables, and some other code, is written in
+<a href="#which_prog_lang">the GNU99 version of the C programming language</a>,
+and does not require the Perl runtime to be used.
+</p>
+
+<p>
+It is true that the preliminary version of Freecell Solver (that was written
+before the first “0.2” release and that can be found
+<a href="https://github.com/shlomif/fc-solve/tree/master/nostalgia/perl">in
+the “nostalgia” directory</a> of the version control system) was written
+in Perl, but that was quickly rewritten in C. The original reason for the
+rewrite was that the Perl version ran too slowly, but part of the problem was
+the fact that it was poorly coded, rather than Perl’s fault.
+</p>
+
+<p>
+I've kept the code written in C after version 0.2 which was written in C,
+and have preferred to keep it in C, for performance reasons. Porting a different
+solver I wrote - for Black Hole Solitaire - from its initial Perl version
+to C - made it roughly
+<a href="http://permalink.gmane.org/gmane.culture.hackers.israel/2415">24
+times faster</a> and I naturally find a 24 factor performance decrease
+unacceptable.
+</p>

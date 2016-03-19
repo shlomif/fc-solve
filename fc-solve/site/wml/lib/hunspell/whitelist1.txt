@@ -350,6 +350,7 @@ Refactored
 Refactoring
 Risko
 RunIndef
+Résumé
 S1
 S2
 SCons
@@ -675,6 +676,7 @@ patsolve-shlomif-3
 pcc
 pdfs
 perl
+perlresume
 pi-make-microsoft-freecell-board
 pkg-config
 pkill
