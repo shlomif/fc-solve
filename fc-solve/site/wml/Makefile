@@ -145,7 +145,7 @@ JSMIN = ./bin/jsmin
 $(JSMIN): lib/jsmin/jsmin.c
 	gcc -O3 -o $@ $<
 
-MULTI_YUI = ./scripts/Run-YUI-Compressor
+MULTI_YUI = ./bin/Run-YUI-Compressor
 
 $(DEST_LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS) $(JSMIN)
 	$(JSMIN) < $(LIBFREECELL_SOLVER_JS) > $(DEST_LIBFREECELL_SOLVER_JS)
