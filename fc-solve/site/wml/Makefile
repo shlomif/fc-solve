@@ -140,7 +140,7 @@ $(LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA)
 clean_js:
 	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.js $(LIBFREECELL_SOLVER_JS_DIR)/*.bc
 
-JSMIN = ./scripts/jsmin
+JSMIN = ./bin/jsmin
 
 $(JSMIN): lib/jsmin/jsmin.c
 	gcc -O3 -o $@ $<
