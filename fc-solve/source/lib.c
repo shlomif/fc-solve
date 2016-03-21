@@ -41,7 +41,9 @@
 #include "fcs_user.h"
 #include "move_funcs_order.h"
 #include "fcs_user_internal.h"
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
 #include "fc_pro_iface_pos.h"
+#endif
 
 #include "unused.h"
 #include "bool.h"
@@ -80,7 +82,9 @@ typedef struct
     char name[FCS_MAX_FLARE_NAME_LEN];
     int next_move;
     fcs_moves_sequence_t moves_seq;
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     fcs_moves_processed_t fc_pro_moves;
+#endif
     fcs_stats_t obj_stats;
     fcs_bool_t was_solution_traced;
     fcs_state_locs_struct_t trace_solution_state_locs;
@@ -93,11 +97,13 @@ typedef enum
     FLARES_PLAN_CHECKPOINT,
 } flares_plan_type_t;
 
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
 typedef enum
 {
     FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN,
     FLARES_CHOICE_FCPRO_SOLUTION_LEN
 } flares_choice_type_t;
+#endif
 
 typedef struct
 {
@@ -173,7 +179,9 @@ typedef struct
 #endif
     freecell_solver_user_long_iter_handler_t long_iter_handler;
     void * iter_handler_context;
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     flares_choice_type_t flares_choice;
+#endif
     double flares_iters_factor;
 
     fc_solve_soft_thread_t * soft_thread;
@@ -250,7 +258,9 @@ static void user_initialize(
     user->state_string_copy = NULL;
     user->iterations_board_started_at = calc_initial_stats_t();
     user->all_instances_were_suspended = TRUE;
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     user->flares_choice = FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN;
+#endif
     user->flares_iters_factor = 1.0;
 
     user->error_string = NULL;
@@ -806,7 +816,9 @@ static void recycle_instance(
 
         flare = &(instance_item->flares[flare_idx]);
 
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
         fc_solve_moves_processed_free(&(flare->fc_pro_moves));
+#endif
 
         if (flare->ret_code != FCS_STATE_NOT_BEGAN_YET)
         {
@@ -948,9 +960,13 @@ static int get_flare_move_count(
 )
 {
     trace_flare_solution(user, flare);
+#define RET() return flare->moves_seq.num_moves
+#ifdef FCS_WITHOUT_FC_PRO_MOVES_COUNT
+    RET();
+#else
     if (user->flares_choice == FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN)
     {
-        return flare->moves_seq.num_moves;
+        RET();
     }
     else
     {
@@ -970,6 +986,9 @@ static int get_flare_move_count(
 
         return fc_solve_moves_processed_get_moves_left(&(flare->fc_pro_moves));
     }
+#endif
+
+#undef RET
 }
 
 static GCC_INLINE fcs_instance_item_t * get_current_instance_item(
@@ -1412,7 +1431,9 @@ static void user_free_resources(
 
         flare->name[0] = '\0';
 
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
         fc_solve_moves_processed_free(&(flare->fc_pro_moves));
+#endif
 
         if (flare->moves_seq.moves)
         {
@@ -2581,7 +2602,9 @@ static int user_next_flare(fcs_user_t * const user)
     flare->moves_seq.moves = NULL;
 
     flare->name[0] = '\0';
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     flare->fc_pro_moves.moves = NULL;
+#endif
     flare->instance_is_ready = TRUE;
     flare->obj_stats = calc_initial_stats_t();
 
@@ -2716,6 +2739,7 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
     const char * const new_flares_choice_string
 )
 {
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (!strcmp(new_flares_choice_string, "fc_solve"))
@@ -2730,7 +2754,7 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
     {
         return -1;
     }
-
+#endif
     return 0;
 }
 
