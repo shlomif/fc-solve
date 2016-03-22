@@ -53,6 +53,16 @@ static GCC_INLINE const fcs_bool_t string_starts_with(
         ;
 }
 
+static GCC_INLINE const char * const try_str_prefix(
+    const char * const str,
+    const char * const prefix
+)
+{
+    register const size_t len = strlen(prefix);
+
+    return (strncmp(str, prefix, len) ? NULL : str+len);
+}
+
 #ifdef __cplusplus
 };
 #endif

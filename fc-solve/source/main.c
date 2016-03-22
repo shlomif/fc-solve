@@ -36,6 +36,7 @@
 #include "fcs_cl.h"
 #include "unused.h"
 #include "bool.h"
+#include "str_utils.h"
 
 #ifdef FCS_TRACE_MEM
 #include "portable_time.h"
@@ -406,7 +407,7 @@ static int cmd_line_callback(
     )
 {
     fc_solve_display_information_context_t * dc;
-    const char * arg_str;
+    const char * arg_str, * s;
 
     *num_to_skip = 0;
 
@@ -433,9 +434,9 @@ static int cmd_line_callback(
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
-    else if (!strncmp(arg_str, "--help-", 7))
+    else if ((s = try_str_prefix(arg_str, "--help-")))
     {
-        print_help_string(arg_str+7);
+        print_help_string(s);
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }

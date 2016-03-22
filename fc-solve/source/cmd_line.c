@@ -53,6 +53,7 @@
 #include "prefix.h"
 #include "inline.h"
 #include "bool.h"
+#include "str_utils.h"
 
 #include "cmd_line_enum.h"
 
@@ -180,7 +181,8 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * const a
             {
                 break;
             }
-            if (!strncmp(line, "dir=", 4))
+            const char * s;
+            if ((s = try_str_prefix(line, "dir=")))
             {
                 nullify_newline(line);
 
@@ -190,13 +192,11 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * const a
                 }
 #ifdef _WIN32
                 {
-                    char * s = line+4;
-                    const char * const var_prefix = "${EXE_DIRNAME}";
-                    const int var_prefix_len = strlen(var_prefix);
 #if 0
 #define MYDEBUG
 #endif
-                    if (! strncmp(s, var_prefix, var_prefix_len))
+                    if ((const char * const after_prefix =
+                            try_str_prefix(s, "${EXE_DIRNAME}")))
                     {
 #ifdef MYDEBUG
                         fprintf(stderr, "Qlokoknh windows_exe_dir=<<%s>>\n", windows_exe_dir);
@@ -204,7 +204,7 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * const a
                         opened_files_dir = malloc(strlen(s) + strlen(windows_exe_dir) + 100);
                         sprintf(
                             opened_files_dir, "%s%s",
-                            windows_exe_dir, s+var_prefix_len
+                            windows_exe_dir, after_prefix
                         );
                     }
                     else
@@ -213,22 +213,22 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * const a
                     }
                 }
 #else
-                opened_files_dir = strdup(line+4);
+                opened_files_dir = strdup(s);
 #endif
             }
-            else if (!strncmp(line, "name=", 5))
+            else if ((s = try_str_prefix(line, "name=")))
             {
                 nullify_newline(line);
-                if (!strcmp(line+5, preset_name))
+                if (!strcmp(s, preset_name))
                 {
                     read_next_preset = TRUE;
                 }
             }
-            else if (!strncmp(line, "command=", 8))
+            else if ((s = try_str_prefix(line, "command=")))
             {
                 if (read_next_preset)
                 {
-                    *args_man = fc_solve_args_man_chop(line+8);
+                    *args_man = fc_solve_args_man_chop(s);
 #if 0
                     fprintf(stderr, "man_chop for <<<%s>>>\n", line);
                     fflush(stderr);
