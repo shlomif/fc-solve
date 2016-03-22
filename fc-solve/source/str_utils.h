@@ -22,7 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * alloc_wrap.h - convenient wrappers for malloc(), realloc(), etc.
+ * str_utils.h - string utilities.
  */
 #ifndef FC_SOLVE__STR_UTILS_H
 #define FC_SOLVE__STR_UTILS_H
