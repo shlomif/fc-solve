@@ -114,9 +114,9 @@ typedef struct
 
 typedef struct
 {
-    int num_flares;
-    fcs_flare_item_t * flares, * minimal_flare;
+    fcs_flare_item_t * flares, * end_of_flares, * minimal_flare;
     flares_plan_item * plan;
+    int num_flares;
     int num_plan_items;
     int current_plan_item_idx;
     int all_plan_items_finished_so_far;
@@ -209,14 +209,16 @@ static void iter_handler_wrapper(
     fcs_int_limit_t parent_iter_num
     );
 
+#define INSTANCE_ITEM_FLARES_LOOP_START() \
+        const fcs_flare_item_t * const end_of_flares = instance_item->end_of_flares; \
+        for (fcs_flare_item_t * flare = instance_item->flares; flare < end_of_flares ; flare++) \
+        {      \
+
 #define FLARES_LOOP_START() \
-    for(int user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++) \
+    for (int user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++) \
     { \
         fcs_instance_item_t * const instance_item = &(user->instances_list[user_inst_idx]); \
-                  \
-        for(int flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++) \
-        {      \
-            fcs_flare_item_t * const flare = &(instance_item->flares[flare_idx]); \
+        INSTANCE_ITEM_FLARES_LOOP_START()
 
 
 #define FLARES_LOOP_END_FLARES() \
@@ -565,7 +567,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
         {
             continue;
         }
-        const typeof(instance_item->flares) const end_of_flares = instance_item->flares + instance_item->num_flares;
+        const typeof(instance_item->end_of_flares) const end_of_flares = instance_item->end_of_flares;
 
         /* If the plan string is NULL or empty, then set the plan
          * to run only the first flare indefinitely. (And then have
@@ -804,10 +806,7 @@ static void recycle_instance(
 {
     fcs_instance_item_t * const instance_item = &(user->instances_list[i]);
 
-    for(int flare_idx = 0; flare_idx < instance_item->num_flares ; flare_idx++)
-    {
-        fcs_flare_item_t * const flare = &(instance_item->flares[flare_idx]);
-
+    INSTANCE_ITEM_FLARES_LOOP_START()
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
         fc_solve_moves_processed_free(&(flare->fc_pro_moves));
 #endif
@@ -834,7 +833,7 @@ static void recycle_instance(
         }
 
         flare->obj_stats = calc_initial_stats_t();
-    }
+    FLARES_LOOP_END_FLARES()
 
     instance_item->current_plan_item_idx = 0;
     instance_item->minimal_flare = NULL;
@@ -2355,7 +2354,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
 
     fcs_instance_item_t * const instance_item = get_current_instance_item(user);
 
-    fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->num_flares-1]);
+    fcs_flare_item_t * const flare = instance_item->end_of_flares - 1;
 
     strncpy(flare->name, name, COUNT(flare->name));
     flare->name[COUNT(flare->name)-1] = '\0';
@@ -2522,8 +2521,7 @@ static int user_next_flare(fcs_user_t * const user)
 
     instance_item->flares =
         SREALLOC( instance_item->flares, ++(instance_item->num_flares) );
-
-    fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->num_flares-1]);
+    fcs_flare_item_t * const flare = ((instance_item->end_of_flares = instance_item->flares + instance_item->num_flares) - 1);
     instance_item->limit = flare->limit = -1;
     fc_solve_instance_t * const instance = &(flare->obj);
 
