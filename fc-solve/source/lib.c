@@ -527,6 +527,24 @@ static GCC_INLINE const flares_plan_type_t add_run_indef_to_plan(
             );
 }
 
+static GCC_INLINE int find_flare(
+    fcs_instance_item_t * const instance_item,
+    const int num_flares,
+    const char * const name,
+    const size_t name_len)
+{
+
+    const typeof (instance_item->flares) flares = instance_item->flares;
+    for (int flare_idx = 0; flare_idx < num_flares; flare_idx++)
+    {
+        if (!strncmp(flares[flare_idx].name, name, name_len))
+        {
+            return flare_idx;
+        }
+    }
+    return -1;
+}
+
 static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t * const user,
     int * const instance_list_index,
@@ -538,6 +556,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
         *instance_list_index = user_inst_idx;
 
         fcs_instance_item_t * const instance_item = &(user->instances_list[user_inst_idx]);
+        const typeof(instance_item->num_flares) num_flares = instance_item->num_flares;
 
         if (instance_item->flares_plan_compiled)
         {
@@ -569,7 +588,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
         /* Tough luck - gotta parse the string. ;-) */
         {
-            char * item_start, * item_end, * cmd_end;
+            const char * item_start, * cmd_end, * item_end;
             flares_plan_type_t last_item_type;
 
             if (instance_item->plan)
@@ -594,16 +613,12 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
                 if (string_starts_with(item_start, "Run", cmd_end))
                 {
-                    char * at_sign, * after_at_sign;
-                    int count_iters;
-                    fcs_bool_t found_flare;
-                    int flare_idx;
 
                     /* It's a Run item - handle it. */
                     cmd_end++;
-                    count_iters = atoi(cmd_end);
+                    const int count_iters = atoi(cmd_end);
 
-                    at_sign = cmd_end;
+                    const char * at_sign = cmd_end;
 
                     while ((*at_sign) && isdigit(*at_sign))
                     {
@@ -616,7 +631,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
                     }
-                    after_at_sign = at_sign+1;
+                    const char * const after_at_sign = at_sign+1;
 
                     /*
                      * Position item_end at the end of item (designated by ",")
@@ -628,19 +643,9 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                         item_end = after_at_sign+strlen(after_at_sign);
                     }
 
-                    found_flare = 0;
-                    for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++)
-                    {
-                        fcs_flare_item_t * const flare = &(instance_item->flares[flare_idx]);
+                    const int flare_idx = find_flare(instance_item, num_flares, after_at_sign, item_end-after_at_sign);
 
-                        if (!strncmp(flare->name, after_at_sign, item_end-after_at_sign))
-                        {
-                            found_flare = 1;
-                            break;
-                        }
-                    }
-
-                    if (! found_flare)
+                    if (flare_idx < 0)
                     {
                         /* TODO : write what the flare name is.  */
                         *error_string = strdup("Unknown flare name.");
@@ -666,8 +671,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 }
                 else if (string_starts_with(item_start, "RunIndef", cmd_end))
                 {
-                    fcs_bool_t found_flare;
-                    int flare_idx;
 
                     cmd_end++;
                     item_end = strchr(cmd_end, ',');
@@ -679,19 +682,8 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     }
                     item_end = cmd_end+strlen(cmd_end);
 
-                    found_flare = FALSE;
-                    for(flare_idx = 0; flare_idx < instance_item->num_flares; flare_idx++)
-                    {
-                        fcs_flare_item_t * const flare = &(instance_item->flares[flare_idx]);
-
-                        if (!strncmp(flare->name, cmd_end, item_end-cmd_end))
-                        {
-                            found_flare = TRUE;
-                            break;
-                        }
-                    }
-
-                    if (! found_flare)
+                    const int flare_idx = find_flare(instance_item, num_flares, cmd_end, item_end-cmd_end);
+                    if (flare_idx < 0)
                     {
                         /* TODO : write what the flare name is.  */
                         *error_string = strdup("Unknown flare name in RunIndef command.");
