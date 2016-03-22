@@ -531,7 +531,7 @@ static GCC_INLINE const flares_plan_type_t add_run_indef_to_plan(
 
 static GCC_INLINE fcs_flare_item_t * find_flare(
     fcs_instance_item_t * const instance_item,
-    const int num_flares,
+    const fcs_flare_item_t * const end_of_flares,
     const char * const proto_name,
     const size_t name_len)
 {
@@ -539,12 +539,11 @@ static GCC_INLINE fcs_flare_item_t * find_flare(
     strncpy(name, proto_name, name_len);
     name[name_len] = '\0';
 
-    const typeof (instance_item->flares) flares = instance_item->flares;
-    for (int flare_idx = 0; flare_idx < num_flares; flare_idx++)
+    for (typeof (instance_item->flares) flare = instance_item->flares; flare < end_of_flares; flare++)
     {
-        if (!strcmp(flares[flare_idx].name, name))
+        if (!strcmp(flare->name, name))
         {
-            return &(flares[flare_idx]);
+            return flare;
         }
     }
     return NULL;
@@ -562,12 +561,11 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
         *instance_list_index = user_inst_idx;
 
         fcs_instance_item_t * const instance_item = &(user->instances_list[user_inst_idx]);
-        const typeof(instance_item->num_flares) num_flares = instance_item->num_flares;
-
         if (instance_item->flares_plan_compiled)
         {
             continue;
         }
+        const typeof(instance_item->flares) const end_of_flares = instance_item->flares + instance_item->num_flares;
 
         /* If the plan string is NULL or empty, then set the plan
          * to run only the first flare indefinitely. (And then have
@@ -649,7 +647,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                         item_end = after_at_sign+strlen(after_at_sign);
                     }
 
-                    fcs_flare_item_t * const flare = find_flare(instance_item, num_flares, after_at_sign, item_end-after_at_sign);
+                    fcs_flare_item_t * const flare = find_flare(instance_item, end_of_flares, after_at_sign, item_end-after_at_sign);
 
                     if (! flare)
                     {
@@ -688,7 +686,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     }
                     item_end = cmd_end+strlen(cmd_end);
 
-                    fcs_flare_item_t * const flare = find_flare(instance_item, num_flares, cmd_end, item_end-cmd_end);
+                    fcs_flare_item_t * const flare = find_flare(instance_item, end_of_flares, cmd_end, item_end-cmd_end);
                     if (!flare)
                     {
                         /* TODO : write what the flare name is.  */
