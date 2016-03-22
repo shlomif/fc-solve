@@ -551,6 +551,8 @@ static GCC_INLINE int find_flare(
     return -1;
 }
 
+#define SET_ERROR(s) strcpy(user->error_string, s)
+
 static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t * const user,
     int * const instance_list_index
@@ -611,7 +613,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
                 if (! cmd_end)
                 {
-                    strcpy(user->error_string, "Could not find a \":\" for a command.");
+                    SET_ERROR ("Could not find a \":\" for a command.");
                     *instance_list_index = user_inst_idx;
                     return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
                 }
@@ -632,7 +634,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
                     if (*at_sign != '@')
                     {
-                        strcpy(user->error_string, "Could not find a \"@\" directly after the digits after the 'Run:' command.");
+                        SET_ERROR ("Could not find a \"@\" directly after the digits after the 'Run:' command.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
                     }
@@ -653,7 +655,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     if (flare_idx < 0)
                     {
                         /* TODO : write what the flare name is.  */
-                        strcpy(user->error_string, "Unknown flare name.");
+                        SET_ERROR ("Unknown flare name.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
@@ -666,7 +668,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     item_end = cmd_end+1;
                     if (! (((*item_end) == ',') || (! (*item_end))))
                     {
-                        strcpy(user->error_string, "Junk after CP (Checkpoint) command.");
+                        SET_ERROR ("Junk after CP (Checkpoint) command.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
                     }
@@ -681,7 +683,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     item_end = strchr(cmd_end, ',');
                     if (item_end)
                     {
-                        strcpy(user->error_string, "Junk after last RunIndef command. Must be the final command.");
+                        SET_ERROR ("Junk after last RunIndef command. Must be the final command.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
                     }
@@ -691,7 +693,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     if (flare_idx < 0)
                     {
                         /* TODO : write what the flare name is.  */
-                        strcpy(user->error_string, "Unknown flare name in RunIndef command.");
+                        SET_ERROR ("Unknown flare name in RunIndef command.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
@@ -701,7 +703,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 else
                 {
                     /* TODO : Write the unknown command in the error string. */
-                    strcpy(user->error_string, "Unknown command.");
+                    SET_ERROR ("Unknown command.");
                     *instance_list_index = user_inst_idx;
                     return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
                 }
