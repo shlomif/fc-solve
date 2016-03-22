@@ -231,6 +231,11 @@ static void iter_handler_wrapper(
 
 static int user_next_instance(fcs_user_t * user);
 
+static GCC_INLINE void clear_error(fcs_user_t * const user)
+{
+    user->error_string[0] = '\0';
+}
+
 static void user_initialize(
         fcs_user_t * const user
         )
@@ -264,7 +269,7 @@ static void user_initialize(
 #endif
     user->flares_iters_factor = 1.0;
 
-    user->error_string[0] = '\0';
+    clear_error(user);
 
     user_next_instance(user);
 
@@ -714,7 +719,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     }
 
     *instance_list_index = -1;
-    user->error_string[0] = '\0';
+    clear_error(user);
 
     return FCS_COMPILE_FLARES_RET_OK;
 }
@@ -1445,8 +1450,6 @@ static void user_free_resources(
         free(user->state_string_copy);
         user->state_string_copy = NULL;
     }
-
-    user->error_string[0] = '\0';
 
     fc_solve_meta_compact_allocator_finish(&(user->meta_alloc));
 }
