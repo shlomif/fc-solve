@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
@@ -129,6 +129,48 @@ my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-p
         'No deal is unsolved, because that makes no sense.',
     );
 }
+
+{
+    my $status;
+
+    trap
+    {
+        $status = system(
+            $fc_solve_exe,
+qw#
+--flare-name prefix_of_a_long_name --method soft-dfs -to 0123456789 -sp r:tf -opt -opt-to 0123456789ABCDE
+-nf --flare-name another_long_name --method soft-dfs -to 0123467 -sp r:tf -opt -opt-to 0123456789ABCDE
+--flares-plan
+# , 'Run:100@prefix,Run:200@another_long_name',
+            File::Spec->catfile(
+                $ENV{FCS_PATH}, '24.board',
+            ),
+        );
+    };
+
+    my $needle = q#Flares Plan: Unknown flare name.#;
+
+    # TEST
+    like (
+        $trap->stderr(),
+        qr/^\Q$needle\E$/ms,
+        q#Cannot use a prefix of a flare's name as the name in the flares plan.#,
+    );
+
+    # TEST
+    ok (
+        scalar ($status != 0),
+        'Exited with a non-zero exit code.',
+    );
+
+    # TEST
+    is (
+        $trap->stdout(),
+        '',
+        'Empty standard output on flares plan error.'
+    );
+}
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2008 Shlomi Fish

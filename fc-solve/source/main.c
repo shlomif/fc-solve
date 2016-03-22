@@ -612,6 +612,12 @@ static freecell_solver_str_t known_parameters[] = {
 
 #define USER_STATE_SIZE 1024
 
+typedef enum
+{
+    SUCCESS = 0,
+    ERROR = -1,
+} exit_code_t;
+
 int main(int argc, char * argv[])
 {
     FILE * file;
@@ -701,6 +707,7 @@ int main(int argc, char * argv[])
     int ret = freecell_solver_user_solve_board(instance, user_state);
 #endif
 
+    exit_code_t exit_code = SUCCESS;
     switch (ret)
     {
         case FCS_STATE_INVALID_STATE:
@@ -712,12 +719,14 @@ int main(int argc, char * argv[])
             error_string
             FC_SOLVE__PASS_T(debug_context.display_10_as_t)
         );
-        printf("%s\n", error_string);
+        fprintf(stderr, "%s\n", error_string);
+        exit_code = ERROR;
         }
         break;
 
         case FCS_STATE_FLARES_PLAN_ERROR:
-        printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
+        fprintf(stderr, "Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
+        exit_code = ERROR;
         break;
 
         default:
@@ -756,6 +765,6 @@ int main(int argc, char * argv[])
 
     freecell_solver_user_free(instance);
 
-    return 0;
+    return exit_code;
 }
 

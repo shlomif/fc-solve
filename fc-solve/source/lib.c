@@ -530,14 +530,17 @@ static GCC_INLINE const flares_plan_type_t add_run_indef_to_plan(
 static GCC_INLINE int find_flare(
     fcs_instance_item_t * const instance_item,
     const int num_flares,
-    const char * const name,
+    const char * const proto_name,
     const size_t name_len)
 {
+    char name[name_len+1];
+    strncpy(name, proto_name, name_len);
+    name[name_len] = '\0';
 
     const typeof (instance_item->flares) flares = instance_item->flares;
     for (int flare_idx = 0; flare_idx < num_flares; flare_idx++)
     {
-        if (!strncmp(flares[flare_idx].name, name, name_len))
+        if (!strcmp(flares[flare_idx].name, name))
         {
             return flare_idx;
         }
