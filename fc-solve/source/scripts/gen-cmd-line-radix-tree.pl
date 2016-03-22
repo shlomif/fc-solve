@@ -136,15 +136,29 @@ EOF
             }
             else
             {
-                my $func = $has_kids ? 'strncmp' : 'strcmp';
-                my $func_len = $has_kids ? ', '.length($key) : '';
-                return "{\nif (!$func(p, \"$key\"$func_len)) {\n"
-                    . ($has_kids
-                        ? ("p += " . length($key) . ";\n" . $render->($node->{$key}))
-                        : "opt = $node->{$key};\n"
-                    )
-                    . "\n}\n}\n"
-                    ;
+                if ($has_kids)
+                {
+                    return <<"EOF";
+{
+    if ((p_rest = try_str_prefix(p, "$key")))
+    {
+        p = p_rest;
+        @{[scalar $render->($node->{$key})]}
+    }
+}
+EOF
+                }
+                else
+                {
+                    return <<"EOF";
+{
+    if (!strcmp(p, "$key"))
+    {
+        opt = $node->{$key};
+    }
+}
+EOF
+                }
             }
         }
         else
