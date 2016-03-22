@@ -2350,11 +2350,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
     const freecell_solver_str_t name
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    fcs_instance_item_t * const instance_item = get_current_instance_item(user);
-
-    fcs_flare_item_t * const flare = instance_item->end_of_flares - 1;
+    fcs_flare_item_t * const flare = get_current_instance_item((fcs_user_t *)api_instance)->end_of_flares - 1;
 
     strncpy(flare->name, name, COUNT(flare->name));
     flare->name[COUNT(flare->name)-1] = '\0';
