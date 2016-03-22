@@ -186,7 +186,8 @@ typedef struct
     fc_solve_soft_thread_t * soft_thread;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    char * state_string_copy;
+#define MAX_STATE_STRING_COPY_LEN 2048
+    char state_string_copy[MAX_STATE_STRING_COPY_LEN];
 
 #ifndef FCS_FREECELL_ONLY
     fcs_preset_t common_preset;
@@ -260,7 +261,6 @@ static void user_initialize(
 #endif
     user->current_iterations_limit = -1;
 
-    user->state_string_copy = NULL;
     user->iterations_board_started_at = calc_initial_stats_t();
     user->all_instances_were_suspended = TRUE;
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
@@ -726,20 +726,24 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 /*
  * Add a trailing newline to the string if it does not exist.
  */
-#define MY_MARGIN 2
+#define MY_MARGIN 3
 #define TRAILING_CHAR '\n'
-static GCC_INLINE char * duplicate_string_while_adding_a_trailing_newline(
+static GCC_INLINE fcs_bool_t duplicate_string_while_adding_a_trailing_newline(
+    char * const s,
     const char * const orig_str
 )
 {
     const int len = strlen(orig_str);
-    char * const s = malloc(len + MY_MARGIN);
     /*
      * If orig_str is the empty string then there is no
      * penultimate character.
      * */
     if (len)
     {
+        if (len >= MAX_STATE_STRING_COPY_LEN - MY_MARGIN)
+        {
+            return FALSE;
+        }
         strcpy (s, orig_str);
         char * s_end = s + len - 1;
         if ((*s_end) != TRAILING_CHAR)
@@ -752,7 +756,7 @@ static GCC_INLINE char * duplicate_string_while_adding_a_trailing_newline(
     {
         strcpy(s, "\n");
     }
-    return s;
+    return TRUE;
 }
 #undef TRAILING_CHAR
 #undef MY_MARGIN
@@ -764,8 +768,10 @@ int DLLEXPORT freecell_solver_user_solve_board(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    user->state_string_copy =
-        duplicate_string_while_adding_a_trailing_newline(state_as_string);
+    if (! duplicate_string_while_adding_a_trailing_newline(user->state_string_copy, state_as_string))
+    {
+        return FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
+    }
 
     user->current_instance_idx = 0;
 
@@ -1427,13 +1433,6 @@ static void user_free_resources(
     FLARES_LOOP_END_INSTANCES()
 
     free(user->instances_list);
-
-    if (user->state_string_copy != NULL)
-    {
-        free(user->state_string_copy);
-        user->state_string_copy = NULL;
-    }
-
     fc_solve_meta_compact_allocator_finish(&(user->meta_alloc));
 }
 
@@ -2424,11 +2423,6 @@ void DLLEXPORT freecell_solver_user_recycle(
     user->current_iterations_limit = -1;
 #endif
     user->iterations_board_started_at = calc_initial_stats_t();
-    if (user->state_string_copy != NULL)
-    {
-        free(user->state_string_copy);
-        user->state_string_copy = NULL;
-    }
 }
 
 int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
