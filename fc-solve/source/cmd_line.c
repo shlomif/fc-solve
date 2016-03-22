@@ -2017,6 +2017,7 @@ break;
         {
             PROCESS_OPT_ARG() ;
 
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
             if (freecell_solver_user_set_flares_choice(
                 instance,
                 (*arg)
@@ -2029,6 +2030,7 @@ break;
 
                 RET_ERROR_IN_ARG() ;
             }
+#endif
         }
         break;
 
