@@ -428,15 +428,12 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
         *error_string = strdup(static_error_string);
     }
 
+    for (int further_depth_idx = depth_idx+1; further_depth_idx < user->soft_thread->by_depth_tests_order.num ; further_depth_idx++)
     {
-        int further_depth_idx;
-        for (further_depth_idx = depth_idx+1; further_depth_idx < user->soft_thread->by_depth_tests_order.num ; further_depth_idx++)
-        {
-            fc_solve_free_tests_order(&(
+        fc_solve_free_tests_order(&(
                 user->soft_thread->by_depth_tests_order
                 .by_depth_tests[further_depth_idx].tests_order
-            ));
-        }
+        ));
     }
 
     user->soft_thread->by_depth_tests_order.by_depth_tests =
