@@ -115,11 +115,10 @@ typedef struct
 typedef struct
 {
     int num_flares;
-    fcs_flare_item_t * flares;
+    fcs_flare_item_t * flares, * minimal_flare;
     flares_plan_item * plan;
     int num_plan_items;
     int current_plan_item_idx;
-    int minimal_solution_flare_idx;
     int all_plan_items_finished_so_far;
     char * flares_plan_string;
     /*
@@ -836,7 +835,7 @@ static void recycle_instance(
     }
 
     instance_item->current_plan_item_idx = 0;
-    instance_item->minimal_solution_flare_idx = -1;
+    instance_item->minimal_flare = NULL;
 
     return;
 }
@@ -1044,9 +1043,9 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         if (current_plan_item->type == FLARES_PLAN_CHECKPOINT)
         {
-            if (instance_item->minimal_solution_flare_idx >= 0)
+            if (instance_item->minimal_flare)
             {
-                user->active_flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+                user->active_flare = instance_item->minimal_flare;
                 user->init_num_checked_states = user->active_flare->obj_stats;
 
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
@@ -1220,24 +1219,17 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->trace_solution_state_locs = user->state_locs;
 
             flare->was_solution_traced = FALSE;
-#define FLARE_MOVE_COUNT(idx) \
-           (get_flare_move_count( \
-               user, \
-               &(instance_item->flares[idx]) \
-           ))
             if (
-                (instance_item->minimal_solution_flare_idx < 0)
+                (! ( instance_item->minimal_flare))
                  ||
-                (
-                    FLARE_MOVE_COUNT(instance_item->minimal_solution_flare_idx)
-                    >
-                    FLARE_MOVE_COUNT(flare_idx)
+                (get_flare_move_count(user, instance_item->minimal_flare)
+                 >
+                 get_flare_move_count(user, flare)
                 )
             )
             {
-                instance_item->minimal_solution_flare_idx = flare_idx;
+                instance_item->minimal_flare = flare;
             }
-#undef FLARE_MOVE_COUNT
             ret = user->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
         }
         else if (user->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
@@ -1305,12 +1297,8 @@ static GCC_INLINE fcs_flare_item_t * const calc_moves_flare(
     fcs_user_t * const user
 )
 {
-    fcs_instance_item_t const * instance_item =
-        get_current_instance_item(user);
-    fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
-
+    fcs_flare_item_t * const flare = get_current_instance_item(user)->minimal_flare;
     trace_flare_solution(user, flare);
-
     return flare;
 }
 
@@ -2612,7 +2600,7 @@ static int user_next_instance(
         .flares_plan_string = NULL,
         .flares_plan_compiled = FALSE,
         .current_plan_item_idx = 0,
-        .minimal_solution_flare_idx = -1,
+        .minimal_flare = NULL,
         .all_plan_items_finished_so_far = 1,
     };
 
@@ -2699,19 +2687,16 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
 )
 {
     const fcs_user_t * const user = (const fcs_user_t *)api_instance;
-
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
     {
         return -2;
     }
-
-    const fcs_instance_item_t * const instance_item = get_current_instance_item(user);
-    const fcs_flare_item_t * const flare = &(instance_item->flares[instance_item->minimal_solution_flare_idx]);
+    const fcs_moves_sequence_t * const src_moves_seq = &(get_current_instance_item(user)->minimal_flare->moves_seq);
 
     moves_seq->moves = memdup(
-        flare->moves_seq.moves,
-        (sizeof(flare->moves_seq.moves[0])
-        * (moves_seq->num_moves = flare->moves_seq.num_moves))
+        src_moves_seq->moves,
+        (sizeof(src_moves_seq->moves[0])
+        * (moves_seq->num_moves = src_moves_seq->num_moves))
     );
 
     return 0;
