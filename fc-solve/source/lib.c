@@ -193,7 +193,8 @@ typedef struct
     fcs_preset_t common_preset;
 #endif
 
-    char * error_string;
+#define MAX_ERROR_STRING_LEN 160
+    char error_string[MAX_ERROR_STRING_LEN];
 
     fcs_meta_compact_allocator_t meta_alloc;
 } fcs_user_t;
@@ -263,7 +264,7 @@ static void user_initialize(
 #endif
     user->flares_iters_factor = 1.0;
 
-    user->error_string = NULL;
+    user->error_string[0] = '\0';
 
     user_next_instance(user);
 
@@ -547,8 +548,7 @@ static GCC_INLINE int find_flare(
 
 static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t * const user,
-    int * const instance_list_index,
-    char * * const error_string
+    int * const instance_list_index
     )
 {
     for (int user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++)
@@ -606,7 +606,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
                 if (! cmd_end)
                 {
-                    *error_string = strdup("Could not find a \":\" for a command.");
+                    strcpy(user->error_string, "Could not find a \":\" for a command.");
                     *instance_list_index = user_inst_idx;
                     return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
                 }
@@ -627,7 +627,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
                     if (*at_sign != '@')
                     {
-                        *error_string = strdup("Could not find a \"@\" directly after the digits after the 'Run:' command.");
+                        strcpy(user->error_string, "Could not find a \"@\" directly after the digits after the 'Run:' command.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
                     }
@@ -648,7 +648,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     if (flare_idx < 0)
                     {
                         /* TODO : write what the flare name is.  */
-                        *error_string = strdup("Unknown flare name.");
+                        strcpy(user->error_string, "Unknown flare name.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
@@ -661,7 +661,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     item_end = cmd_end+1;
                     if (! (((*item_end) == ',') || (! (*item_end))))
                     {
-                        *error_string = strdup("Junk after CP (Checkpoint) command.");
+                        strcpy(user->error_string, "Junk after CP (Checkpoint) command.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
                     }
@@ -676,7 +676,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     item_end = strchr(cmd_end, ',');
                     if (item_end)
                     {
-                        *error_string = strdup("Junk after last RunIndef command. Must be the final command.");
+                        strcpy(user->error_string, "Junk after last RunIndef command. Must be the final command.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
                     }
@@ -686,7 +686,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     if (flare_idx < 0)
                     {
                         /* TODO : write what the flare name is.  */
-                        *error_string = strdup("Unknown flare name in RunIndef command.");
+                        strcpy(user->error_string, "Unknown flare name in RunIndef command.");
                         *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
@@ -696,7 +696,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 else
                 {
                     /* TODO : Write the unknown command in the error string. */
-                    *error_string = strdup("Unknown command.");
+                    strcpy(user->error_string, "Unknown command.");
                     *instance_list_index = user_inst_idx;
                     return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
                 }
@@ -714,7 +714,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     }
 
     *instance_list_index = -1;
-    *error_string = NULL;
+    user->error_string[0] = '\0';
 
     return FCS_COMPILE_FLARES_RET_OK;
 }
@@ -758,8 +758,6 @@ int DLLEXPORT freecell_solver_user_solve_board(
     const char * const state_as_string
     )
 {
-    char * error_string;
-
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     user->state_string_copy =
@@ -768,16 +766,10 @@ int DLLEXPORT freecell_solver_user_solve_board(
     user->current_instance_idx = 0;
 
     int instance_list_index;
-    if (
-        user_compile_all_flares_plans(
-            user,
-            &instance_list_index,
-            &error_string
-        ) != FCS_COMPILE_FLARES_RET_OK
+    if ( user_compile_all_flares_plans(user, &instance_list_index)
+        != FCS_COMPILE_FLARES_RET_OK
     )
     {
-        user->error_string = error_string;
-
         return FCS_STATE_FLARES_PLAN_ERROR;
     }
 
@@ -1454,11 +1446,7 @@ static void user_free_resources(
         user->state_string_copy = NULL;
     }
 
-    if (user->error_string)
-    {
-        free(user->error_string);
-        user->error_string = NULL;
-    }
+    user->error_string[0] = '\0';
 
     fc_solve_meta_compact_allocator_finish(&(user->meta_alloc));
 }
@@ -2768,7 +2756,10 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
     char * * const error_string
     )
 {
-    return user_compile_all_flares_plans((fcs_user_t * const)api_instance, instance_list_index, error_string);
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
+    const fcs_compile_flares_ret_t ret = user_compile_all_flares_plans(user, instance_list_index);
+    *error_string = (user->error_string[0]) ? strdup(user->error_string) : NULL;
+    return ret;
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
