@@ -806,9 +806,7 @@ static void recycle_instance(
 
     for(int flare_idx = 0; flare_idx < instance_item->num_flares ; flare_idx++)
     {
-        fcs_flare_item_t * flare;
-
-        flare = &(instance_item->flares[flare_idx]);
+        fcs_flare_item_t * const flare = &(instance_item->flares[flare_idx]);
 
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
         fc_solve_moves_processed_free(&(flare->fc_pro_moves));
