@@ -1069,9 +1069,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             )
         );
 
-        const int flare_idx = current_plan_item->flare_idx;
         fcs_flare_item_t * const flare =
-            &(instance_item->flares[flare_idx]);
+            &(instance_item->flares[current_plan_item->flare_idx]);
         fc_solve_instance_t * const instance = &(flare->obj);
 
         /* TODO : For later - loop over the flares based on the flares plan. */
