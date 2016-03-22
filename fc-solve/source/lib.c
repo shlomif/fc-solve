@@ -1084,7 +1084,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         if (is_start_of_flare_solving)
         {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS)))
-            fc_solve_instance_t * const instance = &(user->active_flare->obj);
+            fc_solve_instance_t * const instance = &(flare->obj);
 #endif
 
             if (!
@@ -1139,7 +1139,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             user->trace_solution_state_locs = user->state_locs;
 
-            fc_solve_init_instance(&(user->active_flare->obj));
+            fc_solve_init_instance(&(flare->obj));
         }
 
 #define PARAMETERIZED_FIXED_LIMIT(increment) \
@@ -1173,24 +1173,24 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             if (mymin < 0)
             {
-                user->active_flare->obj.i__max_num_checked_states = -1;
-                user->active_flare->obj.effective_max_num_checked_states = FCS_INT_LIMIT_MAX;
+                flare->obj.i__max_num_checked_states = -1;
+                flare->obj.effective_max_num_checked_states = FCS_INT_LIMIT_MAX;
             }
             else
             {
-                user->active_flare->obj.i__max_num_checked_states =
-                    user->active_flare->obj.effective_max_num_checked_states =
-                    (user->active_flare->obj.i__num_checked_states + mymin - user->iterations_board_started_at.num_checked_states);
+                flare->obj.i__max_num_checked_states =
+                    flare->obj.effective_max_num_checked_states =
+                    (flare->obj.i__num_checked_states + mymin - user->iterations_board_started_at.num_checked_states);
             }
         }
 
-        user->init_num_checked_states.num_checked_states = init_num_checked_states.num_checked_states = user->active_flare->obj.i__num_checked_states;
-        user->init_num_checked_states.num_states_in_collection = init_num_checked_states.num_states_in_collection = user->active_flare->obj.num_states_in_collection;
+        user->init_num_checked_states.num_checked_states = init_num_checked_states.num_checked_states = flare->obj.i__num_checked_states;
+        user->init_num_checked_states.num_states_in_collection = init_num_checked_states.num_states_in_collection = flare->obj.num_states_in_collection;
 
         if (is_start_of_flare_solving)
         {
             fc_solve_start_instance_process_with_board(
-                &(user->active_flare->obj), &(user->state),
+                &(flare->obj), &(user->state),
                 &(user->initial_non_canonized_state)
             );
         }
@@ -1204,7 +1204,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         {
             ret = user->ret_code =
                 flare->ret_code =
-                    fc_solve_resume_instance(&(user->active_flare->obj));
+                    fc_solve_resume_instance(&(flare->obj));
             flare->instance_is_ready = FALSE;
         }
 
@@ -1213,11 +1213,11 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             user->all_instances_were_suspended = FALSE;
         }
 
-        user->active_flare->obj_stats.num_checked_states = user->active_flare->obj.i__num_checked_states;
-        user->active_flare->obj_stats.num_states_in_collection = user->active_flare->obj.num_states_in_collection;
-        user->iterations_board_started_at.num_checked_states += user->active_flare->obj_stats.num_checked_states - init_num_checked_states.num_checked_states;
-        user->iterations_board_started_at.num_states_in_collection += user->active_flare->obj_stats.num_states_in_collection - init_num_checked_states.num_states_in_collection;
-        user->init_num_checked_states = user->active_flare->obj_stats;
+        flare->obj_stats.num_checked_states = flare->obj.i__num_checked_states;
+        flare->obj_stats.num_states_in_collection = flare->obj.num_states_in_collection;
+        user->iterations_board_started_at.num_checked_states += flare->obj_stats.num_checked_states - init_num_checked_states.num_checked_states;
+        user->iterations_board_started_at.num_states_in_collection += flare->obj_stats.num_states_in_collection - init_num_checked_states.num_states_in_collection;
+        user->init_num_checked_states = flare->obj_stats;
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
@@ -1248,8 +1248,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         {
             if (was_run_now)
             {
-                fc_solve_recycle_instance(&(user->active_flare->obj));
-                user->active_flare->instance_is_ready = TRUE;
+                fc_solve_recycle_instance(&(flare->obj));
+                flare->instance_is_ready = TRUE;
             }
         }
         else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
@@ -1261,8 +1261,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             if (((user->current_iterations_limit >= 0) &&
                 (user->iterations_board_started_at.num_checked_states >=
                     user->current_iterations_limit)) ||
-                (user->active_flare->obj.num_states_in_collection >=
-                    user->active_flare->obj.effective_max_num_states_in_collection)
+                (flare->obj.num_states_in_collection >=
+                    flare->obj.effective_max_num_states_in_collection)
             )
             {
                 /* Bug fix:
@@ -1281,13 +1281,13 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * so, designate it as unsolvable.
              * */
             if ((local_limit() >= 0) &&
-                (user->active_flare->obj.i__num_checked_states >= local_limit())
+                (flare->obj.i__num_checked_states >= local_limit())
                )
             {
-                user->active_flare->obj_stats.num_checked_states =
-                    user->active_flare->obj.i__num_checked_states;
-                user->active_flare->obj_stats.num_states_in_collection =
-                    user->active_flare->obj.num_states_in_collection;
+                flare->obj_stats.num_checked_states =
+                    flare->obj.i__num_checked_states;
+                flare->obj_stats.num_states_in_collection =
+                    flare->obj.num_states_in_collection;
                 recycle_instance(user, user->current_instance_idx);
                 user->current_instance_idx++;
                 continue;
