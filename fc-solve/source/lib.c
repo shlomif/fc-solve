@@ -107,8 +107,8 @@ typedef enum
 
 typedef struct
 {
+    fcs_flare_item_t * flare;
     flares_plan_type_t type;
-    int flare_idx;
     int count_iters;
 } flares_plan_item;
 
@@ -474,17 +474,17 @@ typedef enum
 
 static GCC_INLINE const flares_plan_item create_plan_item(
     const flares_plan_type_t mytype,
-    const int flare_idx,
+    fcs_flare_item_t * const flare,
     const int count_iters
 )
 {
-    return (const flares_plan_item) {.type = mytype, .flare_idx = flare_idx, .count_iters = count_iters};
+    return (const flares_plan_item) {.type = mytype, .flare = flare, .count_iters = count_iters};
 }
 
 static GCC_INLINE const flares_plan_type_t add_to_plan(
         fcs_instance_item_t * const instance_item,
         const flares_plan_type_t mytype,
-        const int flare_idx,
+        fcs_flare_item_t * const flare,
         const int count_iters
     )
 {
@@ -493,19 +493,19 @@ static GCC_INLINE const flares_plan_type_t add_to_plan(
     instance_item->plan =
         SREALLOC( instance_item->plan, ++(instance_item->num_plan_items));
 
-    instance_item->plan[next_item] = create_plan_item(mytype, flare_idx, count_iters);
+    instance_item->plan[next_item] = create_plan_item(mytype, flare, count_iters);
 
     return mytype;
 }
 
 static GCC_INLINE const flares_plan_type_t add_count_iters_to_plan(
         fcs_instance_item_t * const instance_item,
-        const int flare_idx,
+        fcs_flare_item_t * const flare,
         const int count_iters
 )
 {
     return add_to_plan(instance_item,
-            FLARES_PLAN_RUN_COUNT_ITERS, flare_idx, count_iters
+            FLARES_PLAN_RUN_COUNT_ITERS, flare, count_iters
             );
 }
 
@@ -515,21 +515,21 @@ static GCC_INLINE const flares_plan_type_t add_checkpoint_to_plan(
     )
 {
     return add_to_plan(instance_item,
-            FLARES_PLAN_CHECKPOINT, -1, -1
+            FLARES_PLAN_CHECKPOINT, NULL, -1
             );
 }
 
 static GCC_INLINE const flares_plan_type_t add_run_indef_to_plan(
         fcs_instance_item_t * const instance_item,
-        const int flare_idx
+        fcs_flare_item_t * const flare
     )
 {
     return add_to_plan(instance_item,
-            FLARES_PLAN_RUN_INDEFINITELY, flare_idx, -1
+            FLARES_PLAN_RUN_INDEFINITELY, flare, -1
             );
 }
 
-static GCC_INLINE int find_flare(
+static GCC_INLINE fcs_flare_item_t * find_flare(
     fcs_instance_item_t * const instance_item,
     const int num_flares,
     const char * const proto_name,
@@ -544,10 +544,10 @@ static GCC_INLINE int find_flare(
     {
         if (!strcmp(flares[flare_idx].name, name))
         {
-            return flare_idx;
+            return &(flares[flare_idx]);
         }
     }
-    return -1;
+    return NULL;
 }
 
 #define SET_ERROR(s) strcpy(user->error_string, s)
@@ -585,8 +585,8 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 instance_item->num_plan_items
             );
             /* Set to the first flare. */
-            instance_item->plan[0] = create_plan_item(FLARES_PLAN_RUN_INDEFINITELY, 0, -1);
-            instance_item->plan[1] = create_plan_item(FLARES_PLAN_CHECKPOINT, -1, -1);
+            instance_item->plan[0] = create_plan_item(FLARES_PLAN_RUN_INDEFINITELY, instance_item->flares, -1);
+            instance_item->plan[1] = create_plan_item(FLARES_PLAN_CHECKPOINT, NULL, -1);
 
             instance_item->flares_plan_compiled = TRUE;
             continue;
@@ -649,9 +649,9 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                         item_end = after_at_sign+strlen(after_at_sign);
                     }
 
-                    const int flare_idx = find_flare(instance_item, num_flares, after_at_sign, item_end-after_at_sign);
+                    fcs_flare_item_t * const flare = find_flare(instance_item, num_flares, after_at_sign, item_end-after_at_sign);
 
-                    if (flare_idx < 0)
+                    if (! flare)
                     {
                         /* TODO : write what the flare name is.  */
                         SET_ERROR ("Unknown flare name.");
@@ -660,7 +660,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     }
 
                     /* TODO : free plan upon an error. */
-                    last_item_type = add_count_iters_to_plan(instance_item, flare_idx, count_iters);
+                    last_item_type = add_count_iters_to_plan(instance_item, flare, count_iters);
                 }
                 else if (string_starts_with(item_start, "CP", cmd_end))
                 {
@@ -688,8 +688,8 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     }
                     item_end = cmd_end+strlen(cmd_end);
 
-                    const int flare_idx = find_flare(instance_item, num_flares, cmd_end, item_end-cmd_end);
-                    if (flare_idx < 0)
+                    fcs_flare_item_t * const flare = find_flare(instance_item, num_flares, cmd_end, item_end-cmd_end);
+                    if (!flare)
                     {
                         /* TODO : write what the flare name is.  */
                         SET_ERROR ("Unknown flare name in RunIndef command.");
@@ -697,7 +697,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
 
-                    last_item_type = add_run_indef_to_plan(instance_item, flare_idx);
+                    last_item_type = add_run_indef_to_plan(instance_item, flare);
                 }
                 else
                 {
@@ -1069,8 +1069,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             )
         );
 
-        fcs_flare_item_t * const flare =
-            &(instance_item->flares[current_plan_item->flare_idx]);
+        fcs_flare_item_t * const flare = current_plan_item->flare;
         fc_solve_instance_t * const instance = &(flare->obj);
 
         /* TODO : For later - loop over the flares based on the flares plan. */
@@ -2785,7 +2784,8 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     const int item_idx
     )
 {
-    return get_current_instance_item((fcs_user_t * const)api_instance)->plan[item_idx].flare_idx;
+    fcs_instance_item_t * const instance_item = get_current_instance_item((fcs_user_t * const)api_instance);
+    return instance_item->plan[item_idx].flare - instance_item->flares;
 }
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
