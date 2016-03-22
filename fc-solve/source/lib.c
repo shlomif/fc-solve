@@ -532,7 +532,7 @@ static GCC_INLINE const flares_plan_type_t add_run_indef_to_plan(
 }
 
 static GCC_INLINE fcs_flare_item_t * find_flare(
-    fcs_instance_item_t * const instance_item,
+    fcs_flare_item_t * const flares,
     const fcs_flare_item_t * const end_of_flares,
     const char * const proto_name,
     const size_t name_len)
@@ -541,7 +541,7 @@ static GCC_INLINE fcs_flare_item_t * find_flare(
     strncpy(name, proto_name, name_len);
     name[name_len] = '\0';
 
-    for (typeof (instance_item->flares) flare = instance_item->flares; flare < end_of_flares; flare++)
+    for (fcs_flare_item_t * flare = flares; flare < end_of_flares; flare++)
     {
         if (!strcmp(flare->name, name))
         {
@@ -567,6 +567,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
         {
             continue;
         }
+        fcs_flare_item_t * const flares = instance_item->flares;
         const typeof(instance_item->end_of_flares) const end_of_flares = instance_item->end_of_flares;
 
         /* If the plan string is NULL or empty, then set the plan
@@ -649,7 +650,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                         item_end = after_at_sign+strlen(after_at_sign);
                     }
 
-                    fcs_flare_item_t * const flare = find_flare(instance_item, end_of_flares, after_at_sign, item_end-after_at_sign);
+                    fcs_flare_item_t * const flare = find_flare(flares, end_of_flares, after_at_sign, item_end-after_at_sign);
 
                     if (! flare)
                     {
@@ -688,7 +689,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     }
                     item_end = cmd_end+strlen(cmd_end);
 
-                    fcs_flare_item_t * const flare = find_flare(instance_item, end_of_flares, cmd_end, item_end-cmd_end);
+                    fcs_flare_item_t * const flare = find_flare(flares, end_of_flares, cmd_end, item_end-cmd_end);
                     if (!flare)
                     {
                         /* TODO : write what the flare name is.  */
