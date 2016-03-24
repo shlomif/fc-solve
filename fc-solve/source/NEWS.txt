@@ -940,8 +940,8 @@ dependent on other options, so the sequence move will always be unlimited.
 5. Fixed run-tests.pl (and as a result also ctest -V and make test) to
 run properly after a raw unpacking.
 
-Version 2.12.0 ( 10-Dec-2008)
------------------------------
+Version 2.12.0 (10-Dec-2008)
+----------------------------
 
 1. A New Configuration and build system based on CMake
 ( http://www.cmake.org/ ) which results in faster configurations
@@ -956,8 +956,8 @@ how to run them.
 
 5. Many bug-fixes since 2.8.0. (Released as 2.8.x).
 
-Version 2.8.0 ( 28-Sep-2002 )
------------------------------
+Version 2.8.0 (28-Sep-2002)
+---------------------------
 
 1. Better documentation and help screens. See:
 +
@@ -972,8 +972,8 @@ other in case the other one has returned a negative verdict. This is useful
 for example to run an atomic moves preset after a meta-moves one, as the
 latter cannot guarantee an accurate false verdict.
 
-Version 2.6.0 ( 12-Jul-2002 )
------------------------------
+Version 2.6.0 (12-Jul-2002)
+---------------------------
 
 1. Atomic moves and some atomic moves presets have been added. Solving
 using atomic moves guarantees that there will be no false negatives, but
@@ -1008,8 +1008,8 @@ COMPACT_STATES.
 
 6. Updated the TODO list.
 
-Version 2.4.0 ( 29-Mar-2002 )
------------------------------
+Version 2.4.0 (29-Mar-2002)
+---------------------------
 
 1. Now several scans are to operate on the same states' collection. This is
 done using a mechanism called "soft threads", which is switched in user-land
@@ -1021,8 +1021,8 @@ and does not require system multi-threading. In the file "USAGE" see:
 
 2. fcs_cl.h was included in the RPM .spec.
 
-Version 2.2.0 ( 18-Feb-2002 )
------------------------------
+Version 2.2.0 (18-Feb-2002)
+---------------------------
 
 1. Freecell Solver's version is now kept in the file ver.txt
 
@@ -1049,8 +1049,8 @@ systems by running rpmbuild -ta on the archive.
 
 8. Several speed-ups.
 
-Version 2.0.0 ( 19-Dec-2001 )
------------------------------
+Version 2.0.0 (19-Dec-2001)
+---------------------------
 
 1. Added some presets for the PySol games "Beleaguered Castle", "Citadel"
 and "Streets and Alleys".
@@ -1066,14 +1066,14 @@ it is linked against.
 
 6. Win32 Makefile can now generate a working DLL.
 
-Version 1.10.0 ( 02-Oct-2001 )
-------------------------------
+Version 1.10.0 (02-Oct-2001)
+----------------------------
 
 Added support for solving deals of "Simple Simon" in addition to
 all the freecell-like variants that it could solve before.
 
-Version 1.8.0 ( 31-Aug-2001 )
------------------------------
+Version 1.8.0 (31-Aug-2001)
+---------------------------
 
 1. A new build and configuration process based on the GNU Autotools (Autoconf,
 Automake and libtool). This allows portably build shared and static libraries
@@ -1082,8 +1082,8 @@ and stuff like that.
 2. The GNOME AisleRiot board-generation program can generate the boards of
 the more Solitaire variants which are supported by Freecell Solver.
 
-Version 1.6.0 ( 11-Apr-2001 )
------------------------------
+Version 1.6.0 (11-Apr-2001)
+---------------------------
 
 1. Freecell Solver now has a solution optimization scan. Check it out
 by adding the "-opt" flag.
@@ -1095,8 +1095,8 @@ contact me and I'll add some more comments.
 3. Several speed optimizations were done in the internal hash, so I think
 it should run at least a little faster.
 
-Version 1.4.0 ( 07-Feb-2001 )
------------------------------
+Version 1.4.0 (07-Feb-2001)
+---------------------------
 
 1. Many fixes for bugs and memory leaks.
 
@@ -1112,16 +1112,16 @@ very practical.
 The choice between all those scans can be specified at run-time using
 command-line arguments.
 
-Version 1.2.0 ( 21-Dec-2000 )
------------------------------
+Version 1.2.0 (21-Dec-2000)
+---------------------------
 
 1. Several moves were improved or added, so it can solve more layouts.
 
 2. A more robust command-line argument handling, so less segfaults can be
 expected if it's improperly used.
 
-Version 1.0.0 ( 19-Nov-2000 )
------------------------------
+Version 1.0.0 (19-Nov-2000)
+---------------------------
 
 1. Added support for solving more game types.
 
@@ -1132,8 +1132,8 @@ suspending a solution process and resuming it from its last position.
 
 4. Several random bug-fixes.
 
-Version 0.10.0 ( 09-Oct-2000 )
-------------------------------
+Version 0.10.0 (09-Oct-2000)
+----------------------------
 
 1. Support was added for several Solitaire variants besides Freecell, such as
 Forecell, Seahaven Towers and Eight Off.
@@ -1143,8 +1143,8 @@ solutions.
 
 3. Several bug-fixes.
 
-Version 0.8.0 ( 28-Aug-2000 )
------------------------------
+Version 0.8.0 (28-Aug-2000)
+---------------------------
 
 1. Some bug-fixes.
 
@@ -1161,8 +1161,8 @@ Freecell Solver about 33% faster.
 
 6. Improved Documentation.
 
-Version 0.6 ( 28-Jul-2000 )
----------------------------
+Version 0.6 (28-Jul-2000)
+-------------------------
 
 1. An extra movement that allows Freecell Solver to solve some boards which
 it could not solve previously.
@@ -1176,8 +1176,8 @@ Freecell Solver will stop before it consumes too much memory)
 4. Specify the order of the moves that will be tested. Usually, a test
 order can be found that will solve a given board really quickly.
 
-Version 0.4 ( 06-Jun-2000 )
----------------------------
+Version 0.4 (06-Jun-2000)
+-------------------------
 
 1. Three major code optimizations. Freecell Solver now runs much faster.
 
