@@ -1,5 +1,5 @@
 # This scan is based on as-modified-15-2-remove-underperf.sh only it
-# adds an atomic scan that solves many board.
+# adds an atomic scan that solves many boards.
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -seed 2 -to 0[01][23456789] -step 500 -sp r:tf --st-name 3 -nst \
 --method random-dfs -seed 1 -to 0[0123456789] -step 500 -sp r:tf --st-name 4 -nst \
