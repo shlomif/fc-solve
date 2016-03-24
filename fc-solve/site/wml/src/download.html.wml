@@ -47,7 +47,7 @@ large number of Solitaire variants.
 <table class="downloads" summary="Upper Row - The Freecell Solver Source Code. Lower Row - Windows 32-bit Binaries. Links are at the left; Descriptions are at the Right.">
 <tr>
 <td>
-<link_to_download_file "freecell-solver-4.0.2.tar.xz" />
+<link_to_download_file "freecell-solver-4.2.0.tar.xz" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
@@ -226,6 +226,8 @@ Freecell Solver”</a>.
 </define-tag>
 
 <table class="downloads" summary="Older versions of Freecell Solver. In decreasing version number.">
+<set-var download_suffix="xz" />
+<ver "4.0" "2" />
 <set-var download_suffix="bz2" />
 <ver "3.26" "0" />
 <ver "3.24" "0" />
