@@ -4,8 +4,8 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2016-01-14
 :Revision: $Id$
 
-Version 4.2.0: (FILL IN)
-------------------------
+Version 4.2.0: (25-Mar-2016)
+----------------------------
 
 1. New command-line preset +-l conspiracy-theory+ or +-l ct+ for short that is
 faster than +-l as+ on average.
