@@ -7,11 +7,46 @@ Shlomi Fish <shlomif@cpan.org>
 Version 4.2.0: (FILL IN)
 ------------------------
 
-1. Remove FCS_STATE_STORAGE_INDIRECT - it was old and slow and the hash lookup
+1. New command-line preset +-l conspiracy-theory+ or +-l ct+ for short that is
+faster than +-l as+ on average.
+
+2. Bug fix: some error messages are not emitted to STDERR instead of STDOUT.
+Furthermore, the exit code on some failures is now non-zero.
+
+3. Bug fix: flares names in the flares plan is now their exact strings instead
+of any possible beginning of them.
+
+4. Add a compile-time option to not compile the FC-Pro moves count (used
+primarly for determining the shortest flares). It is
++-DFCS_WITHOUT_FC_PRO_MOVES_COUNT=1+ .
+
+5. Bug fix: properly clean-up solution_moves on recycle.
+
+6. Bug fix: fix the output of the Freecell's dashes in non-parsable output.
+
+7. Add a compile-time option (+-DFCS_BREAK_BACKWARD_COMPAT_1+) to break some
+backward compatibility, such as old functions, cards with "10" instead of "T",
+trailing whitespace in output, and the non-"-p" output of states. This makes
+the binaries smaller and faster but may break some existing functionality.
+Enabling it is not recommended.
+
+8. Freecell Solver now uses https://travis-ci.org/[Travis-CI] to build and
+test the code in several configurations on each commit. This is part of the
+so-called “Continuous Integration” practice.
+
+9. Added support for clang to the PGO (= profile-guided-optimizations)
+scripts.
+
+10. Moved away or deleted many scripts and other cruft.
+
+11. Remove FCS_STATE_STORAGE_INDIRECT - it was old and slow and the hash lookup
 or a balanced binary tree should be used instead.
 
-2. Remove the experimental flipping support and made the default for cards
-not to be flippable at all. (It didn't build with it anyway.)
+12. Remove the experimental flipping support and made the default for cards
+not to be flippable at all. (The code did not build with it enabled anyway.)
+
+13. Many small and large cleanups, optimizations and refactorings - hopefully
+without breaking backward-compatibility.
 
 Version 4.0.2: (14-Jan-2016)
 ----------------------------
