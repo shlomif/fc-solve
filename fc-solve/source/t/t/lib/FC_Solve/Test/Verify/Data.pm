@@ -78,6 +78,11 @@ __PACKAGE__->populate(
             args => {deal => 200, variant => "eight_off", theme => [],},
             msg => "Eight Off #200 with default heuristic",
         },
+        '24_ct' =>
+        {
+            args => {deal => 24, theme => ['-l', 'ct',],},
+            msg => '-l ct should work.',
+        },
         '24_opt' =>
         {
             args => {deal => 24, theme => ["-opt"],},

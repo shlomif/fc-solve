@@ -4,6 +4,7 @@ INSTALL(
         "amateur-star.sh"
         "blue-yonder.sh"
         "children-playing-ball.sh"
+        "conspiracy-theory.sh"
         "cool-jives.sh"
         "crooked-nose.sh"
         "enlightened-ostrich.sh"
