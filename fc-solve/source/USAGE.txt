@@ -1022,6 +1022,8 @@ quota optimization algorithm.
 |+children-playing-ball+       |a meta-moves and flare-based preset that tends
 to yield very short solution, but is very slow (solves only 3 boards per
 second on a Pentium 4 2.4GHz).
+|+conspiracy-theory+           |a meta-moves preset that yields solutions
+faster on average than +amateur-star+.
 |+cool-jives+                  |a meta-moves preset
 |+crooked-nose+                |an atomic-moves preset (guarantees an
             accurate verdict)
