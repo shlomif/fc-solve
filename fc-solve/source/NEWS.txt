@@ -17,7 +17,7 @@ Furthermore, the exit code on some failures is now non-zero.
 of any possible beginning of them.
 
 4. Add a compile-time option to not compile the FC-Pro moves count (used
-primarly for determining the shortest flares). It is
+primarily for determining the shortest flares). It is
 +-DFCS_WITHOUT_FC_PRO_MOVES_COUNT=1+ .
 
 5. Bug fix: properly clean-up solution_moves on recycle.
