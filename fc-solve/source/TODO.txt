@@ -14,6 +14,15 @@ Pressing
 Non-pressing
 ------------
 
+* Experiment with generating the command-line arguments parsing using gperf
+(perfect hash): http://www.ibm.com/developerworks/library/l-gperf/index.html .
+
+* Try different +fcs_hash.c+ hash fill factors, and try to avoid unnecessary
+calculations to check if it should be rehashed.
+
+* Try to convert to an open addressing hash instead of chaining (for better
+memory localisation).
+
 * Experiment with +__int128+ in GCC wrt the delta_states (instead of GMP).
 See: https://www.nu42.com/2016/01/excellent-optimization-story.html .
 
