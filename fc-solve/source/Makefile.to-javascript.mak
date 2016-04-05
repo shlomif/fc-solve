@@ -13,7 +13,7 @@ RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 EMBED_FILE_MUNGE_PL = $(SRC_DIR)/scripts/emscripten-embed-munge.pl
 
-PATS_C_FILES = pat.c patsolve.c tree.c
+PATS_C_FILES = param.c pat.c patsolve.c tree.c
 
 LIB_C_FILES = scans.c lib.c preset.c instance.c move_funcs_order.c  move_funcs_maps.c meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c fcs_hash.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c rate_state.c hacks_for_hlls.c $(PATS_C_FILES)
 
