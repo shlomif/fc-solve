@@ -11,6 +11,9 @@ Pressing
 ** It runs fine on Windows 7.
 ** Thanks to Manish Jain for the report.
 
+* Investigate why MS deal No. 124 with the +ve+ preset does not finish in
+http://fc-solve.shlomifish.org/js-fc-solve/text/ .
+
 Non-pressing
 ------------
 
