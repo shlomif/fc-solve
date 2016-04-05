@@ -115,8 +115,8 @@ restore_bookmark();
 <button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
 <label for="preset">Solving method:</label>
 <select id="preset">
-<option value="as" selected="selected">Amateur Star (fast on average)</option>
-<option value="qs">Qualified Seed (short solutions)</option>
+<option value="ct" selected="selected">“Conspiracy Theory” (fast on average)</option>
+<option value="ve">“Video Editing” (short solutions)</option>
 <option value="default">Default</option>
 </select>
 
