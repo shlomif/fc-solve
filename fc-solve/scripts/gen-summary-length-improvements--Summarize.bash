@@ -3,7 +3,7 @@ get_nums()
 {
     seed="$1"
     shift
-    paste ~/Arcs/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt ~/Backup/Arcs/fcs-summary-len-seed/lens-theme1--seed="$seed".txt |  perl -lanE 'use List::Util qw/min/; my ($cur, @cands) = /(?<=Length: )(-?[0-9]+)/g; my $cand = min(grep { $_ > 0 } @cands); if ($cand > 0 and $cand < $cur) {push @x, $cur-$cand} END { print "@x" }'
+    paste ~/Backup/Arcs/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt ~/Backup/Arcs/fcs-summary-len-seed/lens-theme1--seed="$seed".txt |  perl -lanE 'use List::Util qw/min/; my ($cur, @cands) = /(?<=Length: )(-?[0-9]+)/g; my $cand = min(grep { $_ > 0 } @cands); if ($cand > 0 and $cand < $cur) {push @x, $cur-$cand} END { print "@x" }'
 }
 
 summary()
