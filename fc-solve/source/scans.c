@@ -385,7 +385,7 @@ fcs_state_t * fc_solve_lookup_state_key_from_val(
             { \
             printf("BestFS - %s ; Iters=%ld.\n", \
                     message, \
-                    (long)(instance->num_checked_states) \
+                    (long)(*instance_num_checked_states_ptr) \
                     );  \
             fflush(stdout); \
             } \
@@ -1006,6 +1006,12 @@ extern void fc_solve_sfs_check_state_end(
            (kv_calc_depth(&existing_state) > kv_calc_depth(raw_ptr_state_raw)+1)
         )
         {
+#ifdef DEBUG
+            if (getenv("FCS_TRACE"))
+            {
+                printf("AppleBloom %ld %ld\n", (long)kv_calc_depth(&existing_state), (long)kv_calc_depth(raw_ptr_state_raw));
+            }
+#endif
             /* Make a copy of "moves" because "moves" will be destroyed */
             existing_state_val->moves_to_parent =
                 fc_solve_move_stack_compact_allocate(
