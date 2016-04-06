@@ -54,6 +54,16 @@ static void print_help(void)
 static long deals[32000];
 static int num_deals = 0;
 
+static GCC_INLINE void append(long idx)
+{
+    if (num_deals == COUNT(deals))
+    {
+        fprintf(stderr, "Number of deals exceeded %ld!\n", (long)(COUNT(deals)));
+        exit(-1);
+    }
+    deals[num_deals++] = idx;
+}
+
 int main(int argc, char * argv[])
 {
     const char * variant = "freecell";
@@ -61,12 +71,36 @@ int main(int argc, char * argv[])
 
     while (arg < argc && (strcmp(argv[arg], "--")))
     {
-        if (num_deals == COUNT(deals))
+        if (!strcmp(argv[arg], "seq"))
         {
-            fprintf(stderr, "Number of deals exceeded %ld!\n", (long)(COUNT(deals)));
-            exit(-1);
+            arg++;
+            if (arg < argc)
+            {
+                const long start = atol(argv[arg++]);
+                if (arg < argc)
+                {
+                    const long end = atol(argv[arg++]);
+                    for (long deal = start; deal <= end ; deal++)
+                    {
+                        append(deal);
+                    }
+                }
+                else
+                {
+                    fprintf(stderr, "seq without args!\n");
+                    exit(-1);
+                }
+            }
+            else
+            {
+                fprintf(stderr, "seq without args!\n");
+                exit(-1);
+            }
         }
-        deals[num_deals++] = atol(argv[arg++]);
+        else
+        {
+            append(atol(argv[arg++]));
+        }
     }
 
     if (arg == argc)
