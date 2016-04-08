@@ -12,10 +12,11 @@ STDOUT->autoflush(1);
 my $MAX_ITERS = 2_000;
 
 # my $THEME = q#--method random-dfs -to '[01][2345]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
-my $THEME = q#--method random-dfs -to '[01][2345][6789]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+# my $THEME = q#--method random-dfs -to '[01][2345][6789]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+my $THEME = q#--method random-dfs -to '[01][2345][6789]' -dto2 '13,[0123456]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
 
 my $REFERENCE_FN = "$ENV{HOME}/Backup/Arcs/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt";
-my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed-FlutterShy";
+my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed-Rarity";
 
 my $BASE = 'theme1';
 
