@@ -116,7 +116,6 @@ typedef struct
 {
     fcs_flare_item_t * flares, * end_of_flares, * minimal_flare;
     flares_plan_item * plan;
-    int num_flares;
     int num_plan_items;
     int current_plan_item_idx;
     int all_plan_items_finished_so_far;
@@ -2516,9 +2515,13 @@ static int user_next_flare(fcs_user_t * const user)
 {
     fcs_instance_item_t * const instance_item = get_current_instance_item(user);
 
+#define EXPR instance_item->end_of_flares - instance_item->flares
+    const typeof(EXPR) num_flares = (EXPR);
+#undef EXPR
     instance_item->flares =
-        SREALLOC( instance_item->flares, ++(instance_item->num_flares) );
-    fcs_flare_item_t * const flare = ((instance_item->end_of_flares = instance_item->flares + instance_item->num_flares) - 1);
+        SREALLOC( instance_item->flares, num_flares + 1 );
+    fcs_flare_item_t * const flare = instance_item->flares + num_flares;
+    instance_item->end_of_flares = flare + 1;
     instance_item->limit = flare->limit = -1;
     fc_solve_instance_t * const instance = &(flare->obj);
 
@@ -2576,8 +2579,8 @@ static int user_next_instance(
     user->current_instance_idx = user->num_instances-1;
 
     *(get_current_instance_item(user)) = (fcs_instance_item_t) {
-        .num_flares = 0,
         .flares = NULL,
+        .end_of_flares = NULL,
         .plan = NULL,
         .num_plan_items = 0,
         .flares_plan_string = NULL,
