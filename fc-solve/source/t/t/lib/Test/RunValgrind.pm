@@ -3,6 +3,7 @@ package Test::RunValgrind;
 use strict;
 use warnings;
 
+use Test::More;
 use Path::Tiny qw/path/;
 
 use Carp;
