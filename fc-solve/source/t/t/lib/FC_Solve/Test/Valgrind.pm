@@ -7,7 +7,8 @@ use Test::More ();
 use Carp ();
 use File::Spec ();
 use File::Temp qw( tempdir );
-use Path::Tiny;
+
+use Test::RunValgrind;
 
 sub _expand_catfile_arg
 {
@@ -64,33 +65,18 @@ sub _run_test
     }
 
     my $blurb = $args->{blurb};
-    if ((!defined($blurb)) or ref($blurb) ne '' or length($blurb) == 0)
-    {
-        Carp::confess("Blurb is wrong.");
-    }
-
     my $log_fn = "valgrind--$id.log";
 
-    system(
-        "valgrind",
-        "--track-origins=yes",
-        "--leak-check=yes",
-        "--log-file=$log_fn",
-        "$ENV{FCS_PATH}/$args->{prog}",
-        (map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}),
-    );
-
-    my $out_text = path( $log_fn )->slurp_utf8;
-    if (Test::More::ok (
-            (index($out_text, q{ERROR SUMMARY: 0 errors from 0 contexts}) >= 0)
-                &&
-            (index($out_text, q{in use at exit: 0 bytes}) >= 0)
-            , $blurb)
+    if (!
+        Test::RunValgrind->new({})->run(
+            {
+                log_fn => $log_fn,
+                blurb => $blurb,
+                prog => "$ENV{FCS_PATH}/$args->{prog}",
+                argv => [map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}],
+            }
+        )
     )
-    {
-        unlink($log_fn);
-    }
-    else
     {
         die "Valgrind failed";
     }
