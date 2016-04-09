@@ -7,10 +7,6 @@ Shlomi Fish <shlomif@cpan.org>
 Pressing
 --------
 
-* Investigate why the Win32 package does not run on Windows XP.
-** It runs fine on Windows 7.
-** Thanks to Manish Jain for the report.
-
 * Investigate why MS deal No. 124 with the +ve+ preset does not finish in
 http://fc-solve.shlomifish.org/js-fc-solve/text/ .
 
@@ -194,6 +190,9 @@ and then:
 * Unit-test +fc_solve_compare_lru_cache_keys+ in +scans.c+.
 
 * Interactive mode? Continue a scan that reached its limit.
+
+* Get the tests to run and pass on MS Windows (32-bit/64-bit) and implement
+AppVoyeur Continuous Integration.
 
 To be considered
 ----------------

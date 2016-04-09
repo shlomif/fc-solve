@@ -505,3 +505,9 @@ shlomif[fcs]:$trunk/fc-solve/B$
 
 “Verdict: Unsolved” should never appear because all these games can be solved
 by the scan, but may be intaractable.
+
+* Investigate why the Win32 package does not run on Windows XP.
+** It runs fine on Windows 7.
+** Thanks to Manish Jain for the report.
+** Found out that it was a Windows 64-bit package - the package for 4.2.0
+which was built on WinXP is working fine on 32-bit systems.
