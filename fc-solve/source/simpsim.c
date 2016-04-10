@@ -34,6 +34,7 @@
 #include "simpsim.h"
 
 #include "bool.h"
+#include "typeof_wrap.h"
 #include "scans.h"
 
 /* This is a fallback in case this module is still compiled with
@@ -969,7 +970,7 @@ static GCC_INLINE void sort_ds_dcs(
     {
         for (ds_dc_t * c = b ; (c > start) && (c[0].col < c[-1].col || (c[0].col == c[-1].col && c[0].height > c[-1].height)); c--)
         {
-            const typeof(c[-1]) temp = c[-1];
+            const_AUTO(temp, c[-1]);
             c[-1] = c[0];
             c[0] = temp;
         }

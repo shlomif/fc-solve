@@ -38,6 +38,7 @@
 #include "inline.h"
 #include "bool.h"
 #include "alloc_wrap.h"
+#include "typeof_wrap.h"
 
 typedef struct
 {
@@ -48,8 +49,8 @@ typedef struct
 
 void fc_solve_args_man_free(args_man_t * const manager)
 {
-    const typeof(manager->argc) argc = manager->argc;
-    const typeof(manager->argv) argv = manager->argv;
+    const_SLOT(argc, manager);
+    const_SLOT(argv, manager);
 
     for (int i = 0 ; i < argc ; i++)
     {

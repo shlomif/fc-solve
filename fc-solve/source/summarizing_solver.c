@@ -36,6 +36,7 @@
 #include "unused.h"
 #include "bool.h"
 #include "count.h"
+#include "typeof_wrap.h"
 #include "handle_parsing.h"
 
 static void print_help(void)
@@ -148,7 +149,7 @@ int main(int argc, char * argv[])
 
     for (int deal_idx=0 ; deal_idx < num_deals ; deal_idx++)
     {
-        const typeof(deals[deal_idx]) board_num = deals[deal_idx];
+        const_AUTO(board_num, deals[deal_idx]);
         if (variant_is_freecell)
         {
             get_board_l(board_num, buffer);
