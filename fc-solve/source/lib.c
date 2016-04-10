@@ -790,11 +790,9 @@ static GCC_INLINE void recycle_flare(
 
 static void recycle_instance(
     fcs_user_t * const user,
-    const int i
+    fcs_instance_item_t * const instance_item
     )
 {
-    fcs_instance_item_t * const instance_item = &(user->instances_list[i]);
-
     INSTANCE_ITEM_FLARES_LOOP_START()
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
         fc_solve_moves_processed_free(&(flare->fc_pro_moves));
@@ -1019,7 +1017,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
              * move to the next instance, or exit. */
             if (instance_item->all_plan_items_finished_so_far)
             {
-                recycle_instance(user, user->current_instance_idx);
+                recycle_instance(user, instance_item);
                 user->current_instance_idx++;
                 continue;
             }
@@ -1268,7 +1266,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                     instance->i__num_checked_states;
                 flare->obj_stats.num_states_in_collection =
                     instance->num_states_in_collection;
-                recycle_instance(user, user->current_instance_idx);
+                recycle_instance(user, instance_item);
                 user->current_instance_idx++;
                 continue;
             }
@@ -2397,13 +2395,9 @@ void DLLEXPORT freecell_solver_user_recycle(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-#define EXPR user->end_of_instances_list - user->instances_list
-    const typeof(EXPR) num_instances = (EXPR);
-#undef EXPR
-
-    for (int i = 0 ; i < num_instances ; i++)
+    for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < user->end_of_instances_list ; instance_item++)
     {
-        recycle_instance(user, i);
+        recycle_instance(user, instance_item);
     }
     /*
      * Removing because we are still interested to keep the current iterations
