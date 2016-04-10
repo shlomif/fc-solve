@@ -37,6 +37,7 @@ extern "C" {
 
 #include "inline.h"
 #include "bool.h"
+#include "typeof_wrap.h"
 
 #include "fcs_enums.h"
 #include "fcs_user.h"
@@ -85,7 +86,7 @@ static GCC_INLINE void fc_solve_output_result_to_file(
     const fc_solve_display_information_context_t * const dc_ptr
 )
 {
-    const typeof(*dc_ptr) debug_context = (*dc_ptr);
+    const_AUTO(debug_context, (*dc_ptr));
     if (ret == FCS_STATE_WAS_SOLVED)
     {
         fprintf(output_fh, "-=-=-=-=-=-=-=-=-=-=-=-\n\n");

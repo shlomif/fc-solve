@@ -712,7 +712,7 @@ static GCC_INLINE void fc_solve_free_instance_soft_thread_callback(
     fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
 
 #ifndef FCS_DISABLE_PATSOLVE
-    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+    var_SLOT(pats_scan , soft_thread);
 
     if ( pats_scan )
     {
@@ -781,7 +781,7 @@ static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
         fc_solve_reset_soft_thread(soft_thread);
 
 #ifndef FCS_DISABLE_PATSOLVE
-        typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+        var_SLOT(pats_scan , soft_thread);
 
         if ( pats_scan )
         {
@@ -1191,7 +1191,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t * const hard_thread
             fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
 
 #ifndef FCS_DISABLE_PATSOLVE
-            typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+            var_SLOT(pats_scan , soft_thread);
             if (pats_scan)
             {
                 fc_solve_pats__init_buckets(pats_scan);
