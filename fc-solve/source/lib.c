@@ -141,9 +141,7 @@ typedef struct
      * one after the other in case the previous ones could not solve
      * the board
      * */
-    fcs_instance_item_t * instances_list , * end_of_instances_list;
-
-    int current_instance_idx;
+    fcs_instance_item_t * current_instance, * instances_list , * end_of_instances_list;
     /*
      * The global (sequence-wide) limit of the iterations. Used
      * by limit_iterations() and friends
@@ -346,9 +344,7 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
     const int max_iters
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    user->instances_list[user->current_instance_idx].limit = max_iters;
+    ((fcs_user_t *)api_instance)->current_instance->limit = max_iters;
 }
 
 int DLLEXPORT freecell_solver_user_set_depth_tests_order(
@@ -764,7 +760,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
         return FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
     }
 
-    user->current_instance_idx = 0;
+    user->current_instance = user->instances_list;
 
     int instance_list_index;
     if ( user_compile_all_flares_plans(user, &instance_list_index)
@@ -972,7 +968,7 @@ static GCC_INLINE fcs_instance_item_t * get_current_instance_item(
     fcs_user_t const * user
 )
 {
-    return &(user->instances_list[user->current_instance_idx]);
+    return (user->current_instance);
 }
 
 typedef int flare_iters_quota_t;
@@ -994,10 +990,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
-#define EXPR user->end_of_instances_list - user->instances_list
-    const typeof(EXPR) num_instances = (EXPR);
-#undef EXPR
-
     /*
      * I expect user->current_instance_idx to be initialized with some value.
      * */
@@ -1018,7 +1010,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             if (instance_item->all_plan_items_finished_so_far)
             {
                 recycle_instance(user, instance_item);
-                user->current_instance_idx++;
+                user->current_instance++;
                 continue;
             }
             /* Otherwise - restart the plan again. */
@@ -1267,13 +1259,13 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 flare->obj_stats.num_states_in_collection =
                     instance->num_states_in_collection;
                 recycle_instance(user, instance_item);
-                user->current_instance_idx++;
+                user->current_instance++;
                 continue;
             }
             instance_item->all_plan_items_finished_so_far = 0;
         }
     } while (
-        (user->current_instance_idx < num_instances) &&
+        (user->current_instance < user->end_of_instances_list) &&
         (ret == FCS_STATE_IS_NOT_SOLVEABLE)
     );
 
@@ -2570,9 +2562,8 @@ static int user_next_instance(
     user->instances_list = SREALLOC(
         user->instances_list, num_instances
     );
-    user->end_of_instances_list = user->instances_list + num_instances;
 
-    user->current_instance_idx = num_instances - 1;
+    user->current_instance = (user->end_of_instances_list = user->instances_list + num_instances) - 1;
 
     *(get_current_instance_item(user)) = (fcs_instance_item_t) {
         .flares = NULL,
