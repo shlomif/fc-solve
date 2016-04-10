@@ -168,7 +168,7 @@ static GCC_INLINE void fc_solve_pq_pop(
     fcs_collectible_state_t * * const val
 )
 {
-    pq_element_t * const Elements = pq->Elements;
+    const_SLOT(Elements, pq);
     var_SLOT(current_size, pq);
 
     if( fc_solve_is_pqueue_empty(pq) )
