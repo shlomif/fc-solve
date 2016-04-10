@@ -57,6 +57,7 @@
 #include "likely.h"
 #include "count.h"
 #include "alloc_wrap.h"
+#include "typeof_wrap.h"
 
 /*
     General use of this interface:
@@ -514,15 +515,15 @@ extern void fc_solve_trace_solution(
     /*
      * Handle the case if it's patsolve.
      * */
-    typeof(instance->solving_soft_thread) solving_soft_thread = instance->solving_soft_thread;
+    var_AUTO(solving_soft_thread, instance->solving_soft_thread);
 #ifndef FCS_DISABLE_PATSOLVE
     if (
         solving_soft_thread->super_method_type == FCS_SUPER_METHOD_PATSOLVE)
     {
         fcs_state_locs_struct_t locs;
         fc_solve_init_locs(&(locs));
-        typeof(solving_soft_thread->pats_scan) pats_scan = solving_soft_thread->pats_scan;
-        typeof(pats_scan->num_moves_to_win) num_moves = pats_scan->num_moves_to_win;
+        var_AUTO(pats_scan , solving_soft_thread->pats_scan);
+        var_AUTO(num_moves , pats_scan->num_moves_to_win);
 
         fcs_state_keyval_pair_t s_and_info;
 
@@ -552,7 +553,7 @@ extern void fc_solve_trace_solution(
             solution_moves_ptr->moves,
             num_moves
         );
-        typeof(pats_scan->moves_to_win) mp = pats_scan->moves_to_win;
+        var_AUTO(mp, pats_scan->moves_to_win);
         for (int i = 0 ; i < num_moves; i++, mp++)
         {
             const fcs_card_t card = mp->card;

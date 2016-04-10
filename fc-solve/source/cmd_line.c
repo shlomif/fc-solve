@@ -54,6 +54,7 @@
 #include "inline.h"
 #include "bool.h"
 #include "str_utils.h"
+#include "typeof_wrap.h"
 
 #include "cmd_line_enum.h"
 
@@ -331,7 +332,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         /* First check for the parameters that the user recognizes */
         if (known_parameters)
         {
-            typeof(known_parameters) known_param = known_parameters;
+            var_AUTO(known_param, known_parameters);
             while((*known_param) && strcmp(*known_param, (*arg)))
             {
                 known_param++;

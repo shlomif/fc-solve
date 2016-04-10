@@ -36,6 +36,7 @@
 
 #include "fcs_dllexport.h"
 #include "alloc_wrap.h"
+#include "typeof_wrap.h"
 #include "bit_rw.h"
 #include "state.h"
 #include "indirect_buffer.h"
@@ -221,7 +222,7 @@ static GCC_INLINE void fc_solve_get_freecells_encoding(
 {
 
     const fcs_state_t * const derived = self->_derived_state;
-    const typeof(self->num_freecells) num_freecells = self->num_freecells;
+    const_AUTO(num_freecells, self->num_freecells);
 
     fcs_card_t freecells[MAX_NUM_FREECELLS];
     for (int i=0 ; i < num_freecells ; i++)
@@ -240,7 +241,7 @@ static GCC_INLINE void fc_solve_get_freecells_encoding(
                 min_idx = j;
             }
         }
-        const typeof(freecells[i]) i_card = freecells[i];
+        const_AUTO(i_card, freecells[i]);
         fc_solve_bit_writer_write(bit_w, 6,
             fcs_card2char(
                 (min_idx != i)
@@ -390,8 +391,8 @@ static void fc_solve_delta_stater_decode(
 {
 #define PROCESS_CARD(card) { if (fcs_card_rank(card) < foundations[fcs_card_suit(card)]) { foundations[fcs_card_suit(card)] = fcs_card_rank(card); } }
 
-    const typeof(self->num_freecells) num_freecells = self->num_freecells;
-    const typeof(self->bits_per_orig_cards_in_column) bits_per_orig_cards_in_column = self->bits_per_orig_cards_in_column;
+    const_AUTO(num_freecells, self->num_freecells);
+    const_AUTO(bits_per_orig_cards_in_column, self->bits_per_orig_cards_in_column);
 
     int foundations[4] = {14,14,14,14};
     /* Read the Freecells. */
@@ -410,7 +411,7 @@ static void fc_solve_delta_stater_decode(
         fcs_put_card_in_freecell(*ret, i, card);
     }
 
-    const typeof(self->num_columns) num_columns = self->num_columns;
+    const_AUTO(num_columns, self->num_columns);
     const fcs_state_t * const _init_state = self->_init_state;
 
     for (int col_idx = 0; col_idx < num_columns ; col_idx++)
