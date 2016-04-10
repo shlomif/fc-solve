@@ -50,6 +50,7 @@ extern "C" {
 #include "inline.h"
 #include "bool.h"
 #include "alloc_wrap.h"
+#include "typeof_wrap.h"
 
 /* manage a priority queue as a heap
    the heap is implemented as a fixed size array of pointers to your data */
@@ -170,7 +171,7 @@ static GCC_INLINE void fc_solve_pq_pop(
     int i;
     int child;
     pq_element_t * const Elements = pq->Elements;
-    typeof(pq->current_size) current_size = pq->current_size;
+    var_SLOT(current_size, pq);
 
     if( fc_solve_is_pqueue_empty(pq) )
     {
