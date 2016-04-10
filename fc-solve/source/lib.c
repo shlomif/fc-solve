@@ -141,8 +141,7 @@ typedef struct
      * one after the other in case the previous ones could not solve
      * the board
      * */
-    fcs_instance_item_t * instances_list;
-    int num_instances;
+    fcs_instance_item_t * instances_list , * end_of_instances_list;
 
     int current_instance_idx;
     /*
@@ -214,9 +213,8 @@ static void iter_handler_wrapper(
         {      \
 
 #define FLARES_LOOP_START() \
-    for (int user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++) \
+    for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < user->end_of_instances_list ; instance_item++)\
     { \
-        fcs_instance_item_t * const instance_item = &(user->instances_list[user_inst_idx]); \
         INSTANCE_ITEM_FLARES_LOOP_START()
 
 
@@ -255,7 +253,7 @@ static void user_initialize(
     fc_solve_meta_compact_allocator_init(&(user->meta_alloc));
 
     user->instances_list = NULL;
-    user->num_instances = 0;
+    user->end_of_instances_list = NULL;
     user->long_iter_handler = NULL;
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     user->iter_handler = NULL;
@@ -557,11 +555,9 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     int * const instance_list_index
     )
 {
-    for (int user_inst_idx = 0 ; user_inst_idx < user->num_instances ; user_inst_idx++)
+    *instance_list_index = 0;
+    for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < user->end_of_instances_list ; instance_item++, (*instance_list_index)++)
     {
-        *instance_list_index = user_inst_idx;
-
-        fcs_instance_item_t * const instance_item = &(user->instances_list[user_inst_idx]);
         if (instance_item->flares_plan_compiled)
         {
             continue;
@@ -613,7 +609,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 if (! cmd_end)
                 {
                     SET_ERROR ("Could not find a \":\" for a command.");
-                    *instance_list_index = user_inst_idx;
                     return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
                 }
 
@@ -634,7 +629,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     if (*at_sign != '@')
                     {
                         SET_ERROR ("Could not find a \"@\" directly after the digits after the 'Run:' command.");
-                        *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
                     }
                     const char * const after_at_sign = at_sign+1;
@@ -655,7 +649,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     {
                         /* TODO : write what the flare name is.  */
                         SET_ERROR ("Unknown flare name.");
-                        *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
 
@@ -668,7 +661,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     if (! (((*item_end) == ',') || (! (*item_end))))
                     {
                         SET_ERROR ("Junk after CP (Checkpoint) command.");
-                        *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
                     }
 
@@ -683,7 +675,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     if (item_end)
                     {
                         SET_ERROR ("Junk after last RunIndef command. Must be the final command.");
-                        *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
                     }
                     item_end = cmd_end+strlen(cmd_end);
@@ -693,7 +684,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     {
                         /* TODO : write what the flare name is.  */
                         SET_ERROR ("Unknown flare name in RunIndef command.");
-                        *instance_list_index = user_inst_idx;
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
 
@@ -703,7 +693,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 {
                     /* TODO : Write the unknown command in the error string. */
                     SET_ERROR ("Unknown command.");
-                    *instance_list_index = user_inst_idx;
                     return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
                 }
                 item_start = item_end+1;
@@ -1007,6 +996,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
+#define EXPR user->end_of_instances_list - user->instances_list
+    const typeof(EXPR) num_instances = (EXPR);
+#undef EXPR
+
     /*
      * I expect user->current_instance_idx to be initialized with some value.
      * */
@@ -1282,7 +1275,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             instance_item->all_plan_items_finished_so_far = 0;
         }
     } while (
-        (user->current_instance_idx < user->num_instances) &&
+        (user->current_instance_idx < num_instances) &&
         (ret == FCS_STATE_IS_NOT_SOLVEABLE)
     );
 
@@ -2404,7 +2397,11 @@ void DLLEXPORT freecell_solver_user_recycle(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    for (int i = 0 ; i < user->num_instances ; i++)
+#define EXPR user->end_of_instances_list - user->instances_list
+    const typeof(EXPR) num_instances = (EXPR);
+#undef EXPR
+
+    for (int i = 0 ; i < num_instances ; i++)
     {
         recycle_instance(user, i);
     }
@@ -2572,11 +2569,16 @@ static int user_next_instance(
     fcs_user_t * const user
     )
 {
-    user->instances_list = SREALLOC(
-        user->instances_list, ++user->num_instances
-    );
+#define EXPR 1 + user->end_of_instances_list - user->instances_list
+    const typeof(EXPR) num_instances = (EXPR);
+#undef EXPR
 
-    user->current_instance_idx = user->num_instances-1;
+    user->instances_list = SREALLOC(
+        user->instances_list, num_instances
+    );
+    user->end_of_instances_list = user->instances_list + num_instances;
+
+    user->current_instance_idx = num_instances - 1;
 
     *(get_current_instance_item(user)) = (fcs_instance_item_t) {
         .flares = NULL,
