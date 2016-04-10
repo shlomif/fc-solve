@@ -168,8 +168,6 @@ static GCC_INLINE void fc_solve_pq_pop(
     fcs_collectible_state_t * * const val
 )
 {
-    int i;
-    int child;
     pq_element_t * const Elements = pq->Elements;
     var_SLOT(current_size, pq);
 
@@ -188,6 +186,8 @@ static GCC_INLINE void fc_solve_pq_pop(
 
     /*  UNTESTED */
 
+    int i;
+    int child;
     for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= current_size; i=child )
     {
         /* set child to the smaller of the two children... */
