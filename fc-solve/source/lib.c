@@ -993,7 +993,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
-    const typeof(user->end_of_instances_list) end_of_instances_list = user->end_of_instances_list;
+    const_SLOT(end_of_instances_list, user);
     /*
      * I expect user->current_instance_idx to be initialized with some value.
      * */
@@ -1451,7 +1451,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
-    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+    var_SLOT(pats_scan, soft_thread);
 
     if (! pats_scan)
     {
@@ -1481,7 +1481,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
-    typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan;
+    var_SLOT(pats_scan, soft_thread);
 
     if (! pats_scan)
     {
@@ -1849,7 +1849,7 @@ void freecell_solver_user_get_invalid_state_error_into_string(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    const typeof (user->state_validity_ret) ret = user->state_validity_ret;
+    const_AUTO(ret, user->state_validity_ret);
     switch (ret)
     {
         case FCS_STATE_VALIDITY__OK:
@@ -2501,10 +2501,7 @@ int DLLEXPORT freecell_solver_user_next_instance(
 static int user_next_flare(fcs_user_t * const user)
 {
     fcs_instance_item_t * const instance_item = get_current_instance_item(user);
-
-#define EXPR instance_item->end_of_flares - instance_item->flares
-    const typeof(EXPR) num_flares = (EXPR);
-#undef EXPR
+    const_AUTO(num_flares, instance_item->end_of_flares - instance_item->flares);
     instance_item->flares =
         SREALLOC( instance_item->flares, num_flares + 1 );
     fcs_flare_item_t * const flare = instance_item->flares + num_flares;
@@ -2559,10 +2556,7 @@ static int user_next_instance(
     fcs_user_t * const user
     )
 {
-#define EXPR 1 + user->end_of_instances_list - user->instances_list
-    const typeof(EXPR) num_instances = (EXPR);
-#undef EXPR
-
+    const_AUTO(num_instances, 1 + user->end_of_instances_list - user->instances_list);
     user->instances_list = SREALLOC(
         user->instances_list, num_instances
     );

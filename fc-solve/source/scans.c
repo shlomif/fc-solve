@@ -51,6 +51,7 @@
 #include "likely.h"
 #include "bool.h"
 #include "min_and_max.h"
+#include "typeof_wrap.h"
 
 #if 0
 #define DEBUG 1
@@ -550,7 +551,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     const fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
     const int soft_thread_id = soft_thread->id;
     const fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
-    const typeof(instance->effective_max_num_states_in_collection) effective_max_num_states_in_collection = instance->effective_max_num_states_in_collection;
+    const_SLOT(effective_max_num_states_in_collection, instance);
 
     fcs_states_linked_list_item_t * queue = NULL;
     fcs_states_linked_list_item_t * queue_last_item = NULL;
