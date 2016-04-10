@@ -46,6 +46,7 @@ extern "C" {
 #include "likely.h"
 #include "bool.h"
 #include "min_and_max.h"
+#include "typeof_wrap.h"
 
 #include "scans.h"
 
@@ -646,8 +647,7 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 
     for(;soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
-        const typeof(soft_dfs_info->derived_states_random_indexes)
-            rand_indexes = soft_dfs_info->derived_states_random_indexes;
+        const_AUTO(rand_indexes, soft_dfs_info->derived_states_random_indexes);
 
         /*
          * We start from current_state_index instead of current_state_index+1
@@ -809,7 +809,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     const fcs_tests_list_of_lists * the_tests_list_ptr;
     fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
     fcs_int_limit_t hard_thread_max_num_checked_states;
-    const typeof(instance->effective_max_num_states_in_collection) effective_max_num_states_in_collection = instance->effective_max_num_states_in_collection;
+    const_SLOT(effective_max_num_states_in_collection, instance);
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();
@@ -1152,7 +1152,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                                             % (i+1)
                                         );
 
-                                    const typeof(rand_array[i]) swap_save = rand_array[i];
+                                    const_AUTO(swap_save, rand_array[i]);
                                     rand_array[i] = rand_array[j];
                                     rand_array[j] = swap_save;
                                 }
@@ -1334,9 +1334,7 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
     struct fc_solve__patsolve_thread_struct * const pats_scan
         = soft_thread->pats_scan;
-
-    const typeof (pats_scan->num_checked_states) start_from = pats_scan->num_checked_states;
-
+    const_AUTO(start_from, pats_scan->num_checked_states);
 
     pats_scan->max_num_checked_states = start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) - NUM_CHECKED_STATES);
 
@@ -1345,14 +1343,14 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
     fc_solve_pats__do_it(pats_scan);
 
     {
-        const typeof(start_from) after_scan_delta = pats_scan->num_checked_states - start_from;
+        const_AUTO(after_scan_delta, pats_scan->num_checked_states - start_from);
 #ifndef FCS_SINGLE_HARD_THREAD
         HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
 #endif
         HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
     }
 
-    const typeof(pats_scan->status) status = pats_scan->status;
+    const_SLOT(status, pats_scan);
     return
     (
         (status == FCS_PATS__WIN) ? FCS_STATE_WAS_SOLVED
