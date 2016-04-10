@@ -126,7 +126,7 @@ fcs_bool_t fc_solve_hash_insert(
     )
 {
 #if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
-    const_AUTO(hash_type, hash->hash_type);
+    const_SLOT(hash_type, hash);
 #endif
     /* Get the index of the appropriate chain in the hash table */
 #define PLACE() (hash_value & (hash->size_bitmask))

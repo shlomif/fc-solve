@@ -212,7 +212,7 @@ static void iter_handler_wrapper(
         {      \
 
 #define FLARES_LOOP_START() \
-    const_AUTO(end_of_instances_list, user->end_of_instances_list); \
+    const_SLOT(end_of_instances_list, user); \
     for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < end_of_instances_list ; instance_item++)\
     { \
         INSTANCE_ITEM_FLARES_LOOP_START()
@@ -554,7 +554,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     )
 {
     *instance_list_index = 0;
-    const_AUTO(end_of_instances_list, user->end_of_instances_list);
+    const_SLOT(end_of_instances_list, user);
     for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < end_of_instances_list ; instance_item++, (*instance_list_index)++)
     {
         if (instance_item->flares_plan_compiled)
@@ -562,7 +562,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
             continue;
         }
         fcs_flare_item_t * const flares = instance_item->flares;
-        const_AUTO(end_of_flares, instance_item->end_of_flares);
+        const_SLOT(end_of_flares, instance_item);
 
         /* If the plan string is NULL or empty, then set the plan
          * to run only the first flare indefinitely. (And then have
