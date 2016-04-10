@@ -211,7 +211,8 @@ static void iter_handler_wrapper(
         {      \
 
 #define FLARES_LOOP_START() \
-    for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < user->end_of_instances_list ; instance_item++)\
+    const typeof(user->end_of_instances_list) end_of_instances_list = user->end_of_instances_list; \
+    for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < end_of_instances_list ; instance_item++)\
     { \
         INSTANCE_ITEM_FLARES_LOOP_START()
 
@@ -552,7 +553,8 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     )
 {
     *instance_list_index = 0;
-    for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < user->end_of_instances_list ; instance_item++, (*instance_list_index)++)
+    const typeof(user->end_of_instances_list) end_of_instances_list = user->end_of_instances_list;
+    for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < end_of_instances_list ; instance_item++, (*instance_list_index)++)
     {
         if (instance_item->flares_plan_compiled)
         {
@@ -990,6 +992,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
+    const typeof(user->end_of_instances_list) end_of_instances_list = user->end_of_instances_list;
     /*
      * I expect user->current_instance_idx to be initialized with some value.
      * */
@@ -1265,7 +1268,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             instance_item->all_plan_items_finished_so_far = 0;
         }
     } while (
-        (user->current_instance < user->end_of_instances_list) &&
+        (user->current_instance < end_of_instances_list) &&
         (ret == FCS_STATE_IS_NOT_SOLVEABLE)
     );
 
