@@ -42,6 +42,7 @@ extern "C"
 #include "state.h"
 #include "meta_alloc.h"
 #include "fcs_enums.h"
+#include "typeof_wrap.h"
 
 #include "fcs_dllexport.h"
 #include "dbm_common.h"
@@ -114,9 +115,9 @@ static GCC_INLINE void fc_solve__internal__copy_moves(
 )
 {
     int pos_in_moves = *ptr_to_pos_in_moves;
-    typeof (*ptr_to_end_moves_iter) end_moves_iter = (*ptr_to_end_moves_iter);
+    var_AUTO(end_moves_iter, *ptr_to_end_moves_iter);
     const fcs_fcc_moves_list_item_t * copy_from_iter = moves_seq->moves_list;
-    const typeof(moves_seq->count) count = moves_seq->count;
+    const_SLOT(count, moves_seq);
 
     for ( int copy_from_idx = 0 ; copy_from_idx < count ; )
     {

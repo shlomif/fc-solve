@@ -40,6 +40,7 @@ extern "C" {
 #include "inline.h"
 #include "bool.h"
 #include "fcs_limit.h"
+#include "typeof_wrap.h"
 
 #ifdef FCS_INLINED_HASH_COMPARISON
 enum FCS_INLINED_HASH_DATA_TYPE
@@ -198,7 +199,7 @@ static GCC_INLINE void fc_solve_hash_foreach(
     void * const context
     )
 {
-    const typeof(hash->size) size = hash->size;
+    const_SLOT(size, hash);
     for (int i = 0 ; i < size ; i++)
     {
         fc_solve_hash_symlink_item_t * * item = &(hash->entries[i].first_item);

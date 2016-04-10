@@ -43,6 +43,7 @@ extern "C" {
 #include "inline.h"
 #include "bool.h"
 #include "alloc_wrap.h"
+#include "typeof_wrap.h"
 
 #include "offloading_queue.h"
 
@@ -172,7 +173,7 @@ static GCC_INLINE fcs_bool_t fcs_depth_multi_queue__extract(
 
     while (queue->queues_by_depth[0].num_items_in_queue == 0)
     {
-        typeof(queue->queues_by_depth[0]) save_queue = queue->queues_by_depth[0];
+        var_AUTO(save_queue, queue->queues_by_depth[0]);
         memmove(
             queue->queues_by_depth,
             queue->queues_by_depth+1,
