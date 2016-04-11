@@ -30,8 +30,6 @@
 #include "config.h"
 #include "state.h"
 #include "fcs_enums.h"
-#include "unused.h"
-#include "inline.h"
 
 #define NUM_BITS_IN_BYTES 8
 

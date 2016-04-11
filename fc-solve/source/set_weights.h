@@ -35,8 +35,7 @@ extern "C" {
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "inline.h"
-#include "alloc_wrap.h"
+#include "rinutils.h"
 #include "fcs_user.h"
 
 static GCC_INLINE void fc_solve_set_weights(

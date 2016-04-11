@@ -35,7 +35,6 @@
 #undef FCS_RCS_STATES
 
 #include "dbm_common.h"
-#include "fcs_dllexport.h"
 #include "delta_states_any.h"
 #include "fcc_brfs.h"
 #include "fcc_brfs_test.h"

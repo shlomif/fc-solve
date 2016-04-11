@@ -27,8 +27,6 @@
 #ifndef FC_SOLVE__DBM_PROCS_H
 #define FC_SOLVE__DBM_PROCS_H
 
-#include "inline.h"
-#include "portable_time.h"
 #include "dbm_move_to_string.h"
 
 #ifdef __cplusplus

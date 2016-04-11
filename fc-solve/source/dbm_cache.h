@@ -35,11 +35,6 @@ extern "C"
 
 #include "config.h"
 
-#include "bool.h"
-#include "inline.h"
-#include "alloc_wrap.h"
-#include "unused.h"
-
 #include "state.h"
 #include "meta_alloc.h"
 #include "fcs_enums.h"

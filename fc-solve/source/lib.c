@@ -45,16 +45,6 @@
 #include "fc_pro_iface_pos.h"
 #endif
 
-#include "unused.h"
-#include "bool.h"
-#include "indirect_buffer.h"
-#include "count.h"
-#include "min_and_max.h"
-#include "typeof_wrap.h"
-#include "alloc_wrap.h"
-
-#include "str_utils.h"
-
 #define FCS_MAX_FLARE_NAME_LEN 30
 
 typedef struct {

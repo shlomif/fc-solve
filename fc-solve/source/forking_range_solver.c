@@ -38,10 +38,6 @@
 #define USE_EPOLL
 #endif
 
-#include "alloc_wrap.h"
-#include "portable_int64.h"
-#include "portable_time.h"
-
 #ifndef WIN32
 #include <unistd.h>
 #endif
@@ -55,10 +51,9 @@
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
-#include "unused.h"
-#include "inline.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
+#include "rinutils.h"
 
 #define BINARY_OUTPUT_NUM_INTS 16
 

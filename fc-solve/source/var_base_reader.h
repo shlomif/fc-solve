@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <gmp.h>
 
-#include "inline.h"
+#include "rinutils.h"
 
 typedef struct
 {

@@ -45,10 +45,6 @@ extern "C" {
 #include "internal_move_struct.h"
 #include "indirect_buffer.h"
 
-#include "inline.h"
-#include "bool.h"
-#include "alloc_wrap.h"
-
 extern const fcs_internal_move_t fc_solve_empty_move;
 
 #define FCS_MOVE_STACK_GROW_BY 16

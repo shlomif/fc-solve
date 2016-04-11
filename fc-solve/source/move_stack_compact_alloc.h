@@ -30,7 +30,6 @@
 #ifndef FC_SOLVE__MOVE_STACK_COMPACT_ALLOC_H
 #define FC_SOLVE__MOVE_STACK_COMPACT_ALLOC_H
 
-#include "inline.h"
 #include "instance.h"
 #include "move.h"
 

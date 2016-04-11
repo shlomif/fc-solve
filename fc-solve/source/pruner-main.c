@@ -30,11 +30,9 @@
 #include <signal.h>
 
 #include "fcs_cl.h"
-#include "unused.h"
-#include "bool.h"
+#include "rinutils.h"
 
 #ifdef FCS_TRACE_MEM
-#include "portable_time.h"
 #include <unistd.h>
 #include <sys/types.h>
 #endif

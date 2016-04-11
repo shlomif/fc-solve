@@ -42,11 +42,6 @@
 
 #undef FCS_RCS_STATES
 
-#include "alloc_wrap.h"
-#include "bool.h"
-#include "inline.h"
-#include "portable_time.h"
-
 #include "dbm_calc_derived.h"
 
 #include "delta_states_any.h"

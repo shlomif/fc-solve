@@ -5,9 +5,7 @@
 
 #include "fc_pro_iface_pos.h"
 
-#include "inline.h"
-#include "min_and_max.h"
-#include "alloc_wrap.h"
+#include "rinutils.h"
 
 static GCC_INLINE int Cvtf89(int fcn)
 {

@@ -31,7 +31,7 @@
 extern "C" {
 #endif
 
-#include "inline.h"
+#include "rinutils.h"
 
 typedef long fcs_rand_t;
 

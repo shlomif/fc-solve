@@ -34,7 +34,7 @@
 
 #include "config.h"
 
-#include "alloc_wrap.h"
+#include "rinutils.h"
 
 #include "alloc.h"
 

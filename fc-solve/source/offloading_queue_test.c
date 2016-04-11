@@ -37,9 +37,7 @@
 
 #include "config.h"
 #undef FCS_RCS_STATES
-
-#include "fcs_dllexport.h"
-
+#include "rinutils.h"
 #include "offloading_queue.h"
 
 /* TODO : Remove later. */

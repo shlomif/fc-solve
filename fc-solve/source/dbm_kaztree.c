@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "unused.h"
-#include "alloc_wrap.h"
 #include "dbm_solver.h"
 #include "generic_tree.h"
 

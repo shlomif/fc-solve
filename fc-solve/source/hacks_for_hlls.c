@@ -39,8 +39,7 @@
 #include "split_cmd_line.h"
 
 #include "prefix.h"
-#include "inline.h"
-#include "bool.h"
+#include "rinutils.h"
 
 #include "cmd_line_enum.h"
 

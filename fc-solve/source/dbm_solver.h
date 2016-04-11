@@ -8,8 +8,6 @@ extern "C"
 
 #include "config.h"
 
-#include "bool.h"
-#include "inline.h"
 #include "generic_tree.h"
 
 #include "dbm_solver_key.h"

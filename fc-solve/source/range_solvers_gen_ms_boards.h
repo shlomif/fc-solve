@@ -35,14 +35,9 @@
 extern "C" {
 #endif
 
-#include "portable_int32.h"
-
-#include "inline.h"
-#include "fcs_dllexport.h"
-#include "bool.h"
-
 #include <string.h>
 
+#include "rinutils.h"
 
 typedef u_int32_t microsoft_rand_uint_t;
 

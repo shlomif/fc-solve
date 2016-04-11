@@ -36,8 +36,6 @@
 #include "instance.h"
 
 #include "move_stack_compact_alloc.h"
-#include "inline.h"
-#include "likely.h"
 
 typedef  unsigned long  int  ub4;   /* unsigned 4-byte quantities */
 typedef  unsigned       char ub1;

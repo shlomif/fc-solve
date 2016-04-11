@@ -38,12 +38,7 @@
 #include <string.h>
 
 #include "fcs_hash.h"
-
 #include "meta_alloc.h"
-
-#include "inline.h"
-#include "typeof_wrap.h"
-
 #include "state.h"
 
 #ifdef FCS_RCS_STATES

@@ -29,8 +29,7 @@
 #ifndef FC_SOLVE__SPLIT_CMD_LINE_H
 #define FC_SOLVE__SPLIT_CMD_LINE_H
 
-#include "inline.h"
-#include "alloc_wrap.h"
+#include "rinutils.h"
 
 #define FC_SOLVE__ARGS_MAN_GROW_BY 32
 

@@ -47,10 +47,6 @@ extern "C" {
 #include <stdlib.h>
 
 #include "state.h"
-#include "inline.h"
-#include "bool.h"
-#include "alloc_wrap.h"
-#include "typeof_wrap.h"
 
 /* manage a priority queue as a heap
    the heap is implemented as a fixed size array of pointers to your data */

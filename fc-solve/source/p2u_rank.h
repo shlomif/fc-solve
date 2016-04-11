@@ -36,10 +36,7 @@ extern "C" {
 
 #include "config.h"
 
-#include "inline.h"
-#include "bool.h"
-#include "min_and_max.h"
-
+#include "rinutils.h"
 /*
  * Those strings contain the string representations of the different cards.
  * If CARD_DEBUG_PRES is defined then an asterisk is printed as an empty card.

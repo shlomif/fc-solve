@@ -40,9 +40,6 @@ extern "C" {
 #include <limits.h>
 #include <string.h>
 
-#include "inline.h"
-#include "bool.h"
-
 #include "instance.h"
 
 #ifdef FCS_FREECELL_ONLY

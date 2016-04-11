@@ -33,9 +33,6 @@ extern "C"
 {
 #endif
 
-#include "fcs_dllexport.h"
-#include "bool.h"
-
 #include "dbm_common.h"
 
 typedef struct

@@ -38,8 +38,6 @@ extern "C" {
 
 #include "instance.h"
 
-#include "inline.h"
-
 static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
         const void * const a,
         const void * const b

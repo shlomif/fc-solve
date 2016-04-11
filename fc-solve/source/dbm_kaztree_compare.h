@@ -35,7 +35,6 @@ extern "C"
 {
 #endif
 
-#include "unused.h"
 #include "delta_states.h"
 
 /* TODO: make sure the key is '\0'-padded. */

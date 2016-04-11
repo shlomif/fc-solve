@@ -37,7 +37,6 @@
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
 #include <assert.h>
-#include "count.h"
 
 #include "depth_multi_queue.h"
 

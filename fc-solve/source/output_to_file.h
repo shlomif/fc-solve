@@ -35,9 +35,7 @@ extern "C" {
 
 #include <stdio.h>
 
-#include "inline.h"
-#include "bool.h"
-#include "typeof_wrap.h"
+#include "rinutils.h"
 
 #include "fcs_enums.h"
 #include "fcs_user.h"

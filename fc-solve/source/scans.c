@@ -47,12 +47,6 @@
 #include "simpsim.h"
 #include "move_funcs_maps.h"
 
-#include "inline.h"
-#include "likely.h"
-#include "bool.h"
-#include "min_and_max.h"
-#include "typeof_wrap.h"
-
 #if 0
 #define DEBUG 1
 #endif

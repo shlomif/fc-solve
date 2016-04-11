@@ -44,20 +44,12 @@
 
 #include "config.h"
 
-#include "state.h"
-#include "instance.h"
 #include "instance_for_lib.h"
-#include "scans.h"
-
-#include "preset.h"
-#include "unused.h"
+#include "instance.h"
 #include "move_funcs_order.h"
-
-#include "inline.h"
-#include "likely.h"
-#include "count.h"
-#include "alloc_wrap.h"
-#include "typeof_wrap.h"
+#include "preset.h"
+#include "scans.h"
+#include "state.h"
 
 /*
     General use of this interface:

@@ -58,14 +58,9 @@ extern "C"
 
 #undef FCS_RCS_STATES
 
-#include "bool.h"
-#include "inline.h"
-#include "portable_time.h"
 #include "lock.h"
-
 #include "dbm_calc_derived.h"
 #include "delta_states_any.h"
-
 #include "dbm_common.h"
 #include "dbm_solver.h"
 #include "dbm_cache.h"

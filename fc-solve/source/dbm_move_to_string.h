@@ -27,8 +27,7 @@
 #ifndef FC_SOLVE__DBM_MOVE_TO_STRING_H
 #define FC_SOLVE__DBM_MOVE_TO_STRING_H
 
-#include "inline.h"
-#include "portable_time.h"
+#include "rinutils.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -36,11 +36,7 @@ extern "C" {
 #include "config.h"
 
 #include "meta_alloc.h"
-
-#include "inline.h"
-#include "bool.h"
-#include "fcs_limit.h"
-#include "typeof_wrap.h"
+#include "rinutils.h"
 
 #ifdef FCS_INLINED_HASH_COMPARISON
 enum FCS_INLINED_HASH_DATA_TYPE

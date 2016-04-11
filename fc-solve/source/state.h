@@ -38,13 +38,9 @@ extern "C" {
 #include "config.h"
 
 #include "fcs_move.h"
-#include "fcs_limit.h"
 #include "fcs_enums.h"
 
-#include "inline.h"
-#include "bool.h"
-#include "min_and_max.h"
-
+#include "rinutils.h"
 #include "game_type_limit.h"
 
 #include "internal_move_struct.h"

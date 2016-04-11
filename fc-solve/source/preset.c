@@ -35,9 +35,6 @@
 #include "preset.h"
 #include "move_funcs_order.h"
 
-#include "inline.h"
-#include "count.h"
-
 enum
 {
     FCS_PRESET_BAKERS_DOZEN,

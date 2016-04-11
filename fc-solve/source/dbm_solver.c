@@ -30,8 +30,6 @@
  */
 
 #include "dbm_solver_head.h"
-#include "unused.h"
-#include "count.h"
 
 typedef struct
 {

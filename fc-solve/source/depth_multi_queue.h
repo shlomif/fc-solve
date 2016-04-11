@@ -40,10 +40,6 @@ extern "C" {
 
 #include "config.h"
 #include "state.h"
-#include "inline.h"
-#include "bool.h"
-#include "alloc_wrap.h"
-#include "typeof_wrap.h"
 
 #include "offloading_queue.h"
 

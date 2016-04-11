@@ -38,8 +38,6 @@ extern "C"
 
 #include "state.h"
 
-#include "inline.h"
-
 typedef struct
 {
     char * recycle_bin;

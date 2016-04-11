@@ -51,11 +51,6 @@
 #include "split_cmd_line.h"
 
 #include "prefix.h"
-#include "inline.h"
-#include "bool.h"
-#include "str_utils.h"
-#include "typeof_wrap.h"
-
 #include "cmd_line_enum.h"
 
 static GCC_INLINE void nullify_newline(char * const line)

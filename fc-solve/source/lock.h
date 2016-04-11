@@ -43,6 +43,8 @@ extern "C" {
 #include <pthread/rwlock_fcfs.h>
 #endif
 
+#include "rinutils.h"
+
 #ifdef FCS_DBM_SINGLE_THREAD
 
 typedef fcs_bool_t fcs_lock_t;

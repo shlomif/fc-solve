@@ -35,9 +35,7 @@ extern "C" {
 
 #include <stdio.h>
 
-#include "inline.h"
-#include "bool.h"
-
+#include "rinutils.h"
 #include "fcs_cl.h"
 
 enum

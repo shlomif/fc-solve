@@ -34,8 +34,7 @@ extern "C" {
 #endif
 
 #include "config.h"
-
-#include "bool.h"
+#include "rinutils.h"
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
 

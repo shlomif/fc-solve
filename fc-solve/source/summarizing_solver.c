@@ -32,11 +32,8 @@
 #include "fcs_user.h"
 #include "fcs_cl.h"
 
+#include "rinutils.h"
 #include "range_solvers_gen_ms_boards.h"
-#include "unused.h"
-#include "bool.h"
-#include "count.h"
-#include "typeof_wrap.h"
 #include "handle_parsing.h"
 
 static void print_help(void)

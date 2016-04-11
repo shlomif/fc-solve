@@ -42,8 +42,7 @@
 #include <stddef.h>
 #include <assert.h>
 
-#include "alloc_wrap.h"
-#include "inline.h"
+#include "rinutils.h"
 
 #define DICT_IMPLEMENTATION
 #include "kaz_tree.h"

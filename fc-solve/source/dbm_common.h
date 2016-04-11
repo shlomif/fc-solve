@@ -34,8 +34,6 @@ extern "C"
 
 #include "config.h"
 
-#include "bool.h"
-#include "inline.h"
 #include "state.h"
 
 enum fcs_dbm_variant_type_t

@@ -35,9 +35,6 @@ extern "C"
 {
 #endif
 
-#include "fcs_dllexport.h"
-#include "bool.h"
-
 #include "dbm_common.h"
 
 typedef unsigned char fcs_fcc_move_t;

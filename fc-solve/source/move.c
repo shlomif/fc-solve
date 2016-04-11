@@ -36,9 +36,6 @@
 #include "state.h"
 #include "fcs_enums.h"
 
-#include "inline.h"
-#include "unused.h"
-
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
 const fcs_internal_move_t fc_solve_empty_move = {0,0,0,0};
 #else

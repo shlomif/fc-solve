@@ -40,8 +40,6 @@ extern "C" {
 
 #include "config.h"
 #include "state.h"
-#include "inline.h"
-#include "bool.h"
 
 typedef const unsigned char * fcs_offloading_queue_item_t;
 #if !defined(FCS_DBM_USE_OFFLOADING_QUEUE)

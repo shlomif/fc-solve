@@ -35,9 +35,6 @@ extern "C" {
 #include "fcs_user.h"
 #include "fcs_cl.h"
 
-#include "bool.h"
-#include "inline.h"
-
 #include "state.h"
 
 typedef struct

@@ -36,9 +36,6 @@ extern "C" {
 #include "config.h"
 #include "instance.h"
 
-#include "inline.h"
-#include "likely.h"
-
 static GCC_INLINE void fc_solve__assign_dest_stack_and_col_ptr(
     char * const positions_by_rank,
     const char dest_stack,

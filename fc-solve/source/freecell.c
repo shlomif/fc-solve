@@ -43,12 +43,7 @@
 #include "scans.h"
 
 #include "meta_move_funcs_helpers.h"
-#include "unused.h"
 #include "freecell.h"
-
-#include "inline.h"
-#include "likely.h"
-#include "min_and_max.h"
 
 /*
  * Throughout this code the following local variables are used to quickly

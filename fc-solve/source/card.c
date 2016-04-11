@@ -33,8 +33,6 @@
 #include <ctype.h>
 
 #include "state.h"
-#include "inline.h"
-#include "bool.h"
 
 #include "p2u_rank.h"
 

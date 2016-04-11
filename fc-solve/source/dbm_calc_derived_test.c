@@ -37,7 +37,6 @@
 #include "config.h"
 #undef FCS_RCS_STATES
 
-#include "fcs_dllexport.h"
 #include "delta_states_any.h"
 #include "dbm_calc_derived.h"
 

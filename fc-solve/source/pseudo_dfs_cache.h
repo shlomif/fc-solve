@@ -38,15 +38,10 @@ extern "C"
 
 #include <Judy.h>
 
-#include "bool.h"
-#include "inline.h"
-#include "alloc_wrap.h"
-
 #include "state.h"
 #include "meta_alloc.h"
 #include "fcs_enums.h"
 
-#include "fcs_dllexport.h"
 #include "dbm_common.h"
 #include "dbm_solver_key.h"
 #include "dbm_calc_derived_iface.h"

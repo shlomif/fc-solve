@@ -10,9 +10,6 @@ extern "C"
 
 #include "config.h"
 
-#include "bool.h"
-#include "inline.h"
-
 #include "delta_states.h"
 
 #ifdef __cplusplus

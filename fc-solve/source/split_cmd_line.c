@@ -35,11 +35,6 @@
 
 #include "split_cmd_line.h"
 
-#include "inline.h"
-#include "bool.h"
-#include "alloc_wrap.h"
-#include "typeof_wrap.h"
-
 typedef struct
 {
     args_man_t args_man;

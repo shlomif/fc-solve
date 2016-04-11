@@ -34,21 +34,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "alloc_wrap.h"
-#include "portable_time.h"
-#include "portable_int64.h"
-
 #include "fcs_user.h"
 #include "fcs_cl.h"
-#include "unused.h"
-#include "inline.h"
-#include "bool.h"
+#include "rinutils.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "output_to_file.h"
 #include "handle_parsing.h"
 
 #ifdef FCS_TRACE_MEM
-#include "portable_time.h"
 #include <unistd.h>
 #include <sys/types.h>
 #endif

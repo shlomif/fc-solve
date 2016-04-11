@@ -35,8 +35,6 @@
 #include "config.h"
 #include "state.h"
 #include "fcs_enums.h"
-#include "unused.h"
-#include "inline.h"
 
 #include "p2u_rank.h"
 

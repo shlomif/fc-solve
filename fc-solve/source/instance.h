@@ -42,12 +42,6 @@ extern "C" {
 #include "fcs_enums.h"
 
 #include "rate_state.h"
-#include "inline.h"
-#include "unused.h"
-#include "fcs_limit.h"
-#include "likely.h"
-#include "count.h"
-
 #include "indirect_buffer.h"
 #include "rand.h"
 #include "game_type_params.h"

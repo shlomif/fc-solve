@@ -37,15 +37,9 @@
 #include <unistd.h>
 #endif
 
-#include "portable_int64.h"
-#include "portable_time.h"
+#include "rinutils.h"
 #include "fcs_user.h"
 #include "fcs_cl.h"
-#include "unused.h"
-#include "inline.h"
-#include "bool.h"
-#include "min_and_max.h"
-
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 

@@ -46,7 +46,7 @@ typedef void * dict_key_t;
 #define dict_allocator avl_allocator
 #else
 
-#include "inline.h"
+#include "rinutils.h"
 #include "kaz_tree.h"
 
 static GCC_INLINE void fc_solve_kaz_tree_delete_by_value(

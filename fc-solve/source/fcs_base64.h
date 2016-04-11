@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "inline.h"
+#include "rinutils.h"
 
 /* We modified the encoding table to have '_' instead of '/',
  * which interferes with UNIX paths.

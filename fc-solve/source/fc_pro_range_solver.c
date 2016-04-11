@@ -30,18 +30,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "portable_time.h"
-#include "portable_int64.h"
-
 #include "fcs_user.h"
 #include "fcs_cl.h"
 
 #include "fc_pro_iface_pos.h"
 #include "range_solvers_gen_ms_boards.h"
-#include "unused.h"
-#include "bool.h"
-#include "indirect_buffer.h"
-#include "count.h"
+#include "rinutils.h"
 
 static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, fcs_state_keyval_pair_t * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {

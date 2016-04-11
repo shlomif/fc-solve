@@ -42,12 +42,6 @@ extern "C" {
 
 #include "config.h"
 
-#include "inline.h"
-#include "likely.h"
-#include "bool.h"
-#include "min_and_max.h"
-#include "typeof_wrap.h"
-
 #include "scans.h"
 
 static GCC_INLINE const fcs_bool_t check_num_states_in_collection(

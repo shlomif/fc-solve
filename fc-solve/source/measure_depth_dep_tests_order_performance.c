@@ -28,14 +28,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "portable_time.h"
-#include "portable_int64.h"
-#include "alloc_wrap.h"
 
+#include "rinutils.h"
 #include "fcs_user.h"
 #include "fcs_cl.h"
-#include "unused.h"
-#include "inline.h"
 #include "range_solvers_gen_ms_boards.h"
 
 static void print_help(void)

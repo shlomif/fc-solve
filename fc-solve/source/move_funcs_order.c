@@ -35,10 +35,6 @@
 #include "move_funcs_order.h"
 #include "set_weights.h"
 
-#include "bool.h"
-#include "str_utils.h"
-#include "inline.h"
-
 int fc_solve_apply_tests_order(
     fcs_tests_order_t * tests_order,
     const char * string,

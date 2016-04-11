@@ -33,8 +33,6 @@
 #include "config.h"
 #include "simpsim.h"
 
-#include "bool.h"
-#include "typeof_wrap.h"
 #include "scans.h"
 
 /* This is a fallback in case this module is still compiled with
