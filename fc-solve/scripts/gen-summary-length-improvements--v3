@@ -1,0 +1,216 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use autodie;
+
+use IO::All qw/io/;
+use Storable qw/nstore retrieve/;
+
+use Math::Random;
+
+STDOUT->autoflush(1);
+
+my $BASE_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed-GenLen-v3";
+my $OUTPUT_PATH = "$BASE_PATH/scans/";
+# my $MAX_ITERS = 10_000;
+my $MAX_ITERS = 2_000;
+
+# my $THEME = q#--method random-dfs -to '[01][2345]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+# my $THEME = q#--method random-dfs -to '[01][2345][6789]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+# my $THEME = q#--method random-dfs -to '[01][2345][6789]' -dto2 '13,[0123456]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+
+my $REFERENCE_FN = "$ENV{HOME}/Backup/Arcs/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt";
+
+io->dir($OUTPUT_PATH)->mkpath;
+io->dir($BASE_PATH)->mkpath;
+
+my $STATE_PATH = "$BASE_PATH/State.storable";
+my $state = retrieve($STATE_PATH) //
+    {
+        Math_Random_Seed => [24, 2098],
+        scans => [],
+        num_seeds => 0,
+    };
+
+random_set_seed(@{$state->{Math_Random_Seed}});
+
+my @CHOICES =
+(
+    '[01][23456789]',
+    '[01][234567]',
+    '[01234567]',
+    '[01234][56789]',
+    '[0123456789]',
+    '[012567][3489]',
+    '0123[456789]',
+    '[0123][456][789]',
+);
+
+my $MAX_DTO_DELTA = 20;
+
+my $MAX_LEVELS = 4;
+
+my $BASE = 'theme1';
+
+my @REF = map { /Length: ([0-9\-]+)\z/ ? $1 : (die "Cannot match <$_>") }
+    io->file($REFERENCE_FN)->chomp->getlines;
+
+my $continue = 1;
+my $was_signal_hit = 0;
+STDOUT->autoflush(1);
+
+sub catch_usr1
+{
+    print "Prompting after next iteration.\n";
+    $was_signal_hit = 1;
+
+    return;
+}
+
+$SIG{USR1} = \&catch_usr1;
+$SIG{INT} = \&catch_usr1;
+
+sub run_scan
+{
+    my ($args) = @_;
+
+    my $seed = $args->{seed};
+    my $scan_idx = $args->{scan_idx};
+
+    my $SCAN_DIR = qq#$OUTPUT_PATH/scan__$scan_idx#;
+    my $THEME = $state->{scans}->[$scan_idx];
+    io->dir($SCAN_DIR)->mkpath;
+    {
+        my $out_fn = qq#$SCAN_DIR/lens-$BASE--seed=$seed.txt#;
+
+        if (! -e $out_fn)
+        {
+            my $max = 0;
+            my $sum = 0;
+            my $count = 0;
+            my $out_fn_deltas = "$out_fn.DELTAS";
+            my $out_fn_summary = "$out_fn.SUMMARY";
+
+            my $cmd = qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn"#;
+            print "$cmd\n";
+            open(my $fh, "$cmd |");
+            my $deal = 0;
+            open my $d_fh, '>', $out_fn_deltas;
+            while (my $l = <$fh>)
+            {
+                my $delta = -1;
+                if ($l =~ /Unsolved/)
+                {
+                    print $l;
+                }
+                elsif ($l =~ /Verdict: Solved/)
+                {
+                    my ($i) = ($l =~ /Length: ([0-9]+)/)
+                        or die "Wrong line <$l>";
+
+                    my $r = $REF[$deal];
+
+                    if ($i < $r)
+                    {
+                        $delta = $r - $i;
+                        $sum += $delta;
+                        $count++;
+                        if ($delta > $max)
+                        {
+                            $max = $delta;
+                        }
+                    }
+                }
+                print {$d_fh} "$delta\n";
+            }
+            continue
+            {
+                $deal++;
+            }
+            close ($fh);
+            close ($d_fh);
+            my $MSG = "count = $count ; sum = $sum ; max = $max";
+            io->file($out_fn_summary)->print("$MSG\n");
+            print "Seed = $seed ; $MSG\n";
+        }
+    }
+}
+
+while ($continue)
+{
+    # Create a new scan
+    {
+        my $num_levels = random_uniform_integer(1,1,$MAX_LEVELS+1);
+        my @perm = random_permutation(@CHOICES);
+        my $depth = 0;
+        my $theme = '';
+        for my $l (1 .. $num_levels)
+        {
+            $theme .= " -dto2 \"$depth," . (shift@perm) . q#"#;
+            $depth += random_uniform_integer(1,1,$MAX_DTO_DELTA+1);
+        }
+        push @{$state->{scans}}, qq#--method random-dfs$theme -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+
+        my $scan_idx = $#{$state->{scans}};
+        # Now run the previous seed range through this scan.
+        foreach my $seed (1 .. $state->{num_seeds})
+        {
+            run_scan({ scan_idx => $scan_idx, seed => $seed });
+        }
+    }
+    {
+        my $new_seed = ++$state->{num_seeds};
+        foreach my $scan_idx (keys@{$state->{scans}})
+        {
+            run_scan({ scan_idx => $scan_idx, seed => $new_seed });
+        }
+    }
+    {
+        $state->{Math_Random_Seed} = [random_get_seed()];
+        nstore($state, $STATE_PATH);
+    }
+
+    if ($was_signal_hit)
+    {
+        $was_signal_hit = 0;
+        print "Continue or quit?\n";
+        my $l = <STDIN>;
+        chomp$l;
+        if ($l eq 'q')
+        {
+            $continue = 0;
+        }
+    }
+}
+
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2016 by Shlomi Fish
+
+This program is distributed under the MIT (X11) License:
+L<http://www.opensource.org/licenses/mit-license.php>
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+=cut
