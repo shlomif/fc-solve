@@ -26,12 +26,13 @@ io->dir($OUTPUT_PATH)->mkpath;
 io->dir($BASE_PATH)->mkpath;
 
 my $STATE_PATH = "$BASE_PATH/State.storable";
-my $state = retrieve($STATE_PATH) //
+my $state = ((-e $STATE_PATH) ? retrieve($STATE_PATH) :
     {
         Math_Random_Seed => [24, 2098],
         scans => [],
         num_seeds => 0,
-    };
+    }
+);
 
 random_set_seed(@{$state->{Math_Random_Seed}});
 
