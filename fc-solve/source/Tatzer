@@ -130,9 +130,9 @@ sub _set_to_google_hash
 my %themes =
 (
     tt => [qw(-r --notest-suite --static)],
-    bench => [qw(-l tt --omit-frame --without-visited-iter --single-ht)],
+    bench => [qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1)],
     fc_bench => [qw(
-        -l bench --fc-only --without-depth-field
+        -l bench --fc-only --without-depth-field --without-fc-pro
         )
     ],
     mem_reduction_settings => [qw(
