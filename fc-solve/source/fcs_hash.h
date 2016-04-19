@@ -135,11 +135,11 @@ static GCC_INLINE void fc_solve_hash_init(
 #endif
     )
 {
-#define HASH_WANTED_SIZE 2048
+    const typeof(hash->size) initial_hash_size = 2048;
 
-    hash->size = HASH_WANTED_SIZE;
-    hash->size_bitmask = HASH_WANTED_SIZE-1;
-    fcs_hash_set_max_num_elems(hash, HASH_WANTED_SIZE);
+    hash->size = initial_hash_size;
+    hash->size_bitmask = initial_hash_size-1;
+    fcs_hash_set_max_num_elems(hash, initial_hash_size);
 
     hash->num_elems = 0;
 
@@ -147,7 +147,7 @@ static GCC_INLINE void fc_solve_hash_init(
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the end of each chain is right at the start. */
     hash->entries = (fc_solve_hash_symlink_t *)calloc(
-        HASH_WANTED_SIZE, sizeof(hash->entries[0])
+        initial_hash_size, sizeof(hash->entries[0])
         );
 
     hash->list_of_vacant_items = NULL;
