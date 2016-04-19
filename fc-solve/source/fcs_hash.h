@@ -128,10 +128,11 @@ static GCC_INLINE void fc_solve_hash_init(
     )
 {
 #define HASH_WANTED_SIZE 2048
+#define FCS_HASH__SIZE_2_MAX_NUM_ELEMS(s) (((typeof(hash->max_num_elems_before_resize))(s)) << 1)
 
     hash->size = HASH_WANTED_SIZE;
     hash->size_bitmask = HASH_WANTED_SIZE-1;
-    hash->max_num_elems_before_resize = (HASH_WANTED_SIZE << 1);
+    hash->max_num_elems_before_resize = FCS_HASH__SIZE_2_MAX_NUM_ELEMS(HASH_WANTED_SIZE);
 
     hash->num_elems = 0;
 

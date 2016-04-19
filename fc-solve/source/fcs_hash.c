@@ -101,7 +101,7 @@ static GCC_INLINE void fc_solve_hash_rehash(
     hash->entries = new_entries;
     hash->size = new_size;
     hash->size_bitmask = new_size_bitmask;
-    hash->max_num_elems_before_resize = (new_size << 1);
+    hash->max_num_elems_before_resize = FCS_HASH__SIZE_2_MAX_NUM_ELEMS(new_size);
 }
 
 
