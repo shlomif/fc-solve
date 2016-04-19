@@ -208,9 +208,9 @@ fcs_bool_t fc_solve_hash_insert(
 
     fc_solve_hash_symlink_item_t * item;
 
-    if (hash->list_of_vacant_items)
+    if ((item = hash->list_of_vacant_items))
     {
-        hash->list_of_vacant_items = (item = hash->list_of_vacant_items)->next;
+        hash->list_of_vacant_items = item->next;
     }
     else
     {
