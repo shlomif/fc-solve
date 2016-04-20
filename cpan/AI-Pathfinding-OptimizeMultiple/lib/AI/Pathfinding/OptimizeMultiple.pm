@@ -15,6 +15,7 @@ use AI::Pathfinding::OptimizeMultiple::SimulationResults;
 use MooX qw/late/;
 
 use PDL;
+use Scalar::Util qw/ blessed /;
 
 our $VERSION = '0.0.12';
 
@@ -319,13 +320,13 @@ sub calc_meta_scan
     else
     {
         $err = Exception::Class->caught();
-        if (ref($err))
+        if ($err)
         {
+            if (not ( blessed $err && $err->can('rethrow')))
+            {
+                die $err;
+            }
             $err->rethrow;
-        }
-        elsif ($err)
-        {
-            die $err;
         }
     }
 
