@@ -721,8 +721,11 @@ struct fc_solve_instance_struct
     fcs_int_limit_t i__num_checked_states;
 
     /*
-     * Like max_num_checked_states only defaults to MAX_INT if below zero so it will
-     * work without checking if it's zero.
+     * Limit for the maximal number of checked states. max_num_checked_states
+     * is useful because it can limit the amount of consumed memory (and time).
+     *
+     * This is the effective number that enables the process to work without
+     * checking if it's zero.
      *
      * Normally should be used instead.
      * */
@@ -850,10 +853,6 @@ struct fc_solve_instance_struct
 
 #endif
     /*
-     * Limits for the maximal depth and for the maximal number of checked
-     * states. max_num_checked_states is useful because it enables the process to
-     * stop before it consumes too much memory.
-     *
      * max_depth is quite dangerous because it blocks some intermediate moves
      * and doesn't allow a program to fully reach its solution.
      *
@@ -861,7 +860,6 @@ struct fc_solve_instance_struct
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
     int max_depth;
 #endif
-    fcs_int_limit_t i__max_num_checked_states;
     fcs_int_limit_t trim_states_in_collection_from;
 
     /*

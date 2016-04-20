@@ -95,7 +95,6 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
             .i__num_checked_states = 0,
             .num_states_in_collection = 0,
             .active_num_states_in_collection = 0,
-            .i__max_num_checked_states = -1,
             .effective_max_num_checked_states = INT_MAX,
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
             .max_depth = -1,

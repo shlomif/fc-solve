@@ -1144,13 +1144,11 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
             if (mymin < 0)
             {
-                instance->i__max_num_checked_states = -1;
                 instance->effective_max_num_checked_states = FCS_INT_LIMIT_MAX;
             }
             else
             {
-                instance->i__max_num_checked_states =
-                    instance->effective_max_num_checked_states =
+                instance->effective_max_num_checked_states =
                     (instance->i__num_checked_states + mymin - user->iterations_board_started_at.num_checked_states);
             }
         }
@@ -1721,7 +1719,7 @@ int DLLEXPORT freecell_solver_user_get_limit_iterations(void * const api_instanc
 {
     const fcs_user_t * const user = (const fcs_user_t *)api_instance;
 
-    return user->active_flare->obj.i__max_num_checked_states;
+    return user->active_flare->obj.effective_max_num_checked_states;
 }
 #endif
 
