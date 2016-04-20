@@ -2187,18 +2187,8 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
 {
     fcs_user_t * user = (fcs_user_t*)api_instance;
 
-    if (max_num_states < 0)
-    {
-        user->active_flare->obj.max_num_states_in_collection = -1;
-        user->active_flare->obj.effective_max_num_states_in_collection
-            = FCS_INT_LIMIT_MAX;
-    }
-    else
-    {
-        user->active_flare->obj.effective_max_num_states_in_collection =
-            user->active_flare->obj.max_num_states_in_collection =
-                max_num_states;
-    }
+    user->active_flare->obj.effective_max_num_states_in_collection =
+        ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
 
     return;
 }

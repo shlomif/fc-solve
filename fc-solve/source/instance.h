@@ -802,11 +802,6 @@ struct fc_solve_instance_struct
      * */
     fcs_int_limit_t active_num_states_in_collection, num_states_in_collection;
 
-    /*
-     * A limit to the above.
-     * */
-    fcs_int_limit_t max_num_states_in_collection;
-
 #ifdef FCS_SINGLE_HARD_THREAD
     struct fc_solve_hard_thread_struct hard_thread;
     fcs_bool_t is_optimization_st;
