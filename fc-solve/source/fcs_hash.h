@@ -79,9 +79,11 @@ typedef struct
 {
     /* The vector of the hash table itself */
     fc_solve_hash_symlink_t * entries;
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     /* The list of vacant items as freed by the garbage collector. Use
      * if before allocating more. */
     fc_solve_hash_symlink_item_t * list_of_vacant_items;
+#endif
     /* A comparison function that can be used for comparing two keys
        in the collection */
 #ifdef FCS_INLINED_HASH_COMPARISON
@@ -150,7 +152,9 @@ static GCC_INLINE void fc_solve_hash_init(
         initial_hash_size, sizeof(hash->entries[0])
         );
 
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     hash->list_of_vacant_items = NULL;
+#endif
 
 #ifdef FCS_INLINED_HASH_COMPARISON
     hash->hash_type = hash_type;
@@ -197,6 +201,7 @@ static GCC_INLINE void fc_solve_hash_free(
     hash->entries = NULL;
 }
 
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 static GCC_INLINE void fc_solve_hash_foreach(
     fc_solve_hash_t * const hash,
     const fcs_bool_t (*should_delete_ptr)(void * const key, void * const context),
@@ -228,6 +233,7 @@ static GCC_INLINE void fc_solve_hash_foreach(
         }
     }
 }
+#endif
 
 #ifdef __cplusplus
 }

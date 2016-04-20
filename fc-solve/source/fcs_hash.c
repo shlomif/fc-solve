@@ -206,6 +206,10 @@ fcs_bool_t fc_solve_hash_insert(
         item_placeholder = &(last_item->next);
     }
 
+#define ITEM_ALLOC() fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item))
+#ifdef FCS_WITHOUT_TRIM_MAX_STORED_STATES
+    fc_solve_hash_symlink_item_t * const item = ITEM_ALLOC();
+#else
     fc_solve_hash_symlink_item_t * item;
 
     if ((item = hash->list_of_vacant_items))
@@ -214,8 +218,9 @@ fcs_bool_t fc_solve_hash_insert(
     }
     else
     {
-        item = fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item));
+        item = ITEM_ALLOC();
     }
+#endif
 
     *(item_placeholder) = item;
 

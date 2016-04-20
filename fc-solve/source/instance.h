@@ -730,7 +730,9 @@ struct fc_solve_instance_struct
      * Normally should be used instead.
      * */
     fcs_int_limit_t effective_max_num_checked_states, effective_max_num_states_in_collection;
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_int_limit_t effective_trim_states_in_collection_from;
+#endif
     /*
      * tree is the balanced binary tree that is used to store and index
      * the checked states.

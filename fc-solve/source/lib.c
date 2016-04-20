@@ -2206,10 +2206,12 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     const long max_num_states
     )
 {
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_user_t * const user = (fcs_user_t * const)api_instance;
 
     user->active_flare->obj.effective_trim_states_in_collection_from =
         ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
+#endif
 }
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(

@@ -100,14 +100,12 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
             .max_depth = -1,
 #endif
             .effective_max_num_states_in_collection = FCS_INT_LIMIT_MAX,
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
             .effective_trim_states_in_collection_from = FCS_INT_LIMIT_MAX,
-
+#endif
             .instance_tests_order = {.num_groups = 0, .groups = NULL,},
-
             .list_of_vacant_states = NULL,
-
             .opt_tests_order = {.num_groups = 0, .groups = NULL, },
-
 #ifdef FCS_SINGLE_HARD_THREAD
             .is_optimization_st = FALSE,
 #else

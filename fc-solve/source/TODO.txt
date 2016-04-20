@@ -16,10 +16,6 @@ Non-pressing
 * Experiment with generating the command-line arguments parsing using gperf
 (perfect hash): http://www.ibm.com/developerworks/library/l-gperf/index.html .
 
-* Add a compile-time flag to cancel the +-tmss|--trim-max-stored-states+
-feature along with all the associated code (including the hash foreach and
-the hash +list_of_vacant_items+).
-
 * Try different +fcs_hash.c+ hash fill factors, and try to avoid unnecessary
 calculations to check if it should be rehashed.
 

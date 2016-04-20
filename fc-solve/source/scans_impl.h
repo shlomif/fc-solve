@@ -44,6 +44,7 @@ extern "C" {
 
 #include "scans.h"
 
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
     const fc_solve_instance_t * const instance
     )
@@ -52,6 +53,7 @@ static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
             instance->effective_trim_states_in_collection_from
             );
 }
+#endif
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define check_if_limits_exceeded__num() \
@@ -674,6 +676,7 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 }
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH))
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 static const fcs_bool_t free_states_should_delete(void * const key, void * const context)
 {
     fc_solve_instance_t * const instance = (fc_solve_instance_t * const)context;
@@ -694,6 +697,7 @@ static const fcs_bool_t free_states_should_delete(void * const key, void * const
     }
 }
 #endif
+#endif
 
 static GCC_INLINE void fc_solve_st_free_pq(
     fc_solve_soft_thread_t * const soft_thread
@@ -704,6 +708,7 @@ static GCC_INLINE void fc_solve_st_free_pq(
     );
 }
 
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
 {
 #ifdef DEBUG
@@ -774,6 +779,8 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
     }
 #endif
 }
+#endif
+
 /*
  * fc_solve_soft_dfs_do_solve() is the event loop of the
  * Random-DFS scan. DFS which is recursive in nature is handled here
@@ -1270,6 +1277,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
                     calculate_real_depth(calc_real_depth, PTR_STATE);
 
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
                     if (check_num_states_in_collection(instance))
                     {
                         VERIFY_PTR_STATE_TRACE0("Verify Bakers_Game");
@@ -1278,6 +1286,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
                         VERIFY_PTR_STATE_TRACE0("Verify Penguin");
                     }
+#endif
 
                     if (check_if_limits_exceeded())
                     {

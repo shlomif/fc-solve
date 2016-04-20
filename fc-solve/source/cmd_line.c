@@ -1601,10 +1601,12 @@ break;
         {
             PROCESS_OPT_ARG() ;
 
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
             freecell_solver_set_stored_states_trimming_limit(
                 instance,
                 atol((*arg))
             );
+#endif
         }
         break;
 
