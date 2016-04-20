@@ -2185,12 +2185,10 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
     fcs_int_limit_t max_num_states
     )
 {
-    fcs_user_t * user = (fcs_user_t*)api_instance;
+    fcs_user_t * const user = (fcs_user_t * const)api_instance;
 
     user->active_flare->obj.effective_max_num_states_in_collection =
         ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
-
-    return;
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2208,7 +2206,7 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     const long max_num_states
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t * const)api_instance;
 
     user->active_flare->obj.effective_trim_states_in_collection_from =
         ((max_num_states < 0) ? LONG_MAX : max_num_states);
@@ -2218,7 +2216,7 @@ int DLLEXPORT freecell_solver_user_next_soft_thread(
     void * const api_instance
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
+    fcs_user_t * const user = (fcs_user_t * const)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = fc_solve_new_soft_thread(user->soft_thread->hard_thread);
 
