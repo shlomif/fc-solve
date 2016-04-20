@@ -2210,20 +2210,8 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    if (max_num_states < 0)
-    {
-        user->active_flare->obj.trim_states_in_collection_from = -1;
-        user->active_flare->obj.effective_trim_states_in_collection_from = LONG_MAX;
-    }
-    else
-    {
-        user->active_flare->obj.effective_trim_states_in_collection_from =
-            user->active_flare->obj.trim_states_in_collection_from =
-            max_num_states;
-    }
-
-    return;
-
+    user->active_flare->obj.effective_trim_states_in_collection_from =
+        ((max_num_states < 0) ? LONG_MAX : max_num_states);
 }
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(

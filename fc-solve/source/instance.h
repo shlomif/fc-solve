@@ -855,7 +855,6 @@ struct fc_solve_instance_struct
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
     int max_depth;
 #endif
-    fcs_int_limit_t trim_states_in_collection_from;
 
     /*
      * The debug_iter_output variables provide a programmer programmable way

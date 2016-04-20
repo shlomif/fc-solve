@@ -100,7 +100,6 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
             .max_depth = -1,
 #endif
             .effective_max_num_states_in_collection = INT_MAX,
-            .trim_states_in_collection_from = -1,
             .effective_trim_states_in_collection_from = LONG_MAX,
 
             .instance_tests_order = {.num_groups = 0, .groups = NULL,},
