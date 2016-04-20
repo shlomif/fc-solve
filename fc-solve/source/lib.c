@@ -1142,15 +1142,11 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 }
             }
 
-            if (mymin < 0)
-            {
-                instance->effective_max_num_checked_states = FCS_INT_LIMIT_MAX;
-            }
-            else
-            {
-                instance->effective_max_num_checked_states =
-                    (instance->i__num_checked_states + mymin - user->iterations_board_started_at.num_checked_states);
-            }
+            instance->effective_max_num_checked_states = (
+                (mymin < 0)
+                ? FCS_INT_LIMIT_MAX
+                : (instance->i__num_checked_states + mymin - user->iterations_board_started_at.num_checked_states)
+            );
         }
 
         user->init_num_checked_states.num_checked_states = init_num_checked_states.num_checked_states = instance->i__num_checked_states;
