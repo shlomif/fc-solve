@@ -23,9 +23,6 @@ define a new constant for that.
 feature along with all the associated code (including the hash foreach and
 the hash +list_of_vacant_items+).
 
-* See if the effective vs. user-specified limits can be moved out of the
-+instance.h+ or avoided completely.
-
 * Try different +fcs_hash.c+ hash fill factors, and try to avoid unnecessary
 calculations to check if it should be rehashed.
 

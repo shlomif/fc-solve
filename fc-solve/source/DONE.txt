@@ -511,3 +511,8 @@ by the scan, but may be intaractable.
 ** Thanks to Manish Jain for the report.
 ** Found out that it was a Windows 64-bit package - the package for 4.2.0
 which was built on WinXP is working fine on 32-bit systems.
+
+* Eliminate the non-effective, user-specified limits - they were underused
+and under-referenced and mostly superseded by the effective limits.
+( +instance.h+ ).
+
