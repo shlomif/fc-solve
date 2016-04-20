@@ -516,3 +516,6 @@ which was built on WinXP is working fine on 32-bit systems.
 and under-referenced and mostly superseded by the effective limits.
 ( +instance.h+ ).
 
+* See if any of the +INT_MAX+ s should be converted to +LONG_MAX+ and/or
+define a new constant for that.
+

@@ -16,9 +16,6 @@ Non-pressing
 * Experiment with generating the command-line arguments parsing using gperf
 (perfect hash): http://www.ibm.com/developerworks/library/l-gperf/index.html .
 
-* See if any of the +INT_MAX+ s should be converted to +LONG_MAX+ and/or
-define a new constant for that.
-
 * Add a compile-time flag to cancel the +-tmss|--trim-max-stored-states+
 feature along with all the associated code (including the hash foreach and
 the hash +list_of_vacant_items+).

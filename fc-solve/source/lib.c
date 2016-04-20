@@ -2209,7 +2209,7 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     fcs_user_t * const user = (fcs_user_t * const)api_instance;
 
     user->active_flare->obj.effective_trim_states_in_collection_from =
-        ((max_num_states < 0) ? LONG_MAX : max_num_states);
+        ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
 }
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(

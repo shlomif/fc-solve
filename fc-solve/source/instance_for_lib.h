@@ -95,12 +95,12 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
             .i__num_checked_states = 0,
             .num_states_in_collection = 0,
             .active_num_states_in_collection = 0,
-            .effective_max_num_checked_states = INT_MAX,
+            .effective_max_num_checked_states = FCS_INT_LIMIT_MAX,
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
             .max_depth = -1,
 #endif
-            .effective_max_num_states_in_collection = INT_MAX,
-            .effective_trim_states_in_collection_from = LONG_MAX,
+            .effective_max_num_states_in_collection = FCS_INT_LIMIT_MAX,
+            .effective_trim_states_in_collection_from = FCS_INT_LIMIT_MAX,
 
             .instance_tests_order = {.num_groups = 0, .groups = NULL,},
 
@@ -890,7 +890,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
-    instance->hard_thread.ht__max_num_checked_states = INT_MAX;
+    instance->hard_thread.ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
 
     fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
@@ -966,7 +966,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
-    optimization_thread->ht__max_num_checked_states = INT_MAX;
+    optimization_thread->ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
 
     fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
