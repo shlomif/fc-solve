@@ -222,16 +222,15 @@ fcs_bool_t fc_solve_hash_insert(
     }
 #endif
 
-    *(item_placeholder) = item;
-
-    /* Put the new element at the end of the list */
-    /* Do an in-order insertion. */
-    item->key = key;
-    item->hash_value = hash_value;
+    *(*(item_placeholder) = item) =
+    (typeof(*item)){
+        .key = key,
+        .hash_value = hash_value,
+        .next = NULL,
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    item->secondary_hash_value = secondary_hash_value;
+        .secondary_hash_value = secondary_hash_value,
 #endif
-    item->next = NULL;
+    };
 
     if ((++(hash->num_elems)) > hash->max_num_elems_before_resize)
     {
