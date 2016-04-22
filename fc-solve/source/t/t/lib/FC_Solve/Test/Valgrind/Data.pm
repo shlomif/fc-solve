@@ -3,13 +3,20 @@ package FC_Solve::Test::Valgrind::Data;
 use strict;
 use warnings;
 
-use parent 'FC_Solve::SplitTests::ValidateHash';
+use parent 'Test::Data::Split::Backend::ValidateHash';
 
 my %valgrind_tests;
 
 sub get_hash
 {
     return \%valgrind_tests;
+}
+
+sub validate_and_transform
+{
+    my ($self, $args) = @_;
+
+    return $args->{data};
 }
 
 __PACKAGE__->populate

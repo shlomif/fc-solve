@@ -3,12 +3,19 @@ package FC_Solve::Test::Verify::Data;
 use strict;
 use warnings;
 
-use parent 'FC_Solve::SplitTests::ValidateHash';
+use parent 'Test::Data::Split::Backend::ValidateHash';
 
 my %verify_tests;
 sub get_hash
 {
     return \%verify_tests;
+}
+
+sub validate_and_transform
+{
+    my ($self, $args) = @_;
+
+    return $args->{data};
 }
 
 __PACKAGE__->populate(
