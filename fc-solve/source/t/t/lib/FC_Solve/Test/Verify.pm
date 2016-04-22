@@ -3,7 +3,8 @@ package FC_Solve::Test::Verify;
 use strict;
 use warnings;
 
-sub _run_test
+# Short for run.
+sub r
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
@@ -38,6 +39,15 @@ sub _run_test
     return $test_verdict;
 }
 
+1;
+__END__
+
+sub _run_test
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    return r(@_);
+}
+
 sub run_id
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -46,8 +56,6 @@ sub run_id
 
     return _run_test(@{ $args->{data} }{qw(args msg)});
 }
-
-1;
 
 =head1 COPYRIGHT AND LICENSE
 

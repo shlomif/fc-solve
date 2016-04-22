@@ -41,7 +41,7 @@ sub gen
 
                 return "${fn_prefix}--$args->{id}.t";
             },
-            contents_cb => sub {
+            contents_cb => ($args->{content_cb} // sub {
                 my ($self, $args) = @_;
                 my $id = $args->{id};
                 my $id_quoted = quotemeta($id);
@@ -60,7 +60,7 @@ use $module;
 $module->run_id({ id => qq/$id_quoted/, data => $data, });
 
 EOF
-        },
+        }),
         data_obj => $data_obj,
     }
 )->run;
