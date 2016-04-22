@@ -138,19 +138,18 @@ static GCC_INLINE void fc_solve_cache_stacks(
         {
             column = fcs_state_get_col(*(new_state_key), i);
 
-            replace_with_cached(fc_solve_hash_insert(
+            cached_stack = fc_solve_hash_insert(
                 &(instance->stacks_hash),
                 column,
-                &cached_stack,
                 perl_hash_function(
                     (ub1 *)*(current_stack),
                     col_len
-                    )
+                )
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
                 , hash_value_int
 #endif
-                )
             );
+            replace_with_cached(cached_stack);
         }
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
@@ -383,8 +382,8 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
 #endif
     {
-        void * existing_void;
-        if (fc_solve_hash_insert(
+        void * const existing_void =
+        fc_solve_hash_insert(
         &(instance->hash),
 #ifdef FCS_RCS_STATES
         new_state->val,
@@ -392,7 +391,6 @@ fcs_bool_t fc_solve_check_and_add_state(
 #else
         FCS_STATE_kv_to_collectible(new_state),
 #endif
-        &existing_void,
         perl_hash_function(
             (ub1 *)(new_state_key),
             sizeof(*(new_state_key))
@@ -400,7 +398,8 @@ fcs_bool_t fc_solve_check_and_add_state(
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
         , hash_value_int
 #endif
-        ))
+        );
+        if (existing_void)
         {
             FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
             return FALSE;

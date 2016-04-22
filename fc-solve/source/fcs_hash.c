@@ -107,13 +107,12 @@ static GCC_INLINE void fc_solve_hash_rehash(
 
 
 
-fcs_bool_t fc_solve_hash_insert(
+void * const fc_solve_hash_insert(
     fc_solve_hash_t * const hash,
     void * const key,
 #ifdef FCS_RCS_STATES
     void * const key_id,
 #endif
-    void * * const existing_key,
     const fc_solve_hash_value_t hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     , const fc_solve_hash_value_t secondary_hash_value
@@ -193,9 +192,7 @@ fcs_bool_t fc_solve_hash_insert(
                 && MY_HASH_COMPARE()
                )
             {
-                *existing_key = item->key;
-
-                return TRUE;
+                return item->key;
             }
             /* Cache the item before the current in last_item */
             last_item = item;
@@ -237,11 +234,8 @@ fcs_bool_t fc_solve_hash_insert(
         fc_solve_hash_rehash(hash);
     }
 
-    *existing_key = NULL;
-
-    return FALSE;
+    return NULL;
 }
-
 
 #else
 
