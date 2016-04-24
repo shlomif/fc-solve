@@ -2,6 +2,8 @@
 
 use strict;
 use warnings;
+use autodie;
+
 use List::Util qw(first);
 use Data::Dumper;
 
@@ -14,168 +16,39 @@ my $in = 0;
 
 my %strings_to_opts_map;
 
+my $gperf_fn = 'cmd_line.gperf';
 sub gen_radix_tree
 {
-    my $start = {};
-
-    while (my ($string, $value) = each(%strings_to_opts_map))
-    {
-        my $remaining = $string;
-        my $reached = $start;
-
-        PUT_STRING:
-        while (defined($value))
-        {
-            if (!%$reached)
-            {
-                $reached->{$remaining} = $value;
-                undef($value);
-            }
-            else
-            {
-                my @keys = keys(%$reached);
-                for my $pos (reverse(1 .. length($remaining)))
-                {
-                    if (my $k =
-                        first
-                        {
-                            substr($_, 0, $pos) eq
-                            substr($remaining, 0, $pos)
-                        } @keys
-                    )
-                    {
-                        if ($pos == length($k))
-                        {
-                            $remaining = substr($remaining,$pos);
-
-                            if (ref($reached->{$k}) ne "HASH")
-                            {
-                                $reached->{$k} =
-                                {
-                                    "" => $reached->{$k},
-                                }
-                            }
-
-                            $reached = $reached->{$k};
-
-                            next PUT_STRING;
-                        }
-                        else
-                        {
-                            # Split the node at the position.
-                            $reached = $reached->{substr($k, 0, $pos)} =
-                            {
-                                substr($k, $pos) => delete($reached->{$k}),
-                            };
-
-                            $remaining = substr($remaining, $pos);
-
-                            next PUT_STRING;
-                        }
-                    }
-                }
-
-                # Split at the first character
-                foreach my $k (keys(%$reached))
-                {
-                    if (($k eq "") || (length($k) == 1))
-                    {
-                        next;
-                    }
-                    my $v = delete($reached->{$k});
-                    $reached->{substr($k,0,1)} =
-                    {
-                        substr($k,1) => $v,
-                    }
-                }
-                if (length($remaining) <= 1)
-                {
-                    $reached->{$remaining} = $value;
-                    $remaining = "";
-                    undef($value);
-                }
-                else
-                {
-                    $reached = $reached->{substr($remaining,0,1)} = {};
-                    $remaining = substr($remaining,1);
-                }
-            }
-        }
-    }
-
-    # print Dumper($start);
-
-    # Now let's render $start into C-code.
-    my $code = "";
-
-    $code .= <<"EOF";
-p = (*arg);
-opt = FCS_OPT_UNRECOGNIZED;
+    open my $fh, '>', $gperf_fn;
+    print {$fh} <<"EOF";
+%{
+#include "cmd_line_enum.h"
+%}
+struct CommandOption
+  {
+  const char * name;
+  int OptionCode;
+  };
 EOF
+    print {$fh} "%%\n", map { "$_, $strings_to_opts_map{$_}\n" } sort { $a cmp $b } keys %strings_to_opts_map;
 
-    my $render;
+    close($fh);
 
-    $render = sub {
-        my $node = shift;
-
-        my $ret = "";
-
-        if (ref($node) ne "HASH")
-        {
-            return "\n{\nif (*p == '\\0')\n{\n\nopt = $node;\n}\n}\n";
-        }
-
-        my @k = (sort { $a cmp $b } keys(%$node));
-        if (@k == 1)
-        {
-            my $key = $k[0];
-            my $has_kids = (ref($node->{$key}) eq "HASH");
-            if ((length($key) == 1) && $has_kids)
-            {
-                return "\n{\nif (*(p++) == '$key')\n{\n" . $render->($node->{$key}) . "\n}\n\n}\n";
-            }
-            else
-            {
-                if ($has_kids)
-                {
-                    return <<"EOF";
-{
-    if ((p_rest = try_str_prefix(p, "$key")))
+    return <<"EOF";
+    p = (*arg);
     {
-        p = p_rest;
-        @{[scalar $render->($node->{$key})]}
-    }
-}
-EOF
-                }
-                else
-                {
-                    return <<"EOF";
-{
-    if (!strcmp(p, "$key"))
+    const unsigned int len = strlen(p);
+    const_AUTO(word, in_word_set(p, len));
+    if (word)
     {
-        opt = $node->{$key};
+        opt = word->OptionCode;
     }
-}
+    else
+    {
+        opt = FCS_OPT_UNRECOGNIZED;
+    }
+    }
 EOF
-                }
-            }
-        }
-        else
-        {
-            return "{ switch(*(p++)) {"
-                . join("", (map { "\ncase '" . (length($_) ? $_ : q{\\0}) . "':\n"
-                    . (length($_)
-                        ? $render->($node->{$_})
-                        : "{\nopt = $node->{$_};\n}\n"
-                    )
-                    . "\nbreak;\n"
-                } @k))
-                . "\n}\n}\n";
-        }
-    };
-
-    return $code . $render->($start);
 }
 
 my $ws = " " x 4;
@@ -263,13 +136,19 @@ print {$enum_fh} <<'EOF';
  * cmd_line_enum.h - the ANSI C enum (= enumeration) for the command line
  * arguments. Partially auto-generated.
  */
+
+#ifndef FC_SOLVE__CMD_LINE_ENUM_H
+#define FC_SOLVE__CMD_LINE_ENUM_H
 EOF
 print {$enum_fh} "enum\n{\n",
     (map { $ws . $_ . ",\n" } @enum[0..$#enum-1]),
     $ws . $enum[-1] . "\n",
     "};\n";
+
+print {$enum_fh} "\n#endif\n";
 close($enum_fh);
 
+system(qq#gperf -t "$gperf_fn" > cmd_line_inc.c#);
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2000 Shlomi Fish

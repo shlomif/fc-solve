@@ -25,6 +25,9 @@
  * cmd_line_enum.h - the ANSI C enum (= enumeration) for the command line
  * arguments. Partially auto-generated.
  */
+
+#ifndef FC_SOLVE__CMD_LINE_ENUM_H
+#define FC_SOLVE__CMD_LINE_ENUM_H
 enum
 {
     FCS_OPT_UNRECOGNIZED,
@@ -69,3 +72,5 @@ enum
     FCS_OPT_PATSOLVE_X_PARAM,
     FCS_OPT_PATSOLVE_Y_PARAM
 };
+
+#endif
