@@ -10,6 +10,10 @@ Pressing
 Non-pressing
 ------------
 
+* Implement a transpose command (to flip a layout from vertical to horizontal)
+by request of Manish.
+** With tests.
+
 * Experiment with generating the command-line arguments parsing using gperf
 (perfect hash): http://www.ibm.com/developerworks/library/l-gperf/index.html .
 
