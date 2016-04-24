@@ -152,19 +152,32 @@ foreach my $rec (
     my $arch = $rec->{a};
 
     $themes{$id} = ["--arch=$arch"];
-    # Benchmark for freecell only
-    $themes{$id.'b'} = [qw(-l fc_bench -l), $id];
-    # Generalised benchmark - not freecell-only - should pass the tests.
-    $themes{$id.'bb'} = [qw(-l bench -l), $id];
-    # Memory conserving theme - for freecell only
-    $themes{$id.'m'} = [qw(-l fc_reduce_mem -l), $id];
-    # Generalised Memory conserving theme - not only for freecell
-    $themes{$id.'mm'} = [qw(-l reduce_mem -l), $id];
-    # Testing theme - aims to run the tests quickly
-    $themes{$id.'t'} = ['-l', $id.'bb', qw(-l testing),];
 
+    my $def = sub {
+        my ($suffix, $theme) = @_;
+        $themes{$id.$suffix} = [@$theme];
+        return;
+    };
+    my $id_def = sub {
+        my ($suffix, $theme) = @_;
+        return $def->($suffix, ['-l', $theme, '-l', $id]);
+    };
+    my $bb_def = sub {
+        my ($suffix, $theme) = @_;
+        return $def->($suffix, ['-l', $id.'bb', @$theme]);
+    };
+    # Benchmark for freecell only
+    $id_def->(b => 'fc_bench');
+    # Generalised benchmark - not freecell-only - should pass the tests.
+    $id_def->(bb => 'bench');
+    # Memory conserving theme - for freecell only
+    $id_def->(m => 'fc_reduce_mem');
+    # Generalised Memory conserving theme - not only for freecell
+    $id_def->(mm => 'reduce_mem');
+    # Testing theme - aims to run the tests quickly
+    $bb_def->(t => [qw(-l testing)]);
     # For use by PySolFC
-    $themes{$id . "_pysol"} = ['-l', $id.'bb', '--num-stacks=14', "--prefix=$ENV{HOME}/apps/fcs-for-pysol",];
+    $bb_def->(_pysol => ['--num-stacks=14', "--prefix=$ENV{HOME}/apps/fcs-for-pysol",]);
 }
 
 my @new_argv = @ARGV;
