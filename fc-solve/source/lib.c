@@ -556,6 +556,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     )
 {
     *instance_list_index = 0;
+    {
     const_SLOT(end_of_instances_list, user);
     for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < end_of_instances_list ; instance_item++, (*instance_list_index)++)
     {
@@ -708,7 +709,31 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
             continue;
         }
     }
+    }
 
+    const_SLOT(flares_iters_factor, user);
+    INSTANCES_LOOP_START()
+        const_SLOT(num_plan_items, instance_item);
+        const_SLOT(plan, instance_item);
+        for (int i = 0; i < num_plan_items; i++)
+        {
+            flares_plan_item * item = plan + i;
+            switch (item->type)
+            {
+                case FLARES_PLAN_RUN_COUNT_ITERS:
+                item->initial_quota = normalize_iters_quota(
+                    (typeof(item->initial_quota))
+                    (flares_iters_factor * item->count_iters)
+                );
+                break;
+
+                case FLARES_PLAN_CHECKPOINT:
+                case FLARES_PLAN_RUN_INDEFINITELY:
+                item->initial_quota = -1;
+                break;
+            }
+        }
+    FLARES_LOOP_END_INSTANCES()
     *instance_list_index = -1;
     clear_error(user);
 
@@ -781,22 +806,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
         for (int i = 0; i < num_plan_items; i++)
         {
             flares_plan_item * item = plan + i;
-            switch (item->type)
-            {
-                case FLARES_PLAN_RUN_INDEFINITELY:
-                item->remaining_quota = item->initial_quota = -1;
-                break;
-
-                case FLARES_PLAN_RUN_COUNT_ITERS:
-                item->remaining_quota = item->initial_quota = normalize_iters_quota(
-                    (typeof(item->initial_quota))
-                    (flares_iters_factor * item->count_iters)
-                );
-                break;
-
-                case FLARES_PLAN_CHECKPOINT:
-                break;
-            }
+            item->remaining_quota = item->initial_quota;
         }
     FLARES_LOOP_END_INSTANCES()
 
