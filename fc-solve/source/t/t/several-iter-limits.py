@@ -6,10 +6,10 @@ import os
 sys.path.insert(0, os.environ['FCS_PY3_LIBDIR'])
 
 from TAP.Simple import *
-# TEST:source "$^CURRENT_DIRNAME/lib/FC_Solve/__init__.py"
+# TEST:source "$^CURRENT_DIRNAME/lib-python3/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 
-plan(11)
+plan(14)
 
 def test_resume_solution():
     testname = "With RunIndef"
@@ -121,6 +121,46 @@ JH JD 3C KS 2C 8C
     # TEST
     ok (fcs.get_num_states_in_col() == 3436, "Num-states-in-collection is OK.");
 
+def test_resume_solution_with_flares():
+    testname = "-l ve on iterative limiting - "
+
+    fcs = FC_Solve()
+
+    step = 1000
+    hard_limit = 100000
+    limit = step
+    # TEST*$input_cmd_line
+    fcs.input_cmd_line("video-editing", ['-l', 'video-editing',]);
+    fcs.limit_iterations(limit)
+
+    # MS deal No. 124
+    ret = fcs.solve_board(
+"""7S AS 2C QS TH QD 7D
+5D 8D 9D JH QH 5C JD
+6D TD 5H 2S 6S TC KS
+TS 4S 3D 9C 3C KD 7C
+6H 5S 9H 6C KC AH
+AC 4C 8S 2D QC JS
+9S KH 8C 4D 7H 4H
+2H 3S 8H AD 3H JC
+""")
+
+    iters_count_ok = 1
+
+    while (ret == 5 and limit < hard_limit):
+        if (fcs.get_num_times() != limit):
+            iters_count_ok = 0
+
+        limit += step
+        fcs.limit_iterations(limit)
+        ret = fcs.resume_solution()
+
+    # TEST
+    ok (ret == 0, testname + "State was successfully solved.")
+
+    # TEST
+    ok (iters_count_ok == 1, testname + "Iters count was OK throughout the solution.")
+
 def main():
 
     test_resume_solution()
@@ -128,6 +168,9 @@ def main():
     test_num_states_in_collection_after_recycle()
 
     test_num_states_in_collection_after_unsolved()
+
+    test_resume_solution_with_flares()
+
 #----------------------------------------------------------------------
 
 if __name__ == "__main__":

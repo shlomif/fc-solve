@@ -4,6 +4,13 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2016-01-14
 :Revision: $Id$
 
+Version 4.4.0: (DD-MMM-YYYY)
+----------------------------
+
+1. Fix a bug where using a flare-based scan while incrementally increasing
+the iterations limit could have created a situation where one scan gets all
+the iterations.
+
 Version 4.2.0: (25-Mar-2016)
 ----------------------------
 

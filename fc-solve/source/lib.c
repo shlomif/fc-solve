@@ -96,11 +96,21 @@ typedef enum
 } flares_choice_type_t;
 #endif
 
+typedef int flare_iters_quota_t;
+
+static GCC_INLINE const flare_iters_quota_t normalize_iters_quota(
+    const flare_iters_quota_t i
+)
+{
+    return max(i, 0);
+}
+
 typedef struct
 {
     fcs_flare_item_t * flare;
     flares_plan_type_t type;
     int count_iters;
+    flare_iters_quota_t remaining_quota, initial_quota;
 } flares_plan_item;
 
 typedef struct
@@ -201,12 +211,14 @@ static void iter_handler_wrapper(
         for (fcs_flare_item_t * flare = instance_item->flares; flare < end_of_flares ; flare++) \
         {      \
 
-#define FLARES_LOOP_START() \
+#define INSTANCES_LOOP_START() \
     const_SLOT(end_of_instances_list, user); \
     for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < end_of_instances_list ; instance_item++)\
     { \
-        INSTANCE_ITEM_FLARES_LOOP_START()
 
+#define FLARES_LOOP_START() \
+    INSTANCES_LOOP_START() \
+        INSTANCE_ITEM_FLARES_LOOP_START()
 
 #define FLARES_LOOP_END_FLARES() \
         }
@@ -762,6 +774,31 @@ int DLLEXPORT freecell_solver_user_solve_board(
     {
         return FCS_STATE_FLARES_PLAN_ERROR;
     }
+    const_SLOT(flares_iters_factor, user);
+    INSTANCES_LOOP_START()
+        const_SLOT(num_plan_items, instance_item);
+        const_SLOT(plan, instance_item);
+        for (int i = 0; i < num_plan_items; i++)
+        {
+            flares_plan_item * item = plan + i;
+            switch (item->type)
+            {
+                case FLARES_PLAN_RUN_INDEFINITELY:
+                item->remaining_quota = item->initial_quota = -1;
+                break;
+
+                case FLARES_PLAN_RUN_COUNT_ITERS:
+                item->remaining_quota = item->initial_quota = normalize_iters_quota(
+                    (typeof(item->initial_quota))
+                    (flares_iters_factor * item->count_iters)
+                );
+                break;
+
+                case FLARES_PLAN_CHECKPOINT:
+                break;
+            }
+        }
+    FLARES_LOOP_END_INSTANCES()
 
     return freecell_solver_user_resume_solution(api_instance);
 }
@@ -964,14 +1001,7 @@ static GCC_INLINE fcs_instance_item_t * get_current_instance_item(
     return (user->current_instance);
 }
 
-typedef int flare_iters_quota_t;
 
-static GCC_INLINE const flare_iters_quota_t normalize_iters_quota(
-    const flare_iters_quota_t i
-)
-{
-    return max(i, 0);
-}
 
 int DLLEXPORT freecell_solver_user_resume_solution(
     void * const api_instance
@@ -1015,8 +1045,10 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             }
         }
 
-        const flares_plan_item * const current_plan_item =
-            &(instance_item->plan[instance_item->current_plan_item_idx++]);
+        const typeof(instance_item->current_plan_item_idx) init_current_plan_item_idx
+            = instance_item->current_plan_item_idx++;
+        flares_plan_item * const current_plan_item =
+            &(instance_item->plan[init_current_plan_item_idx]);
 
 
         if (current_plan_item->type == FLARES_PLAN_CHECKPOINT)
@@ -1037,15 +1069,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         }
 
         const flare_iters_quota_t flare_iters_quota =
-        (
-            (current_plan_item->type == FLARES_PLAN_RUN_INDEFINITELY)
-            ? -1
-            /* (current_plan_item->type == FLARES_PLAN_RUN_COUNT_ITERS)  */
-            : normalize_iters_quota(
-                (typeof(flare_iters_quota))
-                (user->flares_iters_factor * current_plan_item->count_iters)
-            )
-        );
+            current_plan_item->remaining_quota;
 
         fcs_flare_item_t * const flare = current_plan_item->flare;
         fc_solve_instance_t * const instance = &(flare->obj);
@@ -1180,7 +1204,14 @@ int DLLEXPORT freecell_solver_user_resume_solution(
 
         flare->obj_stats.num_checked_states = instance->i__num_checked_states;
         flare->obj_stats.num_states_in_collection = instance->num_states_in_collection;
-        user->iterations_board_started_at.num_checked_states += flare->obj_stats.num_checked_states - init_num_checked_states.num_checked_states;
+        const_AUTO(delta, flare->obj_stats.num_checked_states - init_num_checked_states.num_checked_states);
+        user->iterations_board_started_at.num_checked_states += delta;
+        if (flare_iters_quota >= 0)
+        {
+            current_plan_item->remaining_quota = normalize_iters_quota(
+                flare_iters_quota - delta
+            );
+        }
         user->iterations_board_started_at.num_states_in_collection += flare->obj_stats.num_states_in_collection - init_num_checked_states.num_states_in_collection;
         user->init_num_checked_states = flare->obj_stats;
 
@@ -1251,6 +1282,11 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 continue;
             }
             instance_item->all_plan_items_finished_so_far = 0;
+        }
+
+        if (instance_item->current_plan_item_idx != init_current_plan_item_idx)
+        {
+            current_plan_item->remaining_quota = current_plan_item->initial_quota;
         }
     } while (
         (user->current_instance < end_of_instances_list) &&
