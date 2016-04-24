@@ -53,7 +53,7 @@ fc-solve/source/AUTHORS.xml
 fc-solve/source/B
 fc-solve/source/cmake/Shlomif_Common.cmake
 fc-solve/source/cmd_line.gperf
-fc-solve/source/cmd_line_inc.c
+fc-solve/source/cmd_line_inc.h
 fc-solve/source/COPYING.html
 fc-solve/source/COPYING.xml
 fc-solve/source/fc-solve.6

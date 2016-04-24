@@ -148,7 +148,12 @@ print {$enum_fh} "enum\n{\n",
 print {$enum_fh} "\n#endif\n";
 close($enum_fh);
 
-system(qq#gperf -L ANSI-C -t "$gperf_fn" > cmd_line_inc.c#);
+my $inc_h = 'cmd_line_inc.h';
+if (system(qq#gperf -L ANSI-C -t "$gperf_fn" > "$inc_h"#))
+{
+    unlink($inc_h);
+    die "Running gperf failed!";
+}
 
 =head1 COPYRIGHT AND LICENSE
 

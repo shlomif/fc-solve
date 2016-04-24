@@ -52,7 +52,7 @@
 
 #include "prefix.h"
 #include "cmd_line_enum.h"
-#include "cmd_line_inc.c"
+#include "cmd_line_inc.h"
 
 static GCC_INLINE void nullify_newline(char * const line)
 {

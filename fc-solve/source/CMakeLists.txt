@@ -235,6 +235,16 @@ SET (patsolve_modules
     "${p_dir}/tree.c"
     )
 
+SET (CL_INC_H "cmd_line_inc.h")
+SET (CL_INC_SCRIPT "scripts/gen-cmd-line-radix-tree.pl")
+
+ADD_CUSTOM_COMMAND(
+    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_H}"
+    COMMAND "${PERL_EXECUTABLE}" "${CL_INC_SCRIPT}"
+    DEPENDS "${CL_INC_SCRIPT}"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
 SET (FREECELL_SOLVER_LIB_MODULES
     card.c
     check_and_add_state.c
@@ -252,7 +262,7 @@ SET (FREECELL_SOLVER_LIB_MODULES
     simpsim.c
     split_cmd_line.c
     state.c
-
+    "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_H}"
 )
 
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
