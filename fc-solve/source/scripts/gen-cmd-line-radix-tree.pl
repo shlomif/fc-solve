@@ -148,7 +148,8 @@ print {$enum_fh} "enum\n{\n",
 print {$enum_fh} "\n#endif\n";
 close($enum_fh);
 
-system(qq#gperf -t "$gperf_fn" > cmd_line_inc.c#);
+system(qq#gperf -L ANSI-C -t "$gperf_fn" > cmd_line_inc.c#);
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2000 Shlomi Fish
