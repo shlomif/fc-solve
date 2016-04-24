@@ -523,3 +523,7 @@ define a new constant for that.
 feature along with all the associated code (including the hash foreach and
 the hash +list_of_vacant_items+).
 
+* Investigate why MS deal No. 124 with the +ve+ preset does not finish in
+http://fc-solve.shlomifish.org/js-fc-solve/text/ .
+** See commit 70a0a780cf87f7f6c0791f630bf339ac99086094
+** “Bug fix: iterative iters limit on flares.”
