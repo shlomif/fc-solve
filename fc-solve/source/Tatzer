@@ -172,11 +172,11 @@ my @new_argv = @ARGV;
 CALC_NEW_ARGV:
 for (my $idx = 0; $idx < @new_argv ; $idx++)
 {
-    if ($new_argv[$idx] =~ m{\A-l(.*)\z}ms)
+    if (my ($arg_val) = $new_argv[$idx] =~ m{\A-l(.*)\z}ms)
     {
         my $start_idx = $idx;
 
-        my $param = $1 || $new_argv[++$idx];
+        my $param = $arg_val || $new_argv[++$idx];
 
         if (! (my $cmd = $themes{$param}) )
         {
