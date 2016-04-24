@@ -527,3 +527,12 @@ the hash +list_of_vacant_items+).
 http://fc-solve.shlomifish.org/js-fc-solve/text/ .
 ** See commit 70a0a780cf87f7f6c0791f630bf339ac99086094
 ** “Bug fix: iterative iters limit on flares.”
+
+* Make sure the depth_dbm_fc_solver is working on 32-bit architectures.
+
+* Investigate ways to perform more pointer arithmetics and
+(ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
+
+* See if GCC_INLINE-ing the functions inside fcs_hash.c will yield
+any benefit.
+

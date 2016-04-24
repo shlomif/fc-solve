@@ -38,11 +38,6 @@ end results and performance and will generate the new estimated performance.
 * Write the split-dbm-solver which stores the results on the disk for every
 non-reversible-moves offset, and fully-connected-components.
 
-* Make sure the depth_dbm_fc_solver is working on 32-bit architectures.
-
-* See if GCC_INLINE-ing the functions inside fcs_hash.c will yield
-any benefit.
-
 * Refer to +expand-solitaire-multi-card-moves+ from the fc-solve process.
 
 * Create a displayer for fc-solve's solutions which will allow seeing where a
@@ -57,9 +52,6 @@ goes on until it ends.
 * Investigate a way to have positions_by_rank also index according to the
 suit, and to traverse only the possible parents or children based on the
 suit.
-
-* Investigate ways to perform more pointer arithmetics and
-(ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
 
 * In the states handling, there's still some room for pointer arithmetics.
 
