@@ -1055,12 +1055,8 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             }
         }
 
-        const typeof(instance_item->current_plan_item_idx) init_current_plan_item_idx
-            = instance_item->current_plan_item_idx++;
         flares_plan_item * const current_plan_item =
-            &(instance_item->plan[init_current_plan_item_idx]);
-
-
+            &(instance_item->plan[instance_item->current_plan_item_idx++]);
         if (current_plan_item->type == FLARES_PLAN_CHECKPOINT)
         {
             if (instance_item->minimal_flare)
