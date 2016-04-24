@@ -188,6 +188,7 @@ OBJECTS :=                     \
           card.o              \
           check_and_add_state.o \
           cmd_line.o          \
+          fcs_hash.o          \
           freecell.o          \
           instance.o          \
           lib.o               \

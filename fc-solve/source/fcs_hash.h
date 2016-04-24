@@ -170,6 +170,23 @@ static GCC_INLINE void fc_solve_hash_init(
     return;
 }
 
+/*
+ * Returns NULL if the key is new and the key/val pair was inserted.
+ * Returns the existing key if the key is not new (= a truthy pointer).
+ */
+extern void * const fc_solve_hash_insert(
+    fc_solve_hash_t * const hash,
+    void * const key,
+#ifdef FCS_RCS_STATES
+    void * const key_id,
+#endif
+    const fc_solve_hash_value_t hash_value
+#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
+    , const fc_solve_hash_value_t secondary_hash_value
+#endif
+    );
+
+
 
 static GCC_INLINE void fc_solve_hash_free(
     fc_solve_hash_t * const hash
