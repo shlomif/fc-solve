@@ -723,3 +723,36 @@ Reached Board No. 28000 at 1461169163.874747 (total_num_iters=8907755)
 Reached Board No. 32000 at 1461169164.967871 (total_num_iters=10009958)
 Finished at 1461169164.975866 (total_num_iters=11052198)
 </DUMP>
+
+---------------------------------------------------------
+
+ARGS="--worker-step 16 -l ct" bash scripts/time-threads-num.bash 4 4 x Several Times
+commit 490fa0b5e8f3f30c37be6b7f6388120bdce8e987
+(commit Date: Fri Apr 22 22:43:30 2016 +0300)
+With Profile Guided Optimisation (PGO).
+../source/Tatzer -l ci7b --prefix="/home/shlomif/apps/fcs" --without-trim
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+4.6.0-desktop-0.rc4.1.mga6
+gcc-4.9.3 (built from source).
+lib64google-perftools-devel-2.4-2.mga6
+Without strip.
+
+8.39803791046143s
+
+    Highlight: optimising and inlining fc_solve_hash_insert().
+
+<DUMP>
+Started at 1461353876.172699
+Reached Board No. 4000 at 1461353877.241291 (total_num_iters=348935)
+Reached Board No. 8000 at 1461353878.273784 (total_num_iters=1031951)
+Reached Board No. 12000 at 1461353879.304638 (total_num_iters=3716428)
+Unsolved Board No. 11982 at 1461353879.576487
+Reached Board No. 16000 at 1461353880.418872 (total_num_iters=4427031)
+Reached Board No. 20000 at 1461353881.471233 (total_num_iters=5149772)
+Reached Board No. 24000 at 1461353882.486597 (total_num_iters=7839960)
+Reached Board No. 28000 at 1461353883.483869 (total_num_iters=8169412)
+Reached Board No. 32000 at 1461353884.560910 (total_num_iters=9944628)
+Finished at 1461353884.570737 (total_num_iters=11052198)
+</DUMP>
