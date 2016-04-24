@@ -1262,6 +1262,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 break;
             }
 
+            current_plan_item->remaining_quota = current_plan_item->initial_quota;
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
 
@@ -1284,10 +1285,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             instance_item->all_plan_items_finished_so_far = 0;
         }
 
-        if (instance_item->current_plan_item_idx != init_current_plan_item_idx)
-        {
-            current_plan_item->remaining_quota = current_plan_item->initial_quota;
-        }
     } while (
         (user->current_instance < end_of_instances_list) &&
         (ret == FCS_STATE_IS_NOT_SOLVEABLE)
