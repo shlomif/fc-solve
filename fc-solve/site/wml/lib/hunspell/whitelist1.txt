@@ -103,6 +103,7 @@ Amadiro
 Amadiro's
 Amir
 App-Index
+AppVeyor
 Ari
 AsciiDoc
 Autoconf
@@ -504,6 +505,7 @@ demos
 depth_dbm_fc_solver
 depth_dbm_fc_solver
 der_katz
+developerworks
 dfs
 die_schlange
 disinforming
@@ -582,6 +584,7 @@ gmplib
 gnu99
 good_measure
 google
+gperf
 gperftools
 grep
 gtk
@@ -597,6 +600,7 @@ i1
 i2
 i2
 i3
+ibm
 icc
 icc's
 ifdef's
@@ -619,6 +623,7 @@ kaztree
 ko_bakers_game
 kpat
 kripken
+l-gperf
 larrysan
 lcc
 libJudy
@@ -915,6 +920,7 @@ xrl
 26-Jun-2013
 27-Sep-2015
 28-Jul-2000
+DD-MMM-YYYY
 solution_moves
 
 ==== In: dest/docs/distro/README.html
