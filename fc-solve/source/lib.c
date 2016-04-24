@@ -119,7 +119,7 @@ typedef struct
     flares_plan_item * plan;
     int num_plan_items;
     int current_plan_item_idx;
-    int all_plan_items_finished_so_far;
+    fcs_bool_t all_plan_items_finished_so_far;
     char * flares_plan_string;
     /*
      * The default flares_plan_compiled is "False", which means that the
@@ -1050,7 +1050,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
             /* Otherwise - restart the plan again. */
             else
             {
-                instance_item->all_plan_items_finished_so_far = 1;
+                instance_item->all_plan_items_finished_so_far = TRUE;
                 instance_item->current_plan_item_idx = 0;
             }
         }
@@ -1288,7 +1288,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
                 user->current_instance++;
                 continue;
             }
-            instance_item->all_plan_items_finished_so_far = 0;
+            instance_item->all_plan_items_finished_so_far = FALSE;
         }
 
     } while (
@@ -2573,7 +2573,7 @@ static int user_next_instance(
         .flares_plan_compiled = FALSE,
         .current_plan_item_idx = 0,
         .minimal_flare = NULL,
-        .all_plan_items_finished_so_far = 1,
+        .all_plan_items_finished_so_far = TRUE,
     };
 
     /* ret_code and limit are set at user_next_flare(). */
