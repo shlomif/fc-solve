@@ -189,7 +189,7 @@ and then:
 * Interactive mode? Continue a scan that reached its limit.
 
 * Get the tests to run and pass on MS Windows (32-bit/64-bit) and implement
-AppVoyeur Continuous Integration.
+AppVeyor Continuous Integration.
 
 To be considered
 ----------------
