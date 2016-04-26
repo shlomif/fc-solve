@@ -145,7 +145,10 @@ my $inc_h = 'cmd_line_inc.h';
 
 sub del
 {
-    unlink($inc_h);
+    if (-e $inc_h)
+    {
+        unlink($inc_h);
+    }
 }
 
 del();
