@@ -799,7 +799,6 @@ int DLLEXPORT freecell_solver_user_solve_board(
     {
         return FCS_STATE_FLARES_PLAN_ERROR;
     }
-    const_SLOT(flares_iters_factor, user);
     INSTANCES_LOOP_START()
         const_SLOT(num_plan_items, instance_item);
         const_SLOT(plan, instance_item);
