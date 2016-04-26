@@ -52,7 +52,7 @@ EOF
 }
 
 my $ws = " " x 4;
-my @enum = "FCS_OPT_UNRECOGNIZED";
+my @enum = ("FCS_OPT_UNRECOGNIZED");
 
 my $module_filename = "cmd_line.c";
 open my $module, "<", $module_filename;
