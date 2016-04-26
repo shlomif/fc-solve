@@ -354,15 +354,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     p = (*arg);
     {
     const unsigned int len = strlen(p);
-    const_AUTO(word, in_word_set(p, len));
-    if (word)
-    {
-        opt = word->OptionCode;
-    }
-    else
-    {
-        opt = FCS_OPT_UNRECOGNIZED;
-    }
+    opt = in_word_set(p, len);
     }
         switch (opt)
         {

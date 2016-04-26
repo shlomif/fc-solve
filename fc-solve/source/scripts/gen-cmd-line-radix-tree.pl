@@ -7,6 +7,7 @@ use autodie;
 use List::Util qw(first);
 use Data::Dumper;
 
+my $unrecognized = "FCS_OPT_UNRECOGNIZED";
 my $text_out;
 my $find_prefix;
 my $process_opts = "";
@@ -38,21 +39,13 @@ EOF
     p = (*arg);
     {
     const unsigned int len = strlen(p);
-    const_AUTO(word, in_word_set(p, len));
-    if (word)
-    {
-        opt = word->OptionCode;
-    }
-    else
-    {
-        opt = FCS_OPT_UNRECOGNIZED;
-    }
+    opt = in_word_set(p, len);
     }
 EOF
 }
 
 my $ws = " " x 4;
-my @enum = ("FCS_OPT_UNRECOGNIZED");
+my @enum = ($unrecognized);
 
 my $module_filename = "cmd_line.c";
 open my $module, "<", $module_filename;
@@ -161,6 +154,60 @@ if (system('gperf', '-L', 'ANSI-C', '-t', $gperf_fn, "--output-file=$inc_h"))
     del();
     die "Running gperf failed!";
 }
+
+my $TEXT_TO_REPLACE = <<'EOF';
+  if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
+    {
+      register int key = hash (str, len);
+
+      if (key <= MAX_HASH_VALUE && key >= 0)
+        {
+          register const char *s = wordlist[key].name;
+
+          if (*str == *s && !strcmp (str + 1, s + 1))
+            return &wordlist[key];
+        }
+    }
+  return 0;
+EOF
+
+my $REPLACE_WITH = <<"EOF";
+  if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
+    {
+      register int key = hash (str, len);
+
+      if (key <= MAX_HASH_VALUE && key >= 0)
+        {
+          register const typeof(&wordlist[key]) w = &(wordlist[key]);
+          if (!strcmp(str, w->name))
+          {
+                return w->OptionCode;
+          }
+        }
+    }
+  return $unrecognized;
+EOF
+
+my $ORIG_DECL = <<'EOF';
+struct CommandOption *
+in_word_set (register const char *str, register unsigned int len)
+EOF
+
+my $NEW_DECL = <<'EOF';
+int
+in_word_set (register const char *str, register unsigned int len)
+EOF
+
+use Path::Tiny;
+
+path($inc_h)->edit_utf8(
+    sub {
+        s#\Q$TEXT_TO_REPLACE\E#$REPLACE_WITH#ms
+            or die "Cannot replace TEXT_TO_REPLACE";
+        s#\Q$ORIG_DECL\E#$NEW_DECL#ms
+            or die "Cannot replace ORIG_DECL";
+    }
+);
 
 =head1 COPYRIGHT AND LICENSE
 
