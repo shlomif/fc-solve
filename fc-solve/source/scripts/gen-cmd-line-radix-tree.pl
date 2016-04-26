@@ -149,9 +149,16 @@ print {$enum_fh} "\n#endif\n";
 close($enum_fh);
 
 my $inc_h = 'cmd_line_inc.h';
-if (system(qq#gperf -L ANSI-C -t "$gperf_fn" > "$inc_h"#))
+
+sub del
 {
     unlink($inc_h);
+}
+
+del();
+if (system('gperf', '-L', 'ANSI-C', '-t', $gperf_fn, "--output-file=$inc_h"))
+{
+    del();
     die "Running gperf failed!";
 }
 
