@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use autodie;
 
-use List::Util qw(first);
+use List::Util qw(first max);
 use Data::Dumper;
 
 my $unrecognized = "FCS_OPT_UNRECOGNIZED";
@@ -27,7 +27,7 @@ sub gen_radix_tree
 %}
 struct CommandOption
   {
-  const char * name;
+  char name[@{[1 + max ( map { length } keys(%strings_to_opts_map))]}];
   int OptionCode;
   };
 EOF
