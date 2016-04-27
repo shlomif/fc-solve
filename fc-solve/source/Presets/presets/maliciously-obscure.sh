@@ -1,3 +1,4 @@
+#!/bin/sh
 freecell-solver-range-parallel-solve 1 32000 1 \
 --flare-name 1 --method soft-dfs -to 0123456789 -opt \
 -nf --flare-name 2 --method soft-dfs -to 0123467 -opt \

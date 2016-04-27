@@ -1,3 +1,4 @@
+#!/bin/sh
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method soft-dfs -to 0123456789 -step 500 --st-name 1 -nst \
 --method soft-dfs -to 0123467 -step 500 --st-name 2 -nst \

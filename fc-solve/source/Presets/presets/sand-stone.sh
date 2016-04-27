@@ -1,3 +1,4 @@
+#!/bin/sh
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method soft-dfs -to 01ABCDE -step 500 --st-name 0 -nst \
 --method random-dfs -to [01][ABCDE] -seed 1 -step 500 --st-name 1 -nst \

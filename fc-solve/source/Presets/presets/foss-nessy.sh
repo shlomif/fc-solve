@@ -1,3 +1,4 @@
+#!/bin/sh
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -seed 2 -to 0[01][23456789] -step 500 --st-name 3 -nst \
 --method random-dfs -seed 1 -to 0[0123456789] -step 500 --st-name 4 -nst \

@@ -1,3 +1,4 @@
+#!/bin/sh
 # This scan is derived from as-modified-16.sh in scripts/TEST_OPTIMIZATIONS.
 # What happens is that we searched for scans to quickly solve boards with a
 # large number of iterations.
