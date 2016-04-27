@@ -11,7 +11,7 @@ var freecell_solver_user_current_state_stringify = Module.cwrap('freecell_solver
 var freecell_solver_user_stringify_move_ptr = Module.cwrap('freecell_solver_user_stringify_move_ptr', 'number', ['number', 'number', 'number', 'number']);
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
 var freecell_solver_user_limit_iterations_long = Module.cwrap('freecell_solver_user_limit_iterations_long', 'number', ['number', 'number']);
-var freecell_solver_user_get_invalid_state_error_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_string', 'number', ['number', 'number']);
+var freecell_solver_user_get_invalid_state_error_into_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_into_string', 'number', ['number', 'number', 'number',]);
 var freecell_solver_user_cmd_line_parse_args = Module.cwrap('freecell_solver_user_cmd_line_parse_args', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
 var remove_trailing_space_re = /[ \t]+$/gm;
@@ -99,11 +99,18 @@ Class('FC_Solve', {
         handle_err_code: function(solve_err_code) {
              var that = this;
              if (solve_err_code == FCS_STATE_INVALID_STATE) {
-                 var error_string_ptr = freecell_solver_user_get_invalid_state_error_string(
-                     that.obj, 1
+                 var error_string_ptr = malloc(300);
+
+                 if (error_string_ptr == 0) {
+                     alert ("Could not allocate invalid state error string buffer (out of memory?)");
+                     throw "Gum";
+                 }
+
+                 freecell_solver_user_get_invalid_state_error_into_string(
+                     that.obj, error_string_ptr, 1
                  );
 
-                 var error_string = that._stringify_possibly_null_ptr(error_string_ptr);
+                 var error_string = Module.Pointer_stringify(error_string_ptr);
                  c_free ( error_string_ptr );
 
                  alert (error_string + "\n");
