@@ -10,7 +10,7 @@ var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_
 var freecell_solver_user_current_state_stringify = Module.cwrap('freecell_solver_user_current_state_stringify', 'number', ['number', 'number', 'number', 'number', 'number']);
 var freecell_solver_user_stringify_move_ptr = Module.cwrap('freecell_solver_user_stringify_move_ptr', 'number', ['number', 'number', 'number', 'number']);
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
-var freecell_solver_user_limit_iterations = Module.cwrap('freecell_solver_user_limit_iterations', 'number', ['number', 'number']);
+var freecell_solver_user_limit_iterations_long = Module.cwrap('freecell_solver_user_limit_iterations_long', 'number', ['number', 'number']);
 var freecell_solver_user_get_invalid_state_error_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_string', 'number', ['number', 'number']);
 var freecell_solver_user_cmd_line_parse_args = Module.cwrap('freecell_solver_user_cmd_line_parse_args', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
@@ -143,7 +143,7 @@ Class('FC_Solve', {
             var that = this;
 
             that.current_iters_limit += iters_step;
-            freecell_solver_user_limit_iterations(that.obj, that.current_iters_limit);
+            freecell_solver_user_limit_iterations_long(that.obj, that.current_iters_limit);
 
             return;
         },

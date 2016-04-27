@@ -35,7 +35,7 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_free \
 	freecell_solver_user_get_next_move \
 	freecell_solver_user_get_invalid_state_error_string \
-	freecell_solver_user_limit_iterations \
+	freecell_solver_user_limit_iterations_long \
 	freecell_solver_user_stringify_move_ptr \
 	freecell_solver_user_resume_solution \
 	freecell_solver_user_solve_board \
