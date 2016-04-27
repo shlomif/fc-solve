@@ -182,7 +182,7 @@ static const char * known_parameters[] = {
 
 typedef struct
 {
-    FILE * file;
+    FILE * fh;
     char * buffer;
     char * buffer_end;
     char * ptr;
@@ -200,14 +200,14 @@ static void print_int(binary_output_t * const bin, int val)
     bin->ptr += SIZE_INT;
     if (bin->ptr == bin->buffer_end)
     {
-        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->file);
-        fflush(bin->file);
+        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->fh);
+        fflush(bin->fh);
         /* Reset ptr to the beginning */
         bin->ptr = bin->buffer;
     }
 }
 
-#define print_int_wrapper(i) { if (binary_output.file) { print_int(&binary_output, (i));  } }
+#define print_int_wrapper(i) { if (binary_output.fh) { print_int(&binary_output, (i));  } }
 
 static void print_help(void)
 {
@@ -334,69 +334,6 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    if (binary_output_filename)
-    {
-        FILE * in;
-
-        binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
-        binary_output.ptr = binary_output.buffer;
-        binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
-
-
-        in = fopen(binary_output_filename, "rb");
-        if (in == NULL)
-        {
-            binary_output.file = fopen(binary_output_filename, "wb");
-            if (! binary_output.file)
-            {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
-                exit(-1);
-            }
-
-            print_int_wrapper(start_board);
-            print_int_wrapper(end_board);
-            print_int_wrapper(((int)total_iterations_limit_per_board));
-        }
-        else
-        {
-            read_int_wrapper(in, &start_board);
-            read_int_wrapper(in, &end_board);
-            {
-                int val;
-                read_int_wrapper(in, &val);
-                total_iterations_limit_per_board = (fcs_int_limit_t)val;
-            }
-
-            fseek(in, 0, SEEK_END);
-            const long file_len = ftell(in);
-            if (file_len % 4 != 0)
-            {
-                fprintf(stderr, "%s", "Output file has an invalid length. Terminating.\n");
-                exit(-1);
-            }
-            start_board += (file_len-12)/4;
-            if (start_board >= end_board)
-            {
-                fprintf(stderr, "%s", "Output file was already finished being generated.\n");
-                exit(-1);
-            }
-            fclose(in);
-            binary_output.file = fopen(binary_output_filename, "ab");
-            if (! binary_output.file)
-            {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
-                exit(-1);
-            }
-        }
-    }
-    else
-    {
-        binary_output.file = NULL;
-        binary_output.buffer
-            = binary_output.ptr
-            = binary_output.buffer_end
-            = NULL;
-    }
 
     user.instance = freecell_solver_user_alloc();
 
@@ -439,6 +376,70 @@ int main(int argc, char * argv[])
             }
             return (-1);
         }
+    }
+
+    if (binary_output_filename)
+    {
+        FILE * in;
+
+        binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
+        binary_output.ptr = binary_output.buffer;
+        binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
+
+
+        in = fopen(binary_output_filename, "rb");
+        if (in == NULL)
+        {
+            binary_output.fh = fopen(binary_output_filename, "wb");
+            if (! binary_output.fh)
+            {
+                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
+                exit(-1);
+            }
+
+            print_int_wrapper(start_board);
+            print_int_wrapper(end_board);
+            print_int_wrapper(((int)total_iterations_limit_per_board));
+        }
+        else
+        {
+            read_int_wrapper(in, &start_board);
+            read_int_wrapper(in, &end_board);
+            {
+                int val;
+                read_int_wrapper(in, &val);
+                total_iterations_limit_per_board = (fcs_int_limit_t)val;
+            }
+
+            fseek(in, 0, SEEK_END);
+            const long file_len = ftell(in);
+            if (file_len % 4 != 0)
+            {
+                fprintf(stderr, "%s", "Output file has an invalid length. Terminating.\n");
+                exit(-1);
+            }
+            start_board += (file_len-12)/4;
+            if (start_board >= end_board)
+            {
+                fprintf(stderr, "%s", "Output file was already finished being generated.\n");
+                exit(-1);
+            }
+            fclose(in);
+            binary_output.fh = fopen(binary_output_filename, "ab");
+            if (! binary_output.fh)
+            {
+                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
+                exit(-1);
+            }
+        }
+    }
+    else
+    {
+        binary_output.fh = NULL;
+        binary_output.buffer
+            = binary_output.ptr
+            = binary_output.buffer_end
+            = NULL;
     }
 
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
@@ -562,9 +563,9 @@ int main(int argc, char * argv[])
 
     if (binary_output_filename)
     {
-        fwrite(binary_output.buffer, 1, binary_output.ptr - binary_output.buffer, binary_output.file);
-        fflush(binary_output.file);
-        fclose(binary_output.file);
+        fwrite(binary_output.buffer, 1, binary_output.ptr - binary_output.buffer, binary_output.fh);
+        fflush(binary_output.fh);
+        fclose(binary_output.fh);
     }
 
     return 0;

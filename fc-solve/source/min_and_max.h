@@ -40,4 +40,7 @@ extern "C" {
 #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* FC_SOLVE__MIN_AND_MAX_H */
