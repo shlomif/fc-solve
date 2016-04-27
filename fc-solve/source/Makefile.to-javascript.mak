@@ -31,8 +31,7 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_alloc \
 	freecell_solver_user_cmd_line_read_cmd_line_preset \
 	freecell_solver_user_cmd_line_parse_args \
-	freecell_solver_user_current_state_as_string \
-	freecell_solver_user_current_state_as_string \
+	freecell_solver_user_current_state_stringify \
 	freecell_solver_user_free \
 	freecell_solver_user_get_next_move \
 	freecell_solver_user_get_invalid_state_error_string \

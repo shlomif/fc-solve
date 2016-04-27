@@ -7,7 +7,7 @@ var freecell_solver_user_cmd_line_read_cmd_line_preset = Module.cwrap('freecell_
 var malloc = Module.cwrap('malloc', 'number', ['number']);
 var c_free = Module.cwrap('free', 'number', ['number']);
 var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_next_move', 'number', ['number', 'number']);
-var freecell_solver_user_current_state_as_string = Module.cwrap('freecell_solver_user_current_state_as_string', 'number', ['number', 'number', 'number', 'number']);
+var freecell_solver_user_current_state_stringify = Module.cwrap('freecell_solver_user_current_state_stringify', 'number', ['number', 'number', 'number', 'number', 'number']);
 var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_solver_user_move_ptr_to_string_w_state', 'number', ['number', 'number', 'number']);
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
 var freecell_solver_user_limit_iterations = Module.cwrap('freecell_solver_user_limit_iterations', 'number', ['number', 'number']);
@@ -69,6 +69,16 @@ Class('FC_Solve', {
         _proto_states_and_moves_seq: { is: rw, init: null },
         _pre_expand_states_and_moves_seq: { is: rw, init: null },
         _post_expand_states_and_moves_seq: { is: rw, init: null },
+        _state_string_buffer: { is: rw, init: function () {
+            var ret = malloc(500);
+
+            if (ret == 0) {
+                alert ("Could not allocate state string buffer (out of memory?)");
+                throw "Zam";
+            }
+            return ret;
+            },
+        },
     },
     methods: {
         set_status: function (myclass, mylabel) {
@@ -304,15 +314,9 @@ Class('FC_Solve', {
             };
 
             var get_state_str = function () {
-                var ptr = freecell_solver_user_current_state_as_string(that.obj, 1, 0, 1);
+                freecell_solver_user_current_state_stringify(that.obj, that._state_string_buffer, 1, 0, 1);
 
-                if (ptr == 0) {
-                    alert ("Failed to retrieve the current state (out of memory?)");
-                    throw "Foo";
-                }
-                var ret_string = Module.Pointer_stringify(ptr);
-                c_free(ptr);
-                return ret_string;
+                return Module.Pointer_stringify(that._state_string_buffer);
             };
 
             _out_state (get_state_str() );
@@ -355,6 +359,8 @@ Class('FC_Solve', {
             c_free(move_buffer);
             freecell_solver_user_free(that.obj);
             that.obj = 0;
+            c_free(that._state_string_buffer);
+            that._state_string_buffer = 0;
 
             return;
         },
