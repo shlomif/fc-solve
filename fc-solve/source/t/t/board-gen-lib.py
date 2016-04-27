@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 
-import sys
-import os
-
-sys.path.insert(0, os.environ['FCS_PY3_LIBDIR'])
-
 from TAP.Simple import *
 from ctypes import *
 

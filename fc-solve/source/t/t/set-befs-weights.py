@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 
-import sys
-import os
-
-sys.path.insert(0, os.environ['FCS_PY3_LIBDIR'])
-
 from TAP.Simple import *
 # TEST:source "$^CURRENT_DIRNAME/lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
@@ -39,4 +34,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

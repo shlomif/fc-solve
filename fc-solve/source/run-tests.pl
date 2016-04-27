@@ -116,8 +116,9 @@ GetOptions(
     {
         $add_lib->Append($foo_lib_dir);
     }
-    local $ENV{FCS_PY2_LIBDIR} = $foo_lib_dir;
-    local $ENV{FCS_PY3_LIBDIR} = File::Spec->catdir($abs_bindir, "t", "t", "lib-python3");
+    Env::Path->PYTHONPATH->Prepend(
+        File::Spec->catdir($abs_bindir, "t", "t", "lib-python3")
+    );
 
     my $get_config_fn = sub {
         my $basename = shift;
