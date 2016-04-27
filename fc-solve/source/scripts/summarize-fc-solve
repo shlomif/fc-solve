@@ -58,7 +58,7 @@ if (! (@true == 1))
 if ($is_solvable)
 {
     open my $input_fh, "<", (\$fc_solve_output)
-        or die "Cannnot open fc_solve_output.";
+        or die "Cannot open fc_solve_output.";
     my $varianter = Games::Solitaire::Verify::App::CmdLine->new(
         {
             argv => \@game_params,

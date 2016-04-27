@@ -28,7 +28,7 @@
 
     Usage: pi-make-microsoft-freecell-board [board-number] | fc-solve
 
-    Note: this program is platform independant because it uses its own srand()
+    Note: this program is platform independent because it uses its own srand()
     and random() functions which are simliar to the ones used by the Microsoft
     32-bit compilers.
 

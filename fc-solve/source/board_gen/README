@@ -88,7 +88,7 @@ third parameters. The complete list so far is :
 * streets_and_alleys
 
 If you wish the programs to print the 10 cards with "T"'s instead of
-"10", then append a "-t" flag immidiately after the board generation
+"10", then append a "-t" flag immediately after the board generation
 program's name. For example:
 
 # make_pysol_freecell_board.py -t 24

@@ -657,7 +657,7 @@ From 1.11.10 to 1.11.11:
 
 * Added some meat to u_main.c. I retain full output compatibility with main.c.
 
-* Vis-by-vis I added some functions to lib.c to accomodate for the needs of
+* Vis-by-vis I added some functions to lib.c to accommodate for the needs of
 u_main.c.
 
 From 1.11.9 to 1.11.10:
@@ -769,7 +769,7 @@ From 1.11.2 to 1.11.3:
 
 * Converted caas to use it.
 
-* Some minor defintion tweaks.
+* Some minor definitions tweaks.
 
 * Began converting soft_dfs to using it.
 
@@ -1213,7 +1213,7 @@ From 1.5.3 to 1.5.4
 * Modified fcs_stack_compare_for_comparison so it will correspond to the
 order of fcs_stack_compare_for_stack_sort.
 
-* Specifiying type of talon in the command line arguments.
+* Specifying type of talon in the command line arguments.
 
 From 1.5.2 to 1.5.3
 -------------------
@@ -1298,7 +1298,7 @@ From 1.3.41 to 1.3.42
 
 * Replaced malloc.h by stdlib.h.
 
-* Made the inclusion of search.h into an #ifdef dependant on libredblack only.
+* Made the inclusion of search.h into an #ifdef dependent on libredblack only.
 
 * A makefile fix regarding DLFLAGS.
 
@@ -1596,7 +1596,7 @@ From 1.3.5 to 1.3.6
 From 1.3.4 to 1.3.5
 -------------------
 
-* Made the A* weights run-time paramters.
+* Made the A* weights run-time parameters.
 
 * Placed them in an array.
 
@@ -1841,7 +1841,7 @@ Not tested yet.
 From 0.11.8 to 0.11.9
 ---------------------
 
-* Added the ignore_osins (ignore original state is not solveable) paramter
+* Added the ignore_osins (ignore original state is not solveable) parameter
 to the sfs tests.
 
 * Modified the code of move_top_stack_cards_to_founds and
@@ -1979,7 +1979,7 @@ From 0.9.11 to 0.9.12
 ---------------------
 
 * Modified user_state_to_c() so it will accept empty freecells by
-specifiying them with a "*" or "-".
+specifying them with a "*" or "-".
 
 * Modified check_state_validity() so it will report in case there's a hole
 in one of the stacks.
@@ -2075,7 +2075,7 @@ From 0.9.4 to 0.9.5
 
 * Tested the solver on a Baker's Game board. Looks good!
 
-* Added the startegy documents inside the devel_docs sub-dir. I'll
+* Added the strategy documents inside the devel_docs sub-dir. I'll
 remove them towards the final release.
 
 * Added code for Berkeley DB files. The database creation is not working for
@@ -2409,7 +2409,7 @@ From 0.5.21 to 0.5.22
 ---------------------
 
 * Splitted the move stack cards to stacks function into two:
-  1. Move stack cards to diffrent stacks.
+  1. Move stack cards to different stacks.
   2. Move single stack cards to a non-immediate parent on the same stack.
 
 From 0.5.19 to 0.5.21
@@ -2475,7 +2475,7 @@ so the user will not see them re-arranged all the time.
 From 0.5.5 to 0.5.6
 -------------------
 
-* More global variables transfered to freecell_solver_instance_t
+* More global variables transferred to freecell_solver_instance_t
 
 * Solution boards now stored as state_t's.
 

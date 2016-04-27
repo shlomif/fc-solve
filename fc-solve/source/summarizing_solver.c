@@ -42,9 +42,9 @@ static void print_help(void)
 "summary-fc-solve [deal1_idx] [deal2_idx] .. -- \n"
 "   [--variant variant_str] [fc-solve theme args]\n"
 "\n"
-"Attempts to solve several arbitary deal indexes from the Microsoft/Freecell\n"
-"Pro deals using the fc-solve's theme and reports a summary of their results\n"
-"to STDOUT\n"
+"Attempts to solve several arbitrary deal indexes from the\n"
+"Microsoft/Freecell Pro deals using the fc-solve's theme and reports a\n"
+"summary of their results to STDOUT\n"
           );
     exit(-1);
 }

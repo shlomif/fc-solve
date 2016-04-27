@@ -528,7 +528,7 @@ static void verify_soft_dfs_stack(
 #endif
 /*
  * The mark_as_dead_end() inline function marks a state as a dead end, and
- * afterwards propogates this information to its parent and ancestor states.
+ * afterwards propagates this information to its parent and ancestor states.
  *
  * */
 

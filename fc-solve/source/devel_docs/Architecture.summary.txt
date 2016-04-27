@@ -29,7 +29,7 @@
     4.7 fcs_check_state_validity
     4.8 fcs_state_as_string
 5 move.c
-    5.1 How moves are represnted and handled.
+    5.1 How moves are represented and handled.
     5.2 Move stacks and their operations
     5.3 fcs_move_stack_normalize
 6 How the different scans are handled. (scans.c and caas.c)
