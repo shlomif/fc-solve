@@ -12,7 +12,7 @@ var freecell_solver_user_stringify_move_ptr = Module.cwrap('freecell_solver_user
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
 var freecell_solver_user_limit_iterations_long = Module.cwrap('freecell_solver_user_limit_iterations_long', 'number', ['number', 'number']);
 var freecell_solver_user_get_invalid_state_error_into_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_into_string', 'number', ['number', 'number', 'number',]);
-var freecell_solver_user_cmd_line_parse_args = Module.cwrap('freecell_solver_user_cmd_line_parse_args', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
+var freecell_solver_user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap('freecell_solver_user_cmd_line_parse_args_with_file_nesting_count', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',]);
 
 var remove_trailing_space_re = /[ \t]+$/gm;
 
@@ -252,7 +252,7 @@ Class('FC_Solve', {
                     var last_arg_ptr = malloc(4);
 
                     // Input the file to the solver.
-                    var args_ret_code = freecell_solver_user_cmd_line_parse_args(
+                    var args_ret_code = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         that.obj,
                         2,
                         args_buf,
@@ -261,7 +261,9 @@ Class('FC_Solve', {
                         0,
                         0,
                         error_string_ptr_buf,
-                        last_arg_ptr
+                        last_arg_ptr,
+                        -1,
+                        0
                     );
 
                     c_free(last_arg_ptr);

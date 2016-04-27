@@ -30,7 +30,7 @@ NEEDED_FUNCTIONS = \
 	free \
 	freecell_solver_user_alloc \
 	freecell_solver_user_cmd_line_read_cmd_line_preset \
-	freecell_solver_user_cmd_line_parse_args \
+	freecell_solver_user_cmd_line_parse_args_with_file_nesting_count \
 	freecell_solver_user_current_state_stringify \
 	freecell_solver_user_free \
 	freecell_solver_user_get_next_move \
