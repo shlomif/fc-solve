@@ -296,7 +296,7 @@ help_screen_t help_screens[] = {
 "     Reparent states that have a larger depth than that of the state\n"
 "     from which they were reached a posteriori.\n"
 "--calc-real-depth\n"
-"     If --reparent-states is enabled, then explictly calculate the real\n"
+"     If --reparent-states is enabled, then explicitly calculate the real\n"
 "     depth of a state by tracing its path to the initial state\n"
 "--scans-synergy {none|dead-end-marks}\n"
 "     Specifies the cooperation between the scans.\n"
