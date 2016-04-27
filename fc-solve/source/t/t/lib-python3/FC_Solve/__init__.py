@@ -1,6 +1,7 @@
 from TAP.Simple import *
 from ctypes import *
 
+
 class FC_Solve:
     # TEST:$num_befs_weights=5;
     NUM_BEFS_WEIGHTS = 5
@@ -24,23 +25,28 @@ class FC_Solve:
 
         cmd_line_args_tuple = tuple(cmd_line_args)
 
-        self.fcs.freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-            self.user, # instance
+        prefix = 'freecell_solver_user_cmd_line'
+        func = 'parse_args_with_file_nesting_count'
+
+        self.fcs[prefix + '_' + func](
+            self.user,  # instance
             len(cmd_line_args),    # argc
-            ((c_char_p * len(cmd_line_args))(*tuple(bytes(s, 'UTF-8') for s in cmd_line_args_tuple))),  # argv
+            ((c_char_p * len(cmd_line_args))(
+                *tuple(bytes(s, 'UTF-8') for s in cmd_line_args_tuple)
+            )),  # argv
             0,   # start_arg
-            byref(known_params), # known_params
+            byref(known_params),  # known_params
             None,   # callback
             None,   # callback_context
             byref(error_string),  # error_string
             byref(last_arg),    # last_arg
-            c_int(-1), # file_nesting_count
+            c_int(-1),  # file_nesting_count
             opened_files_dir
         )
 
         # TEST:$input_cmd_line++;
         is_ok(last_arg.value, len(cmd_line_args),
-                name + " - assign weights - processed two arguments")
+              name + " - assign weights - processed two arguments")
 
     # TEST:$set_befs=0;
     def _set_befs_weights(self, name, weights_s):
@@ -48,7 +54,7 @@ class FC_Solve:
         self.input_cmd_line(name, ["-asw", weights_s])
 
     def __destroy__(self):
-        self.fcs.freecell_solver_user_free(self.user);
+        self.fcs.freecell_solver_user_free(self.user)
 
     # TEST:$test_befs=0;
     def test_befs_weights(self, name, string, weights):
@@ -65,24 +71,27 @@ class FC_Solve:
 
             have = self.get_befs_weight(self.user, idx)
             # TEST:$test_befs=$test_befs+$num_befs_weights;
-            if (not ok((bottom <= have) and (have <= top), \
-                    name + " - Testing Weight No. " + str(idx))):
+            if (not ok((bottom <= have) and (have <= top),
+                       name + " - Testing Weight No. " + str(idx))):
                 diag("Should be: [" + str(bottom) + "," + str(top) + "] ; " +
-                        "Is: " + str(have))
+                     "Is: " + str(have))
 
     # TEST:$compile_flares_plan_ok=0;
     def compile_flares_plan_ok(self, name, flares_plan_string):
         instance_list_index = c_int()
         error_string = c_char_p()
 
+        myplan = None
+        if flares_plan_string:
+            myplan = bytes(flares_plan_string, 'UTF-8')
         ret_code = self.fcs.freecell_solver_user_set_flares_plan(
-                self.user,
-                c_char_p(bytes(flares_plan_string, 'UTF-8') if flares_plan_string else None)
-                )
+            self.user,
+            c_char_p(myplan)
+        )
 
         # TEST:$compile_flares_plan_ok++;
         ok(ret_code == 0,
-                name + " - set_string returned success")
+           name + " - set_string returned success")
         ret_code = self.fcs.fc_solve_user_INTERNAL_compile_all_flares_plans(
             self.user,
             byref(instance_list_index),
@@ -91,24 +100,23 @@ class FC_Solve:
 
         # TEST:$compile_flares_plan_ok++;
         ok(ret_code == 0,
-                name + " - returned success.")
+           name + " - returned success.")
 
         # TEST:$compile_flares_plan_ok++;
         ok(instance_list_index.value == -1,
-                name + " - instance_list_index returned -1.")
+           name + " - instance_list_index returned -1.")
 
         # TEST:$compile_flares_plan_ok++;
-        ok(error_string.value == None,
-                name + " - error_string returned NULL.")
-
+        ok(error_string.value is None,
+           name + " - error_string returned NULL.")
 
     def flare_plan_num_items_is(self, name, want_num_items):
-        got_num_items = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_num_items(
+        got_num_items = \
+            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_num_items(
                 self.user
-        )
+            )
 
-        ok (want_num_items == got_num_items,
-                name + " - got_num_items.")
+        ok(want_num_items == got_num_items, name + " - got_num_items.")
 
     def _get_plan_type(self, item_idx):
         f = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
@@ -119,45 +127,55 @@ class FC_Solve:
     # TEST:$flare_plan_item_is_run_indef=0;
     def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
         # TEST:$flare_plan_item_is_run_indef++;
-        ok (self._get_plan_type(item_idx) == b"RunIndef",
-                name + " - right type")
+        ok(self._get_plan_type(item_idx) == b"RunIndef",
+           name + " - right type")
 
-        got_flare_idx = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(self.user, item_idx);
+        got_flare_idx = \
+            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+                self.user,
+                item_idx
+            )
 
         # TEST:$flare_plan_item_is_run_indef++;
-        ok (got_flare_idx == flare_idx,
-                name + " - matching flare_idx")
+        ok(got_flare_idx == flare_idx,
+           name + " - matching flare_idx")
 
     # TEST:$flare_plan_item_is_run=0;
     def flare_plan_item_is_run(self, name, item_idx, flare_idx, iters_count):
         # TEST:$flare_plan_item_is_run++;
-        ok (self._get_plan_type(item_idx) == b"Run",
-                name + " - right type")
+        ok(self._get_plan_type(item_idx) == b"Run",
+           name + " - right type")
 
-        got_flare_idx = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(self.user, item_idx);
-
-        # TEST:$flare_plan_item_is_run++;
-        ok (got_flare_idx == flare_idx,
-                name + " - matching flare_idx")
-
-        got_iters_count = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(self.user, item_idx);
+        got_flare_idx = \
+            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+                self.user,
+                item_idx
+            )
 
         # TEST:$flare_plan_item_is_run++;
-        ok (got_iters_count == iters_count,
-                name + " - matching iters_count")
+        ok(got_flare_idx == flare_idx, name + " - matching flare_idx")
+
+        got_iters_count = \
+            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
+                self.user,
+                item_idx
+            )
+
+        # TEST:$flare_plan_item_is_run++;
+        ok(got_iters_count == iters_count, name + " - matching iters_count")
 
     # TEST:$flare_plan_item_is_checkpoint=0;
     def flare_plan_item_is_checkpoint(self, name, item_idx):
         # TEST:$flare_plan_item_is_checkpoint++;
-        ok (self._get_plan_type(item_idx) == b"CP",
-                name + " - right type")
+        ok(self._get_plan_type(item_idx) == b"CP",
+           name + " - right type")
 
     def num_by_depth_tests_order_is(self, name, want_num):
         got_num = self.fcs.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
                 self.user
         )
 
-        ok (want_num == got_num, name + " - by_depth_tests_order.")
+        ok(want_num == got_num, name + " - by_depth_tests_order.")
 
     def by_depth_max_depth_of_depth_idx_is(self, name, depth_idx, want_num):
         got_num = self.fcs.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
@@ -165,7 +183,7 @@ class FC_Solve:
             depth_idx
         )
 
-        ok (want_num == got_num,
+        ok(want_num == got_num,
             name + " - max_depth_of_depth_idx_is for" + str(depth_idx) + ".")
 
     def solve_board(self, board):
@@ -191,10 +209,11 @@ class FC_Solve:
 
     def get_num_states_in_col(self):
         return c_long(
-            self.fcs.freecell_solver_user_get_num_states_in_collection_long(self.user)
+            self.fcs.freecell_solver_user_get_num_states_in_collection_long(
+                self.user
+            )
         ).value
 
     def recycle(self):
         self.fcs.freecell_solver_user_recycle(self.user)
         return
-
