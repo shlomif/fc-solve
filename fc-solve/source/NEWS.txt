@@ -470,7 +470,7 @@ Version 3.2.0: (14-Jul-2010)
 ----------------------------
 
 1. Add the +--depth-tests-order+ (or +-dto+ for short) flag that allows
-varying the tests' order based on the depth. This allows for interesting
+varying the tests' order based on the depth. This gives way for interesting
 (and faster) searches.
 
 2. Add the +the-iglu-cabal+ , +foss-nessy+ and +tea-for-two+ presets.
@@ -914,7 +914,7 @@ Version 2.18.0 (19-Mar-2009)
 
 1. Added the FCS_FREECELL_ONLY compile-time flag to hard-code the settings
 for Freecell and thus allow faster run-time. On a Pentium 4-2.4GHz machine
-running Mandriva Linux Cooker, this allows to solve the Microsoft 32,000 in
+running Mandriva Linux Cooker, this allows one to solve the Microsoft 32,000 in
 194.56353 seconds ( 164 deals / second ) instead of
 228.84 seconds for the generic version ( 140 deals / second ).
 

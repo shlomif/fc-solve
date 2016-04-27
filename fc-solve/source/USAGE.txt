@@ -843,11 +843,11 @@ such, as "dead ends". This may or may not improve the speed of the solution.
 
 *Global*
 
-This option allows to run two or more separate solvers one after the
+This option allows one to run two or more separate solvers one after the
 other. If the first one returned an unsolvable verdict, then the second
 one would run and so on. One use of it is to run an atomic moves scan
 after a meta-moves scan, so we will always get an accurate verdict and
-still enjoy some of the speed of the meta-moves scan.
+still enjoy some of the speed benefits of the meta-moves scan.
 
 -nf , --next-flare
 ~~~~~~~~~~~~~~~~~~
