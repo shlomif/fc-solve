@@ -17,46 +17,47 @@
 #
 # Since much of the code here is ripped from the actual PySol code, this
 # program is distributed under the GNU General Public License.
+
+# Original PySol blurb:
 #
+# ---------------------------------------------------------------------------
 #
+# PySol -- a Python Solitaire game
 #
-## vim:ts=4:et:nowrap
-##
-##---------------------------------------------------------------------------##
-##
-## PySol -- a Python Solitaire game
-##
-## Copyright (C) 2000 Markus Franz Xaver Johannes Oberhumer
-## Copyright (C) 1999 Markus Franz Xaver Johannes Oberhumer
-## Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation; either version 2 of the License, or
-## (at your option) any later version.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with this program; see the file COPYING.
-## If not, write to the Free Software Foundation, Inc.,
-## 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-##
-## Markus F.X.J. Oberhumer
-## <markus.oberhumer@jk.uni-linz.ac.at>
-## http://wildsau.idv.uni-linz.ac.at/mfx/pysol.html
-##
-##---------------------------------------------------------------------------##
+# Copyright (C) 2000 Markus Franz Xaver Johannes Oberhumer
+# Copyright (C) 1999 Markus Franz Xaver Johannes Oberhumer
+# Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; see the file COPYING.
+# If not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# Markus F.X.J. Oberhumer
+# <markus.oberhumer@jk.uni-linz.ac.at>
+# http://wildsau.idv.uni-linz.ac.at/mfx/pysol.html
+#
+# ---------------------------------------------------------------------------
 
 
 # imports
-import sys, os, re, string, time, types
+import sys
+import os
+import re
+import string
+import time
+import types
 import random2
-
-# PySol imports
 
 # /***********************************************************************
 # // Abstract PySol Random number generator.
@@ -64,12 +65,13 @@ import random2
 # // We use a seed of type long in the range [0, MAX_SEED].
 # ************************************************************************/
 
+
 class PysolRandom:
     MAX_SEED = 0
 
-    ORIGIN_UNKNOWN  = 0
-    ORIGIN_RANDOM   = 1
-    ORIGIN_PREVIEW  = 2         # random from preview
+    ORIGIN_UNKNOWN = 0
+    ORIGIN_RANDOM = 1
+    ORIGIN_PREVIEW = 2         # random from preview
     ORIGIN_SELECTED = 3         # manually entered
     ORIGIN_NEXT_GAME = 4        # "Next game number"
 
@@ -178,7 +180,6 @@ class LCRandom64(PysolRandom):
         return ((self.seed >> 21) & 0x7fffffff) / 2147483648.0
 
 
-
 # /***********************************************************************
 # // Linear Congruential random generator
 # // In PySol this is only used for 0 <= seed <= 32000.
@@ -203,14 +204,13 @@ class LCRandom31(PysolRandom):
 # * uses standart python module `random'
 # ************************************************************************
 
-class BasicRandom:
-    #MAX_SEED = 0L
-    #MAX_SEED = 0xffffffffffffffffL  # 64 bits
-    MAX_SEED = 100000000000000000000 # 20 digits
 
-    ORIGIN_UNKNOWN  = 0
-    ORIGIN_RANDOM   = 1
-    ORIGIN_PREVIEW  = 2         # random from preview
+class BasicRandom:
+    MAX_SEED = 100000000000000000000  # 20 digits
+
+    ORIGIN_UNKNOWN = 0
+    ORIGIN_RANDOM = 1
+    ORIGIN_PREVIEW = 2         # random from preview
     ORIGIN_SELECTED = 3         # manually entered
     ORIGIN_NEXT_GAME = 4        # "Next game number"
 
@@ -238,6 +238,7 @@ class BasicRandom:
         t = (t ^ (t >> 24)) % (self.MAX_SEED + 1)
         return t
 
+
 class MTRandom(BasicRandom, random2.Random):
 
     def setSeed(self, seed):
@@ -248,6 +249,7 @@ class MTRandom(BasicRandom, random2.Random):
 
     def reset(self):
         self.setstate(self.initial_state)
+
 
 class Card:
 
@@ -275,7 +277,7 @@ class Card:
         return s
 
     def suit_s(self):
-        return "CSHD"[self.suit];
+        return "CSHD"[self.suit]
 
     def to_s(self):
         if self.empty:
@@ -299,6 +301,7 @@ class Card:
     def is_empty(self):
         return self.empty
 
+
 class Columns:
 
     def __init__(self, num):
@@ -319,9 +322,10 @@ class Columns:
         for column in self.cols:
             print(column_to_string(column))
 
+
 class Board:
     def __init__(self, num_columns, with_freecells=False,
-            with_talon=False, with_foundations=False):
+                 with_talon=False, with_foundations=False):
         self.with_freecells = with_freecells
         self.with_talon = with_talon
         self.with_foundations = with_foundations
@@ -347,7 +351,7 @@ class Board:
 
     def print_foundations(self):
         cells = []
-        for f in [2,0,3,1]:
+        for f in [2, 0, 3, 1]:
             if not self.foundations[f].is_empty():
                 cells.append(self.foundations[f].found_s())
 
@@ -387,9 +391,10 @@ class Board:
 
 
 def empty_card():
-    ret = Card(0,0,0,1)
+    ret = Card(0, 0, 0, 1)
     ret.empty = True
     return ret
+
 
 def createCards(num_decks, print_ts):
     cards = []
@@ -401,11 +406,14 @@ def createCards(num_decks, print_ts):
                 id = id + 1
     return cards
 
+
 def column_to_list_of_strings(col):
     return [c.to_s() for c in col]
 
+
 def column_to_string(col):
     return " ".join(column_to_list_of_strings(col))
+
 
 def flip_card(card_str, flip):
     if flip:
@@ -436,26 +444,32 @@ def shuffle(orig_cards, game_num, which_deals):
 
     return orig_cards
 
+
 class Game:
     REVERSE_MAP = \
         {
                 "freecell":
-                [ "freecell", "forecell", "bakers_game",
-        "ko_bakers_game", "kings_only_bakers_game", "relaxed_freecell",
-        "eight_off" ],
+                ["freecell", "forecell", "bakers_game",
+                 "ko_bakers_game", "kings_only_bakers_game",
+                 "relaxed_freecell", "eight_off"],
                 "der_katz":
-                [ "der_katz", "der_katzenschwantz", "die_schlange"],
+                ["der_katz", "der_katzenschwantz", "die_schlange"],
                 "seahaven":
-                [ "seahaven_towers", "seahaven", "relaxed_seahaven", "relaxed_seahaven_towers" ],
-                "bakers_dozen" : None,
-                "gypsy" : None,
-                "klondike" : [ "klondike", "klondike_by_threes", "casino_klondike", "small_harp", "thumb_and_pouch", "vegas_klondike", "whitehead" ],
-                "simple_simon" : None,
-                "yukon" : None,
-                "beleaguered_castle" : [ "beleaguered_castle", "streets_and_alleys", "citadel" ],
-                "fan" : None,
-                "black_hole" : None,
-                "all_in_a_row" : None,
+                ["seahaven_towers", "seahaven", "relaxed_seahaven",
+                 "relaxed_seahaven_towers"],
+                "bakers_dozen": None,
+                "gypsy": None,
+                "klondike":
+                ["klondike", "klondike_by_threes",
+                 "casino_klondike", "small_harp", "thumb_and_pouch",
+                 "vegas_klondike", "whitehead"],
+                "simple_simon": None,
+                "yukon": None,
+                "beleaguered_castle":
+                ["beleaguered_castle", "streets_and_alleys", "citadel"],
+                "fan": None,
+                "black_hole": None,
+                "all_in_a_row": None,
         }
 
     def __init__(self, game_id, game_num, which_deals, print_ts):
@@ -485,10 +499,11 @@ class Game:
         self.board.output()
 
     def lookup(self):
-        return self.games_map[self.game_id];
+        return self.games_map[self.game_id]
 
     def is_two_decks(self):
-        return self.game_id in ("der_katz", "der_katzenschwantz", "die_schlange", "gypsy")
+        return self.game_id in ("der_katz", "der_katzenschwantz",
+                                "die_schlange", "gypsy")
 
     def get_num_decks(self):
         if self.is_two_decks():
@@ -533,15 +548,15 @@ class Game:
 
     def cyclical_deal(game, num_cards, num_cols, flipped=False):
         for i in range(num_cards):
-            game.add(i%num_cols, next(game).flip(flipped=flipped))
+            game.add(i % num_cols, next(game).flip(flipped=flipped))
         return i
 
     def add_all_to_talon(game):
         for card in game:
             game.board.add_talon(card)
 
-    ### These are the games variants:
-    ### Each one is a callback.
+    # These are the games variants:
+    # Each one is a callback.
     def der_katz(game):
         if (game.game_id == "die_schlange"):
             print("Foundations: H-A S-A D-A C-A H-A S-A D-A C-A")
@@ -615,7 +630,7 @@ class Game:
         num_cols = 7
         game.board = Board(num_cols, with_talon=True)
 
-        for r in range(1,num_cols):
+        for r in range(1, num_cols):
             for s in range(num_cols-r):
                 game.add(s, next(game).flip())
 
@@ -678,7 +693,10 @@ class Game:
         game.board = Board(17)
 
         # move Ace to bottom of the Talon (i.e. last cards to be dealt)
-        game.cards = game._shuffleHookMoveToBottom(game.cards, lambda c: (c.id == 13, c.suit), 1)
+        game.cards = game._shuffleHookMoveToBottom(
+            game.cards,
+            lambda c: (c.id == 13, c.suit),
+            1)
         next(game)
         game.cyclical_deal(52-1, 17)
 
@@ -688,7 +706,10 @@ class Game:
         game.board = Board(13)
 
         # move Ace to bottom of the Talon (i.e. last cards to be dealt)
-        game.cards = game._shuffleHookMoveToTop(game.cards, lambda c: (c.id == 13, c.suit), 1)
+        game.cards = game._shuffleHookMoveToTop(
+            game.cards,
+            lambda c: (c.id == 13, c.suit),
+            1)
         game.cyclical_deal(52, 13)
         print("Foundations: -")
 
@@ -708,14 +729,11 @@ class Game:
 
             game.new_cards(new_cards)
 
-
         for i in range(6):
             for s in range(8):
                 c = next(game)
-                if (game.game_id == "citadel") and game.board.put_into_founds(c):
-                    # Already dealt with this card
-                    True
-                else:
+                if not ((game.game_id == "citadel") and
+                        game.board.put_into_founds(c)):
                     game.add(s, c)
             if game.no_more_cards():
                 break
@@ -732,10 +750,11 @@ class Game:
                 game.add(j, next(game).flip())
 
         for i in range(4):
-            for j in range(1,num_cols):
+            for j in range(1, num_cols):
                 game.add(j, next(game))
 
         game.cyclical_deal(num_cols, num_cols)
+
 
 def shlomif_main(args):
     print_ts = 0
@@ -760,9 +779,7 @@ def shlomif_main(args):
         which_game = "freecell"
 
     game = Game(which_game, game_num, which_deals, print_ts)
-    game.print_layout();
+    game.print_layout()
 
 if __name__ == "__main__":
     sys.exit(shlomif_main(sys.argv))
-
-
