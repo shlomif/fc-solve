@@ -14,6 +14,15 @@ var freecell_solver_user_limit_iterations_long = Module.cwrap('freecell_solver_u
 var freecell_solver_user_get_invalid_state_error_into_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_into_string', 'number', ['number', 'number', 'number',]);
 var freecell_solver_user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap('freecell_solver_user_cmd_line_parse_args_with_file_nesting_count', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',]);
 
+function alloc_wrap(size, desc, error) {
+    var ret = malloc(size);
+    if (ret == 0) {
+        alert ("Could not allocate " + desc + " (out of memory?)");
+        throw error;
+    }
+    return ret;
+}
+
 var remove_trailing_space_re = /[ \t]+$/gm;
 
 var    FCS_STATE_WAS_SOLVED = 0;
@@ -70,23 +79,11 @@ Class('FC_Solve', {
         _pre_expand_states_and_moves_seq: { is: rw, init: null },
         _post_expand_states_and_moves_seq: { is: rw, init: null },
         _state_string_buffer: { is: rw, init: function () {
-            var ret = malloc(500);
-
-            if (ret == 0) {
-                alert ("Could not allocate state string buffer (out of memory?)");
-                throw "Zam";
-            }
-            return ret;
+                return alloc_wrap(500, "state string buffer", "Zam");
             },
         },
         _move_string_buffer: { is: rw, init: function () {
-            var ret = malloc(200);
-
-            if (ret == 0) {
-                alert ("Could not allocate move string buffer (out of memory?)");
-                throw "Plum";
-            }
-            return ret;
+                return alloc_wrap(200, "move string buffer", "Plum");
             },
         },
     },
@@ -99,12 +96,7 @@ Class('FC_Solve', {
         handle_err_code: function(solve_err_code) {
              var that = this;
              if (solve_err_code == FCS_STATE_INVALID_STATE) {
-                 var error_string_ptr = malloc(300);
-
-                 if (error_string_ptr == 0) {
-                     alert ("Could not allocate invalid state error string buffer (out of memory?)");
-                     throw "Gum";
-                 }
+                 var error_string_ptr = alloc_wrap(300, "state error string", "Gum");
 
                  freecell_solver_user_get_invalid_state_error_into_string(
                      that.obj, error_string_ptr, 1
@@ -195,14 +187,7 @@ Class('FC_Solve', {
 
             try {
                 if (cmd_line_preset != "default") {
-
-                    var error_string_ptr_buf = malloc(128);
-
-                    if (error_string_ptr_buf == 0) {
-                        alert ("Failed to allocate (out of memory?).");
-                        throw "Foo";
-                    }
-
+                    var error_string_ptr_buf = alloc_wrap(128, "error string buffer", "Foo");
                     var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(that.obj, cmd_line_preset, 0, error_string_ptr_buf, 0, null);
 
                     var error_string_ptr = getValue(error_string_ptr_buf, '*');
@@ -219,14 +204,7 @@ Class('FC_Solve', {
                 }
 
                 if (that.string_params) {
-
-                    var error_string_ptr_buf = malloc(128);
-
-                    if (error_string_ptr_buf == 0) {
-                        alert ("Failed to allocate (out of memory?).");
-                        throw "Foo";
-                    }
-
+                    var error_string_ptr_buf = alloc_wrap(128, "error string buffer", "Engo");
                     // Create a file with the contents of string_params.
                     var base_path = '/' + that.dir_base;
                     var base_dh = FS.createFolder('/', that.dir_base, true, true);
@@ -236,12 +214,7 @@ Class('FC_Solve', {
                         true, true);
 
 
-                    var args_buf = malloc(4*2);
-                    if (args_buf == 0) {
-                        alert ("Failed to allocate (out of memory?).");
-                        throw "Foo";
-                    }
-
+                    var args_buf = alloc_wrap(4*2, "args buf", "Seed");
                     // TODO : Is there a memory leak here?
                     var read_from_file_str_ptr = allocate(intArrayFromString("--read-from-file"), 'i8', ALLOC_STACK);
                     var arg_str_ptr = allocate(intArrayFromString("0," + string_params_file_path), 'i8', ALLOC_STACK);
@@ -249,7 +222,7 @@ Class('FC_Solve', {
                     setValue(args_buf, read_from_file_str_ptr, '*');
                     setValue(args_buf+4, arg_str_ptr, '*');
 
-                    var last_arg_ptr = malloc(4);
+                    var last_arg_ptr = alloc_wrap(4, "last_arg_ptr", "cherry");
 
                     // Input the file to the solver.
                     var args_ret_code = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
@@ -340,13 +313,7 @@ Class('FC_Solve', {
 
             var move_ret_code;
             // 128 bytes are enough to hold a move.
-            var move_buffer = malloc(128);
-
-            if (move_buffer == 0) {
-                alert ("Failed to allocate a buffer for the move (out of memory?)");
-                throw "Foo";
-            }
-
+            var move_buffer = alloc_wrap(128, "a buffer for the move", "maven");
             while ((move_ret_code = freecell_solver_user_get_next_move(that.obj, move_buffer)) == 0) {
                 var state_as_string = get_state_str();
                 freecell_solver_user_stringify_move_ptr(that.obj, that._move_string_buffer, move_buffer, 0);
