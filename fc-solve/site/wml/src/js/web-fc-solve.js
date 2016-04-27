@@ -8,7 +8,7 @@ var malloc = Module.cwrap('malloc', 'number', ['number']);
 var c_free = Module.cwrap('free', 'number', ['number']);
 var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_next_move', 'number', ['number', 'number']);
 var freecell_solver_user_current_state_stringify = Module.cwrap('freecell_solver_user_current_state_stringify', 'number', ['number', 'number', 'number', 'number', 'number']);
-var freecell_solver_user_move_ptr_to_string_w_state = Module.cwrap('freecell_solver_user_move_ptr_to_string_w_state', 'number', ['number', 'number', 'number']);
+var freecell_solver_user_stringify_move_ptr = Module.cwrap('freecell_solver_user_stringify_move_ptr', 'number', ['number', 'number', 'number', 'number']);
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
 var freecell_solver_user_limit_iterations = Module.cwrap('freecell_solver_user_limit_iterations', 'number', ['number', 'number']);
 var freecell_solver_user_get_invalid_state_error_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_string', 'number', ['number', 'number']);
@@ -75,6 +75,16 @@ Class('FC_Solve', {
             if (ret == 0) {
                 alert ("Could not allocate state string buffer (out of memory?)");
                 throw "Zam";
+            }
+            return ret;
+            },
+        },
+        _move_string_buffer: { is: rw, init: function () {
+            var ret = malloc(200);
+
+            if (ret == 0) {
+                alert ("Could not allocate move string buffer (out of memory?)");
+                throw "Plum";
             }
             return ret;
             },
@@ -332,15 +342,8 @@ Class('FC_Solve', {
 
             while ((move_ret_code = freecell_solver_user_get_next_move(that.obj, move_buffer)) == 0) {
                 var state_as_string = get_state_str();
-                var move_as_string_ptr = freecell_solver_user_move_ptr_to_string_w_state(that.obj, move_buffer, 0);
-
-                if (move_as_string_ptr == 0) {
-                    alert ("Failed to retrieve the current move as string (out of memory?)");
-                    throw "Foo";
-                }
-
-                var move_as_string = Module.Pointer_stringify(move_as_string_ptr);
-                c_free (move_as_string_ptr);
+                freecell_solver_user_stringify_move_ptr(that.obj, that._move_string_buffer, move_buffer, 0);
+                var move_as_string = Module.Pointer_stringify(that._move_string_buffer);
 
                 states_and_moves_sequence.push({ type: 'm', m: { type: 'm', str: move_as_string}, exp: null, is_exp: false});
                 _out_state(state_as_string);
