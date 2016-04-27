@@ -139,17 +139,20 @@ Class('FC_Solve', {
                  throw "Foo";
              }
         },
-        resume_solution: function() {
+        _increase_iters_limit: function() {
             var that = this;
 
             that.current_iters_limit += iters_step;
-
             freecell_solver_user_limit_iterations(that.obj, that.current_iters_limit);
 
+            return;
+        },
+        resume_solution: function() {
+            var that = this;
+
+            that._increase_iters_limit();
             var solve_err_code = freecell_solver_user_resume_solution( that.obj );
-
             that.handle_err_code(solve_err_code);
-
             return solve_err_code;
         },
         // Ascertain that the string contains a trailing newline.
@@ -269,19 +272,14 @@ Class('FC_Solve', {
                     }
                 }
 
-                that.current_iters_limit += iters_step;
-
-                freecell_solver_user_limit_iterations(that.obj, that.current_iters_limit);
-
-                // Removed for debugging purposes.
+                that._increase_iters_limit();
+                // Removed; for debugging purposes.
                 // alert("preset_ret = " + preset_ret);
 
                 var solve_err_code = freecell_solver_user_solve_board(
                     that.obj, board_string
                 );
-
                 that.handle_err_code(solve_err_code);
-
                 return solve_err_code;
             }
             catch (e) {
