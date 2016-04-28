@@ -111,14 +111,11 @@ GetOptions(
         $fcs_path
     );
 
-    my $foo_lib_dir = File::Spec->catdir($abs_bindir, "t", "t", "lib");
-    foreach my $add_lib (Env::Path->PERL5LIB())
+    my $foo_lib_dir = File::Spec->catdir($abs_bindir, "t", "lib");
+    foreach my $add_lib (Env::Path->PERL5LIB(), Env::Path->PYTHONPATH())
     {
         $add_lib->Append($foo_lib_dir);
     }
-    Env::Path->PYTHONPATH->Prepend(
-        File::Spec->catdir($abs_bindir, "t", "t", "lib-python3")
-    );
 
     my $get_config_fn = sub {
         my $basename = shift;

@@ -34,7 +34,7 @@ MACRO(GEN_INDIVIDUAL_TESTS target_name perl_script valg_out module data_module)
         DEPENDS
             "${module}"
             "${data_module}"
-            "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/SplitTests.pm"
+            "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/SplitTests.pm"
     )
 
     ADD_CUSTOM_TARGET(
@@ -154,16 +154,16 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         "generate_valgrind_tests"
         "${PROJECT_SOURCE_DIR}/scripts/generate-individual-valgrind-test-scripts.pl"
         "${CMAKE_CURRENT_BINARY_DIR}/t/valgrind--range_parallel_solve__11982_opt.t"
-        "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Valgrind.pm"
-        "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Valgrind/Data.pm"
+        "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Valgrind.pm"
+        "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Valgrind/Data.pm"
     )
     GEN_INDIVIDUAL_TESTS(
         "generate_verify_tests"
         "${PROJECT_SOURCE_DIR}/scripts/generate-individual-verify-test-scripts.pl"
         "${CMAKE_CURRENT_BINARY_DIR}/t/verify--id24.t"
 
-        "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Verify.pm"
-        "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/Test/Verify/Data.pm"
+        "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Verify.pm"
+        "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Verify/Data.pm"
     )
 ENDIF ()
 
