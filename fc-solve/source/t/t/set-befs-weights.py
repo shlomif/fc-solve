@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
 from TAP.Simple import *
-# TEST:source "$^CURRENT_DIRNAME/lib/FC_Solve/__init__.py"
+# TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 
-# Should be 24.
 plan(24)
 
 
