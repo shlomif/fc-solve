@@ -27,7 +27,7 @@ FC_Solve::SplitTests->gen(
 #!/usr/bin/perl
 use Test::More tests => 1;
 use $module;
-${module}::r(@{[$dump->($data->{args}), ",", $dump->($data->{msg})]});
+${module}::r(@{[$dump->($data->{args}) . "," . $dump->($data->{msg})]});
 EOF
         },
     },
