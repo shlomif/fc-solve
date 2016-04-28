@@ -30,6 +30,10 @@ sub gen
     }
 
     eval "use $data_module;";
+    if (my $error = $@)
+    {
+        die $error;
+    }
 
     my $data_obj = $data_module->new;
 

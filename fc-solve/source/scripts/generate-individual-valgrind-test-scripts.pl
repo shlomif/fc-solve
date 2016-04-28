@@ -21,7 +21,7 @@ FC_Solve::SplitTests->gen(
                 return Data::Dumper->new([shift])->Terse(1)->Indent(0)->Dump;
             };
             my $proc_data = { %{ $args->{data} } };
-            my $msg = delete($proc_data->{blurb});
+            my $msg = delete($proc_data->{msg});
             $proc_data->{log_fn} = "valgrind--$args->{id}.log";
             return <<"EOF";
 #!/usr/bin/perl

@@ -16,7 +16,17 @@ sub validate_and_transform
 {
     my ($self, $args) = @_;
 
-    return $args->{data};
+    my $data = $args->{data};
+    if (!exists($data->{msg}))
+    {
+        die "msg does not exist.";
+    }
+    if (exists($data->{blurb}))
+    {
+        die "blurb exists.";
+    }
+
+    return $data;
 }
 
 __PACKAGE__->populate
@@ -35,7 +45,7 @@ __PACKAGE__->populate
                     ],
                 }
             ],
-            blurb => qq{dbm_fc_solver from 24-mid-with-colons.},
+            msg => qq{dbm_fc_solver from 24-mid-with-colons.},
         },
         'empty_board' =>
         {
@@ -46,7 +56,7 @@ __PACKAGE__->populate
                     args => [{ type => 'ENV', arg => 'FCS_PATH'}, 'empty.board'],
                 },
             ],
-            blurb => "Sanity of running on an empty board input.",
+            msg => "Sanity of running on an empty board input.",
         },
         'fc-solve-crashy-preset-1' =>
         {
@@ -66,7 +76,7 @@ __PACKAGE__->populate
                     args => [{ type => 'ENV', arg => 'FCS_PATH'}, '24.board'],
                 },
             ],
-            blurb => "Check the sanity of crashy-preset-1 which over-rides the soft-thread several times.",
+            msg => "Check the sanity of crashy-preset-1 which over-rides the soft-thread several times.",
         },
         'fc-solve-not-enough-input' =>
         {
@@ -79,7 +89,7 @@ __PACKAGE__->populate
                     ],
                 },
             ],
-            blurb => "Check the sanity of not enough input.",
+            msg => "Check the sanity of not enough input.",
         },
         'fc-solve-trim-max-stored-states' =>
         {
@@ -93,49 +103,49 @@ __PACKAGE__->populate
                     args => [{type => 'ENV', arg => 'FCS_PATH'}, '1941.board',]
                 },
             ],
-            blurb => "Check the sanity of --trim-max-stored-states.",
+            msg => "Check the sanity of --trim-max-stored-states.",
         },
         'range_parallel_solve_befs' =>
         {
             prog => "freecell-solver-range-parallel-solve",
             argv => [qw(1 2 1 --method a-star)],
-            blurb => qq{range-parallel-solve for board #2 using the BeFS method valgrind}
+            msg => qq{range-parallel-solve for board #2 using the BeFS method valgrind}
         },
         'range_parallel_solve_l_gi' =>
         {
             prog => "freecell-solver-range-parallel-solve",
             argv => ["1", "2", "1", "-l", "gi"],
-            blurb => qq{"range-parallel-solve 1 2 1 -l gi" returned no errors}
+            msg => qq{"range-parallel-solve 1 2 1 -l gi" returned no errors}
         },
         'range_parallel_solve__dash_opt' =>
         {
             prog => "freecell-solver-range-parallel-solve",
             argv => ["1", "2", "1", "-opt"],
-            blurb => qq{"range-parallel-solve 1 2 1 -opt" returned no errors}
+            msg => qq{"range-parallel-solve 1 2 1 -opt" returned no errors}
         },
         'range_parallel_solve__next-flare' =>
         {
             prog => "freecell-solver-range-parallel-solve",
             argv => ["1", "2", "1", "--next-flare"],
-            blurb => qq{"range-parallel-solve 1 2 1 --next-flare" returned no errors}
+            msg => qq{"range-parallel-solve 1 2 1 --next-flare" returned no errors}
         },
         'range_parallel_solve__11982_opt' =>
         {
             prog => "freecell-solver-range-parallel-solve",
             argv => [qw(11981 11983 1 -opt)],
-            blurb => qq{"range-parallel-solve 11981 11983 1 -opt" returned no errors}
+            msg => qq{"range-parallel-solve 11981 11983 1 -opt" returned no errors}
         },
         'range_parallel_solve__1_3_1_flares' =>
         {
             prog => "freecell-solver-range-parallel-solve",
             argv => [qw(1 3 1 --flare-name dfs --next-flare --method a-star --flare-name befs --flares-plan), q(Run:300@dfs,Run:500@befs,CP:,Run:200@dfs),],
-            blurb => qq{"range-parallel-solve 1 3 1 flares" returned no errors}
+            msg => qq{"range-parallel-solve 1 3 1 flares" returned no errors}
         },
         'range_parallel_solve__1__2__invalid_flares_plan_1' =>
         {
             prog => "freecell-solver-range-parallel-solve",
             argv => [qw(1 2 1 --flares-plan), q(Run:500@foo)],
-            blurb => qq{"range-parallel-solve --flares-plan Run:500\@foo" does not crash.}
+            msg => qq{"range-parallel-solve --flares-plan Run:500\@foo" does not crash.}
         },
         'range_parallel_solve__sp_r_tf__not_leak' =>
         {
@@ -143,42 +153,42 @@ __PACKAGE__->populate
             argv => [qw(1 2 1 --total-iterations-limit 1000 --method soft-dfs
                 -to 0123456789 -sp r:tf)
             ],
-            blurb => qq{"range-parallel-solve -sp r:tf" does not leak.}
+            msg => qq{"range-parallel-solve -sp r:tf" does not leak.}
         },
         'range_parallel__invalid_print_step' =>
         {
             prog => "freecell-solver-range-parallel-solve",
             argv => [qw(1 1 0 -l as)
             ],
-            blurb => qq{Make sure that the program does not crash on a zero print_step},
+            msg => qq{Make sure that the program does not crash on a zero print_step},
         },
         'fc_pro_range_solve__invalid_print_step' =>
         {
             prog => "freecell-solver-fc-pro-range-solve",
             argv => [qw(1 2 0 -l as)
             ],
-            blurb => qq{Make sure that the fc-pro program does not crash on a zero print_step},
+            msg => qq{Make sure that the fc-pro program does not crash on a zero print_step},
         },
         'board_gen__pi_make_ms__t_only' =>
         {
             prog => "board_gen/pi-make-microsoft-freecell-board",
             argv => [qw(-t)
             ],
-            blurb => qq{Board generation should not crash with only -t flag (pi-make-ms)},
+            msg => qq{Board generation should not crash with only -t flag (pi-make-ms)},
         },
         'board_gen__aisleriot__t_only' =>
         {
             prog => "board_gen/make-aisleriot-freecell-board",
             argv => [qw(-t)
             ],
-            blurb => qq{Board generation should not crash with only -t flag (aisleriot)},
+            msg => qq{Board generation should not crash with only -t flag (aisleriot)},
         },
         'board_gen__gnome__t_only' =>
         {
             prog => "board_gen/make-gnome-freecell-board",
             argv => [qw(-t)
             ],
-            blurb => qq{Board generation should not crash with only -t flag (gnome)},
+            msg => qq{Board generation should not crash with only -t flag (gnome)},
         },
     ]
 );
