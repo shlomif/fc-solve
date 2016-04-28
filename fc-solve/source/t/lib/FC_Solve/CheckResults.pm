@@ -70,7 +70,8 @@ sub should_fill_in_id
     );
 }
 
-sub verify_solution_test
+# Short for a test to verify a solution.
+sub vtest
 {
     my $self = shift;
 

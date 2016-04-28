@@ -15,31 +15,31 @@ my $digests_storage_fn = File::Spec->catfile(
     $data_dir, 'digests-and-lens-storage.yml'
 );
 
-my $verifier = FC_Solve::CheckResults->new(
+my $v = FC_Solve::CheckResults->new(
     {
         data_filename => $digests_storage_fn,
     }
 );
 
-sub verify_solution_test
+sub vtest
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    return $verifier->verify_solution_test(@_);
+    return $v->vtest(@_);
 }
 
 # 24 is my lucky number. (Shlomif)
 # TEST
-verify_solution_test({id => "freecell24", deal => 24}, "Verifying the solution of deal #24");
+vtest({id => "freecell24", deal => 24}, "Verifying the solution of deal #24");
 
 # TEST
-verify_solution_test({id => "random_dfs_with_rand_parens", deal => 24,
+vtest({id => "random_dfs_with_rand_parens", deal => 24,
         theme => ["--method", "random-dfs", "-seed", "1", "-to", "[01]=rand()[23456789]=rand()"],
     },
     "Verifying the solution of a deal with random-dfs specified using '=rand()'");
 
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "375783-dbm-sol",
         deal => 375_783,
@@ -50,36 +50,36 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test({id => "freecell1941", deal => 1941}, "Verifying 1941 (The Hardest Deal)");
+vtest({id => "freecell1941", deal => 1941}, "Verifying 1941 (The Hardest Deal)");
 
 # TEST
-verify_solution_test({id => "freecell24empty", deal => 24, theme => [],},
+vtest({id => "freecell24empty", deal => 24, theme => [],},
     "Solving Deal #24 with the default heuristic"
 );
 
 # TEST
-verify_solution_test({id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],},
+vtest({id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],},
     "Solving Deal #617 with the john-galt-line"
 );
 
 # TEST
-verify_solution_test({id => "bakers_game24default", deal => 24, variant => "bakers_game", theme => [],},
+vtest({id => "bakers_game24default", deal => 24, variant => "bakers_game", theme => [],},
     "Baker's Game Deal #24"
 );
 
 # TEST
-verify_solution_test({id => "forecell1099default", deal => 1099, variant => "forecell", theme => [],},
+vtest({id => "forecell1099default", deal => 1099, variant => "forecell", theme => [],},
     "Forecell Deal #1099"
 );
 
 # TEST
-verify_solution_test({id => "relaxed_freecell11982",deal => 11982, variant => "relaxed_freecell", },
+vtest({id => "relaxed_freecell11982",deal => 11982, variant => "relaxed_freecell", },
     "Relaxed Freecell Deal #11982"
 );
 
 
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "seahaven_towers1977fools-gold",
         deal => 1977,
@@ -90,14 +90,14 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test({
+vtest({
         id => "eight_off200", deal => 200, variant => "eight_off",
     },
     "Eight Off #200 with -l gi"
 );
 
 # TEST
-verify_solution_test(
+vtest(
     {id =>"eight_off200default", deal => 200, variant => "eight_off",
         theme => [],
     },
@@ -105,7 +105,7 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test(
+vtest(
     {id => "simple_simon24default", deal => 24, variant => "simple_simon",
         theme => [],
     },
@@ -113,7 +113,7 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test(
+vtest(
     {id => "simple_simon19806default", deal => 19806, variant => "simple_simon",
         theme => [],
     },
@@ -121,7 +121,7 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test(
+vtest(
     {id => "simple_simon1with_i", deal => 1, variant => "simple_simon",
         theme => ["-to", "abcdefghi"],
     },
@@ -129,7 +129,7 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "simple_simon1with_next_instance",
         deal => 1,
@@ -140,7 +140,7 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "freecell254076_l_by",
         deal => 254076,
@@ -151,30 +151,30 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test({id => "freecell24", deal => 24,
+vtest({id => "freecell24", deal => 24,
         output_file => "24.solution.txt",},
     "Verifying the solution of deal No. 24 with -o");
 
 # TEST
-verify_solution_test({id => "freecell24_children_playing_ball", deal => 24,
+vtest({id => "freecell24_children_playing_ball", deal => 24,
         theme => ["-l", "children-playing-ball"],},
     "Verifying the solution of deal No. 24 with -l cpb");
 
 # TEST
-verify_solution_test({id => "freecell24_sentient_pearls", deal => 24,
+vtest({id => "freecell24_sentient_pearls", deal => 24,
         theme => ["-l", "sentient-pearls"],},
     "Verifying the solution of deal No. 24 with -l sp");
 
 
 # TEST
-verify_solution_test({id => "freecell24with_empty_soft_thread_name", deal => 1,
+vtest({id => "freecell24with_empty_soft_thread_name", deal => 1,
         theme => ["-to", "013[2456789]", "-nst", "-l" ,"by",],
     },
     "Solving Deal #24 with an empty soft thread name"
 );
 
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "freecell1941",
         deal => 1941,
@@ -191,7 +191,7 @@ verify_solution_test(
 # This test aims to fix it.
 
 # TEST
-verify_solution_test({id => "freecell24_board_with_founds_0", deal => 24,
+vtest({id => "freecell24_board_with_founds_0", deal => 24,
         board => File::Spec->catfile(
             $data_dir, 'sample-boards',
             'ms24-with-founds-0.txt'
@@ -199,7 +199,7 @@ verify_solution_test({id => "freecell24_board_with_founds_0", deal => 24,
     }, "Properly handle foundations like H-0 S-0 etc.");
 
 # TEST
-verify_solution_test({
+vtest({
     id => "qualified_seed_for_6240",
     deal => 6240,
     theme => ["-l", "qs", "-fif", "5", "--flares-choice", "fcpro",],
@@ -208,7 +208,7 @@ verify_solution_test({
 );
 
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "freecell24",
         deal => 24,
@@ -220,7 +220,7 @@ verify_solution_test(
 );
 
 # Store the changes at the end so they won't get lost.
-$verifier->end();
+$v->end();
 
 
 =head1 COPYRIGHT AND LICENSE

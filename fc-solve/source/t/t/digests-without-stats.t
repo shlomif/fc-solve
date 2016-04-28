@@ -24,27 +24,27 @@ my $data_dir = File::Spec->catdir(
 
 my $digests_storage_fn = "$data_dir/digests-and-lens-wo-stats-storage.yml";
 
-my $verifier = FC_Solve::CheckResults->new(
+my $v = FC_Solve::CheckResults->new(
     {
         data_filename => $digests_storage_fn,
         trim_stats => 1,
     }
 );
 
-sub verify_solution_test
+sub vtest
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    return $verifier->verify_solution_test(@_);
+    return $v->vtest(@_);
 }
 
 # 24 is my lucky number. (Shlomif)
 # TEST
-verify_solution_test({id => "freecell_default24", deal => 24, theme => [],},
+vtest({id => "freecell_default24", deal => 24, theme => [],},
     "Verifying the solution of deal #24");
 
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "freecell_simple_flare_2",
         deal => 2,
@@ -58,7 +58,7 @@ verify_solution_test(
 
 # This should generate the same results as --method dfs.
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "freecell_flares_cp_1_deal_6",
         deal => 6,
@@ -74,7 +74,7 @@ verify_solution_test(
 # It checks that the plan is restarted over after it reaches the end
 # and yields the end.
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "freecell_flares_cp_1_circular_deal_6",
         deal => 6,
@@ -88,7 +88,7 @@ verify_solution_test(
 
 # This should test the run-indefinitely
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "freecell_flares_run_indef_1_deal_6",
         deal => 6,
@@ -103,7 +103,7 @@ verify_solution_test(
 # This checks for an infinite loop when several identically-spaced quotas
 # are given to the flares.
 # TEST
-verify_solution_test(
+vtest(
     {
         id => "freecell_flares_equally_spaced_quotas_deal_1",
         deal => 1,
@@ -122,7 +122,7 @@ EOF
 );
 
 # Store the changes at the end so they won't get lost.
-$verifier->end();
+$v->end();
 
 
 =head1 COPYRIGHT AND LICENSE
