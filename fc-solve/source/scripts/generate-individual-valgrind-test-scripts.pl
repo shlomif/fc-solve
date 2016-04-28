@@ -9,11 +9,30 @@ use lib "$FindBin::Bin/../t/lib";
 
 use FC_Solve::SplitTests;
 
+my $module = 'FC_Solve::Test::Valgrind';
 FC_Solve::SplitTests->gen(
     {
         prefix => 'valgrind',
-        module => 'FC_Solve::Test::Valgrind',
+        module => $module,
         data_module => 'FC_Solve::Test::Valgrind::Data',
+        content_cb => sub {
+            my ($self, $args) = @_;
+            my $id = $args->{id};
+            my $id_quoted = quotemeta($id);
+            my $data = $args->{data};
+            my $dump = sub {
+                return Data::Dumper->new([shift])->Terse(1)->Indent(0)->Dump;
+            };
+            my $proc_data = { %$data };
+            my $msg = delete($proc_data->{blurb});
+            $proc_data->{log_fn} = "valgrind--$id.log";
+            return <<"EOF";
+#!/usr/bin/perl
+use Test::More tests => 1;
+use $module;
+${module}::r(@{[$dump->($proc_data) . "," . $dump->($msg)]});
+EOF
+        },
     },
 );
 

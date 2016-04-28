@@ -50,28 +50,17 @@ sub _expand_arg
     }
 }
 
-sub _run_test
+
+# Short for run.
+sub r
 {
-    my ($id, $args) = @_;
-
-    if (ref($args) ne "HASH")
-    {
-        Carp::confess("args must be a HASH (wrong ID)?.");
-    }
-
-    if (!defined($id))
-    {
-        Carp::confess("Missing id");
-    }
-
-    my $blurb = $args->{blurb};
-    my $log_fn = "valgrind--$id.log";
+    my ($args, $msg) = @_;
 
     if (!
         Test::RunValgrind->new({})->run(
             {
-                log_fn => $log_fn,
-                blurb => $blurb,
+                log_fn => $args->{log_fn},
+                blurb => $msg,
                 prog => "$ENV{FCS_PATH}/$args->{prog}",
                 argv => [map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}],
             }
@@ -82,6 +71,15 @@ sub _run_test
     }
 }
 
+1;
+
+__END__
+
+sub _run_test
+{
+    return r(@_);
+}
+
 sub run_id
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -90,8 +88,6 @@ sub run_id
 
     return _run_test(@$args{qw(id data)});
 }
-
-1;
 
 =head1 COPYRIGHT AND LICENSE
 
