@@ -16,6 +16,7 @@ sub validate_and_transform
 {
     my ($self, $args) = @_;
 
+    my $id = $args->{id};
     my $data = $args->{data};
     if (!exists($data->{msg}))
     {
@@ -26,7 +27,11 @@ sub validate_and_transform
         die "blurb exists.";
     }
 
-    return $data;
+    my %new_data = %$data;
+    my $msg = delete $new_data{msg};
+    $new_data{log_fn} = "valgrind--$id.log";
+
+    return +{ msg => $msg, args => (\%new_data) };
 }
 
 __PACKAGE__->populate

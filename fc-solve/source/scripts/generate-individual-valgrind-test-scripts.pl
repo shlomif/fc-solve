@@ -17,17 +17,15 @@ FC_Solve::SplitTests->gen(
         data_module => 'FC_Solve::Test::Valgrind::Data',
         content_cb => sub {
             my ($self, $args) = @_;
+            my $data = $args->{data};
             my $dump = sub {
                 return Data::Dumper->new([shift])->Terse(1)->Indent(0)->Dump;
             };
-            my $proc_data = { %{ $args->{data} } };
-            my $msg = delete($proc_data->{msg});
-            $proc_data->{log_fn} = "valgrind--$args->{id}.log";
             return <<"EOF";
 #!/usr/bin/perl
 use Test::More tests => 1;
 use $module;
-${module}::r(@{[$dump->($proc_data) . "," . $dump->($msg)]});
+${module}::r(@{[$dump->($data->{args}) . "," . $dump->($data->{msg})]});
 EOF
         },
     },
