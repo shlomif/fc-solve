@@ -17,8 +17,6 @@ FC_Solve::SplitTests->gen(
         data_module => 'FC_Solve::Test::Verify::Data',
         content_cb => sub {
             my ($self, $args) = @_;
-            my $id = $args->{id};
-            my $id_quoted = quotemeta($id);
             my $data = $args->{data};
             my $dump = sub {
                 return Data::Dumper->new([shift])->Terse(1)->Indent(0)->Dump;
