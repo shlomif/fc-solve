@@ -2,10 +2,8 @@
 
 use strict;
 use warnings;
-use lib './t/lib';
 
 use Test::More tests => 12;
-
 use Test::Differences (qw( eq_or_diff ));
 
 package PQ;

@@ -4,14 +4,9 @@ use strict;
 use warnings;
 
 use Test::More tests => 4312;
-
 use Test::Differences qw(eq_or_diff);
-
 use File::Spec;
-
 use File::Path qw(mkpath);
-
-use lib './t/lib';
 
 use FC_Solve::DepthMultiQueuePrototype;
 use FC_Solve::DepthMultiQueueInC;

@@ -13,11 +13,8 @@ statistics like the number of states checked and the number of stored states.
 =cut
 
 use Test::More tests => 6;
-
 use File::Basename qw( dirname );
 use File::Spec;
-
-use lib './t/lib';
 
 use FC_Solve::CheckResults;
 

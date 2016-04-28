@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Cwd;
 
 BEGIN
 {
@@ -17,9 +18,6 @@ BEGIN
     }
 }
 
-use lib './t/lib';
-
-use Cwd;
 
 package DerivedState;
 

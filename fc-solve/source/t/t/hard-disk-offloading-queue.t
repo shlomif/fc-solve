@@ -4,12 +4,9 @@ use strict;
 use warnings;
 
 use Test::More tests => 2262;
-
 use File::Spec;
-
 use File::Path qw(mkpath);
 
-use lib './t/lib';
 use FC_Solve::QueuePrototype;
 use FC_Solve::QueueInC;
 

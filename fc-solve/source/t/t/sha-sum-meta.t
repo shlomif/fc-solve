@@ -4,11 +4,8 @@ use strict;
 use warnings;
 
 use Test::More tests => 6;
-
 use File::Basename qw( dirname );
 use File::Spec;
-
-use lib './t/lib';
 
 use FC_Solve::ShaAndLen;
 

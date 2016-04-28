@@ -5,7 +5,6 @@ use warnings;
 
 use Test::More tests => 25;
 use File::Spec;
-use lib './t/lib';
 use File::Basename qw( dirname );
 
 use FC_Solve::CheckResults;
