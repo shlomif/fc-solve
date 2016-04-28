@@ -34,7 +34,6 @@ verify_solution_test({id => "freecell24", deal => 24}, "Verifying the solution o
 
 # TEST
 verify_solution_test({id => "random_dfs_with_rand_parens", deal => 24,
-        # theme => ["--method", "random-dfs", "-seed", "1", "-to", "[01][23456789]=rand()"],
         theme => ["--method", "random-dfs", "-seed", "1", "-to", "[01]=rand()[23456789]=rand()"],
     },
     "Verifying the solution of a deal with random-dfs specified using '=rand()'");
@@ -169,7 +168,6 @@ verify_solution_test({id => "freecell24_sentient_pearls", deal => 24,
 
 # TEST
 verify_solution_test({id => "freecell24with_empty_soft_thread_name", deal => 1,
-        # theme => ["-l", "by"],
         theme => ["-to", "013[2456789]", "-nst", "-l" ,"by",],
     },
     "Solving Deal #24 with an empty soft thread name"
