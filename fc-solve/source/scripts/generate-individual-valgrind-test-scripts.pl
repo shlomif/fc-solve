@@ -15,19 +15,6 @@ FC_Solve::SplitTests->gen(
         prefix => 'valgrind',
         module => $module,
         data_module => 'FC_Solve::Test::Valgrind::Data',
-        content_cb => sub {
-            my ($self, $args) = @_;
-            my $data = $args->{data};
-            my $dump = sub {
-                return Data::Dumper->new([shift])->Terse(1)->Indent(0)->Dump;
-            };
-            return <<"EOF";
-#!/usr/bin/perl
-use Test::More tests => 1;
-use $module;
-${module}::r(@{[$dump->($data->{args}) . "," . $dump->($data->{msg})]});
-EOF
-        },
     },
 );
 

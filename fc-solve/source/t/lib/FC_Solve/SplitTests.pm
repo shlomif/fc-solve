@@ -45,26 +45,19 @@ sub gen
 
                 return "${fn_prefix}--$args->{id}.t";
             },
-            contents_cb => ($args->{content_cb} // sub {
+            contents_cb => sub {
                 my ($self, $args) = @_;
-                my $id = $args->{id};
-                my $id_quoted = quotemeta($id);
-                my $data = Data::Dumper->new([$data_obj->lookup_data($id)])->Terse(1)->Indent(0)->Dump;
+                my $data = $args->{data};
+                my $dump = sub {
+                    return Data::Dumper->new([shift])->Terse(1)->Indent(0)->Dump;
+                };
                 return <<"EOF";
 #!/usr/bin/perl
-
-use strict;
-use warnings;
-
 use Test::More tests => 1;
-
 use $module;
-
-# TEST
-$module->run_id({ id => qq/$id_quoted/, data => $data, });
-
+${module}::r(@{[$dump->($data->{args}) . "," . $dump->($data->{msg})]});
 EOF
-        }),
+        },
         data_obj => $data_obj,
     }
 )->run;
