@@ -73,13 +73,8 @@ fc-solve/source/README.xml
 fc-solve/source/tags
 fc-solve/source/TODO.html
 fc-solve/source/TODO.xml
-fc-solve/source/t/t/lib/FC_Solve/__init__.pyc
-fc-solve/source/t/t/lib-python3/FC_Solve/__pycache__
-fc-solve/source/t/t/lib-python3/TAP/__init__.pyc
-fc-solve/source/t/t/lib-python3/TAP/__pycache__
-fc-solve/source/t/t/lib-python3/TAP/Simple.pyc
-fc-solve/source/t/t/lib/TAP/__init__.pyc
-fc-solve/source/t/t/lib/TAP/Simple.pyc
+fc-solve/source/t/lib/FC_Solve/__pycache__
+fc-solve/source/t/lib/TAP/__pycache__
 fc-solve/source/USAGE.html
 fc-solve/source/USAGE.xml
 Task-FreecellSolver-Testing/Build
