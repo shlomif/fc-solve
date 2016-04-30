@@ -209,7 +209,14 @@ GetOptions(
     {
         print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
         print STDERR "FCS_SRC_PATH = $ENV{FCS_SRC_PATH}\n";
-        run_tests(\@tests);
+        if ($ENV{FCS_TEST_SHELL})
+        {
+            system("bash");
+        }
+        else
+        {
+            run_tests(\@tests);
+        }
     }
 }
 
