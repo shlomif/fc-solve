@@ -13,25 +13,33 @@ ADD_EXECUTABLE(
     pi_make_microsoft_freecell_board.c
 )
 
-SET (make_pysol "make_pysol_freecell_board.py")
-SET (_dest "${CMAKE_CURRENT_BINARY_DIR}/${make_pysol}")
-SET (_src  "${CMAKE_CURRENT_SOURCE_DIR}/${make_pysol}")
+MACRO(my_board_gen_prog myprog tgt)
+    SET (_dest "${CMAKE_CURRENT_BINARY_DIR}/${myprog}")
+    SET (_src  "${CMAKE_CURRENT_SOURCE_DIR}/${myprog}")
 
-# Adapted from:
-# http://stackoverflow.com/questions/697560/how-to-copy-directory-from-source-tree-to-binary-tree
-ADD_CUSTOM_COMMAND(
-    OUTPUT "${_dest}"
-    DEPENDS "${_src}"
-    COMMAND "${CMAKE_COMMAND}" "-E" "copy" "${_src}" "${_dest}"
-)
+    # Adapted from:
+    # http://stackoverflow.com/questions/697560/how-to-copy-directory-from-source-tree-to-binary-tree
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${_dest}"
+        DEPENDS "${_src}"
+        COMMAND "${CMAKE_COMMAND}" "-E" "copy" "${_src}" "${_dest}"
+    )
 
-ADD_CUSTOM_TARGET(
-    "make_pysol_board"
-    ALL DEPENDS "${_dest}"
-)
+    ADD_CUSTOM_TARGET(
+        "${tgt}"
+        ALL DEPENDS "${_dest}"
+    )
 
-SET (_make_py_dest "${_dest}")
+    INSTALL(
+        PROGRAMS
+            "${_dest}"
+        DESTINATION
+            "bin"
+    )
+ENDMACRO()
 
+my_board_gen_prog("make_pysol_freecell_board.py" "make_pysol_board")
+my_board_gen_prog("transpose-freecell-board.py" "transpose_freecell_board_prog")
 # Empty list
 SET (_pod_targets )
 
@@ -64,12 +72,6 @@ INSTALL(
         "bin"
 )
 
-INSTALL(
-    PROGRAMS
-        "${_make_py_dest}"
-    DESTINATION
-        "bin"
-)
 
 ADD_CUSTOM_TARGET(
     "docs_pods" ALL
