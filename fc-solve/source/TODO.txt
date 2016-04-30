@@ -14,6 +14,15 @@ Non-pressing
 by request of Manish.
 ** With tests.
 
+* Write a better initial board/initial layout validation code for the online
+solver (at least initially]):
+** Exact number of playstacks. (requires introspection).
+** Number of Freecells not exceeded. (requires introspection).
+** missing/extra cards.
+** whitespace gaps.
+** invalid characters.
+** misformatting of the format.
+
 * Experiment with generating the command-line arguments parsing using gperf
 (perfect hash): http://www.ibm.com/developerworks/library/l-gperf/index.html .
 
