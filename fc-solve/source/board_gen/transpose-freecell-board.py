@@ -93,16 +93,18 @@ def shlomif_main(args):
             pos += 1
         line_num += 1
 
+    for idx in range(0,max_col+1):
+        l = layout[idx]
+        while not l[-1]:
+            l.pop()
+        for x in range(0, len(l)):
+            if not l[x]:
+                raise ValueError("Stack no. %d contains a gap at position no. %d. Aborting." % (idx+1, x+1))
+
     with (sys.stdout if output_to_stdout else open(output_fn)) as f:
         f.write(foundations_line + "\n");
         f.write(freecells_line + "\n");
-        for idx in range(0,max_col+1):
-            l = layout[idx]
-            while not l[-1]:
-                l.pop()
-            for x in range(0, len(l)):
-                if not l[x]:
-                    raise ValueError("Stack no. %d contains a gap at position no. %d. Aborting." % (idx+1, x+1))
+        for l in layout[0:max_col+1]:
             f.write(" ".join([":"] + l) + "\n")
 
     return 0
