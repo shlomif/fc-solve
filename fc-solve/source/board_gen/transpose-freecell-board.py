@@ -16,6 +16,36 @@ import time
 import types
 import random2
 
+class LinesHandler:
+    def __init__(self, content):
+        """docstring for __init__"""
+        self.content = content
+        self.line_num = 0
+
+    def _find_indexes(self, myregex, too_many_msg, not_at_start_msg):
+        idxs = [x for x in range(self.line_num, len(self.content)) if re.match(myregex, self.content[x])]
+
+        if len(idxs) == 0:
+            return None
+        if len(idxs) != 1:
+            raise ValueError(too_many_msg)
+
+        i = idxs.pop(0)
+        if (i != self.line_num):
+            raise ValueError(not_at_start_msg)
+
+        return i
+
+    def _extract_optional_line_from_start(self, validregex, wrong_fmt_msg, myregex, too_many_msg, not_at_start_msg):
+        i = self._find_indexes(myregex, too_many_msg, not_at_start_msg)
+        if i == self.line_num:
+            l = self.content[self.line_num]
+            if not re.match(validregex, l):
+                raise ValueError(wrong_fmt_msg)
+            self.line_num += 1
+            return re.sub(r'\s+$', '', l)
+        else:
+            return None
 
 def shlomif_main(args):
     output_to_stdout = True
@@ -58,45 +88,28 @@ def shlomif_main(args):
 
     freecell_re = (r'(?:%s|-)' % (card_re))
 
-    line_num = 0
+    h = LinesHandler(content)
+    foundations_line = h._extract_optional_line_from_start(
+            (r'^Foundations:(?:\s*%s)?(?:\s+%s)*\s*$' % (found_re, found_re)),
+            "Wrong format for the foundations line.",
+            r'^Foundations:',
+            "There are too many \"Foundations:\" lines!",
+            "The \"Foundations:\" line is not at the beginning!"
+    )
 
-    def _find_indexes(myregex, too_many_msg, not_at_start_msg):
-        idxs = [x for x in range(line_num, len(content)) if re.match(myregex, content[x])]
+    freecells_line = h._extract_optional_line_from_start(
+            (r'^Freecells:(\s*%s)?(?:\s+%s)*\s*$' % (freecell_re, freecell_re)),
+            "Wrong format for the freecells line.",
+            r'^Freecells:',
+            "There are too many \"Freecells:\" lines!",
+            "The \"Freecells:\" line is not at the beginning!"
+    )
 
-        if len(idxs) == 0:
-            return None
-        if len(idxs) != 1:
-            raise ValueError(too_many_msg)
-
-        i = idxs.pop(0)
-        if (i != line_num):
-            raise ValueError(not_at_start_msg)
-
-        return i
-
-    i = _find_indexes(r'^Foundations:', "There are too many \"Foundations:\" lines!", "The \"Foundations:\" line is not at the beginning!")
-    foundations_line = None
-    if i == line_num:
-        foundations_line = content[line_num]
-        if not re.match((r'^Foundations:(?:\s*%s)?(?:\s+%s)*\s*$' % (found_re, found_re)), foundations_line):
-            raise ValueError("Wrong format for the foundations line.")
-        foundations_line = re.sub(r'\s+$', '', foundations_line)
-        line_num += 1
-
-    i = _find_indexes(r'^Freecells:', "There are too many \"Freecells:\" lines!", "The \"Freecells:\" line is not at the beginning!")
-    freecells_line = None
-    if i == line_num:
-        freecells_line = content[line_num]
-        if not re.match((r'^Freecells:(\s*%s)?(?:\s+%s)*\s*$' % (freecell_re, freecell_re)), freecells_line):
-            raise ValueError("Second line must be the freecells line.");
-        freecells_line = re.sub(r'\s+$', '', freecells_line)
-        line_num += 1
-
-    start_line = line_num
+    start_line = h.line_num
     max_col = -1
 
-    while line_num < len(content):
-        l = content[line_num]
+    while h.line_num < len(content):
+        l = content[h.line_num]
         x = 0
         pos = 0
         while x < len(l):
@@ -107,11 +120,11 @@ def shlomif_main(args):
                 if not m:
                     raise ValueError("Card " + s + " does not match pattern!");
                 card = m.group(1)
-            layout[pos][line_num - start_line] = card
+            layout[pos][h.line_num - start_line] = card
             max_col = max(pos, max_col)
             x += 3
             pos += 1
-        line_num += 1
+        h.line_num += 1
 
     for idx in range(0,max_col+1):
         l = layout[idx]
