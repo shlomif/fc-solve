@@ -102,10 +102,13 @@ def shlomif_main(args):
                 raise ValueError("Stack no. %d contains a gap at position no. %d. Aborting." % (idx+1, x+1))
 
     with (sys.stdout if output_to_stdout else open(output_fn)) as f:
-        f.write(foundations_line + "\n");
-        f.write(freecells_line + "\n");
+        def _out_line(line):
+            f.write(line + "\n")
+            return
+        _out_line(foundations_line)
+        _out_line(freecells_line)
         for l in layout[0:max_col+1]:
-            f.write(" ".join([":"] + l) + "\n")
+            _out_line(" ".join([":"] + l))
 
     return 0
 
