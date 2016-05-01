@@ -60,21 +60,26 @@ def shlomif_main(args):
 
     line_num = 0
 
-    foundations_lines_idxs = [x for x in range(line_num, len(content)) if re.match(r'^Foundations:', content[x])]
+    def _find_indexes(myregex, too_many_msg, not_at_start_msg):
+        idxs = [x for x in range(line_num, len(content)) if re.match(myregex, content[x])]
 
-    if len(foundations_lines_idxs) != 1:
-        raise ValueError("There are too many \"Foundations:\" lines!")
+        if len(idxs) != 1:
+            raise ValueError(too_many_msg)
 
-    i = foundations_lines_idxs.pop(0)
-    if (i != line_num):
-        raise ValueError("The \"Foundations:\" line is not at the beginning!")
+        i = idxs.pop(0)
+        if (i != line_num):
+            raise ValueError(not_at_start_msg)
 
+        return i
+
+    i = _find_indexes(r'^Foundations:', "There are too many \"Foundations:\" lines!", "The \"Foundations:\" line is not at the beginning!")
     foundations_line = content[line_num]
     if not re.match((r'^Foundations:(?:\s*%s)?(?:\s+%s)*\s*$' % (found_re, found_re)), foundations_line):
-        raise ValueError("First line must be a foundations line.");
+        raise ValueError("Wrong format for the foundations line.")
     foundations_line = re.sub(r'\s+$', '', foundations_line)
     line_num += 1
 
+    i = _find_indexes(r'^Freecells:', "There are too many \"Freecells:\" lines!", "The \"Freecells:\" line is not at the beginning!")
     freecells_line = content[line_num]
     if not re.match((r'^Freecells:(\s*%s)?(?:\s+%s)*\s*$' % (freecell_re, freecell_re)), freecells_line):
         raise ValueError("Second line must be the freecells line.");
