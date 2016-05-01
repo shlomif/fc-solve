@@ -63,6 +63,8 @@ def shlomif_main(args):
     def _find_indexes(myregex, too_many_msg, not_at_start_msg):
         idxs = [x for x in range(line_num, len(content)) if re.match(myregex, content[x])]
 
+        if len(idxs) == 0:
+            return None
         if len(idxs) != 1:
             raise ValueError(too_many_msg)
 
@@ -73,11 +75,13 @@ def shlomif_main(args):
         return i
 
     i = _find_indexes(r'^Foundations:', "There are too many \"Foundations:\" lines!", "The \"Foundations:\" line is not at the beginning!")
-    foundations_line = content[line_num]
-    if not re.match((r'^Foundations:(?:\s*%s)?(?:\s+%s)*\s*$' % (found_re, found_re)), foundations_line):
-        raise ValueError("Wrong format for the foundations line.")
-    foundations_line = re.sub(r'\s+$', '', foundations_line)
-    line_num += 1
+    foundations_line = None
+    if i == line_num:
+        foundations_line = content[line_num]
+        if not re.match((r'^Foundations:(?:\s*%s)?(?:\s+%s)*\s*$' % (found_re, found_re)), foundations_line):
+            raise ValueError("Wrong format for the foundations line.")
+        foundations_line = re.sub(r'\s+$', '', foundations_line)
+        line_num += 1
 
     i = _find_indexes(r'^Freecells:', "There are too many \"Freecells:\" lines!", "The \"Freecells:\" line is not at the beginning!")
     freecells_line = content[line_num]
@@ -117,7 +121,8 @@ def shlomif_main(args):
 
     with (sys.stdout if output_to_stdout else open(output_fn)) as f:
         def _out_line(line):
-            f.write(line + "\n")
+            if line:
+                f.write(line + "\n")
             return
         _out_line(foundations_line)
         _out_line(freecells_line)
