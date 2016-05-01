@@ -14,7 +14,7 @@ def mytest(input_text, want_out, msg):
         diag("Received [[[%s]]]" % (got_out))
 
 def main():
-    plan(4)
+    plan(5)
 
     # TEST
     mytest(
@@ -124,6 +124,34 @@ QS 3H 3S JH TD    8H 8S
 """,
     "Without a foundations line"
     )
+
+    # TEST
+    mytest(
+        """Foundations:
+4C 5H QC 5D 2D 7H AH 7S
+2H QH 9S 2S KD JS 5S 6C
+9C 3C 6H JC TH KH 6S 7D
+8C AC 9H 5C TC TS AD 4D
+QS 3H 3S JH TD    8H 8S
+   4H KS 6D 8D    JD
+   QD 3D AS       KC
+      2C          9D
+      4S
+      7C
+""",
+"""Foundations:
+: 4C 2H 9C 8C QS
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D 2C 4S 7C
+: 5D 2S JC 5C JH 6D AS
+: 2D KD TH TC TD 8D
+: 7H JS KH TS
+: AH 5S 6S AD 8H JD KC 9D
+: 7S 6C 7D 4D 8S
+""",
+    "Without a Freecells line"
+    )
+
 
 if __name__ == "__main__":
     main()

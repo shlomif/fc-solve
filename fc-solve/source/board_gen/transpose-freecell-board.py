@@ -84,11 +84,13 @@ def shlomif_main(args):
         line_num += 1
 
     i = _find_indexes(r'^Freecells:', "There are too many \"Freecells:\" lines!", "The \"Freecells:\" line is not at the beginning!")
-    freecells_line = content[line_num]
-    if not re.match((r'^Freecells:(\s*%s)?(?:\s+%s)*\s*$' % (freecell_re, freecell_re)), freecells_line):
-        raise ValueError("Second line must be the freecells line.");
-    freecells_line = re.sub(r'\s+$', '', freecells_line)
-    line_num += 1
+    freecells_line = None
+    if i == line_num:
+        freecells_line = content[line_num]
+        if not re.match((r'^Freecells:(\s*%s)?(?:\s+%s)*\s*$' % (freecell_re, freecell_re)), freecells_line):
+            raise ValueError("Second line must be the freecells line.");
+        freecells_line = re.sub(r'\s+$', '', freecells_line)
+        line_num += 1
 
     start_line = line_num
     max_col = -1
