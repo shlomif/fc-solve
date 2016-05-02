@@ -9,12 +9,8 @@
 
 # imports
 import sys
-import os
 import re
-import string
-import time
-import types
-import random2
+
 
 class LinesHandler:
     def __init__(self, content):
@@ -23,7 +19,8 @@ class LinesHandler:
         self.line_num = 0
 
     def _find_indexes(self, myregex, too_many_msg, not_at_start_msg):
-        idxs = [x for x in range(self.line_num, len(self.content)) if re.match(myregex, self.content[x])]
+        idxs = [x for x in range(self.line_num, len(self.content))
+                if re.match(myregex, self.content[x])]
 
         if len(idxs) == 0:
             return None
@@ -36,7 +33,9 @@ class LinesHandler:
 
         return i
 
-    def _extract_optional_line_from_start(self, validregex, wrong_fmt_msg, myregex, too_many_msg, not_at_start_msg):
+    def _extract_optional_line_from_start(self, validregex, wrong_fmt_msg,
+                                          myregex, too_many_msg,
+                                          not_at_start_msg):
         i = self._find_indexes(myregex, too_many_msg, not_at_start_msg)
         if i == self.line_num:
             l = self.content[self.line_num]
@@ -46,6 +45,7 @@ class LinesHandler:
             return re.sub(r'\s+$', '', l)
         else:
             return None
+
 
 def shlomif_main(args):
     output_to_stdout = True
@@ -78,7 +78,7 @@ def shlomif_main(args):
         with open(input_fn) as f:
             content = f.readlines()
 
-    layout = [[None for x in range(0,52)] for l in range(0,52)]
+    layout = [[None for x in range(0, 52)] for l in range(0, 52)]
 
     rank_re = r'[A23456789TJQK]'
     suit_re = r'[HCDS]'
@@ -98,11 +98,11 @@ def shlomif_main(args):
     )
 
     freecells_line = h._extract_optional_line_from_start(
-            (r'^Freecells:(\s*%s)?(?:\s+%s)*\s*$' % (freecell_re, freecell_re)),
-            "Wrong format for the freecells line.",
-            r'^Freecells:',
-            "There are too many \"Freecells:\" lines!",
-            "The \"Freecells:\" line is not at the beginning!"
+        (r'^Freecells:(\s*%s)?(?:\s+%s)*\s*$' % (freecell_re, freecell_re)),
+        "Wrong format for the freecells line.",
+        r'^Freecells:',
+        "There are too many \"Freecells:\" lines!",
+        "The \"Freecells:\" line is not at the beginning!"
     )
 
     start_line = h.line_num
@@ -113,12 +113,12 @@ def shlomif_main(args):
         x = 0
         pos = 0
         while x < len(l):
-            s = l[x:min(x+3,len(l))]
+            s = l[x:min(x+3, len(l))]
             card = None
             if not re.match(r'^\s*$', s):
                 m = re.match(r'^(' + card_re + r') ?$', s)
                 if not m:
-                    raise ValueError("Card " + s + " does not match pattern!");
+                    raise ValueError("Card " + s + " does not match pattern!")
                 card = m.group(1)
             layout[pos][h.line_num - start_line] = card
             max_col = max(pos, max_col)
@@ -126,13 +126,16 @@ def shlomif_main(args):
             pos += 1
         h.line_num += 1
 
-    for idx in range(0,max_col+1):
+    for idx in range(0, max_col + 1):
         l = layout[idx]
         while not l[-1]:
             l.pop()
         for x in range(0, len(l)):
             if not l[x]:
-                raise ValueError("Stack no. %d contains a gap at position no. %d. Aborting." % (idx+1, x+1))
+                raise ValueError(
+                    "Stack no. %d contains a gap at position no. %d. Aborting."
+                    % (idx+1, x+1)
+                )
 
     with (sys.stdout if output_to_stdout else open(output_fn)) as f:
         def _out_line(line):

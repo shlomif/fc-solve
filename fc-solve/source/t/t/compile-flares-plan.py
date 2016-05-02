@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from TAP.Simple import *
+from TAP.Simple import plan
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 

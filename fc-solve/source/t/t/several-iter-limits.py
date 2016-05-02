@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from TAP.Simple import *
+from TAP.Simple import ok, plan
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 
@@ -8,7 +8,7 @@ plan(14)
 
 
 def test_resume_solution():
-    testname = "With RunIndef"
+    testname = "With RunIndef - "
 
     fcs = FC_Solve()
 
@@ -38,19 +38,22 @@ AH 5S 6S AD 8H JD
         ret = fcs.resume_solution()
 
     # TEST
-    ok(ret == 0, "State was successfully solved.")
+    ok(ret == 0, testname + "State was successfully solved.")
 
     # TEST
-    ok(iters_count_ok == 1, "Iters count was OK throughout the solution.")
+    ok(iters_count_ok == 1,
+       testname + "Iters count was OK throughout the solution.")
+
+    return
 
 
 def test_num_states_in_collection_after_recycle():
-    testname = "NumStatesInCol-After-Recycle"
+    testname = "NumStatesInCol-After-Recycle - "
 
     fcs = FC_Solve()
 
     # MS-Freeceel board No. 24.
-    ret = fcs.solve_board(
+    fcs.solve_board(
             """4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
 QC 9S 6H 9H 3S KS 3D
@@ -63,22 +66,24 @@ AH 5S 6S AD 8H JD
     )
 
     # TEST
-    ok(fcs.get_num_times() == 137, "Get num times is OK.")
+    ok(fcs.get_num_times() == 137, testname + "Get num times is OK.")
 
     # TEST
-    ok(fcs.get_num_states_in_col() == 191, "Num-states-in-collection is OK.")
+    ok(fcs.get_num_states_in_col() == 191,
+       testname + "Num-states-in-collection is OK.")
 
     fcs.recycle()
 
     # TEST
-    ok(fcs.get_num_times() == 0, "Get num times immediately after recycle.")
+    ok(fcs.get_num_times() == 0,
+       testname + "Get num times immediately after recycle.")
 
     # TEST
     ok(fcs.get_num_states_in_col() == 0,
-       "Num-states-in-collection immediately after recycle.")
+       testname + "Num-states-in-collection immediately after recycle.")
 
     # MS-Freeceel board No. 24.
-    ret = fcs.solve_board(
+    fcs.solve_board(
             """4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
 QC 9S 6H 9H 3S KS 3D
@@ -91,15 +96,17 @@ AH 5S 6S AD 8H JD
     )
 
     # TEST
-    ok(fcs.get_num_times() == 137, "Get num times after recycle.")
+    ok(fcs.get_num_times() == 137, testname + "Get num times after recycle.")
 
     # TEST
     ok(fcs.get_num_states_in_col() == 191,
-       "Num-states-in-collection after recycle.")
+       testname + "Num-states-in-collection after recycle.")
+
+    return
 
 
 def test_num_states_in_collection_after_unsolved():
-    testname = "NumStatesInCol-After-unsolved"
+    testname = "NumStatesInCol-After-unsolved - "
 
     fcs = FC_Solve()
 
@@ -107,7 +114,7 @@ def test_num_states_in_collection_after_unsolved():
     fcs.input_cmd_line("bakers_game", ['-g', 'bakers_game'])
 
     # MS-Freeceel board No. 10
-    ret = fcs.solve_board(
+    fcs.solve_board(
             """5S KD JC TS 9D KH 8D
 5H 2S 9H 7H TD AD 6D
 6H QD 6C TC AH 8S TH
@@ -120,10 +127,13 @@ JH JD 3C KS 2C 8C
     )
 
     # TEST
-    ok(fcs.get_num_times() == 3436, "Get num times is OK.")
+    ok(fcs.get_num_times() == 3436, testname + "Get num times is OK.")
 
     # TEST
-    ok(fcs.get_num_states_in_col() == 3436, "Num-states-in-collection is OK.")
+    ok(fcs.get_num_states_in_col() == 3436,
+       testname + "Num-states-in-collection is OK.")
+
+    return
 
 
 def test_resume_solution_with_flares():

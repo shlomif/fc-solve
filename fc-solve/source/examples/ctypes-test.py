@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
-from ctypes import *
+from ctypes import CDLL, Structure, c_byte, c_char_p, c_void_p, \
+    pointer, string_at
 
 
 def py_str_at(addr):

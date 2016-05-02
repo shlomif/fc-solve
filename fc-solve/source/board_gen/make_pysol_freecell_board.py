@@ -52,11 +52,7 @@
 
 # imports
 import sys
-import os
-import re
-import string
 import time
-import types
 import random2
 
 # /***********************************************************************
@@ -126,7 +122,7 @@ class PysolRandom:
 
     # Get the next random number in the range [0.0, 1.0).
     def random(self):
-        raise SubclassResponsibility
+        raise ValueError("Subclass responsibility")
 
     #
     # subclass overrideable
@@ -221,7 +217,7 @@ class BasicRandom:
         return '%020d' % seed
 
     def reset(self):
-        raise SubclassResponsibility
+        raise ValueError("Subclass responsibility")
 
     def copy(self):
         random = self.__class__(0)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from TAP.Simple import *
-from ctypes import *
+from TAP.Simple import ok, plan
+from ctypes import c_char_p, c_longlong, CDLL
 
 board_gen_lib = CDLL("../libfcs_gen_ms_freecell_boards.so")
 

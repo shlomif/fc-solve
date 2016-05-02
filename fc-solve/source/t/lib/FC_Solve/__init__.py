@@ -1,5 +1,5 @@
-from TAP.Simple import *
-from ctypes import *
+from TAP.Simple import diag, is_ok, ok
+from ctypes import byref, c_char_p, c_double, c_int, c_long, CDLL
 
 
 class FC_Solve:
