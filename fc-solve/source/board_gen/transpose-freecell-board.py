@@ -120,7 +120,12 @@ def shlomif_main(args):
                 if not m:
                     raise ValueError("Card " + s + " does not match pattern!")
                 card = m.group(1)
-            layout[pos][h.line_num - start_line] = card
+            if pos >= len(layout):
+                raise ValueError("Line %d is too long!" % (h.line_num + 1))
+            l_idx = h.line_num - start_line
+            if l_idx >= len(layout[pos]):
+                raise ValueError("Too many lines!")
+            layout[pos][l_idx] = card
             max_col = max(pos, max_col)
             x += 3
             pos += 1
