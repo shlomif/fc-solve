@@ -2559,12 +2559,12 @@ static int user_next_instance(
     fcs_user_t * const user
     )
 {
-    const_AUTO(num_instances, 1 + user->end_of_instances_list - user->instances_list);
+    const_AUTO(num_instances, user->end_of_instances_list - user->instances_list);
     user->instances_list = SREALLOC(
-        user->instances_list, num_instances
+        user->instances_list, num_instances + 1
     );
 
-    user->current_instance = (user->end_of_instances_list = user->instances_list + num_instances) - 1;
+    user->end_of_instances_list = (user->current_instance = user->instances_list + num_instances) + 1;
 
     *(get_current_instance_item(user)) = (fcs_instance_item_t) {
         .flares = NULL,

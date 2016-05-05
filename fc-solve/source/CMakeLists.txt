@@ -121,7 +121,6 @@ SET (FCS_ENABLE_RCS_STATES CACHE BOOL "Whether to use RCS-like states (requires 
 SET (FCS_ENABLE_DBM_SOLVER CACHE BOOL "Whether to build the DBM solver")
 SET (FCS_DBM_BACKEND "kaztree" CACHE STRING "Type of DBM backend.")
 SET (FCS_DBM_TREE_BACKEND "libavl2" CACHE STRING "Type of DBM tree backend.")
-SET (IA_STATE_PACKS_GROW_BY 32 CACHE STRING "Amount to Grow State Packs By")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")
 SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
 SET (MAX_NUM_STACKS 10 CACHE STRING "Maximal Number of Stacks")

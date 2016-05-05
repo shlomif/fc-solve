@@ -53,17 +53,6 @@ extern "C" {
 
 #cmakedefine FCS_INLINE_KEYWORD ${FCS_INLINE_KEYWORD}
 
-/*
-    The sort margin size for the previous states array.
-*/
-#define PREV_STATES_SORT_MARGIN 32
-
-/*
-    The amount the pack pointers array grows by. Shouldn't be too high
-    because it doesn't happen too often.
-*/
-#cmakedefine IA_STATE_PACKS_GROW_BY 32
-
 /* The size of a single pack in alloc.c/alloc.h measured in 1024 chars. */
 #cmakedefine FCS_IA_PACK_SIZE ${FCS_IA_PACK_SIZE}
 

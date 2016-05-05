@@ -2,7 +2,7 @@ ignore_list = IO.read("scripts/ids-whitelist.txt").split(/\s+/)
 
 ignore = Hash.new
 for s in ignore_list do
-    ignore[s] = 1
+    ignore[s] = 0
 end
 
 col = Hash.new
@@ -41,7 +41,9 @@ ARGV.each do |fn|
     end
 end
 
-puts col.keys.select { |id| !ignore[id] }. \
+puts col.keys.select { |id| ret = ignore.has_key?(id); if (ret) then ignore[id] += 1 ; end;  !ret }. \
     sort_by { |x| [col[x].length,x] }. \
     map{ |x| col[x].map { |arr| arr[0] + ":" + arr[1].to_s + ":" + x }}. \
     flatten
+
+STDERR.puts(ignore.keys.select { |id| ignore[id] == 0 })
