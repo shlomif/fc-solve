@@ -411,6 +411,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_FREECELLS_NUM: /* STRINGS=--freecells-num; */
         {
             PROCESS_OPT_ARG() ;
+#ifndef HARD_CODED_NUM_FREECELLS
             if (freecell_solver_user_set_num_freecells(instance, atoi((*arg))) != 0)
             {
                 char * const errstr = SMALLOC(errstr, 200);
@@ -425,12 +426,14 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
                 RET_ERROR_IN_ARG() ;
             }
+#endif
         }
         break;
 
         case FCS_OPT_STACKS_NUM: /* STRINGS=--stacks-num; */
         {
             PROCESS_OPT_ARG() ;
+#ifndef HARD_CODED_NUM_STACKS
             if (freecell_solver_user_set_num_stacks(instance, atoi((*arg))) != 0)
             {
                 char * const errstr = SMALLOC(errstr, 200);
@@ -445,12 +448,14 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
                 RET_ERROR_IN_ARG() ;
             }
+#endif
         }
         break;
 
         case FCS_OPT_DECKS_NUM: /* STRINGS=--decks-num; */
         {
             PROCESS_OPT_ARG() ;
+#ifndef HARD_CODED_NUM_DECKS
             if (freecell_solver_user_set_num_decks(instance, atoi((*arg))) != 0)
             {
                 char * const errstr = SMALLOC(errstr, 200);
@@ -465,14 +470,15 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
                 RET_ERROR_IN_ARG() ;
             }
+#endif
         }
         break;
 
         case FCS_OPT_SEQUENCES_ARE_BUILT_BY: /* STRINGS=--sequences-are-built-by; */
         {
-            int sbb;
-
             PROCESS_OPT_ARG() ;
+#ifndef FCS_FREECELL_ONLY
+            int sbb;
 
             if (!strcmp((*arg), "suit"))
             {
@@ -487,26 +493,28 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 sbb = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
             }
             freecell_solver_user_set_sequences_are_built_by_type(instance, sbb);
+#endif
         }
         break;
 
         case FCS_OPT_SEQUENCE_MOVE: /* STRINGS=--sequence-move; */
         {
             PROCESS_OPT_ARG() ;
-
+#ifndef FCS_FREECELL_ONLY
             freecell_solver_user_set_sequence_move(
                 instance,
                 !strcmp((*arg), "unlimited")
             );
+#endif
         }
         break;
 
         case FCS_OPT_EMPTY_STACKS_FILLED_BY: /* STRINGS=--empty-stacks-filled-by; */
         {
-            int es_fill;
 
             PROCESS_OPT_ARG() ;
-
+#ifndef FCS_FREECELL_ONLY
+            int es_fill;
             if (!strcmp((*arg), "kings"))
             {
                 es_fill = FCS_ES_FILLED_BY_KINGS_ONLY;
@@ -523,6 +531,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 instance,
                 es_fill
                 );
+#endif
         }
         break;
 
