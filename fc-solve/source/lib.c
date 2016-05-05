@@ -206,29 +206,29 @@ static void iter_handler_wrapper(
     fcs_int_limit_t parent_iter_num
     );
 
-#define INSTANCE_ITEM_FLARES_LOOP_START() \
-        const fcs_flare_item_t * const end_of_flares = instance_item->end_of_flares; \
-        for (fcs_flare_item_t * flare = instance_item->flares; flare < end_of_flares ; flare++) \
-        {      \
-
 #define INSTANCES_LOOP_START() \
     const_SLOT(end_of_instances_list, user); \
     for (fcs_instance_item_t * instance_item = user->instances_list; instance_item < end_of_instances_list ; instance_item++)\
     { \
 
+#define INSTANCE_ITEM_FLARES_LOOP_START() \
+        const fcs_flare_item_t * const end_of_flares = instance_item->end_of_flares; \
+        for (fcs_flare_item_t * flare = instance_item->flares; flare < end_of_flares ; flare++) \
+        {      \
+
+
+#define INSTANCE_ITEM_FLARES_LOOP_END() \
+        }
+
+#define INSTANCES_LOOP_END() \
+    }
+
 #define FLARES_LOOP_START() \
     INSTANCES_LOOP_START() \
         INSTANCE_ITEM_FLARES_LOOP_START()
-
-#define FLARES_LOOP_END_FLARES() \
-        }
-
-#define FLARES_LOOP_END_INSTANCES() \
-    }
-
 #define FLARES_LOOP_END() \
-    FLARES_LOOP_END_FLARES() \
-    FLARES_LOOP_END_INSTANCES()
+    INSTANCE_ITEM_FLARES_LOOP_END() \
+    INSTANCES_LOOP_END()
 
 static int user_next_instance(fcs_user_t * user);
 
@@ -737,7 +737,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 break;
             }
         }
-    FLARES_LOOP_END_INSTANCES()
+    INSTANCES_LOOP_END()
     *instance_list_index = -1;
     clear_error(user);
 
@@ -811,7 +811,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
             flares_plan_item * item = plan + i;
             item->remaining_quota = item->initial_quota;
         }
-    FLARES_LOOP_END_INSTANCES()
+    INSTANCES_LOOP_END()
 
     return freecell_solver_user_resume_solution(api_instance);
 }
@@ -859,7 +859,7 @@ static void recycle_instance(
         }
 
         flare->obj_stats = calc_initial_stats_t();
-    FLARES_LOOP_END_FLARES()
+    INSTANCE_ITEM_FLARES_LOOP_END()
 
     instance_item->current_plan_item_idx = 0;
     instance_item->minimal_flare = NULL;
@@ -1430,7 +1430,7 @@ static void user_free_resources(
             flare->moves_seq.num_moves = 0;
         }
     }
-    FLARES_LOOP_END_FLARES()
+    INSTANCE_ITEM_FLARES_LOOP_END()
         free (instance_item->flares);
         if (instance_item->flares_plan_string)
         {
@@ -1440,7 +1440,7 @@ static void user_free_resources(
         {
             free (instance_item->plan);
         }
-    FLARES_LOOP_END_INSTANCES()
+    INSTANCES_LOOP_END()
 
     free(user->instances_list);
     fc_solve_meta_compact_allocator_finish(&(user->meta_alloc));
