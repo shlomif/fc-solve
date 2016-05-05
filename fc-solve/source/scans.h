@@ -25,9 +25,7 @@
  * scans.h - header file for the scans.c - Best-First-Search and Soft-DFS
  * scans.
  */
-
-#ifndef FC_SOLVE__SCANS_H
-#define FC_SOLVE__SCANS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -224,5 +222,3 @@ extern void fc_solve_sfs_check_state_end(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__SCANS_H */

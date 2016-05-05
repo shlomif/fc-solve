@@ -28,8 +28,7 @@
  *
  * Also see alloc.h.
  */
-#ifndef FC_SOLVE__META_ALLOC_H
-#define FC_SOLVE__META_ALLOC_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -133,5 +132,3 @@ static GCC_INLINE void fc_solve_compact_allocator_recycle(fcs_compact_allocator_
 #ifdef __cplusplus
 };
 #endif
-
-#endif /* FC_SOLVE__META_ALLOC_H */

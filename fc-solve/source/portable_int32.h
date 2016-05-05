@@ -25,9 +25,7 @@
  * portable_int32.h - the Freecell Solver (mostly) portable 32-bit/etc. int
  * typedefs.
  */
-#ifndef FC_SOLVE__PORTABLE_INT32_H
-#define FC_SOLVE__PORTABLE_INT32_H
-
+#pragma once
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,5 +49,3 @@ typedef uint32_t u_int32_t;
 #ifdef __cplusplus
 };
 #endif
-
-#endif /* #ifndef FC_SOLVE__PORTABLE_INT32_H */

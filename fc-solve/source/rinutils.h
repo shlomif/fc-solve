@@ -6,9 +6,7 @@
  * rinutils.h - a common header for Rindolf's (= Shlomi Fish) utility
  * headers.
  */
-
-#ifndef FC_SOLVE__RINUTILS_H
-#define FC_SOLVE__RINUTILS_H
+#pragma once
 
 #include "alloc_wrap.h"
 #include "bool.h"
@@ -24,5 +22,3 @@
 #include "str_utils.h"
 #include "typeof_wrap.h"
 #include "unused.h"
-
-#endif

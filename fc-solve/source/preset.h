@@ -22,13 +22,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * preset.h - header file of the preset management functions for Freecell Solver.
- *
+ * preset.h - header file of the preset management functions for Freecell
+ * Solver.
  * This header is internal to Freecell Solver.
  */
-
-#ifndef FC_SOLVE__PRESET_H
-#define FC_SOLVE__PRESET_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -87,6 +85,4 @@ static GCC_INLINE const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

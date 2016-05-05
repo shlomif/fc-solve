@@ -23,14 +23,9 @@
  */
 /*
  * likely.h - the purpose of this file is to define the likely
- * and unlikely macros. See:
- *
- * - https://lwn.net/Articles/255364/
- *
+ * and unlikely macros. See: https://lwn.net/Articles/255364/ .
  */
-
-#ifndef FC_SOLVE__LIKELY_H
-#define FC_SOLVE__LIKELY_H
+#pragma once
 
 #include "config.h"
 
@@ -41,6 +36,3 @@
 #define unlikely(expr) expr
 #define likely(expr) expr
 #endif
-
-
-#endif /* FC_SOLVE__LIKELY_H */

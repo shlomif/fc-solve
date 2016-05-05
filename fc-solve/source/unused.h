@@ -24,16 +24,11 @@
 /*
  * unused.h - the purpose of this file is to define the GCC_UNUSED
  * macro to suppress unused parameters warnings / remarks.
- *
  */
-
-#ifndef FC_SOLVE__UNUSED_H
-#define FC_SOLVE__UNUSED_H
+#pragma once
 
 #if defined(__GNUC__)
 #define GCC_UNUSED __attribute__ ((unused))
 #else
 #define GCC_UNUSED
-#endif
-
 #endif

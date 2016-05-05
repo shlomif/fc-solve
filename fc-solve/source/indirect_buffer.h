@@ -23,10 +23,8 @@
  */
 /*
  * indirect_buffer.h - declare the dll_ind_buf_t type.
- *
  */
-#ifndef FC_SOLVE__INDIRECT_BUFFER_H
-#define FC_SOLVE__INDIRECT_BUFFER_H
+#pragma once
 
 #include "config.h"
 
@@ -39,6 +37,4 @@ typedef char dll_ind_buf_t[MAX_NUM_STACKS << 7];
 #define DECLARE_IND_BUF_T(ident)
 #define IND_BUF_T_PARAM(ident)
 #define PASS_IND_BUF_T(ident)
-#endif
-
 #endif

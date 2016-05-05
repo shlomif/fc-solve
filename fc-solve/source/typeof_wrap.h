@@ -24,8 +24,7 @@
 /*
  * typeof_wrap.h - convenient wrappers for GCC's typeof
  */
-#ifndef FC_SOLVE__TYPEOF_WRAP_H
-#define FC_SOLVE__TYPEOF_WRAP_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -46,6 +45,4 @@ extern "C"
 
 #ifdef __cplusplus
 };
-#endif
-
 #endif

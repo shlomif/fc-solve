@@ -24,11 +24,8 @@
 /*
  * move.h - header file for the move and move stacks functions of
  * Freecell Solver
- *
  */
-
-#ifndef FC_SOLVE__MOVE_H
-#define FC_SOLVE__MOVE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -463,5 +460,3 @@ extern void fc_solve_derived_states_list_add_state(
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__MOVE_H */

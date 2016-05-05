@@ -25,8 +25,7 @@
  * min_and_max.h - header file for the min(a,b) and max(a,b) macros.
  *
  */
-#ifndef FC_SOLVE__MIN_AND_MAX_H
-#define FC_SOLVE__MIN_AND_MAX_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,4 +42,3 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif /* FC_SOLVE__MIN_AND_MAX_H */

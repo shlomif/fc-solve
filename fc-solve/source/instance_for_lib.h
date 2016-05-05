@@ -28,9 +28,7 @@
  *
  * This is done to speed compilation.
  */
-
-#ifndef FC_SOLVE__INSTANCE_FOR_LIB_H
-#define FC_SOLVE__INSTANCE_FOR_LIB_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -1424,5 +1422,3 @@ static GCC_INLINE int fc_solve_resume_instance(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__INSTANCE_FOR_LIB_H */

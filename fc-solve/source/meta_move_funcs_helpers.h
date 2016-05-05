@@ -26,11 +26,8 @@
  * Solver.
  *
  * The move functions code itself is found in freecell.c and simpsim.c.
- *
  */
-
-#ifndef FC_SOLVE__META_MOVE_FUNCS_HELPERS_H
-#define FC_SOLVE__META_MOVE_FUNCS_HELPERS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -216,5 +213,3 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__META_MOVE_FUNCS_HELPERS_H */

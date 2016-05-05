@@ -24,11 +24,8 @@
 /*
  * simpsim.h - header file of the Simple Simon move functions
  * ("solve-for-state"/"sfs").
- *
  */
-
-#ifndef FC_SOLVE__SIMPSIM_H
-#define FC_SOLVE__SIMPSIM_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,6 +62,3 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__SIMPSIM_H */
-

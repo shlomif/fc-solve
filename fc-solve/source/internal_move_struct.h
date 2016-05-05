@@ -28,9 +28,7 @@
  * This file is not exposed to the outside.
  *
  */
-
-#ifndef FC_SOLVE__INTERNAL_MOVE_STRUCT_H
-#define FC_SOLVE__INTERNAL_MOVE_STRUCT_H
+#pragma once
 
 #include "fcs_move.h"
 
@@ -101,6 +99,3 @@ typedef struct
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__INTERNAL_MOVE_STRUCT_H */
-

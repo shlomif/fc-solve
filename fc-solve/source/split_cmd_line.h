@@ -26,9 +26,7 @@
  * to a subset of Bourne shell's semantics. Useful for reading command
  * line arguments from files.
  */
-#ifndef FC_SOLVE__SPLIT_CMD_LINE_H
-#define FC_SOLVE__SPLIT_CMD_LINE_H
-
+#pragma once
 #include "rinutils.h"
 
 #define FC_SOLVE__ARGS_MAN_GROW_BY 32
@@ -41,6 +39,3 @@ typedef struct
 
 extern void fc_solve_args_man_free(args_man_t * const manager);
 extern args_man_t fc_solve_args_man_chop(const char * const string);
-
-#endif /* #ifndef FC_SOLVE__SPLIT_CMD_LINE_H */
-

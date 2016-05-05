@@ -24,8 +24,7 @@
 /*
  * rate_state.h - for rating states.
  */
-#ifndef FC_SOLVE__RATE_STATE_H
-#define FC_SOLVE__RATE_STATE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -47,6 +46,4 @@ extern const fc_solve_seq_cards_power_type_t fc_solve_seqs_over_cards_lookup[2 *
 
 #ifdef __cplusplus
 };
-#endif
-
 #endif

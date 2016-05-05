@@ -24,14 +24,11 @@
 /*
  * var_base_writer.h - write to a packed integer using digits of variable
  * bases. Also see var_base_reader.h which complements it.
- *
  */
-#ifndef FC_SOLVE__VAR_BASE_WRITER_H
-#define FC_SOLVE__VAR_BASE_WRITER_H
+#pragma once
 
 #include <assert.h>
 #include <gmp.h>
-
 #include "rinutils.h"
 
 typedef struct
@@ -95,5 +92,3 @@ static GCC_INLINE void fc_solve_var_base_writer_release(
     mpz_clear(w->multiplier);
     mpz_clear(w->remainder);
 }
-
-#endif /* FC_SOLVE__VAR_BASE_WRITER_H */

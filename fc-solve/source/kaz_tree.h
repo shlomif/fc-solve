@@ -29,8 +29,7 @@
  * http://git.savannah.gnu.org/cgit/kazlib.git/
  *
  * */
-#ifndef FC_SOLVE__KAZ_TREE_H
-#define FC_SOLVE__KAZ_TREE_H
+#pragma once
 
 #include <limits.h>
 
@@ -203,8 +202,4 @@ extern void dict_merge(dict_t *, dict_t *);
 
 #ifdef __cplusplus
 }
-
-
 #endif
-
-#endif /* FC_SOLVE__KAZ_TREE_H */

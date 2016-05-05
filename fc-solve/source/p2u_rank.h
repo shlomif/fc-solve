@@ -23,19 +23,14 @@
  */
 /*
  * p2u_rank.h - header file for the p2u_rank function.
- *
  */
-#ifndef FC_SOLVE__P2U_RANK_H
-#define FC_SOLVE__P2U_RANK_H
-
+#pragma once
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <string.h>
-
 #include "config.h"
-
 #include "rinutils.h"
 /*
  * Those strings contain the string representations of the different cards.
@@ -87,5 +82,3 @@ static GCC_INLINE void fc_solve_p2u_rank(
 #undef INDEX
     }
 }
-
-#endif /* FC_SOLVE__P2U_RANK_H */

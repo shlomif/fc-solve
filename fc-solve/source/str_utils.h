@@ -24,8 +24,7 @@
 /*
  * str_utils.h - string utilities.
  */
-#ifndef FC_SOLVE__STR_UTILS_H
-#define FC_SOLVE__STR_UTILS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -34,7 +33,6 @@ extern "C"
 
 #include "inline.h"
 #include "bool.h"
-
 #include <string.h>
 
 static GCC_INLINE const fcs_bool_t string_starts_with(
@@ -65,6 +63,4 @@ static GCC_INLINE const char * const try_str_prefix(
 
 #ifdef __cplusplus
 };
-#endif
-
 #endif

@@ -26,8 +26,7 @@
  * the pseudo_dfs solver.
  *
  */
-#ifndef FC_SOLVE_PSEUDO_DFS_CACHE_H
-#define FC_SOLVE_PSEUDO_DFS_CACHE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -35,13 +34,10 @@ extern "C"
 #endif
 
 #include "config.h"
-
 #include <Judy.h>
-
 #include "state.h"
 #include "meta_alloc.h"
 #include "fcs_enums.h"
-
 #include "dbm_common.h"
 #include "dbm_solver_key.h"
 #include "dbm_calc_derived_iface.h"
@@ -187,5 +183,3 @@ static GCC_INLINE fcs_pdfs_cache_key_info_t * fcs_pdfs_cache_insert(fcs_pdfs_lru
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_PSEUDO_DFS_CACHE_H */

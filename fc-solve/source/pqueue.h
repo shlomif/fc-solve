@@ -35,9 +35,7 @@
  *
  * http://www.heyes-jones.com/astar.html
 */
-
-#ifndef FC_SOLVE__PQUEUE_H
-#define FC_SOLVE__PQUEUE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,7 +43,6 @@ extern "C" {
 
 #include <limits.h>
 #include <stdlib.h>
-
 #include "state.h"
 
 /* manage a priority queue as a heap
@@ -215,5 +212,3 @@ static GCC_INLINE void fc_solve_pq_pop(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* #ifdef FC_SOLVE__PQUEUE_H */

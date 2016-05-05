@@ -24,8 +24,7 @@
 /*
  * lock.h - FCS_LOCK()/etc. macros for locking.
  */
-#ifndef FC_SOLVE__LOCK_H
-#define FC_SOLVE__LOCK_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,5 +77,3 @@ typedef pthread_mutex_t fcs_lock_t;
 #ifdef __cplusplus
 };
 #endif
-
-#endif /* #ifndef FC_SOLVE__LOCK_H */

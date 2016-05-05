@@ -24,11 +24,8 @@
 /*
  * instance.h - header file of fc_solve_instance_t / fc_solve_hard_thread_t /
  * fc_solve_soft_thread_t .
- *
  */
-
-#ifndef FC_SOLVE__INSTANCE_H
-#define FC_SOLVE__INSTANCE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -1173,6 +1170,3 @@ extern void fc_solve_init_soft_thread(
 #else
 #define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
 #endif
-
-
-#endif /* FC_SOLVE__INSTANCE_H */

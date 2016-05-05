@@ -24,9 +24,7 @@
 /*
  * set_weights.h - header file of the set_weights function.
  */
-
-#ifndef FC_SOLVE__SET_WEIGHTS_H
-#define FC_SOLVE__SET_WEIGHTS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,7 +32,6 @@ extern "C" {
 
 #include <stdlib.h>
 #include <ctype.h>
-
 #include "rinutils.h"
 #include "fcs_user.h"
 
@@ -72,5 +69,3 @@ static GCC_INLINE void fc_solve_set_weights(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__SET_WEIGHTS_H */

@@ -23,11 +23,8 @@
  */
 /*
  * scans_impl.h - code implementing the various scans as inline functions.
- *
  */
-
-#ifndef FC_SOLVE__SCANS_IMPL_H
-#define FC_SOLVE__SCANS_IMPL_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -1363,5 +1360,3 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__SCANS_IMPL_H */

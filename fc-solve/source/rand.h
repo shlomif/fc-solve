@@ -24,8 +24,7 @@
 /*
  * rand.h - header for the Freecell Solver pseudo-random number generator.
  */
-#ifndef FC_SOLVE__RAND_H
-#define FC_SOLVE__RAND_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,6 +66,4 @@ static GCC_INLINE const int fc_solve_rand_get_random_number(fcs_rand_t * const m
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

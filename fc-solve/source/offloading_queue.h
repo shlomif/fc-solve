@@ -25,9 +25,7 @@
  * offloading_queue.h - header file for the offloading-to-hard-disk
  * queue.
  */
-
-#ifndef FC_SOLVE__OFFLOADING_QUEUE_H
-#define FC_SOLVE__OFFLOADING_QUEUE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -425,5 +423,3 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__OFFLOADING_QUEUE_H */

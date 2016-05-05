@@ -25,11 +25,8 @@
  * range_solvers_gen_ms_boards.h - a header file that defines some
  * static (and preferably inline) routines for generating the Microsoft
  * boards.
- *
  */
-
-#ifndef FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
-#define FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -173,5 +170,3 @@ typedef char fcs_state_string_t[52*3 + 8 + 1];
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__RANGE_SOLVERS_GEN_MS_BOARDS_H */

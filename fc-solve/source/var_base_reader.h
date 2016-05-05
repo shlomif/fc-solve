@@ -24,14 +24,11 @@
 /*
  * var_base_reader.h - read from a packed integer using digits of variable
  * bases. Also see var_base_writer.h which complements it.
- *
  */
-#ifndef FC_SOLVE__VAR_BASE_READER_H
-#define FC_SOLVE__VAR_BASE_READER_H
+#pragma once
 
 #include <assert.h>
 #include <gmp.h>
-
 #include "rinutils.h"
 
 typedef struct
@@ -86,5 +83,3 @@ static GCC_INLINE void fc_solve_var_base_reader_release(
     mpz_clear(s->r);
     mpz_clear(s->data_byte_offset);
 }
-
-#endif /* FC_SOLVE__VAR_BASE_READER_H */

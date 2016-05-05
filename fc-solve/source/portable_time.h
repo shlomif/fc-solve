@@ -25,8 +25,7 @@
  * portable_time.h - the Freecell Solver (mostly) portable time handling
  * routines. Works on Win32 and UNIX-like systems.
  */
-#ifndef FC_SOLVE__PORTABLE_TIME_H
-#define FC_SOLVE__PORTABLE_TIME_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -115,5 +114,3 @@ typedef struct
         FCS_TIME_GET_USEC(mytime), \
         total_num_iters \
     )
-
-#endif /* #ifndef FC_SOLVE__PORTABLE_TIME_H */

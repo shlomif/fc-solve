@@ -24,11 +24,8 @@
 /*
  * move_stack_compact_alloc.h - A header file for a (possibly inline) function
  * that compactly allocates a move stack.
- *
  */
-
-#ifndef FC_SOLVE__MOVE_STACK_COMPACT_ALLOC_H
-#define FC_SOLVE__MOVE_STACK_COMPACT_ALLOC_H
+#pragma once
 
 #include "instance.h"
 #include "move.h"
@@ -54,5 +51,3 @@ static GCC_INLINE fcs_move_stack_t * fc_solve_move_stack_compact_allocate(
     memcpy(new_moves_to_parent, old_move_stack_to_parent->moves, sizeof(fcs_move_t)*old_move_stack_to_parent->num_moves);
     return new_move_stack_to_parent;
 }
-
-#endif /* FC_SOLVE__MOVE_STACK_COMPACT_ALLOC_H */

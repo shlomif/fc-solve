@@ -25,8 +25,7 @@
  * portable_int64.h - the Freecell Solver (mostly) portable 64-bit int
  * typedefs.
  */
-#ifndef FC_SOLVE__PORTABLE_INT64_H
-#define FC_SOLVE__PORTABLE_INT64_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,5 +46,3 @@ typedef __int64 fcs_int64_t;
 #ifdef __cplusplus
 };
 #endif
-
-#endif /* #ifndef FC_SOLVE__PORTABLE_INT64_H */

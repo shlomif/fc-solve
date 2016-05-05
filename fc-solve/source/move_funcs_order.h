@@ -23,11 +23,8 @@
  */
 /*
  * move_funcs_order.h - contains the fc_solve_apply_tests_order function.
- *
  */
-
-#ifndef FC_SOLVE__MOVE_FUNCS_ORDER_H
-#define FC_SOLVE__MOVE_FUNCS_ORDER_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,5 +74,3 @@ extern int fc_solve_apply_tests_order(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__MOVE_FUNCS_ORDER_H */

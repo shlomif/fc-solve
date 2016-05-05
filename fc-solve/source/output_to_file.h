@@ -23,20 +23,15 @@
  */
 /*
  * output_to_file.h - header file for outputting a solution to a file.
- *
  */
-
-#ifndef FC_SOLVE__OUTPUT_TO_FILE_H
-#define FC_SOLVE__OUTPUT_TO_FILE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdio.h>
-
 #include "rinutils.h"
-
 #include "fcs_enums.h"
 #include "fcs_user.h"
 
@@ -210,6 +205,3 @@ static GCC_INLINE void fc_solve_output_result_to_file(
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__OUTPUT_TO_FILE_H */
-
