@@ -187,6 +187,7 @@ SET (FCS_DISABLE_DEBONDT_DELTA_STATES "" CACHE BOOL "Disable the DEBONDT delta s
 SET (FCS_BREAK_BACKWARD_COMPAT_1 "" CACHE BOOL "Break some backward compatibility in the library and input/output")
 SET (FCS_WITHOUT_FC_PRO_MOVES_COUNT "" CACHE BOOL "Don't include the code and functionality of FC-Pro moves count.")
 SET (FCS_WITHOUT_TRIM_MAX_STORED_STATES "" CACHE BOOL "Don't include the trim-max-stored-states-functionality (should make things faster).")
+SET (FCS_WITHOUT_ITER_HANDLER "" CACHE BOOL "Don't include the iteration handler functionality (should make things faster).")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")

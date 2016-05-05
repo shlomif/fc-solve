@@ -866,8 +866,10 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
     CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
     const fcs_instance_debug_iter_output_func_t debug_iter_output_func = instance->debug_iter_output_func;
     const fcs_instance_debug_iter_output_context_t debug_iter_output_context = instance->debug_iter_output_context;
+#endif
 
     fcs_tests_by_depth_unit_t * curr_by_depth_unit;
     {
@@ -962,6 +964,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
             {
                 fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
                 TRACE0("In iter_handler");
 
                 if (debug_iter_output_func)
@@ -982,6 +985,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 #endif
                         );
                 }
+#endif
 
                 num_vacant_freecells =
                     count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);

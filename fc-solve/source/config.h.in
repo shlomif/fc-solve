@@ -92,6 +92,8 @@ extern "C" {
  * */
 #cmakedefine FCS_WITHOUT_DEPTH_FIELD
 
+#cmakedefine FCS_WITHOUT_ITER_HANDLER
+
 /*
  * This flag controls a hash behaviour. It seems to improve things somewhat.
  * */

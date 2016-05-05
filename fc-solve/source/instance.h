@@ -360,6 +360,7 @@ typedef struct
 
 #endif
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
 typedef void * fcs_instance_debug_iter_output_context_t;
 
 typedef void (*fcs_instance_debug_iter_output_func_t)(
@@ -370,6 +371,7 @@ typedef void (*fcs_instance_debug_iter_output_func_t)(
     fcs_kv_state_t * state,
     fcs_int_limit_t parent_iter_num
 );
+#endif
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
 
@@ -855,6 +857,7 @@ struct fc_solve_instance_struct
     int max_depth;
 #endif
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
     /*
      * The debug_iter_output variables provide a programmer programmable way
      * to debug the algorithm while it is running. This works well for DFS
@@ -871,6 +874,7 @@ struct fc_solve_instance_struct
      * */
     fcs_instance_debug_iter_output_func_t debug_iter_output_func;
     fcs_instance_debug_iter_output_context_t debug_iter_output_context;
+#endif
 
     /*
      * The next ID to allocate for a soft-thread.

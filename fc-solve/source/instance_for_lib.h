@@ -114,7 +114,9 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
             .optimization_thread = NULL,
 #endif
             .next_soft_thread_id = 0,
+#ifndef FCS_WITHOUT_ITER_HANDLER
             .debug_iter_output_func = NULL,
+#endif
             .solution_moves = (fcs_move_stack_t) { .moves = NULL, .num_moves = 0 },
             .num_hard_threads_finished = 0,
     /* Make the 1 the default, because otherwise scans will not cooperate

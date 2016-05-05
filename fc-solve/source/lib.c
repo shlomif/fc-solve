@@ -197,6 +197,7 @@ typedef struct
 } fcs_user_t;
 
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
 static void iter_handler_wrapper(
     void * api_instance,
     fcs_int_limit_t iter_num,
@@ -205,6 +206,7 @@ static void iter_handler_wrapper(
     fcs_kv_state_t * ptr_state,
     fcs_int_limit_t parent_iter_num
     );
+#endif
 
 #define INSTANCES_LOOP_START() \
     const_SLOT(end_of_instances_list, user); \
@@ -2038,6 +2040,7 @@ typedef struct {
     fcs_state_locs_struct_t locs;
 } fcs_standalone_state_ptrs_t;
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
 static void iter_handler_wrapper(
     void * const api_instance,
     const fcs_int_limit_t iter_num,
@@ -2117,6 +2120,7 @@ static GCC_INLINE void set_any_iter_handler(
     }
     set_debug_iter_output_func_to_val(user, cb);
 }
+#endif
 
 /* TODO : Add an compile-time option to remove the iteration handler and all
  * related code. */
@@ -2126,7 +2130,8 @@ void DLLEXPORT freecell_solver_user_set_iter_handler_long(
     void * iter_handler_context
     )
 {
-    return set_any_iter_handler(
+#ifndef FCS_WITHOUT_ITER_HANDLER
+    set_any_iter_handler(
         api_instance,
         long_iter_handler,
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2134,6 +2139,7 @@ void DLLEXPORT freecell_solver_user_set_iter_handler_long(
 #endif
         iter_handler_context
         );
+#endif
 }
 
 
@@ -2144,7 +2150,9 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(
     void * const iter_handler_context
     )
 {
-    return set_any_iter_handler(api_instance, NULL, iter_handler, iter_handler_context);
+#ifndef FCS_WITHOUT_ITER_HANDLER
+    set_any_iter_handler(api_instance, NULL, iter_handler, iter_handler_context);
+#endif
 }
 #endif
 
@@ -2539,6 +2547,7 @@ static int user_next_flare(fcs_user_t * const user)
     user->ret_code = flare->ret_code =
         FCS_STATE_NOT_BEGAN_YET;
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
     instance->debug_iter_output_func =
         ((
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2551,6 +2560,8 @@ static int user_next_flare(fcs_user_t * const user)
          : NULL
         );
     instance->debug_iter_output_context = user;
+#endif
+
     flare->moves_seq.num_moves = 0;
     flare->moves_seq.moves = NULL;
 

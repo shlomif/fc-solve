@@ -590,8 +590,11 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 
     CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
 
+
+#ifndef FCS_WITHOUT_ITER_HANDLER
     const fcs_instance_debug_iter_output_func_t debug_iter_output_func = instance->debug_iter_output_func;
     const fcs_instance_debug_iter_output_context_t debug_iter_output_context = instance->debug_iter_output_context;
+#endif
 
     /* Continue as long as there are states in the queue or
        priority queue. */
@@ -676,6 +679,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
             goto my_return_label;
         }
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
         TRACE0("debug_iter_output");
         if (debug_iter_output_func)
         {
@@ -695,6 +699,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 #endif
                     );
         }
+#endif
 
 
         if ((num_vacant_stacks == LOCAL_STACKS_NUM) && (num_vacant_freecells == LOCAL_FREECELLS_NUM))

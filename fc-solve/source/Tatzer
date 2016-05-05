@@ -30,6 +30,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'with-compact-moves' => 'FCS_USE_COMPACT_MOVE_TOKENS',
     'without-depth-field' => 'FCS_WITHOUT_DEPTH_FIELD',
     'without-fc-pro' => 'FCS_WITHOUT_FC_PRO_MOVES_COUNT',
+    'without-iter-handler' => 'FCS_WITHOUT_ITER_HANDLER',
     'without-trim' => 'FCS_WITHOUT_TRIM_MAX_STORED_STATES',
     'without-visited-iter' => 'FCS_WITHOUT_VISITED_ITER',
 );
