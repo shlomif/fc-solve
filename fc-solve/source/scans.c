@@ -469,7 +469,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         BEFS_M_VAR(soft_thread, tests_list_end) = tests_list+num;
     }
 
-    soft_thread->first_state_to_check =
+    BEFS_M_VAR(soft_thread, first_state_to_check) =
         FCS_STATE_keyval_pair_to_collectible(instance->state_copy_ptr);
 
     return;
@@ -565,7 +565,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         = BEFS_M_VAR(soft_thread, tests_list_end);
 
     DECLARE_STATE();
-    ASSIGN_ptr_state(soft_thread->first_state_to_check);
+    ASSIGN_ptr_state(BEFS_M_VAR(soft_thread, first_state_to_check));
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
     const int method = soft_thread->method;
@@ -669,7 +669,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 
         if (check_if_limits_exceeded())
         {
-            soft_thread->first_state_to_check = PTR_STATE;
+            BEFS_M_VAR(soft_thread, first_state_to_check) = PTR_STATE;
 
             TRACE0("error_code - FCS_STATE_SUSPEND_PROCESS");
             error_code = FCS_STATE_SUSPEND_PROCESS;

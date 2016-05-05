@@ -654,22 +654,19 @@ struct fc_solve_soft_thread_struct
                     fc_solve_state_weighting_t weighting;
                 } befs;
             } meth;
+            /*
+             * The first state to be checked by the scan. It is a kind of
+             * bootstrap for the algorithm.
+             * */
+            fcs_collectible_state_t * first_state_to_check;
         } befs;
     } method_specific;
-
-
-    /*
-     * The first state to be checked by the scan. It is a kind of bootstrap
-     * for the algorithm.
-     * */
-    fcs_collectible_state_t * first_state_to_check;
-
 
     fcs_runtime_flags_t runtime_flags;
 
     /*
-     * The number of vacant stacks in the current state - is read from
-     * the test functions in freecell.c .
+     * The number of vacant stacks in the current state - is read by
+     * the move functions in freecell.c .
      * */
      fcs_game_limit_t num_vacant_stacks;
 

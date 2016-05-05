@@ -1047,8 +1047,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
             const int tests_order_num = by_depth_tests_order[depth_idx].tests_order.num_groups;
 
-            fcs_tests_list_of_lists * const tests_list_of_lists =
-                &(arr_ptr->by_depth_units[depth_idx].tests);
+            const_AUTO(tests_list_of_lists, &(arr_ptr->by_depth_units[depth_idx].tests));
 
             *tests_list_of_lists = (typeof(*tests_list_of_lists))
             {
@@ -1067,9 +1066,9 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                     tests_order_groups[group_idx].num
                 );
                 /* TODO : convert to C99 struct initializers. */
-                fcs_tests_list_t * const tests_list_struct_ptr =
+                const_AUTO(tests_list_struct_ptr,
                     &(tests_list_of_lists->lists[tests_list_of_lists->num_lists++])
-                    ;
+                );
 
                 const int shuffling_type =
                     (
