@@ -10157,5 +10157,21 @@ function test_js_fc_solve_class()
         );
     });
 
+    test("FC_Solve get_num_stacks command line settings", function() {
+        expect(1);
+
+        var instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            string_params: '--stacks-num 6',
+            dir_base: 'fcs2',
+            set_status_callback: function () { return; },
+        });
+
+        // TEST
+        equal(instance.get_num_stacks(), 6,
+            "get_num_stacks() Returns 6 after command line."
+        );
+    });
+
     return;
 }
