@@ -1603,23 +1603,30 @@ static void apply_game_params_for_all_instances(
 #ifndef HARD_CODED_NUM_FREECELLS
 
 int DLLEXPORT freecell_solver_user_set_num_freecells(
-    void * api_instance,
-    int freecells_num
+    void * const api_instance,
+    const int freecells_num
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
     if ((freecells_num < 0) || (freecells_num > MAX_NUM_FREECELLS))
     {
         return 1;
     }
 
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
     user->common_preset.game_params.freecells_num = freecells_num;
-
     apply_game_params_for_all_instances(user);
 
     return 0;
 }
+
+#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+int DLLEXPORT freecell_solver_user_get_num_freecells(void * const api_instance)
+{
+    return (((fcs_user_t * const)api_instance)
+        ->common_preset.game_params.freecells_num
+    );
+}
+#endif
 
 #else
 
@@ -1635,7 +1642,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 
 #ifndef HARD_CODED_NUM_STACKS
 int DLLEXPORT freecell_solver_user_set_num_stacks(
-    void * api_instance,
+    void * const api_instance,
     const int stacks_num
     )
 {
@@ -1653,7 +1660,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
 
 #ifdef FC_SOLVE_JAVASCRIPT_QUERYING
 int DLLEXPORT freecell_solver_user_get_num_stacks(
-    void * api_instance
+    void * const api_instance
     )
 {
     return (((fcs_user_t * const)api_instance)
@@ -1937,17 +1944,17 @@ char * freecell_solver_user_get_invalid_state_error_string(
 #endif
 
 int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
-    void * api_instance,
-    int sequences_are_built_by
+    void * const api_instance,
+    const int sequences_are_built_by
     )
 {
 #ifndef FCS_FREECELL_ONLY
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
     if ((sequences_are_built_by < 0) || (sequences_are_built_by > 2))
     {
         return 1;
     }
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
+
 
     user->common_preset.game_params.game_flags &= (~0x3);
     user->common_preset.game_params.game_flags |= sequences_are_built_by;
@@ -1959,8 +1966,8 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
 }
 
 int DLLEXPORT freecell_solver_user_set_sequence_move(
-    void * api_instance,
-    int unlimited_sequence_move
+    void * const api_instance,
+    const int unlimited_sequence_move
     )
 {
 #ifndef FCS_FREECELL_ONLY
@@ -1976,22 +1983,20 @@ int DLLEXPORT freecell_solver_user_set_sequence_move(
 }
 
 int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
-    void * api_instance,
-    int empty_stacks_fill
+    void * const api_instance,
+    const int empty_stacks_fill
     )
 {
 #ifndef FCS_FREECELL_ONLY
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
     if ((empty_stacks_fill < 0) || (empty_stacks_fill > 2))
     {
         return 1;
     }
 
+    fcs_user_t * const user = (fcs_user_t * const)api_instance;
     user->common_preset.game_params.game_flags &= (~(0x3 << 2));
     user->common_preset.game_params.game_flags |=
         (empty_stacks_fill << 2);
-
     apply_game_params_for_all_instances(user);
 #endif
     return 0;
