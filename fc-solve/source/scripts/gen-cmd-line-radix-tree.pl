@@ -37,10 +37,7 @@ EOF
 
     return <<"EOF";
     p = (*arg);
-    {
-    const unsigned int len = strlen(p);
-    opt = in_word_set(p, len);
-    }
+    const int opt = in_word_set(p, strlen(p));
 EOF
 }
 
