@@ -27,8 +27,7 @@
  * Intended for dbm_kaztree.c. Should only be included by it and programs
  * that test it.
  */
-#ifndef FC_SOLVE_DBM_KAZTREE_COMPARE_H
-#define FC_SOLVE_DBM_KAZTREE_COMPARE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -74,6 +73,3 @@ static int compare_records(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_DBM_KAZTREE_COMPARE_H */
-

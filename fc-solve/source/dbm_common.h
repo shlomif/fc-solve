@@ -24,8 +24,7 @@
 /*
  * dbm_common.h - some common definitions (constants/etc.) for the DBM solver.
  */
-#ifndef FC_SOLVE_DBM_COMMON_H
-#define FC_SOLVE_DBM_COMMON_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -65,5 +64,3 @@ enum fcs_dbm_variant_type_t
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_DBM_COMMON_H */

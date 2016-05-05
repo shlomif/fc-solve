@@ -25,8 +25,8 @@
  * header file for fc_solve_check_and_add_state() . Deprecated - now it's
  * in instance.h.
  */
-#ifndef FC_SOLVE__CHECK_AND_ADD_STATE_H
-#define FC_SOLVE__CHECK_AND_ADD_STATE_H
+#pragma once
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,5 +48,3 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* #ifndef FC_SOLVE__CHECK_AND_ADD_STATE_H */

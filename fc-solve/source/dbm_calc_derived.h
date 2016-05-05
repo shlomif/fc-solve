@@ -26,8 +26,7 @@
  * from a certain position.
  *
  */
-#ifndef FC_SOLVE_DBM_CALC_DERIVED_H
-#define FC_SOLVE_DBM_CALC_DERIVED_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -709,9 +708,6 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 #undef the_state
 #undef new_state
 
-
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_DBM_CALC_DERIVED_H */

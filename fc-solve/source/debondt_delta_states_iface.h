@@ -28,8 +28,7 @@
  *
  */
 
-#ifndef FC_SOLVE__DEBONDT_DELTA_STATES_IFACE_H
-#define FC_SOLVE__DEBONDT_DELTA_STATES_IFACE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,5 +43,3 @@ extern char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__DEBONDT_DELTA_STATES_IFACE_H */

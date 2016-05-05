@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef FC_SOLVE__FCS_ENUMS_H
-#define FC_SOLVE__FCS_ENUMS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,5 +101,3 @@ enum
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__FCS_ENUMS_H */

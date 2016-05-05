@@ -22,10 +22,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * dbm_procs.h - common procedures for dbm_solver.c and depth_dbm_solver.c.
+ * dbm_move_to_string.h - the move_to_string function.
  */
-#ifndef FC_SOLVE__DBM_MOVE_TO_STRING_H
-#define FC_SOLVE__DBM_MOVE_TO_STRING_H
+#pragma once
 
 #include "rinutils.h"
 
@@ -72,5 +71,3 @@ static const char * move_to_string(unsigned char move, char * const move_buffer)
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE__DBM_MOVE_TO_STRING_H */

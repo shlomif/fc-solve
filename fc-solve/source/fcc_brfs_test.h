@@ -27,8 +27,7 @@
  *
  * This file is also included by the production code.
  */
-#ifndef FC_SOLVE_FCC_BRFS_TEST_H
-#define FC_SOLVE_FCC_BRFS_TEST_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -85,5 +84,3 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_FCC_BRFS_TEST_H */

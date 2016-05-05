@@ -22,11 +22,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * fcs_user.h - main header file for the Freecell Solver library.
+ * fcs_user_internal.h - header files for the routines of fcs_user.h for
+ * internal use.
  *
  */
-#ifndef FC_SOLVE__FCS_USER_INTERNAL_H
-#define FC_SOLVE__FCS_USER_INTERNAL_H
+#pragma once
 
 #include "fcs_dllexport.h"
 #include "fcs_enums.h"
@@ -81,6 +81,3 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__FCS_USER_INTERNAL_H */
-

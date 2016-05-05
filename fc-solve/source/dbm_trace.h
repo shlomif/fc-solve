@@ -25,8 +25,7 @@
  * dbm_trace.h - dbm-solvers trace macros.
  */
 
-#ifndef FC_SOLVE__DBM_TRACE_H
-#define FC_SOLVE__DBM_TRACE_H
+#pragma once
 
 #define T
 
@@ -44,6 +43,4 @@
 #else
 #define TRACE0(message) {}
 #define TRACE1(a,b) {}
-#endif
-
 #endif

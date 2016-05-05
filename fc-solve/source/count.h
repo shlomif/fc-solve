@@ -25,11 +25,8 @@
  * count.h - define the COUNT macro.
  */
 
-#ifndef FC_SOLVE__COUNT_H
-#define FC_SOLVE__COUNT_H
+#pragma once
 
 #include "config.h"
 
 #define COUNT(arr) (sizeof(arr) / sizeof(arr[0]))
-
-#endif

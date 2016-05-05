@@ -26,8 +26,7 @@
  * parsing the arguments.
  */
 
-#ifndef FC_SOLVE__HANDLE_PARSING_H
-#define FC_SOLVE__HANDLE_PARSING_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -118,6 +117,3 @@ static GCC_INLINE void * const simple_alloc_and_parse(
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__HANDLE_PARSING_H */
-

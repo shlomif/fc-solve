@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef FC_SOLVE__BOOL_H
-#define FC_SOLVE__BOOL_H
+#pragma once
 
 #include "config.h"
 #include <stdbool.h>
@@ -41,6 +40,4 @@ typedef bool fcs_bool_t;
 
 #ifndef TRUE
 #define TRUE true
-#endif
-
 #endif

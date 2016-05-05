@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef FC_SOLVE__DELTA_STATES_ANY_H
-#define FC_SOLVE__DELTA_STATES_ANY_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,5 +83,3 @@ static GCC_INLINE void
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__DELTA_STATES_ANY_H */

@@ -26,8 +26,7 @@
  * Breadth-first-search on the Fully-connected-component.
  *
  */
-#ifndef FC_SOLVE_FCC_BRFS_H
-#define FC_SOLVE_FCC_BRFS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -623,5 +622,3 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_FCC_BRFS_H */

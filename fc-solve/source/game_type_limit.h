@@ -24,12 +24,8 @@
 /*
  * game_type_limit.h: define fcs_game_limit_t.
  */
-#ifndef FC_SOLVE__GAME_TYPE_LIMIT_H
-#define FC_SOLVE__GAME_TYPE_LIMIT_H
+#pragma once
 
 #include "config.h"
 
 typedef unsigned char fcs_game_limit_t;
-
-#endif /* #ifndef FC_SOLVE__GAME_TYPE_LIMIT_H */
-

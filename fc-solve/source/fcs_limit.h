@@ -27,12 +27,9 @@
  *
  */
 
-#ifndef FC_SOLVE__FCS_LIMIT_H
-#define FC_SOLVE__FCS_LIMIT_H
+#pragma once
 
 #include <stdint.h>
 
 typedef intptr_t fcs_int_limit_t;
 #define FCS_INT_LIMIT_MAX INTPTR_MAX
-
-#endif

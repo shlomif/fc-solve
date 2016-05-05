@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef FC_SOLVE__GENERIC_TREE_H
-#define FC_SOLVE__GENERIC_TREE_H
+#pragma once
 
 #include "config.h"
 
@@ -61,7 +60,5 @@ static GCC_INLINE void fc_solve_kaz_tree_delete_by_value(
             )
         );
 }
-
-#endif
 
 #endif

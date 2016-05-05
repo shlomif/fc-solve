@@ -26,8 +26,7 @@
  * multi-queue which can handle more than one starting point.
  */
 
-#ifndef FC_SOLVE__DEPTH_MULTI_QUEUE_H
-#define FC_SOLVE__DEPTH_MULTI_QUEUE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -196,5 +195,3 @@ static GCC_INLINE fcs_bool_t fcs_depth_multi_queue__extract(
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__DEPTH_MULTI_QUEUE_H */

@@ -25,8 +25,7 @@
  * fcs_user.h - main header file for the Freecell Solver library.
  *
  */
-#ifndef FC_SOLVE__FCS_USER_H
-#define FC_SOLVE__FCS_USER_H
+#pragma once
 
 #include "fcs_dllexport.h"
 #include "fcs_enums.h"
@@ -491,5 +490,3 @@ DLLEXPORT extern int freecell_solver_user_set_patsolve_y_param(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__FCS_USER_H */

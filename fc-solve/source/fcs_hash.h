@@ -26,8 +26,7 @@
  *
  */
 
-#ifndef FC_SOLVE__FCS_HASH_H
-#define FC_SOLVE__FCS_HASH_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -224,9 +223,3 @@ static GCC_INLINE void fc_solve_hash_foreach(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__FCS_HASH_H */
-
-
-
-

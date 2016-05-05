@@ -5,8 +5,7 @@
  *
  * */
 
-#ifndef FC_SOLVE__FCS_BASE64_H
-#define FC_SOLVE__FCS_BASE64_H
+#pragma once
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -104,6 +103,3 @@ static int base64_decode(
 
     return 0;
 }
-
-#endif /* FC_SOLVE__FCS_BASE64_H */
-

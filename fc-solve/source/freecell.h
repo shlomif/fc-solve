@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef FC_SOLVE__FREECELL_H
-#define FC_SOLVE__FREECELL_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,6 +79,3 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE__FREECELL_H */
-

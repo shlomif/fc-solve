@@ -25,8 +25,7 @@
  * dbm_calc_derived_iface.h - the public interface to dbm_calc_derived.h
  *
  */
-#ifndef FC_SOLVE_DBM_CALC_DERIVED_IFACE_H
-#define FC_SOLVE_DBM_CALC_DERIVED_IFACE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -69,5 +68,3 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_DBM_CALC_DERIVED_IFACE_H */

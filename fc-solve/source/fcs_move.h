@@ -28,8 +28,7 @@
  *
  */
 
-#ifndef FC_SOLVE__FCS_MOVE_H
-#define FC_SOLVE__FCS_MOVE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,5 +90,3 @@ typedef struct
 #ifdef __cplusplus
 }
 #endif
-
-#endif  /* FC_SOLVE__FCS_MOVE_H */

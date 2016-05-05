@@ -1,5 +1,4 @@
-#ifndef FC_SOLVE_DBM_SOLVER_KEY_H
-#define FC_SOLVE_DBM_SOLVER_KEY_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -15,5 +14,3 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_DBM_SOLVER_KEY_H */

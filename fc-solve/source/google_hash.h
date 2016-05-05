@@ -26,8 +26,7 @@
  * for Freecell Solver.
  */
 
-#ifndef FC_SOLVE__GOOGLE_HASH_H
-#define FC_SOLVE__GOOGLE_HASH_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,5 +90,3 @@ void fc_solve_columns_google_hash_free(fcs_columns_google_hash_handle_t hash);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE__GOOGLE_HASH_H */

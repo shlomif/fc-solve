@@ -24,8 +24,7 @@
 /*
  * alloc_wrap.h - convenient wrappers for malloc(), realloc(), etc.
  */
-#ifndef FC_SOLVE__ALLOC_WRAP_H
-#define FC_SOLVE__ALLOC_WRAP_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -41,6 +40,4 @@ extern "C"
 
 #ifdef __cplusplus
 };
-#endif
-
 #endif

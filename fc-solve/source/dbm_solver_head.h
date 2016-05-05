@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef FC_SOLVE__DBM_SOLVER_HEAD_H
-#define FC_SOLVE__DBM_SOLVER_HEAD_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -92,5 +91,3 @@ fc_solve_delta_stater_t * global_delta_stater;
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE__DBM_SOLVER_HEAD_H */

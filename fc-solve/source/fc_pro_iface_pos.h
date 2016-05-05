@@ -25,8 +25,7 @@
  * fc_pro_iface_pos.h - generate solutions in standard notation, with
  * implicit (and not included) Horne/Raymond prune moves.
  */
-#ifndef FC_SOLVE__FC_PRO_IFACE_POS_H
-#define FC_SOLVE__FC_PRO_IFACE_POS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -83,5 +82,3 @@ static GCC_INLINE void fc_solve_moves_processed_free(fcs_moves_processed_t * con
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* #ifndef FC_SOLVE__FC_PRO_IFACE_POS_H */

@@ -1,5 +1,4 @@
-#ifndef FC_SOLVE_DBM_LRU_CACHE_H
-#define FC_SOLVE_DBM_LRU_CACHE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -50,5 +49,3 @@ typedef struct
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* FC_SOLVE_DBM_LRU_CACHE_H */

@@ -1,5 +1,4 @@
-#ifndef FC_SOLVE__FCS_DLLEXPORT_H
-#define FC_SOLVE__FCS_DLLEXPORT_H
+#pragma once
 
 #ifdef _MSC_VER
   #ifdef BUILDING_DLL
@@ -14,6 +13,4 @@
 #else
     #define DLLEXPORT
     #define DLLLOCAL
-#endif
-
 #endif

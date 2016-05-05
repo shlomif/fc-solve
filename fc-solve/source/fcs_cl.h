@@ -26,8 +26,7 @@
  * fcs_cl.h - the Freecell Solver command line arguments-like parsing routines.
  * Useful for more easily configuring a Freecell Solver instance.
  */
-#ifndef FC_SOLVE__FCS_CL_H
-#define FC_SOLVE__FCS_CL_H
+#pragma once
 
 #include "fcs_dllexport.h"
 #include "fcs_user.h"
@@ -103,5 +102,3 @@ DLLEXPORT extern int freecell_solver_user_cmd_line_read_cmd_line_preset(
 #ifdef __cplusplus
 };
 #endif
-
-#endif /* #ifndef FC_SOLVE__FCS_CL_H */

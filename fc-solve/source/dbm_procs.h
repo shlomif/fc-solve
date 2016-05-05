@@ -24,8 +24,7 @@
 /*
  * dbm_procs.h - common procedures for dbm_solver.c and depth_dbm_solver.c.
  */
-#ifndef FC_SOLVE__DBM_PROCS_H
-#define FC_SOLVE__DBM_PROCS_H
+#pragma once
 
 #include "dbm_move_to_string.h"
 
@@ -339,5 +338,3 @@ static void calc_trace(
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE__DBM_PROCS_H */

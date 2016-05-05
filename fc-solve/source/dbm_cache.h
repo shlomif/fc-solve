@@ -25,8 +25,7 @@
  * dbm_cache.h - contains the implementation of the DBM solver cache routines.
  *
  */
-#ifndef FC_SOLVE_DBM_CACHE_H
-#define FC_SOLVE_DBM_CACHE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -221,5 +220,3 @@ static GCC_INLINE fcs_cache_key_info_t * cache_insert(fcs_lru_cache_t * cache, c
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_DBM_CACHE_H */

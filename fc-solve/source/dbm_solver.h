@@ -1,5 +1,4 @@
-#ifndef FC_SOLVE_DBM_SOLVER_H
-#define FC_SOLVE_DBM_SOLVER_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -94,5 +93,3 @@ enum TERMINATE_REASON
 #ifdef __cplusplus
 }
 #endif
-
-#endif /*  FC_SOLVE_DBM_SOLVER_H */
