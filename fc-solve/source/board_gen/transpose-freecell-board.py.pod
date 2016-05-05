@@ -1,0 +1,57 @@
+=head1 NAME
+
+transpose-freecell-board.py - transpose a Freecell/etc. layout from play-stacks
+in text-columns to play-stacks in text lines.
+
+=head1 SYNOPSIS
+
+B<transpose-freecell-board.py> I<-o output_fn> I<input_fn | ->
+
+=head1 DESCRIPTION
+
+This programs transposes a Freecell/etc. layout.
+
+Sample input:
+
+    4C 5H QC 5D 2D 7H AH 7S
+    2H QH 9S 2S KD JS 5S 6C
+    9C 3C 6H JC TH KH 6S 7D
+    8C AC 9H 5C TC TS AD 4D
+    QS 3H 3S JH TD    8H 8S
+       4H KS 6D 8D    JD
+       QD 3D AS       KC
+          2C          9D
+          4S
+          7C
+
+Sample output:
+
+    : 4C 2H 9C 8C QS
+    : 5H QH 3C AC 3H 4H QD
+    : QC 9S 6H 9H 3S KS 3D 2C 4S 7C
+    : 5D 2S JC 5C JH 6D AS
+    : 2D KD TH TC TD 8D
+    : 7H JS KH TS
+    : AH 5S 6S AD 8H JD KC 9D
+    : 7S 6C 7D 4D 8S
+
+The columns are prefixed with a single optional C<Foundations:> line followed
+by a single optional C<Freecells:> line in fc-solve format.
+
+=head1 OPTIONS
+
+B<-o> Specify an output filename.
+
+=head1 SEE ALSO
+
+B<fc-solve> (6)
+
+/usr/share/doc/freecell-solver-FCS_VERSION/board_gen/README
+
+=head1 AUTHOR
+
+Shlomi Fish, L<http://www.shlomifish.org/> .
+
+Thanks to Manish Jain for inspiring this program.
+
+=cut

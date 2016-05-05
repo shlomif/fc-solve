@@ -52,8 +52,19 @@ RUN_POD2MAN(
     "Freecell Solver ${VERSION}"
 )
 
+RUN_POD2MAN(
+    "_pod_targets"
+    "transpose-freecell-board.py.pod"
+    "transpose-freecell-board.py.6"
+    "6"
+    "Freecell Solver"
+    "Freecell Solver ${VERSION}"
+)
+
+
 IF (UNIX)
     INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/fc-solve-board_gen.6" 6)
+    INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/transpose-freecell-board_gen.py.6" 6)
     # INSTALL_MAN("fc-solve-board_gen.6" 6)
 
     # Install the nroff symbolic links.
