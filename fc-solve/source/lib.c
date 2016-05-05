@@ -1457,9 +1457,7 @@ int DLLEXPORT freecell_solver_user_get_current_depth(
     void * const api_instance
     )
 {
-    const fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    return (DFS_VAR(user->soft_thread, depth));
+    return (DFS_VAR(((const fcs_user_t * const)api_instance)->soft_thread, depth));
 }
 
 extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
