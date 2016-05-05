@@ -319,8 +319,6 @@ int main(int argc, char * argv[])
 
     for ( int idx = 0 ; idx < num_workers ; idx++)
     {
-        int fork_ret;
-
         if (pipe(workers[idx].child_to_parent_pipe))
         {
             fprintf(stderr, "C->P Pipe for worker No. %i failed! Exiting.\n", idx);
@@ -333,27 +331,30 @@ int main(int argc, char * argv[])
         }
 
 
-        fork_ret = fork();
+        switch (fork())
+        {
+            case -1:
+            {
+                fprintf(stderr, "Fork for worker No. %i failed! Exiting.\n", idx);
+                exit(-1);
+            }
 
-        if (fork_ret == -1)
-        {
-            fprintf(stderr, "Fork for worker No. %i failed! Exiting.\n", idx);
-            exit(-1);
-        }
+            case 0:
+            {
+                /* I'm the child. */
+                const worker_t w = workers[idx];
+                close(w.parent_to_child_pipe[WRITE_FD]);
+                close(w.child_to_parent_pipe[READ_FD]);
+                return worker_func(w, instance);
+            }
 
-        if (! fork_ret)
-        {
-            /* I'm the child. */
-            const worker_t w = workers[idx];
-            close(w.parent_to_child_pipe[WRITE_FD]);
-            close(w.child_to_parent_pipe[READ_FD]);
-            return worker_func(w, instance);
-        }
-        else
-        {
-            /* I'm the parent. */
-            close(workers[idx].parent_to_child_pipe[READ_FD]);
-            close(workers[idx].child_to_parent_pipe[WRITE_FD]);
+            default:
+            {
+                /* I'm the parent. */
+                close(workers[idx].parent_to_child_pipe[READ_FD]);
+                close(workers[idx].child_to_parent_pipe[WRITE_FD]);
+            }
+            break;
         }
     }
 
