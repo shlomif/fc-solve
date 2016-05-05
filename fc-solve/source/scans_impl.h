@@ -227,6 +227,22 @@ static GCC_INLINE fcs_depth_t calc_depth(fcs_collectible_state_t * ptr_state)
 
 #endif
 
+static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
+    const fcs_game_limit_t freecells_num,
+    const fcs_state_t * const state_ptr
+)
+{
+    fcs_game_limit_t num_vacant_freecells = 0;
+    for(int i=0;i<freecells_num;i++)
+    {
+        if (fcs_freecell_is_empty(*state_ptr, i))
+        {
+            num_vacant_freecells++;
+        }
+    }
+
+    return num_vacant_freecells;
+}
 
 static GCC_INLINE pq_rating_t befs_rate_state(
     const fc_solve_soft_thread_t * const soft_thread,
@@ -267,7 +283,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     }
 
     fcs_game_limit_t num_vacant_stacks = 0;
-    fcs_game_limit_t num_vacant_freecells = 0;
     if (weighting->should_go_over_stacks)
     {
         for (int a = 0 ; a < LOCAL_STACKS_NUM ; a++)
@@ -305,13 +320,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
             }
         }
 
-        for (int freecell_idx = 0 ; freecell_idx < LOCAL_FREECELLS_NUM ; freecell_idx++)
-        {
-            if (fcs_freecell_is_empty((*state),freecell_idx))
-            {
-                num_vacant_freecells++;
-            }
-        }
+        const fcs_game_limit_t num_vacant_freecells = count_num_vacant_freecells(LOCAL_FREECELLS_NUM, state);
 #define CALC_VACANCY_VAL() \
     ( \
         is_filled_by_any_card() \
@@ -579,22 +588,6 @@ static GCC_INLINE void mark_as_dead_end(
     BUMP_NUM_CHECKED_STATES__HT() \
 }
 
-static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
-    const fcs_game_limit_t freecells_num,
-    const fcs_state_t * const state_ptr
-)
-{
-    fcs_game_limit_t num_vacant_freecells = 0;
-    for(int i=0;i<freecells_num;i++)
-    {
-        if (fcs_freecell_is_empty(*state_ptr, i))
-        {
-            num_vacant_freecells++;
-        }
-    }
-
-    return num_vacant_freecells;
-}
 
 static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
     const fcs_game_limit_t stacks_num,

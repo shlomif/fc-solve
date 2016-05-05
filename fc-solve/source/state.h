@@ -126,8 +126,8 @@ static GCC_INLINE fcs_card_t fcs_char2card(unsigned char c)
 #define fcs_freecell_card(state, f) \
     ( (state).freecells[(f)] )
 
-#define fcs_foundation_value(state, found) \
-    ( (state).foundations[(found)] )
+#define fcs_foundation_value(state, foundation_idx) \
+    ( (state).foundations[(foundation_idx)] )
 
 #elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
 
@@ -248,11 +248,11 @@ typedef char fcs_locs_t;
 #define fcs_freecell_card_suit(state, f) \
     ( fcs_card_suit(fcs_freecell_card((state),(f))) )
 
-#define fcs_increment_foundation(state, d) \
-    ( (fcs_foundation_value((state), (d)))++)
+#define fcs_increment_foundation(state, foundation_idx) \
+    ( (fcs_foundation_value((state), (foundation_idx)))++)
 
-#define fcs_set_foundation(state, found, value) \
-    ( (fcs_foundation_value((state), (found))) = (fcs_state_foundation_t)(value) )
+#define fcs_set_foundation(state, foundation_idx, value) \
+    ( (fcs_foundation_value((state), (foundation_idx))) = (fcs_state_foundation_t)(value) )
 
 #define fcs_col_pop_top(col) \
     {       \
@@ -848,11 +848,9 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
-            int d;
-
-            for (d = 0 ; d < (DECKS_NUM__VAL << 2) ; d++)
+            for (int f_idx = 0 ; f_idx < (DECKS_NUM__VAL << 2) ; f_idx++)
             {
-                fcs_set_foundation(ret, d, 0);
+                fcs_set_foundation(ret, f_idx, 0);
             }
 
             int decks_index[4] = {0,0,0,0};
@@ -862,7 +860,7 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                     str++;
                 if ((*str == '\n') || (*str == '\r'))
                     break;
-                d = fc_solve_u2p_suit(str);
+                const int f_idx = fc_solve_u2p_suit(str);
                 str++;
                 while (*str == '-')
                     str++;
@@ -880,11 +878,11 @@ static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                     str++;
                 }
 
-                fcs_set_foundation(ret, ((decks_index[d]<<2)+d), c);
-                decks_index[d]++;
-                if (decks_index[d] >= DECKS_NUM__VAL)
+                fcs_set_foundation(ret, ((decks_index[f_idx]<<2)+f_idx), c);
+                decks_index[f_idx]++;
+                if (decks_index[f_idx] >= DECKS_NUM__VAL)
                 {
-                    decks_index[d] = 0;
+                    decks_index[f_idx] = 0;
                 }
             }
             s--;
