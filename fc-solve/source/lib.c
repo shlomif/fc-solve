@@ -1636,20 +1636,31 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 #ifndef HARD_CODED_NUM_STACKS
 int DLLEXPORT freecell_solver_user_set_num_stacks(
     void * api_instance,
-    int stacks_num
+    const int stacks_num
     )
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
     if ((stacks_num < 0) || (stacks_num > MAX_NUM_STACKS))
     {
         return 1;
     }
+
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
     user->common_preset.game_params.stacks_num = stacks_num;
     apply_game_params_for_all_instances(user);
 
     return 0;
 }
+
+#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+int DLLEXPORT freecell_solver_user_get_num_stacks(
+    void * api_instance
+    )
+{
+    return (((fcs_user_t * const)api_instance)
+        ->common_preset.game_params.stacks_num
+    );
+}
+#endif
 
 #else
 

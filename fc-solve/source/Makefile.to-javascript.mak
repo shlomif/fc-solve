@@ -34,6 +34,7 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_current_state_stringify \
 	freecell_solver_user_free \
 	freecell_solver_user_get_next_move \
+	freecell_solver_user_get_num_stacks \
 	freecell_solver_user_get_invalid_state_error_into_string \
 	freecell_solver_user_limit_iterations_long \
 	freecell_solver_user_stringify_move_ptr \
@@ -49,7 +50,7 @@ OPT_FLAGS = -O2
 # OPT_FLAGS = -O1
 # OPT_FLAGS =
 
-CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve-shlomif/patsolve/ -I $(CMAKE_DIR) -m32 -std=gnu99
+CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve-shlomif/patsolve/ -I $(CMAKE_DIR) -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
 
 EMCC_CFLAGS = -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" $(CFLAGS)
 

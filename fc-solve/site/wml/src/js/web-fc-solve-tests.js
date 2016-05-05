@@ -10129,5 +10129,18 @@ function test_js_fc_solve_class()
         ok (success, "do_solve was successful.");
 
     });
+
+    test("FC_Solve get_num_stacks #1", function() {
+        expect(1);
+
+        var instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            set_status_callback: function () { return; },
+        });
+
+        // TEST
+        equal(instance.get_num_stacks(), 8, "get_num_stacks() Returns 8.");
+    });
+
     return;
 }

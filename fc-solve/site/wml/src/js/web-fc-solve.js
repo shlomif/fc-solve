@@ -7,6 +7,7 @@ var freecell_solver_user_cmd_line_read_cmd_line_preset = Module.cwrap('freecell_
 var malloc = Module.cwrap('malloc', 'number', ['number']);
 var c_free = Module.cwrap('free', 'number', ['number']);
 var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_next_move', 'number', ['number', 'number']);
+var freecell_solver_user_get_num_stacks = Module.cwrap('freecell_solver_user_get_num_stacks', 'number', ['number']);
 var freecell_solver_user_current_state_stringify = Module.cwrap('freecell_solver_user_current_state_stringify', 'number', ['number', 'number', 'number', 'number', 'number']);
 var freecell_solver_user_stringify_move_ptr = Module.cwrap('freecell_solver_user_stringify_move_ptr', 'number', ['number', 'number', 'number', 'number']);
 var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
@@ -430,6 +431,11 @@ Class('FC_Solve', {
 
             return args.expand ? that.display_expanded_moves_solution(args)
                 : that.display_solution(args);
+        },
+        get_num_stacks: function() {
+            var that = this;
+
+            return freecell_solver_user_get_num_stacks(that.obj);
         },
     },
 });
