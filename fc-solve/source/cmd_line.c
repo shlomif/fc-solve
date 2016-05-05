@@ -349,13 +349,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
         }
 
-        int opt;
         /* OPT-PARSE-START */
     p = (*arg);
-    {
-    const unsigned int len = strlen(p);
-    opt = in_word_set(p, len);
-    }
+    const int opt = in_word_set(p, strlen(p));
         switch (opt)
         {
         case FCS_OPT_UNRECOGNIZED:
