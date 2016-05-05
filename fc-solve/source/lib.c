@@ -2029,6 +2029,15 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 
 #endif
 
+typedef struct {
+    fcs_state_t * key;
+#if 0
+    fcs_state_extra_info_t * val;
+    fcs_collectible_state_t * s;
+#endif
+    fcs_state_locs_struct_t locs;
+} fcs_standalone_state_ptrs_t;
+
 static void iter_handler_wrapper(
     void * const api_instance,
     const fcs_int_limit_t iter_num,
@@ -2040,11 +2049,7 @@ static void iter_handler_wrapper(
 {
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    fcs_standalone_state_ptrs_t state_raw = {.key = ptr_state->key, .val = ptr_state->val};
-#if 0
-    state_raw.key = ptr_state->key;
-    state_raw.val = ptr_state->val;
-#endif
+    fcs_standalone_state_ptrs_t state_raw = {.key = ptr_state->key,};
     fc_solve_init_locs(&(state_raw.locs));
 
 #define CALL(func_ptr) (func_ptr) \
@@ -2162,10 +2167,12 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
         &(user->active_flare->obj);
 #endif
 
+    const_AUTO(ptr_state, ((const fcs_standalone_state_ptrs_t * const)ptr_state_void));
+
     fc_solve_state_as_string(
         output_string,
-        ((fcs_standalone_state_ptrs_t *)ptr_state_void)->key,
-        &(((fcs_standalone_state_ptrs_t *)ptr_state_void)->locs)
+        ptr_state->key,
+        &(ptr_state->locs)
         PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
         PASS_STACKS(INSTANCE_STACKS_NUM)
         PASS_DECKS(INSTANCE_DECKS_NUM)

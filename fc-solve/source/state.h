@@ -528,13 +528,6 @@ FCS_STATE_collectible_to_kv(fcs_kv_state_t * const ret, fcs_collectible_state_t 
 #define FCS_S_VISITED_ITER(s) FCS_S_ACCESSOR(s, visited_iter)
 #endif
 
-typedef struct {
-    fcs_state_t * key;
-    fcs_state_extra_info_t * val;
-    fcs_collectible_state_t * s;
-    fcs_state_locs_struct_t locs;
-} fcs_standalone_state_ptrs_t;
-
 #ifdef DEBUG_STATES
 
 extern fcs_card_t fc_solve_empty_card;
