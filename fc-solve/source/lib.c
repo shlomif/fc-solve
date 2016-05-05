@@ -1473,7 +1473,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
-    var_SLOT(pats_scan, soft_thread);
+    const_SLOT(pats_scan, soft_thread);
 
     if (! pats_scan)
     {
@@ -1493,17 +1493,17 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
 }
 
 extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
-    void * api_instance,
+    void * const api_instance,
     const int position,
     const double y_param_val,
-    char * * error_string
+    char * * const error_string
     )
 {
 #ifndef FCS_DISABLE_PATSOLVE
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t * const soft_thread = user->soft_thread;
-    var_SLOT(pats_scan, soft_thread);
+    const_SLOT(pats_scan, soft_thread);
 
     if (! pats_scan)
     {
@@ -1823,7 +1823,7 @@ DLLEXPORT char * freecell_solver_user_move_to_string(
     const int standard_notation
     )
 {
-    char * ret = SMALLOC(ret, 256);
+    char * const ret = SMALLOC(ret, 256);
     fc_solve_move_to_string_w_state(
         ret,
         NULL,
