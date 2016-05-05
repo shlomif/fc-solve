@@ -67,12 +67,11 @@ extern "C" {
 /*
  *  These are some macros to make it easier for the programmer.
  * */
-#define key_ptr_state_key (raw_ptr_state_raw->key)
+#define ptr_state_key (raw_ptr_state_raw->key)
 #define val_ptr_state_val (raw_ptr_state_raw->val)
 
 #define ptr_new_state &(pass_new_state)
-#define ptr_state_key (key_ptr_state_key)
-#define state_key (*key_ptr_state_key)
+#define state_key (*ptr_state_key)
 #define state_val (*val_ptr_state_val)
 #define new_state_key (*(pass_new_state.key))
 #define new_state new_state_key

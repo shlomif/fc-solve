@@ -75,6 +75,14 @@ typedef struct
 
 struct fc_solve_instance_struct;
 
+#ifndef FCS_INLINED_HASH_COMPARISON
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+typedef int (*fcs_hash_compare_function_t)(const void * const, const void * const, void * context);
+#else
+typedef int (*fcs_hash_compare_function_t)(const void * const, const void * const);
+#endif
+#endif
+
 typedef struct
 {
     /* The vector of the hash table itself */
@@ -89,12 +97,11 @@ typedef struct
 #ifdef FCS_INLINED_HASH_COMPARISON
     enum FCS_INLINED_HASH_DATA_TYPE hash_type;
 #else
+    fcs_hash_compare_function_t compare_function;
 #ifdef FCS_WITH_CONTEXT_VARIABLE
-    int (*compare_function)(const void * key1, const void * key2, void * context);
     /* A context to pass to the comparison function */
     void * context;
 #else
-    int (*compare_function)(const void * key1, const void * key2);
 #endif
 #endif
 
@@ -128,11 +135,10 @@ static GCC_INLINE void fc_solve_hash_init(
 #ifdef FCS_INLINED_HASH_COMPARISON
     const enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
+    fcs_hash_compare_function_t compare_function
 #ifdef FCS_WITH_CONTEXT_VARIABLE
-    const int (*compare_function)(const void * key1, const void * key2, void * context),
-    void * const context
+    , void * const context
 #else
-    const int (*compare_function)(const void * key1, const void * key2)
 #endif
 #endif
     )

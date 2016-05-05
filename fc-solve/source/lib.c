@@ -2118,6 +2118,8 @@ static GCC_INLINE void set_any_iter_handler(
     set_debug_iter_output_func_to_val(user, cb);
 }
 
+/* TODO : Add an compile-time option to remove the iteration handler and all
+ * related code. */
 void DLLEXPORT freecell_solver_user_set_iter_handler_long(
     void * api_instance,
     freecell_solver_user_long_iter_handler_t long_iter_handler,
