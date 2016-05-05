@@ -10142,5 +10142,20 @@ function test_js_fc_solve_class()
         equal(instance.get_num_stacks(), 8, "get_num_stacks() Returns 8.");
     });
 
+    test("FC_Solve get_num_stacks simple_simon", function() {
+        expect(1);
+
+        var instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            string_params: '-g simple_simon',
+            set_status_callback: function () { return; },
+        });
+
+        // TEST
+        equal(instance.get_num_stacks(), 10,
+            "get_num_stacks() Returns 10 for Simple Simon."
+        );
+    });
+
     return;
 }

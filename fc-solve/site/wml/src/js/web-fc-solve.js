@@ -64,6 +64,8 @@ Class('FC_Solve', {
         obj: {
             is: rw,
             init: function() {
+                var that = this;
+
                 var ret_obj = freecell_solver_user_alloc();
 
                 // TODO : add an option to customise the limit of the iterations count.
@@ -72,6 +74,8 @@ Class('FC_Solve', {
                     alert ("Could not allocate solver instance (out of memory?)");
                     throw "Foo";
                 }
+
+                that._initialize_obj( ret_obj );
 
                 return ret_obj;
             },
@@ -178,18 +182,13 @@ Class('FC_Solve', {
 
             return ret;
         },
-        do_solve: function (proto_board_string) {
+        _initialize_obj: function(obj) {
             var that = this;
-
-            var board_string = that._process_board_string(proto_board_string);
             var cmd_line_preset = that.cmd_line_preset;
-
-            that.set_status("running", "Running");
-
             try {
                 if (cmd_line_preset != "default") {
                     var error_string_ptr_buf = alloc_wrap(128, "error string buffer", "Foo");
-                    var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(that.obj, cmd_line_preset, 0, error_string_ptr_buf, 0, null);
+                    var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, cmd_line_preset, 0, error_string_ptr_buf, 0, null);
 
                     var error_string_ptr = getValue(error_string_ptr_buf, '*');
 
@@ -227,7 +226,7 @@ Class('FC_Solve', {
 
                     // Input the file to the solver.
                     var args_ret_code = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-                        that.obj,
+                        obj,
                         2,
                         args_buf,
                         0,
@@ -254,11 +253,25 @@ Class('FC_Solve', {
                         throw "Foo";
                     }
                 }
+                return;
+            }
+            catch (e) {
+                that.set_status("error", "Error");
+                return;
+            }
+        },
+        do_solve: function (proto_board_string) {
+            var that = this;
 
+
+            that.set_status("running", "Running");
+
+            try {
                 that._increase_iters_limit();
                 // Removed; for debugging purposes.
                 // alert("preset_ret = " + preset_ret);
 
+                var board_string = that._process_board_string(proto_board_string);
                 var solve_err_code = freecell_solver_user_solve_board(
                     that.obj, board_string
                 );
