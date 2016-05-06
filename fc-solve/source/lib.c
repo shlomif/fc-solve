@@ -170,11 +170,13 @@ typedef struct
     fcs_bool_t all_instances_were_suspended;
     fcs_state_validity_ret_t state_validity_ret;
     fcs_card_t state_validity_card;
+#ifndef FCS_WITHOUT_ITER_HANDLER
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     freecell_solver_user_iter_handler_t iter_handler;
 #endif
     freecell_solver_user_long_iter_handler_t long_iter_handler;
     void * iter_handler_context;
+#endif
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     flares_choice_type_t flares_choice;
 #endif
@@ -258,9 +260,11 @@ static void user_initialize(
 
     user->instances_list = NULL;
     user->end_of_instances_list = NULL;
+#ifndef FCS_WITHOUT_ITER_HANDLER
     user->long_iter_handler = NULL;
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     user->iter_handler = NULL;
+#endif
 #endif
     user->current_iterations_limit = -1;
 
