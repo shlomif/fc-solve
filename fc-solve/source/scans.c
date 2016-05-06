@@ -664,11 +664,6 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 
         TRACE0("Counting cells");
 
-        const fcs_game_limit_t num_vacant_freecells =
-            count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
-
-        const fcs_game_limit_t num_vacant_stacks =
-            count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
 
         if (check_if_limits_exceeded())
         {
@@ -701,7 +696,10 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         }
 #endif
 
-
+        const fcs_game_limit_t num_vacant_freecells =
+            count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
+        const fcs_game_limit_t num_vacant_stacks =
+            count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
         if ((num_vacant_stacks == LOCAL_STACKS_NUM) && (num_vacant_freecells == LOCAL_FREECELLS_NUM))
         {
             instance->final_state = PTR_STATE;

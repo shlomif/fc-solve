@@ -959,8 +959,6 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 && (the_soft_dfs_info->tests_list_index == 0)
                )
             {
-                fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
-
 #ifndef FCS_WITHOUT_ITER_HANDLER
                 TRACE0("In iter_handler");
 
@@ -984,12 +982,10 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 }
 #endif
 
-                num_vacant_freecells =
+                const fcs_game_limit_t num_vacant_freecells =
                     count_num_vacant_freecells(LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
-
-                num_vacant_stacks =
+                const fcs_game_limit_t num_vacant_stacks =
                     count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
-
                 /* Check if we have reached the empty state */
                 if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
                     (num_vacant_freecells  == LOCAL_FREECELLS_NUM)))
