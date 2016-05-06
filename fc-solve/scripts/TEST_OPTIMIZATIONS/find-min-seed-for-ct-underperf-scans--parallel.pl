@@ -163,6 +163,6 @@ FindSeed->parallel_find(
     {
         scan => \@scans,
         deals => \@deals,
-        threshold => 40,
+        threshold => 50,
     },
 );
