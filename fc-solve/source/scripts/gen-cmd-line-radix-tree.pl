@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use autodie;
 
-use List::Util qw(first max);
+use List::Util qw(first);
 use Data::Dumper;
 
 my $text_out;
@@ -26,7 +26,7 @@ sub gen_radix_tree
 %}
 struct CommandOption
   {
-  char name[@{[1 + max ( map { length } keys(%strings_to_opts_map))]}];
+  const char * name;
   int OptionCode;
   };
 EOF
