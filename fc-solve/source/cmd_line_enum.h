@@ -26,8 +26,7 @@
  * arguments. Partially auto-generated.
  */
 
-#ifndef FC_SOLVE__CMD_LINE_ENUM_H
-#define FC_SOLVE__CMD_LINE_ENUM_H
+#pragma once
 enum
 {
     FCS_OPT_UNRECOGNIZED,
@@ -72,5 +71,3 @@ enum
     FCS_OPT_PATSOLVE_X_PARAM,
     FCS_OPT_PATSOLVE_Y_PARAM
 };
-
-#endif

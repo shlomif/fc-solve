@@ -1,4 +1,3 @@
-#!/usr/bin/perl
 
 use strict;
 use warnings;
@@ -136,15 +135,13 @@ print {$enum_fh} <<'EOF';
  * arguments. Partially auto-generated.
  */
 
-#ifndef FC_SOLVE__CMD_LINE_ENUM_H
-#define FC_SOLVE__CMD_LINE_ENUM_H
+#pragma once
 EOF
 print {$enum_fh} "enum\n{\n",
     (map { $ws . $_ . ",\n" } @enum[0..$#enum-1]),
     $ws . $enum[-1] . "\n",
     "};\n";
 
-print {$enum_fh} "\n#endif\n";
 close($enum_fh);
 
 my $inc_h = 'cmd_line_inc.h';
