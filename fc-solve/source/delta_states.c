@@ -71,19 +71,18 @@ static const int fc_solve_get_column_orig_num_cards(
     return ((num_cards >= 2) ? num_cards : 0);
 }
 
-static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
-        fcs_state_t * init_state,
-        int num_columns,
-        int num_freecells
+static void fc_solve_delta_stater__init(
+    fc_solve_delta_stater_t * const self,
+    fcs_state_t * const init_state,
+    const int num_columns,
+    const int num_freecells
 #ifndef FCS_FREECELL_ONLY
-        , int sequences_are_built_by
+    , const int sequences_are_built_by
 #endif
-        )
+)
 {
     int col_idx;
     int max_num_cards;
-
-    fc_solve_delta_stater_t * self = SMALLOC1(self);
 
 #ifndef FCS_FREECELL_ONLY
     self->sequences_are_built_by = sequences_are_built_by;
@@ -119,13 +118,10 @@ static fc_solve_delta_stater_t * fc_solve_delta_stater_alloc(
 
         self->bits_per_orig_cards_in_column = num_bits;
     }
-
-    return self;
 }
 
-static void fc_solve_delta_stater_free(fc_solve_delta_stater_t * self)
+static GCC_INLINE void fc_solve_delta_stater_release(fc_solve_delta_stater_t * const self)
 {
-    free(self);
 }
 
 static GCC_INLINE void fc_solve_delta_stater_set_derived(fc_solve_delta_stater_t * const self, fcs_state_t * const state)
@@ -567,7 +563,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 {
     char * init_state_s, * derived_state_s;
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
-    fc_solve_delta_stater_t * delta;
+    fc_solve_delta_stater_t delta;
     fcs_uchar_t enc_state[24];
     fc_solve_bit_writer_t bit_w;
     fc_solve_bit_reader_t bit_r;
@@ -598,7 +594,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
             derived_stacks_buffer
             );
 
-    delta = fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater__init(
+        &delta,
             &(init_state.s),
             STACKS_NUM,
             FREECELLS_NUM
@@ -607,7 +604,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 #endif
             );
 
-    fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
+    fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));
 
     fc_solve_state_init(
         &new_derived_state,
@@ -616,10 +613,10 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     );
 
     fc_solve_bit_writer_init(&bit_w, enc_state);
-    fc_solve_delta_stater_encode_composite(delta, &bit_w);
+    fc_solve_delta_stater_encode_composite(&delta, &bit_w);
 
     fc_solve_bit_reader_init(&bit_r, enc_state);
-    fc_solve_delta_stater_decode(delta, &bit_r, &(new_derived_state.s));
+    fc_solve_delta_stater_decode(&delta, &bit_r, &(new_derived_state.s));
 
     fc_solve_init_locs(&locs);
 
@@ -639,7 +636,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     free(init_state_s);
     free(derived_state_s);
 
-    fc_solve_delta_stater_free (delta);
+    fc_solve_delta_stater_release (&delta);
 
     return new_derived_as_str;
 }
