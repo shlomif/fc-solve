@@ -4,9 +4,7 @@
 
     Do not edit by hand!!!
 */
-
-#ifndef FC_SOLVE__MOVE_FUNCS_MAPS_H
-#define FC_SOLVE__MOVE_FUNCS_MAPS_H
+#pragma once
 
 #include "config.h"
 
@@ -22,5 +20,3 @@ typedef struct
 
 extern fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM];
 extern fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM];
-
-#endif
