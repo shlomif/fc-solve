@@ -260,35 +260,35 @@ static GCC_INLINE void instance_debug_out_state(
     fcs_encoded_state_buffer_t * enc_state
 )
 {
-    char * state_str;
     fcs_state_keyval_pair_t state;
     fcs_state_locs_struct_t locs;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     fc_solve_init_locs(&locs);
+    const_AUTO(local_variant, instance->variant);
     /* Handle item. */
     fc_solve_delta_stater_decode_into_state(
-        global_delta_stater,
+        &global_delta_stater,
         enc_state->s,
         &state,
         indirect_stacks_buffer
     );
 
-    state_str = fc_solve_state_as_string(
+    char state_str[1000];
+    fc_solve_state_as_string(
+        state_str,
         &(state.s),
-        &(state.info),
-        &locs,
-        2,
-        8,
-        1,
-        1,
-        0,
-        1
+        &locs
+        PASS_FREECELLS(2)
+        PASS_STACKS(8)
+        PASS_DECKS(1)
+        FC_SOLVE__PASS_PARSABLE(TRUE)
+        , 0
+        FC_SOLVE__PASS_T(TRUE)
         );
 
     fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
     fflush(instance->out_fh);
-    free(state_str);
 }
 
 #else

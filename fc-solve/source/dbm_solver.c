@@ -725,8 +725,8 @@ static void instance_run_all_threads(
     TRACE0("instance_run_all_threads start");
 
 #ifdef DEBUG_FOO
-    global_delta_stater =
-            fc_solve_delta_stater_alloc(
+    fc_solve_delta_stater_init(
+        &global_delta_stater,
                 &(init_state->s),
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -774,7 +774,7 @@ static void instance_run_all_threads(
     free(threads);
 
 #ifdef DEBUG_FOO
-    fc_solve_delta_stater_free(global_delta_stater);
+    fc_solve_delta_stater_release(&global_delta_stater);
 #endif
 
     TRACE0("instance_run_all_threads end");
