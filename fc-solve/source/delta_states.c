@@ -560,10 +560,10 @@ static char * prepare_state_str(const char * proto)
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-        enum fcs_dbm_variant_type_t local_variant,
-        const char * init_state_str_proto,
-        const char * derived_state_str_proto
-        )
+        const enum fcs_dbm_variant_type_t local_variant,
+        const char * const init_state_str_proto,
+        const char * const derived_state_str_proto
+)
 {
     char * init_state_s, * derived_state_s;
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
@@ -599,7 +599,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
             );
 
     fc_solve_delta_stater_init(
-        &delta,
+            &delta,
             &(init_state.s),
             STACKS_NUM,
             FREECELLS_NUM
@@ -634,7 +634,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
         PASS_DECKS(DECKS_NUM)
         FC_SOLVE__PASS_PARSABLE(TRUE)
         , FALSE
-        PASS_T(TRUE)
+        FC_SOLVE__PASS_T(TRUE)
     );
 
     free(init_state_s);

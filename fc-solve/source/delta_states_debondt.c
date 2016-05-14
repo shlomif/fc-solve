@@ -699,9 +699,11 @@ static GCC_INLINE void fcs_debondt_init_and_encode_state(
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
-static char * debondt_prepare_state_str(const char * const proto)
+static char * prepare_state_str(const char * proto)
 {
-    char * const ret = strdup(proto);
+    char * ret;
+
+    ret = strdup(proto);
 
     /* Process the string in-place to make it available as input
      * to fc-solve again.
@@ -714,9 +716,13 @@ static char * debondt_prepare_state_str(const char * const proto)
 
         while ((c = *(d++) = *(s++)))
         {
-            if ((c == '\n') && (s[0] == ':') && (s[1] = ' '))
+            if ((c == '\n') && (s[0] == ':'))
             {
-                s += 2;
+                s++;
+                while(*s == ' ')
+                {
+                    s++;
+                }
             }
         }
     }
@@ -743,8 +749,8 @@ DLLEXPORT char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     DECLARE_IND_BUF_T(derived_stacks_buffer)
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
 
-    init_state_s = debondt_prepare_state_str(init_state_str_proto);
-    derived_state_s = debondt_prepare_state_str(derived_state_str_proto);
+    init_state_s = prepare_state_str(init_state_str_proto);
+    derived_state_s = prepare_state_str(derived_state_str_proto);
 
     fc_solve_initial_user_state_to_c(
             init_state_s,
