@@ -485,7 +485,7 @@ static int main_tests(void)
                  ": 2C\n"
                  ": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
                  ": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
-                 ": \n"
+                 ":\n"
                  ": 2D KD QS JH TC 9D 8S\n"
                  ": 7H JS KH TS KC 7C 6D 5C 4D\n"
                  ": AH 5S 6S AD 8H JD\n"

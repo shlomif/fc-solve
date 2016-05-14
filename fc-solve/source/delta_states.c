@@ -542,9 +542,13 @@ static char * prepare_state_str(const char * proto)
 
         while ((c = *(d++) = *(s++)))
         {
-            if ((c == '\n') && (s[0] == ':') && (s[1] = ' '))
+            if ((c == '\n') && (s[0] == ':'))
             {
-                s += 2;
+                s++;
+                while(*s == ' ')
+                {
+                    s++;
+                }
             }
         }
     }
