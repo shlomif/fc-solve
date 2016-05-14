@@ -25,7 +25,7 @@
 
 #include <string.h>
 
-static char * prepare_state_str(const char * proto)
+static char * prepare_state_str(const char * const proto)
 {
     char * const ret = strdup(proto);
 
