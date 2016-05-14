@@ -39,6 +39,7 @@
 #include "../delta_states_debondt.c"
 #include "../dbm_solver_key.h"
 #include "../indirect_buffer.h"
+#include "../trim_trailing_whitespace.h"
 
 static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
 {
@@ -80,41 +81,7 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
         , FALSE
         PASS_T(TRUE)
     );
-
-    /* Always trim trailing whitespace */
-    {
-        char * dest = as_str;
-        char * src = as_str;
-
-        while (1)
-        {
-            while (! (*(src) == ' ' || *(src) == '\0'))
-            {
-                *(dest++) = *(src++);
-            }
-            if (*(src) == '\0')
-            {
-                break;
-            }
-            char * prev_src = src;
-            while (*src == ' ')
-            {
-                src++;
-            }
-            if (*(src) == '\0')
-            {
-                break;
-            }
-            if (*src != '\n')
-            {
-                while (*prev_src == ' ')
-                {
-                    *(dest++) = *(prev_src++);
-                }
-            }
-        }
-        *(dest++) = '\0';
-    }
+    trim_trailing_whitespace(as_str);
 
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
     {

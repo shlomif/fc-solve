@@ -71,7 +71,7 @@ static const int fc_solve_get_column_orig_num_cards(
     return ((num_cards >= 2) ? num_cards : 0);
 }
 
-static void fc_solve_delta_stater__init(
+static void fc_solve_delta_stater_init(
     fc_solve_delta_stater_t * const self,
     fcs_state_t * const init_state,
     const int num_columns,
@@ -594,7 +594,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
             derived_stacks_buffer
             );
 
-    fc_solve_delta_stater__init(
+    fc_solve_delta_stater_init(
         &delta,
             &(init_state.s),
             STACKS_NUM,

@@ -35,6 +35,7 @@
 #include "../delta_states.c"
 #include "../dbm_solver_key.h"
 #include "../indirect_buffer.h"
+#include "../trim_trailing_whitespace.h"
 
 static fcs_card_t make_card(int rank, int suit)
 {
@@ -46,7 +47,6 @@ static int test_encode_and_decode(const enum fcs_dbm_variant_type_t local_varian
     int verdict;
     fcs_state_keyval_pair_t new_derived_state;
     fcs_uchar_t enc_state[24];
-    char * as_str;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
 
@@ -65,17 +65,19 @@ static int test_encode_and_decode(const enum fcs_dbm_variant_type_t local_varian
         new_derived_indirect_stacks_buffer
     );
 
-    as_str =
-        fc_solve_state_as_string(
-            &(new_derived_state.s),
-            &locs,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM,
-            1,
-            0,
-            1
-            );
+    char as_str[4000];
+    fc_solve_state_as_string(
+        as_str,
+        &(new_derived_state.s),
+        &locs
+        PASS_FREECELLS(FREECELLS_NUM)
+        PASS_STACKS(STACKS_NUM)
+        PASS_DECKS(DECKS_NUM)
+        FC_SOLVE__PASS_PARSABLE(TRUE)
+        , FALSE
+        FC_SOLVE__PASS_T(TRUE)
+    );
+    trim_trailing_whitespace(as_str);
 
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
     {
@@ -84,8 +86,6 @@ static int test_encode_and_decode(const enum fcs_dbm_variant_type_t local_varian
                 expected_str
             );
     }
-
-    free(as_str);
 
     return verdict;
 }
@@ -146,7 +146,7 @@ static int main_tests(void)
     }
 
     {
-        fc_solve_delta_stater_t * delta;
+        fc_solve_delta_stater_t delta;
         fcs_state_keyval_pair_t init_state, derived_state;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
@@ -170,7 +170,8 @@ static int main_tests(void)
             indirect_stacks_buffer
         );
 
-        delta = fc_solve_delta_stater_alloc(
+        fc_solve_delta_stater_init(
+            &delta,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -179,13 +180,9 @@ static int main_tests(void)
 #endif
                 );
 
-        /* TEST
-         *  */
-        ok (delta, "Delta was created.");
-
         fc_solve_initial_user_state_to_c(
                 (
-                 "Foundations: H-0 C-2 D-A S-0 \n"
+                 "Foundations: H-0 C-2 D-A S-0\n"
                  "Freecells:  8D  QD\n"
                  "6D 3C 3H KD 8C 5C\n"
                  "TC 9C 9H 8S\n"
@@ -203,11 +200,11 @@ static int main_tests(void)
                 derived_indirect_stacks_buffer
         );
 
-        fc_solve_delta_stater_set_derived(delta, &(derived_state.s));
+        fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));
 
         {
             fc_solve_column_encoding_composite_t enc;
-            fc_solve_get_column_encoding_composite(delta, 0, &enc);
+            fc_solve_get_column_encoding_composite(&delta, 0, &enc);
 
             /* TEST
              * */
@@ -232,7 +229,7 @@ static int main_tests(void)
 
         {
             fc_solve_column_encoding_composite_t enc;
-            fc_solve_get_column_encoding_composite(delta, 1, &enc);
+            fc_solve_get_column_encoding_composite(&delta, 1, &enc);
 
             /* TEST
              * */
@@ -257,7 +254,7 @@ static int main_tests(void)
             fc_solve_column_encoding_composite_t enc;
             fcs_card_t card_9S;
 
-            fc_solve_get_column_encoding_composite(delta, 5, &enc);
+            fc_solve_get_column_encoding_composite(&delta, 5, &enc);
 
             card_9S = make_card(9, 3);
             /* TEST
@@ -295,7 +292,7 @@ static int main_tests(void)
             fc_solve_bit_writer_init(&bit_w, enc);
             fc_solve_bit_reader_init(&bit_r, enc);
 
-            fc_solve_get_freecells_encoding(delta, &bit_w);
+            fc_solve_get_freecells_encoding(&delta, &bit_w);
 
             /* TEST
              * */
@@ -319,10 +316,10 @@ static int main_tests(void)
          * */
         test_encode_and_decode(
             local_variant,
-            delta,
+            &delta,
             &derived_state,
             (
-"Foundations: H-0 C-2 D-A S-0 \n"
+"Foundations: H-0 C-2 D-A S-0\n"
 "Freecells:  8D  QD\n"
 ": 6D 3C 3H KD 8C 5C\n"
 ": TC 9C 9H 8S\n"
@@ -336,7 +333,7 @@ static int main_tests(void)
             "encode_composite + decode test"
         );
 
-        fc_solve_delta_stater_free (delta);
+        fc_solve_delta_stater_release (&delta);
     }
 
 /* More encode_composite tests - this time from the output of:
@@ -344,7 +341,7 @@ static int main_tests(void)
  *      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
  */
     {
-        fc_solve_delta_stater_t * delta;
+        fc_solve_delta_stater_t delta;
         fcs_state_keyval_pair_t init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -353,8 +350,8 @@ static int main_tests(void)
         /* MS Freecell No. 24 Initial state.
          * */
         fc_solve_initial_user_state_to_c(
-("Foundations: H-0 C-0 D-0 S-0 \n"
-"Freecells:        \n"
+("Foundations: H-0 C-0 D-0 S-0\n"
+"Freecells:\n"
 "4C 2C 9C 8C QS 4S 2H\n"
 "5H QH 3C AC 3H 4H QD\n"
 "QC 9S 6H 9H 3S KS 3D\n"
@@ -370,7 +367,8 @@ static int main_tests(void)
             indirect_stacks_buffer
         );
 
-        delta = fc_solve_delta_stater_alloc(
+        fc_solve_delta_stater_init(
+            &delta,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -381,7 +379,7 @@ static int main_tests(void)
 
         fc_solve_initial_user_state_to_c(
             (
-"Foundations: H-0 C-0 D-0 S-4 \n"
+"Foundations: H-0 C-0 D-0 S-4\n"
 "Freecells:  KS  TD\n"
 "2C\n"
 "5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
@@ -403,12 +401,12 @@ static int main_tests(void)
          * */
         test_encode_and_decode(
             local_variant,
-            delta,
+            &delta,
             &derived_state,
             (
-"Foundations: H-0 C-0 D-0 S-4 \n"
+"Foundations: H-0 C-0 D-0 S-4\n"
 "Freecells:  TD  KS\n"
-": \n"
+":\n"
 ": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
 ": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
 ": 2H\n"
@@ -422,7 +420,7 @@ static int main_tests(void)
 
         fc_solve_initial_user_state_to_c(
             (
-"Foundations: H-0 C-0 D-0 S-2 \n"
+"Foundations: H-0 C-0 D-0 S-2\n"
 "Freecells:  TD  4C\n"
 "8S\n"
 "5H QH 3C AC 3H 4H 3S 2H\n"
@@ -444,10 +442,10 @@ static int main_tests(void)
          * */
         test_encode_and_decode(
             local_variant,
-            delta,
+            &delta,
             &derived_state,
             (
-"Foundations: H-0 C-0 D-0 S-2 \n"
+"Foundations: H-0 C-0 D-0 S-2\n"
 "Freecells:  4C  TD\n"
 ": 5C 4D\n"
 ": 5H QH 3C AC 3H 4H 3S 2H\n"
@@ -461,7 +459,7 @@ static int main_tests(void)
             "encode_composite + decode test No. 3 (deal #24)"
         );
 
-        fc_solve_delta_stater_free (delta);
+        fc_solve_delta_stater_release (&delta);
     }
 
     {
@@ -470,8 +468,8 @@ static int main_tests(void)
         s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(
             local_variant,
                 (
-                 "Foundations: H-0 C-0 D-0 S-0 \n"
-                 "Freecells:        \n"
+                 "Foundations: H-0 C-0 D-0 S-0\n"
+                 "Freecells:\n"
                  ": 4C 2C 9C 8C QS 4S 2H\n"
                  ": 5H QH 3C AC 3H 4H QD\n"
                  ": QC 9S 6H 9H 3S KS 3D\n"
@@ -482,12 +480,12 @@ static int main_tests(void)
                  ": 7S 6C 7D 4D 8S 9D\n"
                 ),
                 (
-                 "Foundations: H-0 C-0 D-0 S-4 \n"
+                 "Foundations: H-0 C-0 D-0 S-4\n"
                  "Freecells:  KS  TD\n"
                  ": 2C\n"
                  ": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
                  ": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
-                 ": \n"
+                 ":\n"
                  ": 2D KD QS JH TC 9D 8S\n"
                  ": 7H JS KH TS KC 7C 6D 5C 4D\n"
                  ": AH 5S 6S AD 8H JD\n"
@@ -495,13 +493,14 @@ static int main_tests(void)
                 )
         );
 
+        trim_trailing_whitespace(s);
         /* TEST
          * */
         ok (!strcmp(s,
             (
-"Foundations: H-0 C-0 D-0 S-4 \n"
+"Foundations: H-0 C-0 D-0 S-4\n"
 "Freecells:  TD  KS\n"
-": \n"
+":\n"
 ": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
 ": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
 ": 2H\n"
@@ -521,7 +520,7 @@ static int main_tests(void)
  * and completely-non-original states.
  */
     {
-        fc_solve_delta_stater_t * delta;
+        fc_solve_delta_stater_t delta;
         fcs_state_keyval_pair_t init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -546,7 +545,8 @@ static int main_tests(void)
             indirect_stacks_buffer
         );
 
-        delta = fc_solve_delta_stater_alloc(
+        fc_solve_delta_stater_init(
+            &delta,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -577,7 +577,7 @@ static int main_tests(void)
         fcs_encoded_state_buffer_t first_enc_state;
 
         fcs_init_and_encode_state(
-            delta,
+            &delta,
             local_variant,
             &derived_state,
             &first_enc_state
@@ -605,7 +605,7 @@ static int main_tests(void)
         fcs_encoded_state_buffer_t second_enc_state;
 
         fcs_init_and_encode_state(
-            delta,
+            &delta,
             local_variant,
             &derived_state,
             &second_enc_state
@@ -618,7 +618,7 @@ static int main_tests(void)
             "Make sure encode_composite avoids permutations of empty columns and completely-non-original states."
          );
 
-        fc_solve_delta_stater_free (delta);
+        fc_solve_delta_stater_release (&delta);
     }
 /* Make sure encode_composite avoids permutations of empty columns
  * and completely-non-original states.
@@ -626,7 +626,7 @@ static int main_tests(void)
  * Another edge-case.
  */
     {
-        fc_solve_delta_stater_t * delta;
+        fc_solve_delta_stater_t delta;
         fcs_state_keyval_pair_t init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -650,7 +650,8 @@ static int main_tests(void)
             indirect_stacks_buffer
         );
 
-        delta = fc_solve_delta_stater_alloc(
+        fc_solve_delta_stater_init(
+            &delta,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -680,7 +681,7 @@ static int main_tests(void)
 
         fcs_encoded_state_buffer_t first_enc_state;
         fcs_init_and_encode_state(
-            delta,
+            &delta,
             local_variant,
             &derived_state,
             &first_enc_state
@@ -707,7 +708,7 @@ static int main_tests(void)
 
         fcs_encoded_state_buffer_t second_enc_state;
         fcs_init_and_encode_state(
-            delta,
+            &delta,
             local_variant,
             &derived_state,
             &second_enc_state
@@ -720,14 +721,14 @@ static int main_tests(void)
             "encode_composite unique encoding No. 2"
          );
 
-        fc_solve_delta_stater_free (delta);
+        fc_solve_delta_stater_release (&delta);
     }
     return 0;
 }
 
 int main(int argc, char * argv[])
 {
-    plan_tests(25);
+    plan_tests(24);
     main_tests();
     return exit_status();
 }
