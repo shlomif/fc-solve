@@ -22,9 +22,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * delta_states_iface.h - some public interface functions for delta_state.c
- * (without all the baggage).
- *
+ * delta_states_any.h - choose between the debondt and non-debondt delta_states
  */
 
 #pragma once
