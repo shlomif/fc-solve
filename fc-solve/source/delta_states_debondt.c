@@ -698,38 +698,7 @@ static GCC_INLINE void fcs_debondt_init_and_encode_state(
 #undef IS_BAKERS_DOZEN
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
-
-static char * prepare_state_str(const char * proto)
-{
-    char * ret;
-
-    ret = strdup(proto);
-
-    /* Process the string in-place to make it available as input
-     * to fc-solve again.
-     * */
-
-    {
-        char * s, * d;
-        char c;
-        s = d = ret;
-
-        while ((c = *(d++) = *(s++)))
-        {
-            if ((c == '\n') && (s[0] == ':'))
-            {
-                s++;
-                while(*s == ' ')
-                {
-                    s++;
-                }
-            }
-        }
-    }
-
-    return ret;
-}
-
+#include "prepare_state_str.h"
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
