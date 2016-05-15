@@ -876,7 +876,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 char * buffer;
                 FILE * f;
                 long file_len;
-                size_t num_read;
                 int num_file_args_to_skip;
 
                 num_file_args_to_skip = 0;
@@ -943,9 +942,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     RET_ERROR_IN_ARG() ;
                 }
                 fseek(f, 0, SEEK_SET);
-                num_read = fread(buffer, 1, file_len, f);
+                buffer[fread(buffer, 1, file_len, f)] = '\0';
                 fclose(f);
-                buffer[num_read] = '\0';
 
                 args_man_t args_man = fc_solve_args_man_chop(buffer);
                 free(buffer);

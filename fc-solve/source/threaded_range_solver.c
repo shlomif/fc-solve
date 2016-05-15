@@ -127,12 +127,7 @@ static void * worker_thread(void * GCC_UNUSED void_context)
 
                 case FCS_STATE_FLARES_PLAN_ERROR:
                 {
-                    const char * flares_error_string;
-
-                    flares_error_string =
-                        freecell_solver_user_get_last_error_string(instance);
-
-                    fprintf(stderr, "Flares Plan: %s\n", flares_error_string);
+                    fprintf(stderr, "Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
 
                     goto theme_error;
                 }

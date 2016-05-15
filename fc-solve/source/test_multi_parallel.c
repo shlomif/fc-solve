@@ -318,7 +318,6 @@ int main(int argc, char * argv[])
 
             case FCS_STATE_FLARES_PLAN_ERROR:
             printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(user.instance));
-
             goto out_of_loop;
 
             case FCS_STATE_IS_NOT_SOLVEABLE:
