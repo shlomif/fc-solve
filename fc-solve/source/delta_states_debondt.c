@@ -636,8 +636,8 @@ static void fc_solve_debondt_delta_stater_decode(
 }
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
-        fc_solve_debondt_delta_stater_t * const delta_stater,
         const enum fcs_dbm_variant_type_t local_variant,
+        fc_solve_debondt_delta_stater_t * const delta_stater,
         const fcs_uchar_t * const enc_state,
         fcs_state_keyval_pair_t * const ret
         IND_BUF_T_PARAM(indirect_stacks_buffer)
@@ -660,9 +660,9 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 }
 
 #ifdef INDIRECT_STACK_STATES
-#define fc_solve_debondt_delta_stater_decode_into_state(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, local_variant, enc_state, state_ptr, indirect_stacks_buffer)
+#define fc_solve_debondt_delta_stater_decode_into_state(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer)
 #else
-#define fc_solve_debondt_delta_stater_decode_into_state(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(delta_stater, local_variant, enc_state, state_ptr)
+#define fc_solve_debondt_delta_stater_decode_into_state(local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) fc_solve_debondt_delta_stater_decode_into_state_proto(local_variant, delta_stater, enc_state, state_ptr)
 #endif
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(

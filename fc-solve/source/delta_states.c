@@ -73,6 +73,7 @@ static const int fc_solve_get_column_orig_num_cards(
 
 static void fc_solve_delta_stater_init(
     fc_solve_delta_stater_t * const self,
+    const enum fcs_dbm_variant_type_t local_variant,
     fcs_state_t * const init_state,
     const int num_columns,
     const int num_freecells
@@ -494,6 +495,7 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
 
 static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
     fc_solve_delta_stater_t * const delta_stater,
+    const enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t * const state,
     unsigned char * const out_enc_state
 )
@@ -518,6 +520,7 @@ static GCC_INLINE void fcs_init_and_encode_state(
 
     fc_solve_delta_stater_encode_into_buffer(
         delta_stater,
+        local_variant,
         state,
         enc_state->s
     );
@@ -569,6 +572,7 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 
     fc_solve_delta_stater_init(
             &delta,
+            local_variant,
             &(init_state.s),
             STACKS_NUM,
             FREECELLS_NUM
