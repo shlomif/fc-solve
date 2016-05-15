@@ -81,7 +81,7 @@ int main(int argc, char * argv[])
     fcs_portable_time_t mytime;
 
     char * error_string;
-    char * scan1_to = NULL, * scan2_to = NULL;
+    const char * scan1_to = NULL, * scan2_to = NULL;
 
     char * output_filename = NULL;
     fcs_state_string_t state_string;

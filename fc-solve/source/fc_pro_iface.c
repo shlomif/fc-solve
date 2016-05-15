@@ -391,7 +391,7 @@ void fc_solve_moves_processed_gen(
                         int num_cards = fcs_move_get_num_cards_in_seq(move);
                         fcs_cards_column_t src_col = fcs_state_get_col(pos, src);
                         fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
-                        int src_len = fcs_col_len(src_col);
+                        const int src_len = fcs_col_len(src_col);
                         assert(virtual_stack_len[src] >= src_len);
                         if (virtual_stack_len[src] > src_len)
                         {

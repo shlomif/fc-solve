@@ -153,7 +153,7 @@ typedef struct
     int num_items_per_page;
     long page_index, queue_id;
     int write_to_idx;
-    int read_from_idx;
+    size_t read_from_idx;
     unsigned char * data;
 } fcs_offloading_queue_page_t;
 

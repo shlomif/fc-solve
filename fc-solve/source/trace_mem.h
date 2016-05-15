@@ -92,7 +92,7 @@ static GCC_INLINE void trace_mem(const int board_num)
 
         fclose(stat);
 
-        long long rss_delta = rss - prev_rss;
+        const long long rss_delta = rss - prev_rss;
         if (rss_found == 1)
         {
             max_rss_delta = rss_delta;

@@ -107,13 +107,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 }
 
 static GCC_INLINE void sort_derived_states(
-        fcs_derived_states_list_t * derived_states_list,
-        int initial_derived_states_num_states
+        fcs_derived_states_list_t * const derived_states_list,
+        const int initial_derived_states_num_states
         )
 {
-    fcs_derived_states_list_item_t * start =
+    fcs_derived_states_list_item_t * const start =
         derived_states_list->states + initial_derived_states_num_states;
-    fcs_derived_states_list_item_t * limit =
+    fcs_derived_states_list_item_t * const limit =
         derived_states_list->states + derived_states_list->num_states;
 
     for (fcs_derived_states_list_item_t * b = start+1 ; b < limit ; b++)
