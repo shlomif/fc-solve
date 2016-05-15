@@ -550,14 +550,7 @@ int main(int argc, char * argv[])
     }
 
     freecell_solver_user_free(user.instance);
-
-    if (binary_output.filename)
-    {
-        fwrite(binary_output.buffer, 1, binary_output.ptr - binary_output.buffer, binary_output.fh);
-        fflush(binary_output.fh);
-        fclose(binary_output.fh);
-    }
-
+    bin_close(&binary_output);
     free (solution_filename);
     solution_filename = NULL;
 

@@ -68,6 +68,17 @@ static void print_int(binary_output_t * const bin, int val)
         bin->ptr = bin->buffer;
     }
 }
+
+static GCC_INLINE void bin_close(binary_output_t * bin)
+{
+    if (bin->filename)
+    {
+        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->fh);
+        fflush(bin->fh);
+        fclose(bin->fh);
+    }
+}
+
 #ifdef __cplusplus
 }
 #endif
