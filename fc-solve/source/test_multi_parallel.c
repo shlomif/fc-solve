@@ -200,7 +200,6 @@ int main(int argc, char * argv[])
 {
     pack_item_t user = {.display_context = INITIAL_DISPLAY_CONTEXT};
     /* char buffer[2048]; */
-    int ret;
     int board_num;
     int start_board, end_board, stop_at;
     fcs_portable_time_t mytime;
@@ -304,8 +303,6 @@ int main(int argc, char * argv[])
         TRUE
     );
 
-    ret = 0;
-
     for(board_num=start_board;board_num<=end_board;board_num++)
     {
         get_board(board_num, state_string);
@@ -315,37 +312,32 @@ int main(int argc, char * argv[])
             freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
         }
 
-        ret =
+        const int ret =
             freecell_solver_user_solve_board(
                 user.instance,
                 state_string
                 );
 
-        if (ret == FCS_STATE_SUSPEND_PROCESS)
+        switch (ret)
         {
+            case FCS_STATE_SUSPEND_PROCESS:
             FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-            fflush(stdout);
             print_int(&binary_output, -1);
-        }
-        else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
-        {
-            const char * flares_error_string;
-
-            flares_error_string =
-                freecell_solver_user_get_last_error_string(user.instance);
-
-            printf("Flares Plan: %s\n", flares_error_string);
-
             break;
-        }
-        else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-        {
+
+            case FCS_STATE_FLARES_PLAN_ERROR:
+            printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(user.instance));
+
+            goto out_of_loop;
+
+            case FCS_STATE_IS_NOT_SOLVEABLE:
             FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
             print_int(&binary_output, -2);
-        }
-        else
-        {
+            break;
+
+            default:
             print_int(&binary_output, (int)freecell_solver_user_get_num_times_long(user.instance));
+            break;
         }
 
         if (solutions_directory)
@@ -462,6 +454,7 @@ int main(int argc, char * argv[])
     }
 #endif
     }
+out_of_loop:
 
     freecell_solver_user_free(user.instance);
     bin_close(&binary_output);
