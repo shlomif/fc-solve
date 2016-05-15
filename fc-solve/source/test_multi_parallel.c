@@ -330,7 +330,6 @@ int main(int argc, char * argv[])
         }
         else
         {
-            long file_len;
 #define read_int_wrapper(var) \
             {       \
                 if (read_int(in, &var))  \
@@ -350,7 +349,7 @@ int main(int argc, char * argv[])
             }
 
             fseek(in, 0, SEEK_END);
-            file_len = ftell(in);
+            const long file_len = ftell(in);
             if (file_len % 4 != 0)
             {
                 fprintf(stderr, "%s", "Output file has an invalid length. Terminating.\n");

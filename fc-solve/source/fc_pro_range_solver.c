@@ -369,7 +369,7 @@ int main(int argc, char * argv[])
 
             print_int(&binary_output, start_board);
             print_int(&binary_output, end_board);
-            print_int(&binary_output, ((int)total_iterations_limit_per_board));
+            print_int(&binary_output, (int)total_iterations_limit_per_board);
         }
         else
         {
