@@ -312,10 +312,10 @@ static void fc_solve_delta_stater_encode_composite(
 
     {
         int new_non_orig_cols_indexes[MAX_NUM_STACKS];
-        int new_non_orig_cols_indexes_count;
+        int new_non_orig_cols_indexes_count = 0;
 
         /* Filter the new_non_orig_cols_indexes */
-        for (new_non_orig_cols_indexes_count = 0, i=0; i < num_columns ; i++)
+        for (i=0; i < num_columns ; i++)
         {
             if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
             {

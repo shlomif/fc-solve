@@ -62,7 +62,7 @@ static GCC_INLINE void add_to_last_arg(args_man_wrapper_t * const manager, const
 
     if (manager->last_arg_ptr == manager->last_arg_end)
     {
-        char * new_last_arg = SREALLOC(manager->last_arg,
+        char * const new_last_arg = SREALLOC(manager->last_arg,
             manager->last_arg_end-manager->last_arg+1024
         );
         manager->last_arg_ptr += new_last_arg - manager->last_arg;

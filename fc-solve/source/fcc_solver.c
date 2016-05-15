@@ -556,7 +556,6 @@ static fcc_status_t instance_run_solver(
                         )
                        )
                     {
-                        fcs_fully_connected_component_t * next_fcc;
                         fcs_encoded_state_buffer_t * enc_state_copy_ptr;
 
                         enc_state_copy_ptr = fcs_compact_alloc_ptr(
@@ -590,7 +589,7 @@ static fcc_status_t instance_run_solver(
                             temp_fcc->next = next_fcc_stage->queue;
                             next_fcc_stage->queue = temp_fcc;
                         }
-                        next_fcc = next_fcc_stage->queue;
+                        fcs_fully_connected_component_t * const next_fcc = next_fcc_stage->queue;
 
                         next_fcc->min_by_absolute_depth = enc_state;
                         next_fcc->moves_seq_to_min_by_absolute_depth = start_point_iter->moves_seq;

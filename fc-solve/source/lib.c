@@ -299,29 +299,28 @@ int DLLEXPORT freecell_solver_user_apply_preset(
     return FCS_PRESET_CODE_OK;
 #else
     const fcs_preset_t * new_preset_ptr;
-    int status;
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
-    status =
+    const int status1 =
         fc_solve_get_preset_by_name(
             preset_name,
             &new_preset_ptr
             );
 
-    if (status != FCS_PRESET_CODE_OK)
+    if (status1 != FCS_PRESET_CODE_OK)
     {
-        return status;
+        return status1;
     }
 
     FLARES_LOOP_START()
-        status = fc_solve_apply_preset_by_ptr(
+        const int status2 = fc_solve_apply_preset_by_ptr(
             &(flare->obj),
             new_preset_ptr
             );
 
-        if (status != FCS_PRESET_CODE_OK)
+        if (status2 != FCS_PRESET_CODE_OK)
         {
-            return status;
+            return status2;
         }
     FLARES_LOOP_END()
 
