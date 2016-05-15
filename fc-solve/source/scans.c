@@ -730,12 +730,12 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
          * done for BFS and BeFS.
         */
         derived.num_states = 0;
-        for(const fc_solve_solve_for_state_move_func_t * next_test = tests_list;
-            next_test < tests_list_end;
-            next_test++
+        for(const fc_solve_solve_for_state_move_func_t * move_func_ptr = tests_list;
+            move_func_ptr < tests_list_end;
+            move_func_ptr++
            )
         {
-            (*next_test)(
+            (*move_func_ptr)(
                 soft_thread,
                 STATE_TO_PASS(),
                 &derived

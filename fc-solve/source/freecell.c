@@ -1503,6 +1503,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     return;
 }
 
+#define CALC_num_cards_in_col_threshold() (tests__should_not_empty_columns() ? 1 : 0)
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 {
     tests_define_accessors();
@@ -1513,7 +1515,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
     SET_GAME_PARAMS();
 #endif
 
-    const int num_cards_in_col_threshold = tests__should_not_empty_columns() ? 1 : 0;
+    const int num_cards_in_col_threshold = CALC_num_cards_in_col_threshold();
 
     for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
@@ -1582,7 +1584,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
         return;
     }
 
-    const int num_cards_in_col_threshold = tests__should_not_empty_columns() ? 1 : 0;
+    const int num_cards_in_col_threshold = CALC_num_cards_in_col_threshold();
 
     int ds;
     for (ds = 0 ; ds < LOCAL_FREECELLS_NUM ; ds++)
