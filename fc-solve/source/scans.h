@@ -204,10 +204,10 @@ static GCC_INLINE void add_to_move_funcs_list(
 }
 
 extern int fc_solve_sfs_check_state_begin(
-    fc_solve_hard_thread_t * const hard_thread,
-    fcs_kv_state_t * const out_new_state_out,
-    fcs_kv_state_t * const raw_ptr_state_raw,
-    fcs_move_stack_t * const moves
+    fc_solve_hard_thread_t * const,
+    fcs_kv_state_t * const,
+    fcs_kv_state_t * const,
+    fcs_move_stack_t * const
     );
 
 extern void fc_solve_sfs_check_state_end(

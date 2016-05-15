@@ -140,11 +140,10 @@ static GCC_INLINE int read_preset(const char * preset_name, args_man_t * const a
 #else
     global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
 #endif
-    const char * path;
     fcs_bool_t read_next_preset = FALSE;
     for (int path_idx=0;(presetrc_pathes[path_idx] != NULL) ; path_idx++)
     {
-        path = (*presetrc_pathes[path_idx]);
+        const char * const path = (*presetrc_pathes[path_idx]);
         if (path == NULL)
         {
             continue;

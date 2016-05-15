@@ -38,6 +38,7 @@
 #include "fcs_cl.h"
 #include "rinutils.h"
 #include "range_solvers_gen_ms_boards.h"
+#include "range_solvers_binary_output.h"
 #include "output_to_file.h"
 #include "handle_parsing.h"
 
@@ -173,38 +174,6 @@ static const char * known_parameters[] = {
     "-pi", "--display-parent-iter",
     NULL
     };
-
-#define BINARY_OUTPUT_NUM_INTS 16
-
-typedef struct
-{
-    FILE * file;
-    char * buffer;
-    char * buffer_end;
-    char * ptr;
-} binary_output_t;
-
-static void print_int(binary_output_t * bin, int val)
-{
-    unsigned char * buffer = (unsigned char *)bin->ptr;
-    int p;
-
-    for(p=0;p<4;p++)
-    {
-        buffer[p] = (unsigned char)(val & 0xFF);
-        val >>= 8;
-    }
-    bin->ptr += 4;
-    if (bin->ptr == bin->buffer_end)
-    {
-        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->file);
-        fflush(bin->file);
-        /* Reset ptr to the beginning */
-        bin->ptr = bin->buffer;
-    }
-}
-
-#define print_int_wrapper(i) { if (binary_output.file) { print_int(&binary_output, (i));  } }
 
 static void print_help(void)
 {
@@ -348,16 +317,16 @@ int main(int argc, char * argv[])
         in = fopen(binary_output_filename, "rb");
         if (in == NULL)
         {
-            binary_output.file = fopen(binary_output_filename, "wb");
-            if (! binary_output.file)
+            binary_output.fh = fopen(binary_output_filename, "wb");
+            if (! binary_output.fh)
             {
                 fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
                 exit(-1);
             }
 
-            print_int_wrapper(start_board);
-            print_int_wrapper(end_board);
-            print_int_wrapper((int)total_iterations_limit_per_board);
+            print_int(&binary_output, start_board);
+            print_int(&binary_output, end_board);
+            print_int(&binary_output, (int)total_iterations_limit_per_board);
         }
         else
         {
@@ -394,8 +363,8 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             fclose(in);
-            binary_output.file = fopen(binary_output_filename, "ab");
-            if (! binary_output.file)
+            binary_output.fh = fopen(binary_output_filename, "ab");
+            if (! binary_output.fh)
             {
                 fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
                 exit(-1);
@@ -404,7 +373,7 @@ int main(int argc, char * argv[])
     }
     else
     {
-        binary_output.file = NULL;
+        binary_output.fh = NULL;
         binary_output.buffer
             = binary_output.ptr
             = binary_output.buffer_end
@@ -442,7 +411,7 @@ int main(int argc, char * argv[])
         {
             FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
             fflush(stdout);
-            print_int_wrapper(-1);
+            print_int(&binary_output, -1);
         }
         else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
         {
@@ -458,11 +427,11 @@ int main(int argc, char * argv[])
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
             FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
-            print_int_wrapper(-2);
+            print_int(&binary_output, -2);
         }
         else
         {
-            print_int_wrapper((int)freecell_solver_user_get_num_times_long(user.instance));
+            print_int(&binary_output, (int)freecell_solver_user_get_num_times_long(user.instance));
         }
 
         if (solutions_directory)
@@ -584,9 +553,9 @@ int main(int argc, char * argv[])
 
     if (binary_output_filename)
     {
-        fwrite(binary_output.buffer, 1, binary_output.ptr - binary_output.buffer, binary_output.file);
-        fflush(binary_output.file);
-        fclose(binary_output.file);
+        fwrite(binary_output.buffer, 1, binary_output.ptr - binary_output.buffer, binary_output.fh);
+        fflush(binary_output.fh);
+        fclose(binary_output.fh);
     }
 
     free (solution_filename);

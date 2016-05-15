@@ -35,6 +35,7 @@
 
 #include "fc_pro_iface_pos.h"
 #include "range_solvers_gen_ms_boards.h"
+#include "range_solvers_binary_output.h"
 #include "rinutils.h"
 
 static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, fcs_state_keyval_pair_t * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
@@ -177,37 +178,6 @@ static const char * known_parameters[] = {
     "-pi", "--display-parent-iter",
     NULL
     };
-
-#define BINARY_OUTPUT_NUM_INTS 16
-
-typedef struct
-{
-    FILE * fh;
-    char * buffer;
-    char * buffer_end;
-    char * ptr;
-} binary_output_t;
-
-#define SIZE_INT 4
-static void print_int(binary_output_t * const bin, int val)
-{
-    unsigned char * const buffer = (unsigned char * const)bin->ptr;
-    for (int p=0 ; p < SIZE_INT ; p++)
-    {
-        buffer[p] = (unsigned char)(val & 0xFF);
-        val >>= 8;
-    }
-    bin->ptr += SIZE_INT;
-    if (bin->ptr == bin->buffer_end)
-    {
-        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->fh);
-        fflush(bin->fh);
-        /* Reset ptr to the beginning */
-        bin->ptr = bin->buffer;
-    }
-}
-
-#define print_int_wrapper(i) { if (binary_output.fh) { print_int(&binary_output, (i));  } }
 
 static void print_help(void)
 {
@@ -397,9 +367,9 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
 
-            print_int_wrapper(start_board);
-            print_int_wrapper(end_board);
-            print_int_wrapper(((int)total_iterations_limit_per_board));
+            print_int(&binary_output, start_board);
+            print_int(&binary_output, end_board);
+            print_int(&binary_output, ((int)total_iterations_limit_per_board));
         }
         else
         {
@@ -524,7 +494,7 @@ int main(int argc, char * argv[])
             }
             break;
         }
-        print_int_wrapper(num_iters);
+        print_int(&binary_output, num_iters);
         printf("[[Num Iters]]=%d\n[[Num FCS Moves]]=%d\n[[Num FCPro Moves]]=%d\n", num_iters, num_moves, num_fcpro_moves);
 
         printf("%s\n", "[[Start]]");
