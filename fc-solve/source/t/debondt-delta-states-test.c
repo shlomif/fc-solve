@@ -43,7 +43,6 @@
 
 static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
 {
-    int verdict;
     fcs_state_keyval_pair_t new_derived_state;
     fcs_encoded_state_buffer_t enc_state;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
@@ -83,7 +82,8 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
     );
     trim_trailing_whitespace(as_str);
 
-    if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
+    const int verdict = ok(!strcmp(as_str, expected_str), "%s", blurb);
+    if (!verdict)
     {
         diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
                 as_str,
