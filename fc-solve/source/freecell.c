@@ -236,10 +236,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
                 break;
             }
 
-            const fcs_cards_column_t new_from_which_col = fcs_state_get_col(temp_new_state_key, *col_idx);
-
-            fcs_card_t top_card;
-            fcs_col_pop_card(new_from_which_col, top_card);
+            const fcs_card_t top_card = fcs_state_pop_col_card(&temp_new_state_key, *col_idx);
 
             fcs_put_card_in_freecell(
                 temp_new_state_key,
@@ -300,11 +297,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 
 
             const int col_idx_val = *col_idx;
-            const fcs_cards_column_t new_from_which_col
-                = fcs_state_get_col(temp_new_state_key, col_idx_val);
-
-            fcs_card_t top_card;
-            fcs_col_pop_card(new_from_which_col, top_card);
+            const fcs_card_t top_card = fcs_state_pop_col_card(&temp_new_state_key, col_idx_val);
             const fcs_cards_column_t new_b_col
                 = fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx);
             fcs_col_push_card(new_b_col, top_card);

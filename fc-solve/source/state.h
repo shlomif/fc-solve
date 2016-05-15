@@ -1183,3 +1183,14 @@ static GCC_INLINE void fcs_col_transfer_cards(fcs_cards_column_t dest_col, fcs_c
     fcs_col_len(dest_col) += cards_num;
     memset(src_cards_ptr, 0, cards_size);
 }
+
+static GCC_INLINE const fcs_card_t fcs_state_pop_col_card(
+    fcs_state_t * const state,
+    const int col_idx
+)
+{
+    const fcs_cards_column_t col = fcs_state_get_col(*state, col_idx);
+    fcs_card_t ret;
+    fcs_col_pop_card(col, ret);
+    return ret;
+}
