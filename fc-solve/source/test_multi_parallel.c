@@ -195,20 +195,6 @@ static void print_help(void)
           );
 }
 
-static int read_int(FILE * f, int * dest)
-{
-    unsigned char buffer[4];
-    int num_read;
-
-    num_read = fread(buffer, 1, 4, f);
-    if (num_read != 4)
-    {
-        return 1;
-    }
-    *dest = (buffer[0]+((buffer[1]+((buffer[2]+((buffer[3])<<8))<<8))<<8));
-
-    return 0;
-}
 
 int main(int argc, char * argv[])
 {
@@ -330,22 +316,12 @@ int main(int argc, char * argv[])
         }
         else
         {
-#define read_int_wrapper(var) \
-            {       \
-                if (read_int(in, &var))  \
-                {        \
-                    fprintf(stderr, "%s", \
-                        "Output file is too short to deduce the configuration!\n"    \
-                           );     \
-                    exit(-1);       \
-                }       \
-            }
-            read_int_wrapper(start_board);
-            read_int_wrapper(end_board);
+            read_int_wrapper(in, &start_board);
+            read_int_wrapper(in, &end_board);
             {
                 int val;
-                read_int_wrapper(val);
-                total_iterations_limit_per_board = val;
+                read_int_wrapper(in, &val);
+                total_iterations_limit_per_board = (fcs_int_limit_t)val;
             }
 
             fseek(in, 0, SEEK_END);

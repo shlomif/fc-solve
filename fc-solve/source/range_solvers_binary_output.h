@@ -81,6 +81,28 @@ static GCC_INLINE void bin_close(binary_output_t * bin)
     }
 }
 
+static GCC_INLINE fcs_bool_t read_int(FILE * const f, int * const dest)
+{
+    unsigned char buffer[SIZE_INT];
+    if (fread(buffer, 1, SIZE_INT, f) != SIZE_INT)
+    {
+        return TRUE;
+    }
+    *dest = (buffer[0]+((buffer[1]+((buffer[2]+((buffer[3])<<8))<<8))<<8));
+
+    return FALSE;
+}
+
+static void read_int_wrapper(FILE * const in, int * const var)
+{
+    if (read_int(in, var))
+    {
+        fprintf(stderr, "%s",
+            "Output file is too short to deduce the configuration!\n"
+        );
+        exit(-1);
+    }
+}
 #ifdef __cplusplus
 }
 #endif

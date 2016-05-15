@@ -199,28 +199,6 @@ static void print_help(void)
           );
 }
 
-static GCC_INLINE int read_int(FILE * const f, int * const dest)
-{
-    unsigned char buffer[SIZE_INT];
-    if (fread(buffer, 1, SIZE_INT, f) != SIZE_INT)
-    {
-        return 1;
-    }
-    *dest = (buffer[0]+((buffer[1]+((buffer[2]+((buffer[3])<<8))<<8))<<8));
-
-    return 0;
-}
-
-static void read_int_wrapper(FILE * const in, int * const var)
-{
-    if (read_int(in, var))
-    {
-        fprintf(stderr, "%s",
-            "Output file is too short to deduce the configuration!\n"
-        );
-        exit(-1);
-    }
-}
 
 int main(int argc, char * argv[])
 {
