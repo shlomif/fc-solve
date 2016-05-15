@@ -556,9 +556,7 @@ static fcc_status_t instance_run_solver(
                         )
                        )
                     {
-                        fcs_encoded_state_buffer_t * enc_state_copy_ptr;
-
-                        enc_state_copy_ptr = fcs_compact_alloc_ptr(
+                        fcs_encoded_state_buffer_t * const enc_state_copy_ptr = fcs_compact_alloc_ptr(
                             &(next_fcc_stage->does_min_by_absolute_depth_exist->dict_allocator),
                             sizeof(*enc_state_copy_ptr)
                             );
