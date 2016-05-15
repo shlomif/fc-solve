@@ -25,9 +25,9 @@
 
 #include <string.h>
 
-static char * prepare_state_str(const char * const proto)
+static char * prepare_state_str(const char * const input_str)
 {
-    char * const ret = strdup(proto);
+    char * const ret = strdup(input_str);
 
     /* Process the string in-place to make it available as input
      * to fc-solve again.
