@@ -427,7 +427,7 @@ static GCC_INLINE void calculate_real_depth(
             this_real_depth++;
         }
         this_real_depth--;
-        temp_state = (ptr_state_orig);
+        temp_state = ptr_state_orig;
         /* Assign the new depth throughout the path */
         while (FCS_S_DEPTH(temp_state) != this_real_depth)
         {

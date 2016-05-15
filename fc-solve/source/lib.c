@@ -2222,11 +2222,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
     const int seed
 )
 {
-    fc_solve_soft_thread_t * const soft_thread = api_soft_thread(api_instance);
-    fc_solve_rand_init(
-            &(DFS_VAR(soft_thread, rand_gen)),
-            (DFS_VAR(soft_thread, rand_seed) = seed)
-            );
+    DFS_VAR(api_soft_thread(api_instance), rand_seed) = seed;
 }
 
 fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_states_in_collection_long(void * api_instance)
