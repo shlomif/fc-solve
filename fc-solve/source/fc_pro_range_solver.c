@@ -32,11 +32,10 @@
 
 #include "fcs_user.h"
 #include "fcs_cl.h"
-
-#include "fc_pro_iface_pos.h"
+#include "rinutils.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "range_solvers_binary_output.h"
-#include "rinutils.h"
+#include "fc_pro_iface_pos.h"
 
 static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, fcs_state_keyval_pair_t * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
