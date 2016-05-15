@@ -42,6 +42,7 @@ typedef struct
     char * buffer;
     char * buffer_end;
     char * ptr;
+    const char * filename;
 } binary_output_t;
 
 #define BINARY_OUTPUT_NUM_INTS 16

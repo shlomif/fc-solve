@@ -229,8 +229,8 @@ int main(int argc, char * argv[])
     fcs_portable_time_t mytime;
     fcs_int64_t total_num_iters = 0;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-    const char * binary_output_filename = NULL;
     binary_output_t binary_output;
+    binary_output.filename = NULL;
     int arg = 1;
 
     fcs_state_keyval_pair_t pos;
@@ -282,7 +282,7 @@ int main(int argc, char * argv[])
                 print_help();
                 exit(-1);
             }
-            binary_output_filename = argv[arg];
+            binary_output.filename = argv[arg];
         }
         else if (!strcmp(argv[arg], "--total-iterations-limit"))
         {
@@ -348,7 +348,7 @@ int main(int argc, char * argv[])
         }
     }
 
-    if (binary_output_filename)
+    if (binary_output.filename)
     {
         FILE * in;
 
@@ -357,13 +357,13 @@ int main(int argc, char * argv[])
         binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
 
 
-        in = fopen(binary_output_filename, "rb");
+        in = fopen(binary_output.filename, "rb");
         if (in == NULL)
         {
-            binary_output.fh = fopen(binary_output_filename, "wb");
+            binary_output.fh = fopen(binary_output.filename, "wb");
             if (! binary_output.fh)
             {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
+                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output.filename);
                 exit(-1);
             }
 
@@ -395,10 +395,10 @@ int main(int argc, char * argv[])
                 exit(-1);
             }
             fclose(in);
-            binary_output.fh = fopen(binary_output_filename, "ab");
+            binary_output.fh = fopen(binary_output.filename, "ab");
             if (! binary_output.fh)
             {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output_filename);
+                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output.filename);
                 exit(-1);
             }
         }
@@ -531,7 +531,7 @@ int main(int argc, char * argv[])
 
     freecell_solver_user_free(user.instance);
 
-    if (binary_output_filename)
+    if (binary_output.filename)
     {
         fwrite(binary_output.buffer, 1, binary_output.ptr - binary_output.buffer, binary_output.fh);
         fflush(binary_output.fh);
