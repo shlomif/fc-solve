@@ -35,10 +35,6 @@
 
 #include "fcs_cl.h"
 #include "rinutils.h"
-#ifdef FCS_TRACE_MEM
-#include <unistd.h>
-#include <sys/types.h>
-#endif
 
 #include "output_to_file.h"
 #include "handle_parsing.h"
