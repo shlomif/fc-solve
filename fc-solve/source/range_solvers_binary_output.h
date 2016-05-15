@@ -46,6 +46,7 @@ typedef struct
 } binary_output_t;
 
 #define BINARY_OUTPUT_NUM_INTS 16
+#define BINARY_OUTPUT_BUF_SIZE (sizeof(int) * BINARY_OUTPUT_NUM_INTS)
 #define SIZE_INT 4
 static void print_int(binary_output_t * const bin, int val)
 {
@@ -114,9 +115,9 @@ static GCC_INLINE void bin_init(binary_output_t * const bin,
     {
         FILE * in;
 
-        bin->buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
+        bin->buffer = malloc(BINARY_OUTPUT_BUF_SIZE);
         bin->ptr = bin->buffer;
-        bin->buffer_end = bin->buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
+        bin->buffer_end = bin->buffer + BINARY_OUTPUT_BUF_SIZE;
 
 
         in = fopen(bin->filename, "rb");
