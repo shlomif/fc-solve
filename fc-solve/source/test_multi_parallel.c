@@ -291,69 +291,8 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    if (binary_output.filename)
-    {
-        FILE * in;
+    bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
 
-        binary_output.buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
-        binary_output.ptr = binary_output.buffer;
-        binary_output.buffer_end = binary_output.buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
-
-
-        in = fopen(binary_output.filename, "rb");
-        if (in == NULL)
-        {
-            binary_output.fh = fopen(binary_output.filename, "wb");
-            if (! binary_output.fh)
-            {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output.filename);
-                exit(-1);
-            }
-
-            print_int(&binary_output, start_board);
-            print_int(&binary_output, end_board);
-            print_int(&binary_output, (int)total_iterations_limit_per_board);
-        }
-        else
-        {
-            read_int_wrapper(in, &start_board);
-            read_int_wrapper(in, &end_board);
-            {
-                int val;
-                read_int_wrapper(in, &val);
-                total_iterations_limit_per_board = (fcs_int_limit_t)val;
-            }
-
-            fseek(in, 0, SEEK_END);
-            const long file_len = ftell(in);
-            if (file_len % 4 != 0)
-            {
-                fprintf(stderr, "%s", "Output file has an invalid length. Terminating.\n");
-                exit(-1);
-            }
-            start_board += (file_len-12)/4;
-            if (start_board >= end_board)
-            {
-                fprintf(stderr, "%s", "Output file was already finished being generated.\n");
-                exit(-1);
-            }
-            fclose(in);
-            binary_output.fh = fopen(binary_output.filename, "ab");
-            if (! binary_output.fh)
-            {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", binary_output.filename);
-                exit(-1);
-            }
-        }
-    }
-    else
-    {
-        binary_output.fh = NULL;
-        binary_output.buffer
-            = binary_output.ptr
-            = binary_output.buffer_end
-            = NULL;
-    }
 
     user.instance = alloc_instance_and_parse(
         argc,

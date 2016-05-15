@@ -103,6 +103,78 @@ static void read_int_wrapper(FILE * const in, int * const var)
         exit(-1);
     }
 }
+
+static GCC_INLINE void bin_init(binary_output_t * const bin,
+    int * const start_board_ptr,
+    int * const end_board_ptr,
+    fcs_int_limit_t * const total_iterations_limit_per_board_ptr
+    )
+{
+    if (bin->filename)
+    {
+        FILE * in;
+
+        bin->buffer = malloc(sizeof(int) * BINARY_OUTPUT_NUM_INTS);
+        bin->ptr = bin->buffer;
+        bin->buffer_end = bin->buffer + sizeof(int)*BINARY_OUTPUT_NUM_INTS;
+
+
+        in = fopen(bin->filename, "rb");
+        if (in == NULL)
+        {
+            bin->fh = fopen(bin->filename, "wb");
+            if (! bin->fh)
+            {
+                fprintf(stderr, "Could not open \"%s\" for writing!\n", bin->filename);
+                exit(-1);
+            }
+
+            print_int(bin, *start_board_ptr);
+            print_int(bin, *end_board_ptr);
+            print_int(bin, (int)(*total_iterations_limit_per_board_ptr));
+        }
+        else
+        {
+            read_int_wrapper(in, start_board_ptr);
+            read_int_wrapper(in, end_board_ptr);
+            {
+                int val;
+                read_int_wrapper(in, &val);
+                *total_iterations_limit_per_board_ptr = (fcs_int_limit_t)val;
+            }
+
+            fseek(in, 0, SEEK_END);
+            const long file_len = ftell(in);
+            if (file_len % 4 != 0)
+            {
+                fprintf(stderr, "%s", "Output file has an invalid length. Terminating.\n");
+                exit(-1);
+            }
+            *start_board_ptr += (file_len-12)/4;
+            if (*start_board_ptr >= *end_board_ptr)
+            {
+                fprintf(stderr, "%s", "Output file was already finished being generated.\n");
+                exit(-1);
+            }
+            fclose(in);
+            bin->fh = fopen(bin->filename, "ab");
+            if (! bin->fh)
+            {
+                fprintf(stderr, "Could not open \"%s\" for writing!\n", bin->filename);
+                exit(-1);
+            }
+        }
+    }
+    else
+    {
+        bin->fh = NULL;
+        bin->buffer
+            = bin->ptr
+            = bin->buffer_end
+            = NULL;
+    }
+}
+
 #ifdef __cplusplus
 }
 #endif
