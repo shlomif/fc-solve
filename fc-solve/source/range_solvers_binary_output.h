@@ -76,6 +76,8 @@ static GCC_INLINE void bin_close(binary_output_t * bin)
         fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->fh);
         fflush(bin->fh);
         fclose(bin->fh);
+        bin->fh = NULL;
+        bin->filename = NULL;
     }
 }
 
