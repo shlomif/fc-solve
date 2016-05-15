@@ -55,8 +55,6 @@
 #include "handle_parsing.h"
 #include "rinutils.h"
 
-#define BINARY_OUTPUT_NUM_INTS 16
-
 static void print_help(void)
 {
     printf("\n%s",
