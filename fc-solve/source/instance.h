@@ -1034,10 +1034,9 @@ static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
 }
 
 
-extern fcs_bool_t fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t * const soft_thread,
-    fcs_kv_state_t * const raw_ptr_state_raw,
-    fcs_collectible_state_t * * const ptr_ptr_next_state
+extern fcs_collectible_state_t * const fc_solve_sfs_raymond_prune(
+    fc_solve_soft_thread_t * const,
+    fcs_kv_state_t * const
 );
 
 

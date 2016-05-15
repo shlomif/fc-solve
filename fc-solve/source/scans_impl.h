@@ -1020,13 +1020,11 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 /* Perform the pruning. */
                 if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
                 {
-                    fcs_collectible_state_t * derived;
-
-                    if (fc_solve_sfs_raymond_prune(
+                    fcs_collectible_state_t * const derived = fc_solve_sfs_raymond_prune(
                             soft_thread,
-                            STATE_TO_PASS(),
-                            &derived
-                    ))
+                            STATE_TO_PASS()
+                    );
+                    if (derived)
                     {
                         the_soft_dfs_info->tests_list_index =
                             THE_TESTS_LIST.num_lists;

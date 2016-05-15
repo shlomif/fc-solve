@@ -621,13 +621,12 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         TRACE0("Pruning");
         if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
         {
-            fcs_collectible_state_t * after_pruning_state;
-
-            if (fc_solve_sfs_raymond_prune(
+            fcs_collectible_state_t * const after_pruning_state =
+                fc_solve_sfs_raymond_prune(
                     soft_thread,
-                    STATE_TO_PASS(),
-                    &after_pruning_state
-            ))
+                    STATE_TO_PASS()
+                );
+            if (after_pruning_state)
             {
                 ASSIGN_ptr_state(after_pruning_state);
             }
