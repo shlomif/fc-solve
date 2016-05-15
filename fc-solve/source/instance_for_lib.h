@@ -904,7 +904,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 )
 {
     fc_solve_soft_thread_t * soft_thread;
-    fc_solve_hard_thread_t * old_hard_thread, * optimization_thread;
+    fc_solve_hard_thread_t * optimization_thread;
 
     if (!instance->solution_moves.moves)
     {
@@ -921,7 +921,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
 
         fc_solve_instance__init_hard_thread(instance, optimization_thread);
 
-        old_hard_thread = instance->current_hard_thread;
+        fc_solve_hard_thread_t * const old_hard_thread = instance->current_hard_thread;
 
         soft_thread = optimization_thread->soft_threads;
 

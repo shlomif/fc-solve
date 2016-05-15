@@ -752,7 +752,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 }
             }
 
-            if (tests__should_not_empty_columns())
+            if (MOVE_FUNCS__should_not_empty_columns())
             {
                 if (c == 0)
                 {
@@ -1503,7 +1503,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     return;
 }
 
-#define CALC_num_cards_in_col_threshold() (tests__should_not_empty_columns() ? 1 : 0)
+#define CALC_num_cards_in_col_threshold() (MOVE_FUNCS__should_not_empty_columns() ? 1 : 0)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 {

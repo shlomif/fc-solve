@@ -208,7 +208,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  *
  * TODO : implement it for FCS_ES_FILLED_BY_KINGS_ONLY
  * */
-#define tests__should_not_empty_columns() tests__is_filled_by_none()
+#define MOVE_FUNCS__should_not_empty_columns() tests__is_filled_by_none()
 
 #ifdef __cplusplus
 }

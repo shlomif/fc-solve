@@ -50,7 +50,7 @@ static void print_help(void)
 }
 
 static long deals[32000];
-static int num_deals = 0;
+static size_t num_deals = 0;
 
 static GCC_INLINE void append(long idx)
 {
