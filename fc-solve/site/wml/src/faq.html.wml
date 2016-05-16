@@ -99,7 +99,7 @@ or PySolFC’s deals), which is part of what Freecell researchers do.
 </p>
 
 <p>
-The Freecell implementation for Windows, Freecell 3D has also introduced a
+Freecell 3D, a Freecell implementation for Windows, has also introduced a
 “Race against the computer” mode of Freecell, which is an interesting challenge.
 </p>
 
@@ -163,8 +163,8 @@ popular languages.
 <li>
 <p>
 Often randomising the solution (see Freecell Solver's Random-DFS scan
-which was inspired by a different solver called “Freecell Tool” can help
-a lot).
+which was inspired by a different solver called “Freecell Tool”) can help
+a lot.
 </p>
 </li>
 
