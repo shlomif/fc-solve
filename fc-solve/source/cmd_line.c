@@ -315,8 +315,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     freecell_solver_str_t opened_files_dir
     )
 {
-    const char * p;
-
     *error_string = NULL;
 
     const freecell_solver_str_t * const arg_argc = &(argv[argc]);
@@ -349,11 +347,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
 
         /* OPT-PARSE-START */
-        p = (*arg);
         const int opt =
         ({
-            const unsigned int len = strlen(p);
-            const_AUTO(word, in_word_set(p, len));
+            const_AUTO(p, (*arg));
+            const_AUTO(word, in_word_set(p, strlen(p)));
             word ? word->OptionCode : FCS_OPT_UNRECOGNIZED;
         });
 
