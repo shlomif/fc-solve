@@ -6,7 +6,6 @@ use autodie;
 use List::Util qw(first);
 use Data::Dumper;
 
-my $text_out;
 my $find_prefix;
 my $process_opts = "";
 my $text_in = "";
@@ -58,8 +57,6 @@ while (my $line = <$module>)
 {
     if ($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
     {
-        $text_out .= $line;
-
         # Skip the lines.
         UP_TO_SWITCH:
         while ($line = <$module>)
@@ -91,19 +88,10 @@ while (my $line = <$module>)
             }
         }
 
-        $text_out .= gen_radix_tree();
-        $text_out .= $process_opts;
-    }
-    else
-    {
-        $text_out .= $line;
+        gen_radix_tree();
     }
 }
 close($module);
-
-open my $out, ">", $module_filename;
-print {$out} $text_out;
-close($out);
 
 open my $enum_fh, ">", "cmd_line_enum.h";
 print {$enum_fh} <<'EOF';

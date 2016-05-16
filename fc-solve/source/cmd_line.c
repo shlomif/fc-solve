@@ -349,18 +349,14 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
 
         /* OPT-PARSE-START */
-    p = (*arg);
-    const unsigned int len = strlen(p);
-    const_AUTO(word, in_word_set(p, len));
-    int opt;
-    if (word)
-    {
-        opt = word->OptionCode;
-    }
-    else
-    {
-        opt = FCS_OPT_UNRECOGNIZED;
-    }
+        p = (*arg);
+        const int opt =
+        ({
+            const unsigned int len = strlen(p);
+            const_AUTO(word, in_word_set(p, len));
+            word ? word->OptionCode : FCS_OPT_UNRECOGNIZED;
+        });
+
         switch (opt)
         {
         case FCS_OPT_UNRECOGNIZED:
