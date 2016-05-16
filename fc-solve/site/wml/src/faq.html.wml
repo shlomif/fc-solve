@@ -482,3 +482,50 @@ to C - made it roughly
 times faster</a> and I naturally find a 24 factor performance decrease
 unacceptable.
 </p>
+
+<h3 id="algo">How does Freecell Solver solves Freecell? Which algorithm
+does it use?</h3>
+
+<p>
+The exact algorithm used by “fc-solve” can be configured using the various
+command line arguments it accepts which are documented in the
+<a href="$(ROOT)/docs/distro/README.html">README</a> and
+<a href="$(ROOT)/docs/distro/USAGE.html">USAGE</a> files. Furthermore, the
+“-l” flag can load some predefined configurations, which are essentially a
+sequence of command line arguments loaded from a file.
+</p>
+
+<p>
+Some of the highlights of the methods supported by Freecell Solver are:
+</p>
+
+<ol>
+
+<li>
+<p>
+Switch-tasking in which different scans are interrupted, swapped with another
+scan, and then resumed.
+</p>
+</li>
+
+<li>
+<p>
+Randomised and/or prioritised depth-first-search (DFS) scans, and
+Best-First-Search (BeFS) scans.
+</p>
+</li>
+
+<li>
+<p>
+Different types of moves, with configurable order and grouping .
+</p>
+</li>
+
+<li>
+<p>
+One can instantiate different instances of the solver, that will each solve
+different deals in different threads or processes.
+</p>
+</li>
+
+</ol>
