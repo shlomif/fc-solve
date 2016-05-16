@@ -985,6 +985,11 @@ TD
 TH
 TS
 
+==== In: dest/docs/distro/TODO.html
+
+misformatting
+playstacks
+
 ==== In: dest/docs/distro/USAGE.html
 
 Der
