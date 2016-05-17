@@ -59,6 +59,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/install_manifest\\\\.txt$"
     "/t/card-test-(parse|render)\\\\.c$"
     "/Testing/"
+    "^${PROJECT_SOURCE_DIR}/ids\\\\.txt$"
     "^${PROJECT_SOURCE_DIR}/scripts/ids-whitelist(\\\\.txt)?"
     "/_Inline/"
     "/(build|BUILD|B)/"
