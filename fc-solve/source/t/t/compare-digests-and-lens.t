@@ -194,7 +194,7 @@ vtest(
 vtest({id => "freecell24_board_with_founds_0", deal => 24,
         board => File::Spec->catfile(
             $data_dir, 'sample-boards',
-            'ms24-with-founds-0.txt'
+            'ms24-with-founds-0.board'
         )
     }, "Properly handle foundations like H-0 S-0 etc.");
 
