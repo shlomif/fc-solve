@@ -24,7 +24,7 @@ pi-make-microsoft-freecell-board: pi_make_microsoft_freecell_board.c
 	$(CC) $(OFLAGS) -o $@ $<
 
 make-pysol-freecell-board: make_pysol_freecell_board.c
-	$(CC) $(OFLAGS) -o $@ $<	
+	$(CC) $(OFLAGS) -o $@ $<
 
 clean:
 	rm -f $(TARGETS) $(UNBUILT_TARGETS)

@@ -8,7 +8,6 @@ Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://fc-solve.shlomifish.org/
 Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
-BuildRequires: ack
 BuildRequires: cmake
 BuildRequires: gmp-devel
 BuildRequires: perl(Carp)
@@ -38,6 +37,7 @@ BuildRequires: perl(Test::Data::Split::Backend::ValidateHash)
 BuildRequires: perl(Test::Differences)
 BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::RunValgrind)
+BuildRequires: perl(Test::TrailingSpace)
 BuildRequires: perl(Test::Trap)
 BuildRequires: perl(warnings)
 BuildRequires: perl(YAML::XS)
