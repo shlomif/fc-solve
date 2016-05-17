@@ -633,7 +633,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         }
 
         {
-             register int temp_visited = FCS_S_VISITED(PTR_STATE);
+            register const int temp_visited = FCS_S_VISITED(PTR_STATE);
 
             /*
              * If this is an optimization scan and the state being checked is

@@ -128,10 +128,10 @@ static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(
 )
 {
     unsigned char * const by_rank_ptr = which_irreversible_moves_bitmask->s + fcs_card_rank(moved_card) - 1;
-    const int suit_double = (fcs_card_suit(moved_card) << 1);
-    const int new_count = ( (((*by_rank_ptr)>>(suit_double))&((1 << 2)-1)) + count );
-    *by_rank_ptr &= (~((((unsigned char)0x3) << (suit_double))));
-    *by_rank_ptr |= (new_count << (suit_double));
+    const int suit_times_two = (fcs_card_suit(moved_card) << 1);
+    const int new_count = ( (((*by_rank_ptr)>>(suit_times_two))&((1 << 2)-1)) + count );
+    *by_rank_ptr &= (~((((unsigned char)0x3) << (suit_times_two))));
+    *by_rank_ptr |= (new_count << (suit_times_two));
 
     return;
 }

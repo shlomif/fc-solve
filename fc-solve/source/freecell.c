@@ -120,9 +120,9 @@ static GCC_INLINE void sort_derived_states(
     {
         for (fcs_derived_states_list_item_t * c = b ; (c > start) && (c[0].context.i < c[-1].context.i); c--)
         {
-            fcs_derived_states_list_item_t temp = c[-1];
+            const_AUTO(swap_temp, c[-1]);
             c[-1] = c[0];
-            c[0] = temp;
+            c[0] = swap_temp;
         }
     }
 }

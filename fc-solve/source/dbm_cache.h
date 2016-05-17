@@ -57,14 +57,10 @@ static int fc_solve_compare_lru_cache_keys(
 static GCC_INLINE void cache_destroy(fcs_lru_cache_t * cache)
 {
     {
-        int i;
 #define NUM_CHAINS_TO_RELEASE 2
-        fcs_cache_key_info_t * to_release[NUM_CHAINS_TO_RELEASE];
+        fcs_cache_key_info_t * const to_release[NUM_CHAINS_TO_RELEASE] = {cache->recycle_bin, cache->lowest_pri};
 
-        to_release[0] = cache->recycle_bin;
-        to_release[1] = cache->lowest_pri;
-
-        for (i=0 ; i < NUM_CHAINS_TO_RELEASE ; i++)
+        for (size_t i=0 ; i < COUNT(to_release) ; i++)
         {
             fcs_cache_key_info_t * cache_key;
 

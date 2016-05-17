@@ -968,9 +968,9 @@ static GCC_INLINE void sort_ds_dcs(
     {
         for (ds_dc_t * c = b ; (c > start) && (c[0].col < c[-1].col || (c[0].col == c[-1].col && c[0].height > c[-1].height)); c--)
         {
-            const_AUTO(temp, c[-1]);
+            const_AUTO(swap_temp, c[-1]);
             c[-1] = c[0];
-            c[0] = temp;
+            c[0] = swap_temp;
         }
     }
 #undef start
