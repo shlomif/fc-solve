@@ -6,7 +6,7 @@ use warnings;
 use Getopt::Long;
 use IO::All qw/ io /;
 use IO::Handle;
-use File::Temp qw(tempfile);
+use File::Temp ();
 
 my $output_fn;
 
@@ -26,13 +26,17 @@ foreach my $fn (@ARGV)
     $buf .= (scalar(io->file($fn)->utf8->slurp) =~ s/([^\n])\z/$1\n/mrs);
 }
 
-my ($t_fh, $t_fn) = tempfile( TEMPLATE => 'tempXXXXXXXXX', SUFFIX => '.js', );
-binmode ( $t_fh, ':encoding(utf8)', );
+my $t_dir = File::Temp->newdir;
 
-$t_fh->print($buf);
-$t_fh->flush();
+my $temp_fn = $t_dir->dirname() . '/temp.js';
 
-if (system('yuicompressor', '--nomunge', '-o', $output_fn, $t_fn))
+io->file($temp_fn)->utf8->print($buf);
+
+if (system('yuicompressor', '--nomunge', '-o', $output_fn, $temp_fn))
 {
+    if ($ENV{KEEP_COPY})
+    {
+        io->file($temp_fn) > io->file($ENV{KEEP_COPY});
+    }
     die "yuicompressor returned an error - $!";
 }
