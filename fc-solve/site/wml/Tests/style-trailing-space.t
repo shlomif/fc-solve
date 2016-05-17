@@ -3,35 +3,17 @@
 use strict;
 use warnings;
 
+use Test::TrailingSpace 0.03;
 use Test::More tests => 1;
 
-{
-    open my $ack_fh, '-|', 'ack', '-l', q/[ \t]+$/, '.'
-        or die "Cannot open ack for input - $!";
-
-    my $count_lines = 0;
-    ACK_OUTPUT:
-    while (my $l = <$ack_fh>)
+my $lib = qr#libfreecell-solver\.js(?:\.mem)?#;
+my $finder = Test::TrailingSpace->new(
     {
-        chomp($l);
-
-        if ($l =~ m{\A(?:dest/t2-homepage|t2)/(?:lecture/CMake|(?:humour/fortunes/fortunes-shlomif-ids-data\.yaml\z))}
-                or
-            $l =~ m{\Alib/fc-solve-for-javascript}
-                or
-            $l =~ m{\.(?:patch|diff)\z}
-                or
-            $l eq 'dest/js/libfreecell-solver.js'
-        )
-        {
-            next ACK_OUTPUT;
-        }
-        $count_lines++;
-        diag("$l\n");
+        root => '.',
+        filename_regex => qr/./,
+        abs_path_prune_re => qr#(?:\A(?:\./)?(?:lib/fc-solve-for-javascript|dest(?:-prod)?/(?:(?:js/$lib)|(?:js-fc-solve/(?:text|automated-tests)/$lib\z))))|(?:\.(?:diff|patch|png|woff|xz|zip)\z)#,
     }
+);
 
-    # TEST
-    is ($count_lines, 0, "Count lines is 0.");
-
-    close($ack_fh);
-}
+# TEST
+$finder->no_trailing_space("No trailing whitespace was found.")
