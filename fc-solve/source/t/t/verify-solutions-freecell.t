@@ -77,7 +77,7 @@ verify_solution_test(
 verify_solution_test(
     {
         board => _path_to_board(
-            "larrysan-kings-only-0-freecells-unlimited-move.txt",
+            "larrysan-kings-only-0-freecells-unlimited-move.board",
         ),
         theme => [qw(--freecells-num 0 --empty-stacks-filled-by kings --sequence-move unlimited)],
         variant => "custom",
