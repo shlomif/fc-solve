@@ -32,7 +32,7 @@ my $temp_fn = $t_dir->dirname() . '/temp.js';
 
 io->file($temp_fn)->utf8->print($buf);
 
-if (system('yuicompressor', '--nomunge', '-o', $output_fn, $temp_fn))
+if (system('yuicompressor', '-o', $output_fn, $temp_fn))
 {
     if ($ENV{KEEP_COPY})
     {
