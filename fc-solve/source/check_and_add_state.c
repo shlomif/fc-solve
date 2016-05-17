@@ -232,15 +232,15 @@ static GCC_INLINE void * const fc_solve_hash_insert(
 
 #endif
 
-typedef  unsigned long  int  ub4;   /* unsigned 4-byte quantities */
+typedef  unsigned long  ul;
 typedef  unsigned       char ub1;
 
-static GCC_INLINE ub4 perl_hash_function(
+static GCC_INLINE ul perl_hash_function(
     register const ub1 *s_ptr,        /* the key */
-    register const ub4  length        /* the length of the key */
+    register const ul length          /* the length of the key */
     )
 {
-    register ub4  hash_value_int = 0;
+    register ul hash_value_int = 0;
     register const ub1 * const s_end = s_ptr+length;
 
     while (s_ptr < s_end)

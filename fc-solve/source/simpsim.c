@@ -398,6 +398,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
     return;
 }
 
+/*
+ * above_c - the height of the card that is to be checked.
+ * above_card - the card at height above_c+1
+ * up_above_card - the card at height above_c
+ *
+ */
 static GCC_INLINE void generic_populate_seq_points(
     const fcs_cards_column_t dest_col,
     const int dc,
@@ -676,13 +682,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
             {
                 LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)
                     /* This is a suitable parent - let's check if there's a sequence above it. */
-
-                    /*
-                     * above_c - the height of the card that is to be checked.
-                     * above_card - the card at height above_c+1
-                     * up_above_card - the card at height above_c
-                     *
-                     * */
                     sequences_analysis_t seqs;
 
                     if (
