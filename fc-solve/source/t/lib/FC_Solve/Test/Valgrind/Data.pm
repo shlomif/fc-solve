@@ -66,9 +66,8 @@ __PACKAGE__->populate
                 {
                     type => 'catfile',
                     prefix => "4,",
-                    args => [{ type => 'ENV', arg => 'FCS_SRC_PATH',},
-                        qw(t data presets crashy-preset-1.preset)
-                    ],
+                    args => [{ type => 'sample_preset',
+                            arg => 'crashy-preset-1.preset'}]
                 },
                 qw(-s -i -p -t -sam),
                 {

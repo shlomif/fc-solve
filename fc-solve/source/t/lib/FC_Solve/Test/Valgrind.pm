@@ -7,25 +7,9 @@ use Test::More ();
 use Carp ();
 use File::Spec ();
 use File::Temp qw( tempdir );
-use FC_Solve::Paths qw( samp_board );
+use FC_Solve::Paths qw( samp_board samp_preset );
 
 use Test::RunValgrind;
-
-sub _expand_catfile_arg
-{
-    my $hash_ref = shift;
-
-    my $type = $hash_ref->{type};
-
-    if ($type eq 'ENV')
-    {
-        return $ENV{ $hash_ref->{arg} };
-    }
-    else
-    {
-        Carp::confess("Unknown catfile arg type '$type'!");
-    }
-}
 
 sub _expand_arg
 {
@@ -37,15 +21,23 @@ sub _expand_arg
     {
         return tempdir(CLEANUP => 1),
     }
+    elsif ($type eq 'ENV')
+    {
+        return $ENV{ $hash_ref->{arg} };
+    }
     elsif ($type eq 'sample_board')
     {
         return samp_board($hash_ref->{arg});
+    }
+    elsif ($type eq 'sample_preset')
+    {
+        return samp_preset($hash_ref->{arg});
     }
     elsif ($type eq 'catfile')
     {
         my $prefix = exists($hash_ref->{prefix}) ? $hash_ref->{prefix} : '';
         return $prefix . File::Spec->catfile(
-            map { (ref($_) eq 'HASH') ? _expand_catfile_arg($_) : $_ }
+            map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ }
             @{$hash_ref->{args}}
         );
     }

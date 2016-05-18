@@ -5,13 +5,14 @@ use warnings;
 
 use parent 'Exporter';
 
-our @EXPORT_OK = qw(data_file samp_board samp_sol);
+our @EXPORT_OK = qw(data_file samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
 my $DATA_DIR = File::Spec->catdir($ENV{FCS_SRC_PATH}, qw(t data));
 my $BOARDS_DIR = File::Spec->catdir($DATA_DIR, 'sample-boards');
 my $SOLS_DIR = File::Spec->catdir($DATA_DIR, 'sample-solutions');
+my $PRESETS_DIR = File::Spec->catdir($DATA_DIR, 'presets');
 
 sub data_file
 {
@@ -28,6 +29,11 @@ sub samp_board
 sub samp_sol
 {
     return File::Spec->catfile($SOLS_DIR, shift);
+}
+
+sub samp_preset
+{
+    return File::Spec->catfile($PRESETS_DIR, shift);
 }
 
 1;
