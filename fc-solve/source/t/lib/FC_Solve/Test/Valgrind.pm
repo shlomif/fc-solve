@@ -7,6 +7,7 @@ use Test::More ();
 use Carp ();
 use File::Spec ();
 use File::Temp qw( tempdir );
+use FC_Solve::Paths qw( samp_board );
 
 use Test::RunValgrind;
 
@@ -35,6 +36,10 @@ sub _expand_arg
     if ($type eq 'tempdir')
     {
         return tempdir(CLEANUP => 1),
+    }
+    elsif ($type eq 'sample_board')
+    {
+        return samp_board($hash_ref->{arg});
     }
     elsif ($type eq 'catfile')
     {

@@ -43,12 +43,7 @@ __PACKAGE__->populate
             argv =>
             [
                 '--offload-dir-path', {type => 'tempdir', },
-                { type => 'catfile',
-                    args => [{ type => 'ENV', arg => 'FCS_SRC_PATH'},
-                        't', 't', 'data',
-                        'sample-boards', '2freecells-24-mid-with-colons.board'
-                    ],
-                }
+                { type => 'sample_board', arg => '2freecells-24-mid-with-colons.board' }
             ],
             msg => qq{dbm_fc_solver from 24-mid-with-colons.},
         },
@@ -86,14 +81,7 @@ __PACKAGE__->populate
         'fc-solve-not-enough-input' =>
         {
             prog => "fc-solve",
-            argv => [
-                {
-                    type => 'catfile',
-                    args => [{type => 'ENV', arg => 'FCS_SRC_PATH'},
-                        qw(t t data sample-boards 24-with-7-cols.board),
-                    ],
-                },
-            ],
+            argv => [ { type => 'sample_board', arg => '24-with-7-cols.board' } ],
             msg => "Check the sanity of not enough input.",
         },
         'fc-solve-trim-max-stored-states' =>

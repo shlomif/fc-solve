@@ -6,18 +6,12 @@ use warnings;
 use Test::More tests => 25;
 use File::Spec;
 use File::Basename qw( dirname );
-
+use FC_Solve::Paths qw( data_file samp_board );
 use FC_Solve::CheckResults;
-
-my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data');
-
-my $digests_storage_fn = File::Spec->catfile(
-    $data_dir, 'digests-and-lens-storage.yml'
-);
 
 my $v = FC_Solve::CheckResults->new(
     {
-        data_filename => $digests_storage_fn,
+        data_filename => data_file(['digests-and-lens-storage.yml']),
     }
 );
 
@@ -192,10 +186,7 @@ vtest(
 
 # TEST
 vtest({id => "freecell24_board_with_founds_0", deal => 24,
-        board => File::Spec->catfile(
-            $data_dir, 'sample-boards',
-            'ms24-with-founds-0.board'
-        )
+        board => samp_board( 'ms24-with-founds-0.board'),
     }, "Properly handle foundations like H-0 S-0 etc.");
 
 # TEST

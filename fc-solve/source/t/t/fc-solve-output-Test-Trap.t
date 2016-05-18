@@ -10,11 +10,12 @@ use String::ShellQuote;
 use File::Spec;
 use File::Temp qw( tempdir );
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
+use FC_Solve::Paths qw( samp_board );
 
 my $fc_solve_exe = File::Spec->catfile($ENV{FCS_PATH}, 'fc-solve');
 my $summary_exe = File::Spec->catfile($ENV{FCS_PATH}, 'summary-fc-solve');
 my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-pro-range-solve');
-my $MID24_BOARD = File::Spec->catfile($ENV{FCS_SRC_PATH}, 't', 't', 'data', 'sample-boards', '24-mid.board');
+my $MID24_BOARD = samp_board('24-mid.board');
 
 {
     trap

@@ -8,6 +8,7 @@ use Carp (qw/confess/);
 use Data::Dumper (qw/Dumper/);
 use File::Spec ();
 use File::Basename qw( dirname );
+use FC_Solve::Paths qw( samp_board );
 
 use FC_Solve::GetOutput ();
 
@@ -51,24 +52,10 @@ sub verify_solution_test
 
 my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data' );
 
-sub _path_to_board
-{
-    my $fn = shift;
-
-    return
-        File::Spec->catfile(
-            $data_dir,
-            "sample-boards",
-            $fn
-        );
-}
-
 # TEST
 verify_solution_test(
     {
-        board => _path_to_board(
-            "24-mid-with-colons.board",
-        ),
+        board => samp_board( "24-mid-with-colons.board" ),
     },
     "Accepting a board with leading colons as directly input from the -p -t solution",
 );
@@ -76,7 +63,7 @@ verify_solution_test(
 # TEST
 verify_solution_test(
     {
-        board => _path_to_board(
+        board => samp_board(
             "larrysan-kings-only-0-freecells-unlimited-move.board",
         ),
         theme => [qw(--freecells-num 0 --empty-stacks-filled-by kings --sequence-move unlimited)],

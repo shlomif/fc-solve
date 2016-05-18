@@ -8,13 +8,13 @@ use File::Spec;
 use File::Temp qw(tempdir);
 use Test::Differences;
 use Path::Tiny;
+use FC_Solve::Paths qw( samp_board );
 
 {
-    my $path = File::Spec->catdir(File::Spec->curdir(), 't', 't', 'data');
-    my $expected_text = path(File::Spec->catfile($path, 'sample-solutions', 'dbm-24-mid.sol'))->slurp_utf8;
+    my $expected_text = path(File::Spec->catfile($ENV{FCS_SRC_PATH}, 't', 't', 'data', 'sample-solutions', 'dbm-24-mid.sol'))->slurp_utf8;
 
     my $tempdir = tempdir(CLEANUP => 1);
-    my $got_text = `./dbm_fc_solver --offload-dir-path $tempdir --num-threads 1 @{[File::Spec->catfile($path, 'sample-boards', '24-mid.board')]}`;
+    my $got_text = `./dbm_fc_solver --offload-dir-path $tempdir --num-threads 1 @{[samp_board('24-mid.board')]}`;
 
     foreach my $text ($got_text, $expected_text)
     {

@@ -8,9 +8,9 @@ use FC_Solve::GetOutput ();
 use Carp;
 use Data::Dumper;
 use String::ShellQuote;
-use File::Spec;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
+use FC_Solve::Paths qw( samp_board );
 
 sub trap_board
 {
@@ -343,11 +343,7 @@ EOF
 
     my $dbm_output = trap_dbm(
         {
-            board_fn =>
-                File::Spec->catfile(
-                    $ENV{FCS_SRC_PATH}, 't', 't', 'data',
-                    'sample-boards', '2freecells-24-mid-with-colons.board'
-                ),
+            board_fn => samp_board( '2freecells-24-mid-with-colons.board' ),
         }
     );
 
