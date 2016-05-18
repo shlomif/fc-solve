@@ -9,7 +9,7 @@ our @EXPORT_OK = qw(data_file samp_board samp_sol);
 
 use File::Spec ();
 
-my $DATA_DIR = File::Spec->catdir($ENV{FCS_SRC_PATH}, qw(t t data));
+my $DATA_DIR = File::Spec->catdir($ENV{FCS_SRC_PATH}, qw(t data));
 my $BOARDS_DIR = File::Spec->catdir($DATA_DIR, 'sample-boards');
 my $SOLS_DIR = File::Spec->catdir($DATA_DIR, 'sample-solutions');
 
