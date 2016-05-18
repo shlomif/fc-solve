@@ -82,7 +82,6 @@ void DESTROY(SV* obj) {
 }
 
 EOF
-    LIBS => "-L" . $ENV{FCS_PATH},
 );
 
 sub new

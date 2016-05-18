@@ -38,7 +38,7 @@ void _fcs_base64_build_decoding_table() {
 }
 
 EOF
-    LIBS => "-L" . $ENV{FCS_PATH} . ' -lgmp',
+    l => '-lgmp',
 );
 
 

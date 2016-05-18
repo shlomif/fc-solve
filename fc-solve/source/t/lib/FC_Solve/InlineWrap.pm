@@ -14,6 +14,7 @@ sub import
     my ($pkg) = caller(0);
 
     my $src = delete($args{C});
+    my $libs = delete($args{l}) // '';
 
     my @inline_params =
     (
@@ -23,6 +24,7 @@ sub import
         INC => "-I" . $ENV{FCS_PATH} . " -I" . $ENV{FCS_SRC_PATH},
         CCFLAGS => "$Config{ccflags} -std=gnu99",
         CLEAN_AFTER_BUILD => 0,
+        LIBS => "-L$ENV{FCS_PATH} $libs",
         %args,
     );
 

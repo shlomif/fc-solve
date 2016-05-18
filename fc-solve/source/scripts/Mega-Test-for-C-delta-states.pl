@@ -48,7 +48,7 @@ SV* horne_prune(const char * variant_s, char * init_state_s) {
     return ret;
 }
 EOF
-    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_delta_states_test -lfcs_debondt_delta_states_test -lfcs_dbm_calc_derived_test -lgmp",
+    l => '-lfcs_delta_states_test -lfcs_debondt_delta_states_test -lfcs_dbm_calc_derived_test -lgmp',
 );
 
 use IO::Handle;

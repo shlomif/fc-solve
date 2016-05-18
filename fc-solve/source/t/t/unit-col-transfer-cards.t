@@ -78,7 +78,6 @@ void transfer_cards(SV * obj, int to, int from, int cards_num) {
     fcs_col_transfer_cards(to_col, from_col, cards_num);
 }
 EOF
-    LIBS => "-L" . $ENV{FCS_PATH} . " ",
 );
 
 sub new

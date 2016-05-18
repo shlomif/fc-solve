@@ -96,7 +96,7 @@ void DESTROY(SV* obj) {
   Safefree(s);
 }
 EOF
-    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
+    l => '-lfcs_fcc_brfs_test',
 );
 
 package FccIsNew;
@@ -160,7 +160,7 @@ int is_fcc_new(char * init_state_s, char * start_state_s, AV * min_states_av, AV
 }
 
 EOF
-    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
+    l => '-lfcs_fcc_brfs_test',
 );
 
 sub is_fcc_new_named_args

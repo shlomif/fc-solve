@@ -51,7 +51,6 @@ SV * non_parsable_state_as_string(char * input_state_string) {
 #endif
 }
 EOF
-    LIBS => "-L" . $ENV{FCS_PATH} . " ",
 );
 
 package main;

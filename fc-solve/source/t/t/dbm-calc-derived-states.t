@@ -121,7 +121,7 @@ void DESTROY(SV* obj) {
   Safefree(s);
 }
 EOF
-    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_dbm_calc_derived_test",
+    l => '-lfcs_dbm_calc_derived_test',
 );
 
 use Games::Solitaire::Verify::Card ();
