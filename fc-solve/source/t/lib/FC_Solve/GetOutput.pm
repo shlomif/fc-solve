@@ -81,8 +81,7 @@ sub fc_solve_params_suffix
         . " -p -t -sam " . ($board ? shell_quote($board) : "");
 }
 
-my $FC_SOLVE_EXE = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
-
+use FC_Solve::Paths qw( $FC_SOLVE_EXE );
 sub calc_cmd_line
 {
     my ($self) = @_;

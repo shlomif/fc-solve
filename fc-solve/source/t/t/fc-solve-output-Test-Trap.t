@@ -6,9 +6,8 @@ use warnings;
 use Test::More tests => 10;
 use File::Spec;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
-use FC_Solve::Paths qw( samp_board );
+use FC_Solve::Paths qw( samp_board $FC_SOLVE__RAW );
 
-my $fc_solve_exe = File::Spec->catfile($ENV{FCS_PATH}, 'fc-solve');
 my $summary_exe = File::Spec->catfile($ENV{FCS_PATH}, 'summary-fc-solve');
 my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-pro-range-solve');
 my $MID24_BOARD = samp_board('24-mid.board');
@@ -16,10 +15,10 @@ my $MID24_BOARD = samp_board('24-mid.board');
 {
     trap
     {
-        system( $fc_solve_exe, "--reset_junk_at_end", $MID24_BOARD );
+        system( $FC_SOLVE__RAW, "--reset_junk_at_end", $MID24_BOARD );
     };
 
-    my $needle = qq#Unknown option "--reset_junk_at_end". Type "$fc_solve_exe --help" for usage information.#;
+    my $needle = qq#Unknown option "--reset_junk_at_end". Type "$FC_SOLVE__RAW --help" for usage information.#;
 
     # TEST
     like (
@@ -39,11 +38,11 @@ my $MID24_BOARD = samp_board('24-mid.board');
 {
     trap
     {
-        system( $fc_solve_exe, '--read-from-file4,amateur-star.sh',
+        system( $FC_SOLVE__RAW, '--read-from-file4,amateur-star.sh',
             '--stacks-num', '7', $MID24_BOARD );
     };
 
-    my $needle = qq#Unknown option "--read-from-file4,amateur-star.sh". Type "$fc_solve_exe --help" for usage information.#;
+    my $needle = qq#Unknown option "--read-from-file4,amateur-star.sh". Type "$FC_SOLVE__RAW --help" for usage information.#;
 
     # TEST
     like (
@@ -122,7 +121,7 @@ my $MID24_BOARD = samp_board('24-mid.board');
     trap
     {
         $status = system(
-            $fc_solve_exe,
+            $FC_SOLVE__RAW,
 qw#
 --flare-name prefix_of_a_long_name --method soft-dfs -to 0123456789 -sp r:tf -opt -opt-to 0123456789ABCDE
 -nf --flare-name another_long_name --method soft-dfs -to 0123467 -sp r:tf -opt -opt-to 0123456789ABCDE

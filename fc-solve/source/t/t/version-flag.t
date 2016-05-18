@@ -6,6 +6,7 @@ use autodie;
 
 use Test::More tests => 2;
 use String::ShellQuote qw/ shell_quote /;
+use FC_Solve::Paths qw( $FC_SOLVE_EXE );
 
 {
     open my $good_ver_fh, "<", "$ENV{FCS_SRC_PATH}/ver.txt";
@@ -13,9 +14,7 @@ use String::ShellQuote qw/ shell_quote /;
     close($good_ver_fh);
     chomp($good_ver);
 
-    my $fc_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/fc-solve");
-
-    my $got_output = `$fc_solve_exe --version`;
+    my $got_output = `$FC_SOLVE_EXE --version`;
 
     my $got_status = $?;
     # TEST
