@@ -4,11 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 56;
-use Carp;
-use Data::Dumper;
-use String::ShellQuote;
-use File::Spec;
-use Test::Differences;
+use Test::Differences qw/ eq_or_diff /;
 
 use FC_Solve::DeltaStater;
 use FC_Solve::DeltaStater::BitReader;

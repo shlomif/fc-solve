@@ -4,11 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 10;
-use Carp;
-use Data::Dumper;
-use String::ShellQuote;
 use File::Spec;
-use File::Temp qw( tempdir );
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 use FC_Solve::Paths qw( samp_board );
 

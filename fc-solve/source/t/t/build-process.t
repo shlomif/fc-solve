@@ -4,13 +4,10 @@ use strict;
 use warnings;
 
 use Test::More;
-use Carp;
-use Data::Dumper;
-use String::ShellQuote;
 use File::Spec;
 use List::MoreUtils qw(none);
 use Cwd;
-use File::Path;
+use File::Path qw/ mkpath rmtree /;
 use Env::Path;
 use File::Temp qw/ tempdir /;
 

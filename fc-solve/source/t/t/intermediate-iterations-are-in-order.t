@@ -4,12 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 11;
-use Carp;
-use Data::Dumper;
-use File::Spec;
-
 use FC_Solve::GetOutput ();
-
 
 #
 # This test verifies that when doing ./fc-solve -s -i , the iterations
