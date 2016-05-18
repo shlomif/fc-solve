@@ -14,17 +14,12 @@ use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn )
 my $fc_solve_exe = File::Spec->catfile($ENV{FCS_PATH}, 'fc-solve');
 my $summary_exe = File::Spec->catfile($ENV{FCS_PATH}, 'summary-fc-solve');
 my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-pro-range-solve');
+my $MID24_BOARD = File::Spec->catfile($ENV{FCS_SRC_PATH}, 't', 't', 'data', 'sample-boards', '24-mid.board');
 
 {
     trap
     {
-        system(
-            $fc_solve_exe, "--reset_junk_at_end",
-            File::Spec->catfile(
-                $ENV{FCS_SRC_PATH}, 't', 't', 'data',
-                'sample-boards', '24-mid.board'
-            ),
-        );
+        system( $fc_solve_exe, "--reset_junk_at_end", $MID24_BOARD );
     };
 
     my $needle = qq#Unknown option "--reset_junk_at_end". Type "$fc_solve_exe --help" for usage information.#;
@@ -47,14 +42,8 @@ my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-p
 {
     trap
     {
-        system(
-            $fc_solve_exe, '--read-from-file4,amateur-star.sh',
-            '--stacks-num', '7',
-            File::Spec->catfile(
-                $ENV{FCS_SRC_PATH}, 't', 't', 'data',
-                'sample-boards', '24-mid.board'
-            ),
-        );
+        system( $fc_solve_exe, '--read-from-file4,amateur-star.sh',
+            '--stacks-num', '7', $MID24_BOARD );
     };
 
     my $needle = qq#Unknown option "--read-from-file4,amateur-star.sh". Type "$fc_solve_exe --help" for usage information.#;
