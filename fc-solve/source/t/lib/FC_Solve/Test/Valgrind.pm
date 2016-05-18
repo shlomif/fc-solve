@@ -7,7 +7,7 @@ use Test::More ();
 use Carp ();
 use File::Spec ();
 use File::Temp qw( tempdir );
-use FC_Solve::Paths qw( samp_board samp_preset );
+use FC_Solve::Paths qw( bin_board samp_board samp_preset );
 
 use Test::RunValgrind;
 
@@ -24,6 +24,10 @@ sub _expand_arg
     elsif ($type eq 'ENV')
     {
         return $ENV{ $hash_ref->{arg} };
+    }
+    elsif ($type eq 'bin_board')
+    {
+        return bin_board($hash_ref->{arg});
     }
     elsif ($type eq 'sample_board')
     {

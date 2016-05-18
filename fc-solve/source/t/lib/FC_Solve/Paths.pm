@@ -6,7 +6,7 @@ use String::ShellQuote qw/shell_quote/;
 
 use parent 'Exporter';
 
-our @EXPORT_OK = qw($FC_SOLVE_EXE $FC_SOLVE__RAW data_file samp_board samp_preset samp_sol);
+our @EXPORT_OK = qw($FC_SOLVE_EXE $FC_SOLVE__RAW bin_board data_file samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -17,6 +17,12 @@ my $PRESETS_DIR = File::Spec->catdir($DATA_DIR, 'presets');
 my $FCS_PATH = $ENV{FCS_PATH};
 our $FC_SOLVE__RAW = "$FCS_PATH/fc-solve";
 our $FC_SOLVE_EXE = shell_quote($FC_SOLVE__RAW);
+
+# A board file in the binary directory.
+sub bin_board
+{
+    return File::Spec->catfile($FCS_PATH, shift);
+}
 
 sub data_file
 {

@@ -50,12 +50,7 @@ __PACKAGE__->populate
         'empty_board' =>
         {
             prog => "fc-solve",
-            argv => [
-                {
-                    type => 'catfile',
-                    args => [{ type => 'ENV', arg => 'FCS_PATH'}, 'empty.board'],
-                },
-            ],
+            argv => [ { type => 'bin_board', arg => 'empty.board', }, ],
             msg => "Sanity of running on an empty board input.",
         },
         'fc-solve-crashy-preset-1' =>
@@ -70,10 +65,7 @@ __PACKAGE__->populate
                             arg => 'crashy-preset-1.preset'}]
                 },
                 qw(-s -i -p -t -sam),
-                {
-                    type => 'catfile',
-                    args => [{ type => 'ENV', arg => 'FCS_PATH'}, '24.board'],
-                },
+                { type => 'bin_board', arg => '24.board', }
             ],
             msg => "Check the sanity of crashy-preset-1 which over-rides the soft-thread several times.",
         },
@@ -90,10 +82,7 @@ __PACKAGE__->populate
                 qw(--method soft-dfs --st-name dfs -nst --method a-star --st-name befs --trim-max-stored-states 100 --prelude) ,
                 '200@befs,100@dfs,1000@befs,500000@dfs',
                 qw(-s -i -p -t -sam -mi 3000),
-                {
-                    type => 'catfile',
-                    args => [{type => 'ENV', arg => 'FCS_PATH'}, '1941.board',]
-                },
+                { type => 'bin_board', arg => '1941.board', },
             ],
             msg => "Check the sanity of --trim-max-stored-states.",
         },

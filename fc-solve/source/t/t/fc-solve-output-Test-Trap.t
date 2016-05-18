@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 10;
 use File::Spec;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
-use FC_Solve::Paths qw( samp_board $FC_SOLVE__RAW );
+use FC_Solve::Paths qw( bin_board samp_board $FC_SOLVE__RAW );
 
 my $summary_exe = File::Spec->catfile($ENV{FCS_PATH}, 'summary-fc-solve');
 my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-pro-range-solve');
@@ -127,7 +127,7 @@ qw#
 -nf --flare-name another_long_name --method soft-dfs -to 0123467 -sp r:tf -opt -opt-to 0123456789ABCDE
 --flares-plan
 # , 'Run:100@prefix,Run:200@another_long_name',
-            File::Spec->catfile($ENV{FCS_PATH}, '24.board'),
+            bin_board('24.board'),
         );
     };
 
