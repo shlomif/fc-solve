@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 25;
 use File::Spec;
 use File::Basename qw( dirname );
-use FC_Solve::Paths qw( data_file samp_board );
+use FC_Solve::Paths qw( data_file samp_board samp_sol );
 use FC_Solve::CheckResults;
 
 my $v = FC_Solve::CheckResults->new(
@@ -38,7 +38,7 @@ vtest(
         id => "375783-dbm-sol",
         deal => 375_783,
         complete_command =>
-        "$^X $ENV{FCS_SRC_PATH}/scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl --freecells-num=2 $ENV{FCS_SRC_PATH}/t/t/data/sample-solutions/375783.dbm-sol"
+        "$^X $ENV{FCS_SRC_PATH}/scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl --freecells-num=2 @{[samp_sol('375783.dbm-sol')]}"
     },
     "Verifying the output of scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl",
 );

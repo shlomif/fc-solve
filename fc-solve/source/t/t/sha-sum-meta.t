@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 6;
-use FC_Solve::Paths qw( data_file );
+use FC_Solve::Paths qw( samp_sol );
 
 use FC_Solve::ShaAndLen;
 
@@ -44,7 +44,7 @@ use FC_Solve::ShaAndLen;
 {
     my $sha = FC_Solve::ShaAndLen->new();
 
-    open my $in, "<", data_file([qw#sample-solutions fcs-freecell-24.txt#]);
+    open my $in, "<", samp_sol('fcs-freecell-24.txt');
     $sha->add_file($in);
     close($in);
 
