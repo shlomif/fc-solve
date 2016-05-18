@@ -4,10 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 12;
-use Carp (qw/confess/);
 use Data::Dumper (qw/Dumper/);
-use File::Spec ();
-use File::Basename qw( dirname );
 use FC_Solve::Paths qw( samp_board );
 
 use FC_Solve::GetOutput ();
@@ -49,8 +46,6 @@ sub verify_solution_test
 
     return $test_verdict;
 }
-
-my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data' );
 
 # TEST
 verify_solution_test(

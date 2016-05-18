@@ -4,8 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 6;
-use File::Basename qw( dirname );
-use File::Spec;
+use FC_Solve::Paths qw( data_file );
 
 use FC_Solve::ShaAndLen;
 
@@ -45,9 +44,7 @@ use FC_Solve::ShaAndLen;
 {
     my $sha = FC_Solve::ShaAndLen->new();
 
-    my $data_dir = File::Spec->catdir( dirname( __FILE__), 'data' );
-
-    open my $in, "<", "$data_dir/sample-solutions/fcs-freecell-24.txt";
+    open my $in, "<", data_file([qw#sample-solutions fcs-freecell-24.txt#]);
     $sha->add_file($in);
     close($in);
 

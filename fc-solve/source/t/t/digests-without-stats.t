@@ -13,20 +13,12 @@ statistics like the number of states checked and the number of stored states.
 =cut
 
 use Test::More tests => 6;
-use File::Basename qw( dirname );
-use File::Spec;
-
+use FC_Solve::Paths qw( data_file );
 use FC_Solve::CheckResults;
-
-my $data_dir = File::Spec->catdir(
-    dirname( __FILE__), 'data'
-);
-
-my $digests_storage_fn = "$data_dir/digests-and-lens-wo-stats-storage.yml";
 
 my $v = FC_Solve::CheckResults->new(
     {
-        data_filename => $digests_storage_fn,
+        data_filename => data_file(['digests-and-lens-wo-stats-storage.yml']),
         trim_stats => 1,
     }
 );
