@@ -3,10 +3,11 @@
 use strict;
 use warnings;
 use Test::More;
+use FC_Solve::Paths qw/ bin_file /;
 
 BEGIN
 {
-    if (-f "$ENV{FCS_PATH}/libfcs_fcc_brfs_test.so")
+    if (-f bin_file(['libfcs_fcc_brfs_test.so']))
     {
         plan tests => 12;
     }

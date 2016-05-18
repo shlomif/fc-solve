@@ -7,7 +7,7 @@ use Test::More ();
 use Carp ();
 use File::Spec ();
 use File::Temp qw( tempdir );
-use FC_Solve::Paths qw( bin_board samp_board samp_preset );
+use FC_Solve::Paths qw( bin_board bin_exe_raw samp_board samp_preset );
 
 use Test::RunValgrind;
 
@@ -62,7 +62,7 @@ sub r
             {
                 log_fn => $args->{log_fn},
                 blurb => $msg,
-                prog => "$ENV{FCS_PATH}/$args->{prog}",
+                prog => bin_exe_raw([$args->{prog}]),
                 argv => [map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}],
             }
         )

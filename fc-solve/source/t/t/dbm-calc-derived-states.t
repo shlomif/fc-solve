@@ -4,10 +4,11 @@ use strict;
 use warnings;
 
 use Test::More;
+use FC_Solve::Paths qw/ bin_file /;
 
 BEGIN
 {
-    if (-f "$ENV{FCS_PATH}/libfcs_dbm_calc_derived_test.so")
+    if (-f bin_file(['libfcs_dbm_calc_derived_test.so']))
     {
         plan tests => 40;
     }

@@ -9,7 +9,7 @@ use Carp ();
 use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
-use FC_Solve::Paths qw( samp_board );
+use FC_Solve::Paths qw/ bin_exe_raw samp_board /;
 
 sub trap_board
 {
@@ -29,16 +29,10 @@ sub trap_dbm
 
     my $args = shift;
 
-    my $board_fn = $args->{board_fn};
-
-    my $dbm_solve_exe = shell_quote($ENV{'FCS_PATH'} . "/dbm_fc_solver");
-
-    my $temp_dir = tempdir (CLEANUP => 1);
-
     open my $fc_solve_output,
-        "$dbm_solve_exe " . shell_quote(
-            "--offload-dir-path", $temp_dir, "--num-threads", 1,
-            $board_fn
+        shell_quote(bin_exe_raw(['dbm_fc_solver']),
+            "--offload-dir-path", tempdir (CLEANUP => 1), "--num-threads", 1,
+            $args->{board_fn}
         ) .
         " |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";

@@ -3,9 +3,10 @@ package FC_Solve::SplitCmdLine;
 use strict;
 use warnings;
 
+use FC_Solve::Paths qw/ bin_exe_raw /;
 use IPC::Open2 qw(open2);
 
-my $split_exe = $ENV{'FCS_PATH'}."/t/out-split-cmd-line.exe";
+my $SPLIT_EXE = bin_exe_raw([qw#t out-split-cmd-line.exe#]);
 
 sub split_cmd_line_string
 {
@@ -13,7 +14,7 @@ sub split_cmd_line_string
 
     my ($child_out, $child_in);
 
-    my $pid = open2($child_out , $child_in, $split_exe);
+    my $pid = open2($child_out , $child_in, $SPLIT_EXE);
 
     print {$child_in} $input_string;
     close($child_in);

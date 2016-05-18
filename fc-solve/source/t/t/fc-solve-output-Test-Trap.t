@@ -6,10 +6,8 @@ use warnings;
 use Test::More tests => 10;
 use File::Spec;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
-use FC_Solve::Paths qw( bin_board samp_board $FC_SOLVE__RAW );
+use FC_Solve::Paths qw( bin_board bin_exe_raw samp_board $FC_SOLVE__RAW );
 
-my $summary_exe = File::Spec->catfile($ENV{FCS_PATH}, 'summary-fc-solve');
-my $fc_pro_range_exe = File::Spec->catfile($ENV{FCS_PATH}, 'freecell-solver-fc-pro-range-solve');
 my $MID24_BOARD = samp_board('24-mid.board');
 
 {
@@ -56,7 +54,7 @@ my $MID24_BOARD = samp_board('24-mid.board');
     trap
     {
         system(
-            $fc_pro_range_exe, '1', '3', '1',
+            bin_exe_raw(['freecell-solver-fc-pro-range-solve']), '1', '3', '1',
             '-l', 'as',
         );
     };
@@ -94,7 +92,7 @@ my $MID24_BOARD = samp_board('24-mid.board');
     trap
     {
         system(
-            $summary_exe, 1591, 1592, 1593,
+            bin_exe_raw(['summary-fc-solve']) , 1591, 1592, 1593,
             qw(-- --method random-dfs -to [0123456789] -sp r:tf -opt -opt-to 0123456789ABCDE -seed 24 -mi 10000)
         );
     };
