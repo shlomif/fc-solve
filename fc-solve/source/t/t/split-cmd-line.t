@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use FC_Solve::SplitCmdLine;
+use FC_Solve::SplitCmdLine ();
 use Test::More tests => 20;
 
 sub check_split

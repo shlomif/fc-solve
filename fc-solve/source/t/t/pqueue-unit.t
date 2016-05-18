@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 12;
-use Test::Differences (qw( eq_or_diff ));
+use Test::Differences qw/ eq_or_diff /;
 
 package PQ;
 

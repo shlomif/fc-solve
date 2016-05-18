@@ -9,7 +9,7 @@ use FC_Solve::Paths qw( samp_board );
 
 use FC_Solve::GetOutput ();
 
-use Games::Solitaire::Verify::Solution;
+use Games::Solitaire::Verify::Solution ();
 
 sub verify_solution_test
 {

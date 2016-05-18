@@ -5,9 +5,8 @@ use warnings;
 
 use Test::More tests => 9;
 use FC_Solve::GetOutput ();
-use Carp;
-use Data::Dumper;
-use String::ShellQuote;
+use Carp ();
+use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
 use FC_Solve::Paths qw( samp_board );

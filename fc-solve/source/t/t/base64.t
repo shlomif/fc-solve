@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More tests => 14;
 
-use FC_Solve::Base64;
+use FC_Solve::Base64 ();
 
 # TEST:$c=0;
 sub test_base64

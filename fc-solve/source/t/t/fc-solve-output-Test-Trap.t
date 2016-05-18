@@ -128,9 +128,7 @@ qw#
 -nf --flare-name another_long_name --method soft-dfs -to 0123467 -sp r:tf -opt -opt-to 0123456789ABCDE
 --flares-plan
 # , 'Run:100@prefix,Run:200@another_long_name',
-            File::Spec->catfile(
-                $ENV{FCS_PATH}, '24.board',
-            ),
+            File::Spec->catfile($ENV{FCS_PATH}, '24.board'),
         );
     };
 

@@ -174,7 +174,7 @@ package FccStartPointsList;
 
 use parent 'FC_Solve::SingleMoveSearch';
 
-use List::MoreUtils qw(uniq);
+use List::MoreUtils qw/ uniq /;
 
 use Test::More;
 
@@ -232,7 +232,7 @@ sub get_num_new_positions
 
 package main;
 
-use List::MoreUtils qw(any none);
+use List::MoreUtils qw/ any none /;
 
 {
     # MS Freecell Board No. 24.

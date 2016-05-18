@@ -14,7 +14,7 @@ statistics like the number of states checked and the number of stored states.
 
 use Test::More tests => 6;
 use FC_Solve::Paths qw( data_file );
-use FC_Solve::CheckResults;
+use FC_Solve::CheckResults ();
 
 my $v = FC_Solve::CheckResults->new(
     {

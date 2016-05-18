@@ -3,11 +3,11 @@
 use strict;
 use warnings;
 
-use FC_Solve::CmdLine::Expand;
-use FC_Solve::CmdLine::Simulate;
+use FC_Solve::CmdLine::Expand ();
+use FC_Solve::CmdLine::Simulate ();
 use Test::More tests => 6;
 
-use Test::Differences;
+use Test::Differences qw/ eq_or_diff /;
 
 sub check
 {

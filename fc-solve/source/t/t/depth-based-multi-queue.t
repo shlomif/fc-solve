@@ -5,11 +5,11 @@ use warnings;
 
 use Test::More tests => 4312;
 use Test::Differences qw(eq_or_diff);
-use File::Spec;
+use File::Spec ();
 use File::Path qw(mkpath);
 
-use FC_Solve::DepthMultiQueuePrototype;
-use FC_Solve::DepthMultiQueueInC;
+use FC_Solve::DepthMultiQueuePrototype ();
+use FC_Solve::DepthMultiQueueInC ();
 
 my $queue_offload_dir_path = File::Spec->catdir(
     File::Spec->curdir(), "depth-multi-queue-offload-dir"

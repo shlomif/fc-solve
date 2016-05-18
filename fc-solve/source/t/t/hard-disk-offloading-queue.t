@@ -4,11 +4,11 @@ use strict;
 use warnings;
 
 use Test::More tests => 2262;
-use File::Spec;
+use File::Spec ();
 use File::Path qw(mkpath);
 
-use FC_Solve::QueuePrototype;
-use FC_Solve::QueueInC;
+use FC_Solve::QueuePrototype ();
+use FC_Solve::QueueInC ();
 
 my $queue_offload_dir_path = File::Spec->catdir(
     File::Spec->curdir(), "queue-offload-dir"

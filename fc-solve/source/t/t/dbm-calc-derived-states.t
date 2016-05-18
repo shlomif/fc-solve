@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Cwd;
 
 BEGIN
 {
@@ -125,7 +124,7 @@ EOF
     LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_dbm_calc_derived_test",
 );
 
-use Games::Solitaire::Verify::Card;
+use Games::Solitaire::Verify::Card ();
 
 sub which_irrev_moves_as_hashref
 {
@@ -295,7 +294,7 @@ sub is_dest
     );
 }
 
-use Test::Differences qw(eq_or_diff);
+use Test::Differences qw/ eq_or_diff /;
 
 sub is_which_irrev_moves_equal_to
 {

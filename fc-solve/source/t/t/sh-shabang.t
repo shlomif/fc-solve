@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 1;
 
 use Test::Differences qw/ eq_or_diff /;
-use Path::Tiny;
+use Path::Tiny qw/ path /;
 
 my $data = path($ENV{FCS_SRC_PATH})->visit(
     sub {

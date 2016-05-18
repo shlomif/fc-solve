@@ -2,18 +2,13 @@
 
 use strict;
 use warnings;
-
 use autodie;
 
 use Test::More tests => 2;
-use String::ShellQuote;
-
-use File::Spec;
-use File::Basename qw( dirname );
+use String::ShellQuote qw/ shell_quote /;
 
 {
-    open my $good_ver_fh, "<", File::Spec->catdir( dirname( __FILE__),
-        (( File::Spec->updir() ) x 2), "ver.txt");
+    open my $good_ver_fh, "<", "$ENV{FCS_SRC_PATH}/ver.txt";
     my $good_ver = <$good_ver_fh>;
     close($good_ver_fh);
     chomp($good_ver);
@@ -33,6 +28,8 @@ use File::Basename qw( dirname );
         "Version is contained in the --version display",
     );
 }
+
+__END__
 
 =head1 COPYRIGHT AND LICENSE
 

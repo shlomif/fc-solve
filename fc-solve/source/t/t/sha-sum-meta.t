@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 6;
 use FC_Solve::Paths qw( samp_sol );
 
-use FC_Solve::ShaAndLen;
+use FC_Solve::ShaAndLen ();
 
 {
     my $string = "HelloWorld";

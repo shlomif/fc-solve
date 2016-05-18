@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 26;
-use Test::Differences;
+use Test::Differences qw/ eq_or_diff /;
 
 sub _test_out
 {
@@ -21,6 +21,8 @@ sub _test_out
         $args->{expected},
         $args->{blurb}
     );
+
+    return;
 }
 
 # TEST

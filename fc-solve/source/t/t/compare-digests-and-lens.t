@@ -4,10 +4,9 @@ use strict;
 use warnings;
 
 use Test::More tests => 25;
-use File::Spec;
-use File::Basename qw( dirname );
+use File::Spec ();
 use FC_Solve::Paths qw( data_file samp_board samp_sol );
-use FC_Solve::CheckResults;
+use FC_Solve::CheckResults ();
 
 my $v = FC_Solve::CheckResults->new(
     {
@@ -203,9 +202,7 @@ vtest(
     {
         id => "freecell24",
         deal => 24,
-        board => File::Spec->catfile(
-            $ENV{FCS_PATH}, '24.no-newline.board',
-        ),
+        board => File::Spec->catfile($ENV{FCS_PATH}, '24.no-newline.board'),
     },
     "Handle initial layouts without a trailing newline."
 );

@@ -4,11 +4,11 @@ use strict;
 use warnings;
 
 use Test::More;
-use File::Spec;
+use File::Spec ();
 use List::MoreUtils qw(none);
-use Cwd;
+use Cwd ();
 use File::Path qw/ mkpath rmtree /;
-use Env::Path;
+use Env::Path ();
 use File::Temp qw/ tempdir /;
 
 # Remove FCS_TEST_BUILD so we won't run the tests with infinite recursion.
