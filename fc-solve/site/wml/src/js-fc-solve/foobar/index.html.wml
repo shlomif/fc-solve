@@ -1,0 +1,57 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+<head>
+<title>Online Freecell solver (text based)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="author" content="Shlomi Fish" />
+<meta name="description" content="Freecell Solver - a Program and a Library written in ANSI C for Solving Games of Freecell and similar Solitaire Variants" />
+<meta name="keywords" content="Freecell, Freecell Solver, solvers, AI, artificial intelligence, solitaire, Simple Simon, Baker's Game, Seahaven Towers, Shlomi Fish, games" />
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen" title="Normal" />
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print" />
+<link rel="next" href="../../faq.html" title="Frequently Asked Questions List" />
+<link rel="prev" href="../" title="Try Freecell Solver in your browser!" />
+<link rel="top" href="../../" title="" />
+<link rel="up" href="../" title="Try Freecell Solver in your browser!" />
+<script type="text/javascript" src="../../js/common-methods.js"></script>
+<script type="text/javascript" src="../../js/common-hacks.js"></script>
+<script type="text/javascript" src="../../js/jq.js"></script>
+<link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="http://fc-solve.blogspot.com/feeds/posts/default?alt=rss" />
+<link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default" />
+<!-- Project Wonderful Ad Box Loader -->
+<script type="text/javascript">
+   (function(){function pw_load(){
+      if(arguments.callee.z)return;else arguments.callee.z=true;
+      var d=document;var s=d.createElement('script');
+      var x=d.getElementsByTagName('script')[0];
+      s.type='text/javascript';s.async=true;
+      s.src='//www.projectwonderful.com/pwa.js';
+      x.parentNode.insertBefore(s,x);}
+   if (window.attachEvent){
+    window.attachEvent('DOMContentLoaded',pw_load);
+    window.attachEvent('onload',pw_load);}
+   else{
+    window.addEventListener('DOMContentLoaded',pw_load,false);
+    window.addEventListener('load',pw_load,false);}})();
+</script>
+<!-- End Project Wonderful Ad Box Loader -->
+<script type="text/javascript">
+(function() {
+    try {
+        var a = new Float64Array(1);
+        return; //no need
+    } catch(e) { window.location.replace("../../js-fc-solve/incompatible-browser.html"); }
+})();
+</script>
+<script type="text/javascript" src="../../js/jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../../js/jquery-ui/jquery-ui.min.css" media="screen, projection" />
+<link rel="stylesheet" type="text/css" href="../../jqui-override.css" media="screen, projection" />
+<script type="text/javascript" src="../../js/jquery.querystring.js"></script>
+<script type="text/javascript" src="../../js/joose.mini.js"></script>
+<script type="text/javascript" src="../../js/libfreecell-solver.min.js"></script>
+</head>
+<body>
+<h1>Test</h1>
+</body>
+</html>
