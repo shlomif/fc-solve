@@ -352,6 +352,8 @@ Class('FC_Solve', {
             that.obj = 0;
             c_free(that._state_string_buffer);
             that._state_string_buffer = 0;
+            c_free(that._move_string_buffer);
+            that._move_string_buffer = 0;
 
             return;
         },
