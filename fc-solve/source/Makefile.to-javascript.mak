@@ -13,7 +13,7 @@ RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 EMBED_FILE_MUNGE_PL = $(SRC_DIR)/scripts/emscripten-embed-munge.pl
 
-PATS_C_FILES = param.c pat.c patsolve.c tree.c
+PATS_C_FILES = $(patsubst %,patsolve-shlomif/patsolve/%,param.c pat.c patsolve.c tree.c)
 
 LIB_C_FILES = scans.c lib.c preset.c instance.c move_funcs_order.c  move_funcs_maps.c meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c rate_state.c hacks_for_hlls.c $(PATS_C_FILES)
 
@@ -63,6 +63,7 @@ PRESET_FILES_LOCAL := $(shell perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR) $(PRES
 EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
 
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
+	mkdir -p "$$(dirname "$@")"
 	emcc $(EMCC_CFLAGS) $< -c -o $@
 
 .PHONY: llvm_and_files
@@ -77,11 +78,6 @@ $(RESULT_NODE_JS_EXE): llvm_and_files
 
 $(RESULT_JS_LIB): llvm_and_files
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(EMCC_POST_FLAGS)
-
-SRC_PATS_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(PATS_C_FILES))
-
-$(SRC_PATS_C_FILES): $(SRC_DIR)/%.c: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
-	cp -f $< $@
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_HTML) $(RESULT_NODE_JS_EXE)
