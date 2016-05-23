@@ -6,4 +6,4 @@ RESULTS = $(patsubst %,Results/%.res,$(INDEXES))
 all: $(RESULTS)
 
 $(RESULTS): %:
-	i="$(patsubst Results/%.res,%,$@)"; F="$$i" L="$$((i + 99))" perl benchmark-no-backticks.pl -- -l as -ni -l fg > $@
+	i="$(patsubst Results/%.res,%,$@)"; F="$$i" L="$$((i + 99))" perl benchmark-no-backticks.pl -- -l ct -ni -l fg > $@

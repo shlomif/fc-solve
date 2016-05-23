@@ -114,7 +114,14 @@ void fc_solve_init(AV * args)
 {
     my_context = INITIAL_DISPLAY_CONTEXT;
 
-    my_context.parseable_output = my_context.display_10_as_t = my_context.display_moves = my_context.show_exceeded_limits = TRUE;
+    #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
+    my_context.parseable_output =
+    #endif
+    #ifndef FC_SOLVE_IMPLICIT_T_RANK
+    my_context.display_10_as_t =
+    #endif
+    my_context.display_moves =
+    my_context.show_exceeded_limits = TRUE;
 
     fcs = freecell_solver_user_alloc();
 
@@ -138,7 +145,7 @@ void fc_solve_init(AV * args)
 
     argv[argc] = NULL;
 
-    freecell_solver_user_cmd_line_parse_args(
+    freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         fcs,
         argc,
         (freecell_solver_str_t *)(void *)argv,
@@ -147,7 +154,9 @@ void fc_solve_init(AV * args)
         NULL,
         NULL,
         &error_string,
-        &arg
+        &arg,
+        -1,
+        NULL
     );
 }
 
