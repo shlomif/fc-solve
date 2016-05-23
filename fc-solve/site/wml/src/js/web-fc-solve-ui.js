@@ -24,6 +24,9 @@ function _increment_move_indices(move_s) {
     );
 }
 
+var _my_module = Module({});
+FC_Solve_init_wrappers_with_module(_my_module);
+
 Class('FC_Solve_UI',
     {
         has: {

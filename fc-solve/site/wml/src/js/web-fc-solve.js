@@ -1,19 +1,54 @@
 "use strict";
 
-var freecell_solver_user_alloc = Module.cwrap('freecell_solver_user_alloc', 'number', []);
-var freecell_solver_user_solve_board = Module.cwrap('freecell_solver_user_solve_board', 'number', ['number', 'string']);
-var freecell_solver_user_resume_solution = Module.cwrap('freecell_solver_user_resume_solution', 'number', ['number']);
-var freecell_solver_user_cmd_line_read_cmd_line_preset = Module.cwrap('freecell_solver_user_cmd_line_read_cmd_line_preset', 'number', ['number', 'string', 'number', 'number', 'number', 'string']);
-var malloc = Module.cwrap('malloc', 'number', ['number']);
-var c_free = Module.cwrap('free', 'number', ['number']);
-var freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_next_move', 'number', ['number', 'number']);
-var freecell_solver_user_get_num_stacks = Module.cwrap('freecell_solver_user_get_num_stacks', 'number', ['number']);
-var freecell_solver_user_current_state_stringify = Module.cwrap('freecell_solver_user_current_state_stringify', 'number', ['number', 'number', 'number', 'number', 'number']);
-var freecell_solver_user_stringify_move_ptr = Module.cwrap('freecell_solver_user_stringify_move_ptr', 'number', ['number', 'number', 'number', 'number']);
-var freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
-var freecell_solver_user_limit_iterations_long = Module.cwrap('freecell_solver_user_limit_iterations_long', 'number', ['number', 'number']);
-var freecell_solver_user_get_invalid_state_error_into_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_into_string', 'number', ['number', 'number', 'number',]);
-var freecell_solver_user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap('freecell_solver_user_cmd_line_parse_args_with_file_nesting_count', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',]);
+var freecell_solver_user_alloc;
+var freecell_solver_user_solve_board;
+var freecell_solver_user_resume_solution;
+var freecell_solver_user_cmd_line_read_cmd_line_preset;
+var malloc;
+var c_free;
+var freecell_solver_user_get_next_move;
+var freecell_solver_user_get_num_stacks;
+var freecell_solver_user_current_state_stringify;
+var freecell_solver_user_stringify_move_ptr;
+var freecell_solver_user_free;
+var freecell_solver_user_limit_iterations_long;
+var freecell_solver_user_get_invalid_state_error_into_string;
+var freecell_solver_user_cmd_line_parse_args_with_file_nesting_count;
+var fc_solve_Pointer_stringify;
+var fc_solve_FS_createFolder;
+var fc_solve_FS_createDataFile;
+var fc_solve_getValue;
+var fc_solve_setValue;
+var fc_solve_intArrayFromString;
+var fc_solve_allocate_i8;
+
+function FC_Solve_init_wrappers_with_module(Module)
+{
+    freecell_solver_user_alloc = Module.cwrap('freecell_solver_user_alloc', 'number', []);
+    freecell_solver_user_solve_board = Module.cwrap('freecell_solver_user_solve_board', 'number', ['number', 'string']);
+    freecell_solver_user_resume_solution = Module.cwrap('freecell_solver_user_resume_solution', 'number', ['number']);
+    freecell_solver_user_cmd_line_read_cmd_line_preset = Module.cwrap('freecell_solver_user_cmd_line_read_cmd_line_preset', 'number', ['number', 'string', 'number', 'number', 'number', 'string']);
+    malloc = Module.cwrap('malloc', 'number', ['number']);
+    c_free = Module.cwrap('free', 'number', ['number']);
+    freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_next_move', 'number', ['number', 'number']);
+    freecell_solver_user_get_num_stacks = Module.cwrap('freecell_solver_user_get_num_stacks', 'number', ['number']);
+    freecell_solver_user_current_state_stringify = Module.cwrap('freecell_solver_user_current_state_stringify', 'number', ['number', 'number', 'number', 'number', 'number']);
+    freecell_solver_user_stringify_move_ptr = Module.cwrap('freecell_solver_user_stringify_move_ptr', 'number', ['number', 'number', 'number', 'number']);
+    freecell_solver_user_free = Module.cwrap('freecell_solver_user_free', 'number', ['number']);
+    freecell_solver_user_limit_iterations_long = Module.cwrap('freecell_solver_user_limit_iterations_long', 'number', ['number', 'number']);
+    freecell_solver_user_get_invalid_state_error_into_string = Module.cwrap('freecell_solver_user_get_invalid_state_error_into_string', 'number', ['number', 'number', 'number',]);
+    freecell_solver_user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap('freecell_solver_user_cmd_line_parse_args_with_file_nesting_count', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',]);
+
+    fc_solve_Pointer_stringify = function(ptr) { return Module.Pointer_stringify(ptr); };
+    fc_solve_FS_createFolder = function(p1, p2, p3, p4) { return Module.FS_createFolder(p1, p2, p3, p4); };
+    fc_solve_FS_createDataFile = function(p1, p2, p3, p4, p5) { return Module.FS_createDataFile(p1, p2, p3, p4, p5); };
+    fc_solve_getValue = function(p1, p2) { return Module.getValue(p1, p2); };
+    fc_solve_setValue = function(p1, p2, p3) { return Module.setValue(p1, p2, p3); };
+    fc_solve_intArrayFromString = function(s) { return Module.intArrayFromString(s); };
+    fc_solve_allocate_i8 = function(p1) { return Module.allocate(p1, 'i8', Module.ALLOC_STACK); };
+
+    return;
+}
 
 function alloc_wrap(size, desc, error) {
     var ret = malloc(size);
@@ -107,7 +142,7 @@ Class('FC_Solve', {
                      that.obj, error_string_ptr, 1
                  );
 
-                 var error_string = Module.Pointer_stringify(error_string_ptr);
+                 var error_string = fc_solve_Pointer_stringify(error_string_ptr);
                  c_free ( error_string_ptr );
 
                  alert (error_string + "\n");
@@ -177,7 +212,7 @@ Class('FC_Solve', {
             var ret = '';
 
             if (s_ptr) {
-                ret = Module.Pointer_stringify(s_ptr);
+                ret = fc_solve_Pointer_stringify(s_ptr);
             }
 
             return ret;
@@ -190,7 +225,7 @@ Class('FC_Solve', {
                     var error_string_ptr_buf = alloc_wrap(128, "error string buffer", "Foo");
                     var preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(obj, cmd_line_preset, 0, error_string_ptr_buf, 0, null);
 
-                    var error_string_ptr = getValue(error_string_ptr_buf, '*');
+                    var error_string_ptr = fc_solve_getValue(error_string_ptr_buf, '*');
 
                     var error_string = that._stringify_possibly_null_ptr(error_string_ptr);
 
@@ -207,20 +242,20 @@ Class('FC_Solve', {
                     var error_string_ptr_buf = alloc_wrap(128, "error string buffer", "Engo");
                     // Create a file with the contents of string_params.
                     var base_path = '/' + that.dir_base;
-                    var base_dh = FS.createFolder('/', that.dir_base, true, true);
+                    var base_dh = fc_solve_FS_createFolder('/', that.dir_base, true, true);
                     var file_basename = 'string-params.fc-solve.txt';
                     var string_params_file_path = base_path + '/' + file_basename;
-                    FS.createDataFile(base_dh, file_basename, that.string_params,
+                    fc_solve_FS_createDataFile(base_dh, file_basename, that.string_params,
                         true, true);
 
 
                     var args_buf = alloc_wrap(4*2, "args buf", "Seed");
                     // TODO : Is there a memory leak here?
-                    var read_from_file_str_ptr = allocate(intArrayFromString("--read-from-file"), 'i8', ALLOC_STACK);
-                    var arg_str_ptr = allocate(intArrayFromString("0," + string_params_file_path), 'i8', ALLOC_STACK);
+                    var read_from_file_str_ptr = fc_solve_allocate_i8(fc_solve_intArrayFromString("--read-from-file"));
+                    var arg_str_ptr = fc_solve_allocate_i8(fc_solve_intArrayFromString("0," + string_params_file_path));
 
-                    setValue(args_buf, read_from_file_str_ptr, '*');
-                    setValue(args_buf+4, arg_str_ptr, '*');
+                    fc_solve_setValue(args_buf, read_from_file_str_ptr, '*');
+                    fc_solve_setValue(args_buf+4, arg_str_ptr, '*');
 
                     var last_arg_ptr = alloc_wrap(4, "last_arg_ptr", "cherry");
 
@@ -242,7 +277,7 @@ Class('FC_Solve', {
                     c_free(last_arg_ptr);
                     c_free(args_buf);
 
-                    var error_string_ptr = getValue(error_string_ptr_buf, '*');
+                    var error_string_ptr = fc_solve_getValue(error_string_ptr_buf, '*');
 
                     var error_string = that._stringify_possibly_null_ptr(error_string_ptr);
                     c_free(error_string_ptr);
@@ -320,7 +355,7 @@ Class('FC_Solve', {
             var get_state_str = function () {
                 freecell_solver_user_current_state_stringify(that.obj, that._state_string_buffer, 1, 0, 1);
 
-                return Module.Pointer_stringify(that._state_string_buffer);
+                return fc_solve_Pointer_stringify(that._state_string_buffer);
             };
 
             _out_state (get_state_str() );
@@ -331,7 +366,7 @@ Class('FC_Solve', {
             while ((move_ret_code = freecell_solver_user_get_next_move(that.obj, move_buffer)) == 0) {
                 var state_as_string = get_state_str();
                 freecell_solver_user_stringify_move_ptr(that.obj, that._move_string_buffer, move_buffer, 0);
-                var move_as_string = Module.Pointer_stringify(that._move_string_buffer);
+                var move_as_string = fc_solve_Pointer_stringify(that._move_string_buffer);
 
                 states_and_moves_sequence.push({ type: 'm', m: { type: 'm', str: move_as_string}, exp: null, is_exp: false});
                 _out_state(state_as_string);

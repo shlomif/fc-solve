@@ -9983,8 +9983,12 @@ var solution_for_deal_24__expanded_moves = ("-=-=-=-=-=-=-=-=-=-=-=-\n" +
 "====================\n\n" +
 "" ) ;
 
+
 function test_js_fc_solve_class()
 {
+    var _my_mod = Module({});
+    FC_Solve_init_wrappers_with_module(_my_mod);
+
     module("FC_Solve.Algorithmic");
 
     var test_for_equal = function(instance, board, expected_sol, blurb) {
