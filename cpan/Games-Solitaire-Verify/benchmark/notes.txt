@@ -67,3 +67,11 @@ user    10m14.517s
 sys     0m6.252s
 shlomif[fcs]:$trunk/cpan/Games-Solitaire-Verify/benchmark$
 
+* After optimisations on trunk, bleadperl (2.25.x) compiled with -flto/etc.
+moving to -l ct, Freecell-only build with breaking back compat and other
+options) the new benchmark is:
+
+real    2m21.000s
+user    9m16.878s
+sys     0m3.499s
+
