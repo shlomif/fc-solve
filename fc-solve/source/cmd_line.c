@@ -600,44 +600,45 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_METHOD: /* STRINGS=-me|--method; */
         {
-            int method;
+            int int_method;
 
             PROCESS_OPT_ARG() ;
 
-            if (!strcmp((*arg), "soft-dfs") ||
-                !strcmp((*arg), "dfs"))
+            const_AUTO(s, (*arg));
+            if (!strcmp(s, "soft-dfs") ||
+                !strcmp(s, "dfs"))
             {
-                method = FCS_METHOD_SOFT_DFS;
+                int_method = FCS_METHOD_SOFT_DFS;
             }
-            else if (!strcmp((*arg), "bfs"))
+            else if (!strcmp(s, "bfs"))
             {
-                method = FCS_METHOD_BFS;
+                int_method = FCS_METHOD_BFS;
             }
-            else if (!strcmp((*arg), "a-star"))
+            else if (!strcmp(s, "a-star"))
             {
-                method = FCS_METHOD_A_STAR;
+                int_method = FCS_METHOD_A_STAR;
             }
-            else if (!strcmp((*arg), "random-dfs"))
+            else if (!strcmp(s, "random-dfs"))
             {
-                method = FCS_METHOD_RANDOM_DFS;
+                int_method = FCS_METHOD_RANDOM_DFS;
             }
 #ifndef FCS_DISABLE_PATSOLVE
-            else if (!strcmp((*arg), "patsolve"))
+            else if (!strcmp(s, "patsolve"))
             {
-                method = FCS_METHOD_PATSOLVE;
+                int_method = FCS_METHOD_PATSOLVE;
             }
 #endif
             else
             {
                 *error_string = calc_errstr_s(
                     "Unknown solving method \"%s\".\n",
-                    (*arg)
+                    s
                 );
 
                 RET_ERROR_IN_ARG() ;
             }
 
-            freecell_solver_user_set_solving_method(instance, method);
+            freecell_solver_user_set_solving_method(instance, int_method);
         }
         break;
 

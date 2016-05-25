@@ -1524,22 +1524,31 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
 
 void DLLEXPORT freecell_solver_user_set_solving_method(
     void * const api_instance,
-    const int method
+    const int int_method
     )
 {
     /* TODO : break backcompat with it. */
-    if (method == FCS_METHOD_HARD_DFS)
+    if (int_method == FCS_METHOD_HARD_DFS)
     {
         return freecell_solver_user_set_solving_method(api_instance, FCS_METHOD_SOFT_DFS);
     }
     fcs_super_method_type_t super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
     fc_solve_soft_thread_t * const soft_thread = api_soft_thread(api_instance);
-    switch ((soft_thread->method = method))
+    switch (int_method)
     {
+        case FCS_METHOD_BFS:
+        soft_thread->enum_method = SOLVE_METHOD_BRFS;
+        break;
+
+        case FCS_METHOD_A_STAR:
+        soft_thread->enum_method = SOLVE_METHOD_BEFS;
+        break;
+
         case FCS_METHOD_RANDOM_DFS:
         case FCS_METHOD_SOFT_DFS:
         {
             super_method_type = FCS_SUPER_METHOD_DFS;
+            soft_thread->enum_method = (int_method == FCS_METHOD_SOFT_DFS ? SOLVE_METHOD_SOFT_DFS : SOLVE_METHOD_RANDOM_DFS);
         }
         break;
 
@@ -1547,6 +1556,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         case FCS_METHOD_PATSOLVE:
         {
             super_method_type = FCS_SUPER_METHOD_PATSOLVE;
+            soft_thread->enum_method = SOLVE_METHOD_PATSOLVE;
 
             if (! soft_thread->pats_scan)
             {

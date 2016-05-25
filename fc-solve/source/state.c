@@ -85,7 +85,6 @@ void fc_solve_canonize_state(
     FREECELLS_AND_STACKS_ARGS()
 )
 {
-    DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
 
 #define state_key (ptr_state_key)
@@ -104,9 +103,12 @@ void fc_solve_canonize_state(
             )
         )
         {
+            {
+            DECLARE_TEMP_STACK();
             COPY_STACK(temp_stack, GET_STACK(c));
             COPY_STACK(GET_STACK(c), GET_STACK(c-1));
             COPY_STACK(GET_STACK(c-1), temp_stack);
+            }
 
             c--;
         }
@@ -145,7 +147,6 @@ void fc_solve_canonize_state_with_locs(
     FREECELLS_AND_STACKS_ARGS()
 )
 {
-    DECLARE_TEMP_STACK();
     fcs_card_t temp_freecell;
     fcs_locs_t temp_loc;
 
@@ -164,9 +165,12 @@ void fc_solve_canonize_state_with_locs(
             )
         )
         {
+            {
+            DECLARE_TEMP_STACK();
             COPY_STACK(temp_stack, GET_STACK(c));
             COPY_STACK(GET_STACK(c), GET_STACK(c-1));
             COPY_STACK(GET_STACK(c-1), temp_stack);
+            }
 
             temp_loc = locs->stack_locs[c];
             locs->stack_locs[c] = locs->stack_locs[c-1];

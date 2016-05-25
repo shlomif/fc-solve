@@ -434,7 +434,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
     fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
 
-    if (soft_thread->method == FCS_METHOD_A_STAR)
+    if (soft_thread->enum_method == SOLVE_METHOD_BEFS)
     {
         /* Initialize the priotity queue of the BeFS scan */
         fc_solve_pq_init( &(BEFS_VAR(soft_thread, pqueue)) );
@@ -568,13 +568,13 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     ASSIGN_ptr_state(BEFS_M_VAR(soft_thread, first_state_to_check));
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
-    const int method = soft_thread->method;
+    const_SLOT(enum_method, soft_thread);
     fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->i__num_checked_states);
 #ifndef FCS_SINGLE_HARD_THREAD
     fcs_int_limit_t * const hard_thread_num_checked_states_ptr = &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
 
-    if (method == FCS_METHOD_A_STAR)
+    if (enum_method == SOLVE_METHOD_BEFS)
     {
         pqueue = &(BEFS_VAR(soft_thread, pqueue));
     }
@@ -643,7 +643,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
              * It the state has already been visited - move on to the next
              * state.
              * */
-            if ((method == FCS_METHOD_OPTIMIZE) ?
+            if ((enum_method == SOLVE_METHOD_OPTIMIZE) ?
                     (
                         (!(temp_visited & FCS_VISITED_IN_SOLUTION_PATH))
                             ||
@@ -772,7 +772,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
             new_pass = FCS_STATE_keyval_pair_to_kv(FCS_SCANS_ptr_new_state = derived_iter->state_ptr);
 #endif
 
-            if (method == FCS_METHOD_A_STAR)
+            if (enum_method == SOLVE_METHOD_BEFS)
             {
                 fc_solve_pq_push(
                     pqueue,
@@ -808,7 +808,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
             }
         }
 
-        if (method == FCS_METHOD_OPTIMIZE)
+        if (enum_method == SOLVE_METHOD_OPTIMIZE)
         {
             FCS_S_VISITED(PTR_STATE) |= FCS_VISITED_IN_OPTIMIZED_PATH;
         }
@@ -839,7 +839,7 @@ next_state:
         */
         {
             fcs_collectible_state_t * new_ptr_state;
-            if (method == FCS_METHOD_A_STAR)
+            if (enum_method == SOLVE_METHOD_BEFS)
             {
 #ifdef DEBUG
                 dump_pqueue(soft_thread, "before_pop", pqueue);
@@ -878,7 +878,7 @@ my_return_label:
         free(derived.states);
     }
 
-    if (method != FCS_METHOD_A_STAR)
+    if (enum_method != SOLVE_METHOD_BEFS)
     {
         my_brfs_queue_last_item = queue_last_item;
     }

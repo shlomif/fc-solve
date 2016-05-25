@@ -881,7 +881,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
             tests_order_dup(&(instance->opt_tests_order));
     }
 
-    soft_thread->method = FCS_METHOD_OPTIMIZE;
+    soft_thread->enum_method = SOLVE_METHOD_OPTIMIZE;
     soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
 
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
@@ -1022,7 +1022,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
     if (! DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units)
     {
         const fcs_bool_t master_to_randomize =
-            (soft_thread->method == FCS_METHOD_RANDOM_DFS)
+            (soft_thread->enum_method == SOLVE_METHOD_RANDOM_DFS)
             ;
 
         fcs_tests_by_depth_array_t * const arr_ptr = &(DFS_VAR(soft_thread, tests_by_depth_array));

@@ -312,7 +312,7 @@ void fc_solve_init_soft_thread(
             .num = 1,
             .by_depth_tests = SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
         },
-        .method = FCS_METHOD_SOFT_DFS,
+        .enum_method = SOLVE_METHOD_SOFT_DFS,
         .super_method_type = FCS_SUPER_METHOD_DFS,
         .num_checked_states_step = NUM_CHECKED_STATES_STEP,
         .name = "",

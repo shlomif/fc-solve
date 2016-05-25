@@ -530,6 +530,16 @@ typedef enum
     FCS_SUPER_METHOD_PATSOLVE,
 } fcs_super_method_type_t;
 
+typedef enum
+{
+    SOLVE_METHOD_SOFT_DFS,
+    SOLVE_METHOD_RANDOM_DFS,
+    SOLVE_METHOD_BRFS,
+    SOLVE_METHOD_BEFS,
+    SOLVE_METHOD_OPTIMIZE,
+    SOLVE_METHOD_PATSOLVE,
+} fcs_solving_method_t;
+
 struct fc_solve__patsolve_thread_struct;
 struct fc_solve_soft_thread_struct
 {
@@ -557,7 +567,7 @@ struct fc_solve_soft_thread_struct
      * instance.
      *
      * */
-    int method;
+    fcs_solving_method_t enum_method;
 
     /* The super-method type - can be  */
     fcs_super_method_type_t super_method_type;
