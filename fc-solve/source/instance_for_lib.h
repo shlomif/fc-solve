@@ -957,7 +957,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
             };
     }
 
-    soft_thread->method = FCS_METHOD_OPTIMIZE;
+    soft_thread->enum_method = SOLVE_METHOD_OPTIMIZE;
     soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
 
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
