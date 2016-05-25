@@ -747,7 +747,6 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
 
                 BEFS_VAR(soft_thread, pqueue) = new_pq;
             }
-            /* TODO : Implement for the BrFS/Optimize scans. */
         }
     }
 
@@ -1154,7 +1153,6 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                                 {
                                     fcs_derived_states_list_item_t * derived_states =
                                         derived_states_list->states;
-                                    /* TODO : avoid excessive mallocing. */
                                     for (int i = 0 ; i < num_states ; i++)
                                     {
                                         rand_array[i].rating = befs_rate_state(

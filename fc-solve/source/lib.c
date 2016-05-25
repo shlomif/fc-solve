@@ -658,12 +658,10 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
                     if (! flare)
                     {
-                        /* TODO : write what the flare name is.  */
                         SET_ERROR ("Unknown flare name.");
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
 
-                    /* TODO : free plan upon an error. */
                     last_item_type = add_count_iters_to_plan(instance_item, flare, count_iters);
                 }
                 else if (string_starts_with(item_start, "CP", cmd_end))
@@ -675,7 +673,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                         return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
                     }
 
-                    /* TODO : free plan upon an error. */
                     last_item_type = add_checkpoint_to_plan(instance_item);
                 }
                 else if (string_starts_with(item_start, "RunIndef", cmd_end))
@@ -693,7 +690,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     fcs_flare_item_t * const flare = find_flare(flares, end_of_flares, cmd_end, item_end-cmd_end);
                     if (!flare)
                     {
-                        /* TODO : write what the flare name is.  */
                         SET_ERROR ("Unknown flare name in RunIndef command.");
                         return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
@@ -702,7 +698,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 }
                 else
                 {
-                    /* TODO : Write the unknown command in the error string. */
                     SET_ERROR ("Unknown command.");
                     return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
                 }
@@ -950,10 +945,6 @@ static void trace_flare_solution(
 
     fc_solve_trace_solution(instance);
     flare->trace_solution_state_locs = user->state_locs;
-    /*
-     * TODO : maybe only normalize the final moves' stack in
-     * order to speed things up.
-     * */
     fc_solve_move_stack_normalize(
         &(instance->solution_moves),
         &(user->state),
@@ -1088,7 +1079,6 @@ int DLLEXPORT freecell_solver_user_resume_solution(
         fcs_flare_item_t * const flare = current_plan_item->flare;
         fc_solve_instance_t * const instance = &(flare->obj);
 
-        /* TODO : For later - loop over the flares based on the flares plan. */
         user->active_flare = flare;
 
         const fcs_bool_t is_start_of_flare_solving =
@@ -1410,9 +1400,6 @@ static void user_free_resources(
         const int ret_code = flare->ret_code;
         fc_solve_instance_t * const instance = &(flare->obj);
 
-        /*  TODO : for later It's possible two flares in a single-instance
-         *  will be solved. Make sure the check is instance-wide.
-         *  */
         if ((ret_code != FCS_STATE_NOT_BEGAN_YET) &&
             (ret_code != FCS_STATE_INVALID_STATE) &&
             (! flare->instance_is_ready))

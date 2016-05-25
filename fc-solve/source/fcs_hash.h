@@ -202,8 +202,7 @@ static GCC_INLINE void fc_solve_hash_foreach(
             if (should_delete_ptr((*item)->key, context))
             {
                 fc_solve_hash_symlink_item_t * next_item = (*item)->next;
-                /* Garbage collect (*item). TODO : actually make use of the
-                 * items. */
+                /* Garbage collect (*item). */
                 (*item)->next = hash->list_of_vacant_items;
                 hash->list_of_vacant_items = (*item);
                 /* Skip the item in the chain. */

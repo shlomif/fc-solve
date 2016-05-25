@@ -64,7 +64,7 @@ Stack States which are the default.
 Compact states used to be faster than Indirect Stack States, but now it
 seems indirect stack states are at least slightly faster even for games
 whose stacks are not very long. If you still would wish to enable it,
-*TODO : FILL IN*.
+pass the "-DSTATES_TYPE=COMPACT_STATES" flag to CMake.
 
 Installing under Win32
 ----------------------

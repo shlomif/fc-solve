@@ -557,8 +557,6 @@ IF ((NOT ("${FCS_AVOID_TCMALLOC}")) AND (NOT "${FCS_WITH_TEST_SUITE}") AND ( NOT
     IF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
         # Do nothing.
     ELSE()
-        # Cancelling for now to see if it helps with the valgrind problem.
-        # TODO : restore
         SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
     ENDIF()
 ENDIF ()
