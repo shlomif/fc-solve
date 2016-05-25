@@ -47,6 +47,7 @@ fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js.mem
 fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js.mem
 fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
+fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve-shlomif/patsolve/*.bc
 fc-solve/site/wml/rules.mak
 fc-solve/source/AUTHORS.html
 fc-solve/source/AUTHORS.xml
