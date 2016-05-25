@@ -573,8 +573,10 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 #ifndef FCS_SINGLE_HARD_THREAD
     fcs_int_limit_t * const hard_thread_num_checked_states_ptr = &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
+    const fcs_bool_t is_befs = (enum_method == SOLVE_METHOD_BEFS);
+    const fcs_bool_t is_optimize_scan = (enum_method == SOLVE_METHOD_OPTIMIZE);
 
-    if (enum_method == SOLVE_METHOD_BEFS)
+    if (is_befs)
     {
         pqueue = &(BEFS_VAR(soft_thread, pqueue));
     }
@@ -643,7 +645,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
              * It the state has already been visited - move on to the next
              * state.
              * */
-            if ((enum_method == SOLVE_METHOD_OPTIMIZE) ?
+            if (is_optimize_scan ?
                     (
                         (!(temp_visited & FCS_VISITED_IN_SOLUTION_PATH))
                             ||
@@ -772,7 +774,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
             new_pass = FCS_STATE_keyval_pair_to_kv(FCS_SCANS_ptr_new_state = derived_iter->state_ptr);
 #endif
 
-            if (enum_method == SOLVE_METHOD_BEFS)
+            if (is_befs)
             {
                 fc_solve_pq_push(
                     pqueue,
@@ -808,7 +810,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
             }
         }
 
-        if (enum_method == SOLVE_METHOD_OPTIMIZE)
+        if (is_optimize_scan)
         {
             FCS_S_VISITED(PTR_STATE) |= FCS_VISITED_IN_OPTIMIZED_PATH;
         }
@@ -839,7 +841,7 @@ next_state:
         */
         {
             fcs_collectible_state_t * new_ptr_state;
-            if (enum_method == SOLVE_METHOD_BEFS)
+            if (is_befs)
             {
 #ifdef DEBUG
                 dump_pqueue(soft_thread, "before_pop", pqueue);
@@ -878,7 +880,7 @@ my_return_label:
         free(derived.states);
     }
 
-    if (enum_method != SOLVE_METHOD_BEFS)
+    if (! is_befs)
     {
         my_brfs_queue_last_item = queue_last_item;
     }
