@@ -1514,11 +1514,12 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     const int int_method
     )
 {
-    /* TODO : break backcompat with it. */
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     if (int_method == FCS_METHOD_HARD_DFS)
     {
         return freecell_solver_user_set_solving_method(api_instance, FCS_METHOD_SOFT_DFS);
     }
+#endif
     fcs_super_method_type_t super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
     fc_solve_soft_thread_t * const soft_thread = api_soft_thread(api_instance);
     switch (int_method)
