@@ -46,13 +46,13 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>False Impossible</term>
                 <listitem>
                     <para>
-                        A false impossible is an initial board position for 
+                        A false impossible is an initial board position for
                         which the solver reports as impossible to solve, yet
                         can be solved in some way. A false impossible may be
-                        considered a bug depending on the context. 
+                        considered a bug depending on the context.
                     </para>
                     <para>
-                        A meta-move scan can potentially have false 
+                        A meta-move scan can potentially have false
                         impossibles, while an atomic moves one (which does not
                         prune in any way) cannot.
                     </para>
@@ -66,8 +66,8 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                     </para>
                 </listitem>
             </varlistentry>
-            
-            
+
+
             <varlistentry>
                 <term>f_s_</term>
                 <listitem>
@@ -92,7 +92,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <listitem>
                     <para>
                         The states in the state collection form a directed
-                        graph. Each link is a state &rarr; derived state 
+                        graph. Each link is a state &rarr; derived state
                         relationship.
                     </para>
                 </listitem>
@@ -101,7 +101,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>Hard DFS</term>
                 <listitem>
                     <para>
-                        A Depth-First Search scan that uses procedural 
+                        A Depth-First Search scan that uses procedural
                         recursion. Since suspending a scan and resuming it are
                         O(d) operations (where d is the depth) instead
                         of O(1) for Soft-DFS its use is deprecated. It was
@@ -114,11 +114,11 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>Hard Thread</term>
                 <listitem>
                     <para>
-                        a collection of soft threads, that should generally be 
-                        placed in one system thread. Hard thread contains 
-                        resources that soft threads from different hard 
-                        threads would interfere with each other in allocating. 
-                        Hard threads contain a collection of state packs, and 
+                        a collection of soft threads, that should generally be
+                        placed in one system thread. Hard thread contains
+                        resources that soft threads from different hard
+                        threads would interfere with each other in allocating.
+                        Hard threads contain a collection of state packs, and
                         various counters and other variables.
                     </para>
                 </listitem>
@@ -132,10 +132,10 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                         whenever one wishes to solve new board. By using
                         command line parameters it is possible to configure it
                         to solve the board in many ways. Instance logic is
-                        implemented in <filename>intrface.c</filename>, and 
-                        the user API is implemented in 
-                        <filename>lib.c</filename>. Users are advised to make 
-                        use of the command line interface in 
+                        implemented in <filename>intrface.c</filename>, and
+                        the user API is implemented in
+                        <filename>lib.c</filename>. Users are advised to make
+                        use of the command line interface in
                         <filename>cmd_line.c</filename>.
                     </para>
                 </listitem>
@@ -150,15 +150,15 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                         whether the board was solvable or not.
                     </para>
                 </listitem>
-            </varlistentry>            
+            </varlistentry>
             <varlistentry>
                 <term>Iterations</term>
                 <listitem>
                     <para>
                         the number of states checked by a scan, or by all the
-                        scans of a hard thread or of an instance. An iterations                         limit (called num_times in the code) is used to 
+                        scans of a hard thread or of an instance. An iterations                         limit (called num_times in the code) is used to
                         restrict a soft thread, hard thread or instance from
-                        running too long, and to allocate time quotas for 
+                        running too long, and to allocate time quotas for
                         different soft threads.
                     </para>
                 </listitem>
@@ -173,7 +173,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                         Simple Simon tests generate meta-moves.
                     </para>
                 </listitem>
-            </varlistentry>            
+            </varlistentry>
             <varlistentry>
                 <term>Move</term>
                 <listitem>
@@ -191,7 +191,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <listitem>
                     <para>
                         A sequence of moves implemented in its own class
-                        (check <filename>move.c</filename> and 
+                        (check <filename>move.c</filename> and
                         <filename>move.h</filename>).
                     </para>
                 </listitem>
@@ -201,7 +201,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <listitem>
                     <para>
                         normalization is the opposite of canonization. It is
-                        meant to bring the stacks and freecells to their 
+                        meant to bring the stacks and freecells to their
                         absolute locations. It is normally done only when
                         presenting a state to the user or to a code that
                         uses the API.
@@ -234,24 +234,24 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                         <orderedlist>
                             <listitem>
                                 <para>
-                                    A structure specifying the type of game 
-                                    according to number of stacks, number of 
-                                    freecells, number of decks, whether kings 
-                                    can be placed in empty stacks, if 
-                                    sequences have unlimited moves, and how 
-                                    stacks are built by. Defined in 
+                                    A structure specifying the type of game
+                                    according to number of stacks, number of
+                                    freecells, number of decks, whether kings
+                                    can be placed in empty stacks, if
+                                    sequences have unlimited moves, and how
+                                    stacks are built by. Defined in
                                     <filename>preset.c</filename>.
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
-                                    A set of command line arguments to be 
-                                    processed as if they were given on the 
-                                    command line. Can be used to shorten 
-                                    command lines. For instance 
-                                    "-l cool-jives" or "-l john-galt-line" 
-                                    load the presets "cool-jives" and 
-                                    "john-galt-line" respectively. Implemented 
+                                    A set of command line arguments to be
+                                    processed as if they were given on the
+                                    command line. Can be used to shorten
+                                    command lines. For instance
+                                    "-l cool-jives" or "-l john-galt-line"
+                                    load the presets "cool-jives" and
+                                    "john-galt-line" respectively. Implemented
                                     mostly in <filename>cmd_line.c</filename>.
                                 </para>
                             </listitem>
@@ -274,10 +274,10 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>Secondary Hash Value</term>
                 <listitem>
                     <para>
-                        a hash value that is calculated for every state that 
-                        is not used to determine the location of the element 
-                        in the hash table, but that is used for comparison. 
-                        That is done in order to avoid needlessly comparing 
+                        a hash value that is calculated for every state that
+                        is not used to determine the location of the element
+                        in the hash table, but that is used for comparison.
+                        That is done in order to avoid needlessly comparing
                         two different states with the same hash value.
                     </para>
                     <para>
@@ -285,9 +285,9 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                         such it is susceptible to the birthday paradox starting
                         at about 2<superscript>16</superscript>. A secondary
                         hash value with extra 32-bits ensures a collision of both
-                        hash values will only happen at around 2<superscript>32</superscript> states, 
-                        which is much more states than most 32-bit systems can 
-                        handle.                        
+                        hash values will only happen at around 2<superscript>32</superscript> states,
+                        which is much more states than most 32-bit systems can
+                        handle.
                     </para>
                 </listitem>
             </varlistentry>
@@ -313,9 +313,9 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>Soft Thread</term>
                 <listitem>
                     <para>
-                        a singular continuous scan operating on a states 
-                        collection. It can be Soft-DFS, Hard-DFS or Best 
-                        First Search. There could be any number of soft 
+                        a singular continuous scan operating on a states
+                        collection. It can be Soft-DFS, Hard-DFS or Best
+                        First Search. There could be any number of soft
                         threads in a hard thread.
                     </para>
                 </listitem>
@@ -337,7 +337,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                             </listitem>
                             <listitem>
                                 <para>
-                                    The stacks used for maintaining the 
+                                    The stacks used for maintaining the
                                     Soft-DFS recursion.
                                 </para>
                             </listitem>
@@ -393,9 +393,9 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>Test Groups</term>
                 <listitem>
                     <para>
-                        a grouping of tests that dictate which one should be 
-                        performed one after the and placed into the same 
-                        derived states list. Afterwards, this list can be 
+                        a grouping of tests that dictate which one should be
+                        performed one after the and placed into the same
+                        derived states list. Afterwards, this list can be
                         randomized, or prioritized.
                     </para>
                 </listitem>
@@ -404,15 +404,15 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 <term>Tests</term>
                 <listitem>
                     <para>
-                        A function that accepts a source state as input and 
-                        fills a list of derived states according to the moves 
-                        it can perform. Each game type has several type of 
-                        tests, which can be ordered and grouped according to 
+                        A function that accepts a source state as input and
+                        fills a list of derived states according to the moves
+                        it can perform. Each game type has several type of
+                        tests, which can be ordered and grouped according to
                         input from the user
                     </para>
                 </listitem>
             </varlistentry>
-            
+
             <!--
             I keep the following code around to be used as a template for
             new entries:

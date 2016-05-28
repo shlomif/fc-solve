@@ -2,19 +2,19 @@ Game Presets Configuration:
 ---------------------------
 
 The info for generating the game presets lie in the file gen_presets.pl. It
-uses data structure inheritance to determine the exact parameters to be 
+uses data structure inheritance to determine the exact parameters to be
 included in each preset. Its output should later be incorporated into presets.c
 
 Maintaining a list of Modules:
 ------------------------------
 
 The file gen_makefile.pl maintains a list of modules and headers across
-all makefiles that are distributed as part of Freecell Solver. 
+all makefiles that are distributed as part of Freecell Solver.
 
 Generating the site:
 --------------------
 
-The site lies in the sub-directory of fc-solve/site/wml in the CVS and is 
+The site lies in the sub-directory of fc-solve/site/wml in the CVS and is
 generated using GNU Make, WebMetaLanguage and CVS glue. If a development
 version is present, it is checked out of the CVS, packed into an archive,
 and placed on the site with a link in the downloads page.
@@ -29,7 +29,7 @@ freecell-solver-config:
 -----------------------
 
 The autoconf process creates a freecell-solver-config program that can be
-used as an aid in programs wishing to compile and link against Freecell 
+used as an aid in programs wishing to compile and link against Freecell
 Solver. It is generated from freecell-solver-config.in by the configure
 script and is installed system-wide.
 

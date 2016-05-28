@@ -66,10 +66,10 @@ and an initial board to explore. Each instance may have several hard threads
 and each hard thread may have several soft threads. A hard thread is something
 that would likely be put in a system thread. It contains such resources,
 that a collision between them among several hard threads running in parallel
-is undesirable. Nevertheless, every hard thread can access the resources 
+is undesirable. Nevertheless, every hard thread can access the resources
 allocated by other hard threads, should he encounter them in his scan.
 
-A soft thread is a singular scan. It performs a scan for a certain number of 
+A soft thread is a singular scan. It performs a scan for a certain number of
 iterations, at which point the hard thread switches to a different soft thread.
 
 Overview of the utility modules:
@@ -114,17 +114,17 @@ Overview of the utility modules:
     =========
 
     This module implements indirect stack allocation to states. It allocates
-    every states in memory pools (called packs) which have a fixed location 
+    every states in memory pools (called packs) which have a fixed location
     in memory and allocates as many such pools as it can.
 
-    Each pool contains several states that are placed one after the other, 
+    Each pool contains several states that are placed one after the other,
     that thus retain their pointer. That way, memory is conserved as an
-    individually malloced state may have a lot of overhead. (a malloced 
+    individually malloced state may have a lot of overhead. (a malloced
     block+a fixed amount of data is rounded to the nearest power of 2)
 
     fcs_isa allows releasing the last allocated state in case it will
     not be used.
-    
+
     alloc.c:
     ========
 
@@ -146,7 +146,7 @@ Overview of the utility modules:
     5. A pound sign (#) makes a comment that extends to the end of the line.
 
     The code itself is very spaghetty like but it's working.
-    
+
     pqueue.c:
     =========
 
@@ -165,24 +165,24 @@ Overview of the core modules:
     card.c
     ======
 
-    Elementary functions to convert cards to and from their string 
+    Elementary functions to convert cards to and from their string
     representations.
 
-    The u and the p stand for user and perl respectively, and mean user 
-    representation and internal C representation. (The first version of 
+    The u and the p stand for user and perl respectively, and mean user
+    representation and internal C representation. (The first version of
     Freecell Solver was written in Perl).
 
     state.h
     =======
 
-    Definition of the fcs_state_t (which represents a complete layout of the 
+    Definition of the fcs_state_t (which represents a complete layout of the
     Freecell board) and of fcs_state_with_locations_t. Contains many macros
     for manipulating states and strings all of them should behave like function
     calls.
 
     The state_with_locations_t contains the real positions of the stacks and
     freecells (refer to SECT<Canonization and Normalization>) and other things
-    that the system uses but don't uniquely identify the state in the state 
+    that the system uses but don't uniquely identify the state in the state
     collection.
 
     state.c:
@@ -206,7 +206,7 @@ Overview of the core modules:
     This file manages the presets, presets being a configuration of stacks
     number, freecells number, decks number, and the other parameters that
     define how a game is played. A preset is a variant of Solitaire such as
-    Freecell, Baker's Game, Simple Simon, Good Measure, etc. Many of them 
+    Freecell, Baker's Game, Simple Simon, Good Measure, etc. Many of them
     are categorized in PySol under different categories than the Freecell
     category. Moreover, some "Freecell-like" games such as Penguin are not
     supported by Freecell Solver yet.
@@ -214,7 +214,7 @@ Overview of the core modules:
     The routines in the file enable applying a preset to an instance (by its
     name), applying a preset to an instance by a pointer to it, etc.
     It is also used by lib.c.
-    
+
 
     freecell.c:
     -----------
@@ -235,12 +235,12 @@ Overview of the core modules:
     -------
 
     This file contains the check_and_add_state function - a function that is
-    used to determine if a reached state is found in the states collection 
+    used to determine if a reached state is found in the states collection
     and if so, to insert it there. (an operation that can be considered
-    atomic). 
+    atomic).
 
-    It has several macros used to do it for the various types of states 
-    collections supported at compile time. It also has a functions to 
+    It has several macros used to do it for the various types of states
+    collections supported at compile time. It also has a functions to
     collect the new stacks that were present in a similar fashion.
 
     It is being used by the tests functions to put a state in the state
@@ -251,7 +251,7 @@ Overview of the core modules:
 
     This module contains the functions of the various scans and their
     auxiliary functions. The scan functions run tests and traverse the
-    graph according to some inherent logic. Currently present are 
+    graph according to some inherent logic. Currently present are
     random-dfs/soft-dfs (soft-dfs is random-dfs without randomizing
     groups), Hard-DFS and Best-First-Search (named A* in the code).
 
@@ -260,7 +260,7 @@ Overview of the core modules:
 
     This module contains the logic that manages a solver instance, configures
     it and runs it. It uses the scans module to perform the scan and other
-    modules to configure it. Note that the interface presented here is 
+    modules to configure it. Note that the interface presented here is
     very raw, and not meant to be used as an API.
 
     lib.c:
@@ -275,17 +275,9 @@ Overview of the core modules:
 
     cmd_line.c:
     -----------
-    
-    This module can be used to analyze an array of strings (similar to that 
+
+    This module can be used to analyze an array of strings (similar to that
     given to the main() function) and configure a user instance accordingly.
-    It also implements reading such arguments from files and a presets 
+    It also implements reading such arguments from files and a presets
     mechanism that can be used to assign names to common configuration and
     load them.
-
-
-    
-
-
-
-
-

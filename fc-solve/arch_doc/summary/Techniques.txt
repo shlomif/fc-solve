@@ -20,8 +20,8 @@ it doesn't scale well to games where the stacks can contain a lot of cards.
 The reason is that every stack be of a fixed size
 (so offset would be determined by means of multiplication).
 
-This configuration used to be the fastest for limited stack games such as 
-Freecell. After Freecell Solver 2.6.x, it seems that Indirect Stack States 
+This configuration used to be the fastest for limited stack games such as
+Freecell. After Freecell Solver 2.6.x, it seems that Indirect Stack States
 has become slightly faster than it, too.
 
 3. Indirect Stack States - in this configuration each stack is a pointer
@@ -43,7 +43,7 @@ the state, and then marks the flags of all the stacks as cleared. (check
 (*Mark STACKS_COW_CLEAR *).
 
 Later on when a stack is changed, its flag is set, and a stack is copied to a
-hard-thread wide indirect stacks buffer and modified there. 
+hard-thread wide indirect stacks buffer and modified there.
 (check (*Mark STACKS_COW_COPY_STACK*) ).
 
 The check_and_add_state function then, when checking a new state, ignores those
@@ -58,7 +58,7 @@ Extended States:
 
 For each position in the game graph, Freecell Solver maintains a data
 structure that identifies it called fcs_state_t. This contains the cards
-in the stacks and the freecells, and the value of the foundations. The 
+in the stacks and the freecells, and the value of the foundations. The
 stacks and freecells are uniquely sorted to avoid states that are identical
 except for a different permutation of the stacks or the freecells.
 
@@ -78,11 +78,11 @@ higher than the depth of state it was derived from + 1 is reached, then
 its parent would be re-assigned.
 
 An extended state has a num_active_children counter that specifies how many
-of those states that consider it their parent were still not marked as dead 
+of those states that consider it their parent were still not marked as dead
 ends. If this counter reaches 0, this state also becomed inactive.
 
 The state has a vector of flags called scan_visited, that specifies if a given
-scan has visited it yet. If it is a complete scan it can also mark it as 
+scan has visited it yet. If it is a complete scan it can also mark it as
 dead end should it:
 
 1. Recurse out of it if it's a DFS scan.
@@ -103,7 +103,7 @@ stubs to use it are implemented in lib.c.
 After an instance is allocated, it should be parameterized to specify how it
 will solve the board. Afterwards, freecell_solver_init_instance() should
 be called. Afterwards freecell_solver_solve_instance() should be called for
-the first time, and freecell_solver_resume_instance afterwards. (these 
+the first time, and freecell_solver_resume_instance afterwards. (these
 functions solve until they reach a limit of iterations number.)
 
 If one would like to use the instance to solve another board, it is possible
@@ -111,13 +111,13 @@ to recycle it by calling freecell_solver_recycle_instance. This will keep
 its configuration but free all its associated resources, and thus will not
 require parsing the command line again.
 
-The function that calls the actual scans is run_hard_thread(), which is 
+The function that calls the actual scans is run_hard_thread(), which is
 called from within freecell_solver_resume_instance().
 
 Compact Allocation:
 -------------------
 
-Most resources that are allocated arbitrarily in Freecell Solver are 
+Most resources that are allocated arbitrarily in Freecell Solver are
 allocated in a compact manner. I.e: instead of being individually malloced,
 they are allocated in segments and placed one after the other. The segments
 are dynamically allocated and kept at a fixed location in memory. If more
@@ -130,7 +130,7 @@ allocated vectors of states, each one is of constant size.
 
 2. alloc.c/alloc.h - allocates blocks of arbitrary size in a compact manner.
 
-Both of these modules support releasing the last allocated block and the last 
+Both of these modules support releasing the last allocated block and the last
 one alone.
 
 Compact allocation is used for the following resources:
@@ -141,7 +141,7 @@ is found to have already existed, it is released. Else, it is kept and a
 pointer to it can be found in the states collection.
 
 2. Card stacks - if a card stack was modified, it is compactly allocated (see
-(*Mark COMPACT_ALLOC_CARD_STACKS*) ), before one checks to see if it is 
+(*Mark COMPACT_ALLOC_CARD_STACKS*) ), before one checks to see if it is
 present in the stacks collection. If it was found there, its memory is
 released. Else, it is kept there.
 

@@ -3,7 +3,7 @@
     <xsl:param name="itemizedlist.propagates.style">1</xsl:param>
     <xsl:param name="chunker.output.doctype-public">-//W3C//DTD XHTML 1.0 Transitional//EN</xsl:param>
     <xsl:param name="chunker.output.doctype-system">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</xsl:param>
-    
+
 <xsl:template match="itemizedlist">
     <div xmlns="http://www.w3.org/1999/xhtml" class="{name(.)}">
     <xsl:call-template name="anchor"/>

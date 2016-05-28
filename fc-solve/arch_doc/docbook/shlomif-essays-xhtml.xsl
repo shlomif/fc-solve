@@ -10,7 +10,7 @@
       <xsl:call-template name="formal.object.heading"/>
     </xsl:if>
 
-    <xsl:apply-templates select="*[not(self::listitem or self::title 
+    <xsl:apply-templates select="*[not(self::listitem or self::title
         or self::titleabbrev)]"/>
 
     <ul>

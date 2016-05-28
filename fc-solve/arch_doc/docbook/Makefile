@@ -6,7 +6,7 @@ PDF = $(DOC).pdf
 RTF = $(DOC).rtf
 CSS = $(XHTML)/style.css
 
-DOCMAKE = docmake -v --make 
+DOCMAKE = docmake -v --make
 
 UPLOAD_PATH = shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/arch_doc/
 
@@ -22,7 +22,7 @@ $(XHTML_INDEX): $(XML)
 		-o $(XHTML) \
 		xhtml $<
 
-$(CSS): style.css $(XHTML_INDEX) 
+$(CSS): style.css $(XHTML_INDEX)
 	cp -f $< $@
 
 pdf: $(PDF)

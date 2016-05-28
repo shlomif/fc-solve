@@ -9,64 +9,64 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
     <section id="technique_state_representation">
         <title>State Representation</title>
         <para>
-            As can be seen in <filename>state.h</filename>, &fcs; 
+            As can be seen in <filename>state.h</filename>, &fcs;
             supports three ways to represent a state:
         </para>
         <para>
             <orderedlist>
                 <listitem>
                     <para>
-                        <emphasis>Debug States</emphasis> - 
-                        in this configuration, stack counters, 
-                        and cards are represented as 32-bit quantities. 
-                        This configuration consumes a lot of memory, and is 
-                        the slowest of the three. It is however useful for 
-                        debugging, as the debugger will display the state 
+                        <emphasis>Debug States</emphasis> -
+                        in this configuration, stack counters,
+                        and cards are represented as 32-bit quantities.
+                        This configuration consumes a lot of memory, and is
+                        the slowest of the three. It is however useful for
+                        debugging, as the debugger will display the state
                         data-structure very nicely.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis>Compact States</emphasis> - in this 
+                        <emphasis>Compact States</emphasis> - in this
                         configuration the data is one buffer of chars,
-                        where each card and each stack counter are 
-                        represented as one character, and each freecell and 
+                        where each card and each stack counter are
+                        represented as one character, and each freecell and
                         foundation is one char too.
                     </para>
                     <para>
-                        Determining the locations of every card is done 
+                        Determining the locations of every card is done
                         using offset calculation.
                     </para>
                     <para>
-                        This configuration consumes much less memory than 
-                        Debug States, but it doesn't scale well to games 
+                        This configuration consumes much less memory than
+                        Debug States, but it doesn't scale well to games
                         where the stacks can contain a lot of cards.
                         The reason is that every stack be of a fixed size
-                        (so offset would be determined by means of 
+                        (so offset would be determined by means of
                         multiplication).
                     </para>
                     <para>
-                        This configuration used to be the fastest for 
-                        limited stack games such as Freecell. After 
-                        &fcs; 2.6.x, it seems that Indirect Stack States 
+                        This configuration used to be the fastest for
+                        limited stack games such as Freecell. After
+                        &fcs; 2.6.x, it seems that Indirect Stack States
                         has become slightly faster than it, too.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis>Indirect Stack States</emphasis> - 
-                        in this configuration 
-                        each stack is a pointer to a stack in memory. 
+                        <emphasis>Indirect Stack States</emphasis> -
+                        in this configuration
+                        each stack is a pointer to a stack in memory.
                         The stacks are also collected and there is one copy
-                        of each stack organization (say [KS QH 6H]) in 
-                        memory. Since a pointer to a stack uniquely 
+                        of each stack organization (say [KS QH 6H]) in
+                        memory. Since a pointer to a stack uniquely
                         identifies a stack, the states can be compared by
                         comparing their memory contents.
                     </para>
                     <para>
-                        This is now the default configuration, and in the 
-                        2.5.x development tree, many enhancements were done to 
-                        optimize it. It was benchmarked to be slightly faster 
+                        This is now the default configuration, and in the
+                        2.5.x development tree, many enhancements were done to
+                        optimize it. It was benchmarked to be slightly faster
                         than Compact States, even for games like freecell.
                     </para>
                 </listitem>
@@ -77,26 +77,26 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
     <section id="technique_indirect_stack_states_algorithms">
         <title>Indirect Stack States Algorithms</title>
         <para>
-            The stacks are kept in their own stack collection in the 
-            freecell_solver_instance struct. When a test wishes to 
-            create a derived states, it first copies the state, and then 
-            marks the flags of all the stacks as cleared. (check 
+            The stacks are kept in their own stack collection in the
+            freecell_solver_instance struct. When a test wishes to
+            create a derived states, it first copies the state, and then
+            marks the flags of all the stacks as cleared. (check
             <symbol>(*Mark STACKS_COW_CLEAR *)</symbol> in the code).
         </para>
         <para>
-            Later on when a stack is changed, its flag is set, and a 
-            stack is copied to a hard-thread wide indirect stacks buffer 
+            Later on when a stack is changed, its flag is set, and a
+            stack is copied to a hard-thread wide indirect stacks buffer
             and modified there. (check (*Mark STACKS_COW_COPY_STACK*) ).
         </para>
         <para>
-            The check_and_add_state function then, when checking a 
-            new state, ignores those stacks whose flag was not set, 
+            The check_and_add_state function then, when checking a
+            new state, ignores those stacks whose flag was not set,
             and collects the stacks whose flag was set.
-            ( <symbol>(*Mark STACKS_COW_CACHING*)</symbol> ). The 
-            memory for the collected stacks is allocated compactly in 
+            ( <symbol>(*Mark STACKS_COW_CACHING*)</symbol> ). The
+            memory for the collected stacks is allocated compactly in
             a segment, where one stack starts after the other
-            (check <filename>alloc.c</filename> and <filename>alloc.h</filename>). 
-            If the stack was found in the collection the memory that was 
+            (check <filename>alloc.c</filename> and <filename>alloc.h</filename>).
+            If the stack was found in the collection the memory that was
             allocated is freed for use by future stacks).
         </para>
     </section>
@@ -104,12 +104,12 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
     <section id="technique_extended_states">
         <title>Extended States</title>
         <para>
-            For each position in the game graph, Freecell Solver maintains a 
-            data structure that identifies it called 
-            <type>fcs_state_t</type>. This contains the cards in the 
-            stacks and the freecells, and the value of the foundations. The 
-            stacks and freecells are uniquely sorted to avoid states that 
-            are identical except for a different permutation of the stacks 
+            For each position in the game graph, Freecell Solver maintains a
+            data structure that identifies it called
+            <type>fcs_state_t</type>. This contains the cards in the
+            stacks and the freecells, and the value of the foundations. The
+            stacks and freecells are uniquely sorted to avoid states that
+            are identical except for a different permutation of the stacks
             or the freecells.
         </para>
         <para>
@@ -132,9 +132,9 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             reached, then its parent would be re-assigned.
         </para>
         <para>
-            An extended state has a num_active_children counter that 
-            specifies how many of those states that consider it their parent 
-            were still not marked as dead ends. If this counter reaches 0, 
+            An extended state has a num_active_children counter that
+            specifies how many of those states that consider it their parent
+            were still not marked as dead ends. If this counter reaches 0,
             this state also becomes inactive.
         </para>
 
@@ -153,15 +153,15 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
                 </listitem>
                 <listitem>
                     <para>
-                        Find that it has no derived states if it is a 
+                        Find that it has no derived states if it is a
                         Best-First Search scan.
                     </para>
                 </listitem>
             </orderedlist>
         </para>
         <para>
-            If it is marked as dead end, then its parent's counter would be 
-            incremented. If the latter is zero, the process may continue to 
+            If it is marked as dead end, then its parent's counter would be
+            incremented. If the latter is zero, the process may continue to
             the grand parent and so forth.
         </para>
     </section>
@@ -169,21 +169,21 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
     <section id="technique_life_cycle_of_a_f_s_instance_t">
         <title>The Life-Cycle of a freecell_solver_instance_t</title>
         <para>
-            A <type>freecell_solver_instance_t</type> is allocated by 
+            A <type>freecell_solver_instance_t</type> is allocated by
             <filename>lib.c</filename> to start solving a board. The logic
-            of solving a board is present in <filename>intrface.c</filename> 
-            while the stubs to use it are implemented in 
+            of solving a board is present in <filename>intrface.c</filename>
+            while the stubs to use it are implemented in
             <filename>lib.c</filename>.
         </para>
         <para>
             After an instance is allocated, it should be parametrized to
-            specify how it will solve the board. Afterwards, 
+            specify how it will solve the board. Afterwards,
             <function>freecell_solver_init_instance()</function> should
-            be called. After that, 
+            be called. After that,
             <function>freecell_solver_solve_instance()</function> should
-            be called for the first time, and 
+            be called for the first time, and
             <function>freecell_solver_resume_instance()</function> afterwards.
-            (these functions solve until they reach a limit of iterations 
+            (these functions solve until they reach a limit of iterations
             number.)
         </para>
         <para>
@@ -194,8 +194,8 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             thus will not require parsing the command line again.
         </para>
         <para>
-            The function that calls the actual scans is 
-            <function>run_hard_thread()</function>, which is called from 
+            The function that calls the actual scans is
+            <function>run_hard_thread()</function>, which is called from
             within <function>freecell_solver_resume_instance()</function>.
         </para>
     </section>
@@ -217,9 +217,9 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             <orderedlist>
                 <listitem>
                     <para>
-                        <filename>fcs_isa.c</filename>/<filename>fcs_isa.h</filename> - 
-                        Short for Indirect State Allocation, this module 
-                        allocated vectors of states, each one is of constant 
+                        <filename>fcs_isa.c</filename>/<filename>fcs_isa.h</filename> -
+                        Short for Indirect State Allocation, this module
+                        allocated vectors of states, each one is of constant
                         size.
                     </para>
                 </listitem>
@@ -235,7 +235,7 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         <para>
             Both of these modules support releasing the last allocated block
             and the last one alone.
-        </para>        
+        </para>
         <para>
             Compact allocation is used for the following resources.
         </para>
@@ -243,35 +243,35 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
             <orderedlist>
                 <listitem>
                     <para>
-                        <emphasis>States</emphasis> - using fcs_isa. A derived 
-                        state is allocated using the hard thread's allocator, 
-                        and it is modified with the appropriate moves. If it 
-                        is found to have already existed, it is released. 
-                        Else, it is kept and a pointer to it can be found 
+                        <emphasis>States</emphasis> - using fcs_isa. A derived
+                        state is allocated using the hard thread's allocator,
+                        and it is modified with the appropriate moves. If it
+                        is found to have already existed, it is released.
+                        Else, it is kept and a pointer to it can be found
                         in the states collection.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis>Card stacks</emphasis> - if a card stack was 
-                        modified, it is compactly allocated (see 
-                        <symbol>(*Mark COMPACT_ALLOC_CARD_STACKS*)</symbol> ), 
-                        before one checks to see if it is present in the 
-                        stacks collection. If it was found there, its memory 
+                        <emphasis>Card stacks</emphasis> - if a card stack was
+                        modified, it is compactly allocated (see
+                        <symbol>(*Mark COMPACT_ALLOC_CARD_STACKS*)</symbol> ),
+                        before one checks to see if it is present in the
+                        stacks collection. If it was found there, its memory
                         is released. Else, it is kept there.
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis>Move stacks</emphasis> - 
-                        the move stacks leading to the parent are compactly 
+                        <emphasis>Move stacks</emphasis> -
+                        the move stacks leading to the parent are compactly
                         allocated (see (*Mark COMPACT_ALLOC_MOVE_STACKS*)).
                     </para>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis>Hash Elements</emphasis> - The elements of 
-                        the hash linked lists are compactly allocated with a 
+                        <emphasis>Hash Elements</emphasis> - The elements of
+                        the hash linked lists are compactly allocated with a
                         specialized hash allocator.
                     </para>
                 </listitem>

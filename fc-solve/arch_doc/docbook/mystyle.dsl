@@ -1,12 +1,12 @@
 <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
-<!ENTITY html-ss 
+<!ENTITY html-ss
   PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" CDATA dsssl>
 <!ENTITY print-ss
   PUBLIC "-//Norman Walsh//DOCUMENT DocBook Print Stylesheet//EN" CDATA dsssl>
 ]>
 <style-sheet>
 <style-specification id="print" use="print-stylesheet">
-<style-specification-body> 
+<style-specification-body>
 (define %bop-footnotes%
    ;; Make "bottom-of-page" footnotes?
    #t)
@@ -22,7 +22,7 @@
       )
       (sosofo-append
         (make formatting-instruction  data: "\\href{" )
-        (make formatting-instruction 
+        (make formatting-instruction
             data: (attribute-string (normalize "url")) )
         (make formatting-instruction  data: "}{" )
         (process-children) ;; Wrote the text with its format (HTML anchor)
@@ -42,7 +42,7 @@
 </style-specification-body>
 </style-specification>
 <style-specification id="html" use="html-stylesheet">
-<style-specification-body> 
+<style-specification-body>
 
 ;; customize the html stylesheet
 (define %html-ext%

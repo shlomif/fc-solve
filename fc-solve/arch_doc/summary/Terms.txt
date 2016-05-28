@@ -1,5 +1,5 @@
 
-Canonization - An extended state is canonized by its stacks being uniquely 
+Canonization - An extended state is canonized by its stacks being uniquely
 sorted according to their contents, and an array of indexes describing their
 original locations sorted accordingly. This is done to make sure no two
 states with the same permutation of states exist.
@@ -33,16 +33,16 @@ it to solve the board in many ways. Instance logic is implemented in
 intrface.c, and the user API is implemented in lib.c. Users are advised to
 make use of the command line interface in cmd_line.c.
 
-Iterations - the number of states checked by a scan, or by all the scans of 
+Iterations - the number of states checked by a scan, or by all the scans of
 a hard thread or of an instance. An iterations limit (called num_times in
 the code) is used to restrict a soft thread, hard thread or instance from
 running too long, and to allocate time quotas for different soft threads.
 
 Moves - A one-time displacements of cards from stacks to stacks, from stacks
-to freecells, or from freecells to stacks. Also contain some special moves 
+to freecells, or from freecells to stacks. Also contain some special moves
 such as those for canonizing stacks, and separators. Also see Move Stacks.
 
-Move Stacks - A sequence of move implemented in its own class. 
+Move Stacks - A sequence of move implemented in its own class.
 (check move.c and move.h)
 
 Normalization - normalization is the opposite of canonization. It is meant
@@ -51,18 +51,18 @@ done only when presenting a state to the user or to an upper state.
 
 Packs - see State Packs
 
-Parent - The state from which one state in the state graph was initially 
+Parent - The state from which one state in the state graph was initially
 derived from. It is possible that this state would eventually be reached
 from a different state, but its parent in that case, remains the same.
 
 Presets -
 1. A structure specifying the type of game according to number of stacks,
-number of freecells, number of decks, whether kings can be placed in empty 
+number of freecells, number of decks, whether kings can be placed in empty
 stacks, if sequences have unlimited moves, and how stacks are built by. Defined
 in preset.c.
-2. A set of command line arguments to be processed as if they were given on the 
+2. A set of command line arguments to be processed as if they were given on the
 command line. Can be used to shorten command lines. For instance "-l cool-jives"
-or "-l john-galt-line" load the presets "cool-jives" and "john-galt-line" 
+or "-l john-galt-line" load the presets "cool-jives" and "john-galt-line"
 respectively. Implemented mostly in cmd_line.c.
 
 Reparent - let's suppose state DEST has been derived from state SRC. If
@@ -97,22 +97,20 @@ describes the contents of the stacks, freecells, and foundations at any given
 time. A human seeing a state can solve the game from it without further
 information.
 
-State Collection - a collection that collects every state once and only once. 
+State Collection - a collection that collects every state once and only once.
 It can be sought of as an associate array (or a map) of keys only. In fact,
 the keys are mapped to extra information such as depth, order of stacks and
 freecells and others, so it is more of a key-value collection.
 
 State Packs - An allocation of states. Each one is a buffer in memory, that
 contain an array of packs. Each buffer remains at a constant memory location,
-but more buffers are allocated as necessary. The implementation of State packs 
+but more buffers are allocated as necessary. The implementation of State packs
 reside in the files fcs_isa.c and fcs_isa.h.
 
 Test Groups - a grouping of tests that dictate which one should be performed
 one after the and placed into the same derived states list. Afterwards, this
 list can be randomized, or prioritized.
 
-Tests - A function that accepts a source state as input and fills a list of 
+Tests - A function that accepts a source state as input and fills a list of
 derived states according to the moves it can perform. Each game type has several
 type of tests, which can be ordered and grouped according to input from the user.
-
-

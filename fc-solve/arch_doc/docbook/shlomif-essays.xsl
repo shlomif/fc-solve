@@ -10,8 +10,8 @@
     <xsl:param name="css.decoration">0</xsl:param>
     <xsl:param name="ulink.target"></xsl:param>
     <xsl:param name="use.viewport">0</xsl:param>
-    <!-- End of Strict Params -->    
-    <xsl:param name="toc.section.depth">10</xsl:param> 
+    <!-- End of Strict Params -->
+    <xsl:param name="toc.section.depth">10</xsl:param>
     <xsl:param name="generate.section.toc.level">10</xsl:param>
     <!-- Enable fop extensions - see:
     http://www.sagehill.net/docbookxsl/InstallingAnFO.html
@@ -26,7 +26,7 @@
       <xsl:call-template name="formal.object.heading"/>
     </xsl:if>
 
-    <xsl:apply-templates select="*[not(self::listitem or self::title 
+    <xsl:apply-templates select="*[not(self::listitem or self::title
         or self::titleabbrev)]"/>
 
     <ul>
@@ -88,7 +88,7 @@ google_color_url = "008000";
     <xsl:if test="string($docmake.output.work_in_progress)">
     <div class="center warning">
         <p>
-            <b>Note:</b> This document is work-in-progress. Please don't 
+            <b>Note:</b> This document is work-in-progress. Please don't
             publish it on news sites, or otherwise link to it in public
             without the author's permission. Private linking is acceptable.
         </p>
