@@ -1,7 +1,7 @@
-  
-<!-- 
-    Credit goes to the Ruby on Rails team for this page 
-    has been heavily based on the default Rails page that is 
+
+<!--
+    Credit goes to the Ruby on Rails team for this page
+    has been heavily based on the default Rails page that is
     built with a scaffolded application.
 
     Thanks a lot to them for their work.
@@ -22,7 +22,7 @@
               <li><a href="https://github.com/PerlDancer/Dancer/">GitHub Community</a></li>
             </ul>
           </li>
-          
+
           <li>
             <h3>Browse the documentation</h3>
 
@@ -61,7 +61,7 @@
         <div id="getting-started">
           <h1>Getting started</h1>
           <h2>Here&rsquo;s how to get dancing:</h2>
-                    
+
           <h3><a href="#" id="about_env_link">About your application's environment</a></h3>
 
           <div id="about-content" style="display: none;">
@@ -109,7 +109,7 @@
     </script>
 
 
-          <ol>          
+          <ol>
             <li>
               <h2>Tune your application</h2>
 
@@ -127,9 +127,9 @@
               <p>
               The default route that displays this page can be removed,
               it's just here to help you get started. The template used to
-              generate this content is located in 
+              generate this content is located in
               <code>views/index.tt</code>.
-              You can add some routes to <tt>lib/Games/FC_Solve/AJAX/Service.pm</tt>. 
+              You can add some routes to <tt>lib/Games/FC_Solve/AJAX/Service.pm</tt>.
               </p>
             </li>
 
