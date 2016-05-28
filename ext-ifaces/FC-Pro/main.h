@@ -28,7 +28,7 @@
 #define FILTERNAME2 "All Files (*.*)"
 #define FILTER2		"*.*"
 
-typedef struct 
+typedef struct
 {
 	CHAR szFilterName1[sizeof (FILTERNAME1)];	// has to be exact size
 	CHAR szFilter1[sizeof (FILTER1)];

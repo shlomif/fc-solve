@@ -106,8 +106,8 @@ VOID FCPlayReInit (HWND hwnd)
 			}
 			else if (card[yCol][yNewPos] != EMPTY)											{
 				// freecell is not empty!
-				
-				Message (hwnd, MB_ICONEXCLAMATION, 
+
+				Message (hwnd, MB_ICONEXCLAMATION,
 					"Cannot reduce freecells from %d to %d\nbecause freecell %d is not empty!",
 					Fvac_max, NumFcs, yNewPos+1);
 				NumFcs = Fvac_max;
@@ -117,7 +117,7 @@ VOID FCPlayReInit (HWND hwnd)
 
 		// move cards
 
-		for (yOldPos = Fvac_max, yNewPos = NumFcs; 
+		for (yOldPos = Fvac_max, yNewPos = NumFcs;
 			 yOldPos < (Fvac_max + NUM_SUITS); yOldPos++, yNewPos++)
 		{
 			card[yCol][yNewPos] = card[yCol][yOldPos];
@@ -135,12 +135,12 @@ VOID FCPlayReInit (HWND hwnd)
 		// ie going from 2 to 4, add 2
 
 		//
-		// move homecells up 
+		// move homecells up
 		//
 
 		yCol = 0;
-		for (yOldPos = (Fvac_max + NUM_SUITS), 
-			 yNewPos = (NumFcs   + NUM_SUITS -1); 
+		for (yOldPos = (Fvac_max + NUM_SUITS),
+			 yNewPos = (NumFcs   + NUM_SUITS -1);
 			 yOldPos >= Fvac_max + 1; yOldPos--, yNewPos--)
 		{
 			card[yCol][yNewPos] = card[yCol][yOldPos - 1];
@@ -189,7 +189,7 @@ VOID ActivateSupMoveTest (VOID)
 BOOL GDone (VOID)
 {
 	BYTE yPos, yCol ;
-	// check if game won! 
+	// check if game won!
 	yCol = 0 ;
 	for (yPos = NUM_FCS; yPos < (NUM_FCS + NUM_SUITS); yPos++)
 	{
@@ -211,16 +211,16 @@ BOOL MakeMoveH (CHAR source, CHAR destination)
 	{
 		return FALSE ;
 	}
-//	if (destination < 'e') 
+//	if (destination < 'e')
 //#ifdef FC89
 #ifndef FC89
-	if (destination < ('a' + NumFcs))    //TEST 
+	if (destination < ('a' + NumFcs))    //TEST
 #else
 //e:		if ((destination < ('a' + NumFcs)) || ((NumFcs > 7) && (destination >= 'k') && (destination <= 'l') &&
 		if (((destination < ('a' + NumFcs)) || (destination >= 'k') || (destination <= 'l')) &&
-				(destination != 'h'))//TEST 
+				(destination != 'h'))//TEST
 //		if ((destination < ('a' + NumFcs)) || ((NumFcs > 7) && (destination <= 'l') &&
-//				(destination != 'h')))//TEST 
+//				(destination != 'h')))//TEST
 //		if (destination != 'h')
 #endif
 				// destination is not home
@@ -283,7 +283,7 @@ BOOL MakeMoveT (CHAR source, CHAR destination)
 	//char szTemp[20] ;
 #ifndef NTMAKE
 
-	_fmemcpy(ColLenS, ColLen, 16) ; 
+	_fmemcpy(ColLenS, ColLen, 16) ;
 
 #else
 //	MainMessage("MMTEnt");
@@ -339,7 +339,7 @@ BOOL MakeMoveT (CHAR source, CHAR destination)
 		//	  result = MakeMove(source, destination, 1) ;
 	}
 #ifndef NTMAKE
-	_fmemcpy(ColLen, ColLenS, 16) ; 
+	_fmemcpy(ColLen, ColLenS, 16) ;
 #else
 	for (i = 0 ; i < 8 ; i++)
 	  ColLen[i] = ColLenS[i] ;
@@ -352,7 +352,7 @@ BOOL MakeMoveTP (CHAR source, CHAR destination)
 	BOOL result;
 	BYTE i;
 #ifndef NTMAKE
-	_fmemcpy(ColLenS, ColLen, 16) ; 
+	_fmemcpy(ColLenS, ColLen, 16) ;
 #else
 	for (i = 0 ; i < 8 ; i++)
 	{
@@ -361,7 +361,7 @@ BOOL MakeMoveTP (CHAR source, CHAR destination)
 #endif
 	result = MakeMove(source, destination, 1) ;
 #ifndef NTMAKE
-	_fmemcpy(ColLen, ColLenS, 16) ; 
+	_fmemcpy(ColLen, ColLenS, 16) ;
 #else
 	for (i = 0 ; i < 8 ; i++)
 	  ColLen[i] = ColLenS[i] ;
@@ -407,7 +407,7 @@ PRIVATE BOOL MakeMove (CHAR source, CHAR destination, INT mode)
 			else
 			{		//Move from column to freecell or home
 #ifdef FCPRO2
-//wcaldif				
+//wcaldif
 				Scard = card[Scol][ColLen[Scol - 1] - 1] ;
 //sprintf(szTemp,"MM2 sc-%d ", Scard);
 //MainMessage(szTemp) ;
@@ -419,14 +419,14 @@ PRIVATE BOOL MakeMove (CHAR source, CHAR destination, INT mode)
 #ifndef FC89
 				if (dst < ('a' + NumFcs))
 #else
-				if (((NumFcs < 8) && (dst < ('a' + NumFcs))) || 
-					((NumFcs > 7) && ((dst < 'h') || (dst == 'k'))) || 
+				if (((NumFcs < 8) && (dst < ('a' + NumFcs))) ||
+					((NumFcs > 7) && ((dst < 'h') || (dst == 'k'))) ||
 					((NumFcs == 9) && (dst == 'l')))
 //orig:				if ((dst < ('a' + NumFcs)) || ((dst >= 'k') && (dst <= 'l'))) //TEST
 #endif
 				{	// Move from column to freecell
 #ifdef FCPRO2
-//wcaldif					
+//wcaldif
 					ShowCell ("FC");
 #endif
 //sprintf(szTemp, "MM MCtF ND-%d ds-%c", NumFcs, dst) ;
@@ -436,7 +436,7 @@ PRIVATE BOOL MakeMove (CHAR source, CHAR destination, INT mode)
 				else
 				{   // Move from column to home
 #ifdef FCPRO2
-//wcaldif					
+//wcaldif
 					ShowCell ("HC");
 #endif
 //MainMessage("MM MCtH") ;
@@ -458,8 +458,8 @@ PRIVATE BOOL MakeMove (CHAR source, CHAR destination, INT mode)
 		if (src > ('a' + NumFcs - 1))
 				rtn = FALSE;
 #else
-		if (((src > ('a' + NumFcs - 1)) && (NumFcs < 8)) || 
-				(((src > ('a' + NumFcs + 2)) && (NumFcs >= 8))))  
+		if (((src > ('a' + NumFcs - 1)) && (NumFcs < 8)) ||
+				(((src > ('a' + NumFcs + 2)) && (NumFcs >= 8))))
 		{
 			if (src == 'h')
 			//attempt to move from home
@@ -477,7 +477,7 @@ PRIVATE BOOL MakeMove (CHAR source, CHAR destination, INT mode)
 //sprintf(szTemp,"MFF sc-%c", Scard) ;
 //MainMessage(szTemp) ;
 #ifdef FCPRO2
-//wcaldif			
+//wcaldif
 			ShowCardG(Scard, TRUE);
 #endif
 			if (Scard == EMPTY)
@@ -521,15 +521,15 @@ PRIVATE BOOL MoveColToFullCol (INT Scol, INT Dcol, INT mode)
 {
 	CARD Scard, Dcard, LScard;
 #ifndef SSMOVE
-	INT  i, j; 
+	INT  i, j;
 #else
-	INT  i, j, k ;	  
+	INT  i, j, k ;
 	CARD SScard ;
-#endif	
+#endif
 	BOOL rtn = TRUE;
 //if (Scol == 6)
 //MainMessage("CtCEnt") ;
-	
+
 	// get dst card val from array
 	Dcard = card[Dcol][ColLen[Dcol - 1] - 1] ;
 
@@ -581,7 +581,7 @@ PRIVATE BOOL MoveColToFullCol (INT Scol, INT Dcol, INT mode)
 			k = i ;
 			}
 		if (i > (Fvac + 1) * (Cvac + 1))
-			MultMove = MultMoveX = i ;		
+			MultMove = MultMoveX = i ;
 		}
 	}
 	for (i = 0; i < k ; i++)
@@ -706,7 +706,7 @@ PRIVATE BOOL MoveColToFullCol (INT Scol, INT Dcol, INT mode)
 // move from column to empty column
 //
 PRIVATE BOOL MoveColToEmptyCol (
-INT Scol, 
+INT Scol,
 INT Dcol,INT mode)
 {
 	INT i, j, k;
@@ -756,7 +756,7 @@ INT Dcol,INT mode)
 #ifdef FCPRO2
 		ShowCardG(Scard, TRUE) ;
 #endif
-		if (i && 
+		if (i &&
 			(
 				(
 					((VALUE(Scard) - 1) != VALUE(LScard)) ||
@@ -803,7 +803,7 @@ INT Dcol,INT mode)
 
 		Scard = card[Scol][ColLen[Scol - 1] - 1] ;
 
-		// change hand - move cards to fcs and empties as we 
+		// change hand - move cards to fcs and empties as we
 		// need
 
 		if (j == (i - 1))
@@ -827,7 +827,7 @@ INT Dcol,INT mode)
 			// its not the last card so put in storage
 
 			// note that empty columns should not be use here
-			// but since it wont be necessary to store move than 
+			// but since it wont be necessary to store move than
 			// the number of freecells, it wont happen
 
 			if (!mode)
@@ -911,7 +911,7 @@ PRIVATE BOOL MoveColToHome (INT Scol, INT dst, INT mode)
 	if ((dst >= 'k') && (NumFcs > 7))
 		dtrpos-= 3 ;
 #endif
-	if ((VALUE(Scard) && 
+	if ((VALUE(Scard) &&
 		(((VALUE(card[0][dtrpos]) + 1) == VALUE(Scard)) &&
 		(SUIT(card[0][dtrpos]) == SUIT(Scard)))) ||
 		(!VALUE(Scard) && (card[0][dtrpos] == EMPTY)))
@@ -944,7 +944,7 @@ PRIVATE BOOL MoveFCToCol (CARD Scard, INT dst, INT trpos, INT mode)
 	{  // Move from freecell to non-empty column
 		Dcard = card[Dcol][ColLen[Dcol - 1] - 1] ;
 #ifdef FCPRO2
-//wcaldif		
+//wcaldif
 		ShowCardG(Dcard, FALSE) ;
 #endif
 	}
@@ -1018,7 +1018,7 @@ PRIVATE BOOL MoveFCToFCOrHome (CARD Scard, INT dst, INT trpos, INT mode)
 	}
 	else
 	{   // Move from freecell to home
-		if ((VALUE(Scard) && 
+		if ((VALUE(Scard) &&
 			(((VALUE(card[0][dtrpos]) + 1) == VALUE(Scard)) &&
 			(SUIT(card[0][dtrpos]) == SUIT(Scard)))) ||
 			(!VALUE(Scard) && (card[0][dtrpos] == EMPTY)))
@@ -1059,7 +1059,7 @@ VOID MoveAuto (BOOL bTestMode)
 		// check all 12 col/fcs
 //		for (i = 0 ; i < 12 ; i++)
 		for (i = 0 ; i < (8 + NUM_FCS) ; i++)
-		{  
+		{
 			//Auto-posting
 
 			post = -1 ;
@@ -1085,7 +1085,7 @@ VOID MoveAuto (BOOL bTestMode)
 			for (j = NUM_FCS ; j < (NUM_FCS + 4) ; j++)
 			{
 				// if (card is ace and homecell is empty) or
-				// (card is duece and homecell is ace and 
+				// (card is duece and homecell is ace and
 				// suits are equal)
 				if ((!VALUE(Scard) && card[0][j] == EMPTY) ||
 					((VALUE(Scard) == 1) && (!VALUE(card[0][j]) &&
@@ -1099,19 +1099,19 @@ VOID MoveAuto (BOOL bTestMode)
 					break;
 				}
 
-				// if card is tres or more and 
+				// if card is tres or more and
 				// homecell+1 equals this card and
 				// they are the same suits
-				if ((VALUE(Scard) > 1) && 
+				if ((VALUE(Scard) > 1) &&
 					(((VALUE(card[0][j]) + 1) == VALUE(Scard)) &&
 					(SUIT(card[0][j]) == SUIT(Scard))))
 				{
 					// post this card to this homecell
 					post = j ;
 				    l = 0 ;
-			
+
 					// look at all homecells
-//					for (k = 4 ; k < 8 ; k++)	
+//					for (k = 4 ; k < 8 ; k++)
 				for (k = NUM_FCS ; k < (NUM_FCS + 4) ; k++)
 					{
 						// if the homecell is not empty and
@@ -1148,7 +1148,7 @@ VOID MoveAuto (BOOL bTestMode)
 				{
 					// card is from a col
 //sprintf(szTemp, "s3- %d", gbSolver3) ;
-//MainMessage(szTemp) ; 
+//MainMessage(szTemp) ;
 					MoveCard (i + 1, ColLen[i] - 1, EMPTY, bTestMode, TRUE);
 					if (!bTestMode && gbLoadingSolver && !gbSolver3)   //***12/19/01
 					{
@@ -1157,18 +1157,18 @@ VOID MoveAuto (BOOL bTestMode)
 //						if ((FCSolveMoves[b] == (i + '1')) &&
 						if ((FCSolveMoves[b] == (ColSeqC[i])) &&
 							  (FCSolveMoves[b - 1] == 'h'))
-							{	
+							{
 								FCSolveMoves[b] = FCSolveMoves[b - 1] = 'x' ;
 								break ;
 							}
 						}
 					}
 
-					// decrement column length, even in test 
-					// mode so that we can see if this will 
+					// decrement column length, even in test
+					// mode so that we can see if this will
 					// end the game
 
-					ColLen[i]-- ; 
+					ColLen[i]-- ;
 
 					if (!ColLen[i])
 					{
@@ -1190,7 +1190,7 @@ VOID MoveAuto (BOOL bTestMode)
 						{
 							if ((FCSolveMoves[b] == (i - 8 + 'a')) &&
 							  (FCSolveMoves[b - 1] == 'h'))
-							{	
+							{
 									FCSolveMoves[b] = FCSolveMoves[b - 1] = 'x' ;
 									break ;
 							}
@@ -1217,9 +1217,9 @@ VOID MoveAuto (BOOL bTestMode)
 }
 
 PRIVATE CHAR MoveCard (
-INT col, 
-INT pos, 
-CARD crd, 
+INT col,
+INT pos,
+CARD crd,
 BOOL bTestMode,
 BOOL bAutoMove)
 {
@@ -1246,7 +1246,7 @@ BOOL bAutoMove)
 //
 // determines if freecell or column has a card
 //
-// a modified version could be used as a more generic 
+// a modified version could be used as a more generic
 // EMPTY checker
 BOOL ValidateClick (CHAR loc)
 {
@@ -1297,11 +1297,11 @@ VOID MoveUndo (INT nSrcCol, INT nSrcPos, INT nDstCol, INT nDstPos)
 
 	// move card
 
-	card[nSrcCol][nSrcPos] = card[nDstCol][nDstPos]; 
+	card[nSrcCol][nSrcPos] = card[nDstCol][nDstPos];
 
 	InvalidateCard (nSrcCol, nSrcPos);
 
-	if (nSrcCol == 0)  
+	if (nSrcCol == 0)
 	{
 		// fc row
 
@@ -1326,7 +1326,7 @@ VOID MoveUndo (INT nSrcCol, INT nSrcPos, INT nDstCol, INT nDstPos)
 
 	if (nDstCol == 0)  // fc row
 	{
-		if (nDstPos >= NUM_FCS) 
+		if (nDstPos >= NUM_FCS)
 		{
 			if (VALUE(card[nDstCol][nDstPos]) > ACE)
 			{
@@ -1341,7 +1341,7 @@ VOID MoveUndo (INT nSrcCol, INT nSrcPos, INT nDstCol, INT nDstPos)
 				card[nDstCol][nDstPos] = EMPTY;
 			}
 		}
-		else 
+		else
 		{
 			// take card out of fc
 
@@ -1389,7 +1389,7 @@ PRIVATE VOID StoreCard (INT Scol, INT Spos, CARD Scard)
 
 	if (gnStorages && gStorage[gnStorages - 1].dst.column)
 	{
-		// last move was to a column, move all previous freecell cards to 
+		// last move was to a column, move all previous freecell cards to
 		// this column
 
 		yDstCol = gStorage[gnStorages - 1].dst.column;
@@ -1429,7 +1429,7 @@ PRIVATE VOID StoreCard (INT Scol, INT Spos, CARD Scard)
 			}
 		}
 	}
-	
+
 	// now that we have freed up the freecells, look for empty freecells
 	// col 0 is top row
 
@@ -1477,7 +1477,7 @@ PRIVATE VOID StoreCard (INT Scol, INT Spos, CARD Scard)
 			}
 			return;
 		}
-	} 
+	}
 
 	MainMessage ("Internal StoreCard () Error.");
 }
@@ -1525,7 +1525,7 @@ PRIVATE VOID UnstoreCards (INT Dcol)
 }
 #ifdef SSMOVE
 
-void MakeMoveHSS(CHAR src, CHAR dest) 
+void MakeMoveHSS(CHAR src, CHAR dest)
 	{
 		if ((src == Osrc) && MultMoveXS)
 		  {
@@ -1547,7 +1547,7 @@ else
 		smcnt += 2 ;
 		return ;
 	}
-void MakeMoveSS1(CHAR src, CHAR dest) 
+void MakeMoveSS1(CHAR src, CHAR dest)
 	{
 		MakeMoveHSS(src, LOBYTE(ColUsed[0] + '0')) ;
 		MakeMoveHSS(src, LOBYTE(ColUsed[1] + '0')) ;
@@ -1555,7 +1555,7 @@ void MakeMoveSS1(CHAR src, CHAR dest)
 		MakeMoveHSS(src, LOBYTE(ColUsed[0] + '0')) ;
 		return ;
 	}
-void MakeMoveSS2(CHAR src, CHAR dest) 
+void MakeMoveSS2(CHAR src, CHAR dest)
 	{
 		MakeMoveSS1(src, dest) ;
 		MakeMoveHSS(src, dest) ;
@@ -1564,7 +1564,7 @@ void MakeMoveSS2(CHAR src, CHAR dest)
 		return ;
 	}
 
-void MakeMoveSS2A(CHAR src, CHAR dest)  // Special treatment for 6-card move with 0 empty freecells and  
+void MakeMoveSS2A(CHAR src, CHAR dest)  // Special treatment for 6-card move with 0 empty freecells and
 	{									// four empty columns -- doesn't fit the general scheme
 		MakeMoveHSS(src, LOBYTE(ColUsed[0] + '0')) ;
 		MakeMoveHSS(src, dest) ;
@@ -1572,7 +1572,7 @@ void MakeMoveSS2A(CHAR src, CHAR dest)  // Special treatment for 6-card move wit
 		return ;
 	}
 
-void MakeMoveSS3(CHAR src, CHAR dest) 
+void MakeMoveSS3(CHAR src, CHAR dest)
 	{
 		MakeMoveSS1(src, dest) ;
 		MakeMoveHSS(src, LOBYTE(ColUsed[2] + '0')) ;
@@ -1591,7 +1591,7 @@ void MakeMoveSS3(CHAR src, CHAR dest)
 	}
 #endif
 
-BOOL MakeMoveHS(CHAR src, CHAR dest)  
+BOOL MakeMoveHS(CHAR src, CHAR dest)
   {
   BOOL rtn ;
   CHAR col, coln ;
@@ -1603,11 +1603,11 @@ BOOL MakeMoveHS(CHAR src, CHAR dest)
   //Used by MakeMoveStatus to determine if move is OK
   rtn = MakeMoveT(src, dest) ;
   FcMode = 1 ;
-  FvacO = Fvac ;  // save original empty freecells 
+  FvacO = Fvac ;  // save original empty freecells
   smcnt = 0 ;
   if (!rtn || !MultMove)
     {
-    if (!MultMove)      
+    if (!MultMove)
 		MakeMoveH(src, dest) ;
     return rtn ;
     }
@@ -1629,7 +1629,7 @@ BOOL MakeMoveHS(CHAR src, CHAR dest)
       for (col = 1 ; col < MAXCOL ; col++)
 		{
 	if (((card[col][0] == EMPTY) && (col != (dest - '0'))) &&
-		(mmcnt < 100*MultMoveS / (100*(FvacO + 1) + 1))) //8/5/99 right? 
+		(mmcnt < 100*MultMoveS / (100*(FvacO + 1) + 1))) //8/5/99 right?
 	{
 	  coln = col + '0' ;
 	  MakeMoveHSS(src, coln) ;
@@ -1648,7 +1648,7 @@ BOOL MakeMoveHS(CHAR src, CHAR dest)
 	  {
 	  coln = col + '0' ;
 	  MakeMoveHSS(coln, dest) ;
-	  }	  
+	  }
 	}
       }
 #ifdef SSMOVE
@@ -1729,7 +1729,7 @@ FcMode = 2;
 //destination character for saving by GotLiveClick
 //Return signals when finished by zero in upper byte
 //
-WORD SaveMultMove(CHAR loc, CHAR Scol)  
+WORD SaveMultMove(CHAR loc, CHAR Scol)
 {
 	if (!MultMoveS && !MultMoveXS)
 		return (WORD)loc ;
@@ -1737,7 +1737,7 @@ WORD SaveMultMove(CHAR loc, CHAR Scol)
 	{
 		if (loc)  // first pass
 		{
-			dcolc = loc - '0' ;	
+			dcolc = loc - '0' ;
 			mcurcol = 1 ;
 			mupind = mmcnt = 0 ;
 		}
@@ -1749,7 +1749,7 @@ WORD SaveMultMove(CHAR loc, CHAR Scol)
 			}
 		mmcnt += 2 ;
 		if (mmcnt < smcnt)
-			return (256 + SSMScript[mmcnt - 1]) ; 
+			return (256 + SSMScript[mmcnt - 1]) ;
 		else
 			{
 			MultMoveXS = MultMoveS = 0 ;
@@ -1793,13 +1793,13 @@ VOID TestPossMoves(char loc)
 				// columns
 				tcol = i + '1';
 			}
-			else 
+			else
 			{
 				// 4 hcs: e, f, g & h
 				tcol = i - 4 + 'a';
 			}
 
-			if (tcol != loc) 
+			if (tcol != loc)
 			{
 				PossMoves[i] = MakeMoveTP(loc, tcol) ;
 			}
@@ -1846,19 +1846,19 @@ VOID TestProLines (VOID)
 
 			for (posS_tmp = ColLen[zCol] - 2 ; posS_tmp >= 0 ; posS_tmp--)
 			{
-				if (((VALUE(card[col][posS_tmp]) - 1) 
+				if (((VALUE(card[col][posS_tmp]) - 1)
 									== VALUE(card[col][posS_tmp + 1])) &&
-					((COLOUR(card[col][posS_tmp]) 
+					((COLOUR(card[col][posS_tmp])
 									!= COLOUR(card[col][posS_tmp + 1]))))
 				{
 					posS[zCol][0] = posS_tmp;
 				}
 				else
 				{
-					break;  
+					break;
 				}
 			}
-		}	
+		}
 
 		if (posS[zCol][0] != MAXPOS)
 		{
@@ -1904,11 +1904,11 @@ VOID TestProLines (VOID)
 #else
 						posS[zCol][1] = ColLen[zCol] - (1<<(Cvac - 1)) * (Fvac + 1) ;
 #endif
-					if ((ColLen[zCol] - posS[zCol][0] - 1) < 
+					if ((ColLen[zCol] - posS[zCol][0] - 1) <
 #ifndef SSMOVEP
 							(Fvac + 1) * (Cvac + 1))
 #else
-							(Fvac + 1) * (Cvac + 1) + 
+							(Fvac + 1) * (Cvac + 1) +
 							SupMove * ((1<<(Cvac)) * (Fvac + 1) - (Fvac + 1) * (Cvac + 1)))
 #endif
 						posS[zCol][2] = posS[zCol][0] ;
@@ -1923,7 +1923,7 @@ VOID TestProLines (VOID)
 						posS[zCol][2] = ColLen[zCol] ; // cancel if king
 				}
 			}
-		} 
+		}
 	}
 
 	// check copy for invalidations

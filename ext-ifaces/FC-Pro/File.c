@@ -17,7 +17,7 @@ BOOL gbSearchF, gbSearchF2, gbSearchF3, gbSearchFGend, gbSearchFC, gbSearchFR ;
 HFILE fhFileSF ;
 BOOL SearchFNxtGame(HWND) ;
 BOOL SearchFNxtMove(HWND) ;
-INT nGameNoValid ; 
+INT nGameNoValid ;
 BOOL PlayMode2 ;
 //INT MoveCount, GameCount ;
 extern int cdMoveCnt, FcMode ;
@@ -51,20 +51,20 @@ BOOL SaveSolution (HWND hwnd)
 	CHAR  szTemp[MAXSTRING+17];
 	DWORD rtn;
 
-    ofn.lStructSize			= sizeof(OPENFILENAME); 
-    ofn.hwndOwner			= hwnd; 
-    ofn.hInstance			= ghInst; 
-    ofn.lpstrFilter			= (LPSTR) &gFilters;  
-    ofn.lpstrCustomFilter	= NULL; 
-    ofn.nFilterIndex		= 0; 
-    ofn.lpstrFile			= gszSaveFile; 
+    ofn.lStructSize			= sizeof(OPENFILENAME);
+    ofn.hwndOwner			= hwnd;
+    ofn.hInstance			= ghInst;
+    ofn.lpstrFilter			= (LPSTR) &gFilters;
+    ofn.lpstrCustomFilter	= NULL;
+    ofn.nFilterIndex		= 0;
+    ofn.lpstrFile			= gszSaveFile;
 	ofn.nMaxFile			= MAXSTRING;
-    ofn.lpstrFileTitle		= NULL; 
-    ofn.lpstrInitialDir		= NULL; 
-    ofn.lpstrTitle			= NULL; 
-    ofn.Flags				= OFN_HIDEREADONLY | OFN_EXPLORER | 
-							  OFN_OVERWRITEPROMPT; 
-    ofn.lpstrDefExt			= NULL; 
+    ofn.lpstrFileTitle		= NULL;
+    ofn.lpstrInitialDir		= NULL;
+    ofn.lpstrTitle			= NULL;
+    ofn.Flags				= OFN_HIDEREADONLY | OFN_EXPLORER |
+							  OFN_OVERWRITEPROMPT;
+    ofn.lpstrDefExt			= NULL;
 
 	if (!GetSaveFileName (&ofn))
 	{
@@ -95,8 +95,8 @@ BOOL SaveSolution (HWND hwnd)
 
 	_lclose(fhFile);
 
-	sprintf (szTemp, "Moves Saved in %s.", gszSaveFile); 
-	StatusOut (szTemp); 
+	sprintf (szTemp, "Moves Saved in %s.", gszSaveFile);
+	StatusOut (szTemp);
 
 	return TRUE;
 }
@@ -116,7 +116,7 @@ BOOL SaveSolutionFast (HWND hwnd)
 		strncat (szTemp, gszSaveFile, MAXSTRING);
 		strcat (szTemp, "'?");
 
-		if (Message (hwnd, MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2, 
+		if (Message (hwnd, MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2,
 					szTemp) != IDYES)
 		{
 			return FALSE;
@@ -135,8 +135,8 @@ BOOL SaveSolutionFast (HWND hwnd)
 
 	_lclose(fhFile);
 
-	sprintf (szTemp, "Moves Saved in %s.", gszSaveFile); 
-	StatusOut (szTemp); 
+	sprintf (szTemp, "Moves Saved in %s.", gszSaveFile);
+	StatusOut (szTemp);
 
 	return TRUE;
 }
@@ -151,20 +151,20 @@ BOOL SaveAuto (HWND hwnd)
 
 	sprintf (szFile, "%saut.txt", FmtGameNo(gnGameNumber));
 
-    ofn.lStructSize			= sizeof(OPENFILENAME); 
-    ofn.hwndOwner			= hwnd; 
-    ofn.hInstance			= ghInst; 
-    ofn.lpstrFilter			= (LPSTR) &gFilters;  
-    ofn.lpstrCustomFilter	= NULL; 
-    ofn.nFilterIndex		= 0; 
-    ofn.lpstrFile			= szFile; 
+    ofn.lStructSize			= sizeof(OPENFILENAME);
+    ofn.hwndOwner			= hwnd;
+    ofn.hInstance			= ghInst;
+    ofn.lpstrFilter			= (LPSTR) &gFilters;
+    ofn.lpstrCustomFilter	= NULL;
+    ofn.nFilterIndex		= 0;
+    ofn.lpstrFile			= szFile;
 	ofn.nMaxFile			= MAXSTRING;
-    ofn.lpstrFileTitle		= NULL; 
-    ofn.lpstrInitialDir		= NULL; 
-    ofn.lpstrTitle			= "Save Moves with Auto Moves - Debug only!"; 
-    ofn.Flags				= OFN_HIDEREADONLY | OFN_EXPLORER | 
-							  OFN_OVERWRITEPROMPT; 
-    ofn.lpstrDefExt			= NULL; 
+    ofn.lpstrFileTitle		= NULL;
+    ofn.lpstrInitialDir		= NULL;
+    ofn.lpstrTitle			= "Save Moves with Auto Moves - Debug only!";
+    ofn.Flags				= OFN_HIDEREADONLY | OFN_EXPLORER |
+							  OFN_OVERWRITEPROMPT;
+    ofn.lpstrDefExt			= NULL;
 
 	if (!GetSaveFileName (&ofn))
 	{
@@ -195,8 +195,8 @@ BOOL SaveAuto (HWND hwnd)
 
 	_lclose(fhFile);
 
-	sprintf (szTemp, "Moves with Auto Moves Saved in %s.", szFile); 
-	StatusOut (szTemp); 
+	sprintf (szTemp, "Moves with Auto Moves Saved in %s.", szFile);
+	StatusOut (szTemp);
 
 	return TRUE;
 }
@@ -210,19 +210,19 @@ VOID OpenSolution (HWND hwnd)
 
 	sprintf (szFile, "%s.txt", FmtGameNo(gnGameNumber));
 
-    ofn.lStructSize			= sizeof(OPENFILENAME); 
-    ofn.hwndOwner			= hwnd; 
-    ofn.hInstance			= ghInst; 
-    ofn.lpstrFilter			= (LPSTR) &gFilters;  
-    ofn.lpstrCustomFilter	= NULL; 
-    ofn.nFilterIndex		= 0; 
-    ofn.lpstrFile			= szFile; 
+    ofn.lStructSize			= sizeof(OPENFILENAME);
+    ofn.hwndOwner			= hwnd;
+    ofn.hInstance			= ghInst;
+    ofn.lpstrFilter			= (LPSTR) &gFilters;
+    ofn.lpstrCustomFilter	= NULL;
+    ofn.nFilterIndex		= 0;
+    ofn.lpstrFile			= szFile;
 	ofn.nMaxFile			= MAXSTRING;
-    ofn.lpstrFileTitle		= NULL; 
-    ofn.lpstrInitialDir		= NULL; 
-    ofn.lpstrTitle			= NULL; 
+    ofn.lpstrFileTitle		= NULL;
+    ofn.lpstrInitialDir		= NULL;
+    ofn.lpstrTitle			= NULL;
     ofn.Flags				= OFN_HIDEREADONLY | OFN_EXPLORER;
-    ofn.lpstrDefExt			= NULL; 
+    ofn.lpstrDefExt			= NULL;
 
 	if (!GetOpenFileName (&ofn))
 	{
@@ -258,7 +258,7 @@ VOID LoadSolution (HWND hwnd, BOOL fLogging)
 //	CHAR  szMove[3];
 	CHAR  szMove[4];
 	INT   nAttemptNumber,nLoadMoves, nONumFcs, nGameNoValid, i ;
-	DWORDLONG nGameNumber ;	
+	DWORDLONG nGameNumber ;
 	BOOL  bContinuous;
 	PAINTSTRUCT pnt ;
 	nGameNoValid = 1 ;
@@ -285,24 +285,24 @@ VOID LoadSolution (HWND hwnd, BOOL fLogging)
 		fhFileSF = fhFile ;
 		gbSearchF = TRUE ;
 					//A multi-solution file to be search for False Impossibles
-		PostMessage(hwnd, WM_USER+104, 0, 0L) ;  // Seems to need to be timer-driven 
+		PostMessage(hwnd, WM_USER+104, 0, 0L) ;  // Seems to need to be timer-driven
 		return ;
 	}
 	if (!lstrcmp(szTemp, "~~~"))
 	{
 		fhFileSF = fhFile ;
-		gbSearchF2 = TRUE ;  //for Solver2  
+		gbSearchF2 = TRUE ;  //for Solver2
 					//A multi-solution file to be search for False Impossibles
-		PostMessage(hwnd, WM_USER+106, 0, 0L) ;  // Seems to need to be timer-driven 
+		PostMessage(hwnd, WM_USER+106, 0, 0L) ;  // Seems to need to be timer-driven
 		return ;
 	}
 	if (!lstrcmp(szTemp, "^^^"))
 	{
 		fhFileSF = fhFile ;
-		gbSearchF3 = TRUE ;  //for Solver3  
+		gbSearchF3 = TRUE ;  //for Solver3
 					//A multi-solution file to be search for False Impossibles
 //		GameCount = 0 ;
-		PostMessage(hwnd, WM_USER+107, 0, 0L) ;  // Seems to need to be timer-driven 
+		PostMessage(hwnd, WM_USER+107, 0, 0L) ;  // Seems to need to be timer-driven
 		return ;
 	}
 	// scan for the last game number in file
@@ -374,7 +374,7 @@ VOID LoadSolution (HWND hwnd, BOOL fLogging)
 	{
 		// found '=', scan in no. of freecells
 		nONumFcs = NumFcs ;
-		_lread(fhFile, szTemp, 3);	  
+		_lread(fhFile, szTemp, 3);
 		NumFcs = szTemp[0] - '0' ;
 		if ((isdigit(szTemp[0])) && (szTemp[0] >= '0') && (szTemp[0] <= '6'))
 		NumFcs = szTemp[0] - '0' ;
@@ -387,7 +387,7 @@ VOID LoadSolution (HWND hwnd, BOOL fLogging)
 	}
 
 	// deal hand
-	if (nGameNoValid) 
+	if (nGameNoValid)
 	{
 		gnGameNumber = nGameNumber;
 		FreeCellInit (TRUE);
@@ -418,7 +418,7 @@ VOID LoadSolution (HWND hwnd, BOOL fLogging)
 
 	if (!nGameNoValid)
 	{
-		ShowHand(&pnt) ;	
+		ShowHand(&pnt) ;
 		InvalidateMain(NULL) ;
 		gbCustomGame = TRUE ;
 	}
@@ -474,16 +474,16 @@ VOID LoadSolution (HWND hwnd, BOOL fLogging)
 			// we are loading log file, we are done
 			break;
 		}
-		
+
 		if ((gnLoadMoves >= 0) &&   // user didnt leave -1 in dialog
-			(++nLoadMoves > gnLoadMoves) && 
+			(++nLoadMoves > gnLoadMoves) &&
 			!bContinuous) // user hasnt already selected continuous
 		{
 			sprintf (szTemp, "Next Move is %c->%c%sLoad solution continuously?",
 						szMove[0], szMove[1], CRLF);
 
-			switch (Message (hwnd, 
-						MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2, 
+			switch (Message (hwnd,
+						MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2,
 						szTemp))
 			{
 				case IDYES:
@@ -516,7 +516,7 @@ if (cdMoveCnt != 0)
 	FcMode = 1 ;
 }
 if (PlayMode2)
-{		
+{
 		if (_lread(fhFile, &szMove[2], 1) == 0)
 			{
 				// end of file
@@ -538,7 +538,7 @@ if (PlayMode2)
 		SendMessage (hwnd, WM_CHAR, (WORD) szMove[1], 0);
 		if (!gbLoadingSolution)
 		{
-			// got illegal move 
+			// got illegal move
 			break;
 		}
 	}
@@ -562,7 +562,7 @@ PRIVATE BOOL LoadChar (CHAR cMove)
 #ifndef FC89
 		cMove == 'h')
 #else
-		(cMove == 'h') || ((cMove >= 'k') && (cMove <= 'l'))) 
+		(cMove == 'h') || ((cMove >= 'k') && (cMove <= 'l')))
 #endif
 	{
 		return TRUE;
@@ -590,7 +590,7 @@ BOOL CopySolution (HWND hwnd)
 
 	// figure how much memory we need
 
-	cch = STD_MAX_CHARS_TOP_LINE + 
+	cch = STD_MAX_CHARS_TOP_LINE +
 		((gnUserMoves)+1)*3 + // moves * (card,card,space)
 		(gnUserMoves/STD_MOVES_PER_LINE)*3; // lines * (cr,lf,NULL)
 
@@ -611,7 +611,7 @@ BOOL CopySolution (HWND hwnd)
     if (OpenClipboard (hwnd))
     {
         EmptyClipboard ();
-        if (!(fSuccess = 
+        if (!(fSuccess =
 				SetClipboardData(CF_TEXT, pBuf) ? TRUE : FALSE))
 		{
 			// putup message
@@ -710,12 +710,12 @@ BOOL SearchFNxtGame(HWND hwnd)
 {
 	CHAR  szTemp[46];
 	INT   nONumFcs, i ;
-	DWORDLONG nGameNumber ;	
+	DWORDLONG nGameNumber ;
 	PAINTSTRUCT pnt ;
 //	LONG fPointer ;
 //	CHAR szMove[2] ;
 	nGameNoValid = 1 ;
-	
+
 //	MoveCount = 0 ;
 //	GameCount++ ;
 	if (!FileScan (fhFileSF, '#',1))
@@ -734,7 +734,7 @@ BOOL SearchFNxtGame(HWND hwnd)
 				gbLoadingSolution = FALSE;
 				_lclose(fhFile);
 				return 0;
-			}	
+			}
 		}
 	// found '#', scan in game number
 	_lread(fhFileSF, szTemp, 10);
@@ -750,7 +750,7 @@ BOOL SearchFNxtGame(HWND hwnd)
 		return 0 ;
 	nGameNumber = CvGameNo(szTemp) ;
 // scan to '='
-	
+
 	if (!FileScan (fhFileSF, '=', 1))
 	{
 		// return to last #
@@ -760,7 +760,7 @@ BOOL SearchFNxtGame(HWND hwnd)
 	{
 		// found '=', scan in no. of freecells
 		nONumFcs = NumFcs ;
-		_lread(fhFileSF, szTemp, 3);	  
+		_lread(fhFileSF, szTemp, 3);
 		NumFcs = szTemp[0] - '0' ;
 		if ((isdigit(szTemp[0])) && (szTemp[0] >= '0') && (szTemp[0] <= '6'))
 		NumFcs = szTemp[0] - '0' ;
@@ -769,7 +769,7 @@ BOOL SearchFNxtGame(HWND hwnd)
 	}
 	_llseek(fhFileSF, -3, 1) ;
 	// deal hand
-	if (nGameNoValid) 
+	if (nGameNoValid)
 	{
 		gnGameNumber = nGameNumber;
 		FreeCellInit (TRUE);
@@ -789,7 +789,7 @@ BOOL SearchFNxtGame(HWND hwnd)
 
 	if (!nGameNoValid)
 	{
-		ShowHand(&pnt) ;	
+		ShowHand(&pnt) ;
 		InvalidateMain(NULL) ;
 		gbCustomGame = TRUE ;
 	}
@@ -801,7 +801,7 @@ BOOL SearchFNxtMove(HWND hwnd)
 	// scan to first move
 {
 	CHAR  szMove[3];
-	
+
 	// send moves thru ringer!
 	//	while (TRUE)
 //	{
@@ -868,7 +868,7 @@ BOOL SearchFNxtMove(HWND hwnd)
 		SendMessage (hwnd, WM_CHAR, (WORD) szMove[1], 0);
 		if (!gbLoadingSolution)
 		{
-			// got illegal move 
+			// got illegal move
 			return 0;
 		}
 //		SendMessage (hwnd, WM_COMMAND, (WORD) ID_SOLVEFAST, 0);
@@ -879,23 +879,23 @@ BOOL SearchFNxtMove(HWND hwnd)
 
 VOID SearchFChk1Start(HWND hwnd)
 {
-		gbSearchFC = gbSearchF = TRUE ;  //for Solver1  
-		PostMessage(hwnd, WM_USER+108, 0, 0L) ;  // Seems to need to be timer-driven 
+		gbSearchFC = gbSearchF = TRUE ;  //for Solver1
+		PostMessage(hwnd, WM_USER+108, 0, 0L) ;  // Seems to need to be timer-driven
 		return ;
 }
 
 
 VOID SearchFChk2Start(HWND hwnd)
 {
-		gbSearchFC = gbSearchF2 = TRUE ;  //for Solver2  
-		PostMessage(hwnd, WM_USER+109, 0, 0L) ;  // Seems to need to be timer-driven 
+		gbSearchFC = gbSearchF2 = TRUE ;  //for Solver2
+		PostMessage(hwnd, WM_USER+109, 0, 0L) ;  // Seems to need to be timer-driven
 		return ;
 }
 
 VOID SearchFChk3Start(HWND hwnd)
 {
-		gbSearchFC = gbSearchF3 = TRUE ;  //for Solver3  
-		PostMessage(hwnd, WM_USER+110, 0, 0L) ;  // Seems to need to be timer-driven 
+		gbSearchFC = gbSearchF3 = TRUE ;  //for Solver3
+		PostMessage(hwnd, WM_USER+110, 0, 0L) ;  // Seems to need to be timer-driven
 		return ;
 }
 

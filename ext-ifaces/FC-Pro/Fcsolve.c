@@ -11,8 +11,8 @@
 
 #define PRESORT (1)
 
-//PRIVATE INT  gnFCSolveIndex; 
-INT  gnFCSolveIndex; 
+//PRIVATE INT  gnFCSolveIndex;
+INT  gnFCSolveIndex;
 int gnFCSolveIndexC ;
 //PRIVATE char FCSolveMoves[STD_MOVES_PER_LINE * STD_MAX_LINES * AUTO_PER_MOVE];
 char FCSolveMoves[STD_MOVES_PER_LINE * STD_MAX_LINES * AUTO_PER_MOVE];
@@ -73,37 +73,37 @@ if (gbSolver2)
 {
 		fpFile = fopen ("FCSSolutionD.txt", "w");
 	if (!gbCustomGame)
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCS Solution)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCS Solution)%s",
 				FmtGameNo(gnGameNumber), NumFcs, CRLF);
 	else
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCS Solution)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCS Solution)%s",
 				gszCustomGameName, NumFcs, CRLF);
 }
 if (gbSolver)
 {
 		fpFile = fopen ("FCSolveD.txt", "w");
 	if (!gbCustomGame)
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCPro - FCSolve debug)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCPro - FCSolve debug)%s",
 				FmtGameNo(gnGameNumber), NumFcs, CRLF);
 	else
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCPro - FCSolve debug)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCPro - FCSolve debug)%s",
 				gszCustomGameName, NumFcs, CRLF);
 }
 if (gbSolver3)
 {
 		fpFile = fopen ("FCPatSolveD.txt", "w");
 	if (!gbCustomGame)
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (Patsolve Solution)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (Patsolve Solution)%s",
 				FmtGameNo(gnGameNumber), NumFcs, CRLF);
 	else
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (Patsolve Solution)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (Patsolve Solution)%s",
 				gszCustomGameName, NumFcs, CRLF);
 }
 		fprintf (fpFile, szTemp);
 
 		for (i = gnFCSolveIndex, j = 0; i >= 0; i -= 2)
 		{
-			fprintf (fpFile, "%c%C ", 
+			fprintf (fpFile, "%c%C ",
 						FCSolveMoves[i], FCSolveMoves[i - 1]);
 
 			if ((++j % STD_MOVES_PER_LINE) == 0)
@@ -137,11 +137,11 @@ if (gbSolver3)
 			if (FCSolveMoves[i] == 'h')
 			{
 				// its ok, probably an autopost.
-				// note that an autopost dont result in 
+				// note that an autopost dont result in
 				// an error if the autopost emptied the column.
 				// deselect the selected card.
 
-				SendMessage (hwnd, WM_CHAR, (WORD) 
+				SendMessage (hwnd, WM_CHAR, (WORD)
 								FCSolveMoves[i + 1], 0);
 
 				gbLoadingSolver = TRUE;
@@ -150,9 +150,9 @@ if (gbSolver3)
 			{
 //sprintf(szTemp, "ch- %c %c %s", FCSolveMoves[i+1], FCSolveMoves[i], FCSolveMoves) ;
 //MessageBox(GetFocus(), szTemp, "SvPl", MB_OK) ;
-				// got illegal move 
+				// got illegal move
 				if (!gbSolver2)
-					Message (hwnd, MB_ICONEXCLAMATION, "Illegal Move by Solver."); 
+					Message (hwnd, MB_ICONEXCLAMATION, "Illegal Move by Solver.");
 				else
 Message (hwnd, MB_ICONEXCLAMATION, "This solution cannot be replayed\nby FcPro because of an incompatibility\nbetween Freecell Solver and FcPro.\nThe full solution may be seen\nin file FCSSolution.txt") ;
 				break;
@@ -161,7 +161,7 @@ Message (hwnd, MB_ICONEXCLAMATION, "This solution cannot be replayed\nby FcPro b
 		gnFCSolveIndexC = i - 2 ;
 	}
 
-	gbLoadingSolver = FALSE; 
+	gbLoadingSolver = FALSE;
 
 //MainMessage("Play fini") ;
 	if (SaveFlag1 || SaveFlag2 || SaveFlag3)
@@ -174,30 +174,30 @@ if (SaveFlag2)
 {
 		fpFile = fopen ("FCSSolution.txt", "w");
 	if (!gbCustomGame)
-		sprintf (szTemp, "F#%s Att.:1 NumFcs=%d (FCS Solution)%s", 
+		sprintf (szTemp, "F#%s Att.:1 NumFcs=%d (FCS Solution)%s",
 				FmtGameNo(gnGameNumber), NumFcs, CRLF);
 	else
-		sprintf (szTemp, "F#%s Att.:1 NumFcs=%d (FCS Solution)%s", 
+		sprintf (szTemp, "F#%s Att.:1 NumFcs=%d (FCS Solution)%s",
 				gszCustomGameName, NumFcs, CRLF);
 }
 if (SaveFlag1)
 {
 		fpFile = fopen ("FCSolve.txt", "w");
 	if (!gbCustomGame)
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCPro - FCSolve debug)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCPro - FCSolve debug)%s",
 				FmtGameNo(gnGameNumber), NumFcs, CRLF);
 	else
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCPro - FCSolve debug)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (FCPro - FCSolve debug)%s",
 				gszCustomGameName, NumFcs, CRLF);
 }
 if (SaveFlag3)
 {
 		fpFile = fopen ("FCPatSolve.txt", "w");
 	if (!gbCustomGame)
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (Patsolve Solution)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (Patsolve Solution)%s",
 				FmtGameNo(gnGameNumber), NumFcs, CRLF);
 	else
-		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (Patsolve Solution)%s", 
+		sprintf (szTemp, "#%s Att.:1 NumFcs=%d (Patsolve Solution)%s",
 				gszCustomGameName, NumFcs, CRLF);
 }
 		fprintf (fpFile, szTemp);
@@ -206,7 +206,7 @@ if (SaveFlag3)
 		{
 		if (FCSolveMoves[i] != 'x')
 			{
-			fprintf (fpFile, "%c%C ", 
+			fprintf (fpFile, "%c%C ",
 						FCSolveMoves[i], FCSolveMoves[i - 1]);
 			if ((++j % STD_MOVES_PER_LINE) == 0)
 				{
@@ -306,7 +306,7 @@ VOID FCSolveReadOriginal ()
 		}
 	}
 
-//#ifndef PRESORT	
+//#ifndef PRESORT
 for (yCol = 0 ; yCol < MAXCOL - 1 ; yCol++)
 			ColSeq[yCol] = yCol + 1 ;
 if (!PresortC[0])
@@ -397,17 +397,17 @@ if (PresortC[0] == 'C')
 	}
 	thru = 7 ;
 
-	while (thru > 0) 
+	while (thru > 0)
 	{
 		i = need = 0;
 		for (i=1; i<=thru; i++)
-		{  
+		{
 			if ((ColLow[ColSeq[i]] < ColLow[ColSeq[i - 1]]) ||
 				((ColLow[ColSeq[i]] == ColLow[ColSeq[i - 1]]) &&
 					(ColLCnt[ColSeq[i]] > ColLCnt[ColSeq[i -1]])) ||
 				((ColLow[ColSeq[i]] == ColLow[ColSeq[i - 1]]) &&
 					(ColLCnt[ColSeq[i]] == ColLCnt[ColSeq[i -1]]) &&
-					(ColLPos[ColSeq[i]] < ColLPos[ColSeq[i -1]])))				
+					(ColLPos[ColSeq[i]] < ColLPos[ColSeq[i -1]])))
 			{
 				temp = ColSeq[i];
 				ColSeq[i] = ColSeq[i-1];
@@ -626,4 +626,4 @@ for (yCol = 0 ; yCol < MAXCOL - 1 ; yCol++)
 		ColSeqC[yCol] = (char)ColSeq[yCol] + '0' ;
 //#endif
 	FCSolveInit ();
-}					  
+}
