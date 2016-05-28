@@ -8,7 +8,7 @@ use strict;
 
 	my %card_map_3 = reverse(%card_map_1);
 	my %card_map_4 = reverse(%card_map_2);
-	
+
 	sub u2p_card_number
 	{
 		my $rest = shift;
@@ -32,7 +32,7 @@ use strict;
 
 		return $card_map_2{$deck};
 	}
-	
+
 sub user2perl
 {
 	my $user = shift;
@@ -47,18 +47,18 @@ sub user2perl
 
 	$card = u2p_card_number($rest);
 
-        return $card . '-' . u2p_deck($deck);	
+        return $card . '-' . u2p_deck($deck);
 }
 
 	sub p2u_card_number
 	{
 		my $card = shift;
-		
+
 		if (exists($card_map_3{$card}))
 		{
 			return $card_map_3{$card};
 		}
-		
+
 		return $card;
 	}
 
