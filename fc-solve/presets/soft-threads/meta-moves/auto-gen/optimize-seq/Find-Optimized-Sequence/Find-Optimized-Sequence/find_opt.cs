@@ -465,7 +465,7 @@ class Process
                 {
                     throw new ApplicationException("next_quota is out of order on line" + line);
                 }
-                
+
 #if false
                 Console.WriteLine(
                     string.Format(
@@ -486,7 +486,7 @@ class Process
             quota_iters_num, ref running_quotas, next_quota
         );
     }
-    
+
 
     public void FindOptimalQuotasProcess(int quota_iters_num, ref int [] running_quotas, int start_idx)
     {

@@ -16,10 +16,10 @@ my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
 
 my @selected_scans = @$sel_scans;
 
-my $scans_data = 
+my $scans_data =
     MyInput::get_scans_data(
-        $start_board, 
-        $num_boards, 
+        $start_board,
+        $num_boards,
         \@selected_scans
     );
 

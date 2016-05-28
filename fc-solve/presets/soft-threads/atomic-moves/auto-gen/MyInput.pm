@@ -11,7 +11,7 @@ sub get_scans_data
     my $num_boards = shift;
     my @selected_scans = @{shift()};
     my $scans_data = zeroes($num_boards, scalar(@selected_scans));
-        
+
     my $scan_idx = 0;
 
     if (! -d "./.data-proc")
@@ -35,9 +35,9 @@ sub get_scans_data
                 {
                     die "Incorrect file format in scan " . $scan->{'id'} . "!\n";
                 }
-                
+
                 my $c = pdl(\@array);
-                
+
                 writefraw($c, "./.data-proc/" . $scan->{'id'});
             }
         }
@@ -68,9 +68,9 @@ sub get_selected_scan_list
     }
     close(I);
 
-    my @selected_scans = 
-        grep 
-        { 
+    my @selected_scans =
+        grep
+        {
             my @stat = stat("./data/".$_->{'id'}.".data.bin");
             scalar(@stat) && ($stat[7] >= 12+($num_boards+$start_board-1)*4);
         }
@@ -78,11 +78,11 @@ sub get_selected_scan_list
 
     #my %black_list = (map { $_ => 0 } (7,8));
     my %black_list = ();
-    @selected_scans = 
-        (grep 
-            { 
-                !exists($black_list{$_->{'id'}}) 
-            } 
+    @selected_scans =
+        (grep
+            {
+                !exists($black_list{$_->{'id'}})
+            }
             @selected_scans
         );
     return \@selected_scans;

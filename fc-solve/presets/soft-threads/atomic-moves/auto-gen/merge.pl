@@ -10,7 +10,7 @@ my (@scans);
 sub get_dir
 {
     my $source = shift;
-    
+
     return ($source eq "this") ? "./" : "$other_dir/";
 }
 
@@ -33,7 +33,7 @@ sub file_len
 foreach my $source ('this', 'other')
 {
     my $dir = get_dir($source);
-    
+
     open I, "<$dir/scans.txt";
     while (my $line = <I>)
     {

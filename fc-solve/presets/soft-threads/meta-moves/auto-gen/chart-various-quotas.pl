@@ -30,8 +30,8 @@ $data_out->autoflush();
 
 foreach my $quota ($start_quota .. $end_quota)
 {
-    open my $process, "-|", 
-        $^X, 
+    open my $process, "-|",
+        $^X,
         "process.pl",
         '--quotas-are-cb',
         "--quotas-expr=sub { return (shift() < 5000 ? $quota : undef()); }"

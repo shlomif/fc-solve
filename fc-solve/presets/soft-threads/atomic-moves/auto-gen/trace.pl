@@ -13,7 +13,7 @@ my $num_boards = 32000;
 
 my $sel_scans = MyInput::get_selected_scan_list($start_board, $num_boards);
 my @selected_scans = @$sel_scans;
-    
+
 #my $scans_data = [];
 #my $scans_data = zeroes($num_boards, scalar(@selected_scans));
 

@@ -77,7 +77,7 @@ _preset "0123456" -to 0123456
 _preset "flamingo" -to 01234567 -dto 30,0123876594
 for threshold in 40 50 55 65 70 71 72 73 74 75 76 77 78 79 80 85 90 95 100 105 110 115 120 130 140 150 ; do
     _preset "flamingo${threshold}" -to 01234567 -dto "${threshold},0123876594"
-done    
+done
 
 _preset "qlad"  -to 01234567  -dto 13,0187465  -dto 26,0134587 -dto 35,819435
 _preset "encad"  -to 01234567  -dto 13,0187465  -dto 26,0134587 -dto 35,0123456789

@@ -4,7 +4,7 @@
     ruby ../optimize-seq/scripts/process-optimal_quotas-dump.rb \
     find_optimal_quotas-300.dump) | \
     perl -I.. ../process.pl --quotas-expr="$(
-        echo -n '('; 
-        ruby -p -e 'sub(/\n/,",");END{print "((350)x#{300-$.}),";}' ; 
+        echo -n '(';
+        ruby -p -e 'sub(/\n/,",");END{print "((350)x#{300-$.}),";}' ;
         echo -n ')'
         )" "$@"
