@@ -16,10 +16,10 @@ Analysis of the game graph:
 
 The game graph is a DAG (directed acyclic graph) of
 fully-connected components (FCCs),
-where the fully-connected components are composed of reversible moves and 
+where the fully-connected components are composed of reversible moves and
 the edges between fully-connected components are irreversible moves.
 
-Furthermore, in order to reach FCC we need to perform all the relevant 
+Furthermore, in order to reach FCC we need to perform all the relevant
 irreversible moves that yielded it. As a result, one needs the same amount of
 irreversible moves to reach a certain FCC so they can be sorted according to
 their depth, which is measured by the number of irreversible moves.
@@ -34,7 +34,7 @@ typedef struct
 {
     /* The minimal state in the fully-connected component, according to
     the lexical sorting of the encoded state keys. This is used to identify
-    it and avoid collisions and re-processing. 
+    it and avoid collisions and re-processing.
     */
     fcs_encoded_state_buffer_t min_by_sorting;
     /* The minimal state by absolute depth (including that of
@@ -42,7 +42,7 @@ typedef struct
     $depth-1 FCC that reaches it, wins the jackpot.
     */
     fcs_encoded_state_buffer_t min_by_absolute_depth;
-    /* Moves to the min_by_absolute_depth from the initial state. 
+    /* Moves to the min_by_absolute_depth from the initial state.
     (accumlative).
     */
     MOVE_STACK_T moves_to_min_by_absolute_depth;
@@ -106,9 +106,9 @@ For each of these startpoints:
 
 #. prev_depth_FCCs.DoesMinBySortingExists ← new empty one.
 
-#. next_depth_FCCs.DoesMinByAbsoluteDepthExists = new empty one ; 
+#. next_depth_FCCs.DoesMinByAbsoluteDepthExists = new empty one ;
 next_depth_FCCs.queue = new empty one ;
-next_depth_FCCs.Cache = new empty one ; 
+next_depth_FCCs.Cache = new empty one ;
 
 Addendum: Handling Horne's Prune
 --------------------------------
@@ -117,7 +117,7 @@ We can handle Horne's prune by counting the number of cards that were moved
 to the foundations and thus getting the new accumlative FCC-depth, in addition
 to the existing move. We perform the prunes only on the startpoints that emerge
 from a non-reversible move. The new FCCs will be placed into the array of the
-FCCs-by-depth. 
+FCCs-by-depth.
 
 As a result, the new state looks like so:
 
@@ -159,7 +159,7 @@ perform_FCC_brfs(
     /* Type of scan. */
     enum { FIND_FCC_START_POINTS, FIND_MIN_BY_SORTING } type,
     /* [Output]: FCC start points. */
-    LinkedList<struct { 
+    LinkedList<struct {
         fcs_encoded_state_buffer_t *,
         moves
     }> fcc_start_points,

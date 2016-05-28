@@ -1,6 +1,6 @@
 == Introduction ==
 
-This document describes a framework where several instances of custom [[Freecell Solver]] instances run in parallel (on a multi-processor machine/etc.) to solve a range of solitaire deals. 
+This document describes a framework where several instances of custom [[Freecell Solver]] instances run in parallel (on a multi-processor machine/etc.) to solve a range of solitaire deals.
 
 == Elements of the Framework ==
 
@@ -51,11 +51,11 @@ This file contains a Storable dump of the entire data. After <tt>summary.lock</t
 
 The structure is:
 
-    { 
+    {
          counts =>
          {
               solved =>
-              { 
+              {
                   iters => { %COUNTS_HASH },
                   gen_states => { %COUNTS_HASH },
                   sol_lens => { %COUNTS_HASH },

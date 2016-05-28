@@ -2,12 +2,12 @@ Hi all,
 
 my name is Shlomi Fish and I'm the originator and lead developer of
 Freecell Solver ( http://fc-solve.berlios.de/ ), an automated solver for
-several variants of cards solitaire. 
+several variants of cards solitaire.
 
 Now, fc-solve is very configurable, and one can construct many
 individual scans that will operate on the same state collection.
-For any given board, one can usually find an individual scan that 
-will solve it quickly, but normally most scans will perform poorly 
+For any given board, one can usually find an individual scan that
+will solve it quickly, but normally most scans will perform poorly
 on some boards.
 
 Furthermore, Freecell Solver has support for running several scans on
@@ -17,7 +17,7 @@ result, I was able to construct meta-scans that comprise of several
 individual scans which generally perform better than any individual
 scan.
 
-It was done by declaring a sequence of mapping of {$Scan_ID, $Quota} 
+It was done by declaring a sequence of mapping of {$Scan_ID, $Quota}
 ($ indicates a variable a-la shell or Perl) which are ran for every
 board that the solver attempts to solve. It tries $Scan_ID[$idx] for
 $Quota[$idx] iterations, and then (in case it could not solve the board
@@ -27,7 +27,7 @@ resumed from the position it reached, without restarting.
 
 To construct such a sequence, which will have reasonable performance, we
 measured the performance of several individual scans across a range of
-initial layouts (the first 32,000 Microsoft Freecell deals, in our case) and 
+initial layouts (the first 32,000 Microsoft Freecell deals, in our case) and
 then used the following algorithm, which is greedy, but not optimal:
 
 * http://www.shlomifish.org/lecture/Perl/Lightning/Opt-Multi-Task-in-PDL/

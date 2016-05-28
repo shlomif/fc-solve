@@ -1,22 +1,22 @@
 We will write a solver that will offload some of the states in the collection
 to a DBM store on the hard disk (e.g: Google's LevelDB, Berkeley DB, or Tokyo
-Cabinet.). The solver will make extensive use of "delta_states.c" for 
+Cabinet.). The solver will make extensive use of "delta_states.c" for
 conserving memory and hard-disk space.
 
 The solver will consist of these components:
 
 1. A BrFS queue (or a similar data-structure for graph traversal.).
 
-2. A DBM that contains a mapping of the encoded orig state -> 
+2. A DBM that contains a mapping of the encoded orig state ->
 { encoded parent state, move from parent state}. The move can take 8-bits
 because it's a one card move of any one of the freecells/top-of-columns (2+8 in
 total) to a freecell/top-of-column/foundation (2+8+4) where each take 4 bits
 or less.
 
-3. An LRU cache for the DBM that will store a cache of $LRU_CACHE_SIZE of the 
+3. An LRU cache for the DBM that will store a cache of $LRU_CACHE_SIZE of the
 most looked-up elements (without parents).
 
-4. A lookup table that will store the positions before they are placed in the 
+4. A lookup table that will store the positions before they are placed in the
 DBM. After $PRE_CACHE_SIZE elements are placed there, it will be emptied into
 the DBM in one transaction.
 
@@ -51,7 +51,7 @@ the DBM in one transaction.
         mutex, put it in the QUEUE, and unlock the QUEUE mutex.
 
     8. If the PRE_CACHE is full, then offload it to the DBM.
-        also put all the PRE_CACHE contents in the LRU cache as 
+        also put all the PRE_CACHE contents in the LRU cache as
         well. Being promoted to the start.
 
     9. Unlock the positions' storage lock.

@@ -12,7 +12,7 @@ Encoded states will be stored instead of the currently decoded states in:
 1. The states collection (the hash or tree used to store all traversed or
 encountered states) - handled by check_and_add_state.c
 
-2. In the Random-DFS stack, the Breadth-First-Search queue, and the 
+2. In the Random-DFS stack, the Breadth-First-Search queue, and the
 Best-First-Search priority queue.
 
 The data type of a possibly encoded state will be fcs_stored_state_t which

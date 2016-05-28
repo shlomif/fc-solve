@@ -5,9 +5,9 @@ in pseudocode:
 ------------------------------
 struct compressed_column
 {
-    int num_original_cards_for_each_column : 8; /* 
+    int num_original_cards_for_each_column : 8; /*
         We need 7 bits for
-        two decks games and 6-bits for 1 deck games. 8 bits for parity. 
+        two decks games and 6-bits for 1 deck games. 8 bits for parity.
         */
     int num_cards_in_the_seq : 4; /* 0 - 13 */
     int top_card : 6; /* Only if num_cards_in_the_seq == 0 */
