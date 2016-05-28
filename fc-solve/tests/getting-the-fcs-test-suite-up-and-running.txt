@@ -2,11 +2,11 @@ This is a log for how to get the test suite up and running:
 
 #. Install the svn client.
 
-	On Debian: 
+	On Debian:
 	# apt-get install subversion.
 
 #. Install cmake (at least version 2.6.3):
-	
+
 	On Debian:
 	# apt-get install cmake
 	$ cmake --version # Make sure it's 2.6.3.
@@ -33,7 +33,7 @@ This is a log for how to get the test suite up and running:
 development headers.
 
 	On Debian:
-	$ tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz 
+	$ tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz
 	$ cd tap-1.01
 	$ ./configure --prefix="$HOME/apps/libtap"
 	$ make CFLAGS+=-UHAVE_LIBPTHREAD

@@ -21,7 +21,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-/* 
+/*
  * state_packs.c - Freecell Solver State Packs Allocation Routines.
  */
 

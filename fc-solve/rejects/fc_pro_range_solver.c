@@ -5,15 +5,6 @@
  *
  *    Description:  rejects from fc_pro_range_sovler.c
  *
- *        Version:  1.0
- *        Created:  13/06/09 15:08:37
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *        Company:  
- *
- * =====================================================================================
  */
 
 

@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  instance.c
- *
- *    Description:  
- *
- *        Version:  1.0
- *        Created:  07/02/11 18:42:16
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *        Company:  
- *
- * =====================================================================================
- */
-
 #ifdef FCS_WITH_TALONS
     /* Initialize the Talon's Cache */
     if (instance->talon_type == FCS_TALON_KLONDIKE)

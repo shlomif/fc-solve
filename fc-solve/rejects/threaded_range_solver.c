@@ -5,14 +5,6 @@
  *
  *    Description:  rejects from threaded_range_solver.c
  *
- *        Version:  1.0
- *        Created:  13/06/09 15:11:00
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *        Company:  
- *
  * =====================================================================================
  */
 

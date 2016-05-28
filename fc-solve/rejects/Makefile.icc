@@ -45,7 +45,7 @@ DLFLAGS = $(LFLAGS)
 TARGETS = fc-solve libfreecell-solver.so \
 		  freecell-solver-range-parallel-solve \
 		  freecell-solver-multi-thread-solve \
-		  
+
 
 ifeq ($(EXIT),1)
 

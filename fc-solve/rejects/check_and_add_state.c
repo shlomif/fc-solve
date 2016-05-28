@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  check_and_add_state.c
- *
- *    Description:  
- *
- *        Version:  1.0
- *        Created:  02/05/2011 11:17:24 PM
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *        Company:  
- *
- * =====================================================================================
- */
-
 #ifdef FCS_WITH_TALONS
 static GCC_INLINE void fc_solve_cache_talon(
     fc_solve_instance_t * instance,

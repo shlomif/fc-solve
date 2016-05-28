@@ -11,10 +11,6 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  YOUR NAME (), 
- *        Company:  
- *
- * =====================================================================================
  */
 
 struct fcs_struct_state_t

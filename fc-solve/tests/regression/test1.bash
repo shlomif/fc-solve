@@ -11,9 +11,9 @@ for board_num in 1 9 24 100 ; do
     fi
 done
 
-for dir in good new ; do    
+for dir in good new ; do
     if [ ! -d $dir ] ; then
-        mkdir $dir 
+        mkdir $dir
     fi
 done
 

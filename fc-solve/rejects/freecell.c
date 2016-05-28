@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  freecell.c
- *
- *    Description:  
- *
- *        Version:  1.0
- *        Created:  07/02/11 18:05:53
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *        Company:  
- *
- * =====================================================================================
- */
-
 #ifdef FCS_WITH_TALONS
 /*
     Let's try to deal the Gypsy-type Talon.

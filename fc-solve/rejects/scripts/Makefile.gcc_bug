@@ -7,7 +7,7 @@ LFLAGS = -lpthread
 REL_CFLAGS = $(COMMON_CFLAGS) -DNDEBUG
 DEB_CFLAGS = $(COMMON_CFLAGS) -DNDEBUG -g
 
-REL_BIN = release/$(PROG_BASE) 
+REL_BIN = release/$(PROG_BASE)
 DEB_BIN = debug/$(PROG_BASE)
 
 all: $(STAMPS) $(REL_BIN) $(DEB_BIN)

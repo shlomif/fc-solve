@@ -35,11 +35,11 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 
     if (parser_ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
     {
-        freecell_solver_user_free(instance);        
+        freecell_solver_user_free(instance);
         return 0;
     }
-    
-            
+
+
     freecell_solver_user_set_game(
         instance,
 
@@ -57,9 +57,9 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
 
     free(state_string);
 
-    while ((verdict == FCS_STATE_SUSPEND_PROCESS) && 
+    while ((verdict == FCS_STATE_SUSPEND_PROCESS) &&
            (
-                (limit > 0) ? 
+                (limit > 0) ?
                     (current_limit < limit) :
                     1
            )
@@ -86,11 +86,11 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         moves_processed_t * moves_processed;
 
         ret = num_iters;
-        
+
         moves_processed = moves_processed_gen(orig, NoFcs, instance);
         num_moves = moves_processed_get_moves_left(moves_processed);
         moves_string_proto = (char *)malloc(moves_processed->num_moves*4+1);
-        
+
         /* a = num_moves-1; */
         str = moves_string_proto;
 
@@ -107,7 +107,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
         }
         moves_string[a] = '\0';
         free(moves_string_proto);
-        
+
     }
     else if (verdict == FCS_STATE_IS_NOT_SOLVEABLE)
     {
@@ -119,7 +119,7 @@ int Free2Solver(Position * orig, int NoFcs, int limit, int cmd_line_argc, char *
     {
         ret = 0;
     }
-    
+
     freecell_solver_user_free(instance);
 
     return ret;

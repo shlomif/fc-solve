@@ -5,15 +5,6 @@
  *
  *    Description:  rejects from fcs_isa.c
  *
- *        Version:  1.0
- *        Created:  16/05/09 09:11:32
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *        Company:  
- *
- * =====================================================================================
  */
 
 #if 0
