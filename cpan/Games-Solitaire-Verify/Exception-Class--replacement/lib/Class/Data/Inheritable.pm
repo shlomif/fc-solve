@@ -72,7 +72,7 @@ The interesting part happens when a class inherits from Pere::Ubu:
 
   package Raygun;
   use base qw(Pere::Ubu);
-  
+
   # Raygun's suitcase is Red.
   $suitcase = Raygun->Suitcase;
 
@@ -139,8 +139,8 @@ Please direct all correspondence regarding this module to:
 
 =head1 COPYRIGHT and LICENSE
 
-Copyright (c) 2000-2005, Damian Conway and Michael G Schwern. 
-All Rights Reserved.  
+Copyright (c) 2000-2005, Damian Conway and Michael G Schwern.
+All Rights Reserved.
 
 This module is free software. It may be used, redistributed and/or
 modified under the same terms as Perl itself.

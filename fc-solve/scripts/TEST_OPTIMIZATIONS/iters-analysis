@@ -34,7 +34,7 @@ sub sys
     return;
 }
 
-sys([ "./freecell-solver-fc-pro-range-solve 1 32000 1 --read-from-file 4,$theme_fn > $dump_fn", ]);
+sys([ "./freecell-solver-fc-pro-range-solve 1 32000 1 --read-from-file 4,$theme_fn | perl -lpE 's/ \$//' > $dump_fn", ]);
 
 sys([ "cat \"$dump_fn\" | perl -lanE 'print \$1 if /\\Q[[Num Iters]]=\\E(-?\\d+)/' | cat -n | sort -n -k 2 > \"$iters_fn\"" , ]);
 

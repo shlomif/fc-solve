@@ -25,7 +25,7 @@ sub first(&@)
 sub min
 {
     my $pivot = shift;
-    
+
     foreach my $x (@_)
     {
         $pivot = $x < $pivot ? $x : $pivot;
