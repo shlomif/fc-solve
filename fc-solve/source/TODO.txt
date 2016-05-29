@@ -149,6 +149,10 @@ $ make_pysol_freecell_board.py -F -t 00682189035907813607 | perl ../scripts/summ
 Verdict: Solved ; Iters: 433 ; Length: 89
 --------------------------------------------------------
 
+* Consider adding the +restrict+ keyword:
+** http://stackoverflow.com/questions/776283/what-does-the-restrict-keyword-mean-in-c
+** https://duckduckgo.com/?q=restrict+keyword+c&ia=web
+
 Long-term
 ---------
 
