@@ -836,6 +836,40 @@ extern void fc_solve_trace_solution(
     fc_solve_instance_t * const instance
 );
 
+static GCC_INLINE void fc_solve__setup_optimization_thread__helper(
+    fc_solve_instance_t * const instance,
+    fc_solve_soft_thread_t * const soft_thread
+)
+{
+    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
+    {
+        if (soft_thread->by_depth_tests_order.by_depth_tests != NULL)
+        {
+            fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
+        }
+
+        soft_thread->by_depth_tests_order = (typeof(soft_thread->by_depth_tests_order))
+        {
+            .num = 1,
+            .by_depth_tests =
+            SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
+        };
+        soft_thread->by_depth_tests_order.by_depth_tests[0] =
+            (typeof( soft_thread->by_depth_tests_order.by_depth_tests[0] ))
+            {
+                .max_depth = INT_MAX,
+                .tests_order = tests_order_dup(&(instance->opt_tests_order)),
+            };
+    }
+
+    soft_thread->enum_method = SOLVE_METHOD_OPTIMIZE;
+    soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
+    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
+    fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
+    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
+    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
+}
+
 /*
     This function optimizes the solution path using a BFS scan on the
     states in the solution path.
@@ -864,38 +898,11 @@ static GCC_INLINE int fc_solve_optimize_solution(
         instance->is_optimization_st = TRUE;
     }
 
-    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
-    {
-#define soft_thread optimization_soft_thread
-        if (optimization_soft_thread->by_depth_tests_order.by_depth_tests != NULL)
-        {
-            fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
-        }
-
-        soft_thread->by_depth_tests_order.num = 1;
-        soft_thread->by_depth_tests_order.by_depth_tests =
-            SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests);
-
-        soft_thread->by_depth_tests_order.by_depth_tests[0].max_depth = INT_MAX;
-        soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order =
-            tests_order_dup(&(instance->opt_tests_order));
-    }
-
-    soft_thread->enum_method = SOLVE_METHOD_OPTIMIZE;
-    soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
-
-    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
-
+    fc_solve__setup_optimization_thread__helper(instance, optimization_soft_thread);
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
     instance->hard_thread.ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
-
-    fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
-    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
-
-    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
-
-    return fc_solve_befs_or_bfs_do_solve( soft_thread );
+    return fc_solve_befs_or_bfs_do_solve( optimization_soft_thread );
 }
 #undef soft_thread
 #else
@@ -936,41 +943,10 @@ static GCC_INLINE int fc_solve_optimize_solution(
         soft_thread = optimization_thread->soft_threads;
     }
 
-    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
-    {
-        if (soft_thread->by_depth_tests_order.by_depth_tests != NULL)
-        {
-            fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
-        }
-
-        soft_thread->by_depth_tests_order = (typeof(soft_thread->by_depth_tests_order))
-        {
-            .num = 1,
-            .by_depth_tests =
-            SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
-        };
-        soft_thread->by_depth_tests_order.by_depth_tests[0] =
-            (typeof( soft_thread->by_depth_tests_order.by_depth_tests[0] ))
-            {
-                .max_depth = INT_MAX,
-                .tests_order = tests_order_dup(&(instance->opt_tests_order)),
-            };
-    }
-
-    soft_thread->enum_method = SOLVE_METHOD_OPTIMIZE;
-    soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
-
-    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
-
+    fc_solve__setup_optimization_thread__helper(instance, soft_thread);
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
     optimization_thread->ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
-
-    fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
-    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
-
-    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
-
     return fc_solve_befs_or_bfs_do_solve( soft_thread );
 }
 #endif
