@@ -508,8 +508,8 @@ extern void fc_solve_trace_solution(
     /*
      * Handle the case if it's patsolve.
      * */
-    var_SLOT(solving_soft_thread, instance);
 #ifndef FCS_DISABLE_PATSOLVE
+    const_SLOT(solving_soft_thread, instance);
     if (
         solving_soft_thread->super_method_type == FCS_SUPER_METHOD_PATSOLVE)
     {

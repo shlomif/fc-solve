@@ -527,7 +527,9 @@ typedef enum
 {
     FCS_SUPER_METHOD_DFS,
     FCS_SUPER_METHOD_BEFS_BRFS,
+#ifndef FCS_DISABLE_PATSOLVE
     FCS_SUPER_METHOD_PATSOLVE,
+#endif
 } fcs_super_method_type_t;
 
 struct fc_solve__patsolve_thread_struct;
@@ -706,8 +708,10 @@ struct fc_solve_instance_struct
      * */
     fcs_game_type_params_t game_params;
 #ifndef FCS_FREECELL_ONLY
+#ifndef FCS_DISABLE_PATSOLVE
     fcs_card_t game_variant_suit_mask;
     fcs_card_t game_variant_desired_suit_value;
+#endif
 #endif
 
     /* The number of states that were checked by the solving algorithm. */

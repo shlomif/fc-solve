@@ -1570,12 +1570,14 @@ static GCC_INLINE void calc_variant_suit_mask_and_desired_suit_value(
     fc_solve_instance_t * const instance
 )
 {
+#ifndef FCS_DISABLE_PATSOLVE
     instance->game_variant_suit_mask = FCS_PATS__COLOR;
     instance->game_variant_desired_suit_value = FCS_PATS__COLOR;
     if ((GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) == FCS_SEQ_BUILT_BY_SUIT)) {
         instance->game_variant_suit_mask = FCS_PATS__SUIT;
         instance->game_variant_desired_suit_value = 0;
     }
+#endif
 }
 
 static void apply_game_params_for_all_instances(
