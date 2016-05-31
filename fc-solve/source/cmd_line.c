@@ -1112,6 +1112,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG() ;
 
+#ifndef FCS_DISABLE_PATSOLVE
             {
                 int position;
                 int x_param_val;
@@ -1138,6 +1139,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     RET_ERROR_IN_ARG() ;
                 }
             }
+#endif
         }
         break;
 
@@ -1145,6 +1147,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG() ;
 
+#ifndef FCS_DISABLE_PATSOLVE
             {
                 int position;
                 double y_param_val;
@@ -1171,6 +1174,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     RET_ERROR_IN_ARG() ;
                 }
             }
+#endif
         }
         break;
 
