@@ -530,13 +530,6 @@ typedef enum
     FCS_SUPER_METHOD_PATSOLVE,
 } fcs_super_method_type_t;
 
-typedef enum
-{
-    SOLVE_METHOD_BRFS,
-    SOLVE_METHOD_BEFS,
-    SOLVE_METHOD_OPTIMIZE,
-} fcs_solving_method_t;
-
 struct fc_solve__patsolve_thread_struct;
 struct fc_solve_soft_thread_struct
 {
@@ -557,14 +550,6 @@ struct fc_solve_soft_thread_struct
      * to be removed completely.
      * */
     fcs_by_depth_tests_order_array_t by_depth_tests_order;
-
-
-    /*
-     * The method (i.e: Soft-DFS, Random-DFS, BFS or BeFS) that is used by this
-     * instance.
-     *
-     * */
-    fcs_solving_method_t enum_method;
 
     /* The super-method type - can be  */
     fcs_super_method_type_t super_method_type;
@@ -709,6 +694,7 @@ struct fc_solve_soft_thread_struct
      * Differentiates between SOFT_DFS and RANDOM_DFS.
      * */
     fcs_bool_t master_to_randomize;
+    fcs_bool_t is_befs, is_optimize_scan;
 };
 
 struct fc_solve_instance_struct

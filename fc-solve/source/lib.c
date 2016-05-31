@@ -1525,11 +1525,11 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     switch (int_method)
     {
         case FCS_METHOD_BFS:
-        soft_thread->enum_method = SOLVE_METHOD_BRFS;
+        soft_thread->is_befs = FALSE;
         break;
 
         case FCS_METHOD_A_STAR:
-        soft_thread->enum_method = SOLVE_METHOD_BEFS;
+        soft_thread->is_befs = TRUE;
         break;
 
         case FCS_METHOD_RANDOM_DFS:

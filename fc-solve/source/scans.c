@@ -434,7 +434,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
     fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
 
-    if (soft_thread->enum_method == SOLVE_METHOD_BEFS)
+    if (soft_thread->is_befs)
     {
         /* Initialize the priotity queue of the BeFS scan */
         fc_solve_pq_init( &(BEFS_VAR(soft_thread, pqueue)) );
@@ -568,13 +568,12 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     ASSIGN_ptr_state(BEFS_M_VAR(soft_thread, first_state_to_check));
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
-    const_SLOT(enum_method, soft_thread);
     fcs_int_limit_t * const instance_num_checked_states_ptr = &(instance->i__num_checked_states);
 #ifndef FCS_SINGLE_HARD_THREAD
     fcs_int_limit_t * const hard_thread_num_checked_states_ptr = &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
-    const fcs_bool_t is_befs = (enum_method == SOLVE_METHOD_BEFS);
-    const fcs_bool_t is_optimize_scan = (enum_method == SOLVE_METHOD_OPTIMIZE);
+    const_SLOT(is_befs, soft_thread);
+    const_SLOT(is_optimize_scan, soft_thread);
 
     if (is_befs)
     {

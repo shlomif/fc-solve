@@ -721,7 +721,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t * const instance)
             {
                 free_states_handle_soft_dfs_soft_thread(soft_thread);
             }
-            else if (soft_thread->enum_method == SOLVE_METHOD_BEFS)
+            else if (soft_thread->is_befs)
             {
                 PQUEUE new_pq;
                 fc_solve_pq_init( &(new_pq) );

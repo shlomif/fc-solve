@@ -312,7 +312,7 @@ void fc_solve_init_soft_thread(
             .num = 1,
             .by_depth_tests = SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
         },
-        .enum_method = SOLVE_METHOD_BEFS,
+        .is_befs = FALSE, .is_optimize_scan = FALSE,
         .super_method_type = FCS_SUPER_METHOD_DFS,
         .master_to_randomize = FALSE,
         .num_checked_states_step = NUM_CHECKED_STATES_STEP,
