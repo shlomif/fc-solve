@@ -1544,7 +1544,6 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         case FCS_METHOD_PATSOLVE:
         {
             super_method_type = FCS_SUPER_METHOD_PATSOLVE;
-            soft_thread->enum_method = SOLVE_METHOD_PATSOLVE;
 
             if (! soft_thread->pats_scan)
             {

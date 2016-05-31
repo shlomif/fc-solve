@@ -535,7 +535,6 @@ typedef enum
     SOLVE_METHOD_BRFS,
     SOLVE_METHOD_BEFS,
     SOLVE_METHOD_OPTIMIZE,
-    SOLVE_METHOD_PATSOLVE,
 } fcs_solving_method_t;
 
 struct fc_solve__patsolve_thread_struct;
