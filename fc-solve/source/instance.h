@@ -532,8 +532,6 @@ typedef enum
 
 typedef enum
 {
-    SOLVE_METHOD_SOFT_DFS,
-    SOLVE_METHOD_RANDOM_DFS,
     SOLVE_METHOD_BRFS,
     SOLVE_METHOD_BEFS,
     SOLVE_METHOD_OPTIMIZE,
@@ -708,6 +706,10 @@ struct fc_solve_soft_thread_struct
      * */
     struct fc_solve__patsolve_thread_struct * pats_scan;
 #endif
+    /*
+     * Differentiates between SOFT_DFS and RANDOM_DFS.
+     * */
+    fcs_bool_t master_to_randomize;
 };
 
 struct fc_solve_instance_struct

@@ -1536,7 +1536,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         case FCS_METHOD_SOFT_DFS:
         {
             super_method_type = FCS_SUPER_METHOD_DFS;
-            soft_thread->enum_method = (int_method == FCS_METHOD_SOFT_DFS ? SOLVE_METHOD_SOFT_DFS : SOLVE_METHOD_RANDOM_DFS);
+            soft_thread->master_to_randomize = (int_method == FCS_METHOD_RANDOM_DFS);
         }
         break;
 
