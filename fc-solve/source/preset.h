@@ -48,17 +48,17 @@ typedef struct
     char allowed_tests[FCS_MOVE_FUNCS_NUM*3+1];
 } fcs_preset_t;
 
-extern const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
+extern fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     fc_solve_instance_t * const instance,
     const fcs_preset_t * const preset_ptr
     );
 
-extern const fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
+extern fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
     const char * const name,
     const fcs_preset_t * * const preset_ptr
     );
 
-static GCC_INLINE const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name(
+static GCC_INLINE fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name(
     fc_solve_instance_t * const instance,
     const char * const name
     )

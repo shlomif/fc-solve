@@ -56,7 +56,7 @@
 #include "scans_impl.h"
 
 
-static GCC_INLINE const fcs_depth_t kv_calc_depth(fcs_kv_state_t * const ptr_state)
+static GCC_INLINE fcs_depth_t kv_calc_depth(fcs_kv_state_t * const ptr_state)
 {
     return calc_depth(FCS_STATE_kv_to_collectible(ptr_state));
 }

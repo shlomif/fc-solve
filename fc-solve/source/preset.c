@@ -402,7 +402,7 @@ static const fcs_preset_name_t fcs_preset_names[23] =
 
 #define NUM_PRESETS ( (int) COUNT(fcs_preset_names) )
 
-static GCC_INLINE const int fcs_get_preset_id_by_name(
+static GCC_INLINE int fcs_get_preset_id_by_name(
     const char * const name
 )
 {
@@ -417,7 +417,7 @@ static GCC_INLINE const int fcs_get_preset_id_by_name(
     return -1;
 }
 
-const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
+fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     fc_solve_instance_t * const instance,
     const fcs_preset_t * const preset_ptr
         )
@@ -514,7 +514,7 @@ const fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     return FCS_PRESET_CODE_OK;
 }
 
-static GCC_INLINE const fc_solve_preset_ret_code_t fcs_get_preset_by_id(
+static GCC_INLINE fc_solve_preset_ret_code_t fcs_get_preset_by_id(
     const int preset_id,
     const fcs_preset_t * * const preset_ptr
     )
@@ -531,7 +531,7 @@ static GCC_INLINE const fc_solve_preset_ret_code_t fcs_get_preset_by_id(
     return FCS_PRESET_CODE_NOT_FOUND;
 }
 
-const fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
+fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
     const char * const name,
     const fcs_preset_t * * const preset_ptr
     )

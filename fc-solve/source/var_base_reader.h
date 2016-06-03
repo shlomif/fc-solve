@@ -65,7 +65,7 @@ static GCC_INLINE void fc_solve_var_base_reader_start(
     }
 }
 
-static GCC_INLINE const int fc_solve_var_base_reader_read(
+static GCC_INLINE int fc_solve_var_base_reader_read(
     fcs_var_base_reader_t * const reader,
     const int base
 )

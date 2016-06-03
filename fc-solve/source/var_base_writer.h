@@ -66,7 +66,7 @@ static GCC_INLINE void fc_solve_var_base_writer_write(
     mpz_mul_ui(w->multiplier, w->multiplier, ((unsigned long)base));
 }
 
-static GCC_INLINE const size_t fc_solve_var_base_writer_get_data(
+static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
     fcs_var_base_writer_t * const w,
     unsigned char * const exported
 )

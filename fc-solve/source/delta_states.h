@@ -138,7 +138,7 @@ static GCC_INLINE void fcs_dbm_record_increment_refcount(
 }
 
 /* Returns the new value so we can tell if it is zero. */
-static GCC_INLINE const unsigned char fcs_dbm_record_decrement_refcount(
+static GCC_INLINE unsigned char fcs_dbm_record_decrement_refcount(
     fcs_dbm_record_t * const rec
     )
 {

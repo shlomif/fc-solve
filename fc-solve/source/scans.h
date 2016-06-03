@@ -164,7 +164,7 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
 }
 
 
-static GCC_INLINE const char * const fc_solve_calc_positions_by_rank_location(
+static GCC_INLINE const char * fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t * const soft_thread
 )
 {

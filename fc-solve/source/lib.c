@@ -52,7 +52,7 @@ typedef struct {
     fcs_int_limit_t num_states_in_collection;
 } fcs_stats_t;
 
-static GCC_INLINE const fcs_stats_t calc_initial_stats_t(void)
+static GCC_INLINE fcs_stats_t calc_initial_stats_t(void)
 {
     return (const fcs_stats_t) {.num_checked_states = 0, .num_states_in_collection = 0};
 }
@@ -98,7 +98,7 @@ typedef enum
 
 typedef int flare_iters_quota_t;
 
-static GCC_INLINE const flare_iters_quota_t normalize_iters_quota(
+static GCC_INLINE flare_iters_quota_t normalize_iters_quota(
     const flare_iters_quota_t i
 )
 {
@@ -356,7 +356,7 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
     ((fcs_user_t *)api_instance)->current_instance->limit = max_iters;
 }
 
-static GCC_INLINE fc_solve_soft_thread_t * const api_soft_thread(void * const api_instance)
+static GCC_INLINE fc_solve_soft_thread_t * api_soft_thread(void * const api_instance)
 {
     return ((fcs_user_t * const)api_instance)->soft_thread;
 }
@@ -480,7 +480,7 @@ typedef enum
     FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
 } fcs_compile_flares_ret_t;
 
-static GCC_INLINE const flares_plan_item create_plan_item(
+static GCC_INLINE flares_plan_item create_plan_item(
     const flares_plan_type_t mytype,
     fcs_flare_item_t * const flare,
     const int count_iters
@@ -489,7 +489,7 @@ static GCC_INLINE const flares_plan_item create_plan_item(
     return (const flares_plan_item) {.type = mytype, .flare = flare, .count_iters = count_iters};
 }
 
-static GCC_INLINE const flares_plan_type_t add_to_plan(
+static GCC_INLINE flares_plan_type_t add_to_plan(
         fcs_instance_item_t * const instance_item,
         const flares_plan_type_t mytype,
         fcs_flare_item_t * const flare,
@@ -506,7 +506,7 @@ static GCC_INLINE const flares_plan_type_t add_to_plan(
     return mytype;
 }
 
-static GCC_INLINE const flares_plan_type_t add_count_iters_to_plan(
+static GCC_INLINE flares_plan_type_t add_count_iters_to_plan(
         fcs_instance_item_t * const instance_item,
         fcs_flare_item_t * const flare,
         const int count_iters
@@ -518,7 +518,7 @@ static GCC_INLINE const flares_plan_type_t add_count_iters_to_plan(
 }
 
 
-static GCC_INLINE const flares_plan_type_t add_checkpoint_to_plan(
+static GCC_INLINE flares_plan_type_t add_checkpoint_to_plan(
         fcs_instance_item_t * const instance_item
     )
 {
@@ -527,7 +527,7 @@ static GCC_INLINE const flares_plan_type_t add_checkpoint_to_plan(
             );
 }
 
-static GCC_INLINE const flares_plan_type_t add_run_indef_to_plan(
+static GCC_INLINE flares_plan_type_t add_run_indef_to_plan(
         fcs_instance_item_t * const instance_item,
         fcs_flare_item_t * const flare
     )
@@ -1300,7 +1300,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     );
 }
 
-static GCC_INLINE fcs_flare_item_t * const calc_moves_flare(
+static GCC_INLINE fcs_flare_item_t * calc_moves_flare(
     fcs_user_t * const user
 )
 {

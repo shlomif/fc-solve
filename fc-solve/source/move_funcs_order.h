@@ -47,7 +47,7 @@ static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
         );
 }
 
-static GCC_INLINE const int fc_solve_string_to_test_num(const char * const s)
+static GCC_INLINE int fc_solve_string_to_test_num(const char * const s)
 {
     fcs_move_func_aliases_mapping_t needle;
     needle.alias[0] = s[0];

@@ -100,7 +100,7 @@ static GCC_INLINE void fc_solve_hash_rehash(
  * Returns NULL if the key is new and the key/val pair was inserted.
  * Returns the existing key if the key is not new (= a truthy pointer).
  */
-static GCC_INLINE void * const fc_solve_hash_insert(
+static GCC_INLINE void * fc_solve_hash_insert(
     fc_solve_hash_t * const hash,
     void * const key,
 #ifdef FCS_RCS_STATES

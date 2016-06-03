@@ -46,17 +46,17 @@ char fc_solve_simple_simon_nothing;
 #include "meta_move_funcs_helpers.h"
 
 
-static GCC_INLINE const fcs_bool_t fcs_is_ss_false_parent(const fcs_card_t parent, const fcs_card_t child)
+static GCC_INLINE fcs_bool_t fcs_is_ss_false_parent(const fcs_card_t parent, const fcs_card_t child)
 {
     return (fcs_card_rank(parent) == fcs_card_rank(child)+1);
 }
 
-static GCC_INLINE const fcs_bool_t fcs_is_ss_suit_true(const fcs_card_t parent, const fcs_card_t child)
+static GCC_INLINE fcs_bool_t fcs_is_ss_suit_true(const fcs_card_t parent, const fcs_card_t child)
 {
     return (fcs_card_suit(parent) == fcs_card_suit(child));
 }
 
-static GCC_INLINE const fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent, const fcs_card_t child)
+static GCC_INLINE fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent, const fcs_card_t child)
 {
     return
     (
@@ -301,7 +301,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     STACK_SOURCE_LOOP_END()
 }
 
-static GCC_INLINE const int get_seq_h(const fcs_const_cards_column_t col, int * const num_true_seqs_out_ptr)
+static GCC_INLINE int get_seq_h(const fcs_const_cards_column_t col, int * const num_true_seqs_out_ptr)
 {
     const int cards_num = fcs_col_len(col);
 
@@ -442,7 +442,7 @@ static GCC_INLINE void populate_seq_points(
     generic_populate_seq_points(dest_col, dc, seqs, fcs_col_len(dest_col));
 }
 
-static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
+static GCC_INLINE fcs_bool_t generic_false_seq_index_loop(
     const int stacks_num,
     fcs_kv_state_t * const raw_ptr_state_raw,
     const int num_vacant_stacks,
@@ -554,7 +554,7 @@ static GCC_INLINE const fcs_bool_t generic_false_seq_index_loop(
     return (false_seq_index == false_seq_index_limit);
 }
 
-static GCC_INLINE const fcs_bool_t false_seq_index_loop(
+static GCC_INLINE fcs_bool_t false_seq_index_loop(
     const int stacks_num,
     fcs_kv_state_t * const raw_ptr_state_raw,
     const int num_vacant_stacks,
@@ -798,7 +798,7 @@ typedef struct {
     int src_stack;
 } s_e_src_t;
 
-static GCC_INLINE const s_e_src_t calc_start_end_src_stack(
+static GCC_INLINE s_e_src_t calc_start_end_src_stack(
     const int seq_index,
     const sequences_analysis_t * const seqs,
     const int after_end_of_junk,

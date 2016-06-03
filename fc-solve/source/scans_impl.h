@@ -604,7 +604,7 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
     return num_vacant_stacks;
 }
 
-static GCC_INLINE const fcs_bool_t fcs__should_state_be_pruned(const fcs_bool_t enable_pruning, const fcs_collectible_state_t * const ptr_state)
+static GCC_INLINE fcs_bool_t fcs__should_state_be_pruned(const fcs_bool_t enable_pruning, const fcs_collectible_state_t * const ptr_state)
 {
     return
     (
@@ -617,7 +617,7 @@ static GCC_INLINE const fcs_bool_t fcs__should_state_be_pruned(const fcs_bool_t 
     );
 }
 
-static GCC_INLINE const fcs_bool_t fcs__is_state_a_dead_end( const fcs_collectible_state_t * const ptr_state)
+static GCC_INLINE fcs_bool_t fcs__is_state_a_dead_end( const fcs_collectible_state_t * const ptr_state)
 {
     return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
 }

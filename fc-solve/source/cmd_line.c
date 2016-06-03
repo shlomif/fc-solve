@@ -286,7 +286,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     }
 }
 
-static GCC_INLINE char * const calc_errstr_s(const char * const format, ...)
+static GCC_INLINE char * calc_errstr_s(const char * const format, ...)
 {
     va_list my_va_list;
 

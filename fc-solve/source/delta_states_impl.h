@@ -43,7 +43,7 @@
 #include "dbm_common.h"
 #endif
 
-static const int fc_solve_get_column_orig_num_cards(
+static int fc_solve_get_column_orig_num_cards(
         fc_solve_delta_stater_t * const self,
         const fcs_const_cards_column_t col
         )

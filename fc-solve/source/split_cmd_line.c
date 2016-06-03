@@ -99,7 +99,7 @@ static GCC_INLINE void push_args_last_arg(args_man_wrapper_t * const manager)
     return;
 }
 
-static GCC_INLINE const fcs_bool_t is_whitespace(const char c)
+static GCC_INLINE fcs_bool_t is_whitespace(const char c)
 {
     return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
 }

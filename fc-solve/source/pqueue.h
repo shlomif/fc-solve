@@ -62,8 +62,8 @@ typedef struct
 
 typedef struct
 {
-    unsigned int max_size;
-    unsigned int current_size;
+    size_t max_size;
+    size_t current_size;
     pq_element_t * Elements; /* pointer to void pointers */
 } PQUEUE;
 
@@ -178,8 +178,8 @@ static GCC_INLINE void fc_solve_pq_pop(
 
     /*  UNTESTED */
 
-    int i;
-    int child;
+    size_t i;
+    size_t child;
     for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= new_current_size; i=child )
     {
         /* set child to the smaller of the two children... */

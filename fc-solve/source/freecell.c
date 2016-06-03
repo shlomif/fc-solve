@@ -353,7 +353,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
                 pos_idx_to_check += suit_positions_by_rank_step \
                )
 
-static GCC_INLINE const fcs_game_limit_t calc_num_vacant_slots(
+static GCC_INLINE fcs_game_limit_t calc_num_vacant_slots(
     const fc_solve_soft_thread_t * const soft_thread,
     const fcs_bool_t is_filled_by_any_card
 )
@@ -1787,7 +1787,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
     return -1;
 }
 
-extern fcs_collectible_state_t * const fc_solve_sfs_raymond_prune(
+extern fcs_collectible_state_t * fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t * const soft_thread,
     fcs_kv_state_t * const raw_ptr_state_raw
 )

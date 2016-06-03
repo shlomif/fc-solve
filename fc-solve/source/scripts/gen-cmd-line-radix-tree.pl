@@ -19,6 +19,7 @@ sub gen_radix_tree
 {
     open my $fh, '>', $gperf_fn;
     print {$fh} <<"EOF";
+%define initializer-suffix ,FCS_OPT_UNRECOGNIZED
 %{
 #include "cmd_line_enum.h"
 %}

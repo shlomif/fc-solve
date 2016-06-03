@@ -195,7 +195,7 @@ static GCC_INLINE int calc_child_card_option(
     }
 }
 
-static GCC_INLINE const int get_top_rank_for_iter(
+static GCC_INLINE int get_top_rank_for_iter(
     const enum fcs_dbm_variant_type_t local_variant
     )
 {

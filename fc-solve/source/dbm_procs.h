@@ -302,7 +302,7 @@ static void calc_trace(
     )
 {
 #define GROW_BY 100
-    int trace_num = 0;
+    size_t trace_num = 0;
     size_t trace_max_num = GROW_BY;
     fcs_encoded_state_buffer_t * trace = SMALLOC(trace, trace_max_num);
     fcs_encoded_state_buffer_t * key_ptr = trace;
