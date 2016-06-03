@@ -32,6 +32,7 @@
 #include "simpsim.h"
 #include "scans.h"
 
+
 /* This is a fallback in case this module is still compiled with
  * FCS_DISABLE_SIMPLE_SIMON.
  * */
@@ -118,6 +119,11 @@ static GCC_INLINE fcs_bool_t fcs_is_ss_true_parent(const fcs_card_t parent, cons
         (const fcs_pos_by_rank_t *) fc_solve_calc_positions_by_rank_location( soft_thread )
 
 #define STACKS_MAP_LEN MAX_NUM_STACKS
+
+#ifndef FCS_WITH_MOVES
+#define moves NULL
+#define moves_ptr NULL
+#endif
 
 static GCC_INLINE void init_stacks_map(fcs_bool_t * const stacks_map, const int stack_idx, const int ds)
 {
@@ -593,8 +599,8 @@ static GCC_INLINE fcs_bool_t false_seq_index_loop(
      })
 
 static GCC_INLINE void move_sequences_analysis_seqs_loop(
-    fcs_kv_state_t * const ptr_to_pass_new_state,
-    fcs_move_stack_t * const moves,
+    fcs_kv_state_t * const ptr_to_pass_new_state
+    SFS__PASS_MOVE_STACK(fcs_move_stack_t * const moves),
     const sequences_analysis_t * const seqs_ptr,
     int source_col_idx,
     int source_col_cards_num
@@ -702,7 +708,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_wit
                     my_copy_stack(ds);
 
                     /* Move the junk cards to their place */
-                    move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, ds, dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
+                    move_sequences_analysis_seqs_loop(&pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs, ds, dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
                     /* Move the source seq on top of the dest seq */
                     fcs_move_sequence(ds, stack_idx, cards_num-h-1);
@@ -769,7 +775,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_ab
                         /* Let's boogie - we can move everything */
 
                         /* Move the junk cards to their place */
-                        move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, stack_idx, cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
+                        move_sequences_analysis_seqs_loop(&pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs, stack_idx, cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
                         fcs_move_sequence(ds, stack_idx, end_of_src_seq-src_card_height);
 
@@ -1065,7 +1071,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_fal
                 my_copy_stack(ds);
 
                 /* Move the junk cards to their place */
-                move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, ds, dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
+                move_sequences_analysis_seqs_loop(&pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs, ds, dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
                 fcs_move_sequence( ds, stack_idx, cards_num-h);
 
@@ -1167,7 +1173,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_s
                 /* Move the junk cards to their place */
 
                 my_copy_stack(stack_idx);
-                move_sequences_analysis_seqs_loop(&pass_new_state, moves, &seqs, stack_idx, cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
+                move_sequences_analysis_seqs_loop(&pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs, stack_idx, cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
                 {
                     const int source_idx

@@ -42,6 +42,7 @@ const fcs_internal_move_t fc_solve_empty_move = {0,0,0,0};
 const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
 #endif
 
+#ifdef FCS_WITH_MOVES
 /*
  * This function performs a given move on a state
  */
@@ -141,6 +142,7 @@ void fc_solve_apply_move(
     }
 #undef state_key
 }
+#endif
 
 
 #define DERIVED_STATES_LIST_GROW_BY 16
@@ -158,14 +160,14 @@ void fc_solve_derived_states_list_add_state(
         )
        )
     {
-        (list)->states = SREALLOC(
-            (list)->states,
+        list->states = SREALLOC(
+            list->states,
             list->num_states
             + (list->states!=NULL)
             + DERIVED_STATES_LIST_GROW_BY
         );
     }
-    (list)->states[(list)->num_states].state_ptr = state;
-    (list)->states[(list)->num_states++].context.i = context;
+    list->states[list->num_states].state_ptr = state;
+    list->states[list->num_states++].context.i = context;
 }
 
