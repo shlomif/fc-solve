@@ -36,7 +36,7 @@
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 
-static void print_help(void)
+static void print_help(void) __attribute__((noreturn))
 {
     printf("\n%s",
 "summary-fc-solve [deal1_idx] [deal2_idx] .. -- \n"
@@ -144,7 +144,7 @@ int main(int argc, char * argv[])
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
 
-    for (int deal_idx=0 ; deal_idx < num_deals ; deal_idx++)
+    for (size_t deal_idx=0 ; deal_idx < num_deals ; deal_idx++)
     {
         const_AUTO(board_num, deals[deal_idx]);
         if (variant_is_freecell)

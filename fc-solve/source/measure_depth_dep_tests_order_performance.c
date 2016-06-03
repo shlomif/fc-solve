@@ -197,7 +197,7 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    results = SMALLOC(results, end_board - start_board + 1);
+    results = SMALLOC(results, (size_t)(end_board - start_board + 1));
 
     output_fh = fopen(output_filename, "wt");
 

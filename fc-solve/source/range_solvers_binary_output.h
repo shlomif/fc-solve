@@ -48,6 +48,13 @@ typedef struct
 #define BINARY_OUTPUT_NUM_INTS 16
 #define BINARY_OUTPUT_BUF_SIZE (sizeof(int) * BINARY_OUTPUT_NUM_INTS)
 #define SIZE_INT 4
+
+static GCC_INLINE void write_me(binary_output_t * const bin)
+{
+    fwrite(bin->buffer, 1, (size_t)(bin->ptr - bin->buffer), bin->fh);
+    fflush(bin->fh);
+}
+
 static void print_int(binary_output_t * const bin, int val)
 {
     if (! bin->fh)
@@ -63,8 +70,7 @@ static void print_int(binary_output_t * const bin, int val)
     bin->ptr += SIZE_INT;
     if (bin->ptr == bin->buffer_end)
     {
-        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->fh);
-        fflush(bin->fh);
+        write_me(bin);
         /* Reset ptr to the beginning */
         bin->ptr = bin->buffer;
     }
@@ -74,8 +80,7 @@ static GCC_INLINE void bin_close(binary_output_t * bin)
 {
     if (bin->filename)
     {
-        fwrite(bin->buffer, 1, bin->ptr - bin->buffer, bin->fh);
-        fflush(bin->fh);
+        write_me(bin);
         fclose(bin->fh);
         bin->fh = NULL;
         bin->filename = NULL;

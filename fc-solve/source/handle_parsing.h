@@ -42,7 +42,7 @@ enum
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
 
-static GCC_INLINE void * const alloc_instance_and_parse(
+static GCC_INLINE void * alloc_instance_and_parse(
     const int argc,
     char * * const argv,
     int * const arg_ptr,
@@ -98,7 +98,7 @@ static GCC_INLINE void * const alloc_instance_and_parse(
     return instance;
 }
 
-static GCC_INLINE void * const simple_alloc_and_parse(
+static GCC_INLINE void * simple_alloc_and_parse(
     const int argc,
     char * * const argv,
     int * const arg_ptr)

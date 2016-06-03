@@ -69,8 +69,8 @@ static int next_board_num;
 static pthread_mutex_t next_board_num_lock;
 
 typedef struct {
-    int argc;
     char * * argv;
+    int argc;
     int arg;
     int stop_at;
     int past_end_board;

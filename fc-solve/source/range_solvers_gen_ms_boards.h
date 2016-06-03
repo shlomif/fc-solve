@@ -123,10 +123,10 @@ static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
     }
 
     {
-        int  num_cards_left = 52;          /*  cards left to be chosen in shuffle */
+        microsoft_rand_uint_t num_cards_left = 52;          /*  cards left to be chosen in shuffle */
         for (int i = 0; i < 52; i++)
         {
-            const int j
+            const microsoft_rand_uint_t j
                 = microsoft_rand__game_num_rand(&seedx, gamenumber) % num_cards_left;
             const int col = (i & (8-1));
             const int card_idx = i >> 3;
