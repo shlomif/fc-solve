@@ -161,31 +161,30 @@ static GCC_INLINE void fc_solve_pq_pop(
     fcs_collectible_state_t * * const val
 )
 {
-    const_SLOT(Elements, pq);
-    var_SLOT(current_size, pq);
-
     if( fc_solve_is_pqueue_empty(pq) )
     {
         *val = NULL;
         return;
     }
-
+    const_SLOT(Elements, pq);
+    const_SLOT(current_size, pq);
     *val = Elements[PQ_FIRST_ENTRY].val;
 
     /* get pointer to last element in tree */
-    const pq_element_t last_elem = Elements[ current_size-- ];
+    const pq_element_t last_elem = Elements[ current_size ];
 
+    const_AUTO(new_current_size, current_size-1);
     /* code to pop an element from an ascending (top to bottom) pqueue */
 
     /*  UNTESTED */
 
     int i;
     int child;
-    for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= current_size; i=child )
+    for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= new_current_size; i=child )
     {
         /* set child to the smaller of the two children... */
 
-        if( (child != current_size) &&
+        if( (child != new_current_size) &&
             (fcs_pq_rating(Elements[child + 1]) > fcs_pq_rating(Elements[child])) )
         {
             child ++;
@@ -202,7 +201,7 @@ static GCC_INLINE void fc_solve_pq_pop(
     }
 
     Elements[i] = last_elem;
-    pq->current_size = current_size;
+    pq->current_size = new_current_size;
 
 
     return;
