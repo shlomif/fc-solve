@@ -27,16 +27,15 @@
 #include "cl_callback.h"
 
 static void my_iter_handler(
-    void * user_instance,
-    fcs_int_limit_t iter_num,
-    int depth,
-    void * ptr_state,
-    fcs_int_limit_t parent_iter_num,
-    void * lp_context
+    void * const user_instance,
+    const fcs_int_limit_t iter_num,
+    const int depth,
+    void * const ptr_state,
+    const fcs_int_limit_t parent_iter_num,
+    void * const lp_context
     )
 {
-    fc_solve_display_information_context_t * context;
-    context = (fc_solve_display_information_context_t*)lp_context;
+    fc_solve_display_information_context_t * const context = (fc_solve_display_information_context_t*)lp_context;
 
     fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
@@ -95,25 +94,26 @@ static void my_iter_handler(
             freecell_solver_user_limit_iterations_long(pruner, 128*1024);
 
             const int ret = freecell_solver_user_solve_board(pruner, state_string);
-            if (ret == FCS_STATE_SUSPEND_PROCESS)
+            switch (ret)
             {
+                case FCS_STATE_SUSPEND_PROCESS:
                 printf ("\n\nVerdict: INDETERMINATE\n\n");
-            }
-            else if (ret == FCS_STATE_WAS_SOLVED)
-            {
+                break;
+
+                case FCS_STATE_WAS_SOLVED:
                 printf("\n\nVerdict: SOLVED\n\nYay! We found a solution from this one.");
                 exit(0);
-            }
-            else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-            {
+                break;
+
+                case FCS_STATE_IS_NOT_SOLVEABLE:
                 printf("\n\nVerdict: PRUNED\n\n");
-            }
-            else
-            {
+                break;
+
+                default:
                 printf("\n\nVerdict: unknown ret code: %d\n\n", ret);
                 exit(-1);
+                break;
             }
-
             freecell_solver_user_free(pruner);
         }
     }

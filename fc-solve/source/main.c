@@ -31,16 +31,15 @@
 #include "cl_callback.h"
 
 static void my_iter_handler(
-    void * user_instance,
-    fcs_int_limit_t iter_num,
-    int depth,
-    void * ptr_state,
-    fcs_int_limit_t parent_iter_num,
+    void * const user_instance,
+    const fcs_int_limit_t iter_num,
+    const int depth,
+    void * const ptr_state,
+    const fcs_int_limit_t parent_iter_num,
     void * lp_context
     )
 {
-    fc_solve_display_information_context_t * context;
-    context = (fc_solve_display_information_context_t*)lp_context;
+    fc_solve_display_information_context_t * const context = (fc_solve_display_information_context_t*)lp_context;
 
     fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
