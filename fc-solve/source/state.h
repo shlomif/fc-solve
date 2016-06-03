@@ -293,7 +293,7 @@ typedef char fcs_locs_t;
 
 static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 {
-    return ( (((fcs_card_t)rank) << 2) | ((fcs_card_t)suit) );
+    return (fcs_card_t)( (((fcs_card_t)rank) << 2) | ((fcs_card_t)suit) );
 }
 
 #define fcs_card2char(c) (c)
@@ -448,7 +448,7 @@ typedef struct {
     fcs_state_extra_info_t * val;
 } fcs_kv_state_t;
 
-static GCC_INLINE const fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(fcs_state_keyval_pair_t * const s)
+static GCC_INLINE fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(fcs_state_keyval_pair_t * const s)
 {
     return (const fcs_kv_state_t) {.key = &(s->s), .val = &(s->info)};
 }
@@ -536,8 +536,6 @@ extern fcs_card_t fc_solve_empty_card;
 
 #define fc_solve_empty_card ((fcs_card_t)0)
 
-#define DEFINE_fc_solve_empty_card()
-
 #endif
 
 #ifdef HARD_CODED_NUM_FREECELLS
@@ -619,7 +617,7 @@ extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
-extern const int fc_solve_u2p_rank(const char * string);
+extern int fc_solve_u2p_rank(const char * string);
 
 #ifdef FC_SOLVE__STRICTER_BOARD_PARSING
 #define FC_SOLVE_MAP_CHAR(c) (c)
@@ -634,7 +632,7 @@ extern const int fc_solve_u2p_rank(const char * string);
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-static GCC_INLINE const int fc_solve_u2p_suit(const char * suit)
+static GCC_INLINE int fc_solve_u2p_suit(const char * suit)
 {
     while (TRUE)
     {
@@ -731,7 +729,7 @@ static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:",
         PASS_IND_BUF_T(indirect_stacks_buffer) \
         )
 
-static GCC_INLINE const fcs_bool_t fc_solve_initial_user_state_to_c_proto(
+static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     const char * const string,
     fcs_state_keyval_pair_t * const out_state
     FREECELLS_STACKS_DECKS__ARGS()
@@ -954,7 +952,7 @@ typedef enum
     FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4
 } fcs_state_validity_ret_t;
 
-static GCC_INLINE const fcs_state_validity_ret_t fc_solve_check_state_validity(
+static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
     const fcs_state_keyval_pair_t * const state_pair
     FREECELLS_STACKS_DECKS__ARGS(),
     fcs_card_t * const misplaced_card)
@@ -1149,7 +1147,7 @@ static GCC_INLINE const fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t c
 
 #else
 
-static GCC_INLINE const fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child, const fcs_card_t parent, const int sequences_are_built_by)
+static GCC_INLINE fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child, const fcs_card_t parent, const int sequences_are_built_by)
 {
     return
     ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) &&
@@ -1184,7 +1182,7 @@ static GCC_INLINE void fcs_col_transfer_cards(fcs_cards_column_t dest_col, fcs_c
     memset(src_cards_ptr, 0, cards_size);
 }
 
-static GCC_INLINE const fcs_card_t fcs_state_pop_col_card(
+static GCC_INLINE fcs_card_t fcs_state_pop_col_card(
     fcs_state_t * const state,
     const int col_idx
 )

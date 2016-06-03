@@ -83,16 +83,16 @@ extern void fc_solve_compact_allocator_init(
 
 static GCC_INLINE void * fcs_compact_alloc_ptr(
     fcs_compact_allocator_t * const allocator,
-    const int how_much_proto
+    const size_t how_much_proto
 )
 {
     /* Round ptr to the next pointer boundary */
-    const int how_much = how_much_proto +
+    const size_t how_much = how_much_proto +
         (
          (sizeof(char *)-((how_much_proto)&(sizeof(char *)-1)))&(sizeof(char*)-1)
         );
 
-    if (allocator->max_ptr - allocator->ptr < how_much)
+    if ((size_t)(allocator->max_ptr - allocator->ptr) < how_much)
     {
         fc_solve_compact_allocator_extend(allocator);
     }

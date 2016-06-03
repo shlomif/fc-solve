@@ -35,13 +35,13 @@ extern "C"
 #include "bool.h"
 #include <string.h>
 
-static GCC_INLINE const fcs_bool_t string_starts_with(
+static GCC_INLINE fcs_bool_t string_starts_with(
     const char * const str,
     const char * const prefix,
     const char * const end
     )
 {
-    register const size_t check_len = end-str;
+    register const size_t check_len = (size_t)(end-str);
 
     return
         (
@@ -51,7 +51,7 @@ static GCC_INLINE const fcs_bool_t string_starts_with(
         ;
 }
 
-static GCC_INLINE const char * const try_str_prefix(
+static GCC_INLINE const char * try_str_prefix(
     const char * const str,
     const char * const prefix
 )

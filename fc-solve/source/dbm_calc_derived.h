@@ -61,7 +61,7 @@ typedef struct fcs_derived_state_struct
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 } fcs_derived_state_t;
 
-#define MAKE_MOVE(src, dest) ((src) | ((dest) << 4))
+#define MAKE_MOVE(src, dest) ((fcs_fcc_move_t)((src) | ((dest) << 4)))
 #define COL2MOVE(idx) (idx)
 #define FREECELL2MOVE(idx) (idx+8)
 #define FOUND2MOVE(idx) ((idx)+(8+4))

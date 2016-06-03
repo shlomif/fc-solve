@@ -36,7 +36,9 @@
 
 #include "p2u_rank.h"
 
+#ifdef DEFINE_fc_solve_empty_card
 DEFINE_fc_solve_empty_card();
+#endif
 
 /*
  * This function converts a card number from its user representation
@@ -44,7 +46,7 @@ DEFINE_fc_solve_empty_card();
  * the program.
  * */
 
-const int fc_solve_u2p_rank(const char * string)
+int fc_solve_u2p_rank(const char * string)
 {
     while (1)
     {
