@@ -51,34 +51,18 @@ struct microsoft_rand_struct
 
 typedef struct microsoft_rand_struct microsoft_rand_t;
 
-static microsoft_rand_t * microsoft_rand_alloc(unsigned int seed)
+static void microsoft_rand_init(microsoft_rand_t * const my_rand_gen, const unsigned int seed)
 {
-    microsoft_rand_t * ret;
-
-    ret = SMALLOC1(ret);
-    ret->seed = (long)seed;
-
-    return ret;
+    my_rand_gen->seed = (long)seed;
 }
 
-static void microsoft_rand_free(microsoft_rand_t * my_rand_gen)
-{
-    free(my_rand_gen);
-}
-
-static int microsoft_rand_rand(microsoft_rand_t * my_rand_gen)
+static int microsoft_rand_rand(microsoft_rand_t * const my_rand_gen)
 {
     my_rand_gen->seed = (my_rand_gen->seed * 214013 + 2531011);
     return (my_rand_gen->seed >> 16) & 0x7fff;
 }
 
 typedef int CARD;
-
-#define     BLACK           0               /* COLOUR(card) */
-#define     RED             1
-
-#define     ACE             0               /*  VALUE(card) */
-#define     DEUCE           1
 
 #define     CLUB            0               /*  SUIT(card)  */
 #define     DIAMOND         1
@@ -87,7 +71,6 @@ typedef int CARD;
 
 #define     SUIT(card)      ((card) % 4)
 #define     VALUE(card)     ((card) / 4)
-#define     COLOUR(card)    (SUIT(card) == DIAMOND || SUIT(card) == HEART)
 
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
@@ -153,7 +136,7 @@ int main(int argc, char * argv[])
     int  i, j;                /*  generic counters */
     int  wLeft = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
-    microsoft_rand_t * my_rand_gen;
+    microsoft_rand_t my_rand_gen;
     int print_ts = 0;
 
     int arg = 1;
@@ -165,17 +148,17 @@ int main(int argc, char * argv[])
             arg++;
         }
     }
-    const int gamenumber = ((arg < argc) ? atoi(argv[arg++]) : time(NULL));
+    const unsigned int gamenumber = ((arg < argc) ? (unsigned int)atoi(argv[arg++]) : (unsigned int)time(NULL));
 
     /* shuffle cards */
 
     for (i = 0; i < 52; i++)      /* put unique card in each deck loc. */
         deck[i] = i;
 
-    my_rand_gen = microsoft_rand_alloc(gamenumber); /* gamenumber is seed for my_rand_gen() */
+    microsoft_rand_init(&my_rand_gen, gamenumber);
     for (i = 0; i < 52; i++)
     {
-        j = microsoft_rand_rand(my_rand_gen) % wLeft;
+        j = microsoft_rand_rand(&my_rand_gen) % wLeft;
         card[(i%8)+1][i/8] = deck[j];
         deck[j] = deck[--wLeft];
     }
@@ -203,6 +186,5 @@ int main(int argc, char * argv[])
         }
     }
 
-    microsoft_rand_free(my_rand_gen);
     return 0;
 }
