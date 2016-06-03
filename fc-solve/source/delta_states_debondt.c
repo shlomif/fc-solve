@@ -143,7 +143,6 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_set_derived(
     self->_derived_state = state;
 }
 
-#define NUM_SUITS 4
 #define GET_SUIT_BIT(card) (( (fcs_card_suit(card)) & 0x2 ) >> 1 )
 
 static GCC_INLINE int wanted_suit_bit_opt(const fcs_card_t parent_card)
