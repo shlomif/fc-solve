@@ -78,7 +78,7 @@ static int main_tests(void)
     return 0;
 }
 
-int main()
+int main(void)
 {
     plan_tests(1);
     main_tests();

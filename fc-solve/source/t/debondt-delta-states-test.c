@@ -272,7 +272,7 @@ static int main_tests(void)
     return 0;
 }
 
-int main()
+int main(void)
 {
     plan_tests(2);
     main_tests();

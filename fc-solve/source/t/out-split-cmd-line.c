@@ -37,8 +37,7 @@
 
 #include "../split_cmd_line.c"
 
-
-int main()
+int main(void)
 {
     char buffer[64 * 1024];
     int i;

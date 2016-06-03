@@ -36,7 +36,7 @@
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 
-static void print_help(void) __attribute__((noreturn))
+static void __attribute__((noreturn)) print_help(void)
 {
     printf("\n%s",
 "summary-fc-solve [deal1_idx] [deal2_idx] .. -- \n"

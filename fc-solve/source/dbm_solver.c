@@ -705,7 +705,7 @@ static void instance_run_all_threads(
     fcs_state_keyval_pair_t * init_state,
     const size_t num_threads)
 {
-    int i, check;
+    int check;
     main_thread_item_t * threads;
 
 #ifndef FCS_FREECELL_ONLY
