@@ -1136,7 +1136,7 @@ static GCC_INLINE void set_scan_visited(fcs_collectible_state_t * const ptr_stat
 
 #ifdef FCS_FREECELL_ONLY
 
-static GCC_INLINE const fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child, const fcs_card_t parent)
+static GCC_INLINE fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child, const fcs_card_t parent)
 {
     return
     ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) && \
