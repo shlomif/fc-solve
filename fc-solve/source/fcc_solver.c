@@ -125,7 +125,7 @@ static GCC_INLINE void instance_init(
 }
 
 static GCC_INLINE void instance_destroy(
-    fcs_dbm_solver_instance_t * instance
+    fcs_dbm_solver_instance_t * const instance GCC_UNUSED
     )
 {
     return;

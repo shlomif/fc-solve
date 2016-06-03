@@ -62,7 +62,7 @@ typedef struct {
 } fcs_FCC_start_points_list_t;
 
 static int fc_solve_compare_encoded_states(
-    const void * void_a, const void * void_b, void * context
+    const void * const void_a, const void * const void_b, void * const context GCC_UNUSED
 )
 {
 #define GET_PARAM(p) ((const fcs_encoded_state_buffer_t *)p)

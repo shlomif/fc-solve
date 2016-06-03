@@ -272,7 +272,7 @@ static int main_tests(void)
     return 0;
 }
 
-int main(int argc, char * argv[])
+int main()
 {
     plan_tests(2);
     main_tests();

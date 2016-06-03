@@ -79,8 +79,8 @@ typedef struct
 static GCC_INLINE void instance_init(
     fcs_dbm_solver_instance_t * instance,
     enum fcs_dbm_variant_type_t local_variant,
-    long pre_cache_max_count,
-    long caches_delta,
+    const long pre_cache_max_count GCC_UNUSED,
+    const long caches_delta GCC_UNUSED,
     const char * dbm_store_path,
     long iters_delta_limit,
     const char * offload_dir_path,
@@ -143,32 +143,6 @@ static GCC_INLINE void instance_init(
 
 }
 
-static GCC_INLINE void instance_recycle(
-    fcs_dbm_solver_instance_t * instance
-    )
-{
-     int depth;
-
-     for (depth = instance->curr_depth ; depth < MAX_FCC_DEPTH ; depth++)
-     {
-         fcs_dbm_collection_by_depth_t * coll;
-
-         coll = &(instance->colls_by_depth[depth]);
-         fcs_offloading_queue__destroy(&(coll->queue));
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-         fcs_offloading_queue__init(&(coll->queue), NUM_ITEMS_PER_PAGE, instance->offload_dir_path, depth);
-#else
-         fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
-#endif
-     }
-
-    instance->should_terminate = DONT_TERMINATE;
-    instance->queue_num_extracted_and_processed = 0;
-    instance->num_states_in_collection = 0;
-    instance->count_num_processed = 0;
-    instance->count_of_items_in_queue = 0;
-}
-
 static GCC_INLINE void instance_destroy(
     fcs_dbm_solver_instance_t * instance
     )
@@ -211,13 +185,13 @@ static GCC_INLINE void instance_destroy(
 #include "dbm_procs.h"
 
 static GCC_INLINE void instance_check_key(
-    fcs_dbm_solver_thread_t * const thread,
+    fcs_dbm_solver_thread_t * const thread GCC_UNUSED,
     fcs_dbm_solver_instance_t * const instance,
     const int key_depth,
     fcs_encoded_state_buffer_t * const key,
     fcs_dbm_record_t * const parent,
-    const unsigned char move,
-    const fcs_which_moves_bitmask_t * const which_irreversible_moves_bitmask
+    const unsigned char move GCC_UNUSED,
+    const fcs_which_moves_bitmask_t * const which_irreversible_moves_bitmask GCC_UNUSED
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif

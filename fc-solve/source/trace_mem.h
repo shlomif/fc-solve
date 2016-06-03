@@ -118,7 +118,7 @@ static GCC_INLINE void trace_mem(const int board_num)
 }
 #else
 
-static GCC_INLINE void trace_mem(const int board_num)
+static GCC_INLINE void trace_mem(const int board_num GCC_UNUSED)
 {
 }
 

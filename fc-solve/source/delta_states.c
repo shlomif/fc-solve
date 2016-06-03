@@ -73,7 +73,7 @@ static const int fc_solve_get_column_orig_num_cards(
 
 static void fc_solve_delta_stater_init(
     fc_solve_delta_stater_t * const self,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const enum fcs_dbm_variant_type_t local_variant GCC_UNUSED,
     fcs_state_t * const init_state,
     const int num_columns,
     const int num_freecells
@@ -121,7 +121,7 @@ static void fc_solve_delta_stater_init(
     }
 }
 
-static GCC_INLINE void fc_solve_delta_stater_release(fc_solve_delta_stater_t * const self)
+static GCC_INLINE void fc_solve_delta_stater_release(fc_solve_delta_stater_t * const self GCC_UNUSED)
 {
 }
 
@@ -495,7 +495,7 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
 
 static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
     fc_solve_delta_stater_t * const delta_stater,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const enum fcs_dbm_variant_type_t local_variant GCC_UNUSED,
     fcs_state_keyval_pair_t * const state,
     unsigned char * const out_enc_state
 )
