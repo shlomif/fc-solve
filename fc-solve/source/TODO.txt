@@ -10,6 +10,10 @@ Pressing
 Non-pressing
 ------------
 
+* Consider a [partial] testing of FCS_DISABLE_MULTI_FLARES.
+** Perhaps implement coditional of more disabled features in -l
+x64t/-l ci7t/etc.
+
 * Implement a transpose command (to flip a layout from vertical to horizontal)
 by request of Manish.
 ** With tests.
