@@ -891,8 +891,7 @@ static void recycle_instance(
     instance_item->current_plan_item_idx = 0;
     instance_item->minimal_flare = NULL;
 #else
-    instance_item->was_flare_found = FALSE;
-
+    instance_item->was_flare_found = instance_item->was_flare_finished = FALSE;
 #endif
 
     return;
