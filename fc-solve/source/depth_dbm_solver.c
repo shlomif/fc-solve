@@ -489,7 +489,7 @@ typedef struct {
 static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,
-    int num_threads)
+    size_t num_threads)
 {
     int i, check;
     main_thread_item_t * threads;
@@ -520,7 +520,7 @@ static void instance_run_all_threads(
 #endif
             );
 #endif
-    for (i=0; i < num_threads ; i++)
+    for (size_t i=0; i < num_threads ; i++)
     {
         fc_solve_delta_stater_init(
             &(threads[i].thread.delta_stater),
@@ -541,7 +541,7 @@ static void instance_run_all_threads(
     while (instance->curr_depth < MAX_FCC_DEPTH)
     {
         TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
-        for (i=0; i < num_threads ; i++)
+        for (size_t i=0; i < num_threads ; i++)
         {
             check = pthread_create(
                 &(threads[i].id),
@@ -560,7 +560,7 @@ static void instance_run_all_threads(
             }
         }
 
-        for (i=0; i < num_threads ; i++)
+        for (size_t i=0; i < num_threads ; i++)
         {
             pthread_join(threads[i].id, NULL);
         }
@@ -629,7 +629,7 @@ static void instance_run_all_threads(
         instance->curr_depth++;
     }
 
-    for (i=0; i < num_threads ; i++)
+    for (size_t i=0; i < num_threads ; i++)
     {
         fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
         fc_solve_meta_compact_allocator_finish(
@@ -865,7 +865,6 @@ int main(int argc, char * argv[])
     long start_line = 1;
 #endif
     const char * dbm_store_path;
-    int num_threads;
     int arg;
     const char * filename = NULL, * out_filename = NULL,
           * offload_dir_path = NULL;
@@ -886,7 +885,7 @@ int main(int argc, char * argv[])
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
     dbm_store_path = "./fc_solve_dbm_store";
-    num_threads = 2;
+    size_t num_threads = 2;
 
     for (arg=1;arg < argc; arg++)
     {
@@ -950,7 +949,7 @@ int main(int argc, char * argv[])
                 fprintf(stderr, "--num-threads came without an argument!\n");
                 exit(-1);
             }
-            num_threads = atoi(argv[arg]);
+            num_threads = (size_t)atoi(argv[arg]);
             if (num_threads < 1)
             {
                 fprintf(stderr, "--num-threads must be at least 1.\n");

@@ -703,7 +703,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,
-    int num_threads)
+    const size_t num_threads)
 {
     int i, check;
     main_thread_item_t * threads;
@@ -736,7 +736,7 @@ static void instance_run_all_threads(
             );
 #endif
 
-    for (i=0; i < num_threads ; i++)
+    for (size_t i=0; i < num_threads ; i++)
     {
         threads[i].thread.instance = instance;
         fc_solve_delta_stater_init(
@@ -766,7 +766,7 @@ static void instance_run_all_threads(
         }
     }
 
-    for (i=0; i < num_threads ; i++)
+    for (size_t i=0; i < num_threads ; i++)
     {
         pthread_join(threads[i].id, NULL);
         fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
@@ -1093,7 +1093,6 @@ int main(int argc, char * argv[])
     long iters_delta_limit = -1;
     long start_line = 1;
     const char * dbm_store_path;
-    int num_threads;
     int arg;
     const char * filename = NULL, * out_filename = NULL,
           * intermediate_input_filename = NULL, * offload_dir_path = NULL;
@@ -1112,7 +1111,7 @@ int main(int argc, char * argv[])
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
     dbm_store_path = "./fc_solve_dbm_store";
-    num_threads = 2;
+    size_t num_threads = 2;
 
     for (arg=1;arg < argc; arg++)
     {
@@ -1154,7 +1153,7 @@ int main(int argc, char * argv[])
                 fprintf(stderr, "--num-threads came without an argument!\n");
                 exit(-1);
             }
-            num_threads = atoi(argv[arg]);
+            num_threads = (size_t)atoi(argv[arg]);
             if (num_threads < 1)
             {
                 fprintf(stderr, "--num-threads must be at least 1.\n");

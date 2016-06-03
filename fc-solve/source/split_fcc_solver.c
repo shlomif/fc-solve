@@ -957,9 +957,9 @@ static void instance_run_all_threads(
     fcs_dbm_solver_instance_t * instance,
     fcs_state_keyval_pair_t * init_state,
     FccEntryPointNode * key_ptr,
-    int num_threads)
+    size_t num_threads)
 {
-    int i, check;
+    int check;
     main_thread_item_t * threads;
 
 #ifndef FCS_FREECELL_ONLY
@@ -989,7 +989,7 @@ static void instance_run_all_threads(
             );
 #endif
 
-    for (i=0; i < num_threads ; i++)
+    for (size_t i = 0 ; i < num_threads ; i++)
     {
         threads[i].thread.instance = instance;
         fc_solve_delta_stater_init(
@@ -1018,7 +1018,7 @@ static void instance_run_all_threads(
 
     {
         TRACE1("Running threads for curr_depth=%d\n", 0);
-        for (i=0; i < num_threads ; i++)
+        for (size_t i=0; i < num_threads ; i++)
         {
             check = pthread_create(
                 &(threads[i].id),
@@ -1037,7 +1037,7 @@ static void instance_run_all_threads(
             }
         }
 
-        for (i=0; i < num_threads ; i++)
+        for (size_t i=0; i < num_threads ; i++)
         {
             pthread_join(threads[i].id, NULL);
         }
@@ -1102,7 +1102,7 @@ static void instance_run_all_threads(
         }
     }
 
-    for (i=0; i < num_threads ; i++)
+    for (size_t i=0; i < num_threads ; i++)
     {
         fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
         fc_solve_meta_compact_allocator_finish(
@@ -1132,7 +1132,6 @@ static void trace_solution(
     enum fcs_dbm_variant_type_t local_variant;
     fcs_encoded_state_buffer_t * trace;
     int trace_num;
-    int i;
     fcs_state_keyval_pair_t state;
     unsigned char move = '\0';
     char move_buffer[500];
@@ -1149,7 +1148,7 @@ static void trace_solution(
 
     fc_solve_init_locs(&locs);
 
-    for (i = trace_num-1 ; i >= 0 ; i--)
+    for (int i = trace_num-1 ; i >= 0 ; i--)
     {
         fc_solve_delta_stater_decode_into_state(
             delta,
@@ -1294,7 +1293,7 @@ int main(int argc, char * argv[])
     long caches_delta = 1000000;
     const char * dbm_store_path = "./fc_solve_dbm_store";
 
-    int num_threads = 1;
+    size_t num_threads = 1;
 
     int arg = 1;
     for (; arg < argc ; arg++)
@@ -1369,7 +1368,7 @@ int main(int argc, char * argv[])
                 fprintf(stderr, "--num-threads came without an argument!\n");
                 exit(-1);
             }
-            num_threads = atoi(argv[arg]);
+            num_threads = (size_t)atoi(argv[arg]);
             if (num_threads < 1)
             {
                 fprintf(stderr, "--num-threads must be at least 1.\n");

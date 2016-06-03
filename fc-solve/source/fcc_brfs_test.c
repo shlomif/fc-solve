@@ -183,7 +183,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     const fcs_FCC_start_point_t * iter = start_points_list.list;
 
-    int states_count = 0;
+    size_t states_count = 0;
     while (iter)
     {
         states_count++;
@@ -197,17 +197,16 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_init_locs(&locs);
 
     iter = start_points_list.list;
-    for (int i = 0; i < states_count ; i++)
+    for (size_t i = 0; i < states_count ; i++)
     {
         fcs_state_keyval_pair_t state;
         DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
 
         ret[i].count = iter->moves_seq.count;
-        ret[i].moves = SMALLOC(ret[i].moves, ret[i].count);
+        ret[i].moves = SMALLOC(ret[i].moves, (size_t)ret[i].count);
         {
-            int moves_idx;
             fcs_fcc_moves_list_item_t * moves_iter = iter->moves_seq.moves_list;
-            for (moves_idx = 0 ; moves_idx < ret[i].count ; )
+            for (int moves_idx = 0 ; moves_idx < ret[i].count ; )
             {
                 ret[i].moves[moves_idx] = moves_iter->data.s[moves_idx % FCS_FCC_NUM_MOVES_IN_ITEM];
                 if ((++moves_idx) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)

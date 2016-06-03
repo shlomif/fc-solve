@@ -158,8 +158,8 @@ static GCC_INLINE int avl_get_decommissioned_flag(struct avl_node * node)
 
 static GCC_INLINE void avl_set_decommissioned_flag(struct avl_node * node, int decommissioned_flag)
 {
-    node->avl_mylink[1] &= (~0x1);
-    node->avl_mylink[1] |= (decommissioned_flag ? 0x1 : 0x0);
+    node->avl_mylink[1] &= (~0x1UL);
+    node->avl_mylink[1] |= (decommissioned_flag ? 0x1UL : 0x0UL);
 }
 
 #endif /* avl.h */

@@ -150,9 +150,9 @@ static GCC_INLINE void fcs_offloading_queue__insert(
 
 typedef struct
 {
-    int num_items_per_page;
+    size_t num_items_per_page;
     long page_index, queue_id;
-    int write_to_idx;
+    size_t write_to_idx;
     size_t read_from_idx;
     unsigned char * data;
 } fcs_offloading_queue_page_t;
@@ -167,7 +167,7 @@ static GCC_INLINE void fcs_offloading_queue_page__recycle(
 
 static GCC_INLINE void fcs_offloading_queue_page__init(
     fcs_offloading_queue_page_t * const page,
-    const int num_items_per_page,
+    const size_t num_items_per_page,
     const long page_index,
     const long queue_id
     )
@@ -315,10 +315,10 @@ typedef struct
 } fcs_offloading_queue_t;
 
 static GCC_INLINE void fcs_offloading_queue__init(
-    fcs_offloading_queue_t * queue,
-    int num_items_per_page,
-    const char * offload_dir_path,
-    long id
+    fcs_offloading_queue_t * const queue,
+    const size_t num_items_per_page,
+    const char * const offload_dir_path,
+    const long id
     )
 {
     queue->num_items_per_page = num_items_per_page;

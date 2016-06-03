@@ -44,7 +44,7 @@ extern "C" {
 
 typedef struct
 {
-    int num_items_per_page;
+    size_t num_items_per_page;
     const char * offload_dir_path;
     long num_inserted, num_items_in_queue, num_extracted;
     long min_depth, max_depth, max_depth_margin;

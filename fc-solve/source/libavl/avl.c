@@ -82,7 +82,7 @@ static GCC_INLINE void avl_set_link(struct avl_node * node, int myindex, struct 
 #define AVL_BOUND(x) (((x) >= 3) ? 3 : ((x) <= (-3)) ? -3 : x)
 static GCC_INLINE void avl_set_balance(struct avl_node * node, signed char balance)
 {
-    node->avl_mylink[0] &= (~0x7);
+    node->avl_mylink[0] &= (~0x7UL);
     node->avl_mylink[0] |= (((uintptr_t)(AVL_BOUND(balance)+3))&0x7);
 }
 #endif

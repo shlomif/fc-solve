@@ -79,7 +79,7 @@ typedef struct fcs_derived_state_struct
     for (int copy_col_idx=0 ; copy_col_idx < LOCAL_STACKS_NUM ; copy_col_idx++) \
     { \
         copy_stack_col = fcs_state_get_col((ptr_new_state->state.s), copy_col_idx); \
-        memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]), copy_stack_col, fcs_col_len(copy_stack_col)+1); \
+        memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]), copy_stack_col, (size_t)(fcs_col_len(copy_stack_col))+1); \
         fcs_state_get_col((ptr_new_state->state.s), copy_col_idx) = &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]); \
    } \
 }
