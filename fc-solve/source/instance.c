@@ -515,7 +515,7 @@ extern void fc_solve_trace_solution(
     {
         fcs_state_locs_struct_t locs;
         fc_solve_init_locs(&(locs));
-        var_SLOT(pats_scan , solving_soft_thread);
+        const_SLOT(pats_scan , solving_soft_thread);
         var_AUTO(num_moves , pats_scan->num_moves_to_win);
 
         fcs_state_keyval_pair_t s_and_info;
