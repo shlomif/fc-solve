@@ -187,7 +187,6 @@ int main(int argc, char * argv[])
 {
     fc_solve_display_information_context_t debug_context = INITIAL_DISPLAY_CONTEXT;
     /* char buffer[2048]; */
-    int board_num;
     int start_board, end_board, stop_at;
     fcs_portable_time_t mytime;
 
@@ -285,7 +284,7 @@ int main(int argc, char * argv[])
         TRUE
     );
 
-    for(board_num=start_board;board_num<=end_board;board_num++)
+    for (int board_num = start_board ; board_num <= end_board ; board_num++)
     {
         get_board(board_num, state_string);
 
@@ -323,13 +322,10 @@ int main(int argc, char * argv[])
 
         if (solutions_directory)
         {
-            FILE * output_fh;
             sprintf(solution_filename, "%s%09d.sol",
                 solutions_directory, board_num
             );
-
-            output_fh = fopen(solution_filename, "wt");
-
+            FILE * const output_fh = fopen(solution_filename, "wt");
             if (! output_fh)
             {
                 fprintf(stderr,
@@ -338,13 +334,10 @@ int main(int argc, char * argv[])
                        );
                 return -1;
             }
-
             fc_solve_output_result_to_file(
                 output_fh, instance, ret, &debug_context
             );
-
             fclose(output_fh);
-            output_fh = NULL;
         }
 
         total_num_iters += freecell_solver_user_get_num_times_long(instance);
