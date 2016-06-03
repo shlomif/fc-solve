@@ -189,8 +189,6 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
     const int num_cards_1, const int num_cards_2
 )
 {
-#define key_ptr_new_state_key (kv_ptr_new_state->key)
-#define temp_new_state_key (*key_ptr_new_state_key)
     empty_two_cols_ret_t ret = {.source_index = -1, .is_col = FALSE};
 
     int num_cards_to_move_from_columns[3] = {num_cards_1, num_cards_2, -1};
@@ -207,6 +205,8 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 #endif
 
 
+    const_AUTO(key_ptr_new_state_key, kv_ptr_new_state->key);
+#define temp_new_state_key (*key_ptr_new_state_key)
     {
         int dest_fc_idx = 0;
 
@@ -312,7 +312,6 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             put_cards_in_col_idx++;
         }
     }
-#undef key_ptr_new_state_key
 }
 
 #define CALC_POSITIONS_BY_RANK() \

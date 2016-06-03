@@ -759,7 +759,7 @@ static void instance_run_all_threads(
         if (check)
         {
             fprintf(stderr,
-                    "Worker Thread No. %d Initialization failed!\n",
+                    "Worker Thread No. %zd Initialization failed!\n",
                     i
                    );
             exit(-1);
