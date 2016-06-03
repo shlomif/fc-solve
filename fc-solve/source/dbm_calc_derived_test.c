@@ -56,7 +56,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fcs_derived_state_t * derived_list_recycle_bin = NULL;
     fcs_compact_allocator_t allocator;
     fcs_meta_compact_allocator_t meta_alloc;
-    int states_count = 0;
+    size_t states_count = 0;
     fcs_derived_state_t * iter;
     fcs_derived_state_debug_t * debug_ret;
     int idx = 0;

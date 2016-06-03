@@ -27,6 +27,7 @@
 
 #include "avl.h"
 
+#include "bool.h"
 #include "inline.h"
 #include "alloc_wrap.h"
 
@@ -341,7 +342,7 @@ avl_delete (struct avl_table *tree, const void *item)
   for (cmp = -1; cmp != 0;
        cmp = tree->avl_compare (item, NODE_DATA_PTR(p), tree->avl_param))
     {
-      int dir = cmp > 0;
+      fcs_bool_t dir = cmp > 0;
 
       pa[k] = p;
       da[k++] = dir;

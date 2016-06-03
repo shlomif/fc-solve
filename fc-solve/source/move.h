@@ -88,7 +88,7 @@ static GCC_INLINE void fcs_push_1card_seq(fcs_move_stack_t * const stack,
     );
 }
 
-static GCC_INLINE const fcs_bool_t fc_solve_move_stack_pop(
+static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(
     fcs_move_stack_t * const stack,
     fcs_internal_move_t * const move
     )
@@ -175,11 +175,7 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 
     fcs_move_stack_t temp_moves = fcs_move_stack__new();
 
-    while (
-        fc_solve_move_stack_pop(
-            moves,
-            &in_move
-            ) == 0)
+    while (! fc_solve_move_stack_pop( moves, &in_move))
     {
         fc_solve_apply_move(
             &(s_and_info.s),
