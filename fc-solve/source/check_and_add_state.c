@@ -492,12 +492,14 @@ static GCC_INLINE void upon_new_state(
     if (likely(parent_state))
     {
         (FCS_S_NUM_ACTIVE_CHILDREN(parent_state))++;
+#ifdef FCS_WITH_MOVES
         /* If parent_val is defined, so is moves_to_parent */
         new_state_info->moves_to_parent =
             fc_solve_move_stack_compact_allocate(
                 hard_thread,
                 new_state_info->moves_to_parent
             );
+#endif
     }
 
     instance->active_num_states_in_collection++;

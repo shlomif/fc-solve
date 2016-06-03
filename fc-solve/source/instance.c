@@ -363,7 +363,9 @@ void fc_solve_instance__init_hard_thread(
 #endif
         );
 
+#ifdef FCS_WITH_MOVES
     HT_FIELD(hard_thread, reusable_move_stack) = fcs_move_stack__new();
+#endif
 }
 
 
@@ -498,6 +500,7 @@ extern void fc_solve_trace_solution(
     fc_solve_instance_t * const instance
 )
 {
+#ifdef FCS_WITH_MOVES
     fcs_internal_move_t canonize_move = fc_solve_empty_move;
     fcs_int_move_set_type(canonize_move, FCS_MOVE_TYPE_CANONIZE);
 
@@ -658,6 +661,7 @@ extern void fc_solve_trace_solution(
         /* There's one more state than there are move stacks */
         FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
     }
+#endif
 }
 
 /*

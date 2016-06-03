@@ -130,6 +130,18 @@ extern "C" {
 #define FCS_WITH_FLARES
 #endif
 
+#cmakedefine FCS_DISABLE_MOVES_TRACKING
+
+#ifndef FCS_DISABLE_MOVES_TRACKING
+#define FCS_WITH_MOVES
+#endif
+
+#ifdef FCS_WITH_MOVES
+#define SFS__PASS_MOVE_STACK(arg) , arg
+#else
+#define SFS__PASS_MOVE_STACK(arg)
+#endif
+
 /*
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.

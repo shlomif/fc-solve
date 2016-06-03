@@ -48,6 +48,7 @@ extern const fcs_internal_move_t fc_solve_empty_move;
 
 static GCC_INLINE void fcs_move_stack_push(fcs_move_stack_t * const stack, const fcs_internal_move_t move)
 {
+#ifdef FCS_WITH_MOVES
     /* If all the moves inside the stack are taken then
        resize the move vector */
     const size_t pos = ++stack->num_moves;
@@ -61,10 +62,12 @@ static GCC_INLINE void fcs_move_stack_push(fcs_move_stack_t * const stack, const
     }
 
     stack->moves[ pos-1 ] = move;
+#endif
 }
 
 static GCC_INLINE void fcs_move_stack_params_push(fcs_move_stack_t * const stack, const int type, const int src, const int dest, const int num_cards_in_seq)
 {
+#ifdef FCS_WITH_MOVES
     fcs_internal_move_t temp_move;
 
     fcs_int_move_set_type(temp_move, type);
@@ -73,21 +76,27 @@ static GCC_INLINE void fcs_move_stack_params_push(fcs_move_stack_t * const stack
     fcs_int_move_set_num_cards_in_seq(temp_move, num_cards_in_seq);
 
     fcs_move_stack_push(stack, temp_move);
+#endif
 }
 
 static GCC_INLINE void fcs_move_stack_non_seq_push(fcs_move_stack_t * const stack, const int type, const int src, const int dest)
 {
+#ifdef FCS_WITH_MOVES
     fcs_move_stack_params_push(stack, type, src, dest, 1);
+#endif
 }
 
 static GCC_INLINE void fcs_push_1card_seq(fcs_move_stack_t * const stack,
     const int src, const int dest)
 {
+#ifdef FCS_WITH_MOVES
     fcs_move_stack_params_push(stack, FCS_MOVE_TYPE_STACK_TO_STACK, src, dest,
         1
     );
+#endif
 }
 
+#ifdef FCS_WITH_MOVES
 static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(
     fcs_move_stack_t * const stack,
     fcs_internal_move_t * const move
@@ -103,17 +112,28 @@ static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(
         return TRUE;
     }
 }
+#endif
 
+#ifdef FCS_WITH_MOVES
 #define fcs_move_stack_static_destroy(stack) \
 { \
     free((stack).moves); \
 }
+#else
+#define fcs_move_stack_static_destroy(stack) {}
+#endif
 
+
+#ifdef FCS_WITH_MOVES
 #define fcs_move_stack_reset(stack) \
 {      \
     (stack)->num_moves = 0;   \
 }
+#else
+#define fcs_move_stack_reset(stack) {}
+#endif
 
+#ifdef FCS_WITH_MOVES
 void fc_solve_apply_move(
     fcs_state_t * const ptr_state_key,
     fcs_state_locs_struct_t * const locs,
@@ -428,6 +448,7 @@ static GCC_INLINE void fc_solve_move_to_string_w_state(
     }
 #undef state_key
 }
+#endif
 
 typedef struct {
     fcs_collectible_state_t * state_ptr;

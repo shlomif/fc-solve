@@ -892,8 +892,8 @@ my_return_label:
 int fc_solve_sfs_check_state_begin(
     fc_solve_hard_thread_t * const hard_thread,
     fcs_kv_state_t * const out_new_state_out,
-    fcs_kv_state_t * const raw_ptr_state_raw,
-    fcs_move_stack_t * const moves
+    fcs_kv_state_t * const raw_ptr_state_raw
+    SFS__PASS_MOVE_STACK(fcs_move_stack_t * const moves)
     )
 {
     fcs_collectible_state_t * raw_ptr_new_state;
@@ -928,7 +928,9 @@ int fc_solve_sfs_check_state_begin(
      * the derived state.
      * */
     FCS_S_PARENT(raw_ptr_new_state) = INFO_STATE_PTR(raw_ptr_state_raw);
+#ifdef FCS_WITH_MOVES
     FCS_S_MOVES_TO_PARENT(raw_ptr_new_state) = moves;
+#endif
     /* Make sure depth is consistent with the game graph.
      * I.e: the depth of every newly discovered state is derived from
      * the state from which it was discovered. */
@@ -1006,11 +1008,13 @@ extern void fc_solve_sfs_check_state_end(
                 printf("AppleBloom %ld %ld\n", (long)kv_calc_depth(&existing_state), (long)kv_calc_depth(raw_ptr_state_raw));
             }
 #endif
+#ifdef FCS_WITH_MOVES
             /* Make a copy of "moves" because "moves" will be destroyed */
             existing_state_val->moves_to_parent =
                 fc_solve_move_stack_compact_allocate(
                     hard_thread, moves
                     );
+#endif
             if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
             {
                 if ((--(FCS_S_NUM_ACTIVE_CHILDREN(existing_state_val->parent))) == 0)

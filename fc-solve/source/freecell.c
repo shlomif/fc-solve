@@ -38,6 +38,11 @@
 #include "meta_move_funcs_helpers.h"
 #include "freecell.h"
 
+#ifndef FCS_WITH_MOVES
+#define moves NULL
+#define moves_ptr NULL
+#endif
+
 /*
  * Throughout this code the following local variables are used to quickly
  * access the instance's members:
@@ -176,10 +181,10 @@ typedef struct {
  */
 static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
     const fc_solve_soft_thread_t * const soft_thread,
-    fcs_kv_state_t * const kv_ptr_new_state,
-    fcs_move_stack_t * const moves,
-    const int cols_indexes[3],
-    const int num_cards_1, const int num_cards_2
+    fcs_kv_state_t * const kv_ptr_new_state
+    SFS__PASS_MOVE_STACK(fcs_move_stack_t * const moves_ptr)
+    , const int cols_indexes[3]
+    , const int num_cards_1, const int num_cards_2
 )
 {
     empty_two_cols_ret_t ret = {.source_index = -1, .is_col = FALSE};
@@ -236,7 +241,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             );
 
             fcs_move_stack_non_seq_push(
-                moves,
+                moves_ptr,
                 FCS_MOVE_TYPE_STACK_TO_FREECELL,
                 *col_idx,
                 dest_fc_idx
@@ -294,7 +299,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             fcs_col_push_card(new_b_col, top_card);
 
             fcs_push_1card_seq(
-                moves,
+                moves_ptr,
                 col_idx_val,
                 put_cards_in_col_idx
             );
@@ -452,8 +457,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
                         empty_two_cols_from_new_state(
                             soft_thread,
-                            NEW_STATE_BY_REF(),
-                            moves,
+                            NEW_STATE_BY_REF()
+                            SFS__PASS_MOVE_STACK(moves),
                             cols_indexes,
                             dest_cards_num - dc - 1,
                             0
@@ -542,8 +547,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 
                             empty_two_cols_from_new_state(
                                 soft_thread,
-                                NEW_STATE_BY_REF(),
-                                moves,
+                                NEW_STATE_BY_REF()
+                                SFS__PASS_MOVE_STACK(moves),
                                 cols_indexes,
                                 cards_num-(c+1),
                                 0
@@ -634,8 +639,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
                             const empty_two_cols_ret_t last_dest = empty_two_cols_from_new_state(
                                 soft_thread,
-                                NEW_STATE_BY_REF(),
-                                moves,
+                                NEW_STATE_BY_REF()
+                                SFS__PASS_MOVE_STACK(moves),
                                 cols_indexes,
                                 /* We're moving one extra card */
                                 cards_num - c,
@@ -644,8 +649,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
                             empty_two_cols_from_new_state(
                                 soft_thread,
-                                NEW_STATE_BY_REF(),
-                                moves,
+                                NEW_STATE_BY_REF()
+                                SFS__PASS_MOVE_STACK(moves),
                                 cols_indexes,
                                 c - dc - 1,
                                 0
@@ -790,8 +795,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
                         empty_two_cols_from_new_state(
                             soft_thread,
-                            NEW_STATE_BY_REF(),
-                            moves,
+                            NEW_STATE_BY_REF()
+                            SFS__PASS_MOVE_STACK(moves),
                             cols_indexes,
                             dest_num_cards,
                             col_num_cards
@@ -956,8 +961,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                         const int cols_indexes[3] = {stack_idx,-1,-1};
                         const empty_two_cols_ret_t empty_ret = empty_two_cols_from_new_state(
                             soft_thread,
-                            NEW_STATE_BY_REF(),
-                            moves,
+                            NEW_STATE_BY_REF()
+                            SFS__PASS_MOVE_STACK(moves),
                             cols_indexes,
                             freecells_to_fill + freestacks_to_fill,
                             0
@@ -1206,8 +1211,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                         const int cols_indexes[3] = {ds,-1,-1};
                         empty_two_cols_from_new_state(
                             soft_thread,
-                            NEW_STATE_BY_REF(),
-                            moves,
+                            NEW_STATE_BY_REF()
+                            SFS__PASS_MOVE_STACK(moves),
                             cols_indexes,
                             freestacks_to_fill + freecells_to_fill,
                             0

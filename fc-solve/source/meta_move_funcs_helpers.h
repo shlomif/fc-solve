@@ -80,8 +80,8 @@ extern "C" {
     {         \
         fc_solve_sfs_check_state_begin(hard_thread,  \
                 &pass_new_state,                      \
-                raw_ptr_state_raw,                   \
-                moves);                              \
+                raw_ptr_state_raw                   \
+                SFS__PASS_MOVE_STACK(moves));                              \
     }
 
 #define sfs_check_state_end() \
@@ -157,12 +157,19 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #endif
 
+#ifdef FCS_WITH_MOVES
+#define tests_define_accessors_move_stack() \
+    fcs_move_stack_t * const moves = &(HT_FIELD(hard_thread, reusable_move_stack))
+#else
+#define tests_define_accessors_move_stack()
+#endif
+
 /*
  * This macro defines these accessors to have some value.
  * */
 #define tests_define_accessors_no_stacks()                                  \
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;        \
-    fcs_move_stack_t * const moves = &(HT_FIELD(hard_thread, reusable_move_stack));         \
+    tests_define_accessors_move_stack(); \
     int state_context_value = 0;                                            \
     fcs_kv_state_t pass_new_state;                                          \
     tests_define_accessors_freecell_only();   \

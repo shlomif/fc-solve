@@ -344,7 +344,9 @@ struct fcs_state_extra_info_struct
 #else
     struct fcs_state_keyval_pair_struct * parent;
 #endif
+#ifdef FCS_WITH_MOVES
     fcs_move_stack_t * moves_to_parent;
+#endif
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     int depth;
@@ -696,7 +698,9 @@ static GCC_INLINE void fc_solve_state_init_proto(
     }
 #endif
     state->info.parent = NULL;
+#ifdef FCS_WITH_MOVES
     state->info.moves_to_parent = NULL;
+#endif
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     state->info.depth = 0;
 #endif

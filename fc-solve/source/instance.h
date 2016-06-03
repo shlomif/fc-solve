@@ -426,11 +426,13 @@ struct fc_solve_hard_thread_struct
      * */
     fcs_compact_allocator_t allocator;
 
+#ifdef FCS_WITH_MOVES
     /*
      * This is a move stack that is used and re-used by the
      * tests functions of this hard thread
      * */
     fcs_move_stack_t reusable_move_stack;
+#endif
 
     /*
      * This is a buffer used to temporarily store the stacks of the duplicated

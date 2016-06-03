@@ -71,8 +71,10 @@ typedef struct
     fcs_bool_t instance_is_ready;
     int limit;
     char name[FCS_MAX_FLARE_NAME_LEN];
+#ifdef FCS_WITH_MOVES
     int next_move;
     fcs_moves_sequence_t moves_seq;
+#endif
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     fcs_moves_processed_t fc_pro_moves;
 #endif
@@ -876,6 +878,7 @@ static void recycle_instance(
             flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
         }
 
+#ifdef FCS_WITH_MOVES
         if (flare->moves_seq.moves)
         {
             free (flare->moves_seq.moves);
@@ -883,6 +886,7 @@ static void recycle_instance(
             flare->moves_seq.num_moves = 0;
             flare->next_move = 0;
         }
+#endif
 
         flare->obj_stats = calc_initial_stats_t();
     INSTANCE_ITEM_FLARES_LOOP_END()
@@ -972,6 +976,7 @@ static void trace_flare_solution(
     }
 
     fc_solve_instance_t * const instance = &(flare->obj);
+#ifdef FCS_WITH_MOVES
 
     fc_solve_trace_solution(instance);
     flare->trace_solution_state_locs = user->state_locs;
@@ -989,6 +994,7 @@ static void trace_flare_solution(
     );
     instance_free_solution_moves(instance);
     flare->next_move = 0;
+#endif
     flare->obj_stats.num_checked_states = instance->i__num_checked_states;
     flare->obj_stats.num_states_in_collection = instance->num_states_in_collection;
 
@@ -1394,6 +1400,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
     fcs_move_t * const user_move
     )
 {
+#ifdef FCS_WITH_MOVES
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
@@ -1419,6 +1426,9 @@ int DLLEXPORT freecell_solver_user_get_next_move(
     );
 
     return 0;
+#else
+    return 1;
+#endif
 }
 
 DLLEXPORT void freecell_solver_user_current_state_stringify(
@@ -1494,12 +1504,14 @@ static void user_free_resources(
         fc_solve_moves_processed_free(&(flare->fc_pro_moves));
 #endif
 
+#ifdef FCS_WITH_MOVES
         if (flare->moves_seq.moves)
         {
             free (flare->moves_seq.moves);
             flare->moves_seq.moves = NULL;
             flare->moves_seq.num_moves = 0;
         }
+#endif
     }
     INSTANCE_ITEM_FLARES_LOOP_END()
 #ifdef FCS_WITH_FLARES
@@ -1853,10 +1865,10 @@ int DLLEXPORT freecell_solver_user_get_limit_iterations(void * const api_instanc
 }
 #endif
 
-int DLLEXPORT freecell_solver_user_get_moves_left(void * const api_instance)
+int DLLEXPORT freecell_solver_user_get_moves_left(void * const api_instance GCC_UNUSED)
 {
+#ifdef FCS_WITH_MOVES
     fcs_user_t * const user = (fcs_user_t *)api_instance;
-
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
     {
         const fcs_flare_item_t * const flare = calc_moves_flare(user);
@@ -1866,6 +1878,9 @@ int DLLEXPORT freecell_solver_user_get_moves_left(void * const api_instance)
     {
         return 0;
     }
+#else
+    return 0;
+#endif
 }
 
 void DLLEXPORT freecell_solver_user_set_solution_optimization(
@@ -1885,6 +1900,7 @@ DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
     const int standard_notation
     )
 {
+#ifdef FCS_WITH_MOVES
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_move_to_string_w_state(
@@ -1893,6 +1909,7 @@ DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
         move,
         standard_notation
     );
+#endif
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2646,8 +2663,10 @@ static int user_next_flare(fcs_user_t * const user)
     instance->debug_iter_output_context = user;
 #endif
 
+#ifdef FCS_WITH_MOVES
     flare->moves_seq.num_moves = 0;
     flare->moves_seq.moves = NULL;
+#endif
 
     flare->name[0] = '\0';
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
@@ -2773,6 +2792,7 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
     fcs_moves_sequence_t * const moves_seq
 )
 {
+#ifdef FCS_WITH_MOVES
     const fcs_user_t * const user = (const fcs_user_t *)api_instance;
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
     {
@@ -2791,6 +2811,9 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
     );
 
     return 0;
+#else
+    return -3;
+#endif
 }
 
 DLLEXPORT extern int freecell_solver_user_set_flares_choice(
