@@ -158,9 +158,6 @@ static int main_tests(void)
 
         fc_solve_debondt_delta_stater_set_derived(&db_delta, &(derived_state.s));
 
-#define SUIT_HC 0
-#define SUIT_DS 1
-
         /* TEST
          * */
         debondt_test_encode_and_decode(
