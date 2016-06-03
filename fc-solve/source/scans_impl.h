@@ -42,7 +42,7 @@ extern "C" {
 #include "scans.h"
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static GCC_INLINE const fcs_bool_t check_num_states_in_collection(
+static GCC_INLINE fcs_bool_t check_num_states_in_collection(
     const fc_solve_instance_t * const instance
     )
 {
@@ -667,7 +667,7 @@ static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH))
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static const fcs_bool_t free_states_should_delete(void * const key, void * const context)
+static fcs_bool_t free_states_should_delete(void * const key, void * const context)
 {
     fc_solve_instance_t * const instance = (fc_solve_instance_t * const)context;
     fcs_collectible_state_t * const ptr_state = (fcs_collectible_state_t * const)key;

@@ -189,7 +189,7 @@ static GCC_INLINE void fc_solve_hash_free(
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 static GCC_INLINE void fc_solve_hash_foreach(
     fc_solve_hash_t * const hash,
-    const fcs_bool_t (*should_delete_ptr)(void * const key, void * const context),
+    fcs_bool_t (*should_delete_ptr)(void * const key, void * const context),
     void * const context
     )
 {

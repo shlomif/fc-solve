@@ -59,7 +59,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     size_t states_count = 0;
     fcs_derived_state_t * iter;
     fcs_derived_state_debug_t * debug_ret;
-    int idx = 0;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -122,6 +121,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fc_solve_init_locs(&locs);
 
     iter = derived_list;
+    size_t idx = 0;
     while (iter)
     {
         debug_ret[idx].state_string = SMALLOC(debug_ret[idx].state_string, 1000);
