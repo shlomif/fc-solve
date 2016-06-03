@@ -157,20 +157,6 @@ __PACKAGE__->populate
             ],
             msg => qq{Board generation should not crash with only -t flag (pi-make-ms)},
         },
-        'board_gen__aisleriot__t_only' =>
-        {
-            prog => "board_gen/make-aisleriot-freecell-board",
-            argv => [qw(-t)
-            ],
-            msg => qq{Board generation should not crash with only -t flag (aisleriot)},
-        },
-        'board_gen__gnome__t_only' =>
-        {
-            prog => "board_gen/make-gnome-freecell-board",
-            argv => [qw(-t)
-            ],
-            msg => qq{Board generation should not crash with only -t flag (gnome)},
-        },
     ]
 );
 
