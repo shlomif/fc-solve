@@ -26,13 +26,10 @@
  *
  */
 
-#define BUILDING_DLL 1
-
+#include "dll_thunk.h"
 #include <stdio.h>
-
 #include "config.h"
 #include "simpsim.h"
-
 #include "scans.h"
 
 /* This is a fallback in case this module is still compiled with

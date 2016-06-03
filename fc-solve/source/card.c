@@ -27,13 +27,10 @@
  *
  */
 
-#define BUILDING_DLL 1
-
+#include "dll_thunk.h"
 #include <string.h>
 #include <ctype.h>
-
 #include "state.h"
-
 #include "p2u_rank.h"
 
 #ifdef DEFINE_fc_solve_empty_card

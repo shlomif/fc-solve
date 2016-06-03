@@ -23,15 +23,10 @@
  */
 /*
  * move_funcs_order.c - contains the fc_solve_apply_tests_order function.
- *
  */
-
-#define BUILDING_DLL 1
-
+#include "dll_thunk.h"
 #include <string.h>
-
 #include "config.h"
-
 #include "move_funcs_order.h"
 #include "set_weights.h"
 

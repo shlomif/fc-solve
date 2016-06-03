@@ -26,21 +26,17 @@
  * languages.
  */
 
-#define BUILDING_DLL 1
-
+#include "dll_thunk.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
-
 #include "set_weights.h"
 #include "fcs_user.h"
 #include "fcs_cl.h"
 #include "split_cmd_line.h"
-
 #include "prefix.h"
 #include "rinutils.h"
-
 #include "cmd_line_enum.h"
 
 DLLEXPORT void freecell_solver_user_stringify_move_ptr(

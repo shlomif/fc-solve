@@ -25,7 +25,7 @@
  * lib.c - library interface functions of Freecell Solver.
  *
  */
-#define BUILDING_DLL 1
+#include "dll_thunk.h"
 
 #include <stdlib.h>
 #include <string.h>

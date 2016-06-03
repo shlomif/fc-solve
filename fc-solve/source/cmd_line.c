@@ -26,7 +26,7 @@
  * routines. Useful for more easily configuring a Freecell Solver instance.
  */
 
-#define BUILDING_DLL 1
+#include "dll_thunk.h"
 
 #include "config.h"
 

@@ -26,7 +26,7 @@
  *
  */
 
-#define BUILDING_DLL 1
+#include "dll_thunk.h"
 
 #include <string.h>
 #include <stdlib.h>

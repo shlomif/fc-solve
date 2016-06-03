@@ -27,12 +27,10 @@
  * line arguments from files.
  */
 
-#define BUILDING_DLL 1
-
+#include "dll_thunk.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "split_cmd_line.h"
 
 typedef struct

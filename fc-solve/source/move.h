@@ -50,7 +50,7 @@ static GCC_INLINE void fcs_move_stack_push(fcs_move_stack_t * const stack, const
 {
     /* If all the moves inside the stack are taken then
        resize the move vector */
-    const int pos = ++stack->num_moves;
+    const size_t pos = ++stack->num_moves;
 
     if (! (pos & (FCS_MOVE_STACK_GROW_BY-1)))
     {

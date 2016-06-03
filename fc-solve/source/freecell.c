@@ -23,25 +23,18 @@
  */
 /*
  * freecell.c - The various movement tests performed by Freecell Solver
- *
  */
-
-#define BUILDING_DLL 1
-
+#include "dll_thunk.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
 #include <limits.h>
 #include <assert.h>
-
-
 #include "config.h"
-
 #include "state.h"
 #include "instance.h"
 #include "scans.h"
-
 #include "meta_move_funcs_helpers.h"
 #include "freecell.h"
 

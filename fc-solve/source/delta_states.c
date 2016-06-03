@@ -28,7 +28,7 @@
  *
  */
 
-#define BUILDING_DLL 1
+#include "dll_thunk.h"
 #include "delta_states_impl.h"
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS

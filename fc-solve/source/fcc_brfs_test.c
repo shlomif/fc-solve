@@ -25,7 +25,7 @@
  * fcc_brfs_test.c - provide utility routines to test fcc_brfs.h
  */
 
-#define BUILDING_DLL 1
+#include "dll_thunk.h"
 
 #include <stdlib.h>
 #include <string.h>

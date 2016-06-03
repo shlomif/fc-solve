@@ -29,8 +29,7 @@
  * This encoding improves upon the original delta_states.c .
  */
 
-#define BUILDING_DLL 1
-
+#include "dll_thunk.h"
 #include "delta_states_debondt_impl.h"
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
