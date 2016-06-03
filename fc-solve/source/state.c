@@ -496,13 +496,7 @@ void fc_solve_state_as_string(
             append_char('\n');
         }
     }
-#undef app_str
-
     *(output_s) = '\0';
-
-#if 0
-    return fc_solve_append_string_finalize(&app_str_struct);
-#endif
 }
 
 #undef FCS_S_FC_LOCS
