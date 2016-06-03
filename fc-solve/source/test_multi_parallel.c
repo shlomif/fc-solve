@@ -157,14 +157,9 @@ int main(int argc, char * argv[])
     fcs_portable_time_t mytime;
 
     fcs_int64_t total_num_iters = 0;
-
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-
-    fcs_state_string_t state_string;
-
-    binary_output_t binary_output;
-    binary_output.filename = NULL;
+    binary_output_t binary_output = {.filename = NULL,};
     const char * solutions_directory = NULL;
     char * solution_filename = NULL;
 
@@ -250,14 +245,15 @@ int main(int argc, char * argv[])
         TRUE
     );
 
+    if (was_total_iterations_limit_per_board_set)
+    {
+        freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
+    }
+
     for (int board_num = start_board ; board_num <= end_board ; board_num++)
     {
+        fcs_state_string_t state_string;
         get_board(board_num, state_string);
-
-        if (was_total_iterations_limit_per_board_set)
-        {
-            freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
-        }
 
         const int ret =
             freecell_solver_user_solve_board(
