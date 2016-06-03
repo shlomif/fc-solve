@@ -148,7 +148,7 @@ static void * worker_thread(void * GCC_UNUSED void_context)
                 total_num_iters_temp = 0;
             }
 
-            if (board_num % context.stop_at == 0)
+            if (unlikely(board_num % context.stop_at == 0))
             {
                 pthread_mutex_lock(&total_num_iters_lock);
                 fcs_int64_t total_num_iters_copy = (total_num_iters += total_num_iters_temp);
