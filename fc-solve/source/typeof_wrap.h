@@ -41,7 +41,6 @@ extern "C"
  * Common macros for object slots.
  * */
 #define const_SLOT(myslot,obj) const_AUTO(myslot,(obj)->myslot)
-#define var_SLOT(myslot,obj) var_AUTO(myslot,(obj)->myslot)
 
 #ifdef __cplusplus
 };
