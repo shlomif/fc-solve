@@ -135,11 +135,6 @@ static GCC_INLINE void * const fc_solve_hash_insert(
         fc_solve_hash_symlink_item_t * item = list->first_item;
         fc_solve_hash_symlink_item_t * last_item = NULL;
 
-#ifdef FCS_WITH_CONTEXT_VARIABLE
-#define MY_HASH_CONTEXT_VAR    , hash->context
-#else
-#define MY_HASH_CONTEXT_VAR
-#endif
 
 /*
  * MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
@@ -165,6 +160,12 @@ static GCC_INLINE void * const fc_solve_hash_insert(
         )
 
 #else
+
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+#define MY_HASH_CONTEXT_VAR    , hash->context
+#else
+#define MY_HASH_CONTEXT_VAR
+#endif
 
 #define MY_HASH_COMPARE_PROTO() (hash->compare_function(item->key, key MY_HASH_CONTEXT_VAR))
 
@@ -516,7 +517,6 @@ fcs_bool_t fc_solve_check_and_add_state(
  * some of the less commonly tested data storage backends. They should be
  * tested and updated.
  * */
-#define existing_state_val (existing_state_raw->val)
 #define new_state_key      (new_state->key)
 
 #define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);

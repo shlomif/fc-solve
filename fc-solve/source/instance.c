@@ -521,9 +521,6 @@ extern void fc_solve_trace_solution(
         fcs_state_keyval_pair_t s_and_info;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
-#define FCS_S_FC_LOCS(s) (locs->fc_locs)
-#define FCS_S_STACK_LOCS(s) (locs->stack_locs)
-
         FCS_STATE__DUP_keyval_pair(s_and_info, *(instance->state_copy_ptr));
 
 #ifndef HARD_CODED_NUM_STACKS

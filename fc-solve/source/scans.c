@@ -898,7 +898,6 @@ int fc_solve_sfs_check_state_begin(
     fcs_move_stack_t * const moves
     )
 {
-#define ptr_state (raw_ptr_state_raw->val)
     fcs_collectible_state_t * raw_ptr_new_state;
     fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 
@@ -949,7 +948,6 @@ int fc_solve_sfs_check_state_begin(
 
     return 0;
 }
-#undef ptr_state
 
 extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t * const soft_thread,

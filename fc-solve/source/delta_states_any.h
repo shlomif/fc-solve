@@ -34,7 +34,7 @@ extern "C" {
 #ifdef FCS_DEBONDT_DELTA_STATES
 #include "delta_states_debondt_impl.h"
 #else
-#include "delta_states.c"
+#include "delta_states_impl.h"
 #endif
 
 #ifdef FCS_DEBONDT_DELTA_STATES

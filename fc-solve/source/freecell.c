@@ -190,7 +190,6 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 )
 {
 #define key_ptr_new_state_key (kv_ptr_new_state->key)
-#define my_new_out_state_key (*key_ptr_new_state_key)
 #define temp_new_state_key (*key_ptr_new_state_key)
     empty_two_cols_ret_t ret = {.source_index = -1, .is_col = FALSE};
 
@@ -314,8 +313,6 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
         }
     }
 #undef key_ptr_new_state_key
-#undef my_new_out_state_key
-#define temp_new_state_key (*key_ptr_new_state_key)
 }
 
 #define CALC_POSITIONS_BY_RANK() \
