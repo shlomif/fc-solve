@@ -205,8 +205,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 #endif
 
 
-    const_AUTO(key_ptr_new_state_key, kv_ptr_new_state->key);
-#define temp_new_state_key (*key_ptr_new_state_key)
+    const_AUTO(new_key, kv_ptr_new_state->key);
     {
         int dest_fc_idx = 0;
 
@@ -224,7 +223,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             /* Find a vacant freecell */
             for( ; dest_fc_idx < LOCAL_FREECELLS_NUM ; dest_fc_idx++)
             {
-                if (fcs_freecell_is_empty(temp_new_state_key, dest_fc_idx))
+                if (fcs_freecell_is_empty(*new_key, dest_fc_idx))
                 {
                     break;
                 }
@@ -235,10 +234,10 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
                 break;
             }
 
-            const fcs_card_t top_card = fcs_state_pop_col_card(&temp_new_state_key, *col_idx);
+            const fcs_card_t top_card = fcs_state_pop_col_card(new_key, *col_idx);
 
             fcs_put_card_in_freecell(
-                temp_new_state_key,
+                *new_key,
                 dest_fc_idx,
                 top_card
             );
@@ -283,7 +282,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             for( ; put_cards_in_col_idx < LOCAL_STACKS_NUM ; put_cards_in_col_idx++)
             {
                 if (fcs_col_len(
-                    fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx)
+                    fcs_state_get_col(*new_key, put_cards_in_col_idx)
                     ) == 0)
                 {
                     break;
@@ -292,13 +291,13 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 
             assert(put_cards_in_col_idx < LOCAL_STACKS_NUM );
 
-            fcs_copy_stack(temp_new_state_key, *(kv_ptr_new_state->val), put_cards_in_col_idx, indirect_stacks_buffer);
+            fcs_copy_stack(*new_key, *(kv_ptr_new_state->val), put_cards_in_col_idx, indirect_stacks_buffer);
 
 
             const int col_idx_val = *col_idx;
-            const fcs_card_t top_card = fcs_state_pop_col_card(&temp_new_state_key, col_idx_val);
+            const fcs_card_t top_card = fcs_state_pop_col_card(new_key, col_idx_val);
             const fcs_cards_column_t new_b_col
-                = fcs_state_get_col(temp_new_state_key, put_cards_in_col_idx);
+                = fcs_state_get_col(*new_key, put_cards_in_col_idx);
             fcs_col_push_card(new_b_col, top_card);
 
             fcs_push_1card_seq(
