@@ -1,9 +1,4 @@
 ADD_EXECUTABLE(
-    make-aisleriot-freecell-board
-    make_aisleriot_freecell_board.c
-)
-
-ADD_EXECUTABLE(
     pi-make-microsoft-freecell-board
     pi_make_microsoft_freecell_board.c
 )
@@ -63,7 +58,6 @@ IF (UNIX)
     # INSTALL_MAN("fc-solve-board_gen.6" 6)
 
     # Install the nroff symbolic links.
-    INSTALL_MAN ("make-aisleriot-freecell-board.6" 6)
     INSTALL_MAN ("make_pysol_freecell_board.py.6" 6)
     INSTALL_MAN ("pi-make-microsoft-freecell-board.6" 6)
 ENDIF ()
@@ -71,7 +65,6 @@ ENDIF ()
 INSTALL(
     TARGETS
         "pi-make-microsoft-freecell-board"
-        "make-aisleriot-freecell-board"
     DESTINATION
         "bin"
 )

@@ -11,7 +11,8 @@ Version 4.4.0: (DD-MMM-YYYY)
 the iterations limit could have created a situation where one scan gets all
 the iterations.
 
-2. Remove make-gnome-freecell-board as GNOME Freecell was discontinued.
+2. Remove make-gnome-freecell-board (GNOME Freecell was discontinued)
+and make-aisleriot-freecell-board (as AisleRiot no longer has numbered deals).
 
 Version 4.2.0: (25-Mar-2016)
 ----------------------------
