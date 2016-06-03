@@ -547,6 +547,24 @@ typedef enum
     ERROR = -1,
 } exit_code_t;
 
+#if 0
+static GCC_INLINE int solve_board(void * const instance, const char * const user_state)
+{
+    fcs_int_limit_t limit = 500;
+    freecell_solver_user_limit_iterations_long(instance, limit);
+    int ret = freecell_solver_user_solve_board(instance, user_state);
+    while (ret == FCS_STATE_SUSPEND_PROCESS)
+    {
+        limit += 500;
+        freecell_solver_user_limit_iterations_long(instance, limit);
+        ret = freecell_solver_user_resume_solution(instance);
+    }
+    return ret;
+}
+#else
+#define solve_board(instance, user_state) freecell_solver_user_solve_board((instance), (user_state))
+#endif
+
 static GCC_INLINE int fc_solve_main__main(int argc, char * argv[])
 {
     FILE * file;
@@ -618,24 +636,7 @@ static GCC_INLINE int fc_solve_main__main(int argc, char * argv[])
     signal(SIGUSR2, select_signal_handler);
     signal(SIGABRT, abort_signal_handler);
 #endif
-
-#if 0
-    int ret;
-    {
-        fcs_int_limit_t limit = 500;
-        freecell_solver_user_limit_iterations_long(instance, limit);
-        ret = freecell_solver_user_solve_board(instance, user_state);
-        while (ret == FCS_STATE_SUSPEND_PROCESS)
-        {
-            limit += 500;
-            freecell_solver_user_limit_iterations_long(instance, limit);
-            ret = freecell_solver_user_resume_solution(instance);
-        }
-    }
-#else
-    int ret = freecell_solver_user_solve_board(instance, user_state);
-#endif
-
+    const int ret = solve_board(instance, user_state);
     exit_code_t exit_code = SUCCESS;
     switch (ret)
     {
