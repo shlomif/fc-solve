@@ -673,7 +673,7 @@ static GCC_INLINE fcs_card_t fc_solve_card_parse_str(const char * const str)
 
 static GCC_INLINE void fc_solve_state_init_proto(
     fcs_state_keyval_pair_t * const state
-    STACKS_NUM__ARG
+    STACKS_NUM__ARG GCC_UNUSED
     IND_BUF_T_PARAM(indirect_stacks_buffer)
     )
 {

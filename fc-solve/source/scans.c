@@ -105,7 +105,7 @@ void fc_solve_increase_dfs_max_depth(
 typedef const char * fcs_lru_side_t;
 
 extern int fc_solve_compare_lru_cache_keys(
-    const void * void_a, const void * void_b, void * context
+    const void * const void_a, const void * const void_b, void * const context GCC_UNUSED
 )
 {
 #define GET_PARAM(p) ((fcs_lru_side_t)(((const fcs_cache_key_info_t *)(p))->val_ptr))

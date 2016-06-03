@@ -1063,9 +1063,9 @@ static GCC_INLINE dnode_t *dnode_init(dnode_t *dnode)
  */
 
 #ifdef NO_FC_SOLVE
-const dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, const void *key, void *data)
+dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, const void *key, void *data)
 #else
-const dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, dict_key_t key)
+dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, dict_key_t key)
 #endif
 {
     dnode_t * from_bin;

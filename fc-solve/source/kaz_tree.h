@@ -156,7 +156,7 @@ extern dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *, dnode_t *, dict_key_t);
 #ifdef NO_FC_SOLVE
 extern dnode_t *fc_solve_kaz_tree_delete(dict_t *, dnode_t *);
 #endif
-extern const dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *, dict_key_t);
+extern dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *, dict_key_t);
 extern void fc_solve_kaz_tree_delete_free(dict_t *, dnode_t *);
 extern dnode_t *fc_solve_kaz_tree_lookup(dict_t *, dict_key_t);
 dict_key_t fc_solve_kaz_tree_lookup_value(dict_t *dict, dict_key_t key);
