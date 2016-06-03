@@ -336,11 +336,11 @@ static int fc_solve__cmd_line_callback(
     )
 {
     fc_solve_display_information_context_t * const dc = (fc_solve_display_information_context_t *)context;
-    const char * arg_str, * s;
+    const char * s;
 
     *num_to_skip = 0;
 
-    arg_str = argv[arg];
+    const char * const arg_str = argv[arg];
 
     if (IS_ARG("--version"))
     {

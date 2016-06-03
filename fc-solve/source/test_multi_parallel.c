@@ -79,6 +79,7 @@ static void my_iter_handler(
 
 }
 
+#define IS_ARG(s) (!strcmp(arg_str, (s)))
 static int cmd_line_callback(
     void * const instance,
     const int argc GCC_UNUSED,
@@ -92,8 +93,9 @@ static int cmd_line_callback(
     fc_solve_display_information_context_t * const dc = (fc_solve_display_information_context_t *)lp_context;
 
     *num_to_skip = 0;
+    const char * const arg_str = argv[arg];
 
-    if ((!strcmp(argv[arg], "-i")) || (!strcmp(argv[arg], "--iter-output")))
+    if (IS_ARG("-i") || IS_ARG("--iter-output"))
     {
         freecell_solver_user_set_iter_handler_long(
             instance,
@@ -102,41 +104,41 @@ static int cmd_line_callback(
             );
         dc->debug_iter_output_on = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-s")) || (!strcmp(argv[arg], "--state-output")))
+    else if (IS_ARG("-s") || IS_ARG("--state-output"))
     {
         dc->debug_iter_state_output = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-p")) || (!strcmp(argv[arg], "--parseable-output")))
+    else if (IS_ARG("-p") || IS_ARG("--parseable-output"))
     {
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
         dc->parseable_output = TRUE;
 #endif
     }
-    else if ((!strcmp(argv[arg], "-c")) || (!strcmp(argv[arg], "--canonized-order-output")))
+    else if (IS_ARG("-c") || IS_ARG("--canonized-order-output"))
     {
         dc->canonized_order_output = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))
+    else if (IS_ARG("-t") || IS_ARG("--display-10-as-t"))
     {
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
         dc->display_10_as_t = TRUE;
 #endif
     }
-    else if ((!strcmp(argv[arg], "-m")) || (!strcmp(argv[arg], "--display-moves")))
+    else if (IS_ARG("-m") || IS_ARG("--display-moves"))
     {
         dc->display_moves = TRUE;
         dc->display_states = FALSE;
     }
-    else if ((!strcmp(argv[arg], "-sn")) || (!strcmp(argv[arg], "--standard-notation")))
+    else if (IS_ARG("-sn") || IS_ARG("--standard-notation"))
     {
         dc->standard_notation = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-sam")) || (!strcmp(argv[arg], "--display-states-and-moves")))
+    else if (IS_ARG("-sam") || IS_ARG("--display-states-and-moves"))
     {
         dc->display_moves = TRUE;
         dc->display_states = TRUE;
     }
-    else if ((!strcmp(argv[arg], "-pi")) || (!strcmp(argv[arg], "--display-parent-iter")))
+    else if (IS_ARG("-pi") || IS_ARG("--display-parent-iter"))
     {
         dc->display_parent_iter_num = TRUE;
     }
