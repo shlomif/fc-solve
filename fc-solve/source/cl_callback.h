@@ -1,5 +1,12 @@
 #pragma once
 
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+
+#include "fcs_cl.h"
+#include "rinutils.h"
 #include "output_to_file.h"
 #include "handle_parsing.h"
 
@@ -486,3 +493,89 @@ static int fc_solve__cmd_line_callback(
 }
 
 #undef IS_ARG
+
+static int command_num = 0;
+static int debug_iter_output_on = FALSE;
+
+static void select_signal_handler(int signal_num GCC_UNUSED)
+{
+    command_num = (command_num+1)%3;
+}
+
+static void * current_instance;
+static fc_solve_display_information_context_t * dc;
+
+
+static void command_signal_handler(int signal_num GCC_UNUSED)
+{
+    if (command_num == 0)
+    {
+        fprintf(
+            stderr,
+            "The number of iterations is %li\n",
+            (long)freecell_solver_user_get_num_times_long(current_instance)
+            );
+    }
+    else if (command_num == 1)
+    {
+        if (debug_iter_output_on)
+        {
+            freecell_solver_user_set_iter_handler_long(
+                current_instance,
+                NULL,
+                NULL
+                );
+            debug_iter_output_on = FALSE;
+        }
+        else
+        {
+            freecell_solver_user_set_iter_handler_long(
+                current_instance,
+                my_iter_handler,
+                dc
+                );
+            debug_iter_output_on = TRUE;
+        }
+    }
+    else if (command_num == 2)
+    {
+        dc->debug_iter_state_output = ! dc->debug_iter_state_output;
+    }
+
+    command_num = 0;
+}
+
+static void abort_signal_handler(int signal_num GCC_UNUSED)
+{
+    freecell_solver_user_limit_iterations_long(current_instance, 0);
+}
+
+static freecell_solver_str_t known_parameters[] = {
+    "-h", "--help",
+        "--help-configs", "--help-options", "--help-problems",
+        "--help-real-help", "--help-short-sol", "--help-summary",
+    "-i", "--iter-output",
+    "-s", "--state-output",
+    "-p", "--parseable-output",
+    "-c", "--canonized-order-output",
+    "-t", "--display-10-as-t",
+    "-m", "--display-moves",
+    "-sn", "--standard-notation",
+    "-snx", "--standard-notation-extended",
+    "-sam", "--display-states-and-moves",
+    "-pi", "--display-parent-iter",
+    "-sel", "--show-exceeded-limits",
+    "-o", "--output",
+    "--reset",
+    "--version",
+    NULL
+    };
+
+#define USER_STATE_SIZE 1024
+
+typedef enum
+{
+    SUCCESS = 0,
+    ERROR = -1,
+} exit_code_t;
+
