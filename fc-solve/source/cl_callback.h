@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016 Shlomi Fish
+ *
+ * Licensed under the MIT/X11 license.
+ * */
 #pragma once
 
 #include <string.h>
