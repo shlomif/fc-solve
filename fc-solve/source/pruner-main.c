@@ -56,7 +56,7 @@ static void my_iter_handler(
     if (context->debug_iter_state_output)
     {
         char state_string[1000];
-            freecell_solver_user_iter_state_stringify(
+        freecell_solver_user_iter_state_stringify(
                 user_instance,
                 state_string,
                 ptr_state
@@ -118,11 +118,11 @@ static void my_iter_handler(
         }
     }
 }
+
 int main(int argc, char * argv[])
 {
     FILE * file;
     char user_state[USER_STATE_SIZE];
-    int ret;
 
     fc_solve_display_information_context_t debug_context = INITIAL_DISPLAY_CONTEXT;
 
@@ -148,7 +148,8 @@ int main(int argc, char * argv[])
         {
             fprintf(stderr, "%s",
                     "Reading the board from the standard input.\n"
-                    "Type \"fc-solve --help\" for more usage information.\n"
+                    "Please refer to the documentation for more usage information:\n"
+                    "    http://fc-solve.shlomifish.org/docs/\n"
                     "To cancel this message set the FREECELL_SOLVER_QUIET environment variable.\n"
                    );
         }
@@ -187,9 +188,11 @@ int main(int argc, char * argv[])
 #ifndef WIN32
     signal(SIGUSR1, command_signal_handler);
     signal(SIGUSR2, select_signal_handler);
+    signal(SIGABRT, abort_signal_handler);
 #endif
 
 #if 0
+    int ret;
     {
         fcs_int_limit_t limit = 500;
         freecell_solver_user_limit_iterations_long(instance, limit);
@@ -202,11 +205,14 @@ int main(int argc, char * argv[])
         }
     }
 #else
-    ret = freecell_solver_user_solve_board(instance, user_state);
+    int ret = freecell_solver_user_solve_board(instance, user_state);
 #endif
 
-    if (ret == FCS_STATE_INVALID_STATE)
+    exit_code_t exit_code = SUCCESS;
+    switch (ret)
     {
+        case FCS_STATE_INVALID_STATE:
+        {
         char error_string[80];
 
         freecell_solver_user_get_invalid_state_error_into_string(
@@ -214,14 +220,18 @@ int main(int argc, char * argv[])
             error_string
             FC_SOLVE__PASS_T(debug_context.display_10_as_t)
         );
-        printf("%s\n", error_string);
-    }
-    else if (ret == FCS_STATE_FLARES_PLAN_ERROR)
-    {
-        printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
-    }
-    else
-    {
+        fprintf(stderr, "%s\n", error_string);
+        exit_code = ERROR;
+        }
+        break;
+
+        case FCS_STATE_FLARES_PLAN_ERROR:
+        fprintf(stderr, "Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
+        exit_code = ERROR;
+        break;
+
+        default:
+        {
         FILE * output_fh;
 
         if (debug_context.output_filename)
@@ -232,7 +242,7 @@ int main(int argc, char * argv[])
                 fprintf(stderr,
                         "Could not open output file '%s' for writing!",
                         debug_context.output_filename
-                       );
+                );
                 return -1;
             }
         }
@@ -250,10 +260,12 @@ int main(int argc, char * argv[])
             fclose(output_fh);
             output_fh = NULL;
         }
+        }
+        break;
     }
 
     freecell_solver_user_free(instance);
 
-    return 0;
+    return exit_code;
 }
 

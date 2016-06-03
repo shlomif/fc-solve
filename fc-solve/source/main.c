@@ -195,7 +195,7 @@ int main(int argc, char * argv[])
                 fprintf(stderr,
                         "Could not open output file '%s' for writing!",
                         debug_context.output_filename
-                       );
+                );
                 return -1;
             }
         }
