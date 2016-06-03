@@ -187,7 +187,6 @@ int main(int argc, char * argv[])
 {
     fc_solve_display_information_context_t debug_context = INITIAL_DISPLAY_CONTEXT;
     /* char buffer[2048]; */
-    int start_board, end_board, stop_at;
     fcs_portable_time_t mytime;
 
     fcs_int64_t total_num_iters = 0;
@@ -210,9 +209,9 @@ int main(int argc, char * argv[])
         print_help();
         exit(-1);
     }
-    start_board = atoi(argv[arg++]);
-    end_board = atoi(argv[arg++]);
-    stop_at = atoi(argv[arg++]);
+    int start_board = atoi(argv[arg++]);
+    int end_board = atoi(argv[arg++]);
+    const int stop_at = atoi(argv[arg++]);
 
     if (stop_at <= 0)
     {
