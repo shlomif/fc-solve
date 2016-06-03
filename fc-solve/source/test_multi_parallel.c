@@ -44,61 +44,52 @@
 #include "trace_mem.h"
 
 static void my_iter_handler(
-    void * user_instance,
-    fcs_int_limit_t iter_num,
-    int depth,
-    void * ptr_state,
-    fcs_int_limit_t parent_iter_num,
-    void * lp_context
+    void * const user_instance,
+    const fcs_int_limit_t iter_num,
+    const int depth,
+    void * const ptr_state,
+    const fcs_int_limit_t parent_iter_num,
+    void * const lp_context
     )
 {
-    fc_solve_display_information_context_t * context;
-    context = (fc_solve_display_information_context_t*)lp_context;
+    fc_solve_display_information_context_t * dc = (fc_solve_display_information_context_t*)lp_context;
 
     fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
-    if (context->display_parent_iter_num)
+    if (dc->display_parent_iter_num)
     {
         fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
     }
     fprintf(stdout, "\n");
 
 
-    if (context->debug_iter_state_output)
+    if (dc->debug_iter_state_output)
     {
         char state_string[1000];
         freecell_solver_user_iter_state_stringify(
             user_instance,
             state_string,
             ptr_state
-            FC_SOLVE__PASS_PARSABLE(context->parseable_output)
-            , context->canonized_order_output
-            FC_SOLVE__PASS_T(context->display_10_as_t)
+            FC_SOLVE__PASS_PARSABLE(dc->parseable_output)
+            , dc->canonized_order_output
+            FC_SOLVE__PASS_T(dc->display_10_as_t)
         );
         printf("%s\n---------------\n\n\n", state_string);
     }
 
 }
 
-typedef struct {
-    fc_solve_display_information_context_t display_context;
-    void * instance;
-}pack_item_t;
-
 static int cmd_line_callback(
-    void * instance,
-    int argc GCC_UNUSED,
+    void * const instance,
+    const int argc GCC_UNUSED,
     freecell_solver_str_t argv[],
-    int arg,
-    int * num_to_skip,
-    int * ret GCC_UNUSED,
-    void * context
+    const int arg,
+    int * const num_to_skip,
+    int * const ret GCC_UNUSED,
+    void * const lp_context
     )
 {
-    pack_item_t * item;
-    fc_solve_display_information_context_t * dc;
-    item = (pack_item_t * )context;
-    dc = &(item->display_context);
+    fc_solve_display_information_context_t * const dc = (fc_solve_display_information_context_t *)lp_context;
 
     *num_to_skip = 0;
 
@@ -194,7 +185,7 @@ static void print_help(void)
 
 int main(int argc, char * argv[])
 {
-    pack_item_t user = {.display_context = INITIAL_DISPLAY_CONTEXT};
+    fc_solve_display_information_context_t debug_context = INITIAL_DISPLAY_CONTEXT;
     /* char buffer[2048]; */
     int board_num;
     int start_board, end_board, stop_at;
@@ -284,13 +275,13 @@ int main(int argc, char * argv[])
     bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
 
 
-    user.instance = alloc_instance_and_parse(
+    void * const instance = alloc_instance_and_parse(
         argc,
         argv,
         &arg,
         known_parameters,
         cmd_line_callback,
-        &user,
+        &debug_context,
         TRUE
     );
 
@@ -300,12 +291,12 @@ int main(int argc, char * argv[])
 
         if (was_total_iterations_limit_per_board_set)
         {
-            freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
+            freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
         }
 
         const int ret =
             freecell_solver_user_solve_board(
-                user.instance,
+                instance,
                 state_string
                 );
 
@@ -317,7 +308,7 @@ int main(int argc, char * argv[])
             break;
 
             case FCS_STATE_FLARES_PLAN_ERROR:
-            printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(user.instance));
+            printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
             goto out_of_loop;
 
             case FCS_STATE_IS_NOT_SOLVEABLE:
@@ -326,7 +317,7 @@ int main(int argc, char * argv[])
             break;
 
             default:
-            print_int(&binary_output, (int)freecell_solver_user_get_num_times_long(user.instance));
+            print_int(&binary_output, (int)freecell_solver_user_get_num_times_long(instance));
             break;
         }
 
@@ -349,14 +340,14 @@ int main(int argc, char * argv[])
             }
 
             fc_solve_output_result_to_file(
-                output_fh, user.instance, ret, &user.display_context
+                output_fh, instance, ret, &debug_context
             );
 
             fclose(output_fh);
             output_fh = NULL;
         }
 
-        total_num_iters += freecell_solver_user_get_num_times_long(user.instance);
+        total_num_iters += freecell_solver_user_get_num_times_long(instance);
 
         if (board_num % stop_at == 0)
         {
@@ -364,13 +355,13 @@ int main(int argc, char * argv[])
             fflush(stdout);
         }
 
-        freecell_solver_user_recycle(user.instance);
+        freecell_solver_user_recycle(instance);
 
         trace_mem(board_num);
     }
 out_of_loop:
 
-    freecell_solver_user_free(user.instance);
+    freecell_solver_user_free(instance);
     bin_close(&binary_output);
     free (solution_filename);
     solution_filename = NULL;
