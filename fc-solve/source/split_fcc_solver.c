@@ -174,10 +174,10 @@ typedef struct
 RB_GENERATE_STATIC(FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 
 static GCC_INLINE void instance_init(
-    fcs_dbm_solver_instance_t * instance,
-    enum fcs_dbm_variant_type_t local_variant,
-    long pre_cache_max_count,
-    long caches_delta,
+    fcs_dbm_solver_instance_t * const instance,
+    const enum fcs_dbm_variant_type_t local_variant,
+    const long pre_cache_max_count GCC_UNUSED,
+    const long caches_delta GCC_UNUSED,
     const char * dbm_store_path,
     long iters_delta_limit,
     const char * offload_dir_path,
@@ -392,13 +392,13 @@ struct fcs_dbm_solver_thread_struct
 };
 
 static GCC_INLINE void instance_check_key(
-    fcs_dbm_solver_thread_t * thread,
-    fcs_dbm_solver_instance_t * instance,
-    int key_depth,
-    fcs_encoded_state_buffer_t * key,
-    fcs_dbm_record_t * parent,
-    unsigned char move,
-    fcs_which_moves_bitmask_t * which_irreversible_moves_bitmask
+    fcs_dbm_solver_thread_t * const thread,
+    fcs_dbm_solver_instance_t * const instance,
+    const int key_depth,
+    fcs_encoded_state_buffer_t * const key,
+    fcs_dbm_record_t * const parent,
+    const unsigned char move GCC_UNUSED,
+    const fcs_which_moves_bitmask_t * const which_irreversible_moves_bitmask
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif

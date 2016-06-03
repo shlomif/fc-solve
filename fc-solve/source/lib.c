@@ -2260,8 +2260,8 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
 #endif
 
 DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
-    void * const api_instance,
-    const long max_num_states
+    void * const api_instance GCC_UNUSED,
+    const long max_num_states GCC_UNUSED
     )
 {
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
@@ -2652,8 +2652,8 @@ DLLEXPORT const char * freecell_solver_user_get_last_error_string(
 
 
 int DLLEXPORT freecell_solver_user_set_cache_limit(
-    void * const api_instance,
-    const long limit
+    void * const api_instance GCC_UNUSED,
+    const long limit GCC_UNUSED
     )
 {
 #ifndef FCS_RCS_STATES
@@ -2696,8 +2696,8 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
 }
 
 DLLEXPORT extern int freecell_solver_user_set_flares_choice(
-    void * api_instance,
-    const char * const new_flares_choice_string
+    void * api_instance GCC_UNUSED,
+    const char * const new_flares_choice_string GCC_UNUSED
 )
 {
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT

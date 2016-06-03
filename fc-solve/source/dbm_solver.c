@@ -182,13 +182,13 @@ static GCC_INLINE void instance_destroy(
 #include "dbm_procs.h"
 
 static GCC_INLINE void instance_check_key(
-    fcs_dbm_solver_thread_t * thread GCC_UNUSED,
-    fcs_dbm_solver_instance_t * instance,
-    int key_depth GCC_UNUSED,
-    fcs_encoded_state_buffer_t * key,
-    fcs_dbm_record_t * parent,
-    unsigned char move GCC_UNUSED,
-    fcs_which_moves_bitmask_t * which_irreversible_moves_bitmask GCC_UNUSED
+    fcs_dbm_solver_thread_t * const thread GCC_UNUSED,
+    fcs_dbm_solver_instance_t * const instance,
+    const int key_depth GCC_UNUSED,
+    fcs_encoded_state_buffer_t * const key,
+    fcs_dbm_record_t * const parent,
+    const unsigned char move GCC_UNUSED,
+    const fcs_which_moves_bitmask_t * const which_irreversible_moves_bitmask GCC_UNUSED
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif

@@ -129,13 +129,13 @@ static void my_iter_handler(
 }
 
 static int cmd_line_callback(
-    void * instance,
-    int argc,
+    void * const instance,
+    const int argc,
     const char * argv[],
-    int arg,
-    int * num_to_skip,
-    int * ret,
-    void * context
+    const int arg,
+    int * const num_to_skip,
+    int * const ret GCC_UNUSED,
+    void * const context
     )
 {
     fc_solve_display_information_context_t * dc;
@@ -173,13 +173,13 @@ static int cmd_line_callback(
     }
     else if ((!strcmp(argv[arg], "-o")) || (!strcmp(argv[arg], "--output")))
     {
-        arg++;
-        if (arg == argc)
+        const int next_arg = arg+1;
+        if (next_arg == argc)
         {
             return FCS_CMD_LINE_STOP;
         }
         *num_to_skip = 2;
-        dc->output_filename = (const char *)argv[arg];
+        dc->output_filename = (const char *)argv[next_arg];
         return FCS_CMD_LINE_SKIP;
     }
     else if ((!strcmp(argv[arg], "-t")) || (!strcmp(argv[arg], "--display-10-as-t")))

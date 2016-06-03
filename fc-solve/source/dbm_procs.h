@@ -175,13 +175,13 @@ static GCC_INLINE void pre_cache_offload_and_reset(
 typedef struct fcs_dbm_solver_thread_struct fcs_dbm_solver_thread_t;
 
 static GCC_INLINE void instance_check_key(
-    fcs_dbm_solver_thread_t * thread,
-    fcs_dbm_solver_instance_t * instance,
-    int key_depth,
-    fcs_encoded_state_buffer_t * key,
-    fcs_dbm_record_t * parent,
-    unsigned char move,
-    fcs_which_moves_bitmask_t * which_irreversible_moves_bitmask
+    fcs_dbm_solver_thread_t * const thread,
+    fcs_dbm_solver_instance_t * const instance,
+    const int key_depth,
+    fcs_encoded_state_buffer_t * const key,
+    fcs_dbm_record_t * const parent,
+    const unsigned char move,
+    const fcs_which_moves_bitmask_t * const which_irreversible_moves_bitmask
 #ifdef FCS_DBM_CACHE_ONLY
     , const fcs_fcc_move_t * moves_to_parent
 #endif
@@ -303,7 +303,7 @@ static void calc_trace(
 {
 #define GROW_BY 100
     int trace_num = 0;
-    int trace_max_num = GROW_BY;
+    size_t trace_max_num = GROW_BY;
     fcs_encoded_state_buffer_t * trace = SMALLOC(trace, trace_max_num);
     fcs_encoded_state_buffer_t * key_ptr = trace;
     fcs_dbm_record_t * record = ptr_initial_record;
