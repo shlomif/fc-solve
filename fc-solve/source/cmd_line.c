@@ -710,9 +710,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         break;
 
         case FCS_OPT_NEXT_FLARE: /* STRINGS=-nf|--next-flare; */
+#ifdef FCS_WITH_FLARES
         {
             freecell_solver_user_next_flare(instance);
         }
+#endif
         break;
 
         case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread; */
@@ -769,8 +771,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_FLARE_NAME: /* STRINGS=--flare-name; */
         {
             PROCESS_OPT_ARG() ;
-
+#ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flare_name(instance, (*arg));
+#endif
         }
         break;
 
@@ -785,16 +788,18 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_FLARES_PLAN: /* STRINGS=--flares-plan; */
         {
             PROCESS_OPT_ARG() ;
-
+#ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flares_plan(instance, (*arg));
+#endif
         }
         break;
 
         case FCS_OPT_FLARES_ITERS_FACTOR: /* STRINGS=-fif|--flares-iters-factor; */
         {
             PROCESS_OPT_ARG() ;
-
+#ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flares_iters_factor(instance, atof(*arg));
+#endif
         }
         break;
 
@@ -1091,6 +1096,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG() ;
 
+#ifdef FCS_WITH_FLARES
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
             if (freecell_solver_user_set_flares_choice(
                 instance,
@@ -1104,6 +1110,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
                 RET_ERROR_IN_ARG() ;
             }
+#endif
 #endif
         }
         break;

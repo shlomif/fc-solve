@@ -124,6 +124,12 @@ extern "C" {
 #define FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY 4
 #endif
 
+#cmakedefine FCS_DISABLE_MULTI_FLARES
+
+#ifndef FCS_DISABLE_MULTI_FLARES
+#define FCS_WITH_FLARES
+#endif
+
 /*
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.
