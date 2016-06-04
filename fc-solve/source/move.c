@@ -36,13 +36,14 @@
 #include "state.h"
 #include "fcs_enums.h"
 
+#ifdef FCS_WITH_MOVES
+
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
 const fcs_internal_move_t fc_solve_empty_move = {0,0,0,0};
 #else
 const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
 #endif
 
-#ifdef FCS_WITH_MOVES
 /*
  * This function performs a given move on a state
  */
