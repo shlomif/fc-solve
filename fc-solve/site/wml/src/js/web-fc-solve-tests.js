@@ -10187,7 +10187,21 @@ function test_js_fc_solve_class()
 
         // TEST
         equal(instance.get_num_freecells(), 4,
-            "get_num_freecells() Returns 4.");
+            "get_num_freecells() returns 4.");
+    });
+    test("FC_Solve get_num_freecells #1", function() {
+        expect(1);
+
+        var instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            string_params: '--freecells-num 2',
+            dir_base: 'fcs3',
+            set_status_callback: function () { return; },
+        });
+
+        // TEST
+        equal(instance.get_num_freecells(), 2,
+            "get_num_freecells() returns 2 after command line.");
     });
 
     return;
