@@ -10177,5 +10177,18 @@ function test_js_fc_solve_class()
         );
     });
 
+    test("FC_Solve get_num_freecells #1", function() {
+        expect(1);
+
+        var instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            set_status_callback: function () { return; },
+        });
+
+        // TEST
+        equal(instance.get_num_freecells(), 4,
+            "get_num_freecells() Returns 4.");
+    });
+
     return;
 }

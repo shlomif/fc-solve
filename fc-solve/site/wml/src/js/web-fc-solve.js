@@ -7,6 +7,7 @@ var freecell_solver_user_cmd_line_read_cmd_line_preset;
 var malloc;
 var c_free;
 var freecell_solver_user_get_next_move;
+var freecell_solver_user_get_num_freecells;
 var freecell_solver_user_get_num_stacks;
 var freecell_solver_user_current_state_stringify;
 var freecell_solver_user_stringify_move_ptr;
@@ -31,6 +32,7 @@ function FC_Solve_init_wrappers_with_module(Module)
     malloc = Module.cwrap('malloc', 'number', ['number']);
     c_free = Module.cwrap('free', 'number', ['number']);
     freecell_solver_user_get_next_move = Module.cwrap('freecell_solver_user_get_next_move', 'number', ['number', 'number']);
+    freecell_solver_user_get_num_freecells = Module.cwrap('freecell_solver_user_get_num_freecells', 'number', ['number']);
     freecell_solver_user_get_num_stacks = Module.cwrap('freecell_solver_user_get_num_stacks', 'number', ['number']);
     freecell_solver_user_current_state_stringify = Module.cwrap('freecell_solver_user_current_state_stringify', 'number', ['number', 'number', 'number', 'number', 'number']);
     freecell_solver_user_stringify_move_ptr = Module.cwrap('freecell_solver_user_stringify_move_ptr', 'number', ['number', 'number', 'number', 'number']);
@@ -481,6 +483,11 @@ Class('FC_Solve', {
 
             return args.expand ? that.display_expanded_moves_solution(args)
                 : that.display_solution(args);
+        },
+        get_num_freecells: function() {
+            var that = this;
+
+            return freecell_solver_user_get_num_freecells(that.obj);
         },
         get_num_stacks: function() {
             var that = this;
