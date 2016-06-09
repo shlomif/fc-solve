@@ -240,7 +240,7 @@ typedef enum
 
 typedef struct
 {
-    int num;
+    size_t num;
     int * order_group_tests;
     fcs_tests_group_type_t shuffling_type;
     fc_solve_state_weighting_t weighting;
@@ -248,7 +248,7 @@ typedef struct
 
 typedef struct
 {
-    int num_groups;
+    size_t num_groups;
     fcs_tests_order_group_t * groups;
 } fcs_tests_order_t;
 

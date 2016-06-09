@@ -186,15 +186,15 @@ static GCC_INLINE const char * fc_solve_calc_positions_by_rank_location(
 
 static GCC_INLINE void add_to_move_funcs_list(
     fc_solve_solve_for_state_move_func_t * * const out_move_funcs_list,
-    int * const num_so_far,
+    size_t * const num_so_far,
     const int * const indexes,
-    const int count_to_add
+    const size_t count_to_add
 )
 {
-    const int num = *num_so_far;
+    const size_t num = *num_so_far;
     fc_solve_solve_for_state_move_func_t * const move_funcs_list = SREALLOC(*out_move_funcs_list, num + count_to_add);
-    int next_i = num;
-    for (int i = 0 ; i < count_to_add ; i++)
+    size_t next_i = num;
+    for (size_t i = 0 ; i < count_to_add ; i++)
     {
         move_funcs_list[next_i++] = fc_solve_sfs_move_funcs[ indexes[i] ];
     }

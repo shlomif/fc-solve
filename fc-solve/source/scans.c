@@ -425,24 +425,17 @@ static GCC_INLINE void fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * co
 
 
 void fc_solve_soft_thread_init_befs_or_bfs(
-    fc_solve_soft_thread_t * soft_thread
+    fc_solve_soft_thread_t * const soft_thread
     )
 {
     fc_solve_soft_thread_update_initial_cards_val(soft_thread);
 
-    fc_solve_instance_t * const instance = HT_INSTANCE(soft_thread->hard_thread);
-
     if (soft_thread->is_befs)
     {
+#define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
         /* Initialize the priotity queue of the BeFS scan */
         fc_solve_pq_init( &(BEFS_VAR(soft_thread, pqueue)) );
-
-#define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
-
-        fc_solve_initialize_befs_rater(
-            soft_thread,
-            WEIGHTING(soft_thread)
-            );
+        fc_solve_initialize_befs_rater(soft_thread, WEIGHTING(soft_thread));
     }
     else
     {
@@ -451,10 +444,10 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
     if (! BEFS_M_VAR(soft_thread, tests_list))
     {
-        int num = 0;
+        size_t num = 0;
         fc_solve_solve_for_state_move_func_t * tests_list = NULL;
 
-        for (int group_idx = 0 ; group_idx < soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num_groups ; group_idx++)
+        for (size_t group_idx = 0 ; group_idx < soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order.num_groups ; group_idx++)
         {
             add_to_move_funcs_list(
                 &tests_list,
@@ -466,11 +459,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         BEFS_M_VAR(soft_thread, tests_list) = tests_list;
         BEFS_M_VAR(soft_thread, tests_list_end) = tests_list+num;
     }
-
     BEFS_M_VAR(soft_thread, first_state_to_check) =
-        FCS_STATE_keyval_pair_to_collectible(instance->state_copy_ptr);
-
-    return;
+        FCS_STATE_keyval_pair_to_collectible(HT_INSTANCE(soft_thread->hard_thread)->state_copy_ptr);
 }
 
 #ifdef DEBUG

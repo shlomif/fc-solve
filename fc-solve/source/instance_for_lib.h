@@ -1033,7 +1033,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
             for (int group_idx = 0 ; group_idx < tests_order_num ; group_idx++)
             {
-                int num = 0;
+                size_t num = 0;
                 fc_solve_solve_for_state_move_func_t * tests_list = NULL;
                 add_to_move_funcs_list(
                     &tests_list,
