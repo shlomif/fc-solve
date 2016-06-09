@@ -37,7 +37,6 @@
 
 int main(int argc, char * argv[])
 {
-    fc_solve_display_information_context_t debug_context = INITIAL_DISPLAY_CONTEXT;
     /* char buffer[2048]; */
     fcs_portable_time_t mytime;
 
@@ -119,14 +118,14 @@ int main(int argc, char * argv[])
 
     bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
 
-
+    fc_solve_display_information_context_t dc = INITIAL_DISPLAY_CONTEXT;
     void * const instance = alloc_instance_and_parse(
         argc,
         argv,
         &arg,
         known_parameters,
         cmd_line_callback,
-        &debug_context,
+        &dc,
         TRUE
     );
 
@@ -182,7 +181,7 @@ int main(int argc, char * argv[])
                 return -1;
             }
             fc_solve_output_result_to_file(
-                output_fh, instance, ret, &debug_context
+                output_fh, instance, ret, &dc
             );
             fclose(output_fh);
         }
