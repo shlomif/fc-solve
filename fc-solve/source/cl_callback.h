@@ -328,8 +328,7 @@ static void my_iter_handler(
     void * lp_context
     );
 
-#define IS_ARG(s) (!strcmp(arg_str, (s)))
-
+#include "cl_callback_common.h"
 static int fc_solve__cmd_line_callback(
     void * const instance,
     const int argc,
@@ -347,7 +346,10 @@ static int fc_solve__cmd_line_callback(
 
     const char * const arg_str = argv[arg];
 
-    if (IS_ARG("--version"))
+    if (cmd_line_cb__handle_common(arg_str, instance, dc))
+    {
+    }
+    else if (IS_ARG("--version"))
     {
         printf(
             "fc-solve\nlibfreecell-solver version %s\n",
@@ -373,34 +375,6 @@ static int fc_solve__cmd_line_callback(
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
-    else if (IS_ARG("-i") || IS_ARG("--iter-output"))
-    {
-#define set_iter_handler() \
-        freecell_solver_user_set_iter_handler_long(   \
-            instance,   \
-            my_iter_handler,   \
-            dc    \
-            );        \
-        dc->debug_iter_output_on = TRUE;
-
-        set_iter_handler();
-    }
-    else if (IS_ARG("-s") || IS_ARG("--state-output"))
-    {
-        set_iter_handler();
-        dc->debug_iter_state_output = TRUE;
-#undef set_iter_handler
-    }
-    else if (IS_ARG("-p") || IS_ARG("--parseable-output"))
-    {
-#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-        dc->parseable_output = TRUE;
-#endif
-    }
-    else if (IS_ARG("-c") || IS_ARG("--canonized-order-output"))
-    {
-        dc->canonized_order_output = TRUE;
-    }
     else if (IS_ARG("-o") || IS_ARG("--output"))
     {
         const int next_arg = arg+1;
@@ -411,39 +385,6 @@ static int fc_solve__cmd_line_callback(
         *num_to_skip = 2;
         dc->output_filename = (const char *)argv[next_arg];
         return FCS_CMD_LINE_SKIP;
-    }
-    else if (IS_ARG("-t") || IS_ARG("--display-10-as-t"))
-    {
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-        dc->display_10_as_t = TRUE;
-#endif
-    }
-    else if (IS_ARG("-m") || IS_ARG("--display-moves"))
-    {
-        dc->display_moves = TRUE;
-        dc->display_states = FALSE;
-    }
-    else if (IS_ARG("-sn") || IS_ARG("--standard-notation"))
-    {
-        dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_REGULAR;
-
-    }
-    else if (IS_ARG("-snx") || IS_ARG("--standard-notation-extended"))
-    {
-        dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_EXTENDED;
-    }
-    else if (IS_ARG("-sam") || IS_ARG("--display-states-and-moves"))
-    {
-        dc->display_moves = TRUE;
-        dc->display_states = TRUE;
-    }
-    else if (IS_ARG("-pi") || IS_ARG("--display-parent-iter"))
-    {
-        dc->display_parent_iter_num = TRUE;
-    }
-    else if (IS_ARG("-sel") || IS_ARG("--show-exceeded-limits"))
-    {
-        dc->show_exceeded_limits = TRUE;
     }
     else if (IS_ARG("--reset"))
     {

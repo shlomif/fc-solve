@@ -15,8 +15,8 @@
 #include "handle_parsing.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "range_solvers_binary_output.h"
+#include "cl_callback_common.h"
 
-#define IS_ARG(s) (!strcmp(arg_str, (s)))
 static int cmd_line_callback(
     void * const instance,
     const int argc GCC_UNUSED,
@@ -32,54 +32,7 @@ static int cmd_line_callback(
     *num_to_skip = 0;
     const char * const arg_str = argv[arg];
 
-    if (IS_ARG("-i") || IS_ARG("--iter-output"))
-    {
-        freecell_solver_user_set_iter_handler_long(
-            instance,
-            my_iter_handler,
-            dc
-            );
-        dc->debug_iter_output_on = TRUE;
-    }
-    else if (IS_ARG("-s") || IS_ARG("--state-output"))
-    {
-        dc->debug_iter_state_output = TRUE;
-    }
-    else if (IS_ARG("-p") || IS_ARG("--parseable-output"))
-    {
-#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-        dc->parseable_output = TRUE;
-#endif
-    }
-    else if (IS_ARG("-c") || IS_ARG("--canonized-order-output"))
-    {
-        dc->canonized_order_output = TRUE;
-    }
-    else if (IS_ARG("-t") || IS_ARG("--display-10-as-t"))
-    {
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-        dc->display_10_as_t = TRUE;
-#endif
-    }
-    else if (IS_ARG("-m") || IS_ARG("--display-moves"))
-    {
-        dc->display_moves = TRUE;
-        dc->display_states = FALSE;
-    }
-    else if (IS_ARG("-sn") || IS_ARG("--standard-notation"))
-    {
-        dc->standard_notation = TRUE;
-    }
-    else if (IS_ARG("-sam") || IS_ARG("--display-states-and-moves"))
-    {
-        dc->display_moves = TRUE;
-        dc->display_states = TRUE;
-    }
-    else if (IS_ARG("-pi") || IS_ARG("--display-parent-iter"))
-    {
-        dc->display_parent_iter_num = TRUE;
-    }
-    else
+    if (! cmd_line_cb__handle_common(arg_str, instance, dc))
     {
         fprintf(stderr, "Unknown option %s!\n", argv[arg]);
         exit(-1);
