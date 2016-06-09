@@ -39,7 +39,6 @@ int main(int argc, char * argv[])
 {
     /* char buffer[2048]; */
     fcs_portable_time_t mytime;
-
     fcs_int64_t total_num_iters = 0;
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;

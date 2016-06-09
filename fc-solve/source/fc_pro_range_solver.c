@@ -81,6 +81,7 @@ int main(int argc, char * argv[])
     const char * variant = "freecell";
     fcs_portable_time_t mytime;
     fcs_int64_t total_num_iters = 0;
+    fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
     binary_output_t binary_output = {.filename = NULL,};
     int arg = 1;
@@ -145,6 +146,7 @@ int main(int argc, char * argv[])
                 print_help();
                 exit(-1);
             }
+            was_total_iterations_limit_per_board_set = TRUE;
             total_iterations_limit_per_board = atol(argv[arg]);
         }
         else
@@ -171,7 +173,10 @@ int main(int argc, char * argv[])
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(instance, variant);
 
-    freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
+    if (was_total_iterations_limit_per_board_set)
+    {
+        freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
+    }
 
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
