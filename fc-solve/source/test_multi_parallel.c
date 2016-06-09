@@ -37,7 +37,6 @@
 
 int main(int argc, char * argv[])
 {
-    /* char buffer[2048]; */
     fcs_portable_time_t mytime;
     fcs_int64_t total_num_iters = 0;
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
@@ -45,7 +44,6 @@ int main(int argc, char * argv[])
     binary_output_t binary_output = {.filename = NULL,};
     const char * solutions_directory = NULL;
     char * solution_filename = NULL;
-
     int arg = 1;
 
     if (argc < 4)
@@ -57,7 +55,6 @@ int main(int argc, char * argv[])
     int start_board = atoi(argv[arg++]);
     int end_board = atoi(argv[arg++]);
     const int stop_at = atoi(argv[arg++]);
-
     if (stop_at <= 0)
     {
         fprintf(stderr, "print_step (the third argument) must be greater than 0.\n");
@@ -115,8 +112,6 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
-
     fc_solve_display_information_context_t dc = INITIAL_DISPLAY_CONTEXT;
     void * const instance = alloc_instance_and_parse(
         argc,
@@ -127,6 +122,8 @@ int main(int argc, char * argv[])
         &dc,
         TRUE
     );
+
+    bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
 
     if (was_total_iterations_limit_per_board_set)
     {
@@ -184,7 +181,6 @@ int main(int argc, char * argv[])
             );
             fclose(output_fh);
         }
-
         total_num_iters += freecell_solver_user_get_num_times_long(instance);
 
         if (board_num % stop_at == 0)
