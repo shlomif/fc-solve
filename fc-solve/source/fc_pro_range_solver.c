@@ -96,11 +96,6 @@ static void my_iter_handler(
     }
 }
 
-typedef struct {
-    fc_solve_display_information_context_t display_context;
-    void * instance;
-} pack_item_t;
-
 static int cmd_line_callback(
     void * instance,
     int argc GCC_UNUSED,
@@ -111,8 +106,7 @@ static int cmd_line_callback(
     void * context
     )
 {
-    pack_item_t * const item = (typeof(item))context;
-    fc_solve_display_information_context_t * const dc = &(item->display_context);
+    fc_solve_display_information_context_t * const dc = (typeof(dc))context;
 
     *num_to_skip = 0;
 
@@ -201,7 +195,7 @@ static void print_help(void)
 
 int main(int argc, char * argv[])
 {
-    pack_item_t user;
+    fc_solve_display_information_context_t dc;
     const char * variant = "freecell";
     fcs_portable_time_t mytime;
     fcs_int64_t total_num_iters = 0;
@@ -282,18 +276,18 @@ int main(int argc, char * argv[])
     fflush(stdout);
 
 
-    user.instance = freecell_solver_user_alloc();
+    void * const instance = freecell_solver_user_alloc();
 
     char * error_string;
     switch(
         freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-            user.instance,
+            instance,
             argc,
             (freecell_solver_str_t *)(void *)argv,
             arg,
             known_parameters,
             cmd_line_callback,
-            &user,
+            &dc,
             &error_string,
             &arg,
             -1,
@@ -327,9 +321,9 @@ int main(int argc, char * argv[])
 
     bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
-    freecell_solver_user_apply_preset(user.instance, variant);
+    freecell_solver_user_apply_preset(instance, variant);
 
-    freecell_solver_user_limit_iterations_long(user.instance, total_iterations_limit_per_board);
+    freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
 
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
@@ -368,7 +362,7 @@ int main(int argc, char * argv[])
 
         switch(
             freecell_solver_user_solve_board(
-                user.instance,
+                instance,
                 buffer
                 )
         )
@@ -384,14 +378,14 @@ int main(int argc, char * argv[])
             break;
 
             default:
-            num_iters = (int)freecell_solver_user_get_num_times_long(user.instance);
-            num_moves = freecell_solver_user_get_moves_left(user.instance);
+            num_iters = (int)freecell_solver_user_get_num_times_long(instance);
+            num_moves = freecell_solver_user_get_moves_left(instance);
 
             if (variant_is_freecell)
             {
                 fcs_moves_sequence_t moves_seq;
 
-                freecell_solver_user_get_moves_sequence(user.instance, &moves_seq);
+                freecell_solver_user_get_moves_sequence(instance, &moves_seq);
                 fc_solve_moves_processed_gen(&fc_pro_moves, &pos, 4, &moves_seq);
 
                 num_fcpro_moves = fc_solve_moves_processed_get_moves_left(&fc_pro_moves);
@@ -428,7 +422,7 @@ int main(int argc, char * argv[])
         }
         printf("\n%s\n", "[[End]]");
         fflush(stdout);
-        total_num_iters += freecell_solver_user_get_num_times_long(user.instance);
+        total_num_iters += freecell_solver_user_get_num_times_long(instance);
 
         if (board_num % stop_at == 0)
         {
@@ -440,10 +434,10 @@ int main(int argc, char * argv[])
             fflush(stdout);
         }
 
-        freecell_solver_user_recycle(user.instance);
+        freecell_solver_user_recycle(instance);
     }
 
-    freecell_solver_user_free(user.instance);
+    freecell_solver_user_free(instance);
     bin_close(&binary_output);
 
     return 0;
