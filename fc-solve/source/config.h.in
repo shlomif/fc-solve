@@ -142,6 +142,8 @@ extern "C" {
 #define SFS__PASS_MOVE_STACK(arg)
 #endif
 
+#cmakedefine FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
+
 /*
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.

@@ -422,8 +422,6 @@ static GCC_INLINE void fc_solve_initialize_bfs_queue(fc_solve_soft_thread_t * co
     return;
 }
 
-
-
 void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t * const soft_thread
     )

@@ -808,41 +808,6 @@ static GCC_INLINE fcs_bool_t duplicate_string_while_adding_a_trailing_newline(
 #undef TRAILING_CHAR
 #undef MY_MARGIN
 
-int DLLEXPORT freecell_solver_user_solve_board(
-    void * const api_instance,
-    const char * const state_as_string
-    )
-{
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
-    if (! duplicate_string_while_adding_a_trailing_newline(user->state_string_copy, state_as_string))
-    {
-        return FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
-    }
-
-    user->current_instance = user->instances_list;
-
-#ifdef FCS_WITH_FLARES
-    int instance_list_index;
-    if ( user_compile_all_flares_plans(user, &instance_list_index)
-        != FCS_COMPILE_FLARES_RET_OK
-    )
-    {
-        return FCS_STATE_FLARES_PLAN_ERROR;
-    }
-    INSTANCES_LOOP_START()
-        const_SLOT(num_plan_items, instance_item);
-        const_SLOT(plan, instance_item);
-        for (int i = 0; i < num_plan_items; i++)
-        {
-            flares_plan_item * item = plan + i;
-            item->remaining_quota = item->initial_quota;
-        }
-    INSTANCES_LOOP_END()
-#endif
-
-    return freecell_solver_user_resume_solution(api_instance);
-}
 
 static GCC_INLINE void recycle_flare(
     fcs_flare_item_t * const flare
@@ -1048,14 +1013,8 @@ static GCC_INLINE fcs_instance_item_t * get_current_instance_item(
     return (user->current_instance);
 }
 
-
-
-int DLLEXPORT freecell_solver_user_resume_solution(
-    void * const api_instance
-    )
+static GCC_INLINE int resume_solution(fcs_user_t * const user)
 {
-    fcs_user_t * const user = (fcs_user_t *)api_instance;
-
     fcs_stats_t init_num_checked_states;
 
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
@@ -1379,6 +1338,55 @@ int DLLEXPORT freecell_solver_user_resume_solution(
     (
         user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret
     );
+}
+
+#ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
+int DLLEXPORT freecell_solver_user_resume_solution(
+    void * const api_instance
+    )
+{
+    return resume_solution((fcs_user_t *)api_instance);
+}
+#endif
+
+int DLLEXPORT freecell_solver_user_solve_board(
+    void * const api_instance,
+    const char * const state_as_string
+    )
+{
+    fcs_user_t * const user = (fcs_user_t *)api_instance;
+
+    if (! duplicate_string_while_adding_a_trailing_newline(user->state_string_copy, state_as_string))
+    {
+        return FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
+    }
+
+    user->current_instance = user->instances_list;
+
+#ifdef FCS_WITH_FLARES
+    int instance_list_index;
+    if ( user_compile_all_flares_plans(user, &instance_list_index)
+        != FCS_COMPILE_FLARES_RET_OK
+    )
+    {
+        return FCS_STATE_FLARES_PLAN_ERROR;
+    }
+    INSTANCES_LOOP_START()
+        const_SLOT(num_plan_items, instance_item);
+        const_SLOT(plan, instance_item);
+        for (int i = 0; i < num_plan_items; i++)
+        {
+            flares_plan_item * item = plan + i;
+            item->remaining_quota = item->initial_quota;
+        }
+    INSTANCES_LOOP_END()
+#endif
+
+#ifdef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
+    return resume_solution(user);
+#else
+    return freecell_solver_user_resume_solution(api_instance);
+#endif
 }
 
 static GCC_INLINE fcs_flare_item_t * calc_moves_flare(
