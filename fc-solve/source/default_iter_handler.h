@@ -4,6 +4,8 @@
  * Licensed under the MIT/X11 license.
  * */
 #pragma once
+#include "fcs_user.h"
+#include "output_to_file.h"
 
 static void my_iter_handler(
     void * const user_instance,
