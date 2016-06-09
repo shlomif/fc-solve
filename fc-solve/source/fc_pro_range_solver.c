@@ -157,50 +157,16 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-
-    void * const instance = freecell_solver_user_alloc();
     fc_solve_display_information_context_t dc = INITIAL_DISPLAY_CONTEXT;
-
-    char * error_string;
-    switch(
-        freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-            instance,
-            argc,
-            (freecell_solver_str_t *)(void *)argv,
-            arg,
-            known_parameters,
-            cmd_line_callback,
-            &dc,
-            &error_string,
-            &arg,
-            -1,
-            NULL
-            )
-    )
-    {
-        case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
-        {
-            fprintf(stderr, "Unknown option: %s", argv[arg]);
-            return (-1);
-        }
-
-        case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
-        {
-            fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                " and was not supplied with one.\n", argv[arg]);
-            return (-1);
-        }
-
-        case FCS_CMD_LINE_ERROR_IN_ARG:
-        {
-            if (error_string != NULL)
-            {
-                fprintf(stderr, "%s", error_string);
-                free(error_string);
-            }
-            return (-1);
-        }
-    }
+    void * const instance = alloc_instance_and_parse(
+        argc,
+        argv,
+        &arg,
+        known_parameters,
+        cmd_line_callback,
+        &dc,
+        TRUE
+    );
 
     bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
