@@ -7,6 +7,15 @@
 
 #define IS_ARG(s) (!strcmp(arg_str, (s)))
 
+static GCC_INLINE void set_iter_handler(
+    void * const instance,
+    fc_solve_display_information_context_t * const dc
+)
+{
+    freecell_solver_user_set_iter_handler_long(instance, my_iter_handler, dc);
+    dc->debug_iter_output_on = TRUE;
+}
+
 static GCC_INLINE fcs_bool_t cmd_line_cb__handle_common(
     const char * const arg_str,
     void * const instance,
@@ -15,20 +24,12 @@ static GCC_INLINE fcs_bool_t cmd_line_cb__handle_common(
 {
     if (IS_ARG("-i") || IS_ARG("--iter-output"))
     {
-#define set_iter_handler() \
-        freecell_solver_user_set_iter_handler_long(   \
-            instance,   \
-            my_iter_handler,   \
-            dc    \
-            );        \
-        dc->debug_iter_output_on = TRUE;
-
-        set_iter_handler();
+        set_iter_handler(instance, dc);
         return TRUE;
     }
     else if (IS_ARG("-s") || IS_ARG("--state-output"))
     {
-        set_iter_handler();
+        set_iter_handler(instance, dc);
         dc->debug_iter_state_output = TRUE;
         return TRUE;
     }
