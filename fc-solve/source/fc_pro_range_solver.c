@@ -26,13 +26,10 @@
  * boards and displays the moves counts and the number of moves in their
  * solution.
  */
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "fcs_user.h"
-#include "fcs_cl.h"
-#include "rinutils.h"
+#include "output_to_file.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "range_solvers_binary_output.h"
 #include "fc_pro_iface_pos.h"
@@ -44,22 +41,6 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t stat
         state_string, pos, 4, 8, 1, indirect_stacks_buffer
     );
 }
-
-typedef struct
-{
-    fcs_bool_t debug_iter_state_output;
-#ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-    fcs_bool_t parseable_output;
-#endif
-    fcs_bool_t canonized_order_output;
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    fcs_bool_t display_10_as_t;
-#endif
-    fcs_bool_t display_parent_iter_num;
-    fcs_bool_t debug_iter_output_on;
-    fcs_bool_t display_moves;
-    fcs_bool_t display_states;
-} fc_solve_display_information_context_t;
 
 static void my_iter_handler(
     void * const user_instance,
@@ -195,7 +176,6 @@ static void print_help(void)
 
 int main(int argc, char * argv[])
 {
-    fc_solve_display_information_context_t dc;
     const char * variant = "freecell";
     fcs_portable_time_t mytime;
     fcs_int64_t total_num_iters = 0;
@@ -277,6 +257,7 @@ int main(int argc, char * argv[])
 
 
     void * const instance = freecell_solver_user_alloc();
+    fc_solve_display_information_context_t dc = INITIAL_DISPLAY_CONTEXT;
 
     char * error_string;
     switch(
