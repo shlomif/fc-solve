@@ -86,9 +86,6 @@ int main(int argc, char * argv[])
     binary_output_t binary_output = {.filename = NULL,};
     int arg = 1;
 
-    fcs_state_keyval_pair_t pos;
-    DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
     if (argc < 4)
     {
         fprintf(stderr, "Not Enough Arguments!\n");
@@ -180,16 +177,14 @@ int main(int argc, char * argv[])
 
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
-
     for (int board_num = start_board ; board_num <= end_board ; board_num++)
     {
+        fcs_state_keyval_pair_t pos;
+        DECLARE_IND_BUF_T(indirect_stacks_buffer)
         if (variant_is_freecell)
         {
             fc_pro_get_board(board_num, buffer, &(pos)
-#ifdef INDIRECT_STACK_STATES
-                , indirect_stacks_buffer
-#endif
-                );
+                PASS_IND_BUF_T(indirect_stacks_buffer));
         }
         else
         {
