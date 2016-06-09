@@ -260,7 +260,7 @@ typedef struct
 
 typedef struct
 {
-    int num;
+    size_t num;
     fcs_by_depth_tests_order_t * by_depth_tests;
 } fcs_by_depth_tests_order_array_t;
 
