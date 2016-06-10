@@ -278,15 +278,6 @@ IF (NOT ("${STATES_TYPE}" STREQUAL "INDIRECT_STACK_STATES"))
     SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_NULL")
 ENDIF ()
 
-# Add the fcs_hash.c module if (and only if) it is being used.
-#
-IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_INTERNAL_HASH") OR
-    ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_INTERNAL_HASH"))
-
-    # LIST(APPEND FREECELL_SOLVER_LIB_MODULES fcs_hash.c)
-
-ENDIF ()
-
 # Add the kaz_tree.c module if (and only if) it is being used.
 #
 IF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_KAZ_TREE" OR
