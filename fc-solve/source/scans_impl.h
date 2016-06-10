@@ -1339,13 +1339,17 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
         HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
     }
 
-    const_SLOT(status, pats_scan);
-    return
-    (
-        (status == FCS_PATS__WIN) ? FCS_STATE_WAS_SOLVED
-        : (status == FCS_PATS__NOSOL) ? FCS_STATE_IS_NOT_SOLVEABLE
-        : FCS_STATE_SUSPEND_PROCESS
-    );
+    switch (pats_scan->status)
+    {
+        case FCS_PATS__WIN:
+        return FCS_STATE_WAS_SOLVED;
+
+        case FCS_PATS__NOSOL:
+        return FCS_STATE_IS_NOT_SOLVEABLE;
+
+        default:
+        return FCS_STATE_SUSPEND_PROCESS;
+    }
 }
 #endif
 
