@@ -145,6 +145,12 @@ extern "C" {
 #cmakedefine FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
 
 /*
+ * Note: enabling this flag makes things considerably slower and reduced
+ * functionality.
+ * */
+#cmakedefine FCS_WITHOUT_STATE_PARENT_PTR
+
+/*
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.
  * */

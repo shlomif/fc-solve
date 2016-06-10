@@ -480,7 +480,9 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
     state_copy_ptr->info.moves_to_parent = NULL;
 #endif
     state_copy_ptr->info.visited = 0;
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     state_copy_ptr->info.parent = NULL;
+#endif
     memset(&(state_copy_ptr->info.scan_visited), '\0', sizeof(state_copy_ptr->info.scan_visited));
 
     instance->state_copy_ptr = state_copy_ptr;

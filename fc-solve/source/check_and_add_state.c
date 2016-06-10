@@ -487,6 +487,7 @@ static GCC_INLINE void upon_new_state(
     fcs_state_extra_info_t * const new_state_info
 )
 {
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     fcs_collectible_state_t * const parent_state = new_state_info->parent;
     /* The new state was not found in the cache, and it was already inserted */
     if (likely(parent_state))
@@ -501,6 +502,7 @@ static GCC_INLINE void upon_new_state(
             );
 #endif
     }
+#endif
 
     instance->active_num_states_in_collection++;
     instance->num_states_in_collection++;

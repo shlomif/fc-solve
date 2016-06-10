@@ -339,10 +339,15 @@ struct fcs_state_keyval_pair_struct;
  * */
 struct fcs_state_extra_info_struct
 {
+    union
+    {
+        struct {
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
 #ifdef FCS_RCS_STATES
     struct fcs_state_extra_info_struct * parent;
 #else
     struct fcs_state_keyval_pair_struct * parent;
+#endif
 #endif
 #ifdef FCS_WITH_MOVES
     fcs_move_stack_t * moves_to_parent;
@@ -359,6 +364,7 @@ struct fcs_state_extra_info_struct
     fcs_int_limit_t visited_iter;
 #endif
 
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     /*
      * This is the number of direct children of this state which were not
      * yet declared as dead ends. Once this counter reaches zero, this
@@ -368,6 +374,7 @@ struct fcs_state_extra_info_struct
      * unlikely that a state will have more than 64K active children.
      * */
     unsigned short num_active_children;
+#endif
 
 
     /*
@@ -402,6 +409,9 @@ struct fcs_state_extra_info_struct
      * */
     int stacks_copy_on_write_flags;
 #endif
+        };
+        struct fcs_state_keyval_pair_struct * state_info_next_ptr;
+    };
 };
 
 typedef struct
@@ -512,7 +522,7 @@ FCS_STATE_collectible_to_kv(fcs_kv_state_t * const ret, fcs_collectible_state_t 
 
 #endif
 
-#define FCS_S_NEXT(s) FCS_S_ACCESSOR(s, parent)
+#define FCS_S_NEXT(s) FCS_S_ACCESSOR(s, state_info_next_ptr)
 #define FCS_S_PARENT(s) FCS_S_ACCESSOR(s, parent)
 #define FCS_S_NUM_ACTIVE_CHILDREN(s) FCS_S_ACCESSOR(s, num_active_children)
 #define FCS_S_MOVES_TO_PARENT(s) FCS_S_ACCESSOR(s, moves_to_parent)
@@ -697,7 +707,10 @@ static GCC_INLINE void fc_solve_state_init_proto(
         }
     }
 #endif
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     state->info.parent = NULL;
+    state->info.num_active_children = 0;
+#endif
 #ifdef FCS_WITH_MOVES
     state->info.moves_to_parent = NULL;
 #endif
@@ -708,7 +721,6 @@ static GCC_INLINE void fc_solve_state_init_proto(
 #ifndef FCS_WITHOUT_VISITED_ITER
     state->info.visited_iter = 0;
 #endif
-    state->info.num_active_children = 0;
     memset(state->info.scan_visited, '\0', sizeof(state->info.scan_visited));
 #ifdef INDIRECT_STACK_STATES
     state->info.stacks_copy_on_write_flags = 0;

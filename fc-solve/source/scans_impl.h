@@ -416,6 +416,7 @@ static GCC_INLINE void calculate_real_depth(
     fcs_collectible_state_t * const ptr_state_orig
 )
 {
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     if (calc_real_depth)
     {
         int this_real_depth = 0;
@@ -436,8 +437,7 @@ static GCC_INLINE void calculate_real_depth(
             temp_state = FCS_S_PARENT(temp_state);
         }
     }
-
-    return;
+#endif
 }
 #else
 #define calculate_real_depth(calc_real_depth, ptr_state_orig) {}
@@ -543,6 +543,7 @@ static GCC_INLINE void mark_as_dead_end(
     fcs_collectible_state_t * const ptr_state_input
 )
 {
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     if (scans_synergy)
     {
         fcs_collectible_state_t * temp_state = (ptr_state_input);
@@ -568,8 +569,7 @@ static GCC_INLINE void mark_as_dead_end(
             }
         }
     }
-
-    return;
+#endif
 }
 
 #ifdef FCS_SINGLE_HARD_THREAD

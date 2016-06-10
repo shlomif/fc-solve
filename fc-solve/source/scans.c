@@ -528,7 +528,9 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 #endif
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     const fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
     const int soft_thread_id = soft_thread->id;
     const fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const_SLOT(effective_max_num_states_in_collection, instance);
@@ -806,6 +808,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
                     soft_thread_id
                     );
 
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
             if (derived.num_states == 0)
             {
                 if (is_a_complete_scan)
@@ -813,6 +816,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
                     mark_as_dead_end(scans_synergy, PTR_STATE);
                 }
             }
+#endif
         }
 
 #ifndef FCS_WITHOUT_VISITED_ITER
@@ -915,7 +919,10 @@ int fc_solve_sfs_check_state_begin(
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.
      * */
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     FCS_S_PARENT(raw_ptr_new_state) = INFO_STATE_PTR(raw_ptr_state_raw);
+    FCS_S_NUM_ACTIVE_CHILDREN(raw_ptr_new_state) = 0;
+#endif
 #ifdef FCS_WITH_MOVES
     FCS_S_MOVES_TO_PARENT(raw_ptr_new_state) = moves;
 #endif
@@ -928,7 +935,6 @@ int fc_solve_sfs_check_state_begin(
     /* Mark this state as a state that was not yet visited */
     FCS_S_VISITED(raw_ptr_new_state) = 0;
     /* It's a newly created state which does not have children yet. */
-    FCS_S_NUM_ACTIVE_CHILDREN(raw_ptr_new_state) = 0;
     memset(&(FCS_S_SCAN_VISITED(raw_ptr_new_state)), '\0',
        sizeof(FCS_S_SCAN_VISITED(raw_ptr_new_state))
         );
@@ -952,8 +958,10 @@ extern void fc_solve_sfs_check_state_end(
     const fcs_runtime_flags_t calc_real_depth
         = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 #endif
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
     const fcs_runtime_flags_t scans_synergy
         = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
     fcs_kv_state_t existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
@@ -968,7 +976,7 @@ extern void fc_solve_sfs_check_state_end(
 #define existing_state_val (existing_state.val)
         if (HT_FIELD(hard_thread, allocated_from_list))
         {
-            ptr_new_state_foo->parent = instance->list_of_vacant_states;
+            ptr_new_state_foo->state_info_next_ptr = instance->list_of_vacant_states;
             instance->list_of_vacant_states = INFO_STATE_PTR(raw_ptr_new_state_raw);
         }
         else
@@ -1003,6 +1011,7 @@ extern void fc_solve_sfs_check_state_end(
                     hard_thread, moves
                     );
 #endif
+#ifndef FCS_WITHOUT_STATE_PARENT_PTR
             if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
             {
                 if ((--(FCS_S_NUM_ACTIVE_CHILDREN(existing_state_val->parent))) == 0)
@@ -1012,6 +1021,7 @@ extern void fc_solve_sfs_check_state_end(
                 ptr_state->num_active_children++;
             }
             existing_state_val->parent = INFO_STATE_PTR(raw_ptr_state_raw);
+#endif
 #ifndef FCS_WITHOUT_DEPTH_FIELD
             existing_state_val->depth = ptr_state->depth + 1;
 #endif
