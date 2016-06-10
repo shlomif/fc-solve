@@ -963,11 +963,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         opened_files_dir
                         );
 
-                    if (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
-                    {
-                        /* Do nothing - continue */
-                    }
-                    else if (ret != FCS_CMD_LINE_OK)
+                    if (!( (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION) ||
+                        (ret == FCS_CMD_LINE_OK)))
                     {
                         fc_solve_args_man_free(&args_man);
                         return ret;
@@ -991,20 +988,21 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 opened_files_dir
             );
 
-            if (ret == FCS_CMD_LINE_ERROR_IN_ARG)
+            switch (ret)
             {
+                case FCS_CMD_LINE_ERROR_IN_ARG:
+                {
                 char * err_str = SMALLOC(err_str, strlen((*arg)) + 100);
                 sprintf(err_str, "Unable to load the \"%s\" configuration!\n", (*arg));
                 *error_string = err_str;
-
+                }
                 RET_ERROR_IN_ARG() ;
-            }
-            else if (ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION)
-            {
-                /* Do nothing - continue */
-            }
-            else if (ret != FCS_CMD_LINE_OK)
-            {
+
+                case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
+                case FCS_CMD_LINE_OK:
+                break;
+
+                default:
                 return ret;
             }
         }
