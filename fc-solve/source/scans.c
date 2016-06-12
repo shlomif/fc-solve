@@ -528,9 +528,9 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
-    const fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+    const fcs_bool_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
     const int soft_thread_id = soft_thread->id;
-    const fcs_runtime_flags_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
+    const fcs_bool_t is_a_complete_scan = STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const_SLOT(effective_max_num_states_in_collection, instance);
 
     fcs_states_linked_list_item_t * queue = NULL;
@@ -951,7 +951,7 @@ extern void fc_solve_sfs_check_state_end(
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
-    const fcs_runtime_flags_t scans_synergy
+    const fcs_bool_t scans_synergy
         = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
     fcs_kv_state_t existing_state;
 
