@@ -10,6 +10,9 @@ Pressing
 Non-pressing
 ------------
 
+* Check if converting the various STRUCT_QUERY_FLAGs to individual
+fcs_bool_t-s speeds things up.
+
 * Consider a [partial] testing of FCS_DISABLE_MULTI_FLARES.
 ** Perhaps implement conditional of more disabled features in -l
 x64t/-l ci7t/etc.
