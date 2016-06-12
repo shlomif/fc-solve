@@ -133,24 +133,17 @@ static GCC_INLINE int worker_func(const worker_t w, void * const instance)
             )
             {
                 case FCS_STATE_SUSPEND_PROCESS:
-                {
-                    FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-                    fflush(stdout);
-                }
+                FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
+                fflush(stdout);
                 break;
                 case FCS_STATE_FLARES_PLAN_ERROR:
-                {
-                    fprintf(stderr, "Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
+                fprintf(stderr, "Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
 
-                    goto next_board;
-                }
-                break;
+                goto next_board;
 
                 case FCS_STATE_IS_NOT_SOLVEABLE:
-                {
-                    FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
-                    fflush(stdout);
-                }
+                FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+                fflush(stdout);
                 break;
             }
 
