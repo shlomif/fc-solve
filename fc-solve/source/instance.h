@@ -267,22 +267,16 @@ typedef struct
 typedef fcs_game_limit_t fcs_runtime_flags_t;
 
 #define STRUCT_CLEAR_FLAG(instance, flag) \
-    { (instance)->runtime_flags &= ~flag; }
+    { (instance)->FLAG_##flag = FALSE; }
 
 #define STRUCT_TURN_ON_FLAG(instance, flag) \
-    { (instance)->runtime_flags |= flag; }
+    { (instance)->FLAG_##flag = TRUE; }
 
 #define STRUCT_QUERY_FLAG(instance, flag) \
-    ((instance)->runtime_flags & flag)
+    ((instance)->FLAG_##flag)
 
 #define STRUCT_SET_FLAG_TO(instance, flag, value) \
-{ \
-    STRUCT_CLEAR_FLAG(instance, flag); \
-    if (value) \
-    { \
-        STRUCT_TURN_ON_FLAG(instance, flag); \
-    } \
-}
+{ (instance)->FLAG_##flag = (value); }
 
 enum
 {
@@ -657,7 +651,7 @@ struct fc_solve_soft_thread_struct
         } befs;
     } method_specific;
 
-    fcs_runtime_flags_t runtime_flags;
+    fcs_bool_t FLAG_FCS_SOFT_THREAD_IS_FINISHED, FLAG_FCS_SOFT_THREAD_INITIALIZED, FLAG_FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN;
 
     /*
      * The number of vacant stacks in the current state - is read by
@@ -794,7 +788,7 @@ struct fc_solve_instance_struct
     DB * db;
 #endif
 
-    fcs_runtime_flags_t runtime_flags;
+    fcs_bool_t FLAG_FCS_RUNTIME_CALC_REAL_DEPTH, FLAG_FCS_RUNTIME_TO_REPARENT_STATES_REAL, FLAG_FCS_RUNTIME_SCANS_SYNERGY, FLAG_FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET, FLAG_FCS_RUNTIME_TO_REPARENT_STATES_PROTO, FLAG_FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FLAG_FCS_RUNTIME_IN_OPTIMIZATION_THREAD;
 
     /*
      * This is the number of states in the state collection.
@@ -1165,7 +1159,7 @@ extern void fc_solve_init_soft_thread(
 
 static GCC_INLINE fcs_bool_t fcs_get_calc_real_depth(const fc_solve_instance_t * const instance)
 {
-    return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH) ? TRUE : FALSE;
+    return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 }
 
 #ifdef __cplusplus
