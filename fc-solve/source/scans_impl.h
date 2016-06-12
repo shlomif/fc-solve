@@ -790,7 +790,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 #endif
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    const fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
     const fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 

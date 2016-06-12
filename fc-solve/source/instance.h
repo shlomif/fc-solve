@@ -1163,6 +1163,11 @@ extern void fc_solve_init_soft_thread(
 );
 #endif
 
+static GCC_INLINE fcs_bool_t fcs_get_calc_real_depth(const fc_solve_instance_t * const instance)
+{
+    return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH) ? TRUE : FALSE;
+}
+
 #ifdef __cplusplus
 }
 #endif

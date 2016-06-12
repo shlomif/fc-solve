@@ -526,7 +526,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     DECLARE_NEW_STATE();
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    const fcs_runtime_flags_t calc_real_depth = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
     const fcs_runtime_flags_t scans_synergy = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
     const int soft_thread_id = soft_thread->id;
@@ -949,8 +949,7 @@ extern void fc_solve_sfs_check_state_end(
     fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    const fcs_runtime_flags_t calc_real_depth
-        = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
+    const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
     const fcs_runtime_flags_t scans_synergy
         = STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
