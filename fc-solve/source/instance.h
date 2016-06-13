@@ -269,17 +269,18 @@ typedef fcs_game_limit_t fcs_runtime_flags_t;
 #endif
 
 #define STRUCT_CLEAR_FLAG(instance, flag) \
-    { (instance)->FLAG_##flag = FALSE; }
+    { (instance)->flag = FALSE; }
 
 #define STRUCT_TURN_ON_FLAG(instance, flag) \
-    { (instance)->FLAG_##flag = TRUE; }
+    { (instance)->flag = TRUE; }
 
 #define STRUCT_QUERY_FLAG(instance, flag) \
-    ((instance)->FLAG_##flag)
+    ((instance)->flag)
 
 #define STRUCT_SET_FLAG_TO(instance, flag, value) \
-{ (instance)->FLAG_##flag = (value); }
+{ (instance)->flag = (value); }
 
+#if 0
 enum
 {
     /* A flag that indicates whether to optimize the solution path
@@ -319,6 +320,7 @@ enum
      * */
     FCS_RUNTIME_SCANS_SYNERGY  = (1 << 6),
 };
+#endif
 
 #ifdef FCS_RCS_STATES
 struct fcs_cache_key_info_struct
@@ -476,6 +478,7 @@ typedef struct
     fcs_game_limit_t num_vacant_freecells;
 } fcs_soft_dfs_stack_item_t;
 
+#if 0
 enum
 {
 
@@ -498,6 +501,7 @@ enum
     FCS_SOFT_THREAD_IS_FINISHED = (1 << 2),
 
 };
+#endif
 
 typedef struct {
     fc_solve_solve_for_state_move_func_t * tests;
@@ -653,7 +657,7 @@ struct fc_solve_soft_thread_struct
         } befs;
     } method_specific;
 
-    fcs_bool_t FLAG_FCS_SOFT_THREAD_IS_FINISHED, FLAG_FCS_SOFT_THREAD_INITIALIZED, FLAG_FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN;
+    fcs_bool_t FCS_SOFT_THREAD_IS_FINISHED, FCS_SOFT_THREAD_INITIALIZED, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN;
 
     /*
      * The number of vacant stacks in the current state - is read by
@@ -790,7 +794,7 @@ struct fc_solve_instance_struct
     DB * db;
 #endif
 
-    fcs_bool_t FLAG_FCS_RUNTIME_CALC_REAL_DEPTH, FLAG_FCS_RUNTIME_TO_REPARENT_STATES_REAL, FLAG_FCS_RUNTIME_SCANS_SYNERGY, FLAG_FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET, FLAG_FCS_RUNTIME_TO_REPARENT_STATES_PROTO, FLAG_FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FLAG_FCS_RUNTIME_IN_OPTIMIZATION_THREAD;
+    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH, FCS_RUNTIME_TO_REPARENT_STATES_REAL, FCS_RUNTIME_SCANS_SYNERGY, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET, FCS_RUNTIME_TO_REPARENT_STATES_PROTO, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FCS_RUNTIME_IN_OPTIMIZATION_THREAD;
 
     /*
      * This is the number of states in the state collection.
