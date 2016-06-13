@@ -387,8 +387,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #define FCS_ASSIGN_STATE_KEY() (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE() fcs_state_t state_key; fcs_kv_state_t pass = {.key = &(state_key)}
-#define DECLARE_NEW_STATE() fcs_kv_state_t new_pass
-#define FCS_SCANS_ptr_new_state (new_pass.val)
 
 #else
 
@@ -397,7 +395,6 @@ static GCC_INLINE pq_rating_t befs_rate_state(
 #define FCS_ASSIGN_STATE_KEY() { pass.key = &(FCS_SCANS_the_state); pass.val = &(PTR_STATE->info); }
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE() fcs_collectible_state_t * ptr_state_raw; fcs_kv_state_t pass
-#define DECLARE_NEW_STATE() fcs_collectible_state_t * FCS_SCANS_ptr_new_state; fcs_kv_state_t new_pass
 #endif
 
 #define ASSIGN_ptr_state(my_value) { if ((PTR_STATE = my_value)) { FCS_ASSIGN_STATE_KEY(); } }
