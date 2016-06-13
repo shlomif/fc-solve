@@ -748,15 +748,14 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
         )
         {
             const_AUTO(FCS_SCANS_ptr_new_state, derived_iter->state_ptr);
-#ifdef FCS_RCS_STATES
-            fcs_kv_state_t new_pass = {.key =
-                fc_solve_lookup_state_key_from_val(instance, FCS_SCANS_ptr_new_state), .val = FCS_SCANS_ptr_new_state};
-#else
-            fcs_kv_state_t new_pass = FCS_STATE_keyval_pair_to_kv(FCS_SCANS_ptr_new_state);
-#endif
-
             if (is_befs)
             {
+#ifdef FCS_RCS_STATES
+                fcs_kv_state_t new_pass = {.key =
+                    fc_solve_lookup_state_key_from_val(instance, FCS_SCANS_ptr_new_state), .val = FCS_SCANS_ptr_new_state};
+#else
+                fcs_kv_state_t new_pass = FCS_STATE_keyval_pair_to_kv(FCS_SCANS_ptr_new_state);
+#endif
                 fc_solve_pq_push(
                     pqueue,
                     FCS_SCANS_ptr_new_state,
