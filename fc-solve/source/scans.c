@@ -522,9 +522,6 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     const fcs_bool_t is_simple_simon = instance->is_simple_simon;
 #endif
-
-    DECLARE_NEW_STATE();
-
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
@@ -750,6 +747,7 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
             derived_iter++
         )
         {
+            DECLARE_NEW_STATE();
 #ifdef FCS_RCS_STATES
             new_pass.key =
                 fc_solve_lookup_state_key_from_val(instance,

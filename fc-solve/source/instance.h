@@ -264,10 +264,6 @@ typedef struct
     fcs_by_depth_tests_order_t * by_depth_tests;
 } fcs_by_depth_tests_order_array_t;
 
-#if 0
-typedef fcs_game_limit_t fcs_runtime_flags_t;
-#endif
-
 #define STRUCT_CLEAR_FLAG(instance, flag) \
     { (instance)->flag = FALSE; }
 

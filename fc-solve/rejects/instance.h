@@ -74,3 +74,5 @@ static GCC_INLINE void fc_solve_unresume_instance(
     fcs_standalone_state_ptrs_t * indirect_prev_states;
     fcs_int_limit_t num_indirect_prev_states;
 #endif
+
+typedef fcs_game_limit_t fcs_runtime_flags_t;
