@@ -18,8 +18,7 @@ my %strings_to_opts_map;
 my $gperf_fn = 'cmd_line.gperf';
 sub gen_radix_tree
 {
-    open my $fh, '>', $gperf_fn;
-    print {$fh} <<"EOF";
+    path($gperf_fn)->spew_utf8( <<"EOF",
 %define initializer-suffix ,FCS_OPT_UNRECOGNIZED
 %{
 #include "cmd_line_enum.h"
@@ -29,11 +28,9 @@ struct CommandOption
   const char * name;
   int OptionCode;
   };
+%%
 EOF
-    print {$fh} "%%\n", map { "$_, $strings_to_opts_map{$_}\n" } sort { $a cmp $b } keys %strings_to_opts_map;
-
-    close($fh);
-
+    map { "$_, $strings_to_opts_map{$_}\n" } sort { $a cmp $b } keys %strings_to_opts_map,);
     return;
 }
 
