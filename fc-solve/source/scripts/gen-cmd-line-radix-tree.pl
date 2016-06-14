@@ -38,8 +38,7 @@ EOF
 my $ws = " " x 4;
 my @enum = ($UNREC);
 
-my $module_filename = "cmd_line.c";
-open my $module, "<", $module_filename;
+open my $module, "<", "cmd_line.c";
 SEARCH_FOR_SWITCH: while (my $line = <$module>)
 {
     if ($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
