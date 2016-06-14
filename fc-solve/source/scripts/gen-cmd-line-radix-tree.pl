@@ -15,13 +15,14 @@ my $in = 0;
 
 my %strings_to_opts_map;
 
+my $enum_fn = 'cmd_line_enum.h';
 my $gperf_fn = 'cmd_line.gperf';
 sub gen_radix_tree
 {
     path($gperf_fn)->spew_utf8( <<"EOF",
 %define initializer-suffix ,FCS_OPT_UNRECOGNIZED
 %{
-#include "cmd_line_enum.h"
+#include "$enum_fn"
 %}
 struct CommandOption
   {
@@ -79,8 +80,8 @@ while (my $line = <$module>)
 }
 close($module);
 
-open my $enum_fh, ">", "cmd_line_enum.h";
-print {$enum_fh} <<'EOF';
+path($enum_fn)->spew_utf8(
+    <<"EOF",
 /* Copyright (c) 2000 Shlomi Fish
  *
  * Permission is hereby granted, free of charge, to any person
@@ -105,18 +106,16 @@ print {$enum_fh} <<'EOF';
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * cmd_line_enum.h - the ANSI C enum (= enumeration) for the command line
+ * $enum_fn - the ANSI C enum (= enumeration) for the command line
  * arguments. Partially auto-generated.
  */
 
 #pragma once
 EOF
-print {$enum_fh} "enum\n{\n",
+    "enum\n{\n",
     (map { $ws . $_ . ",\n" } @enum[0..$#enum-1]),
     $ws . $enum[-1] . "\n",
-    "};\n";
-
-close($enum_fh);
+    "};\n");
 
 my $inc_h = 'cmd_line_inc.h';
 
@@ -161,7 +160,4 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-
-
 =cut
-
