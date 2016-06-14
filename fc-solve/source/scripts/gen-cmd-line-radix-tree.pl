@@ -34,20 +34,7 @@ EOF
 
     close($fh);
 
-    return <<"EOF";
-    p = (*arg);
-    const unsigned int len = strlen(p);
-    const_AUTO(word, in_word_set(p, len));
-    int opt;
-    if (word)
-    {
-        opt = word->OptionCode;
-    }
-    else
-    {
-        opt = FCS_OPT_UNRECOGNIZED;
-    }
-EOF
+    return;
 }
 
 my $ws = " " x 4;
