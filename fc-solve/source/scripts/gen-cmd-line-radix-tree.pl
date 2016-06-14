@@ -44,22 +44,11 @@ SEARCH_FOR_SWITCH: while (my $line = <$module>)
 {
     if ($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
     {
-        # Skip the lines.
-        UP_TO_SWITCH:
-        while ($line = <$module>)
-        {
-            if ($line =~ m{\A *switch \(opt\) *\n?\z}ms)
-            {
-                last UP_TO_SWITCH;
-            }
-        }
-
-        IN_SWITCH:
         while ($line = <$module>)
         {
             if ($line =~ m{\A */\* OPT-PARSE-END \*/})
             {
-                last IN_SWITCH;
+                last SEARCH_FOR_SWITCH;
             }
             if (my ($opt, $strings) = $line =~ m{\A *case (FCS_OPT_\w+): /\* STRINGS=([^;]+); \*/ *\n?\z})
             {
@@ -72,7 +61,6 @@ SEARCH_FOR_SWITCH: while (my $line = <$module>)
                 push @enum, $opt;
             }
         }
-        last SEARCH_FOR_SWITCH;
     }
 }
 close($module);
