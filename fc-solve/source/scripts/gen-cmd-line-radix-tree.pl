@@ -17,10 +17,11 @@ my %strings_to_opts_map;
 
 my $enum_fn = 'cmd_line_enum.h';
 my $gperf_fn = 'cmd_line.gperf';
+my $UNREC = 'FCS_OPT_UNRECOGNIZED';
 sub gen_radix_tree
 {
     path($gperf_fn)->spew_utf8( <<"EOF",
-%define initializer-suffix ,FCS_OPT_UNRECOGNIZED
+%define initializer-suffix ,$UNREC
 %{
 #include "$enum_fn"
 %}
@@ -36,7 +37,7 @@ EOF
 }
 
 my $ws = " " x 4;
-my @enum = ("FCS_OPT_UNRECOGNIZED");
+my @enum = ($UNREC);
 
 my $module_filename = "cmd_line.c";
 open my $module, "<", $module_filename;
