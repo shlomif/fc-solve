@@ -8,7 +8,6 @@ use Data::Dumper;
 use Path::Tiny qw/path/;
 
 my $find_prefix;
-my $process_opts = "";
 my $text_in = "";
 my $ws_prefix;
 my $in = 0;
@@ -41,7 +40,7 @@ my @enum = ($UNREC);
 
 my $module_filename = "cmd_line.c";
 open my $module, "<", $module_filename;
-while (my $line = <$module>)
+SEARCH_FOR_SWITCH: while (my $line = <$module>)
 {
     if ($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
     {
@@ -51,7 +50,6 @@ while (my $line = <$module>)
         {
             if ($line =~ m{\A *switch \(opt\) *\n?\z}ms)
             {
-                $process_opts .= $line;
                 last UP_TO_SWITCH;
             }
         }
@@ -59,7 +57,6 @@ while (my $line = <$module>)
         IN_SWITCH:
         while ($line = <$module>)
         {
-            $process_opts .= $line;
             if ($line =~ m{\A */\* OPT-PARSE-END \*/})
             {
                 last IN_SWITCH;
@@ -75,11 +72,11 @@ while (my $line = <$module>)
                 push @enum, $opt;
             }
         }
-
-        gen_radix_tree();
+        last SEARCH_FOR_SWITCH;
     }
 }
 close($module);
+gen_radix_tree();
 
 path($enum_fn)->spew_utf8(
     <<"EOF",
