@@ -5,6 +5,7 @@ use autodie;
 
 use List::Util qw(first);
 use Data::Dumper;
+use Path::Tiny qw/path/;
 
 my $find_prefix;
 my $process_opts = "";
@@ -149,6 +150,7 @@ if (system('gperf', '-L', 'ANSI-C', '-t', $gperf_fn, "--output-file=$inc_h"))
     del();
     die "Running gperf failed!";
 }
+path($inc_h)->edit_utf8(sub { s#^(struct CommandOption \*)$#static $1#gms;});
 
 =head1 COPYRIGHT AND LICENSE
 
