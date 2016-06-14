@@ -357,11 +357,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         switch (opt)
         {
         case FCS_OPT_UNRECOGNIZED:
-        {
-            *last_arg = arg-&(argv[0]);
-            return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
-        }
-        break;
+        *last_arg = arg-&(argv[0]);
+        return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
 
 #define PROCESS_OPT_ARG() \
         { \
