@@ -7,11 +7,6 @@ use List::Util qw(first);
 use Data::Dumper;
 use Path::Tiny qw/path/;
 
-my $find_prefix;
-my $text_in = "";
-my $ws_prefix;
-my $in = 0;
-
 my %strings_to_opts_map;
 
 my $enum_fn = 'cmd_line_enum.h';
