@@ -956,6 +956,7 @@ typedef enum
     FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4
 } fcs_state_validity_ret_t;
 
+#ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
 static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
     const fcs_state_keyval_pair_t * const state_pair
     FREECELLS_STACKS_DECKS__ARGS(),
@@ -1033,6 +1034,7 @@ static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
 
     return FCS_STATE_VALIDITY__OK;
 }
+#endif
 
 #undef state
 

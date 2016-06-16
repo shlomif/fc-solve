@@ -1119,6 +1119,7 @@ static GCC_INLINE int resume_solution(fcs_user_t * const user)
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
 
+#ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
             if (
                 FCS_STATE_VALIDITY__OK
                     !=
@@ -1135,6 +1136,7 @@ static GCC_INLINE int resume_solution(fcs_user_t * const user)
             {
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
+#endif
 
             fc_solve_init_locs(&(user->initial_state_locs));
             user->state_locs = user->initial_state_locs;
