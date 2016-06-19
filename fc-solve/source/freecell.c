@@ -402,102 +402,101 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
         /* If the freecell is not empty and dest_card is its parent
          * */
-        if (
+        if (! (
                 /* The Cell should not be empty. */
                 fcs_card_is_valid(src_card)
                 &&
                 /* We cannot put a king anywhere. */
                 (fcs_card_rank(src_card) != 13)
-            )
+            ))
         {
-            FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
+            continue;
+        }
+        FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
+        {
+            const int ds = pos_idx_to_check[0];
+            if (ds == -1)
             {
-                const int ds = pos_idx_to_check[0];
-                if (ds == -1)
-                {
-                    continue;
-                }
-                const int dc = pos_idx_to_check[1];
-
-                const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
-
-                const int dest_cards_num = fcs_col_len(dest_col);
-                /* Let's check if we can put it there */
-
-                /* Check if the destination card is already below a
-                 * suitable card */
-                const int next_dc = dc+1;
-                /* If dest_cards_num == next_dc then
-                 * dest_cards_num - next_dc == 0 <= 0 so the other check
-                 * cab be skipped.
-                 * */
-
-                /*
-                 * We don't need this check because the positions_by_rank
-                 * already filters the fcs_is_parent_card check for us.
-                 * */
-#ifdef FCS_POS_BY_RANK__ENABLE_PARENT_CHECK
-                const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
-                if ((dest_cards_num == next_dc) ||
-                    (
-                        (!fcs_is_parent_card(fcs_col_get_card(dest_col, next_dc), dest_card))
-                        &&
-                        (dest_cards_num <= next_dc + num_vacant_slots)
-
-                    )
-                )
-#else
-                if (dest_cards_num <= next_dc + num_vacant_slots)
-#endif
-                {
-                    /* We can move it */
-
-                    sfs_check_state_begin()
-
-                    /* Fill the freecells with the top cards */
-
-                    my_copy_stack(ds);
-
-                    {
-                        const int cols_indexes[3] = {ds,-1,-1};
-
-                        empty_two_cols_from_new_state(
-                            soft_thread,
-                            NEW_STATE_BY_REF()
-                            SFS__PASS_MOVE_STACK(moves),
-                            cols_indexes,
-                            dest_cards_num - dc - 1,
-                            0
-                        );
-                    }
-
-                    fcs_cards_column_t new_dest_col
-                        = fcs_state_get_col(new_state, ds);
-
-                    /* Now put the freecell card on top of the stack */
-                    fcs_col_push_card(new_dest_col, src_card);
-                    fcs_empty_freecell(new_state, fc);
-
-                    fcs_move_stack_non_seq_push(
-                        moves,
-                        FCS_MOVE_TYPE_FREECELL_TO_STACK,
-                        fc,
-                        ds
-                    );
-
-                    /*
-                     * This is to preserve the order that the
-                     * initial (non-optimized) version of the
-                     * function used - for backwards-compatibility
-                     * and consistency.
-                     * */
-                    state_context_value =
-                        ((ds << 16) | ((255-dc) << 8) | fc)
-                        ;
-
-                    sfs_check_state_end()
-                }
+                continue;
             }
+            const int dc = pos_idx_to_check[1];
+
+            const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
+
+            const int dest_cards_num = fcs_col_len(dest_col);
+            /* Let's check if we can put it there */
+
+            /* Check if the destination card is already below a
+             * suitable card */
+            const int next_dc = dc+1;
+            /* If dest_cards_num == next_dc then
+             * dest_cards_num - next_dc == 0 <= 0 so the other check
+             * cab be skipped.
+             * */
+
+            /*
+             * We don't need this check because the positions_by_rank
+             * already filters the fcs_is_parent_card check for us.
+             * */
+#ifdef FCS_POS_BY_RANK__ENABLE_PARENT_CHECK
+            const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+            if (! ((dest_cards_num == next_dc) ||
+                (
+                    (!fcs_is_parent_card(fcs_col_get_card(dest_col, next_dc), dest_card))
+                    &&
+                    (dest_cards_num <= next_dc + num_vacant_slots)
+
+                )
+            ))
+#else
+            if (! (dest_cards_num <= next_dc + num_vacant_slots) )
+#endif
+            {
+                continue;
+            }
+            /* We can move it */
+            sfs_check_state_begin()
+
+            /* Fill the freecells with the top cards */
+            my_copy_stack(ds);
+            {
+                const int cols_indexes[3] = {ds,-1,-1};
+
+                empty_two_cols_from_new_state(
+                    soft_thread,
+                    NEW_STATE_BY_REF()
+                    SFS__PASS_MOVE_STACK(moves),
+                    cols_indexes,
+                    dest_cards_num - dc - 1,
+                    0
+                );
+            }
+
+            fcs_cards_column_t new_dest_col
+                = fcs_state_get_col(new_state, ds);
+
+            /* Now put the freecell card on top of the stack */
+            fcs_col_push_card(new_dest_col, src_card);
+            fcs_empty_freecell(new_state, fc);
+
+            fcs_move_stack_non_seq_push(
+                moves,
+                FCS_MOVE_TYPE_FREECELL_TO_STACK,
+                fc,
+                ds
+            );
+
+            /*
+             * This is to preserve the order that the
+             * initial (non-optimized) version of the
+             * function used - for backwards-compatibility
+             * and consistency.
+             * */
+            state_context_value =
+                ((ds << 16) | ((255-dc) << 8) | fc)
+                ;
+
+            sfs_check_state_end()
         }
     }
 
