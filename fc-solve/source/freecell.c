@@ -1644,29 +1644,27 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
         for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
         {
             fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-            if (fcs_col_len(dest_col) > 0)
+            if (! fcs_col_len(dest_col))
             {
-                fcs_card_t dest_card = fcs_col_get_card(dest_col, fcs_col_len(dest_col)-1);
-                if (fcs_is_parent_card(card, dest_card))
-                {
-                    /* Let's move it */
-                    sfs_check_state_begin();
-
-                    my_copy_stack(ds);
-
-                    fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
-
-                    fcs_empty_freecell(new_state, fc);
-
-                    fcs_col_push_card(new_dest_col, card);
-
-                    fcs_move_stack_non_seq_push(moves,
-                        FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, ds
-                    );
-
-                    sfs_check_state_end()
-                }
+                continue;
             }
+            const fcs_card_t dest_card = fcs_col_get_card(dest_col, fcs_col_len(dest_col)-1);
+            if (! fcs_is_parent_card(card, dest_card))
+            {
+                continue;
+            }
+            /* Let's move it */
+            sfs_check_state_begin();
+
+            my_copy_stack(ds);
+            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
+            fcs_empty_freecell(new_state, fc);
+            fcs_col_push_card(new_dest_col, card);
+            fcs_move_stack_non_seq_push(moves,
+                FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, ds
+            );
+
+            sfs_check_state_end()
         }
     }
 
