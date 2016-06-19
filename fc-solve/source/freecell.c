@@ -749,7 +749,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     break;
                 }
             }
-
             if (MOVE_FUNCS__should_not_empty_columns())
             {
                 if (c == 0)
@@ -771,8 +770,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
             {
                 const int ds = pos_idx_to_check[0];
 
-                if ((ds >= 0) && (ds != stack_idx))
+                if ((ds < 0) || (ds == stack_idx))
                 {
+                    continue;
+                }
                 const int dc = pos_idx_to_check[1];
                 const fcs_const_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 const int dest_num_cards = fcs_col_len(dest_col) - dc - 1;
@@ -786,39 +787,37 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 const int freestacks_to_fill = min(num_cards_to_relocate, num_virtual_vacant_stacks);
                 num_cards_to_relocate -= freestacks_to_fill;
 
-                if (unlikely((num_cards_to_relocate == 0) &&
+                if (! unlikely((num_cards_to_relocate == 0) &&
                    (calc_max_sequence_move(num_vacant_freecells-freecells_to_fill, num_virtual_vacant_stacks-freestacks_to_fill) >=
                     seq_end - c + 1)))
                 {
-                    sfs_check_state_begin()
-
-                    my_copy_stack(stack_idx);
-                    my_copy_stack(ds);
-
-                    {
-                        const int cols_indexes[3] = {ds, stack_idx, -1};
-
-                        empty_two_cols_from_new_state(
-                            soft_thread,
-                            NEW_STATE_BY_REF()
-                            SFS__PASS_MOVE_STACK(moves),
-                            cols_indexes,
-                            dest_num_cards,
-                            col_num_cards
-                        );
-                    }
-                    fcs_move_sequence(ds, stack_idx, seq_end-c+1);
-                    /*
-                     * This is to preserve the order that the
-                     * initial (non-optimized) version of the
-                     * function used - for backwards-compatibility
-                     * and consistency.
-                     * */
-                    state_context_value = ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);
-
-                    sfs_check_state_end()
+                    continue;
                 }
+                sfs_check_state_begin()
+                my_copy_stack(stack_idx);
+                my_copy_stack(ds);
+                {
+                    const int cols_indexes[3] = {ds, stack_idx, -1};
+
+                    empty_two_cols_from_new_state(
+                        soft_thread,
+                        NEW_STATE_BY_REF()
+                        SFS__PASS_MOVE_STACK(moves),
+                        cols_indexes,
+                        dest_num_cards,
+                        col_num_cards
+                    );
                 }
+                fcs_move_sequence(ds, stack_idx, seq_end-c+1);
+                /*
+                 * This is to preserve the order that the
+                 * initial (non-optimized) version of the
+                 * function used - for backwards-compatibility
+                 * and consistency.
+                 * */
+                state_context_value = ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);
+
+                sfs_check_state_end()
             }
         }
     }
