@@ -532,49 +532,42 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 
             for (int deck = 0 ; deck < INSTANCE_DECKS_NUM ; deck++)
             {
-                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card)-1)
+                if ((fcs_foundation_value(state, deck*4+fcs_card_suit(card)) != fcs_card_rank(card)-1)
+                        ||
+                /* The card is foundation-able. Now let's check if we
+                 * can move the cards above it to the freecells and
+                 * stacks */
+                    (num_vacant_slots < cards_num-(c+1))
+                    )
                 {
-                    /* The card is foundation-able. Now let's check if we
-                     * can move the cards above it to the freecells and
-                     * stacks */
-
-                    if (num_vacant_slots >= cards_num-(c+1))
-                    {
-                        fcs_cards_column_t new_src_col;
-                        /* We can move it */
-
-                        sfs_check_state_begin()
-
-                        my_copy_stack(stack_idx);
-
-                        {
-                            const int cols_indexes[3] = {stack_idx,-1,-1};
-
-                            empty_two_cols_from_new_state(
-                                soft_thread,
-                                NEW_STATE_BY_REF()
-                                SFS__PASS_MOVE_STACK(moves),
-                                cols_indexes,
-                                cards_num-(c+1),
-                                0
-                            );
-                        }
-
-                        new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                        fcs_card_t top_card;
-                        fcs_col_pop_card(new_src_col, top_card);
-                        const int dest_found = deck*4+fcs_card_suit(top_card);
-                        fcs_increment_foundation(new_state, dest_found);
-
-                        fcs_move_stack_non_seq_push(moves,
-                            FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
-                            dest_found
-                        );
-                        sfs_check_state_end()
-                    }
-                    break;
+                    continue;
                 }
+                /* We can move it */
+                sfs_check_state_begin()
+                my_copy_stack(stack_idx);
+                {
+                    const int cols_indexes[3] = {stack_idx,-1,-1};
+
+                    empty_two_cols_from_new_state(
+                        soft_thread,
+                        NEW_STATE_BY_REF()
+                        SFS__PASS_MOVE_STACK(moves),
+                        cols_indexes,
+                        cards_num-(c+1),
+                        0
+                    );
+                }
+                fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
+                fcs_card_t top_card;
+                fcs_col_pop_card(new_src_col, top_card);
+                const int dest_found = deck*4+fcs_card_suit(top_card);
+                fcs_increment_foundation(new_state, dest_found);
+                fcs_move_stack_non_seq_push(moves,
+                    FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
+                    dest_found
+                );
+                sfs_check_state_end()
+                break;
             }
         }
     }
