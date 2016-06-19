@@ -596,8 +596,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
         const int cards_num = fcs_col_len(col);
+#define dest_cards_num cards_num
+        const int start_dc_proto = dest_cards_num - num_vacant_slots - 1;
+        const int start_dc = max(start_dc_proto, 0);
 
-        for (int c=2 ; c<cards_num ; c++)
+        for (int c = start_dc+2 ; c<cards_num ; c++)
         {
             /* Find a card which this card can be put on; */
 
@@ -610,11 +613,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
             {
                 continue;
             }
+            /*
+             * Some math:
+             * (dest_cards_num - next_dc <= num_vacant_slots)
+             * dest_cards_num - dc - 1 <= num_vacant_slots
+             * dc >= dest_cards_num - num_vacant_slots - 1
+             * */
 #define ds stack_idx
 #define dest_col col
-#define dest_cards_num cards_num
             /* Check if it can be moved to something on the same stack */
-            for (int dc = 0 ; dc < below_c ; dc++)
+            for (int dc = start_dc ; dc < below_c ; dc++)
             {
                 const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
                 const int next_dc = dc+1;
@@ -624,8 +632,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
                     /* Corresponding cards - see if it is feasible to move
                        the source to the destination. */
                     fcs_is_parent_card(fcs_col_get_card(dest_col, next_dc), dest_card)
-                        ||
-                    (dest_cards_num - next_dc > num_vacant_slots)
                 )
                 {
                     continue;
