@@ -67,37 +67,39 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
     for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        const int cards_num = fcs_col_len(col);
-        if (cards_num)
+        const size_t cards_num = fcs_col_len(col);
+        if (! cards_num)
         {
-            /* Get the top card in the stack */
-            const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
-            for (int deck=0;deck < INSTANCE_DECKS_NUM;deck++)
+            continue;
+        }
+        /* Get the top card in the stack */
+        const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
+        for (int deck=0 ; deck < INSTANCE_DECKS_NUM ; deck++)
+        {
+            if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) != fcs_card_rank(card) - 1)
             {
-                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
-                {
-                    /* We can put it there */
-
-                    sfs_check_state_begin();
-
-                    my_copy_stack(stack_idx);
-                    {
-                        fcs_cards_column_t new_temp_col;
-                        new_temp_col = fcs_state_get_col(new_state, stack_idx);
-                        fcs_col_pop_top(new_temp_col);
-                    }
-
-                    fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
-
-                    fcs_move_stack_non_seq_push(
-                        moves, FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
-                        deck*4+fcs_card_suit(card)
-                    );
-
-                    sfs_check_state_end()
-                    break;
-                }
+                continue;
             }
+            /* We can put it there */
+
+            sfs_check_state_begin();
+
+            my_copy_stack(stack_idx);
+            {
+                fcs_cards_column_t new_temp_col;
+                new_temp_col = fcs_state_get_col(new_state, stack_idx);
+                fcs_col_pop_top(new_temp_col);
+            }
+
+            fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
+
+            fcs_move_stack_non_seq_push(
+                moves, FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
+                deck*4+fcs_card_suit(card)
+            );
+
+            sfs_check_state_end()
+            break;
         }
     }
 
@@ -142,29 +144,33 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
     {
         const fcs_card_t card = fcs_freecell_card(state, fc);
 
-        if (fcs_card_is_valid(card))
+        if (fcs_card_is_empty(card))
         {
-            for (int deck=0 ; deck < INSTANCE_DECKS_NUM ; deck++)
+            continue;
+        }
+        for (int deck=0 ; deck < INSTANCE_DECKS_NUM ; deck++)
+        {
+            if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) != fcs_card_rank(card) - 1)
             {
-                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) == fcs_card_rank(card) - 1)
-                {
-                    /* We can put it there */
-                    sfs_check_state_begin()
-
-                    fcs_empty_freecell(new_state, fc);
-
-                    fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
-
-                    fcs_move_stack_non_seq_push(
-                        moves,
-                        FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION,
-                        fc,
-                        deck*4+fcs_card_suit(card)
-                    );
-
-                    sfs_check_state_end();
-                }
+                continue;
             }
+            /* We can put it there */
+            sfs_check_state_begin()
+
+                fcs_empty_freecell(new_state, fc);
+
+            fcs_increment_foundation(new_state, deck*4+fcs_card_suit(card));
+
+            fcs_move_stack_non_seq_push(
+                moves,
+                FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION,
+                fc,
+                deck*4+fcs_card_suit(card)
+            );
+
+            sfs_check_state_end();
+
+            break;
         }
     }
 
