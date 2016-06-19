@@ -605,84 +605,88 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
             /* Do not move cards that are already found above a suitable
              * parent */
-            if ((c == 0) || (!fcs_is_parent_card(card, fcs_col_get_card(col, c-1))))
+            if (! (
+                    (c == 0)
+                    || (!fcs_is_parent_card(card, fcs_col_get_card(col, c-1)))
+                )
+            )
             {
+                continue;
+            }
 #define ds stack_idx
 #define dest_col col
 #define dest_cards_num cards_num
-                /* Check if it can be moved to something on the same stack */
-                for (int dc = 0 ; dc < c-1 ; dc++)
+            /* Check if it can be moved to something on the same stack */
+            for (int dc = 0 ; dc < c-1 ; dc++)
+            {
+                const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+                const int next_dc = dc+1;
+                if (
+                    (! fcs_is_parent_card(card, dest_card))
+                        ||
+                    /* Corresponding cards - see if it is feasible to move
+                       the source to the destination. */
+                    fcs_is_parent_card(fcs_col_get_card(dest_col, next_dc), dest_card)
+                        ||
+                    (dest_cards_num - next_dc > num_vacant_slots)
+                )
                 {
-                    const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
-                    if (fcs_is_parent_card(card, dest_card))
-                    {
-                        /* Corresponding cards - see if it is feasible to move
-                           the source to the destination. */
+                    continue;
+                }
+                /* We can move it */
+                sfs_check_state_begin()
 
-                        const int next_dc = dc+1;
-                        if (
-                            (!fcs_is_parent_card(fcs_col_get_card(dest_col, next_dc), dest_card))
-                            &&
-                            (dest_cards_num - next_dc <= num_vacant_slots)
-                        )
-                        {
-                            /* We can move it */
-                            sfs_check_state_begin()
+                    my_copy_stack(ds);
 
-                            my_copy_stack(ds);
+                fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
 
-                            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
+                const int cols_indexes[3] = {ds,-1,-1};
 
-                            const int cols_indexes[3] = {ds,-1,-1};
+                const empty_two_cols_ret_t last_dest = empty_two_cols_from_new_state(
+                    soft_thread,
+                    NEW_STATE_BY_REF()
+                    SFS__PASS_MOVE_STACK(moves),
+                    cols_indexes,
+                    /* We're moving one extra card */
+                    cards_num - c,
+                    0
+                );
 
-                            const empty_two_cols_ret_t last_dest = empty_two_cols_from_new_state(
-                                soft_thread,
-                                NEW_STATE_BY_REF()
-                                SFS__PASS_MOVE_STACK(moves),
-                                cols_indexes,
-                                /* We're moving one extra card */
-                                cards_num - c,
-                                0
-                            );
+                empty_two_cols_from_new_state(
+                    soft_thread,
+                    NEW_STATE_BY_REF()
+                    SFS__PASS_MOVE_STACK(moves),
+                    cols_indexes,
+                    c - dc - 1,
+                    0
+                );
 
-                            empty_two_cols_from_new_state(
-                                soft_thread,
-                                NEW_STATE_BY_REF()
-                                SFS__PASS_MOVE_STACK(moves),
-                                cols_indexes,
-                                c - dc - 1,
-                                0
-                            );
-
-                            fcs_card_t moved_card;
+                fcs_card_t moved_card;
 #define source_index last_dest.source_index
-                            if (last_dest.is_col)
-                            {
-                                fcs_cards_column_t new_source_col = fcs_state_get_col(new_state, source_index);
+                if (last_dest.is_col)
+                {
+                    fcs_cards_column_t new_source_col = fcs_state_get_col(new_state, source_index);
 
-                                fcs_col_pop_card(new_source_col, moved_card);
+                    fcs_col_pop_card(new_source_col, moved_card);
 
-                                fcs_push_1card_seq(moves, source_index, ds);
-                            }
-                            else
-                            {
-                                moved_card = fcs_freecell_card(new_state, source_index);
-                                fcs_empty_freecell(new_state, source_index);
+                    fcs_push_1card_seq(moves, source_index, ds);
+                }
+                else
+                {
+                    moved_card = fcs_freecell_card(new_state, source_index);
+                    fcs_empty_freecell(new_state, source_index);
 
-                                fcs_move_stack_non_seq_push(
-                                    moves,
-                                    FCS_MOVE_TYPE_FREECELL_TO_STACK,
-                                    source_index, ds
-                                );
-                            }
+                    fcs_move_stack_non_seq_push(
+                        moves,
+                        FCS_MOVE_TYPE_FREECELL_TO_STACK,
+                        source_index, ds
+                    );
+                }
 #undef source_index
 
-                            fcs_col_push_card(new_dest_col, moved_card);
+                fcs_col_push_card(new_dest_col, moved_card);
 
-                            sfs_check_state_end()
-                        }
-                    }
-                }
+                sfs_check_state_end()
             }
         }
     }
