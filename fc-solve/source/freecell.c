@@ -540,7 +540,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 
             for (int deck = 0 ; deck < INSTANCE_DECKS_NUM ; deck++)
             {
-                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) != fcs_card_rank(card)-1)
+                const int dest_found = deck*4+fcs_card_suit(card);
+                if (fcs_foundation_value(state, dest_found) != fcs_card_rank(card)-1)
                 {
                     continue;
                 }
@@ -560,9 +561,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
                     );
                 }
                 fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
-                fcs_card_t top_card;
-                fcs_col_pop_card(new_src_col, top_card);
-                const int dest_found = deck*4+fcs_card_suit(top_card);
+                fcs_col_pop_top(new_src_col);
                 fcs_increment_foundation(new_state, dest_found);
                 fcs_move_stack_non_seq_push(moves,
                     FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
