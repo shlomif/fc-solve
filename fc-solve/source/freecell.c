@@ -1275,7 +1275,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
         const int cards_num = fcs_col_len(col);
 
-        if (cards_num > num_vacant_freecells)
+        if ((!cards_num) || (cards_num > num_vacant_freecells))
         {
             continue;
         }
