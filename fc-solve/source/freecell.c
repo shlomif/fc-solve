@@ -1266,52 +1266,51 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
     /* Now, let's try to empty an entire stack into the freecells, so other cards can
      * inhabit it */
 
-    if (soft_thread->num_vacant_stacks == 0)
+    if (soft_thread->num_vacant_stacks)
     {
-        for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
-        {
-            fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-            const int cards_num = fcs_col_len(col);
-
-            if (cards_num <= num_vacant_freecells)
-            {
-                /* We can empty it */
-                sfs_check_state_begin()
-
-                my_copy_stack(stack_idx);
-
-                const fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                int b = 0;
-                for (int c = 0 ; c < cards_num ; c++, b++)
-                {
-                    /* Find a vacant freecell */
-                    for ( ; b < LOCAL_FREECELLS_NUM ; b++)
-                    {
-                        if (fcs_freecell_is_empty(new_state, b))
-                        {
-                            break;
-                        }
-                    }
-                    fcs_card_t top_card;
-                    fcs_col_pop_card(new_src_col, top_card);
-
-                    fcs_put_card_in_freecell(new_state, b, top_card);
-
-                    fcs_move_stack_non_seq_push(
-                        moves,
-                        FCS_MOVE_TYPE_STACK_TO_FREECELL,
-                        stack_idx, b
-                    );
-                }
-
-                sfs_check_state_end()
-            }
-        }
+        return;
     }
+    for (int stack_idx = 0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+    {
+        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        const int cards_num = fcs_col_len(col);
 
-    return;
+        if (cards_num > num_vacant_freecells)
+        {
+            continue;
+        }
+        /* We can empty it */
+        sfs_check_state_begin();
 
+        my_copy_stack(stack_idx);
+
+        const fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
+
+        int b = 0;
+        for (int c = 0 ; c < cards_num ; c++, b++)
+        {
+            /* Find a vacant freecell */
+            for ( ; b < LOCAL_FREECELLS_NUM ; b++)
+            {
+                if (fcs_freecell_is_empty(new_state, b))
+                {
+                    break;
+                }
+            }
+            fcs_card_t top_card;
+            fcs_col_pop_card(new_src_col, top_card);
+
+            fcs_put_card_in_freecell(new_state, b, top_card);
+
+            fcs_move_stack_non_seq_push(
+                moves,
+                FCS_MOVE_TYPE_STACK_TO_FREECELL,
+                stack_idx, b
+            );
+        }
+
+        sfs_check_state_end()
+    }
 }
 
 /* Disabling Yukon solving for the time being. */
