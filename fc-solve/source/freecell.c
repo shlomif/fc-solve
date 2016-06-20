@@ -907,23 +907,26 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     c--;
                 }
 
-                if (
-                    (c > 0) &&
-                    ((tests__is_filled_by_kings_only()) ?
-                        fcs_col_is_king(col, c) :
-                        TRUE
+                if (!
+                    (
+                        (c > 0) &&
+                        ((tests__is_filled_by_kings_only()) ?
+                         fcs_col_is_king(col, c) :
+                         TRUE
+                        )
                     )
-                   )
+                )
                 {
-                    sfs_check_state_begin();
-
-                    my_copy_stack(dest_stack_idx);
-                    my_copy_stack(stack_idx);
-
-                    fcs_move_sequence( dest_stack_idx, stack_idx, cards_num-c );
-
-                    sfs_check_state_end()
+                    continue;
                 }
+                sfs_check_state_begin();
+
+                my_copy_stack(dest_stack_idx);
+                my_copy_stack(stack_idx);
+
+                fcs_move_sequence( dest_stack_idx, stack_idx, cards_num-c );
+
+                sfs_check_state_end()
             }
             else
             {
@@ -936,72 +939,76 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 const int freestacks_to_fill = min(num_cards_to_relocate, num_virtual_vacant_stacks);
                 num_cards_to_relocate -= freestacks_to_fill;
 
-                if ((num_cards_to_relocate == 0) && (num_vacant_stacks - freestacks_to_fill > 0))
+                if (!( (num_cards_to_relocate == 0) && (num_vacant_stacks - freestacks_to_fill > 0) ) )
                 {
-                    /* We can move it */
-                    const int seq_start =
-                        ({
-                        const int max_seq_move =
-                        calc_max_sequence_move(
-                            num_vacant_freecells - freecells_to_fill,
-                            num_vacant_stacks - freestacks_to_fill-1
-                        );
-                        const int m = seq_end + 1 - max_seq_move;
-                        max(m, c);
-                        });
-                    if ((seq_start <= seq_end) &&
+                    continue;
+                }
+                /* We can move it */
+                const int seq_start =
+                    ({
+                     const int max_seq_move =
+                     calc_max_sequence_move(
+                         num_vacant_freecells - freecells_to_fill,
+                         num_vacant_stacks - freestacks_to_fill-1
+                     );
+                     const int m = seq_end + 1 - max_seq_move;
+                     max(m, c);
+                     });
+                if (! (
+                        (seq_start <= seq_end)
+                        &&
                         ((tests__is_filled_by_kings_only())
-                            ? fcs_col_is_king(col, seq_start)
-                            : TRUE
+                         ? fcs_col_is_king(col, seq_start)
+                         : TRUE
                         )
                     )
+                )
+                {
+                    continue;
+                }
+                sfs_check_state_begin();
+
+                /* Fill the freecells with the top cards */
+
+                my_copy_stack(stack_idx);
+
+                const int cols_indexes[3] = {stack_idx,-1,-1};
+                const empty_two_cols_ret_t empty_ret = empty_two_cols_from_new_state(
+                    soft_thread,
+                    NEW_STATE_BY_REF()
+                    SFS__PASS_MOVE_STACK(moves),
+                    cols_indexes,
+                    freecells_to_fill + freestacks_to_fill,
+                    0
+                );
+
+                int b;
+                /* Find a vacant stack */
+                for (
+                    b=(
+                        empty_ret.is_col
+                        ? empty_ret.source_index + 1
+                        : 0
+                    )
+                    ;
+                    b < LOCAL_STACKS_NUM
+                    ;
+                    b++
+                )
+                {
+                    if (fcs_col_len(
+                            fcs_state_get_col(new_state, b)
+                    ) == 0)
                     {
-
-                        sfs_check_state_begin();
-
-                        /* Fill the freecells with the top cards */
-
-                        my_copy_stack(stack_idx);
-
-                        const int cols_indexes[3] = {stack_idx,-1,-1};
-                        const empty_two_cols_ret_t empty_ret = empty_two_cols_from_new_state(
-                            soft_thread,
-                            NEW_STATE_BY_REF()
-                            SFS__PASS_MOVE_STACK(moves),
-                            cols_indexes,
-                            freecells_to_fill + freestacks_to_fill,
-                            0
-                        );
-
-                        int b;
-                        /* Find a vacant stack */
-                        for (
-                                b=(
-                                    empty_ret.is_col
-                                    ? empty_ret.source_index + 1
-                                    : 0
-                                  )
-                                ;
-                                b < LOCAL_STACKS_NUM
-                                ;
-                                b++
-                                )
-                        {
-                            if (fcs_col_len(
-                                fcs_state_get_col(new_state, b)
-                                ) == 0)
-                            {
-                                break;
-                            }
-                        }
-
-                        my_copy_stack(b);
-
-                        fcs_move_sequence(b, stack_idx, seq_end - seq_start + 1);
-
-                        sfs_check_state_end();
+                        break;
                     }
                 }
+
+                my_copy_stack(b);
+
+                fcs_move_sequence(b, stack_idx, seq_end - seq_start + 1);
+
+                sfs_check_state_end();
             }
         }
     }
