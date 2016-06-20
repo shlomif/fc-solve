@@ -1266,7 +1266,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
     /* Now, let's try to empty an entire stack into the freecells, so other cards can
      * inhabit it */
 
-    if (soft_thread->num_vacant_stacks)
+    if ((!num_vacant_freecells) || soft_thread->num_vacant_stacks)
     {
         return;
     }
