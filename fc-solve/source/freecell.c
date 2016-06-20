@@ -1050,27 +1050,25 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 
             if (
                 (tests__is_filled_by_kings_only())
-                ? (fcs_card_rank(card) == 13)
-                : fcs_card_is_valid(card)
+                ? (fcs_card_rank(card) != 13)
+                : fcs_card_is_empty(card)
                )
             {
-                fcs_cards_column_t new_src_col;
-                /* We can move it */
-
-                sfs_check_state_begin();
-
-                my_copy_stack(stack_idx);
-
-                new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                fcs_col_push_card(new_src_col, card);
-                fcs_empty_freecell(new_state, fc);
-
-                fcs_move_stack_non_seq_push(moves,
-                    FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, stack_idx);
-
-                sfs_check_state_end()
+                continue;
             }
+            /* We can move it */
+
+            sfs_check_state_begin();
+
+            my_copy_stack(stack_idx);
+
+            fcs_cards_column_t new_src_col
+                = fcs_state_get_col(new_state, stack_idx);
+            fcs_col_push_card(new_src_col, card);
+            fcs_empty_freecell(new_state, fc);
+            fcs_move_stack_non_seq_push(moves,
+                FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, stack_idx);
+            sfs_check_state_end()
         }
     }
 
