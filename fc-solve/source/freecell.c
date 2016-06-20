@@ -1712,22 +1712,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
             continue;
         }
 
-        {
-            sfs_check_state_begin();
+        sfs_check_state_begin();
 
-            my_copy_stack(ds);
+        my_copy_stack(ds);
+        fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
+        fcs_empty_freecell(new_state, fc);
+        fcs_col_push_card(new_dest_col, card);
+        fcs_move_stack_non_seq_push(moves, FCS_MOVE_TYPE_FREECELL_TO_STACK,
+            fc, ds);
 
-            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
-
-            fcs_empty_freecell(new_state, fc);
-
-            fcs_col_push_card(new_dest_col, card);
-
-            fcs_move_stack_non_seq_push(moves, FCS_MOVE_TYPE_FREECELL_TO_STACK,
-                fc, ds);
-
-            sfs_check_state_end()
-        }
+        sfs_check_state_end()
     }
 
     return;
