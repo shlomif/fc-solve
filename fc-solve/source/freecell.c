@@ -1521,50 +1521,49 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
         const int cards_num = fcs_col_len(col);
 
-        if (cards_num > num_cards_in_col_threshold)
+        if (cards_num <= num_cards_in_col_threshold)
         {
-            const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
+            continue;
+        }
+        const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
 
-            for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+        for (int ds = 0 ; ds < LOCAL_STACKS_NUM ; ds++)
+        {
+            if (ds == stack_idx)
             {
-                if (ds == stack_idx)
-                {
-                    continue;
-                }
-
-                fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-
-                if (fcs_col_len(dest_col) > 0)
-                {
-                    fcs_card_t dest_card = fcs_col_get_card(dest_col,
-                            fcs_col_len(dest_col)-1);
-                    if (fcs_is_parent_card(card, dest_card))
-                    {
-                        /* Let's move it */
-                        {
-                            sfs_check_state_begin();
-
-                            my_copy_stack(stack_idx);
-                            my_copy_stack(ds);
-
-                            fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
-                            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
-
-                            fcs_col_pop_top(new_src_col);
-
-                            fcs_col_push_card(new_dest_col, card);
-
-                            fcs_push_1card_seq(moves, stack_idx, ds);
-
-                            sfs_check_state_end()
-                        }
-                    }
-                }
+                continue;
             }
+
+            fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+            const int dest_cards_num = fcs_col_len(dest_col);
+
+            if (! dest_cards_num)
+            {
+                continue;
+            }
+            const fcs_card_t dest_card = fcs_col_get_card(dest_col,
+                fcs_col_len(dest_col)-1);
+            if (! fcs_is_parent_card(card, dest_card))
+            {
+                continue;
+            }
+            sfs_check_state_begin();
+
+            my_copy_stack(stack_idx);
+            my_copy_stack(ds);
+
+            fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
+            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
+
+            fcs_col_pop_top(new_src_col);
+
+            fcs_col_push_card(new_dest_col, card);
+
+            fcs_push_1card_seq(moves, stack_idx, ds);
+
+            sfs_check_state_end()
         }
     }
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
