@@ -518,6 +518,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
     /* Now let's check if a card that is under some other cards can be placed
      * in the foundations. */
 
+    const_AUTO(num_vacant_slots_plus_1, num_vacant_slots + 1);
+
     for (int stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
@@ -525,20 +527,20 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
         /*
          * We starts from cards_num-2 because the top card is already covered
          * by move_top_stack_cards_to_founds.
+         *
+         * Some math:
+         * num_vacant_slots >= cards_num - (c + 1)
+         * c >= cards_num - num_vacant_slots - 1
          * */
-        for (int c = cards_num-2 ; c >= 0 ; c--)
+        const int c_bottom_proto = cards_num - num_vacant_slots_plus_1;
+        const int c_bottom = max(c_bottom_proto, 0);
+        for (int c = cards_num - 2 ; c >= c_bottom ; c--)
         {
             const fcs_card_t card = fcs_col_get_card(col, c);
 
             for (int deck = 0 ; deck < INSTANCE_DECKS_NUM ; deck++)
             {
-                if ((fcs_foundation_value(state, deck*4+fcs_card_suit(card)) != fcs_card_rank(card)-1)
-                        ||
-                /* The card is foundation-able. Now let's check if we
-                 * can move the cards above it to the freecells and
-                 * stacks */
-                    (num_vacant_slots < cards_num-(c+1))
-                    )
+                if (fcs_foundation_value(state, deck*4+fcs_card_suit(card)) != fcs_card_rank(card)-1)
                 {
                     continue;
                 }
