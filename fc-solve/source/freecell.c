@@ -1456,8 +1456,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     for (empty_stack_idx = 0 ; empty_stack_idx < LOCAL_STACKS_NUM ; empty_stack_idx++)
     {
         if (fcs_col_len(
-            fcs_state_get_col(state, empty_stack_idx)
-            ) == 0)
+                fcs_state_get_col(state, empty_stack_idx)
+        ) == 0)
         {
             break;
         }
@@ -1471,38 +1471,35 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         /* Bug fix: if there's only one card in a column, there's no
          * point moving it to a new empty column.
          * */
-        if (cards_num > 1)
+        if (cards_num <= 1)
         {
-            const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
-
-            if (tests__is_filled_by_kings_only() &&
-                (fcs_card_rank(card) != 13))
-            {
-                continue;
-            }
-            /* Let's move it */
-            {
-                sfs_check_state_begin();
-
-                my_copy_stack(stack_idx);
-
-                fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                fcs_col_pop_top(new_src_col);
-
-                my_copy_stack(empty_stack_idx);
-
-                fcs_cards_column_t empty_stack_col = fcs_state_get_col(new_state, empty_stack_idx);
-                fcs_col_push_card(empty_stack_col, card);
-
-                fcs_push_1card_seq(moves, stack_idx, empty_stack_idx);
-
-                sfs_check_state_end()
-            }
+            continue;
         }
-    }
+        const fcs_card_t card = fcs_col_get_card(col, cards_num-1);
 
-    return;
+        if (tests__is_filled_by_kings_only() &&
+            (fcs_card_rank(card) != 13))
+        {
+            continue;
+        }
+        /* Let's move it */
+        sfs_check_state_begin();
+
+        my_copy_stack(stack_idx);
+
+        fcs_cards_column_t new_src_col = fcs_state_get_col(new_state, stack_idx);
+
+        fcs_col_pop_top(new_src_col);
+
+        my_copy_stack(empty_stack_idx);
+
+        fcs_cards_column_t empty_stack_col = fcs_state_get_col(new_state, empty_stack_idx);
+        fcs_col_push_card(empty_stack_col, card);
+
+        fcs_push_1card_seq(moves, stack_idx, empty_stack_idx);
+
+        sfs_check_state_end()
+    }
 }
 
 #define CALC_num_cards_in_col_threshold() (MOVE_FUNCS__should_not_empty_columns() ? 1 : 0)
