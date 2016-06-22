@@ -505,6 +505,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     return;
 }
 
+static GCC_INLINE int max0(const int e)
+{
+    return max(e, 0);
+}
+
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
     tests_define_accessors();
@@ -532,8 +538,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
          * num_vacant_slots >= cards_num - (c + 1)
          * c >= cards_num - num_vacant_slots - 1
          * */
-        const int c_bottom_proto = cards_num - num_vacant_slots_plus_1;
-        const int c_bottom = max(c_bottom_proto, 0);
+        const int c_bottom = max0(cards_num - num_vacant_slots_plus_1);
         for (int c = cards_num - 2 ; c >= c_bottom ; c--)
         {
             const fcs_card_t card = fcs_col_get_card(col, c);
@@ -587,7 +592,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
     SET_GAME_PARAMS();
 #endif
 
-    const fcs_game_limit_t num_vacant_slots = calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
+    const fcs_game_limit_t num_vacant_slots_plus_1 = calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card()) + 1;
 
     /*
      * Now let's try to move a stack card to a parent card which is found
@@ -598,8 +603,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
         const int cards_num = fcs_col_len(col);
 #define dest_cards_num cards_num
-        const int start_dc_proto = dest_cards_num - num_vacant_slots - 1;
-        const int start_dc = max(start_dc_proto, 0);
+        const int start_dc = max0(dest_cards_num - num_vacant_slots_plus_1);
 
         for (int c = start_dc+2 ; c<cards_num ; c++)
         {
