@@ -339,14 +339,14 @@ static int fc_solve__cmd_line_callback(
     void * const context
     )
 {
-    fc_solve_display_information_context_t * const dc = (fc_solve_display_information_context_t *)context;
+    fc_solve_display_information_context_t * const display_context = (fc_solve_display_information_context_t *)context;
     const char * s;
 
     *num_to_skip = 0;
 
     const char * const arg_str = argv[arg];
 
-    if (cmd_line_cb__handle_common(arg_str, instance, dc))
+    if (cmd_line_cb__handle_common(arg_str, instance, display_context))
     {
     }
     else if (IS_ARG("--version"))
@@ -383,12 +383,12 @@ static int fc_solve__cmd_line_callback(
             return FCS_CMD_LINE_STOP;
         }
         *num_to_skip = 2;
-        dc->output_filename = (const char *)argv[next_arg];
+        display_context->output_filename = (const char *)argv[next_arg];
         return FCS_CMD_LINE_SKIP;
     }
     else if (IS_ARG("--reset"))
     {
-        *dc = INITIAL_DISPLAY_CONTEXT;
+        *display_context = INITIAL_DISPLAY_CONTEXT;
         freecell_solver_user_set_iter_handler_long(
             instance,
             NULL,
@@ -515,9 +515,9 @@ static GCC_INLINE int fc_solve_main__main(int argc, char * argv[])
     FILE * file;
     char user_state[USER_STATE_SIZE];
 
-    fc_solve_display_information_context_t debug_context = INITIAL_DISPLAY_CONTEXT;
+    fc_solve_display_information_context_t display_context = INITIAL_DISPLAY_CONTEXT;
 
-    global_dc = &debug_context;
+    global_dc = &display_context;
 
     int arg = 1;
     void * const instance = alloc_instance_and_parse(
@@ -526,7 +526,7 @@ static GCC_INLINE int fc_solve_main__main(int argc, char * argv[])
         &arg,
         known_parameters,
         fc_solve__cmd_line_callback,
-        &debug_context,
+        &display_context,
         FALSE
     );
 
@@ -592,7 +592,7 @@ static GCC_INLINE int fc_solve_main__main(int argc, char * argv[])
         freecell_solver_user_get_invalid_state_error_into_string(
             instance,
             error_string
-            FC_SOLVE__PASS_T(debug_context.display_10_as_t)
+            FC_SOLVE__PASS_T(display_context.display_10_as_t)
         );
         fprintf(stderr, "%s\n", error_string);
         exit_code = ERROR;
@@ -608,14 +608,14 @@ static GCC_INLINE int fc_solve_main__main(int argc, char * argv[])
         {
         FILE * output_fh;
 
-        if (debug_context.output_filename)
+        if (display_context.output_filename)
         {
-            output_fh = fopen(debug_context.output_filename, "wt");
+            output_fh = fopen(display_context.output_filename, "wt");
             if (! output_fh)
             {
                 fprintf(stderr,
                         "Could not open output file '%s' for writing!",
-                        debug_context.output_filename
+                        display_context.output_filename
                 );
                 return -1;
             }
@@ -626,10 +626,10 @@ static GCC_INLINE int fc_solve_main__main(int argc, char * argv[])
         }
 
         fc_solve_output_result_to_file(
-            output_fh, instance, ret, &debug_context
+            output_fh, instance, ret, &display_context
         );
 
-        if (debug_context.output_filename)
+        if (display_context.output_filename)
         {
             fclose(output_fh);
             output_fh = NULL;

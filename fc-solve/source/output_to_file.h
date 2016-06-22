@@ -79,7 +79,7 @@ static GCC_INLINE void fc_solve_output_result_to_file(
     const fc_solve_display_information_context_t * const dc_ptr
 )
 {
-    const_AUTO(debug_context, (*dc_ptr));
+    const_AUTO(display_context, (*dc_ptr));
     if (ret == FCS_STATE_WAS_SOLVED)
     {
         fprintf(output_fh, "-=-=-=-=-=-=-=-=-=-=-=-\n\n");
@@ -90,14 +90,14 @@ static GCC_INLINE void fc_solve_output_result_to_file(
 
             move_dump = output_fh;
 
-            if (debug_context.display_states)
+            if (display_context.display_states)
             {
                     freecell_solver_user_current_state_stringify(
                             instance,
                             as_string
-                            FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
-                            , debug_context.canonized_order_output
-                            FC_SOLVE__PASS_T(debug_context.display_10_as_t)
+                            FC_SOLVE__PASS_PARSABLE(display_context.parseable_output)
+                            , display_context.canonized_order_output
+                            FC_SOLVE__PASS_T(display_context.display_10_as_t)
                             );
 
                 fprintf(move_dump, "%s\n", as_string);
@@ -112,9 +112,9 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                         ) == 0
                   )
             {
-                if (debug_context.display_moves)
+                if (display_context.display_moves)
                 {
-                    if (debug_context.display_states && debug_context.standard_notation)
+                    if (display_context.display_states && display_context.standard_notation)
                     {
                         fprintf(move_dump, "Move: ");
                     }
@@ -123,51 +123,51 @@ static GCC_INLINE void fc_solve_output_result_to_file(
                         instance,
                         as_string,
                         move,
-                        debug_context.standard_notation
+                        display_context.standard_notation
                     );
                     fprintf(
                             move_dump,
-                            (debug_context.standard_notation ?
+                            (display_context.standard_notation ?
                              "%s " :
                              "%s\n"
                             ),
                             as_string
                            );
                     move_num++;
-                    if (debug_context.standard_notation)
+                    if (display_context.standard_notation)
                     {
-                        if ((move_num % 10 == 0) || debug_context.display_states)
+                        if ((move_num % 10 == 0) || display_context.display_states)
                         {
                             fprintf(move_dump, "\n");
                         }
                     }
-                    if (debug_context.display_states)
+                    if (display_context.display_states)
                     {
                         fprintf (move_dump, "\n");
                     }
                     fflush (move_dump);
                 }
 
-                if (debug_context.display_states)
+                if (display_context.display_states)
                 {
                     freecell_solver_user_current_state_stringify(
                         instance,
                         as_string
-                        FC_SOLVE__PASS_PARSABLE(debug_context.parseable_output)
-                        , debug_context.canonized_order_output
-                        FC_SOLVE__PASS_T(debug_context.display_10_as_t)
+                        FC_SOLVE__PASS_PARSABLE(display_context.parseable_output)
+                        , display_context.canonized_order_output
+                        FC_SOLVE__PASS_T(display_context.display_10_as_t)
                     );
 
                     fprintf(move_dump, "%s\n", as_string);
                 }
 
-                if (debug_context.display_states || (!debug_context.standard_notation))
+                if (display_context.display_states || (!display_context.standard_notation))
                 {
                     fprintf(move_dump, "%s", "\n====================\n\n");
                 }
             }
 
-            if (debug_context.standard_notation && (!debug_context.display_states))
+            if (display_context.standard_notation && (!display_context.display_states))
             {
                 fprintf(move_dump, "\n\n");
             }
@@ -175,7 +175,7 @@ static GCC_INLINE void fc_solve_output_result_to_file(
 
         fprintf(output_fh, "This game is solveable.\n");
     }
-    else if (debug_context.show_exceeded_limits && (ret == FCS_STATE_SUSPEND_PROCESS))
+    else if (display_context.show_exceeded_limits && (ret == FCS_STATE_SUSPEND_PROCESS))
     {
         fprintf(output_fh, "Iterations count exceeded.\n");
     }

@@ -112,14 +112,14 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    fc_solve_display_information_context_t dc = INITIAL_DISPLAY_CONTEXT;
+    fc_solve_display_information_context_t display_context = INITIAL_DISPLAY_CONTEXT;
     void * const instance = alloc_instance_and_parse(
         argc,
         argv,
         &arg,
         known_parameters,
         cmd_line_callback,
-        &dc,
+        &display_context,
         TRUE
     );
 
@@ -177,7 +177,7 @@ int main(int argc, char * argv[])
                 return -1;
             }
             fc_solve_output_result_to_file(
-                output_fh, instance, ret, &dc
+                output_fh, instance, ret, &display_context
             );
             fclose(output_fh);
         }
