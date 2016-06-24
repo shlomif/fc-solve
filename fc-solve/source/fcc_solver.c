@@ -252,8 +252,6 @@ static void instance_time_printf(
     fflush(fh);
 }
 
-#define STEP (instance->positions_milestone_step)
-
 static GCC_INLINE void instance_print_processed_FCCs(
     fcs_dbm_solver_instance_t * const instance
     )
@@ -290,7 +288,8 @@ static fcc_status_t instance_run_solver(
     fcs_fully_connected_component_t * fcc;
     int curr_depth;
     fcs_lru_cache_t * cache;
-    long next_count_num_processed_landmark = STEP;
+    const_AUTO(step, instance->positions_milestone_step);
+    long next_count_num_processed_landmark = step;
     long FCCs_per_depth_milestone_step;
     fcs_fcc_moves_seq_t ret_moves_seq;
     fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
@@ -436,7 +435,7 @@ static fcc_status_t instance_run_solver(
                 {
                     instance_print_reached(instance);
                     next_count_num_processed_landmark = instance->count_num_processed;
-                    next_count_num_processed_landmark += (STEP - (next_count_num_processed_landmark % STEP));
+                    next_count_num_processed_landmark += (step - (next_count_num_processed_landmark % step));
                     if (instance->count_num_processed >=
                         instance->max_processed_positions_count)
                     {
