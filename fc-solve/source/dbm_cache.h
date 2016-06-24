@@ -98,15 +98,10 @@ static GCC_INLINE void cache_init(fcs_lru_cache_t * cache, long max_num_elements
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, fcs_cache_key_t * key)
+static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * const cache, fcs_cache_key_t * const key)
 {
-    fcs_cache_key_info_t to_check;
-    dict_key_t existing_key;
-
-    to_check.key = *key;
-
-    existing_key = fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
-
+    fcs_cache_key_info_t to_check = {.key = *key};
+    dict_key_t existing_key = fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
     if (! existing_key)
     {
         return FALSE;
@@ -114,9 +109,7 @@ static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * cache, fcs_c
     else
     {
         /* First - promote this key to the top of the cache. */
-        fcs_cache_key_info_t * existing;
-
-        existing = (fcs_cache_key_info_t *)existing_key;
+        fcs_cache_key_info_t * const existing = (fcs_cache_key_info_t *)existing_key;
 
         if (existing->higher_pri)
         {
