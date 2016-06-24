@@ -43,7 +43,6 @@ static long long int prev_rss = -1, max_rss_delta = -1;
 
 static GCC_INLINE void trace_mem(const int board_num)
 {
-#define STEP 100000
     long long int rss;
     unsigned long long unsigned_foo;
     char stat_fn[1024], foo_str[1024];
