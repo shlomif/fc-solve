@@ -502,7 +502,9 @@ static GCC_INLINE void upon_new_state(
 #endif
     }
 
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     instance->active_num_states_in_collection++;
+#endif
     instance->num_states_in_collection++;
 
     return;

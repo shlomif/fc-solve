@@ -92,7 +92,9 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
         .meta_alloc = meta_alloc,
             .i__num_checked_states = 0,
             .num_states_in_collection = 0,
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
             .active_num_states_in_collection = 0,
+#endif
             .effective_max_num_checked_states = FCS_INT_LIMIT_MAX,
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
             .max_depth = -1,
