@@ -2,7 +2,7 @@ DEBUG = 0
 PROFILE = 0
 WITH_TRACES = 0
 FREECELL_ONLY = 1
-DISABLE_PATSOLVE = 0
+DISABLE_PATSOLVE = 1
 DISABLE_SIMPLE_SIMON := 0
 WITH_LIBRB = 0
 OPT_FOR_SIZE = 0
@@ -105,7 +105,7 @@ ifeq ($(GCC_COMPAT),1)
 	else ifeq ($(OPT_AND_DEBUG),1)
 		CFLAGS += -g -O2 $(MARCH_FLAG) $(LTO_FLAGS)
 	else
-		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS)
+		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS) -fvisibility=hidden
 	endif
 	CFLAGS += -fPIC
 endif
