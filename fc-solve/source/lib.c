@@ -2540,6 +2540,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     char * * const error_string
     )
 {
+#ifdef FCS_WITH_MOVES
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     fc_solve_free_tests_order(&(user->active_flare->obj.opt_tests_order));
@@ -2569,6 +2570,9 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     }
 
     return ret;
+#else
+    return 0;
+#endif
 }
 
 

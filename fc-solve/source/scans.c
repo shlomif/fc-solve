@@ -556,7 +556,9 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
     fcs_int_limit_t * const hard_thread_num_checked_states_ptr = &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
     const_SLOT(is_befs, soft_thread);
+#ifdef FCS_WITH_MOVES
     const_SLOT(is_optimize_scan, soft_thread);
+#endif
 
     if (is_befs)
     {
@@ -627,13 +629,16 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
              * It the state has already been visited - move on to the next
              * state.
              * */
-            if (is_optimize_scan ?
+            if (
+#ifdef FCS_WITH_MOVES
+                is_optimize_scan ?
                     (
                         (!(temp_visited & FCS_VISITED_IN_SOLUTION_PATH))
                             ||
                         (temp_visited & FCS_VISITED_IN_OPTIMIZED_PATH)
                     )
                     :
+#endif
                     (
                         (temp_visited & FCS_VISITED_DEAD_END)
                             ||
@@ -790,11 +795,13 @@ int fc_solve_befs_or_bfs_do_solve( fc_solve_soft_thread_t * const soft_thread )
             }
         }
 
+#ifdef FCS_WITH_MOVES
         if (is_optimize_scan)
         {
             FCS_S_VISITED(PTR_STATE) |= FCS_VISITED_IN_OPTIMIZED_PATH;
         }
         else
+#endif
         {
             set_scan_visited(
                     PTR_STATE,

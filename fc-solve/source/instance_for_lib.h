@@ -105,7 +105,9 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
 #endif
             .instance_tests_order = {.num_groups = 0, .groups = NULL,},
             .list_of_vacant_states = NULL,
+#ifdef FCS_WITH_MOVES
             .opt_tests_order = {.num_groups = 0, .groups = NULL, },
+#endif
 #ifdef FCS_SINGLE_HARD_THREAD
 #ifdef FCS_WITH_MOVES
             .is_optimization_st = FALSE,
@@ -125,9 +127,10 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
             .num_hard_threads_finished = 0,
     /* Make the 1 the default, because otherwise scans will not cooperate
      * with one another. */
-            .FCS_RUNTIME_CALC_REAL_DEPTH = FALSE, .FCS_RUNTIME_TO_REPARENT_STATES_REAL = FALSE, .FCS_RUNTIME_SCANS_SYNERGY = TRUE, .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = FALSE, .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE,
+            .FCS_RUNTIME_CALC_REAL_DEPTH = FALSE, .FCS_RUNTIME_TO_REPARENT_STATES_REAL = FALSE, .FCS_RUNTIME_SCANS_SYNERGY = TRUE,
+             .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE,
 #ifdef FCS_WITH_MOVES
-            .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE, .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE,
+            .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE, .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE, .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = FALSE,
 #endif
 
 #ifdef FCS_RCS_STATES
@@ -291,6 +294,7 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
             FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS,
             &total_tests
         );
+#ifdef FCS_WITH_MOVES
         if (!STRUCT_QUERY_FLAG(
                 instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET
         ))
@@ -331,6 +335,7 @@ static GCC_INLINE void fc_solve_init_instance(fc_solve_instance_t * const instan
                 };
             STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
+#endif
     }
 
 #ifdef FCS_RCS_STATES
@@ -769,10 +774,12 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
 #endif
 #endif
     fc_solve_free_tests_order( &(instance->instance_tests_order) );
+#ifdef FCS_WITH_MOVES
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
         fc_solve_free_tests_order( &(instance->opt_tests_order) );
     }
+#endif
 
     instance_free_solution_moves(instance);
 }

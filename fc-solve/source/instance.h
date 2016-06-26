@@ -694,7 +694,11 @@ struct fc_solve_soft_thread_struct
      * Differentiates between SOFT_DFS and RANDOM_DFS.
      * */
     fcs_bool_t master_to_randomize;
-    fcs_bool_t is_befs, is_optimize_scan;
+    fcs_bool_t is_befs
+#ifdef FCS_WITH_MOVES
+        , is_optimize_scan
+#endif
+        ;
 };
 
 struct fc_solve_instance_struct
@@ -790,9 +794,9 @@ struct fc_solve_instance_struct
     DB * db;
 #endif
 
-    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH, FCS_RUNTIME_TO_REPARENT_STATES_REAL, FCS_RUNTIME_SCANS_SYNERGY, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET, FCS_RUNTIME_TO_REPARENT_STATES_PROTO;
+    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH, FCS_RUNTIME_TO_REPARENT_STATES_REAL, FCS_RUNTIME_SCANS_SYNERGY, FCS_RUNTIME_TO_REPARENT_STATES_PROTO;
 #ifdef FCS_WITH_MOVES
-    fcs_bool_t FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FCS_RUNTIME_IN_OPTIMIZATION_THREAD;
+    fcs_bool_t FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FCS_RUNTIME_IN_OPTIMIZATION_THREAD, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
 #endif
 
     /*
@@ -840,10 +844,12 @@ struct fc_solve_instance_struct
      * */
     int num_hard_threads_finished;
 
+#ifdef FCS_WITH_MOVES
     /*
      * The tests order for the optimization scan as specified by the user.
      * */
     fcs_tests_order_t opt_tests_order;
+#endif
 
 #ifdef FCS_RCS_STATES
     fcs_lru_cache_t rcs_states_cache;
