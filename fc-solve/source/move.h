@@ -462,7 +462,7 @@ typedef struct {
 
 typedef struct
 {
-    int num_states;
+    size_t num_states;
     fcs_derived_states_list_item_t * states;
 } fcs_derived_states_list_t;
 
