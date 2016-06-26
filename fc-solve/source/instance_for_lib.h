@@ -107,11 +107,15 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
             .list_of_vacant_states = NULL,
             .opt_tests_order = {.num_groups = 0, .groups = NULL, },
 #ifdef FCS_SINGLE_HARD_THREAD
+#ifdef FCS_WITH_MOVES
             .is_optimization_st = FALSE,
+#endif
 #else
             .num_hard_threads = 0,
             .hard_threads = NULL,
+#ifdef FCS_WITH_MOVES
             .optimization_thread = NULL,
+#endif
 #endif
             .next_soft_thread_id = 0,
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -121,7 +125,10 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
             .num_hard_threads_finished = 0,
     /* Make the 1 the default, because otherwise scans will not cooperate
      * with one another. */
-            .FCS_RUNTIME_CALC_REAL_DEPTH = FALSE, .FCS_RUNTIME_TO_REPARENT_STATES_REAL = FALSE, .FCS_RUNTIME_SCANS_SYNERGY = TRUE, .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = FALSE, .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE, .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE, .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE,
+            .FCS_RUNTIME_CALC_REAL_DEPTH = FALSE, .FCS_RUNTIME_TO_REPARENT_STATES_REAL = FALSE, .FCS_RUNTIME_SCANS_SYNERGY = TRUE, .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = FALSE, .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE,
+#ifdef FCS_WITH_MOVES
+            .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE, .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE,
+#endif
 
 #ifdef FCS_RCS_STATES
 
@@ -743,19 +750,23 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
     }
 
 #ifdef FCS_SINGLE_HARD_THREAD
+#ifdef FCS_WITH_MOVES
     if (instance->is_optimization_st)
     {
         fc_solve_free_instance_soft_thread_callback(&( instance->optimization_soft_thread ));
         instance->is_optimization_st = FALSE;
     }
+#endif
 #else
     free (instance->hard_threads);
 
+#ifdef FCS_WITH_MOVES
     if (instance->optimization_thread)
     {
         free_instance_hard_thread_callback(instance->optimization_thread);
         free (instance->optimization_thread);
     }
+#endif
 #endif
     fc_solve_free_tests_order( &(instance->instance_tests_order) );
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
@@ -819,10 +830,12 @@ static GCC_INLINE void fc_solve_recycle_instance(
 #ifdef FCS_SINGLE_HARD_THREAD
     fc_solve_instance__recycle_hard_thread(instance);
 
+#ifdef FCS_WITH_MOVES
     if (instance->is_optimization_st)
     {
         fc_solve_reset_soft_thread(&(instance->optimization_soft_thread));
     }
+#endif
 #else
     for (int ht_idx = 0;  ht_idx < instance->num_hard_threads; ht_idx++)
     {
@@ -834,9 +847,12 @@ static GCC_INLINE void fc_solve_recycle_instance(
         fc_solve_instance__recycle_hard_thread(instance->optimization_thread);
     }
 #endif
+#ifdef FCS_WITH_MOVES
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
+#endif
 }
 
+#ifdef FCS_WITH_MOVES
 extern void fc_solve_trace_solution(
     fc_solve_instance_t * const instance
 );
@@ -955,6 +971,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     optimization_thread->ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
     return fc_solve_befs_or_bfs_do_solve( soft_thread );
 }
+#endif
 #endif
 
 static GCC_INLINE int fc_solve__soft_thread__do_solve(
@@ -1292,6 +1309,7 @@ static GCC_INLINE int fc_solve_resume_instance(
      *
      * Else, proceed with the normal total scan.
      * */
+#ifdef FCS_WITH_MOVES
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
     {
         ret =
@@ -1304,6 +1322,7 @@ static GCC_INLINE int fc_solve_resume_instance(
             );
     }
     else
+#endif
     {
 #ifdef FCS_SINGLE_HARD_THREAD
 #define hard_thread instance
@@ -1378,7 +1397,7 @@ static GCC_INLINE int fc_solve_resume_instance(
         }
     }
 
-
+#ifdef FCS_WITH_MOVES
     if (ret == FCS_STATE_WAS_SOLVED)
     {
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH))
@@ -1391,6 +1410,7 @@ static GCC_INLINE int fc_solve_resume_instance(
             }
         }
     }
+#endif
 
     return ret;
 }
