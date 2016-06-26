@@ -941,8 +941,8 @@ extern void fc_solve_sfs_check_state_end(
     fcs_derived_states_list_t * const derived_states_list
     )
 {
-    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t * const instance = HT_INSTANCE(hard_thread);
+    const_SLOT(hard_thread, soft_thread);
+    const_AUTO(instance, HT_INSTANCE(hard_thread));
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif

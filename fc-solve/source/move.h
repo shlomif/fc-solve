@@ -469,9 +469,9 @@ typedef struct
 
 
 extern void fc_solve_derived_states_list_add_state(
-        fcs_derived_states_list_t * list,
-        fcs_collectible_state_t * state_val,
-        int context
+        fcs_derived_states_list_t * const list,
+        fcs_collectible_state_t * const state_val,
+        const int context
         );
 
 #ifdef __cplusplus

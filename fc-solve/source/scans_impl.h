@@ -1317,9 +1317,8 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
     fc_solve_soft_thread_t * const soft_thread
     )
 {
-    fc_solve_hard_thread_t * const hard_thread = soft_thread->hard_thread;
-    struct fc_solve__patsolve_thread_struct * const pats_scan
-        = soft_thread->pats_scan;
+    const_SLOT(hard_thread, soft_thread);
+    const_SLOT(pats_scan, soft_thread);
     const_AUTO(start_from, pats_scan->num_checked_states);
 
     pats_scan->max_num_checked_states = start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) - NUM_CHECKED_STATES);

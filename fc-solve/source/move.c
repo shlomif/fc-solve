@@ -148,9 +148,9 @@ void fc_solve_apply_move(
 
 #define DERIVED_STATES_LIST_GROW_BY 16
 void fc_solve_derived_states_list_add_state(
-        fcs_derived_states_list_t * list,
-        fcs_collectible_state_t * state,
-        int context
+        fcs_derived_states_list_t * const list,
+        fcs_collectible_state_t * const state,
+        const int context
         )
 {
     if (
@@ -168,7 +168,6 @@ void fc_solve_derived_states_list_add_state(
             + DERIVED_STATES_LIST_GROW_BY
         );
     }
-    list->states[list->num_states].state_ptr = state;
-    list->states[list->num_states++].context.i = context;
+    list->states[list->num_states++] = (fcs_derived_states_list_item_t) {.state_ptr = state, .context.i = context };
 }
 

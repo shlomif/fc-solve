@@ -46,7 +46,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t * store, const char * path)
 
 fcs_bool_t fc_solve_dbm_store_does_key_exist(
     fcs_dbm_store_t store,
-    const unsigned char * key_raw
+    const unsigned char * const key_raw
 )
 {
     unsigned char dummy[100];
