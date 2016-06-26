@@ -389,7 +389,6 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 #endif
     fcs_card_t card, dest_card;
     int deck, suit;
-    int empty_fc_idx = -1;
     int empty_stack_idx = -1;
 
 #ifndef FCS_FREECELL_ONLY
@@ -452,6 +451,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
         }
     }
 
+    int empty_fc_idx = -1;
 #define fc_idx stack_idx
     /* Move freecell cards to foundations. */
     for (fc_idx=0 ; fc_idx < LOCAL_FREECELLS_NUM ; fc_idx++)
@@ -595,13 +595,12 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
 
                     {
                         fcs_cards_column_t new_src_col;
-                        fcs_cards_column_t empty_stack_col;
 
                         new_src_col = fcs_state_get_col(new_state, stack_idx);
 
                         fcs_col_pop_top(new_src_col);
 
-                        empty_stack_col = fcs_state_get_col(new_state, empty_stack_idx);
+                        fcs_cards_column_t empty_stack_col = fcs_state_get_col(new_state, empty_stack_idx);
                         fcs_col_push_card(empty_stack_col, card);
                     }
                     COMMIT_NEW_STATE(
