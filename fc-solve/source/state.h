@@ -127,6 +127,9 @@ static GCC_INLINE fcs_card_t fcs_char2card(unsigned char c)
 #define fcs_foundation_value(state, foundation_idx) \
     ( (state).foundations[(foundation_idx)] )
 
+#define fcs_card_is_empty(card) (fcs_card_rank(card) == 0)
+#define fcs_card_is_valid(card) (fcs_card_rank(card) != 0)
+
 #elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
 
 typedef char fcs_card_t;
@@ -268,8 +271,6 @@ typedef char fcs_locs_t;
   fcs_col_get_card((col), ((fcs_col_len(col))++)) = (from); \
 }
 
-#define fcs_card_is_empty(card) (fcs_card_rank(card) == 0)
-#define fcs_card_is_valid(card) (fcs_card_rank(card) != 0)
 #define fcs_freecell_is_empty(state, idx) (fcs_card_is_empty(fcs_freecell_card(state, idx)))
 
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
@@ -290,6 +291,9 @@ typedef char fcs_locs_t;
 /* These are macros that are common to COMPACT_STATES and
  * INDIRECT_STACK_STATES */
 #if defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
+
+#define fcs_card_is_empty(card) ((card) == 0)
+#define fcs_card_is_valid(card) ((card) != 0)
 
 static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 {
