@@ -1898,11 +1898,9 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
     const int optimize
 )
 {
-#ifdef FCS_WITH_MOVES
     fcs_user_t * const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(&(user->active_flare->obj), FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
-#endif
 }
 
 DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(

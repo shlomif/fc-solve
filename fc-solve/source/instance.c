@@ -190,12 +190,10 @@ void fc_solve_foreach_soft_thread(
         {
             soft_thread = &(instance->hard_thread.soft_threads[st_idx]);
         }
-#ifdef FCS_WITH_MOVES
         else if (instance->is_optimization_st)
         {
             soft_thread = &(instance->optimization_soft_thread);
         }
-#endif
         else
         {
             break;
@@ -497,11 +495,11 @@ static GCC_INLINE find_card_ret_t find_card_src_string(
  * This function traces the solution from the final state down
  * to the initial state
  * */
-#ifdef FCS_WITH_MOVES
 extern void fc_solve_trace_solution(
     fc_solve_instance_t * const instance
 )
 {
+#ifdef FCS_WITH_MOVES
     fcs_internal_move_t canonize_move = fc_solve_empty_move;
     fcs_int_move_set_type(canonize_move, FCS_MOVE_TYPE_CANONIZE);
 
@@ -662,8 +660,8 @@ extern void fc_solve_trace_solution(
         /* There's one more state than there are move stacks */
         FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
     }
-}
 #endif
+}
 
 /*
     This function should be called after the user has retrieved the

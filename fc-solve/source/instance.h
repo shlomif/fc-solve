@@ -794,10 +794,7 @@ struct fc_solve_instance_struct
     DB * db;
 #endif
 
-    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH, FCS_RUNTIME_TO_REPARENT_STATES_REAL, FCS_RUNTIME_SCANS_SYNERGY, FCS_RUNTIME_TO_REPARENT_STATES_PROTO;
-#ifdef FCS_WITH_MOVES
-    fcs_bool_t FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FCS_RUNTIME_IN_OPTIMIZATION_THREAD, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
-#endif
+    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH, FCS_RUNTIME_TO_REPARENT_STATES_REAL, FCS_RUNTIME_SCANS_SYNERGY, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET, FCS_RUNTIME_TO_REPARENT_STATES_PROTO, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FCS_RUNTIME_IN_OPTIMIZATION_THREAD;
 
     /*
      * This is the number of states in the state collection.
@@ -811,10 +808,8 @@ struct fc_solve_instance_struct
 
 #ifdef FCS_SINGLE_HARD_THREAD
     struct fc_solve_hard_thread_struct hard_thread;
-#ifdef FCS_WITH_MOVES
     fcs_bool_t is_optimization_st;
     struct fc_solve_soft_thread_struct optimization_soft_thread;
-#endif
 #else
     int num_hard_threads;
     struct fc_solve_hard_thread_struct * hard_threads;
@@ -823,12 +818,10 @@ struct fc_solve_instance_struct
      * */
     fc_solve_hard_thread_t * current_hard_thread;
 
-#ifdef FCS_WITH_MOVES
     /*
      * This is the hard-thread used for the optimization scan.
      * */
     struct fc_solve_hard_thread_struct * optimization_thread;
-#endif
 #endif
 
     /*
