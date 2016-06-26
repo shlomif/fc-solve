@@ -123,7 +123,9 @@ static GCC_INLINE void fc_solve_alloc_instance(fc_solve_instance_t * const insta
 #ifndef FCS_WITHOUT_ITER_HANDLER
             .debug_iter_output_func = NULL,
 #endif
+#ifdef FCS_WITH_MOVES
             .solution_moves = (fcs_move_stack_t) { .moves = NULL, .num_moves = 0 },
+#endif
             .num_hard_threads_finished = 0,
     /* Make the 1 the default, because otherwise scans will not cooperate
      * with one another. */
@@ -736,6 +738,7 @@ static GCC_INLINE void fc_solve_free_instance_soft_thread_callback(
 #endif
 }
 
+#ifdef FCS_WITH_MOVES
 static GCC_INLINE void instance_free_solution_moves(fc_solve_instance_t * const instance)
 {
     if (instance->solution_moves.moves)
@@ -744,6 +747,7 @@ static GCC_INLINE void instance_free_solution_moves(fc_solve_instance_t * const 
         instance->solution_moves.moves = NULL;
     }
 }
+#endif
 
 static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instance)
 {
@@ -779,9 +783,9 @@ static GCC_INLINE void fc_solve_free_instance(fc_solve_instance_t * const instan
     {
         fc_solve_free_tests_order( &(instance->opt_tests_order) );
     }
+    instance_free_solution_moves(instance);
 #endif
 
-    instance_free_solution_moves(instance);
 }
 
 
@@ -828,7 +832,9 @@ static GCC_INLINE void fc_solve_recycle_instance(
 )
 {
     fc_solve_finish_instance(instance);
+#ifdef FCS_WITH_MOVES
     instance_free_solution_moves(instance);
+#endif
 
     instance->i__num_checked_states = 0;
 

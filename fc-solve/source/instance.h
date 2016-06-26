@@ -902,6 +902,7 @@ struct fc_solve_instance_struct
     fcs_collectible_state_t * final_state;
 
 
+#ifdef FCS_WITH_MOVES
     /*
      * A move stack that contains the moves leading to the solution.
      *
@@ -909,6 +910,7 @@ struct fc_solve_instance_struct
      * all the stacks of each depth.
      * */
     fcs_move_stack_t solution_moves;
+#endif
 
     /*
      * The meta allocator - see meta_alloc.h.
