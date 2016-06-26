@@ -100,8 +100,8 @@ static GCC_INLINE void cache_init(fcs_lru_cache_t * cache, long max_num_elements
 
 static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * const cache, fcs_cache_key_t * const key)
 {
-    fcs_cache_key_info_t to_check = {.key = *key};
-    dict_key_t existing_key = fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
+    const fcs_cache_key_info_t to_check = {.key = *key};
+    const dict_key_t existing_key = fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
     if (! existing_key)
     {
         return FALSE;

@@ -40,7 +40,7 @@ extern "C" {
 #include "instance.h"
 
 #ifdef FCS_FREECELL_ONLY
-#define calc_max_sequence_move(fc_num, fs_num) (((fc_num)+1)<<(fs_num))
+#define calc_max_sequence_move(num_freecells, num_empty_cols) (((num_freecells)+1)<<(num_empty_cols))
 #else
 /*
  * The number of cards that can be moved is
@@ -50,15 +50,15 @@ extern "C" {
  *
  * TODO : place INSTANCE_GAME_FLAGS inside a local variable.
  * */
-#define calc_max_sequence_move(fc_num, fs_num)                    \
+#define calc_max_sequence_move(num_freecells, num_empty_cols)                    \
     (INSTANCE_UNLIMITED_SEQUENCE_MOVE ?                         \
             INT_MAX :                                             \
     ((empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD) ? \
-                (((fc_num)+1)<<(fs_num))                        : \
-        ((fc_num)+1)                                              \
+                (((num_freecells)+1)<<(num_empty_cols))                        : \
+        ((num_freecells)+1)                                              \
     ))
 
-#define calc_max_simple_simon_seq_move(fs_num) (1 << (fs_num))
+#define calc_max_simple_simon_seq_move(num_empty_cols) (1 << (num_empty_cols))
 #endif
 
 /*
