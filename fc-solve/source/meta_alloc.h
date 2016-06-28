@@ -105,9 +105,11 @@ static GCC_INLINE void * fcs_compact_alloc_ptr(
     return allocator->rollback_ptr;
 }
 
-#define fcs_compact_alloc_release(allocator) \
-{    \
-    (allocator)->ptr = (allocator)->rollback_ptr; \
+static GCC_INLINE void fcs_compact_alloc_release(
+    fcs_compact_allocator_t * const allocator
+)
+{
+    allocator->ptr = allocator->rollback_ptr;
 }
 
 extern void fc_solve_compact_allocator_finish(
