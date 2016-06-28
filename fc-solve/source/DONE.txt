@@ -536,3 +536,18 @@ http://fc-solve.shlomifish.org/js-fc-solve/text/ .
 * See if GCC_INLINE-ing the functions inside fcs_hash.c will yield
 any benefit.
 
+* Check if converting the various STRUCT_QUERY_FLAGs to individual
+fcs_bool_t-s speeds things up.
+** Checked and converted.
+
+* Consider a [partial] testing of FCS_DISABLE_MULTI_FLARES.
+** Perhaps implement conditional of more disabled features in -l
+x64t/-l ci7t/etc.
+
+* Implement a transpose command (to flip a layout from vertical to horizontal)
+by request of Manish.
+** With tests.
+
+* Experiment with generating the command-line arguments parsing using gperf
+(perfect hash): http://www.ibm.com/developerworks/library/l-gperf/index.html .
+

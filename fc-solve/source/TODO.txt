@@ -10,17 +10,6 @@ Pressing
 Non-pressing
 ------------
 
-* Check if converting the various STRUCT_QUERY_FLAGs to individual
-fcs_bool_t-s speeds things up.
-
-* Consider a [partial] testing of FCS_DISABLE_MULTI_FLARES.
-** Perhaps implement conditional of more disabled features in -l
-x64t/-l ci7t/etc.
-
-* Implement a transpose command (to flip a layout from vertical to horizontal)
-by request of Manish.
-** With tests.
-
 * Write a better initial board/initial layout validation code for the online
 solver (at least initially]):
 ** Exact number of playstacks. (requires introspection).
@@ -29,9 +18,6 @@ solver (at least initially]):
 ** whitespace gaps.
 ** invalid characters.
 ** misformatting of the format.
-
-* Experiment with generating the command-line arguments parsing using gperf
-(perfect hash): http://www.ibm.com/developerworks/library/l-gperf/index.html .
 
 * Try different +fcs_hash.c+ hash fill factors, and try to avoid unnecessary
 calculations to check if it should be rehashed.
