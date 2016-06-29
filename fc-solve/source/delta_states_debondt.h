@@ -50,7 +50,7 @@ typedef struct
 #endif
     int num_freecells;
     int num_columns;
-    fcs_state_t * _init_state, * _derived_state;
+    fcs_state_t *_init_state, *_derived_state;
     int bits_per_orig_cards_in_column;
     int card_states[4 * RANK_KING];
     char bakers_dozen_topmost_cards_lookup[((1 << 6) / 8) + 1];
@@ -58,11 +58,9 @@ typedef struct
     fcs_var_base_writer_t w;
 } fc_solve_debondt_delta_stater_t;
 
-extern char * fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
-        enum fcs_dbm_variant_type_t local_variant,
-        const char * init_state_str_proto,
-        const char * derived_state_str_proto
-        );
+extern char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
+    enum fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
+    const char *derived_state_str_proto);
 
 #ifdef __cplusplus
 }

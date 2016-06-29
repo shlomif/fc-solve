@@ -36,13 +36,12 @@
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
-DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-        const enum fcs_dbm_variant_type_t local_variant,
-        const char * const init_state_str_proto,
-        const char * const derived_state_str_proto
-)
+DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+    const enum fcs_dbm_variant_type_t local_variant,
+    const char *const init_state_str_proto,
+    const char *const derived_state_str_proto)
 {
-    char * init_state_s, * derived_state_s;
+    char *init_state_s, *derived_state_s;
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
     fc_solve_delta_stater_t delta;
     fcs_uchar_t enc_state[24];
@@ -57,42 +56,24 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     init_state_s = prepare_state_str(init_state_str_proto);
     derived_state_s = prepare_state_str(derived_state_str_proto);
 
-    fc_solve_initial_user_state_to_c(
-            init_state_s,
-            &init_state,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM,
-            indirect_stacks_buffer
-            );
+    fc_solve_initial_user_state_to_c(init_state_s, &init_state, FREECELLS_NUM,
+        STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
-    fc_solve_initial_user_state_to_c(
-            derived_state_s,
-            &derived_state,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM,
-            derived_stacks_buffer
-            );
+    fc_solve_initial_user_state_to_c(derived_state_s, &derived_state,
+        FREECELLS_NUM, STACKS_NUM, DECKS_NUM, derived_stacks_buffer);
 
     fc_solve_delta_stater_init(
-            &delta,
-            local_variant,
-            &(init_state.s),
-            STACKS_NUM,
-            FREECELLS_NUM
+        &delta, local_variant, &(init_state.s), STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+        ,
+        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-            );
+        );
 
     fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));
 
     fc_solve_state_init(
-        &new_derived_state,
-        STACKS_NUM,
-        new_derived_indirect_stacks_buffer
-    );
+        &new_derived_state, STACKS_NUM, new_derived_indirect_stacks_buffer);
 
     fc_solve_bit_writer_init(&bit_w, enc_state);
     fc_solve_delta_stater_encode_composite(&delta, &bit_w);
@@ -102,23 +83,16 @@ DLLEXPORT char * fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 
     fc_solve_init_locs(&locs);
 
-    char * new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
-    fc_solve_state_as_string(
-        new_derived_as_str,
-        &(new_derived_state.s),
-        &locs
-        PASS_FREECELLS(FREECELLS_NUM)
-        PASS_STACKS(STACKS_NUM)
-        PASS_DECKS(DECKS_NUM)
-        FC_SOLVE__PASS_PARSABLE(TRUE)
-        , FALSE
-        FC_SOLVE__PASS_T(TRUE)
-    );
+    char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
+    fc_solve_state_as_string(new_derived_as_str, &(new_derived_state.s),
+        &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
+            PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
+        FALSE FC_SOLVE__PASS_T(TRUE));
 
     free(init_state_s);
     free(derived_state_s);
 
-    fc_solve_delta_stater_release (&delta);
+    fc_solve_delta_stater_release(&delta);
 
     return new_derived_as_str;
 }
