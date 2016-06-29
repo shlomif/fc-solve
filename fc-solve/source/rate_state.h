@@ -27,8 +27,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include <math.h>
@@ -36,10 +35,12 @@ extern "C"
 #define FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
 typedef double fc_solve_seq_cards_power_type_t;
-extern const fc_solve_seq_cards_power_type_t fc_solve_seqs_over_cards_lookup[2 * 13 * 4 + 1];
+extern const fc_solve_seq_cards_power_type_t
+    fc_solve_seqs_over_cards_lookup[2 * 13 * 4 + 1];
 
 #if 0
-#define FCS_SEQS_OVER_RENEGADE_POWER(n) pow(n, FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
+#define FCS_SEQS_OVER_RENEGADE_POWER(n)                                        \
+    pow(n, FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT)
 #else
 #define FCS_SEQS_OVER_RENEGADE_POWER(n) fc_solve_seqs_over_cards_lookup[(n)]
 #endif

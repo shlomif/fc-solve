@@ -40,19 +40,22 @@ typedef u_int32_t microsoft_rand_uint_t;
 
 typedef long long microsoft_rand_t;
 
-static GCC_INLINE microsoft_rand_uint_t microsoft_rand_rand(microsoft_rand_t * my_rand)
+static GCC_INLINE microsoft_rand_uint_t microsoft_rand_rand(
+    microsoft_rand_t *my_rand)
 {
     *my_rand = ((*my_rand) * 214013 + 2531011);
     return ((*my_rand) >> 16) & 0x7fff;
 }
 
-static GCC_INLINE microsoft_rand_uint_t microsoft_rand_randp(microsoft_rand_t * my_rand)
+static GCC_INLINE microsoft_rand_uint_t microsoft_rand_randp(
+    microsoft_rand_t *my_rand)
 {
     *my_rand = ((*my_rand) * 214013 + 2531011);
     return ((*my_rand) >> 16) & 0xffff;
 }
 
-static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_rand_t * const seedx_ptr, const long long gnGameNumber)
+static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(
+    microsoft_rand_t *const seedx_ptr, const long long gnGameNumber)
 {
     if (gnGameNumber < 0x100000000LL)
     {
@@ -67,17 +70,16 @@ static GCC_INLINE microsoft_rand_uint_t microsoft_rand__game_num_rand(microsoft_
 
 typedef int CARD;
 
+#define SUIT(card) ((card) & (4 - 1))
+#define VALUE(card) ((card) >> 2)
 
-#define     SUIT(card)      ((card) & (4-1))
-#define     VALUE(card)     ((card) >> 2)
+#define MAXPOS 7
+#define MAXCOL 8
 
-#define     MAXPOS          7
-#define     MAXCOL          8
+static const char *card_to_string_values = "A23456789TJQK";
+static const char *card_to_string_suits = "CDHS";
 
-static const char * card_to_string_values = "A23456789TJQK";
-static const char * card_to_string_suits = "CDHS";
-
-static GCC_INLINE void card_to_string(char * const s, const CARD card)
+static GCC_INLINE void card_to_string(char *const s, const CARD card)
 {
     s[0] = card_to_string_values[VALUE(card)];
     s[1] = card_to_string_suits[SUIT(card)];
@@ -94,46 +96,49 @@ static GCC_INLINE void card_to_string(char * const s, const CARD card)
  * we'll devise a header for this routine.
  *
  * */
-void DLLEXPORT fc_solve_get_board_l(const long long gamenumber, char * const ret);
+void DLLEXPORT fc_solve_get_board_l(
+    const long long gamenumber, char *const ret);
 
-extern void DLLEXPORT fc_solve_get_board_l(const long long gamenumber, char * const ret)
+extern void DLLEXPORT fc_solve_get_board_l(
+    const long long gamenumber, char *const ret)
 #else
-static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
+static GCC_INLINE void get_board_l(const long long gamenumber, char *const ret)
 #endif
 {
-    long long seedx = (microsoft_rand_uint_t)((gamenumber < 0x100000000LL) ? gamenumber : (gamenumber - 0x100000000LL));
-    strcpy(ret,
-        "XX XX XX XX XX XX XX\n"
-        "XX XX XX XX XX XX XX\n"
-        "XX XX XX XX XX XX XX\n"
-        "XX XX XX XX XX XX XX\n"
-        "XX XX XX XX XX XX\n"
-        "XX XX XX XX XX XX\n"
-        "XX XX XX XX XX XX\n"
-        "XX XX XX XX XX XX\n"
-    );
+    long long seedx = (microsoft_rand_uint_t)(
+        (gamenumber < 0x100000000LL) ? gamenumber
+                                     : (gamenumber - 0x100000000LL));
+    strcpy(ret, "XX XX XX XX XX XX XX\n"
+                "XX XX XX XX XX XX XX\n"
+                "XX XX XX XX XX XX XX\n"
+                "XX XX XX XX XX XX XX\n"
+                "XX XX XX XX XX XX\n"
+                "XX XX XX XX XX XX\n"
+                "XX XX XX XX XX XX\n"
+                "XX XX XX XX XX XX\n");
 
-    CARD deck[52];            /* deck of 52 unique cards */
+    CARD deck[52]; /* deck of 52 unique cards */
 
     /* shuffle cards */
 
-    for (int i = 0; i < 52; i++)      /* put unique card in each deck loc. */
+    for (int i = 0; i < 52; i++) /* put unique card in each deck loc. */
     {
         deck[i] = i;
     }
 
     {
-        microsoft_rand_uint_t num_cards_left = 52;          /*  cards left to be chosen in shuffle */
+        microsoft_rand_uint_t num_cards_left =
+            52; /*  cards left to be chosen in shuffle */
         for (int i = 0; i < 52; i++)
         {
-            const microsoft_rand_uint_t j
-                = microsoft_rand__game_num_rand(&seedx, gamenumber) % num_cards_left;
-            const int col = (i & (8-1));
+            const microsoft_rand_uint_t j =
+                microsoft_rand__game_num_rand(&seedx, gamenumber) %
+                num_cards_left;
+            const int col = (i & (8 - 1));
             const int card_idx = i >> 3;
             card_to_string(
-                &ret[3 * (col * 7 - ((col > 4) ? (col-4) : 0) + card_idx)],
-                deck[j]
-            );
+                &ret[3 * (col * 7 - ((col > 4) ? (col - 4) : 0) + card_idx)],
+                deck[j]);
             deck[j] = deck[--num_cards_left];
         }
     }
@@ -150,11 +155,11 @@ static GCC_INLINE void get_board_l(const long long gamenumber, char * const ret)
  * we'll devise a header for this routine.
  *
  * */
-void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret);
+void DLLEXPORT fc_solve_get_board(long gamenumber, char *ret);
 
-extern void DLLEXPORT fc_solve_get_board(long gamenumber, char * ret)
+extern void DLLEXPORT fc_solve_get_board(long gamenumber, char *ret)
 #else
-static GCC_INLINE void get_board(long gamenumber, char * ret)
+static GCC_INLINE void get_board(long gamenumber, char *ret)
 #endif
 {
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
@@ -164,8 +169,7 @@ static GCC_INLINE void get_board(long gamenumber, char * ret)
 #endif
 }
 
-
-typedef char fcs_state_string_t[52*3 + 8 + 1];
+typedef char fcs_state_string_t[52 * 3 + 8 + 1];
 
 #ifdef __cplusplus
 }

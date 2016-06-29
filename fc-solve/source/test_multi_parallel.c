@@ -35,15 +35,17 @@
 #include "handle_parsing.h"
 #include "trace_mem.h"
 
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
     fcs_portable_time_t mytime;
     fcs_int64_t total_num_iters = 0;
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-    binary_output_t binary_output = {.filename = NULL,};
-    const char * solutions_directory = NULL;
-    char * solution_filename = NULL;
+    binary_output_t binary_output = {
+        .filename = NULL,
+    };
+    const char *solutions_directory = NULL;
+    char *solution_filename = NULL;
     int arg = 1;
 
     if (argc < 4)
@@ -57,20 +59,21 @@ int main(int argc, char * argv[])
     const int stop_at = atoi(argv[arg++]);
     if (stop_at <= 0)
     {
-        fprintf(stderr, "print_step (the third argument) must be greater than 0.\n");
+        fprintf(stderr,
+            "print_step (the third argument) must be greater than 0.\n");
         print_help();
         exit(-1);
-
     }
 
-    for (;arg < argc; arg++)
+    for (; arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--binary-output-to"))
         {
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--binary-output-to came without an argument!\n");
+                fprintf(
+                    stderr, "--binary-output-to came without an argument!\n");
                 print_help();
                 exit(-1);
             }
@@ -81,7 +84,8 @@ int main(int argc, char * argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--total-iterations-limit came without an argument!\n");
+                fprintf(stderr,
+                    "--total-iterations-limit came without an argument!\n");
                 print_help();
                 exit(-1);
             }
@@ -93,15 +97,14 @@ int main(int argc, char * argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--solutions-directory came without an argument!\n");
+                fprintf(stderr,
+                    "--solutions-directory came without an argument!\n");
                 print_help();
                 exit(-1);
             }
             solutions_directory = argv[arg];
-            solution_filename = SMALLOC(
-                solution_filename,
-                strlen(solutions_directory) + 1024
-            );
+            solution_filename =
+                SMALLOC(solution_filename, strlen(solutions_directory) + 1024);
         }
         else
         {
@@ -112,73 +115,64 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    fc_solve_display_information_context_t display_context = INITIAL_DISPLAY_CONTEXT;
-    void * const instance = alloc_instance_and_parse(
-        argc,
-        argv,
-        &arg,
-        known_parameters,
-        cmd_line_callback,
-        &display_context,
-        TRUE
-    );
+    fc_solve_display_information_context_t display_context =
+        INITIAL_DISPLAY_CONTEXT;
+    void *const instance = alloc_instance_and_parse(argc, argv, &arg,
+        known_parameters, cmd_line_callback, &display_context, TRUE);
 
-    bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
+    bin_init(&binary_output, &start_board, &end_board,
+        &total_iterations_limit_per_board);
 
     if (was_total_iterations_limit_per_board_set)
     {
-        freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
+        freecell_solver_user_limit_iterations_long(
+            instance, total_iterations_limit_per_board);
     }
 
-    for (int board_num = start_board ; board_num <= end_board ; board_num++)
+    for (int board_num = start_board; board_num <= end_board; board_num++)
     {
         fcs_state_string_t state_string;
         get_board(board_num, state_string);
 
         const int ret =
-            freecell_solver_user_solve_board(
-                instance,
-                state_string
-                );
+            freecell_solver_user_solve_board(instance, state_string);
 
         switch (ret)
         {
-            case FCS_STATE_SUSPEND_PROCESS:
+        case FCS_STATE_SUSPEND_PROCESS:
             FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
             print_int(&binary_output, -1);
             break;
 
-            case FCS_STATE_FLARES_PLAN_ERROR:
-            printf("Flares Plan: %s\n", freecell_solver_user_get_last_error_string(instance));
+        case FCS_STATE_FLARES_PLAN_ERROR:
+            printf("Flares Plan: %s\n",
+                freecell_solver_user_get_last_error_string(instance));
             goto out_of_loop;
 
-            case FCS_STATE_IS_NOT_SOLVEABLE:
+        case FCS_STATE_IS_NOT_SOLVEABLE:
             FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
             print_int(&binary_output, -2);
             break;
 
-            default:
-            print_int(&binary_output, (int)freecell_solver_user_get_num_times_long(instance));
+        default:
+            print_int(&binary_output,
+                (int)freecell_solver_user_get_num_times_long(instance));
             break;
         }
 
         if (solutions_directory)
         {
-            sprintf(solution_filename, "%s%09d.sol",
-                solutions_directory, board_num
-            );
-            FILE * const output_fh = fopen(solution_filename, "wt");
-            if (! output_fh)
+            sprintf(solution_filename, "%s%09d.sol", solutions_directory,
+                board_num);
+            FILE *const output_fh = fopen(solution_filename, "wt");
+            if (!output_fh)
             {
-                fprintf(stderr,
-                        "Could not open output file '%s' for writing!",
-                        solution_filename
-                       );
+                fprintf(stderr, "Could not open output file '%s' for writing!",
+                    solution_filename);
                 return -1;
             }
             fc_solve_output_result_to_file(
-                output_fh, instance, ret, &display_context
-            );
+                output_fh, instance, ret, &display_context);
             fclose(output_fh);
         }
         total_num_iters += freecell_solver_user_get_num_times_long(instance);
@@ -197,7 +191,7 @@ out_of_loop:
 
     freecell_solver_user_free(instance);
     bin_close(&binary_output);
-    free (solution_filename);
+    free(solution_filename);
     solution_filename = NULL;
 
     return 0;

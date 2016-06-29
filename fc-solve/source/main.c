@@ -31,7 +31,4 @@
 #include "cl_callback.h"
 #include "default_iter_handler.h"
 
-int main(int argc, char * argv[])
-{
-    return fc_solve_main__main(argc, argv);
-}
+int main(int argc, char *argv[]) { return fc_solve_main__main(argc, argv); }

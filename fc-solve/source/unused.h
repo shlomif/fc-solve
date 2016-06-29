@@ -28,7 +28,7 @@
 #pragma once
 
 #if defined(__GNUC__)
-#define GCC_UNUSED __attribute__ ((unused))
+#define GCC_UNUSED __attribute__((unused))
 #else
 #define GCC_UNUSED
 #endif

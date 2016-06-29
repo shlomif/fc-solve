@@ -27,20 +27,19 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /*
  * These emulate the C++ auto keyword.
  * */
-#define const_AUTO(myvar,expr) const typeof(expr) myvar = (expr)
-#define var_AUTO(myvar,expr) typeof(expr) myvar = (expr)
+#define const_AUTO(myvar, expr) const typeof(expr) myvar = (expr)
+#define var_AUTO(myvar, expr) typeof(expr) myvar = (expr)
 
 /*
  * Common macros for object slots.
  * */
-#define const_SLOT(myslot,obj) const_AUTO(myslot,(obj)->myslot)
+#define const_SLOT(myslot, obj) const_AUTO(myslot, (obj)->myslot)
 
 #ifdef __cplusplus
 };

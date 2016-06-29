@@ -44,10 +44,10 @@ extern "C" {
 #include "internal_move_struct.h"
 #include "indirect_buffer.h"
 
-#if MAX_NUM_INITIAL_CARDS_IN_A_STACK+12>(MAX_NUM_DECKS*52)
-#define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_DECKS*52)
+#if MAX_NUM_INITIAL_CARDS_IN_A_STACK + 12 > (MAX_NUM_DECKS * 52)
+#define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_DECKS * 52)
 #else
-#define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_INITIAL_CARDS_IN_A_STACK+12)
+#define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_INITIAL_CARDS_IN_A_STACK + 12)
 #endif
 
 #ifndef FCS_MAX_NUM_SCANS_BUCKETS
@@ -60,7 +60,9 @@ extern "C" {
 #define FCS_CHAR_BIT_SIZE_LOG2 3
 #define MAX_NUM_SCANS (FCS_MAX_NUM_SCANS_BUCKETS * (sizeof(unsigned char) * 8))
 
-#define is_scan_visited(ptr_state, scan_id) ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id)>>FCS_CHAR_BIT_SIZE_LOG2] & (1 << ((scan_id)&((1<<(FCS_CHAR_BIT_SIZE_LOG2))-1))))
+#define is_scan_visited(ptr_state, scan_id)                                    \
+    ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id) >> FCS_CHAR_BIT_SIZE_LOG2] &    \
+        (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1))))
 
 #ifdef DEBUG_STATES
 
@@ -76,15 +78,15 @@ typedef struct
     fcs_card_t cards[MAX_NUM_CARDS_IN_A_STACK];
 } fc_stack_t;
 
-typedef fc_stack_t * fcs_cards_column_t;
-typedef const fc_stack_t * fcs_const_cards_column_t;
+typedef fc_stack_t *fcs_cards_column_t;
+typedef const fc_stack_t *fcs_const_cards_column_t;
 typedef int fcs_state_foundation_t;
 
 struct fcs_struct_state_t
 {
     fc_stack_t stacks[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    fcs_state_foundation_t foundations[MAX_NUM_DECKS*4];
+    fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
 };
 
 typedef struct fcs_struct_state_t fcs_state_t;
@@ -93,7 +95,7 @@ typedef int fcs_locs_t;
 
 static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 {
-    fcs_card_t ret = { .rank = rank, .suit = suit };
+    fcs_card_t ret = {.rank = rank, .suit = suit};
 
     return ret;
 }
@@ -106,35 +108,29 @@ static GCC_INLINE fcs_card_t fcs_char2card(unsigned char c)
     return fcs_make_card((c >> 2), (c & 0x3));
 }
 
-#define fcs_state_get_col(state, col_idx) \
-    (&((state).stacks[(col_idx)]))
+#define fcs_state_get_col(state, col_idx) (&((state).stacks[(col_idx)]))
 
-#define fcs_col_len(col) \
-    ((col)->num_cards)
+#define fcs_col_len(col) ((col)->num_cards)
 
-#define fcs_col_get_card(col, c) \
-    ((col)->cards[(c)] )
+#define fcs_col_get_card(col, c) ((col)->cards[(c)])
 
-#define fcs_card_rank(card) \
-    ( (card).rank )
+#define fcs_card_rank(card) ((card).rank)
 
-#define fcs_card_suit(card) \
-    ((int)( (card).suit ))
+#define fcs_card_suit(card) ((int)((card).suit))
 
-#define fcs_freecell_card(state, f) \
-    ( (state).freecells[(f)] )
+#define fcs_freecell_card(state, f) ((state).freecells[(f)])
 
-#define fcs_foundation_value(state, foundation_idx) \
-    ( (state).foundations[(foundation_idx)] )
+#define fcs_foundation_value(state, foundation_idx)                            \
+    ((state).foundations[(foundation_idx)])
 
 #define fcs_card_is_empty(card) (fcs_card_rank(card) == 0)
 #define fcs_card_is_valid(card) (fcs_card_rank(card) != 0)
 
-#elif defined(COMPACT_STATES)    /* #ifdef DEBUG_STATES */
+#elif defined(COMPACT_STATES) /* #ifdef DEBUG_STATES */
 
 typedef char fcs_card_t;
-typedef fcs_card_t * fcs_cards_column_t;
-typedef const fcs_card_t * fcs_const_cards_column_t;
+typedef fcs_card_t *fcs_cards_column_t;
+typedef const fcs_card_t *fcs_const_cards_column_t;
 typedef fcs_card_t fcs_state_foundation_t;
 /*
  * Card:
@@ -145,7 +141,8 @@ typedef fcs_card_t fcs_state_foundation_t;
 
 struct fcs_struct_state_t
 {
-    fcs_card_t data[MAX_NUM_STACKS*(MAX_NUM_CARDS_IN_A_STACK+1)+MAX_NUM_FREECELLS+4*MAX_NUM_DECKS];
+    fcs_card_t data[MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1) +
+                    MAX_NUM_FREECELLS + 4 * MAX_NUM_DECKS];
 };
 
 /*
@@ -172,120 +169,118 @@ typedef struct fcs_struct_state_t fcs_state_t;
 
 typedef char fcs_locs_t;
 
-#define fcs_state_get_col(state, col_idx) \
-    ( (state).data + ((col_idx)*(MAX_NUM_CARDS_IN_A_STACK+1)) )
+#define fcs_state_get_col(state, col_idx)                                      \
+    ((state).data + ((col_idx) * (MAX_NUM_CARDS_IN_A_STACK + 1)))
 
+#define FCS_FREECELLS_OFFSET ((MAX_NUM_STACKS) * (MAX_NUM_CARDS_IN_A_STACK + 1))
 
-#define FCS_FREECELLS_OFFSET ((MAX_NUM_STACKS)*(MAX_NUM_CARDS_IN_A_STACK+1))
+#define fcs_freecell_card(state, f) ((state).data[FCS_FREECELLS_OFFSET + (f)])
 
-#define fcs_freecell_card(state, f) \
-    ( (state).data[FCS_FREECELLS_OFFSET+(f)] )
+#define FCS_FOUNDATIONS_OFFSET                                                 \
+    (((MAX_NUM_STACKS) * (MAX_NUM_CARDS_IN_A_STACK + 1)) + (MAX_NUM_FREECELLS))
 
-#define FCS_FOUNDATIONS_OFFSET (((MAX_NUM_STACKS)*(MAX_NUM_CARDS_IN_A_STACK+1))+(MAX_NUM_FREECELLS))
+#define fcs_foundation_value(state, d)                                         \
+    ((state).data[FCS_FOUNDATIONS_OFFSET + (d)])
 
-#define fcs_foundation_value(state, d) \
-    ( (state).data[FCS_FOUNDATIONS_OFFSET+(d)])
-
-#elif defined(INDIRECT_STACK_STATES) /* #ifdef DEBUG_STATES
-                                        #elif defined(COMPACT_STATES)
+#elif defined(INDIRECT_STACK_STATES) /* #ifdef DEBUG_STATES                    \
+                                        #elif defined(COMPACT_STATES)          \
                                       */
 
 typedef char fcs_card_t;
-typedef fcs_card_t * fcs_cards_column_t;
-typedef const fcs_card_t * fcs_const_cards_column_t;
+typedef fcs_card_t *fcs_cards_column_t;
+typedef const fcs_card_t *fcs_const_cards_column_t;
 typedef char fcs_state_foundation_t;
 
 struct fcs_struct_state_t
 {
     fcs_cards_column_t stacks[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    fcs_state_foundation_t foundations[MAX_NUM_DECKS*4];
+    fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
 };
 
 typedef struct fcs_struct_state_t fcs_state_t;
 
-#define fcs_state_get_col(state, col_idx) \
-    ( (state).stacks[(col_idx)] )
+#define fcs_state_get_col(state, col_idx) ((state).stacks[(col_idx)])
 
+#define fcs_freecell_card(state, f) ((state).freecells[(f)])
 
+#define fcs_foundation_value(state, d) ((state).foundations[(d)])
 
-#define fcs_freecell_card(state, f) \
-    ( (state).freecells[(f)] )
-
-#define fcs_foundation_value(state, d) \
-    ( (state).foundations[(d)] )
-
-
-#define fcs_copy_stack(state_key, state_val, idx, buffer) \
-    {     \
-        if (! ((state_val).stacks_copy_on_write_flags & (1 << idx)))        \
-        {          \
-            fcs_cards_column_t copy_stack_col; \
-                                    \
-            (state_val).stacks_copy_on_write_flags |= (1 << idx);       \
-            copy_stack_col = fcs_state_get_col((state_key), idx); \
-            memcpy(&buffer[idx << 7], copy_stack_col, fcs_col_len(copy_stack_col)+1); \
-            fcs_state_get_col((state_key), idx) = &buffer[idx << 7];     \
-        }     \
+#define fcs_copy_stack(state_key, state_val, idx, buffer)                      \
+    {                                                                          \
+        if (!((state_val).stacks_copy_on_write_flags & (1 << idx)))            \
+        {                                                                      \
+            fcs_cards_column_t copy_stack_col;                                 \
+                                                                               \
+            (state_val).stacks_copy_on_write_flags |= (1 << idx);              \
+            copy_stack_col = fcs_state_get_col((state_key), idx);              \
+            memcpy(&buffer[idx << 7], copy_stack_col,                          \
+                fcs_col_len(copy_stack_col) + 1);                              \
+            fcs_state_get_col((state_key), idx) = &buffer[idx << 7];           \
+        }                                                                      \
     }
 
-#define fcs_duplicate_state_extra(dest_info)  \
-    {   \
-        (dest_info).stacks_copy_on_write_flags = 0; \
+#define fcs_duplicate_state_extra(dest_info)                                   \
+    {                                                                          \
+        (dest_info).stacks_copy_on_write_flags = 0;                            \
     }
 
 typedef char fcs_locs_t;
 
 #else
 #error DEBUG_STATES , COMPACT_STATES or INDIRECT_STACK_STATES are not defined.
-#endif /* #ifdef DEBUG_STATES -
-          #elif defined COMPACT_STATES -
-          #elif defined INDIRECT_STACK_STATES
+#endif /* #ifdef DEBUG_STATES -                                                \
+          #elif defined COMPACT_STATES -                                       \
+          #elif defined INDIRECT_STACK_STATES                                  \
         */
 
 /* These are macros or functions that are common to all three _STATES types. */
 
+#define fcs_freecell_card_suit(state, f)                                       \
+    (fcs_card_suit(fcs_freecell_card((state), (f))))
 
-#define fcs_freecell_card_suit(state, f) \
-    ( fcs_card_suit(fcs_freecell_card((state),(f))) )
+#define fcs_increment_foundation(state, foundation_idx)                        \
+    ((fcs_foundation_value((state), (foundation_idx)))++)
 
-#define fcs_increment_foundation(state, foundation_idx) \
-    ( (fcs_foundation_value((state), (foundation_idx)))++)
+#define fcs_set_foundation(state, foundation_idx, value)                       \
+    ((fcs_foundation_value((state), (foundation_idx))) =                       \
+            (fcs_state_foundation_t)(value))
 
-#define fcs_set_foundation(state, foundation_idx, value) \
-    ( (fcs_foundation_value((state), (foundation_idx))) = (fcs_state_foundation_t)(value) )
-
-#define fcs_col_pop_top(col) \
-    {       \
-        fcs_col_get_card((col), (--fcs_col_len(col))) = fc_solve_empty_card;  \
+#define fcs_col_pop_top(col)                                                   \
+    {                                                                          \
+        fcs_col_get_card((col), (--fcs_col_len(col))) = fc_solve_empty_card;   \
     }
 
-#define fcs_col_pop_card(col, into) \
-    {   \
-        into = fcs_col_get_card((col), (fcs_col_len(col)-1)); \
-        fcs_col_pop_top(col); \
+#define fcs_col_pop_card(col, into)                                            \
+    {                                                                          \
+        into = fcs_col_get_card((col), (fcs_col_len(col) - 1));                \
+        fcs_col_pop_top(col);                                                  \
     }
 
-#define fcs_col_push_card(col, from) \
-{ \
-  fcs_col_get_card((col), ((fcs_col_len(col))++)) = (from); \
-}
+#define fcs_col_push_card(col, from)                                           \
+    {                                                                          \
+        fcs_col_get_card((col), ((fcs_col_len(col))++)) = (from);              \
+    }
 
-#define fcs_freecell_is_empty(state, idx) (fcs_card_is_empty(fcs_freecell_card(state, idx)))
+#define fcs_freecell_is_empty(state, idx)                                      \
+    (fcs_card_is_empty(fcs_freecell_card(state, idx)))
 
 #if defined(COMPACT_STATES) || defined(DEBUG_STATES)
 
-#define fcs_duplicate_state_extra(dest_info)  \
-    {}
+#define fcs_duplicate_state_extra(dest_info)                                   \
+    {                                                                          \
+    }
 
-#define fcs_copy_stack(state_key, state_val, idx, buffer) {}
+#define fcs_copy_stack(state_key, state_val, idx, buffer)                      \
+    {                                                                          \
+    }
 
 #endif
 
-#define fcs_put_card_in_freecell(state, f, card) \
+#define fcs_put_card_in_freecell(state, f, card)                               \
     (fcs_freecell_card((state), (f)) = (card))
 
-#define fcs_empty_freecell(state, f) \
+#define fcs_empty_freecell(state, f)                                           \
     fcs_put_card_in_freecell((state), (f), fc_solve_empty_card)
 
 /* These are macros that are common to COMPACT_STATES and
@@ -297,33 +292,31 @@ typedef char fcs_locs_t;
 
 static GCC_INLINE fcs_card_t fcs_make_card(const int rank, const int suit)
 {
-    return (fcs_card_t)( (((fcs_card_t)rank) << 2) | ((fcs_card_t)suit) );
+    return (fcs_card_t)((((fcs_card_t)rank) << 2) | ((fcs_card_t)suit));
 }
 
 #define fcs_card2char(c) (c)
 #define fcs_char2card(c) (c)
 
-#define fcs_col_len(col) \
-    ( ((col)[0]) )
+#define fcs_col_len(col) (((col)[0]))
 
-#define fcs_col_get_card(col, card_idx) \
-    ((col)[(card_idx)+1])
+#define fcs_col_get_card(col, card_idx) ((col)[(card_idx) + 1])
 
-#define fcs_card_rank(card) \
-    ( (card) >> 2 )
+#define fcs_card_rank(card) ((card) >> 2)
 
-#define fcs_card_suit(card) \
-    ( (card) & 0x03 )
+#define fcs_card_suit(card) ((card)&0x03)
 
 #endif
 
-static GCC_INLINE fcs_card_t fcs_col_get_rank(const fcs_const_cards_column_t col, const int card_idx)
+static GCC_INLINE fcs_card_t fcs_col_get_rank(
+    const fcs_const_cards_column_t col, const int card_idx)
 {
     return fcs_card_rank(fcs_col_get_card(col, card_idx));
 }
 #define FCS_RANK_KING 13
 
-static GCC_INLINE fcs_bool_t fcs_col_is_king(const fcs_const_cards_column_t col, const int card_idx)
+static GCC_INLINE fcs_bool_t fcs_col_is_king(
+    const fcs_const_cards_column_t col, const int card_idx)
 {
     return (fcs_col_get_rank(col, card_idx) == FCS_RANK_KING);
 }
@@ -344,12 +337,12 @@ struct fcs_state_keyval_pair_struct;
 struct fcs_state_extra_info_struct
 {
 #ifdef FCS_RCS_STATES
-    struct fcs_state_extra_info_struct * parent;
+    struct fcs_state_extra_info_struct *parent;
 #else
-    struct fcs_state_keyval_pair_struct * parent;
+    struct fcs_state_keyval_pair_struct *parent;
 #endif
 #ifdef FCS_WITH_MOVES
-    fcs_move_stack_t * moves_to_parent;
+    fcs_move_stack_t *moves_to_parent;
 #endif
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
@@ -373,7 +366,6 @@ struct fcs_state_extra_info_struct
      * */
     unsigned short num_active_children;
 
-
     /*
      * This field contains global, scan-independant flags, which are used
      * from the FCS_VISITED_* enum below.
@@ -392,7 +384,6 @@ struct fcs_state_extra_info_struct
      * for it.
      * */
     fcs_game_limit_t visited;
-
 
     /*
      * This is a vector of flags - one for each scan. Each indicates whether
@@ -419,14 +410,14 @@ typedef struct
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
 } fcs_state_locs_struct_t;
 
-static GCC_INLINE void fc_solve_init_locs(fcs_state_locs_struct_t * locs)
+static GCC_INLINE void fc_solve_init_locs(fcs_state_locs_struct_t *locs)
 {
     int i;
-    for ( i=0 ; i<MAX_NUM_STACKS ; i++)
+    for (i = 0; i < MAX_NUM_STACKS; i++)
     {
         locs->stack_locs[i] = (fcs_locs_t)i;
     }
-    for ( i=0 ; i<MAX_NUM_FREECELLS ; i++)
+    for (i = 0; i < MAX_NUM_FREECELLS; i++)
     {
         locs->fc_locs[i] = (fcs_locs_t)i;
     }
@@ -436,35 +427,36 @@ typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
 
 struct fcs_state_keyval_pair_struct
 {
-    union
-    {
+    union {
         struct
         {
             fcs_state_t s;
             fcs_state_extra_info_t info;
         };
-        struct fcs_state_keyval_pair_struct * next;
+        struct fcs_state_keyval_pair_struct *next;
     };
 };
 
 typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
 
-typedef struct {
-    fcs_state_t * key;
-    fcs_state_extra_info_t * val;
+typedef struct
+{
+    fcs_state_t *key;
+    fcs_state_extra_info_t *val;
 } fcs_kv_state_t;
 
-static GCC_INLINE fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(fcs_state_keyval_pair_t * const s)
+static GCC_INLINE fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(
+    fcs_state_keyval_pair_t *const s)
 {
-    return (const fcs_kv_state_t) {.key = &(s->s), .val = &(s->info)};
+    return (const fcs_kv_state_t){.key = &(s->s), .val = &(s->info)};
 }
 
 /* Always the same. */
-#define fcs_duplicate_kv_state(ptr_dest, ptr_src) \
-    { \
-    *((ptr_dest)->key) = *((ptr_src)->key); \
-    *((ptr_dest)->val) = *((ptr_src)->val); \
-    fcs_duplicate_state_extra(*((ptr_dest)->val));   \
+#define fcs_duplicate_kv_state(ptr_dest, ptr_src)                              \
+    {                                                                          \
+        *((ptr_dest)->key) = *((ptr_src)->key);                                \
+        *((ptr_dest)->val) = *((ptr_src)->val);                                \
+        fcs_duplicate_state_extra(*((ptr_dest)->val));                         \
     }
 
 /*
@@ -480,13 +472,13 @@ static GCC_INLINE fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(fcs_state_keyval_pa
 typedef fcs_state_extra_info_t fcs_collectible_state_t;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 
-#define fcs_duplicate_state(x,y) fcs_duplicate_kv_state((x),(y))
+#define fcs_duplicate_state(x, y) fcs_duplicate_kv_state((x), (y))
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (&((s)->info))
 #define FCS_STATE_kv_to_collectible(s) ((s)->val)
 
-static GCC_INLINE void
-FCS_STATE_collectible_to_kv(fcs_kv_state_t * const ret, fcs_collectible_state_t * const s)
+static GCC_INLINE void FCS_STATE_collectible_to_kv(
+    fcs_kv_state_t *const ret, fcs_collectible_state_t *const s)
 {
     ret->val = s;
 }
@@ -497,19 +489,17 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
 
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
 
-#define fcs_duplicate_state(ptr_dest, ptr_src) \
-    { \
-    *(ptr_dest) = *(ptr_src); \
-    fcs_duplicate_state_extra((ptr_dest)->info);   \
+#define fcs_duplicate_state(ptr_dest, ptr_src)                                 \
+    {                                                                          \
+        *(ptr_dest) = *(ptr_src);                                              \
+        fcs_duplicate_state_extra((ptr_dest)->info);                           \
     }
-
-
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (s)
 #define FCS_STATE_kv_to_collectible(s) ((fcs_collectible_state_t *)((s)->key))
 
-static GCC_INLINE void
-FCS_STATE_collectible_to_kv(fcs_kv_state_t * const ret, fcs_collectible_state_t * const s)
+static GCC_INLINE void FCS_STATE_collectible_to_kv(
+    fcs_kv_state_t *const ret, fcs_collectible_state_t *const s)
 {
     *ret = FCS_STATE_keyval_pair_to_kv(s);
 }
@@ -535,10 +525,9 @@ FCS_STATE_collectible_to_kv(fcs_kv_state_t * const ret, fcs_collectible_state_t 
 #ifdef DEBUG_STATES
 
 extern fcs_card_t fc_solve_empty_card;
-#define DEFINE_fc_solve_empty_card() \
-    fcs_card_t fc_solve_empty_card = {0,0}
+#define DEFINE_fc_solve_empty_card() fcs_card_t fc_solve_empty_card = {0, 0}
 
-#elif defined(COMPACT_STATES) || defined (INDIRECT_STACK_STATES)
+#elif defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
 
 #define fc_solve_empty_card ((fcs_card_t)0)
 
@@ -575,7 +564,8 @@ extern fcs_card_t fc_solve_empty_card;
 #define DECKS_NUM__ARG PASS_DECKS(const int decks_num)
 
 #define FREECELLS_AND_STACKS_ARGS() FREECELLS_NUM__ARG STACKS_NUM__ARG
-#define FREECELLS_STACKS_DECKS__ARGS() FREECELLS_AND_STACKS_ARGS() DECKS_NUM__ARG
+#define FREECELLS_STACKS_DECKS__ARGS()                                         \
+    FREECELLS_AND_STACKS_ARGS() DECKS_NUM__ARG
 
 #ifdef FC_SOLVE_IMPLICIT_T_RANK
 #define FCS_IMPLICIT_T_RANK
@@ -584,46 +574,41 @@ extern fcs_card_t fc_solve_empty_card;
 #define PASS_T(arg) FC_SOLVE__PASS_T(arg)
 
 extern void fc_solve_canonize_state(
-    fcs_state_t * const ptr_state_key
-    FREECELLS_AND_STACKS_ARGS()
-);
+    fcs_state_t *const ptr_state_key FREECELLS_AND_STACKS_ARGS());
 
-void fc_solve_canonize_state_with_locs(
-    fcs_state_t * const ptr_state_key,
-    fcs_state_locs_struct_t * const locs
-    FREECELLS_AND_STACKS_ARGS()
-);
+void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
+    fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS());
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-typedef void * fcs_compare_context_t;
+typedef void *fcs_compare_context_t;
 #else
-typedef const void * fcs_compare_context_t;
+typedef const void *fcs_compare_context_t;
 #endif
 
-static GCC_INLINE int fc_solve_state_compare(const void * s1, const void * s2)
+static GCC_INLINE int fc_solve_state_compare(const void *s1, const void *s2)
 {
-    return memcmp(s1,s2,sizeof(fcs_state_t));
+    return memcmp(s1, s2, sizeof(fcs_state_t));
 }
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-extern int fc_solve_state_compare_equal(const void * s1, const void * s2);
+extern int fc_solve_state_compare_equal(const void *s1, const void *s2);
 #endif
-extern int fc_solve_state_compare_with_context(const void * s1, const void * s2, fcs_compare_context_t context);
-
+extern int fc_solve_state_compare_with_context(
+    const void *s1, const void *s2, fcs_compare_context_t context);
 
 /*
  * Convert an entire card to its user representation.
  *
  * */
-extern void fc_solve_card_perl2user(const fcs_card_t card, char * const str
-    PASS_T(const fcs_bool_t t));
+extern void fc_solve_card_perl2user(
+    const fcs_card_t card, char *const str PASS_T(const fcs_bool_t t));
 
 /*
  * This function converts a card number from its user representation
  * (e.g: "A", "K", "9") to its card number that can be used by
  * the program.
  * */
-extern int fc_solve_u2p_rank(const char * string);
+extern int fc_solve_u2p_rank(const char *string);
 
 #ifdef FC_SOLVE__STRICTER_BOARD_PARSING
 #define FC_SOLVE_MAP_CHAR(c) (c)
@@ -638,24 +623,24 @@ extern int fc_solve_u2p_rank(const char * string);
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-static GCC_INLINE int fc_solve_u2p_suit(const char * suit)
+static GCC_INLINE int fc_solve_u2p_suit(const char *suit)
 {
     while (TRUE)
     {
-        switch(FC_SOLVE_MAP_CHAR(*suit))
+        switch (FC_SOLVE_MAP_CHAR(*suit))
         {
-            case 'H':
-            case ' ':
-            case '\0':
-                return 0;
-            case 'C':
-                return 1;
-            case 'D':
-                return 2;
-            case 'S':
-                return 3;
-            default:
-                suit++;
+        case 'H':
+        case ' ':
+        case '\0':
+            return 0;
+        case 'C':
+            return 1;
+        case 'D':
+            return 2;
+        case 'S':
+            return 3;
+        default:
+            suit++;
         }
     }
 }
@@ -664,38 +649,35 @@ static GCC_INLINE int fc_solve_u2p_suit(const char * suit)
  * This function converts an entire card from its string representations
  * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
  * */
-static GCC_INLINE fcs_card_t fc_solve_card_parse_str(const char * const str)
+static GCC_INLINE fcs_card_t fc_solve_card_parse_str(const char *const str)
 {
     return fcs_make_card(fc_solve_u2p_rank(str), fc_solve_u2p_suit(str));
 }
 
 #ifdef INDIRECT_STACK_STATES
-#define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer) \
-    fc_solve_state_init_proto(state PASS_STACKS(stacks_num) , indirect_stacks_buffer)
+#define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer)         \
+    fc_solve_state_init_proto(                                                 \
+        state PASS_STACKS(stacks_num), indirect_stacks_buffer)
 #else
-#define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer) \
+#define fc_solve_state_init(state, stacks_num, indirect_stacks_buffer)         \
     fc_solve_state_init_proto(state PASS_STACKS(stacks_num))
 #endif
 
 static GCC_INLINE void fc_solve_state_init_proto(
-    fcs_state_keyval_pair_t * const state
-    STACKS_NUM__ARG GCC_UNUSED
-    IND_BUF_T_PARAM(indirect_stacks_buffer)
-    )
+    fcs_state_keyval_pair_t *const state STACKS_NUM__ARG GCC_UNUSED
+        IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     memset(&(state->s), 0, sizeof(state->s));
 
 #ifdef INDIRECT_STACK_STATES
     {
         int i;
-        for ( i = 0 ; i < STACKS_NUM__VAL ; i++)
+        for (i = 0; i < STACKS_NUM__VAL; i++)
         {
-            memset(
-                state->s.stacks[i] = &indirect_stacks_buffer[i << 7],
-                 '\0', MAX_NUM_DECKS*52+1
-            );
+            memset(state->s.stacks[i] = &indirect_stacks_buffer[i << 7], '\0',
+                MAX_NUM_DECKS * 52 + 1);
         }
-        for(;i<MAX_NUM_STACKS;i++)
+        for (; i < MAX_NUM_STACKS; i++)
         {
             state->s.stacks[i] = NULL;
         }
@@ -719,58 +701,52 @@ static GCC_INLINE void fc_solve_state_init_proto(
 #endif
 }
 
-static const char * const fc_solve_freecells_prefixes[] = { "FC:", "Freecells:", "Freecell:", NULL};
+static const char *const fc_solve_freecells_prefixes[] = {
+    "FC:", "Freecells:", "Freecell:", NULL};
 
-static const char * const fc_solve_foundations_prefixes[] = { "Decks:", "Deck:", "Founds:", "Foundations:", "Foundation:", "Found:", NULL};
+static const char *const fc_solve_foundations_prefixes[] = {"Decks:", "Deck:",
+    "Founds:", "Foundations:", "Foundation:", "Found:", NULL};
 #if defined(WIN32) && (!defined(HAVE_STRNCASECMP))
 #ifndef strncasecmp
-#define strncasecmp(a,b,c) (strnicmp((a),(b),(c)))
+#define strncasecmp(a, b, c) (strnicmp((a), (b), (c)))
 #endif
 #endif
 
-#define fc_solve_initial_user_state_to_c(string, out_state, freecells_num, stacks_num, decks_num, indirect_stacks_buffer) \
-    fc_solve_initial_user_state_to_c_proto( \
-        string, out_state \
-        PASS_FREECELLS(freecells_num) \
-        PASS_STACKS(stacks_num) \
-        PASS_DECKS(decks_num) \
-        PASS_IND_BUF_T(indirect_stacks_buffer) \
-        )
+#define fc_solve_initial_user_state_to_c(string, out_state, freecells_num,     \
+                                         stacks_num, decks_num,                \
+                                         indirect_stacks_buffer)               \
+    fc_solve_initial_user_state_to_c_proto(string,                             \
+        out_state PASS_FREECELLS(freecells_num) PASS_STACKS(stacks_num)        \
+            PASS_DECKS(decks_num) PASS_IND_BUF_T(indirect_stacks_buffer))
 
 static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
-    const char * const string,
-    fcs_state_keyval_pair_t * const out_state
-    FREECELLS_STACKS_DECKS__ARGS()
-    IND_BUF_T_PARAM(indirect_stacks_buffer)
-    )
+    const char *const string,
+    fcs_state_keyval_pair_t *const out_state FREECELLS_STACKS_DECKS__ARGS()
+        IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
-    const char * const * prefix;
+    const char *const *prefix;
 
-    fc_solve_state_init(
-        out_state,
-        STACKS_NUM__VAL,
-        indirect_stacks_buffer
-        );
-    const char * str = string;
+    fc_solve_state_init(out_state, STACKS_NUM__VAL, indirect_stacks_buffer);
+    const char *str = string;
 
     fcs_bool_t first_line = TRUE;
 
 #define ret (out_state->s)
 /* Handle the end of string - shouldn't happen */
-#define handle_eos() \
-    { \
-        if ((*str) == '\0') \
-        {  \
-            return FALSE; \
-        } \
+#define handle_eos()                                                           \
+    {                                                                          \
+        if ((*str) == '\0')                                                    \
+        {                                                                      \
+            return FALSE;                                                      \
+        }                                                                      \
     }
 
-    for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
+    for (int s = 0; s < STACKS_NUM__VAL; s++)
     {
         /* Move to the next stack */
         if (!first_line)
         {
-            while((*str) != '\n')
+            while ((*str) != '\n')
             {
                 handle_eos();
                 str++;
@@ -780,7 +756,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         first_line = FALSE;
 
-        for (prefix = fc_solve_freecells_prefixes ; (*prefix) ; prefix++)
+        for (prefix = fc_solve_freecells_prefixes; (*prefix); prefix++)
         {
             if (!strncasecmp(str, (*prefix), strlen(*prefix)))
             {
@@ -791,20 +767,16 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
-            for (int c = 0 ; c < FREECELLS_NUM__VAL ; c++)
+            for (int c = 0; c < FREECELLS_NUM__VAL; c++)
             {
                 fcs_empty_freecell(ret, c);
             }
-            for (int c = 0 ; c < FREECELLS_NUM__VAL ; c++)
+            for (int c = 0; c < FREECELLS_NUM__VAL; c++)
             {
                 if (c != 0)
                 {
-                    while(
-                            ((*str) != ' ') &&
-                            ((*str) != '\t') &&
-                            ((*str) != '\n') &&
-                            ((*str) != '\r')
-                         )
+                    while (((*str) != ' ') && ((*str) != '\t') &&
+                           ((*str) != '\n') && ((*str) != '\r'))
                     {
                         handle_eos();
                         str++;
@@ -823,13 +795,10 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 if ((*str == '\r') || (*str == '\n'))
                     break;
 
-                fcs_put_card_in_freecell(ret, c,
-                    (
-                        ((*str == '*') || (*str == '-'))
-                        ? fc_solve_empty_card
-                        : fc_solve_card_parse_str(str)
-                    )
-                );
+                fcs_put_card_in_freecell(
+                    ret, c, (((*str == '*') || (*str == '-'))
+                                    ? fc_solve_empty_card
+                                    : fc_solve_card_parse_str(str)));
             }
 
             while (*str != '\n')
@@ -841,7 +810,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             continue;
         }
 
-        for(prefix = fc_solve_foundations_prefixes ; (*prefix) ; prefix++)
+        for (prefix = fc_solve_foundations_prefixes; (*prefix); prefix++)
         {
             if (!strncasecmp(str, (*prefix), strlen(*prefix)))
             {
@@ -852,15 +821,15 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
-            for (int f_idx = 0 ; f_idx < (DECKS_NUM__VAL << 2) ; f_idx++)
+            for (int f_idx = 0; f_idx < (DECKS_NUM__VAL << 2); f_idx++)
             {
                 fcs_set_foundation(ret, f_idx, 0);
             }
 
-            int decks_index[4] = {0,0,0,0};
+            int decks_index[4] = {0, 0, 0, 0};
             while (1)
             {
-                while((*str == ' ') || (*str == '\t'))
+                while ((*str == ' ') || (*str == '\t'))
                     str++;
                 if ((*str == '\n') || (*str == '\r'))
                     break;
@@ -871,18 +840,14 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 /* Workaround for fc_solve_u2p_rank's willingness
                  * to designate the string '0' as 10. */
                 const int c = ((str[0] == '0') ? 0 : fc_solve_u2p_rank(str));
-                while (
-                        (*str != ' ') &&
-                        (*str != '\t') &&
-                        (*str != '\n') &&
-                        (*str != '\r')
-                      )
+                while ((*str != ' ') && (*str != '\t') && (*str != '\n') &&
+                       (*str != '\r'))
                 {
                     handle_eos();
                     str++;
                 }
 
-                fcs_set_foundation(ret, ((decks_index[f_idx]<<2)+f_idx), c);
+                fcs_set_foundation(ret, ((decks_index[f_idx] << 2) + f_idx), c);
                 decks_index[f_idx]++;
                 if (decks_index[f_idx] >= DECKS_NUM__VAL)
                 {
@@ -901,17 +866,13 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
         }
 
         fcs_cards_column_t col = fcs_state_get_col(ret, s);
-        for(int c=0 ; c < MAX_NUM_CARDS_IN_A_STACK ; c++)
+        for (int c = 0; c < MAX_NUM_CARDS_IN_A_STACK; c++)
         {
             /* Move to the next card */
             if (c != 0)
             {
-                while(
-                    ((*str) != ' ') &&
-                    ((*str) != '\t') &&
-                    ((*str) != '\n') &&
-                    ((*str) != '\r')
-                )
+                while (((*str) != ' ') && ((*str) != '\t') &&
+                       ((*str) != '\n') && ((*str) != '\r'))
                 {
                     handle_eos();
                     str++;
@@ -941,18 +902,15 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 #undef ret
 #undef handle_eos
 
-extern void fc_solve_state_as_string(
-    char * output_s,
-    const fcs_state_t * const state,
-    const fcs_state_locs_struct_t * const state_locs
-    FREECELLS_STACKS_DECKS__ARGS()
-    FC_SOLVE__PASS_PARSABLE(const fcs_bool_t parseable_output),
-    const fcs_bool_t canonized_order_output
-    PASS_T(const fcs_bool_t display_10_as_t)
-);
+extern void fc_solve_state_as_string(char *output_s,
+    const fcs_state_t *const state,
+    const fcs_state_locs_struct_t *const state_locs
+        FREECELLS_STACKS_DECKS__ARGS()
+            FC_SOLVE__PASS_PARSABLE(const fcs_bool_t parseable_output),
+    const fcs_bool_t canonized_order_output PASS_T(
+                                         const fcs_bool_t display_10_as_t));
 
-typedef enum
-{
+typedef enum {
     FCS_STATE_VALIDITY__OK = 0,
     FCS_STATE_VALIDITY__MISSING_CARD = 1,
     FCS_STATE_VALIDITY__EXTRA_CARD = 2,
@@ -962,34 +920,34 @@ typedef enum
 
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
 static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
-    const fcs_state_keyval_pair_t * const state_pair
-    FREECELLS_STACKS_DECKS__ARGS(),
-    fcs_card_t * const misplaced_card)
+    const fcs_state_keyval_pair_t *const state_pair
+        FREECELLS_STACKS_DECKS__ARGS(),
+    fcs_card_t *const misplaced_card)
 {
     int cards[4][14];
 
-    const fcs_state_t * const state = &(state_pair->s);
+    const fcs_state_t *const state = &(state_pair->s);
 
     /* Initialize all cards to 0 */
-    for (int d = 0 ; d < 4 ; d++)
+    for (int d = 0; d < 4; d++)
     {
-        for(int c = 1 ; c <= 13 ; c++)
+        for (int c = 1; c <= 13; c++)
         {
             cards[d][c] = 0;
         }
     }
 
     /* Mark the cards in the decks */
-    for (int d=0 ; d < (DECKS_NUM__VAL << 2) ; d++)
+    for (int d = 0; d < (DECKS_NUM__VAL << 2); d++)
     {
-        for(int c=1;c<=fcs_foundation_value(*state, d);c++)
+        for (int c = 1; c <= fcs_foundation_value(*state, d); c++)
         {
-            cards[d%4][c]++;
+            cards[d % 4][c]++;
         }
     }
 
     /* Mark the cards in the freecells */
-    for (int f=0;f<FREECELLS_NUM__VAL;f++)
+    for (int f = 0; f < FREECELLS_NUM__VAL; f++)
     {
         const fcs_card_t card = fcs_freecell_card(*state, f);
         if (fcs_card_is_valid(card))
@@ -999,39 +957,34 @@ static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
     }
 
     /* Mark the cards in the stacks */
-    for (int s = 0 ; s < STACKS_NUM__VAL ; s++)
+    for (int s = 0; s < STACKS_NUM__VAL; s++)
     {
         const fcs_const_cards_column_t col = fcs_state_get_col(*state, s);
         const int col_len = fcs_col_len(col);
-        for (int c=0;c<col_len;c++)
+        for (int c = 0; c < col_len; c++)
         {
-            const fcs_card_t card = fcs_col_get_card(col,c);
+            const fcs_card_t card = fcs_col_get_card(col, c);
             if (fcs_card_is_empty(card))
             {
                 *misplaced_card = fc_solve_empty_card;
                 return FCS_STATE_VALIDITY__EMPTY_SLOT;
             }
-            cards
-                [fcs_card_suit(card)]
-                [fcs_card_rank(card)] ++;
-
+            cards[fcs_card_suit(card)][fcs_card_rank(card)]++;
         }
     }
 
     /* Now check if there are extra or missing cards */
 
-    for (int suit_idx = 0; suit_idx < 4; suit_idx ++)
+    for (int suit_idx = 0; suit_idx < 4; suit_idx++)
     {
-        for (int rank = 1; rank <= FCS_MAX_RANK ; rank++)
+        for (int rank = 1; rank <= FCS_MAX_RANK; rank++)
         {
             if (cards[suit_idx][rank] != DECKS_NUM__VAL)
             {
                 *misplaced_card = fcs_make_card(rank, suit_idx);
                 return ((cards[suit_idx][rank] < DECKS_NUM__VAL)
-                    ? FCS_STATE_VALIDITY__MISSING_CARD
-                    : FCS_STATE_VALIDITY__EXTRA_CARD
-                    )
-                    ;
+                            ? FCS_STATE_VALIDITY__MISSING_CARD
+                            : FCS_STATE_VALIDITY__EXTRA_CARD);
             }
         }
     }
@@ -1060,12 +1013,10 @@ enum
 #endif
 
 static GCC_INLINE int fc_solve_card_compare(
-        const fcs_card_t c1,
-        const fcs_card_t c2
-        )
+    const fcs_card_t c1, const fcs_card_t c2)
 {
 #ifdef FCS_WITH_CARD_COMPARE_LOOKUP
-    return (c1)-(c2);
+    return (c1) - (c2);
 #else
     if (fcs_card_rank(c1) > fcs_card_rank(c2))
     {
@@ -1091,16 +1042,17 @@ static GCC_INLINE int fc_solve_card_compare(
 }
 
 #if defined(INDIRECT_STACK_STATES)
-static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * const v_s1, const void * const v_s2)
+static GCC_INLINE int fc_solve_stack_compare_for_comparison(
+    const void *const v_s1, const void *const v_s2)
 {
-    const fcs_card_t * const s1 = (const fcs_card_t * const)v_s1;
-    const fcs_card_t * const s2 = (const fcs_card_t * const)v_s2;
+    const fcs_card_t *const s1 = (const fcs_card_t *const)v_s1;
+    const fcs_card_t *const s2 = (const fcs_card_t *const)v_s2;
 
     {
         const int min_len = min(s1[0], s2[0]);
-        for(int a=1 ; a <= min_len ; a++)
+        for (int a = 1; a <= min_len; a++)
         {
-            int ret = fc_solve_card_compare(s1[a],s2[a]);
+            int ret = fc_solve_card_compare(s1[a], s2[a]);
             if (ret != 0)
             {
                 return ret;
@@ -1130,10 +1082,11 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(const void * const v
 
 #endif
 
-static GCC_INLINE void set_scan_visited(fcs_collectible_state_t * const ptr_state, int scan_id)
+static GCC_INLINE void set_scan_visited(
+    fcs_collectible_state_t *const ptr_state, int scan_id)
 {
-    (FCS_S_SCAN_VISITED(ptr_state))[scan_id>>FCS_CHAR_BIT_SIZE_LOG2]
-        |= (1 << ((scan_id)&((1<<(FCS_CHAR_BIT_SIZE_LOG2))-1)));
+    (FCS_S_SCAN_VISITED(ptr_state))[scan_id >> FCS_CHAR_BIT_SIZE_LOG2] |=
+        (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1)));
 }
 
 /*
@@ -1146,56 +1099,53 @@ static GCC_INLINE void set_scan_visited(fcs_collectible_state_t * const ptr_stat
 
 #ifdef FCS_FREECELL_ONLY
 
-static GCC_INLINE fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child, const fcs_card_t parent)
+static GCC_INLINE fcs_bool_t fcs_is_parent_card__helper(
+    const fcs_card_t child, const fcs_card_t parent)
 {
-    return
-    ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) && \
-            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1)) \
-    );
+    return ((fcs_card_rank(child) + 1 == fcs_card_rank(parent)) &&
+            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent) & 0x1)));
 }
-#define fcs_is_parent_card(child, parent) fcs_is_parent_card__helper(child, parent)
+#define fcs_is_parent_card(child, parent)                                      \
+    fcs_is_parent_card__helper(child, parent)
 
 #else
 
-static GCC_INLINE fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child, const fcs_card_t parent, const int sequences_are_built_by)
+static GCC_INLINE fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child,
+    const fcs_card_t parent, const int sequences_are_built_by)
 {
-    return
-    ((fcs_card_rank(child)+1 == fcs_card_rank(parent)) &&
-    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ?
-        TRUE :
-        ((sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ?
-            (fcs_card_suit(child) == fcs_card_suit(parent)) :
-            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent)&0x1))
-        ))
-    );
+    return ((fcs_card_rank(child) + 1 == fcs_card_rank(parent)) &&
+            ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
+                    ? TRUE
+                    : ((sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)
+                              ? (fcs_card_suit(child) == fcs_card_suit(parent))
+                              : ((fcs_card_suit(child) & 0x1) !=
+                                    (fcs_card_suit(parent) & 0x1)))));
 }
-#define fcs_is_parent_card(child, parent) fcs_is_parent_card__helper(child, parent, sequences_are_built_by)
+#define fcs_is_parent_card(child, parent)                                      \
+    fcs_is_parent_card__helper(child, parent, sequences_are_built_by)
 
 #endif
 
-#define FCS_STATE__DUP_keyval_pair(dest, src) \
-    { \
-    (dest) = (src); \
-    fcs_duplicate_state_extra((dest).info);   \
+#define FCS_STATE__DUP_keyval_pair(dest, src)                                  \
+    {                                                                          \
+        (dest) = (src);                                                        \
+        fcs_duplicate_state_extra((dest).info);                                \
     }
 
-static GCC_INLINE void fcs_col_transfer_cards(fcs_cards_column_t dest_col, fcs_cards_column_t src_col, const int cards_num)
+static GCC_INLINE void fcs_col_transfer_cards(fcs_cards_column_t dest_col,
+    fcs_cards_column_t src_col, const int cards_num)
 {
-    fcs_card_t * const src_cards_ptr = &fcs_col_get_card(src_col, ( fcs_col_len(src_col) -= cards_num ) );
+    fcs_card_t *const src_cards_ptr =
+        &fcs_col_get_card(src_col, (fcs_col_len(src_col) -= cards_num));
     const size_t cards_size = (((size_t)cards_num) * sizeof(fcs_card_t));
-    memcpy(
-        &fcs_col_get_card(dest_col, fcs_col_len(dest_col)),
-        src_cards_ptr,
-        cards_size
-    );
+    memcpy(&fcs_col_get_card(dest_col, fcs_col_len(dest_col)), src_cards_ptr,
+        cards_size);
     fcs_col_len(dest_col) += cards_num;
     memset(src_cards_ptr, 0, cards_size);
 }
 
 static GCC_INLINE fcs_card_t fcs_state_pop_col_card(
-    fcs_state_t * const state,
-    const int col_idx
-)
+    fcs_state_t *const state, const int col_idx)
 {
     const fcs_cards_column_t col = fcs_state_get_col(*state, col_idx);
     fcs_card_t ret;

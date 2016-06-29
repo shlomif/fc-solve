@@ -29,8 +29,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "config.h"
@@ -51,7 +50,7 @@ typedef struct fcs_pdfs_key_info_struct
      *
      * pri == priority.
      * */
-    struct fcs_pdfs_key_info_struct * lower_pri, * higher_pri;
+    struct fcs_pdfs_key_info_struct *lower_pri, *higher_pri;
 } fcs_pdfs_cache_key_info_t;
 
 typedef struct
@@ -60,26 +59,28 @@ typedef struct
     fcs_compact_allocator_t states_values_to_keys_allocator;
     long count_elements_in_cache, max_num_elements_in_cache;
 
-    fcs_pdfs_cache_key_info_t * lowest_pri, * highest_pri;
+    fcs_pdfs_cache_key_info_t *lowest_pri, *highest_pri;
 
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
-    fcs_pdfs_cache_key_info_t * recycle_bin;
+    fcs_pdfs_cache_key_info_t *recycle_bin;
 } fcs_pdfs_lru_cache_t;
 
-static GCC_INLINE void fcs_pdfs_cache_destroy(fcs_pdfs_lru_cache_t * const cache)
+static GCC_INLINE void fcs_pdfs_cache_destroy(fcs_pdfs_lru_cache_t *const cache)
 {
     Word_t Rc_word;
     JHSFA(Rc_word, cache->states_values_to_keys_map);
-    fc_solve_compact_allocator_finish(&(cache->states_values_to_keys_allocator));
+    fc_solve_compact_allocator_finish(
+        &(cache->states_values_to_keys_allocator));
 }
 
-static GCC_INLINE void fcs_pdfs_cache_init(fcs_pdfs_lru_cache_t * const cache, const long max_num_elements_in_cache, fcs_meta_compact_allocator_t * const meta_alloc)
+static GCC_INLINE void fcs_pdfs_cache_init(fcs_pdfs_lru_cache_t *const cache,
+    const long max_num_elements_in_cache,
+    fcs_meta_compact_allocator_t *const meta_alloc)
 {
-    cache->states_values_to_keys_map = ((Pvoid_t) NULL);
+    cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 
     fc_solve_compact_allocator_init(
-        &(cache->states_values_to_keys_allocator), meta_alloc
-    );
+        &(cache->states_values_to_keys_allocator), meta_alloc);
     cache->lowest_pri = NULL;
     cache->highest_pri = NULL;
     cache->recycle_bin = NULL;
@@ -87,13 +88,14 @@ static GCC_INLINE void fcs_pdfs_cache_init(fcs_pdfs_lru_cache_t * const cache, c
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static GCC_INLINE const fcs_bool_t fcs_pdfs_cache_does_key_exist(fcs_pdfs_lru_cache_t * const cache, fcs_pdfs_key_t * const key)
+static GCC_INLINE const fcs_bool_t fcs_pdfs_cache_does_key_exist(
+    fcs_pdfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
 {
-    fcs_pdfs_cache_key_info_t * existing;
+    fcs_pdfs_cache_key_info_t *existing;
 
-    Word_t * PValue;
+    Word_t *PValue;
     JHSG(PValue, cache->states_values_to_keys_map, key, sizeof(*key));
-    if (! PValue)
+    if (!PValue)
     {
         existing = NULL;
     }
@@ -102,7 +104,7 @@ static GCC_INLINE const fcs_bool_t fcs_pdfs_cache_does_key_exist(fcs_pdfs_lru_ca
         existing = (typeof(existing))(*PValue);
     }
 
-    if (! existing)
+    if (!existing)
     {
         return FALSE;
     }
@@ -111,12 +113,10 @@ static GCC_INLINE const fcs_bool_t fcs_pdfs_cache_does_key_exist(fcs_pdfs_lru_ca
         /* First - promote this key to the top of the cache. */
         if (existing->higher_pri)
         {
-            existing->higher_pri->lower_pri =
-                existing->lower_pri;
+            existing->higher_pri->lower_pri = existing->lower_pri;
             if (existing->lower_pri)
             {
-                existing->lower_pri->higher_pri =
-                    existing->higher_pri;
+                existing->lower_pri->higher_pri = existing->higher_pri;
             }
             else
             {
@@ -130,31 +130,28 @@ static GCC_INLINE const fcs_bool_t fcs_pdfs_cache_does_key_exist(fcs_pdfs_lru_ca
             existing->higher_pri = NULL;
         }
 
-
         return TRUE;
     }
 }
 
-static GCC_INLINE fcs_pdfs_cache_key_info_t * fcs_pdfs_cache_insert(fcs_pdfs_lru_cache_t * const cache, fcs_pdfs_key_t * const key)
+static GCC_INLINE fcs_pdfs_cache_key_info_t *fcs_pdfs_cache_insert(
+    fcs_pdfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
 {
-    fcs_pdfs_cache_key_info_t * cache_key;
+    fcs_pdfs_cache_key_info_t *cache_key;
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
     {
         int Rc_int;
         cache_key = cache->lowest_pri;
-        JHSD( Rc_int, cache->states_values_to_keys_map, &(cache_key->key), sizeof(cache_key->key));
+        JHSD(Rc_int, cache->states_values_to_keys_map, &(cache_key->key),
+            sizeof(cache_key->key));
 
         cache->lowest_pri = cache->lowest_pri->higher_pri;
         cache->lowest_pri->lower_pri = NULL;
     }
     else
     {
-        cache_key =
-            (fcs_pdfs_cache_key_info_t *)
-            fcs_compact_alloc_ptr(
-                &(cache->states_values_to_keys_allocator),
-                sizeof(*cache_key)
-            );
+        cache_key = (fcs_pdfs_cache_key_info_t *)fcs_compact_alloc_ptr(
+            &(cache->states_values_to_keys_allocator), sizeof(*cache_key));
         cache->count_elements_in_cache++;
     }
 
@@ -173,7 +170,7 @@ static GCC_INLINE fcs_pdfs_cache_key_info_t * fcs_pdfs_cache_insert(fcs_pdfs_lru
         cache_key->higher_pri = cache_key->lower_pri = NULL;
     }
 
-    Word_t * PValue;
+    Word_t *PValue;
     JHSI(PValue, cache->states_values_to_keys_map, key, sizeof(*key));
     *PValue = ((Word_t)cache_key);
 

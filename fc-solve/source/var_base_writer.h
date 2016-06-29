@@ -39,24 +39,23 @@ typedef struct
     mpz_t remainder;
 } fcs_var_base_writer_t;
 
-static GCC_INLINE void fc_solve_var_base_writer_init(fcs_var_base_writer_t * const s)
+static GCC_INLINE void fc_solve_var_base_writer_init(
+    fcs_var_base_writer_t *const s)
 {
     mpz_init(s->data);
     mpz_init(s->multiplier);
     mpz_init(s->remainder);
 }
 
-static GCC_INLINE void fc_solve_var_base_writer_start(fcs_var_base_writer_t * const s)
+static GCC_INLINE void fc_solve_var_base_writer_start(
+    fcs_var_base_writer_t *const s)
 {
     mpz_set_ui(s->data, 0);
     mpz_set_ui(s->multiplier, 1);
 }
 
 static GCC_INLINE void fc_solve_var_base_writer_write(
-    fcs_var_base_writer_t * const w,
-    const int base,
-    const int item
-)
+    fcs_var_base_writer_t *const w, const int base, const int item)
 {
     assert(item >= 0);
     assert(item < base);
@@ -67,9 +66,7 @@ static GCC_INLINE void fc_solve_var_base_writer_write(
 }
 
 static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
-    fcs_var_base_writer_t * const w,
-    unsigned char * const exported
-)
+    fcs_var_base_writer_t *const w, unsigned char *const exported)
 {
     size_t count = 0;
 
@@ -85,8 +82,7 @@ static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
 }
 
 static GCC_INLINE void fc_solve_var_base_writer_release(
-    fcs_var_base_writer_t * const w
-)
+    fcs_var_base_writer_t *const w)
 {
     mpz_clear(w->data);
     mpz_clear(w->multiplier);

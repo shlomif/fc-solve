@@ -36,37 +36,26 @@ extern "C" {
 #include "instance.h"
 
 static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
-        const void * const a,
-        const void * const b
-        )
+    const void *const a, const void *const b)
 {
-    return
-        strcmp(
-            ((const fcs_move_func_aliases_mapping_t *)a)->alias,
-            ((const fcs_move_func_aliases_mapping_t *)b)->alias
-        );
+    return strcmp(((const fcs_move_func_aliases_mapping_t *)a)->alias,
+        ((const fcs_move_func_aliases_mapping_t *)b)->alias);
 }
 
-static GCC_INLINE int fc_solve_string_to_test_num(const char * const s)
+static GCC_INLINE int fc_solve_string_to_test_num(const char *const s)
 {
-    const fcs_move_func_aliases_mapping_t needle = {.alias = {s[0], '\0'} };
-    const fcs_move_func_aliases_mapping_t * const result = (fcs_move_func_aliases_mapping_t *)
-        bsearch(
-            &needle,
-            fc_solve_sfs_move_funcs_aliases,
-            FCS_MOVE_FUNCS_ALIASES_NUM,
+    const fcs_move_func_aliases_mapping_t needle = {.alias = {s[0], '\0'}};
+    const fcs_move_func_aliases_mapping_t *const result =
+        (fcs_move_func_aliases_mapping_t *)bsearch(&needle,
+            fc_solve_sfs_move_funcs_aliases, FCS_MOVE_FUNCS_ALIASES_NUM,
             sizeof(fc_solve_sfs_move_funcs_aliases[0]),
-            fc_solve_string_to_test_num_compare_func
-            );
+            fc_solve_string_to_test_num_compare_func);
 
     return (result ? result->move_func_num : 0);
 }
 
-extern int fc_solve_apply_tests_order(
-    fcs_tests_order_t * tests_order,
-    const char * string,
-    char * const error_string
-    );
+extern int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
+    const char *string, char *const error_string);
 
 #ifdef __cplusplus
 }

@@ -36,16 +36,9 @@
 extern "C" {
 #endif
 
-typedef int (*freecell_solver_user_cmd_line_known_commands_callback_t)
-    (
-     void * instance,
-     int argc,
-     freecell_solver_str_t argv[],
-     int arg_index,
-     int * num_to_skip,
-     int * ret,
-     void * context
-     );
+typedef int (*freecell_solver_user_cmd_line_known_commands_callback_t)(
+    void *instance, int argc, freecell_solver_str_t argv[], int arg_index,
+    int *num_to_skip, int *ret, void *context);
 
 enum
 {
@@ -59,45 +52,30 @@ enum
     FCS_CMD_LINE_USER = 0x10000
 };
 
-/* One should use freecell_solver_user_cmd_line_parse_args_with_file_nesting_count()
+/* One should use
+ * freecell_solver_user_cmd_line_parse_args_with_file_nesting_count()
  * instead.
  * */
 #ifndef FC_SOLVE__REMOVE_OLD_API_1
-DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args(
-    void * instance,
-    int argc,
-    freecell_solver_str_t argv[],
-    int start_arg,
-    freecell_solver_str_t * known_parameters,
+DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args(void *instance,
+    int argc, freecell_solver_str_t argv[], int start_arg,
+    freecell_solver_str_t *known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
-    void * callback_context,
-    char * * error_string,
-    int * last_arg
-    );
+    void *callback_context, char **error_string, int *last_arg);
 #endif
 
-DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-    void * instance,
-    int argc,
-    freecell_solver_str_t argv[],
-    int start_arg,
-    freecell_solver_str_t * known_parameters,
+DLLEXPORT extern int
+freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(void *instance,
+    int argc, freecell_solver_str_t argv[], int start_arg,
+    freecell_solver_str_t *known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
-    void * callback_context,
-    char * * error_string,
-    int * last_arg,
-    int file_nesting_count,
-    freecell_solver_str_t opened_files_dir
-    );
+    void *callback_context, char **error_string, int *last_arg,
+    int file_nesting_count, freecell_solver_str_t opened_files_dir);
 
 DLLEXPORT extern int freecell_solver_user_cmd_line_read_cmd_line_preset(
-    void * instance,
-    const char * const preset_name,
-    freecell_solver_str_t * known_parameters,
-    char * * error_string,
-    int file_nesting_count,
-    freecell_solver_str_t opened_files_dir
-);
+    void *instance, const char *const preset_name,
+    freecell_solver_str_t *known_parameters, char **error_string,
+    int file_nesting_count, freecell_solver_str_t opened_files_dir);
 
 #ifdef __cplusplus
 };

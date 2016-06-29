@@ -32,9 +32,9 @@ extern "C" {
 
 #include <sys/types.h>
 
-    /* Taken from:
-     * http://www.binarytides.com/data-type-u_int8_t-u_int16_t-u_int32_t-on-windows/
-     * */
+/* Taken from:
+ * http://www.binarytides.com/data-type-u_int8_t-u_int16_t-u_int32_t-on-windows/
+ * */
 #if defined(_WIN32)
 
 #include <stdint.h>

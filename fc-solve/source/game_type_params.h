@@ -29,22 +29,22 @@
 #include "config.h"
 #include "game_type_limit.h"
 
-typedef struct {
-    /*
-     * The number of Freecells, Stacks and Foundations present in the game.
-     *
-     * freecells_num and stacks_num are variable and may be specified at
-     * the beginning of the execution of the algorithm. However, there
-     * is a maximal limit to them which is set in config.h.
-     *
-     * decks_num can be 1 or 2 .
-     * */
+typedef struct
+{
+/*
+ * The number of Freecells, Stacks and Foundations present in the game.
+ *
+ * freecells_num and stacks_num are variable and may be specified at
+ * the beginning of the execution of the algorithm. However, there
+ * is a maximal limit to them which is set in config.h.
+ *
+ * decks_num can be 1 or 2 .
+ * */
 
-#define SET_INSTANCE_GAME_PARAMS(instance) \
+#define SET_INSTANCE_GAME_PARAMS(instance)                                     \
     const fcs_game_type_params_t game_params = (instance)->game_params
 
-#define SET_GAME_PARAMS() \
-    SET_INSTANCE_GAME_PARAMS(instance)
+#define SET_GAME_PARAMS() SET_INSTANCE_GAME_PARAMS(instance)
 
 #ifndef HARD_CODED_NUM_FREECELLS
     fcs_game_limit_t freecells_num;
@@ -74,7 +74,8 @@ typedef struct {
 #endif
 
 #ifdef FCS_FREECELL_ONLY
-#define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)                          \
+    FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #else
     /* sequences_are_built_by - (bits 0:1) - what two adjacent cards in the
      * same sequence can be.
@@ -88,12 +89,12 @@ typedef struct {
      * */
     fcs_game_limit_t game_flags;
 
-#define INSTANCE_GAME_FLAGS  (instance->game_params.game_flags)
-#define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) \
+#define INSTANCE_GAME_FLAGS (instance->game_params.game_flags)
+#define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)                          \
     ((instance)->game_params.game_flags & 0x3)
 
-#define INSTANCE_UNLIMITED_SEQUENCE_MOVE  (INSTANCE_GAME_FLAGS & (1 << 4))
-#define INSTANCE_EMPTY_STACKS_FILL   ((INSTANCE_GAME_FLAGS >> 2) & 0x3)
+#define INSTANCE_UNLIMITED_SEQUENCE_MOVE (INSTANCE_GAME_FLAGS & (1 << 4))
+#define INSTANCE_EMPTY_STACKS_FILL ((INSTANCE_GAME_FLAGS >> 2) & 0x3)
 
 #endif
 

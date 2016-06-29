@@ -24,14 +24,14 @@
 
 #pragma once
 
-static void trim_trailing_whitespace(char * const as_str)
+static void trim_trailing_whitespace(char *const as_str)
 {
-    char * dest = as_str;
-    char * src = as_str;
+    char *dest = as_str;
+    char *src = as_str;
 
     while (1)
     {
-        while (! (*(src) == ' ' || *(src) == '\0'))
+        while (!(*(src) == ' ' || *(src) == '\0'))
         {
             *(dest++) = *(src++);
         }
@@ -39,7 +39,7 @@ static void trim_trailing_whitespace(char * const as_str)
         {
             break;
         }
-        char * prev_src = src;
+        char *prev_src = src;
         while (*src == ' ')
         {
             src++;

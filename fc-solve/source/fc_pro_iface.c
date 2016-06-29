@@ -7,100 +7,90 @@
 
 #include "rinutils.h"
 
-static GCC_INLINE int Cvtf89(int fcn)
-{
-    return (fcn >= 7) ? (fcn+3) : fcn;
-}
+static GCC_INLINE int Cvtf89(int fcn) { return (fcn >= 7) ? (fcn + 3) : fcn; }
 
-char * fc_solve_moves_processed_render_move(const fcs_extended_move_t move, char * const string)
+char *fc_solve_moves_processed_render_move(
+    const fcs_extended_move_t move, char *const string)
 {
-    switch(fcs_move_get_type(move.move))
+    switch (fcs_move_get_type(move.move))
     {
-        case FCS_MOVE_TYPE_STACK_TO_STACK:
-                if (move.to_empty_stack && (fcs_move_get_num_cards_in_seq(move.move) > 1))
-                {
-                    sprintf(string, "%i%iv%x",
-                        1+fcs_move_get_src_stack(move.move),
-                        1+fcs_move_get_dest_stack(move.move),
-                        fcs_move_get_num_cards_in_seq(move.move)
-                        );
-                }
-                else
-                {
-                    sprintf(string, "%i%i",
-                        1+fcs_move_get_src_stack(move.move),
-                        1+fcs_move_get_dest_stack(move.move)
-                        );
-                }
-        break;
-
-        case FCS_MOVE_TYPE_FREECELL_TO_STACK:
-                sprintf(string, "%c%i",
-                    ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))),
-                    1+fcs_move_get_dest_stack(move.move)
-                    );
-        break;
-
-        case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
+    case FCS_MOVE_TYPE_STACK_TO_STACK:
+        if (move.to_empty_stack &&
+            (fcs_move_get_num_cards_in_seq(move.move) > 1))
         {
-            char c1, c2;
-
-            c1 = (char)('a'+Cvtf89(fcs_move_get_src_freecell(move.move)));
-            c2 = (char)('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)));
-            sprintf(string, "%c%c", c1, c2);
+            sprintf(string, "%i%iv%x", 1 + fcs_move_get_src_stack(move.move),
+                1 + fcs_move_get_dest_stack(move.move),
+                fcs_move_get_num_cards_in_seq(move.move));
+        }
+        else
+        {
+            sprintf(string, "%i%i", 1 + fcs_move_get_src_stack(move.move),
+                1 + fcs_move_get_dest_stack(move.move));
         }
         break;
 
-        case FCS_MOVE_TYPE_STACK_TO_FREECELL:
-                sprintf(string, "%i%c",
-                    1+fcs_move_get_src_stack(move.move),
-                    ('a'+Cvtf89(fcs_move_get_dest_freecell(move.move)))
-                    );
+    case FCS_MOVE_TYPE_FREECELL_TO_STACK:
+        sprintf(string, "%c%i",
+            ('a' + Cvtf89(fcs_move_get_src_freecell(move.move))),
+            1 + fcs_move_get_dest_stack(move.move));
         break;
 
-        case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
-                sprintf(string, "%ih", 1+fcs_move_get_src_stack(move.move));
+    case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
+    {
+        char c1, c2;
+
+        c1 = (char)('a' + Cvtf89(fcs_move_get_src_freecell(move.move)));
+        c2 = (char)('a' + Cvtf89(fcs_move_get_dest_freecell(move.move)));
+        sprintf(string, "%c%c", c1, c2);
+    }
+    break;
+
+    case FCS_MOVE_TYPE_STACK_TO_FREECELL:
+        sprintf(string, "%i%c", 1 + fcs_move_get_src_stack(move.move),
+            ('a' + Cvtf89(fcs_move_get_dest_freecell(move.move))));
         break;
 
-
-        case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
-                sprintf(string, "%ch", ('a'+Cvtf89(fcs_move_get_src_freecell(move.move))));
+    case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
+        sprintf(string, "%ih", 1 + fcs_move_get_src_stack(move.move));
         break;
 
-        case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
-                sprintf(string, "%ih", fcs_move_get_src_stack(move.move));
+    case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
+        sprintf(string, "%ch",
+            ('a' + Cvtf89(fcs_move_get_src_freecell(move.move))));
         break;
 
-        default:
-            string[0] = '\0';
+    case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
+        sprintf(string, "%ih", fcs_move_get_src_stack(move.move));
+        break;
+
+    default:
+        string[0] = '\0';
         break;
     }
-    return string+strlen(string);
+    return string + strlen(string);
 }
 
 #define MOVES_PROCESSED_GROW_BY 32
-static GCC_INLINE void moves_processed_add_new_move(fcs_moves_processed_t * const moves, const fcs_extended_move_t new_move)
+static GCC_INLINE void moves_processed_add_new_move(
+    fcs_moves_processed_t *const moves, const fcs_extended_move_t new_move)
 {
-    if (! ((++moves->num_moves) & (MOVES_PROCESSED_GROW_BY - 1)))
+    if (!((++moves->num_moves) & (MOVES_PROCESSED_GROW_BY - 1)))
     {
         moves->moves =
-            SREALLOC (moves->moves, moves->num_moves + MOVES_PROCESSED_GROW_BY);
+            SREALLOC(moves->moves, moves->num_moves + MOVES_PROCESSED_GROW_BY);
     }
-    moves->moves[moves->num_moves-1] = new_move;
+    moves->moves[moves->num_moves - 1] = new_move;
 }
 
-void fc_solve_moves_processed_gen(
-    fcs_moves_processed_t * const ret,
-    fcs_state_keyval_pair_t * const orig,
-    const int num_freecells,
-    const fcs_moves_sequence_t * const moves_seq
-)
+void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
+    fcs_state_keyval_pair_t *const orig, const int num_freecells,
+    const fcs_moves_sequence_t *const moves_seq)
 {
     fcs_state_keyval_pair_t pos_proto;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     FCS_STATE__DUP_keyval_pair(pos_proto, *orig);
-    for (int i = 0 ; i < 8 ; i++)
+    for (int i = 0; i < 8; i++)
     {
         fcs_copy_stack(pos_proto.s, pos_proto.info, i, indirect_stacks_buffer);
     }
@@ -111,7 +101,7 @@ void fc_solve_moves_processed_gen(
     int virtual_freecell_len[12];
 #endif
     int i, j, move_idx;
-    fcs_move_t move, out_move, * next_move_ptr;
+    fcs_move_t move, out_move, *next_move_ptr;
 
     const int num_back_end_moves = moves_seq->num_moves;
     next_move_ptr = moves_seq->moves;
@@ -120,19 +110,19 @@ void fc_solve_moves_processed_gen(
     ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);
     ret->next_move_idx = 0;
 
-    for ( i = 0 ; i < 8 ; i++)
+    for (i = 0; i < 8; i++)
     {
         fcs_cards_column_t col = fcs_state_get_col(pos, i);
         virtual_stack_len[i] = fcs_col_len(col);
     }
 #ifndef NDEBUG
-    for ( i=0 ; i < num_freecells ; i++)
+    for (i = 0; i < num_freecells; i++)
     {
-        virtual_freecell_len[i] = (! fcs_freecell_is_empty(pos, i)) ? 1 : 0;
+        virtual_freecell_len[i] = (!fcs_freecell_is_empty(pos, i)) ? 1 : 0;
     }
 #endif
 
-    for ( move_idx=0 ; move_idx < num_back_end_moves ; move_idx ++)
+    for (move_idx = 0; move_idx < num_back_end_moves; move_idx++)
     {
         /*
          * Move safe cards to the foundations
@@ -202,7 +192,7 @@ void fc_solve_moves_processed_gen(
             );
 #endif
 
-            for (i = 0 ; i < 8 ; i++)
+            for (i = 0; i < 8; i++)
             {
                 int rank, suit;
                 fcs_card_t card;
@@ -214,10 +204,11 @@ void fc_solve_moves_processed_gen(
                     rank = fcs_card_rank(card);
                     suit = fcs_card_suit(card);
                     /* Check if we can safely move it */
-                    if ((fcs_foundation_value(pos, suit^0x1) >= rank-2) &&
-                        (fcs_foundation_value(pos, suit^0x1^0x2) >= rank-2) &&
-                        (fcs_foundation_value(pos, suit^0x2) >= rank-3) &&
-                        (fcs_foundation_value(pos, suit) == rank-1))
+                    if ((fcs_foundation_value(pos, suit ^ 0x1) >= rank - 2) &&
+                        (fcs_foundation_value(pos, suit ^ 0x1 ^ 0x2) >=
+                            rank - 2) &&
+                        (fcs_foundation_value(pos, suit ^ 0x2) >= rank - 3) &&
+                        (fcs_foundation_value(pos, suit) == rank - 1))
                     {
                         fcs_increment_foundation(pos, suit);
                         fcs_col_pop_top(col);
@@ -231,21 +222,22 @@ void fc_solve_moves_processed_gen(
             {
                 continue;
             }
-            for(j=0;j<num_freecells;j++)
+            for (j = 0; j < num_freecells; j++)
             {
                 int rank, suit;
                 fcs_card_t card;
 
-                if (! fcs_freecell_is_empty(pos, j))
+                if (!fcs_freecell_is_empty(pos, j))
                 {
                     card = fcs_freecell_card(pos, j);
                     rank = fcs_card_rank(card);
                     suit = fcs_card_suit(card);
                     /* Check if we can safely move it */
-                    if ((fcs_foundation_value(pos, suit^0x1) >= rank-2) &&
-                        (fcs_foundation_value(pos, suit^0x1^0x2) >= rank-2) &&
-                        (fcs_foundation_value(pos, suit^0x2) >= rank-3) &&
-                        (fcs_foundation_value(pos, suit) == rank-1))
+                    if ((fcs_foundation_value(pos, suit ^ 0x1) >= rank - 2) &&
+                        (fcs_foundation_value(pos, suit ^ 0x1 ^ 0x2) >=
+                            rank - 2) &&
+                        (fcs_foundation_value(pos, suit ^ 0x2) >= rank - 3) &&
+                        (fcs_foundation_value(pos, suit) == rank - 1))
                     {
                         fcs_increment_foundation(pos, suit);
                         fcs_empty_freecell(pos, j);
@@ -253,7 +245,6 @@ void fc_solve_moves_processed_gen(
                         /* We've just done an auto-move */
                         break;
                     }
-
                 }
             }
             if ((i == 8) && (j == num_freecells))
@@ -266,162 +257,161 @@ void fc_solve_moves_processed_gen(
         {
             int src, dest;
             fcs_card_t card;
-            switch(fcs_move_get_type(move))
+            switch (fcs_move_get_type(move))
             {
-                case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
+            case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
+            {
+                src = fcs_move_get_src_stack(move);
+                fcs_cards_column_t col = fcs_state_get_col(pos, src);
+                assert(virtual_stack_len[src] >= fcs_col_len(col));
+                if (virtual_stack_len[src] == fcs_col_len(col))
+                {
+                    fcs_col_pop_card(col, card);
+                    fcs_increment_foundation(pos, fcs_card_suit(card));
+                    virtual_stack_len[src]--;
                     {
-                        src = fcs_move_get_src_stack(move);
-                        fcs_cards_column_t col = fcs_state_get_col(pos, src);
-                        assert(virtual_stack_len[src] >= fcs_col_len(col));
-                        if (virtual_stack_len[src] == fcs_col_len(col))
-                        {
-                            fcs_col_pop_card(col, card);
-                            fcs_increment_foundation(pos, fcs_card_suit(card));
-                            virtual_stack_len[src]--;
-                            {
-                                fcs_extended_move_t ext_move;
-                                ext_move.move = move;
-                                /* Stub value to settle gcc. Isn't used. */
-                                ext_move.to_empty_stack = 0;
+                        fcs_extended_move_t ext_move;
+                        ext_move.move = move;
+                        /* Stub value to settle gcc. Isn't used. */
+                        ext_move.to_empty_stack = 0;
 
-                                moves_processed_add_new_move(ret, ext_move);
-                            }
-                        }
-                        else
-                        {
-                            virtual_stack_len[src]--;
-                        }
+                        moves_processed_add_new_move(ret, ext_move);
                     }
-                    break;
+                }
+                else
+                {
+                    virtual_stack_len[src]--;
+                }
+            }
+            break;
 
-                case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
+            case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
+            {
+                src = fcs_move_get_src_freecell(move);
+                assert((virtual_freecell_len[src] == 1));
+                if (fcs_freecell_is_empty(pos, src))
+                {
+                    /* Do nothing */
+                }
+                else
+                {
                     {
-                        src = fcs_move_get_src_freecell(move);
-                        assert((virtual_freecell_len[src] == 1));
-                        if (fcs_freecell_is_empty(pos, src))
-                        {
-                            /* Do nothing */
-                        }
-                        else
-                        {
-                            {
-                                fcs_extended_move_t ext_move;
-                                ext_move.move = move;
-                                /* Stub value to settle gcc. Isn't used. */
-                                ext_move.to_empty_stack = 0;
+                        fcs_extended_move_t ext_move;
+                        ext_move.move = move;
+                        /* Stub value to settle gcc. Isn't used. */
+                        ext_move.to_empty_stack = 0;
 
-                                moves_processed_add_new_move(ret, ext_move);
-                            }
-                            fcs_increment_foundation(pos, fcs_freecell_card_suit(pos, src));
-                            fcs_empty_freecell(pos, src);
-                        }
+                        moves_processed_add_new_move(ret, ext_move);
+                    }
+                    fcs_increment_foundation(
+                        pos, fcs_freecell_card_suit(pos, src));
+                    fcs_empty_freecell(pos, src);
+                }
 #ifndef NDEBUG
-                        virtual_freecell_len[src] = 0;
+                virtual_freecell_len[src] = 0;
 #endif
-                    }
-                    break;
+            }
+            break;
 
-                case FCS_MOVE_TYPE_FREECELL_TO_STACK:
+            case FCS_MOVE_TYPE_FREECELL_TO_STACK:
+            {
+                src = fcs_move_get_src_freecell(move);
+                dest = fcs_move_get_dest_stack(move);
+                assert(virtual_freecell_len[src] == 1);
+                if (fcs_freecell_is_empty(pos, src))
+                {
+                    /* Do nothing */
+                }
+                else
+                {
                     {
-                        src = fcs_move_get_src_freecell(move);
-                        dest = fcs_move_get_dest_stack(move);
-                        assert(virtual_freecell_len[src] == 1);
-                        if (fcs_freecell_is_empty(pos, src))
-                        {
-                            /* Do nothing */
-                        }
-                        else
-                        {
-                            {
-                                fcs_extended_move_t ext_move;
-                                ext_move.move = move;
-                                /* Stub value to settle gcc. Isn't used. */
-                                ext_move.to_empty_stack = 0;
+                        fcs_extended_move_t ext_move;
+                        ext_move.move = move;
+                        /* Stub value to settle gcc. Isn't used. */
+                        ext_move.to_empty_stack = 0;
 
-                                moves_processed_add_new_move(ret, ext_move);
-                            }
-                            fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
-                            fcs_col_push_card(dest_col, fcs_freecell_card(pos, src));
-                            fcs_empty_freecell(pos, src);
-                        }
+                        moves_processed_add_new_move(ret, ext_move);
+                    }
+                    fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
+                    fcs_col_push_card(dest_col, fcs_freecell_card(pos, src));
+                    fcs_empty_freecell(pos, src);
+                }
 #ifndef NDEBUG
-                        virtual_freecell_len[src] = 0;
+                virtual_freecell_len[src] = 0;
 #endif
-                        virtual_stack_len[dest]++;
-                    }
-                    break;
+                virtual_stack_len[dest]++;
+            }
+            break;
 
-               case FCS_MOVE_TYPE_STACK_TO_FREECELL:
+            case FCS_MOVE_TYPE_STACK_TO_FREECELL:
+            {
+                src = fcs_move_get_src_stack(move);
+                dest = fcs_move_get_dest_freecell(move);
+                assert(virtual_stack_len[src] > 0);
+                fcs_cards_column_t col = fcs_state_get_col(pos, src);
+                assert(fcs_col_len(col) <= virtual_stack_len[src]);
+                if (fcs_col_len(col) < virtual_stack_len[src])
+                {
+                    /* Do nothing */
+                }
+                else
+                {
                     {
-                        src = fcs_move_get_src_stack(move);
-                        dest = fcs_move_get_dest_freecell(move);
-                        assert(virtual_stack_len[src] > 0);
-                        fcs_cards_column_t col = fcs_state_get_col(pos, src);
-                        assert(fcs_col_len(col) <= virtual_stack_len[src]);
-                        if (fcs_col_len(col) < virtual_stack_len[src])
-                        {
-                            /* Do nothing */
-                        }
-                        else
-                        {
-                            {
-                                fcs_extended_move_t ext_move;
+                        fcs_extended_move_t ext_move;
 
-                                ext_move.move = move;
-                                /* Stub value to settle gcc. Isn't used. */
-                                ext_move.to_empty_stack = 0;
+                        ext_move.move = move;
+                        /* Stub value to settle gcc. Isn't used. */
+                        ext_move.to_empty_stack = 0;
 
-                                moves_processed_add_new_move(ret, ext_move);
-                            }
-                            fcs_card_t temp_card;
-                            fcs_col_pop_card(col, temp_card);
-                            fcs_put_card_in_freecell(pos, dest, temp_card);
-                        }
-                        virtual_stack_len[src]--;
+                        moves_processed_add_new_move(ret, ext_move);
+                    }
+                    fcs_card_t temp_card;
+                    fcs_col_pop_card(col, temp_card);
+                    fcs_put_card_in_freecell(pos, dest, temp_card);
+                }
+                virtual_stack_len[src]--;
 #ifndef NDEBUG
-                        virtual_freecell_len[dest] = 1;
+                virtual_freecell_len[dest] = 1;
 #endif
-                    }
-                    break;
+            }
+            break;
 
-               case FCS_MOVE_TYPE_STACK_TO_STACK:
+            case FCS_MOVE_TYPE_STACK_TO_STACK:
+            {
+                src = fcs_move_get_src_stack(move);
+                dest = fcs_move_get_dest_stack(move);
+                int num_cards = fcs_move_get_num_cards_in_seq(move);
+                fcs_cards_column_t src_col = fcs_state_get_col(pos, src);
+                fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
+                const int src_len = fcs_col_len(src_col);
+                assert(virtual_stack_len[src] >= src_len);
+                if (virtual_stack_len[src] > src_len)
+                {
+                    const int virt_num_cards =
+                        min((virtual_stack_len[src] - src_len), num_cards);
+                    virtual_stack_len[src] -= virt_num_cards;
+                    virtual_stack_len[dest] += virt_num_cards;
+                    num_cards -= virt_num_cards;
+                }
+                if (num_cards > 0)
+                {
+                    fcs_move_set_type(out_move, FCS_MOVE_TYPE_STACK_TO_STACK);
+                    fcs_move_set_src_stack(out_move, src);
+                    fcs_move_set_dest_stack(out_move, dest);
+                    fcs_move_set_num_cards_in_seq(out_move, num_cards);
                     {
-                        src = fcs_move_get_src_stack(move);
-                        dest = fcs_move_get_dest_stack(move);
-                        int num_cards = fcs_move_get_num_cards_in_seq(move);
-                        fcs_cards_column_t src_col = fcs_state_get_col(pos, src);
-                        fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
-                        const int src_len = fcs_col_len(src_col);
-                        assert(virtual_stack_len[src] >= src_len);
-                        if (virtual_stack_len[src] > src_len)
-                        {
-                            const int virt_num_cards = min((virtual_stack_len[src]-src_len), num_cards);
-                            virtual_stack_len[src] -= virt_num_cards;
-                            virtual_stack_len[dest] += virt_num_cards;
-                            num_cards -= virt_num_cards;
-                        }
-                        if (num_cards > 0)
-                        {
-                            fcs_move_set_type(out_move, FCS_MOVE_TYPE_STACK_TO_STACK);
-                            fcs_move_set_src_stack(out_move, src);
-                            fcs_move_set_dest_stack(out_move, dest);
-                            fcs_move_set_num_cards_in_seq(out_move, num_cards);
-                            {
-                                fcs_extended_move_t ext_move;
-                                ext_move.move = out_move;
-                                ext_move.to_empty_stack = (fcs_col_len(dest_col) == 0);
-                                moves_processed_add_new_move(ret, ext_move);
-                            }
-                            fcs_col_transfer_cards(dest_col, src_col, num_cards);
-                            virtual_stack_len[dest] += num_cards;
-                            virtual_stack_len[src] -= num_cards;
-                        }
+                        fcs_extended_move_t ext_move;
+                        ext_move.move = out_move;
+                        ext_move.to_empty_stack = (fcs_col_len(dest_col) == 0);
+                        moves_processed_add_new_move(ret, ext_move);
                     }
-                    break;
-
+                    fcs_col_transfer_cards(dest_col, src_col, num_cards);
+                    virtual_stack_len[dest] += num_cards;
+                    virtual_stack_len[src] -= num_cards;
+                }
+            }
+            break;
             }
         }
     }
 }
-
-

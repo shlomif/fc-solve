@@ -56,7 +56,7 @@ typedef int pq_rating_t;
 
 typedef struct
 {
-    fcs_collectible_state_t * val;
+    fcs_collectible_state_t *val;
     pq_rating_t rating;
 } pq_element_t;
 
@@ -64,75 +64,73 @@ typedef struct
 {
     size_t max_size;
     size_t current_size;
-    pq_element_t * Elements; /* pointer to void pointers */
+    pq_element_t *Elements; /* pointer to void pointers */
 } PQUEUE;
 
-/* given an index to any element in a binary tree stored in a linear array with the root at 1 and
+/* given an index to any element in a binary tree stored in a linear array with
+   the root at 1 and
    a "sentinel" value at 0 these macros are useful in making the code clearer */
 
 /* the parent is always given by index/2 */
-#define PQ_PARENT_INDEX(i) ((i)>>1)
+#define PQ_PARENT_INDEX(i) ((i) >> 1)
 #define PQ_FIRST_ENTRY (1)
 
 /* left and right children are index * 2 and (index * 2) +1 respectively */
-#define PQ_LEFT_CHILD_INDEX(i) ((i)<<1)
-/* initialise the priority queue with a maximum size of maxelements. maxrating is the highest or lowest value of an
-   entry in the pqueue depending on whether it is ascending or descending respectively. Finally the bool32 tells you whether
+#define PQ_LEFT_CHILD_INDEX(i) ((i) << 1)
+/* initialise the priority queue with a maximum size of maxelements. maxrating
+   is the highest or lowest value of an
+   entry in the pqueue depending on whether it is ascending or descending
+   respectively. Finally the bool32 tells you whether
    the list is sorted ascending or descending... */
 
-static GCC_INLINE void fc_solve_pq_init(
-    PQUEUE * const pq
-    )
+static GCC_INLINE void fc_solve_pq_init(PQUEUE *const pq)
 {
     pq->current_size = 0;
-    pq->Elements = SMALLOC(pq->Elements, (pq->max_size = 1024) + 1 );
+    pq->Elements = SMALLOC(pq->Elements, (pq->max_size = 1024) + 1);
 }
 
-static GCC_INLINE void fc_solve_PQueueFree( PQUEUE *pq )
+static GCC_INLINE void fc_solve_PQueueFree(PQUEUE *pq)
 {
-    free( pq->Elements );
+    free(pq->Elements);
     pq->Elements = NULL;
 }
-
-
 
 /* Join a priority queue
    "r" is the rating of the item you're adding for sorting purposes */
 
 static GCC_INLINE void fc_solve_pq_push(
-        PQUEUE * const pq,
-        fcs_collectible_state_t * const val,
-        const pq_rating_t r
-        )
+    PQUEUE *const pq, fcs_collectible_state_t *const val, const pq_rating_t r)
 {
     typeof(pq->current_size) i = ++(pq->current_size);
 
-    if (i > pq->max_size )
+    if (i > pq->max_size)
     {
-        pq->Elements = (pq_element_t *)SREALLOC( pq->Elements, (pq->max_size += 256)+1);
+        pq->Elements =
+            (pq_element_t *)SREALLOC(pq->Elements, (pq->max_size += 256) + 1);
     }
 
-    pq_element_t * const Elements = pq->Elements;
+    pq_element_t *const Elements = pq->Elements;
     {
         /* set i to the first unused element and increment current_size */
-        /* while the parent of the space we're putting the new node into is worse than
-           our new node, swap the space with the worse node. We keep doing that until we
+        /* while the parent of the space we're putting the new node into is
+           worse than
+           our new node, swap the space with the worse node. We keep doing that
+           until we
            get to a worse node or until we get to the top
 
-           note that we also can sort so that the minimum elements bubble up so we need to loops
+           note that we also can sort so that the minimum elements bubble up so
+           we need to loops
            with the comparison operator flipped... */
 
         {
 
-            while( ( i==PQ_FIRST_ENTRY ?
-                     (FC_SOLVE_PQUEUE_MaxRating) /* return biggest possible rating if first element */
-                     :
-                     (fcs_pq_rating(Elements[ PQ_PARENT_INDEX(i) ]) )
-                   )
-                   < r
-                 )
+            while ((i == PQ_FIRST_ENTRY
+                           ? (FC_SOLVE_PQUEUE_MaxRating) /* return biggest
+                                                            possible rating if
+                                                            first element */
+                           : (fcs_pq_rating(Elements[PQ_PARENT_INDEX(i)]))) < r)
             {
-                Elements[ i ] = Elements[ PQ_PARENT_INDEX(i) ];
+                Elements[i] = Elements[PQ_PARENT_INDEX(i)];
 
                 i = PQ_PARENT_INDEX(i);
             }
@@ -144,7 +142,7 @@ static GCC_INLINE void fc_solve_pq_push(
     }
 }
 
-static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(PQUEUE * pq)
+static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(PQUEUE *pq)
 {
     return (pq->current_size == 0);
 }
@@ -157,11 +155,9 @@ static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(PQUEUE * pq)
  * */
 
 static GCC_INLINE void fc_solve_pq_pop(
-    PQUEUE * const pq,
-    fcs_collectible_state_t * * const val
-)
+    PQUEUE *const pq, fcs_collectible_state_t **const val)
 {
-    if( fc_solve_is_pqueue_empty(pq) )
+    if (fc_solve_is_pqueue_empty(pq))
     {
         *val = NULL;
         return;
@@ -171,28 +167,29 @@ static GCC_INLINE void fc_solve_pq_pop(
     *val = Elements[PQ_FIRST_ENTRY].val;
 
     /* get pointer to last element in tree */
-    const pq_element_t last_elem = Elements[ current_size ];
+    const pq_element_t last_elem = Elements[current_size];
 
-    const_AUTO(new_current_size, current_size-1);
+    const_AUTO(new_current_size, current_size - 1);
     /* code to pop an element from an ascending (top to bottom) pqueue */
 
     /*  UNTESTED */
 
     size_t i;
     size_t child;
-    for( i=PQ_FIRST_ENTRY; (child = PQ_LEFT_CHILD_INDEX(i)) <= new_current_size; i=child )
+    for (i = PQ_FIRST_ENTRY;
+         (child = PQ_LEFT_CHILD_INDEX(i)) <= new_current_size; i = child)
     {
         /* set child to the smaller of the two children... */
 
-        if( (child != new_current_size) &&
-            (fcs_pq_rating(Elements[child + 1]) > fcs_pq_rating(Elements[child])) )
+        if ((child != new_current_size) && (fcs_pq_rating(Elements[child + 1]) >
+                                               fcs_pq_rating(Elements[child])))
         {
-            child ++;
+            child++;
         }
 
-        if( fcs_pq_rating( last_elem ) < fcs_pq_rating( Elements[ child ] ) )
+        if (fcs_pq_rating(last_elem) < fcs_pq_rating(Elements[child]))
         {
-            Elements[ i ] = Elements[ child ];
+            Elements[i] = Elements[child];
         }
         else
         {
@@ -203,10 +200,8 @@ static GCC_INLINE void fc_solve_pq_pop(
     Elements[i] = last_elem;
     pq->current_size = new_current_size;
 
-
     return;
 }
-
 
 #ifdef __cplusplus
 }

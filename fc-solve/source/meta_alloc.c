@@ -38,12 +38,10 @@
 
 #include "meta_alloc.h"
 
-#define ALLOCED_SIZE (FCS_IA_PACK_SIZE*1024-(256+128))
+#define ALLOCED_SIZE (FCS_IA_PACK_SIZE * 1024 - (256 + 128))
 
-void fc_solve_compact_allocator_init(
-    fcs_compact_allocator_t * const allocator,
-    fcs_meta_compact_allocator_t * const meta_allocator
-    )
+void fc_solve_compact_allocator_init(fcs_compact_allocator_t *const allocator,
+    fcs_meta_compact_allocator_t *const meta_allocator)
 {
     allocator->meta = meta_allocator;
 
@@ -52,15 +50,14 @@ void fc_solve_compact_allocator_init(
     return;
 }
 
-#define OLD_LIST_NEXT(ptr) (*((char * *)(ptr)))
-#define OLD_LIST_DATA(ptr) ((char *)(&(((char * *)(ptr))[1])))
-static GCC_INLINE char * meta_request_new_buffer(
-    fcs_meta_compact_allocator_t * const meta_allocator
-    )
+#define OLD_LIST_NEXT(ptr) (*((char **)(ptr)))
+#define OLD_LIST_DATA(ptr) ((char *)(&(((char **)(ptr))[1])))
+static GCC_INLINE char *meta_request_new_buffer(
+    fcs_meta_compact_allocator_t *const meta_allocator)
 {
     if (meta_allocator->recycle_bin)
     {
-        char * ret = meta_allocator->recycle_bin;
+        char *ret = meta_allocator->recycle_bin;
         meta_allocator->recycle_bin = OLD_LIST_NEXT(ret);
         return ret;
     }
@@ -70,34 +67,25 @@ static GCC_INLINE char * meta_request_new_buffer(
     }
 }
 
-void fc_solve_compact_allocator_extend(
-    fcs_compact_allocator_t * const allocator
-        )
+void fc_solve_compact_allocator_extend(fcs_compact_allocator_t *const allocator)
 {
-    char * const new_data = meta_request_new_buffer(allocator->meta);
+    char *const new_data = meta_request_new_buffer(allocator->meta);
 
     OLD_LIST_NEXT(new_data) = allocator->old_list;
     allocator->old_list = new_data;
 
-    allocator->ptr
-        = allocator->rollback_ptr
-        = OLD_LIST_DATA(new_data);
+    allocator->ptr = allocator->rollback_ptr = OLD_LIST_DATA(new_data);
     allocator->max_ptr = new_data + ALLOCED_SIZE;
 }
 
 void fc_solve_meta_compact_allocator_finish(
-    fcs_meta_compact_allocator_t * const meta_allocator
-    )
+    fcs_meta_compact_allocator_t *const meta_allocator)
 {
-    char * iter, * iter_next;
+    char *iter, *iter_next;
 
-    for (
-        iter = meta_allocator->recycle_bin, iter_next = iter ? OLD_LIST_NEXT(iter) : NULL
-            ;
-        iter_next
-            ;
-        iter = iter_next , iter_next = OLD_LIST_NEXT(iter)
-        )
+    for (iter = meta_allocator->recycle_bin,
+        iter_next = iter ? OLD_LIST_NEXT(iter) : NULL;
+         iter_next; iter = iter_next, iter_next = OLD_LIST_NEXT(iter))
     {
         free(iter);
     }
@@ -106,20 +94,15 @@ void fc_solve_meta_compact_allocator_finish(
     meta_allocator->recycle_bin = NULL;
 }
 
-void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * const allocator)
+void fc_solve_compact_allocator_finish(fcs_compact_allocator_t *const allocator)
 {
-    char * iter, * iter_next;
-    fcs_meta_compact_allocator_t * const meta = allocator->meta;
+    char *iter, *iter_next;
+    fcs_meta_compact_allocator_t *const meta = allocator->meta;
 
     /* Enqueue all the allocated buffers in the meta allocator for re-use.
      * */
-    for (
-        iter = allocator->old_list, iter_next = OLD_LIST_NEXT(iter)
-            ;
-        iter_next
-            ;
-        iter = iter_next , iter_next = OLD_LIST_NEXT(iter)
-        )
+    for (iter = allocator->old_list, iter_next = OLD_LIST_NEXT(iter); iter_next;
+         iter = iter_next, iter_next = OLD_LIST_NEXT(iter))
     {
         OLD_LIST_NEXT(iter) = meta->recycle_bin;
         meta->recycle_bin = iter;

@@ -22,7 +22,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 /*
- * measure_depth_dep_tests_order_performance.c - measure the relative depth-dependent
+ * measure_depth_dep_tests_order_performance.c - measure the relative
+ * depth-dependent
  * performance of two scans.
  */
 #include <stdio.h>
@@ -37,23 +38,22 @@
 static void print_help(void)
 {
     printf("\n%s",
-"measure-depth-dep-tests-order-performance start end\n"
-"   [--args-start] [--args-end] [--output-to]\n"
-"[--scan1-to] [--scan2-to] [--iters-limit]\n"
-"[--max-ver-depth]"
-"   [fc-solve Arguments...]\n"
-"\n"
-"Solves a sequence of boards from the Microsoft/Freecell Pro Deals\n"
-"\n"
-"start - the first board in the sequence\n"
-"end - the last board in the sequence (inclusive)\n"
-"print_step - at which division to print a status line\n"
-"\n"
-"--binary-output-to   filename\n"
-"     Outputs statistics to binary file 'filename'\n"
-"--total-iterations-limit  limit\n"
-"     Limits each board for up to 'limit' iterations.\n"
-          );
+        "measure-depth-dep-tests-order-performance start end\n"
+        "   [--args-start] [--args-end] [--output-to]\n"
+        "[--scan1-to] [--scan2-to] [--iters-limit]\n"
+        "[--max-ver-depth]"
+        "   [fc-solve Arguments...]\n"
+        "\n"
+        "Solves a sequence of boards from the Microsoft/Freecell Pro Deals\n"
+        "\n"
+        "start - the first board in the sequence\n"
+        "end - the last board in the sequence (inclusive)\n"
+        "print_step - at which division to print a status line\n"
+        "\n"
+        "--binary-output-to   filename\n"
+        "     Outputs statistics to binary file 'filename'\n"
+        "--total-iterations-limit  limit\n"
+        "     Limits each board for up to 'limit' iterations.\n");
 }
 
 typedef struct
@@ -63,27 +63,25 @@ typedef struct
     int verdict;
 } result_t;
 
-static const char * known_parameters[] = {
-    NULL
-    };
+static const char *known_parameters[] = {NULL};
 
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
     /* char buffer[2048]; */
     int board_num;
     int start_board, end_board;
-    result_t * results, * curr_result;
-    FILE * output_fh;
+    result_t *results, *curr_result;
+    FILE *output_fh;
     int min_depth_for_scan2;
     fcs_int_limit_t iters_limit = 100000;
     int max_var_depth_to_check = 100;
 
     fcs_portable_time_t mytime;
 
-    char * error_string;
-    const char * scan1_to = NULL, * scan2_to = NULL;
+    char *error_string;
+    const char *scan1_to = NULL, *scan2_to = NULL;
 
-    char * output_filename = NULL;
+    char *output_filename = NULL;
     fcs_state_string_t state_string;
 
     int arg = 1, start_from_arg = -1, end_args = -1;
@@ -97,7 +95,7 @@ int main(int argc, char * argv[])
     start_board = atoi(argv[arg++]);
     end_board = atoi(argv[arg++]);
 
-    for (;arg < argc; arg++)
+    for (; arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--args-start"))
         {
@@ -201,78 +199,50 @@ int main(int argc, char * argv[])
 
     output_fh = fopen(output_filename, "wt");
 
-    for (min_depth_for_scan2 = 0; min_depth_for_scan2 < max_var_depth_to_check ;
-            min_depth_for_scan2++)
+    for (min_depth_for_scan2 = 0; min_depth_for_scan2 < max_var_depth_to_check;
+         min_depth_for_scan2++)
     {
-        void * const instance = freecell_solver_user_alloc();
+        void *const instance = freecell_solver_user_alloc();
 
         if (start_from_arg >= 0)
         {
             freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-                instance,
-                end_args,
-                (freecell_solver_str_t *)(void *)argv,
-                start_from_arg,
-                known_parameters,
-                NULL,
-                NULL,
-                &error_string,
-                &arg,
-                -1,
-                NULL
-            );
+                instance, end_args, (freecell_solver_str_t *)(void *)argv,
+                start_from_arg, known_parameters, NULL, NULL, &error_string,
+                &arg, -1, NULL);
         }
 
         if (freecell_solver_user_set_depth_tests_order(
-            instance,
-            0,
-            scan1_to,
-            &error_string
-            ))
+                instance, 0, scan1_to, &error_string))
         {
             fprintf(stderr, "Error! Got '%s'!\n", error_string);
             free(error_string);
             exit(-1);
         }
         if (freecell_solver_user_set_depth_tests_order(
-            instance,
-            min_depth_for_scan2,
-            scan2_to,
-            &error_string
-            ))
+                instance, min_depth_for_scan2, scan2_to, &error_string))
         {
             fprintf(stderr, "Error! Got '%s'!\n", error_string);
             free(error_string);
             exit(-1);
         }
 
-
-        for (board_num=start_board, curr_result = results
-                ;
-             board_num<=end_board
-                ;
-             board_num++, curr_result++
-        )
+        for (board_num = start_board, curr_result = results;
+             board_num <= end_board; board_num++, curr_result++)
         {
             get_board(board_num, state_string);
 
-            freecell_solver_user_limit_iterations_long(
-                instance,
-                iters_limit
-            );
+            freecell_solver_user_limit_iterations_long(instance, iters_limit);
 
             FCS_GET_TIME(curr_result->start_time);
 
             curr_result->verdict =
-                freecell_solver_user_solve_board(
-                    instance,
-                    state_string
-                    );
+                freecell_solver_user_solve_board(instance, state_string);
 
             FCS_GET_TIME(curr_result->end_time);
 
-            curr_result->num_iters
-                = freecell_solver_user_get_num_times_long(instance);
+            curr_result->num_iters =
+                freecell_solver_user_get_num_times_long(instance);
 
             freecell_solver_user_recycle(instance);
         }
@@ -282,18 +252,18 @@ int main(int argc, char * argv[])
         printf("Reached depth %d\n", min_depth_for_scan2);
 
         fprintf(output_fh, "Depth == %d\n\n", min_depth_for_scan2);
-        for (board_num=start_board, curr_result = results
-                ;
-             board_num<=end_board
-                ;
-             board_num++, curr_result++
-        )
+        for (board_num = start_board, curr_result = results;
+             board_num <= end_board; board_num++, curr_result++)
         {
-            fprintf(output_fh, "board[%d].ret == %d\n", board_num, curr_result->verdict);
-            fprintf(output_fh, "board[%d].iters == %ld\n", board_num, (long)curr_result->num_iters);
+            fprintf(output_fh, "board[%d].ret == %d\n", board_num,
+                curr_result->verdict);
+            fprintf(output_fh, "board[%d].iters == %ld\n", board_num,
+                (long)curr_result->num_iters);
 
-#define FPRINTF_TIME(label, field) \
-            fprintf(output_fh, "board[%d].%s = %li.%.6li\n", board_num, label, FCS_TIME_GET_SEC(curr_result->field),FCS_TIME_GET_USEC(curr_result->field));
+#define FPRINTF_TIME(label, field)                                             \
+    fprintf(output_fh, "board[%d].%s = %li.%.6li\n", board_num, label,         \
+        FCS_TIME_GET_SEC(curr_result->field),                                  \
+        FCS_TIME_GET_USEC(curr_result->field));
 
             FPRINTF_TIME("start", start_time);
             FPRINTF_TIME("end", end_time);

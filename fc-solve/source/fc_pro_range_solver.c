@@ -31,24 +31,21 @@
 #include "range_solvers_binary_output.h"
 #include "fc_pro_iface_pos.h"
 
-static GCC_INLINE void fc_pro_get_board(long gamenumber, fcs_state_string_t state_string, fcs_state_keyval_pair_t * pos IND_BUF_T_PARAM(indirect_stacks_buffer))
+static GCC_INLINE void fc_pro_get_board(long gamenumber,
+    fcs_state_string_t state_string,
+    fcs_state_keyval_pair_t *pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     get_board(gamenumber, state_string);
     fc_solve_initial_user_state_to_c(
-        state_string, pos, 4, 8, 1, indirect_stacks_buffer
-    );
+        state_string, pos, 4, 8, 1, indirect_stacks_buffer);
 }
 
-static void my_iter_handler(
-    void * const user_instance,
-    const fcs_int_limit_t iter_num,
-    const int depth,
-    void * const ptr_state,
-    const fcs_int_limit_t parent_iter_num,
-    void * lp_context
-    )
+static void my_iter_handler(void *const user_instance,
+    const fcs_int_limit_t iter_num, const int depth, void *const ptr_state,
+    const fcs_int_limit_t parent_iter_num, void *lp_context)
 {
-    const fc_solve_display_information_context_t * const display_context = (const fc_solve_display_information_context_t * const)lp_context;
+    const fc_solve_display_information_context_t *const display_context =
+        (const fc_solve_display_information_context_t *const)lp_context;
 
     fprintf(stdout, "Iteration: %li\n", (long)iter_num);
     fprintf(stdout, "Depth: %i\n", depth);
@@ -58,32 +55,30 @@ static void my_iter_handler(
     }
     fprintf(stdout, "\n");
 
-
     if (display_context->debug_iter_state_output)
     {
         char state_string[1000];
-            freecell_solver_user_iter_state_stringify(
-                user_instance,
-                state_string,
-                ptr_state
-                FC_SOLVE__PASS_PARSABLE(display_context->parseable_output)
-                , display_context->canonized_order_output
-                FC_SOLVE__PASS_T(display_context->display_10_as_t)
-                );
+        freecell_solver_user_iter_state_stringify(
+            user_instance, state_string, ptr_state FC_SOLVE__PASS_PARSABLE(
+                                             display_context->parseable_output),
+            display_context->canonized_order_output FC_SOLVE__PASS_T(
+                display_context->display_10_as_t));
         printf("%s\n---------------\n\n\n", state_string);
     }
 }
 
 #include "cl_callback_range.h"
 
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
-    const char * variant = "freecell";
+    const char *variant = "freecell";
     fcs_portable_time_t mytime;
     fcs_int64_t total_num_iters = 0;
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-    binary_output_t binary_output = {.filename = NULL,};
+    binary_output_t binary_output = {
+        .filename = NULL,
+    };
     int arg = 1;
 
     if (argc < 4)
@@ -97,13 +92,13 @@ int main(int argc, char * argv[])
     const int stop_at = atoi(argv[arg++]);
     if (stop_at <= 0)
     {
-        fprintf(stderr, "print_step (the third argument) must be greater than 0.\n");
+        fprintf(stderr,
+            "print_step (the third argument) must be greater than 0.\n");
         print_help();
         exit(-1);
-
     }
 
-    for (;arg < argc; arg++)
+    for (; arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--variant"))
         {
@@ -128,7 +123,8 @@ int main(int argc, char * argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--binary-output-to came without an argument!\n");
+                fprintf(
+                    stderr, "--binary-output-to came without an argument!\n");
                 print_help();
                 exit(-1);
             }
@@ -139,7 +135,8 @@ int main(int argc, char * argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--total-iterations-limit came without an argument!\n");
+                fprintf(stderr,
+                    "--total-iterations-limit came without an argument!\n");
                 print_help();
                 exit(-1);
             }
@@ -155,77 +152,66 @@ int main(int argc, char * argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    fc_solve_display_information_context_t display_context = INITIAL_DISPLAY_CONTEXT;
-    void * const instance = alloc_instance_and_parse(
-        argc,
-        argv,
-        &arg,
-        known_parameters,
-        cmd_line_callback,
-        &display_context,
-        TRUE
-    );
+    fc_solve_display_information_context_t display_context =
+        INITIAL_DISPLAY_CONTEXT;
+    void *const instance = alloc_instance_and_parse(argc, argv, &arg,
+        known_parameters, cmd_line_callback, &display_context, TRUE);
 
-    bin_init(&binary_output, &start_board, &end_board, &total_iterations_limit_per_board);
+    bin_init(&binary_output, &start_board, &end_board,
+        &total_iterations_limit_per_board);
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(instance, variant);
 
     if (was_total_iterations_limit_per_board_set)
     {
-        freecell_solver_user_limit_iterations_long(instance, total_iterations_limit_per_board);
+        freecell_solver_user_limit_iterations_long(
+            instance, total_iterations_limit_per_board);
     }
 
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
-    for (int board_num = start_board ; board_num <= end_board ; board_num++)
+    for (int board_num = start_board; board_num <= end_board; board_num++)
     {
         fcs_state_keyval_pair_t pos;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         if (variant_is_freecell)
         {
-            fc_pro_get_board(board_num, buffer, &(pos)
-                PASS_IND_BUF_T(indirect_stacks_buffer));
+            fc_pro_get_board(board_num, buffer,
+                &(pos)PASS_IND_BUF_T(indirect_stacks_buffer));
         }
         else
         {
             char command[1000];
 
             sprintf(command, "make_pysol_freecell_board.py -F -t %d %s",
-                    board_num,
-                    variant
-                   );
+                board_num, variant);
 
-            FILE * const from_make_pysol = popen(command, "r");
-            fread(buffer, sizeof(buffer[0]), BUF_SIZE-1, from_make_pysol);
+            FILE *const from_make_pysol = popen(command, "r");
+            fread(buffer, sizeof(buffer[0]), BUF_SIZE - 1, from_make_pysol);
             pclose(from_make_pysol);
 #undef BUF_SIZE
         }
 
-        buffer[COUNT(buffer)-1] = '\0';
+        buffer[COUNT(buffer) - 1] = '\0';
 
         int num_iters;
         int num_moves;
         int num_fcpro_moves;
         fcs_moves_processed_t fc_pro_moves = {.moves = NULL};
 
-        switch(
-            freecell_solver_user_solve_board(
-                instance,
-                buffer
-                )
-        )
+        switch (freecell_solver_user_solve_board(instance, buffer))
         {
-            case FCS_STATE_SUSPEND_PROCESS:
+        case FCS_STATE_SUSPEND_PROCESS:
             FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
             num_iters = num_moves = num_fcpro_moves = -1;
             break;
 
-            case FCS_STATE_IS_NOT_SOLVEABLE:
+        case FCS_STATE_IS_NOT_SOLVEABLE:
             FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
             num_iters = num_moves = num_fcpro_moves = -2;
             break;
 
-            default:
+        default:
             num_iters = (int)freecell_solver_user_get_num_times_long(instance);
             num_moves = freecell_solver_user_get_moves_left(instance);
 
@@ -234,13 +220,15 @@ int main(int argc, char * argv[])
                 fcs_moves_sequence_t moves_seq;
 
                 freecell_solver_user_get_moves_sequence(instance, &moves_seq);
-                fc_solve_moves_processed_gen(&fc_pro_moves, &pos, 4, &moves_seq);
+                fc_solve_moves_processed_gen(
+                    &fc_pro_moves, &pos, 4, &moves_seq);
 
-                num_fcpro_moves = fc_solve_moves_processed_get_moves_left(&fc_pro_moves);
+                num_fcpro_moves =
+                    fc_solve_moves_processed_get_moves_left(&fc_pro_moves);
 
                 if (moves_seq.moves)
                 {
-                    free (moves_seq.moves);
+                    free(moves_seq.moves);
                     moves_seq.moves = NULL;
                 }
             }
@@ -251,20 +239,21 @@ int main(int argc, char * argv[])
             break;
         }
         print_int(&binary_output, num_iters);
-        printf("[[Num Iters]]=%d\n[[Num FCS Moves]]=%d\n[[Num FCPro Moves]]=%d\n", num_iters, num_moves, num_fcpro_moves);
+        printf(
+            "[[Num Iters]]=%d\n[[Num FCS Moves]]=%d\n[[Num FCPro Moves]]=%d\n",
+            num_iters, num_moves, num_fcpro_moves);
 
         printf("%s\n", "[[Start]]");
         if (fc_pro_moves.moves)
         {
             fcs_extended_move_t move;
             int len = 0;
-            while (! fc_solve_moves_processed_get_next_move(&fc_pro_moves, &move))
+            while (
+                !fc_solve_moves_processed_get_next_move(&fc_pro_moves, &move))
             {
                 char temp_str[10];
                 fc_solve_moves_processed_render_move(move, temp_str);
-                printf("%s%c", temp_str,
-                    ((((++len) % 10) == 0) ? '\n' : ' ')
-                );
+                printf("%s%c", temp_str, ((((++len) % 10) == 0) ? '\n' : ' '));
             }
             fc_solve_moves_processed_free(&fc_pro_moves);
         }

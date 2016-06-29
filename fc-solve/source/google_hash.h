@@ -37,7 +37,7 @@ extern "C" {
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
 
-typedef void * fcs_states_google_hash_handle_t;
+typedef void *fcs_states_google_hash_handle_t;
 
 extern fcs_states_google_hash_handle_t fc_solve_states_google_hash_new();
 
@@ -49,24 +49,19 @@ extern fcs_states_google_hash_handle_t fc_solve_states_google_hash_new();
  * was set to it.
  */
 extern fcs_bool_t fc_solve_states_google_hash_insert(
-    fcs_states_google_hash_handle_t hash,
-    void * key,
-    void * * existing_key
-    );
+    fcs_states_google_hash_handle_t hash, void *key, void **existing_key);
 
 void fc_solve_states_google_hash_free(fcs_states_google_hash_handle_t hash);
 
 extern void fc_solve_states_google_hash_foreach(
     fcs_states_google_hash_handle_t hash,
-    fcs_bool_t (*should_delete_ptr)(void * key, void * context),
-    void * context
-    );
+    fcs_bool_t (*should_delete_ptr)(void *key, void *context), void *context);
 
 #endif
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
 
-typedef void * fcs_columns_google_hash_handle_t;
+typedef void *fcs_columns_google_hash_handle_t;
 
 extern fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new();
 
@@ -78,10 +73,7 @@ extern fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new();
  * was set to it.
  */
 extern fcs_bool_t fc_solve_columns_google_hash_insert(
-    fcs_columns_google_hash_handle_t hash,
-    void * key,
-    void * * existing_key
-    );
+    fcs_columns_google_hash_handle_t hash, void *key, void **existing_key);
 
 void fc_solve_columns_google_hash_free(fcs_columns_google_hash_handle_t hash);
 

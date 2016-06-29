@@ -47,7 +47,6 @@
 #define DICT_IMPLEMENTATION
 #include "kaz_tree.h"
 
-
 /*
  * These macros provide short convenient names for structure members,
  * which are embellished with dict_ prefixes so that they are
@@ -106,10 +105,13 @@ static void rotate_left(dnode_t *upper)
     /* don't need to check for root node here because root->parent is
        the sentinel nil node, and root->parent->left points back to root */
 
-    if (upper == upparent->left) {
+    if (upper == upparent->left)
+    {
         upparent->left = lower;
-    } else {
-        assert (upper == upparent->right);
+    }
+    else
+    {
+        assert(upper == upparent->right);
         upparent->right = lower;
     }
 
@@ -132,10 +134,13 @@ static void rotate_right(dnode_t *upper)
 
     lower->parent = upparent = upper->parent;
 
-    if (upper == upparent->right) {
+    if (upper == upparent->right)
+    {
         upparent->right = lower;
-    } else {
-        assert (upper == upparent->left);
+    }
+    else
+    {
+        assert(upper == upparent->left);
         upparent->left = lower;
     }
 
@@ -175,14 +180,19 @@ static int verify_bintree(dict_t *dict)
 
     first = fc_solve_kaz_tree_first(dict);
 
-    if (dict->dupes) {
-        while (first && (next = dict_next(dict, first))) {
+    if (dict->dupes)
+    {
+        while (first && (next = dict_next(dict, first)))
+        {
             if (dict->compare(first->key, next->key, dict->context) > 0)
                 return 0;
             first = next;
         }
-    } else {
-        while (first && (next = dict_next(dict, first))) {
+    }
+    else
+    {
+        while (first && (next = dict_next(dict, first)))
+        {
             if (dict->compare(first->key, next->key, dict->context) >= 0)
                 return 0;
             first = next;
@@ -211,14 +221,16 @@ static unsigned int verify_redblack(dnode_t *nil, dnode_t *root)
 {
     unsigned height_left, height_right;
 
-    if (root != nil) {
+    if (root != nil)
+    {
         height_left = verify_redblack(nil, root->left);
         height_right = verify_redblack(nil, root->right);
         if (height_left == 0 || height_right == 0)
             return 0;
         if (height_left != height_right)
             return 0;
-        if (root->color == dnode_red) {
+        if (root->color == dnode_red)
+        {
             if (root->left->color != dnode_black)
                 return 0;
             if (root->right->color != dnode_black)
@@ -245,8 +257,8 @@ static dictcount_t verify_node_count(dnode_t *nil, dnode_t *root)
     if (root == nil)
         return 0;
     else
-        return 1 + verify_node_count(nil, root->left)
-            + verify_node_count(nil, root->right);
+        return 1 + verify_node_count(nil, root->left) +
+               verify_node_count(nil, root->right);
 }
 #endif
 
@@ -260,10 +272,10 @@ static dictcount_t verify_node_count(dnode_t *nil, dnode_t *root)
 
 static int verify_dict_has_node(dnode_t *nil, dnode_t *root, dnode_t *node)
 {
-    if (root != nil) {
-        return root == node
-                || verify_dict_has_node(nil, root->left, node)
-                || verify_dict_has_node(nil, root->right, node);
+    if (root != nil)
+    {
+        return root == node || verify_dict_has_node(nil, root->left, node) ||
+               verify_dict_has_node(nil, root->right, node);
     }
     return 0;
 }
@@ -274,12 +286,13 @@ static int verify_dict_has_node(dnode_t *nil, dnode_t *root, dnode_t *node)
  */
 
 #ifdef NO_FC_SOLVE
-dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp, void * context)
+dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp, void *context)
 #else
-dict_t *fc_solve_kaz_tree_create(dict_comp_t comp, void * context, fcs_meta_compact_allocator_t * meta_allocator)
+dict_t *fc_solve_kaz_tree_create(dict_comp_t comp, void *context,
+    fcs_meta_compact_allocator_t *meta_allocator)
 #endif
 {
-    dict_t *dict = (dict_t *) SMALLOC1(dict);
+    dict_t *dict = (dict_t *)SMALLOC1(dict);
 
     if (dict)
         dict_init(dict, comp, meta_allocator);
@@ -314,25 +327,36 @@ void dict_set_allocator(dict_t *dict, dnode_alloc_t al,
 static void safe_traverse(dict_t *dict, void (*func)(dnode_t *, void *))
 {
     dnode_t *nil = dict_nil(dict), *current = dict_root(dict);
-    enum { from_parent, from_left, from_right } came_from = from_parent;
+    enum
+    {
+        from_parent,
+        from_left,
+        from_right
+    } came_from = from_parent;
 
-    while (current != nil) {
+    while (current != nil)
+    {
         dnode_t *next = nil; /* Initialized to shut up gcc warning. */
 
-        switch (came_from) {
+        switch (came_from)
+        {
         case from_parent:
-            if (current->left != nil) {
+            if (current->left != nil)
+            {
                 next = current->left;
-            } else
-        case from_left:
-            if (current->right != nil) {
+            }
+            else
+            case from_left:
+            if (current->right != nil)
+            {
                 came_from = from_parent;
                 next = current->right;
-            } else
-        case from_right:
+            }
+            else
+            case from_right:
             {
-                came_from = (current == current->parent->left)
-                            ? from_left : from_right;
+                came_from =
+                    (current == current->parent->left) ? from_left : from_right;
                 next = current->parent;
                 func(current, dict->context);
             }
@@ -350,7 +374,7 @@ static void safe_traverse(dict_t *dict, void (*func)(dnode_t *, void *))
  */
 void fc_solve_kaz_tree_destroy(dict_t *dict)
 {
-    assert (dict_isempty(dict));
+    assert(dict_isempty(dict));
 
     fc_solve_compact_allocator_finish(&(dict->dict_allocator));
     free(dict);
@@ -363,7 +387,7 @@ void fc_solve_kaz_tree_destroy(dict_t *dict)
 
 void fc_solve_kaz_tree_free_nodes(dict_t *dict)
 {
-    /* Removed for fc-solve. */
+/* Removed for fc-solve. */
 #ifdef NO_FC_SOLVE
     safe_traverse(dict, dict->freenode);
     dict->nodecount = 0;
@@ -380,7 +404,7 @@ void fc_solve_kaz_tree_free_nodes(dict_t *dict)
 void dict_free(dict_t *dict)
 {
 #ifdef KAZLIB_OBSOLESCENT_DEBUG
-    assert ("call to obsolescent function dict_free()" && 0);
+    assert("call to obsolescent function dict_free()" && 0);
 #endif
     fc_solve_kaz_tree_free_nodes(dict);
 }
@@ -394,12 +418,11 @@ void dict_free(dict_t *dict)
 dict_t *dict_init(dict_t *dict, dictcount_t maxcount, dict_comp_t comp)
 #else
 dict_t *dict_init(dict_t *dict, dict_comp_t comp,
-    fcs_meta_compact_allocator_t * meta_allocator
-    )
+    fcs_meta_compact_allocator_t *meta_allocator)
 #endif
 {
     dict->compare = comp;
-    /* Removed for fc-solve. */
+/* Removed for fc-solve. */
 #if 0
     dict->allocnode = dnode_alloc;
     dict->freenode = dnode_free;
@@ -431,7 +454,7 @@ dict_t *dict_init(dict_t *dict, dict_comp_t comp,
 void dict_init_like(dict_t *dict, const dict_t *orig)
 {
     dict->compare = orig->compare;
-    /* Removed for fc-solve. */
+/* Removed for fc-solve. */
 #if 0
     dict->allocnode = orig->allocnode;
     dict->freenode = orig->freenode;
@@ -450,18 +473,17 @@ void dict_init_like(dict_t *dict, const dict_t *orig)
     dict->dupes = orig->dupes;
 #endif
 
-    assert (dict_similar(dict, orig));
+    assert(dict_similar(dict, orig));
 }
 
 /*
  * Initialize with allocator
  */
 extern dict_t *dict_init_alloc(dict_t *dict, dictcount_t maxcount,
-                               dict_comp_t comp, dnode_alloc_t al,
-                               dnode_free_t fr, void *context)
+    dict_comp_t comp, dnode_alloc_t al, dnode_free_t fr, void *context)
 {
     dict->compare = comp;
-    /* Removed for fc-solve. */
+/* Removed for fc-solve. */
 #if 0
     dict->allocnode = al;
     dict->freenode = fr;
@@ -492,10 +514,9 @@ static void dict_clear(dict_t *dict)
     dict->nilnode.left = &dict->nilnode;
     dict->nilnode.right = &dict->nilnode;
     dict->nilnode.parent = &dict->nilnode;
-    assert (dict->nilnode.color == dnode_black);
+    assert(dict->nilnode.color == dnode_black);
 }
 #endif
-
 
 /*
  * Verify the integrity of the dictionary structure.  This is provided for
@@ -557,7 +578,7 @@ int dict_similar(const dict_t *left, const dict_t *right)
 
 dict_key_t fc_solve_kaz_tree_lookup_value(dict_t *dict, dict_key_t key)
 {
-    dnode_t * const dn = fc_solve_kaz_tree_lookup(dict, key);
+    dnode_t *const dn = fc_solve_kaz_tree_lookup(dict, key);
 
     return (dn ? dn->dict_key : NULL);
 }
@@ -580,7 +601,8 @@ dnode_t *fc_solve_kaz_tree_lookup(dict_t *dict, dict_key_t key)
 
     /* simple binary search adapted for trees that contain duplicate keys */
 
-    while (root != nil) {
+    while (root != nil)
+    {
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
         result = memcmp(&(key.key), &(root->dict_key.key), sizeof(key.key));
 #else
@@ -591,15 +613,21 @@ dnode_t *fc_solve_kaz_tree_lookup(dict_t *dict, dict_key_t key)
             root = root->left;
         else if (result > 0)
             root = root->right;
-        else {
+        else
+        {
 #ifdef NO_FC_SOLVE
-            if (!dict->dupes) { /* no duplicates, return match          */
+            if (!dict->dupes)
+            { /* no duplicates, return match          */
                 return root;
-            } else {            /* could be dupes, find leftmost one    */
-                do {
+            }
+            else
+            { /* could be dupes, find leftmost one    */
+                do
+                {
                     saved = root;
                     root = root->left;
-                    while (root != nil && dict->compare(key, root->key, dict->context))
+                    while (root != nil &&
+                           dict->compare(key, root->key, dict->context))
                         root = root->right;
                 } while (root != nil);
                 return saved;
@@ -625,19 +653,28 @@ dnode_t *dict_lower_bound(dict_t *dict, const void *key)
     dnode_t *nil = dict_nil(dict);
     dnode_t *tentative = 0;
 
-    while (root != nil) {
+    while (root != nil)
+    {
         int result = dict->compare(key, root->key, dict->context);
 
-        if (result > 0) {
+        if (result > 0)
+        {
             root = root->right;
-        } else if (result < 0) {
+        }
+        else if (result < 0)
+        {
             tentative = root;
             root = root->left;
-        } else {
+        }
+        else
+        {
 #ifdef NO_FC_SOLVE
-            if (!dict->dupes) {
+            if (!dict->dupes)
+            {
                 return root;
-            } else {
+            }
+            else
+            {
                 tentative = root;
                 root = root->left;
             }
@@ -661,19 +698,28 @@ dnode_t *dict_upper_bound(dict_t *dict, const void *key)
     dnode_t *nil = dict_nil(dict);
     dnode_t *tentative = 0;
 
-    while (root != nil) {
+    while (root != nil)
+    {
         int result = dict->compare(key, root->key, dict->context);
 
-        if (result < 0) {
+        if (result < 0)
+        {
             root = root->left;
-        } else if (result > 0) {
+        }
+        else if (result > 0)
+        {
             tentative = root;
             root = root->right;
-        } else {
+        }
+        else
+        {
 #ifdef NO_FC_SOLVE
-            if (!dict->dupes) {
+            if (!dict->dupes)
+            {
                 return root;
-            } else {
+            }
+            else
+            {
                 tentative = root;
                 root = root->right;
             }
@@ -696,12 +742,16 @@ dnode_t *dict_strict_lower_bound(dict_t *dict, const void *key)
     dnode_t *nil = dict_nil(dict);
     dnode_t *tentative = 0;
 
-    while (root != nil) {
+    while (root != nil)
+    {
         int result = dict->compare(key, root->key, dict->context);
 
-        if (result >= 0) {
+        if (result >= 0)
+        {
             root = root->right;
-        } else {
+        }
+        else
+        {
             tentative = root;
             root = root->left;
         }
@@ -720,12 +770,16 @@ dnode_t *dict_strict_upper_bound(dict_t *dict, const void *key)
     dnode_t *nil = dict_nil(dict);
     dnode_t *tentative = 0;
 
-    while (root != nil) {
+    while (root != nil)
+    {
         int result = dict->compare(key, root->key, dict->context);
 
-        if (result <= 0) {
+        if (result <= 0)
+        {
             root = root->left;
-        } else {
+        }
+        else
+        {
             tentative = root;
             root = root->right;
         }
@@ -748,7 +802,8 @@ dnode_t *dict_strict_upper_bound(dict_t *dict, const void *key)
  * function returns true).
  */
 
-dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t key)
+dict_ret_key_t fc_solve_kaz_tree_insert(
+    dict_t *dict, dnode_t *node, dict_key_t key)
 {
     dnode_t *where = dict_root(dict), *nil = dict_nil(dict);
     dnode_t *parent = nil, *uncle, *grandpa;
@@ -756,13 +811,14 @@ dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t 
 
     node->dict_key = key;
 
-    assert (!dict_isfull(dict));
-    assert (!dict_contains(dict, node));
-    assert (!dnode_is_in_a_dict(node));
+    assert(!dict_isfull(dict));
+    assert(!dict_contains(dict, node));
+    assert(!dnode_is_in_a_dict(node));
 
     /* basic binary tree insert */
 
-    while (where != nil) {
+    while (where != nil)
+    {
         parent = where;
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
         result = memcmp(&(key.key), &(where->dict_key.key), sizeof(key.key));
@@ -770,9 +826,9 @@ dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t 
         result = dict->compare(key, where->dict_key, dict->context);
 #endif
 
-        /* We are remming it out because instead of duplicating the key
-         * we return the existing key. -- Shlomi Fish, fc-solve.
-         * */
+/* We are remming it out because instead of duplicating the key
+ * we return the existing key. -- Shlomi Fish, fc-solve.
+ * */
 #if 0
         /* trap attempts at duplicate key insertion unless it's explicitly allowed */
         assert (dict->dupes || result != 0);
@@ -795,7 +851,7 @@ dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t 
         }
     }
 
-    assert (where == nil);
+    assert(where == nil);
 
     if (result < 0)
         parent->left = node;
@@ -814,21 +870,27 @@ dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t 
 
     node->color = dnode_red;
 
-    while (parent->color == dnode_red) {
+    while (parent->color == dnode_red)
+    {
         grandpa = parent->parent;
-        if (parent == grandpa->left) {
+        if (parent == grandpa->left)
+        {
             uncle = grandpa->right;
-            if (uncle->color == dnode_red) {    /* red parent, red uncle */
+            if (uncle->color == dnode_red)
+            { /* red parent, red uncle */
                 parent->color = dnode_black;
                 uncle->color = dnode_black;
                 grandpa->color = dnode_red;
                 node = grandpa;
                 parent = grandpa->parent;
-            } else {                            /* red parent, black uncle */
-                if (node == parent->right) {
+            }
+            else
+            { /* red parent, black uncle */
+                if (node == parent->right)
+                {
                     rotate_left(parent);
                     parent = node;
-                    assert (grandpa == parent->parent);
+                    assert(grandpa == parent->parent);
                     /* rotation between parent and child preserves grandpa */
                 }
                 parent->color = dnode_black;
@@ -836,19 +898,25 @@ dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t 
                 rotate_right(grandpa);
                 break;
             }
-        } else {        /* symmetric cases: parent == parent->parent->right */
+        }
+        else
+        { /* symmetric cases: parent == parent->parent->right */
             uncle = grandpa->left;
-            if (uncle->color == dnode_red) {
+            if (uncle->color == dnode_red)
+            {
                 parent->color = dnode_black;
                 uncle->color = dnode_black;
                 grandpa->color = dnode_red;
                 node = grandpa;
                 parent = grandpa->parent;
-            } else {
-                if (node == parent->left) {
+            }
+            else
+            {
+                if (node == parent->left)
+                {
                     rotate_right(parent);
                     parent = node;
-                    assert (grandpa == parent->parent);
+                    assert(grandpa == parent->parent);
                 }
                 parent->color = dnode_black;
                 grandpa->color = dnode_red;
@@ -860,7 +928,7 @@ dict_ret_key_t fc_solve_kaz_tree_insert(dict_t *dict, dnode_t *node, dict_key_t 
 
     dict_root(dict)->color = dnode_black;
 
-    assert (dict_verify(dict));
+    assert(dict_verify(dict));
 
     return NULL;
 }
@@ -877,8 +945,8 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
 
     /* basic deletion */
 
-    assert (!dict_isempty(dict));
-    assert (dict_contains(dict, target));
+    assert(!dict_isempty(dict));
+    assert(dict_contains(dict, target));
 
     /*
      * If the node being deleted has two children, then we replace it with its
@@ -892,14 +960,15 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
      * one node to another behind the user's back.
      */
 
-    if (target->left != nil && target->right != nil) {
+    if (target->left != nil && target->right != nil)
+    {
         dnode_t *next = fc_solve_kaz_tree_next(dict, target);
         dnode_t *nextparent = next->parent;
         const dnode_color_t nextcolor = next->color;
 
-        assert (next != nil);
-        assert (next->parent != nil);
-        assert (next->left == nil);
+        assert(next != nil);
+        assert(next->parent != nil);
+        assert(next->left == nil);
 
         /*
          * First, splice out the successor from the tree completely, by
@@ -909,10 +978,13 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
         child = next->right;
         child->parent = nextparent;
 
-        if (nextparent->left == next) {
+        if (nextparent->left == next)
+        {
             nextparent->left = child;
-        } else {
-            assert (nextparent->right == next);
+        }
+        else
+        {
+            assert(nextparent->right == next);
             nextparent->right = child;
         }
 
@@ -929,25 +1001,32 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
         next->color = target->color;
         target->color = nextcolor;
 
-        if (delparent->left == target) {
+        if (delparent->left == target)
+        {
             delparent->left = next;
-        } else {
-            assert (delparent->right == target);
+        }
+        else
+        {
+            assert(delparent->right == target);
             delparent->right = next;
         }
-
-    } else {
-        assert (target != nil);
-        assert (target->left == nil || target->right == nil);
+    }
+    else
+    {
+        assert(target != nil);
+        assert(target->left == nil || target->right == nil);
 
         child = (target->left != nil) ? target->left : target->right;
 
         child->parent = delparent = target->parent;
 
-        if (target == delparent->left) {
+        if (target == delparent->left)
+        {
             delparent->left = child;
-        } else {
-            assert (target == delparent->right);
+        }
+        else
+        {
+            assert(target == delparent->right);
             delparent->right = child;
         }
     }
@@ -960,39 +1039,47 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
     dict->nodecount--;
 #endif
 
-    assert (verify_bintree(dict));
+    assert(verify_bintree(dict));
 
     /* red-black adjustments */
 
-    if (target->color == dnode_black) {
+    if (target->color == dnode_black)
+    {
         dnode_t *parent, *sister;
 
         dict_root(dict)->color = dnode_red;
 
-        while (child->color == dnode_black) {
+        while (child->color == dnode_black)
+        {
             parent = child->parent;
-            if (child == parent->left) {
+            if (child == parent->left)
+            {
                 sister = parent->right;
-                assert (sister != nil);
-                if (sister->color == dnode_red) {
+                assert(sister != nil);
+                if (sister->color == dnode_red)
+                {
                     sister->color = dnode_black;
                     parent->color = dnode_red;
                     rotate_left(parent);
                     sister = parent->right;
-                    assert (sister != nil);
+                    assert(sister != nil);
                 }
-                if (sister->left->color == dnode_black
-                        && sister->right->color == dnode_black) {
+                if (sister->left->color == dnode_black &&
+                    sister->right->color == dnode_black)
+                {
                     sister->color = dnode_red;
                     child = parent;
-                } else {
-                    if (sister->right->color == dnode_black) {
-                        assert (sister->left->color == dnode_red);
+                }
+                else
+                {
+                    if (sister->right->color == dnode_black)
+                    {
+                        assert(sister->left->color == dnode_red);
                         sister->left->color = dnode_black;
                         sister->color = dnode_red;
                         rotate_right(sister);
                         sister = parent->right;
-                        assert (sister != nil);
+                        assert(sister != nil);
                     }
                     sister->color = parent->color;
                     sister->right->color = dnode_black;
@@ -1000,29 +1087,36 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
                     rotate_left(parent);
                     break;
                 }
-            } else {    /* symmetric case: child == child->parent->right */
-                assert (child == parent->right);
+            }
+            else
+            { /* symmetric case: child == child->parent->right */
+                assert(child == parent->right);
                 sister = parent->left;
-                assert (sister != nil);
-                if (sister->color == dnode_red) {
+                assert(sister != nil);
+                if (sister->color == dnode_red)
+                {
                     sister->color = dnode_black;
                     parent->color = dnode_red;
                     rotate_right(parent);
                     sister = parent->left;
-                    assert (sister != nil);
+                    assert(sister != nil);
                 }
-                if (sister->right->color == dnode_black
-                        && sister->left->color == dnode_black) {
+                if (sister->right->color == dnode_black &&
+                    sister->left->color == dnode_black)
+                {
                     sister->color = dnode_red;
                     child = parent;
-                } else {
-                    if (sister->left->color == dnode_black) {
-                        assert (sister->right->color == dnode_red);
+                }
+                else
+                {
+                    if (sister->left->color == dnode_black)
+                    {
+                        assert(sister->right->color == dnode_red);
                         sister->right->color = dnode_black;
                         sister->color = dnode_red;
                         rotate_left(sister);
                         sister = parent->left;
-                        assert (sister != nil);
+                        assert(sister != nil);
                     }
                     sister->color = parent->color;
                     sister->left->color = dnode_black;
@@ -1037,7 +1131,7 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
         dict_root(dict)->color = dnode_black;
     }
 
-    assert (dict_verify(dict));
+    assert(dict_verify(dict));
 
     return target;
 }
@@ -1063,16 +1157,16 @@ static GCC_INLINE dnode_t *dnode_init(dnode_t *dnode)
  */
 
 #ifdef NO_FC_SOLVE
-dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, const void *key, void *data)
+dict_ret_key_t fc_solve_kaz_tree_alloc_insert(
+    dict_t *dict, const void *key, void *data)
 #else
 dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, dict_key_t key)
 #endif
 {
-    dnode_t * from_bin;
-    dnode_t * node;
+    dnode_t *from_bin;
+    dnode_t *node;
     dict_ret_key_t ret;
-    fcs_compact_allocator_t * allocator;
-
+    fcs_compact_allocator_t *allocator;
 
     allocator = &(dict->dict_allocator);
     if ((from_bin = dict->dict_recycle_bin) != NULL)
@@ -1082,9 +1176,7 @@ dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, dict_key_t key)
     }
     else
     {
-        node = (dnode_t *)
-            fcs_compact_alloc_ptr(allocator, sizeof(*node))
-            ;
+        node = (dnode_t *)fcs_compact_alloc_ptr(allocator, sizeof(*node));
     }
 
 #ifdef NO_FC_SOLVE
@@ -1136,7 +1228,6 @@ dnode_t *fc_solve_kaz_tree_first(dict_t *dict)
  * (that is, dict_isempty(dict) returns 1) a null pointer is returned.
  */
 
-
 /*
  * Return the node with the highest (rightmost) key. If the dictionary is empty
  * (that is, dict_isempty(dict) returns 1) a null pointer is returned.
@@ -1161,11 +1252,12 @@ dnode_t *dict_last(dict_t *dict)
  */
 #endif
 
-dnode_t * fc_solve_kaz_tree_next(dict_t *dict, dnode_t *curr)
+dnode_t *fc_solve_kaz_tree_next(dict_t *dict, dnode_t *curr)
 {
     dnode_t *nil = dict_nil(dict), *parent, *left;
 
-    if (curr->right != nil) {
+    if (curr->right != nil)
+    {
         curr = curr->right;
         while ((left = curr->left) != nil)
             curr = left;
@@ -1174,7 +1266,8 @@ dnode_t * fc_solve_kaz_tree_next(dict_t *dict, dnode_t *curr)
 
     parent = curr->parent;
 
-    while (parent != nil && curr == parent->right) {
+    while (parent != nil && curr == parent->right)
+    {
         curr = parent;
         parent = curr->parent;
     }
@@ -1193,7 +1286,8 @@ dnode_t *dict_prev(dict_t *dict, dnode_t *curr)
 {
     dnode_t *nil = dict_nil(dict), *parent, *right;
 
-    if (curr->left != nil) {
+    if (curr->left != nil)
+    {
         curr = curr->left;
         while ((right = curr->right) != nil)
             curr = right;
@@ -1202,7 +1296,8 @@ dnode_t *dict_prev(dict_t *dict, dnode_t *curr)
 
     parent = curr->parent;
 
-    while (parent != nil && curr == parent->left) {
+    while (parent != nil && curr == parent->left)
+    {
         curr = parent;
         parent = curr->parent;
     }
@@ -1210,7 +1305,6 @@ dnode_t *dict_prev(dict_t *dict, dnode_t *curr)
     return (parent == nil) ? NULL : parent;
 }
 #endif
-
 
 #undef dict_count
 #undef dict_isempty
@@ -1220,25 +1314,13 @@ dnode_t *dict_prev(dict_t *dict, dnode_t *curr)
 #undef dnode_getkey
 
 #ifdef NO_FC_SOLVE
-void dict_allow_dupes(dict_t *dict)
-{
-    dict->dupes = 1;
-}
+void dict_allow_dupes(dict_t *dict) { dict->dupes = 1; }
 
-dictcount_t dict_count(dict_t *dict)
-{
-    return dict->nodecount;
-}
+dictcount_t dict_count(dict_t *dict) { return dict->nodecount; }
 
-int dict_isempty(dict_t *dict)
-{
-    return dict->nodecount == 0;
-}
+int dict_isempty(dict_t *dict) { return dict->nodecount == 0; }
 
-int dict_isfull(dict_t *dict)
-{
-    return dict->nodecount == dict->maxcount;
-}
+int dict_isfull(dict_t *dict) { return dict->nodecount == dict->maxcount; }
 
 int dict_contains(dict_t *dict, dnode_t *node)
 {
@@ -1247,18 +1329,15 @@ int dict_contains(dict_t *dict, dnode_t *node)
 
 static dnode_t *dnode_alloc(void *context)
 {
-    return (dnode_t *) malloc(sizeof *dnode_alloc(NULL));
+    return (dnode_t *)malloc(sizeof *dnode_alloc(NULL));
 }
 
-static void dnode_free(dnode_t *node, void *context)
-{
-    free(node);
-}
+static void dnode_free(dnode_t *node, void *context) { free(node); }
 
-dnode_t * const dnode_create(void * const data)
+dnode_t *const dnode_create(void *const data)
 {
-    dnode_t *dnode = (dnode_t *) SMALLOC1(dnode)
-    if (dnode) {
+    dnode_t *dnode = (dnode_t *)SMALLOC1(dnode) if (dnode)
+    {
         dnode->data = data;
         dnode->parent = NULL;
         dnode->left = NULL;
@@ -1269,24 +1348,15 @@ dnode_t * const dnode_create(void * const data)
 
 void dnode_destroy(dnode_t *dnode)
 {
-    assert (!dnode_is_in_a_dict(dnode));
+    assert(!dnode_is_in_a_dict(dnode));
     free(dnode);
 }
 
-void *dnode_get(dnode_t *dnode)
-{
-    return dnode->data;
-}
+void *dnode_get(dnode_t *dnode) { return dnode->data; }
 
-const void *dnode_getkey(dnode_t *dnode)
-{
-    return dnode->key;
-}
+const void *dnode_getkey(dnode_t *dnode) { return dnode->key; }
 
-void dnode_put(dnode_t *dnode, void *data)
-{
-    dnode->data = data;
-}
+void dnode_put(dnode_t *dnode, void *data) { dnode->data = data; }
 
 int dnode_is_in_a_dict(dnode_t *dnode)
 {
@@ -1297,10 +1367,11 @@ void dict_process(dict_t *dict, void *context, dnode_process_t function)
 {
     dnode_t *node = fc_solve_kaz_tree_first(dict), *next;
 
-    while (node != NULL) {
+    while (node != NULL)
+    {
         /* check for callback function deleting */
         /* the next node from under us          */
-        assert (dict_contains(dict, node));
+        assert(dict_contains(dict, node));
         next = dict_next(dict, node);
         function(dict, node, context);
         node = next;
@@ -1331,17 +1402,18 @@ void dict_load_next(dict_load_t *load, dnode_t *newnode, const void *key)
     dict_t *dict = load->dictptr;
     dnode_t *nil = &load->nilnode;
 
-    assert (!dnode_is_in_a_dict(newnode));
-    assert (dict->nodecount < dict->maxcount);
+    assert(!dnode_is_in_a_dict(newnode));
+    assert(dict->nodecount < dict->maxcount);
 
-    #ifndef NDEBUG
-    if (dict->nodecount > 0) {
+#ifndef NDEBUG
+    if (dict->nodecount > 0)
+    {
         if (dict->dupes)
-            assert (dict->compare(nil->left->key, key) <= 0);
+            assert(dict->compare(nil->left->key, key) <= 0);
         else
-            assert (dict->compare(nil->left->key, key) < 0);
+            assert(dict->compare(nil->left->key, key) < 0);
     }
-    #endif
+#endif
 
     newnode->key = key;
     nil->right->left = newnode;
@@ -1355,33 +1427,37 @@ void dict_load_next(dict_load_t *load, dnode_t *newnode, const void *key)
 void dict_load_end(dict_load_t *load)
 {
     dict_t *dict = load->dictptr;
-    dnode_t *tree[DICT_DEPTH_MAX] = { 0 };
+    dnode_t *tree[DICT_DEPTH_MAX] = {0};
     dnode_t *curr, *dictnil = dict_nil(dict), *loadnil = &load->nilnode, *next;
     dnode_t *complete = 0;
     dictcount_t fullcount = DICTCOUNT_T_MAX, nodecount = dict->nodecount;
     dictcount_t botrowcount;
     unsigned baselevel = 0, level = 0, i;
 
-    assert (dnode_red == 0 && dnode_black == 1);
+    assert(dnode_red == 0 && dnode_black == 1);
 
     while (fullcount >= nodecount && fullcount)
         fullcount >>= 1;
 
     botrowcount = nodecount - fullcount;
 
-    for (curr = loadnil->left; curr != loadnil; curr = next) {
+    for (curr = loadnil->left; curr != loadnil; curr = next)
+    {
         next = curr->left;
 
-        if (complete == NULL && botrowcount-- == 0) {
-            assert (baselevel == 0);
-            assert (level == 0);
+        if (complete == NULL && botrowcount-- == 0)
+        {
+            assert(baselevel == 0);
+            assert(level == 0);
             baselevel = level = 1;
             complete = tree[0];
 
-            if (complete != 0) {
+            if (complete != 0)
+            {
                 tree[0] = 0;
                 complete->right = dictnil;
-                while (tree[level] != 0) {
+                while (tree[level] != 0)
+                {
                     tree[level]->right = complete;
                     complete->parent = tree[level];
                     complete = tree[level];
@@ -1390,22 +1466,26 @@ void dict_load_end(dict_load_t *load)
             }
         }
 
-        if (complete == NULL) {
+        if (complete == NULL)
+        {
             curr->left = dictnil;
             curr->right = dictnil;
-            curr->color = (dnode_color_t) (level % 2);
+            curr->color = (dnode_color_t)(level % 2);
             complete = curr;
 
-            assert (level == baselevel);
-            while (tree[level] != 0) {
+            assert(level == baselevel);
+            while (tree[level] != 0)
+            {
                 tree[level]->right = complete;
                 complete->parent = tree[level];
                 complete = tree[level];
                 tree[level++] = 0;
             }
-        } else {
+        }
+        else
+        {
             curr->left = complete;
-            curr->color = (dnode_color_t) ((level + 1) % 2);
+            curr->color = (dnode_color_t)((level + 1) % 2);
             complete->parent = curr;
             tree[level] = curr;
             complete = 0;
@@ -1416,8 +1496,10 @@ void dict_load_end(dict_load_t *load)
     if (complete == NULL)
         complete = dictnil;
 
-    for (i = 0; i < DICT_DEPTH_MAX; i++) {
-        if (tree[i] != 0) {
+    for (i = 0; i < DICT_DEPTH_MAX; i++)
+    {
+        if (tree[i] != 0)
+        {
             tree[i]->right = complete;
             complete->parent = tree[i];
             complete = tree[i];
@@ -1430,15 +1512,16 @@ void dict_load_end(dict_load_t *load)
     complete->color = dnode_black;
     dict_root(dict) = complete;
 
-    assert (dict_verify(dict));
+    assert(dict_verify(dict));
 }
 
 void dict_merge(dict_t *dest, dict_t *source)
 {
     dict_load_t load;
-    dnode_t *leftnode = fc_solve_kaz_tree_first(dest), *rightnode = fc_solve_kaz_tree_first(source);
+    dnode_t *leftnode = fc_solve_kaz_tree_first(dest),
+            *rightnode = fc_solve_kaz_tree_first(source);
 
-    assert (dict_similar(dest, source));
+    assert(dict_similar(dest, source));
 
     if (source == dest)
         return;
@@ -1448,46 +1531,54 @@ void dict_merge(dict_t *dest, dict_t *source)
 #endif
     load_begin_internal(&load, dest);
 
-    for (;;) {
-        if (leftnode != NULL && rightnode != NULL) {
-            if (dest->compare(leftnode->key, rightnode->key, source->context) < 0)
+    for (;;)
+    {
+        if (leftnode != NULL && rightnode != NULL)
+        {
+            if (dest->compare(leftnode->key, rightnode->key, source->context) <
+                0)
                 goto copyleft;
             else
                 goto copyright;
-        } else if (leftnode != NULL) {
+        }
+        else if (leftnode != NULL)
+        {
             goto copyleft;
-        } else if (rightnode != NULL) {
+        }
+        else if (rightnode != NULL)
+        {
             goto copyright;
-        } else {
-            assert (leftnode == NULL && rightnode == NULL);
+        }
+        else
+        {
+            assert(leftnode == NULL && rightnode == NULL);
             break;
         }
 
     copyleft:
-        {
-            dnode_t *next = dict_next(dest, leftnode);
-            #ifndef NDEBUG
-            leftnode->left = NULL;      /* suppress assertion in dict_load_next */
-            #endif
-            dict_load_next(&load, leftnode, leftnode->key);
-            leftnode = next;
-            continue;
-        }
+    {
+        dnode_t *next = dict_next(dest, leftnode);
+#ifndef NDEBUG
+        leftnode->left = NULL; /* suppress assertion in dict_load_next */
+#endif
+        dict_load_next(&load, leftnode, leftnode->key);
+        leftnode = next;
+        continue;
+    }
 
     copyright:
-        {
-            dnode_t *next = dict_next(source, rightnode);
-            #ifndef NDEBUG
-            rightnode->left = NULL;
-            #endif
-            dict_load_next(&load, rightnode, rightnode->key);
-            rightnode = next;
-            continue;
-        }
+    {
+        dnode_t *next = dict_next(source, rightnode);
+#ifndef NDEBUG
+        rightnode->left = NULL;
+#endif
+        dict_load_next(&load, rightnode, rightnode->key);
+        rightnode = next;
+        continue;
+    }
     }
 
     dict_clear(source);
     dict_load_end(&load);
 }
 #endif
-

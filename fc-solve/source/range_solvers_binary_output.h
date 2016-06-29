@@ -38,31 +38,31 @@ extern "C" {
 
 typedef struct
 {
-    FILE * fh;
-    char * buffer;
-    char * buffer_end;
-    char * ptr;
-    const char * filename;
+    FILE *fh;
+    char *buffer;
+    char *buffer_end;
+    char *ptr;
+    const char *filename;
 } binary_output_t;
 
 #define BINARY_OUTPUT_NUM_INTS 16
 #define BINARY_OUTPUT_BUF_SIZE (sizeof(int) * BINARY_OUTPUT_NUM_INTS)
 #define SIZE_INT 4
 
-static GCC_INLINE void write_me(binary_output_t * const bin)
+static GCC_INLINE void write_me(binary_output_t *const bin)
 {
     fwrite(bin->buffer, 1, (size_t)(bin->ptr - bin->buffer), bin->fh);
     fflush(bin->fh);
 }
 
-static void print_int(binary_output_t * const bin, int val)
+static void print_int(binary_output_t *const bin, int val)
 {
-    if (! bin->fh)
+    if (!bin->fh)
     {
         return;
     }
-    unsigned char * const buffer = (unsigned char * const)bin->ptr;
-    for (int p=0 ; p < SIZE_INT ; p++)
+    unsigned char *const buffer = (unsigned char *const)bin->ptr;
+    for (int p = 0; p < SIZE_INT; p++)
     {
         buffer[p] = (unsigned char)(val & 0xFF);
         val >>= 8;
@@ -76,7 +76,7 @@ static void print_int(binary_output_t * const bin, int val)
     }
 }
 
-static GCC_INLINE void bin_close(binary_output_t * bin)
+static GCC_INLINE void bin_close(binary_output_t *bin)
 {
     if (bin->filename)
     {
@@ -87,51 +87,49 @@ static GCC_INLINE void bin_close(binary_output_t * bin)
     }
 }
 
-static GCC_INLINE fcs_bool_t read_int(FILE * const f, int * const dest)
+static GCC_INLINE fcs_bool_t read_int(FILE *const f, int *const dest)
 {
     unsigned char buffer[SIZE_INT];
     if (fread(buffer, 1, SIZE_INT, f) != SIZE_INT)
     {
         return TRUE;
     }
-    *dest = (buffer[0]+((buffer[1]+((buffer[2]+((buffer[3])<<8))<<8))<<8));
+    *dest = (buffer[0] +
+             ((buffer[1] + ((buffer[2] + ((buffer[3]) << 8)) << 8)) << 8));
 
     return FALSE;
 }
 
-static void read_int_wrapper(FILE * const in, int * const var)
+static void read_int_wrapper(FILE *const in, int *const var)
 {
     if (read_int(in, var))
     {
         fprintf(stderr, "%s",
-            "Output file is too short to deduce the configuration!\n"
-        );
+            "Output file is too short to deduce the configuration!\n");
         exit(-1);
     }
 }
 
-static GCC_INLINE void bin_init(binary_output_t * const bin,
-    int * const start_board_ptr,
-    int * const end_board_ptr,
-    fcs_int_limit_t * const total_iterations_limit_per_board_ptr
-    )
+static GCC_INLINE void bin_init(binary_output_t *const bin,
+    int *const start_board_ptr, int *const end_board_ptr,
+    fcs_int_limit_t *const total_iterations_limit_per_board_ptr)
 {
     if (bin->filename)
     {
-        FILE * in;
+        FILE *in;
 
         bin->buffer = malloc(BINARY_OUTPUT_BUF_SIZE);
         bin->ptr = bin->buffer;
         bin->buffer_end = bin->buffer + BINARY_OUTPUT_BUF_SIZE;
 
-
         in = fopen(bin->filename, "rb");
         if (in == NULL)
         {
             bin->fh = fopen(bin->filename, "wb");
-            if (! bin->fh)
+            if (!bin->fh)
             {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", bin->filename);
+                fprintf(stderr, "Could not open \"%s\" for writing!\n",
+                    bin->filename);
                 exit(-1);
             }
 
@@ -153,20 +151,23 @@ static GCC_INLINE void bin_init(binary_output_t * const bin,
             const long file_len = ftell(in);
             if (file_len % 4 != 0)
             {
-                fprintf(stderr, "%s", "Output file has an invalid length. Terminating.\n");
+                fprintf(stderr, "%s",
+                    "Output file has an invalid length. Terminating.\n");
                 exit(-1);
             }
-            *start_board_ptr += (file_len-12)/4;
+            *start_board_ptr += (file_len - 12) / 4;
             if (*start_board_ptr >= *end_board_ptr)
             {
-                fprintf(stderr, "%s", "Output file was already finished being generated.\n");
+                fprintf(stderr, "%s",
+                    "Output file was already finished being generated.\n");
                 exit(-1);
             }
             fclose(in);
             bin->fh = fopen(bin->filename, "ab");
-            if (! bin->fh)
+            if (!bin->fh)
             {
-                fprintf(stderr, "Could not open \"%s\" for writing!\n", bin->filename);
+                fprintf(stderr, "Could not open \"%s\" for writing!\n",
+                    bin->filename);
                 exit(-1);
             }
         }
@@ -174,10 +175,7 @@ static GCC_INLINE void bin_init(binary_output_t * const bin,
     else
     {
         bin->fh = NULL;
-        bin->buffer
-            = bin->ptr
-            = bin->buffer_end
-            = NULL;
+        bin->buffer = bin->ptr = bin->buffer_end = NULL;
     }
 }
 

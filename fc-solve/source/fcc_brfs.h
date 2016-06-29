@@ -29,8 +29,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include <assert.h>
@@ -52,41 +51,36 @@ typedef struct fcs_FCC_start_point_struct
 {
     fcs_encoded_state_buffer_t enc_state;
     fcs_fcc_moves_seq_t moves_seq;
-    struct fcs_FCC_start_point_struct * next;
+    struct fcs_FCC_start_point_struct *next;
 } fcs_FCC_start_point_t;
 
-typedef struct {
-    fcs_FCC_start_point_t * list;
+typedef struct
+{
+    fcs_FCC_start_point_t *list;
     fcs_compact_allocator_t allocator;
-    fcs_FCC_start_point_t * recycle_bin;
+    fcs_FCC_start_point_t *recycle_bin;
 } fcs_FCC_start_points_list_t;
 
-static int fc_solve_compare_encoded_states(
-    const void * const void_a, const void * const void_b, void * const context GCC_UNUSED
-)
+static int fc_solve_compare_encoded_states(const void *const void_a,
+    const void *const void_b, void *const context GCC_UNUSED)
 {
 #define GET_PARAM(p) ((const fcs_encoded_state_buffer_t *)p)
-    return memcmp(GET_PARAM(void_a), GET_PARAM(void_b), sizeof(*(GET_PARAM(void_a))));
+    return memcmp(
+        GET_PARAM(void_a), GET_PARAM(void_b), sizeof(*(GET_PARAM(void_a))));
 #undef GET_PARAM
 }
 
 static GCC_INLINE void fc_solve_fcc_release_moves_seq(
-    fcs_fcc_moves_seq_t * moves_seq,
-    fcs_fcc_moves_seq_allocator_t * moves_list_allocator
-    )
+    fcs_fcc_moves_seq_t *moves_seq,
+    fcs_fcc_moves_seq_allocator_t *moves_list_allocator)
 {
-    fcs_fcc_moves_list_item_t * iter = moves_seq->moves_list;
-    fcs_fcc_moves_list_item_t * iter_next;
+    fcs_fcc_moves_list_item_t *iter = moves_seq->moves_list;
+    fcs_fcc_moves_list_item_t *iter_next;
 
     if (iter)
     {
-        for(
-            iter_next = iter->next
-            ;
-            iter_next
-            ;
-            iter = iter_next, iter_next = iter_next->next
-           )
+        for (iter_next = iter->next; iter_next;
+             iter = iter_next, iter_next = iter_next->next)
         {
             iter->next = moves_list_allocator->recycle_bin;
             moves_list_allocator->recycle_bin = iter;
@@ -102,29 +96,25 @@ static GCC_INLINE void fc_solve_fcc_release_moves_seq(
 }
 
 static GCC_INLINE void fc_solve__internal__copy_moves(
-    fcs_fcc_moves_seq_t * const moves_seq,
-    int * const ptr_to_pos_in_moves,
-    fcs_fcc_moves_list_item_t * * * const ptr_to_end_moves_iter,
+    fcs_fcc_moves_seq_t *const moves_seq, int *const ptr_to_pos_in_moves,
+    fcs_fcc_moves_list_item_t ***const ptr_to_end_moves_iter,
     const unsigned char extra_move,
-    fcs_fcc_moves_seq_allocator_t * const moves_list_allocator
-)
+    fcs_fcc_moves_seq_allocator_t *const moves_list_allocator)
 {
     int pos_in_moves = *ptr_to_pos_in_moves;
     var_AUTO(end_moves_iter, *ptr_to_end_moves_iter);
-    const fcs_fcc_moves_list_item_t * copy_from_iter = moves_seq->moves_list;
+    const fcs_fcc_moves_list_item_t *copy_from_iter = moves_seq->moves_list;
     const_SLOT(count, moves_seq);
 
-    for ( int copy_from_idx = 0 ; copy_from_idx < count ; )
+    for (int copy_from_idx = 0; copy_from_idx < count;)
     {
         if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
         {
-            (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
+            (*end_moves_iter) =
+                fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
         }
-        (*end_moves_iter)->data.s[
-            pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
-            ] = copy_from_iter->data.s[
-            copy_from_idx % FCS_FCC_NUM_MOVES_IN_ITEM
-            ];
+        (*end_moves_iter)->data.s[pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM] =
+            copy_from_iter->data.s[copy_from_idx % FCS_FCC_NUM_MOVES_IN_ITEM];
         if ((++pos_in_moves) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
         {
             end_moves_iter = &((*end_moves_iter)->next);
@@ -138,25 +128,24 @@ static GCC_INLINE void fc_solve__internal__copy_moves(
     /* Append the remaining moves. */
     if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
     {
-        (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
+        (*end_moves_iter) =
+            fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
     }
-    (*end_moves_iter)->data.s[
-        (pos_in_moves++) % FCS_FCC_NUM_MOVES_IN_ITEM
-        ] = extra_move;
+    (*end_moves_iter)->data.s[(pos_in_moves++) % FCS_FCC_NUM_MOVES_IN_ITEM] =
+        extra_move;
 
     *ptr_to_pos_in_moves = pos_in_moves;
     *ptr_to_end_moves_iter = end_moves_iter;
 }
 
-static void perform_FCC_brfs(
-    enum fcs_dbm_variant_type_t local_variant,
+static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
     /* The first state in the game, from which all states are encoded. */
-    fcs_state_keyval_pair_t * init_state,
+    fcs_state_keyval_pair_t *init_state,
     /* The start state. */
     fcs_encoded_state_buffer_t start_state,
     /* The moves leading up to the state.
      * */
-    const fcs_fcc_moves_seq_t * const start_state_moves_seq,
+    const fcs_fcc_moves_seq_t *const start_state_moves_seq,
 #if 0
     /* [Output]: FCC start points.
      * */
@@ -170,48 +159,49 @@ static void perform_FCC_brfs(
      * [Output] a callback to add a point to the next_start_points,
      * and its context.
      */
-    fcs_bool_t (*add_start_point)(
-        const fcs_encoded_state_buffer_t * const enc_state,
-        const fcs_fcc_moves_seq_t * const start_state_moves_seq,
-        fcs_fcc_moves_seq_t * const after_start_moves_seq,
-        const unsigned char extra_move,
-        void * const context
-    ),
-    void * add_start_point_context,
+    fcs_bool_t (*add_start_point)(const fcs_encoded_state_buffer_t
+                                      *const enc_state,
+                                 const fcs_fcc_moves_seq_t
+                                     *const start_state_moves_seq,
+                                 fcs_fcc_moves_seq_t
+                                     *const after_start_moves_seq,
+                                 const unsigned char extra_move,
+                                 void *const context),
+    void *add_start_point_context,
 #endif
     /* [Output]: Is the min_by_sorting new.
      * */
-    fcs_bool_t * is_min_by_sorting_new,
+    fcs_bool_t *is_min_by_sorting_new,
     /* [Output]: The min_by_sorting.
      * */
-    fcs_encoded_state_buffer_t * min_by_sorting,
+    fcs_encoded_state_buffer_t *min_by_sorting,
     /* [Input/Output]: The ${next}_depth_FCCs.DoesExist
      * (for the right depth based on the current depth and pruning.)
      * Of type Map{min_by_sorting => Bool Exists} DoesExist.
     */
-    dict_t * does_min_by_sorting_exist,
+    dict_t *does_min_by_sorting_exist,
     /* [Input/Output]: The LRU cache.
      * Of type <<LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache>>
      * */
-    fcs_lru_cache_t * does_state_exist_in_any_FCC_cache,
+    fcs_lru_cache_t *does_state_exist_in_any_FCC_cache,
     /* [Output]: the number of new positions/states scanned in the FCC. If it's
      * not new, this will be set to zero (0). It includes the initial position,
      * but does not include the start points of the new FCC.
      * */
-    long * out_num_new_positions,
+    long *out_num_new_positions,
     /* [Input/Output]: the list allocator. */
-    fcs_fcc_moves_seq_allocator_t * moves_list_allocator,
+    fcs_fcc_moves_seq_allocator_t *moves_list_allocator,
     /* [Input/Output]: The meta allocator - needed to allocate and free
      * the compact allocators. */
-    fcs_meta_compact_allocator_t * meta_alloc
-)
+    fcs_meta_compact_allocator_t *meta_alloc)
 {
-    void * tree_recycle_bin = NULL;
-    fcs_dbm_queue_item_t * queue_head, * queue_tail, * queue_recycle_bin, * new_item, * extracted_item;
+    void *tree_recycle_bin = NULL;
+    fcs_dbm_queue_item_t *queue_head, *queue_tail, *queue_recycle_bin,
+        *new_item, *extracted_item;
     fcs_compact_allocator_t queue_allocator, derived_list_allocator;
-    fcs_derived_state_t * derived_list, * derived_list_recycle_bin,
-                        * derived_iter, * next_derived_iter;
-    dict_t * traversed_states;
+    fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter,
+        *next_derived_iter;
+    dict_t *traversed_states;
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
@@ -219,7 +209,7 @@ static void perform_FCC_brfs(
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    /* Some sanity checks. */
+/* Some sanity checks. */
 #ifndef NDEBUG
     assert(add_start_point);
     assert(add_start_point_context);
@@ -230,30 +220,25 @@ static void perform_FCC_brfs(
 #endif
 
     /* Initialize the queue_allocator. */
-    fc_solve_compact_allocator_init( &(queue_allocator), meta_alloc );
-    fc_solve_compact_allocator_init( &(derived_list_allocator), meta_alloc );
+    fc_solve_compact_allocator_init(&(queue_allocator), meta_alloc);
+    fc_solve_compact_allocator_init(&(derived_list_allocator), meta_alloc);
     queue_recycle_bin = NULL;
 
     /* TODO : maybe pass delta_stater as an argument  */
     fc_solve_delta_stater_t delta_stater;
     fc_solve_delta_stater_init(
-        &delta_stater,
-        &(init_state->s),
-        STACKS_NUM,
-        FREECELLS_NUM
+        &delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-        , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+        ,
+        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-    );
-
-    traversed_states = fc_solve_kaz_tree_create(fc_solve_compare_encoded_states, NULL, meta_alloc, &tree_recycle_bin);
-
-    new_item =
-        (fcs_dbm_queue_item_t *)
-        fcs_compact_alloc_ptr(
-            &(queue_allocator),
-            sizeof(*new_item)
         );
+
+    traversed_states = fc_solve_kaz_tree_create(
+        fc_solve_compare_encoded_states, NULL, meta_alloc, &tree_recycle_bin);
+
+    new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
+        &(queue_allocator), sizeof(*new_item));
 
     new_item->key = start_state;
     new_item->next = NULL;
@@ -266,39 +251,34 @@ static void perform_FCC_brfs(
 
     *out_num_new_positions = num_new_positions = 0;
 
-    fc_solve_kaz_tree_alloc_insert(
-        traversed_states,
-        &(new_item->key)
-    );
+    fc_solve_kaz_tree_alloc_insert(traversed_states, &(new_item->key));
 
     /* Extract an item from the queue. */
     while ((extracted_item = queue_head))
     {
         num_new_positions++;
-        if (! (queue_head = extracted_item->next) )
+        if (!(queue_head = extracted_item->next))
         {
             queue_tail = NULL;
         }
 
         /* Handle the min_by_sorting scan. */
-        if ((! running_min_was_assigned) ||
-            (memcmp(&(extracted_item->key), &running_min,
-                    sizeof(running_min)) < 0)
-        )
+        if ((!running_min_was_assigned) ||
+            (memcmp(&(extracted_item->key), &running_min, sizeof(running_min)) <
+                0))
         {
             running_min_was_assigned = TRUE;
             running_min = extracted_item->key;
             if (cache_does_key_exist(
-                    does_state_exist_in_any_FCC_cache,
-                    &(running_min)
-                    ))
+                    does_state_exist_in_any_FCC_cache, &(running_min)))
             {
                 *is_min_by_sorting_new = FALSE;
                 goto free_resources;
             }
             else
             {
-                cache_insert(does_state_exist_in_any_FCC_cache, &(running_min), NULL, '\0');
+                cache_insert(does_state_exist_in_any_FCC_cache, &(running_min),
+                    NULL, '\0');
             }
         }
 
@@ -306,12 +286,8 @@ static void perform_FCC_brfs(
         derived_list = NULL;
 
         /* Handle item. */
-        fc_solve_delta_stater_decode_into_state(
-            &delta_stater,
-            extracted_item->key.s,
-            &(state),
-            indirect_stacks_buffer
-        );
+        fc_solve_delta_stater_decode_into_state(&delta_stater,
+            extracted_item->key.s, &(state), indirect_stacks_buffer);
 
 #if 0
         char * state_as_str =
@@ -336,18 +312,11 @@ static void perform_FCC_brfs(
         free(state_as_str);
 #endif
 
-        instance_solver_thread_calc_derived_states(
-            local_variant,
-            &state,
-            NULL,
-            &derived_list,
-            &derived_list_recycle_bin,
-            &derived_list_allocator,
+        instance_solver_thread_calc_derived_states(local_variant, &state, NULL,
+            &derived_list, &derived_list_recycle_bin, &derived_list_allocator,
             /* Horne's Prune should be disabled because that interferes
              * with the FCC-depth. */
-            FALSE
-        );
-
+            FALSE);
 
         /* Allocate a spare 'new_item'. */
         if (queue_recycle_bin)
@@ -357,66 +326,42 @@ static void perform_FCC_brfs(
         }
         else
         {
-            new_item =
-                (fcs_dbm_queue_item_t *)
-                fcs_compact_alloc_ptr(
-                    &(queue_allocator),
-                    sizeof(*new_item)
-                );
+            new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
+                &(queue_allocator), sizeof(*new_item));
         }
 
         /* Enqueue the new elements to the queue. */
-        for (derived_iter = derived_list;
-                derived_iter ;
-                derived_iter = next_derived_iter
-        )
+        for (derived_iter = derived_list; derived_iter;
+             derived_iter = next_derived_iter)
         {
-            fcs_bool_t is_reversible = (derived_iter->core_irreversible_moves_count == 0);
+            fcs_bool_t is_reversible =
+                (derived_iter->core_irreversible_moves_count == 0);
             unsigned char extra_move;
 
-
-            fcs_init_and_encode_state(
-                &delta_stater,
-                local_variant,
-                &(derived_iter->state),
-                &(new_item->key)
-            );
+            fcs_init_and_encode_state(&delta_stater, local_variant,
+                &(derived_iter->state), &(new_item->key));
 
             extra_move = derived_iter->move;
 
-            if (!
-                (
-                    is_reversible
-                    ?  (fc_solve_kaz_tree_lookup_value(
-                       traversed_states,
-                       &(new_item->key)
-                       ) != NULL)
-                   : add_start_point(
-                       &(new_item->key),
-                       start_state_moves_seq,
-                       &(extracted_item->moves_seq),
-                       extra_move,
-                       add_start_point_context
-                   )
-                )
-            )
+            if (!(is_reversible
+                        ? (fc_solve_kaz_tree_lookup_value(
+                               traversed_states, &(new_item->key)) != NULL)
+                        : add_start_point(&(new_item->key),
+                              start_state_moves_seq,
+                              &(extracted_item->moves_seq), extra_move,
+                              add_start_point_context)))
             {
-                fcs_fcc_moves_list_item_t * moves_list, * * end_moves_iter;
-                fcs_encoded_state_buffer_t * key_to_add;
+                fcs_fcc_moves_list_item_t *moves_list, **end_moves_iter;
+                fcs_encoded_state_buffer_t *key_to_add;
 
-                key_to_add =
-                    fcs_compact_alloc_ptr(
-                        &(traversed_states->dict_allocator),
-                        sizeof(*key_to_add)
-                    );
+                key_to_add = fcs_compact_alloc_ptr(
+                    &(traversed_states->dict_allocator), sizeof(*key_to_add));
                 *key_to_add = new_item->key;
 
                 if (is_reversible)
                 {
                     fc_solve_kaz_tree_alloc_insert(
-                        traversed_states,
-                        key_to_add
-                        );
+                        traversed_states, key_to_add);
                 }
 
                 /* Fill in the moves. */
@@ -425,13 +370,9 @@ static void perform_FCC_brfs(
                 if (is_reversible)
                 {
                     int pos_in_moves = 0;
-                    fc_solve__internal__copy_moves(
-                        &(extracted_item->moves_seq),
-                        &pos_in_moves,
-                        &end_moves_iter,
-                        extra_move,
-                        moves_list_allocator
-                    );
+                    fc_solve__internal__copy_moves(&(extracted_item->moves_seq),
+                        &pos_in_moves, &end_moves_iter, extra_move,
+                        moves_list_allocator);
 
                     new_item->moves_seq.count = pos_in_moves;
                     new_item->moves_seq.moves_list = moves_list;
@@ -462,12 +403,8 @@ static void perform_FCC_brfs(
                 }
                 else
                 {
-                    new_item =
-                        (fcs_dbm_queue_item_t *)
-                        fcs_compact_alloc_ptr(
-                            &(queue_allocator),
-                            sizeof(*new_item)
-                        );
+                    new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
+                        &(queue_allocator), sizeof(*new_item));
                 }
             }
 
@@ -485,24 +422,17 @@ static void perform_FCC_brfs(
          * because we are interested only in those of the derived items.
          * */
         fc_solve_fcc_release_moves_seq(
-            &(extracted_item->moves_seq),
-            moves_list_allocator
-        );
+            &(extracted_item->moves_seq), moves_list_allocator);
     }
 
-    if ((*is_min_by_sorting_new =
-        (!fc_solve_kaz_tree_lookup_value(
-            does_min_by_sorting_exist,
-            &(running_min))
-         )
-        )
-    )
+    if ((*is_min_by_sorting_new = (!fc_solve_kaz_tree_lookup_value(
+             does_min_by_sorting_exist, &(running_min)))))
     {
         *min_by_sorting = running_min;
         *out_num_new_positions = num_new_positions;
     }
 
-    /* Free the allocated resources. */
+/* Free the allocated resources. */
 free_resources:
     fc_solve_compact_allocator_finish(&(queue_allocator));
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
@@ -512,87 +442,68 @@ free_resources:
 
 typedef struct
 {
-    fcs_FCC_start_points_list_t * next_start_points_list;
-    dict_t * do_next_fcc_start_points_exist;
-    fcs_fcc_moves_seq_allocator_t * moves_list_allocator;
+    fcs_FCC_start_points_list_t *next_start_points_list;
+    dict_t *do_next_fcc_start_points_exist;
+    fcs_fcc_moves_seq_allocator_t *moves_list_allocator;
 } add_start_point_context_t;
 
 /*
  * Returns if already exist (the NOT of if the state is new).
  */
 static fcs_bool_t fc_solve_add_start_point_in_mem(
-    const fcs_encoded_state_buffer_t * const enc_state,
-    const fcs_fcc_moves_seq_t * const start_state_moves_seq,
-    fcs_fcc_moves_seq_t * const after_start_moves_seq,
-    const unsigned char extra_move,
-    void * const void_context
-)
+    const fcs_encoded_state_buffer_t *const enc_state,
+    const fcs_fcc_moves_seq_t *const start_state_moves_seq,
+    fcs_fcc_moves_seq_t *const after_start_moves_seq,
+    const unsigned char extra_move, void *const void_context)
 {
-    add_start_point_context_t * const context = (add_start_point_context_t *)void_context;
-    dict_t * const tree = context->do_next_fcc_start_points_exist;
+    add_start_point_context_t *const context =
+        (add_start_point_context_t *)void_context;
+    dict_t *const tree = context->do_next_fcc_start_points_exist;
 
-    if (fc_solve_kaz_tree_lookup_value(
-            tree,
-            enc_state
-            )
-       )
+    if (fc_solve_kaz_tree_lookup_value(tree, enc_state))
     {
         return TRUE;
     }
 
-    fcs_encoded_state_buffer_t * const key_to_add =
-        fcs_compact_alloc_ptr(
-            &(tree->dict_allocator),
-            sizeof(*key_to_add)
-            );
+    fcs_encoded_state_buffer_t *const key_to_add =
+        fcs_compact_alloc_ptr(&(tree->dict_allocator), sizeof(*key_to_add));
     *key_to_add = *enc_state;
-    fc_solve_kaz_tree_alloc_insert(
-        tree,
-        key_to_add
-        );
+    fc_solve_kaz_tree_alloc_insert(tree, key_to_add);
     /* Fill in the moves. */
-    fcs_fcc_moves_list_item_t * moves_list;
-    fcs_fcc_moves_list_item_t * * end_moves_iter = &moves_list;
+    fcs_fcc_moves_list_item_t *moves_list;
+    fcs_fcc_moves_list_item_t **end_moves_iter = &moves_list;
     int pos_in_moves = 0;
     /*
      * TODO : optimise the loop so the data will be copied
      * in one go by jumps of FCS_FCC_NUM_MOVES_IN_ITEM
      * */
-    const fcs_fcc_moves_list_item_t * start_iter = start_state_moves_seq->moves_list;
+    const fcs_fcc_moves_list_item_t *start_iter =
+        start_state_moves_seq->moves_list;
     const int count_start_state_moves = start_state_moves_seq->count;
-    fcs_fcc_moves_seq_allocator_t * moves_list_allocator = context->moves_list_allocator;
-    for(
-        ;
-        pos_in_moves < count_start_state_moves
-        ;
-       )
+    fcs_fcc_moves_seq_allocator_t *moves_list_allocator =
+        context->moves_list_allocator;
+    for (; pos_in_moves < count_start_state_moves;)
     {
         if (pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
         {
-            (*end_moves_iter) = fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
+            (*end_moves_iter) =
+                fc_solve_fcc_alloc_moves_list_item(moves_list_allocator);
         }
-        (*end_moves_iter)->data.s[
-            pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
-            ] = start_iter->data.s[
-            pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM
-            ];
+        (*end_moves_iter)->data.s[pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM] =
+            start_iter->data.s[pos_in_moves % FCS_FCC_NUM_MOVES_IN_ITEM];
         if ((++pos_in_moves) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
         {
             end_moves_iter = &((*end_moves_iter)->next);
             start_iter = start_iter->next;
         }
     }
-    fc_solve__internal__copy_moves(
-        after_start_moves_seq,
-        &pos_in_moves,
-        &end_moves_iter,
-        extra_move,
-        moves_list_allocator
-    );
+    fc_solve__internal__copy_moves(after_start_moves_seq, &pos_in_moves,
+        &end_moves_iter, extra_move, moves_list_allocator);
 
     /* Enqueue the new FCC start point. */
-    fcs_FCC_start_points_list_t * const fcc_start_points = context->next_start_points_list;
-    fcs_FCC_start_point_t * new_start_point;
+    fcs_FCC_start_points_list_t *const fcc_start_points =
+        context->next_start_points_list;
+    fcs_FCC_start_point_t *new_start_point;
     if (fcc_start_points->recycle_bin)
     {
         new_start_point = fcc_start_points->recycle_bin;
@@ -600,11 +511,8 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
     }
     else
     {
-        new_start_point = (fcs_FCC_start_point_t *)
-            fcs_compact_alloc_ptr(
-                &(fcc_start_points->allocator),
-                sizeof (*new_start_point)
-                );
+        new_start_point = (fcs_FCC_start_point_t *)fcs_compact_alloc_ptr(
+            &(fcc_start_points->allocator), sizeof(*new_start_point));
     }
     new_start_point->enc_state = *enc_state;
     new_start_point->moves_seq.count = pos_in_moves;

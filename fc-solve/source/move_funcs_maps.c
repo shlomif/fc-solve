@@ -14,8 +14,7 @@
 #define WRAP_SIMPSIM(f) f
 #endif
 
-fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM] =
-{
+fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM] = {
     fc_solve_sfs_move_top_stack_cards_to_founds,
     fc_solve_sfs_move_freecell_cards_to_founds,
     fc_solve_sfs_move_freecell_cards_on_top_of_stacks,
@@ -33,40 +32,23 @@ fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM]
     fc_solve_sfs_atomic_move_freecell_card_to_empty_stack,
     WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_founds),
     WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_true_parent),
-    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent),
-    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above),
-    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent),
-    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above),
-    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above),
-    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack),
-    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
-};
+    WRAP_SIMPSIM(
+        fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent),
+    WRAP_SIMPSIM(
+        fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above),
+    WRAP_SIMPSIM(
+        fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent),
+    WRAP_SIMPSIM(
+        fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above),
+    WRAP_SIMPSIM(
+        fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above),
+    WRAP_SIMPSIM(
+        fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack),
+    WRAP_SIMPSIM(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)};
 
-
-fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM] =
-{
-    { "0", 0 },
-    { "1", 1 },
-    { "2", 2 },
-    { "3", 3 },
-    { "4", 4 },
-    { "5", 5 },
-    { "6", 6 },
-    { "7", 7 },
-    { "8", 8 },
-    { "9", 9 },
-    { "A", 10 },
-    { "B", 11 },
-    { "C", 12 },
-    { "D", 13 },
-    { "E", 14 },
-    { "a", 15 },
-    { "b", 16 },
-    { "c", 17 },
-    { "d", 18 },
-    { "e", 19 },
-    { "f", 20 },
-    { "g", 21 },
-    { "h", 22 },
-    { "i", 23 }
-};
+fcs_move_func_aliases_mapping_t
+    fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM] = {{"0", 0},
+        {"1", 1}, {"2", 2}, {"3", 3}, {"4", 4}, {"5", 5}, {"6", 6}, {"7", 7},
+        {"8", 8}, {"9", 9}, {"A", 10}, {"B", 11}, {"C", 12}, {"D", 13},
+        {"E", 14}, {"a", 15}, {"b", 16}, {"c", 17}, {"d", 18}, {"e", 19},
+        {"f", 20}, {"g", 21}, {"h", 22}, {"i", 23}};

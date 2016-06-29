@@ -27,8 +27,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "inline.h"
@@ -36,29 +35,20 @@ extern "C"
 #include <string.h>
 
 static GCC_INLINE fcs_bool_t string_starts_with(
-    const char * const str,
-    const char * const prefix,
-    const char * const end
-    )
+    const char *const str, const char *const prefix, const char *const end)
 {
-    register const size_t check_len = (size_t)(end-str);
+    register const size_t check_len = (size_t)(end - str);
 
-    return
-        (
-         (check_len == strlen(prefix))
-            && (!strncmp(str, prefix, check_len))
-        )
-        ;
+    return (
+        (check_len == strlen(prefix)) && (!strncmp(str, prefix, check_len)));
 }
 
-static GCC_INLINE const char * try_str_prefix(
-    const char * const str,
-    const char * const prefix
-)
+static GCC_INLINE const char *try_str_prefix(
+    const char *const str, const char *const prefix)
 {
     register const size_t len = strlen(prefix);
 
-    return (strncmp(str, prefix, len) ? NULL : str+len);
+    return (strncmp(str, prefix, len) ? NULL : str + len);
 }
 
 #ifdef __cplusplus

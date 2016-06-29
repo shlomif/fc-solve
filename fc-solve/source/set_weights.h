@@ -35,13 +35,10 @@ extern "C" {
 #include "rinutils.h"
 #include "fcs_user.h"
 
-static GCC_INLINE void fc_solve_set_weights(
-    freecell_solver_str_t start_num,
-    const freecell_solver_str_t string_end,
-    double * const befs_weights
-)
+static GCC_INLINE void fc_solve_set_weights(freecell_solver_str_t start_num,
+    const freecell_solver_str_t string_end, double *const befs_weights)
 {
-    for (int i=0 ; i < FCS_NUM_BEFS_WEIGHTS ; i++)
+    for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
     {
         while (*start_num == ',')
         {
@@ -60,7 +57,7 @@ static GCC_INLINE void fc_solve_set_weights(
 
             return;
         }
-        char * end_num;
+        char *end_num;
         befs_weights[i] = strtod(start_num, &end_num);
         start_num = end_num;
     }

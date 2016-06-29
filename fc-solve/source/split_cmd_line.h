@@ -34,8 +34,8 @@
 typedef struct
 {
     int argc;
-    char * * argv;
+    char **argv;
 } args_man_t;
 
-extern void fc_solve_args_man_free(args_man_t * const manager);
-extern args_man_t fc_solve_args_man_chop(const char * const string);
+extern void fc_solve_args_man_free(args_man_t *const manager);
+extern args_man_t fc_solve_args_man_chop(const char *const string);

@@ -43,7 +43,9 @@ extern "C" {
 #include "rand.h"
 #include "game_type_params.h"
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE))
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE) ||               \
+    (defined(INDIRECT_STACK_STATES) &&                                         \
+        (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE))
 
 #include <redblack.h>
 
@@ -61,20 +63,28 @@ extern "C" {
 
 #endif
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH) || (defined(INDIRECT_STACK_STATES) && ((FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE) || (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)))
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE) ||                      \
+    (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH) ||                      \
+    (defined(INDIRECT_STACK_STATES) &&                                         \
+        ((FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE) ||                 \
+            (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)))
 
 #include <glib.h>
 
 #endif
 
-#if ((defined(FCS_RCS_STATES) && (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY) || (defined(INDIRECT_STACK_STATES) && (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)))
+#if ((defined(FCS_RCS_STATES) &&                                               \
+         (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)) ||             \
+     (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY) ||                          \
+     (defined(INDIRECT_STACK_STATES) &&                                        \
+         (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)))
 
 #include <Judy.h>
 
 #endif
 
-
-#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)||(FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH))
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \
+     (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH))
 
 #include "fcs_hash.h"
 
@@ -92,7 +102,9 @@ extern "C" {
 
 #endif
 
-#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE) || (defined(FCS_RCS_STATES) && (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)))
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE) ||                      \
+     (defined(FCS_RCS_STATES) &&                                               \
+         (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)))
 
 #include "kaz_tree.h"
 
@@ -109,8 +121,8 @@ extern "C" {
 #include "meta_alloc.h"
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-#define FCS_SS_POS_BY_RANK_WIDTH (13+1)
-#define FCS_SS_POS_BY_RANK_LEN ( FCS_SS_POS_BY_RANK_WIDTH * 4 )
+#define FCS_SS_POS_BY_RANK_WIDTH (13 + 1)
+#define FCS_SS_POS_BY_RANK_LEN (FCS_SS_POS_BY_RANK_WIDTH * 4)
 #endif
 
 /* We need 2 chars per card - one for the column_idx and one
@@ -125,13 +137,16 @@ extern "C" {
 
 /* We don't keep track of kings (rank == 13). */
 #define NUM_POS_BY_RANK_SLOTS 13
-#define FCS_POS_BY_RANK_LEN ( NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH )
-typedef struct {
+#define FCS_POS_BY_RANK_LEN (NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH)
+typedef struct
+{
     char col, height;
 } fcs_pos_by_rank_t;
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-#define FCS_BOTH__POS_BY_RANK__SIZE (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank_t), FCS_POS_BY_RANK_LEN))
+#define FCS_BOTH__POS_BY_RANK__SIZE                                            \
+    (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank_t),                   \
+        FCS_POS_BY_RANK_LEN))
 #else
 #define FCS_BOTH__POS_BY_RANK__SIZE FCS_POS_BY_RANK_LEN
 #endif
@@ -144,8 +159,8 @@ typedef char fcs__positions_by_rank_t[FCS_BOTH__POS_BY_RANK__SIZE];
  * */
 typedef struct fcs_states_linked_list_item_struct
 {
-    fcs_collectible_state_t * s;
-    struct fcs_states_linked_list_item_struct * next;
+    fcs_collectible_state_t *s;
+    struct fcs_states_linked_list_item_struct *next;
 } fcs_states_linked_list_item_t;
 
 /*
@@ -157,10 +172,8 @@ struct fc_solve_soft_thread_struct;
 struct fc_solve_instance_struct;
 
 typedef void (*fc_solve_solve_for_state_move_func_t)(
-    struct fc_solve_soft_thread_struct *,
-    fcs_kv_state_t *,
-    fcs_derived_states_list_t *
-);
+    struct fc_solve_soft_thread_struct *, fcs_kv_state_t *,
+    fcs_derived_states_list_t *);
 
 #ifdef FCS_SINGLE_HARD_THREAD
 typedef struct fc_solve_instance_struct fc_solve_hard_thread_t;
@@ -169,10 +182,9 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 #endif
 
 extern fcs_bool_t fc_solve_check_and_add_state(
-    fc_solve_hard_thread_t * const hard_thread,
-    fcs_kv_state_t * const new_state_val,
-    fcs_kv_state_t * const existing_state_val
-    );
+    fc_solve_hard_thread_t *const hard_thread,
+    fcs_kv_state_t *const new_state_val,
+    fcs_kv_state_t *const existing_state_val);
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 extern guint fc_solve_hash_function(gconstpointer key);
@@ -182,28 +194,24 @@ extern guint fc_solve_hash_function(gconstpointer key);
 /* HT_LOOP == hard threads' loop - macros to abstract it. */
 #ifdef FCS_SINGLE_HARD_THREAD
 
-#define HT_LOOP_START() \
-    fc_solve_hard_thread_t * const hard_thread = instance; \
+#define HT_LOOP_START() fc_solve_hard_thread_t *const hard_thread = instance;
 
 #else
-#define HT_LOOP_START() \
-    fc_solve_hard_thread_t * hard_thread = instance->hard_threads; \
-    fc_solve_hard_thread_t * const end_hard_thread = hard_thread+instance->num_hard_threads; \
-    for ( ; \
-         hard_thread < end_hard_thread ;  \
-         hard_thread++ \
-    )
+#define HT_LOOP_START()                                                        \
+    fc_solve_hard_thread_t *hard_thread = instance->hard_threads;              \
+    fc_solve_hard_thread_t *const end_hard_thread =                            \
+        hard_thread + instance->num_hard_threads;                              \
+    for (; hard_thread < end_hard_thread; hard_thread++)
 #endif
 
 /* ST_LOOP == soft threads' loop - macros to abstract it. */
-#define ST_LOOP_START() \
-    fc_solve_soft_thread_t * const ht_soft_threads = HT_FIELD(hard_thread, soft_threads); \
-    fc_solve_soft_thread_t * soft_thread = ht_soft_threads; \
-    fc_solve_soft_thread_t * const end_soft_thread = ht_soft_threads + HT_FIELD(hard_thread, num_soft_threads); \
-    for ( ; \
-         soft_thread < end_soft_thread ;  \
-         soft_thread++ \
-    )
+#define ST_LOOP_START()                                                        \
+    fc_solve_soft_thread_t *const ht_soft_threads =                            \
+        HT_FIELD(hard_thread, soft_threads);                                   \
+    fc_solve_soft_thread_t *soft_thread = ht_soft_threads;                     \
+    fc_solve_soft_thread_t *const end_soft_thread =                            \
+        ht_soft_threads + HT_FIELD(hard_thread, num_soft_threads);             \
+    for (; soft_thread < end_soft_thread; soft_thread++)
 
 #define ST_LOOP__WAS_FINISHED() (soft_thread == end_soft_thread)
 
@@ -211,17 +219,16 @@ extern guint fc_solve_hash_function(gconstpointer key);
 
 #define TESTS_ORDER_GROW_BY 16
 
-typedef struct {
+typedef struct
+{
     double weights[FCS_NUM_BEFS_WEIGHTS];
 } fcs_default_weights_t;
 typedef struct
 {
     fcs_bool_t should_go_over_stacks;
-    double max_sequence_move_factor,
-           cards_under_sequences_factor,
-           seqs_over_renegade_cards_factor,
-           depth_factor,
-           num_cards_not_on_parents_factor;
+    double max_sequence_move_factor, cards_under_sequences_factor,
+        seqs_over_renegade_cards_factor, depth_factor,
+        num_cards_not_on_parents_factor;
 
     double num_cards_out_lookup_table[14];
     /*
@@ -231,8 +238,7 @@ typedef struct
     fcs_default_weights_t befs_weights;
 } fc_solve_state_weighting_t;
 
-typedef enum
-{
+typedef enum {
     FCS_NO_SHUFFLING,
     FCS_RAND,
     FCS_WEIGHTING,
@@ -241,7 +247,7 @@ typedef enum
 typedef struct
 {
     size_t num;
-    int * order_group_tests;
+    int *order_group_tests;
     fcs_tests_group_type_t shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_order_group_t;
@@ -249,7 +255,7 @@ typedef struct
 typedef struct
 {
     size_t num_groups;
-    fcs_tests_order_group_t * groups;
+    fcs_tests_order_group_t *groups;
 } fcs_tests_order_t;
 
 typedef struct
@@ -261,20 +267,25 @@ typedef struct
 typedef struct
 {
     size_t num;
-    fcs_by_depth_tests_order_t * by_depth_tests;
+    fcs_by_depth_tests_order_t *by_depth_tests;
 } fcs_by_depth_tests_order_array_t;
 
-#define STRUCT_CLEAR_FLAG(instance, flag) \
-    { (instance)->flag = FALSE; }
+#define STRUCT_CLEAR_FLAG(instance, flag)                                      \
+    {                                                                          \
+        (instance)->flag = FALSE;                                              \
+    }
 
-#define STRUCT_TURN_ON_FLAG(instance, flag) \
-    { (instance)->flag = TRUE; }
+#define STRUCT_TURN_ON_FLAG(instance, flag)                                    \
+    {                                                                          \
+        (instance)->flag = TRUE;                                               \
+    }
 
-#define STRUCT_QUERY_FLAG(instance, flag) \
-    ((instance)->flag)
+#define STRUCT_QUERY_FLAG(instance, flag) ((instance)->flag)
 
-#define STRUCT_SET_FLAG_TO(instance, flag, value) \
-{ (instance)->flag = (value); }
+#define STRUCT_SET_FLAG_TO(instance, flag, value)                              \
+    {                                                                          \
+        (instance)->flag = (value);                                            \
+    }
 
 #if 0
 enum
@@ -321,13 +332,13 @@ enum
 #ifdef FCS_RCS_STATES
 struct fcs_cache_key_info_struct
 {
-    fcs_collectible_state_t * val_ptr;
+    fcs_collectible_state_t *val_ptr;
     fcs_state_t key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.
      * */
-    struct fcs_cache_key_info_struct * lower_pri, * higher_pri;
+    struct fcs_cache_key_info_struct *lower_pri, *higher_pri;
 };
 
 typedef struct fcs_cache_key_info_struct fcs_cache_key_info_t;
@@ -337,31 +348,27 @@ typedef struct
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     Pvoid_t states_values_to_keys_map;
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
-    dict_t * kaz_tree;
+    dict_t *kaz_tree;
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
     fcs_compact_allocator_t states_values_to_keys_allocator;
     fcs_int_limit_t count_elements_in_cache, max_num_elements_in_cache;
 
-    fcs_cache_key_info_t * lowest_pri, * highest_pri;
+    fcs_cache_key_info_t *lowest_pri, *highest_pri;
 
-    fcs_cache_key_info_t * recycle_bin;
+    fcs_cache_key_info_t *recycle_bin;
 } fcs_lru_cache_t;
 
 #endif
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
-typedef void * fcs_instance_debug_iter_output_context_t;
+typedef void *fcs_instance_debug_iter_output_context_t;
 
 typedef void (*fcs_instance_debug_iter_output_func_t)(
-    fcs_instance_debug_iter_output_context_t,
-    fcs_int_limit_t iter_num,
-    int depth,
-    void * instance,
-    fcs_kv_state_t * state,
-    fcs_int_limit_t parent_iter_num
-);
+    fcs_instance_debug_iter_output_context_t, fcs_int_limit_t iter_num,
+    int depth, void *instance, fcs_kv_state_t *state,
+    fcs_int_limit_t parent_iter_num);
 #endif
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
@@ -379,15 +386,16 @@ typedef struct
 struct fc_solve_hard_thread_struct
 {
 #ifndef FCS_SINGLE_HARD_THREAD
-    fc_solve_instance_t * instance;
+    fc_solve_instance_t *instance;
 #endif
 
-    struct fc_solve_soft_thread_struct * soft_threads;
+    struct fc_solve_soft_thread_struct *soft_threads;
 
 #ifndef FCS_SINGLE_HARD_THREAD
     /*
      * The hard thread count of how many states he checked himself. The
-     * instance num_checked_states can be confusing because other threads modify it too.
+     * instance num_checked_states can be confusing because other threads modify
+     * it too.
      *
      * Thus, the soft thread switching should be done based on this variable
      * */
@@ -436,7 +444,7 @@ struct fc_solve_hard_thread_struct
 
     fcs_int_limit_t prelude_num_items;
     int prelude_idx;
-    fcs_prelude_item_t * prelude;
+    fcs_prelude_item_t *prelude;
 
     fcs_bool_t allocated_from_list;
     int num_soft_threads;
@@ -448,27 +456,26 @@ struct fc_solve_hard_thread_struct
      * */
     int num_soft_threads_finished;
 
-    char * prelude_as_string;
+    char *prelude_as_string;
 };
-
-
 
 /********************************************/
 
-typedef struct {
+typedef struct
+{
     int idx;
     pq_rating_t rating;
 } fcs_rating_with_index_t;
 
 typedef struct
 {
-    fcs_collectible_state_t * state;
+    fcs_collectible_state_t *state;
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
     int tests_list_index;
     int test_index;
     int derived_states_random_indexes_max_size;
-    fcs_rating_with_index_t * derived_states_random_indexes;
+    fcs_rating_with_index_t *derived_states_random_indexes;
     fcs__positions_by_rank_t positions_by_rank;
     fcs_game_limit_t num_vacant_stacks;
     fcs_game_limit_t num_vacant_freecells;
@@ -499,30 +506,33 @@ enum
 };
 #endif
 
-typedef struct {
-    fc_solve_solve_for_state_move_func_t * tests;
+typedef struct
+{
+    fc_solve_solve_for_state_move_func_t *tests;
     int num_tests;
     int shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_list_t;
 
-typedef struct {
+typedef struct
+{
     int num_lists;
-    fcs_tests_list_t * lists;
+    fcs_tests_list_t *lists;
 } fcs_tests_list_of_lists;
 
-typedef struct {
+typedef struct
+{
     int max_depth;
     fcs_tests_list_of_lists tests;
 } fcs_tests_by_depth_unit_t;
 
-typedef struct {
+typedef struct
+{
     int num_units;
-    fcs_tests_by_depth_unit_t * by_depth_units;
+    fcs_tests_by_depth_unit_t *by_depth_units;
 } fcs_tests_by_depth_array_t;
 
-typedef enum
-{
+typedef enum {
     FCS_SUPER_METHOD_DFS,
     FCS_SUPER_METHOD_BEFS_BRFS,
 #ifndef FCS_DISABLE_PATSOLVE
@@ -533,7 +543,7 @@ typedef enum
 struct fc_solve__patsolve_thread_struct;
 struct fc_solve_soft_thread_struct
 {
-    fc_solve_hard_thread_t * hard_thread;
+    fc_solve_hard_thread_t *hard_thread;
 
     /*
      * The ID of the soft thread inside the instance.
@@ -592,7 +602,7 @@ struct fc_solve_soft_thread_struct
              *
              * */
 
-            fcs_soft_dfs_stack_item_t * soft_dfs_info;
+            fcs_soft_dfs_stack_item_t *soft_dfs_info;
 
             /* The depth of the DFS stacks */
             int depth;
@@ -615,7 +625,7 @@ struct fc_solve_soft_thread_struct
         struct
         {
             fcs__positions_by_rank_t befs_positions_by_rank;
-            fc_solve_solve_for_state_move_func_t * tests_list, * tests_list_end;
+            fc_solve_solve_for_state_move_func_t *tests_list, *tests_list_end;
             struct
             {
                 struct
@@ -623,18 +633,19 @@ struct fc_solve_soft_thread_struct
                     /*
                      * A linked list that serves as the queue for the BFS scan.
                      * */
-                    fcs_states_linked_list_item_t * bfs_queue;
+                    fcs_states_linked_list_item_t *bfs_queue;
                     /*
-                     * The last item in the linked list, so new items can be added at
+                     * The last item in the linked list, so new items can be
+                     * added at
                      * it, thus making it a queue.
                      * */
-                    fcs_states_linked_list_item_t * bfs_queue_last_item;
+                    fcs_states_linked_list_item_t *bfs_queue_last_item;
                     /*
                      * A linked list of items that were freed from
                      * the queue and should be reused before allocating new
                      * items.
                      * */
-                    fcs_states_linked_list_item_t * recycle_bin;
+                    fcs_states_linked_list_item_t *recycle_bin;
                 } brfs;
                 struct
                 {
@@ -649,17 +660,18 @@ struct fc_solve_soft_thread_struct
              * The first state to be checked by the scan. It is a kind of
              * bootstrap for the algorithm.
              * */
-            fcs_collectible_state_t * first_state_to_check;
+            fcs_collectible_state_t *first_state_to_check;
         } befs;
     } method_specific;
 
-    fcs_bool_t FCS_SOFT_THREAD_IS_FINISHED, FCS_SOFT_THREAD_INITIALIZED, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN;
+    fcs_bool_t FCS_SOFT_THREAD_IS_FINISHED, FCS_SOFT_THREAD_INITIALIZED,
+        FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN;
 
     /*
      * The number of vacant stacks in the current state - is read by
      * the move functions in freecell.c .
      * */
-     fcs_game_limit_t num_vacant_stacks;
+    fcs_game_limit_t num_vacant_stacks;
 
     /*
      * The number of vacant freecells in the current state - is read
@@ -688,7 +700,7 @@ struct fc_solve_soft_thread_struct
     /*
      * The patsolve soft_thread that is associated with this soft_thread.
      * */
-    struct fc_solve__patsolve_thread_struct * pats_scan;
+    struct fc_solve__patsolve_thread_struct *pats_scan;
 #endif
     /*
      * Differentiates between SOFT_DFS and RANDOM_DFS.
@@ -696,7 +708,8 @@ struct fc_solve_soft_thread_struct
     fcs_bool_t master_to_randomize;
     fcs_bool_t is_befs
 #ifdef FCS_WITH_MOVES
-        , is_optimize_scan
+        ,
+        is_optimize_scan
 #endif
         ;
 };
@@ -728,33 +741,34 @@ struct fc_solve_instance_struct
      *
      * Normally should be used instead.
      * */
-    fcs_int_limit_t effective_max_num_checked_states, effective_max_num_states_in_collection;
+    fcs_int_limit_t effective_max_num_checked_states,
+        effective_max_num_states_in_collection;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_int_limit_t effective_trim_states_in_collection_from;
 #endif
-    /*
-     * tree is the balanced binary tree that is used to store and index
-     * the checked states.
-     *
-     * */
+/*
+ * tree is the balanced binary tree that is used to store and index
+ * the checked states.
+ *
+ * */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    struct rbtree * tree;
+    struct rbtree *tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     Pvoid_t judy_array;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-    fcs_libavl2_states_tree_table_t * tree;
+    fcs_libavl2_states_tree_table_t *tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-    GTree * tree;
+    GTree *tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
-    dict_t * tree;
+    dict_t *tree;
 #endif
 
-    /*
-     * hash is the hash table that is used to store the previous
-     * states of the scan.
-     * */
+/*
+ * hash is the hash table that is used to store the previous
+ * states of the scan.
+ * */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-    GHashTable * hash;
+    GHashTable *hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_t hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
@@ -762,20 +776,20 @@ struct fc_solve_instance_struct
 #endif
 
 #if defined(INDIRECT_STACK_STATES)
-    /*
-     * The storage mechanism for the stacks assuming INDIRECT_STACK_STATES is
-     * used.
-     * */
+/*
+ * The storage mechanism for the stacks assuming INDIRECT_STACK_STATES is
+ * used.
+ * */
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     fc_solve_hash_t stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
-    fcs_libavl2_stacks_tree_table_t * stacks_tree;
+    fcs_libavl2_stacks_tree_table_t *stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
-    struct rbtree * stacks_tree;
+    struct rbtree *stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
-    GTree * stacks_tree;
+    GTree *stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
-    GHashTable * stacks_hash;
+    GHashTable *stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
     fcs_columns_google_hash_handle_t stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
@@ -785,25 +799,27 @@ struct fc_solve_instance_struct
 #endif
 #endif
 
-    fcs_collectible_state_t * list_of_vacant_states;
-    /*
-     * Storing using Berkeley DB is not operational for some reason so
-     * pay no attention to it for the while
-     * */
+    fcs_collectible_state_t *list_of_vacant_states;
+/*
+ * Storing using Berkeley DB is not operational for some reason so
+ * pay no attention to it for the while
+ * */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
-    DB * db;
+    DB *db;
 #endif
 
-    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH, FCS_RUNTIME_TO_REPARENT_STATES_REAL, FCS_RUNTIME_SCANS_SYNERGY, FCS_RUNTIME_TO_REPARENT_STATES_PROTO;
+    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH, FCS_RUNTIME_TO_REPARENT_STATES_REAL,
+        FCS_RUNTIME_SCANS_SYNERGY, FCS_RUNTIME_TO_REPARENT_STATES_PROTO;
 #ifdef FCS_WITH_MOVES
-    fcs_bool_t FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FCS_RUNTIME_IN_OPTIMIZATION_THREAD, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
+    fcs_bool_t FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH,
+        FCS_RUNTIME_IN_OPTIMIZATION_THREAD, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
 #endif
 
-    /*
-     * This is the number of states in the state collection.
-     *
-     * It gives a rough estimate of the memory occupied by the instance.
-     * */
+/*
+ * This is the number of states in the state collection.
+ *
+ * It gives a rough estimate of the memory occupied by the instance.
+ * */
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_int_limit_t active_num_states_in_collection;
 #endif
@@ -817,17 +833,17 @@ struct fc_solve_instance_struct
 #endif
 #else
     int num_hard_threads;
-    struct fc_solve_hard_thread_struct * hard_threads;
+    struct fc_solve_hard_thread_struct *hard_threads;
     /*
      * An iterator over the hard threads.
      * */
-    fc_solve_hard_thread_t * current_hard_thread;
+    fc_solve_hard_thread_t *current_hard_thread;
 
 #ifdef FCS_WITH_MOVES
     /*
      * This is the hard-thread used for the optimization scan.
      * */
-    struct fc_solve_hard_thread_struct * optimization_thread;
+    struct fc_solve_hard_thread_struct *optimization_thread;
 #endif
 #endif
 
@@ -854,17 +870,18 @@ struct fc_solve_instance_struct
 #ifdef FCS_RCS_STATES
     fcs_lru_cache_t rcs_states_cache;
 
-#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) || (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
-    fcs_state_t * tree_new_state_key;
-    fcs_collectible_state_t * tree_new_state;
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) ||                  \
+     (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
+    fcs_state_t *tree_new_state_key;
+    fcs_collectible_state_t *tree_new_state;
 #endif
 
 #endif
-    /*
-     * max_depth is quite dangerous because it blocks some intermediate moves
-     * and doesn't allow a program to fully reach its solution.
-     *
-     * */
+/*
+ * max_depth is quite dangerous because it blocks some intermediate moves
+ * and doesn't allow a program to fully reach its solution.
+ *
+ * */
 #ifdef FC_SOLVE__WITH_MAX_DEPTH
     int max_depth;
 #endif
@@ -894,13 +911,12 @@ struct fc_solve_instance_struct
     int next_soft_thread_id;
 
     /* This is a place-holder for the initial state */
-    fcs_state_keyval_pair_t * state_copy_ptr;
+    fcs_state_keyval_pair_t *state_copy_ptr;
 
     /* This is the final state that the scan recommends to the
      * interface
      * */
-    fcs_collectible_state_t * final_state;
-
+    fcs_collectible_state_t *final_state;
 
 #ifdef FCS_WITH_MOVES
     /*
@@ -915,21 +931,21 @@ struct fc_solve_instance_struct
     /*
      * The meta allocator - see meta_alloc.h.
      * */
-    fcs_meta_compact_allocator_t * meta_alloc;
+    fcs_meta_compact_allocator_t *meta_alloc;
 
     /*
      * The soft_thread that solved the state.
      *
      * Needed to trace the patsolve solutions.
      * */
-    fc_solve_soft_thread_t * solving_soft_thread;
+    fc_solve_soft_thread_t *solving_soft_thread;
 
     /*
      * This is intended to be used by the patsolve scan which is
      * sensitive to the ordering of the columns/stacks. This is an ugly hack
      * but hopefully it will work.
      * */
-    fcs_state_keyval_pair_t * initial_non_canonized_state;
+    fcs_state_keyval_pair_t *initial_non_canonized_state;
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     /*
@@ -939,13 +955,9 @@ struct fc_solve_instance_struct
 #endif
 };
 
-
-
-
-
-
 #ifdef FCS_SINGLE_HARD_THREAD
-static GCC_INLINE fc_solve_instance_t * fcs_st_instance(fc_solve_soft_thread_t * const soft_thread)
+static GCC_INLINE fc_solve_instance_t *fcs_st_instance(
+    fc_solve_soft_thread_t *const soft_thread)
 {
     return soft_thread->hard_thread;
 }
@@ -953,7 +965,8 @@ static GCC_INLINE fc_solve_instance_t * fcs_st_instance(fc_solve_soft_thread_t *
 #define HT_INSTANCE(hard_thread) (hard_thread)
 #define INST_HT0(instance) ((instance)->hard_thread)
 #else
-static GCC_INLINE fc_solve_instance_t * fcs_st_instance(fc_solve_soft_thread_t * const soft_thread)
+static GCC_INLINE fc_solve_instance_t *fcs_st_instance(
+    fc_solve_soft_thread_t *const soft_thread)
 {
     return soft_thread->hard_thread->instance;
 }
@@ -962,11 +975,13 @@ static GCC_INLINE fc_solve_instance_t * fcs_st_instance(fc_solve_soft_thread_t *
 #define INST_HT0(instance) ((instance)->hard_threads[0])
 #endif
 
-#define DFS_VAR(soft_thread,var) (soft_thread)->method_specific.soft_dfs.var
-#define BEFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.befs.var
+#define DFS_VAR(soft_thread, var) (soft_thread)->method_specific.soft_dfs.var
+#define BEFS_VAR(soft_thread, var)                                             \
+    (soft_thread)->method_specific.befs.meth.befs.var
 /* M is Methods-common. */
-#define BEFS_M_VAR(soft_thread,var) (soft_thread)->method_specific.befs.var
-#define BRFS_VAR(soft_thread,var) (soft_thread)->method_specific.befs.meth.brfs.var
+#define BEFS_M_VAR(soft_thread, var) (soft_thread)->method_specific.befs.var
+#define BRFS_VAR(soft_thread, var)                                             \
+    (soft_thread)->method_specific.befs.meth.brfs.var
 
 /*
  * An enum that specifies the meaning of each BeFS weight.
@@ -983,16 +998,14 @@ static GCC_INLINE fc_solve_instance_t * fcs_st_instance(fc_solve_soft_thread_t *
 #endif
 
 extern int fc_solve_befs_or_bfs_do_solve(
-    fc_solve_soft_thread_t * const soft_thread
-);
+    fc_solve_soft_thread_t *const soft_thread);
 
 extern void fc_solve_increase_dfs_max_depth(
-    fc_solve_soft_thread_t * const soft_thread
-);
+    fc_solve_soft_thread_t *const soft_thread);
 
-static GCC_INLINE void * memdup(const void * const src, const size_t my_size)
+static GCC_INLINE void *memdup(const void *const src, const size_t my_size)
 {
-    void * const dest = malloc(my_size);
+    void *const dest = malloc(my_size);
     if (dest == NULL)
     {
         return NULL;
@@ -1009,110 +1022,105 @@ static GCC_INLINE int update_col_cards_under_sequences(
 #endif
     const fcs_const_cards_column_t col,
     int d /* One less than cards_num of col. */
-)
+    )
 {
     fcs_card_t this_card = fcs_col_get_card(col, d);
-    fcs_card_t prev_card = fcs_col_get_card(col, d-1);
-    for (; (d > 0) && ({ prev_card=fcs_col_get_card(col, d-1); fcs_is_parent_card(this_card, prev_card); }) ; d--, this_card = prev_card)
+    fcs_card_t prev_card = fcs_col_get_card(col, d - 1);
+    for (; (d > 0) && ({
+               prev_card = fcs_col_get_card(col, d - 1);
+               fcs_is_parent_card(this_card, prev_card);
+           });
+         d--, this_card = prev_card)
     {
     }
     return d;
 }
 
 static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
-    fc_solve_soft_thread_t * const soft_thread
-)
+    fc_solve_soft_thread_t *const soft_thread)
 {
-    fc_solve_instance_t * const instance = fcs_st_instance(soft_thread);
+    fc_solve_instance_t *const instance = fcs_st_instance(soft_thread);
 #ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+    const int sequences_are_built_by =
+        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
     /* We cannot use typeof here because clang complains about double
      * const.
      * */
-    const fcs_state_t * const s = &(instance->state_copy_ptr->s);
+    const fcs_state_t *const s = &(instance->state_copy_ptr->s);
 
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
-    for (int a = 0 ; a < INSTANCE_STACKS_NUM ; a++)
+    for (int a = 0; a < INSTANCE_STACKS_NUM; a++)
     {
         const fcs_const_cards_column_t col = fcs_state_get_col(*s, a);
-        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(
+        cards_under_sequences +=
+            FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(
 #ifndef FCS_FREECELL_ONLY
                 sequences_are_built_by,
 #endif
-                col,
-                fcs_col_len(col)-1
-        )
-        );
+                col, fcs_col_len(col) - 1));
     }
     soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
 
     return;
 }
 
-
-extern fcs_collectible_state_t * fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t * const,
-    fcs_kv_state_t * const
-);
-
+extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
+    fc_solve_soft_thread_t *const, fcs_kv_state_t *const);
 
 #ifdef FCS_RCS_STATES
-fcs_state_t * fc_solve_lookup_state_key_from_val(
-    fc_solve_instance_t * const instance,
-    fcs_collectible_state_t * const orig_ptr_state_val
-);
+fcs_state_t *fc_solve_lookup_state_key_from_val(
+    fc_solve_instance_t *const instance,
+    fcs_collectible_state_t *const orig_ptr_state_val);
 
 extern int fc_solve_compare_lru_cache_keys(
-    const void * const void_a, const void * const void_b, void * const context
-);
+    const void *const void_a, const void *const void_b, void *const context);
 
 #endif
 
 extern void fc_solve_soft_thread_init_befs_or_bfs(
-    fc_solve_soft_thread_t * const soft_thread
-);
+    fc_solve_soft_thread_t *const soft_thread);
 
 extern void fc_solve_instance__init_hard_thread(
 #ifndef FCS_SINGLE_HARD_THREAD
-    fc_solve_instance_t * const instance,
+    fc_solve_instance_t *const instance,
 #endif
-    fc_solve_hard_thread_t * const hard_thread
-);
+    fc_solve_hard_thread_t *const hard_thread);
 
-extern void fc_solve_free_soft_thread_by_depth_test_array(fc_solve_soft_thread_t * const soft_thread);
+extern void fc_solve_free_soft_thread_by_depth_test_array(
+    fc_solve_soft_thread_t *const soft_thread);
 
-static GCC_INLINE fcs_tests_order_t tests_order_dup(fcs_tests_order_t * const orig)
+static GCC_INLINE fcs_tests_order_t tests_order_dup(
+    fcs_tests_order_t *const orig)
 {
     fcs_tests_order_t ret;
 
     ret.num_groups = orig->num_groups;
 
-    ret.groups = memdup(orig->groups, sizeof(orig->groups[0]) *
-                        ((ret.num_groups & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
-    );
+    ret.groups = memdup(
+        orig->groups, sizeof(orig->groups[0]) *
+                          ((ret.num_groups & (~(TESTS_ORDER_GROW_BY - 1))) +
+                              TESTS_ORDER_GROW_BY));
 
-    for (int i = 0 ; i < ret.num_groups ; i++)
+    for (int i = 0; i < ret.num_groups; i++)
     {
-        ret.groups[i].order_group_tests = memdup(
-            ret.groups[i].order_group_tests,
-            sizeof(ret.groups[i].order_group_tests[0]) *
-            ((ret.groups[i].num & (~(TESTS_ORDER_GROW_BY - 1)))+TESTS_ORDER_GROW_BY)
-        );
+        ret.groups[i].order_group_tests =
+            memdup(ret.groups[i].order_group_tests,
+                sizeof(ret.groups[i].order_group_tests[0]) *
+                    ((ret.groups[i].num & (~(TESTS_ORDER_GROW_BY - 1))) +
+                        TESTS_ORDER_GROW_BY));
     }
 
     return ret;
 }
 
-extern fc_solve_soft_thread_t * fc_solve_new_soft_thread(
-    fc_solve_hard_thread_t * const hard_thread
-);
+extern fc_solve_soft_thread_t *fc_solve_new_soft_thread(
+    fc_solve_hard_thread_t *const hard_thread);
 
 /* This is the commmon code from fc_solve_instance__init_hard_thread() and
  * recycle_hard_thread() */
 static GCC_INLINE void fc_solve_reset_hard_thread(
-    fc_solve_hard_thread_t * const hard_thread
-)
+    fc_solve_hard_thread_t *const hard_thread)
 {
 #ifndef FCS_SINGLE_HARD_THREAD
     HT_FIELD(hard_thread, ht__num_checked_states) = 0;
@@ -1122,27 +1130,22 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
 }
 
 static GCC_INLINE void fc_solve_reset_soft_thread(
-    fc_solve_soft_thread_t * const soft_thread
-)
+    fc_solve_soft_thread_t *const soft_thread)
 {
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
 }
 
-
-typedef enum
-{
+typedef enum {
     FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS,
     FOREACH_SOFT_THREAD_FREE_INSTANCE,
     FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
     FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS
 } fcs_foreach_st_callback_choice_t;
 
-extern void fc_solve_foreach_soft_thread(
-    fc_solve_instance_t * const instance,
+extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     const fcs_foreach_st_callback_choice_t callback_choice,
-    void * const context
-);
+    void *const context);
 
 /*
     This function is the last function that should be called in the
@@ -1150,34 +1153,31 @@ extern void fc_solve_foreach_soft_thread(
     whatever memory was allocated by alloc_instance().
   */
 
-static GCC_INLINE void fc_solve_free_tests_order(fcs_tests_order_t * tests_order)
+static GCC_INLINE void fc_solve_free_tests_order(fcs_tests_order_t *tests_order)
 {
-    for (int group_idx = 0 ; group_idx < tests_order->num_groups ; group_idx++)
+    for (int group_idx = 0; group_idx < tests_order->num_groups; group_idx++)
     {
-        free (tests_order->groups[group_idx].order_group_tests);
+        free(tests_order->groups[group_idx].order_group_tests);
     }
-    free (tests_order->groups);
+    free(tests_order->groups);
     tests_order->groups = NULL;
     tests_order->num_groups = 0;
 }
 
 /***********************************************************/
 
-#define DECLARE_MOVE_FUNCTION(name) \
-extern void name( \
-        fc_solve_soft_thread_t * const soft_thread, \
-        fcs_kv_state_t * const raw_ptr_state_raw, \
-        fcs_derived_states_list_t * const derived_states_list \
-)
+#define DECLARE_MOVE_FUNCTION(name)                                            \
+    extern void name(fc_solve_soft_thread_t *const soft_thread,                \
+        fcs_kv_state_t *const raw_ptr_state_raw,                               \
+        fcs_derived_states_list_t *const derived_states_list)
 
 #ifdef FCS_SINGLE_HARD_THREAD
-extern void fc_solve_init_soft_thread(
-    fc_solve_hard_thread_t * const hard_thread,
-    fc_solve_soft_thread_t * const soft_thread
-);
+extern void fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
+    fc_solve_soft_thread_t *const soft_thread);
 #endif
 
-static GCC_INLINE fcs_bool_t fcs_get_calc_real_depth(const fc_solve_instance_t * const instance)
+static GCC_INLINE fcs_bool_t fcs_get_calc_real_depth(
+    const fc_solve_instance_t *const instance)
 {
     return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 }

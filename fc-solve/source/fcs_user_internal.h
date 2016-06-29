@@ -38,43 +38,28 @@ extern "C" {
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
-    void * api_instance,
-    int my_index
-    );
+    void *api_instance, int my_index);
 
 int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
-    void * api_instance,
-    int * instance_list_index,
-    char * * error_string
-    );
+    void *api_instance, int *instance_list_index, char **error_string);
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
-    void * api_instance
-    );
+    void *api_instance);
 
-const DLLEXPORT char * fc_solve_user_INTERNAL_get_flares_plan_item_type(
-    void * api_instance,
-    int item_idx
-    );
+const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
+    void *api_instance, int item_idx);
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
-    void * api_instance,
-    int item_idx
-    );
+    void *api_instance, int item_idx);
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
-    void * api_instance,
-    int item_idx
-    );
+    void *api_instance, int item_idx);
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
-    void * api_instance
-    );
+    void *api_instance);
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-    void * const api_instance,
-    const int depth_idx
-    );
+    void *const api_instance, const int depth_idx);
 
 #endif
 

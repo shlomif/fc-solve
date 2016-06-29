@@ -39,7 +39,6 @@ extern "C" {
 /* For fc_solve_soft_thread_t and fcs_derived_states_list_t */
 #include "instance.h"
 
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds);
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds);
@@ -48,7 +47,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks);
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds);
 
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack);
+DECLARE_MOVE_FUNCTION(
+    fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack);
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks);
 
@@ -69,7 +69,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent);
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack);
-
 
 #if 0
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent);

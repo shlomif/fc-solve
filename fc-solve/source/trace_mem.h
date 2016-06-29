@@ -46,7 +46,7 @@ static GCC_INLINE void trace_mem(const int board_num)
     long long int rss;
     unsigned long long unsigned_foo;
     char stat_fn[1024], foo_str[1024];
-    FILE * stat;
+    FILE *stat;
 
     snprintf(stat_fn, sizeof(stat_fn), "/proc/%ld/stat", (long)(getpid()));
 
@@ -105,8 +105,7 @@ static GCC_INLINE void trace_mem(const int board_num)
                 max_rss_delta_deal = board_num;
             }
             printf("Max RSS delta %lld encountered at deal %ld\n",
-                max_rss_delta, max_rss_delta_deal
-            );
+                max_rss_delta, max_rss_delta_deal);
         }
         prev_rss = rss;
         if (rss_found < 2)
@@ -117,9 +116,7 @@ static GCC_INLINE void trace_mem(const int board_num)
 }
 #else
 
-static GCC_INLINE void trace_mem(const int board_num GCC_UNUSED)
-{
-}
+static GCC_INLINE void trace_mem(const int board_num GCC_UNUSED) {}
 
 #endif
 #ifdef __cplusplus

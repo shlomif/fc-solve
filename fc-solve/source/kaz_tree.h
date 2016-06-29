@@ -57,16 +57,17 @@ typedef enum { dnode_red, dnode_black } dnode_color_t;
  */
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
 typedef fcs_dbm_record_t dict_key_t;
-typedef dict_key_t * dict_ret_key_t;
+typedef dict_key_t *dict_ret_key_t;
 #else
-typedef void * dict_key_t;
+typedef void *dict_key_t;
 typedef dict_key_t dict_ret_key_t;
 #endif
 
 #define DNODE_NEXT(node) ((node)->dict_left)
 
-typedef struct dnode_t {
-    #if defined(DICT_IMPLEMENTATION) || !defined(KAZLIB_OPAQUE_DEBUG)
+typedef struct dnode_t
+{
+#if defined(DICT_IMPLEMENTATION) || !defined(KAZLIB_OPAQUE_DEBUG)
     struct dnode_t *dict_left;
     struct dnode_t *dict_right;
     struct dnode_t *dict_parent;
@@ -75,9 +76,9 @@ typedef struct dnode_t {
 #ifdef NO_FC_SOLVE
     void *dict_data;
 #endif
-    #else
+#else
     int dict_dummy;
-    #endif
+#endif
 } dnode_t;
 
 typedef int (*dict_comp_t)(const void *, const void *, void *);
@@ -87,46 +88,49 @@ typedef dnode_t *(*dnode_alloc_t)(void *);
 typedef void (*dnode_free_t)(dnode_t *, void *);
 #endif
 
-typedef struct dict_t {
-    #if defined(DICT_IMPLEMENTATION) || !defined(KAZLIB_OPAQUE_DEBUG)
+typedef struct dict_t
+{
+#if defined(DICT_IMPLEMENTATION) || !defined(KAZLIB_OPAQUE_DEBUG)
     dnode_t dict_nilnode;
 #ifdef NO_FC_SOLVE
     dictcount_t dict_nodecount;
     dictcount_t dict_maxcount;
 #endif
     dict_comp_t dict_compare;
-    /* Removed from fc-solve */
+/* Removed from fc-solve */
 #if 0
     dnode_alloc_t dict_allocnode;
     dnode_free_t dict_free_node;
 #else
     fcs_compact_allocator_t dict_allocator;
-    dnode_t * dict_recycle_bin;
+    dnode_t *dict_recycle_bin;
 #endif
     void *dict_context;
 #ifdef NO_FC_SOLVE
     int dict_dupes;
 #endif
-    #else
+#else
     int dict_dummy;
-    #endif
+#endif
 } dict_t;
 
 typedef void (*dnode_process_t)(dict_t *, dnode_t *, void *);
 
-typedef struct dict_load_t {
-    #if defined(DICT_IMPLEMENTATION) || !defined(KAZLIB_OPAQUE_DEBUG)
+typedef struct dict_load_t
+{
+#if defined(DICT_IMPLEMENTATION) || !defined(KAZLIB_OPAQUE_DEBUG)
     dict_t *dict_dictptr;
     dnode_t dict_nilnode;
-    #else
+#else
     int dict_dummy;
-    #endif
+#endif
 } dict_load_t;
 
 #ifdef NO_FC_SOLVE
-extern dict_t *dict_create(dictcount_t, dict_comp_t, void * context);
+extern dict_t *dict_create(dictcount_t, dict_comp_t, void *context);
 #else
-extern dict_t * fc_solve_kaz_tree_create(dict_comp_t, void * context, fcs_meta_compact_allocator_t * meta_allocator);
+extern dict_t *fc_solve_kaz_tree_create(
+    dict_comp_t, void *context, fcs_meta_compact_allocator_t *meta_allocator);
 #endif
 #if 0
 extern void dict_set_allocator(dict_t *, dnode_alloc_t, dnode_free_t, void *);
@@ -141,8 +145,8 @@ extern dict_t *dict_init(dict_t *, dict_comp_t, fcs_meta_compact_allocator_t *);
 #endif
 #ifdef NO_FC_SOLVE
 extern void dict_init_like(dict_t *, const dict_t *);
-extern dict_t *dict_init_alloc(dict_t *, dictcount_t, dict_comp_t,
-                               dnode_alloc_t, dnode_free_t, void *);
+extern dict_t *dict_init_alloc(
+    dict_t *, dictcount_t, dict_comp_t, dnode_alloc_t, dnode_free_t, void *);
 #endif
 #ifdef NO_FC_SOLVE
 extern int dict_verify(dict_t *);

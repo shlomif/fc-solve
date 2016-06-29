@@ -47,14 +47,22 @@ extern "C" {
 #ifdef FCS_DBM_SINGLE_THREAD
 
 typedef fcs_bool_t fcs_lock_t;
-#define FCS_LOCK(lock) {}
-#define FCS_UNLOCK(lock) {}
-#define FCS_INIT_LOCK(lock) {}
-#define FCS_DESTROY_LOCK(lock) {}
+#define FCS_LOCK(lock)                                                         \
+    {                                                                          \
+    }
+#define FCS_UNLOCK(lock)                                                       \
+    {                                                                          \
+    }
+#define FCS_INIT_LOCK(lock)                                                    \
+    {                                                                          \
+    }
+#define FCS_DESTROY_LOCK(lock)                                                 \
+    {                                                                          \
+    }
 
 #elif defined(FCS_DBM_USE_RWLOCK)
 
-typedef pthread_rwlock_fcfs_t * fcs_lock_t;
+typedef pthread_rwlock_fcfs_t *fcs_lock_t;
 #define FCS_LOCK(lock) pthread_rwlock_fcfs_gain_write(lock)
 #define FCS_UNLOCK(lock) pthread_rwlock_fcfs_release(lock)
 #define FCS_INIT_LOCK(lock) ((lock) = pthread_rwlock_fcfs_alloc())
@@ -62,15 +70,15 @@ typedef pthread_rwlock_fcfs_t * fcs_lock_t;
 
 #else
 
-static const pthread_mutex_t initial_mutex_constant =
-    PTHREAD_MUTEX_INITIALIZER
-    ;
+static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 
 typedef pthread_mutex_t fcs_lock_t;
 #define FCS_LOCK(lock) pthread_mutex_lock(&(lock))
 #define FCS_UNLOCK(lock) pthread_mutex_unlock(&(lock))
 #define FCS_INIT_LOCK(lock) ((lock) = initial_mutex_constant)
-#define FCS_DESTROY_LOCK(lock) {}
+#define FCS_DESTROY_LOCK(lock)                                                 \
+    {                                                                          \
+    }
 
 #endif
 

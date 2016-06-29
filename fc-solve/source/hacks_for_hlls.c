@@ -40,17 +40,9 @@
 #include "cmd_line_enum.h"
 
 DLLEXPORT void freecell_solver_user_stringify_move_ptr(
-    void * const user_instance,
-    char * const output_string,
-    fcs_move_t * const move_ptr,
-    const int standard_notation
-)
+    void *const user_instance, char *const output_string,
+    fcs_move_t *const move_ptr, const int standard_notation)
 {
     freecell_solver_user_stringify_move_w_state(
-        user_instance,
-        output_string,
-        *move_ptr,
-        standard_notation
-    );
+        user_instance, output_string, *move_ptr, standard_notation);
 }
-

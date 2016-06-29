@@ -13,7 +13,7 @@ if ($fmt)
 {
     plan tests => 1;
     my $SRC_PATH = $ENV{FCS_SRC_PATH};
-    my @filenames = grep { ! /\Qcmd_line_inc.h\E/ } grep { m#\A\Q$SRC_PATH\E/(?i:[a-d])# } sort {$a cmp $b} map { glob "$SRC_PATH/$_" } qw/*.c *.h *.cpp *.hpp/;
+    my @filenames = grep { ! /\Qcmd_line_inc.h\E|\Qrate_state.c\E/ } grep { m#\A\Q$SRC_PATH\E/(?i:[a-z])# } sort {$a cmp $b} map { glob "$SRC_PATH/$_" } qw/*.c *.h *.cpp *.hpp/;
     foreach my $fn (@filenames)
     {
         copy($fn, "$fn.orig");

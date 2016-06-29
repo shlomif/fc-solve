@@ -53,21 +53,22 @@ extern "C" {
  * str - the string to output to.
  * t - whether 10 should be printed as T or not.
  * */
-#define GEN_CARD_MAP(t_card) { CARD_ZERO(), "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J", "Q", "K" }
+#define GEN_CARD_MAP(t_card)                                                   \
+    {                                                                          \
+        CARD_ZERO()                                                            \
+        , "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J", "Q", "K"   \
+    }
 
 #ifndef FCS_IMPLICIT_T_RANK
 static const char card_map_3_10[14][4] = GEN_CARD_MAP("10");
 
 static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
 #else
-static const char cards_char_map[15] = ( CARD_ZERO() "A23456789TJQK" );
+static const char cards_char_map[15] = (CARD_ZERO() "A23456789TJQK");
 #endif
 
 static GCC_INLINE void fc_solve_p2u_rank(
-    const int rank_idx,
-    char * const str
-    PASS_T(const fcs_bool_t t)
-)
+    const int rank_idx, char *const str PASS_T(const fcs_bool_t t))
 {
     {
 #define INDEX() (rank_idx)
@@ -75,9 +76,7 @@ static GCC_INLINE void fc_solve_p2u_rank(
         str[0] = cards_char_map[INDEX()];
         str[1] = '\0';
 #else
-        strcpy(str,
-            (t ? card_map_3_T : card_map_3_10)
-            [INDEX()]);
+        strcpy(str, (t ? card_map_3_T : card_map_3_10)[INDEX()]);
 #endif
 #undef INDEX
     }

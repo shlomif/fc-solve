@@ -30,11 +30,8 @@
 #include "move_funcs_order.h"
 #include "set_weights.h"
 
-int fc_solve_apply_tests_order(
-    fcs_tests_order_t * tests_order,
-    const char * string,
-    char * const error_string
-    )
+int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
+    const char *string, char *const error_string)
 {
     int i;
     int len;
@@ -46,11 +43,10 @@ int fc_solve_apply_tests_order(
     tests_order->groups = SMALLOC(tests_order->groups, TESTS_ORDER_GROW_BY);
     tests_order->groups[tests_order->num_groups].num = 0;
     tests_order->groups[tests_order->num_groups].order_group_tests =
-        SMALLOC(
-            tests_order->groups[tests_order->num_groups].order_group_tests,
-            TESTS_ORDER_GROW_BY
-        );
-    tests_order->groups[tests_order->num_groups].shuffling_type = FCS_NO_SHUFFLING;
+        SMALLOC(tests_order->groups[tests_order->num_groups].order_group_tests,
+            TESTS_ORDER_GROW_BY);
+    tests_order->groups[tests_order->num_groups].shuffling_type =
+        FCS_NO_SHUFFLING;
 
     tests_order->num_groups++;
 
@@ -58,7 +54,7 @@ int fc_solve_apply_tests_order(
     is_group = FALSE;
     is_start_group = FALSE;
 
-    for (i = 0 ; i < len ; i++)
+    for (i = 0; i < len; i++)
     {
         if ((string[i] == '(') || (string[i] == '['))
         {
@@ -71,26 +67,22 @@ int fc_solve_apply_tests_order(
             is_start_group = TRUE;
             if (tests_order->groups[tests_order->num_groups - 1].num)
             {
-                if (! (tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
+                if (!(tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
                 {
                     tests_order->groups =
-                        SREALLOC(
-                            tests_order->groups,
-                            TESTS_ORDER_GROW_BY
-                        );
+                        SREALLOC(tests_order->groups, TESTS_ORDER_GROW_BY);
                 }
 
                 tests_order->groups[tests_order->num_groups].num = 0;
                 tests_order->groups[tests_order->num_groups].order_group_tests =
-                    SMALLOC(
-                        tests_order->groups[tests_order->num_groups].order_group_tests,
-                        TESTS_ORDER_GROW_BY
-                    );
+                    SMALLOC(tests_order->groups[tests_order->num_groups]
+                                .order_group_tests,
+                        TESTS_ORDER_GROW_BY);
 
                 tests_order->num_groups++;
             }
-            tests_order->groups[tests_order->num_groups-1].shuffling_type
-                = FCS_RAND;
+            tests_order->groups[tests_order->num_groups - 1].shuffling_type =
+                FCS_RAND;
             continue;
         }
 
@@ -101,56 +93,59 @@ int fc_solve_apply_tests_order(
                 strcpy(error_string, "There's an empty group.");
                 return 2;
             }
-            if (! is_group)
+            if (!is_group)
             {
-                strcpy(error_string, "There's a renegade right parenthesis or bracket.");
+                strcpy(error_string,
+                    "There's a renegade right parenthesis or bracket.");
                 return 3;
             }
             /* Try to parse the ordering function. */
-            if (string[i+1] == '=')
+            if (string[i + 1] == '=')
             {
-                i+=2;
-                const char * open_paren = strchr(string+i, '(');
-                if (! open_paren)
+                i += 2;
+                const char *open_paren = strchr(string + i, '(');
+                if (!open_paren)
                 {
-                    strcpy(error_string, "A = ordering function is missing its open parenthesis - (");
+                    strcpy(error_string, "A = ordering function is missing its "
+                                         "open parenthesis - (");
                     return 5;
                 }
-                if (string_starts_with(string+i, "rand", open_paren))
+                if (string_starts_with(string + i, "rand", open_paren))
                 {
-                    tests_order->groups[tests_order->num_groups-1].shuffling_type
-                        = FCS_RAND;
+                    tests_order->groups[tests_order->num_groups - 1]
+                        .shuffling_type = FCS_RAND;
                 }
-                else if (string_starts_with(string+i, "asw", open_paren))
+                else if (string_starts_with(string + i, "asw", open_paren))
                 {
-                    tests_order->groups[tests_order->num_groups-1].shuffling_type
-                        = FCS_WEIGHTING;
+                    tests_order->groups[tests_order->num_groups - 1]
+                        .shuffling_type = FCS_WEIGHTING;
                 }
                 else
                 {
                     strcpy(error_string, "Unknown = ordering function");
                     return 6;
                 }
-                const char * const aft_open_paren = open_paren + 1;
-                const char * const close_paren = strchr(aft_open_paren, ')');
+                const char *const aft_open_paren = open_paren + 1;
+                const char *const close_paren = strchr(aft_open_paren, ')');
                 if (!close_paren)
                 {
-                    strcpy(error_string, "= ordering function not terminated with a ')'");
+                    strcpy(error_string,
+                        "= ordering function not terminated with a ')'");
                     return 7;
                 }
-                if (tests_order->groups[tests_order->num_groups-1].shuffling_type == FCS_WEIGHTING)
+                if (tests_order->groups[tests_order->num_groups - 1]
+                        .shuffling_type == FCS_WEIGHTING)
                 {
-                    fc_solve_set_weights(
-                        aft_open_paren,
-                        close_paren,
-                        tests_order->groups[tests_order->num_groups-1].weighting.befs_weights.weights
-                    );
+                    fc_solve_set_weights(aft_open_paren, close_paren,
+                        tests_order->groups[tests_order->num_groups - 1]
+                            .weighting.befs_weights.weights);
                 }
                 else
                 {
                     if (close_paren != aft_open_paren)
                     {
-                        strcpy( error_string, "=rand() arguments are not empty.");
+                        strcpy(
+                            error_string, "=rand() arguments are not empty.");
                         return 8;
                     }
                 }
@@ -164,44 +159,39 @@ int fc_solve_apply_tests_order(
             is_group = FALSE;
             is_start_group = FALSE;
 
-
             if (tests_order->groups[tests_order->num_groups - 1].num)
             {
-                if (! (tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
+                if (!(tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
                 {
-                    tests_order->groups =
-                        SREALLOC(
-                            tests_order->groups,
-                            tests_order->num_groups + TESTS_ORDER_GROW_BY
-                        );
+                    tests_order->groups = SREALLOC(tests_order->groups,
+                        tests_order->num_groups + TESTS_ORDER_GROW_BY);
                 }
                 tests_order->groups[tests_order->num_groups].num = 0;
                 tests_order->groups[tests_order->num_groups].order_group_tests =
-                    SMALLOC(
-                        tests_order->groups[tests_order->num_groups].order_group_tests,
-                        TESTS_ORDER_GROW_BY
-                    );
+                    SMALLOC(tests_order->groups[tests_order->num_groups]
+                                .order_group_tests,
+                        TESTS_ORDER_GROW_BY);
 
                 tests_order->num_groups++;
             }
-            tests_order->groups[tests_order->num_groups-1].shuffling_type
-                = FCS_NO_SHUFFLING;
+            tests_order->groups[tests_order->num_groups - 1].shuffling_type =
+                FCS_NO_SHUFFLING;
             continue;
         }
 
-        if (! (tests_order->groups[tests_order->num_groups-1].num & (TESTS_ORDER_GROW_BY - 1)))
+        if (!(tests_order->groups[tests_order->num_groups - 1].num &
+                (TESTS_ORDER_GROW_BY - 1)))
         {
-            tests_order->groups[tests_order->num_groups-1].order_group_tests =
-                SREALLOC(
-                    tests_order->groups[tests_order->num_groups-1].order_group_tests,
-                    TESTS_ORDER_GROW_BY
-                );
+            tests_order->groups[tests_order->num_groups - 1].order_group_tests =
+                SREALLOC(tests_order->groups[tests_order->num_groups - 1]
+                             .order_group_tests,
+                    TESTS_ORDER_GROW_BY);
         }
 
         test_name[0] = string[i];
-        tests_order->groups[tests_order->num_groups-1].order_group_tests[
-            tests_order->groups[tests_order->num_groups-1].num++
-            ] = (fc_solve_string_to_test_num(test_name)%FCS_MOVE_FUNCS_NUM);
+        tests_order->groups[tests_order->num_groups - 1].order_group_tests
+            [tests_order->groups[tests_order->num_groups - 1].num++] =
+            (fc_solve_string_to_test_num(test_name) % FCS_MOVE_FUNCS_NUM);
 
         is_start_group = FALSE;
     }
@@ -211,7 +201,7 @@ int fc_solve_apply_tests_order(
         return 4;
     }
 
-    if (! tests_order->groups[tests_order->num_groups - 1].num)
+    if (!tests_order->groups[tests_order->num_groups - 1].num)
     {
         tests_order->num_groups--;
         free(tests_order->groups[tests_order->num_groups].order_group_tests);
@@ -222,4 +212,3 @@ int fc_solve_apply_tests_order(
 
     return 0;
 }
-

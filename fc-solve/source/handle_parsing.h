@@ -42,51 +42,37 @@ enum
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
 
-static GCC_INLINE void * alloc_instance_and_parse(
-    const int argc,
-    char * * const argv,
-    int * const arg_ptr,
-    freecell_solver_str_t * const known_parameters,
+static GCC_INLINE void *alloc_instance_and_parse(const int argc,
+    char **const argv, int *const arg_ptr,
+    freecell_solver_str_t *const known_parameters,
     const freecell_solver_user_cmd_line_known_commands_callback_t callback,
-    void * const callback_context,
-    const fcs_bool_t only_recognized
-)
+    void *const callback_context, const fcs_bool_t only_recognized)
 {
-    void * const instance = freecell_solver_user_alloc();
+    void *const instance = freecell_solver_user_alloc();
 
-    char * error_string;
-    switch (
-        freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-            instance,
-            argc,
-            (freecell_solver_str_t *)(void *)argv,
-            (*arg_ptr),
-            known_parameters,
-            callback,
-            callback_context,
-            &error_string,
-            arg_ptr,
-            -1,
-            NULL
-        )
-    )
+    char *error_string;
+    switch (freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+        instance, argc, (freecell_solver_str_t *)(void *)argv, (*arg_ptr),
+        known_parameters, callback, callback_context, &error_string, arg_ptr,
+        -1, NULL))
     {
-        case EXIT_AND_RETURN_0:
+    case EXIT_AND_RETURN_0:
         freecell_solver_user_free(instance);
         exit(0);
 
-        case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
+    case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
         if (only_recognized)
         {
             fprintf(stderr, "Unknown option: %s\n", argv[*arg_ptr]);
             exit(-1);
         }
         break;
-        case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
+    case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
         fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-            " and was not supplied with one.\n", argv[*arg_ptr]);
+                        " and was not supplied with one.\n",
+            argv[*arg_ptr]);
         exit(-1);
-        case FCS_CMD_LINE_ERROR_IN_ARG:
+    case FCS_CMD_LINE_ERROR_IN_ARG:
         if (error_string)
         {
             fprintf(stderr, "%s", error_string);
@@ -98,20 +84,11 @@ static GCC_INLINE void * alloc_instance_and_parse(
     return instance;
 }
 
-static GCC_INLINE void * simple_alloc_and_parse(
-    const int argc,
-    char * * const argv,
-    int * const arg_ptr)
+static GCC_INLINE void *simple_alloc_and_parse(
+    const int argc, char **const argv, int *const arg_ptr)
 {
     return alloc_instance_and_parse(
-        argc,
-        argv,
-        arg_ptr,
-        NULL,
-        NULL,
-        NULL,
-        TRUE
-    );
+        argc, argv, arg_ptr, NULL, NULL, NULL, TRUE);
 }
 
 #ifdef __cplusplus
