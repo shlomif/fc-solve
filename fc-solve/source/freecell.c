@@ -98,7 +98,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
                 deck*4+fcs_card_suit(card)
             );
 
-            sfs_check_state_end()
+            sfs_check_state_end();
             break;
         }
     }
@@ -496,7 +496,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                 ((ds << 16) | ((255-dc) << 8) | fc)
                 ;
 
-            sfs_check_state_end()
+            sfs_check_state_end();
         }
     }
 
@@ -572,7 +572,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
                     FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
                     dest_found
                 );
-                sfs_check_state_end()
+                sfs_check_state_end();
                 break;
             }
         }
@@ -694,7 +694,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stac
 
                 fcs_col_push_card(new_dest_col, moved_card);
 
-                sfs_check_state_end()
+                sfs_check_state_end();
             }
         }
     }
@@ -822,7 +822,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                  * */
                 state_context_value = ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);
 
-                sfs_check_state_end()
+                sfs_check_state_end();
             }
         }
     }
@@ -930,7 +930,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 
                 fcs_move_sequence( dest_stack_idx, stack_idx, cards_num-c );
 
-                sfs_check_state_end()
+                sfs_check_state_end();
             }
             else
             {
@@ -1072,7 +1072,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
             fcs_empty_freecell(new_state, fc);
             fcs_move_stack_non_seq_push(moves,
                 FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, stack_idx);
-            sfs_check_state_end()
+            sfs_check_state_end();
         }
     }
 
@@ -1240,7 +1240,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                     state_context_value =
                         ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);
 
-                    sfs_check_state_end()
+                    sfs_check_state_end();
                 }
             }
         }
@@ -1313,7 +1313,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
             );
         }
 
-        sfs_check_state_end()
+        sfs_check_state_end();
     }
 }
 
@@ -1502,7 +1502,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 
         fcs_push_1card_seq(moves, stack_idx, empty_stack_idx);
 
-        sfs_check_state_end()
+        sfs_check_state_end();
     }
 }
 
@@ -1565,7 +1565,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 
             fcs_push_1card_seq(moves, stack_idx, ds);
 
-            sfs_check_state_end()
+            sfs_check_state_end();
         }
     }
 }
@@ -1621,7 +1621,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
         fcs_move_stack_non_seq_push(moves,
             FCS_MOVE_TYPE_STACK_TO_FREECELL, stack_idx, ds);
 
-        sfs_check_state_end()
+        sfs_check_state_end();
     }
 }
 
@@ -1666,7 +1666,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
                 FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, ds
             );
 
-            sfs_check_state_end()
+            sfs_check_state_end();
         }
     }
 
@@ -1725,7 +1725,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         fcs_move_stack_non_seq_push(moves, FCS_MOVE_TYPE_FREECELL_TO_STACK,
             fc, ds);
 
-        sfs_check_state_end()
+        sfs_check_state_end();
     }
 
     return;
