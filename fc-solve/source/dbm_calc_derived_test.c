@@ -42,66 +42,44 @@
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
-        enum fcs_dbm_variant_type_t local_variant,
-        const char * init_state_str_proto,
-        int * const num_out_derived_states,
-        fcs_derived_state_debug_t * * out_derived_states,
-        const fcs_bool_t perform_horne_prune
-        )
+    enum fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
+    int *const num_out_derived_states,
+    fcs_derived_state_debug_t **out_derived_states,
+    const fcs_bool_t perform_horne_prune)
 {
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;
     fcs_state_locs_struct_t locs;
-    fcs_derived_state_t * derived_list = NULL;
-    fcs_derived_state_t * derived_list_recycle_bin = NULL;
+    fcs_derived_state_t *derived_list = NULL;
+    fcs_derived_state_t *derived_list_recycle_bin = NULL;
     fcs_compact_allocator_t allocator;
     fcs_meta_compact_allocator_t meta_alloc;
     size_t states_count = 0;
-    fcs_derived_state_t * iter;
-    fcs_derived_state_debug_t * debug_ret;
+    fcs_derived_state_t *iter;
+    fcs_derived_state_debug_t *debug_ret;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    fc_solve_initial_user_state_to_c(
-            init_state_str_proto,
-            &init_state,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM,
-            indirect_stacks_buffer
-            );
+    fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,
+        FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
     fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(
-        &delta,
-            &(init_state.s),
-            STACKS_NUM,
-            FREECELLS_NUM
+        &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
-            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+        ,
+        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-            );
-
-    fcs_init_and_encode_state(
-        &delta,
-        local_variant,
-        &(init_state),
-        &enc_state
         );
 
-    fc_solve_meta_compact_allocator_init (&meta_alloc);
-    fc_solve_compact_allocator_init( &allocator, &meta_alloc);
+    fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 
-    instance_solver_thread_calc_derived_states(
-        local_variant,
-        &init_state,
-        NULL,
-        &derived_list,
-        &derived_list_recycle_bin,
-        &allocator,
-        perform_horne_prune
-    );
+    fc_solve_meta_compact_allocator_init(&meta_alloc);
+    fc_solve_compact_allocator_init(&allocator, &meta_alloc);
 
+    instance_solver_thread_calc_derived_states(local_variant, &init_state, NULL,
+        &derived_list, &derived_list_recycle_bin, &allocator,
+        perform_horne_prune);
 
     iter = derived_list;
 
@@ -113,7 +91,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     *(num_out_derived_states) = states_count;
 
-
     debug_ret = SMALLOC(debug_ret, states_count);
 
     *(out_derived_states) = debug_ret;
@@ -124,24 +101,19 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     size_t idx = 0;
     while (iter)
     {
-        debug_ret[idx].state_string = SMALLOC(debug_ret[idx].state_string, 1000);
-        fc_solve_state_as_string(
-            debug_ret[idx].state_string,
-            &(iter->state.s),
-            &locs
-            PASS_FREECELLS(FREECELLS_NUM)
-            PASS_STACKS(STACKS_NUM)
-            PASS_DECKS(DECKS_NUM)
-            FC_SOLVE__PASS_PARSABLE(TRUE)
-            , FALSE
-            PASS_T(TRUE)
-        );
+        debug_ret[idx].state_string =
+            SMALLOC(debug_ret[idx].state_string, 1000);
+        fc_solve_state_as_string(debug_ret[idx].state_string, &(iter->state.s),
+            &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
+                PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
+            FALSE PASS_T(TRUE));
         debug_ret[idx].move = iter->move;
-        debug_ret[idx].core_irreversible_moves_count
-            = iter->core_irreversible_moves_count;
-        debug_ret[idx].num_non_reversible_moves_including_prune
-            = iter->num_non_reversible_moves_including_prune;
-        /* TODO : Put something meaningful there by passing it to the function. */
+        debug_ret[idx].core_irreversible_moves_count =
+            iter->core_irreversible_moves_count;
+        debug_ret[idx].num_non_reversible_moves_including_prune =
+            iter->num_non_reversible_moves_including_prune;
+        /* TODO : Put something meaningful there by passing it to the function.
+         */
         debug_ret[idx].which_irreversible_moves_bitmask =
             iter->which_irreversible_moves_bitmask;
         idx++;
@@ -151,7 +123,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     assert(idx == states_count);
 
     fc_solve_compact_allocator_finish(&allocator);
-    fc_solve_meta_compact_allocator_finish( &meta_alloc );
+    fc_solve_meta_compact_allocator_finish(&meta_alloc);
 
     fc_solve_delta_stater_release(&delta);
 
@@ -162,10 +134,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
-        enum fcs_dbm_variant_type_t local_variant,
-        const char * init_state_str_proto,
-        char * * ret_state_s
-        )
+    enum fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
+    char **ret_state_s)
 {
     fcs_state_keyval_pair_t init_state;
     fcs_state_locs_struct_t locs;
@@ -175,31 +145,19 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
 
     fc_solve_init_locs(&locs);
 
-    fc_solve_initial_user_state_to_c(
-            init_state_str_proto,
-            &init_state,
-            FREECELLS_NUM,
-            STACKS_NUM,
-            DECKS_NUM,
-            indirect_stacks_buffer
-            );
+    fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,
+        FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
     {
         fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
-        prune_ret = horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
+        prune_ret =
+            horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     }
     *ret_state_s = SMALLOC(*ret_state_s, 1000);
-    fc_solve_state_as_string(
-        *ret_state_s,
-        &(init_state.s),
-        &locs
-        PASS_FREECELLS(FREECELLS_NUM)
-        PASS_STACKS(STACKS_NUM)
-        PASS_DECKS(DECKS_NUM)
-        FC_SOLVE__PASS_PARSABLE(TRUE)
-        , FALSE
-        PASS_T(TRUE)
-    );
+    fc_solve_state_as_string(*ret_state_s, &(init_state.s),
+        &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
+            PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
+        FALSE PASS_T(TRUE));
 
     return prune_ret;
 }

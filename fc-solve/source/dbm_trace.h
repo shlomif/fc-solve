@@ -30,17 +30,21 @@
 #define T
 
 #ifdef T
-#define TRACE0(message) \
-        { \
-            fprintf(out_fh, "%s\n", message); \
-            fflush(out_fh); \
-        }
-#define TRACE1(my_format, arg1) \
-        { \
-            fprintf(out_fh, my_format, arg1); \
-            fflush(out_fh); \
-        }
+#define TRACE0(message)                                                        \
+    {                                                                          \
+        fprintf(out_fh, "%s\n", message);                                      \
+        fflush(out_fh);                                                        \
+    }
+#define TRACE1(my_format, arg1)                                                \
+    {                                                                          \
+        fprintf(out_fh, my_format, arg1);                                      \
+        fflush(out_fh);                                                        \
+    }
 #else
-#define TRACE0(message) {}
-#define TRACE1(a,b) {}
+#define TRACE0(message)                                                        \
+    {                                                                          \
+    }
+#define TRACE1(a, b)                                                           \
+    {                                                                          \
+    }
 #endif

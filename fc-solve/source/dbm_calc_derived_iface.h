@@ -28,8 +28,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "dbm_common.h"
@@ -41,7 +40,7 @@ typedef struct
 
 typedef struct
 {
-    char * state_string;
+    char *state_string;
     unsigned char move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
@@ -49,21 +48,16 @@ typedef struct
 } fcs_derived_state_debug_t;
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
-        enum fcs_dbm_variant_type_t local_variant,
-        const char * init_state_str_proto,
-        int * num_out_derived_states,
-        fcs_derived_state_debug_t * * out_derived_states,
-        const fcs_bool_t perform_horne_prune
-        );
+    enum fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
+    int *num_out_derived_states, fcs_derived_state_debug_t **out_derived_states,
+    const fcs_bool_t perform_horne_prune);
 
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
-        enum fcs_dbm_variant_type_t local_variant,
-        const char * init_state_str_proto,
-        char * * ret_state_s
-        );
+    enum fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
+    char **ret_state_s);
 
 #ifdef __cplusplus
 }

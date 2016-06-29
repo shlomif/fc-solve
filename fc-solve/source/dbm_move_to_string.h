@@ -29,15 +29,14 @@
 #include "rinutils.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-static const char * move_to_string(unsigned char move, char * const move_buffer)
+static const char *move_to_string(unsigned char move, char *const move_buffer)
 {
-    char * s = move_buffer;
+    char *s = move_buffer;
 
-    for (int iter=0 ; iter < 2 ; iter++)
+    for (int iter = 0; iter < 2; iter++)
     {
         int inspect = (move & 0xF);
         move >>= 4;

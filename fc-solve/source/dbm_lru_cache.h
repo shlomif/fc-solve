@@ -1,8 +1,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "generic_tree.h"
@@ -17,12 +16,12 @@ typedef fcs_encoded_state_buffer_t fcs_cache_key_t;
 struct fcs_cache_key_info_struct
 {
     fcs_cache_key_t key;
-    fcs_fcc_move_t * moves_to_key;
+    fcs_fcc_move_t *moves_to_key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.
      * */
-    struct fcs_cache_key_info_struct * lower_pri, * higher_pri;
+    struct fcs_cache_key_info_struct *lower_pri, *higher_pri;
 };
 
 typedef struct fcs_cache_key_info_struct fcs_cache_key_info_t;
@@ -32,18 +31,18 @@ typedef struct
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     Pvoid_t states_values_to_keys_map;
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
-    dict_t * kaz_tree;
+    dict_t *kaz_tree;
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
     fcs_compact_allocator_t states_values_to_keys_allocator;
     long count_elements_in_cache, max_num_elements_in_cache;
 
-    fcs_cache_key_info_t * lowest_pri, * highest_pri;
+    fcs_cache_key_info_t *lowest_pri, *highest_pri;
 
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
-    fcs_cache_key_info_t * recycle_bin;
-    void * tree_recycle_bin;
+    fcs_cache_key_info_t *recycle_bin;
+    void *tree_recycle_bin;
 } fcs_lru_cache_t;
 
 #ifdef __cplusplus

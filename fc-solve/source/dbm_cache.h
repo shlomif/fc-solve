@@ -28,8 +28,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "config.h"
@@ -45,26 +44,26 @@ extern "C"
 #include "dbm_lru_cache.h"
 
 static int fc_solve_compare_lru_cache_keys(
-    const void * void_a, const void * void_b, void * context GCC_UNUSED
-)
+    const void *void_a, const void *void_b, void *context GCC_UNUSED)
 {
 #define GET_PARAM(p) ((((const fcs_cache_key_info_t *)(p))->key))
-    return memcmp(&(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
+    return memcmp(
+        &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
 
-static GCC_INLINE void cache_destroy(fcs_lru_cache_t * cache)
+static GCC_INLINE void cache_destroy(fcs_lru_cache_t *cache)
 {
     {
 #define NUM_CHAINS_TO_RELEASE 2
-        fcs_cache_key_info_t * const to_release[NUM_CHAINS_TO_RELEASE] = {cache->recycle_bin, cache->lowest_pri};
+        fcs_cache_key_info_t *const to_release[NUM_CHAINS_TO_RELEASE] = {
+            cache->recycle_bin, cache->lowest_pri};
 
-        for (size_t i=0 ; i < COUNT(to_release) ; i++)
+        for (size_t i = 0; i < COUNT(to_release); i++)
         {
-            fcs_cache_key_info_t * cache_key;
+            fcs_cache_key_info_t *cache_key;
 
-            for (cache_key = to_release[i] ;
-                 cache_key ;
+            for (cache_key = to_release[i]; cache_key;
                  cache_key = RECYCLE_BIN_NEXT(cache_key))
             {
                 free(cache_key->moves_to_key);
@@ -74,23 +73,25 @@ static GCC_INLINE void cache_destroy(fcs_lru_cache_t * cache)
 #undef NUM_CHAINS_TO_RELEASE
     }
     fc_solve_kaz_tree_destroy(cache->kaz_tree);
-    fc_solve_compact_allocator_finish(&(cache->states_values_to_keys_allocator));
+    fc_solve_compact_allocator_finish(
+        &(cache->states_values_to_keys_allocator));
 }
 
-static GCC_INLINE void cache_init(fcs_lru_cache_t * cache, long max_num_elements_in_cache, fcs_meta_compact_allocator_t * meta_alloc)
+static GCC_INLINE void cache_init(fcs_lru_cache_t *cache,
+    long max_num_elements_in_cache, fcs_meta_compact_allocator_t *meta_alloc)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
-    cache->states_values_to_keys_map = ((Pvoid_t) NULL);
+    cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
     cache->tree_recycle_bin = NULL;
-    cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys, NULL, meta_alloc, &(cache->tree_recycle_bin));
+    cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys,
+        NULL, meta_alloc, &(cache->tree_recycle_bin));
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
 
     fc_solve_compact_allocator_init(
-        &(cache->states_values_to_keys_allocator), meta_alloc
-    );
+        &(cache->states_values_to_keys_allocator), meta_alloc);
     cache->lowest_pri = NULL;
     cache->highest_pri = NULL;
     cache->recycle_bin = NULL;
@@ -98,27 +99,28 @@ static GCC_INLINE void cache_init(fcs_lru_cache_t * cache, long max_num_elements
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * const cache, fcs_cache_key_t * const key)
+static GCC_INLINE fcs_bool_t cache_does_key_exist(
+    fcs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     const fcs_cache_key_info_t to_check = {.key = *key};
-    const dict_key_t existing_key = fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
-    if (! existing_key)
+    const dict_key_t existing_key =
+        fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
+    if (!existing_key)
     {
         return FALSE;
     }
     else
     {
         /* First - promote this key to the top of the cache. */
-        fcs_cache_key_info_t * const existing = (fcs_cache_key_info_t *)existing_key;
+        fcs_cache_key_info_t *const existing =
+            (fcs_cache_key_info_t *)existing_key;
 
         if (existing->higher_pri)
         {
-            existing->higher_pri->lower_pri =
-                existing->lower_pri;
+            existing->higher_pri->lower_pri = existing->lower_pri;
             if (existing->lower_pri)
             {
-                existing->lower_pri->higher_pri =
-                    existing->higher_pri;
+                existing->lower_pri->higher_pri = existing->higher_pri;
             }
             else
             {
@@ -132,33 +134,31 @@ static GCC_INLINE fcs_bool_t cache_does_key_exist(fcs_lru_cache_t * const cache,
             existing->higher_pri = NULL;
         }
 
-
         return TRUE;
     }
 }
 
-static GCC_INLINE fcs_cache_key_info_t * cache_insert(fcs_lru_cache_t * cache, const fcs_cache_key_t * key, const fcs_fcc_move_t * moves_to_parent, const fcs_fcc_move_t final_move)
+static GCC_INLINE fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
+    const fcs_cache_key_t *key, const fcs_fcc_move_t *moves_to_parent,
+    const fcs_fcc_move_t final_move)
 {
-    fcs_cache_key_info_t * cache_key;
-    dict_t * kaz_tree;
+    fcs_cache_key_info_t *cache_key;
+    dict_t *kaz_tree;
 
     kaz_tree = cache->kaz_tree;
 
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
     {
-        fc_solve_kaz_tree_delete_by_value(kaz_tree, (cache_key = cache->lowest_pri));
+        fc_solve_kaz_tree_delete_by_value(
+            kaz_tree, (cache_key = cache->lowest_pri));
 
         cache->lowest_pri = cache->lowest_pri->higher_pri;
         cache->lowest_pri->lower_pri = NULL;
     }
     else
     {
-        cache_key =
-            (fcs_cache_key_info_t *)
-            fcs_compact_alloc_ptr(
-                &(cache->states_values_to_keys_allocator),
-                sizeof(*cache_key)
-            );
+        cache_key = (fcs_cache_key_info_t *)fcs_compact_alloc_ptr(
+            &(cache->states_values_to_keys_allocator), sizeof(*cache_key));
         cache_key->moves_to_key = NULL;
         cache->count_elements_in_cache++;
     }
@@ -167,13 +167,13 @@ static GCC_INLINE fcs_cache_key_info_t * cache_insert(fcs_lru_cache_t * cache, c
     if (moves_to_parent)
     {
         size_t len;
-        fcs_fcc_move_t * moves;
+        fcs_fcc_move_t *moves;
         len = strlen((const char *)moves_to_parent);
         cache_key->moves_to_key = moves =
-            SREALLOC(cache_key->moves_to_key, len+1+1);
+            SREALLOC(cache_key->moves_to_key, len + 1 + 1);
         memcpy(moves, moves_to_parent, len);
         moves[len] = final_move;
-        moves[len+1] = '\0';
+        moves[len + 1] = '\0';
     }
     else if (final_move)
     {
@@ -183,7 +183,7 @@ static GCC_INLINE fcs_cache_key_info_t * cache_insert(fcs_lru_cache_t * cache, c
     }
     else
     {
-        free (cache_key->moves_to_key);
+        free(cache_key->moves_to_key);
         cache_key->moves_to_key = NULL;
     }
 

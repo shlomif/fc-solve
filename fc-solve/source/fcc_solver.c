@@ -325,7 +325,6 @@ static fcc_status_t instance_run_solver(
     ret_moves_seq.moves_list = NULL;
 
     {
-#define SUIT_LIMIT ( DECKS_NUM * 4 )
         int suit;
 
         for (suit = 0 ; suit < SUIT_LIMIT ; suit++)
@@ -342,7 +341,6 @@ static fcc_status_t instance_run_solver(
             goto free_resources;
         }
     }
-#undef SUIT_LIMIT
 
     /* Bootstrap FCC depth 0 with the initial state. */
     fcc_stage = &(solver_state->FCCs_by_depth[0]);
@@ -511,7 +509,6 @@ static fcc_status_t instance_run_solver(
                  * so, do the cleanup and return the solution.
                  * */
                 {
-#define SUIT_LIMIT ( DECKS_NUM * 4 )
                     int suit;
 
                     for (suit = 0 ; suit < SUIT_LIMIT ; suit++)
@@ -535,7 +532,6 @@ static fcc_status_t instance_run_solver(
 
                     goto fcc_loop_cleanup;
                 }
-#undef SUIT_LIMIT
 
                 fcs_init_and_encode_state(
                     &delta,

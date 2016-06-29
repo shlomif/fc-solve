@@ -30,8 +30,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include <stdio.h>
@@ -52,7 +51,6 @@ extern "C"
 #define FCS_DBM_SINGLE_THREAD 1
 #endif
 
-
 #include "config.h"
 
 #undef FCS_RCS_STATES
@@ -67,8 +65,6 @@ extern "C"
 #define FCS_DBM_USE_OFFLOADING_QUEUE
 
 #include "offloading_queue.h"
-
-
 
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
 

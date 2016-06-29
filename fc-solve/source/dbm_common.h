@@ -27,8 +27,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "config.h"
@@ -52,7 +51,9 @@ enum fcs_dbm_variant_type_t
 
 #define LOCAL_VARIANT local_variant
 #define STACKS_NUM ((LOCAL_VARIANT == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 13 : 8)
-#define LOCAL_FREECELLS_NUM ((LOCAL_VARIANT == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 0 : FCS_DBM_FREECELLS_NUM)
+#define LOCAL_FREECELLS_NUM                                                    \
+    ((LOCAL_VARIANT == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 0                       \
+                                                     : FCS_DBM_FREECELLS_NUM)
 #endif
 
 #define LOCAL_STACKS_NUM STACKS_NUM
