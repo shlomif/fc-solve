@@ -13,7 +13,7 @@ if ($fmt)
 {
     plan tests => 1;
     my $SRC_PATH = $ENV{FCS_SRC_PATH};
-    my @filenames = grep { m#\A\Q$SRC_PATH\E/(?i:[a-b])# } sort {$a cmp $b} map { glob "$SRC_PATH/$_" } qw/*.c *.h *.cpp *.hpp/;
+    my @filenames = grep { m#\A\Q$SRC_PATH\E/(?i:[a-b]|c[a-h])# } sort {$a cmp $b} map { glob "$SRC_PATH/$_" } qw/*.c *.h *.cpp *.hpp/;
     foreach my $fn (@filenames)
     {
         copy($fn, "$fn.orig");
