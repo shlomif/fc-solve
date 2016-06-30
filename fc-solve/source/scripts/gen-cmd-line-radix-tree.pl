@@ -44,7 +44,7 @@ SEARCH_FOR_SWITCH: while (my $line = <$module>)
             {
                 last SEARCH_FOR_SWITCH;
             }
-            if (my ($opt, $strings) = $line =~ m{\A *case (FCS_OPT_\w+): /\* STRINGS=([^;]+); \*/ *\n?\z})
+            if (my ($opt, $strings) = $line =~ m{\A *case (FCS_OPT_\w+): /\* STRINGS=([^;]+);(?: \*/)? *\n?\z})
             {
                 my @s = split(/\|/, $strings);
                 %strings_to_opts_map =
