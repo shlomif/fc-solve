@@ -1,6 +1,6 @@
 #!/bin/sh
-# This scan is derived from ct-mod6.sh in scripts/TEST_OPTIMIZATIONS by
-# adding a new scan "sH".
+# This scan is derived from ct-mod8.sh in scripts/TEST_OPTIMIZATIONS by
+# removing some under-effective scans or their calls.
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -seed 2 -to 0[01][23456789] -step 500 -sp r:tf --st-name 3 -nst \
 --method random-dfs -seed 3 -to "0[1]=asw(1)[23467]=asw(1)" -step 500 -sp r:tf --st-name 5 -nst \
