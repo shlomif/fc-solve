@@ -45,6 +45,12 @@ File.open(iters_fn, "r") do |file|
                 while (iters > start_at + quotas[0][:iters])
                     start_at += quotas[0][:iters]
                     found_quotas << quotas.shift
+                    if quotas.length == 0
+                        break
+                    end
+                end
+                if quotas.length == 0
+                    break
                 end
                 quotas[0][:found] += 1
             end
