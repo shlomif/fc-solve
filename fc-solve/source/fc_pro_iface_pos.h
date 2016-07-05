@@ -44,8 +44,8 @@ typedef struct
 
 typedef struct
 {
-    int next_move_idx;
-    int num_moves;
+    size_t next_move_idx;
+    size_t num_moves;
     fcs_extended_move_t *moves;
 } fcs_moves_processed_t;
 
