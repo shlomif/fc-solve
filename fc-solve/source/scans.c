@@ -127,8 +127,8 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
     fcs_lru_cache_t *cache = &(instance->rcs_states_cache);
 
-    int parents_stack_len = 1;
-    int parents_stack_max_len = 16;
+    ssize_t parents_stack_len = 1;
+    ssize_t parents_stack_max_len = 16;
 
     struct
     {
