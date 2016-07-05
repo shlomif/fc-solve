@@ -82,16 +82,11 @@ static GCC_INLINE int read_preset(const char *preset_name,
         (const char **)&global_presetrc, &user_preset_dir, NULL,
     };
 
+    char *const home_dir = getenv("HOME");
+    if (home_dir)
     {
-        char *home_dir;
-        home_dir = getenv("HOME");
-        if (home_dir)
-        {
-            home_dir_presetrc =
-                SMALLOC(home_dir_presetrc, strlen(home_dir) + 50);
-            sprintf(
-                home_dir_presetrc, "%s/.freecell-solver/presetrc", home_dir);
-        }
+        home_dir_presetrc = SMALLOC(home_dir_presetrc, strlen(home_dir) + 50);
+        sprintf(home_dir_presetrc, "%s/.freecell-solver/presetrc", home_dir);
     }
     env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
 
