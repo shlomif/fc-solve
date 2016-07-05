@@ -1330,7 +1330,7 @@ int main(int argc, char *argv[])
 #endif
 
         fcs_offloading_queue__insert(
-            &(instance.queue), (fcs_offloading_queue_item_t *)&token);
+            &(instance.queue), (const fcs_offloading_queue_item_t *)&token);
         instance.num_states_in_collection++;
         instance.count_of_items_in_queue++;
 
