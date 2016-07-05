@@ -43,8 +43,8 @@ static int fc_solve_compare_pre_cache_keys(
 #undef GET_PARAM
 }
 
-static GCC_INLINE void pre_cache_init(
-    fcs_pre_cache_t *pre_cache_ptr, fcs_meta_compact_allocator_t *meta_alloc)
+static GCC_INLINE void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
+    fcs_meta_compact_allocator_t *const meta_alloc)
 {
     pre_cache_ptr->kaz_tree = fc_solve_kaz_tree_create(
         fc_solve_compare_pre_cache_keys, NULL, meta_alloc);
