@@ -892,7 +892,12 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             {
                 break;
             }
-            fcs_col_push_card(col, fc_solve_card_parse_str(str));
+            const_AUTO(my_card, fc_solve_card_parse_str(str));
+            if (!fcs_card_rank(my_card))
+            {
+                return FALSE;
+            }
+            fcs_col_push_card(col, my_card);
         }
     }
 
