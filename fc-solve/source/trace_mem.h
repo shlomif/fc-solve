@@ -44,8 +44,8 @@ static long long int prev_rss = -1, max_rss_delta = -1;
 static GCC_INLINE void trace_mem(const int board_num)
 {
     long long int rss;
-    unsigned long long unsigned_foo;
-    char stat_fn[1024], foo_str[1024];
+    unsigned long long unused_unsigned;
+    char stat_fn[1024], unused_str[1024];
     FILE *stat;
 
     snprintf(stat_fn, sizeof(stat_fn), "/proc/%ld/stat", (long)(getpid()));
@@ -56,10 +56,10 @@ static GCC_INLINE void trace_mem(const int board_num)
          * http://www.brokestream.com/procstat.html
          * */
         stat = fopen(stat_fn, "r");
-#define readone(foo) (fscanf(stat, "%lld ", &rss))
-#define readstr(foo) (fscanf(stat, "%1000s ", foo_str))
-#define readchar(foo) (fscanf(stat, "%c ", foo_str))
-#define readunsigned(foo) (fscanf(stat, "%llu ", &unsigned_foo))
+#define readone(unused) (fscanf(stat, "%lld ", &rss))
+#define readstr(unused) (fscanf(stat, "%1000s ", unused_str))
+#define readchar(unused) (fscanf(stat, "%c ", unused_str))
+#define readunsigned(unused) (fscanf(stat, "%llu ", &unused_unsigned))
         readone(&pid);
         readstr(tcomm);
         readchar(&state);
