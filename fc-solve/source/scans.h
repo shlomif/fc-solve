@@ -165,7 +165,7 @@ static GCC_INLINE const char *fc_solve_calc_positions_by_rank_location(
 
 static GCC_INLINE void add_to_move_funcs_list(
     fc_solve_solve_for_state_move_func_t **const out_move_funcs_list,
-    size_t *const num_so_far, const int *const indexes,
+    size_t *const num_so_far, const size_t *const indexes,
     const size_t count_to_add)
 {
     const size_t num = *num_so_far;

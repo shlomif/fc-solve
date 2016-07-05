@@ -278,7 +278,7 @@ static GCC_INLINE void fc_solve_init_instance(
     }
 
     {
-        int total_tests = 0;
+        size_t total_tests = 0;
         fc_solve_foreach_soft_thread(
             instance, FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER, &total_tests);
         fc_solve_foreach_soft_thread(instance,
@@ -292,10 +292,10 @@ static GCC_INLINE void fc_solve_init_instance(
              * to a valid tests order.
              *
              * */
-            int num_tests = 0;
-            int *tests = SMALLOC(tests, sizeof(total_tests) * 8);
+            size_t num_tests = 0;
+            size_t *tests = SMALLOC(tests, sizeof(total_tests) * 8);
 
-            for (int bit_idx = 0; total_tests != 0;
+            for (size_t bit_idx = 0; total_tests != 0;
                  bit_idx++, total_tests >>= 1)
             {
                 if ((total_tests & 0x1) != 0)

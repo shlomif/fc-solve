@@ -134,15 +134,15 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
 }
 
 static GCC_INLINE void accumulate_tests_by_ptr(
-    int *const tests_order, fcs_tests_order_t *const st_tests_order)
+    size_t *const tests_order, fcs_tests_order_t *const st_tests_order)
 {
     const fcs_tests_order_group_t *group_ptr = st_tests_order->groups;
     const fcs_tests_order_group_t *const groups_end =
         group_ptr + st_tests_order->num_groups;
     for (; group_ptr < groups_end; group_ptr++)
     {
-        const int *test_ptr = group_ptr->order_group_tests;
-        const int *const tests_end = test_ptr + group_ptr->num;
+        const size_t *test_ptr = group_ptr->order_group_tests;
+        const size_t *const tests_end = test_ptr + group_ptr->num;
         for (; test_ptr < tests_end; test_ptr++)
         {
             *tests_order |= (1 << (*test_ptr));
@@ -153,20 +153,20 @@ static GCC_INLINE void accumulate_tests_by_ptr(
 static GCC_INLINE void accumulate_tests_order(
     fc_solve_soft_thread_t *const soft_thread, void *const context)
 {
-    accumulate_tests_by_ptr((int *)context,
+    accumulate_tests_by_ptr((size_t *)context,
         &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order));
 }
 
 static GCC_INLINE void determine_scan_completeness(
     fc_solve_soft_thread_t *const soft_thread, void *const global_tests_order)
 {
-    int tests_order = 0;
+    size_t tests_order = 0;
 
     accumulate_tests_by_ptr(&tests_order,
         &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order));
 
     STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
-        (tests_order == *(int *)global_tests_order));
+        (tests_order == *(size_t *)global_tests_order));
 }
 
 void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,

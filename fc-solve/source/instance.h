@@ -247,7 +247,7 @@ typedef enum {
 typedef struct
 {
     size_t num;
-    int *order_group_tests;
+    size_t *order_group_tests;
     fcs_tests_group_type_t shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_order_group_t;
@@ -1155,7 +1155,7 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
 
 static GCC_INLINE void fc_solve_free_tests_order(fcs_tests_order_t *tests_order)
 {
-    for (int group_idx = 0; group_idx < tests_order->num_groups; group_idx++)
+    for (size_t group_idx = 0; group_idx < tests_order->num_groups; group_idx++)
     {
         free(tests_order->groups[group_idx].order_group_tests);
     }

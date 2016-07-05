@@ -301,16 +301,16 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                          by_depth_tests_order[depth_idx].tests_order.num_groups;
                          group_idx++)
                     {
-                        const int *const move_funcs_idxs =
+                        const size_t *const move_funcs_idxs =
                             by_depth_tests_order[depth_idx]
                                 .tests_order.groups[group_idx]
                                 .order_group_tests;
-                        const int tests_order_num =
+                        const size_t tests_order_num =
                             by_depth_tests_order[depth_idx]
                                 .tests_order.groups[group_idx]
                                 .num;
 
-                        for (int num_valid_move_funcs = 0;
+                        for (size_t num_valid_move_funcs = 0;
                              num_valid_move_funcs < tests_order_num;
                              num_valid_move_funcs++)
                         {
