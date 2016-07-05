@@ -357,7 +357,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
 static GCC_INLINE fc_solve_preset_ret_code_t fcs_get_preset_by_id(
     const int preset_id, const fcs_preset_t **const preset_ptr)
 {
-    for (int preset_index = 0; preset_index < NUM_PRESETS; preset_index++)
+    for (size_t preset_index = 0; preset_index < NUM_PRESETS; preset_index++)
     {
         if (fcs_presets[preset_index].preset_id == preset_id)
         {
