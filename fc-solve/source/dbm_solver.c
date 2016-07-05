@@ -1186,7 +1186,6 @@ int main(int argc, char *argv[])
 
     if (intermediate_in_fh)
     {
-        fcs_bool_t found_line;
         char *line = NULL;
         size_t line_size = 0;
         long line_num = 0;
@@ -1202,6 +1201,7 @@ int main(int argc, char *argv[])
             caches_delta, dbm_store_path, LONG_MAX, iters_delta_limit,
             offload_dir_path, out_fh);
 
+        fcs_bool_t found_line;
         do
         {
             line_num++;

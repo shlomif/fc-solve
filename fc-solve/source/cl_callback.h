@@ -420,7 +420,7 @@ static void select_signal_handler(int signal_num GCC_UNUSED)
 }
 
 static void *current_instance;
-static fc_solve_display_information_context_t *global_dc;
+static fc_solve_display_information_context_t *global_display_context;
 
 static void command_signal_handler(int signal_num GCC_UNUSED)
 {
@@ -440,14 +440,14 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
         else
         {
             freecell_solver_user_set_iter_handler_long(
-                current_instance, my_iter_handler, global_dc);
+                current_instance, my_iter_handler, global_display_context);
             debug_iter_output_on = TRUE;
         }
     }
     else if (command_num == 2)
     {
-        global_dc->debug_iter_state_output =
-            !global_dc->debug_iter_state_output;
+        global_display_context->debug_iter_state_output =
+            !global_display_context->debug_iter_state_output;
     }
 
     command_num = 0;
@@ -502,7 +502,7 @@ static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
     fc_solve_display_information_context_t display_context =
         INITIAL_DISPLAY_CONTEXT;
 
-    global_dc = &display_context;
+    global_display_context = &display_context;
 
     int arg = 1;
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
