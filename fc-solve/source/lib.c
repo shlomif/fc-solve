@@ -856,32 +856,30 @@ static GCC_INLINE const fcs_internal_move_t user_move_to_internal_move(
 }
 #endif
 
-static GCC_INLINE int calc_moves_seq(
+static GCC_INLINE void calc_moves_seq(
     const fcs_move_stack_t *const solution_moves,
     fcs_moves_sequence_t *const moves_seq)
 {
     moves_seq->num_moves = 0;
     moves_seq->moves = NULL;
 
-    int num_moves = (int)solution_moves->num_moves;
-    fcs_internal_move_t *next_move_ptr = solution_moves->moves + num_moves - 1;
+    const_SLOT(num_moves, solution_moves);
+    fcs_internal_move_t *next_move_ptr = solution_moves->moves + num_moves;
 
     fcs_move_t *ret_moves = SMALLOC(ret_moves, num_moves);
 
     if (!ret_moves)
     {
-        return -1;
+        return;
     }
 
-    for (int i = 0; i < num_moves; i++)
+    for (size_t i = 0; i < num_moves; i++)
     {
-        ret_moves[i] = internal_move_to_user_move(*(next_move_ptr--));
+        ret_moves[i] = internal_move_to_user_move(*(--next_move_ptr));
     }
 
     moves_seq->num_moves = num_moves;
     moves_seq->moves = ret_moves;
-
-    return 0;
 }
 
 static void trace_flare_solution(
