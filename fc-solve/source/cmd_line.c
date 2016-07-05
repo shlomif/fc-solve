@@ -298,7 +298,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             {
                 known_param++;
             }
-            if ((*known_param) != NULL)
+            if (*known_param)
             {
                 int ret, num_to_skip;
                 switch (callback(instance, argc, argv, arg - &(argv[0]),

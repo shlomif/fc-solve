@@ -477,9 +477,9 @@ static GCC_INLINE flares_plan_item create_plan_item(
         .type = mytype, .flare = flare, .count_iters = count_iters};
 }
 
-static GCC_INLINE flares_plan_type_t add_to_plan(
-    fcs_instance_item_t *const instance_item, const flares_plan_type_t mytype,
-    fcs_flare_item_t *const flare, const int count_iters)
+static GCC_INLINE void add_to_plan(fcs_instance_item_t *const instance_item,
+    const flares_plan_type_t mytype, fcs_flare_item_t *const flare,
+    const int count_iters)
 {
     const int next_item = instance_item->num_plan_items;
 
@@ -488,28 +488,25 @@ static GCC_INLINE flares_plan_type_t add_to_plan(
 
     instance_item->plan[next_item] =
         create_plan_item(mytype, flare, count_iters);
-
-    return mytype;
 }
 
-static GCC_INLINE flares_plan_type_t add_count_iters_to_plan(
+static GCC_INLINE void add_count_iters_to_plan(
     fcs_instance_item_t *const instance_item, fcs_flare_item_t *const flare,
     const int count_iters)
 {
-    return add_to_plan(
-        instance_item, FLARES_PLAN_RUN_COUNT_ITERS, flare, count_iters);
+    add_to_plan(instance_item, FLARES_PLAN_RUN_COUNT_ITERS, flare, count_iters);
 }
 
-static GCC_INLINE flares_plan_type_t add_checkpoint_to_plan(
+static GCC_INLINE void add_checkpoint_to_plan(
     fcs_instance_item_t *const instance_item)
 {
-    return add_to_plan(instance_item, FLARES_PLAN_CHECKPOINT, NULL, -1);
+    add_to_plan(instance_item, FLARES_PLAN_CHECKPOINT, NULL, -1);
 }
 
-static GCC_INLINE flares_plan_type_t add_run_indef_to_plan(
+static GCC_INLINE void add_run_indef_to_plan(
     fcs_instance_item_t *const instance_item, fcs_flare_item_t *const flare)
 {
-    return add_to_plan(instance_item, FLARES_PLAN_RUN_INDEFINITELY, flare, -1);
+    add_to_plan(instance_item, FLARES_PLAN_RUN_INDEFINITELY, flare, -1);
 }
 
 static GCC_INLINE fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
@@ -575,7 +572,6 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
             /* Tough luck - gotta parse the string. ;-) */
             {
                 const char *item_start, *cmd_end, *item_end;
-                flares_plan_type_t last_item_type;
 
                 if (instance_item->plan)
                 {
@@ -639,7 +635,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                             return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                         }
 
-                        last_item_type = add_count_iters_to_plan(
+                        add_count_iters_to_plan(
                             instance_item, flare, count_iters);
                     }
                     else if (string_starts_with(item_start, "CP", cmd_end))
@@ -651,7 +647,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                             return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
                         }
 
-                        last_item_type = add_checkpoint_to_plan(instance_item);
+                        add_checkpoint_to_plan(instance_item);
                     }
                     else if (string_starts_with(
                                  item_start, "RunIndef", cmd_end))
@@ -676,8 +672,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                             return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                         }
 
-                        last_item_type =
-                            add_run_indef_to_plan(instance_item, flare);
+                        add_run_indef_to_plan(instance_item, flare);
                     }
                     else
                     {
@@ -687,7 +682,9 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                     item_start = item_end + 1;
                 } while (*item_end);
 
-                if (last_item_type != FLARES_PLAN_CHECKPOINT)
+                if ((!instance_item->plan) ||
+                    instance_item->plan[instance_item->num_plan_items - 1]
+                            .type != FLARES_PLAN_CHECKPOINT)
                 {
                     add_checkpoint_to_plan(instance_item);
                 }
