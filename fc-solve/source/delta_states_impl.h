@@ -171,11 +171,7 @@ static GCC_INLINE void fc_solve_get_column_encoding_composite(
 
     fc_solve_bit_writer_write(&bit_w, 4, num_derived_cards);
 
-#ifdef DEBUG_STATES
-    if (fc_solve_card_compare(init_card, fc_solve_empty_card))
-#else
-    if (!(init_card == fc_solve_empty_card))
-#endif
+    if (fcs_card_is_valid(init_card))
     {
         fc_solve_bit_writer_write(&bit_w, 6, fcs_card2char(init_card));
     }

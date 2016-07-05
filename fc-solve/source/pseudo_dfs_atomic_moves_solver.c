@@ -318,8 +318,6 @@ int main(int argc, char *argv[])
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
-    fcs_cache_key_t *init_state_ptr;
-
     FILE *fh = fopen(filename, "r");
     if (fh == NULL)
     {
@@ -335,12 +333,10 @@ int main(int argc, char *argv[])
     fc_solve_initial_user_state_to_c(
         user_state, &init_state_pair, FREECELLS_NUM, STACKS_NUM, 1, NULL);
 
-    init_state_ptr = &(init_state_pair);
-
     fcs_dbm_solver_instance_t instance;
 
     instance_init(
-        &instance, local_variant, init_state_ptr, max_num_elements_in_cache);
+        &instance, local_variant, &init_state_pair, max_num_elements_in_cache);
 
 #define LOG_FILENAME "fc-solve-pseudo-dfs.log.txt"
 
