@@ -128,7 +128,6 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
 {
     fcs_card_t temp_freecell;
-    fcs_locs_t temp_loc;
 
     /* Insertion-sort the stacks */
 
@@ -144,9 +143,9 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
                 COPY_STACK(GET_STACK(c - 1), temp_stack);
             }
 
-            temp_loc = locs->stack_locs[c];
+            const_AUTO(swap_loc, locs->stack_locs[c]);
             locs->stack_locs[c] = locs->stack_locs[c - 1];
-            locs->stack_locs[c - 1] = temp_loc;
+            locs->stack_locs[c - 1] = swap_loc;
 
             c--;
         }
@@ -165,9 +164,9 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
             GET_FREECELL(c) = GET_FREECELL(c - 1);
             GET_FREECELL(c - 1) = temp_freecell;
 
-            temp_loc = locs->fc_locs[c];
+            const_AUTO(swap_loc, locs->fc_locs[c]);
             locs->fc_locs[c] = locs->fc_locs[c - 1];
-            locs->fc_locs[c - 1] = temp_loc;
+            locs->fc_locs[c - 1] = swap_loc;
 
             c--;
         }

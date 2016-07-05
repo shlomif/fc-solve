@@ -965,8 +965,8 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             fcs_tests_order_group_t *const tests_order_groups =
                 by_depth_tests_order[depth_idx].tests_order.groups;
 
-            const int tests_order_num =
-                by_depth_tests_order[depth_idx].tests_order.num_groups;
+            const_AUTO(tests_order_num,
+                by_depth_tests_order[depth_idx].tests_order.num_groups);
 
             const_AUTO(tests_list_of_lists,
                 &(arr_ptr->by_depth_units[depth_idx].tests));
@@ -976,7 +976,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                 .lists = SMALLOC(tests_list_of_lists->lists, tests_order_num),
             };
 
-            for (int group_idx = 0; group_idx < tests_order_num; group_idx++)
+            for (size_t group_idx = 0; group_idx < tests_order_num; group_idx++)
             {
                 size_t num = 0;
                 fc_solve_solve_for_state_move_func_t *tests_list = NULL;

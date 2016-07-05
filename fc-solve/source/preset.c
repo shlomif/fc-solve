@@ -305,10 +305,10 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                             by_depth_tests_order[depth_idx]
                                 .tests_order.groups[group_idx]
                                 .order_group_tests;
-                        const size_t tests_order_num =
-                            by_depth_tests_order[depth_idx]
-                                .tests_order.groups[group_idx]
-                                .num;
+                        const_AUTO(
+                            tests_order_num, by_depth_tests_order[depth_idx]
+                                                 .tests_order.groups[group_idx]
+                                                 .num);
 
                         for (size_t num_valid_move_funcs = 0;
                              num_valid_move_funcs < tests_order_num;

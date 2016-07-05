@@ -236,7 +236,7 @@ static void fc_solve_delta_stater_encode_composite(
     int cols_indexes[MAX_NUM_STACKS];
     fc_solve_column_encoding_composite_t cols[MAX_NUM_STACKS];
     fcs_state_t *derived;
-    int i, swap_int;
+    int i;
     int num_columns;
 
     derived = self->_derived_state;
@@ -286,7 +286,7 @@ static void fc_solve_delta_stater_encode_composite(
                 break;
             }
 
-            swap_int = cols_indexes[non_orig_idx];
+            const_AUTO(swap_int, cols_indexes[non_orig_idx]);
             cols_indexes[non_orig_idx] = cols_indexes[empty_idx];
             cols_indexes[empty_idx] = swap_int;
 
@@ -324,7 +324,7 @@ static void fc_solve_delta_stater_encode_composite(
                 for (c = b; (c > 0) && (COMP_BY_IDX(c - 1) > COMP_BY_IDX(c));
                      c--)
                 {
-                    swap_int = ITEM_IDX(c);
+                    const_AUTO(swap_int, ITEM_IDX(c));
                     ITEM_IDX(c) = ITEM_IDX(c - 1);
                     ITEM_IDX(c - 1) = swap_int;
                 }
