@@ -443,7 +443,7 @@ static GCC_INLINE void calculate_real_depth(const fcs_bool_t calc_real_depth,
         {                                                                      \
             printf("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "         \
                    "tests_list_index=%d ; test_index=%d ; "                    \
-                   "current_state_index=%d ; num_states=%d\n",                 \
+                   "current_state_index=%d ; num_states=%zd\n",                \
                 message, (long int)DFS_VAR(soft_thread, depth),                \
                 (long int)(the_soft_dfs_info -                                 \
                            DFS_VAR(soft_thread, soft_dfs_info)),               \
