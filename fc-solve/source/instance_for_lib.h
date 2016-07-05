@@ -178,7 +178,7 @@ static GCC_INLINE void fc_solve__hard_thread__compile_prelude(
     fc_solve_hard_thread_t *const hard_thread)
 {
     fcs_bool_t last_one = FALSE;
-    int num_items = 0;
+    size_t num_items = 0;
     fcs_prelude_item_t *prelude = NULL;
 
     const char *p = HT_FIELD(hard_thread, prelude_as_string);
@@ -228,9 +228,8 @@ static GCC_INLINE void fc_solve__hard_thread__compile_prelude(
             prelude = SREALLOC(prelude, num_items + PRELUDE_GROW_BY);
         }
 #undef PRELUDE_GROW_BY
-        prelude[num_items].scan_idx = ST_LOOP__GET_INDEX();
-        prelude[num_items].quota = p_quota;
-        num_items++;
+        prelude[num_items++] = (typeof(prelude[0])){
+            .scan_idx = ST_LOOP__GET_INDEX(), .quota = p_quota};
     }
 
     HT_FIELD(hard_thread, prelude) = SREALLOC(prelude, num_items);
@@ -583,7 +582,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
             }
             else
             {
-                HT_FIELD(hard_thread, prelude_num_items) = -1;
+                HT_FIELD(hard_thread, prelude_num_items) = 0;
             }
         }
     }

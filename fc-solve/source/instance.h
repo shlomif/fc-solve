@@ -442,8 +442,8 @@ struct fc_solve_hard_thread_struct
      * */
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    fcs_int_limit_t prelude_num_items;
-    int prelude_idx;
+    size_t prelude_num_items;
+    size_t prelude_idx;
     fcs_prelude_item_t *prelude;
 
     fcs_bool_t allocated_from_list;
