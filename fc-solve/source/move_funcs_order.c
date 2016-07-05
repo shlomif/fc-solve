@@ -103,7 +103,7 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
             if (string[i + 1] == '=')
             {
                 i += 2;
-                const char *open_paren = strchr(string + i, '(');
+                const char *const open_paren = strchr(string + i, '(');
                 if (!open_paren)
                 {
                     strcpy(error_string, "A = ordering function is missing its "
