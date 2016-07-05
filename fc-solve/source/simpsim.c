@@ -117,7 +117,6 @@ static GCC_INLINE fcs_bool_t fcs_is_ss_true_parent(
 
 #ifndef FCS_WITH_MOVES
 #define moves NULL
-#define moves_ptr NULL
 #endif
 
 static GCC_INLINE void init_stacks_map(

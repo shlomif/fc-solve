@@ -410,8 +410,6 @@ static fcc_status_t instance_run_solver(
 
             if (is_fcc_new)
             {
-                fcs_encoded_state_buffer_t *min_by_sorting_copy_ptr;
-
                 instance->num_unique_FCCs_for_depth++;
 
                 /* First of all, add min_by_sorting to
@@ -420,9 +418,10 @@ static fcc_status_t instance_run_solver(
                  * min_by_sorting is a temporary variable and the tree
                  * holds pointers.
                  * */
-                min_by_sorting_copy_ptr = fcs_compact_alloc_ptr(
-                    &(fcc_stage->does_min_by_sorting_exist->dict_allocator),
-                    sizeof(*min_by_sorting_copy_ptr));
+                fcs_encoded_state_buffer_t *const min_by_sorting_copy_ptr =
+                    fcs_compact_alloc_ptr(
+                        &(fcc_stage->does_min_by_sorting_exist->dict_allocator),
+                        sizeof(*min_by_sorting_copy_ptr));
 
                 *min_by_sorting_copy_ptr = min_by_sorting;
 
