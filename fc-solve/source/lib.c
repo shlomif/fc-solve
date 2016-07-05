@@ -1098,25 +1098,25 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
 #else
 #define NUM_ITERS_LIMITS 2
 #endif
+#define NUM_ITERS_LIMITS_MINUS_1 (NUM_ITERS_LIMITS - 1)
 #ifndef min
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
         {
-            fcs_int_limit_t limits[NUM_ITERS_LIMITS];
-            int limit_idx;
-            fcs_int_limit_t mymin, new_lim;
-
-            limits[0] = local_limit();
-            limits[1] = user->current_iterations_limit;
+            const fcs_int_limit_t limits[NUM_ITERS_LIMITS_MINUS_1] = {
+                user->current_iterations_limit
 #ifdef FCS_WITH_FLARES
-            limits[2] = PARAMETERIZED_LIMIT(flare_iters_quota);
+                ,
+                PARAMETERIZED_LIMIT(flare_iters_quota)
 #endif
+            };
 
-            mymin = limits[0];
-            for (limit_idx = 1; limit_idx < NUM_ITERS_LIMITS; limit_idx++)
+            fcs_int_limit_t mymin = local_limit();
+            for (size_t limit_idx = 0; limit_idx < NUM_ITERS_LIMITS_MINUS_1;
+                 limit_idx++)
             {
-                new_lim = limits[limit_idx];
+                const_AUTO(new_lim, limits[limit_idx]);
                 if (new_lim >= 0)
                 {
                     mymin = (mymin < 0) ? new_lim : min(mymin, new_lim);
