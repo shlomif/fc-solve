@@ -101,10 +101,10 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
     int virtual_freecell_len[12];
 #endif
     int i, j, move_idx;
-    fcs_move_t move, out_move, *next_move_ptr;
+    fcs_move_t move, out_move;
 
     const int num_back_end_moves = moves_seq->num_moves;
-    next_move_ptr = moves_seq->moves;
+    typeof(moves_seq->moves[0]) *next_move_ptr = moves_seq->moves - 1;
 
     ret->num_moves = 0;
     ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);
@@ -252,7 +252,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 break;
             }
         }
-        move = *(next_move_ptr++);
+        move = *(++next_move_ptr);
 
         {
             int src, dest;
