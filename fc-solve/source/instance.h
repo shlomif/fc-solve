@@ -379,8 +379,8 @@ typedef struct fc_solve_instance_struct fc_solve_instance_t;
 
 typedef struct
 {
-    int scan_idx;
-    int quota;
+    size_t scan_idx;
+    size_t quota;
 } fcs_prelude_item_t;
 
 struct fc_solve_hard_thread_struct

@@ -70,7 +70,6 @@ int main(int argc, char *argv[])
     /* char buffer[2048]; */
     int board_num;
     int start_board, end_board;
-    result_t *results, *curr_result;
     FILE *output_fh;
     int min_depth_for_scan2;
     fcs_int_limit_t iters_limit = 100000;
@@ -195,7 +194,8 @@ int main(int argc, char *argv[])
     FCS_PRINT_STARTED_AT(mytime);
     fflush(stdout);
 
-    results = SMALLOC(results, (size_t)(end_board - start_board + 1));
+    result_t *const results =
+        SMALLOC(results, (size_t)(end_board - start_board + 1));
 
     output_fh = fopen(output_filename, "wt");
 
@@ -227,6 +227,7 @@ int main(int argc, char *argv[])
             exit(-1);
         }
 
+        result_t *curr_result;
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)
         {

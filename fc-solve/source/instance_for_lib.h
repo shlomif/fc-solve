@@ -185,7 +185,7 @@ static GCC_INLINE void fc_solve__hard_thread__compile_prelude(
 
     while (!last_one)
     {
-        const int p_quota = atoi(p);
+        const size_t p_quota = (size_t)atol(p);
         while ((*p) && isdigit(*p))
         {
             p++;

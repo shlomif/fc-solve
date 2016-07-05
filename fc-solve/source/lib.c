@@ -866,7 +866,7 @@ static GCC_INLINE void calc_moves_seq(
     const_SLOT(num_moves, solution_moves);
     fcs_internal_move_t *next_move_ptr = solution_moves->moves + num_moves;
 
-    fcs_move_t *ret_moves = SMALLOC(ret_moves, num_moves);
+    fcs_move_t *const ret_moves = SMALLOC(ret_moves, num_moves);
 
     if (!ret_moves)
     {

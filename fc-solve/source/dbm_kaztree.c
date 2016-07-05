@@ -16,8 +16,8 @@ typedef struct
 #endif
 } dbm_t;
 
-void fc_solve_dbm_store_init(
-    fcs_dbm_store_t *store, const char *path GCC_UNUSED, void **recycle_bin_ptr)
+void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
+    const char *path GCC_UNUSED, void **const recycle_bin_ptr)
 {
     dbm_t *const db = SMALLOC1(db);
 
