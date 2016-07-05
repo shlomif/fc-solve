@@ -99,7 +99,7 @@ typedef enum {
 } flares_choice_type_t;
 #endif
 
-typedef int flare_iters_quota_t;
+typedef fcs_int_limit_t flare_iters_quota_t;
 
 static GCC_INLINE flare_iters_quota_t normalize_iters_quota(
     const flare_iters_quota_t i)
@@ -111,8 +111,8 @@ typedef struct
 {
     fcs_flare_item_t *flare;
     flares_plan_type_t type;
-    int count_iters;
     flare_iters_quota_t remaining_quota, initial_quota;
+    int count_iters;
 } flares_plan_item;
 
 #endif
