@@ -271,7 +271,8 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
 	# /home/shlomif/bin/cc  -O3 -DNDEBUG  -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program threaded_range_solver.o  -o $@ -rdynamic libfcs.a -lpthread -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS) $(LIB_LINK_POST_POST)
+	# $(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS) $(LIB_LINK_POST_POST)
+	/home/shlomif/bin/cc  -O3 -DNDEBUG  -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $< -o $@ -rdynamic libfcs.a -lpthread -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
 
 freecell-solver-fork-solve: forking_range_solver.o $(STATIC_LIB)
 	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
