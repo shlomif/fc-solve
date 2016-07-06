@@ -241,7 +241,7 @@ ifeq ($(DISABLE_PATSOLVE),0)
 endif
 
 $(STATIC_LIB): $(FCS_OBJECTS)
-	$(AR) r $@ $^
+	$(AR) qc $@ $^
 	$(RANLIB) $@
 
 $(FCS_SHARED_LIB): $(FCS_OBJECTS)
