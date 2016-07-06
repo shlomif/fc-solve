@@ -137,8 +137,8 @@ endif
 EXTRA_CFLAGS =
 CFLAGS += $(EXTRA_CFLAGS)
 
-LFLAGS := $(CFLAGS) -fwhole-program
-END_LFLAGS := -lm
+LFLAGS := -O3 -DNDEBUG -fvisibility=hidden -march=native -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program
+END_LFLAGS := -lm -Wl,-rpath,::::::::::::::::::::::::::
 
 # Toggle for profiling information.
 ifneq ($(PROFILE),0)
@@ -255,10 +255,9 @@ ifeq ($(COMPILER),tcc)
     LIB_LINK_PRE :=
 else
     # LIB_LINK_PRE := -Wl,-rpath,.
-	LIB_LINK_POST_POST := -Wl,-rpath,::::::::::::::::::::::::::
 endif
 
-LIB_LINK_PRE += -L.
+# LIB_LINK_PRE += -L.
 # LIB_LINK_POST := -lfreecell-solver
 LIB_LINK_POST := -rdynamic libfcs.a
 # LIB_LINK_POST := -l$(STATIC_LIB_BASE)
@@ -270,9 +269,8 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
-	# /home/shlomif/bin/cc  -O3 -DNDEBUG  -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program threaded_range_solver.o  -o $@ -rdynamic libfcs.a -lpthread -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
-	# $(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS) $(LIB_LINK_POST_POST)
-	/home/shlomif/bin/cc  -O3 -DNDEBUG  -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $< -o $@ -rdynamic libfcs.a -lpthread -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS)
+	# /home/shlomif/bin/cc  -O3 -DNDEBUG  -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $< -o $@ -rdynamic libfcs.a -lpthread -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
 
 freecell-solver-fork-solve: forking_range_solver.o $(STATIC_LIB)
 	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
