@@ -25,7 +25,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS :=   -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
+CFLAGS := -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
@@ -106,9 +106,9 @@ ifeq ($(GCC_COMPAT),1)
 	else ifeq ($(OPT_AND_DEBUG),1)
 		CFLAGS += -g -O2 $(MARCH_FLAG) $(LTO_FLAGS)
 	else
-		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS) # -fvisibility=hidden
+		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS) -fvisibility=hidden
 	endif
-	CFLAGS += -fPIC
+	# CFLAGS += -fPIC
 endif
 
 # The malloc library should appear as early as possible in the link stage
@@ -225,8 +225,7 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 -include $(DEP_FILES)
 
 %.o: $(SRC_DIR)/%.c
-	# $(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
-	/home/shlomif/bin/cc -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/B -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source/patsolve-shlomif/patsolve  -O3 -DNDEBUG  -std=gnu99 -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -o $@   -c $<
+	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $< $(END_OFLAGS)
 
 $(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
 	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
@@ -270,7 +269,6 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS)
-	# /home/shlomif/bin/cc  -O3 -DNDEBUG  -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $< -o $@ -rdynamic libfcs.a -lpthread -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
 
 freecell-solver-fork-solve: forking_range_solver.o $(STATIC_LIB)
 	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
