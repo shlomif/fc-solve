@@ -92,7 +92,7 @@ else
 endif
 
 ifeq ($(GCC_COMPAT),1)
-	CREATE_SHARED = $(CC) $(CFLAGS) -shared -fwhole-program
+	CREATE_SHARED = $(CC) -fPIC $(CFLAGS) -shared -fwhole-program
 	END_SHARED = $(END_LFLAGS)
 	ifeq ($(NATIVE_ARCH),1)
 		MARCH_FLAG := -march=native
@@ -244,8 +244,7 @@ $(STATIC_LIB): $(FCS_OBJECTS)
 	$(RANLIB) $@
 
 $(FCS_SHARED_LIB): $(FCS_OBJECTS)
-	/home/shlomif/bin/cc  -fPIC -O3 -DNDEBUG -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -shared -Wl,-soname,libfreecell-solver.so.0 -o $@ $(FCS_OBJECTS) -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
-	# $(CREATE_SHARED) $(LIB_LINK_PRE) $(TCMALLOC_LINK) -o $@ $^ $(END_SHARED)
+	$(CREATE_SHARED) $(LIB_LINK_PRE) $(TCMALLOC_LINK) -o $@ $^ $(END_SHARED)
 	if ! test -e libfreecell-solver.so ; then \
 		ln -s $@ libfreecell-solver.so ; \
 	fi
