@@ -226,7 +226,7 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 
 %.o: $(SRC_DIR)/%.c
 	# $(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
-	/home/shlomif/bin/cc -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/B -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source/patsolve-shlomif/patsolve  -O3 -DNDEBUG -fPIC   -std=gnu99 -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -o $@   -c $<
+	/home/shlomif/bin/cc -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/B -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source/patsolve-shlomif/patsolve  -O3 -DNDEBUG  -std=gnu99 -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -o $@   -c $<
 
 $(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
 	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
