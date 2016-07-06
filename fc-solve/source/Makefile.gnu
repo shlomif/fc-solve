@@ -25,7 +25,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -Wall -DFCS_DBM_USE_LIBAVL=1 -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
+CFLAGS :=  -Dfreecell_solver_EXPORTS -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
@@ -42,9 +42,10 @@ AR := ar
 RANLIB := ranlib
 
 ifeq ($(COMPILER),gcc)
-	CC = gcc
+	# CC = gcc
+	CC = /home/shlomif/bin/cc
 	GCC_COMPAT := 1
-	CFLAGS += -Werror=implicit-function-declaration -std=gnu99
+	CFLAGS += -std=gnu99
 else ifeq ($(COMPILER),clang)
 	CC = clang
 	GCC_COMPAT := 1
@@ -105,7 +106,7 @@ ifeq ($(GCC_COMPAT),1)
 	else ifeq ($(OPT_AND_DEBUG),1)
 		CFLAGS += -g -O2 $(MARCH_FLAG) $(LTO_FLAGS)
 	else
-		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS) -fvisibility=hidden
+		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS) # -fvisibility=hidden
 	endif
 	CFLAGS += -fPIC
 endif
@@ -224,7 +225,8 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 -include $(DEP_FILES)
 
 %.o: $(SRC_DIR)/%.c
-	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
+	# $(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
+	/home/shlomif/bin/cc   -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/B -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source -I/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source/patsolve-shlomif/patsolve  -O3 -DNDEBUG   -std=gnu99 -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -o $@  -c $<
 
 $(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
 	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
@@ -243,7 +245,8 @@ $(STATIC_LIB): $(FCS_OBJECTS)
 	$(RANLIB) $@
 
 $(FCS_SHARED_LIB): $(FCS_OBJECTS)
-	$(CREATE_SHARED) $(TCMALLOC_LINK) -o $@ $^ $(END_SHARED)
+	/home/shlomif/bin/cc  -fPIC -O3 -DNDEBUG -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -shared -Wl,-soname,libfreecell-solver.so.0 -o $@ $(FCS_OBJECTS) -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
+	# $(CREATE_SHARED) $(LIB_LINK_PRE) $(TCMALLOC_LINK) -o $@ $^ $(END_SHARED)
 	if ! test -e libfreecell-solver.so ; then \
 		ln -s $@ libfreecell-solver.so ; \
 	fi
@@ -252,27 +255,28 @@ ifeq ($(COMPILER),tcc)
     LIB_LINK_PRE :=
 else
     LIB_LINK_PRE := -Wl,-rpath,.
+    # LIB_LINK_PRE :=
 endif
 
 LIB_LINK_PRE += -L.
-# LIB_LINK_POST := -lfreecell-solver
-LIB_LINK_POST := -l$(STATIC_LIB_BASE)
+LIB_LINK_POST := -lfreecell-solver
+# LIB_LINK_POST := -l$(STATIC_LIB_BASE)
 
-fc-solve: main.o $(STATIC_LIB)
+fc-solve: main.o $(FCS_SHARED_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
-freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
+freecell-solver-range-parallel-solve: test_multi_parallel.o $(FCS_SHARED_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
-freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
+freecell-solver-multi-thread-solve: threaded_range_solver.o $(FCS_SHARED_LIB)
 	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
-freecell-solver-fork-solve: forking_range_solver.o $(STATIC_LIB)
+freecell-solver-fork-solve: forking_range_solver.o $(FCS_SHARED_LIB)
 	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
 FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o
 
-freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
+freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(FCS_SHARED_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FC_PRO_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
 
 FCC_SOLVER_OBJS = fcc_solver.o libavl/avl.o card.o meta_alloc.o state.o
