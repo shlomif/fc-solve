@@ -260,7 +260,7 @@ endif
 
 LIB_LINK_PRE += -L.
 # LIB_LINK_POST := -lfreecell-solver
-LIB_LINK_POST := libfcs.a
+LIB_LINK_POST := -rdynamic libfcs.a
 # LIB_LINK_POST := -l$(STATIC_LIB_BASE)
 
 fc-solve: main.o $(STATIC_LIB)
@@ -271,7 +271,7 @@ freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
 
 freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
 	# /home/shlomif/bin/cc  -O3 -DNDEBUG  -fvisibility=hidden -march=corei7-avx -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program threaded_range_solver.o  -o $@ -rdynamic libfcs.a -lpthread -lm -ltcmalloc -Wl,-rpath,::::::::::::::::::::::::::
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< -rdynamic -lpthread $(TCMALLOC_LINK) $(LIB_LINK_POST) $(END_LFLAGS) $(LIB_LINK_POST_POST)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS) $(LIB_LINK_POST_POST)
 
 freecell-solver-fork-solve: forking_range_solver.o $(STATIC_LIB)
 	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
