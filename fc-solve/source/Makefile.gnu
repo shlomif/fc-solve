@@ -42,8 +42,7 @@ AR := ar
 RANLIB := ranlib
 
 ifeq ($(COMPILER),gcc)
-	# CC = gcc
-	CC = /home/shlomif/bin/cc
+	CC = gcc
 	GCC_COMPAT := 1
 	CFLAGS += -std=gnu99
 else ifeq ($(COMPILER),clang)
