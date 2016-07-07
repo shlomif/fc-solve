@@ -1171,12 +1171,13 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
             }
         }
 
-        if (ret == FCS_STATE_WAS_SOLVED)
+        const fcs_bool_t was_solved = (ret == FCS_STATE_WAS_SOLVED);
+        if (was_solved)
         {
             instance->solving_soft_thread = soft_thread;
         }
 
-        if ((ret == FCS_STATE_WAS_SOLVED) ||
+        if (was_solved ||
             ((ret == FCS_STATE_SUSPEND_PROCESS) &&
                 /* There's a limit to the scan only
                  * if max_num_checked_states is greater than 0 */
