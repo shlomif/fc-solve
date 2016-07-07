@@ -880,9 +880,11 @@ extern void fc_solve_sfs_check_state_end(
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
     const fcs_bool_t scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
 #endif
     fcs_kv_state_t existing_state;
 
@@ -909,12 +911,13 @@ extern void fc_solve_sfs_check_state_end(
             calc_real_depth, FCS_STATE_kv_to_collectible(&existing_state));
 #endif
 
-        /* Re-parent the existing state to this one.
-         *
-         * What it means is that if the depth of the state if it
-         * can be reached from this one is lower than what it
-         * already have, then re-assign its parent to this state.
-         * */
+/* Re-parent the existing state to this one.
+ *
+ * What it means is that if the depth of the state if it
+ * can be reached from this one is lower than what it
+ * already have, then re-assign its parent to this state.
+ * */
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
             (kv_calc_depth(&existing_state) >
                 kv_calc_depth(raw_ptr_state_raw) + 1))
@@ -946,6 +949,7 @@ extern void fc_solve_sfs_check_state_end(
             existing_state_val->depth = ptr_state->depth + 1;
 #endif
         }
+#endif
 
         fc_solve_derived_states_list_add_state(derived_states_list,
             FCS_STATE_kv_to_collectible(&existing_state), state_context_value);

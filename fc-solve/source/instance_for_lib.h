@@ -132,11 +132,13 @@ static GCC_INLINE void fc_solve_alloc_instance(
         /* Make the 1 the default, because otherwise scans will not cooperate
          * with one another. */
         .FCS_RUNTIME_CALC_REAL_DEPTH = FALSE,
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
         .FCS_RUNTIME_TO_REPARENT_STATES_REAL = FALSE,
+        .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE,
+#endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
         .FCS_RUNTIME_SCANS_SYNERGY = TRUE,
 #endif
-        .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE,
 #ifdef FCS_WITH_MOVES
         .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE,
         .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE,
@@ -589,8 +591,10 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
         }
     }
 
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
     STRUCT_SET_FLAG_TO(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL,
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO));
+#endif
 
     return;
 }
@@ -837,7 +841,9 @@ static GCC_INLINE int fc_solve_optimize_solution(
         fc_solve_trace_solution(instance);
     }
 
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
+#endif
 
     if (!instance->is_optimization_st)
     {
