@@ -8,13 +8,8 @@ OPT_FOR_SIZE = 0
 OPT_AND_DEBUG = 0
 NATIVE_ARCH = 1
 
+# Can be any of clang, gcc, icc, lcc, pcc, tcc or tendra
 COMPILER = gcc
-# COMPILER = clang
-# COMPILER = icc
-# COMPILER = lcc
-# COMPILER = pcc
-# COMPILER = tcc
-# COMPILER = tendra
 
 ifeq ($(SRC_DIR),)
 	SRC_DIR := .
@@ -149,25 +144,12 @@ ifneq ($(PROFILE),0)
 	endif
 endif
 
-DFLAGS = $(CFLAGS) -DDEBUG
-END_DLFLAGS = $(END_LFLAGS)
-
-DLFLAGS = $(LFLAGS)
-
 FCS_SHARED_LIB = libfreecell-solver.so.0
 TARGETS = fc-solve $(FCS_SHARED_LIB) \
           freecell-solver-range-parallel-solve \
           freecell-solver-multi-thread-solve \
           freecell-solver-fork-solve \
           freecell-solver-fc-pro-range-solve
-
-ifeq ($(EXIT),1)
-
-error:
-	@echo "Error! WHICH_STATE_ALLOCATION must be defined to a legal value"
-	@echo $(LFLAGS)
-
-else
 
 all: $(TARGETS)
 
@@ -278,8 +260,6 @@ fcc_fc_solver: $(FCC_SOLVER_OBJS)
 
 clean:
 	rm -f *.o libavl/*.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
-
-endif
 
 %.show:
 	@echo "$* = $($*)"
