@@ -4,7 +4,6 @@ WITH_TRACES = 0
 FREECELL_ONLY = 1
 DISABLE_PATSOLVE = 1
 DISABLE_SIMPLE_SIMON := 0
-WITH_LIBRB = 0
 OPT_FOR_SIZE = 0
 OPT_AND_DEBUG = 0
 NATIVE_ARCH = 1
@@ -148,10 +147,6 @@ ifneq ($(PROFILE),0)
 		# END_LFLAGS := -pg -lc_p -lm_p -static-libgcc
 		END_LFLAGS := -pg -lm
 	endif
-endif
-
-ifneq ($(WITH_LIBRB),0)
-	END_LFLAGS += -lredblack
 endif
 
 DFLAGS = $(CFLAGS) -DDEBUG
