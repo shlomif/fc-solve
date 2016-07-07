@@ -136,7 +136,7 @@ endif
 EXTRA_CFLAGS =
 CFLAGS += $(EXTRA_CFLAGS)
 
-LFLAGS := -O3 -DNDEBUG -fvisibility=hidden -march=native -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program
+LFLAGS := -O3 -DNDEBUG -fvisibility=hidden -march=native -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $(EXTRA_CFLAGS)
 END_LFLAGS := -lm -Wl,-rpath,::::::::::::::::::::::::::
 
 # Toggle for profiling information.
