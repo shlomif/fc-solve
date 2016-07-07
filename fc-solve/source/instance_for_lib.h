@@ -129,9 +129,11 @@ static GCC_INLINE void fc_solve_alloc_instance(
         .solution_moves = (fcs_move_stack_t){.moves = NULL, .num_moves = 0},
 #endif
         .num_hard_threads_finished = 0,
-        /* Make the 1 the default, because otherwise scans will not cooperate
-         * with one another. */
+/* Make the 1 the default, because otherwise scans will not cooperate
+ * with one another. */
+#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
         .FCS_RUNTIME_CALC_REAL_DEPTH = FALSE,
+#endif
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
         .FCS_RUNTIME_TO_REPARENT_STATES_REAL = FALSE,
         .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE,

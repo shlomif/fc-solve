@@ -484,7 +484,9 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
     const fcs_bool_t is_simple_simon = instance->is_simple_simon;
 #endif
 #ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
+#endif
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
     const fcs_bool_t scans_synergy =
@@ -878,7 +880,9 @@ extern void fc_solve_sfs_check_state_end(
     const_SLOT(hard_thread, soft_thread);
     const_AUTO(instance, HT_INSTANCE(hard_thread));
 #ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
+#endif
 #endif
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE

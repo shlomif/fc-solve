@@ -167,6 +167,7 @@ SET (FCS_DISABLE_MOVES_TRACKING "" CACHE BOOL "Disable the moves-tracking functi
 SET (FCS_DISABLE_STATE_VALIDITY_CHECK "" CACHE BOOL "Disable the state validity check. May make things faster but breaks some compatibilty. Enable at your own risk.")
 SET (FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE "" CACHE BOOL "Make scan synergy as always true. Reduces functionality but may make things faster.")
 SET (FCS_HARD_CODE_REPARENT_STATES_AS_FALSE "" CACHE BOOL "Make reparent states as always false. Reduces functionality but may make things faster.")
+SET (FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE "" CACHE BOOL "Make calc-real-depth as always false. Reduces functionality but may make things faster.")
 SET (FCS_WITHOUT_EXPORTED_RESUME_SOLUTION "" CACHE BOOL "Don't export resume_solution. Breaks compat but may make things faseer. Enable at your own risk.")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))

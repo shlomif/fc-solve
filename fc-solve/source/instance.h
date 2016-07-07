@@ -808,20 +808,19 @@ struct fc_solve_instance_struct
     DB *db;
 #endif
 
-    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH
+#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
+    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH;
+#endif
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
-        ,
-        FCS_RUNTIME_TO_REPARENT_STATES_REAL
+    fcs_bool_t FCS_RUNTIME_TO_REPARENT_STATES_REAL;
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-        ,
-        FCS_RUNTIME_SCANS_SYNERGY
+    fcs_bool_t FCS_RUNTIME_SCANS_SYNERGY;
 #endif
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
-        ,
-        FCS_RUNTIME_TO_REPARENT_STATES_PROTO
+    fcs_bool_t FCS_RUNTIME_TO_REPARENT_STATES_PROTO;
 #endif
-        ;
+    ;
 #ifdef FCS_WITH_MOVES
     fcs_bool_t FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH,
         FCS_RUNTIME_IN_OPTIMIZATION_THREAD, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
@@ -1188,11 +1187,13 @@ extern void fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
     fc_solve_soft_thread_t *const soft_thread);
 #endif
 
+#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 static GCC_INLINE fcs_bool_t fcs_get_calc_real_depth(
     const fc_solve_instance_t *const instance)
 {
     return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 }
+#endif
 
 #ifdef __cplusplus
 }

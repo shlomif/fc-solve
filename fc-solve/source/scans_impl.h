@@ -395,7 +395,8 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         }                                                                      \
     }
 
-#ifndef FCS_WITHOUT_DEPTH_FIELD
+#if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
+    !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
 /*
  * The calculate_real_depth() inline function traces the path of the state up
  * to the original state, and thus calculates its real depth.
@@ -779,7 +780,9 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 #endif
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
+#endif
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
     const fcs_bool_t scans_synergy =

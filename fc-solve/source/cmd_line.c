@@ -686,10 +686,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             break;
 
         case FCS_OPT_CALC_REAL_DEPTH: /* STRINGS=--calc-real-depth; */
-        {
+#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
             freecell_solver_user_set_calc_real_depth(instance, 1);
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_ST_NAME: /* STRINGS=--st-name; */
         {
