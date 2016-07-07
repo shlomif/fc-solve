@@ -2396,10 +2396,12 @@ void DLLEXPORT freecell_solver_user_set_reparent_states(
 void DLLEXPORT freecell_solver_user_set_scans_synergy(
     void *const api_instance, const int synergy)
 {
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(
         &(user->active_flare->obj), FCS_RUNTIME_SCANS_SYNERGY, synergy);
+#endif
 }
 
 int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)

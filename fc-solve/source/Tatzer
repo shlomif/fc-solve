@@ -25,6 +25,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'disable-patsolve' => 'FCS_DISABLE_PATSOLVE',
     'disable-simple-simon' => 'FCS_DISABLE_SIMPLE_SIMON',
     'fc-only' => 'FCS_FREECELL_ONLY',
+    'hard-code-scans-synergy' => 'FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE',
     'omit-frame' => 'OPTIMIZATION_OMIT_FRAME_POINTER',
     'rcs' => 'FCS_ENABLE_RCS_STATES',
     'secondary' => 'FCS_ENABLE_SECONDARY_HASH_VALUE',

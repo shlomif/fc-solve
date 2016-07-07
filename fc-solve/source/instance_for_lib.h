@@ -133,7 +133,9 @@ static GCC_INLINE void fc_solve_alloc_instance(
          * with one another. */
         .FCS_RUNTIME_CALC_REAL_DEPTH = FALSE,
         .FCS_RUNTIME_TO_REPARENT_STATES_REAL = FALSE,
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
         .FCS_RUNTIME_SCANS_SYNERGY = TRUE,
+#endif
         .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE,
 #ifdef FCS_WITH_MOVES
         .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE,
@@ -1150,12 +1152,13 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
             {
                 instance->num_hard_threads_finished++;
             }
-            /*
-             * Check if this thread is a complete scan and if so,
-             * terminate the search. Note that if the scans synergy is set,
-             * then we may still need to continue running the other threads
-             * which may have blocked some positions / states in the graph.
-             * */
+/*
+ * Check if this thread is a complete scan and if so,
+ * terminate the search. Note that if the scans synergy is set,
+ * then we may still need to continue running the other threads
+ * which may have blocked some positions / states in the graph.
+ * */
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
             if (STRUCT_QUERY_FLAG(
                     soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN) &&
                 (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY)))
@@ -1163,6 +1166,7 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
                 return FCS_STATE_IS_NOT_SOLVEABLE;
             }
             else
+#endif
             {
                 /*
                  * Else, make sure ret is something more sensible

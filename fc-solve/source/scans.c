@@ -486,8 +486,10 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
     const fcs_bool_t scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
     const int soft_thread_id = soft_thread->id;
     const fcs_bool_t is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
@@ -749,7 +751,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
             {
                 if (is_a_complete_scan)
                 {
-                    mark_as_dead_end(scans_synergy, PTR_STATE);
+                    MARK_AS_DEAD_END(PTR_STATE);
                 }
             }
         }
@@ -878,8 +880,10 @@ extern void fc_solve_sfs_check_state_end(
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
     const fcs_bool_t scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
     fcs_kv_state_t existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
@@ -933,7 +937,7 @@ extern void fc_solve_sfs_check_state_end(
                 if ((--(FCS_S_NUM_ACTIVE_CHILDREN(
                         existing_state_val->parent))) == 0)
                 {
-                    mark_as_dead_end(scans_synergy, existing_state_val->parent);
+                    MARK_AS_DEAD_END(existing_state_val->parent);
                 }
                 ptr_state->num_active_children++;
             }

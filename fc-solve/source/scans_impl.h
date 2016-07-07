@@ -535,38 +535,48 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
  *
  * */
 
-static GCC_INLINE void mark_as_dead_end(const fcs_bool_t scans_synergy,
+static GCC_INLINE void mark_as_dead_end__proto(
     fcs_collectible_state_t *const ptr_state_input)
 {
-    if (scans_synergy)
+    fcs_collectible_state_t *temp_state = (ptr_state_input);
+    /* Mark as a dead end */
+    FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
+    temp_state = FCS_S_PARENT(temp_state);
+    if (temp_state != NULL)
     {
-        fcs_collectible_state_t *temp_state = (ptr_state_input);
-        /* Mark as a dead end */
-        FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
-        temp_state = FCS_S_PARENT(temp_state);
-        if (temp_state != NULL)
+        /* Decrease the refcount of the state */
+        (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;
+        while ((FCS_S_NUM_ACTIVE_CHILDREN(temp_state) == 0) &&
+               (FCS_S_VISITED(temp_state) & FCS_VISITED_ALL_TESTS_DONE))
         {
-            /* Decrease the refcount of the state */
-            (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;
-            while ((FCS_S_NUM_ACTIVE_CHILDREN(temp_state) == 0) &&
-                   (FCS_S_VISITED(temp_state) & FCS_VISITED_ALL_TESTS_DONE))
+            /* Mark as dead end */
+            FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
+            /* Go to its parent state */
+            temp_state = FCS_S_PARENT(temp_state);
+            if (temp_state == NULL)
             {
-                /* Mark as dead end */
-                FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
-                /* Go to its parent state */
-                temp_state = FCS_S_PARENT(temp_state);
-                if (temp_state == NULL)
-                {
-                    break;
-                }
-                /* Decrease the refcount */
-                (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;
+                break;
             }
+            /* Decrease the refcount */
+            (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;
         }
     }
-
-    return;
 }
+
+#ifdef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
+#define MARK_AS_DEAD_END(state)                                                \
+    {                                                                          \
+        mark_as_dead_end__proto(state);                                        \
+    }
+#else
+#define MARK_AS_DEAD_END(state)                                                \
+    {                                                                          \
+        if (scans_synergy)                                                     \
+        {                                                                      \
+            mark_as_dead_end__proto(state);                                    \
+        }                                                                      \
+    }
+#endif
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define BUMP_NUM_CHECKED_STATES__HT()
@@ -771,8 +781,10 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 #ifndef FCS_WITHOUT_DEPTH_FIELD
     const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
     const fcs_bool_t scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
 
     const fcs_bool_t is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
@@ -903,7 +915,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 if (is_a_complete_scan)
                 {
                     FCS_S_VISITED(PTR_STATE) |= FCS_VISITED_ALL_TESTS_DONE;
-                    mark_as_dead_end(scans_synergy, PTR_STATE);
+                    MARK_AS_DEAD_END(PTR_STATE);
                 }
 
                 if (unlikely(--DEPTH() < 0))
