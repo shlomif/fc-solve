@@ -128,7 +128,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__init_card_states(
     }
 }
 
-static void fc_solve_debondt_delta_stater_release(
+static GCC_INLINE void fc_solve_debondt_delta_stater_release(
     fc_solve_debondt_delta_stater_t *const self)
 {
     fc_solve_var_base_reader_release(&(self->r));

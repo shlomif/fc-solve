@@ -485,6 +485,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 #endif
     for (size_t i = 0; i < num_threads; i++)
     {
+        threads[i].thread.instance = instance;
         fc_solve_delta_stater_init(&(threads[i].thread.delta_stater),
             &(init_state->s), STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY

@@ -140,7 +140,7 @@ static GCC_INLINE void instance__inspect_new_state(
     {
         kv.key = &(derived_list->state.s);
         kv.val = &(derived_list->state.info);
-        fc_solve_canonize_state(&kv, FREECELLS_NUM, STACKS_NUM);
+        fc_solve_canonize_state(kv.key, FREECELLS_NUM, STACKS_NUM);
 
         if (!lookup_state(
                 &(instance->store), &(instance->cache), &(derived_list->state)))
@@ -271,12 +271,14 @@ static GCC_INLINE void instance__print_coords_to_log(
 
         fcs_state_locs_struct_t locs;
         fc_solve_init_locs(&locs);
-        char *const state_as_string =
-            fc_solve_state_as_string(&(end_stack_item->curr_state->s), &locs,
-                FREECELLS_NUM, STACKS_NUM, DECKS_NUM, TRUE, FALSE, TRUE);
+        char state_as_string[2000];
+        fc_solve_state_as_string(state_as_string,
+            &(end_stack_item->curr_state->s),
+            &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
+                PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
+            FALSE PASS_T(TRUE));
         printf("Found State=<<'STATE'\n%s\nSTATE\n\n", state_as_string);
         fflush(stdout);
-        free(state_as_string);
     }
 #endif
 
