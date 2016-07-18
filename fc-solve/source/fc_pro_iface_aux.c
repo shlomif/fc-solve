@@ -17,6 +17,16 @@ static GCC_INLINE char freecell_to_char(const int fc_idx)
     return 'a' + Cvtf89(fc_idx);
 }
 
+static GCC_INLINE char dest_fc_to_char(const fcs_extended_move_t move)
+{
+    return freecell_to_char(fcs_move_get_dest_freecell(move.move));
+}
+
+static GCC_INLINE char src_fc_to_char(const fcs_extended_move_t move)
+{
+    return freecell_to_char(fcs_move_get_src_freecell(move.move));
+}
+
 char *fc_solve_moves_processed_render_move(
     const fcs_extended_move_t move, char *const string)
 {
@@ -38,20 +48,17 @@ char *fc_solve_moves_processed_render_move(
         break;
 
     case FCS_MOVE_TYPE_FREECELL_TO_STACK:
-        sprintf(string, "%c%i",
-            freecell_to_char(fcs_move_get_src_freecell(move.move)),
+        sprintf(string, "%c%i", src_fc_to_char(move),
             1 + fcs_move_get_dest_stack(move.move));
         break;
 
     case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
-        sprintf(string, "%c%c",
-            freecell_to_char(fcs_move_get_src_freecell(move.move)),
-            freecell_to_char(fcs_move_get_dest_freecell(move.move)));
+        sprintf(string, "%c%c", src_fc_to_char(move), dest_fc_to_char(move));
         break;
 
     case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         sprintf(string, "%i%c", 1 + fcs_move_get_src_stack(move.move),
-            freecell_to_char(fcs_move_get_dest_freecell(move.move)));
+            dest_fc_to_char(move));
         break;
 
     case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
@@ -59,8 +66,7 @@ char *fc_solve_moves_processed_render_move(
         break;
 
     case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
-        sprintf(string, "%ch",
-            freecell_to_char(fcs_move_get_src_freecell(move.move)));
+        sprintf(string, "%ch", src_fc_to_char(move));
         break;
 
     case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
