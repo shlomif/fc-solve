@@ -38,29 +38,13 @@ char *fc_solve_moves_processed_render_move(
         break;
 
     case FCS_MOVE_TYPE_FREECELL_TO_STACK:
-        sprintf(string, "%c%i", src_fc_to_char(move),
-            1 + fcs_move_get_dest_stack(move.move));
-        break;
-
     case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
-        sprintf(string, "%c%c", src_fc_to_char(move), dest_fc_to_char(move));
-        break;
-
     case FCS_MOVE_TYPE_STACK_TO_FREECELL:
-        sprintf(string, "%i%c", 1 + fcs_move_get_src_stack(move.move),
-            dest_fc_to_char(move));
-        break;
-
     case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
-        sprintf(string, "%ih", 1 + fcs_move_get_src_stack(move.move));
-        break;
-
     case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
-        sprintf(string, "%ch", src_fc_to_char(move));
-        break;
-
     case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
-        sprintf(string, "%ih", fcs_move_get_src_stack(move.move));
+        fc_solve_move_to_string_w_state(
+            string, NULL, move.move, FC_SOLVE__STANDARD_NOTATION_EXTENDED);
         break;
 
     default:
