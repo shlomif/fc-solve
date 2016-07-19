@@ -7,16 +7,6 @@
 #include "rinutils.h"
 #include "move.h"
 
-static GCC_INLINE char dest_fc_to_char(const fcs_extended_move_t move)
-{
-    return fc_solve__freecell_to_char(fcs_move_get_dest_freecell(move.move));
-}
-
-static GCC_INLINE char src_fc_to_char(const fcs_extended_move_t move)
-{
-    return fc_solve__freecell_to_char(fcs_move_get_src_freecell(move.move));
-}
-
 char *fc_solve_moves_processed_render_move(
     const fcs_extended_move_t move, char *const string)
 {
