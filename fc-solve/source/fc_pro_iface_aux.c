@@ -4,27 +4,17 @@
 #include <assert.h>
 
 #include "fc_pro_iface_pos.h"
-
 #include "rinutils.h"
-
-static GCC_INLINE int Cvtf89(const int fcn)
-{
-    return (fcn >= 7) ? (fcn + 3) : fcn;
-}
-
-static GCC_INLINE char freecell_to_char(const int fc_idx)
-{
-    return 'a' + Cvtf89(fc_idx);
-}
+#include "move.h"
 
 static GCC_INLINE char dest_fc_to_char(const fcs_extended_move_t move)
 {
-    return freecell_to_char(fcs_move_get_dest_freecell(move.move));
+    return fc_solve__freecell_to_char(fcs_move_get_dest_freecell(move.move));
 }
 
 static GCC_INLINE char src_fc_to_char(const fcs_extended_move_t move)
 {
-    return freecell_to_char(fcs_move_get_src_freecell(move.move));
+    return fc_solve__freecell_to_char(fcs_move_get_src_freecell(move.move));
 }
 
 char *fc_solve_moves_processed_render_move(

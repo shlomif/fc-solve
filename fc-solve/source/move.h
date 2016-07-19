@@ -265,14 +265,15 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #undef FCS_S_FC_LOCS
 #undef FCS_S_STACK_LOCS
 
-static GCC_INLINE int fc_solve_move__convert_freecell_num(int fcn)
+static GCC_INLINE int fc_solve_move__convert_freecell_num(const int fcn)
 {
-    if (fcn >= 7)
-        return (fcn + 3);
-    else
-        return fcn;
+    return (fcn >= 7) ? (fcn + 3) : fcn;
 }
 
+static GCC_INLINE char fc_solve__freecell_to_char(const int fc_idx)
+{
+    return 'a' + fc_solve_move__convert_freecell_num(fc_idx);
+}
 static GCC_INLINE void fc_solve_move_to_string_w_state(char *const string,
     fcs_state_keyval_pair_t *const state, const fcs_move_t move,
     const int standard_notation)
@@ -310,8 +311,7 @@ static GCC_INLINE void fc_solve_move_to_string_w_state(char *const string,
         if (standard_notation)
         {
             sprintf(string, "%c%i",
-                ('a' + fc_solve_move__convert_freecell_num(
-                           fcs_move_get_src_freecell(move))),
+                fc_solve__freecell_to_char(fcs_move_get_src_freecell(move)),
                 1 + fcs_move_get_dest_stack(move));
         }
         else
@@ -326,10 +326,8 @@ static GCC_INLINE void fc_solve_move_to_string_w_state(char *const string,
         if (standard_notation)
         {
             sprintf(string, "%c%c",
-                ((char)('a' + (char)fc_solve_move__convert_freecell_num(
-                                  fcs_move_get_src_freecell(move)))),
-                ((char)('a' + (char)fc_solve_move__convert_freecell_num(
-                                  fcs_move_get_dest_freecell(move)))));
+                fc_solve__freecell_to_char(fcs_move_get_src_freecell(move)),
+                fc_solve__freecell_to_char(fcs_move_get_dest_freecell(move)));
         }
         else
         {
@@ -344,8 +342,7 @@ static GCC_INLINE void fc_solve_move_to_string_w_state(char *const string,
         if (standard_notation)
         {
             sprintf(string, "%i%c", 1 + fcs_move_get_src_stack(move),
-                ('a' + fc_solve_move__convert_freecell_num(
-                           fcs_move_get_dest_freecell(move))));
+                fc_solve__freecell_to_char(fcs_move_get_dest_freecell(move)));
         }
         else
         {
@@ -371,9 +368,8 @@ static GCC_INLINE void fc_solve_move_to_string_w_state(char *const string,
     case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
         if (standard_notation)
         {
-            sprintf(
-                string, "%ch", ('a' + fc_solve_move__convert_freecell_num(
-                                          fcs_move_get_src_freecell(move))));
+            sprintf(string, "%ch",
+                fc_solve__freecell_to_char(fcs_move_get_src_freecell(move)));
         }
         else
         {
