@@ -7,7 +7,7 @@
 #include "rinutils.h"
 #include "move.h"
 
-char *fc_solve_moves_processed_render_move(
+void fc_solve_moves_processed_render_move(
     const fcs_extended_move_t move, char *const string)
 {
     switch (fcs_move_get_type(move.move))
@@ -41,5 +41,4 @@ char *fc_solve_moves_processed_render_move(
         string[0] = '\0';
         break;
     }
-    return string + strlen(string);
 }

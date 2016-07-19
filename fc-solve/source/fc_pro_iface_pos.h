@@ -49,11 +49,11 @@ typedef struct
     fcs_extended_move_t *moves;
 } fcs_moves_processed_t;
 
-extern void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
+void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
     fcs_state_keyval_pair_t *const orig, const int num_freecells,
     const fcs_moves_sequence_t *const moves_seq);
 
-char *fc_solve_moves_processed_render_move(
+void fc_solve_moves_processed_render_move(
     fcs_extended_move_t move, char *string);
 
 static GCC_INLINE int fc_solve_moves_processed_get_moves_left(
