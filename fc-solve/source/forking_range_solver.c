@@ -85,8 +85,8 @@ typedef struct
 
 typedef struct
 {
-    int board_num;
-    int quota_end;
+    long long board_num;
+    long long quota_end;
 } request_t;
 
 typedef struct
@@ -165,8 +165,8 @@ static GCC_INLINE int worker_func(const worker_t w, void *const instance)
     return 0;
 }
 
-static GCC_INLINE void write_request(const int end_board,
-    const int board_num_step, int *const next_board_num_ptr,
+static GCC_INLINE void write_request(const long long end_board,
+    const long long board_num_step, long long *const next_board_num_ptr,
     const worker_t *const worker)
 {
     request_t request;
@@ -193,8 +193,8 @@ static GCC_INLINE void write_request(const int end_board,
 
 static GCC_INLINE void transaction(const worker_t *const worker,
     const int read_fd, int *const total_num_finished_boards,
-    const int end_board, const int board_num_step,
-    int *const next_board_num_ptr)
+    const long long end_board, const long long board_num_step,
+    long long *const next_board_num_ptr)
 {
     response_t response;
     if (read(read_fd, &response, sizeof(response)) <
@@ -220,9 +220,9 @@ int main(int argc, char *argv[])
         print_help();
         exit(-1);
     }
-    int next_board_num = atoi(argv[arg++]);
-    const int end_board = atoi(argv[arg++]);
-    const int stop_at = atoi(argv[arg++]);
+    long long next_board_num = atoll(argv[arg++]);
+    const long long end_board = atoll(argv[arg++]);
+    const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
         fprintf(stderr,
@@ -371,9 +371,10 @@ int main(int argc, char *argv[])
 #endif
 
         int total_num_finished_boards = 0;
-        const int total_num_boards_to_check = end_board - next_board_num + 1;
+        const long long total_num_boards_to_check =
+            end_board - next_board_num + 1;
 
-        int next_milestone = next_board_num + stop_at;
+        long long next_milestone = next_board_num + stop_at;
         next_milestone -= (next_milestone % stop_at);
 
         for (size_t idx = 0; idx < num_workers; idx++)

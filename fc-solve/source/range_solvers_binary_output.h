@@ -87,7 +87,7 @@ static GCC_INLINE void bin_close(binary_output_t *bin)
     }
 }
 
-static GCC_INLINE fcs_bool_t read_int(FILE *const f, int *const dest)
+static GCC_INLINE fcs_bool_t read_int(FILE *const f, long long *const dest)
 {
     unsigned char buffer[SIZE_INT];
     if (fread(buffer, 1, SIZE_INT, f) != SIZE_INT)
@@ -100,7 +100,7 @@ static GCC_INLINE fcs_bool_t read_int(FILE *const f, int *const dest)
     return FALSE;
 }
 
-static void read_int_wrapper(FILE *const in, int *const var)
+static void read_int_wrapper(FILE *const in, long long *const var)
 {
     if (read_int(in, var))
     {
@@ -111,7 +111,7 @@ static void read_int_wrapper(FILE *const in, int *const var)
 }
 
 static GCC_INLINE void bin_init(binary_output_t *const bin,
-    int *const start_board_ptr, int *const end_board_ptr,
+    long long *const start_board_ptr, long long *const end_board_ptr,
     fcs_int_limit_t *const total_iterations_limit_per_board_ptr)
 {
     if (bin->filename)
@@ -142,7 +142,7 @@ static GCC_INLINE void bin_init(binary_output_t *const bin,
             read_int_wrapper(in, start_board_ptr);
             read_int_wrapper(in, end_board_ptr);
             {
-                int val;
+                long long val;
                 read_int_wrapper(in, &val);
                 *total_iterations_limit_per_board_ptr = (fcs_int_limit_t)val;
             }

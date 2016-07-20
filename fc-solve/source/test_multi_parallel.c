@@ -54,9 +54,9 @@ int main(int argc, char *argv[])
         print_help();
         exit(-1);
     }
-    int start_board = atoi(argv[arg++]);
-    int end_board = atoi(argv[arg++]);
-    const int stop_at = atoi(argv[arg++]);
+    long long start_board = atoll(argv[arg++]);
+    long long end_board = atoll(argv[arg++]);
+    const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
         fprintf(stderr,
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
             instance, total_iterations_limit_per_board);
     }
 
-    for (int board_num = start_board; board_num <= end_board; board_num++)
+    for (long long board_num = start_board; board_num <= end_board; board_num++)
     {
         fcs_state_string_t state_string;
         get_board(board_num, state_string);
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 
         if (solutions_directory)
         {
-            sprintf(solution_filename, "%s%09d.sol", solutions_directory,
+            sprintf(solution_filename, "%s%09lld.sol", solutions_directory,
                 board_num);
             FILE *const output_fh = fopen(solution_filename, "wt");
             if (!output_fh)

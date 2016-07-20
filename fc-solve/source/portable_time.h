@@ -73,13 +73,13 @@ typedef struct
 
 #define FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num)                         \
     FCS_GET_TIME(mytime);                                                      \
-    printf("Intractable Board No. %i at %li.%.6li\n", board_num,               \
-        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
+    printf("Intractable Board No. " FCS_INT64_FORMAT " at %li.%.6li\n",        \
+        board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
 
 #define FCS_PRINT_UNSOLVED_BOARD(mytime, board_num)                            \
     FCS_GET_TIME(mytime);                                                      \
-    printf("Unsolved Board No. %i at %li.%.6li\n", board_num,                  \
-        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
+    printf("Unsolved Board No. " FCS_INT64_FORMAT " at %li.%.6li\n",           \
+        board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
 
 #define FCS_PRINT_STARTED_AT(mytime)                                           \
     FCS_GET_TIME(mytime);                                                      \
@@ -88,7 +88,7 @@ typedef struct
 
 #define FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters)            \
     FCS_GET_TIME(mytime);                                                      \
-    printf(("Reached Board No. %i at %li.%.6li "                               \
+    printf(("Reached Board No. " FCS_INT64_FORMAT " at %li.%.6li "             \
             "(total_num_iters=" FCS_INT64_FORMAT ")\n"),                       \
         board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime),        \
         total_num_iters);

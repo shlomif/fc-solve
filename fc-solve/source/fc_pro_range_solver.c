@@ -87,9 +87,9 @@ int main(int argc, char *argv[])
         print_help();
         exit(-1);
     }
-    int start_board = atoi(argv[arg++]);
-    int end_board = atoi(argv[arg++]);
-    const int stop_at = atoi(argv[arg++]);
+    long long start_board = atoll(argv[arg++]);
+    long long end_board = atoll(argv[arg++]);
+    const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
         fprintf(stderr,
@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
 
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
-    for (int board_num = start_board; board_num <= end_board; board_num++)
+    for (long long board_num = start_board; board_num <= end_board; board_num++)
     {
         fcs_state_keyval_pair_t pos;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
         {
             char command[1000];
 
-            sprintf(command, "make_pysol_freecell_board.py -F -t %d %s",
+            sprintf(command, "make_pysol_freecell_board.py -F -t %lld %s",
                 board_num, variant);
 
             FILE *const from_make_pysol = popen(command, "r");

@@ -62,7 +62,7 @@ static void print_help(void)
 
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 
-static int next_board_num;
+static long long next_board_num;
 static pthread_mutex_t next_board_num_lock;
 
 typedef struct
@@ -70,8 +70,8 @@ typedef struct
     char **argv;
     int argc;
     int arg;
-    int stop_at;
-    int past_end_board;
+    long long stop_at;
+    long long past_end_board;
     int board_num_step;
     int update_total_num_iters_threshold;
     fcs_int_limit_t total_iterations_limit_per_board;
@@ -95,7 +95,7 @@ static void *worker_thread(void *GCC_UNUSED void_context)
 
     fcs_portable_time_t mytime;
     fcs_int_limit_t total_num_iters_temp = 0;
-    int board_num;
+    long long board_num;
     do
     {
         pthread_mutex_lock(&next_board_num_lock);
@@ -174,11 +174,11 @@ int main(int argc, char *argv[])
         print_help();
         exit(-1);
     }
-    next_board_num = atoi(argv[context.arg++]);
-    context.past_end_board = 1 + atoi(argv[context.arg++]);
+    next_board_num = atoll(argv[context.arg++]);
+    context.past_end_board = 1 + atoll(argv[context.arg++]);
     ;
 
-    if ((context.stop_at = atoi(argv[context.arg++])) <= 0)
+    if ((context.stop_at = atoll(argv[context.arg++])) <= 0)
     {
         fprintf(stderr,
             "print_step (the third argument) must be greater than 0.\n");
