@@ -47,9 +47,9 @@ typedef Pvoid_t store_t;
 static GCC_INLINE void delete_state(store_t *const store,
     fcs_pdfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
-    int Rc_int;
     fcs_pdfs_cache_insert(cache, &(key->s));
-    JHSD(Rc_int, *store, &(key->s), sizeof(key->s));
+    int rc_int;
+    JHSD(rc_int, *store, &(key->s), sizeof(key->s));
 }
 
 static GCC_INLINE void insert_state(store_t *store, fcs_cache_key_t *key)
@@ -206,8 +206,8 @@ static GCC_INLINE void instance_free(fcs_dbm_solver_instance_t *const instance)
     free(instance->stack);
     instance->stack = NULL;
 
-    Word_t Rc_word;
-    JHSFA(Rc_word, instance->store);
+    Word_t rc_word;
+    JHSFA(rc_word, instance->store);
 
     fcs_pdfs_cache_destroy(&(instance->cache));
 

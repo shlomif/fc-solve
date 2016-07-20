@@ -299,13 +299,10 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
         while (count > limit)
         {
-#if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
-            int Rc_int;
-#endif
             fcs_cache_key_info_t *lowest_pri = cache->lowest_pri;
-
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
-            JLD(Rc_int, cache->states_values_to_keys_map,
+            int rc_int;
+            JLD(rc_int, cache->states_values_to_keys_map,
                 (Word_t)(lowest_pri->val_ptr));
 #else
             fc_solve_kaz_tree_delete_free(cache->kaz_tree,

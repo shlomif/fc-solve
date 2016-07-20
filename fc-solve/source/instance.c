@@ -703,8 +703,8 @@ in the process */
 
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     {
-        Word_t Rc_word;
-        JLFA(Rc_word, instance->rcs_states_cache.states_values_to_keys_map);
+        Word_t rc_word;
+        JLFA(rc_word, instance->rcs_states_cache.states_values_to_keys_map);
     }
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
     fc_solve_kaz_tree_free_nodes(instance->rcs_states_cache.kaz_tree);

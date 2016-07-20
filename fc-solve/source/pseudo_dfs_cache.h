@@ -67,8 +67,8 @@ typedef struct
 
 static GCC_INLINE void fcs_pdfs_cache_destroy(fcs_pdfs_lru_cache_t *const cache)
 {
-    Word_t Rc_word;
-    JHSFA(Rc_word, cache->states_values_to_keys_map);
+    Word_t rc_word;
+    JHSFA(rc_word, cache->states_values_to_keys_map);
     fc_solve_compact_allocator_finish(
         &(cache->states_values_to_keys_allocator));
 }
@@ -140,9 +140,9 @@ static GCC_INLINE fcs_pdfs_cache_key_info_t *fcs_pdfs_cache_insert(
     fcs_pdfs_cache_key_info_t *cache_key;
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
     {
-        int Rc_int;
         cache_key = cache->lowest_pri;
-        JHSD(Rc_int, cache->states_values_to_keys_map, &(cache_key->key),
+        int rc_int;
+        JHSD(rc_int, cache->states_values_to_keys_map, &(cache_key->key),
             sizeof(cache_key->key));
 
         cache->lowest_pri = cache->lowest_pri->higher_pri;
