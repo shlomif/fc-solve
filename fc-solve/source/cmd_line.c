@@ -64,18 +64,18 @@ static GCC_INLINE void nullify_newline(char *const line)
     }
 }
 
+#define MAX_PATH_LEN 4000
 /* TODO : Perhaps avoid allocating a pointer to args_man_t and instead
  * initialize it in-place.
  * */
-static GCC_INLINE int read_preset(const char *preset_name,
-    args_man_t *const args_man, char **const opened_files_dir_to_assign,
+static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
+    args_man_t *const args_man, char *const opened_files_dir,
     const char *const user_preset_dir)
 {
-    int ret_code = 1;
+    fcs_bool_t ret_code = TRUE;
     char *home_dir_presetrc = NULL, *env_var_presetrc = NULL;
     const char *global_presetrc = NULL;
     FILE *f = NULL;
-    char *opened_files_dir = NULL;
     const char *const *const presetrc_pathes[5] = {
         (const char **)(void *)&env_var_presetrc,
         (const char **)(void *)&home_dir_presetrc,
@@ -151,26 +151,22 @@ static GCC_INLINE int read_preset(const char *preset_name,
             {
                 nullify_newline(line);
 
-                if (opened_files_dir != NULL)
-                {
-                    free(opened_files_dir);
-                }
 #ifdef _WIN32
                 const char *const after_prefix =
                     try_str_prefix(s, "${EXE_DIRNAME}");
                 if (after_prefix)
                 {
-                    opened_files_dir =
-                        malloc(strlen(s) + strlen(windows_exe_dir) + 100);
-                    sprintf(opened_files_dir, "%s%s", windows_exe_dir,
-                        after_prefix);
+                    snprintf(opened_files_dir, MAX_PATH_LEN, "%s%s",
+                        windows_exe_dir, after_prefix);
                 }
                 else
                 {
-                    opened_files_dir = strdup(s);
+                    strncpy(opened_files_dir, s, MAX_PATH_LEN);
+                    opened_files_dir[MAX_PATH_LEN - 1] = '\0';
                 }
 #else
-                opened_files_dir = strdup(s);
+                strncpy(opened_files_dir, s, MAX_PATH_LEN);
+                opened_files_dir[MAX_PATH_LEN - 1] = '\0';
 #endif
             }
             else if ((s = try_str_prefix(line, "name=")))
@@ -190,7 +186,7 @@ static GCC_INLINE int read_preset(const char *preset_name,
                     fprintf(stderr, "man_chop for <<<%s>>>\n", line);
                     fflush(stderr);
 #endif
-                    ret_code = 0;
+                    ret_code = FALSE;
                     goto have_preset;
                 }
             }
@@ -210,18 +206,6 @@ have_preset:
         free(home_dir_presetrc);
     }
 
-    if (ret_code == 0)
-    {
-        *opened_files_dir_to_assign = opened_files_dir;
-    }
-    else
-    {
-        if (opened_files_dir)
-        {
-            free(opened_files_dir);
-        }
-    }
-
     return ret_code;
 }
 
@@ -231,9 +215,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     const int file_nesting_count, freecell_solver_str_t opened_files_dir)
 {
     args_man_t preset_args;
-    char *dir = NULL;
+    char dir[MAX_PATH_LEN];
 
-    if (read_preset(preset_name, &preset_args, &dir, NULL))
+    dir[0] = '\0';
+
+    if (read_preset(preset_name, &preset_args, dir, NULL))
     {
         *error_string = strdup("Could not read preset.");
         return FCS_CMD_LINE_ERROR_IN_ARG;
@@ -249,12 +235,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
                 known_parameters, NULL, NULL, error_string, &(last_arg),
                 ((file_nesting_count < 0) ? file_nesting_count
                                           : (file_nesting_count - 1)),
-                dir ? dir : opened_files_dir);
+                dir[0] ? dir : opened_files_dir);
 
-        if (dir)
-        {
-            free(dir);
-        }
         fc_solve_args_man_free(&preset_args);
 
         return ret;
