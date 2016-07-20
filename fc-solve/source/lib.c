@@ -53,8 +53,8 @@ typedef struct
     fcs_int_limit_t num_states_in_collection;
 } fcs_stats_t;
 
-static const fcs_stats_t initial_stats =
-    (const fcs_stats_t){.num_checked_states = 0, .num_states_in_collection = 0};
+static const fcs_stats_t initial_stats = {
+    .num_checked_states = 0, .num_states_in_collection = 0};
 
 /* A flare is an alternative scan algorithm to be tried. All flares in
  * a single instance are being evaluated and then one picks the shortest
