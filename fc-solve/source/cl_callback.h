@@ -494,9 +494,44 @@ static GCC_INLINE int solve_board(void * const instance, const char * const user
     freecell_solver_user_solve_board((instance), (user_state))
 #endif
 
+static GCC_INLINE FILE *fc_solve_calc_file_handle(
+    const int argc, char *argv[], const int arg)
+{
+    if ((arg == argc) || (!strcmp(argv[arg], "-")))
+    {
+        if (!getenv("FREECELL_SOLVER_QUIET"))
+        {
+            fprintf(stderr, "%s",
+                "Reading the board from the standard input.\n"
+                "Please refer to the documentation for more usage "
+                "information:\n"
+                "    http://fc-solve.shlomifish.org/docs/\n"
+                "To cancel this message set the FREECELL_SOLVER_QUIET "
+                "environment variable.\n");
+        }
+        return stdin;
+    }
+    else if (argv[arg][0] == '-')
+    {
+        fprintf(stderr, "Unknown option \"%s\". "
+                        "Type \"%s --help\" for usage information.\n",
+            argv[arg], argv[0]);
+        return NULL;
+    }
+    else
+    {
+        FILE *const f = fopen(argv[arg], "r");
+        if (!f)
+        {
+            fprintf(stderr, "Could not open file \"%s\" for input. Exiting.\n",
+                argv[arg]);
+        }
+        return f;
+    }
+}
+
 static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
 {
-    FILE *f;
     char user_state[USER_STATE_SIZE];
 
     fc_solve_display_information_context_t display_context =
@@ -510,40 +545,11 @@ static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
 
     current_instance = instance;
 
-    if ((arg == argc) || (!strcmp(argv[arg], "-")))
+    FILE *const f = fc_solve_calc_file_handle(argc, argv, arg);
+    if (!f)
     {
-        f = stdin;
-        if (!getenv("FREECELL_SOLVER_QUIET"))
-        {
-            fprintf(stderr, "%s",
-                "Reading the board from the standard input.\n"
-                "Please refer to the documentation for more usage "
-                "information:\n"
-                "    http://fc-solve.shlomifish.org/docs/\n"
-                "To cancel this message set the FREECELL_SOLVER_QUIET "
-                "environment variable.\n");
-        }
-    }
-    else if (argv[arg][0] == '-')
-    {
-        fprintf(stderr, "Unknown option \"%s\". "
-                        "Type \"%s --help\" for usage information.\n",
-            argv[arg], argv[0]);
         freecell_solver_user_free(instance);
-
         return -1;
-    }
-    else
-    {
-        f = fopen(argv[arg], "r");
-        if (f == NULL)
-        {
-            fprintf(stderr, "Could not open file \"%s\" for input. Exiting.\n",
-                argv[arg]);
-            freecell_solver_user_free(instance);
-
-            return -1;
-        }
     }
     memset(user_state, '\0', sizeof(user_state));
     fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, f);
