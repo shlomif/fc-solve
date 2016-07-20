@@ -100,19 +100,19 @@ static GCC_INLINE int calc_max_simple_simon_seq_move(const int num_empty_cols)
 #define STATE_KEY() (*(new_state_kv_ptr->key))
 static GCC_INLINE void fc_solve_move_sequence_function(
     fcs_kv_state_t *const new_state_kv_ptr, fcs_move_stack_t *const moves,
-    const int dest_idx, const int source_idx, const int cards_num)
+    const size_t dest_col_i, const size_t src_col_i, const size_t cards_num)
 {
-    fcs_col_transfer_cards(fcs_state_get_col(STATE_KEY(), dest_idx),
-        fcs_state_get_col(STATE_KEY(), source_idx), cards_num);
+    fcs_col_transfer_cards(fcs_state_get_col(STATE_KEY(), dest_col_i),
+        fcs_state_get_col(STATE_KEY(), src_col_i), cards_num);
     fcs_move_stack_params_push(
-        moves, FCS_MOVE_TYPE_STACK_TO_STACK, source_idx, dest_idx, cards_num);
+        moves, FCS_MOVE_TYPE_STACK_TO_STACK, src_col_i, dest_col_i, cards_num);
 }
 #undef STATE_KEY
 
-#define fcs_move_sequence(dest_idx, source_idx, cards_num)                     \
+#define fcs_move_sequence(to, from, cards_num)                                 \
     {                                                                          \
         fc_solve_move_sequence_function(                                       \
-            &pass_new_state, moves, dest_idx, source_idx, cards_num);          \
+            &pass_new_state, moves, to, from, cards_num);                      \
     }
 
 #ifdef FCS_RCS_STATES
