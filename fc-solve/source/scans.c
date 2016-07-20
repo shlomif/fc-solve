@@ -698,20 +698,20 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
         for (derived_end = (derived_iter = derived.states) + derived.num_states;
              derived_iter < derived_end; derived_iter++)
         {
-            const_AUTO(FCS_SCANS_ptr_new_state, derived_iter->state_ptr);
+            const_AUTO(scans_ptr_new_state, derived_iter->state_ptr);
             if (is_befs)
             {
 #ifdef FCS_RCS_STATES
                 fcs_kv_state_t new_pass = {
                     .key = fc_solve_lookup_state_key_from_val(
-                        instance, FCS_SCANS_ptr_new_state),
-                    .val = FCS_SCANS_ptr_new_state};
+                        instance, scans_ptr_new_state),
+                    .val = scans_ptr_new_state};
 #else
                 fcs_kv_state_t new_pass =
-                    FCS_STATE_keyval_pair_to_kv(FCS_SCANS_ptr_new_state);
+                    FCS_STATE_keyval_pair_to_kv(scans_ptr_new_state);
 #endif
                 fc_solve_pq_push(
-                    pqueue, FCS_SCANS_ptr_new_state,
+                    pqueue, scans_ptr_new_state,
                     befs_rate_state(soft_thread, WEIGHTING(soft_thread),
                         new_pass.key,
                         BEFS_MAX_DEPTH - kv_calc_depth(&(new_pass))));
@@ -733,7 +733,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
 
                 queue_last_item->next = last_item_next;
 
-                queue_last_item->s = FCS_SCANS_ptr_new_state;
+                queue_last_item->s = scans_ptr_new_state;
                 last_item_next->next = NULL;
                 queue_last_item = last_item_next;
             }

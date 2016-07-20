@@ -888,14 +888,6 @@ struct fc_solve_instance_struct
 #endif
 
 #endif
-/*
- * max_depth is quite dangerous because it blocks some intermediate moves
- * and doesn't allow a program to fully reach its solution.
- *
- * */
-#ifdef FC_SOLVE__WITH_MAX_DEPTH
-    int max_depth;
-#endif
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
     /*

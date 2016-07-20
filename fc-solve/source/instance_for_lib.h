@@ -92,9 +92,6 @@ static GCC_INLINE void fc_solve_alloc_instance(
         .active_num_states_in_collection = 0,
 #endif
         .effective_max_num_checked_states = FCS_INT_LIMIT_MAX,
-#ifdef FC_SOLVE__WITH_MAX_DEPTH
-        .max_depth = -1,
-#endif
         .effective_max_num_states_in_collection = FCS_INT_LIMIT_MAX,
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
         .effective_trim_states_in_collection_from = FCS_INT_LIMIT_MAX,
