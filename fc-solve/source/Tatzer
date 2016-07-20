@@ -147,6 +147,7 @@ my %themes =
     reduce_mem => [ qw(-l bench -l mem_reduction_settings) ],
     fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=1) ],
     testing => [qw(--rwd --dbm=kaztree --test-suite --num-stacks=13),],
+    extra_speed => [qw(--break-back-compat-1 --without-fc-pro --without-trim --disable-flares --disable-moves-track --disable-check-valid --disable-patsolve --disable-resume --hard-code-reparent-states  --hard-code-calc-real-depth),],
 );
 
 foreach my $rec (
