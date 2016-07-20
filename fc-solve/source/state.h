@@ -1157,3 +1157,10 @@ static GCC_INLINE fcs_card_t fcs_state_pop_col_card(
     fcs_col_pop_card(col, ret);
     return ret;
 }
+
+#ifdef FCS_FREECELL_ONLY
+#define FCS__SEQS_ARE_BUILT_BY_RANK() FALSE
+#else
+#define FCS__SEQS_ARE_BUILT_BY_RANK()                                          \
+    (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
+#endif

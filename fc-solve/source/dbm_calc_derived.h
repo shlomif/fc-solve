@@ -151,13 +151,6 @@ static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(
     COMMIT_NEW_STATE_WITH_COUNT(                                               \
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
-#ifdef FCS_FREECELL_ONLY
-#define SEQS_ARE_BUILT_BY_RANK() FALSE
-#else
-#define SEQS_ARE_BUILT_BY_RANK()                                               \
-    (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
-#endif
-
 static GCC_INLINE int calc_foundation_to_put_card_on(
     const enum fcs_dbm_variant_type_t local_variant,
     fcs_state_t *const my_ptr_state, const fcs_card_t card)
@@ -178,7 +171,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             {
                 if (fcs_foundation_value(*my_ptr_state, other_deck_idx) <
                     fcs_card_rank(card) - 2 -
-                        (SEQS_ARE_BUILT_BY_RANK()
+                        (FCS__SEQS_ARE_BUILT_BY_RANK()
                                 ? 0
                                 : ((other_deck_idx & 0x1) ==
                                       (fcs_card_suit(card) & 0x1))))

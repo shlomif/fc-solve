@@ -1646,13 +1646,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 #define CALC_FOUNDATION_TO_PUT_CARD_ON()                                       \
     calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card)
 
-#ifdef FCS_FREECELL_ONLY
-#define SEQS_ARE_BUILT_BY_RANK() FALSE
-#else
-#define SEQS_ARE_BUILT_BY_RANK()                                               \
-    (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
-#endif
-
 static GCC_INLINE int calc_foundation_to_put_card_on(
     const fc_solve_soft_thread_t *const soft_thread,
     const fcs_state_t *const my_ptr_state, const fcs_card_t card)
@@ -1684,7 +1677,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             {
                 if (fcs_foundation_value(*my_ptr_state, other_deck_idx) <
                     fcs_card_rank(card) - 2 -
-                        (SEQS_ARE_BUILT_BY_RANK()
+                        (FCS__SEQS_ARE_BUILT_BY_RANK()
                                 ? 0
                                 : ((other_deck_idx & 0x1) ==
                                       (fcs_card_suit(card) & 0x1))))
