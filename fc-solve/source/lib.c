@@ -622,7 +622,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
                         item_end = strchr(after_at_sign, ',');
                         if (!item_end)
                         {
-                            item_end = after_at_sign + strlen(after_at_sign);
+                            item_end = strchr(after_at_sign, '\0');
                         }
 
                         fcs_flare_item_t *const flare =

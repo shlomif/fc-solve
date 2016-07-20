@@ -963,11 +963,11 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
         const fcs_by_depth_tests_order_t *const by_depth_tests_order =
             soft_thread->by_depth_tests_order.by_depth_tests;
 
-        for (int depth_idx = 0;
-             depth_idx < soft_thread->by_depth_tests_order.num; depth_idx++)
+        var_AUTO(unit, arr_ptr->by_depth_units);
+        const_AUTO(depth_num, soft_thread->by_depth_tests_order.num);
+        for (size_t depth_idx = 0; depth_idx < depth_num; depth_idx++, unit++)
         {
-            arr_ptr->by_depth_units[depth_idx].max_depth =
-                by_depth_tests_order[depth_idx].max_depth;
+            unit->max_depth = by_depth_tests_order[depth_idx].max_depth;
 
             fcs_tests_order_group_t *const tests_order_groups =
                 by_depth_tests_order[depth_idx].tests_order.groups;
@@ -975,8 +975,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
             const_AUTO(tests_order_num,
                 by_depth_tests_order[depth_idx].tests_order.num_groups);
 
-            const_AUTO(tests_list_of_lists,
-                &(arr_ptr->by_depth_units[depth_idx].tests));
+            const_AUTO(tests_list_of_lists, &(unit->tests));
 
             *tests_list_of_lists = (typeof(*tests_list_of_lists)){
                 .num_lists = 0,
