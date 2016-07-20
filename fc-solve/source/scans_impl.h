@@ -1193,7 +1193,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     derived_states[(*(rand_int_ptr++)).idx].state_ptr;
 
                 the_soft_dfs_info->current_state_index++;
-                VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Seahaven");
+                VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
 
                 if ((!(FCS_S_VISITED(single_derived_state) &
                         FCS_VISITED_DEAD_END)) &&
@@ -1201,7 +1201,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 {
                     BUMP_NUM_CHECKED_STATES();
 
-                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Gypsy");
+                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [After BUMP]");
 
                     set_scan_visited(single_derived_state, soft_thread_id);
 
@@ -1210,7 +1210,8 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                         instance->i__num_checked_states;
 #endif
 
-                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Golf");
+                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0(
+                        "Verify [aft set_visit]");
 
                     /*
                         I'm using current_state_indexes[depth]-1 because we
@@ -1227,7 +1228,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     ASSIGN_ptr_state(single_derived_state);
                     the_soft_dfs_info->state = PTR_STATE;
 
-                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify Zap");
+                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify after recurse");
 
                     the_soft_dfs_info->tests_list_index = 0;
                     the_soft_dfs_info->test_index = 0;
