@@ -39,6 +39,7 @@ extern "C" {
 
 #include "instance.h"
 
+static GCC_INLINE int max0(const int e) { return max(e, 0); }
 #ifdef FCS_FREECELL_ONLY
 #define calc_max_sequence_move(num_freecells, num_empty_cols)                  \
     (((num_freecells) + 1) << (num_empty_cols))
@@ -58,7 +59,10 @@ extern "C" {
                       ? (((num_freecells) + 1) << (num_empty_cols))            \
                       : ((num_freecells) + 1)))
 
-#define calc_max_simple_simon_seq_move(num_empty_cols) (1 << (num_empty_cols))
+static GCC_INLINE int calc_max_simple_simon_seq_move(const int num_empty_cols)
+{
+    return ((num_empty_cols < 0) ? 0 : (1 << num_empty_cols));
+}
 #endif
 
 /*

@@ -131,11 +131,11 @@ static GCC_INLINE void init_stacks_map(
 
 typedef struct
 {
-    int num_separate_false_seqs;
+    size_t num_separate_false_seqs;
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
     int junk_move_to_stacks[MAX_NUM_STACKS];
     int after_junk_num_freestacks;
-    int above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
+    size_t above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
 } sequences_analysis_t;
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
@@ -298,12 +298,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 }
 
 static GCC_INLINE int get_seq_h(
-    const fcs_const_cards_column_t col, int *const num_true_seqs_out_ptr)
+    const fcs_const_cards_column_t col, size_t *const num_true_seqs_out_ptr)
 {
     const int cards_num = fcs_col_len(col);
 
     fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
-    int num_true_seqs = 1;
+    size_t num_true_seqs = 1;
 
     int h;
     /* Stop if we reached the bottom of the stack */
@@ -351,7 +351,7 @@ DECLARE_MOVE_FUNCTION(
 
     STACK_SOURCE_LOOP_START(1)
     {
-        int num_true_seqs;
+        size_t num_true_seqs;
         /* This means that the loop exited prematurely and the stack does
          * not contain a sequence. */
         if ((get_seq_h(col, &num_true_seqs) > 0) ||
@@ -399,7 +399,7 @@ static GCC_INLINE void generic_populate_seq_points(
     const fcs_cards_column_t dest_col, const int dc,
     sequences_analysis_t *const seqs, const int dest_cards_num)
 {
-    int num_separate_false_seqs = seqs->num_separate_false_seqs;
+    size_t num_separate_false_seqs = seqs->num_separate_false_seqs;
     seqs->above_num_true_seqs[num_separate_false_seqs] = 1;
     fcs_card_t above_card = fcs_col_get_card(dest_col, dest_cards_num - 1);
     for (int above_c = dest_cards_num - 2; above_c > dc; above_c--)
@@ -435,15 +435,15 @@ static GCC_INLINE fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
     const fcs_cards_column_t col, sequences_analysis_t *const seqs,
     const int stack_idx, const int ds, const fcs_bool_t behavior_flag,
     const fcs_bool_t should_src_col, const fcs_card_t src_card,
-    const int num_src_junk_true_seqs)
+    const size_t num_src_junk_true_seqs)
 {
-    const int num_separate_false_seqs = seqs->num_separate_false_seqs;
+    const size_t num_separate_false_seqs = seqs->num_separate_false_seqs;
     fcs_bool_t stacks_map[STACKS_MAP_LEN];
     init_stacks_map(stacks_map, stack_idx, ds);
 
     int after_junk_num_freestacks = num_vacant_stacks;
 
-    const int false_seq_index_limit =
+    const size_t false_seq_index_limit =
         num_separate_false_seqs + (should_src_col ? 1 : 0);
 
     int false_seq_index;
@@ -460,7 +460,7 @@ static GCC_INLINE fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
                 ? src_card
                 : fcs_col_get_card(col, seqs->seq_points[false_seq_index]);
 
-        const int the_num_true_seqs =
+        const size_t the_num_true_seqs =
             is_ultimate_iter ? num_src_junk_true_seqs
                              : seqs->above_num_true_seqs[false_seq_index];
 
@@ -603,7 +603,7 @@ DECLARE_MOVE_FUNCTION(
     CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
-    int num_true_seqs = 1;
+    size_t num_true_seqs = 1;
 
     for (int h = cards_num - 2; h >= -1; h--)
     {
@@ -690,7 +690,7 @@ DECLARE_MOVE_FUNCTION(
         const fcs_card_t h_card = fcs_col_get_card(col, src_card_height);
         fcs_card_t card = h_card;
 
-        int num_true_seqs = 1;
+        size_t num_true_seqs = 1;
 
         for (int end_of_src_seq = src_card_height + 1;
              end_of_src_seq < cards_num; end_of_src_seq++)
@@ -805,7 +805,7 @@ DECLARE_MOVE_FUNCTION(
     CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
-    int num_src_junk_true_seqs;
+    size_t num_src_junk_true_seqs;
 
     int h = get_seq_h(col, &num_src_junk_true_seqs);
     if (!h)
@@ -817,7 +817,7 @@ DECLARE_MOVE_FUNCTION(
 
     const int after_end_of_junk = h;
     const int end_of_junk = (--h);
-    int num_true_seqs = 1;
+    size_t num_true_seqs = 1;
 
     for (; h > -1; h--)
     {
@@ -951,7 +951,7 @@ DECLARE_MOVE_FUNCTION(
 
     STACK_SOURCE_LOOP_START(1)
     {
-        int num_true_seqs;
+        size_t num_true_seqs;
         if (get_seq_h(col, &num_true_seqs) || (max_seq_move < num_true_seqs))
         {
             continue;
@@ -1056,7 +1056,7 @@ DECLARE_MOVE_FUNCTION(
              * */
 
             int end_of_child_seq = child_card_height;
-            int child_num_true_seqs = 1;
+            size_t child_num_true_seqs = 1;
             while (
                 (end_of_child_seq + 1 < cards_num) &&
                 fcs_is_ss_false_parent(fcs_col_get_card(col, end_of_child_seq),
@@ -1137,7 +1137,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     const int max_seq_move = calc_max_simple_simon_seq_move(num_vacant_stacks);
 
     STACK_SOURCE_LOOP_START(1)
-    int num_true_seqs;
+    size_t num_true_seqs;
     const int h = get_seq_h(col, &num_true_seqs);
     /* Let's check if we have enough empty stacks to make the move
      * feasible.
