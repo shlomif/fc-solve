@@ -73,22 +73,18 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
     const char *const user_preset_dir)
 {
     fcs_bool_t ret_code = TRUE;
-    char *home_dir_presetrc = NULL, *env_var_presetrc = NULL;
-    const char *global_presetrc = NULL;
-    FILE *f = NULL;
-    const char *const *const presetrc_pathes[5] = {
-        (const char **)(void *)&env_var_presetrc,
-        (const char **)(void *)&home_dir_presetrc,
-        (const char **)&global_presetrc, &user_preset_dir, NULL,
-    };
-
+    char home_dir_presetrc[MAX_PATH_LEN];
     char *const home_dir = getenv("HOME");
     if (home_dir)
     {
-        home_dir_presetrc = SMALLOC(home_dir_presetrc, strlen(home_dir) + 50);
-        sprintf(home_dir_presetrc, "%s/.freecell-solver/presetrc", home_dir);
+        snprintf(home_dir_presetrc, MAX_PATH_LEN,
+            "%s/.freecell-solver/presetrc", home_dir);
     }
-    env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
+
+    const char *global_presetrc = NULL;
+    FILE *f = NULL;
+
+    char *env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
 
 #ifdef _WIN32
 
@@ -126,10 +122,15 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
 #else
     global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
 #endif
+    const char *const presetrc_pathes[4] = {
+        (const char *)env_var_presetrc,
+        (home_dir ? ((const char *)home_dir_presetrc) : NULL),
+        (const char *)global_presetrc, user_preset_dir,
+    };
     fcs_bool_t read_next_preset = FALSE;
-    for (int path_idx = 0; (presetrc_pathes[path_idx] != NULL); path_idx++)
+    for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); path_idx++)
     {
-        const char *const path = (*presetrc_pathes[path_idx]);
+        const char *const path = presetrc_pathes[path_idx];
         if (path == NULL)
         {
             continue;
@@ -199,11 +200,6 @@ have_preset:
     if (f)
     {
         fclose(f);
-    }
-
-    if (home_dir_presetrc)
-    {
-        free(home_dir_presetrc);
     }
 
     return ret_code;
