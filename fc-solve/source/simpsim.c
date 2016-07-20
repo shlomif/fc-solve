@@ -684,7 +684,7 @@ DECLARE_MOVE_FUNCTION(
     CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
-    for (int src_card_height = cards_num - 1; src_card_height >= 0;
+    for (ssize_t src_card_height = cards_num - 1; src_card_height >= 0;
          src_card_height--)
     {
         const fcs_card_t h_card = fcs_col_get_card(col, src_card_height);
@@ -692,7 +692,7 @@ DECLARE_MOVE_FUNCTION(
 
         size_t num_true_seqs = 1;
 
-        for (int end_of_src_seq = src_card_height + 1;
+        for (size_t end_of_src_seq = src_card_height + 1;
              end_of_src_seq < cards_num; end_of_src_seq++)
         {
             const fcs_card_t above_card = fcs_col_get_card(col, end_of_src_seq);
@@ -965,8 +965,8 @@ DECLARE_MOVE_FUNCTION(
         continue;
     }
     ds_dc_t ds_dcs[4];
-    int len = 0;
-    for (int parent_suit = 0; parent_suit < 4; parent_suit++)
+    size_t len = 0;
+    for (size_t parent_suit = 0; parent_suit < 4; parent_suit++)
     {
         const fcs_pos_by_rank_t pos = positions_by_rank[FCS_POS_IDX(
             fcs_card_rank(card) + 1, parent_suit)];
@@ -982,10 +982,10 @@ DECLARE_MOVE_FUNCTION(
     /* This is done to preserve the original order in the solutions. */
     sort_ds_dcs(ds_dcs, len);
 
-    for (int i = 0; i < len; i++)
+    for (size_t i = 0; i < len; i++)
     {
-        const int ds = ds_dcs[i].col;
-        const int dc = ds_dcs[i].height;
+        const_AUTO(ds, ds_dcs[i].col);
+        const_AUTO(dc, ds_dcs[i].height);
         const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
         const int dest_cards_num = fcs_col_len(dest_col);
 
