@@ -773,7 +773,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
 
-    int by_depth_max_depth, by_depth_min_depth;
+    ssize_t by_depth_max_depth, by_depth_min_depth;
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     const fcs_bool_t is_simple_simon = instance->is_simple_simon;
@@ -802,12 +802,12 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 #endif
 
 #define DEPTH() (*depth_ptr)
-    int *const depth_ptr = &(DFS_VAR(soft_thread, depth));
+    ssize_t *const depth_ptr = &(DFS_VAR(soft_thread, depth));
 
     fcs_soft_dfs_stack_item_t *the_soft_dfs_info =
         &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]);
 
-    int dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
+    ssize_t dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
     fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 
     DECLARE_STATE();

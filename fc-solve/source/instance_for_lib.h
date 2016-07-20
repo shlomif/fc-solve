@@ -810,7 +810,7 @@ static GCC_INLINE void fc_solve__setup_optimization_thread__helper(
             };
         soft_thread->by_depth_tests_order.by_depth_tests[0] =
             (typeof(soft_thread->by_depth_tests_order.by_depth_tests[0])){
-                .max_depth = INT_MAX,
+                .max_depth = SSIZE_MAX,
                 .tests_order = tests_order_dup(&(instance->opt_tests_order)),
             };
     }

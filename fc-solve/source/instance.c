@@ -312,7 +312,7 @@ static GCC_INLINE
     };
     soft_thread->by_depth_tests_order.by_depth_tests[0] =
         (typeof(soft_thread->by_depth_tests_order.by_depth_tests[0])){
-            .max_depth = INT_MAX,
+            .max_depth = SSIZE_MAX,
             .tests_order = tests_order_dup(
                 &(fcs_st_instance(soft_thread)->instance_tests_order)),
         };

@@ -422,7 +422,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     }
 
     soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].max_depth =
-        INT_MAX;
+        SSIZE_MAX;
 
     char static_error_string[120];
     const int ret_code = fc_solve_apply_tests_order(

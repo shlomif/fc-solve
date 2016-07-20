@@ -260,7 +260,7 @@ typedef struct
 
 typedef struct
 {
-    int max_depth;
+    ssize_t max_depth;
     fcs_tests_order_t tests_order;
 } fcs_by_depth_tests_order_t;
 
@@ -522,7 +522,7 @@ typedef struct
 
 typedef struct
 {
-    int max_depth;
+    ssize_t max_depth;
     fcs_tests_list_of_lists tests;
 } fcs_tests_by_depth_unit_t;
 
@@ -573,7 +573,7 @@ struct fc_solve_soft_thread_struct
             /*
              * The (temporary) max depth of the Soft-DFS scans)
              * */
-            int dfs_max_depth;
+            ssize_t dfs_max_depth;
 
             /*
              * These are stacks used by the Soft-DFS for various uses.
@@ -605,7 +605,7 @@ struct fc_solve_soft_thread_struct
             fcs_soft_dfs_stack_item_t *soft_dfs_info;
 
             /* The depth of the DFS stacks */
-            int depth;
+            ssize_t depth;
 
             /*
              * A pseudo-random number generator for use in the random-DFS scan

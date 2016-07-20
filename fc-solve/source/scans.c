@@ -63,8 +63,8 @@ static GCC_INLINE fcs_depth_t kv_calc_depth(fcs_kv_state_t *const ptr_state)
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
 {
-    const int new_dfs_max_depth =
-        DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY;
+    const_AUTO(new_dfs_max_depth,
+        DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
 
     DFS_VAR(soft_thread, soft_dfs_info) =
         SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
