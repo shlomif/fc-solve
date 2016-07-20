@@ -496,7 +496,7 @@ static GCC_INLINE int solve_board(void * const instance, const char * const user
 
 static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
 {
-    FILE *file;
+    FILE *f;
     char user_state[USER_STATE_SIZE];
 
     fc_solve_display_information_context_t display_context =
@@ -512,7 +512,7 @@ static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
 
     if ((arg == argc) || (!strcmp(argv[arg], "-")))
     {
-        file = stdin;
+        f = stdin;
         if (!getenv("FREECELL_SOLVER_QUIET"))
         {
             fprintf(stderr, "%s",
@@ -535,8 +535,8 @@ static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
     }
     else
     {
-        file = fopen(argv[arg], "r");
-        if (file == NULL)
+        f = fopen(argv[arg], "r");
+        if (f == NULL)
         {
             fprintf(stderr, "Could not open file \"%s\" for input. Exiting.\n",
                 argv[arg]);
@@ -546,8 +546,8 @@ static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
         }
     }
     memset(user_state, '\0', sizeof(user_state));
-    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, file);
-    fclose(file);
+    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, f);
+    fclose(f);
 
 /* Win32 Does not have those signals */
 #ifndef WIN32
