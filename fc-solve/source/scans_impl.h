@@ -512,9 +512,9 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
         soft_dfs_info = &(DFS_VAR(soft_thread, soft_dfs_info)[depth]);
         int *const rand_indexes = soft_dfs_info->derived_states_random_indexes;
 
-        const int num_states = soft_dfs_info->derived_states_list.num_states;
+        const_AUTO(num_states, soft_dfs_info->derived_states_list.num_states);
 
-        for (int i = soft_dfs_info->current_state_index; i < num_states; i++)
+        for (size_t i = soft_dfs_info->current_state_index; i < num_states; i++)
         {
             verify_state_sanity(
                 soft_dfs_info->derived_states_list.states[rand_indexes[i]]
@@ -1085,7 +1085,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
             }
 
             {
-                const int num_states = derived_states_list->num_states;
+                const_SLOT(num_states, derived_states_list);
 
                 if (num_states >
                     the_soft_dfs_info->derived_states_random_indexes_max_size)
@@ -1102,7 +1102,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
                 VERIFY_PTR_STATE_TRACE0("Verify Panter");
 
-                for (int i = 0; i < num_states; i++)
+                for (size_t i = 0; i < num_states; i++)
                 {
                     rand_array[i].idx = i;
                 }
@@ -1121,7 +1121,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     {
                     case FCS_RAND:
                     {
-                        for (int i = num_states - 1; i > 0; i--)
+                        for (ssize_t i = num_states - 1; i > 0; i--)
                         {
                             const typeof(i) j =
                                 (fc_solve_rand_get_random_number(rand_gen) %
@@ -1138,9 +1138,9 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     {
                         if (orig_tests_list_index < THE_TESTS_LIST.num_lists)
                         {
-                            fcs_derived_states_list_item_t *derived_states =
-                                derived_states_list->states;
-                            for (int i = 0; i < num_states; i++)
+                            fcs_derived_states_list_item_t *const
+                                derived_states = derived_states_list->states;
+                            for (size_t i = 0; i < num_states; i++)
                             {
                                 rand_array[i].rating = befs_rate_state(
                                     soft_thread, weighting,
@@ -1179,7 +1179,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
         }
 
         {
-            const int num_states = derived_states_list->num_states;
+            const_SLOT(num_states, derived_states_list);
             fcs_derived_states_list_item_t *const derived_states =
                 derived_states_list->states;
             const fcs_rating_with_index_t *rand_int_ptr =
