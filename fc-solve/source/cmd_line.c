@@ -815,17 +815,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
                 if (opened_files_dir)
                 {
-                    char *complete_path;
-                    register int len;
-
-                    len = strlen(opened_files_dir);
-                    len += strlen(s);
-                    len++;
-
-                    complete_path = SMALLOC(complete_path, len);
+                    char
+                        complete_path[strlen(opened_files_dir) + strlen(s) + 1];
                     sprintf(complete_path, "%s%s", opened_files_dir, s);
                     f = fopen(complete_path, "rt");
-                    free(complete_path);
                 }
                 else
                 {
