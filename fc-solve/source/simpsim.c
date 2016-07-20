@@ -133,7 +133,7 @@ typedef struct
 {
     size_t num_separate_false_seqs;
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
-    int junk_move_to_stacks[MAX_NUM_STACKS];
+    size_t junk_move_to_stacks[MAX_NUM_STACKS];
     int after_junk_num_freestacks;
     size_t above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
 } sequences_analysis_t;
@@ -557,10 +557,10 @@ static GCC_INLINE void move_sequences_analysis_seqs_loop(
     for (int seq_index = 0; seq_index < seqs_ptr->num_separate_false_seqs;
          seq_index++)
     {
-        const int dest_index = seqs_ptr->junk_move_to_stacks[seq_index];
-        my_copy_stack(dest_index);
+        const_AUTO(dest_col_i, seqs_ptr->junk_move_to_stacks[seq_index]);
+        my_copy_stack(dest_col_i);
 
-        fcs_move_sequence(dest_index, source_col_idx,
+        fcs_move_sequence(dest_col_i, source_col_idx,
             ((seq_index == 0) ? source_col_cards_num
                               : seqs_ptr->seq_points[seq_index - 1]) -
                 seqs_ptr->seq_points[seq_index]);
@@ -870,10 +870,10 @@ DECLARE_MOVE_FUNCTION(
 
                 my_copy_stack(s_e.src_stack);
 
-                const int dest_index = seqs.junk_move_to_stacks[seq_index];
-                my_copy_stack(dest_index);
+                const_AUTO(dest_col_i, seqs.junk_move_to_stacks[seq_index]);
+                my_copy_stack(dest_col_i);
 
-                fcs_move_sequence(dest_index, s_e.src_stack, s_e.cards_num);
+                fcs_move_sequence(dest_col_i, s_e.src_stack, s_e.cards_num);
             }
 
             /* Move the source seq on top of the dest seq */
@@ -1103,10 +1103,10 @@ DECLARE_MOVE_FUNCTION(
                 cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
             {
-                const int source_idx =
-                    seqs.junk_move_to_stacks[child_seq_index];
-                my_copy_stack(source_idx);
-                fcs_move_sequence(stack_idx, source_idx,
+                const_AUTO(
+                    src_col_i, seqs.junk_move_to_stacks[child_seq_index]);
+                my_copy_stack(src_col_i);
+                fcs_move_sequence(stack_idx, src_col_i,
                     end_of_child_seq - child_card_height + 1);
             }
 
