@@ -396,8 +396,6 @@ int main(int argc, char *argv[])
             {
                 FCS_PRINT_REACHED_BOARD(
                     mytime, next_milestone, total_num_iters);
-                fflush(stdout);
-
                 next_milestone += stop_at;
             }
 

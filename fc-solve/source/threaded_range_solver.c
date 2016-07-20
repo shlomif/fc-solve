@@ -149,7 +149,6 @@ static void *worker_thread(void *GCC_UNUSED void_context)
 
                 FCS_PRINT_REACHED_BOARD(
                     mytime, board_num, total_num_iters_copy);
-                fflush(stdout);
             }
 
             freecell_solver_user_recycle(instance);

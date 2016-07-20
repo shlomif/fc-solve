@@ -264,7 +264,6 @@ int main(int argc, char *argv[])
         if (board_num % stop_at == 0)
         {
             FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters);
-            fflush(stdout);
         }
 
         freecell_solver_user_recycle(instance);
