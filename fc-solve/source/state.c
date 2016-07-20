@@ -39,7 +39,7 @@
 #include "p2u_rank.h"
 
 #ifdef DEBUG_STATES
-#define GET_CARD(s) (((const fc_stack_t *const)(s))->cards[0])
+#define GET_CARD(s) (((const fcs_DEBUG_STATES_stack_t *const)(s))->cards[0])
 #elif defined(COMPACT_STATES)
 #define GET_CARD(s) (((const fcs_card_t *const)(s))[1])
 #endif
@@ -64,7 +64,7 @@ static GCC_INLINE int fcs_stack_compare(const void *s1, const void *s2)
 
 #ifdef DEBUG_STATES
 
-#define DECLARE_TEMP_STACK() fc_stack_t temp_stack
+#define DECLARE_TEMP_STACK() fcs_DEBUG_STATES_stack_t temp_stack
 #define STACK_COMPARE(a, b) (fcs_stack_compare((&(a)), (&(b))))
 
 #else

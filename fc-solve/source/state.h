@@ -76,15 +76,15 @@ typedef struct
 {
     int num_cards;
     fcs_card_t cards[MAX_NUM_CARDS_IN_A_STACK];
-} fc_stack_t;
+} fcs_DEBUG_STATES_stack_t;
 
-typedef fc_stack_t *fcs_cards_column_t;
-typedef const fc_stack_t *fcs_const_cards_column_t;
+typedef fcs_DEBUG_STATES_stack_t *fcs_cards_column_t;
+typedef const fcs_DEBUG_STATES_stack_t *fcs_const_cards_column_t;
 typedef int fcs_state_foundation_t;
 
 struct fcs_struct_state_t
 {
-    fc_stack_t stacks[MAX_NUM_STACKS];
+    fcs_DEBUG_STATES_stack_t stacks[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
     fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
 };
