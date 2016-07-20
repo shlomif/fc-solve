@@ -265,9 +265,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
 #undef FCS_S_FC_LOCS
 #undef FCS_S_STACK_LOCS
 
-static GCC_INLINE int fc_solve_move__convert_freecell_num(const int fcn)
+static GCC_INLINE int fc_solve_move__convert_freecell_num(const int fc_idx)
 {
-    return (fcn >= 7) ? (fcn + 3) : fcn;
+    return (fc_idx >= 7) ? (fc_idx + 3) : fc_idx;
 }
 
 static GCC_INLINE char fc_solve__freecell_to_char(const int fc_idx)
