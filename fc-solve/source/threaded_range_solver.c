@@ -115,7 +115,6 @@ static void *worker_thread(void *GCC_UNUSED void_context)
             {
             case FCS_STATE_SUSPEND_PROCESS:
                 FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-                fflush(stdout);
                 break;
 
             case FCS_STATE_FLARES_PLAN_ERROR:
@@ -244,7 +243,6 @@ int main(int argc, char *argv[])
 
     fcs_portable_time_t mytime;
     FCS_PRINT_STARTED_AT(mytime);
-    fflush(stdout);
 
     context.argc = argc;
     context.argv = argv;
