@@ -445,20 +445,12 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
-            int es_fill;
-            if (!strcmp((*arg), "kings"))
-            {
-                es_fill = FCS_ES_FILLED_BY_KINGS_ONLY;
-            }
-            else if (!strcmp((*arg), "none"))
-            {
-                es_fill = FCS_ES_FILLED_BY_NONE;
-            }
-            else
-            {
-                es_fill = FCS_ES_FILLED_BY_ANY_CARD;
-            }
-            freecell_solver_user_set_empty_stacks_filled_by(instance, es_fill);
+            const char *const s = (*arg);
+            freecell_solver_user_set_empty_stacks_filled_by(instance,
+                (!strcmp(s, "kings"))
+                    ? FCS_ES_FILLED_BY_KINGS_ONLY
+                    : (!strcmp(s, "none")) ? FCS_ES_FILLED_BY_NONE
+                                           : FCS_ES_FILLED_BY_ANY_CARD);
 #endif
         }
         break;
