@@ -83,14 +83,13 @@ static GCC_INLINE int fcs_stack_compare(const void *s1, const void *s2)
 void fc_solve_canonize_state(
     fcs_state_t *const ptr_state_key FREECELLS_AND_STACKS_ARGS())
 {
-    fcs_card_t temp_freecell;
 
 #define state_key (ptr_state_key)
     /* Insertion-sort the stacks */
 
-    for (int b = 1; b < STACKS_NUM__VAL; b++)
+    for (size_t b = 1; b < STACKS_NUM__VAL; b++)
     {
-        int c = b;
+        size_t c = b;
         while ((c > 0) && ((STACK_COMPARE(GET_STACK(c), GET_STACK(c - 1))) < 0))
         {
             {
@@ -106,14 +105,14 @@ void fc_solve_canonize_state(
 
     /* Insertion-sort the freecells */
 
-    for (int b = 1; b < FREECELLS_NUM__VAL; b++)
+    for (size_t b = 1; b < FREECELLS_NUM__VAL; b++)
     {
-        int c = b;
+        size_t c = b;
 
         while ((c > 0) && ((fc_solve_card_compare(
                                (GET_FREECELL(c)), (GET_FREECELL(c - 1)))) < 0))
         {
-            temp_freecell = GET_FREECELL(c);
+            const fcs_card_t temp_freecell = GET_FREECELL(c);
             GET_FREECELL(c) = GET_FREECELL(c - 1);
             GET_FREECELL(c - 1) = temp_freecell;
 
@@ -127,13 +126,10 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
 #define state_key (ptr_state_key)
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
 {
-    fcs_card_t temp_freecell;
-
     /* Insertion-sort the stacks */
-
-    for (int b = 1; b < STACKS_NUM__VAL; b++)
+    for (size_t b = 1; b < STACKS_NUM__VAL; b++)
     {
-        int c = b;
+        size_t c = b;
         while ((c > 0) && ((STACK_COMPARE(GET_STACK(c), GET_STACK(c - 1))) < 0))
         {
             {
@@ -153,14 +149,14 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
 
     /* Insertion-sort the freecells */
 
-    for (int b = 1; b < FREECELLS_NUM__VAL; b++)
+    for (size_t b = 1; b < FREECELLS_NUM__VAL; b++)
     {
-        int c = b;
+        size_t c = b;
 
         while ((c > 0) && ((fc_solve_card_compare(
                                (GET_FREECELL(c)), (GET_FREECELL(c - 1)))) < 0))
         {
-            temp_freecell = GET_FREECELL(c);
+            const fcs_card_t temp_freecell = GET_FREECELL(c);
             GET_FREECELL(c) = GET_FREECELL(c - 1);
             GET_FREECELL(c - 1) = temp_freecell;
 
