@@ -79,7 +79,7 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
         snprintf(home_dir_presetrc, MAX_PATH_LEN,
             "%s/.freecell-solver/presetrc", home_dir);
     }
-    const char *global_presetrc = NULL;
+    const char *global_presetrc;
     char *env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
 
 #ifdef _WIN32
