@@ -82,14 +82,12 @@ typedef fcs_DEBUG_STATES_stack_t *fcs_cards_column_t;
 typedef const fcs_DEBUG_STATES_stack_t *fcs_const_cards_column_t;
 typedef int fcs_state_foundation_t;
 
-struct fcs_struct_state_t
+typedef struct
 {
     fcs_DEBUG_STATES_stack_t stacks[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
     fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
-};
-
-typedef struct fcs_struct_state_t fcs_state_t;
+} fcs_state_t;
 
 typedef int fcs_locs_t;
 
@@ -139,11 +137,11 @@ typedef fcs_card_t fcs_state_foundation_t;
  *
  */
 
-struct fcs_struct_state_t
+typedef struct
 {
     fcs_card_t data[MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1) +
                     MAX_NUM_FREECELLS + 4 * MAX_NUM_DECKS];
-};
+} fcs_state_t;
 
 /*
  * Stack: 0 - Number of cards
@@ -164,8 +162,6 @@ struct fcs_struct_state_t
  * Bytes 160-163 - Freecells
  * Bytes 164-167 - Decks
  */
-
-typedef struct fcs_struct_state_t fcs_state_t;
 
 typedef char fcs_locs_t;
 
@@ -191,14 +187,12 @@ typedef fcs_card_t *fcs_cards_column_t;
 typedef const fcs_card_t *fcs_const_cards_column_t;
 typedef char fcs_state_foundation_t;
 
-struct fcs_struct_state_t
+typedef struct
 {
     fcs_cards_column_t stacks[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
     fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
-};
-
-typedef struct fcs_struct_state_t fcs_state_t;
+} fcs_state_t;
 
 #define fcs_state_get_col(state, col_idx) ((state).stacks[(col_idx)])
 
