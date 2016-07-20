@@ -345,9 +345,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
         {
             PROCESS_OPT_ARG();
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-            freecell_solver_user_limit_depth(instance, atoi((*arg)));
-#endif
         }
         break;
 

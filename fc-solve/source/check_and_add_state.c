@@ -490,22 +490,9 @@ fcs_bool_t fc_solve_check_and_add_state(
 #else
     fc_solve_instance_t *const instance = hard_thread->instance;
 #endif
-
-/* #if'ing out because it doesn't belong here. */
-#if 0
-    if ((instance->max_depth >= 0) &&
-        (new_state_val->depth >= instance->max_depth))
-    {
-        return FCS_STATE_EXCEEDS_MAX_DEPTH;
-    }
-#endif
-
     fc_solve_cache_stacks(hard_thread, new_state);
-
-    {
-        fc_solve_canonize_state(new_state_key PASS_FREECELLS(
-            INSTANCE_FREECELLS_NUM) PASS_STACKS(INSTANCE_STACKS_NUM));
-    }
+    fc_solve_canonize_state(new_state_key PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+            PASS_STACKS(INSTANCE_STACKS_NUM));
 
 /*
     The objective of this part of the code is:
