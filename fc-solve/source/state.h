@@ -600,7 +600,7 @@ extern int fc_solve_state_compare_with_context(
  * Convert an entire card to its user representation.
  *
  * */
-extern void fc_solve_card_perl2user(
+extern void fc_solve_card_stringify(
     const fcs_card_t card, char *const str PASS_T(const fcs_bool_t t));
 
 /*

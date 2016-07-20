@@ -1852,10 +1852,10 @@ void freecell_solver_user_get_invalid_state_error_into_string(
     {
         /*
          * user->state_validity_card is only valid for these states,
-         * so we should call fc_solve_card_perl2user on there only.
+         * so we should call fc_solve_card_stringify on there only.
          * */
         char card_str[4];
-        fc_solve_card_perl2user(
+        fc_solve_card_stringify(
             user->state_validity_card, card_str FC_SOLVE__PASS_T(print_ts));
 
         sprintf(string, "%s%s.", ((ret == FCS_STATE_VALIDITY__EXTRA_CARD)

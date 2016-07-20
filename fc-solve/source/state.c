@@ -192,7 +192,7 @@ static GCC_INLINE void render_freecell_card(const fcs_card_t card,
     }
     else
     {
-        fc_solve_card_perl2user(card, freecell PASS_T(display_10_as_t));
+        fc_solve_card_stringify(card, freecell PASS_T(display_10_as_t));
     }
 }
 
@@ -325,7 +325,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
                 else
                 {
                     one_card_buffer stack_card_str;
-                    fc_solve_card_perl2user(fcs_col_get_card(col, card_idx),
+                    fc_solve_card_stringify(fcs_col_get_card(col, card_idx),
                         stack_card_str PASS_T(display_10_as_t));
                     fc_solve_append_string_sprintf("%3s ", stack_card_str);
                 }
@@ -389,7 +389,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
             for (int card_idx = 0; card_idx < col_len; card_idx++)
             {
                 one_card_buffer stack_card_str;
-                fc_solve_card_perl2user(fcs_col_get_card(col, card_idx),
+                fc_solve_card_stringify(fcs_col_get_card(col, card_idx),
                     stack_card_str PASS_T(display_10_as_t));
                 fc_solve_append_string_sprintf(" %s", stack_card_str);
             }
