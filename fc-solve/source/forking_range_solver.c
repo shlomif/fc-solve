@@ -127,7 +127,6 @@ static GCC_INLINE int worker_func(const worker_t w, void *const instance)
             {
             case FCS_STATE_SUSPEND_PROCESS:
                 FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-                fflush(stdout);
                 break;
             case FCS_STATE_FLARES_PLAN_ERROR:
                 fprintf(stderr, "Flares Plan: %s\n",
@@ -137,7 +136,6 @@ static GCC_INLINE int worker_func(const worker_t w, void *const instance)
 
             case FCS_STATE_IS_NOT_SOLVEABLE:
                 FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
-                fflush(stdout);
                 break;
             }
 
@@ -233,7 +231,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    int num_workers = 3;
+    size_t num_workers = 3;
     int board_num_step = 1;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
 
@@ -281,25 +279,24 @@ int main(int argc, char *argv[])
 
     fcs_portable_time_t mytime;
     FCS_PRINT_STARTED_AT(mytime);
-    fflush(stdout);
 
     void *const instance = simple_alloc_and_parse(argc, argv, &arg);
     freecell_solver_user_limit_iterations_long(
         instance, total_iterations_limit_per_board);
     worker_t workers[num_workers];
 
-    for (int idx = 0; idx < num_workers; idx++)
+    for (size_t idx = 0; idx < num_workers; idx++)
     {
         if (pipe(workers[idx].child_to_parent_pipe))
         {
             fprintf(
-                stderr, "C->P Pipe for worker No. %i failed! Exiting.\n", idx);
+                stderr, "C->P Pipe for worker No. %zd failed! Exiting.\n", idx);
             exit(-1);
         }
         if (pipe(workers[idx].parent_to_child_pipe))
         {
             fprintf(
-                stderr, "P->C Pipe for worker No. %i failed! Exiting.\n", idx);
+                stderr, "P->C Pipe for worker No. %zd failed! Exiting.\n", idx);
             exit(-1);
         }
 
@@ -307,7 +304,7 @@ int main(int argc, char *argv[])
         {
         case -1:
         {
-            fprintf(stderr, "Fork for worker No. %i failed! Exiting.\n", idx);
+            fprintf(stderr, "Fork for worker No. %zd failed! Exiting.\n", idx);
             exit(-1);
         }
 
@@ -347,7 +344,7 @@ int main(int argc, char *argv[])
         int mymax = -1;
 #endif
 
-        for (int idx = 0; idx < num_workers; idx++)
+        for (size_t idx = 0; idx < num_workers; idx++)
         {
 #define GET_READ_FD(worker) ((worker).child_to_parent_pipe[READ_FD])
             const int fd = GET_READ_FD(workers[idx]);
@@ -379,7 +376,7 @@ int main(int argc, char *argv[])
         int next_milestone = next_board_num + stop_at;
         next_milestone -= (next_milestone % stop_at);
 
-        for (int idx = 0; idx < num_workers; idx++)
+        for (size_t idx = 0; idx < num_workers; idx++)
         {
             write_request(
                 end_board, board_num_step, &next_board_num, &(workers[idx]));
@@ -426,7 +423,7 @@ int main(int argc, char *argv[])
             }
             else if (select_ret)
             {
-                for (int idx = 0; idx < num_workers; idx++)
+                for (size_t idx = 0; idx < num_workers; idx++)
                 {
                     const int fd = workers[idx].child_to_parent_pipe[READ_FD];
 
@@ -446,7 +443,7 @@ int main(int argc, char *argv[])
 
     {
         int status;
-        for (int idx = 0; idx < num_workers; idx++)
+        for (size_t idx = 0; idx < num_workers; idx++)
         {
             wait(&status);
         }
