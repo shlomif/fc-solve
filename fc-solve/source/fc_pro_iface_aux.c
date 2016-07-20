@@ -27,6 +27,7 @@ void fc_solve_moves_processed_render_move(
         }
         break;
 
+#ifdef FCS_WITH_MOVES
     case FCS_MOVE_TYPE_FREECELL_TO_STACK:
     case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
     case FCS_MOVE_TYPE_STACK_TO_FREECELL:
@@ -36,6 +37,7 @@ void fc_solve_moves_processed_render_move(
         fc_solve_move_to_string_w_state(
             string, NULL, move.move, FC_SOLVE__STANDARD_NOTATION_EXTENDED);
         break;
+#endif
 
     default:
         string[0] = '\0';

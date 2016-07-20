@@ -984,8 +984,8 @@ DECLARE_MOVE_FUNCTION(
 
     for (size_t i = 0; i < len; i++)
     {
-        const_AUTO(ds, ds_dcs[i].col);
-        const_AUTO(dc, ds_dcs[i].height);
+        const size_t ds = ds_dcs[i].col;
+        const size_t dc = ds_dcs[i].height;
         const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
         const int dest_cards_num = fcs_col_len(dest_col);
 
