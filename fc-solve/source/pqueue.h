@@ -50,8 +50,6 @@ extern "C" {
 
 #define FC_SOLVE_PQUEUE_MaxRating INT_MAX
 
-#define fcs_pq_rating(elem) ((elem).rating)
-
 typedef int pq_rating_t;
 
 typedef struct
@@ -59,6 +57,11 @@ typedef struct
     fcs_collectible_state_t *val;
     pq_rating_t rating;
 } pq_element_t;
+
+static GCC_INLINE pq_rating_t fcs_pq_rating(const pq_element_t elem)
+{
+    return elem.rating;
+}
 
 typedef struct
 {
