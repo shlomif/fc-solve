@@ -72,7 +72,6 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
     args_man_t *const args_man, char *const opened_files_dir,
     const char *const user_preset_dir)
 {
-    fcs_bool_t ret_code = TRUE;
     char home_dir_presetrc[MAX_PATH_LEN];
     char *const home_dir = getenv("HOME");
     if (home_dir)
@@ -80,10 +79,7 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
         snprintf(home_dir_presetrc, MAX_PATH_LEN,
             "%s/.freecell-solver/presetrc", home_dir);
     }
-
     const char *global_presetrc = NULL;
-    FILE *f = NULL;
-
     char *env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
 
 #ifdef _WIN32
@@ -135,7 +131,7 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
         {
             continue;
         }
-        f = fopen(path, "rt");
+        FILE *f = fopen(path, "rt");
         if (f == NULL)
         {
             continue;
@@ -187,22 +183,14 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
                     fprintf(stderr, "man_chop for <<<%s>>>\n", line);
                     fflush(stderr);
 #endif
-                    ret_code = FALSE;
-                    goto have_preset;
+                    fclose(f);
+                    return FALSE;
                 }
             }
         }
         fclose(f);
-        f = NULL;
     }
-have_preset:
-
-    if (f)
-    {
-        fclose(f);
-    }
-
-    return ret_code;
+    return TRUE;
 }
 
 DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
