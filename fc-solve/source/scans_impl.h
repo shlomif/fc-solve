@@ -1121,7 +1121,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     {
                     case FCS_RAND:
                     {
-                        for (ssize_t i = num_states - 1; i > 0; i--)
+                        for (size_t i = num_states - 1; i > 0; i--)
                         {
                             const typeof(i) j =
                                 (fc_solve_rand_get_random_number(rand_gen) %
