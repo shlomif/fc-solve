@@ -53,11 +53,8 @@ typedef struct
     fcs_int_limit_t num_states_in_collection;
 } fcs_stats_t;
 
-static GCC_INLINE fcs_stats_t calc_initial_stats_t(void)
-{
-    return (const fcs_stats_t){
-        .num_checked_states = 0, .num_states_in_collection = 0};
-}
+static const fcs_stats_t initial_stats =
+    (const fcs_stats_t){.num_checked_states = 0, .num_states_in_collection = 0};
 
 /* A flare is an alternative scan algorithm to be tried. All flares in
  * a single instance are being evaluated and then one picks the shortest
@@ -279,7 +276,7 @@ static void user_initialize(fcs_user_t *const user)
 #endif
     user->current_iterations_limit = -1;
 
-    user->iterations_board_started_at = calc_initial_stats_t();
+    user->iterations_board_started_at = initial_stats;
     user->all_instances_were_suspended = TRUE;
 #ifdef FCS_WITH_FLARES
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
@@ -786,7 +783,7 @@ static void recycle_instance(
          * instance
          * is equal to 0.
          * */
-        user->init_num_checked_states = calc_initial_stats_t();
+        user->init_num_checked_states = initial_stats;
 
         flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
     }
@@ -801,7 +798,7 @@ static void recycle_instance(
     }
 #endif
 
-    flare->obj_stats = calc_initial_stats_t();
+    flare->obj_stats = initial_stats;
     INSTANCE_ITEM_FLARES_LOOP_END()
 
 #ifdef FCS_WITH_FLARES
@@ -2316,7 +2313,7 @@ void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
 #if 0
     user->current_iterations_limit = -1;
 #endif
-    user->iterations_board_started_at = calc_initial_stats_t();
+    user->iterations_board_started_at = initial_stats;
 }
 
 int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
@@ -2460,7 +2457,7 @@ static int user_next_flare(fcs_user_t *const user)
     flare->fc_pro_moves.moves = NULL;
 #endif
     flare->instance_is_ready = TRUE;
-    flare->obj_stats = calc_initial_stats_t();
+    flare->obj_stats = initial_stats;
 
     return 0;
 }
