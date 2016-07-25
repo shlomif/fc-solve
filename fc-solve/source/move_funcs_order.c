@@ -27,11 +27,12 @@
 #include "dll_thunk.h"
 #include <string.h>
 #include "config.h"
+#include "fcs_back_compat.h"
 #include "move_funcs_order.h"
 #include "set_weights.h"
 
 int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
-    const char *string, char *const error_string)
+    const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
     int i;
     int len;
@@ -60,7 +61,9 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
         {
             if (is_group)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 strcpy(error_string, "There's a nested random group.");
+#endif
                 return 1;
             }
             is_group = TRUE;
@@ -90,13 +93,17 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
         {
             if (is_start_group)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 strcpy(error_string, "There's an empty group.");
+#endif
                 return 2;
             }
             if (!is_group)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 strcpy(error_string,
                     "There's a renegade right parenthesis or bracket.");
+#endif
                 return 3;
             }
             /* Try to parse the ordering function. */
@@ -106,8 +113,10 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
                 const char *const open_paren = strchr(string + i, '(');
                 if (!open_paren)
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     strcpy(error_string, "A = ordering function is missing its "
                                          "open parenthesis - (");
+#endif
                     return 5;
                 }
                 if (string_starts_with(string + i, "rand", open_paren))
@@ -122,15 +131,19 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
                 }
                 else
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     strcpy(error_string, "Unknown = ordering function");
+#endif
                     return 6;
                 }
                 const char *const aft_open_paren = open_paren + 1;
                 const char *const close_paren = strchr(aft_open_paren, ')');
                 if (!close_paren)
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     strcpy(error_string,
                         "= ordering function not terminated with a ')'");
+#endif
                     return 7;
                 }
                 if (tests_order->groups[tests_order->num_groups - 1]
@@ -144,8 +157,10 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
                 {
                     if (close_paren != aft_open_paren)
                     {
+#ifdef FCS_WITH_ERROR_STRS
                         strcpy(
                             error_string, "=rand() arguments are not empty.");
+#endif
                         return 8;
                     }
                 }
@@ -197,7 +212,9 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
     }
     if (i != len)
     {
+#ifdef FCS_WITH_ERROR_STRS
         strcpy(error_string, "The Input string is too long.");
+#endif
         return 4;
     }
 
@@ -208,7 +225,9 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
         tests_order->groups[tests_order->num_groups].order_group_tests = NULL;
     }
 
+#ifdef FCS_WITH_ERROR_STRS
     error_string[0] = '\0';
+#endif
 
     return 0;
 }

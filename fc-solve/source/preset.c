@@ -251,7 +251,9 @@ static GCC_INLINE int fcs_get_preset_id_by_name(const char *const name)
 fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     fc_solve_instance_t *const instance, const fcs_preset_t *const preset_ptr)
 {
+#ifdef FCS_WITH_ERROR_STRS
     char no_use[120];
+#endif
 
 #define preset (*preset_ptr)
     if (preset.game_params.freecells_num > MAX_NUM_FREECELLS)
@@ -334,7 +336,8 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                                 fc_solve_apply_tests_order(
                                     &(by_depth_tests_order[depth_idx]
                                             .tests_order),
-                                    preset.tests_order, no_use);
+                                    preset.tests_order FCS__PASS_ERR_STR(
+                                        no_use));
                                 break;
                             }
                         }
@@ -347,8 +350,8 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     /* Assign the master tests order */
 
     {
-        fc_solve_apply_tests_order(
-            &(instance->instance_tests_order), preset.tests_order, no_use);
+        fc_solve_apply_tests_order(&(instance->instance_tests_order),
+            preset.tests_order FCS__PASS_ERR_STR(no_use));
     }
 #undef preset
     return FCS_PRESET_CODE_OK;

@@ -58,8 +58,8 @@ DLLEXPORT extern void freecell_solver_user_limit_iterations(
     void *user_instance, int max_iters);
 #endif
 
-DLLEXPORT extern int freecell_solver_user_set_tests_order(
-    void *user_instance, const char *tests_order, char **error_string);
+DLLEXPORT extern int freecell_solver_user_set_tests_order(void *user_instance,
+    const char *tests_order FCS__PASS_ERR_STR(char **error_string));
 
 DLLEXPORT extern int freecell_solver_user_solve_board(
     void *user_instance, const char *state_as_string);
@@ -162,6 +162,7 @@ DLLEXPORT extern int freecell_solver_user_set_num_decks(
 
 DLLEXPORT extern int freecell_solver_user_get_max_num_decks(void);
 
+#ifdef FCS_WITH_ERROR_STRS
 DLLEXPORT void freecell_solver_user_get_invalid_state_error_into_string(
     void *const api_instance, char *const string
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
@@ -169,7 +170,9 @@ DLLEXPORT void freecell_solver_user_get_invalid_state_error_into_string(
     const int print_ts
 #endif
     );
+#endif
 
+#ifdef FCS_WITH_ERROR_STRS
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern char *freecell_solver_user_get_invalid_state_error_string(
     void *user_instance
@@ -178,6 +181,7 @@ DLLEXPORT extern char *freecell_solver_user_get_invalid_state_error_string(
     int print_ts
 #endif
     );
+#endif
 #endif
 
 DLLEXPORT extern int freecell_solver_user_set_sequences_are_built_by_type(
@@ -294,8 +298,8 @@ DLLEXPORT extern int freecell_solver_user_set_flares_plan(
 DLLEXPORT extern void freecell_solver_user_recycle(void *const user_instance);
 
 DLLEXPORT extern int freecell_solver_user_set_optimization_scan_tests_order(
-    void *const user_instance, const char *const tests_order,
-    char **const error_string);
+    void *const user_instance,
+    const char *const tests_order FCS__PASS_ERR_STR(char **const error_string));
 
 DLLEXPORT extern void freecell_solver_user_set_reparent_states(
     void *const user_instance, const int to_reparent_states);
@@ -327,18 +331,20 @@ DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
  * This error string should be strdup()'ed or something if one wishes
  * to reuse it. Otherwise, it is constant.
  * */
+#ifdef FCS_WITH_ERROR_STRS
 DLLEXPORT const char *freecell_solver_user_get_last_error_string(
     void *const api_instance);
+#endif
 
 /*
  * This sets the tests_order from min_depth onwards.
  * */
 DLLEXPORT extern int freecell_solver_user_set_depth_tests_order(
     void *const user_instance, const int min_depth,
-    const char *const tests_order, char **const error_string);
+    const char *const tests_order FCS__PASS_ERR_STR(char **const error_string));
 
 DLLEXPORT extern int freecell_solver_user_set_pruning(void *const user_instance,
-    const char *const pruning, char **const error_string);
+    const char *const pruning FCS__PASS_ERR_STR(char **const error_string));
 
 DLLEXPORT extern int freecell_solver_user_set_cache_limit(
     void *const user_instance, long limit);
@@ -353,12 +359,12 @@ DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
     void *const user_instance, const double new_factor);
 
 DLLEXPORT extern int freecell_solver_user_set_patsolve_x_param(
-    void *const api_instance, const int position, const int x_param_val,
-    char **const error_string);
+    void *const api_instance, const int position,
+    const int x_param_val FCS__PASS_ERR_STR(char **const error_string));
 
 DLLEXPORT extern int freecell_solver_user_set_patsolve_y_param(
-    void *const api_instance, const int position, const double y_param_val,
-    char **const error_string);
+    void *const api_instance, const int position,
+    const double y_param_val FCS__PASS_ERR_STR(char **const error_string));
 
 #ifdef __cplusplus
 }

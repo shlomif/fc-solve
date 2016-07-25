@@ -77,10 +77,14 @@ static void my_iter_handler(void *const user_instance,
             void *const pruner = freecell_solver_user_alloc();
 
             freecell_solver_user_set_num_freecells(pruner, 2);
+#ifdef FCS_WITH_ERROR_STRS
             char *error_string;
+#endif
             freecell_solver_user_set_tests_order(
-                pruner, "01ABCDE", &error_string);
+                pruner, "01ABCDE" FCS__PASS_ERR_STR(&error_string));
+#ifdef FCS_WITH_ERROR_STRS
             free(error_string);
+#endif
             freecell_solver_user_limit_iterations_long(pruner, 128 * 1024);
 
             const int ret =

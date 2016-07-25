@@ -77,7 +77,9 @@ int main(int argc, char *argv[])
 
     fcs_portable_time_t mytime;
 
+#ifdef FCS_WITH_ERROR_STRS
     char *error_string;
+#endif
     const char *scan1_to = NULL, *scan2_to = NULL;
 
     char *output_filename = NULL;
@@ -213,17 +215,26 @@ int main(int argc, char *argv[])
         }
 
         if (freecell_solver_user_set_depth_tests_order(
-                instance, 0, scan1_to, &error_string))
+                instance, 0, scan1_to FCS__PASS_ERR_STR(&error_string)))
         {
+#ifdef FCS_WITH_ERROR_STRS
             fprintf(stderr, "Error! Got '%s'!\n", error_string);
             free(error_string);
+#else
+            fprintf(stderr, "%s\n", "depth-tests-order Error!");
+#endif
+
             exit(-1);
         }
-        if (freecell_solver_user_set_depth_tests_order(
-                instance, min_depth_for_scan2, scan2_to, &error_string))
+        if (freecell_solver_user_set_depth_tests_order(instance,
+                min_depth_for_scan2, scan2_to FCS__PASS_ERR_STR(&error_string)))
         {
+#ifdef FCS_WITH_ERROR_STRS
             fprintf(stderr, "Error! Got '%s'!\n", error_string);
             free(error_string);
+#else
+            fprintf(stderr, "%s\n", "depth-tests-order Error!");
+#endif
             exit(-1);
         }
 

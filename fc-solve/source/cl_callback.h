@@ -567,18 +567,26 @@ static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
     {
     case FCS_STATE_INVALID_STATE:
     {
+#ifdef FCS_WITH_ERROR_STRS
         char error_string[80];
 
         freecell_solver_user_get_invalid_state_error_into_string(instance,
             error_string FC_SOLVE__PASS_T(display_context.display_10_as_t));
         fprintf(stderr, "%s\n", error_string);
+#else
+        fprintf(stderr, "%s\n", "Invalid state");
+#endif
         exit_code = ERROR;
     }
     break;
 
     case FCS_STATE_FLARES_PLAN_ERROR:
+#ifdef FCS_WITH_ERROR_STRS
         fprintf(stderr, "Flares Plan: %s\n",
             freecell_solver_user_get_last_error_string(instance));
+#else
+        fprintf(stderr, "%s\n", "Flares Plan Error");
+#endif
         exit_code = ERROR;
         break;
 

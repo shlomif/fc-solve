@@ -201,8 +201,10 @@ typedef struct
     fcs_preset_t common_preset;
 #endif
 
+#ifdef FCS_WITH_ERROR_STRS
 #define MAX_ERROR_STRING_LEN 160
     char error_string[MAX_ERROR_STRING_LEN];
+#endif
 
     fcs_meta_compact_allocator_t meta_alloc;
 } fcs_user_t;
@@ -249,10 +251,16 @@ static void iter_handler_wrapper(void *api_instance, fcs_int_limit_t iter_num,
 
 static int user_next_instance(fcs_user_t *user);
 
+#ifdef FCS_WITH_ERROR_STRS
 static GCC_INLINE void clear_error(fcs_user_t *const user)
 {
     user->error_string[0] = '\0';
 }
+#else
+#define clear_error(user)                                                      \
+    {                                                                          \
+    }
+#endif
 
 static void user_initialize(fcs_user_t *const user)
 {
@@ -363,17 +371,21 @@ static GCC_INLINE fc_solve_soft_thread_t *api_soft_thread(
 
 int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     void *const api_instance, const int min_depth,
-    const char *const tests_order, char **const error_string)
+    const char *const tests_order FCS__PASS_ERR_STR(char **const error_string))
 {
     int depth_idx;
 
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
 
+#ifdef FCS_WITH_ERROR_STRS
     *error_string = NULL;
+#endif
 
     if (min_depth < 0)
     {
+#ifdef FCS_WITH_ERROR_STRS
         *error_string = strdup("Depth is negative.");
+#endif
         return 1;
     }
 
@@ -421,16 +433,20 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].max_depth =
         SSIZE_MAX;
 
+#ifdef FCS_WITH_ERROR_STRS
     char static_error_string[120];
+#endif
     const int ret_code = fc_solve_apply_tests_order(
         &(soft_thread->by_depth_tests_order.by_depth_tests[depth_idx]
                 .tests_order),
-        tests_order, static_error_string);
+        tests_order FCS__PASS_ERR_STR(static_error_string));
 
+#ifdef FCS_WITH_ERROR_STRS
     if (static_error_string[0])
     {
         *error_string = strdup(static_error_string);
     }
+#endif
 
     for (int further_depth_idx = depth_idx + 1;
          further_depth_idx < soft_thread->by_depth_tests_order.num;
@@ -448,11 +464,11 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     return ret_code;
 }
 
-int DLLEXPORT freecell_solver_user_set_tests_order(
-    void *api_instance, const char *tests_order, char **error_string)
+int DLLEXPORT freecell_solver_user_set_tests_order(void *api_instance,
+    const char *tests_order FCS__PASS_ERR_STR(char **error_string))
 {
     return freecell_solver_user_set_depth_tests_order(
-        api_instance, 0, tests_order, error_string);
+        api_instance, 0, tests_order FCS__PASS_ERR_STR(error_string));
 }
 
 typedef enum {
@@ -524,7 +540,13 @@ static GCC_INLINE fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
     return NULL;
 }
 
+#ifdef FCS_WITH_ERROR_STRS
 #define SET_ERROR(s) strcpy(user->error_string, s)
+#else
+#define SET_ERROR(s)                                                           \
+    {                                                                          \
+    }
+#endif
 
 static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t *const user, int *const instance_list_index)
@@ -1442,21 +1464,25 @@ int DLLEXPORT freecell_solver_user_get_current_depth(void *const api_instance)
 }
 
 extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
-    void *const api_instance, const int position, const int x_param_val,
-    char **const error_string)
+    void *const api_instance, const int position,
+    const int x_param_val FCS__PASS_ERR_STR(char **const error_string))
 {
 #ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(pats_scan, api_soft_thread(api_instance));
 
     if (!pats_scan)
     {
+#ifdef FCS_WITH_ERROR_STRS
         *error_string = strdup("Not using the \"patsolve\" scan.");
+#endif
         return 1;
     }
     if ((position < 0) ||
         (position >= (int)(COUNT(pats_scan->pats_solve_params.x))))
     {
+#ifdef FCS_WITH_ERROR_STRS
         *error_string = strdup("Position out of range.");
+#endif
         return 2;
     }
 
@@ -1468,21 +1494,25 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
 }
 
 extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
-    void *const api_instance, const int position, const double y_param_val,
-    char **const error_string)
+    void *const api_instance, const int position,
+    const double y_param_val FCS__PASS_ERR_STR(char **const error_string))
 {
 #ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(pats_scan, api_soft_thread(api_instance));
 
     if (!pats_scan)
     {
+#ifdef FCS_WITH_ERROR_STRS
         *error_string = strdup("Not using the \"patsolve\" scan.");
+#endif
         return 1;
     }
     if ((position < 0) ||
         (position >= (int)(COUNT(pats_scan->pats_solve_params.y))))
     {
+#ifdef FCS_WITH_ERROR_STRS
         *error_string = strdup("Position out of range.");
+#endif
         return 2;
     }
 
@@ -1826,6 +1856,7 @@ int DLLEXPORT freecell_solver_user_get_max_num_decks(void)
     return MAX_NUM_DECKS;
 }
 
+#ifdef FCS_WITH_ERROR_STRS
 void freecell_solver_user_get_invalid_state_error_into_string(
     void *const api_instance, char *const string
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
@@ -1870,7 +1901,9 @@ void freecell_solver_user_get_invalid_state_error_into_string(
         break;
     }
 }
+#endif
 
+#ifdef FCS_WITH_ERROR_STRS
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 char *freecell_solver_user_get_invalid_state_error_string(
     void *const api_instance
@@ -1885,6 +1918,7 @@ char *freecell_solver_user_get_invalid_state_error_string(
         api_instance, ret PASS_T(print_ts));
     return ret;
 }
+#endif
 #endif
 
 int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
@@ -2317,8 +2351,8 @@ void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
 }
 
 int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
-    void *const api_instance, const char *const tests_order,
-    char **const error_string)
+    void *const api_instance,
+    const char *const tests_order FCS__PASS_ERR_STR(char **const error_string))
 {
 #ifdef FCS_WITH_MOVES
     fcs_user_t *const user = (fcs_user_t *)api_instance;
@@ -2328,11 +2362,14 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     STRUCT_CLEAR_FLAG(
         &(user->active_flare->obj), FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
 
+#ifdef FCS_WITH_ERROR_STRS
     char static_error_string[120];
+#endif
     const int ret =
         fc_solve_apply_tests_order(&(user->active_flare->obj.opt_tests_order),
-            tests_order, static_error_string);
+            tests_order FCS__PASS_ERR_STR(static_error_string));
 
+#ifdef FCS_WITH_ERROR_STRS
     if (static_error_string[0])
     {
         *error_string = strdup(static_error_string);
@@ -2341,6 +2378,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     {
         *error_string = NULL;
     }
+#endif
 
     if (!ret)
     {
@@ -2354,8 +2392,8 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 #endif
 }
 
-extern int DLLEXPORT freecell_solver_user_set_pruning(
-    void *api_instance, const char *pruning, char **error_string)
+extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
+    const char *pruning FCS__PASS_ERR_STR(char **error_string))
 {
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
 
@@ -2369,8 +2407,10 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(
     }
     else
     {
+#ifdef FCS_WITH_ERROR_STRS
         *error_string =
             strdup("Unknown pruning value - must be \"r:tf\" or empty.");
+#endif
 
         return 1;
     }
@@ -2537,11 +2577,13 @@ DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
         .name;
 }
 
+#ifdef FCS_WITH_ERROR_STRS
 DLLEXPORT const char *freecell_solver_user_get_last_error_string(
     void *const api_instance)
 {
     return (((fcs_user_t * const)api_instance)->error_string);
 }
+#endif
 
 int DLLEXPORT freecell_solver_user_set_cache_limit(
     void *const api_instance GCC_UNUSED, const long limit GCC_UNUSED)
@@ -2635,7 +2677,11 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
     fcs_user_t *const user = (fcs_user_t *)api_instance;
     const fcs_compile_flares_ret_t ret =
         user_compile_all_flares_plans(user, instance_list_index);
+#ifdef FCS_WITH_ERROR_STRS
     *error_string = (user->error_string[0]) ? strdup(user->error_string) : NULL;
+#else
+    *error_string = NULL;
+#endif
     return ret;
 #else
     *error_string = NULL;

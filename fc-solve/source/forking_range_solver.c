@@ -129,8 +129,10 @@ static GCC_INLINE int worker_func(const worker_t w, void *const instance)
                 FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
                 break;
             case FCS_STATE_FLARES_PLAN_ERROR:
+#ifdef FCS_WITH_ERROR_STRS
                 fprintf(stderr, "Flares Plan: %s\n",
                     freecell_solver_user_get_last_error_string(instance));
+#endif
 
                 goto next_board;
 
