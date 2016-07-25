@@ -79,6 +79,19 @@ extern "C" {
 #define FC_SOLVE__REMOVE_OLD_API_1
 #endif
 #endif
+
+#cmakedefine FCS_DISABLE_ERROR_STRINGS
+
+#ifndef FCS_DISABLE_ERROR_STRINGS
+#define FCS_WITH_ERROR_STRS
+#endif
+
+#ifdef FCS_WITH_ERROR_STRS
+#define FCS__PASS_ERR_STR(arg) , arg
+#else
+#define FCS__PASS_ERR_STR(arg)
+#endif
+
 #ifdef __cplusplus
 }
 #endif
