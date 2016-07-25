@@ -50,11 +50,13 @@ static GCC_INLINE void *alloc_instance_and_parse(const int argc,
 {
     void *const instance = freecell_solver_user_alloc();
 
+#ifdef FCS_WITH_ERROR_STRS
     char *error_string;
+#endif
     switch (freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         instance, argc, (freecell_solver_str_t *)(void *)argv, (*arg_ptr),
-        known_parameters, callback, callback_context, &error_string, arg_ptr,
-        -1, NULL))
+        known_parameters, callback,
+        callback_context FCS__PASS_ERR_STR(&error_string), arg_ptr, -1, NULL))
     {
     case EXIT_AND_RETURN_0:
         freecell_solver_user_free(instance);
@@ -73,11 +75,15 @@ static GCC_INLINE void *alloc_instance_and_parse(const int argc,
             argv[*arg_ptr]);
         exit(-1);
     case FCS_CMD_LINE_ERROR_IN_ARG:
+#ifdef FCS_WITH_ERROR_STRS
         if (error_string)
         {
             fprintf(stderr, "%s", error_string);
             free(error_string);
         }
+#else
+        fprintf(stderr, "%s\n", "Error in command line arg.");
+#endif
         exit(-1);
     }
 

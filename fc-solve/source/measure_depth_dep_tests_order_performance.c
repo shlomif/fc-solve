@@ -208,8 +208,8 @@ int main(int argc, char *argv[])
         {
             freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 instance, end_args, (freecell_solver_str_t *)(void *)argv,
-                start_from_arg, known_parameters, NULL, NULL, &error_string,
-                &arg, -1, NULL);
+                start_from_arg, known_parameters, NULL,
+                NULL FCS__PASS_ERR_STR(&error_string), &arg, -1, NULL);
         }
 
         if (freecell_solver_user_set_depth_tests_order(

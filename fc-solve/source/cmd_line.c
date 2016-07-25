@@ -195,7 +195,8 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
 
 DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     void *const instance, const char *const preset_name,
-    freecell_solver_str_t *const known_parameters, char **const error_string,
+    freecell_solver_str_t *const known_parameters FCS__PASS_ERR_STR(
+        char **const error_string),
     const int file_nesting_count, freecell_solver_str_t opened_files_dir)
 {
     args_man_t preset_args;
@@ -205,7 +206,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
 
     if (read_preset(preset_name, &preset_args, dir, NULL))
     {
+#ifdef FCS_WITH_ERROR_STRS
         *error_string = strdup("Could not read preset.");
+#endif
         return FCS_CMD_LINE_ERROR_IN_ARG;
     }
     else
@@ -216,7 +219,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
             freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 instance, preset_args.argc,
                 (freecell_solver_str_t *)(void *)(preset_args.argv), 0,
-                known_parameters, NULL, NULL, error_string, &(last_arg),
+                known_parameters, NULL, NULL FCS__PASS_ERR_STR(error_string),
+                &(last_arg),
                 ((file_nesting_count < 0) ? file_nesting_count
                                           : (file_nesting_count - 1)),
                 dir[0] ? dir : opened_files_dir);
@@ -246,10 +250,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void *instance, int argc, freecell_solver_str_t argv[], int start_arg,
     freecell_solver_str_t *known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
-    void *callback_context, char **error_string, int *last_arg,
-    const int file_nesting_count, freecell_solver_str_t opened_files_dir)
+    void *callback_context FCS__PASS_ERR_STR(char **error_string),
+    int *last_arg, const int file_nesting_count,
+    freecell_solver_str_t opened_files_dir)
 {
+#ifdef FCS_WITH_ERROR_STRS
     *error_string = NULL;
+#endif
 
     const freecell_solver_str_t *const arg_argc = &(argv[argc]);
 
@@ -331,8 +338,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_tests_order(
                     instance, (*arg), &fcs_user_errstr) != 0)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string = calc_errstr_s(
                     "Error in tests' order!\n%s\n", fcs_user_errstr);
+#endif
                 free(fcs_user_errstr);
 
                 RET_ERROR_IN_ARG();
@@ -347,6 +356,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_num_freecells(
                     instance, atoi((*arg))) != 0)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 char *const errstr = SMALLOC(errstr, 200);
                 sprintf(errstr,
                     "Error! The freecells\' number "
@@ -355,6 +365,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     freecell_solver_user_get_max_num_freecells());
 
                 *error_string = errstr;
+#endif
 
                 RET_ERROR_IN_ARG();
             }
@@ -369,6 +380,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_num_stacks(instance, atoi((*arg))) !=
                 0)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 char *const errstr = SMALLOC(errstr, 200);
                 sprintf(errstr,
                     "Error! The stacks\' number "
@@ -377,6 +389,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     freecell_solver_user_get_max_num_stacks());
 
                 *error_string = errstr;
+#endif
 
                 RET_ERROR_IN_ARG();
             }
@@ -390,6 +403,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #ifndef HARD_CODED_NUM_DECKS
             if (freecell_solver_user_set_num_decks(instance, atoi((*arg))) != 0)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 char *const errstr = SMALLOC(errstr, 200);
                 sprintf(errstr,
                     "Error! The decks\' number "
@@ -398,6 +412,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     freecell_solver_user_get_max_num_decks());
 
                 *error_string = errstr;
+#endif
 
                 RET_ERROR_IN_ARG();
             }
@@ -467,34 +482,42 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 break;
 
             case FCS_PRESET_CODE_NOT_FOUND:
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string =
                     calc_errstr_s("Unknown game \"%s\"!\n\n", s_arg);
+#endif
                 RET_ERROR_IN_ARG();
 
             case FCS_PRESET_CODE_FREECELLS_EXCEED_MAX:
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string =
                     calc_errstr_s("The game \"%s\" exceeds the maximal number "
                                   "of freecells in the program.\n"
                                   "Modify the file \"config.h\" and recompile, "
                                   "if you wish to solve one of its boards.\n",
                         s_arg);
+#endif
                 RET_ERROR_IN_ARG();
 
             case FCS_PRESET_CODE_STACKS_EXCEED_MAX:
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string =
                     calc_errstr_s("The game \"%s\" exceeds the maximal number "
                                   "of stacks in the program.\n"
                                   "Modify the file \"config.h\" and recompile, "
                                   "if you wish to solve one of its boards.\n",
                         s_arg);
+#endif
                 RET_ERROR_IN_ARG();
 
             default:
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string = calc_errstr_s(
                     "The game \"%s\" exceeds the limits of the program.\n"
                     "Modify the file \"config.h\" and recompile, if you wish "
                     "to solve one of its boards.\n",
                     s_arg);
+#endif
                 RET_ERROR_IN_ARG();
             }
 #endif
@@ -532,8 +555,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             else
             {
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string =
                     calc_errstr_s("Unknown solving method \"%s\".\n", s);
+#endif
 
                 RET_ERROR_IN_ARG();
             }
@@ -618,8 +643,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     ? freecell_solver_user_next_soft_thread(instance)
                     : freecell_solver_user_next_hard_thread(instance))
             {
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string = strdup(
                     "The maximal number of soft threads has been exceeded\n");
+#endif
 
                 RET_ERROR_IN_ARG();
             }
@@ -699,9 +726,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_optimization_scan_tests_order(
                     instance, (*arg), &fcs_user_errstr) != 0)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string = calc_errstr_s(
                     "Error in the optimization scan's tests' order!\n%s\n",
                     fcs_user_errstr);
+#endif
                 free(fcs_user_errstr);
 
                 RET_ERROR_IN_ARG();
@@ -725,8 +754,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             else
             {
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string = calc_errstr_s(
                     "Unknown scans' synergy type \"%s\"!\n", (*arg));
+#endif
 
                 RET_ERROR_IN_ARG();
             }
@@ -795,11 +826,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 /* If we still could not open it return an error */
                 if (f == NULL)
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     char *err_str = SMALLOC(err_str, strlen(s) + 100);
                     sprintf(
                         err_str, "Could not open file \"%s\"!\nQuitting.\n", s);
 
                     *error_string = err_str;
+#endif
 
                     RET_ERROR_IN_ARG();
                 }
@@ -808,8 +841,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 buffer = SMALLOC(buffer, file_len + 1);
                 if (buffer == NULL)
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     *error_string = strdup("Could not allocate enough memory "
                                            "to parse the file. Quitting.\n");
+#endif
+
                     fclose(f);
 
                     RET_ERROR_IN_ARG();
@@ -828,11 +864,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                             instance, args_man.argc - num_file_args_to_skip,
                             (freecell_solver_str_t *)(void
                                     *)(args_man.argv + num_file_args_to_skip),
-                            0, known_parameters, callback, callback_context,
-                            error_string, last_arg,
-                            ((file_nesting_count < 0)
-                                    ? file_nesting_count
-                                    : (file_nesting_count - 1)),
+                            0, known_parameters, callback,
+                            callback_context FCS__PASS_ERR_STR(error_string),
+                            last_arg, ((file_nesting_count < 0)
+                                              ? file_nesting_count
+                                              : (file_nesting_count - 1)),
                             opened_files_dir);
 
                     if (!((ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION) ||
@@ -851,18 +887,22 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 
-            const int ret = freecell_solver_user_cmd_line_read_cmd_line_preset(
-                instance, (*arg), known_parameters, error_string,
-                file_nesting_count, opened_files_dir);
+            const int ret =
+                freecell_solver_user_cmd_line_read_cmd_line_preset(instance,
+                    (*arg), known_parameters FCS__PASS_ERR_STR(error_string),
+                    file_nesting_count, opened_files_dir);
 
             switch (ret)
             {
             case FCS_CMD_LINE_ERROR_IN_ARG:
             {
+#ifdef FCS_WITH_ERROR_STRS
                 char *err_str = SMALLOC(err_str, strlen((*arg)) + 100);
                 sprintf(err_str, "Unable to load the \"%s\" configuration!\n",
                     (*arg));
                 *error_string = err_str;
+
+#endif
             }
                 RET_ERROR_IN_ARG();
 
@@ -910,8 +950,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg)),
                         &fcs_user_errstr))
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     *error_string = calc_errstr_s(
                         "Error in depth tests' order!\n%s\n", fcs_user_errstr);
+#endif
                     free(fcs_user_errstr);
 
                     RET_ERROR_IN_ARG();
@@ -928,9 +970,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_pruning(
                     instance, (*arg), &fcs_user_errstr) != 0)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string = calc_errstr_s(
                     "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr);
+#endif
                 free(fcs_user_errstr);
 
                 RET_ERROR_IN_ARG();
@@ -954,8 +998,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
             if (freecell_solver_user_set_flares_choice(instance, (*arg)) != 0)
             {
+#ifdef FCS_WITH_ERROR_STRS
                 *error_string = calc_errstr_s(
                     "Unknown flares choice argument '%s'.\n", (*arg));
+#endif
 
                 RET_ERROR_IN_ARG();
             }
@@ -975,17 +1021,21 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
                 if (sscanf((*arg), "%d,%d", &position, &x_param_val) != 2)
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     *error_string =
                         strdup("Wrong format for --patsolve-x-param");
+#endif
                     RET_ERROR_IN_ARG();
                 }
                 char *fcs_user_errstr;
                 if (freecell_solver_user_set_patsolve_x_param(
                         instance, position, x_param_val, &fcs_user_errstr) != 0)
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     *error_string = calc_errstr_s(
                         "Error in patsolve X param setting!\n%s\n",
                         fcs_user_errstr);
+#endif
                     free(fcs_user_errstr);
 
                     RET_ERROR_IN_ARG();
@@ -1006,17 +1056,21 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
                 if (sscanf((*arg), "%d,%lf", &position, &y_param_val) != 2)
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     *error_string =
                         strdup("Wrong format for --patsolve-y-param");
+#endif
                     RET_ERROR_IN_ARG();
                 }
                 char *fcs_user_errstr;
                 if (freecell_solver_user_set_patsolve_y_param(
                         instance, position, y_param_val, &fcs_user_errstr) != 0)
                 {
+#ifdef FCS_WITH_ERROR_STRS
                     *error_string = calc_errstr_s(
                         "Error in patsolve Y param setting!\n%s\n",
                         fcs_user_errstr);
+#endif
                     free(fcs_user_errstr);
 
                     RET_ERROR_IN_ARG();
@@ -1040,10 +1094,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args(void *instance, int argc,
     freecell_solver_str_t argv[], int start_arg,
     freecell_solver_str_t *known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
-    void *callback_context, char **error_string, int *last_arg)
+    void *callback_context FCS__PASS_ERR_STR(char **error_string),
+    int *last_arg)
 {
     return freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         instance, argc, argv, start_arg, known_parameters, callback,
-        callback_context, error_string, last_arg, -1, NULL);
+        callback_context FCS__PASS_ERR_STR(error_string), last_arg, -1, NULL);
 }
 #endif
