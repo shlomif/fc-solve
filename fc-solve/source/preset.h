@@ -63,7 +63,7 @@ static GCC_INLINE fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name(
 
     if (ret != FCS_PRESET_CODE_OK)
     {
-        return ret;
+        return (fc_solve_preset_ret_code_t)ret;
     }
 
     return fc_solve_apply_preset_by_ptr(instance, preset_ptr);

@@ -1702,8 +1702,9 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
     SET_GAME_PARAMS();
 #endif
 
-    fcs_derived_states_list_t derived_states_list_struct = {
-        .states = NULL, .num_states = 0};
+    fcs_derived_states_list_t derived_states_list_struct;
+    derived_states_list_struct.num_states = 0;
+    derived_states_list_struct.states = NULL;
 
     sfs_check_state_begin();
 

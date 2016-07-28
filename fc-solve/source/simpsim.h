@@ -27,10 +27,6 @@
  */
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "config.h"
 /* For fcs_state_keyval_pair_t */
 #include "state.h"
@@ -64,7 +60,3 @@ DECLARE_MOVE_FUNCTION(
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent);
 
 #endif /* #ifndef FCS_DISABLE_SIMPLE_SIMON */
-
-#ifdef __cplusplus
-}
-#endif

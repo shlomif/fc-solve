@@ -27,10 +27,6 @@
  */
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "config.h"
 #include "instance.h"
 
@@ -169,8 +165,8 @@ static GCC_INLINE void add_to_move_funcs_list(
     const size_t count_to_add)
 {
     const size_t num = *num_so_far;
-    fc_solve_solve_for_state_move_func_t *const move_funcs_list =
-        SREALLOC(*out_move_funcs_list, num + count_to_add);
+    fc_solve_solve_for_state_move_func_t *const move_funcs_list = (typeof(
+        move_funcs_list))SREALLOC(*out_move_funcs_list, num + count_to_add);
     size_t next_i = num;
     for (size_t i = 0; i < count_to_add; i++)
     {
@@ -188,7 +184,3 @@ extern int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const,
 extern void fc_solve_sfs_check_state_end(fc_solve_soft_thread_t *const,
     fcs_kv_state_t *const, fcs_kv_state_t *const, const int,
     fcs_move_stack_t *const, fcs_derived_states_list_t *const);
-
-#ifdef __cplusplus
-}
-#endif

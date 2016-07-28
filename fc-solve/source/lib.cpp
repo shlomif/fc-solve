@@ -1862,7 +1862,7 @@ char *freecell_solver_user_get_invalid_state_error_string(
 #endif
     )
 {
-    char *ret = malloc(80);
+    char *ret = (char *)malloc(80);
     freecell_solver_user_get_invalid_state_error_into_string(
         api_instance, ret PASS_T(print_ts));
     return ret;
@@ -2566,7 +2566,7 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
         &(get_current_instance_item(user)->single_flare.moves_seq);
 #endif
 
-    moves_seq->moves = memdup(src_moves_seq->moves,
+    moves_seq->moves = (typeof(moves_seq->moves))memdup(src_moves_seq->moves,
         (sizeof(src_moves_seq->moves[0]) * (moves_seq->num_moves =
                                                    src_moves_seq->num_moves)));
 

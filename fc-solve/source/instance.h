@@ -27,10 +27,6 @@
  */
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <math.h>
 
 #include "config.h"
@@ -143,6 +139,7 @@ typedef struct
     char col, height;
 } fcs_pos_by_rank_t;
 
+#include "min_and_max.h"
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 #define FCS_BOTH__POS_BY_RANK__SIZE                                            \
     (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank_t),                   \
@@ -773,7 +770,7 @@ struct fc_solve_instance_struct
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_t hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-    fcs_states_google_hash_handle_t hash;
+    StatesGoogleHash hash;
 #endif
 
 #if defined(INDIRECT_STACK_STATES)
@@ -792,7 +789,7 @@ struct fc_solve_instance_struct
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     GHashTable *stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-    fcs_columns_google_hash_handle_t stacks_hash;
+    ColumnsGoogleHash stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     Pvoid_t stacks_judy_array;
 #else
@@ -1101,7 +1098,7 @@ static GCC_INLINE fcs_tests_order_t tests_order_dup(
 
     ret.num_groups = orig->num_groups;
 
-    ret.groups = memdup(
+    ret.groups = (typeof(ret.groups))memdup(
         orig->groups, sizeof(orig->groups[0]) *
                           ((ret.num_groups & (~(TESTS_ORDER_GROW_BY - 1))) +
                               TESTS_ORDER_GROW_BY));
@@ -1109,7 +1106,8 @@ static GCC_INLINE fcs_tests_order_t tests_order_dup(
     for (int i = 0; i < ret.num_groups; i++)
     {
         ret.groups[i].order_group_tests =
-            memdup(ret.groups[i].order_group_tests,
+            (typeof(ret.groups[i].order_group_tests))memdup(
+                ret.groups[i].order_group_tests,
                 sizeof(ret.groups[i].order_group_tests[0]) *
                     ((ret.groups[i].num & (~(TESTS_ORDER_GROW_BY - 1))) +
                         TESTS_ORDER_GROW_BY));
@@ -1185,10 +1183,6 @@ static GCC_INLINE fcs_bool_t fcs_get_calc_real_depth(
     const fc_solve_instance_t *const instance)
 {
     return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
-}
-#endif
-
-#ifdef __cplusplus
 }
 #endif
 

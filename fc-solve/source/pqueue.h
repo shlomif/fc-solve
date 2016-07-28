@@ -89,7 +89,8 @@ typedef struct
 static GCC_INLINE void fc_solve_pq_init(PQUEUE *const pq)
 {
     pq->current_size = 0;
-    pq->Elements = SMALLOC(pq->Elements, (pq->max_size = 1024) + 1);
+    pq->Elements =
+        (typeof(pq->Elements))SMALLOC(pq->Elements, (pq->max_size = 1024) + 1);
 }
 
 static GCC_INLINE void fc_solve_PQueueFree(PQUEUE *pq)

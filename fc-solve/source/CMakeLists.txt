@@ -229,19 +229,19 @@ ADD_CUSTOM_COMMAND(
 
 SET (FREECELL_SOLVER_LIB_MODULES
     card.c
-    check_and_add_state.c
+    check_and_add_state.cpp
     cmd_line.c
-    freecell.c
-    instance.c
-    lib.c
+    freecell.cpp
+    instance.cpp
+    lib.cpp
     meta_alloc.c
     move.c
-    move_funcs_maps.c
-    move_funcs_order.c
-    preset.c
+    move_funcs_maps.cpp
+    move_funcs_order.cpp
+    preset.cpp
     rate_state.c
-    scans.c
-    simpsim.c
+    scans.cpp
+    simpsim.cpp
     split_cmd_line.c
     state.c
     "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_H}"
@@ -458,7 +458,7 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     # "-Wfloat-equal"
 
     IF (${CMAKE_COMPILER_IS_GNUCC})
-        ADD_GCC_DEBUG_WARNING_FLAGS()
+        # ADD_GCC_DEBUG_WARNING_FLAGS()
     ENDIF ()
 ENDIF ()
 
@@ -466,9 +466,6 @@ IF (IS_DEBUG OR FCS_WITH_TEST_SUITE)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
 ENDIF ()
 
-IF (${CMAKE_COMPILER_IS_GNUCC})
-    ADD_DEFINITIONS("-std=gnu99")
-ENDIF ()
 
 IF (CMAKE_BUILD_TYPE STREQUAL release)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-flto" "-ffat-lto-objects")
@@ -1173,3 +1170,15 @@ ADD_SUBDIRECTORY ("t")
 ADD_SUBDIRECTORY ("board_gen")
 ADD_SUBDIRECTORY ("man")
 ADD_SUBDIRECTORY ("Presets")
+
+FOREACH(_file ${FREECELL_SOLVER_LIB_MODULES})
+    IF ("${_file}" MATCHES "\\.c$")
+        IF (${CMAKE_COMPILER_IS_GNUCC})
+            SET_SOURCE_FILES_PROPERTIES("${_file}" PROPERTIES COMPILE_FLAGS "-std=gnu99")
+        ENDIF ()
+    ELSE()
+        IF (${CMAKE_COMPILER_IS_GNUCC})
+            SET_SOURCE_FILES_PROPERTIES("${_file}" PROPERTIES COMPILE_FLAGS "-std=gnu++11")
+        ENDIF ()
+    ENDIF ()
+ENDFOREACH()

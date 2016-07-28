@@ -644,26 +644,28 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
         }
 #endif
 
-        const fcs_game_limit_t num_vacant_freecells =
-            count_num_vacant_freecells(
-                LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
-        const fcs_game_limit_t num_vacant_stacks =
-            count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
-        if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
-            (num_vacant_freecells == LOCAL_FREECELLS_NUM))
         {
-            instance->final_state = PTR_STATE;
+            const fcs_game_limit_t num_vacant_freecells =
+                count_num_vacant_freecells(
+                    LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
+            const fcs_game_limit_t num_vacant_stacks =
+                count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
+            if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
+                (num_vacant_freecells == LOCAL_FREECELLS_NUM))
+            {
+                instance->final_state = PTR_STATE;
 
-            BUMP_NUM_CHECKED_STATES();
+                BUMP_NUM_CHECKED_STATES();
 
-            error_code = FCS_STATE_WAS_SOLVED;
-            goto my_return_label;
+                error_code = FCS_STATE_WAS_SOLVED;
+                goto my_return_label;
+            }
+
+            calculate_real_depth(calc_real_depth, PTR_STATE);
+
+            soft_thread->num_vacant_freecells = num_vacant_freecells;
+            soft_thread->num_vacant_stacks = num_vacant_stacks;
         }
-
-        calculate_real_depth(calc_real_depth, PTR_STATE);
-
-        soft_thread->num_vacant_freecells = num_vacant_freecells;
-        soft_thread->num_vacant_stacks = num_vacant_stacks;
         fc_solve__calc_positions_by_rank_data(
             soft_thread, &FCS_SCANS_the_state, befs_positions_by_rank
 #ifndef FCS_DISABLE_SIMPLE_SIMON

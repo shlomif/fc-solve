@@ -255,7 +255,7 @@ static GCC_INLINE ul perl_hash_function(
     if (condition_expr)                                                        \
     {                                                                          \
         fcs_compact_alloc_release(stacks_allocator);                           \
-        *(current_stack) = cached_stack;                                       \
+        *(current_stack) = (typeof(*(current_stack)))cached_stack;             \
     }
 
 /* TODO : Maybe define an accesor for new_state_key->stacks (also see the
@@ -344,8 +344,13 @@ static GCC_INLINE void fc_solve_cache_stacks(
         {
             column = fcs_state_get_col(*new_state_key, i);
 
-            replace_with_cached(fc_solve_columns_google_hash_insert(
-                instance->stacks_hash, column, &cached_stack));
+            std::pair<ColumnsGoogleHash::iterator, bool> result =
+                instance->stacks_hash.insert((char *)column);
+            if (!result.second)
+            {
+                cached_stack = (*(result.first));
+                replace_with_cached(TRUE);
+            }
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
 
@@ -548,19 +553,19 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     {
-        void *existing_void;
-
+        std::pair<StatesGoogleHash::iterator, bool> result =
+            instance->hash.insert((char *)new_state);
         /*  TODO : check if this condition should be negated. */
-        if (fc_solve_states_google_hash_insert(instance->hash,
-                FCS_STATE_kv_to_collectible(new_state), &(existing_void)))
-        {
-            FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
-            return FALSE;
-        }
-        else
+        if (result.second)
         {
             ON_STATE_NEW();
             return TRUE;
+        }
+        else
+        {
+            FCS_STATE_collectible_to_kv(existing_state_raw,
+                (fcs_collectible_state_t *)(*(result.first)));
+            return FALSE;
         }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)

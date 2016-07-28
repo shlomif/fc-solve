@@ -26,8 +26,6 @@
  * for Freecell Solver.
  */
 
-#include "google_hash.h"
-
 #if ((FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE) ||  \
      (FCS_WHICH_COLUMNS_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE))
 #include <google/dense_hash_set>
@@ -95,6 +93,7 @@ typedef sparse_hash_set<char *, state_hash, state_equality> StatesGoogleHash;
 typedef dense_hash_set<char *, state_hash, state_equality> StatesGoogleHash;
 #endif
 
+#if 0
 extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
 {
     StatesGoogleHash *ret = new StatesGoogleHash;
@@ -105,6 +104,7 @@ extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
 
     return (fcs_states_google_hash_handle_t)(ret);
 }
+#endif
 
 /*
  * Returns 0 if the key is new and the key/val pair was inserted.
@@ -113,6 +113,7 @@ extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
+#if 0
 extern "C" fcs_bool_t fc_solve_states_google_hash_insert(
     fcs_states_google_hash_handle_t void_hash, void *key, void **existing_key)
 {
@@ -133,7 +134,9 @@ extern "C" fcs_bool_t fc_solve_states_google_hash_insert(
         return TRUE;
     }
 }
+#endif
 
+#if 0
 extern "C" void fc_solve_states_google_hash_free(
     fcs_states_google_hash_handle_t void_hash)
 {
@@ -143,18 +146,16 @@ extern "C" void fc_solve_states_google_hash_free(
 
     return;
 }
+#endif
 
-extern void fc_solve_states_google_hash_foreach(
-    fcs_states_google_hash_handle_t void_hash,
+static inline void fc_solve_states_google_hash_foreach(StatesGoogleHash &hash,
     fcs_bool_t (*should_delete_ptr)(void *key, void *context), void *context)
 {
-    StatesGoogleHash *hash = (StatesGoogleHash *)void_hash;
-
-    for (StatesGoogleHash::iterator it = hash->begin(); it != hash->end(); ++it)
+    for (StatesGoogleHash::iterator it = hash.begin(); it != hash.end(); ++it)
     {
         if (should_delete_ptr(*(it), context))
         {
-            hash->erase(it);
+            hash.erase(it);
         }
     }
 }
@@ -187,6 +188,7 @@ typedef sparse_hash_set<char *, column_hash, column_equality> ColumnsGoogleHash;
 typedef dense_hash_set<char *, column_hash, column_equality> ColumnsGoogleHash;
 #endif
 
+#if 0
 extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
 {
     ColumnsGoogleHash *ret = new ColumnsGoogleHash;
@@ -197,6 +199,7 @@ extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
 
     return (fcs_columns_google_hash_handle_t)(ret);
 }
+#endif
 
 /*
  * Returns 0 if the key is new and the key/val pair was inserted.
@@ -205,6 +208,7 @@ extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
+#if 0
 extern "C" fcs_bool_t fc_solve_columns_google_hash_insert(
     fcs_columns_google_hash_handle_t void_hash, void *key, void **existing_key)
 {
@@ -235,5 +239,6 @@ extern "C" void fc_solve_columns_google_hash_free(
 
     return;
 }
+#endif
 
 #endif

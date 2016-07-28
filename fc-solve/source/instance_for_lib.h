@@ -30,10 +30,6 @@
  */
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "instance.h"
 #include "scans_impl.h"
 
@@ -52,8 +48,8 @@ static GCC_INLINE fc_solve_soft_thread_t *fc_solve_new_hard_thread(
         return NULL;
     }
 
-    instance->hard_threads =
-        SREALLOC(instance->hard_threads, instance->num_hard_threads + 1);
+    instance->hard_threads = (typeof(instance->hard_threads))SREALLOC(
+        instance->hard_threads, instance->num_hard_threads + 1);
 
     /* Since we SREALLOC()ed the hard_threads, their addresses changed,
      * so we need to update it.
@@ -230,14 +226,16 @@ static GCC_INLINE void fc_solve__hard_thread__compile_prelude(
 #define PRELUDE_GROW_BY 16
         if (!(num_items & (PRELUDE_GROW_BY - 1)))
         {
-            prelude = SREALLOC(prelude, num_items + PRELUDE_GROW_BY);
+            prelude =
+                (typeof(prelude))SREALLOC(prelude, num_items + PRELUDE_GROW_BY);
         }
 #undef PRELUDE_GROW_BY
         prelude[num_items++] = (typeof(prelude[0])){
             .scan_idx = ST_LOOP__GET_INDEX(), .quota = p_quota};
     }
 
-    HT_FIELD(hard_thread, prelude) = SREALLOC(prelude, num_items);
+    HT_FIELD(hard_thread, prelude) =
+        (typeof(HT_FIELD(hard_thread, prelude)))SREALLOC(prelude, num_items);
     HT_FIELD(hard_thread, prelude_num_items) = num_items;
     HT_FIELD(hard_thread, prelude_idx) = 0;
 }
@@ -297,7 +295,8 @@ static GCC_INLINE void fc_solve_init_instance(
              *
              * */
             size_t num_tests = 0;
-            size_t *tests = SMALLOC(tests, sizeof(total_tests) * 8);
+            size_t *tests =
+                (typeof(tests))SMALLOC(tests, sizeof(total_tests) * 8);
 
             for (size_t bit_idx = 0; total_tests != 0;
                  bit_idx++, total_tests >>= 1)
@@ -307,12 +306,12 @@ static GCC_INLINE void fc_solve_init_instance(
                     tests[num_tests++] = bit_idx;
                 }
             }
-            tests =
-                SREALLOC(tests, ((num_tests & (~(TESTS_ORDER_GROW_BY - 1))) +
-                                    TESTS_ORDER_GROW_BY));
+            tests = (typeof(tests))SREALLOC(
+                tests, ((num_tests & (~(TESTS_ORDER_GROW_BY - 1))) +
+                           TESTS_ORDER_GROW_BY));
             instance->opt_tests_order = (typeof(instance->opt_tests_order)){
                 .num_groups = 1,
-                .groups = SMALLOC(
+                .groups = (typeof(instance->opt_tests_order.groups))SMALLOC(
                     instance->opt_tests_order.groups, TESTS_ORDER_GROW_BY),
             };
             instance->opt_tests_order.groups[0] =
@@ -506,7 +505,9 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
     instance->hash.instance = instance;
 #endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-    instance->hash = fc_solve_states_google_hash_new();
+#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE)
+    instance->hash.set_empty_key(NULL);
+#endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 /* Do nothing because it is allocated elsewhere. */
 #else
@@ -543,7 +544,9 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
         g_hash_table_new(fc_solve_glib_hash_stack_hash_function,
             fc_solve_glib_hash_stack_compare);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-    instance->stacks_hash = fc_solve_columns_google_hash_new();
+#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE)
+    instance->stacks_hash.set_empty_key(NULL);
+#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     instance->stacks_judy_array = NULL;
 #else
@@ -804,12 +807,13 @@ static GCC_INLINE void fc_solve__setup_optimization_thread__helper(
             fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
         }
 
-        soft_thread->by_depth_tests_order =
-            (typeof(soft_thread->by_depth_tests_order)){
-                .num = 1,
-                .by_depth_tests =
+        soft_thread->by_depth_tests_order = (typeof(
+            soft_thread->by_depth_tests_order)){
+            .num = 1,
+            .by_depth_tests =
+                (typeof(soft_thread->by_depth_tests_order.by_depth_tests))
                     SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
-            };
+        };
         soft_thread->by_depth_tests_order.by_depth_tests[0] =
             (typeof(soft_thread->by_depth_tests_order.by_depth_tests[0])){
                 .max_depth = SSIZE_MAX,
@@ -883,7 +887,7 @@ static GCC_INLINE int fc_solve_optimize_solution(
     if (!instance->optimization_thread)
     {
         instance->optimization_thread = optimization_thread =
-            SMALLOC1(optimization_thread);
+            (typeof(optimization_thread))SMALLOC1(optimization_thread);
 
         fc_solve_instance__init_hard_thread(instance, optimization_thread);
 
@@ -959,8 +963,9 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
         const_SLOT(master_to_randomize, soft_thread);
         fcs_tests_by_depth_array_t *const arr_ptr =
             &(DFS_VAR(soft_thread, tests_by_depth_array));
-        arr_ptr->by_depth_units = SMALLOC(arr_ptr->by_depth_units,
-            (arr_ptr->num_units = soft_thread->by_depth_tests_order.num));
+        arr_ptr->by_depth_units =
+            (typeof(arr_ptr->by_depth_units))SMALLOC(arr_ptr->by_depth_units,
+                (arr_ptr->num_units = soft_thread->by_depth_tests_order.num));
 
         const fcs_by_depth_tests_order_t *const by_depth_tests_order =
             soft_thread->by_depth_tests_order.by_depth_tests;
@@ -981,7 +986,8 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
 
             *tests_list_of_lists = (typeof(*tests_list_of_lists)){
                 .num_lists = 0,
-                .lists = SMALLOC(tests_list_of_lists->lists, tests_order_num),
+                .lists = (typeof(tests_list_of_lists->lists))SMALLOC(
+                    tests_list_of_lists->lists, tests_order_num),
             };
 
             for (size_t group_idx = 0; group_idx < tests_order_num; group_idx++)
@@ -1016,8 +1022,9 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                 }
             }
 
-            tests_list_of_lists->lists = SREALLOC(
-                tests_list_of_lists->lists, tests_list_of_lists->num_lists);
+            tests_list_of_lists->lists =
+                (typeof(tests_list_of_lists->lists))SREALLOC(
+                    tests_list_of_lists->lists, tests_list_of_lists->num_lists);
         }
     }
 
@@ -1313,8 +1320,4 @@ static GCC_INLINE int fc_solve_resume_instance(
 }
 #ifdef FCS_SINGLE_HARD_THREAD
 #undef hard_thread
-#endif
-
-#ifdef __cplusplus
-}
 #endif

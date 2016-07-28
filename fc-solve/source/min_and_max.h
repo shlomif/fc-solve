@@ -25,20 +25,10 @@
  * min_and_max.h - header file for the min(a,b) and max(a,b) macros.
  *
  */
-#pragma once
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef min
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
-#endif
-
-#ifdef __cplusplus
-}
 #endif

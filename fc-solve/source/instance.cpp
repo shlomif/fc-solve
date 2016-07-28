@@ -294,7 +294,8 @@ static GCC_INLINE
         .by_depth_tests_order =
             {
                 .num = 1,
-                .by_depth_tests =
+                .by_depth_tests = (typeof(
+                    soft_thread->by_depth_tests_order.by_depth_tests))
                     SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
             },
         .is_befs = FALSE,
@@ -453,11 +454,12 @@ static GCC_INLINE find_card_ret_t find_card_src_string(
         return (find_card_ret_t){
             .idx = (find_fc_card(
                 dynamic_state, src_card_s PASS_FREECELLS(FREECELLS_NUM__VAL))),
-            .type = FREECELL};
+            .type = find_card_ret_t::FREECELL};
     }
     else
     {
-        return (find_card_ret_t){.idx = src_col_idx, .type = COLUMN};
+        return (find_card_ret_t){
+            .idx = src_col_idx, .type = find_card_ret_t::COLUMN};
     }
 }
 
@@ -509,8 +511,8 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
 #endif
 
         solution_moves_ptr->num_moves = num_moves;
-        solution_moves_ptr->moves =
-            SREALLOC(solution_moves_ptr->moves, num_moves);
+        solution_moves_ptr->moves = (typeof(solution_moves_ptr->moves))SREALLOC(
+            solution_moves_ptr->moves, num_moves);
         var_AUTO(mp, pats_scan->moves_to_win);
         for (int i = 0; i < num_moves; i++, mp++)
         {
@@ -554,7 +556,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 const find_card_ret_t src_s = find_card_src_string(
                     &(s_and_info.s), card PASS_FREECELLS(FREECELLS_NUM__VAL)
                                          PASS_STACKS(STACKS_NUM__VAL));
-                if (src_s.type == FREECELL)
+                if (src_s.type == find_card_ret_t::FREECELL)
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
@@ -574,7 +576,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 const find_card_ret_t src_s = find_card_src_string(s,
                     card PASS_FREECELLS(FREECELLS_NUM__VAL)
                         PASS_STACKS(STACKS_NUM__VAL));
-                if (src_s.type == FREECELL)
+                if (src_s.type == find_card_ret_t::FREECELL)
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
@@ -663,7 +665,7 @@ void fc_solve_finish_instance(fc_solve_instance_t *const instance)
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
         fc_solve_hash_free(&(instance->hash));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-        fc_solve_states_google_hash_free(instance->hash);
+        instance->hash.resize(0);
 #else
 #error not defined
 #endif
@@ -682,7 +684,7 @@ in the process */
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->stacks_hash);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-    fc_solve_columns_google_hash_free(instance->stacks_hash);
+    instance->stacks_hash.resize(0);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     {
         Word_t rc_word;
@@ -732,7 +734,8 @@ fc_solve_soft_thread_t *fc_solve_new_soft_thread(
     }
 
     HT_FIELD(hard_thread, soft_threads) =
-        SREALLOC(HT_FIELD(hard_thread, soft_threads),
+        (typeof(HT_FIELD(hard_thread, soft_threads)))SREALLOC(
+            HT_FIELD(hard_thread, soft_threads),
             HT_FIELD(hard_thread, num_soft_threads) + 1);
 
     fc_solve_soft_thread_t *ret;

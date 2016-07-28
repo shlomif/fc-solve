@@ -26,10 +26,6 @@
  */
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
@@ -1033,11 +1029,13 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                             the_soft_dfs_info
                                 ->derived_states_random_indexes_max_size = 1;
                             the_soft_dfs_info
-                                ->derived_states_random_indexes = SREALLOC(
+                                ->derived_states_random_indexes = (typeof(
                                 the_soft_dfs_info
-                                    ->derived_states_random_indexes,
-                                the_soft_dfs_info
-                                    ->derived_states_random_indexes_max_size);
+                                    ->derived_states_random_indexes))
+                                SREALLOC(the_soft_dfs_info
+                                             ->derived_states_random_indexes,
+                                    the_soft_dfs_info
+                                        ->derived_states_random_indexes_max_size);
                         }
 
                         the_soft_dfs_info->derived_states_random_indexes[0]
@@ -1092,10 +1090,12 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 {
                     the_soft_dfs_info->derived_states_random_indexes_max_size =
                         num_states;
-                    the_soft_dfs_info->derived_states_random_indexes = SREALLOC(
-                        the_soft_dfs_info->derived_states_random_indexes,
-                        the_soft_dfs_info
-                            ->derived_states_random_indexes_max_size);
+                    the_soft_dfs_info->derived_states_random_indexes = (typeof(
+                        the_soft_dfs_info->derived_states_random_indexes))
+                        SREALLOC(
+                            the_soft_dfs_info->derived_states_random_indexes,
+                            the_soft_dfs_info
+                                ->derived_states_random_indexes_max_size);
                 }
                 fcs_rating_with_index_t *const rand_array =
                     the_soft_dfs_info->derived_states_random_indexes;
@@ -1325,9 +1325,5 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
     default:
         return FCS_STATE_SUSPEND_PROCESS;
     }
-}
-#endif
-
-#ifdef __cplusplus
 }
 #endif

@@ -192,7 +192,7 @@ sub func_name
 
 my $move_funcs_string = join(",\n", (map { "    " . func_name($_->{'function'}) } @move_funcs));
 my $aliases_string = join(",\n", (map { "    { \"$_\", " . $declared_move_funcs{$aliases{$_}} . " }" } (sort { $a cmp $b } keys(%aliases))));
-my $move_funcs_filename = 'move_funcs_maps.c';
+my $move_funcs_filename = 'move_funcs_maps.cpp';
 open my $move_funcs_fh, '>', $move_funcs_filename
     or die "Cannot open '$move_funcs_filename' for writing - $!";
 print {$move_funcs_fh} <<"EOF" ;

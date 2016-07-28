@@ -56,7 +56,8 @@ static GCC_INLINE void fcs_move_stack_push(
 
     if (!(pos & (FCS_MOVE_STACK_GROW_BY - 1)))
     {
-        stack->moves = SREALLOC(stack->moves, pos + FCS_MOVE_STACK_GROW_BY);
+        stack->moves = (typeof(stack->moves))SREALLOC(
+            stack->moves, pos + FCS_MOVE_STACK_GROW_BY);
     }
 
     stack->moves[pos - 1] = move;
@@ -147,8 +148,10 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
 
 static GCC_INLINE fcs_move_stack_t fcs_move_stack__new(void)
 {
-    return (fcs_move_stack_t){.num_moves = 0,
-        .moves = malloc(sizeof(fcs_move_t) * FCS_MOVE_STACK_GROW_BY)};
+    fcs_move_stack_t ret;
+    ret.num_moves = 0, ret.moves = (typeof(ret.moves))malloc(
+                           sizeof(fcs_move_t) * FCS_MOVE_STACK_GROW_BY);
+    return ret;
 }
 
 static GCC_INLINE void fc_solve_move_stack_swallow_stack(
