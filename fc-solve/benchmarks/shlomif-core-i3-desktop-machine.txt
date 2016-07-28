@@ -861,3 +861,43 @@ Reached Board No. 28000 at 1467749838.311119 (total_num_iters=8522473)
 Reached Board No. 32000 at 1467749839.229263 (total_num_iters=9248862)
 Finished at 1467749839.244415 (total_num_iters=10998093)
 </DUMP>
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="--read-from-file 4,$(pwd)/ct-mod13.sh"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+forking solver instead of multi-threaded solver
+commit 48777d39ee1594fc63bec50ded6f5e6bc5edc265
+(commit Date:   Tue Jul 5 16:44:12 2016 +0300 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l ci7b --prefix="/home/shlomif/apps/fcs"  -l extra_speed --disable-err-strs
+(With -flto and -fwhole-program).
+sudo_renice.
+-O3
+4.7.0 final vanilla - built from source.
+gcc-5.4.0-1.mga6 (Mageia package)
+lib64tcmalloc-devel-2.4.91-2.mga6
+With strip.
+
+7.25082588195801s
+
+    Highlight: new scan, more compiled-out features (do less), some
+    optimisations and cleanups on the trunk, convert to forking solver,
+    vanilla kernel with speedups.
+
+<DUMP>
+Started at 1469653776.406593
+Started at 1469653776.406593
+Started at 1469653776.406593
+Unsolved Board No. 11982 at 1469653779.468860
+Started at 1469653776.406593
+Started at 1469653776.406593
+Reached Board No. 4000 at 1469653777.346302 (total_num_iters=1413271)
+Reached Board No. 8000 at 1469653778.248874 (total_num_iters=2787181)
+Reached Board No. 12000 at 1469653779.122180 (total_num_iters=4123941)
+Reached Board No. 16000 at 1469653780.115049 (total_num_iters=5599888)
+Reached Board No. 20000 at 1469653781.025084 (total_num_iters=6984235)
+Reached Board No. 24000 at 1469653781.885408 (total_num_iters=8302682)
+Reached Board No. 28000 at 1469653782.752831 (total_num_iters=9636225)
+Finished at 1469653783.657419 (total_num_iters=11017439)
+</DUMP>
