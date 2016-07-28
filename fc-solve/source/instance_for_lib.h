@@ -166,8 +166,8 @@ static GCC_INLINE void fc_solve_alloc_instance(
 #ifdef FCS_WITH_ERROR_STRS
         char no_use[120];
 #endif
-        fc_solve_apply_tests_order(
-            &(instance->instance_tests_order), "[01][23456789]" FCS__PASS_ERR_STR(no_use));
+        fc_solve_apply_tests_order(&(instance->instance_tests_order),
+            "[01][23456789]" FCS__PASS_ERR_STR(no_use));
     }
 #endif
 
