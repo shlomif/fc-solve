@@ -510,7 +510,7 @@ typedef struct
 {
     fc_solve_solve_for_state_move_func_t *tests;
     int num_tests;
-    int shuffling_type;
+    fcs_tests_group_type_t shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_list_t;
 

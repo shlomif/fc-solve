@@ -996,7 +996,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                     &(tests_list_of_lists
                                    ->lists[tests_list_of_lists->num_lists++]));
 
-                const int shuffling_type =
+                const fcs_tests_group_type_t shuffling_type =
                     (master_to_randomize
                             ? tests_order_groups[group_idx].shuffling_type
                             : FCS_NO_SHUFFLING);
