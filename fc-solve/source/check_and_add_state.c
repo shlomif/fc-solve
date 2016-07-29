@@ -552,10 +552,10 @@ fcs_bool_t fc_solve_check_and_add_state(
         void *existing_void;
 
         /*  TODO : check if this condition should be negated. */
-        if (fc_solve_states_google_hash_insert(
-                instance->hash, new_state, &(existing_void)))
+        if (fc_solve_states_google_hash_insert(instance->hash,
+                FCS_STATE_kv_to_collectible(new_state), &(existing_void)))
         {
-            existing_state_val = existing_void;
+            FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
             return FALSE;
         }
         else
