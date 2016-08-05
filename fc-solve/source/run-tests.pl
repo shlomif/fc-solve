@@ -13,6 +13,7 @@ use File::Copy;
 use File::Path;
 use Getopt::Long;
 use Env::Path;
+use Path::Tiny qw( path );
 use File::Basename qw( basename dirname );
 # use Time::HiRes qw(time);
 
@@ -53,6 +54,12 @@ GetOptions(
     my $fcs_path = Cwd::getcwd();
     local $ENV{FCS_PATH} = $fcs_path;
     local $ENV{FCS_SRC_PATH} = $abs_bindir;
+
+    local $ENV{FCS_TEST_TAGS} = join ' ', sort { $a cmp $b} (path(
+        File::Spec->catdir(
+            File::Spec->curdir(), "t", "TAGS.txt"
+        )
+    )->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g);
 
     my $testing_preset_rc;
     {

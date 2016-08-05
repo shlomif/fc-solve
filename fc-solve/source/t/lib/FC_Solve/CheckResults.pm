@@ -6,6 +6,7 @@ use warnings;
 use parent 'Games::Solitaire::Verify::Base';
 
 use YAML::XS qw(DumpFile LoadFile);
+use FC_Solve::Paths qw( is_freecell_only );
 
 use String::ShellQuote;
 use Carp;
@@ -74,11 +75,14 @@ sub should_fill_in_id
 sub vtest
 {
     my $self = shift;
-
-    local $Test::Builder::Level = $Test::Builder::Level + 1;
-
     my $args = shift;
     my $msg = shift;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    if (exists($args->{variant}) and is_freecell_only())
+    {
+        return ok(1, q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#);
+    }
 
     if (! $args->{id})
     {

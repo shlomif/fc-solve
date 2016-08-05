@@ -3,6 +3,8 @@ package FC_Solve::Test::Verify;
 use strict;
 use warnings;
 
+use FC_Solve::Paths qw( is_freecell_only );
+
 # Short for run.
 sub r
 {
@@ -11,6 +13,12 @@ sub r
     my ($args, $msg) = @_;
 
     require FC_Solve::GetOutput;
+
+    if (exists $args->{variant} and is_freecell_only())
+    {
+        return Test::More::ok(1, 'skipped due to freecell-only');
+    }
+
     my $cmd_line = FC_Solve::GetOutput->new($args);
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
 

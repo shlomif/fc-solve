@@ -167,3 +167,9 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
     )
 ENDIF ()
 
+SET (test_tags )
+IF (FCS_FREECELL_ONLY)
+    LIST(APPEND test_tags "fc_only")
+ENDIF ()
+
+FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/TAGS.txt" "${test_tags}")

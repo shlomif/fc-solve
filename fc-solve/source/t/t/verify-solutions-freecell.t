@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More tests => 12;
 use Data::Dumper (qw/Dumper/);
-use FC_Solve::Paths qw( samp_board );
+use FC_Solve::Paths qw( is_freecell_only samp_board );
 
 use FC_Solve::GetOutput ();
 
@@ -17,6 +17,11 @@ sub verify_solution_test
 
     my $args = shift;
     my $msg = shift;
+
+    if (exists($args->{variant}) and is_freecell_only())
+    {
+        return ok(1, q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#);
+    }
 
     my $cmd_line = FC_Solve::GetOutput->new($args);
     my $cmd_line_args = $cmd_line->open_cmd_line;
