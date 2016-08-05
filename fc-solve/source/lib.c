@@ -979,8 +979,6 @@ static GCC_INLINE fcs_instance_item_t *get_current_instance_item(
 
 static GCC_INLINE int resume_solution(fcs_user_t *const user)
 {
-    fcs_stats_t init_num_checked_states;
-
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
     const_SLOT(end_of_instances_list, user);
@@ -1150,10 +1148,10 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
                                        .num_checked_states));
         }
 
-        user->init_num_checked_states = init_num_checked_states =
-            (typeof(init_num_checked_states)){
-                .num_checked_states = instance->i__num_checked_states,
-                .num_states_in_collection = instance->num_states_in_collection};
+        fcs_stats_t init_num_checked_states = (typeof(init_num_checked_states)){
+            .num_checked_states = instance->i__num_checked_states,
+            .num_states_in_collection = instance->num_states_in_collection};
+        user->init_num_checked_states = init_num_checked_states;
 
         if (is_start_of_flare_solving)
         {
