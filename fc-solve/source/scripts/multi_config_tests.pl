@@ -264,6 +264,13 @@ run_tests("Break Backward Compatibility #1",
     }
 );
 
+run_tests("Freecell-only (as well as Break Backcompat)",
+    {
+        tatzer_args =>
+        [qw(-l x64t --break-back-compat-1 --fc-only)]
+    }
+);
+
 print colored("All tests successful.",
         ($ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green')
     ), "\n";
