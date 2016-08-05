@@ -901,6 +901,14 @@ static GCC_INLINE void calc_moves_seq(
     moves_seq->moves = ret_moves;
 }
 
+static GCC_INLINE void flare__copy_instance_stats(
+    fcs_flare_item_t *const flare, const fc_solve_instance_t *const instance)
+{
+    flare->obj_stats = (typeof(flare->obj_stats)){
+        .num_checked_states = instance->i__num_checked_states,
+        .num_states_in_collection = instance->num_states_in_collection};
+}
+
 static void trace_flare_solution(
     fcs_user_t *const user, fcs_flare_item_t *const flare)
 {
@@ -922,9 +930,7 @@ static void trace_flare_solution(
     instance_free_solution_moves(instance);
     flare->next_move = 0;
 #endif
-    flare->obj_stats.num_checked_states = instance->i__num_checked_states;
-    flare->obj_stats.num_states_in_collection =
-        instance->num_states_in_collection;
+    flare__copy_instance_stats(flare, instance);
 
     recycle_flare(flare);
     flare->was_solution_traced = TRUE;
@@ -1171,9 +1177,7 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             user->all_instances_were_suspended = FALSE;
         }
 
-        flare->obj_stats.num_checked_states = instance->i__num_checked_states;
-        flare->obj_stats.num_states_in_collection =
-            instance->num_states_in_collection;
+        flare__copy_instance_stats(flare, instance);
         const_AUTO(delta, flare->obj_stats.num_checked_states -
                               init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
@@ -1252,10 +1256,7 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             if ((local_limit() >= 0) &&
                 (instance->i__num_checked_states >= local_limit()))
             {
-                flare->obj_stats.num_checked_states =
-                    instance->i__num_checked_states;
-                flare->obj_stats.num_states_in_collection =
-                    instance->num_states_in_collection;
+                flare__copy_instance_stats(flare, instance);
                 recycle_instance(user, instance_item);
                 user->current_instance++;
                 continue;
