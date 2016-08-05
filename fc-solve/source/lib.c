@@ -1144,12 +1144,10 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
                                        .num_checked_states));
         }
 
-        user->init_num_checked_states.num_checked_states =
-            init_num_checked_states.num_checked_states =
-                instance->i__num_checked_states;
-        user->init_num_checked_states.num_states_in_collection =
-            init_num_checked_states.num_states_in_collection =
-                instance->num_states_in_collection;
+        user->init_num_checked_states = init_num_checked_states =
+            (typeof(init_num_checked_states)){
+                .num_checked_states = instance->i__num_checked_states,
+                .num_states_in_collection = instance->num_states_in_collection};
 
         if (is_start_of_flare_solving)
         {
