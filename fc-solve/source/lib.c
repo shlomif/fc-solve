@@ -901,12 +901,17 @@ static GCC_INLINE void calc_moves_seq(
     moves_seq->moves = ret_moves;
 }
 
+static GCC_INLINE fcs_stats_t instance__calc_stats(
+    const fc_solve_instance_t *const instance)
+{
+    return (fcs_stats_t){.num_checked_states = instance->i__num_checked_states,
+        .num_states_in_collection = instance->num_states_in_collection};
+}
+
 static GCC_INLINE void flare__copy_instance_stats(
     fcs_flare_item_t *const flare, const fc_solve_instance_t *const instance)
 {
-    flare->obj_stats = (typeof(flare->obj_stats)){
-        .num_checked_states = instance->i__num_checked_states,
-        .num_states_in_collection = instance->num_states_in_collection};
+    flare->obj_stats = instance__calc_stats(instance);
 }
 
 static void trace_flare_solution(
@@ -1148,9 +1153,8 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
                                        .num_checked_states));
         }
 
-        fcs_stats_t init_num_checked_states = (typeof(init_num_checked_states)){
-            .num_checked_states = instance->i__num_checked_states,
-            .num_states_in_collection = instance->num_states_in_collection};
+        const fcs_stats_t init_num_checked_states =
+            instance__calc_stats(instance);
         user->init_num_checked_states = init_num_checked_states;
 
         if (is_start_of_flare_solving)
