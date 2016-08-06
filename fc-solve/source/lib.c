@@ -47,15 +47,6 @@
 
 #define FCS_MAX_FLARE_NAME_LEN 30
 
-typedef struct
-{
-    fcs_int_limit_t num_checked_states;
-    fcs_int_limit_t num_states_in_collection;
-} fcs_stats_t;
-
-static const fcs_stats_t initial_stats = {
-    .num_checked_states = 0, .num_states_in_collection = 0};
-
 /* A flare is an alternative scan algorithm to be tried. All flares in
  * a single instance are being evaluated and then one picks the shortest
  * solution out of all of them. (see fc-solve/docs/flares-functional-spec.txt )
@@ -904,8 +895,7 @@ static GCC_INLINE void calc_moves_seq(
 static GCC_INLINE fcs_stats_t instance__calc_stats(
     const fc_solve_instance_t *const instance)
 {
-    return (fcs_stats_t){.num_checked_states = instance->i__num_checked_states,
-        .num_states_in_collection = instance->num_states_in_collection};
+    return instance->stats;
 }
 
 static GCC_INLINE void flare__copy_instance_stats(
@@ -1148,7 +1138,7 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
 
             instance->effective_max_num_checked_states =
                 ((mymin < 0) ? FCS_INT_LIMIT_MAX
-                             : (instance->i__num_checked_states + mymin -
+                             : (instance->stats.num_checked_states + mymin -
                                    user->iterations_board_started_at
                                        .num_checked_states));
         }
@@ -1233,7 +1223,7 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             if (((user->current_iterations_limit >= 0) &&
                     (user->iterations_board_started_at.num_checked_states >=
                         user->current_iterations_limit)) ||
-                (instance->num_states_in_collection >=
+                (instance->stats.num_states_in_collection >=
                     instance->effective_max_num_states_in_collection))
             {
 /* Bug fix:
@@ -1256,7 +1246,7 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
              * so, designate it as unsolvable.
              * */
             if ((local_limit() >= 0) &&
-                (instance->i__num_checked_states >= local_limit()))
+                (instance->stats.num_checked_states >= local_limit()))
             {
                 flare__copy_instance_stats(flare, instance);
                 recycle_instance(user, instance_item);
@@ -1753,7 +1743,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
 
     return user->iterations_board_started_at.num_checked_states +
            max(user->active_flare->obj_stats.num_checked_states,
-               user->active_flare->obj.i__num_checked_states) -
+               user->active_flare->obj.stats.num_checked_states) -
            user->init_num_checked_states.num_checked_states;
 }
 

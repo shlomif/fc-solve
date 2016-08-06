@@ -66,7 +66,7 @@ static GCC_INLINE fcs_bool_t check_num_states_in_collection(
  * */
 #define check_if_limits_exceeded()                                             \
     (check_if_limits_exceeded__num() ||                                        \
-        (instance->num_states_in_collection >=                                 \
+        (instance->stats.num_states_in_collection >=                           \
             effective_max_num_states_in_collection))
 
 #define BEFS_MAX_DEPTH 20000
@@ -837,7 +837,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     }
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
-        &(instance->i__num_checked_states);
+        &(instance->stats.num_checked_states);
 #ifndef FCS_SINGLE_HARD_THREAD
     fcs_int_limit_t *const hard_thread_num_checked_states_ptr =
         &(HT_FIELD(hard_thread, ht__num_checked_states));
@@ -1311,7 +1311,7 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 #ifndef FCS_SINGLE_HARD_THREAD
         HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
 #endif
-        HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
+        HT_INSTANCE(hard_thread)->stats.num_checked_states += after_scan_delta;
     }
 
     switch (pats_scan->status)
