@@ -6,7 +6,7 @@ use String::ShellQuote qw/shell_quote/;
 
 use parent 'Exporter';
 
-our @EXPORT_OK = qw($FC_SOLVE_EXE $FC_SOLVE__RAW bin_board bin_exe_raw bin_file data_file is_freecell_only samp_board samp_preset samp_sol);
+our @EXPORT_OK = qw($FC_SOLVE_EXE $FC_SOLVE__RAW bin_board bin_exe_raw bin_file data_file is_freecell_only is_without_flares samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -18,7 +18,14 @@ my $FCS_PATH = $ENV{FCS_PATH};
 our $FC_SOLVE__RAW = "$FCS_PATH/fc-solve";
 our $FC_SOLVE_EXE = shell_quote($FC_SOLVE__RAW);
 
-my $FC_ONLY = ($ENV{FCS_TEST_TAGS} =~ /\bfc_only\b/);
+sub _is_tag
+{
+    my ($tag) = @_;
+
+    return ($ENV{FCS_TEST_TAGS} =~ /\b\Q$tag\E\b/)
+}
+my $FC_ONLY = _is_tag('fc_only');
+my $NO_FLARES = _is_tag('no_flares');
 
 # A file in the output/binaries directory where fc-solve was compiled.
 sub bin_file
@@ -45,6 +52,11 @@ sub data_file
 sub is_freecell_only
 {
     return $FC_ONLY;
+}
+
+sub is_without_flares
+{
+    return $NO_FLARES;
 }
 
 # Returns a board from the sample-boards directory.
