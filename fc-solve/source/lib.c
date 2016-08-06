@@ -898,14 +898,13 @@ static GCC_INLINE fcs_stats_t instance__calc_stats(
     return instance->stats;
 }
 
-static GCC_INLINE void flare__copy_instance_stats(
-    fcs_flare_item_t *const flare, const fc_solve_instance_t *const instance)
-{
-    flare->obj_stats = instance__calc_stats(instance);
-}
-
-static void trace_flare_solution(
-    fcs_user_t *const user, fcs_flare_item_t *const flare)
+#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
+static
+#if ((!defined(FCS_WITH_MOVES)) || (!defined(FCS_WITH_FLARES)))
+    GCC_INLINE
+#endif
+    void
+    trace_flare_solution(fcs_user_t *const user, fcs_flare_item_t *const flare)
 {
     if (flare->was_solution_traced)
     {
@@ -914,7 +913,6 @@ static void trace_flare_solution(
 
     fc_solve_instance_t *const instance = &(flare->obj);
 #ifdef FCS_WITH_MOVES
-
     fc_solve_trace_solution(instance);
     flare->trace_solution_state_locs = user->state_locs;
     fc_solve_move_stack_normalize(&(instance->solution_moves), &(user->state),
@@ -925,11 +923,12 @@ static void trace_flare_solution(
     instance_free_solution_moves(instance);
     flare->next_move = 0;
 #endif
-    flare__copy_instance_stats(flare, instance);
+    flare->obj_stats = instance__calc_stats(instance);
 
     recycle_flare(flare);
     flare->was_solution_traced = TRUE;
 }
+#endif
 
 #ifdef FCS_WITH_FLARES
 static int get_flare_move_count(
@@ -1169,8 +1168,8 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             user->all_instances_were_suspended = FALSE;
         }
 
-        flare__copy_instance_stats(flare, instance);
-        const_AUTO(delta, flare->obj_stats.num_checked_states -
+        const_AUTO(new_flare_stats, instance__calc_stats(instance));
+        const_AUTO(delta, new_flare_stats.num_checked_states -
                               init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
 #ifdef FCS_WITH_FLARES
@@ -1181,9 +1180,9 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
         }
 #endif
         user->iterations_board_started_at.num_states_in_collection +=
-            flare->obj_stats.num_states_in_collection -
+            new_flare_stats.num_states_in_collection -
             init_num_checked_states.num_states_in_collection;
-        user->init_num_checked_states = flare->obj_stats;
+        user->init_num_checked_states = flare->obj_stats = new_flare_stats;
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
@@ -1248,7 +1247,6 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             if ((local_limit() >= 0) &&
                 (instance->stats.num_checked_states >= local_limit()))
             {
-                flare__copy_instance_stats(flare, instance);
                 recycle_instance(user, instance_item);
                 user->current_instance++;
                 continue;
@@ -1312,6 +1310,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
 #endif
 }
 
+#ifdef FCS_WITH_MOVES
 static GCC_INLINE fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
 {
 #ifdef FCS_WITH_FLARES
@@ -1324,6 +1323,7 @@ static GCC_INLINE fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
     trace_flare_solution(user, flare);
     return flare;
 }
+#endif
 
 int DLLEXPORT freecell_solver_user_get_next_move(
     void *const api_instance, fcs_move_t *const user_move)
