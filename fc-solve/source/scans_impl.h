@@ -448,7 +448,7 @@ static GCC_INLINE void calculate_real_depth(const fcs_bool_t calc_real_depth,
                 message, (long int)DFS_VAR(soft_thread, depth),                \
                 (long int)(the_soft_dfs_info -                                 \
                            DFS_VAR(soft_thread, soft_dfs_info)),               \
-                (long int)(instance->i__num_checked_states),                   \
+                (long int)(instance->stats.num_checked_states),                \
                 the_soft_dfs_info->tests_list_index,                           \
                 the_soft_dfs_info->test_index,                                 \
                 the_soft_dfs_info->current_state_index,                        \
@@ -1207,7 +1207,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
 #ifndef FCS_WITHOUT_VISITED_ITER
                     FCS_S_VISITED_ITER(single_derived_state) =
-                        instance->i__num_checked_states;
+                        instance->stats.num_checked_states;
 #endif
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0(
