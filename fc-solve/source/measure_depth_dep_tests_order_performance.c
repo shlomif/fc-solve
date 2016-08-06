@@ -69,7 +69,6 @@ int main(int argc, char *argv[])
 {
     /* char buffer[2048]; */
     int board_num;
-    int start_board;
     FILE *output_fh;
     int min_depth_for_scan2;
     fcs_int_limit_t iters_limit = 100000;
@@ -93,7 +92,7 @@ int main(int argc, char *argv[])
         print_help();
         exit(-1);
     }
-    start_board = atoi(argv[arg++]);
+    int start_board_idx = atoi(argv[arg++]);
     int end_board_idx = atoi(argv[arg++]);
 
     for (; arg < argc; arg++)
@@ -197,7 +196,7 @@ int main(int argc, char *argv[])
     fflush(stdout);
 
     result_t *const results =
-        SMALLOC(results, (size_t)(end_board_idx - start_board + 1));
+        SMALLOC(results, (size_t)(end_board_idx - start_board_idx + 1));
 
     output_fh = fopen(output_filename, "wt");
 
@@ -239,7 +238,7 @@ int main(int argc, char *argv[])
         }
 
         result_t *curr_result;
-        for (board_num = start_board, curr_result = results;
+        for (board_num = start_board_idx, curr_result = results;
              board_num <= end_board_idx; board_num++, curr_result++)
         {
             get_board(board_num, state_string);
@@ -264,7 +263,7 @@ int main(int argc, char *argv[])
         printf("Reached depth %d\n", min_depth_for_scan2);
 
         fprintf(output_fh, "Depth == %d\n\n", min_depth_for_scan2);
-        for (board_num = start_board, curr_result = results;
+        for (board_num = start_board_idx, curr_result = results;
              board_num <= end_board_idx; board_num++, curr_result++)
         {
             fprintf(output_fh, "board[%d].ret == %d\n", board_num,
