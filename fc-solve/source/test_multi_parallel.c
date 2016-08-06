@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
     long long start_board = atoll(argv[arg++]);
-    long long end_board = atoll(argv[arg++]);
+    long long end_board_idx = atoll(argv[arg++]);
     const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
         known_parameters, cmd_line_callback, &display_context, TRUE);
 
-    bin_init(&binary_output, &start_board, &end_board,
+    bin_init(&binary_output, &start_board, &end_board_idx,
         &total_iterations_limit_per_board);
 
     if (was_total_iterations_limit_per_board_set)
@@ -129,7 +129,8 @@ int main(int argc, char *argv[])
             instance, total_iterations_limit_per_board);
     }
 
-    for (long long board_num = start_board; board_num <= end_board; board_num++)
+    for (long long board_num = start_board; board_num <= end_board_idx;
+         board_num++)
     {
         fcs_state_string_t state_string;
         get_board(board_num, state_string);

@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
     long long start_board = atoll(argv[arg++]);
-    long long end_board = atoll(argv[arg++]);
+    long long end_board_idx = atoll(argv[arg++]);
     const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
         known_parameters, cmd_line_callback, &display_context, TRUE);
 
-    bin_init(&binary_output, &start_board, &end_board,
+    bin_init(&binary_output, &start_board, &end_board_idx,
         &total_iterations_limit_per_board);
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(instance, variant);
@@ -170,7 +170,8 @@ int main(int argc, char *argv[])
 
 #define BUF_SIZE 2000
     char buffer[BUF_SIZE];
-    for (long long board_num = start_board; board_num <= end_board; board_num++)
+    for (long long board_num = start_board; board_num <= end_board_idx;
+         board_num++)
     {
         fcs_state_keyval_pair_t pos;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
