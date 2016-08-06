@@ -171,5 +171,8 @@ SET (test_tags )
 IF (FCS_FREECELL_ONLY)
     LIST(APPEND test_tags "fc_only")
 ENDIF ()
+IF (FCS_DISABLE_MULTI_FLARES)
+    LIST(APPEND test_tags "no_flares")
+ENDIF ()
 
 FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/TAGS.txt" "${test_tags}")
