@@ -48,11 +48,11 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
 
     tests_order->num_groups++;
 
-    const size_t len = strlen(string);
+    const int len = strlen(string);
     fcs_bool_t is_group = FALSE;
     fcs_bool_t is_start_group = FALSE;
 
-    size_t i;
+    int i;
     for (i = 0; i < len; i++)
     {
         if ((string[i] == '(') || (string[i] == '['))
