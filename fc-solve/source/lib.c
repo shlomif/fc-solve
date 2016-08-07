@@ -901,6 +901,7 @@ static GCC_INLINE void calc_moves_seq(
     moves_seq->moves = ret_moves;
 }
 
+#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
 static void trace_flare_solution(
     fcs_user_t *const user, fcs_flare_item_t *const flare)
 {
@@ -929,6 +930,7 @@ static void trace_flare_solution(
     recycle_flare(flare);
     flare->was_solution_traced = TRUE;
 }
+#endif
 
 #ifdef FCS_WITH_FLARES
 static int get_flare_move_count(
@@ -1321,6 +1323,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
 #endif
 }
 
+#ifdef FCS_WITH_MOVES
 static GCC_INLINE fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
 {
 #ifdef FCS_WITH_FLARES
@@ -1333,6 +1336,7 @@ static GCC_INLINE fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
     trace_flare_solution(user, flare);
     return flare;
 }
+#endif
 
 int DLLEXPORT freecell_solver_user_get_next_move(
     void *const api_instance, fcs_move_t *const user_move)
