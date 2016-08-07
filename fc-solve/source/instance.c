@@ -693,6 +693,8 @@ in the process */
 #endif
 #endif
 
+    instance->num_states_in_collection = 0;
+
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     instance->db->close(instance->db, 0);
 #endif

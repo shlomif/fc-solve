@@ -440,6 +440,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 {
     char *s_ptr;
     fcs_encoded_state_buffer_t final_stack_encoded_state;
+    int hex_digits;
     fcs_encoded_state_buffer_t running_key;
     fcs_dbm_record_t *running_parent;
     fcs_state_keyval_pair_t running_state;
@@ -466,7 +467,6 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 
     while (*(s_ptr) != '|')
     {
-        int hex_digits;
         if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
         {
             fprintf(stderr, "Error in reading state in line %ld of the "
@@ -510,7 +510,6 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #endif
     instance->num_states_in_collection++;
 
-    int hex_digits;
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
 #ifdef DEBUG_OUT

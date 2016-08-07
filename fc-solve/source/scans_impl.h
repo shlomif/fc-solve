@@ -66,7 +66,7 @@ static GCC_INLINE fcs_bool_t check_num_states_in_collection(
  * */
 #define check_if_limits_exceeded()                                             \
     (check_if_limits_exceeded__num() ||                                        \
-        (instance->stats.num_states_in_collection >=                           \
+        (instance->num_states_in_collection >=                                 \
             effective_max_num_states_in_collection))
 
 #define BEFS_MAX_DEPTH 20000
@@ -448,7 +448,7 @@ static GCC_INLINE void calculate_real_depth(const fcs_bool_t calc_real_depth,
                 message, (long int)DFS_VAR(soft_thread, depth),                \
                 (long int)(the_soft_dfs_info -                                 \
                            DFS_VAR(soft_thread, soft_dfs_info)),               \
-                (long int)(instance->stats.num_checked_states),                \
+                (long int)(instance->i__num_checked_states),                   \
                 the_soft_dfs_info->tests_list_index,                           \
                 the_soft_dfs_info->test_index,                                 \
                 the_soft_dfs_info->current_state_index,                        \
@@ -837,7 +837,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     }
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
-        &(instance->stats.num_checked_states);
+        &(instance->i__num_checked_states);
 #ifndef FCS_SINGLE_HARD_THREAD
     fcs_int_limit_t *const hard_thread_num_checked_states_ptr =
         &(HT_FIELD(hard_thread, ht__num_checked_states));
@@ -1207,7 +1207,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
 #ifndef FCS_WITHOUT_VISITED_ITER
                     FCS_S_VISITED_ITER(single_derived_state) =
-                        instance->stats.num_checked_states;
+                        instance->i__num_checked_states;
 #endif
 
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0(
@@ -1311,7 +1311,7 @@ static GCC_INLINE int fc_solve_patsolve_do_solve(
 #ifndef FCS_SINGLE_HARD_THREAD
         HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
 #endif
-        HT_INSTANCE(hard_thread)->stats.num_checked_states += after_scan_delta;
+        HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
     }
 
     switch (pats_scan->status)

@@ -86,7 +86,8 @@ static GCC_INLINE void fc_solve_alloc_instance(
 {
     *(instance) = (fc_solve_instance_t){
         .meta_alloc = meta_alloc,
-        .stats = initial_stats,
+        .i__num_checked_states = 0,
+        .num_states_in_collection = 0,
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
         .active_num_states_in_collection = 0,
 #endif
@@ -759,7 +760,7 @@ static GCC_INLINE void fc_solve_recycle_instance(
     instance_free_solution_moves(instance);
 #endif
 
-    instance->stats = initial_stats;
+    instance->i__num_checked_states = 0;
 
     instance->num_hard_threads_finished = 0;
 
@@ -1046,15 +1047,6 @@ static GCC_INLINE void switch_to_next_soft_thread(
     }
 }
 
-static GCC_INLINE fcs_bool_t instance__check_exceeded_stats(
-    const fc_solve_instance_t *const instance)
-{
-    return ((instance->stats.num_checked_states >=
-                instance->effective_max_num_checked_states) ||
-            (instance->stats.num_states_in_collection >=
-                instance->effective_max_num_states_in_collection));
-}
-
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
 {
     const fcs_int_limit_t prelude_num_items =
@@ -1195,10 +1187,14 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
             instance->solving_soft_thread = soft_thread;
         }
 
-        if (was_solved || ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-                              /* There's a limit to the scan only
-                               * if max_num_checked_states is greater than 0 */
-                              instance__check_exceeded_stats(instance)))
+        if (was_solved ||
+            ((ret == FCS_STATE_SUSPEND_PROCESS) &&
+                /* There's a limit to the scan only
+                 * if max_num_checked_states is greater than 0 */
+                (((instance->i__num_checked_states >=
+                     instance->effective_max_num_checked_states)) ||
+                    (instance->num_states_in_collection >=
+                        instance->effective_max_num_states_in_collection))))
         {
             return ret;
         }
@@ -1272,7 +1268,13 @@ static GCC_INLINE int fc_solve_resume_instance(
                     ((ret == FCS_STATE_SUSPEND_PROCESS) &&
                         /* There's a limit to the scan only
                          * if max_num_checked_states is greater than 0 */
-                        instance__check_exceeded_stats(instance)))
+                        ((instance->i__num_checked_states >=
+                             instance->effective_max_num_checked_states) ||
+                            (instance->num_states_in_collection >=
+                                instance
+                                    ->effective_max_num_states_in_collection)))
+
+                        )
                 {
                     goto end_of_hard_threads_loop;
                 }

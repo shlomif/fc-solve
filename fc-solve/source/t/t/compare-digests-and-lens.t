@@ -150,12 +150,12 @@ vtest({id => "freecell24", deal => 24,
 
 # TEST
 vtest({id => "freecell24_children_playing_ball", deal => 24,
-        theme => ["-l", "children-playing-ball"], with_flares => 1},
+        theme => ["-l", "children-playing-ball"],},
     "Verifying the solution of deal No. 24 with -l cpb");
 
 # TEST
 vtest({id => "freecell24_sentient_pearls", deal => 24,
-        theme => ["-l", "sentient-pearls"], with_flares => 1},
+        theme => ["-l", "sentient-pearls"],},
     "Verifying the solution of deal No. 24 with -l sp");
 
 
@@ -193,7 +193,6 @@ vtest({
     id => "qualified_seed_for_6240",
     deal => 6240,
     theme => ["-l", "qs", "-fif", "5", "--flares-choice", "fcpro",],
-    with_flares => 1,
     },
     "Qualified seed test with -fif and --flares-choice fcpro",
 );

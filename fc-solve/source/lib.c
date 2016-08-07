@@ -47,6 +47,15 @@
 
 #define FCS_MAX_FLARE_NAME_LEN 30
 
+typedef struct
+{
+    fcs_int_limit_t num_checked_states;
+    fcs_int_limit_t num_states_in_collection;
+} fcs_stats_t;
+
+static const fcs_stats_t initial_stats = {
+    .num_checked_states = 0, .num_states_in_collection = 0};
+
 /* A flare is an alternative scan algorithm to be tried. All flares in
  * a single instance are being evaluated and then one picks the shortest
  * solution out of all of them. (see fc-solve/docs/flares-functional-spec.txt )
@@ -892,19 +901,8 @@ static GCC_INLINE void calc_moves_seq(
     moves_seq->moves = ret_moves;
 }
 
-static GCC_INLINE fcs_stats_t instance__calc_stats(
-    const fc_solve_instance_t *const instance)
-{
-    return instance->stats;
-}
-
-#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
-static
-#if ((!defined(FCS_WITH_MOVES)) || (!defined(FCS_WITH_FLARES)))
-    GCC_INLINE
-#endif
-    void
-    trace_flare_solution(fcs_user_t *const user, fcs_flare_item_t *const flare)
+static void trace_flare_solution(
+    fcs_user_t *const user, fcs_flare_item_t *const flare)
 {
     if (flare->was_solution_traced)
     {
@@ -913,6 +911,7 @@ static
 
     fc_solve_instance_t *const instance = &(flare->obj);
 #ifdef FCS_WITH_MOVES
+
     fc_solve_trace_solution(instance);
     flare->trace_solution_state_locs = user->state_locs;
     fc_solve_move_stack_normalize(&(instance->solution_moves), &(user->state),
@@ -923,12 +922,13 @@ static
     instance_free_solution_moves(instance);
     flare->next_move = 0;
 #endif
-    flare->obj_stats = instance__calc_stats(instance);
+    flare->obj_stats.num_checked_states = instance->i__num_checked_states;
+    flare->obj_stats.num_states_in_collection =
+        instance->num_states_in_collection;
 
     recycle_flare(flare);
     flare->was_solution_traced = TRUE;
 }
-#endif
 
 #ifdef FCS_WITH_FLARES
 static int get_flare_move_count(
@@ -973,6 +973,8 @@ static GCC_INLINE fcs_instance_item_t *get_current_instance_item(
 
 static GCC_INLINE int resume_solution(fcs_user_t *const user)
 {
+    fcs_stats_t init_num_checked_states;
+
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
     const_SLOT(end_of_instances_list, user);
@@ -1137,14 +1139,17 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
 
             instance->effective_max_num_checked_states =
                 ((mymin < 0) ? FCS_INT_LIMIT_MAX
-                             : (instance->stats.num_checked_states + mymin -
+                             : (instance->i__num_checked_states + mymin -
                                    user->iterations_board_started_at
                                        .num_checked_states));
         }
 
-        const fcs_stats_t init_num_checked_states =
-            instance__calc_stats(instance);
-        user->init_num_checked_states = init_num_checked_states;
+        user->init_num_checked_states.num_checked_states =
+            init_num_checked_states.num_checked_states =
+                instance->i__num_checked_states;
+        user->init_num_checked_states.num_states_in_collection =
+            init_num_checked_states.num_states_in_collection =
+                instance->num_states_in_collection;
 
         if (is_start_of_flare_solving)
         {
@@ -1168,8 +1173,10 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             user->all_instances_were_suspended = FALSE;
         }
 
-        const_AUTO(new_flare_stats, instance__calc_stats(instance));
-        const_AUTO(delta, new_flare_stats.num_checked_states -
+        flare->obj_stats.num_checked_states = instance->i__num_checked_states;
+        flare->obj_stats.num_states_in_collection =
+            instance->num_states_in_collection;
+        const_AUTO(delta, flare->obj_stats.num_checked_states -
                               init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
 #ifdef FCS_WITH_FLARES
@@ -1180,9 +1187,9 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
         }
 #endif
         user->iterations_board_started_at.num_states_in_collection +=
-            new_flare_stats.num_states_in_collection -
+            flare->obj_stats.num_states_in_collection -
             init_num_checked_states.num_states_in_collection;
-        user->init_num_checked_states = flare->obj_stats = new_flare_stats;
+        user->init_num_checked_states = flare->obj_stats;
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
@@ -1222,7 +1229,7 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             if (((user->current_iterations_limit >= 0) &&
                     (user->iterations_board_started_at.num_checked_states >=
                         user->current_iterations_limit)) ||
-                (instance->stats.num_states_in_collection >=
+                (instance->num_states_in_collection >=
                     instance->effective_max_num_states_in_collection))
             {
 /* Bug fix:
@@ -1245,8 +1252,12 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
              * so, designate it as unsolvable.
              * */
             if ((local_limit() >= 0) &&
-                (instance->stats.num_checked_states >= local_limit()))
+                (instance->i__num_checked_states >= local_limit()))
             {
+                flare->obj_stats.num_checked_states =
+                    instance->i__num_checked_states;
+                flare->obj_stats.num_states_in_collection =
+                    instance->num_states_in_collection;
                 recycle_instance(user, instance_item);
                 user->current_instance++;
                 continue;
@@ -1310,7 +1321,6 @@ int DLLEXPORT freecell_solver_user_solve_board(
 #endif
 }
 
-#ifdef FCS_WITH_MOVES
 static GCC_INLINE fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
 {
 #ifdef FCS_WITH_FLARES
@@ -1323,7 +1333,6 @@ static GCC_INLINE fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
     trace_flare_solution(user, flare);
     return flare;
 }
-#endif
 
 int DLLEXPORT freecell_solver_user_get_next_move(
     void *const api_instance, fcs_move_t *const user_move)
@@ -1743,7 +1752,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
 
     return user->iterations_board_started_at.num_checked_states +
            max(user->active_flare->obj_stats.num_checked_states,
-               user->active_flare->obj.stats.num_checked_states) -
+               user->active_flare->obj.i__num_checked_states) -
            user->init_num_checked_states.num_checked_states;
 }
 

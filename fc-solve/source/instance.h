@@ -715,15 +715,6 @@ struct fc_solve_soft_thread_struct
         ;
 };
 
-typedef struct
-{
-    fcs_int_limit_t num_checked_states;
-    fcs_int_limit_t num_states_in_collection;
-} fcs_stats_t;
-
-static const fcs_stats_t initial_stats = {
-    .num_checked_states = 0, .num_states_in_collection = 0};
-
 struct fc_solve_instance_struct
 {
     /*
@@ -739,9 +730,8 @@ struct fc_solve_instance_struct
 #endif
 #endif
 
-    /* The number of states that were checked by the solving algorithm,
-     * and the num total states in the collection.*/
-    fcs_stats_t stats;
+    /* The number of states that were checked by the solving algorithm. */
+    fcs_int_limit_t i__num_checked_states;
 
     /*
      * Limit for the maximal number of checked states. max_num_checked_states
@@ -845,6 +835,8 @@ struct fc_solve_instance_struct
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_int_limit_t active_num_states_in_collection;
 #endif
+    fcs_int_limit_t num_states_in_collection;
+
 #ifdef FCS_SINGLE_HARD_THREAD
     struct fc_solve_hard_thread_struct hard_thread;
 #ifdef FCS_WITH_MOVES
@@ -1201,7 +1193,7 @@ static GCC_INLINE fcs_bool_t fcs_get_calc_real_depth(
 #endif
 
 #ifdef FCS_SINGLE_HARD_THREAD
-#define NUM_CHECKED_STATES (HT_INSTANCE(hard_thread)->stats.num_checked_states)
+#define NUM_CHECKED_STATES (HT_INSTANCE(hard_thread)->i__num_checked_states)
 #else
 #define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
 #endif

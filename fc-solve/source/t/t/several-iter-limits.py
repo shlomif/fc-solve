@@ -3,8 +3,6 @@
 from TAP.Simple import ok, plan
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
-import re
-import os
 
 plan(14)
 
@@ -109,12 +107,6 @@ AH 5S 6S AD 8H JD
 
 def test_num_states_in_collection_after_unsolved():
     testname = "NumStatesInCol-After-unsolved - "
-
-    if re.search(r'\bfc_only\b', os.getenv('FCS_TEST_TAGS')):
-        for idx in range(0, 3):
-            ok(True, 'skipping because not-freecell test on a freecell build',
-               skip='fc_only')
-        return
 
     fcs = FC_Solve()
 

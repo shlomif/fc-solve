@@ -167,12 +167,12 @@ static GCC_INLINE int worker_func(const worker_t w, void *const instance)
     return 0;
 }
 
-static GCC_INLINE void write_request(const long long end_board_idx,
+static GCC_INLINE void write_request(const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr,
     const worker_t *const worker)
 {
     request_t request;
-    if ((*next_board_num_ptr) > end_board_idx)
+    if ((*next_board_num_ptr) > end_board)
     {
         /* We only absolutely need to initialize .board_num here, but the
          * Coverity Scan scanner complains about quota_end being uninitialized
@@ -183,9 +183,9 @@ static GCC_INLINE void write_request(const long long end_board_idx,
     else
     {
         request.board_num = *(next_board_num_ptr);
-        if (((*next_board_num_ptr) += board_num_step) > end_board_idx)
+        if (((*next_board_num_ptr) += board_num_step) > end_board)
         {
-            (*next_board_num_ptr) = end_board_idx + 1;
+            (*next_board_num_ptr) = end_board + 1;
         }
         request.quota_end = (*next_board_num_ptr) - 1;
     }
@@ -195,7 +195,7 @@ static GCC_INLINE void write_request(const long long end_board_idx,
 
 static GCC_INLINE void transaction(const worker_t *const worker,
     const int read_fd, int *const total_num_finished_boards,
-    const long long end_board_idx, const long long board_num_step,
+    const long long end_board, const long long board_num_step,
     long long *const next_board_num_ptr)
 {
     response_t response;
@@ -208,7 +208,7 @@ static GCC_INLINE void transaction(const worker_t *const worker,
     total_num_iters += response.num_iters;
     (*total_num_finished_boards) += response.num_finished_boards;
 
-    write_request(end_board_idx, board_num_step, next_board_num_ptr, worker);
+    write_request(end_board, board_num_step, next_board_num_ptr, worker);
 }
 
 int main(int argc, char *argv[])
@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
     long long next_board_num = atoll(argv[arg++]);
-    const long long end_board_idx = atoll(argv[arg++]);
+    const long long end_board = atoll(argv[arg++]);
     const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
@@ -374,15 +374,15 @@ int main(int argc, char *argv[])
 
         int total_num_finished_boards = 0;
         const long long total_num_boards_to_check =
-            end_board_idx - next_board_num + 1;
+            end_board - next_board_num + 1;
 
         long long next_milestone = next_board_num + stop_at;
         next_milestone -= (next_milestone % stop_at);
 
         for (size_t idx = 0; idx < num_workers; idx++)
         {
-            write_request(end_board_idx, board_num_step, &next_board_num,
-                &(workers[idx]));
+            write_request(
+                end_board, board_num_step, &next_board_num, &(workers[idx]));
         }
 
 #ifdef USE_EPOLL
@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
             {
                 const worker_t *const worker = events[i].data.ptr;
                 transaction(worker, GET_READ_FD(*worker),
-                    &total_num_finished_boards, end_board_idx, board_num_step,
+                    &total_num_finished_boards, end_board, board_num_step,
                     &next_board_num);
             }
 
@@ -435,7 +435,7 @@ int main(int argc, char *argv[])
                         /* FD_ISSET can be set on EOF, so we check if
                          * read failed. */
                         transaction(&(workers[idx]), fd,
-                            &total_num_finished_boards, end_board_idx,
+                            &total_num_finished_boards, end_board,
                             board_num_step, &next_board_num);
                     }
                 }

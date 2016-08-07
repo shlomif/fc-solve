@@ -6,7 +6,6 @@ use warnings;
 use parent 'Games::Solitaire::Verify::Base';
 
 use YAML::XS qw(DumpFile LoadFile);
-use FC_Solve::Paths qw( is_freecell_only is_without_flares );
 
 use String::ShellQuote;
 use Carp;
@@ -75,18 +74,11 @@ sub should_fill_in_id
 sub vtest
 {
     my $self = shift;
-    my $args = shift;
-    my $msg = shift;
+
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    if (exists($args->{variant}) and is_freecell_only())
-    {
-        return ok(1, q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#);
-    }
-    if ($args->{with_flares} and is_without_flares())
-    {
-        return ok(1, q#Test skipped because it uses flares, and we are running on a build without flares.#);
-    }
+    my $args = shift;
+    my $msg = shift;
 
     if (! $args->{id})
     {
