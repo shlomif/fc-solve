@@ -1256,10 +1256,6 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             if ((local_limit() >= 0) &&
                 (instance->i__num_checked_states >= local_limit()))
             {
-                flare->obj_stats.num_checked_states =
-                    instance->i__num_checked_states;
-                flare->obj_stats.num_states_in_collection =
-                    instance->num_states_in_collection;
                 recycle_instance(user, instance_item);
                 user->current_instance++;
                 continue;
