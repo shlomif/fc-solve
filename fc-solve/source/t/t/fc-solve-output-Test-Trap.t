@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 14;
 use File::Spec;
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 use FC_Solve::Paths qw( bin_board bin_exe_raw samp_board $FC_SOLVE__RAW );
@@ -152,6 +152,9 @@ qw#
     );
 }
 
+# TEST:$num_boards=2;
+foreach my $board_fn (qw(24-with-stray-d-char.board
+    24-with-stray-d-char-in-freecells.board))
 {
     trap
     {
@@ -160,20 +163,21 @@ qw#
 
     my $needle = q#Not enough input.#;
 
-    # TEST
+    # TEST*$num_boards
     like (
         $trap->stderr(),
         qr/^\Q$needle\E$/ms,
         "Invalid card format.",
     );
 
-    # TEST
+    # TEST*$num_boards
     unlike (
         $trap->stdout(),
         qr/\S/,
         "Empty standard output due to invalid card format.",
     );
 }
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2008 Shlomi Fish

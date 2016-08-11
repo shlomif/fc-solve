@@ -52,6 +52,8 @@ int fc_solve_u2p_rank(const char *string)
         case '\0':
         case ' ':
         case '\t':
+        case '\n':
+        case '\r':
             return 0;
         case 'A':
             return 1;

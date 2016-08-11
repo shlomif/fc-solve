@@ -789,10 +789,20 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 if ((*str == '\r') || (*str == '\n'))
                     break;
 
-                fcs_put_card_in_freecell(
-                    ret, c, (((*str == '*') || (*str == '-'))
-                                    ? fc_solve_empty_card
-                                    : fc_solve_card_parse_str(str)));
+                fcs_card_t my_card;
+                if ((*str == '*') || (*str == '-'))
+                {
+                    my_card = fc_solve_empty_card;
+                }
+                else
+                {
+                    my_card = fc_solve_card_parse_str(str);
+                    if (!fcs_card_rank(my_card))
+                    {
+                        return FALSE;
+                    }
+                }
+                fcs_put_card_in_freecell(ret, c, my_card);
             }
 
             while (*str != '\n')
