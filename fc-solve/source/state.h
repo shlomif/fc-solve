@@ -944,9 +944,9 @@ static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
     {
         const int max_rank = fcs_foundation_value(*state, found_idx);
         int *const suit_cards = cards[found_idx & 0x3];
-        for (int c = 1; c <= max_rank; c++)
+        for (int rank = 1; rank <= max_rank; rank++)
         {
-            suit_cards[c]++;
+            suit_cards[rank]++;
         }
     }
 
