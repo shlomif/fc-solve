@@ -934,17 +934,9 @@ static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
     fcs_card_t *const misplaced_card)
 {
     int cards[4][14];
+    memset(cards, 0, sizeof(cards));
 
     const fcs_state_t *const state = &(state_pair->s);
-
-    /* Initialize all cards to 0 */
-    for (int d = 0; d < 4; d++)
-    {
-        for (int c = 1; c <= 13; c++)
-        {
-            cards[d][c] = 0;
-        }
-    }
 
     /* Mark the cards in the decks */
     for (int d = 0; d < (DECKS_NUM__VAL << 2); d++)
