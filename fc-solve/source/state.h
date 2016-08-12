@@ -942,9 +942,11 @@ static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
     const_AUTO(num_foundations, (DECKS_NUM__VAL << 2));
     for (int found_idx = 0; found_idx < num_foundations; found_idx++)
     {
-        for (int c = 1; c <= fcs_foundation_value(*state, found_idx); c++)
+        const int max_rank = fcs_foundation_value(*state, found_idx);
+        int *const suit_cards = cards[found_idx & 0x3];
+        for (int c = 1; c <= max_rank; c++)
         {
-            cards[found_idx % 4][c]++;
+            suit_cards[c]++;
         }
     }
 
