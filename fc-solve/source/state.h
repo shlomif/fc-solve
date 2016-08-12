@@ -939,11 +939,12 @@ static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
     const fcs_state_t *const state = &(state_pair->s);
 
     /* Mark the cards in the decks */
-    for (int d = 0; d < (DECKS_NUM__VAL << 2); d++)
+    const_AUTO(num_foundations, (DECKS_NUM__VAL << 2));
+    for (int found_idx = 0; found_idx < num_foundations; found_idx++)
     {
-        for (int c = 1; c <= fcs_foundation_value(*state, d); c++)
+        for (int c = 1; c <= fcs_foundation_value(*state, found_idx); c++)
         {
-            cards[d % 4][c]++;
+            cards[found_idx % 4][c]++;
         }
     }
 
