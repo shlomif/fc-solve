@@ -1047,6 +1047,9 @@ static GCC_INLINE void switch_to_next_soft_thread(
     }
 }
 
+/* instance__check_exceeded_stats() cannot be an inline function because if
+ * it is, the code becomes considerably slower (at least on gcc-5.4.0 on x86-64
+ * Linux). */
 #define instance__check_exceeded_stats(instance)                               \
     ((instance->i__num_checked_states >=                                       \
          instance->effective_max_num_checked_states) ||                        \
