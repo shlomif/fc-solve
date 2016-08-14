@@ -1111,7 +1111,8 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
         }
 
         const_AUTO(init__num_checked_states, instance->i__num_checked_states);
-        const_AUTO(init__num_states_in_collection, instance->num_states_in_collection);
+        const_AUTO(
+            init__num_states_in_collection, instance->num_states_in_collection);
         if (is_start_of_flare_solving)
         {
             fc_solve_start_instance_process_with_board(
@@ -1135,9 +1136,9 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
         }
 
         user->num_states_in_collection +=
-            instance->num_states_in_collection -
-            init__num_states_in_collection;
-        const_AUTO(delta, instance->i__num_checked_states - init__num_checked_states);
+            instance->num_states_in_collection - init__num_states_in_collection;
+        const_AUTO(
+            delta, instance->i__num_checked_states - init__num_checked_states);
         user->num_checked_states += delta;
 #ifdef FCS_WITH_FLARES
         if (flare_iters_quota >= 0)
@@ -1701,7 +1702,7 @@ int DLLEXPORT freecell_solver_user_set_game(void *const api_instance,
 fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
     void *api_instance)
 {
-    return ((const fcs_user_t * const)api_instance)->num_checked_states;
+    return ((const fcs_user_t *const)api_instance)->num_checked_states;
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2109,7 +2110,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
 fcs_int_limit_t DLLEXPORT
 freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
 {
-    return ((const fcs_user_t * const)api_instance)->num_states_in_collection;
+    return ((const fcs_user_t *const)api_instance)->num_states_in_collection;
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
