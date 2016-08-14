@@ -34,6 +34,7 @@ endif
 LTO_FLAGS := -flto -ffat-lto-objects
 AR := ar
 RANLIB := ranlib
+END_LFLAGS := -lm -Wl,-rpath,::::::::::::::::::::::::::
 
 ifeq ($(COMPILER),gcc)
 	CC = gcc
@@ -42,10 +43,12 @@ ifeq ($(COMPILER),gcc)
 else ifeq ($(COMPILER),clang)
 	CC = clang
 	GCC_COMPAT := 1
+	GOLD = -fuse-ld=gold
+	END_LFLAGS += $(GOLD)
 	# CFLAGS += -Werror=implicit-function-declaration -std=gnu99 -fuse-ld=gold
-	CFLAGS += -Werror=implicit-function-declaration -std=gnu99
+	CFLAGS += -Werror=implicit-function-declaration -std=gnu99 -fPIC $(GOLD)
 	# LTO_FLAGS := -flto
-	LTO_FLAGS :=
+	# LTO_FLAGS :=
 	AR := llvm-ar
 	RANLIB := llvm-ranlib
 else ifeq ($(COMPILER),icc)
@@ -132,7 +135,6 @@ EXTRA_CFLAGS =
 CFLAGS += $(EXTRA_CFLAGS)
 
 LFLAGS := -O3 -DNDEBUG -fvisibility=hidden -march=native -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $(EXTRA_CFLAGS)
-END_LFLAGS := -lm -Wl,-rpath,::::::::::::::::::::::::::
 
 # Toggle for profiling information.
 ifneq ($(PROFILE),0)
