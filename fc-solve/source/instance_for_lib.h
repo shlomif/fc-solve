@@ -1047,14 +1047,11 @@ static GCC_INLINE void switch_to_next_soft_thread(
     }
 }
 
-static GCC_INLINE fcs_bool_t instance__check_exceeded_stats(
-    const fc_solve_instance_t *const instance)
-{
-    return ((instance->i__num_checked_states >=
-                instance->effective_max_num_checked_states) ||
-            (instance->num_states_in_collection >=
-                instance->effective_max_num_states_in_collection));
-}
+#define instance__check_exceeded_stats(instance)                               \
+    ((instance->i__num_checked_states >=                                       \
+         instance->effective_max_num_checked_states) ||                        \
+        (instance->num_states_in_collection >=                                 \
+            instance->effective_max_num_states_in_collection))
 
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
 {
