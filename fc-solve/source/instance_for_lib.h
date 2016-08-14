@@ -1047,6 +1047,15 @@ static GCC_INLINE void switch_to_next_soft_thread(
     }
 }
 
+static GCC_INLINE fcs_bool_t instance__check_exceeded_stats(
+    const fc_solve_instance_t *const instance)
+{
+    return ((instance->i__num_checked_states >=
+                instance->effective_max_num_checked_states) ||
+            (instance->num_states_in_collection >=
+                instance->effective_max_num_states_in_collection));
+}
+
 static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
 {
     const fcs_int_limit_t prelude_num_items =
@@ -1187,14 +1196,8 @@ static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
             instance->solving_soft_thread = soft_thread;
         }
 
-        if (was_solved ||
-            ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-                /* There's a limit to the scan only
-                 * if max_num_checked_states is greater than 0 */
-                (((instance->i__num_checked_states >=
-                     instance->effective_max_num_checked_states)) ||
-                    (instance->num_states_in_collection >=
-                        instance->effective_max_num_states_in_collection))))
+        if (was_solved || ((ret == FCS_STATE_SUSPEND_PROCESS) &&
+                              instance__check_exceeded_stats(instance)))
         {
             return ret;
         }
@@ -1266,15 +1269,7 @@ static GCC_INLINE int fc_solve_resume_instance(
                 if ((ret == FCS_STATE_IS_NOT_SOLVEABLE) ||
                     (ret == FCS_STATE_WAS_SOLVED) ||
                     ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-                        /* There's a limit to the scan only
-                         * if max_num_checked_states is greater than 0 */
-                        ((instance->i__num_checked_states >=
-                             instance->effective_max_num_checked_states) ||
-                            (instance->num_states_in_collection >=
-                                instance
-                                    ->effective_max_num_states_in_collection)))
-
-                        )
+                        instance__check_exceeded_stats(instance)))
                 {
                     goto end_of_hard_threads_loop;
                 }
