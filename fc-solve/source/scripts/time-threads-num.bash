@@ -3,6 +3,7 @@
 RUN_SERIAL=false
 PROG="${PROG:-./freecell-solver-multi-thread-solve}"
 MAX_BOARD="32000"
+suf='t'
 
 while getopts "spt:" flag ; do
     # Run the serial scan first.
@@ -11,6 +12,7 @@ while getopts "spt:" flag ; do
     # Run the multi-process version instead of the multi-threaded version.
     elif [ "$flag" = "p" ] ; then
         PROG="./freecell-solver-fork-solve"
+        suf='p'
     # Maximal board - mnemonic - "to".
     elif [ "$flag" = "t" ] ; then
         MAX_BOARD="$OPTARG"
@@ -33,7 +35,7 @@ ARGS="${ARGS:--l gi}"
 
 # strip * > /dev/null 2>&1
 
-DUMPS_DIR="$OUT_DIR/$(date +"DUMPS-%s")"
+DUMPS_DIR="$OUT_DIR/$(date +"DUMPS-%s")-$suf"
 mkdir -p "$DUMPS_DIR"
 
 p_dir="__p"
