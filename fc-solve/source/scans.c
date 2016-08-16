@@ -245,13 +245,14 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
         for (; next_move < moves_end; next_move++)
         {
 
-            fc_solve_apply_move(pass_key, NULL, (*next_move),
-                LOCAL_FREECELLS_NUM, LOCAL_STACKS_NUM);
+            fc_solve_apply_move(pass_key, NULL,
+                (*next_move)PASS_FREECELLS(LOCAL_FREECELLS_NUM)
+                    PASS_STACKS(LOCAL_STACKS_NUM));
         }
         /* The state->parent_state moves stack has an implicit canonize
          * suffix move. */
-        fc_solve_canonize_state(
-            pass_key, LOCAL_FREECELLS_NUM, LOCAL_STACKS_NUM);
+        fc_solve_canonize_state(pass_key PASS_FREECELLS(LOCAL_FREECELLS_NUM)
+                PASS_STACKS(LOCAL_STACKS_NUM));
 
         /* Promote new_cache_state to the head of the priority list. */
         if (!cache->lowest_pri)
