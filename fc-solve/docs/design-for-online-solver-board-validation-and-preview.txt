@@ -1,0 +1,23 @@
+class Card
+{
+    int suit; HCDS = 0123
+    int rank; A = 1 ; K = 13
+}
+
+parse_and_validate()
+{
+    returns:
+
+    {
+        bool is_valid;
+        int error_range_start; // in chars.
+        int error_range_len;
+        string error_code;
+        class State parsed_state;
+        class Card [] missing_cards;
+        class Card [] extra_cards;
+        string error_msg;
+    }
+
+}
+
