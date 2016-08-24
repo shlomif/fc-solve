@@ -525,60 +525,10 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
         {
             break;
         }
-        /* Now that we are about to ascend to a new depth, let's mark-and-sweep
-         * the old states, some of which are no longer of interest.
-         * */
-        {
-            dict_t *kaz_tree;
-            struct avl_traverser trav;
-            dict_key_t item;
-            struct avl_node *ancestor;
-            struct avl_node **tree_recycle_bin;
-            size_t items_count, idx;
-
-            TRACE1("Start mark-and-sweep cleanup for curr_depth=%d\n",
-                instance->curr_depth);
-            tree_recycle_bin =
-                ((struct avl_node **)(&(instance->tree_recycle_bin)));
-
-            kaz_tree = fc_solve_dbm_store_get_dict(
-                instance->colls_by_depth[instance->curr_depth].store);
-            avl_t_init(&trav, kaz_tree);
-
-            items_count = kaz_tree->avl_count;
-            for (idx = 0, item = avl_t_first(&trav, kaz_tree); item;
-                 item = avl_t_next(&trav))
-            {
-                if (!avl_get_decommissioned_flag(item))
-                {
-                    ancestor = (struct avl_node *)item;
-                    while (
-                        fcs_dbm_record_get_refcount(&(ancestor->avl_data)) == 0)
-                    {
-                        avl_set_decommissioned_flag(ancestor, 1);
-
-                        AVL_SET_NEXT(ancestor, *(tree_recycle_bin));
-                        *(tree_recycle_bin) = ancestor;
-
-                        if (!(ancestor = (struct avl_node *)
-                                    fcs_dbm_record_get_parent_ptr(
-                                        &(ancestor->avl_data))))
-                        {
-                            break;
-                        }
-                        fcs_dbm_record_decrement_refcount(
-                            &(ancestor->avl_data));
-                    }
-                }
-                if (((++idx) % 100000) == 0)
-                {
-                    fprintf(out_fh, "Mark+Sweep Progress - %ld/%ld\n",
-                        ((long)idx), ((long)items_count));
-                }
-            }
-            TRACE1("Finish mark-and-sweep cleanup for curr_depth=%d\n",
-                instance->curr_depth);
-        }
+        mark_and_sweep_old_states(
+            instance, fc_solve_dbm_store_get_dict(
+                          instance->colls_by_depth[instance->curr_depth].store),
+            instance->curr_depth);
         instance->curr_depth++;
     }
 
