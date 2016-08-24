@@ -234,12 +234,11 @@ static GCC_INLINE void *fc_solve_hash_insert(
 typedef unsigned long ul;
 typedef unsigned char ub1;
 
-static GCC_INLINE ul perl_hash_function(register const ub1 *s_ptr, /* the key */
-    register const ul length /* the length of the key */
-    )
+static GCC_INLINE ul perl_hash_function(
+    register const ub1 *s_ptr, register const ul len)
 {
     register ul hash_value_int = 0;
-    register const ub1 *const s_end = s_ptr + length;
+    register const ub1 *const s_end = s_ptr + len;
 
     while (s_ptr < s_end)
     {
