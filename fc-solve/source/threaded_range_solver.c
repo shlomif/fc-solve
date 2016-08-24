@@ -61,37 +61,22 @@ static void print_help(void)
 }
 
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
-
-static long long next_board_num;
 static pthread_mutex_t next_board_num_lock;
-
-typedef struct
-{
-    char **argv;
-    int argc;
-    int arg;
-    long long stop_at;
-    long long past_end_board;
-    int board_num_step;
-    int update_total_num_iters_threshold;
-    fcs_int_limit_t total_iterations_limit_per_board;
-} context_t;
-
-static context_t context = {.arg = 1,
-    .board_num_step = 1,
-    .update_total_num_iters_threshold = 1000000,
-    .total_iterations_limit_per_board = -1};
-
+static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
+fcs_int_limit_t total_iterations_limit_per_board = -1;
+fcs_int_limit_t update_total_num_iters_threshold = 1000000;
+char **context_argv;
+int context_arg = 1, context_argc;
 static fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
 static void *worker_thread(void *GCC_UNUSED void_context)
 {
-    int arg = context.arg;
+    int arg = context_arg;
     void *const instance =
-        simple_alloc_and_parse(context.argc, context.argv, &arg);
+        simple_alloc_and_parse(context_argc, context_argv, &arg);
     freecell_solver_user_limit_iterations_long(
-        instance, context.total_iterations_limit_per_board);
+        instance, total_iterations_limit_per_board);
 
     fcs_portable_time_t mytime;
     fcs_int_limit_t total_num_iters_temp = 0;
@@ -100,11 +85,10 @@ static void *worker_thread(void *GCC_UNUSED void_context)
     {
         pthread_mutex_lock(&next_board_num_lock);
         board_num = next_board_num;
-        const int proposed_quota_end =
-            (next_board_num += context.board_num_step);
+        const int proposed_quota_end = (next_board_num += board_num_step);
         pthread_mutex_unlock(&next_board_num_lock);
 
-        const int quota_end = min(proposed_quota_end, context.past_end_board);
+        const int quota_end = min(proposed_quota_end, past_end_board);
 
         for (; board_num < quota_end; board_num++)
         {
@@ -131,8 +115,7 @@ static void *worker_thread(void *GCC_UNUSED void_context)
 
             total_num_iters_temp +=
                 freecell_solver_user_get_num_times_long(instance);
-            if (total_num_iters_temp >=
-                context.update_total_num_iters_threshold)
+            if (total_num_iters_temp >= update_total_num_iters_threshold)
             {
                 pthread_mutex_lock(&total_num_iters_lock);
                 total_num_iters += total_num_iters_temp;
@@ -140,7 +123,7 @@ static void *worker_thread(void *GCC_UNUSED void_context)
                 total_num_iters_temp = 0;
             }
 
-            if (unlikely(board_num % context.stop_at == 0))
+            if (unlikely(board_num % stop_at == 0))
             {
                 pthread_mutex_lock(&total_num_iters_lock);
                 fcs_int64_t total_num_iters_copy =
@@ -154,7 +137,7 @@ static void *worker_thread(void *GCC_UNUSED void_context)
 
             freecell_solver_user_recycle(instance);
         }
-    } while (board_num < context.past_end_board);
+    } while (board_num < past_end_board);
 
     pthread_mutex_lock(&total_num_iters_lock);
     total_num_iters += total_num_iters_temp;
@@ -176,11 +159,11 @@ int main(int argc, char *argv[])
         print_help();
         exit(-1);
     }
-    next_board_num = atoll(argv[context.arg++]);
-    context.past_end_board = 1 + atoll(argv[context.arg++]);
+    next_board_num = atoll(argv[context_arg++]);
+    past_end_board = 1 + atoll(argv[context_arg++]);
     ;
 
-    if ((context.stop_at = atoll(argv[context.arg++])) <= 0)
+    if ((stop_at = atoll(argv[context_arg++])) <= 0)
     {
         fprintf(stderr,
             "print_step (the third argument) must be greater than 0.\n");
@@ -189,53 +172,53 @@ int main(int argc, char *argv[])
     }
 
     int num_workers = 3;
-    for (; context.arg < argc; context.arg++)
+    for (; context_arg < argc; context_arg++)
     {
-        if (!strcmp(argv[context.arg], "--total-iterations-limit"))
+        if (!strcmp(argv[context_arg], "--total-iterations-limit"))
         {
-            context.arg++;
-            if (context.arg == argc)
+            context_arg++;
+            if (context_arg == argc)
             {
                 fprintf(stderr,
                     "--total-iterations-limit came without an argument!\n");
                 print_help();
                 exit(-1);
             }
-            context.total_iterations_limit_per_board = atol(argv[context.arg]);
+            total_iterations_limit_per_board = atol(argv[context_arg]);
         }
-        else if (!strcmp(argv[context.arg], "--num-workers"))
+        else if (!strcmp(argv[context_arg], "--num-workers"))
         {
-            context.arg++;
-            if (context.arg == argc)
+            context_arg++;
+            if (context_arg == argc)
             {
                 fprintf(stderr, "--num-workers came without an argument!\n");
                 print_help();
                 exit(-1);
             }
-            num_workers = atoi(argv[context.arg]);
+            num_workers = atoi(argv[context_arg]);
         }
-        else if (!strcmp(argv[context.arg], "--worker-step"))
+        else if (!strcmp(argv[context_arg], "--worker-step"))
         {
-            context.arg++;
-            if (context.arg == argc)
+            context_arg++;
+            if (context_arg == argc)
             {
                 fprintf(stderr, "--worker-step came without an argument!\n");
                 print_help();
                 exit(-1);
             }
-            context.board_num_step = atoi(argv[context.arg]);
+            board_num_step = atoll(argv[context_arg]);
         }
-        else if (!strcmp(argv[context.arg], "--iters-update-on"))
+        else if (!strcmp(argv[context_arg], "--iters-update-on"))
         {
-            context.arg++;
-            if (context.arg == argc)
+            context_arg++;
+            if (context_arg == argc)
             {
                 fprintf(
                     stderr, "--iters-update-on came without an argument!\n");
                 print_help();
                 exit(-1);
             }
-            context.update_total_num_iters_threshold = atoi(argv[context.arg]);
+            update_total_num_iters_threshold = atol(argv[context_arg]);
         }
         else
         {
@@ -246,8 +229,8 @@ int main(int argc, char *argv[])
     fcs_portable_time_t mytime;
     FCS_PRINT_STARTED_AT(mytime);
 
-    context.argc = argc;
-    context.argv = argv;
+    context_argc = argc;
+    context_argv = argv;
 
     pthread_t workers[num_workers];
 
