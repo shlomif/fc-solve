@@ -282,25 +282,22 @@ static GCC_INLINE void mark_and_sweep_old_states(
      * mark-and-sweep
      * the old states, some of which are no longer of interest.
      * */
-    struct avl_traverser trav;
-    dict_key_t item;
-    struct avl_node *ancestor;
-    struct avl_node **tree_recycle_bin;
-    size_t idx;
-
     FILE *const out_fh = instance->out_fh;
     TRACE1("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
-    tree_recycle_bin = ((struct avl_node **)(&(instance->tree_recycle_bin)));
+    struct avl_node **tree_recycle_bin =
+        ((struct avl_node **)(&(instance->tree_recycle_bin)));
 
+    struct avl_traverser trav;
     avl_t_init(&trav, kaz_tree);
 
     const size_t items_count = kaz_tree->avl_count;
-    for (idx = 0, item = avl_t_first(&trav, kaz_tree); item;
+    size_t idx = 0;
+    for (dict_key_t item = avl_t_first(&trav, kaz_tree); item;
          item = avl_t_next(&trav))
     {
         if (!avl_get_decommissioned_flag(item))
         {
-            ancestor = (struct avl_node *)item;
+            var_AUTO(ancestor, (struct avl_node *)item);
             while (fcs_dbm_record_get_refcount(&(ancestor->avl_data)) == 0)
             {
                 avl_set_decommissioned_flag(ancestor, 1);
@@ -319,8 +316,8 @@ static GCC_INLINE void mark_and_sweep_old_states(
         }
         if (((++idx) % 100000) == 0)
         {
-            fprintf(out_fh, "Mark+Sweep Progress - %ld/%zd\n", ((long)idx),
-                items_count);
+            fprintf(
+                out_fh, "Mark+Sweep Progress - %zd/%zd\n", idx, items_count);
         }
     }
     TRACE1("Finish mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
