@@ -82,9 +82,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *instance,
     const long caches_delta GCC_UNUSED, const char *dbm_store_path,
     long iters_delta_limit, const char *offload_dir_path, FILE *out_fh)
 {
-    int depth;
-    fcs_dbm_collection_by_depth_t *coll;
-
     instance->variant = local_variant;
     instance->curr_depth = 0;
     FCS_INIT_LOCK(instance->global_lock);
@@ -110,9 +107,9 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *instance,
     instance->tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
-    for (depth = 0; depth < MAX_FCC_DEPTH; depth++)
+    for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
-        coll = &(instance->colls_by_depth[depth]);
+        const_AUTO(coll, &(instance->colls_by_depth[depth]));
         FCS_INIT_LOCK(coll->queue_lock);
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
 #define NUM_ITEMS_PER_PAGE (128 * 1024)
@@ -187,8 +184,7 @@ static GCC_INLINE void instance_check_key(
 #endif
     )
 {
-    fcs_dbm_collection_by_depth_t *coll;
-    coll = &(instance->colls_by_depth[key_depth]);
+    const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
     {
 #ifdef FCS_DBM_WITHOUT_CACHES
         fcs_dbm_record_t *token;
@@ -274,7 +270,6 @@ static void *instance_run_solver_thread(void *void_arg)
 {
     thread_arg_t *arg;
     int curr_depth;
-    fcs_dbm_collection_by_depth_t *coll;
 
     enum TERMINATE_REASON should_terminate;
     enum fcs_dbm_variant_type_t local_variant;
@@ -315,7 +310,7 @@ static void *instance_run_solver_thread(void *void_arg)
 #endif
 
     curr_depth = instance->curr_depth;
-    coll = &(instance->colls_by_depth[curr_depth]);
+    const_AUTO(coll, &(instance->colls_by_depth[curr_depth]));
 
     while (1)
     {
