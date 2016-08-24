@@ -334,7 +334,7 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
         for (derived_iter = derived_list; derived_iter;
              derived_iter = next_derived_iter)
         {
-            fcs_bool_t is_reversible =
+            const fcs_bool_t is_reversible =
                 (derived_iter->core_irreversible_moves_count == 0);
             unsigned char extra_move;
 
@@ -351,7 +351,8 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
                               &(extracted_item->moves_seq), extra_move,
                               add_start_point_context)))
             {
-                fcs_fcc_moves_list_item_t *moves_list, **end_moves_iter;
+                fcs_fcc_moves_list_item_t *moves_list,
+                    **end_moves_iter = &moves_list;
                 fcs_encoded_state_buffer_t *key_to_add;
 
                 key_to_add = fcs_compact_alloc_ptr(
@@ -362,13 +363,7 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
                 {
                     fc_solve_kaz_tree_alloc_insert(
                         traversed_states, key_to_add);
-                }
-
-                /* Fill in the moves. */
-                end_moves_iter = &(moves_list);
-
-                if (is_reversible)
-                {
+                    /* Fill in the moves. */
                     int pos_in_moves = 0;
                     fc_solve__internal__copy_moves(&(extracted_item->moves_seq),
                         &pos_in_moves, &end_moves_iter, extra_move,

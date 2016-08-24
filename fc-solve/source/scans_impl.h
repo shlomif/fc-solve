@@ -266,8 +266,8 @@ static GCC_INLINE pq_rating_t befs_rate_state(
         num_cards_out_lookup_table = weighting->num_cards_out_lookup_table;
     if (num_cards_out_lookup_table[1])
     {
-        const int num_founds = (LOCAL_DECKS_NUM << 2);
-        for (int found_idx = 0; found_idx < num_founds; found_idx++)
+        const int num_foundations = (LOCAL_DECKS_NUM << 2);
+        for (int found_idx = 0; found_idx < num_foundations; found_idx++)
         {
             sum += num_cards_out_lookup_table[(
                 int)(fcs_foundation_value((*state), found_idx))];
