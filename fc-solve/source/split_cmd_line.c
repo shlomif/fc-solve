@@ -73,12 +73,12 @@ static GCC_INLINE void add_to_last_arg(
 
 static GCC_INLINE void push_args_last_arg(args_man_wrapper_t *const manager)
 {
-    const int length = manager->last_arg_ptr - manager->last_arg;
+    const int len = manager->last_arg_ptr - manager->last_arg;
 
-    char *const new_arg = SMALLOC(new_arg, length + 1);
+    char *const new_arg = SMALLOC(new_arg, len + 1);
 
-    strncpy(new_arg, manager->last_arg, length);
-    new_arg[length] = '\0';
+    strncpy(new_arg, manager->last_arg, len);
+    new_arg[len] = '\0';
 
     manager->args_man.argv[(manager->args_man.argc)++] = new_arg;
 
@@ -262,10 +262,5 @@ END_OF_LOOP:
     }
 
     free(manager.last_arg);
-#if 0
-    /* Not needed because they get discarded. */
-    manager.last_arg = manager.last_arg_ptr = manager.last_arg_end = NULL;
-#endif
-
     return manager.args_man;
 }
