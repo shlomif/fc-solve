@@ -451,22 +451,13 @@ typedef struct
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, size_t num_threads)
 {
-    int check;
-    main_thread_item_t *threads;
-
-#ifndef FCS_FREECELL_ONLY
-    int local_variant;
-#endif
 #ifdef T
-    FILE *out_fh = instance->out_fh;
+    FILE *const out_fh = instance->out_fh;
 #endif
-
 #ifndef FCS_FREECELL_ONLY
-    local_variant = instance->variant;
+    const_AUTO(local_variant, instance->variant);
 #endif
-
-    threads = SMALLOC(threads, num_threads);
-
+    main_thread_item_t *const threads = SMALLOC(threads, num_threads);
     TRACE0("instance_run_all_threads start");
 
 #ifdef DEBUG_FOO
@@ -499,10 +490,8 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
         TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
         for (size_t i = 0; i < num_threads; i++)
         {
-            check = pthread_create(&(threads[i].id), NULL,
-                instance_run_solver_thread, &(threads[i].arg));
-
-            if (check)
+            if (pthread_create(&(threads[i].id), NULL,
+                    instance_run_solver_thread, &(threads[i].arg)))
             {
                 fprintf(stderr,
                     "Worker Thread No. %zd Initialization failed!\n", i);
@@ -533,13 +522,10 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
         fc_solve_meta_compact_allocator_finish(
             &(threads[i].thread.thread_meta_alloc));
     }
-
     free(threads);
-
 #ifdef DEBUG_FOO
     fc_solve_delta_stater_release(&global_delta_stater);
 #endif
-
     TRACE0("instance_run_all_threads end");
     return;
 }
@@ -583,10 +569,8 @@ static unsigned char get_move_from_parent_to_child(
     fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
     fcs_meta_compact_allocator_t meta_alloc;
-    enum fcs_dbm_variant_type_t local_variant;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
-    local_variant = instance->variant;
+    const_AUTO(local_variant, instance->variant);
 
     fc_solve_meta_compact_allocator_init(&meta_alloc);
     fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
@@ -625,10 +609,9 @@ static unsigned char get_move_from_parent_to_child(
     return move_to_return;
 }
 
-static void trace_solution(fcs_dbm_solver_instance_t *instance, FILE *out_fh,
-    fc_solve_delta_stater_t *delta)
+static void trace_solution(fcs_dbm_solver_instance_t *const instance,
+    FILE *const out_fh, fc_solve_delta_stater_t *const delta)
 {
-    enum fcs_dbm_variant_type_t local_variant;
     fcs_encoded_state_buffer_t *trace;
     int trace_num;
     int i;
@@ -637,8 +620,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *instance, FILE *out_fh,
     char move_buffer[500];
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
-
-    local_variant = instance->variant;
+    const_AUTO(local_variant, instance->variant);
 
     fprintf(out_fh, "%s\n", "Success!");
     fflush(out_fh);
@@ -723,16 +705,12 @@ int main(int argc, char *argv[])
     char user_state[USER_STATE_SIZE];
     fc_solve_delta_stater_t delta;
     fcs_dbm_record_t *token;
-    enum fcs_dbm_variant_type_t local_variant;
-
+    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     fcs_state_keyval_pair_t init_state;
 #if 0
     fcs_bool_t skip_queue_output = FALSE;
 #endif
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-
-    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
-
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
     dbm_store_path = "./fc_solve_dbm_store";
