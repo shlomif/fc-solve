@@ -314,10 +314,8 @@ static unsigned char get_move_from_parent_to_child(
     fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
     fcs_meta_compact_allocator_t meta_alloc;
-    enum fcs_dbm_variant_type_t local_variant;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
-    local_variant = instance->variant;
+    const_AUTO(local_variant, instance->variant);
 
     fc_solve_meta_compact_allocator_init(&meta_alloc);
     fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
