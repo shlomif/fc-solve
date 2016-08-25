@@ -430,30 +430,6 @@ static void *instance_run_solver_thread(void *void_arg)
     return NULL;
 }
 
-#include "depth_dbm_procs.h"
-
-static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
-    fcs_state_keyval_pair_t *init_state, size_t num_threads)
-{
-    main_thread_item_t *const threads =
-        dbm__calc_threads(instance, init_state, num_threads, init_thread);
-    while (instance->curr_depth < MAX_FCC_DEPTH)
-    {
-        dbm__spawn_threads(instance, num_threads, threads);
-        if (instance->queue_solution_was_found)
-        {
-            break;
-        }
-        mark_and_sweep_old_states(
-            instance, fc_solve_dbm_store_get_dict(
-                          instance->colls_by_depth[instance->curr_depth].store),
-            instance->curr_depth);
-        instance->curr_depth++;
-    }
-
-    dbm__free_threads(instance, num_threads, threads, free_thread);
-}
-
 #ifdef FCS_DEBONDT_DELTA_STATES
 
 static int compare_enc_states(
@@ -533,85 +509,28 @@ static unsigned char get_move_from_parent_to_child(
     return move_to_return;
 }
 
-static void trace_solution(fcs_dbm_solver_instance_t *const instance,
-    FILE *const out_fh, fc_solve_delta_stater_t *const delta)
+#include "depth_dbm_procs.h"
+
+static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
+    fcs_state_keyval_pair_t *init_state, size_t num_threads)
 {
-    fcs_encoded_state_buffer_t *trace;
-    int trace_num;
-    int i;
-    fcs_state_keyval_pair_t state;
-    unsigned char move = '\0';
-    char move_buffer[500];
-    DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    fcs_state_locs_struct_t locs;
-    const_AUTO(local_variant, instance->variant);
-
-    fprintf(out_fh, "%s\n", "Success!");
-    fflush(out_fh);
-    /* Now trace the solution */
-
-    calc_trace(instance->queue_solution_ptr, &trace, &trace_num);
-
-    fc_solve_init_locs(&locs);
-
-    for (i = trace_num - 1; i >= 0; i--)
+    main_thread_item_t *const threads =
+        dbm__calc_threads(instance, init_state, num_threads, init_thread);
+    while (instance->curr_depth < MAX_FCC_DEPTH)
     {
-        fc_solve_delta_stater_decode_into_state(
-            delta, trace[i].s, &state, indirect_stacks_buffer);
-        if (i > 0)
+        dbm__spawn_threads(instance, num_threads, threads);
+        if (instance->queue_solution_was_found)
         {
-            move = get_move_from_parent_to_child(
-                instance, delta, trace[i], trace[i - 1]);
+            break;
         }
-
-        char state_as_str[1000];
-        fc_solve_state_as_string(state_as_str, &(state.s),
-            &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
-                PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
-            FALSE PASS_T(TRUE));
-
-        fprintf(out_fh, "--------\n%s\n==\n%s\n", state_as_str,
-            (i > 0) ? move_to_string(move, move_buffer) : "END");
-        fflush(out_fh);
-    }
-    free(trace);
-}
-
-/* Returns if the process should terminate. */
-static fcs_bool_t handle_and_destroy_instance_solution(
-    fcs_dbm_solver_instance_t *instance, FILE *out_fh,
-    fc_solve_delta_stater_t *delta)
-{
-    fcs_bool_t ret = FALSE;
-
-    TRACE("%s\n", "handle_and_destroy_instance_solution start");
-    instance_print_stats(instance, out_fh);
-
-    if (instance->queue_solution_was_found)
-    {
-        trace_solution(instance, out_fh, delta);
-        ret = TRUE;
-    }
-    else if (instance->should_terminate != DONT_TERMINATE)
-    {
-        fprintf(out_fh, "%s\n", "Intractable.");
-        fflush(out_fh);
-        if (instance->should_terminate == MAX_ITERS_TERMINATE)
-        {
-            fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n",
-                instance->max_count_num_processed);
-        }
-    }
-    else
-    {
-        fprintf(out_fh, "%s\n", "Could not solve successfully.");
+        mark_and_sweep_old_states(
+            instance, fc_solve_dbm_store_get_dict(
+                          instance->colls_by_depth[instance->curr_depth].store),
+            instance->curr_depth);
+        instance->curr_depth++;
     }
 
-    TRACE("%s\n", "handle_and_destroy_instance_solution end");
-
-    instance_destroy(instance);
-
-    return ret;
+    dbm__free_threads(instance, num_threads, threads, free_thread);
 }
 
 int main(int argc, char *argv[])
