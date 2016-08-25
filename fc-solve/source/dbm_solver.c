@@ -667,35 +667,6 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     return;
 }
 
-#ifdef FCS_DEBONDT_DELTA_STATES
-
-static int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
-{
-    return memcmp(a, b, sizeof(*a));
-}
-
-#else
-
-static int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
-{
-    if (a->s[0] < b->s[0])
-    {
-        return -1;
-    }
-    else if (a->s[0] > b->s[0])
-    {
-        return 1;
-    }
-    else
-    {
-        return memcmp(a->s, b->s, a->s[0] + 1);
-    }
-}
-
-#endif
-
 static unsigned char get_move_from_parent_to_child(
     fcs_dbm_solver_instance_t *instance, fc_solve_delta_stater_t *delta,
     fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)

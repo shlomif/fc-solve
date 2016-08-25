@@ -40,35 +40,6 @@
 
 #include "depth_multi_queue.h"
 
-#ifdef FCS_DEBONDT_DELTA_STATES
-
-static GCC_INLINE int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
-{
-    return memcmp(a, b, sizeof(*a));
-}
-
-#else
-
-static GCC_INLINE int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
-{
-    if (a->s[0] < b->s[0])
-    {
-        return -1;
-    }
-    else if (a->s[0] > b->s[0])
-    {
-        return 1;
-    }
-    else
-    {
-        return memcmp(a->s, b->s, a->s[0] + 1);
-    }
-}
-
-#endif
-
 typedef struct
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
