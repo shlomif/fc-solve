@@ -448,37 +448,8 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 #ifdef T
     FILE *const out_fh = instance->out_fh;
 #endif
-#ifndef FCS_FREECELL_ONLY
-    const_AUTO(local_variant, instance->variant);
-#endif
-    main_thread_item_t *const threads = SMALLOC(threads, num_threads);
-    TRACE0("instance_run_all_threads start");
-
-#ifdef DEBUG_FOO
-    fc_solve_delta_stater_init(
-        &global_delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-        );
-#endif
-    for (size_t i = 0; i < num_threads; i++)
-    {
-        threads[i].thread.instance = instance;
-        fc_solve_delta_stater_init(&(threads[i].thread.delta_stater),
-            &(init_state->s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-            ,
-            FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-            );
-
-        fc_solve_meta_compact_allocator_init(
-            &(threads[i].thread.thread_meta_alloc));
-        threads[i].arg.thread = &(threads[i].thread);
-    }
-
+    main_thread_item_t *const threads =
+        dbm__calc_threads(instance, init_state, num_threads);
     while (instance->curr_depth < MAX_FCC_DEPTH)
     {
         dbm__spawn_threads(instance, num_threads, threads);
