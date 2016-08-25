@@ -171,89 +171,6 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 
 #include "dbm_procs.h"
 
-static GCC_INLINE void instance_check_key(
-    fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
-    const unsigned char move GCC_UNUSED,
-    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
-        GCC_UNUSED
-#ifdef FCS_DBM_CACHE_ONLY
-    ,
-    const fcs_fcc_move_t *moves_to_parent
-#endif
-    )
-{
-    const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
-    {
-#ifdef FCS_DBM_WITHOUT_CACHES
-        fcs_dbm_record_t *token;
-#endif
-#ifndef FCS_DBM_WITHOUT_CACHES
-        fcs_lru_cache_t *cache;
-#ifndef FCS_DBM_CACHE_ONLY
-        fcs_pre_cache_t *pre_cache;
-#endif
-
-        cache = &(instance->cache);
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache = &(instance->pre_cache);
-#endif
-
-        if (cache_does_key_exist(cache, key))
-        {
-            return;
-        }
-#ifndef FCS_DBM_CACHE_ONLY
-        else if (pre_cache_does_key_exist(pre_cache, key))
-        {
-            return;
-        }
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-        else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
-        {
-            cache_insert(cache, key, NULL, '\0');
-            return;
-        }
-#endif
-        else
-#else
-        if ((token = fc_solve_dbm_store_insert_key_value(
-                 coll->store, key, parent, TRUE)))
-#endif
-        {
-#ifdef FCS_DBM_CACHE_ONLY
-            fcs_cache_key_info_t *cache_key;
-#endif
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-            pre_cache_insert(pre_cache, key, parent);
-#else
-            cache_key = cache_insert(cache, key, moves_to_parent, move);
-#endif
-#endif
-
-            /* Now insert it into the queue. */
-
-            FCS_LOCK(coll->queue_lock);
-            fcs_offloading_queue__insert(
-                &(coll->queue), (const fcs_offloading_queue_item_t *)(&token));
-            FCS_UNLOCK(coll->queue_lock);
-
-            FCS_LOCK(instance->global_lock);
-
-            instance->count_of_items_in_queue++;
-            instance->num_states_in_collection++;
-
-            instance_debug_out_state(instance, &(token->key));
-
-            FCS_UNLOCK(instance->global_lock);
-        }
-    }
-}
-
 struct fcs_dbm_solver_thread_struct
 {
     fcs_dbm_solver_instance_t *instance;
@@ -428,6 +345,89 @@ static void *instance_run_solver_thread(void *void_arg)
 }
 
 #include "depth_dbm_procs.h"
+
+static GCC_INLINE void instance_check_key(
+    fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
+    fcs_dbm_solver_instance_t *const instance, const int key_depth,
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
+    const unsigned char move GCC_UNUSED,
+    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
+        GCC_UNUSED
+#ifdef FCS_DBM_CACHE_ONLY
+    ,
+    const fcs_fcc_move_t *moves_to_parent
+#endif
+    )
+{
+    const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
+    {
+#ifdef FCS_DBM_WITHOUT_CACHES
+        fcs_dbm_record_t *token;
+#endif
+#ifndef FCS_DBM_WITHOUT_CACHES
+        fcs_lru_cache_t *cache;
+#ifndef FCS_DBM_CACHE_ONLY
+        fcs_pre_cache_t *pre_cache;
+#endif
+
+        cache = &(instance->cache);
+#ifndef FCS_DBM_CACHE_ONLY
+        pre_cache = &(instance->pre_cache);
+#endif
+
+        if (cache_does_key_exist(cache, key))
+        {
+            return;
+        }
+#ifndef FCS_DBM_CACHE_ONLY
+        else if (pre_cache_does_key_exist(pre_cache, key))
+        {
+            return;
+        }
+#endif
+#ifndef FCS_DBM_CACHE_ONLY
+        else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
+        {
+            cache_insert(cache, key, NULL, '\0');
+            return;
+        }
+#endif
+        else
+#else
+        if ((token = fc_solve_dbm_store_insert_key_value(
+                 coll->store, key, parent, TRUE)))
+#endif
+        {
+#ifdef FCS_DBM_CACHE_ONLY
+            fcs_cache_key_info_t *cache_key;
+#endif
+
+#ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
+            pre_cache_insert(pre_cache, key, parent);
+#else
+            cache_key = cache_insert(cache, key, moves_to_parent, move);
+#endif
+#endif
+
+            /* Now insert it into the queue. */
+
+            FCS_LOCK(coll->queue_lock);
+            fcs_offloading_queue__insert(
+                &(coll->queue), (const fcs_offloading_queue_item_t *)(&token));
+            FCS_UNLOCK(coll->queue_lock);
+
+            FCS_LOCK(instance->global_lock);
+
+            instance->count_of_items_in_queue++;
+            instance->num_states_in_collection++;
+
+            instance_debug_out_state(instance, &(token->key));
+
+            FCS_UNLOCK(instance->global_lock);
+        }
+    }
+}
 
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, size_t num_threads)

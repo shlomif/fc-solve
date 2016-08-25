@@ -390,13 +390,13 @@ static void *instance_run_solver_thread(void *void_arg)
 /* A section for debugging. */
 #ifdef DEBUG_OUT
             {
-                char *state_str;
-                state_str = fc_solve_state_as_string(&(state.s), &(state.info),
-                    &locs, FREECELLS_NUM, STACKS_NUM, 1, 1, 0, 1);
+                char state_str[2000];
+                fc_solve_state_as_string(state_str, &(state.s), &locs,
+                    FREECELLS_NUM, STACKS_NUM, 1 FC_SOLVE__PASS_PARSABLE(TRUE),
+                    0 FC_SOLVE__PASS_T(TRUE));
 
                 fprintf(out_fh, "<<<\n%s>>>\n", state_str);
                 fflush(out_fh);
-                free(state_str);
             }
 #endif
 
@@ -557,11 +557,8 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
     enum fcs_dbm_variant_type_t local_variant = instance->variant;
-    ;
 #endif
-
-    fcs_dbm_collection_by_depth_t *coll;
-    coll = &(instance->coll);
+    const_AUTO(coll, &(instance->coll));
     {
 #ifdef FCS_DBM_WITHOUT_CACHES
         fcs_dbm_record_t *token;
@@ -741,15 +738,16 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                     fc_solve_delta_stater_decode_into_state(
                         &(thread->delta_stater), key->s, &state,
                         indirect_stacks_buffer);
-                    char *state_as_str = fc_solve_state_as_string(&(state.s),
-                        &(state.info), &locs, FREECELLS_NUM, STACKS_NUM,
-                        DECKS_NUM, 1, 0, 1);
+                    char state_as_str[2000];
+                    fc_solve_state_as_string(state_as_str, &(state.s), &locs,
+                        FREECELLS_NUM, STACKS_NUM,
+                        1 FC_SOLVE__PASS_PARSABLE(TRUE),
+                        0 FC_SOLVE__PASS_T(TRUE));
                     fprintf(stderr,
                         "Check Key: <<<\n%s\n>>>\n\n[%s %s %ld %s]\n\n",
                         state_as_str, fingerprint_base64, state_base64,
                         added_moves_to_output,
                         instance->moves_base64_encoding_buffer);
-                    free(state_as_str);
                 }
 #endif
                 fflush(instance->fcc_exit_points_out_fh);
