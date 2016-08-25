@@ -439,14 +439,8 @@ static void *instance_run_solver_thread(void *void_arg)
     return NULL;
 }
 
-typedef struct
-{
-    fcs_dbm_solver_thread_t thread;
-    thread_arg_t arg;
-    pthread_t id;
-} main_thread_item_t;
-
 #define USER_STATE_SIZE 2000
+#include "depth_dbm_procs.h"
 
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, size_t num_threads)
@@ -487,24 +481,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 
     while (instance->curr_depth < MAX_FCC_DEPTH)
     {
-        TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
-        for (size_t i = 0; i < num_threads; i++)
-        {
-            if (pthread_create(&(threads[i].id), NULL,
-                    instance_run_solver_thread, &(threads[i].arg)))
-            {
-                fprintf(stderr,
-                    "Worker Thread No. %zd Initialization failed!\n", i);
-                exit(-1);
-            }
-        }
-
-        for (size_t i = 0; i < num_threads; i++)
-        {
-            pthread_join(threads[i].id, NULL);
-        }
-        TRACE1("Finished running threads for curr_depth=%d\n",
-            instance->curr_depth);
+        dbm__spawn_threads(instance, num_threads, threads);
         if (instance->queue_solution_was_found)
         {
             break;

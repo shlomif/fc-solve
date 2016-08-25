@@ -854,35 +854,20 @@ static void *instance_run_solver_thread(void *void_arg)
     return NULL;
 }
 
-typedef struct
-{
-    fcs_dbm_solver_thread_t thread;
-    thread_arg_t arg;
-    pthread_t id;
-} main_thread_item_t;
-
 #define USER_STATE_SIZE 2000
+#include "depth_dbm_procs.h"
 
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, FccEntryPointNode *key_ptr,
     size_t num_threads)
 {
-    int check;
-    main_thread_item_t *threads;
-
-#ifndef FCS_FREECELL_ONLY
-    int local_variant;
-#endif
 #ifdef T
-    FILE *out_fh = instance->out_fh;
+    FILE *const out_fh = instance->out_fh;
 #endif
-
 #ifndef FCS_FREECELL_ONLY
-    local_variant = instance->variant;
+    const_AUTO(local_variant, instance->variant);
 #endif
-
-    threads = SMALLOC(threads, num_threads);
-
+    main_thread_item_t *const threads = SMALLOC(threads, num_threads);
     TRACE0("instance_run_all_threads start");
 
 #ifdef DEBUG_FOO
@@ -894,7 +879,6 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 #endif
         );
 #endif
-
     for (size_t i = 0; i < num_threads; i++)
     {
         threads[i].thread.instance = instance;
@@ -920,26 +904,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 #endif
 
     {
-        TRACE1("Running threads for curr_depth=%d\n", 0);
-        for (size_t i = 0; i < num_threads; i++)
-        {
-            check = pthread_create(&(threads[i].id), NULL,
-                instance_run_solver_thread, &(threads[i].arg));
-
-            if (check)
-            {
-                fprintf(stderr,
-                    "Worker Thread No. %zd Initialization failed!\n", i);
-                exit(-1);
-            }
-        }
-
-        for (size_t i = 0; i < num_threads; i++)
-        {
-            pthread_join(threads[i].id, NULL);
-        }
-        TRACE1("Finished running threads for curr_depth=%d\n",
-            instance->curr_depth);
+        dbm__spawn_threads(instance, num_threads, threads);
         if (!instance->queue_solution_was_found)
         {
             mark_and_sweep_old_states(instance,
@@ -954,13 +919,10 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
         fc_solve_meta_compact_allocator_finish(
             &(threads[i].thread.thread_meta_alloc));
     }
-
     free(threads);
-
 #ifdef DEBUG_FOO
     fc_solve_delta_stater_release(&global_delta_stater);
 #endif
-
     TRACE0("instance_run_all_threads end");
     return;
 }
