@@ -32,7 +32,6 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include <pthread.h>
 #include <unistd.h>
 #include <limits.h>
 #include <signal.h>
@@ -128,17 +127,6 @@ static GCC_INLINE void instance_destroy(
 {
     return;
 }
-
-typedef struct
-{
-    fcs_dbm_solver_instance_t *instance;
-    fc_solve_delta_stater_t *delta_stater;
-} fcs_dbm_solver_thread_t;
-
-typedef struct
-{
-    fcs_dbm_solver_thread_t *thread;
-} thread_arg_t;
 
 static GCC_INLINE void init_solver_state(
     fcs_fcc_solver_state *const solver_state,
@@ -592,13 +580,6 @@ free_resources:
     return ret;
 }
 
-typedef struct
-{
-    fcs_dbm_solver_thread_t thread;
-    thread_arg_t arg;
-    pthread_t id;
-} main_thread_item_t;
-
 #define USER_STATE_SIZE 2000
 
 static fcs_dbm_solver_instance_t *global_instance_ptr;
@@ -616,7 +597,6 @@ int main(int argc, char *argv[])
     long caches_delta;
     long max_processed_positions_count = LONG_MAX;
     long positions_milestone_step = 100000;
-    int num_threads;
     int arg;
     const char *filename;
     const char *out_filename = NULL;
@@ -632,7 +612,6 @@ int main(int argc, char *argv[])
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     caches_delta = 1000000;
-    num_threads = 2;
     FCCs_per_depth_milestone_step = 10000;
     global_instance_ptr = &instance;
 
@@ -694,21 +673,6 @@ int main(int argc, char *argv[])
                 exit(-1);
             }
             FCCs_per_depth_milestone_step = atol(argv[arg]);
-        }
-        else if (!strcmp(argv[arg], "--num-threads"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--num-threads came without an argument!\n");
-                exit(-1);
-            }
-            num_threads = atoi(argv[arg]);
-            if (num_threads < 1)
-            {
-                fprintf(stderr, "--num-threads must be at least 1.\n");
-                exit(-1);
-            }
         }
         else
         {
