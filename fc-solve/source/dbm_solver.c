@@ -288,7 +288,6 @@ static void *instance_run_solver_thread(void *void_arg)
 #ifdef DEBUG_OUT
     fc_solve_init_locs(&locs);
 #endif
-    enum TERMINATE_REASON should_terminate;
     while (1)
     {
         /* First of all extract an item. */
@@ -299,12 +298,12 @@ static void *instance_run_solver_thread(void *void_arg)
             instance->queue_num_extracted_and_processed--;
         }
 
-        if ((should_terminate = instance->should_terminate) == DONT_TERMINATE)
+        if (instance->should_terminate == DONT_TERMINATE)
         {
             if (instance->count_of_items_in_queue >=
                 instance->max_count_of_items_in_queue)
             {
-                instance->should_terminate = should_terminate = QUEUE_TERMINATE;
+                instance->should_terminate = QUEUE_TERMINATE;
                 /* TODO :
                  * Implement dumping the queue to the output filehandle.
                  * */
@@ -325,8 +324,7 @@ static void *instance_run_solver_thread(void *void_arg)
                 if (instance->count_num_processed >=
                     instance->max_count_num_processed)
                 {
-                    instance->should_terminate = should_terminate =
-                        MAX_ITERS_TERMINATE;
+                    instance->should_terminate = MAX_ITERS_TERMINATE;
                 }
             }
             else
@@ -339,7 +337,7 @@ static void *instance_run_solver_thread(void *void_arg)
         }
         FCS_UNLOCK(instance->queue_lock);
 
-        if ((should_terminate != DONT_TERMINATE) ||
+        if ((instance->should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
         {
             break;
