@@ -28,3 +28,13 @@ static GCC_INLINE void dbm__spawn_threads(
     TRACE1(
         "Finished running threads for curr_depth=%d\n", instance->curr_depth);
 }
+
+static void init_thread(fcs_dbm_solver_thread_t *const thread)
+{
+    fc_solve_meta_compact_allocator_init(&(thread->thread_meta_alloc));
+}
+
+static void free_thread(fcs_dbm_solver_thread_t *const thread)
+{
+    fc_solve_meta_compact_allocator_finish(&(thread->thread_meta_alloc));
+}

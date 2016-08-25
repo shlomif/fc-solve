@@ -856,16 +856,6 @@ static void *instance_run_solver_thread(void *void_arg)
 
 #include "depth_dbm_procs.h"
 
-static void init_thread(fcs_dbm_solver_thread_t *const thread)
-{
-    fc_solve_meta_compact_allocator_init(&(thread->thread_meta_alloc));
-}
-
-static void free_thread(fcs_dbm_solver_thread_t *const thread)
-{
-    fc_solve_meta_compact_allocator_finish(&(thread->thread_meta_alloc));
-}
-
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, FccEntryPointNode *key_ptr,
     size_t num_threads)
