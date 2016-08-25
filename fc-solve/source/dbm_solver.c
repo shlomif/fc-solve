@@ -639,14 +639,11 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #include "dbm_procs_inner.h"
 
 static void init_thread(fcs_dbm_solver_thread_t *const thread) {}
+static void free_thread(fcs_dbm_solver_thread_t *const thread) {}
 
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, const size_t num_threads)
 {
-#ifdef T
-    FILE *const out_fh = instance->out_fh;
-#endif
-
     main_thread_item_t *const threads =
         dbm__calc_threads(instance, init_state, num_threads, init_thread);
     for (size_t i = 0; i < num_threads; i++)
@@ -663,15 +660,10 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     for (size_t i = 0; i < num_threads; i++)
     {
         pthread_join(threads[i].id, NULL);
-        fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
     }
-    free(threads);
 
-#ifdef DEBUG_FOO
-    fc_solve_delta_stater_release(&global_delta_stater);
-#endif
+    dbm__free_threads(instance, num_threads, threads, free_thread);
 
-    TRACE0("instance_run_all_threads end");
     return;
 }
 

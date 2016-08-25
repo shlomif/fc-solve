@@ -43,3 +43,23 @@ static GCC_INLINE main_thread_item_t *dbm__calc_threads(
     }
     return threads;
 }
+
+static GCC_INLINE void dbm__free_threads(
+    fcs_dbm_solver_instance_t *const instance, const size_t num_threads,
+    main_thread_item_t *const threads,
+    void (*free_thread_cb)(fcs_dbm_solver_thread_t *))
+{
+#ifdef T
+    FILE *const out_fh = instance->out_fh;
+#endif
+    for (size_t i = 0; i < num_threads; i++)
+    {
+        fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
+        free_thread_cb(&(threads[i].thread));
+    }
+    free(threads);
+#ifdef DEBUG_FOO
+    fc_solve_delta_stater_release(&global_delta_stater);
+#endif
+    TRACE0("instance_run_all_threads end");
+}

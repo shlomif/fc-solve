@@ -446,12 +446,14 @@ static void init_thread(fcs_dbm_solver_thread_t *const thread)
     fc_solve_meta_compact_allocator_init(&(thread->thread_meta_alloc));
 }
 
+static void free_thread(fcs_dbm_solver_thread_t *const thread)
+{
+    fc_solve_meta_compact_allocator_finish(&(thread->thread_meta_alloc));
+}
+
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, size_t num_threads)
 {
-#ifdef T
-    FILE *const out_fh = instance->out_fh;
-#endif
     main_thread_item_t *const threads =
         dbm__calc_threads(instance, init_state, num_threads, init_thread);
     while (instance->curr_depth < MAX_FCC_DEPTH)
@@ -468,18 +470,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
         instance->curr_depth++;
     }
 
-    for (size_t i = 0; i < num_threads; i++)
-    {
-        fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));
-        fc_solve_meta_compact_allocator_finish(
-            &(threads[i].thread.thread_meta_alloc));
-    }
-    free(threads);
-#ifdef DEBUG_FOO
-    fc_solve_delta_stater_release(&global_delta_stater);
-#endif
-    TRACE0("instance_run_all_threads end");
-    return;
+    dbm__free_threads(instance, num_threads, threads, free_thread);
 }
 
 #ifdef FCS_DEBONDT_DELTA_STATES
