@@ -30,10 +30,6 @@
  *
  */
 
-#if 0
-#define DEBUG_OUT 1
-#endif
-
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
 #include <assert.h>
@@ -291,8 +287,6 @@ typedef struct
 static void *instance_run_solver_thread(void *void_arg)
 {
     fcs_dbm_collection_by_depth_t *coll;
-
-    enum TERMINATE_REASON should_terminate;
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t *token;
     fcs_dbm_queue_item_t *item, *prev_item;
@@ -345,7 +339,7 @@ static void *instance_run_solver_thread(void *void_arg)
             FCS_UNLOCK(instance->global_lock);
         }
 
-        if ((should_terminate = instance->should_terminate) == DONT_TERMINATE)
+        if (instance->should_terminate == DONT_TERMINATE)
         {
             if (fcs_depth_multi_queue__extract(&(coll->depth_queue),
                     &(thread->state_depth),
@@ -362,8 +356,7 @@ static void *instance_run_solver_thread(void *void_arg)
                 if (instance->count_num_processed >=
                     instance->max_count_num_processed)
                 {
-                    instance->should_terminate = should_terminate =
-                        MAX_ITERS_TERMINATE;
+                    instance->should_terminate = MAX_ITERS_TERMINATE;
                 }
             }
             else
@@ -376,7 +369,7 @@ static void *instance_run_solver_thread(void *void_arg)
         }
         FCS_UNLOCK(coll->queue_lock);
 
-        if ((should_terminate != DONT_TERMINATE) ||
+        if ((instance->should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
         {
             break;

@@ -269,8 +269,6 @@ typedef struct
 static void *instance_run_solver_thread(void *void_arg)
 {
     int curr_depth;
-
-    enum TERMINATE_REASON should_terminate;
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t *token;
     fcs_dbm_queue_item_t *item, *prev_item;
@@ -315,7 +313,7 @@ static void *instance_run_solver_thread(void *void_arg)
             FCS_UNLOCK(instance->global_lock);
         }
 
-        if ((should_terminate = instance->should_terminate) == DONT_TERMINATE)
+        if (instance->should_terminate == DONT_TERMINATE)
         {
             if (fcs_offloading_queue__extract(
                     &(coll->queue), (fcs_offloading_queue_item_t *)(&token)))
@@ -331,8 +329,7 @@ static void *instance_run_solver_thread(void *void_arg)
                 if (instance->count_num_processed >=
                     instance->max_count_num_processed)
                 {
-                    instance->should_terminate = should_terminate =
-                        MAX_ITERS_TERMINATE;
+                    instance->should_terminate = MAX_ITERS_TERMINATE;
                 }
             }
             else
@@ -345,7 +342,7 @@ static void *instance_run_solver_thread(void *void_arg)
         }
         FCS_UNLOCK(coll->queue_lock);
 
-        if ((should_terminate != DONT_TERMINATE) ||
+        if ((instance->should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
         {
             break;
