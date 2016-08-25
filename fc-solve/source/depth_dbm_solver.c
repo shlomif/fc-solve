@@ -439,7 +439,6 @@ static void *instance_run_solver_thread(void *void_arg)
     return NULL;
 }
 
-#define USER_STATE_SIZE 2000
 #include "depth_dbm_procs.h"
 
 static void init_thread(fcs_dbm_solver_thread_t *const thread)

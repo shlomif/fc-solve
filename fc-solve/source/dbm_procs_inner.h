@@ -1,5 +1,5 @@
 #pragma once
-
+#define USER_STATE_SIZE 2000
 typedef struct
 {
     fcs_dbm_solver_thread_t thread;

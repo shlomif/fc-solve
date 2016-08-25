@@ -423,8 +423,6 @@ static void *instance_run_solver_thread(void *void_arg)
     return NULL;
 }
 
-#define USER_STATE_SIZE 2000
-
 static fcs_bool_t populate_instance_with_intermediate_input_line(
     fcs_dbm_solver_instance_t *const instance,
     fc_solve_delta_stater_t *const delta,
