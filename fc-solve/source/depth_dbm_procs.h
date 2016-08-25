@@ -2,56 +2,6 @@
 
 #include "dbm_procs_inner.h"
 
-static unsigned char get_move_from_parent_to_child(
-    fcs_dbm_solver_instance_t *instance, fc_solve_delta_stater_t *delta,
-    fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
-{
-    unsigned char move_to_return;
-    fcs_encoded_state_buffer_t got_child;
-    fcs_state_keyval_pair_t parent_state;
-    fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
-    fcs_compact_allocator_t derived_list_allocator;
-    fcs_meta_compact_allocator_t meta_alloc;
-    DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    const_AUTO(local_variant, instance->variant);
-
-    fc_solve_meta_compact_allocator_init(&meta_alloc);
-    fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
-    fc_solve_delta_stater_decode_into_state(
-        delta, parent.s, &parent_state, indirect_stacks_buffer);
-
-    derived_list = NULL;
-    derived_list_recycle_bin = NULL;
-
-    instance_solver_thread_calc_derived_states(local_variant, &parent_state,
-        NULL, &derived_list, &derived_list_recycle_bin, &derived_list_allocator,
-        TRUE);
-
-    for (derived_iter = derived_list; derived_iter;
-         derived_iter = derived_iter->next)
-    {
-        fcs_init_and_encode_state(
-            delta, local_variant, &(derived_iter->state), &got_child);
-
-        if (compare_enc_states(&got_child, &child) == 0)
-        {
-            break;
-        }
-    }
-
-    if (!derived_iter)
-    {
-        fprintf(stderr, "%s\n", "Failed to find move. Terminating.");
-        exit(-1);
-    }
-    move_to_return = derived_iter->move;
-
-    fc_solve_compact_allocator_finish(&(derived_list_allocator));
-    fc_solve_meta_compact_allocator_finish(&meta_alloc);
-
-    return move_to_return;
-}
-
 static GCC_INLINE void dbm__spawn_threads(
     fcs_dbm_solver_instance_t *const instance, const size_t num_threads,
     main_thread_item_t *const threads)
