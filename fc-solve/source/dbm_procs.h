@@ -283,7 +283,7 @@ static GCC_INLINE void mark_and_sweep_old_states(
      * the old states, some of which are no longer of interest.
      * */
     FILE *const out_fh = instance->out_fh;
-    TRACE1("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
+    TRACE("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
     struct avl_node **tree_recycle_bin =
         ((struct avl_node **)(&(instance->tree_recycle_bin)));
 
@@ -320,7 +320,7 @@ static GCC_INLINE void mark_and_sweep_old_states(
                 out_fh, "Mark+Sweep Progress - %zd/%zd\n", idx, items_count);
         }
     }
-    TRACE1("Finish mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
+    TRACE("Finish mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
 }
 
 #ifdef FCS_DBM_SINGLE_THREAD

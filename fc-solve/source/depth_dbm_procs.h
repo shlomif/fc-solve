@@ -9,7 +9,7 @@ static GCC_INLINE void dbm__spawn_threads(
 #ifdef T
     FILE *const out_fh = instance->out_fh;
 #endif
-    TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
+    TRACE("Running threads for curr_depth=%d\n", instance->curr_depth);
     for (size_t i = 0; i < num_threads; i++)
     {
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
@@ -25,8 +25,7 @@ static GCC_INLINE void dbm__spawn_threads(
     {
         pthread_join(threads[i].id, NULL);
     }
-    TRACE1(
-        "Finished running threads for curr_depth=%d\n", instance->curr_depth);
+    TRACE("Finished running threads for curr_depth=%d\n", instance->curr_depth);
 }
 
 static void init_thread(fcs_dbm_solver_thread_t *const thread)

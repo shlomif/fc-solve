@@ -304,7 +304,7 @@ static void *instance_run_solver_thread(void *void_arg)
     derived_list = NULL;
     out_fh = instance->out_fh;
 
-    TRACE0("instance_run_solver_thread start");
+    TRACE("%s\n", "instance_run_solver_thread start");
 #ifdef DEBUG_OUT
     fc_solve_init_locs(&locs);
 #endif
@@ -434,7 +434,7 @@ static void *instance_run_solver_thread(void *void_arg)
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
 
-    TRACE0("instance_run_solver_thread end");
+    TRACE("%s\n", "instance_run_solver_thread end");
 
     return NULL;
 }
@@ -593,7 +593,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 {
     fcs_bool_t ret = FALSE;
 
-    TRACE0("handle_and_destroy_instance_solution start");
+    TRACE("%s\n", "handle_and_destroy_instance_solution start");
     instance_print_stats(instance, out_fh);
 
     if (instance->queue_solution_was_found)
@@ -616,7 +616,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
         fprintf(out_fh, "%s\n", "Could not solve successfully.");
     }
 
-    TRACE0("handle_and_destroy_instance_solution end");
+    TRACE("%s\n", "handle_and_destroy_instance_solution end");
 
     instance_destroy(instance);
 

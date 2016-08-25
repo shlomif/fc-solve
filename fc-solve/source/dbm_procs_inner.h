@@ -19,7 +19,7 @@ static GCC_INLINE main_thread_item_t *dbm__calc_threads(
     const_AUTO(local_variant, instance->variant);
 #endif
     main_thread_item_t *const threads = SMALLOC(threads, num_threads);
-    TRACE0("instance_run_all_threads start");
+    TRACE("%s\n", "instance_run_all_threads start");
 #ifdef DEBUG_FOO
     fc_solve_delta_stater_init(
         &global_delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
@@ -61,5 +61,5 @@ static GCC_INLINE void dbm__free_threads(
 #ifdef DEBUG_FOO
     fc_solve_delta_stater_release(&global_delta_stater);
 #endif
-    TRACE0("instance_run_all_threads end");
+    TRACE("%s\n", "instance_run_all_threads end");
 }
