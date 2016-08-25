@@ -8,8 +8,7 @@ typedef struct
 } main_thread_item_t;
 
 static GCC_INLINE void dbm__spawn_threads(
-    fcs_dbm_solver_instance_t *const instance,
-    const size_t num_threads,
+    fcs_dbm_solver_instance_t *const instance, const size_t num_threads,
     main_thread_item_t *const threads)
 {
 #ifdef T
@@ -18,11 +17,11 @@ static GCC_INLINE void dbm__spawn_threads(
     TRACE1("Running threads for curr_depth=%d\n", instance->curr_depth);
     for (size_t i = 0; i < num_threads; i++)
     {
-        if (pthread_create(&(threads[i].id), NULL,
-                instance_run_solver_thread, &(threads[i].arg)))
+        if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
+                &(threads[i].arg)))
         {
-            fprintf(stderr,
-                "Worker Thread No. %zd Initialization failed!\n", i);
+            fprintf(
+                stderr, "Worker Thread No. %zd Initialization failed!\n", i);
             exit(-1);
         }
     }
@@ -31,6 +30,6 @@ static GCC_INLINE void dbm__spawn_threads(
     {
         pthread_join(threads[i].id, NULL);
     }
-    TRACE1("Finished running threads for curr_depth=%d\n",
-        instance->curr_depth);
+    TRACE1(
+        "Finished running threads for curr_depth=%d\n", instance->curr_depth);
 }
