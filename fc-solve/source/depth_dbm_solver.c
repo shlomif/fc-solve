@@ -34,6 +34,35 @@
 
 #include "dbm_solver_head.h"
 
+#ifdef FCS_DEBONDT_DELTA_STATES
+
+static GCC_INLINE int compare_enc_states(
+    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
+{
+    return memcmp(a, b, sizeof(*a));
+}
+
+#else
+
+static GCC_INLINE int compare_enc_states(
+    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
+{
+    if (a->s[0] < b->s[0])
+    {
+        return -1;
+    }
+    else if (a->s[0] > b->s[0])
+    {
+        return 1;
+    }
+    else
+    {
+        return memcmp(a->s, b->s, a->s[0] + 1);
+    }
+}
+
+#endif
+
 typedef struct
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -170,35 +199,6 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
     (instance->curr_depth + list->num_non_reversible_moves_including_prune)
 
 #include "dbm_procs.h"
-
-#ifdef FCS_DEBONDT_DELTA_STATES
-
-static int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
-{
-    return memcmp(a, b, sizeof(*a));
-}
-
-#else
-
-static int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
-{
-    if (a->s[0] < b->s[0])
-    {
-        return -1;
-    }
-    else if (a->s[0] > b->s[0])
-    {
-        return 1;
-    }
-    else
-    {
-        return memcmp(a->s, b->s, a->s[0] + 1);
-    }
-}
-
-#endif
 
 static unsigned char get_move_from_parent_to_child(
     fcs_dbm_solver_instance_t *instance, fc_solve_delta_stater_t *delta,
