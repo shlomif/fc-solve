@@ -857,6 +857,11 @@ static void *instance_run_solver_thread(void *void_arg)
 #define USER_STATE_SIZE 2000
 #include "depth_dbm_procs.h"
 
+static void init_thread(fcs_dbm_solver_thread_t *const thread)
+{
+    fc_solve_meta_compact_allocator_init(&(thread->thread_meta_alloc));
+}
+
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, FccEntryPointNode *key_ptr,
     size_t num_threads)
@@ -865,7 +870,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     FILE *const out_fh = instance->out_fh;
 #endif
     main_thread_item_t *const threads =
-        dbm__calc_threads(instance, init_state, num_threads);
+        dbm__calc_threads(instance, init_state, num_threads, init_thread);
     /* TODO : do something meaningful with start_key_ptr . */
     instance->start_key_ptr = key_ptr;
 

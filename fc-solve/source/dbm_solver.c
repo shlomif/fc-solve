@@ -423,13 +423,6 @@ static void *instance_run_solver_thread(void *void_arg)
     return NULL;
 }
 
-typedef struct
-{
-    fcs_dbm_solver_thread_t thread;
-    thread_arg_t arg;
-    pthread_t id;
-} main_thread_item_t;
-
 #define USER_STATE_SIZE 2000
 
 static fcs_bool_t populate_instance_with_intermediate_input_line(
@@ -645,53 +638,23 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     return TRUE;
 }
 
+#include "dbm_procs_inner.h"
+
+static void init_thread(fcs_dbm_solver_thread_t *const thread) {}
+
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, const size_t num_threads)
 {
-    int check;
-    main_thread_item_t *threads;
-
-#ifndef FCS_FREECELL_ONLY
-    int local_variant;
-#endif
-
 #ifdef T
-    FILE *out_fh = instance->out_fh;
+    FILE *const out_fh = instance->out_fh;
 #endif
 
-#ifndef FCS_FREECELL_ONLY
-    local_variant = instance->variant;
-#endif
-
-    threads = SMALLOC(threads, num_threads);
-
-    TRACE0("instance_run_all_threads start");
-
-#ifdef DEBUG_FOO
-    fc_solve_delta_stater_init(
-        &global_delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-        );
-#endif
-
+    main_thread_item_t *const threads =
+        dbm__calc_threads(instance, init_state, num_threads, init_thread);
     for (size_t i = 0; i < num_threads; i++)
     {
-        threads[i].thread.instance = instance;
-        fc_solve_delta_stater_init(&(threads[i].thread.delta_stater),
-            &(init_state->s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-            ,
-            FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-            );
-        threads[i].arg.thread = &(threads[i].thread);
-        check = pthread_create(&(threads[i].id), NULL,
-            instance_run_solver_thread, &(threads[i].arg));
-
-        if (check)
+        if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
+                &(threads[i].arg)))
         {
             fprintf(
                 stderr, "Worker Thread No. %zd Initialization failed!\n", i);
