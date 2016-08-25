@@ -591,13 +591,9 @@ typedef struct
 
 static void *instance_run_solver_thread(void *void_arg)
 {
-    thread_arg_t *arg;
     fcs_dbm_collection_by_depth_t *coll;
 
     enum TERMINATE_REASON should_terminate;
-    enum fcs_dbm_variant_type_t local_variant;
-    fcs_dbm_solver_thread_t *thread;
-    fcs_dbm_solver_instance_t *instance;
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t *token;
     fcs_dbm_queue_item_t *item, *prev_item;
@@ -605,7 +601,6 @@ static void *instance_run_solver_thread(void *void_arg)
     fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
     fcs_state_keyval_pair_t state;
-    FILE *out_fh;
     char *base64_encoding_buffer = NULL;
 #if 0
     size_t base64_encoding_buffer_max_len = 0;
@@ -617,11 +612,10 @@ static void *instance_run_solver_thread(void *void_arg)
 #endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    arg = (thread_arg_t *)void_arg;
-    thread = arg->thread;
-    instance = thread->instance;
-    fc_solve_delta_stater_t *const delta_stater = &(thread->delta_stater);
-    local_variant = instance->variant;
+    const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
+    const_SLOT(instance, thread);
+    const_AUTO(delta_stater, &(thread->delta_stater));
+    const_AUTO(local_variant, instance->variant);
 
     prev_item = item = NULL;
     queue_num_extracted_and_processed = 0;
@@ -630,7 +624,7 @@ static void *instance_run_solver_thread(void *void_arg)
         &(derived_list_allocator), &(thread->thread_meta_alloc));
     derived_list_recycle_bin = NULL;
     derived_list = NULL;
-    out_fh = instance->out_fh;
+    const_SLOT(out_fh, instance);
 
     TRACE("%s\n", "instance_run_solver_thread start");
 
