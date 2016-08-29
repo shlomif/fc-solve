@@ -59,11 +59,17 @@ function _perl_range(start: number, end: number): Array<number> {
 _perl_range(1,13).forEach(function (rank) {
     _ranks__str_to_int[_ranks__int_to_str.substring(rank, rank+1)] = rank;
 });
+var _suits__int_to_str:string = "HCDS";
+var _suits__str_to_int = {};
+_perl_range(0,3).forEach(function (suit) {
+    _suits__str_to_int[_suits__int_to_str.substring(suit, suit+1)] = suit;
+});
+
 
 function fcs_js__card_from_string(s: string): Card {
     var m = s.match(/^([A23456789TJQK])([HCDS])$/);
     if (! m) {
         throw "Invalid format for a card - \"" + s + "\"";
     }
-    return new Card(_ranks__str_to_int[m[1]], 0);
+    return new Card(_ranks__str_to_int[m[1]], _suits__str_to_int[m[2]]);
 }
