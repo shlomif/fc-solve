@@ -10203,6 +10203,13 @@ function test_js_fc_solve_class()
         equal(instance.get_num_freecells(), 2,
             "get_num_freecells() returns 2 after command line.");
     });
+    test("verify_state Card class tests", function() {
+        expect(1);
+
+        var c = fcs_js__card_from_string('TH');
+
+        equal(c.getRank(), 10, "Card(TH).getRank() is fine.");
+    });
 
     return;
 }
