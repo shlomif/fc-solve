@@ -122,6 +122,11 @@ COMPLETED TASKS:
     - Make sure the makefile uses the right upload URL on PROD=1 vs. not.
         @ DONE [Sun 2016-01-24]
       @ Added [Sun 2016-01-24]
+    - Test whether remove breakpoint for the -tests.js file works properly in
+    Firefox nightly.
+        @ DONE [Mon 2016-08-29]
+            - appears to be working fine there.
+    @ Added [Mon 2016-08-29]
 
 
 
