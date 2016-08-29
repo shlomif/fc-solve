@@ -10204,11 +10204,17 @@ function test_js_fc_solve_class()
             "get_num_freecells() returns 2 after command line.");
     });
     test("verify_state Card class tests", function() {
-        expect(1);
+        expect(2);
 
-        var c = fcs_js__card_from_string('TH');
+        {
+            var c = fcs_js__card_from_string('TH');
 
-        equal(c.getRank(), 10, "Card(TH).getRank() is fine.");
+            // TEST
+            equal(c.getRank(), 10, "Card(TH).getRank() is fine.");
+
+            // TEST
+            equal(c.getSuit(), 0, "Card(TH).getSuit() is fine.");
+        }
     });
 
     return;
