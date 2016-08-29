@@ -10204,7 +10204,7 @@ function test_js_fc_solve_class()
             "get_num_freecells() returns 2 after command line.");
     });
     test("verify_state Card class tests", function() {
-        expect(4);
+        expect(6);
 
         {
             var c = fcs_js__card_from_string('TH');
@@ -10224,6 +10224,16 @@ function test_js_fc_solve_class()
 
             // TEST
             equal(c.getSuit(), 0, "Card(AH).getSuit() is fine.");
+        }
+
+        {
+            var c = fcs_js__card_from_string('AC');
+
+            // TEST
+            equal(c.getRank(), 1, "Card(AC).getRank() is fine.");
+
+            // TEST
+            equal(c.getSuit(), 1, "Card(AC).getSuit() is fine.");
         }
     });
 
