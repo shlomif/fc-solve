@@ -165,6 +165,13 @@ $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN): $(LIBFREECELL_SOLVER_JS)
 $(DEST_LIBFREECELL_SOLVER_JS_MEM): %: lib/fc-solve-for-javascript/libfreecell-solver.js.mem
 	cp -f $< $@
 
+FCS_VALID_DEST = $(D)/js/fcs-validate.js
+
+all: $(FCS_VALID_DEST)
+
+$(FCS_VALID_DEST): src/js/fcs-validate.ts
+	tsc --out $@ $<
+
 .PHONY:
 
 # Build index.html pages for the appropriate sub-directories.
