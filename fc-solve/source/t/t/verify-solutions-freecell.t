@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More tests => 12;
 use Data::Dumper (qw/Dumper/);
-use FC_Solve::Paths qw( is_freecell_only samp_board );
+use FC_Solve::Paths qw( is_freecell_only is_without_patsolve samp_board );
 
 use FC_Solve::GetOutput ();
 
@@ -21,6 +21,10 @@ sub verify_solution_test
     if (exists($args->{variant}) and is_freecell_only())
     {
         return ok(1, q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#);
+    }
+    if (exists($args->{uses_patsolve}) and is_without_patsolve())
+    {
+        return ok(1, q#Test skipped because it uses patsolve on a build without it.#);
     }
 
     my $cmd_line = FC_Solve::GetOutput->new($args);
@@ -191,6 +195,7 @@ verify_solution_test(
     {
         deal => 24,
         theme => ["--method", "patsolve",],
+        uses_patsolve => 1,
     },
     "Solving Deal #24 with patsolve"
 );
