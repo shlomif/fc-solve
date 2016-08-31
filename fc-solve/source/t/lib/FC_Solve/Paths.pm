@@ -6,7 +6,7 @@ use String::ShellQuote qw/shell_quote/;
 
 use parent 'Exporter';
 
-our @EXPORT_OK = qw($FC_SOLVE_EXE $FC_SOLVE__RAW bin_board bin_exe_raw bin_file data_file is_freecell_only is_without_flares is_without_valgrind samp_board samp_preset samp_sol);
+our @EXPORT_OK = qw($FC_SOLVE_EXE $FC_SOLVE__RAW bin_board bin_exe_raw bin_file data_file is_freecell_only is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -26,6 +26,7 @@ sub _is_tag
 }
 my $FC_ONLY = _is_tag('fc_only');
 my $NO_FLARES = _is_tag('no_flares');
+my $NO_PATSOLVE = _is_tag('no_pats');
 my $NO_VALGRIND = _is_tag('no_valg');
 
 # A file in the output/binaries directory where fc-solve was compiled.
@@ -58,6 +59,11 @@ sub is_freecell_only
 sub is_without_flares
 {
     return $NO_FLARES;
+}
+
+sub is_without_patsolve
+{
+    return $NO_PATSOLVE;
 }
 
 sub is_without_valgrind
