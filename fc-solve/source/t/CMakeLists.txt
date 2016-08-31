@@ -174,5 +174,8 @@ ENDIF ()
 IF (FCS_DISABLE_MULTI_FLARES)
     LIST(APPEND test_tags "no_flares")
 ENDIF ()
+IF (SKIP_VALGRIND)
+    LIST(APPEND test_tags "no_valg")
+ENDIF ()
 
 FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/TAGS.txt" "${test_tags}")

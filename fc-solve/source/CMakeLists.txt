@@ -292,6 +292,7 @@ IF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_KAZ_TREE" OR
 
 ENDIF ()
 
+SET (SKIP_VALGRIND )
 # Add the google_hash.cpp if (and only if) it is being used.
 #
 IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_GOOGLE_DENSE_HASH") OR
@@ -299,6 +300,7 @@ IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_GOOGLE_DENSE_HASH") OR
 
     LIST(APPEND FREECELL_SOLVER_LIB_MODULES google_hash.cpp)
 
+    SET (SKIP_VALGRIND 1)
 ENDIF ()
 
 # Search for libredblack if appropriate.

@@ -53,12 +53,13 @@ using google::sparse_hash_set; // namespace where class lives by default
 typedef unsigned long int ub4; /* unsigned 4-byte quantities */
 typedef unsigned char ub1;
 
-static GCC_INLINE ub4 perl_hash_function(register ub1 *s_ptr, /* the key */
-    register ub4 length /* the length of the key */
+static GCC_INLINE ub4 perl_hash_function(
+    register const ub1 *s_ptr, /* the key */
+    register const ub4 length  /* the length of the key */
     )
 {
     register ub4 hash_value_int = 0;
-    register ub1 *s_end = s_ptr + length;
+    register const ub1 *s_end = s_ptr + length;
 
     while (s_ptr < s_end)
     {
@@ -84,7 +85,7 @@ struct state_hash
 {
     int operator()(const char *s1) const
     {
-        return perl_hash_function((ub1 *)s1, sizeof(fcs_state_t));
+        return perl_hash_function((const ub1 *)s1, sizeof(fcs_state_t));
     }
 };
 
@@ -176,7 +177,7 @@ struct column_hash
 {
     int operator()(const char *s1) const
     {
-        return perl_hash_function((ub1 *)s1, fcs_col_len(s1) + 1);
+        return perl_hash_function((const ub1 *)s1, fcs_col_len(s1) + 1);
     }
 };
 

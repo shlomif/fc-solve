@@ -39,7 +39,7 @@ extern "C" {
 
 typedef void *fcs_states_google_hash_handle_t;
 
-extern fcs_states_google_hash_handle_t fc_solve_states_google_hash_new();
+extern fcs_states_google_hash_handle_t fc_solve_states_google_hash_new(void);
 
 /*
  * Returns 0 if the key is new and the key/val pair was inserted.
@@ -63,7 +63,7 @@ extern void fc_solve_states_google_hash_foreach(
 
 typedef void *fcs_columns_google_hash_handle_t;
 
-extern fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new();
+extern fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new(void);
 
 /*
  * Returns 0 if the key is new and the key/val pair was inserted.

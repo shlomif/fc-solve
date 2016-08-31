@@ -7,7 +7,7 @@ use Test::More ();
 use Carp ();
 use File::Spec ();
 use File::Temp qw( tempdir );
-use FC_Solve::Paths qw( bin_board bin_exe_raw samp_board samp_preset );
+use FC_Solve::Paths qw( bin_board bin_exe_raw is_without_valgrind samp_board samp_preset );
 
 use Test::RunValgrind;
 
@@ -57,18 +57,25 @@ sub r
 {
     my ($args, $msg) = @_;
 
-    if (!
-        Test::RunValgrind->new({})->run(
-            {
-                log_fn => $args->{log_fn},
-                blurb => $msg,
-                prog => bin_exe_raw([$args->{prog}]),
-                argv => [map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}],
-            }
-        )
-    )
+    SKIP:
     {
-        die "Valgrind failed";
+        if (is_without_valgrind())
+        {
+            Test::More::skip("valgrind is skipped for google-dense/sparse-hash.", 1);
+        }
+        elsif (!
+            Test::RunValgrind->new({})->run(
+                {
+                    log_fn => $args->{log_fn},
+                    blurb => $msg,
+                    prog => bin_exe_raw([$args->{prog}]),
+                    argv => [map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}],
+                }
+            )
+        )
+        {
+            die "Valgrind failed";
+        }
     }
 }
 
