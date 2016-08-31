@@ -48,25 +48,7 @@ using google::dense_hash_set; // namespace where class lives by default
 using google::sparse_hash_set; // namespace where class lives by default
 #endif
 
-typedef unsigned long int ub4; /* unsigned 4-byte quantities */
-typedef unsigned char ub1;
-
-static GCC_INLINE ub4 perl_hash_function(
-    register const ub1 *s_ptr, /* the key */
-    register const ub4 length  /* the length of the key */
-    )
-{
-    register ub4 hash_value_int = 0;
-    register const ub1 *s_end = s_ptr + length;
-
-    while (s_ptr < s_end)
-    {
-        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-    }
-    hash_value_int += (hash_value_int >> 5);
-
-    return hash_value_int;
-}
+#include "perl_hash_func.h"
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
 

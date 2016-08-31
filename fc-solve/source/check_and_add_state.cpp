@@ -59,7 +59,8 @@ static GCC_INLINE void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
     const int new_size_bitmask = new_size - 1;
 
     fc_solve_hash_symlink_t *const new_entries =
-        calloc(new_size, sizeof(new_entries[0]));
+        (fc_solve_hash_symlink_t * const)calloc(
+            new_size, sizeof(new_entries[0]));
 
     /* Copy the items to the new hash while not allocating them again */
     for (int i = 0; i < old_size; i++)
@@ -196,7 +197,9 @@ static GCC_INLINE void *fc_solve_hash_insert(
         item_placeholder = &(last_item->next);
     }
 
-#define ITEM_ALLOC() fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item))
+#define ITEM_ALLOC()                                                           \
+    (fc_solve_hash_symlink_item_t * const)                                     \
+        fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item))
 #ifdef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fc_solve_hash_symlink_item_t *const item = ITEM_ALLOC();
 #else
@@ -231,23 +234,7 @@ static GCC_INLINE void *fc_solve_hash_insert(
 
 #endif
 
-typedef unsigned long ul;
-typedef unsigned char ub1;
-
-static GCC_INLINE ul perl_hash_function(
-    register const ub1 *s_ptr, register const ul len)
-{
-    register ul hash_value_int = 0;
-    register const ub1 *const s_end = s_ptr + len;
-
-    while (s_ptr < s_end)
-    {
-        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-    }
-    hash_value_int += (hash_value_int >> 5);
-
-    return hash_value_int;
-}
+#include "perl_hash_func.h"
 
 #ifdef INDIRECT_STACK_STATES
 
@@ -542,7 +529,8 @@ fcs_bool_t fc_solve_check_and_add_state(
             );
         if (existing_void)
         {
-            FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
+            FCS_STATE_collectible_to_kv(existing_state_raw,
+                (fcs_collectible_state_t * const)existing_void);
             return FALSE;
         }
         else
