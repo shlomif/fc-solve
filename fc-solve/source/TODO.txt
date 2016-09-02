@@ -10,6 +10,14 @@ Pressing
 Non-pressing
 ------------
 
+* Investigate why this depth_dbm_solver invocation with Freecell as the game,
+multi-threading and 4 freecells runs for many hours with many iterations, but
+consumes very little RAM (below 0.1%).
+
+------------
+./depth_dbm_fc_solver --num-threads 4 --offload-dir-path /home/shlomif/tmp/depth-dbm/ 1107600547.board | tee 1107600547.depth_dbm.dump
+------------
+
 * Write a better initial board/initial layout validation code for the online
 solver (at least initially]):
 ** Exact number of playstacks. (requires introspection).
