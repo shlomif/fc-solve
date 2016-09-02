@@ -91,8 +91,8 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES'). No need to usually change.")
-SET (FCS_ENABLE_RCS_STATES CACHE BOOL "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
-SET (FCS_ENABLE_DBM_SOLVER CACHE BOOL "Whether to build the DBM solver")
+option (FCS_ENABLE_RCS_STATES "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
+option (FCS_ENABLE_DBM_SOLVER "Whether to build the DBM solver")
 SET (FCS_DBM_BACKEND "kaztree" CACHE STRING "Type of DBM backend.")
 SET (FCS_DBM_TREE_BACKEND "libavl2" CACHE STRING "Type of DBM tree backend.")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")
@@ -102,74 +102,49 @@ SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING
     "Maximal Number of Initial Cards in a Stack")
 SET (MAX_NUM_DECKS 2 CACHE STRING "Maximal Number of Decks (1 or 2)")
 SET (MAX_NUM_BENCHMARK_THREADS 4 CACHE STRING "Maximal Number of Threads to Use When Benchmarking")
-
 SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State Storage Type")
 SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack Storage Type")
 SET (FCS_RCS_CACHE_STORAGE "FCS_RCS_CACHE_STORAGE_KAZ_TREE" CACHE STRING "The LRU Cache Type of for FCS_RCS_STATES.")
-
 SET (FCS_WHICH_COLUMNS_GOOGLE_HASH "FCS_WHICH_COLUMNS_GOOGLE_HASH__SPARSE" CACHE STRING "The Columns' Google Hash Type")
 SET (FCS_WHICH_STATES_GOOGLE_HASH "FCS_WHICH_STATES_GOOGLE_HASH__SPARSE" CACHE STRING "The States/Positions' Google Hash Type")
-
-SET (FCS_FREECELL_ONLY "" CACHE BOOL "Configure Freecell Solver to only be able to solve Freecell (not recommended)")
-SET (FCS_DISABLE_SIMPLE_SIMON "" CACHE BOOL "Exclude being able to solve Simple Simon from the Binary (not recommended)")
-SET (FCS_WITH_TEST_SUITE "1" CACHE BOOL "Also build and run the test suite.")
-SET (FCS_LINK_TO_STATIC "" CACHE BOOL "Link to the static library.")
+option (FCS_FREECELL_ONLY "Configure Freecell Solver to only be able to solve Freecell (not recommended)")
+option (FCS_DISABLE_SIMPLE_SIMON "Exclude being able to solve Simple Simon from the Binary (not recommended)")
+option (FCS_WITH_TEST_SUITE "Also build and run the test suite." ON)
+option (FCS_LINK_TO_STATIC "Link to the static library.")
 SET (FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY "4" CACHE STRING "The hard-coded number of freecells (4, 2, etc.). Usually ignored")
-
-SET (FCS_ENABLE_SECONDARY_HASH_VALUE ""
-    CACHE BOOL
-    "Enable the secondary hash value calculation and track-keeping. Seems to slow things down."
-)
-
-SET (FCS_WITH_CONTEXT_VARIABLE "1"
-    CACHE BOOL
-    "Enable the context (extra void *) as passed to the comparison functions, etc."
-)
-
-SET (FCS_INLINED_HASH_COMPARISON "1"
-    CACHE BOOL
-    "Use more compact tokens for moves internally (makes things slower)"
-)
-
-SET (FCS_AVOID_TCMALLOC ""
-    CACHE BOOL
-    "Avoid linking against Google's tcmalloc"
-)
-
-SET (FCS_BUILD_DOCS "1" CACHE BOOL "Whether to build the documentation or not.")
-
-SET (BUILD_STATIC_LIBRARY "1" CACHE BOOL "Whether to build the static library (which takes more time)" )
-
+option (FCS_ENABLE_SECONDARY_HASH_VALUE "Enable the secondary hash value calculation and track-keeping. Seems to slow things down.")
+option (FCS_WITH_CONTEXT_VARIABLE "Enable the context (extra void *) as passed to the comparison functions, etc." ON)
+option (FCS_INLINED_HASH_COMPARISON "Use more compact tokens for moves internally (makes things slower)" ON)
+option (FCS_AVOID_TCMALLOC "Avoid linking against Google's tcmalloc")
+option (FCS_BUILD_DOCS "Whether to build the documentation or not." ON)
+option (BUILD_STATIC_LIBRARY "Whether to build the static library (which takes more time)" ON)
 SET (CPU_ARCH "" CACHE STRING "A specific CPU architecture to pass to gcc")
 SET (OPTIMIZATION_OMIT_FRAME_POINTER "" CACHE STRING "Use -fomit-frame-pointer with gcc (not recommended for debugging)")
-
 SET (FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE "avl" CACHE STRING "The libavl2 tree type used for the state storage. Ignored if not set to libavl2")
 SET (FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE "avl" CACHE STRING "The libavl2 tree type used for the stack storage. Ignored if not set to libavl2")
 SET (LIBAVL2_SOURCE_DIR "/usr/src/avl-2.0.3" CACHE STRING "The location of the libavl2 source tree (from which files are copied)")
-
 SET (LEVELDB_SOURCE_DIR "/home/shlomif/Download/unpack/prog/leveldb/leveldb" CACHE STRING "The location of the LevelDB sources.")
-
-SET (FCS_WITHOUT_VISITED_ITER "" CACHE BOOL "Disable the visited_iter counter in each state (somewhat useful for debugging, otherwise not needed.)")
-SET (FCS_WITHOUT_DEPTH_FIELD "" CACHE BOOL "Disable the depth field in each state (not absolutely necessary.)")
-SET (FCS_WITHOUT_LOCS_FIELDS "" CACHE BOOL "Does not do anything (kept for backwards-compatibility)")
-SET (FCS_TRACE_MEM "" CACHE BOOL "Enable memory tracing in fc-solve.")
+option (FCS_WITHOUT_VISITED_ITER "Disable the visited_iter counter in each state (somewhat useful for debugging, otherwise not needed.)")
+option (FCS_WITHOUT_DEPTH_FIELD "Disable the depth field in each state (not absolutely necessary.)")
+option (FCS_WITHOUT_LOCS_FIELDS "Does not do anything (kept for backwards-compatibility)")
+option (FCS_TRACE_MEM "Enable memory tracing in fc-solve.")
 SET (FCS_MAX_NUM_SCANS_BUCKETS "" CACHE STRING "The number of scan_visited buckets in fc-solve (safe to ignore).")
-SET (FCS_DISABLE_PATSOLVE "" CACHE BOOL "Disable the patsolve code")
+option (FCS_DISABLE_PATSOLVE "Disable the patsolve code")
 SET (FCS_MAX_IDENT_LEN "10" CACHE STRING "Maximal length of identifiers")
-SET (FCS_SINGLE_HARD_THREAD "" CACHE BOOL "Enable single-hard-thread-per-instance (an optimization)")
-SET (FCS_DISABLE_DEBONDT_DELTA_STATES "" CACHE BOOL "Disable the DEBONDT delta states")
-SET (FCS_BREAK_BACKWARD_COMPAT_1 "" CACHE BOOL "Break some backward compatibility in the library and input/output")
-SET (FCS_WITHOUT_FC_PRO_MOVES_COUNT "" CACHE BOOL "Don't include the code and functionality of FC-Pro moves count.")
-SET (FCS_WITHOUT_TRIM_MAX_STORED_STATES "" CACHE BOOL "Don't include the trim-max-stored-states-functionality (should make things faster).")
-SET (FCS_WITHOUT_ITER_HANDLER "" CACHE BOOL "Don't include the iteration handler functionality (should make things faster).")
-SET (FCS_DISABLE_MULTI_FLARES "" CACHE BOOL "Disable the multi-flaring functionality. May make things faster but break compatibilty. Enable at your own risk.")
-SET (FCS_DISABLE_MOVES_TRACKING "" CACHE BOOL "Disable the moves-tracking functionality. May make things faster but break a lot of compatibilty. Enable at your own risk.")
-SET (FCS_DISABLE_ERROR_STRINGS "" CACHE BOOL "Disables passing/setting the error strings - breaks a lot of compatibility - enable at your own risk.")
-SET (FCS_DISABLE_STATE_VALIDITY_CHECK "" CACHE BOOL "Disable the state validity check. May make things faster but breaks some compatibilty. Enable at your own risk.")
-SET (FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE "" CACHE BOOL "Make scan synergy as always true. Reduces functionality but may make things faster.")
-SET (FCS_HARD_CODE_REPARENT_STATES_AS_FALSE "" CACHE BOOL "Make reparent states as always false. Reduces functionality but may make things faster.")
-SET (FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE "" CACHE BOOL "Make calc-real-depth as always false. Reduces functionality but may make things faster.")
-SET (FCS_WITHOUT_EXPORTED_RESUME_SOLUTION "" CACHE BOOL "Don't export resume_solution. Breaks compat but may make things faseer. Enable at your own risk.")
+option (FCS_SINGLE_HARD_THREAD "Enable single-hard-thread-per-instance (an optimization)")
+option (FCS_DISABLE_DEBONDT_DELTA_STATES "Disable the DEBONDT delta states")
+option (FCS_BREAK_BACKWARD_COMPAT_1 "Break some backward compatibility in the library and input/output")
+option (FCS_WITHOUT_FC_PRO_MOVES_COUNT "Don't include the code and functionality of FC-Pro moves count.")
+option (FCS_WITHOUT_TRIM_MAX_STORED_STATES "Don't include the trim-max-stored-states-functionality (should make things faster).")
+option (FCS_WITHOUT_ITER_HANDLER "Don't include the iteration handler functionality (should make things faster).")
+option (FCS_DISABLE_MULTI_FLARES "Disable the multi-flaring functionality. May make things faster but break compatibilty. Enable at your own risk.")
+option (FCS_DISABLE_MOVES_TRACKING "Disable the moves-tracking functionality. May make things faster but break a lot of compatibilty. Enable at your own risk.")
+option (FCS_DISABLE_ERROR_STRINGS "Disables passing/setting the error strings - breaks a lot of compatibility - enable at your own risk.")
+option (FCS_DISABLE_STATE_VALIDITY_CHECK "Disable the state validity check. May make things faster but breaks some compatibilty. Enable at your own risk.")
+option (FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE "Make scan synergy as always true. Reduces functionality but may make things faster.")
+option (FCS_HARD_CODE_REPARENT_STATES_AS_FALSE "Make reparent states as always false. Reduces functionality but may make things faster.")
+option (FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE "Make calc-real-depth as always false. Reduces functionality but may make things faster.")
+option (FCS_WITHOUT_EXPORTED_RESUME_SOLUTION "Don't export resume_solution. Breaks compat but may make things faseer. Enable at your own risk.")
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")
