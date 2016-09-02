@@ -453,28 +453,16 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 
 int main(int argc, char *argv[])
 {
-    long pre_cache_max_count;
-    long caches_delta;
-    long iters_delta_limit = -1;
-#if 0
-    long start_line = 1;
-#endif
-    const char *dbm_store_path;
     int arg;
     const char *filename = NULL, *out_filename = NULL, *offload_dir_path = NULL;
-    FILE *fh = NULL, *out_fh = NULL;
-    char user_state[USER_STATE_SIZE];
-    fc_solve_delta_stater_t delta;
-    fcs_dbm_record_t *token;
     enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
-    fcs_state_keyval_pair_t init_state;
 #if 0
     fcs_bool_t skip_queue_output = FALSE;
 #endif
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-    pre_cache_max_count = 1000000;
-    caches_delta = 1000000;
-    dbm_store_path = "./fc_solve_dbm_store";
+    long pre_cache_max_count = 1000000, caches_delta = 1000000,
+         iters_delta_limit = -1;
+    const char *dbm_store_path = "./fc_solve_dbm_store";
     size_t num_threads = 2;
 
     for (arg = 1; arg < argc; arg++)
@@ -607,32 +595,27 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    if (out_filename)
+    FILE *const out_fh = (out_filename ? fopen(out_filename, "at") : stdout);
+    if (!out_fh)
     {
-        out_fh = fopen(out_filename, "at");
-        if (!out_fh)
-        {
-            fprintf(stderr, "Cannot open '%s' for output.\n", "out_filename");
-            exit(-1);
-        }
-    }
-    else
-    {
-        out_fh = stdout;
+        fprintf(stderr, "Cannot open '%s' for output.\n", out_filename);
+        exit(-1);
     }
 
     filename = argv[arg];
 
-    fh = fopen(filename, "r");
+    FILE *fh = fopen(filename, "r");
     if (fh == NULL)
     {
         fprintf(stderr, "Could not open file '%s' for input.\n", filename);
         exit(-1);
     }
+    char user_state[USER_STATE_SIZE];
     memset(user_state, '\0', sizeof(user_state));
     fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, fh);
     fclose(fh);
 
+    fcs_state_keyval_pair_t init_state;
     fc_solve_initial_user_state_to_c(user_state, &init_state, FREECELLS_NUM,
         STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
 
@@ -641,6 +624,7 @@ int main(int argc, char *argv[])
         horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     }
 
+    fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
         ,
@@ -650,51 +634,44 @@ int main(int argc, char *argv[])
 #endif
             );
 
-    {
-        fcs_dbm_solver_instance_t instance;
-        fcs_encoded_state_buffer_t *key_ptr;
 #define KEY_PTR() (key_ptr)
+    fcs_dbm_solver_instance_t instance;
+    instance_init(&instance, local_variant, pre_cache_max_count, caches_delta,
+        dbm_store_path, iters_delta_limit, offload_dir_path, out_fh);
 
-        fcs_encoded_state_buffer_t parent_state_enc;
+    fcs_encoded_state_buffer_t *const key_ptr = &(instance.first_key);
+    fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
 
-        instance_init(&instance, local_variant, pre_cache_max_count,
-            caches_delta, dbm_store_path, iters_delta_limit, offload_dir_path,
-            out_fh);
+    /* The NULL parent_state_enc and move for indicating this is the
+     * initial state. */
+    fcs_encoded_state_buffer_t parent_state_enc;
+    fcs_init_encoded_state(&(parent_state_enc));
 
-        key_ptr = &(instance.first_key);
-        fcs_init_and_encode_state(
-            &delta, local_variant, &(init_state), KEY_PTR());
-
-        /* The NULL parent_state_enc and move for indicating this is the
-         * initial state. */
-        fcs_init_encoded_state(&(parent_state_enc));
-
+    fcs_dbm_record_t *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
+    pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
 #else
-        cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
+    cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
-        token = fc_solve_dbm_store_insert_key_value(
-            instance.colls_by_depth[0].store, KEY_PTR(), NULL, TRUE);
+    token = fc_solve_dbm_store_insert_key_value(
+        instance.colls_by_depth[0].store, KEY_PTR(), NULL, TRUE);
 #endif
 
-        fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
-            (const fcs_offloading_queue_item_t *)(&token));
-        instance.num_states_in_collection++;
-        instance.count_of_items_in_queue++;
+    fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
+        (const fcs_offloading_queue_item_t *)(&token));
+    instance.num_states_in_collection++;
+    instance.count_of_items_in_queue++;
 
-        instance_run_all_threads(&instance, &init_state, NUM_THREADS());
-        handle_and_destroy_instance_solution(&instance, out_fh, &delta);
-    }
+    instance_run_all_threads(&instance, &init_state, NUM_THREADS());
+    handle_and_destroy_instance_solution(&instance, out_fh, &delta);
 
     fc_solve_delta_stater_release(&delta);
 
     if (out_filename)
     {
         fclose(out_fh);
-        out_fh = NULL;
     }
 
     return 0;
