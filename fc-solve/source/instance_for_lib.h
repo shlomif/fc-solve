@@ -153,7 +153,23 @@ static GCC_INLINE void fc_solve_alloc_instance(
 #ifndef FCS_DISABLE_SIMPLE_SIMON
         .is_simple_simon = FALSE,
 #endif
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+        .hash = StatesGoogleHash(),
+#endif
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+        .stacks_hash = ColumnsGoogleHash(),
+#endif
     };
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE)
+    instance->hash.set_empty_key(NULL);
+#endif
+#endif
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
+#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE)
+    instance->stacks_hash.set_empty_key(NULL);
+#endif
+#endif
 
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_name(instance, "freecell");
@@ -504,11 +520,9 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
 #ifdef FCS_RCS_STATES
     instance->hash.instance = instance;
 #endif
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE)
-    instance->hash.set_empty_key(NULL);
-#endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+/* Do nothing because it is allocated elsewhere. */
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
 /* Do nothing because it is allocated elsewhere. */
 #else
 #error not defined
@@ -544,9 +558,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
         g_hash_table_new(fc_solve_glib_hash_stack_hash_function,
             fc_solve_glib_hash_stack_compare);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-#if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE)
-    instance->stacks_hash.set_empty_key(NULL);
-#endif
+/* Do nothing because it is allocated elsewhere. */
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     instance->stacks_judy_array = NULL;
 #else
