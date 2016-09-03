@@ -429,12 +429,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 {
     fcs_encoded_state_buffer_t final_stack_encoded_state;
     fcs_encoded_state_buffer_t running_key;
-    fcs_dbm_record_t *running_parent;
     fcs_state_keyval_pair_t running_state;
     fcs_dbm_record_t *token = NULL;
-#ifdef FCS_DBM_CACHE_ONLY
-    fcs_fcc_move_t *running_moves;
-#endif
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
@@ -478,10 +474,10 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
      * state. */
     fcs_init_and_encode_state(
         delta, local_variant, &(running_state), &running_key);
-    running_parent = NULL;
+    fcs_dbm_record_t *running_parent = NULL;
 
 #ifdef FCS_DBM_CACHE_ONLY
-    running_moves = NULL;
+    fcs_fcc_move_t *running_moves = NULL;
 #endif
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
