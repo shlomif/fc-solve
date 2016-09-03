@@ -722,16 +722,12 @@ static GCC_INLINE void free_states(fc_solve_instance_t *const instance)
                 {
                     PQUEUE new_pq;
                     fc_solve_pq_init(&(new_pq));
-
                     pq_element_t *const Elements =
                         BEFS_VAR(soft_thread, pqueue).Elements;
                     pq_element_t *const end_element =
                         Elements + BEFS_VAR(soft_thread, pqueue).current_size;
-
-                    pq_element_t *next_element =
-                        BEFS_VAR(soft_thread, pqueue).Elements + PQ_FIRST_ENTRY;
-
-                    for (; next_element <= end_element; next_element++)
+                    for (pq_element_t *next_element = Elements + PQ_FIRST_ENTRY;
+                         next_element <= end_element; next_element++)
                     {
                         if (!fcs__is_state_a_dead_end((*next_element).val))
                         {
@@ -741,7 +737,6 @@ static GCC_INLINE void free_states(fc_solve_instance_t *const instance)
                     }
 
                     fc_solve_st_free_pq(soft_thread);
-
                     BEFS_VAR(soft_thread, pqueue) = new_pq;
                 }
             }
