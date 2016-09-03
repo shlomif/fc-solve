@@ -427,9 +427,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     fcs_state_keyval_pair_t *const init_state_ptr, char *line,
     const long line_num, fcs_encoded_state_buffer_t *const parent_state_enc)
 {
-    char *s_ptr;
     fcs_encoded_state_buffer_t final_stack_encoded_state;
-    int hex_digits;
     fcs_encoded_state_buffer_t running_key;
     fcs_dbm_record_t *running_parent;
     fcs_state_keyval_pair_t running_state;
@@ -437,8 +435,6 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #ifdef FCS_DBM_CACHE_ONLY
     fcs_fcc_move_t *running_moves;
 #endif
-    fcs_fcc_move_t move;
-    enum fcs_dbm_variant_type_t local_variant;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
@@ -446,16 +442,16 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 
     DECLARE_IND_BUF_T(running_indirect_stacks_buffer)
 
-    local_variant = instance->variant;
+    const_AUTO(local_variant, instance->variant);
     fc_solve_state_init(
         &running_state, STACKS_NUM, running_indirect_stacks_buffer);
     fcs_init_encoded_state(&(final_stack_encoded_state));
     *parent_state_enc = final_stack_encoded_state;
 
-    s_ptr = line;
-
+    const char *s_ptr = line;
     while (*(s_ptr) != '|')
     {
+        int hex_digits;
         if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
         {
             fprintf(stderr, "Error in reading state in line %ld of the "
@@ -499,6 +495,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #endif
     instance->num_states_in_collection++;
 
+    int hex_digits;
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
 #ifdef DEBUG_OUT
@@ -513,15 +510,14 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             free(state_str);
         }
 #endif
-        int src, dest;
         fcs_card_t src_card;
 
         s_ptr += 3;
 
-        move = (fcs_fcc_move_t)hex_digits;
+        const_AUTO(move, (fcs_fcc_move_t)hex_digits);
         /* Apply the move. */
-        src = (move & 0xF);
-        dest = ((move >> 4) & 0xF);
+        int src = (move & 0xF);
+        int dest = ((move >> 4) & 0xF);
 
 #define the_state (running_state.s)
         /* Extract the card from the source. */
