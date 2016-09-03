@@ -454,7 +454,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 int main(int argc, char *argv[])
 {
     int arg;
-    const char *filename = NULL, *out_filename = NULL, *offload_dir_path = NULL;
+    const char *out_filename = NULL, *offload_dir_path = NULL;
     enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 #if 0
     fcs_bool_t skip_queue_output = FALSE;
@@ -602,8 +602,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    filename = argv[arg];
-
+    const char *const filename = argv[arg];
     FILE *fh = fopen(filename, "r");
     if (fh == NULL)
     {
