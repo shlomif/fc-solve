@@ -258,9 +258,6 @@ static GCC_INLINE ul perl_hash_function(
         *(current_stack) = cached_stack;                                       \
     }
 
-/* TODO : Maybe define an accesor for new_state_key->stacks (also see the
- * replaced_with_cached macro above.
- * */
 static GCC_INLINE void fc_solve_cache_stacks(
     fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state)
 {
