@@ -26,6 +26,10 @@ sub get_time
 foreach my $fn (@ARGV)
 {
     my @lines = path($fn)->lines_utf8;
+    if (not @lines)
+    {
+        die qq#File "$fn" is empty.#;
+    }
     if (@ARGV > 1)
     {
         print $fn.':';
