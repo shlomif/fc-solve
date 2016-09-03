@@ -153,7 +153,7 @@ static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(
 
 static GCC_INLINE int calc_foundation_to_put_card_on(
     const enum fcs_dbm_variant_type_t local_variant,
-    fcs_state_t *const my_ptr_state, const fcs_card_t card)
+    fcs_state_t *const ptr_state, const fcs_card_t card)
 {
 #ifndef FCS_FREECELL_ONLY
     /* needed by the macros. */
@@ -161,7 +161,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 #endif
     for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
     {
-        if (fcs_foundation_value(*my_ptr_state,
+        if (fcs_foundation_value(*ptr_state,
                 (deck << 2) + fcs_card_suit(card)) == fcs_card_rank(card) - 1)
         {
             int other_deck_idx;
@@ -169,7 +169,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             for (other_deck_idx = 0; other_deck_idx < (INSTANCE_DECKS_NUM << 2);
                  other_deck_idx++)
             {
-                if (fcs_foundation_value(*my_ptr_state, other_deck_idx) <
+                if (fcs_foundation_value(*ptr_state, other_deck_idx) <
                     fcs_card_rank(card) - 2 -
                         (FCS__SEQS_ARE_BUILT_BY_RANK()
                                 ? 0
