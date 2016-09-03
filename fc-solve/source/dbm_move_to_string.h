@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-static const char *move_to_string(unsigned char move, char *const move_buffer)
+static void move_to_string(unsigned char move, char *const move_buffer)
 {
     char *s = move_buffer;
 
@@ -63,8 +63,6 @@ static const char *move_to_string(unsigned char move, char *const move_buffer)
             s += sprintf(s, "%s", " -> ");
         }
     }
-
-    return move_buffer;
 }
 
 #ifdef __cplusplus

@@ -78,7 +78,8 @@ struct FccEntryPointNode
 static GCC_INLINE int FccEntryPointNode_compare(
     FccEntryPointNode *a, FccEntryPointNode *b)
 {
-    return compare_enc_states(&(a->kv.key.key), &(b->kv.key.key));
+#define MAP(x) &((x)->kv.key.key)
+    return compare_enc_states(MAP(a), MAP(b));
 }
 
 RB_HEAD(FccEntryPointList, FccEntryPointNode);

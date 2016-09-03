@@ -133,6 +133,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
         {
             move = get_move_from_parent_to_child(
                 instance, delta, trace[i], trace[i - 1]);
+            move_to_string(move, move_buffer);
         }
 
         char state_as_str[1000];
@@ -142,7 +143,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
             FALSE PASS_T(TRUE));
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n", state_as_str,
-            (i > 0) ? move_to_string(move, move_buffer) : "END");
+            (i > 0) ? move_buffer : "END");
         fflush(out_fh);
     }
     free(trace);
