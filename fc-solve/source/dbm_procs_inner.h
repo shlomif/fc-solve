@@ -176,3 +176,14 @@ static GCC_INLINE void read_state_from_file(
     fc_solve_initial_user_state_to_c(user_state, init_state, FREECELLS_NUM,
         STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
 }
+
+static GCC_INLINE FILE *calc_out_fh(const char *const out_filename)
+{
+    FILE *const out_fh = (out_filename ? fopen(out_filename, "at") : stdout);
+    if (!out_fh)
+    {
+        fprintf(stderr, "Cannot open '%s' for output.\n", out_filename);
+        exit(-1);
+    }
+    return out_fh;
+}
