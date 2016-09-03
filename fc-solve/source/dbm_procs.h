@@ -195,18 +195,17 @@ static GCC_INLINE void instance_check_multiple_keys(
     FCS_UNLOCK(instance->storage_lock);
 }
 
-static void instance_print_stats(
-    fcs_dbm_solver_instance_t *instance, FILE *out_fh)
+static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
 {
     fcs_portable_time_t mytime;
     FCS_GET_TIME(mytime);
 
+    FILE *const out_fh = instance->out_fh;
     fprintf(out_fh,
-        "Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n",
+        ("Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n"
+         ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n"),
         instance->count_num_processed, instance->num_states_in_collection,
-        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime));
-    fprintf(out_fh,
-        ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n",
+        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime),
         instance->num_states_in_collection,
         instance->num_states_in_collection - instance->count_num_processed,
         instance->count_num_processed);

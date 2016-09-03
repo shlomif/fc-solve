@@ -241,7 +241,7 @@ static void *instance_run_solver_thread(void *void_arg)
                 instance->queue_num_extracted_and_processed++;
                 if (++instance->count_num_processed % 100000 == 0)
                 {
-                    instance_print_stats(instance, out_fh);
+                    instance_print_stats(instance);
                 }
                 if (instance->count_num_processed >=
                     instance->max_count_num_processed)

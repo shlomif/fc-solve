@@ -43,12 +43,10 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     fcs_dbm_solver_instance_t *const instance,
     fc_solve_delta_stater_t *const delta)
 {
-    fcs_bool_t ret = FALSE;
     FILE *const out_fh = instance->out_fh;
-
+    fcs_bool_t ret = FALSE;
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
-    instance_print_stats(instance, out_fh);
-
+    instance_print_stats(instance);
     if (instance->queue_solution_was_found)
     {
         trace_solution(instance, out_fh, delta);
