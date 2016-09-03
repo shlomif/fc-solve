@@ -1646,7 +1646,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
 static GCC_INLINE int calc_foundation_to_put_card_on(
     const fc_solve_soft_thread_t *const soft_thread,
-    const fcs_state_t *const my_ptr_state, const fcs_card_t card)
+    const fcs_state_t *const ptr_state, const fcs_card_t card)
 {
 #ifndef FCS_FREECELL_ONLY
     const fc_solve_instance_t *const instance =
@@ -1658,7 +1658,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
     for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
     {
         const int ret_val = ((deck << 2) | fcs_card_suit(card));
-        if (fcs_foundation_value(*my_ptr_state, ret_val) ==
+        if (fcs_foundation_value(*ptr_state, ret_val) ==
             fcs_card_rank(card) - 1)
         {
 /* Always put on the foundation if it is built-by-suit */
@@ -1673,7 +1673,7 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
             for (other_deck_idx = 0; other_deck_idx < (INSTANCE_DECKS_NUM << 2);
                  other_deck_idx++)
             {
-                if (fcs_foundation_value(*my_ptr_state, other_deck_idx) <
+                if (fcs_foundation_value(*ptr_state, other_deck_idx) <
                     fcs_card_rank(card) - 2 -
                         (FCS__SEQS_ARE_BUILT_BY_RANK()
                                 ? 0
