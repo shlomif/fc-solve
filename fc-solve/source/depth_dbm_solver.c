@@ -602,22 +602,9 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    const char *const filename = argv[arg];
-    FILE *fh = fopen(filename, "r");
-    if (fh == NULL)
-    {
-        fprintf(stderr, "Could not open file '%s' for input.\n", filename);
-        exit(-1);
-    }
-    char user_state[USER_STATE_SIZE];
-    memset(user_state, '\0', sizeof(user_state));
-    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, fh);
-    fclose(fh);
-
     fcs_state_keyval_pair_t init_state;
-    fc_solve_initial_user_state_to_c(user_state, &init_state, FREECELLS_NUM,
-        STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
-
+    read_state_from_file(local_variant, argv[arg],
+        &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     {
         fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
         horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);

@@ -829,29 +829,21 @@ static GCC_INLINE void release_starting_state_specific_instance_resources(
 int main(int argc, char *argv[])
 {
     build_decoding_table();
-
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
 #endif
-
-    long iters_delta_limit = -1;
     const char *mod_base64_fcc_fingerprint = NULL;
     const char *fingerprint_input_location_path = NULL;
     const char *path_to_output_dir = NULL;
     const char *filename = NULL, *offload_dir_path = NULL;
-    char user_state[USER_STATE_SIZE];
     enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
-
-    fcs_state_keyval_pair_t init_state;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-
-    long pre_cache_max_count = 1000000;
-    long caches_delta = 1000000;
+    long pre_cache_max_count = 1000000, caches_delta = 1000000,
+         iters_delta_limit = -1;
     const char *dbm_store_path = "./fc_solve_dbm_store";
 
     size_t num_threads = 1;
-
     int arg = 1;
     for (; arg < argc; arg++)
     {
@@ -1017,21 +1009,9 @@ int main(int argc, char *argv[])
             "--board, --fingerprint, --input, --output, --offload-dir-path");
         exit(-1);
     }
-
-    {
-        FILE *fh = fopen(filename, "r");
-        if (fh == NULL)
-        {
-            fprintf(stderr, "Could not open file '%s' for input.\n", filename);
-            exit(-1);
-        }
-        memset(user_state, '\0', sizeof(user_state));
-        fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, fh);
-        fclose(fh);
-    }
-
-    fc_solve_initial_user_state_to_c(user_state, &init_state, FREECELLS_NUM,
-        STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
+    fcs_state_keyval_pair_t init_state;
+    read_state_from_file(local_variant, filename,
+        &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
 
     fcs_which_moves_bitmask_t initial_which_irreversible_moves_bitmask = {
         {'\0'}};

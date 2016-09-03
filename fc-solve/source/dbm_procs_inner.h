@@ -156,3 +156,23 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
     }
     free(trace);
 }
+
+static GCC_INLINE void read_state_from_file(
+    const enum fcs_dbm_variant_type_t local_variant, const char *const filename,
+    fcs_state_keyval_pair_t *const init_state IND_BUF_T_PARAM(
+        init_indirect_stacks_buffer))
+{
+    FILE *const fh = fopen(filename, "r");
+    if (!fh)
+    {
+        fprintf(stderr, "Could not open file '%s' for input.\n", filename);
+        exit(-1);
+    }
+    char user_state[USER_STATE_SIZE];
+    memset(user_state, '\0', sizeof(user_state));
+    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, fh);
+    fclose(fh);
+
+    fc_solve_initial_user_state_to_c(user_state, init_state, FREECELLS_NUM,
+        STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
+}

@@ -800,20 +800,14 @@ int main(int argc, char *argv[])
     long start_line = 1;
     const char *dbm_store_path;
     int arg;
-    const char *filename = NULL, *out_filename = NULL,
-               *intermediate_input_filename = NULL, *offload_dir_path = NULL;
-    FILE *fh = NULL, *out_fh = NULL, *intermediate_in_fh = NULL;
-    char user_state[USER_STATE_SIZE];
+    const char *out_filename = NULL, *intermediate_input_filename = NULL,
+               *offload_dir_path = NULL;
+    FILE *out_fh = NULL, *intermediate_in_fh = NULL;
     fc_solve_delta_stater_t delta;
     fcs_dbm_record_t *token;
-    enum fcs_dbm_variant_type_t local_variant;
-
-    fcs_state_keyval_pair_t init_state;
+    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     fcs_bool_t skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-
-    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
-
     pre_cache_max_count = 1000000;
     caches_delta = 1000000;
     dbm_store_path = "./fc_solve_dbm_store";
@@ -973,21 +967,9 @@ int main(int argc, char *argv[])
         out_fh = stdout;
     }
 
-    filename = argv[arg];
-
-    fh = fopen(filename, "r");
-    if (fh == NULL)
-    {
-        fprintf(stderr, "Could not open file '%s' for input.\n", filename);
-        exit(-1);
-    }
-    memset(user_state, '\0', sizeof(user_state));
-    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, fh);
-    fclose(fh);
-
-    fc_solve_initial_user_state_to_c(user_state, &init_state, FREECELLS_NUM,
-        STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
-
+    fcs_state_keyval_pair_t init_state;
+    read_state_from_file(local_variant, argv[arg],
+        &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     {
         fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
         horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
