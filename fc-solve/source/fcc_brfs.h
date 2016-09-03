@@ -188,7 +188,7 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
      * not new, this will be set to zero (0). It includes the initial position,
      * but does not include the start points of the new FCC.
      * */
-    long *out_num_new_positions,
+    long *const out_num_new_positions,
     /* [Input/Output]: the list allocator. */
     fcs_fcc_moves_seq_allocator_t *moves_list_allocator,
     /* [Input/Output]: The meta allocator - needed to allocate and free
@@ -205,7 +205,7 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
-    long num_new_positions;
+    long num_new_positions = 0;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -249,7 +249,7 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
 
     derived_list_recycle_bin = NULL;
 
-    *out_num_new_positions = num_new_positions = 0;
+    *out_num_new_positions = num_new_positions;
 
     fc_solve_kaz_tree_alloc_insert(traversed_states, &(new_item->key));
 
