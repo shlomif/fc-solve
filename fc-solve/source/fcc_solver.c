@@ -528,16 +528,14 @@ static fcc_status_t instance_run_solver(
             }
 
         fcc_loop_cleanup:
-        {
-            fcs_FCC_start_point_t *more_start_point_iter;
-            for (more_start_point_iter = start_point_iter;
+            for (fcs_FCC_start_point_t *more_start_point_iter =
+                     start_point_iter;
                  more_start_point_iter;
                  more_start_point_iter = more_start_point_iter->next)
             {
                 fc_solve_fcc_release_moves_seq(
                     &(more_start_point_iter->moves_seq), moves_list_allocator);
             }
-        }
 
             /* Free the next_start_points_list */
             fc_solve_compact_allocator_finish(
