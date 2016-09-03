@@ -6,27 +6,16 @@
 #pragma once
 #include "fcs_user.h"
 #include "output_to_file.h"
+#include "iter_handler_base.h"
 
 static void my_iter_handler(void *const user_instance,
     const fcs_int_limit_t iter_num, const int depth, void *const ptr_state,
-    const fcs_int_limit_t parent_iter_num, void *lp_context)
+    const fcs_int_limit_t parent_iter_num, void *const lp_context)
 {
     const fc_solve_display_information_context_t *const display_context =
         (const fc_solve_display_information_context_t *const)lp_context;
-
-    fprintf(stdout, "Iteration: %li\n", (long)iter_num);
-    fprintf(stdout, "Depth: %i\n", depth);
-    fprintf(stdout, "Stored-States: %li\n",
-        (long)freecell_solver_user_get_num_states_in_collection_long(
-                user_instance));
-    fprintf(stdout, "Scan: %s\n",
-        freecell_solver_user_get_current_soft_thread_name(user_instance));
-    if (display_context->display_parent_iter_num)
-    {
-        fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
-    }
-    fprintf(stdout, "\n");
-
+    my_iter_handler_base(
+        iter_num, depth, user_instance, display_context, parent_iter_num);
     if (display_context->debug_iter_state_output)
     {
         char state_string[1000];
