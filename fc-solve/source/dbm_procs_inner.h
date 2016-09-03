@@ -68,8 +68,6 @@ static unsigned char get_move_from_parent_to_child(
     fcs_dbm_solver_instance_t *instance, fc_solve_delta_stater_t *delta,
     fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
 {
-    unsigned char move_to_return;
-    fcs_encoded_state_buffer_t got_child;
     fcs_state_keyval_pair_t parent_state;
     fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
@@ -92,26 +90,19 @@ static unsigned char get_move_from_parent_to_child(
     for (derived_iter = derived_list; derived_iter;
          derived_iter = derived_iter->next)
     {
+        fcs_encoded_state_buffer_t got_child;
         fcs_init_and_encode_state(
             delta, local_variant, &(derived_iter->state), &got_child);
-
         if (compare_enc_states(&got_child, &child) == 0)
         {
-            break;
+            const_AUTO(move_to_return, derived_iter->move);
+            fc_solve_compact_allocator_finish(&(derived_list_allocator));
+            fc_solve_meta_compact_allocator_finish(&meta_alloc);
+            return move_to_return;
         }
     }
-
-    if (!derived_iter)
-    {
-        fprintf(stderr, "%s\n", "Failed to find move. Terminating.");
-        exit(-1);
-    }
-    move_to_return = derived_iter->move;
-
-    fc_solve_compact_allocator_finish(&(derived_list_allocator));
-    fc_solve_meta_compact_allocator_finish(&meta_alloc);
-
-    return move_to_return;
+    fprintf(stderr, "%s\n", "Failed to find move. Terminating.");
+    exit(-1);
 }
 
 static void trace_solution(fcs_dbm_solver_instance_t *const instance,
