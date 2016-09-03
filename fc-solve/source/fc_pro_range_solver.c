@@ -26,7 +26,7 @@
  * boards and displays the moves counts and the number of moves in their
  * solution.
  */
-#include "output_to_file.h"
+#include "default_iter_handler.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "range_solvers_binary_output.h"
 #include "fc_pro_iface_pos.h"
@@ -38,33 +38,6 @@ static GCC_INLINE void fc_pro_get_board(long gamenumber,
     get_board(gamenumber, state_string);
     fc_solve_initial_user_state_to_c(
         state_string, pos, 4, 8, 1, indirect_stacks_buffer);
-}
-
-static void my_iter_handler(void *const user_instance,
-    const fcs_int_limit_t iter_num, const int depth, void *const ptr_state,
-    const fcs_int_limit_t parent_iter_num, void *lp_context)
-{
-    const fc_solve_display_information_context_t *const display_context =
-        (const fc_solve_display_information_context_t *const)lp_context;
-
-    fprintf(stdout, "Iteration: %li\n", (long)iter_num);
-    fprintf(stdout, "Depth: %i\n", depth);
-    if (display_context->display_parent_iter_num)
-    {
-        fprintf(stdout, "Parent Iteration: %li\n", (long)parent_iter_num);
-    }
-    fprintf(stdout, "\n");
-
-    if (display_context->debug_iter_state_output)
-    {
-        char state_string[1000];
-        freecell_solver_user_iter_state_stringify(
-            user_instance, state_string, ptr_state FC_SOLVE__PASS_PARSABLE(
-                                             display_context->parseable_output),
-            display_context->canonized_order_output FC_SOLVE__PASS_T(
-                display_context->display_10_as_t));
-        printf("%s\n---------------\n\n\n", state_string);
-    }
 }
 
 #include "cl_callback_range.h"
