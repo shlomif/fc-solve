@@ -281,13 +281,14 @@ static GCC_INLINE void fc_solve_cache_stacks(
 
     fcs_cards_column_t *current_stack = new_state_key->stacks;
 
+    const_SLOT(stacks_copy_on_write_flags, new_state_info);
     for (int i = 0; i < LOCAL_STACKS_NUM; i++, current_stack++)
     {
         /*
          * If the stack is not a copy - it is already cached so skip
          * to the next stack
          * */
-        if (!(new_state_info->stacks_copy_on_write_flags & (1 << i)))
+        if (!(stacks_copy_on_write_flags & (1 << i)))
         {
             continue;
         }
