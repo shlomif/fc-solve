@@ -788,9 +788,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             else
             {
                 freecell_solver_str_t s;
+                char *buffer;
                 FILE *f;
                 long file_len;
-                int num_file_args_to_skip = 0;
+                int num_file_args_to_skip;
+
+                num_file_args_to_skip = 0;
+
                 s = (*arg);
                 while (isdigit(*s))
                 {
@@ -838,11 +842,25 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 fseek(f, 0, SEEK_END);
                 file_len = ftell(f);
-                char buffer[file_len + 1];
+                buffer = SMALLOC(buffer, file_len + 1);
+                if (buffer == NULL)
+                {
+#ifdef FCS_WITH_ERROR_STRS
+                    *error_string = strdup("Could not allocate enough memory "
+                                           "to parse the file. Quitting.\n");
+#endif
+
+                    fclose(f);
+
+                    RET_ERROR_IN_ARG();
+                }
                 fseek(f, 0, SEEK_SET);
                 buffer[fread(buffer, 1, file_len, f)] = '\0';
                 fclose(f);
+
                 args_man_t args_man = fc_solve_args_man_chop(buffer);
+                free(buffer);
+
                 if (num_file_args_to_skip < args_man.argc)
                 {
                     const int ret =
