@@ -751,9 +751,9 @@ int main(int argc, char *argv[])
         iter = init_moves_seq.moves_list;
         for (i = 0; i < init_moves_seq.count;)
         {
-            fprintf(out_fh, "==\n%s\n",
-                move_to_string(iter->data.s[i % FCS_FCC_NUM_MOVES_IN_ITEM],
-                        move_buffer));
+            move_to_string(
+                iter->data.s[i % FCS_FCC_NUM_MOVES_IN_ITEM], move_buffer);
+            fprintf(out_fh, "==\n%s\n", move_buffer);
             if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
             {
                 iter = iter->next;
@@ -762,9 +762,9 @@ int main(int argc, char *argv[])
         iter = ret_moves_seq.moves_list;
         for (i = 0; i < ret_moves_seq.count;)
         {
-            fprintf(out_fh, "==\n%s\n",
-                move_to_string(iter->data.s[i % FCS_FCC_NUM_MOVES_IN_ITEM],
-                        move_buffer));
+            move_to_string(
+                iter->data.s[i % FCS_FCC_NUM_MOVES_IN_ITEM], move_buffer);
+            fprintf(out_fh, "==\n%s\n", move_buffer);
             if ((++i) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
             {
                 iter = iter->next;
