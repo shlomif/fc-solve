@@ -667,9 +667,10 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 
 /* Returns if the process should terminate. */
 static fcs_bool_t handle_and_destroy_instance_solution(
-    fcs_dbm_solver_instance_t *instance, FILE *out_fh,
-    fc_solve_delta_stater_t *delta)
+    fcs_dbm_solver_instance_t *const instance,
+    fc_solve_delta_stater_t *const delta)
 {
+    FILE *const out_fh = instance->out_fh;
     fcs_bool_t ret = FALSE;
     fcs_dbm_record_t *token;
 #ifdef DEBUG_OUT
@@ -793,26 +794,20 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 
 int main(int argc, char *argv[])
 {
-    long pre_cache_max_count;
-    long caches_delta;
-    long max_count_of_items_in_queue = LONG_MAX;
-    long iters_delta_limit = -1;
     long start_line = 1;
     const char *dbm_store_path;
-    int arg;
     const char *out_filename = NULL, *intermediate_input_filename = NULL,
                *offload_dir_path = NULL;
-    FILE *out_fh = NULL, *intermediate_in_fh = NULL;
-    fc_solve_delta_stater_t delta;
-    fcs_dbm_record_t *token;
+    FILE *intermediate_in_fh = NULL;
     enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     fcs_bool_t skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-    pre_cache_max_count = 1000000;
-    caches_delta = 1000000;
+    long iters_delta_limit = -1, pre_cache_max_count = 1000000,
+         caches_delta = 1000000, max_count_of_items_in_queue = LONG_MAX;
     dbm_store_path = "./fc_solve_dbm_store";
     size_t num_threads = 2;
 
+    int arg;
     for (arg = 1; arg < argc; arg++)
     {
         if (!strcmp(argv[arg], "--pre-cache-max-count"))
@@ -953,20 +948,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    if (out_filename)
-    {
-        out_fh = fopen(out_filename, "at");
-        if (!out_fh)
-        {
-            fprintf(stderr, "Cannot open '%s' for output.\n", "out_filename");
-            exit(-1);
-        }
-    }
-    else
-    {
-        out_fh = stdout;
-    }
-
+    FILE *const out_fh = calc_out_fh(out_filename);
     fcs_state_keyval_pair_t init_state;
     read_state_from_file(local_variant, argv[arg],
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
@@ -975,6 +957,7 @@ int main(int argc, char *argv[])
         horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     }
 
+    fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
         ,
@@ -1081,7 +1064,7 @@ int main(int argc, char *argv[])
                         &queue_instance, &init_state, NUM_THREADS());
 
                     if (handle_and_destroy_instance_solution(
-                            &queue_instance, out_fh, &delta))
+                            &queue_instance, &delta))
                     {
                         queue_solution_was_found = TRUE;
                     }
@@ -1128,6 +1111,7 @@ int main(int argc, char *argv[])
          * initial state. */
         fcs_init_encoded_state(&(parent_state_enc));
 
+        fcs_dbm_record_t *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
@@ -1145,7 +1129,7 @@ int main(int argc, char *argv[])
         instance.count_of_items_in_queue++;
 
         instance_run_all_threads(&instance, &init_state, NUM_THREADS());
-        handle_and_destroy_instance_solution(&instance, out_fh, &delta);
+        handle_and_destroy_instance_solution(&instance, &delta);
     }
 
     fc_solve_delta_stater_release(&delta);
@@ -1153,7 +1137,6 @@ int main(int argc, char *argv[])
     if (out_filename)
     {
         fclose(out_fh);
-        out_fh = NULL;
     }
 
     if (intermediate_in_fh)

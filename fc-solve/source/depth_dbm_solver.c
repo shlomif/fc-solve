@@ -595,13 +595,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    FILE *const out_fh = (out_filename ? fopen(out_filename, "at") : stdout);
-    if (!out_fh)
-    {
-        fprintf(stderr, "Cannot open '%s' for output.\n", out_filename);
-        exit(-1);
-    }
-
+    FILE *const out_fh = calc_out_fh(out_filename);
     fcs_state_keyval_pair_t init_state;
     read_state_from_file(local_variant, argv[arg],
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
@@ -651,7 +645,7 @@ int main(int argc, char *argv[])
     instance.count_of_items_in_queue++;
 
     instance_run_all_threads(&instance, &init_state, NUM_THREADS());
-    handle_and_destroy_instance_solution(&instance, out_fh, &delta);
+    handle_and_destroy_instance_solution(&instance, &delta);
 
     fc_solve_delta_stater_release(&delta);
 

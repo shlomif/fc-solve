@@ -1050,15 +1050,13 @@ int main(int argc, char *argv[])
             );
 
     {
-        FILE *out_fh = stdout;
-
         fcs_dbm_solver_instance_t instance;
         FccEntryPointNode *key_ptr = NULL;
         fcs_encoded_state_buffer_t parent_state_enc;
 
         instance_init(&instance, local_variant, pre_cache_max_count,
             caches_delta, dbm_store_path, iters_delta_limit, offload_dir_path,
-            &fingerprint_which_irreversible_moves_bitmask, out_fh);
+            &fingerprint_which_irreversible_moves_bitmask, stdout);
 
         FILE *fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
 
@@ -1263,7 +1261,7 @@ int main(int argc, char *argv[])
         }
 #endif
         fclose(fingerprint_fh);
-        handle_and_destroy_instance_solution(&instance, out_fh, &delta);
+        handle_and_destroy_instance_solution(&instance, &delta);
         free(instance.moves_to_state);
         free(instance.moves_base64_encoding_buffer);
         free(instance.fingerprint_line);

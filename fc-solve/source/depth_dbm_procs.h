@@ -40,10 +40,11 @@ static void free_thread(fcs_dbm_solver_thread_t *const thread)
 
 /* Returns if the process should terminate. */
 static fcs_bool_t handle_and_destroy_instance_solution(
-    fcs_dbm_solver_instance_t *instance, FILE *out_fh,
-    fc_solve_delta_stater_t *delta)
+    fcs_dbm_solver_instance_t *const instance,
+    fc_solve_delta_stater_t *const delta)
 {
     fcs_bool_t ret = FALSE;
+    FILE *const out_fh = instance->out_fh;
 
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
     instance_print_stats(instance, out_fh);
