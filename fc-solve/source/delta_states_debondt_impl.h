@@ -467,71 +467,65 @@ static void fc_solve_debondt_delta_stater_decode(
 
     int next_freecell_idx = 0;
     int next_new_top_most_cards = 0;
-
+    const int top_rank_for_iter = get_top_rank_for_iter(local_variant);
+    for (int rank = 1; rank <= top_rank_for_iter; rank++)
     {
-        const int top_rank_for_iter = get_top_rank_for_iter(local_variant);
-
-        for (int rank = 1; rank <= top_rank_for_iter; rank++)
+        for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
         {
-            for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
+            const fcs_card_t card = fcs_make_card(rank, suit_idx);
+            const char card_char = fcs_card2char(card);
+
+            if (IS_BAKERS_DOZEN())
             {
-                const fcs_card_t card = fcs_make_card(rank, suit_idx);
-                const char card_char = fcs_card2char(card);
-
-                if (IS_BAKERS_DOZEN())
+                if ((self->bakers_dozen_topmost_cards_lookup[card_char >> 3] &
+                        (1 << (card_char & (8 - 1)))))
                 {
-                    if ((self->bakers_dozen_topmost_cards_lookup[card_char >>
-                                                                 3] &
-                            (1 << (card_char & (8 - 1)))))
+                    if (!IS_IN_FOUNDATIONS(card))
                     {
-                        if (!IS_IN_FOUNDATIONS(card))
+                        self->card_states[CARD_POS(card)] =
+                            OPT__BAKERS_DOZEN__ORIG_POS;
+                    }
+                    continue;
+                }
+            }
+
+            const int existing_opt =
+                self->card_states[STATE_POS(suit_idx, rank)];
+
+            if (rank == 1)
+            {
+                if (existing_opt < 0)
+                {
+                    self->card_states[STATE_POS(suit_idx, rank)] = orig_pos_opt;
+                }
+            }
+            else
+            {
+                const int base =
+                    (IS_BAKERS_DOZEN()
+                            ? NUM__BAKERS_DOZEN__OPTS
+                            : ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS));
+                const int item_opt =
+                    fc_solve_var_base_reader_read(reader, base);
+
+                if (existing_opt < 0)
+                {
+                    self->card_states[STATE_POS(suit_idx, rank)] = item_opt;
+
+                    if (!IS_BAKERS_DOZEN())
+                    {
+                        if (item_opt == OPT_FREECELL)
                         {
-                            self->card_states[CARD_POS(card)] =
-                                OPT__BAKERS_DOZEN__ORIG_POS;
+                            fcs_put_card_in_freecell(
+                                *ret, next_freecell_idx, card);
+                            next_freecell_idx++;
                         }
-                        continue;
-                    }
-                }
-
-                const int existing_opt =
-                    self->card_states[STATE_POS(suit_idx, rank)];
-
-                if (rank == 1)
-                {
-                    if (existing_opt < 0)
-                    {
-                        self->card_states[STATE_POS(suit_idx, rank)] =
-                            orig_pos_opt;
-                    }
-                }
-                else
-                {
-                    const int base = (IS_BAKERS_DOZEN()
-                                          ? NUM__BAKERS_DOZEN__OPTS
-                                          : ((rank == RANK_KING) ? NUM_KING_OPTS
-                                                                 : NUM_OPTS));
-                    const int item_opt =
-                        fc_solve_var_base_reader_read(reader, base);
-
-                    if (existing_opt < 0)
-                    {
-                        self->card_states[STATE_POS(suit_idx, rank)] = item_opt;
-
-                        if (!IS_BAKERS_DOZEN())
+                        else if (item_opt == OPT_TOPMOST)
                         {
-                            if (item_opt == OPT_FREECELL)
+                            if (!orig_top_most_cards[CARD_POS(card)])
                             {
-                                fcs_put_card_in_freecell(
-                                    *ret, next_freecell_idx, card);
-                                next_freecell_idx++;
-                            }
-                            else if (item_opt == OPT_TOPMOST)
-                            {
-                                if (!orig_top_most_cards[CARD_POS(card)])
-                                {
-                                    new_top_most_cards
-                                        [next_new_top_most_cards++] = card;
-                                }
+                                new_top_most_cards[next_new_top_most_cards++] =
+                                    card;
                             }
                         }
                     }
