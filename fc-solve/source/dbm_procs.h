@@ -328,6 +328,11 @@ static GCC_INLINE void mark_and_sweep_old_states(
 #define NUM_THREADS() num_threads
 #endif
 
+#define FCS__RENDER_STATE(state_str, state_ptr, locs)                          \
+    fc_solve_state_as_string(state_str, state_ptr, locs, FREECELLS_NUM,        \
+        STACKS_NUM, 1 FC_SOLVE__PASS_PARSABLE(TRUE),                           \
+        FALSE FC_SOLVE__PASS_T(TRUE))
+
 #ifdef __cplusplus
 }
 #endif
