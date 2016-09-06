@@ -33,6 +33,7 @@
 
 typedef struct
 {
+    void *tree_recycle_bin;
     fcs_lock_t storage_lock;
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
@@ -44,12 +45,22 @@ typedef struct
     fcs_dbm_store_t store;
 #endif
 
-    long pre_cache_max_count;
     /* The queue */
 
     fcs_lock_t queue_lock;
-    long count_num_processed, count_of_items_in_queue, max_count_num_processed;
     long max_count_of_items_in_queue;
+    fcs_meta_compact_allocator_t meta_alloc;
+    fcs_offloading_queue_t queue;
+#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
+    const char *offload_dir_path;
+#endif
+    int queue_num_extracted_and_processed;
+    fcs_encoded_state_buffer_t first_key;
+    long num_states_in_collection;
+    FILE *out_fh;
+    enum fcs_dbm_variant_type_t variant;
+    long pre_cache_max_count;
+    long count_num_processed, count_of_items_in_queue, max_count_num_processed;
     fcs_bool_t queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
 #ifdef FCS_DBM_WITHOUT_CACHES
@@ -57,22 +68,11 @@ typedef struct
 #else
     fcs_encoded_state_buffer_t queue_solution;
 #endif
-    fcs_meta_compact_allocator_t meta_alloc;
-    int queue_num_extracted_and_processed;
-    fcs_offloading_queue_t queue;
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-    const char *offload_dir_path;
-#endif
-    fcs_encoded_state_buffer_t first_key;
-    long num_states_in_collection;
-    FILE *out_fh;
-    void *tree_recycle_bin;
-    enum fcs_dbm_variant_type_t variant;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *instance,
-    enum fcs_dbm_variant_type_t local_variant,
-    long pre_cache_max_count GCC_UNUSED, long caches_delta GCC_UNUSED,
+    const enum fcs_dbm_variant_type_t local_variant,
+    const long pre_cache_max_count GCC_UNUSED, long caches_delta GCC_UNUSED,
     const char *dbm_store_path, long max_count_of_items_in_queue,
     long iters_delta_limit, const char *offload_dir_path, FILE *out_fh)
 {

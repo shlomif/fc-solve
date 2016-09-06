@@ -58,8 +58,13 @@ typedef struct
     const char *offload_dir_path;
     int curr_depth;
     fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
-    long pre_cache_max_count;
     /* The queue */
+    int queue_num_extracted_and_processed;
+    fcs_encoded_state_buffer_t first_key;
+    long num_states_in_collection;
+    FILE *out_fh;
+    enum fcs_dbm_variant_type_t variant;
+    long pre_cache_max_count;
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
     fcs_bool_t queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
@@ -67,17 +72,11 @@ typedef struct
     fcs_dbm_record_t *queue_solution_ptr;
 #else
     fcs_encoded_state_buffer_t queue_solution;
-
 #endif
-    int queue_num_extracted_and_processed;
-    long num_states_in_collection;
-    FILE *out_fh;
-    fcs_encoded_state_buffer_t first_key;
-    enum fcs_dbm_variant_type_t variant;
 } fcs_dbm_solver_instance_t;
 
-static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *instance,
-    enum fcs_dbm_variant_type_t local_variant,
+static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
+    const enum fcs_dbm_variant_type_t local_variant,
     const long pre_cache_max_count GCC_UNUSED,
     const long caches_delta GCC_UNUSED, const char *dbm_store_path,
     long iters_delta_limit, const char *offload_dir_path, FILE *out_fh)
