@@ -357,12 +357,7 @@ static void *instance_run_solver_thread(void *void_arg)
 
 /* A section for debugging. */
 #ifdef DEBUG_OUT
-            {
-                char state_str[2000];
-                FCS__RENDER_STATE(state_str, &(state.s), &locs);
-                fprintf(out_fh, "<<<\n%s>>>\n", state_str);
-                fflush(out_fh);
-            }
+            FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 #endif
 
             if (instance_solver_thread_calc_derived_states(local_variant,
@@ -492,14 +487,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
 #ifdef DEBUG_OUT
-        {
-            char state_str[2000];
-            FCS__RENDER_STATE(state_str, &(running_state.s), &locs);
-
-            fprintf(
-                stdout, "BEFORE_RUNNING_STATE == <<<\n%s>>>\n\n", state_str);
-            fflush(stdout);
-        }
+        FCS__OUTPUT_STATE(
+            stdout, "BEFORE_RUNNING_STATE == ", &(running_state.s), &locs);
 #endif
         fcs_card_t src_card;
 
@@ -593,12 +582,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
         fc_solve_delta_stater_decode_into_state(delta, running_key.s,
             &running_state, running_indirect_stacks_buffer);
 #ifdef DEBUG_OUT
-        {
-            char state_str[2000];
-            FCS__RENDER_STATE(state_str, &(running_state.s), &locs);
-            fprintf(stdout, "RUNNING_STATE == <<<\n%s>>>\n\n", state_str);
-            fflush(stdout);
-        }
+        FCS__OUTPUT_STATE(
+            stdout, "RUNNING_STATE == ", &(running_state.s), &locs);
 #endif
     }
 
@@ -747,10 +732,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                     fc_solve_delta_stater_decode_into_state(
                         delta, item->key.s, &state, indirect_stacks_buffer);
 
-                    char state_str[2000];
-                    FCS__RENDER_STATE(state_str, &(state.s), &locs);
-                    fprintf(out_fh, "<<<\n%s>>>\n", state_str);
-                    fflush(out_fh);
+                    FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
                 }
 #endif
             }
