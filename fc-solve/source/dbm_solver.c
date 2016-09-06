@@ -358,13 +358,10 @@ static void *instance_run_solver_thread(void *void_arg)
 /* A section for debugging. */
 #ifdef DEBUG_OUT
             {
-                char *state_str;
-                state_str = fc_solve_state_as_string(&(state.s), &(state.info),
-                    &locs, FREECELLS_NUM, 8, 1, 1, 0, 1);
-
+                char state_str[2000];
+                FCS__RENDER_STATE(state_str, &(state.s), &locs);
                 fprintf(out_fh, "<<<\n%s>>>\n", state_str);
                 fflush(out_fh);
-                free(state_str);
             }
 #endif
 
@@ -496,14 +493,12 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     {
 #ifdef DEBUG_OUT
         {
-            char *state_str;
-            state_str = fc_solve_state_as_string(&(running_state.s),
-                &(running_state.info), &locs, FREECELLS_NUM, 8, 1, 1, 0, 1);
+            char state_str[2000];
+            FCS__RENDER_STATE(state_str, &(running_state.s), &locs);
 
             fprintf(
                 stdout, "BEFORE_RUNNING_STATE == <<<\n%s>>>\n\n", state_str);
             fflush(stdout);
-            free(state_str);
         }
 #endif
         fcs_card_t src_card;
@@ -599,13 +594,10 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             &running_state, running_indirect_stacks_buffer);
 #ifdef DEBUG_OUT
         {
-            char *state_str;
-            state_str = fc_solve_state_as_string(&(running_state.s),
-                &(running_state.info), &locs, FREECELLS_NUM, 8, 1, 1, 0, 1);
-
+            char state_str[2000];
+            FCS__RENDER_STATE(state_str, &(running_state.s), &locs);
             fprintf(stdout, "RUNNING_STATE == <<<\n%s>>>\n\n", state_str);
             fflush(stdout);
-            free(state_str);
         }
 #endif
     }
@@ -746,7 +738,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 fflush(out_fh);
 #ifdef DEBUG_OUT
                 {
-                    char *state_str;
                     fcs_state_keyval_pair_t state;
                     fcs_state_locs_struct_t locs;
                     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -756,12 +747,10 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                     fc_solve_delta_stater_decode_into_state(
                         delta, item->key.s, &state, indirect_stacks_buffer);
 
-                    state_str = fc_solve_state_as_string(
-                        &(state.s), &(state.info), &locs, 2, 8, 1, 1, 0, 1);
-
+                    char state_str[2000];
+                    FCS__RENDER_STATE(state_str, &(state.s), &locs);
                     fprintf(out_fh, "<<<\n%s>>>\n", state_str);
                     fflush(out_fh);
-                    free(state_str);
                 }
 #endif
             }

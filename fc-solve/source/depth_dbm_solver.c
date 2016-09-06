@@ -280,13 +280,10 @@ static void *instance_run_solver_thread(void *void_arg)
 /* A section for debugging. */
 #ifdef DEBUG_OUT
             {
-                char *state_str;
-                state_str = fc_solve_state_as_string(
-                    &(state.s), &locs, FREECELLS_NUM, STACKS_NUM, 1, 1, 0, 1);
-
+                char state_str[2000];
+                FCS__RENDER_STATE(state_str, &(state.s), &locs);
                 fprintf(out_fh, "<<<\n%s>>>\n", state_str);
                 fflush(out_fh);
-                free(state_str);
             }
 #endif
 

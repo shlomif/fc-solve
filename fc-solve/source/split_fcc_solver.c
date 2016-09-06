@@ -392,10 +392,7 @@ static void *instance_run_solver_thread(void *void_arg)
 #ifdef DEBUG_OUT
             {
                 char state_str[2000];
-                fc_solve_state_as_string(state_str, &(state.s), &locs,
-                    FREECELLS_NUM, STACKS_NUM, 1 FC_SOLVE__PASS_PARSABLE(TRUE),
-                    0 FC_SOLVE__PASS_T(TRUE));
-
+                FCS__RENDER_STATE(state_str, &(state.s), &locs);
                 fprintf(out_fh, "<<<\n%s>>>\n", state_str);
                 fflush(out_fh);
             }
@@ -739,14 +736,11 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                     fc_solve_delta_stater_decode_into_state(
                         &(thread->delta_stater), key->s, &state,
                         indirect_stacks_buffer);
-                    char state_as_str[2000];
-                    fc_solve_state_as_string(state_as_str, &(state.s), &locs,
-                        FREECELLS_NUM, STACKS_NUM,
-                        1 FC_SOLVE__PASS_PARSABLE(TRUE),
-                        0 FC_SOLVE__PASS_T(TRUE));
+                    char state_str[2000];
+                    FCS__RENDER_STATE(state_str, &(state.s), &locs);
                     fprintf(stderr,
                         "Check Key: <<<\n%s\n>>>\n\n[%s %s %ld %s]\n\n",
-                        state_as_str, fingerprint_base64, state_base64,
+                        state_str, fingerprint_base64, state_base64,
                         added_moves_to_output,
                         instance->moves_base64_encoding_buffer);
                 }
