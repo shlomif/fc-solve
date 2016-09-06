@@ -88,14 +88,18 @@ const FccEntryPointList FccEntryPointList_init =
 
 typedef struct
 {
+    fcs_dbm_collection_by_depth_t coll;
     fcs_lock_t global_lock;
     void *tree_recycle_bin;
     fcs_lock_t storage_lock;
     const char *offload_dir_path;
     int curr_depth;
-    fcs_dbm_collection_by_depth_t coll;
+    int queue_num_extracted_and_processed;
+    fcs_encoded_state_buffer_t first_key;
+    long num_states_in_collection;
+    FILE *out_fh;
+    enum fcs_dbm_variant_type_t variant;
     long pre_cache_max_count;
-    /* The queue */
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
     fcs_bool_t queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
@@ -103,13 +107,7 @@ typedef struct
     fcs_dbm_record_t *queue_solution_ptr;
 #else
     fcs_encoded_state_buffer_t queue_solution;
-
 #endif
-    int queue_num_extracted_and_processed;
-    long num_states_in_collection;
-    FILE *out_fh;
-    fcs_encoded_state_buffer_t first_key;
-    enum fcs_dbm_variant_type_t variant;
     fcs_meta_compact_allocator_t fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
     fcs_compact_allocator_t fcc_entry_points_allocator;
