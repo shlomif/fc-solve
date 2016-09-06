@@ -52,13 +52,12 @@ typedef struct
 
 typedef struct
 {
+    fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
     fcs_lock_t global_lock;
     void *tree_recycle_bin;
     fcs_lock_t storage_lock;
     const char *offload_dir_path;
     int curr_depth;
-    fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
-    /* The queue */
     int queue_num_extracted_and_processed;
     fcs_encoded_state_buffer_t first_key;
     long num_states_in_collection;
