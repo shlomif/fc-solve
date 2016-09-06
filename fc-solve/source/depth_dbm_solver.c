@@ -279,12 +279,7 @@ static void *instance_run_solver_thread(void *void_arg)
 
 /* A section for debugging. */
 #ifdef DEBUG_OUT
-            {
-                char state_str[2000];
-                FCS__RENDER_STATE(state_str, &(state.s), &locs);
-                fprintf(out_fh, "<<<\n%s>>>\n", state_str);
-                fflush(out_fh);
-            }
+            FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 #endif
 
             if (instance_solver_thread_calc_derived_states(local_variant,

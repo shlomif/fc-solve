@@ -333,6 +333,14 @@ static GCC_INLINE void mark_and_sweep_old_states(
         STACKS_NUM, 1 FC_SOLVE__PASS_PARSABLE(TRUE),                           \
         FALSE FC_SOLVE__PASS_T(TRUE))
 
+#define FCS__OUTPUT_STATE(out_fh, prefix, state_ptr, locs)                     \
+    {                                                                          \
+        char state_str[2000];                                                  \
+        FCS__RENDER_STATE(state_str, state_ptr, locs);                         \
+        fprintf(out_fh, "%s<<<\n%s>>>\n\n", prefix, state_str);                \
+        fflush(out_fh);                                                        \
+    }
+
 #ifdef __cplusplus
 }
 #endif
