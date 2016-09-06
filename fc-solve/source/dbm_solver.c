@@ -70,11 +70,12 @@ typedef struct
 #endif
 } fcs_dbm_solver_instance_t;
 
-static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *instance,
+static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     const enum fcs_dbm_variant_type_t local_variant,
-    const long pre_cache_max_count GCC_UNUSED, long caches_delta GCC_UNUSED,
-    const char *dbm_store_path, long max_count_of_items_in_queue,
-    long iters_delta_limit, const char *offload_dir_path, FILE *out_fh)
+    const long pre_cache_max_count GCC_UNUSED,
+    const long caches_delta GCC_UNUSED, const char *const dbm_store_path,
+    const long max_count_of_items_in_queue, const long iters_delta_limit,
+    const char *const offload_dir_path, FILE *const out_fh)
 {
     FCS_INIT_LOCK(instance->queue_lock);
     FCS_INIT_LOCK(instance->storage_lock);
