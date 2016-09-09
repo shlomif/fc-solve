@@ -10204,7 +10204,7 @@ function test_js_fc_solve_class()
             "get_num_freecells() returns 2 after command line.");
     });
     test("verify_state Card class tests", function() {
-        expect(6);
+        expect(7);
 
         {
             var c = fcs_js__card_from_string('TH');
@@ -10214,6 +10214,9 @@ function test_js_fc_solve_class()
 
             // TEST
             equal(c.getSuit(), 0, "Card(TH).getSuit() is fine.");
+
+            // TEST
+            equal(c.toString(), 'TH', "Card(TH).toString() works.");
         }
 
         {
