@@ -3,13 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 use FC_Solve::GetOutput ();
 use Carp ();
 use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
-use FC_Solve::Paths qw/ bin_exe_raw samp_board /;
+use FC_Solve::Paths qw/ bin_board bin_exe_raw samp_board /;
 
 sub trap_board
 {
@@ -36,6 +36,29 @@ sub trap_dbm
         ) .
         " |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
+
+    my @lines = <$fc_solve_output>;
+
+    close($fc_solve_output);
+
+    return { out_lines => \@lines };
+}
+
+sub trap_depth_dbm
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $args = shift;
+
+    open my $fc_solve_output,
+        shell_quote(bin_exe_raw(['depth_dbm_fc_solver']),
+            "--offload-dir-path", (tempdir (CLEANUP => 1) . '/'),
+            "--num-threads", 1,
+            "--iters-delta-limit", $args->{max_iters},
+            $args->{board_fn}
+        ) .
+        " |"
+        or Carp::confess "Error! Could not open the depth_dbm_fc_solver pipline!";
 
     my @lines = <$fc_solve_output>;
 
@@ -349,6 +372,24 @@ EOF
         scalar (index( $output_text, $needle) >= 0 or
         index( $output_text, $needle_non_debondt) >= 0),
         "dbm_fc_solver invocation contains the solution's output."
+    );
+}
+
+{
+    my $dbm_output = trap_depth_dbm(
+        {
+            board_fn => bin_board('981.board'),
+            max_iters => 400_000,
+        }
+    );
+
+    my $output_text = join('', @{$dbm_output->{out_lines}});
+
+    # TEST
+    like (
+        $output_text,
+        qr/^Mark\+Sweep Progress - 100000/ms,
+        "depth_dbm_fc_solver bug with infinite run is fixed."
     );
 }
 

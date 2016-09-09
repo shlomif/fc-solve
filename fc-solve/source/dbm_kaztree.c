@@ -85,12 +85,10 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
 #endif
     if (ret)
     {
-#ifdef FCS_EXPLICIT_REFCOUNT
         if (should_modify_parent && parent)
         {
             fcs_dbm_record_increment_refcount(parent);
         }
-#endif
 
         return ((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(
             db->kaz_tree, to_check)));
