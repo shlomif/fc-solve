@@ -10236,6 +10236,32 @@ function test_js_fc_solve_class()
             equal(c.getSuit(), 1, "Card(AC).getSuit() is fine.");
         }
     });
+    test("verify_state Card class tests", function() {
+        expect(6);
+
+        {
+            var result = fcs_js__column_from_string('KS QD');
+
+            // TEST
+            ok (result.is_correct, "Column was parsed correctly.");
+
+            var col = result.col;
+
+            // TEST
+            equal(col.getLen(2), 2, "col.getLen() is fine.");
+
+            // TEST
+            equal(col.getCard(0).getRank(), 13, "col.getCard(0) is fine.");
+            // TEST
+            equal(col.getCard(0).getSuit(), 3, "col.getCard(0) is fine.");
+
+            // TEST
+            equal(col.getCard(1).getRank(), 12, "col.getCard(1) is fine.");
+            // TEST
+            equal(col.getCard(1).getSuit(), 2, "col.getCard(1) is fine.");
+        }
+    });
+
 
     return;
 }
