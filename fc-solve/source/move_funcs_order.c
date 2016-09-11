@@ -34,6 +34,9 @@
 int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
     const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
+    int i;
+    int len;
+    fcs_bool_t is_group, is_start_group;
     char test_name[2] = {0};
 
     fc_solve_free_tests_order(tests_order);
@@ -48,11 +51,10 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
 
     tests_order->num_groups++;
 
-    const int len = strlen(string);
-    fcs_bool_t is_group = FALSE;
-    fcs_bool_t is_start_group = FALSE;
+    len = strlen(string);
+    is_group = FALSE;
+    is_start_group = FALSE;
 
-    int i;
     for (i = 0; i < len; i++)
     {
         if ((string[i] == '(') || (string[i] == '['))

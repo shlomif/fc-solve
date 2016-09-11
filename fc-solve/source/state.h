@@ -796,11 +796,12 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 }
                 else
                 {
-                    my_card = fc_solve_card_parse_str(str);
-                    if (!fcs_card_rank(my_card))
+                    const char rank = fc_solve_u2p_rank(str);
+                    if (!rank)
                     {
                         return FALSE;
                     }
+                    my_card = fcs_make_card(rank, fc_solve_u2p_suit(str));
                 }
                 fcs_put_card_in_freecell(ret, c, my_card);
             }
@@ -934,19 +935,24 @@ static GCC_INLINE fcs_state_validity_ret_t fc_solve_check_state_validity(
     fcs_card_t *const misplaced_card)
 {
     int cards[4][14];
-    memset(cards, 0, sizeof(cards));
 
     const fcs_state_t *const state = &(state_pair->s);
 
-    /* Mark the cards in the decks */
-    const_AUTO(num_foundations, (DECKS_NUM__VAL << 2));
-    for (int found_idx = 0; found_idx < num_foundations; found_idx++)
+    /* Initialize all cards to 0 */
+    for (int d = 0; d < 4; d++)
     {
-        const int max_rank = fcs_foundation_value(*state, found_idx);
-        int *const suit_cards = cards[found_idx & 0x3];
-        for (int rank = 1; rank <= max_rank; rank++)
+        for (int c = 1; c <= 13; c++)
         {
-            suit_cards[rank]++;
+            cards[d][c] = 0;
+        }
+    }
+
+    /* Mark the cards in the decks */
+    for (int d = 0; d < (DECKS_NUM__VAL << 2); d++)
+    {
+        for (int c = 1; c <= fcs_foundation_value(*state, d); c++)
+        {
+            cards[d % 4][c]++;
         }
     }
 

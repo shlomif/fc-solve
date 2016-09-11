@@ -234,11 +234,12 @@ static GCC_INLINE void *fc_solve_hash_insert(
 typedef unsigned long ul;
 typedef unsigned char ub1;
 
-static GCC_INLINE ul perl_hash_function(
-    register const ub1 *s_ptr, register const ul len)
+static GCC_INLINE ul perl_hash_function(register const ub1 *s_ptr, /* the key */
+    register const ul length /* the length of the key */
+    )
 {
     register ul hash_value_int = 0;
-    register const ub1 *const s_end = s_ptr + len;
+    register const ub1 *const s_end = s_ptr + length;
 
     while (s_ptr < s_end)
     {
@@ -258,6 +259,9 @@ static GCC_INLINE ul perl_hash_function(
         *(current_stack) = cached_stack;                                       \
     }
 
+/* TODO : Maybe define an accesor for new_state_key->stacks (also see the
+ * replaced_with_cached macro above.
+ * */
 static GCC_INLINE void fc_solve_cache_stacks(
     fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state)
 {
@@ -278,14 +282,13 @@ static GCC_INLINE void fc_solve_cache_stacks(
 
     fcs_cards_column_t *current_stack = new_state_key->stacks;
 
-    const_SLOT(stacks_copy_on_write_flags, new_state_info);
     for (int i = 0; i < LOCAL_STACKS_NUM; i++, current_stack++)
     {
         /*
          * If the stack is not a copy - it is already cached so skip
          * to the next stack
          * */
-        if (!(stacks_copy_on_write_flags & (1 << i)))
+        if (!(new_state_info->stacks_copy_on_write_flags & (1 << i)))
         {
             continue;
         }
