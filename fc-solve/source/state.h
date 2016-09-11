@@ -789,21 +789,16 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 if ((*str == '\r') || (*str == '\n'))
                     break;
 
-                fcs_card_t my_card;
-                if ((*str == '*') || (*str == '-'))
-                {
-                    my_card = fc_solve_empty_card;
-                }
-                else
-                {
-                    const char rank = fc_solve_u2p_rank(str);
-                    if (!rank)
-                    {
-                        return FALSE;
-                    }
-                    my_card = fcs_make_card(rank, fc_solve_u2p_suit(str));
-                }
-                fcs_put_card_in_freecell(ret, c, my_card);
+                fcs_put_card_in_freecell(
+                    ret, c,
+                    ((*str == '*') || (*str == '-')) ? fc_solve_empty_card : ({
+                        const char rank = fc_solve_u2p_rank(str);
+                        if (!rank)
+                        {
+                            return FALSE;
+                        }
+                        fcs_make_card(rank, fc_solve_u2p_suit(str));
+                    }));
             }
 
             while (*str != '\n')
