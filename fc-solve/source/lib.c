@@ -1175,9 +1175,9 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             user->all_instances_were_suspended = FALSE;
         }
 
-        flare->obj_stats =
-            (fcs_stats_t){.num_checked_states = instance->i__num_checked_states,
-                .num_states_in_collection = instance->num_states_in_collection};
+        flare->obj_stats.num_checked_states = instance->i__num_checked_states;
+        flare->obj_stats.num_states_in_collection =
+            instance->num_states_in_collection;
         const_AUTO(delta, flare->obj_stats.num_checked_states -
                               init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
@@ -1256,6 +1256,10 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             if ((local_limit() >= 0) &&
                 (instance->i__num_checked_states >= local_limit()))
             {
+                flare->obj_stats.num_checked_states =
+                    instance->i__num_checked_states;
+                flare->obj_stats.num_states_in_collection =
+                    instance->num_states_in_collection;
                 recycle_instance(user, instance_item);
                 user->current_instance++;
                 continue;
