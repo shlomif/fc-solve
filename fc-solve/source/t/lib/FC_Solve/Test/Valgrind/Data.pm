@@ -69,6 +69,22 @@ __PACKAGE__->populate
             ],
             msg => "Check the sanity of crashy-preset-1 which over-rides the soft-thread several times.",
         },
+        'fc-solve-crashy-preset-2' =>
+        {
+            prog => "fc-solve",
+            argv => [
+                '--read-from-file',
+                {
+                    type => 'catfile',
+                    prefix => "0,",
+                    args => [{ type => 'sample_preset',
+                            arg => 'crashy-preset-2.preset'}]
+                },
+                qw(-s -i -p -t -sam),
+                { type => 'bin_board', arg => '24.board', }
+            ],
+            msg => "Check the sanity of crashy-preset-2 which contains a long double-quoted string.",
+        },
         'fc-solve-not-enough-input' =>
         {
             prog => "fc-solve",

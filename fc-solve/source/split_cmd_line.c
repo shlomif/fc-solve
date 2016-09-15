@@ -218,7 +218,10 @@ args_man_t fc_solve_args_man_chop(const char *const string)
                         }
                         s++;
                     }
-                    s++;
+                    if (*s != '\0')
+                    {
+                        s++;
+                    }
                     break;
 
                 case '#':

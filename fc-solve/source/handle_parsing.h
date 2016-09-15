@@ -84,6 +84,7 @@ static GCC_INLINE void *alloc_instance_and_parse(const int argc,
 #else
         fprintf(stderr, "%s\n", "Error in command line arg.");
 #endif
+        freecell_solver_user_free(instance);
         exit(-1);
     }
 
