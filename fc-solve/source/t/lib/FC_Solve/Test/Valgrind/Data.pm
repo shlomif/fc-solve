@@ -120,6 +120,12 @@ __PACKAGE__->populate
             argv => ["1", "2", "1", "-opt"],
             msg => qq{"range-parallel-solve 1 2 1 -opt" returned no errors}
         },
+        'range_parallel_solve__mixed_simple_simon'=>
+        {
+            prog => "freecell-solver-range-parallel-solve",
+            argv => ["1", "1", "1", "-to", "01abc",],
+            msg => qq{"range-parallel-solve with mixed Freecell and Simple Simon Tests}
+        },
         'range_parallel_solve__next-flare' =>
         {
             prog => "freecell-solver-range-parallel-solve",

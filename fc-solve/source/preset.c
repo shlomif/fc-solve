@@ -74,13 +74,13 @@ static const fcs_preset_t fcs_presets[16] = {
 
             FCS_SEQ_BUILT_BY_SUIT, 0, FCS_ES_FILLED_BY_ANY_CARD),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_BELEAGUERED_CASTLE,
         MAKE_GAME_PARAMS(0, 8, 1,
 
             FCS_SEQ_BUILT_BY_RANK, 0, FCS_ES_FILLED_BY_ANY_CARD),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_CRUEL, MAKE_GAME_PARAMS(0, 12, 1,
 
                            FCS_SEQ_BUILT_BY_SUIT, 0, FCS_ES_FILLED_BY_NONE),
@@ -91,36 +91,36 @@ static const fcs_preset_t fcs_presets[16] = {
 
             FCS_SEQ_BUILT_BY_ALTERNATE_COLOR, 1, FCS_ES_FILLED_BY_NONE),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_DIE_SCHLANGE,
         MAKE_GAME_PARAMS(8, 9, 2,
 
             FCS_SEQ_BUILT_BY_ALTERNATE_COLOR, 0, FCS_ES_FILLED_BY_NONE),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_EIGHT_OFF,
         MAKE_GAME_PARAMS(8, 8, 1,
 
             FCS_SEQ_BUILT_BY_SUIT, 0, FCS_ES_FILLED_BY_KINGS_ONLY),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_FAN, MAKE_GAME_PARAMS(0, 18, 1,
 
                          FCS_SEQ_BUILT_BY_SUIT, 0, FCS_ES_FILLED_BY_KINGS_ONLY),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_FORECELL,
         MAKE_GAME_PARAMS(4, 8, 1,
 
             FCS_SEQ_BUILT_BY_ALTERNATE_COLOR, 0, FCS_ES_FILLED_BY_KINGS_ONLY),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_FREECELL,
         MAKE_GAME_PARAMS(4, 8, 1,
 
             FCS_SEQ_BUILT_BY_ALTERNATE_COLOR, 0, FCS_ES_FILLED_BY_ANY_CARD),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_GOOD_MEASURE,
         MAKE_GAME_PARAMS(0, 10, 1,
 
@@ -132,31 +132,31 @@ static const fcs_preset_t fcs_presets[16] = {
 
             FCS_SEQ_BUILT_BY_SUIT, 0, FCS_ES_FILLED_BY_KINGS_ONLY),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_RELAXED_FREECELL,
         MAKE_GAME_PARAMS(4, 8, 1,
 
             FCS_SEQ_BUILT_BY_ALTERNATE_COLOR, 1, FCS_ES_FILLED_BY_ANY_CARD),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_RELAXED_SEAHAVEN_TOWERS,
         MAKE_GAME_PARAMS(4, 10, 1,
 
             FCS_SEQ_BUILT_BY_SUIT, 1, FCS_ES_FILLED_BY_KINGS_ONLY),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_SEAHAVEN_TOWERS,
         MAKE_GAME_PARAMS(4, 10, 1,
 
             FCS_SEQ_BUILT_BY_SUIT, 0, FCS_ES_FILLED_BY_KINGS_ONLY),
 
-        "[01][23456789]", "0123456789"},
+        "[01][23456789]", "0123456789ABCDE"},
     {FCS_PRESET_SIMPLE_SIMON,
         MAKE_GAME_PARAMS(0, 10, 1,
 
             FCS_SEQ_BUILT_BY_SUIT, 0, FCS_ES_FILLED_BY_ANY_CARD),
 
-        "abcdefgh", "abcdefgh"}};
+        "abcdefgh", "abcdefghi"}};
 
 typedef struct
 {
