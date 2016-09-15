@@ -16,13 +16,13 @@ my %presets =
     'eight_off' => [ qw(i kings_only_bakers_game f 8) ],
     'fan' => [ qw(i freecell s 18 sbb suit sm limited esf kings_only f 0) ],
     'forecell' => [ qw(i freecell esf kings_only) ],
-    'freecell' => [ qw(s 8 f 4 d 1 sbb ac sm limited esf any_card to [01][23456789] at 0123456789) ],
+    'freecell' => [ qw(s 8 f 4 d 1 sbb ac sm limited esf any_card to [01][23456789] at 0123456789ABCDE) ],
     'good_measure' => [ qw(i bakers_dozen s 10) ],
     'kings_only_bakers_game' => [ qw(i bakers_game esf kings_only) ],
     'relaxed_freecell' => [ qw(i freecell sm unlimited) ],
     'relaxed_seahaven_towers' => [ qw(i seahaven_towers sm unlimited) ],
     'seahaven_towers' => [ qw(i bakers_game esf kings_only s 10) ],
-    'simple_simon' => [ qw(i bakers_game s 10 f 0 to abcdefgh at abcdefgh) ],
+    'simple_simon' => [ qw(i bakers_game s 10 f 0 to abcdefgh at abcdefghi) ],
     # 'yukon' => [ qw(i freecell s 7 f 0 to ABCDEFG) ],
 );
 
@@ -113,7 +113,7 @@ sub compile_preset
         }
         elsif ($cmd =~ /^(at|allowed_tests)$/)
         {
-            if ($arg =~ /[^0-9a-hA-G]/)
+            if ($arg =~ /[^0-9a-iA-G]/)
             {
                 die "Unrecognized character in Allowed Tests!\n";
             }

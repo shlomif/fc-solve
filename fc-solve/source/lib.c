@@ -1298,6 +1298,11 @@ int DLLEXPORT freecell_solver_user_solve_board(
 
     user->current_instance = user->instances_list;
 
+    {
+        FLARES_LOOP_START()
+        fc_solve_apply_preset_by_ptr(&(flare->obj), &(user->common_preset));
+        FLARES_LOOP_END()
+    }
 #ifdef FCS_WITH_FLARES
     int instance_list_index;
     if (user_compile_all_flares_plans(user, &instance_list_index) !=
