@@ -72,8 +72,8 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
             {
                 if (!(tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
                 {
-                    tests_order->groups =
-                        SREALLOC(tests_order->groups, TESTS_ORDER_GROW_BY);
+                    tests_order->groups = SREALLOC(tests_order->groups,
+                        tests_order->num_groups + TESTS_ORDER_GROW_BY);
                 }
 
                 tests_order->groups[tests_order->num_groups].num = 0;
@@ -200,7 +200,8 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
             tests_order->groups[tests_order->num_groups - 1].order_group_tests =
                 SREALLOC(tests_order->groups[tests_order->num_groups - 1]
                              .order_group_tests,
-                    TESTS_ORDER_GROW_BY);
+                    tests_order->groups[tests_order->num_groups - 1].num +
+                        TESTS_ORDER_GROW_BY);
         }
 
         test_name[0] = string[i];
