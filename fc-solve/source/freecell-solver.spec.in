@@ -3,7 +3,7 @@ Version: @VERSION@
 Release: 1
 License: MIT
 Group: Amusement/Games
-Source: http://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{version}.tar.bz2
+Source: http://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{version}.tar.xz
 Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://fc-solve.shlomifish.org/
 Requires: libfreecell-solver0 = %{version}
@@ -103,16 +103,16 @@ cp ../../README .
 
 %build
 %cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12
-%make
+%make_build
 
 %check
 cd build
-%make test
+%make_build test
 
 %install
 rm -rf %buildroot
 cd build
-%{makeinstall_std}
+%{make_install}
 
 rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 
@@ -134,10 +134,9 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 /usr/bin/freecell-solver-fc-pro-range-solve
 /usr/bin/freecell-solver-multi-thread-solve
 /usr/bin/freecell-solver-range-parallel-solve
-/usr/bin/make-aisleriot-freecell-board
-/usr/bin/make-gnome-freecell-board
 /usr/bin/make_pysol_freecell_board.py
 /usr/bin/pi-make-microsoft-freecell-board
+/usr/bin/transpose-freecell-board.py
 %{_mandir}/*/*
 %{_docdir}/*
 

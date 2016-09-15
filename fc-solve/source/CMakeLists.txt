@@ -818,7 +818,7 @@ ENDIF ()
 
 SET (fc_solve_manpage "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.6")
 
-IF ("${UNIX}" AND "${FCS_BUILD_DOCS}")
+IF (UNIX AND FCS_BUILD_DOCS)
     INSTALL_MAN ("${fc_solve_manpage}" 6)
 ENDIF ()
 
