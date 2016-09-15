@@ -16,6 +16,7 @@ INSTALL(
         "maliciously-obscure.sh"
         "micro-finance.sh"
         "micro-finance-improved.sh"
+        "one-big-family.sh"
         "qualified-seed.sh"
         "rin-tin-tin.sh"
         "sand-stone.sh"
