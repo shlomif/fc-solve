@@ -9989,7 +9989,7 @@ function test_js_fc_solve_class()
     var _my_mod = Module({});
     FC_Solve_init_wrappers_with_module(_my_mod);
 
-    module("FC_Solve.Algorithmic");
+    QUnit.module("FC_Solve.Algorithmic");
 
     var test_for_equal = function(instance, board, expected_sol, blurb) {
 
