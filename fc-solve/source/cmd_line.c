@@ -878,6 +878,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     if (!((ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION) ||
                             (ret == FCS_CMD_LINE_OK)))
                     {
+                        /* So we don't give a last_arg to the read file.*/
+                        *last_arg = arg - &(argv[0]);
                         fc_solve_args_man_free(&args_man);
                         return ret;
                     }

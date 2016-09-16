@@ -120,6 +120,21 @@ __PACKAGE__->populate
             argv => ["1", "2", "1", "-opt"],
             msg => qq{"range-parallel-solve 1 2 1 -opt" returned no errors}
         },
+        'range_parallel_solve__missing_arg'=>
+        {
+            prog => "freecell-solver-range-parallel-solve",
+            argv => [
+                '1', '1', '1',
+                '--read-from-file',
+                {
+                    type => 'catfile',
+                    prefix => "0,",
+                    args => [{ type => 'sample_preset',
+                            arg => 'crashy-preset-3.preset'}]
+                },
+            ],
+            msg => qq{"range-parallel-solve with a preset that ends with an option with a missing argument},
+        },
         'range_parallel_solve__mixed_simple_simon'=>
         {
             prog => "freecell-solver-range-parallel-solve",
