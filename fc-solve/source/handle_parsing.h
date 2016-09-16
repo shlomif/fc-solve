@@ -73,6 +73,7 @@ static GCC_INLINE void *alloc_instance_and_parse(const int argc,
         fprintf(stderr, "The command line parameter \"%s\" requires an argument"
                         " and was not supplied with one.\n",
             argv[*arg_ptr]);
+        freecell_solver_user_free(instance);
         exit(-1);
     case FCS_CMD_LINE_ERROR_IN_ARG:
 #ifdef FCS_WITH_ERROR_STRS
