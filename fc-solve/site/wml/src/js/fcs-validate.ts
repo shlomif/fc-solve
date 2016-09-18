@@ -1,7 +1,7 @@
 // Adapted from http://www.inventpartners.com/javascript_is_int - thanks.
 function is_int(input: number): boolean {
     var value:string = "" + input;
-    if((parseFloat(value) == parseInt(value)) && !isNaN(input)){
+    if ((parseFloat(value) == parseInt(value)) && !isNaN(input)){
         return true;
     } else {
         return false;
