@@ -203,5 +203,9 @@ runtest: all
 clean:
 	rm -f lib/fc-solve-for-javascript/*.bc lib/fc-solve-for-javascript/*.js
 
+# A temporary target to edit the active files.
+edit:
+	gvim -o src/js/fcs-validate.ts src/js/web-fc-solve-tests.js
+
 %.show:
 	@echo "$* = $($*)"
