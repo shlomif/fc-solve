@@ -10246,7 +10246,7 @@ function test_js_fc_solve_class()
         }
     });
     test("verify_state Card class tests", function() {
-        expect(12);
+        expect(15);
 
         {
             var result = fcs_js__column_from_string('KS QD');
@@ -10289,6 +10289,19 @@ function test_js_fc_solve_class()
             equal(col.getCard(2).toString(), '7D', "col.getCard(2) is fine.");
             // TEST
             equal(col.getCard(3).toString(), '6S', "col.getCard(3) is fine.");
+        }
+
+        {
+            var result = fcs_js__column_from_string('3C HA');
+
+            // TEST
+            ok ((! result.is_correct), "Column is incorrectly formatted.");
+
+            // TEST
+            equal (result.problem_found_at_char_idx, 3, 'Consumed 3 characters.');
+
+            // TEST
+            equal (result.error, 'Wrong card format - should be [Rank][Suit]', 'error is correct');
         }
     });
 
