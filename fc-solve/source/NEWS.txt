@@ -10,7 +10,7 @@ Version 4.4.0: (22-Sep-2016)
 1. Add the +-l one-big-family+, or +-l obf+ for short, preset which improves
 the average performance for solving Freecell deals.
 
-2. Add the +trasnpose-freecell-board.py+ utility to transpose a board from
+2. Add the +transpose-freecell-board.py+ utility to transpose a board from
 having stacks-in-columns to a stacks-in-lines format acceptable by fc-solve.
 
 3. Fix a bug where using a flare-based scan while incrementally increasing
