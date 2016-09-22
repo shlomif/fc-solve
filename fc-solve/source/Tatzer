@@ -11,7 +11,6 @@ use warnings;
 
 use File::Path qw(rmtree);
 use File::Basename qw(dirname);
-use File::Spec;
 use Getopt::Long;
 
 my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
@@ -342,7 +341,6 @@ my @cmd= ("cmake",
     (map { defined($int_opts__values{$_}) ? ("-D" . $INT_OPTS{$_} . "=" . $int_opts__values{$_}) : () } @INT_OPS__KEYS),
     (map { my $k = $_; my $r = $STR_OPTS{$k}; my $v = $r->{value}; defined($v) ? ("-D$r->{param}=$r->{prefix}$v") : () } @STR_OPTS__KEYS),
 );
-
 
 if (defined ($path_to_source_dir))
 {
