@@ -916,13 +916,17 @@ xrl
 07-Jun-2009
 10-Jul-2009
 14-Jul-2010
+22-Sep-2016
 24-Jun-2009
 25-Jun-2009
 26-Jun-2013
 27-Sep-2015
 28-Jul-2000
 DD-MMM-YYYY
+depth_dbm_fc_solve
+obf
 solution_moves
+transpose-freecell-board
 
 ==== In: dest/docs/distro/README.html
 
