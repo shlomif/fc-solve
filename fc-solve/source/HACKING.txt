@@ -1,7 +1,7 @@
 Freecell Solver "Hacking"-Related Issues
 ========================================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2009-08-14
+:Date: 2016-09-22
 :Revision: $Id$
 
 Benchmarking a Freecell Solver Release
@@ -18,7 +18,7 @@ system to clone the repository and get a working copy.
 directory from +freecell-solver-x.y.z+ to +source+. Alternatively, you can
 use a different path here.
 
-3. Run +../source/Tatzer -l fc_bench+ (for a Freecell-only capable solver)
+3. Run +../source/Tatzer -l fc_bench -l extra_speed+ (for a Freecell-only capable solver)
 or +../source/Tatzer -l bench+ (for a solver that can solve all supported
 games). Also append these options:
 +
