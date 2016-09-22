@@ -1048,6 +1048,8 @@ to yield very short solutions (even in comparison to +maliciously-obscure+
 |+micro-finance-improved+      |a meta-moves and flare-based preset, based
 on +micro-finance+ that yields somewhat shorter solutions on average, and
 should not be slower.
+|+one-big-family+           |a meta-moves preset that yields solutions
+faster on average than +conspiracy-theory+.
 |+qualified-seed+              |a meta-moves and flare-based preset, based
 on +micro-finance-improved+ that yields somewhat shorter solutions on average,
 and should not be slower.
