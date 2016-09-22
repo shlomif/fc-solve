@@ -144,7 +144,7 @@ my %themes =
     fc_bench => [qw( -l bench --fc-only --without-fc-pro) ],
     mem_reduction_settings => [qw(
         --rcs --with-compact-moves --without-depth-field
-    )],
+        )],
     reduce_mem => [ qw(-l bench -l mem_reduction_settings) ],
     fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=1) ],
     testing => [qw(--rwd --dbm=kaztree --test-suite --num-stacks=13),],
@@ -186,8 +186,12 @@ foreach my $rec (
     $id_def->(mm => 'reduce_mem');
     # Testing theme - aims to run the tests quickly
     $bb_def->(t => [qw(-l testing)]);
-    # For use by PySolFC
-    $bb_def->(_pysol => ['--num-stacks=14', "--prefix=$ENV{HOME}/apps/fcs-for-pysol",]);
+
+    if (defined(my $HOME = $ENV{HOME}))
+    {
+        # For use by PySolFC
+        $bb_def->(_pysol => ['--num-stacks=14', "--prefix=$HOME/apps/fcs-for-pysol",]);
+    }
 }
 
 my @new_argv = @ARGV;
