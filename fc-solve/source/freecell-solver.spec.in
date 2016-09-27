@@ -8,8 +8,10 @@ Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://fc-solve.shlomifish.org/
 Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
+BuildRequires: ack
 BuildRequires: cmake
 BuildRequires: gmp-devel
+BuildRequires: perl(base)
 BuildRequires: perl(Carp)
 BuildRequires: perl(Cwd)
 BuildRequires: perl(Data::Dumper)
@@ -25,6 +27,9 @@ BuildRequires: perl(Inline::C)
 BuildRequires: perl(IPC::Open2)
 BuildRequires: perl(lib)
 BuildRequires: perl(List::MoreUtils)
+BuildRequires: perl(Moo)
+BuildRequires: perl(MooX)
+BuildRequires: perl(MooX::late)
 BuildRequires: perl(parent)
 BuildRequires: perl(Path::Tiny)
 BuildRequires: perl(Storable)
@@ -44,6 +49,7 @@ BuildRequires: perl(YAML::XS)
 BuildRequires: perl-devel
 BuildRequires: python3-random2
 BuildRequires: tap-devel
+BuildRequires: the_silver_searcher
 BuildRequires: valgrind
 
 %description
@@ -107,7 +113,7 @@ cp ../../README .
 
 %check
 cd build
-%make_build test
+perl ../run-tests.pl
 
 %install
 rm -rf %buildroot
