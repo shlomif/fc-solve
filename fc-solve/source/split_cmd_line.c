@@ -183,15 +183,21 @@ args_man_t fc_solve_args_man_chop(const char *const string)
 
                 case '\"':
 
-                    s++;
                     in_arg = TRUE;
-                    while ((*s != '\"') && (*s != '\0'))
+                    while (TRUE)
                     {
-                        if (*s == '\\')
+                        const_AUTO(c, *(++s));
+                        switch (c)
                         {
-                            char next_char;
+                        case '\"':
+                            ++s;
+                        case '\0':
+                            goto after_quote;
 
-                            next_char = *(++s);
+                        case '\\':
+                        {
+                            const_AUTO(next_char, *(++s));
+
                             if (next_char == '\0')
                             {
                                 push_args_last_arg(&manager);
@@ -212,16 +218,15 @@ args_man_t fc_solve_args_man_chop(const char *const string)
                                 add_to_last_arg(&manager, next_char);
                             }
                         }
-                        else
+                        break;
+                        default:
                         {
-                            add_to_last_arg(&manager, *s);
+                            add_to_last_arg(&manager, c);
                         }
-                        s++;
+                        break;
+                        }
                     }
-                    if (*s != '\0')
-                    {
-                        s++;
-                    }
+                after_quote:
                     break;
 
                 case '#':
