@@ -10246,7 +10246,7 @@ function test_js_fc_solve_class()
         }
     });
     test("verify_state Card class tests", function() {
-        expect(15);
+        expect(20);
 
         {
             var result = fcs_js__column_from_string('KS QD');
@@ -10302,6 +10302,25 @@ function test_js_fc_solve_class()
 
             // TEST
             equal (result.error, 'Wrong card format - should be [Rank][Suit]', 'error is correct');
+        }
+
+        {
+            var result = fcs_js__column_from_string(': 3D AH KH');
+
+            // TEST
+            ok (result.is_correct, "Column was parsed correctly.");
+
+            var col = result.col;
+
+            // TEST
+            equal(col.getLen(), 3, "col.getLen() is fine.");
+
+            // TEST
+            equal(col.getCard(0).toString(), '3D', "col.getCard(0) is fine.");
+            // TEST
+            equal(col.getCard(1).toString(), 'AH', "col.getCard(1) is fine.");
+            // TEST
+            equal(col.getCard(2).toString(), 'KH', "col.getCard(2) is fine.");
         }
     });
 
