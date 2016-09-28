@@ -198,24 +198,26 @@ args_man_t fc_solve_args_man_chop(const char *const string)
                         {
                             const_AUTO(next_char, *(++s));
 
-                            if (next_char == '\0')
+                            switch (next_char)
                             {
+                                case '\0':
                                 push_args_last_arg(&manager);
-
                                 goto END_OF_LOOP;
-                            }
-                            else if ((next_char == '\n') || (next_char == '\r'))
-                            {
+
+                                case '\n':
+                                case '\r':
                                 /* Do nothing */
-                            }
-                            else if ((next_char == '\\') || (next_char == '\"'))
-                            {
+                                break;
+
+                                case '\\':
+                                case '\"':
                                 add_to_last_arg(&manager, next_char);
-                            }
-                            else
-                            {
+                                break;
+
+                                default:
                                 add_to_last_arg(&manager, '\\');
                                 add_to_last_arg(&manager, next_char);
+                                break;
                             }
                         }
                         break;
