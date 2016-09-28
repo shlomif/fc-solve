@@ -121,6 +121,14 @@ function fcs_js__column_from_string(s: string): ColumnParseResult {
     var cards:Array<Card> = [];
     var is_start:boolean = true;
     var consumed:number = 0;
+
+    {
+        var m = s.match('^((?:\: +)?)');
+        var len_match = m[1].length;
+        consumed += len_match;
+        s = s.substring(len_match);
+    }
+
     while (s.length > 0) {
         if (s.match('^ +$')) {
             break;
