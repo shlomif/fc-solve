@@ -122,13 +122,15 @@ function fcs_js__column_from_string(s: string): ColumnParseResult {
     var is_start:boolean = true;
     var consumed:number = 0;
 
-    {
-        var m = s.match('^((?:\: +)?)');
-        var len_match = m[1].length;
+    function consume_match(m: RegExpMatchArray): void {
+        var len_match:number = m[1].length;
         consumed += len_match;
         s = s.substring(len_match);
+
+        return;
     }
 
+    consume_match(s.match('^((?:\: +)?)'));
     while (s.length > 0) {
         if (s.match('^ +$')) {
             break;
@@ -137,18 +139,13 @@ function fcs_js__column_from_string(s: string): ColumnParseResult {
         var m = s.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
         if (! m) {
             m = s.match('^( *)');
-
-            var len_match = m[1].length;
-            consumed += len_match;
-            s = s.substring(len_match);
+            consume_match(m);
 
             return new ColumnParseResult(false, consumed, 'Wrong card format - should be [Rank][Suit]', []);
         }
 
-        var len_match = m[1].length;
-        consumed += len_match;
+        consume_match(m);
         cards.push(fcs_js__card_from_string(m[2]));
-        s = s.substring(len_match);
         is_start = false;
     }
     return new ColumnParseResult(true, -1, '', cards);
