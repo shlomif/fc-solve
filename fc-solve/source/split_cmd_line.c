@@ -200,21 +200,21 @@ args_man_t fc_solve_args_man_chop(const char *const string)
 
                             switch (next_char)
                             {
-                                case '\0':
+                            case '\0':
                                 push_args_last_arg(&manager);
                                 goto END_OF_LOOP;
 
-                                case '\n':
-                                case '\r':
+                            case '\n':
+                            case '\r':
                                 /* Do nothing */
                                 break;
 
-                                case '\\':
-                                case '\"':
+                            case '\\':
+                            case '\"':
                                 add_to_last_arg(&manager, next_char);
                                 break;
 
-                                default:
+                            default:
                                 add_to_last_arg(&manager, '\\');
                                 add_to_last_arg(&manager, next_char);
                                 break;
