@@ -128,13 +128,12 @@ function fcs_js__column_from_string(s: string): ColumnParseResult {
 
         var m = s.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
         if (! m) {
-            {
-                m = s.match('^( *)');
+            m = s.match('^( *)');
 
-                var len_match = m[1].length;
-                consumed += len_match;
-                s = s.substring(len_match);
-            }
+            var len_match = m[1].length;
+            consumed += len_match;
+            s = s.substring(len_match);
+
             return new ColumnParseResult(false, consumed, 'Wrong card format - should be [Rank][Suit]', []);
         }
 
