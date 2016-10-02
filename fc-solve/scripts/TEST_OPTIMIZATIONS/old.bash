@@ -1,1 +1,1 @@
-bash RUN.bash -l as
+bash RUN.bash -l obf
