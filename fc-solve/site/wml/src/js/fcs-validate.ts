@@ -106,12 +106,12 @@ function fcs_js__card_from_string(s: string): Card {
 class ColumnParseResult {
     public col: Column;
     public is_correct: boolean;
-    public problem_found_at_char_idx: number;
+    public num_consumed_chars: number;
     public error: string;
 
-    constructor(is_correct: boolean, problem_found_at_char_idx: number, error: string, cards: Array<Card>) {
+    constructor(is_correct: boolean, num_consumed_chars: number, error: string, cards: Array<Card>) {
         this.is_correct = is_correct;
-        this.problem_found_at_char_idx = problem_found_at_char_idx;
+        this.num_consumed_chars = num_consumed_chars;
         this.error = error;
         this.col = new Column(cards);
     }

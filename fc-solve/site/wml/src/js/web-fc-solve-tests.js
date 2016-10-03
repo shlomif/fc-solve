@@ -10260,7 +10260,7 @@ function test_js_fc_solve_class()
             equal(col.getLen(), 2, "col.getLen() is fine.");
 
             // TEST
-            equal(result.problem_found_at_char_idx, 'KS QD'.length, "col.consumed is right on success.");
+            equal(result.num_consumed_chars, 'KS QD'.length, "col.consumed is right on success.");
 
             // TEST
             equal(col.getCard(0).getRank(), 13, "col.getCard(0) is fine.");
@@ -10301,7 +10301,7 @@ function test_js_fc_solve_class()
             ok ((! result.is_correct), "Column is incorrectly formatted.");
 
             // TEST
-            equal (result.problem_found_at_char_idx, 3, 'Consumed 3 characters.');
+            equal (result.num_consumed_chars, 3, 'Consumed 3 characters.');
 
             // TEST
             equal (result.error, 'Wrong card format - should be [Rank][Suit]', 'error is correct');
