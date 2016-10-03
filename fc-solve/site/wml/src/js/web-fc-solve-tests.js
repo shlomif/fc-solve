@@ -10246,7 +10246,7 @@ function test_js_fc_solve_class()
         }
     });
     test("verify_state Card class tests", function() {
-        expect(20);
+        expect(21);
 
         {
             var result = fcs_js__column_from_string('KS QD');
@@ -10258,6 +10258,9 @@ function test_js_fc_solve_class()
 
             // TEST
             equal(col.getLen(), 2, "col.getLen() is fine.");
+
+            // TEST
+            equal(result.problem_found_at_char_idx, 'KS QD'.length, "col.consumed is right on success.");
 
             // TEST
             equal(col.getCard(0).getRank(), 13, "col.getCard(0) is fine.");

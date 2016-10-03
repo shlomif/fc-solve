@@ -148,5 +148,5 @@ function fcs_js__column_from_string(s: string): ColumnParseResult {
         cards.push(fcs_js__card_from_string(m[2]));
         is_start = false;
     }
-    return new ColumnParseResult(true, -1, '', cards);
+    return new ColumnParseResult(true, consumed, '', cards);
 }
