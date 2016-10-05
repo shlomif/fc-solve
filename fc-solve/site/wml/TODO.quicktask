@@ -23,10 +23,12 @@ CURRENT TASKS:
       @ Added [Sun 2015-12-13]
     - Add spell checking support to test for spelling.
       @ Added [Sun 2016-01-24]
-    - Test that the web-site build on Travis-CI/etc.
+    - Test that the web-site builds on Travis-CI/etc.
       @ Added [Sun 2016-01-24]
     - Add a "Contribute" page (perhaps a nav-tree category)
       @ Added [Sun 2016-01-24]
+    - Write a better README for documenting the website build/maint process.
+      @ Added [Wed 2016-10-05]
 
 
 LONG TERM:
