@@ -1027,7 +1027,11 @@ iterations's
 28-Jul-2000
 28-Sep-2015
 Der
+Feelin
+Grimmie
+Rihanna
 solv
+transpose-freecell-board
 
 ==== In: dest/pysol/index.html
 
