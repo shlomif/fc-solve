@@ -42,5 +42,7 @@ my $text = io("include.mak")->slurp();
 $text =~ s!^((?:T2_DOCS|T2_DIRS) = )([^\n]*)!my ($prefix, $files) = ($1,$2); $prefix . ($files =~ s# +ipp\.\S*##gr)!ems;
 io("include.mak")->print($text);
 
+io()->file('Makefile')->print("include lib/make/_Main.mak\n");
+
 1;
 
