@@ -16,6 +16,7 @@
 <script type="text/javascript" src="$(ROOT)/js/fcs-validate.js"></script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve-tests.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/web-fc-solve-tests--fcs-validate.js"></script>
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>
@@ -24,6 +25,7 @@
   \$(document).ready(function () {
       try {
           test_js_fc_solve_class();
+          test_fcs_validate();
       }
       catch (err) {
         module("Meta");
