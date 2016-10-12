@@ -99,7 +99,7 @@ $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
 $STR_OPTS{'prefix'}{value} = '/usr';
 
 my $build_type = "debug";
-
+my $generate_what;
 my $google_stack_storage;
 my $google_state_storage;
 
@@ -275,6 +275,7 @@ GetOptions(
         $build_type = "MinSizeRel";
         return;
     },
+    'gen=s' => \$generate_what,
     (map {; "$_!" => \($bool_opts_with_false_defaults__values{$_}) } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
     (map {; "$_!" => \($true_bool_opts__values{$_}) } @TRUE_BOOL_KEYS),
     (map {; "$_=i" => \($int_opts__values{$_}) } @INT_OPS__KEYS),
@@ -324,6 +325,7 @@ rmtree(['_Inline', 't/_Inline']);
 unlink(glob("*.so"));
 
 my @cmd= ("cmake",
+    (defined($generate_what) ? ("-G", $generate_what) : ()),
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DDATADIR=$STR_OPTS{prefix}{value}/share",
     "-DBUILD_STATIC_LIBRARY=",
