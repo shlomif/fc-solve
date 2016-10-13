@@ -28,30 +28,29 @@
 #pragma once
 
 #include <assert.h>
-#include <gmp.h>
-#include "rinutils.h"
+#include "var_base_int.h"
 
 typedef struct
 {
-    mpz_t data;
-    mpz_t multiplier;
+    fcs_var_base_int_t data;
+    fcs_var_base_int_t multiplier;
     /* To avoid memory fragmentation, we keep those here and re use them. */
-    mpz_t remainder;
+    fcs_var_base_int_t remainder;
 } fcs_var_base_writer_t;
 
 static GCC_INLINE void fc_solve_var_base_writer_init(
     fcs_var_base_writer_t *const s)
 {
-    mpz_init(s->data);
-    mpz_init(s->multiplier);
-    mpz_init(s->remainder);
+    FCS_var_base_int__init(s->data);
+    FCS_var_base_int__init(s->multiplier);
+    FCS_var_base_int__init(s->remainder);
 }
 
 static GCC_INLINE void fc_solve_var_base_writer_start(
     fcs_var_base_writer_t *const s)
 {
-    mpz_set_ui(s->data, 0);
-    mpz_set_ui(s->multiplier, 1);
+    FCS_var_base_int__set_ui(s->data, 0);
+    FCS_var_base_int__set_ui(s->multiplier, 1);
 }
 
 static GCC_INLINE void fc_solve_var_base_writer_write(
@@ -60,9 +59,9 @@ static GCC_INLINE void fc_solve_var_base_writer_write(
     assert(item >= 0);
     assert(item < base);
 
-    mpz_addmul_ui(w->data, w->multiplier, ((unsigned long)item));
+    FCS_var_base_int__addmul_ui(w->data, w->multiplier, ((unsigned long)item));
 
-    mpz_mul_ui(w->multiplier, w->multiplier, ((unsigned long)base));
+    FCS_var_base_int__mul_ui(w->multiplier, ((unsigned long)base));
 }
 
 static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
@@ -71,11 +70,18 @@ static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
     size_t count = 0;
 
 #define NUM_BITS 8
-    while (mpz_cmp_ui(w->data, 0) != 0)
+    while (FCS_var_base_int__not_zero(w->data))
     {
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+        exported[count++] =
+            (unsigned char)((w->data) & (((1 << NUM_BITS) - 1)));
+        w->data >>= NUM_BITS;
+#else
         mpz_fdiv_r_2exp(w->remainder, w->data, NUM_BITS);
         mpz_fdiv_q_2exp(w->data, w->data, NUM_BITS);
-        exported[count++] = (unsigned char)mpz_get_ui(w->remainder);
+        exported[count++] =
+            (unsigned char)FCS_var_base_int__get_ui(w->remainder);
+#endif
     }
 
     return count;
@@ -84,7 +90,7 @@ static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
 static GCC_INLINE void fc_solve_var_base_writer_release(
     fcs_var_base_writer_t *const w)
 {
-    mpz_clear(w->data);
-    mpz_clear(w->multiplier);
-    mpz_clear(w->remainder);
+    FCS_var_base_int__clear(w->data);
+    FCS_var_base_int__clear(w->multiplier);
+    FCS_var_base_int__clear(w->remainder);
 }

@@ -28,52 +28,52 @@
 #pragma once
 
 #include <assert.h>
-#include <gmp.h>
-#include "rinutils.h"
+#include "var_base_int.h"
 
 typedef struct
 {
-    mpz_t data;
+    fcs_var_base_int_t data;
     /* To avoid memory fragmentation, we keep those here and re use them. */
-    mpz_t data_byte_offset;
-    mpz_t r;
+    fcs_var_base_int_t data_byte_offset;
+    fcs_var_base_int_t r;
 } fcs_var_base_reader_t;
 
 static GCC_INLINE void fc_solve_var_base_reader_init(
     fcs_var_base_reader_t *const s)
 {
-    mpz_init(s->data);
-    mpz_init(s->data_byte_offset);
-    mpz_init(s->r);
+    FCS_var_base_int__init(s->data);
+    FCS_var_base_int__init(s->data_byte_offset);
+    FCS_var_base_int__init(s->r);
 }
 
 static GCC_INLINE void fc_solve_var_base_reader_start(
     fcs_var_base_reader_t *const s, const unsigned char *const data,
     const size_t data_len)
 {
-    mpz_set_ui(s->data, 0);
+    FCS_var_base_int__set_ui(s->data, 0);
 #define NUM_BITS 8
     unsigned long shift_count = 0;
     for (size_t count = 0; count < data_len; count++, shift_count += NUM_BITS)
     {
-        mpz_set_ui(s->data_byte_offset, (unsigned long)data[count]);
-        mpz_mul_2exp(s->data_byte_offset, s->data_byte_offset, shift_count);
-        mpz_add(s->data, s->data, s->data_byte_offset);
+        FCS_var_base_int__set_ui(
+            s->data_byte_offset, (unsigned long)data[count]);
+        FCS_var_base_int__left_shift(s->data_byte_offset, shift_count);
+        FCS_var_base_int__add(s->data, s->data_byte_offset);
     }
 }
 
 static GCC_INLINE int fc_solve_var_base_reader_read(
     fcs_var_base_reader_t *const reader, const int base)
 {
-    mpz_fdiv_qr_ui(reader->data, reader->r, reader->data, (unsigned long)base);
+    FCS_var_base_int__mod_div(reader->data, reader->r, (unsigned long)base);
 
-    return (int)mpz_get_ui(reader->r);
+    return (int)FCS_var_base_int__get_ui(reader->r);
 }
 
 static GCC_INLINE void fc_solve_var_base_reader_release(
-    fcs_var_base_reader_t *s)
+    fcs_var_base_reader_t *const s)
 {
-    mpz_clear(s->data);
-    mpz_clear(s->r);
-    mpz_clear(s->data_byte_offset);
+    FCS_var_base_int__clear(s->data);
+    FCS_var_base_int__clear(s->r);
+    FCS_var_base_int__clear(s->data_byte_offset);
 }
