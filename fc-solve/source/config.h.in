@@ -238,6 +238,8 @@ extern "C" {
 
 #cmakedefine HAVE_VASPRINTF
 
+#cmakedefine FCS_USE_INT128_FOR_VAR_BASE
+
 /* Name of package */
 #define PACKAGE "${PACKAGE}"
 

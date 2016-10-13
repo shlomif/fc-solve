@@ -400,6 +400,7 @@ INCLUDE(CPack)
 
 include(CheckFunctionExists)
 INCLUDE(CheckCCompilerFlag)
+INCLUDE(CheckTypeSize)
 INCLUDE(FindThreads)
 
 
@@ -751,6 +752,11 @@ FOREACH(KEYWORD "inline" "__inline__" "__inline")
      ENDIF()
    ENDIF()
 ENDFOREACH()
+
+CHECK_TYPE_SIZE("__int128" INT128 LANGUAGE C)
+IF(HAVE_INT128)
+    SET(FCS_USE_INT128_FOR_VAR_BASE 1)
+ENDIF()
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
