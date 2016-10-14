@@ -412,10 +412,10 @@ static void fc_solve_debondt_delta_stater_decode(
     {
         for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
         {
-            const int foundation_rank =
+            const unsigned long foundation_rank =
                 fc_solve_var_base_reader_read(reader, FOUNDATION_BASE);
 
-            for (int rank = 1; rank <= foundation_rank; rank++)
+            for (unsigned long rank = 1; rank <= foundation_rank; rank++)
             {
                 self->card_states[STATE_POS(suit_idx, rank)] =
                     (IS_BAKERS_DOZEN() ? OPT__BAKERS_DOZEN__IN_FOUNDATION
@@ -501,11 +501,11 @@ static void fc_solve_debondt_delta_stater_decode(
             }
             else
             {
-                const int base =
+                const unsigned long base =
                     (IS_BAKERS_DOZEN()
                             ? NUM__BAKERS_DOZEN__OPTS
                             : ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS));
-                const int item_opt =
+                const unsigned long item_opt =
                     fc_solve_var_base_reader_read(reader, base);
 
                 if (existing_opt < 0)
