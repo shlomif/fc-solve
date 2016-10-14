@@ -19,6 +19,12 @@ solver (at least initially]):
 ** invalid characters.
 ** misformatting of the format.
 
+* Make sure the code uses GMP instead of +__int128+ for the non-DeBondt states
+encoding.
+
+* Currently +var_base*.h+ use many type casting and other minor inefficiences.
+Refactor/optimize to avoid that.
+
 * Try different +fcs_hash.c+ hash fill factors, and try to avoid unnecessary
 calculations to check if it should be rehashed.
 
