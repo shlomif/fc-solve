@@ -566,14 +566,23 @@ FCS_ADD_EXEC_NO_INSTALL(summary-fc-solve summarizing_solver.c)
 
 SET (DBM_FCC_COMMON card.c meta_alloc.c state.c)
 
-MACRO (MY_FIND_GMP reason_why my_option)
-    FIND_LIBRARY(LIBGMP_LIB gmp)
+CHECK_TYPE_SIZE("__int128" INT128 LANGUAGE C)
+IF (HAVE_INT128)
+    SET(FCS_USE_INT128_FOR_VAR_BASE 1)
+ENDIF()
 
-    IF (NOT LIBGMP_LIB)
-        MESSAGE (FATAL_ERROR
-"You must install libgmp ( http://gmplib.org/ ) and its development package ${reason_why}.
-If you're not interested in building it, run cmake with the -D${my_option}= flag."
-        )
+MACRO (MY_FIND_GMP reason_why my_option)
+    IF (HAVE_INT128)
+        SET(LIBGMP_LIB )
+    ELSE()
+        FIND_LIBRARY(LIBGMP_LIB gmp)
+
+        IF (NOT LIBGMP_LIB)
+            MESSAGE (FATAL_ERROR
+    "You must install libgmp ( http://gmplib.org/ ) and its development package ${reason_why}.
+    If you're not interested in building it, run cmake with the -D${my_option}= flag."
+            )
+        ENDIF ()
     ENDIF ()
 ENDMACRO ()
 
@@ -753,10 +762,6 @@ FOREACH(KEYWORD "inline" "__inline__" "__inline")
    ENDIF()
 ENDFOREACH()
 
-CHECK_TYPE_SIZE("__int128" INT128 LANGUAGE C)
-IF(HAVE_INT128)
-    SET(FCS_USE_INT128_FOR_VAR_BASE 1)
-ENDIF()
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
