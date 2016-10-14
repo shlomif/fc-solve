@@ -62,12 +62,12 @@ static GCC_INLINE void fc_solve_var_base_reader_start(
     }
 }
 
-static GCC_INLINE int fc_solve_var_base_reader_read(
-    fcs_var_base_reader_t *const reader, const int base)
+static GCC_INLINE unsigned long fc_solve_var_base_reader_read(
+    fcs_var_base_reader_t *const reader, const unsigned long base)
 {
-    FCS_var_base_int__mod_div(reader->data, reader->r, (unsigned long)base);
+    FCS_var_base_int__mod_div(reader->data, reader->r, base);
 
-    return (int)FCS_var_base_int__get_ui(reader->r);
+    return FCS_var_base_int__get_ui(reader->r);
 }
 
 static GCC_INLINE void fc_solve_var_base_reader_release(
