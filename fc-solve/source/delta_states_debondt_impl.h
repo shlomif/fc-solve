@@ -208,13 +208,13 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     {
         for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
         {
-            const int rank = fcs_foundation_value(*derived, suit_idx);
+            const unsigned long rank = fcs_foundation_value(*derived, suit_idx);
 
             fc_solve_var_base_writer_write(writer, FOUNDATION_BASE, rank);
 
-            const int max_rank = ((rank < 1) ? 1 : rank);
+            const unsigned long max_rank = ((rank < 1) ? 1 : rank);
 
-            for (int r = 1; r <= max_rank; r++)
+            for (unsigned long r = 1; r <= max_rank; r++)
             {
 #define STATE_POS(suit_idx, rank) (rank - 1 + suit_idx * RANK_KING)
 #define CARD_POS(card) (STATE_POS((fcs_card_suit(card)), (fcs_card_rank(card))))
@@ -332,8 +332,9 @@ static void fc_solve_debondt_delta_stater_encode_composite(
         {
             for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
             {
-                const int opt = self->card_states[STATE_POS(suit_idx, rank)];
-                int base;
+                const unsigned long opt =
+                    self->card_states[STATE_POS(suit_idx, rank)];
+                unsigned long base;
 
                 if (IS_BAKERS_DOZEN())
                 {
@@ -351,7 +352,6 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                     base = ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS);
                 }
 
-                assert(opt >= 0);
                 assert(opt < base);
 
                 fc_solve_var_base_writer_write(writer, base, opt);
