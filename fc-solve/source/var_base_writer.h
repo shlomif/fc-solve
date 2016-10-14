@@ -54,14 +54,14 @@ static GCC_INLINE void fc_solve_var_base_writer_start(
 }
 
 static GCC_INLINE void fc_solve_var_base_writer_write(
-    fcs_var_base_writer_t *const w, const int base, const int item)
+    fcs_var_base_writer_t *const w, const unsigned long base,
+    const unsigned long item)
 {
-    assert(item >= 0);
     assert(item < base);
 
-    FCS_var_base_int__addmul_ui(w->data, w->multiplier, ((unsigned long)item));
+    FCS_var_base_int__addmul_ui(w->data, w->multiplier, item);
 
-    FCS_var_base_int__mul_ui(w->multiplier, ((unsigned long)base));
+    FCS_var_base_int__mul_ui(w->multiplier, base);
 }
 
 static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
