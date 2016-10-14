@@ -64,7 +64,14 @@ while(my $l = <>)
     {
         next LINES;
     }
-
+    elsif ($l =~ m{\A[0-9]+\.[0-9]+user\s+[0-9]+\.[0-9]+system})
+    {
+        next LINES;
+    }
+    elsif ($l =~ m{inputs.*?outputs.*?major.*?minor})
+    {
+        next LINES;
+    }
 
     if (not (($reached, $in_collection, $time) = $l =~
             m{\AReached (\d+) ; States-in-collection: (\d+) ; Time: (\d+\.\d+)\z}))
@@ -81,7 +88,7 @@ while(my $l = <>)
     chomp($queue_l);
     $line_idx++;
 
-    $in_queue = $in_collection-$reached;
+    $in_queue = $in_collection - $reached;
 
     my $expected_queue_l = ">>>Queue Stats: inserted=$in_collection items_in_queue=$in_queue extracted=$reached";
     if (0) # if ($queue_l ne $expected_queue_l)
@@ -94,7 +101,9 @@ while(my $l = <>)
     if (defined($last_time))
     {
         my $time_delta = $time-$last_time;
-        my $time_delta_by_in_coll = $time_delta/($in_collection-$last_in_collection);
+        my $delta_in_coll = ($in_collection - $last_in_collection);
+        # Avoid division by zero.
+        my $time_delta_by_in_coll = ($delta_in_coll == 0 ? (-1) : $time_delta / $delta_in_coll);
         my $ratio_log = $ratio ? (log($ratio)*$LOG2_BASER) : 0;
 
         print_tsv_line_generic(
@@ -107,7 +116,7 @@ while(my $l = <>)
                 TimeDelta => $time_delta,
                 TimeDeltaByInColl => $time_delta_by_in_coll,
                 LogTimeDelta => (log($time_delta)/log(2)),
-                LogTimeDeltaByInColl => (log($time_delta_by_in_coll)/log(2)),
+                LogTimeDeltaByInColl => ($time_delta_by_in_coll < 0 ? -1 : (log($time_delta_by_in_coll)/log(2))),
                 InQueueVsInCollRatio => $ratio,
                 RatioLog => $ratio_log,
                 RatioDelta => ($last_ratio - $ratio),
