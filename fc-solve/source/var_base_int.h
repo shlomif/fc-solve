@@ -31,7 +31,7 @@
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
 
 typedef unsigned __int128 fcs_var_base_int_t;
-#define FCS_var_base_int__init(i) ((i) = 0)
+#define FCS_var_base_int__init(i)
 #define FCS_var_base_int__set_ui(i, val) ((i) = (val))
 #define FCS_var_base_int__left_shift(i, shift) ((i) <<= (shift))
 #define FCS_var_base_int__add(i, i2) ((i) += (i2))
