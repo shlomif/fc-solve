@@ -36,6 +36,7 @@
 #include "../dbm_solver_key.h"
 #include "../indirect_buffer.h"
 #include "../trim_trailing_whitespace.h"
+#include "../render_state.h"
 
 static fcs_card_t make_card(int rank, int suit)
 {
@@ -66,17 +67,7 @@ static int test_encode_and_decode(const enum fcs_dbm_variant_type_t local_varian
     );
 
     char as_str[4000];
-    fc_solve_state_as_string(
-        as_str,
-        &(new_derived_state.s),
-        &locs
-        PASS_FREECELLS(FREECELLS_NUM)
-        PASS_STACKS(STACKS_NUM)
-        PASS_DECKS(DECKS_NUM)
-        FC_SOLVE__PASS_PARSABLE(TRUE)
-        , FALSE
-        FC_SOLVE__PASS_T(TRUE)
-    );
+    FCS__RENDER_STATE(as_str, &(new_derived_state.s), &locs);
     trim_trailing_whitespace(as_str);
 
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))

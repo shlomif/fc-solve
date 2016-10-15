@@ -272,11 +272,8 @@ static GCC_INLINE void instance__print_coords_to_log(
         fcs_state_locs_struct_t locs;
         fc_solve_init_locs(&locs);
         char state_as_string[2000];
-        fc_solve_state_as_string(state_as_string,
-            &(end_stack_item->curr_state->s),
-            &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
-                PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
-            FALSE PASS_T(TRUE));
+        FCS__RENDER_STATE(
+            state_as_string, &(end_stack_item->curr_state->s), &locs);
         printf("Found State=<<'STATE'\n%s\nSTATE\n\n", state_as_string);
         fflush(stdout);
     }

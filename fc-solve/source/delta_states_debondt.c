@@ -31,6 +31,7 @@
 
 #include "dll_thunk.h"
 #include "delta_states_debondt_impl.h"
+#include "render_state.h"
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 #include "prepare_state_str.h"
@@ -87,10 +88,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     fc_solve_init_locs(&locs);
 
     char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
-    fc_solve_state_as_string(new_derived_as_str, &(new_derived_state.s),
-        &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
-            PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
-        FALSE FC_SOLVE__PASS_T(TRUE));
+    FCS__RENDER_STATE(new_derived_as_str, &(new_derived_state.s), &locs);
 
     free(init_state_s);
     free(derived_state_s);

@@ -38,6 +38,7 @@
 #include "delta_states_any.h"
 #include "fcc_brfs.h"
 #include "fcc_brfs_test.h"
+#include "render_state.h"
 
 static void fc_solve_state_string_to_enc(
     const enum fcs_dbm_variant_type_t local_variant,
@@ -188,11 +189,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         fc_solve_delta_stater_decode_into_state(
             &delta, iter->enc_state.s, &(state), state_indirect_stacks_buffer);
         ret[i].state_as_string = SMALLOC(ret[i].state_as_string, 1000);
-        fc_solve_state_as_string(ret[i].state_as_string, &(state.s),
-            &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
-                PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
-            FALSE PASS_T(TRUE));
-
+        FCS__RENDER_STATE(ret[i].state_as_string, &(state.s), &locs);
         iter = iter->next;
     }
 

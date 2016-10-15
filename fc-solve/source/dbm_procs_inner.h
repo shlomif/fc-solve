@@ -1,4 +1,6 @@
 #pragma once
+#include "render_state.h"
+
 #define USER_STATE_SIZE 2000
 typedef struct
 {
@@ -137,10 +139,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
         }
 
         char state_as_str[1000];
-        fc_solve_state_as_string(state_as_str, &(state.s),
-            &locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)
-                PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),
-            FALSE PASS_T(TRUE));
+        FCS__RENDER_STATE(state_as_str, &(state.s), &locs);
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n", state_as_str,
             (i > 0) ? move_buffer : "END");

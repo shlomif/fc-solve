@@ -289,29 +289,6 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
         fc_solve_delta_stater_decode_into_state(&delta_stater,
             extracted_item->key.s, &(state), indirect_stacks_buffer);
 
-#if 0
-        char * state_as_str =
-                fc_solve_state_as_string(
-#ifdef FCS_RCS_STATES
-                        &(state.s),
-                        &(state.info),
-#else
-                        &state,
-#endif
-                        &locs,
-                        FREECELLS_NUM,
-                        STACKS_NUM,
-                        DECKS_NUM,
-                        1,
-                        0,
-                        1
-                );
-
-        printf("Checking = <<<\n%s\n>>>\n", state_as_str);
-
-        free(state_as_str);
-#endif
-
         instance_solver_thread_calc_derived_states(local_variant, &state, NULL,
             &derived_list, &derived_list_recycle_bin, &derived_list_allocator,
             /* Horne's Prune should be disabled because that interferes
