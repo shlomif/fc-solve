@@ -27,6 +27,7 @@
 #pragma once
 
 #include "dbm_move_to_string.h"
+#include "render_state.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -228,11 +229,7 @@ static GCC_INLINE void instance_debug_out_state(
         &global_delta_stater, enc_state->s, &state, indirect_stacks_buffer);
 
     char state_str[1000];
-    fc_solve_state_as_string(state_str, &(state.s),
-        &locs PASS_FREECELLS(2) PASS_STACKS(8) PASS_DECKS(1)
-            FC_SOLVE__PASS_PARSABLE(TRUE),
-        0 FC_SOLVE__PASS_T(TRUE));
-
+    FCS__RENDER_STATE(state_str, &(state.s), &locs);
     fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
     fflush(instance->out_fh);
 }
@@ -327,20 +324,6 @@ static GCC_INLINE void mark_and_sweep_old_states(
 #else
 #define NUM_THREADS() num_threads
 #endif
-
-#define FCS__RENDER_STATE(state_str, state_ptr, locs)                          \
-    fc_solve_state_as_string(state_str, state_ptr,                             \
-        locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)             \
-            PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),               \
-        FALSE FC_SOLVE__PASS_T(TRUE))
-
-#define FCS__OUTPUT_STATE(out_fh, prefix, state_ptr, locs)                     \
-    {                                                                          \
-        char state_str[2000];                                                  \
-        FCS__RENDER_STATE(state_str, state_ptr, locs);                         \
-        fprintf(out_fh, "%s<<<\n%s>>>\n\n", prefix, state_str);                \
-        fflush(out_fh);                                                        \
-    }
 
 #ifdef __cplusplus
 }
