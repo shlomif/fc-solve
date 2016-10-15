@@ -425,51 +425,6 @@ void fc_solve_soft_thread_init_befs_or_bfs(
             HT_INSTANCE(soft_thread->hard_thread)->state_copy_ptr);
 }
 
-#ifdef DEBUG
-#if 0
-static void dump_pqueue (
-    fc_solve_soft_thread_t * const soft_thread,
-    const char * const stage_id,
-    PQUEUE * const pq
-    )
-{
-    int i;
-    char * s;
-    fc_solve_instance_t * instance = HT_INSTANCE(soft_thread->hard_thread);
-
-    if (strcmp(soft_thread->name, "11"))
-    {
-        return;
-    }
-
-    printf("<pqueue_dump stage=\"%s\">\n\n", stage_id);
-
-    for (i = PQ_FIRST_ENTRY ; i < pq->current_size ; i++)
-    {
-        printf("Rating[%d] = %d\nState[%d] = <<<\n", i, pq->Elements[i].rating, i);
-        s = fc_solve_state_as_string(pq->Elements[i].val,
-                INSTANCE_FREECELLS_NUM,
-                INSTANCE_STACKS_NUM,
-                INSTANCE_DECKS_NUM,
-                1,
-                0,
-                1
-                );
-
-        printf("%s\n>>>\n\n", s);
-
-        free(s);
-    }
-
-    printf("\n\n</pqueue_dump>\n\n");
-}
-#else
-#define dump_pqueue(a, b, c)                                                   \
-    {                                                                          \
-    }
-#endif
-#endif
-
 /*
  *  fc_solve_befs_or_bfs_do_solve() is the main event
  *  loop of the BeFS And BFS scans. It is quite simple as all it does is
@@ -566,11 +521,6 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
     while (PTR_STATE != NULL)
     {
         TRACE0("Start of loop");
-
-#ifdef DEBUG
-        dump_pqueue(soft_thread, "loop_start", pqueue);
-#endif
-
         /*
          * If we do the pruning after checking for being visited, then
          * there's a risk of inconsistent result when being interrupted
@@ -775,9 +725,6 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
             fcs_collectible_state_t *new_ptr_state;
             if (is_befs)
             {
-#ifdef DEBUG
-                dump_pqueue(soft_thread, "before_pop", pqueue);
-#endif
                 /* It is an BeFS scan */
                 fc_solve_pq_pop(pqueue, &(new_ptr_state));
             }
