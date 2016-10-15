@@ -21,7 +21,7 @@ sub print_tsv_line_generic
     my $hash_ref = shift;
 
     my @vals;
-    foreach my $key ('Iterations', 'InColl', 'InQueue', 'Time', 'TimeDelta', 'TimeDeltaByInColl', 'LogTimeDelta', 'LogTimeDeltaByInColl', 'InQueueVsInCollRatio', 'RatioLog', 'RatioDelta', 'QueueDelta', )
+    foreach my $key ('Iterations', 'InColl', 'InQueue', 'Time', 'TimeDelta', 'TimeDeltaByInColl', 'LogTimeDelta', 'LogTimeDeltaByInColl', 'InQueueVsInCollRatio', 'RatioLog', 'RatioDelta', 'QueueDelta', 'TimeSinceStart', )
     {
         my $val = $callback->($hash_ref,$key);
         if (! defined($val))
@@ -38,6 +38,8 @@ print_tsv_line_generic(sub { my ($hash_ref, $key) = @_; return $key }, {});
 my $is_finished = 0;
 
 my $LOG2_BASER = 1/log(2);
+
+my $start_time;
 
 LINES:
 while(my $l = <>)
@@ -78,6 +80,7 @@ while(my $l = <>)
     {
         die "Wrong syntax in line $line_idx Line is <<$l>>.";
     }
+    $start_time //= $time;
 
     if (($last_reached + 100_000 != $reached) && (!$is_finished))
     {
@@ -115,6 +118,7 @@ while(my $l = <>)
                 Time => $time,
                 TimeDelta => $time_delta,
                 TimeDeltaByInColl => $time_delta_by_in_coll,
+                TimeSinceStart => ($time - $start_time),
                 LogTimeDelta => (log($time_delta)/log(2)),
                 LogTimeDeltaByInColl => ($time_delta_by_in_coll < 0 ? -1 : (log($time_delta_by_in_coll)/log(2))),
                 InQueueVsInCollRatio => $ratio,
