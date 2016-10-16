@@ -559,3 +559,6 @@ consumes very little RAM (below 0.1%).
 ./depth_dbm_fc_solver --num-threads 4 --offload-dir-path /home/shlomif/tmp/depth-dbm/ 1107600547.board | tee 1107600547.depth_dbm.dump
 ------------
 
+* Experiment with +__int128+ in GCC wrt the delta_states (instead of GMP).
+See: https://www.nu42.com/2016/01/excellent-optimization-story.html .
+

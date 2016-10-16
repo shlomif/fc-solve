@@ -22,6 +22,10 @@ solver (at least initially]):
 * Make sure the code uses GMP instead of +__int128+ for the non-DeBondt states
 encoding.
 
+* Try to build the code on ARM Linux and get the tests to pass.
+
+* See about the failing test on 32-bit i586 Linux.
+
 * Currently +var_base*.h+ use many type casting and other minor inefficiences.
 Refactor/optimize to avoid that.
 
@@ -30,9 +34,6 @@ calculations to check if it should be rehashed.
 
 * Try to convert to an open addressing hash instead of chaining (for better
 memory localisation).
-
-* Experiment with +__int128+ in GCC wrt the delta_states (instead of GMP).
-See: https://www.nu42.com/2016/01/excellent-optimization-story.html .
 
 * Find how well the solver performs with different permutations of the
 order of columns/freecells.

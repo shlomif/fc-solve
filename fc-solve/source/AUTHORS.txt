@@ -1,7 +1,7 @@
 Freecell Solver's Authors and Contributors
 ==========================================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2009-08-29
+:Date: 2016-10-17
 :Revision: $Id$
 
 Freecell Solver's Authors and Contributors List
@@ -137,3 +137,8 @@ steps to reproduce.
 vasprintf() and asprintf() implementation, that was placed under the
 +asprintf-1.0+ directory and used in case the host system does not provide
 such a function.
+
+* *A. Sinan Unur* - for writing the article
+https://www.nu42.com/2016/01/excellent-optimization-story.html[“An Excellent Optimization Story”]
+that motivated a similar optimisation in +var_base_int.h+ (originally linked
+from http://perlweekly.com/archive/234.html[this Perl Weekly issue]).
