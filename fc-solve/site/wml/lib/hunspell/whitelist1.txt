@@ -994,15 +994,19 @@ TS
 
 --num-threads
 --offload-dir-path
+Refactor
 depth-dbm
 depth_dbm
 depth_dbm_solver
 duckduckgo
+i586
 ia
 misformatting
+non-DeBondt
 playstacks
 stackoverflow
 tmp
+var_base
 
 ==== In: dest/docs/distro/USAGE.html
 
