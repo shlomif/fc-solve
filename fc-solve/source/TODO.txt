@@ -19,6 +19,8 @@ solver (at least initially]):
 ** invalid characters.
 ** misformatting of the format.
 
+* Add Test::RunValgrind to the testing CPAN task.
+
 * Make sure the code uses GMP instead of +__int128+ for the non-DeBondt states
 encoding.
 
