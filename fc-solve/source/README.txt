@@ -45,7 +45,10 @@ It has the 8 Freecell stacks.
 Each stack contain its number of cards separated by a whitespace
 and terminated with a newline character( it's important that the last stack
 will also be terminated with a newline !). The cards in the line are ordered
-from the bottom-most card in the left to the topmost card in the right.
+from the topmost card (= the card right on the carpet and the one with the
+most cards place on it) in the left to the bottommost card in the
+right (= the card with no other cards placed above it, and the one on top
+of all other cards).
 
 A card string contains the rank of the card followed by its suit.
 The card number is one of: +A,1,2,3,4,5,6,7,8,9,10,J,Q,K+. Alternatively,
