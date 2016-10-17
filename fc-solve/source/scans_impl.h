@@ -683,7 +683,8 @@ static GCC_INLINE void free_states(fc_solve_instance_t *const instance)
 #ifdef DEBUG
     printf("%s\n", "FREE_STATES HIT");
 #endif
-#if (!((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||               \
+#if (!(((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) &&              \
+           (!defined(FCS_USE_ANHOLT_HASH))) ||                                 \
          (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
     return;
 #else

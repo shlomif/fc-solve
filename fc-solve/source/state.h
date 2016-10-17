@@ -565,7 +565,8 @@ static GCC_INLINE int fc_solve_state_compare(const void *s1, const void *s2)
     return memcmp(s1, s2, sizeof(fcs_state_t));
 }
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH) ||                     \
+     defined(FCS_USE_ANHOLT_HASH))
 extern int fc_solve_state_compare_equal(const void *s1, const void *s2);
 #endif
 extern int fc_solve_state_compare_with_context(
@@ -1065,6 +1066,13 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(
         return 0;
     }
 }
+
+#ifdef FCS_USE_ANHOLT_HASH
+static int fc_solve_stack_equal(const void *const v_s1, const void *const v_s2)
+{
+    return (!fc_solve_stack_compare_for_comparison(v_s1, v_s2));
+}
+#endif
 
 #endif
 

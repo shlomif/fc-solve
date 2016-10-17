@@ -155,7 +155,8 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
 }
 #undef state_key
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH) ||                     \
+     defined(FCS_USE_ANHOLT_HASH))
 int fc_solve_state_compare_equal(const void *const s1, const void *const s2)
 {
     return (!memcmp(s1, s2, sizeof(fcs_state_t)));

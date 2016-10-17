@@ -23,6 +23,8 @@
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \
      (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH))
+
+#ifndef FCS_USE_ANHOLT_HASH
 /*
     This function "rehashes" a hash. I.e: it increases the size of its
     hash table, allowing for smaller chains, and faster lookup.
@@ -79,13 +81,20 @@ static GCC_INLINE void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
     hash->size_bitmask = new_size_bitmask;
     fcs_hash_set_max_num_elems(hash, new_size);
 }
+#endif
 
+#ifndef FCS_USE_ANHOLT_HASH
 /*
  * Returns NULL if the key is new and the key/val pair was inserted.
  * Returns the existing key if the key is not new (= a truthy pointer).
  */
 static GCC_INLINE void *fc_solve_hash_insert(
-    fc_solve_hash_t *const hash, void *const key,
+#ifdef FCS_USE_ANHOLT_HASH
+    fc_solve_hash_t const hash,
+#else
+    fc_solve_hash_t *const hash,
+#endif
+    void *const key,
 #ifdef FCS_RCS_STATES
     void *const key_id,
 #endif
@@ -212,6 +221,7 @@ static GCC_INLINE void *fc_solve_hash_insert(
 
     return NULL;
 }
+#endif
 
 #endif
 
@@ -315,6 +325,13 @@ static GCC_INLINE void fc_solve_cache_stacks(
         {
             column = fcs_state_get_col(*(new_state_key), i);
 
+#ifdef FCS_USE_ANHOLT_HASH
+            const_AUTO(
+                ret, set_add_pre_hashed(instance->stacks_hash,
+                         perl_hash_function((ub1 *)*(current_stack), col_len),
+                         column));
+            cached_stack = ret ? ret->key : NULL;
+#else
             cached_stack = fc_solve_hash_insert(&(instance->stacks_hash),
                 column, perl_hash_function((ub1 *)*(current_stack), col_len)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -322,6 +339,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
                 hash_value_int
 #endif
                 );
+#endif
             REPLACE_WITH_CACHED(cached_stack);
         }
 
@@ -508,6 +526,13 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
 #endif
     {
+#ifdef FCS_USE_ANHOLT_HASH
+        const_AUTO(ret, set_add_pre_hashed(instance->hash,
+                            perl_hash_function((ub1 *)(new_state_key),
+                                               sizeof(*(new_state_key))),
+                            FCS_STATE_kv_to_collectible(new_state)));
+        void *const existing_void = ret ? ret->key : NULL;
+#else
         void *const existing_void = fc_solve_hash_insert(&(instance->hash),
 #ifdef FCS_RCS_STATES
             new_state->val, new_state->key,
@@ -520,6 +545,7 @@ fcs_bool_t fc_solve_check_and_add_state(
             hash_value_int
 #endif
             );
+#endif
         if (existing_void)
         {
             FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);

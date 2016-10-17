@@ -646,7 +646,11 @@ void fc_solve_finish_instance(fc_solve_instance_t *const instance)
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
         g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+#ifdef FCS_USE_ANHOLT_HASH
+        set_destroy(instance->hash, NULL);
+#else
         fc_solve_hash_free(&(instance->hash));
+#endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
         fc_solve_states_google_hash_free(instance->hash);
 #else
@@ -657,7 +661,11 @@ void fc_solve_finish_instance(fc_solve_instance_t *const instance)
 in the process */
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
+#ifdef FCS_USE_ANHOLT_HASH
+    set_destroy(instance->stacks_hash, NULL);
+#else
     fc_solve_hash_free(&(instance->stacks_hash));
+#endif
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_destroy(instance->stacks_tree, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)

@@ -32,6 +32,10 @@ enum FCS_INLINED_HASH_DATA_TYPE
 
 typedef int fc_solve_hash_value_t;
 
+#ifdef FCS_USE_ANHOLT_HASH
+#include "set.h"
+typedef struct set *fc_solve_hash_t;
+#else
 struct fc_solve_hash_symlink_item_struct
 {
     /* A pointer to the data structure that is to be collected */
@@ -196,6 +200,8 @@ static GCC_INLINE void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
         }
     }
 }
+#endif
+
 #endif
 
 #ifdef __cplusplus
