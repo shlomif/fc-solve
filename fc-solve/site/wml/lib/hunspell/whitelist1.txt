@@ -851,6 +851,19 @@ xpat2
 xpat2-1
 xz
 
+==== In: dest/charts/dbm-solver-__int128-optimisation/index.html
+
+BigInteger
+BigIntegers
+GCC's
+GMP's
+NewTimeSinceStart
+Old-vs-New
+OldIterations
+OldTimeSinceStart
+depth_dbm_solver
+depth_dbm_solver's
+
 ==== In: dest/code-of-conduct/index.html
 
 BY-SA

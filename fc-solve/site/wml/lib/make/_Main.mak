@@ -167,9 +167,19 @@ $(DEST_LIBFREECELL_SOLVER_JS_MEM): %: lib/fc-solve-for-javascript/libfreecell-so
 
 FCS_VALID_DEST = $(D)/js/fcs-validate.js
 
-all: $(FCS_VALID_DEST)
+TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts
 
-$(FCS_VALID_DEST): src/js/fcs-validate.ts
+all: $(TYPINGS)
+
+$(TYPINGS):
+	cd src/charts/dbm-solver-__int128-optimisation/ && typings install dt~jquery --global --save
+
+
+TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
+
+all: $(TYPESCRIPT_DEST_FILES)
+
+$(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
 	tsc --out $@ $<
 
 .PHONY:

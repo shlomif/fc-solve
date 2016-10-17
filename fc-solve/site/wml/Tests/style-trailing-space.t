@@ -11,7 +11,7 @@ my $finder = Test::TrailingSpace->new(
     {
         root => '.',
         filename_regex => qr/./,
-        abs_path_prune_re => qr#(?:\A(?:\./)?(?:lib/fc-solve-for-javascript|dest(?:-prod)?/(?:(?:js/$lib)|(?:js-fc-solve/(?:text|automated-tests)/$lib\z))))|(?:\.(?:diff|patch|png|woff|xz|zip)\z)#,
+        abs_path_prune_re => qr#(?:\A(?:\./)?(?:lib/fc-solve-for-javascript|dest(?:-prod)?/(?:(?:js/$lib)|(?:js-fc-solve/(?:text|automated-tests)/$lib\z))))|(?:\.(?:diff|patch|png|ts|woff|xz|zip)\z)#,
     }
 );
 
