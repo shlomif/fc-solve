@@ -35,6 +35,21 @@ typedef int fc_solve_hash_value_t;
 #ifdef FCS_USE_ANHOLT_HASH
 #include "set.h"
 typedef struct set *fc_solve_hash_t;
+
+static GCC_INLINE void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
+    fcs_bool_t (*should_delete_ptr)(void *const key, void *const context),
+    void *const context)
+{
+    const_AUTO(set, *hash);
+    for (struct set_entry *e = set_next_entry(set, NULL); e;
+         e = set_next_entry(set, e))
+    {
+        if (should_delete_ptr(e->key, context))
+        {
+            set_remove_entry(set, e);
+        }
+    }
+}
 #else
 struct fc_solve_hash_symlink_item_struct
 {
