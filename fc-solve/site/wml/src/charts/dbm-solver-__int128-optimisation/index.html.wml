@@ -23,6 +23,15 @@
     of converting from GMP’s BigIntegers to GCC’s “__int128”s (lower
     is better).
     </p>
+    <h2>Thanks</h2>
+    <ul>
+    <li>
+    <p>
+    “mechenbier” for helping
+    <a href="http://stackoverflow.com/questions/40059588/typescripts-tsc-compiler-emits-errors-when-calling-jquery-and-flot-code">on Stack Overflow</a>.
+    </p>
+    </li>
+    </ul>
     <h2>Data</h2>
     <div>
 <textarea id="data" style="height:100px;" cols="80" rows="20" readonly="1">

@@ -863,6 +863,7 @@ OldIterations
 OldTimeSinceStart
 depth_dbm_solver
 depth_dbm_solver's
+mechenbier
 
 ==== In: dest/code-of-conduct/index.html
 
@@ -897,8 +898,10 @@ Radchenko
 Reftel
 Rivest
 ShareAlike
+Sinan
 Stannered
 Tzafrir
+Unur
 Yotam
 burtleburtle
 debondt
@@ -919,6 +922,7 @@ numin8r
 pysolfc
 pythack
 ru
+var_base_int
 wikimedia
 xrl
 
@@ -1008,6 +1012,7 @@ TS
 --num-threads
 --offload-dir-path
 Refactor
+RunValgrind
 depth-dbm
 depth_dbm
 depth_dbm_solver
