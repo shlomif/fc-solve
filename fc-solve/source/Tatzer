@@ -78,12 +78,12 @@ $int_opts__values{'max-bench-threads-num'} = 4;
 my %STR_OPTS =
 (
     'arch' => { param => 'CPU_ARCH', },
-    'c|cols' => {prefix => 'FCS_STATE_STORAGE_', param => 'FCS_STATE_STORAGE'},
+    'c|cols' => {prefix => 'FCS_STACK_STORAGE_', param => 'FCS_STACK_STORAGE'},
     'dbm' => { param => 'FCS_DBM_BACKEND', },
     'libavl2-c' => { param => 'FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE' },
     'libavl2-p' => { param => 'FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE' },
     'prefix' => {param => 'CMAKE_INSTALL_PREFIX',},
-    'p|pos' => {prefix => 'FCS_STACK_STORAGE_', param => 'FCS_STACK_STORAGE'},
+    'p|pos' => {prefix => 'FCS_STATE_STORAGE_', param => 'FCS_STATE_STORAGE'},
     'rcs-cache-storage' => { prefix => 'FCS_RCS_CACHE_STORAGE_', param => 'FCS_RCS_CACHE_STORAGE' },
     'states-type' => { param => 'STATES_TYPE', },
 );

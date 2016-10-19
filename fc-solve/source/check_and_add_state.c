@@ -38,7 +38,7 @@
 #include "move_stack_compact_alloc.h"
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \
-     (FCS_STACK_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH))
+     (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH))
 /*
     This function "rehashes" a hash. I.e: it increases the size of its
     hash table, allowing for smaller chains, and faster lookup.
