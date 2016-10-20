@@ -53,10 +53,10 @@ $(function() {
 
             {
 				if (item) {
-					var x = item.datapoint[0].toFixed(2),
+					var x = (item.datapoint[0] / 1000000),
 						y = item.datapoint[1].toFixed(2);
 
-					$("#tooltip").html(item.series.label + " of " + x + " = " + y)
+					$("#tooltip").html(item.series.label + " of " + x.toFixed(1) + "M = " + y + "sec")
 						.css({top: item.pageY+5, left: item.pageX+5})
 						.fadeIn(200);
 				} else {
