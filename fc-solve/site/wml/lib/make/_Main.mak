@@ -215,7 +215,7 @@ clean:
 
 # A temporary target to edit the active files.
 edit:
-	gvim -o src/js/fcs-validate.ts src/js/web-fc-solve-tests.js
+	gvim -o src/js/fcs-validate.ts src/js/web-fc-solve-tests--fcs-validate.js
 
 %.show:
 	@echo "$* = $($*)"
