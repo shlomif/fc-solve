@@ -167,15 +167,16 @@ $(DEST_LIBFREECELL_SOLVER_JS_MEM): %: lib/fc-solve-for-javascript/libfreecell-so
 
 FCS_VALID_DEST = $(D)/js/fcs-validate.js
 
-TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts
+TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts src/js/typings/index.d.ts
 
 all: $(TYPINGS)
 
 $(TYPINGS):
 	cd src/charts/dbm-solver-__int128-optimisation/ && typings install dt~jquery --global --save
+	cd src/js && typings install dt~qunit --global --save
 
 
-TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
+TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js $(D)/js/web-fc-solve-tests--fcs-validate.js
 
 all: $(TYPESCRIPT_DEST_FILES)
 
@@ -215,7 +216,7 @@ clean:
 
 # A temporary target to edit the active files.
 edit:
-	gvim -o src/js/fcs-validate.ts src/js/web-fc-solve-tests--fcs-validate.js
+	gvim -o src/js/fcs-validate.ts src/js/web-fc-solve-tests--fcs-validate.ts
 
 %.show:
 	@echo "$* = $($*)"

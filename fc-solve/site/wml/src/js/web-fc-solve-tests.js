@@ -9991,7 +9991,7 @@ function test_js_fc_solve_class()
 
     QUnit.module("FC_Solve.Algorithmic");
 
-    var test_for_equal = function(instance, board, expected_sol, blurb) {
+    var test_for_equal = function(assert, instance, board, expected_sol, blurb) {
 
         var success = false;
 
@@ -10004,7 +10004,7 @@ function test_js_fc_solve_class()
         if (solve_err_code == FCS_STATE_WAS_SOLVED) {
             var buffer = instance.display_solution( {} );
             success = true;
-            equal (buffer, expected_sol,
+            assert.equal (buffer, expected_sol,
                 blurb
             );
         }
@@ -10012,11 +10012,11 @@ function test_js_fc_solve_class()
         return success;
     };
 
-    test("FC_Solve main test", function() {
-        expect(3);
+    QUnit.test("FC_Solve main test", function(assert) {
+        assert.expect(3);
 
         // TEST
-        ok (true, "True is, well, true.");
+        assert.ok (true, "True is, well, true.");
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
@@ -10024,7 +10024,7 @@ function test_js_fc_solve_class()
         });
 
         // TEST*2
-        ok (test_for_equal(instance,
+        assert.ok (test_for_equal(assert, instance,
                 ms_deal_24,
                 solution_for_deal_24__default,
                 "Solution is right."
@@ -10033,11 +10033,11 @@ function test_js_fc_solve_class()
             );
     });
 
-    test("FC_Solve unicoded solution", function() {
-        expect(3);
+    QUnit.test("FC_Solve unicoded solution", function(assert) {
+        assert.expect(3);
 
         // TEST
-        ok (true, "True is, well, true.");
+        assert.ok (true, "True is, well, true.");
 
         var success = false;
 
@@ -10048,7 +10048,8 @@ function test_js_fc_solve_class()
         });
 
         // TEST*2
-        ok (test_for_equal(
+        assert.ok (test_for_equal(
+                assert,
                 instance,
                 ms_deal_24,
                 solution_for_deal_24__default__with_unicoded_suits,
@@ -10058,8 +10059,8 @@ function test_js_fc_solve_class()
         );
     });
 
-    test("FC_Solve arbitrary parameters - Solve Simple Simon.", function() {
-        expect(2);
+    QUnit.test("FC_Solve arbitrary parameters - Solve Simple Simon.", function(assert) {
+        assert.expect(2);
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
@@ -10069,7 +10070,8 @@ function test_js_fc_solve_class()
         });
 
         // TEST*2
-        ok (test_for_equal(
+        assert.ok (test_for_equal(
+            assert,
                 instance,
                 pysol_simple_simon_deal_24,
                 solution_for_pysol_simple_simon_deal_24__default,
@@ -10079,11 +10081,11 @@ function test_js_fc_solve_class()
         );
     });
 
-    test("FC_Solve solve board without a trailing newline", function() {
-        expect(3);
+    QUnit.test("FC_Solve solve board without a trailing newline", function(assert) {
+        assert.expect(3);
 
         // TEST
-        ok (true, "True is, well, true.");
+        assert.ok (true, "True is, well, true.");
 
         var instance = new FC_Solve({
             is_unicode_cards: true,
@@ -10092,7 +10094,8 @@ function test_js_fc_solve_class()
         });
 
         // TEST*2
-        ok (test_for_equal(
+        assert.ok (test_for_equal(
+                assert,
                 instance,
                 board_without_trailing_newline,
                 solution_for_board_without_trailing_newline,
@@ -10102,11 +10105,11 @@ function test_js_fc_solve_class()
         );
     });
 
-    test("FC_Solve Expanded Moves test", function() {
-        expect(3);
+    QUnit.test("FC_Solve Expanded Moves test", function(assert) {
+        assert.expect(3);
 
         // TEST
-        ok (true, "True is, well, true.");
+        assert.ok (true, "True is, well, true.");
 
         var success = false;
 
@@ -10125,17 +10128,17 @@ function test_js_fc_solve_class()
 
         success = true;
         // TEST
-        equal (buffer, solution_for_deal_24__expanded_moves,
+        assert.equal (buffer, solution_for_deal_24__expanded_moves,
             "Expanded-moves Solution is right"
         );
 
         // TEST
-        ok (success, "do_solve was successful.");
+        assert.ok (success, "do_solve was successful.");
 
     });
 
-    test("FC_Solve get_num_stacks #1", function() {
-        expect(1);
+    QUnit.test("FC_Solve get_num_stacks #1", function(assert) {
+        assert.expect(1);
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
@@ -10143,11 +10146,11 @@ function test_js_fc_solve_class()
         });
 
         // TEST
-        equal(instance.get_num_stacks(), 8, "get_num_stacks() Returns 8.");
+        assert.equal(instance.get_num_stacks(), 8, "get_num_stacks() Returns 8.");
     });
 
-    test("FC_Solve get_num_stacks simple_simon", function() {
-        expect(1);
+    QUnit.test("FC_Solve get_num_stacks simple_simon", function(assert) {
+        assert.expect(1);
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
@@ -10156,13 +10159,13 @@ function test_js_fc_solve_class()
         });
 
         // TEST
-        equal(instance.get_num_stacks(), 10,
+        assert.equal(instance.get_num_stacks(), 10,
             "get_num_stacks() Returns 10 for Simple Simon."
         );
     });
 
-    test("FC_Solve get_num_stacks command line settings", function() {
-        expect(1);
+    QUnit.test("FC_Solve get_num_stacks command line settings", function(assert) {
+        assert.expect(1);
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
@@ -10172,13 +10175,13 @@ function test_js_fc_solve_class()
         });
 
         // TEST
-        equal(instance.get_num_stacks(), 6,
+        assert.equal(instance.get_num_stacks(), 6,
             "get_num_stacks() Returns 6 after command line."
         );
     });
 
-    test("FC_Solve get_num_freecells #1", function() {
-        expect(1);
+    QUnit.test("FC_Solve get_num_freecells #1", function(assert) {
+        assert.expect(1);
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
@@ -10186,11 +10189,12 @@ function test_js_fc_solve_class()
         });
 
         // TEST
-        equal(instance.get_num_freecells(), 4,
+        assert.equal(instance.get_num_freecells(), 4,
             "get_num_freecells() returns 4.");
     });
-    test("FC_Solve get_num_freecells #1", function() {
-        expect(1);
+
+    QUnit.test("FC_Solve get_num_freecells #1", function(assert) {
+        assert.expect(1);
 
         var instance = new FC_Solve({
             cmd_line_preset: 'default',
@@ -10200,7 +10204,7 @@ function test_js_fc_solve_class()
         });
 
         // TEST
-        equal(instance.get_num_freecells(), 2,
+        assert.equal(instance.get_num_freecells(), 2,
             "get_num_freecells() returns 2 after command line.");
     });
 
