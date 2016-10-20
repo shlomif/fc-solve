@@ -80,7 +80,7 @@
 
 #qunit-testrunner-toolbar .clearfix {
 	height: 0;
-	clear: both;
+	/* clear: both; */
 }
 
 #qunit-testrunner-toolbar label {
