@@ -45,7 +45,7 @@ function test_fcs_validate()
         }
     });
     test("verify_state Card class tests", function() {
-        expect(21);
+        expect(28);
 
         {
             var result = fcs_js__column_from_string('KS QD');
@@ -123,6 +123,31 @@ function test_fcs_validate()
             equal(col.getCard(1).toString(), 'AH', "col.getCard(1) is fine.");
             // TEST
             equal(col.getCard(2).toString(), 'KH', "col.getCard(2) is fine.");
+        }
+
+        {
+            var input_str = '3C AH 7D 6S  # This is a comment.';
+            var result = fcs_js__column_from_string(input_str);
+
+            // TEST
+            ok (result.is_correct, "Column was parsed correctly.");
+
+            // TEST
+            equal (result.num_consumed_chars, input_str.length, 'Consumed input_str.length characters.');
+
+            var col = result.col;
+
+            // TEST
+            equal(col.getLen(), 4, "col.getLen() is fine.");
+
+            // TEST
+            equal(col.getCard(0).toString(), '3C', "col.getCard(0) is fine.");
+            // TEST
+            equal(col.getCard(1).toString(), 'AH', "col.getCard(1) is fine.");
+            // TEST
+            equal(col.getCard(2).toString(), '7D', "col.getCard(2) is fine.");
+            // TEST
+            equal(col.getCard(3).toString(), '6S', "col.getCard(3) is fine.");
         }
     });
 }

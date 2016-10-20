@@ -136,7 +136,13 @@ function fcs_js__column_from_string(s: string): ColumnParseResult {
             break;
         }
 
-        var m = s.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
+        var m = s.match(/^(\s*#[^\n]*)$/);
+        if (m) {
+            consume_match(m);
+            break;
+        }
+
+        m = s.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
         if (! m) {
             m = s.match('^( *)');
             consume_match(m);
