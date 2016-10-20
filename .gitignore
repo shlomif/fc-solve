@@ -52,6 +52,8 @@ fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve-shlomif/patsolve/*.bc
 fc-solve/site/wml/rules.mak
 fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings
 fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings.json
+fc-solve/site/wml/src/js/typings
+fc-solve/site/wml/src/js/typings.json
 fc-solve/source/AUTHORS.html
 fc-solve/source/AUTHORS.xml
 fc-solve/source/B
