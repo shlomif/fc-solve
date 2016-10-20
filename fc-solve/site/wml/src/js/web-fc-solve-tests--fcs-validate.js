@@ -45,13 +45,21 @@ function test_fcs_validate()
         }
     });
     test("verify_state Card class tests", function() {
-        expect(28);
+        expect(30);
 
         {
-            var result = fcs_js__column_from_string('KS QD');
+            var start_char_idx = 10;
+            var col_str = 'KS QD';
+            var result = fcs_js__column_from_string(start_char_idx, col_str);
 
             // TEST
             ok (result.is_correct, "Column was parsed correctly.");
+
+            // TEST
+            equal(result.start_char_idx, start_char_idx, "start_char_idx is correct.");
+
+            // TEST
+            equal(result.getEnd(), start_char_idx + col_str.length);
 
             var col = result.col;
 
@@ -73,7 +81,7 @@ function test_fcs_validate()
         }
 
         {
-            var result = fcs_js__column_from_string('3C AH 7D 6S');
+            var result = fcs_js__column_from_string(0, '3C AH 7D 6S');
 
             // TEST
             ok (result.is_correct, "Column was parsed correctly.");
@@ -94,7 +102,7 @@ function test_fcs_validate()
         }
 
         {
-            var result = fcs_js__column_from_string('3C HA');
+            var result = fcs_js__column_from_string(0, '3C HA');
 
             // TEST
             ok ((! result.is_correct), "Column is incorrectly formatted.");
@@ -107,7 +115,7 @@ function test_fcs_validate()
         }
 
         {
-            var result = fcs_js__column_from_string(': 3D AH KH');
+            var result = fcs_js__column_from_string(0, ': 3D AH KH');
 
             // TEST
             ok (result.is_correct, "Column was parsed correctly.");
@@ -127,7 +135,7 @@ function test_fcs_validate()
 
         {
             var input_str = '3C AH 7D 6S  # This is a comment.';
-            var result = fcs_js__column_from_string(input_str);
+            var result = fcs_js__column_from_string(0, input_str);
 
             // TEST
             ok (result.is_correct, "Column was parsed correctly.");

@@ -106,18 +106,24 @@ function fcs_js__card_from_string(s: string): Card {
 class ColumnParseResult {
     public col: Column;
     public is_correct: boolean;
+    public start_char_idx: number;
     public num_consumed_chars: number;
     public error: string;
 
-    constructor(is_correct: boolean, num_consumed_chars: number, error: string, cards: Array<Card>) {
+    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, cards: Array<Card>) {
         this.is_correct = is_correct;
         this.num_consumed_chars = num_consumed_chars;
         this.error = error;
         this.col = new Column(cards);
+        this.start_char_idx = start_char_idx;
+    }
+
+    getEnd(): number {
+        return (this.start_char_idx + this.num_consumed_chars);
     }
 }
 
-function fcs_js__column_from_string(s: string): ColumnParseResult {
+function fcs_js__column_from_string(start_char_idx: number, s: string): ColumnParseResult {
     var cards:Array<Card> = [];
     var is_start:boolean = true;
     var consumed:number = 0;
@@ -147,12 +153,12 @@ function fcs_js__column_from_string(s: string): ColumnParseResult {
             m = s.match('^( *)');
             consume_match(m);
 
-            return new ColumnParseResult(false, consumed, 'Wrong card format - should be [Rank][Suit]', []);
+            return new ColumnParseResult(false, start_char_idx, consumed, 'Wrong card format - should be [Rank][Suit]', []);
         }
 
         consume_match(m);
         cards.push(fcs_js__card_from_string(m[2]));
         is_start = false;
     }
-    return new ColumnParseResult(true, consumed, '', cards);
+    return new ColumnParseResult(true, start_char_idx, consumed, '', cards);
 }
