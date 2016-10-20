@@ -138,11 +138,8 @@ function fcs_js__column_from_string(start_char_idx: number, s: string): ColumnPa
 
     consume_match(s.match('^((?:\: +)?)'));
     while (s.length > 0) {
-        if (s.match('^ +$')) {
-            break;
-        }
+        var m = s.match(/^(\s*(?:#[^\n]*)?\n?)$/);
 
-        var m = s.match(/^(\s*#[^\n]*)$/);
         if (m) {
             consume_match(m);
             break;

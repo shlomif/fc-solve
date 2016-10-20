@@ -48,7 +48,7 @@ function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Card class tests", function(a: Assert) {
-        a.expect(30);
+        a.expect(37);
 
         {
             var start_char_idx = 10;
@@ -155,6 +155,31 @@ function test_fcs_validate()
             a.equal(col.getCard(0).toString(), '3C', "col.getCard(0) is fine.");
             // TEST
             a.equal(col.getCard(1).toString(), 'AH', "col.getCard(1) is fine.");
+            // TEST
+            a.equal(col.getCard(2).toString(), '7D', "col.getCard(2) is fine.");
+            // TEST
+            a.equal(col.getCard(3).toString(), '6S', "col.getCard(3) is fine.");
+        }
+
+        {
+            var input_str = "3S AD 7D 6S  # This is a comment.\n";
+            var result = fcs_js__column_from_string(0, input_str);
+
+            // TEST
+            a.ok (result.is_correct, "Newline terminated Column was parsed correctly.");
+
+            // TEST
+            a.equal (result.num_consumed_chars, input_str.length, 'Newline terminated - Consumed input_str.length characters.');
+
+            var col = result.col;
+
+            // TEST
+            a.equal(col.getLen(), 4, "Newline terminated - col.getLen() is fine.");
+
+            // TEST
+            a.equal(col.getCard(0).toString(), '3S', "col.getCard(0) is fine.");
+            // TEST
+            a.equal(col.getCard(1).toString(), 'AD', "col.getCard(1) is fine.");
             // TEST
             a.equal(col.getCard(2).toString(), '7D', "col.getCard(2) is fine.");
             // TEST

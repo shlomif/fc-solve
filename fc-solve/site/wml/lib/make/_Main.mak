@@ -175,13 +175,16 @@ $(TYPINGS):
 	cd src/charts/dbm-solver-__int128-optimisation/ && typings install dt~jquery --global --save
 	cd src/js && typings install dt~qunit --global --save
 
+TEST_FCS_VALID_DEST = $(D)/js/web-fc-solve-tests--fcs-validate.js
 
-TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js $(D)/js/web-fc-solve-tests--fcs-validate.js
+TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js $(TEST_FCS_VALID_DEST)
 
 all: $(TYPESCRIPT_DEST_FILES)
 
 $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
 	tsc --out $@ $<
+
+$(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
 
 .PHONY:
 
