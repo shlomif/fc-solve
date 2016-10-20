@@ -84,15 +84,15 @@ my %STR_OPTS =
     'prefix' => {param => 'CMAKE_INSTALL_PREFIX',},
     'states-type' => { param => 'STATES_TYPE', },
     (map
-    {
-        my ($key, $param) = @$_;
-        ($key => +{ prefix => "${param}_", param => $param })
-    }
-    (
-        ['c|cols' => 'FCS_STACK_STORAGE'],
-        ['p|pos' => 'FCS_STATE_STORAGE'],
-        ['rcs-cache-storage' => 'FCS_RCS_CACHE_STORAGE' ],
-    )
+        {
+            my ($key, $param) = @$_;
+            ($key => +{ prefix => "${param}_", param => $param })
+        }
+        (
+            ['c|cols' => 'FCS_STACK_STORAGE'],
+            ['p|pos' => 'FCS_STATE_STORAGE'],
+            ['rcs-cache-storage' => 'FCS_RCS_CACHE_STORAGE' ],
+        )
     ),
 );
 
