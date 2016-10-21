@@ -48,7 +48,7 @@ function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Card class tests", function(a: Assert) {
-        a.expect(33);
+        a.expect(29);
 
         {
             var start_char_idx = 10;
@@ -67,20 +67,11 @@ function test_fcs_validate()
             var col = result.col;
 
             // TEST
-            a.equal(col.getLen(), 2, "col.getLen() is fine.");
+            a.deepEqual(col.getArrOfStrs(), ['KS', 'QD'],
+                        "col contents is fine.");
 
             // TEST
             a.equal(result.num_consumed_chars, 'KS QD'.length, "col.consumed is right on success.");
-
-            // TEST
-            a.equal(col.getCard(0).getRank(), 13, "col.getCard(0) is fine.");
-            // TEST
-            a.equal(col.getCard(0).getSuit(), 3, "col.getCard(0) is fine.");
-
-            // TEST
-            a.equal(col.getCard(1).getRank(), 12, "col.getCard(1) is fine.");
-            // TEST
-            a.equal(col.getCard(1).getSuit(), 2, "col.getCard(1) is fine.");
         }
 
         {
