@@ -90,6 +90,13 @@ class Column {
         }
         return that.cards[idx];
     }
+
+    getArrOfStrs(): Array<string> {
+        var that = this;
+        return _perl_range(0, that.getLen()-1).map(function (i) {
+            return that.getCard(i).toString();
+        });
+    }
 }
 
 
