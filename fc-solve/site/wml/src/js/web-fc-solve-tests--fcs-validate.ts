@@ -48,7 +48,7 @@ function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Card class tests", function(a: Assert) {
-        a.expect(29);
+        a.expect(25);
 
         {
             var start_char_idx = 10;
@@ -83,16 +83,7 @@ function test_fcs_validate()
             var col = result.col;
 
             // TEST
-            a.equal(col.getLen(), 4, "col.getLen() is fine.");
-
-            // TEST
-            a.equal(col.getCard(0).toString(), '3C', "col.getCard(0) is fine.");
-            // TEST
-            a.equal(col.getCard(1).toString(), 'AH', "col.getCard(1) is fine.");
-            // TEST
-            a.equal(col.getCard(2).toString(), '7D', "col.getCard(2) is fine.");
-            // TEST
-            a.equal(col.getCard(3).toString(), '6S', "col.getCard(3) is fine.");
+            a.deepEqual(col.getArrOfStrs(), ['3C', 'AH', '7D', '6S'], "col contents are fine.");
         }
 
         {
