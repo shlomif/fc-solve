@@ -48,7 +48,7 @@ function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Card class tests", function(a: Assert) {
-        a.expect(25);
+        a.expect(22);
 
         {
             var start_char_idx = 10;
@@ -105,17 +105,8 @@ function test_fcs_validate()
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
 
-            var col = result.col;
-
             // TEST
-            a.equal(col.getLen(), 3, "col.getLen() is fine.");
-
-            // TEST
-            a.equal(col.getCard(0).toString(), '3D', "col.getCard(0) is fine.");
-            // TEST
-            a.equal(col.getCard(1).toString(), 'AH', "col.getCard(1) is fine.");
-            // TEST
-            a.equal(col.getCard(2).toString(), 'KH', "col.getCard(2) is fine.");
+            a.deepEqual(result.col.getArrOfStrs(), ['3D', 'AH', 'KH'], "col with leading colon contents");
         }
 
         {
