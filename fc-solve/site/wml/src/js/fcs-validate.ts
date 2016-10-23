@@ -1,3 +1,5 @@
+
+
 // Adapted from http://www.inventpartners.com/javascript_is_int - thanks.
 function is_int(input: number): boolean {
     var value:string = "" + input;
@@ -165,4 +167,46 @@ function fcs_js__column_from_string(start_char_idx: number, s: string): ColumnPa
         is_start = false;
     }
     return new ColumnParseResult(true, start_char_idx, consumed, '', cards);
+}
+
+type MaybeCard = Card | null;
+
+class Freecells {
+    private num_freecells: number;
+    private cards: Array<MaybeCard>;
+
+    constructor(num_freecells: number, cards: Array<MaybeCard>) {
+        if (!is_int(num_freecells)) {
+            throw "num_freecells is not an integer.";
+        }
+        this.num_freecells = num_freecells;
+
+        if (cards.length != num_freecells) {
+            throw "cards length mismatch.";
+        }
+        this.cards = cards;
+    }
+
+    getNum(): number {
+        return this.num_freecells;
+    }
+
+    getCard(idx: number) {
+        var that = this;
+        if (idx < 0) {
+            throw "idx is below zero.";
+        }
+        if (idx >= that.getNum()) {
+            throw "idx exceeds the length of the column.";
+        }
+        return that.cards[idx];
+    }
+
+    getArrOfStrs(): Array<string> {
+        var that = this;
+        return _perl_range(0, that.getNum()-1).map(function (i) {
+            var card = that.getCard(i);
+            return ((card !== undefined) ? card.toString() : '-');
+        });
+    }
 }

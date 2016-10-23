@@ -186,18 +186,6 @@ $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
 
-TS_MAYBE_GIT = lib/ts-maybe/index.ts
-
-$(TS_MAYBE_GIT):
-	cd lib && git clone https://github.com/ParkingCard/ts-maybe
-
-TS_MAYBE_SRC = src/js/ts-maybe/index.ts
-
-$(TS_MAYBE_SRC): $(TS_MAYBE_GIT)
-	cp -f $< $@
-
-all: $(TS_MAYBE_SRC)
-
 .PHONY:
 
 # Build index.html pages for the appropriate sub-directories.
