@@ -210,3 +210,69 @@ class Freecells {
         });
     }
 }
+
+// TODO : Merge common functionality with ColumnParseResult into a base class.
+class FreecellsParseResult {
+    public freecells: Freecells;
+    public is_correct: boolean;
+    public start_char_idx: number;
+    public num_consumed_chars: number;
+    public error: string;
+
+    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, num_freecells: number, fc: Array<MaybeCard>) {
+        this.is_correct = is_correct;
+        this.num_consumed_chars = num_consumed_chars;
+        this.error = error;
+        this.freecells = new Freecells(num_freecells, fc);
+        this.start_char_idx = start_char_idx;
+    }
+
+    getEnd(): number {
+        return (this.start_char_idx + this.num_consumed_chars);
+    }
+}
+
+function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: number, s: string): FreecellsParseResult {
+    var cards:Array<MaybeCard> = [];
+    var is_start:boolean = true;
+    var consumed:number = 0;
+
+    function consume_match(m: RegExpMatchArray): void {
+        var len_match:number = m[1].length;
+        consumed += len_match;
+        s = s.substring(len_match);
+
+        return;
+    }
+
+    {
+        var m = s.match(/^((?:Freecells\: +)?)/);
+        if (!m) {
+            return new FreecellsParseResult(false, start_char_idx, consumed, 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
+        }
+
+        consume_match(m);
+    }
+
+    while (s.length > 0) {
+        var m = s.match(/^(\s*(?:#[^\n]*)?\n?)$/);
+
+        if (m) {
+            consume_match(m);
+            break;
+        }
+
+        m = s.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
+        if (! m) {
+            m = s.match('^( *)');
+            consume_match(m);
+
+            return new FreecellsParseResult(false, start_char_idx, consumed, 'Wrong card format - should be [Rank][Suit]', num_freecells, []);
+        }
+
+        consume_match(m);
+        cards.push(fcs_js__card_from_string(m[2]));
+        is_start = false;
+    }
+    return new FreecellsParseResult(true, start_char_idx, consumed, '', num_freecells, cards);
+}

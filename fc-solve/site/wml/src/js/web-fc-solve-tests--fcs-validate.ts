@@ -47,7 +47,7 @@ function test_fcs_validate()
             a.equal(c.toString(), 'AC', "Card(AC).toString() works.");
         }
     });
-    QUnit.test("verify_state Card class tests", function(a: Assert) {
+    QUnit.test("verify_state Column class tests", function(a: Assert) {
         a.expect(18);
 
         {
@@ -141,6 +141,33 @@ function test_fcs_validate()
                 ['3S', 'AD', '7D', '6S'],
                 "Newline terminated - col contents are fine."
             );
+        }
+    });
+    QUnit.test("verify_state Freecells class tests", function(a: Assert) {
+        a.expect(5);
+
+        {
+            var start_char_idx = 10;
+            var str = "Freecells: 5C 2H 3D 9H";
+            var num_freecells = 4;
+
+            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+
+            // TEST
+            a.ok (result.is_correct, "Column was parsed correctly.");
+
+            // TEST
+            a.equal(result.start_char_idx, start_char_idx, "start_char_idx is correct.");
+
+            // TEST
+            a.equal(result.getEnd(), start_char_idx + str.length);
+
+            // TEST
+            a.deepEqual(result.freecells.getArrOfStrs(), ['5C', '2H', '3D', '9H'],
+                        "freecell contents is fine.");
+
+            // TEST
+            a.equal(result.num_consumed_chars, str.length, "fc.consumed is right on success.");
         }
     });
 }
