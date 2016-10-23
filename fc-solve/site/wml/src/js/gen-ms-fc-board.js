@@ -13,7 +13,7 @@
  * */
 
 function deal_ms_fc_board(seed) {
-    var randomizer = new MSRand({ seed: seed });
+    var randomizer = new MSRand({ gamenumber: seed });
     var num_cols = 8;
 
     var _perl_range = function(start, end) {

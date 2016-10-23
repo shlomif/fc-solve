@@ -10208,5 +10208,22 @@ function test_js_fc_solve_class()
             "get_num_freecells() returns 2 after command line.");
     });
 
+    QUnit.test("FC_Solve deal_ms_fc_board", function(assert) {
+        assert.expect(1);
+
+        // TEST
+        assert.equal(deal_ms_fc_board(3000000000),
+": 8D TS JS TD JH JD JC\n" +
+": 4D QS TH AD 4S TC 3C\n" +
+": 9H KH QH 4C 5C KD AS\n" +
+": 9D 5D 8S 4H KS 6S 9S\n" +
+": 6H 2S 7H 3D KC 2C\n" +
+": 9C 7C QC 7S QD 7D\n" +
+": 6C 3H 8H AC 6D 3S\n" +
+": 8C AH 2H 5H 2D 5S\n" +
+                "" ,
+            "deal_ms_fc_board for 3e9");
+    });
+
     return;
 }
