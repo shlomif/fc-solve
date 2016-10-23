@@ -262,7 +262,7 @@ function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: nu
             break;
         }
 
-        m = s.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
+        m = s.match('^(' + (is_start ? '' : ' +') + "(\\-|(?:" + card_re + '))' + ')');
         if (! m) {
             m = s.match('^( *)');
             consume_match(m);
@@ -271,7 +271,8 @@ function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: nu
         }
 
         consume_match(m);
-        cards.push(fcs_js__card_from_string(m[2]));
+        var card_str = m[2];
+        cards.push((card_str == '-') ? null : fcs_js__card_from_string(m[2]));
         is_start = false;
     }
 

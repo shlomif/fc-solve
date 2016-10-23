@@ -144,7 +144,7 @@ function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Freecells class tests", function(a: Assert) {
-        a.expect(10);
+        a.expect(15);
 
         {
             var start_char_idx = 10;
@@ -188,6 +188,30 @@ function test_fcs_validate()
 
             // TEST
             a.deepEqual(result.freecells.getArrOfStrs(), ['5C', '2H', '-', '-'],
+                        "freecell contents is fine.");
+
+            // TEST
+            a.equal(result.num_consumed_chars, str.length, "fc.consumed is right on success.");
+        }
+
+        {
+            var start_char_idx = 39;
+            var str = "Freecells: - TC - 9H";
+            var num_freecells = 4;
+
+            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+
+            // TEST
+            a.ok (result.is_correct, "Column was parsed correctly.");
+
+            // TEST
+            a.equal(result.start_char_idx, start_char_idx, "start_char_idx is correct.");
+
+            // TEST
+            a.equal(result.getEnd(), start_char_idx + str.length);
+
+            // TEST
+            a.deepEqual(result.freecells.getArrOfStrs(), ['-', 'TC', '-', '9H'],
                         "freecell contents is fine.");
 
             // TEST
