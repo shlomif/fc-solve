@@ -206,7 +206,7 @@ class Freecells {
         var that = this;
         return _perl_range(0, that.getNum()-1).map(function (i) {
             var card = that.getCard(i);
-            return ((card !== undefined) ? card.toString() : '-');
+            return ((card !== null) ? card.toString() : '-');
         });
     }
 }
@@ -274,5 +274,14 @@ function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: nu
         cards.push(fcs_js__card_from_string(m[2]));
         is_start = false;
     }
+
+    while (cards.length < num_freecells) {
+        cards.push(null);
+    }
+
+    if (cards.length != num_freecells) {
+        return new FreecellsParseResult(false, start_char_idx, consumed, 'Too many cards specified in Freecells line.', num_freecells, []);
+    }
+
     return new FreecellsParseResult(true, start_char_idx, consumed, '', num_freecells, cards);
 }
