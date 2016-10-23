@@ -10209,7 +10209,7 @@ function test_js_fc_solve_class()
     });
 
     QUnit.test("FC_Solve deal_ms_fc_board", function(assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         // TEST
         assert.equal(deal_ms_fc_board(3000000000),
@@ -10223,6 +10223,19 @@ function test_js_fc_solve_class()
 ": 8C AH 2H 5H 2D 5S\n" +
                 "" ,
             "deal_ms_fc_board for 3e9");
+
+        // TEST
+        assert.equal(deal_ms_fc_board(6000000000),
+": 2D 2C QS 8D KD 8C 4C\n" +
+": 3D AH 2H 4H TS 6H QD\n" +
+": 4D JS AD 6S JH JC JD\n" +
+": KH 3H KS AS TC 5D AC\n" +
+": TD 7C 9C 7H 3C 3S\n" +
+": QH 9H 9D 5S 7S 6C\n" +
+": 5C 5H 2S KC 9S 4S\n" +
+": 6D QC 8S TH 7D 8H\n" +
+"",
+            "deal_ms_fc_board for 6e9");
     });
 
     return;

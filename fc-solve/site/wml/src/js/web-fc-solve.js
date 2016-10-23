@@ -1,5 +1,7 @@
 "use strict";
-
+var fc_solve__hll_ms_rand__get_singleton;
+var fc_solve__hll_ms_rand__init;
+var fc_solve__hll_ms_rand__mod_rand;
 var freecell_solver_user_alloc;
 var freecell_solver_user_solve_board;
 var freecell_solver_user_resume_solution;
@@ -25,6 +27,9 @@ var fc_solve_allocate_i8;
 
 function FC_Solve_init_wrappers_with_module(Module)
 {
+    fc_solve__hll_ms_rand__get_singleton = Module.cwrap('fc_solve__hll_ms_rand__get_singleton', 'number', []);
+    fc_solve__hll_ms_rand__init = Module.cwrap('fc_solve__hll_ms_rand__init', 'number', ['number', 'string']);
+    fc_solve__hll_ms_rand__mod_rand = Module.cwrap('fc_solve__hll_ms_rand__mod_rand', 'number', ['number', 'number']);
     freecell_solver_user_alloc = Module.cwrap('freecell_solver_user_alloc', 'number', []);
     freecell_solver_user_solve_board = Module.cwrap('freecell_solver_user_solve_board', 'number', ['number', 'string']);
     freecell_solver_user_resume_solution = Module.cwrap('freecell_solver_user_resume_solution', 'number', ['number']);

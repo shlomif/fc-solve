@@ -15,7 +15,7 @@ EMBED_FILE_MUNGE_PL = $(SRC_DIR)/scripts/emscripten-embed-munge.pl
 
 PATS_C_FILES = $(patsubst %,patsolve-shlomif/patsolve/%,param.c pat.c patsolve.c tree.c)
 
-LIB_C_FILES = scans.c lib.c preset.c instance.c move_funcs_order.c  move_funcs_maps.c meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c rate_state.c hacks_for_hlls.c $(PATS_C_FILES)
+LIB_C_FILES = scans.c lib.c preset.c instance.c move_funcs_order.c  move_funcs_maps.c meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c rate_state.c gen_ms_boards__hll_iface.c hacks_for_hlls.c $(PATS_C_FILES)
 
 C_FILES = main.c $(LIB_C_FILES)
 
@@ -27,6 +27,9 @@ LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.bc,$(LIB_C_FILES))
 all: $(RESULT_NODE_JS_EXE) $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS = \
+    fc_solve__hll_ms_rand__get_singleton \
+	fc_solve__hll_ms_rand__init \
+	fc_solve__hll_ms_rand__mod_rand \
 	free \
 	freecell_solver_user_alloc \
 	freecell_solver_user_cmd_line_read_cmd_line_preset \
