@@ -48,6 +48,7 @@ void fc_solve__hll_ms_rand__init(
 extern int fc_solve__hll_ms_rand__mod_rand(
     fc_solve__hll_ms_rand_t *const instance, const int limit)
 {
-    return microsoft_rand__game_num_rand(
-        &(instance->seedx), instance->gamenumber);
+    return (microsoft_rand__game_num_rand(
+                &(instance->seedx), instance->gamenumber) %
+            limit);
 }
