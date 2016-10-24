@@ -25,10 +25,15 @@
   \$(document).ready(function () {
       try {
           test_js_fc_solve_class();
-          define(['require', "web-fc-solve-tests--fcs-validate"], function (require) {
-            var fcs_valid = require("web-fc-solve-tests--fcs-validate");
+          var was_called = false;
+          require(["web-fc-solve-tests--fcs-validate"], function (fcs_valid) {
             fcs_valid.test_fcs_validate();
+            was_called = true;
           });
+          while (! was_called)
+          {
+          // Wait.
+          }
       }
       catch (err) {
         alert(err);
