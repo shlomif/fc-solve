@@ -1,1 +1,1 @@
-test_fcs_validate();
+console.log(1);
