@@ -5,10 +5,10 @@
 <page_extra_head_elements>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/qunit.css" />
 <script type="text/javascript" src="$(ROOT)/js/qunit.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
-<jquery_ui_head_elements />
-<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
+<jquery_ui_head_elements />
+<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
@@ -30,11 +30,9 @@
           require(["web-fc-solve-tests--fcs-validate"], function (fcs_valid) {
             fcs_valid.test_fcs_validate();
             was_called = true;
+            // Hide passed tests by default.
+            $('#qunit-tests').addClass('hidepass');
           });
-          while (! was_called)
-          {
-          // Wait.
-          }
       }
       catch (err) {
         alert(err);
@@ -43,8 +41,6 @@
             assert.ok (false, 'test_js_fc_solve_class() or test_fcs_validate() have thrown an exception or are invalid.');
         });
       }
-      // Hide passed tests by default.
-      $('#qunit-tests').addClass('hidepass');
   });
 </script>
 
