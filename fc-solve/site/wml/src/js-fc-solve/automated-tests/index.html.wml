@@ -5,10 +5,11 @@
 <page_extra_head_elements>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/qunit.css" />
 <script type="text/javascript" src="$(ROOT)/js/qunit.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
-<jquery_ui_head_elements />
-<script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
+<jquery_ui_head_elements />
+<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/web-fc-solve--expand-moves.js"></script>
