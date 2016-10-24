@@ -7,9 +7,10 @@ requirejs.config({
     nodeRequire: require
 });
 
-requirejs(['./fcs-validate.js', ],
+if (false) {
+requirejs(['fcs-validate', ],
     function   (fcs_valid) {
-        requirejs(['./web-fc-solve-tests--fcs-validate.js'],
+        requirejs(['web-fc-solve-tests--fcs-validate'],
             function (test_valid) {
                 test_valid.test_fcs_validate();
                 return;
@@ -17,3 +18,6 @@ requirejs(['./fcs-validate.js', ],
         return;
     });
 
+}
+var test_valid = require('./web-fc-solve-tests--fcs-validate');
+test_valid.test_fcs_validate();

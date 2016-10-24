@@ -190,7 +190,7 @@ $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
 $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts
 	# tsc --module system --out $@ $<
 	# tsc --out $@ $<
-	tsc --module commonjs --outDir lib/for-node/js $<
+	tsc --target es5 --module commonjs --outDir lib/for-node/js $<
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
 
