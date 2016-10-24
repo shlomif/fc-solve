@@ -1021,6 +1021,7 @@ i586
 ia
 misformatting
 non-DeBondt
+pi_make_microsoft_freecell_board
 playstacks
 stackoverflow
 tmp
