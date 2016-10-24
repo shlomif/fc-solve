@@ -104,7 +104,7 @@ class Column {
 
 
 var card_re:string = '([A23456789TJQK])([HCDS])';
-function fcs_js__card_from_string(s: string): Card {
+export function fcs_js__card_from_string(s: string): Card {
     var m = s.match('^' + card_re + '$');
     if (! m) {
         throw "Invalid format for a card - \"" + s + "\"";
@@ -132,7 +132,7 @@ class ColumnParseResult {
     }
 }
 
-function fcs_js__column_from_string(start_char_idx: number, s: string): ColumnParseResult {
+export function fcs_js__column_from_string(start_char_idx: number, s: string): ColumnParseResult {
     var cards:Array<Card> = [];
     var is_start:boolean = true;
     var consumed:number = 0;
@@ -232,7 +232,7 @@ class FreecellsParseResult {
     }
 }
 
-function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: number, s: string): FreecellsParseResult {
+export function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: number, s: string): FreecellsParseResult {
     var cards:Array<MaybeCard> = [];
     var is_start:boolean = true;
     var consumed:number = 0;

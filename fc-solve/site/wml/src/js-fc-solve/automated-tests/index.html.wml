@@ -25,12 +25,16 @@
   \$(document).ready(function () {
       try {
           test_js_fc_solve_class();
-          test_fcs_validate();
+          define(['require', "web-fc-solve-tests--fcs-validate"], function (require) {
+            var fcs_valid = require("web-fc-solve-tests--fcs-validate");
+            fcs_valid.test_fcs_validate();
+          });
       }
       catch (err) {
-        module("Meta");
-        test("global_failure", function() {
-            ok (false, 'test_js_fc_solve_class() has thrown an exception or is invalid.');
+        alert(err);
+        QUnit.module("Meta");
+        QUnit.test("global_failure", function(assert) {
+            assert.ok (false, 'test_js_fc_solve_class() or test_fcs_validate() have thrown an exception or are invalid.');
         });
       }
       // Hide passed tests by default.

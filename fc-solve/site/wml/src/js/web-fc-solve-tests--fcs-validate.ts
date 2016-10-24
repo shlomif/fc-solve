@@ -1,7 +1,8 @@
 /// <reference path="typings/index.d.ts" />
-/// <reference path="fcs-validate.ts" />
 
-function test_fcs_validate()
+import { fcs_js__freecells_from_string, fcs_js__column_from_string, fcs_js__card_from_string } from "./fcs-validate";
+
+export function test_fcs_validate()
 {
     QUnit.module("FC_Solve.Algorithmic");
 

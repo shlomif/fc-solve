@@ -182,7 +182,9 @@ TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(D)/charts/dbm-solver-__int128-optimi
 all: $(TYPESCRIPT_DEST_FILES)
 
 $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
-	tsc --out $@ $<
+	# tsc --module system --out $@ $<
+	# tsc --out $@ $<
+	tsc --module amd --out $@ $<
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
 
