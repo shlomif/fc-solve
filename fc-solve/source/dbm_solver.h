@@ -17,7 +17,7 @@ extern "C" {
 
 #include "generic_tree.h"
 
-#include "dbm_solver_key.h"
+#include "delta_states.h"
 
 /* We need it for the typedef of fcs_fcc_move_t. */
 #include "fcc_brfs_test.h"

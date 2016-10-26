@@ -33,7 +33,7 @@
 #include "../card.c"
 #include "../state.c"
 #include "../delta_states_impl.h"
-#include "../dbm_solver_key.h"
+#include "../delta_states.h"
 #include "../indirect_buffer.h"
 #include "../trim_trailing_whitespace.h"
 #include "../render_state.h"

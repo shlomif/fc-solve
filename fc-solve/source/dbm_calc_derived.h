@@ -27,7 +27,7 @@ extern "C" {
 
 #include "fcs_dllexport.h"
 #include "dbm_common.h"
-#include "dbm_solver_key.h"
+#include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
 #include "indirect_buffer.h"
 #include "fcc_brfs_test.h"

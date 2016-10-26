@@ -23,7 +23,7 @@ extern "C" {
 #include "meta_alloc.h"
 #include "fcs_enums.h"
 #include "dbm_common.h"
-#include "dbm_solver_key.h"
+#include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
 
 typedef fcs_state_t fcs_pdfs_key_t;
