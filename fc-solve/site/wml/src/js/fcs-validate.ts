@@ -132,41 +132,65 @@ class ColumnParseResult {
     }
 }
 
-export function fcs_js__column_from_string(start_char_idx: number, s: string): ColumnParseResult {
-    var cards:Array<Card> = [];
-    var is_start:boolean = true;
-    var consumed:number = 0;
+class StringParser {
+    private s: string;
+    private consumed: number;
 
-    function consume_match(m: RegExpMatchArray): void {
+    constructor(s: string) {
+        this.s = s;
+        this.consumed = 0;
+    }
+
+    consume(m: RegExpMatchArray): void {
+        var that = this;
         var len_match:number = m[1].length;
-        consumed += len_match;
-        s = s.substring(len_match);
+        that.consumed += len_match;
+        that.s = that.s.substring(len_match);
 
         return;
     }
 
-    consume_match(s.match('^((?:\: +)?)'));
-    while (s.length > 0) {
-        var m = s.match(/^(\s*(?:#[^\n]*)?\n?)$/);
+    getConsumed(): number {
+        return this.consumed;
+    }
+
+    isNotEmpty(): boolean {
+        return (this.s.length > 0);
+    }
+
+    match(re: any): RegExpMatchArray {
+        return this.s.match(re);
+    }
+}
+
+export function fcs_js__column_from_string(start_char_idx: number, orig_s: string): ColumnParseResult {
+    var cards:Array<Card> = [];
+    var is_start:boolean = true;
+
+    var p = new StringParser(orig_s);
+
+    p.consume(p.match('^((?:\: +)?)'));
+    while (p.isNotEmpty()) {
+        var m = p.match(/^(\s*(?:#[^\n]*)?\n?)$/);
 
         if (m) {
-            consume_match(m);
+            p.consume(m);
             break;
         }
 
-        m = s.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
+        m = p.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
         if (! m) {
-            m = s.match('^( *)');
-            consume_match(m);
+            m = p.match('^( *)');
+            p.consume(m);
 
-            return new ColumnParseResult(false, start_char_idx, consumed, 'Wrong card format - should be [Rank][Suit]', []);
+            return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', []);
         }
 
-        consume_match(m);
+        p.consume(m);
         cards.push(fcs_js__card_from_string(m[2]));
         is_start = false;
     }
-    return new ColumnParseResult(true, start_char_idx, consumed, '', cards);
+    return new ColumnParseResult(true, start_char_idx, p.getConsumed(), '', cards);
 }
 
 type MaybeCard = Card | null;
