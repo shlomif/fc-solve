@@ -180,13 +180,11 @@ export function fcs_js__column_from_string(start_char_idx: number, orig_s: strin
 
     p.consume_match('^((?:\: +)?)');
     while (p.isNotEmpty()) {
-        var m = p.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/);
-
-        if (m) {
+        if (p.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)) {
             break;
         }
 
-        m = p.consume_match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
+        var m = p.consume_match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
         if (! m) {
             p.consume_match('^( *)');
 
