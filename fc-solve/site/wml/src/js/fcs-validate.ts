@@ -172,11 +172,28 @@ class StringParser {
     }
 }
 
+class CardsStringParser extends StringParser {
+    private is_start: boolean;
+
+    constructor(s: string) {
+        super(s)
+        this.is_start = true;
+    }
+
+    afterStart(): void {
+        this.is_start = false;
+
+        return;
+    }
+
+    getStartSpace(): string {
+        return (this.is_start ? '' : ' +');
+    }
+}
+
 export function fcs_js__column_from_string(start_char_idx: number, orig_s: string): ColumnParseResult {
     var cards:Array<Card> = [];
-    var is_start:boolean = true;
-
-    var p = new StringParser(orig_s);
+    var p = new CardsStringParser(orig_s);
 
     p.consume_match('^((?:\: +)?)');
     while (p.isNotEmpty()) {
@@ -184,14 +201,14 @@ export function fcs_js__column_from_string(start_char_idx: number, orig_s: strin
             break;
         }
 
-        var m = p.consume_match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
+        var m = p.consume_match('^(' + p.getStartSpace()  + '(' + card_re + ')' + ')');
         if (! m) {
             p.consume_match('^( *)');
 
             return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', []);
         }
         cards.push(fcs_js__card_from_string(m[2]));
-        is_start = false;
+        p.afterStart();
     }
     return new ColumnParseResult(true, start_char_idx, p.getConsumed(), '', cards);
 }
@@ -261,9 +278,7 @@ class FreecellsParseResult {
 
 export function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: number, orig_s: string): FreecellsParseResult {
     var cards:Array<MaybeCard> = [];
-    var is_start:boolean = true;
-
-    var p = new StringParser(orig_s);
+    var p = new CardsStringParser(orig_s);
 
     if (!p.consume_match(/^((?:Freecells\: +)?)/)) {
         return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
@@ -274,7 +289,7 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
             break;
         }
 
-        var m = p.consume_match('^(' + (is_start ? '' : ' +') + "(\\-|(?:" + card_re + '))' + ')');
+        var m = p.consume_match('^(' + p.getStartSpace() + "(\\-|(?:" + card_re + '))' + ')');
         if (! m) {
             p.consume_match('^( *)');
 
@@ -283,7 +298,7 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
 
         var card_str = m[2];
         cards.push((card_str == '-') ? null : fcs_js__card_from_string(card_str));
-        is_start = false;
+        p.afterStart();
     }
 
     while (cards.length < num_freecells) {
