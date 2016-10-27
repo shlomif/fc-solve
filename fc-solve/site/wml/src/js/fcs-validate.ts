@@ -161,6 +161,15 @@ class StringParser {
     match(re: any): RegExpMatchArray {
         return this.s.match(re);
     }
+
+    consume_match(re: any): RegExpMatchArray {
+        var that = this;
+        var m = that.match(re);
+        if (m) {
+            that.consume(m);
+        }
+        return m;
+    }
 }
 
 export function fcs_js__column_from_string(start_char_idx: number, orig_s: string): ColumnParseResult {
@@ -169,24 +178,20 @@ export function fcs_js__column_from_string(start_char_idx: number, orig_s: strin
 
     var p = new StringParser(orig_s);
 
-    p.consume(p.match('^((?:\: +)?)'));
+    p.consume_match('^((?:\: +)?)');
     while (p.isNotEmpty()) {
-        var m = p.match(/^(\s*(?:#[^\n]*)?\n?)$/);
+        var m = p.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/);
 
         if (m) {
-            p.consume(m);
             break;
         }
 
-        m = p.match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
+        m = p.consume_match('^(' + (is_start ? '' : ' +') + '(' + card_re + ')' + ')');
         if (! m) {
-            m = p.match('^( *)');
-            p.consume(m);
+            p.consume_match('^( *)');
 
             return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', []);
         }
-
-        p.consume(m);
         cards.push(fcs_js__card_from_string(m[2]));
         is_start = false;
     }
@@ -262,34 +267,24 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
 
     var p = new StringParser(orig_s);
 
-    {
-        var m = p.match(/^((?:Freecells\: +)?)/);
-        if (!m) {
-            return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
-        }
-
-        p.consume(m);
+    if (!p.consume_match(/^((?:Freecells\: +)?)/)) {
+        return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
     }
 
     while (p.isNotEmpty()) {
-        var m = p.match(/^(\s*(?:#[^\n]*)?\n?)$/);
-
-        if (m) {
-            p.consume(m);
+        if (p.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)) {
             break;
         }
 
-        m = p.match('^(' + (is_start ? '' : ' +') + "(\\-|(?:" + card_re + '))' + ')');
+        var m = p.consume_match('^(' + (is_start ? '' : ' +') + "(\\-|(?:" + card_re + '))' + ')');
         if (! m) {
-            m = p.match('^( *)');
-            p.consume(m);
+            p.consume_match('^( *)');
 
             return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', num_freecells, []);
         }
 
-        p.consume(m);
         var card_str = m[2];
-        cards.push((card_str == '-') ? null : fcs_js__card_from_string(m[2]));
+        cards.push((card_str == '-') ? null : fcs_js__card_from_string(card_str));
         is_start = false;
     }
 
