@@ -289,7 +289,9 @@ class FreecellsParseResult {
         this.is_correct = is_correct;
         this.num_consumed_chars = num_consumed_chars;
         this.error = error;
-        this.freecells = new Freecells(num_freecells, fc);
+        if (is_correct) {
+            this.freecells = new Freecells(num_freecells, fc);
+        }
         this.start_char_idx = start_char_idx;
     }
 
@@ -305,8 +307,8 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
         return new FreecellsParseResult(verdict, start_char_idx, p.getConsumed(), err_str, num_freecells, verdict ? p.cards : []);
     }
 
-    if (!p.consume_match(/^((?:Freecells\: +)?)/)) {
-        return make_ret(false, 'Wrong ling prefix for freecells - should be "Freecells:"');
+    if (!p.consume_match(/^(Freecells\: +)/)) {
+        return make_ret(false, 'Wrong line prefix for freecells - should be "Freecells:"');
     }
 
     var ret = p.loop("\\-|(?:" + card_re + ')', () => { return make_ret(false, 'Wrong card format - should be [Rank][Suit]'); });

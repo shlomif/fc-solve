@@ -145,7 +145,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Freecells class tests", function(a: Assert) {
-        a.expect(40);
+        a.expect(43);
 
         {
             var start_char_idx = 10;
@@ -340,6 +340,23 @@ export function test_fcs_validate()
 
             // TEST
             a.equal(result.num_consumed_chars, str.length, test_name + "fc.consumed is right on success.");
+        }
+
+        {
+            const start_char_idx = 10;
+            const str = "F-Junk: 5C 2H 3D 9H";
+            const num_freecells = 4;
+
+            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+
+            // TEST
+            a.notOk (result.is_correct, "Freecells has wrong prefix.");
+
+            // TEST
+            a.equal(result.start_char_idx, start_char_idx, "start_char_idx is correct.");
+
+            // TEST
+            a.ok (result.error.match(/^Wrong line prefix/), "err-str");
         }
     });
 }
