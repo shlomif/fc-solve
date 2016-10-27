@@ -256,45 +256,38 @@ class FreecellsParseResult {
     }
 }
 
-export function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: number, s: string): FreecellsParseResult {
+export function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: number, orig_s: string): FreecellsParseResult {
     var cards:Array<MaybeCard> = [];
     var is_start:boolean = true;
-    var consumed:number = 0;
 
-    function consume_match(m: RegExpMatchArray): void {
-        var len_match:number = m[1].length;
-        consumed += len_match;
-        s = s.substring(len_match);
-
-        return;
-    }
+    var p = new StringParser(orig_s);
 
     {
-        var m = s.match(/^((?:Freecells\: +)?)/);
+        var m = p.match(/^((?:Freecells\: +)?)/);
         if (!m) {
-            return new FreecellsParseResult(false, start_char_idx, consumed, 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
+            return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
         }
 
-        consume_match(m);
+        p.consume(m);
     }
 
-    while (s.length > 0) {
-        var m = s.match(/^(\s*(?:#[^\n]*)?\n?)$/);
+    while (p.isNotEmpty()) {
+        var m = p.match(/^(\s*(?:#[^\n]*)?\n?)$/);
 
         if (m) {
-            consume_match(m);
+            p.consume(m);
             break;
         }
 
-        m = s.match('^(' + (is_start ? '' : ' +') + "(\\-|(?:" + card_re + '))' + ')');
+        m = p.match('^(' + (is_start ? '' : ' +') + "(\\-|(?:" + card_re + '))' + ')');
         if (! m) {
-            m = s.match('^( *)');
-            consume_match(m);
+            m = p.match('^( *)');
+            p.consume(m);
 
-            return new FreecellsParseResult(false, start_char_idx, consumed, 'Wrong card format - should be [Rank][Suit]', num_freecells, []);
+            return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', num_freecells, []);
         }
 
-        consume_match(m);
+        p.consume(m);
         var card_str = m[2];
         cards.push((card_str == '-') ? null : fcs_js__card_from_string(m[2]));
         is_start = false;
@@ -305,8 +298,8 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
     }
 
     if (cards.length != num_freecells) {
-        return new FreecellsParseResult(false, start_char_idx, consumed, 'Too many cards specified in Freecells line.', num_freecells, []);
+        return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Too many cards specified in Freecells line.', num_freecells, []);
     }
 
-    return new FreecellsParseResult(true, start_char_idx, consumed, '', num_freecells, cards);
+    return new FreecellsParseResult(true, start_char_idx, p.getConsumed(), '', num_freecells, cards);
 }
