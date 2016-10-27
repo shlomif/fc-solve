@@ -172,12 +172,16 @@ class StringParser {
     }
 }
 
-class CardsStringParser extends StringParser {
+class CardsStringParser<CardType> extends StringParser {
     private is_start: boolean;
+    public cards: Array<CardType>;
+    private card_mapper: ((string) => CardType);
 
-    constructor(s: string) {
+    constructor(s: string, card_mapper) {
         super(s)
         this.is_start = true;
+        this.cards = [];
+        this.card_mapper = card_mapper;
     }
 
     afterStart(): void {
@@ -194,11 +198,16 @@ class CardsStringParser extends StringParser {
         var that = this;
         return (that.isNotEmpty() && (!that.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)));
     }
+
+    add(m: RegExpMatchArray): void {
+        this.cards.push(this.card_mapper(m[2]));
+
+        return;
+    }
 }
 
 export function fcs_js__column_from_string(start_char_idx: number, orig_s: string): ColumnParseResult {
-    var cards:Array<Card> = [];
-    var p = new CardsStringParser(orig_s);
+    var p = new CardsStringParser<Card>(orig_s, fcs_js__card_from_string);
 
     p.consume_match('^((?:\: +)?)');
     while (p.should_loop()) {
@@ -208,10 +217,10 @@ export function fcs_js__column_from_string(start_char_idx: number, orig_s: strin
 
             return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', []);
         }
-        cards.push(fcs_js__card_from_string(m[2]));
+        p.add(m);
         p.afterStart();
     }
-    return new ColumnParseResult(true, start_char_idx, p.getConsumed(), '', cards);
+    return new ColumnParseResult(true, start_char_idx, p.getConsumed(), '', p.cards);
 }
 
 type MaybeCard = Card | null;
@@ -278,8 +287,7 @@ class FreecellsParseResult {
 }
 
 export function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: number, orig_s: string): FreecellsParseResult {
-    var cards:Array<MaybeCard> = [];
-    var p = new CardsStringParser(orig_s);
+    var p = new CardsStringParser<MaybeCard>(orig_s, (card_str) => { return ((card_str == '-') ? null : fcs_js__card_from_string(card_str)); });
 
     if (!p.consume_match(/^((?:Freecells\: +)?)/)) {
         return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
@@ -293,18 +301,17 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
             return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', num_freecells, []);
         }
 
-        var card_str = m[2];
-        cards.push((card_str == '-') ? null : fcs_js__card_from_string(card_str));
+        p.add(m);
         p.afterStart();
     }
 
-    while (cards.length < num_freecells) {
-        cards.push(null);
+    while (p.cards.length < num_freecells) {
+        p.cards.push(null);
     }
 
-    if (cards.length != num_freecells) {
+    if (p.cards.length != num_freecells) {
         return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Too many cards specified in Freecells line.', num_freecells, []);
     }
 
-    return new FreecellsParseResult(true, start_char_idx, p.getConsumed(), '', num_freecells, cards);
+    return new FreecellsParseResult(true, start_char_idx, p.getConsumed(), '', num_freecells, p.cards);
 }
