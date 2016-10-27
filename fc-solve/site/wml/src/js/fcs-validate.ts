@@ -205,21 +205,33 @@ class CardsStringParser<CardType> extends StringParser {
         this.afterStart();
         return;
     }
+
+    loop(re: any, callback: (() => any)): any {
+        var p = this;
+
+        while (p.should_loop()) {
+            var m = p.consume_match('^(' + p.getStartSpace() + '(' + re + ')' + ')');
+            if (! m) {
+                p.consume_match('^( *)');
+
+                return callback();
+            }
+            p.add(m);
+        }
+        return null;
+    }
 }
 
 export function fcs_js__column_from_string(start_char_idx: number, orig_s: string): ColumnParseResult {
     var p = new CardsStringParser<Card>(orig_s, fcs_js__card_from_string);
 
     p.consume_match('^((?:\: +)?)');
-    while (p.should_loop()) {
-        var m = p.consume_match('^(' + p.getStartSpace()  + '(' + card_re + ')' + ')');
-        if (! m) {
-            p.consume_match('^( *)');
 
-            return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', []);
-        }
-        p.add(m);
+    var ret = p.loop(card_re, () => { return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', []); });
+    if (ret) {
+        return ret;
     }
+
     return new ColumnParseResult(true, start_char_idx, p.getConsumed(), '', p.cards);
 }
 
@@ -293,15 +305,10 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
         return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
     }
 
-    while (p.should_loop()) {
-        var m = p.consume_match('^(' + p.getStartSpace() + "(\\-|(?:" + card_re + '))' + ')');
-        if (! m) {
-            p.consume_match('^( *)');
+    var ret = p.loop("\\-|(?:" + card_re + ')', () => { return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', num_freecells, []); });
 
-            return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', num_freecells, []);
-        }
-
-        p.add(m);
+    if (ret) {
+        return ret;
     }
 
     while (p.cards.length < num_freecells) {
