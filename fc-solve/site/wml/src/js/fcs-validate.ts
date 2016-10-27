@@ -202,6 +202,7 @@ class CardsStringParser<CardType> extends StringParser {
     add(m: RegExpMatchArray): void {
         this.cards.push(this.card_mapper(m[2]));
 
+        this.afterStart();
         return;
     }
 }
@@ -218,7 +219,6 @@ export function fcs_js__column_from_string(start_char_idx: number, orig_s: strin
             return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', []);
         }
         p.add(m);
-        p.afterStart();
     }
     return new ColumnParseResult(true, start_char_idx, p.getConsumed(), '', p.cards);
 }
@@ -302,7 +302,6 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
         }
 
         p.add(m);
-        p.afterStart();
     }
 
     while (p.cards.length < num_freecells) {
