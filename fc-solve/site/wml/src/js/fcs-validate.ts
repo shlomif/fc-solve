@@ -189,6 +189,11 @@ class CardsStringParser extends StringParser {
     getStartSpace(): string {
         return (this.is_start ? '' : ' +');
     }
+
+    should_loop(): boolean {
+        var that = this;
+        return (that.isNotEmpty() && (!that.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)));
+    }
 }
 
 export function fcs_js__column_from_string(start_char_idx: number, orig_s: string): ColumnParseResult {
@@ -196,11 +201,7 @@ export function fcs_js__column_from_string(start_char_idx: number, orig_s: strin
     var p = new CardsStringParser(orig_s);
 
     p.consume_match('^((?:\: +)?)');
-    while (p.isNotEmpty()) {
-        if (p.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)) {
-            break;
-        }
-
+    while (p.should_loop()) {
         var m = p.consume_match('^(' + p.getStartSpace()  + '(' + card_re + ')' + ')');
         if (! m) {
             p.consume_match('^( *)');
@@ -284,11 +285,7 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
         return new FreecellsParseResult(false, start_char_idx, p.getConsumed(), 'Wrong ling prefix for freecells - should be "Freecells:"', num_freecells, []);
     }
 
-    while (p.isNotEmpty()) {
-        if (p.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)) {
-            break;
-        }
-
+    while (p.should_loop()) {
         var m = p.consume_match('^(' + p.getStartSpace() + "(\\-|(?:" + card_re + '))' + ')');
         if (! m) {
             p.consume_match('^( *)');
