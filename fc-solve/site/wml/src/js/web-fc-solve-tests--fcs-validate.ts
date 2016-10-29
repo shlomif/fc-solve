@@ -1,5 +1,3 @@
-/// <reference path="typings/index.d.ts" />
-
 import { fcs_js__freecells_from_string, fcs_js__column_from_string, fcs_js__card_from_string } from "./fcs-validate";
 
 export function test_fcs_validate()

@@ -177,16 +177,24 @@ $(TYPINGS):
 
 TEST_FCS_VALID_DEST = $(D)/js/web-fc-solve-tests--fcs-validate.js
 
-TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js $(TEST_FCS_VALID_DEST)
+TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
+TYPESCRIPT_COMMON_DEFS_FILES = src/js/typings/index.d.ts
 
 all: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
 
 $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
-	tsc --module amd --out $@ $<
+	tsc --module amd --out $@ $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
 $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts
-	tsc --target es5 --module commonjs --outDir lib/for-node/js $<
+	tsc --target es5 --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
+
+TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
+
+all: $(TS_CHART_DEST)
+
+$(TS_CHART_DEST): $(D)/%.js: src/%.ts
+	tsc --module amd --out $@ src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
 

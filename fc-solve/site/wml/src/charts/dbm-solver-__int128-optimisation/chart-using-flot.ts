@@ -1,6 +1,3 @@
-/// <reference path="typings/index.d.ts" />
-/// <reference path="jquery.flot.d.ts" />
-
 $(function() {
 	var series = [[],[]];
 	var lines = $("#data").text().split("\n");
