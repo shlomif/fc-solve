@@ -227,7 +227,7 @@ runtest: all
 	runprove Tests/*.t
 
 clean:
-	rm -f lib/fc-solve-for-javascript/*.bc lib/fc-solve-for-javascript/*.js
+	rm -f lib/fc-solve-for-javascript/*.bc lib/fc-solve-for-javascript/*.js $(TYPESCRIPT_DEST_FILES__NODE) $(TYPESCRIPT_DEST_FILES) $(TS_CHART_DEST)
 
 # A temporary target to edit the active files.
 edit:
