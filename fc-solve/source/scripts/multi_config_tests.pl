@@ -158,6 +158,11 @@ local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 my $test_index = 1;
 my $NUM_PROCESSORS = 4;
 
+my $FALSE = 0;
+# Inline::C/etc. leave some files and dirs under restrictive file permissions
+# and we need to instruct rmtree to delete them as well.
+my $SAFE = $FALSE;
+
 sub run_tests
 {
     my ($blurb_base_base, $args) = @_;
@@ -199,7 +204,7 @@ sub run_tests
     run_cmd("$blurb_base : test", {cmd => [$^X, "$cwd/run-tests.pl"]});
 
     chdir($cwd);
-    rmtree($build_path, 0, 1);
+    rmtree($build_path, 0, $SAFE);
 
     return;
 }
