@@ -562,3 +562,7 @@ consumes very little RAM (below 0.1%).
 * Experiment with +__int128+ in GCC wrt the delta_states (instead of GMP).
 See: https://www.nu42.com/2016/01/excellent-optimization-story.html .
 
+* Make sure the code uses GMP instead of +__int128+ for the non-DeBondt states
+encoding.
+** *Resolution*: it does not depend on it because it uses +bit_rw.h+ .
+

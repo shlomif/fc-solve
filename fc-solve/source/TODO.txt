@@ -29,9 +29,6 @@ Enable the extended seeds' range.
 
 * Add Test::RunValgrind to the testing CPAN task.
 
-* Make sure the code uses GMP instead of +__int128+ for the non-DeBondt states
-encoding.
-
 * Try to build the code on ARM Linux and get the tests to pass.
 
 * See about the failing test on 32-bit i586 Linux.
