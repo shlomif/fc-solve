@@ -23,8 +23,6 @@ solver (at least initially]):
 rand-gen .h files in +fc-solve/source+, to: 1. Avoid code duplication. 2.
 Enable the extended seeds' range.
 
-* Add Test::RunValgrind to the testing CPAN task.
-
 * Try to build the code on ARM Linux and get the tests to pass.
 
 * See about the failing test on 32-bit i586 Linux.
