@@ -529,7 +529,7 @@ SET(LIBTCMALLOC_LIB_LIST)
 
 # Avoid linking to tcmalloc if the test suite is enabled due to:
 # https://github.com/gperftools/gperftools/issues/758
-IF ((NOT ("${FCS_AVOID_TCMALLOC}")) AND (NOT "${FCS_WITH_TEST_SUITE}") AND ( NOT ((CMAKE_BUILD_TYPE STREQUAL "debug") OR (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo") ) ))
+IF ((NOT (FCS_AVOID_TCMALLOC)) AND (NOT (FCS_WITH_TEST_SUITE)) AND ( NOT ((CMAKE_BUILD_TYPE STREQUAL "debug") OR (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo") ) ))
     # Optionally link against Google's TCMalloc if it's available:
     # http://goog-perftools.sourceforge.net/
     # This gives better performance for the threaded programs.

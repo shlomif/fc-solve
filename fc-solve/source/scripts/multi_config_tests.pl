@@ -166,6 +166,12 @@ sub run_tests
     my $blurb_base = "$blurb_base_base [idx=$idx]";
 
     my $tatzer_args = $args->{'tatzer_args'};
+    my $cmake_args = $args->{'cmake_args'};
+
+    if (not ($tatzer_args xor $cmake_args))
+    {
+        die "One and only one of tatzer_args or cmake_args must be specified.";
+    }
 
     my $cwd = getcwd();
     my $build_path = File::Spec->rel2abs(
@@ -181,7 +187,14 @@ sub run_tests
     delete($ENV{FCS_USE_TEST_RUN});
     $ENV{TEST_JOBS} = $NUM_PROCESSORS;
 
-    run_cmd("$blurb_base : Tatzer", {cmd => ['../source/Tatzer', @$tatzer_args]});
+    if ($tatzer_args)
+    {
+        run_cmd("$blurb_base : Tatzer", {cmd => ['../source/Tatzer', @$tatzer_args]});
+    }
+    else
+    {
+        run_cmd("$blurb_base : cmake", {cmd => ['cmake', @$cmake_args, '../source']});
+    }
     run_cmd("$blurb_base : make", {cmd => ['make', "-j$NUM_PROCESSORS"]});
     run_cmd("$blurb_base : test", {cmd => [$^X, "$cwd/run-tests.pl"]});
 
@@ -212,6 +225,7 @@ else
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
 
+run_tests("Plain CMake Default", { cmake_args => [] });
 run_tests("Default", { tatzer_args => [] });
 run_tests("--rcs", { tatzer_args => [qw(--rcs)] });
 
