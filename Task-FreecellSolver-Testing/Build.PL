@@ -39,6 +39,7 @@ my $builder = Test::Run::Builder->new(
         "Test::Differences" => 0,
         "Test::More" => 0,
         "Test::Run::CmdLine::Plugin::TrimDisplayedFilenames" => 0,
+        "Test::RunValgrind" => 0,
         "perl" => '5.008',
         "warnings" => 0,
         "YAML::XS" => 0,

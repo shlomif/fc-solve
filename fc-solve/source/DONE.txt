@@ -566,3 +566,9 @@ See: https://www.nu42.com/2016/01/excellent-optimization-story.html .
 encoding.
 ** *Resolution*: it does not depend on it because it uses +bit_rw.h+ .
 
+* Make sure that
++cmake -DCMAKE_INSTALL_PREFIX="$HOME/apps/to-del-fcs" ../source+ builds and
+passes the tests fine.
+** *Resolution*: added to +scripts/multi_config_tests.pl+ .
+
+* Add Test::RunValgrind to the testing CPAN task.

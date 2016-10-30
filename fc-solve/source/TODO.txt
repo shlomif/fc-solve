@@ -19,10 +19,6 @@ solver (at least initially]):
 ** invalid characters.
 ** misformatting of the format.
 
-* Make sure that
-+cmake -DCMAKE_INSTALL_PREFIX="$HOME/apps/to-del-fcs" ../source+ builds and
-passes the tests fine.
-
 * Convert +board_gen/pi_make_microsoft_freecell_board.c+ to use the common
 rand-gen .h files in +fc-solve/source+, to: 1. Avoid code duplication. 2.
 Enable the extended seeds' range.

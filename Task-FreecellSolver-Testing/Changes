@@ -1,5 +1,8 @@
 Revision history for Task-FreecellSolver-Testing
 
+0.0.7   Unknown
+        - Add Test::RunValgrind.
+
 0.0.6   2015-04-06
         - Add Test::Data::Split which is now required.
 
