@@ -9,7 +9,7 @@ MIT/X11 License ( http://en.wikipedia.org/wiki/MIT_License ).
 
 What this means is that the code and binaries here can be linked against
 anything, converted to any different license, freely used and distributed, and
-anything else without any restrictions whatsoever. No Strings Attached!<tm>
+anything else without any restrictions whatsoever. No Strings Attached!™
 
 -- Shlomi Fish
 

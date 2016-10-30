@@ -38,7 +38,7 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
-DOCS_PROTO = AUTHORS INSTALL NEWS README TODO USAGE
+DOCS_PROTO = AUTHORS COPYING INSTALL NEWS README TODO USAGE
 ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
