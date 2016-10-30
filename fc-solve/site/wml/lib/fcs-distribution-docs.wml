@@ -28,5 +28,6 @@
 <fcs_document fn="USAGE" desc="A detailed usage document" />
 <fcs_document fn="TODO" desc="The to-do list" />
 <fcs_document fn="AUTHORS" desc="List of authors and contributors" />
+<fcs_document fn="COPYING" desc="The licensing/copyright terms file of Freecell Solver" />
 </table>
 </define-tag>
