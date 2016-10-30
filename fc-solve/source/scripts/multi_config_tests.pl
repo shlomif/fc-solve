@@ -226,6 +226,7 @@ else
 # run_cmd('false', {cmd => [qw(false)],});
 
 run_tests("Plain CMake Default", { cmake_args => [] });
+run_tests("Non-Debondt Delta States", { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] });
 run_tests("Default", { tatzer_args => [] });
 run_tests("--rcs", { tatzer_args => [qw(--rcs)] });
 
