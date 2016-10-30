@@ -52,10 +52,9 @@ static int fc_solve_get_column_orig_num_cards(
     return ((num_cards >= 2) ? num_cards : 0);
 }
 
-static void fc_solve_delta_stater_init(fc_solve_delta_stater_t *const self,
-    const enum fcs_dbm_variant_type_t local_variant GCC_UNUSED,
-    fcs_state_t *const init_state, const int num_columns,
-    const int num_freecells
+static void fc_solve_delta_stater_init(
+    fc_solve_delta_stater_t *const self, fcs_state_t *const init_state,
+    const int num_columns, const int num_freecells
 #ifndef FCS_FREECELL_ONLY
     ,
     const int sequences_are_built_by

@@ -55,6 +55,7 @@ static int test_encode_and_decode(const enum fcs_dbm_variant_type_t local_varian
 
     fc_solve_delta_stater_encode_into_buffer(
         delta,
+        local_variant,
         state,
         enc_state
     );
@@ -454,9 +455,7 @@ static int main_tests(void)
     }
 
     {
-        char * s;
-
-        s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+        char * s = fc_solve_user_INTERNAL_delta_states_enc_and_dec(
             local_variant,
                 (
                  "Foundations: H-0 C-0 D-0 S-0\n"

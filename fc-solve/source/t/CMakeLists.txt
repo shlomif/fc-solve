@@ -122,6 +122,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         ADD_EXECUTABLE(
             "${EXE_FILE}"
             "${CMAKE_CURRENT_SOURCE_DIR}/delta-states-test.c"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
         )
 
         TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB} ${LIBGMP_LIB})
