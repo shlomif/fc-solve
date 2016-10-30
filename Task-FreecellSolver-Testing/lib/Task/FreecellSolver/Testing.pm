@@ -10,11 +10,11 @@ Freecell Solver test suite.
 
 =head1 VERSION
 
-Version 0.0.6
+Version 0.0.7
 
 =cut
 
-our $VERSION = '0.0.6';
+our $VERSION = '0.0.7';
 
 # Load the dependencies so we'll be sure they are installed.
 use Carp;

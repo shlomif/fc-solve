@@ -1,6 +1,6 @@
 Revision history for Task-FreecellSolver-Testing
 
-0.0.7   Unknown
+0.0.7   2016-10-30
         - Add Test::RunValgrind.
 
 0.0.6   2015-04-06
