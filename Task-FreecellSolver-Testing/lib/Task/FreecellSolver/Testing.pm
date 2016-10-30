@@ -34,6 +34,7 @@ use Template;
 use Test::Differences;
 use Test::More;
 use Test::Run::CmdLine::Plugin::TrimDisplayedFilenames;
+use Test::RunValgrind;
 use YAML::XS;
 
 =head1 SYNOPSIS
