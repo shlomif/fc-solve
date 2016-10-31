@@ -39,7 +39,6 @@ typedef struct
 {
     fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
     fcs_lock_t global_lock;
-    void *tree_recycle_bin;
     fcs_lock_t storage_lock;
     const char *offload_dir_path;
     int curr_depth;
@@ -74,7 +73,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         instance->common.max_count_num_processed = LONG_MAX;
     }
     instance->common.count_of_items_in_queue = 0;
-    instance->tree_recycle_bin = NULL;
+    instance->common.tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
@@ -99,8 +98,8 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
             &(coll->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_init(
-            &(coll->store), dbm_store_path, &(instance->tree_recycle_bin));
+        fc_solve_dbm_store_init(&(coll->store), dbm_store_path,
+            &(instance->common.tree_recycle_bin));
 #endif
     }
 }

@@ -280,7 +280,7 @@ static GCC_INLINE void mark_and_sweep_old_states(
     FILE *const out_fh = instance->common.out_fh;
     TRACE("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
     struct avl_node **tree_recycle_bin =
-        ((struct avl_node **)(&(instance->tree_recycle_bin)));
+        ((struct avl_node **)(&(instance->common.tree_recycle_bin)));
 
     struct avl_traverser trav;
     avl_t_init(&trav, kaz_tree);

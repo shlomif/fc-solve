@@ -106,6 +106,7 @@ typedef struct
 #else
     fcs_encoded_state_buffer_t queue_solution;
 #endif
+    void *tree_recycle_bin;
 } fcs_dbm_instance_common_elems_t;
 
 static GCC_INLINE void fcs_dbm__found_solution(

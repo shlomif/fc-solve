@@ -18,7 +18,6 @@
 
 typedef struct
 {
-    void *tree_recycle_bin;
     fcs_lock_t storage_lock;
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
@@ -89,9 +88,9 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         &(instance->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-    instance->tree_recycle_bin = NULL;
-    fc_solve_dbm_store_init(
-        &(instance->store), dbm_store_path, &(instance->tree_recycle_bin));
+    instance->common.tree_recycle_bin = NULL;
+    fc_solve_dbm_store_init(&(instance->store), dbm_store_path,
+        &(instance->common.tree_recycle_bin));
 #endif
 }
 

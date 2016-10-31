@@ -75,7 +75,6 @@ typedef struct
 {
     fcs_dbm_collection_by_depth_t coll;
     fcs_lock_t global_lock;
-    void *tree_recycle_bin;
     fcs_lock_t storage_lock;
     const char *offload_dir_path;
     int curr_depth;
@@ -168,7 +167,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         instance->common.max_count_num_processed = LONG_MAX;
     }
     instance->common.count_of_items_in_queue = 0;
-    instance->tree_recycle_bin = NULL;
+    instance->common.tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
     FCS_INIT_LOCK(instance->output_lock);
@@ -187,8 +186,8 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
             &(coll->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_init(
-            &(coll->store), dbm_store_path, &(instance->tree_recycle_bin));
+        fc_solve_dbm_store_init(&(coll->store), dbm_store_path,
+            &(instance->common.tree_recycle_bin));
 #endif
     }
 
@@ -737,7 +736,7 @@ static GCC_INLINE void release_starting_state_specific_instance_resources(
     /* TODO : Implement. */
     DESTROY_CACHE(coll);
     /* That is important to avoid stale nodes. */
-    instance->tree_recycle_bin = NULL;
+    instance->common.tree_recycle_bin = NULL;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
@@ -747,7 +746,7 @@ static GCC_INLINE void release_starting_state_specific_instance_resources(
         cache_init (&(coll->cache), pre_cache_max_count+caches_delta, &(coll->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_init(&(coll->store), instance->dbm_store_path, &(instance->tree_recycle_bin));
+        fc_solve_dbm_store_init(&(coll->store), instance->dbm_store_path, &(instance->common.tree_recycle_bin));
 #endif
 }
 #endif
