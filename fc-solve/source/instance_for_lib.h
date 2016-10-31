@@ -614,7 +614,8 @@ static GCC_INLINE void fc_solve_release_tests_list(
     /* Free the DFS data. */
     fcs_tests_by_depth_array_t *const arr =
         &(DFS_VAR(soft_thread, tests_by_depth_array));
-    for (int unit_idx = 0; unit_idx < arr->num_units; unit_idx++)
+    const_SLOT(num_units, arr);
+    for (size_t unit_idx = 0; unit_idx < num_units; unit_idx++)
     {
         if (arr->by_depth_units[unit_idx].tests.lists)
         {

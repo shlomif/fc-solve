@@ -289,7 +289,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(temp_allocator));
-
     fc_solve_delta_stater_release(&delta);
     fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
     fc_solve_kaz_tree_destroy(does_min_by_sorting_exist);
