@@ -254,6 +254,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     freecell_solver_str_t opened_files_dir)
 {
 #ifdef FCS_WITH_ERROR_STRS
+    char *fcs_user_errstr;
     *error_string = NULL;
 #endif
 
@@ -330,21 +331,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */
         {
-#ifdef FCS_WITH_ERROR_STRS
-            char *fcs_user_errstr;
-#endif
-
             PROCESS_OPT_ARG();
 
             if (freecell_solver_user_set_tests_order(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
-#ifdef FCS_WITH_ERROR_STRS
-                ASSIGN_ERR_STR(error_string, "Error in tests' order!\n%s\n",
-                    fcs_user_errstr);
-                free(fcs_user_errstr);
-#endif
-
+                ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                    "Error in tests' order!\n%s\n", fcs_user_errstr);
                 RET_ERROR_IN_ARG();
             }
         }
@@ -685,10 +678,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                                                   */
         {
             PROCESS_OPT_ARG();
-
-#ifdef FCS_WITH_ERROR_STRS
-            char *fcs_user_errstr;
-#endif
             if (freecell_solver_user_set_optimization_scan_tests_order(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
@@ -886,13 +875,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     s = (*arg);
                 }
 
-/* Note: passing (*arg) instead of s to the
- * set_depth_tests_order is likely wrong, but when doing
- * it right, the tests fail.
- * */
-#ifdef FCS_WITH_ERROR_STRS
-                char *fcs_user_errstr;
-#endif
+                /* Note: passing (*arg) instead of s to the
+                 * set_depth_tests_order is likely wrong, but when doing
+                 * it right, the tests fail.
+                 * */
                 if (freecell_solver_user_set_depth_tests_order(instance,
                         min_depth,
                         ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg))
@@ -909,10 +895,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_SET_PRUNING: /* STRINGS=-sp|--set-pruning; */
         {
             PROCESS_OPT_ARG();
-
-#ifdef FCS_WITH_ERROR_STRS
-            char *fcs_user_errstr;
-#endif
             if (freecell_solver_user_set_pruning(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
@@ -964,9 +946,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
                     RET_ERROR_IN_ARG();
                 }
-#ifdef FCS_WITH_ERROR_STRS
-                char *fcs_user_errstr;
-#endif
                 if (freecell_solver_user_set_patsolve_x_param(instance,
                         position,
                         x_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
@@ -997,9 +976,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
                     RET_ERROR_IN_ARG();
                 }
-#ifdef FCS_WITH_ERROR_STRS
-                char *fcs_user_errstr;
-#endif
                 if (freecell_solver_user_set_patsolve_y_param(instance,
                         position,
                         y_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
