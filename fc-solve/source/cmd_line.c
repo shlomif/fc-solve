@@ -413,21 +413,12 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
-            int sbb;
-
-            if (!strcmp((*arg), "suit"))
-            {
-                sbb = FCS_SEQ_BUILT_BY_SUIT;
-            }
-            else if (!strcmp((*arg), "rank"))
-            {
-                sbb = FCS_SEQ_BUILT_BY_RANK;
-            }
-            else
-            {
-                sbb = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
-            }
-            freecell_solver_user_set_sequences_are_built_by_type(instance, sbb);
+            const_AUTO(p, (*arg));
+            freecell_solver_user_set_sequences_are_built_by_type(instance,
+                (!strcmp(p, "suit"))
+                    ? FCS_SEQ_BUILT_BY_SUIT
+                    : (!strcmp(p, "rank")) ? FCS_SEQ_BUILT_BY_RANK
+                                           : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR);
 #endif
         }
         break;

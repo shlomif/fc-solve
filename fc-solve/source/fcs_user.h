@@ -170,7 +170,7 @@ DLLEXPORT extern char *freecell_solver_user_get_invalid_state_error_string(
 #endif
 
 DLLEXPORT extern int freecell_solver_user_set_sequences_are_built_by_type(
-    void *user_instance, int sbb);
+    void *user_instance, int sequences_are_built_by);
 
 DLLEXPORT extern int freecell_solver_user_set_empty_stacks_filled_by(
     void *user_instance, int es_fill);
