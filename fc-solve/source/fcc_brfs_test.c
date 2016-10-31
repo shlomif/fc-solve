@@ -59,12 +59,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     const int max_num_elements_in_cache = 1000;
     fcs_encoded_state_buffer_t min_by_sorting;
-    fcs_fcc_moves_seq_allocator_t moves_list_allocator;
     fcs_fcc_moves_seq_t start_state_moves_seq;
     add_start_point_context_t add_start_point_context;
     void *tree_recycle_bin = NULL;
-
-    fcs_compact_allocator_t moves_list_compact_alloc;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -98,11 +95,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     cache_init(&does_state_exist_in_any_FCC_cache, max_num_elements_in_cache,
         &meta_alloc);
 
+    fcs_compact_allocator_t moves_list_compact_alloc;
     fc_solve_compact_allocator_init(&(moves_list_compact_alloc), &(meta_alloc));
-
-    moves_list_allocator.recycle_bin = NULL;
-    moves_list_allocator.allocator = &(moves_list_compact_alloc);
-
+    fcs_fcc_moves_seq_allocator_t moves_list_allocator = {
+        .recycle_bin = NULL, .allocator = &(moves_list_compact_alloc)};
     start_state_moves_seq.count = start_state_moves_count;
     start_state_moves_seq.moves_list = NULL;
     {
@@ -181,7 +177,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(moves_list_compact_alloc));
-
     fc_solve_delta_stater_release(&delta);
     fc_solve_kaz_tree_destroy(do_next_fcc_start_points_exist);
     fc_solve_kaz_tree_destroy(does_min_by_sorting_exist);
@@ -206,7 +201,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     dict_t *do_next_fcc_start_points_exist;
     dict_t *does_min_by_sorting_exist;
     fcs_compact_allocator_t temp_allocator;
-    fcs_fcc_moves_seq_allocator_t moves_list_allocator;
     const int max_num_elements_in_cache = 1000000;
     fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     fcs_encoded_state_buffer_t min_by_sorting;
@@ -247,10 +241,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
 
     fc_solve_compact_allocator_init(&(temp_allocator), &meta_alloc);
-
-    moves_list_allocator.recycle_bin = NULL;
-    moves_list_allocator.allocator = &(temp_allocator);
-
+    fcs_fcc_moves_seq_allocator_t moves_list_allocator = {
+        .recycle_bin = NULL, .allocator = &(temp_allocator)};
     /* Populate does_min_by_sorting_exist from min_states */
     {
         const char **min_states_iter = min_states;
