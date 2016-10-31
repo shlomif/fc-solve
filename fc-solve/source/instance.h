@@ -425,31 +425,6 @@ typedef struct
     fcs_game_limit_t num_vacant_freecells;
 } fcs_soft_dfs_stack_item_t;
 
-#if 0
-enum
-{
-
-    /*
-     * A flag that indicates if this soft thread has already been
-     * initialized.
-     * */
-    FCS_SOFT_THREAD_INITIALIZED = (1 << 0),
-
-    /*
-     * A flag that indicates if this scan contains all the tests that
-     * are accessible to all the other scans
-     * */
-    FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN = (1 << 1),
-
-    /*
-     * A flag that indicates if this scan has completed a scan. Used by
-     * solve_instance() to skip to the next scan.
-     * */
-    FCS_SOFT_THREAD_IS_FINISHED = (1 << 2),
-
-};
-#endif
-
 typedef struct
 {
     fc_solve_solve_for_state_move_func_t *tests;

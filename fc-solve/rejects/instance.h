@@ -117,3 +117,29 @@ enum
     FCS_RUNTIME_SCANS_SYNERGY  = (1 << 6),
 };
 #endif
+
+#if 0
+enum
+{
+
+    /*
+     * A flag that indicates if this soft thread has already been
+     * initialized.
+     * */
+    FCS_SOFT_THREAD_INITIALIZED = (1 << 0),
+
+    /*
+     * A flag that indicates if this scan contains all the tests that
+     * are accessible to all the other scans
+     * */
+    FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN = (1 << 1),
+
+    /*
+     * A flag that indicates if this scan has completed a scan. Used by
+     * solve_instance() to skip to the next scan.
+     * */
+    FCS_SOFT_THREAD_IS_FINISHED = (1 << 2),
+
+};
+#endif
+
