@@ -369,9 +369,6 @@ int main(int argc, char *argv[])
     int arg;
     const char *out_filename = NULL, *offload_dir_path = NULL;
     enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
-#if 0
-    fcs_bool_t skip_queue_output = FALSE;
-#endif
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     long pre_cache_max_count = 1000000, caches_delta = 1000000,
          iters_delta_limit = -1;
