@@ -147,10 +147,10 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
             move_to_string(move, move_buffer);
         }
 
-        char state_as_str[1000];
-        FCS__RENDER_STATE(state_as_str, &(state.s), &locs);
+        char state_str[1000];
+        FCS__RENDER_STATE(state_str, &(state.s), &locs);
 
-        fprintf(out_fh, "--------\n%s\n==\n%s\n", state_as_str,
+        fprintf(out_fh, "--------\n%s\n==\n%s\n", state_str,
             (i > 0) ? move_buffer : "END");
         fflush(out_fh);
     }
