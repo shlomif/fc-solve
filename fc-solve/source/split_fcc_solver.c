@@ -313,11 +313,8 @@ static void *instance_run_solver_thread(void *const void_arg)
             fc_solve_delta_stater_decode_into_state(
                 delta_stater, item->key.s, &state, indirect_stacks_buffer);
 
-/* A section for debugging. */
-#ifdef DEBUG_OUT
+            /* A section for debugging. */
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
-#endif
-
 #if 0
         {
             FccEntryPointNode key;

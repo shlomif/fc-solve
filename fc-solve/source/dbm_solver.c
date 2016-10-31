@@ -280,11 +280,8 @@ static void *instance_run_solver_thread(void *const void_arg)
             /* Handle item. */
             fc_solve_delta_stater_decode_into_state(
                 delta_stater, item->key.s, &state, indirect_stacks_buffer);
-
-/* A section for debugging. */
-#ifdef DEBUG_OUT
+            /* A section for debugging. */
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
-#endif
 
             if (instance_solver_thread_calc_derived_states(local_variant,
                     &state, token, &derived_list, &derived_list_recycle_bin,
@@ -406,10 +403,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     int hex_digits;
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
-#ifdef DEBUG_OUT
         FCS__OUTPUT_STATE(
             stdout, "BEFORE_RUNNING_STATE == ", &(running_state.s), &locs);
-#endif
         fcs_card_t src_card;
 
         s_ptr += 3;
@@ -501,10 +496,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
          * */
         fc_solve_delta_stater_decode_into_state(delta, running_key.s,
             &running_state, running_indirect_stacks_buffer);
-#ifdef DEBUG_OUT
         FCS__OUTPUT_STATE(
             stdout, "RUNNING_STATE == ", &(running_state.s), &locs);
-#endif
     }
 
     if (memcmp(&running_key, &final_stack_encoded_state, sizeof(running_key)) !=
