@@ -220,7 +220,7 @@ typedef struct
     fcs_dbm_solver_thread_t *thread;
 } thread_arg_t;
 
-static void *instance_run_solver_thread(void *void_arg)
+static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_collection_by_depth_t *coll;
     fcs_dbm_queue_item_t physical_item;
