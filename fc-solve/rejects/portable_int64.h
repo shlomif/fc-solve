@@ -17,16 +17,14 @@
 extern "C" {
 #endif
 
-#ifndef WIN32
-typedef long long fcs_int64_t;
-
-#define FCS_INT64_FORMAT "%lli"
-
-#else
+#ifdef WIN32
 typedef __int64 fcs_int64_t;
 
 #define FCS_INT64_FORMAT "%I64i"
+#else
+typedef long long fcs_int64_t;
 
+#define FCS_INT64_FORMAT "%lli"
 #endif
 
 #ifdef __cplusplus

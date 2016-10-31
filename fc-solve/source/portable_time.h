@@ -62,13 +62,13 @@ typedef struct
 
 #define FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num)                         \
     FCS_GET_TIME(mytime);                                                      \
-    printf("Intractable Board No. " FCS_INT64_FORMAT " at %li.%.6li\n",        \
-        board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
+    printf("Intractable Board No. %lld at %li.%.6li\n", board_num,             \
+        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
 
 #define FCS_PRINT_UNSOLVED_BOARD(mytime, board_num)                            \
     FCS_GET_TIME(mytime);                                                      \
-    printf("Unsolved Board No. " FCS_INT64_FORMAT " at %li.%.6li\n",           \
-        board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
+    printf("Unsolved Board No. %lld at %li.%.6li\n", board_num,                \
+        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
 
 static GCC_INLINE void fc_solve_print_started_at(void)
 {
@@ -80,13 +80,13 @@ static GCC_INLINE void fc_solve_print_started_at(void)
 
 #define FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters)            \
     FCS_GET_TIME(mytime);                                                      \
-    printf(("Reached Board No. " FCS_INT64_FORMAT " at %li.%.6li "             \
-            "(total_num_iters=" FCS_INT64_FORMAT ")\n"),                       \
+    printf(("Reached Board No. %lld at %li.%.6li "                             \
+            "(total_num_iters=%lld)\n"),                                       \
         board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime),        \
         total_num_iters);
 
 #define FCS_PRINT_FINISHED(mytime, total_num_iters)                            \
     FCS_GET_TIME(mytime);                                                      \
                                                                                \
-    printf(("Finished at %li.%.6li (total_num_iters=" FCS_INT64_FORMAT ")\n"), \
+    printf(("Finished at %li.%.6li (total_num_iters=%lld)\n"),                 \
         FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime), total_num_iters)

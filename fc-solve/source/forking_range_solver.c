@@ -59,7 +59,7 @@ static void print_help(void)
         "     Limits each board for up to 'limit' iterations.\n");
 }
 
-static fcs_int64_t total_num_iters = 0;
+static long long total_num_iters = 0;
 
 #define READ_FD 0
 #define WRITE_FD 1
@@ -353,11 +353,9 @@ int main(int argc, char *argv[])
             }
 #endif
         }
-
 #ifndef USE_EPOLL
         mymax++;
 #endif
-
         int total_num_finished_boards = 0;
         const long long total_num_boards_to_check =
             end_board - next_board_num + 1;

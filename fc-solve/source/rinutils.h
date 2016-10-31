@@ -22,7 +22,6 @@
 #include "likely.h"
 #include "min_and_max.h"
 #include "portable_int32.h"
-#include "portable_int64.h"
 #include "portable_time.h"
 #include "str_utils.h"
 #include "typeof_wrap.h"

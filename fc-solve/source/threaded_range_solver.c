@@ -53,7 +53,7 @@ fcs_int_limit_t total_iterations_limit_per_board = -1;
 fcs_int_limit_t update_total_num_iters_threshold = 1000000;
 char **context_argv;
 int context_arg = 1, context_argc;
-static fcs_int64_t total_num_iters = 0;
+static long long total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
 static void *worker_thread(void *GCC_UNUSED void_arg)
@@ -112,7 +112,7 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
             if (unlikely(board_num % stop_at == 0))
             {
                 pthread_mutex_lock(&total_num_iters_lock);
-                fcs_int64_t total_num_iters_copy =
+                long long total_num_iters_copy =
                     (total_num_iters += total_num_iters_temp);
                 pthread_mutex_unlock(&total_num_iters_lock);
                 total_num_iters_temp = 0;
