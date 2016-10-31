@@ -218,12 +218,9 @@ static void fc_solve_delta_stater_encode_composite(
 {
     int cols_indexes[MAX_NUM_STACKS];
     fc_solve_column_encoding_composite_t cols[MAX_NUM_STACKS];
-    fcs_state_t *derived;
-    int num_columns;
+    fcs_state_t *const derived = self->_derived_state;
 
-    derived = self->_derived_state;
-
-    num_columns = self->num_columns;
+    const_SLOT(num_columns, self);
     for (int i = 0; i < num_columns; i++)
     {
         cols_indexes[i] = i;
