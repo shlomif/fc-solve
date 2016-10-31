@@ -179,44 +179,6 @@ static GCC_INLINE fcs_bool_t read_preset(const char *preset_name,
     return TRUE;
 }
 
-DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
-    void *const instance, const char *const preset_name,
-    freecell_solver_str_t *const known_parameters FCS__PASS_ERR_STR(
-        char **const error_string),
-    const int file_nesting_count, freecell_solver_str_t opened_files_dir)
-{
-    args_man_t preset_args;
-    char dir[MAX_PATH_LEN];
-
-    dir[0] = '\0';
-
-    if (read_preset(preset_name, &preset_args, dir, NULL))
-    {
-#ifdef FCS_WITH_ERROR_STRS
-        *error_string = strdup("Could not read preset.");
-#endif
-        return FCS_CMD_LINE_ERROR_IN_ARG;
-    }
-    else
-    {
-        int last_arg = 0;
-
-        const int ret =
-            freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-                instance, preset_args.argc,
-                (freecell_solver_str_t *)(void *)(preset_args.argv), 0,
-                known_parameters, NULL, NULL FCS__PASS_ERR_STR(error_string),
-                &(last_arg),
-                ((file_nesting_count < 0) ? file_nesting_count
-                                          : (file_nesting_count - 1)),
-                dir[0] ? dir : opened_files_dir);
-
-        fc_solve_args_man_free(&preset_args);
-
-        return ret;
-    }
-}
-
 static GCC_INLINE char *calc_errstr_s(const char *const format, ...)
 {
     va_list my_va_list;
@@ -244,6 +206,42 @@ static GCC_INLINE char *calc_errstr_s(const char *const format, ...)
 #define ASSIGN_ERR_STR(error_string, format, ...)
 #define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)
 #endif
+
+DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
+    void *const instance, const char *const preset_name,
+    freecell_solver_str_t *const known_parameters FCS__PASS_ERR_STR(
+        char **const error_string),
+    const int file_nesting_count, freecell_solver_str_t opened_files_dir)
+{
+    args_man_t preset_args;
+    char dir[MAX_PATH_LEN];
+
+    dir[0] = '\0';
+
+    if (read_preset(preset_name, &preset_args, dir, NULL))
+    {
+        ASSIGN_ERR_STR(error_string, "%s", "Could not read preset.");
+        return FCS_CMD_LINE_ERROR_IN_ARG;
+    }
+    else
+    {
+        int last_arg = 0;
+
+        const int ret =
+            freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+                instance, preset_args.argc,
+                (freecell_solver_str_t *)(void *)(preset_args.argv), 0,
+                known_parameters, NULL, NULL FCS__PASS_ERR_STR(error_string),
+                &(last_arg),
+                ((file_nesting_count < 0) ? file_nesting_count
+                                          : (file_nesting_count - 1)),
+                dir[0] ? dir : opened_files_dir);
+
+        fc_solve_args_man_free(&preset_args);
+
+        return ret;
+    }
+}
 
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void *instance, int argc, freecell_solver_str_t argv[], const int start_arg,
@@ -600,11 +598,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     ? freecell_solver_user_next_soft_thread(instance)
                     : freecell_solver_user_next_hard_thread(instance))
             {
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string = strdup(
+                ASSIGN_ERR_STR(error_string, "%s",
                     "The maximal number of soft threads has been exceeded\n");
-#endif
-
                 RET_ERROR_IN_ARG();
             }
         }
@@ -781,11 +776,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 buffer = SMALLOC(buffer, file_len + 1);
                 if (buffer == NULL)
                 {
-#ifdef FCS_WITH_ERROR_STRS
-                    *error_string = strdup("Could not allocate enough memory "
-                                           "to parse the file. Quitting.\n");
-#endif
-
+                    ASSIGN_ERR_STR(error_string, "%s",
+                        "Could not allocate enough memory "
+                        "to parse the file. Quitting.\n");
                     fclose(f);
 
                     RET_ERROR_IN_ARG();
@@ -940,10 +933,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 int position, x_param_val;
                 if (sscanf((*arg), "%d,%d", &position, &x_param_val) != 2)
                 {
-#ifdef FCS_WITH_ERROR_STRS
-                    *error_string =
-                        strdup("Wrong format for --patsolve-x-param");
-#endif
+                    ASSIGN_ERR_STR(error_string, "%s",
+                        "Wrong format for --patsolve-x-param");
                     RET_ERROR_IN_ARG();
                 }
                 if (freecell_solver_user_set_patsolve_x_param(instance,
@@ -970,10 +961,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 double y_param_val;
                 if (sscanf((*arg), "%d,%lf", &position, &y_param_val) != 2)
                 {
-#ifdef FCS_WITH_ERROR_STRS
-                    *error_string =
-                        strdup("Wrong format for --patsolve-y-param");
-#endif
+                    ASSIGN_ERR_STR(error_string, "%s",
+                        "Wrong format for --patsolve-y-param");
                     RET_ERROR_IN_ARG();
                 }
                 if (freecell_solver_user_set_patsolve_y_param(instance,
