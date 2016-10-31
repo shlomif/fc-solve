@@ -44,6 +44,7 @@
 #include <time.h>
 
 #include "alloc_wrap.h"
+#include "bool.h"
 #include "gen_ms_boards__rand.h"
 
 typedef int CARD;
