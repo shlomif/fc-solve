@@ -777,10 +777,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 char *buffer;
                 FILE *f;
                 long file_len;
-                int num_file_args_to_skip;
-
-                num_file_args_to_skip = 0;
-
+                int num_file_args_to_skip = 0;
                 s = (*arg);
                 while (isdigit(*s))
                 {

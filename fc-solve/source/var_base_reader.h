@@ -60,7 +60,7 @@ static GCC_INLINE unsigned long fc_solve_var_base_reader_read(
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
     fcs_var_base_int_t rem;
 #else
-#define rem reader->r;
+#define rem (reader->r)
 #endif
     FCS_var_base_int__mod_div(reader->data, rem, base);
 
