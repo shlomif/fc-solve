@@ -169,12 +169,12 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
     )
 ENDIF ()
 
-SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/gen_rate_state_c.pl")
+SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_rate_state_c.pl")
 SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
 ADD_CUSTOM_COMMAND(
-    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.c"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c"
     COMMAND "perl"
     ARGS ${rate_state_args}
     DEPENDS "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.h"
