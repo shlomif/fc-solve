@@ -56,8 +56,8 @@ static int fc_solve_compare_encoded_states(const void *const void_a,
 }
 
 static GCC_INLINE void fc_solve_fcc_release_moves_seq(
-    fcs_fcc_moves_seq_t *moves_seq,
-    fcs_fcc_moves_seq_allocator_t *moves_list_allocator)
+    fcs_fcc_moves_seq_t *const moves_seq,
+    fcs_fcc_moves_seq_allocator_t *const moves_list_allocator)
 {
     fcs_fcc_moves_list_item_t *iter = moves_seq->moves_list;
     fcs_fcc_moves_list_item_t *iter_next;

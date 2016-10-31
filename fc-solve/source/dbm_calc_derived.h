@@ -330,6 +330,21 @@ static GCC_INLINE int horne_prune(
     return count_moves_so_far + count_additional_irrev_moves;
 }
 
+#define the_state (init_state_kv_ptr->s)
+static GCC_INLINE fcs_bool_t is_state_solved(
+    const enum fcs_dbm_variant_type_t local_variant,
+    fcs_state_keyval_pair_t *const init_state_kv_ptr)
+{
+    for (int suit = 0; suit < DECKS_NUM * 4; suit++)
+    {
+        if (fcs_foundation_value(the_state, suit) < RANK_KING)
+        {
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
 static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     const enum fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
@@ -354,21 +369,9 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
 
-#define the_state (init_state_kv_ptr->s)
 #define new_state (ptr_new_state->state.s)
-
-#define SUIT_LIMIT (DECKS_NUM * 4)
-    for (suit = 0; suit < SUIT_LIMIT; suit++)
+    if (is_state_solved(local_variant, init_state_kv_ptr))
     {
-        if (fcs_foundation_value(the_state, suit) < RANK_KING)
-        {
-            break;
-        }
-    }
-
-    if (suit == SUIT_LIMIT)
-    {
-        /* Solved state. */
         return TRUE;
     }
 
