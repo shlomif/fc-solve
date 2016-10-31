@@ -56,7 +56,7 @@ int context_arg = 1, context_argc;
 static fcs_int64_t total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
-static void *worker_thread(void *GCC_UNUSED void_context)
+static void *worker_thread(void *GCC_UNUSED void_arg)
 {
     int arg = context_arg;
     void *const instance =
