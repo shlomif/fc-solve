@@ -767,10 +767,12 @@ static GCC_INLINE void fc_solve_recycle_instance(
             &(instance->hard_threads[ht_idx]));
     }
 
+#ifdef FCS_WITH_MOVES
     if (instance->optimization_thread)
     {
         fc_solve_instance__recycle_hard_thread(instance->optimization_thread);
     }
+#endif
 #endif
 #ifdef FCS_WITH_MOVES
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);

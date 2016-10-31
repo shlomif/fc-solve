@@ -185,10 +185,12 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
         {
             hard_thread = &(instance->hard_threads[ht_idx]);
         }
+#ifdef FCS_WITH_MOVES
         else if (instance->optimization_thread)
         {
             hard_thread = instance->optimization_thread;
         }
+#endif
         else
         {
             break;
