@@ -204,7 +204,7 @@ ADD_CUSTOM_COMMAND(
 
 SET (MOVE_C move_funcs_maps.c)
 SET (MOVE_H move_funcs_maps.h)
-SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/gen_move_funcs.pl")
+SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_move_funcs.pl")
 
 ADD_CUSTOM_COMMAND(
     OUTPUT
