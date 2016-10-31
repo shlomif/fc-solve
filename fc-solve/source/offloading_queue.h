@@ -263,19 +263,20 @@ typedef struct
     fcs_offloading_queue_page_t pages[2];
 } fcs_offloading_queue_t;
 
+const size_t NUM_ITEMS_PER_PAGE = (128 * 1024);
 static GCC_INLINE void fcs_offloading_queue__init(
-    fcs_offloading_queue_t *const queue, const size_t num_items_per_page,
-    const char *const offload_dir_path, const long id)
+    fcs_offloading_queue_t *const queue, const char *const offload_dir_path,
+    const long id)
 {
-    queue->num_items_per_page = num_items_per_page;
+    queue->num_items_per_page = NUM_ITEMS_PER_PAGE;
     queue->offload_dir_path = offload_dir_path;
     queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
     queue->id = id;
 
     fcs_offloading_queue_page__init(
-        &(queue->pages[0]), num_items_per_page, 0, queue->id);
+        &(queue->pages[0]), NUM_ITEMS_PER_PAGE, 0, queue->id);
     fcs_offloading_queue_page__init(
-        &(queue->pages[1]), num_items_per_page, 0, queue->id);
+        &(queue->pages[1]), NUM_ITEMS_PER_PAGE, 0, queue->id);
 
     queue->page_idx_to_read_from = queue->page_idx_to_write_to = 0;
     queue->page_idx_for_backup = 1;

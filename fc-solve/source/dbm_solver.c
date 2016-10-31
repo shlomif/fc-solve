@@ -52,9 +52,8 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     FCS_INIT_LOCK(instance->storage_lock);
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-#define NUM_ITEMS_PER_PAGE (128 * 1024)
-    fcs_offloading_queue__init(&(instance->queue), NUM_ITEMS_PER_PAGE,
-        instance->offload_dir_path = offload_dir_path, 0);
+    fcs_offloading_queue__init(
+        &(instance->queue), instance->offload_dir_path = offload_dir_path, 0);
 #else
     fcs_offloading_queue__init(&(instance->queue), &(instance->meta_alloc));
 #endif
@@ -81,7 +80,7 @@ static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
     fcs_offloading_queue__destroy(&(instance->queue));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_offloading_queue__init(
-        &(instance->queue), NUM_ITEMS_PER_PAGE, instance->offload_dir_path, 0);
+        &(instance->queue), instance->offload_dir_path, 0);
 #else
     fcs_offloading_queue__init(&(instance->queue), &(instance->meta_alloc));
 #endif

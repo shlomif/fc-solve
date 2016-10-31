@@ -30,7 +30,6 @@ extern "C" {
 
 typedef struct
 {
-    size_t num_items_per_page;
     const char *offload_dir_path;
     long num_inserted, num_items_in_queue, num_extracted;
     long min_depth, max_depth, max_depth_margin;
@@ -48,8 +47,8 @@ typedef struct
 static GCC_INLINE void fcs_depth_multi_queue__new_queue(
     fcs_depth_multi_queue_t *const queue, fcs_offloading_queue_t *const q)
 {
-    fcs_offloading_queue__init(q, queue->num_items_per_page,
-        queue->offload_dir_path, (queue->next_queue_id++));
+    fcs_offloading_queue__init(
+        q, queue->offload_dir_path, (queue->next_queue_id++));
 }
 
 static GCC_INLINE void fcs_depth_multi_queue__insert(
@@ -77,11 +76,9 @@ static GCC_INLINE void fcs_depth_multi_queue__insert(
 }
 
 static GCC_INLINE void fcs_depth_multi_queue__init(
-    fcs_depth_multi_queue_t *const queue, const int num_items_per_page,
-    const char *offload_dir_path, const int first_depth,
-    const fcs_offloading_queue_item_t *const first_item)
+    fcs_depth_multi_queue_t *const queue, const char *offload_dir_path,
+    const int first_depth, const fcs_offloading_queue_item_t *const first_item)
 {
-    queue->num_items_per_page = num_items_per_page;
     queue->offload_dir_path = offload_dir_path;
     queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
     queue->next_queue_id = 0;

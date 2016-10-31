@@ -1023,10 +1023,8 @@ int main(int argc, char *argv[])
                 else
                 {
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-#define NUM_ITEMS_PER_PAGE (128 * 1024)
                     fcs_depth_multi_queue__init(&(instance.coll.depth_queue),
-                        NUM_ITEMS_PER_PAGE, instance.offload_dir_path,
-                        state_depth, &(token));
+                        instance.offload_dir_path, state_depth, &(token));
 #else
                     fc_solve_meta_compact_allocator_init(
                         &(coll->queue_meta_alloc));

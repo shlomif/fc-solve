@@ -65,9 +65,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         const_AUTO(coll, &(instance->colls_by_depth[depth]));
         FCS_INIT_LOCK(coll->queue_lock);
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-#define NUM_ITEMS_PER_PAGE (128 * 1024)
-        fcs_offloading_queue__init(
-            &(coll->queue), NUM_ITEMS_PER_PAGE, offload_dir_path, depth);
+        fcs_offloading_queue__init(&(coll->queue), offload_dir_path, depth);
 #else
         fc_solve_meta_compact_allocator_init(&(coll->queue_meta_alloc));
         fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
