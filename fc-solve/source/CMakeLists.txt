@@ -193,13 +193,15 @@ SET (patsolve_modules
     )
 
 SET (CL_INC_H "cmd_line_inc.h")
+SET (BIN_CL_INC_H "${CMAKE_CURRENT_BINARY_DIR}/${CL_INC_H}")
 SET (CL_INC_SCRIPT "scripts/gen-cmd-line-radix-tree.pl")
 
 ADD_CUSTOM_COMMAND(
-    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_H}"
-    COMMAND "${PERL_EXECUTABLE}" "${CL_INC_SCRIPT}"
+    OUTPUT
+        "${BIN_CL_INC_H}"
+        "${CMAKE_CURRENT_BINARY_DIR}/cmd_line_enum.h"
+    COMMAND "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_SCRIPT}"
     DEPENDS "${CL_INC_SCRIPT}"
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 SET (MOVE_C move_funcs_maps.c)
@@ -231,7 +233,7 @@ SET (FREECELL_SOLVER_LIB_MODULES
     split_cmd_line.c
     state.c
     "${MOVE_C}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_H}"
+    "${BIN_CL_INC_H}"
 )
 
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
