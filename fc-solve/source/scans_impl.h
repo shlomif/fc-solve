@@ -340,10 +340,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
     return ((int)sum);
 #undef CALC_VACANCY_VAL
 }
-
 #undef TRACE0
-
-#define STATE_TO_PASS() (&(pass))
 
 #ifdef FCS_RCS_STATES
 
@@ -946,7 +943,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 {
                     debug_iter_output_func(debug_iter_output_context,
                         *(instance_num_checked_states_ptr), DEPTH(),
-                        (void *)instance, STATE_TO_PASS(),
+                        (void *)instance, &pass,
 #ifdef FCS_WITHOUT_VISITED_ITER
                         0
 #else
@@ -1000,8 +997,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
                 {
                     fcs_collectible_state_t *const derived =
-                        fc_solve_sfs_raymond_prune(
-                            soft_thread, STATE_TO_PASS());
+                        fc_solve_sfs_raymond_prune(soft_thread, &pass);
                     if (derived)
                     {
                         the_soft_dfs_info->tests_list_index =
@@ -1048,7 +1044,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
                     THE_TESTS_LIST.lists[the_soft_dfs_info->tests_list_index]
                         .tests[the_soft_dfs_info->test_index](
-                            soft_thread, STATE_TO_PASS(), derived_states_list);
+                            soft_thread, &pass, derived_states_list);
 
                     VERIFY_PTR_STATE_TRACE0("Verify Glanko");
 

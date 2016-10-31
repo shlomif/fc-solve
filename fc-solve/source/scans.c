@@ -517,7 +517,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
         if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
         {
             fcs_collectible_state_t *const after_pruning_state =
-                fc_solve_sfs_raymond_prune(soft_thread, STATE_TO_PASS());
+                fc_solve_sfs_raymond_prune(soft_thread, &pass);
             if (after_pruning_state)
             {
                 ASSIGN_ptr_state(after_pruning_state);
@@ -566,7 +566,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
         {
             debug_iter_output_func(
                 debug_iter_output_context, *(instance_num_checked_states_ptr),
-                calc_depth(PTR_STATE), (void *)instance, STATE_TO_PASS(),
+                calc_depth(PTR_STATE), (void *)instance, &pass,
 #ifdef FCS_WITHOUT_VISITED_ITER
                 0
 #else
@@ -617,7 +617,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
                  tests_list;
              move_func_ptr < tests_list_end; move_func_ptr++)
         {
-            (*move_func_ptr)(soft_thread, STATE_TO_PASS(), &derived);
+            (*move_func_ptr)(soft_thread, &pass, &derived);
         }
 
         if (is_a_complete_scan)
