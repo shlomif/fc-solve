@@ -202,6 +202,18 @@ ADD_CUSTOM_COMMAND(
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
+SET (MOVE_C move_funcs_maps.c)
+SET (MOVE_H move_funcs_maps.h)
+SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/gen_move_funcs.pl")
+
+ADD_CUSTOM_COMMAND(
+    OUTPUT
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}"
+    COMMAND "${PERL_EXECUTABLE}" "${MOVE_GEN}"
+    DEPENDS "${MOVE_GEN}"
+)
+
 SET (FREECELL_SOLVER_LIB_MODULES
     card.c
     check_and_add_state.c
@@ -211,7 +223,6 @@ SET (FREECELL_SOLVER_LIB_MODULES
     lib.c
     meta_alloc.c
     move.c
-    move_funcs_maps.c
     move_funcs_order.c
     preset.c
     rate_state.c
@@ -219,6 +230,7 @@ SET (FREECELL_SOLVER_LIB_MODULES
     simpsim.c
     split_cmd_line.c
     state.c
+    "${MOVE_C}"
     "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_H}"
 )
 
