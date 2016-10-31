@@ -15,6 +15,8 @@ extern "C" {
 
 #include "config.h"
 
+#include <limits.h>
+
 #include "generic_tree.h"
 
 #include "delta_states.h"
@@ -120,6 +122,26 @@ static GCC_INLINE void fcs_dbm__found_solution(
 #else
     common->queue_solution = item->key;
 #endif
+}
+
+static GCC_INLINE void fcs_dbm__common_init(
+    fcs_dbm_instance_common_elems_t *const common, const long iters_delta_limit)
+{
+    common->queue_solution_was_found = FALSE;
+    common->should_terminate = DONT_TERMINATE;
+    common->queue_num_extracted_and_processed = 0;
+    common->num_states_in_collection = 0;
+    common->count_num_processed = 0;
+    if (iters_delta_limit >= 0)
+    {
+        common->max_count_num_processed =
+            common->count_num_processed + iters_delta_limit;
+    }
+    else
+    {
+        common->max_count_num_processed = LONG_MAX;
+    }
+    common->count_of_items_in_queue = 0;
 }
 
 #ifdef __cplusplus

@@ -62,21 +62,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
 #else
     fcs_offloading_queue__init(&(instance->queue), &(instance->meta_alloc));
 #endif
-    instance->common.queue_solution_was_found = FALSE;
-    instance->common.should_terminate = DONT_TERMINATE;
-    instance->common.queue_num_extracted_and_processed = 0;
-    instance->common.num_states_in_collection = 0;
-    instance->common.count_num_processed = 0;
-    if (iters_delta_limit >= 0)
-    {
-        instance->common.max_count_num_processed =
-            instance->common.count_num_processed + iters_delta_limit;
-    }
-    else
-    {
-        instance->common.max_count_num_processed = LONG_MAX;
-    }
-    instance->common.count_of_items_in_queue = 0;
+    fcs_dbm__common_init(&(instance->common), iters_delta_limit);
     instance->max_count_of_items_in_queue = max_count_of_items_in_queue;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
