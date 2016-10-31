@@ -156,7 +156,6 @@ typedef struct
     fcs_state_keyval_pair_t running_state;
     fcs_state_keyval_pair_t initial_non_canonized_state;
     fcs_state_locs_struct_t state_locs;
-    fcs_state_locs_struct_t trace_solution_state_locs;
     fcs_state_locs_struct_t initial_state_locs;
     int ret_code;
     fcs_bool_t all_instances_were_suspended;
@@ -1083,9 +1082,6 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
             fc_solve_canonize_state_with_locs(&(user->state.s),
                 &(user->state_locs)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
                     PASS_STACKS(INSTANCE_STACKS_NUM));
-
-            user->trace_solution_state_locs = user->state_locs;
-
             fc_solve_init_instance(instance);
         }
 
@@ -1180,8 +1176,6 @@ static GCC_INLINE int resume_solution(fcs_user_t *const user)
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
-            user->trace_solution_state_locs = user->state_locs;
-
             flare->was_solution_traced = FALSE;
 #ifdef FCS_WITH_FLARES
             if ((!(instance_item->minimal_flare)) ||
