@@ -133,14 +133,8 @@ static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
     fcs_offloading_queue__destroy(&(instance->queue));
-
     DESTROY_CACHE(instance);
-#ifndef FCS_DBM_CACHE_ONLY
-    fc_solve_dbm_store_destroy(instance->store);
-#endif
-
     fc_solve_meta_compact_allocator_finish(&(instance->meta_alloc));
-
     FCS_DESTROY_LOCK(instance->queue_lock);
     FCS_DESTROY_LOCK(instance->storage_lock);
 }

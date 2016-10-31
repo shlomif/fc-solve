@@ -233,9 +233,6 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
         fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
 #endif
         DESTROY_CACHE(coll);
-#ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_destroy(coll->store);
-#endif
         FCS_DESTROY_LOCK(coll->queue_lock);
     }
     FCS_DESTROY_LOCK(instance->storage_lock);

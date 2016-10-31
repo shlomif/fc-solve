@@ -322,16 +322,21 @@ static GCC_INLINE void mark_and_sweep_old_states(
 #define NUM_THREADS() num_threads
 #endif
 
+#ifndef FCS_DBM_CACHE_ONLY
+#define DESTROY_STORE(instance) fc_solve_dbm_store_destroy((instance)->store)
+#else
+#define DESTROY_STORE(instance)
+#endif
+
 #ifndef FCS_DBM_WITHOUT_CACHES
 #define DESTROY_CACHE(instance)                                                \
     {                                                                          \
         PRE_CACHE_OFFLOAD(instance);                                           \
         cache_destroy(&(instance->cache));                                     \
-    }
+        DESTROY_STORE(instance);
+}
 #else
-#define DESTROY_CACHE(instance)                                                \
-    {                                                                          \
-    }
+#define DESTROY_CACHE(instance) DESTROY_STORE(instance)
 #endif
 
 #ifdef __cplusplus
