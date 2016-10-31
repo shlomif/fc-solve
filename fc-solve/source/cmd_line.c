@@ -345,14 +345,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     instance, atoi((*arg))) != 0)
             {
 #ifdef FCS_WITH_ERROR_STRS
-                char *const errstr = SMALLOC(errstr, 200);
-                sprintf(errstr,
+                *error_string = calc_errstr_s(
                     "Error! The freecells\' number "
                     "exceeds the maximum of %i.\n"
                     "Recompile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_freecells());
-
-                *error_string = errstr;
 #endif
 
                 RET_ERROR_IN_ARG();
@@ -369,14 +366,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 0)
             {
 #ifdef FCS_WITH_ERROR_STRS
-                char *const errstr = SMALLOC(errstr, 200);
-                sprintf(errstr,
+                *error_string = calc_errstr_s(
                     "Error! The stacks\' number "
                     "exceeds the maximum of %i.\n"
                     "Recompile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_stacks());
-
-                *error_string = errstr;
 #endif
 
                 RET_ERROR_IN_ARG();
@@ -392,14 +386,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_num_decks(instance, atoi((*arg))) != 0)
             {
 #ifdef FCS_WITH_ERROR_STRS
-                char *const errstr = SMALLOC(errstr, 200);
-                sprintf(errstr,
+                *error_string = calc_errstr_s(
                     "Error! The decks\' number "
                     "exceeds the maximum of %i.\n"
                     "Recopmile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_decks());
-
-                *error_string = errstr;
 #endif
 
                 RET_ERROR_IN_ARG();
