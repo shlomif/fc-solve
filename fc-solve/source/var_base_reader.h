@@ -22,8 +22,8 @@ typedef struct
 #ifndef FCS_USE_INT128_FOR_VAR_BASE
     /* To avoid memory fragmentation, we keep those here and re use them. */
     fcs_var_base_int_t data_byte_offset;
-#endif
     fcs_var_base_int_t r;
+#endif
 } fcs_var_base_reader_t;
 
 static GCC_INLINE void fc_solve_var_base_reader_init(
@@ -57,9 +57,17 @@ static GCC_INLINE void fc_solve_var_base_reader_start(
 static GCC_INLINE unsigned long fc_solve_var_base_reader_read(
     fcs_var_base_reader_t *const reader, const unsigned long base)
 {
-    FCS_var_base_int__mod_div(reader->data, reader->r, base);
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+    fcs_var_base_int_t rem;
+#else
+#define rem reader->r;
+#endif
+    FCS_var_base_int__mod_div(reader->data, rem, base);
 
-    return FCS_var_base_int__get_ui(reader->r);
+    return FCS_var_base_int__get_ui(rem);
+#ifndef FCS_USE_INT128_FOR_VAR_BASE
+#undef rem
+#endif
 }
 
 static GCC_INLINE void fc_solve_var_base_reader_release(
