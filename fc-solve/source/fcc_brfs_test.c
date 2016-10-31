@@ -210,7 +210,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     const int max_num_elements_in_cache = 1000000;
     fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     fcs_encoded_state_buffer_t min_by_sorting;
-    fcs_fcc_moves_seq_t init_moves_seq;
     add_start_point_context_t add_start_point_context;
     void *tree_recycle_bin = NULL;
 
@@ -291,9 +290,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         }
     }
 
-    init_moves_seq.moves_list = NULL;
-    init_moves_seq.count = 0;
-
+    fcs_fcc_moves_seq_t init_moves_seq = {.moves_list = NULL, .count = 0};
     add_start_point_context.do_next_fcc_start_points_exist =
         do_next_fcc_start_points_exist;
     add_start_point_context.next_start_points_list = &start_points_list;
