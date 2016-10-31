@@ -118,11 +118,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
     FILE *out_fh)
 {
-    fcs_dbm_collection_by_depth_t *coll;
-
     instance->dbm_store_path = dbm_store_path;
-    instance->common.variant = local_variant;
-
     instance->fingerprint_which_irreversible_moves_bitmask =
         (*fingerprint_which_irreversible_moves_bitmask);
 
@@ -149,9 +145,8 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
 
     FCS_INIT_LOCK(instance->global_lock);
     instance->offload_dir_path = offload_dir_path;
-
-    instance->common.out_fh = out_fh;
-    fcs_dbm__common_init(&(instance->common), iters_delta_limit);
+    fcs_dbm__common_init(
+        &(instance->common), iters_delta_limit, local_variant, out_fh);
     instance->common.tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
@@ -159,7 +154,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     FCS_INIT_LOCK(instance->fcc_entry_points_lock);
     FCS_INIT_LOCK(instance->fcc_exit_points_output_lock);
     {
-        coll = &(instance->coll);
+        fcs_dbm_collection_by_depth_t *const coll = &(instance->coll);
         FCS_INIT_LOCK(coll->queue_lock);
 
 #ifndef FCS_DBM_WITHOUT_CACHES

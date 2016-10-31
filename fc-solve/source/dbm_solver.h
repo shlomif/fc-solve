@@ -125,8 +125,11 @@ static GCC_INLINE void fcs_dbm__found_solution(
 }
 
 static GCC_INLINE void fcs_dbm__common_init(
-    fcs_dbm_instance_common_elems_t *const common, const long iters_delta_limit)
+    fcs_dbm_instance_common_elems_t *const common, const long iters_delta_limit,
+    const enum fcs_dbm_variant_type_t local_variant, FILE *const out_fh)
 {
+    common->variant = local_variant;
+    common->out_fh = out_fh;
     common->queue_solution_was_found = FALSE;
     common->should_terminate = DONT_TERMINATE;
     common->queue_num_extracted_and_processed = 0;

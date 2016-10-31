@@ -49,15 +49,14 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     const enum fcs_dbm_variant_type_t local_variant,
     const long pre_cache_max_count GCC_UNUSED,
     const long caches_delta GCC_UNUSED, const char *dbm_store_path,
-    const long iters_delta_limit, const char *offload_dir_path, FILE *out_fh)
+    const long iters_delta_limit, const char *offload_dir_path,
+    FILE *const out_fh)
 {
-    instance->common.variant = local_variant;
     instance->curr_depth = 0;
     FCS_INIT_LOCK(instance->global_lock);
     instance->offload_dir_path = offload_dir_path;
-
-    instance->common.out_fh = out_fh;
-    fcs_dbm__common_init(&(instance->common), iters_delta_limit);
+    fcs_dbm__common_init(
+        &(instance->common), iters_delta_limit, local_variant, out_fh);
     instance->common.tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
