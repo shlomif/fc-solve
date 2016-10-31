@@ -329,13 +329,7 @@ static void *instance_run_solver_thread(void *void_arg)
                     &derived_list_allocator, TRUE))
             {
                 FCS_LOCK(instance->queue_lock);
-                instance->common.should_terminate = SOLUTION_FOUND_TERMINATE;
-                instance->common.queue_solution_was_found = TRUE;
-#ifdef FCS_DBM_WITHOUT_CACHES
-                instance->common.queue_solution_ptr = token;
-#else
-                instance->common.queue_solution = item->key;
-#endif
+                fcs_dbm__found_solution(&(instance->common), token, item);
                 FCS_UNLOCK(instance->queue_lock);
                 break;
             }

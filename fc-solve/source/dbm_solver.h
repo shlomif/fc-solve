@@ -101,6 +101,20 @@ typedef struct
     fcs_encoded_state_buffer_t queue_solution;
 #endif
 } fcs_dbm_instance_common_elems_t;
+
+static GCC_INLINE void fcs_dbm__found_solution(
+    fcs_dbm_instance_common_elems_t *const common,
+    fcs_dbm_record_t *const token, fcs_dbm_queue_item_t *const item)
+{
+    common->should_terminate = SOLUTION_FOUND_TERMINATE;
+    common->queue_solution_was_found = TRUE;
+#ifdef FCS_DBM_WITHOUT_CACHES
+    common->queue_solution_ptr = token;
+#else
+    common->queue_solution = item->key;
+#endif
+}
+
 #ifdef __cplusplus
 }
 #endif
