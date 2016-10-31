@@ -123,6 +123,14 @@ static GCC_INLINE void fc_solve__internal__copy_moves(
     *ptr_to_end_moves_iter = end_moves_iter;
 }
 
+static GCC_INLINE dict_t *fcc_brfs_kaz_tree_create(
+    fcs_meta_compact_allocator_t *const meta_alloc,
+    void **const tree_recycle_bin)
+{
+    return fc_solve_kaz_tree_create(
+        fc_solve_compare_encoded_states, NULL, meta_alloc, tree_recycle_bin);
+}
+
 static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair_t *init_state,
@@ -178,7 +186,7 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
     fcs_fcc_moves_seq_allocator_t *moves_list_allocator,
     /* [Input/Output]: The meta allocator - needed to allocate and free
      * the compact allocators. */
-    fcs_meta_compact_allocator_t *meta_alloc)
+    fcs_meta_compact_allocator_t *const meta_alloc)
 {
     void *tree_recycle_bin = NULL;
     fcs_dbm_queue_item_t *queue_head, *queue_tail, *queue_recycle_bin,
@@ -219,8 +227,7 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
 #endif
         );
 
-    traversed_states = fc_solve_kaz_tree_create(
-        fc_solve_compare_encoded_states, NULL, meta_alloc, &tree_recycle_bin);
+    traversed_states = fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
 
     new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
         &(queue_allocator), sizeof(*new_item));

@@ -85,13 +85,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_meta_compact_allocator_init(&meta_alloc);
     fc_solve_compact_allocator_init(
         &(start_points_list.allocator), &meta_alloc);
-
-    do_next_fcc_start_points_exist = fc_solve_kaz_tree_create(
-        fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
-
-    does_min_by_sorting_exist = fc_solve_kaz_tree_create(
-        fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
-
+    do_next_fcc_start_points_exist =
+        fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
+    does_min_by_sorting_exist =
+        fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
     cache_init(&does_state_exist_in_any_FCC_cache, max_num_elements_in_cache,
         &meta_alloc);
 
@@ -233,13 +230,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     start_points_list.recycle_bin = NULL;
     fc_solve_compact_allocator_init(
         &(start_points_list.allocator), &meta_alloc);
-
-    do_next_fcc_start_points_exist = fc_solve_kaz_tree_create(
-        fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
-
-    does_min_by_sorting_exist = fc_solve_kaz_tree_create(
-        fc_solve_compare_encoded_states, NULL, &meta_alloc, &tree_recycle_bin);
-
+    do_next_fcc_start_points_exist =
+        fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
+    does_min_by_sorting_exist =
+        fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
     fc_solve_compact_allocator_init(&(temp_allocator), &meta_alloc);
     fcs_fcc_moves_seq_allocator_t moves_list_allocator = {
         .recycle_bin = NULL, .allocator = &(temp_allocator)};
