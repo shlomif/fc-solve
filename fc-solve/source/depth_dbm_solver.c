@@ -118,6 +118,11 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     }
 }
 
+#define CHECK_KEY_CALC_DEPTH()                                                 \
+    (instance->curr_depth + list->num_non_reversible_moves_including_prune)
+
+#include "dbm_procs.h"
+
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
     int depth;
@@ -130,12 +135,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
         fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
 #endif
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-        PRE_CACHE_OFFLOAD(coll);
-        cache_destroy(&(coll->cache));
-#endif
-
+        DESTROY_CACHE(coll);
 #ifndef FCS_DBM_CACHE_ONLY
         fc_solve_dbm_store_destroy(coll->store);
 #endif
@@ -143,11 +143,6 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
     }
     FCS_DESTROY_LOCK(instance->storage_lock);
 }
-
-#define CHECK_KEY_CALC_DEPTH()                                                 \
-    (instance->curr_depth + list->num_non_reversible_moves_including_prune)
-
-#include "dbm_procs.h"
 
 struct fcs_dbm_solver_thread_struct
 {

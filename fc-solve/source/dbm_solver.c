@@ -126,15 +126,15 @@ static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
     instance->count_of_items_in_queue = 0;
 }
 
+#define CHECK_KEY_CALC_DEPTH() 0
+
+#include "dbm_procs.h"
+
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
     fcs_offloading_queue__destroy(&(instance->queue));
 
-#ifndef FCS_DBM_WITHOUT_CACHES
-    PRE_CACHE_OFFLOAD(instance);
-    cache_destroy(&(instance->cache));
-#endif
-
+    DESTROY_CACHE(instance);
 #ifndef FCS_DBM_CACHE_ONLY
     fc_solve_dbm_store_destroy(instance->store);
 #endif
@@ -144,10 +144,6 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
     FCS_DESTROY_LOCK(instance->queue_lock);
     FCS_DESTROY_LOCK(instance->storage_lock);
 }
-
-#define CHECK_KEY_CALC_DEPTH() 0
-
-#include "dbm_procs.h"
 
 static GCC_INLINE void instance_check_key(
     fcs_dbm_solver_thread_t *const thread GCC_UNUSED,

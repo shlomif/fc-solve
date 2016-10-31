@@ -214,6 +214,12 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     instance->start_key_ptr = NULL;
 }
 
+#define CHECK_KEY_CALC_DEPTH()                                                 \
+    (instance->curr_depth + list->num_non_reversible_moves_including_prune)
+
+#include "dbm_procs.h"
+#include "fcs_base64.h"
+
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
     fcs_dbm_collection_by_depth_t *coll;
@@ -226,12 +232,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
         fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
 #endif
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-        PRE_CACHE_OFFLOAD(coll);
-        cache_destroy(&(coll->cache));
-#endif
-
+        DESTROY_CACHE(coll);
 #ifndef FCS_DBM_CACHE_ONLY
         fc_solve_dbm_store_destroy(coll->store);
 #endif
@@ -243,12 +244,6 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
     FCS_DESTROY_LOCK(instance->fcc_exit_points_output_lock);
     FCS_DESTROY_LOCK(instance->output_lock);
 }
-
-#define CHECK_KEY_CALC_DEPTH()                                                 \
-    (instance->curr_depth + list->num_non_reversible_moves_including_prune)
-
-#include "dbm_procs.h"
-#include "fcs_base64.h"
 
 struct fcs_dbm_solver_thread_struct
 {
@@ -762,16 +757,12 @@ static GCC_INLINE void release_starting_state_specific_instance_resources(
     fcs_dbm_collection_by_depth_t * coll = &(instance->coll);
 
     /* TODO : Implement. */
-#ifndef FCS_DBM_WITHOUT_CACHES
-        PRE_CACHE_OFFLOAD(coll);
-        cache_destroy(&(coll->cache));
-#endif
-
+    DESTROY_CACHE(coll);
 #ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_destroy(coll->store);
+    fc_solve_dbm_store_destroy(coll->store);
 #endif
-        /* That is important to avoid stale nodes. */
-        instance->tree_recycle_bin = NULL;
+    /* That is important to avoid stale nodes. */
+    instance->tree_recycle_bin = NULL;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
