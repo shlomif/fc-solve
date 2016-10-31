@@ -867,7 +867,9 @@ static GCC_INLINE int fc_solve_optimize_solution(
         fc_solve_trace_solution(instance);
     }
 
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
+#endif
 
     if (!instance->optimization_thread)
     {
