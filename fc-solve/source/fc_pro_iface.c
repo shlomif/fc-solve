@@ -79,37 +79,35 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             {
                 /* Check the intermediate position validity */
                 char exists[4*13];
-                int rank, suit;
-                int fc, col, count;
-                fcs_card_t card;
 
                 memset(exists, '\0', sizeof(exists));
-                for (suit=0;suit<4;suit++)
+                for (int suit = 0 ; suit < 4 ; suit++)
                 {
-                    for(rank=1;rank<=fcs_foundation_value(pos, suit);rank++)
+                    for (int rank = 1 ; rank <= fcs_foundation_value(pos, suit) ;
+                        rank++)
                     {
                         exists[rank-1+suit*13] = 1;
                     }
                 }
-                for (col=0;col<8;col++)
+                for (int col = 0 ; col < 8 ; col++)
                 {
                     const fcs_const_cards_column_t col_col = fcs_state_get_col(pos, col);
-                    count = fcs_col_len(col_col);
-                    for (i=0;i<count;i++)
+                    const_AUTO(count, fcs_col_len(col_col));
+                    for (i = 0 ; i < count ; i++)
                     {
-                        card = fcs_col_get_card(col_col, i);
+                        const_AUTO(card, fcs_col_get_card(col_col, i));
                         exists[fcs_card_rank(card)-1+fcs_card_suit(card)*13] = 1;
                     }
                 }
-                for (fc=0;fc<num_freecells;fc++)
+                for (int fc = 0 ; fc < num_freecells ; fc++)
                 {
-                    card = fcs_freecell_card(pos, fc);
-                    if (! fcs_card_is_empty(card))
+                    const_AUTO(card, fcs_freecell_card(pos, fc));
+                    if (fcs_card_is_valid(card))
                     {
                         exists[fcs_card_rank(card)-1+fcs_card_suit(card)*13] = 1;
                     }
                 }
-                for (i=0;i<52;i++)
+                for (int i = 0 ; i < 52 ; i++)
                 {
                     if (exists[i] != 1)
                     {
