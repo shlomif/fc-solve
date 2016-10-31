@@ -90,6 +90,17 @@ enum TERMINATE_REASON
 
 #define MAX_FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 
+typedef struct
+{
+    long count_num_processed, count_of_items_in_queue, max_count_num_processed;
+    fcs_bool_t queue_solution_was_found;
+    enum TERMINATE_REASON should_terminate;
+#ifdef FCS_DBM_WITHOUT_CACHES
+    fcs_dbm_record_t *queue_solution_ptr;
+#else
+    fcs_encoded_state_buffer_t queue_solution;
+#endif
+} fcs_dbm_instance_common_elems_t;
 #ifdef __cplusplus
 }
 #endif

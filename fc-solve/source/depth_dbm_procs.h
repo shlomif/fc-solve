@@ -56,19 +56,19 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     fcs_bool_t ret = FALSE;
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
     instance_print_stats(instance);
-    if (instance->queue_solution_was_found)
+    if (instance->common.queue_solution_was_found)
     {
         trace_solution(instance, out_fh, delta);
         ret = TRUE;
     }
-    else if (instance->should_terminate != DONT_TERMINATE)
+    else if (instance->common.should_terminate != DONT_TERMINATE)
     {
         fprintf(out_fh, "%s\n", "Intractable.");
         fflush(out_fh);
-        if (instance->should_terminate == MAX_ITERS_TERMINATE)
+        if (instance->common.should_terminate == MAX_ITERS_TERMINATE)
         {
             fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n",
-                instance->max_count_num_processed);
+                instance->common.max_count_num_processed);
         }
     }
     else

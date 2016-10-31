@@ -85,14 +85,7 @@ typedef struct
     FILE *out_fh;
     enum fcs_dbm_variant_type_t variant;
     long pre_cache_max_count;
-    long count_num_processed, count_of_items_in_queue, max_count_num_processed;
-    fcs_bool_t queue_solution_was_found;
-    enum TERMINATE_REASON should_terminate;
-#ifdef FCS_DBM_WITHOUT_CACHES
-    fcs_dbm_record_t *queue_solution_ptr;
-#else
-    fcs_encoded_state_buffer_t queue_solution;
-#endif
+    fcs_dbm_instance_common_elems_t common;
     fcs_meta_compact_allocator_t fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
     fcs_compact_allocator_t fcc_entry_points_allocator;
@@ -166,21 +159,21 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
 
     instance->out_fh = out_fh;
 
-    instance->queue_solution_was_found = FALSE;
-    instance->should_terminate = DONT_TERMINATE;
+    instance->common.queue_solution_was_found = FALSE;
+    instance->common.should_terminate = DONT_TERMINATE;
     instance->queue_num_extracted_and_processed = 0;
     instance->num_states_in_collection = 0;
-    instance->count_num_processed = 0;
+    instance->common.count_num_processed = 0;
     if (iters_delta_limit >= 0)
     {
-        instance->max_count_num_processed =
-            instance->count_num_processed + iters_delta_limit;
+        instance->common.max_count_num_processed =
+            instance->common.count_num_processed + iters_delta_limit;
     }
     else
     {
-        instance->max_count_num_processed = LONG_MAX;
+        instance->common.max_count_num_processed = LONG_MAX;
     }
-    instance->count_of_items_in_queue = 0;
+    instance->common.count_of_items_in_queue = 0;
     instance->tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
@@ -310,7 +303,7 @@ static void *instance_run_solver_thread(void *void_arg)
             FCS_UNLOCK(instance->global_lock);
         }
 
-        if (instance->should_terminate == DONT_TERMINATE)
+        if (instance->common.should_terminate == DONT_TERMINATE)
         {
             if (fcs_depth_multi_queue__extract(&(coll->depth_queue),
                     &(thread->state_depth),
@@ -318,16 +311,16 @@ static void *instance_run_solver_thread(void *void_arg)
             {
                 physical_item.key = token->key;
                 item = &physical_item;
-                instance->count_of_items_in_queue--;
+                instance->common.count_of_items_in_queue--;
                 instance->queue_num_extracted_and_processed++;
-                if (++instance->count_num_processed % 100000 == 0)
+                if (++instance->common.count_num_processed % 100000 == 0)
                 {
                     instance_print_stats(instance);
                 }
-                if (instance->count_num_processed >=
-                    instance->max_count_num_processed)
+                if (instance->common.count_num_processed >=
+                    instance->common.max_count_num_processed)
                 {
-                    instance->should_terminate = MAX_ITERS_TERMINATE;
+                    instance->common.should_terminate = MAX_ITERS_TERMINATE;
                 }
             }
             else
@@ -340,7 +333,7 @@ static void *instance_run_solver_thread(void *void_arg)
         }
         FCS_UNLOCK(coll->queue_lock);
 
-        if ((instance->should_terminate != DONT_TERMINATE) ||
+        if ((instance->common.should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
         {
             break;
@@ -452,12 +445,12 @@ static void *instance_run_solver_thread(void *void_arg)
                     &derived_list_allocator, TRUE))
             {
                 FCS_LOCK(instance->global_lock);
-                instance->should_terminate = SOLUTION_FOUND_TERMINATE;
-                instance->queue_solution_was_found = TRUE;
+                instance->common.should_terminate = SOLUTION_FOUND_TERMINATE;
+                instance->common.queue_solution_was_found = TRUE;
 #ifdef FCS_DBM_WITHOUT_CACHES
-                instance->queue_solution_ptr = token;
+                instance->common.queue_solution_ptr = token;
 #else
-                instance->queue_solution = item->key;
+                instance->common.queue_solution = item->key;
 #endif
                 FCS_UNLOCK(instance->global_lock);
                 break;
@@ -584,7 +577,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 
                 FCS_LOCK(instance->global_lock);
 
-                instance->count_of_items_in_queue++;
+                instance->common.count_of_items_in_queue++;
                 instance->num_states_in_collection++;
 
                 instance_debug_out_state(instance, &(token->key));
@@ -736,7 +729,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 
     {
         dbm__spawn_threads(instance, num_threads, threads);
-        if (!instance->queue_solution_was_found)
+        if (!instance->common.queue_solution_was_found)
         {
             mark_and_sweep_old_states(instance,
                 fc_solve_dbm_store_get_dict(instance->coll.store),
@@ -1093,7 +1086,7 @@ int main(int argc, char *argv[])
                 }
             }
             instance.num_states_in_collection++;
-            instance.count_of_items_in_queue++;
+            instance.common.count_of_items_in_queue++;
             /* Valid for the next iteration: */
             location_in_file = ftell(fingerprint_fh);
         }

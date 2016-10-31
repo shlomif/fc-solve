@@ -45,14 +45,7 @@ typedef struct
     FILE *out_fh;
     enum fcs_dbm_variant_type_t variant;
     long pre_cache_max_count;
-    long count_num_processed, count_of_items_in_queue, max_count_num_processed;
-    fcs_bool_t queue_solution_was_found;
-    enum TERMINATE_REASON should_terminate;
-#ifdef FCS_DBM_WITHOUT_CACHES
-    fcs_dbm_record_t *queue_solution_ptr;
-#else
-    fcs_encoded_state_buffer_t queue_solution;
-#endif
+    fcs_dbm_instance_common_elems_t common;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
@@ -76,21 +69,21 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
 #else
     fcs_offloading_queue__init(&(instance->queue), &(instance->meta_alloc));
 #endif
-    instance->queue_solution_was_found = FALSE;
-    instance->should_terminate = DONT_TERMINATE;
+    instance->common.queue_solution_was_found = FALSE;
+    instance->common.should_terminate = DONT_TERMINATE;
     instance->queue_num_extracted_and_processed = 0;
     instance->num_states_in_collection = 0;
-    instance->count_num_processed = 0;
+    instance->common.count_num_processed = 0;
     if (iters_delta_limit >= 0)
     {
-        instance->max_count_num_processed =
-            instance->count_num_processed + iters_delta_limit;
+        instance->common.max_count_num_processed =
+            instance->common.count_num_processed + iters_delta_limit;
     }
     else
     {
-        instance->max_count_num_processed = LONG_MAX;
+        instance->common.max_count_num_processed = LONG_MAX;
     }
-    instance->count_of_items_in_queue = 0;
+    instance->common.count_of_items_in_queue = 0;
     instance->max_count_of_items_in_queue = max_count_of_items_in_queue;
 
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -119,11 +112,11 @@ static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
     fcs_offloading_queue__init(&(instance->queue), &(instance->meta_alloc));
 #endif
 
-    instance->should_terminate = DONT_TERMINATE;
+    instance->common.should_terminate = DONT_TERMINATE;
     instance->queue_num_extracted_and_processed = 0;
     instance->num_states_in_collection = 0;
-    instance->count_num_processed = 0;
-    instance->count_of_items_in_queue = 0;
+    instance->common.count_num_processed = 0;
+    instance->common.count_of_items_in_queue = 0;
 }
 
 #define CHECK_KEY_CALC_DEPTH() 0
@@ -205,14 +198,14 @@ static GCC_INLINE void instance_check_key(
 
         FCS_LOCK(instance->queue_lock);
 
-        instance->count_of_items_in_queue++;
+        instance->common.count_of_items_in_queue++;
         instance->num_states_in_collection++;
 
         instance_debug_out_state(instance, &(token->key));
 
         fcs_offloading_queue__insert(
             &(instance->queue), ((fcs_offloading_queue_item_t *)(&token)));
-        instance->count_of_items_in_queue++;
+        instance->common.count_of_items_in_queue++;
         FCS_UNLOCK(instance->queue_lock);
     }
 }
@@ -269,12 +262,12 @@ static void *instance_run_solver_thread(void *void_arg)
             instance->queue_num_extracted_and_processed--;
         }
 
-        if (instance->should_terminate == DONT_TERMINATE)
+        if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            if (instance->count_of_items_in_queue >=
+            if (instance->common.count_of_items_in_queue >=
                 instance->max_count_of_items_in_queue)
             {
-                instance->should_terminate = QUEUE_TERMINATE;
+                instance->common.should_terminate = QUEUE_TERMINATE;
                 /* TODO :
                  * Implement dumping the queue to the output filehandle.
                  * */
@@ -286,16 +279,16 @@ static void *instance_run_solver_thread(void *void_arg)
                 physical_item.key = token->key;
                 item = &physical_item;
 
-                instance->count_of_items_in_queue--;
+                instance->common.count_of_items_in_queue--;
                 instance->queue_num_extracted_and_processed++;
-                if (++instance->count_num_processed % 100000 == 0)
+                if (++instance->common.count_num_processed % 100000 == 0)
                 {
                     instance_print_stats(instance);
                 }
-                if (instance->count_num_processed >=
-                    instance->max_count_num_processed)
+                if (instance->common.count_num_processed >=
+                    instance->common.max_count_num_processed)
                 {
-                    instance->should_terminate = MAX_ITERS_TERMINATE;
+                    instance->common.should_terminate = MAX_ITERS_TERMINATE;
                 }
             }
             else
@@ -308,7 +301,7 @@ static void *instance_run_solver_thread(void *void_arg)
         }
         FCS_UNLOCK(instance->queue_lock);
 
-        if ((instance->should_terminate != DONT_TERMINATE) ||
+        if ((instance->common.should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
         {
             break;
@@ -336,12 +329,12 @@ static void *instance_run_solver_thread(void *void_arg)
                     &derived_list_allocator, TRUE))
             {
                 FCS_LOCK(instance->queue_lock);
-                instance->should_terminate = SOLUTION_FOUND_TERMINATE;
-                instance->queue_solution_was_found = TRUE;
+                instance->common.should_terminate = SOLUTION_FOUND_TERMINATE;
+                instance->common.queue_solution_was_found = TRUE;
 #ifdef FCS_DBM_WITHOUT_CACHES
-                instance->queue_solution_ptr = token;
+                instance->common.queue_solution_ptr = token;
 #else
-                instance->queue_solution = item->key;
+                instance->common.queue_solution = item->key;
 #endif
                 FCS_UNLOCK(instance->queue_lock);
                 break;
@@ -569,7 +562,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     }
     fcs_offloading_queue__insert(
         &(instance->queue), (const fcs_offloading_queue_item_t *)(&token));
-    instance->count_of_items_in_queue++;
+    instance->common.count_of_items_in_queue++;
 
     return TRUE;
 }
@@ -620,16 +613,16 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
     instance_print_stats(instance);
 
-    if (instance->queue_solution_was_found)
+    if (instance->common.queue_solution_was_found)
     {
         trace_solution(instance, out_fh, delta);
         ret = TRUE;
     }
-    else if (instance->should_terminate != DONT_TERMINATE)
+    else if (instance->common.should_terminate != DONT_TERMINATE)
     {
         fprintf(out_fh, "%s\n", "Intractable.");
         fflush(out_fh);
-        if (instance->should_terminate == QUEUE_TERMINATE)
+        if (instance->common.should_terminate == QUEUE_TERMINATE)
         {
             fcs_dbm_queue_item_t physical_item;
             fcs_dbm_queue_item_t *item;
@@ -708,10 +701,10 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 #endif
             }
         }
-        else if (instance->should_terminate == MAX_ITERS_TERMINATE)
+        else if (instance->common.should_terminate == MAX_ITERS_TERMINATE)
         {
             fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n",
-                instance->max_count_num_processed);
+                instance->common.max_count_num_processed);
         }
     }
     else
@@ -962,20 +955,22 @@ int main(int argc, char *argv[])
                     instance_run_all_threads(
                         &limit_instance, &init_state, NUM_THREADS());
 
-                    if (limit_instance.queue_solution_was_found)
+                    if (limit_instance.common.queue_solution_was_found)
                     {
                         trace_solution(&limit_instance, out_fh, &delta);
                         skip_queue_output = TRUE;
                         queue_solution_was_found = TRUE;
                     }
-                    else if (limit_instance.should_terminate ==
+                    else if (limit_instance.common.should_terminate ==
                              MAX_ITERS_TERMINATE)
                     {
                         fprintf(out_fh, "Reached Max-or-more iterations of %ld "
                                         "in intermediate-input line No. %ld.\n",
-                            limit_instance.max_count_num_processed, line_num);
+                            limit_instance.common.max_count_num_processed,
+                            line_num);
                     }
-                    else if (limit_instance.should_terminate == DONT_TERMINATE)
+                    else if (limit_instance.common.should_terminate ==
+                             DONT_TERMINATE)
                     {
                         fprintf(out_fh, "Pruning due to unsolvability in "
                                         "intermediate-input line No. %ld\n",
@@ -1060,7 +1055,7 @@ int main(int argc, char *argv[])
         fcs_offloading_queue__insert(
             &(instance.queue), (const fcs_offloading_queue_item_t *)&token);
         instance.num_states_in_collection++;
-        instance.count_of_items_in_queue++;
+        instance.common.count_of_items_in_queue++;
 
         instance_run_all_threads(&instance, &init_state, NUM_THREADS());
         handle_and_destroy_instance_solution(&instance, &delta);

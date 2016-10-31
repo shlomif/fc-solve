@@ -132,7 +132,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
     fflush(out_fh);
     /* Now trace the solution */
 
-    calc_trace(instance->queue_solution_ptr, &trace, &trace_num);
+    calc_trace(instance->common.queue_solution_ptr, &trace, &trace_num);
 
     fc_solve_init_locs(&locs);
 
