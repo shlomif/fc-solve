@@ -183,7 +183,8 @@ static GCC_INLINE void instance_check_multiple_keys(
     }
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-    if (instance->pre_cache.count_elements >= instance->pre_cache_max_count)
+    if (instance->pre_cache.count_elements >=
+        instance->common.pre_cache_max_count)
     {
         pre_cache_offload_and_reset(&(instance->pre_cache), instance->store,
             &(instance->cache), &(instance->meta_alloc));
@@ -198,14 +199,14 @@ static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
     fcs_portable_time_t mytime;
     FCS_GET_TIME(mytime);
 
-    FILE *const out_fh = instance->out_fh;
+    FILE *const out_fh = instance->common.out_fh;
     fprintf(out_fh,
         ("Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n"
          ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n"),
         instance->common.count_num_processed,
-        instance->num_states_in_collection, FCS_TIME_GET_SEC(mytime),
-        FCS_TIME_GET_USEC(mytime), instance->num_states_in_collection,
-        instance->num_states_in_collection -
+        instance->common.num_states_in_collection, FCS_TIME_GET_SEC(mytime),
+        FCS_TIME_GET_USEC(mytime), instance->common.num_states_in_collection,
+        instance->common.num_states_in_collection -
             instance->common.count_num_processed,
         instance->common.count_num_processed);
     fflush(out_fh);
@@ -221,15 +222,15 @@ static GCC_INLINE void instance_debug_out_state(
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     fc_solve_init_locs(&locs);
-    const_AUTO(local_variant, instance->variant);
+    const_AUTO(local_variant, instance->common.variant);
     /* Handle item. */
     fc_solve_delta_stater_decode_into_state(
         &global_delta_stater, enc_state->s, &state, indirect_stacks_buffer);
 
     char state_str[1000];
     FCS__RENDER_STATE(state_str, &(state.s), &locs);
-    fprintf(instance->out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
-    fflush(instance->out_fh);
+    fprintf(instance->common.out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
+    fflush(instance->common.out_fh);
 }
 
 #else
@@ -276,7 +277,7 @@ static GCC_INLINE void mark_and_sweep_old_states(
      * mark-and-sweep
      * the old states, some of which are no longer of interest.
      * */
-    FILE *const out_fh = instance->out_fh;
+    FILE *const out_fh = instance->common.out_fh;
     TRACE("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
     struct avl_node **tree_recycle_bin =
         ((struct avl_node **)(&(instance->tree_recycle_bin)));

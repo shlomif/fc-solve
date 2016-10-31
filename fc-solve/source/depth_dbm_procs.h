@@ -16,7 +16,7 @@ static GCC_INLINE void dbm__spawn_threads(
     main_thread_item_t *const threads)
 {
 #ifdef T
-    FILE *const out_fh = instance->out_fh;
+    FILE *const out_fh = instance->common.out_fh;
 #endif
     TRACE("Running threads for curr_depth=%d\n", instance->curr_depth);
     for (size_t i = 0; i < num_threads; i++)
@@ -52,7 +52,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     fcs_dbm_solver_instance_t *const instance,
     fc_solve_delta_stater_t *const delta)
 {
-    FILE *const out_fh = instance->out_fh;
+    FILE *const out_fh = instance->common.out_fh;
     fcs_bool_t ret = FALSE;
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
     instance_print_stats(instance);

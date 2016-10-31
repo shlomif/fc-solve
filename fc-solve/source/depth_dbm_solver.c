@@ -43,12 +43,6 @@ typedef struct
     fcs_lock_t storage_lock;
     const char *offload_dir_path;
     int curr_depth;
-    int queue_num_extracted_and_processed;
-    fcs_encoded_state_buffer_t first_key;
-    long num_states_in_collection;
-    FILE *out_fh;
-    enum fcs_dbm_variant_type_t variant;
-    long pre_cache_max_count;
     fcs_dbm_instance_common_elems_t common;
 } fcs_dbm_solver_instance_t;
 
@@ -58,17 +52,17 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     const long caches_delta GCC_UNUSED, const char *dbm_store_path,
     long iters_delta_limit, const char *offload_dir_path, FILE *out_fh)
 {
-    instance->variant = local_variant;
+    instance->common.variant = local_variant;
     instance->curr_depth = 0;
     FCS_INIT_LOCK(instance->global_lock);
     instance->offload_dir_path = offload_dir_path;
 
-    instance->out_fh = out_fh;
+    instance->common.out_fh = out_fh;
 
     instance->common.queue_solution_was_found = FALSE;
     instance->common.should_terminate = DONT_TERMINATE;
-    instance->queue_num_extracted_and_processed = 0;
-    instance->num_states_in_collection = 0;
+    instance->common.queue_num_extracted_and_processed = 0;
+    instance->common.num_states_in_collection = 0;
     instance->common.count_num_processed = 0;
     if (iters_delta_limit >= 0)
     {
@@ -165,7 +159,7 @@ static void *instance_run_solver_thread(void *void_arg)
     const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
     const_SLOT(instance, thread);
     const_AUTO(delta_stater, &(thread->delta_stater));
-    const_AUTO(local_variant, instance->variant);
+    const_AUTO(local_variant, instance->common.variant);
 
     prev_item = item = NULL;
     queue_num_extracted_and_processed = 0;
@@ -174,7 +168,7 @@ static void *instance_run_solver_thread(void *void_arg)
         &(derived_list_allocator), &(thread->thread_meta_alloc));
     derived_list_recycle_bin = NULL;
     derived_list = NULL;
-    const_SLOT(out_fh, instance);
+    FILE *const out_fh = instance->common.out_fh;
 
     TRACE("%s\n", "instance_run_solver_thread start");
 
@@ -189,7 +183,7 @@ static void *instance_run_solver_thread(void *void_arg)
         if (prev_item)
         {
             FCS_LOCK(instance->global_lock);
-            instance->queue_num_extracted_and_processed--;
+            instance->common.queue_num_extracted_and_processed--;
             FCS_UNLOCK(instance->global_lock);
         }
 
@@ -201,7 +195,7 @@ static void *instance_run_solver_thread(void *void_arg)
                 physical_item.key = token->key;
                 item = &physical_item;
                 instance->common.count_of_items_in_queue--;
-                instance->queue_num_extracted_and_processed++;
+                instance->common.queue_num_extracted_and_processed++;
                 if (++instance->common.count_num_processed % 100000 == 0)
                 {
                     instance_print_stats(instance);
@@ -218,7 +212,7 @@ static void *instance_run_solver_thread(void *void_arg)
             }
 
             queue_num_extracted_and_processed =
-                instance->queue_num_extracted_and_processed;
+                instance->common.queue_num_extracted_and_processed;
         }
         FCS_UNLOCK(coll->queue_lock);
 
@@ -369,7 +363,7 @@ static GCC_INLINE void instance_check_key(
             FCS_LOCK(instance->global_lock);
 
             instance->common.count_of_items_in_queue++;
-            instance->num_states_in_collection++;
+            instance->common.num_states_in_collection++;
 
             instance_debug_out_state(instance, &(token->key));
 
@@ -568,7 +562,7 @@ int main(int argc, char *argv[])
     instance_init(&instance, local_variant, pre_cache_max_count, caches_delta,
         dbm_store_path, iters_delta_limit, offload_dir_path, out_fh);
 
-    fcs_encoded_state_buffer_t *const key_ptr = &(instance.first_key);
+    fcs_encoded_state_buffer_t *const key_ptr = &(instance.common.first_key);
     fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
 
     /* The NULL parent_state_enc and move for indicating this is the
@@ -590,7 +584,7 @@ int main(int argc, char *argv[])
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
         (const fcs_offloading_queue_item_t *)(&token));
-    instance.num_states_in_collection++;
+    instance.common.num_states_in_collection++;
     instance.common.count_of_items_in_queue++;
 
     instance_run_all_threads(&instance, &init_state, NUM_THREADS());

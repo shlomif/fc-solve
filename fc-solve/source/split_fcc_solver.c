@@ -79,12 +79,6 @@ typedef struct
     fcs_lock_t storage_lock;
     const char *offload_dir_path;
     int curr_depth;
-    int queue_num_extracted_and_processed;
-    fcs_encoded_state_buffer_t first_key;
-    long num_states_in_collection;
-    FILE *out_fh;
-    enum fcs_dbm_variant_type_t variant;
-    long pre_cache_max_count;
     fcs_dbm_instance_common_elems_t common;
     fcs_meta_compact_allocator_t fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
@@ -128,7 +122,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_dbm_collection_by_depth_t *coll;
 
     instance->dbm_store_path = dbm_store_path;
-    instance->variant = local_variant;
+    instance->common.variant = local_variant;
 
     instance->fingerprint_which_irreversible_moves_bitmask =
         (*fingerprint_which_irreversible_moves_bitmask);
@@ -157,12 +151,12 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     FCS_INIT_LOCK(instance->global_lock);
     instance->offload_dir_path = offload_dir_path;
 
-    instance->out_fh = out_fh;
+    instance->common.out_fh = out_fh;
 
     instance->common.queue_solution_was_found = FALSE;
     instance->common.should_terminate = DONT_TERMINATE;
-    instance->queue_num_extracted_and_processed = 0;
-    instance->num_states_in_collection = 0;
+    instance->common.queue_num_extracted_and_processed = 0;
+    instance->common.num_states_in_collection = 0;
     instance->common.count_num_processed = 0;
     if (iters_delta_limit >= 0)
     {
@@ -272,7 +266,7 @@ static void *instance_run_solver_thread(void *void_arg)
     const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
     const_SLOT(instance, thread);
     const_AUTO(delta_stater, &(thread->delta_stater));
-    const_AUTO(local_variant, instance->variant);
+    const_AUTO(local_variant, instance->common.variant);
 
     prev_item = item = NULL;
     queue_num_extracted_and_processed = 0;
@@ -281,7 +275,7 @@ static void *instance_run_solver_thread(void *void_arg)
         &(derived_list_allocator), &(thread->thread_meta_alloc));
     derived_list_recycle_bin = NULL;
     derived_list = NULL;
-    const_SLOT(out_fh, instance);
+    FILE *const out_fh = instance->common.out_fh;
 
     TRACE("%s\n", "instance_run_solver_thread start");
 
@@ -299,7 +293,7 @@ static void *instance_run_solver_thread(void *void_arg)
         if (prev_item)
         {
             FCS_LOCK(instance->global_lock);
-            instance->queue_num_extracted_and_processed--;
+            instance->common.queue_num_extracted_and_processed--;
             FCS_UNLOCK(instance->global_lock);
         }
 
@@ -312,7 +306,7 @@ static void *instance_run_solver_thread(void *void_arg)
                 physical_item.key = token->key;
                 item = &physical_item;
                 instance->common.count_of_items_in_queue--;
-                instance->queue_num_extracted_and_processed++;
+                instance->common.queue_num_extracted_and_processed++;
                 if (++instance->common.count_num_processed % 100000 == 0)
                 {
                     instance_print_stats(instance);
@@ -329,7 +323,7 @@ static void *instance_run_solver_thread(void *void_arg)
             }
 
             queue_num_extracted_and_processed =
-                instance->queue_num_extracted_and_processed;
+                instance->common.queue_num_extracted_and_processed;
         }
         FCS_UNLOCK(coll->queue_lock);
 
@@ -506,7 +500,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
-    enum fcs_dbm_variant_type_t local_variant = instance->variant;
+    enum fcs_dbm_variant_type_t local_variant = instance->common.variant;
 #endif
     const_AUTO(coll, &(instance->coll));
     {
@@ -572,7 +566,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 FCS_LOCK(instance->global_lock);
 
                 instance->common.count_of_items_in_queue++;
-                instance->num_states_in_collection++;
+                instance->common.num_states_in_collection++;
 
                 instance_debug_out_state(instance, &(token->key));
 
@@ -1079,7 +1073,7 @@ int main(int argc, char *argv[])
                     was_init = TRUE;
                 }
             }
-            instance.num_states_in_collection++;
+            instance.common.num_states_in_collection++;
             instance.common.count_of_items_in_queue++;
             /* Valid for the next iteration: */
             location_in_file = ftell(fingerprint_fh);

@@ -24,10 +24,10 @@ static GCC_INLINE main_thread_item_t *dbm__calc_threads(
     void (*init_thread_cb)(fcs_dbm_solver_thread_t *))
 {
 #ifdef T
-    FILE *const out_fh = instance->out_fh;
+    FILE *const out_fh = instance->common.out_fh;
 #endif
 #ifndef FCS_FREECELL_ONLY
-    const_AUTO(local_variant, instance->variant);
+    const_AUTO(local_variant, instance->common.variant);
 #endif
     main_thread_item_t *const threads = SMALLOC(threads, num_threads);
     TRACE("%s\n", "instance_run_all_threads start");
@@ -61,7 +61,7 @@ static GCC_INLINE void dbm__free_threads(
     void (*free_thread_cb)(fcs_dbm_solver_thread_t *))
 {
 #ifdef T
-    FILE *const out_fh = instance->out_fh;
+    FILE *const out_fh = instance->common.out_fh;
 #endif
     for (size_t i = 0; i < num_threads; i++)
     {
@@ -84,7 +84,7 @@ static unsigned char get_move_from_parent_to_child(
     fcs_compact_allocator_t derived_list_allocator;
     fcs_meta_compact_allocator_t meta_alloc;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    const_AUTO(local_variant, instance->variant);
+    const_AUTO(local_variant, instance->common.variant);
 
     fc_solve_meta_compact_allocator_init(&meta_alloc);
     fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
@@ -126,7 +126,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
     char move_buffer[500];
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
-    const_AUTO(local_variant, instance->variant);
+    const_AUTO(local_variant, instance->common.variant);
 
     fprintf(out_fh, "%s\n", "Success!");
     fflush(out_fh);
