@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
     }
 
     fcs_portable_time_t mytime;
-    FCS_PRINT_STARTED_AT(mytime);
+    fc_solve_print_started_at();
 
     context_argc = argc;
     context_argv = argv;

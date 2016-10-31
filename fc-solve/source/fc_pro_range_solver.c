@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    FCS_PRINT_STARTED_AT(mytime);
+    fc_solve_print_started_at();
     fflush(stdout);
 
     fc_solve_display_information_context_t display_context =

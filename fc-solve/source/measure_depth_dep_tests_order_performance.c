@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    FCS_PRINT_STARTED_AT(mytime);
+    fc_solve_print_started_at();
     fflush(stdout);
 
     result_t *const results =

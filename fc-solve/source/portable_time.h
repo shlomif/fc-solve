@@ -17,12 +17,15 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
 #ifndef WIN32
 #include <sys/time.h>
 #else
 #include <sys/types.h>
 #include <sys/timeb.h>
 #endif
+
+#include "inline.h"
 
 #ifndef WIN32
 
@@ -67,10 +70,13 @@ typedef struct
     printf("Unsolved Board No. " FCS_INT64_FORMAT " at %li.%.6li\n",           \
         board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
 
-#define FCS_PRINT_STARTED_AT(mytime)                                           \
-    FCS_GET_TIME(mytime);                                                      \
-    printf("Started at %li.%.6li\n", FCS_TIME_GET_SEC(mytime),                 \
-        FCS_TIME_GET_USEC(mytime))
+static GCC_INLINE void fc_solve_print_started_at(void)
+{
+    fcs_portable_time_t mytime;
+    FCS_GET_TIME(mytime);
+    printf("Started at %li.%.6li\n", FCS_TIME_GET_SEC(mytime),
+        FCS_TIME_GET_USEC(mytime));
+}
 
 #define FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters)            \
     FCS_GET_TIME(mytime);                                                      \

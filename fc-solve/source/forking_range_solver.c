@@ -266,7 +266,7 @@ int main(int argc, char *argv[])
     }
 
     fcs_portable_time_t mytime;
-    FCS_PRINT_STARTED_AT(mytime);
+    fc_solve_print_started_at();
 
     void *const instance = simple_alloc_and_parse(argc, argv, &arg);
     freecell_solver_user_limit_iterations_long(
