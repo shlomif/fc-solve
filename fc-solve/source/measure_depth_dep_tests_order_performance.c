@@ -60,9 +60,6 @@ int main(int argc, char *argv[])
     int min_depth_for_scan2;
     fcs_int_limit_t iters_limit = 100000;
     int max_var_depth_to_check = 100;
-
-    fcs_portable_time_t mytime;
-
 #ifdef FCS_WITH_ERROR_STRS
     char *error_string;
 #endif

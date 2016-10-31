@@ -76,3 +76,44 @@ static GCC_INLINE void fc_solve_unresume_instance(
 #endif
 
 typedef fcs_game_limit_t fcs_runtime_flags_t;
+#if 0
+enum
+{
+    /* A flag that indicates whether to optimize the solution path
+       at the end of the scan */
+    FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = (1 << 0),
+    /*
+     * Specifies that we are now running the optimization thread.
+     * */
+    FCS_RUNTIME_IN_OPTIMIZATION_THREAD = (1 << 1),
+    /*
+     * A flag that indicates whether or not to explicitly calculate
+     * the depth of a state that was reached.
+     * */
+    FCS_RUNTIME_CALC_REAL_DEPTH = (1 << 2),
+    /*
+     * A flag that indicates if instance->opt_tests_order was set.
+     */
+    FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = (1 << 3),
+    /*
+     * This flag indicates whether scans should or should not reparent the
+     * states their encounter to a lower depth in the depth tree
+     *
+     * _proto is the one input by the user.
+     * _real is calculated based on other factors such as whether the
+     * scan method is FCS_METHOD_OPTIMIZE.
+     * */
+    FCS_RUNTIME_TO_REPARENT_STATES_PROTO = (1 << 4),
+    FCS_RUNTIME_TO_REPARENT_STATES_REAL  = (1 << 5),
+    /*
+     * This variable determines how the scans cooperate with each other.
+     *
+     * A value of 0 indicates that they don't and only share the same
+     * states collection.
+     *
+     * A value of 1 indicates that they mark states as dead-end,
+     * which may help or hinder other scans.
+     * */
+    FCS_RUNTIME_SCANS_SYNERGY  = (1 << 6),
+};
+#endif
