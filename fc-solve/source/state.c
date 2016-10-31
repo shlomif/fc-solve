@@ -183,8 +183,6 @@ static GCC_INLINE void render_freecell_card(const fcs_card_t card,
 
 void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
     const fcs_state_locs_struct_t *const state_locs
-#define FCS_S_STACK_LOCS() (state_locs->stack_locs)
-#define FCS_S_FC_LOCS() (state_locs->fc_locs)
         FREECELLS_STACKS_DECKS__ARGS()
             FC_SOLVE__PASS_PARSABLE(const fcs_bool_t parseable_output),
     const fcs_bool_t canonized_order_output PASS_T(
@@ -215,11 +213,11 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
     {
         for (int i = 0; i < STACKS_NUM__VAL; i++)
         {
-            stack_locs[(int)((FCS_S_STACK_LOCS())[i])] = i;
+            stack_locs[(int)(state_locs->stack_locs[i])] = i;
         }
         for (int i = 0; i < FREECELLS_NUM__VAL; i++)
         {
-            freecell_locs[(int)((FCS_S_FC_LOCS())[i])] = i;
+            freecell_locs[(int)(state_locs->fc_locs[i])] = i;
         }
     }
 
@@ -390,6 +388,3 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
     }
     *(output_s) = '\0';
 }
-
-#undef FCS_S_FC_LOCS
-#undef FCS_S_STACK_LOCS

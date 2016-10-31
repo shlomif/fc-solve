@@ -153,16 +153,9 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
 {
     fcs_internal_move_t in_move;
-
     fcs_state_keyval_pair_t s_and_info;
-
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
-#define FCS_S_FC_LOCS() (locs->fc_locs)
-#define FCS_S_STACK_LOCS() (locs->stack_locs)
-
     fcs_internal_move_t out_move = fc_solve_empty_move;
-
     FCS_STATE__DUP_keyval_pair(s_and_info, *init_state);
 
 #ifdef INDIRECT_STACK_STATES
@@ -195,28 +188,27 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
             (move_type == FCS_MOVE_TYPE_SEQ_TO_FOUNDATION))
         {
             fcs_int_move_set_src_stack(out_move,
-                (FCS_S_STACK_LOCS())[(int)fcs_int_move_get_src_stack(in_move)]);
+                locs->stack_locs[(int)fcs_int_move_get_src_stack(in_move)]);
         }
         else if ((move_type == FCS_MOVE_TYPE_FREECELL_TO_STACK) ||
                  (move_type == FCS_MOVE_TYPE_FREECELL_TO_FREECELL) ||
                  (move_type == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION))
         {
             fcs_int_move_set_src_freecell(out_move,
-                (FCS_S_FC_LOCS())[(int)fcs_int_move_get_src_freecell(in_move)]);
+                locs->fc_locs[(int)fcs_int_move_get_src_freecell(in_move)]);
         }
 
         if ((move_type == FCS_MOVE_TYPE_STACK_TO_STACK) ||
             (move_type == FCS_MOVE_TYPE_FREECELL_TO_STACK))
         {
-            fcs_int_move_set_dest_stack(
-                out_move, (FCS_S_STACK_LOCS())[(int)fcs_int_move_get_dest_stack(
-                              in_move)]);
+            fcs_int_move_set_dest_stack(out_move,
+                locs->stack_locs[(int)fcs_int_move_get_dest_stack(in_move)]);
         }
         else if ((move_type == FCS_MOVE_TYPE_STACK_TO_FREECELL) ||
                  (move_type == FCS_MOVE_TYPE_FREECELL_TO_FREECELL))
         {
             fcs_int_move_set_dest_freecell(out_move,
-                FCS_S_FC_LOCS()[(int)fcs_int_move_get_dest_freecell(in_move)]);
+                locs->fc_locs[(int)fcs_int_move_get_dest_freecell(in_move)]);
         }
         else if ((move_type == FCS_MOVE_TYPE_STACK_TO_FOUNDATION) ||
                  (move_type == FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION) ||
@@ -247,9 +239,6 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fc_solve_move_stack_swallow_stack(moves, (&temp_moves));
     fcs_move_stack_static_destroy(temp_moves);
 }
-
-#undef FCS_S_FC_LOCS
-#undef FCS_S_STACK_LOCS
 
 static GCC_INLINE int fc_solve_move__convert_freecell_num(const int fc_idx)
 {
