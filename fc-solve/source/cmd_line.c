@@ -235,8 +235,14 @@ static GCC_INLINE char *calc_errstr_s(const char *const format, ...)
 #ifdef FCS_WITH_ERROR_STRS
 #define ASSIGN_ERR_STR(error_string, format, ...)                              \
     *(error_string) = calc_errstr_s(format, __VA_ARGS__)
+#define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)    \
+    {                                                                          \
+        ASSIGN_ERR_STR(error_string, format, __VA_ARGS__);                     \
+        free(fcs_user_errstr);                                                 \
+    }
 #else
 #define ASSIGN_ERR_STR(error_string, format, ...)
+#define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)
 #endif
 
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
@@ -686,13 +692,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_optimization_scan_tests_order(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
-#ifdef FCS_WITH_ERROR_STRS
-                ASSIGN_ERR_STR(error_string,
+                ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                     "Error in the optimization scan's tests' order!\n%s\n",
                     fcs_user_errstr);
-                free(fcs_user_errstr);
-#endif
-
                 RET_ERROR_IN_ARG();
             }
         }
@@ -896,12 +898,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg))
                             FCS__PASS_ERR_STR(&fcs_user_errstr)))
                 {
-#ifdef FCS_WITH_ERROR_STRS
-                    ASSIGN_ERR_STR(error_string,
+                    ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                         "Error in depth tests' order!\n%s\n", fcs_user_errstr);
-                    free(fcs_user_errstr);
-#endif
-
                     RET_ERROR_IN_ARG();
                 }
             }
@@ -918,13 +916,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_pruning(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
-#ifdef FCS_WITH_ERROR_STRS
-                ASSIGN_ERR_STR(error_string,
+                ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                     "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr);
-                free(fcs_user_errstr);
-#endif
-
                 RET_ERROR_IN_ARG();
             }
         }
@@ -977,13 +971,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         position,
                         x_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
                 {
-#ifdef FCS_WITH_ERROR_STRS
-                    ASSIGN_ERR_STR(error_string,
+                    ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                         "Error in patsolve X param setting!\n%s\n",
                         fcs_user_errstr);
-                    free(fcs_user_errstr);
-#endif
-
                     RET_ERROR_IN_ARG();
                 }
             }
@@ -1014,13 +1004,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         position,
                         y_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
                 {
-#ifdef FCS_WITH_ERROR_STRS
-                    ASSIGN_ERR_STR(error_string,
+                    ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                         "Error in patsolve Y param setting!\n%s\n",
                         fcs_user_errstr);
-                    free(fcs_user_errstr);
-#endif
-
                     RET_ERROR_IN_ARG();
                 }
             }
