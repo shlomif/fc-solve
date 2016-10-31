@@ -35,6 +35,7 @@ typedef struct
     fcs_offloading_queue_t queue;
 } fcs_dbm_collection_by_depth_t;
 
+#define MAX_FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 typedef struct
 {
     fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
@@ -94,12 +95,9 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
 
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
-    int depth;
-    fcs_dbm_collection_by_depth_t *coll;
-
-    for (depth = 0; depth < MAX_FCC_DEPTH; depth++)
+    for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
-        coll = &(instance->colls_by_depth[depth]);
+        const_AUTO(coll, &(instance->colls_by_depth[depth]));
         fcs_offloading_queue__destroy(&(coll->queue));
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
         fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
