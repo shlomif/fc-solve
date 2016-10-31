@@ -81,7 +81,6 @@ fc-solve/source/fc-solve.xml
 fc-solve/source/freecell-solver.spec
 fc-solve/source/ids.txt
 fc-solve/source/patsolve-shlomif
-fc-solve/source/rate_state.c
 fc-solve/source/scripts/ids-whitelist.txt
 fc-solve/source/t/lib/FC_Solve/__pycache__
 fc-solve/source/t/lib/TAP/__pycache__
