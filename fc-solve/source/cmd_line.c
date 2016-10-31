@@ -232,6 +232,13 @@ static GCC_INLINE char *calc_errstr_s(const char *const format, ...)
     return errstr;
 }
 
+#ifdef FCS_WITH_ERROR_STRS
+#define ASSIGN_ERR_STR(error_string, format, ...)                              \
+    *(error_string) = calc_errstr_s(format, __VA_ARGS__)
+#else
+#define ASSIGN_ERR_STR(error_string, format, ...)
+#endif
+
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void *instance, int argc, freecell_solver_str_t argv[], const int start_arg,
     freecell_solver_str_t *known_parameters,
@@ -327,8 +334,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
 #ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
-                    "Error in tests' order!\n%s\n", fcs_user_errstr);
+                ASSIGN_ERR_STR(error_string, "Error in tests' order!\n%s\n",
+                    fcs_user_errstr);
                 free(fcs_user_errstr);
 #endif
 
@@ -344,14 +351,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_num_freecells(
                     instance, atoi((*arg))) != 0)
             {
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "Error! The freecells\' number "
                     "exceeds the maximum of %i.\n"
                     "Recompile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_freecells());
-#endif
-
                 RET_ERROR_IN_ARG();
             }
 #endif
@@ -365,14 +369,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (freecell_solver_user_set_num_stacks(instance, atoi((*arg))) !=
                 0)
             {
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "Error! The stacks\' number "
                     "exceeds the maximum of %i.\n"
                     "Recompile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_stacks());
-#endif
-
                 RET_ERROR_IN_ARG();
             }
 #endif
@@ -385,14 +386,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #ifndef HARD_CODED_NUM_DECKS
             if (freecell_solver_user_set_num_decks(instance, atoi((*arg))) != 0)
             {
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "Error! The decks\' number "
                     "exceeds the maximum of %i.\n"
                     "Recopmile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_decks());
-#endif
-
                 RET_ERROR_IN_ARG();
             }
 #endif
@@ -452,42 +450,34 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 break;
 
             case FCS_PRESET_CODE_NOT_FOUND:
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string =
-                    calc_errstr_s("Unknown game \"%s\"!\n\n", string_arg);
-#endif
+                ASSIGN_ERR_STR(
+                    error_string, "Unknown game \"%s\"!\n\n", string_arg);
                 RET_ERROR_IN_ARG();
 
             case FCS_PRESET_CODE_FREECELLS_EXCEED_MAX:
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string =
-                    calc_errstr_s("The game \"%s\" exceeds the maximal number "
-                                  "of freecells in the program.\n"
-                                  "Modify the file \"config.h\" and recompile, "
-                                  "if you wish to solve one of its boards.\n",
-                        string_arg);
-#endif
+                ASSIGN_ERR_STR(error_string,
+                    "The game \"%s\" exceeds the maximal number "
+                    "of freecells in the program.\n"
+                    "Modify the file \"config.h\" and recompile, "
+                    "if you wish to solve one of its boards.\n",
+                    string_arg);
                 RET_ERROR_IN_ARG();
 
             case FCS_PRESET_CODE_STACKS_EXCEED_MAX:
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string =
-                    calc_errstr_s("The game \"%s\" exceeds the maximal number "
-                                  "of stacks in the program.\n"
-                                  "Modify the file \"config.h\" and recompile, "
-                                  "if you wish to solve one of its boards.\n",
-                        string_arg);
-#endif
+                ASSIGN_ERR_STR(error_string,
+                    "The game \"%s\" exceeds the maximal number "
+                    "of stacks in the program.\n"
+                    "Modify the file \"config.h\" and recompile, "
+                    "if you wish to solve one of its boards.\n",
+                    string_arg);
                 RET_ERROR_IN_ARG();
 
             default:
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "The game \"%s\" exceeds the limits of the program.\n"
                     "Modify the file \"config.h\" and recompile, if you wish "
                     "to solve one of its boards.\n",
                     string_arg);
-#endif
                 RET_ERROR_IN_ARG();
             }
 #endif
@@ -525,10 +515,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             else
             {
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string =
-                    calc_errstr_s("Unknown solving method \"%s\".\n", s);
-#endif
+                ASSIGN_ERR_STR(
+                    error_string, "Unknown solving method \"%s\".\n", s);
 
                 RET_ERROR_IN_ARG();
             }
@@ -699,7 +687,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
 #ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "Error in the optimization scan's tests' order!\n%s\n",
                     fcs_user_errstr);
                 free(fcs_user_errstr);
@@ -726,10 +714,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             else
             {
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "Unknown scans' synergy type \"%s\"!\n", (*arg));
-#endif
 
                 RET_ERROR_IN_ARG();
             }
@@ -795,11 +781,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 /* If we still could not open it return an error */
                 if (f == NULL)
                 {
-#ifdef FCS_WITH_ERROR_STRS
-                    *error_string = calc_errstr_s(
+                    ASSIGN_ERR_STR(error_string,
                         "Could not open file \"%s\"!\nQuitting.\n", s);
-#endif
-
                     RET_ERROR_IN_ARG();
                 }
                 fseek(f, 0, SEEK_END);
@@ -863,10 +846,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             switch (ret)
             {
             case FCS_CMD_LINE_ERROR_IN_ARG:
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "Unable to load the \"%s\" configuration!\n", (*arg));
-#endif
                 RET_ERROR_IN_ARG();
 
             case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
@@ -916,7 +897,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                             FCS__PASS_ERR_STR(&fcs_user_errstr)))
                 {
 #ifdef FCS_WITH_ERROR_STRS
-                    *error_string = calc_errstr_s(
+                    ASSIGN_ERR_STR(error_string,
                         "Error in depth tests' order!\n%s\n", fcs_user_errstr);
                     free(fcs_user_errstr);
 #endif
@@ -938,7 +919,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
 #ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr);
                 free(fcs_user_errstr);
@@ -965,11 +946,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
             if (freecell_solver_user_set_flares_choice(instance, (*arg)) != 0)
             {
-#ifdef FCS_WITH_ERROR_STRS
-                *error_string = calc_errstr_s(
+                ASSIGN_ERR_STR(error_string,
                     "Unknown flares choice argument '%s'.\n", (*arg));
-#endif
-
                 RET_ERROR_IN_ARG();
             }
 #endif
@@ -1000,7 +978,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         x_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
                 {
 #ifdef FCS_WITH_ERROR_STRS
-                    *error_string = calc_errstr_s(
+                    ASSIGN_ERR_STR(error_string,
                         "Error in patsolve X param setting!\n%s\n",
                         fcs_user_errstr);
                     free(fcs_user_errstr);
@@ -1037,7 +1015,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         y_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
                 {
 #ifdef FCS_WITH_ERROR_STRS
-                    *error_string = calc_errstr_s(
+                    ASSIGN_ERR_STR(error_string,
                         "Error in patsolve Y param setting!\n%s\n",
                         fcs_user_errstr);
                     free(fcs_user_errstr);
