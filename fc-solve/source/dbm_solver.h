@@ -99,7 +99,6 @@ typedef struct
     long num_states_in_collection;
     FILE *out_fh;
     enum fcs_dbm_variant_type_t variant;
-    long pre_cache_max_count;
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
     fcs_bool_t queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;

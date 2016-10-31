@@ -66,7 +66,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
 #ifndef FCS_DBM_CACHE_ONLY
     pre_cache_init(&(instance->pre_cache), &(instance->meta_alloc));
 #endif
-    instance->common.pre_cache_max_count = pre_cache_max_count;
     cache_init(&(instance->cache), pre_cache_max_count + caches_delta,
         &(instance->meta_alloc));
 #endif
