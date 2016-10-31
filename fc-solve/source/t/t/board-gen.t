@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 30;
 use Test::Differences qw/ eq_or_diff /;
 
 use FC_Solve::Paths qw/ bin_exe_raw /;
@@ -141,6 +141,42 @@ _test_ms(
         blurb => "Testing for -t pi-ms-make Freecell",
         cmd => [qw(-t 24)],
         expected => $BOARD_24_T,
+    }
+);
+
+# TEST
+_test_ms(
+    {
+        blurb => "Testing pi-ms-make long seed",
+        cmd => [qw(-t 3000000000)],
+        expected => <<'EOF',
+8D TS JS TD JH JD JC
+4D QS TH AD 4S TC 3C
+9H KH QH 4C 5C KD AS
+9D 5D 8S 4H KS 6S 9S
+6H 2S 7H 3D KC 2C
+9C 7C QC 7S QD 7D
+6C 3H 8H AC 6D 3S
+8C AH 2H 5H 2D 5S
+EOF
+    }
+);
+
+# TEST
+_test_ms(
+    {
+        blurb => "Testing pi-ms-make long seed",
+        cmd => [qw(-t 6000000000)],
+        expected => <<'EOF',
+2D 2C QS 8D KD 8C 4C
+3D AH 2H 4H TS 6H QD
+4D JS AD 6S JH JC JD
+KH 3H KS AS TC 5D AC
+TD 7C 9C 7H 3C 3S
+QH 9H 9D 5S 7S 6C
+5C 5H 2S KC 9S 4S
+6D QC 8S TH 7D 8H
+EOF
     }
 );
 

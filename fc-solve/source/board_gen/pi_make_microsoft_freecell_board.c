@@ -44,23 +44,7 @@
 #include <time.h>
 
 #include "alloc_wrap.h"
-struct microsoft_rand_struct
-{
-    long seed;
-};
-
-typedef struct microsoft_rand_struct microsoft_rand_t;
-
-static void microsoft_rand_init(microsoft_rand_t * const my_rand_gen, const unsigned int seed)
-{
-    my_rand_gen->seed = (long)seed;
-}
-
-static int microsoft_rand_rand(microsoft_rand_t * const my_rand_gen)
-{
-    my_rand_gen->seed = (my_rand_gen->seed * 214013 + 2531011);
-    return (my_rand_gen->seed >> 16) & 0x7fff;
-}
+#include "gen_ms_boards__rand.h"
 
 typedef int CARD;
 
@@ -133,10 +117,9 @@ int main(int argc, char * argv[])
 
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
 
-    int  i, j;                /*  generic counters */
-    int  wLeft = 52;          /*  cards left to be chosen in shuffle */
+    int  i;                /*  generic counters */
+    int  num_cards_left = 52;          /*  cards left to be chosen in shuffle */
     CARD deck[52];            /* deck of 52 unique cards */
-    microsoft_rand_t my_rand_gen;
     int print_ts = 0;
 
     int arg = 1;
@@ -148,19 +131,23 @@ int main(int argc, char * argv[])
             arg++;
         }
     }
-    const unsigned int gamenumber = ((arg < argc) ? (unsigned int)atoi(argv[arg++]) : (unsigned int)time(NULL));
+    const long long gamenumber = ((arg < argc) ? atoll(argv[arg++]) : (long long)time(NULL));
 
     /* shuffle cards */
 
     for (i = 0; i < 52; i++)      /* put unique card in each deck loc. */
         deck[i] = i;
 
-    microsoft_rand_init(&my_rand_gen, gamenumber);
+    long long seedx = (microsoft_rand_uint_t)(
+        (gamenumber < 0x100000000LL) ? gamenumber
+                                     : (gamenumber - 0x100000000LL));
     for (i = 0; i < 52; i++)
     {
-        j = microsoft_rand_rand(&my_rand_gen) % wLeft;
+        const microsoft_rand_uint_t j =
+                microsoft_rand__game_num_rand(&seedx, gamenumber) %
+                num_cards_left;
         card[(i%8)+1][i/8] = deck[j];
-        deck[j] = deck[--wLeft];
+        deck[j] = deck[--num_cards_left];
     }
 
     {
