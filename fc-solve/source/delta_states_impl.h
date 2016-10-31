@@ -219,13 +219,12 @@ static void fc_solve_delta_stater_encode_composite(
     int cols_indexes[MAX_NUM_STACKS];
     fc_solve_column_encoding_composite_t cols[MAX_NUM_STACKS];
     fcs_state_t *derived;
-    int i;
     int num_columns;
 
     derived = self->_derived_state;
 
     num_columns = self->num_columns;
-    for (i = 0; i < num_columns; i++)
+    for (int i = 0; i < num_columns; i++)
     {
         cols_indexes[i] = i;
         fc_solve_get_column_encoding_composite(self, i, &(cols[i]));
@@ -283,7 +282,7 @@ static void fc_solve_delta_stater_encode_composite(
         int new_non_orig_cols_indexes_count = 0;
 
         /* Filter the new_non_orig_cols_indexes */
-        for (i = 0; i < num_columns; i++)
+        for (int i = 0; i < num_columns; i++)
         {
             if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
             {
@@ -292,46 +291,36 @@ static void fc_solve_delta_stater_encode_composite(
             }
         }
 
-        /* Sort the new_non_orig_cols_indexes_count using insertion-sort. */
-        {
-            int c;
-
-#define b i
+/* Sort the new_non_orig_cols_indexes_count using insertion-sort. */
 #define COMP_BY(idx)                                                           \
     (fcs_card2char(fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0)))
 #define ITEM_IDX(idx) (new_non_orig_cols_indexes[idx])
 #define COMP_BY_IDX(idx) (COMP_BY(ITEM_IDX(idx)))
-
-            for (b = 1; b < new_non_orig_cols_indexes_count; b++)
+        for (int b = 1; b < new_non_orig_cols_indexes_count; b++)
+        {
+            for (int c = b; (c > 0) && (COMP_BY_IDX(c - 1) > COMP_BY_IDX(c));
+                 c--)
             {
-                for (c = b; (c > 0) && (COMP_BY_IDX(c - 1) > COMP_BY_IDX(c));
-                     c--)
-                {
-                    const_AUTO(swap_int, ITEM_IDX(c));
-                    ITEM_IDX(c) = ITEM_IDX(c - 1);
-                    ITEM_IDX(c - 1) = swap_int;
-                }
+                const_AUTO(swap_int, ITEM_IDX(c));
+                ITEM_IDX(c) = ITEM_IDX(c - 1);
+                ITEM_IDX(c - 1) = swap_int;
             }
+        }
 #undef COMP_BY_IDX
 #undef ITEM_IDX
 #undef COMP_BY
 #undef b
-        }
-
+        for (int i = 0, sorted_idx = 0; i < num_columns; i++)
         {
-            int sorted_idx;
-            for (i = 0, sorted_idx = 0; i < num_columns; i++)
+            if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
             {
-                if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
-                {
-                    cols_indexes[i] = new_non_orig_cols_indexes[sorted_idx++];
-                }
+                cols_indexes[i] = new_non_orig_cols_indexes[sorted_idx++];
             }
         }
     }
 
     fc_solve_get_freecells_encoding(self, bit_w);
-    for (i = 0; i < num_columns; i++)
+    for (int i = 0; i < num_columns; i++)
     {
         const fc_solve_column_encoding_composite_t *const col_enc =
             (cols + cols_indexes[i]);
