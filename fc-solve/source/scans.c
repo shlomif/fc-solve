@@ -436,7 +436,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
     const fcs_bool_t scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
-    const int soft_thread_id = soft_thread->id;
+    const_AUTO(soft_thread_id, soft_thread->id);
     const fcs_bool_t is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const_SLOT(effective_max_num_states_in_collection, instance);

@@ -772,7 +772,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
     const fcs_bool_t is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
-    const int soft_thread_id = soft_thread->id;
+    const_AUTO(soft_thread_id, soft_thread->id);
     const fcs_tests_list_of_lists *the_tests_list_ptr;
     fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
     fcs_int_limit_t hard_thread_max_num_checked_states;

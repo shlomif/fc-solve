@@ -124,9 +124,9 @@ args_man_t fc_solve_args_man_chop(const char *const string)
         }
 
         {
-            fcs_bool_t still_loop = TRUE;
+            fcs_bool_t should_still_loop = TRUE;
             fcs_bool_t in_arg = FALSE;
-            while (still_loop)
+            while (should_still_loop)
             {
                 switch (*s)
                 {
@@ -137,7 +137,7 @@ args_man_t fc_solve_args_man_chop(const char *const string)
                 case '\r':
 
                     push_next_arg_flag = TRUE;
-                    still_loop = FALSE;
+                    should_still_loop = FALSE;
 
                     break;
 
@@ -150,14 +150,14 @@ args_man_t fc_solve_args_man_chop(const char *const string)
                     {
                         s--;
                         push_next_arg_flag = TRUE;
-                        still_loop = FALSE;
+                        should_still_loop = FALSE;
                     }
                     else if ((next_char == '\n') || (next_char == '\r'))
                     {
                         /* Skip to the next line. */
                         if (!in_arg)
                         {
-                            still_loop = FALSE;
+                            should_still_loop = FALSE;
                         }
                     }
                     else
@@ -226,7 +226,7 @@ args_man_t fc_solve_args_man_chop(const char *const string)
                         s++;
                     }
                     push_next_arg_flag = TRUE;
-                    still_loop = FALSE;
+                    should_still_loop = FALSE;
                     break;
 
                 default:

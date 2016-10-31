@@ -233,7 +233,7 @@ static GCC_INLINE char *calc_errstr_s(const char *const format, ...)
 }
 
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-    void *instance, int argc, freecell_solver_str_t argv[], int start_arg,
+    void *instance, int argc, freecell_solver_str_t argv[], const int start_arg,
     freecell_solver_str_t *known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void *callback_context FCS__PASS_ERR_STR(char **error_string),
@@ -992,9 +992,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
 #ifndef FCS_DISABLE_PATSOLVE
             {
-                int position;
-                int x_param_val;
-
+                int position, x_param_val;
                 if (sscanf((*arg), "%d,%d", &position, &x_param_val) != 2)
                 {
 #ifdef FCS_WITH_ERROR_STRS
@@ -1032,7 +1030,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             {
                 int position;
                 double y_param_val;
-
                 if (sscanf((*arg), "%d,%lf", &position, &y_param_val) != 2)
                 {
 #ifdef FCS_WITH_ERROR_STRS
@@ -1073,7 +1070,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
 #ifndef FC_SOLVE__REMOVE_OLD_API_1
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args(void *instance, int argc,
-    freecell_solver_str_t argv[], int start_arg,
+    freecell_solver_str_t argv[], const int start_arg,
     freecell_solver_str_t *known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void *callback_context FCS__PASS_ERR_STR(char **error_string),
