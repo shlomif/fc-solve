@@ -145,6 +145,7 @@ static GCC_INLINE void fcs_dbm__common_init(
         common->max_count_num_processed = LONG_MAX;
     }
     common->count_of_items_in_queue = 0;
+    common->tree_recycle_bin = NULL;
 }
 
 #ifdef __cplusplus

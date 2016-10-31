@@ -71,7 +71,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         &(instance->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-    instance->common.tree_recycle_bin = NULL;
     fc_solve_dbm_store_init(&(instance->store), dbm_store_path,
         &(instance->common.tree_recycle_bin));
 #endif

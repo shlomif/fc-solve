@@ -147,7 +147,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     instance->offload_dir_path = offload_dir_path;
     fcs_dbm__common_init(
         &(instance->common), iters_delta_limit, local_variant, out_fh);
-    instance->common.tree_recycle_bin = NULL;
 
     FCS_INIT_LOCK(instance->storage_lock);
     FCS_INIT_LOCK(instance->output_lock);
