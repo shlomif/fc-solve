@@ -268,8 +268,6 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     if (instance->next_soft_thread_id)
 #endif
     {
-        char test_name[2] = {0};
-
         HT_LOOP_START()
         {
             ST_LOOP_START()
@@ -304,7 +302,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                             const char *s;
                             for (s = preset.allowed_tests; *s != '\0'; s++)
                             {
-                                test_name[0] = *s;
+                                const char test_name[2] = {*s, '\0'};
                                 /* Check if this test corresponds to this
                                  * character */
                                 if (move_funcs_idxs[num_valid_move_funcs] ==

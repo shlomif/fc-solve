@@ -23,10 +23,7 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
     int i;
     int len;
     fcs_bool_t is_group, is_start_group;
-    char test_name[2] = {0};
-
     fc_solve_free_tests_order(tests_order);
-
     tests_order->groups = SMALLOC(tests_order->groups, TESTS_ORDER_GROW_BY);
     tests_order->groups[tests_order->num_groups].num = 0;
     tests_order->groups[tests_order->num_groups].order_group_tests =
@@ -190,11 +187,10 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
                         TESTS_ORDER_GROW_BY);
         }
 
-        test_name[0] = string[i];
+        const char test_name[2] = {string[i], '\0'};
         tests_order->groups[tests_order->num_groups - 1].order_group_tests
             [tests_order->groups[tests_order->num_groups - 1].num++] =
             fc_solve_string_to_test_num(test_name);
-
         is_start_group = FALSE;
     }
     if (i != len)
