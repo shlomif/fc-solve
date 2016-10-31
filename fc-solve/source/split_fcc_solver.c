@@ -228,12 +228,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 #endif
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_offload_and_destroy(
-            &(coll->pre_cache), coll->store, &(coll->cache));
-#endif
-
+        PRE_CACHE_OFFLOAD(coll);
         cache_destroy(&(coll->cache));
 #endif
 
@@ -768,15 +763,7 @@ static GCC_INLINE void release_starting_state_specific_instance_resources(
 
     /* TODO : Implement. */
 #ifndef FCS_DBM_WITHOUT_CACHES
-
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_offload_and_destroy(
-            &(coll->pre_cache),
-            coll->store,
-            &(coll->cache)
-            );
-#endif
-
+        PRE_CACHE_OFFLOAD(coll);
         cache_destroy(&(coll->cache));
 #endif
 

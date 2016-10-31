@@ -106,7 +106,8 @@ static GCC_INLINE void cache_populate_from_pre_cache(
 }
 
 static GCC_INLINE void pre_cache_offload_and_destroy(
-    fcs_pre_cache_t *pre_cache, fcs_dbm_store_t store, fcs_lru_cache_t *cache)
+    fcs_pre_cache_t *const pre_cache, fcs_dbm_store_t store,
+    fcs_lru_cache_t *const cache)
 {
     fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
     cache_populate_from_pre_cache(cache, pre_cache);
@@ -115,6 +116,16 @@ static GCC_INLINE void pre_cache_offload_and_destroy(
     fc_solve_kaz_tree_destroy(pre_cache->kaz_tree);
     fc_solve_compact_allocator_finish(&(pre_cache->kv_allocator));
 }
+
+#ifndef FCS_DBM_CACHE_ONLY
+#define PRE_CACHE_OFFLOAD(instance)                                            \
+    pre_cache_offload_and_destroy( \
+        &((instance)->pre_cache), (instance)->store, &((instance)->cache)
+#else
+#define PRE_CACHE_OFFLOAD(instance)                                            \
+    {                                                                          \
+    }
+#endif
 
 #ifndef FCS_DBM_CACHE_ONLY
 

@@ -131,12 +131,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
     fcs_offloading_queue__destroy(&(instance->queue));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-
-#ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_offload_and_destroy(
-        &(instance->pre_cache), instance->store, &(instance->cache));
-#endif
-
+    PRE_CACHE_OFFLOAD(instance);
     cache_destroy(&(instance->cache));
 #endif
 
