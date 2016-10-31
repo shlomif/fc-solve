@@ -814,11 +814,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 if (f == NULL)
                 {
 #ifdef FCS_WITH_ERROR_STRS
-                    char *err_str = SMALLOC(err_str, strlen(s) + 100);
-                    sprintf(
-                        err_str, "Could not open file \"%s\"!\nQuitting.\n", s);
-
-                    *error_string = err_str;
+                    *error_string = calc_errstr_s(
+                        "Could not open file \"%s\"!\nQuitting.\n", s);
 #endif
 
                     RET_ERROR_IN_ARG();
