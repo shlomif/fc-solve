@@ -25,9 +25,10 @@ extern "C" {
 static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
     const void *const a, const void *const b)
 {
-    return strcmp(((const fcs_move_func_aliases_mapping_t *)a)->alias,
-        ((const fcs_move_func_aliases_mapping_t *)b)->alias);
+#define MAP(x) (((const fcs_move_func_aliases_mapping_t *const)(x))->alias)
+    return strcmp(MAP(a), MAP(b));
 }
+#undef MAP
 
 static GCC_INLINE int fc_solve_string_to_test_num(const char *const s)
 {
