@@ -881,15 +881,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             switch (ret)
             {
             case FCS_CMD_LINE_ERROR_IN_ARG:
-            {
 #ifdef FCS_WITH_ERROR_STRS
-                char *err_str = SMALLOC(err_str, strlen((*arg)) + 100);
-                sprintf(err_str, "Unable to load the \"%s\" configuration!\n",
-                    (*arg));
-                *error_string = err_str;
-
+                *error_string = calc_errstr_s(
+                    "Unable to load the \"%s\" configuration!\n", (*arg));
 #endif
-            }
                 RET_ERROR_IN_ARG();
 
             case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
