@@ -283,17 +283,7 @@ static void *instance_run_solver_thread(void *void_arg)
             {
                 physical_item.key = token->key;
                 item = &physical_item;
-                instance->common.count_of_items_in_queue--;
-                instance->common.queue_num_extracted_and_processed++;
-                if (++instance->common.count_num_processed % 100000 == 0)
-                {
-                    instance_print_stats(instance);
-                }
-                if (instance->common.count_num_processed >=
-                    instance->common.max_count_num_processed)
-                {
-                    instance->common.should_terminate = MAX_ITERS_TERMINATE;
-                }
+                instance_increment(instance);
             }
             else
             {

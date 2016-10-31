@@ -341,6 +341,22 @@ static GCC_INLINE void mark_and_sweep_old_states(
 #define DESTROY_CACHE(instance) DESTROY_STORE(instance)
 #endif
 
+static GCC_INLINE void instance_increment(
+    fcs_dbm_solver_instance_t *const instance)
+{
+    instance->common.count_of_items_in_queue--;
+    instance->common.queue_num_extracted_and_processed++;
+    if (++instance->common.count_num_processed % 100000 == 0)
+    {
+        instance_print_stats(instance);
+    }
+    if (instance->common.count_num_processed >=
+        instance->common.max_count_num_processed)
+    {
+        instance->common.should_terminate = MAX_ITERS_TERMINATE;
+    }
+}
+
 #ifdef __cplusplus
 }
 #endif
