@@ -59,9 +59,10 @@ static GCC_INLINE void fcs_offloading_queue__destroy(
 }
 
 static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
-    fcs_offloading_queue_t *queue, fcs_offloading_queue_item_t *return_item)
+    fcs_offloading_queue_t *const queue,
+    fcs_offloading_queue_item_t *const return_item)
 {
-    fcs_Q_item_wrapper_t *item = queue->queue_head;
+    fcs_Q_item_wrapper_t *const item = queue->queue_head;
 
     if (!item)
     {
@@ -320,7 +321,8 @@ static GCC_INLINE void fcs_offloading_queue__insert(
 }
 
 static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
-    fcs_offloading_queue_t *queue, fcs_offloading_queue_item_t *return_item)
+    fcs_offloading_queue_t *const queue,
+    fcs_offloading_queue_item_t *const return_item)
 {
     if (queue->num_items_in_queue == 0)
     {

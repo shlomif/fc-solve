@@ -463,8 +463,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             PROCESS_OPT_ARG();
 
 #ifndef FCS_FREECELL_ONLY
-            const char *const s_arg = (*arg);
-            switch (freecell_solver_user_apply_preset(instance, s_arg))
+            const char *const string_arg = (*arg);
+            switch (freecell_solver_user_apply_preset(instance, string_arg))
             {
             case FCS_PRESET_CODE_OK:
                 break;
@@ -472,7 +472,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             case FCS_PRESET_CODE_NOT_FOUND:
 #ifdef FCS_WITH_ERROR_STRS
                 *error_string =
-                    calc_errstr_s("Unknown game \"%s\"!\n\n", s_arg);
+                    calc_errstr_s("Unknown game \"%s\"!\n\n", string_arg);
 #endif
                 RET_ERROR_IN_ARG();
 
@@ -483,7 +483,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                                   "of freecells in the program.\n"
                                   "Modify the file \"config.h\" and recompile, "
                                   "if you wish to solve one of its boards.\n",
-                        s_arg);
+                        string_arg);
 #endif
                 RET_ERROR_IN_ARG();
 
@@ -494,7 +494,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                                   "of stacks in the program.\n"
                                   "Modify the file \"config.h\" and recompile, "
                                   "if you wish to solve one of its boards.\n",
-                        s_arg);
+                        string_arg);
 #endif
                 RET_ERROR_IN_ARG();
 
@@ -504,7 +504,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     "The game \"%s\" exceeds the limits of the program.\n"
                     "Modify the file \"config.h\" and recompile, if you wish "
                     "to solve one of its boards.\n",
-                    s_arg);
+                    string_arg);
 #endif
                 RET_ERROR_IN_ARG();
             }
