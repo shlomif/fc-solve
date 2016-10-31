@@ -139,9 +139,7 @@ int main(int argc, char * argv[])
     for (int i = 0; i < NUM_CARDS; i++)      /* put unique card in each deck loc. */
         deck[i] = i;
 
-    long long seedx = (microsoft_rand_uint_t)(
-        (gamenumber < 0x100000000LL) ? gamenumber
-                                     : (gamenumber - 0x100000000LL));
+    long long seedx = microsoft_rand__calc_init_seedx(gamenumber);
     for (int i = 0; i < NUM_CARDS; i++)
     {
         const microsoft_rand_uint_t j =

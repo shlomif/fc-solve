@@ -59,9 +59,7 @@ extern void DLLEXPORT fc_solve_get_board_l(
 static GCC_INLINE void get_board_l(const long long gamenumber, char *const ret)
 #endif
 {
-    long long seedx = (microsoft_rand_uint_t)(
-        (gamenumber < 0x100000000LL) ? gamenumber
-                                     : (gamenumber - 0x100000000LL));
+    long long seedx = microsoft_rand__calc_init_seedx(gamenumber);
     strcpy(ret, "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"

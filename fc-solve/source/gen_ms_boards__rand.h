@@ -24,6 +24,14 @@ typedef u_int32_t microsoft_rand_uint_t;
 
 typedef long long microsoft_rand_t;
 
+static GCC_INLINE microsoft_rand_t microsoft_rand__calc_init_seedx(
+    const microsoft_rand_t gamenumber)
+{
+    return (microsoft_rand_uint_t)((gamenumber < 0x100000000LL)
+                                       ? gamenumber
+                                       : (gamenumber - 0x100000000LL));
+}
+
 static GCC_INLINE microsoft_rand_uint_t microsoft_rand_rand(
     microsoft_rand_t *const my_rand)
 {

@@ -24,11 +24,8 @@ void fc_solve__hll_ms_rand__init(
     fc_solve__hll_ms_rand_t *const instance, const char *const gamenumber_s)
 {
     const microsoft_rand_t gamenumber = atoll(gamenumber_s);
-    const long long seedx = (microsoft_rand_uint_t)(
-        (gamenumber < 0x100000000LL) ? gamenumber
-                                     : (gamenumber - 0x100000000LL));
     instance->gamenumber = gamenumber;
-    instance->seedx = seedx;
+    instance->seedx = microsoft_rand__calc_init_seedx(gamenumber);
 }
 
 extern int fc_solve__hll_ms_rand__mod_rand(
