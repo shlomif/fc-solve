@@ -491,13 +491,10 @@ static GCC_INLINE void FCS_STATE_collectible_to_kv(
 #define FCS_S_NUM_ACTIVE_CHILDREN(s) FCS_S_ACCESSOR(s, num_active_children)
 #define FCS_S_MOVES_TO_PARENT(s) FCS_S_ACCESSOR(s, moves_to_parent)
 #define FCS_S_VISITED(s) FCS_S_ACCESSOR(s, visited)
-
 #define FCS_S_SCAN_VISITED(s) FCS_S_ACCESSOR(s, scan_visited)
-
 #ifndef FCS_WITHOUT_DEPTH_FIELD
 #define FCS_S_DEPTH(s) FCS_S_ACCESSOR(s, depth)
 #endif
-
 #ifndef FCS_WITHOUT_VISITED_ITER
 #define FCS_S_VISITED_ITER(s) FCS_S_ACCESSOR(s, visited_iter)
 #endif

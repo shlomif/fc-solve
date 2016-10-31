@@ -1176,8 +1176,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 the_soft_dfs_info->current_state_index++;
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
 
-                if ((!(FCS_S_VISITED(single_derived_state) &
-                        FCS_VISITED_DEAD_END)) &&
+                if ((!fcs__is_state_a_dead_end(single_derived_state)) &&
                     (!is_scan_visited(single_derived_state, soft_thread_id)))
                 {
                     BUMP_NUM_CHECKED_STATES();
