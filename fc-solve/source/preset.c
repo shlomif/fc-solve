@@ -308,8 +308,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                                 /* Check if this test corresponds to this
                                  * character */
                                 if (move_funcs_idxs[num_valid_move_funcs] ==
-                                    (fc_solve_string_to_test_num(test_name) %
-                                        FCS_MOVE_FUNCS_NUM))
+                                    fc_solve_string_to_test_num(test_name))
                                 {
                                     break;
                                 }

@@ -193,7 +193,7 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
         test_name[0] = string[i];
         tests_order->groups[tests_order->num_groups - 1].order_group_tests
             [tests_order->groups[tests_order->num_groups - 1].num++] =
-            (fc_solve_string_to_test_num(test_name) % FCS_MOVE_FUNCS_NUM);
+            fc_solve_string_to_test_num(test_name);
 
         is_start_group = FALSE;
     }
