@@ -48,6 +48,7 @@
 
 typedef int CARD;
 
+const int NUM_CARDS = (4*13);
 #define     CLUB            0               /*  SUIT(card)  */
 #define     DIAMOND         1
 #define     HEART           2
@@ -59,10 +60,10 @@ typedef int CARD;
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
-static char * card_to_string(char * s, CARD card, int not_append_ws, int print_ts)
+static char * card_to_string(char * s, const CARD card, const fcs_bool_t not_append_ws, const fcs_bool_t print_ts)
 {
-    int suit = SUIT(card);
-    int v = VALUE(card)+1;
+    const int suit = SUIT(card);
+    const int v = VALUE(card)+1;
 
     if (v == 1)
     {
@@ -117,17 +118,16 @@ int main(int argc, char * argv[])
 
     CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
 
-    int  i;                /*  generic counters */
-    int  num_cards_left = 52;          /*  cards left to be chosen in shuffle */
-    CARD deck[52];            /* deck of 52 unique cards */
-    int print_ts = 0;
+    int  num_cards_left = NUM_CARDS;          /*  cards left to be chosen in shuffle */
+    CARD deck[NUM_CARDS];            /* deck of 52 unique cards */
+    fcs_bool_t print_ts = FALSE;
 
     int arg = 1;
     if (arg < argc)
     {
         if (!strcmp(argv[arg], "-t"))
         {
-            print_ts = 1;
+            print_ts = TRUE;
             arg++;
         }
     }
@@ -135,13 +135,13 @@ int main(int argc, char * argv[])
 
     /* shuffle cards */
 
-    for (i = 0; i < 52; i++)      /* put unique card in each deck loc. */
+    for (int i = 0; i < NUM_CARDS; i++)      /* put unique card in each deck loc. */
         deck[i] = i;
 
     long long seedx = (microsoft_rand_uint_t)(
         (gamenumber < 0x100000000LL) ? gamenumber
                                      : (gamenumber - 0x100000000LL));
-    for (i = 0; i < 52; i++)
+    for (int i = 0; i < NUM_CARDS; i++)
     {
         const microsoft_rand_uint_t j =
                 microsoft_rand__game_num_rand(&seedx, gamenumber) %
@@ -150,27 +150,21 @@ int main(int argc, char * argv[])
         deck[j] = deck[--num_cards_left];
     }
 
+    for (int stack=1 ; stack<9 ; stack++ )
     {
-        int stack;
-        int c;
-
-        char card_string[10];
-
-        for(stack=1 ; stack<9 ; stack++ )
+        for (int c=0 ; c < (6+(stack<5)) ; c++)
         {
-            for(c=0 ; c < (6+(stack<5)) ; c++)
-            {
-                printf("%s",
-                    card_to_string(
-                        card_string,
-                        card[stack][c],
-                        (c == (6+(stack<5))),
-                        print_ts
-                    )
-                );
-            }
-            printf("%s", "\n");
+            char card_string[10];
+            printf("%s",
+                card_to_string(
+                    card_string,
+                    card[stack][c],
+                    (c == (6+(stack<5))),
+                    print_ts
+                )
+            );
         }
+        printf("%s", "\n");
     }
 
     return 0;
