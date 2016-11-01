@@ -205,7 +205,7 @@ static GCC_INLINE void fc_solve_get_freecells_encoding(
         const_AUTO(i_card, freecells[i]);
         fc_solve_bit_writer_write(
             bit_w, 6, fcs_card2char((min_idx != i) ? ({
-                const typeof(freecells[min_idx]) min_card = freecells[min_idx];
+                const_AUTO(min_card, freecells[min_idx]);
                 freecells[min_idx] = i_card;
                 min_card;
             })
