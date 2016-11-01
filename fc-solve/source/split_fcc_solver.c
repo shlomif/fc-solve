@@ -604,15 +604,11 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                         new_max_enc_len;
                 }
 
-                {
-                    size_t unused_output_len;
-                    base64_encode(moves_to_state, added_moves_to_output,
-                        instance->moves_base64_encoding_buffer,
-                        &unused_output_len);
-                }
+                size_t unused_output_len;
+                base64_encode(moves_to_state, added_moves_to_output,
+                    instance->moves_base64_encoding_buffer, &unused_output_len);
                 char fingerprint_base64[100];
                 char state_base64[100];
-                size_t unused_output_len;
                 base64_encode(new_fingerprint.s, sizeof(new_fingerprint),
                     fingerprint_base64, &unused_output_len);
                 base64_encode((unsigned char *)&(*key), sizeof(*key),

@@ -428,13 +428,14 @@ static fc_solve_display_information_context_t *global_display_context;
 
 static void command_signal_handler(int signal_num GCC_UNUSED)
 {
-    if (command_num == 0)
+    switch (command_num)
     {
+    case 0:
         fprintf(stderr, "The number of iterations is %li\n",
             (long)freecell_solver_user_get_num_times_long(current_instance));
-    }
-    else if (command_num == 1)
-    {
+        break;
+
+    case 1:
         if (debug_iter_output_on)
         {
             freecell_solver_user_set_iter_handler_long(
@@ -447,13 +448,13 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
                 current_instance, my_iter_handler, global_display_context);
             debug_iter_output_on = TRUE;
         }
-    }
-    else if (command_num == 2)
-    {
+        break;
+
+    case 2:
         global_display_context->debug_iter_state_output =
             !global_display_context->debug_iter_state_output;
+        break;
     }
-
     command_num = 0;
 }
 
