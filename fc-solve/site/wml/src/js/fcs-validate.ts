@@ -112,23 +112,29 @@ export function fcs_js__card_from_string(s: string): Card {
     return new Card(_ranks__str_to_int[m[1]], _suits__str_to_int[m[2]]);
 }
 
-class ColumnParseResult {
-    public col: Column;
+class BaseResult {
     public is_correct: boolean;
     public start_char_idx: number;
     public num_consumed_chars: number;
     public error: string;
 
-    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, cards: Array<Card>) {
+    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string) {
         this.is_correct = is_correct;
         this.num_consumed_chars = num_consumed_chars;
         this.error = error;
-        this.col = new Column(cards);
         this.start_char_idx = start_char_idx;
     }
-
     getEnd(): number {
         return (this.start_char_idx + this.num_consumed_chars);
+    }
+}
+
+class ColumnParseResult extends BaseResult {
+    public col: Column;
+
+    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, cards: Array<Card>) {
+        super(is_correct, start_char_idx, num_consumed_chars, error);
+        this.col = new Column(cards);
     }
 }
 
@@ -278,25 +284,14 @@ class Freecells {
 }
 
 // TODO : Merge common functionality with ColumnParseResult into a base class.
-class FreecellsParseResult {
+class FreecellsParseResult extends BaseResult {
     public freecells: Freecells;
-    public is_correct: boolean;
-    public start_char_idx: number;
-    public num_consumed_chars: number;
-    public error: string;
 
     constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, num_freecells: number, fc: Array<MaybeCard>) {
-        this.is_correct = is_correct;
-        this.num_consumed_chars = num_consumed_chars;
-        this.error = error;
+        super(is_correct, start_char_idx, num_consumed_chars, error);
         if (is_correct) {
             this.freecells = new Freecells(num_freecells, fc);
         }
-        this.start_char_idx = start_char_idx;
-    }
-
-    getEnd(): number {
-        return (this.start_char_idx + this.num_consumed_chars);
     }
 }
 
