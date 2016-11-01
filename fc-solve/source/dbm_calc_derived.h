@@ -58,26 +58,19 @@ typedef struct fcs_derived_state_struct
 #ifdef INDIRECT_STACK_STATES
 
 #define COPY_INDIRECT_COLS()                                                   \
+    for (int copy_col_idx = 0; copy_col_idx < LOCAL_STACKS_NUM;                \
+         copy_col_idx++)                                                       \
     {                                                                          \
-        for (int copy_col_idx = 0; copy_col_idx < LOCAL_STACKS_NUM;            \
-             copy_col_idx++)                                                   \
-        {                                                                      \
-            const_AUTO(copy_stack_col,                                         \
-                fcs_state_get_col((ptr_new_state->state.s), copy_col_idx));    \
-            memcpy(                                                            \
-                &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]),   \
-                copy_stack_col, (size_t)(fcs_col_len(copy_stack_col)) + 1);    \
-            fcs_state_get_col((ptr_new_state->state.s), copy_col_idx) =        \
-                &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]);   \
-        }                                                                      \
+        const_AUTO(copy_stack_col,                                             \
+            fcs_state_get_col((ptr_new_state->state.s), copy_col_idx));        \
+        memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]),    \
+            copy_stack_col, (size_t)(fcs_col_len(copy_stack_col)) + 1);        \
+        fcs_state_get_col((ptr_new_state->state.s), copy_col_idx) =            \
+            &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]);       \
     }
 
 #else
-
-#define COPY_INDIRECT_COLS()                                                   \
-    {                                                                          \
-    }
-
+#define COPY_INDIRECT_COLS()
 #endif
 
 #define BEGIN_NEW_STATE()                                                      \
