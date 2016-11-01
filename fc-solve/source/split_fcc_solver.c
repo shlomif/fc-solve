@@ -1016,8 +1016,8 @@ int main(int argc, char *argv[])
 
         count_of_instance_runs++;
 
-        char fcc_exit_points_out_fn[PATH_MAX],
-            fcc_exit_points_out_fn_temp[PATH_MAX];
+        char fcc_exit_points_out_fn[PATH_MAX + 1],
+            fcc_exit_points_out_fn_temp[PATH_MAX + 1];
         sprintf(fcc_exit_points_out_fn, "%s/exits.%ld", path_to_output_dir,
             count_of_instance_runs);
         sprintf(fcc_exit_points_out_fn_temp, "%s.temp", fcc_exit_points_out_fn);
