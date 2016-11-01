@@ -400,13 +400,13 @@ static GCC_INLINE int find_empty_col(
 }
 
 static GCC_INLINE int find_col_card(const fcs_state_t *const dynamic_state,
-    const fcs_card_t src_card_s STACKS_NUM__ARG)
+    const fcs_card_t needle STACKS_NUM__ARG)
 {
     for (int i = 0; i < STACKS_NUM__VAL; i++)
     {
         fcs_const_cards_column_t col = fcs_state_get_col(*dynamic_state, i);
         const int col_len = fcs_col_len(col);
-        if (col_len > 0 && (fcs_col_get_card(col, col_len - 1) == src_card_s))
+        if (col_len > 0 && (fcs_col_get_card(col, col_len - 1) == needle))
         {
             return i;
         }
@@ -416,11 +416,11 @@ static GCC_INLINE int find_col_card(const fcs_state_t *const dynamic_state,
 }
 
 static GCC_INLINE int find_fc_card(const fcs_state_t *const dynamic_state,
-    const fcs_card_t src_card_s FREECELLS_NUM__ARG)
+    const fcs_card_t needle FREECELLS_NUM__ARG)
 {
     for (int dest = 0; dest < FREECELLS_NUM__VAL; dest++)
     {
-        if (fcs_freecell_card(*dynamic_state, dest) == src_card_s)
+        if (fcs_freecell_card(*dynamic_state, dest) == needle)
         {
             return dest;
         }
@@ -431,15 +431,15 @@ static GCC_INLINE int find_fc_card(const fcs_state_t *const dynamic_state,
 
 static GCC_INLINE find_card_ret_t find_card_src_string(
     const fcs_state_t *const dynamic_state,
-    const fcs_card_t src_card_s FREECELLS_AND_STACKS_ARGS())
+    const fcs_card_t needle FREECELLS_AND_STACKS_ARGS())
 {
     const int src_col_idx =
-        find_col_card(dynamic_state, src_card_s PASS_STACKS(STACKS_NUM__VAL));
+        find_col_card(dynamic_state, needle PASS_STACKS(STACKS_NUM__VAL));
     if (src_col_idx < 0)
     {
         return (find_card_ret_t){
             .idx = (find_fc_card(
-                dynamic_state, src_card_s PASS_FREECELLS(FREECELLS_NUM__VAL))),
+                dynamic_state, needle PASS_FREECELLS(FREECELLS_NUM__VAL))),
             .type = FREECELL};
     }
     else
@@ -461,7 +461,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
     instance_free_solution_moves(instance);
     instance->solution_moves = fcs_move_stack__new();
 
-    fcs_move_stack_t *const solution_moves_ptr = &(instance->solution_moves);
+    const_AUTO(solution_moves_ptr, &(instance->solution_moves));
 /*
  * Handle the case if it's patsolve.
  * */

@@ -1513,7 +1513,7 @@ void dict_load_end(dict_load_t *load)
     assert(dict_verify(dict));
 }
 
-void dict_merge(dict_t *dest, dict_t *source)
+void dict_merge(dict_t *const dest, dict_t *const source)
 {
     dict_load_t load;
     dnode_t *leftnode = fc_solve_kaz_tree_first(dest),

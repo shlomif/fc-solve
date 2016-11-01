@@ -268,27 +268,30 @@ static GCC_INLINE void fc_solve_init_instance(
     }
 
     {
-        size_t total_tests = 0;
-        fc_solve_foreach_soft_thread(
-            instance, FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER, &total_tests);
+        size_t total_move_funcs_bitmask = 0;
         fc_solve_foreach_soft_thread(instance,
-            FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS, &total_tests);
+            FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER, &total_move_funcs_bitmask);
+        fc_solve_foreach_soft_thread(instance,
+            FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS,
+            &total_move_funcs_bitmask);
 #ifdef FCS_WITH_MOVES
         if (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
         {
             /*
              *
-             * What this code does is convert the bit map of total_tests
+             * What this code does is convert the bit map of
+             * total_move_funcs_bitmask
              * to a valid tests order.
              *
              * */
             size_t num_move_funcs = 0;
-            size_t *tests = SMALLOC(tests, sizeof(total_tests) * 8);
+            size_t *tests =
+                SMALLOC(tests, sizeof(total_move_funcs_bitmask) * 8);
 
-            for (size_t bit_idx = 0; total_tests != 0;
-                 bit_idx++, total_tests >>= 1)
+            for (size_t bit_idx = 0; total_move_funcs_bitmask != 0;
+                 bit_idx++, total_move_funcs_bitmask >>= 1)
             {
-                if ((total_tests & 0x1) != 0)
+                if ((total_move_funcs_bitmask & 0x1) != 0)
                 {
                     tests[num_move_funcs++] = bit_idx;
                 }

@@ -150,7 +150,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                         fcs_extended_move_t ext_move;
                         ext_move.move = move;
                         /* Stub value to settle gcc. Isn't used. */
-                        ext_move.to_empty_stack = 0;
+                        ext_move.to_empty_stack = FALSE;
 
                         moves_processed_add_new_move(ret, ext_move);
                     }
@@ -176,7 +176,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                         fcs_extended_move_t ext_move;
                         ext_move.move = move;
                         /* Stub value to settle gcc. Isn't used. */
-                        ext_move.to_empty_stack = 0;
+                        ext_move.to_empty_stack = FALSE;
 
                         moves_processed_add_new_move(ret, ext_move);
                     }
@@ -205,7 +205,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                         fcs_extended_move_t ext_move;
                         ext_move.move = move;
                         /* Stub value to settle gcc. Isn't used. */
-                        ext_move.to_empty_stack = 0;
+                        ext_move.to_empty_stack = FALSE;
 
                         moves_processed_add_new_move(ret, ext_move);
                     }
@@ -238,7 +238,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
 
                         ext_move.move = move;
                         /* Stub value to settle gcc. Isn't used. */
-                        ext_move.to_empty_stack = 0;
+                        ext_move.to_empty_stack = FALSE;
 
                         moves_processed_add_new_move(ret, ext_move);
                     }
