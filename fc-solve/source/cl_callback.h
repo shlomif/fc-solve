@@ -343,8 +343,7 @@ static void print_help_string(const char *key)
 }
 
 static void my_iter_handler(void *user_instance, fcs_int_limit_t iter_num,
-    int depth, void *ptr_state, fcs_int_limit_t parent_iter_num,
-    void *lp_context);
+    int depth, void *ptr_state, fcs_int_limit_t parent_iter_num, void *context);
 
 #include "cl_callback_common.h"
 static int fc_solve__cmd_line_callback(void *const instance, const int argc,

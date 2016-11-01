@@ -41,15 +41,8 @@
 #include "scans_impl.h"
 
 /* GCC does not handle inline functions as well as macros. */
-#if 0
-static GCC_INLINE fcs_depth_t kv_calc_depth(fcs_kv_state_t *const ptr_state)
-{
-    return calc_depth(FCS_STATE_kv_to_collectible(ptr_state));
-}
-#else
 #define kv_calc_depth(ptr_state)                                               \
     calc_depth(FCS_STATE_kv_to_collectible(ptr_state))
-#endif
 
 #define SOFT_DFS_DEPTH_GROW_BY 16
 void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)

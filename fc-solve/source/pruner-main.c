@@ -15,10 +15,10 @@
 
 static void my_iter_handler(void *const user_instance,
     const fcs_int_limit_t iter_num, const int depth, void *const ptr_state,
-    const fcs_int_limit_t parent_iter_num, void *const lp_context)
+    const fcs_int_limit_t parent_iter_num, void *const context)
 {
     const fc_solve_display_information_context_t *const display_context =
-        (const fc_solve_display_information_context_t *const)lp_context;
+        (const fc_solve_display_information_context_t *const)context;
     my_iter_handler_base(
         iter_num, depth, user_instance, display_context, parent_iter_num);
     if (display_context->debug_iter_state_output)
