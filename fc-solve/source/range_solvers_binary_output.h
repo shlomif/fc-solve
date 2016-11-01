@@ -64,7 +64,7 @@ static void print_int(binary_output_t *const bin, int val)
     }
 }
 
-static GCC_INLINE void bin_close(binary_output_t *bin)
+static GCC_INLINE void bin_close(binary_output_t *const bin)
 {
     if (bin->filename)
     {
