@@ -534,8 +534,9 @@ static void fc_solve_debondt_delta_stater_decode(
             fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
             const fcs_cards_column_t orig_col =
                 fcs_state_get_col(*init_state, col_idx);
+            const_AUTO(orig_col_len, fcs_col_len(orig_col));
 
-            if (fcs_col_len(orig_col))
+            if (orig_col_len)
             {
                 top_card = fcs_col_get_card(orig_col, 0);
                 top_opt = self->card_states[CARD_POS(top_card)];
@@ -567,7 +568,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
                 parent_card = top_card;
 
-                for (pos = 1; pos < fcs_col_len(orig_col); pos++)
+                for (pos = 1; pos < orig_col_len; pos++)
                 {
                     fcs_card_t child_card;
 

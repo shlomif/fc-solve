@@ -489,8 +489,6 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
 
     /* Continue as long as there are states in the queue or
        priority queue. */
-    fcs_states_linked_list_item_t *save_item;
-
     char *const befs_positions_by_rank =
         (BEFS_M_VAR(soft_thread, befs_positions_by_rank));
 
@@ -706,7 +704,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
             }
             else
             {
-                save_item = queue->next;
+                const_AUTO(save_item, queue->next);
                 if (save_item != queue_last_item)
                 {
                     new_ptr_state = save_item->s;
