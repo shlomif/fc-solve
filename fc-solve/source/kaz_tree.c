@@ -1166,9 +1166,7 @@ dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, dict_key_t key)
     dnode_t *from_bin;
     dnode_t *node;
     dict_ret_key_t ret;
-    fcs_compact_allocator_t *allocator;
-
-    allocator = &(dict->dict_allocator);
+    fcs_compact_allocator_t *const allocator = &(dict->dict_allocator);
     if ((from_bin = dict->dict_recycle_bin) != NULL)
     {
         node = dict->dict_recycle_bin;

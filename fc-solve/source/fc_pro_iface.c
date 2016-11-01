@@ -75,67 +75,6 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
          * */
         while (1)
         {
-#if 0
-            {
-                /* Check the intermediate position validity */
-                char exists[4*13];
-
-                memset(exists, '\0', sizeof(exists));
-                for (int suit = 0 ; suit < 4 ; suit++)
-                {
-                    for (int rank = 1 ; rank <= fcs_foundation_value(pos, suit) ;
-                        rank++)
-                    {
-                        exists[rank-1+suit*13] = 1;
-                    }
-                }
-                for (int col = 0 ; col < 8 ; col++)
-                {
-                    const fcs_const_cards_column_t col_col = fcs_state_get_col(pos, col);
-                    const_AUTO(count, fcs_col_len(col_col));
-                    for (i = 0 ; i < count ; i++)
-                    {
-                        const_AUTO(card, fcs_col_get_card(col_col, i));
-                        exists[fcs_card_rank(card)-1+fcs_card_suit(card)*13] = 1;
-                    }
-                }
-                for (int fc = 0 ; fc < num_freecells ; fc++)
-                {
-                    const_AUTO(card, fcs_freecell_card(pos, fc));
-                    if (fcs_card_is_valid(card))
-                    {
-                        exists[fcs_card_rank(card)-1+fcs_card_suit(card)*13] = 1;
-                    }
-                }
-                for (int i = 0 ; i < 52 ; i++)
-                {
-                    if (exists[i] != 1)
-                    {
-                        printf("Invalid position!!!!!!!!!!!\n");
-                        exit(-1);
-                    }
-                }
-            }
-#endif
-
-#if 0
-    fcs_state_locs_struct_t locs;
-    fc_solve_init_locs(&locs);
-            printf("STATE=<<<\n%s\n>>>\n",
-                fc_solve_state_as_string(
-                    &pos,
-                    &pos_proto.info,
-                    &locs,
-                    4,
-                    8,
-                    1,
-                    TRUE,
-                    FALSE,
-                    TRUE
-                )
-            );
-#endif
-
             for (i = 0; i < 8; i++)
             {
                 fcs_cards_column_t col = fcs_state_get_col(pos, i);
