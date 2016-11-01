@@ -26,7 +26,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_
 
         New(42, s, 1, QueueInC);
 
-        fcs_depth_multi_queue__init(&(s->q), num_items_per_page, strdup(offload_dir_path), first_depth, &first_item);
+        fcs_depth_multi_queue__init(&(s->q), strdup(offload_dir_path), first_depth, &first_item);
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         return obj_ref;
@@ -36,7 +36,7 @@ static GCC_INLINE QueueInC * deref(SV * const obj) {
     return (QueueInC*)SvIV(SvRV(obj));
 }
 
-static GCC_INLINE fcs_offloading_queue_t * q(SV * const obj) {
+static GCC_INLINE fcs_depth_multi_queue_t * q(SV * const obj) {
     return &(deref(obj)->q);
 }
 

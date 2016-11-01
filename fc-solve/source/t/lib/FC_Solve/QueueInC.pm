@@ -21,7 +21,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue
 
         New(42, s, 1, QueueInC);
 
-        fcs_offloading_queue__init(&(s->q), num_items_per_page, strdup(offload_dir_path), queue_id);
+        fcs_offloading_queue__init(&(s->q), strdup(offload_dir_path), queue_id);
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FC_Solve::QueueInC");
         sv_setiv(obj, (IV)s);
