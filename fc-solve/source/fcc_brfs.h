@@ -194,7 +194,6 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
     fcs_compact_allocator_t queue_allocator, derived_list_allocator;
     fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter,
         *next_derived_iter;
-    dict_t *traversed_states;
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
@@ -226,8 +225,8 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
         );
-
-    traversed_states = fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
+    dict_t *traversed_states =
+        fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
 
     new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
         &(queue_allocator), sizeof(*new_item));
