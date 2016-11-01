@@ -428,8 +428,8 @@ typedef struct
 typedef struct
 {
     fc_solve_solve_for_state_move_func_t *tests;
-    /* num_tests should be int instead of size_t for performance.*/
-    int num_tests;
+    /* num_move_funcs should be int instead of size_t for performance.*/
+    int num_move_funcs;
     fcs_tests_group_type_t shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_list_t;

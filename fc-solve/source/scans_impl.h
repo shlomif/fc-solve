@@ -1051,7 +1051,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     if ((++the_soft_dfs_info->test_index) ==
                         THE_TESTS_LIST
                             .lists[the_soft_dfs_info->tests_list_index]
-                            .num_tests)
+                            .num_move_funcs)
                     {
                         the_soft_dfs_info->tests_list_index++;
                         the_soft_dfs_info->test_index = 0;

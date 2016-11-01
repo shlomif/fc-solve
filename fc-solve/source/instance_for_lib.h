@@ -282,7 +282,7 @@ static GCC_INLINE void fc_solve_init_instance(
              * to a valid tests order.
              *
              * */
-            size_t num_tests = 0;
+            size_t num_move_funcs = 0;
             size_t *tests = SMALLOC(tests, sizeof(total_tests) * 8);
 
             for (size_t bit_idx = 0; total_tests != 0;
@@ -290,12 +290,12 @@ static GCC_INLINE void fc_solve_init_instance(
             {
                 if ((total_tests & 0x1) != 0)
                 {
-                    tests[num_tests++] = bit_idx;
+                    tests[num_move_funcs++] = bit_idx;
                 }
             }
-            tests =
-                SREALLOC(tests, ((num_tests & (~(TESTS_ORDER_GROW_BY - 1))) +
-                                    TESTS_ORDER_GROW_BY));
+            tests = SREALLOC(
+                tests, ((num_move_funcs & (~(TESTS_ORDER_GROW_BY - 1))) +
+                           TESTS_ORDER_GROW_BY));
             instance->opt_tests_order = (typeof(instance->opt_tests_order)){
                 .num_groups = 1,
                 .groups = SMALLOC(
@@ -304,7 +304,7 @@ static GCC_INLINE void fc_solve_init_instance(
             instance->opt_tests_order.groups[0] =
                 (typeof(instance->opt_tests_order.groups[0])){
                     .order_group_tests = tests,
-                    .num = num_tests,
+                    .num = num_move_funcs,
                     .shuffling_type = FCS_NO_SHUFFLING,
                 };
             STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
@@ -993,7 +993,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                             : FCS_NO_SHUFFLING);
                 *tests_list_struct_ptr = (typeof(*tests_list_struct_ptr)){
                     .tests = tests_list,
-                    .num_tests = num,
+                    .num_move_funcs = num,
                     .shuffling_type = shuffling_type,
                 };
 
