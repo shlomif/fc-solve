@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
         case 0:
         {
             /* I'm the child. */
-            const worker_t w = workers[idx];
+            const_AUTO(w, workers[idx]);
             close(w.parent_to_child_pipe[WRITE_FD]);
             close(w.child_to_parent_pipe[READ_FD]);
             return worker_func(w, instance);
