@@ -37,6 +37,10 @@ typedef struct
     fcs_dbm_instance_common_elems_t common;
 } fcs_dbm_solver_instance_t;
 
+#define CHECK_KEY_CALC_DEPTH()                                                 \
+    (instance->curr_depth + list->num_non_reversible_moves_including_prune)
+
+#include "dbm_procs.h"
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     const enum fcs_dbm_variant_type_t local_variant,
     const long pre_cache_max_count GCC_UNUSED,
@@ -62,25 +66,11 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
 #endif
 
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_init(&(coll->pre_cache), &(coll->meta_alloc));
-#endif
-        coll->pre_cache_max_count = pre_cache_max_count;
-        cache_init(&(coll->cache), pre_cache_max_count + caches_delta,
-            &(coll->meta_alloc));
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_init(&(coll->cache_store.store), dbm_store_path,
-            &(instance->common.tree_recycle_bin));
-#endif
+        fcs_dbm__cache_store__init(&(coll->cache_store), &(instance->common),
+            &(coll->queue_meta_alloc), dbm_store_path, pre_cache_max_count,
+            caches_delta);
     }
 }
-
-#define CHECK_KEY_CALC_DEPTH()                                                 \
-    (instance->curr_depth + list->num_non_reversible_moves_including_prune)
-
-#include "dbm_procs.h"
 
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
@@ -213,7 +203,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &(derived_iter->state), &(derived_iter->key));
             }
 
-            instance_check_multiple_keys(thread, instance, derived_list
+            instance_check_multiple_keys(thread, instance, &(coll->cache_store),
+                &(thread->thread_meta_alloc), derived_list
 #ifdef FCS_DBM_CACHE_ONLY
                 ,
                 item->moves_to_key
@@ -260,32 +251,22 @@ static GCC_INLINE void instance_check_key(
 {
     const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
     {
-#ifdef FCS_DBM_WITHOUT_CACHES
         fcs_dbm_record_t *token;
-#endif
 #ifndef FCS_DBM_WITHOUT_CACHES
-        fcs_lru_cache_t *cache;
-#ifndef FCS_DBM_CACHE_ONLY
-        fcs_pre_cache_t *pre_cache;
-#endif
-
-        cache = &(instance->cache);
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache = &(instance->pre_cache);
-#endif
-
+        fcs_lru_cache_t *const cache = &(coll->cache_store.cache);
         if (cache_does_key_exist(cache, key))
         {
             return;
         }
 #ifndef FCS_DBM_CACHE_ONLY
-        else if (pre_cache_does_key_exist(pre_cache, key))
+        else if (pre_cache_does_key_exist(&(coll->cache_store.pre_cache), key))
         {
             return;
         }
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
+        else if (fc_solve_dbm_store_does_key_exist(
+                     coll->cache_store.store, key->s))
         {
             cache_insert(cache, key, NULL, '\0');
             return;
@@ -303,7 +284,7 @@ static GCC_INLINE void instance_check_key(
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-            pre_cache_insert(pre_cache, key, parent);
+            pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);
 #else
             cache_key = cache_insert(cache, key, moves_to_parent, move);
 #endif
@@ -527,9 +508,11 @@ int main(int argc, char *argv[])
     fcs_dbm_record_t *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
+    pre_cache_insert(&(instance.colls_by_depth[0].cache_store.pre_cache),
+        KEY_PTR(), &parent_state_enc);
 #else
-    cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
+    cache_insert(
+        &(instance.colls_by_depth[0].cache_store.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
     token = fc_solve_dbm_store_insert_key_value(

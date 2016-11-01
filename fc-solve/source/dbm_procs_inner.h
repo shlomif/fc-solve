@@ -119,6 +119,11 @@ static unsigned char get_move_from_parent_to_child(
 static void trace_solution(fcs_dbm_solver_instance_t *const instance,
     FILE *const out_fh, fc_solve_delta_stater_t *const delta)
 {
+
+    fprintf(out_fh, "%s\n", "Success!");
+    fflush(out_fh);
+/* Now trace the solution */
+#ifdef FCS_DBM_WITHOUT_CACHES
     fcs_encoded_state_buffer_t *trace;
     int trace_num;
     fcs_state_keyval_pair_t state;
@@ -127,11 +132,6 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
     const_AUTO(local_variant, instance->common.variant);
-
-    fprintf(out_fh, "%s\n", "Success!");
-    fflush(out_fh);
-    /* Now trace the solution */
-
     calc_trace(instance->common.queue_solution_ptr, &trace, &trace_num);
 
     fc_solve_init_locs(&locs);
@@ -155,6 +155,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
         fflush(out_fh);
     }
     free(trace);
+#endif
 }
 
 static GCC_INLINE void read_state_from_file(

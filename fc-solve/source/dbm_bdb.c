@@ -20,7 +20,8 @@ typedef struct
     DBT key, data;
 } dbm_t;
 
-void fc_solve_dbm_store_init(fcs_dbm_store_t *store, const char *path)
+void fc_solve_dbm_store_init(
+    fcs_dbm_store_t *store, const char *path, void **recycle_bin_ptr)
 {
     dbm_t *db = SMALLOC1(db);
 
@@ -44,11 +45,13 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *store, const char *path)
     return;
 
 err:
+{
     int t_ret;
     if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
     {
         ret = t_ret;
     }
+}
     exit(ret);
 }
 
@@ -106,7 +109,8 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
     else
     {
         db->dbp->err(db->dbp, ret, "DB->get");
-        if ((int t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
+        int t_ret;
+        if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
         {
             ret = t_ret;
         }

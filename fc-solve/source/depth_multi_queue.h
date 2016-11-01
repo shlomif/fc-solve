@@ -40,6 +40,9 @@ typedef struct
      */
     fcs_offloading_queue_t *queues_by_depth;
     long next_queue_id;
+#ifndef FCS_DBM_USE_OFFLOADING_QUEUE
+    fcs_meta_compact_allocator_t *meta_alloc;
+#endif
 } fcs_depth_multi_queue_t;
 
 #define DEPTH_Q_GROW_BY 32
@@ -47,8 +50,15 @@ typedef struct
 static GCC_INLINE void fcs_depth_multi_queue__new_queue(
     fcs_depth_multi_queue_t *const queue, fcs_offloading_queue_t *const q)
 {
-    fcs_offloading_queue__init(
-        q, queue->offload_dir_path, (queue->next_queue_id++));
+    fcs_offloading_queue__init(q
+#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
+        ,
+        queue->offload_dir_path, (queue->next_queue_id++)
+#else
+        ,
+        queue->meta_alloc
+#endif
+            );
 }
 
 static GCC_INLINE void fcs_depth_multi_queue__insert(

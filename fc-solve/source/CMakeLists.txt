@@ -659,11 +659,13 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         ${DBM_BACKEND_MODULES}
     )
 
+    IF (1)
     ADD_EXECUTABLE(split_fcc_fc_solver
         split_fcc_solver.c
         ${DBM_FCC_COMMON}
         ${DBM_BACKEND_MODULES}
     )
+    ENDIF()
 
     SET (EXTRA_SOLVERS )
     IF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES") AND "${WITH_JUDY}")
@@ -678,11 +680,12 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
 
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
 
-    FOREACH (TGT "dbm_fc_solver" "depth_dbm_fc_solver" "split_fcc_fc_solver" ${EXTRA_SOLVERS})
+    SET (dbm_solvers dbm_fc_solver depth_dbm_fc_solver split_fcc_fc_solver)
+    FOREACH (TGT ${dbm_solvers} ${EXTRA_SOLVERS})
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB})
     ENDFOREACH ()
 
-    FOREACH (TGT "dbm_fc_solver" "depth_dbm_fc_solver" "split_fcc_fc_solver")
+    FOREACH (TGT ${dbm_solvers})
         SET_TARGET_PROPERTIES("${TGT}"
             PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
         )

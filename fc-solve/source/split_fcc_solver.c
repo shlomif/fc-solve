@@ -97,6 +97,11 @@ typedef struct
     const char *dbm_store_path;
 } fcs_dbm_solver_instance_t;
 
+#define CHECK_KEY_CALC_DEPTH()                                                 \
+    (instance->curr_depth + list->num_non_reversible_moves_including_prune)
+
+#include "dbm_procs.h"
+#include "fcs_base64.h"
 #define __unused GCC_UNUSED
 RB_GENERATE_STATIC(
     FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
@@ -109,6 +114,13 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
     FILE *out_fh)
 {
+    fc_solve_meta_compact_allocator_init(&(instance->fcc_meta_alloc));
+    instance->fcc_entry_points = FccEntryPointList_init;
+
+    fc_solve_compact_allocator_init(
+        &(instance->fcc_entry_points_allocator), &(instance->fcc_meta_alloc));
+
+    instance->start_key_ptr = NULL;
     instance->dbm_store_path = dbm_store_path;
     instance->fingerprint_which_irreversible_moves_bitmask =
         (*fingerprint_which_irreversible_moves_bitmask);
@@ -147,34 +159,11 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         fcs_dbm_collection_by_depth_t *const coll = &(instance->coll);
         FCS_INIT_LOCK(coll->queue_lock);
 
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_init(&(coll->pre_cache), &(coll->meta_alloc));
-#endif
-        coll->pre_cache_max_count = pre_cache_max_count;
-        cache_init(&(coll->cache), pre_cache_max_count + caches_delta,
-            &(coll->meta_alloc));
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_init(&(coll->cache_store.store), dbm_store_path,
-            &(instance->common.tree_recycle_bin));
-#endif
+        fcs_dbm__cache_store__init(&(coll->cache_store), &(instance->common),
+            &(coll->queue_meta_alloc), dbm_store_path, pre_cache_max_count,
+            caches_delta);
     }
-
-    fc_solve_meta_compact_allocator_init(&(instance->fcc_meta_alloc));
-    instance->fcc_entry_points = FccEntryPointList_init;
-
-    fc_solve_compact_allocator_init(
-        &(instance->fcc_entry_points_allocator), &(instance->fcc_meta_alloc));
-
-    instance->start_key_ptr = NULL;
 }
-
-#define CHECK_KEY_CALC_DEPTH()                                                 \
-    (instance->curr_depth + list->num_non_reversible_moves_including_prune)
-
-#include "dbm_procs.h"
-#include "fcs_base64.h"
 
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
@@ -408,7 +397,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &(derived_iter->state), &(derived_iter->key));
             }
 
-            instance_check_multiple_keys(thread, instance, derived_list
+            instance_check_multiple_keys(thread, instance, &(coll->cache_store),
+                &(coll->queue_meta_alloc), derived_list
 #ifdef FCS_DBM_CACHE_ONLY
                 ,
                 item->moves_to_key
@@ -462,29 +452,25 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     {
 #ifdef FCS_DBM_WITHOUT_CACHES
         fcs_dbm_record_t *token;
+#else
+        fcs_dbm_record_t *token = key;
 #endif
 #ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-        fcs_pre_cache_t *pre_cache;
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache = &(instance->pre_cache);
-#endif
-
-        if (cache_does_key_exist(&(instance->cache), key))
+        if (cache_does_key_exist(&(coll->cache_store.cache), key))
         {
             return;
         }
 #ifndef FCS_DBM_CACHE_ONLY
-        else if (pre_cache_does_key_exist(pre_cache, key))
+        else if (pre_cache_does_key_exist(&(coll->cache_store.pre_cache), key))
         {
             return;
         }
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
+        else if (fc_solve_dbm_store_does_key_exist(
+                     coll->cache_store.store, key->s))
         {
-            cache_insert(&(instance->cache), key, NULL, '\0');
+            cache_insert(&(coll->cache_store.cache), key, NULL, '\0');
             return;
         }
 #endif
@@ -500,10 +486,10 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-            pre_cache_insert(pre_cache, key, parent);
+            pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);
 #else
-            cache_key =
-                cache_insert(&(instance->cache), key, moves_to_parent, move);
+            cache_key = cache_insert(
+                &(coll->cache_store.cache), key, moves_to_parent, move);
 #endif
 #endif
 
@@ -512,9 +498,14 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 /* Now insert it into the queue. */
 
                 FCS_LOCK(coll->queue_lock);
-                fcs_depth_multi_queue__insert(&(coll->depth_queue),
-                    thread->state_depth + 1,
-                    (const fcs_offloading_queue_item_t *)(&token));
+                fcs_depth_multi_queue__insert(
+                    &(coll->depth_queue), thread->state_depth + 1,
+#ifdef FCS_DBM_WITHOUT_CACHES
+                    (const fcs_offloading_queue_item_t *)(&token)
+#else
+                    key
+#endif
+                        );
                 FCS_UNLOCK(coll->queue_lock);
 
                 FCS_LOCK(instance->global_lock);
@@ -547,7 +538,6 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                  * in instance_check_multiple_keys and we should not
                  * lock it here. */
                 calc_trace(token, &trace, &trace_num);
-
                 {
                     FccEntryPointNode fcc_entry_key;
                     fcc_entry_key.kv.key.key = trace[trace_num - 1];
@@ -991,11 +981,12 @@ int main(int argc, char *argv[])
                         instance.offload_dir_path, state_depth, &(token));
 #else
                     fc_solve_meta_compact_allocator_init(
-                        &(coll->queue_meta_alloc));
+                        &(instance.coll.queue_meta_alloc));
                     fcs_offloading_queue__init(
-                        &(coll->queue), &(coll->queue_meta_alloc));
+                        &(instance.coll.cache_store.queue),
+                        &(instance.coll.queue_meta_alloc));
                     fcs_depth_multi_queue__insert(
-                        &(coll->queue), state_depth, &(token));
+                        &(instance.coll.queue), state_depth, &(token));
 #endif
 
                     was_init = TRUE;

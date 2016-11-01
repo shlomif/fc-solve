@@ -47,7 +47,9 @@ extern "C" {
 #include "dbm_solver.h"
 #include "dbm_cache.h"
 
+#ifdef FCS_DBM_WITHOUT_CACHES
 #define FCS_DBM_USE_OFFLOADING_QUEUE
+#endif
 
 #include "offloading_queue.h"
 

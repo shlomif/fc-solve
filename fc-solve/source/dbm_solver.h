@@ -44,6 +44,7 @@ typedef struct
     fcs_compact_allocator_t kv_allocator;
     fcs_pre_cache_key_val_pair_t *kv_recycle_bin;
     long count_elements;
+    void *tree_recycle_bin;
 } fcs_pre_cache_t;
 #endif
 
@@ -160,6 +161,7 @@ typedef struct
 
     /* The queue */
     fcs_lock_t queue_lock;
+    long pre_cache_max_count;
 } fcs_dbm__cache_store__common_t;
 
 #ifdef __cplusplus

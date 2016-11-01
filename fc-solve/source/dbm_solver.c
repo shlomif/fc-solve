@@ -30,6 +30,9 @@ typedef struct
     fcs_dbm_instance_common_elems_t common;
 } fcs_dbm_solver_instance_t;
 
+#define CHECK_KEY_CALC_DEPTH() 0
+
+#include "dbm_procs.h"
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     const enum fcs_dbm_variant_type_t local_variant,
     const long pre_cache_max_count GCC_UNUSED,
@@ -49,18 +52,9 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_dbm__common_init(
         &(instance->common), iters_delta_limit, local_variant, out_fh);
     instance->max_count_of_items_in_queue = max_count_of_items_in_queue;
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_init(&(instance->cache_store.pre_cache), &(instance->meta_alloc));
-#endif
-    cache_init(&(instance->cache_store.cache),
-        pre_cache_max_count + caches_delta, &(instance->meta_alloc));
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-    fc_solve_dbm_store_init(&(instance->cache_store.store), dbm_store_path,
-        &(instance->common.tree_recycle_bin));
-#endif
+    fcs_dbm__cache_store__init(&(instance->cache_store), &(instance->common),
+        &(instance->meta_alloc), dbm_store_path, pre_cache_max_count,
+        caches_delta);
 }
 
 static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
@@ -80,10 +74,6 @@ static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
     instance->common.count_num_processed = 0;
     instance->common.count_of_items_in_queue = 0;
 }
-
-#define CHECK_KEY_CALC_DEPTH() 0
-
-#include "dbm_procs.h"
 
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
@@ -280,7 +270,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &(derived_iter->state), &(derived_iter->key));
             }
 
-            instance_check_multiple_keys(thread, instance, derived_list
+            instance_check_multiple_keys(thread, instance,
+                &(instance->cache_store), &(instance->meta_alloc), derived_list
 #ifdef FCS_DBM_CACHE_ONLY
                 ,
                 item->moves_to_key
