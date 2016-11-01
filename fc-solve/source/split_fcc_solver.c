@@ -202,11 +202,9 @@ typedef struct
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
-    fcs_dbm_collection_by_depth_t *coll;
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t *token;
     fcs_dbm_queue_item_t *item, *prev_item;
-    int queue_num_extracted_and_processed;
     fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
     fcs_state_keyval_pair_t state;
@@ -227,22 +225,17 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_AUTO(local_variant, instance->common.variant);
 
     prev_item = item = NULL;
-    queue_num_extracted_and_processed = 0;
-
+    int queue_num_extracted_and_processed = 0;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(thread->thread_meta_alloc));
     derived_list_recycle_bin = NULL;
     derived_list = NULL;
     FILE *const out_fh = instance->common.out_fh;
-
     TRACE("%s\n", "instance_run_solver_thread start");
-
-    coll = &(instance->coll);
-
+    const_AUTO(coll, &(instance->coll));
 #if 0
     fcs_bool_t was_start_key_reachable = instance->was_start_key_reachable;
 #endif
-
     while (1)
     {
         /* First of all extract an item. */
