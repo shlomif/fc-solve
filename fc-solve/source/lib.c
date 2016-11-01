@@ -1476,8 +1476,7 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
     }
 
     pats_scan->pats_solve_params.x[position] = x_param_val;
-    pats_scan->cutoff =
-        pats_scan->pats_solve_params.x[FC_SOLVE_PATS__NUM_X_PARAM - 1];
+    fc_solve_pats__set_cut_off(pats_scan);
 #endif
     return 0;
 }
@@ -1558,8 +1557,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
             pats_scan->pats_solve_params =
                 (freecell_solver_pats__x_y_params_preset
                         [FC_SOLVE_PATS__PARAM_PRESET__FreecellSpeed]);
-            pats_scan->cutoff =
-                pats_scan->pats_solve_params.x[FC_SOLVE_PATS__NUM_X_PARAM - 1];
+            fc_solve_pats__set_cut_off(pats_scan);
         }
     }
     break;
