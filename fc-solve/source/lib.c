@@ -104,8 +104,7 @@ typedef struct
 #ifdef FCS_WITH_FLARES
     fcs_flare_item_t *flares, *end_of_flares, *minimal_flare;
     flares_plan_item *plan;
-    int num_plan_items;
-    int current_plan_item_idx;
+    size_t num_plan_items, current_plan_item_idx;
     char *flares_plan_string;
     /*
      * The default flares_plan_compiled is "False", which means that the
