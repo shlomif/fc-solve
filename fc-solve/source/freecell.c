@@ -29,6 +29,19 @@
 #define moves_ptr NULL
 #endif
 
+static GCC_INLINE int find_empty_stack(fcs_kv_state_t *const raw_ptr_state_raw,
+    const int start_from, const int local_stacks_num)
+{
+    for (int ret = start_from; ret < local_stacks_num; ret++)
+    {
+        if (fcs_col_len(fcs_state_get_col(state, ret)) == 0)
+        {
+            return ret;
+        }
+    }
+    return -1;
+}
+
 /*
  * Throughout this code the following local variables are used to quickly
  * access the instance's members:
@@ -260,16 +273,8 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
             }
 
             /*  Find a vacant stack */
-            for (; put_cards_in_col_idx < LOCAL_STACKS_NUM;
-                 put_cards_in_col_idx++)
-            {
-                if (fcs_col_len(
-                        fcs_state_get_col(*new_key, put_cards_in_col_idx)) == 0)
-                {
-                    break;
-                }
-            }
-
+            put_cards_in_col_idx = find_empty_stack(
+                kv_ptr_new_state, put_cards_in_col_idx, LOCAL_STACKS_NUM);
             assert(put_cards_in_col_idx < LOCAL_STACKS_NUM);
 
             fcs_copy_stack(*new_key, *(kv_ptr_new_state->val),
@@ -803,16 +808,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 
     /* Now try to move sequences to empty stacks */
 
-    int dest_stack_idx;
-    for (dest_stack_idx = 0; dest_stack_idx < LOCAL_STACKS_NUM;
-         dest_stack_idx++)
-    {
-        if (fcs_col_len(fcs_state_get_col(state, dest_stack_idx)) == 0)
-        {
-            break;
-        }
-    }
-
+    const int dest_stack_idx =
+        find_empty_stack(raw_ptr_state_raw, 0, LOCAL_STACKS_NUM);
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
@@ -909,17 +906,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                         cols_indexes, freecells_to_fill + freestacks_to_fill,
                         0);
 
-                int b;
-                /* Find a vacant stack */
-                for (b = (empty_ret.is_col ? empty_ret.source_index + 1 : 0);
-                     b < LOCAL_STACKS_NUM; b++)
-                {
-                    if (fcs_col_len(fcs_state_get_col(new_state, b)) == 0)
-                    {
-                        break;
-                    }
-                }
-
+                const int b = find_empty_stack(raw_ptr_state_raw,
+                    (empty_ret.is_col ? empty_ret.source_index + 1 : 0),
+                    LOCAL_STACKS_NUM);
                 my_copy_stack(b);
 
                 fcs_move_sequence(b, stack_idx, seq_end - seq_start + 1);
@@ -1593,14 +1582,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     }
 
     /* Find a vacant stack */
-    int ds;
-    for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
-    {
-        if (fcs_col_len(fcs_state_get_col(state, ds)) == 0)
-        {
-            break;
-        }
-    }
+    const int ds = find_empty_stack(raw_ptr_state_raw, 0, LOCAL_STACKS_NUM);
 
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
