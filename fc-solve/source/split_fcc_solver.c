@@ -572,7 +572,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                         &(instance->moves_to_state_len));
                 }
 
-                const size_t moves_to_state_len = instance->moves_to_state_len;
+                const_SLOT(moves_to_state_len, instance);
                 const size_t added_moves_to_output =
                     moves_to_state_len + trace_num - 1;
                 instance_alloc_num_moves(instance, added_moves_to_output);
