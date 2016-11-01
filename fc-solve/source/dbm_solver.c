@@ -52,10 +52,10 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_init(&(instance->pre_cache), &(instance->meta_alloc));
+    pre_cache_init(&(instance->cache_store.pre_cache), &(instance->meta_alloc));
 #endif
-    cache_init(&(instance->cache), pre_cache_max_count + caches_delta,
-        &(instance->meta_alloc));
+    cache_init(&(instance->cache_store.cache),
+        pre_cache_max_count + caches_delta, &(instance->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
     fc_solve_dbm_store_init(&(instance->cache_store.store), dbm_store_path,
@@ -111,22 +111,12 @@ static GCC_INLINE void instance_check_key(
     fcs_dbm_record_t *token;
 #endif
 #ifndef FCS_DBM_WITHOUT_CACHES
-    fcs_lru_cache_t *cache;
-#ifndef FCS_DBM_CACHE_ONLY
-    fcs_pre_cache_t *pre_cache;
-#endif
-
-    cache = &(instance->cache);
-#ifndef FCS_DBM_CACHE_ONLY
-    pre_cache = &(instance->pre_cache);
-#endif
-
-    if (cache_does_key_exist(cache, key))
+    if (cache_does_key_exist(&(instance->cache_store.cache), key))
     {
         return;
     }
 #ifndef FCS_DBM_CACHE_ONLY
-    else if (pre_cache_does_key_exist(pre_cache, key))
+    else if (pre_cache_does_key_exist(&(instance->cache_store.pre_cache), key))
     {
         return;
     }
@@ -134,7 +124,7 @@ static GCC_INLINE void instance_check_key(
 #ifndef FCS_DBM_CACHE_ONLY
     else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
     {
-        cache_insert(cache, key, NULL, '\0');
+        cache_insert(&(instance->cache_store.cache), key, NULL, '\0');
         return;
     }
 #endif
@@ -150,9 +140,10 @@ static GCC_INLINE void instance_check_key(
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(pre_cache, key, parent);
+        pre_cache_insert(&(instance->cache_store.pre_cache), key, parent);
 #else
-        cache_key = cache_insert(cache, key, moves_to_parent, move);
+        cache_key = cache_insert(
+            &(instance->cache_store.cache), key, moves_to_parent, move);
 #endif
 #endif
 
@@ -378,9 +369,11 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #endif
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_insert(&(instance->pre_cache), &(running_key), &running_parent);
+    pre_cache_insert(
+        &(instance->cache_store.pre_cache), &(running_key), &running_parent);
 #else
-    cache_insert(&(instance->cache), &(running_key), running_moves, '\0');
+    cache_insert(
+        &(instance->cache_store.cache), &(running_key), running_moves, '\0');
 #endif
 #else
     running_parent = fc_solve_dbm_store_insert_key_value(
@@ -461,11 +454,11 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(
-            &(instance->pre_cache), &(running_key), &running_parent);
+        pre_cache_insert(&(instance->cache_store.pre_cache), &(running_key),
+            &running_parent);
 #else
-        running_moves = (cache_insert(&(instance->cache), &(running_key),
-                             running_moves, move))
+        running_moves = (cache_insert(&(instance->cache_store.cache),
+                             &(running_key), running_moves, move))
                             ->moves_to_key;
 #endif
 #else
@@ -980,9 +973,10 @@ int main(int argc, char *argv[])
         fcs_dbm_record_t *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(instance.pre_cache), KEY_PTR(), &parent_state_enc);
+        pre_cache_insert(
+            &(instance.cache_store.pre_cache), KEY_PTR(), &parent_state_enc);
 #else
-        cache_insert(&(instance.cache), KEY_PTR(), NULL, '\0');
+        cache_insert(&(instance.cache_store.cache), KEY_PTR(), NULL, '\0');
 #endif
 #else
         token = fc_solve_dbm_store_insert_key_value(
