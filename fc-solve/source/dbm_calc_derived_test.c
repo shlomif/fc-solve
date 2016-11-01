@@ -87,18 +87,18 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     size_t idx = 0;
     while (iter)
     {
-        debug_ret[idx].state_string =
-            SMALLOC(debug_ret[idx].state_string, 1000);
+        debug_ret[idx] = (typeof(debug_ret[idx])){
+            .state_string = SMALLOC(debug_ret[idx].state_string, 1000),
+            .move = iter->move,
+            .core_irreversible_moves_count =
+                iter->core_irreversible_moves_count,
+            .num_non_reversible_moves_including_prune =
+                iter->num_non_reversible_moves_including_prune,
+            .which_irreversible_moves_bitmask =
+                iter->which_irreversible_moves_bitmask};
         FCS__RENDER_STATE(debug_ret[idx].state_string, &(iter->state.s), &locs);
-        debug_ret[idx].move = iter->move;
-        debug_ret[idx].core_irreversible_moves_count =
-            iter->core_irreversible_moves_count;
-        debug_ret[idx].num_non_reversible_moves_including_prune =
-            iter->num_non_reversible_moves_including_prune;
         /* TODO : Put something meaningful there by passing it to the function.
          */
-        debug_ret[idx].which_irreversible_moves_bitmask =
-            iter->which_irreversible_moves_bitmask;
         idx++;
         iter = iter->next;
     }
