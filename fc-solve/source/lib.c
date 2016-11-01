@@ -572,128 +572,119 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
             }
 
             /* Tough luck - gotta parse the string. ;-) */
+            const char *cmd_end, *item_end;
+            const char *item_start = instance_item->flares_plan_string;
+            if (instance_item->plan)
             {
-                const char *item_start, *cmd_end, *item_end;
+                free(instance_item->plan);
+                instance_item->plan = NULL;
+                instance_item->num_plan_items = 0;
+            }
+            do
+            {
+                cmd_end = strchr(item_start, ':');
 
-                if (instance_item->plan)
+                if (!cmd_end)
                 {
-                    free(instance_item->plan);
-                    instance_item->plan = NULL;
-                    instance_item->num_plan_items = 0;
+                    SET_ERROR("Could not find a \":\" for a command.");
+                    return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
                 }
 
-                item_start = instance_item->flares_plan_string;
-
-                do
+                if (string_starts_with(item_start, "Run", cmd_end))
                 {
-                    cmd_end = strchr(item_start, ':');
 
-                    if (!cmd_end)
+                    /* It's a Run item - handle it. */
+                    cmd_end++;
+                    const int count_iters = atoi(cmd_end);
+
+                    const char *at_sign = cmd_end;
+
+                    while ((*at_sign) && isdigit(*at_sign))
                     {
-                        SET_ERROR("Could not find a \":\" for a command.");
-                        return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
+                        at_sign++;
                     }
 
-                    if (string_starts_with(item_start, "Run", cmd_end))
+                    if (*at_sign != '@')
                     {
-
-                        /* It's a Run item - handle it. */
-                        cmd_end++;
-                        const int count_iters = atoi(cmd_end);
-
-                        const char *at_sign = cmd_end;
-
-                        while ((*at_sign) && isdigit(*at_sign))
-                        {
-                            at_sign++;
-                        }
-
-                        if (*at_sign != '@')
-                        {
-                            SET_ERROR("Could not find a \"@\" directly after "
-                                      "the digits after the 'Run:' command.");
-                            return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
-                        }
-                        const char *const after_at_sign = at_sign + 1;
-
-                        /*
-                         * Position item_end at the end of item (designated by
-                         * ",")
-                         * or alternatively the end of the string.
-                         * */
-                        item_end = strchr(after_at_sign, ',');
-                        if (!item_end)
-                        {
-                            item_end = strchr(after_at_sign, '\0');
-                        }
-
-                        fcs_flare_item_t *const flare =
-                            find_flare(flares, end_of_flares, after_at_sign,
-                                item_end - after_at_sign);
-
-                        if (!flare)
-                        {
-                            SET_ERROR("Unknown flare name.");
-                            return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
-                        }
-
-                        add_count_iters_to_plan(
-                            instance_item, flare, count_iters);
+                        SET_ERROR("Could not find a \"@\" directly after "
+                                  "the digits after the 'Run:' command.");
+                        return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
                     }
-                    else if (string_starts_with(item_start, "CP", cmd_end))
+                    const char *const after_at_sign = at_sign + 1;
+
+                    /*
+                     * Position item_end at the end of item (designated by
+                     * ",")
+                     * or alternatively the end of the string.
+                     * */
+                    item_end = strchr(after_at_sign, ',');
+                    if (!item_end)
                     {
-                        item_end = cmd_end + 1;
-                        if (!(((*item_end) == ',') || (!(*item_end))))
-                        {
-                            SET_ERROR("Junk after CP (Checkpoint) command.");
-                            return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
-                        }
-
-                        add_checkpoint_to_plan(instance_item);
+                        item_end = strchr(after_at_sign, '\0');
                     }
-                    else if (string_starts_with(
-                                 item_start, "RunIndef", cmd_end))
+
+                    fcs_flare_item_t *const flare = find_flare(flares,
+                        end_of_flares, after_at_sign, item_end - after_at_sign);
+
+                    if (!flare)
                     {
-
-                        cmd_end++;
-                        item_end = strchr(cmd_end, ',');
-                        if (item_end)
-                        {
-                            SET_ERROR("Junk after last RunIndef command. Must "
-                                      "be the final command.");
-                            return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
-                        }
-                        item_end = cmd_end + strlen(cmd_end);
-
-                        fcs_flare_item_t *const flare = find_flare(
-                            flares, end_of_flares, cmd_end, item_end - cmd_end);
-                        if (!flare)
-                        {
-                            SET_ERROR(
-                                "Unknown flare name in RunIndef command.");
-                            return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
-                        }
-
-                        add_run_indef_to_plan(instance_item, flare);
+                        SET_ERROR("Unknown flare name.");
+                        return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
                     }
-                    else
-                    {
-                        SET_ERROR("Unknown command.");
-                        return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
-                    }
-                    item_start = item_end + 1;
-                } while (*item_end);
 
-                if ((!instance_item->plan) ||
-                    instance_item->plan[instance_item->num_plan_items - 1]
-                            .type != FLARES_PLAN_CHECKPOINT)
+                    add_count_iters_to_plan(instance_item, flare, count_iters);
+                }
+                else if (string_starts_with(item_start, "CP", cmd_end))
                 {
+                    item_end = cmd_end + 1;
+                    if (!(((*item_end) == ',') || (!(*item_end))))
+                    {
+                        SET_ERROR("Junk after CP (Checkpoint) command.");
+                        return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
+                    }
+
                     add_checkpoint_to_plan(instance_item);
                 }
+                else if (string_starts_with(item_start, "RunIndef", cmd_end))
+                {
 
-                instance_item->flares_plan_compiled = TRUE;
-                continue;
+                    cmd_end++;
+                    item_end = strchr(cmd_end, ',');
+                    if (item_end)
+                    {
+                        SET_ERROR("Junk after last RunIndef command. Must "
+                                  "be the final command.");
+                        return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
+                    }
+                    item_end = cmd_end + strlen(cmd_end);
+
+                    fcs_flare_item_t *const flare = find_flare(
+                        flares, end_of_flares, cmd_end, item_end - cmd_end);
+                    if (!flare)
+                    {
+                        SET_ERROR("Unknown flare name in RunIndef command.");
+                        return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
+                    }
+
+                    add_run_indef_to_plan(instance_item, flare);
+                }
+                else
+                {
+                    SET_ERROR("Unknown command.");
+                    return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
+                }
+                item_start = item_end + 1;
+            } while (*item_end);
+
+            if ((!instance_item->plan) ||
+                instance_item->plan[instance_item->num_plan_items - 1].type !=
+                    FLARES_PLAN_CHECKPOINT)
+            {
+                add_checkpoint_to_plan(instance_item);
             }
+
+            instance_item->flares_plan_compiled = TRUE;
+            continue;
         }
     }
 
@@ -703,7 +694,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
     const_SLOT(plan, instance_item);
     for (int i = 0; i < num_plan_items; i++)
     {
-        flares_plan_item *item = plan + i;
+        flares_plan_item *const item = plan + i;
         switch (item->type)
         {
         case FLARES_PLAN_RUN_COUNT_ITERS:
