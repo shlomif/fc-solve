@@ -20,8 +20,8 @@ typedef struct
     DBT key, data;
 } dbm_t;
 
-void fc_solve_dbm_store_init(
-    fcs_dbm_store_t *store, const char *path, void **recycle_bin_ptr)
+void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
+    const char *const path, void **const recycle_bin_ptr)
 {
     dbm_t *db = SMALLOC1(db);
 

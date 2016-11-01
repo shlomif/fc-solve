@@ -432,6 +432,17 @@ static void *instance_run_solver_thread(void *const void_arg)
 
 #include "depth_dbm_procs.h"
 
+static GCC_INLINE void instance_alloc_num_moves(
+    fcs_dbm_solver_instance_t *const instance, const size_t buffer_size)
+{
+    if (buffer_size > instance->max_moves_to_state_len)
+    {
+        instance->moves_to_state =
+            SREALLOC(instance->moves_to_state, buffer_size);
+        instance->max_moves_to_state_len = buffer_size;
+    }
+}
+
 static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     fcs_dbm_solver_instance_t *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
@@ -562,12 +573,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                     }
                     const size_t string_len = strlen(moves_to_state_enc);
                     const size_t buffer_size = (((string_len * 3) >> 2) + 20);
-                    if (buffer_size > instance->max_moves_to_state_len)
-                    {
-                        instance->moves_to_state =
-                            SREALLOC(instance->moves_to_state, buffer_size);
-                        instance->max_moves_to_state_len = buffer_size;
-                    }
+                    instance_alloc_num_moves(instance, buffer_size);
                     base64_decode(moves_to_state_enc, string_len,
                         ((unsigned char *)instance->moves_to_state),
                         &(instance->moves_to_state_len));
@@ -576,12 +582,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 const size_t moves_to_state_len = instance->moves_to_state_len;
                 const size_t added_moves_to_output =
                     moves_to_state_len + trace_num - 1;
-                if (added_moves_to_output > instance->max_moves_to_state_len)
-                {
-                    instance->moves_to_state = SREALLOC(
-                        instance->moves_to_state, added_moves_to_output);
-                    instance->max_moves_to_state_len = added_moves_to_output;
-                }
+                instance_alloc_num_moves(instance, added_moves_to_output);
                 unsigned char *const moves_to_state = instance->moves_to_state;
                 for (int i = trace_num - 1; i > 0; i--)
                 {
