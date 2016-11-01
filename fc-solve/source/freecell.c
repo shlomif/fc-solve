@@ -649,6 +649,9 @@ DECLARE_MOVE_FUNCTION(
 #undef dest_col
 #undef dest_cards_num
 
+#define CALC_num_virtual_vacant_stacks()                                       \
+    (tests__is_filled_by_any_card() ? num_vacant_stacks : 0)
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 {
     tests_define_accessors();
@@ -659,12 +662,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
      (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
     SET_GAME_PARAMS();
 #endif
-
-    const fcs_game_limit_t num_vacant_freecells =
-        soft_thread->num_vacant_freecells;
-
+    const_SLOT(num_vacant_freecells, soft_thread);
+    const_SLOT(num_vacant_stacks, soft_thread);
     const fcs_game_limit_t num_virtual_vacant_stacks =
-        tests__is_filled_by_any_card() ? soft_thread->num_vacant_stacks : 0;
+        CALC_num_virtual_vacant_stacks();
 
     const int initial_derived_states_num_states =
         derived_states_list->num_states;
@@ -790,18 +791,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     SET_GAME_PARAMS();
 #endif
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
-
     if (num_vacant_stacks == 0)
     {
         return;
     }
-
     const fcs_game_limit_t num_vacant_freecells =
         soft_thread->num_vacant_freecells;
-
     const fcs_game_limit_t num_virtual_vacant_stacks =
-        tests__is_filled_by_any_card() ? num_vacant_stacks : 0;
-
+        CALC_num_virtual_vacant_stacks();
     const int max_sequence_len =
         calc_max_sequence_move(num_vacant_freecells, num_vacant_stacks - 1);
 
@@ -985,9 +982,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     const fcs_game_limit_t num_vacant_freecells =
         soft_thread->num_vacant_freecells;
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
-
     const fcs_game_limit_t num_virtual_vacant_stacks =
-        tests__is_filled_by_any_card() ? num_vacant_stacks : 0;
+        CALC_num_virtual_vacant_stacks();
 
     const int initial_derived_states_num_states =
         derived_states_list->num_states;
