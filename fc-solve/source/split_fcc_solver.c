@@ -572,8 +572,8 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                         *trailing_newline = '\0';
                     }
                     const size_t string_len = strlen(moves_to_state_enc);
-                    const size_t buffer_size = (((string_len * 3) >> 2) + 20);
-                    instance_alloc_num_moves(instance, buffer_size);
+                    instance_alloc_num_moves(
+                        instance, ((string_len * 3) >> 2) + 20);
                     base64_decode(moves_to_state_enc, string_len,
                         ((unsigned char *)instance->moves_to_state),
                         &(instance->moves_to_state_len));
