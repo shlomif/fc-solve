@@ -307,13 +307,13 @@ dict_t *fc_solve_kaz_tree_create(dict_comp_t comp, void *context,
  * Select a different set of node allocator routines.
  */
 
-void dict_set_allocator(dict_t *dict, dnode_alloc_t al,
+void dict_set_allocator(dict_t *dict, dnode_alloc_t allocator,
         dnode_free_t fr, void *context)
 {
     assert (dict_count(dict) == 0);
-    assert ((al == NULL && fr == NULL) || (al != NULL && fr != NULL));
+    assert ((allocator == NULL && fr == NULL) || (allocator != NULL && fr != NULL));
 
-    dict->allocnode = al ? al : dnode_alloc;
+    dict->allocnode = allocator ? allocator : dnode_alloc;
     dict->freenode = fr ? fr : dnode_free;
     dict->context = context;
 }
@@ -480,12 +480,12 @@ void dict_init_like(dict_t *dict, const dict_t *orig)
  * Initialize with allocator
  */
 extern dict_t *dict_init_alloc(dict_t *dict, dictcount_t maxcount,
-    dict_comp_t comp, dnode_alloc_t al, dnode_free_t fr, void *context)
+    dict_comp_t comp, dnode_alloc_t allocator, dnode_free_t fr, void *context)
 {
     dict->compare = comp;
 /* Removed for fc-solve. */
 #if 0
-    dict->allocnode = al;
+    dict->allocnode = allocator;
     dict->freenode = fr;
 #endif
     dict->context = context;
