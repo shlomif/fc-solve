@@ -16,8 +16,6 @@
 extern "C" {
 #endif
 
-#include <math.h>
-
 #define FCS_BEFS_SEQS_OVER_RENEGADE_CARDS_EXPONENT 1.3
 
 typedef double fc_solve_seq_cards_power_type_t;
