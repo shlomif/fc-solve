@@ -21,16 +21,7 @@
 
 typedef struct
 {
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-    fcs_pre_cache_t pre_cache;
-#endif
-    fcs_lru_cache_t cache;
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-    fcs_dbm_store_t store;
-#endif
-    fcs_lock_t queue_lock;
+    fcs_dbm__cache_store__common_t cache_store;
     fcs_meta_compact_allocator_t queue_meta_alloc;
     fcs_offloading_queue_t queue;
 } fcs_dbm_collection_by_depth_t;
@@ -80,7 +71,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
             &(coll->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        fc_solve_dbm_store_init(&(coll->store), dbm_store_path,
+        fc_solve_dbm_store_init(&(coll->cache_store.store), dbm_store_path,
             &(instance->common.tree_recycle_bin));
 #endif
     }
@@ -303,7 +294,7 @@ static GCC_INLINE void instance_check_key(
         else
 #else
         if ((token = fc_solve_dbm_store_insert_key_value(
-                 coll->store, key, parent, TRUE)))
+                 coll->cache_store.store, key, parent, TRUE)))
 #endif
         {
 #ifdef FCS_DBM_CACHE_ONLY
@@ -351,7 +342,8 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
         }
         mark_and_sweep_old_states(
             instance, fc_solve_dbm_store_get_dict(
-                          instance->colls_by_depth[instance->curr_depth].store),
+                          instance->colls_by_depth[instance->curr_depth]
+                              .cache_store.store),
             instance->curr_depth);
         instance->curr_depth++;
     }
@@ -541,7 +533,7 @@ int main(int argc, char *argv[])
 #endif
 #else
     token = fc_solve_dbm_store_insert_key_value(
-        instance.colls_by_depth[0].store, KEY_PTR(), NULL, TRUE);
+        instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL, TRUE);
 #endif
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),

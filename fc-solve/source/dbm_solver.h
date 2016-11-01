@@ -23,6 +23,7 @@ extern "C" {
 
 /* We need it for the typedef of fcs_fcc_move_t. */
 #include "fcc_brfs_test.h"
+#include "lock.h"
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 
@@ -144,6 +145,22 @@ static GCC_INLINE void fcs_dbm__common_init(
     common->count_of_items_in_queue = 0;
     common->tree_recycle_bin = NULL;
 }
+
+typedef struct
+{
+#ifndef FCS_DBM_WITHOUT_CACHES
+#ifndef FCS_DBM_CACHE_ONLY
+    fcs_pre_cache_t pre_cache;
+#endif
+    fcs_lru_cache_t cache;
+#endif
+#ifndef FCS_DBM_CACHE_ONLY
+    fcs_dbm_store_t store;
+#endif
+
+    /* The queue */
+    fcs_lock_t queue_lock;
+} fcs_dbm__cache_store__common_t;
 
 #ifdef __cplusplus
 }

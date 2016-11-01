@@ -19,19 +19,8 @@
 typedef struct
 {
     fcs_lock_t storage_lock;
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-    fcs_pre_cache_t pre_cache;
-#endif
-    fcs_lru_cache_t cache;
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-    fcs_dbm_store_t store;
-#endif
-
+    fcs_dbm__cache_store__common_t cache_store;
     /* The queue */
-
-    fcs_lock_t queue_lock;
     long max_count_of_items_in_queue;
     fcs_meta_compact_allocator_t meta_alloc;
     fcs_offloading_queue_t queue;
@@ -69,7 +58,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         &(instance->meta_alloc));
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-    fc_solve_dbm_store_init(&(instance->store), dbm_store_path,
+    fc_solve_dbm_store_init(&(instance->cache_store.store), dbm_store_path,
         &(instance->common.tree_recycle_bin));
 #endif
 }
@@ -152,7 +141,7 @@ static GCC_INLINE void instance_check_key(
     else
 #else
     if ((token = fc_solve_dbm_store_insert_key_value(
-             instance->store, key, parent, TRUE)))
+             instance->cache_store.store, key, parent, TRUE)))
 #endif
     {
 #ifdef FCS_DBM_CACHE_ONLY
@@ -395,7 +384,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #endif
 #else
     running_parent = fc_solve_dbm_store_insert_key_value(
-        instance->store, &(running_key), running_parent, TRUE);
+        instance->cache_store.store, &(running_key), running_parent, TRUE);
 #endif
     instance->common.num_states_in_collection++;
 
@@ -481,7 +470,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #endif
 #else
         token = fc_solve_dbm_store_insert_key_value(
-            instance->store, &(running_key), running_parent, TRUE);
+            instance->cache_store.store, &(running_key), running_parent, TRUE);
         if (!token)
         {
             return FALSE;
@@ -997,7 +986,7 @@ int main(int argc, char *argv[])
 #endif
 #else
         token = fc_solve_dbm_store_insert_key_value(
-            instance.store, KEY_PTR(), NULL, TRUE);
+            instance.cache_store.store, KEY_PTR(), NULL, TRUE);
 #endif
 
         fcs_offloading_queue__insert(

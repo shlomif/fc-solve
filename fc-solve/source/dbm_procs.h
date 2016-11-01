@@ -325,7 +325,8 @@ static GCC_INLINE void mark_and_sweep_old_states(
 #endif
 
 #ifndef FCS_DBM_CACHE_ONLY
-#define DESTROY_STORE(instance) fc_solve_dbm_store_destroy((instance)->store)
+#define DESTROY_STORE(instance)                                                \
+    fc_solve_dbm_store_destroy((instance)->cache_store.store)
 #else
 #define DESTROY_STORE(instance)
 #endif
