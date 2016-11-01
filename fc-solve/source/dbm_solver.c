@@ -572,8 +572,8 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 
 #ifdef FCS_DBM_CACHE_ONLY
                 {
-                    fcs_fcc_move_t *move_ptr;
-                    if ((move_ptr = item->moves_to_key))
+                    fcs_fcc_move_t *move_ptr = item->moves_to_key;
+                    if (move_ptr)
                     {
                         while (*(move_ptr))
                         {

@@ -554,10 +554,10 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                     getline(&(instance->fingerprint_line),
                         &(instance->fingerprint_line_size),
                         instance->fingerprint_fh);
-                    char *moves_to_state_enc =
-                        strchr(instance->fingerprint_line, ' ');
-                    moves_to_state_enc = strchr(moves_to_state_enc + 1, ' ');
-                    moves_to_state_enc++;
+                    char *const moves_to_state_enc =
+                        strchr(
+                            strchr(instance->fingerprint_line, ' ') + 1, ' ') +
+                        1;
                     char *const trailing_newline =
                         strchr(moves_to_state_enc, '\n');
                     if (trailing_newline)
