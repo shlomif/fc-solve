@@ -133,7 +133,6 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
         move = *(++next_move_ptr);
 
         {
-            int dest;
             fcs_card_t card;
             switch (fcs_move_get_type(move))
             {
@@ -194,7 +193,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             case FCS_MOVE_TYPE_FREECELL_TO_STACK:
             {
                 const int src = fcs_move_get_src_freecell(move);
-                dest = fcs_move_get_dest_stack(move);
+                const int dest = fcs_move_get_dest_stack(move);
                 assert(virtual_freecell_len[src] == 1);
                 if (fcs_freecell_is_empty(pos, src))
                 {
@@ -224,7 +223,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             case FCS_MOVE_TYPE_STACK_TO_FREECELL:
             {
                 const int src = fcs_move_get_src_stack(move);
-                dest = fcs_move_get_dest_freecell(move);
+                const int dest = fcs_move_get_dest_freecell(move);
                 assert(virtual_stack_len[src] > 0);
                 fcs_cards_column_t col = fcs_state_get_col(pos, src);
                 assert(fcs_col_len(col) <= virtual_stack_len[src]);
@@ -257,7 +256,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             case FCS_MOVE_TYPE_STACK_TO_STACK:
             {
                 const int src = fcs_move_get_src_stack(move);
-                dest = fcs_move_get_dest_stack(move);
+                const int dest = fcs_move_get_dest_stack(move);
                 int num_cards = fcs_move_get_num_cards_in_seq(move);
                 fcs_cards_column_t src_col = fcs_state_get_col(pos, src);
                 fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
