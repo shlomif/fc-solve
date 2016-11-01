@@ -1039,7 +1039,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                 break;
             }
         }
-
         min_card_height += 2;
 
         for (int c = min_card_height; c < cards_num; c++)

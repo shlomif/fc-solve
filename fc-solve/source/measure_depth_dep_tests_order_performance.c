@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
     int board_num;
     int start_board, end_board;
     FILE *output_fh;
-    int min_depth_for_scan2;
     fcs_int_limit_t iters_limit = 100000;
     int max_var_depth_to_check = 100;
 #ifdef FCS_WITH_ERROR_STRS
@@ -184,8 +183,8 @@ int main(int argc, char *argv[])
 
     output_fh = fopen(output_filename, "wt");
 
-    for (min_depth_for_scan2 = 0; min_depth_for_scan2 < max_var_depth_to_check;
-         min_depth_for_scan2++)
+    for (int min_depth_for_scan2 = 0;
+         min_depth_for_scan2 < max_var_depth_to_check; min_depth_for_scan2++)
     {
         void *const instance = freecell_solver_user_alloc();
 

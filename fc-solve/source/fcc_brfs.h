@@ -167,7 +167,7 @@ static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
     fcs_bool_t *is_min_by_sorting_new,
     /* [Output]: The min_by_sorting.
      * */
-    fcs_encoded_state_buffer_t *min_by_sorting,
+    fcs_encoded_state_buffer_t *const min_by_sorting,
     /* [Input/Output]: The ${next}_depth_FCCs.DoesExist
      * (for the right depth based on the current depth and pruning.)
      * Of type Map{min_by_sorting => Bool Exists} DoesExist.
