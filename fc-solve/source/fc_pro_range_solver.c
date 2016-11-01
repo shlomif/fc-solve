@@ -35,9 +35,7 @@ int main(int argc, char *argv[])
     long long total_num_iters = 0;
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-    binary_output_t binary_output = {
-        .filename = NULL,
-    };
+    binary_output_t binary_output = INIT_BINARY_OUTPUT;
     int arg = 1;
 
     if (argc < 4)
