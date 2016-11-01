@@ -288,20 +288,11 @@ static GCC_INLINE void instance__load_coords_from_fh(
 
 int main(int argc, char *argv[])
 {
-    enum fcs_dbm_variant_type_t local_variant;
-#if 1
-    const int delta_limit = 100000;
-#else
-    const int delta_limit = 2;
-#endif
-
+    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    const long delta_limit = 100000;
     const int max_num_elements_in_cache = 8000000;
-
     const char *filename = argv[1];
-
-    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
-
-    FILE *fh = fopen(filename, "r");
+    FILE *const fh = fopen(filename, "r");
     if (fh == NULL)
     {
         fprintf(stderr, "Could not open file '%s' for input.\n", filename);
