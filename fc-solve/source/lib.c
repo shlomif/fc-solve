@@ -2330,13 +2330,6 @@ void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
     {
         recycle_instance(user, instance_item);
     }
-/*
- * Removing because we are still interested to keep the current iterations
- * limit.
- * */
-#if 0
-    user->current_iterations_limit = -1;
-#endif
     user->iterations_board_started_at = initial_stats;
 }
 
