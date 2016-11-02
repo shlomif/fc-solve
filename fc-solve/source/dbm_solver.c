@@ -434,8 +434,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             }
         }
 #undef the_state
-        fcs_which_moves_bitmask_t which_no_use = {""};
-        horne_prune(local_variant, &running_state, &which_no_use, NULL, NULL);
+        horne_prune__simple(local_variant, &running_state);
 
         fcs_init_and_encode_state(
             delta, local_variant, &(running_state), &(running_key));
@@ -797,8 +796,7 @@ int main(int argc, char *argv[])
     fcs_state_keyval_pair_t init_state;
     read_state_from_file(local_variant, argv[arg],
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
-    fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
-    horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
+    horne_prune__simple(local_variant, &init_state);
 
     fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM

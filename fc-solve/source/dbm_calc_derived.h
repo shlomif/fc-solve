@@ -323,6 +323,14 @@ static GCC_INLINE int horne_prune(
     return count_moves_so_far + count_additional_irrev_moves;
 }
 
+static GCC_INLINE int horne_prune__simple(
+    const enum fcs_dbm_variant_type_t local_variant,
+    fcs_state_keyval_pair_t *const init_state_kv_ptr)
+{
+    fcs_which_moves_bitmask_t no_use = {{'\0'}};
+    return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
+}
+
 #define the_state (init_state_kv_ptr->s)
 static GCC_INLINE fcs_bool_t is_state_solved(
     const enum fcs_dbm_variant_type_t local_variant,
