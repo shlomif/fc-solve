@@ -42,8 +42,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fcs_meta_compact_allocator_t meta_alloc;
     size_t states_count = 0;
     fcs_derived_state_t *iter;
-    fcs_derived_state_debug_t *debug_ret;
-
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,
@@ -77,8 +75,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     *(num_out_derived_states) = states_count;
 
-    debug_ret = SMALLOC(debug_ret, states_count);
-
+    fcs_derived_state_debug_t *const debug_ret =
+        SMALLOC(debug_ret, states_count);
     *(out_derived_states) = debug_ret;
 
     fc_solve_init_locs(&locs);
