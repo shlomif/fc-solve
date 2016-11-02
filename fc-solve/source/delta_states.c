@@ -27,7 +27,6 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     const char *const init_state_str_proto,
     const char *const derived_state_str_proto)
 {
-    char *init_state_s;
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
     fc_solve_delta_stater_t delta;
     fcs_uchar_t enc_state[24];
@@ -38,8 +37,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     DECLARE_IND_BUF_T(derived_stacks_buffer)
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
-
-    init_state_s = prepare_state_str(init_state_str_proto);
+    const_AUTO(init_state_s, prepare_state_str(init_state_str_proto));
     const_AUTO(derived_state_s, prepare_state_str(derived_state_str_proto));
 
     fc_solve_initial_user_state_to_c(init_state_s, &init_state, FREECELLS_NUM,

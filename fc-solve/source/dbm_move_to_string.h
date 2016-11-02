@@ -24,24 +24,24 @@ static void move_to_string(unsigned char move, char *const move_buffer)
 
     for (int iter = 0; iter < 2; iter++)
     {
-        int inspect = (move & 0xF);
+        int val_to_inspect = (move & 0xF);
         move >>= 4;
 
-        if (inspect < 8)
+        if (val_to_inspect < 8)
         {
-            s += sprintf(s, "Column %d", inspect);
+            s += sprintf(s, "Column %d", val_to_inspect);
         }
         else
         {
-            inspect -= 8;
-            if (inspect < 4)
+            val_to_inspect -= 8;
+            if (val_to_inspect < 4)
             {
-                s += sprintf(s, "Freecell %d", inspect);
+                s += sprintf(s, "Freecell %d", val_to_inspect);
             }
             else
             {
-                inspect -= 4;
-                s += sprintf(s, "Foundation %d", inspect);
+                val_to_inspect -= 4;
+                s += sprintf(s, "Foundation %d", val_to_inspect);
             }
         }
         if (iter == 0)

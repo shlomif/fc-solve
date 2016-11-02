@@ -20,13 +20,13 @@ typedef unsigned __int128 fcs_var_base_int_t;
 #define FCS_var_base_int__init(i)
 #define FCS_var_base_int__set_ui(i, val) ((i) = (val))
 #define FCS_var_base_int__left_shift(i, shift) ((i) <<= (shift))
-#define FCS_var_base_int__add(i, i2) ((i) += (i2))
+#define FCS_var_base_int__add(i, diff) ((i) += (diff))
 #define FCS_var_base_int__mod_div(i, i_mod, base)                              \
     (i_mod) = (i) % (base);                                                    \
     (i) /= (base)
 #define FCS_var_base_int__get_ui(i) (i)
 #define FCS_var_base_int__clear(i)
-#define FCS_var_base_int__addmul_ui(i, i2, ui) ((i) += (i2) * (ui))
+#define FCS_var_base_int__addmul_ui(i, i_mult, ui) ((i) += (i_mult) * (ui))
 #define FCS_var_base_int__mul_ui(i, ui) (i) *= (ui)
 #define FCS_var_base_int__not_zero(i) ((i) != 0)
 
@@ -40,12 +40,12 @@ typedef mpz_t fcs_var_base_int_t;
 #define FCS_var_base_int__init(i) mpz_init(i)
 #define FCS_var_base_int__set_ui(i, val) mpz_set_ui((i), (val))
 #define FCS_var_base_int__left_shift(i, shift) mpz_mul_2exp((i), (i), (shift))
-#define FCS_var_base_int__add(i, i2) mpz_add((i), (i), (i2))
+#define FCS_var_base_int__add(i, diff) mpz_add((i), (i), (diff))
 #define FCS_var_base_int__mod_div(i, i_mod, base)                              \
     mpz_fdiv_qr_ui(i, i_mod, i, base)
 #define FCS_var_base_int__get_ui(i) mpz_get_ui(i)
 #define FCS_var_base_int__clear(i) mpz_clear(i)
-#define FCS_var_base_int__addmul_ui(i, i2, ui) mpz_addmul_ui(i, i2, ui)
+#define FCS_var_base_int__addmul_ui(i, i_mult, ui) mpz_addmul_ui(i, i_mult, ui)
 #define FCS_var_base_int__mul_ui(i, ui) mpz_mul_ui((i), (i), (ui))
 #define FCS_var_base_int__not_zero(i) (mpz_cmp_ui(i, 0) != 0)
 

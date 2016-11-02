@@ -708,7 +708,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
 #define ret (out_state->s)
 /* Handle the end of string - shouldn't happen */
-#define handle_eos()                                                           \
+#define HANDLE_EOS()                                                           \
     {                                                                          \
         if ((*str) == '\0')                                                    \
         {                                                                      \
@@ -723,7 +723,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
         {
             while ((*str) != '\n')
             {
-                handle_eos();
+                HANDLE_EOS();
                 str++;
             }
             str++;
@@ -753,7 +753,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                     while (((*str) != ' ') && ((*str) != '\t') &&
                            ((*str) != '\n') && ((*str) != '\r'))
                     {
-                        handle_eos();
+                        HANDLE_EOS();
                         str++;
                     }
                     if ((*str == '\n') || (*str == '\r'))
@@ -784,7 +784,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
             while (*str != '\n')
             {
-                handle_eos();
+                HANDLE_EOS();
                 str++;
             }
             s--;
@@ -824,7 +824,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 while ((*str != ' ') && (*str != '\t') && (*str != '\n') &&
                        (*str != '\r'))
                 {
-                    handle_eos();
+                    HANDLE_EOS();
                     str++;
                 }
 
@@ -855,7 +855,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 while (((*str) != ' ') && ((*str) != '\t') &&
                        ((*str) != '\n') && ((*str) != '\r'))
                 {
-                    handle_eos();
+                    HANDLE_EOS();
                     str++;
                 }
                 if ((*str == '\n') || (*str == '\r'))
@@ -868,7 +868,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             {
                 str++;
             }
-            handle_eos();
+            HANDLE_EOS();
             if ((*str == '\n') || (*str == '\r'))
             {
                 break;
@@ -886,7 +886,7 @@ static GCC_INLINE fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 }
 
 #undef ret
-#undef handle_eos
+#undef HANDLE_EOS
 
 extern void fc_solve_state_as_string(char *output_s,
     const fcs_state_t *const state,

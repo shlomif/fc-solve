@@ -661,7 +661,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     const_SLOT(num_vacant_stacks, soft_thread);
     const fcs_game_limit_t num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
-
     const int initial_derived_states_num_states =
         derived_states_list->num_states;
 
@@ -762,10 +761,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
             }
         }
     }
-
     sort_derived_states(derived_states_list, initial_derived_states_num_states);
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
@@ -976,7 +972,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
     const fcs_game_limit_t num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
-
     const int initial_derived_states_num_states =
         derived_states_list->num_states;
 
@@ -1115,8 +1110,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     }
 
     sort_derived_states(derived_states_list, initial_derived_states_num_states);
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)

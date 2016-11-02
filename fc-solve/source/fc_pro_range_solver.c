@@ -221,7 +221,6 @@ int main(int argc, char *argv[])
         {
             FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters);
         }
-
         freecell_solver_user_recycle(instance);
     }
 

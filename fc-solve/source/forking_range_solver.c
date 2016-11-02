@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
             {
                 for (size_t idx = 0; idx < num_workers; idx++)
                 {
-                    const int fd = workers[idx].child_to_parent_pipe[READ_FD];
+                    const int fd = GET_READ_FD(workers[idx]);
 
                     if (FD_ISSET(fd, &readers))
                     {
