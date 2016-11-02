@@ -123,9 +123,7 @@ int main(int argc, char *argv[])
 
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
     freecell_solver_user_apply_preset(instance, variant);
-
-#define BUF_SIZE 2000
-    char buffer[BUF_SIZE];
+    char buffer[2000];
 
     for (size_t deal_idx = 0; deal_idx < num_deals; deal_idx++)
     {
@@ -141,11 +139,10 @@ int main(int argc, char *argv[])
                 board_num, variant);
 
             FILE *const from_make_pysol = popen(command, "r");
-            fread(buffer, sizeof(buffer[0]), BUF_SIZE - 1, from_make_pysol);
+            fread(
+                buffer, sizeof(buffer[0]), COUNT(buffer) - 1, from_make_pysol);
             pclose(from_make_pysol);
-#undef BUF_SIZE
         }
-
         buffer[COUNT(buffer) - 1] = '\0';
 
         long num_moves;

@@ -125,8 +125,7 @@ int main(int argc, char *argv[])
             instance, total_iterations_limit_per_board);
     }
 
-#define BUF_SIZE 2000
-    char buffer[BUF_SIZE];
+    char buffer[2000];
     for (long long board_num = start_board; board_num <= end_board; board_num++)
     {
         fcs_state_keyval_pair_t pos;
@@ -144,9 +143,9 @@ int main(int argc, char *argv[])
                 board_num, variant);
 
             FILE *const from_make_pysol = popen(command, "r");
-            fread(buffer, sizeof(buffer[0]), BUF_SIZE - 1, from_make_pysol);
+            fread(
+                buffer, sizeof(buffer[0]), COUNT(buffer) - 1, from_make_pysol);
             pclose(from_make_pysol);
-#undef BUF_SIZE
         }
 
         buffer[COUNT(buffer) - 1] = '\0';
