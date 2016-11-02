@@ -29,7 +29,7 @@ typedef struct
 typedef Pvoid_t store_t;
 
 static GCC_INLINE void delete_state(store_t *const store,
-    fcs_pdfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
+    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     fcs_pdfs_cache_insert(cache, &(key->s));
     int rc_int;
@@ -44,7 +44,7 @@ static GCC_INLINE void insert_state(store_t *store, fcs_cache_key_t *key)
 }
 
 static GCC_INLINE const fcs_bool_t lookup_state(store_t *const store,
-    fcs_pdfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
+    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     Word_t *PValue;
     JHSG(PValue, *store, &(key->s), sizeof(key->s));
@@ -66,7 +66,7 @@ typedef struct
 {
     fcs_lock_t storage_lock;
     store_t store;
-    fcs_pdfs_lru_cache_t cache;
+    fcs_pseudo_dfs_lru_cache_t cache;
 
     long pre_cache_max_count;
     /* The stack */
