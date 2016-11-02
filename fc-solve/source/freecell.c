@@ -436,13 +436,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
                 /* Fill the freecells with the top cards */
                 my_copy_stack(ds);
-            {
-                const int cols_indexes[3] = {ds, -1, -1};
-
-                empty_two_cols_from_new_state(soft_thread,
-                    NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves),
-                    cols_indexes, dest_cards_num - dc - 1, 0);
-            }
+            const int cols_indexes[3] = {ds, -1, -1};
+            empty_two_cols_from_new_state(soft_thread,
+                NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves), cols_indexes,
+                dest_cards_num - dc - 1, 0);
 
             fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
 
@@ -513,13 +510,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
                 }
                 /* We can move it */
                 sfs_check_state_begin() my_copy_stack(stack_idx);
-                {
-                    const int cols_indexes[3] = {stack_idx, -1, -1};
+                const int cols_indexes[3] = {stack_idx, -1, -1};
 
-                    empty_two_cols_from_new_state(soft_thread,
-                        NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves),
-                        cols_indexes, cards_num - (c + 1), 0);
-                }
+                empty_two_cols_from_new_state(soft_thread,
+                    NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves),
+                    cols_indexes, cards_num - (c + 1), 0);
                 fcs_cards_column_t new_src_col =
                     fcs_state_get_col(new_state, stack_idx);
                 fcs_col_pop_top(new_src_col);
@@ -749,13 +744,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 }
                 sfs_check_state_begin() my_copy_stack(stack_idx);
                 my_copy_stack(ds);
-                {
-                    const int cols_indexes[3] = {ds, stack_idx, -1};
-
-                    empty_two_cols_from_new_state(soft_thread,
-                        NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves),
-                        cols_indexes, dest_num_cards, col_num_cards);
-                }
+                const int cols_indexes[3] = {ds, stack_idx, -1};
+                empty_two_cols_from_new_state(soft_thread,
+                    NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves),
+                    cols_indexes, dest_num_cards, col_num_cards);
                 fcs_move_sequence(ds, stack_idx, seq_end - c + 1);
                 /*
                  * This is to preserve the order that the
@@ -1103,13 +1095,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
                         my_copy_stack(ds);
 
-                    {
-                        const int cols_indexes[3] = {ds, -1, -1};
-                        empty_two_cols_from_new_state(soft_thread,
-                            NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves),
-                            cols_indexes,
-                            freestacks_to_fill + freecells_to_fill, 0);
-                    }
+                    const int cols_indexes[3] = {ds, -1, -1};
+                    empty_two_cols_from_new_state(soft_thread,
+                        NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves),
+                        cols_indexes, freestacks_to_fill + freecells_to_fill,
+                        0);
 
                     my_copy_stack(stack_idx);
 
