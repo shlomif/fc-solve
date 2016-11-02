@@ -21,8 +21,6 @@
 #include <ctype.h>
 
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <limits.h>
 
 #define NUM_CHECKED_STATES_STEP 50
@@ -290,7 +288,7 @@ static GCC_INLINE
 #endif
         .super_method_type = FCS_SUPER_METHOD_DFS,
         .master_to_randomize = FALSE,
-        .num_checked_states_step = NUM_CHECKED_STATES_STEP,
+        .checked_states_step = NUM_CHECKED_STATES_STEP,
         .name = "",
         .enable_pruning = FALSE,
 #ifndef FCS_DISABLE_PATSOLVE
@@ -538,40 +536,40 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
             }
             else if (mp->totype == FCS_PATS__TYPE_FOUNDATION)
             {
-                const find_card_ret_t src_s = find_card_src_string(
+                const find_card_ret_t src = find_card_src_string(
                     &(s_and_info.s), card PASS_FREECELLS(FREECELLS_NUM__VAL)
                                          PASS_STACKS(STACKS_NUM__VAL));
-                if (src_s.type == FREECELL)
+                if (src.type == FREECELL)
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
-                    fcs_int_move_set_src_freecell(out_move, src_s.idx);
+                    fcs_int_move_set_src_freecell(out_move, src.idx);
                 }
                 else
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
-                    fcs_int_move_set_src_stack(out_move, src_s.idx);
+                    fcs_int_move_set_src_stack(out_move, src.idx);
                 }
                 fcs_int_move_set_foundation(out_move, fcs_card_suit(card));
             }
             else
             {
                 const fcs_card_t dest_card = mp->destcard;
-                const find_card_ret_t src_s = find_card_src_string(s,
+                const find_card_ret_t src = find_card_src_string(s,
                     card PASS_FREECELLS(FREECELLS_NUM__VAL)
                         PASS_STACKS(STACKS_NUM__VAL));
-                if (src_s.type == FREECELL)
+                if (src.type == FREECELL)
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
-                    fcs_int_move_set_src_freecell(out_move, src_s.idx);
+                    fcs_int_move_set_src_freecell(out_move, src.idx);
                 }
                 else
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_STACK_TO_STACK);
-                    fcs_int_move_set_src_stack(out_move, src_s.idx);
+                    fcs_int_move_set_src_stack(out_move, src.idx);
                     fcs_int_move_set_num_cards_in_seq(out_move, 1);
                 }
                 fcs_int_move_set_dest_stack(
@@ -652,7 +650,7 @@ void fc_solve_finish_instance(fc_solve_instance_t *const instance)
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
         fc_solve_states_google_hash_free(instance->hash);
 #else
-#error not defined
+#error FCS_STATE_STORAGE is not defined
 #endif
 
 /* De-allocate the stack collection while free()'ing the stacks

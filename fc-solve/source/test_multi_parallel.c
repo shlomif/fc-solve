@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     fcs_int_limit_t total_iterations_limit_per_board = -1;
     binary_output_t binary_output = INIT_BINARY_OUTPUT;
     const char *solutions_directory = NULL;
-    char *solution_filename = NULL;
+    char *solution_fn = NULL;
     int arg = 1;
 
     if (argc < 4)
@@ -87,8 +87,8 @@ int main(int argc, char *argv[])
                 exit(-1);
             }
             solutions_directory = argv[arg];
-            solution_filename =
-                SMALLOC(solution_filename, strlen(solutions_directory) + 1024);
+            solution_fn =
+                SMALLOC(solution_fn, strlen(solutions_directory) + 1024);
         }
         else
         {
@@ -150,13 +150,13 @@ int main(int argc, char *argv[])
 
         if (solutions_directory)
         {
-            sprintf(solution_filename, "%s%09lld.sol", solutions_directory,
-                board_num);
-            FILE *const output_fh = fopen(solution_filename, "wt");
+            sprintf(
+                solution_fn, "%s%09lld.sol", solutions_directory, board_num);
+            FILE *const output_fh = fopen(solution_fn, "wt");
             if (!output_fh)
             {
                 fprintf(stderr, "Could not open output file '%s' for writing!",
-                    solution_filename);
+                    solution_fn);
                 return -1;
             }
             fc_solve_output_result_to_file(
@@ -176,8 +176,8 @@ out_of_loop:
 
     freecell_solver_user_free(instance);
     bin_close(&binary_output);
-    free(solution_filename);
-    solution_filename = NULL;
+    free(solution_fn);
+    solution_fn = NULL;
 
     return 0;
 }

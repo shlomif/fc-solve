@@ -236,7 +236,7 @@ static GCC_INLINE ul perl_hash_function(register const ub1 *s_ptr, /* the key */
 
 #ifdef INDIRECT_STACK_STATES
 
-#define replace_with_cached(condition_expr)                                    \
+#define REPLACE_WITH_CACHED(condition_expr)                                    \
     if (condition_expr)                                                        \
     {                                                                          \
         fcs_compact_alloc_release(stacks_allocator);                           \
@@ -322,14 +322,14 @@ static GCC_INLINE void fc_solve_cache_stacks(
                 hash_value_int
 #endif
                 );
-            replace_with_cached(cached_stack);
+            REPLACE_WITH_CACHED(cached_stack);
         }
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
         {
             column = fcs_state_get_col(*new_state_key, i);
 
-            replace_with_cached(fc_solve_columns_google_hash_insert(
+            REPLACE_WITH_CACHED(fc_solve_columns_google_hash_insert(
                 instance->stacks_hash, column, &cached_stack));
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
@@ -337,19 +337,19 @@ static GCC_INLINE void fc_solve_cache_stacks(
         cached_stack = fcs_libavl2_stacks_tree_insert(
             instance->stacks_tree, new_state_key->stacks[i]);
 
-        replace_with_cached(cached_stack != NULL);
+        REPLACE_WITH_CACHED(cached_stack != NULL);
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
         cached_stack =
             (void *)rbsearch(*(current_stack), instance->stacks_tree);
 
-        replace_with_cached(cached_stack != *(current_stack));
+        REPLACE_WITH_CACHED(cached_stack != *(current_stack));
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
         cached_stack =
             g_tree_lookup(instance->stacks_tree, (gpointer) * (current_stack));
 
-        /* replace_with_cached contains an if statement */
-        replace_with_cached(cached_stack != NULL) else
+        /* REPLACE_WITH_CACHED contains an if statement */
+        REPLACE_WITH_CACHED(cached_stack != NULL) else
         {
             g_tree_insert(instance->stacks_tree, (gpointer) * (current_stack),
                 (gpointer) * (current_stack));
@@ -357,7 +357,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
         cached_stack = g_hash_table_lookup(
             instance->stacks_hash, (gconstpointer) * (current_stack));
-        replace_with_cached(cached_stack != NULL) else
+        REPLACE_WITH_CACHED(cached_stack != NULL) else
         {
             g_hash_table_insert(instance->stacks_hash,
                 (gpointer) * (current_stack), (gpointer) * (current_stack));
@@ -377,7 +377,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
         else
         {
             cached_stack = (void *)(*PValue);
-            replace_with_cached(1);
+            REPLACE_WITH_CACHED(1);
         }
 #else
 #error FCS_STACK_STORAGE is not set to a good value.

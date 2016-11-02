@@ -257,7 +257,7 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
 DLLEXPORT extern int freecell_solver_user_next_soft_thread(void *user_instance);
 
 DLLEXPORT extern void freecell_solver_user_set_soft_thread_step(
-    void *const user_instance, const int num_checked_states_step);
+    void *const user_instance, const int checked_states_step);
 
 DLLEXPORT extern int freecell_solver_user_next_hard_thread(
     void *const user_instance);

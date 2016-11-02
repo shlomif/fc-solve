@@ -602,7 +602,7 @@ struct fc_solve_soft_thread_struct
     /*
      * The number of iterations with which to process this scan
      * */
-    int num_checked_states_step;
+    int checked_states_step;
 
     /*
      * A string that serves as an identification for the user.

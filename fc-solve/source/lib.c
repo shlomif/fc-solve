@@ -293,7 +293,7 @@ void DLLEXPORT *freecell_solver_user_alloc(void)
 }
 
 int DLLEXPORT freecell_solver_user_apply_preset(
-    void *api_instance, const char *preset_name)
+    void *const api_instance, const char *const preset_name)
 {
 #ifdef FCS_FREECELL_ONLY
     return FCS_PRESET_CODE_OK;
@@ -2202,10 +2202,9 @@ int DLLEXPORT freecell_solver_user_next_soft_thread(void *const api_instance)
 }
 
 extern void DLLEXPORT freecell_solver_user_set_soft_thread_step(
-    void *const api_instance, const int num_checked_states_step)
+    void *const api_instance, const int checked_states_step)
 {
-    api_soft_thread(api_instance)->num_checked_states_step =
-        num_checked_states_step;
+    api_soft_thread(api_instance)->checked_states_step = checked_states_step;
 }
 
 int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)

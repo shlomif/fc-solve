@@ -76,10 +76,8 @@ static void fc_solve_delta_stater_init(
     max_num_cards = 0;
     for (col_idx = 0; col_idx < num_columns; col_idx++)
     {
-        int num_cards;
-
-        num_cards = fc_solve_get_column_orig_num_cards(
-            self, fcs_state_get_col(*init_state, col_idx));
+        const_AUTO(num_cards, fc_solve_get_column_orig_num_cards(self,
+                                  fcs_state_get_col(*init_state, col_idx)));
 
         if (num_cards > max_num_cards)
         {
@@ -132,7 +130,7 @@ static GCC_INLINE void fc_solve_get_column_encoding_composite(
     const fcs_state_t *const derived = self->derived_state;
     fcs_const_cards_column_t col = fcs_state_get_col(*derived, col_idx);
 
-    const int num_orig_cards = fc_solve_get_column_orig_num_cards(self, col);
+    const_AUTO(num_orig_cards, fc_solve_get_column_orig_num_cards(self, col));
     const int col_len = fcs_col_len(col);
     const int num_derived_cards = col_len - num_orig_cards;
 

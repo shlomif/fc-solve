@@ -263,7 +263,7 @@ static GCC_INLINE void fc_solve_init_instance(
             }
         }
         set_next_soft_thread(hard_thread, 0,
-            HT_FIELD(hard_thread, soft_threads)[0].num_checked_states_step,
+            HT_FIELD(hard_thread, soft_threads)[0].checked_states_step,
             &(HT_FIELD(hard_thread, st_idx)));
     }
 
@@ -499,7 +499,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 /* Do nothing because it is allocated elsewhere. */
 #else
-#error not defined
+#error FCS_STATE_STORAGE is not defined
 #endif
 
 /****************************************************/
@@ -1037,7 +1037,7 @@ static GCC_INLINE void switch_to_next_soft_thread(
     {
         const int next_st_idx = ((1 + (*st_idx_ptr)) % num_soft_threads);
         set_next_soft_thread(hard_thread, next_st_idx,
-            soft_threads[next_st_idx].num_checked_states_step, st_idx_ptr);
+            soft_threads[next_st_idx].checked_states_step, st_idx_ptr);
     }
 }
 
