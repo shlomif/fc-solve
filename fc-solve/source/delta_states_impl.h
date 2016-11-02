@@ -71,7 +71,7 @@ static void fc_solve_delta_stater_init(
     self->num_columns = num_columns;
     self->num_freecells = num_freecells;
 
-    self->_init_state = init_state;
+    self->init_state = init_state;
 
     max_num_cards = 0;
     for (col_idx = 0; col_idx < num_columns; col_idx++)
@@ -109,7 +109,7 @@ static GCC_INLINE void fc_solve_delta_stater_release(
 static GCC_INLINE void fc_solve_delta_stater_set_derived(
     fc_solve_delta_stater_t *const self, fcs_state_t *const state)
 {
-    self->_derived_state = state;
+    self->derived_state = state;
 }
 
 typedef struct
@@ -129,7 +129,7 @@ static GCC_INLINE void fc_solve_get_column_encoding_composite(
     fc_solve_delta_stater_t *const self, const int col_idx,
     fc_solve_column_encoding_composite_t *const ret)
 {
-    const fcs_state_t *const derived = self->_derived_state;
+    const fcs_state_t *const derived = self->derived_state;
     fcs_const_cards_column_t col = fcs_state_get_col(*derived, col_idx);
 
     const int num_orig_cards = fc_solve_get_column_orig_num_cards(self, col);
@@ -182,7 +182,7 @@ static GCC_INLINE void fc_solve_get_freecells_encoding(
     fc_solve_delta_stater_t *const self, fc_solve_bit_writer_t *const bit_w)
 {
 
-    const fcs_state_t *const derived = self->_derived_state;
+    const fcs_state_t *const derived = self->derived_state;
     const_SLOT(num_freecells, self);
 
     fcs_card_t freecells[MAX_NUM_FREECELLS];
@@ -218,7 +218,7 @@ static void fc_solve_delta_stater_encode_composite(
 {
     int cols_indexes[MAX_NUM_STACKS];
     fc_solve_column_encoding_composite_t cols[MAX_NUM_STACKS];
-    fcs_state_t *const derived = self->_derived_state;
+    fcs_state_t *const derived = self->derived_state;
 
     const_SLOT(num_columns, self);
     for (int i = 0; i < num_columns; i++)
@@ -365,7 +365,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
     }
 
     const_SLOT(num_columns, self);
-    const fcs_state_t *const _init_state = self->_init_state;
+    const fcs_state_t *const init_state = self->init_state;
 
     for (int col_idx = 0; col_idx < num_columns; col_idx++)
     {
@@ -374,7 +374,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
             fc_solve_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
 
         fcs_const_cards_column_t orig_col =
-            fcs_state_get_col(*_init_state, col_idx);
+            fcs_state_get_col(*init_state, col_idx);
 
         for (int i = 0; i < num_orig_cards; i++)
         {

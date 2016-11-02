@@ -35,7 +35,7 @@ typedef struct
 #endif
     int num_freecells;
     int num_columns;
-    fcs_state_t *_init_state, *_derived_state;
+    fcs_state_t *init_state, *derived_state;
     int bits_per_orig_cards_in_column;
     int card_states[4 * RANK_KING];
     char bakers_dozen_topmost_cards_lookup[((1 << 6) / 8) + 1];

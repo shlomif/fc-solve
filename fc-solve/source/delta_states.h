@@ -139,7 +139,7 @@ typedef struct
 #endif
     int num_freecells;
     int num_columns;
-    fcs_state_t *_init_state, *_derived_state;
+    fcs_state_t *init_state, *derived_state;
     int bits_per_orig_cards_in_column;
 } fc_solve_delta_stater_t;
 

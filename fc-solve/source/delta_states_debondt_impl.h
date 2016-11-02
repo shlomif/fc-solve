@@ -72,7 +72,7 @@ static void fc_solve_debondt_delta_stater_init(
     self->num_columns = num_columns;
     self->num_freecells = num_freecells;
 
-    self->_init_state = init_state;
+    self->init_state = init_state;
 
     memset(self->bakers_dozen_topmost_cards_lookup, '\0',
         sizeof(self->bakers_dozen_topmost_cards_lookup));
@@ -124,7 +124,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_release(
 static GCC_INLINE void fc_solve_debondt_delta_stater_set_derived(
     fc_solve_debondt_delta_stater_t *const self, fcs_state_t *const state)
 {
-    self->_derived_state = state;
+    self->derived_state = state;
 }
 
 #define GET_SUIT_BIT(card) (((fcs_card_suit(card)) & 0x2) >> 1)
@@ -187,7 +187,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     const enum fcs_dbm_variant_type_t local_variant,
     fcs_var_base_writer_t *const writer)
 {
-    fcs_state_t *const derived = self->_derived_state;
+    fcs_state_t *const derived = self->derived_state;
 
     fc_solve_debondt_delta_stater__init_card_states(self);
 
@@ -415,7 +415,7 @@ static void fc_solve_debondt_delta_stater_decode(
 #define IS_IN_FOUNDATIONS(card)                                                \
     (fcs_card_rank(card) <= fcs_foundation_value(*ret, fcs_card_suit(card)))
 
-    fcs_state_t *const init_state = self->_init_state;
+    fcs_state_t *const init_state = self->init_state;
 
     const int orig_pos_opt =
         (IS_BAKERS_DOZEN() ? OPT__BAKERS_DOZEN__ORIG_POS : OPT_ORIG_POS);
