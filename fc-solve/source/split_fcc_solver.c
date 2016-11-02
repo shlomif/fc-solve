@@ -640,8 +640,8 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, FccEntryPointNode *key_ptr,
     size_t num_threads)
 {
-    main_thread_item_t *const threads =
-        dbm__calc_threads(instance, init_state, num_threads, init_thread);
+    const_AUTO(threads,
+        dbm__calc_threads(instance, init_state, num_threads, init_thread));
     /* TODO : do something meaningful with start_key_ptr . */
     instance->start_key_ptr = key_ptr;
 

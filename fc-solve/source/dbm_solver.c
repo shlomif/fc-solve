@@ -496,8 +496,8 @@ static void free_thread(fcs_dbm_solver_thread_t *const thread) {}
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     fcs_state_keyval_pair_t *init_state, const size_t num_threads)
 {
-    main_thread_item_t *const threads =
-        dbm__calc_threads(instance, init_state, num_threads, init_thread);
+    const_AUTO(threads,
+        dbm__calc_threads(instance, init_state, num_threads, init_thread));
     for (size_t i = 0; i < num_threads; i++)
     {
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,

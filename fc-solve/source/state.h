@@ -1035,8 +1035,7 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(
     const fcs_card_t *const s2 = (const fcs_card_t *const)v_s2;
 
     {
-#define mymin(a, b) ((a) < (b) ? (a) : (b))
-        const int min_len = mymin(s1[0], s2[0]);
+        const int min_len = min(s1[0], s2[0]);
         for (int a = 1; a <= min_len; a++)
         {
             int ret = fc_solve_card_compare(s1[a], s2[a]);

@@ -46,7 +46,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
 #ifndef NDEBUG
     int virtual_freecell_len[12];
 #endif
-    int i, j, move_idx;
+    int i, j;
     fcs_move_t move, out_move;
 
     const int num_back_end_moves = moves_seq->num_moves;
@@ -68,7 +68,7 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
     }
 #endif
 
-    for (move_idx = 0; move_idx < num_back_end_moves; move_idx++)
+    for (int move_idx = 0; move_idx < num_back_end_moves; move_idx++)
     {
         /*
          * Move safe cards to the foundations
