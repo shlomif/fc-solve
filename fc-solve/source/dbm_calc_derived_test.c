@@ -129,11 +129,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
-    {
-        fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
-        prune_ret =
-            horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
-    }
+    fcs_which_moves_bitmask_t which_no_use = {{'\0'}};
+    prune_ret =
+        horne_prune(local_variant, &init_state, &which_no_use, NULL, NULL);
     *ret_state_s = SMALLOC(*ret_state_s, 1000);
     FCS__RENDER_STATE(*ret_state_s, &(init_state.s), &locs);
 

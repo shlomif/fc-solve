@@ -123,9 +123,9 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 
 #define tests__is_filled_by_any_card() TRUE
 
-#define tests__is_filled_by_kings_only() FALSE
+#define IS_FILLED_BY_KINGS_ONLY() FALSE
 
-#define tests__is_filled_by_none() FALSE
+#define IS_FILLED_BY_NONE() FALSE
 
 #else
 
@@ -140,10 +140,10 @@ static GCC_INLINE void fc_solve_move_sequence_function(
 #define tests__is_filled_by_any_card()                                         \
     (empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
 
-#define tests__is_filled_by_kings_only()                                       \
+#define IS_FILLED_BY_KINGS_ONLY()                                              \
     (empty_stacks_fill == FCS_ES_FILLED_BY_KINGS_ONLY)
 
-#define tests__is_filled_by_none() (empty_stacks_fill == FCS_ES_FILLED_BY_NONE)
+#define IS_FILLED_BY_NONE() (empty_stacks_fill == FCS_ES_FILLED_BY_NONE)
 
 #endif
 
@@ -209,7 +209,7 @@ static GCC_INLINE void fc_solve_move_sequence_function(
  *
  * TODO : implement it for FCS_ES_FILLED_BY_KINGS_ONLY
  * */
-#define MOVE_FUNCS__should_not_empty_columns() tests__is_filled_by_none()
+#define MOVE_FUNCS__should_not_empty_columns() IS_FILLED_BY_NONE()
 
 #ifdef __cplusplus
 }

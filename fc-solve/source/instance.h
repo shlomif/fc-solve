@@ -417,7 +417,7 @@ typedef struct
     fcs_derived_states_list_t derived_states_list;
     int current_state_index;
     int tests_list_index;
-    int test_index;
+    int move_func_idx;
     int derived_states_random_indexes_max_size;
     fcs_rating_with_index_t *derived_states_random_indexes;
     fcs__positions_by_rank_t positions_by_rank;

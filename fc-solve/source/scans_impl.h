@@ -425,14 +425,14 @@ static GCC_INLINE void calculate_real_depth(const fcs_bool_t calc_real_depth,
         if (getenv("FCS_TRACE"))                                               \
         {                                                                      \
             printf("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "         \
-                   "tests_list_index=%d ; test_index=%d ; "                    \
+                   "tests_list_index=%d ; move_func_idx=%d ; "                 \
                    "current_state_index=%d ; num_states=%zd\n",                \
                 message, (long int)DFS_VAR(soft_thread, depth),                \
                 (long int)(the_soft_dfs_info -                                 \
                            DFS_VAR(soft_thread, soft_dfs_info)),               \
                 (long int)(instance->i__num_checked_states),                   \
                 the_soft_dfs_info->tests_list_index,                           \
-                the_soft_dfs_info->test_index,                                 \
+                the_soft_dfs_info->move_func_idx,                              \
                 the_soft_dfs_info->current_state_index,                        \
                 (derived_states_list ? derived_states_list->num_states : -1)); \
             fflush(stdout);                                                    \
@@ -932,7 +932,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
             TRACE0("Before iter_handler");
             /* If this is the first test, then count the number of unoccupied
                freecells and stacks and check if we are done. */
-            if ((the_soft_dfs_info->test_index == 0) &&
+            if ((the_soft_dfs_info->move_func_idx == 0) &&
                 (the_soft_dfs_info->tests_list_index == 0))
             {
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -1042,19 +1042,19 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     VERIFY_PTR_STATE_TRACE0("Verify Bar");
 
                     THE_TESTS_LIST.lists[the_soft_dfs_info->tests_list_index]
-                        .tests[the_soft_dfs_info->test_index](
+                        .tests[the_soft_dfs_info->move_func_idx](
                             soft_thread, &pass, derived_states_list);
 
                     VERIFY_PTR_STATE_TRACE0("Verify Glanko");
 
                     /* Move the counter to the next test */
-                    if ((++the_soft_dfs_info->test_index) ==
+                    if ((++the_soft_dfs_info->move_func_idx) ==
                         THE_TESTS_LIST
                             .lists[the_soft_dfs_info->tests_list_index]
                             .num_move_funcs)
                     {
                         the_soft_dfs_info->tests_list_index++;
-                        the_soft_dfs_info->test_index = 0;
+                        the_soft_dfs_info->move_func_idx = 0;
                         break;
                     }
                 } while (local_shuffling_type != FCS_NO_SHUFFLING);
@@ -1206,7 +1206,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify after recurse");
 
                     the_soft_dfs_info->tests_list_index = 0;
-                    the_soft_dfs_info->test_index = 0;
+                    the_soft_dfs_info->move_func_idx = 0;
                     the_soft_dfs_info->current_state_index = 0;
                     derived_states_list =
                         &(the_soft_dfs_info->derived_states_list);

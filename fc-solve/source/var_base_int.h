@@ -26,8 +26,8 @@ typedef unsigned __int128 fcs_var_base_int_t;
     (i) /= (base)
 #define FCS_var_base_int__get_ui(i) (i)
 #define FCS_var_base_int__clear(i)
-#define FCS_var_base_int__addmul_ui(i, i_mult, ui) ((i) += (i_mult) * (ui))
-#define FCS_var_base_int__mul_ui(i, ui) (i) *= (ui)
+#define FCS_var_base_int__addmul_ui(i, i_mult, ul) ((i) += (i_mult) * (ul))
+#define FCS_var_base_int__mul_ui(i, ul) (i) *= (ul)
 #define FCS_var_base_int__not_zero(i) ((i) != 0)
 
 #else /* FCS_USE_INT128_FOR_VAR_BASE */
@@ -45,8 +45,8 @@ typedef mpz_t fcs_var_base_int_t;
     mpz_fdiv_qr_ui(i, i_mod, i, base)
 #define FCS_var_base_int__get_ui(i) mpz_get_ui(i)
 #define FCS_var_base_int__clear(i) mpz_clear(i)
-#define FCS_var_base_int__addmul_ui(i, i_mult, ui) mpz_addmul_ui(i, i_mult, ui)
-#define FCS_var_base_int__mul_ui(i, ui) mpz_mul_ui((i), (i), (ui))
+#define FCS_var_base_int__addmul_ui(i, i_mult, ul) mpz_addmul_ui(i, i_mult, ul)
+#define FCS_var_base_int__mul_ui(i, ul) mpz_mul_ui((i), (i), (ul))
 #define FCS_var_base_int__not_zero(i) (mpz_cmp_ui(i, 0) != 0)
 
 #endif /* FCS_USE_INT128_FOR_VAR_BASE */

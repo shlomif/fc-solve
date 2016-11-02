@@ -770,7 +770,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     tests_define_empty_stacks_fill();
     tests_define_seqs_built_by();
 
-    if (tests__is_filled_by_none())
+    if (IS_FILLED_BY_NONE())
     {
         return;
     }
@@ -812,8 +812,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 }
             }
 
-            if ((!fcs_col_is_king(col, c)) &&
-                (tests__is_filled_by_kings_only()))
+            if ((!fcs_col_is_king(col, c)) && (IS_FILLED_BY_KINGS_ONLY()))
             {
                 continue;
             }
@@ -827,9 +826,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     c--;
                 }
 
-                if (!((c > 0) && ((tests__is_filled_by_kings_only())
-                                         ? fcs_col_is_king(col, c)
-                                         : TRUE)))
+                if (!((c > 0) &&
+                        ((IS_FILLED_BY_KINGS_ONLY()) ? fcs_col_is_king(col, c)
+                                                     : TRUE)))
                 {
                     continue;
                 }
@@ -869,7 +868,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     max(m, c);
                 });
                 if (!((seq_start <= seq_end) &&
-                        ((tests__is_filled_by_kings_only())
+                        ((IS_FILLED_BY_KINGS_ONLY())
                                 ? fcs_col_is_king(col, seq_start)
                                 : TRUE)))
                 {
@@ -909,7 +908,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
-    if (tests__is_filled_by_none())
+    if (IS_FILLED_BY_NONE())
     {
         return;
     }
@@ -933,8 +932,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
         {
             const fcs_card_t card = fcs_freecell_card(state, fc);
 
-            if ((tests__is_filled_by_kings_only()) ? (fcs_card_rank(card) != 13)
-                                                   : fcs_card_is_empty(card))
+            if ((IS_FILLED_BY_KINGS_ONLY()) ? (fcs_card_rank(card) != 13)
+                                            : fcs_card_is_empty(card))
             {
                 continue;
             }
@@ -1117,7 +1116,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
-    if (tests__is_filled_by_none())
+    if (IS_FILLED_BY_NONE())
     {
         return;
     }
@@ -1303,7 +1302,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     tests_define_accessors();
     tests_define_empty_stacks_fill();
 
-    if (tests__is_filled_by_none())
+    if (IS_FILLED_BY_NONE())
     {
         return;
     }
@@ -1341,7 +1340,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         }
         const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
 
-        if (tests__is_filled_by_kings_only() && (fcs_card_rank(card) != 13))
+        if (IS_FILLED_BY_KINGS_ONLY() && (fcs_card_rank(card) != 13))
         {
             continue;
         }
@@ -1546,7 +1545,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     SET_GAME_PARAMS();
 #endif
 
-    if (tests__is_filled_by_none())
+    if (IS_FILLED_BY_NONE())
     {
         return;
     }
@@ -1564,7 +1563,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         const fcs_card_t card = fcs_freecell_card(state, fc);
 
         if (fcs_card_is_empty(card) ||
-            (tests__is_filled_by_kings_only() && (fcs_card_rank(card) != 13)))
+            (IS_FILLED_BY_KINGS_ONLY() && (fcs_card_rank(card) != 13)))
         {
             continue;
         }
