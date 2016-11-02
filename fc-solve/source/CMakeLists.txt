@@ -169,6 +169,17 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
     )
 ENDIF ()
 
+SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_presets.pl")
+SET (presets_gen_output "${CMAKE_CURRENT_BINARY_DIR}/fcs_presets_generated.h")
+SET (presets_gen_args "${presets_gen}" "--mode=c" "--output" "${presets_gen_output}")
+# We do this so there will be no need to run "make" first.
+# See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
+ADD_CUSTOM_COMMAND(
+    OUTPUT "${presets_gen_output}"
+    COMMAND "perl"
+    ARGS ${presets_gen_args}
+    DEPENDS "${presets_gen}"
+)
 SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_rate_state_c.pl")
 SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
 # We do this so there will be no need to run "make" first.
@@ -234,6 +245,7 @@ SET (FREECELL_SOLVER_LIB_MODULES
     state.c
     "${MOVE_C}"
     "${BIN_CL_INC_H}"
+    "${presets_gen_output}"
 )
 
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
