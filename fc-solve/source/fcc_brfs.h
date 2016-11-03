@@ -131,7 +131,7 @@ static GCC_INLINE dict_t *fcc_brfs_kaz_tree_create(
         fc_solve_compare_encoded_states, NULL, meta_alloc, tree_recycle_bin);
 }
 
-static void perform_FCC_brfs(enum fcs_dbm_variant_type_t local_variant,
+static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair_t *init_state,
     /* The start state. */

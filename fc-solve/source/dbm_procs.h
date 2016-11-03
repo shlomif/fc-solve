@@ -383,7 +383,7 @@ static GCC_INLINE void fcs_dbm__cache_store__init(
 
 static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
     const int argc, char **const argv, int *const arg,
-    enum fcs_dbm_variant_type_t *const ptr_local_variant)
+    fcs_dbm_variant_type_t *const ptr_local_variant)
 {
     if (!strcmp(argv[*arg], "--game"))
     {

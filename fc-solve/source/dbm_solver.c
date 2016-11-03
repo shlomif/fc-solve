@@ -34,7 +34,7 @@ typedef struct
 
 #include "dbm_procs.h"
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     const long pre_cache_max_count GCC_UNUSED,
     const long caches_delta GCC_UNUSED, const char *const dbm_store_path,
     const long max_count_of_items_in_queue, const long iters_delta_limit,
@@ -189,7 +189,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_derived_state_t *derived_list = NULL;
     FILE *const out_fh = instance->common.out_fh;
 
-    enum fcs_dbm_variant_type_t local_variant = instance->common.variant;
+    fcs_dbm_variant_type_t local_variant = instance->common.variant;
 
     TRACE("%s\n", "instance_run_solver_thread start");
 #ifdef DEBUG_OUT
@@ -524,7 +524,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     fcs_bool_t ret = FALSE;
     fcs_dbm_record_t *token;
 #ifdef DEBUG_OUT
-    enum fcs_dbm_variant_type_t local_variant = instance->common.variant;
+    fcs_dbm_variant_type_t local_variant = instance->common.variant;
 #endif
 
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
@@ -643,7 +643,7 @@ int main(int argc, char *argv[])
     const char *out_filename = NULL, *intermediate_input_filename = NULL,
                *offload_dir_path = NULL;
     FILE *intermediate_in_fh = NULL;
-    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     fcs_bool_t skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     long iters_delta_limit = -1, pre_cache_max_count = 1000000,

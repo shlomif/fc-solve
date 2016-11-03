@@ -42,7 +42,7 @@ typedef struct
 
 #include "dbm_procs.h"
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     const long pre_cache_max_count GCC_UNUSED,
     const long caches_delta GCC_UNUSED, const char *dbm_store_path,
     const long iters_delta_limit, const char *offload_dir_path,
@@ -336,7 +336,7 @@ int main(int argc, char *argv[])
 {
     int arg;
     const char *out_filename = NULL, *offload_dir_path = NULL;
-    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     long pre_cache_max_count = 1000000, caches_delta = 1000000,
          iters_delta_limit = -1;

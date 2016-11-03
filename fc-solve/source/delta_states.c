@@ -23,7 +23,7 @@
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     const char *const init_state_str_proto,
     const char *const derived_state_str_proto)
 {

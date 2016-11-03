@@ -98,7 +98,7 @@ typedef struct
     fcs_encoded_state_buffer_t first_key;
     long num_states_in_collection;
     FILE *out_fh;
-    enum fcs_dbm_variant_type_t variant;
+    fcs_dbm_variant_type_t variant;
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
     fcs_bool_t queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
@@ -125,7 +125,7 @@ static GCC_INLINE void fcs_dbm__found_solution(
 
 static GCC_INLINE void fcs_dbm__common_init(
     fcs_dbm_instance_common_elems_t *const common, const long iters_delta_limit,
-    const enum fcs_dbm_variant_type_t local_variant, FILE *const out_fh)
+    const fcs_dbm_variant_type_t local_variant, FILE *const out_fh)
 {
     common->variant = local_variant;
     common->out_fh = out_fh;

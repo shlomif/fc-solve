@@ -423,7 +423,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
 }
 
 static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     fc_solve_delta_stater_t *const delta_stater,
     const fcs_uchar_t *const enc_state,
     fcs_state_keyval_pair_t *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
@@ -450,7 +450,7 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
 
 static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
     fc_solve_delta_stater_t *const delta_stater,
-    const enum fcs_dbm_variant_type_t local_variant GCC_UNUSED,
+    const fcs_dbm_variant_type_t local_variant GCC_UNUSED,
     fcs_state_keyval_pair_t *const state, unsigned char *const out_enc_state)
 {
     fc_solve_bit_writer_t bit_w;
@@ -463,8 +463,8 @@ static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
 
 static GCC_INLINE void fcs_init_and_encode_state(
     fc_solve_delta_stater_t *delta_stater,
-    const enum fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *state, fcs_encoded_state_buffer_t *enc_state)
+    const fcs_dbm_variant_type_t local_variant, fcs_state_keyval_pair_t *state,
+    fcs_encoded_state_buffer_t *enc_state)
 {
     fcs_init_encoded_state(enc_state);
 

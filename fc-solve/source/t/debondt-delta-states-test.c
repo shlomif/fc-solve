@@ -48,7 +48,7 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
     fcs_encoded_state_buffer_t enc_state;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
-    enum fcs_dbm_variant_type_t local_variant;
+    fcs_dbm_variant_type_t local_variant;
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
@@ -87,7 +87,7 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
 
 static int main_tests(void)
 {
-    enum fcs_dbm_variant_type_t local_variant;
+    fcs_dbm_variant_type_t local_variant;
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 

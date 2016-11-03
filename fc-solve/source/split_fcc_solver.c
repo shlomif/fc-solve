@@ -107,7 +107,7 @@ RB_GENERATE_STATIC(
     FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     const long pre_cache_max_count GCC_UNUSED,
     const long caches_delta GCC_UNUSED, const char *dbm_store_path,
     const long iters_delta_limit, const char *offload_dir_path,
@@ -450,7 +450,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
-    enum fcs_dbm_variant_type_t local_variant = instance->common.variant;
+    fcs_dbm_variant_type_t local_variant = instance->common.variant;
 #endif
     const_AUTO(coll, &(instance->coll));
     {
@@ -673,7 +673,7 @@ int main(int argc, char *argv[])
     const char *fingerprint_input_location_path = NULL;
     const char *path_to_output_dir = NULL;
     const char *filename = NULL, *offload_dir_path = NULL;
-    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     long pre_cache_max_count = 1000000, caches_delta = 1000000,
          iters_delta_limit = -1;

@@ -56,9 +56,8 @@ enum
 
 static void fc_solve_debondt_delta_stater_init(
     fc_solve_debondt_delta_stater_t *const self,
-    const enum fcs_dbm_variant_type_t local_variant,
-    fcs_state_t *const init_state, const int num_columns,
-    const int num_freecells
+    const fcs_dbm_variant_type_t local_variant, fcs_state_t *const init_state,
+    const int num_columns, const int num_freecells
 #ifndef FCS_FREECELL_ONLY
     ,
     const int sequences_are_built_by
@@ -141,8 +140,8 @@ static GCC_INLINE int wanted_suit_idx_opt(const fcs_card_t parent_card)
 }
 
 static GCC_INLINE int calc_child_card_option(
-    const enum fcs_dbm_variant_type_t local_variant,
-    const fcs_card_t parent_card, const fcs_card_t child_card
+    const fcs_dbm_variant_type_t local_variant, const fcs_card_t parent_card,
+    const fcs_card_t child_card
 #ifndef FCS_FREECELL_ONLY
     ,
     const int sequences_are_built_by
@@ -176,7 +175,7 @@ static GCC_INLINE int calc_child_card_option(
 }
 
 static GCC_INLINE int get_top_rank_for_iter(
-    const enum fcs_dbm_variant_type_t local_variant)
+    const fcs_dbm_variant_type_t local_variant)
 {
     return (IS_BAKERS_DOZEN() ? (RANK_KING - 1) : RANK_KING);
 }
@@ -184,7 +183,7 @@ static GCC_INLINE int get_top_rank_for_iter(
 #define NUM_SUITS 4
 static void fc_solve_debondt_delta_stater_encode_composite(
     fc_solve_debondt_delta_stater_t *const self,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     fcs_var_base_writer_t *const writer)
 {
     fcs_state_t *const derived = self->derived_state;
@@ -349,8 +348,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 static GCC_INLINE void
 fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
     fc_solve_debondt_delta_stater_t *const self,
-    const enum fcs_dbm_variant_type_t local_variant,
-    fcs_cards_column_t *const col)
+    const fcs_dbm_variant_type_t local_variant, fcs_cards_column_t *const col)
 {
     fcs_card_t parent_card = fcs_col_get_card(*col, fcs_col_len(*col) - 1);
 
@@ -387,7 +385,7 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
 
 static void fc_solve_debondt_delta_stater_decode(
     fc_solve_debondt_delta_stater_t *const self,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     fcs_var_base_reader_t *const reader, fcs_state_t *const ret)
 {
     unsigned char orig_top_most_cards[4 * RANK_KING];
@@ -602,7 +600,7 @@ static void fc_solve_debondt_delta_stater_decode(
 }
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     fc_solve_debondt_delta_stater_t *const delta_stater,
     const fcs_uchar_t *const enc_state,
     fcs_state_keyval_pair_t *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
@@ -630,7 +628,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
 
 static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
     fc_solve_debondt_delta_stater_t *const delta_stater,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const state, unsigned char *const out_enc_state)
 {
     fc_solve_var_base_writer_start(&(delta_stater->w));
@@ -642,7 +640,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
 
 static GCC_INLINE void fcs_debondt_init_and_encode_state(
     fc_solve_debondt_delta_stater_t *const delta_stater,
-    const enum fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const state,
     fcs_encoded_state_buffer_t *const enc_state)
 {

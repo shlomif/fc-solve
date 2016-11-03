@@ -78,7 +78,7 @@ typedef struct
     fcs_compact_allocator_t derived_list_allocator;
     fcs_meta_compact_allocator_t meta_alloc;
     fcs_derived_state_t *derived_list_recycle_bin;
-    enum fcs_dbm_variant_type_t local_variant;
+    fcs_dbm_variant_type_t local_variant;
 } fcs_dbm_solver_instance_t;
 
 static GCC_INLINE void instance__inspect_new_state(
@@ -91,7 +91,7 @@ static GCC_INLINE void instance__inspect_new_state(
         instance->stack_depth--;
         return;
     }
-    const enum fcs_dbm_variant_type_t local_variant = instance->local_variant;
+    const fcs_dbm_variant_type_t local_variant = instance->local_variant;
     const int depth = (instance->stack_depth);
     const int max_depth = instance->max_stack_depth;
     if (depth == max_depth)
@@ -150,7 +150,7 @@ static GCC_INLINE void instance__inspect_new_state(
 }
 
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    enum fcs_dbm_variant_type_t local_variant, fcs_cache_key_t *init_state,
+    const fcs_dbm_variant_type_t local_variant, fcs_cache_key_t *init_state,
     long max_num_elements_in_cache)
 {
     instance->local_variant = local_variant;
@@ -238,7 +238,7 @@ static GCC_INLINE void instance_run(fcs_dbm_solver_instance_t *const instance)
 static GCC_INLINE void instance__print_coords_to_log(
     fcs_dbm_solver_instance_t *const instance, FILE *const log_fh)
 {
-    const enum fcs_dbm_variant_type_t local_variant = instance->local_variant;
+    const fcs_dbm_variant_type_t local_variant = instance->local_variant;
     fprintf(
         log_fh, "At %ld iterations Coords=[", instance->count_num_processed);
 
@@ -288,7 +288,7 @@ static GCC_INLINE void instance__load_coords_from_fh(
 
 int main(int argc, char *argv[])
 {
-    enum fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     const long delta_limit = 100000;
     const int max_num_elements_in_cache = 8000000;
     const char *filename = argv[1];
