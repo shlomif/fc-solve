@@ -671,6 +671,10 @@ int main(int argc, char *argv[])
                 exit(-1);
             }
         }
+        else if (fcs_dbm__extract_game_variant_from_argv(
+                     argc, argv, &arg, &local_variant))
+        {
+        }
         else if (!strcmp(argv[arg], "--caches-delta"))
         {
             arg++;

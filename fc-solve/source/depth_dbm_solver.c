@@ -362,27 +362,9 @@ int main(int argc, char *argv[])
                 exit(-1);
             }
         }
-        else if (!strcmp(argv[arg], "--game"))
+        else if (fcs_dbm__extract_game_variant_from_argv(
+                     argc, argv, &arg, &local_variant))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--game came without an argument!\n");
-                exit(-1);
-            }
-            if (!strcmp(argv[arg], "bakers_dozen"))
-            {
-                local_variant = FCS_DBM_VARIANT_BAKERS_DOZEN;
-            }
-            else if (!strcmp(argv[arg], "freecell"))
-            {
-                local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
-            }
-            else
-            {
-                fprintf(stderr, "Unknown game '%s'. Aborting\n", argv[arg]);
-                exit(-1);
-            }
         }
         else if (!strcmp(argv[arg], "--caches-delta"))
         {

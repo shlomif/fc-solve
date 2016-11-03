@@ -380,6 +380,38 @@ static GCC_INLINE void fcs_dbm__cache_store__init(
         &(cache_store->store), dbm_store_path, &(common->tree_recycle_bin));
 #endif
 }
+
+static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
+    const int argc, char **const argv, int *const arg,
+    enum fcs_dbm_variant_type_t *const ptr_local_variant)
+{
+    if (!strcmp(argv[*arg], "--game"))
+    {
+        (*arg)++;
+        if (*arg == argc)
+        {
+            fprintf(stderr, "--game came without an argument!\n");
+            exit(-1);
+        }
+        const_AUTO(name, argv[*arg]);
+        if (!strcmp(name, "bakers_dozen"))
+        {
+            *ptr_local_variant = FCS_DBM_VARIANT_BAKERS_DOZEN;
+        }
+        else if (!strcmp(name, "freecell"))
+        {
+            *ptr_local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+        }
+        else
+        {
+            fprintf(stderr, "Unknown game '%s'. Aborting\n", name);
+            exit(-1);
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
 #ifdef __cplusplus
 }
 #endif
