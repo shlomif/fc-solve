@@ -301,17 +301,16 @@ int DLLEXPORT freecell_solver_user_apply_preset(
     const fcs_preset_t *new_preset_ptr;
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-    const int status1 =
-        fc_solve_get_preset_by_name(preset_name, &new_preset_ptr);
-
+    const_AUTO(
+        status1, fc_solve_get_preset_by_name(preset_name, &new_preset_ptr));
     if (status1 != FCS_PRESET_CODE_OK)
     {
         return status1;
     }
 
     FLARES_LOOP_START()
-    const int status2 =
-        fc_solve_apply_preset_by_ptr(&(flare->obj), new_preset_ptr);
+    const_AUTO(
+        status2, fc_solve_apply_preset_by_ptr(&(flare->obj), new_preset_ptr));
 
     if (status2 != FCS_PRESET_CODE_OK)
     {
