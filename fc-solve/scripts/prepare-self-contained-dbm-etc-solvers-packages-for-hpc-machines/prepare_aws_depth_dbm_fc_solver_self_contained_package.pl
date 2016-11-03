@@ -24,7 +24,7 @@ my $num_threads = $num_cpus;
 my $num_hours = 120;
 
 my $march_flag = "-march=native";
-my $num_freecells = $ENV{NUM_FC} || 2;
+my $num_freecells = $ENV{NUM_FC} || 4;
 
 GetOptions(
     'flto!' => \$flto,
@@ -243,11 +243,23 @@ my @deals = (
 
 =cut
 
-my @deals = (9189909);
+# my @deals = (9189909)
+my @deals =
+(qw/
+219837216
+1252215044
+2255988055
+2901685480
+2902413565
+4260084873
+6687921694
+6825625742
+7489392343
+    /);
 
 foreach my $deal_idx (@deals)
 {
-    system(qq{python $src_path/board_gen/make_pysol_freecell_board.py -t --ms $deal_idx > $dest_dir/$deal_idx.board});
+    system(qq{pi-make-microsoft-freecell-board -t $deal_idx > $dest_dir/$deal_idx.board});
 }
 
 @modules = sort { $a cmp $b } @modules;
