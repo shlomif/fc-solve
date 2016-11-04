@@ -58,7 +58,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
         const_AUTO(coll, &(instance->colls_by_depth[depth]));
-        FCS_INIT_LOCK(coll->queue_lock);
+        FCS_INIT_LOCK(coll->cache_store.queue_lock);
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
         fcs_offloading_queue__init(&(coll->queue), offload_dir_path, depth);
 #else
@@ -82,7 +82,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
         fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
 #endif
         DESTROY_CACHE(coll);
-        FCS_DESTROY_LOCK(coll->queue_lock);
+        FCS_DESTROY_LOCK(coll->cache_store.queue_lock);
     }
     FCS_DESTROY_LOCK(instance->storage_lock);
 }
@@ -137,7 +137,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     while (1)
     {
         /* First of all extract an item. */
-        FCS_LOCK(coll->queue_lock);
+        FCS_LOCK(coll->cache_store.queue_lock);
 
         if (prev_item)
         {
@@ -163,7 +163,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             queue_num_extracted_and_processed =
                 instance->common.queue_num_extracted_and_processed;
         }
-        FCS_UNLOCK(coll->queue_lock);
+        FCS_UNLOCK(coll->cache_store.queue_lock);
 
         if ((instance->common.should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
@@ -292,10 +292,10 @@ static GCC_INLINE void instance_check_key(
 
             /* Now insert it into the queue. */
 
-            FCS_LOCK(coll->queue_lock);
+            FCS_LOCK(coll->cache_store.queue_lock);
             fcs_offloading_queue__insert(
                 &(coll->queue), (const fcs_offloading_queue_item_t *)(&token));
-            FCS_UNLOCK(coll->queue_lock);
+            FCS_UNLOCK(coll->cache_store.queue_lock);
 
             FCS_LOCK(instance->global_lock);
 
