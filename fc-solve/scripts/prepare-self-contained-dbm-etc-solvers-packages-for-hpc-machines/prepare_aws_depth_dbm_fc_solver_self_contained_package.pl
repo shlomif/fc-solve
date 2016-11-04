@@ -292,7 +292,7 @@ JOBS_STAMP = jobs/STAMP
 all: \$(TARGET) \$(JOBS)
 
 \$(TARGET): \$(MODULES)
-\tgcc \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -lgmp -Bstatic -lm -lpthread
+\tgcc \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -lgmp -Bstatic -lm -lpthread -ltcmalloc
 \tstrip \$\@
 
 \$(MODULES): %.o: %.c
