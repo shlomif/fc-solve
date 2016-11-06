@@ -702,7 +702,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t *const instance)
                 }
                 else if (soft_thread->is_befs)
                 {
-                    PQUEUE new_pq;
+                    pri_queue_t new_pq;
                     fc_solve_pq_init(&(new_pq));
                     pq_element_t *const Elements =
                         BEFS_VAR(soft_thread, pqueue).Elements;
@@ -798,7 +798,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
     fcs_tests_by_depth_unit_t *by_depth_units =
         DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units;
 
-#define THE_TESTS_LIST (*the_tests_list_ptr)
+#define THE_MOVE_FUNCS_LIST (*the_tests_list_ptr)
     TRACE0("Before depth loop");
 
 #define GET_DEPTH(ptr) ((ptr)->max_depth)
@@ -887,7 +887,8 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
             derived_states_list->num_states)
         {
             /* Check if we already tried all the tests here. */
-            if (the_soft_dfs_info->tests_list_index == THE_TESTS_LIST.num_lists)
+            if (the_soft_dfs_info->tests_list_index ==
+                THE_MOVE_FUNCS_LIST.num_lists)
             {
                 /* Backtrack to the previous depth. */
 
@@ -999,7 +1000,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                     if (derived)
                     {
                         the_soft_dfs_info->tests_list_index =
-                            THE_TESTS_LIST.num_lists;
+                            THE_MOVE_FUNCS_LIST.num_lists;
                         fc_solve_derived_states_list_add_state(
                             derived_states_list, derived, 0);
                         if (the_soft_dfs_info
@@ -1027,20 +1028,23 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
                 the_soft_dfs_info->tests_list_index;
 
             const fc_solve_state_weighting_t *const weighting =
-                &(THE_TESTS_LIST.lists[orig_tests_list_index].weighting);
+                &(THE_MOVE_FUNCS_LIST.lists[orig_tests_list_index].weighting);
 
-            if (the_soft_dfs_info->tests_list_index < THE_TESTS_LIST.num_lists)
+            if (the_soft_dfs_info->tests_list_index <
+                THE_MOVE_FUNCS_LIST.num_lists)
             {
                 /* Always do the first test */
                 local_shuffling_type =
-                    THE_TESTS_LIST.lists[the_soft_dfs_info->tests_list_index]
+                    THE_MOVE_FUNCS_LIST
+                        .lists[the_soft_dfs_info->tests_list_index]
                         .shuffling_type;
 
                 do
                 {
                     VERIFY_PTR_STATE_TRACE0("Verify Bar");
 
-                    THE_TESTS_LIST.lists[the_soft_dfs_info->tests_list_index]
+                    THE_MOVE_FUNCS_LIST
+                        .lists[the_soft_dfs_info->tests_list_index]
                         .tests[the_soft_dfs_info->move_func_idx](
                             soft_thread, &pass, derived_states_list);
 
@@ -1048,7 +1052,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
                     /* Move the counter to the next test */
                     if ((++the_soft_dfs_info->move_func_idx) ==
-                        THE_TESTS_LIST
+                        THE_MOVE_FUNCS_LIST
                             .lists[the_soft_dfs_info->tests_list_index]
                             .num_move_funcs)
                     {
@@ -1111,7 +1115,8 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 
                     case FCS_WEIGHTING:
                     {
-                        if (orig_tests_list_index < THE_TESTS_LIST.num_lists)
+                        if (orig_tests_list_index <
+                            THE_MOVE_FUNCS_LIST.num_lists)
                         {
                             fcs_derived_states_list_item_t *const
                                 derived_states = derived_states_list->states;

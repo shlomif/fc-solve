@@ -572,7 +572,7 @@ struct fc_solve_soft_thread_struct
                     /*
                      * The priority queue of the BeFS scan
                      * */
-                    PQUEUE pqueue;
+                    pri_queue_t pqueue;
                     fc_solve_state_weighting_t weighting;
                 } befs;
             } meth;

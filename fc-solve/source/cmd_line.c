@@ -51,9 +51,6 @@ static GCC_INLINE void nullify_newline(char *const line)
 }
 
 #define MAX_PATH_LEN 4000
-/* TODO : Perhaps avoid allocating a pointer to args_man_t and instead
- * initialize it in-place.
- * */
 static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
     args_man_t *const args_man, char *const opened_files_dir,
     const char *const user_preset_dir)
