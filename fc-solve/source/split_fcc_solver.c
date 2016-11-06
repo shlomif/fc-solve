@@ -855,9 +855,7 @@ int main(int argc, char *argv[])
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
         ,
-        ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
-                ? FCS_SEQ_BUILT_BY_RANK
-                : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
+        CALC_SEQUENCES_ARE_BUILT_BY()
 #endif
             );
 
