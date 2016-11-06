@@ -14,7 +14,7 @@ use FC_Solve::InlineWrap (
 
 typedef struct
 {
-    PQUEUE pq;
+    pri_queue_t pq;
 } PqInC;
 
 SV* _proto_new() {
@@ -33,7 +33,7 @@ static GCC_INLINE PqInC * deref(SV * const obj) {
     return (PqInC*)SvIV(SvRV(obj));
 }
 
-static GCC_INLINE PQUEUE * q(SV * const obj) {
+static GCC_INLINE pri_queue_t * q(SV * const obj) {
     return &(deref(obj)->pq);
 }
 
