@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 31;
+use Test::More tests => 32;
 use Test::Differences qw/ eq_or_diff /;
 
 use FC_Solve::Paths qw/ bin_exe_raw /;
@@ -164,12 +164,7 @@ _test_ms(
     }
 );
 
-# TEST
-_test_ms(
-    {
-        blurb => "Testing pi-ms-make long seed",
-        cmd => [qw(-t 6000000000)],
-        expected => <<'EOF',
+my $MS6E9 = <<'EOF';
 2D 2C QS 8D KD 8C 4C
 3D AH 2H 4H TS 6H QD
 4D JS AD 6S JH JC JD
@@ -179,6 +174,13 @@ QH 9H 9D 5S 7S 6C
 5C 5H 2S KC 9S 4S
 6D QC 8S TH 7D 8H
 EOF
+
+# TEST
+_test_ms(
+    {
+        blurb => "Testing pi-ms-make long seed",
+        cmd => [qw(-t 6000000000)],
+        expected => $MS6E9,
     }
 );
 
@@ -665,6 +667,15 @@ _test_out(
         blurb => "make_pysol --ms board long seed.",
         cmd => [qw(--ms -t 3000000000)],
         expected => $MS3E9,
+    }
+);
+
+# TEST
+_test_out(
+    {
+        blurb => "make_pysol --ms board even longer (> 4 G) seed.",
+        cmd => [qw(--ms -t 6000000000)],
+        expected => $MS6E9,
     }
 );
 
