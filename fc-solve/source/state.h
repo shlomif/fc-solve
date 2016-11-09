@@ -1066,14 +1066,6 @@ static GCC_INLINE int fc_solve_stack_compare_for_comparison(
         return 0;
     }
 }
-
-#ifdef FCS_USE_ANHOLT_HASH
-static int fc_solve_stack_equal(const void *const v_s1, const void *const v_s2)
-{
-    return (!fc_solve_stack_compare_for_comparison(v_s1, v_s2));
-}
-#endif
-
 #endif
 
 static GCC_INLINE void set_scan_visited(

@@ -411,6 +411,13 @@ static GCC_INLINE void set_next_prelude_item(
         hard_thread, next_item.scan_idx, next_item.quota, st_idx_ptr);
 }
 
+#ifdef FCS_USE_ANHOLT_HASH
+static int fc_solve_stack_equal(const void *const v_s1, const void *const v_s2)
+{
+    return (!fc_solve_stack_compare_for_comparison(v_s1, v_s2));
+}
+#endif
+
 /*
     This function associates a board with an fc_solve_instance_t and
     does other initialisations. After it, you must call
