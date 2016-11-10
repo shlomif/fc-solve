@@ -18,6 +18,7 @@
 #include "rinutils.h"
 #include "output_to_file.h"
 #include "handle_parsing.h"
+#include "read_state.h"
 
 typedef struct
 {
@@ -472,8 +473,6 @@ static freecell_solver_str_t known_parameters[] = {"-h", "--help",
     "--display-parent-iter", "-sel", "--show-exceeded-limits", "-o", "--output",
     "--reset", "--version", NULL};
 
-#define USER_STATE_SIZE 1024
-
 typedef enum {
     SUCCESS = 0,
     ERROR = -1,
@@ -536,8 +535,6 @@ static GCC_INLINE FILE *fc_solve_calc_file_handle(
 
 static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
 {
-    char user_state[USER_STATE_SIZE];
-
     fc_solve_display_information_context_t display_context =
         INITIAL_DISPLAY_CONTEXT;
 
@@ -555,17 +552,15 @@ static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
         freecell_solver_user_free(instance);
         return -1;
     }
-    memset(user_state, '\0', sizeof(user_state));
-    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, f);
-    fclose(f);
 
+    const fcs_user_state_str_t user_state = read_state(f);
 /* Win32 Does not have those signals */
 #ifndef WIN32
     signal(SIGUSR1, command_signal_handler);
     signal(SIGUSR2, select_signal_handler);
     signal(SIGABRT, abort_signal_handler);
 #endif
-    const int ret = solve_board(instance, user_state);
+    const int ret = solve_board(instance, user_state.s);
     exit_code_t exit_code = SUCCESS;
     switch (ret)
     {

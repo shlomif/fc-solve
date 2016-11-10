@@ -284,7 +284,7 @@ static GCC_INLINE void instance__load_coords_from_fh(
     }
 }
 
-#define USER_STATE_SIZE 2000
+#include "read_state.h"
 
 int main(int argc, char *argv[])
 {
@@ -298,14 +298,10 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Could not open file '%s' for input.\n", filename);
         exit(-1);
     }
-    char user_state[USER_STATE_SIZE];
-    memset(user_state, '\0', sizeof(user_state));
-    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, fh);
-    fclose(fh);
-
+    const fcs_user_state_str_t user_state = read_state(fh);
     fcs_state_keyval_pair_t init_state_pair;
     fc_solve_initial_user_state_to_c(
-        user_state, &init_state_pair, FREECELLS_NUM, STACKS_NUM, 1, NULL);
+        user_state.s, &init_state_pair, FREECELLS_NUM, STACKS_NUM, 1, NULL);
 
     fcs_dbm_solver_instance_t instance;
 

@@ -9,8 +9,7 @@
  */
 #pragma once
 #include "render_state.h"
-
-#define USER_STATE_SIZE 2000
+#include "read_state.h"
 typedef struct
 {
     fcs_dbm_solver_thread_t thread;
@@ -169,12 +168,8 @@ static GCC_INLINE void read_state_from_file(
         fprintf(stderr, "Could not open file '%s' for input.\n", filename);
         exit(-1);
     }
-    char user_state[USER_STATE_SIZE];
-    memset(user_state, '\0', sizeof(user_state));
-    fread(user_state, sizeof(user_state[0]), USER_STATE_SIZE - 1, fh);
-    fclose(fh);
-
-    fc_solve_initial_user_state_to_c(user_state, init_state, FREECELLS_NUM,
+    const fcs_user_state_str_t user_state = read_state(fh);
+    fc_solve_initial_user_state_to_c(user_state.s, init_state, FREECELLS_NUM,
         STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
 }
 
