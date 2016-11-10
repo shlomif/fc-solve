@@ -34,7 +34,7 @@ typedef struct
     int sequences_are_built_by;
 #endif
     int num_freecells;
-    int num_columns;
+    size_t num_columns;
     fcs_state_t *init_state, *derived_state;
     int bits_per_orig_cards_in_column;
     int card_states[4 * RANK_KING];

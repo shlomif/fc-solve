@@ -54,14 +54,13 @@ static int fc_solve_get_column_orig_num_cards(
 
 static void fc_solve_delta_stater_init(
     fc_solve_delta_stater_t *const self, fcs_state_t *const init_state,
-    const int num_columns, const int num_freecells
+    const size_t num_columns, const int num_freecells
 #ifndef FCS_FREECELL_ONLY
     ,
     const int sequences_are_built_by
 #endif
     )
 {
-    int col_idx;
     int max_num_cards;
 
 #ifndef FCS_FREECELL_ONLY
@@ -74,7 +73,7 @@ static void fc_solve_delta_stater_init(
     self->init_state = init_state;
 
     max_num_cards = 0;
-    for (col_idx = 0; col_idx < num_columns; col_idx++)
+    for (size_t col_idx = 0; col_idx < num_columns; col_idx++)
     {
         const_AUTO(num_cards, fc_solve_get_column_orig_num_cards(self,
                                   fcs_state_get_col(*init_state, col_idx)));
@@ -219,7 +218,7 @@ static void fc_solve_delta_stater_encode_composite(
     fcs_state_t *const derived = self->derived_state;
 
     const_SLOT(num_columns, self);
-    for (int i = 0; i < num_columns; i++)
+    for (size_t i = 0; i < num_columns; i++)
     {
         cols_indexes[i] = i;
         fc_solve_get_column_encoding_composite(self, i, &(cols[i]));
@@ -315,7 +314,7 @@ static void fc_solve_delta_stater_encode_composite(
     }
 
     fc_solve_get_freecells_encoding(self, bit_w);
-    for (int i = 0; i < num_columns; i++)
+    for (size_t i = 0; i < num_columns; i++)
     {
         const fc_solve_column_encoding_composite_t *const col_enc =
             (cols + cols_indexes[i]);
@@ -365,7 +364,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
     const_SLOT(num_columns, self);
     const fcs_state_t *const init_state = self->init_state;
 
-    for (int col_idx = 0; col_idx < num_columns; col_idx++)
+    for (size_t col_idx = 0; col_idx < num_columns; col_idx++)
     {
         const fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
         const int num_orig_cards =

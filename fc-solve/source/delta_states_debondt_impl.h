@@ -57,7 +57,7 @@ enum
 static void fc_solve_debondt_delta_stater_init(
     fc_solve_debondt_delta_stater_t *const self,
     const fcs_dbm_variant_type_t local_variant, fcs_state_t *const init_state,
-    const int num_columns, const int num_freecells
+    const size_t num_columns, const int num_freecells
 #ifndef FCS_FREECELL_ONLY
     ,
     const int sequences_are_built_by
@@ -81,7 +81,7 @@ static void fc_solve_debondt_delta_stater_init(
 
     if (IS_BAKERS_DOZEN())
     {
-        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
+        for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
             const fcs_cards_column_t col =
                 fcs_state_get_col(*init_state, col_idx);
@@ -222,7 +222,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
     if (IS_BAKERS_DOZEN())
     {
-        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
+        for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
             const fcs_cards_column_t col = fcs_state_get_col(*derived, col_idx);
             const int col_len = fcs_col_len(col);
@@ -265,7 +265,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     }
     else
     {
-        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
+        for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
             const fcs_cards_column_t col = fcs_state_get_col(*derived, col_idx);
             const int col_len = fcs_col_len(col);
@@ -422,7 +422,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
     memset(orig_top_most_cards, '\0', sizeof(orig_top_most_cards));
     {
-        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
+        for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
             const fcs_cards_column_t col =
                 fcs_state_get_col(*init_state, col_idx);
@@ -523,77 +523,75 @@ static void fc_solve_debondt_delta_stater_decode(
         fcs_empty_freecell(*ret, next_freecell_idx);
     }
 
+    for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
     {
-        for (int col_idx = 0; col_idx < self->num_columns; col_idx++)
+        fcs_card_t top_card;
+        int top_opt;
+
+        fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
+        const fcs_cards_column_t orig_col =
+            fcs_state_get_col(*init_state, col_idx);
+        const_AUTO(orig_col_len, fcs_col_len(orig_col));
+
+        if (orig_col_len)
         {
-            fcs_card_t top_card;
-            int top_opt;
+            top_card = fcs_col_get_card(orig_col, 0);
+            top_opt = self->card_states[CARD_POS(top_card)];
+        }
+        else
+        {
+            top_card = fc_solve_empty_card;
+            top_opt = -1;
+        }
 
-            fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
-            const fcs_cards_column_t orig_col =
-                fcs_state_get_col(*init_state, col_idx);
-            const_AUTO(orig_col_len, fcs_col_len(orig_col));
-
-            if (orig_col_len)
+        if (fcs_card_is_empty(top_card) ||
+            (!((top_opt == OPT_TOPMOST) || (top_opt == orig_pos_opt))))
+        {
+            if (next_new_top_most_cards > 0)
             {
-                top_card = fcs_col_get_card(orig_col, 0);
-                top_opt = self->card_states[CARD_POS(top_card)];
-            }
-            else
-            {
-                top_card = fc_solve_empty_card;
-                top_opt = -1;
-            }
-
-            if (fcs_card_is_empty(top_card) ||
-                (!((top_opt == OPT_TOPMOST) || (top_opt == orig_pos_opt))))
-            {
-                if (next_new_top_most_cards > 0)
-                {
-                    fcs_col_push_card(
-                        col, new_top_most_cards[--next_new_top_most_cards]);
-
-                    fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
-                        self, local_variant, &col);
-                }
-            }
-            else
-            {
-                fcs_card_t parent_card;
-                int pos;
-
-                fcs_col_push_card(col, top_card);
-
-                parent_card = top_card;
-
-                for (pos = 1; pos < orig_col_len; pos++)
-                {
-                    fcs_card_t child_card;
-
-                    child_card = fcs_col_get_card(orig_col, pos);
-
-                    if ((!IS_IN_FOUNDATIONS(child_card)) &&
-                        (self->card_states[CARD_POS(child_card)] ==
-                            calc_child_card_option(
-                                local_variant, parent_card, child_card
-#ifndef FCS_FREECELL_ONLY
-                                ,
-                                self->sequences_are_built_by
-#endif
-                                )))
-                    {
-                        fcs_col_push_card(col, child_card);
-                        parent_card = child_card;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                fcs_col_push_card(
+                    col, new_top_most_cards[--next_new_top_most_cards]);
 
                 fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
                     self, local_variant, &col);
             }
+        }
+        else
+        {
+            fcs_card_t parent_card;
+            int pos;
+
+            fcs_col_push_card(col, top_card);
+
+            parent_card = top_card;
+
+            for (pos = 1; pos < orig_col_len; pos++)
+            {
+                fcs_card_t child_card;
+
+                child_card = fcs_col_get_card(orig_col, pos);
+
+                if ((!IS_IN_FOUNDATIONS(child_card)) &&
+                    (self->card_states[CARD_POS(child_card)] ==
+                        calc_child_card_option(
+                            local_variant, parent_card, child_card
+#ifndef FCS_FREECELL_ONLY
+                            ,
+                            self->sequences_are_built_by
+#endif
+                            )))
+                {
+                    fcs_col_push_card(col, child_card);
+                    parent_card = child_card;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
+                self, local_variant, &col);
         }
     }
 #undef IS_IN_FOUNDATIONS

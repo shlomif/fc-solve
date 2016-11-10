@@ -32,7 +32,7 @@ extern "C" {
 #ifdef FCS_FREECELL_ONLY
 static GCC_INLINE void fc_solve_delta_stater_init(
     fc_solve_debondt_delta_stater_t *const delta, fcs_state_t *const init_state,
-    const int num_columns, const int num_freecells)
+    const size_t num_columns, const int num_freecells)
 {
     return fc_solve_debondt_delta_stater_init(delta,
         FCS_DBM_VARIANT_2FC_FREECELL, init_state, num_columns, num_freecells);
@@ -40,7 +40,7 @@ static GCC_INLINE void fc_solve_delta_stater_init(
 #else
 static GCC_INLINE void fc_solve_delta_stater_init(
     fc_solve_debondt_delta_stater_t *const delta, fcs_state_t *const init_state,
-    const int num_columns, const int num_freecells,
+    const size_t num_columns, const int num_freecells,
     const int sequences_are_built_by)
 {
     return fc_solve_debondt_delta_stater_init(delta,
