@@ -166,7 +166,11 @@ dummy:
 
 
 #<<<OBJECTS.START
-OBJECTS :=                     \
+GEN_C_OBJECTS := \
+	move_funcs_maps.o   \
+	rate_state.o        \
+
+SOURCE_OBJECTS :=             \
           card.o              \
           check_and_add_state.o \
           cmd_line.o          \
@@ -175,15 +179,18 @@ OBJECTS :=                     \
           lib.o               \
           meta_alloc.o        \
           move.o              \
-          move_funcs_maps.o   \
           move_funcs_order.o  \
-          rate_state.o        \
           scans.o             \
           split_cmd_line.o    \
           state.o             \
 
-
+MAIN_OBJECT := main.o
+T_MAIN_OBJECT := test_multi_parallel.o
+THR_MAIN_OBJECT := threaded_range_solver.o
+FORK_MAIN_OBJECT := forking_range_solver.o
 #>>>OBJECTS.END
+
+OBJECTS := $(GEN_C_OBJECTS) $(SOURCE_OBJECTS)
 
 PAT_OBJECTS = \
 		  param.o \
@@ -205,10 +212,12 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 
 -include $(DEP_FILES)
 
-%.o: $(SRC_DIR)/%.c
+FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o fc_pro_iface_aux.o
+
+$(SOURCE_OBJECTS) $(MAIN_OBJECT) $(T_MAIN_OBJECT) $(THR_MAIN_OBJECT) $(FORK_MAIN_OBJECT) $(FC_PRO_OBJS): %.o: $(SRC_DIR)/%.c
 	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $< $(END_OFLAGS)
 
-move_funcs_maps.o rate_state.o: %.o: %.c
+$(GEN_C_OBJECTS): %.o: %.c
 	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $< $(END_OFLAGS)
 
 $(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
@@ -244,19 +253,18 @@ endif
 LIB_LINK_POST := -rdynamic libfcs.a
 # LIB_LINK_POST := -l$(STATIC_LIB_BASE)
 
-fc-solve: main.o $(STATIC_LIB)
+fc-solve: $(MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
-freecell-solver-range-parallel-solve: test_multi_parallel.o $(STATIC_LIB)
+freecell-solver-range-parallel-solve: $(T_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
-freecell-solver-multi-thread-solve: threaded_range_solver.o $(STATIC_LIB)
+freecell-solver-multi-thread-solve: $(THR_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS)
 
-freecell-solver-fork-solve: forking_range_solver.o $(STATIC_LIB)
+freecell-solver-fork-solve: $(FORK_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
-FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o fc_pro_iface_aux.o
 
 freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FC_PRO_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
