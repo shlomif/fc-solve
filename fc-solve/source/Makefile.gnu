@@ -36,17 +36,19 @@ AR := ar
 RANLIB := ranlib
 END_LFLAGS := -lm -Wl,-rpath,::::::::::::::::::::::::::
 
+STD_FLAG := -std=gnu11
+
 ifeq ($(COMPILER),gcc)
 	CC = gcc
 	GCC_COMPAT := 1
-	CFLAGS += -std=gnu99
+	CFLAGS += $(STD_FLAG)
 else ifeq ($(COMPILER),clang)
 	CC = clang
 	GCC_COMPAT := 1
 	GOLD = -fuse-ld=gold
 	END_LFLAGS += $(GOLD)
-	# CFLAGS += -Werror=implicit-function-declaration -std=gnu99 -fuse-ld=gold
-	CFLAGS += -Werror=implicit-function-declaration -std=gnu99 -fPIC $(GOLD)
+	# CFLAGS += -Werror=implicit-function-declaration $(STD_FLAG) -fuse-ld=gold
+	CFLAGS += -Werror=implicit-function-declaration $(STD_FLAG) -fPIC $(GOLD)
 	# LTO_FLAGS := -flto
 	# LTO_FLAGS :=
 	AR := llvm-ar
@@ -204,6 +206,9 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 -include $(DEP_FILES)
 
 %.o: $(SRC_DIR)/%.c
+	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $< $(END_OFLAGS)
+
+move_funcs_maps.o rate_state.o: %.o: %.c
 	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $< $(END_OFLAGS)
 
 $(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
