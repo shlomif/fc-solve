@@ -15,14 +15,17 @@ EMBED_FILE_MUNGE_PL = $(SRC_DIR)/scripts/emscripten-embed-munge.pl
 
 PATS_C_FILES = $(patsubst %,patsolve-shlomif/patsolve/%,param.c pat.c patsolve.c tree.c)
 
-LIB_C_FILES = scans.c lib.c preset.c instance.c move_funcs_order.c  move_funcs_maps.c meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c rate_state.c gen_ms_boards__hll_iface.c hacks_for_hlls.c $(PATS_C_FILES)
+LIB_C_FILES = scans.c lib.c preset.c instance.c move_funcs_order.c   meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c gen_ms_boards__hll_iface.c hacks_for_hlls.c $(PATS_C_FILES)
 
+CMAKE_C_FILES = move_funcs_maps.c rate_state.c
 C_FILES = main.c $(LIB_C_FILES)
 
 
 SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
+SRC_CMAKE_C_FILES = $(patsubst %.c,$(CMAKE_DIR)/%.c,$(CMAKE_C_FILES))
 LLVM_BITCODE_FILES = $(patsubst %.c,%.bc,$(C_FILES))
 LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.bc,$(LIB_C_FILES))
+LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.bc,$(CMAKE_C_FILES))
 
 all: $(RESULT_NODE_JS_EXE) $(RESULT_JS_LIB)
 
@@ -65,13 +68,16 @@ PRESET_FILES_LOCAL := $(shell perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR) $(PRES
 
 EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
 
+$(LLVM_BITCODE_CMAKE_FILES): %.bc: $(CMAKE_DIR)/%.c
+	emcc $(EMCC_CFLAGS) $< -c -o $@
+
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	mkdir -p "$$(dirname "$@")"
 	emcc $(EMCC_CFLAGS) $< -c -o $@
 
 .PHONY: llvm_and_files
 
-llvm_and_files: $(LLVM_BITCODE_FILES)
+llvm_and_files: $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
 
 $(RESULT_HTML): llvm_and_files
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(EMCC_POST_FLAGS)
@@ -80,7 +86,7 @@ $(RESULT_NODE_JS_EXE): llvm_and_files
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(EMCC_POST_FLAGS)
 
 $(RESULT_JS_LIB): llvm_and_files
-	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(EMCC_POST_FLAGS)
+	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_HTML) $(RESULT_NODE_JS_EXE)

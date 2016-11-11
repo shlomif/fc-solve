@@ -169,24 +169,29 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
     )
 ENDIF ()
 
+SET (_gen_c_files )
+
 SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_presets.pl")
 SET (presets_gen_output "${CMAKE_CURRENT_BINARY_DIR}/fcs_presets_generated.h")
 SET (presets_gen_args "${presets_gen}" "--mode=c" "--output" "${presets_gen_output}")
+LIST (APPEND _gen_c_files "${presets_gen_output}")
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
 ADD_CUSTOM_COMMAND(
     OUTPUT "${presets_gen_output}"
-    COMMAND "perl"
+    COMMAND "${PERL_EXECUTABLE}"
     ARGS ${presets_gen_args}
     DEPENDS "${presets_gen}"
 )
 SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_rate_state_c.pl")
 SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
+SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c")
+LIST (APPEND _gen_c_files "${rate_state_output}")
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
 ADD_CUSTOM_COMMAND(
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c"
-    COMMAND "perl"
+    OUTPUT "${rate_state_output}"
+    COMMAND "${PERL_EXECUTABLE}"
     ARGS ${rate_state_args}
     DEPENDS "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.h"
 )
@@ -206,11 +211,13 @@ SET (patsolve_modules
 SET (CL_INC_H "cmd_line_inc.h")
 SET (BIN_CL_INC_H "${CMAKE_CURRENT_BINARY_DIR}/${CL_INC_H}")
 SET (CL_INC_SCRIPT "scripts/gen-cmd-line-radix-tree.pl")
+SET (cl_enum_h "${CMAKE_CURRENT_BINARY_DIR}/cmd_line_enum.h")
 
+LIST (APPEND _gen_c_files "${BIN_CL_INC_H}" "${cl_enum_h}")
 ADD_CUSTOM_COMMAND(
     OUTPUT
         "${BIN_CL_INC_H}"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmd_line_enum.h"
+        "${cl_enum_h}"
     COMMAND "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_SCRIPT}"
     DEPENDS "${CL_INC_SCRIPT}"
 )
@@ -219,12 +226,21 @@ SET (MOVE_C move_funcs_maps.c)
 SET (MOVE_H move_funcs_maps.h)
 SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_move_funcs.pl")
 
+LIST (APPEND _gen_c_files
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}")
+
 ADD_CUSTOM_COMMAND(
     OUTPUT
         "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
         "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}"
     COMMAND "${PERL_EXECUTABLE}" "${MOVE_GEN}"
     DEPENDS "${MOVE_GEN}"
+)
+
+ADD_CUSTOM_TARGET(
+    generate_c_files
+    DEPENDS ${_gen_c_files}
 )
 
 SET (FREECELL_SOLVER_LIB_MODULES
