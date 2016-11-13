@@ -431,23 +431,22 @@ static GCC_INLINE fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
     const size_t false_seq_index_limit =
         num_separate_false_seqs + (should_src_col ? 1 : 0);
 
-    int false_seq_index;
+    int false_seq_idx;
 
-    for (false_seq_index = 0; false_seq_index < false_seq_index_limit;
-         false_seq_index++)
+    for (false_seq_idx = 0; false_seq_idx < false_seq_index_limit;
+         false_seq_idx++)
     {
         const fcs_bool_t is_ultimate_iter =
-            (false_seq_index == num_separate_false_seqs);
+            (false_seq_idx == num_separate_false_seqs);
 
         /* Find a suitable place to put it */
         const fcs_card_t the_card =
-            is_ultimate_iter
-                ? src_card
-                : fcs_col_get_card(col, seqs->seq_points[false_seq_index]);
+            is_ultimate_iter ? src_card : fcs_col_get_card(col,
+                                              seqs->seq_points[false_seq_idx]);
 
         const size_t the_num_true_seqs =
             is_ultimate_iter ? num_src_junk_true_seqs
-                             : seqs->above_num_true_seqs[false_seq_index];
+                             : seqs->above_num_true_seqs[false_seq_idx];
 
         /* Let's try to find a suitable parent on top one of the stacks */
         int clear_junk_dest_stack;
@@ -503,11 +502,11 @@ static GCC_INLINE fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
             after_junk_num_freestacks--;
         }
 
-        seqs->junk_move_to_stacks[false_seq_index] = clear_junk_dest_stack;
+        seqs->junk_move_to_stacks[false_seq_idx] = clear_junk_dest_stack;
     }
 
     seqs->after_junk_num_freestacks = after_junk_num_freestacks;
-    return (false_seq_index == false_seq_index_limit);
+    return (false_seq_idx == false_seq_index_limit);
 }
 
 static GCC_INLINE fcs_bool_t false_seq_index_loop(const int stacks_num,
@@ -576,8 +575,6 @@ DECLARE_MOVE_FUNCTION(
      *      on this stack or is it already taken.
      * junk_move_to_stacks[] - the stacks to move each false sequence of the
      *      junk to.
-     * false_seq_index - an iterator to hold the index of the current false
-     *      sequence.
      * after_junk_num_freestacks - this variable holds the number of stacks
      *      that remained unoccupied during and after the process of moving
      *      the junk sequences to different stacks.
@@ -774,8 +771,6 @@ DECLARE_MOVE_FUNCTION(
      * num_separate_false_seqs - the number of false sequences
      * seq_points[] - the places in which the false sequences of the junk begin
      *      and end
-     * false_seq_index - an iterator that marks the index of the current
-     *      false sequence
      * stacks_map[] - a map of booleans that indicates if one can place a card
      *      on this stack or is already taken.
      * above_num_true_seqs[] - the number of true sequences in each false
@@ -918,8 +913,6 @@ DECLARE_MOVE_FUNCTION(
      *      on this stack or is it already taken.
      * junk_move_to_stacks[] - the stacks to move each false sequence of the
      *      junk to.
-     * false_seq_index - an iterator to hold the index of the current false
-     *      sequence.
      * after_junk_num_freestacks - a variable that holds the number of stacks
      *      that are left unoccupied as part of the junk disposal process.
      *
