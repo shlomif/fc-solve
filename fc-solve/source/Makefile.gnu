@@ -181,6 +181,7 @@ SOURCE_OBJECTS :=             \
           move.o              \
           move_funcs_order.o  \
           scans.o             \
+          set.o               \
           split_cmd_line.o    \
           state.o             \
 
