@@ -304,12 +304,9 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
         {
             const fcs_bool_t is_reversible =
                 (derived_iter->core_irreversible_moves_count == 0);
-            unsigned char extra_move;
-
             fcs_init_and_encode_state(&delta_stater, local_variant,
                 &(derived_iter->state), &(new_item->key));
-
-            extra_move = derived_iter->move;
+            const_AUTO(extra_move, derived_iter->move);
 
             if (!(is_reversible
                         ? (fc_solve_kaz_tree_lookup_value(

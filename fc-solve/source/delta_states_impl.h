@@ -226,7 +226,7 @@ static void fc_solve_delta_stater_encode_composite(
 
     {
         int non_orig_idx = 0;
-        int empty_idx = num_columns - 1;
+        int empty_col_idx = num_columns - 1;
 
         /*
          * Move the empty columns to the front, but only within the
@@ -249,25 +249,25 @@ static void fc_solve_delta_stater_encode_composite(
                 break;
             }
 
-            for (; empty_idx >= 0; empty_idx--)
+            for (; empty_col_idx >= 0; empty_col_idx--)
             {
-                if (cols[empty_idx].type == COL_TYPE_EMPTY)
+                if (cols[empty_col_idx].type == COL_TYPE_EMPTY)
                 {
                     break;
                 }
             }
 
-            if ((empty_idx < 0) || (empty_idx < non_orig_idx))
+            if ((empty_col_idx < 0) || (empty_col_idx < non_orig_idx))
             {
                 break;
             }
 
             const_AUTO(swap_int, cols_indexes[non_orig_idx]);
-            cols_indexes[non_orig_idx] = cols_indexes[empty_idx];
-            cols_indexes[empty_idx] = swap_int;
+            cols_indexes[non_orig_idx] = cols_indexes[empty_col_idx];
+            cols_indexes[empty_col_idx] = swap_int;
 
             non_orig_idx++;
-            empty_idx--;
+            empty_col_idx--;
         }
     }
 
