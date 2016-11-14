@@ -350,7 +350,7 @@ export class Foundations {
         return this.ranks[suit];
     }
 
-    setByIdx(deck: number, suit: number, rank: number) {
+    setByIdx(deck: number, suit: number, rank: number): boolean {
         this._validateDeckSuit(deck, suit);
 
         if (!is_int(rank)) {
@@ -360,9 +360,14 @@ export class Foundations {
         if (! ((rank >=0 ) && (rank <= 13))) {
             throw "rank is out of range.";
         }
+
+        if (this.ranks[suit] >= 0) {
+            return false;
+        }
+
         this.ranks[suit] = rank;
 
-        return;
+        return true;
     }
 
 };

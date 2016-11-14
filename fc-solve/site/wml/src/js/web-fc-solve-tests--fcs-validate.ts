@@ -143,7 +143,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Freecells class tests", function(a: Assert) {
-        a.expect(45);
+        a.expect(46);
 
         {
             var start_char_idx = 10;
@@ -363,7 +363,8 @@ export function test_fcs_validate()
             // TEST
             a.equal(f.getByIdx(0,0), (-1), "founds.getByIdx works.");
 
-            f.setByIdx(0,0,0);
+            // TEST
+            a.equal(f.setByIdx(0,0,0), true, "founds.setByIdx works.");
             // TEST
             a.equal(f.getByIdx(0,0), 0, "founds.getByIdx works after assignment.");
 
