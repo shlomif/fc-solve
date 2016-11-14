@@ -327,7 +327,7 @@ export class Foundations {
     private ranks: Array<number>;
 
     constructor() {
-        this.ranks = [0,0,0,0];
+        this.ranks = [-1,-1,-1,-1];
     }
 
     getByIdx(deck: number, suit: number) {

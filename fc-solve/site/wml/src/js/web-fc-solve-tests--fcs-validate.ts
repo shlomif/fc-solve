@@ -361,7 +361,7 @@ export function test_fcs_validate()
             var f = new Foundations();
 
             // TEST
-            a.equal(f.getByIdx(0,0), 0, "founds.getByIdx works.");
+            a.equal(f.getByIdx(0,0), (-1), "founds.getByIdx works.");
         }
     });
 }
