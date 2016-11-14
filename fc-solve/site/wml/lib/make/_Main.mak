@@ -1,4 +1,6 @@
 
+SHELL = /bin/bash
+
 all: dummy
 
 include rules.mak
@@ -197,6 +199,14 @@ $(TS_CHART_DEST): $(D)/%.js: src/%.ts
 	tsc --module amd --out $@ src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
+
+FC_PRO_4FC_DUMPS = $(filter charts/fc-pro--4fc-intractable-deals--report/data/%.dump.txt,$(SRC_IMAGES))
+FC_PRO_4FC_TSVS = $(patsubst %.dump.txt,$(D)/%.tsv,$(FC_PRO_4FC_DUMPS))
+
+$(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
+	perl ../../scripts/convert-dbm-fc-solver-log-to-tsv.pl <(< "$<" perl -lapE 's#[^\t]*\t##') | perl -lanE 'print join"\t",@F[0,2]' > "$@"
+
+all: $(FC_PRO_4FC_TSVS)
 
 .PHONY:
 
