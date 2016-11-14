@@ -322,3 +322,25 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
 
     return make_ret(true, '');
 }
+
+export class Foundations {
+    private ranks: Array<number>;
+
+    constructor() {
+        this.ranks = [0,0,0,0];
+    }
+
+    getByIdx(deck: number, suit: number) {
+        if (deck != 0) {
+            throw "multiple decks are not supported.";
+        }
+        if (!is_int(suit)) {
+            throw "suit is not an integer.";
+        }
+        if (! ((suit >= 0) && (suit < 4))) {
+            throw "suit is out of range.";
+        }
+        return this.ranks[suit];
+    }
+};
+

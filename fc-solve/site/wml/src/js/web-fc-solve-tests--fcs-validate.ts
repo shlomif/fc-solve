@@ -1,4 +1,4 @@
-import { fcs_js__freecells_from_string, fcs_js__column_from_string, fcs_js__card_from_string } from "./fcs-validate";
+import { fcs_js__freecells_from_string, fcs_js__column_from_string, fcs_js__card_from_string, Foundations } from "./fcs-validate";
 
 export function test_fcs_validate()
 {
@@ -143,7 +143,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Freecells class tests", function(a: Assert) {
-        a.expect(43);
+        a.expect(44);
 
         {
             var start_char_idx = 10;
@@ -355,6 +355,13 @@ export function test_fcs_validate()
 
             // TEST
             a.ok (result.error.match(/^Wrong line prefix/), "err-str");
+        }
+
+        {
+            var f = new Foundations();
+
+            // TEST
+            a.equal(f.getByIdx(0,0), 0, "founds.getByIdx works.");
         }
     });
 }
