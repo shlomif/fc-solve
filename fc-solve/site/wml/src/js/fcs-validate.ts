@@ -330,7 +330,7 @@ export class Foundations {
         this.ranks = [-1,-1,-1,-1];
     }
 
-    getByIdx(deck: number, suit: number) {
+    private _validateDeckSuit(deck: number, suit: number) {
         if (deck != 0) {
             throw "multiple decks are not supported.";
         }
@@ -340,7 +340,30 @@ export class Foundations {
         if (! ((suit >= 0) && (suit < 4))) {
             throw "suit is out of range.";
         }
+
+        return;
+    }
+
+
+    getByIdx(deck: number, suit: number) {
+        this._validateDeckSuit(deck, suit);
         return this.ranks[suit];
     }
+
+    setByIdx(deck: number, suit: number, rank: number) {
+        this._validateDeckSuit(deck, suit);
+
+        if (!is_int(rank)) {
+            throw "Rank must be an integer.";
+        }
+
+        if (! ((rank >=0 ) && (rank <= 13))) {
+            throw "rank is out of range.";
+        }
+        this.ranks[suit] = rank;
+
+        return;
+    }
+
 };
 
