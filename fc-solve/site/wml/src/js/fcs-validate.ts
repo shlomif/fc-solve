@@ -372,3 +372,13 @@ export class Foundations {
 
 };
 
+class FoundationsParseResult extends BaseResult {
+    public foundations: Foundations;
+
+    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, foundations: Foundations) {
+        super(is_correct, start_char_idx, num_consumed_chars, error);
+        if (is_correct) {
+            this.foundations = foundations;
+        }
+    }
+}
