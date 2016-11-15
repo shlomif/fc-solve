@@ -143,7 +143,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Freecells class tests", function(a: Assert) {
-        a.expect(48);
+        a.expect(52);
 
         {
             var start_char_idx = 10;
@@ -372,6 +372,20 @@ export function test_fcs_validate()
             // TEST
             a.equal(f.getByIdx(0,0), 0, "founds.getByIdx assigned only once.");
 
+        }
+        {
+            var f = new Foundations();
+
+            // TEST
+            a.equal(f.setByIdx(0,2,11), true, "founds.setByIdx #2.");
+
+            // TEST
+            a.equal(f.getByIdx(0,0), -1, "founds.getByIdx works.");
+
+            // TEST
+            a.equal(f.getByIdx(0,2), 11, "founds.getByIdx works after assignment.");
+            // TEST
+            a.equal(f.setByIdx(0,2,11), false, "founds.setByIdx does not assign again.");
         }
     });
 }
