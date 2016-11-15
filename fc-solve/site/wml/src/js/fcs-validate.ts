@@ -102,8 +102,9 @@ class Column {
 }
 
 
-
-var card_re:string = '([A23456789TJQK])([HCDS])';
+const suit_re: string = '[HCDS]';
+const rank_re: string = '[A23456789TJQK]';
+const card_re: string = '(' + rank_re + ')(' + suit_re + ')';
 export function fcs_js__card_from_string(s: string): Card {
     var m = s.match('^' + card_re + '$');
     if (! m) {
@@ -370,6 +371,15 @@ export class Foundations {
         return true;
     }
 
+    finalize(): void {
+        var that = this;
+        for (var i = 0; i < 4; i++) {
+            if (that.getByIdx(0,i) < 0) {
+                that.setByIdx(0,i,0);
+            }
+        }
+        return;
+    }
 };
 
 class FoundationsParseResult extends BaseResult {
@@ -381,4 +391,39 @@ class FoundationsParseResult extends BaseResult {
             this.foundations = foundations;
         }
     }
+}
+
+export function fcs_js__foundations_from_string(num_decks: number, start_char_idx: number, orig_s: string): FoundationsParseResult {
+
+    if (num_decks != 1) {
+        throw "Can only handle 1 decks.";
+    }
+
+    var p = new StringParser(orig_s);
+    var founds = new Foundations;
+
+    function make_ret (verdict: boolean, err_str: string) {
+        if (verdict) {
+            founds.finalize();
+        }
+        return new FoundationsParseResult(verdict, start_char_idx, p.getConsumed(), err_str, founds);
+    }
+
+    if (!p.consume_match(/^(Foundations\:)/)) {
+        return make_ret(false, 'Wrong line prefix for freecells - should be "Freecells:"');
+    }
+
+    while (p.isNotEmpty()) {
+        if (p.consume_match(/^( *)$/)) {
+            break;
+        }
+        var m = p.consume_match("^( +(" + suit_re + ")-(" + rank_re + "))");
+        if (! m) {
+            return make_ret(false, "Could not match a foundation string [HCDS]-[A23456789TJQK]");
+        }
+        if (!founds.setByIdx(0, _suits__str_to_int[m[1]], _ranks__str_to_int[m[2]])) {
+            return make_ret(false, "Suit \"" + m[1] + "\" was already set.");
+        }
+    }
+    return make_ret(true, '');
 }
