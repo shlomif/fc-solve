@@ -143,7 +143,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state Freecells class tests", function(a: Assert) {
-        a.expect(52);
+        a.expect(43);
 
         {
             var start_char_idx = 10;
@@ -357,6 +357,9 @@ export function test_fcs_validate()
             a.ok (result.error.match(/^Wrong line prefix/), "err-str");
         }
 
+    });
+    QUnit.test("verify_state Foundations class tests", function(a: Assert) {
+        a.expect(9);
         {
             var f = new Foundations();
 
