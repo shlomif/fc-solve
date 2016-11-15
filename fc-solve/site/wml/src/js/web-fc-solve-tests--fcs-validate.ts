@@ -359,7 +359,7 @@ export function test_fcs_validate()
 
     });
     QUnit.test("verify_state Foundations class tests", function(a: Assert) {
-        a.expect(16);
+        a.expect(18);
         {
             var f = new Foundations();
 
@@ -425,6 +425,19 @@ export function test_fcs_validate()
             a.equal( result.foundations.getByIdx(0, SPADES), QUEEN, "foundations is correct.");
             // TEST
             a.equal( result.foundations.getByIdx(0, 1), 0, "foundations is correct.");
+
+        }
+
+        {
+            const start_char_idx = 17;
+            const str = "Foundations: C-5 C-2\n";
+            const result = fcs_js__foundations_from_string(1, start_char_idx, str);
+
+            // TEST
+            a.notOk( result.is_correct, "not correct.");
+
+            // TEST
+            a.equal( result.error, 'Suit "C" was already set.', "error string for dup suit.");
 
         }
     });
