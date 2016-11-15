@@ -359,7 +359,7 @@ export function test_fcs_validate()
 
     });
     QUnit.test("verify_state Foundations class tests", function(a: Assert) {
-        a.expect(12);
+        a.expect(16);
         {
             var f = new Foundations();
 
@@ -403,6 +403,26 @@ export function test_fcs_validate()
             const HEARTS = 0;
             // TEST
             a.equal( result.foundations.getByIdx(0, HEARTS), 1, "foundations is correct.");
+            // TEST
+            a.equal( result.foundations.getByIdx(0, 1), 0, "foundations is correct.");
+        }
+
+        {
+            const start_char_idx = 20;
+            const str = "Foundations:    S-Q        H-A\n";
+            const result = fcs_js__foundations_from_string(1, start_char_idx, str);
+
+            // TEST
+            a.ok( result.is_correct, "is correct.");
+
+            const HEARTS = 0;
+            const SPADES = 3;
+            const QUEEN = 12;
+
+            // TEST
+            a.equal( result.foundations.getByIdx(0, HEARTS), 1, "foundations is correct.");
+            // TEST
+            a.equal( result.foundations.getByIdx(0, SPADES), QUEEN, "foundations is correct.");
             // TEST
             a.equal( result.foundations.getByIdx(0, 1), 0, "foundations is correct.");
 
