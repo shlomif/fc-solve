@@ -414,15 +414,16 @@ export function fcs_js__foundations_from_string(num_decks: number, start_char_id
     }
 
     while (p.isNotEmpty()) {
-        if (p.consume_match(/^( *)$/)) {
+        if (p.consume_match(/^( *\n?)$/)) {
             break;
         }
         var m = p.consume_match("^( +(" + suit_re + ")-(" + rank_re + "))");
         if (! m) {
             return make_ret(false, "Could not match a foundation string [HCDS]-[A23456789TJQK]");
         }
-        if (!founds.setByIdx(0, _suits__str_to_int[m[1]], _ranks__str_to_int[m[2]])) {
-            return make_ret(false, "Suit \"" + m[1] + "\" was already set.");
+        const suit = m[2];
+        if (!founds.setByIdx(0, _suits__str_to_int[suit], _ranks__str_to_int[m[3]])) {
+            return make_ret(false, "Suit \"" + suit + "\" was already set.");
         }
     }
     return make_ret(true, '');

@@ -1,4 +1,4 @@
-import { fcs_js__freecells_from_string, fcs_js__column_from_string, fcs_js__card_from_string, Foundations } from "./fcs-validate";
+import { fcs_js__foundations_from_string, fcs_js__freecells_from_string, fcs_js__column_from_string, fcs_js__card_from_string, Foundations } from "./fcs-validate";
 
 export function test_fcs_validate()
 {
@@ -359,7 +359,7 @@ export function test_fcs_validate()
 
     });
     QUnit.test("verify_state Foundations class tests", function(a: Assert) {
-        a.expect(9);
+        a.expect(12);
         {
             var f = new Foundations();
 
@@ -376,6 +376,7 @@ export function test_fcs_validate()
             a.equal(f.getByIdx(0,0), 0, "founds.getByIdx assigned only once.");
 
         }
+
         {
             var f = new Foundations();
 
@@ -389,6 +390,22 @@ export function test_fcs_validate()
             a.equal(f.getByIdx(0,2), 11, "founds.getByIdx works after assignment.");
             // TEST
             a.equal(f.setByIdx(0,2,11), false, "founds.setByIdx does not assign again.");
+        }
+
+        {
+            const start_char_idx = 10;
+            const str = "Foundations: H-A\n";
+            const result = fcs_js__foundations_from_string(1, start_char_idx, str);
+
+            // TEST
+            a.ok( result.is_correct, "is correct.");
+
+            const HEARTS = 0;
+            // TEST
+            a.equal( result.foundations.getByIdx(0, HEARTS), 1, "foundations is correct.");
+            // TEST
+            a.equal( result.foundations.getByIdx(0, 1), 0, "foundations is correct.");
+
         }
     });
 }
