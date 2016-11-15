@@ -327,7 +327,7 @@ static GCC_INLINE void fc_solve_cache_stacks(
 
 #ifdef FCS_USE_ANHOLT_HASH
             const_AUTO(
-                ret, set_add_pre_hashed(instance->stacks_hash,
+                ret, set_add_pre_hashed(&(instance->stacks_hash),
                          perl_hash_function((ub1 *)*(current_stack), col_len),
                          column));
             cached_stack = ret ? ret->key : NULL;
@@ -527,9 +527,9 @@ fcs_bool_t fc_solve_check_and_add_state(
 #endif
     {
 #ifdef FCS_USE_ANHOLT_HASH
-        const_AUTO(ret, set_add_pre_hashed(instance->hash,
+        const_AUTO(ret, set_add_pre_hashed(&(instance->hash),
                             perl_hash_function((ub1 *)(new_state_key),
-                                               sizeof(*(new_state_key))),
+                                sizeof(*(new_state_key))),
                             FCS_STATE_kv_to_collectible(new_state)));
         void *const existing_void = ret ? ret->key : NULL;
 #else

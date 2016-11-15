@@ -50,7 +50,7 @@ struct set
     uint32_t deleted_entries;
 };
 
-struct set *set_create(uint32_t (*hash_function)(void *key),
+void set_create(struct set *set, uint32_t (*hash_function)(void *key),
     int (*key_equals_function)(const void *a, const void *b));
 void set_destroy(
     struct set *set, void (*delete_function)(struct set_entry *entry));

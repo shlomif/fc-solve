@@ -488,7 +488,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
         g_hash_table_new(fc_solve_hash_function, fc_solve_state_compare_equal);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_USE_ANHOLT_HASH
-    instance->hash = set_create(NULL, fc_solve_state_compare_equal);
+    set_create(&(instance->hash), NULL, fc_solve_state_compare_equal);
 #else
     fc_solve_hash_init(instance->meta_alloc, &(instance->hash),
 #ifdef FCS_INLINED_HASH_COMPARISON
@@ -522,7 +522,7 @@ static GCC_INLINE void fc_solve_start_instance_process_with_board(
    collection */
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
 #ifdef FCS_USE_ANHOLT_HASH
-    instance->stacks_hash = set_create(NULL, fc_solve_stack_equal);
+    set_create(&(instance->stacks_hash), NULL, fc_solve_stack_equal);
 #else
     fc_solve_hash_init(instance->meta_alloc, &(instance->stacks_hash),
 #ifdef FCS_INLINED_HASH_COMPARISON

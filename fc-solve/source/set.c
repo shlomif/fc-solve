@@ -78,15 +78,9 @@ static int entry_is_present(const struct set_entry *entry)
     return entry->key != NULL && entry->key != deleted_key;
 }
 
-struct set *set_create(uint32_t (*hash_function)(void *key),
+void set_create(struct set *const set, uint32_t (*hash_function)(void *key),
     int key_equals_function(const void *a, const void *b))
 {
-    struct set *set;
-
-    set = malloc(sizeof(*set));
-    if (set == NULL)
-        return NULL;
-
     set->size_index = 0;
     set->size = hash_sizes[set->size_index].size;
     set->rehash = hash_sizes[set->size_index].rehash;
@@ -96,14 +90,6 @@ struct set *set_create(uint32_t (*hash_function)(void *key),
     set->table = calloc(set->size, sizeof(*set->table));
     set->entries = 0;
     set->deleted_entries = 0;
-
-    if (set->table == NULL)
-    {
-        free(set);
-        return NULL;
-    }
-
-    return set;
 }
 
 /**
@@ -115,9 +101,6 @@ struct set *set_create(uint32_t (*hash_function)(void *key),
 void set_destroy(
     struct set *set, void (*delete_function)(struct set_entry *entry))
 {
-    if (!set)
-        return;
-
     if (delete_function)
     {
         struct set_entry *entry;
@@ -129,7 +112,7 @@ void set_destroy(
         }
     }
     free(set->table);
-    free(set);
+    set->table = NULL;
 }
 
 /* Does the set contain an entry with the given key.
