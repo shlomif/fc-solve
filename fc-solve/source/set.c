@@ -45,7 +45,7 @@
  */
 
 static uint32_t deleted_key_value;
-static void *deleted_key = &deleted_key_value;
+void *deleted_key = &deleted_key_value;
 
 static const struct
 {
@@ -62,21 +62,6 @@ static const struct
     {134217728, 147639589, 147639587}, {268435456, 295279081, 295279079},
     {536870912, 590559793, 590559791}, {1073741824, 1181116273, 1181116271},
     {2147483648ul, 2362232233ul, 2362232231ul}};
-
-static int entry_is_free(const struct set_entry *entry)
-{
-    return entry->key == NULL;
-}
-
-static int entry_is_deleted(const struct set_entry *entry)
-{
-    return entry->key == deleted_key;
-}
-
-static int entry_is_present(const struct set_entry *entry)
-{
-    return entry->key != NULL && entry->key != deleted_key;
-}
 
 void set_create(struct set *const set, uint32_t (*hash_function)(void *key),
     int key_equals_function(const void *a, const void *b))
@@ -175,7 +160,7 @@ struct set_entry *set_search_pre_hashed(
     return NULL;
 }
 
-static void set_rehash(struct set *set, int new_size_index)
+void set_rehash(struct set *set, int new_size_index)
 {
     struct set old_set;
     struct set_entry *table, *entry;
@@ -220,79 +205,6 @@ struct set_entry *set_add(struct set *set, void *key)
     uint32_t hash = set->hash_function(key);
 
     return set_add_pre_hashed(set, hash, key);
-}
-
-/**
- * Inserts the key with the given hash into the set.
- *
- * Note that insertion may rearrange the set on a resize or rehash, so
- * previously found set_entry pointers are no longer valid after this
- * function.
- */
-struct set_entry *set_add_pre_hashed(struct set *set, uint32_t hash, void *key)
-{
-    uint32_t hash_address;
-    struct set_entry *available_entry = NULL;
-
-    if (set->entries >= set->max_entries)
-    {
-        set_rehash(set, set->size_index + 1);
-    }
-    else if (set->deleted_entries + set->entries >= set->max_entries)
-    {
-        set_rehash(set, set->size_index);
-    }
-
-    hash_address = hash % set->size;
-    do
-    {
-        struct set_entry *entry = set->table + hash_address;
-        uint32_t double_hash;
-
-        if (!entry_is_present(entry))
-        {
-            /* Stash the first available entry we find */
-            if (available_entry == NULL)
-                available_entry = entry;
-            if (entry_is_free(entry))
-                break;
-        }
-
-        /* Implement replacement when another insert happens
-         * with a matching key.  This is a relatively common
-         * feature of hash tables, with the alternative
-         * generally being "insert the new value as well, and
-         * return it first when the key is searched for".
-         *
-         * Note that the set doesn't have a delete callback.
-         * If freeing of old keys is required to avoid memory leaks,
-         * perform a search before inserting.
-         */
-        if (!entry_is_deleted(entry) && entry->hash == hash &&
-            set->key_equals_function(key, entry->key))
-        {
-            return entry;
-        }
-
-        double_hash = 1 + hash % set->rehash;
-
-        hash_address = (hash_address + double_hash) % set->size;
-    } while (hash_address != hash % set->size);
-
-    if (available_entry)
-    {
-        if (entry_is_deleted(available_entry))
-            set->deleted_entries--;
-        available_entry->hash = hash;
-        available_entry->key = key;
-        set->entries++;
-        return NULL;
-    }
-
-    /* We could hit here if a required resize failed. An unchecked-malloc
-     * application could ignore this result.
-     */
-    return NULL;
 }
 
 /**
