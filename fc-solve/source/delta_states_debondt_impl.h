@@ -323,7 +323,8 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                 if (IS_BAKERS_DOZEN())
                 {
-                    char card = fcs_card2char(fcs_make_card(rank, suit_idx));
+                    const_AUTO(
+                        card, fcs_card2char(fcs_make_card(rank, suit_idx)));
 
                     if (self->bakers_dozen_topmost_cards_lookup[card >> 3] &
                         (1 << (card & (8 - 1))))
@@ -457,7 +458,7 @@ static void fc_solve_debondt_delta_stater_decode(
         for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
         {
             const fcs_card_t card = fcs_make_card(rank, suit_idx);
-            const char card_char = fcs_card2char(card);
+            const_AUTO(card_char, fcs_card2char(card));
 
             if (IS_BAKERS_DOZEN())
             {

@@ -390,12 +390,11 @@ typedef struct
 
 static GCC_INLINE void fc_solve_init_locs(fcs_state_locs_struct_t *locs)
 {
-    int i;
-    for (i = 0; i < MAX_NUM_STACKS; i++)
+    for (int i = 0; i < MAX_NUM_STACKS; i++)
     {
         locs->stack_locs[i] = (fcs_locs_t)i;
     }
-    for (i = 0; i < MAX_NUM_FREECELLS; i++)
+    for (int i = 0; i < MAX_NUM_FREECELLS; i++)
     {
         locs->fc_locs[i] = (fcs_locs_t)i;
     }
