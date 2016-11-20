@@ -16,8 +16,7 @@ sub format_num
 
 foreach my $deal
 (
-    grep { /\A[12]/ }
-    sort {$a <=> $b }
+    sort { $a <=> $b }
     map { s#.*/##mrs =~ s#\.dump\.txt\z##mrs }
     glob("charts/fc-pro--4fc-intractable-deals--report/data/*.dump.txt")
 )
