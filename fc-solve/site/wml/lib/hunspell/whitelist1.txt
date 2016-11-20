@@ -93,6 +93,7 @@ AIs
 API
 APIs
 AVL
+AWS
 Adrian_Ettlinger
 Advogato
 Affero
@@ -164,6 +165,7 @@ Demos
 Dimitri
 DocBook
 Doxygen
+EC2
 EE
 ESR
 EXE

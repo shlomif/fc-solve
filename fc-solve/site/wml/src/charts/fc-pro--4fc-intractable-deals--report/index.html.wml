@@ -1,0 +1,31 @@
+#include '../template.wml'
+<latemp_subject "Report: solving the remaining Freecell Pro 4 freecells Intractable Deals" />
+
+<h2 id="intro">Introduction</h2>
+
+<p>
+Theodore Pringle had posted <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1466">an announcement</a>
+to the "fc-solve-discuss" group where he said that he ran a solver over all
+the deals in the 8 milliard Freecell Pro deals range and ended up with 102,032
+impossible deals and 46 intractable deals. Further analysis reduced the number
+of intractable deals - see
+<a href="https://github.com/shlomif/freecell-pro-intractable-deals">the list</a>.
+</p>
+
+<p>
+I set out to determine the solvability of these deals while using Freecell
+Solver's depth_dbm_fc_solver, which is a solver which occupies relatively
+little RAM, and aims to completely scan all positions in a board and determine
+whether it is solvable or not. That solver was ran on an Amazon Web Services
+(“AWS”) EC2 node with 256 GB of RAM.
+</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>
+Deals 219837216, 1252215044, 2255988055, 2901685480, 2902413565, 4260084873,
+6687921694, and 7489392343 were <b>shown to be impossible</b> by the solver.
+Deal 6825625742 ran out of hard disk space (we were only given 8 GB of disk
+space by default, which turned out to not be enough), and appears to be
+impossible as well, but not provably so.
+</p>
