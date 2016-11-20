@@ -1,5 +1,8 @@
 #include '../template.wml'
 <latemp_subject "Report: solving the remaining Freecell Pro 4 freecells Intractable Deals" />
+<page_extra_head_elements>
+<script type="text/javascript" src="$(ROOT)/js/jquery.flot.js"></script>
+</page_extra_head_elements>
 
 <h2 id="intro">Introduction</h2>
 
@@ -29,3 +32,13 @@ Deal 6825625742 ran out of hard disk space (we were only given 8 GB of disk
 space by default, which turned out to not be enough), and appears to be
 impossible as well, but not provably so.
 </p>
+
+<h2 id="charts">Charts</h2>
+
+<h3 id="queue-items">Queue Items per iteration</h3>
+
+<:
+{
+use FreecellSolver::GenDealsCharts1;
+}
+:>

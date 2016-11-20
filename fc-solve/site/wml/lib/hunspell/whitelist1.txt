@@ -254,6 +254,7 @@ INDIRECT_STACK_STATES
 IRC
 IST
 Ido
+InQueue
 Inc
 Inline
 Inlined
