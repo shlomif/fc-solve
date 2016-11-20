@@ -32,7 +32,7 @@ foreach my $deal
     <br />
 EOF
     print qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_data">\n#;
-    print io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal.tsv")->all;
+    print io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal" . ($deal eq '6825625742' ? ".filtered" : '') . ".tsv")->all;
     print qq#</textarea>\n<br />\n#;
 }
 

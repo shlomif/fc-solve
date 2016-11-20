@@ -206,11 +206,15 @@ $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
 
 FC_PRO_4FC_DUMPS = $(filter charts/fc-pro--4fc-intractable-deals--report/data/%.dump.txt,$(SRC_IMAGES))
 FC_PRO_4FC_TSVS = $(patsubst %.dump.txt,$(D)/%.tsv,$(FC_PRO_4FC_DUMPS))
+FC_PRO_4FC_FILTERED_TSVS = $(patsubst %.dump.txt,$(D)/%.filtered.tsv,$(FC_PRO_4FC_DUMPS))
 
 $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
 	perl ../../scripts/convert-dbm-fc-solver-log-to-tsv.pl <(< "$<" perl -lapE 's#[^\t]*\t##') | perl -lanE 'print join"\t",@F[0,2]' > "$@"
 
-all: $(FC_PRO_4FC_TSVS)
+$(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
+	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] % 1_000_000 == 0))' < "$<" > "$@"
+
+all: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
 
 .PHONY:
 
