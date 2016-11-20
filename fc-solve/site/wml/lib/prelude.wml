@@ -1,0 +1,28 @@
+# This file should be the first thing to be included by template.wml
+# or a page that tries to over-ride stuff here. By itself it does not render
+# anything, and that is delegated to the "driver.wml".
+#
+# After including this file and before including "driver.wml", one can
+# over-ride stuff that driver.wml will later use.
+
+<:
+use strict;
+use warnings;
+:>
+
+<define-tag body endtag="required">
+<body*{#BODY_PARAMS#}>
+%body
+</body*>
+</define-tag>
+
+#include "utils.wml"
+#include "paypal.wml"
+
+<define-tag software_patents>1</define-tag>
+#include "latemp/latemp-prelude.wml"
+#include "local-defs.wml"
+
+#include "share-this.wml"
+#include "sponsored_ad.wml"
+#include "amazon.wml"

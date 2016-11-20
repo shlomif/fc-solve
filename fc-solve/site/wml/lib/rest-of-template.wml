@@ -1,0 +1,219 @@
+#include "shlomif/affiliations.wml"
+#include "share-this.wml"
+
+<:{
+    sub _wrap_as_utf8 {
+        my ($cb) = @_;
+
+        binmode STDOUT, ":utf8";
+
+        $cb->();
+
+        binmode STDOUT, ":raw";
+    }
+
+}:>
+<define-tag rss_feed whitespace="delete">
+http://fc-solve.blogspot.com/feeds/posts/default?alt=rss
+</define-tag>
+
+<latemp_lang "en-US" />
+<latemp_encoding "utf-8" />
+<latemp_author "Shlomi Fish" />
+<latemp_meta_desc "Freecell Solver - a Program and a Library written in ANSI C for Solving Games of Freecell and similar Solitaire Variants" />
+<latemp_common_keywords "Freecell, Freecell Solver, solvers, AI, artificial intelligence, solitaire, Simple Simon, Baker's Game, Seahaven Towers, Shlomi Fish, games" />
+
+<define-tag project_wonderful_ads__ad_box_code>
+
+<!-- Project Wonderful Ad Box Code -->
+<div id="pw_adbox_75116_3_0"></div>
+<script type="text/javascript"></script>
+<define-tag projectwonderful_noscript_1>
+<noscript><map id="admap75116"><area href="http://www.projectwonderful.com/out_nojs.php?r=0&amp;c=0&amp;id=75116&amp;type=3" shape="rect" coords="0,0,160,600" title="" alt="" target="_blank" /></map>
+<table cellpadding="0" cellspacing="0" style="width:160px;border-style:none;background-color:#ffffff;"><tr><td><img src="http://www.projectwonderful.com/nojs.php?id=75116&amp;type=3" style="width:160px;height:600px;border-style:none;" usemap="#admap75116" alt="" /></td></tr><tr><td style="background-color:#ffffff;" colspan="1"><div class="center"><a style="font-size:10px;color:#0000ff;text-decoration:none;line-height:1.2;font-weight:bold;font-family:Tahoma, verdana,arial,helvetica,sans-serif;text-transform: none;letter-spacing:normal;text-shadow:none;white-space:normal;word-spacing:normal;" href="http://www.projectwonderful.com/advertisehere.php?id=75116&amp;type=3" target="_blank">Ads by Project Wonderful!  Your ad here, right now: $0</a></div></td></tr></table>
+</noscript>
+</define-tag>
+<!-- End Project Wonderful Ad Box Code -->
+
+</define-tag>
+
+<latemp_affiliations_buttons>
+<affil_collection_berlios />
+<ul>
+<li>
+<p>
+Please consider
+<a href="http://www.shlomifish.org/meta/donate/"><b>donating</b></a>.
+</p>
+</li>
+</ul>
+<br />
+<a href="<rss_feed />" rel="rss feed" title="Subscribe to Our News"><img
+    src="$(ROOT)/images/rss.png"
+    alt="RSS Feed"
+    class="bless"
+    /></a>
+<br />
+<br />
+<project_wonderful_ads__ad_box_code />
+</latemp_affiliations_buttons>
+
+<latemp_top_left_corner_logo>
+<div class="center">
+<a href="$(ROOT)"
+    title="Freecell Solver’s Homepage"><img
+    src="$(ROOT)/images/fc-solve-icon.png"
+    alt="fc-solve icon: H C D S"
+    class="icon"
+    style="border:0;margin-bottom:0.5em;"
+    /></a>
+</div>
+</latemp_top_left_corner_logo>
+
+<latemp_license>
+
+<!-- Creative Commons License -->
+<p>
+Unless noted otherwise, the text and other creative media of the pages of this
+site is <b>licensed</b> under the
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
+Commons Attribution 3.0 Unported License</a> (or at your option any later
+version). The markup and code of this site are, unless noted otherwise, licensed
+under the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11
+licence</a>.
+</p>
+<!-- /Creative Commons License -->
+
+<!--
+
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <dc:title>Freecell Solver Site</dc:title>
+   <dc:date>2004</dc:date>
+   <dc:description>A website for the the open-source Freecell Solver Project</dc:description>
+   <dc:creator><Agent>
+      <dc:title>Shlomi Fish</dc:title>
+   </Agent></dc:creator>
+   <dc:rights><Agent>
+      <dc:title>Shlomi Fish</dc:title>
+   </Agent></dc:rights>
+   <dc:type rdf:resource="http://purl.org/dc/dcmitype/Text" />
+   <license rdf:resource="http://creativecommons.org/licenses/by/3.0/" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/by/3.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <requires rdf:resource="http://web.resource.org/cc/Attribution" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+</License>
+
+</rdf:RDF>
+
+-->
+</latemp_license>
+
+<define-tag old_removed_self_links>
+<script type="text/javascript">
+<!--
+$("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]").each(function(i){ \$(this).append( ' <span class="selfl">[<a href="#' + this.id + '">link</a>]</span>' ) })
+-->
+</script>
+</define-tag>
+
+<latemp_webmaster>
+<p>
+<b>Webmaster:</b> <a href="http://www.shlomifish.org/">Shlomi Fish</a> (Email:
+<a href="mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a>).
+</p>
+</latemp_webmaster>
+
+
+
+
+<define-tag linktofile>
+<a href="%0">%0</a>
+</define-tag>
+<define-tag berlios_url whitespace="delete">
+<if "$(BERLIOS)" "$(ROOT)/%0" "http://fc-solve.shlomifish.org/%0" />
+</define-tag>
+
+<define-tag arch:doc:url><berlios_url "arch_doc/" /></define-tag>
+<define-tag doxygen:url><berlios_url "michael_mann/" /></define-tag>
+<set-var presentation_url="http://www.shlomifish.org/lecture/Freecell-Solver/" />
+
+<define-tag page_extra_head_elements endtag="required" whitespace="delete">
+{#PAGE_EXTRA_HEAD_ELEMENTS#:%body:##}
+</define-tag>
+
+<define-tag project_wonderful_ads__loader>
+<!-- Project Wonderful Ad Box Loader -->
+<script type="text/javascript">
+   (function(){function pw_load(){
+      if(arguments.callee.z)return;else arguments.callee.z=true;
+      var d=document;var s=d.createElement('script');
+      var x=d.getElementsByTagName('script')[0];
+      s.type='text/javascript';s.async=true;
+      s.src='//www.projectwonderful.com/pwa.js';
+      x.parentNode.insertBefore(s,x);}
+   if (window.attachEvent){
+    window.attachEvent('DOMContentLoaded',pw_load);
+    window.attachEvent('onload',pw_load);}
+   else{
+    window.addEventListener('DOMContentLoaded',pw_load,false);
+    window.addEventListener('load',pw_load,false);}})();
+</script>
+<!-- End Project Wonderful Ad Box Loader -->
+</define-tag>
+
+<define-tag my_extra_head_elements>
+<script type="text/javascript" src="$(ROOT)/js/common-methods.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/common-hacks.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/jq.js"></script>
+<link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="<rss_feed />" />
+<link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default" />
+<project_wonderful_ads__loader />
+{#PAGE_EXTRA_HEAD_ELEMENTS#}
+</define-tag>
+
+<define-tag my_printable_head_elements>
+<style type="text/css">
+body { background-color : white; color: black; }
+td { vertical-align : top; }
+</style>
+</define-tag>
+
+<latemp_extra_head_elements>
+<if "$(PRINTABLE)"
+    "<my_printable_head_elements />"
+    "<my_extra_head_elements />"
+    />
+</latemp_extra_head_elements>
+
+<latemp_after_body>
+<br />
+<br />
+<share_this_button />
+</latemp_after_body>
+
+<define-tag try_online>
+<div class="try_online_wrapper">
+<a class="solve_online_button" id="try_online_link" href="$(ROOT)/js-fc-solve/text/"><span class="try_main">Try</span><br /><span class="try_main">Online</span><br /><br /><span class="try_note">Firefox, Chrome, Opera, or IE10+</span></a>
+</div>
+</define-tag>
+
+<define-tag jquery_ui_head_elements>
+<script type="text/javascript" src="$(ROOT)/js/jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="$(ROOT)/js/jquery-ui/jquery-ui.min.css" media="screen, projection" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen, projection" />
+</define-tag>
+
+<latemp_after_main_title>
+<if "<match "$(LATEMP_FILENAME)" "^js-fc-solve/" action="report" />"
+    ""
+    "<try_online />"
+    />
+</latemp_after_main_title>

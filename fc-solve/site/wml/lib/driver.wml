@@ -1,0 +1,10 @@
+# This file should be the included after the prelude.wml and the rest
+# of the local definitions were set. It does the actual rendering of the page
+# as part of the site common look and feel.
+#
+
+#include "latemp/latemp-driver.wml"
+#include "shlomif/affiliations.wml"
+
+#include "rest-of-template.wml"
+
