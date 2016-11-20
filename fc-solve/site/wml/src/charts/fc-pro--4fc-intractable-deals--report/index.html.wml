@@ -37,19 +37,23 @@
 
 <p>
 Theodore Pringle had posted <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1466">an announcement</a>
-to the "fc-solve-discuss" group where he said that he ran a solver over all
-the deals in the 8 milliard Freecell Pro deals range and ended up with 102,032
+to the "fc-solve-discuss" group, where he said that he ran a solver over all
+the deals in the 8 milliard (1 to 8,589,934,591) Freecell Pro deals range.
+He ended up discovering that there are 102,032
 impossible deals and 46 intractable deals. Further analysis reduced the number
 of intractable deals - see
-<a href="https://github.com/shlomif/freecell-pro-intractable-deals">the list</a>.
+<a href="https://github.com/shlomif/freecell-pro-intractable-deals">the updated
+list</a>.
 </p>
 
 <p>
-I set out to determine the solvability of these deals while using Freecell
-Solver's depth_dbm_fc_solver, which is a solver which occupies relatively
+I set out to determine the solvability of these intractable deals while using
+<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a>'s
+depth_dbm_fc_solver, which is a solver which occupies relatively
 little RAM, and aims to completely scan all positions in a board and determine
-whether it is solvable or not. That solver was ran on an Amazon Web Services
-(“AWS”) EC2 node with 256 GB of RAM.
+whether it is solvable or not. That solver was ran on an
+<a href="https://aws.amazon.com/">Amazon Web Services (“AWS”)</a> EC2 node
+with 256 GB of RAM.
 </p>
 
 <h2 id="conclusions">Conclusions</h2>
@@ -64,7 +68,15 @@ impossible as well, but not provably so.
 
 <h2 id="charts">Charts</h2>
 
-<h3 id="queue-items">Queue Items per iteration</h3>
+<h3 id="queue-items">Queue items per iterations for each of the deals</h3>
+
+<p>
+<b>Note:</b> the depth_dbm_fc_solver uses a variation on
+<a href="https://en.wikipedia.org/wiki/Breadth-first_search">breadth-first
+search</a> where we keep a queue of items to check and check an iterations
+count of states. The x-axis - "Iterations" roughly corresponds to time while
+the y-axis, corresponds to the number of states in the queue.
+</p>
 
 <:
 {
