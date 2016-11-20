@@ -192,10 +192,14 @@ $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts
 	tsc --target es5 --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
+TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js
 
-all: $(TS_CHART_DEST)
+all: $(TS_CHART_DEST) $(TS_CHART2_DEST)
 
 $(TS_CHART_DEST): $(D)/%.js: src/%.ts
+	tsc --module amd --out $@ src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
+
+$(TS_CHART2_DEST): $(D)/%.js: src/%.ts
 	tsc --module amd --out $@ src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
