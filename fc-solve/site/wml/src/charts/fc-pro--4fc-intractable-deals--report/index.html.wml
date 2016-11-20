@@ -6,8 +6,8 @@
 <style type="text/css">
 .demo-container {
 	box-sizing: border-box;
-	width: 500px;
-	height: 200px;
+	width: 800px;
+	height: 400px;
 	padding: 20px 15px 15px 15px;
 	margin: 15px auto 30px auto;
 	border: 1px solid #ddd;
