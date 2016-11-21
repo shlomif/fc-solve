@@ -358,6 +358,7 @@ Random-DFS-based
 Rebert
 Refactored
 Refactoring
+Ringstad
 Risko
 RunIndef
 Résumé
