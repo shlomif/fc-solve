@@ -57,7 +57,8 @@ depth_dbm_fc_solver, which is a solver which occupies relatively
 little RAM, and aims to completely scan all positions in a board and determine
 whether it is solvable or not. That solver was ran on an
 <a href="https://aws.amazon.com/">Amazon Web Services (“AWS”)</a> EC2 node
-with 256 GB of RAM.
+with 256 GB of RAM. (Thanks to Jonathan Ringstad for the suggestion to use
+AWS.)
 </p>
 
 <h2 id="conclusions">Conclusions</h2>
