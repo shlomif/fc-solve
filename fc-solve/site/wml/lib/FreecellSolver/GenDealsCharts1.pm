@@ -16,14 +16,19 @@ sub format_num
     return join",",@d;
 }
 
-sub gen_progress_charts
+sub _calc_deal_nums
 {
-    foreach my $deal
-    (
+    return
+    [
         sort { $a <=> $b }
         map { s#.*/##mrs =~ s#\.dump\.txt\z##mrs }
         glob("charts/fc-pro--4fc-intractable-deals--report/data/*.dump.txt")
-    )
+    ];
+}
+
+sub gen_progress_charts
+{
+    foreach my $deal (@{_calc_deal_nums()})
     {
         my $data_id = "queue-items-$deal-data";
         my $chart_id = "queue-items-$deal-chart";
@@ -41,4 +46,21 @@ EOF
     }
 }
 
+sub gen_summary_table
+{
+    print <<'EOF';
+<table class="fcs_depth_dbm_deals" summary="Summary of the iterations for the deals">
+<tr>
+<th>Deal No.</th>
+<th>Iterations Reached</th>
+</tr>
+EOF
+    foreach my $deal (@{_calc_deal_nums()})
+    {
+        print "<tr><td>" . format_num($deal) . "</td><td>" . format_num(io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal.tsv")->tail(1) =~ s#\t.*##mrs) . "</td></tr>\n";
+    }
+    print <<'EOF';
+</table>
+EOF
+}
 1;

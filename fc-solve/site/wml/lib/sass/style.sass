@@ -6,7 +6,7 @@ body
 
 a
     &:visited
-        /* Konqi 3.4.x on Mandriva 2006 sets its to magenta, which doesn't
+        /* Konqi 3.4.x on Mandriva 2006 sets it to magenta, which doesn't
          * look very well.
         color: purple
     &:hover
@@ -110,14 +110,21 @@ div.indent
     li
         margin-top: 0.5em
 
-table.downloads
+table.downloads, .fcs_depth_dbm_deals
     border: #444 medium solid
 
-.downloads
+.downloads, .fcs_depth_dbm_deals
     td, th
         vertical-align: top
         padding: 0.2em 0.2em 0.2em 0.2em
         border: #666 thin solid
+
+.fcs_depth_dbm_deals
+    td
+        text-align: right
+        padding-left: 2em
+    th
+        text-align: left
 
 .stop
     border: solid medium #880000
