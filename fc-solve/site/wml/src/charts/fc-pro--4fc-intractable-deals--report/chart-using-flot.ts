@@ -5,7 +5,7 @@ function chart_data(data_selector: string, chart_selector: string) {
 	lines.forEach(
 		function (l) {
 			var fields = l.split("\t");
-			series[0].push([parseFloat(fields[0]),parseFloat(fields[1])]);
+			series.push([parseFloat(fields[0]),parseFloat(fields[1])]);
 		}
 	);
     var plot = $.plot($(chart_selector), [
