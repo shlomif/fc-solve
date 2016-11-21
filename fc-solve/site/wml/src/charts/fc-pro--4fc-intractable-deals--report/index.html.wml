@@ -84,6 +84,7 @@ the y-axis, corresponds to the number of states in the queue.
 
 <:
 {
-require FreecellSolver::GenDealsCharts1;
+use FreecellSolver::GenDealsCharts1;
+FreecellSolver::GenDealsCharts1->gen_progress_charts;
 }
 :>
