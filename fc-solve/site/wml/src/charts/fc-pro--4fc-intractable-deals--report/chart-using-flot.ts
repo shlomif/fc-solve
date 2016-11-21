@@ -1,17 +1,15 @@
 function chart_data(data_selector: string, chart_selector: string) {
-	var series = [[]];
+	var series = [];
 	var lines = $(data_selector).text().split("\n");
 	lines.shift();
 	lines.forEach(
 		function (l) {
 			var fields = l.split("\t");
-			var x:number = parseFloat(fields[0]);
-			var y1:number = parseFloat(fields[1]);
-			series[0].push([x,y1]);
+			series[0].push([parseFloat(fields[0]),parseFloat(fields[1])]);
 		}
 	);
     var plot = $.plot($(chart_selector), [
-            { data: series[0], label: "queue-items(iters)", },
+            { data: series, label: "queue-items(iters)", },
         ],
         {
             series: {
