@@ -122,3 +122,33 @@ FreecellSolver::GenDealsCharts1->gen_summary_table;
 FreecellSolver::GenDealsCharts1->gen_progress_charts;
 }
 :>
+
+<h2 id="links">Links and References</h2>
+
+<ul>
+
+<li>
+<p>
+<a href="https://drive.google.com/drive/u/0/folders/0B6WZWNModsLfaEIzbnM5UkpHek0">Theodore Pringle’s lists of impossible and intractable FC-Pro deals</a> - on
+Google Drive.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/scripts/prepare-self-contained-dbm-etc-solvers-packages-for-hpc-machines/prepare_aws_depth_dbm_fc_solver_self_contained_package.pl">The script used to prepare the source package for deployment</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1483">fc-solve-discuss thread about the effort</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="data/">Log/output files of the runs</a>
+</p>
+</li>
+</ul>
