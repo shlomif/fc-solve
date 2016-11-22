@@ -1,5 +1,8 @@
 #include '../template.wml'
+#include "xhtml/1.x/std/toc.wml"
+
 <latemp_subject "Report: Solving the Remaining Freecell Pro 4 Freecells Intractable Deals" />
+
 <page_extra_head_elements>
 <script type="text/javascript" src="$(ROOT)/js/jquery.flot.js"></script>
 <script type="text/javascript" src="chart-using-flot.js"></script>
@@ -33,6 +36,10 @@
 </style>
 </page_extra_head_elements>
 
+<h2* id="toc">Table of contents</h2*>
+
+<toc />
+
 <h2 id="intro">Introduction</h2>
 
 <p>
@@ -41,17 +48,21 @@
 
 <p>
 Theodore Pringle had posted <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1466">an announcement</a>
-to the "fc-solve-discuss" group, where he said that he ran a solver over all
-the deals in the 8 milliard (1 to 8,589,934,591) Freecell Pro deals range.
+to the "fc-solve-discuss" group, where he said that he ran a
+<a href="https://en.wikipedia.org/wiki/FreeCell">Freecell</a> solver over all
+the deals in the 8 milliard (1 to 8,589,934,591)
+<a href="http://cards.wikia.com/wiki/FreeCell_Pro">Freecell Pro</a> deals range
+which are based on the original <a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">Microsoft FreeCell</a> dealing.
 He ended up discovering that there are 102,032
 impossible deals and 46 intractable deals. Further analysis reduced the number
-of intractable deals to 9 - see
+of intractable deals down to 9 - see
 <a href="https://github.com/shlomif/freecell-pro-intractable-deals">the updated
 list</a>.
 </p>
 
 <p>
-I set out to determine the solvability of these intractable deals while using
+I (= Shlomi Fish) set out to determine the solvability of these intractable
+deals while using
 <a href="http://fc-solve.shlomifish.org/">Freecell Solver</a>'s
 depth_dbm_fc_solver, which is a solver which occupies relatively
 little RAM, and aims to completely scan all positions in a board and
@@ -68,7 +79,7 @@ Deals 219837216, 1252215044, 2255988055, 2901685480, 2902413565, 4260084873,
 6687921694, and 7489392343 were <b>shown to be impossible</b> by the solver.
 Deal 6825625742 ran out of hard disk space (we were given only 8 GB of disk
 space by default, which turned out to not be enough), and appears to be
-impossible as well, but not provably so.
+impossible as well, but not yet provably so.
 </p>
 
 <h3 id="reflections">Some Reflections</h3>
