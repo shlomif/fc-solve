@@ -176,6 +176,7 @@ Emscripten
 Ettlinger
 Ettlinger
 Ettlinger's
+Expat
 FC
 FC-Pro
 FCCs
@@ -612,6 +613,7 @@ icc
 icc's
 ifdef's
 ifdefs
+inbox
 inline
 inlined
 installment

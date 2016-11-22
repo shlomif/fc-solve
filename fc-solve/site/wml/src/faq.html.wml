@@ -60,7 +60,7 @@ proprietary use of the code or binaries.
 <p>
 Freecell Solver used to be distributed under the Public Domain, but was
 relicensed to the permissive
-<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 licence</a> due
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a> due
 to the problematic and not globally accepted nature of the Public Domain,
 especially in software. (See
 <a href="http://linuxmafia.com/faq/Licensing_and_Law/public-domain.html">the
@@ -110,6 +110,35 @@ suite with a good solver integration can attempt to solve some difficult
 deals (for both a human and a computerised solver), by pruning dead ends, and
 by finding whether reached states are solvable. This provides a combined
 solving technique, that is greater than the sum of both parts.
+</p>
+
+<h3 id="does_anyone_care">Does anyone care about this project? I think no one cares about it except you.</h3>
+
+<p>
+The short answer is that: yes, some people care. As of November 2016, I received
+over 900 E-mails about the project to my private inbox and my
+<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">fc-solve-discuss group</a>’s
+folder also contains over 900 E-mails. Furthermore, some people to whom
+I mentioned my solver in real life, expressed interest in it, in part due to
+the fact that in <a href="https://en.wikipedia.org/wiki/Israel">Israel</a>,
+where I live, many people played it on
+<a href="http://en.wikipedia.org/wiki/Israel_Defense_Forces">the
+Israeli military</a>’s computers during their draft/etc. service. An
+<a href="http://www.nrg.co.il/online/10/ART/782/006.html">internal survey</a>
+conducted in 2004 found that it was the preferable game of 29% of the
+surveyed soldiers - thanks to <a href="https://he.wikipedia.org/wiki/%D7%A4%D7%A8%D7%99%D7%A1%D7%9C">the Hebrew wikipedia page about Freecell</a> for the link. One should note that Israel has instated a draft for girls as well
+as boys, so some of the people who were impressed were attractive females.
+</p>
+
+<p>
+I have written <a href="http://blogs.perl.org/users/shlomi_fish/2013/03/ann-my-transition-from-software-developer-to-writerentertaineramateur-philosopherinternet-celebrity.html">a section
+in a three-part essay</a> titled “How to achieve world domination” about that
+and niche software in general.
+</p>
+
+<p>
+Freecell may have been declining in popularity lately, but I expect interest
+in it to continue for a while.
 </p>
 
 <h3 id="new_solver_is_too_slow">I started writing a solver for Freecell (of my own) but it is too slow. What can I do?</h3>
