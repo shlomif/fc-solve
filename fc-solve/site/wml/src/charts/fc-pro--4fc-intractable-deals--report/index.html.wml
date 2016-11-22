@@ -1,5 +1,5 @@
 #include '../template.wml'
-<latemp_subject "Report: solving the remaining Freecell Pro 4 freecells Intractable Deals" />
+<latemp_subject "Report: Solving the Remaining Freecell Pro 4 Freecells Intractable Deals" />
 <page_extra_head_elements>
 <script type="text/javascript" src="$(ROOT)/js/jquery.flot.js"></script>
 <script type="text/javascript" src="chart-using-flot.js"></script>
@@ -71,7 +71,7 @@ space by default, which turned out to not be enough), and appears to be
 impossible as well, but not provably so.
 </p>
 
-<h3 id="reflections">Some reflections</h3>
+<h3 id="reflections">Some Reflections</h3>
 
 <p>
 This space will be filled with the contemporary statistics of the total
@@ -92,7 +92,7 @@ are winnable using 4 freecells.
 
 <h2 id="charts">Charts</h2>
 
-<h3 id="queue-items">Queue items per iterations for each of the deals</h3>
+<h3 id="queue-items">Queue Items Per Iterations for Each of the Deals</h3>
 
 <p>
 <b>Note:</b> the depth_dbm_fc_solver uses a variation on
