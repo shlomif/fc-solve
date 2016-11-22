@@ -100,7 +100,7 @@ foreach my $fn ('card.c', "$main_base.c", 'state.c',
     'fcc_brfs_test.h','dbm_kaztree_compare.h', 'delta_states_iface.h',
     'dbm_cache.h', 'dbm_lru_cache.h', 'dbm_trace.h', 'dbm_procs.h',
     'delta_states_debondt.c', 'delta_states_any.h', 'delta_states_debondt.h',
-    'debondt_delta_states_iface.h',
+    'debondt_delta_states_iface.h', 'read_state.h',
     'var_base_reader.h', 'var_base_writer.h', 'rinutils.h', 'alloc_wrap.h',
     'count.h', 'likely.h', 'min_and_max.h', 'portable_int32.h', 'str_utils.h',
     'typeof_wrap.h', 'game_type_limit.h', 'p2u_rank.h', 'delta_states_debondt_impl.h', 'var_base_int.h', 'dbm_move_to_string.h', 'render_state.h',
@@ -132,118 +132,6 @@ for my $fn ("prepare_pbs_deal.bash")
 
 =begin old
 
-my @deals = (
-    33668,
-    34152,
-    41701,
-    48819
-);
-
-my @deals = (
-    102257,
-    129561,
-    141951,
-    142720,
-    142864,
-    146457,
-    147148,
-    155990,
-    169944,
-    171337,
-    175864,
-    176168,
-    182980,
-    198960,
-    212009,
-    215164,
-    222860,
-    224115,
-    225805,
-    234834,
-    235561,
-    239422,
-    243540,
-    244525,
-    247736,
-    267112,
-    271131,
-    284184,
-    284204,
-    287876,
-    291131,
-    295997,
-    298904,
-    310397,
-    311564,
-    312381,
-    312736,
-    317289,
-    320583,
-    329150,
-    336145,
-    347972,
-    359432,
-    361934,
-    366584,
-    367103,
-    373120,
-    375783,
-    378764,
-    384243,
-    384543,
-    392121,
-    396792,
-    397067,
-    397251,
-);
-
-my @deals = (
-    142720,
-    146457,
-    169944,
-    176168,
-    182980,
-    198960,
-    215164,
-    225805,
-    234834,
-    235561,
-    239422,
-    243540,
-    244525,
-    287876,
-    295997,
-    298904,
-    312381,
-    317289,
-    320583,
-    329150,
-    336145,
-    347972,
-    359432,
-    361934,
-    366584,
-    367103,
-    373120,
-    375783,
-    378764,
-    384243,
-    384543,
-    392121,
-    396792,
-    397067,
-    397251,
-);
-
-my @deals = (
-    384243,
-);
-
-=end old
-
-=cut
-
-# my @deals = (9189909)
 my @deals =
 (qw/
 219837216
@@ -257,9 +145,21 @@ my @deals =
 7489392343
     /);
 
+=end old
+
+=cut
+
+my @deals =
+(qw/
+6825625742
+/);
+
 foreach my $deal_idx (@deals)
 {
-    system(qq{pi-make-microsoft-freecell-board -t $deal_idx > $dest_dir/$deal_idx.board});
+    if (system(qq{pi-make-microsoft-freecell-board -t $deal_idx > $dest_dir/$deal_idx.board}) != 0)
+    {
+        die "Could not generate deal no. $deal_idx.";
+    }
 }
 
 @modules = sort { $a cmp $b } @modules;
