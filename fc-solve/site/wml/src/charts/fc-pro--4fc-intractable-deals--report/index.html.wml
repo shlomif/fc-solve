@@ -45,7 +45,7 @@ to the "fc-solve-discuss" group, where he said that he ran a solver over all
 the deals in the 8 milliard (1 to 8,589,934,591) Freecell Pro deals range.
 He ended up discovering that there are 102,032
 impossible deals and 46 intractable deals. Further analysis reduced the number
-of intractable deals - see
+of intractable deals to 9 - see
 <a href="https://github.com/shlomif/freecell-pro-intractable-deals">the updated
 list</a>.
 </p>
@@ -54,8 +54,8 @@ list</a>.
 I set out to determine the solvability of these intractable deals while using
 <a href="http://fc-solve.shlomifish.org/">Freecell Solver</a>'s
 depth_dbm_fc_solver, which is a solver which occupies relatively
-little RAM, and aims to completely scan all positions in a board and determine
-whether it is solvable or not. That solver was ran on an
+little RAM, and aims to completely scan all positions in a board and
+conclusively determine whether it is solvable or not. That solver was ran on an
 <a href="https://aws.amazon.com/">Amazon Web Services (“AWS”)</a> EC2 node
 with 256 GB of RAM. (Thanks to Jonathan Ringstad for the suggestion to use
 AWS.)
@@ -66,9 +66,28 @@ AWS.)
 <p>
 Deals 219837216, 1252215044, 2255988055, 2901685480, 2902413565, 4260084873,
 6687921694, and 7489392343 were <b>shown to be impossible</b> by the solver.
-Deal 6825625742 ran out of hard disk space (we were only given 8 GB of disk
+Deal 6825625742 ran out of hard disk space (we were given only 8 GB of disk
 space by default, which turned out to not be enough), and appears to be
 impossible as well, but not provably so.
+</p>
+
+<h3 id="reflections">Some reflections</h3>
+
+<p>
+This space will be filled with the contemporary statistics of the total
+number and percentage of impossible and solvable deals out of the 8.5 milliard
+deals.
+</p>
+
+<p>
+Otherwise note that one surprising fact is that solving 4-freecells deals was
+much easier for us to do programatically than solving the same
+2-freecells deals. An
+<a href="http://fc-solve.blogspot.co.il/2012/09/two-freecell-solvability-report-for.html">earlier report</a>
+about their statistics, ran into more difficulties solving the first 400,000
+2-freecells deals, which is a deals’ space smaller by over 4 orders of
+magnitude. Perhaps this can be explained by the fact that many more deals
+are winnable using 4 freecells.
 </p>
 
 <h2 id="charts">Charts</h2>
