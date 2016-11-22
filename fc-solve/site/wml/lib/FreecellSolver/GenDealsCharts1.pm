@@ -28,16 +28,20 @@ sub _calc_deal_nums
 
 sub gen_progress_charts
 {
+    my @funcs;
+    my $idx = 0;
     foreach my $deal (@{_calc_deal_nums()})
     {
         my $data_id = "queue-items-$deal-data";
         my $chart_id = "queue-items-$deal-chart";
+        my $func_id = "my_chart_" . ($idx++);
+        push @funcs, $func_id;
         print qq#<h4 id="queue-items-$deal">Deal @{[format_num($deal)]}</h4>\n#;
         print <<"EOF";
     <div class="demo-container">
         <div id="$chart_id" class="demo-placeholder"></div>
     </div>
-    <script type="text/javascript">\$(function() { chart_data("#$data_id", "#$chart_id"); })</script>
+    <script type="text/javascript">function $func_id() { chart_data("#$data_id", "#$chart_id"); }</script>
     <br />
 EOF
         print qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_data">\n#;
@@ -45,6 +49,27 @@ EOF
         print io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal.filtered.tsv")->all;
         print qq#</textarea>\n<br />\n#;
     }
+    print <<"EOF";
+<script type="text/javascript">
+\$(function() {
+    var funcs = [@{[join",",@funcs]}];
+    var call_func;
+    call_func = function(idx) {
+        if (idx == funcs.length)
+        {
+            return;
+        }
+        window.setTimeout(function() {
+            funcs[idx]();
+            call_func(idx+1);
+        }, 20);
+        return;
+    };
+    call_func(0);
+    return;
+});
+</script>
+EOF
 }
 
 sub gen_summary_table
