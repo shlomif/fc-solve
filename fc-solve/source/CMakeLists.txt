@@ -631,6 +631,22 @@ ENDMACRO ()
 # We also need to put the CMAKE_POLICY invocation here or else it still warns.
 CMAKE_POLICY(SET CMP0054 NEW)
 
+MACRO(gen_error_exe myprog tgt)
+    SET (_dest "${CMAKE_CURRENT_BINARY_DIR}/${myprog}")
+    SET (_src  "${CMAKE_SOURCE_DIR}/scripts/err-on-unbuilt-executable.pl")
+
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${_dest}"
+        DEPENDS "${_src}"
+        COMMAND "${CMAKE_COMMAND}" "-E" "copy" "${_src}" "${_dest}"
+    )
+
+    ADD_CUSTOM_TARGET(
+        "${tgt}"
+        ALL DEPENDS "${_dest}"
+    )
+ENDMACRO()
+
 SET (DEBONDT_DELTA_STATES )
 IF ("${FCS_ENABLE_DBM_SOLVER}")
 
@@ -704,6 +720,8 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         )
         TARGET_LINK_LIBRARIES("pseudo_dfs_fc_solver" ${LIBJUDY_LIB})
         LIST(APPEND EXTRA_SOLVERS "pseudo_dfs_fc_solver")
+    ELSE ()
+        gen_error_exe( pseudo_dfs_fc_solver pseudo_dfs_fc_solver )
     ENDIF ()
 
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
@@ -718,6 +736,11 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
             PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
         )
     ENDFOREACH ()
+ELSE ()
+    gen_error_exe( depth_dbm_fc_solver depth_dbm_fc_solver)
+    gen_error_exe( dbm_fc_solver dbm_fc_solver)
+    gen_error_exe( split_fcc_fc_solver split_fcc_fc_solver )
+    gen_error_exe( pseudo_dfs_fc_solver pseudo_dfs_fc_solver )
 ENDIF ()
 
 IF (CMAKE_USE_PTHREADS_INIT)
