@@ -449,3 +449,24 @@ class ErrorLocation {
         return;
     }
 }
+
+enum ParseErrorType {
+    TOO_MUCH_OF_CARD,
+    NOT_ENOUGH_OF_CARD,
+    FOUNDATIONS_NOT_AT_START,
+    FREECELLS_NOT_AT_START,
+    LINE_PARSE_ERROR,
+};
+
+class ParseError {
+    public type_: ParseErrorType;
+    public locs: Array<ErrorLocation>;
+    public card: Card;
+
+    constructor(t: ParseErrorType, locs: Array<ErrorLocation>, c: Card) {
+        this.type_ = t;
+        this.locs = locs;
+        this.card = c;
+        return;
+    }
+}
