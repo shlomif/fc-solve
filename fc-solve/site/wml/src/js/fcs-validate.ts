@@ -428,3 +428,24 @@ export function fcs_js__foundations_from_string(num_decks: number, start_char_id
     }
     return make_ret(true, '');
 }
+
+enum ErrorLocationType {
+    ErrorLocationType_Foundations,
+    ErrorLocationType_Freecells,
+    ErrorLocationType_Column,
+};
+
+class ErrorLocation {
+    public type_: ErrorLocationType;
+    public idx: number;
+    public start: number;
+    public end: number;
+
+    constructor(t: ErrorLocationType, idx: number, start: number, end:number) {
+        this.type_ = t;
+        this.idx = idx;
+        this.start = start;
+        this.end = end;
+        return;
+    }
+}
