@@ -66,6 +66,7 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
 
     if (!item)
     {
+        *return_item = NULL;
         return FALSE;
     }
 
@@ -327,6 +328,7 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
 {
     if (queue->num_items_in_queue == 0)
     {
+        *return_item = NULL;
         return FALSE;
     }
 
