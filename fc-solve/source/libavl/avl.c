@@ -39,7 +39,7 @@ static GCC_INLINE signed char avl_get_balance(struct avl_node * node)
 
 static GCC_INLINE struct avl_node * avl_process_link(uintptr_t mylink)
 {
-    return (struct avl_node *)(mylink);
+    return (struct avl_node *)(mylink & (~((uintptr_t)0x1)));
 }
 
 static GCC_INLINE void avl_set_link(struct avl_node * node, int myindex, struct avl_node * val)
