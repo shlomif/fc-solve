@@ -181,5 +181,8 @@ ENDIF ()
 IF (SKIP_VALGRIND)
     LIST(APPEND test_tags "no_valg")
 ENDIF ()
+IF (NOT "${FCS_ENABLE_DBM_SOLVER}")
+    LIST(APPEND test_tags "no_dbm")
+ENDIF ()
 
 FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/TAGS.txt" "${test_tags}")

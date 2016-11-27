@@ -9,7 +9,7 @@ use Carp ();
 use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
-use FC_Solve::Paths qw/ bin_board bin_exe_raw samp_board /;
+use FC_Solve::Paths qw/ bin_board bin_exe_raw is_without_dbm samp_board /;
 
 sub trap_board
 {
@@ -152,7 +152,13 @@ sub trap_depth_dbm
 }
 
 {
+SKIP:
+{
 
+    if (is_without_dbm())
+    {
+        Test::More::skip( "without the dbm fc_solvers", 1);
+    }
     my $needle = <<"EOF";
 Success!
 --------
@@ -374,23 +380,32 @@ EOF
         "dbm_fc_solver invocation contains the solution's output."
     );
 }
+}
 
 {
-    my $dbm_output = trap_depth_dbm(
+    SKIP:
+    {
+        if (is_without_dbm())
         {
-            board_fn => bin_board('981.board'),
-            max_iters => 400_000,
+            Test::More::skip( "without the dbm fc_solvers", 1);
         }
-    );
 
-    my $output_text = join('', @{$dbm_output->{out_lines}});
+        my $dbm_output = trap_depth_dbm(
+            {
+                board_fn => bin_board('981.board'),
+                max_iters => 400_000,
+            }
+        );
 
-    # TEST
-    like (
-        $output_text,
-        qr/^Mark\+Sweep Progress - 100000/ms,
-        "depth_dbm_fc_solver bug with infinite run is fixed."
-    );
+        my $output_text = join('', @{$dbm_output->{out_lines}});
+
+        # TEST
+        like (
+            $output_text,
+            qr/^Mark\+Sweep Progress - 100000/ms,
+            "depth_dbm_fc_solver bug with infinite run is fixed."
+        );
+    }
 }
 
 =head1 COPYRIGHT AND LICENSE

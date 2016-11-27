@@ -7,7 +7,7 @@ use Test::More ();
 use Carp ();
 use File::Spec ();
 use File::Temp qw( tempdir );
-use FC_Solve::Paths qw( bin_board bin_exe_raw is_without_valgrind samp_board samp_preset );
+use FC_Solve::Paths qw( bin_board bin_exe_raw is_without_dbm is_without_valgrind samp_board samp_preset );
 
 use Test::RunValgrind;
 
@@ -62,6 +62,10 @@ sub r
         if (is_without_valgrind())
         {
             Test::More::skip("valgrind is skipped for google-dense/sparse-hash.", 1);
+        }
+        elsif (is_without_dbm() and $args->{dbm})
+        {
+            Test::More::skip("Skipping valgrind test for no_dbm solvers", 1);
         }
         elsif (!
             Test::RunValgrind->new({})->run(

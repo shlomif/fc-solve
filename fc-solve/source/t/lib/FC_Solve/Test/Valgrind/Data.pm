@@ -39,6 +39,7 @@ __PACKAGE__->populate
     [
         'dbm_fc_solver_1' =>
         {
+            dbm => 1,
             prog => "dbm_fc_solver",
             argv =>
             [
