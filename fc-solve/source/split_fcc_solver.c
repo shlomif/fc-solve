@@ -607,7 +607,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 base64_encode((unsigned char *)&(*key), sizeof(*key),
                     state_base64, &unused_output_len);
                 /* Output the exit point. */
-                fprintf(instance->fcc_exit_points_out_fh, "%s %s %ld %s\n",
+                fprintf(instance->fcc_exit_points_out_fh, "%s %s %zd %s\n",
                     fingerprint_base64, state_base64, added_moves_to_output,
                     instance->moves_base64_encoding_buffer);
 #ifdef DEBUG_OUT

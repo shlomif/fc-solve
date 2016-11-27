@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
             break;
         }
         printf("%ld = Verdict: %s ; Iters: %ld ; Length: %ld\n", board_num,
-            verdict, freecell_solver_user_get_num_times_long(instance),
+            verdict, (long)freecell_solver_user_get_num_times_long(instance),
             num_moves);
         fflush(stdout);
 
