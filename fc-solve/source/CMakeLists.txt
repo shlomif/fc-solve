@@ -450,18 +450,6 @@ ENDIF ()
 
 SET (COMPILER_FLAGS_TO_CHECK "-fvisibility=hidden")
 
-# The Freecell Solver code assumes in certain places that plain "char"
-# variables are signed rather than unsigned. This is a temporary workaround
-# for platforms where char is "unsigned char" by default (such as apparently
-# ARM linux).
-#
-# TODO : Fix it in a less hacky way in the code.
-MACRO(CHAR_MUST_BE_SIGNED_PORTABILITY)
-    LIST(APPEND COMPILER_FLAGS_TO_CHECK "-fsigned-char")
-ENDMACRO ()
-
-CHAR_MUST_BE_SIGNED_PORTABILITY()
-
 IF (CPU_ARCH)
     LIST(APPEND COMPILER_FLAGS_TO_CHECK "-march=${CPU_ARCH}")
 ENDIF ()
