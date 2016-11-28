@@ -297,7 +297,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
 }
 
 #define CALC_POSITIONS_BY_RANK()                                               \
-    const char *const positions_by_rank =                                      \
+    const int8_t *const positions_by_rank =                                    \
         fc_solve_calc_positions_by_rank_location(soft_thread)
 
 #define FCS_POS_BY_RANK_MAP(x) ((x) << 1)
@@ -336,9 +336,10 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
         (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
-    const char *pos_idx_to_check = &positions_by_rank[(                        \
+    const int8_t *pos_idx_to_check = &positions_by_rank[(                      \
         FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card)))];                   \
-    const char *const last_pos_idx = pos_idx_to_check + FCS_POS_BY_RANK_WIDTH; \
+    const int8_t *const last_pos_idx =                                         \
+        pos_idx_to_check + FCS_POS_BY_RANK_WIDTH;                              \
                                                                                \
     for (pos_idx_to_check +=                                                   \
          FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card);             \

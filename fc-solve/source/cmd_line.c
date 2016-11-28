@@ -725,7 +725,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             else
             {
                 freecell_solver_str_t s;
-                char *buffer;
                 FILE *f;
                 int num_file_args_to_skip = 0;
                 s = (*arg);
@@ -769,7 +768,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 fseek(f, 0, SEEK_END);
                 const long file_len = ftell(f);
-                buffer = SMALLOC(buffer, file_len + 1);
+                char *buffer = SMALLOC(buffer, file_len + 1);
                 if (buffer == NULL)
                 {
                     ASSIGN_ERR_STR(error_string, "%s",

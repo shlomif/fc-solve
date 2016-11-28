@@ -489,7 +489,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
 
     /* Continue as long as there are states in the queue or
        priority queue. */
-    char *const befs_positions_by_rank =
+    int8_t *const befs_positions_by_rank =
         (BEFS_M_VAR(soft_thread, befs_positions_by_rank));
 
     while (PTR_STATE != NULL)

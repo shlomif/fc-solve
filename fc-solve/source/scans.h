@@ -21,12 +21,12 @@ extern "C" {
 #include "instance.h"
 
 static GCC_INLINE void fc_solve__assign_dest_stack_and_col_ptr(
-    char *const positions_by_rank, const char dest_stack, const char dest_col,
-    const fcs_card_t dest_card)
+    int8_t *const positions_by_rank, const int8_t dest_stack,
+    const int8_t dest_col, const fcs_card_t dest_card)
 {
-    char *ptr = &positions_by_rank[(FCS_POS_BY_RANK_WIDTH *
-                                       (fcs_card_rank(dest_card) - 1)) +
-                                   (fcs_card_suit(dest_card) << 1)];
+    int8_t *ptr = &positions_by_rank[(FCS_POS_BY_RANK_WIDTH *
+                                         (fcs_card_rank(dest_card) - 1)) +
+                                     (fcs_card_suit(dest_card) << 1)];
 
 #if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
     for (; (*ptr) != -1; ptr += (4 << 1))
@@ -135,7 +135,7 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
 #undef ptr_state_key
 }
 
-static GCC_INLINE const char *fc_solve_calc_positions_by_rank_location(
+static GCC_INLINE const int8_t *fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t *const soft_thread)
 {
     if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)

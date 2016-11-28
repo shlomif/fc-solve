@@ -137,7 +137,7 @@ typedef struct
 #define FCS_BOTH__POS_BY_RANK__SIZE FCS_POS_BY_RANK_LEN
 #endif
 
-typedef char fcs__positions_by_rank_t[FCS_BOTH__POS_BY_RANK__SIZE];
+typedef int8_t fcs__positions_by_rank_t[FCS_BOTH__POS_BY_RANK__SIZE];
 
 /*
  * This is a linked list item that is used to implement a queue for the BFS
