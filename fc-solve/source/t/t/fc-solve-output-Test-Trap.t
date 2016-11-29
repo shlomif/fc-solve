@@ -7,7 +7,7 @@ use Test::More tests => 17;
 use File::Spec;
 use File::Temp qw( tempdir );
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
-use FC_Solve::Paths qw( bin_board bin_exe_raw samp_board $FC_SOLVE__RAW );
+use FC_Solve::Paths qw( bin_board bin_exe_raw is_without_dbm samp_board $FC_SOLVE__RAW );
 
 my $MID24_BOARD = samp_board('24-mid.board');
 
@@ -180,32 +180,39 @@ foreach my $board_fn (qw(24-with-stray-d-char.board
 }
 
 {
-    my $status;
-    trap
+    SKIP:
     {
-        $status = system(
-            bin_exe_raw(['depth_dbm_fc_solver']),
-            "--offload-dir-path", (tempdir (CLEANUP => 1) . '/'),
-            bin_board('empty.board'),
+        if (is_without_dbm())
+        {
+            Test::More::skip( "without the dbm fc_solvers", 3);
+        }
+        my $status;
+        trap
+        {
+            $status = system(
+                bin_exe_raw(['depth_dbm_fc_solver']),
+                "--offload-dir-path", (tempdir (CLEANUP => 1) . '/'),
+                bin_board('empty.board'),
+            );
+        };
+
+        my $out = $trap->stdout();
+        # TEST
+        is (
+            $out, '',
+            "No output for depth_dbm_fc_solver on empty and invalid board",
         );
-    };
 
-    my $out = $trap->stdout();
-    # TEST
-    is (
-        $out, '',
-        "No output for depth_dbm_fc_solver on empty and invalid board",
-    );
+        # TEST
+        like (
+            $trap->stderr(),
+            qr/\AInvalid input board/,
+            "Correct stderr for depth_dbm_fc_solver on empty and invalid board",
+        );
 
-    # TEST
-    like (
-        $trap->stderr(),
-        qr/\AInvalid input board/,
-        "Correct stderr for depth_dbm_fc_solver on empty and invalid board",
-    );
-
-    # TEST
-    ok ( scalar ($status != 0), "Exit code is non-zero." );
+        # TEST
+        ok ( scalar ($status != 0), "Exit code is non-zero." );
+    }
 }
 
 =head1 COPYRIGHT AND LICENSE
