@@ -171,6 +171,18 @@ static GCC_INLINE void read_state_from_file(
     const fcs_user_state_str_t user_state = read_state(fh);
     fc_solve_initial_user_state_to_c(user_state.s, init_state, FREECELLS_NUM,
         STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
+#ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
+    fcs_card_t problem_card;
+    if (FCS_STATE_VALIDITY__OK !=
+        fc_solve_check_state_validity(init_state PASS_FREECELLS(FREECELLS_NUM)
+                                          PASS_STACKS(STACKS_NUM)
+                                              PASS_DECKS(DECKS_NUM),
+            &problem_card))
+    {
+        fprintf(stderr, "%s\n", "Invalid input board");
+        exit(-1);
+    }
+#endif
 }
 
 static GCC_INLINE FILE *calc_out_fh(const char *const out_filename)

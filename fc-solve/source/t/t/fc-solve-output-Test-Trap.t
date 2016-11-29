@@ -3,8 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 17;
 use File::Spec;
+use File::Temp qw( tempdir );
 use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 use FC_Solve::Paths qw( bin_board bin_exe_raw samp_board $FC_SOLVE__RAW );
 
@@ -176,6 +177,35 @@ foreach my $board_fn (qw(24-with-stray-d-char.board
         qr/\S/,
         "Empty standard output due to invalid card format.",
     );
+}
+
+{
+    my $status;
+    trap
+    {
+        $status = system(
+            bin_exe_raw(['depth_dbm_fc_solver']),
+            "--offload-dir-path", (tempdir (CLEANUP => 1) . '/'),
+            bin_board('empty.board'),
+        );
+    };
+
+    my $out = $trap->stdout();
+    # TEST
+    is (
+        $out, '',
+        "No output for depth_dbm_fc_solver on empty and invalid board",
+    );
+
+    # TEST
+    like (
+        $trap->stderr(),
+        qr/\AInvalid input board/,
+        "Correct stderr for depth_dbm_fc_solver on empty and invalid board",
+    );
+
+    # TEST
+    ok ( scalar ($status != 0), "Exit code is non-zero." );
 }
 
 =head1 COPYRIGHT AND LICENSE
