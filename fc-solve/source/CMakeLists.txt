@@ -166,11 +166,14 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
 ENDIF ()
 
 SET (_gen_c_files )
+MACRO(add_gen_c)
+    LIST(APPEND _gen_c_files ${ARGV})
+ENDMACRO ()
 
 SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_presets.pl")
 SET (presets_gen_output "${CMAKE_CURRENT_BINARY_DIR}/fcs_presets_generated.h")
 SET (presets_gen_args "${presets_gen}" "--mode=c" "--output" "${presets_gen_output}")
-LIST (APPEND _gen_c_files "${presets_gen_output}")
+add_gen_c("${presets_gen_output}")
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
 ADD_CUSTOM_COMMAND(
@@ -182,7 +185,7 @@ ADD_CUSTOM_COMMAND(
 SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_rate_state_c.pl")
 SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
 SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c")
-LIST (APPEND _gen_c_files "${rate_state_output}")
+add_gen_c("${rate_state_output}")
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
 ADD_CUSTOM_COMMAND(
@@ -209,7 +212,7 @@ SET (BIN_CL_INC_H "${CMAKE_CURRENT_BINARY_DIR}/${CL_INC_H}")
 SET (CL_INC_SCRIPT "scripts/gen-cmd-line-radix-tree.pl")
 SET (cl_enum_h "${CMAKE_CURRENT_BINARY_DIR}/cmd_line_enum.h")
 
-LIST (APPEND _gen_c_files "${BIN_CL_INC_H}" "${cl_enum_h}")
+add_gen_c("${BIN_CL_INC_H}" "${cl_enum_h}")
 ADD_CUSTOM_COMMAND(
     OUTPUT
         "${BIN_CL_INC_H}"
@@ -222,8 +225,7 @@ SET (MOVE_C move_funcs_maps.c)
 SET (MOVE_H move_funcs_maps.h)
 SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_move_funcs.pl")
 
-LIST (APPEND _gen_c_files
-        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
+add_gen_c("${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
         "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}")
 
 ADD_CUSTOM_COMMAND(
