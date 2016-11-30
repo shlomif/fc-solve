@@ -451,13 +451,16 @@ IF (MSVC)
 ENDIF ()
 
 SET (COMPILER_FLAGS_TO_CHECK "-fvisibility=hidden")
+MACRO(add_flags)
+    LIST(APPEND COMPILER_FLAGS_TO_CHECK ${ARGV})
+ENDMACRO ()
 
 IF (CPU_ARCH)
-    LIST(APPEND COMPILER_FLAGS_TO_CHECK "-march=${CPU_ARCH}")
+    add_flags("-march=${CPU_ARCH}")
 ENDIF ()
 
 IF (OPTIMIZATION_OMIT_FRAME_POINTER)
-    LIST(APPEND COMPILER_FLAGS_TO_CHECK "-fomit-frame-pointer")
+    add_flags("-fomit-frame-pointer")
 ENDIF()
 
 SET (IS_DEBUG)
@@ -465,7 +468,7 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
     SET (IS_DEBUG 1)
     # This slows down the program considerably.
     IF (CMAKE_BUILD_TYPE STREQUAL debug)
-        LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DDEBUG=1")
+        add_flags("-DDEBUG=1")
     ENDIF ()
 
     # Removed these flags because they emitted spurious warnings, which were of
@@ -479,7 +482,7 @@ IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebIn
 ENDIF ()
 
 IF (IS_DEBUG OR FCS_WITH_TEST_SUITE)
-    LIST(APPEND COMPILER_FLAGS_TO_CHECK "-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
+    add_flags("-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
 ENDIF ()
 
 IF (${CMAKE_COMPILER_IS_GNUCC})
@@ -487,7 +490,7 @@ IF (${CMAKE_COMPILER_IS_GNUCC})
 ENDIF ()
 
 IF (CMAKE_BUILD_TYPE STREQUAL release)
-    LIST(APPEND COMPILER_FLAGS_TO_CHECK "-flto" "-ffat-lto-objects")
+    add_flags("-flto" "-ffat-lto-objects")
 ENDIF ()
 
 SET (IDX 1)
