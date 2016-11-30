@@ -5,6 +5,7 @@ use warnings;
 use autodie;
 use File::Spec;
 use Path::Tiny;
+use List::Util qw/ product sum /;
 
 my $src_dir = shift(@ARGV);
 
@@ -26,7 +27,17 @@ if (!defined($power) or !defined($limit))
     die "Could not match power and/or limit";
 }
 
-my $top = eval($limit);
+my $top = sum(map { product(map {
+            if (my ($n) = /\A([1-9][0-9]*)\z/)
+            {
+                $n;
+            }
+            else
+            {
+                die "not an integer - $_!";
+            }
+        } split/ *\* */, $_)
+    } split/ *\+ */, $limit);
 
 # my @data = (map { int( ($_ ** $power) * 128 * 1024 ) } (0 .. $top-1));
 my @data = (map { $_ ** $power } (0 .. $top-1));
