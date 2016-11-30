@@ -6,88 +6,14 @@ use warnings;
 my @QUEUE_ITEM_FIELDS_ORDER = qw(path_to_dir min_idx max_idx);
 my $RANGE_TO_VERIFY_SOCKET_PATH;
 
-package Object;
-
-use strict;
-use warnings;
-
-sub new
-{
-    my $class = shift;
-
-    my $self = bless {}, $class;
-
-    $self->_init(@_);
-
-    return $self;
-}
-
-sub make_accessors
-{
-    my ($pkg, $methods) = @_;
-
-    no strict 'refs';
-    foreach my $method (@$methods)
-    {
-        *{$pkg."::".$method} =
-            sub {
-                my $self = shift;
-
-                if (@_)
-                {
-                    $self->{$method} = shift;
-                }
-                return $self->{$method};
-            };
-    }
-
-    return;
-}
-
-sub make_delegates_generic
-{
-    my ($pkg, $slot, $methods) = @_;
-
-    no strict 'refs';
-    while (my ($method, $map_to) = each(%$methods))
-    {
-        *{$pkg."::".$method} =
-            sub {
-                return shift->$slot()->$map_to(@_);
-            };
-    }
-
-    return;
-}
-
-sub make_delegates
-{
-    my ($pkg, $slot, $methods) = @_;
-
-    return $pkg->make_delegates_generic(
-        $slot,
-        +{ map { $_ => $_ } @$methods }
-    );
-}
-
-sub make_private_delegates
-{
-    my ($pkg, $slot, $methods) = @_;
-
-    return $pkg->make_delegates_generic(
-        $slot,
-        +{ map { ('_'.$_) => $_ } @$methods }
-    );
-}
-
 package FC_Solve::Socket;
 
 use strict;
 use warnings;
 
-our @ISA = (qw(Object));
+use MooX qw/ late /;
 
-__PACKAGE__->make_accessors([qw(_client_sock)]);
+has '_client_sock' => (is => 'rw');
 
 sub read_line
 {
@@ -127,7 +53,9 @@ package VerifierConn;
 use strict;
 use warnings;
 
-our @ISA = (qw(FC_Solve::Socket));
+use MooX qw/ late /;
+
+extends(qw(FC_Solve::Socket));
 
 use Carp;
 
@@ -241,13 +169,14 @@ package QueueServerSocket;
 use strict;
 use warnings;
 
-our @ISA = (qw(FC_Solve::Socket));
+use MooX qw/ late /;
+extends(qw(FC_Solve::Socket));
 
 use Carp;
 
 use IO::Socket::UNIX;
 
-__PACKAGE__->make_accessors([qw(_server_sock)]);
+has [qw(_server_sock)] => (is => 'rw');
 
 sub _init
 {
@@ -315,12 +244,12 @@ sub read_queue_item
 
 package ProcessesRegistry;
 
-our @ISA = (qw(Object));
+use MooX qw/ late /;
 
 use strict;
 use warnings;
 
-__PACKAGE__->make_accessors([qw(_registry _was_placed _next_id)]);
+has [qw(_registry _was_placed _next_id)] => (is => 'rw');
 
 sub _init
 {
@@ -381,9 +310,8 @@ package QueueServerRegistry;
 use strict;
 use warnings;
 
-our @ISA = (qw(Object));
-
-__PACKAGE__->make_accessors([qw(_active)]);
+use MooX qw/ late /;
+has '_active' => (is => 'rw');
 
 sub _init
 {
@@ -460,9 +388,22 @@ package QueueManager;
 use strict;
 use warnings;
 
-our @ISA = (qw(Object));
+use MooX qw/ late /;
 
-__PACKAGE__->make_accessors([qw(_active _log_cb _queue _service)]);
+has [qw(_log_cb _queue)] => (is => 'rw');
+has [qw(_service)] => (is => 'rw', handles =>
+    {
+        _write => 'write',
+        _new_client => 'new_client',
+    },);
+
+has [qw(_active)] => (is => 'rw', handles =>
+    {
+        _has_solvers => 'has_solvers',
+        _register => 'register',
+        _remove => 'remove',
+        _is_verifiers_active => 'is_verifiers_active',
+    },);
 
 sub _log
 {
@@ -515,12 +456,6 @@ sub display_queue
         } @{$self->_queue}
     ) . "]";
 }
-
-__PACKAGE__->make_private_delegates('_active',
-    [qw(has_solvers register remove is_verifiers_active)]
-);
-
-__PACKAGE__->make_private_delegates('_service', [qw(write new_client)]);
 
 sub _cmd_ENQ
 {
