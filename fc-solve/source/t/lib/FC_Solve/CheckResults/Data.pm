@@ -25,6 +25,11 @@ __PACKAGE__->populate(
             args => {id => "freecell24", deal => 24},
             msg => "Verifying the solution of deal #24",
         },
+        'bakers_game24default' =>
+        {
+            args => {id => "bakers_game24default", deal => 24, variant => "bakers_game", theme => [],},
+            msg =>     "Baker's Game Deal #24",
+        }
     ]
 );
 

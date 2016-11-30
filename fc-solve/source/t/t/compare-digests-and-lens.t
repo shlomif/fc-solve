@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 23;
 use File::Spec ();
 use FC_Solve::Paths qw( bin_board data_file samp_board samp_sol );
 use FC_Solve::CheckResults ();
@@ -49,11 +49,6 @@ vtest({id => "freecell24empty", deal => 24, theme => [],},
 # TEST
 vtest({id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],},
     "Solving Deal #617 with the john-galt-line"
-);
-
-# TEST
-vtest({id => "bakers_game24default", deal => 24, variant => "bakers_game", theme => [],},
-    "Baker's Game Deal #24"
 );
 
 # TEST
