@@ -86,6 +86,91 @@ __PACKAGE__->populate(
             },
             msg =>     "Eight Off #200 with default heuristic",
         },
+        'simple_simon24default' =>
+        {
+            args => {id => "simple_simon24default", deal => 24, variant => "simple_simon",
+                theme => [],
+            },
+            msg =>     "Simple Simon #24 with default theme",
+        },
+        'simple_simon19806default' =>
+        {
+            args => {id => "simple_simon19806default", deal => 19806, variant => "simple_simon",
+                theme => [],
+            },
+            msg =>     "Simple Simon #19806 with default theme",
+        },
+        'simple_simon1with_i' =>
+        {
+            args => {id => "simple_simon1with_i", deal => 1, variant => "simple_simon",
+                theme => ["-to", "abcdefghi"],
+            },
+            msg =>     "Simple Simon #1 with seq-to-false-parent",
+        },
+        'simple_simon1with_next_instance' =>
+        {
+            args => {
+                id => "simple_simon1with_next_instance",
+                deal => 1,
+                variant => "simple_simon",
+                theme => ["-to", "abcdefgh", "--next-instance", "-to", "abcdefghi",],
+            },
+            msg =>     "Simple Simon #1 using an --next-instance",
+        },
+        'freecell254076_l_by' =>
+        {
+            args => {
+                id => "freecell254076_l_by",
+                deal => 254076,
+                msdeals => 1,
+                theme => ["-l", "by", "--scans-synergy", "dead-end-marks"],
+            },
+            msg =>     "Freecell MS 254,076 while using -l by with dead-end-marks",
+        },
+        'freecell24_out_file' =>
+        {
+            args => {id => "freecell24", deal => 24,
+                output_file => "24.solution.txt",},
+            msg =>     "Verifying the solution of deal No. 24 with -o",
+        },
+        'freecell24_children_playing_ball' =>
+        {
+            args => {id => "freecell24_children_playing_ball", deal => 24,
+                theme => ["-l", "children-playing-ball"], with_flares => 1},
+            msg =>     "Verifying the solution of deal No. 24 with -l cpb",
+        },
+        'freecell24_sentient_pearls' =>
+        {
+            args => {id => "freecell24_sentient_pearls", deal => 24,
+                theme => ["-l", "sentient-pearls"], with_flares => 1},
+            msg =>     "Verifying the solution of deal No. 24 with -l sp",
+        },
+        'freecell24with_empty_soft_thread_name' =>
+        {
+            args => {id => "freecell24with_empty_soft_thread_name", deal => 1,
+                theme => ["-to", "013[2456789]", "-nst", "-l" ,"by",],
+            },
+            msg =>     "Solving Deal #24 with an empty soft thread name",
+        },
+        'freecell1941__cache_limit' =>
+        {
+            args => {
+                id => "freecell1941",
+                deal => 1941,
+                theme => ["-l", "gi", "--cache-limit", "2000"],
+            },
+            msg =>     "Verifying 1941 with --cache-limit set to a different value",
+        },
+        'qualified_seed_for_6240' =>
+        {
+            args => {
+                id => "qualified_seed_for_6240",
+                deal => 6240,
+                theme => ["-l", "qs", "-fif", "5", "--flares-choice", "fcpro",],
+                with_flares => 1,
+            },
+            msg =>     "Qualified seed test with -fif and --flares-choice fcpro",
+        },
     ]
 );
 

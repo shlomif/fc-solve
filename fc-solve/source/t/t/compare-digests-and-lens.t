@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 3;
 use File::Spec ();
 use FC_Solve::Paths qw( bin_board data_file samp_board samp_sol );
 use FC_Solve::CheckResults ();
@@ -32,85 +32,6 @@ vtest(
     "Verifying the output of scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl",
 );
 
-# TEST
-vtest(
-    {id => "simple_simon24default", deal => 24, variant => "simple_simon",
-        theme => [],
-    },
-    "Simple Simon #24 with default theme",
-);
-
-# TEST
-vtest(
-    {id => "simple_simon19806default", deal => 19806, variant => "simple_simon",
-        theme => [],
-    },
-    "Simple Simon #19806 with default theme",
-);
-
-# TEST
-vtest(
-    {id => "simple_simon1with_i", deal => 1, variant => "simple_simon",
-        theme => ["-to", "abcdefghi"],
-    },
-    "Simple Simon #1 with seq-to-false-parent",
-);
-
-# TEST
-vtest(
-    {
-        id => "simple_simon1with_next_instance",
-        deal => 1,
-        variant => "simple_simon",
-        theme => ["-to", "abcdefgh", "--next-instance", "-to", "abcdefghi",],
-    },
-    "Simple Simon #1 using an --next-instance",
-);
-
-# TEST
-vtest(
-    {
-        id => "freecell254076_l_by",
-        deal => 254076,
-        msdeals => 1,
-        theme => ["-l", "by", "--scans-synergy", "dead-end-marks"],
-    },
-    "Freecell MS 254,076 while using -l by with dead-end-marks"
-);
-
-# TEST
-vtest({id => "freecell24", deal => 24,
-        output_file => "24.solution.txt",},
-    "Verifying the solution of deal No. 24 with -o");
-
-# TEST
-vtest({id => "freecell24_children_playing_ball", deal => 24,
-        theme => ["-l", "children-playing-ball"], with_flares => 1},
-    "Verifying the solution of deal No. 24 with -l cpb");
-
-# TEST
-vtest({id => "freecell24_sentient_pearls", deal => 24,
-        theme => ["-l", "sentient-pearls"], with_flares => 1},
-    "Verifying the solution of deal No. 24 with -l sp");
-
-
-# TEST
-vtest({id => "freecell24with_empty_soft_thread_name", deal => 1,
-        theme => ["-to", "013[2456789]", "-nst", "-l" ,"by",],
-    },
-    "Solving Deal #24 with an empty soft thread name"
-);
-
-# TEST
-vtest(
-    {
-        id => "freecell1941",
-        deal => 1941,
-        theme => ["-l", "gi", "--cache-limit", "2000"],
-    },
-    "Verifying 1941 with --cache-limit set to a different value",
-);
-
 #
 # We discovered that Freecell Solver did not properly handle the foundations
 # with 0's like "H-0" , "S-0", etc. This is as opposed to what exists in the
@@ -122,16 +43,6 @@ vtest(
 vtest({id => "freecell24_board_with_founds_0", deal => 24,
         board => samp_board( 'ms24-with-founds-0.board'),
     }, "Properly handle foundations like H-0 S-0 etc.");
-
-# TEST
-vtest({
-    id => "qualified_seed_for_6240",
-    deal => 6240,
-    theme => ["-l", "qs", "-fif", "5", "--flares-choice", "fcpro",],
-    with_flares => 1,
-    },
-    "Qualified seed test with -fif and --flares-choice fcpro",
-);
 
 # TEST
 vtest(
