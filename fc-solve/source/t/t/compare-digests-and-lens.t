@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 24;
 use File::Spec ();
 use FC_Solve::Paths qw( bin_board data_file samp_board samp_sol );
 use FC_Solve::CheckResults ();
@@ -20,10 +20,6 @@ sub vtest
 
     return $v->vtest(@_);
 }
-
-# 24 is my lucky number. (Shlomif)
-# TEST
-vtest({id => "freecell24", deal => 24}, "Verifying the solution of deal #24");
 
 # TEST
 vtest({id => "random_dfs_with_rand_parens", deal => 24,
