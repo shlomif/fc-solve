@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 
 use strict;
+use warnings;
+use autodie;
 
 my @limits = qw(100 1000 10000 100000 1000000 2000000 10000000);
 
@@ -29,31 +31,31 @@ my %stats =
     'stuck' => [],
 );
 
-open I, "<total_dump.txt";
+open my $in, '<', 'total_dump.txt';
 
 my ($line);
 
-while (!eof(I))
+while (!eof($in))
 {
-    if ($line !~ /^SEED=(\d+)/)
+    if ($line !~ /^SEED=([0-9]+)/)
     {
-        $line = <I>;
+        $line = <$in>;
     }
-    if ($line =~ /^SEED=(\d+)/)
+    if ($line =~ /^SEED=([0-9]+)/)
     {
         my $num = $1;
         $total_num += 1;
-        $line = <I>;
+        $line = <$in>;
         while ($line =~ /^The number of iterations/)
         {
-        	$line = <I>;
+        	$line = <$in>;
         }
         my $which;
         if ($line =~ /^This game is solveable/)
         {
             $which = $stats{'solved'};
         }
-        elsif ($line =~ /^I could not solve this game/)
+        elsif ($line =~ /^$in could not solve this game/)
         {
             $which = $stats{'not_solved'};
         }
@@ -62,8 +64,8 @@ while (!eof(I))
             push @{$stats{'stuck'}}, $num;
             next;
         }
-        $line = <I>;
-        $line =~ /(\d+)/;
+        $line = <$in>;
+        $line =~ /([0-9]+)/;
         my $num_iters = $1;
         if ($num_iters == $max_num_iterations)
         {
@@ -84,7 +86,7 @@ while (!eof(I))
     }
 }
 
-close(I);
+close($in);
 
 print "Total Number of Games Checked: $total_num\n";
 print "\n";
