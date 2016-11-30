@@ -1,7 +1,9 @@
-package RangeVerifyApp;
+package main;
 
 use strict;
 use warnings;
+
+package RangeVerifyApp;
 
 use parent 'Games::Solitaire::Verify::Base';
 
@@ -320,9 +322,6 @@ sub run
 }
 
 package main;
-
-use strict;
-use warnings;
 
 RangeVerifyApp->new({ argv => [@ARGV] })->run();
 
