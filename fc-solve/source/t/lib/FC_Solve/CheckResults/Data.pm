@@ -52,6 +52,40 @@ __PACKAGE__->populate(
             args => {id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],},
             msg =>     "Solving Deal #617 with the john-galt-line",
         },
+        'forecell1099default' =>
+        {
+            args => {id => "forecell1099default", deal => 1099, variant => "forecell", theme => [],},
+            msg =>     "Forecell Deal #1099",
+        },
+        'relaxed_freecell11982' =>
+        {
+            args => {id => "relaxed_freecell11982",deal => 11982, variant => "relaxed_freecell", },
+            msg =>     "Relaxed Freecell Deal #11982",
+        },
+        'seahaven_towers1977fools' =>
+        {
+            args => {
+                id => "seahaven_towers1977fools-gold",
+                deal => 1977,
+                variant => "seahaven_towers",
+                theme => ["-l", "fools-gold",],
+            },
+            msg =>     "Seahaven Towers #1977",
+        },
+        'eight_off200' =>
+        {
+            args => {
+                id => "eight_off200", deal => 200, variant => "eight_off",
+            },
+            msg =>     "Eight Off #200 with -l gi",
+        },
+        'eight_off200default' =>
+        {
+            args => {id =>"eight_off200default", deal => 200, variant => "eight_off",
+                theme => [],
+            },
+            msg =>     "Eight Off #200 with default heuristic",
+        },
     ]
 );
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 14;
 use File::Spec ();
 use FC_Solve::Paths qw( bin_board data_file samp_board samp_sol );
 use FC_Solve::CheckResults ();
@@ -30,43 +30,6 @@ vtest(
         "$^X $ENV{FCS_SRC_PATH}/scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl --freecells-num=2 @{[samp_sol('375783.dbm-sol')]}"
     },
     "Verifying the output of scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl",
-);
-
-# TEST
-vtest({id => "forecell1099default", deal => 1099, variant => "forecell", theme => [],},
-    "Forecell Deal #1099"
-);
-
-# TEST
-vtest({id => "relaxed_freecell11982",deal => 11982, variant => "relaxed_freecell", },
-    "Relaxed Freecell Deal #11982"
-);
-
-
-# TEST
-vtest(
-    {
-        id => "seahaven_towers1977fools-gold",
-        deal => 1977,
-        variant => "seahaven_towers",
-        theme => ["-l", "fools-gold",],
-    },
-    "Seahaven Towers #1977"
-);
-
-# TEST
-vtest({
-        id => "eight_off200", deal => 200, variant => "eight_off",
-    },
-    "Eight Off #200 with -l gi"
-);
-
-# TEST
-vtest(
-    {id =>"eight_off200default", deal => 200, variant => "eight_off",
-        theme => [],
-    },
-    "Eight Off #200 with default heuristic"
 );
 
 # TEST
