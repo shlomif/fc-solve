@@ -35,10 +35,7 @@ sub rand30
 
 package main;
 
-
-use File::Spec;
-use File::Path qw( mkpath );
-
+use Path::Tiny qw( path );
 use Data::Dump qw(dd);
 
 use FC_Solve::QueuePrototype;
@@ -50,10 +47,9 @@ my $input_gen =  RandGen->new(seed => $data_seed);
 my $output_gen = RandGen->new(seed => $data_seed);
 my $interval_gen = RandGen->new(seed => $interval_seed);
 
-my $queue_offload_dir_path = File::Spec->catdir(
-    $ENV{TMPDIR}, "queue-offload-dir"
+my $queue_offload_dir_path = path($ENV{TMPDIR})->child("queue-offload-dir");
 );
-mkpath($queue_offload_dir_path);
+$queue_offload_dir_path->mkpath;
 
 my $class = $ENV{'USE_C'} ? 'FC_Solve::QueueInC' :
     'FC_Solve::QueuePrototype';
@@ -61,7 +57,7 @@ my $class = $ENV{'USE_C'} ? 'FC_Solve::QueueInC' :
 my $queue = $class->new(
     {
         num_items_per_page => $items_per_page,
-        offload_dir_path => $queue_offload_dir_path,
+        offload_dir_path => "$queue_offload_dir_path",
     }
 );
 
