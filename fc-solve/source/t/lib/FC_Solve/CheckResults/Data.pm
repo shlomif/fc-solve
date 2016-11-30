@@ -29,7 +29,29 @@ __PACKAGE__->populate(
         {
             args => {id => "bakers_game24default", deal => 24, variant => "bakers_game", theme => [],},
             msg =>     "Baker's Game Deal #24",
-        }
+        },
+        'random_dfs_with_rand_parens' =>
+        {
+            args => {id => "random_dfs_with_rand_parens", deal => 24,
+                theme => ["--method", "random-dfs", "-seed", "1", "-to", "[01]=rand()[23456789]=rand()"],
+            },
+            msg =>     "Verifying the solution of a deal with random-dfs specified using '=rand()'",
+        },
+        'freecell1941' =>
+        {
+            args => {id => "freecell1941", deal => 1941},
+            msg =>  "Verifying 1941 (The Hardest Deal)",
+        },
+        'freecell24empty' =>
+        {
+            args => {id => "freecell24empty", deal => 24, theme => [],},
+            msg =>     "Solving Deal #24 with the default heuristic",
+        },
+        'freecell617jgl' =>
+        {
+            args => {id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],},
+            msg =>     "Solving Deal #617 with the john-galt-line",
+        },
     ]
 );
 

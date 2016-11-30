@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 19;
 use File::Spec ();
 use FC_Solve::Paths qw( bin_board data_file samp_board samp_sol );
 use FC_Solve::CheckResults ();
@@ -22,12 +22,6 @@ sub vtest
 }
 
 # TEST
-vtest({id => "random_dfs_with_rand_parens", deal => 24,
-        theme => ["--method", "random-dfs", "-seed", "1", "-to", "[01]=rand()[23456789]=rand()"],
-    },
-    "Verifying the solution of a deal with random-dfs specified using '=rand()'");
-
-# TEST
 vtest(
     {
         id => "375783-dbm-sol",
@@ -36,19 +30,6 @@ vtest(
         "$^X $ENV{FCS_SRC_PATH}/scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl --freecells-num=2 @{[samp_sol('375783.dbm-sol')]}"
     },
     "Verifying the output of scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl",
-);
-
-# TEST
-vtest({id => "freecell1941", deal => 1941}, "Verifying 1941 (The Hardest Deal)");
-
-# TEST
-vtest({id => "freecell24empty", deal => 24, theme => [],},
-    "Solving Deal #24 with the default heuristic"
-);
-
-# TEST
-vtest({id => "freecell617jgl", deal => 617, theme => ["-l", "john-galt-line"],},
-    "Solving Deal #617 with the john-galt-line"
 );
 
 # TEST
