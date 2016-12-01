@@ -1,5 +1,8 @@
 Revision history for Task-FreecellSolver-Testing
 
+0.0.8   2016-12-01
+        - Convert to Dist-Zilla and added some deps.
+
 0.0.7   2016-10-30
         - Add Test::RunValgrind.
 
