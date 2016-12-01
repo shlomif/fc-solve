@@ -25,7 +25,7 @@ install:
     - ( a="$(pwd)"; mkdir B2 && cd B2 && hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules && cd shlomif-cmake-modules/shlomif-cmake-modules && cp -f "$(pwd)"/Shlomif_Common.cmake "$a"/fc-solve/source/cmake/ )
 
 perl:
-    - "5.22"
+    - "5.24"
 python:
     - "3.5"
 script: "export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 ; cd fc-solve/source && perl scripts/multi_config_tests.pl"
