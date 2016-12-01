@@ -92,27 +92,27 @@ SASS_HEADERS = lib/sass/common-style.sass
 $(CSS_TARGETS): $(D)/%.css: lib/sass/%.sass $(SASS_HEADERS)
 	$(SASS_CMD) $< $@
 
-$(D) $(SUBDIRS) :: % :
+$(D) $(SUBDIRS): % :
 	@if [ ! -e $@ ] ; then \
 		mkdir $@ ; \
 	fi
 
 RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 
-$(ARC_DOCS) :: $(D)/% : ../../source/%.txt
+$(ARC_DOCS): $(D)/% : ../../source/%.txt
 	cp -f "$<" "$@"
 
-$(DOCS_HTMLS) :: $(D)/docs/distro/% : ../../source/%
+$(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
 	cp -f "$<" "$@"
 
-$(HTMLS) :: $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
+$(HTMLS): $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
 	WML_LATEMP_PATH="$$(perl -MFile::Spec -e 'print File::Spec->rel2abs(shift)' '$@')" ; \
 	(cd src && wml -o "$${WML_LATEMP_PATH}" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
 
-$(IMAGES) :: $(D)/% : src/%
+$(IMAGES): $(D)/% : src/%
 	cp -f $< $@
 
-$(RAW_SUBDIRS) :: $(D)/% : src/%
+$(RAW_SUBDIRS): $(D)/% : src/%
 	rm -fr $@
 	cp -r $< $@
 
@@ -142,15 +142,10 @@ $(LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA)
 clean_js:
 	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.js $(LIBFREECELL_SOLVER_JS_DIR)/*.bc
 
-JSMIN = ./bin/jsmin
-
-$(JSMIN): lib/jsmin/jsmin.c
-	gcc -O3 -o $@ $<
-
 MULTI_YUI = ./bin/Run-YUI-Compressor
 
-$(DEST_LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS) $(JSMIN)
-	$(JSMIN) < $(LIBFREECELL_SOLVER_JS) > $(DEST_LIBFREECELL_SOLVER_JS)
+$(DEST_LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS)
+	cp -f $< $@
 
 $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 	$(MULTI_YUI) -o $@ $<
@@ -214,12 +209,14 @@ $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
 $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
 	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] % 1_000_000 == 0))' < "$<" > "$@"
 
+$(D)/charts/fc-pro--4fc-intractable-deals--report/index.html: $(FC_PRO_4FC_FILTERED_TSVS) $(FC_PRO_4FC_TSVS)
+
 all: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
 
 .PHONY:
 
 # Build index.html pages for the appropriate sub-directories.
-$(INDEXES) :: $(D)/%/index.html : src/% gen_index.pl
+$(INDEXES): $(D)/%/index.html : src/% gen_index.pl
 	perl gen_index.pl $< $@
 
 ALL_HTACCESSES = $(D)/.htaccess
