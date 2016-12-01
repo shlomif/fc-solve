@@ -85,11 +85,4 @@ fc-solve/source/scripts/ids-whitelist.txt
 fc-solve/source/t/lib/FC_Solve/__pycache__
 fc-solve/source/t/lib/TAP/__pycache__
 fc-solve/source/tags
-Task-FreecellSolver-Testing/Build
-Task-FreecellSolver-Testing/META.json
-Task-FreecellSolver-Testing/META.yml
-Task-FreecellSolver-Testing/MYMETA.json
-Task-FreecellSolver-Testing/MYMETA.yml
-Task-FreecellSolver-Testing/Makefile.PL
-Task-FreecellSolver-Testing/_build/
-Task-FreecellSolver-Testing/blib/
+Task-FreecellSolver-Testing/.build
