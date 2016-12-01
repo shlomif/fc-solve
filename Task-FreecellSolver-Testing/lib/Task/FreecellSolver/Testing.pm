@@ -3,34 +3,38 @@ package Task::FreecellSolver::Testing;
 use warnings;
 use strict;
 
+use 5.012;
+
 =head1 NAME
 
 Task::FreecellSolver::Testing - install the CPAN dependencies of the
 Freecell Solver test suite.
 
-=head1 VERSION
-
-Version 0.0.7
-
 =cut
 
-our $VERSION = '0.0.7';
+our $VERSION = 'v0.0.7';
 
 # Load the dependencies so we'll be sure they are installed.
 use Carp;
+use Cwd;
 use Data::Dumper;
 use Digest::SHA;
 use Env::Path;
 use File::Path;
 use File::Spec;
 use Games::Solitaire::Verify;
+use Inline;
+use Inline::C ();
 use IPC::Open2;
+use List::MoreUtils;
+use List::Util;
+use Moo;
 use MooX qw(late);
 use Storable;
 use String::ShellQuote;
 use Task::Test::Run::AllPlugins;
-use Test::Data::Split;
 use Template;
+use Test::Data::Split;
 use Test::Differences;
 use Test::More;
 use Test::Run::CmdLine::Plugin::TrimDisplayedFilenames;
