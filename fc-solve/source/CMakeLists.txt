@@ -438,61 +438,16 @@ ENDIF ()
 INCLUDE(CPack)
 
 include(CheckFunctionExists)
-INCLUDE(CheckCCompilerFlag)
 INCLUDE(CheckTypeSize)
 INCLUDE(FindThreads)
 
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
-IF (MSVC)
-    MESSAGE(FATAL_ERROR "Error! You are using Microsoft Visual C++ and Freecell Solver Requires a compiler that supports C99 and some GCC extensions. Possible alternatives are GCC, clang and Intel C++ Compiler")
-ENDIF ()
-
-SET (COMPILER_FLAGS_TO_CHECK "-fvisibility=hidden")
-MACRO(add_flags)
-    LIST(APPEND COMPILER_FLAGS_TO_CHECK ${ARGV})
-ENDMACRO ()
-
-IF (CPU_ARCH)
-    add_flags("-march=${CPU_ARCH}")
-ENDIF ()
-
-IF (OPTIMIZATION_OMIT_FRAME_POINTER)
-    add_flags("-fomit-frame-pointer")
-ENDIF ()
-
-SET (IS_DEBUG)
-IF ((CMAKE_BUILD_TYPE STREQUAL debug) OR (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo))
-    SET (IS_DEBUG 1)
-    # This slows down the program considerably.
-    IF (CMAKE_BUILD_TYPE STREQUAL debug)
-        add_flags("-DDEBUG=1")
-    ENDIF ()
-
-    # Removed these flags because they emitted spurious warnings, which were of
-    # no use to us:
-    # "-Winline"
-    # "-Wfloat-equal"
-
-    IF (${CMAKE_COMPILER_IS_GNUCC})
-        ADD_GCC_DEBUG_WARNING_FLAGS()
-    ENDIF ()
-ENDIF ()
-
-IF (${CMAKE_COMPILER_IS_GNUCC})
-    ADD_DEFINITIONS("-std=gnu11")
-ENDIF ()
-
+SHLOMIF_ADD_COMMON_C_FLAGS()
 IF (IS_DEBUG OR FCS_WITH_TEST_SUITE)
     add_flags("-DFCS_COMPILE_DEBUG_FUNCTIONS=1")
 ENDIF ()
-
-
-IF (CMAKE_BUILD_TYPE STREQUAL release)
-    add_flags("-flto" "-ffat-lto-objects")
-ENDIF ()
-
 SET (IDX 1)
 FOREACH (CFLAG_TO_CHECK ${COMPILER_FLAGS_TO_CHECK})
     SET (FLAG_EXISTS_VAR "FLAG_EXISTS_${IDX}")
