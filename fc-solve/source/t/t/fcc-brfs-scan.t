@@ -7,7 +7,7 @@ use FC_Solve::Paths qw/ bin_file /;
 
 BEGIN
 {
-    if (-f bin_file(['libfcs_fcc_brfs_test.so']))
+    if ( -f bin_file( ['libfcs_fcc_brfs_test.so'] ) )
     {
         plan tests => 12;
     }
@@ -168,7 +168,8 @@ sub is_fcc_new_named_args
 {
     my ($args) = @_;
 
-    return is_fcc_new(@{$args}{qw(init_state start_state min_states states_in_cache)});
+    return is_fcc_new(
+        @{$args}{qw(init_state start_state min_states states_in_cache)} );
 }
 
 package FccStartPointsList;
@@ -179,9 +180,12 @@ use List::MoreUtils qw/ uniq /;
 
 use Test::More;
 
-__PACKAGE__->mk_acc_ref([qw(
-    states
-    )]
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            states
+            )
+    ]
 );
 
 sub _init
@@ -192,9 +196,7 @@ sub _init
     my $moves_prefix = $args->{moves_prefix} || '';
 
     $self->states(
-        FccStartPoint::find_fcc_start_points(
-            $args->{start}, $moves_prefix,
-        )
+        FccStartPoint::find_fcc_start_points( $args->{start}, $moves_prefix, )
     );
 
     return;
@@ -210,15 +212,15 @@ sub sanity_check
     my $fcc_start_points_list = $self->states();
 
     # TEST:$sanity_check++;
-    is (
-        scalar(uniq map { $_->get_state_string() } @$fcc_start_points_list),
+    is(
+        scalar( uniq map { $_->get_state_string() } @$fcc_start_points_list ),
         scalar(@$fcc_start_points_list),
         'The states are unique',
     );
 
     # TEST:$sanity_check++;
-    is (
-        scalar(uniq map { $_->get_moves() } @$fcc_start_points_list),
+    is(
+        scalar( uniq map { $_->get_moves() } @$fcc_start_points_list ),
         scalar(@$fcc_start_points_list),
         'The states are unique',
     );
@@ -280,14 +282,14 @@ EOF
     $obj->sanity_check();
 
     # TEST
-    ok (
-        (any { $_->get_state_string() =~ m/^: 8D$/ms } @{$obj->states()}),
+    ok(
+        ( any { $_->get_state_string() =~ m/^: 8D$/ms } @{ $obj->states() } ),
         "Horne prune did not take effect (found intermediate state)"
     );
 
     my $canonize_state_sub = sub {
         my ($state) = @_;
-        return join '', sort { $a cmp $b } split/^/, $state;
+        return join '', sort { $a cmp $b } split /^/, $state;
     };
 
     my $canonized_state = $canonize_state_sub->(<<"EOF");
@@ -304,27 +306,28 @@ Freecells:  KD  7D
 EOF
 
     # TEST
-    ok (
-        (none {
-            $canonize_state_sub->($_->get_state_string())
-                eq
-            $canonized_state
-        }
-            @{$obj->states()}
+    ok(
+        (
+            none
+            {
+                $canonize_state_sub->( $_->get_state_string() ) eq
+                    $canonized_state
+            }
+            @{ $obj->states() }
         ),
-        "Intermediate states in the FCC are not placed in the list of start points.",
+"Intermediate states in the FCC are not placed in the list of start points.",
     );
 
-    my $half_move_spec = $obj->compile_move_spec(
-        { type => 'stack', idx => 3, },
-    );
+    my $half_move_spec =
+        $obj->compile_move_spec( { type => 'stack', idx => 3, }, );
 
     # TEST
-    ok (
-        (none
+    ok(
+        (
+            none
             {
-                (length($_->get_moves()) == 1) &&
-                vec($_->get_moves(), 0, 4) == $half_move_spec,
+                ( length( $_->get_moves() ) == 1 )
+                    && vec( $_->get_moves(), 0, 4 ) == $half_move_spec,
             }
         ),
         "No intermediate states - moves",
@@ -354,19 +357,21 @@ EOF
     $obj->sanity_check();
 
     # TEST
-    is (
+    is(
         $obj->get_num_new_positions(),
         (
             # count when QD is above KS.
-            1 + # Original
-            1 + # KD on stack.
-            # Now all cards must be on separate cells.
-            # 2 Cards are in the freecell - one on a stack.
-            3 +
-            # 3 cards are on the stacks separately.
-            1 +
-            # 1 Card is in the freecell
-            3
+            1 +        # Original
+                1 +    # KD on stack.
+                       # Now all cards must be on separate cells.
+                       # 2 Cards are in the freecell - one on a stack.
+                3 +
+
+                # 3 cards are on the stacks separately.
+                1 +
+
+                # 1 Card is in the freecell
+                3
         ),
         "Checking get_num_new_positions for close-to-final state.",
     );
@@ -402,19 +407,22 @@ EOF
 
     # Empty;
     my @states_in_cache;
+
     # TEST
-    ok (
-        FccIsNew::is_fcc_new($init_state_s, $start_state_s, \@min_states, \@states_in_cache),
+    ok(
+        FccIsNew::is_fcc_new(
+            $init_state_s, $start_state_s, \@min_states, \@states_in_cache
+        ),
         'State with empty cache and min_states is new',
     );
 
     # TEST
-    ok (
+    ok(
         FccIsNew::is_fcc_new_named_args(
             {
-                init_state => $init_state_s,
-                start_state => $start_state_s,
-                min_states => \@min_states,
+                init_state      => $init_state_s,
+                start_state     => $start_state_s,
+                min_states      => \@min_states,
                 states_in_cache => \@states_in_cache,
             }
         ),
@@ -424,14 +432,15 @@ EOF
     # Broke due to only putting the so-far-minimal states in the cache.
     if (0)
     {
-    #CANCELED_TEST
-    ok (
-        (!FccIsNew::is_fcc_new_named_args(
-            {
-                init_state => $init_state_s,
-                start_state => $start_state_s,
-                min_states => [],
-                states_in_cache => [<<"EOF"],
+        #CANCELED_TEST
+        ok(
+            (
+                !FccIsNew::is_fcc_new_named_args(
+                    {
+                        init_state      => $init_state_s,
+                        start_state     => $start_state_s,
+                        min_states      => [],
+                        states_in_cache => [<<"EOF"],
 Foundations: H-K C-K D-J S-Q
 Freecells:  KD
 :
@@ -443,10 +452,11 @@ Freecells:  KD
 :
 :
 EOF
-            }
-        )),
-        'Testing that it returns FALSE if state is in the cache.',
-    );
+                    }
+                )
+            ),
+            'Testing that it returns FALSE if state is in the cache.',
+        );
     }
 }
 
@@ -493,17 +503,20 @@ Freecells:  6D  KH
 EOF
 
     ## CANCELLED TEST
-    ok (
-        (!FccIsNew::is_fcc_new_named_args(
-            {
-                init_state => $init_state_s,
-                start_state => $start_state_s,
-                min_states => [$min_state_s],
-                # No states in the cache, because we are not interested in
-                # testing it.
-                states_in_cache => [],
-            }
-        )),
+    ok(
+        (
+            !FccIsNew::is_fcc_new_named_args(
+                {
+                    init_state  => $init_state_s,
+                    start_state => $start_state_s,
+                    min_states  => [$min_state_s],
+
+                    # No states in the cache, because we are not interested in
+                    # testing it.
+                    states_in_cache => [],
+                }
+            )
+        ),
         'Min state present returns FALSE.',
     );
 }

@@ -46,15 +46,15 @@ EOF
 sub new
 {
     my $class = shift;
-    my $args = shift;
-    return FC_Solve::VarBaseDigitsReader::XS::_proto_new($args->{data});
+    my $args  = shift;
+    return FC_Solve::VarBaseDigitsReader::XS::_proto_new( $args->{data} );
 }
 
 sub read
 {
-    my ($self, $base) = @_;
+    my ( $self, $base ) = @_;
 
-    return _var_base_reader__read($self, $base);
+    return _var_base_reader__read( $self, $base );
 }
 
 1;

@@ -10,7 +10,7 @@ use FC_Solve::CheckResults ();
 
 my $v = FC_Solve::CheckResults->new(
     {
-        data_filename => data_file(['digests-and-lens-storage.yml']),
+        data_filename => data_file( ['digests-and-lens-storage.yml'] ),
     }
 );
 
@@ -24,12 +24,12 @@ sub vtest
 # TEST
 vtest(
     {
-        id => "375783-dbm-sol",
+        id   => "375783-dbm-sol",
         deal => 375_783,
         complete_command =>
-        "$^X $ENV{FCS_SRC_PATH}/scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl --freecells-num=2 @{[samp_sol('375783.dbm-sol')]}"
+"$^X $ENV{FCS_SRC_PATH}/scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl --freecells-num=2 @{[samp_sol('375783.dbm-sol')]}"
     },
-    "Verifying the output of scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl",
+"Verifying the output of scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl",
 );
 
 #
@@ -40,15 +40,20 @@ vtest(
 # This test aims to fix it.
 
 # TEST
-vtest({id => "freecell24_board_with_founds_0", deal => 24,
-        board => samp_board( 'ms24-with-founds-0.board'),
-    }, "Properly handle foundations like H-0 S-0 etc.");
+vtest(
+    {
+        id    => "freecell24_board_with_founds_0",
+        deal  => 24,
+        board => samp_board('ms24-with-founds-0.board'),
+    },
+    "Properly handle foundations like H-0 S-0 etc."
+);
 
 # TEST
 vtest(
     {
-        id => "freecell24",
-        deal => 24,
+        id    => "freecell24",
+        deal  => 24,
         board => bin_board('24.no-newline.board'),
     },
     "Handle initial layouts without a trailing newline."

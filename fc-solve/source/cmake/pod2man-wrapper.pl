@@ -7,62 +7,57 @@ use Getopt::Long;
 use File::Temp qw/tempdir/;
 use File::Copy;
 
-my ($src, $dest, $sect, $center, $release);
+my ( $src, $dest, $sect, $center, $release );
 
 GetOptions(
-    'src=s' => \$src,
-    'dest=s' => \$dest,
+    'src=s'     => \$src,
+    'dest=s'    => \$dest,
     'section=s' => \$sect,
-    'center=s' => \$center,
+    'center=s'  => \$center,
     'release=s' => \$release,
-)
-    or die "Wrong options.";
+) or die "Wrong options.";
 
-if (!defined($src))
+if ( !defined($src) )
 {
     die "src not specified.";
 }
 
-if (!defined($dest))
+if ( !defined($dest) )
 {
     die "dest not specified.";
 }
 
-if (!defined($sect))
+if ( !defined($sect) )
 {
     die "section not specified.";
 }
 
-if (!defined($center))
+if ( !defined($center) )
 {
     die "center not specified.";
 }
 
-if (!defined($release))
+if ( !defined($release) )
 {
     die "release not specified.";
 }
 
-my $dir = tempdir( CLEANUP => 1);
+my $dir = tempdir( CLEANUP => 1 );
 
 my $pod = "$dir/Hoola.pod";
 
-if (! -e $src)
+if ( !-e $src )
 {
     die "Cannot find '$src'";
 }
-copy($src, $pod);
+copy( $src, $pod );
 
-if(
-system(
-    'pod2man',
-    "--section=$sect",
-    "--center=$center",
-    "--release=$release",
-    $pod,
-    $dest
-)
-)
+if (
+    system(
+        'pod2man',            "--section=$sect", "--center=$center",
+        "--release=$release", $pod,              $dest
+    )
+    )
 {
     die "pod2man failed! $!";
 }

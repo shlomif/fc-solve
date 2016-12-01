@@ -8,7 +8,7 @@ use FC_Solve::CheckResults ();
 
 my $v = FC_Solve::CheckResults->new(
     {
-        data_filename => data_file(['digests-and-lens-storage.yml']),
+        data_filename => data_file( ['digests-and-lens-storage.yml'] ),
     }
 );
 
@@ -17,9 +17,9 @@ sub r
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my ($args, $msg) = @_;
+    my ( $args, $msg ) = @_;
 
-    return $v->vtest($args, $msg);
+    return $v->vtest( $args, $msg );
 }
 
 1;

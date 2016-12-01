@@ -10,27 +10,27 @@ use Test::Data::Split;
 
 sub gen
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    my $module = $args->{module};
+    my $module      = $args->{module};
     my $data_module = $args->{data_module};
-    my $fn_prefix = $args->{prefix};
+    my $fn_prefix   = $args->{prefix};
 
-    if ($module !~ /\A[A-Z][a-zA-Z_0-9:]+\z/)
+    if ( $module !~ /\A[A-Z][a-zA-Z_0-9:]+\z/ )
     {
         die "module should be the name of a module.";
     }
-    if ($data_module !~ /\A[A-Z][a-zA-Z_0-9:]+\z/)
+    if ( $data_module !~ /\A[A-Z][a-zA-Z_0-9:]+\z/ )
     {
         die "data_module should be the name of a module.";
     }
-    if ($fn_prefix !~ /\A[a-z]+\z/)
+    if ( $fn_prefix !~ /\A[a-z]+\z/ )
     {
         die "prefix is wrong.";
     }
 
     eval "use $data_module;";
-    if (my $error = $@)
+    if ( my $error = $@ )
     {
         die $error;
     }
@@ -39,17 +39,18 @@ sub gen
 
     Test::Data::Split->new(
         {
-            target_dir => 't',
+            target_dir  => 't',
             filename_cb => sub {
-                my ($self, $args) = @_;
+                my ( $self, $args ) = @_;
 
                 return "${fn_prefix}--$args->{id}.t";
             },
             contents_cb => sub {
-                my ($self, $args) = @_;
+                my ( $self, $args ) = @_;
                 my $data = $args->{data};
                 my $dump = sub {
-                    return Data::Dumper->new([shift])->Terse(1)->Indent(0)->Dump;
+                    return Data::Dumper->new( [shift] )->Terse(1)->Indent(0)
+                        ->Dump;
                 };
                 return <<"EOF";
 #!/usr/bin/perl
@@ -57,10 +58,10 @@ use Test::More tests => 1;
 use $module;
 ${module}::r(@{[$dump->($data->{args}) . "," . $dump->($data->{msg})]});
 EOF
-        },
-        data_obj => $data_obj,
-    }
-)->run;
+            },
+            data_obj => $data_obj,
+        }
+    )->run;
 
 }
 

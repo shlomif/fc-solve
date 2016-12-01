@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More tests => 10;
 use FC_Solve::GetOutput ();
-use Carp ();
+use Carp                ();
 use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
@@ -16,7 +16,7 @@ sub trap_board
     my $args = shift;
 
     my $fc_solve_output = FC_Solve::GetOutput->new($args)->open_cmd_line->{fh};
-    my @lines = <$fc_solve_output>;
+    my @lines           = <$fc_solve_output>;
 
     close($fc_solve_output);
 
@@ -30,11 +30,12 @@ sub trap_dbm
     my $args = shift;
 
     open my $fc_solve_output,
-        shell_quote(bin_exe_raw(['dbm_fc_solver']),
-            "--offload-dir-path", tempdir (CLEANUP => 1), "--num-threads", 1,
-            $args->{board_fn}
-        ) .
-        " |"
+        shell_quote(
+        bin_exe_raw( ['dbm_fc_solver'] ),
+        "--offload-dir-path", tempdir( CLEANUP => 1 ),
+        "--num-threads", 1, $args->{board_fn}
+        )
+        . " |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
     my @lines = <$fc_solve_output>;
@@ -51,14 +52,15 @@ sub trap_depth_dbm
     my $args = shift;
 
     open my $fc_solve_output,
-        shell_quote(bin_exe_raw(['depth_dbm_fc_solver']),
-            "--offload-dir-path", (tempdir (CLEANUP => 1) . '/'),
-            "--num-threads", 1,
-            "--iters-delta-limit", $args->{max_iters},
-            $args->{board_fn}
-        ) .
-        " |"
-        or Carp::confess "Error! Could not open the depth_dbm_fc_solver pipline!";
+        shell_quote(
+        bin_exe_raw( ['depth_dbm_fc_solver'] ), "--offload-dir-path",
+        ( tempdir( CLEANUP => 1 ) . '/' ), "--num-threads",
+        1,                  "--iters-delta-limit",
+        $args->{max_iters}, $args->{board_fn}
+        )
+        . " |"
+        or Carp::confess
+        "Error! Could not open the depth_dbm_fc_solver pipline!";
 
     my @lines = <$fc_solve_output>;
 
@@ -68,9 +70,14 @@ sub trap_depth_dbm
 }
 
 {
-    my $fc_solve_output = trap_board({ deal => 1941, theme => ['--show-exceeded-limits', '--max-iters', '10'], });
+    my $fc_solve_output = trap_board(
+        {
+            deal  => 1941,
+            theme => [ '--show-exceeded-limits', '--max-iters', '10' ],
+        }
+    );
 
-    my $output_text = join('', @{$fc_solve_output->{out_lines}});
+    my $output_text = join( '', @{ $fc_solve_output->{out_lines} } );
 
     # TEST
     like(
@@ -88,29 +95,39 @@ sub trap_depth_dbm
         return trap_board(@_)->{out_lines};
     };
 
-    my $want_output = $trap->({ deal => 24, theme => ['-to', '0123456789'], });
-    my $have_output = $trap->({ deal => 24, theme => ['-to', '0123456789', '-dto2', '9,0123456789',], });
-    my $long_have_output = $trap->({ deal => 24, theme => ['-to', '0123456789', '--depth-tests-order2', '9,0123456789',], });
+    my $want_output =
+        $trap->( { deal => 24, theme => [ '-to', '0123456789' ], } );
+    my $have_output = $trap->(
+        {
+            deal  => 24,
+            theme => [ '-to', '0123456789', '-dto2', '9,0123456789', ],
+        }
+    );
+    my $long_have_output = $trap->(
+        {
+            deal  => 24,
+            theme => [
+                '-to', '0123456789', '--depth-tests-order2', '9,0123456789',
+            ],
+        }
+    );
 
     # TEST
-    eq_or_diff(
-        $have_output,
-        $want_output,
+    eq_or_diff( $have_output, $want_output,
         '-dto2 yields the pristine tests order.',
     );
 
     # TEST
-    eq_or_diff(
-        $long_have_output,
-        $want_output,
+    eq_or_diff( $long_have_output, $want_output,
         '--depth-tests-order2 yields the pristine tests order.',
     );
 }
 
 {
-    my $fc_solve_output = trap_board({ deal => 1941, theme => ['-sel', '--max-iters', '10'], });
+    my $fc_solve_output = trap_board(
+        { deal => 1941, theme => [ '-sel', '--max-iters', '10' ], } );
 
-    my $output_text = join('', @{$fc_solve_output->{out_lines}});
+    my $output_text = join( '', @{ $fc_solve_output->{out_lines} } );
 
     # TEST
     like(
@@ -129,37 +146,44 @@ sub trap_depth_dbm
     # TEST:$num_choices=2;
     foreach my $choice (qw(fc_solve fcpro))
     {
-        my $fc_solve_output = trap_board({ deal => '22215757927177568630',
+        my $fc_solve_output = trap_board(
+            {
+                deal          => '22215757927177568630',
                 pysolfc_deals => 1,
-                theme => [qw(-s -i -p -t -sam -sel -l qsi -fif 1 --flares-choice), $choice], });
+                theme         => [
+                    qw(-s -i -p -t -sam -sel -l qsi -fif 1 --flares-choice),
+                    $choice
+                ],
+            }
+        );
 
-        my $output_text = join('', @{$fc_solve_output->{out_lines}});
+        my $output_text = join( '', @{ $fc_solve_output->{out_lines} } );
 
         # TEST*$num_choices
         is(
-            scalar(() = $output_text =~ /^Iteration: /gms),
+            scalar( () = $output_text =~ /^Iteration: /gms ),
             $GOOD_ITERS_COUNT,
-            "Verifying existing iterations count for qsi --flares-choice $choice",
+"Verifying existing iterations count for qsi --flares-choice $choice",
         );
 
         # TEST*$num_choices
         like(
             $output_text,
             qr/^Total number of states checked is \Q$GOOD_ITERS_COUNT\E\.$/ms,
-            "Total number of states checked is reported as the same as the actual one for --flares-choice $choice.",
+"Total number of states checked is reported as the same as the actual one for --flares-choice $choice.",
         );
     }
 }
 
 {
 SKIP:
-{
-
-    if (is_without_dbm())
     {
-        Test::More::skip( "without the dbm fc_solvers", 1);
-    }
-    my $needle = <<"EOF";
+
+        if ( is_without_dbm() )
+        {
+            Test::More::skip( "without the dbm fc_solvers", 1 );
+        }
+        my $needle = <<"EOF";
 Success!
 --------
 Foundations: H-T C-8 D-A S-J
@@ -261,7 +285,7 @@ Freecells:
 END
 EOF
 
-    my $needle_non_debondt = <<"EOF";
+        my $needle_non_debondt = <<"EOF";
 Success!
 --------
 Foundations: H-T C-8 D-A S-J
@@ -363,44 +387,46 @@ Freecells:
 END
 EOF
 
-    my $dbm_output = trap_dbm(
-        {
-            board_fn => samp_board( '2freecells-24-mid-with-colons.board' ),
-        }
-    );
+        my $dbm_output = trap_dbm(
+            {
+                board_fn => samp_board('2freecells-24-mid-with-colons.board'),
+            }
+        );
 
-    my $output_text = join('', @{$dbm_output->{out_lines}});
+        my $output_text = join( '', @{ $dbm_output->{out_lines} } );
 
-    $output_text =~ s# +(\n|\z)#$1#g;
+        $output_text =~ s# +(\n|\z)#$1#g;
 
-    # TEST
-    ok (
-        scalar (index( $output_text, $needle) >= 0 or
-        index( $output_text, $needle_non_debondt) >= 0),
-        "dbm_fc_solver invocation contains the solution's output."
-    );
-}
+        # TEST
+        ok(
+            scalar(
+                       index( $output_text, $needle ) >= 0
+                    or index( $output_text, $needle_non_debondt ) >= 0
+            ),
+            "dbm_fc_solver invocation contains the solution's output."
+        );
+    }
 }
 
 {
-    SKIP:
+SKIP:
     {
-        if (is_without_dbm())
+        if ( is_without_dbm() )
         {
-            Test::More::skip( "without the dbm fc_solvers", 1);
+            Test::More::skip( "without the dbm fc_solvers", 1 );
         }
 
         my $dbm_output = trap_depth_dbm(
             {
-                board_fn => bin_board('981.board'),
+                board_fn  => bin_board('981.board'),
                 max_iters => 400_000,
             }
         );
 
-        my $output_text = join('', @{$dbm_output->{out_lines}});
+        my $output_text = join( '', @{ $dbm_output->{out_lines} } );
 
         # TEST
-        like (
+        like(
             $output_text,
             qr/^Mark\+Sweep Progress - 100000/ms,
             "depth_dbm_fc_solver bug with infinite run is fixed."

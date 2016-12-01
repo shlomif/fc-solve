@@ -8,7 +8,7 @@ use FC_Solve::Paths qw/ bin_file /;
 
 BEGIN
 {
-    if (-f bin_file(['libfcs_dbm_calc_derived_test.so']))
+    if ( -f bin_file( ['libfcs_dbm_calc_derived_test.so'] ) )
     {
         plan tests => 40;
     }
@@ -17,7 +17,6 @@ BEGIN
         plan skip_all => "Test object shared object not found - incompatible.";
     }
 }
-
 
 package DerivedState;
 
@@ -132,23 +131,19 @@ sub which_irrev_moves_as_hashref
     my ($self) = @_;
     my $bitmask = $self->get_which_irreversible_moves_bitmask;
 
-    return
-    +{
-        map
-        {
+    return +{
+        map {
             my $rank_int = $_;
-            map
-            {
+            map {
                 my $suit_int = $_;
-                my $card = Games::Solitaire::Verify::Card->rank_to_string(
-                    1+$rank_int
-                ) . Games::Solitaire::Verify::Card->get_suits_seq->[$suit_int];
-                my $v = vec($bitmask, ($rank_int << 2)+$suit_int, 2);
-                $v ? ($card => $v) : ();
-            }
-            (0 .. (4-1))
-        }
-        (0 .. (13-1))
+                my $card     = Games::Solitaire::Verify::Card->rank_to_string(
+                    1 + $rank_int )
+                    . Games::Solitaire::Verify::Card->get_suits_seq
+                    ->[$suit_int];
+                my $v = vec( $bitmask, ( $rank_int << 2 ) + $suit_int, 2 );
+                $v ? ( $card => $v ) : ();
+                } ( 0 .. ( 4 - 1 ) )
+        } ( 0 .. ( 13 - 1 ) )
     };
 }
 
@@ -156,9 +151,12 @@ package DerivedStatesList;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-__PACKAGE__->mk_acc_ref([qw(
-    states
-    )]
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            states
+            )
+    ]
 );
 
 sub _init
@@ -177,12 +175,19 @@ sub _init
 
 sub find_by_string
 {
-    my $self = shift;
+    my $self            = shift;
     my $derived_state_s = shift;
 
-    return DerivedStatesSearch->new({
-        states => [grep { ($_->get_state_string() =~ s# +(\n)#$1#gr) eq $derived_state_s } @{$self->states}]
-    });
+    return DerivedStatesSearch->new(
+        {
+            states => [
+                grep {
+                    ( $_->get_state_string() =~ s# +(\n)#$1#gr ) eq
+                        $derived_state_s
+                } @{ $self->states }
+            ]
+        }
+    );
 }
 
 package DerivedStatesSearch;
@@ -191,9 +196,12 @@ use parent 'FC_Solve::SingleMoveSearch';
 
 use Test::More;
 
-__PACKAGE__->mk_acc_ref([qw(
-    states
-    )]
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            states
+            )
+    ]
 );
 
 sub _init
@@ -201,58 +209,49 @@ sub _init
     my $self = shift;
     my $args = shift;
 
-    $self->states(
-        $args->{states}
-    );
+    $self->states( $args->{states} );
 
     return;
 }
 
 sub has_one
 {
-    my ($self,$blurb) = @_;
+    my ( $self, $blurb ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    return is( scalar(@{$self->states()}), 1, $blurb);
+    return is( scalar( @{ $self->states() } ), 1, $blurb );
 }
 
 sub count_irreversible_moves_is
 {
-    my ($self, $exp_count, $blurb) = @_;
+    my ( $self, $exp_count, $blurb ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    return is(
-        ($self->states->[0]->get_core_irreversible_moves_count()),
-        ($exp_count),
-        $blurb
-    );
+    return is( ( $self->states->[0]->get_core_irreversible_moves_count() ),
+        ($exp_count), $blurb );
 }
 
 sub count_irreversible_moves_including_prune_is
 {
-    my ($self, $exp_count, $blurb) = @_;
+    my ( $self, $exp_count, $blurb ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     return is(
-        ($self->states->[0]->get_num_non_reversible_moves_including_prune()),
-        ($exp_count),
-        $blurb
+        ( $self->states->[0]->get_num_non_reversible_moves_including_prune() ),
+        ($exp_count), $blurb
     );
 }
 
 sub is_reversible
 {
-    my ($self, $is_reversible, $blurb) = @_;
+    my ( $self, $is_reversible, $blurb ) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    return is(
-        (!$self->states->[0]->get_core_irreversible_moves_count()),
-        (!!$is_reversible),
-        $blurb
-    );
+    return is( ( !$self->states->[0]->get_core_irreversible_moves_count() ),
+        ( !!$is_reversible ), $blurb );
 }
 
 sub _move
@@ -264,56 +263,49 @@ sub _move
 
 sub _move_half
 {
-    my ($self, $which) = @_;
+    my ( $self, $which ) = @_;
 
-    return $self->calc_move_half($self->_move(), $which);
+    return $self->calc_move_half( $self->_move(), $which );
 }
 
 sub is_src
 {
-    my ($self, $src_spec, $blurb) = @_;
+    my ( $self, $src_spec, $blurb ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    return is (
-        $self->_move_half(0),
-        $self->compile_move_spec($src_spec),
-        $blurb
-    );
+    return is( $self->_move_half(0), $self->compile_move_spec($src_spec),
+        $blurb );
 }
 
 sub is_dest
 {
-    my ($self, $dest_spec, $blurb) = @_;
+    my ( $self, $dest_spec, $blurb ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    return is (
-        $self->_move_half(1),
-        $self->compile_move_spec($dest_spec),
-        $blurb
-    );
+    return is( $self->_move_half(1), $self->compile_move_spec($dest_spec),
+        $blurb );
 }
 
 use Test::Differences qw/ eq_or_diff /;
 
 sub is_which_irrev_moves_equal_to
 {
-    my ($self, $which_irrev_moves__spec, $blurb) = @_;
+    my ( $self, $which_irrev_moves__spec, $blurb ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     return eq_or_diff(
-        scalar($self->states->[0]->which_irrev_moves_as_hashref()),
-        $which_irrev_moves__spec,
-        $blurb,
-    );
+        scalar( $self->states->[0]->which_irrev_moves_as_hashref() ),
+        $which_irrev_moves__spec, $blurb, );
 }
+
 package main;
 
 use Test::More;
 
-my $TRUE = 1;
+my $TRUE  = 1;
 my $FALSE = 0;
 
 {
@@ -330,20 +322,21 @@ EOF
 
     my $fc_24_init = DerivedStatesList->new(
         {
-            start => $freecell_24_initial_layout_s,
+            start               => $freecell_24_initial_layout_s,
             perform_horne_prune => 0,
         }
     );
 
     my $fc_24_init_with_prune = DerivedStatesList->new(
         {
-            start => $freecell_24_initial_layout_s,
+            start               => $freecell_24_initial_layout_s,
             perform_horne_prune => 1,
         }
     );
 
     {
-        my $results = $fc_24_init->find_by_string(<<"EOF"
+        my $results = $fc_24_init->find_by_string(
+            <<"EOF"
 Foundations: H-0 C-0 D-0 S-0
 Freecells:      9D
 : 4C 2C 9C 8C QS 4S 2H
@@ -361,13 +354,19 @@ EOF
         $results->has_one('9D to freecell has one result.');
 
         # TEST
-        $results->is_reversible($FALSE, '9D to freecell is not reversible');
+        $results->is_reversible( $FALSE, '9D to freecell is not reversible' );
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 7, }, '9D to freecell is from stack No. 7');
+        $results->is_src(
+            { type => 'stack', idx => 7, },
+            '9D to freecell is from stack No. 7'
+        );
 
         # TEST
-        $results->is_dest({ type => 'freecell', idx => 1, }, '9D to freecell is to freecell No. 1');
+        $results->is_dest(
+            { type => 'freecell', idx => 1, },
+            '9D to freecell is to freecell No. 1'
+        );
 
         # TEST
         $results->is_which_irrev_moves_equal_to(
@@ -380,7 +379,8 @@ EOF
 
     # Check move from stack to foundations
     {
-        my $results = $fc_24_init->find_by_string(<<"EOF"
+        my $results = $fc_24_init->find_by_string(
+            <<"EOF"
 Foundations: H-0 C-0 D-0 S-A
 Freecells:
 : 4C 2C 9C 8C QS 4S 2H
@@ -395,19 +395,18 @@ EOF
         );
 
         my $blurb_base = "Stack->Foundations Move";
+
         # TEST
         $results->has_one("$blurb_base has one.");
 
         # TEST
-        $results->is_reversible($FALSE, "$blurb_base is not reversible.");
+        $results->is_reversible( $FALSE, "$blurb_base is not reversible." );
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 3, },
-                "$blurb_base src");
+        $results->is_src( { type => 'stack', idx => 3, }, "$blurb_base src" );
 
         # TEST
-        $results->is_dest({ type => 'found', idx => 3, },
-                "$blurb_base dest");
+        $results->is_dest( { type => 'found', idx => 3, }, "$blurb_base dest" );
 
         # TEST
         $results->is_which_irrev_moves_equal_to(
@@ -419,7 +418,8 @@ EOF
     }
 
     {
-        my $results = $fc_24_init_with_prune->find_by_string(<<"EOF"
+        my $results = $fc_24_init_with_prune->find_by_string(
+            <<"EOF"
 Foundations: H-0 C-0 D-0 S-A
 Freecells:      9D
 : 4C 2C 9C 8C QS 4S 2H
@@ -437,15 +437,21 @@ EOF
         $results->has_one('9D to freecell has one result.');
 
         # TEST
-        $results->count_irreversible_moves_including_prune_is(3,
+        $results->count_irreversible_moves_including_prune_is( 3,
             '9D to Freecell Count irreversible is 3.',
         );
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 7, }, '9D to freecell is from stack No. 7');
+        $results->is_src(
+            { type => 'stack', idx => 7, },
+            '9D to freecell is from stack No. 7'
+        );
 
         # TEST
-        $results->is_dest({ type => 'freecell', idx => 1, }, '9D to freecell is to freecell No. 1');
+        $results->is_dest(
+            { type => 'freecell', idx => 1, },
+            '9D to freecell is to freecell No. 1'
+        );
 
         # TEST
         $results->is_which_irrev_moves_equal_to(
@@ -474,13 +480,14 @@ EOF
 
     my $fc_24 = DerivedStatesList->new(
         {
-            start => $freecell_24_middle_layout,
+            start               => $freecell_24_middle_layout,
             perform_horne_prune => 0,
         }
     );
 
     {
-        my $results = $fc_24->find_by_string(<<"EOF"
+        my $results = $fc_24->find_by_string(
+            <<"EOF"
 Foundations: H-Q C-8 D-8 S-Q
 Freecells:
 : KH QC JD TC 9D
@@ -498,20 +505,17 @@ EOF
         $results->has_one('KD from Freecell has exactly one result');
 
         # TEST
-        $results->is_reversible($TRUE, 'KD from Freecell is reversible');
+        $results->is_reversible( $TRUE, 'KD from Freecell is reversible' );
 
         # TEST
-        $results->is_src({ type => 'freecell', idx => 0, },
-            'from freecell 0');
+        $results->is_src( { type => 'freecell', idx => 0, },
+            'from freecell 0' );
 
         # TEST
-        $results->is_dest({ type => 'stack', idx => 7, },
-            'to stack No. 7');
+        $results->is_dest( { type => 'stack', idx => 7, }, 'to stack No. 7' );
 
         # TEST
-        $results->is_which_irrev_moves_equal_to(
-            {
-            },
+        $results->is_which_irrev_moves_equal_to( {},
             'One irreversible move of 9D',
         );
     }
@@ -535,13 +539,14 @@ EOF
 
     my $fc_24 = DerivedStatesList->new(
         {
-            start => $freecell_24_middle_layout,
+            start               => $freecell_24_middle_layout,
             perform_horne_prune => 0,
         }
     );
 
     {
-        my $results = $fc_24->find_by_string(<<"EOF"
+        my $results = $fc_24->find_by_string(
+            <<"EOF"
 Foundations: H-0 C-0 D-0 S-2
 Freecells:  JH  8D
 : 4C 2C 9C 8C QS 4S 2H
@@ -556,30 +561,32 @@ EOF
         );
 
         my $blurb_base = "Moving from parent to empty";
+
         # TEST
         $results->has_one("$blurb_base has one");
 
         # TEST
-        $results->is_reversible($TRUE, "$blurb_base is reversible");
+        $results->is_reversible( $TRUE, "$blurb_base is reversible" );
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 1, },
-            "$blurb_base - from stack No. 1");
+        $results->is_src(
+            { type => 'stack', idx => 1, },
+            "$blurb_base - from stack No. 1"
+        );
 
         # TEST
-        $results->is_dest({ type => 'stack', idx => 3, },
-            "$blurb_base - to stack No. 3");
+        $results->is_dest( { type => 'stack', idx => 3, },
+            "$blurb_base - to stack No. 3" );
 
         # TEST
-        $results->is_which_irrev_moves_equal_to(
-            {
-            },
+        $results->is_which_irrev_moves_equal_to( {},
             "$blurb_base - no irreversible moves.",
         );
     }
 
     {
-        my $results = $fc_24->find_by_string(<<"EOF"
+        my $results = $fc_24->find_by_string(
+            <<"EOF"
 Foundations: H-0 C-0 D-0 S-2
 Freecells:  JH  8D
 : 4C 2C 9C 8C QS 4S 2H
@@ -594,19 +601,22 @@ EOF
         );
 
         my $blurb_base = "Moving from non-seq-parent to empty column";
+
         # TEST
         $results->has_one("$blurb_base has one");
 
         # TEST
-        $results->is_reversible($FALSE, "$blurb_base is not reversible");
+        $results->is_reversible( $FALSE, "$blurb_base is not reversible" );
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 2, },
-            "$blurb_base - from stack No. 1");
+        $results->is_src(
+            { type => 'stack', idx => 2, },
+            "$blurb_base - from stack No. 1"
+        );
 
         # TEST
-        $results->is_dest({ type => 'stack', idx => 3, },
-            "$blurb_base - to stack No. 3");
+        $results->is_dest( { type => 'stack', idx => 3, },
+            "$blurb_base - to stack No. 3" );
     }
 }
 
@@ -626,13 +636,14 @@ EOF
 
     my $fc_24 = DerivedStatesList->new(
         {
-            start => $freecell_24_middle_layout,
+            start               => $freecell_24_middle_layout,
             perform_horne_prune => 0,
         }
     );
 
     {
-        my $results = $fc_24->find_by_string(<<"EOF"
+        my $results = $fc_24->find_by_string(
+            <<"EOF"
 Foundations: H-0 C-0 D-0 S-A
 Freecells:
 : 4C 2C 9C 8C QS 4S 2H
@@ -647,19 +658,20 @@ EOF
         );
 
         my $blurb_base = "Moving from freecell to foundation";
+
         # TEST
         $results->has_one("$blurb_base has one");
 
         # TEST
-        $results->is_reversible($FALSE, "$blurb_base is not reversible");
+        $results->is_reversible( $FALSE, "$blurb_base is not reversible" );
 
         # TEST
-        $results->is_src({ type => 'freecell', idx => 0, },
-            "$blurb_base - src");
+        $results->is_src( { type => 'freecell', idx => 0, },
+            "$blurb_base - src" );
 
         # TEST
-        $results->is_dest({ type => 'found', idx => 3, },
-            "$blurb_base - dest");
+        $results->is_dest( { type => 'found', idx => 3, },
+            "$blurb_base - dest" );
     }
 }
 
@@ -678,13 +690,14 @@ EOF
 
     my $fc = DerivedStatesList->new(
         {
-            start => $freecell_24ish_layout,
+            start               => $freecell_24ish_layout,
             perform_horne_prune => 0,
         }
     );
 
     {
-        my $results = $fc->find_by_string(<<"EOF"
+        my $results = $fc->find_by_string(
+            <<"EOF"
 Foundations: H-3 C-0 D-0 S-0
 Freecells:
 : 4C 2C 9C 8C QS 4S
@@ -702,17 +715,15 @@ EOF
         $results->has_one('3H to foundation has one result.');
 
         # TEST
-        $results->count_irreversible_moves_is(2,
-            '3H to foundation is two irreversible moves because' .
-            ' it was not lying on a parent.'
-        );
+        $results->count_irreversible_moves_is( 2,
+                  '3H to foundation is two irreversible moves because'
+                . ' it was not lying on a parent.' );
 
         # TEST
-        $results->is_src({ type => 'stack', idx => 1, },
-            'From stack #1');
+        $results->is_src( { type => 'stack', idx => 1, }, 'From stack #1' );
 
         # TEST
-        $results->is_dest({ type => 'found', idx => 0, }, "Foundation.");
+        $results->is_dest( { type => 'found', idx => 0, }, "Foundation." );
 
         # TEST
         $results->is_which_irrev_moves_equal_to(
@@ -741,15 +752,11 @@ EOF
     );
 
     # TEST
-    is (
-        $ret->[0],
-        4,
-        "4 irreversible pseudo-moves",
-    );
+    is( $ret->[0], 4, "4 irreversible pseudo-moves", );
 
     # TEST
-    is (
-       scalar($ret->[1] =~ s# +(\n|\z)#$1#gr),
+    is(
+        scalar( $ret->[1] =~ s# +(\n|\z)#$1#gr ),
         <<"EOF"
 Foundations: H-2 C-0 D-0 S-A
 Freecells:

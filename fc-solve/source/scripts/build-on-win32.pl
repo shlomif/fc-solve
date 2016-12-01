@@ -8,9 +8,9 @@ use Carp (qw/ confess /);
 sub run
 {
     my $cmd = shift;
-    if (system(@$cmd))
+    if ( system(@$cmd) )
     {
-        confess ("[@{$cmd}] failed! $! $?");
+        confess("[@{$cmd}] failed! $! $?");
     }
 }
 
@@ -22,6 +22,7 @@ run(
     [
         qq{C:/Program Files/CMake 3.4/bin/CMake},
         '-G', 'MinGW Makefiles',
+
         # These variables require libgmp which isn't provided by default.
         '-DFCS_WITH_TEST_SUITE=', '-DFCS_ENABLE_DBM_SOLVER=',
         @ARGV,

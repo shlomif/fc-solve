@@ -17,11 +17,12 @@ use FC_Solve::Paths qw( $FC_SOLVE_EXE );
     my $got_output = `$FC_SOLVE_EXE --version`;
 
     my $got_status = $?;
-    # TEST
-    ok (!$got_status, "fc-solve --version ran fine");
 
     # TEST
-    like (
+    ok( !$got_status, "fc-solve --version ran fine" );
+
+    # TEST
+    like(
         $got_output,
         qr{^libfreecell-solver version \Q$good_ver\E}ms,
         "Version is contained in the --version display",

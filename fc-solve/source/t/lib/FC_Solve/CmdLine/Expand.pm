@@ -12,66 +12,69 @@ sub _build_argv
 {
     my $self = shift;
 
-    return $self->_process_cmd_line($self->input_argv());
+    return $self->_process_cmd_line( $self->input_argv() );
 }
 
-has input_argv => (is => 'ro', isa => 'ArrayRef[Str]', required => 1, );
-has argv => (is => 'ro', isa => 'ArrayRef[Str]', lazy => 1, default => \&_build_argv);
+has input_argv => ( is => 'ro', isa => 'ArrayRef[Str]', required => 1, );
+has argv =>
+    ( is => 'ro', isa => 'ArrayRef[Str]', lazy => 1, default => \&_build_argv );
 
 sub _process_cmd_line
 {
-    my ($self, $argv_input) = @_;
+    my ( $self, $argv_input ) = @_;
 
     my @argv = @$argv_input;
     my @out;
     my $idx = 0;
-    while ($idx < @argv)
+    while ( $idx < @argv )
     {
-        if ($argv[$idx] eq '--read-from-file')
+        if ( $argv[$idx] eq '--read-from-file' )
         {
             $idx++;
-            my $s = $argv[$idx];
+            my $s        = $argv[$idx];
             my $num_skip = 0;
 
-            if ($s =~ s/\A(\d+),//)
+            if ( $s =~ s/\A(\d+),// )
             {
                 $num_skip = $1;
             }
             my $filename = $s;
 
-            if ($filename !~ m#\A/#)
+            if ( $filename !~ m#\A/# )
             {
                 $filename = "$ENV{FCS_SRC_PATH}/Presets/presets/$filename";
             }
 
             my $text = path($filename)->slurp_utf8;
-            my $argv_to_process = FC_Solve::SplitCmdLine->split_cmd_line_string(
-                $text
-            );
+            my $argv_to_process =
+                FC_Solve::SplitCmdLine->split_cmd_line_string($text);
 
-            push @out, @{
+            push @out,
+                @{
                 $self->_process_cmd_line(
-                    [ @{$argv_to_process}[$num_skip .. $#{$argv_to_process}] ]
+                    [
+                        @{$argv_to_process}[ $num_skip .. $#{$argv_to_process} ]
+                    ]
                 )
-            };
+                };
         }
-        elsif (($argv[$idx] eq '-l') || ($argv[$idx] eq '--load-config'))
+        elsif ( ( $argv[$idx] eq '-l' ) || ( $argv[$idx] eq '--load-config' ) )
         {
             $idx++;
             my $preset_name = $argv[$idx];
             open my $in, '<', "$ENV{FCS_PATH}/Presets/presetrc"
                 or die "Cannot open presetrc file - $!";
             my $cmd_found;
-            PRESETRC:
-            while (my $line = <$in>)
+        PRESETRC:
+            while ( my $line = <$in> )
             {
                 chomp($line);
-                if ($line =~ m#\Aname=\Q$preset_name\E\s*\z#)
+                if ( $line =~ m#\Aname=\Q$preset_name\E\s*\z# )
                 {
-                    while (my $cmd = <$in>)
+                    while ( my $cmd = <$in> )
                     {
                         chomp($cmd);
-                        if ($cmd =~ s/\Acommand=//)
+                        if ( $cmd =~ s/\Acommand=// )
                         {
                             $cmd_found = $cmd;
                             last PRESETRC;
@@ -81,16 +84,16 @@ sub _process_cmd_line
             }
             close($in);
 
-            if (defined($cmd_found))
+            if ( defined($cmd_found) )
             {
                 push @out,
-                @{
+                    @{
                     $self->_process_cmd_line(
                         FC_Solve::SplitCmdLine->split_cmd_line_string(
                             $cmd_found
                         )
                     )
-                };
+                    };
             }
             else
             {

@@ -12,7 +12,7 @@ use Env::Path ();
 use File::Temp qw/ tempdir /;
 
 # Remove FCS_TEST_BUILD so we won't run the tests with infinite recursion.
-if (! delete( $ENV{'FCS_TEST_BUILD'} ) )
+if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
 {
     plan skip_all => "Skipping because FCS_TEST_BUILD is not set";
 }
@@ -25,25 +25,24 @@ my $src_path = $ENV{"FCS_SRC_PATH"};
 sub test_cmd
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
-    my ($cmd, $blurb) = @_;
+    my ( $cmd, $blurb ) = @_;
 
-    my @cmd = (ref($cmd) eq "ARRAY") ? @$cmd : $cmd;
+    my @cmd = ( ref($cmd) eq "ARRAY" ) ? @$cmd : $cmd;
 
     # These environment variables confuse the input for the harness.
-    my $sys_ret =
-    do {
+    my $sys_ret = do
+    {
         local %ENV = %ENV;
-        delete($ENV{HARNESS_VERBOSE});
+        delete( $ENV{HARNESS_VERBOSE} );
 
         system(@cmd);
     };
 
-    if (!ok (!$sys_ret, $blurb))
+    if ( !ok( !$sys_ret, $blurb ) )
     {
-        Carp::confess("Command [" .
-            join(" ", (map { qq/"$_"/ } @cmd)) .
-                "] failed! $!."
-            );
+        Carp::confess( "Command ["
+                . join( " ", ( map { qq/"$_"/ } @cmd ) )
+                . "] failed! $!." );
     }
 }
 
@@ -52,19 +51,20 @@ sub test_cmd
     my $before_temp_cwd = Cwd::getcwd();
 
     chdir($temp_dir);
-    # TEST
-    test_cmd(["cmake", $src_path], "cmake succeeded");
 
     # TEST
-    test_cmd(["make", "dist"], "make dist is successful");
+    test_cmd( [ "cmake", $src_path ], "cmake succeeded" );
 
-    open my $ver_fh, "<", File::Spec->catfile($src_path, "ver.txt");
+    # TEST
+    test_cmd( [ "make", "dist" ], "make dist is successful" );
+
+    open my $ver_fh, "<", File::Spec->catfile( $src_path, "ver.txt" );
     my $version = <$ver_fh>;
     close($ver_fh);
     chomp($version);
 
-    my $base =  "freecell-solver-$version";
-    my $tar_arc = "$base.tar";
+    my $base     = "freecell-solver-$version";
+    my $tar_arc  = "$base.tar";
     my $arc_name = "$tar_arc.xz";
 
     # The code starting from here makes sure we can run "make dist"
@@ -72,56 +72,58 @@ sub test_cmd
     # archive. So we don't have to rename it.
 
     # TEST
-    test_cmd(["tar", "-xvf", $arc_name], "Unpacking the arc name");
+    test_cmd( [ "tar", "-xvf", $arc_name ], "Unpacking the arc name" );
 
     # TEST
-    ok (scalar(-d $base), "The directory was created");
+    ok( scalar( -d $base ), "The directory was created" );
 
     my $orig_cwd = Cwd::getcwd();
 
     chdir($base);
 
-    mkdir ("build");
-    chdir ("build");
-    # TEST
-    test_cmd(["cmake", ".."],
-        "CMaking in the unpacked dir"
-    );
+    mkdir("build");
+    chdir("build");
 
     # TEST
-    test_cmd(["make", "dist"]);
+    test_cmd( [ "cmake", ".." ], "CMaking in the unpacked dir" );
 
     # TEST
-    test_cmd(["tar", "-xvf", $arc_name],
-        "Unpacking the arc name in the unpacked dir"
-    );
+    test_cmd( [ "make", "dist" ] );
 
     # TEST
-    ok (scalar(-d $base), "The directory was created again");
+    test_cmd( [ "tar", "-xvf", $arc_name ],
+        "Unpacking the arc name in the unpacked dir" );
 
     # TEST
-    ok (scalar(-f
-            File::Spec->catfile(
+    ok( scalar( -d $base ), "The directory was created again" );
+
+    # TEST
+    ok(
+        scalar(
+            -f File::Spec->catfile(
                 File::Spec->curdir(), $base, "CMakeLists.txt"
             )
-        ), "CMakeLists.txt exists",
+        ),
+        "CMakeLists.txt exists",
     );
 
     # TEST
-    ok (scalar(-f
-            File::Spec->catfile(
+    ok(
+        scalar(
+            -f File::Spec->catfile(
                 File::Spec->curdir(), $base, "HACKING.txt"
             )
-        ), "HACKING.txt exists",
+        ),
+        "HACKING.txt exists",
     );
 
     chdir($orig_cwd);
 
-    my $failing_asciidoc_dir = File::Spec->catdir($orig_cwd, "asciidoc-fail");
+    my $failing_asciidoc_dir = File::Spec->catdir( $orig_cwd, "asciidoc-fail" );
     rmtree($failing_asciidoc_dir);
     mkpath($failing_asciidoc_dir);
 
-    my $asciidoc_bin = File::Spec->catfile($failing_asciidoc_dir, "asciidoc");
+    my $asciidoc_bin = File::Spec->catfile( $failing_asciidoc_dir, "asciidoc" );
 
     {
         open my $out, ">", $asciidoc_bin
@@ -134,7 +136,7 @@ EOF
         close($out);
     }
 
-    chmod(0755, $asciidoc_bin);
+    chmod( 0755, $asciidoc_bin );
 
     # Delete the unpacked directory.
     rmtree($base);
@@ -143,18 +145,14 @@ EOF
     {
         local $ENV{PATH} = $ENV{PATH};
 
-        Env::Path->PATH->Prepend(
-            $failing_asciidoc_dir,
-        );
+        Env::Path->PATH->Prepend( $failing_asciidoc_dir, );
 
         # We need to delete the tar.gz/tar.bz2 because rpmbuild -tb may work
         # on them with the .xz still present.
-        unlink(map { "$tar_arc.$_" } qw/bz2 gz/);
+        unlink( map { "$tar_arc.$_" } qw/bz2 gz/ );
 
         # TEST
-        ok (scalar(-e $arc_name),
-            "Archive exists."
-        );
+        ok( scalar( -e $arc_name ), "Archive exists." );
 
         open my $tar_fh, "-|", "tar", "-tvf", $arc_name
             or die "Could not open Tar '$arc_name' for opening.";
@@ -165,26 +163,33 @@ EOF
         chomp(@tar_lines);
 
         # TEST
-        ok ((none { m{/config\.h\z} } @tar_lines),
-            "Archive does not contain config.h files");
+        ok(
+            ( none { m{/config\.h\z} } @tar_lines ),
+            "Archive does not contain config.h files"
+        );
 
         # TEST
-        ok ((none { m{/freecell-solver-range-parallel-solve\z} } @tar_lines),
-            "Archive does not contain the range solver executable");
+        ok(
+            ( none { m{/freecell-solver-range-parallel-solve\z} } @tar_lines ),
+            "Archive does not contain the range solver executable"
+        );
 
         # TEST
-        ok ((none { m{/libfreecell-solver\.a\z} } @tar_lines),
-            "Archive does not contain libfreecell-solver.a");
+        ok(
+            ( none { m{/libfreecell-solver\.a\z} } @tar_lines ),
+            "Archive does not contain libfreecell-solver.a"
+        );
 
         # TEST
-        test_cmd ("rpmbuild -tb $arc_name 2>/dev/null",
+        test_cmd(
+            "rpmbuild -tb $arc_name 2>/dev/null",
             "rpmbuild -tb is successful."
         );
     }
 
     rmtree($failing_asciidoc_dir);
 
-    chdir ($before_temp_cwd);
+    chdir($before_temp_cwd);
 }
 
 __END__

@@ -12,8 +12,8 @@ use FC_Solve::SplitTests;
 my $module = 'FC_Solve::Test::Valgrind';
 FC_Solve::SplitTests->gen(
     {
-        prefix => 'valgrind',
-        module => $module,
+        prefix      => 'valgrind',
+        module      => $module,
         data_module => 'FC_Solve::Test::Valgrind::Data',
     },
 );

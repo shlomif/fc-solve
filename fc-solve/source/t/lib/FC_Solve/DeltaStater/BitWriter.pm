@@ -5,13 +5,13 @@ use warnings;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-__PACKAGE__->mk_acc_ref([qw(_bits_ref _bit_idx)]);
+__PACKAGE__->mk_acc_ref( [qw(_bits_ref _bit_idx)] );
 
 sub _init
 {
     my $self = shift;
 
-    $self->_bits_ref(\(my $s = ''));
+    $self->_bits_ref( \( my $s = '' ) );
 
     $self->_bit_idx(0);
 
@@ -24,18 +24,18 @@ sub _next_idx
 
     my $ret = $self->_bit_idx;
 
-    $self->_bit_idx($ret+1);
+    $self->_bit_idx( $ret + 1 );
 
     return $ret;
 }
 
 sub write
 {
-    my ($self, $len, $data) = @_;
+    my ( $self, $len, $data ) = @_;
 
     while ($len)
     {
-        vec(${$self->_bits_ref()}, $self->_next_idx(), 1) = ($data & 0b1);
+        vec( ${ $self->_bits_ref() }, $self->_next_idx(), 1 ) = ( $data & 0b1 );
     }
     continue
     {
@@ -50,7 +50,7 @@ sub get_bits
 {
     my $self = shift;
 
-    return ${$self->_bits_ref()};
+    return ${ $self->_bits_ref() };
 }
 
 1;

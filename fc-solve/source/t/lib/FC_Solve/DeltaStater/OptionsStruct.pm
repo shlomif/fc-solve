@@ -5,21 +5,21 @@ use warnings;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-my $UNKNOWN = 0;
+my $UNKNOWN    = 0;
 my $IMPOSSIBLE = 1;
-my $TRUE = 2;
+my $TRUE       = 2;
 
 use List::MoreUtils qw(firstidx);
 
-__PACKAGE__->mk_acc_ref([qw(_options _which_option _num_unknowns)]);
+__PACKAGE__->mk_acc_ref( [qw(_options _which_option _num_unknowns)] );
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
     my $count = $args->{count};
 
-    $self->_options([($UNKNOWN) x $count]);
+    $self->_options( [ ($UNKNOWN) x $count ] );
 
     $self->_which_option(-1);
 
@@ -30,21 +30,21 @@ sub _init
 
 sub get_option
 {
-    my ($self,$idx) = @_;
+    my ( $self, $idx ) = @_;
 
     return $self->_options->[$idx];
 }
 
 sub _set_option
 {
-    my ($self,$idx, $val) = @_;
+    my ( $self, $idx, $val ) = @_;
 
-    if (($val != $TRUE) && ($val != $IMPOSSIBLE))
+    if ( ( $val != $TRUE ) && ( $val != $IMPOSSIBLE ) )
     {
         Carp::confess "Must be true or impossible.";
     }
 
-    if ($self->get_option($idx) != $UNKNOWN)
+    if ( $self->get_option($idx) != $UNKNOWN )
     {
         Carp::confess "Option was already set.";
     }
@@ -62,28 +62,28 @@ sub get_verdict
 sub mark_as_impossible
 {
     my $self = shift;
-    my $idx = shift;
+    my $idx  = shift;
 
-    if ($self->_which_option() >= 0)
+    if ( $self->_which_option() >= 0 )
     {
         Carp::confess "Already decided!";
     }
 
-    if ($self->get_option($idx) != $UNKNOWN)
+    if ( $self->get_option($idx) != $UNKNOWN )
     {
         Carp::confess "Already set.";
     }
 
-    $self->_set_option($idx, $IMPOSSIBLE);
-    $self->_num_unknowns($self->_num_unknowns() -1);
+    $self->_set_option( $idx, $IMPOSSIBLE );
+    $self->_num_unknowns( $self->_num_unknowns() - 1 );
 
-    if ($self->_num_unknowns() == 1)
+    if ( $self->_num_unknowns() == 1 )
     {
         $self->_which_option(
             firstidx { $self->get_option($_) == $UNKNOWN }
-            (0 .. $#{$self->_options()})
+            ( 0 .. $#{ $self->_options() } )
         );
-        $self->_set_option($self->_which_option(), $TRUE);
+        $self->_set_option( $self->_which_option(), $TRUE );
         $self->_num_unknowns(0);
     }
 
@@ -92,28 +92,28 @@ sub mark_as_impossible
 
 sub mark_as_true
 {
-    my $self = shift;
+    my $self       = shift;
     my $option_idx = shift;
 
-    if ($self->_which_option() >= 0)
+    if ( $self->_which_option() >= 0 )
     {
         Carp::confess "Already decided!";
     }
 
-    if ($self->get_option($option_idx) != $UNKNOWN)
+    if ( $self->get_option($option_idx) != $UNKNOWN )
     {
         Carp::confess "Already set.";
     }
 
-    $self->_set_option($option_idx, $TRUE);
+    $self->_set_option( $option_idx, $TRUE );
     $self->_which_option($option_idx);
     $self->_num_unknowns(0);
 
-    foreach my $idx (0 .. $#{$self->_options})
+    foreach my $idx ( 0 .. $#{ $self->_options } )
     {
-        if ($self->get_option($idx) == $UNKNOWN)
+        if ( $self->get_option($idx) == $UNKNOWN )
         {
-            $self->_set_option($idx, $IMPOSSIBLE);
+            $self->_set_option( $idx, $IMPOSSIBLE );
         }
     }
 

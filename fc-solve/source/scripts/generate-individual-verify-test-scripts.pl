@@ -12,8 +12,8 @@ use FC_Solve::SplitTests;
 my $module = 'FC_Solve::Test::Verify';
 FC_Solve::SplitTests->gen(
     {
-        prefix => 'verify',
-        module => $module,
+        prefix      => 'verify',
+        module      => $module,
         data_module => 'FC_Solve::Test::Verify::Data',
     },
 );

@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Exporter';
 
-our @EXPORT_OK=qw(trim_trail_ws);
+our @EXPORT_OK = qw(trim_trail_ws);
 
 sub trim_trail_ws
 {

@@ -8,47 +8,51 @@ use parent 'Games::Solitaire::Verify::Base';
 use Carp qw/confess/;
 use String::ShellQuote qw/shell_quote/;
 
-__PACKAGE__->mk_acc_ref([qw(
-        board
-        deal
-        is_custom
-        msdeals
-        pysolfc_deals
-        theme
-        variant
-        variant_s
-        )]);
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            board
+            deal
+            is_custom
+            msdeals
+            pysolfc_deals
+            theme
+            variant
+            variant_s
+            )
+    ]
+);
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    my $board = $self->board($args->{board});
-    my $deal = $self->deal($args->{deal});
+    my $board = $self->board( $args->{board} );
+    my $deal  = $self->deal( $args->{deal} );
 
-    $self->theme($args->{theme} || ["-l", "gi"]);
+    $self->theme( $args->{theme} || [ "-l", "gi" ] );
 
-    if (! defined($board))
+    if ( !defined($board) )
     {
-        if (!defined($deal))
+        if ( !defined($deal) )
         {
             confess "Neither Deal nor board are specified";
         }
-        if ($deal !~ m{\A[1-9][0-9]*\z})
+        if ( $deal !~ m{\A[1-9][0-9]*\z} )
         {
             confess "Invalid deal $deal";
         }
     }
 
-
-    my $variant = $self->variant($args->{variant} || "freecell");
+    my $variant = $self->variant( $args->{variant} || "freecell" );
     $self->variant_s(
-        $self->is_custom(scalar ($variant eq "custom"))
-        ? "" : "-g $variant"
+        $self->is_custom( scalar( $variant eq "custom" ) )
+        ? ""
+        : "-g $variant"
     );
 
-    $self->msdeals($args->{msdeals});
-    $self->pysolfc_deals($args->{pysolfc_deals});
+    $self->msdeals( $args->{msdeals} );
+    $self->pysolfc_deals( $args->{pysolfc_deals} );
 
     return;
 }
@@ -59,13 +63,14 @@ sub board_gen_prefix
 
     my $deal = $self->deal;
 
-    return
-    ($self->board ? "" :
-        (
-            ($self->msdeals ?
-                "pi-make-microsoft-freecell-board -t $deal | " :
-                ("make_pysol_freecell_board.py -t" .
-                    ($self->pysolfc_deals ? " -F " : "") . " $deal @{[$self->variant]} | ")
+    return (
+        $self->board ? ""
+        : (
+            (
+                $self->msdeals ? "pi-make-microsoft-freecell-board -t $deal | "
+                : (       "make_pysol_freecell_board.py -t"
+                        . ( $self->pysolfc_deals ? " -F " : "" )
+                        . " $deal @{[$self->variant]} | " )
             )
         )
     );
@@ -77,25 +82,25 @@ sub fc_solve_params_suffix
 
     my $board = $self->board;
 
-    return $self->variant_s . ' ' . shell_quote(@{$self->theme})
-        . " -p -t -sam " . ($board ? shell_quote($board) : "");
+    return
+          $self->variant_s . ' '
+        . shell_quote( @{ $self->theme } )
+        . " -p -t -sam "
+        . ( $board ? shell_quote($board) : "" );
 }
 
 use FC_Solve::Paths qw( $FC_SOLVE_EXE );
+
 sub calc_cmd_line
 {
     my ($self) = @_;
 
     my $cmd_line =
-    (
-        $self->board_gen_prefix() .
-        " $FC_SOLVE_EXE " . $self->fc_solve_params_suffix()
-    );
+        (     $self->board_gen_prefix()
+            . " $FC_SOLVE_EXE "
+            . $self->fc_solve_params_suffix() );
 
-    return
-    +{
-        cmd_line => $cmd_line,
-    };
+    return +{ cmd_line => $cmd_line, };
 }
 
 sub open_cmd_line

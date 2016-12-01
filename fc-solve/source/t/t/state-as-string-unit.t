@@ -68,9 +68,9 @@ package main;
 EOF
 
     # TEST
-    if (!defined($output_s))
+    if ( !defined($output_s) )
     {
-        ok (1, "Skipping for this version.");
+        ok( 1, "Skipping for this version." );
     }
     else
     {

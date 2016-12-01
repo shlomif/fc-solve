@@ -10,16 +10,16 @@ sub r
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my ($args, $msg) = @_;
+    my ( $args, $msg ) = @_;
 
     require FC_Solve::GetOutput;
 
-    if (exists $args->{variant} and is_freecell_only())
+    if ( exists $args->{variant} and is_freecell_only() )
     {
-        return Test::More::ok(1, 'skipped due to freecell-only');
+        return Test::More::ok( 1, 'skipped due to freecell-only' );
     }
 
-    my $cmd_line = FC_Solve::GetOutput->new($args);
+    my $cmd_line        = FC_Solve::GetOutput->new($args);
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
 
     require Games::Solitaire::Verify::Solution;
@@ -28,18 +28,22 @@ sub r
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => $fc_solve_output,
-            variant => $cmd_line->variant,
-            ($cmd_line->is_custom ? (variant_params => $args->{variant_params}) : ()),
+            variant  => $cmd_line->variant,
+            (
+                $cmd_line->is_custom
+                ? ( variant_params => $args->{variant_params} )
+                : ()
+            ),
         },
     );
 
     my $verdict = $solution->verify();
-    my $test_verdict = Test::More::ok (!$verdict, $msg);
+    my $test_verdict = Test::More::ok( !$verdict, $msg );
 
-    if (!$test_verdict)
+    if ( !$test_verdict )
     {
         require Data::Dumper;
-        Test::More::diag("Verdict == " . Data::Dumper::Dumper($verdict));
+        Test::More::diag( "Verdict == " . Data::Dumper::Dumper($verdict) );
     }
 
     close($fc_solve_output);

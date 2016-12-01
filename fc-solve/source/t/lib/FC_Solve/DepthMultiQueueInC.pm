@@ -86,9 +86,12 @@ EOF
 
 sub new
 {
-    my ($class, $args) = @_;
+    my ( $class, $args ) = @_;
 
-    return FC_Solve::DepthMultiQueueInC::_proto_new($args->{num_items_per_page}, $args->{offload_dir_path}, $args->{first_depth}, $args->{first_item}, );
+    return FC_Solve::DepthMultiQueueInC::_proto_new(
+        $args->{num_items_per_page}, $args->{offload_dir_path},
+        $args->{first_depth},        $args->{first_item},
+    );
 }
 
 sub extract

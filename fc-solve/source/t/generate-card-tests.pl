@@ -11,61 +11,57 @@ sub rank_normalize
 {
     my $arg = shift;
 
-    if (ref($arg) eq "")
+    if ( ref($arg) eq "" )
     {
         return +{ map { $_ => $arg } (qw(t non_t)) };
     }
     else
     {
-        return $arg
+        return $arg;
     }
 }
 
-my $implicit_t = (path("../fcs_back_compat.h")->slurp_utf8 =~ /^#define FCS_BREAK_BACKWARD_COMPAT_1$/ms ? 1 : 0);
+my $implicit_t = ( path("../fcs_back_compat.h")->slurp_utf8 =~
+        /^#define FCS_BREAK_BACKWARD_COMPAT_1$/ms ? 1 : 0 );
 
 my @suits = (qw(H C D S));
-my @ranks =  ("A", (2 .. 9),
+my @ranks = (
+    "A",
+    ( 2 .. 9 ),
     {
-        't' => "T",
+        't'     => "T",
         'non_t' => "10",
     },
-    , "J", "Q", "K");
+    ,
+    "J", "Q", "K"
+);
 
-@ranks = (map { rank_normalize($_) } @ranks);
+@ranks = ( map { rank_normalize($_) } @ranks );
 
-my $template = Template->new({ ABSOLUTE => 1, },);
+my $template = Template->new( { ABSOLUTE => 1, }, );
 
 sub indexify
 {
     my $offset = shift;
-    my $array = shift;
+    my $array  = shift;
 
-    return
-    [
-        map
-        { +{ 'idx' => ($offset+$_), 'value' => $array->[$_] } }
-        (0 .. $#$array)
-    ];
+    return [ map { +{ 'idx' => ( $offset + $_ ), 'value' => $array->[$_] } }
+            ( 0 .. $#$array ) ];
 }
 
-my $args =
-{
-    'suits' => indexify(0, \@suits),
-    'ranks' => indexify(1, \@ranks),
+my $args = {
+    'suits'      => indexify( 0, \@suits ),
+    'ranks'      => indexify( 1, \@ranks ),
     'implicit_t' => $implicit_t,
 };
 
-$template->process(
-    "$FindBin::Bin/card-test-render.c.tt",
-    $args,
-    "card-test-render.c",
-) || die $template->error();
+$template->process( "$FindBin::Bin/card-test-render.c.tt",
+    $args, "card-test-render.c", )
+    || die $template->error();
 
-$template->process(
-    "$FindBin::Bin/card-test-parse.c.tt",
-    $args,
-    "card-test-parse.c",
-) || die $template->error();
+$template->process( "$FindBin::Bin/card-test-parse.c.tt",
+    $args, "card-test-parse.c", )
+    || die $template->error();
 
 __END__
 

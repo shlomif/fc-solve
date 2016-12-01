@@ -18,7 +18,7 @@ use FC_Solve::CheckResults ();
 
 my $v = FC_Solve::CheckResults->new(
     {
-        data_filename => data_file(['digests-and-lens-wo-stats-storage.yml']),
+        data_filename => data_file( ['digests-and-lens-wo-stats-storage.yml'] ),
         trim_stats => 1,
     }
 );
@@ -32,18 +32,19 @@ sub vtest
 
 # 24 is my lucky number. (Shlomif)
 # TEST
-vtest({id => "freecell_default24", deal => 24, theme => [],},
-    "Verifying the solution of deal #24");
+vtest( { id => "freecell_default24", deal => 24, theme => [], },
+    "Verifying the solution of deal #24" );
 
 # TEST
 vtest(
     {
-        id => "freecell_simple_flare_2",
-        deal => 2,
-        theme => [qw(
-            --flare-name dfs
-            --next-flare --method a-star --flare-name befs
-            --flares-plan), q{Run:500@dfs,Run:1500@befs},
+        id    => "freecell_simple_flare_2",
+        deal  => 2,
+        theme => [
+            qw(
+                --flare-name dfs
+                --next-flare --method a-star --flare-name befs
+                --flares-plan), q{Run:500@dfs,Run:1500@befs},
         ],
     }
 );
@@ -52,12 +53,13 @@ vtest(
 # TEST
 vtest(
     {
-        id => "freecell_flares_cp_1_deal_6",
-        deal => 6,
-        theme => [qw(
-            --flare-name dfs
-            --next-flare --method a-star --flare-name befs
-            --flares-plan), q{Run:300@dfs,Run:3000@befs,CP:,Run:200@dfs},
+        id    => "freecell_flares_cp_1_deal_6",
+        deal  => 6,
+        theme => [
+            qw(
+                --flare-name dfs
+                --next-flare --method a-star --flare-name befs
+                --flares-plan), q{Run:300@dfs,Run:3000@befs,CP:,Run:200@dfs},
         ],
     }
 );
@@ -68,12 +70,13 @@ vtest(
 # TEST
 vtest(
     {
-        id => "freecell_flares_cp_1_circular_deal_6",
-        deal => 6,
-        theme => [qw(
-            --flare-name dfs
-            --next-flare --method a-star --flare-name befs
-            --flares-plan), q{Run:300@dfs,Run:1000@befs,CP:,Run:100@dfs},
+        id    => "freecell_flares_cp_1_circular_deal_6",
+        deal  => 6,
+        theme => [
+            qw(
+                --flare-name dfs
+                --next-flare --method a-star --flare-name befs
+                --flares-plan), q{Run:300@dfs,Run:1000@befs,CP:,Run:100@dfs},
         ],
     }
 );
@@ -82,12 +85,13 @@ vtest(
 # TEST
 vtest(
     {
-        id => "freecell_flares_run_indef_1_deal_6",
-        deal => 6,
-        theme => [qw(
-            --flare-name dfs
-            --next-flare --method a-star --flare-name befs
-            --flares-plan), q{Run:500@dfs,RunIndef:befs},
+        id    => "freecell_flares_run_indef_1_deal_6",
+        deal  => 6,
+        theme => [
+            qw(
+                --flare-name dfs
+                --next-flare --method a-star --flare-name befs
+                --flares-plan), q{Run:500@dfs,RunIndef:befs},
         ],
     }
 );
@@ -97,11 +101,12 @@ vtest(
 # TEST
 vtest(
     {
-        id => "freecell_flares_equally_spaced_quotas_deal_1",
-        deal => 1,
+        id    => "freecell_flares_equally_spaced_quotas_deal_1",
+        deal  => 1,
         theme => [
+
             # This is to avoid warnings on commas in qw(...)
-        grep { /\S/ } split(/\s+/, <<'EOF')
+            grep { /\S/ } split( /\s+/, <<'EOF')
 
 --method a-star -asw 0.2,0.8,0,0,0 -step 500 --st-name 11 --flare-name 11 -nf
 --method a-star -to 0123467 -asw 0.5,0,0.3,0,0 -step 500 --st-name 18 --flare-name 18 -nf

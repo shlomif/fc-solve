@@ -12,8 +12,8 @@ use FC_Solve::SplitTests;
 my $module = 'FC_Solve::Test::CheckResults';
 FC_Solve::SplitTests->gen(
     {
-        prefix => 'cmpdigest',
-        module => $module,
+        prefix      => 'cmpdigest',
+        module      => $module,
         data_module => 'FC_Solve::CheckResults::Data',
     },
 );

@@ -74,9 +74,13 @@ EOF
 
 sub new
 {
-    my ($class, $args) = @_;
+    my ( $class, $args ) = @_;
 
-    return FC_Solve::QueueInC::_proto_new($args->{num_items_per_page}, $args->{offload_dir_path}, ($args->{queue_id} || 0));
+    return FC_Solve::QueueInC::_proto_new(
+        $args->{num_items_per_page},
+        $args->{offload_dir_path},
+        ( $args->{queue_id} || 0 )
+    );
 }
 
 1;

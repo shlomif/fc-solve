@@ -31,35 +31,36 @@ my @fields = qw(
     warn
 );
 
-__PACKAGE__->mk_acc_ref([@fields]);
-__PACKAGE__->mk_acc_ref(['blurb', 'cmd_line', ]);
+__PACKAGE__->mk_acc_ref( [@fields] );
+__PACKAGE__->mk_acc_ref( [ 'blurb', 'cmd_line', ] );
 
 use Text::Sprintf::Named;
 
-use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
+use Test::Trap
+    qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    %$self = (%$self, %$args);
+    %$self = ( %$self, %$args );
 
     return $self;
 }
 
 sub _stringify_value
 {
-    my ($self, $name) = @_;
+    my ( $self, $name ) = @_;
 
     my $value = $self->$name();
 
-    if (($name eq "return") || ($name eq "warn"))
+    if ( ( $name eq "return" ) || ( $name eq "warn" ) )
     {
-        return Data::Dumper->new([$value])->Dump();
+        return Data::Dumper->new( [$value] )->Dump();
     }
     else
     {
-        return (defined($value) ? $value : "");
+        return ( defined($value) ? $value : "" );
     }
 }
 
@@ -68,33 +69,40 @@ sub all_info
     my $self = shift;
 
     return Text::Sprintf::Named->new(
-            {
-                fmt =>
-            join( "",
-            map { "$_ ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" }
-            (@fields))
+        {
+            fmt => join( "",
+                map { "$_ ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" } (@fields) )
+        }
+        )->format(
+        {
+            args => {
+                map {
+                    my $name = $_;
+                    ( $name => $self->_stringify_value($name) )
+                } @fields
             }
-        )->format({args => { map { my $name = $_;
-                        ($name => $self->_stringify_value($name)) }
-                    @fields
-                }});
+        }
+        );
 }
 
 sub emit_all
 {
     my $self = shift;
 
-    my $err_s = "Error with @{[$self->blurb()]} executing [@{$self->cmd_line()}].\n";
+    my $err_s =
+        "Error with @{[$self->blurb()]} executing [@{$self->cmd_line()}].\n";
 
     my $out = sub {
         print $err_s;
     };
 
     $out->();
-    print ($self->all_info());
+    print( $self->all_info() );
 
     Carp::cluck("Error.");
-    print colored("Error!", ($ENV{'HARNESS_SUMMARY_COLOR_FAIL'} || 'bold red')),
+    print colored(
+        "Error!", ( $ENV{'HARNESS_SUMMARY_COLOR_FAIL'} || 'bold red' )
+        ),
         "\n";
     $out->();
     exit(-1);
@@ -102,29 +110,27 @@ sub emit_all
 
 sub run_cmd
 {
-    my ($blurb, $args) = @_;
+    my ( $blurb, $args ) = @_;
 
-    my @cmd_line = @{$args->{'cmd'}};
+    my @cmd_line = @{ $args->{'cmd'} };
 
     print "Running: {$blurb} @cmd_line\n";
     STDOUT->flush;
 
     my $error_code;
 
-    trap { $error_code = (system {$cmd_line[0] } @cmd_line); };
+    trap { $error_code = ( system { $cmd_line[0] } @cmd_line ); };
 
-    my $self = __PACKAGE__->new({
-        ( map { $_ => $trap->$_() } @fields),
-    });
+    my $self = __PACKAGE__->new( { ( map { $_ => $trap->$_() } @fields ), } );
 
     $self->blurb($blurb);
-    $self->cmd_line([@cmd_line]);
+    $self->cmd_line( [@cmd_line] );
 
     if ($error_code)
     {
         $self->emit_all();
     }
-    elsif ($ENV{FC_SOLVE__MULT_CONFIG_TESTS__TRACE})
+    elsif ( $ENV{FC_SOLVE__MULT_CONFIG_TESTS__TRACE} )
     {
         $self->trace_all();
     }
@@ -137,7 +143,7 @@ sub trace_all
     my ($self) = @_;
 
     print "Trace of @{[$self->blurb()]} executing [@{$self->cmd_line()}].\n";
-    print ($self->all_info());
+    print( $self->all_info() );
 
     return;
 }
@@ -155,30 +161,31 @@ use Term::ANSIColor qw(colored);
 
 local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 
-my $test_index = 1;
+my $test_index     = 1;
 my $NUM_PROCESSORS = 4;
 
 my $FALSE = 0;
+
 # Inline::C/etc. leave some files and dirs under restrictive file permissions
 # and we need to instruct rmtree to delete them as well.
 my $SAFE = $FALSE;
 
 sub run_tests
 {
-    my ($blurb_base_base, $args) = @_;
+    my ( $blurb_base_base, $args ) = @_;
 
-    my $idx = $test_index++;
+    my $idx        = $test_index++;
     my $blurb_base = "$blurb_base_base [idx=$idx]";
 
     my $tatzer_args = $args->{'tatzer_args'};
-    my $cmake_args = $args->{'cmake_args'};
+    my $cmake_args  = $args->{'cmake_args'};
 
-    if (not ($tatzer_args xor $cmake_args))
+    if ( not( $tatzer_args xor $cmake_args ) )
     {
         die "One and only one of tatzer_args or cmake_args must be specified.";
     }
 
-    my $cwd = getcwd();
+    my $cwd        = getcwd();
     my $build_path = File::Spec->rel2abs(
         File::Spec->catdir(
             File::Spec->curdir(), File::Spec->updir(), "build-$idx"
@@ -189,111 +196,123 @@ sub run_tests
     chdir($build_path);
 
     local %ENV = %ENV;
-    delete($ENV{FCS_USE_TEST_RUN});
+    delete( $ENV{FCS_USE_TEST_RUN} );
     $ENV{TEST_JOBS} = $NUM_PROCESSORS;
 
     if ($tatzer_args)
     {
-        run_cmd("$blurb_base : Tatzer", {cmd => ['../source/Tatzer', @$tatzer_args]});
+        run_cmd( "$blurb_base : Tatzer",
+            { cmd => [ '../source/Tatzer', @$tatzer_args ] } );
     }
     else
     {
-        run_cmd("$blurb_base : cmake", {cmd => ['cmake', @$cmake_args, '../source']});
+        run_cmd( "$blurb_base : cmake",
+            { cmd => [ 'cmake', @$cmake_args, '../source' ] } );
     }
-    run_cmd("$blurb_base : make", {cmd => ['make', "-j$NUM_PROCESSORS"]});
-    run_cmd("$blurb_base : test", {cmd => [$^X, "$cwd/run-tests.pl"]});
+    run_cmd( "$blurb_base : make", { cmd => [ 'make', "-j$NUM_PROCESSORS" ] } );
+    run_cmd( "$blurb_base : test", { cmd => [ $^X,    "$cwd/run-tests.pl" ] } );
 
     chdir($cwd);
-    rmtree($build_path, 0, $SAFE);
+    rmtree( $build_path, 0, $SAFE );
 
     return;
 }
 
-if ($ENV{FC_SOLVE_GIT_CHECKOUT})
+if ( $ENV{FC_SOLVE_GIT_CHECKOUT} )
 {
     $ENV{LIBAVL2_SOURCE_DIR} = "$ENV{HOME}/Download/unpack/prog/c/avl-2.0.3/";
 
-    run_cmd('git checkout', {cmd => [qw(git checkout master)],});
-    run_cmd('git pull', {cmd => [qw(git pull --ff-only origin master)],});
+    run_cmd( 'git checkout', { cmd => [qw(git checkout master)], } );
+    run_cmd( 'git pull', { cmd => [qw(git pull --ff-only origin master)], } );
 }
 else
 {
-    if (! -d "avl-2.0.3")
+    if ( !-d "avl-2.0.3" )
     {
-        run_cmd('wget avl', {cmd => [qw(wget ftp://ftp.gnu.org/pub/gnu/avl/avl-2.0.3.tar.gz)]}
+        run_cmd(
+            'wget avl',
+            {
+                cmd => [qw(wget ftp://ftp.gnu.org/pub/gnu/avl/avl-2.0.3.tar.gz)]
+            }
         );
-        run_cmd('untar avl', {cmd => [qw(tar -xvf avl-2.0.3.tar.gz)]});
-        system(q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#);
+        run_cmd( 'untar avl', { cmd => [qw(tar -xvf avl-2.0.3.tar.gz)] } );
+        system(
+q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
+        );
     }
     $ENV{LIBAVL2_SOURCE_DIR} = getcwd() . "/avl-2.0.3";
 }
+
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
 
-run_tests("Plain CMake Default", { cmake_args => [] });
-run_tests("Non-Debondt Delta States", { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] });
-run_tests("Default", { tatzer_args => [] });
-run_tests("--rcs", { tatzer_args => [qw(--rcs)] });
+run_tests( "Plain CMake Default", { cmake_args => [] } );
+run_tests( "Non-Debondt Delta States",
+    { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
+run_tests( "Default", { tatzer_args => [] } );
+run_tests( "--rcs",   { tatzer_args => [qw(--rcs)] } );
 
-run_tests("libavl2 with COMPACT_STATES",
+run_tests(
+    "libavl2 with COMPACT_STATES",
     {
         tatzer_args =>
-        [qw(-l x64t --states-type=COMPACT_STATES --libavl2-p=prb)]
+            [qw(-l x64t --states-type=COMPACT_STATES --libavl2-p=prb)]
     }
 );
 
-run_tests("libavl2 with COMPACT_STATES and --rcs",
+run_tests(
+    "libavl2 with COMPACT_STATES and --rcs",
     {
         tatzer_args =>
-        [qw(-l x64t --states-type=COMPACT_STATES --libavl2-p=prb --rcs)]
+            [qw(-l x64t --states-type=COMPACT_STATES --libavl2-p=prb --rcs)]
     }
 );
 
-run_tests("libavl2 with INDIRECT_STATES",
+run_tests(
+    "libavl2 with INDIRECT_STATES",
     {
-        tatzer_args =>
-        [qw(-l x64t --libavl2-p=prb)]
+        tatzer_args => [qw(-l x64t --libavl2-p=prb)]
     }
 );
 
-run_tests("without-depth-field",
+run_tests(
+    "without-depth-field",
     {
-        tatzer_args =>
-        [qw(--without-depth-field)],
+        tatzer_args => [qw(--without-depth-field)],
     }
 );
 
-run_tests("without-depth-field and rcs",
+run_tests(
+    "without-depth-field and rcs",
     {
-        tatzer_args =>
-        [qw(--without-depth-field --rcs)],
+        tatzer_args => [qw(--without-depth-field --rcs)],
     }
 );
 
-run_tests("No FCS_SINGLE_HARD_THREAD",
+run_tests(
+    "No FCS_SINGLE_HARD_THREAD",
     {
-        tatzer_args =>
-        [qw(-l x64t --nosingle-ht)]
+        tatzer_args => [qw(-l x64t --nosingle-ht)]
     }
 );
 
-run_tests("Break Backward Compatibility #1",
+run_tests(
+    "Break Backward Compatibility #1",
     {
-        tatzer_args =>
-        [qw(-l x64t --break-back-compat-1)]
+        tatzer_args => [qw(-l x64t --break-back-compat-1)]
     }
 );
 
-run_tests("Freecell-only (as well as Break Backcompat)",
+run_tests(
+    "Freecell-only (as well as Break Backcompat)",
     {
-        tatzer_args =>
-        [qw(-l x64t --break-back-compat-1 --fc-only)]
+        tatzer_args => [qw(-l x64t --break-back-compat-1 --fc-only)]
     }
 );
 
-print colored("All tests successful.",
-        ($ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green')
-    ), "\n";
+print colored( "All tests successful.",
+    ( $ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green' ) ),
+    "\n";
 
 exit(0);
 

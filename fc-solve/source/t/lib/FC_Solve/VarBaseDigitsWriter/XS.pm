@@ -56,12 +56,12 @@ sub new
 
 sub write
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
     my $base = $args->{base};
     my $item = $args->{item};
 
-    $self->_proto_write($base, $item);
+    $self->_proto_write( $base, $item );
 
     return;
 }

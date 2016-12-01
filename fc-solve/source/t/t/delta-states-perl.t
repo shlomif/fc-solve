@@ -22,28 +22,28 @@ my $RANK_Q = 12;
 my $RANK_K = 13;
 
 {
-my @suits = (qw(H C D S));
-my %suit_to_idx = do {
-    my $s = Games::Solitaire::Verify::Card->get_suits_seq();
-    (map { $s->[$_] => $_ } (0 .. $#$s)) ;
-};
-
-sub _card_to_bin
-{
-    my ($args) = @_;
-
-    my $suit = $args->{suit};
-    my $rank = $args->{rank};
-
-    if (!exists($suit_to_idx{$suit}))
+    my @suits       = (qw(H C D S));
+    my %suit_to_idx = do
     {
-        die "Unknown suit '$suit'.";
+        my $s = Games::Solitaire::Verify::Card->get_suits_seq();
+        ( map { $s->[$_] => $_ } ( 0 .. $#$s ) );
+    };
+
+    sub _card_to_bin
+    {
+        my ($args) = @_;
+
+        my $suit = $args->{suit};
+        my $rank = $args->{rank};
+
+        if ( !exists( $suit_to_idx{$suit} ) )
+        {
+            die "Unknown suit '$suit'.";
+        }
+        return ( $suit_to_idx{$suit} | ( $rank << 2 ) );
     }
-    return ($suit_to_idx{$suit} | ($rank << 2));
-}
 
 }
-
 
 {
     # MS Freecell No. 982 Initial state.
@@ -65,7 +65,7 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Object was initialized correctly.');
+    ok( $delta, 'Object was initialized correctly.' );
 
     $delta->set_derived(
         {
@@ -87,12 +87,13 @@ EOF
     # TEST
     eq_or_diff(
         $delta->get_foundations_bits(),
+
         # Given as an array reference of $num_bits => $bits array refs.
         [
-            [4 => 0,], # Hearts
-            [4 => 2,], # Clubs
-            [4 => 1,], # Diamonds
-            [4 => 0,], # Spades
+            [ 4 => 0, ],    # Hearts
+            [ 4 => 2, ],    # Clubs
+            [ 4 => 1, ],    # Diamonds
+            [ 4 => 0, ],    # Spades
         ],
         'get_foundations_bits works',
     );
@@ -101,31 +102,33 @@ EOF
     eq_or_diff(
         $delta->get_column_encoding(0),
         [
-            [ 3 => 6 ], # Orig len.
-            [ 4 => 0 ], # Derived len.
+            [ 3 => 6 ],     # Orig len.
+            [ 4 => 0 ],     # Derived len.
         ],
         'get_column_lengths_bits() works',
     );
 
     my $HC = [ 1 => 0, ];
     my $DS = [ 1 => 1, ];
+
     # TEST
     eq_or_diff(
         $delta->get_column_encoding(1),
         [
-            [ 3 => 3 ], # Orig len.
-            [ 4 => 1 ], # Derived len.
-            $DS, # 8S
+            [ 3 => 3 ],     # Orig len.
+            [ 4 => 1 ],     # Derived len.
+            $DS,            # 8S
         ],
         'get_column_lengths_bits() works',
     );
+
     # TEST
     eq_or_diff(
         $delta->get_column_encoding(5),
         [
-            [ 3 => 0 ], # Orig len.
-            [ 4 => 1 ], # Derived len.
-            [ 6 => _card_to_bin({suit => 'S', rank => 9,}) ], # 9S
+            [ 3 => 0 ],                                           # Orig len.
+            [ 4 => 1 ],                                           # Derived len.
+            [ 6 => _card_to_bin( { suit => 'S', rank => 9, } ) ], # 9S
         ],
         'get_column_lengths_bits() works',
     );
@@ -134,8 +137,8 @@ EOF
     eq_or_diff(
         $delta->get_freecells_encoding(),
         [
-            [ 6 => _card_to_bin({suit => 'D', rank => 8}), ],  # 8D
-            [ 6 => _card_to_bin({suit => 'D', rank => $RANK_Q}), ], # QD
+            [ 6 => _card_to_bin( { suit => 'D', rank => 8 } ), ],          # 8D
+            [ 6 => _card_to_bin( { suit => 'D', rank => $RANK_Q } ), ],    # QD
         ],
         'Freecells',
     );
@@ -145,30 +148,31 @@ EOF
     my $bit_writer = FC_Solve::DeltaStater::BitWriter->new;
 
     # TEST
-    ok ($bit_writer, 'Init bit_writer');
+    ok( $bit_writer, 'Init bit_writer' );
 
-    $bit_writer->write(4 => 5);
-    $bit_writer->write(2 => 1);
+    $bit_writer->write( 4 => 5 );
+    $bit_writer->write( 2 => 1 );
 
     # TEST
     eq_or_diff(
         $bit_writer->get_bits(),
-        chr(5 | (1 << 4)),
+        chr( 5 | ( 1 << 4 ) ),
         "write() test",
     );
 }
 
 {
-    my $bit_reader = FC_Solve::DeltaStater::BitReader->new({ bits => chr(3 | (4 << 3))});
+    my $bit_reader = FC_Solve::DeltaStater::BitReader->new(
+        { bits => chr( 3 | ( 4 << 3 ) ) } );
 
     # TEST
-    ok ($bit_reader, 'Init bit_reader');
+    ok( $bit_reader, 'Init bit_reader' );
 
     # TEST
-    is ($bit_reader->read(3), 3, 'bit_reader->read(3)');
+    is( $bit_reader->read(3), 3, 'bit_reader->read(3)' );
 
     # TEST
-    is ($bit_reader->read(4), 4, 'bit_reader->read(4)');
+    is( $bit_reader->read(4), 4, 'bit_reader->read(4)' );
 }
 
 {
@@ -191,7 +195,7 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Object was initialized correctly.');
+    ok( $delta, 'Object was initialized correctly.' );
 
     $delta->set_derived(
         {
@@ -212,7 +216,7 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode())->to_string()),
+        scalar( $delta->decode( $delta->encode() )->to_string() ),
         <<"EOF",
 Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
@@ -230,7 +234,7 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         <<"EOF",
 Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
@@ -269,7 +273,7 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Object was initialized correctly.');
+    ok( $delta, 'Object was initialized correctly.' );
 
     $delta->set_derived(
         {
@@ -291,7 +295,7 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         <<"EOF",
 Foundations: H-0 C-0 D-0 S-4
 Freecells:  KS  TD
@@ -326,7 +330,7 @@ EOF
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         <<"EOF",
 Foundations: H-0 C-0 D-0 S-2
 Freecells:  TD  4C
@@ -382,7 +386,7 @@ EOF
     );
 
     my $calc_enc_state = sub {
-        return join '', unpack("H*", $delta->encode_composite());
+        return join '', unpack( "H*", $delta->encode_composite() );
     };
 
     my $first_state = $calc_enc_state->();
@@ -407,10 +411,10 @@ EOF
     my $second_state = $calc_enc_state->();
 
     # TEST
-    is (
+    is(
         $first_state,
         $second_state,
-        "Make sure encode_composite avoids permutations of empty columns and completely-non-original states.",
+"Make sure encode_composite avoids permutations of empty columns and completely-non-original states.",
     );
 }
 
@@ -454,7 +458,7 @@ EOF
     );
 
     my $calc_enc_state = sub {
-        return join '', unpack("H*", $delta->encode_composite());
+        return join '', unpack( "H*", $delta->encode_composite() );
     };
 
     my $first_state = $calc_enc_state->();
@@ -479,93 +483,86 @@ EOF
     my $second_state = $calc_enc_state->();
 
     # TEST
-    is (
-        $first_state,
-        $second_state,
+    is( $first_state, $second_state,
         "encode_composite avoids permutations - #2",
     );
 }
 
 {
     my $reader =
-    FC_Solve::VarBaseDigitsReader
-        ->new({ data => (3 | (12 << 3))});
+        FC_Solve::VarBaseDigitsReader->new( { data => ( 3 | ( 12 << 3 ) ) } );
 
     # TEST
-    ok ($reader, 'Init var_reader');
+    ok( $reader, 'Init var_reader' );
 
     # TEST
-    is ($reader->read(1 << 3), 3, 'reader->read(1 << 3)');
+    is( $reader->read( 1 << 3 ), 3, 'reader->read(1 << 3)' );
 
     # TEST
-    is ($reader->read(1 << 4), 8+4, 'reader->read(1 << 4)');
+    is( $reader->read( 1 << 4 ), 8 + 4, 'reader->read(1 << 4)' );
 }
 
 {
-    my $reader =
-    FC_Solve::VarBaseDigitsReader
-        ->new(
+    my $reader = FC_Solve::VarBaseDigitsReader->new(
         {
-            data => (24 + 8*52 + 7*11*52)
+            data => ( 24 + 8 * 52 + 7 * 11 * 52 )
         }
     );
 
     # TEST
-    ok ($reader, 'Init var_reader');
+    ok( $reader, 'Init var_reader' );
 
     # TEST
-    is ($reader->read(52), 24, 'reader->read(24)');
+    is( $reader->read(52), 24, 'reader->read(24)' );
 
     # TEST
-    is ($reader->read(11), 8, 'reader->read(11)');
+    is( $reader->read(11), 8, 'reader->read(11)' );
 
     # TEST
-    is ($reader->read(10), 7, 'reader->read(10)');
+    is( $reader->read(10), 7, 'reader->read(10)' );
 }
 
 # TEST:$c=2;
-foreach my $classes_rec
-(
+foreach my $classes_rec (
     {
         type => 'perl',
-        w => 'FC_Solve::VarBaseDigitsWriter',
-        r => 'FC_Solve::VarBaseDigitsReader',
+        w    => 'FC_Solve::VarBaseDigitsWriter',
+        r    => 'FC_Solve::VarBaseDigitsReader',
     },
     {
         type => 'XS',
-        w => 'FC_Solve::VarBaseDigitsWriter::XS',
-        r => 'FC_Solve::VarBaseDigitsReader::XS',
+        w    => 'FC_Solve::VarBaseDigitsWriter::XS',
+        r    => 'FC_Solve::VarBaseDigitsReader::XS',
     },
-)
+    )
 {
-    my $type = $classes_rec->{type};
+    my $type   = $classes_rec->{type};
     my $writer = $classes_rec->{w}->new;
 
     # TEST*$c
-    ok ($writer, "Init var_writer - $type");
+    ok( $writer, "Init var_writer - $type" );
 
-    $writer->write({ item => 24, base => 52, });
-    $writer->write({ item => 8, base => 11, });
-    $writer->write({ item => 7, base => 10, });
+    $writer->write( { item => 24, base => 52, } );
+    $writer->write( { item => 8,  base => 11, } );
+    $writer->write( { item => 7,  base => 10, } );
 
-    my $reader =
-    $classes_rec->{r}->new(
+    my $reader = $classes_rec->{r}->new(
         {
             data => $writer->get_data(),
         }
     );
 
     # TEST*$c
-    ok ($reader, "Init var_reader - $type");
+    ok( $reader, "Init var_reader - $type" );
 
     # TEST*$c
-    is ($reader->read(52), 24, "writer-to-reader->read(24) - $type");
+    is( $reader->read(52), 24, "writer-to-reader->read(24) - $type" );
 
     # TEST*$c
-    is ($reader->read(11), 8, "writer-to-reader->read(11) - $type");
+    is( $reader->read(11), 8, "writer-to-reader->read(11) - $type" );
 
     # TEST*$c
-    is ($reader->read(10), 7, "writer-to-reader->read(10) - $type");
+    is( $reader->read(10), 7, "writer-to-reader->read(10) - $type" );
 }
 
 {
@@ -588,7 +585,7 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Object was initialized correctly.');
+    ok( $delta, 'Object was initialized correctly.' );
 
     $delta->set_derived(
         {
@@ -608,11 +605,11 @@ EOF
     );
 
     # TEST
-    ok ($delta->encode_composite(), "->encode_composite runs fine.");
+    ok( $delta->encode_composite(), "->encode_composite runs fine." );
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         <<"EOF",
 Foundations: H-0 C-2 D-A S-0
 Freecells:  8D  QD
@@ -653,13 +650,13 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Object was initialized correctly.');
+    ok( $delta, 'Object was initialized correctly.' );
 
-    $delta->set_derived({ state_str => $init_state, });
+    $delta->set_derived( { state_str => $init_state, } );
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         $init_state,
         'DeBondt encode_composite()+decode() test for leading Aces',
     );
@@ -669,7 +666,7 @@ EOF
     # PySol Baker's Dozen deal No. 24
     my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
-            variant => "bakers_dozen",
+            variant        => "bakers_dozen",
             init_state_str => <<"EOF",
 Foundations: H-A C-2 D-0 S-A
 Freecells:
@@ -691,7 +688,7 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Baker Dozen Object was initialized correctly.');
+    ok( $delta, 'Baker Dozen Object was initialized correctly.' );
 
     my $derived_str = <<"EOF";
 Foundations: H-A C-5 D-5 S-2
@@ -718,11 +715,12 @@ EOF
     );
 
     # TEST
-    ok ($delta->encode_composite(), "Baker's Dozen ->encode_composite runs fine.");
+    ok( $delta->encode_composite(),
+        "Baker's Dozen ->encode_composite runs fine." );
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         $derived_str,
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 1.",
     );
@@ -732,7 +730,7 @@ EOF
     # PySol Baker's Dozen deal No. 86
     my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
-            variant => "bakers_dozen",
+            variant        => "bakers_dozen",
             init_state_str => <<"EOF",
 Foundations: H-0 C-2 D-A S-0
 Freecells:
@@ -754,7 +752,7 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Baker Dozen Object was initialized correctly.');
+    ok( $delta, 'Baker Dozen Object was initialized correctly.' );
 
     my $derived_str = <<"EOF";
 Foundations: H-0 C-2 D-A S-0
@@ -781,12 +779,12 @@ EOF
     );
 
     # TEST
-    ok ($delta->encode_composite(),
-        "Baker's Dozen ->encode_composite (No. 2) runs fine.");
+    ok( $delta->encode_composite(),
+        "Baker's Dozen ->encode_composite (No. 2) runs fine." );
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         $derived_str,
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 2.",
     );
@@ -796,7 +794,7 @@ EOF
     # PySol Baker's Dozen deal No. 86
     my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
-            variant => "bakers_dozen",
+            variant        => "bakers_dozen",
             init_state_str => <<"EOF",
 Foundations: H-0 C-2 D-A S-0
 Freecells:
@@ -818,7 +816,7 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Baker Dozen Object was initialized correctly.');
+    ok( $delta, 'Baker Dozen Object was initialized correctly.' );
 
     my $derived_str = <<"EOF";
 Foundations: H-0 C-4 D-4 S-2
@@ -845,12 +843,12 @@ EOF
     );
 
     # TEST
-    ok ($delta->encode_composite(),
-        "Baker's Dozen ->encode_composite (No. 3) runs fine.");
+    ok( $delta->encode_composite(),
+        "Baker's Dozen ->encode_composite (No. 3) runs fine." );
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         $derived_str,
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 3.",
     );
@@ -860,7 +858,7 @@ EOF
     # PySol Baker's Dozen deal No. 281
     my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
-            variant => "bakers_dozen",
+            variant        => "bakers_dozen",
             init_state_str => <<"EOF",
 Foundations: H-2 C-0 D-0 S-2
 Freecells:
@@ -882,7 +880,7 @@ EOF
     );
 
     # TEST
-    ok ($delta, 'Baker Dozen Object was initialized correctly.');
+    ok( $delta, 'Baker Dozen Object was initialized correctly.' );
 
     my $derived_str = <<"EOF";
 Foundations: H-2 C-0 D-0 S-2
@@ -909,12 +907,12 @@ EOF
     );
 
     # TEST
-    ok ($delta->encode_composite(),
-        "Baker's Dozen ->encode_composite (No. 4) runs fine.");
+    ok( $delta->encode_composite(),
+        "Baker's Dozen ->encode_composite (No. 4) runs fine." );
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         $derived_str,
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 4.",
     );
@@ -941,13 +939,13 @@ Freecells:
 EOF
     my $delta = FC_Solve::DeltaStater::DeBondt->new(
         {
-            variant => "bakers_dozen",
+            variant        => "bakers_dozen",
             init_state_str => $init_state_str,
         }
     );
 
     # TEST
-    ok ($delta, 'Baker Dozen Object was initialized correctly.');
+    ok( $delta, 'Baker Dozen Object was initialized correctly.' );
 
     my $derived_str = $init_state_str;
 
@@ -958,12 +956,12 @@ EOF
     );
 
     # TEST
-    ok ($delta->encode_composite(),
-        "Baker's Dozen ->encode_composite (No. 5) runs fine.");
+    ok( $delta->encode_composite(),
+        "Baker's Dozen ->encode_composite (No. 5) runs fine." );
 
     # TEST
     eq_or_diff(
-        scalar($delta->decode($delta->encode_composite())->to_string()),
+        scalar( $delta->decode( $delta->encode_composite() )->to_string() ),
         $derived_str,
         "Baker's Dozen DeBondt encode_composite()+decode() test No. 5.",
     );

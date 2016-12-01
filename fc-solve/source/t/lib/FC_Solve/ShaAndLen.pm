@@ -7,15 +7,19 @@ use Digest::SHA;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-__PACKAGE__->mk_acc_ref([qw(
-    _len
-    _hasher
-    )]);
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            _len
+            _hasher
+            )
+    ]
+);
 
 sub new
 {
     my $class = shift;
-    my $self = {};
+    my $self  = {};
 
     bless $self, $class;
 
@@ -30,17 +34,17 @@ sub _init
     my $args = shift;
 
     $self->_len(0);
-    $self->_hasher(Digest::SHA->new(256));
+    $self->_hasher( Digest::SHA->new(256) );
 
     return 0;
 }
 
 sub add
 {
-    my $self = shift;
+    my $self   = shift;
     my $string = shift;
 
-    $self->_len($self->_len()+length($string));
+    $self->_len( $self->_len() + length($string) );
     $self->_hasher->add($string);
 
     return;
@@ -68,15 +72,15 @@ sub _unity
 sub add_file
 {
     my $self = shift;
-    my $fh = shift;
+    my $fh   = shift;
 
-    return $self->add_processed_slurp($fh, \&_unity);
+    return $self->add_processed_slurp( $fh, \&_unity );
 }
 
 sub add_processed_slurp
 {
-    my $self = shift;
-    my $fh = shift;
+    my $self     = shift;
+    my $fh       = shift;
     my $callback = shift;
 
     my $buffer;
@@ -84,7 +88,7 @@ sub add_processed_slurp
         local $/;
         $buffer = <$fh>;
     }
-    return $self->add(scalar($callback->($buffer)));
+    return $self->add( scalar( $callback->($buffer) ) );
 }
 
 1;

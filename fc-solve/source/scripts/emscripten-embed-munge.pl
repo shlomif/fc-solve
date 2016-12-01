@@ -11,4 +11,4 @@ foreach my $fn (@ARGV)
 {
     push @output, $fn =~ s#\A(\Q$dir\E(/.*))\z#$1\@$2#r;
 }
-print join(" ", @output), "\n";
+print join( " ", @output ), "\n";

@@ -14,42 +14,39 @@ sub _build_expander
 
     return FC_Solve::CmdLine::Expand->new(
         {
-            input_argv => scalar($self->input_argv),
+            input_argv => scalar( $self->input_argv ),
         }
     );
 }
 
-has input_argv => (is => 'ro', isa => 'ArrayRef[Str]', required => 1, );
-has _expander =>
-(
-    is => 'ro',
-    isa => 'FC_Solve::CmdLine::Expand',
-    lazy => 1,
+has input_argv => ( is => 'ro', isa => 'ArrayRef[Str]', required => 1, );
+has _expander => (
+    is      => 'ro',
+    isa     => 'FC_Solve::CmdLine::Expand',
+    lazy    => 1,
     default => \&_build_expander,
-    handles =>
-    {
+    handles => {
         _expanded_argv => 'argv',
     },
 );
 
-has '_flares' =>
-(
-    is => 'ro',
-    isa => 'ArrayRef[FC_Solve::CmdLine::Simulate::Flare]',
-    lazy => 1,
+has '_flares' => (
+    is      => 'ro',
+    isa     => 'ArrayRef[FC_Solve::CmdLine::Simulate::Flare]',
+    lazy    => 1,
     default => \&_calc_flares,
 );
 
 sub get_flares_num
 {
-    my ($self, $idx) = @_;
+    my ( $self, $idx ) = @_;
 
-    return scalar(@{ $self->_flares });
+    return scalar( @{ $self->_flares } );
 }
 
 sub get_flare_by_idx
 {
-    my ($self, $idx) = @_;
+    my ( $self, $idx ) = @_;
 
     return $self->_flares->[$idx];
 }
@@ -67,22 +64,22 @@ sub _calc_flares
         my $flare_name;
         my $is_flares_plan_start = 0;
 
-        PARSE_FLARE_ARGV:
-        while ($idx < @$argv)
+    PARSE_FLARE_ARGV:
+        while ( $idx < @$argv )
         {
             my $arg = $argv->[$idx];
 
-            if ($arg eq '-nf')
+            if ( $arg eq '-nf' )
             {
                 $idx++;
                 last PARSE_FLARE_ARGV;
             }
-            elsif ($arg eq '--flare-name')
+            elsif ( $arg eq '--flare-name' )
             {
                 $idx++;
                 $flare_name = $argv->[$idx];
             }
-            elsif ($arg eq '--flares-plan')
+            elsif ( $arg eq '--flares-plan' )
             {
                 $is_flares_plan_start = 1;
                 last PARSE_FLARE_ARGV;
@@ -97,33 +94,33 @@ sub _calc_flares
             $idx++;
         }
 
-        return
-        {
-            name => $flare_name,
-            args => (\@flare_args),
+        return {
+            name                 => $flare_name,
+            args                 => ( \@flare_args ),
             is_flares_plan_start => $is_flares_plan_start,
         };
     };
 
     my @flares;
-    GET_FLARES:
+GET_FLARES:
     while (1)
     {
         my $flare = $parse_flare->();
 
-        if (! defined($flare->{name}))
+        if ( !defined( $flare->{name} ) )
         {
             die "no --flare-name given.";
         }
 
-        push @flares, FC_Solve::CmdLine::Simulate::Flare->new(
+        push @flares,
+            FC_Solve::CmdLine::Simulate::Flare->new(
             {
                 name => $flare->{name},
                 argv => $flare->{args},
             }
-        );
+            );
 
-        if ($flare->{is_flares_plan_start})
+        if ( $flare->{is_flares_plan_start} )
         {
             last GET_FLARES;
         }

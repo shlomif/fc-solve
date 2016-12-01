@@ -10,12 +10,14 @@ use Path::Tiny qw/path/;
 
 my %strings_to_opts_map;
 
-my $enum_fn = 'cmd_line_enum.h';
+my $enum_fn  = 'cmd_line_enum.h';
 my $gperf_fn = 'cmd_line.gperf';
-my $UNREC = 'FCS_OPT_UNRECOGNIZED';
+my $UNREC    = 'FCS_OPT_UNRECOGNIZED';
+
 sub gen_radix_tree
 {
-    path($gperf_fn)->spew_utf8( <<"EOF",
+    path($gperf_fn)->spew_utf8(
+        <<"EOF",
 %define initializer-suffix ,$UNREC
 %{
 #include "$enum_fn"
@@ -27,32 +29,34 @@ struct CommandOption
   };
 %%
 EOF
-    map { "$_, $strings_to_opts_map{$_}\n" } sort { $a cmp $b } keys %strings_to_opts_map,);
+        map      { "$_, $strings_to_opts_map{$_}\n" }
+            sort { $a cmp $b } keys %strings_to_opts_map,
+    );
     return;
 }
 
-my $ws = " " x 4;
+my $ws   = " " x 4;
 my @enum = ($UNREC);
 
 open my $module, "<", "$FindBin::Bin/../cmd_line.c";
-SEARCH_FOR_SWITCH: while (my $line = <$module>)
+SEARCH_FOR_SWITCH: while ( my $line = <$module> )
 {
-    if ($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
+    if ( $line =~ m{\A(\s*)/\* OPT-PARSE-START \*/} )
     {
-        while ($line = <$module>)
+        while ( $line = <$module> )
         {
-            if ($line =~ m{\A */\* OPT-PARSE-END \*/})
+            if ( $line =~ m{\A */\* OPT-PARSE-END \*/} )
             {
                 last SEARCH_FOR_SWITCH;
             }
-            if (my ($opt, $strings) = $line =~ m{\A *case (FCS_OPT_\w+): /\* STRINGS=([^;]+);(?: \*/)? *\n?\z})
+            if ( my ( $opt, $strings ) =
+                $line =~
+                m{\A *case (FCS_OPT_\w+): /\* STRINGS=([^;]+);(?: \*/)? *\n?\z}
+                )
             {
-                my @s = split(/\|/, $strings);
+                my @s = split( /\|/, $strings );
                 %strings_to_opts_map =
-                (
-                    %strings_to_opts_map,
-                    (map { $_ => $opt } @s),
-                );
+                    ( %strings_to_opts_map, ( map { $_ => $opt } @s ), );
                 push @enum, $opt;
             }
         }
@@ -71,27 +75,29 @@ path($enum_fn)->spew_utf8(
 #pragma once
 EOF
     "enum\n{\n",
-    (map { $ws . $_ . ",\n" } @enum[0..$#enum-1]),
+    ( map { $ws . $_ . ",\n" } @enum[ 0 .. $#enum - 1 ] ),
     $ws . $enum[-1] . "\n",
-    "};\n");
+    "};\n"
+);
 
 my $inc_h = 'cmd_line_inc.h';
 
 sub del
 {
-    if (-e $inc_h)
+    if ( -e $inc_h )
     {
         unlink($inc_h);
     }
 }
 
 del();
-if (system('gperf', '-L', 'ANSI-C', '-t', $gperf_fn, "--output-file=$inc_h"))
+if (
+    system( 'gperf', '-L', 'ANSI-C', '-t', $gperf_fn, "--output-file=$inc_h" ) )
 {
     del();
     die "Running gperf failed!";
 }
-path($inc_h)->edit_utf8(sub { s#^(struct CommandOption \*)$#static $1#gms;});
+path($inc_h)->edit_utf8( sub { s#^(struct CommandOption \*)$#static $1#gms; } );
 
 __END__
 

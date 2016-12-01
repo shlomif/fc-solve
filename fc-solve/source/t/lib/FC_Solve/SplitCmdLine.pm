@@ -6,41 +6,41 @@ use warnings;
 use FC_Solve::Paths qw/ bin_exe_raw /;
 use IPC::Open2 qw(open2);
 
-my $SPLIT_EXE = bin_exe_raw([qw#t out-split-cmd-line.exe#]);
+my $SPLIT_EXE = bin_exe_raw( [qw#t out-split-cmd-line.exe#] );
 
 sub split_cmd_line_string
 {
-    my ($class, $input_string) = @_;
+    my ( $class, $input_string ) = @_;
 
-    my ($child_out, $child_in);
+    my ( $child_out, $child_in );
 
-    my $pid = open2($child_out , $child_in, $SPLIT_EXE);
+    my $pid = open2( $child_out, $child_in, $SPLIT_EXE );
 
     print {$child_in} $input_string;
     close($child_in);
 
     my @have;
-    while (my $line = <$child_out>)
+    while ( my $line = <$child_out> )
     {
         chomp($line);
-        if ($line !~ m{\A<<(.*)\z})
+        if ( $line !~ m{\A<<(.*)\z} )
         {
             die "Invalid output from program.";
         }
         my $terminator = $1;
 
-        my $item = "";
+        my $item             = "";
         my $found_terminator = 0;
-        while ($line = <$child_out>)
+        while ( $line = <$child_out> )
         {
-            if ($line eq "$terminator\n")
+            if ( $line eq "$terminator\n" )
             {
                 $found_terminator = 1;
                 last;
             }
             $item .= $line;
         }
-        if (!$found_terminator)
+        if ( !$found_terminator )
         {
             die "Could not find terminator '$terminator' in output.";
         }
@@ -48,9 +48,9 @@ sub split_cmd_line_string
         push @have, $item;
     }
 
-    close ($child_out);
+    close($child_out);
 
-    return (\@have);
+    return ( \@have );
 }
 
 1;

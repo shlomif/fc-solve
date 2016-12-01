@@ -41,7 +41,6 @@ EOF
     l => '-lgmp',
 );
 
-
 sub base64_encode
 {
     return _fcs_base64_encode(shift);
@@ -55,7 +54,7 @@ sub base64_decode
 BEGIN
 {
     _fcs_base64_build_decoding_table();
-};
+}
 
 1;
 

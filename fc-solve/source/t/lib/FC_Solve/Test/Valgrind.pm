@@ -4,10 +4,11 @@ use strict;
 use warnings;
 
 use Test::More ();
-use Carp ();
+use Carp       ();
 use File::Spec ();
 use File::Temp qw( tempdir );
-use FC_Solve::Paths qw( bin_board bin_exe_raw is_without_dbm is_without_valgrind samp_board samp_preset );
+use FC_Solve::Paths
+    qw( bin_board bin_exe_raw is_without_dbm is_without_valgrind samp_board samp_preset );
 
 use Test::RunValgrind;
 
@@ -17,33 +18,33 @@ sub _expand_arg
 
     my $type = $hash_ref->{type};
 
-    if ($type eq 'tempdir')
+    if ( $type eq 'tempdir' )
     {
-        return tempdir(CLEANUP => 1),
+        return tempdir( CLEANUP => 1 ),;
     }
-    elsif ($type eq 'ENV')
+    elsif ( $type eq 'ENV' )
     {
         return $ENV{ $hash_ref->{arg} };
     }
-    elsif ($type eq 'bin_board')
+    elsif ( $type eq 'bin_board' )
     {
-        return bin_board($hash_ref->{arg});
+        return bin_board( $hash_ref->{arg} );
     }
-    elsif ($type eq 'sample_board')
+    elsif ( $type eq 'sample_board' )
     {
-        return samp_board($hash_ref->{arg});
+        return samp_board( $hash_ref->{arg} );
     }
-    elsif ($type eq 'sample_preset')
+    elsif ( $type eq 'sample_preset' )
     {
-        return samp_preset($hash_ref->{arg});
+        return samp_preset( $hash_ref->{arg} );
     }
-    elsif ($type eq 'catfile')
+    elsif ( $type eq 'catfile' )
     {
-        my $prefix = exists($hash_ref->{prefix}) ? $hash_ref->{prefix} : '';
-        return $prefix . File::Spec->catfile(
-            map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ }
-            @{$hash_ref->{args}}
-        );
+        my $prefix = exists( $hash_ref->{prefix} ) ? $hash_ref->{prefix} : '';
+        return $prefix
+            . File::Spec->catfile(
+            map { ( ref($_) eq 'HASH' ) ? _expand_arg($_) : $_ }
+                @{ $hash_ref->{args} } );
     }
     else
     {
@@ -51,32 +52,35 @@ sub _expand_arg
     }
 }
 
-
 # Short for run.
 sub r
 {
-    my ($args, $msg) = @_;
+    my ( $args, $msg ) = @_;
 
-    SKIP:
+SKIP:
     {
-        if (is_without_valgrind())
+        if ( is_without_valgrind() )
         {
-            Test::More::skip("valgrind is skipped for google-dense/sparse-hash.", 1);
+            Test::More::skip(
+                "valgrind is skipped for google-dense/sparse-hash.", 1 );
         }
-        elsif (is_without_dbm() and $args->{dbm})
+        elsif ( is_without_dbm() and $args->{dbm} )
         {
-            Test::More::skip("Skipping valgrind test for no_dbm solvers", 1);
+            Test::More::skip( "Skipping valgrind test for no_dbm solvers", 1 );
         }
-        elsif (!
-            Test::RunValgrind->new({})->run(
+        elsif (
+            !Test::RunValgrind->new( {} )->run(
                 {
                     log_fn => $args->{log_fn},
-                    blurb => $msg,
-                    prog => bin_exe_raw([$args->{prog}]),
-                    argv => [map { (ref($_) eq 'HASH') ? _expand_arg($_) : $_ } @{$args->{argv}}],
+                    blurb  => $msg,
+                    prog   => bin_exe_raw( [ $args->{prog} ] ),
+                    argv   => [
+                        map { ( ref($_) eq 'HASH' ) ? _expand_arg($_) : $_ }
+                            @{ $args->{argv} }
+                    ],
                 }
             )
-        )
+            )
         {
             die "Valgrind failed";
         }

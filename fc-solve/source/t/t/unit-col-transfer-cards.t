@@ -82,7 +82,7 @@ EOF
 
 sub new
 {
-    my ($class, $string) = @_;
+    my ( $class, $string ) = @_;
     return State::_proto_new($string);
 }
 
@@ -104,10 +104,12 @@ Freecells:  8H  KH  JH  TD
 : 5S 4H 3S
 EOF
 
-        use FC_Solve::Trim qw/trim_trail_ws/;
-        # TEST
-        is (trim_trail_ws($state->as_string()),
-            <<'EOF',
+    use FC_Solve::Trim qw/trim_trail_ws/;
+
+    # TEST
+    is(
+        trim_trail_ws( $state->as_string() ),
+        <<'EOF',
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H  KH  JH  TD
 : KC QH
@@ -119,14 +121,15 @@ Freecells:  8H  KH  JH  TD
 : QD 7D 9H KD QS JD TS 9D 8S
 : 5S 4H 3S
 EOF
-            "as_string is working fine."
-        );
+        "as_string is working fine."
+    );
 
-        $state->transfer_cards(3, 7, 3);
+    $state->transfer_cards( 3, 7, 3 );
 
-        # TEST
-        is (trim_trail_ws($state->as_string()),
-            <<'EOF',
+    # TEST
+    is(
+        trim_trail_ws( $state->as_string() ),
+        <<'EOF',
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H  KH  JH  TD
 : KC QH
@@ -138,6 +141,6 @@ Freecells:  8H  KH  JH  TD
 : QD 7D 9H KD QS JD TS 9D 8S
 :
 EOF
-            "cards were transferred."
-        );
+        "cards were transferred."
+    );
 }

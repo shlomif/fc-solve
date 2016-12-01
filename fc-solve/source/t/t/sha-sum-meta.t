@@ -16,10 +16,11 @@ use FC_Solve::ShaAndLen ();
     $sha->add($string);
 
     # TEST
-    is ($sha->len(), 10, "Length is 10");
+    is( $sha->len(), 10, "Length is 10" );
 
     # TEST
-    is ($sha->hexdigest(),
+    is(
+        $sha->hexdigest(),
         "872e4e50ce9990d8b041330c47c9ddd11bec6b503ae9386a99da8584e9bb12c4",
         "Hex digest is OK."
     );
@@ -32,10 +33,11 @@ use FC_Solve::ShaAndLen ();
     $sha->add("World");
 
     # TEST
-    is ($sha->len(), 10, "Length is 10");
+    is( $sha->len(), 10, "Length is 10" );
 
     # TEST
-    is ($sha->hexdigest(),
+    is(
+        $sha->hexdigest(),
         "872e4e50ce9990d8b041330c47c9ddd11bec6b503ae9386a99da8584e9bb12c4",
         "Hex digest is OK."
     );
@@ -49,10 +51,11 @@ use FC_Solve::ShaAndLen ();
     close($in);
 
     # TEST
-    is ($sha->len(), 31811, "Length for add_file() is 32280");
+    is( $sha->len(), 31811, "Length for add_file() is 32280" );
 
     # TEST
-    is ($sha->hexdigest(),
+    is(
+        $sha->hexdigest(),
         "e838102eafd8984dad80528e5bad1abe9f1cc669628495fce2c58e61cf2c3558",
         "Hex digest is OK for add_file()"
     );

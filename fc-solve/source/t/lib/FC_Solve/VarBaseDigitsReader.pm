@@ -5,21 +5,21 @@ use warnings;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-__PACKAGE__->mk_acc_ref([qw(_data)]);
+__PACKAGE__->mk_acc_ref( [qw(_data)] );
 
 sub _init
 {
     my $self = shift;
     my $args = shift;
 
-    $self->_data($args->{data});
+    $self->_data( $args->{data} );
 
     return;
 }
 
 sub read
 {
-    my ($self, $base) = @_;
+    my ( $self, $base ) = @_;
 
     my $data = $self->_data;
 

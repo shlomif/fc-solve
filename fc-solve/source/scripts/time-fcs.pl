@@ -13,7 +13,7 @@ use Path::Tiny;
 sub get_time
 {
     my $l = shift;
-    if ($l =~ m{ at (\d+\.\d+)})
+    if ( $l =~ m{ at (\d+\.\d+)} )
     {
         return $1;
     }
@@ -26,15 +26,15 @@ sub get_time
 foreach my $fn (@ARGV)
 {
     my @lines = path($fn)->lines_utf8;
-    if (not @lines)
+    if ( not @lines )
     {
         die qq#File "$fn" is empty.#;
     }
-    if (@ARGV > 1)
+    if ( @ARGV > 1 )
     {
-        print $fn.':';
+        print $fn. ':';
     }
-    print +(get_time($lines[-1]) - get_time($lines[0])), "\n";
+    print +( get_time( $lines[-1] ) - get_time( $lines[0] ) ), "\n";
 }
 
 =head1 COPYRIGHT AND LICENSE

@@ -9,7 +9,7 @@ use Math::BigInt try => 'GMP';
 
 use Carp ();
 
-__PACKAGE__->mk_acc_ref([qw(_data _multiplier)]);
+__PACKAGE__->mk_acc_ref( [qw(_data _multiplier)] );
 
 sub _init
 {
@@ -23,27 +23,23 @@ sub _init
 
 sub write
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
     my $base = $args->{base};
     my $item = $args->{item};
 
-    if ($item < 0)
+    if ( $item < 0 )
     {
-        Carp::confess ("Item '$item' cannot be less than 0.");
+        Carp::confess("Item '$item' cannot be less than 0.");
     }
-    elsif ($item >= $base)
+    elsif ( $item >= $base )
     {
-        Carp::confess ("Base '$base' must be greater than item '$item'");
+        Carp::confess("Base '$base' must be greater than item '$item'");
     }
 
-    $self->_data(
-        $self->_data() + $self->_multiplier() * $item
-    );
+    $self->_data( $self->_data() + $self->_multiplier() * $item );
 
-    $self->_multiplier(
-        $self->_multiplier() * $base
-    );
+    $self->_multiplier( $self->_multiplier() * $base );
 
     return;
 }
