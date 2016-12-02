@@ -19,10 +19,6 @@ solver (at least initially]):
 ** invalid characters.
 ** misformatting of the format.
 
-* Try to build the code on ARM Linux and get the tests to pass.
-
-* See about the failing test on 32-bit i586 Linux.
-
 * Currently +var_base*.h+ use many type casting and other minor inefficiencies.
 Refactor/optimize to avoid that.
 

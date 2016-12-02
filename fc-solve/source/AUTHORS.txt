@@ -142,3 +142,9 @@ such a function.
 https://www.nu42.com/2016/01/excellent-optimization-story.html[“An Excellent Optimization Story”]
 that motivated a similar optimisation in +var_base_int.h+ (originally linked
 from http://perlweekly.com/archive/234.html[this Perl Weekly issue]).
+
+* https://www.scaleway.com/[Scaleway] for allowing us to rent an ARM Linux
+server to fix the production code and tests there.
+
+* http://www.mageia.org/en/[Mageia] - its build-system caught some test
+failures.

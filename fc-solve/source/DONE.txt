@@ -577,3 +577,8 @@ passes the tests fine.
 rand-gen .h files in +fc-solve/source+, to: 1. Avoid code duplication. 2.
 Enable the extended seeds' range.
 
+* Try to build the code on ARM Linux and get the tests to pass.
+** Tests now pass on ARM Linux - thanks to https://www.scaleway.com/ for
+providing the ARM Linux server.
+
+* See about the failing test on 32-bit i586 Linux.
