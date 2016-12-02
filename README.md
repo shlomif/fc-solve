@@ -13,6 +13,10 @@ project also span some other code for testing and for support.
 
 [![Travis-CI Build Status](https://travis-ci.org/shlomif/fc-solve.svg?branch=master)](https://travis-ci.org/shlomif/fc-solve)
 
+# Screenshots
+
+![PySol FC Running Freecell Solver](<http://i.imgur.com/thImObN.png>)
+
 # Repository structure
 
 ## fc-solve/source/
