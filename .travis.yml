@@ -8,7 +8,7 @@ before_install:
     - sudo apt-get update -q
     - sudo apt-get install -y cmake cmake-data ninja-build python3-pip
 install:
-    - ( cd fc-solve/source && hg clone -u make-code-suitable-for-fc-solve https://bitbucket.org/shlomif/patsolve-shlomif )
+    - ( cd fc-solve/source && git clone --branch make-code-suitable-for-fc-solve https://github.com/shlomif/patsolve.git patsolve-shlomif )
       # - sudo easy_install3 pip
     - sudo -H python3 -m pip install random2
     - sudo -H `which python3` -m pip install random2

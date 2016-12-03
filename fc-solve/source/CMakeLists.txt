@@ -38,7 +38,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "^${PROJECT_SOURCE_DIR}/scripts/ids-whitelist(\\\\.txt)?"
     "/(build|BUILD|B)/"
     "/Presets/testing-presets"
-    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/\\\\.hg"
+    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/\\\\.(git|hg)"
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolva/ga"
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(COPYING|Manifest|check_layout|convert_[a-z]+|fc-solve\\\\.ico|dondorf-king\\\\.bmp|threaded_main\\\\.c|patmain\\\\.c|run-tests\\\\.pl|read_layout\\\\.h|print_layout\\\\.h)$"
 )
@@ -161,7 +161,7 @@ ENDIF ()
 SET (pats_dir "patsolve-shlomif")
 
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
-    EXECUTE_PROCESS(COMMAND "hg" "clone" "-u" "make-code-suitable-for-fc-solve" "ssh://hg@bitbucket.org/shlomif/patsolve-shlomif" "${pats_dir}"
+    EXECUTE_PROCESS(COMMAND "git" "clone" "--branch" "make-code-suitable-for-fc-solve" "git@github.com:shlomif/patsolve.git" "${pats_dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
