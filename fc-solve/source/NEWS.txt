@@ -4,6 +4,25 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2016-09-22
 :Revision: $Id$
 
+Version 4.6.0: (04-Dec-2016)
+----------------------------
+
+1. Got the production code and tests to pass on ARM Linux. Previously
++fc-solve+ just hanged there.
+
+2. Fix the tests and +depth_dbm_fc_solver+ on 32-bit platforms.
+
+3. Apply the large Freecell Pro seeds deals generation to the board generators
+and range solvers.
+
+4. Option to use +__int128+ instead of libGMP for the DBM solvers - a
+significant speedup, see
+http://www.shlomifish.org/fc-solve-temp/charts/dbm-solver-__int128-optimisation/
+
+5. Revise some awkward phrasing in the README .
+
+6. Many small and larger cleanups.
+
 Version 4.4.0: (22-Sep-2016)
 ----------------------------
 
