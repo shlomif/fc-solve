@@ -672,7 +672,7 @@ int main(int argc, char *argv[])
             }
         }
         else if (fcs_dbm__extract_game_variant_from_argv(
-                     argc, argv, &arg, &local_variant))
+                     argc, argv, &arg, &local_variant, &offload_dir_path))
         {
         }
         else if (!strcmp(argv[arg], "--caches-delta"))
@@ -767,17 +767,6 @@ int main(int argc, char *argv[])
                 exit(-1);
             }
             intermediate_input_filename = argv[arg];
-        }
-        else if (!strcmp(argv[arg], "--offload-dir-path"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(
-                    stderr, "--offload-dir-path came without an argument.\n");
-                exit(-1);
-            }
-            offload_dir_path = argv[arg];
         }
         else
         {

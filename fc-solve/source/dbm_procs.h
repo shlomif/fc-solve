@@ -383,12 +383,12 @@ static GCC_INLINE void fcs_dbm__cache_store__init(
 
 static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
     const int argc, char **const argv, int *const arg,
-    fcs_dbm_variant_type_t *const ptr_local_variant)
+    fcs_dbm_variant_type_t *const ptr_local_variant,
+    const char **const ptr_offload_dir_path)
 {
     if (!strcmp(argv[*arg], "--game"))
     {
-        (*arg)++;
-        if (*arg == argc)
+        if (++(*arg) == argc)
         {
             fprintf(stderr, "--game came without an argument!\n");
             exit(-1);
@@ -407,6 +407,16 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
             fprintf(stderr, "Unknown game '%s'. Aborting\n", name);
             exit(-1);
         }
+        return TRUE;
+    }
+    else if (!strcmp(argv[*arg], "--offload-dir-path"))
+    {
+        if (++(*arg) == argc)
+        {
+            fprintf(stderr, "--offload-dir-path came without an argument.\n");
+            exit(-1);
+        }
+        *ptr_offload_dir_path = argv[*arg];
         return TRUE;
     }
     return FALSE;
