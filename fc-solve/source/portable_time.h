@@ -52,7 +52,7 @@ typedef struct
     {                                                                          \
         _ftime(&((pt).tb));                                                    \
     }
-#define FCS_TIME_GET_SEC(pt) ((pt).tb.time)
+#define FCS_TIME_GET_SEC(pt) ((long)((pt).tb.time))
 #define FCS_TIME_GET_USEC(pt) ((long)(((pt).tb.millitm) * 1000))
 #endif
 
