@@ -1096,7 +1096,7 @@ ADD_CUSTOM_TARGET(
 )
 
 
-IF ("${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STATES}"))
+IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STATES}"))
     # The delta-states testing library
     ADD_LIBRARY(fcs_delta_states_test
         SHARED
@@ -1108,19 +1108,17 @@ IF ("${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STATES}"))
         card.c state.c delta_states_debondt.c
     )
     TARGET_LINK_LIBRARIES(fcs_debondt_delta_states_test ${LIBGMP_LIB})
-    IF ("${FCS_ENABLE_DBM_SOLVER}")
-        ADD_LIBRARY(fcs_dbm_calc_derived_test
-            SHARED
-            ${DBM_FCC_COMMON}
-            dbm_calc_derived_test.c
+    ADD_LIBRARY(fcs_dbm_calc_derived_test
+        SHARED
+        ${DBM_FCC_COMMON}
+        dbm_calc_derived_test.c
         )
-        TARGET_LINK_LIBRARIES(fcs_dbm_calc_derived_test ${LIBGMP_LIB})
-        ADD_LIBRARY(fcs_fcc_brfs_test
-            SHARED
-            ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
+    TARGET_LINK_LIBRARIES(fcs_dbm_calc_derived_test ${LIBGMP_LIB})
+    ADD_LIBRARY(fcs_fcc_brfs_test
+        SHARED
+        ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
         )
-        TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
-    ENDIF ()
+    TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
 ENDIF ()
 
 ADD_CUSTOM_TARGET(
