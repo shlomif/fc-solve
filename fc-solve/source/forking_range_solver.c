@@ -277,23 +277,20 @@ int main(int argc, char *argv[])
     {
         if (pipe(workers[idx].child_to_parent_pipe))
         {
-            fprintf(
-                stderr, "C->P Pipe for worker No. %zd failed! Exiting.\n", idx);
-            exit(-1);
+            fc_solve_err(
+                "C->P Pipe for worker No. %zd failed! Exiting.\n", idx);
         }
         if (pipe(workers[idx].parent_to_child_pipe))
         {
-            fprintf(
-                stderr, "P->C Pipe for worker No. %zd failed! Exiting.\n", idx);
-            exit(-1);
+            fc_solve_err(
+                "P->C Pipe for worker No. %zd failed! Exiting.\n", idx);
         }
 
         switch (fork())
         {
         case -1:
         {
-            fprintf(stderr, "Fork for worker No. %zd failed! Exiting.\n", idx);
-            exit(-1);
+            fc_solve_err("Fork for worker No. %zd failed! Exiting.\n", idx);
         }
 
         case 0:

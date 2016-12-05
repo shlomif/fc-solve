@@ -688,16 +688,13 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr,
+                fc_solve_err(
                     "--pre-cache-max-count came without an argument!\n");
-                exit(-1);
             }
             pre_cache_max_count = atol(argv[arg]);
             if (pre_cache_max_count < 1000)
             {
-                fprintf(
-                    stderr, "--pre-cache-max-count must be at least 1,000.\n");
-                exit(-1);
+                fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
             }
         }
         else if (!strcmp(argv[arg], "--board"))
@@ -705,8 +702,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--board came without an argument.");
-                exit(-1);
+                fc_solve_err("--board came without an argument.");
             }
             filename = argv[arg];
         }
@@ -719,14 +715,12 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--caches-delta came without an argument!\n");
-                exit(-1);
+                fc_solve_err("--caches-delta came without an argument!\n");
             }
             caches_delta = atol(argv[arg]);
             if (caches_delta < 1000)
             {
-                fprintf(stderr, "--caches-delta must be at least 1,000.\n");
-                exit(-1);
+                fc_solve_err("--caches-delta must be at least 1,000.\n");
             }
         }
         else if (!strcmp(argv[arg], "--dbm-store-path"))
@@ -734,8 +728,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--dbm-store-path came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--dbm-store-path came without an argument.\n");
             }
             dbm_store_path = argv[arg];
         }
@@ -744,9 +737,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(
-                    stderr, "--iters-delta-limit came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--iters-delta-limit came without an argument.\n");
             }
             iters_delta_limit = atol(argv[arg]);
         }
@@ -755,8 +746,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--output came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--output came without an argument.\n");
             }
             path_to_output_dir = argv[arg];
         }
@@ -765,8 +755,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--fingerprint came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--fingerprint came without an argument.\n");
             }
             mod_base64_fcc_fingerprint = argv[arg];
         }
@@ -775,8 +764,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--input came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--input came without an argument.\n");
             }
             fingerprint_input_location_path = argv[arg];
         }
@@ -788,18 +776,15 @@ int main(int argc, char *argv[])
 
     if (arg != argc)
     {
-        fprintf(stderr, "%s\n", "Junk at the end of the parameters");
-        exit(-1);
+        fc_solve_err("%s\n", "Junk at the end of the parameters");
     }
 
     if (!(filename && fingerprint_input_location_path &&
             mod_base64_fcc_fingerprint && path_to_output_dir &&
             offload_dir_path))
     {
-        fprintf(stderr,
-            "One or more of these parameters was not specified: %s\n",
+        fc_solve_err("One or more of these parameters was not specified: %s\n",
             "--board, --fingerprint, --input, --output, --offload-dir-path");
-        exit(-1);
     }
     fcs_state_keyval_pair_t init_state;
     read_state_from_file(local_variant, filename,
@@ -817,8 +802,7 @@ int main(int argc, char *argv[])
         if (fingerprint_data_len !=
             sizeof(fingerprint_which_irreversible_moves_bitmask))
         {
-            fprintf(stderr, "%s\n", "--fingerprint is invalid length.");
-            exit(-1);
+            fc_solve_err("%s\n", "--fingerprint is invalid length.");
         }
     }
 
@@ -846,9 +830,8 @@ int main(int argc, char *argv[])
 
         if (!fingerprint_fh)
         {
-            fprintf(stderr, "Cannot open '%s' for reading. Exiting.",
+            fc_solve_err("Cannot open '%s' for reading. Exiting.",
                 fingerprint_input_location_path);
-            exit(-1);
         }
 
         instance.fingerprint_line = NULL;

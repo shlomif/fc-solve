@@ -111,8 +111,7 @@ static unsigned char get_move_from_parent_to_child(
             return move_to_return;
         }
     }
-    fprintf(stderr, "%s\n", "Failed to find move. Terminating.");
-    exit(-1);
+    fc_solve_err("%s\n", "Failed to find move. Terminating.");
 }
 
 static void trace_solution(fcs_dbm_solver_instance_t *const instance,
@@ -165,8 +164,7 @@ static GCC_INLINE void read_state_from_file(
     FILE *const fh = fopen(filename, "r");
     if (!fh)
     {
-        fprintf(stderr, "Could not open file '%s' for input.\n", filename);
-        exit(-1);
+        fc_solve_err("Could not open file '%s' for input.\n", filename);
     }
     const fcs_user_state_str_t user_state = read_state(fh);
     fc_solve_initial_user_state_to_c(user_state.s, init_state, FREECELLS_NUM,
@@ -179,8 +177,7 @@ static GCC_INLINE void read_state_from_file(
                                               PASS_DECKS(DECKS_NUM),
             &problem_card))
     {
-        fprintf(stderr, "%s\n", "Invalid input board");
-        exit(-1);
+        fc_solve_err("%s\n", "Invalid input board");
     }
 #endif
 }
@@ -190,8 +187,7 @@ static GCC_INLINE FILE *calc_out_fh(const char *const out_filename)
     FILE *const out_fh = (out_filename ? fopen(out_filename, "at") : stdout);
     if (!out_fh)
     {
-        fprintf(stderr, "Cannot open '%s' for output.\n", out_filename);
-        exit(-1);
+        fc_solve_err("Cannot open '%s' for output.\n", out_filename);
     }
     return out_fh;
 }
