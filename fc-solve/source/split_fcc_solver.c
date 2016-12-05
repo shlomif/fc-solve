@@ -662,6 +662,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }
 
+#define TRY_P(s) try_argv_param(argc, argv, &arg, s)
 int main(int argc, char *argv[])
 {
     build_decoding_table();
@@ -678,52 +679,32 @@ int main(int argc, char *argv[])
     long pre_cache_max_count = 1000000, caches_delta = 1000000,
          iters_delta_limit = -1;
     const char *dbm_store_path = "./fc_solve_dbm_store";
+    const char *param;
 
     size_t num_threads = 1;
     int arg = 1;
     for (; arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--board"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--board came without an argument.");
-            }
-            filename = argv[arg];
-        }
-        else if (fcs_dbm__extract_common_from_argv(argc, argv, &arg,
-                     &local_variant, &offload_dir_path, &num_threads,
-                     &pre_cache_max_count, &iters_delta_limit, &caches_delta,
-                     &dbm_store_path))
+        if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &local_variant,
+                &offload_dir_path, &num_threads, &pre_cache_max_count,
+                &iters_delta_limit, &caches_delta, &dbm_store_path))
         {
         }
-        else if (!strcmp(argv[arg], "--output"))
+        else if ((param = TRY_P("--board")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--output came without an argument.\n");
-            }
-            path_to_output_dir = argv[arg];
+            filename = param;
         }
-        else if (!strcmp(argv[arg], "--fingerprint"))
+        else if ((param = TRY_P("--output")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--fingerprint came without an argument.\n");
-            }
-            mod_base64_fcc_fingerprint = argv[arg];
+            path_to_output_dir = param;
         }
-        else if (!strcmp(argv[arg], "--input"))
+        else if ((param = TRY_P("--fingerprint")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--input came without an argument.\n");
-            }
-            fingerprint_input_location_path = argv[arg];
+            mod_base64_fcc_fingerprint = param;
+        }
+        else if ((param = TRY_P("--input")))
+        {
+            fingerprint_input_location_path = param;
         }
         else
         {

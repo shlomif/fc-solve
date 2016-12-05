@@ -631,6 +631,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     return ret;
 }
 
+#define TRY_P(s) try_argv_param(argc, argv, &arg, s)
 int main(int argc, char *argv[])
 {
     long start_line = 1;
@@ -645,6 +646,7 @@ int main(int argc, char *argv[])
          caches_delta = 1000000, max_count_of_items_in_queue = LONG_MAX;
     dbm_store_path = "./fc_solve_dbm_store";
     size_t num_threads = 2;
+    const char *param;
 
     int arg;
     for (arg = 1; arg < argc; arg++)
@@ -654,43 +656,21 @@ int main(int argc, char *argv[])
                 &iters_delta_limit, &caches_delta, &dbm_store_path))
         {
         }
-        else if (!strcmp(argv[arg], "--max-count-of-items-in-queue"))
+        else if ((param = TRY_P("--max-count-of-items-in-queue")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--max-count-of-items-in-queue came without an "
-                             "argument.\n");
-            }
-            max_count_of_items_in_queue = atol(argv[arg]);
+            max_count_of_items_in_queue = atol(param);
         }
-        else if (!strcmp(argv[arg], "--start-line"))
+        else if ((param = TRY_P("--start-line")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--start-line came without an argument.\n");
-            }
-            start_line = atol(argv[arg]);
+            start_line = atol(param);
         }
-        else if (!strcmp(argv[arg], "-o"))
+        else if ((param = TRY_P("-o")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("-o came without an argument.\n");
-            }
-            out_filename = argv[arg];
+            out_filename = param;
         }
-        else if (!strcmp(argv[arg], "--intermediate-input"))
+        else if ((param = TRY_P("--intermediate-input")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err(
-                    "--intermediate-input came without an argument.\n");
-            }
-            intermediate_input_filename = argv[arg];
+            intermediate_input_filename = param;
         }
         else
         {
