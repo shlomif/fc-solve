@@ -694,21 +694,8 @@ int main(int argc, char *argv[])
         }
         else if (fcs_dbm__extract_common_from_argv(argc, argv, &arg,
                      &local_variant, &offload_dir_path, &num_threads,
-                     &pre_cache_max_count, &iters_delta_limit))
+                     &pre_cache_max_count, &iters_delta_limit, &caches_delta))
         {
-        }
-        else if (!strcmp(argv[arg], "--caches-delta"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--caches-delta came without an argument!\n");
-            }
-            caches_delta = atol(argv[arg]);
-            if (caches_delta < 1000)
-            {
-                fc_solve_err("--caches-delta must be at least 1,000.\n");
-            }
         }
         else if (!strcmp(argv[arg], "--dbm-store-path"))
         {

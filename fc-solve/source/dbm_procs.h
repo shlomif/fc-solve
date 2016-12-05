@@ -385,7 +385,8 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     char **const argv, int *const arg,
     fcs_dbm_variant_type_t *const ptr_local_variant,
     const char **const ptr_offload_dir_path, size_t *const ptr_num_threads,
-    long *const ptr_pre_cache_max_count, long *const ptr_iters_delta_limit)
+    long *const ptr_pre_cache_max_count, long *const ptr_iters_delta_limit,
+    long *const ptr_caches_delta)
 {
     if (!strcmp(argv[*arg], "--pre-cache-max-count"))
     {
@@ -452,6 +453,20 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
             fc_solve_err("--iters-delta-limit came without an argument.\n");
         }
         *ptr_iters_delta_limit = atol(argv[*arg]);
+        return TRUE;
+    }
+    else if (!strcmp(argv[*arg], "--caches-delta"))
+    {
+        if (++(*arg) == argc)
+        {
+            fc_solve_err("--caches-delta came without an argument!\n");
+        }
+        const_AUTO(caches_delta, atol(argv[*arg]));
+        if (caches_delta < 1000)
+        {
+            fc_solve_err("--caches-delta must be at least 1,000.\n");
+        }
+        *ptr_caches_delta = caches_delta;
         return TRUE;
     }
     return FALSE;
