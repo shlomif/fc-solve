@@ -362,8 +362,8 @@ int main(int argc, char *argv[])
                 exit(-1);
             }
         }
-        else if (fcs_dbm__extract_game_variant_from_argv(
-                     argc, argv, &arg, &local_variant, &offload_dir_path))
+        else if (fcs_dbm__extract_game_variant_from_argv(argc, argv, &arg,
+                     &local_variant, &offload_dir_path, &num_threads))
         {
         }
         else if (!strcmp(argv[arg], "--caches-delta"))
@@ -378,21 +378,6 @@ int main(int argc, char *argv[])
             if (caches_delta < 1000)
             {
                 fprintf(stderr, "--caches-delta must be at least 1,000.\n");
-                exit(-1);
-            }
-        }
-        else if (!strcmp(argv[arg], "--num-threads"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--num-threads came without an argument!\n");
-                exit(-1);
-            }
-            num_threads = (size_t)atoi(argv[arg]);
-            if (num_threads < 1)
-            {
-                fprintf(stderr, "--num-threads must be at least 1.\n");
                 exit(-1);
             }
         }

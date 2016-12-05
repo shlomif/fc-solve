@@ -384,7 +384,7 @@ static GCC_INLINE void fcs_dbm__cache_store__init(
 static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
     const int argc, char **const argv, int *const arg,
     fcs_dbm_variant_type_t *const ptr_local_variant,
-    const char **const ptr_offload_dir_path)
+    const char **const ptr_offload_dir_path, size_t *const ptr_num_threads)
 {
     if (!strcmp(argv[*arg], "--game"))
     {
@@ -417,6 +417,22 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
             exit(-1);
         }
         *ptr_offload_dir_path = argv[*arg];
+        return TRUE;
+    }
+    else if (!strcmp(argv[*arg], "--num-threads"))
+    {
+        if (++(*arg) == argc)
+        {
+            fprintf(stderr, "--num-threads came without an argument!\n");
+            exit(-1);
+        }
+        const_AUTO(num_threads, (size_t)atoi(argv[*arg]));
+        if (num_threads < 1)
+        {
+            fprintf(stderr, "--num-threads must be at least 1.\n");
+            exit(-1);
+        }
+        *ptr_num_threads = num_threads;
         return TRUE;
     }
     return FALSE;
