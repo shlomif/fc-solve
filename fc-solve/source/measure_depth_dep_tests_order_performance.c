@@ -20,6 +20,7 @@
 #include "fcs_user.h"
 #include "fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
+#include "help_err.h"
 
 static void print_help(void)
 {
@@ -71,9 +72,7 @@ int main(int argc, char *argv[])
 
     if (argc < 3)
     {
-        fprintf(stderr, "Not Enough Arguments!\n");
-        print_help();
-        exit(-1);
+        help_err("Not Enough Arguments!\n");
     }
     start_board = atoi(argv[arg++]);
     end_board = atoi(argv[arg++]);
@@ -100,9 +99,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--output-to came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--output-to came without an argument!\n");
             }
             output_filename = argv[arg];
         }
@@ -111,9 +108,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--scan1-to came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--scan1-to came without an argument!\n");
             }
             scan1_to = argv[arg];
         }
@@ -122,9 +117,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--scan1-to came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--scan1-to came without an argument!\n");
             }
             scan2_to = argv[arg];
         }
@@ -133,9 +126,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--iters-limit came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--iters-limit came without an argument!\n");
             }
             iters_limit = (fcs_int_limit_t)atol(argv[arg]);
         }
@@ -144,9 +135,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--max-var-depth came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--max-var-depth came without an argument!\n");
             }
             max_var_depth_to_check = atoi(argv[arg]);
         }

@@ -28,6 +28,7 @@
 #include "fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
+#include "help_err.h"
 
 static void print_help(void)
 {
@@ -44,16 +45,6 @@ static void print_help(void)
         "\n"
         "--total-iterations-limit  limit\n"
         "     Limits each board for up to 'limit' iterations.\n");
-}
-
-static __attribute__((noreturn)) void help_err(const char *msg, ...)
-{
-    va_list ap;
-    va_start(ap, msg);
-    vfprintf(stderr, msg, ap);
-    va_end(ap);
-    print_help();
-    exit(-1);
 }
 
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;

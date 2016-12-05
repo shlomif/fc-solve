@@ -40,6 +40,7 @@
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 #include "rinutils.h"
+#include "help_err.h"
 
 static void print_help(void)
 {
@@ -204,19 +205,14 @@ int main(int argc, char *argv[])
 
     if (argc < 4)
     {
-        fprintf(stderr, "Not Enough Arguments!\n");
-        print_help();
-        exit(-1);
+        help_err("Not Enough Arguments!\n");
     }
     long long next_board_num = atoll(argv[arg++]);
     const long long end_board = atoll(argv[arg++]);
     const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
-        fprintf(stderr,
-            "print_step (the third argument) must be greater than 0.\n");
-        print_help();
-        exit(-1);
+        help_err("print_step (the third argument) must be greater than 0.\n");
     }
 
     size_t num_workers = 3;
@@ -230,10 +226,8 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr,
+                help_err(
                     "--total-iterations-limit came without an argument!\n");
-                print_help();
-                exit(-1);
             }
             total_iterations_limit_per_board = (fcs_int_limit_t)atol(argv[arg]);
         }
@@ -242,9 +236,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--num-workers came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--num-workers came without an argument!\n");
             }
             num_workers = atoi(argv[arg]);
         }
@@ -253,9 +245,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--worker-step came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--worker-step came without an argument!\n");
             }
             board_num_step = atoi(argv[arg]);
         }

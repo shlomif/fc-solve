@@ -20,6 +20,7 @@
 #include "cl_callback_range.h"
 #include "handle_parsing.h"
 #include "trace_mem.h"
+#include "help_err.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,19 +35,14 @@ int main(int argc, char *argv[])
 
     if (argc < 4)
     {
-        fprintf(stderr, "Not Enough Arguments!\n");
-        print_help();
-        exit(-1);
+        help_err("Not Enough Arguments!\n");
     }
     long long start_board = atoll(argv[arg++]);
     long long end_board = atoll(argv[arg++]);
     const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
-        fprintf(stderr,
-            "print_step (the third argument) must be greater than 0.\n");
-        print_help();
-        exit(-1);
+        help_err("print_step (the third argument) must be greater than 0.\n");
     }
 
     for (; arg < argc; arg++)
@@ -56,10 +52,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(
-                    stderr, "--binary-output-to came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--binary-output-to came without an argument!\n");
             }
             binary_output.filename = argv[arg];
         }
@@ -68,10 +61,8 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr,
+                help_err(
                     "--total-iterations-limit came without an argument!\n");
-                print_help();
-                exit(-1);
             }
             was_total_iterations_limit_per_board_set = TRUE;
             total_iterations_limit_per_board = (fcs_int_limit_t)atol(argv[arg]);
@@ -81,10 +72,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr,
-                    "--solutions-directory came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--solutions-directory came without an argument!\n");
             }
             solutions_directory = argv[arg];
             solution_fn =
