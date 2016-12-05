@@ -689,7 +689,6 @@ int main(int argc, char *argv[])
             {
                 fc_solve_err(
                     "--intermediate-input came without an argument.\n");
-                exit(-1);
             }
             intermediate_input_filename = argv[arg];
         }
