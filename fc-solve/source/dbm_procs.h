@@ -381,6 +381,21 @@ static GCC_INLINE void fcs_dbm__cache_store__init(
 #endif
 }
 
+static const char *try_argv_param(
+    const int argc, char **const argv, int *const arg, const char *const flag)
+{
+    if (!strcmp(argv[*arg], flag))
+    {
+        if (++(*arg) == argc)
+        {
+            fc_solve_err("%s came without an argument!\n", flag);
+        }
+        return argv[*arg];
+    }
+    return NULL;
+}
+
+#define TRY_PARAM(s) try_argv_param(argc, argv, arg, s)
 static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     char **const argv, int *const arg,
     fcs_dbm_variant_type_t *const ptr_local_variant,
@@ -388,13 +403,10 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     long *const ptr_pre_cache_max_count, long *const ptr_iters_delta_limit,
     long *const ptr_caches_delta, const char **const dbm_store_path)
 {
-    if (!strcmp(argv[*arg], "--pre-cache-max-count"))
+    const char *param;
+    if ((param = TRY_PARAM("--pre-cache-max-count")))
     {
-        if (++(*arg) == argc)
-        {
-            fc_solve_err("--pre-cache-max-count came without an argument!\n");
-        }
-        const_AUTO(pre_cache_max_count, atol(argv[*arg]));
+        const_AUTO(pre_cache_max_count, atol(param));
         if (pre_cache_max_count < 1000)
         {
             fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
@@ -402,43 +414,30 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
         *ptr_pre_cache_max_count = pre_cache_max_count;
         return TRUE;
     }
-    else if (!strcmp(argv[*arg], "--game"))
+    else if ((param = TRY_PARAM("--game")))
     {
-        if (++(*arg) == argc)
-        {
-            fc_solve_err("--game came without an argument!\n");
-        }
-        const_AUTO(name, argv[*arg]);
-        if (!strcmp(name, "bakers_dozen"))
+        if (!strcmp(param, "bakers_dozen"))
         {
             *ptr_local_variant = FCS_DBM_VARIANT_BAKERS_DOZEN;
         }
-        else if (!strcmp(name, "freecell"))
+        else if (!strcmp(param, "freecell"))
         {
             *ptr_local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
         }
         else
         {
-            fc_solve_err("Unknown game '%s'. Aborting\n", name);
+            fc_solve_err("Unknown game '%s'. Aborting\n", param);
         }
         return TRUE;
     }
-    else if (!strcmp(argv[*arg], "--offload-dir-path"))
+    else if ((param = TRY_PARAM("--offload-dir-path")))
     {
-        if (++(*arg) == argc)
-        {
-            fc_solve_err("--offload-dir-path came without an argument.\n");
-        }
-        *ptr_offload_dir_path = argv[*arg];
+        *ptr_offload_dir_path = param;
         return TRUE;
     }
-    else if (!strcmp(argv[*arg], "--num-threads"))
+    else if ((param = TRY_PARAM("--num-threads")))
     {
-        if (++(*arg) == argc)
-        {
-            fc_solve_err("--num-threads came without an argument!\n");
-        }
-        const_AUTO(num_threads, (size_t)atoi(argv[*arg]));
+        const_AUTO(num_threads, (size_t)atoi(param));
         if (num_threads < 1)
         {
             fc_solve_err("--num-threads must be at least 1.\n");
@@ -446,22 +445,14 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
         *ptr_num_threads = num_threads;
         return TRUE;
     }
-    else if (!strcmp(argv[*arg], "--iters-delta-limit"))
+    else if ((param = TRY_PARAM("--iters-delta-limit")))
     {
-        if (++(*arg) == argc)
-        {
-            fc_solve_err("--iters-delta-limit came without an argument.\n");
-        }
-        *ptr_iters_delta_limit = atol(argv[*arg]);
+        *ptr_iters_delta_limit = atol(param);
         return TRUE;
     }
-    else if (!strcmp(argv[*arg], "--caches-delta"))
+    else if ((param = TRY_PARAM("--caches-delta")))
     {
-        if (++(*arg) == argc)
-        {
-            fc_solve_err("--caches-delta came without an argument!\n");
-        }
-        const_AUTO(caches_delta, atol(argv[*arg]));
+        const_AUTO(caches_delta, atol(param));
         if (caches_delta < 1000)
         {
             fc_solve_err("--caches-delta must be at least 1,000.\n");
@@ -469,13 +460,9 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
         *ptr_caches_delta = caches_delta;
         return TRUE;
     }
-    else if (!strcmp(argv[*arg], "--dbm-store-path"))
+    else if ((param = TRY_PARAM("--dbm-store-path")))
     {
-        if (++(*arg) == argc)
-        {
-            fc_solve_err("--dbm-store-path came without an argument.\n");
-        }
-        *dbm_store_path = argv[*arg];
+        *dbm_store_path = param;
         return TRUE;
     }
     return FALSE;
