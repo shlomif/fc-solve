@@ -345,9 +345,9 @@ int main(int argc, char *argv[])
 
     for (arg = 1; arg < argc; arg++)
     {
-        if (fcs_dbm__extract_game_variant_from_argv(argc, argv, &arg,
-                &local_variant, &offload_dir_path, &num_threads,
-                &pre_cache_max_count, &iters_delta_limit))
+        if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &local_variant,
+                &offload_dir_path, &num_threads, &pre_cache_max_count,
+                &iters_delta_limit))
         {
         }
         else if (!strcmp(argv[arg], "--caches-delta"))

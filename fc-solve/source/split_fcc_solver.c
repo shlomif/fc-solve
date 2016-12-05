@@ -692,7 +692,7 @@ int main(int argc, char *argv[])
             }
             filename = argv[arg];
         }
-        else if (fcs_dbm__extract_game_variant_from_argv(argc, argv, &arg,
+        else if (fcs_dbm__extract_common_from_argv(argc, argv, &arg,
                      &local_variant, &offload_dir_path, &num_threads,
                      &pre_cache_max_count, &iters_delta_limit))
         {
