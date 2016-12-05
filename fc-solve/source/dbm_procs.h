@@ -386,7 +386,7 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     fcs_dbm_variant_type_t *const ptr_local_variant,
     const char **const ptr_offload_dir_path, size_t *const ptr_num_threads,
     long *const ptr_pre_cache_max_count, long *const ptr_iters_delta_limit,
-    long *const ptr_caches_delta)
+    long *const ptr_caches_delta, const char **const dbm_store_path)
 {
     if (!strcmp(argv[*arg], "--pre-cache-max-count"))
     {
@@ -467,6 +467,15 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
             fc_solve_err("--caches-delta must be at least 1,000.\n");
         }
         *ptr_caches_delta = caches_delta;
+        return TRUE;
+    }
+    else if (!strcmp(argv[*arg], "--dbm-store-path"))
+    {
+        if (++(*arg) == argc)
+        {
+            fc_solve_err("--dbm-store-path came without an argument.\n");
+        }
+        *dbm_store_path = argv[*arg];
         return TRUE;
     }
     return FALSE;

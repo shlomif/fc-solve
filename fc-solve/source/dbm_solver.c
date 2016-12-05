@@ -651,17 +651,8 @@ int main(int argc, char *argv[])
     {
         if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &local_variant,
                 &offload_dir_path, &num_threads, &pre_cache_max_count,
-                &iters_delta_limit, &caches_delta))
+                &iters_delta_limit, &caches_delta, &dbm_store_path))
         {
-        }
-        else if (!strcmp(argv[arg], "--dbm-store-path"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--dbm-store-path came without an argument.\n");
-            }
-            dbm_store_path = argv[arg];
         }
         else if (!strcmp(argv[arg], "--max-count-of-items-in-queue"))
         {
