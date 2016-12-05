@@ -635,7 +635,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 int main(int argc, char *argv[])
 {
     long start_line = 1;
-    const char *dbm_store_path;
     const char *out_filename = NULL, *intermediate_input_filename = NULL,
                *offload_dir_path = NULL;
     FILE *intermediate_in_fh = NULL;
@@ -644,7 +643,7 @@ int main(int argc, char *argv[])
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     long iters_delta_limit = -1, pre_cache_max_count = 1000000,
          caches_delta = 1000000, max_count_of_items_in_queue = LONG_MAX;
-    dbm_store_path = "./fc_solve_dbm_store";
+    const char *dbm_store_path = "./fc_solve_dbm_store";
     size_t num_threads = 2;
     const char *param;
 
