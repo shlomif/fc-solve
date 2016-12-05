@@ -651,7 +651,7 @@ int main(int argc, char *argv[])
     {
         if (fcs_dbm__extract_game_variant_from_argv(argc, argv, &arg,
                 &local_variant, &offload_dir_path, &num_threads,
-                &pre_cache_max_count))
+                &pre_cache_max_count, &iters_delta_limit))
         {
         }
         else if (!strcmp(argv[arg], "--caches-delta"))
@@ -694,15 +694,6 @@ int main(int argc, char *argv[])
                 fc_solve_err("--start-line came without an argument.\n");
             }
             start_line = atol(argv[arg]);
-        }
-        else if (!strcmp(argv[arg], "--iters-delta-limit"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err("--iters-delta-limit came without an argument.\n");
-            }
-            iters_delta_limit = atol(argv[arg]);
         }
         else if (!strcmp(argv[arg], "-o"))
         {
