@@ -46,6 +46,16 @@ static void print_help(void)
         "     Limits each board for up to 'limit' iterations.\n");
 }
 
+static __attribute__((noreturn)) void help_err(const char *msg, ...)
+{
+    va_list ap;
+    va_start(ap, msg);
+    vfprintf(stderr, msg, ap);
+    va_end(ap);
+    print_help();
+    exit(-1);
+}
+
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t next_board_num_lock;
 static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
@@ -140,9 +150,7 @@ int main(int argc, char *argv[])
     total_num_iters_lock = initial_mutex_constant;
     if (argc < 4)
     {
-        fprintf(stderr, "Not Enough Arguments!\n");
-        print_help();
-        exit(-1);
+        help_err("Not Enough Arguments!\n");
     }
     next_board_num = atoll(argv[context_arg++]);
     past_end_board = 1 + atoll(argv[context_arg++]);
@@ -150,10 +158,7 @@ int main(int argc, char *argv[])
 
     if ((stop_at = atoll(argv[context_arg++])) <= 0)
     {
-        fprintf(stderr,
-            "print_step (the third argument) must be greater than 0.\n");
-        print_help();
-        exit(-1);
+        help_err("print_step (the third argument) must be greater than 0.\n");
     }
 
     int num_workers = 3;
@@ -164,10 +169,8 @@ int main(int argc, char *argv[])
             context_arg++;
             if (context_arg == argc)
             {
-                fprintf(stderr,
+                help_err(
                     "--total-iterations-limit came without an argument!\n");
-                print_help();
-                exit(-1);
             }
             total_iterations_limit_per_board = atol(argv[context_arg]);
         }
@@ -176,9 +179,7 @@ int main(int argc, char *argv[])
             context_arg++;
             if (context_arg == argc)
             {
-                fprintf(stderr, "--num-workers came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--num-workers came without an argument!\n");
             }
             num_workers = atoi(argv[context_arg]);
         }
@@ -187,9 +188,7 @@ int main(int argc, char *argv[])
             context_arg++;
             if (context_arg == argc)
             {
-                fprintf(stderr, "--worker-step came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--worker-step came without an argument!\n");
             }
             board_num_step = atoll(argv[context_arg]);
         }
@@ -198,10 +197,7 @@ int main(int argc, char *argv[])
             context_arg++;
             if (context_arg == argc)
             {
-                fprintf(
-                    stderr, "--iters-update-on came without an argument!\n");
-                print_help();
-                exit(-1);
+                help_err("--iters-update-on came without an argument!\n");
             }
             update_total_num_iters_threshold = atol(argv[context_arg]);
         }
