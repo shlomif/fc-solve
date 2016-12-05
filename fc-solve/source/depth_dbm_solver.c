@@ -350,16 +350,13 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr,
+                fc_solve_err(
                     "--pre-cache-max-count came without an argument!\n");
-                exit(-1);
             }
             pre_cache_max_count = atol(argv[arg]);
             if (pre_cache_max_count < 1000)
             {
-                fprintf(
-                    stderr, "--pre-cache-max-count must be at least 1,000.\n");
-                exit(-1);
+                fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
             }
         }
         else if (fcs_dbm__extract_game_variant_from_argv(argc, argv, &arg,
@@ -371,14 +368,12 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--caches-delta came without an argument!\n");
-                exit(-1);
+                fc_solve_err("--caches-delta came without an argument!\n");
             }
             caches_delta = atol(argv[arg]);
             if (caches_delta < 1000)
             {
-                fprintf(stderr, "--caches-delta must be at least 1,000.\n");
-                exit(-1);
+                fc_solve_err("--caches-delta must be at least 1,000.\n");
             }
         }
         else if (!strcmp(argv[arg], "--dbm-store-path"))
@@ -386,8 +381,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--dbm-store-path came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--dbm-store-path came without an argument.\n");
             }
             dbm_store_path = argv[arg];
         }
@@ -396,9 +390,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(
-                    stderr, "--iters-delta-limit came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--iters-delta-limit came without an argument.\n");
             }
             iters_delta_limit = atol(argv[arg]);
         }
@@ -407,8 +399,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "-o came without an argument.\n");
-                exit(-1);
+                fc_solve_err("-o came without an argument.\n");
             }
             out_filename = argv[arg];
         }
@@ -420,13 +411,11 @@ int main(int argc, char *argv[])
 
     if (arg < argc - 1)
     {
-        fprintf(stderr, "%s\n", "Junk arguments!");
-        exit(-1);
+        fc_solve_err("%s\n", "Junk arguments!");
     }
     else if (arg == argc)
     {
-        fprintf(stderr, "%s\n", "No board specified.");
-        exit(-1);
+        fc_solve_err("%s\n", "No board specified.");
     }
 
     FILE *const out_fh = calc_out_fh(out_filename);

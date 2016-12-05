@@ -329,10 +329,9 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
         int hex_digits;
         if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
         {
-            fprintf(stderr, "Error in reading state in line %ld of the "
-                            "--intermediate-input",
+            fc_solve_err("Error in reading state in line %ld of the "
+                         "--intermediate-input",
                 line_num);
-            exit(-1);
         }
 #ifdef FCS_DEBONDT_DELTA_STATES
         final_stack_encoded_state.s[(s_ptr - line) >> 1] =
@@ -405,11 +404,10 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             }
             else
             {
-                fprintf(stderr, "Error in reading state in line %ld of the "
-                                "--intermediate-input - source cannot be a "
-                                "foundation.",
+                fc_solve_err("Error in reading state in line %ld of the "
+                             "--intermediate-input - source cannot be a "
+                             "foundation.",
                     line_num);
-                exit(-1);
             }
         }
         /* Apply src_card to dest. */
@@ -471,11 +469,10 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     if (memcmp(&running_key, &final_stack_encoded_state, sizeof(running_key)) !=
         0)
     {
-        fprintf(stderr, "Error in reading state in line %ld of the "
-                        "--intermediate-input - final state does not match "
-                        "that with all states applied.\n",
+        fc_solve_err("Error in reading state in line %ld of the "
+                     "--intermediate-input - final state does not match "
+                     "that with all states applied.\n",
             line_num);
-        exit(-1);
     }
     fcs_offloading_queue__insert(
         &(instance->queue), (const fcs_offloading_queue_item_t *)(&token));
@@ -499,9 +496,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
                 &(threads[i].arg)))
         {
-            fprintf(
-                stderr, "Worker Thread No. %zd Initialization failed!\n", i);
-            exit(-1);
+            fc_solve_err("Worker Thread No. %zd Initialization failed!\n", i);
         }
     }
 
@@ -659,16 +654,13 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr,
+                fc_solve_err(
                     "--pre-cache-max-count came without an argument!\n");
-                exit(-1);
             }
             pre_cache_max_count = atol(argv[arg]);
             if (pre_cache_max_count < 1000)
             {
-                fprintf(
-                    stderr, "--pre-cache-max-count must be at least 1,000.\n");
-                exit(-1);
+                fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
             }
         }
         else if (fcs_dbm__extract_game_variant_from_argv(argc, argv, &arg,
@@ -680,14 +672,12 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--caches-delta came without an argument!\n");
-                exit(-1);
+                fc_solve_err("--caches-delta came without an argument!\n");
             }
             caches_delta = atol(argv[arg]);
             if (caches_delta < 1000)
             {
-                fprintf(stderr, "--caches-delta must be at least 1,000.\n");
-                exit(-1);
+                fc_solve_err("--caches-delta must be at least 1,000.\n");
             }
         }
         else if (!strcmp(argv[arg], "--dbm-store-path"))
@@ -695,8 +685,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--dbm-store-path came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--dbm-store-path came without an argument.\n");
             }
             dbm_store_path = argv[arg];
         }
@@ -705,9 +694,8 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--max-count-of-items-in-queue came without an "
-                                "argument.\n");
-                exit(-1);
+                fc_solve_err("--max-count-of-items-in-queue came without an "
+                             "argument.\n");
             }
             max_count_of_items_in_queue = atol(argv[arg]);
         }
@@ -716,8 +704,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "--start-line came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--start-line came without an argument.\n");
             }
             start_line = atol(argv[arg]);
         }
@@ -726,9 +713,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(
-                    stderr, "--iters-delta-limit came without an argument.\n");
-                exit(-1);
+                fc_solve_err("--iters-delta-limit came without an argument.\n");
             }
             iters_delta_limit = atol(argv[arg]);
         }
@@ -737,8 +722,7 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(stderr, "-o came without an argument.\n");
-                exit(-1);
+                fc_solve_err("-o came without an argument.\n");
             }
             out_filename = argv[arg];
         }
@@ -747,8 +731,8 @@ int main(int argc, char *argv[])
             arg++;
             if (arg == argc)
             {
-                fprintf(
-                    stderr, "--intermediate-input came without an argument.\n");
+                fc_solve_err(
+                    "--intermediate-input came without an argument.\n");
                 exit(-1);
             }
             intermediate_input_filename = argv[arg];
@@ -761,13 +745,11 @@ int main(int argc, char *argv[])
 
     if (arg < argc - 1)
     {
-        fprintf(stderr, "%s\n", "Junk arguments!");
-        exit(-1);
+        fc_solve_err("%s\n", "Junk arguments!");
     }
     else if (arg == argc)
     {
-        fprintf(stderr, "%s\n", "No board specified.");
-        exit(-1);
+        fc_solve_err("%s\n", "No board specified.");
     }
 
     FILE *const out_fh = calc_out_fh(out_filename);
@@ -789,10 +771,9 @@ int main(int argc, char *argv[])
         intermediate_in_fh = fopen(intermediate_input_filename, "rt");
         if (!intermediate_in_fh)
         {
-            fprintf(stderr,
+            fc_solve_err(
                 "Could not open file '%s' as --intermediate-input-filename.\n",
                 intermediate_input_filename);
-            exit(-1);
         }
     }
 

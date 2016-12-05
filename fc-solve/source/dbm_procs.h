@@ -390,8 +390,7 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
     {
         if (++(*arg) == argc)
         {
-            fprintf(stderr, "--game came without an argument!\n");
-            exit(-1);
+            fc_solve_err("--game came without an argument!\n");
         }
         const_AUTO(name, argv[*arg]);
         if (!strcmp(name, "bakers_dozen"))
@@ -404,8 +403,7 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
         }
         else
         {
-            fprintf(stderr, "Unknown game '%s'. Aborting\n", name);
-            exit(-1);
+            fc_solve_err("Unknown game '%s'. Aborting\n", name);
         }
         return TRUE;
     }
@@ -413,8 +411,7 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
     {
         if (++(*arg) == argc)
         {
-            fprintf(stderr, "--offload-dir-path came without an argument.\n");
-            exit(-1);
+            fc_solve_err("--offload-dir-path came without an argument.\n");
         }
         *ptr_offload_dir_path = argv[*arg];
         return TRUE;
@@ -423,14 +420,12 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
     {
         if (++(*arg) == argc)
         {
-            fprintf(stderr, "--num-threads came without an argument!\n");
-            exit(-1);
+            fc_solve_err("--num-threads came without an argument!\n");
         }
         const_AUTO(num_threads, (size_t)atoi(argv[*arg]));
         if (num_threads < 1)
         {
-            fprintf(stderr, "--num-threads must be at least 1.\n");
-            exit(-1);
+            fc_solve_err("--num-threads must be at least 1.\n");
         }
         *ptr_num_threads = num_threads;
         return TRUE;

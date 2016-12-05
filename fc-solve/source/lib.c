@@ -2687,9 +2687,8 @@ const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
         return "CP";
         break;
     default:
-        fprintf(stderr, "%s\n", "Unknown flares plan item type. Something is "
-                                "Wrong on the Internet.");
-        exit(-1);
+        fc_solve_err("%s\n", "Unknown flares plan item type. Something is "
+                             "Wrong on the Internet.");
     }
 #else
     return "";

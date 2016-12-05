@@ -162,10 +162,6 @@ static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
                 if (read_next_preset)
                 {
                     *args_man = fc_solve_args_man_chop(s);
-#if 0
-                    fprintf(stderr, "man_chop for <<<%s>>>\n", line);
-                    fflush(stderr);
-#endif
                     fclose(f);
                     return FALSE;
                 }

@@ -41,9 +41,7 @@ static GCC_INLINE void append(long idx)
 {
     if (num_deals == COUNT(deals))
     {
-        fprintf(
-            stderr, "Number of deals exceeded %ld!\n", (long)(COUNT(deals)));
-        exit(-1);
+        fc_solve_err("Number of deals exceeded %ld!\n", (long)(COUNT(deals)));
     }
     deals[num_deals++] = idx;
 }
@@ -71,14 +69,12 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    fprintf(stderr, "seq without args!\n");
-                    exit(-1);
+                    fc_solve_err("seq without args!\n");
                 }
             }
             else
             {
-                fprintf(stderr, "seq without args!\n");
-                exit(-1);
+                fc_solve_err("seq without args!\n");
             }
         }
         else
@@ -89,8 +85,7 @@ int main(int argc, char *argv[])
 
     if (arg == argc)
     {
-        fprintf(stderr, "No double dash (\"--\") after deals indexes!");
-        exit(-1);
+        fc_solve_err("No double dash (\"--\") after deals indexes!");
     }
 
     arg++;

@@ -152,27 +152,23 @@ int main(int argc, char *argv[])
         }
         else
         {
-            fprintf(stderr, "Unknown argument - '%s'!\n", argv[arg]);
-            exit(-1);
+            fc_solve_err("Unknown argument - '%s'!\n", argv[arg]);
         }
     }
 
     if (!scan1_to)
     {
-        fprintf(stderr, "--scan1-to not specified!\n");
-        exit(-1);
+        fc_solve_err("--scan1-to not specified!\n");
     }
 
     if (!scan2_to)
     {
-        fprintf(stderr, "--scan2-to not specified!\n");
-        exit(-1);
+        fc_solve_err("--scan2-to not specified!\n");
     }
 
     if (!output_filename)
     {
-        fprintf(stderr, "output filename not specified");
-        exit(-1);
+        fc_solve_err("output filename not specified");
     }
 
     fc_solve_print_started_at();

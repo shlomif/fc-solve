@@ -5,25 +5,28 @@
  * Freecell Solver, including this file, may be copied, modified, propagated,
  * or distributed except according to the terms contained in the COPYING file.
  *
- * Copyright (c) 2016 Shlomi Fish
+ * Copyright (c) 2000 Shlomi Fish
  */
 /*
- * rinutils.h - a common header for Rindolf's (= Shlomi Fish) utility
- * headers.
+ * fcs_limit.h - the purpose of this file is to define the fcs_int_limit_t
+ * type, and the FCS_INT_LIMIT_MAX constant.
  */
+
 #pragma once
 
-#include "alloc_wrap.h"
-#include "bool.h"
-#include "count.h"
-#include "fcs_dllexport.h"
-#include "fcs_err.h"
-#include "fcs_limit.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
+
 #include "inline.h"
-#include "likely.h"
-#include "min_and_max.h"
-#include "portable_int32.h"
-#include "portable_time.h"
-#include "str_utils.h"
-#include "typeof_wrap.h"
-#include "unused.h"
+
+static GCC_INLINE __attribute__((noreturn)) void fc_solve_err(
+    const char *msg, ...)
+{
+    va_list ap;
+
+    va_start(ap, msg);
+    vfprintf(stderr, msg, ap);
+    va_end(ap);
+    exit(-1);
+}

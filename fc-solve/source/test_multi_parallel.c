@@ -155,9 +155,8 @@ int main(int argc, char *argv[])
             FILE *const output_fh = fopen(solution_fn, "wt");
             if (!output_fh)
             {
-                fprintf(stderr, "Could not open output file '%s' for writing!",
+                fc_solve_err("Could not open output file '%s' for writing!",
                     solution_fn);
-                return -1;
             }
             fc_solve_output_result_to_file(
                 output_fh, instance, ret, &display_context);

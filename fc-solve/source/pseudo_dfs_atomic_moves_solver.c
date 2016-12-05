@@ -295,8 +295,7 @@ int main(int argc, char *argv[])
     FILE *const fh = fopen(filename, "r");
     if (fh == NULL)
     {
-        fprintf(stderr, "Could not open file '%s' for input.\n", filename);
-        exit(-1);
+        fc_solve_err("Could not open file '%s' for input.\n", filename);
     }
     const fcs_user_state_str_t user_state = read_state(fh);
     fcs_state_keyval_pair_t init_state_pair;

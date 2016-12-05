@@ -24,9 +24,7 @@ static GCC_INLINE void dbm__spawn_threads(
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
                 &(threads[i].arg)))
         {
-            fprintf(
-                stderr, "Worker Thread No. %zd Initialization failed!\n", i);
-            exit(-1);
+            fc_solve_err("Worker Thread No. %zd Initialization failed!\n", i);
         }
     }
 
