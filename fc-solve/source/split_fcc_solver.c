@@ -673,21 +673,15 @@ int main(int argc, char *argv[])
     const char *mod_base64_fcc_fingerprint = NULL;
     const char *fingerprint_input_location_path = NULL;
     const char *path_to_output_dir = NULL;
-    const char *filename = NULL, *offload_dir_path = NULL;
-    fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    const char *filename = NULL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-    long pre_cache_max_count = 1000000, caches_delta = 1000000,
-         iters_delta_limit = -1;
-    const char *dbm_store_path = "./fc_solve_dbm_store";
     const char *param;
+    fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
 
-    size_t num_threads = 1;
     int arg;
     for (arg = 1; arg < argc; arg++)
     {
-        if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &local_variant,
-                &offload_dir_path, &num_threads, &pre_cache_max_count,
-                &iters_delta_limit, &caches_delta, &dbm_store_path))
+        if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &inp))
         {
         }
         else if ((param = TRY_P("--board")))
@@ -719,15 +713,15 @@ int main(int argc, char *argv[])
 
     if (!(filename && fingerprint_input_location_path &&
             mod_base64_fcc_fingerprint && path_to_output_dir &&
-            offload_dir_path))
+            inp.offload_dir_path))
     {
         fc_solve_err("One or more of these parameters was not specified: %s\n",
             "--board, --fingerprint, --input, --output, --offload-dir-path");
     }
     fcs_state_keyval_pair_t init_state;
-    read_state_from_file(local_variant, filename,
+    read_state_from_file(inp.local_variant, filename,
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
-    horne_prune__simple(local_variant, &init_state);
+    horne_prune__simple(inp.local_variant, &init_state);
     fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask = {
         {'\0'}};
     {
@@ -743,6 +737,8 @@ int main(int argc, char *argv[])
             fc_solve_err("%s\n", "--fingerprint is invalid length.");
         }
     }
+
+    const_AUTO(local_variant, inp.local_variant);
 
     /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth.
      */
@@ -760,9 +756,10 @@ int main(int argc, char *argv[])
         FccEntryPointNode *key_ptr = NULL;
         fcs_encoded_state_buffer_t parent_state_enc;
 
-        instance_init(&instance, local_variant, pre_cache_max_count,
-            caches_delta, dbm_store_path, iters_delta_limit, offload_dir_path,
-            &fingerprint_which_irreversible_moves_bitmask, stdout);
+        instance_init(&instance, local_variant, inp.pre_cache_max_count,
+            inp.caches_delta, inp.dbm_store_path, inp.iters_delta_limit,
+            inp.offload_dir_path, &fingerprint_which_irreversible_moves_bitmask,
+            stdout);
 
         FILE *fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
 

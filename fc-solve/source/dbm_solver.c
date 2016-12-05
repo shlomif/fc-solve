@@ -635,24 +635,18 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 int main(int argc, char *argv[])
 {
     long start_line = 1;
-    const char *out_filename = NULL, *intermediate_input_filename = NULL,
-               *offload_dir_path = NULL;
+    const char *out_filename = NULL, *intermediate_input_filename = NULL;
     FILE *intermediate_in_fh = NULL;
-    fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     fcs_bool_t skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-    long iters_delta_limit = -1, pre_cache_max_count = 1000000,
-         caches_delta = 1000000, max_count_of_items_in_queue = LONG_MAX;
-    const char *dbm_store_path = "./fc_solve_dbm_store";
-    size_t num_threads = 2;
+    long max_count_of_items_in_queue = LONG_MAX;
     const char *param;
+    fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
 
     int arg;
     for (arg = 1; arg < argc; arg++)
     {
-        if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &local_variant,
-                &offload_dir_path, &num_threads, &pre_cache_max_count,
-                &iters_delta_limit, &caches_delta, &dbm_store_path))
+        if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &inp))
         {
         }
         else if ((param = TRY_P("--max-count-of-items-in-queue")))
@@ -688,10 +682,11 @@ int main(int argc, char *argv[])
 
     FILE *const out_fh = calc_out_fh(out_filename);
     fcs_state_keyval_pair_t init_state;
-    read_state_from_file(local_variant, argv[arg],
+    read_state_from_file(inp.local_variant, argv[arg],
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
-    horne_prune__simple(local_variant, &init_state);
+    horne_prune__simple(inp.local_variant, &init_state);
 
+    const_AUTO(local_variant, inp.local_variant);
     fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY
@@ -720,13 +715,13 @@ int main(int argc, char *argv[])
         fcs_dbm_solver_instance_t queue_instance;
         fcs_dbm_solver_instance_t limit_instance;
 
-        instance_init(&queue_instance, local_variant, pre_cache_max_count,
-            caches_delta, dbm_store_path, max_count_of_items_in_queue, -1,
-            offload_dir_path, out_fh);
+        instance_init(&queue_instance, local_variant, inp.pre_cache_max_count,
+            inp.caches_delta, inp.dbm_store_path, max_count_of_items_in_queue,
+            -1, inp.offload_dir_path, out_fh);
 
-        instance_init(&limit_instance, local_variant, pre_cache_max_count,
-            caches_delta, dbm_store_path, LONG_MAX, iters_delta_limit,
-            offload_dir_path, out_fh);
+        instance_init(&limit_instance, local_variant, inp.pre_cache_max_count,
+            inp.caches_delta, inp.dbm_store_path, LONG_MAX,
+            inp.iters_delta_limit, inp.offload_dir_path, out_fh);
 
         fcs_bool_t found_line;
         do
@@ -835,9 +830,9 @@ int main(int argc, char *argv[])
 
         fcs_encoded_state_buffer_t parent_state_enc;
 
-        instance_init(&instance, local_variant, pre_cache_max_count,
-            caches_delta, dbm_store_path, max_count_of_items_in_queue,
-            iters_delta_limit, offload_dir_path, out_fh);
+        instance_init(&instance, local_variant, inp.pre_cache_max_count,
+            inp.caches_delta, inp.dbm_store_path, max_count_of_items_in_queue,
+            inp.iters_delta_limit, inp.offload_dir_path, out_fh);
 
         key_ptr = &(instance.common.first_key);
         fcs_init_and_encode_state(

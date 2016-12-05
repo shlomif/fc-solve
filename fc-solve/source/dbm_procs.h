@@ -395,13 +395,26 @@ static const char *try_argv_param(
     return NULL;
 }
 
+typedef struct
+{
+    fcs_dbm_variant_type_t local_variant;
+    const char *offload_dir_path, *dbm_store_path;
+    long pre_cache_max_count, iters_delta_limit, caches_delta;
+    size_t num_threads;
+} fcs_dbm_common_input_t;
+
+static const fcs_dbm_common_input_t fcs_dbm_common_input_init = {
+    .local_variant = FCS_DBM_VARIANT_2FC_FREECELL,
+    .offload_dir_path = NULL,
+    .dbm_store_path = "./fc_solve_dbm_store",
+    .pre_cache_max_count = 1000000,
+    .iters_delta_limit = -1,
+    .caches_delta = 1000000,
+    .num_threads = 2};
+
 #define TRY_PARAM(s) try_argv_param(argc, argv, arg, s)
 static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
-    char **const argv, int *const arg,
-    fcs_dbm_variant_type_t *const ptr_local_variant,
-    const char **const ptr_offload_dir_path, size_t *const ptr_num_threads,
-    long *const ptr_pre_cache_max_count, long *const ptr_iters_delta_limit,
-    long *const ptr_caches_delta, const char **const dbm_store_path)
+    char **const argv, int *const arg, fcs_dbm_common_input_t *const inp)
 {
     const char *param;
     if ((param = TRY_PARAM("--pre-cache-max-count")))
@@ -411,18 +424,18 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
         {
             fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
         }
-        *ptr_pre_cache_max_count = pre_cache_max_count;
+        inp->pre_cache_max_count = pre_cache_max_count;
         return TRUE;
     }
     else if ((param = TRY_PARAM("--game")))
     {
         if (!strcmp(param, "bakers_dozen"))
         {
-            *ptr_local_variant = FCS_DBM_VARIANT_BAKERS_DOZEN;
+            inp->local_variant = FCS_DBM_VARIANT_BAKERS_DOZEN;
         }
         else if (!strcmp(param, "freecell"))
         {
-            *ptr_local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+            inp->local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
         }
         else
         {
@@ -432,7 +445,7 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     }
     else if ((param = TRY_PARAM("--offload-dir-path")))
     {
-        *ptr_offload_dir_path = param;
+        inp->offload_dir_path = param;
         return TRUE;
     }
     else if ((param = TRY_PARAM("--num-threads")))
@@ -442,12 +455,12 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
         {
             fc_solve_err("--num-threads must be at least 1.\n");
         }
-        *ptr_num_threads = num_threads;
+        inp->num_threads = num_threads;
         return TRUE;
     }
     else if ((param = TRY_PARAM("--iters-delta-limit")))
     {
-        *ptr_iters_delta_limit = atol(param);
+        inp->iters_delta_limit = atol(param);
         return TRUE;
     }
     else if ((param = TRY_PARAM("--caches-delta")))
@@ -457,12 +470,12 @@ static GCC_INLINE fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
         {
             fc_solve_err("--caches-delta must be at least 1,000.\n");
         }
-        *ptr_caches_delta = caches_delta;
+        inp->caches_delta = caches_delta;
         return TRUE;
     }
     else if ((param = TRY_PARAM("--dbm-store-path")))
     {
-        *dbm_store_path = param;
+        inp->dbm_store_path = param;
         return TRUE;
     }
     return FALSE;
