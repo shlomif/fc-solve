@@ -682,8 +682,8 @@ int main(int argc, char *argv[])
     const char *param;
 
     size_t num_threads = 1;
-    int arg = 1;
-    for (; arg < argc; arg++)
+    int arg;
+    for (arg = 1; arg < argc; arg++)
     {
         if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &local_variant,
                 &offload_dir_path, &num_threads, &pre_cache_max_count,

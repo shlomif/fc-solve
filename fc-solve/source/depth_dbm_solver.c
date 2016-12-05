@@ -334,7 +334,6 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
 
 int main(int argc, char *argv[])
 {
-    int arg;
     const char *out_filename = NULL, *offload_dir_path = NULL;
     fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
@@ -343,6 +342,7 @@ int main(int argc, char *argv[])
     const char *dbm_store_path = "./fc_solve_dbm_store";
     size_t num_threads = 2;
 
+    int arg;
     for (arg = 1; arg < argc; arg++)
     {
         if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &local_variant,
