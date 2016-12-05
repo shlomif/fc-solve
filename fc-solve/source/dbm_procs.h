@@ -384,9 +384,24 @@ static GCC_INLINE void fcs_dbm__cache_store__init(
 static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
     const int argc, char **const argv, int *const arg,
     fcs_dbm_variant_type_t *const ptr_local_variant,
-    const char **const ptr_offload_dir_path, size_t *const ptr_num_threads)
+    const char **const ptr_offload_dir_path, size_t *const ptr_num_threads,
+    long *const ptr_pre_cache_max_count)
 {
-    if (!strcmp(argv[*arg], "--game"))
+    if (!strcmp(argv[*arg], "--pre-cache-max-count"))
+    {
+        if (++(*arg) == argc)
+        {
+            fc_solve_err("--pre-cache-max-count came without an argument!\n");
+        }
+        const_AUTO(pre_cache_max_count, atol(argv[*arg]));
+        if (pre_cache_max_count < 1000)
+        {
+            fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
+        }
+        *ptr_pre_cache_max_count = pre_cache_max_count;
+        return TRUE;
+    }
+    else if (!strcmp(argv[*arg], "--game"))
     {
         if (++(*arg) == argc)
         {

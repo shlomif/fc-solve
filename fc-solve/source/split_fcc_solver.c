@@ -683,21 +683,7 @@ int main(int argc, char *argv[])
     int arg = 1;
     for (; arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--pre-cache-max-count"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fc_solve_err(
-                    "--pre-cache-max-count came without an argument!\n");
-            }
-            pre_cache_max_count = atol(argv[arg]);
-            if (pre_cache_max_count < 1000)
-            {
-                fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
-            }
-        }
-        else if (!strcmp(argv[arg], "--board"))
+        if (!strcmp(argv[arg], "--board"))
         {
             arg++;
             if (arg == argc)
@@ -707,7 +693,8 @@ int main(int argc, char *argv[])
             filename = argv[arg];
         }
         else if (fcs_dbm__extract_game_variant_from_argv(argc, argv, &arg,
-                     &local_variant, &offload_dir_path, &num_threads))
+                     &local_variant, &offload_dir_path, &num_threads,
+                     &pre_cache_max_count))
         {
         }
         else if (!strcmp(argv[arg], "--caches-delta"))
