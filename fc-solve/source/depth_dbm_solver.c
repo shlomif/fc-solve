@@ -163,67 +163,65 @@ static void *instance_run_solver_thread(void *const void_arg)
             break;
         }
 
+        prev_size = batch_size;
         if (batch_size == 0)
         {
             /* Sleep until more items become available in the
              * queue. */
             usleep(5000);
+            continue;
         }
-        else
+
+        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
-            for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
+            /* Handle item. */
+            fc_solve_delta_stater_decode_into_state(delta_stater,
+                tokens[batch_i]->key.s, &state, indirect_stacks_buffer);
+            /* A section for debugging. */
+            FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
+
+            if (instance_solver_thread_calc_derived_states(local_variant,
+                    &state, tokens[batch_i], &derived_list,
+                    &derived_list_recycle_bin, &derived_list_allocator, TRUE))
             {
-                /* Handle item. */
-                fc_solve_delta_stater_decode_into_state(delta_stater,
-                    tokens[batch_i]->key.s, &state, indirect_stacks_buffer);
-                /* A section for debugging. */
-                FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
-
-                if (instance_solver_thread_calc_derived_states(local_variant,
-                        &state, tokens[batch_i], &derived_list,
-                        &derived_list_recycle_bin, &derived_list_allocator,
-                        TRUE))
-                {
-                    fcs_dbm_queue_item_t physical_item;
-                    physical_item.key = tokens[batch_i]->key;
-                    FCS_LOCK(instance->storage_lock);
-                    fcs_dbm__found_solution(
-                        &(instance->common), tokens[batch_i], &physical_item);
-                    FCS_UNLOCK(instance->storage_lock);
-                    goto thread_end;
-                }
+                fcs_dbm_queue_item_t physical_item;
+                physical_item.key = tokens[batch_i]->key;
+                FCS_LOCK(instance->storage_lock);
+                fcs_dbm__found_solution(
+                    &(instance->common), tokens[batch_i], &physical_item);
+                FCS_UNLOCK(instance->storage_lock);
+                goto thread_end;
             }
-
-            /* Encode all the states. */
-            for (derived_iter = derived_list; derived_iter;
-                 derived_iter = derived_iter->next)
-            {
-                fcs_init_and_encode_state(delta_stater, local_variant,
-                    &(derived_iter->state), &(derived_iter->key));
-            }
-
-            instance_check_multiple_keys(thread, instance, &(coll->cache_store),
-                &(thread->thread_meta_alloc), derived_list
-#ifdef FCS_DBM_CACHE_ONLY
-                ,
-                item->moves_to_key
-#endif
-                );
-
-            /* Now recycle the derived_list */
-            while (derived_list)
-            {
-#define derived_list_next derived_iter
-                derived_list_next = derived_list->next;
-                derived_list->next = derived_list_recycle_bin;
-                derived_list_recycle_bin = derived_list;
-                derived_list = derived_list_next;
-#undef derived_list_next
-            }
-            /* End handle item. */
         }
+
+        /* Encode all the states. */
+        for (derived_iter = derived_list; derived_iter;
+             derived_iter = derived_iter->next)
+        {
+            fcs_init_and_encode_state(delta_stater, local_variant,
+                &(derived_iter->state), &(derived_iter->key));
+        }
+
+        instance_check_multiple_keys(thread, instance, &(coll->cache_store),
+            &(thread->thread_meta_alloc), derived_list
+#ifdef FCS_DBM_CACHE_ONLY
+            ,
+            item->moves_to_key
+#endif
+            );
+
+        /* Now recycle the derived_list */
+        while (derived_list)
+        {
+#define derived_list_next derived_iter
+            derived_list_next = derived_list->next;
+            derived_list->next = derived_list_recycle_bin;
+            derived_list_recycle_bin = derived_list;
+            derived_list = derived_list_next;
+#undef derived_list_next
+        }
+        /* End handle item. */
         /* End of main thread loop */
-        prev_size = batch_size;
     }
 thread_end:
 
