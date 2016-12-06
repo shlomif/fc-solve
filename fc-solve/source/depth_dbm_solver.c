@@ -42,17 +42,13 @@ typedef struct
 
 #include "dbm_procs.h"
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_variant_type_t local_variant,
-    const long pre_cache_max_count GCC_UNUSED,
-    const long caches_delta GCC_UNUSED, const char *dbm_store_path,
-    const long iters_delta_limit, const char *offload_dir_path,
-    FILE *const out_fh)
+    const fcs_dbm_common_input_t *const inp, FILE *const out_fh)
 {
     instance->curr_depth = 0;
     FCS_INIT_LOCK(instance->global_lock);
-    instance->offload_dir_path = offload_dir_path;
-    fcs_dbm__common_init(
-        &(instance->common), iters_delta_limit, local_variant, out_fh);
+    instance->offload_dir_path = inp->offload_dir_path;
+    fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
+        inp->local_variant, out_fh);
 
     FCS_INIT_LOCK(instance->storage_lock);
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
@@ -60,15 +56,16 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         const_AUTO(coll, &(instance->colls_by_depth[depth]));
         FCS_INIT_LOCK(coll->cache_store.queue_lock);
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-        fcs_offloading_queue__init(&(coll->queue), offload_dir_path, depth);
+        fcs_offloading_queue__init(
+            &(coll->queue), inp->offload_dir_path, depth);
 #else
         fc_solve_meta_compact_allocator_init(&(coll->queue_meta_alloc));
         fcs_offloading_queue__init(&(coll->queue), &(coll->queue_meta_alloc));
 #endif
 
         fcs_dbm__cache_store__init(&(coll->cache_store), &(instance->common),
-            &(coll->queue_meta_alloc), dbm_store_path, pre_cache_max_count,
-            caches_delta);
+            &(coll->queue_meta_alloc), inp->dbm_store_path,
+            inp->pre_cache_max_count, inp->caches_delta);
     }
 }
 
@@ -385,9 +382,7 @@ int main(int argc, char *argv[])
 
 #define KEY_PTR() (key_ptr)
     fcs_dbm_solver_instance_t instance;
-    instance_init(&instance, local_variant, inp.pre_cache_max_count,
-        inp.caches_delta, inp.dbm_store_path, inp.iters_delta_limit,
-        inp.offload_dir_path, out_fh);
+    instance_init(&instance, &inp, out_fh);
 
     fcs_encoded_state_buffer_t *const key_ptr = &(instance.common.first_key);
     fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
