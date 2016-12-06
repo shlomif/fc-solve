@@ -27,6 +27,7 @@ typedef struct
 } fcs_dbm_collection_by_depth_t;
 
 #define MAX_FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
+typedef size_t batch_size_t;
 typedef struct
 {
     fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
@@ -35,6 +36,7 @@ typedef struct
     const char *offload_dir_path;
     int curr_depth;
     fcs_dbm_instance_common_elems_t common;
+    batch_size_t batch_size;
 } fcs_dbm_solver_instance_t;
 
 #define CHECK_KEY_CALC_DEPTH()                                                 \
@@ -42,8 +44,10 @@ typedef struct
 
 #include "dbm_procs.h"
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_common_input_t *const inp, FILE *const out_fh)
+    const fcs_dbm_common_input_t *const inp, const batch_size_t batch_size,
+    FILE *const out_fh)
 {
+    instance->batch_size = batch_size;
     instance->curr_depth = 0;
     FCS_INIT_LOCK(instance->global_lock);
     instance->offload_dir_path = inp->offload_dir_path;
@@ -99,7 +103,8 @@ typedef struct
 static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item_t physical_item;
-    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL, *derived_iter;
+    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL,
+                        *derived_iter;
     fcs_state_keyval_pair_t state;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
@@ -327,21 +332,31 @@ int main(int argc, char *argv[])
     const char *out_filename = NULL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
+    batch_size_t batch_size = 1;
+    const char *param;
 
-    int arg;
-    for (arg = 1; arg < argc; arg++)
+    int real_arg;
+    int *arg = &real_arg;
+    for (real_arg = 1; real_arg < argc; real_arg++)
     {
-        if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &inp))
+        if (fcs_dbm__extract_common_from_argv(argc, argv, arg, &inp))
         {
         }
-        else if (!strcmp(argv[arg], "-o"))
+        else if ((param = TRY_PARAM("--batch-size")))
         {
-            arg++;
-            if (arg == argc)
+            batch_size = (batch_size_t)atol(param);
+            if (batch_size < 1)
+            {
+                fc_solve_err("--batch-size must be at least 1.\n");
+            }
+        }
+        else if (!strcmp(argv[*arg], "-o"))
+        {
+            if (++(*arg) == argc)
             {
                 fc_solve_err("-o came without an argument.\n");
             }
-            out_filename = argv[arg];
+            out_filename = argv[*arg];
         }
         else
         {
@@ -349,18 +364,18 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (arg < argc - 1)
+    if (real_arg < argc - 1)
     {
         fc_solve_err("%s\n", "Junk arguments!");
     }
-    else if (arg == argc)
+    else if (real_arg == argc)
     {
         fc_solve_err("%s\n", "No board specified.");
     }
 
     FILE *const out_fh = calc_out_fh(out_filename);
     fcs_state_keyval_pair_t init_state;
-    read_state_from_file(inp.local_variant, argv[arg],
+    read_state_from_file(inp.local_variant, argv[real_arg],
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     horne_prune__simple(inp.local_variant, &init_state);
 
@@ -375,7 +390,7 @@ int main(int argc, char *argv[])
 
 #define KEY_PTR() (key_ptr)
     fcs_dbm_solver_instance_t instance;
-    instance_init(&instance, &inp, out_fh);
+    instance_init(&instance, &inp, batch_size, out_fh);
 
     fcs_encoded_state_buffer_t *const key_ptr = &(instance.common.first_key);
     fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
