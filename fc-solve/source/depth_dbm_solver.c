@@ -115,7 +115,6 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_AUTO(local_variant, instance->common.variant);
     const_SLOT(max_batch_size, instance);
 
-    fcs_dbm_queue_item_t physical_items[max_batch_size];
     batch_size_t prev_size = 0;
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_compact_allocator_init(
@@ -145,7 +144,6 @@ static void *instance_run_solver_thread(void *const void_arg)
                 if (fcs_offloading_queue__extract(&(coll->queue),
                         (fcs_offloading_queue_item_t *)(&tokens[batch_size])))
                 {
-                    physical_items[batch_size].key = tokens[batch_size]->key;
                     instance_increment(instance);
                 }
                 else
@@ -177,8 +175,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             {
                 /* Handle item. */
                 fc_solve_delta_stater_decode_into_state(delta_stater,
-                    physical_items[batch_i].key.s, &state,
-                    indirect_stacks_buffer);
+                    tokens[batch_i]->key.s, &state, indirect_stacks_buffer);
                 /* A section for debugging. */
                 FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
@@ -187,9 +184,11 @@ static void *instance_run_solver_thread(void *const void_arg)
                         &derived_list_recycle_bin, &derived_list_allocator,
                         TRUE))
                 {
+                    fcs_dbm_queue_item_t physical_item;
+                    physical_item.key = tokens[batch_i]->key;
                     FCS_LOCK(instance->storage_lock);
-                    fcs_dbm__found_solution(&(instance->common),
-                        tokens[batch_i], &physical_items[batch_i]);
+                    fcs_dbm__found_solution(
+                        &(instance->common), tokens[batch_i], &physical_item);
                     FCS_UNLOCK(instance->storage_lock);
                     break;
                 }
