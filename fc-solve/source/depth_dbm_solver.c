@@ -190,7 +190,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                     fcs_dbm__found_solution(
                         &(instance->common), tokens[batch_i], &physical_item);
                     FCS_UNLOCK(instance->storage_lock);
-                    break;
+                    goto thread_end;
                 }
             }
 
@@ -225,6 +225,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         /* End of main thread loop */
         prev_size = batch_size;
     }
+thread_end:
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
 
