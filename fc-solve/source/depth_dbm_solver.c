@@ -99,11 +99,7 @@ typedef struct
 static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item_t physical_item;
-    fcs_dbm_record_t *token;
-    fcs_dbm_queue_item_t *item, *prev_item;
-    int queue_num_extracted_and_processed;
-    fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
-    fcs_compact_allocator_t derived_list_allocator;
+    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL, *derived_iter;
     fcs_state_keyval_pair_t state;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
@@ -116,19 +112,18 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_AUTO(delta_stater, &(thread->delta_stater));
     const_AUTO(local_variant, instance->common.variant);
 
-    prev_item = item = NULL;
-    queue_num_extracted_and_processed = 0;
+    fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
 
+    fcs_compact_allocator_t derived_list_allocator;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(thread->thread_meta_alloc));
-    derived_list_recycle_bin = NULL;
-    derived_list = NULL;
-    FILE *const out_fh = instance->common.out_fh;
+    const_AUTO(out_fh, instance->common.out_fh);
 
     TRACE("%s\n", "instance_run_solver_thread start");
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
-    while (1)
+    int queue_num_extracted_and_processed = 0;
+    while (TRUE)
     {
         /* First of all extract an item. */
         FCS_LOCK(coll->cache_store.queue_lock);
@@ -140,6 +135,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             FCS_UNLOCK(instance->global_lock);
         }
 
+        fcs_dbm_record_t *token;
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
             if (fcs_offloading_queue__extract(
