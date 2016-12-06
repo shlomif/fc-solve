@@ -116,7 +116,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_SLOT(max_batch_size, instance);
 
     fcs_dbm_queue_item_t physical_items[max_batch_size];
-    batch_size_t prev_count = 0;
+    batch_size_t prev_size = 0;
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(thread->thread_meta_alloc));
@@ -131,21 +131,21 @@ static void *instance_run_solver_thread(void *const void_arg)
         /* First of all extract a batch of items. */
         FCS_LOCK(instance->storage_lock);
 
-        if (prev_count > 0)
+        if (prev_size > 0)
         {
-            instance->common.queue_num_extracted_and_processed -= prev_count;
+            instance->common.queue_num_extracted_and_processed -= prev_size;
         }
 
         fcs_dbm_record_t *tokens[max_batch_size];
-        batch_size_t batch_count = 0;
+        batch_size_t batch_size = 0;
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            for (; batch_count < max_batch_size; ++batch_count)
+            for (; batch_size < max_batch_size; ++batch_size)
             {
                 if (fcs_offloading_queue__extract(&(coll->queue),
-                        (fcs_offloading_queue_item_t *)(&tokens[batch_count])))
+                        (fcs_offloading_queue_item_t *)(&tokens[batch_size])))
                 {
-                    physical_items[batch_count].key = tokens[batch_count]->key;
+                    physical_items[batch_size].key = tokens[batch_size]->key;
                     instance_increment(instance);
                 }
                 else
@@ -165,7 +165,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             break;
         }
 
-        if (batch_count == 0)
+        if (batch_size == 0)
         {
             /* Sleep until more items become available in the
              * queue. */
@@ -173,7 +173,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         }
         else
         {
-            for (batch_size_t batch_i = 0; batch_i < batch_count; ++batch_i)
+            for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
             {
                 /* Handle item. */
                 fc_solve_delta_stater_decode_into_state(delta_stater,
@@ -224,7 +224,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             /* End handle item. */
         }
         /* End of main thread loop */
-        prev_count = batch_count;
+        prev_size = batch_size;
     }
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
