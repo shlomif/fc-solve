@@ -107,10 +107,7 @@ RB_GENERATE_STATIC(
     FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_variant_type_t local_variant,
-    const long pre_cache_max_count GCC_UNUSED,
-    const long caches_delta GCC_UNUSED, const char *dbm_store_path,
-    const long iters_delta_limit, const char *offload_dir_path,
+    const fcs_dbm_common_input_t *const inp,
     fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
     FILE *out_fh)
 {
@@ -121,7 +118,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         &(instance->fcc_entry_points_allocator), &(instance->fcc_meta_alloc));
 
     instance->start_key_ptr = NULL;
-    instance->dbm_store_path = dbm_store_path;
+    instance->dbm_store_path = inp->dbm_store_path;
     instance->fingerprint_which_irreversible_moves_bitmask =
         (*fingerprint_which_irreversible_moves_bitmask);
 
@@ -147,9 +144,9 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     }
 
     FCS_INIT_LOCK(instance->global_lock);
-    instance->offload_dir_path = offload_dir_path;
-    fcs_dbm__common_init(
-        &(instance->common), iters_delta_limit, local_variant, out_fh);
+    instance->offload_dir_path = inp->offload_dir_path;
+    fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
+        inp->local_variant, out_fh);
 
     FCS_INIT_LOCK(instance->storage_lock);
     FCS_INIT_LOCK(instance->output_lock);
@@ -160,8 +157,8 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         FCS_INIT_LOCK(coll->queue_lock);
 
         fcs_dbm__cache_store__init(&(coll->cache_store), &(instance->common),
-            &(coll->queue_meta_alloc), dbm_store_path, pre_cache_max_count,
-            caches_delta);
+            &(coll->queue_meta_alloc), inp->dbm_store_path,
+            inp->pre_cache_max_count, inp->caches_delta);
     }
 }
 
@@ -450,7 +447,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
-    fcs_dbm_variant_type_t local_variant = instance->common.variant;
+    const_AUTO(local_variant, instance->common.variant);
 #endif
     const_AUTO(coll, &(instance->coll));
     {
@@ -756,10 +753,8 @@ int main(int argc, char *argv[])
         FccEntryPointNode *key_ptr = NULL;
         fcs_encoded_state_buffer_t parent_state_enc;
 
-        instance_init(&instance, local_variant, inp.pre_cache_max_count,
-            inp.caches_delta, inp.dbm_store_path, inp.iters_delta_limit,
-            inp.offload_dir_path, &fingerprint_which_irreversible_moves_bitmask,
-            stdout);
+        instance_init(&instance, &inp,
+            &fingerprint_which_irreversible_moves_bitmask, stdout);
 
         FILE *fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
 
