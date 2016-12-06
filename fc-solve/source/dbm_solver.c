@@ -38,7 +38,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     const long max_count_of_items_in_queue, const long iters_delta_limit,
     FILE *const out_fh)
 {
-    FCS_INIT_LOCK(instance->queue_lock);
     FCS_INIT_LOCK(instance->storage_lock);
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -137,8 +136,6 @@ static GCC_INLINE void instance_check_key(
 
         /* Now insert it into the queue. */
 
-        FCS_LOCK(instance->queue_lock);
-
         instance->common.count_of_items_in_queue++;
         instance->common.num_states_in_collection++;
 
@@ -147,7 +144,6 @@ static GCC_INLINE void instance_check_key(
         fcs_offloading_queue__insert(
             &(instance->queue), ((fcs_offloading_queue_item_t *)(&token)));
         instance->common.count_of_items_in_queue++;
-        FCS_UNLOCK(instance->queue_lock);
     }
 }
 
@@ -196,7 +192,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     while (1)
     {
         /* First of all extract an item. */
-        FCS_LOCK(instance->queue_lock);
+        FCS_LOCK(instance->storage_lock);
 
         if (prev_item)
         {
@@ -228,7 +224,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             queue_num_extracted_and_processed =
                 instance->common.queue_num_extracted_and_processed;
         }
-        FCS_UNLOCK(instance->queue_lock);
+        FCS_UNLOCK(instance->storage_lock);
 
         if ((instance->common.should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
@@ -254,9 +250,9 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &state, token, &derived_list, &derived_list_recycle_bin,
                     &derived_list_allocator, TRUE))
             {
-                FCS_LOCK(instance->queue_lock);
+                FCS_LOCK(instance->storage_lock);
                 fcs_dbm__found_solution(&(instance->common), token, item);
-                FCS_UNLOCK(instance->queue_lock);
+                FCS_UNLOCK(instance->storage_lock);
                 break;
             }
 
@@ -677,6 +673,7 @@ int main(int argc, char *argv[])
     {
         fc_solve_err("%s\n", "No board specified.");
     }
+    const_AUTO(num_threads, inp.num_threads);
 
     FILE *const out_fh = calc_out_fh(out_filename);
     fcs_state_keyval_pair_t init_state;

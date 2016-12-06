@@ -31,7 +31,6 @@ typedef size_t batch_size_t;
 typedef struct
 {
     fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
-    fcs_lock_t global_lock;
     fcs_lock_t storage_lock;
     const char *offload_dir_path;
     int curr_depth;
@@ -49,7 +48,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
 {
     instance->batch_size = batch_size;
     instance->curr_depth = 0;
-    FCS_INIT_LOCK(instance->global_lock);
+    FCS_INIT_LOCK(instance->storage_lock);
     instance->offload_dir_path = inp->offload_dir_path;
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
         inp->local_variant, out_fh);
@@ -58,7 +57,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
         const_AUTO(coll, &(instance->colls_by_depth[depth]));
-        FCS_INIT_LOCK(coll->cache_store.queue_lock);
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
         fcs_offloading_queue__init(
             &(coll->queue), inp->offload_dir_path, depth);
@@ -102,7 +100,6 @@ typedef struct
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
-    fcs_dbm_queue_item_t physical_item;
     fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL,
                         *derived_iter;
     fcs_state_keyval_pair_t state;
@@ -116,9 +113,10 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_SLOT(instance, thread);
     const_AUTO(delta_stater, &(thread->delta_stater));
     const_AUTO(local_variant, instance->common.variant);
+    const_SLOT(batch_size, instance);
 
-    fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
-
+    fcs_dbm_queue_item_t physical_items[batch_size];
+    batch_size_t prev_count = 0;
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(thread->thread_meta_alloc));
@@ -128,37 +126,40 @@ static void *instance_run_solver_thread(void *const void_arg)
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
     int queue_num_extracted_and_processed = 0;
+    fcs_dbm_queue_item_t *items[batch_size];
     while (TRUE)
     {
-        /* First of all extract an item. */
-        FCS_LOCK(coll->cache_store.queue_lock);
+        /* First of all extract a batch of items. */
+        FCS_LOCK(instance->storage_lock);
 
-        if (prev_item)
+        if (prev_count > 0)
         {
-            FCS_LOCK(instance->global_lock);
-            instance->common.queue_num_extracted_and_processed--;
-            FCS_UNLOCK(instance->global_lock);
+            instance->common.queue_num_extracted_and_processed -= prev_count;
         }
 
-        fcs_dbm_record_t *token;
+        fcs_dbm_record_t *tokens[batch_size];
+        batch_size_t batch_count = 0;
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            if (fcs_offloading_queue__extract(
-                    &(coll->queue), (fcs_offloading_queue_item_t *)(&token)))
+            for (; batch_count < batch_size; ++batch_count)
             {
-                physical_item.key = token->key;
-                item = &physical_item;
-                instance_increment(instance);
-            }
-            else
-            {
-                item = NULL;
+                if (fcs_offloading_queue__extract(&(coll->queue),
+                        (fcs_offloading_queue_item_t *)(&tokens[batch_count])))
+                {
+                    physical_items[batch_count].key = tokens[batch_count]->key;
+                    items[batch_count] = &physical_items[batch_count];
+                    instance_increment(instance);
+                }
+                else
+                {
+                    break;
+                }
             }
 
             queue_num_extracted_and_processed =
                 instance->common.queue_num_extracted_and_processed;
         }
-        FCS_UNLOCK(coll->cache_store.queue_lock);
+        FCS_UNLOCK(instance->storage_lock);
 
         if ((instance->common.should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
@@ -166,7 +167,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             break;
         }
 
-        if (!item)
+        if (batch_count == 0)
         {
             /* Sleep until more items become available in the
              * queue. */
@@ -174,20 +175,25 @@ static void *instance_run_solver_thread(void *const void_arg)
         }
         else
         {
-            /* Handle item. */
-            fc_solve_delta_stater_decode_into_state(
-                delta_stater, item->key.s, &state, indirect_stacks_buffer);
-            /* A section for debugging. */
-            FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
-
-            if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, token, &derived_list, &derived_list_recycle_bin,
-                    &derived_list_allocator, TRUE))
+            for (batch_size_t batch_i = 0; batch_i < batch_count; ++batch_i)
             {
-                FCS_LOCK(instance->global_lock);
-                fcs_dbm__found_solution(&(instance->common), token, item);
-                FCS_UNLOCK(instance->global_lock);
-                break;
+                /* Handle item. */
+                fc_solve_delta_stater_decode_into_state(delta_stater,
+                    items[batch_i]->key.s, &state, indirect_stacks_buffer);
+                /* A section for debugging. */
+                FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
+
+                if (instance_solver_thread_calc_derived_states(local_variant,
+                        &state, tokens[batch_i], &derived_list,
+                        &derived_list_recycle_bin, &derived_list_allocator,
+                        TRUE))
+                {
+                    FCS_LOCK(instance->storage_lock);
+                    fcs_dbm__found_solution(
+                        &(instance->common), tokens[batch_i], items[batch_i]);
+                    FCS_UNLOCK(instance->storage_lock);
+                    break;
+                }
             }
 
             /* Encode all the states. */
@@ -219,7 +225,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             /* End handle item. */
         }
         /* End of main thread loop */
-        prev_item = item;
+        prev_count = batch_count;
     }
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
@@ -287,19 +293,12 @@ static GCC_INLINE void instance_check_key(
 
             /* Now insert it into the queue. */
 
-            FCS_LOCK(coll->cache_store.queue_lock);
             fcs_offloading_queue__insert(
                 &(coll->queue), (const fcs_offloading_queue_item_t *)(&token));
-            FCS_UNLOCK(coll->cache_store.queue_lock);
-
-            FCS_LOCK(instance->global_lock);
 
             instance->common.count_of_items_in_queue++;
             instance->common.num_states_in_collection++;
-
             instance_debug_out_state(instance, &(token->key));
-
-            FCS_UNLOCK(instance->global_lock);
         }
     }
 }
@@ -372,6 +371,7 @@ int main(int argc, char *argv[])
     {
         fc_solve_err("%s\n", "No board specified.");
     }
+    const_AUTO(num_threads, inp.num_threads);
 
     FILE *const out_fh = calc_out_fh(out_filename);
     fcs_state_keyval_pair_t init_state;

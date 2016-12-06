@@ -154,7 +154,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     FCS_INIT_LOCK(instance->fcc_exit_points_output_lock);
     {
         fcs_dbm_collection_by_depth_t *const coll = &(instance->coll);
-        FCS_INIT_LOCK(coll->queue_lock);
 
         fcs_dbm__cache_store__init(&(coll->cache_store), &(instance->common),
             &(coll->queue_meta_alloc), inp->dbm_store_path,
@@ -200,7 +199,7 @@ typedef struct
 static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item_t physical_item;
-    fcs_dbm_record_t *token;
+    fcs_dbm_record_t *token = NULL;
     fcs_dbm_queue_item_t *item, *prev_item;
     fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
@@ -236,13 +235,11 @@ static void *instance_run_solver_thread(void *const void_arg)
     while (1)
     {
         /* First of all extract an item. */
-        FCS_LOCK(coll->queue_lock);
+        FCS_LOCK(instance->global_lock);
 
         if (prev_item)
         {
-            FCS_LOCK(instance->global_lock);
             instance->common.queue_num_extracted_and_processed--;
-            FCS_UNLOCK(instance->global_lock);
         }
 
         if (instance->common.should_terminate == DONT_TERMINATE)
@@ -263,7 +260,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             queue_num_extracted_and_processed =
                 instance->common.queue_num_extracted_and_processed;
         }
-        FCS_UNLOCK(coll->queue_lock);
+        FCS_UNLOCK(instance->global_lock);
 
         if ((instance->common.should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
@@ -497,8 +494,8 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
             if (key_depth == instance->curr_depth)
             {
                 /* Now insert it into the queue. */
+                FCS_LOCK(instance->global_lock);
 
-                FCS_LOCK(coll->queue_lock);
                 fcs_depth_multi_queue__insert(
                     &(coll->depth_queue), thread->state_depth + 1,
 #ifdef FCS_DBM_WITHOUT_CACHES
@@ -507,9 +504,6 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                     key
 #endif
                         );
-                FCS_UNLOCK(coll->queue_lock);
-
-                FCS_LOCK(instance->global_lock);
 
                 instance->common.count_of_items_in_queue++;
                 instance->common.num_states_in_collection++;
@@ -736,6 +730,7 @@ int main(int argc, char *argv[])
     }
 
     const_AUTO(local_variant, inp.local_variant);
+    const_AUTO(num_threads, inp.num_threads);
 
     /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth.
      */

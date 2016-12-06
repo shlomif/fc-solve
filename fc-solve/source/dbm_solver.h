@@ -160,7 +160,6 @@ typedef struct
 #endif
 
     /* The queue */
-    fcs_lock_t queue_lock;
     long pre_cache_max_count;
 } fcs_dbm__cache_store__common_t;
 
