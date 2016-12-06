@@ -126,7 +126,6 @@ static void *instance_run_solver_thread(void *const void_arg)
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
     int queue_num_extracted_and_processed = 0;
-    fcs_dbm_queue_item_t *items[max_batch_size];
     while (TRUE)
     {
         /* First of all extract a batch of items. */
@@ -147,7 +146,6 @@ static void *instance_run_solver_thread(void *const void_arg)
                         (fcs_offloading_queue_item_t *)(&tokens[batch_count])))
                 {
                     physical_items[batch_count].key = tokens[batch_count]->key;
-                    items[batch_count] = &physical_items[batch_count];
                     instance_increment(instance);
                 }
                 else
@@ -179,7 +177,8 @@ static void *instance_run_solver_thread(void *const void_arg)
             {
                 /* Handle item. */
                 fc_solve_delta_stater_decode_into_state(delta_stater,
-                    items[batch_i]->key.s, &state, indirect_stacks_buffer);
+                    physical_items[batch_i].key.s, &state,
+                    indirect_stacks_buffer);
                 /* A section for debugging. */
                 FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
@@ -189,8 +188,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                         TRUE))
                 {
                     FCS_LOCK(instance->storage_lock);
-                    fcs_dbm__found_solution(
-                        &(instance->common), tokens[batch_i], items[batch_i]);
+                    fcs_dbm__found_solution(&(instance->common),
+                        tokens[batch_i], &physical_items[batch_i]);
                     FCS_UNLOCK(instance->storage_lock);
                     break;
                 }
