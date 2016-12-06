@@ -98,7 +98,6 @@ typedef struct
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
-    int curr_depth;
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t *token;
     fcs_dbm_queue_item_t *item, *prev_item;
@@ -128,9 +127,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
     TRACE("%s\n", "instance_run_solver_thread start");
 
-    curr_depth = instance->curr_depth;
-    const_AUTO(coll, &(instance->colls_by_depth[curr_depth]));
-
+    const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
     while (1)
     {
         /* First of all extract an item. */
