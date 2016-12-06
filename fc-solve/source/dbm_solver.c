@@ -34,27 +34,25 @@ typedef struct
 
 #include "dbm_procs.h"
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_variant_type_t local_variant,
-    const long pre_cache_max_count GCC_UNUSED,
-    const long caches_delta GCC_UNUSED, const char *const dbm_store_path,
+    const fcs_dbm_common_input_t *const inp,
     const long max_count_of_items_in_queue, const long iters_delta_limit,
-    const char *const offload_dir_path, FILE *const out_fh)
+    FILE *const out_fh)
 {
     FCS_INIT_LOCK(instance->queue_lock);
     FCS_INIT_LOCK(instance->storage_lock);
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
-    fcs_offloading_queue__init(
-        &(instance->queue), instance->offload_dir_path = offload_dir_path, 0);
+    fcs_offloading_queue__init(&(instance->queue),
+        instance->offload_dir_path = inp->offload_dir_path, 0);
 #else
     fcs_offloading_queue__init(&(instance->queue), &(instance->meta_alloc));
 #endif
     fcs_dbm__common_init(
-        &(instance->common), iters_delta_limit, local_variant, out_fh);
+        &(instance->common), iters_delta_limit, inp->local_variant, out_fh);
     instance->max_count_of_items_in_queue = max_count_of_items_in_queue;
     fcs_dbm__cache_store__init(&(instance->cache_store), &(instance->common),
-        &(instance->meta_alloc), dbm_store_path, pre_cache_max_count,
-        caches_delta);
+        &(instance->meta_alloc), inp->dbm_store_path, inp->pre_cache_max_count,
+        inp->caches_delta);
 }
 
 static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
@@ -715,13 +713,10 @@ int main(int argc, char *argv[])
         fcs_dbm_solver_instance_t queue_instance;
         fcs_dbm_solver_instance_t limit_instance;
 
-        instance_init(&queue_instance, local_variant, inp.pre_cache_max_count,
-            inp.caches_delta, inp.dbm_store_path, max_count_of_items_in_queue,
-            -1, inp.offload_dir_path, out_fh);
-
-        instance_init(&limit_instance, local_variant, inp.pre_cache_max_count,
-            inp.caches_delta, inp.dbm_store_path, LONG_MAX,
-            inp.iters_delta_limit, inp.offload_dir_path, out_fh);
+        instance_init(
+            &queue_instance, &inp, max_count_of_items_in_queue, -1, out_fh);
+        instance_init(
+            &limit_instance, &inp, LONG_MAX, inp.iters_delta_limit, out_fh);
 
         fcs_bool_t found_line;
         do
@@ -825,19 +820,15 @@ int main(int argc, char *argv[])
     else
     {
         fcs_dbm_solver_instance_t instance;
+        instance_init(&instance, &inp, max_count_of_items_in_queue,
+            inp.iters_delta_limit, out_fh);
         fcs_encoded_state_buffer_t *key_ptr;
 #define KEY_PTR() (key_ptr)
-
         fcs_encoded_state_buffer_t parent_state_enc;
-
-        instance_init(&instance, local_variant, inp.pre_cache_max_count,
-            inp.caches_delta, inp.dbm_store_path, max_count_of_items_in_queue,
-            inp.iters_delta_limit, inp.offload_dir_path, out_fh);
 
         key_ptr = &(instance.common.first_key);
         fcs_init_and_encode_state(
             &delta, local_variant, &(init_state), KEY_PTR());
-
         /* The NULL parent_state_enc and move for indicating this is the
          * initial state. */
         fcs_init_encoded_state(&(parent_state_enc));
