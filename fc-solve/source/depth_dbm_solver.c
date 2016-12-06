@@ -35,7 +35,7 @@ typedef struct
     const char *offload_dir_path;
     int curr_depth;
     fcs_dbm_instance_common_elems_t common;
-    batch_size_t batch_size;
+    batch_size_t max_batch_size;
 } fcs_dbm_solver_instance_t;
 
 #define CHECK_KEY_CALC_DEPTH()                                                 \
@@ -43,10 +43,10 @@ typedef struct
 
 #include "dbm_procs.h"
 static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_common_input_t *const inp, const batch_size_t batch_size,
+    const fcs_dbm_common_input_t *const inp, const batch_size_t max_batch_size,
     FILE *const out_fh)
 {
-    instance->batch_size = batch_size;
+    instance->max_batch_size = max_batch_size;
     instance->curr_depth = 0;
     FCS_INIT_LOCK(instance->storage_lock);
     instance->offload_dir_path = inp->offload_dir_path;
@@ -113,9 +113,9 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_SLOT(instance, thread);
     const_AUTO(delta_stater, &(thread->delta_stater));
     const_AUTO(local_variant, instance->common.variant);
-    const_SLOT(batch_size, instance);
+    const_SLOT(max_batch_size, instance);
 
-    fcs_dbm_queue_item_t physical_items[batch_size];
+    fcs_dbm_queue_item_t physical_items[max_batch_size];
     batch_size_t prev_count = 0;
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_compact_allocator_init(
@@ -126,7 +126,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
     int queue_num_extracted_and_processed = 0;
-    fcs_dbm_queue_item_t *items[batch_size];
+    fcs_dbm_queue_item_t *items[max_batch_size];
     while (TRUE)
     {
         /* First of all extract a batch of items. */
@@ -137,11 +137,11 @@ static void *instance_run_solver_thread(void *const void_arg)
             instance->common.queue_num_extracted_and_processed -= prev_count;
         }
 
-        fcs_dbm_record_t *tokens[batch_size];
+        fcs_dbm_record_t *tokens[max_batch_size];
         batch_size_t batch_count = 0;
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            for (; batch_count < batch_size; ++batch_count)
+            for (; batch_count < max_batch_size; ++batch_count)
             {
                 if (fcs_offloading_queue__extract(&(coll->queue),
                         (fcs_offloading_queue_item_t *)(&tokens[batch_count])))
@@ -331,7 +331,7 @@ int main(int argc, char *argv[])
     const char *out_filename = NULL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
-    batch_size_t batch_size = 1;
+    batch_size_t max_batch_size = 1;
     const char *param;
 
     int real_arg;
@@ -343,8 +343,8 @@ int main(int argc, char *argv[])
         }
         else if ((param = TRY_PARAM("--batch-size")))
         {
-            batch_size = (batch_size_t)atol(param);
-            if (batch_size < 1)
+            max_batch_size = (batch_size_t)atol(param);
+            if (max_batch_size < 1)
             {
                 fc_solve_err("--batch-size must be at least 1.\n");
             }
@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
 
 #define KEY_PTR() (key_ptr)
     fcs_dbm_solver_instance_t instance;
-    instance_init(&instance, &inp, batch_size, out_fh);
+    instance_init(&instance, &inp, max_batch_size, out_fh);
 
     fcs_encoded_state_buffer_t *const key_ptr = &(instance.common.first_key);
     fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
