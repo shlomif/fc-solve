@@ -123,6 +123,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
     int queue_num_extracted_and_processed = 0;
+    fcs_dbm_record_t *tokens[max_batch_size];
+    fcs_derived_state_t *derived_lists[max_batch_size];
     while (TRUE)
     {
         /* First of all extract a batch of items. */
@@ -133,8 +135,6 @@ static void *instance_run_solver_thread(void *const void_arg)
             instance->common.queue_num_extracted_and_processed -= prev_size;
         }
 
-        fcs_dbm_record_t *tokens[max_batch_size];
-        fcs_derived_state_t *derived_lists[max_batch_size];
         batch_size_t batch_size = 0;
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
@@ -143,7 +143,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 if (fcs_offloading_queue__extract(&(coll->queue),
                         (fcs_offloading_queue_item_t *)(&tokens[batch_size])))
                 {
-                    derived_lists[batch_size] = 0;
+                    derived_lists[batch_size] = NULL;
                     instance_increment(instance);
                 }
                 else
