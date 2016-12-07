@@ -630,8 +630,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
     {
         fcs_derived_state_t *derived_iter;
 
-        for (derived_iter = (*derived_list); derived_iter;
-             derived_iter = derived_iter->next)
+        for (derived_iter = (*derived_list); derived_iter;)
         {
             derived_iter->num_non_reversible_moves_including_prune =
                 (derived_iter->core_irreversible_moves_count +
@@ -642,6 +641,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
                                           ->which_irreversible_moves_bitmask),
                                   NULL, NULL)
                             : 0));
+            derived_iter = derived_iter->next;
         }
     }
 

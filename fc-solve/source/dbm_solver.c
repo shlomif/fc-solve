@@ -264,8 +264,9 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &(derived_iter->state), &(derived_iter->key));
             }
 
-            instance_check_multiple_keys(thread, instance,
-                &(instance->cache_store), &(instance->meta_alloc), derived_list
+            instance_check_multiple_keys(
+                thread, instance, &(instance->cache_store),
+                &(instance->meta_alloc), &derived_list, 1
 #ifdef FCS_DBM_CACHE_ONLY
                 ,
                 item->moves_to_key
