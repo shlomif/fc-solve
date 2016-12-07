@@ -172,7 +172,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             continue;
         }
 
-        for (ssize_t batch_i = 0; batch_i < batch_size; ++batch_i)
+        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             /* Handle item. */
             fc_solve_delta_stater_decode_into_state(delta_stater,
@@ -181,7 +181,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
         }
 
-        for (ssize_t batch_i = 0; batch_i < batch_size; ++batch_i)
+        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             /* Handle item. */
             fc_solve_delta_stater_decode_into_state(delta_stater,
@@ -204,7 +204,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         }
 
         /* Encode all the states. */
-        for (ssize_t batch_i = 0; batch_i < batch_size; ++batch_i)
+        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             for (derived_iter = derived_lists[batch_i]; derived_iter;
                  derived_iter = derived_iter->next)
@@ -223,7 +223,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             );
 
         /* Now recycle the derived_list */
-        for (ssize_t batch_i = 0; batch_i < batch_size; ++batch_i)
+        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             var_AUTO(list, derived_lists[batch_i]);
             while (list)

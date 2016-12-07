@@ -161,7 +161,7 @@ static GCC_INLINE void instance_check_multiple_keys(
     fcs_dbm_solver_thread_t *thread, fcs_dbm_solver_instance_t *instance,
     fcs_dbm__cache_store__common_t *const cache_store,
     fcs_meta_compact_allocator_t *const meta_alloc, fcs_derived_state_t **lists,
-    const size_t batch_size
+    size_t batch_size
 #ifdef FCS_DBM_CACHE_ONLY
     ,
     const fcs_fcc_move_t *moves_to_parent
@@ -174,7 +174,7 @@ static GCC_INLINE void instance_check_multiple_keys(
         return;
     }
     FCS_LOCK(instance->storage_lock);
-    for (ssize_t batch_i = 0; batch_i < batch_size; ++batch_i)
+    for (typeof(batch_size) batch_i = 0; batch_i < batch_size; ++batch_i)
     {
         for (var_AUTO(list, lists[batch_i]); list; list = list->next)
         {
