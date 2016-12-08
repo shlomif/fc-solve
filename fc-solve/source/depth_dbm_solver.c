@@ -31,6 +31,7 @@ typedef struct
 {
     fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
     fcs_lock_t storage_lock;
+    fcs_condvar_t monitor;
     const char *offload_dir_path;
     int curr_depth;
     fcs_dbm_instance_common_elems_t common;
@@ -53,6 +54,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         inp->local_variant, out_fh);
 
     FCS_INIT_LOCK(instance->storage_lock);
+    fcs_init_condvar(&(instance->monitor));
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
         const_AUTO(coll, &(instance->colls_by_depth[depth]));
@@ -83,6 +85,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
         FCS_DESTROY_LOCK(coll->cache_store.queue_lock);
     }
     FCS_DESTROY_LOCK(instance->storage_lock);
+    fcs_destroy_condvar(&(instance->monitor));
 }
 
 struct fcs_dbm_solver_thread_struct
@@ -168,7 +171,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         {
             /* Sleep until more items become available in the
              * queue. */
-            usleep(5000);
+            fcs_wait_on_condvar(&(instance->monitor));
             continue;
         }
 
@@ -190,6 +193,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 fcs_dbm__found_solution(
                     &(instance->common), tokens[batch_i], &physical_item);
                 FCS_UNLOCK(instance->storage_lock);
+                fcs_broadcast_condvar(&(instance->monitor));
                 goto thread_end;
             }
         }
@@ -205,13 +209,16 @@ static void *instance_run_solver_thread(void *const void_arg)
             }
         }
 
-        instance_check_multiple_keys(thread, instance, &(coll->cache_store),
-            &(thread->thread_meta_alloc), derived_lists, batch_size
+        if (instance_check_multiple_keys(thread, instance, &(coll->cache_store),
+                &(thread->thread_meta_alloc), derived_lists, batch_size
 #ifdef FCS_DBM_CACHE_ONLY
-            ,
-            item->moves_to_key
+                ,
+                item->moves_to_key
 #endif
-            );
+                ))
+        {
+            fcs_signal_condvar(&(instance->monitor));
+        }
 
         /* Now recycle the derived_list */
         for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)

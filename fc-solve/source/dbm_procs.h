@@ -157,7 +157,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 #endif
     );
 
-static GCC_INLINE void instance_check_multiple_keys(
+static GCC_INLINE fcs_bool_t instance_check_multiple_keys(
     fcs_dbm_solver_thread_t *thread, fcs_dbm_solver_instance_t *instance,
     fcs_dbm__cache_store__common_t *const cache_store,
     fcs_meta_compact_allocator_t *const meta_alloc, fcs_derived_state_t **lists,
@@ -171,7 +171,7 @@ static GCC_INLINE void instance_check_multiple_keys(
     /* Small optimization in case the list is empty. */
     if (batch_size == 1 && !lists[0])
     {
-        return;
+        return FALSE;
     }
     FCS_LOCK(instance->storage_lock);
     for (typeof(batch_size) batch_i = 0; batch_i < batch_size; ++batch_i)
@@ -198,7 +198,14 @@ static GCC_INLINE void instance_check_multiple_keys(
 #endif
         }
     }
+#ifdef MAX_FCC_DEPTH
+    const fcs_bool_t have_more = (instance->colls_by_depth[instance->curr_depth]
+                                      .queue.num_items_in_queue > 0);
+#else
+    const fcs_bool_t have_more = FALSE;
+#endif
     FCS_UNLOCK(instance->storage_lock);
+    return have_more;
 }
 
 static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
