@@ -451,6 +451,7 @@ class ErrorLocation {
 }
 
 enum ParseErrorType {
+    VALID,
     TOO_MUCH_OF_CARD,
     NOT_ENOUGH_OF_CARD,
     FOUNDATIONS_NOT_AT_START,
@@ -469,4 +470,12 @@ class ParseError {
         this.card = c;
         return;
     }
+}
+
+class BoardParseResult extends BaseResult {
+    public errors: Array<ParseError>;
+    public is_valid: boolean;
+    public foundations: FoundationsParseResult;
+    public freecells: FreecellsParseResult;
+    public columns: Array<ColumnParseResult>;
 }
