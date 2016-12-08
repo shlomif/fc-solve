@@ -906,6 +906,7 @@ RPMs
 Radchenko
 Reftel
 Rivest
+Scaleway
 ShareAlike
 Sinan
 Stannered
@@ -960,7 +961,11 @@ sublicense
 27-Sep-2015
 28-Jul-2000
 DD-MMM-YYYY
+dbm-solver
 depth_dbm_fc_solve
+int128
+int128-optimisation
+libGMP
 obf
 solution_moves
 transpose-freecell-board

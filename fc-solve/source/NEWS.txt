@@ -16,8 +16,8 @@ Version 4.6.0: (04-Dec-2016)
 and range solvers.
 
 4. Option to use +__int128+ instead of libGMP for the DBM solvers - a
-significant speedup, see
-http://www.shlomifish.org/fc-solve-temp/charts/dbm-solver-__int128-optimisation/
+significant speed-up, see
+http://fc-solve.shlomifish.org/charts/dbm-solver-__int128-optimisation/ .
 
 5. Revise some awkward phrasing in the README .
 
