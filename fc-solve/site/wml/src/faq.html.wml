@@ -79,6 +79,12 @@ expanded into many single-card moves. If you are on Microsoft Windows, you can
 install <a href="http://strawberryperl.com/">Strawberry Perl</a> and run it.
 </p>
 
+<p>
+Note that the <a href="$(ROOT)/js-fc-solve/">web-based solver</a> also has an
+option to expand such moves and one can use it in most modern JavaScript-enabled
+browsers without having to install any additional software on your computer.
+</p>
+
 <h3 id="abuse_of_fc_solve">I think I found an abuse of Freecell Solver. What should I do?</h3>
 
 <p>
@@ -188,7 +194,7 @@ can be devised).
 <p>
 You can try inspecting the code of Freecell Solver or one of the
 <a href="$(ROOT)/links.html#other_solvers">other solvers</a> for insights, but
-note that their code (and especially Freecell Solver's) may be somewhat
+note that their code (and especially Freecell Solver’s) may be somewhat
 complex and hard to understand for people with relatively little experience.
 You can also pursue some of the
 <a href="$(ROOT)/docs/">Freecell Solver documentation</a> as well as the
@@ -206,7 +212,7 @@ Here are some general tips:
 <p>
 Make sure that the positions in the graph of the game are represented as a
 single segment of memory (normally a C struct) and can be compared for
-equivalence easily (using memcmp() or a similar function).
+equivalence easily (using <a href="http://en.cppreference.com/w/c/string/byte/memcmp">memcmp()</a> or a similar function).
 </p>
 </li>
 
@@ -257,7 +263,7 @@ program? If so - how?</h3>
 
 <p>
 Yes, you can, as long as you accept the
-<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 licence</a> . We
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a> . We
 also would appreciate an acknowledgement and a link to the Freecell Solver
 home page, in the About Dialogue, and in other places.
 </p>
@@ -288,7 +294,7 @@ alternatively, if you are successful.
 <h3 id="solutions_are_too_long">The Solutions I got are too long. What can I do?</h3>
 
 <p>
-You can try using a flares-based preset such as “qualified-seed” and
+You can try using a flares-based preset such as “video-editing” and
 optionally add <kbd>--flares-choice fcpro</kbd> and <kbd>-fif 10</kbd>, where 10
 can be replaced by a larger (or smaller) number. So the complete command would
 be:
@@ -296,7 +302,7 @@ be:
 
 <pre>
 pi-make-microsoft-freecell-board -t 24 | \
-    fc-solve -l qs --flares-choice fcpro -fif 10 -
+    fc-solve -l ve --flares-choice fcpro -fif 10 -
 </pre>
 
 <p>
@@ -309,9 +315,9 @@ flares and soft threads under the “Presets/presets” directory.
 <h3 id="which_prog_lang">Which programming language (or programming languages) is Freecell Solver written in?</h3>
 
 <p>
-The core Freecell Solver source is written in the GNU99 version of
-the C99 standard of the <a href="https://en.wikipedia.org/wiki/C_%28programming_language%29">C programming language</a>
-(<code>-std=gnu99</code>), which is supported by the
+The core Freecell Solver source is written in the GNU11 version of
+the C11 standard of the <a href="https://en.wikipedia.org/wiki/C_%28programming_language%29">C programming language</a>
+(<code>-std=gnu11</code>), which is supported by the
 <a href="https://en.wikipedia.org/wiki/GNU_Compiler_Collection">GCC</a> and
 <a href="https://en.wikipedia.org/wiki/Clang">clang</a> compilers
 and compatible compilers. This
@@ -334,17 +340,16 @@ markup in other languages such as JavaScript.
 Here are the estimated lines-of-codes-per-language statistics of running
 <a href="http://www.dwheeler.com/sloccount/">SLOCCount by David Wheeler</a> on
 the “fc-solve/source” sub-directory of the git repository (as of
-13 January 2014)
+9 December 2016)
 </p>
 
 <pre>
 Totals grouped by language (dominant language first):
-ansic:        34392 (69.41%)
-perl:         12118 (24.46%)
-sh:            1254 (2.53%)
-python:        1137 (2.29%)
-ruby:           347 (0.70%)
-cpp:            304 (0.61%)
+ansic:        27360 (68.34%)
+perl:         10165 (25.39%)
+python:        1262 (3.15%)
+sh:             970 (2.42%)
+cpp:            277 (0.69%)
 </pre>
 
 <h3 id="why_in_c">Why is Freecell Solver written in C? Why not in another language?</h3>
@@ -519,7 +524,7 @@ Solver.
 <p>
 In fact, the core C libfreecell-solver library, some of the command line
 executables, and some other code, is written in
-<a href="#which_prog_lang">the GNU99 version of the C programming language</a>,
+<a href="#which_prog_lang">the GNU11 version of the C programming language</a>,
 and does not require the Perl runtime to be used.
 </p>
 

@@ -131,6 +131,7 @@ Blogger
 BrFS
 Brumley
 BuildRequires
+C11
 C99
 CC-by-sa-licensed
 CFLAGS
@@ -222,6 +223,7 @@ GCC_INLINE-ing
 GDB
 GLib
 GMP
+GNU11
 GNU99
 GPL
 GPL'd
@@ -589,6 +591,7 @@ gcc-4
 gcc-compatible
 github
 gmplib
+gnu11
 gnu99
 good_measure
 google
