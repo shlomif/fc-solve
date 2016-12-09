@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 18;
 use File::Spec;
 use File::Temp qw( tempdir );
 use Test::Trap
@@ -199,6 +199,39 @@ SKIP:
 
         # TEST
         ok( scalar( $status != 0 ), "Exit code is non-zero." );
+    }
+}
+
+{
+SKIP:
+    {
+        if ( is_without_dbm() )
+        {
+            Test::More::skip( "without the dbm fc_solvers", 1 );
+        }
+        my $status;
+        trap
+        {
+            $status = system(
+                bin_exe_raw( ['depth_dbm_fc_solver'] ),
+                '--num-threads',
+                3,
+                '--batch-size',
+                20,
+                "--offload-dir-path",
+                ( tempdir( CLEANUP => 1 ) . '/' ),
+                bin_board('1107600547.board'),
+            );
+        };
+
+        my $out = $trap->stdout();
+
+        # TEST
+        like(
+            $out,
+qr/\nCould not solve successfully\.\nhandle_and_destroy_instance_solution end\n?\z/,
+            "1107600547 run finished.",
+        );
     }
 }
 
