@@ -179,15 +179,6 @@ static void *instance_run_solver_thread(void *const void_arg)
                 tokens[batch_i]->key.s, &state, indirect_stacks_buffer);
             /* A section for debugging. */
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
-        }
-
-        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
-        {
-            /* Handle item. */
-            fc_solve_delta_stater_decode_into_state(delta_stater,
-                tokens[batch_i]->key.s, &state, indirect_stacks_buffer);
-            /* A section for debugging. */
-            // FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
                     &state, tokens[batch_i], &derived_lists[batch_i],
