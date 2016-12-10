@@ -204,11 +204,11 @@ static GCC_INLINE fcs_bool_t instance_check_multiple_keys(
 
     if (have_more)
     {
-        fcs_signal_condvar(&(instance->monitor));
+        fcs_condvar_signal(&(instance->monitor));
     }
     else
     {
-        fcs_broadcast_condvar(&(instance->monitor));
+        fcs_condvar_broadcast(&(instance->monitor));
     }
 #else
     const fcs_bool_t have_more = FALSE;

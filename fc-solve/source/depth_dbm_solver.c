@@ -68,7 +68,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
             &(coll->queue_meta_alloc), inp->dbm_store_path,
             inp->pre_cache_max_count, inp->caches_delta);
     }
-    fcs_init_condvar(&(instance->monitor));
+    fcs_condvar_init(&(instance->monitor));
 }
 
 static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
@@ -83,7 +83,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
         DESTROY_CACHE(coll);
         FCS_DESTROY_LOCK(coll->cache_store.queue_lock);
     }
-    fcs_destroy_condvar(&(instance->monitor));
+    fcs_condvar_destroy(&(instance->monitor));
     FCS_DESTROY_LOCK(instance->storage_lock);
 }
 
@@ -138,7 +138,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             if (!(instance->common.queue_num_extracted_and_processed -=
                     prev_size))
             {
-                fcs_broadcast_condvar(&(instance->monitor));
+                fcs_condvar_broadcast(&(instance->monitor));
             }
             prev_size = 0;
         }
@@ -172,7 +172,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 {
                     /* Sleep until more items become available in the
                      * queue. */
-                    fcs_wait_on_condvar(
+                    fcs_condvar__wait_on(
                         &(instance->monitor), &(instance->storage_lock));
                 }
             }
@@ -205,7 +205,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 FCS_LOCK(instance->storage_lock);
                 fcs_dbm__found_solution(
                     &(instance->common), tokens[batch_i], &physical_item);
-                fcs_broadcast_condvar(&(instance->monitor));
+                fcs_condvar_broadcast(&(instance->monitor));
                 FCS_UNLOCK(instance->storage_lock);
                 goto thread_end;
             }

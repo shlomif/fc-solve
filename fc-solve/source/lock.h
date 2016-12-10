@@ -71,29 +71,29 @@ typedef struct
     {                                                                          \
     }
 
-static GCC_INLINE void fcs_init_condvar(fcs_condvar_t *const cond)
+static GCC_INLINE void fcs_condvar_init(fcs_condvar_t *const cond)
 {
     cond->cond = initial_cond_constant;
     pthread_cond_init(&(cond->cond), NULL);
 }
 
-static GCC_INLINE void fcs_destroy_condvar(fcs_condvar_t *const cond)
+static GCC_INLINE void fcs_condvar_destroy(fcs_condvar_t *const cond)
 {
     pthread_cond_destroy(&(cond->cond));
 }
 
-static GCC_INLINE void fcs_wait_on_condvar(
+static GCC_INLINE void fcs_condvar__wait_on(
     fcs_condvar_t *const cond, fcs_lock_t *const mutex)
 {
     pthread_cond_wait(&(cond->cond), mutex);
 }
 
-static GCC_INLINE void fcs_signal_condvar(fcs_condvar_t *const cond)
+static GCC_INLINE void fcs_condvar_signal(fcs_condvar_t *const cond)
 {
     pthread_cond_signal(&(cond->cond));
 }
 
-static GCC_INLINE void fcs_broadcast_condvar(fcs_condvar_t *const cond)
+static GCC_INLINE void fcs_condvar_broadcast(fcs_condvar_t *const cond)
 {
     pthread_cond_broadcast(&(cond->cond));
 }
