@@ -346,6 +346,7 @@ my @cmd= ("cmake",
         : ()
     ),
     ($STR_OPTS{dbm}{value} ? ("-DFCS_ENABLE_DBM_SOLVER=1") : ()),
+    (defined( $int_opts__values{nfc} ) ? ("-DFCS_DBM_FREECELLS_NUM=$int_opts__values{nfc}") : ()),
     (map { $bool_opts_with_false_defaults__values{$_} ? ("-D" . $BOOL_OPTS_WITH_FALSE_DEFAULTS{$_} . "=1") : () } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
     (map { '-D' . $TRUE_BOOL_OPTS{$_} . '=' . ($true_bool_opts__values{$_} ? '1': '') } @TRUE_BOOL_KEYS),
     (map { defined($int_opts__values{$_}) ? ("-D" . $INT_OPTS{$_} . "=" . $int_opts__values{$_}) : () } @INT_OPS__KEYS),

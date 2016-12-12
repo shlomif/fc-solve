@@ -167,6 +167,8 @@ extern "C" {
 #define MAX_NUM_FREECELLS ${MAX_NUM_FREECELLS}
 #endif
 
+#cmakedefine FCS_DBM_FREECELLS_NUM ${FCS_DBM_FREECELLS_NUM}
+
 /*
  * The maximal number of Stacks. For efficiency's sake it should be a
  * multiple of 4.

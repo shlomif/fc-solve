@@ -25,7 +25,9 @@ typedef enum {
     FCS_DBM_VARIANT_BAKERS_DOZEN,
 } fcs_dbm_variant_type_t;
 
+#ifndef FCS_DBM_FREECELLS_NUM
 #define FCS_DBM_FREECELLS_NUM 2
+#endif
 
 #ifdef FCS_FREECELL_ONLY
 
