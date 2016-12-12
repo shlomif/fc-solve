@@ -84,11 +84,13 @@
 2Ftrunk
 32K
 3D
+4-Freecells
 4-freecells
 4GHz
 5's
 6th
 82-fcs-path-0
+9th
 ABRT
 AGPL
 AIs

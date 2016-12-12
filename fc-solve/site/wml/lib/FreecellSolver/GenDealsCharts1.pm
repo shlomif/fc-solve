@@ -29,6 +29,11 @@ sub _calc_deal_nums
 
 sub gen_progress_charts
 {
+    my ($class, $args) = @_;
+
+    $args //= +{};
+    my $try2 = $args->{try2} // 0;
+
     my @funcs;
     my $idx = 0;
     foreach my $deal (@{_calc_deal_nums()})
@@ -47,7 +52,7 @@ sub gen_progress_charts
 EOF
         print qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_data">\n#;
         # print io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal" . ($deal eq '6825625742' ? ".filtered" : '') . ".tsv")->all;
-        print io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal.filtered.tsv")->all;
+        print io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal" . (($try2 && ($deal eq '6825625742')) ? '--try2' : '') . ".filtered.tsv")->all;
         print qq#</textarea>\n<br />\n#;
     }
     print <<"EOF";
@@ -75,6 +80,11 @@ EOF
 
 sub gen_summary_table
 {
+    my ($class, $args) = @_;
+
+    $args //= +{};
+    my $try2 = $args->{try2} // 0;
+
     print <<'EOF';
 <table class="fcs_depth_dbm_deals" summary="Summary of the iterations for the deals">
 <tr>
@@ -84,7 +94,7 @@ sub gen_summary_table
 EOF
     foreach my $deal (@{_calc_deal_nums()})
     {
-        print "<tr><td>" . format_num($deal) . "</td><td>" . format_num(io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal.tsv")->tail(1) =~ s#\t.*##mrs) . "</td></tr>\n";
+        print "<tr><td>" . format_num($deal) . "</td><td>" . format_num(io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal" . (($try2 && ($deal eq '6825625742')) ? '--try2' : '') . ".tsv")->tail(1) =~ s#\t.*##mrs) . "</td></tr>\n";
     }
     print <<'EOF';
 </table>
