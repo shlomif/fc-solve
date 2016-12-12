@@ -5,7 +5,7 @@
 
 <page_extra_head_elements>
 <script type="text/javascript" src="$(ROOT)/js/jquery.flot.js"></script>
-<script type="text/javascript" src="chart-using-flot.js"></script>
+<script type="text/javascript" src="$(ROOT)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js"></script>
 <style type="text/css">
 .demo-container {
     box-sizing: border-box;
