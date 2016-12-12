@@ -163,6 +163,22 @@ by using the <a href="https://github.com/aws/aws-sdk-cpp">AWS SDK for C++</a>
 which is open source and appears to be well-maintained and stable.
 </p>
 
+<p>
+Shlomi Fish also wishes to try to independently confirm the impossibility of
+the other deals on Theodore Pringle’s list, because he used a solver which
+used to have some false negatives. This effort ran into RAM shortage problems
+on his personal computer which only has 8 GB of RAM so it may require getting
+access to a more capable machine.
+</p>
+
+<p>
+Another potential future direction is that we noticed that some terminal
+game positions are seemingly impossible to a human player but the computer
+solvers just move cards on top of each others and into empty slots using
+reversible moves. We wish to investigate some potential prunes to detect such
+terminal positions and avoid traversing them further.
+</p>
+
 <h2 id="links">Links and References</h2>
 
 <ul>
