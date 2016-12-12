@@ -140,8 +140,28 @@ FreecellSolver::GenDealsCharts1->gen_progress_charts({try2 => 1});
 }
 :>
 
-<h3 id="future_directions">Future Directions</h3>
+<h2 id="future_directions">Future Directions</h2>
 
+<p>
+The version of the depth_dbm_fc_solver that was used for solving the intractable
+deals in this report had poor multitasking/multi-threading scalability so work
+was done in <a href="https://github.com/shlomif/fc-solve/tree/feature-branch--depth-dbm-solver--batches--issue7">the “feature-branch--depth-dbm-solver--batches--issue7” branch</a> in an attempt to mitigate that. The benchmarks appeared to
+be encouraging.
+</p>
+
+<p>
+Some further work has been done in <a href="https://github.com/shlomif/fc-solve/tree/feature-branch--depth-dbm-solver--condvars--issue8">the “feature-branch--depth-dbm-solver--condvars--issue8” branch</a> but results are less conclusive and
+both “before” and “after” benchmarks yield a large variance.
+</p>
+
+<p>
+One note is that we were told that the cost of additional disk space (beyond
+the pre-allocated 8 GB) on Amazon EC2 is prohibitive and that it would be
+cheaper to make use of <a href="https://en.wikipedia.org/wiki/Amazon_S3">Amazon
+S3</a>. We wish to look into writing an optional S3 backend for the depth_dbm_fc_solver’s offloading queue
+by using the <a href="https://github.com/aws/aws-sdk-cpp">AWS SDK for C++</a>
+which is open source and appears to be well-maintained and stable.
+</p>
 
 <h2 id="links">Links and References</h2>
 

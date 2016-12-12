@@ -372,7 +372,9 @@ RunIndef
 Résumé
 S1
 S2
+S3
 SCons
+SDK
 SIGABRT
 SLOCCount
 SQL
@@ -516,7 +518,7 @@ delta_states
 delta_states_debondt
 demos
 depth_dbm_fc_solver
-depth_dbm_fc_solver
+depth_dbm_fc_solver's
 der_katz
 developerworks
 dfs
@@ -562,6 +564,8 @@ fcs_dllexport
 fcs_hash
 fcs_state_extra_info_t
 fcs_user
+feature-branch--depth-dbm-solver--batches--issue7
+feature-branch--depth-dbm-solver--condvars--issue8
 fetchmail
 filename
 flamatory
