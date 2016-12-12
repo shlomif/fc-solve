@@ -54,8 +54,11 @@ the deals in the 8 milliard (1 to 8,589,934,591)
 <a href="http://cards.wikia.com/wiki/FreeCell_Pro">Freecell Pro</a> deals range
 which are based on the original <a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">Microsoft FreeCell</a> dealing.
 He ended up discovering that there are 102,032
-impossible deals and 46 intractable deals. Further analysis reduced the number
-of intractable deals down to 9 - see
+impossible deals and 46 intractable deals. An “intractable” deal in this
+context means a deal for which all definitive solvers ran out of resources
+(usually memory) before determining whether it was solvable or impossible.
+(Also see <a href="https://www.reddit.com/r/gamedev/comments/5e9qp0/report_solving_the_remaining_4freecells/daaxgby/">a discussion about it on Reddit</a>.)
+Further analysis reduced the number of intractable deals down to 9 - see
 <a href="https://github.com/shlomif/freecell-pro-intractable-deals">the updated
 list</a>.
 </p>
