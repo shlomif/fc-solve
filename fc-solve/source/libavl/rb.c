@@ -144,14 +144,16 @@ rb_probe (struct rb_table *tree, void *item)
 
   assert (tree != NULL && item != NULL);
 
-  pa[0] = (struct rb_node *) &tree->rb_root;
+  pa[0] = (struct rb_node *)&(tree->rb_proto_root);
   da[0] = 0;
   k = 1;
-  for (p = TREE_AVL_ROOT(tree); p != NULL; p = rb_process_link(p->rb_mylink[da[k - 1]]))
+  for (p = TREE_AVL_ROOT(tree);
+      p != NULL;
+      p = rb_process_link(p->rb_mylink[da[k - 1]]))
     {
       int cmp = tree->rb_compare (item, NODE_DATA_PTR(p), tree->rb_param);
       if (cmp == 0)
-        return &p->rb_data;
+        return NODE_DATA_PTR(p);
 
       pa[k] = p;
       da[k++] = cmp > 0;
@@ -167,7 +169,7 @@ rb_probe (struct rb_table *tree, void *item)
           &(tree->rb_allocator), sizeof(*n)
           );
   }
-    rb_set_link(pa[k - 1], da[k - 1], n);
+  rb_set_link(pa[k - 1], da[k - 1], n);
   if (n == NULL)
     return NULL;
 
@@ -253,7 +255,7 @@ rb_probe (struct rb_table *tree, void *item)
   rb_set_color(TREE_AVL_ROOT(tree), RB_BLACK);
 
 
-  return &n->rb_data;
+  return NODE_DATA_PTR(n);
 }
 
 /* Inserts |item| into |table|.
@@ -300,7 +302,7 @@ rb_delete (struct rb_table *tree, const void *item)
   assert (tree != NULL && item != NULL);
 
   k = 0;
-  p = (struct rb_node *) &tree->rb_root;
+  p = (struct rb_node *) &tree->rb_proto_root;
   for (cmp = -1; cmp != 0;
        cmp = tree->rb_compare (item, NODE_DATA_PTR(p), tree->rb_param))
     {
@@ -934,11 +936,13 @@ rb_destroy (struct rb_table *tree, rb_item_func *destroy)
 
   assert (tree != NULL);
 
+  if (destroy != NULL)
+  {
   for (p = TREE_AVL_ROOT(tree); p != NULL; p = q)
     if (rb_process_link(p->rb_mylink[0]) == NULL)
       {
         q = rb_process_link(p->rb_mylink[1]);
-        if (destroy != NULL && NODE_DATA_PTR(p) != NULL)
+        if (NODE_DATA_PTR(p) != NULL)
           destroy (NODE_DATA_PTR(p), tree->rb_param);
 #if 0
         tree->rb_alloc->libavl_free (tree->rb_alloc, p);
@@ -950,7 +954,7 @@ rb_destroy (struct rb_table *tree, rb_item_func *destroy)
         rb_set_link(p, 0, rb_process_link(q->rb_mylink[1]));
         rb_set_link(q, 1, p);
       }
-
+    }
   fc_solve_compact_allocator_finish(&(tree->rb_allocator));
   free (tree);
 }
