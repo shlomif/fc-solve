@@ -81,13 +81,13 @@ static GCC_INLINE void cache_populate_from_pre_cache(
 {
 #ifdef FCS_DBM_USE_LIBAVL
     dict_t *kaz_tree;
-    struct avl_traverser trav;
+    struct rb_traverser trav;
     dict_key_t item;
 
     kaz_tree = pre_cache->kaz_tree;
-    avl_t_init(&trav, kaz_tree);
+    rb_t_init(&trav, kaz_tree);
 
-    for (item = avl_t_first(&trav, kaz_tree); item; item = avl_t_next(&trav))
+    for (item = rb_t_first(&trav, kaz_tree); item; item = rb_t_next(&trav))
     {
         cache_insert(cache, &(((fcs_pre_cache_key_val_pair_t *)(item))->key),
             NULL, '\0');
@@ -286,34 +286,34 @@ static GCC_INLINE void mark_and_sweep_old_states(
      * */
     FILE *const out_fh = instance->common.out_fh;
     TRACE("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
-    struct avl_node **tree_recycle_bin =
-        ((struct avl_node **)(&(instance->common.tree_recycle_bin)));
+    struct rb_node **tree_recycle_bin =
+        ((struct rb_node **)(&(instance->common.tree_recycle_bin)));
 
-    struct avl_traverser trav;
-    avl_t_init(&trav, kaz_tree);
+    struct rb_traverser trav;
+    rb_t_init(&trav, kaz_tree);
 
-    const size_t items_count = kaz_tree->avl_count;
+    const size_t items_count = kaz_tree->rb_count;
     size_t idx = 0;
-    for (dict_key_t item = avl_t_first(&trav, kaz_tree); item;
-         item = avl_t_next(&trav))
+    for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
+         item = rb_t_next(&trav))
     {
-        if (!avl_get_decommissioned_flag(item))
+        if (!rb_get_decommissioned_flag(item))
         {
-            var_AUTO(ancestor, (struct avl_node *)item);
-            while (fcs_dbm_record_get_refcount(&(ancestor->avl_data)) == 0)
+            var_AUTO(ancestor, (struct rb_node *)item);
+            while (fcs_dbm_record_get_refcount(&(ancestor->rb_data)) == 0)
             {
-                avl_set_decommissioned_flag(ancestor, 1);
+                rb_set_decommissioned_flag(ancestor, 1);
 
                 AVL_SET_NEXT(ancestor, *(tree_recycle_bin));
                 *(tree_recycle_bin) = ancestor;
 
                 if (!(ancestor =
-                            (struct avl_node *)fcs_dbm_record_get_parent_ptr(
-                                &(ancestor->avl_data))))
+                            (struct rb_node *)fcs_dbm_record_get_parent_ptr(
+                                &(ancestor->rb_data))))
                 {
                     break;
                 }
-                fcs_dbm_record_decrement_refcount(&(ancestor->avl_data));
+                fcs_dbm_record_decrement_refcount(&(ancestor->rb_data));
             }
         }
         if (((++idx) % 100000) == 0)

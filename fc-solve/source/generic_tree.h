@@ -9,7 +9,7 @@
  */
 /*
  * generic_tree.h - provide a unified interface to either kaz_tree.h
- * or libavl/avl.h .
+ * or libavl/rb.h .
  */
 
 #pragma once
@@ -18,17 +18,17 @@
 
 #ifdef FCS_DBM_USE_LIBAVL
 
-#include "avl.h"
+#include "rb.h"
 
-typedef struct avl_table dict_t;
+typedef struct rb_table dict_t;
 typedef void *dict_key_t;
-#define fc_solve_kaz_tree_destroy(tree) avl_destroy(tree, NULL)
+#define fc_solve_kaz_tree_destroy(tree) rb_destroy(tree, NULL)
 #define fc_solve_kaz_tree_create(comparator, context, meta, recycle_bin_ptr)   \
-    avl_create(comparator, context, meta, recycle_bin_ptr)
-#define fc_solve_kaz_tree_lookup_value(tree, value) avl_find(tree, value)
-#define fc_solve_kaz_tree_delete_by_value(tree, value) avl_delete(tree, value)
-#define fc_solve_kaz_tree_alloc_insert(tree, value) avl_insert(tree, value)
-#define dict_allocator avl_allocator
+    rb_create(comparator, context, meta, recycle_bin_ptr)
+#define fc_solve_kaz_tree_lookup_value(tree, value) rb_find(tree, value)
+#define fc_solve_kaz_tree_delete_by_value(tree, value) rb_delete(tree, value)
+#define fc_solve_kaz_tree_alloc_insert(tree, value) rb_insert(tree, value)
+#define dict_allocator rb_allocator
 #else
 
 #include "rinutils.h"
