@@ -21,6 +21,7 @@ install:
     - git clone https://github.com/mpapierski/libtap
     - mkdir libtap\b
     - cd libtap\b
+    - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
     - cmake -G "MSYS Makefiles" -DCMAKE_INSTALL_PREFIX=C:\libtap ..
     - make
     - make install
