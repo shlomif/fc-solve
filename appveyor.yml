@@ -20,7 +20,7 @@ install:
     - mkdir c:\libtap
     - wget http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
     - tar -xvf gperf-3.0.4.tar.gz
-    - if not exit C:\libtap\bin\gperf.exe cd gperf-3.0.4 && sh configure --prefix=C:/libtap && gmake && gmake install && cd ..
+    - if not exist C:\libtap\bin\gperf.exe cd gperf-3.0.4 && sh configure --prefix=C:/libtap && gmake && gmake install && cd ..
     - git clone https://github.com/mpapierski/libtap
     - mkdir libtap\b
     - cd libtap\b
