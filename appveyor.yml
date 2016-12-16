@@ -44,11 +44,13 @@ test_script:
     - set LD_LIBRARY_PATH=C:\libtap\lib
     - set CPATH=C:\libtap\include
     - set PATH=C:\libtap\bin;%PATH%
+    - set HARNESS_BREAK=1
     - mkdir fc-solve\b
     - cd fc-solve\b
     - perl ../source/Tatzer -G "MSYS Makefiles"
     - gmake
     - gmake boards
+    - perl ../source/run-tests.pl
 cache:
     - C:\libtap
     - C:\Perl5
