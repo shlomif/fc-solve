@@ -133,9 +133,13 @@ GetOptions(
             File::Spec->catdir( $bindir, "t", "config", $basename ),
         );
     };
+    my $IS_WIN = ( $^O eq "MSWin32" );
 
-    local $ENV{HARNESS_ALT_INTRP_FILE} =
-        $get_config_fn->("alternate-interpreters.yml");
+    local $ENV{HARNESS_ALT_INTRP_FILE} = $get_config_fn->(
+        $IS_WIN
+        ? "alternate-interpreters--mswin.yml"
+        : "alternate-interpreters.yml"
+    );
 
     local $ENV{HARNESS_TRIM_FNS} = 'keep:1';
 
@@ -163,7 +167,6 @@ GetOptions(
 
     if ( !$is_ninja )
     {
-        my $IS_WIN = ( $^O eq "MSWin32" );
         my $MAKE = $IS_WIN ? 'gmake' : 'make';
         if ( system( $MAKE, "-s" ) )
         {
