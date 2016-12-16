@@ -22,7 +22,7 @@ install:
     - mkdir libtap\b
     - cd libtap\b
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
-    - cmake -G "MSYS Makefiles" -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+    - cmake -G "MSYS Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
     - make
     - make install
     - cd ..\..\
