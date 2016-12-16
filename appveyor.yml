@@ -3,6 +3,7 @@
 # Thanks!
 install:
     - choco install strawberryperl -version 5.20.1.1
+    - choco install wget
     - dir c:\python35
     - SET PATH=C:\Python35;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - perl -v
