@@ -704,8 +704,16 @@ int main(int argc, char *argv[])
 
     if (intermediate_in_fh)
     {
+#if _POSIX_C_SOURCE > 200809L
+#define HAVE_GETLINE 1
+#endif
+#ifdef HAVE_GETLINE
         char *line = NULL;
         size_t line_size = 0;
+#else
+        size_t line_size = 16000;
+        char *line = SMALLOC(line, line_size);
+#endif
         long line_num = 0;
         fcs_bool_t queue_solution_was_found = FALSE;
         fcs_dbm_solver_instance_t queue_instance;
@@ -721,7 +729,11 @@ int main(int argc, char *argv[])
         {
             line_num++;
             found_line = FALSE;
+#ifdef HAVE_GETLINE
             while (getline(&line, &line_size, intermediate_in_fh) >= 0)
+#else
+            while (fgets(line, line_size - 1, intermediate_in_fh))
+#endif
             {
                 if (strchr(line, '|') != NULL)
                 {

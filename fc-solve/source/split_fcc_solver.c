@@ -21,6 +21,9 @@
 
 #include "depth_multi_queue.h"
 
+#if _POSIX_C_SOURCE > 200809L
+#define HAVE_GETLINE 1
+#endif
 typedef struct
 {
     fcs_dbm__cache_store__common_t cache_store;
@@ -542,9 +545,15 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                         val_proto->kv.val.location_in_file;
                     fseek(instance->fingerprint_fh, location_in_file, SEEK_SET);
 
+#ifdef HAVE_GETLINE
                     getline(&(instance->fingerprint_line),
                         &(instance->fingerprint_line_size),
                         instance->fingerprint_fh);
+#else
+                    fgets(instance->fingerprint_line,
+                        instance->fingerprint_line_size,
+                        instance->fingerprint_fh);
+#endif
                     char *const moves_to_state_enc =
                         strchr(
                             strchr(instance->fingerprint_line, ' ') + 1, ' ') +
@@ -759,13 +768,24 @@ int main(int argc, char *argv[])
                 fingerprint_input_location_path);
         }
 
+#ifdef HAVE_GETLINE
         instance.fingerprint_line = NULL;
         instance.fingerprint_line_size = 0;
+#else
+        instance.fingerprint_line_size = 16000;
+        instance.fingerprint_line =
+            SMALLOC(instance.fingerprint_line, instance.fingerprint_line_size);
+#endif
 
         long location_in_file = 0;
         fcs_bool_t was_init = FALSE;
+#ifdef HAVE_GETLINE
         while (getline(&instance.fingerprint_line,
                    &instance.fingerprint_line_size, fingerprint_fh) != -1)
+#else
+        while (fgets(instance.fingerprint_line,
+            instance.fingerprint_line_size - 1, fingerprint_fh))
+#endif
         {
             FccEntryPointNode *const entry_point = fcs_compact_alloc_ptr(
                 &(instance.fcc_entry_points_allocator), sizeof(*entry_point));

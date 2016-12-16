@@ -30,7 +30,9 @@
 #ifndef	FC_SOLVE__SYS_TREE_H
 #define	FC_SOLVE__SYS_TREE_H
 
+#ifndef _WIN32
 #include <sys/cdefs.h>
+#endif
 
 /*
  * This file defines data structures for different types of trees:

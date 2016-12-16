@@ -266,6 +266,10 @@ extern "C" {
 #error FCS_RCS_STATES requires COMPACT_STATES
 #endif
 
+#ifdef _WIN32
+#define plan_tests(...) plan(__VA_ARGS__)
+#endif
+
 #ifdef __cplusplus
 }
 #endif
