@@ -333,6 +333,7 @@ rmtree(['_Inline', 't/_Inline']);
 unlink(glob("*.so"));
 
 my @cmd= ("cmake",
+    (defined($ENV{CMAKE_MAKE_PROGRAM}) ? "-DCMAKE_MAKE_PROGRAM=$ENV{CMAKE_MAKE_PROGRAM}" : ()),
     (defined($generate_what) ? ("-G", $generate_what) : ()),
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DDATADIR=$STR_OPTS{prefix}{value}/share",
