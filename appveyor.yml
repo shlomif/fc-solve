@@ -1,0 +1,45 @@
+---
+# Shamelessly taken from https://github.com/plicease/Dist-Zilla-PluginBundle-Author-Plicease/blob/master/.appveyor.yml
+# Thanks!
+install:
+    - choco install strawberryperl -version 5.20.1.1
+    - dir c:\python35
+    - SET PATH=C:\Python35;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - perl -v
+    - if not exist C:\Perl5 mkdir C:\Perl5
+    - SET PATH=C:\msys64\bin;C:\Perl5\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - SET PERL5LIB=C:/Perl5/lib/perl5
+    - SET PERL_LOCAL_LIB_ROOT=C:/Perl5
+    - SET PERL_MB_OPT=--install_base C:/Perl5
+    - SET PERL_MM_OPT=INSTALL_BASE=C:/Perl5
+    - cpanm --notest Task::FreecellSolver::Testing
+    - hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules fc-solve/source/cmake/sfc
+    - copy fc-solve\source\cmake\sfc\shlomif-cmake-modules\Shlomif_Common.cmake fc-solve\source\cmake\
+    - git clone -b make-code-suitable-for-fc-solve git://github.com/shlomif/patsolve.git fc-solve/source/patsolve-shlomif
+    - mkdir c:\libtap
+    - git clone git://github.com/shlomif/gperf-for-windows C:/libtap/bin
+    - git clone https://github.com/mpapierski/libtap
+    - mkdir libtap\b
+    - cd libtap\b
+    - cmake -G "MSYS Makefiles" -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+    - make
+    - make install
+    - cd ..\..\
+build: off
+test_script:
+    - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
+    - set LIBRARY_PATH=C:\libtap\lib
+    - set CMAKE_LIBRARY_PATH=C:\libtap\lib
+    - set LD_LIBRARY_PATH=C:\libtap\lib
+    - set CPATH=C:\libtap\include
+    - set PATH=C:\libtap\bin;%PATH%
+    - mkdir fc-solve\b
+    - cd fc-solve\b
+    - perl ../source/Tatzer -G "MSYS Makefiles"
+    - make
+    - make boards
+cache:
+    - C:\Perl5
+
+shallow_clone: true
+
