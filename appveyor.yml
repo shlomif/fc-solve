@@ -49,7 +49,7 @@ test_script:
     - perl ../source/Tatzer -G "MSYS Makefiles"
     - gmake
     - gmake boards
-    - perl ../source/run-tests.pl --glob='board-gen*.t'
+    - perl ../source/run-tests.pl --glob='board-gen*.{py,t}'
 cache:
     - C:\libtap
     - C:\Perl5
