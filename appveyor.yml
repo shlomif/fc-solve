@@ -17,7 +17,9 @@ install:
     - copy fc-solve\source\cmake\sfc\shlomif-cmake-modules\Shlomif_Common.cmake fc-solve\source\cmake\
     - git clone -b make-code-suitable-for-fc-solve git://github.com/shlomif/patsolve.git fc-solve/source/patsolve-shlomif
     - mkdir c:\libtap
-    - git clone git://github.com/shlomif/gperf-for-windows C:/libtap/bin
+    - wget http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
+    - tar -xvf gperf-3.0.4.tar.gz
+    - if not exit C:\libtap\bin\gperf.exe cd gperf-3.0.4 && sh configure --prefix=C:/libtap && gmake && gmake install && cd ..
     - git clone https://github.com/mpapierski/libtap
     - mkdir libtap\b
     - cd libtap\b
@@ -37,10 +39,10 @@ test_script:
     - mkdir fc-solve\b
     - cd fc-solve\b
     - perl ../source/Tatzer -G "MSYS Makefiles"
-    - gperf
     - gmake
     - gmake boards
 cache:
+    - C:\libtap
     - C:\Perl5
 
 shallow_clone: true
