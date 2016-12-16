@@ -5,8 +5,6 @@ use warnings;
 
 use autodie;
 
-# use File::Which;
-# use File::Basename;
 use Cwd;
 use File::Spec;
 use File::Copy;
@@ -15,8 +13,6 @@ use Getopt::Long;
 use Env::Path;
 use Path::Tiny qw( path );
 use File::Basename qw( basename dirname );
-
-# use Time::HiRes qw(time);
 
 my $bindir     = dirname(__FILE__);
 my $abs_bindir = File::Spec->rel2abs($bindir);
@@ -40,7 +36,15 @@ sub run_tests
 {
     my $tests = shift;
 
-    exec( ( $use_prove ? @{ _calc_prove() } : 'runprove' ), @$tests );
+    my @cmd = ( ( $use_prove ? @{ _calc_prove() } : 'runprove' ), @$tests );
+    if ( $ENV{RUN_TESTS_VERBOSE} )
+    {
+        print "Running [@cmd]\n";
+    }
+
+    # Workaround for Windows spawning-SNAFU.
+    my $exit_code = system(@cmd);
+    exit( $exit_code ? (-1) : 0 );
 }
 
 my $tests_glob = "*.{t.exe,py,t}";
@@ -159,9 +163,11 @@ GetOptions(
 
     if ( !$is_ninja )
     {
-        if ( system( "make", "-s" ) )
+        my $IS_WIN = ( $^O eq "MSWin32" );
+        my $MAKE = $IS_WIN ? 'gmake' : 'make';
+        if ( system( $MAKE, "-s" ) )
         {
-            die "make failed";
+            die "$MAKE failed";
         }
     }
 
