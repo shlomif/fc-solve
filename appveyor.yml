@@ -32,6 +32,7 @@ install:
     - cmake -G "MSYS Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
     - gmake
     - gmake install
+    - dir C:\libtap\include
     - cd ..\..\
 build: off
 test_script:
