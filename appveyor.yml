@@ -23,7 +23,6 @@ install:
     - hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules fc-solve/source/cmake/sfc
     - copy fc-solve\source\cmake\sfc\shlomif-cmake-modules\Shlomif_Common.cmake fc-solve\source\cmake\
     - git clone -b make-code-suitable-for-fc-solve git://github.com/shlomif/patsolve.git fc-solve/source/patsolve-shlomif
-    - mkdir c:\libtap
     - wget http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
     - tar -xvf gperf-3.0.4.tar.gz
     - if not exist C:\libtap\bin\gperf.exe cd gperf-3.0.4 && sh configure --prefix=C:/libtap && gmake && gmake install && cd ..
