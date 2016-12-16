@@ -37,6 +37,7 @@ test_script:
     - mkdir fc-solve\b
     - cd fc-solve\b
     - perl ../source/Tatzer -G "MSYS Makefiles"
+    - gperf
     - gmake
     - gmake boards
 cache:
