@@ -3,6 +3,7 @@
 # Thanks!
 install:
     - dir C:\msys64
+    - dir C:\msys64\mingw64
     - choco install strawberryperl -version 5.20.1.1
     - choco install wget
     - dir c:\Python35-x64
