@@ -210,6 +210,7 @@ GetOptions(
     {
         print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
         print STDERR "FCS_SRC_PATH = $ENV{FCS_SRC_PATH}\n";
+        print STDERR "FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>\n";
         if ( $ENV{FCS_TEST_SHELL} )
         {
             system("bash");

@@ -24,7 +24,7 @@ sub _is_tag
 {
     my ($tag) = @_;
 
-    return ( $ENV{FCS_TEST_TAGS} =~ /\b\Q$tag\E\b/ );
+    return ( ( $ENV{FCS_TEST_TAGS} // '' ) =~ /\b\Q$tag\E\b/ );
 }
 my $FC_ONLY     = _is_tag('fc_only');
 my $NO_FLARES   = _is_tag('no_flares');
