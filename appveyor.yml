@@ -23,8 +23,8 @@ install:
     - cd libtap\b
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
     - cmake -G "MSYS Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
-    - make
-    - make install
+    - gmake
+    - gmake install
     - cd ..\..\
 build: off
 test_script:
@@ -37,8 +37,8 @@ test_script:
     - mkdir fc-solve\b
     - cd fc-solve\b
     - perl ../source/Tatzer -G "MSYS Makefiles"
-    - make
-    - make boards
+    - gmake
+    - gmake boards
 cache:
     - C:\Perl5
 
