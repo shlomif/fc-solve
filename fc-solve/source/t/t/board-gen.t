@@ -6,8 +6,10 @@ use warnings;
 use Test::More tests => 32;
 use Test::Differences qw/ eq_or_diff /;
 
-use FC_Solve::Paths qw/ bin_exe_raw /;
+use FC_Solve::Paths qw/ $IS_WIN bin_exe_raw /;
 use FC_Solve::Trim qw/trim_trail_ws/;
+
+my $PY3 = ( $IS_WIN ? 'python3 ' : '' );
 
 sub _test_out
 {
@@ -17,7 +19,7 @@ sub _test_out
 
     my $cmd_line_args = $args->{cmd};
 
-    my $got = `../board_gen/make_pysol_freecell_board.py @$cmd_line_args`;
+    my $got = `${PY3}../board_gen/make_pysol_freecell_board.py @$cmd_line_args`;
 
     eq_or_diff( $got, $args->{expected}, $args->{blurb} );
 

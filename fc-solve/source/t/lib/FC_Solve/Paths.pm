@@ -7,7 +7,7 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW bin_board bin_exe_raw bin_file data_file is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN bin_board bin_exe_raw bin_file data_file is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -18,6 +18,7 @@ my $PRESETS_DIR = File::Spec->catdir( $DATA_DIR,          'presets' );
 my $FCS_PATH    = $ENV{FCS_PATH};
 our $FC_SOLVE__RAW = "$FCS_PATH/fc-solve";
 our $FC_SOLVE_EXE  = shell_quote($FC_SOLVE__RAW);
+our $IS_WIN        = ( $^O eq "MSWin32" );
 
 sub _is_tag
 {
