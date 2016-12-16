@@ -2,8 +2,10 @@
 
 from TAP.Simple import ok, plan
 from ctypes import c_char_p, c_longlong, CDLL
+import platform
 
-board_gen_lib = CDLL("../libfcs_gen_ms_freecell_boards.so")
+board_gen_lib = CDLL("../libfcs_gen_ms_freecell_boards." +
+                     ("dll" if (platform.system() == 'Windows') else "so"))
 
 fc_solve_get_board = board_gen_lib.fc_solve_get_board
 fc_solve_get_board_l = board_gen_lib.fc_solve_get_board_l
