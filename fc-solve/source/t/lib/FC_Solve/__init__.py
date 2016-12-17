@@ -27,7 +27,7 @@ class FC_Solve:
         opened_files_dir = create_string_buffer(32001)
         diag("opened_files_dir = <%s>" % opened_files_dir)
 
-        if (platform.system() == 'Windows'):
+        if False:  # (platform.system() == 'Windows'):
             import sys
             sys.exit(1)
 
