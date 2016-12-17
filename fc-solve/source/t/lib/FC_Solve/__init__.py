@@ -1,5 +1,5 @@
 from TAP.Simple import diag, is_ok, ok
-from ctypes import byref, c_char_p, c_double, c_int, c_long, \
+from ctypes import byref, c_char_p, c_double, c_int, c_long, c_void_p, \
         create_string_buffer, CDLL
 import platform
 
@@ -12,6 +12,14 @@ class FC_Solve:
         self.fcs = CDLL("../libfreecell-solver." +
                         ("dll" if (platform.system() == 'Windows') else "so"))
 
+        self.user_alloc = self.fcs.freecell_solver_user_alloc
+        self.user_alloc.restype = c_void_p
+        self.u_get_num_times = self.fcs.freecell_solver_user_get_num_times_long
+        self.u_get_num_times.restype = c_long
+        prefix = 'freecell_solver_user'
+        func = 'get_num_states_in_collection_long'
+        self.get_num_states = self.fcs[prefix + '_' + func]
+        self.get_num_states.restype = c_long
         self.user = self.fcs.freecell_solver_user_alloc()
         diag("[Gnoom] self.user = <%s>" % self.user)
 
@@ -212,16 +220,10 @@ class FC_Solve:
         return
 
     def get_num_times(self):
-        return c_long(
-            self.fcs.freecell_solver_user_get_num_times_long(self.user)
-        ).value
+        return self.u_get_num_times(self.user)
 
     def get_num_states_in_col(self):
-        return c_long(
-            self.fcs.freecell_solver_user_get_num_states_in_collection_long(
-                self.user
-            )
-        ).value
+        return self.get_num_states(self.user)
 
     def recycle(self):
         self.fcs.freecell_solver_user_recycle(self.user)
