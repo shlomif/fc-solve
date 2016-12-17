@@ -3,7 +3,12 @@ b freecell_solver_user_alloc
 r -m trace --trace "..\\..\\source\\t\t\\by-depth-tests-order.py"
 b 292
 c
-call printf("apple bloom ret=<%p> soft_thread=<%p>\n", ret, ret->soft_thread)
+p "apple bloom ret="
+p ret
+p "prettyfour soft_thread="
+p ret->soft_thread
+p &(ret->soft_thread)
+watch *(long long *)$
 b freecell_solver_user_free
 c
 bt full
