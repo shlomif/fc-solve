@@ -1,5 +1,6 @@
 from TAP.Simple import diag, is_ok, ok
 from ctypes import byref, c_char_p, c_double, c_int, c_long, CDLL
+import platform
 
 
 class FC_Solve:
@@ -7,7 +8,8 @@ class FC_Solve:
     NUM_BEFS_WEIGHTS = 5
 
     def __init__(self):
-        self.fcs = CDLL("../libfreecell-solver.so")
+        self.fcs = CDLL("../libfreecell-solver." +
+                        ("dll" if (platform.system() == 'Windows') else "so"))
 
         self.user = self.fcs.freecell_solver_user_alloc()
 
