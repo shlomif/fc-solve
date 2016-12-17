@@ -13,6 +13,7 @@ class FC_Solve:
                         ("dll" if (platform.system() == 'Windows') else "so"))
 
         self.user = self.fcs.freecell_solver_user_alloc()
+        diag("[Gnoom] self.user = <%s>" % self.user)
 
         self.get_befs_weight = self.fcs.fc_solve_user_INTERNAL_get_befs_weight
 
