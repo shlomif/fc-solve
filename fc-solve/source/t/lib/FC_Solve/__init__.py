@@ -28,7 +28,8 @@ class FC_Solve:
         diag("opened_files_dir = <%s>" % opened_files_dir)
 
         if (platform.system() == 'Windows'):
-            return
+            import sys
+            sys.exit(1)
 
         cmd_line_args_tuple = tuple(cmd_line_args)
 
