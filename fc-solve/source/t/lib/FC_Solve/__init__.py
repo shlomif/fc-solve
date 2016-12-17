@@ -20,7 +20,7 @@ class FC_Solve:
         func = 'get_num_states_in_collection_long'
         self.get_num_states = self.fcs[prefix + '_' + func]
         self.get_num_states.restype = c_long
-        self.user = self.fcs.freecell_solver_user_alloc()
+        self.user = c_void_p(self.user_alloc())
         diag("[Gnoom] self.user = <%s>" % self.user)
 
         self.get_befs_weight = self.fcs.fc_solve_user_INTERNAL_get_befs_weight
