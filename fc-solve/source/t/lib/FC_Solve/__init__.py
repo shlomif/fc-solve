@@ -1,5 +1,6 @@
 from TAP.Simple import diag, is_ok, ok
-from ctypes import byref, c_char_p, c_double, c_int, c_long, CDLL
+from ctypes import byref, c_char_p, c_double, c_int, c_long, \
+        create_string_buffer, CDLL
 import platform
 
 
@@ -23,7 +24,7 @@ class FC_Solve:
         last_arg = c_int()
         error_string = c_char_p()
         known_params = c_char_p(None)
-        opened_files_dir = c_char_p(None)
+        opened_files_dir = create_string_buffer(4001)
 
         cmd_line_args_tuple = tuple(cmd_line_args)
 
