@@ -7,7 +7,7 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN bin_board bin_exe_raw bin_file data_file is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -15,10 +15,22 @@ my $DATA_DIR    = File::Spec->catdir( $ENV{FCS_SRC_PATH}, qw(t data) );
 my $BOARDS_DIR  = File::Spec->catdir( $DATA_DIR,          'sample-boards' );
 my $SOLS_DIR    = File::Spec->catdir( $DATA_DIR,          'sample-solutions' );
 my $PRESETS_DIR = File::Spec->catdir( $DATA_DIR,          'presets' );
-my $FCS_PATH    = $ENV{FCS_PATH};
+our $IS_WIN = ( $^O eq "MSWin32" );
+
+sub _correct_path
+{
+    my $p = shift;
+    if ($IS_WIN)
+    {
+        $p =~ tr#/#\\#;
+    }
+    return $p;
+}
+my $FCS_PATH = $ENV{FCS_PATH};
 our $FC_SOLVE__RAW = "$FCS_PATH/fc-solve";
-our $FC_SOLVE_EXE  = shell_quote($FC_SOLVE__RAW);
-our $IS_WIN        = ( $^O eq "MSWin32" );
+our $FC_SOLVE_EXE  = _correct_path( shell_quote($FC_SOLVE__RAW) );
+my $PY3 = ( $IS_WIN ? 'python3 ' : '' );
+our $MAKE_PYSOL = "${PY3}../board_gen/make_pysol_freecell_board.py";
 
 sub _is_tag
 {

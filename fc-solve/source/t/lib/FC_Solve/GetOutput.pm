@@ -8,7 +8,7 @@ use parent 'Games::Solitaire::Verify::Base';
 use Carp qw/confess/;
 use String::ShellQuote qw/shell_quote/;
 
-use FC_Solve::Paths qw( $IS_WIN );
+use FC_Solve::Paths qw( $FC_SOLVE_EXE $IS_WIN $MAKE_PYSOL );
 
 __PACKAGE__->mk_acc_ref(
     [
@@ -70,7 +70,7 @@ sub board_gen_prefix
         : (
             (
                 $self->msdeals ? "pi-make-microsoft-freecell-board -t $deal | "
-                : (       "make_pysol_freecell_board.py -t"
+                : (       "$MAKE_PYSOL -t"
                         . ( $self->pysolfc_deals ? " -F " : "" )
                         . " $deal @{[$self->variant]} | " )
             )
@@ -90,8 +90,6 @@ sub fc_solve_params_suffix
         . " -p -t -sam "
         . ( $board ? shell_quote($board) : "" );
 }
-
-use FC_Solve::Paths qw( $FC_SOLVE_EXE );
 
 sub calc_cmd_line
 {
