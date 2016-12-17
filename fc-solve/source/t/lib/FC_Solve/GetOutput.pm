@@ -8,6 +8,8 @@ use parent 'Games::Solitaire::Verify::Base';
 use Carp qw/confess/;
 use String::ShellQuote qw/shell_quote/;
 
+use FC_Solve::Paths qw( $IS_WIN );
+
 __PACKAGE__->mk_acc_ref(
     [
         qw(
@@ -108,6 +110,11 @@ sub open_cmd_line
     my ($self) = @_;
 
     my $cmd_line_args = $self->calc_cmd_line;
+
+    if ($IS_WIN)
+    {
+        diag(qq#open_cmd_line() \$cmd = <<$cmd_line_args->{cmd_line}>>#);
+    }
 
     open my $fc_solve_output, "$cmd_line_args->{cmd_line} |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
