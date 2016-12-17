@@ -6,7 +6,7 @@ use warnings;
 use parent 'Games::Solitaire::Verify::Base';
 
 use YAML::XS qw(DumpFile LoadFile);
-use FC_Solve::Paths qw( $IS_WIN is_freecell_only is_without_flares );
+use FC_Solve::Paths qw( is_freecell_only is_without_flares );
 
 use String::ShellQuote;
 use Carp;
@@ -122,10 +122,6 @@ q#Test skipped because it uses flares, and we are running on a build without fla
         local $args->{theme} =
             [ '-o', $output_file, @{ $args->{theme} || [qw(-l gi)] } ];
         my @cmd = FC_Solve::GetOutput->new($args)->calc_cmd_line->{cmd_line};
-        if ($IS_WIN)
-        {
-            diag(qq#\@cmd = <<@cmd>>#);
-        }
         if ( system(@cmd) )
         {
             Carp::confess "Error: could not execute the fc-solve pipeline.";

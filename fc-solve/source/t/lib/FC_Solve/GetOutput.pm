@@ -120,14 +120,6 @@ sub open_cmd_line
     my ($self) = @_;
 
     my $cmd_line_args = $self->calc_cmd_line;
-
-    if ($IS_WIN)
-    {
-        require Test::More;
-        Test::More::diag(
-            qq#open_cmd_line() \$cmd = <<$cmd_line_args->{cmd_line}>>#);
-    }
-
     open my $fc_solve_output, "$cmd_line_args->{cmd_line} |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
     $cmd_line_args->{fh} = $fc_solve_output;
