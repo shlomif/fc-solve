@@ -25,7 +25,10 @@ class FC_Solve:
         error_string = c_char_p()
         known_params = c_char_p(None)
         opened_files_dir = create_string_buffer(32001)
-        diag("opened_files_dir = %s" % opened_files_dir)
+        diag("opened_files_dir = <%s>" % opened_files_dir)
+
+        if (platform.system() == 'Windows'):
+            return
 
         cmd_line_args_tuple = tuple(cmd_line_args)
 
