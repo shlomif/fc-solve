@@ -251,6 +251,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     "file_nesting_count=%d opened_files_dir=%p>\n",
         instance, argc, argv, start_arg, known_parameters, error_string,
         last_arg, file_nesting_count, opened_files_dir);
+    fflush(stderr);
 #endif
 #ifdef FCS_WITH_ERROR_STRS
     char *fcs_user_errstr;
