@@ -25,7 +25,8 @@ install:
     - git clone -b make-code-suitable-for-fc-solve git://github.com/shlomif/patsolve.git fc-solve/source/patsolve-shlomif
     - if not exist C:\libtap mkdir C:\libtap
     - if not exist C:\libtap\gperf-3.0.4.tar.gz wget -O C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
-    - tar -xvf C:\libtap\gperf-3.0.4.tar.gz
+    - copy C:\libtap\gperf-3.0.4.tar.gz .
+    - tar -xvf gperf-3.0.4.tar.gz
     - if not exist C:\libtap\bin\gperf.exe cd gperf-3.0.4 && sh configure --prefix=C:/libtap && gmake && gmake install && cd ..
     - git clone -b cmake https://github.com/shlomif/libtap
     - mkdir libtap\b

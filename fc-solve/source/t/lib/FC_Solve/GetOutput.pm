@@ -113,7 +113,9 @@ sub open_cmd_line
 
     if ($IS_WIN)
     {
-        diag(qq#open_cmd_line() \$cmd = <<$cmd_line_args->{cmd_line}>>#);
+        require Test::More;
+        Test::More::diag(
+            qq#open_cmd_line() \$cmd = <<$cmd_line_args->{cmd_line}>>#);
     }
 
     open my $fc_solve_output, "$cmd_line_args->{cmd_line} |"
