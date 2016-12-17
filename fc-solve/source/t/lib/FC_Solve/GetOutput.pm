@@ -78,6 +78,18 @@ sub board_gen_prefix
     );
 }
 
+sub _win_quote
+{
+    my $ret = shell_quote(@_);
+
+    if ($IS_WIN)
+    {
+        $ret =~ tr#'#"#;
+    }
+
+    return $ret;
+}
+
 sub fc_solve_params_suffix
 {
     my ($self) = @_;
@@ -86,9 +98,9 @@ sub fc_solve_params_suffix
 
     return
           $self->variant_s . ' '
-        . shell_quote( @{ $self->theme } )
+        . _win_quote( @{ $self->theme } )
         . " -p -t -sam "
-        . ( $board ? shell_quote($board) : "" );
+        . ( $board ? _win_quote($board) : "" );
 }
 
 sub calc_cmd_line
