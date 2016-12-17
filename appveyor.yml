@@ -58,7 +58,8 @@ test_script:
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     # - perl ../source/run-tests.pl --glob='{a,b,board-gen,cmpdigest,verify--}*.{py,t}'
     - set PYTHONPATH=C:\projects\fc-solve\fc-solve\source\t\lib
-    - gdb --command=..\scripts\appveyor.gdb c:\Python35-x64\python3.exe
+    - cd ..\source\t
+    - gdb --command=..\..\scripts\appveyor.gdb c:\Python35-x64\python3.exe
 cache:
     - C:\libtap
     - C:\Perl5
