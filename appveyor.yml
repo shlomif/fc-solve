@@ -51,7 +51,7 @@ test_script:
     - gmake
     - gmake boards
     - dir *gen_ms*
-    - perl ../source/run-tests.pl --glob='board-gen*.{py,t}'
+    - perl ../source/run-tests.pl --glob='{board-gen,cmpdigest}*.{py,t}'
 cache:
     - C:\libtap
     - C:\Perl5
