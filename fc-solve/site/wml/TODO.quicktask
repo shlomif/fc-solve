@@ -1,6 +1,8 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - Convert the presets in the combo box to their more updated ones.
+      @ Added [Sat 2016-12-17]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
@@ -10,7 +12,7 @@ CURRENT TASKS:
         * Added [Sat 2013-01-12]
         * (bakers_game, bakers_dozen, seahaven, simple simon, etc.)
 
-    - Make the output more compatible with fc-solve -sam -p -t.
+    - Make the output more compatible with fc-solve -sel -sam -p -t.
         * Added [Sun 2013-01-13]
 
     - Investigate .getScript to load libfreecell-solver.min.js by AJAX.
