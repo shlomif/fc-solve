@@ -244,6 +244,14 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     int *last_arg, const int file_nesting_count,
     freecell_solver_str_t opened_files_dir)
 {
+/* TODO : #if 0 later. */
+#ifdef _WIN32
+    fprintf(stderr, "Eclibri: <instance=%p argc=%d argv=%p start_arg=%d "
+                    "known_parameters=%p error_string=%p last_arg=%p "
+                    "file_nesting_count=%d opened_files_dir=%p>\n",
+        instance, argc, argv, start_arg, known_parameters, error_string,
+        last_arg, file_nesting_count, opened_files_dir);
+#endif
 #ifdef FCS_WITH_ERROR_STRS
     char *fcs_user_errstr;
     *error_string = NULL;
