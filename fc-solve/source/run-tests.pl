@@ -49,10 +49,12 @@ sub run_tests
 
 my $tests_glob = "*.{t.exe,py,t}";
 
+my @execute;
 GetOptions(
-    '--glob=s'   => \$tests_glob,
-    '--prove!'   => \$use_prove,
-    '--jobs|j=n' => \$num_jobs,
+    '--execute|e=s' => \@execute,
+    '--glob=s'      => \$tests_glob,
+    '--prove!'      => \$use_prove,
+    '--jobs|j=n'    => \$num_jobs,
 ) or die "--glob='tests_glob'";
 
 {
@@ -217,6 +219,10 @@ GetOptions(
         if ( $ENV{FCS_TEST_SHELL} )
         {
             system("bash");
+        }
+        elsif (@execute)
+        {
+            system(@execute);
         }
         else
         {
