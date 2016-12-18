@@ -3,7 +3,8 @@
 # Thanks!
 install:
     - ps: (new-object net.webclient).DownloadFile('http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi', 'strawberry-perl-5.24.0.1-64bit.msi')
-    - ps: msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log
+    - ps: msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR=C:\Strawberry
+    - type install.log
     # - dir C:\msys64
     # - dir C:\msys64\mingw64
     # - dir C:\msys64\mingw64\bin
@@ -13,7 +14,7 @@ install:
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - python3 -mpip install random2
     - perl -v
-    - cpan -i cpanminus
+    # - cpan -i cpanminus
     - if not exist C:\Perl5 mkdir C:\Perl5
     - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
     # - SET PATH=C:\msys64\mingw64\bin;C:\Perl5\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
