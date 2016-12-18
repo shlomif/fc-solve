@@ -26,9 +26,10 @@ sub _correct_path
     }
     return $p;
 }
-my $FCS_PATH = $ENV{FCS_PATH};
-our $FC_SOLVE__RAW = "$FCS_PATH/fc-solve";
-our $FC_SOLVE_EXE  = _correct_path( shell_quote($FC_SOLVE__RAW) );
+my $FCS_PATH           = $ENV{FCS_PATH};
+my $FC_SOLVE__RAW__RAW = "$FCS_PATH/fc-solve";
+our $FC_SOLVE__RAW = _correct_path($FC_SOLVE__RAW__RAW);
+our $FC_SOLVE_EXE  = _correct_path( shell_quote($FC_SOLVE__RAW__RAW) );
 my $PY3 = ( $IS_WIN ? 'python3 ' : '' );
 our $MAKE_PYSOL = "${PY3}../board_gen/make_pysol_freecell_board.py";
 
