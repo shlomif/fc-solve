@@ -4,8 +4,9 @@ use strict;
 use warnings;
 
 use Config;
-
 use Inline;
+
+use FC_Solve::Paths qw( $IS_WIN );
 
 sub import
 {
@@ -16,6 +17,9 @@ sub import
     my $src = delete( $args{C} );
     my $libs = delete( $args{l} ) // '';
 
+    my @workaround_for_a_heisenbug =
+        ( $IS_WIN ? ( optimize => '-g' ) : () );
+
     my @inline_params = (
         C                 => $src,
         name              => $pkg,
@@ -24,6 +28,7 @@ sub import
         CCFLAGS           => "$Config{ccflags} -std=gnu99",
         CLEAN_AFTER_BUILD => 0,
         LIBS              => "-L$ENV{FCS_PATH} $libs",
+        @workaround_for_a_heisenbug,
         %args,
     );
 
