@@ -3,8 +3,9 @@
 # Thanks!
 install:
     - ps: (new-object net.webclient).DownloadFile('http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi', 'strawberry-perl-5.24.0.1-64bit.msi')
-    - ps: msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR=C:\Strawberry
+    - ps: msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR=C:\strawberry
     - type install.log
+    - dir C:\strawberry
     # - dir C:\msys64
     # - dir C:\msys64\mingw64
     # - dir C:\msys64\mingw64\bin
