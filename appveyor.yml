@@ -6,7 +6,7 @@ install:
     - wget -O strawberry-perl-5.24.0.1-64bit.msi http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi
     # - ps: (new-object net.webclient).DownloadFile('http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi', 'strawberry-perl-5.24.0.1-64bit.msi')
     - dir *.msi
-    - ps: msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR="C:\strawberry"
+    # - ps: msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR="C:\strawberry"
     - msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR="C:\strawberry"
     # - type install.log
     - dir C:\
@@ -72,7 +72,7 @@ test_script:
     - gmake boards
     - dir *gen_ms*
     # Trying this hack to take more precendence for Inline::C / etc.
-    - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5;%PATH%
     - perl ../source/run-tests.pl --glob='{a,b,board-gen,c,cmpdigest,d,verify--}*.{py,t}'
     # - perl ../source/run-tests.pl --glob='delta-states-perl*.{py,t}'
     # - perl ../source/run-tests.pl --execute="gdb --command=..\..\scripts\appveyor.gdb c:\Python35-x64\python3.exe"
