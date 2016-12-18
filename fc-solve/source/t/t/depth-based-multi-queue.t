@@ -8,8 +8,11 @@ use Test::Differences qw(eq_or_diff);
 use File::Spec ();
 use File::Path qw(mkpath);
 
+use FC_Solve::Paths qw( $IS_WIN );
+
 use FC_Solve::DepthMultiQueuePrototype ();
-use FC_Solve::DepthMultiQueueInC       ();
+
+# use FC_Solve::DepthMultiQueueInC       ();
 
 my $queue_offload_dir_path =
     File::Spec->catdir( File::Spec->curdir(), "depth-multi-queue-offload-dir" );
@@ -251,4 +254,13 @@ sub run_queue_tests
 run_queue_tests( 'Perl queue', 'FC_Solve::DepthMultiQueuePrototype' );
 
 # TEST*$run_queue_tests
-run_queue_tests( 'C queue', 'FC_Solve::DepthMultiQueueInC' );
+if ($IS_WIN)
+{
+    run_queue_tests( 'Perl queue again[win32]',
+        'FC_Solve::DepthMultiQueuePrototype' );
+}
+else
+{
+    require FC_Solve::DepthMultiQueueInC;
+    run_queue_tests( 'C queue', 'FC_Solve::DepthMultiQueueInC' );
+}
