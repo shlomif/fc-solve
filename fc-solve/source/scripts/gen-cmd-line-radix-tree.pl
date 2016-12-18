@@ -92,9 +92,9 @@ sub del
 
 del();
 my $IS_WIN = ( $^O eq "MSWin32" );
-if ( $IS_WIN )
+if ($IS_WIN)
 {
-    system("echo", "foo") and die "die foo.";
+    system( "echo", "foo" ) and die "die foo.";
     require File::Which;
     print 'which = ', File::Which::which("gperf"), '\n';
 }
