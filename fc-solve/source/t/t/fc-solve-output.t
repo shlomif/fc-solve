@@ -10,7 +10,8 @@ use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
 use Socket qw(:crlf);
-use FC_Solve::Paths qw/ bin_board bin_exe_raw is_without_dbm samp_board /;
+use FC_Solve::Paths
+    qw/ $IS_WIN bin_board bin_exe_raw is_without_dbm samp_board /;
 
 sub _normalize_lf
 {
@@ -192,9 +193,9 @@ sub trap_depth_dbm
 SKIP:
     {
 
-        if ( is_without_dbm() )
+        if ( is_without_dbm() || $IS_WIN )
         {
-            Test::More::skip( "without the dbm fc_solvers", 1 );
+            Test::More::skip( "without the dbm fc_solvers or win32", 1 );
         }
         my $needle = <<"EOF";
 Success!
@@ -424,9 +425,9 @@ EOF
 {
 SKIP:
     {
-        if ( is_without_dbm() )
+        if ( is_without_dbm() || $IS_WIN )
         {
-            Test::More::skip( "without the dbm fc_solvers", 1 );
+            Test::More::skip( "without the dbm fc_solvers or win32", 1 );
         }
 
         my $dbm_output = trap_depth_dbm(
