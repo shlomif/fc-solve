@@ -8,14 +8,15 @@ use parent 'Games::Solitaire::Verify::Base';
 __PACKAGE__->mk_acc_ref(
     [
         qw(
-            _num_items_per_page
-            _offload_dir_path
+            _num_extracted
             _num_inserted
             _num_items_in_queue
-            _num_extracted
-            _page_to_write_to
+            _num_items_per_page
+            _offload_dir_path
             _page_for_backup
             _page_to_read_from
+            _page_to_write_to
+            _queue_id
             )
     ]
 );
@@ -41,6 +42,9 @@ sub _init
     }
     $self->_offload_dir_path($offload_dir_path);
 
+    my $queue_id = $args->{queue_id} || 0;
+    $self->_queue_id($queue_id);
+
     $self->_num_inserted(0);
     $self->_num_items_in_queue(0);
     $self->_num_extracted(0);
@@ -50,6 +54,7 @@ sub _init
             {
                 num_items_per_page => $self->_num_items_per_page(),
                 page_index         => 0,
+                queue_id           => $self->_queue_id(),
             }
         )
     );
@@ -59,6 +64,7 @@ sub _init
             {
                 num_items_per_page => $self->_num_items_per_page(),
                 page_index         => 0,
+                queue_id           => $self->_queue_id(),
             }
         )
     );
@@ -164,11 +170,12 @@ use parent 'Games::Solitaire::Verify::Base';
 __PACKAGE__->mk_acc_ref(
     [
         qw(
+            _data
             _num_items_per_page
             _page_index
-            _write_to_idx
+            _queue_id
             _read_from_idx
-            _data
+            _write_to_idx
             )
     ]
 );
@@ -192,6 +199,7 @@ sub _init
 
     $self->_num_items_per_page( $args->{num_items_per_page} );
     $self->_page_index( $args->{page_index} );
+    $self->_queue_id( $args->{queue_id} );
 
     $self->_recycle;
 
@@ -246,8 +254,13 @@ sub _calc_filename
 {
     my ( $self, $offload_dir_path ) = @_;
 
-    return File::Spec->catfile( $offload_dir_path,
-        sprintf( "fcs_queue_%020X.page", $self->get_page_index() ) );
+    return File::Spec->catfile(
+        $offload_dir_path,
+        sprintf(
+            "fcs_q%Xq_%020X.page",
+            $self->_queue_id(), $self->get_page_index()
+        )
+    );
 }
 
 sub read_next_from_disk
