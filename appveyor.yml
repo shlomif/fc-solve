@@ -37,6 +37,7 @@ install:
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
     # - cmake -G "MSYS Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
     - cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+    - echo %PATH%
     - gmake
     - gmake install
     - dir C:\libtap\include
