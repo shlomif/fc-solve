@@ -57,6 +57,7 @@ test_script:
     - cd fc-solve\b
     # - perl ../source/Tatzer -G "MSYS Makefiles"
     - perl ../source/Tatzer -G "MinGW Makefiles"
+    - echo %PATH%
     - gmake
     - gmake boards
     - dir *gen_ms*
