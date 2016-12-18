@@ -8,6 +8,19 @@ use FC_Solve::CmdLine::Simulate ();
 use Test::More tests => 6;
 
 use Test::Differences qw/ eq_or_diff /;
+use Socket qw(:crlf);
+
+sub _normalize_lf
+{
+    my ($s) = @_;
+    $s =~ s#$CRLF#$LF#g;
+    return $s;
+}
+
+sub _normalize_lf_list
+{
+    return [ map { _normalize_lf($_) } @{ shift @_ } ];
+}
 
 sub check
 {
@@ -23,7 +36,8 @@ sub check
         }
     );
 
-    eq_or_diff( $obj->argv(), $want_argv, $msg, );
+    eq_or_diff( _normalize_lf_list( $obj->argv() ),
+        _normalize_lf_list($want_argv), $msg, );
 }
 
 # TEST

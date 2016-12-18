@@ -5,6 +5,14 @@ use warnings;
 
 use FC_Solve::Paths qw/ bin_exe_raw /;
 use IPC::Run qw/ run /;
+use Socket qw(:crlf);
+
+sub _normalize_lf
+{
+    my ($s) = @_;
+    $s =~ s#$CRLF#$LF#g;
+    return $s;
+}
 
 my $SPLIT_EXE = bin_exe_raw( [qw#t out-split-cmd-line.exe#] );
 
@@ -14,6 +22,8 @@ sub split_cmd_line_string
 
     my $output = '';
     my $pid = run [$SPLIT_EXE], \$input_string, \$output;
+
+    $output = _normalize_lf($output);
 
     open my $child_out, '<', \$output;
     my @have;
