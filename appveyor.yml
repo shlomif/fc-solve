@@ -20,7 +20,7 @@ install:
     - SET PERL_LOCAL_LIB_ROOT=C:/Perl5
     - SET PERL_MB_OPT=--install_base C:/Perl5
     - SET PERL_MM_OPT=INSTALL_BASE=C:/Perl5
-    - cpanm --notest Devel::Trace Path::Tiny Task::FreecellSolver::Testing
+    - cpanm --notest Devel::Trace File::Which Path::Tiny Task::FreecellSolver::Testing
     - hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules fc-solve/source/cmake/sfc
     - copy fc-solve\source\cmake\sfc\shlomif-cmake-modules\Shlomif_Common.cmake fc-solve\source\cmake\
     - git clone -b make-code-suitable-for-fc-solve git://github.com/shlomif/patsolve.git fc-solve/source/patsolve-shlomif
