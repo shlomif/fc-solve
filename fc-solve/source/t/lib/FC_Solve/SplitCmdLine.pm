@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use FC_Solve::Paths qw/ bin_exe_raw /;
-use IPC::Open2 qw(open2);
+use IPC::Run qw/ run /;
 
 my $SPLIT_EXE = bin_exe_raw( [qw#t out-split-cmd-line.exe#] );
 
@@ -12,13 +12,10 @@ sub split_cmd_line_string
 {
     my ( $class, $input_string ) = @_;
 
-    my ( $child_out, $child_in );
+    my $output = '';
+    my $pid = run [$SPLIT_EXE], \$input_string, \$output;
 
-    my $pid = open2( $child_out, $child_in, $SPLIT_EXE );
-
-    print {$child_in} $input_string;
-    close($child_in);
-
+    open my $child_out, '<', \$output;
     my @have;
     while ( my $line = <$child_out> )
     {
