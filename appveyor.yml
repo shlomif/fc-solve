@@ -13,8 +13,9 @@ install:
     - python3 -mpip install random2
     - perl -v
     - if not exist C:\Perl5 mkdir C:\Perl5
-    - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
-    - SET PATH=C:\msys64\mingw64\bin;C:\Perl5\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    # - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
+    # - SET PATH=C:\msys64\mingw64\bin;C:\Perl5\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - SET PATH=C:\Perl5\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - SET PERL5LIB=C:/Perl5/lib/perl5
     - SET PERL_LOCAL_LIB_ROOT=C:/Perl5
     - SET PERL_MB_OPT=--install_base C:/Perl5
@@ -32,7 +33,8 @@ install:
     - mkdir libtap\b
     - cd libtap\b
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
-    - cmake -G "MSYS Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+    # - cmake -G "MSYS Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+    - cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
     - gmake
     - gmake install
     - dir C:\libtap\include
@@ -50,7 +52,8 @@ test_script:
     - set FCS_USE_TEST_RUN=1
     - mkdir fc-solve\b
     - cd fc-solve\b
-    - perl ../source/Tatzer -G "MSYS Makefiles"
+    # - perl ../source/Tatzer -G "MSYS Makefiles"
+    - perl ../source/Tatzer -G "MinGW Makefiles"
     - gmake
     - gmake boards
     - dir *gen_ms*
