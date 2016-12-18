@@ -14,16 +14,15 @@ install:
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - python3 -mpip install random2
     - perl -v
-    - if not exist C:\Perl5 mkdir C:\Perl5
     - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
-    # - SET PATH=C:\msys64\mingw64\bin;C:\Perl5\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
-    - SET PATH=C:\Perl5\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
-    - SET PERL5LIB=C:/Perl5/lib/perl5
-    - SET PERL_LOCAL_LIB_ROOT=C:/Perl5
-    - SET PERL_MB_OPT=--install_base C:/Perl5
-    - SET PERL_MM_OPT=INSTALL_BASE=C:/Perl5
+    # - SET PATH=C:\msys64\mingw64\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - SET PERL5LIB=C:/_P5/lib/perl5
+    - SET PERL_LOCAL_LIB_ROOT=C:/_P5
+    - SET PERL_MB_OPT=--install_base C:/_P5
+    - SET PERL_MM_OPT=INSTALL_BASE=C:/_P5
     - perl -v
-    - cpan -i cpanminus
+    # - cpan -i cpanminus
     - cpanm --notest Devel::Trace File::Which Path::Tiny Task::FreecellSolver::Testing
     - hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules fc-solve/source/cmake/sfc
     - copy fc-solve\source\cmake\sfc\shlomif-cmake-modules\Shlomif_Common.cmake fc-solve\source\cmake\
@@ -76,7 +75,7 @@ test_script:
     # - perl ../source/run-tests.pl --execute="c:\msys64\mingw64\bin\gdb --command=..\..\scripts\appveyor.gdb c:\strawberry\perl\bin\perl.exe"
 cache:
     - C:\libtap
-    - C:\Perl5
+    - C:\_P5
 
 shallow_clone: true
 
