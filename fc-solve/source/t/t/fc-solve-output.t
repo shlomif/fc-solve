@@ -9,7 +9,20 @@ use Carp                ();
 use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
+use Socket qw(:crlf);
 use FC_Solve::Paths qw/ bin_board bin_exe_raw is_without_dbm samp_board /;
+
+sub _normalize_lf
+{
+    my ($s) = @_;
+    $s =~ s#$CRLF#$LF#g;
+    return $s;
+}
+
+sub _get
+{
+    return _normalize_lf( join( '', @{ shift->{out_lines} } ) );
+}
 
 sub trap_board
 {
@@ -77,7 +90,7 @@ sub trap_depth_dbm
         }
     );
 
-    my $output_text = join( '', @{ $fc_solve_output->{out_lines} } );
+    my $output_text = _get($fc_solve_output);
 
     # TEST
     like(
@@ -127,7 +140,7 @@ sub trap_depth_dbm
     my $fc_solve_output = trap_board(
         { deal => 1941, theme => [ '-sel', '--max-iters', '10' ], } );
 
-    my $output_text = join( '', @{ $fc_solve_output->{out_lines} } );
+    my $output_text = _get($fc_solve_output);
 
     # TEST
     like(
@@ -157,7 +170,7 @@ sub trap_depth_dbm
             }
         );
 
-        my $output_text = join( '', @{ $fc_solve_output->{out_lines} } );
+        my $output_text = _get($fc_solve_output);
 
         # TEST*$num_choices
         is(
@@ -393,7 +406,7 @@ EOF
             }
         );
 
-        my $output_text = join( '', @{ $dbm_output->{out_lines} } );
+        my $output_text = _get($dbm_output);
 
         $output_text =~ s# +(\n|\z)#$1#g;
 
@@ -423,7 +436,7 @@ SKIP:
             }
         );
 
-        my $output_text = join( '', @{ $dbm_output->{out_lines} } );
+        my $output_text = _get($dbm_output);
 
         # TEST
         like(
