@@ -20,12 +20,18 @@ sub import
     my @workaround_for_a_heisenbug =
         ( $IS_WIN ? ( optimize => '-g' ) : () );
 
+    my $ccflags = "$Config{ccflags} -std=gnu99";
+    if ($IS_WIN)
+    {
+        $ccflags =~ s#\b-[Of][a-zA-Z0-9_\-]*##g;
+    }
+
     my @inline_params = (
         C                 => $src,
         name              => $pkg,
         NAME              => $pkg,
         INC               => "-I" . $ENV{FCS_PATH} . " -I" . $ENV{FCS_SRC_PATH},
-        CCFLAGS           => "$Config{ccflags} -std=gnu99",
+        CCFLAGS           => $ccflags,
         CLEAN_AFTER_BUILD => 0,
         LIBS              => "-L$ENV{FCS_PATH} $libs",
         @workaround_for_a_heisenbug,
