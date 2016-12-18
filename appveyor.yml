@@ -68,6 +68,7 @@ test_script:
     # - perl ../source/run-tests.pl --glob='{a,b,board-gen,c,cmpdigest,d,verify--}*.{py,t}'
     # - perl ../source/run-tests.pl --glob='delta-states-perl*.{py,t}'
     # - perl ../source/run-tests.pl --execute="gdb --command=..\..\scripts\appveyor.gdb c:\Python35-x64\python3.exe"
+    - perl ../source/run-tests.pl --execute="perl t\delta-states-perl.t"
     - perl ../source/run-tests.pl --execute="c:\msys64\mingw64\bin\gdb --command=..\..\scripts\appveyor.gdb c:\strawberry\perl\bin\perl.exe"
 cache:
     - C:\libtap
