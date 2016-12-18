@@ -57,8 +57,9 @@ test_script:
     # Trying this hack to take more precendence for Inline::C / etc.
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     # - perl ../source/run-tests.pl --glob='{a,b,board-gen,c,cmpdigest,d,verify--}*.{py,t}'
-    - perl ../source/run-tests.pl --glob='delta-states-perl*.{py,t}'
+    # - perl ../source/run-tests.pl --glob='delta-states-perl*.{py,t}'
     # - perl ../source/run-tests.pl --execute="gdb --command=..\..\scripts\appveyor.gdb c:\Python35-x64\python3.exe"
+    - perl ../source/run-tests.pl --execute="gdb --command=..\..\scripts\appveyor.gdb c:\strawberry\perl\bin\perl.exe"
 cache:
     - C:\libtap
     - C:\Perl5
