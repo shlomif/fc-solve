@@ -153,15 +153,16 @@ GetOptions(
     );
 
     my $is_ninja = ( -e "build.ninja" );
+    my $MAKE = $IS_WIN ? 'gmake' : 'make';
     if ($is_ninja)
     {
         system( "ninja", "boards" );
     }
     else
     {
-        if ( system( "make", "-s", "boards" ) )
+        if ( system( $MAKE, "-s", "boards" ) )
         {
-            die "make failed";
+            die "$MAKE failed";
         }
     }
 
@@ -169,7 +170,6 @@ GetOptions(
 
     if ( !$is_ninja )
     {
-        my $MAKE = $IS_WIN ? 'gmake' : 'make';
         if ( system( $MAKE, "-s" ) )
         {
             die "$MAKE failed";
