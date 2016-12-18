@@ -58,6 +58,7 @@ test_script:
     # - perl ../source/Tatzer -G "MSYS Makefiles"
     - perl ../source/Tatzer -G "MinGW Makefiles"
     - echo %PATH%
+    - gperf
     - gmake
     - gmake boards
     - dir *gen_ms*
