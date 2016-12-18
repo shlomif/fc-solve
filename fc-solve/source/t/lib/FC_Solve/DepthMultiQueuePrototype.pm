@@ -2,9 +2,7 @@ package FC_Solve::DepthMultiQueuePrototype;
 
 use strict;
 use warnings;
-
-# TODO : Convert to QueueInC
-use FC_Solve::QueuePrototype;
+use FC_Solve::QueueInC;
 
 use parent 'Games::Solitaire::Verify::Base';
 
@@ -80,7 +78,7 @@ sub _new_queue
 {
     my ($self) = @_;
 
-    return FC_Solve::QueuePrototype->new(
+    return FC_Solve::QueueInC->new(
         {
             num_items_per_page => $self->_num_items_per_page,
             offload_dir_path   => $self->_offload_dir_path,
