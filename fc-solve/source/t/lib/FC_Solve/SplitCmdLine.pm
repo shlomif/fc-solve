@@ -3,7 +3,7 @@ package FC_Solve::SplitCmdLine;
 use strict;
 use warnings;
 
-use FC_Solve::Paths qw/ bin_exe_raw /;
+use FC_Solve::Paths qw/ $IS_WIN bin_exe_raw /;
 use IPC::Run qw/ run /;
 use Socket qw(:crlf);
 
@@ -24,6 +24,12 @@ sub split_cmd_line_string
     my $pid = run [$SPLIT_EXE], \$input_string, \$output;
 
     $output = _normalize_lf($output);
+
+    if ($IS_WIN)
+    {
+        require Test::More;
+        Test::More::diag("Flutter output = [[[[\n$output\n]]]]");
+    }
 
     open my $child_out, '<', \$output;
     my @have;
