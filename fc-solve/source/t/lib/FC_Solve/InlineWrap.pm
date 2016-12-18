@@ -32,6 +32,13 @@ sub import
         %args,
     );
 
+    if ($IS_WIN)
+    {
+        use Data::Dumper;
+        print STDERR "inline_params = <<<<<\n", Dumper( \@inline_params ),
+            ">>>>>>\n";
+    }
+
     eval "{ package $pkg; Inline->bind(\@inline_params); }";
 
     if ($@)
