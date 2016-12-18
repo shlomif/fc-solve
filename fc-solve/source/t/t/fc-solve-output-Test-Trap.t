@@ -23,7 +23,7 @@ my $MID24_BOARD = samp_board('24-mid.board');
 qq#Unknown option "--reset_junk_at_end". Type "$FC_SOLVE__RAW --help" for usage information.#;
 
     # TEST
-    like( $trap->stderr(), qr/^\Q$needle\E$/ms,
+    like( $trap->stderr(), qr/^\Q$needle\E\r?$/ms,
         "Unknown option was recognized, for one that has a valid prefix.",
     );
 
@@ -44,7 +44,7 @@ qq#Unknown option "--reset_junk_at_end". Type "$FC_SOLVE__RAW --help" for usage 
 qq#Unknown option "--read-from-file4,amateur-star.sh". Type "$FC_SOLVE__RAW --help" for usage information.#;
 
     # TEST
-    like( $trap->stderr(), qr/^\Q$needle\E$/ms,
+    like( $trap->stderr(), qr/^\Q$needle\E\r?$/ms,
         "Option without space is not accepted." );
 }
 
@@ -131,7 +131,7 @@ qr/^1591 = Verdict: Intractable.*?^1592 = Verdict: Solved.*?^1593 = Verdict: Sol
     # TEST
     like(
         $trap->stderr(),
-        qr/^\Q$needle\E$/ms,
+        qr/^\Q$needle\E\r?$/ms,
 q#Cannot use a prefix of a flare's name as the name in the flares plan.#,
     );
 
@@ -157,7 +157,7 @@ foreach my $board_fn (
     my $needle = q#Not enough input.#;
 
     # TEST*$num_boards
-    like( $trap->stderr(), qr/^\Q$needle\E$/ms, "Invalid card format.", );
+    like( $trap->stderr(), qr/^\Q$needle\E\r?$/ms, "Invalid card format.", );
 
     # TEST*$num_boards
     unlike( $trap->stdout(), qr/\S/,
@@ -229,7 +229,7 @@ SKIP:
         # TEST
         like(
             $out,
-qr/\nCould not solve successfully\.\nhandle_and_destroy_instance_solution end\n?\z/,
+qr/\nCould not solve successfully\.\nhandle_and_destroy_instance_solution end\r?\n?\z/,
             "1107600547 run finished.",
         );
     }
