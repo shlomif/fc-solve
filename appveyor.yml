@@ -2,7 +2,9 @@
 # Shamelessly taken from https://github.com/plicease/Dist-Zilla-PluginBundle-Author-Plicease/blob/master/.appveyor.yml
 # Thanks!
 install:
-    - ps: (new-object net.webclient).DownloadFile('http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi', 'strawberry-perl-5.24.0.1-64bit.msi')
+    - choco install wget
+    - wget -O strawberry-perl-5.24.0.1-64bit.msi http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi
+    # - ps: (new-object net.webclient).DownloadFile('http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi', 'strawberry-perl-5.24.0.1-64bit.msi')
     - dir *.msi
     - ps: msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR="C:\strawberry"
     # - type install.log
@@ -11,7 +13,6 @@ install:
     # - dir C:\msys64
     # - dir C:\msys64\mingw64
     # - dir C:\msys64\mingw64\bin
-    - choco install wget
     - dir c:\Python35-x64
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
