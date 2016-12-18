@@ -23,7 +23,7 @@ sub import
     my $ccflags = "$Config{ccflags} -std=gnu99";
     if ($IS_WIN)
     {
-        $ccflags =~ s#\b-[Of][a-zA-Z0-9_\-]*##g;
+        $ccflags =~ s#(^|\s)-[Of][a-zA-Z0-9_\-]*#$1#gms;
     }
 
     my @inline_params = (
