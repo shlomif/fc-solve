@@ -75,9 +75,9 @@ qq#Unknown option "--read-from-file4,amateur-star.sh". Type "$FC_SOLVE__RAW --he
     is_deeply(
         [
             grep {
-                /\A\[\[Num FCPro Moves\]\]=([0-9]+)\z/
+                /\A\[\[Num FCPro Moves\]\]=([0-9]+)\r?\z/
                     ? ( not( $1 > 0 ) )
-                    : ( die "Incorrect $_" );
+                    : 1;
                 }
                 grep { /\A\[\[Num FCPro Moves\]\]/ } @lines
         ],
