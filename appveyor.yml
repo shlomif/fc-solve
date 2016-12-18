@@ -57,6 +57,7 @@ test_script:
     - cd fc-solve\b
     # - perl ../source/Tatzer -G "MSYS Makefiles"
     - perl ../source/Tatzer -G "MinGW Makefiles"
+    - SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
     - echo %PATH%
     - gperf
     - gmake
