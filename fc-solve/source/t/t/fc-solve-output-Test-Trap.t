@@ -229,7 +229,7 @@ SKIP:
         # TEST
         like(
             $out,
-qr/\nCould not solve successfully\.\nhandle_and_destroy_instance_solution end\r?\n?\z/,
+qr/\nCould not solve successfully\.\r?\nhandle_and_destroy_instance_solution end\r?\n?\z/,
             "1107600547 run finished.",
         );
     }
