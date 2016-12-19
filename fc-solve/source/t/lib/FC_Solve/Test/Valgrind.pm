@@ -8,7 +8,7 @@ use Carp       ();
 use File::Spec ();
 use File::Temp qw( tempdir );
 use FC_Solve::Paths
-    qw( bin_board bin_exe_raw is_without_dbm is_without_valgrind samp_board samp_preset );
+    qw( $IS_WIN bin_board bin_exe_raw is_without_dbm is_without_valgrind samp_board samp_preset );
 
 use Test::RunValgrind;
 
@@ -59,7 +59,12 @@ sub r
 
 SKIP:
     {
-        if ( is_without_valgrind() )
+        if ($IS_WIN)
+        {
+            Test::More::skip( "valgrind is skipped due to running on windows.",
+                1 );
+        }
+        elsif ( is_without_valgrind() )
         {
             Test::More::skip(
                 "valgrind is skipped for google-dense/sparse-hash.", 1 );
