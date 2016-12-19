@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 2;
 use Test::Differences (qw( eq_or_diff ));
 
-package State;
+package FC_Solve::FCS_Perl_State;
 
 use FC_Solve::InlineWrap (
     C => <<"EOF",
@@ -25,7 +25,7 @@ typedef struct
 SV* _proto_new(const char * input_state_string) {
         StateInC * s;
         SV*      obj_ref = newSViv(0);
-        SV*      obj = newSVrv(obj_ref, "State");
+        SV*      obj = newSVrv(obj_ref, "FC_Solve::FCS_Perl_State");
         New(42, s, 1, StateInC);
 
         fc_solve_init_locs (&(s->locs));
@@ -83,7 +83,7 @@ EOF
 sub new
 {
     my ( $class, $string ) = @_;
-    return State::_proto_new($string);
+    return FC_Solve::FCS_Perl_State::_proto_new($string);
 }
 
 package main;
@@ -91,7 +91,7 @@ package main;
 {
     # A state from the middle of:
     # pi-make-microsoft-freecell-board -t 1024 | fc-solve -t -sam -p -sel
-    my $state = State->new(<<'EOF');
+    my $state = FC_Solve::FCS_Perl_State->new(<<'EOF');
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H  KH  JH  TD
 : KC QH
