@@ -70,11 +70,11 @@ test_script:
     - dir *gen_ms*
     # Trying this hack to take more precendence for Inline::C / etc.
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
-    # - perl ../source/run-tests.pl --glob='{[a-c],delta,[e-i]}*.{py,t}'
+    - perl ../source/run-tests.pl --glob='{[a-c],delta,[e-g],[i-z][A-Z][0-9]}*.{py,t}'
     # - perl ../source/run-tests.pl --glob='{[f-g],[i-z]}*.{py,t}'
     # - perl ../source/run-tests.pl --glob='{a,b,board-gen,c,cmpdigest,d,verify--}*.{py,t}'
     # - perl ../source/run-tests.pl --glob='d*.{py,t}'
-    - perl ../source/run-tests.pl --glob='[s-z]*.{py,t}'
+    # - perl ../source/run-tests.pl --glob='[s-z]*.{py,t}'
     # - perl ../source/run-tests.pl --execute="gdb --command=..\..\scripts\appveyor.gdb c:\Python35-x64\python3.exe"
     # - perl ../source/run-tests.pl --execute="perl ..\..\source\t\t\depth-based-multi-queue.t"
     # - perl ../source/run-tests.pl --execute="c:\msys64\mingw64\bin\gdb --command=..\..\scripts\appveyor.gdb c:\strawberry\perl\bin\perl.exe"
