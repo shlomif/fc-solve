@@ -7,6 +7,10 @@ import os
 py_prog = os.environ['FCS_SRC_PATH'] + '/board_gen/transpose-freecell-board.py'
 
 
+def _normalize_lf(txt):
+    return txt.replace("\r\n", "\n")
+
+
 def mytest(input_text, want_out, msg):
     global py_prog
     process = subprocess.Popen(
@@ -17,7 +21,7 @@ def mytest(input_text, want_out, msg):
     process.stdin.close()
     got_out = process.stdout.read().decode('utf-8')
 
-    if not ok(got_out == want_out, msg):
+    if not ok(_normalize_lf(got_out) == _normalize_lf(want_out), msg):
         diag("Received [[[%s]]]" % (got_out))
 
 
