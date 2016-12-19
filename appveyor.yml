@@ -28,7 +28,7 @@ install:
     - SET PERL_MB_OPT=--install_base C:/_P5
     - SET PERL_MM_OPT=INSTALL_BASE=C:/_P5
     - perl -v
-    - cpanm --notest Devel::Trace File::Which IPC::Run Path::Tiny Task::FreecellSolver::Testing Test::PerlTidy
+    - cpanm --notest Devel::Trace File::Which IPC::Run Path::Tiny Task::FreecellSolver::Testing Test::PerlTidy Test::TrailingSpace
     - hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules fc-solve/source/cmake/sfc
     - copy fc-solve\source\cmake\sfc\shlomif-cmake-modules\Shlomif_Common.cmake fc-solve\source\cmake\
     - git clone -b make-code-suitable-for-fc-solve git://github.com/shlomif/patsolve.git fc-solve/source/patsolve-shlomif
