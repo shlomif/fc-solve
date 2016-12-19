@@ -472,10 +472,36 @@ class ParseError {
     }
 }
 
-class BoardParseResult extends BaseResult {
+class BoardParseResult {
     public errors: Array<ParseError>;
     public is_valid: boolean;
     public foundations: FoundationsParseResult;
     public freecells: FreecellsParseResult;
     public columns: Array<ColumnParseResult>;
+    public num_stacks: number;
+    public num_freecells: number;
+    constructor(num_stacks: number, num_freecells: number, orig_s: string) {
+        var that = this;
+        that.num_stacks = num_stacks;
+        that.num_freecells = num_freecells;
+
+        that.columns = [];
+        var p = new StringParser(orig_s);
+        for (var i=0; i < num_stacks; i++) {
+            const start_char_idx = p.getConsumed();
+            var l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
+            var col = fcs_js__column_from_string(start_char_idx, l);
+            if (! col.is_correct) {
+                that.errors.push(new ParseError(ParseErrorType.LINE_PARSE_ERROR, [new ErrorLocation(ErrorLocationType.ErrorLocationType_Column, i, start_char_idx, p.getConsumed())], fcs_js__card_from_string('AH')));
+                that.is_valid = false;
+                return;
+            }
+            that.columns.push(col);
+        }
+        // TODO : Implement duplicate/missing cards.
+        that.is_valid = true;
+        return;
+    }
 }
+
+
