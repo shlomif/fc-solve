@@ -24,13 +24,25 @@
 
 #include "../split_cmd_line.c"
 
-int main(void)
+int main(int argc, char * argv[])
 {
     char buffer[64 * 1024];
     int i;
+    FILE * in, * out;
+
+    if (argc == 5 && (!strcmp(argv[1], "-i")) && (!strcmp(argv[3], "-o")))
+    {
+        in = fopen(argv[2], "rb");
+        out = fopen(argv[4], "wt");
+    }
+    else
+    {
+        in = stdin;
+        out = stdout;
+    }
 
     memset(buffer, '\0', sizeof(buffer));
-    fread(buffer, sizeof(buffer[0]), sizeof(buffer)-1, stdin);
+    fread(buffer, sizeof(buffer[0]), sizeof(buffer)-1, in);
 
     args_man_t args = fc_solve_args_man_chop(buffer);
 
@@ -48,12 +60,15 @@ int main(void)
             strcat(terminator, "G");
         }
 
-        printf("<<%s\n%s\n%s\n", terminator, s, terminator);
+        fprintf(out, "<<%s\n%s\n%s\n", terminator, s, terminator);
 
         free(terminator);
     }
 
     fc_solve_args_man_free(&args);
+
+    fclose(in);
+    fclose(out);
 
     return 0;
 }
