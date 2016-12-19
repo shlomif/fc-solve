@@ -3,8 +3,7 @@
 # Thanks!
 install:
     - choco install ag
-    - choco install wget
-    - wget -O strawberry-perl-5.24.0.1-64bit.msi http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi
+    - curl -fsS -o strawberry-perl-5.24.0.1-64bit.msi http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi
     - msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR="C:\strawberry"
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
@@ -23,7 +22,7 @@ install:
     - copy fc-solve\source\cmake\sfc\shlomif-cmake-modules\Shlomif_Common.cmake fc-solve\source\cmake\
     - git clone -b make-code-suitable-for-fc-solve git://github.com/shlomif/patsolve.git fc-solve/source/patsolve-shlomif
     - if not exist C:\libtap mkdir C:\libtap
-    - if not exist C:\libtap\gperf-3.0.4.tar.gz wget -O C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
+    - if not exist C:\libtap\gperf-3.0.4.tar.gz curl -fsS -o C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
     - copy C:\libtap\gperf-3.0.4.tar.gz .
     - tar -xvf gperf-3.0.4.tar.gz
     # - if not exist C:\libtap\bin\gperf.exe cd gperf-3.0.4 && sh configure --prefix=C:/libtap && gmake && gmake install && cd ..
