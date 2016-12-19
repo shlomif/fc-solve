@@ -12,7 +12,7 @@ Freecell Solver test suite.
 
 =cut
 
-our $VERSION = 'v0.0.8';
+our $VERSION = 'v0.0.9';
 
 # Load the dependencies so we'll be sure they are installed.
 use Carp;
@@ -22,14 +22,15 @@ use Digest::SHA;
 use Env::Path;
 use File::Path;
 use File::Spec;
+use File::Which ();
 use Games::Solitaire::Verify;
 use Inline;
 use Inline::C ();
-use IPC::Open2;
 use List::MoreUtils;
 use List::Util;
 use Moo;
 use MooX qw(late);
+use Path::Tiny 0.077;
 use Storable;
 use String::ShellQuote;
 use Task::Test::Run::AllPlugins;
@@ -39,6 +40,7 @@ use Test::Differences;
 use Test::More;
 use Test::Run::CmdLine::Plugin::TrimDisplayedFilenames;
 use Test::RunValgrind;
+use Test::TrailingSpace ();
 use YAML::XS;
 
 =head1 SYNOPSIS

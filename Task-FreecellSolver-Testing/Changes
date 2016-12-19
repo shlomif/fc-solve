@@ -1,5 +1,8 @@
 Revision history for Task-FreecellSolver-Testing
 
+0.0.9   2016-12-19
+        - Update the list of dependencies.
+
 0.0.8   2016-12-01
         - Convert to Dist-Zilla and added some deps.
 
