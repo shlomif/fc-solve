@@ -6,13 +6,6 @@ install:
     - choco install wget
     - wget -O strawberry-perl-5.24.0.1-64bit.msi http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi
     - msiexec /i strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR="C:\strawberry"
-    # - type install.log
-    - dir C:\
-    - dir C:\strawberry
-    # - dir C:\msys64
-    # - dir C:\msys64\mingw64
-    # - dir C:\msys64\mingw64\bin
-    - dir c:\Python35-x64
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - python3 -mpip install random2
@@ -45,7 +38,6 @@ install:
     - echo %PATH%
     - gmake
     - gmake install
-    - dir C:\libtap\include
     - cd ..\..\
 build: off
 test_script:
@@ -56,7 +48,7 @@ test_script:
     - set CPATH=C:\libtap\include
     - set PATH=C:\libtap\bin;%PATH%
     - set HARNESS_BREAK=1
-    - set HARNESS_VERBOSE=1
+    # - set HARNESS_VERBOSE=1
     - set FCS_USE_TEST_RUN=1
     - mkdir fc-solve\b
     - cd fc-solve\b
@@ -64,21 +56,11 @@ test_script:
     - perl ../source/Tatzer -G "MinGW Makefiles"
     - SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
     - echo %PATH%
-    # - gperf
     - gmake
     - gmake boards
-    - dir *gen_ms*
     # Trying this hack to take more precendence for Inline::C / etc.
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
     - perl ../source/run-tests.pl --exclude-re="\A(?:depth-based-multi-queue|hard-disk-offloading-queue)"
-    # - perl ../source/run-tests.pl --glob='{[a-c],delta,[e-g],[i-z],[0-9]}*.{py,t}'
-    # - perl ../source/run-tests.pl --glob='{[f-g],[i-z]}*.{py,t}'
-    # - perl ../source/run-tests.pl --glob='{a,b,board-gen,c,cmpdigest,d,verify--}*.{py,t}'
-    # - perl ../source/run-tests.pl --glob='d*.{py,t}'
-    # - perl ../source/run-tests.pl --glob='[s-z]*.{py,t}'
-    # - perl ../source/run-tests.pl --execute="gdb --command=..\..\scripts\appveyor.gdb c:\Python35-x64\python3.exe"
-    # - perl ../source/run-tests.pl --execute="perl ..\..\source\t\t\depth-based-multi-queue.t"
-    # - perl ../source/run-tests.pl --execute="c:\msys64\mingw64\bin\gdb --command=..\..\scripts\appveyor.gdb c:\strawberry\perl\bin\perl.exe"
 cache:
     - C:\libtap
     - C:\_P5

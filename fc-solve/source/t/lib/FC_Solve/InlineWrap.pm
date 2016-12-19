@@ -38,12 +38,18 @@ sub import
         %args,
     );
 
+=begin debug
+
     if ($IS_WIN)
     {
-        use Data::Dumper;
-        print STDERR "inline_params = <<<<<\n", Dumper( \@inline_params ),
+        require Data::Dumper;
+        print STDERR "inline_params = <<<<<\n", Data::Dumper::Dumper( \@inline_params ),
             ">>>>>>\n";
     }
+
+=end debug
+
+=cut
 
     eval "{ package $pkg; Inline->bind(\@inline_params); }";
 

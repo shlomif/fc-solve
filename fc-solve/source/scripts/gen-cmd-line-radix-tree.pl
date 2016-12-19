@@ -91,13 +91,6 @@ sub del
 }
 
 del();
-my $IS_WIN = ( $^O eq "MSWin32" );
-if ($IS_WIN)
-{
-    system( "echo", "foo" ) and die "die foo.";
-    require File::Which;
-    print 'which = ', File::Which::which("gperf"), "\n";
-}
 if (
     system( 'gperf', '-L', 'ANSI-C', '-t', $gperf_fn, "--output-file=$inc_h" ) )
 {
