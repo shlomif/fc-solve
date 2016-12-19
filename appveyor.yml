@@ -2,6 +2,7 @@
 # Shamelessly taken from https://github.com/plicease/Dist-Zilla-PluginBundle-Author-Plicease/blob/master/.appveyor.yml
 # Thanks!
 install:
+    - choco install ag
     - choco install wget
     - wget -O strawberry-perl-5.24.0.1-64bit.msi http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi
     # - ps: (new-object net.webclient).DownloadFile('http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi', 'strawberry-perl-5.24.0.1-64bit.msi')
