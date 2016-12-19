@@ -18,6 +18,10 @@ project also span some other code for testing and for support.
 
 ![PySol FC Running Freecell Solver](<http://i.imgur.com/thImObN.png>)
 
+## Videos
+
+[![PySolFC Solving Freecell](https://img.youtube.com/vi/hYdqNuX4WJc/0.jpg)](https://www.youtube.com/watch?v=hYdqNuX4WJc)
+
 # Repository structure
 
 ## fc-solve/source/
