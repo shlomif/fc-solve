@@ -12,6 +12,7 @@ Also contained are several command-line programs that use it, and the original
 project also span some other code for testing and for support.
 
 [![Travis-CI Build Status](https://travis-ci.org/shlomif/fc-solve.svg?branch=master)](https://travis-ci.org/shlomif/fc-solve)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/ondu214y43paykp5/branch/master?svg=true)](https://ci.appveyor.com/project/shlomif/fc-solve/branch/master)
 
 # Screenshots
 
