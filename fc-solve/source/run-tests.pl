@@ -48,13 +48,15 @@ sub run_tests
 }
 
 my $tests_glob = "*.{t.exe,py,t}";
+my $exclude_re_s;
 
 my @execute;
 GetOptions(
-    '--execute|e=s' => \@execute,
-    '--glob=s'      => \$tests_glob,
-    '--prove!'      => \$use_prove,
-    '--jobs|j=n'    => \$num_jobs,
+    '--exclude-re=s' => \$exclude_re_s,
+    '--execute|e=s'  => \@execute,
+    '--glob=s'       => \$tests_glob,
+    '--prove!'       => \$use_prove,
+    '--jobs|j=n'     => \$num_jobs,
 ) or die "--glob='tests_glob'";
 
 {
@@ -201,6 +203,12 @@ GetOptions(
             : ()
         ),
         );
+
+    if ( defined($exclude_re_s) )
+    {
+        my $re = qr/$exclude_re_s/ms;
+        @tests = grep { basename($_) !~ $re } @tests;
+    }
 
     if ( !$ENV{FCS_TEST_BUILD} )
     {
