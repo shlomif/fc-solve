@@ -64,7 +64,6 @@ static GCC_INLINE const fcs_bool_t lookup_state(store_t *const store,
 
 typedef struct
 {
-    fcs_lock_t storage_lock;
     store_t store;
     fcs_pseudo_dfs_lru_cache_t cache;
 
@@ -154,8 +153,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     long max_num_elements_in_cache)
 {
     instance->local_variant = local_variant;
-    FCS_INIT_LOCK(instance->storage_lock);
-
     instance->solution_was_found = FALSE;
     instance->should_terminate = DONT_TERMINATE;
 
