@@ -170,12 +170,20 @@ my $FALSE = 0;
 # and we need to instruct rmtree to delete them as well.
 my $SAFE = $FALSE;
 
+my @tests;
+
+sub reg_test
+{
+    push @tests, [@_];
+}
+
 sub run_tests
 {
     my ( $blurb_base_base, $args ) = @_;
 
-    my $idx        = $test_index++;
-    my $blurb_base = "$blurb_base_base [idx=$idx]";
+    my $idx = $test_index++;
+    my $blurb_base = sprintf "%s [idx=%d / %d]", $blurb_base_base, $idx,
+        scalar(@tests);
 
     my $tatzer_args = $args->{'tatzer_args'};
     my $cmake_args  = $args->{'cmake_args'};
@@ -246,13 +254,13 @@ q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
 
-run_tests( "Plain CMake Default", { cmake_args => [] } );
-run_tests( "Non-Debondt Delta States",
+reg_test( "Plain CMake Default", { cmake_args => [] } );
+reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
-run_tests( "Default", { tatzer_args => [] } );
-run_tests( "--rcs",   { tatzer_args => [qw(--rcs)] } );
+reg_test( "Default", { tatzer_args => [] } );
+reg_test( "--rcs",   { tatzer_args => [qw(--rcs)] } );
 
-run_tests(
+reg_test(
     "libavl2 with COMPACT_STATES",
     {
         tatzer_args =>
@@ -260,7 +268,7 @@ run_tests(
     }
 );
 
-run_tests(
+reg_test(
     "libavl2 with COMPACT_STATES and --rcs",
     {
         tatzer_args =>
@@ -268,47 +276,52 @@ run_tests(
     }
 );
 
-run_tests(
+reg_test(
     "libavl2 with INDIRECT_STATES",
     {
         tatzer_args => [qw(-l x64t --libavl2-p=prb)]
     }
 );
 
-run_tests(
+reg_test(
     "without-depth-field",
     {
         tatzer_args => [qw(--without-depth-field)],
     }
 );
 
-run_tests(
+reg_test(
     "without-depth-field and rcs",
     {
         tatzer_args => [qw(--without-depth-field --rcs)],
     }
 );
 
-run_tests(
+reg_test(
     "No FCS_SINGLE_HARD_THREAD",
     {
         tatzer_args => [qw(-l x64t --nosingle-ht)]
     }
 );
 
-run_tests(
+reg_test(
     "Break Backward Compatibility #1",
     {
         tatzer_args => [qw(-l x64t --break-back-compat-1)]
     }
 );
 
-run_tests(
+reg_test(
     "Freecell-only (as well as Break Backcompat)",
     {
         tatzer_args => [qw(-l x64t --break-back-compat-1 --fc-only)]
     }
 );
+
+foreach my $run (@tests)
+{
+    run_tests(@$run);
+}
 
 print colored( "All tests successful.",
     ( $ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green' ) ),
