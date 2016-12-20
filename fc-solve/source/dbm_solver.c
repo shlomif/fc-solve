@@ -222,7 +222,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             queue_num_extracted_and_processed =
                 instance->common.queue_num_extracted_and_processed;
         }
-        FCS_UNLOCK(instance->common.storage_lock);
+        fcs_lock_unlock(&instance->common.storage_lock);
 
         if ((instance->common.should_terminate != DONT_TERMINATE) ||
             (!queue_num_extracted_and_processed))
@@ -250,7 +250,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             {
                 fcs_lock_lock(&instance->common.storage_lock);
                 fcs_dbm__found_solution(&(instance->common), token, item);
-                FCS_UNLOCK(instance->common.storage_lock);
+                fcs_lock_unlock(&instance->common.storage_lock);
                 break;
             }
 

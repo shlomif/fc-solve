@@ -175,7 +175,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 }
             }
         }
-        FCS_UNLOCK(instance->common.storage_lock);
+        fcs_lock_unlock(&instance->common.storage_lock);
 
         if (should_break && (prev_size == 0))
         {
@@ -204,7 +204,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 fcs_dbm__found_solution(
                     &(instance->common), tokens[batch_i], &physical_item);
                 fcs_condvar_broadcast(&(instance->monitor));
-                FCS_UNLOCK(instance->common.storage_lock);
+                fcs_lock_unlock(&instance->common.storage_lock);
                 goto thread_end;
             }
         }

@@ -213,7 +213,7 @@ static GCC_INLINE fcs_bool_t instance_check_multiple_keys(
 #else
     const fcs_bool_t have_more = FALSE;
 #endif
-    FCS_UNLOCK(instance->common.storage_lock);
+    fcs_lock_unlock(&instance->common.storage_lock);
     return have_more;
 }
 
