@@ -36,10 +36,7 @@ typedef fcs_bool_t fcs_lock_t;
 static GCC_INLINE void fcs_lock_lock(fcs_lock_t *const lock) {}
 static GCC_INLINE void fcs_lock_unlock(fcs_lock_t *const lock) {}
 static GCC_INLINE void fcs_lock_init(fcs_lock_t *const lock) {}
-#define FCS_DESTROY_LOCK(lock)                                                 \
-    {                                                                          \
-    }
-
+static GCC_INLINE void fcs_lock_destroy(fcs_lock_t *const lock) {}
 #elif defined(FCS_DBM_USE_RWLOCK)
 
 typedef pthread_rwlock_fcfs_t *fcs_lock_t;
@@ -55,7 +52,10 @@ static GCC_INLINE void fcs_lock_init(fcs_lock_t *const lock)
 {
     *lock = pthread_rwlock_fcfs_alloc();
 }
-#define FCS_DESTROY_LOCK(lock) pthread_rwlock_fcfs_destroy(lock)
+static GCC_INLINE void fcs_lock_destroy(fcs_lock_t *const lock)
+{
+    pthread_rwlock_fcfs_destroy(*lock);
+}
 
 #else
 
@@ -76,10 +76,10 @@ static GCC_INLINE void fcs_lock_unlock(fcs_lock_t *const lock)
 {
     pthread_mutex_unlock(lock);
 }
-#define FCS_DESTROY_LOCK(lock)                                                 \
-    {                                                                          \
-    }
-
+static GCC_INLINE void fcs_lock_destroy(fcs_lock_t *const lock)
+{
+    pthread_mutex_destroy(lock);
+}
 static GCC_INLINE void fcs_condvar_init(fcs_condvar_t *const cond)
 {
     *cond = initial_cond_constant;

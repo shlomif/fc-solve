@@ -75,8 +75,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
     fcs_offloading_queue__destroy(&(instance->queue));
     DESTROY_CACHE(instance);
     fc_solve_meta_compact_allocator_finish(&(instance->meta_alloc));
-    FCS_DESTROY_LOCK(instance->queue_lock);
-    FCS_DESTROY_LOCK(instance->common.storage_lock);
+    fcs_lock_destroy(&instance->common.storage_lock);
 }
 
 static GCC_INLINE void instance_check_key(

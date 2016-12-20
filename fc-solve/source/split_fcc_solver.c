@@ -175,13 +175,12 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
         fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
 #endif
         DESTROY_CACHE(coll);
-        FCS_DESTROY_LOCK(coll->queue_lock);
     }
-    FCS_DESTROY_LOCK(instance->storage_lock);
-    FCS_DESTROY_LOCK(instance->global_lock);
-    FCS_DESTROY_LOCK(instance->fcc_entry_points_lock);
-    FCS_DESTROY_LOCK(instance->fcc_exit_points_output_lock);
-    FCS_DESTROY_LOCK(instance->output_lock);
+    fcs_lock_destroy(&instance->common.storage_lock);
+    fcs_lock_destroy(&instance->global_lock);
+    fcs_lock_destroy(&instance->fcc_entry_points_lock);
+    fcs_lock_destroy(&instance->fcc_exit_points_output_lock);
+    fcs_lock_destroy(&instance->output_lock);
 }
 
 struct fcs_dbm_solver_thread_struct
