@@ -39,9 +39,7 @@ typedef fcs_bool_t fcs_lock_t;
 #define FCS_UNLOCK(lock)                                                       \
     {                                                                          \
     }
-#define FCS_INIT_LOCK(lock)                                                    \
-    {                                                                          \
-    }
+static GCC_INLINE void fcs_lock_init(fcs_lock_t *const lock) {}
 #define FCS_DESTROY_LOCK(lock)                                                 \
     {                                                                          \
     }
@@ -51,7 +49,10 @@ typedef fcs_bool_t fcs_lock_t;
 typedef pthread_rwlock_fcfs_t *fcs_lock_t;
 #define FCS_LOCK(lock) pthread_rwlock_fcfs_gain_write(lock)
 #define FCS_UNLOCK(lock) pthread_rwlock_fcfs_release(lock)
-#define FCS_INIT_LOCK(lock) ((lock) = pthread_rwlock_fcfs_alloc())
+static GCC_INLINE void fcs_lock_init(fcs_lock_t *const lock)
+{
+    *lock = pthread_rwlock_fcfs_alloc();
+}
 #define FCS_DESTROY_LOCK(lock) pthread_rwlock_fcfs_destroy(lock)
 
 #else
@@ -62,8 +63,11 @@ static const pthread_cond_t initial_cond_constant = PTHREAD_COND_INITIALIZER;
 typedef pthread_mutex_t fcs_lock_t;
 typedef pthread_cond_t fcs_condvar_t;
 #define FCS_LOCK(lock) pthread_mutex_lock(&(lock))
+static GCC_INLINE void fcs_lock_init(fcs_lock_t *const lock)
+{
+    *lock = initial_mutex_constant;
+}
 #define FCS_UNLOCK(lock) pthread_mutex_unlock(&(lock))
-#define FCS_INIT_LOCK(lock) ((lock) = initial_mutex_constant)
 #define FCS_DESTROY_LOCK(lock)                                                 \
     {                                                                          \
     }

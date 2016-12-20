@@ -145,14 +145,14 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         instance->curr_depth = curr_depth;
     }
 
-    FCS_INIT_LOCK(instance->global_lock);
+    fcs_lock_init(&instance->global_lock);
     instance->offload_dir_path = inp->offload_dir_path;
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
         inp->local_variant, out_fh);
 
-    FCS_INIT_LOCK(instance->output_lock);
-    FCS_INIT_LOCK(instance->fcc_entry_points_lock);
-    FCS_INIT_LOCK(instance->fcc_exit_points_output_lock);
+    fcs_lock_init(&instance->output_lock);
+    fcs_lock_init(&instance->fcc_entry_points_lock);
+    fcs_lock_init(&instance->fcc_exit_points_output_lock);
     {
         fcs_dbm_collection_by_depth_t *const coll = &(instance->coll);
 
