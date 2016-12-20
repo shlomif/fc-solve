@@ -128,7 +128,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     while (TRUE)
     {
         /* First of all extract a batch of items. */
-        FCS_LOCK(instance->common.storage_lock);
+        fcs_lock_lock(&instance->common.storage_lock);
         fcs_bool_t should_break = FALSE;
         batch_size_t batch_size = 0;
         if (prev_size > 0)
@@ -200,7 +200,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             {
                 fcs_dbm_queue_item_t physical_item;
                 physical_item.key = tokens[batch_i]->key;
-                FCS_LOCK(instance->common.storage_lock);
+                fcs_lock_lock(&instance->common.storage_lock);
                 fcs_dbm__found_solution(
                     &(instance->common), tokens[batch_i], &physical_item);
                 fcs_condvar_broadcast(&(instance->monitor));

@@ -173,7 +173,7 @@ static GCC_INLINE fcs_bool_t instance_check_multiple_keys(
     {
         return FALSE;
     }
-    FCS_LOCK(instance->common.storage_lock);
+    fcs_lock_lock(&instance->common.storage_lock);
     for (typeof(batch_size) batch_i = 0; batch_i < batch_size; ++batch_i)
     {
         for (var_AUTO(list, lists[batch_i]); list; list = list->next)

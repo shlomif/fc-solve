@@ -8,7 +8,7 @@
  * Copyright (c) 2012 Shlomi Fish
  */
 /*
- * lock.h - FCS_LOCK()/etc. macros for locking.
+ * lock.h - macros/functions for locking.
  */
 #pragma once
 
@@ -33,9 +33,7 @@ extern "C" {
 #ifdef FCS_DBM_SINGLE_THREAD
 
 typedef fcs_bool_t fcs_lock_t;
-#define FCS_LOCK(lock)                                                         \
-    {                                                                          \
-    }
+static GCC_INLINE void fcs_lock_lock(fcs_lock_t *const lock) {}
 #define FCS_UNLOCK(lock)                                                       \
     {                                                                          \
     }
@@ -47,7 +45,10 @@ static GCC_INLINE void fcs_lock_init(fcs_lock_t *const lock) {}
 #elif defined(FCS_DBM_USE_RWLOCK)
 
 typedef pthread_rwlock_fcfs_t *fcs_lock_t;
-#define FCS_LOCK(lock) pthread_rwlock_fcfs_gain_write(lock)
+static GCC_INLINE void fcs_lock_lock(fcs_lock_t *const lock)
+{
+    pthread_rwlock_fcfs_gain_write(*lock);
+}
 #define FCS_UNLOCK(lock) pthread_rwlock_fcfs_release(lock)
 static GCC_INLINE void fcs_lock_init(fcs_lock_t *const lock)
 {
@@ -62,7 +63,10 @@ static const pthread_cond_t initial_cond_constant = PTHREAD_COND_INITIALIZER;
 
 typedef pthread_mutex_t fcs_lock_t;
 typedef pthread_cond_t fcs_condvar_t;
-#define FCS_LOCK(lock) pthread_mutex_lock(&(lock))
+static GCC_INLINE void fcs_lock_lock(fcs_lock_t *const lock)
+{
+    pthread_mutex_lock(lock);
+}
 static GCC_INLINE void fcs_lock_init(fcs_lock_t *const lock)
 {
     *lock = initial_mutex_constant;

@@ -236,7 +236,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     while (1)
     {
         /* First of all extract an item. */
-        FCS_LOCK(instance->global_lock);
+        fcs_lock_lock(&instance->global_lock);
 
         if (prev_item)
         {
@@ -287,7 +287,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         {
             FccEntryPointNode key;
             key.kv.key.key = item->key;
-            FCS_LOCK(instance->fcc_entry_points_lock);
+            fcs_lock_lock(&instance->fcc_entry_points_lock);
             FccEntryPointNode * val_proto = RB_FIND(
                 FccEntryPointList,
                 &(instance->fcc_entry_points),
@@ -351,7 +351,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &unused_output_len
                 );
 
-                FCS_LOCK(instance->output_lock);
+                fcs_lock_lock(&instance->output_lock);
                 fprintf(
                     instance->consumed_states_fh,
                     "%s\n", base64_encoding_buffer
@@ -371,7 +371,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &state, token, &derived_list, &derived_list_recycle_bin,
                     &derived_list_allocator, TRUE))
             {
-                FCS_LOCK(instance->global_lock);
+                fcs_lock_lock(&instance->global_lock);
                 fcs_dbm__found_solution(&(instance->common), token, item);
                 FCS_UNLOCK(instance->global_lock);
                 break;
@@ -495,7 +495,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
             if (key_depth == instance->curr_depth)
             {
                 /* Now insert it into the queue. */
-                FCS_LOCK(instance->global_lock);
+                fcs_lock_lock(&instance->global_lock);
 
                 fcs_depth_multi_queue__insert(
                     &(coll->depth_queue), thread->state_depth + 1,
@@ -529,7 +529,7 @@ static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 }
                 int trace_num;
                 fcs_encoded_state_buffer_t *trace;
-                FCS_LOCK(instance->fcc_exit_points_output_lock);
+                fcs_lock_lock(&instance->fcc_exit_points_output_lock);
                 /* instance->storage_lock is already locked
                  * in instance_check_multiple_keys and we should not
                  * lock it here. */
