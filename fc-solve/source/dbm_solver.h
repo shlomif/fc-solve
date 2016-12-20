@@ -146,6 +146,7 @@ static GCC_INLINE void fcs_dbm__common_init(
     }
     common->count_of_items_in_queue = 0;
     common->tree_recycle_bin = NULL;
+    FCS_INIT_LOCK(common->storage_lock);
 }
 
 typedef struct

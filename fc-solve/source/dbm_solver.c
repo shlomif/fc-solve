@@ -37,7 +37,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     const long max_count_of_items_in_queue, const long iters_delta_limit,
     FILE *const out_fh)
 {
-    FCS_INIT_LOCK(instance->common.storage_lock);
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_offloading_queue__init(&(instance->queue),

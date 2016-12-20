@@ -51,7 +51,6 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
         inp->local_variant, out_fh);
 
-    FCS_INIT_LOCK(instance->common.storage_lock);
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
         const_AUTO(coll, &(instance->colls_by_depth[depth]));
