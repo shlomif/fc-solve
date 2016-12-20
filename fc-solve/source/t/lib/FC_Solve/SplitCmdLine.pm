@@ -2,12 +2,28 @@ package FC_Solve::SplitCmdLine;
 
 use strict;
 use warnings;
-use autodie;
 
-use Path::Tiny qw/ path /;
-use FC_Solve::Paths qw/ bin_exe_raw /;
 use Socket qw(:crlf);
-use File::Temp qw/ tempdir /;
+
+use FC_Solve::InlineWrap (
+    C => <<"EOF",
+#include "split_cmd_line.c"
+
+SV * _internal_parse_args(char * input) {
+    AV *const results = (AV *)sv_2mortal((SV *)newAV());
+    args_man_t args = fc_solve_args_man_chop(input);
+
+    for ( int i=0 ; i < args.argc ; i++)
+    {
+        av_push(results, newSVpv(args.argv[i], 0));
+    }
+
+    fc_solve_args_man_free(&args);
+    return newRV((SV *)results);
+}
+
+EOF
+);
 
 sub _normalize_lf
 {
@@ -16,57 +32,10 @@ sub _normalize_lf
     return $s;
 }
 
-my $SPLIT_EXE = bin_exe_raw( [qw#t out-split-cmd-line.exe#] );
-
 sub split_cmd_line_string
 {
     my ( $class, $input_string ) = @_;
-
-    my $dir = tempdir( CLEANUP => 1 );
-    my $input_fn = "$dir/in.txt";
-    open my $i, '>', $input_fn;
-    print {$i} $input_string;
-    close($i);
-
-    my $output_fn = "$dir/out.txt";
-    system( $SPLIT_EXE, '-i', $input_fn, '-o', $output_fn );
-
-    my $output = path($output_fn)->slurp_utf8;
-    $output = _normalize_lf($output);
-
-    open my $child_out, '<', \$output;
-    my @have;
-    while ( my $line = <$child_out> )
-    {
-        chomp($line);
-        if ( $line !~ m{\A<<(.*)\z} )
-        {
-            die "Invalid output from program.";
-        }
-        my $terminator = $1;
-
-        my $item             = "";
-        my $found_terminator = 0;
-        while ( $line = <$child_out> )
-        {
-            if ( $line eq "$terminator\n" )
-            {
-                $found_terminator = 1;
-                last;
-            }
-            $item .= $line;
-        }
-        if ( !$found_terminator )
-        {
-            die "Could not find terminator '$terminator' in output.";
-        }
-        chomp($item);
-        push @have, $item;
-    }
-
-    close($child_out);
-
-    return ( \@have );
+    return _internal_parse_args( _normalize_lf($input_string) );
 }
 
 1;
