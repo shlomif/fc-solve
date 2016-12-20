@@ -66,18 +66,6 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         "card-test-parse.c"
     )
 
-    ADD_EXECUTABLE(
-        "out-split-cmd-line.exe"
-        "${CMAKE_CURRENT_SOURCE_DIR}/out-split-cmd-line.c"
-    )
-
-    SET_SOURCE_FILES_PROPERTIES (
-        "out-split-cmd-line.c"
-        PROPERTIES
-            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../split_cmd_line.c"
-            GENERATED "1"
-    )
-
     FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/t")
 
     SET (EXE_FILE "bit-reader-and-writer-test.t.exe")
