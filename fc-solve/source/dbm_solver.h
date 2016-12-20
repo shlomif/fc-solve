@@ -94,6 +94,7 @@ enum TERMINATE_REASON
 
 typedef struct
 {
+    fcs_lock_t storage_lock;
     int queue_num_extracted_and_processed;
     fcs_encoded_state_buffer_t first_key;
     long num_states_in_collection;

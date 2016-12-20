@@ -30,7 +30,6 @@ typedef size_t batch_size_t;
 typedef struct
 {
     fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
-    fcs_lock_t storage_lock;
     fcs_condvar_t monitor;
     const char *offload_dir_path;
     int curr_depth;
@@ -52,7 +51,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
         inp->local_variant, out_fh);
 
-    FCS_INIT_LOCK(instance->storage_lock);
+    FCS_INIT_LOCK(instance->common.storage_lock);
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
         const_AUTO(coll, &(instance->colls_by_depth[depth]));
@@ -84,7 +83,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
         FCS_DESTROY_LOCK(coll->cache_store.queue_lock);
     }
     fcs_condvar_destroy(&(instance->monitor));
-    FCS_DESTROY_LOCK(instance->storage_lock);
+    FCS_DESTROY_LOCK(instance->common.storage_lock);
 }
 
 struct fcs_dbm_solver_thread_struct
@@ -130,7 +129,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     while (TRUE)
     {
         /* First of all extract a batch of items. */
-        FCS_LOCK(instance->storage_lock);
+        FCS_LOCK(instance->common.storage_lock);
         fcs_bool_t should_break = FALSE;
         batch_size_t batch_size = 0;
         if (prev_size > 0)
@@ -173,11 +172,11 @@ static void *instance_run_solver_thread(void *const void_arg)
                     /* Sleep until more items become available in the
                      * queue. */
                     fcs_condvar__wait_on(
-                        &(instance->monitor), &(instance->storage_lock));
+                        &(instance->monitor), &(instance->common.storage_lock));
                 }
             }
         }
-        FCS_UNLOCK(instance->storage_lock);
+        FCS_UNLOCK(instance->common.storage_lock);
 
         if (should_break && (prev_size == 0))
         {
@@ -202,11 +201,11 @@ static void *instance_run_solver_thread(void *const void_arg)
             {
                 fcs_dbm_queue_item_t physical_item;
                 physical_item.key = tokens[batch_i]->key;
-                FCS_LOCK(instance->storage_lock);
+                FCS_LOCK(instance->common.storage_lock);
                 fcs_dbm__found_solution(
                     &(instance->common), tokens[batch_i], &physical_item);
                 fcs_condvar_broadcast(&(instance->monitor));
-                FCS_UNLOCK(instance->storage_lock);
+                FCS_UNLOCK(instance->common.storage_lock);
                 goto thread_end;
             }
         }

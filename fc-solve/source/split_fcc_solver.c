@@ -69,7 +69,6 @@ typedef struct
 {
     fcs_dbm_collection_by_depth_t coll;
     fcs_lock_t global_lock;
-    fcs_lock_t storage_lock;
     const char *offload_dir_path;
     int curr_depth;
     fcs_dbm_instance_common_elems_t common;
@@ -151,7 +150,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
         inp->local_variant, out_fh);
 
-    FCS_INIT_LOCK(instance->storage_lock);
+    FCS_INIT_LOCK(instance->common.storage_lock);
     FCS_INIT_LOCK(instance->output_lock);
     FCS_INIT_LOCK(instance->fcc_entry_points_lock);
     FCS_INIT_LOCK(instance->fcc_exit_points_output_lock);
