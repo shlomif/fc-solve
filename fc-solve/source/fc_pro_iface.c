@@ -28,7 +28,7 @@ static inline void moves_processed_add_new_move(
     moves->moves[moves->num_moves - 1] = new_move;
 }
 
-void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
+DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
     fcs_state_keyval_pair_t *const orig, const int num_freecells,
     const fcs_moves_sequence_t *const moves_seq)
 {

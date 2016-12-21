@@ -16,6 +16,10 @@
 #define DLLEXPORT __declspec(dllimport)
 #endif
 #define DLLLOCAL
+#elif defined(__EMSCRIPTEN__)
+#include "emscripten.h"
+#define DLLEXPORT EMSCRIPTEN_KEEPALIVE
+#define DLLLOCAL __attribute__((visibility("hidden")))
 #elif defined(__GNUC__)
 #define DLLEXPORT __attribute__((visibility("default")))
 #define DLLLOCAL __attribute__((visibility("hidden")))
