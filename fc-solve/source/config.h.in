@@ -31,13 +31,6 @@ extern "C" {
 
 #cmakedefine CARD_DEBUG_PRES
 
-/*
- * Define this macro if the C compiler supports the keyword inline or
- * a similar keyword that was found by Autoconf (and defined as inline).
- * */
-#cmakedefine HAVE_C_INLINE
-
-#cmakedefine FCS_INLINE_KEYWORD ${FCS_INLINE_KEYWORD}
 
 /* The size of a single pack in alloc.c/alloc.h measured in 1024 chars. */
 #cmakedefine FCS_IA_PACK_SIZE ${FCS_IA_PACK_SIZE}

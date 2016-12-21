@@ -758,20 +758,6 @@ WHILE ( NOT ("${TEMP_SIZE}" STREQUAL "${INT_SIZE_IN_BITS}") )
 
 ENDWHILE ()
 
-# Inspired from /usr/share/autoconf/autoconf/c.m4
-FOREACH(KEYWORD "inline" "__inline__" "__inline")
-   IF(NOT DEFINED HAVE_C_INLINE)
-     TRY_COMPILE(C_HAS_${KEYWORD} "${CMAKE_CURRENT_BINARY_DIR}"
-       "${CMAKE_CURRENT_SOURCE_DIR}/test_inline.c"
-       COMPILE_DEFINITIONS "-Dinline=${KEYWORD}")
-     IF(C_HAS_${KEYWORD})
-       SET(HAVE_C_INLINE TRUE)
-       SET(FCS_INLINE_KEYWORD "${KEYWORD}")
-     ENDIF()
-   ENDIF()
-ENDFOREACH()
-
-
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.h

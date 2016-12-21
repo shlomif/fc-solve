@@ -13,12 +13,4 @@
  */
 #pragma once
 
-#include "config.h"
-
-#if defined(HAVE_C_INLINE)
-#define GCC_INLINE FCS_INLINE_KEYWORD
-#elif defined(__GNUC__)
 #define GCC_INLINE inline
-#else
-#define GCC_INLINE
-#endif
