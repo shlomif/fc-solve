@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
     if (arg == argc)
     {
-        fc_solve_err("No double dash (\"--\") after deals indexes!");
+        fc_solve_err("No double dash (\"--\") after deals indexes!\n");
     }
 
     arg++;
