@@ -70,7 +70,7 @@ typedef struct
     printf("Unsolved Board No. %lld at %li.%.6li\n", board_num,                \
         FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
 
-static GCC_INLINE void fc_solve_print_started_at(void)
+static inline void fc_solve_print_started_at(void)
 {
     fcs_portable_time_t mytime;
     FCS_GET_TIME(mytime);

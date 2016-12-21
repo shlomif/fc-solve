@@ -107,13 +107,13 @@ typedef struct
 #endif
 } fc_solve_hash_t;
 
-static GCC_INLINE void fcs_hash_set_max_num_elems(
+static inline void fcs_hash_set_max_num_elems(
     fc_solve_hash_t *const hash, const fcs_int_limit_t new_size)
 {
     hash->max_num_elems_before_resize = (new_size << 1);
 }
 
-static GCC_INLINE void fc_solve_hash_init(
+static inline void fc_solve_hash_init(
     fcs_meta_compact_allocator_t *const meta_alloc, fc_solve_hash_t *const hash,
 #ifdef FCS_INLINED_HASH_COMPARISON
     const enum FCS_INLINED_HASH_DATA_TYPE hash_type
@@ -159,7 +159,7 @@ static GCC_INLINE void fc_solve_hash_init(
     return;
 }
 
-static GCC_INLINE void fc_solve_hash_free(fc_solve_hash_t *const hash)
+static inline void fc_solve_hash_free(fc_solve_hash_t *const hash)
 {
     fc_solve_compact_allocator_finish(&(hash->allocator));
 
@@ -168,7 +168,7 @@ static GCC_INLINE void fc_solve_hash_free(fc_solve_hash_t *const hash)
 }
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static GCC_INLINE void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
+static inline void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
     fcs_bool_t (*should_delete_ptr)(void *const key, void *const context),
     void *const context)
 {

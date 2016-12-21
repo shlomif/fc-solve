@@ -17,7 +17,7 @@
 #include "rinutils.h"
 
 #define MOVES_PROCESSED_GROW_BY 32
-static GCC_INLINE void moves_processed_add_new_move(
+static inline void moves_processed_add_new_move(
     fcs_moves_processed_t *const moves, const fcs_extended_move_t new_move)
 {
     if (!((++moves->num_moves) & (MOVES_PROCESSED_GROW_BY - 1)))

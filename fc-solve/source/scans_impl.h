@@ -27,7 +27,7 @@ extern "C" {
 #include "scans.h"
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static GCC_INLINE fcs_bool_t check_num_states_in_collection(
+static inline fcs_bool_t check_num_states_in_collection(
     const fc_solve_instance_t *const instance)
 {
     return (instance->active_num_states_in_collection >=
@@ -64,7 +64,7 @@ extern const fcs_default_weights_t fc_solve_default_befs_weights;
 #define is_filled_by_any_card()                                                \
     (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
 #endif
-static GCC_INLINE void fc_solve_initialize_befs_rater(
+static inline void fc_solve_initialize_befs_rater(
     fc_solve_soft_thread_t *const soft_thread,
     fc_solve_state_weighting_t *const weighting)
 {
@@ -166,7 +166,7 @@ static int compare_rating_with_index(
 
 typedef int fcs_depth_t;
 
-static GCC_INLINE fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
+static inline fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
 {
 #ifdef FCS_WITHOUT_DEPTH_FIELD
 
@@ -204,7 +204,7 @@ static GCC_INLINE fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
 
 #endif
 
-static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
+static inline fcs_game_limit_t count_num_vacant_freecells(
     const fcs_game_limit_t freecells_num, const fcs_state_t *const state_ptr)
 {
     fcs_game_limit_t num_vacant_freecells = 0;
@@ -219,7 +219,7 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_freecells(
     return num_vacant_freecells;
 }
 
-static GCC_INLINE pq_rating_t befs_rate_state(
+static inline pq_rating_t befs_rate_state(
     const fc_solve_soft_thread_t *const soft_thread,
     const fc_solve_state_weighting_t *const weighting,
     const fcs_state_t *const state, const int negated_depth)
@@ -387,7 +387,7 @@ static GCC_INLINE pq_rating_t befs_rate_state(
  *
  * */
 
-static GCC_INLINE void calculate_real_depth(const fcs_bool_t calc_real_depth,
+static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
     fcs_collectible_state_t *const ptr_state_orig)
 {
     if (calc_real_depth)
@@ -518,7 +518,7 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
  *
  * */
 
-static GCC_INLINE void mark_as_dead_end__proto(
+static inline void mark_as_dead_end__proto(
     fcs_collectible_state_t *const ptr_state_input)
 {
     fcs_collectible_state_t *temp_state = (ptr_state_input);
@@ -573,7 +573,7 @@ static GCC_INLINE void mark_as_dead_end__proto(
         BUMP_NUM_CHECKED_STATES__HT()                                          \
     }
 
-static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
+static inline fcs_game_limit_t count_num_vacant_stacks(
     const fcs_game_limit_t stacks_num, const fcs_state_t *const state_ptr)
 {
     fcs_game_limit_t num_vacant_stacks = 0;
@@ -589,7 +589,7 @@ static GCC_INLINE fcs_game_limit_t count_num_vacant_stacks(
     return num_vacant_stacks;
 }
 
-static GCC_INLINE fcs_bool_t fcs__should_state_be_pruned(
+static inline fcs_bool_t fcs__should_state_be_pruned(
     const fcs_bool_t enable_pruning,
     const fcs_collectible_state_t *const ptr_state)
 {
@@ -597,13 +597,13 @@ static GCC_INLINE fcs_bool_t fcs__should_state_be_pruned(
             (!(FCS_S_VISITED(ptr_state) & FCS_VISITED_GENERATED_BY_PRUNING)));
 }
 
-static GCC_INLINE fcs_bool_t fcs__is_state_a_dead_end(
+static inline fcs_bool_t fcs__is_state_a_dead_end(
     const fcs_collectible_state_t *const ptr_state)
 {
     return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
 }
 
-static GCC_INLINE void free_states_handle_soft_dfs_soft_thread(
+static inline void free_states_handle_soft_dfs_soft_thread(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fcs_soft_dfs_stack_item_t *soft_dfs_info =
@@ -671,14 +671,14 @@ static fcs_bool_t free_states_should_delete(
 #endif
 #endif
 
-static GCC_INLINE void fc_solve_st_free_pq(
+static inline void fc_solve_st_free_pq(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_PQueueFree(&(BEFS_VAR(soft_thread, pqueue)));
 }
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static GCC_INLINE void free_states(fc_solve_instance_t *const instance)
+static inline void free_states(fc_solve_instance_t *const instance)
 {
 #ifdef DEBUG
     printf("%s\n", "FREE_STATES HIT");
@@ -744,7 +744,7 @@ static GCC_INLINE void free_states(fc_solve_instance_t *const instance)
  * without procedural recursion by using some dedicated stacks for
  * the traversal.
  */
-static GCC_INLINE int fc_solve_soft_dfs_do_solve(
+static inline int fc_solve_soft_dfs_do_solve(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
@@ -1269,7 +1269,7 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
  * fc_solve_patsolve_do_solve() is the event loop of the
  * Patsolve scan.
  */
-static GCC_INLINE int fc_solve_patsolve_do_solve(
+static inline int fc_solve_patsolve_do_solve(
     fc_solve_soft_thread_t *const soft_thread)
 {
     const_SLOT(hard_thread, soft_thread);

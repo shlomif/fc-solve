@@ -40,14 +40,14 @@ extern void fc_solve_compact_allocator_extend(
     fcs_compact_allocator_t *const allocator);
 
 /* To be called after the meta_alloc was set. */
-static GCC_INLINE void fc_solve_compact_allocator_init_helper(
+static inline void fc_solve_compact_allocator_init_helper(
     fcs_compact_allocator_t *const allocator)
 {
     allocator->old_list = NULL;
     fc_solve_compact_allocator_extend(allocator);
 }
 
-static GCC_INLINE void fc_solve_meta_compact_allocator_init(
+static inline void fc_solve_meta_compact_allocator_init(
     fcs_meta_compact_allocator_t *const meta)
 {
     meta->recycle_bin = NULL;
@@ -60,7 +60,7 @@ extern void fc_solve_compact_allocator_init(
     fcs_compact_allocator_t *const allocator,
     fcs_meta_compact_allocator_t *const meta_allocator);
 
-static GCC_INLINE void *fcs_compact_alloc_ptr(
+static inline void *fcs_compact_alloc_ptr(
     fcs_compact_allocator_t *const allocator, const size_t how_much_proto)
 {
     /* Round ptr to the next pointer boundary */
@@ -82,7 +82,7 @@ static GCC_INLINE void *fcs_compact_alloc_ptr(
     return allocator->rollback_ptr;
 }
 
-static GCC_INLINE void fcs_compact_alloc_release(
+static inline void fcs_compact_alloc_release(
     fcs_compact_allocator_t *const allocator)
 {
     allocator->ptr = allocator->rollback_ptr;
@@ -91,14 +91,14 @@ static GCC_INLINE void fcs_compact_alloc_release(
 extern void fc_solve_compact_allocator_finish(
     fcs_compact_allocator_t *const allocator);
 
-static GCC_INLINE fcs_collectible_state_t *fcs_state_ia_alloc_into_var(
+static inline fcs_collectible_state_t *fcs_state_ia_alloc_into_var(
     fcs_compact_allocator_t *const allocator)
 {
     return (fcs_collectible_state_t *)fcs_compact_alloc_ptr(
         allocator, sizeof(fcs_collectible_state_t));
 }
 
-static GCC_INLINE void fc_solve_compact_allocator_recycle(
+static inline void fc_solve_compact_allocator_recycle(
     fcs_compact_allocator_t *const allocator)
 {
     fc_solve_compact_allocator_finish(allocator);

@@ -20,8 +20,7 @@
 
 #include "inline.h"
 
-static GCC_INLINE __attribute__((noreturn)) void fc_solve_err(
-    const char *msg, ...)
+static inline __attribute__((noreturn)) void fc_solve_err(const char *msg, ...)
 {
     va_list ap;
 

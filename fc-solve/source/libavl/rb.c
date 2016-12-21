@@ -32,42 +32,42 @@
 #include "alloc_wrap.h"
 
 #ifdef WITH_AVL_BALANCE_FIELD
-static GCC_INLINE signed char rb_get_color(struct rb_node *const node)
+static inline signed char rb_get_color(struct rb_node *const node)
 {
     return node->rb_color;
 }
 
-static GCC_INLINE struct rb_node * rb_process_link(uintptr_t mylink)
+static inline struct rb_node * rb_process_link(uintptr_t mylink)
 {
     return (struct rb_node *)(mylink & (~((uintptr_t)0x1)));
 }
 
-static GCC_INLINE void rb_set_link(struct rb_node * node, int myindex, struct rb_node * val)
+static inline void rb_set_link(struct rb_node * node, int myindex, struct rb_node * val)
 {
     node->rb_mylink[myindex] = ((uintptr_t)val);
 }
 
-static GCC_INLINE void rb_set_color(struct rb_node * node, enum rb_color color)
+static inline void rb_set_color(struct rb_node * node, enum rb_color color)
 {
     node->rb_color = color;
 }
 #else
-static GCC_INLINE enum rb_color rb_get_color(struct rb_node * node)
+static inline enum rb_color rb_get_color(struct rb_node * node)
 {
     return ((enum rb_color)(node->rb_mylink[0] & 0x1));
 }
 
-static GCC_INLINE struct rb_node * rb_process_link(uintptr_t mylink)
+static inline struct rb_node * rb_process_link(uintptr_t mylink)
 {
     return (struct rb_node *)(mylink & (~((uintptr_t)0x1)));
 }
 
-static GCC_INLINE void rb_set_link(struct rb_node * node, int myindex, struct rb_node * val)
+static inline void rb_set_link(struct rb_node * node, int myindex, struct rb_node * val)
 {
     node->rb_mylink[myindex] = (((uintptr_t)val) | (node->rb_mylink[myindex] & 0x1));
 }
 
-static GCC_INLINE enum rb_color rb_set_color(struct rb_node *const node, const enum rb_color color)
+static inline enum rb_color rb_set_color(struct rb_node *const node, const enum rb_color color)
 {
     node->rb_mylink[0] &= (~0x1UL);
     node->rb_mylink[0] |= (((uintptr_t)(color))&0x1);

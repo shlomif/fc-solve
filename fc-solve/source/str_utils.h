@@ -20,7 +20,7 @@ extern "C" {
 #include "bool.h"
 #include <string.h>
 
-static GCC_INLINE fcs_bool_t string_starts_with(
+static inline fcs_bool_t string_starts_with(
     const char *const str, const char *const prefix, const char *const end)
 {
     register const size_t check_len = (size_t)(end - str);
@@ -29,7 +29,7 @@ static GCC_INLINE fcs_bool_t string_starts_with(
         (check_len == strlen(prefix)) && (!strncmp(str, prefix, check_len)));
 }
 
-static GCC_INLINE const char *try_str_prefix(
+static inline const char *try_str_prefix(
     const char *const str, const char *const prefix)
 {
     register const size_t len = strlen(prefix);

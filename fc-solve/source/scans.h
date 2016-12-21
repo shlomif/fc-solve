@@ -20,7 +20,7 @@ extern "C" {
 #include "config.h"
 #include "instance.h"
 
-static GCC_INLINE void fc_solve__assign_dest_stack_and_col_ptr(
+static inline void fc_solve__assign_dest_stack_and_col_ptr(
     int8_t *const positions_by_rank, const int8_t dest_stack,
     const int8_t dest_col, const fcs_card_t dest_card)
 {
@@ -38,7 +38,7 @@ static GCC_INLINE void fc_solve__assign_dest_stack_and_col_ptr(
     *(ptr) = dest_col;
 }
 
-static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
+static inline void fc_solve__calc_positions_by_rank_data(
     fc_solve_soft_thread_t *const soft_thread,
     const fcs_state_t *const ptr_state_key,
     fcs__positions_by_rank_t positions_by_rank
@@ -135,7 +135,7 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
 #undef ptr_state_key
 }
 
-static GCC_INLINE const int8_t *fc_solve_calc_positions_by_rank_location(
+static inline const int8_t *fc_solve_calc_positions_by_rank_location(
     fc_solve_soft_thread_t *const soft_thread)
 {
     if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
@@ -149,7 +149,7 @@ static GCC_INLINE const int8_t *fc_solve_calc_positions_by_rank_location(
     }
 }
 
-static GCC_INLINE void add_to_move_funcs_list(
+static inline void add_to_move_funcs_list(
     fc_solve_solve_for_state_move_func_t **const out_move_funcs_list,
     size_t *const num_so_far, const size_t *const indexes,
     const size_t count_to_add)

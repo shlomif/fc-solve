@@ -53,7 +53,7 @@ static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
 static const char cards_char_map[15] = (CARD_ZERO() "A23456789TJQK");
 #endif
 
-static GCC_INLINE void fc_solve_p2u_rank(
+static inline void fc_solve_p2u_rank(
     const int rank_idx, char *const str PASS_T(const fcs_bool_t t))
 {
     {

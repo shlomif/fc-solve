@@ -40,7 +40,7 @@ void fc_solve_args_man_free(args_man_t *const manager)
     manager->argv = NULL;
 }
 
-static GCC_INLINE void add_to_last_arg(
+static inline void add_to_last_arg(
     args_man_wrapper_t *const manager, const char c)
 {
     *(manager->last_arg_ptr++) = c;
@@ -57,7 +57,7 @@ static GCC_INLINE void add_to_last_arg(
     return;
 }
 
-static GCC_INLINE void push_args_last_arg(args_man_wrapper_t *const manager)
+static inline void push_args_last_arg(args_man_wrapper_t *const manager)
 {
     const int len = manager->last_arg_ptr - manager->last_arg;
 
@@ -80,12 +80,12 @@ static GCC_INLINE void push_args_last_arg(args_man_wrapper_t *const manager)
     return;
 }
 
-static GCC_INLINE fcs_bool_t is_whitespace(const char c)
+static inline fcs_bool_t is_whitespace(const char c)
 {
     return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
 }
 
-static GCC_INLINE args_man_t fc_solve_args_man_alloc(void)
+static inline args_man_t fc_solve_args_man_alloc(void)
 {
     const args_man_t ret = {
         .argc = 0, .argv = SMALLOC(ret.argv, FC_SOLVE__ARGS_MAN_GROW_BY)};

@@ -30,7 +30,7 @@ extern "C" {
 #define fcs_init_and_encode_state(a, b, c, d)                                  \
     fcs_debondt_init_and_encode_state(a, b, c, d)
 #ifdef FCS_FREECELL_ONLY
-static GCC_INLINE void fc_solve_delta_stater_init(
+static inline void fc_solve_delta_stater_init(
     fc_solve_debondt_delta_stater_t *const delta, fcs_state_t *const init_state,
     const size_t num_columns, const int num_freecells)
 {
@@ -38,7 +38,7 @@ static GCC_INLINE void fc_solve_delta_stater_init(
         FCS_DBM_VARIANT_2FC_FREECELL, init_state, num_columns, num_freecells);
 }
 #else
-static GCC_INLINE void fc_solve_delta_stater_init(
+static inline void fc_solve_delta_stater_init(
     fc_solve_debondt_delta_stater_t *const delta, fcs_state_t *const init_state,
     const size_t num_columns, const int num_freecells,
     const int sequences_are_built_by)
@@ -57,7 +57,7 @@ static GCC_INLINE void fc_solve_delta_stater_init(
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 
-static GCC_INLINE int compare_enc_states(
+static inline int compare_enc_states(
     const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
 {
     return memcmp(a, b, sizeof(*a));
@@ -65,7 +65,7 @@ static GCC_INLINE int compare_enc_states(
 
 #else
 
-static GCC_INLINE int compare_enc_states(
+static inline int compare_enc_states(
     const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
 {
     if (a->s[0] < b->s[0])

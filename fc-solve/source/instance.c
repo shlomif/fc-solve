@@ -59,7 +59,7 @@
 const fcs_default_weights_t fc_solve_default_befs_weights = {
     .weights = {0.5, 0, 0.3, 0, 0.2, 0}};
 
-static GCC_INLINE void soft_thread_clean_soft_dfs(
+static inline void soft_thread_clean_soft_dfs(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fcs_soft_dfs_stack_item_t *const soft_dfs_info =
@@ -116,7 +116,7 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
     soft_thread->by_depth_tests_order.by_depth_tests = NULL;
 }
 
-static GCC_INLINE void accumulate_tests_by_ptr(
+static inline void accumulate_tests_by_ptr(
     size_t *const tests_order, fcs_tests_order_t *const st_tests_order)
 {
     const fcs_tests_order_group_t *group_ptr = st_tests_order->groups;
@@ -133,14 +133,14 @@ static GCC_INLINE void accumulate_tests_by_ptr(
     }
 }
 
-static GCC_INLINE void accumulate_tests_order(
+static inline void accumulate_tests_order(
     fc_solve_soft_thread_t *const soft_thread, void *const context)
 {
     accumulate_tests_by_ptr((size_t *)context,
         &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order));
 }
 
-static GCC_INLINE void determine_scan_completeness(
+static inline void determine_scan_completeness(
     fc_solve_soft_thread_t *const soft_thread, void *const global_tests_order)
 {
     size_t tests_order = 0;
@@ -222,14 +222,14 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
 #endif
 }
 
-static GCC_INLINE void clean_soft_dfs(fc_solve_instance_t *const instance)
+static inline void clean_soft_dfs(fc_solve_instance_t *const instance)
 {
     fc_solve_foreach_soft_thread(
         instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
 #ifndef FCS_SINGLE_HARD_THREAD
-static GCC_INLINE
+static inline
 #endif
     void
     fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
@@ -383,7 +383,7 @@ typedef struct
     } type;
 } find_card_ret_t;
 
-static GCC_INLINE int find_empty_col(
+static inline int find_empty_col(
     const fcs_state_t *const dynamic_state STACKS_NUM__ARG)
 {
     for (int i = 0; i < STACKS_NUM__VAL; i++)
@@ -397,7 +397,7 @@ static GCC_INLINE int find_empty_col(
     return -1;
 }
 
-static GCC_INLINE int find_col_card(const fcs_state_t *const dynamic_state,
+static inline int find_col_card(const fcs_state_t *const dynamic_state,
     const fcs_card_t needle STACKS_NUM__ARG)
 {
     for (int i = 0; i < STACKS_NUM__VAL; i++)
@@ -413,7 +413,7 @@ static GCC_INLINE int find_col_card(const fcs_state_t *const dynamic_state,
     return -1;
 }
 
-static GCC_INLINE int find_fc_card(const fcs_state_t *const dynamic_state,
+static inline int find_fc_card(const fcs_state_t *const dynamic_state,
     const fcs_card_t needle FREECELLS_NUM__ARG)
 {
     for (int dest = 0; dest < FREECELLS_NUM__VAL; dest++)
@@ -427,7 +427,7 @@ static GCC_INLINE int find_fc_card(const fcs_state_t *const dynamic_state,
     return -1;
 }
 
-static GCC_INLINE find_card_ret_t find_card_src_string(
+static inline find_card_ret_t find_card_src_string(
     const fcs_state_t *const dynamic_state,
     const fcs_card_t needle FREECELLS_AND_STACKS_ARGS())
 {

@@ -26,15 +26,14 @@ typedef struct
 #endif
 } fcs_var_base_reader_t;
 
-static GCC_INLINE void fc_solve_var_base_reader_init(
-    fcs_var_base_reader_t *const s)
+static inline void fc_solve_var_base_reader_init(fcs_var_base_reader_t *const s)
 {
     FCS_var_base_int__init(s->data);
     FCS_var_base_int__init(s->data_byte_offset);
     FCS_var_base_int__init(s->r);
 }
 
-static GCC_INLINE void fc_solve_var_base_reader_start(
+static inline void fc_solve_var_base_reader_start(
     fcs_var_base_reader_t *const s, const unsigned char *const data,
     const size_t data_len)
 {
@@ -54,7 +53,7 @@ static GCC_INLINE void fc_solve_var_base_reader_start(
     }
 }
 
-static GCC_INLINE unsigned long fc_solve_var_base_reader_read(
+static inline unsigned long fc_solve_var_base_reader_read(
     fcs_var_base_reader_t *const reader, const unsigned long base)
 {
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
@@ -70,7 +69,7 @@ static GCC_INLINE unsigned long fc_solve_var_base_reader_read(
 #endif
 }
 
-static GCC_INLINE void fc_solve_var_base_reader_release(
+static inline void fc_solve_var_base_reader_release(
     fcs_var_base_reader_t *const s)
 {
     FCS_var_base_int__clear(s->data);

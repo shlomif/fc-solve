@@ -30,19 +30,19 @@ char fc_solve_simple_simon_nothing;
 
 #include "meta_move_funcs_helpers.h"
 
-static GCC_INLINE fcs_bool_t fcs_is_ss_false_parent(
+static inline fcs_bool_t fcs_is_ss_false_parent(
     const fcs_card_t parent, const fcs_card_t child)
 {
     return (fcs_card_rank(parent) == fcs_card_rank(child) + 1);
 }
 
-static GCC_INLINE fcs_bool_t fcs_is_ss_suit_true(
+static inline fcs_bool_t fcs_is_ss_suit_true(
     const fcs_card_t parent, const fcs_card_t child)
 {
     return (fcs_card_suit(parent) == fcs_card_suit(child));
 }
 
-static GCC_INLINE fcs_bool_t fcs_is_ss_true_parent(
+static inline fcs_bool_t fcs_is_ss_true_parent(
     const fcs_card_t parent, const fcs_card_t child)
 {
     return (fcs_is_ss_false_parent(parent, child) &&
@@ -104,7 +104,7 @@ static GCC_INLINE fcs_bool_t fcs_is_ss_true_parent(
 #define moves NULL
 #endif
 
-static GCC_INLINE void init_stacks_map(
+static inline void init_stacks_map(
     fcs_bool_t *const stacks_map, const int stack_idx, const int ds)
 {
     for (int i = 0; i < STACKS_MAP_LEN; i++)
@@ -282,7 +282,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     STACK_SOURCE_LOOP_END()
 }
 
-static GCC_INLINE int get_seq_h(
+static inline int get_seq_h(
     const fcs_const_cards_column_t col, size_t *const num_true_seqs_out_ptr)
 {
     const int cards_num = fcs_col_len(col);
@@ -380,7 +380,7 @@ DECLARE_MOVE_FUNCTION(
  * up_above_card - the card at height above_c
  *
  */
-static GCC_INLINE void generic_populate_seq_points(
+static inline void generic_populate_seq_points(
     const fcs_cards_column_t dest_col, const int dc,
     sequences_analysis_t *const seqs, const int dest_cards_num)
 {
@@ -408,14 +408,14 @@ static GCC_INLINE void generic_populate_seq_points(
     seqs->num_separate_false_seqs = num_separate_false_seqs;
 }
 
-static GCC_INLINE void populate_seq_points(const fcs_cards_column_t dest_col,
+static inline void populate_seq_points(const fcs_cards_column_t dest_col,
     const int dc, sequences_analysis_t *const seqs)
 {
     seqs->num_separate_false_seqs = 0;
     generic_populate_seq_points(dest_col, dc, seqs, fcs_col_len(dest_col));
 }
 
-static GCC_INLINE fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
+static inline fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
     fcs_kv_state_t *const raw_ptr_state_raw, const int num_vacant_stacks,
     const fcs_cards_column_t col, sequences_analysis_t *const seqs,
     const int stack_idx, const int ds, const fcs_bool_t behavior_flag,
@@ -509,7 +509,7 @@ static GCC_INLINE fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
     return (false_seq_idx == false_seq_index_limit);
 }
 
-static GCC_INLINE fcs_bool_t false_seq_index_loop(const int stacks_num,
+static inline fcs_bool_t false_seq_index_loop(const int stacks_num,
     fcs_kv_state_t *const raw_ptr_state_raw, const int num_vacant_stacks,
     const fcs_cards_column_t col, sequences_analysis_t *const seqs,
     const int stack_idx, const int ds, const fcs_bool_t behavior_flag)
@@ -531,7 +531,7 @@ static GCC_INLINE fcs_bool_t false_seq_index_loop(const int stacks_num,
         IS_false_seq_index_loop(col, behavior_flag, stack_idx, ds);            \
     })
 
-static GCC_INLINE void move_sequences_analysis_seqs_loop(
+static inline void move_sequences_analysis_seqs_loop(
     fcs_kv_state_t *const ptr_to_pass_new_state SFS__PASS_MOVE_STACK(
         fcs_move_stack_t *const moves),
     const sequences_analysis_t *const seqs_ptr, int source_col_idx,
@@ -735,7 +735,7 @@ typedef struct
     int src_stack;
 } s_e_src_t;
 
-static GCC_INLINE s_e_src_t calc_start_end_src_stack(const int seq_index,
+static inline s_e_src_t calc_start_end_src_stack(const int seq_index,
     const sequences_analysis_t *const seqs, const int after_end_of_junk,
     const int cards_num, const int stack_idx, const int ds,
     const int dest_cards_num)
@@ -869,7 +869,7 @@ DECLARE_MOVE_FUNCTION(
 
 typedef fcs_pos_by_rank_t ds_dc_t;
 
-static GCC_INLINE void sort_ds_dcs(ds_dc_t *const ds_dcs, const int len)
+static inline void sort_ds_dcs(ds_dc_t *const ds_dcs, const int len)
 {
 #define start ds_dcs
     ds_dc_t *const limit = start + len;

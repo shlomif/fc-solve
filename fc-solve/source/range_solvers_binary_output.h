@@ -37,7 +37,7 @@ const binary_output_t INIT_BINARY_OUTPUT = {.filename = NULL};
 #define BINARY_OUTPUT_BUF_SIZE (sizeof(int) * BINARY_OUTPUT_NUM_INTS)
 #define SIZE_INT 4
 
-static GCC_INLINE void write_me(binary_output_t *const bin)
+static inline void write_me(binary_output_t *const bin)
 {
     fwrite(bin->buffer, 1, (size_t)(bin->ptr - bin->buffer), bin->fh);
     fflush(bin->fh);
@@ -64,7 +64,7 @@ static void print_int(binary_output_t *const bin, int val)
     }
 }
 
-static GCC_INLINE void bin_close(binary_output_t *const bin)
+static inline void bin_close(binary_output_t *const bin)
 {
     if (bin->filename)
     {
@@ -75,7 +75,7 @@ static GCC_INLINE void bin_close(binary_output_t *const bin)
     }
 }
 
-static GCC_INLINE fcs_bool_t read_int(FILE *const f, long long *const dest)
+static inline fcs_bool_t read_int(FILE *const f, long long *const dest)
 {
     unsigned char buffer[SIZE_INT];
     if (fread(buffer, 1, SIZE_INT, f) != SIZE_INT)
@@ -97,7 +97,7 @@ static void read_int_wrapper(FILE *const in, long long *const var)
     }
 }
 
-static GCC_INLINE void bin_init(binary_output_t *const bin,
+static inline void bin_init(binary_output_t *const bin,
     long long *const start_board_ptr, long long *const end_board_ptr,
     fcs_int_limit_t *const total_iterations_limit_per_board_ptr)
 {

@@ -162,12 +162,12 @@ void *rb_t_prev (struct rb_traverser *);
 void *rb_t_cur (struct rb_traverser *);
 void *rb_t_replace (struct rb_traverser *, void *);
 
-static GCC_INLINE int rb_get_decommissioned_flag(struct rb_node *const node)
+static inline int rb_get_decommissioned_flag(struct rb_node *const node)
 {
     return ((signed char)(node->rb_mylink[1] & 0x1));
 }
 
-static GCC_INLINE void rb_set_decommissioned_flag(struct rb_node *const node, const int decommissioned_flag)
+static inline void rb_set_decommissioned_flag(struct rb_node *const node, const int decommissioned_flag)
 {
     node->rb_mylink[1] &= (~0x1UL);
     node->rb_mylink[1] |= (decommissioned_flag ? 0x1UL : 0x0UL);

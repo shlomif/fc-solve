@@ -30,7 +30,7 @@
 #endif
 
 #ifdef GET_CARD
-static GCC_INLINE int fcs_stack_compare(const void *s1, const void *s2)
+static inline int fcs_stack_compare(const void *s1, const void *s2)
 {
     return fc_solve_card_compare(GET_CARD(s1), GET_CARD(s2));
 }
@@ -168,7 +168,7 @@ int fc_solve_state_compare_with_context(
     return memcmp(s1, s2, sizeof(fcs_state_t));
 }
 
-static GCC_INLINE void render_freecell_card(const fcs_card_t card,
+static inline void render_freecell_card(const fcs_card_t card,
     char *const freecell PASS_T(const fcs_bool_t display_10_as_t))
 {
     if (fcs_card_is_empty(card))

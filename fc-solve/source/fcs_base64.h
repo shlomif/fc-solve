@@ -24,7 +24,7 @@ static const char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
 static char decoding_table[256];
 static const int mod_table[] = {0, 2, 1};
 
-static GCC_INLINE void build_decoding_table(void)
+static inline void build_decoding_table(void)
 {
     for (int i = 0; i < 64; i++)
         decoding_table[(unsigned char)encoding_table[i]] = i;

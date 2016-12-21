@@ -11,9 +11,8 @@
 
 #include "dbm_procs_inner.h"
 
-static GCC_INLINE void dbm__spawn_threads(
-    fcs_dbm_solver_instance_t *const instance, const size_t num_threads,
-    main_thread_item_t *const threads)
+static inline void dbm__spawn_threads(fcs_dbm_solver_instance_t *const instance,
+    const size_t num_threads, main_thread_item_t *const threads)
 {
 #ifdef T
     FILE *const out_fh = instance->common.out_fh;

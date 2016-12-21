@@ -32,7 +32,7 @@ typedef struct
 #define CHECK_KEY_CALC_DEPTH() 0
 
 #include "dbm_procs.h"
-static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
+static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     const fcs_dbm_common_input_t *const inp,
     const long max_count_of_items_in_queue, const long iters_delta_limit,
     FILE *const out_fh)
@@ -52,7 +52,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
         inp->caches_delta);
 }
 
-static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
+static inline void instance_recycle(fcs_dbm_solver_instance_t *instance)
 {
 
     fcs_offloading_queue__destroy(&(instance->queue));
@@ -70,7 +70,7 @@ static GCC_INLINE void instance_recycle(fcs_dbm_solver_instance_t *instance)
     instance->common.count_of_items_in_queue = 0;
 }
 
-static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
+static inline void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
     fcs_offloading_queue__destroy(&(instance->queue));
     DESTROY_CACHE(instance);
@@ -78,7 +78,7 @@ static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
     fcs_lock_destroy(&instance->common.storage_lock);
 }
 
-static GCC_INLINE void instance_check_key(
+static inline void instance_check_key(
     fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
     fcs_dbm_solver_instance_t *const instance, const int key_depth GCC_UNUSED,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,

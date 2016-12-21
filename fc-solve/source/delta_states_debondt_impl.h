@@ -103,7 +103,7 @@ static void fc_solve_debondt_delta_stater_init(
     }
 }
 
-static GCC_INLINE void fc_solve_debondt_delta_stater__init_card_states(
+static inline void fc_solve_debondt_delta_stater__init_card_states(
     fc_solve_debondt_delta_stater_t *const self)
 {
     int *const card_states = self->card_states;
@@ -113,14 +113,14 @@ static GCC_INLINE void fc_solve_debondt_delta_stater__init_card_states(
     }
 }
 
-static GCC_INLINE void fc_solve_debondt_delta_stater_release(
+static inline void fc_solve_debondt_delta_stater_release(
     fc_solve_debondt_delta_stater_t *const self)
 {
     fc_solve_var_base_reader_release(&(self->r));
     fc_solve_var_base_writer_release(&(self->w));
 }
 
-static GCC_INLINE void fc_solve_debondt_delta_stater_set_derived(
+static inline void fc_solve_debondt_delta_stater_set_derived(
     fc_solve_debondt_delta_stater_t *const self, fcs_state_t *const state)
 {
     self->derived_state = state;
@@ -128,18 +128,18 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_set_derived(
 
 #define GET_SUIT_BIT(card) (((fcs_card_suit(card)) & 0x2) >> 1)
 
-static GCC_INLINE int wanted_suit_bit_opt(const fcs_card_t parent_card)
+static inline int wanted_suit_bit_opt(const fcs_card_t parent_card)
 {
     return GET_SUIT_BIT(parent_card) ? OPT_PARENT_SUIT_MOD_IS_1
                                      : OPT_PARENT_SUIT_MOD_IS_0;
 }
 
-static GCC_INLINE int wanted_suit_idx_opt(const fcs_card_t parent_card)
+static inline int wanted_suit_idx_opt(const fcs_card_t parent_card)
 {
     return OPT__BAKERS_DOZEN__FIRST_PARENT + fcs_card_suit(parent_card);
 }
 
-static GCC_INLINE int calc_child_card_option(
+static inline int calc_child_card_option(
     const fcs_dbm_variant_type_t local_variant, const fcs_card_t parent_card,
     const fcs_card_t child_card
 #ifndef FCS_FREECELL_ONLY
@@ -174,7 +174,7 @@ static GCC_INLINE int calc_child_card_option(
     }
 }
 
-static GCC_INLINE int get_top_rank_for_iter(
+static inline int get_top_rank_for_iter(
     const fcs_dbm_variant_type_t local_variant)
 {
     return (IS_BAKERS_DOZEN() ? (RANK_KING - 1) : RANK_KING);
@@ -346,7 +346,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     }
 }
 
-static GCC_INLINE void
+static inline void
 fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
     fc_solve_debondt_delta_stater_t *const self,
     const fcs_dbm_variant_type_t local_variant, fcs_cards_column_t *const col)
@@ -598,7 +598,7 @@ static void fc_solve_debondt_delta_stater_decode(
 #undef IS_IN_FOUNDATIONS
 }
 
-static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
+static inline void fc_solve_debondt_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type_t local_variant,
     fc_solve_debondt_delta_stater_t *const delta_stater,
     const fcs_uchar_t *const enc_state,
@@ -625,7 +625,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_decode_into_state_proto(
         local_variant, delta_stater, enc_state, state_ptr)
 #endif
 
-static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
+static inline void fc_solve_debondt_delta_stater_encode_into_buffer(
     fc_solve_debondt_delta_stater_t *const delta_stater,
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const state, unsigned char *const out_enc_state)
@@ -637,7 +637,7 @@ static GCC_INLINE void fc_solve_debondt_delta_stater_encode_into_buffer(
     fc_solve_var_base_writer_get_data(&(delta_stater->w), out_enc_state);
 }
 
-static GCC_INLINE void fcs_debondt_init_and_encode_state(
+static inline void fcs_debondt_init_and_encode_state(
     fc_solve_debondt_delta_stater_t *const delta_stater,
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const state,

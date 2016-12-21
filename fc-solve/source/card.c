@@ -83,7 +83,7 @@ int fc_solve_u2p_rank(const char *string)
  * Converts a suit to its user representation.
  *
  * */
-static GCC_INLINE void fc_solve_p2u_suit(const int suit, char *str)
+static inline void fc_solve_p2u_suit(const int suit, char *str)
 {
     *(str++) = "HCDS"[suit];
     *(str) = '\0';

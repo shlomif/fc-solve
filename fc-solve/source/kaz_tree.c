@@ -1137,9 +1137,9 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
 }
 
 #ifdef NO_FC_SOLVE
-static GCC_INLINE dnode_t *dnode_init(dnode_t *dnode, void *data)
+static inline dnode_t *dnode_init(dnode_t *dnode, void *data)
 #else
-static GCC_INLINE dnode_t *dnode_init(dnode_t *dnode)
+static inline dnode_t *dnode_init(dnode_t *dnode)
 #endif
 {
 #ifdef NO_FC_SOLVE

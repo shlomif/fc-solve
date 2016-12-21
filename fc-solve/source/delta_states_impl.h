@@ -98,12 +98,12 @@ static void fc_solve_delta_stater_init(
     }
 }
 
-static GCC_INLINE void fc_solve_delta_stater_release(
+static inline void fc_solve_delta_stater_release(
     fc_solve_delta_stater_t *const self GCC_UNUSED)
 {
 }
 
-static GCC_INLINE void fc_solve_delta_stater_set_derived(
+static inline void fc_solve_delta_stater_set_derived(
     fc_solve_delta_stater_t *const self, fcs_state_t *const state)
 {
     self->derived_state = state;
@@ -122,7 +122,7 @@ typedef struct
     int bit_in_char_idx;
 } fc_solve_column_encoding_composite_t;
 
-static GCC_INLINE void fc_solve_get_column_encoding_composite(
+static inline void fc_solve_get_column_encoding_composite(
     fc_solve_delta_stater_t *const self, const int col_idx,
     fc_solve_column_encoding_composite_t *const ret)
 {
@@ -175,7 +175,7 @@ static GCC_INLINE void fc_solve_get_column_encoding_composite(
                                                  : COL_TYPE_ENTIRELY_NON_ORIG);
 }
 
-static GCC_INLINE void fc_solve_get_freecells_encoding(
+static inline void fc_solve_get_freecells_encoding(
     fc_solve_delta_stater_t *const self, fc_solve_bit_writer_t *const bit_w)
 {
 
@@ -421,7 +421,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
 #undef PROCESS_CARD
 }
 
-static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
+static inline void fc_solve_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type_t local_variant,
     fc_solve_delta_stater_t *const delta_stater,
     const fcs_uchar_t *const enc_state,
@@ -447,7 +447,7 @@ static GCC_INLINE void fc_solve_delta_stater_decode_into_state_proto(
         local_variant, delta_stater, enc_state, state_ptr)
 #endif
 
-static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
+static inline void fc_solve_delta_stater_encode_into_buffer(
     fc_solve_delta_stater_t *const delta_stater,
     const fcs_dbm_variant_type_t local_variant GCC_UNUSED,
     fcs_state_keyval_pair_t *const state, unsigned char *const out_enc_state)
@@ -460,7 +460,7 @@ static GCC_INLINE void fc_solve_delta_stater_encode_into_buffer(
         bit_w.current - bit_w.start + (bit_w.bit_in_char_idx > 0);
 }
 
-static GCC_INLINE void fcs_init_and_encode_state(
+static inline void fcs_init_and_encode_state(
     fc_solve_delta_stater_t *delta_stater,
     const fcs_dbm_variant_type_t local_variant, fcs_state_keyval_pair_t *state,
     fcs_encoded_state_buffer_t *enc_state)

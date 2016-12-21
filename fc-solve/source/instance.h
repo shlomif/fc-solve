@@ -879,7 +879,7 @@ struct fc_solve_instance_struct
 };
 
 #ifdef FCS_SINGLE_HARD_THREAD
-static GCC_INLINE fc_solve_instance_t *fcs_st_instance(
+static inline fc_solve_instance_t *fcs_st_instance(
     fc_solve_soft_thread_t *const soft_thread)
 {
     return soft_thread->hard_thread;
@@ -888,7 +888,7 @@ static GCC_INLINE fc_solve_instance_t *fcs_st_instance(
 #define HT_INSTANCE(hard_thread) (hard_thread)
 #define INST_HT0(instance) ((instance)->hard_thread)
 #else
-static GCC_INLINE fc_solve_instance_t *fcs_st_instance(
+static inline fc_solve_instance_t *fcs_st_instance(
     fc_solve_soft_thread_t *const soft_thread)
 {
     return soft_thread->hard_thread->instance;
@@ -926,7 +926,7 @@ extern int fc_solve_befs_or_bfs_do_solve(
 extern void fc_solve_increase_dfs_max_depth(
     fc_solve_soft_thread_t *const soft_thread);
 
-static GCC_INLINE void *memdup(const void *const src, const size_t my_size)
+static inline void *memdup(const void *const src, const size_t my_size)
 {
     void *const dest = malloc(my_size);
     if (dest == NULL)
@@ -939,7 +939,7 @@ static GCC_INLINE void *memdup(const void *const src, const size_t my_size)
     return dest;
 }
 
-static GCC_INLINE int update_col_cards_under_sequences(
+static inline int update_col_cards_under_sequences(
 #ifndef FCS_FREECELL_ONLY
     const int sequences_are_built_by,
 #endif
@@ -959,7 +959,7 @@ static GCC_INLINE int update_col_cards_under_sequences(
     return d;
 }
 
-static GCC_INLINE void fc_solve_soft_thread_update_initial_cards_val(
+static inline void fc_solve_soft_thread_update_initial_cards_val(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_instance_t *const instance = fcs_st_instance(soft_thread);
@@ -1013,8 +1013,7 @@ extern void fc_solve_instance__init_hard_thread(
 extern void fc_solve_free_soft_thread_by_depth_test_array(
     fc_solve_soft_thread_t *const soft_thread);
 
-static GCC_INLINE fcs_tests_order_t tests_order_dup(
-    fcs_tests_order_t *const orig)
+static inline fcs_tests_order_t tests_order_dup(fcs_tests_order_t *const orig)
 {
     fcs_tests_order_t ret;
 
@@ -1042,7 +1041,7 @@ extern fc_solve_soft_thread_t *fc_solve_new_soft_thread(
 
 /* This is the commmon code from fc_solve_instance__init_hard_thread() and
  * recycle_hard_thread() */
-static GCC_INLINE void fc_solve_reset_hard_thread(
+static inline void fc_solve_reset_hard_thread(
     fc_solve_hard_thread_t *const hard_thread)
 {
 #ifndef FCS_SINGLE_HARD_THREAD
@@ -1052,7 +1051,7 @@ static GCC_INLINE void fc_solve_reset_hard_thread(
     HT_FIELD(hard_thread, num_soft_threads_finished) = 0;
 }
 
-static GCC_INLINE void fc_solve_reset_soft_thread(
+static inline void fc_solve_reset_soft_thread(
     fc_solve_soft_thread_t *const soft_thread)
 {
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
@@ -1076,7 +1075,7 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     whatever memory was allocated by alloc_instance().
   */
 
-static GCC_INLINE void fc_solve_free_tests_order(fcs_tests_order_t *tests_order)
+static inline void fc_solve_free_tests_order(fcs_tests_order_t *tests_order)
 {
     for (size_t group_idx = 0; group_idx < tests_order->num_groups; group_idx++)
     {
@@ -1100,7 +1099,7 @@ extern void fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
 #endif
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
-static GCC_INLINE fcs_bool_t fcs_get_calc_real_depth(
+static inline fcs_bool_t fcs_get_calc_real_depth(
     const fc_solve_instance_t *const instance)
 {
     return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);

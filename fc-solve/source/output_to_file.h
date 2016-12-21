@@ -56,7 +56,7 @@ static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT = {
     .output_filename = NULL,
     .show_exceeded_limits = FALSE};
 
-static GCC_INLINE void fc_solve_output_result_to_file(FILE *const output_fh,
+static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     void *const instance, const int ret,
     const fc_solve_display_information_context_t *const dc_ptr)
 {

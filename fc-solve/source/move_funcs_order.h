@@ -22,7 +22,7 @@ extern "C" {
 #include "fcs_back_compat.h"
 #include "instance.h"
 
-static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
+static inline int fc_solve_string_to_test_num_compare_func(
     const void *const a, const void *const b)
 {
 #define MAP(x) (((const fcs_move_func_aliases_mapping_t *const)(x))->alias)
@@ -30,7 +30,7 @@ static GCC_INLINE int fc_solve_string_to_test_num_compare_func(
 }
 #undef MAP
 
-static GCC_INLINE int fc_solve_string_to_test_num(const char *const s)
+static inline int fc_solve_string_to_test_num(const char *const s)
 {
     const fcs_move_func_aliases_mapping_t needle = {.alias = {s[0], '\0'}};
     const fcs_move_func_aliases_mapping_t *const result =

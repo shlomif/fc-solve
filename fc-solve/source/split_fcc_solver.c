@@ -54,7 +54,7 @@ struct FccEntryPointNode
     } kv;
 };
 
-static GCC_INLINE int FccEntryPointNode_compare(
+static inline int FccEntryPointNode_compare(
     FccEntryPointNode *a, FccEntryPointNode *b)
 {
 #define MAP(x) &((x)->kv.key.key)
@@ -108,7 +108,7 @@ typedef struct
 RB_GENERATE_STATIC(
     FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 
-static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
+static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     const fcs_dbm_common_input_t *const inp,
     fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
     FILE *out_fh)
@@ -162,7 +162,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     }
 }
 
-static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
+static inline void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
     fcs_dbm_collection_by_depth_t *coll;
 
@@ -419,7 +419,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
 #include "depth_dbm_procs.h"
 
-static GCC_INLINE void instance_alloc_num_moves(
+static inline void instance_alloc_num_moves(
     fcs_dbm_solver_instance_t *const instance, const size_t buffer_size)
 {
     if (buffer_size > instance->max_moves_to_state_len)
@@ -430,7 +430,7 @@ static GCC_INLINE void instance_alloc_num_moves(
     }
 }
 
-static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
+static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     fcs_dbm_solver_instance_t *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,

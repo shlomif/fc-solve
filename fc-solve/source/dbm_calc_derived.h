@@ -92,7 +92,7 @@ typedef struct fcs_derived_state_struct
         COPY_INDIRECT_COLS()                                                   \
     }
 
-static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(
+static inline void fc_solve_add_to_irrev_moves_bitmask(
     fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
     const fcs_card_t moved_card, const int count)
 {
@@ -129,7 +129,7 @@ static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(
     COMMIT_NEW_STATE_WITH_COUNT(                                               \
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
-static GCC_INLINE int calc_foundation_to_put_card_on(
+static inline int calc_foundation_to_put_card_on(
     const fcs_dbm_variant_type_t local_variant, fcs_state_t *const ptr_state,
     const fcs_card_t card)
 {
@@ -172,7 +172,7 @@ typedef struct
     fcs_compact_allocator_t *allocator;
 } fcs_fcc_moves_seq_allocator_t;
 
-static GCC_INLINE fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
+static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
     fcs_fcc_moves_seq_allocator_t *allocator)
 {
     fcs_fcc_moves_list_item_t *new_item;
@@ -196,7 +196,7 @@ static GCC_INLINE fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
                                    fcs_col_get_card(col, cards_num - 2)))
 
 /* Returns the number of amortized irreversible moves performed. */
-static GCC_INLINE int horne_prune(const fcs_dbm_variant_type_t local_variant,
+static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
     fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
     fcs_fcc_moves_seq_t *const moves_seq,
@@ -322,7 +322,7 @@ static GCC_INLINE int horne_prune(const fcs_dbm_variant_type_t local_variant,
     return count_moves_so_far + count_additional_irrev_moves;
 }
 
-static GCC_INLINE int horne_prune__simple(
+static inline int horne_prune__simple(
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr)
 {
@@ -331,7 +331,7 @@ static GCC_INLINE int horne_prune__simple(
 }
 
 #define the_state (init_state_kv_ptr->s)
-static GCC_INLINE fcs_bool_t is_state_solved(
+static inline fcs_bool_t is_state_solved(
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr)
 {
@@ -345,7 +345,7 @@ static GCC_INLINE fcs_bool_t is_state_solved(
     return TRUE;
 }
 
-static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
+static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
     fcs_dbm_record_t *const parent_ptr,

@@ -24,22 +24,21 @@ typedef struct
     fcs_var_base_int_t remainder;
 } fcs_var_base_writer_t;
 
-static GCC_INLINE void fc_solve_var_base_writer_init(
-    fcs_var_base_writer_t *const s)
+static inline void fc_solve_var_base_writer_init(fcs_var_base_writer_t *const s)
 {
     FCS_var_base_int__init(s->data);
     FCS_var_base_int__init(s->multiplier);
     FCS_var_base_int__init(s->remainder);
 }
 
-static GCC_INLINE void fc_solve_var_base_writer_start(
+static inline void fc_solve_var_base_writer_start(
     fcs_var_base_writer_t *const s)
 {
     FCS_var_base_int__set_ui(s->data, 0);
     FCS_var_base_int__set_ui(s->multiplier, 1);
 }
 
-static GCC_INLINE void fc_solve_var_base_writer_write(
+static inline void fc_solve_var_base_writer_write(
     fcs_var_base_writer_t *const w, const unsigned long base,
     const unsigned long item)
 {
@@ -50,7 +49,7 @@ static GCC_INLINE void fc_solve_var_base_writer_write(
     FCS_var_base_int__mul_ui(w->multiplier, base);
 }
 
-static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
+static inline size_t fc_solve_var_base_writer_get_data(
     fcs_var_base_writer_t *const w, unsigned char *const exported)
 {
     size_t count = 0;
@@ -73,7 +72,7 @@ static GCC_INLINE size_t fc_solve_var_base_writer_get_data(
     return count;
 }
 
-static GCC_INLINE void fc_solve_var_base_writer_release(
+static inline void fc_solve_var_base_writer_release(
     fcs_var_base_writer_t *const w)
 {
     FCS_var_base_int__clear(w->data);

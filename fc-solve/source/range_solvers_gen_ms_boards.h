@@ -33,7 +33,7 @@ typedef int CARD;
 static const char *card_to_string_values = "A23456789TJQK";
 static const char *card_to_string_suits = "CDHS";
 
-static GCC_INLINE void card_to_string(char *const s, const CARD card)
+static inline void card_to_string(char *const s, const CARD card)
 {
     s[0] = card_to_string_values[VALUE(card)];
     s[1] = card_to_string_suits[SUIT(card)];
@@ -56,7 +56,7 @@ void DLLEXPORT fc_solve_get_board_l(
 extern void DLLEXPORT fc_solve_get_board_l(
     const long long gamenumber, char *const ret)
 #else
-static GCC_INLINE void get_board_l(const long long gamenumber, char *const ret)
+static inline void get_board_l(const long long gamenumber, char *const ret)
 #endif
 {
     long long seedx = microsoft_rand__calc_init_seedx(gamenumber);
@@ -111,7 +111,7 @@ void DLLEXPORT fc_solve_get_board(long gamenumber, char *ret);
 
 extern void DLLEXPORT fc_solve_get_board(long gamenumber, char *ret)
 #else
-static GCC_INLINE void get_board(long gamenumber, char *ret)
+static inline void get_board(long gamenumber, char *ret)
 #endif
 {
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API

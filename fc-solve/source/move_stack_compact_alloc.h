@@ -16,7 +16,7 @@
 #include "instance.h"
 #include "move.h"
 
-static GCC_INLINE fcs_move_stack_t *fc_solve_move_stack_compact_allocate(
+static inline fcs_move_stack_t *fc_solve_move_stack_compact_allocate(
     fc_solve_hard_thread_t *const hard_thread,
     fcs_move_stack_t *const old_move_stack_to_parent)
 {

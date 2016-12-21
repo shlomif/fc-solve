@@ -50,7 +50,7 @@ typedef struct
     fcs_pdfs_cache_key_info_t *recycle_bin;
 } fcs_pseudo_dfs_lru_cache_t;
 
-static GCC_INLINE void fcs_pdfs_cache_destroy(
+static inline void fcs_pdfs_cache_destroy(
     fcs_pseudo_dfs_lru_cache_t *const cache)
 {
     Word_t rc_word;
@@ -59,8 +59,7 @@ static GCC_INLINE void fcs_pdfs_cache_destroy(
         &(cache->states_values_to_keys_allocator));
 }
 
-static GCC_INLINE void fcs_pdfs_cache_init(
-    fcs_pseudo_dfs_lru_cache_t *const cache,
+static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache_t *const cache,
     const long max_num_elements_in_cache,
     fcs_meta_compact_allocator_t *const meta_alloc)
 {
@@ -75,7 +74,7 @@ static GCC_INLINE void fcs_pdfs_cache_init(
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static GCC_INLINE const fcs_bool_t fcs_pdfs_cache_does_key_exist(
+static inline const fcs_bool_t fcs_pdfs_cache_does_key_exist(
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
 {
     fcs_pdfs_cache_key_info_t *existing;
@@ -121,7 +120,7 @@ static GCC_INLINE const fcs_bool_t fcs_pdfs_cache_does_key_exist(
     }
 }
 
-static GCC_INLINE fcs_pdfs_cache_key_info_t *fcs_pdfs_cache_insert(
+static inline fcs_pdfs_cache_key_info_t *fcs_pdfs_cache_insert(
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
 {
     fcs_pdfs_cache_key_info_t *cache_key;

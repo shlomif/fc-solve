@@ -28,7 +28,7 @@ typedef struct
 
 typedef Pvoid_t store_t;
 
-static GCC_INLINE void delete_state(store_t *const store,
+static inline void delete_state(store_t *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     fcs_pdfs_cache_insert(cache, &(key->s));
@@ -36,14 +36,14 @@ static GCC_INLINE void delete_state(store_t *const store,
     JHSD(rc_int, *store, &(key->s), sizeof(key->s));
 }
 
-static GCC_INLINE void insert_state(store_t *store, fcs_cache_key_t *key)
+static inline void insert_state(store_t *store, fcs_cache_key_t *key)
 {
     Word_t *PValue;
     JHSI(PValue, *store, &(key->s), sizeof(key->s));
     *PValue = 1;
 }
 
-static GCC_INLINE const fcs_bool_t lookup_state(store_t *const store,
+static inline const fcs_bool_t lookup_state(store_t *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     Word_t *PValue;
@@ -80,7 +80,7 @@ typedef struct
     fcs_dbm_variant_type_t local_variant;
 } fcs_dbm_solver_instance_t;
 
-static GCC_INLINE void instance__inspect_new_state(
+static inline void instance__inspect_new_state(
     fcs_dbm_solver_instance_t *const instance, fcs_cache_key_t *const state)
 {
     instance->count_num_processed++;
@@ -148,7 +148,7 @@ static GCC_INLINE void instance__inspect_new_state(
     return;
 }
 
-static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
+static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     const fcs_dbm_variant_type_t local_variant, fcs_cache_key_t *init_state,
     long max_num_elements_in_cache)
 {
@@ -177,7 +177,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     instance__inspect_new_state(instance, init_state);
 }
 
-static GCC_INLINE void instance_free(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_free(fcs_dbm_solver_instance_t *const instance)
 {
     for (int d = 0; d < instance->stack_depth; d++)
     {
@@ -196,7 +196,7 @@ static GCC_INLINE void instance_free(fcs_dbm_solver_instance_t *const instance)
     fc_solve_meta_compact_allocator_finish(&(instance->meta_alloc));
 }
 
-static GCC_INLINE void instance_run(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_run(fcs_dbm_solver_instance_t *const instance)
 {
     while (instance->count_num_processed < instance->max_count_num_processed &&
            (instance->should_terminate == DONT_TERMINATE))
@@ -232,7 +232,7 @@ static GCC_INLINE void instance_run(fcs_dbm_solver_instance_t *const instance)
     }
 }
 
-static GCC_INLINE void instance__print_coords_to_log(
+static inline void instance__print_coords_to_log(
     fcs_dbm_solver_instance_t *const instance, FILE *const log_fh)
 {
     const fcs_dbm_variant_type_t local_variant = instance->local_variant;
@@ -263,7 +263,7 @@ static GCC_INLINE void instance__print_coords_to_log(
     fprintf(log_fh, "]\n");
 }
 
-static GCC_INLINE void instance__load_coords_from_fh(
+static inline void instance__load_coords_from_fh(
     fcs_dbm_solver_instance_t *const instance, FILE *const fh)
 {
     int coord_from_input;

@@ -479,7 +479,7 @@ typedef enum {
 } exit_code_t;
 
 #if 0
-static GCC_INLINE int solve_board(void * const instance, const char * const user_state)
+static inline int solve_board(void * const instance, const char * const user_state)
 {
     fcs_int_limit_t limit = 500;
     freecell_solver_user_limit_iterations_long(instance, limit);
@@ -497,7 +497,7 @@ static GCC_INLINE int solve_board(void * const instance, const char * const user
     freecell_solver_user_solve_board((instance), (user_state))
 #endif
 
-static GCC_INLINE FILE *fc_solve_calc_file_handle(
+static inline FILE *fc_solve_calc_file_handle(
     const int argc, char *argv[], const int arg)
 {
     if ((arg == argc) || (!strcmp(argv[arg], "-")))
@@ -533,7 +533,7 @@ static GCC_INLINE FILE *fc_solve_calc_file_handle(
     }
 }
 
-static GCC_INLINE int fc_solve_main__main(int argc, char *argv[])
+static inline int fc_solve_main__main(int argc, char *argv[])
 {
     fc_solve_display_information_context_t display_context =
         INITIAL_DISPLAY_CONTEXT;

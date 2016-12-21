@@ -17,7 +17,7 @@ typedef struct
     pthread_t id;
 } main_thread_item_t;
 
-static GCC_INLINE main_thread_item_t *dbm__calc_threads(
+static inline main_thread_item_t *dbm__calc_threads(
     fcs_dbm_solver_instance_t *const instance,
     fcs_state_keyval_pair_t *const init_state, const size_t num_threads,
     void (*init_thread_cb)(fcs_dbm_solver_thread_t *))
@@ -54,9 +54,8 @@ static GCC_INLINE main_thread_item_t *dbm__calc_threads(
     return threads;
 }
 
-static GCC_INLINE void dbm__free_threads(
-    fcs_dbm_solver_instance_t *const instance, const size_t num_threads,
-    main_thread_item_t *const threads,
+static inline void dbm__free_threads(fcs_dbm_solver_instance_t *const instance,
+    const size_t num_threads, main_thread_item_t *const threads,
     void (*free_thread_cb)(fcs_dbm_solver_thread_t *))
 {
 #ifdef T
@@ -156,7 +155,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
 #endif
 }
 
-static GCC_INLINE void read_state_from_file(
+static inline void read_state_from_file(
     const fcs_dbm_variant_type_t local_variant, const char *const filename,
     fcs_state_keyval_pair_t *const init_state IND_BUF_T_PARAM(
         init_indirect_stacks_buffer))
@@ -182,7 +181,7 @@ static GCC_INLINE void read_state_from_file(
 #endif
 }
 
-static GCC_INLINE FILE *calc_out_fh(const char *const out_filename)
+static inline FILE *calc_out_fh(const char *const out_filename)
 {
     FILE *const out_fh = (out_filename ? fopen(out_filename, "at") : stdout);
     if (!out_fh)

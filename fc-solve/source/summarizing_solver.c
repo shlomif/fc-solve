@@ -37,7 +37,7 @@ static void __attribute__((noreturn)) print_help(void)
 static long deals[32000];
 static size_t num_deals = 0;
 
-static GCC_INLINE void append(long idx)
+static inline void append(long idx)
 {
     if (num_deals == COUNT(deals))
     {

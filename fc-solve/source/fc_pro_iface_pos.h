@@ -42,13 +42,13 @@ void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
 void fc_solve_moves_processed_render_move(
     fcs_extended_move_t move, char *string);
 
-static GCC_INLINE int fc_solve_moves_processed_get_moves_left(
+static inline int fc_solve_moves_processed_get_moves_left(
     const fcs_moves_processed_t *const moves)
 {
     return moves->num_moves - moves->next_move_idx;
 }
 
-static GCC_INLINE fcs_bool_t fc_solve_moves_processed_get_next_move(
+static inline fcs_bool_t fc_solve_moves_processed_get_next_move(
     fcs_moves_processed_t *const moves, fcs_extended_move_t *const move)
 {
     if (moves->next_move_idx == moves->num_moves)
@@ -59,7 +59,7 @@ static GCC_INLINE fcs_bool_t fc_solve_moves_processed_get_next_move(
     return FALSE;
 }
 
-static GCC_INLINE void fc_solve_moves_processed_free(
+static inline void fc_solve_moves_processed_free(
     fcs_moves_processed_t *const moves)
 {
     free(moves->moves);

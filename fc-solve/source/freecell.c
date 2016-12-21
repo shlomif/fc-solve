@@ -28,7 +28,7 @@
 #define moves_ptr NULL
 #endif
 
-static GCC_INLINE int find_empty_stack(fcs_kv_state_t *const raw_ptr_state_raw,
+static inline int find_empty_stack(fcs_kv_state_t *const raw_ptr_state_raw,
     const int start_from, const int local_stacks_num)
 {
     for (int ret = start_from; ret < local_stacks_num; ret++)
@@ -104,7 +104,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
     return;
 }
 
-static GCC_INLINE void sort_derived_states(
+static inline void sort_derived_states(
     fcs_derived_states_list_t *const derived_states_list,
     const int initial_derived_states_num_states)
 {
@@ -182,7 +182,7 @@ typedef struct
  * This function empties two stacks from the new state
  * into freeeclls and empty columns
  */
-static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
+static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
     const fc_solve_soft_thread_t *const soft_thread,
     fcs_kv_state_t *const kv_ptr_new_state SFS__PASS_MOVE_STACK(
         fcs_move_stack_t *const moves_ptr),
@@ -346,7 +346,7 @@ static GCC_INLINE empty_two_cols_ret_t empty_two_cols_from_new_state(
          pos_idx_to_check < last_pos_idx;                                      \
          pos_idx_to_check += suit_positions_by_rank_step)
 
-static GCC_INLINE fcs_game_limit_t calc_num_vacant_slots(
+static inline fcs_game_limit_t calc_num_vacant_slots(
     const fc_solve_soft_thread_t *const soft_thread,
     const fcs_bool_t is_filled_by_any_card)
 {
@@ -1587,7 +1587,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 #define CALC_FOUNDATION_TO_PUT_CARD_ON()                                       \
     calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card)
 
-static GCC_INLINE int calc_foundation_to_put_card_on(
+static inline int calc_foundation_to_put_card_on(
     const fc_solve_soft_thread_t *const soft_thread,
     const fcs_state_t *const ptr_state, const fcs_card_t card)
 {

@@ -40,7 +40,7 @@
 #include "cmd_line_enum.h"
 #include "cmd_line_inc.h"
 
-static GCC_INLINE void nullify_newline(char *const line)
+static inline void nullify_newline(char *const line)
 {
     char *const s = strchr(line, '\n');
 
@@ -51,7 +51,7 @@ static GCC_INLINE void nullify_newline(char *const line)
 }
 
 #define MAX_PATH_LEN 4000
-static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
+static inline fcs_bool_t read_preset(const char *const preset_name,
     args_man_t *const args_man, char *const opened_files_dir,
     const char *const user_preset_dir)
 {
@@ -172,7 +172,7 @@ static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
     return TRUE;
 }
 
-static GCC_INLINE char *calc_errstr_s(const char *const format, ...)
+static inline char *calc_errstr_s(const char *const format, ...)
 {
     va_list my_va_list;
 

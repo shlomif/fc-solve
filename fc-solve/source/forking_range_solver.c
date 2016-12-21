@@ -82,7 +82,7 @@ typedef struct
     int num_finished_boards;
 } response_t;
 
-static GCC_INLINE int worker_func(const worker_t w, void *const instance)
+static inline int worker_func(const worker_t w, void *const instance)
 {
     /* I'm one of the slaves */
     request_t request;
@@ -154,7 +154,7 @@ static GCC_INLINE int worker_func(const worker_t w, void *const instance)
     return 0;
 }
 
-static GCC_INLINE void write_request(const long long end_board,
+static inline void write_request(const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr,
     const worker_t *const worker)
 {
@@ -180,10 +180,9 @@ static GCC_INLINE void write_request(const long long end_board,
     write(worker->parent_to_child_pipe[WRITE_FD], &request, sizeof(request));
 }
 
-static GCC_INLINE void transaction(const worker_t *const worker,
-    const int read_fd, int *const total_num_finished_boards,
-    const long long end_board, const long long board_num_step,
-    long long *const next_board_num_ptr)
+static inline void transaction(const worker_t *const worker, const int read_fd,
+    int *const total_num_finished_boards, const long long end_board,
+    const long long board_num_step, long long *const next_board_num_ptr)
 {
     response_t response;
     if (read(read_fd, &response, sizeof(response)) <

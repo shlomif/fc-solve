@@ -83,7 +83,7 @@ typedef enum {
 
 typedef fcs_int_limit_t flare_iters_quota_t;
 
-static GCC_INLINE flare_iters_quota_t normalize_iters_quota(
+static inline flare_iters_quota_t normalize_iters_quota(
     const flare_iters_quota_t i)
 {
     return max(i, 0);
@@ -235,7 +235,7 @@ static void iter_handler_wrapper(void *api_instance, fcs_int_limit_t iter_num,
 static int user_next_instance(fcs_user_t *user);
 
 #ifdef FCS_WITH_ERROR_STRS
-static GCC_INLINE void clear_error(fcs_user_t *const user)
+static inline void clear_error(fcs_user_t *const user)
 {
     user->error_string[0] = '\0';
 }
@@ -345,8 +345,7 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
     ((fcs_user_t *)api_instance)->current_instance->limit = max_iters;
 }
 
-static GCC_INLINE fc_solve_soft_thread_t *api_soft_thread(
-    void *const api_instance)
+static inline fc_solve_soft_thread_t *api_soft_thread(void *const api_instance)
 {
     return ((fcs_user_t * const)api_instance)->soft_thread;
 }
@@ -464,15 +463,14 @@ typedef enum {
 } fcs_compile_flares_ret_t;
 
 #ifdef FCS_WITH_FLARES
-static GCC_INLINE flares_plan_item create_plan_item(
-    const flares_plan_type_t mytype, fcs_flare_item_t *const flare,
-    const int count_iters)
+static inline flares_plan_item create_plan_item(const flares_plan_type_t mytype,
+    fcs_flare_item_t *const flare, const int count_iters)
 {
     return (const flares_plan_item){
         .type = mytype, .flare = flare, .count_iters = count_iters};
 }
 
-static GCC_INLINE void add_to_plan(fcs_instance_item_t *const instance_item,
+static inline void add_to_plan(fcs_instance_item_t *const instance_item,
     const flares_plan_type_t mytype, fcs_flare_item_t *const flare,
     const int count_iters)
 {
@@ -485,26 +483,26 @@ static GCC_INLINE void add_to_plan(fcs_instance_item_t *const instance_item,
         create_plan_item(mytype, flare, count_iters);
 }
 
-static GCC_INLINE void add_count_iters_to_plan(
+static inline void add_count_iters_to_plan(
     fcs_instance_item_t *const instance_item, fcs_flare_item_t *const flare,
     const int count_iters)
 {
     add_to_plan(instance_item, FLARES_PLAN_RUN_COUNT_ITERS, flare, count_iters);
 }
 
-static GCC_INLINE void add_checkpoint_to_plan(
+static inline void add_checkpoint_to_plan(
     fcs_instance_item_t *const instance_item)
 {
     add_to_plan(instance_item, FLARES_PLAN_CHECKPOINT, NULL, -1);
 }
 
-static GCC_INLINE void add_run_indef_to_plan(
+static inline void add_run_indef_to_plan(
     fcs_instance_item_t *const instance_item, fcs_flare_item_t *const flare)
 {
     add_to_plan(instance_item, FLARES_PLAN_RUN_INDEFINITELY, flare, -1);
 }
 
-static GCC_INLINE fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
+static inline fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
     const fcs_flare_item_t *const end_of_flares, const char *const proto_name,
     const size_t name_len)
 {
@@ -530,7 +528,7 @@ static GCC_INLINE fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
     }
 #endif
 
-static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
+static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t *const user, int *const instance_list_index)
 {
     *instance_list_index = 0;
@@ -720,7 +718,7 @@ static GCC_INLINE fcs_compile_flares_ret_t user_compile_all_flares_plans(
  */
 #define MY_MARGIN 3
 #define TRAILING_CHAR '\n'
-static GCC_INLINE fcs_bool_t duplicate_string_while_adding_a_trailing_newline(
+static inline fcs_bool_t duplicate_string_while_adding_a_trailing_newline(
     char *const s, const char *const orig_str)
 {
     const int len = strlen(orig_str);
@@ -751,7 +749,7 @@ static GCC_INLINE fcs_bool_t duplicate_string_while_adding_a_trailing_newline(
 #undef TRAILING_CHAR
 #undef MY_MARGIN
 
-static GCC_INLINE void recycle_flare(fcs_flare_item_t *const flare)
+static inline void recycle_flare(fcs_flare_item_t *const flare)
 {
     if (!flare->instance_is_ready)
     {
@@ -809,7 +807,7 @@ static void recycle_instance(
 #ifndef FCS_USE_COMPACT_MOVE_TOKENS
 #define internal_move_to_user_move(x) (x)
 #else
-static GCC_INLINE const fcs_move_t internal_move_to_user_move(
+static inline const fcs_move_t internal_move_to_user_move(
     const fcs_internal_move_t internal_move)
 {
     fcs_move_t user_move;
@@ -830,7 +828,7 @@ static GCC_INLINE const fcs_move_t internal_move_to_user_move(
 #ifndef FCS_USE_COMPACT_MOVE_TOKENS
 #define user_move_to_internal_move(x) (x)
 #else
-static GCC_INLINE const fcs_internal_move_t user_move_to_internal_move(
+static inline const fcs_internal_move_t user_move_to_internal_move(
     const fcs_move_t user_move)
 {
     fcs_internal_move_t internal_move;
@@ -848,8 +846,7 @@ static GCC_INLINE const fcs_internal_move_t user_move_to_internal_move(
 }
 #endif
 
-static GCC_INLINE void calc_moves_seq(
-    const fcs_move_stack_t *const solution_moves,
+static inline void calc_moves_seq(const fcs_move_stack_t *const solution_moves,
     fcs_moves_sequence_t *const moves_seq)
 {
     moves_seq->num_moves = 0;
@@ -940,13 +937,13 @@ static int get_flare_move_count(
 }
 #endif
 
-static GCC_INLINE fcs_instance_item_t *get_current_instance_item(
+static inline fcs_instance_item_t *get_current_instance_item(
     fcs_user_t const *user)
 {
     return (user->current_instance);
 }
 
-static GCC_INLINE int resume_solution(fcs_user_t *const user)
+static inline int resume_solution(fcs_user_t *const user)
 {
     fcs_stats_t init_num_checked_states;
 
@@ -1299,7 +1296,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
 }
 
 #ifdef FCS_WITH_MOVES
-static GCC_INLINE fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
+static inline fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
 {
 #ifdef FCS_WITH_FLARES
     fcs_flare_item_t *const flare =
@@ -1558,7 +1555,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 }
 
 #ifndef FCS_FREECELL_ONLY
-static GCC_INLINE void calc_variant_suit_mask_and_desired_suit_value(
+static inline void calc_variant_suit_mask_and_desired_suit_value(
     fc_solve_instance_t *const instance)
 {
 #ifndef FCS_DISABLE_PATSOLVE
@@ -2022,7 +2019,7 @@ static void iter_handler_wrapper(void *const api_instance,
 #undef CALL
 }
 
-static GCC_INLINE void set_debug_iter_output_func_to_val(
+static inline void set_debug_iter_output_func_to_val(
     fcs_user_t *const user, const fcs_instance_debug_iter_output_func_t value)
 {
     FLARES_LOOP_START()
@@ -2030,7 +2027,7 @@ static GCC_INLINE void set_debug_iter_output_func_to_val(
     FLARES_LOOP_END()
 }
 
-static GCC_INLINE void set_any_iter_handler(void *const api_instance,
+static inline void set_any_iter_handler(void *const api_instance,
     const freecell_solver_user_long_iter_handler_t long_iter_handler,
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     const freecell_solver_user_iter_handler_t iter_handler,

@@ -38,7 +38,7 @@ void fc_solve_compact_allocator_init(fcs_compact_allocator_t *const allocator,
 
 #define OLD_LIST_NEXT(ptr) (*((char **)(ptr)))
 #define OLD_LIST_DATA(ptr) ((char *)(&(((char **)(ptr))[1])))
-static GCC_INLINE char *meta_request_new_buffer(
+static inline char *meta_request_new_buffer(
     fcs_meta_compact_allocator_t *const meta_allocator)
 {
     if (meta_allocator->recycle_bin)

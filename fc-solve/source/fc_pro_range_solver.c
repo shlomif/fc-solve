@@ -18,7 +18,7 @@
 #include "fc_pro_iface_pos.h"
 #include "help_err.h"
 
-static GCC_INLINE void fc_pro_get_board(long gamenumber,
+static inline void fc_pro_get_board(long gamenumber,
     fcs_state_string_t state_string,
     fcs_state_keyval_pair_t *pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {

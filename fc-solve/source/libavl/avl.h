@@ -151,12 +151,12 @@ void *avl_t_prev (struct avl_traverser *);
 void *avl_t_cur (struct avl_traverser *);
 void *avl_t_replace (struct avl_traverser *, void *);
 
-static GCC_INLINE int avl_get_decommissioned_flag(struct avl_node * node)
+static inline int avl_get_decommissioned_flag(struct avl_node * node)
 {
     return ((signed char)(node->avl_mylink[1] & 0x1));
 }
 
-static GCC_INLINE void avl_set_decommissioned_flag(struct avl_node * node, int decommissioned_flag)
+static inline void avl_set_decommissioned_flag(struct avl_node * node, int decommissioned_flag)
 {
     node->avl_mylink[1] &= (~0x1UL);
     node->avl_mylink[1] |= (decommissioned_flag ? 0x1UL : 0x0UL);

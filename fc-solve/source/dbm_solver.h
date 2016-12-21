@@ -111,7 +111,7 @@ typedef struct
     void *tree_recycle_bin;
 } fcs_dbm_instance_common_elems_t;
 
-static GCC_INLINE void fcs_dbm__found_solution(
+static inline void fcs_dbm__found_solution(
     fcs_dbm_instance_common_elems_t *const common,
     fcs_dbm_record_t *const token, fcs_dbm_queue_item_t *const item)
 {
@@ -124,7 +124,7 @@ static GCC_INLINE void fcs_dbm__found_solution(
 #endif
 }
 
-static GCC_INLINE void fcs_dbm__common_init(
+static inline void fcs_dbm__common_init(
     fcs_dbm_instance_common_elems_t *const common, const long iters_delta_limit,
     const fcs_dbm_variant_type_t local_variant, FILE *const out_fh)
 {

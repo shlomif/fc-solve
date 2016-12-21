@@ -42,7 +42,7 @@ typedef struct
     (instance->curr_depth + list->num_non_reversible_moves_including_prune)
 
 #include "dbm_procs.h"
-static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
+static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     const fcs_dbm_common_input_t *const inp, const batch_size_t max_batch_size,
     FILE *const out_fh)
 {
@@ -70,7 +70,7 @@ static GCC_INLINE void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_condvar_init(&(instance->monitor));
 }
 
-static GCC_INLINE void instance_destroy(fcs_dbm_solver_instance_t *instance)
+static inline void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
@@ -256,7 +256,7 @@ thread_end:
 
 #include "depth_dbm_procs.h"
 
-static GCC_INLINE void instance_check_key(
+static inline void instance_check_key(
     fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
     fcs_dbm_solver_instance_t *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,

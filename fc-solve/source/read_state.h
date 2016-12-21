@@ -16,7 +16,7 @@ typedef struct
     char s[USER_STATE_SIZE];
 } fcs_user_state_str_t;
 
-static GCC_INLINE fcs_user_state_str_t read_state(FILE *f)
+static inline fcs_user_state_str_t read_state(FILE *f)
 {
     fcs_user_state_str_t user_state;
     memset(user_state.s, '\0', sizeof(user_state));

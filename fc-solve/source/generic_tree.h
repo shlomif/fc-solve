@@ -34,7 +34,7 @@ typedef void *dict_key_t;
 #include "rinutils.h"
 #include "kaz_tree.h"
 
-static GCC_INLINE void fc_solve_kaz_tree_delete_by_value(
+static inline void fc_solve_kaz_tree_delete_by_value(
     dict_t *kaz_tree, dict_key_t value)
 {
     fc_solve_kaz_tree_delete_free(

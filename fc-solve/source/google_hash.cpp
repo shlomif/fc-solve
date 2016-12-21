@@ -40,9 +40,8 @@ using google::sparse_hash_set; // namespace where class lives by default
 typedef unsigned long int ub4; /* unsigned 4-byte quantities */
 typedef unsigned char ub1;
 
-static GCC_INLINE ub4 perl_hash_function(
-    register const ub1 *s_ptr, /* the key */
-    register const ub4 length  /* the length of the key */
+static inline ub4 perl_hash_function(register const ub1 *s_ptr, /* the key */
+    register const ub4 length /* the length of the key */
     )
 {
     register ub4 hash_value_int = 0;

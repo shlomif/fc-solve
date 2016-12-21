@@ -25,7 +25,7 @@ extern "C" {
 
 #include "instance.h"
 
-static GCC_INLINE int max0(const int e) { return max(e, 0); }
+static inline int max0(const int e) { return max(e, 0); }
 #ifdef FCS_FREECELL_ONLY
 #define calc_max_sequence_move(num_freecells, num_empty_cols)                  \
     (((num_freecells) + 1) << (num_empty_cols))
@@ -45,7 +45,7 @@ static GCC_INLINE int max0(const int e) { return max(e, 0); }
                       ? (((num_freecells) + 1) << (num_empty_cols))            \
                       : ((num_freecells) + 1)))
 
-static GCC_INLINE int calc_max_simple_simon_seq_move(const int num_empty_cols)
+static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
 {
     return ((num_empty_cols < 0) ? 0 : (1 << num_empty_cols));
 }
@@ -84,7 +84,7 @@ static GCC_INLINE int calc_max_simple_simon_seq_move(const int num_empty_cols)
   */
 
 #define STATE_KEY() (*(new_state_kv_ptr->key))
-static GCC_INLINE void fc_solve_move_sequence_function(
+static inline void fc_solve_move_sequence_function(
     fcs_kv_state_t *const new_state_kv_ptr, fcs_move_stack_t *const moves,
     const size_t dest_col_i, const size_t src_col_i, const size_t cards_num)
 {

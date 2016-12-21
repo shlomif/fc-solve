@@ -27,7 +27,7 @@
     This function "rehashes" a hash. I.e: it increases the size of its
     hash table, allowing for smaller chains, and faster lookup.
   */
-static GCC_INLINE void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
+static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
 {
     const int old_size = hash->size;
 
@@ -84,7 +84,7 @@ static GCC_INLINE void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
  * Returns NULL if the key is new and the key/val pair was inserted.
  * Returns the existing key if the key is not new (= a truthy pointer).
  */
-static GCC_INLINE void *fc_solve_hash_insert(
+static inline void *fc_solve_hash_insert(
     fc_solve_hash_t *const hash, void *const key,
 #ifdef FCS_RCS_STATES
     void *const key_id,
@@ -218,7 +218,7 @@ static GCC_INLINE void *fc_solve_hash_insert(
 typedef unsigned long ul;
 typedef unsigned char ub1;
 
-static GCC_INLINE ul perl_hash_function(register const ub1 *s_ptr, /* the key */
+static inline ul perl_hash_function(register const ub1 *s_ptr, /* the key */
     register const ul len /* the length of the key */
     )
 {
@@ -246,7 +246,7 @@ static GCC_INLINE ul perl_hash_function(register const ub1 *s_ptr, /* the key */
 /* TODO : Maybe define an accesor for new_state_key->stacks (also see the
  * replaced_with_cached macro above.
  * */
-static GCC_INLINE void fc_solve_cache_stacks(
+static inline void fc_solve_cache_stacks(
     fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -432,7 +432,7 @@ guint fc_solve_hash_function(gconstpointer key)
  *        5b. Add the new state and return TRUE.
  * */
 
-static GCC_INLINE void upon_new_state(fc_solve_instance_t *const instance,
+static inline void upon_new_state(fc_solve_instance_t *const instance,
     fc_solve_hard_thread_t *const hard_thread,
     fcs_state_extra_info_t *const new_state_info)
 {

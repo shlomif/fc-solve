@@ -55,7 +55,7 @@ static int fc_solve_compare_encoded_states(const void *const void_a,
 #undef GET_PARAM
 }
 
-static GCC_INLINE void fc_solve_fcc_release_moves_seq(
+static inline void fc_solve_fcc_release_moves_seq(
     fcs_fcc_moves_seq_t *const moves_seq,
     fcs_fcc_moves_seq_allocator_t *const moves_list_allocator)
 {
@@ -80,7 +80,7 @@ static GCC_INLINE void fc_solve_fcc_release_moves_seq(
     moves_seq->count = -1;
 }
 
-static GCC_INLINE void fc_solve__internal__copy_moves(
+static inline void fc_solve__internal__copy_moves(
     fcs_fcc_moves_seq_t *const moves_seq, int *const ptr_to_pos_in_moves,
     fcs_fcc_moves_list_item_t ***const ptr_to_end_moves_iter,
     const unsigned char extra_move,
@@ -123,7 +123,7 @@ static GCC_INLINE void fc_solve__internal__copy_moves(
     *ptr_to_end_moves_iter = end_moves_iter;
 }
 
-static GCC_INLINE dict_t *fcc_brfs_kaz_tree_create(
+static inline dict_t *fcc_brfs_kaz_tree_create(
     fcs_meta_compact_allocator_t *const meta_alloc,
     void **const tree_recycle_bin)
 {

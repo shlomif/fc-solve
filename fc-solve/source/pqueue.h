@@ -58,7 +58,7 @@ typedef struct
     pq_rating_t rating;
 } pq_element_t;
 
-static GCC_INLINE pq_rating_t fcs_pq_rating(const pq_element_t elem)
+static inline pq_rating_t fcs_pq_rating(const pq_element_t elem)
 {
     return elem.rating;
 }
@@ -86,13 +86,13 @@ typedef struct
    respectively. Finally the bool32 tells you whether
    the list is sorted ascending or descending... */
 
-static GCC_INLINE void fc_solve_pq_init(pri_queue_t *const pq)
+static inline void fc_solve_pq_init(pri_queue_t *const pq)
 {
     pq->current_size = 0;
     pq->Elements = SMALLOC(pq->Elements, (pq->max_size = 1024) + 1);
 }
 
-static GCC_INLINE void fc_solve_PQueueFree(pri_queue_t *pq)
+static inline void fc_solve_PQueueFree(pri_queue_t *pq)
 {
     free(pq->Elements);
     pq->Elements = NULL;
@@ -101,7 +101,7 @@ static GCC_INLINE void fc_solve_PQueueFree(pri_queue_t *pq)
 /* Join a priority queue
    "r" is the rating of the item you're adding for sorting purposes */
 
-static GCC_INLINE void fc_solve_pq_push(pri_queue_t *const pq,
+static inline void fc_solve_pq_push(pri_queue_t *const pq,
     fcs_collectible_state_t *const val, const pq_rating_t r)
 {
     typeof(pq->current_size) i = ++(pq->current_size);
@@ -145,7 +145,7 @@ static GCC_INLINE void fc_solve_pq_push(pri_queue_t *const pq,
     }
 }
 
-static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(pri_queue_t *pq)
+static inline fcs_bool_t fc_solve_is_pqueue_empty(pri_queue_t *pq)
 {
     return (pq->current_size == 0);
 }
@@ -157,7 +157,7 @@ static GCC_INLINE fcs_bool_t fc_solve_is_pqueue_empty(pri_queue_t *pq)
  *
  * */
 
-static GCC_INLINE void fc_solve_pq_pop(
+static inline void fc_solve_pq_pop(
     pri_queue_t *const pq, fcs_collectible_state_t **const val)
 {
     if (fc_solve_is_pqueue_empty(pq))

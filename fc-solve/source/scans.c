@@ -341,7 +341,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
         &(HT_FIELD(hard_thread, allocator)),                                   \
         sizeof(fcs_states_linked_list_item_t)));
 
-static GCC_INLINE void fc_solve_initialize_bfs_queue(
+static inline void fc_solve_initialize_bfs_queue(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;

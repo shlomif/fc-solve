@@ -37,7 +37,7 @@ static int fc_solve_compare_lru_cache_keys(
 #undef GET_PARAM
 }
 
-static GCC_INLINE void cache_destroy(fcs_lru_cache_t *cache)
+static inline void cache_destroy(fcs_lru_cache_t *cache)
 {
     {
 #define NUM_CHAINS_TO_RELEASE 2
@@ -62,7 +62,7 @@ static GCC_INLINE void cache_destroy(fcs_lru_cache_t *cache)
         &(cache->states_values_to_keys_allocator));
 }
 
-static GCC_INLINE void cache_init(fcs_lru_cache_t *cache,
+static inline void cache_init(fcs_lru_cache_t *cache,
     long max_num_elements_in_cache, fcs_meta_compact_allocator_t *meta_alloc)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
@@ -84,7 +84,7 @@ static GCC_INLINE void cache_init(fcs_lru_cache_t *cache,
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static GCC_INLINE fcs_bool_t cache_does_key_exist(
+static inline fcs_bool_t cache_does_key_exist(
     fcs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     const fcs_cache_key_info_t to_check = {.key = *key};
@@ -123,7 +123,7 @@ static GCC_INLINE fcs_bool_t cache_does_key_exist(
     }
 }
 
-static GCC_INLINE fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
+static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
     const fcs_cache_key_t *key, const fcs_fcc_move_t *moves_to_parent,
     const fcs_fcc_move_t final_move)
 {

@@ -32,7 +32,7 @@ extern const fcs_internal_move_t fc_solve_empty_move;
 
 #define FCS_MOVE_STACK_GROW_BY 16
 
-static GCC_INLINE void fcs_move_stack_push(
+static inline void fcs_move_stack_push(
     fcs_move_stack_t *const stack, const fcs_internal_move_t move)
 {
 #ifdef FCS_WITH_MOVES
@@ -49,7 +49,7 @@ static GCC_INLINE void fcs_move_stack_push(
 #endif
 }
 
-static GCC_INLINE void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
+static inline void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
     const int type, const int src, const int dest, const int num_cards_in_seq)
 {
 #ifdef FCS_WITH_MOVES
@@ -64,16 +64,15 @@ static GCC_INLINE void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
 #endif
 }
 
-static GCC_INLINE void fcs_move_stack_non_seq_push(
-    fcs_move_stack_t *const stack, const int type, const int src,
-    const int dest)
+static inline void fcs_move_stack_non_seq_push(fcs_move_stack_t *const stack,
+    const int type, const int src, const int dest)
 {
 #ifdef FCS_WITH_MOVES
     fcs_move_stack_params_push(stack, type, src, dest, 1);
 #endif
 }
 
-static GCC_INLINE void fcs_push_1card_seq(
+static inline void fcs_push_1card_seq(
     fcs_move_stack_t *const stack, const int src, const int dest)
 {
 #ifdef FCS_WITH_MOVES
@@ -83,7 +82,7 @@ static GCC_INLINE void fcs_push_1card_seq(
 }
 
 #ifdef FCS_WITH_MOVES
-static GCC_INLINE fcs_bool_t fc_solve_move_stack_pop(
+static inline fcs_bool_t fc_solve_move_stack_pop(
     fcs_move_stack_t *const stack, fcs_internal_move_t *const move)
 {
     if (stack->num_moves > 0)
@@ -131,13 +130,13 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
     user positions.
 */
 
-static GCC_INLINE fcs_move_stack_t fcs_move_stack__new(void)
+static inline fcs_move_stack_t fcs_move_stack__new(void)
 {
     return (fcs_move_stack_t){.num_moves = 0,
         .moves = malloc(sizeof(fcs_move_t) * FCS_MOVE_STACK_GROW_BY)};
 }
 
-static GCC_INLINE void fc_solve_move_stack_swallow_stack(
+static inline void fc_solve_move_stack_swallow_stack(
     fcs_move_stack_t *const stack, fcs_move_stack_t *const src_stack)
 {
     fcs_internal_move_t move;
@@ -147,8 +146,7 @@ static GCC_INLINE void fc_solve_move_stack_swallow_stack(
     }
 }
 
-static GCC_INLINE void fc_solve_move_stack_normalize(
-    fcs_move_stack_t *const moves,
+static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
     const fcs_state_keyval_pair_t *const init_state,
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
 {
@@ -240,16 +238,16 @@ static GCC_INLINE void fc_solve_move_stack_normalize(
     fcs_move_stack_static_destroy(temp_moves);
 }
 
-static GCC_INLINE int fc_solve_move__convert_freecell_num(const int fc_idx)
+static inline int fc_solve_move__convert_freecell_num(const int fc_idx)
 {
     return (fc_idx >= 7) ? (fc_idx + 3) : fc_idx;
 }
 
-static GCC_INLINE char fc_solve__freecell_to_char(const int fc_idx)
+static inline char fc_solve__freecell_to_char(const int fc_idx)
 {
     return 'a' + fc_solve_move__convert_freecell_num(fc_idx);
 }
-static GCC_INLINE void fc_solve_move_to_string_w_state(char *const string,
+static inline void fc_solve_move_to_string_w_state(char *const string,
     fcs_state_keyval_pair_t *const state, const fcs_move_t move,
     const int standard_notation)
 {

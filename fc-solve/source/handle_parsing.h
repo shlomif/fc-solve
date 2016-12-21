@@ -28,9 +28,8 @@ enum
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
 
-static GCC_INLINE void *alloc_instance_and_parse(const int argc,
-    char **const argv, int *const arg_ptr,
-    freecell_solver_str_t *const known_parameters,
+static inline void *alloc_instance_and_parse(const int argc, char **const argv,
+    int *const arg_ptr, freecell_solver_str_t *const known_parameters,
     const freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void *const callback_context, const fcs_bool_t only_recognized)
 {
@@ -77,7 +76,7 @@ static GCC_INLINE void *alloc_instance_and_parse(const int argc,
     return instance;
 }
 
-static GCC_INLINE void *simple_alloc_and_parse(
+static inline void *simple_alloc_and_parse(
     const int argc, char **const argv, int *const arg_ptr)
 {
     return alloc_instance_and_parse(

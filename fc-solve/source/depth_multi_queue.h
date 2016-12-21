@@ -47,7 +47,7 @@ typedef struct
 
 #define DEPTH_Q_GROW_BY 32
 
-static GCC_INLINE void fcs_depth_multi_queue__new_queue(
+static inline void fcs_depth_multi_queue__new_queue(
     fcs_depth_multi_queue_t *const queue, fcs_offloading_queue_t *const q)
 {
     fcs_offloading_queue__init(q
@@ -61,7 +61,7 @@ static GCC_INLINE void fcs_depth_multi_queue__new_queue(
             );
 }
 
-static GCC_INLINE void fcs_depth_multi_queue__insert(
+static inline void fcs_depth_multi_queue__insert(
     fcs_depth_multi_queue_t *const queue, const int depth,
     const fcs_offloading_queue_item_t *const item)
 {
@@ -85,7 +85,7 @@ static GCC_INLINE void fcs_depth_multi_queue__insert(
     queue->num_items_in_queue++;
 }
 
-static GCC_INLINE void fcs_depth_multi_queue__init(
+static inline void fcs_depth_multi_queue__init(
     fcs_depth_multi_queue_t *const queue, const char *offload_dir_path,
     const int first_depth, const fcs_offloading_queue_item_t *const first_item)
 {
@@ -103,7 +103,7 @@ static GCC_INLINE void fcs_depth_multi_queue__init(
     fcs_depth_multi_queue__insert(queue, first_depth, first_item);
 }
 
-static GCC_INLINE void fcs_depth_multi_queue__destroy(
+static inline void fcs_depth_multi_queue__destroy(
     fcs_depth_multi_queue_t *const queue)
 {
     int limit = queue->max_depth - queue->min_depth;
@@ -119,7 +119,7 @@ static GCC_INLINE void fcs_depth_multi_queue__destroy(
     queue->queues_by_depth = NULL;
 }
 
-static GCC_INLINE fcs_bool_t fcs_depth_multi_queue__extract(
+static inline fcs_bool_t fcs_depth_multi_queue__extract(
     fcs_depth_multi_queue_t *const queue, int *const return_depth,
     fcs_offloading_queue_item_t *const return_item)
 {

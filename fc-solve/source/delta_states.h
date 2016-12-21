@@ -51,13 +51,13 @@ typedef struct
 #define FCS_DBM_RECORD_SHIFT ((sizeof(rec->parent_and_refcount) - 1) * 8)
 
 #ifdef FCS_EXPLICIT_REFCOUNT
-static GCC_INLINE fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
+static inline fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
     fcs_dbm_record_t *rec)
 {
     return (fcs_dbm_record_t *)(rec->parent_and_refcount);
 }
 #else
-static GCC_INLINE fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
+static inline fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
     fcs_dbm_record_t *rec)
 {
     return (fcs_dbm_record_t *)(rec->parent_and_refcount &
@@ -65,7 +65,7 @@ static GCC_INLINE fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
 }
 #endif
 
-static GCC_INLINE void fcs_dbm_record_set_parent_ptr(
+static inline void fcs_dbm_record_set_parent_ptr(
     fcs_dbm_record_t *const rec, fcs_dbm_record_t *const parent_ptr)
 {
     rec->parent_and_refcount = ((uintptr_t)parent_ptr);
@@ -75,27 +75,25 @@ static GCC_INLINE void fcs_dbm_record_set_parent_ptr(
 }
 
 #ifdef FCS_EXPLICIT_REFCOUNT
-static GCC_INLINE unsigned char fcs_dbm_record_get_refcount(
-    fcs_dbm_record_t *rec)
+static inline unsigned char fcs_dbm_record_get_refcount(fcs_dbm_record_t *rec)
 {
     return rec->refcount;
 }
 #else
-static GCC_INLINE unsigned char fcs_dbm_record_get_refcount(
-    fcs_dbm_record_t *rec)
+static inline unsigned char fcs_dbm_record_get_refcount(fcs_dbm_record_t *rec)
 {
     return (unsigned char)(rec->parent_and_refcount >> FCS_DBM_RECORD_SHIFT);
 }
 #endif
 
 #ifdef FCS_EXPLICIT_REFCOUNT
-static GCC_INLINE void fcs_dbm_record_set_refcount(
+static inline void fcs_dbm_record_set_refcount(
     fcs_dbm_record_t *const rec, const unsigned char new_val)
 {
     rec->refcount = new_val;
 }
 #else
-static GCC_INLINE void fcs_dbm_record_set_refcount(
+static inline void fcs_dbm_record_set_refcount(
     fcs_dbm_record_t *const rec, const unsigned char new_val)
 {
     rec->parent_and_refcount &=
@@ -105,14 +103,14 @@ static GCC_INLINE void fcs_dbm_record_set_refcount(
 }
 #endif
 
-static GCC_INLINE void fcs_dbm_record_increment_refcount(
+static inline void fcs_dbm_record_increment_refcount(
     fcs_dbm_record_t *const rec)
 {
     fcs_dbm_record_set_refcount(rec, fcs_dbm_record_get_refcount(rec) + 1);
 }
 
 /* Returns the new value so we can tell if it is zero. */
-static GCC_INLINE unsigned char fcs_dbm_record_decrement_refcount(
+static inline unsigned char fcs_dbm_record_decrement_refcount(
     fcs_dbm_record_t *const rec)
 {
     const unsigned char new_val = fcs_dbm_record_get_refcount(rec) - 1;
@@ -143,8 +141,7 @@ typedef struct
     int bits_per_orig_cards_in_column;
 } fc_solve_delta_stater_t;
 
-static GCC_INLINE void fcs_init_encoded_state(
-    fcs_encoded_state_buffer_t *enc_state)
+static inline void fcs_init_encoded_state(fcs_encoded_state_buffer_t *enc_state)
 {
     memset(enc_state, '\0', sizeof(*enc_state));
 }

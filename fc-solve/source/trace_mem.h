@@ -27,7 +27,7 @@ static int rss_found = 0;
 static long max_rss_delta_deal = -1;
 static long long int prev_rss = -1, max_rss_delta = -1;
 
-static GCC_INLINE void trace_mem(const int board_num)
+static inline void trace_mem(const int board_num)
 {
     long long int rss;
     unsigned long long unused_unsigned;
@@ -102,7 +102,7 @@ static GCC_INLINE void trace_mem(const int board_num)
 }
 #else
 
-static GCC_INLINE void trace_mem(const int board_num GCC_UNUSED) {}
+static inline void trace_mem(const int board_num GCC_UNUSED) {}
 
 #endif
 #ifdef __cplusplus
