@@ -16,6 +16,7 @@
  * In addition, this solver implements the scheme in:
  * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1135
  */
+
 #include "dbm_solver_head.h"
 
 typedef struct
