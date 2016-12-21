@@ -1,5 +1,8 @@
 Revision history for Task-FreecellSolver-Testing
 
+v0.0.10     2016-12-21
+        - Add Test::PerlTidy.
+
 v0.0.9  2016-12-19
         - Update the list of dependencies.
 

@@ -12,7 +12,7 @@ Freecell Solver test suite.
 
 =cut
 
-our $VERSION = 'v0.0.9';
+our $VERSION = 'v0.0.10';
 
 # Load the dependencies so we'll be sure they are installed.
 use Carp;
@@ -38,6 +38,7 @@ use Template;
 use Test::Data::Split;
 use Test::Differences;
 use Test::More;
+use Test::PerlTidy ();
 use Test::Run::CmdLine::Plugin::TrimDisplayedFilenames;
 use Test::RunValgrind;
 use Test::TrailingSpace ();
