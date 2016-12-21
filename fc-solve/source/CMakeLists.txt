@@ -209,6 +209,12 @@ SET (patsolve_modules
     "${p_dir}/tree.c"
     )
 
+FIND_PROGRAM(_GPERF "gperf")
+
+IF ("${_GPERF}" STREQUAL "_GPERF-NOTFOUND")
+    MESSAGE(FATAL_ERROR "gperf must be in the path - see https://www.gnu.org/software/gperf/ .")
+ENDIF ()
+
 SET (CL_INC_H "cmd_line_inc.h")
 SET (BIN_CL_INC_H "${CMAKE_CURRENT_BINARY_DIR}/${CL_INC_H}")
 SET (CL_INC_SCRIPT "scripts/gen-cmd-line-radix-tree.pl")
