@@ -20,7 +20,7 @@ foreach my $seed (1 .. 1000)
     my $out_fn = qq#$OUTPUT_PATH/lens-$BASE--seed=$seed.txt#;
     if (! -e $out_fn)
     {
-        my $cmd = qq#./summary-fc-solve \$(seq 1 32000) -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn" | grep Unsolved#;
+        my $cmd = qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn" | grep Unsolved#;
         print "$cmd\n";
         system($cmd);
     }
