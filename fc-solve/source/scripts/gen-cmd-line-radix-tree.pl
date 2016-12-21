@@ -69,7 +69,7 @@ path($enum_fn)->spew_utf8(
     <<"EOF",
 /*
  * $enum_fn - the ANSI C enum (= enumeration) for the command line
- * arguments. Partially auto-generated.
+ * arguments. Partly auto-generated.
  */
 
 #pragma once
