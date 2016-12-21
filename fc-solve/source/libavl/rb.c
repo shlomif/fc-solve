@@ -28,7 +28,6 @@
 #include "rb.h"
 
 #include "bool.h"
-#include "inline.h"
 #include "alloc_wrap.h"
 
 #ifdef WITH_AVL_BALANCE_FIELD

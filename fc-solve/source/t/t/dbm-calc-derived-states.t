@@ -23,7 +23,6 @@ package DerivedState;
 use FC_Solve::InlineWrap (
     C => <<"EOF",
 #include "dbm_calc_derived_iface.h"
-#include "inline.h"
 
 typedef struct
 {
@@ -90,7 +89,7 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
     return newRV((SV *)results);
 }
 
-static GCC_INLINE DerivedState * deref(SV * const obj) {
+static inline DerivedState * deref(SV * const obj) {
     return ((DerivedState *)SvIV(SvRV(obj)));
 }
 

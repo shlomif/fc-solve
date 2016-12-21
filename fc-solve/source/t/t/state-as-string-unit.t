@@ -13,7 +13,6 @@ use FC_Solve::InlineWrap (
 #include "state.h"
 #include "state.c"
 #include "card.c"
-#include "inline.h"
 
 SV * non_parsable_state_as_string(char * input_state_string) {
 #ifdef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT

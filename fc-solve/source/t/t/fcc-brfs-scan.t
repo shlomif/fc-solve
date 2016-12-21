@@ -22,7 +22,6 @@ package FccStartPoint;
 use FC_Solve::InlineWrap (
     C => <<"EOF",
 #include "fcc_brfs_test.h"
-#include "inline.h"
 
 typedef struct
 {
@@ -72,7 +71,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
     return newRV((SV *)results);
 }
 
-static GCC_INLINE FccStartPoint * deref(SV * const obj) {
+static inline FccStartPoint * deref(SV * const obj) {
     return ((FccStartPoint *)SvIV(SvRV(obj)));
 }
 

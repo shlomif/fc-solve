@@ -29,11 +29,11 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue
         return obj_ref;
 }
 
-static GCC_INLINE QueueInC * deref(SV * const obj) {
+static inline QueueInC * deref(SV * const obj) {
     return (QueueInC*)SvIV(SvRV(obj));
 }
 
-static GCC_INLINE fcs_offloading_queue_t * q(SV * const obj) {
+static inline fcs_offloading_queue_t * q(SV * const obj) {
     return &(deref(obj)->q);
 }
 

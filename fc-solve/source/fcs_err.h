@@ -18,8 +18,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#include "inline.h"
-
 static inline __attribute__((noreturn)) void fc_solve_err(const char *msg, ...)
 {
     va_list ap;

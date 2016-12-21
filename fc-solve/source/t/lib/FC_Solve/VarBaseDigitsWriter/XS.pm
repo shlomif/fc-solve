@@ -23,7 +23,7 @@ SV* _proto_new() {
         return obj_ref;
 }
 
-static GCC_INLINE fcs_var_base_writer_t * deref(SV * const obj) {
+static inline fcs_var_base_writer_t * deref(SV * const obj) {
     return (fcs_var_base_writer_t *)SvIV(SvRV(obj));
 }
 

@@ -13,7 +13,6 @@ use FC_Solve::InlineWrap (
 #include "state.h"
 #include "state.c"
 #include "card.c"
-#include "inline.h"
 
 typedef struct
 {
@@ -43,11 +42,11 @@ SV* _proto_new(const char * input_state_string) {
         return obj_ref;
 }
 
-static GCC_INLINE StateInC * deref(SV * const obj) {
+static inline StateInC * deref(SV * const obj) {
     return (StateInC*)SvIV(SvRV(obj));
 }
 
-static GCC_INLINE fcs_state_keyval_pair_t * q(SV * const obj) {
+static inline fcs_state_keyval_pair_t * q(SV * const obj) {
     return &(deref(obj)->state);
 }
 

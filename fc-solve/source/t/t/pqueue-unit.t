@@ -29,11 +29,11 @@ SV* _proto_new() {
         return obj_ref;
 }
 
-static GCC_INLINE PqInC * deref(SV * const obj) {
+static inline PqInC * deref(SV * const obj) {
     return (PqInC*)SvIV(SvRV(obj));
 }
 
-static GCC_INLINE pri_queue_t * q(SV * const obj) {
+static inline pri_queue_t * q(SV * const obj) {
     return &(deref(obj)->pq);
 }
 

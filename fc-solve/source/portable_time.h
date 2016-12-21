@@ -25,8 +25,6 @@ extern "C" {
 #include <sys/timeb.h>
 #endif
 
-#include "inline.h"
-
 #ifndef WIN32
 
 typedef struct

@@ -19,7 +19,6 @@
 #include "fcs_dllexport.h"
 #include "fcs_err.h"
 #include "fcs_limit.h"
-#include "inline.h"
 #include "likely.h"
 #include "min_and_max.h"
 #include "portable_int32.h"

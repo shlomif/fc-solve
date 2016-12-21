@@ -6,7 +6,6 @@ use warnings;
 use FC_Solve::InlineWrap (
     C => <<'EOF',
 #include "var_base_reader.h"
-#include "inline.h"
 
 SV* _proto_new(SV * data_proto) {
 
@@ -25,7 +24,7 @@ SV* _proto_new(SV * data_proto) {
         return obj_ref;
 }
 
-static GCC_INLINE fcs_var_base_reader_t * _var_base_deref(SV * const obj) {
+static inline fcs_var_base_reader_t * _var_base_deref(SV * const obj) {
     return ((fcs_var_base_reader_t *)SvIV(SvRV(obj)));
 }
 
