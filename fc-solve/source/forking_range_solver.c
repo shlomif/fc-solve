@@ -198,7 +198,6 @@ static inline void transaction(const worker_t *const worker, const int read_fd,
 
 int main(int argc, char *argv[])
 {
-
     int arg = 1;
 
     if (argc < 4)
@@ -410,12 +409,10 @@ int main(int argc, char *argv[])
         }
     }
 
+    int status;
+    for (size_t idx = 0; idx < num_workers; idx++)
     {
-        int status;
-        for (size_t idx = 0; idx < num_workers; idx++)
-        {
-            wait(&status);
-        }
+        wait(&status);
     }
 
     fc_solve_print_finished(total_num_iters);

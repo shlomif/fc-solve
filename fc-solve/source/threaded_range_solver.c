@@ -142,7 +142,6 @@ int main(int argc, char *argv[])
     }
     next_board_num = atoll(argv[context_arg++]);
     past_end_board = 1 + atoll(argv[context_arg++]);
-    ;
 
     if ((stop_at = atoll(argv[context_arg++])) <= 0)
     {
@@ -217,7 +216,6 @@ int main(int argc, char *argv[])
     {
         pthread_join(workers[idx], NULL);
     }
-
     fc_solve_print_finished(total_num_iters);
 
     return 0;
