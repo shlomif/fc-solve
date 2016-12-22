@@ -198,12 +198,9 @@ int main(int argc, char *argv[])
         }
     }
 
-    fcs_portable_time_t mytime;
     fc_solve_print_started_at();
-
     context_argc = argc;
     context_argv = argv;
-
     pthread_t workers[num_workers];
 
     for (int idx = 0; idx < num_workers; idx++)
@@ -224,7 +221,7 @@ int main(int argc, char *argv[])
         pthread_join(workers[idx], NULL);
     }
 
-    FCS_PRINT_FINISHED(mytime, total_num_iters);
+    fc_solve_print_finished(total_num_iters);
 
     return 0;
 }

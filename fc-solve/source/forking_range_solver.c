@@ -421,7 +421,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    FCS_PRINT_FINISHED(mytime, total_num_iters);
-
+    fc_solve_print_finished(total_num_iters);
     return 0;
 }
