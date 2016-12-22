@@ -65,7 +65,6 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
     freecell_solver_user_limit_iterations_long(
         instance, total_iterations_limit_per_board);
 
-    fcs_portable_time_t mytime;
     fcs_int_limit_t total_num_iters_temp = 0;
     long long board_num;
     do
@@ -117,9 +116,7 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
                     (total_num_iters += total_num_iters_temp);
                 pthread_mutex_unlock(&total_num_iters_lock);
                 total_num_iters_temp = 0;
-
-                FCS_PRINT_REACHED_BOARD(
-                    mytime, board_num, total_num_iters_copy);
+                fc_solve_print_reached(board_num, total_num_iters_copy);
             }
             freecell_solver_user_recycle(instance);
         }

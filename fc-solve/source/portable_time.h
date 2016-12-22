@@ -82,12 +82,15 @@ static inline void fc_solve_print_started_at(void)
         FCS_TIME_GET_USEC(mytime));
 }
 
-#define FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters)            \
-    FCS_GET_TIME(mytime);                                                      \
-    printf(("Reached Board No. %lld at %li.%.6li "                             \
-            "(total_num_iters=%lld)\n"),                                       \
-        board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime),        \
+static inline void fc_solve_print_reached(
+    const long long board_num, const long long total_num_iters)
+{
+    fcs_portable_time_t mytime;
+    FCS_GET_TIME(mytime);
+    printf("Reached Board No. %lld at %li.%.6li (total_num_iters=%lld)\n",
+        board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime),
         total_num_iters);
+}
 
 static inline void fc_solve_print_finished(const long long total_num_iters)
 {

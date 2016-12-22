@@ -24,7 +24,6 @@
 
 int main(int argc, char *argv[])
 {
-    fcs_portable_time_t mytime;
     long long total_num_iters = 0;
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
@@ -154,7 +153,7 @@ int main(int argc, char *argv[])
 
         if (board_num % stop_at == 0)
         {
-            FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters);
+            fc_solve_print_reached(board_num, total_num_iters);
         }
         freecell_solver_user_recycle(instance);
         trace_mem(board_num);
