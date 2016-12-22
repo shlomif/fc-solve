@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
         switch (ret)
         {
         case FCS_STATE_SUSPEND_PROCESS:
-            FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
+            fc_solve_print_intractable(board_num);
             print_int(&binary_output, -1);
             break;
 

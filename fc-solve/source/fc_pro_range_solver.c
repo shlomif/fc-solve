@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
         switch (freecell_solver_user_solve_board(instance, buffer))
         {
         case FCS_STATE_SUSPEND_PROCESS:
-            FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
+            fc_solve_print_intractable(board_num);
             num_iters = num_moves = num_fcpro_moves = -1;
             break;
 

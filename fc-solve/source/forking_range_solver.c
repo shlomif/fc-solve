@@ -88,7 +88,6 @@ static inline int worker_func(const worker_t w, void *const instance)
     request_t request;
     response_t response;
     fcs_state_string_t state_string;
-    fcs_portable_time_t mytime;
 
     while (1)
     {
@@ -113,7 +112,7 @@ static inline int worker_func(const worker_t w, void *const instance)
             switch (freecell_solver_user_solve_board(instance, state_string))
             {
             case FCS_STATE_SUSPEND_PROCESS:
-                FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
+                fc_solve_print_intractable(board_num);
                 break;
             case FCS_STATE_FLARES_PLAN_ERROR:
 #ifdef FCS_WITH_ERROR_STRS

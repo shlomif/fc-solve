@@ -85,7 +85,7 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
             switch (freecell_solver_user_solve_board(instance, state_string))
             {
             case FCS_STATE_SUSPEND_PROCESS:
-                FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
+                fc_solve_print_intractable(board_num);
                 break;
 
             case FCS_STATE_FLARES_PLAN_ERROR:
