@@ -8,7 +8,7 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 /*
- * test_multi_parallel.c - the Freecell Solver range solver.
+ * serial_range_solver.c - the Freecell Solver range solver.
  *
  * Also see:
  *  - fc_pro_range_solver.c - range solver that can count the moves in

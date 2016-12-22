@@ -548,7 +548,7 @@ ENDMACRO()
 
 
 FCS_ADD_EXEC(fc-solve main.c)
-FCS_ADD_EXEC(freecell-solver-range-parallel-solve test_multi_parallel.c)
+FCS_ADD_EXEC(freecell-solver-range-parallel-solve serial_range_solver.c)
 SET (_mods fc_pro_range_solver.c fc_pro_iface_aux.c)
 IF ("${FCS_WITHOUT_FC_PRO_MOVES_COUNT}")
     LIST(APPEND _mods fc_pro_iface.c)
