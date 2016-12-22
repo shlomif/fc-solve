@@ -96,7 +96,7 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
                 goto theme_error;
 
             case FCS_STATE_IS_NOT_SOLVEABLE:
-                FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+                fc_solve_print_unsolved(board_num);
                 break;
             }
 

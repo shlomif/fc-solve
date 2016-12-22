@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
             goto out_of_loop;
 
         case FCS_STATE_IS_NOT_SOLVEABLE:
-            FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+            fc_solve_print_unsolved(board_num);
             print_int(&binary_output, -2);
             break;
 

@@ -63,10 +63,13 @@ typedef struct
     printf("Intractable Board No. %lld at %li.%.6li\n", board_num,             \
         FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
 
-#define FCS_PRINT_UNSOLVED_BOARD(mytime, board_num)                            \
-    FCS_GET_TIME(mytime);                                                      \
-    printf("Unsolved Board No. %lld at %li.%.6li\n", board_num,                \
-        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime))
+static inline void fc_solve_print_unsolved(const long long board_num)
+{
+    fcs_portable_time_t mytime;
+    FCS_GET_TIME(mytime);
+    printf("Unsolved Board No. %lld at %li.%.6li\n", board_num,
+        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime));
+}
 
 static inline void fc_solve_print_started_at(void)
 {
