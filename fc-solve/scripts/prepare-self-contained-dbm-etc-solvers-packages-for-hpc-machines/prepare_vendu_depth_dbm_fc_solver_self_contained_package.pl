@@ -212,7 +212,7 @@ all: \$(TARGET) \$(JOBS)
 EOF
 
 chdir($temp_dir);
-system("tar", "-cavf", "$src_path/$dest_dir_base.tar.gz", "$dest_dir_base/");
+system("tar", "-cavf", "$src_path/$dest_dir_base.tar.xz", "$dest_dir_base/");
 chdir($src_path);
 
 __END__
