@@ -902,24 +902,39 @@ MACRO(GEN_BOARD_NO_NEWLINE idx)
     add_boards("${board}")
 ENDMACRO()
 
-FOREACH(idx 24 981 1941 1107600547)
-    GEN_BOARD("${idx}")
-ENDFOREACH(idx)
-GEN_BOARD_NO_NEWLINE(24)
+FIND_PROGRAM(_PYTHON3 "python3")
+SET (found_python3 )
+IF (NOT "${_PYTHON3}" STREQUAL "_PYTHON3-NOTFOUND")
+    SET (found_python3 "1")
+    EXECUTE_PROCESS(COMMAND "python3" "-c" "import random2; import sys; sys.exit(0);" RESULT_VARIABLE _random2)
+    IF ("${_random2}" STREQUAL "0")
+        SET (found_python3_random2 "1")
+    ELSE()
+        SET (found_python3_random2)
+        MESSAGE (WARNING "Could not find the python3's random2 module - please install it.")
+    ENDIF ()
+ENDIF ()
+
+IF (found_python3_random2)
+    FOREACH(idx 24 981 1941 1107600547)
+        GEN_BOARD("${idx}")
+    ENDFOREACH(idx)
+    GEN_BOARD_NO_NEWLINE(24)
 
 
-SET(board "empty.board")
-ADD_CUSTOM_COMMAND(
-    OUTPUT "${board}"
-    COMMAND "${CMAKE_COMMAND}"
-    ARGS "-E" "touch" "${board}"
-)
-add_boards("${board}")
+    SET(board "empty.board")
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${board}"
+        COMMAND "${CMAKE_COMMAND}"
+        ARGS "-E" "touch" "${board}"
+    )
+    add_boards("${board}")
 
-ADD_CUSTOM_TARGET(
-    boards
-    DEPENDS ${BOARDS}
-)
+    ADD_CUSTOM_TARGET(
+        boards
+        DEPENDS ${BOARDS}
+    )
+ENDIF ()
 
 SET (_readme "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
 SET (_usage  "${CMAKE_CURRENT_SOURCE_DIR}/USAGE.txt")

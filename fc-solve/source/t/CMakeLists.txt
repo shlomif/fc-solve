@@ -47,6 +47,10 @@ IF (FCS_WITH_TEST_SUITE)
 
     CHECK_FOR_MULTIPLE_PERL_MODULES("Task::FreecellSolver::Testing")
 
+    IF (NOT found_python3_random2)
+        MESSAGE (FATAL_ERROR "python3 and the random2 module from PyPI is required for running the test suite. Please install them.")
+    ENDIF ()
+
     FIND_LIBRARY(LIBTAP_LIB tap)
     IF (NOT LIBTAP_LIB)
         MESSAGE (FATAL_ERROR
