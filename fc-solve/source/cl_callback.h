@@ -415,6 +415,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
 
 #undef IS_ARG
 
+#ifndef WIN32
 static int command_num = 0;
 static int debug_iter_output_on = FALSE;
 
@@ -462,6 +463,7 @@ static void abort_signal_handler(int signal_num GCC_UNUSED)
 {
     freecell_solver_user_limit_iterations_long(current_instance, 0);
 }
+#endif
 
 static freecell_solver_str_t known_parameters[] = {"-h", "--help",
     "--help-configs", "--help-options", "--help-problems", "--help-real-help",
@@ -538,13 +540,14 @@ static inline int fc_solve_main__main(int argc, char *argv[])
     fc_solve_display_information_context_t display_context =
         INITIAL_DISPLAY_CONTEXT;
 
-    global_display_context = &display_context;
-
     int arg = 1;
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
         known_parameters, fc_solve__cmd_line_callback, &display_context, FALSE);
 
+#ifndef WIN32
+    global_display_context = &display_context;
     current_instance = instance;
+#endif
 
     FILE *const f = fc_solve_calc_file_handle(argc, argv, arg);
     if (!f)
