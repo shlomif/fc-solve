@@ -701,9 +701,6 @@ int main(int argc, char *argv[])
 
     if (intermediate_in_fh)
     {
-#if _POSIX_C_SOURCE > 200809L
-#define HAVE_GETLINE 1
-#endif
 #ifdef HAVE_GETLINE
         char *line = NULL;
         size_t line_size = 0;

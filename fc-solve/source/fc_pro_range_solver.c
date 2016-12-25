@@ -125,7 +125,8 @@ int main(int argc, char *argv[])
         {
             char command[1000];
 
-            sprintf(command, "make_pysol_freecell_board.py -F -t %lld %s",
+            sprintf(command,
+                "make_pysol_freecell_board.py -F -t " FCS_LL_FMT "%s",
                 board_num, variant);
 
             FILE *const from_make_pysol = popen(command, "r");

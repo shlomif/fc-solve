@@ -137,8 +137,8 @@ int main(int argc, char *argv[])
 
         if (solutions_directory)
         {
-            sprintf(
-                solution_fn, "%s%09lld.sol", solutions_directory, board_num);
+            sprintf(solution_fn, "%s" FCS_LL9_FMT ".sol", solutions_directory,
+                board_num);
             FILE *const output_fh = fopen(solution_fn, "wt");
             if (!output_fh)
             {

@@ -263,6 +263,12 @@ extern "C" {
 #define plan_tests(...) plan(__VA_ARGS__)
 #endif
 
+#ifdef _POSIX_C_SOURCE
+#if _POSIX_C_SOURCE > 200809L
+#define HAVE_GETLINE 1
+#endif
+#endif
+
 #ifdef __cplusplus
 }
 #endif

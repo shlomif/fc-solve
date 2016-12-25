@@ -21,9 +21,6 @@
 
 #include "depth_multi_queue.h"
 
-#if _POSIX_C_SOURCE > 200809L
-#define HAVE_GETLINE 1
-#endif
 typedef struct
 {
     fcs_dbm__cache_store__common_t cache_store;
@@ -604,8 +601,9 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 base64_encode((unsigned char *)&(*key), sizeof(*key),
                     state_base64, &unused_output_len);
                 /* Output the exit point. */
-                fprintf(instance->fcc_exit_points_out_fh, "%s %s %zd %s\n",
-                    fingerprint_base64, state_base64, added_moves_to_output,
+                fprintf(instance->fcc_exit_points_out_fh,
+                    "%s %s " FCS_LL_FMT " %s\n", fingerprint_base64,
+                    state_base64, (long long)added_moves_to_output,
                     instance->moves_base64_encoding_buffer);
 #ifdef DEBUG_OUT
                 {

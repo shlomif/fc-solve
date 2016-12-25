@@ -41,6 +41,7 @@ typedef struct
 #define FCS_TIME_GET_USEC(pt) ((long long)((pt).tv.tv_usec))
 #define FCS_LL_FMT "%lld"
 #define FCS_LL6_FMT "%.6lld"
+#define FCS_LL9_FMT "%09lld"
 #else
 
 typedef struct
@@ -56,6 +57,7 @@ typedef struct
 #define FCS_TIME_GET_USEC(pt) ((long long)(((pt).tb.millitm) * 1000))
 #define FCS_LL_FMT "%I64d"
 #define FCS_LL6_FMT "%.6I64d"
+#define FCS_LL9_FMT "%09I64d"
 #endif
 
 #ifdef __cplusplus

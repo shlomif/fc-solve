@@ -333,8 +333,14 @@ static inline void mark_and_sweep_old_states(
         }
         if (((++idx) % 100000) == 0)
         {
+#ifdef WIN32
+            fprintf(out_fh,
+                "Mark+Sweep Progress - " FCS_LL_FMT "/" FCS_LL_FMT "\n",
+                (long long)idx, (long long)items_count);
+#else
             fprintf(
                 out_fh, "Mark+Sweep Progress - %zd/%zd\n", idx, items_count);
+#endif
         }
     }
     TRACE("Finish mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
