@@ -223,7 +223,7 @@ static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
 
     FILE *const out_fh = instance->common.out_fh;
     fprintf(out_fh,
-        ("Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n"
+        ("Reached %ld ; States-in-collection: %ld ; Time: " FCS_T_FMT "\n"
          ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n"),
         instance->common.count_num_processed,
         instance->common.num_states_in_collection, FCS_TIME_GET_SEC(mytime),

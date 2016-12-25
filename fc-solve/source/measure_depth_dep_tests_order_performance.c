@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
                 (long)curr_result->num_iters);
 
 #define FPRINTF_TIME(label, field)                                             \
-    fprintf(output_fh, "board[%d].%s = %li.%.6li\n", board_num, label,         \
+    fprintf(output_fh, "board[%d].%s = " FCS_T_FMT "\n", board_num, label,     \
         FCS_TIME_GET_SEC(curr_result->field),                                  \
         FCS_TIME_GET_USEC(curr_result->field));
 
