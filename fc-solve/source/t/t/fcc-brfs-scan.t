@@ -121,7 +121,7 @@ static string_list_t av_to_char_p_p(AV * av)
         item = av_fetch(av, i, FALSE);
 
         assert(item);
-        ret[i] = strdup(SvPVbyte_nolen((*item)));
+        ret[i] = savepv(SvPVbyte_nolen((*item)));
     }
     ret[i] = NULL;
 
@@ -133,7 +133,7 @@ static void free_char_p_p(string_list_t p)
     string_list_t p_iter = p;
     while ((*p_iter))
     {
-        free(*p_iter);
+        Safefree(*p_iter);
         p_iter++;
     }
     free(p);

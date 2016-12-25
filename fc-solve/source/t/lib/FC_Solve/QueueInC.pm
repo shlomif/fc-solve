@@ -21,7 +21,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue
 
         New(42, s, 1, QueueInC);
 
-        fcs_offloading_queue__init(&(s->q), strdup(offload_dir_path), queue_id);
+        fcs_offloading_queue__init(&(s->q), savepv(offload_dir_path), queue_id);
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FC_Solve::QueueInC");
         sv_setiv(obj, (IV)s);
@@ -64,7 +64,7 @@ long get_num_extracted(SV* obj) {
 
 void DESTROY(SV* obj) {
   QueueInC * s = deref(obj);
-  free(s->q.offload_dir_path);
+  Safefree(s->q.offload_dir_path);
   fcs_offloading_queue__destroy(&s->q);
   Safefree(s);
 }

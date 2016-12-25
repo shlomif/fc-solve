@@ -26,7 +26,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_
 
         New(42, s, 1, QueueInC);
 
-        fcs_depth_multi_queue__init(&(s->q), strdup(offload_dir_path), first_depth, &first_item);
+        fcs_depth_multi_queue__init(&(s->q), savepv(offload_dir_path), first_depth, &first_item);
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         return obj_ref;
@@ -76,7 +76,7 @@ long get_num_extracted(SV* obj) {
 
 void DESTROY(SV* obj) {
   QueueInC * s = deref(obj);
-  free(s->q.offload_dir_path);
+  Safefree(s->q.offload_dir_path);
   fcs_depth_multi_queue__destroy(&(s->q));
   Safefree(s);
 }
