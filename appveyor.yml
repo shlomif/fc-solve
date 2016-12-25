@@ -11,7 +11,6 @@ install:
     - python3 -mpip install random2
     - perl -v
     - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
-    # - SET PATH=C:\msys64\mingw64\bin;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - SET PERL5LIB=C:/_P5/lib/perl5
     - SET PERL_LOCAL_LIB_ROOT=C:/_P5
@@ -25,14 +24,11 @@ install:
     - if not exist C:\libtap\gperf-3.0.4.tar.gz curl -fsS -o C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
     - copy C:\libtap\gperf-3.0.4.tar.gz .
     - tar -xvf gperf-3.0.4.tar.gz
-    # - if not exist C:\libtap\bin\gperf.exe cd gperf-3.0.4 && sh configure --prefix=C:/libtap && gmake && gmake install && cd ..
-    # - if not exist C:\libtap\bin\gperf.exe cd gperf-3.0.4 && perl -e "$ENV{PATH} = qq#C:\\msys64\\mingw64\\bin;$ENV{PATH}#; system('sh configure --prefix=C:/libtap && gmake && gmake install');" && cd ..
     - cd gperf-3.0.4 && perl -e "if (-e qq#C:\\libtap\\bin\\gperf.exe#) { exit(0); } $ENV{PATH} = qq#C:\\msys64\\mingw64\\bin;$ENV{PATH}#; system('sh configure --prefix=C:/libtap') or system('gmake') or system('gmake install');" && cd ..
     - git clone -b cmake https://github.com/shlomif/libtap
     - mkdir libtap\b
     - cd libtap\b
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
-    # - cmake -G "MSYS Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
     - cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
     - echo %PATH%
     - gmake
@@ -47,11 +43,9 @@ test_script:
     - set CPATH=C:\libtap\include
     - set PATH=C:\libtap\bin;%PATH%
     - set HARNESS_BREAK=1
-    # - set HARNESS_VERBOSE=1
     - set FCS_USE_TEST_RUN=1
     - mkdir fc-solve\b
     - cd fc-solve\b
-    # - perl ../source/Tatzer -G "MSYS Makefiles"
     - perl ../source/Tatzer -G "MinGW Makefiles"
     - SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
     - echo %PATH%
@@ -65,4 +59,3 @@ cache:
     - C:\_P5
     - C:\strawberry
 shallow_clone: true
-
