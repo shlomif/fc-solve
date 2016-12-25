@@ -426,7 +426,7 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
         {                                                                      \
             printf("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "         \
                    "tests_list_index=%d ; move_func_idx=%d ; "                 \
-                   "current_state_index=%d ; num_states=%zd\n",                \
+                   "current_state_index=%d ; num_states=%ld\n",                \
                 message, (long int)DFS_VAR(soft_thread, depth),                \
                 (long int)(the_soft_dfs_info -                                 \
                            DFS_VAR(soft_thread, soft_dfs_info)),               \
@@ -434,7 +434,8 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
                 the_soft_dfs_info->tests_list_index,                           \
                 the_soft_dfs_info->move_func_idx,                              \
                 the_soft_dfs_info->current_state_index,                        \
-                (derived_states_list ? derived_states_list->num_states : -1)); \
+                (long)(derived_states_list ? derived_states_list->num_states   \
+                                           : -1));                             \
             fflush(stdout);                                                    \
         }                                                                      \
     }
