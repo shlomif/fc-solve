@@ -97,7 +97,9 @@ if (
     del();
     die "Running gperf failed!";
 }
-path($inc_h)->edit_utf8( sub { s#^(struct CommandOption \*)$#static $1#gms; } );
+path($inc_h)
+    ->edit_utf8( sub { s#(^|\n)(struct CommandOption \*)$#${1}static $2#gms; }
+    );
 
 __END__
 
