@@ -85,27 +85,13 @@ system(File::Spec->catdir($src_path, "Tatzer"),
 
 my $main_base = $depth_dbm ? "depth_dbm_solver" : "dbm_solver";
 
-# my @modules = ('card.o', 'dbm_solver.o', 'state.o', 'dbm_kaztree.o', 'rwlock.o', 'queue.o', 'libavl/avl.o', 'meta_alloc.o',);
-my @modules = ('card.o', "$main_base.o", 'state.o', 'dbm_kaztree.o', 'libavl/avl.o', 'meta_alloc.o',);
+use FindBin ();
+use lib "$FindBin::Bin";
+use PrepareCommon;
 
-foreach my $fn ('card.c', "$main_base.c", 'state.c',
-    'dbm_kaztree.c', 'state.h', 'lock.h',
-    'dbm_solver.h', 'dbm_solver_head.h', 'dll_thunk.h', 'kaz_tree.h', 'dbm_solver_key.h',
-    'fcs_move.h', 'inline.h', 'bool.h', 'internal_move_struct.h',
-    'delta_states.c', 'delta_states.h', 'fcs_dllexport.h', 'bit_rw.h',
-    'fcs_enums.h', 'unused.h', 'fcs_limit.h',
-    'portable_time.h', 'dbm_calc_derived.h', 'dbm_calc_derived_iface.h',
-    'libavl/avl.c', 'libavl/avl.h', 'offloading_queue.h',
-    'indirect_buffer.h', 'generic_tree.h', 'meta_alloc.h', 'meta_alloc.c',
-    'fcc_brfs_test.h','dbm_kaztree_compare.h', 'delta_states_iface.h',
-    'dbm_cache.h', 'dbm_lru_cache.h', 'dbm_trace.h', 'dbm_procs.h',
-    'delta_states_debondt.c', 'delta_states_any.h', 'delta_states_debondt.h',
-    'debondt_delta_states_iface.h', 'read_state.h',
-    'var_base_reader.h', 'var_base_writer.h', 'rinutils.h', 'alloc_wrap.h',
-    'count.h', 'likely.h', 'min_and_max.h', 'portable_int32.h', 'str_utils.h',
-    'typeof_wrap.h', 'game_type_limit.h', 'p2u_rank.h', 'delta_states_debondt_impl.h', 'var_base_int.h', 'dbm_move_to_string.h', 'render_state.h',
-    'depth_dbm_procs.h', 'dbm_procs_inner.h',
-)
+my $obj = PrepareCommon->new({depth_dbm => $depth_dbm});
+
+foreach my $fn (@{$obj->src_filenames()})
 {
     io("$src_path/$fn") > io("$dest_dir/$fn");
 }
@@ -162,7 +148,7 @@ foreach my $deal_idx (@deals)
     }
 }
 
-@modules = sort { $a cmp $b } @modules;
+my @modules = @{ $obj->modules };
 
 my $more_cflags = $flto ? " -flto " : '';
 
