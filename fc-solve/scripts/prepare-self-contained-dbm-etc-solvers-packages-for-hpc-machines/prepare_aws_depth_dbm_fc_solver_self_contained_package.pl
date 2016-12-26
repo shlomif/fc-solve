@@ -59,8 +59,8 @@ if ($sub)
 elsif ($is_am)
 {
     $flto = 0;
-    $num_cpus = $num_threads = 12;
-    $mem = 127;
+    $num_cpus = $num_threads = 16;
+    $mem = 64;
     $num_hours = 700;
     $march_flag = '';
 }
@@ -109,7 +109,7 @@ foreach my $fn ('rwlock.c', 'queue.c', 'pthread/rwlock_fcfs.h', 'pthread/rwlock_
     io("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads/$fn") > io("$dest_dir/$fn")
 }
 
-for my $fn ("prepare_pbs_deal.bash")
+for my $fn ("prepare_vendu_deal.bash")
 {
     io("$BIN_DIR/$fn") > io("$dest_dir/$fn")
 }
@@ -135,7 +135,8 @@ my @deals =
 
 my @deals =
 (qw/
-6825625742
+504179225
+8203007169
 /);
 
 foreach my $deal_idx (@deals)
@@ -187,14 +188,14 @@ all: \$(TARGET) \$(JOBS)
 \ttouch \$\@
 
 \$(JOBS): %: \$(JOBS_STAMP) \$(RESULT)
-\tTHREADS="\$(THREADS)" MEM="\$(MEM)" CPUS="\$(CPUS)" HOURS="\$(HOURS)" bash prepare_pbs_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
+\tTHREADS="\$(THREADS)" MEM="\$(MEM)" CPUS="\$(CPUS)" HOURS="\$(HOURS)" bash prepare_vendu_deal.bash "\$(patsubst jobs/%.job.sh,%,\$\@)" "\$\@"
 
 %.show:
 \t\@echo "\$* = \$(\$*)"
 EOF
 
 chdir($temp_dir);
-system("tar", "-cavf", "$src_path/$dest_dir_base.tar.gz", "$dest_dir_base/");
+system("tar", "-cavf", "$src_path/$dest_dir_base.tar.xz", "$dest_dir_base/");
 chdir($src_path);
 
 __END__
