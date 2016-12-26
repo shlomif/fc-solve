@@ -83,8 +83,6 @@ system(File::Spec->catdir($src_path, "Tatzer"),
     $src_path
 );
 
-my $main_base = $depth_dbm ? "depth_dbm_solver" : "dbm_solver";
-
 use FindBin ();
 use lib "$FindBin::Bin";
 use PrepareCommon;
