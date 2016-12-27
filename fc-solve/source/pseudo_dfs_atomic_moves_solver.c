@@ -16,6 +16,7 @@
 
 #include "dbm_solver_head.h"
 #include "pseudo_dfs_cache.h"
+#include "render_state.h"
 
 #include <Judy.h>
 
@@ -123,7 +124,8 @@ static inline void instance__inspect_new_state(
     {
         kv.key = &(derived_list->state.s);
         kv.val = &(derived_list->state.info);
-        fc_solve_canonize_state(kv.key, FREECELLS_NUM, STACKS_NUM);
+        fc_solve_canonize_state(
+            kv.key PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM));
 
         if (!lookup_state(
                 &(instance->store), &(instance->cache), &(derived_list->state)))
