@@ -12,6 +12,7 @@ install:
       # - sudo easy_install3 pip
     - sudo -H python3 -m pip install random2
     - sudo -H `which python3` -m pip install random2
+    - sudo -H `which python3` -m pip install Zenfilter
     - which python3
       # - /usr/bin/env python3 -m sys -m random2 -c 'print(sys.executable)'
       # Temporary workaround for a problem in running the Inline::C test
@@ -28,4 +29,5 @@ perl:
     - "5.24"
 python:
     - "3.5"
-script: "export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 ; cd fc-solve/source && perl scripts/multi_config_tests.pl"
+script:
+    - export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 ; set -o pipefail ; cd fc-solve/source ; perl scripts/multi_config_tests.pl 2>&1 | zenfilter --count-step=500 --last=500 --filter='^Running:.*?\[idx\s*=\s*[0-9]+\s*/\s*[0-9]+'
