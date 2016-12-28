@@ -3,9 +3,6 @@
 use strict;
 use warnings;
 
-use File::Basename;
-use File::Spec;
-
 use Getopt::Long;
 
 my $flto = 0;

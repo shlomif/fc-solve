@@ -3,11 +3,6 @@
 use strict;
 use warnings;
 
-use IO::All qw/ io /;
-use File::Basename ();
-use File::Path qw/ mkpath /;
-use File::Spec;
-
 use Getopt::Long;
 
 my $flto = 0;

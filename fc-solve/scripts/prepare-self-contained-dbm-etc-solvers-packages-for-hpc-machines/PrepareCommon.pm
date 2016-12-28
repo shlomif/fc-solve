@@ -3,6 +3,8 @@ package PrepareCommon;
 use strict;
 use warnings;
 
+use File::Spec;
+use File::Basename ();
 use File::Temp qw / tempdir /;
 use Cwd qw / getcwd /;
 use File::Path qw/ mkpath /;
