@@ -3,10 +3,10 @@ package FC_Solve::CmdLine::Expand;
 use strict;
 use warnings;
 
-use FC_Solve::SplitCmdLine;
-use Path::Tiny;
+use FC_Solve::SplitCmdLine ();
+use Path::Tiny qw/ path /;
 
-use MooX qw( late );
+use MooX qw/ late /;
 
 sub _build_argv
 {

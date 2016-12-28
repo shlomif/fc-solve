@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-use IO::All;
+use IO::All qw/ io /;
 
 my $fh = io->file("dump.txt");
 

@@ -3,8 +3,8 @@ package FC_Solve::CmdLine::Simulate;
 use strict;
 use warnings;
 
-use FC_Solve::CmdLine::Simulate::Flare;
-use FC_Solve::CmdLine::Expand;
+use FC_Solve::CmdLine::Simulate::Flare ();
+use FC_Solve::CmdLine::Expand          ();
 
 use MooX qw( late );
 

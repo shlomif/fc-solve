@@ -8,9 +8,9 @@ use autodie;
 use base 'HTML::Widgets::NavMenu::Object';
 use base 'Class::Accessor';
 
-use XML::Feed;
-use CGI;
-use Encode;
+use XML::Feed ();
+use CGI ();
+use Encode qw/ decode /;
 
 __PACKAGE__->mk_accessors(qw(
     feed

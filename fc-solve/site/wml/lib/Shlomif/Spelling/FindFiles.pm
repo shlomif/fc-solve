@@ -6,7 +6,7 @@ use warnings;
 use MooX qw/late/;
 use List::MoreUtils qw/any/;
 
-use HTML::Spelling::Site::Finder;
+use HTML::Spelling::Site::Finder ();
 
 my @prunes =
 (

@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
-use Getopt::Long;
-use File::Temp qw/tempdir/;
-use File::Copy;
+use Getopt::Long qw/ GetOptions /;
+use File::Temp qw/ tempdir /;
+use File::Copy qw/ copy /;
 
 my ( $src, $dest, $sect, $center, $release );
 

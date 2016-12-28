@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-use Template;
-use Path::Tiny;
+use Template ();
+use Path::Tiny qw/ path /;
 use FindBin;
 
 sub rank_normalize

@@ -1,6 +1,7 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
+use warnings;
 
 my $string = join("", <>);
 
@@ -13,9 +14,8 @@ my @chars = split(//, $string);
 my $next_char;
 
 push @chars, "\0";
-my $i;
 
-for($i=0;$i<scalar(@chars);)
+for (my $i = 0 ; $i < @chars;)
 {
     while ($chars[$i] =~ /^[ \t\n]$/)
     {
@@ -100,7 +100,7 @@ for($i=0;$i<scalar(@chars);)
 }
 
 END_OF_LOOP:
-for($i=0;$i<scalar(@args);$i++)
+while (my ($i, $arg) = each @args)
 {
-    print "$i: $args[$i]\n";
+    print "$i: $arg\n";
 }

@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Test::More tests => 18;
-use File::Spec;
 use File::Temp qw( tempdir );
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );

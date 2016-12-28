@@ -3,9 +3,6 @@
 use strict;
 use warnings;
 
-use Config;
-use Cwd;
-
 use lib "$ENV{FCS_SRC_PATH}/t/t/lib";
 
 use FC_Solve::InlineWrap (
@@ -53,10 +50,10 @@ EOF
 );
 
 use IO::Handle;
-use FC_Solve::DeltaStater;
-use FC_Solve::DeltaStater::DeBondt;
+use FC_Solve::DeltaStater          ();
+use FC_Solve::DeltaStater::DeBondt ();
 
-use Parallel::ForkManager;
+use Parallel::ForkManager ();
 
 STDOUT->autoflush(1);
 

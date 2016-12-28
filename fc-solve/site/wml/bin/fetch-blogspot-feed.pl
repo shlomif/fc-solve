@@ -5,7 +5,7 @@ use warnings;
 
 use lib "./lib";
 
-use FreecellSolver::Site::Rss;
+use FreecellSolver::Site::Rss ();
 
 my $feed = FreecellSolver::Site::Rss->new();
 $feed->run();

@@ -3,42 +3,46 @@
 use strict;
 use warnings;
 
-use DateTime;
-use DateTime::Format::Strptime;
-use Time::JulianDay;
+use DateTime                   ();
+use DateTime::Format::Strptime ();
+use Time::JulianDay qw/ gm_julian_day /;
 
-use IO::All qw/io/;
+use IO::All qw/ io /;
 
 my @releases;
 
 my $strptime = DateTime::Format::Strptime->new(
-    pattern => '%d-%b-%Y',
-    locale => 'en_GB',
+    pattern   => '%d-%b-%Y',
+    locale    => 'en_GB',
     time_zone => 'UTC',
-    on_error => 'croak',
+    on_error  => 'croak',
 );
 
-foreach my $l (io->file("./NEWS.txt")->chomp->getlines())
+foreach my $l ( io->file("./NEWS.txt")->chomp->getlines() )
 {
-    if (my ($ver, $date_s) = $l =~ m#\AVersion ([0-9\.]+):? \(([0-9]+-[A-Z][a-z]+-[0-9]+)\)\z#)
+    if ( my ( $ver, $date_s ) =
+        $l =~ m#\AVersion ([0-9\.]+):? \(([0-9]+-[A-Z][a-z]+-[0-9]+)\)\z# )
     {
-        if ($ver eq '0.4' or $ver eq '0.6' or $ver =~ /\.0\z/)
+        if ( $ver eq '0.4' or $ver eq '0.6' or $ver =~ /\.0\z/ )
         {
-            push @releases, +{
-                ver => $ver,
-                date => gm_julian_day($strptime->parse_datetime($date_s)->epoch()),
-            };
+            push @releases,
+                +{
+                ver  => $ver,
+                date => gm_julian_day(
+                    $strptime->parse_datetime($date_s)->epoch()
+                ),
+                };
         }
     }
 }
 
-unshift @releases, +{ ver => "Future", date => gm_julian_day(time()), };
+unshift @releases, +{ ver => "Future", date => gm_julian_day( time() ), };
 
-@releases = reverse@releases;
-foreach my $i (1 .. $#releases)
+@releases = reverse @releases;
+foreach my $i ( 1 .. $#releases )
 {
-    my ($p, $n) = @releases[$i-1,$i];
-    printf "%s→%s\t%d\n", $p->{ver}, $n->{ver}, $n->{date}-$p->{date};
+    my ( $p, $n ) = @releases[ $i - 1, $i ];
+    printf "%s→%s\t%d\n", $p->{ver}, $n->{ver}, $n->{date} - $p->{date};
 }
 __END__
 

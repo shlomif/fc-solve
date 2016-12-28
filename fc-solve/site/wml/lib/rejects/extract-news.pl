@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Data::Dumper;
-use IO::All;
-use POSIX;
+use Data::Dumper ();
+use IO::All qw/ io /;
 
 my @results;
 my $last_time;

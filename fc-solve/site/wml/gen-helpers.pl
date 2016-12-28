@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-use HTML::Latemp::GenMakeHelpers;
-use File::Find::Object::Rule;
+use HTML::Latemp::GenMakeHelpers ();
+use File::Find::Object::Rule ();
 
 require IO::All;
 

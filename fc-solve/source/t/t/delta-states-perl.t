@@ -6,14 +6,14 @@ use warnings;
 use Test::More tests => 56;
 use Test::Differences qw/ eq_or_diff /;
 
-use FC_Solve::DeltaStater;
-use FC_Solve::DeltaStater::BitReader;
-use FC_Solve::DeltaStater::BitWriter;
-use FC_Solve::DeltaStater::DeBondt;
-use FC_Solve::VarBaseDigitsReader;
-use FC_Solve::VarBaseDigitsReader::XS;
-use FC_Solve::VarBaseDigitsWriter;
-use FC_Solve::VarBaseDigitsWriter::XS;
+use FC_Solve::DeltaStater             ();
+use FC_Solve::DeltaStater::BitReader  ();
+use FC_Solve::DeltaStater::BitWriter  ();
+use FC_Solve::DeltaStater::DeBondt    ();
+use FC_Solve::VarBaseDigitsReader     ();
+use FC_Solve::VarBaseDigitsReader::XS ();
+use FC_Solve::VarBaseDigitsWriter     ();
+use FC_Solve::VarBaseDigitsWriter::XS ();
 
 package main;
 

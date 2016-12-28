@@ -3,10 +3,10 @@
 use strict;
 use warnings;
 
-use IO::All;
-use File::Path;
+use IO::All qw/ io /;
+use File::Path qw/ mkpath /;
 
-use Getopt::Long;
+use Getopt::Long qw/ GetOptions /;
 
 my $to_upload = 0;
 GetOptions(

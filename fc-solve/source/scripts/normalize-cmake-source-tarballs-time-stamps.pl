@@ -3,11 +3,11 @@
 use strict;
 use warnings;
 
-use Getopt::Long;
-use File::Find::Object;
+use Getopt::Long qw/ GetOptions /;
+use File::Find::Object ();
 use File::Temp qw( tempdir );
 use List::Util qw( first );
-use File::Spec;
+use File::Spec ();
 use File::stat;
 use Cwd qw ( getcwd );
 

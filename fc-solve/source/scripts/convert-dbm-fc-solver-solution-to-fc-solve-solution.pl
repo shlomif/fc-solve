@@ -15,10 +15,10 @@ package Games::Solitaire::Verify::App::From_DBM_FC_Solver;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::Verify::VariantsMap;
-use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::Verify::State;
-use Games::Solitaire::Verify::Move;
+use Games::Solitaire::Verify::VariantsMap ();
+use Games::Solitaire::Verify::Solution    ();
+use Games::Solitaire::Verify::State       ();
+use Games::Solitaire::Verify::Move        ();
 
 use Getopt::Long qw(GetOptionsFromArray);
 

@@ -6,7 +6,7 @@ use autodie;
 
 use Data::Dumper ();
 
-use Test::Data::Split;
+use Test::Data::Split ();
 
 sub gen
 {

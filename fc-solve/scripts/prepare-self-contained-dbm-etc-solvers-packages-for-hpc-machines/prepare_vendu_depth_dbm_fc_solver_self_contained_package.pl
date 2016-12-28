@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
-use IO::All;
-use File::Basename;
-use File::Path;
+use IO::All qw/ io /;
+use File::Basename ();
+use File::Path qw/ mkpath /;
 use File::Temp qw / tempdir /;
 use File::Spec;
 use Cwd qw / getcwd /;

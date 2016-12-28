@@ -3,7 +3,7 @@ package FC_Solve::ShaAndLen;
 use strict;
 use warnings;
 
-use Digest::SHA;
+use Digest::SHA ();
 
 use parent 'Games::Solitaire::Verify::Base';
 

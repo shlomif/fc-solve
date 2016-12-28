@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-use Cwd;
 use File::Path qw(mkpath);
 
 my $filename = shift(@ARGV);

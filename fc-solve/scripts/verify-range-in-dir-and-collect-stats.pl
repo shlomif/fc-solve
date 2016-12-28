@@ -9,8 +9,8 @@ use parent 'Games::Solitaire::Verify::Base';
 
 use Getopt::Long qw(GetOptionsFromArray);
 
-use Games::Solitaire::Verify::VariantsMap;
-use Games::Solitaire::Verify::Solution;
+use Games::Solitaire::Verify::VariantsMap ();
+use Games::Solitaire::Verify::Solution ();
 
 use Storable qw(nstore retrieve);
 

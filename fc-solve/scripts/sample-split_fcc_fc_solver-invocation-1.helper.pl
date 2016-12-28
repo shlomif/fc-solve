@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
-use FC_Solve::Base64;
-use Games::Solitaire::FC_Solve::DeltaStater::DeBondt;
-use IO::All;
+use FC_Solve::Base64 ();
+use Games::Solitaire::FC_Solve::DeltaStater::DeBondt ();
+use IO::All qw/ io /;
 
 my $delta = Games::Solitaire::FC_Solve::DeltaStater::DeBondt->new(
     {init_state_str => io->file($ENV{I})->all(), }

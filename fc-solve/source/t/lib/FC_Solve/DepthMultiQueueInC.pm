@@ -3,8 +3,6 @@ package FC_Solve::DepthMultiQueueInC;
 use strict;
 use warnings;
 
-use Config;
-
 use FC_Solve::InlineWrap (
     C => <<'EOF',
 #define FCS_DBM_USE_OFFLOADING_QUEUE

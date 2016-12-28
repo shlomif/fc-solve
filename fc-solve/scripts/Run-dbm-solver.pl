@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Cwd;
+use Cwd ();
 
 my $filename = shift(@ARGV);
 

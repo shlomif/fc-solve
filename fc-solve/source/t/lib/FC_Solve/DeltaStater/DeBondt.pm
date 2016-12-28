@@ -5,12 +5,16 @@ use warnings;
 
 use parent 'FC_Solve::DeltaStater';
 
-use Carp;
+use Carp ();
 
-use Games::Solitaire::Verify::Solution;
-use FC_Solve::DeltaStater::OptionsStruct;
-use FC_Solve::VarBaseDigitsReader;
-use FC_Solve::VarBaseDigitsWriter;
+use Games::Solitaire::Verify::Card        ();
+use Games::Solitaire::Verify::Column      ();
+use Games::Solitaire::Verify::Foundations ();
+use Games::Solitaire::Verify::State       ();
+
+use FC_Solve::DeltaStater::OptionsStruct ();
+use FC_Solve::VarBaseDigitsReader        ();
+use FC_Solve::VarBaseDigitsWriter        ();
 
 =head1 ALGORITHM
 

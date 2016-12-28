@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Statistics::Descriptive;
+use Statistics::Descriptive ();
 
 my @buckets_ids = (qw(solved unsolvable));
 my %buckets =

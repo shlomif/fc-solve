@@ -3,13 +3,13 @@
 use strict;
 use warnings;
 
-use Getopt::Long;
+use Getopt::Long qw/ GetOptions /;
 use IO::Handle;
 use List::Util qw(min first);
 
 use PDL ();
 
-use FC_Solve::TimePresets;
+use FC_Solve::TimePresets ();
 
 STDOUT->autoflush(1);
 

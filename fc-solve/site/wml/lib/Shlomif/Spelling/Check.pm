@@ -7,9 +7,9 @@ use utf8;
 
 use MooX qw/late/;
 
-use Text::Hunspell;
-use Shlomif::Spelling::Whitelist;
-use HTML::Spelling::Site::Checker;
+use Text::Hunspell ();
+use Shlomif::Spelling::Whitelist ();
+use HTML::Spelling::Site::Checker ();
 
 sub spell_check
 {

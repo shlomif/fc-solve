@@ -3,8 +3,6 @@ package FC_Solve::VarBaseDigitsWriter::XS;
 use strict;
 use warnings;
 
-use Config;
-
 use FC_Solve::InlineWrap (
     C => <<'EOF',
 #include "var_base_writer.h"

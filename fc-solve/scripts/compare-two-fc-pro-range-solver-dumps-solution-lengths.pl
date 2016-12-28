@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-use IO::All;
-use Getopt::Long;
+use IO::All qw/ io /;
+use Getopt::Long qw/ GetOptions /;
 use File::Basename qw(basename);
 use List::Util qw(min);
 

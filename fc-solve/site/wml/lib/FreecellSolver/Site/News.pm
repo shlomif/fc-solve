@@ -2,16 +2,15 @@ package FreecellSolver::Site::News;
 
 use strict;
 use warnings;
-
 use autodie;
-
 use utf8;
 
-use base 'HTML::Widgets::NavMenu::Object';
-use base 'Class::Accessor';
+use parent 'HTML::Widgets::NavMenu::Object';
+use parent 'Class::Accessor';
 
-use MyOldNews;
-use DateTime;
+use Path::Tiny qw/ path /;
+use MyOldNews ();
+use DateTime ();
 
 __PACKAGE__->mk_accessors(qw(
     dir
@@ -38,12 +37,7 @@ sub file_to_news_item
 {
     my $self = shift;
     my $filename = shift;
-    my $text = do {
-        local $/;
-        open my $fh, "<", $self->dir()."/".$filename;
-        binmode $fh, ":utf8";
-        <$fh>;
-    };
+    my $text = path ( $self->dir()."/".$filename)->slurp_utf8;
     my $title;
     if ($text =~ s{\A<!-- TITLE=(.*?)-->\n}{})
     {

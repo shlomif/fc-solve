@@ -4,9 +4,8 @@ use warnings;
 use autodie;
 
 use List::Util qw(first);
-use Data::Dumper;
 use FindBin;
-use Path::Tiny qw/path/;
+use Path::Tiny qw/ path /;
 
 my %strings_to_opts_map;
 

@@ -3,14 +3,12 @@ package MyNews;
 use strict;
 use warnings;
 
-use POSIX;
+use CGI ();
 
-use CGI;
+use DateTime ();
+use XML::Feed ();
 
-use DateTime;
-use XML::Feed;
-
-use MyOldNews;
+use MyOldNews ();
 
 sub _render_news_item
 {

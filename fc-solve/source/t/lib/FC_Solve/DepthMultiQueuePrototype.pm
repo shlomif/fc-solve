@@ -2,7 +2,7 @@ package FC_Solve::DepthMultiQueuePrototype;
 
 use strict;
 use warnings;
-use FC_Solve::QueueInC;
+use FC_Solve::QueueInC ();
 
 use parent 'Games::Solitaire::Verify::Base';
 

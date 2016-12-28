@@ -3,7 +3,10 @@ package FC_Solve::DeltaStater;
 use strict;
 use warnings;
 
-use Games::Solitaire::Verify::Solution;
+use Games::Solitaire::Verify::Card        ();
+use Games::Solitaire::Verify::Column      ();
+use Games::Solitaire::Verify::State       ();
+use Games::Solitaire::Verify::VariantsMap ();
 
 use FC_Solve::DeltaStater::BitWriter;
 use FC_Solve::DeltaStater::BitReader;

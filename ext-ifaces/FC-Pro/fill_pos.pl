@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
+use warnings;
 
 my %ranks_map = qw(A 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 T 10 J 11 Q 12 K 13 10 10);
 
@@ -21,11 +22,11 @@ my @foundation = (0,0,0,0);
 my @freecells = ();
 
 my $stack = 0;
+PARSE:
 while(<>)
 {
-    if (/^Foundations:/)
+    if (s/\AFoundations:\s*//)
     {
-        s/^Foundations:\s*//;
         my @f_s = split(/\s+/, $_);
         foreach my $f (@f_s)
         {
@@ -33,14 +34,13 @@ while(<>)
             $foundation[$suits_map{$1}] = $ranks_map{$2};
         }
 
-        next;
+        next PARSE;
     }
-    if (/^Freecells:/)
+    if (s/^Freecells:\s*//)
     {
-        s/^Freecells:\s*//;
         my $string = $_;
         @freecells = (map { &card_to_num($_) } split(/\s+/, $string));
-        next;
+        next PARSE;
     }
     my @cards = split(/\s+/, $_);
     print "mypos.tableau[$stack].count = " . scalar(@cards) . ";\n";

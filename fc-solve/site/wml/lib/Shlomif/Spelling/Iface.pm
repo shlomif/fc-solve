@@ -5,8 +5,8 @@ use warnings;
 
 use MooX (qw( late ));
 
-use Shlomif::Spelling::Check;
-use Shlomif::Spelling::FindFiles;
+use Shlomif::Spelling::Check ();
+use Shlomif::Spelling::FindFiles ();
 
 sub run
 {

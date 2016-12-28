@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 use autodie;
-use File::Spec;
-use Path::Tiny;
+use File::Spec ();
+use Path::Tiny qw/ path /;
 use List::Util qw/ product sum /;
 
 my $src_dir = shift(@ARGV);

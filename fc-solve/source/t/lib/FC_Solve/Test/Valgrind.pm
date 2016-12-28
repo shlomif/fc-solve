@@ -10,7 +10,7 @@ use File::Temp qw( tempdir );
 use FC_Solve::Paths
     qw( $IS_WIN bin_board bin_exe_raw is_without_dbm is_without_valgrind samp_board samp_preset );
 
-use Test::RunValgrind;
+use Test::RunValgrind ();
 
 sub _expand_arg
 {

@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-use Getopt::Long;
-use Path::Tiny;
+use Getopt::Long qw/ GetOptions /;
+use Path::Tiny qw/ path /;
 
 =head1 NAME
 

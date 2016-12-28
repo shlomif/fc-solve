@@ -8,11 +8,10 @@ use parent 'Games::Solitaire::Verify::Base';
 use YAML::XS qw(DumpFile LoadFile);
 use FC_Solve::Paths qw( is_freecell_only is_without_flares );
 
-use String::ShellQuote;
-use Carp;
+use Carp ();
 
 use Test::More;
-use FC_Solve::ShaAndLen;
+use FC_Solve::ShaAndLen ();
 use FC_Solve::GetOutput ();
 
 __PACKAGE__->mk_acc_ref(

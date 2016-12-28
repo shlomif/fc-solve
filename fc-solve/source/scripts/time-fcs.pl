@@ -8,7 +8,7 @@
 
 use strict;
 use warnings;
-use Path::Tiny;
+use Path::Tiny qw/ path /;
 
 sub get_time
 {
