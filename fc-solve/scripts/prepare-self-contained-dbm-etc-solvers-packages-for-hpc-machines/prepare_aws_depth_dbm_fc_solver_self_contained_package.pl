@@ -60,5 +60,10 @@ use FindBin ();
 use lib "$FindBin::Bin";
 use PrepareCommon;
 
-my $obj = PrepareCommon->new({depth_dbm => $depth_dbm, dest_dir_base => $dest_dir_base, flto => $flto, num_threads => $num_threads, mem => $mem, num_hours => $num_hours, march_flag => $march_flag});
+my @deals =
+(qw/
+    504179225
+    8203007169
+    /);
+my $obj = PrepareCommon->new({depth_dbm => $depth_dbm, dest_dir_base => $dest_dir_base, flto => $flto, num_threads => $num_threads, mem => $mem, num_hours => $num_hours, march_flag => $march_flag, deals => [@deals],});
 $obj->run;

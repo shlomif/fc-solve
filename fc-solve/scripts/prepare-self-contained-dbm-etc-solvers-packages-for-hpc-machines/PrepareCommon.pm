@@ -16,6 +16,8 @@ has 'depth_dbm' => (is => 'ro', isa => 'Bool', required => 1);
 has ['dest_dir_base', 'march_flag'] => (is => 'ro', isa => 'Str', required => 1);
 has 'flto' => (is => 'ro', isa => 'Bool', required => 1);
 has ['mem', 'num_hours', 'num_threads'] => (is => 'ro', isa => 'Int', required => 1);
+has ['num_freecells'] => (is => 'ro', isa => 'Int', default => 4,);
+has 'deals' => (is => 'ro', isa => 'ArrayRef[Int]', required => 1);
 
 sub main_base
 {
@@ -114,7 +116,7 @@ sub run
     my $self = shift;
 
     my $BIN_DIR = File::Spec->rel2abs(File::Basename::dirname($0));
-    my $num_freecells = $ENV{NUM_FC} || 4;
+    my $num_freecells = $ENV{NUM_FC} || $self->num_freecells;
     my $temp_dir = tempdir( CLEANUP => 1 );
     my $dest_dir_base = $self->dest_dir_base;
     my $dest_dir = File::Spec->catdir($temp_dir, $dest_dir_base);
@@ -158,12 +160,7 @@ sub run
         io("$BIN_DIR/$fn") > io("$dest_dir/$fn")
     }
 
-my @deals =
-(qw/
-    504179225
-    8203007169
-    /);
-
+    my @deals = @{ $self->deals };
 foreach my $deal_idx (@deals)
 {
     if (system(qq{pi-make-microsoft-freecell-board -t $deal_idx > $dest_dir/$deal_idx.board}) != 0)
