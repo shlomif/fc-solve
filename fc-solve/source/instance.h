@@ -1089,9 +1089,9 @@ static inline void fc_solve_free_tests_order(fcs_tests_order_t *tests_order)
 /***********************************************************/
 
 #define DECLARE_MOVE_FUNCTION(name)                                            \
-    extern void name(fc_solve_soft_thread_t *const soft_thread,                \
-        fcs_kv_state_t *const raw_ptr_state_raw,                               \
-        fcs_derived_states_list_t *const derived_states_list)
+    extern void name(fc_solve_soft_thread_t *const restrict soft_thread,       \
+        fcs_kv_state_t *const restrict raw_ptr_state_raw,                      \
+        fcs_derived_states_list_t *const restrict derived_states_list)
 
 #ifdef FCS_SINGLE_HARD_THREAD
 extern void fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
