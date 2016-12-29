@@ -1,5 +1,5 @@
-DEBUG = 0
-PROFILE = 0
+DEBUG = 1
+PROFILE = 2
 WITH_TRACES = 0
 FREECELL_ONLY = 1
 DISABLE_PATSOLVE = 1
@@ -106,7 +106,7 @@ ifeq ($(GCC_COMPAT),1)
 	else
 		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS) -fvisibility=hidden
 	endif
-	# CFLAGS += -fPIC
+	CFLAGS += -fPIC
 endif
 
 # The malloc library should appear as early as possible in the link stage
@@ -185,7 +185,7 @@ SOURCE_OBJECTS :=             \
           state.o             \
 
 MAIN_OBJECT := main.o
-T_MAIN_OBJECT := test_multi_parallel.o
+T_MAIN_OBJECT := serial_range_solver.o
 THR_MAIN_OBJECT := threaded_range_solver.o
 FORK_MAIN_OBJECT := forking_range_solver.o
 #>>>OBJECTS.END
@@ -253,8 +253,8 @@ endif
 LIB_LINK_POST := -rdynamic libfcs.a
 # LIB_LINK_POST := -l$(STATIC_LIB_BASE)
 
-fc-solve: $(MAIN_OBJECT) $(STATIC_LIB)
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
+fc-solve: $(MAIN_OBJECT) fc_pro_iface.o $(STATIC_LIB)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< fc_pro_iface.o $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-range-parallel-solve: $(T_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
