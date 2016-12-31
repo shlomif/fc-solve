@@ -147,3 +147,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
 
     return prune_ret;
 }
+
+DLLEXPORT void fc_solve_user_INTERNAL_perform_horne_prune__free_ret_state_s(
+    char *const ret_state_s)
+{
+    free(ret_state_s);
+}

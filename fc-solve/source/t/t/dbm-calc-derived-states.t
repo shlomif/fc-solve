@@ -45,9 +45,7 @@ SV * perl_perform_horne_prune(char * init_state_s) {
     av_push(results, newSViv(ret_count));
     av_push(results, newSVpv(ret_state_s, 0));
 
-    #ifndef WIN32
-    free(ret_state_s);
-    #endif
+    fc_solve_user_INTERNAL_perform_horne_prune__free_ret_state_s(ret_state_s);
 
     return newRV((SV *)results);
 }

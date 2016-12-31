@@ -48,6 +48,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
     char **ret_state_s);
 
+DLLEXPORT void fc_solve_user_INTERNAL_perform_horne_prune__free_ret_state_s(
+    char *const ret_state_s);
+
 #ifdef __cplusplus
 }
 #endif
