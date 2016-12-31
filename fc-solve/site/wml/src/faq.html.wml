@@ -25,7 +25,7 @@ which is maintained by Michael Keller.
 An automated solver for Freecell is a computer program that attempts to solve
 layouts of Freecell: either initial deals, or often also mid-play states of the
 game, and emit a solution to completion, or conclude that the layout could
-not be solved by it. Freecell Solver is one such program and it is
+not be solved by it. Freecell Solver is one such program, and it is
 <a href="https://en.wikipedia.org/wiki/Open-source_software">open source</a>
 under the permissive and common
 <a href="https://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>,
