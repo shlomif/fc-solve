@@ -57,6 +57,8 @@ test_script:
     - perl ../source/run-tests.pl --glob="dbm-calc*" --exit0
     - dir t\_Inline\*
     - dir /s t\_Inline\build\
+    - cd t\_Inline\build\DerivedState
+    - dmake
 cache:
     - C:\libtap
     - C:\_P5
