@@ -122,9 +122,15 @@ GetOptions(
         File::Spec->catdir( $abs_bindir, "t", "scripts" ),
     );
 
+    my $IS_WIN = ( $^O eq "MSWin32" );
     Env::Path->CPATH->Prepend( $abs_bindir, );
 
     Env::Path->LD_LIBRARY_PATH->Prepend($fcs_path);
+    if ($IS_WIN)
+    {
+        # For the shared objects.
+        Env::Path->PATH->Append($fcs_path);
+    }
 
     my $foo_lib_dir = File::Spec->catdir( $abs_bindir, "t", "lib" );
     foreach my $add_lib ( Env::Path->PERL5LIB(), Env::Path->PYTHONPATH() )
@@ -139,7 +145,6 @@ GetOptions(
             File::Spec->catdir( $bindir, "t", "config", $basename ),
         );
     };
-    my $IS_WIN = ( $^O eq "MSWin32" );
 
     local $ENV{HARNESS_ALT_INTRP_FILE} = $get_config_fn->(
         $IS_WIN
