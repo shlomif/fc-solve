@@ -58,16 +58,22 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         New(42, s, 1, FccStartPoint);
 
         s->state_as_string = savepv(iter->state_as_string);
+        #ifndef WIN32
         free(iter->state_as_string);
+        #endif
         s->moves = newSVpvn(iter->moves, iter->count);
+        #ifndef WIN32
         free(iter->moves);
+        #endif
         s->num_new_positions = num_new_positions;
 
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         av_push(results, obj_ref);
     }
+    #ifndef WIN32
     free(fcc_start_points);
+    #endif
     return newRV((SV *)results);
 }
 
@@ -113,7 +119,7 @@ static string_list_t av_to_char_p_p(AV * av)
     int i, len;
 
     len = av_len(av)+1;
-    ret = malloc(sizeof(ret[0]) * (len+1));
+    Newx(ret, (sizeof(ret[0]) * (len+1)), char *);
 
     for (i = 0; i < len ; i++)
     {
@@ -136,7 +142,7 @@ static void free_char_p_p(string_list_t p)
         Safefree(*p_iter);
         p_iter++;
     }
-    free(p);
+    Safefree(p);
 }
 
 int is_fcc_new(char * init_state_s, char * start_state_s, AV * min_states_av, AV * states_in_cache_av) {
