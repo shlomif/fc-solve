@@ -37,6 +37,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     int *num_out_derived_states, fcs_derived_state_debug_t **out_derived_states,
     const fcs_bool_t perform_horne_prune);
 
+DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
+    const int num_derived_states,
+    fcs_derived_state_debug_t *const derived_states);
+
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */

@@ -111,6 +111,18 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     return 0;
 }
 
+DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
+    const int num_derived_states,
+    fcs_derived_state_debug_t *const derived_states)
+{
+    fcs_derived_state_debug_t *iter = derived_states;
+    for (int i = 0; i < num_derived_states; i++, iter++)
+    {
+        free(iter->state_string);
+    }
+    free(derived_states);
+}
+
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */

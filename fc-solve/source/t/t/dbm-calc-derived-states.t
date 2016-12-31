@@ -76,9 +76,6 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
             New(42, s, 1, DerivedState);
 
             s->state_string = savepv(iter->state_string);
-            #ifndef WIN32
-            free(iter->state_string);
-            #endif
             s->move = iter->move;
             s->core_irreversible_moves_count = iter->core_irreversible_moves_count;
             s->num_non_reversible_moves_including_prune = iter->num_non_reversible_moves_including_prune;
@@ -89,9 +86,7 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
             SvREADONLY_on(obj);
             av_push(results, obj_ref);
         }
-    #ifndef WIN32
-    free(derived_states);
-    #endif
+    fc_solve_user_INTERNAL_free_derived_states(count, derived_states);
     return newRV((SV *)results);
 }
 
