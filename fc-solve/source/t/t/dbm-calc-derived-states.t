@@ -45,7 +45,9 @@ SV * perl_perform_horne_prune(char * init_state_s) {
     av_push(results, newSViv(ret_count));
     av_push(results, newSVpv(ret_state_s, 0));
 
+    #ifndef WIN32
     free(ret_state_s);
+    #endif
 
     return newRV((SV *)results);
 }
@@ -74,7 +76,9 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
             New(42, s, 1, DerivedState);
 
             s->state_string = savepv(iter->state_string);
+            #ifndef WIN32
             free(iter->state_string);
+            #endif
             s->move = iter->move;
             s->core_irreversible_moves_count = iter->core_irreversible_moves_count;
             s->num_non_reversible_moves_including_prune = iter->num_non_reversible_moves_including_prune;
@@ -85,7 +89,9 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
             SvREADONLY_on(obj);
             av_push(results, obj_ref);
         }
+    #ifndef WIN32
     free(derived_states);
+    #endif
     return newRV((SV *)results);
 }
 
