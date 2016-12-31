@@ -20,7 +20,7 @@ extern "C" {
 
 #include "rinutils.h"
 
-typedef u_int32_t microsoft_rand_uint_t;
+typedef uint32_t microsoft_rand_uint_t;
 
 typedef long long microsoft_rand_t;
 
