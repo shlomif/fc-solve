@@ -46,7 +46,7 @@ test_script:
     - set FCS_USE_TEST_RUN=1
     - mkdir fc-solve\b
     - cd fc-solve\b
-    - perl ../source/Tatzer -G "MinGW Makefiles"
+    - perl ../source/Tatzer -G "MinGW Makefiles" -l x64t
     - SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
     - echo %PATH%
     - gmake
