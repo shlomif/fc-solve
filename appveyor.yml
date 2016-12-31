@@ -56,6 +56,7 @@ test_script:
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
     - perl ../source/run-tests.pl --glob="dbm-calc*" --exit0
     - dir t\_Inline\*
+    - dir t\_Inline\build\*
 cache:
     - C:\libtap
     - C:\_P5
