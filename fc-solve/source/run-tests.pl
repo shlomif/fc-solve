@@ -31,6 +31,8 @@ sub _calc_prove
         ( defined($num_jobs) ? sprintf( "-j%d", $num_jobs ) : () ) ];
 }
 
+my $exit_success;
+
 sub run_tests
 {
     my $tests = shift;
@@ -43,7 +45,7 @@ sub run_tests
 
     # Workaround for Windows spawning-SNAFU.
     my $exit_code = system(@cmd);
-    exit( $exit_code ? (-1) : 0 );
+    exit( $exit_success ? 0 : $exit_code ? (-1) : 0 );
 }
 
 my $tests_glob = "*.{t.exe,py,t}";
@@ -53,6 +55,7 @@ my @execute;
 GetOptions(
     '--exclude-re=s' => \$exclude_re_s,
     '--execute|e=s'  => \@execute,
+    '--exit0!'       => \$exit_success,
     '--glob=s'       => \$tests_glob,
     '--prove!'       => \$use_prove,
     '--jobs|j=n'     => \$num_jobs,

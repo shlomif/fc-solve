@@ -54,7 +54,7 @@ test_script:
     - gmake boards
     # Trying this hack to take more precendence for Inline::C / etc.
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
-    - perl ../source/run-tests.pl --glob="dbm-calc*" || echo foo
+    - perl ../source/run-tests.pl --glob="dbm-calc*" --exit0
     - dir t\_Inline\*
 cache:
     - C:\libtap
