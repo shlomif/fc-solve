@@ -22,7 +22,7 @@ sub rank_normalize
 }
 
 my $implicit_t = ( path("../fcs_back_compat.h")->slurp_utf8 =~
-        /^#define FCS_BREAK_BACKWARD_COMPAT_1$/ms ? 1 : 0 );
+        /^#define FCS_BREAK_BACKWARD_COMPAT_1\r?$/ms ? 1 : 0 );
 
 my @suits = (qw(H C D S));
 my @ranks = (
