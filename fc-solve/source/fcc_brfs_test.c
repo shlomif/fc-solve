@@ -181,6 +181,18 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     return 0;
 }
 
+DLLEXPORT void fc_solve_user_INTERNAL_free_fcc_start_points(
+    fcs_FCC_start_point_result_t *const fcc_start_points)
+{
+    for (fcs_FCC_start_point_result_t *iter = fcc_start_points; iter->count;
+         iter++)
+    {
+        free(iter->state_as_string);
+        free(iter->moves);
+    }
+    free(fcc_start_points);
+}
+
 DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     const fcs_dbm_variant_type_t local_variant,
     const char *init_state_str_proto, const char *start_state_str_proto,

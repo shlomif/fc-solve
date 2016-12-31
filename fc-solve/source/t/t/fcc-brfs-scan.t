@@ -58,22 +58,14 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         New(42, s, 1, FccStartPoint);
 
         s->state_as_string = savepv(iter->state_as_string);
-        #ifndef WIN32
-        free(iter->state_as_string);
-        #endif
         s->moves = newSVpvn(iter->moves, iter->count);
-        #ifndef WIN32
-        free(iter->moves);
-        #endif
         s->num_new_positions = num_new_positions;
 
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
         av_push(results, obj_ref);
     }
-    #ifndef WIN32
-    free(fcc_start_points);
-    #endif
+    fc_solve_user_INTERNAL_free_fcc_start_points(fcc_start_points);
     return newRV((SV *)results);
 }
 
