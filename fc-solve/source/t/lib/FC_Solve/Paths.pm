@@ -55,7 +55,7 @@ sub bin_file
 sub dll_file
 {
     my $fn = shift;
-    return bin_file( [ $IS_WIN ? "$fn.dll" : "lib$fn.so" ] );
+    return bin_file( [ "lib$fn." . ( $IS_WIN ? "dll" : "so" ) ] );
 }
 
 sub bin_exe_raw
