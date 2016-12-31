@@ -7,7 +7,7 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -50,6 +50,12 @@ my $NO_DBM      = _is_tag('no_dbm');
 sub bin_file
 {
     return File::Spec->catfile( $FCS_PATH, @{ shift @_ } );
+}
+
+sub dll_file
+{
+    my $fn = shift;
+    return bin_file( [ $IS_WIN ? "$fn.dll" : "lib$fn.so" ] );
 }
 
 sub bin_exe_raw

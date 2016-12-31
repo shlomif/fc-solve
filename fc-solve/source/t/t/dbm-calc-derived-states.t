@@ -4,11 +4,11 @@ use strict;
 use warnings;
 
 use Test::More;
-use FC_Solve::Paths qw/ bin_file /;
+use FC_Solve::Paths qw/ dll_file /;
 
 BEGIN
 {
-    if ( -f bin_file( ['libfcs_dbm_calc_derived_test.so'] ) )
+    if ( -f dll_file('fcs_dbm_calc_derived_test') )
     {
         plan tests => 40;
     }
