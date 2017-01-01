@@ -734,6 +734,7 @@ programmatically
 pseudo-DFS
 pseudo-Freecell
 pseudo_dfs_atomic_moves_solver
+pseudorandom
 pthreads
 ptr
 ptr_state_extra_info_t
@@ -1068,6 +1069,13 @@ var_base
 
 Der
 iterations's
+
+==== In: dest/faq.html
+
+5-freecells
+NNN
+gen_ms_boards__rand
+range_solvers_gen_ms_boards
 
 ==== In: dest/index.html , dest/old-news.html
 

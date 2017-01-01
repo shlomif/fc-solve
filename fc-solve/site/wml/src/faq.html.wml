@@ -40,6 +40,69 @@ but Freecell appears to be the most popular variant out of them, and the
 name is kept for historical reasons.
 </p>
 
+<h3 id="what_are_ms_deals">What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?</h3>
+
+<p>
+Microsoft shipped several implementations of Freecell for its Windows operating
+systems called
+<a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">“Microsoft
+FreeCell”</a> which contributed to popularising the game. They dealt cards
+with numbered deals using a shuffling algorithm based on inputting the number
+of the deal into the Microsoft C Run time library
+<a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom
+number generator</a>. The algorithm for dealing cards was made available by
+Jim Horne, a Microsoft software developer who implemented Microsoft FreeCell.
+</p>
+
+<p>
+While the original MS FreeCell only dealt deals in the range 1 to 32,000, these
+deals can be extended up to a 31-bit number and were later extended by
+<a href="http://cards.wikia.com/wiki/FreeCell_Pro">Freecell Pro</a> to 33-bits
+dealing.
+</p>
+
+<p>
+The Microsoft deals are considered canonical among Freecell researchers in
+their studies of the game.
+</p>
+
+<p>
+For more information, see:
+</p>
+
+<ol>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/source/range_solvers_gen_ms_boards.h">range_solvers_gen_ms_boards.h</a> and
+<a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/source/gen_ms_boards__rand.h">gen_ms_boards__rand.h</a>
+- from the Freecell Solver's source - implementations of the dealing algorithm
+in optimised C under the MIT/Expat licence.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://rosettacode.org/wiki/Deal_cards_for_FreeCell">“Deal cards
+for FreeCell”</a> on Rosetta Code - implementations in many programming
+languages, but under a problematic licence.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/freecell-pro-impossible-deals">The
+impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals</a>.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/theodorepringle/MicrosoftFreeCell32000-minimal-freecells/">The minimal number of freecells needed to win for each deal in the original Microsoft FreeCell 32,000 deals.</a>
+</p>
+</li>
+</ol>
+
 <h3 id="solve_all_games">Can Freecell Solver solve all the Freecell layouts?</h3>
 
 <p>
