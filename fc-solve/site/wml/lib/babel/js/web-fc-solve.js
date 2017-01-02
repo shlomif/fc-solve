@@ -95,19 +95,17 @@ function fc_solve_2uni_found(match, p1, p2, offset, mystring) {
     return fc_solve_2uni_suit_map[p1] + p2;
 }
 
-Class('FC_Solve', {
-    has: {
-        dir_base: { is: ro },
-        string_params: { is: ro, init: null, },
-        set_status_callback: { is: ro },
-        is_unicode_cards: { is: ro, init: false, },
-        cmd_line_preset: { is: ro },
-        current_iters_limit: { is: rw, init: 0 },
-        obj: {
-            is: rw,
-            init: function() {
-                var that = this;
+class FC_Solve {
+    constructor(args) {
+        var that = this;
 
+        that.dir_base = args.dir_base;
+        that.string_params = args.string_params;
+        that.set_status_callback = args.set_status_callback;
+        that.is_unicode_cards = (args.is_unicode_cards || false);
+        that.cmd_line_preset = args.cmd_line_preset;
+        that.current_iters_limit = 0;
+        that.obj = ( function() {
                 var ret_obj = freecell_solver_user_alloc();
 
                 // TODO : add an option to customise the limit of the iterations count.
@@ -120,27 +118,21 @@ Class('FC_Solve', {
                 that._initialize_obj( ret_obj );
 
                 return ret_obj;
-            },
-        },
-        _proto_states_and_moves_seq: { is: rw, init: null },
-        _pre_expand_states_and_moves_seq: { is: rw, init: null },
-        _post_expand_states_and_moves_seq: { is: rw, init: null },
-        _state_string_buffer: { is: rw, init: function () {
-                return alloc_wrap(500, "state string buffer", "Zam");
-            },
-        },
-        _move_string_buffer: { is: rw, init: function () {
-                return alloc_wrap(200, "move string buffer", "Plum");
-            },
-        },
-    },
-    methods: {
-        set_status: function (myclass, mylabel) {
+            })();
+        that._proto_states_and_moves_seq = null;
+        that._pre_expand_states_and_moves_seq = null;
+        that._post_expand_states_and_moves_seq = null;
+        that._state_string_buffer = alloc_wrap(500, "state string buffer", "Zam");
+        that._move_string_buffer = alloc_wrap(200, "move string buffer", "Plum");
+
+        return;
+    }
+        set_status(myclass, mylabel) {
             var that = this;
 
             return that.set_status_callback(myclass, mylabel);
-        },
-        handle_err_code: function(solve_err_code) {
+        }
+        handle_err_code(solve_err_code) {
              var that = this;
              if (solve_err_code == FCS_STATE_INVALID_STATE) {
                  var error_string_ptr = alloc_wrap(300, "state error string", "Gum");
@@ -184,26 +176,26 @@ Class('FC_Solve', {
                  alert ("Unknown Error code " + solve_err_code + "!");
                  throw "Foo";
              }
-        },
-        _increase_iters_limit: function() {
+        }
+        _increase_iters_limit() {
             var that = this;
 
             that.current_iters_limit += iters_step;
             freecell_solver_user_limit_iterations_long(that.obj, that.current_iters_limit);
 
             return;
-        },
-        resume_solution: function() {
+        }
+        resume_solution() {
             var that = this;
 
             that._increase_iters_limit();
             var solve_err_code = freecell_solver_user_resume_solution( that.obj );
             that.handle_err_code(solve_err_code);
             return solve_err_code;
-        },
+        }
         // Ascertain that the string contains a trailing newline.
         // Without the trailing newline, the parser is sometimes confused.
-        _process_board_string: function (proto_board_string) {
+        _process_board_string(proto_board_string) {
             var that = this;
 
             if (proto_board_string.match(/\n$/)) {
@@ -212,8 +204,8 @@ Class('FC_Solve', {
             else {
                 return proto_board_string + "\n";
             }
-        },
-        _stringify_possibly_null_ptr: function (s_ptr) {
+        }
+        _stringify_possibly_null_ptr(s_ptr) {
             var that = this;
 
             var ret = '';
@@ -223,8 +215,8 @@ Class('FC_Solve', {
             }
 
             return ret;
-        },
-        _initialize_obj: function(obj) {
+        }
+        _initialize_obj(obj) {
             var that = this;
             var cmd_line_preset = that.cmd_line_preset;
             try {
@@ -301,8 +293,8 @@ Class('FC_Solve', {
                 that.set_status("error", "Error");
                 return;
             }
-        },
-        do_solve: function (proto_board_string) {
+        }
+        do_solve(proto_board_string) {
             var that = this;
 
 
@@ -324,18 +316,18 @@ Class('FC_Solve', {
                 that.set_status("error", "Error");
                 return;
             }
-        },
-        _replace_card: function(s) {
+        }
+        _replace_card(s) {
             return s.replace(/\b([A2-9TJQK])([HCDS])\b/g,
                 fc_solve_2uni_card
             );
-        },
-        _replace_found: function (s) {
+        }
+        _replace_found(s) {
             return s.replace(/\b([HCDS])(-[0A2-9TJQK])\b/g,
                 fc_solve_2uni_found
             );
-        },
-        unicode_preprocess: function(out_buffer) {
+        }
+        unicode_preprocess(out_buffer) {
             var that = this;
 
             if (! that.is_unicode_cards) {
@@ -343,8 +335,8 @@ Class('FC_Solve', {
             }
 
             return that._replace_found(that._replace_card(out_buffer));
-        },
-        _calc_states_and_moves_seq: function() {
+        }
+        _calc_states_and_moves_seq() {
             var that = this;
 
             if (that._pre_expand_states_and_moves_seq) {
@@ -398,8 +390,8 @@ Class('FC_Solve', {
             that._move_string_buffer = 0;
 
             return;
-        },
-        _calc_expanded_move: function(idx) {
+        }
+        _calc_expanded_move(idx) {
             var that = this;
 
             var states_and_moves_sequence = that._proto_states_and_moves_seq;
@@ -415,8 +407,8 @@ Class('FC_Solve', {
                     );
             }
             return states_and_moves_sequence[idx].exp;
-        },
-        _calc_expanded_seq: function() {
+        }
+        _calc_expanded_seq() {
             var that = this;
 
             if (that._post_expand_states_and_moves_seq) {
@@ -436,8 +428,8 @@ Class('FC_Solve', {
 
 
             return;
-        },
-        _display_specific_sol: function(seq) {
+        }
+        _display_specific_sol(seq) {
             var that = this;
 
             var out_buffer = '';
@@ -459,8 +451,8 @@ Class('FC_Solve', {
             return that.unicode_preprocess(
                 out_buffer.replace(remove_trailing_space_re, '')
             );
-        },
-        display_solution: function(args) {
+        }
+        display_solution(args) {
             var that = this;
 
             var ret;
@@ -475,30 +467,29 @@ Class('FC_Solve', {
             }
 
             return ret;
-        },
-        display_expanded_moves_solution: function(args) {
+        }
+        display_expanded_moves_solution(args) {
             var that = this;
 
             that._calc_expanded_seq();
             that.set_status("solved", "Solved");
             return that._display_specific_sol(that._post_expand_states_and_moves_seq);
-        },
-        generic_display_sol: function(args) {
+        }
+        generic_display_sol(args) {
             var that = this;
 
             return args.expand ? that.display_expanded_moves_solution(args)
                 : that.display_solution(args);
-        },
-        get_num_freecells: function() {
+        }
+        get_num_freecells() {
             var that = this;
 
             return freecell_solver_user_get_num_freecells(that.obj);
-        },
-        get_num_stacks: function() {
+        }
+        get_num_stacks() {
             var that = this;
 
             return freecell_solver_user_get_num_stacks(that.obj);
-        },
-    },
-});
+        }
+}
 
