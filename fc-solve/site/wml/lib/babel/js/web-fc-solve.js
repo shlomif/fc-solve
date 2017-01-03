@@ -1,4 +1,8 @@
 "use strict";
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module);
+}
+define([], function () {
 var fc_solve__hll_ms_rand__get_singleton;
 var fc_solve__hll_ms_rand__init;
 var fc_solve__hll_ms_rand__mod_rand;
@@ -492,4 +496,7 @@ class FC_Solve {
             return freecell_solver_user_get_num_stacks(that.obj);
         }
 }
-
+    return { FC_Solve: FC_Solve,
+        FC_Solve_init_wrappers_with_module: FC_Solve_init_wrappers_with_module
+    };
+});

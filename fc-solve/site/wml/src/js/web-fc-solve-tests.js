@@ -1,6 +1,17 @@
-"use strict";
+// "use strict";
+//
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module);
+}
 
-var ms_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
+// console.log("pinkpie", define);
+define(["web-fc-solve", "libfreecell-solver.min"], function (w, Module) {
+    // var Module = f.Module;
+    console.log("luna","celest");
+    var FC_Solve = w.FC_Solve;
+    var FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
+    console.log("cheesesand");
+    var ms_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
 "5H QH 3C AC 3H 4H QD\n" +
 "QC 9S 6H 9H 3S KS 3D\n" +
 "5D 2S JC 5C JH 6D AS\n" +
@@ -10240,3 +10251,7 @@ function test_js_fc_solve_class()
 
     return;
 }
+return {test_js_fc_solve_class: test_js_fc_solve_class};
+    return {foo:"barari"};
+
+});

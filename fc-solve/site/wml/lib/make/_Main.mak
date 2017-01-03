@@ -181,6 +181,13 @@ TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
 TYPESCRIPT_COMMON_DEFS_FILES = src/js/typings/index.d.ts
 
+JS_DEST_FILES__NODE = lib/for-node/js/libfreecell-solver.min.js lib/for-node/js/web-fc-solve.js lib/for-node/js/web-fc-solve-tests.js
+
+all: $(JS_DEST_FILES__NODE)
+
+$(JS_DEST_FILES__NODE): lib/for-node/%.js: dest/%.js
+	cp -f $< $@
+
 all: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
 
 $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
