@@ -11,6 +11,7 @@ ARGV.each do |fn|
         next
     end
     File.open(fn, "r") do |file|
+        begin
         line_num = 1
         while (l = file.gets)
             l.gsub!(/\/\*.*?\*\//m, "");
@@ -37,6 +38,10 @@ ARGV.each do |fn|
                     line_num += 1
                 end
             end
+        end
+        rescue ArgumentError
+            puts "#{fn} is malformed UTF8-wise"
+            exit
         end
     end
 end
