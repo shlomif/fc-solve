@@ -34,14 +34,10 @@ typedef struct
 } DerivedState;
 
 SV * perl_perform_horne_prune(char * init_state_s) {
-    AV * results;
     char * ret_state_s;
-    int ret_count;
+    const int ret_count = fc_solve_user_INTERNAL_perform_horne_prune(FCS_DBM_VARIANT_2FC_FREECELL, init_state_s, &ret_state_s);
 
-    results = (AV *)sv_2mortal((SV *)newAV());
-
-    ret_count = fc_solve_user_INTERNAL_perform_horne_prune(FCS_DBM_VARIANT_2FC_FREECELL, init_state_s, &ret_state_s);
-
+    AV *const results = (AV *)sv_2mortal((SV *)newAV());
     av_push(results, newSViv(ret_count));
     av_push(results, newSVpv(ret_state_s, 0));
 
@@ -51,39 +47,37 @@ SV * perl_perform_horne_prune(char * init_state_s) {
 }
 
 SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
-        AV * results;
+    int count;
+    fcs_derived_state_debug_t * derived_states;
+    fc_solve_user_INTERNAL_calc_derived_states_wrapper(
+        FCS_DBM_VARIANT_2FC_FREECELL,
+        init_state_s,
+        &count,
+        &derived_states,
+        perform_horne_prune
+    );
+    AV *const results = (AV *)sv_2mortal((SV *)newAV());
+
+    var_AUTO(iter, derived_states);
+    for (int i=0 ; i < count; i++, iter++)
+    {
+        SV *const obj_ref = newSViv(0);
+        SV *const obj = newSVrv(obj_ref, "DerivedState");
+
         DerivedState* s;
-        int count, i;
-        fcs_derived_state_debug_t * derived_states, * iter;
+        New(42, s, 1, DerivedState);
 
-        fc_solve_user_INTERNAL_calc_derived_states_wrapper(
-            FCS_DBM_VARIANT_2FC_FREECELL,
-            init_state_s,
-            &count,
-            &derived_states,
-            perform_horne_prune
-        );
-        results = (AV *)sv_2mortal((SV *)newAV());
+        s->state_string = savepv(iter->state_string);
+        s->move = iter->move;
+        s->core_irreversible_moves_count = iter->core_irreversible_moves_count;
+        s->num_non_reversible_moves_including_prune = iter->num_non_reversible_moves_including_prune;
+        s->which_irreversible_moves_bitmask
+            = iter->which_irreversible_moves_bitmask;
 
-        iter = derived_states;
-        for (i=0 ; i < count; i++, iter++)
-        {
-            SV*      obj_ref = newSViv(0);
-            SV*      obj = newSVrv(obj_ref, "DerivedState");
-
-            New(42, s, 1, DerivedState);
-
-            s->state_string = savepv(iter->state_string);
-            s->move = iter->move;
-            s->core_irreversible_moves_count = iter->core_irreversible_moves_count;
-            s->num_non_reversible_moves_including_prune = iter->num_non_reversible_moves_including_prune;
-            s->which_irreversible_moves_bitmask
-                = iter->which_irreversible_moves_bitmask;
-
-            sv_setiv(obj, (IV)s);
-            SvREADONLY_on(obj);
-            av_push(results, obj_ref);
-        }
+        sv_setiv(obj, (IV)s);
+        SvREADONLY_on(obj);
+        av_push(results, obj_ref);
+    }
     fc_solve_user_INTERNAL_free_derived_states(count, derived_states);
     return newRV((SV *)results);
 }
