@@ -31,13 +31,8 @@ typedef struct
 } FccStartPoint;
 
 SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
-    AV * results;
-    FccStartPoint* s;
-    int count, i;
-    fcs_FCC_start_point_result_t * fcc_start_points, * iter;
+    fcs_FCC_start_point_result_t * fcc_start_points;
     long num_new_positions;
-    fcs_fcc_moves_seq_t start_moves;
-
     STRLEN count_start_moves = SvLEN(moves_prefix);
 
     fc_solve_user_INTERNAL_find_fcc_start_points(
@@ -48,13 +43,14 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         &fcc_start_points,
         &num_new_positions
     );
-    results = (AV *)sv_2mortal((SV *)newAV());
+    AV *const results = (AV *)sv_2mortal((SV *)newAV());
 
-    for (iter = fcc_start_points ; iter->count ; iter++)
+    for (var_AUTO(iter, fcc_start_points) ; iter->count ; iter++)
     {
-        SV*      obj_ref = newSViv(0);
-        SV*      obj = newSVrv(obj_ref, "FccStartPoint");
+        SV *const obj_ref = newSViv(0);
+        SV *const obj = newSVrv(obj_ref, "FccStartPoint");
 
+        FccStartPoint* s;
         New(42, s, 1, FccStartPoint);
 
         s->state_as_string = savepv(iter->state_as_string);
