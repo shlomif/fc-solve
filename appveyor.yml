@@ -43,7 +43,6 @@ test_script:
     - set CPATH=C:\libtap\include
     - set PATH=C:\libtap\bin;%PATH%
     - set HARNESS_BREAK=1
-    - set HARNESS_VERBOSE=1
     - set FCS_USE_TEST_RUN=1
     - mkdir fc-solve\b
     - cd fc-solve\b
