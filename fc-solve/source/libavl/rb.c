@@ -96,7 +96,7 @@ rb_create (rb_comparison_func *compare, void *param,
   SET_TREE_AVL_ROOT(tree, NULL);
   tree->rb_compare = compare;
   tree->rb_param = param;
-  fc_solve_compact_allocator_init(&(tree->rb_allocator), meta_alloc);
+  fc_solve_compact_allocator_init(&(tree->dict_allocator), meta_alloc);
   tree->rb_recycle_bin = (struct rb_node * *)common_recycle_bin;
   tree->rb_count = 0;
   tree->rb_generation = 0;
@@ -165,7 +165,7 @@ rb_probe (struct rb_table *tree, void *item)
   else
   {
       n = fcs_compact_alloc_ptr(
-          &(tree->rb_allocator), sizeof(*n)
+          &(tree->dict_allocator), sizeof(*n)
           );
   }
   rb_set_link(pa[k - 1], da[k - 1], n);
@@ -954,7 +954,7 @@ rb_destroy (struct rb_table *tree, rb_item_func *destroy)
         rb_set_link(q, 1, p);
       }
     }
-  fc_solve_compact_allocator_finish(&(tree->rb_allocator));
+  fc_solve_compact_allocator_finish(&(tree->dict_allocator));
   free (tree);
 }
 

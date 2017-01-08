@@ -28,7 +28,6 @@ typedef void *dict_key_t;
 #define fc_solve_kaz_tree_lookup_value(tree, value) rb_find(tree, value)
 #define fc_solve_kaz_tree_delete_by_value(tree, value) rb_delete(tree, value)
 #define fc_solve_kaz_tree_alloc_insert(tree, value) rb_insert(tree, value)
-#define dict_allocator rb_allocator
 #else
 
 #include "rinutils.h"

@@ -106,7 +106,7 @@ struct rb_table
     struct rb_node rb_proto_root;          /* Tree's root. */
     rb_comparison_func *rb_compare;   /* Comparison function. */
     void *rb_param;                    /* Extra argument to |rb_compare|. */
-    fcs_compact_allocator_t rb_allocator;
+    fcs_compact_allocator_t dict_allocator;
     struct rb_node * * rb_recycle_bin;
     size_t rb_count;                   /* Number of items in tree. */
     unsigned long rb_generation;       /* Generation number. */
