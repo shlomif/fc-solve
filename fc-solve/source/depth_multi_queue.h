@@ -31,7 +31,7 @@ extern "C" {
 typedef struct
 {
     const char *offload_dir_path;
-    long num_inserted, num_items_in_queue, num_extracted;
+    fcs_queue_stats_t stats;
     long min_depth, max_depth, max_depth_margin;
     /*
      * page_to_write_to, page_for_backup and page_to_read_from always
@@ -81,8 +81,7 @@ static inline void fcs_depth_multi_queue__insert(
     fcs_offloading_queue__insert(
         &(queue->queues_by_depth[depth - queue->min_depth]), item);
 
-    queue->num_inserted++;
-    queue->num_items_in_queue++;
+    q_stats_insert(&queue->stats);
 }
 
 static inline void fcs_depth_multi_queue__init(
@@ -90,7 +89,7 @@ static inline void fcs_depth_multi_queue__init(
     const int first_depth, const fcs_offloading_queue_item_t *const first_item)
 {
     queue->offload_dir_path = offload_dir_path;
-    queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
+    fcs_queue_stats_init(&queue->stats);
     queue->next_queue_id = 0;
     queue->min_depth = first_depth;
     queue->max_depth_margin = first_depth + DEPTH_Q_GROW_BY;
@@ -123,7 +122,7 @@ static inline fcs_bool_t fcs_depth_multi_queue__extract(
     fcs_depth_multi_queue_t *const queue, int *const return_depth,
     fcs_offloading_queue_item_t *const return_item)
 {
-    if (queue->num_items_in_queue == 0)
+    if (queue->stats.num_items_in_queue == 0)
     {
         return FALSE;
     }
@@ -143,10 +142,7 @@ static inline fcs_bool_t fcs_depth_multi_queue__extract(
 
     *return_depth = queue->min_depth;
     fcs_offloading_queue__extract(&(queue->queues_by_depth[0]), return_item);
-
-    queue->num_items_in_queue--;
-    queue->num_extracted++;
-
+    q_stats_extract(&queue->stats);
     return TRUE;
 }
 
