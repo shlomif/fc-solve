@@ -112,7 +112,7 @@ static inline void fc_solve_pq_push(pri_queue_t *const pq,
             (pq_element_t *)SREALLOC(pq->Elements, (pq->max_size += 256) + 1);
     }
 
-    pq_element_t *const Elements = pq->Elements;
+    const_SLOT(Elements, pq);
     {
         /* set i to the first unused element and increment current_size */
         /* while the parent of the space we're putting the new node into is
@@ -170,7 +170,7 @@ static inline void fc_solve_pq_pop(
     *val = Elements[PQ_FIRST_ENTRY].val;
 
     /* get pointer to last element in tree */
-    const pq_element_t last_elem = Elements[current_size];
+    const_AUTO(last_elem, Elements[current_size]);
 
     const_AUTO(new_current_size, current_size - 1);
     /* code to pop an element from an ascending (top to bottom) pqueue */

@@ -702,10 +702,10 @@ static inline void free_states(fc_solve_instance_t *const instance)
                 {
                     pri_queue_t new_pq;
                     fc_solve_pq_init(&(new_pq));
-                    pq_element_t *const Elements =
-                        BEFS_VAR(soft_thread, pqueue).Elements;
-                    pq_element_t *const end_element =
-                        Elements + BEFS_VAR(soft_thread, pqueue).current_size;
+                    const_AUTO(
+                        Elements, BEFS_VAR(soft_thread, pqueue).Elements);
+                    const_AUTO(end_element,
+                        Elements + BEFS_VAR(soft_thread, pqueue).current_size);
                     for (pq_element_t *next_element = Elements + PQ_FIRST_ENTRY;
                          next_element <= end_element; next_element++)
                     {
