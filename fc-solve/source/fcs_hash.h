@@ -180,7 +180,7 @@ static inline void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
         {
             if (should_delete_ptr((*item)->key, context))
             {
-                fc_solve_hash_symlink_item_t *next_item = (*item)->next;
+                fc_solve_hash_symlink_item_t *const next_item = (*item)->next;
                 /* Garbage collect (*item). */
                 (*item)->next = hash->list_of_vacant_items;
                 hash->list_of_vacant_items = (*item);
