@@ -419,7 +419,9 @@ static inline void fc_solve_start_instance_process_with_board(
     fcs_state_keyval_pair_t *const init_state,
     fcs_state_keyval_pair_t *const initial_non_canonized_state)
 {
+#ifndef FCS_DISABLE_PATSOLVE
     instance->initial_non_canonized_state = initial_non_canonized_state;
+#endif
     /* Allocate the first state and initialize it to init_state */
     fcs_state_keyval_pair_t *const state_copy_ptr =
         (fcs_state_keyval_pair_t *)fcs_compact_alloc_ptr(

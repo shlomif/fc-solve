@@ -863,12 +863,14 @@ struct fc_solve_instance_struct
      * */
     fc_solve_soft_thread_t *solving_soft_thread;
 
+#ifndef FCS_DISABLE_PATSOLVE
     /*
      * This is intended to be used by the patsolve scan which is
      * sensitive to the ordering of the columns/stacks. This is an ugly hack
      * but hopefully it will work.
      * */
     fcs_state_keyval_pair_t *initial_non_canonized_state;
+#endif
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     /*

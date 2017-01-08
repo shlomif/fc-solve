@@ -153,7 +153,9 @@ typedef struct
     fcs_flare_item_t *active_flare;
     fcs_state_keyval_pair_t state;
     fcs_state_keyval_pair_t running_state;
+#if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
     fcs_state_keyval_pair_t initial_non_canonized_state;
+#endif
     fcs_state_locs_struct_t state_locs;
     fcs_state_locs_struct_t initial_state_locs;
     int ret_code;
@@ -1062,8 +1064,10 @@ static inline int resume_solution(fcs_user_t *const user)
              * state to it before user->state is canonized.
              * */
             FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
+#if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
             FCS_STATE__DUP_keyval_pair(
                 user->initial_non_canonized_state, user->state);
+#endif
 
             fc_solve_canonize_state_with_locs(&(user->state.s),
                 &(user->state_locs)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
@@ -1122,8 +1126,13 @@ static inline int resume_solution(fcs_user_t *const user)
 
         if (is_start_of_flare_solving)
         {
-            fc_solve_start_instance_process_with_board(
-                instance, &(user->state), &(user->initial_non_canonized_state));
+            fc_solve_start_instance_process_with_board(instance, &(user->state),
+#if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
+                &(user->initial_non_canonized_state)
+#else
+                NULL
+#endif
+                    );
         }
 
         const fcs_bool_t was_run_now =
