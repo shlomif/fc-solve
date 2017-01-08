@@ -271,55 +271,52 @@ static inline void instance_check_key(
     )
 {
     const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
+    fcs_dbm_record_t *token;
+#ifndef FCS_DBM_WITHOUT_CACHES
+    fcs_lru_cache_t *const cache = &(coll->cache_store.cache);
+    if (cache_does_key_exist(cache, key))
     {
-        fcs_dbm_record_t *token;
-#ifndef FCS_DBM_WITHOUT_CACHES
-        fcs_lru_cache_t *const cache = &(coll->cache_store.cache);
-        if (cache_does_key_exist(cache, key))
-        {
-            return;
-        }
+        return;
+    }
 #ifndef FCS_DBM_CACHE_ONLY
-        else if (pre_cache_does_key_exist(&(coll->cache_store.pre_cache), key))
-        {
-            return;
-        }
+    else if (pre_cache_does_key_exist(&(coll->cache_store.pre_cache), key))
+    {
+        return;
+    }
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        else if (fc_solve_dbm_store_does_key_exist(
-                     coll->cache_store.store, key->s))
-        {
-            cache_insert(cache, key, NULL, '\0');
-            return;
-        }
+    else if (fc_solve_dbm_store_does_key_exist(coll->cache_store.store, key->s))
+    {
+        cache_insert(cache, key, NULL, '\0');
+        return;
+    }
 #endif
-        else
+    else
 #else
-        if ((token = fc_solve_dbm_store_insert_key_value(
-                 coll->cache_store.store, key, parent, TRUE)))
+    if ((token = fc_solve_dbm_store_insert_key_value(
+             coll->cache_store.store, key, parent, TRUE)))
 #endif
-        {
+    {
 #ifdef FCS_DBM_CACHE_ONLY
-            fcs_cache_key_info_t *cache_key;
+        fcs_cache_key_info_t *cache_key;
 #endif
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-            pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);
+        pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);
 #else
-            cache_key = cache_insert(cache, key, moves_to_parent, move);
+        cache_key = cache_insert(cache, key, moves_to_parent, move);
 #endif
 #endif
 
-            /* Now insert it into the queue. */
+        /* Now insert it into the queue. */
 
-            fcs_offloading_queue__insert(
-                &(coll->queue), (const fcs_offloading_queue_item_t *)(&token));
+        fcs_offloading_queue__insert(
+            &(coll->queue), (const fcs_offloading_queue_item_t *)(&token));
 
-            instance->common.count_of_items_in_queue++;
-            instance->common.num_states_in_collection++;
-            instance_debug_out_state(instance, &(token->key));
-        }
+        instance->common.count_of_items_in_queue++;
+        instance->common.num_states_in_collection++;
+        instance_debug_out_state(instance, &(token->key));
     }
 }
 

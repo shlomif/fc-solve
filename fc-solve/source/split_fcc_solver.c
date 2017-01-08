@@ -443,189 +443,179 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     const_AUTO(local_variant, instance->common.variant);
 #endif
     const_AUTO(coll, &(instance->coll));
+#ifdef FCS_DBM_WITHOUT_CACHES
+    fcs_dbm_record_t *token;
+#else
+    fcs_dbm_record_t *token = key;
+#endif
+#ifndef FCS_DBM_WITHOUT_CACHES
+    if (cache_does_key_exist(&(coll->cache_store.cache), key))
     {
-#ifdef FCS_DBM_WITHOUT_CACHES
-        fcs_dbm_record_t *token;
-#else
-        fcs_dbm_record_t *token = key;
-#endif
-#ifndef FCS_DBM_WITHOUT_CACHES
-        if (cache_does_key_exist(&(coll->cache_store.cache), key))
-        {
-            return;
-        }
+        return;
+    }
 #ifndef FCS_DBM_CACHE_ONLY
-        else if (pre_cache_does_key_exist(&(coll->cache_store.pre_cache), key))
-        {
-            return;
-        }
+    else if (pre_cache_does_key_exist(&(coll->cache_store.pre_cache), key))
+    {
+        return;
+    }
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-        else if (fc_solve_dbm_store_does_key_exist(
-                     coll->cache_store.store, key->s))
-        {
-            cache_insert(&(coll->cache_store.cache), key, NULL, '\0');
-            return;
-        }
+    else if (fc_solve_dbm_store_does_key_exist(coll->cache_store.store, key->s))
+    {
+        cache_insert(&(coll->cache_store.cache), key, NULL, '\0');
+        return;
+    }
 #endif
-        else
+    else
 #else
-        if ((token = fc_solve_dbm_store_insert_key_value(
-                 coll->cache_store.store, key, parent, TRUE)))
+    if ((token = fc_solve_dbm_store_insert_key_value(
+             coll->cache_store.store, key, parent, TRUE)))
 #endif
-        {
+    {
 #ifdef FCS_DBM_CACHE_ONLY
-            fcs_cache_key_info_t *cache_key;
+        fcs_cache_key_info_t *cache_key;
 #endif
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-            pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);
+        pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);
 #else
-            cache_key = cache_insert(
-                &(coll->cache_store.cache), key, moves_to_parent, move);
+        cache_key = cache_insert(
+            &(coll->cache_store.cache), key, moves_to_parent, move);
 #endif
 #endif
 
-            if (key_depth == instance->curr_depth)
-            {
-                /* Now insert it into the queue. */
-                fcs_lock_lock(&instance->global_lock);
+        if (key_depth == instance->curr_depth)
+        {
+            /* Now insert it into the queue. */
+            fcs_lock_lock(&instance->global_lock);
 
-                fcs_depth_multi_queue__insert(
-                    &(coll->depth_queue), thread->state_depth + 1,
+            fcs_depth_multi_queue__insert(
+                &(coll->depth_queue), thread->state_depth + 1,
 #ifdef FCS_DBM_WITHOUT_CACHES
-                    (const fcs_offloading_queue_item_t *)(&token)
+                (const fcs_offloading_queue_item_t *)(&token)
 #else
-                    key
+                key
 #endif
-                        );
+                    );
 
-                instance->common.count_of_items_in_queue++;
-                instance->common.num_states_in_collection++;
+            instance->common.count_of_items_in_queue++;
+            instance->common.num_states_in_collection++;
 
-                instance_debug_out_state(instance, &(token->key));
+            instance_debug_out_state(instance, &(token->key));
 
-                fcs_lock_unlock(&instance->global_lock);
-            }
-            else
+            fcs_lock_unlock(&instance->global_lock);
+        }
+        else
+        {
+            /* Handle an irreversible move */
+
+            /* Calculate the new fingerprint to which the exit
+             * point belongs. */
+            fcs_which_moves_bitmask_t new_fingerprint = {{'\0'}};
+            for (size_t i = 0; i < COUNT(new_fingerprint.s); i++)
             {
-                /* Handle an irreversible move */
-
-                /* Calculate the new fingerprint to which the exit
-                 * point belongs. */
-                fcs_which_moves_bitmask_t new_fingerprint = {{'\0'}};
-                for (size_t i = 0; i < COUNT(new_fingerprint.s); i++)
-                {
-                    new_fingerprint.s[i] =
-                        which_irreversible_moves_bitmask->s[i] +
-                        instance->fingerprint_which_irreversible_moves_bitmask
-                            .s[i];
-                }
-                int trace_num;
-                fcs_encoded_state_buffer_t *trace;
-                fcs_lock_lock(&instance->fcc_exit_points_output_lock);
-                /* instance->storage_lock is already locked
-                 * in instance_check_multiple_keys and we should not
-                 * lock it here. */
-                calc_trace(token, &trace, &trace_num);
-                {
-                    FccEntryPointNode fcc_entry_key;
-                    fcc_entry_key.kv.key.key = trace[trace_num - 1];
-                    FccEntryPointNode *val_proto = RB_FIND(FccEntryPointList,
-                        &(instance->fcc_entry_points), &fcc_entry_key);
-                    const long location_in_file =
-                        val_proto->kv.val.location_in_file;
-                    fseek(instance->fingerprint_fh, location_in_file, SEEK_SET);
+                new_fingerprint.s[i] =
+                    which_irreversible_moves_bitmask->s[i] +
+                    instance->fingerprint_which_irreversible_moves_bitmask.s[i];
+            }
+            int trace_num;
+            fcs_encoded_state_buffer_t *trace;
+            fcs_lock_lock(&instance->fcc_exit_points_output_lock);
+            /* instance->storage_lock is already locked
+             * in instance_check_multiple_keys and we should not
+             * lock it here. */
+            calc_trace(token, &trace, &trace_num);
+            {
+                FccEntryPointNode fcc_entry_key;
+                fcc_entry_key.kv.key.key = trace[trace_num - 1];
+                FccEntryPointNode *val_proto = RB_FIND(FccEntryPointList,
+                    &(instance->fcc_entry_points), &fcc_entry_key);
+                const long location_in_file =
+                    val_proto->kv.val.location_in_file;
+                fseek(instance->fingerprint_fh, location_in_file, SEEK_SET);
 
 #ifdef HAVE_GETLINE
-                    getline(&(instance->fingerprint_line),
-                        &(instance->fingerprint_line_size),
-                        instance->fingerprint_fh);
+                getline(&(instance->fingerprint_line),
+                    &(instance->fingerprint_line_size),
+                    instance->fingerprint_fh);
 #else
-                    fgets(instance->fingerprint_line,
-                        instance->fingerprint_line_size,
-                        instance->fingerprint_fh);
+                fgets(instance->fingerprint_line,
+                    instance->fingerprint_line_size, instance->fingerprint_fh);
 #endif
-                    char *const moves_to_state_enc =
-                        strchr(
-                            strchr(instance->fingerprint_line, ' ') + 1, ' ') +
-                        1;
-                    char *const trailing_newline =
-                        strchr(moves_to_state_enc, '\n');
-                    if (trailing_newline)
-                    {
-                        *trailing_newline = '\0';
-                    }
-                    const size_t string_len = strlen(moves_to_state_enc);
-                    instance_alloc_num_moves(
-                        instance, ((string_len * 3) >> 2) + 20);
-                    base64_decode(moves_to_state_enc, string_len,
-                        ((unsigned char *)instance->moves_to_state),
-                        &(instance->moves_to_state_len));
-                }
-
-                const_SLOT(moves_to_state_len, instance);
-                const size_t added_moves_to_output =
-                    moves_to_state_len + trace_num - 1;
-                instance_alloc_num_moves(instance, added_moves_to_output);
-                unsigned char *const moves_to_state = instance->moves_to_state;
-                for (int i = trace_num - 1; i > 0; i--)
+                char *const moves_to_state_enc =
+                    strchr(strchr(instance->fingerprint_line, ' ') + 1, ' ') +
+                    1;
+                char *const trailing_newline = strchr(moves_to_state_enc, '\n');
+                if (trailing_newline)
                 {
-                    moves_to_state[moves_to_state_len + trace_num - 1 - i] =
-                        get_move_from_parent_to_child(instance,
-                            &(thread->delta_stater), trace[i], trace[i - 1]);
+                    *trailing_newline = '\0';
                 }
-
-                const size_t new_max_enc_len =
-                    ((added_moves_to_output * 4) / 3) + 20;
-
-                if (new_max_enc_len >
-                    instance->moves_base64_encoding_buffer_max_len)
-                {
-                    instance->moves_base64_encoding_buffer =
-                        SREALLOC(instance->moves_base64_encoding_buffer,
-                            new_max_enc_len);
-                    instance->moves_base64_encoding_buffer_max_len =
-                        new_max_enc_len;
-                }
-
-                size_t unused_output_len;
-                base64_encode(moves_to_state, added_moves_to_output,
-                    instance->moves_base64_encoding_buffer, &unused_output_len);
-                char fingerprint_base64[100];
-                char state_base64[100];
-                base64_encode(new_fingerprint.s, sizeof(new_fingerprint),
-                    fingerprint_base64, &unused_output_len);
-                base64_encode((unsigned char *)&(*key), sizeof(*key),
-                    state_base64, &unused_output_len);
-                /* Output the exit point. */
-                fprintf(instance->fcc_exit_points_out_fh,
-                    "%s %s " FCS_LL_FMT " %s\n", fingerprint_base64,
-                    state_base64, (long long)added_moves_to_output,
-                    instance->moves_base64_encoding_buffer);
-#ifdef DEBUG_OUT
-                {
-                    fcs_state_keyval_pair_t state;
-                    DECLARE_IND_BUF_T(indirect_stacks_buffer)
-                    fc_solve_delta_stater_decode_into_state(
-                        &(thread->delta_stater), key->s, &state,
-                        indirect_stacks_buffer);
-                    char state_str[2000];
-                    FCS__RENDER_STATE(state_str, &(state.s), &locs);
-                    fprintf(stderr,
-                        "Check Key: <<<\n%s\n>>>\n\n[%s %s %ld %s]\n\n",
-                        state_str, fingerprint_base64, state_base64,
-                        added_moves_to_output,
-                        instance->moves_base64_encoding_buffer);
-                }
-#endif
-                fflush(instance->fcc_exit_points_out_fh);
-
-                fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
-
-                free(trace);
+                const size_t string_len = strlen(moves_to_state_enc);
+                instance_alloc_num_moves(
+                    instance, ((string_len * 3) >> 2) + 20);
+                base64_decode(moves_to_state_enc, string_len,
+                    ((unsigned char *)instance->moves_to_state),
+                    &(instance->moves_to_state_len));
             }
+
+            const_SLOT(moves_to_state_len, instance);
+            const size_t added_moves_to_output =
+                moves_to_state_len + trace_num - 1;
+            instance_alloc_num_moves(instance, added_moves_to_output);
+            unsigned char *const moves_to_state = instance->moves_to_state;
+            for (int i = trace_num - 1; i > 0; i--)
+            {
+                moves_to_state[moves_to_state_len + trace_num - 1 - i] =
+                    get_move_from_parent_to_child(instance,
+                        &(thread->delta_stater), trace[i], trace[i - 1]);
+            }
+
+            const size_t new_max_enc_len =
+                ((added_moves_to_output * 4) / 3) + 20;
+
+            if (new_max_enc_len >
+                instance->moves_base64_encoding_buffer_max_len)
+            {
+                instance->moves_base64_encoding_buffer = SREALLOC(
+                    instance->moves_base64_encoding_buffer, new_max_enc_len);
+                instance->moves_base64_encoding_buffer_max_len =
+                    new_max_enc_len;
+            }
+
+            size_t unused_output_len;
+            base64_encode(moves_to_state, added_moves_to_output,
+                instance->moves_base64_encoding_buffer, &unused_output_len);
+            char fingerprint_base64[100];
+            char state_base64[100];
+            base64_encode(new_fingerprint.s, sizeof(new_fingerprint),
+                fingerprint_base64, &unused_output_len);
+            base64_encode((unsigned char *)&(*key), sizeof(*key), state_base64,
+                &unused_output_len);
+            /* Output the exit point. */
+            fprintf(instance->fcc_exit_points_out_fh,
+                "%s %s " FCS_LL_FMT " %s\n", fingerprint_base64, state_base64,
+                (long long)added_moves_to_output,
+                instance->moves_base64_encoding_buffer);
+#ifdef DEBUG_OUT
+            {
+                fcs_state_keyval_pair_t state;
+                DECLARE_IND_BUF_T(indirect_stacks_buffer)
+                fc_solve_delta_stater_decode_into_state(&(thread->delta_stater),
+                    key->s, &state, indirect_stacks_buffer);
+                char state_str[2000];
+                FCS__RENDER_STATE(state_str, &(state.s), &locs);
+                fprintf(stderr, "Check Key: <<<\n%s\n>>>\n\n[%s %s %ld %s]\n\n",
+                    state_str, fingerprint_base64, state_base64,
+                    added_moves_to_output,
+                    instance->moves_base64_encoding_buffer);
+            }
+#endif
+            fflush(instance->fcc_exit_points_out_fh);
+
+            fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
+
+            free(trace);
         }
     }
 }
