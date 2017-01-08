@@ -49,15 +49,15 @@ SV* extract(SV* obj) {
 }
 
 long get_num_inserted(SV* obj) {
-    return q(obj)->num_inserted;
+    return q(obj)->stats.num_inserted;
 }
 
 long get_num_items_in_queue(SV* obj) {
-    return q(obj)->num_items_in_queue;
+    return q(obj)->stats.num_items_in_queue;
 }
 
 long get_num_extracted(SV* obj) {
-    return q(obj)->num_extracted;
+    return q(obj)->stats.num_extracted;
 }
 
 void DESTROY(SV* obj) {

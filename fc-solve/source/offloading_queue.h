@@ -26,6 +26,30 @@ extern "C" {
 #include "state.h"
 
 typedef const unsigned char *fcs_offloading_queue_item_t;
+
+typedef struct
+{
+    long num_inserted, num_items_in_queue, num_extracted;
+} fcs_queue_stats_t;
+
+static inline void fcs_queue_stats_init(fcs_queue_stats_t *const q)
+{
+    *q = (typeof(*q)){
+        .num_inserted = 0, .num_items_in_queue = 0, .num_extracted = 0};
+}
+
+static inline void q_stats_insert(fcs_queue_stats_t *const q)
+{
+    q->num_inserted++;
+    q->num_items_in_queue++;
+}
+
+static inline void q_stats_extract(fcs_queue_stats_t *const q)
+{
+    q->num_items_in_queue--;
+    q->num_extracted++;
+}
+
 #if !defined(FCS_DBM_USE_OFFLOADING_QUEUE)
 
 typedef struct fcs_Q_item_wrapper_struct
@@ -38,7 +62,7 @@ typedef struct
 {
     fcs_compact_allocator_t queue_allocator;
     fcs_Q_item_wrapper_t *queue_head, *queue_tail, *queue_recycle_bin;
-    long num_inserted, num_items_in_queue, num_extracted;
+    fcs_queue_stats_t stats;
 } fcs_offloading_queue_t;
 
 static inline void fcs_offloading_queue__init(
@@ -47,7 +71,7 @@ static inline void fcs_offloading_queue__init(
     fc_solve_compact_allocator_init(&(queue->queue_allocator), meta_alloc);
 
     queue->queue_head = queue->queue_tail = queue->queue_recycle_bin = NULL;
-    queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
+    fcs_queue_stats_init(&queue->stats);
 
     return;
 }
@@ -75,13 +99,10 @@ static inline fcs_bool_t fcs_offloading_queue__extract(
     {
         queue->queue_tail = NULL;
     }
-
     item->next = queue->queue_recycle_bin;
     queue->queue_recycle_bin = item;
 
-    queue->num_items_in_queue--;
-    queue->num_extracted++;
-
+    q_stats_extract(&queue->stats);
     return TRUE;
 }
 
@@ -110,10 +131,7 @@ static inline void fcs_offloading_queue__insert(
     {
         queue->queue_head = queue->queue_tail = new_item;
     }
-
-    queue->num_inserted++;
-    queue->num_items_in_queue++;
-
+    q_stats_insert(&queue->stats);
     return;
 }
 
@@ -252,7 +270,7 @@ typedef struct
 {
     int num_items_per_page;
     const char *offload_dir_path;
-    long num_inserted, num_items_in_queue, num_extracted;
+    fcs_queue_stats_t stats;
     long id;
     /*
      * page_idx_to_write_to, page_idx_for_backup and page_idx_to_read_from
@@ -270,7 +288,7 @@ static inline void fcs_offloading_queue__init(
 {
     queue->num_items_per_page = NUM_ITEMS_PER_PAGE;
     queue->offload_dir_path = offload_dir_path;
-    queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
+    fcs_queue_stats_init(&queue->stats);
     queue->id = id;
 
     fcs_offloading_queue_page__init(
@@ -315,16 +333,14 @@ static inline void fcs_offloading_queue__insert(
 
     fcs_offloading_queue_page__insert(
         queue->pages + queue->page_idx_to_write_to, item);
-
-    queue->num_inserted++;
-    queue->num_items_in_queue++;
+    q_stats_insert(&queue->stats);
 }
 
 static inline fcs_bool_t fcs_offloading_queue__extract(
     fcs_offloading_queue_t *const queue,
     fcs_offloading_queue_item_t *const return_item)
 {
-    if (queue->num_items_in_queue == 0)
+    if (queue->stats.num_items_in_queue == 0)
     {
         *return_item = NULL;
         return FALSE;
@@ -352,8 +368,7 @@ static inline fcs_bool_t fcs_offloading_queue__extract(
         }
     }
 
-    queue->num_items_in_queue--;
-    queue->num_extracted++;
+    q_stats_extract(&queue->stats);
 
     fcs_offloading_queue_page__extract(
         queue->pages + queue->page_idx_to_read_from, return_item);

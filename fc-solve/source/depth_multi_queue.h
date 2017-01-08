@@ -128,7 +128,7 @@ static inline fcs_bool_t fcs_depth_multi_queue__extract(
         return FALSE;
     }
 
-    while (queue->queues_by_depth[0].num_items_in_queue == 0)
+    while (queue->queues_by_depth[0].stats.num_items_in_queue == 0)
     {
         var_AUTO(save_queue, queue->queues_by_depth[0]);
         memmove(queue->queues_by_depth, queue->queues_by_depth + 1,
