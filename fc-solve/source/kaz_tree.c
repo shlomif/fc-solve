@@ -347,20 +347,20 @@ static void safe_traverse(dict_t *dict, void (*func)(dnode_t *, void *))
             }
             else
             case from_left:
-            if (current->right != nil)
-            {
-                came_from = from_parent;
-                next = current->right;
-            }
-            else
-            case from_right:
-            {
-                came_from =
-                    (current == current->parent->left) ? from_left : from_right;
-                next = current->parent;
-                func(current, dict->context);
-            }
-            break;
+                if (current->right != nil)
+                {
+                    came_from = from_parent;
+                    next = current->right;
+                }
+                else
+                case from_right:
+                {
+                    came_from = (current == current->parent->left) ? from_left
+                                                                   : from_right;
+                    next = current->parent;
+                    func(current, dict->context);
+                }
+                break;
         }
 
         current = next;

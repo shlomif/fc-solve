@@ -73,9 +73,9 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
 
             if (display_context.display_states)
             {
-                freecell_solver_user_current_state_stringify(
-                    instance, state_as_string FC_SOLVE__PASS_PARSABLE(
-                                  display_context.parseable_output),
+                freecell_solver_user_current_state_stringify(instance,
+                    state_as_string FC_SOLVE__PASS_PARSABLE(
+                        display_context.parseable_output),
                     display_context.canonized_order_output FC_SOLVE__PASS_T(
                         display_context.display_10_as_t));
 
@@ -118,9 +118,9 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
 
                 if (display_context.display_states)
                 {
-                    freecell_solver_user_current_state_stringify(
-                        instance, state_as_string FC_SOLVE__PASS_PARSABLE(
-                                      display_context.parseable_output),
+                    freecell_solver_user_current_state_stringify(instance,
+                        state_as_string FC_SOLVE__PASS_PARSABLE(
+                            display_context.parseable_output),
                         display_context.canonized_order_output FC_SOLVE__PASS_T(
                             display_context.display_10_as_t));
 

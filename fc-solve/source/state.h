@@ -818,8 +818,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 if ((*str == '\r') || (*str == '\n'))
                     break;
 
-                fcs_put_card_in_freecell(
-                    ret, c,
+                fcs_put_card_in_freecell(ret, c,
                     ((*str == '*') || (*str == '-')) ? fc_solve_empty_card : ({
                         const char rank = fc_solve_u2p_rank(str);
                         if (!rank)
@@ -942,7 +941,7 @@ extern void fc_solve_state_as_string(char *output_s,
         FREECELLS_STACKS_DECKS__ARGS()
             FC_SOLVE__PASS_PARSABLE(const fcs_bool_t parseable_output),
     const fcs_bool_t canonized_order_output PASS_T(
-                                         const fcs_bool_t display_10_as_t));
+        const fcs_bool_t display_10_as_t));
 
 typedef enum {
     FCS_STATE_VALIDITY__OK = 0,

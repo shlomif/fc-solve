@@ -334,10 +334,10 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
         {
             break;
         }
-        mark_and_sweep_old_states(
-            instance, fc_solve_dbm_store_get_dict(
-                          instance->colls_by_depth[instance->curr_depth]
-                              .cache_store.store),
+        mark_and_sweep_old_states(instance,
+            fc_solve_dbm_store_get_dict(
+                instance->colls_by_depth[instance->curr_depth]
+                    .cache_store.store),
             instance->curr_depth);
         instance->curr_depth++;
     }

@@ -581,7 +581,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                     {
                         fprintf(out_fh, "%.2X,",
                             get_move_from_parent_to_child(
-                                    instance, delta, trace[i], trace[i - 1]));
+                                instance, delta, trace[i], trace[i - 1]));
                     }
 #undef PENULTIMATE_DEPTH
                     free(trace);

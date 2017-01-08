@@ -186,7 +186,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
         FREECELLS_STACKS_DECKS__ARGS()
             FC_SOLVE__PASS_PARSABLE(const fcs_bool_t parseable_output),
     const fcs_bool_t canonized_order_output PASS_T(
-                                  const fcs_bool_t display_10_as_t))
+        const fcs_bool_t display_10_as_t))
 {
     typedef char one_card_buffer[4];
     char decks[MAX_NUM_DECKS * 4][10];

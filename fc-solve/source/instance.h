@@ -950,9 +950,9 @@ static inline int update_col_cards_under_sequences(
     fcs_card_t this_card = fcs_col_get_card(col, d);
     fcs_card_t prev_card = fcs_col_get_card(col, d - 1);
     for (; (d > 0) && ({
-               prev_card = fcs_col_get_card(col, d - 1);
-               fcs_is_parent_card(this_card, prev_card);
-           });
+             prev_card = fcs_col_get_card(col, d - 1);
+             fcs_is_parent_card(this_card, prev_card);
+         });
          d--, this_card = prev_card)
     {
     }
