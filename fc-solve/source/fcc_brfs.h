@@ -131,6 +131,15 @@ static inline dict_t *fcc_brfs_kaz_tree_create(
         fc_solve_compare_encoded_states, NULL, meta_alloc, tree_recycle_bin);
 }
 
+static inline void fcc_brfs_add_key_to_tree(
+    dict_t *const tree, const fcs_encoded_state_buffer_t *const val)
+{
+    fcs_encoded_state_buffer_t *key_to_add =
+        fcs_compact_alloc_ptr(&(tree->dict_allocator), sizeof(*key_to_add));
+    *key_to_add = *val;
+    fc_solve_kaz_tree_alloc_insert(tree, key_to_add);
+}
+
 static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair_t *init_state,
@@ -313,18 +322,11 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
                               &(extracted_item->moves_seq), extra_move,
                               add_start_point_context)))
             {
-                fcs_fcc_moves_list_item_t *moves_list,
-                    **end_moves_iter = &moves_list;
-                fcs_encoded_state_buffer_t *key_to_add;
-
-                key_to_add = fcs_compact_alloc_ptr(
-                    &(traversed_states->dict_allocator), sizeof(*key_to_add));
-                *key_to_add = new_item->key;
-
                 if (is_reversible)
                 {
-                    fc_solve_kaz_tree_alloc_insert(
-                        traversed_states, key_to_add);
+                    fcc_brfs_add_key_to_tree(traversed_states, &new_item->key);
+                    fcs_fcc_moves_list_item_t *moves_list,
+                        **end_moves_iter = &moves_list;
                     /* Fill in the moves. */
                     int pos_in_moves = 0;
                     fc_solve__internal__copy_moves(&(extracted_item->moves_seq),
@@ -422,10 +424,7 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
         return TRUE;
     }
 
-    fcs_encoded_state_buffer_t *const key_to_add =
-        fcs_compact_alloc_ptr(&(tree->dict_allocator), sizeof(*key_to_add));
-    *key_to_add = *enc_state;
-    fc_solve_kaz_tree_alloc_insert(tree, key_to_add);
+    fcc_brfs_add_key_to_tree(tree, enc_state);
     /* Fill in the moves. */
     fcs_fcc_moves_list_item_t *moves_list;
     fcs_fcc_moves_list_item_t **end_moves_iter = &moves_list;
