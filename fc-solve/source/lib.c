@@ -531,14 +531,12 @@ static inline fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
 #endif
 
 static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
-    fcs_user_t *const user, int *const instance_list_index)
+    fcs_user_t *const user)
 {
-    *instance_list_index = 0;
     {
         const_SLOT(end_of_instances_list, user);
         for (fcs_instance_item_t *instance_item = user->instances_list;
-             instance_item < end_of_instances_list;
-             instance_item++, (*instance_list_index)++)
+             instance_item < end_of_instances_list; instance_item++)
         {
             if (instance_item->flares_plan_compiled)
             {
@@ -708,7 +706,6 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
         }
     }
     INSTANCES_LOOP_END()
-    *instance_list_index = -1;
     clear_error(user);
 
     return FCS_COMPILE_FLARES_RET_OK;
@@ -1280,9 +1277,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
     }
 #endif
 #ifdef FCS_WITH_FLARES
-    int instance_list_index;
-    if (user_compile_all_flares_plans(user, &instance_list_index) !=
-        FCS_COMPILE_FLARES_RET_OK)
+    if (user_compile_all_flares_plans(user) != FCS_COMPILE_FLARES_RET_OK)
     {
         return FCS_STATE_FLARES_PLAN_ERROR;
     }
@@ -2643,13 +2638,11 @@ DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 
 int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
-    void *const api_instance GCC_UNUSED,
-    int *const instance_list_index GCC_UNUSED, char **const error_string)
+    void *const api_instance GCC_UNUSED, char **const error_string)
 {
 #ifdef FCS_WITH_FLARES
     fcs_user_t *const user = (fcs_user_t *)api_instance;
-    const fcs_compile_flares_ret_t ret =
-        user_compile_all_flares_plans(user, instance_list_index);
+    const fcs_compile_flares_ret_t ret = user_compile_all_flares_plans(user);
 #ifdef FCS_WITH_ERROR_STRS
     *error_string = (user->error_string[0]) ? strdup(user->error_string) : NULL;
 #else

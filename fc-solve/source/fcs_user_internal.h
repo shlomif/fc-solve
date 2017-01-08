@@ -26,7 +26,7 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
     void *api_instance, int my_index);
 
 int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
-    void *api_instance, int *instance_list_index, char **error_string);
+    void *api_instance, char **error_string);
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *api_instance);

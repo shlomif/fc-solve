@@ -4,7 +4,7 @@ from TAP.Simple import plan
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 from FC_Solve import FC_Solve
 
-plan(79)
+plan(73)
 
 
 def test_null_plan():

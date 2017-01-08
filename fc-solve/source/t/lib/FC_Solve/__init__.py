@@ -95,7 +95,6 @@ class FC_Solve:
 
     # TEST:$compile_flares_plan_ok=0;
     def compile_flares_plan_ok(self, name, flares_plan_string):
-        instance_list_index = c_int()
         error_string = c_char_p()
 
         myplan = None
@@ -111,17 +110,12 @@ class FC_Solve:
            name + " - set_string returned success")
         ret_code = self.fcs.fc_solve_user_INTERNAL_compile_all_flares_plans(
             self.user,
-            byref(instance_list_index),
             byref(error_string)
         )
 
         # TEST:$compile_flares_plan_ok++;
         ok(ret_code == 0,
            name + " - returned success.")
-
-        # TEST:$compile_flares_plan_ok++;
-        ok(instance_list_index.value == -1,
-           name + " - instance_list_index returned -1.")
 
         # TEST:$compile_flares_plan_ok++;
         ok(error_string.value is None,
