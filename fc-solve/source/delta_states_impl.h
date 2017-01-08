@@ -207,6 +207,49 @@ static inline void fc_solve_get_freecells_encoding(
     }
 }
 
+static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
+    int *const cols_indexes, fc_solve_column_encoding_composite_t *const cols)
+{
+    int non_orig_idx = 0;
+    int empty_col_idx = num_columns - 1;
+
+    while (1)
+    {
+        for (; non_orig_idx < num_columns; non_orig_idx++)
+        {
+            if (cols[non_orig_idx].type == COL_TYPE_ENTIRELY_NON_ORIG)
+            {
+                break;
+            }
+        }
+
+        if (non_orig_idx == num_columns)
+        {
+            break;
+        }
+
+        for (; empty_col_idx >= 0; empty_col_idx--)
+        {
+            if (cols[empty_col_idx].type == COL_TYPE_EMPTY)
+            {
+                break;
+            }
+        }
+
+        if ((empty_col_idx < 0) || (empty_col_idx < non_orig_idx))
+        {
+            break;
+        }
+
+        const_AUTO(swap_int, cols_indexes[non_orig_idx]);
+        cols_indexes[non_orig_idx] = cols_indexes[empty_col_idx];
+        cols_indexes[empty_col_idx] = swap_int;
+
+        non_orig_idx++;
+        empty_col_idx--;
+    }
+}
+
 static void fc_solve_delta_stater_encode_composite(
     fc_solve_delta_stater_t *const self, fc_solve_bit_writer_t *const bit_w)
 {
@@ -221,52 +264,13 @@ static void fc_solve_delta_stater_encode_composite(
         fc_solve_get_column_encoding_composite(self, i, &(cols[i]));
     }
 
-    {
-        int non_orig_idx = 0;
-        int empty_col_idx = num_columns - 1;
-
-        /*
-         * Move the empty columns to the front, but only within the
-         * entirely_non_orig
-         * That's because the orig columns should be preserved in their own
-         * place.
-         * */
-        while (1)
-        {
-            for (; non_orig_idx < num_columns; non_orig_idx++)
-            {
-                if (cols[non_orig_idx].type == COL_TYPE_ENTIRELY_NON_ORIG)
-                {
-                    break;
-                }
-            }
-
-            if (non_orig_idx == num_columns)
-            {
-                break;
-            }
-
-            for (; empty_col_idx >= 0; empty_col_idx--)
-            {
-                if (cols[empty_col_idx].type == COL_TYPE_EMPTY)
-                {
-                    break;
-                }
-            }
-
-            if ((empty_col_idx < 0) || (empty_col_idx < non_orig_idx))
-            {
-                break;
-            }
-
-            const_AUTO(swap_int, cols_indexes[non_orig_idx]);
-            cols_indexes[non_orig_idx] = cols_indexes[empty_col_idx];
-            cols_indexes[empty_col_idx] = swap_int;
-
-            non_orig_idx++;
-            empty_col_idx--;
-        }
-    }
+    /*
+     * Move the empty columns to the front, but only within the
+     * entirely_non_orig
+     * That's because the orig columns should be preserved in their own
+     * place.
+     * */
+    fc_solve_delta__promote_empty_cols(num_columns, cols_indexes, cols);
 
     {
         int new_non_orig_cols_indexes[MAX_NUM_STACKS];
