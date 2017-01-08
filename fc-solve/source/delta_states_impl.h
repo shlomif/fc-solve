@@ -61,18 +61,15 @@ static void fc_solve_delta_stater_init(
 #endif
     )
 {
-    int max_num_cards;
-
 #ifndef FCS_FREECELL_ONLY
     self->sequences_are_built_by = sequences_are_built_by;
 #endif
-
     self->num_columns = num_columns;
     self->num_freecells = num_freecells;
 
     self->init_state = init_state;
 
-    max_num_cards = 0;
+    int max_num_cards = 0;
     for (size_t col_idx = 0; col_idx < num_columns; col_idx++)
     {
         const_AUTO(num_cards, fc_solve_get_column_orig_num_cards(self,
