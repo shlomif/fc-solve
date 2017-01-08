@@ -103,22 +103,18 @@ typedef char * * string_list_t;
 
 static string_list_t av_to_char_p_p(AV * av)
 {
+    const int len = av_len(av)+1;
     string_list_t ret;
-    int i, len;
-
-    len = av_len(av)+1;
     Newx(ret, (sizeof(ret[0]) * (len+1)), char *);
 
-    for (i = 0; i < len ; i++)
+    for (int i = 0; i < len ; i++)
     {
-        SV * * item;
-        item = av_fetch(av, i, FALSE);
+        SV * * item = av_fetch(av, i, FALSE);
 
         assert(item);
         ret[i] = savepv(SvPVbyte_nolen((*item)));
     }
-    ret[i] = NULL;
-
+    ret[len] = NULL;
     return ret;
 }
 

@@ -33,7 +33,7 @@ typedef struct
     fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
 } DerivedState;
 
-SV * perl_perform_horne_prune(char * init_state_s) {
+AV * perl_perform_horne_prune(char * init_state_s) {
     char * ret_state_s;
     const int ret_count = fc_solve_user_INTERNAL_perform_horne_prune(FCS_DBM_VARIANT_2FC_FREECELL, init_state_s, &ret_state_s);
 
@@ -43,10 +43,10 @@ SV * perl_perform_horne_prune(char * init_state_s) {
 
     fc_solve_user_INTERNAL_perform_horne_prune__free_ret_state_s(ret_state_s);
 
-    return newRV((SV *)results);
+    return results;
 }
 
-SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
+AV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
     int count;
     fcs_derived_state_debug_t * derived_states;
     fc_solve_user_INTERNAL_calc_derived_states_wrapper(
@@ -79,7 +79,7 @@ SV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
         av_push(results, obj_ref);
     }
     fc_solve_user_INTERNAL_free_derived_states(count, derived_states);
-    return newRV((SV *)results);
+    return results;
 }
 
 static inline DerivedState * deref(SV * const obj) {
