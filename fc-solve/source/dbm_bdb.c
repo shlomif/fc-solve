@@ -127,8 +127,7 @@ extern void fc_solve_dbm_store_offload_pre_cache(
     for (dnode_t *node = fc_solve_kaz_tree_first(kaz_tree); node;
          node = fc_solve_kaz_tree_next(kaz_tree, node))
     {
-        fcs_pre_cache_key_val_pair_t *const kv =
-            (fcs_pre_cache_key_val_pair_t *)(node->dict_key);
+        const_AUTO(kv, (fcs_pre_cache_key_val_pair_t *)(node->dict_key));
 
         db->key.data = kv->key.s + 1;
         db->key.size = kv->key.s[0];

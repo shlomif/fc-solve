@@ -197,7 +197,6 @@ static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t *token = NULL;
-    fcs_dbm_queue_item_t *item, *prev_item;
     fcs_derived_state_t *derived_list, *derived_list_recycle_bin, *derived_iter;
     fcs_compact_allocator_t derived_list_allocator;
     fcs_state_keyval_pair_t state;
@@ -217,7 +216,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_AUTO(delta_stater, &(thread->delta_stater));
     const_AUTO(local_variant, instance->common.variant);
 
-    prev_item = item = NULL;
+    fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
     int queue_num_extracted_and_processed = 0;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(thread->thread_meta_alloc));

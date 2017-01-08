@@ -186,15 +186,21 @@ static inline fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
 
 #ifdef DEBUG
 
-#define TRACE0(message)                                                        \
-    {                                                                          \
-        if (getenv("FCS_TRACE"))                                               \
-        {                                                                      \
-            printf(                                                            \
-                "BestFS(rate_state) - %s ; rating=%.40f .\n", message, 0.1);   \
-            fflush(stdout);                                                    \
-        }                                                                      \
+static inline void fcs_trace(const char *const format, ...)
+{
+    va_list my_va_list;
+    va_start(my_va_list, format);
+
+    if (getenv("FCS_TRACE"))
+    {
+        vfprintf(stdout, format, my_va_list);
+        fflush(stdout);
     }
+    va_end(my_va_list);
+}
+
+#define TRACE0(message)                                                        \
+    fcs_trace("BestFS(rate_state) - %s ; rating=%.40f .\n", message, 0.1)
 
 #else
 
@@ -421,24 +427,15 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
 
 #ifdef DEBUG
 #define TRACE0(message)                                                        \
-    {                                                                          \
-        if (getenv("FCS_TRACE"))                                               \
-        {                                                                      \
-            printf("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "         \
-                   "tests_list_index=%d ; move_func_idx=%d ; "                 \
-                   "current_state_index=%d ; num_states=%ld\n",                \
-                message, (long int)DFS_VAR(soft_thread, depth),                \
-                (long int)(the_soft_dfs_info -                                 \
-                           DFS_VAR(soft_thread, soft_dfs_info)),               \
-                (long int)(instance->i__num_checked_states),                   \
-                the_soft_dfs_info->tests_list_index,                           \
-                the_soft_dfs_info->move_func_idx,                              \
-                the_soft_dfs_info->current_state_index,                        \
-                (long)(derived_states_list ? derived_states_list->num_states   \
-                                           : -1));                             \
-            fflush(stdout);                                                    \
-        }                                                                      \
-    }
+    fcs_trace("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "              \
+              "tests_list_index=%d ; move_func_idx=%d ; "                      \
+              "current_state_index=%d ; num_states=%ld\n",                     \
+        message, (long int)DFS_VAR(soft_thread, depth),                        \
+        (long int)(the_soft_dfs_info - DFS_VAR(soft_thread, soft_dfs_info)),   \
+        (long int)(instance->i__num_checked_states),                           \
+        the_soft_dfs_info->tests_list_index, the_soft_dfs_info->move_func_idx, \
+        the_soft_dfs_info->current_state_index,                                \
+        (long)(derived_states_list ? derived_states_list->num_states : -1))
 
 #define VERIFY_STATE_SANITY() verify_state_sanity(&FCS_SCANS_the_state)
 
