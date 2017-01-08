@@ -196,6 +196,11 @@ static inline void transaction(const worker_t *const worker, const int read_fd,
     write_request(end_board, board_num_step, next_board_num_ptr, worker);
 }
 
+static inline int read_fd(const worker_t *const worker)
+{
+    return worker->child_to_parent_pipe[READ_FD];
+}
+
 int main(int argc, char *argv[])
 {
     int arg = 1;
@@ -316,8 +321,7 @@ int main(int argc, char *argv[])
 
         for (size_t idx = 0; idx < num_workers; idx++)
         {
-#define GET_READ_FD(worker) ((worker).child_to_parent_pipe[READ_FD])
-            const int fd = GET_READ_FD(workers[idx]);
+            const int fd = read_fd(&workers[idx]);
 #ifdef USE_EPOLL
             struct epoll_event ev = {
                 .events = EPOLLIN, .data.ptr = &(workers[idx]),
@@ -375,9 +379,8 @@ int main(int argc, char *argv[])
             for (int i = 0; i < nfds; i++)
             {
                 const worker_t *const worker = events[i].data.ptr;
-                transaction(worker, GET_READ_FD(*worker),
-                    &total_num_finished_boards, end_board, board_num_step,
-                    &next_board_num);
+                transaction(worker, read_fd(worker), &total_num_finished_boards,
+                    end_board, board_num_step, &next_board_num);
             }
 
 #else
@@ -393,7 +396,7 @@ int main(int argc, char *argv[])
             {
                 for (size_t idx = 0; idx < num_workers; idx++)
                 {
-                    const int fd = GET_READ_FD(workers[idx]);
+                    const int fd = read_fd(&workers[idx]);
 
                     if (FD_ISSET(fd, &readers))
                     {
