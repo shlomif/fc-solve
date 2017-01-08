@@ -292,8 +292,10 @@ DLLEXPORT extern void freecell_solver_user_set_reparent_states(
 DLLEXPORT extern void freecell_solver_user_set_scans_synergy(
     void *const user_instance, const int synergy);
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern void freecell_solver_user_limit_current_instance_iterations(
     void *user_instance, int max_iters);
+#endif
 
 DLLEXPORT extern int freecell_solver_user_next_instance(
     void *const user_instance);

@@ -339,13 +339,13 @@ void DLLEXPORT freecell_solver_user_limit_iterations(
     return freecell_solver_user_limit_iterations_long(
         api_instance, (fcs_int_limit_t)max_iters);
 }
-#endif
 
 void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
     void *const api_instance, const int max_iters)
 {
     ((fcs_user_t *)api_instance)->current_instance->limit = max_iters;
 }
+#endif
 
 static inline fc_solve_soft_thread_t *api_soft_thread(void *const api_instance)
 {
