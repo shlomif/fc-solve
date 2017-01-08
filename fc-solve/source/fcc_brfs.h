@@ -470,14 +470,13 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
         new_start_point = (fcs_FCC_start_point_t *)fcs_compact_alloc_ptr(
             &(fcc_start_points->allocator), sizeof(*new_start_point));
     }
-    new_start_point->enc_state = *enc_state;
-    new_start_point->moves_seq.count = pos_in_moves;
-    new_start_point->moves_seq.moves_list = moves_list;
+    *new_start_point = (typeof(*new_start_point)){.enc_state = *enc_state,
+        .moves_seq = {.count = pos_in_moves, .moves_list = moves_list},
+        .next = fcc_start_points->list};
 
     /*
      * Enqueue the new start point - it won't work without it,
      * retardo! */
-    new_start_point->next = fcc_start_points->list;
     fcc_start_points->list = new_start_point;
 
     return FALSE;
