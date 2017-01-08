@@ -142,27 +142,27 @@ args_man_t fc_solve_args_man_chop(const char *const string)
                     break;
 
                 case '\\':
-
                 {
-                    char next_char = *(++s);
+                    const_AUTO(next_char, *(++s));
                     s++;
-                    if (next_char == '\0')
+                    switch (next_char)
                     {
+                    case '\0':
                         s--;
                         push_next_arg_flag = TRUE;
                         should_still_loop = FALSE;
-                    }
-                    else if ((next_char == '\n') || (next_char == '\r'))
-                    {
+                        break;
+                    case '\r':
+                    case '\n':
                         /* Skip to the next line. */
                         if (!in_arg)
                         {
                             should_still_loop = FALSE;
                         }
-                    }
-                    else
-                    {
+                        break;
+                    default:
                         add_to_last_arg(&manager, next_char);
+                        break;
                     }
                 }
                 break;
