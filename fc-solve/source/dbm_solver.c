@@ -623,7 +623,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     return ret;
 }
 
-#define TRY_P(s) try_argv_param(argc, argv, &arg, s)
 int main(int argc, char *argv[])
 {
     long start_line = 1;

@@ -301,8 +301,8 @@ static inline void mark_and_sweep_old_states(
      * */
     FILE *const out_fh = instance->common.out_fh;
     TRACE("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
-    struct rb_node **tree_recycle_bin =
-        ((struct rb_node **)(&(instance->common.tree_recycle_bin)));
+    const_AUTO(tree_recycle_bin,
+        ((struct rb_node **)(&(instance->common.tree_recycle_bin))));
 
     struct rb_traverser trav;
     rb_t_init(&trav, kaz_tree);
@@ -319,8 +319,8 @@ static inline void mark_and_sweep_old_states(
             {
                 rb_set_decommissioned_flag(ancestor, 1);
 
-                AVL_SET_NEXT(ancestor, *(tree_recycle_bin));
-                *(tree_recycle_bin) = ancestor;
+                AVL_SET_NEXT(ancestor, *tree_recycle_bin);
+                *tree_recycle_bin = ancestor;
 
                 if (!(ancestor =
                             (struct rb_node *)fcs_dbm_record_get_parent_ptr(
@@ -437,6 +437,7 @@ static const fcs_dbm_common_input_t fcs_dbm_common_input_init = {
     .num_threads = 2};
 
 #define TRY_PARAM(s) try_argv_param(argc, argv, arg, s)
+#define TRY_P(s) try_argv_param(argc, argv, &arg, s)
 static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     char **const argv, int *const arg, fcs_dbm_common_input_t *const inp)
 {

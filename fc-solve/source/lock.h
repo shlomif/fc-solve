@@ -92,9 +92,9 @@ static inline void fcs_condvar_destroy(fcs_condvar_t *const cond)
 }
 
 static inline void fcs_condvar__wait_on(
-    fcs_condvar_t *const cond, fcs_lock_t *const mutex)
+    fcs_condvar_t *const cond, fcs_lock_t *const lock)
 {
-    pthread_cond_wait(cond, mutex);
+    pthread_cond_wait(cond, lock);
 }
 
 static inline void fcs_condvar_signal(fcs_condvar_t *const cond)

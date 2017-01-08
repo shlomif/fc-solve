@@ -657,7 +657,6 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }
 
-#define TRY_P(s) try_argv_param(argc, argv, &arg, s)
 int main(int argc, char *argv[])
 {
     build_decoding_table();
