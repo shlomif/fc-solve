@@ -443,39 +443,12 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     const_AUTO(local_variant, instance->common.variant);
 #endif
     const_AUTO(coll, &(instance->coll));
-#ifdef FCS_DBM_WITHOUT_CACHES
     fcs_dbm_record_t *token;
-#else
-    fcs_dbm_record_t *token = key;
-#endif
-#ifndef FCS_DBM_WITHOUT_CACHES
-    if (cache_does_key_exist(&(coll->cache_store.cache), key))
-    {
-        return;
-    }
-#ifndef FCS_DBM_CACHE_ONLY
-    else if (pre_cache_does_key_exist(&(coll->cache_store.pre_cache), key))
-    {
-        return;
-    }
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-    else if (fc_solve_dbm_store_does_key_exist(coll->cache_store.store, key->s))
-    {
-        cache_insert(&(coll->cache_store.cache), key, NULL, '\0');
-        return;
-    }
-#endif
-    else
-#else
-    if ((token = fc_solve_dbm_store_insert_key_value(
-             coll->cache_store.store, key, parent, TRUE)))
-#endif
+    if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
 #ifdef FCS_DBM_CACHE_ONLY
         fcs_cache_key_info_t *cache_key;
 #endif
-
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
         pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);

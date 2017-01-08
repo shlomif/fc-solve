@@ -506,6 +506,35 @@ static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     return FALSE;
 }
 
+static inline fcs_dbm_record_t *cache_store__has_key(
+    fcs_dbm__cache_store__common_t *const cache_store,
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent)
+{
+#ifndef FCS_DBM_WITHOUT_CACHES
+    if (cache_does_key_exist(&(cache_store->cache), key))
+    {
+        return NULL;
+    }
+#ifndef FCS_DBM_CACHE_ONLY
+    else if (pre_cache_does_key_exist(&(cache_store->pre_cache), key))
+    {
+        return NULL;
+    }
+#endif
+#ifndef FCS_DBM_CACHE_ONLY
+    else if (fc_solve_dbm_store_does_key_exist(cache_store->store, key->s))
+    {
+        cache_insert(&(cache_store->cache), key, NULL, '\0');
+        return NULL;
+    }
+#endif
+    return ((fcs_dbm_record_t *)key);
+#else
+    return fc_solve_dbm_store_insert_key_value(
+        cache_store->store, key, parent, TRUE);
+#endif
+}
+
 #ifdef __cplusplus
 }
 #endif

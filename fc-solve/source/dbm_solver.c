@@ -88,32 +88,8 @@ static inline void instance_check_key(
 #endif
     )
 {
-#ifdef FCS_DBM_WITHOUT_CACHES
     fcs_dbm_record_t *token;
-#endif
-#ifndef FCS_DBM_WITHOUT_CACHES
-    if (cache_does_key_exist(&(instance->cache_store.cache), key))
-    {
-        return;
-    }
-#ifndef FCS_DBM_CACHE_ONLY
-    else if (pre_cache_does_key_exist(&(instance->cache_store.pre_cache), key))
-    {
-        return;
-    }
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
-    else if (fc_solve_dbm_store_does_key_exist(instance->store, key->s))
-    {
-        cache_insert(&(instance->cache_store.cache), key, NULL, '\0');
-        return;
-    }
-#endif
-    else
-#else
-    if ((token = fc_solve_dbm_store_insert_key_value(
-             instance->cache_store.store, key, parent, TRUE)))
-#endif
+    if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
     {
 #ifdef FCS_DBM_CACHE_ONLY
         fcs_cache_key_info_t *cache_key;
