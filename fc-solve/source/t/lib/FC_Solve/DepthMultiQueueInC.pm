@@ -15,15 +15,13 @@ typedef struct
 } QueueInC;
 
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_depth, int first_item_i) {
-        QueueInC * s;
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FC_Solve::DepthMultiQueueInC");
-        fcs_offloading_queue_item_t first_item;
 
-        first_item = (fcs_offloading_queue_item_t)first_item_i;
-
+        QueueInC * s;
         New(42, s, 1, QueueInC);
 
+        const_AUTO(first_item, (fcs_offloading_queue_item_t)first_item_i);
         fcs_depth_multi_queue__init(&(s->q), savepv(offload_dir_path), first_depth, &first_item);
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
@@ -39,11 +37,8 @@ static inline fcs_depth_multi_queue_t * q(SV * const obj) {
 }
 
 void insert(SV* obj, int depth, int item_i) {
-    fcs_offloading_queue_item_t item = (fcs_offloading_queue_item_t)item_i;
-
+    const_AUTO(item, (fcs_offloading_queue_item_t)item_i);
     fcs_depth_multi_queue__insert( q(obj), depth, &item );
-
-    return;
 }
 
 AV* extract_proto(SV* obj) {

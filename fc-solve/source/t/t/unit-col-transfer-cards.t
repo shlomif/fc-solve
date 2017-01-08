@@ -22,20 +22,19 @@ typedef struct
 } StateInC;
 
 SV* _proto_new(const char * input_state_string) {
-        StateInC * s;
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FC_Solve::FCS_Perl_State");
+        StateInC * s;
         New(42, s, 1, StateInC);
 
         fc_solve_init_locs (&(s->locs));
-
         fc_solve_initial_user_state_to_c(
-        input_state_string,
-        &s->state,
-        4,
-        8,
-        1,
-        s->indirect_stacks_buffer
+            input_state_string,
+            &s->state,
+            4,
+            8,
+            1,
+            s->indirect_stacks_buffer
         );
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);

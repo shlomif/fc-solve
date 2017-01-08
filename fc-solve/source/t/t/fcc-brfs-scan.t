@@ -30,7 +30,7 @@ typedef struct
     long num_new_positions;
 } FccStartPoint;
 
-SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
+AV * find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
     fcs_FCC_start_point_result_t * fcc_start_points;
     long num_new_positions;
     STRLEN count_start_moves = SvLEN(moves_prefix);
@@ -62,7 +62,7 @@ SV* find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
         av_push(results, obj_ref);
     }
     fc_solve_user_INTERNAL_free_fcc_start_points(fcc_start_points);
-    return newRV((SV *)results);
+    return results;
 }
 
 static inline FccStartPoint * deref(SV * const obj) {
