@@ -84,12 +84,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
             sfs_check_state_begin();
 
             my_copy_stack(stack_idx);
-            {
-                fcs_cards_column_t new_temp_col;
-                new_temp_col = fcs_state_get_col(new_state, stack_idx);
-                fcs_col_pop_top(new_temp_col);
-            }
-
+            fcs_state_pop_col_top(&new_state, stack_idx);
             fcs_increment_foundation(new_state, deck * 4 + fcs_card_suit(card));
 
             fcs_move_stack_non_seq_push(moves,
@@ -1673,14 +1668,8 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
                     num_cards_moved++;
 
                     my_copy_stack(stack_idx);
-                    {
-                        fcs_cards_column_t new_temp_col;
-                        new_temp_col = fcs_state_get_col(new_state, stack_idx);
-                        fcs_col_pop_top(new_temp_col);
-                    }
-
+                    fcs_state_pop_col_top(&new_state, stack_idx);
                     fcs_increment_foundation(new_state, dest_foundation);
-
                     fcs_move_stack_non_seq_push(moves,
                         FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
                         dest_foundation);

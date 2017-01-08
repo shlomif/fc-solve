@@ -1186,6 +1186,13 @@ static inline fcs_card_t fcs_state_pop_col_card(
     return ret;
 }
 
+static inline void fcs_state_pop_col_top(
+    fcs_state_t *const state, const int col_idx)
+{
+    const fcs_cards_column_t col = fcs_state_get_col(*state, col_idx);
+    fcs_col_pop_top(col);
+}
+
 #ifdef FCS_FREECELL_ONLY
 #define FCS__SEQS_ARE_BUILT_BY_RANK() FALSE
 #else

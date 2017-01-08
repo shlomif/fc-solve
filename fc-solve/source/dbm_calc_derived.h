@@ -391,12 +391,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
                     /* We can put it there */
                     BEGIN_NEW_STATE()
 
-                    {
-                        fcs_cards_column_t new_temp_col;
-                        new_temp_col = fcs_state_get_col(new_state, stack_idx);
-                        fcs_col_pop_top(new_temp_col);
-                    }
-
+                    fcs_state_pop_col_top(&new_state, stack_idx);
                     fcs_increment_foundation(new_state, deck * 4 + suit);
 
                     COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx),
