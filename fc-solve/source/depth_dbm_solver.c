@@ -188,21 +188,22 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
+            const_AUTO(token, tokens[batch_i]);
             /* Handle item. */
-            fc_solve_delta_stater_decode_into_state(delta_stater,
-                tokens[batch_i]->key.s, &state, indirect_stacks_buffer);
+            fc_solve_delta_stater_decode_into_state(
+                delta_stater, token->key.s, &state, indirect_stacks_buffer);
             /* A section for debugging. */
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, tokens[batch_i], &derived_lists[batch_i],
+                    &state, token, &derived_lists[batch_i],
                     &derived_list_recycle_bin, &derived_list_allocator, TRUE))
             {
                 fcs_dbm_queue_item_t physical_item;
-                physical_item.key = tokens[batch_i]->key;
+                physical_item.key = token->key;
                 fcs_lock_lock(&instance->common.storage_lock);
                 fcs_dbm__found_solution(
-                    &(instance->common), tokens[batch_i], &physical_item);
+                    &(instance->common), token, &physical_item);
                 fcs_condvar_broadcast(&(instance->monitor));
                 fcs_lock_unlock(&instance->common.storage_lock);
                 goto thread_end;
