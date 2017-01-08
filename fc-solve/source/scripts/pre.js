@@ -3,4 +3,3 @@ if (typeof define !== 'function') {
 }
 
 define([], function () {
-    return function(Module) {

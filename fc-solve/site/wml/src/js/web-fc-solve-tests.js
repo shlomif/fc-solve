@@ -10252,6 +10252,4 @@ function test_js_fc_solve_class()
     return;
 }
 return {test_js_fc_solve_class: test_js_fc_solve_class};
-    return {foo:"barari"};
-
 });
