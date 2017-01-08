@@ -50,6 +50,11 @@ static inline void q_stats_extract(fcs_queue_stats_t *const q)
     q->num_extracted++;
 }
 
+static inline fcs_bool_t q_stats_is_empty(fcs_queue_stats_t *const q)
+{
+    return (q->num_items_in_queue == 0);
+}
+
 #if !defined(FCS_DBM_USE_OFFLOADING_QUEUE)
 
 typedef struct fcs_Q_item_wrapper_struct
@@ -340,7 +345,7 @@ static inline fcs_bool_t fcs_offloading_queue__extract(
     fcs_offloading_queue_t *const queue,
     fcs_offloading_queue_item_t *const return_item)
 {
-    if (queue->stats.num_items_in_queue == 0)
+    if (q_stats_is_empty(&queue->stats))
     {
         *return_item = NULL;
         return FALSE;

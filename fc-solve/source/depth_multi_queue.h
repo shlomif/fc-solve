@@ -122,12 +122,12 @@ static inline fcs_bool_t fcs_depth_multi_queue__extract(
     fcs_depth_multi_queue_t *const queue, int *const return_depth,
     fcs_offloading_queue_item_t *const return_item)
 {
-    if (queue->stats.num_items_in_queue == 0)
+    if (q_stats_is_empty(&queue->stats))
     {
         return FALSE;
     }
 
-    while (queue->queues_by_depth[0].stats.num_items_in_queue == 0)
+    while (q_stats_is_empty(&queue->queues_by_depth[0].stats))
     {
         var_AUTO(save_queue, queue->queues_by_depth[0]);
         memmove(queue->queues_by_depth, queue->queues_by_depth + 1,

@@ -198,8 +198,8 @@ static inline fcs_bool_t instance_check_multiple_keys(
         }
     }
 #ifdef MAX_FCC_DEPTH
-    const fcs_bool_t have_more = (instance->colls_by_depth[instance->curr_depth]
-                                      .queue.stats.num_items_in_queue > 0);
+    const fcs_bool_t have_more = !q_stats_is_empty(
+        &instance->colls_by_depth[instance->curr_depth].queue.stats);
 
     if (have_more)
     {
