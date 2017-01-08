@@ -20,7 +20,6 @@ typedef struct
 {
     fcs_dbm__cache_store__common_t cache_store;
     /* The queue */
-    long max_count_of_items_in_queue;
     fcs_meta_compact_allocator_t meta_alloc;
     fcs_offloading_queue_t queue;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -33,8 +32,7 @@ typedef struct
 
 #include "dbm_procs.h"
 static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_common_input_t *const inp,
-    const long max_count_of_items_in_queue, const long iters_delta_limit,
+    const fcs_dbm_common_input_t *const inp, const long iters_delta_limit,
     FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
@@ -46,7 +44,6 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
 #endif
     fcs_dbm__common_init(
         &(instance->common), iters_delta_limit, inp->local_variant, out_fh);
-    instance->max_count_of_items_in_queue = max_count_of_items_in_queue;
     fcs_dbm__cache_store__init(&(instance->cache_store), &(instance->common),
         &(instance->meta_alloc), inp->dbm_store_path, inp->pre_cache_max_count,
         inp->caches_delta);
@@ -198,16 +195,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            if (instance->common.count_of_items_in_queue >=
-                instance->max_count_of_items_in_queue)
-            {
-                instance->common.should_terminate = QUEUE_TERMINATE;
-                /* TODO :
-                 * Implement dumping the queue to the output filehandle.
-                 * */
-            }
-            else if (fcs_offloading_queue__extract(&(instance->queue),
-                         (fcs_offloading_queue_item_t *)(&token)))
+            if (fcs_offloading_queue__extract(&(instance->queue),
+                    (fcs_offloading_queue_item_t *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -630,7 +619,6 @@ int main(int argc, char *argv[])
     FILE *intermediate_in_fh = NULL;
     fcs_bool_t skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-    long max_count_of_items_in_queue = LONG_MAX;
     const char *param;
     fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
 
@@ -639,10 +627,6 @@ int main(int argc, char *argv[])
     {
         if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &inp))
         {
-        }
-        else if ((param = TRY_P("--max-count-of-items-in-queue")))
-        {
-            max_count_of_items_in_queue = atol(param);
         }
         else if ((param = TRY_P("--start-line")))
         {
@@ -712,10 +696,8 @@ int main(int argc, char *argv[])
         fcs_dbm_solver_instance_t queue_instance;
         fcs_dbm_solver_instance_t limit_instance;
 
-        instance_init(
-            &queue_instance, &inp, max_count_of_items_in_queue, -1, out_fh);
-        instance_init(
-            &limit_instance, &inp, LONG_MAX, inp.iters_delta_limit, out_fh);
+        instance_init(&queue_instance, &inp, -1, out_fh);
+        instance_init(&limit_instance, &inp, inp.iters_delta_limit, out_fh);
 
         fcs_bool_t found_line;
         do
@@ -823,8 +805,7 @@ int main(int argc, char *argv[])
     else
     {
         fcs_dbm_solver_instance_t instance;
-        instance_init(&instance, &inp, max_count_of_items_in_queue,
-            inp.iters_delta_limit, out_fh);
+        instance_init(&instance, &inp, inp.iters_delta_limit, out_fh);
         fcs_encoded_state_buffer_t *key_ptr;
 #define KEY_PTR() (key_ptr)
         fcs_encoded_state_buffer_t parent_state_enc;
