@@ -275,16 +275,9 @@ static inline void instance_check_key(
 
     if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
-#ifdef FCS_DBM_CACHE_ONLY
-        fcs_cache_key_info_t *cache_key;
-#endif
-
 #ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);
-#else
-        cache_key = cache_insert(cache, key, moves_to_parent, move);
-#endif
+        fcs_cache_key_info_t *cache_key = cache_store__insert_key(
+            &(instance->cache_store), key, parent, moves_to_parent, move);
 #endif
 
         /* Now insert it into the queue. */
@@ -397,13 +390,8 @@ int main(int argc, char *argv[])
 
     fcs_dbm_record_t *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_insert(&(instance.colls_by_depth[0].cache_store.pre_cache),
-        KEY_PTR(), &parent_state_enc);
-#else
-    cache_insert(
-        &(instance.colls_by_depth[0].cache_store.cache), KEY_PTR(), NULL, '\0');
-#endif
+    cache_store__insert_key(
+        &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
 #else
     token = fc_solve_dbm_store_insert_key_value(
         instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL, TRUE);

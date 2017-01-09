@@ -446,16 +446,9 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     fcs_dbm_record_t *token;
     if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
-#ifdef FCS_DBM_CACHE_ONLY
-        fcs_cache_key_info_t *cache_key;
-#endif
 #ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(coll->cache_store.pre_cache), key, parent);
-#else
-        cache_key = cache_insert(
-            &(coll->cache_store.cache), key, moves_to_parent, move);
-#endif
+        fcs_cache_key_info_t *cache_key = cache_store__insert_key(
+            &(coll->cache_store.pre_cache), key, parent, moves_to_parent, move);
 #endif
 
         if (key_depth == instance->curr_depth)
@@ -770,11 +763,7 @@ int main(int argc, char *argv[])
  * */
 #if 0
 #ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-            pre_cache_insert(&(instance.pre_cache), &(key_ptr->kv.key.key), &parent_state_enc);
-#else
-            cache_insert(&(instance.cache), &(key_ptr->kv.key.key), NULL, '\0');
-#endif
+            cache_store__insert_key(&(instance.cache_store), &(key_ptr->kv.key.key), &parent_state_enc, NULL, '\0');
 #else
             token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL, TRUE);
 #endif

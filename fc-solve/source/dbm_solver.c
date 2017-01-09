@@ -91,22 +91,14 @@ static inline void instance_check_key(
     fcs_dbm_record_t *token;
     if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
     {
-#ifdef FCS_DBM_CACHE_ONLY
-        fcs_cache_key_info_t *cache_key;
-#endif
-
 #ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(instance->cache_store.pre_cache), key, parent);
-#else
-        cache_key = cache_insert(
-            &(instance->cache_store.cache), key, moves_to_parent, move);
+        fcs_cache_key_info_t *cache_key = cache_store__insert_key(
+            &(instance->cache_store), key, parent, moves_to_parent, move);
+        endif
 #endif
-#endif
+            /* Now insert it into the queue. */
 
-        /* Now insert it into the queue. */
-
-        instance->common.count_of_items_in_queue++;
+            instance->common.count_of_items_in_queue++;
         instance->common.num_states_in_collection++;
 
         instance_debug_out_state(instance, &(token->key));
@@ -313,15 +305,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 
 #ifdef FCS_DBM_CACHE_ONLY
     fcs_fcc_move_t *running_moves = NULL;
-#endif
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_insert(
-        &(instance->cache_store.pre_cache), &(running_key), &running_parent);
-#else
-    cache_insert(
-        &(instance->cache_store.cache), &(running_key), running_moves, '\0');
-#endif
+    cache_store__insert_key(&(instance->cache_store), &(running_key),
+        &running_parent, running_moves, '\0');
 #else
     running_parent = fc_solve_dbm_store_insert_key_value(
         instance->cache_store.store, &(running_key), running_parent, TRUE);
@@ -395,14 +380,13 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             delta, local_variant, &(running_state), &(running_key));
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(&(instance->cache_store.pre_cache), &(running_key),
-            &running_parent);
-#else
-        running_moves = (cache_insert(&(instance->cache_store.cache),
-                             &(running_key), running_moves, move))
-                            ->moves_to_key;
-#endif
+        var_AUTO(cache_ret,
+            cache_store__insert_key(&(instance->cache_store), &(running_key),
+                &running_parent, running_moves, move));
+        if (cache_ret)
+        {
+            running_moves = cache_ret->moves_to_key;
+        }
 #else
         token = fc_solve_dbm_store_insert_key_value(
             instance->cache_store.store, &(running_key), running_parent, TRUE);
@@ -795,12 +779,8 @@ int main(int argc, char *argv[])
 
         fcs_dbm_record_t *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-        pre_cache_insert(
-            &(instance.cache_store.pre_cache), KEY_PTR(), &parent_state_enc);
-#else
-        cache_insert(&(instance.cache_store.cache), KEY_PTR(), NULL, '\0');
-#endif
+        cache_store__insert_key(
+            &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
 #else
         token = fc_solve_dbm_store_insert_key_value(
             instance.cache_store.store, KEY_PTR(), NULL, TRUE);

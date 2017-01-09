@@ -535,6 +535,23 @@ static inline fcs_dbm_record_t *cache_store__has_key(
 #endif
 }
 
+#ifndef FCS_DBM_WITHOUT_CACHES
+static inline fcs_cache_key_info_t *cache_store__insert_key(
+    fcs_dbm__cache_store__common_t *const cache_store,
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
+    const fcs_fcc_move_t *const moves_to_parent,
+    const unsigned char move GCC_UNUSED)
+{
+#ifndef FCS_DBM_CACHE_ONLY
+    pre_cache_insert(&(instance->cache_store.pre_cache), key, parent);
+    return NULL;
+#else
+    return cache_insert(
+        &(instance->cache_store.cache), key, moves_to_parent, move);
+#endif
+}
+#endif
+
 #ifdef __cplusplus
 }
 #endif
