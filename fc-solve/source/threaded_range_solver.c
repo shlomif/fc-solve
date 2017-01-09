@@ -71,10 +71,10 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
     {
         pthread_mutex_lock(&next_board_num_lock);
         board_num = next_board_num;
-        const int proposed_quota_end = (next_board_num += board_num_step);
+        const long long proposed_quota_end = (next_board_num += board_num_step);
         pthread_mutex_unlock(&next_board_num_lock);
 
-        const int quota_end = min(proposed_quota_end, past_end_board);
+        const long long quota_end = min(proposed_quota_end, past_end_board);
 
         for (; board_num < quota_end; board_num++)
         {
