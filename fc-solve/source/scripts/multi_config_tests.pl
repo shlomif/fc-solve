@@ -206,6 +206,10 @@ sub run_tests
     local %ENV = %ENV;
     delete( $ENV{FCS_USE_TEST_RUN} );
     $ENV{TEST_JOBS} = $NUM_PROCESSORS;
+    if ( not $args->{run_perltidy} )
+    {
+        $ENV{FCS_TEST_SKIP_PERLTIDY} = 1;
+    }
 
     if ($tatzer_args)
     {
@@ -254,7 +258,7 @@ q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
 
-reg_test( "Plain CMake Default", { cmake_args => [] } );
+reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
 reg_test( "Default", { tatzer_args => [] } );
