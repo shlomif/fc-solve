@@ -2272,13 +2272,9 @@ int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
     void *const api_instance, const char *const prelude)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
-
     fc_solve_hard_thread_t *const hard_thread = user->soft_thread->hard_thread;
 
-    if (HT_FIELD(hard_thread, prelude_as_string) != NULL)
-    {
-        free(HT_FIELD(hard_thread, prelude_as_string));
-    }
+    free(HT_FIELD(hard_thread, prelude_as_string));
     HT_FIELD(hard_thread, prelude_as_string) = strdup(prelude);
 
     return 0;

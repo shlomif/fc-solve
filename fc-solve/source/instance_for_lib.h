@@ -592,14 +592,8 @@ static inline void fc_solve_start_instance_process_with_board(
 static inline void free_instance_hard_thread_callback(
     fc_solve_hard_thread_t *const hard_thread)
 {
-    if (likely(HT_FIELD(hard_thread, prelude_as_string)))
-    {
-        free(HT_FIELD(hard_thread, prelude_as_string));
-    }
-    if (likely(HT_FIELD(hard_thread, prelude)))
-    {
-        free(HT_FIELD(hard_thread, prelude));
-    }
+    free(HT_FIELD(hard_thread, prelude_as_string));
+    free(HT_FIELD(hard_thread, prelude));
     fcs_move_stack_static_destroy(HT_FIELD(hard_thread, reusable_move_stack));
 
     free(HT_FIELD(hard_thread, soft_threads));
