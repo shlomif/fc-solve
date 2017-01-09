@@ -1,3 +1,13 @@
+# This program should be called with a bunch of C (and possibly C++)
+# source file paths on the command line and it emits the identifiers
+# with their filenames and line numbers (useful for vim's quickfix command
+# or equivalent - see :help :cbuf) in the files, sorted by:
+#
+# 1. Frequency - less frequent identifiers appear first.
+# 2. Lexicographical order.
+#
+# This proved useful for refactoring / code cleanups
+
 ignore_list = IO.read("scripts/ids-whitelist.txt").split(/\s+/)
 
 ignore = Hash.new
