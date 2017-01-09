@@ -252,42 +252,40 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
         }
     }
 
+    int put_cards_in_col_idx = 0;
+    /* Fill the free stacks with the cards below them */
+    while (1)
     {
-        int put_cards_in_col_idx = 0;
-        /* Fill the free stacks with the cards below them */
-        while (1)
+        while ((*col_num_cards) == 0)
         {
-            while ((*col_num_cards) == 0)
+            col_num_cards++;
+            if (*(++col_idx) == -1)
             {
-                col_num_cards++;
-                if (*(++col_idx) == -1)
-                {
-                    return ret;
-                }
+                return ret;
             }
-
-            /*  Find a vacant stack */
-            put_cards_in_col_idx = find_empty_stack(
-                kv_ptr_new_state, put_cards_in_col_idx, LOCAL_STACKS_NUM);
-            assert(put_cards_in_col_idx < LOCAL_STACKS_NUM);
-
-            fcs_copy_stack(*new_key, *(kv_ptr_new_state->val),
-                put_cards_in_col_idx, indirect_stacks_buffer);
-
-            const int col_idx_val = *col_idx;
-            const fcs_card_t top_card =
-                fcs_state_pop_col_card(new_key, col_idx_val);
-            const fcs_cards_column_t new_b_col =
-                fcs_state_get_col(*new_key, put_cards_in_col_idx);
-            fcs_col_push_card(new_b_col, top_card);
-
-            fcs_push_1card_seq(moves_ptr, col_idx_val, put_cards_in_col_idx);
-
-            ret = (empty_two_cols_ret_t){
-                .source_index = put_cards_in_col_idx, .is_col = TRUE};
-            (*col_num_cards)--;
-            put_cards_in_col_idx++;
         }
+
+        /*  Find a vacant stack */
+        put_cards_in_col_idx = find_empty_stack(
+            kv_ptr_new_state, put_cards_in_col_idx, LOCAL_STACKS_NUM);
+        assert(put_cards_in_col_idx < LOCAL_STACKS_NUM);
+
+        fcs_copy_stack(*new_key, *(kv_ptr_new_state->val), put_cards_in_col_idx,
+            indirect_stacks_buffer);
+
+        const int col_idx_val = *col_idx;
+        const fcs_card_t top_card =
+            fcs_state_pop_col_card(new_key, col_idx_val);
+        const fcs_cards_column_t new_b_col =
+            fcs_state_get_col(*new_key, put_cards_in_col_idx);
+        fcs_col_push_card(new_b_col, top_card);
+
+        fcs_push_1card_seq(moves_ptr, col_idx_val, put_cards_in_col_idx);
+
+        ret = (empty_two_cols_ret_t){
+            .source_index = put_cards_in_col_idx, .is_col = TRUE};
+        (*col_num_cards)--;
+        put_cards_in_col_idx++;
     }
 }
 
