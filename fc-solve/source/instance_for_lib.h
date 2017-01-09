@@ -130,14 +130,7 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
 #endif
 
 #ifdef FCS_RCS_STATES
-
-#define DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE 10000
-
-        .rcs_states_cache.max_num_elements_in_cache =
-            DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE,
-
-#undef DEFAULT_MAX_NUM_ELEMENTS_IN_CACHE
-
+        .rcs_states_cache.max_num_elements_in_cache = 10000,
 #endif
 #ifndef FCS_DISABLE_SIMPLE_SIMON
         .is_simple_simon = FALSE,
