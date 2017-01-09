@@ -1050,7 +1050,7 @@ DECLARE_MOVE_FUNCTION(
             populate_seq_points(col, end_of_child_seq, &seqs);
 
             /* Add the child to the seq_points */
-            const int child_seq_index = seqs.num_separate_false_seqs;
+            const_AUTO(child_seq_index, seqs.num_separate_false_seqs);
             seqs.above_num_true_seqs[seqs.num_separate_false_seqs] =
                 child_num_true_seqs;
             seqs.seq_points[seqs.num_separate_false_seqs++] = child_card_height;
