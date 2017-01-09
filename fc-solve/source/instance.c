@@ -501,7 +501,9 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
         {
             const fcs_card_t card = mp->card;
             fcs_internal_move_t out_move = fc_solve_empty_move;
-            if (mp->totype == FCS_PATS__TYPE_FREECELL)
+            switch (mp->totype)
+            {
+            case FCS_PATS__TYPE_FREECELL:
             {
                 int src_col_idx;
                 for (src_col_idx = 0; src_col_idx < STACKS_NUM__VAL;
@@ -534,7 +536,8 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 fcs_int_move_set_src_stack(out_move, src_col_idx);
                 fcs_int_move_set_dest_freecell(out_move, dest);
             }
-            else if (mp->totype == FCS_PATS__TYPE_FOUNDATION)
+            break;
+            case FCS_PATS__TYPE_FOUNDATION:
             {
                 const find_card_ret_t src = find_card_src_string(
                     &(s_and_info.s), card PASS_FREECELLS(FREECELLS_NUM__VAL)
@@ -553,7 +556,8 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 }
                 fcs_int_move_set_foundation(out_move, fcs_card_suit(card));
             }
-            else
+            break;
+            default:
             {
                 const fcs_card_t dest_card = mp->destcard;
                 const find_card_ret_t src = find_card_src_string(s,
@@ -577,6 +581,8 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                             ? find_empty_col(s PASS_STACKS(STACKS_NUM__VAL))
                             : find_col_card(
                                   s, dest_card PASS_STACKS(STACKS_NUM__VAL))));
+            }
+            break;
             }
 
             fc_solve_apply_move(&(s_and_info.s), &locs,
