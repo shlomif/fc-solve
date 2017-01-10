@@ -327,8 +327,8 @@ static inline void fc_solve_cache_stacks(
             instance->stacks_hash, column, &cached_stack));
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
 
-        cached_stack = fcs_libavl2_stacks_tree_insert(
-            instance->stacks_tree, new_state_key->stacks[i]);
+        cached_stack =
+            fcs_libavl2_stacks_tree_insert(instance->stacks_tree, column);
 
         REPLACE_WITH_CACHED(cached_stack != NULL);
 
