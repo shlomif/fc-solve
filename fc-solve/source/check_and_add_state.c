@@ -284,6 +284,7 @@ static inline void fc_solve_cache_stacks(
             (char *)fcs_compact_alloc_ptr(stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
         *(current_stack) = new_ptr;
+        column = fcs_state_get_col(*new_state_key, i);
 
         void *cached_stack;
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
@@ -312,26 +313,18 @@ static inline void fc_solve_cache_stacks(
         }
 #endif
 
-        {
-            column = fcs_state_get_col(*(new_state_key), i);
-
-            cached_stack = fc_solve_hash_insert(&(instance->stacks_hash),
-                column, perl_hash_function((ub1 *)*(current_stack), col_len)
+        cached_stack = fc_solve_hash_insert(&(instance->stacks_hash), column,
+            perl_hash_function((ub1 *)*(current_stack), col_len)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-                            ,
-                hash_value_int
+                ,
+            hash_value_int
 #endif
-                );
-            REPLACE_WITH_CACHED(cached_stack);
-        }
+            );
+        REPLACE_WITH_CACHED(cached_stack);
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-        {
-            column = fcs_state_get_col(*new_state_key, i);
-
-            REPLACE_WITH_CACHED(fc_solve_columns_google_hash_insert(
-                instance->stacks_hash, column, &cached_stack));
-        }
+        REPLACE_WITH_CACHED(fc_solve_columns_google_hash_insert(
+            instance->stacks_hash, column, &cached_stack));
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
 
         cached_stack = fcs_libavl2_stacks_tree_insert(
@@ -364,8 +357,6 @@ static inline void fc_solve_cache_stacks(
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
         PWord_t *PValue;
-        column = fcs_state_get_col(*new_state_key, i);
-
         JHSI(PValue, instance->stacks_judy_array, column,
             (1 + fcs_col_len(column)));
         /* later_todo : Handle out-of-memory. */
