@@ -243,7 +243,7 @@ static inline ul perl_hash_function(register const ub1 *s_ptr, /* the key */
         *(current_stack) = cached_stack;                                       \
     }
 
-/* TODO : Maybe define an accesor for new_state_key->stacks (also see the
+/* TODO : Maybe define an accesor for new_state_key->columns (also see the
  * replaced_with_cached macro above.
  * */
 static inline void fc_solve_cache_stacks(
@@ -264,7 +264,7 @@ static inline void fc_solve_cache_stacks(
     fcs_compact_allocator_t *const stacks_allocator =
         &(HT_FIELD(hard_thread, allocator));
 
-    fcs_cards_column_t *current_stack = new_state_key->stacks;
+    fcs_cards_column_t *current_stack = new_state_key->columns;
 
     for (int i = 0; i < LOCAL_STACKS_NUM; i++, current_stack++)
     {
@@ -357,8 +357,7 @@ static inline void fc_solve_cache_stacks(
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
         PWord_t *PValue;
-        JHSI(PValue, instance->stacks_judy_array, column,
-            (1 + fcs_col_len(column)));
+        JHSI(PValue, instance->stacks_judy_array, column, col_len);
         /* later_todo : Handle out-of-memory. */
         if (*PValue == 0)
         {

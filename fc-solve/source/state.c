@@ -59,7 +59,7 @@ static inline int fcs_stack_compare(const void *s1, const void *s2)
 
 #endif
 
-#define GET_STACK(c) (state_key->stacks[c])
+#define GET_STACK(c) (state_key->columns[c])
 #define COPY_STACK(d, s) (d = s)
 #define GET_FREECELL(c) (state_key->freecells[(c)])
 
@@ -70,7 +70,7 @@ void fc_solve_canonize_state(
 {
 
 #define state_key (ptr_state_key)
-    /* Insertion-sort the stacks */
+    /* Insertion-sort the columns */
 
     for (size_t b = 1; b < STACKS_NUM__VAL; b++)
     {
@@ -111,7 +111,7 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
 #define state_key (ptr_state_key)
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
 {
-    /* Insertion-sort the stacks */
+    /* Insertion-sort the columns */
     for (size_t b = 1; b < STACKS_NUM__VAL; b++)
     {
         size_t c = b;

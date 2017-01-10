@@ -70,7 +70,7 @@ typedef int fcs_state_foundation_t;
 
 typedef struct
 {
-    fcs_DEBUG_STATES_stack_t stacks[MAX_NUM_STACKS];
+    fcs_DEBUG_STATES_stack_t columns[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
     fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
 } fcs_state_t;
@@ -92,7 +92,7 @@ static inline fcs_card_t fcs_char2card(unsigned char c)
     return fcs_make_card((c >> 2), (c & 0x3));
 }
 
-#define fcs_state_get_col(state, col_idx) (&((state).stacks[(col_idx)]))
+#define fcs_state_get_col(state, col_idx) (&((state).columns[(col_idx)]))
 
 #define fcs_col_len(col) ((col)->num_cards)
 
@@ -175,12 +175,12 @@ typedef char fcs_state_foundation_t;
 
 typedef struct
 {
-    fcs_cards_column_t stacks[MAX_NUM_STACKS];
+    fcs_cards_column_t columns[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
     fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
 } fcs_state_t;
 
-#define fcs_state_get_col(state, col_idx) ((state).stacks[(col_idx)])
+#define fcs_state_get_col(state, col_idx) ((state).columns[(col_idx)])
 
 #define fcs_freecell_card(state, f) ((state).freecells[(f)])
 
@@ -371,7 +371,7 @@ struct fcs_state_extra_info_struct
 
 #ifdef INDIRECT_STACK_STATES
     /*
-     * A vector of flags that indicates which stacks were already copied.
+     * A vector of flags that indicates which columns were already copied.
      * */
     int stacks_copy_on_write_flags;
 #endif
@@ -380,7 +380,7 @@ struct fcs_state_extra_info_struct
 typedef struct
 {
     /*
-     * These contain the location of the original stacks and freecells
+     * These contain the location of the original columns and freecells
      * in the permutation of them. They are sorted by the canonization
      * function.
      * */
@@ -697,12 +697,12 @@ static inline void fc_solve_state_init_proto(
         int i;
         for (i = 0; i < STACKS_NUM__VAL; i++)
         {
-            memset(state->s.stacks[i] = &indirect_stacks_buffer[i << 7], '\0',
+            memset(state->s.columns[i] = &indirect_stacks_buffer[i << 7], '\0',
                 MAX_NUM_DECKS * 52 + 1);
         }
         for (; i < MAX_NUM_STACKS; i++)
         {
-            state->s.stacks[i] = NULL;
+            state->s.columns[i] = NULL;
         }
     }
 #endif
@@ -989,7 +989,7 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
         }
     }
 
-    /* Mark the cards in the stacks */
+    /* Mark the cards in the columns */
     for (int s = 0; s < STACKS_NUM__VAL; s++)
     {
         const fcs_const_cards_column_t col = fcs_state_get_col(*state, s);
