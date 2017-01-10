@@ -514,9 +514,8 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                     const int src_cards_num = fcs_col_len(src_col);
                     if (src_cards_num)
                     {
-                        const fcs_card_t src_card =
-                            fcs_col_get_card(src_col, src_cards_num - 1);
-                        if (card == src_card)
+                        if (card ==
+                            fcs_col_get_card(src_col, src_cards_num - 1))
                         {
                             break;
                         }
