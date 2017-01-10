@@ -40,7 +40,6 @@ static void base64_encode(const unsigned char *data, size_t input_length,
 
     for (size_t i = 0, j = 0; i < input_length;)
     {
-
         const uint32_t octet_a = i < input_length ? data[i++] : 0;
         const uint32_t octet_b = i < input_length ? data[i++] : 0;
         const uint32_t octet_c = i < input_length ? data[i++] : 0;

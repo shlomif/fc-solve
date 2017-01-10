@@ -957,11 +957,11 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
             const_AUTO(tests_order_num,
                 by_depth_tests_order[depth_idx].tests_order.num_groups);
 
-            const_AUTO(tests_list_of_lists, &(unit->tests));
+            const_AUTO(moves_list_of_lists, &(unit->tests));
 
-            *tests_list_of_lists = (typeof(*tests_list_of_lists)){
+            *moves_list_of_lists = (typeof(*moves_list_of_lists)){
                 .num_lists = 0,
-                .lists = SMALLOC(tests_list_of_lists->lists, tests_order_num),
+                .lists = SMALLOC(moves_list_of_lists->lists, tests_order_num),
             };
 
             for (size_t group_idx = 0; group_idx < tests_order_num; group_idx++)
@@ -973,8 +973,8 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
                     tests_order_groups[group_idx].num);
                 /* TODO : convert to C99 struct initializers. */
                 const_AUTO(tests_list_struct_ptr,
-                    &(tests_list_of_lists
-                            ->lists[tests_list_of_lists->num_lists++]));
+                    &(moves_list_of_lists
+                            ->lists[moves_list_of_lists->num_lists++]));
 
                 const fcs_tests_group_type_t shuffling_type =
                     (master_to_randomize
@@ -996,8 +996,8 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
                 }
             }
 
-            tests_list_of_lists->lists = SREALLOC(
-                tests_list_of_lists->lists, tests_list_of_lists->num_lists);
+            moves_list_of_lists->lists = SREALLOC(
+                moves_list_of_lists->lists, moves_list_of_lists->num_lists);
         }
     }
 
