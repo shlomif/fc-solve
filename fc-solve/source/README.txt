@@ -47,8 +47,8 @@ Each stack contains its cards separated by a whitespace
 and terminated with a newline character( it's important that the last stack
 will also be terminated with a newline !). The cards in the line are ordered
 from the topmost card (= the card right on the carpet and the one with the
-most cards place on it) in the left to the bottommost card in the
-right (= the card with no other cards placed above it, and the one on top
+most cards placed on it) in the left, to the bottommost card in the
+right (= the card with no other cards placed on it, and the one on top
 of all the other cards in the stack).
 
 A card string contains the rank of the card followed by its suit.
