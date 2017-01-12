@@ -163,7 +163,7 @@ sub run
     my @deals = @{ $self->deals };
 foreach my $deal_idx (@deals)
 {
-    if (system(qq{pi-make-microsoft-freecell-board -t $deal_idx > $dest_dir/$deal_idx.board}) != 0)
+    if (system(qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > $dest_dir/$deal_idx.board}) != 0)
     {
         die "Could not generate deal no. $deal_idx.";
     }
