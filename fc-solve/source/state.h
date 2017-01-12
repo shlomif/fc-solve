@@ -43,6 +43,9 @@ extern "C" {
 /* How many ranks there are - Ace to King == 13. */
 #define FCS_MAX_RANK 13
 
+#define FCS_NUM_SUITS 4
+#define FCS_MAX_SUIT (FCS_NUM_SUITS - 1)
+
 #define FCS_CHAR_BIT_SIZE_LOG2 3
 #define MAX_NUM_SCANS (FCS_MAX_NUM_SCANS_BUCKETS * (sizeof(unsigned char) * 8))
 
@@ -885,39 +888,39 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
         FREECELLS_STACKS_DECKS__ARGS(),
     fcs_card_t *const misplaced_card)
 {
-    int cards[4][14];
+    int card_counts[FCS_NUM_SUITS][FCS_MAX_RANK + 1];
 
     const fcs_state_t *const state = &(state_pair->s);
 
-    /* Initialize all cards to 0 */
-    for (int d = 0; d < 4; d++)
+    /* Initialize all card_counts to 0 */
+    for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
     {
-        for (int c = 1; c <= 13; c++)
+        for (int c = 1; c <= FCS_MAX_RANK; c++)
         {
-            cards[d][c] = 0;
+            card_counts[suit_idx][c] = 0;
         }
     }
 
-    /* Mark the cards in the decks */
-    for (int d = 0; d < (DECKS_NUM__VAL << 2); d++)
+    /* Mark the card_counts in the decks */
+    for (int suit_idx = 0; suit_idx < (DECKS_NUM__VAL << 2); suit_idx++)
     {
-        for (int c = 1; c <= fcs_foundation_value(*state, d); c++)
+        for (int c = 1; c <= fcs_foundation_value(*state, suit_idx); c++)
         {
-            cards[d % 4][c]++;
+            card_counts[suit_idx % FCS_NUM_SUITS][c]++;
         }
     }
 
-    /* Mark the cards in the freecells */
+    /* Mark the card_counts in the freecells */
     for (int f = 0; f < FREECELLS_NUM__VAL; f++)
     {
         const fcs_card_t card = fcs_freecell_card(*state, f);
         if (fcs_card_is_valid(card))
         {
-            cards[fcs_card_suit(card)][fcs_card_rank(card)]++;
+            card_counts[fcs_card_suit(card)][fcs_card_rank(card)]++;
         }
     }
 
-    /* Mark the cards in the columns */
+    /* Mark the card_counts in the columns */
     for (int s = 0; s < STACKS_NUM__VAL; s++)
     {
         const fcs_const_cards_column_t col = fcs_state_get_col(*state, s);
@@ -930,20 +933,20 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
                 *misplaced_card = fc_solve_empty_card;
                 return FCS_STATE_VALIDITY__EMPTY_SLOT;
             }
-            cards[fcs_card_suit(card)][fcs_card_rank(card)]++;
+            card_counts[fcs_card_suit(card)][fcs_card_rank(card)]++;
         }
     }
 
-    /* Now check if there are extra or missing cards */
+    /* Now check if there are extra or missing card_counts */
 
-    for (int suit_idx = 0; suit_idx < 4; suit_idx++)
+    for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
     {
         for (int rank = 1; rank <= FCS_MAX_RANK; rank++)
         {
-            if (cards[suit_idx][rank] != DECKS_NUM__VAL)
+            if (card_counts[suit_idx][rank] != DECKS_NUM__VAL)
             {
                 *misplaced_card = fcs_make_card(rank, suit_idx);
-                return ((cards[suit_idx][rank] < DECKS_NUM__VAL)
+                return ((card_counts[suit_idx][rank] < DECKS_NUM__VAL)
                             ? FCS_STATE_VALIDITY__MISSING_CARD
                             : FCS_STATE_VALIDITY__EXTRA_CARD);
             }
