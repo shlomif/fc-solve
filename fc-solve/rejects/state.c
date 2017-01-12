@@ -12,3 +12,8 @@ int fc_solve_state_compare_indirect_with_context(const void * s1, const void * s
 }
 
 #endif
+#ifdef DEBUG_STATES
+
+#define DECLARE_TEMP_STACK() fcs_DEBUG_STATES_stack_t temp_stack
+#define STACK_COMPARE(a, b) (fcs_stack_compare((&(a)), (&(b))))
+#endif

@@ -91,7 +91,7 @@ SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
-    "States Type ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES'). No need to usually change.")
+    "States Type ('INDIRECT_STACK_STATES', or 'COMPACT_STATES'). No need to usually change.")
 option (FCS_ENABLE_RCS_STATES "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
 option (FCS_ENABLE_DBM_SOLVER "Whether to build the DBM solver")
 SET (FCS_DBM_BACKEND "kaztree" CACHE STRING "Type of DBM backend.")
@@ -148,8 +148,8 @@ option (FCS_HARD_CODE_REPARENT_STATES_AS_FALSE "Make reparent states as always f
 option (FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE "Make calc-real-depth as always false. Reduces functionality but may make things faster.")
 option (FCS_WITHOUT_EXPORTED_RESUME_SOLUTION "Don't export resume_solution. Breaks compat but may make things faseer. Enable at your own risk.")
 
-IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES|DEBUG_STATES)$"))
-    MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', 'COMPACT_STATES' or 'DEBUG_STATES')")
+IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES)$"))
+    MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', or 'COMPACT_STATES')")
 ENDIF()
 
 SET (${STATES_TYPE} 1)

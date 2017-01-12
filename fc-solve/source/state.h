@@ -50,67 +50,7 @@ extern "C" {
     ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id) >> FCS_CHAR_BIT_SIZE_LOG2] &    \
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1))))
 
-#ifdef DEBUG_STATES
-
-typedef struct
-{
-    short rank;
-    short suit;
-} fcs_card_t;
-
-typedef struct
-{
-    int num_cards;
-    fcs_card_t cards[MAX_NUM_CARDS_IN_A_STACK];
-} fcs_DEBUG_STATES_stack_t;
-
-typedef fcs_DEBUG_STATES_stack_t *fcs_cards_column_t;
-typedef const fcs_DEBUG_STATES_stack_t *fcs_const_cards_column_t;
-typedef int fcs_state_foundation_t;
-
-typedef struct
-{
-    fcs_DEBUG_STATES_stack_t columns[MAX_NUM_STACKS];
-    fcs_card_t freecells[MAX_NUM_FREECELLS];
-    fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
-} fcs_state_t;
-
-typedef int fcs_locs_t;
-
-static inline fcs_card_t fcs_make_card(const int rank, const int suit)
-{
-    fcs_card_t ret = {.rank = rank, .suit = suit};
-
-    return ret;
-}
-static inline char fcs_card2char(const fcs_card_t card)
-{
-    return (char)(card.suit | (card.rank << 2));
-}
-static inline fcs_card_t fcs_char2card(unsigned char c)
-{
-    return fcs_make_card((c >> 2), (c & 0x3));
-}
-
-#define fcs_state_get_col(state, col_idx) (&((state).columns[(col_idx)]))
-
-#define fcs_col_len(col) ((col)->num_cards)
-
-#define fcs_col_get_card(col, c) ((col)->cards[(c)])
-
-#define fcs_card_rank(card) ((card).rank)
-
-#define fcs_card_suit(card) ((int)((card).suit))
-
-#define fcs_freecell_card(state, f) ((state).freecells[(f)])
-
-#define fcs_foundation_value(state, foundation_idx)                            \
-    ((state).foundations[(foundation_idx)])
-
-#define fcs_card_is_empty(card) (fcs_card_rank(card) == 0)
-#define fcs_card_is_valid(card) (fcs_card_rank(card) != 0)
-
-#elif defined(COMPACT_STATES) /* #ifdef DEBUG_STATES */
+#ifdef COMPACT_STATES
 
 typedef char fcs_card_t;
 typedef fcs_card_t *fcs_cards_column_t;
@@ -164,9 +104,7 @@ typedef char fcs_locs_t;
 #define fcs_foundation_value(state, d)                                         \
     ((state).data[FCS_FOUNDATIONS_OFFSET + (d)])
 
-#elif defined(INDIRECT_STACK_STATES) /* #ifdef DEBUG_STATES                    \
-                                        #elif defined(COMPACT_STATES)          \
-                                      */
+#elif defined(INDIRECT_STACK_STATES) /* #ifdef COMPACT_STATES */
 
 typedef char fcs_card_t;
 typedef fcs_card_t *fcs_cards_column_t;
@@ -206,9 +144,8 @@ typedef struct
 typedef char fcs_locs_t;
 
 #else
-#error DEBUG_STATES , COMPACT_STATES or INDIRECT_STACK_STATES are not defined.
-#endif /* #ifdef DEBUG_STATES -                                                \
-          #elif defined COMPACT_STATES -                                       \
+#error Neither COMPACT_STATES nor INDIRECT_STACK_STATES are not defined.
+#endif /* #if defined COMPACT_STATES -                                         \
           #elif defined INDIRECT_STACK_STATES                                  \
         */
 
@@ -243,7 +180,7 @@ typedef char fcs_locs_t;
 #define fcs_freecell_is_empty(state, idx)                                      \
     (fcs_card_is_empty(fcs_freecell_card(state, idx)))
 
-#if defined(COMPACT_STATES) || defined(DEBUG_STATES)
+#if defined(COMPACT_STATES)
 
 #define fcs_duplicate_state_extra(dest_info)                                   \
     {                                                                          \
@@ -496,16 +433,7 @@ static inline void FCS_STATE_collectible_to_kv(
 #define FCS_S_VISITED_ITER(s) FCS_S_ACCESSOR(s, visited_iter)
 #endif
 
-#ifdef DEBUG_STATES
-
-extern fcs_card_t fc_solve_empty_card;
-#define DEFINE_fc_solve_empty_card() fcs_card_t fc_solve_empty_card = {0, 0}
-
-#elif defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
-
 #define fc_solve_empty_card ((fcs_card_t)0)
-
-#endif
 
 #ifdef HARD_CODED_NUM_FREECELLS
 #define PASS_FREECELLS(arg)
@@ -1041,37 +969,12 @@ enum
     FCS_VISITED_GENERATED_BY_PRUNING = 0x10,
 };
 
-#ifndef DEBUG_STATES
 #define FCS_WITH_CARD_COMPARE_LOOKUP
-#endif
 
 static inline int fc_solve_card_compare(
     const fcs_card_t c1, const fcs_card_t c2)
 {
-#ifdef FCS_WITH_CARD_COMPARE_LOOKUP
     return (c1) - (c2);
-#else
-    if (fcs_card_rank(c1) > fcs_card_rank(c2))
-    {
-        return 1;
-    }
-    else if (fcs_card_rank(c1) < fcs_card_rank(c2))
-    {
-        return -1;
-    }
-    else if (fcs_card_suit(c1) > fcs_card_suit(c2))
-    {
-        return 1;
-    }
-    else if (fcs_card_suit(c1) < fcs_card_suit(c2))
-    {
-        return -1;
-    }
-    else
-    {
-        return 0;
-    }
-#endif
 }
 
 #if defined(INDIRECT_STACK_STATES)

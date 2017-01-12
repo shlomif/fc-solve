@@ -89,13 +89,7 @@ static void fc_solve_debondt_delta_stater_init(
 
             if (col_len > 0)
             {
-#ifndef DEBUG_STATES
                 const fcs_card_t top_card = fcs_col_get_card(col, 0);
-#else
-                const fcs_card_t top_card_proto = fcs_col_get_card(col, 0);
-                const unsigned char top_card =
-                    (top_card_proto.suit | (top_card_proto.rank << 2));
-#endif
                 self->bakers_dozen_topmost_cards_lookup[top_card >> 3] |=
                     (1 << top_card & (8 - 1));
             }

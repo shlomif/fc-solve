@@ -333,3 +333,64 @@ static GCC_INLINE int fc_solve_state_compare(const void * s1, const void * s2)
 #define fcs_col_push_col_card(dest_col, src_col, card_idx) \
     fcs_col_push_card((dest_col), fcs_col_get_card((src_col), (card_idx)))
 
+#ifdef DEBUG_STATES
+
+typedef struct
+{
+    short rank;
+    short suit;
+} fcs_card_t;
+
+typedef struct
+{
+    int num_cards;
+    fcs_card_t cards[MAX_NUM_CARDS_IN_A_STACK];
+} fcs_DEBUG_STATES_stack_t;
+
+typedef fcs_DEBUG_STATES_stack_t *fcs_cards_column_t;
+typedef const fcs_DEBUG_STATES_stack_t *fcs_const_cards_column_t;
+typedef int fcs_state_foundation_t;
+
+typedef struct
+{
+    fcs_DEBUG_STATES_stack_t columns[MAX_NUM_STACKS];
+    fcs_card_t freecells[MAX_NUM_FREECELLS];
+    fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
+} fcs_state_t;
+
+typedef int fcs_locs_t;
+
+static inline fcs_card_t fcs_make_card(const int rank, const int suit)
+{
+    fcs_card_t ret = {.rank = rank, .suit = suit};
+
+    return ret;
+}
+static inline char fcs_card2char(const fcs_card_t card)
+{
+    return (char)(card.suit | (card.rank << 2));
+}
+static inline fcs_card_t fcs_char2card(unsigned char c)
+{
+    return fcs_make_card((c >> 2), (c & 0x3));
+}
+
+#define fcs_state_get_col(state, col_idx) (&((state).columns[(col_idx)]))
+
+#define fcs_col_len(col) ((col)->num_cards)
+
+#define fcs_col_get_card(col, c) ((col)->cards[(c)])
+
+#define fcs_card_rank(card) ((card).rank)
+
+#define fcs_card_suit(card) ((int)((card).suit))
+
+#define fcs_freecell_card(state, f) ((state).freecells[(f)])
+
+#define fcs_foundation_value(state, foundation_idx)                            \
+    ((state).foundations[(foundation_idx)])
+
+#define fcs_card_is_empty(card) (fcs_card_rank(card) == 0)
+#define fcs_card_is_valid(card) (fcs_card_rank(card) != 0)
+
+#endif

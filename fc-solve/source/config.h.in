@@ -23,7 +23,6 @@ extern "C" {
 
 #include "fcs_back_compat.h"
 
-#cmakedefine DEBUG_STATES
 #cmakedefine COMPACT_STATES
 #cmakedefine INDIRECT_STACK_STATES
 

@@ -13,7 +13,6 @@
 /* Define if you have the ANSI C header files.  */
 #define STDC_HEADERS 1
 
-/* #undef DEBUG_STATES */
 /* #undef COMPACT_STATES */
 #define INDIRECT_STACK_STATES 1
 
