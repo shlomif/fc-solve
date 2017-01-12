@@ -603,8 +603,11 @@ the fact that it was poorly coded, rather than Perl’s fault.
 
 <p>
 I've kept the code written in C after version 0.2 which was written in C,
-and have preferred to keep it in C, for performance reasons. Porting a different
-solver I wrote - for Black Hole Solitaire - from its initial Perl version
+and have preferred to keep it in C, for performance reasons. Porting a
+<a href="http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">different
+solver</a> I wrote - for
+<a href="https://en.wikipedia.org/wiki/Black_Hole_%28solitaire%29">Black Hole
+Solitaire</a> - from its initial Perl version
 to C - made it roughly
 <a href="http://permalink.gmane.org/gmane.culture.hackers.israel/2415">24
 times faster</a> and I naturally find a 24 factor performance decrease
