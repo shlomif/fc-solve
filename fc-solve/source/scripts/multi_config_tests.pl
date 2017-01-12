@@ -290,9 +290,19 @@ reg_test(
     {
         prepare_dist_args => {
             base => 'prepare_aws_depth_dbm_fc_solver_self_contained_package.pl',
-            args => []
+            args => [],
         },
-    }
+    },
+);
+reg_test(
+    "prepare_dist vendu",
+    {
+        prepare_dist_args => {
+            base =>
+                'prepare_vendu_depth_dbm_fc_solver_self_contained_package.pl',
+            args => [],
+        },
+    },
 );
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
