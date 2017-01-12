@@ -2,19 +2,11 @@ os: linux
 dist: trusty
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -y cpanminus gperf libgmp-dev libgoogle-perftools-dev mercurial python3 python3-setuptools perl libperl-dev silversearcher-ag valgrind
-      # For cmake-3.x - probably not needed in trusty.
-      # - sudo add-apt-repository ppa:george-edison55/precise-backports -y
-    - sudo apt-get update -q
-    - sudo apt-get install -y cmake cmake-data ninja-build python3-pip
+    - sudo apt-get install -y cmake cmake-data cpanminus gperf libgmp-dev libgoogle-perftools-dev libperl-dev mercurial ninja-build python3 python3-setuptools perl python3-pip silversearcher-ag valgrind
 install:
     - ( cd fc-solve/source && git clone --branch make-code-suitable-for-fc-solve https://github.com/shlomif/patsolve.git patsolve-shlomif )
-      # - sudo easy_install3 pip
-    - sudo -H python3 -m pip install random2
     - sudo -H `which python3` -m pip install random2
     - sudo -H `which python3` -m pip install Zenfilter
-    - which python3
-      # - /usr/bin/env python3 -m sys -m random2 -c 'print(sys.executable)'
       # Temporary workaround for a problem in running the Inline::C test
       # suite with latest EU::MM - install Inline::C with no tests.
       #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
@@ -24,7 +16,6 @@ install:
     - tar -xvf libtap-1.12.0.tar.bz2
     - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )
     - ( a="$(pwd)"; mkdir B2 && cd B2 && hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules && cd shlomif-cmake-modules/shlomif-cmake-modules && cp -f "$(pwd)"/Shlomif_Common.cmake "$a"/fc-solve/source/cmake/ )
-
 perl:
     - "5.24"
 python:
