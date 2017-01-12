@@ -6,6 +6,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 package Games::Solitaire::FC_Solve::Test::Trap::Obj;
 
@@ -185,12 +186,14 @@ sub run_tests
     my $blurb_base = sprintf "%s [idx=%d / %d]", $blurb_base_base, $idx,
         scalar(@tests);
 
-    my $tatzer_args = $args->{'tatzer_args'};
-    my $cmake_args  = $args->{'cmake_args'};
+    my $tatzer_args       = $args->{'tatzer_args'};
+    my $cmake_args        = $args->{'cmake_args'};
+    my $prepare_dist_args = $args->{'prepare_dist_args'};
 
-    if ( not( $tatzer_args xor $cmake_args ) )
+    if ( 1 != grep { $_ } ( $tatzer_args, $cmake_args, $prepare_dist_args ) )
     {
-        die "One and only one of tatzer_args or cmake_args must be specified.";
+        die
+"One and only one of tatzer_args or cmake_args or prepare_dist_args must be specified.";
     }
 
     my $cwd        = getcwd();
@@ -200,9 +203,6 @@ sub run_tests
         )
     );
 
-    mkdir($build_path);
-    chdir($build_path);
-
     local %ENV = %ENV;
     delete( $ENV{FCS_USE_TEST_RUN} );
     $ENV{TEST_JOBS} = $NUM_PROCESSORS;
@@ -211,21 +211,48 @@ sub run_tests
         $ENV{FCS_TEST_SKIP_PERLTIDY} = 1;
     }
 
-    if ($tatzer_args)
+    if ($prepare_dist_args)
     {
-        run_cmd( "$blurb_base : Tatzer",
-            { cmd => [ '../source/Tatzer', @$tatzer_args ] } );
+        run_cmd(
+            "$blurb_base : prepare_Dist",
+            {
+                cmd => [
+                    $^X,
+"../scripts/prepare-self-contained-dbm-etc-solvers-packages-for-hpc-machines/$prepare_dist_args->{base}",
+                    @{ $prepare_dist_args->{args} }
+                ],
+            },
+        );
+        run_cmd( "$blurb_base : untar",
+            { cmd => [ "tar", "-xvf", "dbm_fcs_for_sub.tar.xz" ], } );
+        chdir('dbm_fcs_for_sub');
+        run_cmd( "$blurb_base : make", { cmd => ['make'], } );
+        chdir($cwd);
+        rmtree( 'dbm_fcs_for_sub', 0, $SAFE );
+        unlink('dbm_fcs_for_sub.tar.xz');
     }
     else
     {
-        run_cmd( "$blurb_base : cmake",
-            { cmd => [ 'cmake', @$cmake_args, '../source' ] } );
-    }
-    run_cmd( "$blurb_base : make", { cmd => [ 'make', "-j$NUM_PROCESSORS" ] } );
-    run_cmd( "$blurb_base : test", { cmd => [ $^X,    "$cwd/run-tests.pl" ] } );
+        mkdir($build_path);
+        chdir($build_path);
+        if ($tatzer_args)
+        {
+            run_cmd( "$blurb_base : Tatzer",
+                { cmd => [ '../source/Tatzer', @$tatzer_args ] } );
+        }
+        else
+        {
+            run_cmd( "$blurb_base : cmake",
+                { cmd => [ 'cmake', @$cmake_args, '../source' ] } );
+        }
+        run_cmd( "$blurb_base : make",
+            { cmd => [ 'make', "-j$NUM_PROCESSORS" ] } );
+        run_cmd( "$blurb_base : test",
+            { cmd => [ $^X, "$cwd/run-tests.pl" ] } );
 
-    chdir($cwd);
-    rmtree( $build_path, 0, $SAFE );
+        chdir($cwd);
+        rmtree( $build_path, 0, $SAFE );
+    }
 
     return;
 }
@@ -258,6 +285,15 @@ q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
 
+reg_test(
+    "prepare_dist AWS",
+    {
+        prepare_dist_args => {
+            base => 'prepare_aws_depth_dbm_fc_solver_self_contained_package.pl',
+            args => []
+        },
+    }
+);
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
