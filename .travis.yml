@@ -2,7 +2,7 @@ os: linux
 dist: trusty
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -y cpanminus gperf libgmp-dev mercurial python3 python3-setuptools perl libperl-dev silversearcher-ag valgrind
+    - sudo apt-get install -y cpanminus gperf libgmp-dev libgoogle-perftools-dev mercurial python3 python3-setuptools perl libperl-dev silversearcher-ag valgrind
       # For cmake-3.x - probably not needed in trusty.
       # - sudo add-apt-repository ppa:george-edison55/precise-backports -y
     - sudo apt-get update -q
