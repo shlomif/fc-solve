@@ -44,7 +44,6 @@ extern "C" {
 #define FCS_MAX_RANK 13
 
 #define FCS_NUM_SUITS 4
-#define FCS_MAX_SUIT (FCS_NUM_SUITS - 1)
 
 #define FCS_CHAR_BIT_SIZE_LOG2 3
 #define MAX_NUM_SCANS (FCS_MAX_NUM_SCANS_BUCKETS * (sizeof(unsigned char) * 8))

@@ -2382,16 +2382,16 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
     return 0;
 }
 
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
 void DLLEXPORT freecell_solver_user_set_reparent_states(
     void *const api_instance, const int to_reparent_states)
 {
-#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(&(user->active_flare->obj),
         FCS_RUNTIME_TO_REPARENT_STATES_PROTO, to_reparent_states);
-#endif
 }
+#endif
 
 void DLLEXPORT freecell_solver_user_set_scans_synergy(
     void *const api_instance, const int synergy)
