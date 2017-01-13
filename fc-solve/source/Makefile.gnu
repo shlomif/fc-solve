@@ -1,5 +1,5 @@
-DEBUG = 1
-PROFILE = 2
+DEBUG = 0
+PROFILE = 0
 WITH_TRACES = 0
 FREECELL_ONLY = 1
 DISABLE_PATSOLVE = 1
@@ -89,11 +89,13 @@ else
 	CC = error
 endif
 
+MARCH_FLAG :=
 ifeq ($(GCC_COMPAT),1)
 	CREATE_SHARED = $(CC) -fPIC $(CFLAGS) -shared -fwhole-program
 	END_SHARED = $(END_LFLAGS)
 	ifeq ($(NATIVE_ARCH),1)
 		MARCH_FLAG := -march=native
+		# MARCH_FLAG := -march=corei7-avx
 	else
 		MARCH_FLAG := -mtune=generic
 	endif
@@ -136,7 +138,7 @@ endif
 EXTRA_CFLAGS =
 CFLAGS += $(EXTRA_CFLAGS)
 
-LFLAGS := -O3 -DNDEBUG -fvisibility=hidden -march=native -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $(EXTRA_CFLAGS)
+LFLAGS := -O3 -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $(EXTRA_CFLAGS)
 
 # Toggle for profiling information.
 ifneq ($(PROFILE),0)
