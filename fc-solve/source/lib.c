@@ -1953,10 +1953,8 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
     void *const api_instance, const int my_index, const double weight)
 {
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
-    if ((my_index < 0) ||
-        (my_index >=
-            (int)(COUNT(
-                BEFS_VAR(soft_thread, weighting).befs_weights.weights))))
+    if ((my_index < 0) || (my_index >= (int)(COUNT(BEFS_VAR(soft_thread,
+                                           weighting).befs_weights.weights))))
     {
         return 1;
     }
@@ -2592,8 +2590,8 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
 #endif
 
     moves_seq->moves = memdup(src_moves_seq->moves,
-        (sizeof(src_moves_seq->moves[0]) * (moves_seq->num_moves =
-                                                   src_moves_seq->num_moves)));
+        (sizeof(src_moves_seq->moves[0]) *
+            (moves_seq->num_moves = src_moves_seq->num_moves)));
 
     return 0;
 #else

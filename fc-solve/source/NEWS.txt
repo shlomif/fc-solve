@@ -4,6 +4,12 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2016-09-22
 :Revision: $Id$
 
+Version 4.6.1: (14-Jan-2017)
+----------------------------
+
+1. Fix for building the package in certain conditions (originally created for the
+Mageia Linux package).
+
 Version 4.6.0: (04-Dec-2016)
 ----------------------------
 

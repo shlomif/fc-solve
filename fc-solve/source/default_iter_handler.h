@@ -23,9 +23,9 @@ static void my_iter_handler(void *const user_instance,
     if (display_context->debug_iter_state_output)
     {
         char state_string[1000];
-        freecell_solver_user_iter_state_stringify(
-            user_instance, state_string, ptr_state FC_SOLVE__PASS_PARSABLE(
-                                             display_context->parseable_output),
+        freecell_solver_user_iter_state_stringify(user_instance, state_string,
+            ptr_state FC_SOLVE__PASS_PARSABLE(
+                display_context->parseable_output),
             display_context->canonized_order_output FC_SOLVE__PASS_T(
                 display_context->display_10_as_t));
         printf("%s\n---------------\n\n\n", state_string);

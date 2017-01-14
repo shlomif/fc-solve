@@ -636,8 +636,7 @@ static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
             derived_iter->num_non_reversible_moves_including_prune =
                 (derived_iter->core_irreversible_moves_count +
                     (perform_horne_prune
-                            ? horne_prune(
-                                  local_variant, &(derived_iter->state),
+                            ? horne_prune(local_variant, &(derived_iter->state),
                                   &(derived_iter
                                           ->which_irreversible_moves_bitmask),
                                   NULL, NULL)

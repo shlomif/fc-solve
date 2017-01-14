@@ -638,8 +638,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
                 fcs_kv_state_t new_pass =
                     FCS_STATE_keyval_pair_to_kv(scans_ptr_new_state);
 #endif
-                fc_solve_pq_push(
-                    pqueue, scans_ptr_new_state,
+                fc_solve_pq_push(pqueue, scans_ptr_new_state,
                     befs_rate_state(soft_thread, WEIGHTING(soft_thread),
                         new_pass.key,
                         BEFS_MAX_DEPTH - kv_calc_depth(&(new_pass))));
@@ -745,7 +744,7 @@ my_return_label:
 int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
     fcs_kv_state_t *const out_new_state_out,
     fcs_kv_state_t *const raw_ptr_state_raw SFS__PASS_MOVE_STACK(
-                                       fcs_move_stack_t *const moves))
+        fcs_move_stack_t *const moves))
 {
     fcs_collectible_state_t *raw_ptr_new_state;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);

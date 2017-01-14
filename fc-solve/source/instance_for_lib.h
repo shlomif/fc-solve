@@ -988,7 +988,7 @@ static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
                 /* TODO : convert to C99 struct initializers. */
                 const_AUTO(tests_list_struct_ptr,
                     &(tests_list_of_lists
-                                   ->lists[tests_list_of_lists->num_lists++]));
+                            ->lists[tests_list_of_lists->num_lists++]));
 
                 const fcs_tests_group_type_t shuffling_type =
                     (master_to_randomize

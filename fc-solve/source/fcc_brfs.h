@@ -152,14 +152,11 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
      * [Output] a callback to add a point to the next_start_points,
      * and its context.
      */
-    fcs_bool_t (*add_start_point)(const fcs_encoded_state_buffer_t
-                                      *const enc_state,
-                                 const fcs_fcc_moves_seq_t
-                                     *const start_state_moves_seq,
-                                 fcs_fcc_moves_seq_t
-                                     *const after_start_moves_seq,
-                                 const unsigned char extra_move,
-                                 void *const context),
+    fcs_bool_t (*add_start_point)(
+        const fcs_encoded_state_buffer_t *const enc_state,
+        const fcs_fcc_moves_seq_t *const start_state_moves_seq,
+        fcs_fcc_moves_seq_t *const after_start_moves_seq,
+        const unsigned char extra_move, void *const context),
     void *add_start_point_context,
 #endif
     /* [Output]: Is the min_by_sorting new.

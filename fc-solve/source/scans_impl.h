@@ -159,9 +159,9 @@ static int compare_rating_with_index(
     const fcs_rating_with_index_t *const b =
         (const fcs_rating_with_index_t *const)void_b;
 
-    return ((a->rating < b->rating) ? -1 : (a->rating > b->rating)
-                                               ? 1
-                                               : (a->idx - b->idx));
+    return ((a->rating < b->rating)
+                ? -1
+                : (a->rating > b->rating) ? 1 : (a->idx - b->idx));
 }
 
 typedef int fcs_depth_t;
@@ -946,11 +946,10 @@ static GCC_INLINE int fc_solve_soft_dfs_do_solve(
 #ifdef FCS_WITHOUT_VISITED_ITER
                         0
 #else
-                        ((DEPTH() == 0) ? 0
-                                        : FCS_S_VISITED_ITER(
-                                              DFS_VAR(soft_thread,
+                        ((DEPTH() == 0) ? 0 : FCS_S_VISITED_ITER(DFS_VAR(
+                                                  soft_thread,
                                                   soft_dfs_info)[DEPTH() - 1]
-                                                  .state))
+                                                                     .state))
 #endif
                         );
                 }
