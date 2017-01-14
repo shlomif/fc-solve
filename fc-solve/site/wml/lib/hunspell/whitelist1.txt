@@ -791,6 +791,7 @@ soft_thread
 solvability
 sourceforge
 spec
+speedup
 speedups
 split-dbm-solver
 split-fcc-solver
@@ -974,6 +975,7 @@ sublicense
 DD-MMM-YYYY
 dbm-solver
 depth_dbm_fc_solve
+fc-solve-temp
 int128
 int128-optimisation
 libGMP
