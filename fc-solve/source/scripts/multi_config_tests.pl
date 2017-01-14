@@ -304,6 +304,15 @@ reg_test(
         },
     },
 );
+reg_test(
+    "prepare_dist pbs",
+    {
+        prepare_dist_args => {
+            base => 'prepare_pbs_dbm_solver_self_contained_package.pl',
+            args => [],
+        },
+    },
+);
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
