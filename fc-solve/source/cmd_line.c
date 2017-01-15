@@ -674,6 +674,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                                                   */
         {
             PROCESS_OPT_ARG();
+#ifdef FCS_WITH_MOVES
             if (freecell_solver_user_set_optimization_scan_tests_order(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
@@ -682,6 +683,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     fcs_user_errstr);
                 RET_ERROR_IN_ARG();
             }
+#endif
         }
         break;
 
@@ -902,7 +904,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+#ifdef FCS_RCS_STATES
             freecell_solver_user_set_cache_limit(instance, atol(*arg));
+#endif
+#endif
         }
         break;
 
