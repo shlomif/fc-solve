@@ -247,8 +247,11 @@ sub run_tests
         }
         run_cmd( "$blurb_base : make",
             { cmd => [ 'make', "-j$NUM_PROCESSORS" ] } );
-        run_cmd( "$blurb_base : test",
-            { cmd => [ $^X, "$cwd/run-tests.pl" ] } );
+        if ( not $args->{do_not_test} )
+        {
+            run_cmd( "$blurb_base : test",
+                { cmd => [ $^X, "$cwd/run-tests.pl" ] } );
+        }
 
         chdir($cwd);
         rmtree( $build_path, 0, $SAFE );
@@ -312,6 +315,13 @@ reg_test(
             args => [],
         },
     },
+);
+reg_test(
+    "build_only: maximum speed preset",
+    {
+        do_not_test => 1,
+        tatzer_args => [qw(-l x64b -l extra_speed --disable-err-strs)]
+    }
 );
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
