@@ -64,6 +64,7 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     if (ret == FCS_STATE_WAS_SOLVED)
     {
         fprintf(output_fh, "-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+#ifdef FCS_WITH_MOVES
         {
             fcs_move_t move;
             FILE *move_dump;
@@ -140,6 +141,7 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                 fprintf(move_dump, "\n\n");
             }
         }
+#endif
 
         fprintf(output_fh, "This game is solveable.\n");
     }

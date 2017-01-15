@@ -156,6 +156,7 @@ int main(int argc, char *argv[])
 
         default:
             num_iters = (int)freecell_solver_user_get_num_times_long(instance);
+#ifdef FCS_WITH_MOVES
             num_moves = freecell_solver_user_get_moves_left(instance);
 
             if (variant_is_freecell)
@@ -179,6 +180,9 @@ int main(int argc, char *argv[])
             {
                 num_fcpro_moves = num_moves;
             }
+#else
+            num_fcpro_moves = num_moves = -1;
+#endif
             break;
         }
         print_int(&binary_output, num_iters);

@@ -1314,10 +1314,10 @@ static inline fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
 }
 #endif
 
+#ifdef FCS_WITH_MOVES
 int DLLEXPORT freecell_solver_user_get_next_move(
     void *const api_instance, fcs_move_t *const user_move)
 {
-#ifdef FCS_WITH_MOVES
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
@@ -1342,10 +1342,8 @@ int DLLEXPORT freecell_solver_user_get_next_move(
                 PASS_STACKS(INSTANCE_STACKS_NUM));
 
     return 0;
-#else
-    return 1;
-#endif
 }
+#endif
 
 DLLEXPORT void freecell_solver_user_current_state_stringify(void *api_instance,
     char *const output_string FC_SOLVE__PASS_PARSABLE(int parseable_output),
@@ -1443,11 +1441,11 @@ int DLLEXPORT freecell_solver_user_get_current_depth(void *const api_instance)
     return (DFS_VAR(api_soft_thread(api_instance), depth));
 }
 
+#ifndef FCS_DISABLE_PATSOLVE
 extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
     void *const api_instance, const int position,
     const int x_param_val FCS__PASS_ERR_STR(char **const error_string))
 {
-#ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(pats_scan, api_soft_thread(api_instance));
 
     if (!pats_scan)
@@ -1468,15 +1466,15 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
 
     pats_scan->pats_solve_params.x[position] = x_param_val;
     fc_solve_pats__set_cut_off(pats_scan);
-#endif
     return 0;
 }
+#endif
 
+#ifndef FCS_DISABLE_PATSOLVE
 extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
     void *const api_instance, const int position,
     const double y_param_val FCS__PASS_ERR_STR(char **const error_string))
 {
-#ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(pats_scan, api_soft_thread(api_instance));
 
     if (!pats_scan)
@@ -1496,9 +1494,9 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
     }
 
     pats_scan->pats_solve_params.y[position] = y_param_val;
-#endif
     return 0;
 }
+#endif
 
 void DLLEXPORT freecell_solver_user_set_solving_method(
     void *const api_instance, const int int_method)
@@ -1749,10 +1747,10 @@ int DLLEXPORT freecell_solver_user_get_limit_iterations(
 }
 #endif
 
+#ifdef FCS_WITH_MOVES
 int DLLEXPORT freecell_solver_user_get_moves_left(
     void *const api_instance GCC_UNUSED)
 {
-#ifdef FCS_WITH_MOVES
     fcs_user_t *const user = (fcs_user_t *)api_instance;
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
     {
@@ -1763,10 +1761,8 @@ int DLLEXPORT freecell_solver_user_get_moves_left(
     {
         return 0;
     }
-#else
-    return 0;
-#endif
 }
+#endif
 
 void DLLEXPORT freecell_solver_user_set_solution_optimization(
     void *const api_instance, const int optimize)

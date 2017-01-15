@@ -155,7 +155,11 @@ int main(int argc, char *argv[])
             break;
 
         default:
+#ifdef FCS_WITH_MOVES
             num_moves = freecell_solver_user_get_moves_left(instance);
+#else
+            num_moves = -1;
+#endif
             verdict = "Solved";
             break;
         }
