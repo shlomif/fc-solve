@@ -544,10 +544,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         break;
 
         case FCS_OPT_OPTIMIZE_SOLUTION: /* STRINGS=-opt|--optimize-solution; */
-        {
+#ifdef FCS_WITH_MOVES
             freecell_solver_user_set_solution_optimization(instance, 1);
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_SEED: /* STRINGS=-seed; */
         {

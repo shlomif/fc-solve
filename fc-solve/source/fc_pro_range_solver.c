@@ -103,7 +103,9 @@ int main(int argc, char *argv[])
     bin_init(&binary_output, &start_board, &end_board,
         &total_iterations_limit_per_board);
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
+#ifndef FCS_FREECELL_ONLY
     freecell_solver_user_apply_preset(instance, variant);
+#endif
 
     if (was_total_iterations_limit_per_board_set)
     {

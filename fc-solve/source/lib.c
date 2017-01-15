@@ -294,12 +294,10 @@ void DLLEXPORT *freecell_solver_user_alloc(void)
     return (void *)ret;
 }
 
+#ifndef FCS_FREECELL_ONLY
 int DLLEXPORT freecell_solver_user_apply_preset(
     void *const api_instance, const char *const preset_name)
 {
-#ifdef FCS_FREECELL_ONLY
-    return FCS_PRESET_CODE_OK;
-#else
     const fcs_preset_t *new_preset_ptr;
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
@@ -323,8 +321,8 @@ int DLLEXPORT freecell_solver_user_apply_preset(
     fcs_duplicate_preset(user->common_preset, *new_preset_ptr);
 
     return FCS_PRESET_CODE_OK;
-#endif
 }
+#endif
 
 void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void *const api_instance, const fcs_int_limit_t max_iters)
@@ -1764,28 +1762,28 @@ int DLLEXPORT freecell_solver_user_get_moves_left(
 }
 #endif
 
+#ifdef FCS_WITH_MOVES
 void DLLEXPORT freecell_solver_user_set_solution_optimization(
     void *const api_instance, const int optimize)
 {
-#ifdef FCS_WITH_MOVES
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(&(user->active_flare->obj),
         FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
-#endif
 }
+#endif
 
+#ifdef FCS_WITH_MOVES
 DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
     void *const api_instance, char *const output_string, const fcs_move_t move,
     const int standard_notation)
 {
-#ifdef FCS_WITH_MOVES
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     fc_solve_move_to_string_w_state(
         output_string, &(user->running_state), move, standard_notation);
-#endif
 }
+#endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT char *freecell_solver_user_move_to_string(
@@ -1895,10 +1893,10 @@ char *freecell_solver_user_get_invalid_state_error_string(
 #endif
 #endif
 
+#ifndef FCS_FREECELL_ONLY
 int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     void *const api_instance, const int sequences_are_built_by)
 {
-#ifndef FCS_FREECELL_ONLY
     if ((sequences_are_built_by < 0) || (sequences_are_built_by > 2))
     {
         return 1;
@@ -1909,15 +1907,15 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     user->common_preset.game_params.game_flags |= sequences_are_built_by;
 
     apply_game_params_for_all_instances(user);
-#endif
 
     return 0;
 }
+#endif
 
+#ifndef FCS_FREECELL_ONLY
 int DLLEXPORT freecell_solver_user_set_sequence_move(
     void *const api_instance, const int unlimited_sequence_move)
 {
-#ifndef FCS_FREECELL_ONLY
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     user->common_preset.game_params.game_flags &= (~(1 << 4));
@@ -1925,14 +1923,14 @@ int DLLEXPORT freecell_solver_user_set_sequence_move(
         ((unlimited_sequence_move != 0) << 4);
 
     apply_game_params_for_all_instances(user);
-#endif
     return 0;
 }
+#endif
 
+#ifndef FCS_FREECELL_ONLY
 int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
     void *const api_instance, const int empty_stacks_fill)
 {
-#ifndef FCS_FREECELL_ONLY
     if ((empty_stacks_fill < 0) || (empty_stacks_fill > 2))
     {
         return 1;
@@ -1942,9 +1940,9 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
     user->common_preset.game_params.game_flags &= (~(0x3 << 2));
     user->common_preset.game_params.game_flags |= (empty_stacks_fill << 2);
     apply_game_params_for_all_instances(user);
-#endif
     return 0;
 }
+#endif
 
 int DLLEXPORT freecell_solver_user_set_a_star_weight(
     void *const api_instance, const int my_index, const double weight)
@@ -2055,18 +2053,18 @@ static inline void set_any_iter_handler(void *const api_instance,
 
 /* TODO : Add an compile-time option to remove the iteration handler and all
  * related code. */
+#ifndef FCS_WITHOUT_ITER_HANDLER
 void DLLEXPORT freecell_solver_user_set_iter_handler_long(void *api_instance,
     freecell_solver_user_long_iter_handler_t long_iter_handler,
     void *iter_handler_context)
 {
-#ifndef FCS_WITHOUT_ITER_HANDLER
     set_any_iter_handler(api_instance, long_iter_handler,
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
         NULL,
 #endif
         iter_handler_context);
-#endif
 }
+#endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 void DLLEXPORT freecell_solver_user_set_iter_handler(void *const api_instance,
@@ -2167,16 +2165,16 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
 }
 #endif
 
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     void *const api_instance GCC_UNUSED, const long max_num_states GCC_UNUSED)
 {
-#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_user_t *const user = (fcs_user_t * const)api_instance;
 
     user->active_flare->obj.effective_trim_states_in_collection_from =
         ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
-#endif
 }
+#endif
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(void *const api_instance)
 {
@@ -2230,16 +2228,16 @@ int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
     return user->active_flare->obj.next_soft_thread_id;
 }
 
+#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 void DLLEXPORT freecell_solver_user_set_calc_real_depth(
     void *const api_instance, const int calc_real_depth)
 {
-#ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     STRUCT_SET_FLAG_TO(&(user->active_flare->obj), FCS_RUNTIME_CALC_REAL_DEPTH,
         calc_real_depth);
-#endif
 }
+#endif
 
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     void *const api_instance, const freecell_solver_str_t name)
