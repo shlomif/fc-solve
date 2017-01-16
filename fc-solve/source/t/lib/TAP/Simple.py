@@ -8,6 +8,7 @@ builder = TAP.Builder()
 def plan(plan, plan_param=None):
     builder.set_plan(plan, plan_param)
 
+
 ok = builder.ok
 
 

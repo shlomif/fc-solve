@@ -1087,7 +1087,7 @@ FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/.deps")
 ADD_CUSTOM_TARGET(
     "pgo_proto"
     COMMAND "bash" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/pgo.bash" "gcc" "total"
-    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.c"
+    DEPENDS "${rate_state_output}"
             "${CMAKE_CURRENT_BINARY_DIR}/config.h"
             "${CMAKE_CURRENT_BINARY_DIR}/prefix.h"
 )

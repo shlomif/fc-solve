@@ -197,7 +197,6 @@ def main():
     test_num_states_in_collection_after_unsolved()
     test_resume_solution_with_flares()
 
-# ----------------------------------------------------------------------
 
 if __name__ == "__main__":
     main()

@@ -791,5 +791,6 @@ def shlomif_main(args):
     game = Game(which_game, game_num, which_deals, print_ts)
     game.print_layout()
 
+
 if __name__ == "__main__":
     sys.exit(shlomif_main(sys.argv))

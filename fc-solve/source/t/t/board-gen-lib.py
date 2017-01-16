@@ -112,5 +112,6 @@ QH 9H 9D 5S 7S 6C
 """
     )
 
+
 if __name__ == "__main__":
     main()

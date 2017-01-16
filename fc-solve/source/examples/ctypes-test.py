@@ -52,7 +52,9 @@ def main(argv):
         print_state()
     fcs.freecell_solver_user_free(user)
 
+
 # ----------------------------------------------------------------------
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

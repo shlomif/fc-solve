@@ -201,7 +201,6 @@ def main():
     test_with_checkpoints_and_explicit_checkpoint()
     test_with_run_indef()
 
-# ----------------------------------------------------------------------
 
 if __name__ == "__main__":
     main()
