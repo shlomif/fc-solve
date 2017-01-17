@@ -357,7 +357,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_derived_state_t *ptr_new_state;
     int stack_idx, cards_num, ds;
     fcs_cards_column_t col, dest_col;
-    fcs_card_t card, dest_card;
+    fcs_card_t dest_card;
     int deck, suit;
     int empty_stack_idx = -1;
 
@@ -380,7 +380,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         if (cards_num)
         {
             /* Get the top card in the stack */
-            card = fcs_col_get_card(col, cards_num - 1);
+            const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
             suit = fcs_card_suit(card);
             for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
             {
@@ -411,7 +411,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     /* Move freecell cards to foundations. */
     for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
-        card = fcs_freecell_card(the_state, fc_idx);
+        const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
         suit = fcs_card_suit(card);
         if (fcs_card_is_valid(card))
         {
@@ -448,7 +448,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         cards_num = fcs_col_len(col);
         if (cards_num > cards_num_min_limit)
         {
-            card = fcs_col_get_card(col, cards_num - 1);
+            const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
 
             for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
             {
@@ -491,7 +491,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     /* Move freecell card on top of a parent */
     for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
-        card = fcs_freecell_card(the_state, fc_idx);
+        const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
         if (fcs_card_is_valid(card))
         {
             for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
@@ -538,7 +538,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
              * */
             if (cards_num > 1)
             {
-                card = fcs_col_get_card(col, cards_num - 1);
+                const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
                 /* Let's move it */
                 {
                     BEGIN_NEW_STATE()
@@ -564,7 +564,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         /* Freecell card -> Empty Stack. */
         for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
         {
-            card = fcs_freecell_card(the_state, fc_idx);
+            const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
             if (fcs_card_is_empty(card))
             {
                 continue;
@@ -596,7 +596,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             cards_num = fcs_col_len(col);
             if (cards_num > cards_num_min_limit)
             {
-                card = fcs_col_get_card(col, cards_num - 1);
+                const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
                 /* Let's move it */
                 {
                     BEGIN_NEW_STATE()

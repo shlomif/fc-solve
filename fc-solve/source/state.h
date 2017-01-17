@@ -814,8 +814,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 }
 
                 fcs_set_foundation(ret, ((decks_index[f_idx] << 2) + f_idx), c);
-                decks_index[f_idx]++;
-                if (decks_index[f_idx] >= DECKS_NUM__VAL)
+                if ((++decks_index[f_idx]) >= DECKS_NUM__VAL)
                 {
                     decks_index[f_idx] = 0;
                 }
