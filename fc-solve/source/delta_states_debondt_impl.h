@@ -174,7 +174,6 @@ static inline int get_top_rank_for_iter(
     return (IS_BAKERS_DOZEN() ? (RANK_KING - 1) : RANK_KING);
 }
 
-#define NUM_SUITS 4
 static void fc_solve_debondt_delta_stater_encode_composite(
     fc_solve_debondt_delta_stater_t *const self,
     const fcs_dbm_variant_type_t local_variant,
@@ -185,7 +184,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     fc_solve_debondt_delta_stater__init_card_states(self);
 
     {
-        for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
+        for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
         {
             const unsigned long rank = fcs_foundation_value(*derived, suit_idx);
 
@@ -309,7 +308,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
         const int top_rank_for_iter = get_top_rank_for_iter(local_variant);
         for (int rank = 2; rank <= top_rank_for_iter; rank++)
         {
-            for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
+            for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
             {
                 const unsigned long opt =
                     self->card_states[STATE_POS(suit_idx, rank)];
@@ -358,7 +357,7 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
         for (int suit = (IS_BAKERS_DOZEN()
                              ? 0
                              : ((fcs_card_suit(parent_card) & (0x1)) ^ 0x1));
-             suit < NUM_SUITS; suit += (IS_BAKERS_DOZEN() ? 1 : 2))
+             suit < FCS_NUM_SUITS; suit += (IS_BAKERS_DOZEN() ? 1 : 2))
         {
             const fcs_card_t candidate_card =
                 fcs_make_card(candidate_rank, suit);
@@ -389,7 +388,7 @@ static void fc_solve_debondt_delta_stater_decode(
     fc_solve_debondt_delta_stater__init_card_states(self);
 
     {
-        for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
+        for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
         {
             const unsigned long foundation_rank =
                 fc_solve_var_base_reader_read(reader, FOUNDATION_BASE);
@@ -433,7 +432,7 @@ static void fc_solve_debondt_delta_stater_decode(
     /* Process the kings: */
     if (IS_BAKERS_DOZEN())
     {
-        for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
+        for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
         {
             fcs_card_t card = fcs_make_card(RANK_KING, suit_idx);
 
@@ -449,7 +448,7 @@ static void fc_solve_debondt_delta_stater_decode(
     const int top_rank_for_iter = get_top_rank_for_iter(local_variant);
     for (int rank = 1; rank <= top_rank_for_iter; rank++)
     {
-        for (int suit_idx = 0; suit_idx < NUM_SUITS; suit_idx++)
+        for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
         {
             const fcs_card_t card = fcs_make_card(rank, suit_idx);
             const_AUTO(card_char, fcs_card2char(card));
