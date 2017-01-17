@@ -104,7 +104,7 @@ static inline void fc_solve_PQueueFree(pri_queue_t *pq)
 static inline void fc_solve_pq_push(pri_queue_t *const pq,
     fcs_collectible_state_t *const val, const pq_rating_t r)
 {
-    typeof(pq->current_size) i = ++(pq->current_size);
+    var_AUTO(i, ++(pq->current_size));
 
     if (i > pq->max_size)
     {
@@ -113,36 +113,31 @@ static inline void fc_solve_pq_push(pri_queue_t *const pq,
     }
 
     const_SLOT(Elements, pq);
+    /* set i to the first unused element and increment current_size */
+    /* while the parent of the space we're putting the new node into is
+       worse than
+       our new node, swap the space with the worse node. We keep doing that
+       until we
+       get to a worse node or until we get to the top
+
+       note that we also can sort so that the minimum elements bubble up so
+       we need to loops
+       with the comparison operator flipped... */
+
+    while ((i == PQ_FIRST_ENTRY
+                   ? (FC_SOLVE_PQUEUE_MaxRating) /* return biggest
+                                                    possible rating if
+                                                    first element */
+                   : (fcs_pq_rating(Elements[PQ_PARENT_INDEX(i)]))) < r)
     {
-        /* set i to the first unused element and increment current_size */
-        /* while the parent of the space we're putting the new node into is
-           worse than
-           our new node, swap the space with the worse node. We keep doing that
-           until we
-           get to a worse node or until we get to the top
+        Elements[i] = Elements[PQ_PARENT_INDEX(i)];
 
-           note that we also can sort so that the minimum elements bubble up so
-           we need to loops
-           with the comparison operator flipped... */
-
-        {
-
-            while ((i == PQ_FIRST_ENTRY
-                           ? (FC_SOLVE_PQUEUE_MaxRating) /* return biggest
-                                                            possible rating if
-                                                            first element */
-                           : (fcs_pq_rating(Elements[PQ_PARENT_INDEX(i)]))) < r)
-            {
-                Elements[i] = Elements[PQ_PARENT_INDEX(i)];
-
-                i = PQ_PARENT_INDEX(i);
-            }
-        }
-
-        /* then add the element at the space we created. */
-        Elements[i].val = val;
-        Elements[i].rating = r;
+        i = PQ_PARENT_INDEX(i);
     }
+
+    /* then add the element at the space we created. */
+    Elements[i].val = val;
+    Elements[i].rating = r;
 }
 
 static inline fcs_bool_t fc_solve_is_pqueue_empty(pri_queue_t *pq)
