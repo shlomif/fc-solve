@@ -200,10 +200,6 @@ typedef char fcs_locs_t;
 #define fcs_empty_freecell(state, f)                                           \
     fcs_put_card_in_freecell((state), (f), fc_solve_empty_card)
 
-/* These are macros that are common to COMPACT_STATES and
- * INDIRECT_STACK_STATES */
-#if defined(COMPACT_STATES) || defined(INDIRECT_STACK_STATES)
-
 #define fcs_card_is_empty(card) ((card) == 0)
 #define fcs_card_is_valid(card) ((card) != 0)
 
@@ -222,8 +218,6 @@ static inline fcs_card_t fcs_make_card(const int rank, const int suit)
 #define fcs_card_rank(card) ((card) >> 2)
 
 #define fcs_card_suit(card) ((card)&0x03)
-
-#endif
 
 static inline fcs_card_t fcs_col_get_rank(
     const fcs_const_cards_column_t col, const int card_idx)
