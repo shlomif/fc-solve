@@ -391,7 +391,11 @@ typedef fcs_state_extra_info_t fcs_collectible_state_t;
 #define fcs_duplicate_state(x, y) fcs_duplicate_kv_state((x), (y))
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (&((s)->info))
-#define FCS_STATE_kv_to_collectible(s) ((s)->val)
+static inline fcs_collectible_state_t *FCS_STATE_kv_to_collectible(
+    fcs_kv_state_t *const s)
+{
+    return s->val;
+}
 
 static inline void FCS_STATE_collectible_to_kv(
     fcs_kv_state_t *const ret, fcs_collectible_state_t *const s)
@@ -412,7 +416,11 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
     }
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (s)
-#define FCS_STATE_kv_to_collectible(s) ((fcs_collectible_state_t *)((s)->key))
+static inline fcs_collectible_state_t *FCS_STATE_kv_to_collectible(
+    fcs_kv_state_t *const s)
+{
+    return (fcs_collectible_state_t *)(s->key);
+}
 
 static inline void FCS_STATE_collectible_to_kv(
     fcs_kv_state_t *const ret, fcs_collectible_state_t *const s)
