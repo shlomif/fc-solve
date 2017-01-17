@@ -64,7 +64,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
 #ifndef NDEBUG
     for (i = 0; i < num_freecells; i++)
     {
-        virtual_freecell_len[i] = (!fcs_freecell_is_empty(pos, i)) ? 1 : 0;
+        virtual_freecell_len[i] = fcs_freecell_is_empty(pos, i) ? 0 : 1;
     }
 #endif
 
@@ -166,20 +166,14 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             {
                 const int src = fcs_move_get_src_freecell(move);
                 assert((virtual_freecell_len[src] == 1));
-                if (fcs_freecell_is_empty(pos, src))
+                if (!fcs_freecell_is_empty(pos, src))
                 {
-                    /* Do nothing */
-                }
-                else
-                {
-                    {
-                        fcs_extended_move_t ext_move;
-                        ext_move.move = move;
-                        /* Stub value to settle gcc. Isn't used. */
-                        ext_move.to_empty_stack = FALSE;
+                    fcs_extended_move_t ext_move;
+                    ext_move.move = move;
+                    /* Stub value to settle gcc. Isn't used. */
+                    ext_move.to_empty_stack = FALSE;
 
-                        moves_processed_add_new_move(ret, ext_move);
-                    }
+                    moves_processed_add_new_move(ret, ext_move);
                     fcs_increment_foundation(
                         pos, fcs_freecell_card_suit(pos, src));
                     fcs_empty_freecell(pos, src);
@@ -195,20 +189,14 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 const int src = fcs_move_get_src_freecell(move);
                 const int dest = fcs_move_get_dest_stack(move);
                 assert(virtual_freecell_len[src] == 1);
-                if (fcs_freecell_is_empty(pos, src))
+                if (!fcs_freecell_is_empty(pos, src))
                 {
-                    /* Do nothing */
-                }
-                else
-                {
-                    {
-                        fcs_extended_move_t ext_move;
-                        ext_move.move = move;
-                        /* Stub value to settle gcc. Isn't used. */
-                        ext_move.to_empty_stack = FALSE;
+                    fcs_extended_move_t ext_move;
+                    ext_move.move = move;
+                    /* Stub value to settle gcc. Isn't used. */
+                    ext_move.to_empty_stack = FALSE;
 
-                        moves_processed_add_new_move(ret, ext_move);
-                    }
+                    moves_processed_add_new_move(ret, ext_move);
                     fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
                     fcs_col_push_card(dest_col, fcs_freecell_card(pos, src));
                     fcs_empty_freecell(pos, src);
