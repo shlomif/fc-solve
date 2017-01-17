@@ -18,7 +18,6 @@
 #include <string.h>
 #include <limits.h>
 #include <stdio.h>
-#include <ctype.h>
 
 #include <sys/types.h>
 #include <limits.h>

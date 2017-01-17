@@ -14,7 +14,6 @@
 
 #include "dll_thunk.h"
 #include <string.h>
-#include <ctype.h>
 #include "state.h"
 #include "p2u_rank.h"
 
