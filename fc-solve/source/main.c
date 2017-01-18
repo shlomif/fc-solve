@@ -22,8 +22,87 @@
 #include "fcs_cl.h"
 #include "rinutils.h"
 #include "output_to_file.h"
-#include "handle_parsing.h"
-#include "read_state.h"
+#include <stdio.h>
+
+#include "rinutils.h"
+#include "fcs_cl.h"
+
+enum
+{
+    EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
+};
+
+static inline void *alloc_instance_and_parse(const int argc, char **const argv,
+    int *const arg_ptr, freecell_solver_str_t *const known_parameters,
+    const freecell_solver_user_cmd_line_known_commands_callback_t callback,
+    void *const callback_context, const fcs_bool_t only_recognized)
+{
+    void *const instance = freecell_solver_user_alloc();
+
+#ifdef FCS_WITH_ERROR_STRS
+    char *error_string;
+#endif
+    switch (freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+        instance, argc, (freecell_solver_str_t *)(void *)argv, (*arg_ptr),
+        known_parameters, callback,
+        callback_context FCS__PASS_ERR_STR(&error_string), arg_ptr, -1, NULL))
+    {
+    case EXIT_AND_RETURN_0:
+        freecell_solver_user_free(instance);
+        exit(0);
+
+    case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
+        if (only_recognized)
+        {
+            fc_solve_err("Unknown option: %s\n", argv[*arg_ptr]);
+        }
+        break;
+    case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
+        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
+                        " and was not supplied with one.\n",
+            argv[*arg_ptr]);
+        freecell_solver_user_free(instance);
+        exit(-1);
+    case FCS_CMD_LINE_ERROR_IN_ARG:
+#ifdef FCS_WITH_ERROR_STRS
+        if (error_string)
+        {
+            fprintf(stderr, "%s", error_string);
+            free(error_string);
+        }
+#else
+        fprintf(stderr, "%s\n", "Error in command line arg.");
+#endif
+        freecell_solver_user_free(instance);
+        exit(-1);
+    }
+
+    return instance;
+}
+
+static inline void *simple_alloc_and_parse(
+    const int argc, char **const argv, int *const arg_ptr)
+{
+    return alloc_instance_and_parse(
+        argc, argv, arg_ptr, NULL, NULL, NULL, TRUE);
+}
+
+#define USER_STATE_SIZE 1024
+
+typedef struct
+{
+    char s[USER_STATE_SIZE];
+} fcs_user_state_str_t;
+
+static inline fcs_user_state_str_t read_state(FILE *f)
+{
+    fcs_user_state_str_t user_state;
+    memset(user_state.s, '\0', sizeof(user_state));
+    fread(user_state.s, sizeof(user_state.s[0]), USER_STATE_SIZE - 1, f);
+    fclose(f);
+
+    return user_state;
+}
 
 typedef struct
 {
