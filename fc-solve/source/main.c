@@ -31,7 +31,19 @@ typedef struct
     const char *screen;
 } help_screen_t;
 
-#include "cl_callback_common.h"
+/*
+ * This file is part of Freecell Solver. It is subject to the license terms in
+ * the COPYING.txt file found in the top-level directory of this distribution
+ * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+ * Freecell Solver, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the COPYING file.
+ *
+ * Copyright (c) 2016 Shlomi Fish
+ */
+#pragma once
+
+#define IS_ARG(s) (!strcmp(arg_str, (s)))
+
 static int fc_solve__cmd_line_callback(void *const instance, const int argc,
     const char *argv[], const int arg, int *const num_to_skip, int *const ret,
     void *const context)
@@ -44,10 +56,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
 
     const char *const arg_str = argv[arg];
 
-    if (cmd_line_cb__handle_common(arg_str, instance, display_context))
-    {
-    }
-    else if (IS_ARG("--version"))
+    if (IS_ARG("--version"))
     {
         printf("fc-solve\nlibfreecell-solver version %s\n",
             freecell_solver_user_get_lib_version(instance));
