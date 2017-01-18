@@ -14,8 +14,8 @@
  * It is documented in the documents "README", "USAGE", etc. in the
  * Freecell Solver distribution from http://fc-solve.shlomifish.org/ .
  */
-#include "rinutils.h"
 #include "config.h"
+#include <string.h>
 
 typedef unsigned char fcs_game_limit_t;
 
@@ -198,7 +198,8 @@ typedef struct
     int preset_id;
 } fcs_preset_name_t;
 
-static const fcs_preset_name_t fcs_preset_names[23] = {
+#define NUM_NAMES 23
+static const fcs_preset_name_t fcs_preset_names[NUM_NAMES] = {
     {
         "bakers_dozen", FCS_PRESET_BAKERS_DOZEN,
     },
@@ -267,7 +268,7 @@ static const fcs_preset_name_t fcs_preset_names[23] = {
     },
 };
 
-#define NUM_PRESETS ((int)COUNT(fcs_preset_names))
+#define NUM_PRESETS NUM_NAMES
 
 static inline int fcs_get_preset_id_by_name(const char *const name)
 {
@@ -306,8 +307,7 @@ fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
 int main(int argc, char *argv[])
 {
     const fcs_preset_t *new_preset_ptr;
-    const_AUTO(
-        status1, fc_solve_get_preset_by_name("notexist", &new_preset_ptr));
+    const fc_solve_preset_ret_code_t status1 = fc_solve_get_preset_by_name("notexist", &new_preset_ptr);
     if (status1 != FCS_PRESET_CODE_OK)
     {
         return status1;
