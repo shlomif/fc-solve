@@ -238,19 +238,9 @@ typedef enum {
     ERROR = -1,
 } exit_code_t;
 
-static inline int fc_solve_main__main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     void * instance = freecell_solver_user_alloc(void);
     freecell_solver_user_apply_preset(instance, "notexist");
-#if 0
-    fc_solve_display_information_context_t display_context =
-        INITIAL_DISPLAY_CONTEXT;
-
-    int arg = 1;
-    void *const instance = alloc_instance_and_parse(argc, argv, &arg,
-        known_parameters, fc_solve__cmd_line_callback, &display_context, FALSE);
-#endif
     return 0;
 }
-
-int main(int argc, char *argv[]) { return fc_solve_main__main(argc, argv); }
