@@ -15,7 +15,7 @@
  * Freecell Solver distribution from http://fc-solve.shlomifish.org/ .
  */
 #include "rinutils.h"
-#include "instance_for_lib.h"
+#include "preset.h"
 
 int main(int argc, char *argv[])
 {
