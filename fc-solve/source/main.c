@@ -14,16 +14,32 @@
  * It is documented in the documents "README", "USAGE", etc. in the
  * Freecell Solver distribution from http://fc-solve.shlomifish.org/ .
  */
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
+#ifdef _MSC_VER
+#ifdef BUILDING_DLL
+#define DLLEXPORT __declspec(dllexport)
+#else
+#define DLLEXPORT __declspec(dllimport)
+#endif
+#define DLLLOCAL
+#elif defined(__EMSCRIPTEN__)
+#include "emscripten.h"
+#define DLLEXPORT EMSCRIPTEN_KEEPALIVE
+#define DLLLOCAL __attribute__((visibility("hidden")))
+#elif defined(__GNUC__)
+#define DLLEXPORT __attribute__((visibility("default")))
+#define DLLLOCAL __attribute__((visibility("hidden")))
+#else
+#define DLLEXPORT
+#define DLLLOCAL
+#endif
+DLLEXPORT extern void *freecell_solver_user_alloc(void);
 
-#include "fcs_user.h"
+DLLEXPORT extern int freecell_solver_user_apply_preset(
+    void *instance, const char *preset_name);
 
 int main(int argc, char *argv[])
 {
-    void * instance = freecell_solver_user_alloc(void);
+    void * instance = freecell_solver_user_alloc();
     freecell_solver_user_apply_preset(instance, "notexist");
     return 0;
 }
