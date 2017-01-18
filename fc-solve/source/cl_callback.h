@@ -480,61 +480,6 @@ typedef enum {
     ERROR = -1,
 } exit_code_t;
 
-#if 0
-static inline int solve_board(void * const instance, const char * const user_state)
-{
-    fcs_int_limit_t limit = 500;
-    freecell_solver_user_limit_iterations_long(instance, limit);
-    int ret = freecell_solver_user_solve_board(instance, user_state);
-    while (ret == FCS_STATE_SUSPEND_PROCESS)
-    {
-        limit += 500;
-        freecell_solver_user_limit_iterations_long(instance, limit);
-        ret = freecell_solver_user_resume_solution(instance);
-    }
-    return ret;
-}
-#else
-#define solve_board(instance, user_state)                                      \
-    freecell_solver_user_solve_board((instance), (user_state))
-#endif
-
-static inline FILE *fc_solve_calc_file_handle(
-    const int argc, char *argv[], const int arg)
-{
-    if ((arg == argc) || (!strcmp(argv[arg], "-")))
-    {
-        if (!getenv("FREECELL_SOLVER_QUIET"))
-        {
-            fprintf(stderr, "%s",
-                "Reading the board from the standard input.\n"
-                "Please refer to the documentation for more usage "
-                "information:\n"
-                "    http://fc-solve.shlomifish.org/docs/\n"
-                "To cancel this message set the FREECELL_SOLVER_QUIET "
-                "environment variable.\n");
-        }
-        return stdin;
-    }
-    else if (argv[arg][0] == '-')
-    {
-        fprintf(stderr, "Unknown option \"%s\". "
-                        "Type \"%s --help\" for usage information.\n",
-            argv[arg], argv[0]);
-        return NULL;
-    }
-    else
-    {
-        FILE *const f = fopen(argv[arg], "r");
-        if (!f)
-        {
-            fprintf(stderr, "Could not open file \"%s\" for input. Exiting.\n",
-                argv[arg]);
-        }
-        return f;
-    }
-}
-
 static inline int fc_solve_main__main(int argc, char *argv[])
 {
     fc_solve_display_information_context_t display_context =
