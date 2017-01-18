@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 20;
 use File::Temp qw( tempdir );
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
@@ -254,6 +254,20 @@ SKIP:
             "-g notexist returns the right error.",
         );
     }
+}
+
+{
+    trap
+    {
+        system( $FC_SOLVE__RAW, '-l' );
+    };
+
+    # TEST
+    like(
+        $trap->stderr(),
+        qr/\AThe command line parameter "-l" requires an argument/ms,
+        "Command line parameter without argument displays its name",
+    );
 }
 __END__
 

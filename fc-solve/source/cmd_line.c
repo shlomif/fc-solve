@@ -302,10 +302,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
 #define PROCESS_OPT_ARG()                                                      \
     {                                                                          \
-        arg++;                                                                 \
-        if (arg == arg_argc)                                                   \
+        if ((++arg) == arg_argc)                                               \
         {                                                                      \
-            *last_arg = arg - &(argv[0]);                                      \
+            *last_arg = arg - 1 - &(argv[0]);                                  \
             return FCS_CMD_LINE_PARAM_WITH_NO_ARG;                             \
         }                                                                      \
     }
