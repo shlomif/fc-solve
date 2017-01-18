@@ -14,7 +14,6 @@
  * It is documented in the documents "README", "USAGE", etc. in the
  * Freecell Solver distribution from http://fc-solve.shlomifish.org/ .
  */
-#include "config.h"
 #include <string.h>
 
 typedef unsigned char fcs_game_limit_t;
