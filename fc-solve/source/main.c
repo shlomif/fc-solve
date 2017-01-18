@@ -17,8 +17,9 @@
 #include "rinutils.h"
 #include "config.h"
 
-#include "instance.h"
-#include "move_funcs_maps.h"
+#include "game_type_params.h"
+#include "fcs_enums.h"
+#define FCS_MOVE_FUNCS_NUM 199
 
 typedef struct
 {
@@ -30,23 +31,8 @@ typedef struct
     char allowed_tests[FCS_MOVE_FUNCS_NUM * 3 + 1];
 } fcs_preset_t;
 
-extern fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
-    fc_solve_instance_t *const instance, const fcs_preset_t *const preset_ptr);
-
 extern fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
     const char *const name, const fcs_preset_t **const preset_ptr);
-
-static inline fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name(
-    fc_solve_instance_t *const instance, const char *const name)
-{
-    const fcs_preset_t *preset_ptr;
-    const_AUTO(ret, fc_solve_get_preset_by_name(name, &preset_ptr));
-    if (ret != FCS_PRESET_CODE_OK)
-    {
-        return ret;
-    }
-    return fc_solve_apply_preset_by_ptr(instance, preset_ptr);
-}
 
 int main(int argc, char *argv[])
 {
