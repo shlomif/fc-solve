@@ -94,6 +94,15 @@ __PACKAGE__->populate(
             msg =>
 "Check the sanity of crashy-preset-2 which contains a long double-quoted string.",
         },
+        'fc-solve-non-existent-game-preset' => {
+            prog => "fc-solve",
+            argv => [
+                '-g', 'notexist',
+                { type => 'bin_board', arg => '24.board', }
+            ],
+            msg =>
+"Make sure a non-existent game preset does not crash the solver.",
+        },
         'fc-solve-not-enough-input' => {
             prog => "fc-solve",
             argv =>

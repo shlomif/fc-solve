@@ -3,12 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 use File::Temp qw( tempdir );
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 use FC_Solve::Paths
-    qw( bin_board bin_exe_raw is_without_dbm samp_board $FC_SOLVE__RAW );
+    qw( bin_board bin_exe_raw is_freecell_only is_without_dbm samp_board $FC_SOLVE__RAW );
 
 my $MID24_BOARD = samp_board('24-mid.board');
 
@@ -234,6 +234,27 @@ qr/\nCould not solve successfully\.\r?\nhandle_and_destroy_instance_solution end
     }
 }
 
+{
+SKIP:
+    {
+        if ( is_freecell_only() )
+        {
+            Test::More::skip( "without freecell", 1 );
+        }
+
+        trap
+        {
+            system( $FC_SOLVE__RAW, '-g', 'notexist', bin_board('24.board'), );
+        };
+
+        # TEST
+        like(
+            $trap->stderr(),
+            qr/\AUnknown game \"notexist\"!/ms,
+            "-g notexist returns the right error.",
+        );
+    }
+}
 __END__
 
 =head1 COPYRIGHT AND LICENSE
