@@ -357,23 +357,14 @@ static void *freecell_solver_user_alloc(void)
 #define FLARES_LOOP_END()                                                      \
     INSTANCE_ITEM_FLARES_LOOP_END()                                            \
     INSTANCES_LOOP_END()
-#ifndef FCS_FREECELL_ONLY
-static int freecell_solver_user_apply_preset(
-    void *const api_instance, const char *const preset_name)
+int main(int argc, char *argv[])
 {
     const fcs_preset_t *new_preset_ptr;
     const_AUTO(
-        status1, fc_solve_get_preset_by_name(preset_name, &new_preset_ptr));
+        status1, fc_solve_get_preset_by_name("notexist", &new_preset_ptr));
     if (status1 != FCS_PRESET_CODE_OK)
     {
         return status1;
     }
-    return FCS_PRESET_CODE_OK;
-}
-#endif
-int main(int argc, char *argv[])
-{
-    void * instance = freecell_solver_user_alloc();
-    freecell_solver_user_apply_preset(instance, "notexist");
     return 0;
 }
