@@ -26,7 +26,8 @@ typedef struct
     int preset_id;
 } fcs_preset_t;
 
-static const fcs_preset_t fcs_presets[16] =
+#define NUM_PRESETS 16
+static const fcs_preset_t fcs_presets[NUM_PRESETS] =
 {
     {
         0,
@@ -154,11 +155,9 @@ static const fcs_preset_name_t fcs_preset_names[NUM_NAMES] = {
     },
 };
 
-#define NUM_PRESETS NUM_NAMES
-
 static inline int fcs_get_preset_id_by_name(const char *const name)
 {
-    for (int i = 0; i < NUM_PRESETS; i++)
+    for (int i = 0; i < NUM_NAMES; i++)
     {
         if (!strcmp(name, fcs_preset_names[i].name))
         {
