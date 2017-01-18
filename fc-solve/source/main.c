@@ -24,9 +24,6 @@
 #include "output_to_file.h"
 #include <stdio.h>
 
-#include "rinutils.h"
-#include "fcs_cl.h"
-
 enum
 {
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
