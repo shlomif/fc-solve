@@ -1,8 +1,35 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2016-09-22
+:Date: 2017-01-20
 :Revision: $Id$
+
+Version 4.8.0: (20-Jan-2017)
+----------------------------
+
+1. Fix a crash when doing +fc-solve -g [non-existent-game]+ (with tests):
+https://github.com/shlomif/fc-solve/issues/11 .
+
+2. Mention the final parameter name (instead of just saying "(null)") when
+it accepts a non-given argument:
+https://github.com/shlomif/fc-solve/issues/12 .
+
+3. Remove DEBUG_STATES - it was slow and not really helpful and caused bloat.
+
+4. Implement condition variables instead of usleep in the depth_dbm_solver .
+https://github.com/shlomif/fc-solve/issues/8 . It now also supports processing
+batches of items from the queue in a single transaction.
+
+5. Got a test suite to pass on MS-Windows / AppVeyor:
+https://ci.appveyor.com/project/shlomif/fc-solve .
+
+6. Many large and small code cleanups and refactorings.
+
+Version 4.6.1: (14-Jan-2017)
+----------------------------
+
+1. Fix for building the package in certain conditions (originally created for
+the Mageia Linux package).
 
 Version 4.6.0: (04-Dec-2016)
 ----------------------------
