@@ -973,8 +973,11 @@ sublicense
 27-Sep-2015
 28-Jul-2000
 DD-MMM-YYYY
+appveyor
+ci
 dbm-solver
 depth_dbm_fc_solve
+depth_dbm_solver
 fc-solve-temp
 int128
 int128-optimisation
@@ -982,6 +985,7 @@ libGMP
 obf
 solution_moves
 transpose-freecell-board
+usleep
 
 ==== In: dest/docs/distro/README.html
 
