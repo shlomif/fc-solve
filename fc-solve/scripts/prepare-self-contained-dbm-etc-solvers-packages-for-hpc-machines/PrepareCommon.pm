@@ -13,6 +13,7 @@ use IO::All qw/ io /;
 use Moose;
 
 has 'depth_dbm' => (is => 'ro', isa => 'Bool', required => 1);
+has 'fcc_solver' => (is => 'ro', isa => 'Bool', default => 0);
 has ['dest_dir_base', 'march_flag'] => (is => 'ro', isa => 'Str', required => 1);
 has 'flto' => (is => 'ro', isa => 'Bool', required => 1);
 has ['mem', 'num_hours', 'num_threads'] => (is => 'ro', isa => 'Int', required => 1);
@@ -21,12 +22,18 @@ has 'deals' => (is => 'ro', isa => 'ArrayRef[Int]', required => 1);
 
 sub main_base
 {
-    return shift->depth_dbm ? "depth_dbm_solver" : "dbm_solver";
+    my ($self) = @_;
+    return $self->fcc_solver ? 'split_fcc_solver' : $self->depth_dbm ? "depth_dbm_solver" : "dbm_solver";
 }
 
 sub src_filenames
 {
     my ($self) = @_;
+
+    my $on_fcc = sub {
+        my $filenames = shift;
+        return ($self->fcc_solver ? (@$filenames) : ()),
+    };
 
     return
     [
@@ -39,6 +46,7 @@ sub src_filenames
         'dbm_cache.h',
         'dbm_calc_derived.h',
         'dbm_calc_derived_iface.h',
+        'dbm_kaztree_compare.h',
         'dbm_kaztree.c',
         'dbm_lru_cache.h',
         'dbm_move_to_string.h',
@@ -57,8 +65,10 @@ sub src_filenames
         'delta_states_debondt_impl.h',
         'delta_states_iface.h',
         'depth_dbm_procs.h',
+        $on_fcc->(['depth_multi_queue.h',]),
         'dll_thunk.h',
-        'fcc_brfs_test.h','dbm_kaztree_compare.h',
+        $on_fcc->(['fcs_base64.h',]),
+        'fcc_brfs_test.h',
         'fcs_dllexport.h',
         'fcs_enums.h',
         'fcs_err.h',
@@ -87,6 +97,7 @@ sub src_filenames
         'state.c',
         'state.h',
         'str_utils.h',
+        $on_fcc->(['sys/tree.h',]),
         'typeof_wrap.h',
         'unused.h',
         'var_base_int.h',
@@ -127,6 +138,10 @@ sub run
     mkpath("$dest_dir");
     mkpath("$dest_dir/libavl");
     mkpath("$dest_dir/pthread");
+    if ($self->fcc_solver)
+    {
+        mkpath("$dest_dir/sys");
+    }
     mkpath($build_dir);
 
     chdir ($build_dir);

@@ -289,6 +289,15 @@ q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
 # run_cmd('false', {cmd => [qw(false)],});
 
 reg_test(
+    "prepare_dist fcc_solver",
+    {
+        prepare_dist_args => {
+            base => 'prepare_fcc_solver_self_contained_package.pl',
+            args => [],
+        },
+    },
+);
+reg_test(
     "prepare_dist AWS",
     {
         prepare_dist_args => {
