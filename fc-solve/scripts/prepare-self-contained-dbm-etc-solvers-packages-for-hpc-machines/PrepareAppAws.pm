@@ -7,6 +7,7 @@ use Getopt::Long qw/ GetOptions /;
 use Moose;
 use PrepareCommon;
 
+has 'fcc_solver' => (is => 'ro', isa => 'Bool', default => '');
 has 'num_freecells' => (is => 'ro', isa => 'Int', default => 4);
 has 'deals' => (is => 'ro', isa => 'ArrayRef[Int]', required => 1);
 
@@ -65,6 +66,6 @@ elsif ($is_am)
     $march_flag = '';
     $dest_dir_base = 'dbm_fcs_for_amadiro';
 }
-return PrepareCommon->new({depth_dbm => $depth_dbm, dest_dir_base => $dest_dir_base, flto => $flto, num_threads => $num_threads, mem => $mem, num_hours => $num_hours, march_flag => $march_flag, deals => $self->deals, num_freecells => $self->num_freecells})->run;
+return PrepareCommon->new({fcc_solver => scalar($self->fcc_solver), depth_dbm => $depth_dbm, dest_dir_base => $dest_dir_base, flto => $flto, num_threads => $num_threads, mem => $mem, num_hours => $num_hours, march_flag => $march_flag, deals => $self->deals, num_freecells => $self->num_freecells})->run;
 }
 1;
