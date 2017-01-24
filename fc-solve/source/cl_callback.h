@@ -583,12 +583,7 @@ static inline int fc_solve_main__main(int argc, char *argv[])
     break;
 
     case FCS_STATE_FLARES_PLAN_ERROR:
-#ifdef FCS_WITH_ERROR_STRS
-        fprintf(stderr, "Flares Plan: %s\n",
-            freecell_solver_user_get_last_error_string(instance));
-#else
-        fprintf(stderr, "%s\n", "Flares Plan Error");
-#endif
+        print_flares_plan_error(instance);
         exit_code = ERROR;
         break;
 

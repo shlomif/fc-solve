@@ -115,13 +115,8 @@ static inline int worker_func(const worker_t w, void *const instance)
                 fc_solve_print_intractable(board_num);
                 break;
             case FCS_STATE_FLARES_PLAN_ERROR:
-#ifdef FCS_WITH_ERROR_STRS
-                fprintf(stderr, "Flares Plan: %s\n",
-                    freecell_solver_user_get_last_error_string(instance));
-#endif
-
+                print_flares_plan_error(instance);
                 goto next_board;
-
             case FCS_STATE_IS_NOT_SOLVEABLE:
                 fc_solve_print_unsolved(board_num);
                 break;

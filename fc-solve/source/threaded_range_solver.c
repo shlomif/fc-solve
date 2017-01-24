@@ -88,10 +88,7 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
                 break;
 
             case FCS_STATE_FLARES_PLAN_ERROR:
-#ifdef FCS_WITH_ERROR_STRS
-                fprintf(stderr, "Flares Plan: %s\n",
-                    freecell_solver_user_get_last_error_string(instance));
-#endif
+                print_flares_plan_error(instance);
                 goto theme_error;
 
             case FCS_STATE_IS_NOT_SOLVEABLE:

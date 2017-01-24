@@ -116,12 +116,7 @@ int main(int argc, char *argv[])
             break;
 
         case FCS_STATE_FLARES_PLAN_ERROR:
-#ifdef FCS_WITH_ERROR_STRS
-            printf("Flares Plan: %s\n",
-                freecell_solver_user_get_last_error_string(instance));
-#else
-            printf("%s\n", "Flares Plan Error");
-#endif
+            print_flares_plan_error(instance);
             goto out_of_loop;
 
         case FCS_STATE_IS_NOT_SOLVEABLE:
