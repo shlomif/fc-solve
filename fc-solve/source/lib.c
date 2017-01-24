@@ -236,14 +236,16 @@ static void iter_handler_wrapper(void *api_instance, fcs_int_limit_t iter_num,
 static int user_next_instance(fcs_user_t *user);
 
 #ifdef FCS_WITH_ERROR_STRS
+#define ALLOC_ERROR_STRING(var, s) *(var) = strdup(s)
+#define SET_ERROR(s) strcpy(user->error_string, s)
 static inline void clear_error(fcs_user_t *const user)
 {
     user->error_string[0] = '\0';
 }
 #else
-#define clear_error(user)                                                      \
-    {                                                                          \
-    }
+#define ALLOC_ERROR_STRING(var, s)
+#define SET_ERROR(s)
+#define clear_error(user)
 #endif
 
 static void user_initialize(fcs_user_t *const user)
@@ -363,9 +365,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 
     if (min_depth < 0)
     {
-#ifdef FCS_WITH_ERROR_STRS
-        *error_string = strdup("Depth is negative.");
-#endif
+        ALLOC_ERROR_STRING(error_string, "Depth is negative.");
         return 1;
     }
 
@@ -518,14 +518,6 @@ static inline fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
     }
     return NULL;
 }
-
-#ifdef FCS_WITH_ERROR_STRS
-#define SET_ERROR(s) strcpy(user->error_string, s)
-#else
-#define SET_ERROR(s)                                                           \
-    {                                                                          \
-    }
-#endif
 
 static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t *const user)
@@ -1447,17 +1439,13 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
 
     if (!pats_scan)
     {
-#ifdef FCS_WITH_ERROR_STRS
-        *error_string = strdup("Not using the \"patsolve\" scan.");
-#endif
+        ALLOC_ERROR_STRING(error_string, "Not using the \"patsolve\" scan.");
         return 1;
     }
     if ((position < 0) ||
         (position >= (int)(COUNT(pats_scan->pats_solve_params.x))))
     {
-#ifdef FCS_WITH_ERROR_STRS
-        *error_string = strdup("Position out of range.");
-#endif
+        ALLOC_ERROR_STRING(error_string, "Position out of range.");
         return 2;
     }
 
@@ -1476,17 +1464,13 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
 
     if (!pats_scan)
     {
-#ifdef FCS_WITH_ERROR_STRS
-        *error_string = strdup("Not using the \"patsolve\" scan.");
-#endif
+        ALLOC_ERROR_STRING(error_string, "Not using the \"patsolve\" scan.");
         return 1;
     }
     if ((position < 0) ||
         (position >= (int)(COUNT(pats_scan->pats_solve_params.y))))
     {
-#ifdef FCS_WITH_ERROR_STRS
-        *error_string = strdup("Position out of range.");
-#endif
+        ALLOC_ERROR_STRING(error_string, "Position out of range.");
         return 2;
     }
 
@@ -2362,11 +2346,8 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
     }
     else
     {
-#ifdef FCS_WITH_ERROR_STRS
-        *error_string =
-            strdup("Unknown pruning value - must be \"r:tf\" or empty.");
-#endif
-
+        ALLOC_ERROR_STRING(
+            error_string, "Unknown pruning value - must be \"r:tf\" or empty.");
         return 1;
     }
 
