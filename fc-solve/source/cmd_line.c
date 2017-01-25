@@ -331,8 +331,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 
-            if (freecell_solver_user_set_tests_order(
-                    instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
+            if (freecell_solver_user_set_depth_tests_order(instance, 0,
+                    (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
                 ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                     "Error in tests' order!\n%s\n", fcs_user_errstr);

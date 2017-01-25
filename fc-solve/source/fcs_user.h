@@ -41,10 +41,10 @@ DLLEXPORT extern void freecell_solver_user_limit_iterations_long(
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern void freecell_solver_user_limit_iterations(
     void *user_instance, int max_iters);
-#endif
 
 DLLEXPORT extern int freecell_solver_user_set_tests_order(void *user_instance,
     const char *tests_order FCS__PASS_ERR_STR(char **error_string));
+#endif
 
 DLLEXPORT extern int freecell_solver_user_solve_board(
     void *user_instance, const char *state_as_string);

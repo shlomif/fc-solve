@@ -437,12 +437,14 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     return ret_code;
 }
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_set_tests_order(void *api_instance,
     const char *tests_order FCS__PASS_ERR_STR(char **error_string))
 {
     return freecell_solver_user_set_depth_tests_order(
         api_instance, 0, tests_order FCS__PASS_ERR_STR(error_string));
 }
+#endif
 
 typedef enum {
     FCS_COMPILE_FLARES_RET_OK = 0,
