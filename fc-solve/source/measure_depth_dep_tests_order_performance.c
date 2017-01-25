@@ -52,6 +52,25 @@ typedef struct
 
 static const char *known_parameters[] = {NULL};
 
+static void set_tests_order(
+    void *const instance, const int min_depth, const char *const tests_order)
+{
+#ifdef FCS_WITH_ERROR_STRS
+    char *error_string;
+#endif
+    if (freecell_solver_user_set_depth_tests_order(
+            instance, min_depth, tests_order FCS__PASS_ERR_STR(&error_string)))
+    {
+#ifdef FCS_WITH_ERROR_STRS
+        fprintf(stderr, "Error! Got '%s'!\n", error_string);
+        free(error_string);
+#else
+        fprintf(stderr, "%s\n", "depth-tests-order Error!");
+#endif
+        exit(-1);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     /* char buffer[2048]; */
@@ -181,29 +200,8 @@ int main(int argc, char *argv[])
                 NULL FCS__PASS_ERR_STR(&error_string), &arg, -1, NULL);
         }
 
-        if (freecell_solver_user_set_depth_tests_order(
-                instance, 0, scan1_to FCS__PASS_ERR_STR(&error_string)))
-        {
-#ifdef FCS_WITH_ERROR_STRS
-            fprintf(stderr, "Error! Got '%s'!\n", error_string);
-            free(error_string);
-#else
-            fprintf(stderr, "%s\n", "depth-tests-order Error!");
-#endif
-
-            exit(-1);
-        }
-        if (freecell_solver_user_set_depth_tests_order(instance,
-                min_depth_for_scan2, scan2_to FCS__PASS_ERR_STR(&error_string)))
-        {
-#ifdef FCS_WITH_ERROR_STRS
-            fprintf(stderr, "Error! Got '%s'!\n", error_string);
-            free(error_string);
-#else
-            fprintf(stderr, "%s\n", "depth-tests-order Error!");
-#endif
-            exit(-1);
-        }
+        set_tests_order(instance, 0, scan1_to);
+        set_tests_order(instance, min_depth_for_scan2, scan2_to);
 
         result_t *curr_result;
         for (board_num = start_board, curr_result = results;
