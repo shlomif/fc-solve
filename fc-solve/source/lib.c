@@ -237,6 +237,7 @@ static int user_next_instance(fcs_user_t *user);
 
 #ifdef FCS_WITH_ERROR_STRS
 #define ALLOC_ERROR_STRING(var, s) *(var) = strdup(s)
+#define SET_ERROR_VAR(var, s) *(var) = (((s)[0]) ? strdup(s) : NULL)
 #define SET_ERROR(s) strcpy(user->error_string, s)
 static inline void clear_error(fcs_user_t *const user)
 {
@@ -244,6 +245,7 @@ static inline void clear_error(fcs_user_t *const user)
 }
 #else
 #define ALLOC_ERROR_STRING(var, s)
+#define SET_ERROR_VAR(var, s)
 #define SET_ERROR(s)
 #define clear_error(user)
 #endif
@@ -359,10 +361,6 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
 
-#ifdef FCS_WITH_ERROR_STRS
-    *error_string = NULL;
-#endif
-
     if (min_depth < 0)
     {
         ALLOC_ERROR_STRING(error_string, "Depth is negative.");
@@ -421,12 +419,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
                 .tests_order),
         tests_order FCS__PASS_ERR_STR(static_error_string));
 
-#ifdef FCS_WITH_ERROR_STRS
-    if (static_error_string[0])
-    {
-        *error_string = strdup(static_error_string);
-    }
-#endif
+    SET_ERROR_VAR(error_string, static_error_string);
 
     for (int further_depth_idx = depth_idx + 1;
          further_depth_idx < soft_thread->by_depth_tests_order.num;
@@ -2310,17 +2303,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
         fc_solve_apply_tests_order(&(user->active_flare->obj.opt_tests_order),
             tests_order FCS__PASS_ERR_STR(static_error_string));
 
-#ifdef FCS_WITH_ERROR_STRS
-    if (static_error_string[0])
-    {
-        *error_string = strdup(static_error_string);
-    }
-    else
-    {
-        *error_string = NULL;
-    }
-#endif
-
+    SET_ERROR_VAR(error_string, static_error_string);
     if (!ret)
     {
         STRUCT_TURN_ON_FLAG(
@@ -2608,7 +2591,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
     fcs_user_t *const user = (fcs_user_t *)api_instance;
     const fcs_compile_flares_ret_t ret = user_compile_all_flares_plans(user);
 #ifdef FCS_WITH_ERROR_STRS
-    *error_string = (user->error_string[0]) ? strdup(user->error_string) : NULL;
+    SET_ERROR_VAR(error_string, user->error_string);
 #else
     *error_string = NULL;
 #endif
