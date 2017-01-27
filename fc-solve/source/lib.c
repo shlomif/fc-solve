@@ -2261,11 +2261,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
 
     fcs_instance_item_t *const instance_item = get_current_instance_item(user);
 
-    if (instance_item->flares_plan_string)
-    {
-        free(instance_item->flares_plan_string);
-    }
-
+    free(instance_item->flares_plan_string);
     instance_item->flares_plan_string =
         (flares_plan_string ? strdup(flares_plan_string) : NULL);
     instance_item->flares_plan_compiled = FALSE;
