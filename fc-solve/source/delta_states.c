@@ -18,14 +18,12 @@
 #include "render_state.h"
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
-#include "prepare_state_str.h"
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    const fcs_dbm_variant_type_t local_variant,
-    const char *const init_state_str_proto,
-    const char *const derived_state_str_proto)
+    const fcs_dbm_variant_type_t local_variant, const char *const init_state_s,
+    const char *const derived_state_s)
 {
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
     fc_solve_delta_stater_t delta;
@@ -37,8 +35,6 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     DECLARE_IND_BUF_T(derived_stacks_buffer)
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
-    const_AUTO(init_state_s, prepare_state_str(init_state_str_proto));
-    const_AUTO(derived_state_s, prepare_state_str(derived_state_str_proto));
 
     fc_solve_initial_user_state_to_c(init_state_s, &init_state, FREECELLS_NUM,
         STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
@@ -69,9 +65,6 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 
     char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
     FCS__RENDER_STATE(new_derived_as_str, &(new_derived_state.s), &locs);
-
-    free(init_state_s);
-    free(derived_state_s);
 
     fc_solve_delta_stater_release(&delta);
 
