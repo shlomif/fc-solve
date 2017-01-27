@@ -17,8 +17,12 @@ static inline void my_iter_handler_base(const fcs_int_limit_t iter_num,
 {
     printf("Iteration: %li\nDepth: %i\nStored-States: %li\nScan: %s\n",
         (long)iter_num, depth,
+#ifdef FCS_DISABLE_NUM_STORED_STATES
+        1L,
+#else
         (long)freecell_solver_user_get_num_states_in_collection_long(
             user_instance),
+#endif
         freecell_solver_user_get_current_soft_thread_name(user_instance));
     if (display_context->display_parent_iter_num)
     {

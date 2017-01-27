@@ -438,10 +438,12 @@ static inline void upon_new_state(fc_solve_instance_t *const instance,
 #endif
     }
 
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     instance->active_num_states_in_collection++;
 #endif
     instance->num_states_in_collection++;
+#endif
 
     return;
 }

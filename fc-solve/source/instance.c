@@ -681,7 +681,9 @@ in the process */
 #endif
 #endif
 
+#ifndef FCS_DISABLE_NUM_STORED_STATES
     instance->num_states_in_collection = 0;
+#endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     instance->db->close(instance->db, 0);

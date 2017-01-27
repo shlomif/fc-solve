@@ -34,11 +34,16 @@
 typedef struct
 {
     fcs_int_limit_t num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
     fcs_int_limit_t num_states_in_collection;
+#endif
 } fcs_stats_t;
 
-static const fcs_stats_t initial_stats = {
-    .num_checked_states = 0, .num_states_in_collection = 0};
+static const fcs_stats_t initial_stats = {.num_checked_states = 0,
+#ifndef FCS_DISABLE_NUM_STORED_STATES
+    .num_states_in_collection = 0
+#endif
+};
 
 /* A flare is an alternative scan algorithm to be tried. All flares in
  * a single instance are being evaluated and then one picks the shortest
@@ -877,8 +882,10 @@ static void trace_flare_solution(
     flare->next_move = 0;
 #endif
     flare->obj_stats.num_checked_states = instance->i__num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
     flare->obj_stats.num_states_in_collection =
         instance->num_states_in_collection;
+#endif
 
     recycle_flare(flare);
     flare->was_solution_traced = TRUE;
@@ -1101,9 +1108,11 @@ static inline int resume_solution(fcs_user_t *const user)
         user->init_num_checked_states.num_checked_states =
             init_num_checked_states.num_checked_states =
                 instance->i__num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
         user->init_num_checked_states.num_states_in_collection =
             init_num_checked_states.num_states_in_collection =
                 instance->num_states_in_collection;
+#endif
 
         if (is_start_of_flare_solving)
         {
@@ -1133,8 +1142,10 @@ static inline int resume_solution(fcs_user_t *const user)
         }
 
         flare->obj_stats.num_checked_states = instance->i__num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
         flare->obj_stats.num_states_in_collection =
             instance->num_states_in_collection;
+#endif
         const_AUTO(delta, flare->obj_stats.num_checked_states -
                               init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
@@ -1145,9 +1156,11 @@ static inline int resume_solution(fcs_user_t *const user)
                 normalize_iters_quota(flare_iters_quota - delta);
         }
 #endif
+#ifndef FCS_DISABLE_NUM_STORED_STATES
         user->iterations_board_started_at.num_states_in_collection +=
             flare->obj_stats.num_states_in_collection -
             init_num_checked_states.num_states_in_collection;
+#endif
         user->init_num_checked_states = flare->obj_stats;
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
@@ -1185,9 +1198,12 @@ static inline int resume_solution(fcs_user_t *const user)
              * */
             if (((user->current_iterations_limit >= 0) &&
                     (user->iterations_board_started_at.num_checked_states >=
-                        user->current_iterations_limit)) ||
-                (instance->num_states_in_collection >=
-                    instance->effective_max_num_states_in_collection))
+                        user->current_iterations_limit))
+#ifndef FCS_DISABLE_NUM_STORED_STATES
+                || (instance->num_states_in_collection >=
+                       instance->effective_max_num_states_in_collection)
+#endif
+                    )
             {
 /* Bug fix:
  * We need to resume from the last flare in case we exceed
@@ -1213,8 +1229,10 @@ static inline int resume_solution(fcs_user_t *const user)
             {
                 flare->obj_stats.num_checked_states =
                     instance->i__num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
                 flare->obj_stats.num_states_in_collection =
                     instance->num_states_in_collection;
+#endif
                 recycle_instance(user, instance_item);
                 user->current_instance++;
                 continue;
@@ -2106,6 +2124,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
     DFS_VAR(api_soft_thread(api_instance), rand_seed) = seed;
 }
 
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 fcs_int_limit_t DLLEXPORT
 freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
 {
@@ -2152,6 +2171,7 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     user->active_flare->obj.effective_trim_states_in_collection_from =
         ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
 }
+#endif
 #endif
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(void *const api_instance)

@@ -44,15 +44,21 @@ static inline fcs_bool_t check_num_states_in_collection(
         hard_thread_max_num_checked_states)
 #endif
 
+#ifdef FCS_DISABLE_NUM_STORED_STATES
+#define check_if_limits_exceeded__num_states()
+#else
+#define check_if_limits_exceeded__num_states()                                 \
+    || (instance->num_states_in_collection >=                                  \
+           effective_max_num_states_in_collection)
+#endif
+
 /*
  * This macro checks if we need to terminate from running this soft
  * thread and return to the soft thread manager with an
  * FCS_STATE_SUSPEND_PROCESS
  * */
 #define check_if_limits_exceeded()                                             \
-    (check_if_limits_exceeded__num() ||                                        \
-        (instance->num_states_in_collection >=                                 \
-            effective_max_num_states_in_collection))
+    (check_if_limits_exceeded__num() check_if_limits_exceeded__num_states())
 
 #define BEFS_MAX_DEPTH 20000
 
@@ -769,7 +775,9 @@ static inline int fc_solve_soft_dfs_do_solve(
     const fcs_tests_list_of_lists *the_tests_list_ptr;
     fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
     fcs_int_limit_t hard_thread_max_num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
+#endif
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
     SET_GAME_PARAMS();

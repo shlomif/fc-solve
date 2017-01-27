@@ -157,7 +157,7 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
 
     fprintf(output_fh, "Total number of states checked is %li.\n",
         (long)freecell_solver_user_get_num_times_long(instance));
-#if 1
+#ifndef FCS_DISABLE_NUM_STORED_STATES
     fprintf(output_fh, "This scan generated %li states.\n",
         (long)freecell_solver_user_get_num_states_in_collection_long(instance));
 #endif

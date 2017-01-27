@@ -234,6 +234,7 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
 DLLEXPORT extern void freecell_solver_user_set_random_seed(
     void *const user_instance, const int seed);
 
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 DLLEXPORT fcs_int_limit_t
 freecell_solver_user_get_num_states_in_collection_long(
     void *const user_instance);
@@ -253,6 +254,7 @@ DLLEXPORT extern void freecell_solver_user_limit_num_states_in_collection(
 
 DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     void *user_instance, long max_num_states);
+#endif
 
 DLLEXPORT extern int freecell_solver_user_next_soft_thread(void *user_instance);
 

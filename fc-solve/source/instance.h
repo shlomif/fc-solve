@@ -661,10 +661,12 @@ struct fc_solve_instance_struct
      *
      * Normally should be used instead.
      * */
-    fcs_int_limit_t effective_max_num_checked_states,
-        effective_max_num_states_in_collection;
+    fcs_int_limit_t effective_max_num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
+    fcs_int_limit_t effective_max_num_states_in_collection;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_int_limit_t effective_trim_states_in_collection_from;
+#endif
 #endif
 /*
  * tree is the balanced binary tree that is used to store and index
@@ -751,10 +753,12 @@ struct fc_solve_instance_struct
  *
  * It gives a rough estimate of the memory occupied by the instance.
  * */
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_int_limit_t active_num_states_in_collection;
 #endif
     fcs_int_limit_t num_states_in_collection;
+#endif
 
 #ifdef FCS_SINGLE_HARD_THREAD
     struct fc_solve_hard_thread_struct hard_thread;

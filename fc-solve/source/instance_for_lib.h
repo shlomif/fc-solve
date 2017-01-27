@@ -72,14 +72,14 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
     *(instance) = (fc_solve_instance_t){
         .meta_alloc = meta_alloc,
         .i__num_checked_states = 0,
+        .effective_max_num_checked_states = FCS_INT_LIMIT_MAX,
+#ifndef FCS_DISABLE_NUM_STORED_STATES
         .num_states_in_collection = 0,
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
         .active_num_states_in_collection = 0,
-#endif
-        .effective_max_num_checked_states = FCS_INT_LIMIT_MAX,
-        .effective_max_num_states_in_collection = FCS_INT_LIMIT_MAX,
-#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
         .effective_trim_states_in_collection_from = FCS_INT_LIMIT_MAX,
+#endif
+        .effective_max_num_states_in_collection = FCS_INT_LIMIT_MAX,
 #endif
         .instance_tests_order =
             {
@@ -1030,11 +1030,17 @@ static inline void switch_to_next_soft_thread(
 /* instance__check_exceeded_stats() cannot be an inline function because if
  * it is, the code becomes considerably slower (at least on gcc-5.4.0 on x86-64
  * Linux). */
+#ifdef FCS_DISABLE_NUM_STORED_STATES
+#define instance_check_exceeded__num_states(instance)
+#else
+#define instance_check_exceeded__num_states(instance)                          \
+    || (instance->num_states_in_collection >=                                  \
+           instance->effective_max_num_states_in_collection)
+#endif
 #define instance__check_exceeded_stats(instance)                               \
     ((instance->i__num_checked_states >=                                       \
-         instance->effective_max_num_checked_states) ||                        \
-        (instance->num_states_in_collection >=                                 \
-            instance->effective_max_num_states_in_collection))
+        instance->effective_max_num_checked_states)                            \
+            instance_check_exceeded__num_states(instance))
 
 static inline int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
 {

@@ -560,8 +560,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 
+#ifndef FCS_DISABLE_NUM_STORED_STATES
             freecell_solver_user_limit_num_states_in_collection_long(
                 instance, atol((*arg)));
+#endif
         }
         break;
 

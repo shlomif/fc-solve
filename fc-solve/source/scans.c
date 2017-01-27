@@ -424,7 +424,9 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
     const_AUTO(soft_thread_id, soft_thread->id);
     const fcs_bool_t is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
+#ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
+#endif
 
     fcs_states_linked_list_item_t *queue = NULL;
     fcs_states_linked_list_item_t *queue_last_item = NULL;

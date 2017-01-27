@@ -117,6 +117,8 @@ extern "C" {
 #define FCS_WITH_MOVES
 #endif
 
+#cmakedefine FCS_DISABLE_NUM_STORED_STATES
+
 #ifdef FCS_WITH_MOVES
 #define SFS__PASS_MOVE_STACK(arg) , arg
 #else
