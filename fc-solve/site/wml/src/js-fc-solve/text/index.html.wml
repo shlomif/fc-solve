@@ -154,6 +154,7 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 use FreecellSolver::ExtractGames;
 print FreecellSolver::ExtractGames->new->calc_html;
 }:>
+<br />
 <label for="string_params">String Parameters:</label><br />
 <textarea class="emscripten" id="string_params" cols="50" rows="30"></textarea>
 <p>
@@ -233,6 +234,13 @@ and/or copy the output from <a href="#output">the output box</a>.
 
 <p>
 Enjoy!
+</p>
+
+<h3 id="other_games">Solving other, similar, games</h3>
+
+<p>
+Click the <a href="#fcs_advanced_toggle">Advanced button</a> and select the
+game from the drop-down.
 </p>
 
 <h2 id="technology">Technology</h2>
