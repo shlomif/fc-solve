@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Differences (qw( eq_or_diff ));
 
 use lib './lib';
@@ -28,5 +28,12 @@ use FreecellSolver::ExtractGames ();
             { id => 'forecell', name => q#Forecell# },
         ],
         "Found eight_off",
+    );
+
+    # TEST
+    like(
+        scalar( $obj->calc_html() ),
+        qr#<option value="freecell" selected="selected">Freecell \(default\)</option>#,
+        "selected freecell.",
     );
 }

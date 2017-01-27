@@ -15,7 +15,7 @@ has 'games' => (is => 'ro', default => sub {
         {
             if ($l =~ /\A--game \[game\]/ .. $l =~ /\AExamples/)
             {
-                if (my ($id, $name) = ($l =~ m#\A\|\+([a-zA-Z_]+)\+\s+\|([A-Za-z' ]*)\z#))
+                if (my ($id, $name) = ($l =~ m#\A\|\+([a-zA-Z_]+)\+\s+\|([A-Za-z' \(\)]*)\z#))
                 {
                     push @ret, {id => $id, name => $name};
                 }

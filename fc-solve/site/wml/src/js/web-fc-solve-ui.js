@@ -222,7 +222,7 @@ Class('FC_Solve_UI',
             },
             _get_string_params: function() {
                 var text = $("#string_params").val();
-                return text.match(/\S/) ? text : null;
+                return ('--game ' + $("#game_type").val() + ' ' + (text.match(/\S/) ? text : ''));
             },
             _get_cmd_line_preset: function() {
                 return $("#preset").val();
