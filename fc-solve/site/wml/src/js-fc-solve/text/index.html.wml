@@ -37,7 +37,7 @@
 <p>
 An online solver for
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
-card solitaire game. <span class="enable_js">Please enable
+card solitaire game and <a href="#other_games">several related games</a>. <span class="enable_js">Please enable
 <strong>JavaScript</strong>.</span>
 </p>
 
@@ -150,6 +150,10 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 </p>
 
 <div id="fcs_advanced" class="disabled">
+<:{
+use FreecellSolver::ExtractGames;
+print FreecellSolver::ExtractGames->new->calc_html;
+}:>
 <label for="string_params">String Parameters:</label><br />
 <textarea class="emscripten" id="string_params" cols="50" rows="30"></textarea>
 <p>

@@ -1107,6 +1107,10 @@ Rihanna
 solv
 transpose-freecell-board
 
+==== In: dest/js-fc-solve/text/index.html
+
+Der
+
 ==== In: dest/pysol/index.html
 
 82-fcs-patch-0

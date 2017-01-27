@@ -209,6 +209,8 @@ $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
 $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
 	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] % 1_000_000 == 0))' < "$<" > "$@"
 
+$(D)/js-fc-solve/text/index.html: lib/FreecellSolver/ExtractGames.pm ../../source/USAGE.txt
+
 $(D)/charts/fc-pro--4fc-intractable-deals--report/index.html: $(FC_PRO_4FC_FILTERED_TSVS) $(FC_PRO_4FC_TSVS)
 
 all: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)

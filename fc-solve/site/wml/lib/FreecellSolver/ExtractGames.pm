@@ -3,11 +3,13 @@ package FreecellSolver::ExtractGames;
 use strict;
 use warnings;
 use IO::All qw/ io /;
+use CGI qw/ escapeHTML /;
+use File::Basename qw/ dirname /;
 
 use MooX qw/ late /;
 
 has 'games' => (is => 'ro', default => sub {
-        my @lines = io->file('../../source/USAGE.txt')->chomp->getlines;
+        my @lines = io->file(dirname(__FILE__).'/../../../../source/USAGE.txt')->chomp->getlines;
         my @ret;
         foreach my $l (@lines)
         {
@@ -21,4 +23,16 @@ has 'games' => (is => 'ro', default => sub {
         }
         return \@ret;
     });
+
+sub calc_html
+{
+    my $self = shift;
+
+    return qq#<label for="game_type">Game Type:</label><select id="game_type">#
+        . join('', map { my $sel = $_->{id} eq 'freecell' ? qq# selected="selected"# : ''; qq#<option value="$_->{id}"$sel>@{[escapeHTML($_->{name})]}</option># } @{$self->games()})
+        . "</select>";
+
+    return;
+}
+
 1;
