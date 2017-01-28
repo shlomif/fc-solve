@@ -34,7 +34,7 @@ endif
 LTO_FLAGS := -flto -ffat-lto-objects
 AR := ar
 RANLIB := ranlib
-END_LFLAGS := -lm -Wl,-rpath,::::::::::::::::::::::::::
+END_LFLAGS := -lm
 
 STD_FLAG := -std=gnu11
 
@@ -265,7 +265,7 @@ freecell-solver-multi-thread-solve: $(THR_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS)
 
 freecell-solver-fork-solve: $(FORK_MAIN_OBJECT) $(STATIC_LIB)
-	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS)
 
 
 freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
