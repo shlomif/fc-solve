@@ -1012,8 +1012,8 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
 static inline void switch_to_next_soft_thread(
     fc_solve_hard_thread_t *const hard_thread, const int num_soft_threads,
     const fc_solve_soft_thread_t *const soft_threads,
-    const fcs_prelude_item_t *const prelude,
-    const fcs_int_limit_t prelude_num_items, int *const st_idx_ptr)
+    const fcs_prelude_item_t *const prelude, const size_t prelude_num_items,
+    int *const st_idx_ptr)
 {
     if (HT_FIELD(hard_thread, prelude_idx) < prelude_num_items)
     {
@@ -1044,8 +1044,7 @@ static inline void switch_to_next_soft_thread(
 
 static inline int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
 {
-    const fcs_int_limit_t prelude_num_items =
-        HT_FIELD(hard_thread, prelude_num_items);
+    const size_t prelude_num_items = HT_FIELD(hard_thread, prelude_num_items);
 #ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
