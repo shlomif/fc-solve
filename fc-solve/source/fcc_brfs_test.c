@@ -251,9 +251,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
         for (; *(min_states_iter); min_states_iter++)
         {
-            fcs_encoded_state_buffer_t *min_enc_state;
-            min_enc_state = (fcs_encoded_state_buffer_t *)fcs_compact_alloc_ptr(
-                &(temp_allocator), sizeof(*min_enc_state));
+            fcs_encoded_state_buffer_t *const min_enc_state =
+                (fcs_encoded_state_buffer_t *)fcs_compact_alloc_ptr(
+                    &(temp_allocator), sizeof(*min_enc_state));
 
             fc_solve_state_string_to_enc(
                 local_variant, &delta, *(min_states_iter), min_enc_state);
@@ -272,9 +272,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
         for (; *(min_states_iter); min_states_iter++)
         {
-            fcs_encoded_state_buffer_t *min_enc_state;
-            min_enc_state = (fcs_encoded_state_buffer_t *)fcs_compact_alloc_ptr(
-                &(temp_allocator), sizeof(*min_enc_state));
+            fcs_encoded_state_buffer_t *const min_enc_state =
+                (fcs_encoded_state_buffer_t *)fcs_compact_alloc_ptr(
+                    &(temp_allocator), sizeof(*min_enc_state));
 
             fc_solve_state_string_to_enc(
                 local_variant, &delta, *(min_states_iter), min_enc_state);
