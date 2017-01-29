@@ -686,7 +686,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
     fcs_bool_t first_line = TRUE;
 
-#define ret (out_state->s)
+#define out (out_state->s)
 /* Handle the end of string - shouldn't happen */
 #define HANDLE_EOS()                                                           \
     {                                                                          \
@@ -724,7 +724,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
         {
             for (int c = 0; c < FREECELLS_NUM__VAL; c++)
             {
-                fcs_empty_freecell(ret, c);
+                fcs_empty_freecell(out, c);
             }
             for (int c = 0; c < FREECELLS_NUM__VAL; c++)
             {
@@ -750,7 +750,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                 if ((*str == '\r') || (*str == '\n'))
                     break;
 
-                fcs_put_card_in_freecell(ret, c,
+                fcs_put_card_in_freecell(out, c,
                     ((*str == '*') || (*str == '-')) ? fc_solve_empty_card : ({
                         const char rank = fc_solve_u2p_rank(str);
                         if (!rank)
@@ -783,7 +783,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
         {
             for (int f_idx = 0; f_idx < (DECKS_NUM__VAL << 2); f_idx++)
             {
-                fcs_set_foundation(ret, f_idx, 0);
+                fcs_set_foundation(out, f_idx, 0);
             }
 
             int decks_index[4] = {0, 0, 0, 0};
@@ -807,7 +807,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                     str++;
                 }
 
-                fcs_set_foundation(ret, ((decks_index[f_idx] << 2) + f_idx), c);
+                fcs_set_foundation(out, ((decks_index[f_idx] << 2) + f_idx), c);
                 if ((++decks_index[f_idx]) >= DECKS_NUM__VAL)
                 {
                     decks_index[f_idx] = 0;
@@ -824,7 +824,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             str++;
         }
 
-        fcs_cards_column_t col = fcs_state_get_col(ret, s);
+        fcs_cards_column_t col = fcs_state_get_col(out, s);
         for (int c = 0; c < MAX_NUM_CARDS_IN_A_STACK; c++)
         {
             /* Move to the next card */
@@ -863,7 +863,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     return TRUE;
 }
 
-#undef ret
+#undef out
 #undef HANDLE_EOS
 
 extern void fc_solve_state_as_string(char *output_s,
@@ -991,7 +991,7 @@ static inline int fc_solve_stack_compare_for_comparison(
         const int min_len = min(s1[0], s2[0]);
         for (int a = 1; a <= min_len; a++)
         {
-            int ret = fc_solve_card_compare(s1[a], s2[a]);
+            const int ret = fc_solve_card_compare(s1[a], s2[a]);
             if (ret != 0)
             {
                 return ret;
