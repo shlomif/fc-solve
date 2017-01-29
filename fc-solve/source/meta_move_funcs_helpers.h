@@ -180,11 +180,11 @@ static inline void fc_solve_move_sequence_function(
 
 #ifdef FCS_FREECELL_ONLY
 
-#define tests_define_seqs_built_by()
+#define MOVE_FUNCS__define_seqs_built_by()
 #define tests_define_empty_stacks_fill()
 #else
 
-#define tests_define_seqs_built_by()                                           \
+#define MOVE_FUNCS__define_seqs_built_by()                                     \
     const int sequences_are_built_by =                                         \
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 

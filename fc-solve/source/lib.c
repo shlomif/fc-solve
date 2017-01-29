@@ -1535,7 +1535,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
             fc_solve_pats__init_soft_thread(
                 pats_scan, HT_INSTANCE(soft_thread->hard_thread));
 
-            pats_scan->to_stack = 1;
+            pats_scan->to_stack = TRUE;
 
             pats_scan->pats_solve_params =
                 (freecell_solver_pats__x_y_params_preset
