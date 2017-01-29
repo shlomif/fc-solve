@@ -178,21 +178,6 @@ static inline void fc_solve_move_sequence_function(
     tests_define_accessors_no_stacks();                                        \
     tests_define_indirect_stack_states_accessors();
 
-#ifdef FCS_FREECELL_ONLY
-
-#define MOVE_FUNCS__define_seqs_built_by()
-#define tests_define_empty_stacks_fill()
-#else
-
-#define MOVE_FUNCS__define_seqs_built_by()                                     \
-    const int sequences_are_built_by =                                         \
-        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
-
-#define tests_define_empty_stacks_fill()                                       \
-    const int empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL;
-
-#endif
-
 #define my_copy_stack(idx)                                                     \
     fcs_copy_stack(new_state_key, new_state_val, idx, indirect_stacks_buffer);
 
