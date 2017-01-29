@@ -50,10 +50,10 @@ static void print_help(void)
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t next_board_num_lock;
 static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
-fcs_int_limit_t total_iterations_limit_per_board = -1;
-fcs_int_limit_t update_total_num_iters_threshold = 1000000;
-char **context_argv;
-int context_arg = 1, context_argc;
+static fcs_int_limit_t total_iterations_limit_per_board = -1;
+static fcs_int_limit_t update_total_num_iters_threshold = 1000000;
+static char **context_argv;
+static int context_arg = 1, context_argc;
 static long long total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
