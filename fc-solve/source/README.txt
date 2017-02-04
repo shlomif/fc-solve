@@ -46,10 +46,9 @@ It has the 8 Freecell stacks.
 Each stack contains its cards separated by a whitespace
 and terminated with a newline character( it's important that the last stack
 will also be terminated with a newline !). The cards in the line are ordered
-from the topmost card (= the card right on the carpet and the one with the
-most cards placed on it) in the left, to the bottommost card in the
-right (= the card with no other cards placed on it, and the one on top
-of all the other cards in the stack).
+from the topmost card (= the card right on the virtual table and the one with
+the most cards placed on it) in the left, to the bottommost card in the right
+(= the card with no other cards placed on it).
 
 A card string contains the rank of the card followed by its suit.
 The card number is one of: +A,1,2,3,4,5,6,7,8,9,10,J,Q,K+. Alternatively,
@@ -68,6 +67,13 @@ QC 9S 6H 9H 3S KS 3D
 AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 -----------------------
+
+Visually, it appears as this:
+
+image:http://fc-solve.shlomifish.org/images/pysol-freecell-ms24.png[Freecell Deal No. 24]
+
+As can be seen, the four of clubs (4C), five of hearts (5H), etc. are at the
+bottom of the stacks and the start of the lines in the board input.
 
 And another one: (PySol board No. 198246790)
 
