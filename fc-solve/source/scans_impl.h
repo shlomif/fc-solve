@@ -1164,89 +1164,85 @@ static inline int fc_solve_soft_dfs_do_solve(
             the_soft_dfs_info->current_state_index = 0;
         }
 
+        const_SLOT(num_states, derived_states_list);
+        fcs_derived_states_list_item_t *const derived_states =
+            derived_states_list->states;
+        var_AUTO(state_idx, the_soft_dfs_info->current_state_index - 1);
+        const fcs_rating_with_index_t *rand_int_ptr =
+            the_soft_dfs_info->derived_states_random_indexes + state_idx;
+        VERIFY_PTR_STATE_TRACE0("Verify Klondike");
+
+        while (++state_idx < num_states)
         {
-            const_SLOT(num_states, derived_states_list);
-            fcs_derived_states_list_item_t *const derived_states =
-                derived_states_list->states;
-            var_AUTO(state_idx, the_soft_dfs_info->current_state_index - 1);
-            const fcs_rating_with_index_t *rand_int_ptr =
-                the_soft_dfs_info->derived_states_random_indexes + state_idx;
-            VERIFY_PTR_STATE_TRACE0("Verify Klondike");
+            fcs_collectible_state_t *const single_derived_state =
+                derived_states[(*(++rand_int_ptr)).idx].state_ptr;
 
-            while (++state_idx < num_states)
+            VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
+
+            if ((!fcs__is_state_a_dead_end(single_derived_state)) &&
+                (!is_scan_visited(single_derived_state, soft_thread_id)))
             {
-                fcs_collectible_state_t *const single_derived_state =
-                    derived_states[(*(++rand_int_ptr)).idx].state_ptr;
+                BUMP_NUM_CHECKED_STATES();
 
-                VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
+                VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [After BUMP]");
 
-                if ((!fcs__is_state_a_dead_end(single_derived_state)) &&
-                    (!is_scan_visited(single_derived_state, soft_thread_id)))
-                {
-                    BUMP_NUM_CHECKED_STATES();
-
-                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [After BUMP]");
-
-                    set_scan_visited(single_derived_state, soft_thread_id);
+                set_scan_visited(single_derived_state, soft_thread_id);
 
 #ifndef FCS_WITHOUT_VISITED_ITER
-                    FCS_S_VISITED_ITER(single_derived_state) =
-                        instance->i__num_checked_states;
+                FCS_S_VISITED_ITER(single_derived_state) =
+                    instance->i__num_checked_states;
 #endif
 
-                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0(
-                        "Verify [aft set_visit]");
+                VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [aft set_visit]");
 
-                    /*
-                        I'm using current_state_indexes[depth]-1 because we
-                       already
-                        increased it by one, so now it refers to the next state.
-                    */
-                    if (unlikely(++DEPTH() >= by_depth_max_depth))
-                    {
-                        curr_by_depth_unit++;
-                        RECALC_BY_DEPTH_LIMITS();
-                    }
-                    the_soft_dfs_info->current_state_index = state_idx;
-                    the_soft_dfs_info++;
+                /*
+                    I'm using current_state_indexes[depth]-1 because we
+                   already
+                    increased it by one, so now it refers to the next state.
+                */
+                if (unlikely(++DEPTH() >= by_depth_max_depth))
+                {
+                    curr_by_depth_unit++;
+                    RECALC_BY_DEPTH_LIMITS();
+                }
+                the_soft_dfs_info->current_state_index = state_idx;
+                the_soft_dfs_info++;
 
-                    ASSIGN_ptr_state(single_derived_state);
-                    the_soft_dfs_info->state = PTR_STATE;
+                ASSIGN_ptr_state(single_derived_state);
+                the_soft_dfs_info->state = PTR_STATE;
 
-                    VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify after recurse");
+                VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify after recurse");
 
-                    the_soft_dfs_info->tests_list_index = 0;
-                    the_soft_dfs_info->move_func_idx = 0;
-                    the_soft_dfs_info->current_state_index = 0;
-                    derived_states_list =
-                        &(the_soft_dfs_info->derived_states_list);
-                    derived_states_list->num_states = 0;
+                the_soft_dfs_info->tests_list_index = 0;
+                the_soft_dfs_info->move_func_idx = 0;
+                the_soft_dfs_info->current_state_index = 0;
+                derived_states_list = &(the_soft_dfs_info->derived_states_list);
+                derived_states_list->num_states = 0;
 
-                    calculate_real_depth(calc_real_depth, PTR_STATE);
+                calculate_real_depth(calc_real_depth, PTR_STATE);
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-                    if (check_num_states_in_collection(instance))
-                    {
-                        VERIFY_PTR_STATE_TRACE0("Verify Bakers_Game");
+                if (check_num_states_in_collection(instance))
+                {
+                    VERIFY_PTR_STATE_TRACE0("Verify Bakers_Game");
 
-                        free_states(instance);
+                    free_states(instance);
 
-                        VERIFY_PTR_STATE_TRACE0("Verify Penguin");
-                    }
+                    VERIFY_PTR_STATE_TRACE0("Verify Penguin");
+                }
 #endif
 
-                    if (check_if_limits_exceeded())
-                    {
-                        TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside "
-                               "current_state_index)");
-                        return FCS_STATE_SUSPEND_PROCESS;
-                    }
-
-                    goto main_loop;
+                if (check_if_limits_exceeded())
+                {
+                    TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside "
+                           "current_state_index)");
+                    return FCS_STATE_SUSPEND_PROCESS;
                 }
+
+                goto main_loop;
             }
-            the_soft_dfs_info->current_state_index = num_states;
         }
+        the_soft_dfs_info->current_state_index = num_states;
     }
 
     /*
