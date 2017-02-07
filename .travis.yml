@@ -12,6 +12,7 @@ install:
       #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
     - sudo cpanm --notest Inline::C
     - sudo cpanm Task::FreecellSolver::Testing
+    - sudo cpanm Test::Code::TidyAll
     - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
     - tar -xvf libtap-1.12.0.tar.bz2
     - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )

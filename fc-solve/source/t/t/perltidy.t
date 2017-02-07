@@ -11,11 +11,8 @@ if ( $ENV{FCS_TEST_SKIP_PERLTIDY} )
 }
 else
 {
-    require Test::PerlTidy;
+    require Test::Code::TidyAll;
 
-    Test::PerlTidy::run_tests(
-        path       => $ENV{FCS_SRC_PATH},
-        perltidyrc => "$ENV{FCS_SRC_PATH}/.perltidyrc",
-        exclude    => [ qr/--.*?\.t\z/, qr/Makefile\.PL/ ],
-    );
+    Test::Code::TidyAll::tidyall_ok(
+        conf_file => "$ENV{FCS_SRC_PATH}/.tidyallrc", );
 }
