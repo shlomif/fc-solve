@@ -871,6 +871,7 @@ static inline int fc_solve_soft_dfs_do_solve(
     */
     while (1)
     {
+    main_loop:
         /*
             Increase the "maximal" depth if it is about to be exceeded.
         */
@@ -1167,17 +1168,16 @@ static inline int fc_solve_soft_dfs_do_solve(
             const_SLOT(num_states, derived_states_list);
             fcs_derived_states_list_item_t *const derived_states =
                 derived_states_list->states;
+            var_AUTO(state_idx, the_soft_dfs_info->current_state_index - 1);
             const fcs_rating_with_index_t *rand_int_ptr =
-                the_soft_dfs_info->derived_states_random_indexes +
-                the_soft_dfs_info->current_state_index;
+                the_soft_dfs_info->derived_states_random_indexes + state_idx;
             VERIFY_PTR_STATE_TRACE0("Verify Klondike");
 
-            while (the_soft_dfs_info->current_state_index < num_states)
+            while (++state_idx < num_states)
             {
                 fcs_collectible_state_t *const single_derived_state =
-                    derived_states[(*(rand_int_ptr++)).idx].state_ptr;
+                    derived_states[(*(++rand_int_ptr)).idx].state_ptr;
 
-                the_soft_dfs_info->current_state_index++;
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
 
                 if ((!fcs__is_state_a_dead_end(single_derived_state)) &&
@@ -1207,6 +1207,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                         curr_by_depth_unit++;
                         RECALC_BY_DEPTH_LIMITS();
                     }
+                    the_soft_dfs_info->current_state_index = state_idx;
                     the_soft_dfs_info++;
 
                     ASSIGN_ptr_state(single_derived_state);
@@ -1241,9 +1242,10 @@ static inline int fc_solve_soft_dfs_do_solve(
                         return FCS_STATE_SUSPEND_PROCESS;
                     }
 
-                    break;
+                    goto main_loop;
                 }
             }
+            the_soft_dfs_info->current_state_index = num_states;
         }
     }
 
