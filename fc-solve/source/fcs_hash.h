@@ -173,9 +173,10 @@ static inline void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
     void *const context)
 {
     const_SLOT(size, hash);
+    var_AUTO(entries, hash->entries);
     for (int i = 0; i < size; i++)
     {
-        fc_solve_hash_symlink_item_t **item = &(hash->entries[i].first_item);
+        fc_solve_hash_symlink_item_t **item = &(entries[i].first_item);
         while ((*item) != NULL)
         {
             if (should_delete_ptr((*item)->key, context))
