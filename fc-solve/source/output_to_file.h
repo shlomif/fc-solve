@@ -63,7 +63,7 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     const_AUTO(display_context, (*dc_ptr));
     if (ret == FCS_STATE_WAS_SOLVED)
     {
-        fprintf(output_fh, "-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+        fputs("-=-=-=-=-=-=-=-=-=-=-=-\n\n", output_fh);
 #ifdef FCS_WITH_MOVES
         {
             fcs_move_t move;
@@ -80,8 +80,8 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                     display_context.canonized_order_output FC_SOLVE__PASS_T(
                         display_context.display_10_as_t));
 
-                fprintf(move_dump, "%s\n", state_as_string);
-                fprintf(move_dump, "%s", "\n====================\n\n");
+                fputs(state_as_string, move_dump);
+                fputs("\n\n====================\n\n", move_dump);
             }
 
             int move_num = 0;
@@ -92,7 +92,7 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                     if (display_context.display_states &&
                         display_context.standard_notation)
                     {
-                        fprintf(move_dump, "Move: ");
+                        fputs("Move: ", move_dump);
                     }
 
                     freecell_solver_user_stringify_move_w_state(instance,
@@ -107,12 +107,12 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                         if ((move_num % 10 == 0) ||
                             display_context.display_states)
                         {
-                            fprintf(move_dump, "\n");
+                            putc('\n', move_dump);
                         }
                     }
                     if (display_context.display_states)
                     {
-                        fprintf(move_dump, "\n");
+                        putc('\n', move_dump);
                     }
                     fflush(move_dump);
                 }
@@ -131,34 +131,34 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                 if (display_context.display_states ||
                     (!display_context.standard_notation))
                 {
-                    fprintf(move_dump, "%s", "\n====================\n\n");
+                    fputs("\n====================\n\n", move_dump);
                 }
             }
 
             if (display_context.standard_notation &&
                 (!display_context.display_states))
             {
-                fprintf(move_dump, "\n\n");
+                fputs("\n\n", move_dump);
             }
         }
 #endif
 
-        fprintf(output_fh, "This game is solveable.\n");
+        fputs("This game is solveable.\n", output_fh);
     }
     else if (display_context.show_exceeded_limits &&
              (ret == FCS_STATE_SUSPEND_PROCESS))
     {
-        fprintf(output_fh, "Iterations count exceeded.\n");
+        fputs("Iterations count exceeded.\n", output_fh);
     }
     else
     {
-        fprintf(output_fh, "I could not solve this game.\n");
+        fputs("I could not solve this game.\n", output_fh);
     }
 
-    fprintf(output_fh, "Total number of states checked is %li.\n",
+    fprintf(output_fh, "Total number of states checked is %ld.\n",
         (long)freecell_solver_user_get_num_times_long(instance));
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-    fprintf(output_fh, "This scan generated %li states.\n",
+    fprintf(output_fh, "This scan generated %ld states.\n",
         (long)freecell_solver_user_get_num_states_in_collection_long(instance));
 #endif
 
