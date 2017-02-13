@@ -41,6 +41,7 @@
 #include "handle_parsing.h"
 #include "rinutils.h"
 #include "help_err.h"
+#include "range_solvers.h"
 
 static void print_help(void)
 {
@@ -87,7 +88,6 @@ static inline int worker_func(const worker_t w, void *const instance)
     /* I'm one of the slaves */
     request_t request;
     response_t response;
-    fcs_state_string_t state_string;
 
     while (1)
     {
@@ -104,37 +104,12 @@ static inline int worker_func(const worker_t w, void *const instance)
             request.quota_end - request.board_num + 1;
 
 #define board_num (request.board_num)
-#define total_num_iters_temp (response.num_iters)
         for (; board_num <= request.quota_end; board_num++)
         {
-            get_board(board_num, state_string);
-
-            switch (freecell_solver_user_solve_board(instance, state_string))
-            {
-            case FCS_STATE_SUSPEND_PROCESS:
-                fc_solve_print_intractable(board_num);
-                break;
-            case FCS_STATE_FLARES_PLAN_ERROR:
-                print_flares_plan_error(instance);
-                goto next_board;
-            case FCS_STATE_IS_NOT_SOLVEABLE:
-                fc_solve_print_unsolved(board_num);
-                break;
-            }
-
-            total_num_iters_temp +=
-                freecell_solver_user_get_num_times_long(instance);
-
-/*  TODO : implement at the master. */
-#if 0
-
-#endif
-
-        next_board:
+            range_solvers__solve(instance, board_num, &response.num_iters);
             freecell_solver_user_recycle(instance);
         }
 #undef board_num
-#undef total_num_iters_temp
 
         write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
     }

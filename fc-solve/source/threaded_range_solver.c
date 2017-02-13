@@ -29,6 +29,7 @@
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 #include "help_err.h"
+#include "range_solvers.h"
 
 static void print_help(void)
 {
@@ -78,26 +79,11 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
 
         for (; board_num < quota_end; board_num++)
         {
-            fcs_state_string_t state_string;
-            get_board(board_num, state_string);
-
-            switch (freecell_solver_user_solve_board(instance, state_string))
+            if (range_solvers__solve(
+                    instance, board_num, &total_num_iters_temp))
             {
-            case FCS_STATE_SUSPEND_PROCESS:
-                fc_solve_print_intractable(board_num);
-                break;
-
-            case FCS_STATE_FLARES_PLAN_ERROR:
-                print_flares_plan_error(instance);
                 goto theme_error;
-
-            case FCS_STATE_IS_NOT_SOLVEABLE:
-                fc_solve_print_unsolved(board_num);
-                break;
             }
-
-            total_num_iters_temp +=
-                freecell_solver_user_get_num_times_long(instance);
             if (total_num_iters_temp >= update_total_num_iters_threshold)
             {
                 pthread_mutex_lock(&total_num_iters_lock);
