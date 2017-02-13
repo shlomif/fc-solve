@@ -1021,16 +1021,14 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
 
 static inline fcs_tests_order_t tests_order_dup(fcs_tests_order_t *const orig)
 {
-    fcs_tests_order_t ret;
+    const_SLOT(num_groups, orig);
+    fcs_tests_order_t ret = (fcs_tests_order_t){.num_groups = num_groups,
+        .groups = memdup(
+            orig->groups, sizeof(orig->groups[0]) *
+                              ((num_groups & (~(TESTS_ORDER_GROW_BY - 1))) +
+                                  TESTS_ORDER_GROW_BY))};
 
-    ret.num_groups = orig->num_groups;
-
-    ret.groups = memdup(
-        orig->groups, sizeof(orig->groups[0]) *
-                          ((ret.num_groups & (~(TESTS_ORDER_GROW_BY - 1))) +
-                              TESTS_ORDER_GROW_BY));
-
-    for (int i = 0; i < ret.num_groups; i++)
+    for (int i = 0; i < num_groups; i++)
     {
         ret.groups[i].order_group_tests =
             memdup(ret.groups[i].order_group_tests,
@@ -1083,11 +1081,13 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
 
 static inline void fc_solve_free_tests_order(fcs_tests_order_t *tests_order)
 {
-    for (size_t group_idx = 0; group_idx < tests_order->num_groups; group_idx++)
+    const_SLOT(groups, tests_order);
+    const_SLOT(num_groups, tests_order);
+    for (size_t group_idx = 0; group_idx < num_groups; group_idx++)
     {
-        free(tests_order->groups[group_idx].order_group_tests);
+        free(groups[group_idx].order_group_tests);
     }
-    free(tests_order->groups);
+    free(groups);
     tests_order->groups = NULL;
     tests_order->num_groups = 0;
 }

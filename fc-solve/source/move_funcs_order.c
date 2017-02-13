@@ -23,12 +23,10 @@
 #define SET_ERR(s)
 #endif
 
-int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
+int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
     const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
     int i;
-    int len;
-    fcs_bool_t is_group, is_start_group;
     fc_solve_free_tests_order(tests_order);
     tests_order->groups = SMALLOC(tests_order->groups, TESTS_ORDER_GROW_BY);
     tests_order->groups[tests_order->num_groups].num = 0;
@@ -40,9 +38,9 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
 
     tests_order->num_groups++;
 
-    len = strlen(string);
-    is_group = FALSE;
-    is_start_group = FALSE;
+    const_AUTO(len, strlen(string));
+    fcs_bool_t is_group = FALSE;
+    fcs_bool_t is_start_group = FALSE;
 
     for (i = 0; i < len; i++)
     {
