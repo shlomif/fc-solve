@@ -35,12 +35,6 @@
 #include <sys/epoll.h>
 #endif
 
-#include "fcs_user.h"
-#include "fcs_cl.h"
-#include "range_solvers_gen_ms_boards.h"
-#include "handle_parsing.h"
-#include "rinutils.h"
-#include "help_err.h"
 #include "range_solvers.h"
 
 static void print_help(void)

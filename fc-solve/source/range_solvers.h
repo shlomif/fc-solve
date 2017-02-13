@@ -11,6 +11,11 @@
  * range_solvers.h - common routines for the range solvers.
  */
 #pragma once
+#include "rinutils.h"
+#include "fcs_cl.h"
+#include "range_solvers_gen_ms_boards.h"
+#include "handle_parsing.h"
+#include "help_err.h"
 
 static inline fcs_bool_t range_solvers__solve(void *const instance,
     const long long board_num, fcs_int_limit_t *const total_num_iters_temp)
