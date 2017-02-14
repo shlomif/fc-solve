@@ -103,14 +103,12 @@ static inline void bin_init(binary_output_t *const bin,
 {
     if (bin->filename)
     {
-        FILE *in;
-
         bin->buffer = malloc(BINARY_OUTPUT_BUF_SIZE);
         bin->ptr = bin->buffer;
         bin->buffer_end = bin->buffer + BINARY_OUTPUT_BUF_SIZE;
 
-        in = fopen(bin->filename, "rb");
-        if (in == NULL)
+        FILE *const in = fopen(bin->filename, "rb");
+        if (!in)
         {
             bin->fh = fopen(bin->filename, "wb");
             if (!bin->fh)
