@@ -106,10 +106,12 @@ impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals<
 <h3 id="solve_all_games">Can Freecell Solver solve all the Freecell layouts?</h3>
 
 <p>
-First of all, a small percentage of the standard 8 columns+4 freecells
+First of all, despite popular belief, a small percentage of the standard
+8 columns+4 freecells
 Freecell layouts are
 <a href="http://www.staff.science.uu.nl/~bodla101/d.freecell/freecellhtml.html"><b>impossible</b>
-to solve</a>, and this is even more true with less than 4 freecells. What
+to solve</a>, and even more deals are impossible with fewer than 4 freecells
+available. What
 Freecell Solver will do in this case is traverse the entire game graph (given
 enough time and computer memory) and then report
 “I could not solve this game.”
@@ -118,8 +120,44 @@ enough time and computer memory) and then report
 <p>
 That put aside, some deals may be
 <a href="#unsolvable_solution">inaccurately reported as unsolvable</a> with
-the default heuristic. See the link for more information and for a solution.
+the default heuristic. See <a href="#unsolvable_solution">the link</a> for
+more information and for a solution.
 </p>
+
+<p>
+Part of the confusion may have stemmed from the phrasing in the Microsoft
+Freecell help file which read “It is believed (though not proven) that every
+[Freecell] game is winnable.” which referred only to the 32,000 built-in deals
+and proved to be false as well (because deal #11,982 turned out to be
+impossible).
+</p>
+
+<p>
+Some of the most famous impossible deals are:
+</p>
+
+<ol>
+
+<li>
+<p>
+Microsoft Deal #11,982.
+</p>
+</li>
+
+<li>
+<p>
+Recent versions of Microsoft Freecell contain two impossible deals numbered
+-1 and -2 as a joke.
+</p>
+</li>
+
+<li>
+<p>
+Theodore Pringle has constructed <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1472">a deal</a>
+which is impossible to win with 8 freecells or fewer.
+</p>
+</li>
+</ol>
 
 <h3 id="a_move_seems_wrong">I think I found a wrong move in the solution? What can I do?</h3>
 
