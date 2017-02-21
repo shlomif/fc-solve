@@ -60,7 +60,7 @@ typedef struct
     int limit;
     char name[FCS_MAX_FLARE_NAME_LEN];
 #ifdef FCS_WITH_MOVES
-    int next_move;
+    uint_fast32_t next_move_idx;
     fcs_moves_sequence_t moves_seq;
 #endif
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
@@ -775,7 +775,7 @@ static void recycle_instance(
         free(flare->moves_seq.moves);
         flare->moves_seq.moves = NULL;
         flare->moves_seq.num_moves = 0;
-        flare->next_move = 0;
+        flare->next_move_idx = 0;
     }
 #endif
 
@@ -879,7 +879,7 @@ static void trace_flare_solution(
 
     calc_moves_seq(&(instance->solution_moves), &(flare->moves_seq));
     instance_free_solution_moves(instance);
-    flare->next_move = 0;
+    flare->next_move_idx = 0;
 #endif
     flare->obj_stats.num_checked_states = instance->i__num_checked_states;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
@@ -1327,7 +1327,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         return 1;
     }
     fcs_flare_item_t *const flare = calc_moves_flare(user);
-    if (flare->next_move == flare->moves_seq.num_moves)
+    if (flare->next_move_idx == flare->moves_seq.num_moves)
     {
         return 1;
     }
@@ -1338,8 +1338,8 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 #endif
 
     fc_solve_apply_move(&(user->running_state.s), NULL,
-        user_move_to_internal_move(*user_move = flare->moves_seq
-                                                    .moves[flare->next_move++])
+        user_move_to_internal_move(
+                *user_move = flare->moves_seq.moves[flare->next_move_idx++])
             PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
                 PASS_STACKS(INSTANCE_STACKS_NUM));
 
@@ -1749,7 +1749,7 @@ int DLLEXPORT freecell_solver_user_get_moves_left(
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
     {
         const fcs_flare_item_t *const flare = calc_moves_flare(user);
-        return flare->moves_seq.num_moves - flare->next_move;
+        return flare->moves_seq.num_moves - flare->next_move_idx;
     }
     else
     {
