@@ -1623,8 +1623,8 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
 
     sfs_check_state_begin();
 
-    int num_total_cards_moved = 0;
-    int num_cards_moved;
+    fcs_bool_t cards_were_moved = FALSE;
+    uint_fast32_t num_cards_moved;
     do
     {
         num_cards_moved = 0;
@@ -1677,7 +1677,10 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
                 }
             }
         }
-        num_total_cards_moved += num_cards_moved;
+        if (num_cards_moved)
+        {
+            cards_were_moved = TRUE;
+        }
     } while (num_cards_moved);
 
 #define derived_states_list (&derived_states_list_struct)
@@ -1685,7 +1688,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
 #undef derived_states_list
 
     register fcs_collectible_state_t *ptr_next_state;
-    if (num_total_cards_moved)
+    if (cards_were_moved)
     {
         ptr_next_state = derived_states_list_struct.states[0].state_ptr;
 

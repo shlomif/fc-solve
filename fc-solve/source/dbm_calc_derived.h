@@ -211,7 +211,7 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
 #endif
 
 #define the_state (init_state_kv_ptr->s)
-    int num_cards_moved;
+    uint_fast32_t num_cards_moved;
     do
     {
         num_cards_moved = 0;
