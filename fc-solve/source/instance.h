@@ -767,7 +767,7 @@ struct fc_solve_instance_struct
     struct fc_solve_soft_thread_struct optimization_soft_thread;
 #endif
 #else
-    int num_hard_threads;
+    uint_fast32_t num_hard_threads;
     struct fc_solve_hard_thread_struct *hard_threads;
     /*
      * An iterator over the hard threads.

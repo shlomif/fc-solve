@@ -750,7 +750,8 @@ static inline void fc_solve_recycle_instance(
     }
 #endif
 #else
-    for (int ht_idx = 0; ht_idx < instance->num_hard_threads; ht_idx++)
+    for (uint_fast32_t ht_idx = 0; ht_idx < instance->num_hard_threads;
+         ht_idx++)
     {
         fc_solve_instance__recycle_hard_thread(
             &(instance->hard_threads[ht_idx]));

@@ -174,7 +174,8 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
             break;
         }
 #else
-    for (int ht_idx = 0; ht_idx <= instance->num_hard_threads; ht_idx++)
+    for (uint_fast32_t ht_idx = 0; ht_idx <= instance->num_hard_threads;
+         ht_idx++)
     {
         fc_solve_hard_thread_t *hard_thread;
         if (ht_idx < instance->num_hard_threads)
