@@ -14,16 +14,10 @@
 <jquery_ui_head_elements />
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
 <define-tag expanded_scripts>
-<script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve--expand-moves.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve-ui.js"></script>
 </define-tag>
 <define-tag production_scripts>
-<script type="text/javascript" src="$(ROOT)/js/web-fcs.min.js"></script>
 </define-tag>
 <if "$(PRODUCTION)" "<production_scripts />" "<expanded_scripts />" />
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
@@ -66,30 +60,37 @@ $(function() { $('.enable_js').addClass('ok'); })
 </div>
 
 <script type="text/javascript">
-$(function() { $( "#fc_solve_tabs" ).tabs({
-    beforeActivate: function( event, ui) {
-        var mynew = ui.newPanel;
-        var old = ui.oldPanel;
+requirejs.config({
+    baseUrl: '$(ROOT)/js',
+    });
+require(["$(ROOT)/js/web-fc-solve-ui.js"], function (web_fc_solve_ui) {
+    $(function() {
+        $( "#fc_solve_tabs" ).tabs({
+            beforeActivate: function( event, ui) {
+                var mynew = ui.newPanel;
+                var old = ui.oldPanel;
 
-        var common_old = old.find('.fcs_common');
-        var old_text = common_old.find('textarea').val();
+                var common_old = old.find('.fcs_common');
+                var old_text = common_old.find('textarea').val();
 
-        var common_html = common_old.html();
+                var common_html = common_old.html();
 
-        common_old.html('');
+                common_old.html('');
 
-        var common_new = mynew.find('.fcs_common');
+                var common_new = mynew.find('.fcs_common');
 
-        common_new.html(common_html);
-        common_new.find('textarea').val(old_text);
+                common_new.html(common_html);
+                common_new.find('textarea').val(old_text);
 
+                return;
+            }
+        });
         return;
-    },
-    }
-);
+    });
 
-restore_bookmark();
+    web_fc_solve_ui.set_up();
 
+    return;
 });
 </script>
 
@@ -105,14 +106,14 @@ restore_bookmark();
 <p class="first">
 <label for="deal_number">Enter an MS Freecell Deal:</label>
 <input type="text" id="deal_number" size="12" />
-<button id="populate_input" onclick="javascript:populate_input_with_numbered_deal()" title="Populate Input with a Windows Freecell Numbered Deal">Populate</button><br />
+<button id="populate_input" title="Populate Input with a Windows Freecell Numbered Deal">Populate</button><br />
 </p>
 
 <div class="fcs_common">
 
 <label for="stdin">Input:</label><br />
 <textarea class="emscripten" id="stdin" cols="30" rows="10"></textarea><br />
-<button id="run_do_solve" onclick="javascript:fc_solve_do_solve()">Solve!</button>
+<button id="run_do_solve">Solve!</button>
 <label for="preset">Solving method:</label>
 <select id="preset">
 <option value="obf" selected="selected">“One Big Family” (fast on average)</option>
@@ -137,16 +138,8 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 </div>
 
-<div class="disabled">
-
-<div class="emscripten">
-<input type="button" value="fullscreen" onclick="Module.requestFullScreen()" />
-</div>
-
-</div> ;;; end of .disabled
-
 <p>
-<button id="fcs_advanced_toggle" onclick="javascript:toggle_advanced()">Advanced ▼</button>
+<button id="fcs_advanced_toggle">Advanced ▼</button>
 </p>
 
 <div id="fcs_advanced" class="disabled">
@@ -177,9 +170,9 @@ print FreecellSolver::ExtractGames->new->calc_html;
 <textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
 
 <div class="controls">
-<input id="one_based" type="checkbox" title="1-based offset" checked="checked" onclick="javascript:on_toggle_one_based()">1-based</button><br />
+<input id="one_based" type="checkbox" title="1-based offset" checked="checked">1-based</button><br />
 <input id="unicode_suits" type="checkbox" title="Unicode suits" checked="checked">Unicode suits</button><br />
-<button id="clear_output" onclick="javascript:clear_output()" title="Clear the Output Box">Clear Output</button>
+<button id="clear_output" title="Clear the Output Box">Clear Output</button>
 </div>
 </div>
 <br />
@@ -195,7 +188,7 @@ auto-populate the form. This is also useful for reporting problems.
 </p>
 
 <div class="controls_wrapper">
-<button id="fc_solve_bookmark_button" onclick="javascript:on_bookmarking()">Bookmark</button>
+<button id="fc_solve_bookmark_button">Bookmark</button>
 
 <ul id="fcs_bookmark_wrapper" class="disabled">
 

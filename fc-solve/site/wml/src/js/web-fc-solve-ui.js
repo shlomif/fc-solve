@@ -1,4 +1,17 @@
 "use strict";
+
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module);
+}
+
+define(["web-fc-solve", "libfreecell-solver.min"], function (w, Module) {
+    // var Module = f.Module;
+    var FC_Solve = w.FC_Solve;
+    var FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
+    var FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
+    var FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
+    var deal_ms_fc_board = w.deal_ms_fc_board;
+
 var entityMap = {
     "&": "&amp;",
     "<": "&lt;",
@@ -24,7 +37,7 @@ function _increment_move_indices(move_s) {
     );
 }
 
-var _my_module = Module({});
+var _my_module = Module()({});
 FC_Solve_init_wrappers_with_module(_my_module);
 
 Class('FC_Solve_UI',
@@ -462,3 +475,16 @@ function toggle_expand_moves() {
     );
     return;
 }
+
+function set_up() {
+    restore_bookmark();
+    $("#populate_input").click(populate_input_with_numbered_deal);
+    $("#run_do_solve").click(fc_solve_do_solve);
+    $("#fcs_advanced_toggle").click(toggle_advanced);
+    $("#one_based").click(on_toggle_one_based);
+    $("#clear_output").click(clear_output);
+    $("#fc_solve_bookmark_button").click(on_bookmarking);
+}
+
+    return { set_up: set_up };
+});
