@@ -2,7 +2,9 @@
 if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
-define([], function () {
+define(["web-fc-solve--expand-moves"], function (expand) {
+    var fc_solve_expand_move = expand.fc_solve_expand_move;
+
 var fc_solve__hll_ms_rand__get_singleton;
 var fc_solve__hll_ms_rand__init;
 var fc_solve__hll_ms_rand__mod_rand;
@@ -496,7 +498,92 @@ class FC_Solve {
             return freecell_solver_user_get_num_stacks(that.obj);
         }
 }
+/*
+ * Microsoft C Run-time-Library-compatible Random Number Generator
+ * Copyright by Shlomi Fish, 2011.
+ * Released under the MIT/X11 License
+ * ( http://en.wikipedia.org/wiki/MIT_License ).
+ * */
+class MSRand {
+    constructor(args) {
+        var that = this;
+        that.gamenumber = args.gamenumber;
+        that.rander = fc_solve__hll_ms_rand__get_singleton();
+        fc_solve__hll_ms_rand__init(that.rander, "" + that.gamenumber);
+        return;
+    }
+    max_rand(mymax) {
+        return fc_solve__hll_ms_rand__mod_rand(this.rander, mymax);
+    }
+    shuffle(deck) {
+        if (deck.length) {
+            var i = deck.length;
+            while (--i) {
+                var j = this.max_rand(i+1);
+                var tmp = deck[i];
+                deck[i] = deck[j];
+                deck[j] = tmp;
+            }
+        }
+        return deck;
+    }
+}
+/*
+ * Microsoft Windows Freecell / Freecell Pro boards generation.
+ *
+ * See:
+ *
+ * - http://rosettacode.org/wiki/Deal_cards_for_FreeCell
+ *
+ * - http://www.solitairelaboratory.com/mshuffle.txt
+ *
+ * Under MIT/X11 Licence.
+ *
+ * */
+
+function deal_ms_fc_board(seed) {
+    var randomizer = new MSRand({ gamenumber: seed });
+    var num_cols = 8;
+
+    var _perl_range = function(start, end) {
+        var ret = [];
+
+        for (var i = start; i <= end; i++) {
+            ret.push(i);
+        }
+
+        return ret;
+    };
+
+    var columns = _perl_range(0, num_cols-1).map(function () { return []; });
+    var deck = _perl_range(0, 4*13-1);
+
+    randomizer.shuffle(deck);
+
+    deck = deck.reverse()
+
+    for (var i = 0; i < 52; i++) {
+        columns[i % num_cols].push(deck[i]);
+    }
+
+    var render_card = function (card) {
+        var suit = (card % 4);
+        var rank = Math.floor(card / 4);
+
+        return "A23456789TJQK".charAt(rank) + "CDHS".charAt(suit);
+    }
+
+    var render_column = function(col) {
+        return ": " + col.map(render_card).join(" ") + "\n";
+    }
+
+    return columns.map(render_column).join("");
+}
+
     return { FC_Solve: FC_Solve,
-        FC_Solve_init_wrappers_with_module: FC_Solve_init_wrappers_with_module
+        FC_Solve_init_wrappers_with_module: FC_Solve_init_wrappers_with_module,
+        FCS_STATE_SUSPEND_PROCESS: FCS_STATE_SUSPEND_PROCESS,
+        FCS_STATE_WAS_SOLVED: FCS_STATE_WAS_SOLVED,
+        deal_ms_fc_board: deal_ms_fc_board
     };
 });

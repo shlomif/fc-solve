@@ -88,9 +88,10 @@ $(RESULT_NODE_JS_EXE): llvm_and_files
 PRE_JS = $(SRC_DIR)/scripts/pre.js
 POST_JS = $(SRC_DIR)/scripts/post.js
 $(RESULT_JS_LIB): llvm_and_files
-	emcc $(EMCC_CFLAGS) --pre-js $(PRE_JS) --post-js $(POST_JS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
-	# cat $(SRC_DIR)/scripts/pre.js $@ $(SRC_DIR)/scripts/post.js > temp.$@
-	# mv -f temp.$@ $@
+	# emcc $(EMCC_CFLAGS) --pre-js $(PRE_JS) --post-js $(POST_JS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	cat $(SRC_DIR)/scripts/pre.js $@ $(SRC_DIR)/scripts/post.js > temp.$@
+	mv -f temp.$@ $@
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_HTML) $(RESULT_NODE_JS_EXE)

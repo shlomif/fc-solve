@@ -11,7 +11,4 @@ var test_valid = require('web-fc-solve-tests--fcs-validate');
 test_valid.test_fcs_validate();
 // define = requirejs.define;
 var test_code = require('web-fc-solve-tests');
-console.log("Applej", {lamba: "Manjan"});
-console.log(test_code);
-console.log("AppleBigmacj");
 test_code.test_js_fc_solve_class();

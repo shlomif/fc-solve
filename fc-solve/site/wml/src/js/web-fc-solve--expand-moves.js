@@ -1,5 +1,12 @@
 "use strict";
 
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module);
+}
+
+// console.log("pinkpie", define);
+define([], function () {
+
 function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str, initial_move, initial_dest_state_str) {
 
     var matched = initial_move.str.match(/^Move ([0-9]+) cards from stack ([0-9]+) to stack ([0-9]+)$/);
@@ -241,3 +248,5 @@ function fc_solve_expand_move (num_stacks, num_freecells, initial_src_state_str,
 
     return ret_array;
 }
+    return { fc_solve_expand_move: fc_solve_expand_move };
+});

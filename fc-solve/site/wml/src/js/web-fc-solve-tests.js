@@ -4,13 +4,12 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-// console.log("pinkpie", define);
 define(["web-fc-solve", "libfreecell-solver.min"], function (w, Module) {
     // var Module = f.Module;
-    console.log("luna","celest");
     var FC_Solve = w.FC_Solve;
     var FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
-    console.log("cheesesand");
+    var FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
+    var FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
     var ms_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
 "5H QH 3C AC 3H 4H QD\n" +
 "QC 9S 6H 9H 3S KS 3D\n" +
@@ -9997,8 +9996,10 @@ var solution_for_deal_24__expanded_moves = ("-=-=-=-=-=-=-=-=-=-=-=-\n" +
 
 function test_js_fc_solve_class()
 {
-    var _my_mod = Module({});
+    // var _my_mod = Module({});
+    var _my_mod = Module()();
     FC_Solve_init_wrappers_with_module(_my_mod);
+    var deal_ms_fc_board = w.deal_ms_fc_board;
 
     QUnit.module("FC_Solve.Algorithmic");
 
