@@ -9997,7 +9997,7 @@ var solution_for_deal_24__expanded_moves = ("-=-=-=-=-=-=-=-=-=-=-=-\n" +
 function test_js_fc_solve_class()
 {
     // var _my_mod = Module({});
-    var _my_mod = Module()();
+    var _my_mod = Module()({});
     FC_Solve_init_wrappers_with_module(_my_mod);
     var deal_ms_fc_board = w.deal_ms_fc_board;
 
