@@ -8,12 +8,7 @@
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
 <jquery_ui_head_elements />
 <script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve--expand-moves.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/fcs-validate.js"></script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve-tests--fcs-validate.js"></script>
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>
@@ -22,10 +17,8 @@
 requirejs.config({
     baseUrl: '$(ROOT)/js',
     });
-// require(["$(ROOT)/js/libfreecell-solver.min", "$(ROOT)/js/web-fc-solve.js", "$(ROOT)/js/web-fc-solve-tests.js"], function (Module, fcs, t) {
- require(["$(ROOT)/js/web-fc-solve-tests.js"], function (t) {
-    // var FC_Solve = fcs.FC_Solve;
-    // var FC_Solve_init_wrappers_with_module = fcs.FC_Solve_init_wrappers_with_module;
+require(["$(ROOT)/js/web-fc-solve-tests.js"], function (t) {
+ //require(["$(ROOT)/js/web-fc-solve-tests.js"], function (t) {
     var test_js_fc_solve_class = t.test_js_fc_solve_class;
   \$(document).ready(function () {
       try {
