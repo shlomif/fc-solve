@@ -144,9 +144,9 @@ static inline void fcs_offloading_queue__insert(
 /* Implement the standard in-memory queue as a linked list. */
 #else
 
+const size_t NUM_ITEMS_PER_PAGE = (128 * 1024);
 typedef struct
 {
-    size_t num_items_per_page;
     long page_index, queue_id;
     size_t write_to_idx;
     size_t read_from_idx;
@@ -161,15 +161,13 @@ static inline void fcs_offloading_queue_page__recycle(
 }
 
 static inline void fcs_offloading_queue_page__init(
-    fcs_offloading_queue_page_t *const page, const size_t num_items_per_page,
-    const long page_index, const long queue_id)
+    fcs_offloading_queue_page_t *const page, const long page_index,
+    const long queue_id)
 {
-    fcs_offloading_queue_page_t new_page = {
-        .num_items_per_page = num_items_per_page,
-        .page_index = page_index,
+    fcs_offloading_queue_page_t new_page = {.page_index = page_index,
         .queue_id = queue_id,
         .data =
-            malloc(sizeof(fcs_offloading_queue_item_t) * num_items_per_page)};
+            malloc(sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE)};
     *page = new_page;
     fcs_offloading_queue_page__recycle(page);
 
@@ -201,7 +199,7 @@ static inline void fcs_offloading_queue_page__extract(
 static inline fcs_bool_t fcs_offloading_queue_page__can_insert(
     const fcs_offloading_queue_page_t *const page)
 {
-    return (page->write_to_idx < page->num_items_per_page);
+    return (page->write_to_idx < NUM_ITEMS_PER_PAGE);
 }
 
 static inline void fcs_offloading_queue_page__insert(
@@ -245,15 +243,15 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
         page, page_filename, offload_dir_path);
 
     FILE *const f = fopen(page_filename, "rb");
-    fread(page->data, sizeof(fcs_offloading_queue_item_t),
-        page->num_items_per_page, f);
+    fread(
+        page->data, sizeof(fcs_offloading_queue_item_t), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
 
     /* We need to set this limit because it's a read-only page that we
      * retrieve from the disk and otherwise ->can_extract() will return
      * false for most items.
      * */
-    page->write_to_idx = page->num_items_per_page;
+    page->write_to_idx = NUM_ITEMS_PER_PAGE;
 
     unlink(page_filename);
 }
@@ -267,14 +265,13 @@ static inline void fcs_offloading_queue_page__offload(
         page, page_filename, offload_dir_path);
 
     FILE *const f = fopen(page_filename, "wb");
-    fwrite(page->data, sizeof(fcs_offloading_queue_item_t),
-        page->num_items_per_page, f);
+    fwrite(
+        page->data, sizeof(fcs_offloading_queue_item_t), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
 }
 
 typedef struct
 {
-    int num_items_per_page;
     const char *offload_dir_path;
     fcs_queue_stats_t stats;
     long id;
@@ -287,20 +284,16 @@ typedef struct
     fcs_offloading_queue_page_t pages[2];
 } fcs_offloading_queue_t;
 
-const size_t NUM_ITEMS_PER_PAGE = (128 * 1024);
 static inline void fcs_offloading_queue__init(
     fcs_offloading_queue_t *const queue, const char *const offload_dir_path,
     const long id)
 {
-    queue->num_items_per_page = NUM_ITEMS_PER_PAGE;
     queue->offload_dir_path = offload_dir_path;
     fcs_queue_stats_init(&queue->stats);
     queue->id = id;
 
-    fcs_offloading_queue_page__init(
-        &(queue->pages[0]), NUM_ITEMS_PER_PAGE, 0, queue->id);
-    fcs_offloading_queue_page__init(
-        &(queue->pages[1]), NUM_ITEMS_PER_PAGE, 0, queue->id);
+    fcs_offloading_queue_page__init(&(queue->pages[0]), 0, queue->id);
+    fcs_offloading_queue_page__init(&(queue->pages[1]), 0, queue->id);
 
     queue->page_idx_to_read_from = queue->page_idx_to_write_to = 0;
     queue->page_idx_for_backup = 1;
