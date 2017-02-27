@@ -611,9 +611,11 @@ static inline void fc_solve_release_tests_list(
         {
             fcs_tests_list_t *const lists =
                 arr->by_depth_units[unit_idx].tests.lists;
-            const int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
+            const_AUTO(
+                num_lists, arr->by_depth_units[unit_idx].tests.num_lists);
 
-            for (int i = 0; i < num_lists; i++)
+            for (typeof(arr->by_depth_units[unit_idx].tests.num_lists) i = 0;
+                 i < num_lists; i++)
             {
                 free(lists[i].tests);
             }

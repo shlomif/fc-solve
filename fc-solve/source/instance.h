@@ -436,7 +436,7 @@ typedef struct
 
 typedef struct
 {
-    int num_lists;
+    uint_fast32_t num_lists;
     fcs_tests_list_t *lists;
 } fcs_tests_list_of_lists;
 
