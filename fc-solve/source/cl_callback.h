@@ -593,8 +593,7 @@ static inline int fc_solve_main__main(int argc, char *argv[])
 
         if (display_context.output_filename)
         {
-            output_fh = fopen(display_context.output_filename, "wt");
-            if (!output_fh)
+            if (!(output_fh = fopen(display_context.output_filename, "wt")))
             {
                 fprintf(stderr, "Could not open output file '%s' for writing!",
                     display_context.output_filename);
@@ -612,7 +611,6 @@ static inline int fc_solve_main__main(int argc, char *argv[])
         if (display_context.output_filename)
         {
             fclose(output_fh);
-            output_fh = NULL;
         }
     }
     break;

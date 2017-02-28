@@ -74,18 +74,13 @@ static void set_tests_order(
 int main(int argc, char *argv[])
 {
     /* char buffer[2048]; */
-    int board_num;
-    int start_board, end_board;
-    FILE *output_fh;
     fcs_int_limit_t iters_limit = 100000;
     int max_var_depth_to_check = 100;
 #ifdef FCS_WITH_ERROR_STRS
     char *error_string;
 #endif
     const char *scan1_to = NULL, *scan2_to = NULL;
-
     char *output_filename = NULL;
-    fcs_state_string_t state_string;
 
     int arg = 1, start_from_arg = -1, end_args = -1;
 
@@ -93,8 +88,8 @@ int main(int argc, char *argv[])
     {
         help_err("Not Enough Arguments!\n");
     }
-    start_board = atoi(argv[arg++]);
-    end_board = atoi(argv[arg++]);
+    const_AUTO(start_board, atoi(argv[arg++]));
+    const_AUTO(end_board, atoi(argv[arg++]));
 
     for (; arg < argc; arg++)
     {
@@ -185,8 +180,7 @@ int main(int argc, char *argv[])
     result_t *const results =
         SMALLOC(results, (size_t)(end_board - start_board + 1));
 
-    output_fh = fopen(output_filename, "wt");
-
+    FILE *const output_fh = fopen(output_filename, "wt");
     for (int min_depth_for_scan2 = 0;
          min_depth_for_scan2 < max_var_depth_to_check; min_depth_for_scan2++)
     {
@@ -204,9 +198,11 @@ int main(int argc, char *argv[])
         set_tests_order(instance, min_depth_for_scan2, scan2_to);
 
         result_t *curr_result;
+        int board_num;
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)
         {
+            fcs_state_string_t state_string;
             get_board(board_num, state_string);
 
             freecell_solver_user_limit_iterations_long(instance, iters_limit);
