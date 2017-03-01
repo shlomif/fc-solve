@@ -280,7 +280,8 @@ typedef struct
      * always point to the two "pages" below, but they can be swapped and
      * page_idx_for_backup may be NULL.
      */
-    int page_idx_to_write_to, page_idx_for_backup, page_idx_to_read_from;
+    int_fast32_t page_idx_to_write_to, page_idx_for_backup,
+        page_idx_to_read_from;
     fcs_offloading_queue_page_t pages[2];
 } fcs_offloading_queue_t;
 

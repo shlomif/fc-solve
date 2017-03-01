@@ -30,10 +30,10 @@ static inline void build_decoding_table(void)
         decoding_table[(unsigned char)encoding_table[i]] = i;
 }
 
-static void base64_encode(const unsigned char *data, size_t input_length,
+static void base64_encode(const unsigned char *data, const size_t input_length,
     char *encoded_data, /* Should have enough space, we got rid of
    malloc()s to avoid memory fragmentation. */
-    size_t *output_length)
+    size_t *const output_length)
 {
 
     *output_length = 4 * ((input_length + 2) / 3);
@@ -60,8 +60,8 @@ static void base64_encode(const unsigned char *data, size_t input_length,
     return;
 }
 
-static int base64_decode(const char *data, size_t input_length,
-    unsigned char *decoded_data, size_t *output_length)
+static int base64_decode(const char *data, const size_t input_length,
+    unsigned char *decoded_data, size_t *const output_length)
 {
 
     if (input_length % 4 != 0)

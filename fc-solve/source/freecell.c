@@ -403,12 +403,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
         }
         FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)
         {
-            const int ds = pos_idx_to_check[0];
+            const int_fast32_t ds = pos_idx_to_check[0];
             if (ds == -1)
             {
                 continue;
             }
-            const int dc = pos_idx_to_check[1];
+            const int_fast32_t dc = pos_idx_to_check[1];
 
             const fcs_const_cards_column_t dest_col =
                 fcs_state_get_col(state, ds);
@@ -715,13 +715,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
-                const int ds = pos_idx_to_check[0];
+                const int_fast32_t ds = pos_idx_to_check[0];
 
                 if ((ds < 0) || (ds == stack_idx))
                 {
                     continue;
                 }
-                const int dc = pos_idx_to_check[1];
+                const int_fast32_t dc = pos_idx_to_check[1];
                 const fcs_const_cards_column_t dest_col =
                     fcs_state_get_col(state, ds);
                 const int dest_num_cards = fcs_col_len(dest_col) - dc - 1;
@@ -1025,12 +1025,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
             const fcs_card_t card = fcs_col_get_card(col, c);
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
-                const int ds = pos_idx_to_check[0];
+                const int_fast32_t ds = pos_idx_to_check[0];
                 if ((ds == -1) || (ds == stack_idx))
                 {
                     continue;
                 }
-                const int dc = pos_idx_to_check[1];
+                const int_fast32_t dc = pos_idx_to_check[1];
 
                 fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
                 int dest_cards_num = fcs_col_len(dest_col);
