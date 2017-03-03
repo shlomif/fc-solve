@@ -214,7 +214,7 @@ sub run_tests
     if ($prepare_dist_args)
     {
         run_cmd(
-            "$blurb_base : prepare_Dist",
+            "$blurb_base : prepare dist",
             {
                 cmd => [
                     $^X,
