@@ -13,7 +13,6 @@
 </script>
 <jquery_ui_head_elements />
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
 <define-tag expanded_scripts>
 </define-tag>
@@ -273,7 +272,9 @@ controls based on jQuery.
 <p>
 <a href="http://code.google.com/p/joose-js/">Joose</a> - an object oriented
 programming system for JavaScript (inspired by
-<a href="http://moose.iinteractive.com/">Perl's Moose</a>).
+<a href="http://moose.iinteractive.com/">Perl's Moose</a>). <b>Note:</b>
+it is no longer used here due to not being compatible with Node.js and
+non-browser environments.
 </p>
 </li>
 

@@ -1110,6 +1110,7 @@ transpose-freecell-board
 ==== In: dest/js-fc-solve/text/index.html
 
 Der
+js
 
 ==== In: dest/pysol/index.html
 

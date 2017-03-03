@@ -5,7 +5,6 @@
 <page_extra_head_elements>
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
 <jquery_ui_head_elements />
-<script type="text/javascript" src="$(ROOT)/js/joose.mini.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/ms-rand.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/gen-ms-fc-board.js"></script>
