@@ -151,7 +151,7 @@ $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 	$(MULTI_YUI) -o $@ $<
 
 
-WEB_FCS_UI_JS_SOURCES = $(D)/js/ms-rand.js src/js/gen-ms-fc-board.js src/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve.js src/js/web-fc-solve-ui.js
+WEB_FCS_UI_JS_SOURCES = $(D)/js/ms-rand.js src/js/gen-ms-fc-board.js src/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
 
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
@@ -166,9 +166,11 @@ FCS_VALID_DEST = $(D)/js/fcs-validate.js
 
 TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts src/js/typings/index.d.ts
 
-all: $(TYPINGS) $(D)/js/web-fc-solve.js $(D)/js/ms-rand.js
+DEST_BABEL_JSES = $(D)/js/ms-rand.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
 
-$(D)/js/ms-rand.js $(D)/js/web-fc-solve.js: $(D)/%.js: lib/babel/%.js
+all: $(TYPINGS) $(DEST_BABEL_JSES)
+
+$(DEST_BABEL_JSES): $(D)/%.js: lib/babel/%.js
 	babel -o $@ $<
 
 $(TYPINGS):
