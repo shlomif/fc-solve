@@ -22,14 +22,17 @@ require(["$(ROOT)/js/web-fc-solve-tests.js"], function (t) {
     var test_js_fc_solve_class = t.test_js_fc_solve_class;
   \$(document).ready(function () {
       try {
-          test_js_fc_solve_class();
+          test_js_fc_solve_class(function () {
           var was_called = false;
           require(["web-fc-solve-tests--fcs-validate"], function (fcs_valid) {
             fcs_valid.test_fcs_validate();
             was_called = true;
             // Hide passed tests by default.
             $('#qunit-tests').addClass('hidepass');
+            return;
           });
+          return;
+            });
       }
       catch (err) {
       throw err;

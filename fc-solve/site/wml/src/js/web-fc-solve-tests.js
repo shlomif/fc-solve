@@ -9994,11 +9994,14 @@ var solution_for_deal_24__expanded_moves = ("-=-=-=-=-=-=-=-=-=-=-=-\n" +
 "" ) ;
 
 
-function test_js_fc_solve_class()
+function test_js_fc_solve_class(my_callback)
 {
     // var _my_mod = Module({});
-    var _my_mod = Module()({});
-    FC_Solve_init_wrappers_with_module(_my_mod);
+    var _my_mod;
+    _my_mod = Module()({onRuntimeInitialized : function () {
+    // console.log("groot\n");
+    //_my_mod['_main'] = function () {
+    FC_Solve_init_wrappers_with_module(_my_mod || this);
     var deal_ms_fc_board = w.deal_ms_fc_board;
 
     QUnit.module("FC_Solve.Algorithmic");
@@ -10250,7 +10253,10 @@ function test_js_fc_solve_class()
             "deal_ms_fc_board for 6e9");
     });
 
+    my_callback();
     return;
+}});
+return;
 }
 return {test_js_fc_solve_class: test_js_fc_solve_class};
 });
