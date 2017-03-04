@@ -4,6 +4,11 @@ use strict;
 use warnings;
 
 use IO::All qw/io/;
+use Parallel::ForkManager;
+
+my $MAX_PROCESSES = 4;
+
+my $pm = Parallel::ForkManager->new($MAX_PROCESSES);
 
 my $MAX_ITERS = 10000;
 
@@ -20,9 +25,13 @@ foreach my $seed (1 .. 1000)
     my $out_fn = qq#$OUTPUT_PATH/lens-$BASE--seed=$seed.txt#;
     if (! -e $out_fn)
     {
-        my $cmd = qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn" | grep Unsolved#;
-        print "$cmd\n";
-        system($cmd);
+        if (not my $pid = $pm->start)
+        {
+            my $cmd = qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn" | grep Unsolved#;
+            print "$cmd\n";
+            system($cmd);
+            $pm->finish;
+        }
     }
 }
 
