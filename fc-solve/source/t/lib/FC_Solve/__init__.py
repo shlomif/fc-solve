@@ -1,6 +1,4 @@
 from TAP.Simple import diag, is_ok, ok
-from ctypes import byref, c_char_p, c_int, c_long, c_void_p, \
-        create_string_buffer, CDLL
 from cffi import FFI
 import platform
 
@@ -46,20 +44,15 @@ int fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
     void * api_instance);
 int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
     void * api_instance, int depth_idx);
-
+long freecell_solver_user_get_num_times_long(void * user);
+long freecell_solver_user_get_num_states_in_collection_long(void * user);
+void freecell_solver_user_limit_iterations_long(
+    void * api_instance, const long max_iters);
+int freecell_solver_user_solve_board(void *api_instance,
+const char *const state_as_string);
+int freecell_solver_user_resume_solution(void * user);
+void freecell_solver_user_recycle(void *api_instance);
 ''')
-        self.fcs = CDLL("../libfreecell-solver." +
-                        ("dll" if (platform.system() == 'Windows') else "so"))
-
-        self.user_alloc = self.fcs.freecell_solver_user_alloc
-        self.user_alloc.restype = c_void_p
-        self.u_get_num_times = self.fcs.freecell_solver_user_get_num_times_long
-        self.u_get_num_times.restype = c_long
-        prefix = 'freecell_solver_user'
-        func = 'get_num_states_in_collection_long'
-        self.get_num_states = self.fcs[prefix + '_' + func]
-        self.get_num_states.restype = c_long
-        self.user = c_void_p(self.user_alloc())
         self.lib_user = self.lib.freecell_solver_user_alloc()
 
     # TEST:$input_cmd_line=0;
@@ -92,38 +85,6 @@ int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
         is_ok(last_arg[0], len(cmd_line_args),
               name + " - assign weights - processed two arguments")
 
-    def input_cmd_line(self, name, cmd_line_args):
-
-        last_arg = c_int()
-        error_string = c_char_p()
-        known_params = c_char_p(None)
-        opened_files_dir = create_string_buffer(32001)
-        diag("opened_files_dir = <%s>" % opened_files_dir)
-
-        cmd_line_args_tuple = tuple(cmd_line_args)
-
-        prefix = 'freecell_solver_user_cmd_line'
-        func = 'parse_args_with_file_nesting_count'
-
-        self.fcs[prefix + '_' + func](
-            self.user,  # instance
-            len(cmd_line_args),    # argc
-            ((c_char_p * len(cmd_line_args))(
-                *tuple(bytes(s, 'UTF-8') for s in cmd_line_args_tuple)
-            )),  # argv
-            0,   # start_arg
-            byref(known_params),  # known_params
-            None,   # callback
-            None,   # callback_context
-            byref(error_string),  # error_string
-            byref(last_arg),    # last_arg
-            c_int(-1),  # file_nesting_count
-            opened_files_dir
-        )
-
-        is_ok(last_arg.value, len(cmd_line_args),
-              name + " - assign weights - processed two arguments")
-
     # TEST:$set_befs=0;
     def _set_befs_weights(self, name, weights_s):
         # TEST:$set_befs=$set_befs+$input_cmd_line;
@@ -131,7 +92,6 @@ int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
 
     def __destroy__(self):
         self.ffi.freecell_solver_user_free(self.lib_user)
-        self.fcs.freecell_solver_user_free(self.user)
 
     # TEST:$test_befs=0;
     def test_befs_weights(self, name, string, weights):
@@ -258,27 +218,29 @@ int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
             name + " - max_depth_of_depth_idx_is for" + str(depth_idx) + ".")
 
     def solve_board(self, board):
-        return self.fcs.freecell_solver_user_solve_board(
-                self.user,
-                (c_char_p)(bytes(board, 'UTF-8'))
+        return self.lib.freecell_solver_user_solve_board(
+                self.lib_user,
+                bytes(board, 'UTF-8')
         )
 
     def resume_solution(self):
-        return self.fcs.freecell_solver_user_resume_solution(self.user)
+        return self.lib.freecell_solver_user_resume_solution(self.lib_user)
 
     def limit_iterations(self, max_iters):
-        self.fcs.freecell_solver_user_limit_iterations_long(
-            self.user,
-            (c_long)(max_iters)
+        self.lib.freecell_solver_user_limit_iterations_long(
+            self.lib_user,
+            max_iters
         )
         return
 
     def get_num_times(self):
-        return self.u_get_num_times(self.user)
+        return self.lib.freecell_solver_user_get_num_times_long(
+                self.lib_user)
 
     def get_num_states_in_col(self):
-        return self.get_num_states(self.user)
+        return self.lib.freecell_solver_user_get_num_states_in_collection_long(
+                self.lib_user)
 
     def recycle(self):
-        self.fcs.freecell_solver_user_recycle(self.user)
+        self.lib.freecell_solver_user_recycle(self.lib_user)
         return
