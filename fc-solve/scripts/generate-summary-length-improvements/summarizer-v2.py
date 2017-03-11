@@ -28,7 +28,7 @@ my_max = 0
 
 
 print( "Seed\tN\tSum\tMax" )
-for seed in xrange(1, 747):
+for seed in xrange(1, 4227):
     with open(basedir + "/fcs-summary-len-seed/lens-theme1--seed=%d.txt" % seed) as fh:
         i = 0
         for l in fh:
