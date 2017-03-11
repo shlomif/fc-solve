@@ -42,6 +42,11 @@ int fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(void * i,
 int item_idx);
 int fc_solve_user_INTERNAL_compile_all_flares_plans(void * i,
 char **error_string);
+int fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+    void * api_instance);
+int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+    void * api_instance, int depth_idx);
+
 ''')
         self.fcs = CDLL("../libfreecell-solver." +
                         ("dll" if (platform.system() == 'Windows') else "so"))
@@ -237,15 +242,15 @@ char **error_string);
            name + " - right type")
 
     def num_by_depth_tests_order_is(self, name, want_num):
-        got_num = self.fcs.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
-                self.user
+        got_num = self.lib.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+                self.lib_user
         )
 
         ok(want_num == got_num, name + " - by_depth_tests_order.")
 
     def by_depth_max_depth_of_depth_idx_is(self, name, depth_idx, want_num):
-        got_num = self.fcs.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-            self.user,
+        got_num = self.lib.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+            self.lib_user,
             depth_idx
         )
 
