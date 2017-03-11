@@ -65,6 +65,11 @@ requirejs.config({
 require(["$(ROOT)/js/web-fc-solve-ui.js"], function (web_fc_solve_ui) {
     $(function() {
         $( "#fc_solve_tabs" ).tabs({
+            activate: function () {
+                web_fc_solve_ui.set_up_handlers();
+
+                return;
+            },
             beforeActivate: function( event, ui) {
                 var mynew = ui.newPanel;
                 var old = ui.oldPanel;

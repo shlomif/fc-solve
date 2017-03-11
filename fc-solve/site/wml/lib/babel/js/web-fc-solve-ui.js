@@ -473,8 +473,7 @@ function toggle_expand_moves() {
     return;
 }
 
-function set_up() {
-    restore_bookmark();
+function set_up_handlers() {
     $("#populate_input").click(populate_input_with_numbered_deal);
     $("#run_do_solve").click(fc_solve_do_solve);
     $("#fcs_advanced_toggle").click(toggle_advanced);
@@ -483,5 +482,10 @@ function set_up() {
     $("#fc_solve_bookmark_button").click(on_bookmarking);
 }
 
-    return { set_up: set_up };
+function set_up() {
+    restore_bookmark();
+    set_up_handlers();
+}
+
+    return { set_up: set_up, set_up_handlers: set_up_handlers, };
 });
