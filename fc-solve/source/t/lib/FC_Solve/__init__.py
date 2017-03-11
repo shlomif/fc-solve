@@ -16,6 +16,7 @@ class FC_Solve:
             ("dll" if (platform.system() == 'Windows') else "so"))
         self.ffi.cdef('''
 void * freecell_solver_user_alloc();
+void freecell_solver_user_free(void * instance);
 double fc_solve_user_INTERNAL_get_befs_weight(void * user, int idx);
 typedef char * freecell_solver_str_t;
 typedef int (*freecell_solver_user_cmd_line_known_commands_callback_t)(
@@ -29,7 +30,18 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     void *callback_context, char **error_string,
     int *last_arg, int file_nesting_count,
     freecell_solver_str_t opened_files_dir);
-
+int freecell_solver_user_set_flares_plan(void * instance, char * s);
+int freecell_solver_user_INTERNAL_compile_all_flares_plans(void * instance,
+char * * s);
+int fc_solve_user_INTERNAL_get_flares_plan_num_items(void * i);
+char * fc_solve_user_INTERNAL_get_flares_plan_item_type(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_compile_all_flares_plans(void * i,
+char **error_string);
 ''')
         self.fcs = CDLL("../libfreecell-solver." +
                         ("dll" if (platform.system() == 'Windows') else "so"))
@@ -83,10 +95,6 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         opened_files_dir = create_string_buffer(32001)
         diag("opened_files_dir = <%s>" % opened_files_dir)
 
-        if False:  # (platform.system() == 'Windows'):
-            import sys
-            sys.exit(1)
-
         cmd_line_args_tuple = tuple(cmd_line_args)
 
         prefix = 'freecell_solver_user_cmd_line'
@@ -117,6 +125,7 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         self.lib__input_cmd_line(name, ["-asw", weights_s])
 
     def __destroy__(self):
+        self.ffi.freecell_solver_user_free(self.lib_user)
         self.fcs.freecell_solver_user_free(self.user)
 
     # TEST:$test_befs=0;
@@ -142,22 +151,22 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
     # TEST:$compile_flares_plan_ok=0;
     def compile_flares_plan_ok(self, name, flares_plan_string):
-        error_string = c_char_p()
+        error_string = self.ffi.new('char * *')
 
-        myplan = None
+        myplan = self.ffi.NULL
         if flares_plan_string:
             myplan = bytes(flares_plan_string, 'UTF-8')
-        ret_code = self.fcs.freecell_solver_user_set_flares_plan(
-            self.user,
-            c_char_p(myplan)
+        ret_code = self.lib.freecell_solver_user_set_flares_plan(
+            self.lib_user,
+            myplan
         )
 
         # TEST:$compile_flares_plan_ok++;
         ok(ret_code == 0,
            name + " - set_string returned success")
-        ret_code = self.fcs.fc_solve_user_INTERNAL_compile_all_flares_plans(
-            self.user,
-            byref(error_string)
+        ret_code = self.lib.fc_solve_user_INTERNAL_compile_all_flares_plans(
+            self.lib_user,
+            error_string
         )
 
         # TEST:$compile_flares_plan_ok++;
@@ -165,22 +174,21 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
            name + " - returned success.")
 
         # TEST:$compile_flares_plan_ok++;
-        ok(error_string.value is None,
+        ok(error_string[0] == self.ffi.NULL,
            name + " - error_string returned NULL.")
 
     def flare_plan_num_items_is(self, name, want_num_items):
         got_num_items = \
-            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_num_items(
-                self.user
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_num_items(
+                self.lib_user
             )
 
         ok(want_num_items == got_num_items, name + " - got_num_items.")
 
     def _get_plan_type(self, item_idx):
-        f = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
-        f.restype = c_char_p
-
-        return f(self.user, item_idx)
+        return self.ffi.string(
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_type(
+                self.lib_user, item_idx))
 
     # TEST:$flare_plan_item_is_run_indef=0;
     def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
@@ -189,8 +197,8 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
            name + " - right type")
 
         got_flare_idx = \
-            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
-                self.user,
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+                self.lib_user,
                 item_idx
             )
 
@@ -205,8 +213,8 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
            name + " - right type")
 
         got_flare_idx = \
-            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
-                self.user,
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+                self.lib_user,
                 item_idx
             )
 
@@ -214,8 +222,8 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         ok(got_flare_idx == flare_idx, name + " - matching flare_idx")
 
         got_iters_count = \
-            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
-                self.user,
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
+                self.lib_user,
                 item_idx
             )
 

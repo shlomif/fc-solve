@@ -48,7 +48,7 @@ def test_two_runs():
 
     name = "Two Run's"
     # TEST*$input_cmd_line
-    fcs.input_cmd_line(
+    fcs.lib__input_cmd_line(
         "Input Flares",
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star"])
@@ -76,7 +76,7 @@ def test_with_checkpoints():
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.input_cmd_line(
+    fcs.lib__input_cmd_line(
         "Input Flares",
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star", "-nf",
@@ -117,7 +117,7 @@ def test_with_checkpoints_and_explicit_checkpoint():
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.input_cmd_line(
+    fcs.lib__input_cmd_line(
         "Input Flares",
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star", "-nf",
@@ -158,7 +158,7 @@ def test_with_run_indef():
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.input_cmd_line(
+    fcs.lib__input_cmd_line(
         "Input Flares",
         ["--flare-name", "dfs", "-nf",
          "--flare-name", "befs", "--method", "a-star", "-nf",
