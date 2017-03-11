@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
 
 from TAP.Simple import ok, plan
-from ctypes import c_char_p, c_longlong, CDLL
+from cffi import FFI
 import platform
 
-board_gen_lib = CDLL("../libfcs_gen_ms_freecell_boards." +
-                     ("dll" if (platform.system() == 'Windows') else "so"))
+ffi = FFI()
+lib = ffi.dlopen("../libfcs_gen_ms_freecell_boards." +
+                 ("dll" if (platform.system() == 'Windows') else "so"))
 
-fc_solve_get_board = board_gen_lib.fc_solve_get_board
-fc_solve_get_board_l = board_gen_lib.fc_solve_get_board_l
+ffi.cdef('''
+    void fc_solve_get_board(long gamenumber, char * ret);
+    void fc_solve_get_board_l(long long gamenumber, char * ret);
+''')
 
 
 def test_board(idx, want_string):
-    buf = (b"x" * 500)
-    fc_solve_get_board(idx, c_char_p(buf))
-    ok(buf[0:buf.find(b"\0")] == bytes(want_string, 'UTF-8'),
+    buf = ffi.new('char [500]')
+    lib.fc_solve_get_board(idx, buf)
+    ok(ffi.string(buf) == bytes(want_string, 'UTF-8'),
        ("board %d was generated fine" % (idx)))
 
 
 def test_board_l(idx, want_string):
-    buf = (b"x" * 500)
-    fc_solve_get_board_l(c_longlong(idx), c_char_p(buf))
-    ok(buf[0:buf.find(b"\0")] == bytes(want_string, 'UTF-8'),
+    buf = ffi.new('char [500]')
+    lib.fc_solve_get_board_l(idx, buf)
+    ok(ffi.string(buf) == bytes(want_string, 'UTF-8'),
        ("long board %d was generated fine" % (idx)))
 
 
