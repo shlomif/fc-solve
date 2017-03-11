@@ -1,6 +1,7 @@
 from TAP.Simple import diag, is_ok, ok
-from ctypes import byref, c_char_p, c_double, c_int, c_long, c_void_p, \
+from ctypes import byref, c_char_p, c_int, c_long, c_void_p, \
         create_string_buffer, CDLL
+from cffi import FFI
 import platform
 
 
@@ -9,6 +10,27 @@ class FC_Solve:
     NUM_BEFS_WEIGHTS = 5
 
     def __init__(self):
+        self.ffi = FFI()
+        self.lib = self.ffi.dlopen(
+            "../libfreecell-solver." +
+            ("dll" if (platform.system() == 'Windows') else "so"))
+        self.ffi.cdef('''
+void * freecell_solver_user_alloc();
+double fc_solve_user_INTERNAL_get_befs_weight(void * user, int idx);
+typedef char * freecell_solver_str_t;
+typedef int (*freecell_solver_user_cmd_line_known_commands_callback_t)(
+    void *instance, int argc, freecell_solver_str_t argv[], int arg_index,
+    int *num_to_skip, int *ret, void *context);
+int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+    void *instance,
+    int argc, freecell_solver_str_t argv[], int start_arg,
+    freecell_solver_str_t *known_parameters,
+    freecell_solver_user_cmd_line_known_commands_callback_t callback,
+    void *callback_context, char **error_string,
+    int *last_arg, int file_nesting_count,
+    freecell_solver_str_t opened_files_dir);
+
+''')
         self.fcs = CDLL("../libfreecell-solver." +
                         ("dll" if (platform.system() == 'Windows') else "so"))
 
@@ -21,13 +43,38 @@ class FC_Solve:
         self.get_num_states = self.fcs[prefix + '_' + func]
         self.get_num_states.restype = c_long
         self.user = c_void_p(self.user_alloc())
-        diag("[Gnoom] self.user = <%s>" % self.user)
-
-        self.get_befs_weight = self.fcs.fc_solve_user_INTERNAL_get_befs_weight
-
-        self.get_befs_weight.restype = c_double
+        self.lib_user = self.lib.freecell_solver_user_alloc()
 
     # TEST:$input_cmd_line=0;
+    def lib__input_cmd_line(self, name, cmd_line_args):
+
+        last_arg = self.ffi.new('int *')
+        error_string = self.ffi.new('char * *')
+        known_params = self.ffi.new('char * *')
+        opened_files_dir = self.ffi.new('char [32001]')
+
+        prefix = 'freecell_solver_user_cmd_line'
+        func = 'parse_args_with_file_nesting_count'
+
+        getattr(self.lib, prefix + '_' + func)(
+            self.lib_user,  # instance
+            len(cmd_line_args),    # argc
+            [self.ffi.new('char[]', bytes(s, 'UTF-8')) \
+             for s in cmd_line_args],  # argv
+            0,   # start_arg
+            known_params,  # known_params
+            self.ffi.NULL,   # callback
+            self.ffi.NULL,   # callback_context
+            error_string,  # error_string
+            last_arg,   # last_arg
+            -1,  # file_nesting_count
+            opened_files_dir
+        )
+
+        # TEST:$input_cmd_line++;
+        is_ok(last_arg[0], len(cmd_line_args),
+              name + " - assign weights - processed two arguments")
+
     def input_cmd_line(self, name, cmd_line_args):
 
         last_arg = c_int()
@@ -61,14 +108,13 @@ class FC_Solve:
             opened_files_dir
         )
 
-        # TEST:$input_cmd_line++;
         is_ok(last_arg.value, len(cmd_line_args),
               name + " - assign weights - processed two arguments")
 
     # TEST:$set_befs=0;
     def _set_befs_weights(self, name, weights_s):
         # TEST:$set_befs=$set_befs+$input_cmd_line;
-        self.input_cmd_line(name, ["-asw", weights_s])
+        self.lib__input_cmd_line(name, ["-asw", weights_s])
 
     def __destroy__(self):
         self.fcs.freecell_solver_user_free(self.user)
@@ -86,7 +132,8 @@ class FC_Solve:
                 top = top + 1e-6
                 bottom = bottom - 1e-6
 
-            have = self.get_befs_weight(self.user, idx)
+            have = self.lib.fc_solve_user_INTERNAL_get_befs_weight(
+                    self.lib_user, idx)
             # TEST:$test_befs=$test_befs+$num_befs_weights;
             if (not ok((bottom <= have) and (have <= top),
                        name + " - Testing Weight No. " + str(idx))):
