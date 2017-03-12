@@ -123,7 +123,7 @@ def test_num_states_in_collection_after_unsolved():
     fcs = FC_Solve()
 
     # TEST*$input_cmd_line
-    fcs.lib__input_cmd_line("bakers_game", ['-g', 'bakers_game'])
+    fcs.input_cmd_line("bakers_game", ['-g', 'bakers_game'])
 
     # MS-Freeceel board No. 10
     fcs.solve_board(
@@ -157,7 +157,7 @@ def test_resume_solution_with_flares():
     hard_limit = 100000
     limit = step
     # TEST*$input_cmd_line
-    fcs.lib__input_cmd_line("video-editing", ['-l', 'video-editing'])
+    fcs.input_cmd_line("video-editing", ['-l', 'video-editing'])
     fcs.limit_iterations(limit)
 
     # MS deal No. 124

@@ -53,10 +53,10 @@ const char *const state_as_string);
 int freecell_solver_user_resume_solution(void * user);
 void freecell_solver_user_recycle(void *api_instance);
 ''')
-        self.lib_user = self.lib.freecell_solver_user_alloc()
+        self.user = self.lib.freecell_solver_user_alloc()
 
     # TEST:$input_cmd_line=0;
-    def lib__input_cmd_line(self, name, cmd_line_args):
+    def input_cmd_line(self, name, cmd_line_args):
 
         last_arg = self.ffi.new('int *')
         error_string = self.ffi.new('char * *')
@@ -67,7 +67,7 @@ void freecell_solver_user_recycle(void *api_instance);
         func = 'parse_args_with_file_nesting_count'
 
         getattr(self.lib, prefix + '_' + func)(
-            self.lib_user,  # instance
+            self.user,  # instance
             len(cmd_line_args),    # argc
             [self.ffi.new('char[]', bytes(s, 'UTF-8')) \
              for s in cmd_line_args],  # argv
@@ -88,10 +88,10 @@ void freecell_solver_user_recycle(void *api_instance);
     # TEST:$set_befs=0;
     def _set_befs_weights(self, name, weights_s):
         # TEST:$set_befs=$set_befs+$input_cmd_line;
-        self.lib__input_cmd_line(name, ["-asw", weights_s])
+        self.input_cmd_line(name, ["-asw", weights_s])
 
     def __destroy__(self):
-        self.ffi.freecell_solver_user_free(self.lib_user)
+        self.ffi.freecell_solver_user_free(self.user)
 
     # TEST:$test_befs=0;
     def test_befs_weights(self, name, string, weights):
@@ -107,7 +107,7 @@ void freecell_solver_user_recycle(void *api_instance);
                 bottom = bottom - 1e-6
 
             have = self.lib.fc_solve_user_INTERNAL_get_befs_weight(
-                    self.lib_user, idx)
+                    self.user, idx)
             # TEST:$test_befs=$test_befs+$num_befs_weights;
             if (not ok((bottom <= have) and (have <= top),
                        name + " - Testing Weight No. " + str(idx))):
@@ -122,7 +122,7 @@ void freecell_solver_user_recycle(void *api_instance);
         if flares_plan_string:
             myplan = bytes(flares_plan_string, 'UTF-8')
         ret_code = self.lib.freecell_solver_user_set_flares_plan(
-            self.lib_user,
+            self.user,
             myplan
         )
 
@@ -130,7 +130,7 @@ void freecell_solver_user_recycle(void *api_instance);
         ok(ret_code == 0,
            name + " - set_string returned success")
         ret_code = self.lib.fc_solve_user_INTERNAL_compile_all_flares_plans(
-            self.lib_user,
+            self.user,
             error_string
         )
 
@@ -145,7 +145,7 @@ void freecell_solver_user_recycle(void *api_instance);
     def flare_plan_num_items_is(self, name, want_num_items):
         got_num_items = \
             self.lib.fc_solve_user_INTERNAL_get_flares_plan_num_items(
-                self.lib_user
+                self.user
             )
 
         ok(want_num_items == got_num_items, name + " - got_num_items.")
@@ -153,7 +153,7 @@ void freecell_solver_user_recycle(void *api_instance);
     def _get_plan_type(self, item_idx):
         return self.ffi.string(
             self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_type(
-                self.lib_user, item_idx))
+                self.user, item_idx))
 
     # TEST:$flare_plan_item_is_run_indef=0;
     def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
@@ -163,7 +163,7 @@ void freecell_solver_user_recycle(void *api_instance);
 
         got_flare_idx = \
             self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
-                self.lib_user,
+                self.user,
                 item_idx
             )
 
@@ -179,7 +179,7 @@ void freecell_solver_user_recycle(void *api_instance);
 
         got_flare_idx = \
             self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
-                self.lib_user,
+                self.user,
                 item_idx
             )
 
@@ -188,7 +188,7 @@ void freecell_solver_user_recycle(void *api_instance);
 
         got_iters_count = \
             self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
-                self.lib_user,
+                self.user,
                 item_idx
             )
 
@@ -203,14 +203,14 @@ void freecell_solver_user_recycle(void *api_instance);
 
     def num_by_depth_tests_order_is(self, name, want_num):
         got_num = self.lib.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
-                self.lib_user
+                self.user
         )
 
         ok(want_num == got_num, name + " - by_depth_tests_order.")
 
     def by_depth_max_depth_of_depth_idx_is(self, name, depth_idx, want_num):
         got_num = self.lib.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-            self.lib_user,
+            self.user,
             depth_idx
         )
 
@@ -219,28 +219,28 @@ void freecell_solver_user_recycle(void *api_instance);
 
     def solve_board(self, board):
         return self.lib.freecell_solver_user_solve_board(
-                self.lib_user,
+                self.user,
                 bytes(board, 'UTF-8')
         )
 
     def resume_solution(self):
-        return self.lib.freecell_solver_user_resume_solution(self.lib_user)
+        return self.lib.freecell_solver_user_resume_solution(self.user)
 
     def limit_iterations(self, max_iters):
         self.lib.freecell_solver_user_limit_iterations_long(
-            self.lib_user,
+            self.user,
             max_iters
         )
         return
 
     def get_num_times(self):
         return self.lib.freecell_solver_user_get_num_times_long(
-                self.lib_user)
+                self.user)
 
     def get_num_states_in_col(self):
         return self.lib.freecell_solver_user_get_num_states_in_collection_long(
-                self.lib_user)
+                self.user)
 
     def recycle(self):
-        self.lib.freecell_solver_user_recycle(self.lib_user)
+        self.lib.freecell_solver_user_recycle(self.user)
         return
