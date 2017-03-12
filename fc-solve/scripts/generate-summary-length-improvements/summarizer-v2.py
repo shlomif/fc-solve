@@ -7,7 +7,7 @@ home = expanduser("~")
 
 basedir = home + "/Backup/Arcs"
 
-state = {'start_nums' : [], 'mysum': 0, 'my_num_improved': 0,}
+state = {'start_nums' : [], 'mysum': 0, 'my_num_improved': 0, 'my_max': 0, }
 
 regex = re.compile(r'(?<=Length: )(-?[0-9]+)')
 
@@ -22,7 +22,6 @@ NUM = 32000
 assert len(state['start_nums']) == NUM
 
 state['run_nums'] = [x for x in state['start_nums']]
-my_max = 0
 
 
 print( "Seed\tN\tSum\tMax" )
@@ -39,9 +38,9 @@ for seed in xrange(1, 4840):
                         state['my_num_improved'] += 1
                     state['mysum'] += delta
                     init_delta = orig - new
-                    if init_delta > my_max:
-                        my_max = init_delta
+                    if init_delta > state['my_max']:
+                        state['my_max'] = init_delta
                     state['run_nums'][i] = new
             i += 1
-    print( "%d\t%d\t%d\t%d" % (seed, state['my_num_improved'], state['mysum'], my_max))
+    print( "%d\t%d\t%d\t%d" % (seed, state['my_num_improved'], state['mysum'], state['my_max']))
 
