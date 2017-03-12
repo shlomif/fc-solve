@@ -7,7 +7,7 @@ home = expanduser("~")
 
 basedir = home + "/Backup/Arcs"
 
-start_nums = []
+state = {'start_nums' : []}
 
 regex = re.compile(r'(?<=Length: )(-?[0-9]+)')
 
@@ -16,19 +16,19 @@ def extract(l):
 
 with open(basedir + "/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt") as fh:
     for l in fh:
-        start_nums.append(extract(l))
+        state['start_nums'].append(extract(l))
 
 NUM = 32000
-assert len(start_nums) == NUM
+assert len(state['start_nums']) == NUM
 
-run_nums = [x for x in start_nums]
+run_nums = [x for x in state['start_nums']]
 mysum = 0
 my_num_improved = 0
 my_max = 0
 
 
 print( "Seed\tN\tSum\tMax" )
-for seed in xrange(1, 4227):
+for seed in xrange(1, 4840):
     with open(basedir + "/fcs-summary-len-seed/lens-theme1--seed=%d.txt" % seed) as fh:
         i = 0
         for l in fh:
@@ -36,10 +36,11 @@ for seed in xrange(1, 4227):
             if new >= 0:
                 delta = run_nums[i] - new
                 if delta > 0:
-                    if run_nums[i] == start_nums[i]:
+                    orig = state['start_nums'][i]
+                    if run_nums[i] == orig:
                         my_num_improved += 1
                     mysum += delta
-                    init_delta = start_nums[i] - new
+                    init_delta = orig - new
                     if init_delta > my_max:
                         my_max = init_delta
                     run_nums[i] = new
