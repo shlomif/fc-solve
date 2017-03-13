@@ -14,14 +14,14 @@ basedir = home + "/Backup/Arcs"
 
 STATE_FN = basedir + "/FC_SOLVE_SUMMARIZE_RESULTS--state.json"
 
-regex = re.compile(r'(?<=Length: )(-?[0-9]+)')
+extract_len_re = re.compile(r'(?<=Length: )(-?[0-9]+)')
 
 
 def extract(l):
-    return int(regex.search(l).group(1))
+    return int(extract_len_re.search(l).group(1))
 
 
-NUM = 32000
+NUM_DEALS = 32000
 
 
 def calc_init_state():
@@ -30,9 +30,9 @@ def calc_init_state():
     with open(basedir + "/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt") as fh:
         for l in fh:
             state['start_nums'].append(extract(l))
-    assert len(state['start_nums']) == NUM
+    assert len(state['start_nums']) == NUM_DEALS
 
-    state['run_nums'] = [x for x in state['start_nums']]
+    state['run_nums'] = list(state['start_nums'])
 
     return state
 
@@ -40,7 +40,6 @@ def calc_init_state():
 def write_state(state):
     with open(STATE_FN, 'w') as fh:
         fh.write(json.dumps(state))
-    return
 
 
 if not isfile(STATE_FN):
@@ -50,7 +49,7 @@ state = None
 with open(STATE_FN) as fh:
     state = json.loads(fh.read())
 
-MAX_SEED = 5302
+MAX_SEED = 5737
 print("Seed\tN\tSum\tMax")
 sys.stdout.write(state['output'])
 for seed in xrange(state['reached_seed'], MAX_SEED + 1):
