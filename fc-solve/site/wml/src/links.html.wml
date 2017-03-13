@@ -90,12 +90,6 @@ contains the old Subversion repository.
 </p>
 </li>
 
-<li>
-<p>
-<a href="http://bitbucket.org/shlomif/fc-solve/src">Source Code Browser</a> -
-a browser for the source code.
-</p>
-</li>
 </ul>
 
 <h2 id="technologies">Technologies</h2>
@@ -381,7 +375,7 @@ We have competition. But there's nothing wrong with competition. ;-)
 <a href="https://bitbucket.org/shlomif/patsolve-shlomif">patsolve</a> -
 an ANSI C program that automatically solves games of Freecell and Seahaven
 Towers. The open source code is available - originally under the GPL,
-but later converted into the MIT/X11 licence, in hope of future integration
+but later converted into the MIT/Expat licence, in hope of future integration
 with Freecell Solver. Its author, Tom Holroyd, and I discussed Freecell
 solving for quite a few E-mail transactions, before I established the
 mailing-list.
@@ -656,6 +650,35 @@ quite amusing.
 <p>
 <a href="http://suso.suso.org/xulu/Thoughts/Thanks_Freecell_solver!">SusoSight's
 Thought of the Moment Regarding Freecell Solver</a>
+</p>
+</li>
+</ul>
+
+<h2 id="videos">Videos: Screencasts, demos, etc.</h2>
+
+<ul>
+
+<li>
+<p>
+<a href="https://www.youtube.com/watch?v=hYdqNuX4WJc">“PySol FC
+Solving a Freecell Deal Using Freecell Solver's qualified-seed-improved
+preset.”</a> - a screencast.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://www.youtube.com/watch?v=EHQ2bWGeYMg">“Screencast:
+PySolFC solving Freecell using Freecell Solver”</a> - an older screencast
+using a preset that usually generates longer solutions.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://www.youtube.com/watch?v=oGgnyysFNTQ">“iPhone
+Freecell Bot”</a> - video of a computer solving Freecell by interacting with
+an external iPhone device.
 </p>
 </li>
 </ul>
