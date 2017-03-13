@@ -322,7 +322,7 @@ equivalence easily (using <a href="http://en.cppreference.com/w/c/string/byte/me
 Use an efficient data structure to hold the states in the collection such as
 a <a href="https://en.wikipedia.org/wiki/Hash_table">hash table</a> or a
 <a href="https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree">self-balancing
-binary search tree<a/>. There are libraries implementing them for most
+binary search tree</a>. There are libraries implementing them for most
 popular languages.
 </p>
 </li>

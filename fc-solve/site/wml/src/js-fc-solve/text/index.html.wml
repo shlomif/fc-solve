@@ -174,8 +174,9 @@ print FreecellSolver::ExtractGames->new->calc_html;
 <textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
 
 <div class="controls">
-<input id="one_based" type="checkbox" title="1-based offset" checked="checked">1-based</button><br />
-<input id="unicode_suits" type="checkbox" title="Unicode suits" checked="checked">Unicode suits</button><br />
+
+<input id="one_based" type="checkbox" title="1-based offset" checked="checked" /><label for="one_based">1-based</label><br />
+<input id="unicode_suits" type="checkbox" title="Unicode suits" checked="checked" /><label for="unicode_suits">Unicode suits</label>
 <button id="clear_output" title="Clear the Output Box">Clear Output</button>
 </div>
 </div>
@@ -202,7 +203,7 @@ auto-populate the form. This is also useful for reporting problems.
 </li>
 
 <li>
-<a id="fcs_bm_results_a" href="">Bookmark Link</a>
+<a id="fcs_bm_results_a" href="#fcs_bookmark_wrapper">Bookmark Link</a>
 </li>
 
 </ul>
