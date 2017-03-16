@@ -688,10 +688,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
             /* Check if there is a sequence here. */
             for (seq_end = c; seq_end < col_len_minus_1; seq_end++)
             {
-                const fcs_card_t this_card = fcs_col_get_card(col, seq_end + 1);
-                const fcs_card_t prev_card = fcs_col_get_card(col, seq_end);
-
-                if (!fcs_is_parent_card(this_card, prev_card))
+                if (!fcs_is_parent_card(fcs_col_get_card(col, seq_end + 1),
+                        fcs_col_get_card(col, seq_end)))
                 {
                     break;
                 }
@@ -803,10 +801,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
             /* Check if there is a sequence here. */
             for (seq_end = c; seq_end < cards_num - 1; seq_end++)
             {
-                fcs_card_t this_card = fcs_col_get_card(col, seq_end + 1);
-                fcs_card_t prev_card = fcs_col_get_card(col, seq_end);
-
-                if (!fcs_is_parent_card(this_card, prev_card))
+                if (!fcs_is_parent_card(fcs_col_get_card(col, seq_end + 1),
+                        fcs_col_get_card(col, seq_end)))
                 {
                     break;
                 }
