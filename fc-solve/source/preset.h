@@ -35,10 +35,10 @@ typedef struct
 } fcs_preset_t;
 
 extern fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
-    fc_solve_instance_t *const instance, const fcs_preset_t *const preset_ptr);
+    fc_solve_instance_t *, const fcs_preset_t *);
 
 extern fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
-    const char *const name, const fcs_preset_t **const preset_ptr);
+    const char *, const fcs_preset_t **);
 
 static inline fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name(
     fc_solve_instance_t *const instance, const char *const name)
