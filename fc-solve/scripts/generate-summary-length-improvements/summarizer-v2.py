@@ -49,7 +49,7 @@ state = None
 with open(STATE_FN) as fh:
     state = json.loads(fh.read())
 
-MAX_SEED = 5737
+MAX_SEED = 7633
 print("Seed\tN\tSum\tMax")
 sys.stdout.write(state['output'])
 for seed in xrange(state['reached_seed'], MAX_SEED + 1):
