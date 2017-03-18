@@ -576,27 +576,21 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         {
             col = fcs_state_get_col(the_state, stack_idx);
             cards_num = fcs_col_len(col);
-            if (cards_num > cards_num_min_limit)
+            if (cards_num <= cards_num_min_limit)
             {
-                const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
-                /* Let's move it */
-                {
-                    BEGIN_NEW_STATE()
-
-                    {
-                        fcs_cards_column_t new_src_col;
-
-                        new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                        fcs_col_pop_top(new_src_col);
-
-                        fcs_put_card_in_freecell(new_state, empty_fc_idx, card);
-                    }
-                    COMMIT_NEW_STATE(COL2MOVE(stack_idx),
-                        FREECELL2MOVE(empty_fc_idx),
-                        FROM_COL_IS_REVERSIBLE_MOVE(), card)
-                }
+                continue;
             }
+            const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
+            /* Let's move it */
+            BEGIN_NEW_STATE()
+
+            fcs_cards_column_t new_src_col =
+                fcs_state_get_col(new_state, stack_idx);
+            fcs_col_pop_top(new_src_col);
+            fcs_put_card_in_freecell(new_state, empty_fc_idx, card);
+
+            COMMIT_NEW_STATE(COL2MOVE(stack_idx), FREECELL2MOVE(empty_fc_idx),
+                FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
     }
 #undef fc_idx
