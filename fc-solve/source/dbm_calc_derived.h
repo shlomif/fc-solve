@@ -413,29 +413,28 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
-        suit = fcs_card_suit(card);
-        if (fcs_card_is_valid(card))
-        {
-            for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
-            {
-                if (fcs_foundation_value(the_state, deck * 4 + suit) ==
-                    fcs_card_rank(card) - 1)
-                {
-                    BEGIN_NEW_STATE()
-
-                    /* We can put it there */
-                    fcs_empty_freecell(new_state, fc_idx);
-
-                    fcs_increment_foundation(new_state, deck * 4 + suit);
-
-                    COMMIT_NEW_STATE(
-                        FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), FALSE, card)
-                }
-            }
-        }
-        else
+        if (fcs_card_is_empty(card))
         {
             empty_fc_idx = fc_idx;
+            continue;
+        }
+        suit = fcs_card_suit(card);
+        for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+        {
+            if (fcs_foundation_value(the_state, deck * 4 + suit) !=
+                fcs_card_rank(card) - 1)
+            {
+                continue;
+            }
+            BEGIN_NEW_STATE()
+
+            /* We can put it there */
+            fcs_empty_freecell(new_state, fc_idx);
+            fcs_increment_foundation(new_state, deck * 4 + suit);
+
+            COMMIT_NEW_STATE(
+                FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), FALSE, card)
+            break;
         }
     }
 
