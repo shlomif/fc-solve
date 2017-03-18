@@ -194,6 +194,7 @@ static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
 #define FROM_COL_IS_REVERSIBLE_MOVE()                                          \
     ((cards_num <= 1) ? TRUE : fcs_is_parent_card(card,                        \
                                    fcs_col_get_card(col, cards_num - 2)))
+#define COUNT_NON_REV(is_reversible) ((is_reversible) ? 1 : 2)
 
 /* Returns the number of amortized irreversible moves performed. */
 static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
@@ -227,7 +228,8 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
                     local_variant, &the_state, card);
                 if (dest_foundation >= 0)
                 {
-                    if (!FROM_COL_IS_REVERSIBLE_MOVE())
+                    const_AUTO(is_reversible, FROM_COL_IS_REVERSIBLE_MOVE());
+                    if (!is_reversible)
                     {
                         count_additional_irrev_moves++;
                     }
@@ -235,7 +237,7 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
                     num_cards_moved++;
                     fc_solve_add_to_irrev_moves_bitmask(
                         which_irreversible_moves_bitmask, card,
-                        ((!FROM_COL_IS_REVERSIBLE_MOVE()) ? 2 : 1));
+                        COUNT_NON_REV(is_reversible));
 
                     fcs_col_pop_top(col);
 
@@ -396,7 +398,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
 
                     COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx),
                         FOUND2MOVE(suit),
-                        (FROM_COL_IS_REVERSIBLE_MOVE() ? 1 : 2), card)
+                        COUNT_NON_REV(FROM_COL_IS_REVERSIBLE_MOVE()), card)
                 }
             }
         }
@@ -643,6 +645,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
 }
 
 #undef FROM_COL_IS_REVERSIBLE_MOVE
+#undef COUNT_NON_REV
 #undef the_state
 #undef new_state
 
