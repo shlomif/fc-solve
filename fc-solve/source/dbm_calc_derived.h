@@ -359,7 +359,6 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_derived_state_t *ptr_new_state;
     int stack_idx, cards_num, ds;
     fcs_cards_column_t col, dest_col;
-    fcs_card_t dest_card;
     int deck, suit;
     int empty_stack_idx = -1;
 
@@ -463,9 +462,9 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
 
                 if (fcs_col_len(dest_col) > 0)
                 {
-                    dest_card =
-                        fcs_col_get_card(dest_col, fcs_col_len(dest_col) - 1);
-                    if (fcs_is_parent_card(card, dest_card))
+                    if (fcs_is_parent_card(
+                            card, fcs_col_get_card(
+                                      dest_col, fcs_col_len(dest_col) - 1)))
                     {
                         /* Let's move it */
                         BEGIN_NEW_STATE()
@@ -502,9 +501,9 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
 
                 if (fcs_col_len(dest_col) > 0)
                 {
-                    dest_card =
-                        fcs_col_get_card(dest_col, fcs_col_len(dest_col) - 1);
-                    if (fcs_is_parent_card(card, dest_card))
+                    if (fcs_is_parent_card(
+                            card, fcs_col_get_card(
+                                      dest_col, fcs_col_len(dest_col) - 1)))
                     {
                         /* Let's move it */
                         BEGIN_NEW_STATE()
