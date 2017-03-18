@@ -466,17 +466,10 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
                         /* Let's move it */
                         BEGIN_NEW_STATE()
 
-                        {
-                            fcs_cards_column_t new_src_col;
-                            fcs_cards_column_t new_dest_col;
-
-                            new_src_col =
-                                fcs_state_get_col(new_state, stack_idx);
-                            new_dest_col = fcs_state_get_col(new_state, ds);
-
-                            fcs_col_pop_top(new_src_col);
-                            fcs_col_push_card(new_dest_col, card);
-                        }
+                        fcs_state_pop_col_top(&new_state, stack_idx);
+                        fcs_cards_column_t new_dest_col =
+                            fcs_state_get_col(new_state, ds);
+                        fcs_col_push_card(new_dest_col, card);
 
                         COMMIT_NEW_STATE(COL2MOVE(stack_idx), COL2MOVE(ds),
                             FROM_COL_IS_REVERSIBLE_MOVE(), card)
@@ -534,9 +527,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             /* Let's move it */
             BEGIN_NEW_STATE()
 
-            fcs_cards_column_t new_src_col =
-                fcs_state_get_col(new_state, stack_idx);
-            fcs_col_pop_top(new_src_col);
+            fcs_state_pop_col_top(&new_state, stack_idx);
             fcs_cards_column_t empty_stack_col =
                 fcs_state_get_col(new_state, empty_stack_idx);
             fcs_col_push_card(empty_stack_col, card);
@@ -581,9 +572,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             /* Let's move it */
             BEGIN_NEW_STATE()
 
-            fcs_cards_column_t new_src_col =
-                fcs_state_get_col(new_state, stack_idx);
-            fcs_col_pop_top(new_src_col);
+            fcs_state_pop_col_top(&new_state, stack_idx);
             fcs_put_card_in_freecell(new_state, empty_fc_idx, card);
 
             COMMIT_NEW_STATE(COL2MOVE(stack_idx), FREECELL2MOVE(empty_fc_idx),
