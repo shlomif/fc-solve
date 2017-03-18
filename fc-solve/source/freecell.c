@@ -694,12 +694,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     break;
                 }
             }
-            if (MOVE_FUNCS__should_not_empty_columns())
+            if (MOVE_FUNCS__should_not_empty_columns() && (c == 0))
             {
-                if (c == 0)
-                {
-                    continue;
-                }
+                continue;
             }
             const int col_num_cards = col_len_minus_1 - seq_end;
             /* Find a card which this card can be put on; */
@@ -792,14 +789,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     const int ds = find_empty_stack(raw_ptr_state_raw, 0, LOCAL_STACKS_NUM);
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
-        const int cards_num = fcs_col_len(col);
+        const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        const int col_len = fcs_col_len(col);
+        const int col_len_minus_1 = col_len - 1;
 
         int seq_end;
-        for (int c = 0; c < cards_num; c = seq_end + 1)
+        for (int c = 0; c < col_len; c = seq_end + 1)
         {
             /* Check if there is a sequence here. */
-            for (seq_end = c; seq_end < cards_num - 1; seq_end++)
+            for (seq_end = c; seq_end < col_len_minus_1; seq_end++)
             {
                 if (!fcs_is_parent_card(fcs_col_get_card(col, seq_end + 1),
                         fcs_col_get_card(col, seq_end)))
@@ -808,16 +806,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 }
             }
 
-            if ((!fcs_col_is_king(col, c)) && (IS_FILLED_BY_KINGS_ONLY()))
+            if (IS_FILLED_BY_KINGS_ONLY() && (!fcs_col_is_king(col, c)))
             {
                 continue;
             }
 
-            if (seq_end == cards_num - 1)
+            if (seq_end == col_len_minus_1)
             {
                 /* One stack is the destination stack, so we have one     *
                  * less stack in that case                                */
-                while ((max_sequence_len < cards_num - c) && (c > 0))
+                while ((max_sequence_len < col_len - c) && (c > 0))
                 {
                     c--;
                 }
@@ -833,13 +831,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 my_copy_stack(ds);
                 my_copy_stack(stack_idx);
 
-                fcs_move_sequence(ds, stack_idx, cards_num - c);
+                fcs_move_sequence(ds, stack_idx, col_len - c);
 
                 sfs_check_state_end();
             }
             else
             {
-                int num_cards_to_relocate = cards_num - seq_end - 1;
+                int num_cards_to_relocate = col_len_minus_1 - seq_end;
 
                 const int freecells_to_fill =
                     min(num_cards_to_relocate, num_vacant_freecells);
