@@ -493,36 +493,37 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
-        if (fcs_card_is_valid(card))
+        if (!fcs_card_is_valid(card))
         {
-            for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
+            continue;
+        }
+        for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
+        {
+            dest_col = fcs_state_get_col(the_state, ds);
+
+            if (fcs_col_len(dest_col) == 0)
             {
-                dest_col = fcs_state_get_col(the_state, ds);
-
-                if (fcs_col_len(dest_col) > 0)
-                {
-                    if (fcs_is_parent_card(
-                            card, fcs_col_get_card(
-                                      dest_col, fcs_col_len(dest_col) - 1)))
-                    {
-                        /* Let's move it */
-                        BEGIN_NEW_STATE()
-
-                        {
-                            fcs_cards_column_t new_dest_col;
-
-                            new_dest_col = fcs_state_get_col(new_state, ds);
-
-                            fcs_col_push_card(new_dest_col, card);
-
-                            fcs_empty_freecell(new_state, fc_idx);
-                        }
-
-                        COMMIT_NEW_STATE(
-                            FREECELL2MOVE(fc_idx), COL2MOVE(ds), TRUE, card)
-                    }
-                }
+                continue;
             }
+            if (!fcs_is_parent_card(card,
+                    fcs_col_get_card(dest_col, fcs_col_len(dest_col) - 1)))
+            {
+                continue;
+            }
+            /* Let's move it */
+            BEGIN_NEW_STATE()
+
+            {
+                fcs_cards_column_t new_dest_col;
+
+                new_dest_col = fcs_state_get_col(new_state, ds);
+
+                fcs_col_push_card(new_dest_col, card);
+
+                fcs_empty_freecell(new_state, fc_idx);
+            }
+
+            COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx), COL2MOVE(ds), TRUE, card)
         }
     }
 
