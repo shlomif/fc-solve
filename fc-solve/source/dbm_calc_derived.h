@@ -528,29 +528,24 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             /* Bug fix: if there's only one card in a column, there's no
              * point moving it to a new empty column.
              * */
-            if (cards_num > 1)
+            if (cards_num <= 1)
             {
-                const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
-                /* Let's move it */
-                {
-                    BEGIN_NEW_STATE()
-
-                    {
-                        fcs_cards_column_t new_src_col;
-
-                        new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                        fcs_col_pop_top(new_src_col);
-
-                        fcs_cards_column_t empty_stack_col =
-                            fcs_state_get_col(new_state, empty_stack_idx);
-                        fcs_col_push_card(empty_stack_col, card);
-                    }
-                    COMMIT_NEW_STATE(COL2MOVE(stack_idx),
-                        COL2MOVE(empty_stack_idx),
-                        FROM_COL_IS_REVERSIBLE_MOVE(), card)
-                }
+                continue;
             }
+
+            const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
+            /* Let's move it */
+            BEGIN_NEW_STATE()
+
+            fcs_cards_column_t new_src_col =
+                fcs_state_get_col(new_state, stack_idx);
+            fcs_col_pop_top(new_src_col);
+            fcs_cards_column_t empty_stack_col =
+                fcs_state_get_col(new_state, empty_stack_idx);
+            fcs_col_push_card(empty_stack_col, card);
+
+            COMMIT_NEW_STATE(COL2MOVE(stack_idx), COL2MOVE(empty_stack_idx),
+                FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
 
         /* Freecell card -> Empty Stack. */
