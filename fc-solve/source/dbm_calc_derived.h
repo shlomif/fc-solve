@@ -500,28 +500,18 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
             dest_col = fcs_state_get_col(the_state, ds);
-
-            if (fcs_col_len(dest_col) == 0)
-            {
-                continue;
-            }
-            if (!fcs_is_parent_card(card,
-                    fcs_col_get_card(dest_col, fcs_col_len(dest_col) - 1)))
+            const_AUTO(col_len, fcs_col_len(dest_col));
+            if ((col_len == 0) || (!fcs_is_parent_card(card,
+                                      fcs_col_get_card(dest_col, col_len - 1))))
             {
                 continue;
             }
             /* Let's move it */
             BEGIN_NEW_STATE()
 
-            {
-                fcs_cards_column_t new_dest_col;
-
-                new_dest_col = fcs_state_get_col(new_state, ds);
-
-                fcs_col_push_card(new_dest_col, card);
-
-                fcs_empty_freecell(new_state, fc_idx);
-            }
+            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
+            fcs_col_push_card(new_dest_col, card);
+            fcs_empty_freecell(new_state, fc_idx);
 
             COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx), COL2MOVE(ds), TRUE, card)
         }
