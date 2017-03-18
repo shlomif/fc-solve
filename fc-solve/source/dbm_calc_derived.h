@@ -557,20 +557,15 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
                 continue;
             }
 
-            {
-                BEGIN_NEW_STATE()
+            BEGIN_NEW_STATE()
 
-                {
-                    fcs_cards_column_t new_dest_col;
-                    new_dest_col =
-                        fcs_state_get_col(new_state, empty_stack_idx);
-                    fcs_col_push_card(new_dest_col, card);
-                    fcs_empty_freecell(new_state, fc_idx);
-                }
+            fcs_cards_column_t new_dest_col =
+                fcs_state_get_col(new_state, empty_stack_idx);
+            fcs_col_push_card(new_dest_col, card);
+            fcs_empty_freecell(new_state, fc_idx);
 
-                COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx),
-                    COL2MOVE(empty_stack_idx), TRUE, card);
-            }
+            COMMIT_NEW_STATE(
+                FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx), TRUE, card);
         }
     }
 
