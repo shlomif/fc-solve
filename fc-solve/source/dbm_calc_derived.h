@@ -444,38 +444,35 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     {
         col = fcs_state_get_col(the_state, stack_idx);
         cards_num = fcs_col_len(col);
-        if (cards_num > cards_num_min_limit)
+        if (cards_num <= cards_num_min_limit)
         {
-            const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
+            continue;
+        }
+        const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
 
-            for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
+        for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
+        {
+            if (ds == stack_idx)
             {
-                if (ds == stack_idx)
-                {
-                    continue;
-                }
-
-                dest_col = fcs_state_get_col(the_state, ds);
-
-                if (fcs_col_len(dest_col) > 0)
-                {
-                    if (fcs_is_parent_card(
-                            card, fcs_col_get_card(
-                                      dest_col, fcs_col_len(dest_col) - 1)))
-                    {
-                        /* Let's move it */
-                        BEGIN_NEW_STATE()
-
-                        fcs_state_pop_col_top(&new_state, stack_idx);
-                        fcs_cards_column_t new_dest_col =
-                            fcs_state_get_col(new_state, ds);
-                        fcs_col_push_card(new_dest_col, card);
-
-                        COMMIT_NEW_STATE(COL2MOVE(stack_idx), COL2MOVE(ds),
-                            FROM_COL_IS_REVERSIBLE_MOVE(), card)
-                    }
-                }
+                continue;
             }
+
+            dest_col = fcs_state_get_col(the_state, ds);
+            const_AUTO(col_len, fcs_col_len(dest_col));
+            if ((col_len == 0) || (!fcs_is_parent_card(card,
+                                      fcs_col_get_card(dest_col, col_len - 1))))
+            {
+                continue;
+            }
+            /* Let's move it */
+            BEGIN_NEW_STATE()
+
+            fcs_state_pop_col_top(&new_state, stack_idx);
+            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
+            fcs_col_push_card(new_dest_col, card);
+
+            COMMIT_NEW_STATE(COL2MOVE(stack_idx), COL2MOVE(ds),
+                FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
     }
 
