@@ -332,6 +332,15 @@ static inline int horne_prune__simple(
     return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
 }
 
+static inline fcs_bool_t card_cannot_be_placed(fcs_state_t *s,
+    const u_int16_t ds, const fcs_card_t card, const int sequences_are_built_by)
+{
+    const_AUTO(col, fcs_state_get_col(*s, ds));
+    const_AUTO(col_len, fcs_col_len(col));
+    return ((col_len == 0) ||
+            (!fcs_is_parent_card(card, fcs_col_get_card(col, col_len - 1))));
+}
+
 #define the_state (init_state_kv_ptr->s)
 static inline fcs_bool_t is_state_solved(
     const fcs_dbm_variant_type_t local_variant,
@@ -358,14 +367,12 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
 {
     fcs_derived_state_t *ptr_new_state;
     int stack_idx, cards_num, ds;
-    fcs_cards_column_t col, dest_col;
+    fcs_cards_column_t col;
     int deck, suit;
     int empty_stack_idx = -1;
 
-#ifndef FCS_FREECELL_ONLY
     /* needed by the macros. */
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-#endif
 
 #define new_state (ptr_new_state->state.s)
     if (is_state_solved(local_variant, init_state_kv_ptr))
@@ -452,15 +459,8 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
 
         for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
-            if (ds == stack_idx)
-            {
-                continue;
-            }
-
-            dest_col = fcs_state_get_col(the_state, ds);
-            const_AUTO(col_len, fcs_col_len(dest_col));
-            if ((col_len == 0) || (!fcs_is_parent_card(card,
-                                      fcs_col_get_card(dest_col, col_len - 1))))
+            if (ds == stack_idx || card_cannot_be_placed(&the_state, ds, card,
+                                       sequences_are_built_by))
             {
                 continue;
             }
@@ -486,10 +486,8 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         }
         for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
-            dest_col = fcs_state_get_col(the_state, ds);
-            const_AUTO(col_len, fcs_col_len(dest_col));
-            if ((col_len == 0) || (!fcs_is_parent_card(card,
-                                      fcs_col_get_card(dest_col, col_len - 1))))
+            if (card_cannot_be_placed(
+                    &the_state, ds, card, sequences_are_built_by))
             {
                 continue;
             }
