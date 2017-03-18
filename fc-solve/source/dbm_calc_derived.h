@@ -378,32 +378,30 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     {
         col = fcs_state_get_col(the_state, stack_idx);
         cards_num = fcs_col_len(col);
-        if (cards_num)
-        {
-            /* Get the top card in the stack */
-            const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
-            suit = fcs_card_suit(card);
-            for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
-            {
-
-                if (fcs_foundation_value(the_state, deck * 4 + suit) ==
-                    fcs_card_rank(card) - 1)
-                {
-                    /* We can put it there */
-                    BEGIN_NEW_STATE()
-
-                    fcs_state_pop_col_top(&new_state, stack_idx);
-                    fcs_increment_foundation(new_state, deck * 4 + suit);
-
-                    COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx),
-                        FOUND2MOVE(suit),
-                        COUNT_NON_REV(FROM_COL_IS_REVERSIBLE_MOVE()), card)
-                }
-            }
-        }
-        else
+        if (cards_num == 0)
         {
             empty_stack_idx = stack_idx;
+            continue;
+        }
+        /* Get the top card in the stack */
+        const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
+        suit = fcs_card_suit(card);
+        for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+        {
+            if (fcs_foundation_value(the_state, deck * 4 + suit) !=
+                fcs_card_rank(card) - 1)
+            {
+                continue;
+            }
+            /* We can put it there */
+            BEGIN_NEW_STATE()
+
+            fcs_state_pop_col_top(&new_state, stack_idx);
+            fcs_increment_foundation(new_state, deck * 4 + suit);
+
+            COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx), FOUND2MOVE(suit),
+                COUNT_NON_REV(FROM_COL_IS_REVERSIBLE_MOVE()), card)
+            break;
         }
     }
 
