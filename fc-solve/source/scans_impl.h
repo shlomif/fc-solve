@@ -330,17 +330,14 @@ static inline pq_rating_t befs_rate_state(
             const fcs_const_cards_column_t col =
                 fcs_state_get_col(*state, stack_idx);
 
-            const int col_len = fcs_col_len(col);
-            fcs_card_t parent_card = fcs_col_get_card(col, 0);
-            for (int h = 1; h < col_len; h++)
+            const uint_fast16_t col_len = fcs_col_len(col);
+            for (uint_fast16_t h = 1; h < col_len; h++)
             {
-                const fcs_card_t child_card = fcs_col_get_card(col, h);
-
-                if (!fcs_is_parent_card(parent_card, child_card))
+                if (!fcs_is_parent_card(
+                        fcs_col_get_card(col, h - 1), fcs_col_get_card(col, h)))
                 {
                     num_cards_not_on_parents--;
                 }
-                parent_card = child_card;
             }
         }
         sum += num_cards_not_on_parents * num_cards_not_on_parents_weight;
