@@ -473,10 +473,6 @@ static inline void FCS_STATE_collectible_to_kv(
 #define FREECELLS_STACKS_DECKS__ARGS()                                         \
     FREECELLS_AND_STACKS_ARGS() DECKS_NUM__ARG
 
-#ifdef FC_SOLVE_IMPLICIT_T_RANK
-#define FCS_IMPLICIT_T_RANK
-#endif
-
 #define PASS_T(arg) FC_SOLVE__PASS_T(arg)
 
 extern void fc_solve_canonize_state(
