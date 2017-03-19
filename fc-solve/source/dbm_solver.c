@@ -98,14 +98,14 @@ static inline void instance_check_key(
 #endif
             /* Now insert it into the queue. */
 
-            instance->common.count_of_items_in_queue++;
-        instance->common.num_states_in_collection++;
+            ++ instance->common.count_of_items_in_queue;
+        ++instance->common.num_states_in_collection;
 
         instance_debug_out_state(instance, &(token->key));
 
         fcs_offloading_queue__insert(
             &(instance->queue), ((fcs_offloading_queue_item_t *)(&token)));
-        instance->common.count_of_items_in_queue++;
+        ++instance->common.count_of_items_in_queue;
     }
 }
 
@@ -417,7 +417,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     }
     fcs_offloading_queue__insert(
         &(instance->queue), (const fcs_offloading_queue_item_t *)(&token));
-    instance->common.count_of_items_in_queue++;
+    ++instance->common.count_of_items_in_queue;
 
     return TRUE;
 }
@@ -788,8 +788,8 @@ int main(int argc, char *argv[])
 
         fcs_offloading_queue__insert(
             &(instance.queue), (const fcs_offloading_queue_item_t *)&token);
-        instance.common.num_states_in_collection++;
-        instance.common.count_of_items_in_queue++;
+        ++instance.common.num_states_in_collection;
+        ++instance.common.count_of_items_in_queue;
 
         instance_run_all_threads(&instance, &init_state, NUM_THREADS());
         handle_and_destroy_instance_solution(&instance, &delta);

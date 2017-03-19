@@ -460,8 +460,8 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 thread->state_depth + 1,
                 (const fcs_offloading_queue_item_t *)(&token));
 
-            instance->common.count_of_items_in_queue++;
-            instance->common.num_states_in_collection++;
+            ++instance->common.count_of_items_in_queue;
+            ++instance->common.num_states_in_collection;
 
             instance_debug_out_state(instance, &(token->key));
 
@@ -789,8 +789,8 @@ int main(int argc, char *argv[])
                     was_init = TRUE;
                 }
             }
-            instance.common.num_states_in_collection++;
-            instance.common.count_of_items_in_queue++;
+            ++instance.common.num_states_in_collection;
+            ++instance.common.count_of_items_in_queue;
             /* Valid for the next iteration: */
             location_in_file = ftell(fingerprint_fh);
         }

@@ -98,7 +98,7 @@ typedef struct
     fcs_flare_item_t *flare;
     flares_plan_type_t type;
     flare_iters_quota_t remaining_quota, initial_quota;
-    int count_iters;
+    int_fast32_t count_iters;
 } flares_plan_item;
 
 #endif
@@ -463,7 +463,7 @@ typedef enum {
 
 #ifdef FCS_WITH_FLARES
 static inline flares_plan_item create_plan_item(const flares_plan_type_t mytype,
-    fcs_flare_item_t *const flare, const int count_iters)
+    fcs_flare_item_t *const flare, const int_fast32_t count_iters)
 {
     return (const flares_plan_item){
         .type = mytype, .flare = flare, .count_iters = count_iters};
@@ -471,7 +471,7 @@ static inline flares_plan_item create_plan_item(const flares_plan_type_t mytype,
 
 static inline void add_to_plan(fcs_instance_item_t *const instance_item,
     const flares_plan_type_t mytype, fcs_flare_item_t *const flare,
-    const int count_iters)
+    const int_fast32_t count_iters)
 {
     const int next_item = instance_item->num_plan_items;
 
@@ -484,7 +484,7 @@ static inline void add_to_plan(fcs_instance_item_t *const instance_item,
 
 static inline void add_count_iters_to_plan(
     fcs_instance_item_t *const instance_item, fcs_flare_item_t *const flare,
-    const int count_iters)
+    const int_fast32_t count_iters)
 {
     add_to_plan(instance_item, FLARES_PLAN_RUN_COUNT_ITERS, flare, count_iters);
 }
@@ -581,7 +581,7 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
                     /* It's a Run item - handle it. */
                     cmd_end++;
-                    const int count_iters = atoi(cmd_end);
+                    const int_fast32_t count_iters = atoi(cmd_end);
 
                     const char *at_sign = cmd_end;
 

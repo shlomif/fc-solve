@@ -372,8 +372,8 @@ static inline void mark_and_sweep_old_states(
 
 static inline void instance_increment(fcs_dbm_solver_instance_t *const instance)
 {
-    instance->common.count_of_items_in_queue--;
-    instance->common.queue_num_extracted_and_processed++;
+    --instance->common.count_of_items_in_queue;
+    ++instance->common.queue_num_extracted_and_processed;
     if (++instance->common.count_num_processed % 100000 == 0)
     {
         instance_print_stats(instance);

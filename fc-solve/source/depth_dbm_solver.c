@@ -285,8 +285,8 @@ static inline void instance_check_key(
         fcs_offloading_queue__insert(
             &(coll->queue), (const fcs_offloading_queue_item_t *)(&token));
 
-        instance->common.count_of_items_in_queue++;
-        instance->common.num_states_in_collection++;
+        ++instance->common.count_of_items_in_queue;
+        ++instance->common.num_states_in_collection;
         instance_debug_out_state(instance, &(token->key));
     }
 }
@@ -399,8 +399,8 @@ int main(int argc, char *argv[])
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
         (const fcs_offloading_queue_item_t *)(&token));
-    instance.common.num_states_in_collection++;
-    instance.common.count_of_items_in_queue++;
+    ++instance.common.num_states_in_collection;
+    ++instance.common.count_of_items_in_queue;
 
     instance_run_all_threads(&instance, &init_state, NUM_THREADS());
     handle_and_destroy_instance_solution(&instance, &delta);

@@ -224,7 +224,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
         {
             while ((*col_num_cards) == 0)
             {
-                col_num_cards++;
+                ++col_num_cards;
                 if (*(++col_idx) == -1)
                 {
                     return ret;
@@ -255,14 +255,14 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
 
             ret = (empty_two_cols_ret_t){
                 .source_index = dest_fc_idx, .is_col = FALSE};
-            (*col_num_cards)--;
-            dest_fc_idx++;
+            --(*col_num_cards);
+            ++dest_fc_idx;
         }
     }
 
     while ((*col_num_cards) == 0)
     {
-        col_num_cards++;
+        ++col_num_cards;
         if (*(++col_idx) == -1)
         {
             return ret;
@@ -275,7 +275,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
     {
         while ((*col_num_cards) == 0)
         {
-            col_num_cards++;
+            ++col_num_cards;
             if (*(++col_idx) == -1)
             {
                 return ret;
@@ -301,8 +301,8 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
 
         ret = (empty_two_cols_ret_t){
             .source_index = put_cards_in_col_idx, .is_col = TRUE};
-        (*col_num_cards)--;
-        put_cards_in_col_idx++;
+        --(*col_num_cards);
+        ++put_cards_in_col_idx;
     }
 }
 

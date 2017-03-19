@@ -473,7 +473,7 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
 
 #ifdef DEBUG
 
-static void verify_state_sanity(fcs_state_t *ptr_state)
+static void verify_state_sanity(const fcs_state_t *const ptr_state)
 {
 #ifndef NDEBUG
     for (int i = 0; i < 8; i++)
@@ -482,8 +482,6 @@ static void verify_state_sanity(fcs_state_t *ptr_state)
         assert((l >= 0) && (l <= 7 + 12));
     }
 #endif
-
-    return;
 }
 
 #ifdef DEBUG_VERIFY_SOFT_DFS_STACK
