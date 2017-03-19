@@ -150,7 +150,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move,
     const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move_t *moves_to_parent
 #endif
@@ -161,7 +161,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
     fcs_dbm__cache_store__common_t *const cache_store,
     fcs_meta_compact_allocator_t *const meta_alloc, fcs_derived_state_t **lists,
     size_t batch_size
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move_t *moves_to_parent
 #endif
@@ -180,7 +180,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
             instance_check_key(thread, instance, CHECK_KEY_CALC_DEPTH(),
                 &(list->key), list->parent, list->move,
                 &(list->which_irreversible_moves_bitmask)
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
                     ,
                 moves_to_parent
 #endif
@@ -543,11 +543,10 @@ static inline fcs_cache_key_info_t *cache_store__insert_key(
     const unsigned char move GCC_UNUSED)
 {
 #ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_insert(&(instance->cache_store.pre_cache), key, parent);
+    pre_cache_insert(&(cache_store->pre_cache), key, &(parent->key));
     return NULL;
 #else
-    return cache_insert(
-        &(instance->cache_store.cache), key, moves_to_parent, move);
+    return cache_insert(&(cache_store->cache), key, moves_to_parent, move);
 #endif
 }
 #endif

@@ -382,7 +382,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
             instance_check_multiple_keys(thread, instance, &(coll->cache_store),
                 &(coll->queue_meta_alloc), &derived_list, 1
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
                 ,
                 item->moves_to_key
 #endif
@@ -431,7 +431,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move_t *moves_to_parent
 #endif
@@ -447,8 +447,8 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES
-        fcs_cache_key_info_t *cache_key = cache_store__insert_key(
-            &(coll->cache_store.pre_cache), key, parent, moves_to_parent, move);
+        cache_store__insert_key(
+            &(coll->cache_store), key, parent, moves_to_parent, move);
 #endif
 
         if (key_depth == instance->curr_depth)
@@ -456,14 +456,9 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
             /* Now insert it into the queue. */
             fcs_lock_lock(&instance->global_lock);
 
-            fcs_depth_multi_queue__insert(
-                &(coll->depth_queue), thread->state_depth + 1,
-#ifdef FCS_DBM_WITHOUT_CACHES
-                (const fcs_offloading_queue_item_t *)(&token)
-#else
-                key
-#endif
-                    );
+            fcs_depth_multi_queue__insert(&(coll->depth_queue),
+                thread->state_depth + 1,
+                (const fcs_offloading_queue_item_t *)(&token));
 
             instance->common.count_of_items_in_queue++;
             instance->common.num_states_in_collection++;
@@ -789,19 +784,8 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-#ifdef FCS_DBM_USE_OFFLOADING_QUEUE
                     fcs_depth_multi_queue__init(&(instance.coll.depth_queue),
                         instance.offload_dir_path, state_depth, &(token));
-#else
-                    fc_solve_meta_compact_allocator_init(
-                        &(instance.coll.queue_meta_alloc));
-                    fcs_offloading_queue__init(
-                        &(instance.coll.cache_store.queue),
-                        &(instance.coll.queue_meta_alloc));
-                    fcs_depth_multi_queue__insert(
-                        &(instance.coll.queue), state_depth, &(token));
-#endif
-
                     was_init = TRUE;
                 }
             }

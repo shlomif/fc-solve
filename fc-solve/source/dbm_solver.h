@@ -77,7 +77,7 @@ typedef struct fcs_dbm_queue_item_struct
     /* TODO : maybe get rid of moves_seq with FCS_DBM_WITHOUT_CACHES
      * to save space. */
     fcs_fcc_moves_seq_t moves_seq;
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
     fcs_fcc_move_t *moves_to_key;
 #endif
 

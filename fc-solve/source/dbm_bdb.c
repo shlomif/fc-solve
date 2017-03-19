@@ -20,6 +20,16 @@ typedef struct
     DBT key, data;
 } dbm_t;
 
+static __attribute__((noreturn)) inline void my_close(DB *const dbp, int ret)
+{
+    int close_ret;
+    if ((close_ret = dbp->close(dbp, 0)) != 0 && ret == 0)
+    {
+        ret = close_ret;
+    }
+    exit(ret);
+}
+
 void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     const char *const path, void **const recycle_bin_ptr)
 {
@@ -44,14 +54,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     return;
 
 err:
-{
-    int t_ret;
-    if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
-    {
-        ret = t_ret;
-    }
-}
-    exit(ret);
+    my_close(db->dbp, ret);
 }
 
 fcs_bool_t fc_solve_dbm_store_does_key_exist(
@@ -76,13 +79,8 @@ fcs_bool_t fc_solve_dbm_store_does_key_exist(
     }
     else
     {
-        int t_ret;
         db->dbp->err(db->dbp, ret, "DB->get");
-        if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
-        {
-            ret = t_ret;
-        }
-        exit(ret);
+        my_close(db->dbp, ret);
     }
 }
 
@@ -108,12 +106,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
     else
     {
         db->dbp->err(db->dbp, ret, "DB->get");
-        int t_ret;
-        if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
-        {
-            ret = t_ret;
-        }
-        exit(ret);
+        my_close(db->dbp, ret);
     }
 }
 
@@ -133,14 +126,11 @@ extern void fc_solve_dbm_store_offload_pre_cache(
         db->key.size = kv->key.s[0];
         db->data.data = kv->parent.s + 1;
         db->data.size = kv->parent.s[0];
-        if ((int ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
+        int ret;
+        if ((ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
         {
             dbp->err(dbp, ret, "DB->put");
-            if ((int t_ret = dbp->close(dbp, 0)) != 0 && ret == 0)
-            {
-                ret = t_ret;
-            }
-            exit(ret);
+            my_close(dbp, ret);
         }
     }
 }
@@ -148,7 +138,8 @@ extern void fc_solve_dbm_store_offload_pre_cache(
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
 {
     dbm_t *const db = (dbm_t *)store;
-    if ((int ret = db->dbp->close(db->dbp, 0)) != 0)
+    int ret;
+    if ((ret = db->dbp->close(db->dbp, 0)) != 0)
     {
         fc_solve_err("DB close failed with ret=%d\n", ret);
     }
