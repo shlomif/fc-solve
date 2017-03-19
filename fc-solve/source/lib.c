@@ -1826,12 +1826,8 @@ int DLLEXPORT freecell_solver_user_get_max_num_decks(void)
 
 #ifdef FCS_WITH_ERROR_STRS
 void freecell_solver_user_get_invalid_state_error_into_string(
-    void *const api_instance, char *const string
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    ,
-    const int print_ts
-#endif
-    )
+    void *const api_instance,
+    char *const string FC_SOLVE__PASS_T(const int print_ts))
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
@@ -1874,12 +1870,7 @@ void freecell_solver_user_get_invalid_state_error_into_string(
 #ifdef FCS_WITH_ERROR_STRS
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 char *freecell_solver_user_get_invalid_state_error_string(
-    void *const api_instance
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    ,
-    const int print_ts
-#endif
-    )
+    void *const api_instance FC_SOLVE__PASS_T(const int print_ts))
 {
     char *ret = malloc(80);
     freecell_solver_user_get_invalid_state_error_into_string(

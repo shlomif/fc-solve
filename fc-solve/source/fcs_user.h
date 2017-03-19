@@ -62,12 +62,7 @@ DLLEXPORT extern char *freecell_solver_user_current_state_as_string(
     int parseable_output
 #endif
     ,
-    int canonized_order_output
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    ,
-    int display_10_as_t
-#endif
-    );
+    int canonized_order_output FC_SOLVE__PASS_T(int display_10_as_t));
 #endif
 
 DLLEXPORT extern void freecell_solver_user_current_state_stringify(
@@ -77,12 +72,7 @@ DLLEXPORT extern void freecell_solver_user_current_state_stringify(
     int parseable_output
 #endif
     ,
-    int canonized_order_output
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    ,
-    int display_10_as_t
-#endif
-    );
+    int canonized_order_output FC_SOLVE__PASS_T(int display_10_as_t));
 
 DLLEXPORT extern void freecell_solver_user_free(void *user_instance);
 
@@ -149,23 +139,14 @@ DLLEXPORT extern int freecell_solver_user_get_max_num_decks(void);
 
 #ifdef FCS_WITH_ERROR_STRS
 DLLEXPORT void freecell_solver_user_get_invalid_state_error_into_string(
-    void *const api_instance, char *const string
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    ,
-    const int print_ts
-#endif
-    );
+    void *const api_instance,
+    char *const string FC_SOLVE__PASS_T(const int print_ts));
 #endif
 
 #ifdef FCS_WITH_ERROR_STRS
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern char *freecell_solver_user_get_invalid_state_error_string(
-    void *user_instance
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    ,
-    int print_ts
-#endif
-    );
+    void *user_instance FC_SOLVE__PASS_T(int print_ts));
 #endif
 #endif
 
@@ -209,12 +190,8 @@ DLLEXPORT extern char *freecell_solver_user_iter_state_as_string(
     const int parseable_output
 #endif
     ,
-    const int canonized_order_output
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    ,
-    const int display_10_as_t
-#endif
-    );
+    const int canonized_order_output FC_SOLVE__PASS_T(
+        const int display_10_as_t));
 #endif
 
 DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
@@ -224,12 +201,8 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
     const int parseable_output
 #endif
     ,
-    const int canonized_order_output
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-    ,
-    const int display_10_as_t
-#endif
-    );
+    const int canonized_order_output FC_SOLVE__PASS_T(
+        const int display_10_as_t));
 
 DLLEXPORT extern void freecell_solver_user_set_random_seed(
     void *const user_instance, const int seed);
