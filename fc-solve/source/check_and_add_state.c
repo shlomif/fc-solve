@@ -449,6 +449,27 @@ static inline void upon_new_state(fc_solve_instance_t *const instance,
     return;
 }
 
+#define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
+static inline fcs_bool_t handle_existing_void(
+    fc_solve_instance_t *const instance,
+    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
+    fcs_kv_state_t *const existing_state_raw, void *const existing_void)
+{
+    if (existing_void)
+    {
+        FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
+        return FALSE;
+    }
+    else
+    {
+        ON_STATE_NEW();
+        return TRUE;
+    }
+}
+#define HANDLE_existing_void(existing_void)                                    \
+    handle_existing_void(                                                      \
+        instance, hard_thread, new_state, existing_state_raw, (existing_void))
+
 fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
     fcs_kv_state_t *const existing_state_raw)
@@ -459,8 +480,6 @@ fcs_bool_t fc_solve_check_and_add_state(
  * tested and updated.
  * */
 #define new_state_key (new_state->key)
-
-#define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
@@ -500,47 +519,26 @@ fcs_bool_t fc_solve_check_and_add_state(
         hash_value_int &= (~(1 << ((sizeof(hash_value_int) << 3) - 1)));
     }
 #endif
-    {
-        void *const existing_void = fc_solve_hash_insert(&(instance->hash),
+    return HANDLE_existing_void(fc_solve_hash_insert(&(instance->hash),
 #ifdef FCS_RCS_STATES
-            new_state->val, new_state->key,
+        new_state->val, new_state->key,
 #else
-            FCS_STATE_kv_to_collectible(new_state),
+        FCS_STATE_kv_to_collectible(new_state),
 #endif
-            perl_hash_function((ub1 *)(new_state_key), sizeof(*(new_state_key)))
+        perl_hash_function((ub1 *)(new_state_key), sizeof(*(new_state_key)))
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-                ,
-            hash_value_int
+            ,
+        hash_value_int
 #endif
-            );
-        if (existing_void)
-        {
-            FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
-            return FALSE;
-        }
-        else
-        {
-            ON_STATE_NEW();
-            return TRUE;
-        }
-    }
+        ));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+    void *existing_void;
+    if (!fc_solve_states_google_hash_insert(instance->hash,
+            FCS_STATE_kv_to_collectible(new_state), &(existing_void)))
     {
-        void *existing_void;
-
-        /*  TODO : check if this condition should be negated. */
-        if (fc_solve_states_google_hash_insert(instance->hash,
-                FCS_STATE_kv_to_collectible(new_state), &(existing_void)))
-        {
-            FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
-            return FALSE;
-        }
-        else
-        {
-            ON_STATE_NEW();
-            return TRUE;
-        }
+        existing_void = NULL;
     }
+    return HANDLE_existing_void(existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     existing_state_val =
         (fcs_state_extra_info_t *)rbsearch(new_state_val, instance->tree);
@@ -551,46 +549,20 @@ fcs_bool_t fc_solve_check_and_add_state(
     instance->tree_new_state_key = new_state->key;
     instance->tree_new_state = new_state->val;
 #endif
-
-    {
-        void *existing_void;
-        if ((existing_void = fc_solve_kaz_tree_alloc_insert(instance->tree,
+    return HANDLE_existing_void(fc_solve_kaz_tree_alloc_insert(instance->tree,
 #ifdef FCS_RCS_STATES
-                 new_state_val
+        new_state_val
 #else
-                 FCS_STATE_kv_to_collectible(new_state)
+        FCS_STATE_kv_to_collectible(new_state)
 #endif
-                 )) == NULL)
-        {
-            ON_STATE_NEW();
-            return TRUE;
-        }
-        else
-        {
-            FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
-            return FALSE;
-        }
-    }
+        ));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 #ifdef FCS_RCS_STATES
     instance->tree_new_state_key = new_state->key;
     instance->tree_new_state = new_state->val;
 #endif
-
-    {
-        void *existing_void;
-        if ((existing_void = fcs_libavl2_states_tree_insert(instance->tree,
-                 FCS_STATE_kv_to_collectible(new_state))) == NULL)
-        {
-            ON_STATE_NEW();
-            return TRUE;
-        }
-        else
-        {
-            FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
-            return FALSE;
-        }
-    }
+    return HANDLE_existing_void(fcs_libavl2_states_tree_insert(
+        instance->tree, FCS_STATE_kv_to_collectible(new_state)));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
     if ((is_state_new = (existing_state_val == NULL)))
@@ -634,27 +606,24 @@ fcs_bool_t fc_solve_check_and_add_state(
         }
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
+    PWord_t *PValue;
+
+    JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
+
+    /* later_todo : Handle out-of-memory. */
+    if (*PValue == 0)
     {
-        PWord_t *PValue;
-
-        JHSI(PValue, instance->judy_array, new_state_key,
-            sizeof(*new_state_key));
-
-        /* later_todo : Handle out-of-memory. */
-        if (*PValue == 0)
-        {
-            /* A new state. */
-            *PValue = (PWord_t)(FCS_STATE_kv_to_collectible(new_state));
-            ON_STATE_NEW();
-            return TRUE;
-        }
-        else
-        {
-            /* Already exists. */
-            FCS_STATE_collectible_to_kv(
-                existing_state_raw, (fcs_collectible_state_t *)(*PValue));
-            return FALSE;
-        }
+        /* A new state. */
+        *PValue = (PWord_t)(FCS_STATE_kv_to_collectible(new_state));
+        ON_STATE_NEW();
+        return TRUE;
+    }
+    else
+    {
+        /* Already exists. */
+        FCS_STATE_collectible_to_kv(
+            existing_state_raw, (fcs_collectible_state_t *)(*PValue));
+        return FALSE;
     }
 #else
 #error Unknown FCS_STATE_STORAGE. Please define it to a valid value.
