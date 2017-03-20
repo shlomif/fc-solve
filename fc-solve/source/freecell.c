@@ -117,18 +117,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 }
 
 static inline void sort_derived_states(
-    fcs_derived_states_list_t *const derived_states_list,
-    const int initial_derived_states_num_states)
+    fcs_derived_states_list_t *const d, const size_t derived_start_idx)
 {
-    fcs_derived_states_list_item_t *const start =
-        derived_states_list->states + initial_derived_states_num_states;
-    fcs_derived_states_list_item_t *const limit =
-        derived_states_list->states + derived_states_list->num_states;
+    var_AUTO(start, d->states + derived_start_idx);
+    const_AUTO(limit, d->states + d->num_states);
 
-    for (fcs_derived_states_list_item_t *b = start + 1; b < limit; b++)
+    for (var_AUTO(b, start + 1); b < limit; b++)
     {
-        for (fcs_derived_states_list_item_t *c = b;
-             (c > start) && (c[0].context.i < c[-1].context.i); c--)
+        for (var_AUTO(c, b); (c > start) && (c[0].context.i < c[-1].context.i);
+             c--)
         {
             const_AUTO(swap_temp, c[-1]);
             c[-1] = c[0];
@@ -380,8 +377,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     const fcs_game_limit_t num_vacant_slots =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
 
-    const int initial_derived_states_num_states =
-        derived_states_list->num_states;
+    const size_t derived_start_idx = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
     FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS();
@@ -475,7 +471,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
         }
     }
 
-    sort_derived_states(derived_states_list, initial_derived_states_num_states);
+    sort_derived_states(derived_states_list, derived_start_idx);
 
     return;
 }
@@ -714,8 +710,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     const_SLOT(num_vacant_stacks, soft_thread);
     const fcs_game_limit_t num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
-    const int initial_derived_states_num_states =
-        derived_states_list->num_states;
+    const size_t derived_start_idx = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
 
@@ -798,7 +793,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
             }
         }
     }
-    sort_derived_states(derived_states_list, initial_derived_states_num_states);
+    sort_derived_states(derived_states_list, derived_start_idx);
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
@@ -987,8 +982,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
     const fcs_game_limit_t num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
-    const int initial_derived_states_num_states =
-        derived_states_list->num_states;
+    const int derived_start_idx = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
 
@@ -1124,7 +1118,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
         }
     }
 
-    sort_derived_states(derived_states_list, initial_derived_states_num_states);
+    sort_derived_states(derived_states_list, derived_start_idx);
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
