@@ -406,7 +406,6 @@ int main(int argc, char *argv[])
     handle_and_destroy_instance_solution(&instance, &delta);
 
     fc_solve_delta_stater_release(&delta);
-
     if (out_filename)
     {
         fclose(out_fh);

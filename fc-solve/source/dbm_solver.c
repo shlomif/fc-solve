@@ -796,16 +796,13 @@ int main(int argc, char *argv[])
     }
 
     fc_solve_delta_stater_release(&delta);
-
     if (out_filename)
     {
         fclose(out_fh);
     }
-
     if (intermediate_in_fh)
     {
         fclose(intermediate_in_fh);
-        intermediate_in_fh = NULL;
     }
 
     return 0;

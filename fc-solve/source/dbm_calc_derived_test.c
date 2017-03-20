@@ -102,10 +102,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     }
 
     assert(idx == states_count);
-
     fc_solve_compact_allocator_finish(&allocator);
     fc_solve_meta_compact_allocator_finish(&meta_alloc);
-
     fc_solve_delta_stater_release(&delta);
 
     return 0;

@@ -49,7 +49,7 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
     /* Copy the items to the new hash while not allocating them again */
     for (int i = 0; i < old_size; i++)
     {
-        fc_solve_hash_symlink_item_t *item = entries[i].first_item;
+        fcs_hash_item_t *item = entries[i].first_item;
         /* traverse the chain item by item */
         while (item != NULL)
         {
@@ -58,7 +58,7 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
 
             /* Store the next item in the linked list in a safe place,
                so we can retrieve it after the assignment */
-            fc_solve_hash_symlink_item_t *const next_item = item->next;
+            fcs_hash_item_t *const next_item = item->next;
             /* It is placed in front of the first element in the chain,
                so it should link to it */
             item->next = new_entries[place].first_item;
@@ -107,7 +107,7 @@ static inline void *fc_solve_hash_insert(
 
 #undef PLACE
 
-    fc_solve_hash_symlink_item_t **item_placeholder;
+    fcs_hash_item_t **item_placeholder;
     /* If first_item is non-existent */
     if (list->first_item == NULL)
     {
@@ -117,8 +117,8 @@ static inline void *fc_solve_hash_insert(
     else
     {
         /* Initialize item to the chain's first_item */
-        fc_solve_hash_symlink_item_t *item = list->first_item;
-        fc_solve_hash_symlink_item_t *last_item = NULL;
+        fcs_hash_item_t *item = list->first_item;
+        fcs_hash_item_t *last_item = NULL;
 
 /*
  * MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
@@ -183,9 +183,9 @@ static inline void *fc_solve_hash_insert(
 
 #define ITEM_ALLOC() fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item))
 #ifdef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    fc_solve_hash_symlink_item_t *const item = ITEM_ALLOC();
+    fcs_hash_item_t *const item = ITEM_ALLOC();
 #else
-    fc_solve_hash_symlink_item_t *item;
+    fcs_hash_item_t *item;
 
     if ((item = hash->list_of_vacant_items))
     {

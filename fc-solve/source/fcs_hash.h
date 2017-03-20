@@ -50,11 +50,11 @@ struct fc_solve_hash_symlink_item_struct
     struct fc_solve_hash_symlink_item_struct *next;
 };
 
-typedef struct fc_solve_hash_symlink_item_struct fc_solve_hash_symlink_item_t;
+typedef struct fc_solve_hash_symlink_item_struct fcs_hash_item_t;
 
 typedef struct
 {
-    fc_solve_hash_symlink_item_t *first_item;
+    fcs_hash_item_t *first_item;
 } fc_solve_hash_symlink_t;
 
 struct fc_solve_instance_struct;
@@ -76,7 +76,7 @@ typedef struct
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     /* The list of vacant items as freed by the garbage collector. Use
      * if before allocating more. */
-    fc_solve_hash_symlink_item_t *list_of_vacant_items;
+    fcs_hash_item_t *list_of_vacant_items;
 #endif
 /* A comparison function that can be used for comparing two keys
    in the collection */
@@ -176,12 +176,12 @@ static inline void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
     var_AUTO(entries, hash->entries);
     for (int i = 0; i < size; i++)
     {
-        fc_solve_hash_symlink_item_t **item = &(entries[i].first_item);
+        fcs_hash_item_t **item = &(entries[i].first_item);
         while ((*item) != NULL)
         {
             if (should_delete_ptr((*item)->key, context))
             {
-                fc_solve_hash_symlink_item_t *const next_item = (*item)->next;
+                fcs_hash_item_t *const next_item = (*item)->next;
                 /* Garbage collect (*item). */
                 (*item)->next = hash->list_of_vacant_items;
                 hash->list_of_vacant_items = (*item);
