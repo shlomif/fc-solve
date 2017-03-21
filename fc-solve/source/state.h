@@ -1046,10 +1046,7 @@ static inline fcs_bool_t fcs_is_parent_card__helper(
 static inline fcs_bool_t fcs_is_parent_card__helper(
     const fcs_card_t child, const fcs_card_t parent)
 {
-    const uint_fast16_t offset = ((parent << 6) | child);
-    return (fc_solve_is_parent_buf[offset >> 3] & (1 << (offset & (8 - 1))))
-               ? TRUE
-               : FALSE;
+    return fc_solve_is_parent_buf[((parent << 6) | child)];
 }
 #endif
 #define fcs_is_parent_card(child, parent)                                      \

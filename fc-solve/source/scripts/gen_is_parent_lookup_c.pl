@@ -39,23 +39,25 @@ foreach my $parent_suit (@SUITS)
                                 make_card( $child_rank, $child_suit )
                         ),
                         1
-                    ) = 1;
+                    ) = $TRUE;
                 }
             }
         }
     }
 }
 
-my $LEN = ( ( 64 * 64 ) / 8 );
-my $DECL = qq#const uint8_t fc_solve_is_parent_buf[$LEN]#;
+my $LEN = ( ( 64 * 64 ) );
+my $DECL = qq#const fcs_bool_t fc_solve_is_parent_buf[$LEN]#;
 path("is_parent.h")->spew_utf8(<<"EOF");
 #pragma once
-#include <stdint.h>
+#include "bool.h"
 extern $DECL;
 EOF
 
-path("is_parent.c")
-    ->spew_utf8( qq/#include "is_parent.h"\n\n/
+path("is_parent.c")->spew_utf8(
+          qq/#include "is_parent.h"\n\n/
         . "$DECL = {"
-        . join( ',', map { vec( $lookup, $_, 8 ) . 'U' } ( 0 .. $LEN - 1 ) )
-        . "};" );
+        . join( ',',
+        map { vec( $lookup, $_, 1 ) ? 'TRUE' : 'FALSE' } ( 0 .. $LEN - 1 ) )
+        . "};"
+);
