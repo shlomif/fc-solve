@@ -23,6 +23,7 @@
 
 #include "../card.c"
 #include "../state.c"
+#include "is_parent.c"
 #include "../delta_states_debondt_impl.h"
 #include "../delta_states.h"
 #include "../indirect_buffer.h"

@@ -197,6 +197,16 @@ ADD_CUSTOM_COMMAND(
     ARGS ${rate_state_args}
     DEPENDS "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.h"
 )
+SET (is_parent_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_is_parent_lookup_c.pl")
+SET (is_parent_args "${is_parent_gen}")
+SET (is_parent_output "${CMAKE_CURRENT_BINARY_DIR}/is_parent.c" "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h")
+add_gen_c(${is_parent_output})
+ADD_CUSTOM_COMMAND(
+    OUTPUT ${is_parent_output}
+    COMMAND "${PERL_EXECUTABLE}"
+    ARGS ${is_parent_args}
+    DEPENDS "${is_parent_gen}"
+)
 
 EXECUTE_PROCESS(COMMAND "perl" ${rate_state_args})
 
@@ -256,6 +266,7 @@ SET (FREECELL_SOLVER_LIB_MODULES
     cmd_line.c
     freecell.c
     instance.c
+    is_parent.c
     lib.c
     meta_alloc.c
     move.c
@@ -559,7 +570,7 @@ FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tes
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 FCS_ADD_EXEC_NO_INSTALL(summary-fc-solve summarizing_solver.c)
 
-SET (DBM_FCC_COMMON card.c meta_alloc.c state.c)
+SET (DBM_FCC_COMMON card.c is_parent.c meta_alloc.c state.c)
 
 CHECK_TYPE_SIZE("__int128" INT128 LANGUAGE C)
 IF (HAVE_INT128)

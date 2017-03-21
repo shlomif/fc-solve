@@ -1034,12 +1034,24 @@ static inline void set_scan_visited(
 
 #ifdef FCS_FREECELL_ONLY
 
+#if 0
 static inline fcs_bool_t fcs_is_parent_card__helper(
     const fcs_card_t child, const fcs_card_t parent)
 {
     return ((fcs_card_rank(child) + 1 == fcs_card_rank(parent)) &&
             ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent) & 0x1)));
 }
+#else
+#include "is_parent.h"
+static inline fcs_bool_t fcs_is_parent_card__helper(
+    const fcs_card_t child, const fcs_card_t parent)
+{
+    const uint_fast16_t offset = ((parent << 6) | child);
+    return (fc_solve_is_parent_buf[offset >> 3] & (1 << (offset & (8 - 1))))
+               ? TRUE
+               : FALSE;
+}
+#endif
 #define fcs_is_parent_card(child, parent)                                      \
     fcs_is_parent_card__helper(child, parent)
 
