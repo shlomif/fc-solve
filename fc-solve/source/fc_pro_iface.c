@@ -146,14 +146,9 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                     fcs_col_pop_card(col, card);
                     fcs_increment_foundation(pos, fcs_card_suit(card));
                     virtual_stack_len[src]--;
-                    {
-                        fcs_extended_move_t ext_move;
-                        ext_move.move = move;
-                        /* Stub value to settle gcc. Isn't used. */
-                        ext_move.to_empty_stack = FALSE;
-
-                        moves_processed_add_new_move(ret, ext_move);
-                    }
+                    moves_processed_add_new_move(
+                        ret, (fcs_extended_move_t){
+                                 .move = move, .to_empty_stack = FALSE});
                 }
                 else
                 {
@@ -167,17 +162,11 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 const int src = fcs_move_get_src_freecell(move);
                 assert((virtual_freecell_len[src] == 1));
                 if (!fcs_freecell_is_empty(pos, src))
-                {
-                    fcs_extended_move_t ext_move;
-                    ext_move.move = move;
-                    /* Stub value to settle gcc. Isn't used. */
-                    ext_move.to_empty_stack = FALSE;
-
-                    moves_processed_add_new_move(ret, ext_move);
-                    fcs_increment_foundation(
-                        pos, fcs_freecell_card_suit(pos, src));
-                    fcs_empty_freecell(pos, src);
-                }
+                    moves_processed_add_new_move(
+                        ret, (fcs_extended_move_t){
+                                 .move = move, .to_empty_stack = FALSE});
+                fcs_increment_foundation(pos, fcs_freecell_card_suit(pos, src));
+                fcs_empty_freecell(pos, src);
 #ifndef NDEBUG
                 virtual_freecell_len[src] = 0;
 #endif
@@ -191,12 +180,9 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 assert(virtual_freecell_len[src] == 1);
                 if (!fcs_freecell_is_empty(pos, src))
                 {
-                    fcs_extended_move_t ext_move;
-                    ext_move.move = move;
-                    /* Stub value to settle gcc. Isn't used. */
-                    ext_move.to_empty_stack = FALSE;
-
-                    moves_processed_add_new_move(ret, ext_move);
+                    moves_processed_add_new_move(
+                        ret, (fcs_extended_move_t){
+                                 .move = move, .to_empty_stack = FALSE});
                     fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
                     fcs_col_push_card(dest_col, fcs_freecell_card(pos, src));
                     fcs_empty_freecell(pos, src);
@@ -221,15 +207,9 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 }
                 else
                 {
-                    {
-                        fcs_extended_move_t ext_move;
-
-                        ext_move.move = move;
-                        /* Stub value to settle gcc. Isn't used. */
-                        ext_move.to_empty_stack = FALSE;
-
-                        moves_processed_add_new_move(ret, ext_move);
-                    }
+                    moves_processed_add_new_move(
+                        ret, (fcs_extended_move_t){
+                                 .move = move, .to_empty_stack = FALSE});
                     fcs_card_t temp_card;
                     fcs_col_pop_card(col, temp_card);
                     fcs_put_card_in_freecell(pos, dest, temp_card);
@@ -264,12 +244,9 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                     fcs_move_set_src_stack(out_move, src);
                     fcs_move_set_dest_stack(out_move, dest);
                     fcs_move_set_num_cards_in_seq(out_move, num_cards);
-                    {
-                        fcs_extended_move_t ext_move;
-                        ext_move.move = out_move;
-                        ext_move.to_empty_stack = (fcs_col_len(dest_col) == 0);
-                        moves_processed_add_new_move(ret, ext_move);
-                    }
+                    moves_processed_add_new_move(ret,
+                        (fcs_extended_move_t){.move = out_move,
+                            .to_empty_stack = (fcs_col_len(dest_col) == 0)});
                     fcs_col_transfer_cards(dest_col, src_col, num_cards);
                     virtual_stack_len[dest] += num_cards;
                     virtual_stack_len[src] -= num_cards;
