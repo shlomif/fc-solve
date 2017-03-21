@@ -1046,7 +1046,7 @@ static inline fcs_bool_t fcs_is_parent_card__helper(
 static inline fcs_bool_t fcs_is_parent_card__helper(
     const fcs_card_t child, const fcs_card_t parent)
 {
-    return fc_solve_is_parent_buf[((parent << 6) | child)];
+    return fc_solve_is_parent_buf[(size_t)parent][(size_t)child];
 }
 #endif
 #define fcs_is_parent_card(child, parent)                                      \
