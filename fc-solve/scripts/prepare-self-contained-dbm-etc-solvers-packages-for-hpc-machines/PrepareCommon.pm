@@ -79,6 +79,8 @@ sub src_filenames
         'indirect_buffer.h',
         'inline.h',
         'internal_move_struct.h',
+        'is_parent.c',
+        'is_parent.h',
         'kaz_tree.h',
         'libavl/rb.c',
         'libavl/rb.h',
@@ -116,6 +118,7 @@ sub modules
         $self->main_base . '.o',
         'card.o',
         'dbm_kaztree.o',
+        'is_parent.o',
         'libavl/rb.o',
         'meta_alloc.o',
         'state.o',
@@ -184,6 +187,15 @@ foreach my $deal_idx (@deals)
     }
 }
 
+{
+    my $cwd = getcwd();
+    chdir ($dest_dir);
+    if (system($^X, "$src_path/scripts/gen_is_parent_lookup_c.pl") != 0)
+    {
+        die "Could not generate is_parent.{c,h}!";
+    }
+    chdir ($cwd);
+}
 my @modules = @{ $self->modules };
 
 my $more_cflags = $self->flto ? " -flto " : '';
