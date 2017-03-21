@@ -169,6 +169,7 @@ dummy:
 
 #<<<OBJECTS.START
 GEN_C_OBJECTS := \
+	is_parent.o         \
 	move_funcs_maps.o   \
 	rate_state.o        \
 
