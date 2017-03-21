@@ -662,7 +662,7 @@ int main(int argc, char *argv[])
         fcs_bool_t found_line;
         do
         {
-            line_num++;
+            ++line_num;
             found_line = FALSE;
 #ifdef HAVE_GETLINE
             while (getline(&line, &line_size, intermediate_in_fh) >= 0)
@@ -675,7 +675,7 @@ int main(int argc, char *argv[])
                     found_line = TRUE;
                     break;
                 }
-                line_num++;
+                ++line_num;
             }
 
             if (found_line)

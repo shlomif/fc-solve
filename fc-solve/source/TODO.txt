@@ -19,6 +19,9 @@ solver (at least initially]):
 ** invalid characters.
 ** misformatting of the format.
 
+* Try to convert the fcs_is_parent() functions to a lookup bitvector based
+on 64*64 bits.
+
 * Currently +var_base*.h+ use many type casting and other minor inefficiencies.
 Refactor/optimize to avoid that.
 

@@ -434,7 +434,7 @@ static void fc_solve_debondt_delta_stater_decode(
     {
         for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
         {
-            fcs_card_t card = fcs_make_card(RANK_KING, suit_idx);
+            const fcs_card_t card = fcs_make_card(RANK_KING, suit_idx);
 
             if (!IS_IN_FOUNDATIONS(card))
             {

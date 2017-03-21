@@ -67,10 +67,7 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
 #ifdef FCS_WITH_MOVES
         {
             fcs_move_t move;
-            FILE *move_dump;
             char state_as_string[1000];
-
-            move_dump = output_fh;
 
             if (display_context.display_states)
             {
@@ -80,8 +77,8 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                     display_context.canonized_order_output FC_SOLVE__PASS_T(
                         display_context.display_10_as_t));
 
-                fputs(state_as_string, move_dump);
-                fputs("\n\n====================\n\n", move_dump);
+                fputs(state_as_string, output_fh);
+                fputs("\n\n====================\n\n", output_fh);
             }
 
             int move_num = 0;
@@ -92,13 +89,13 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                     if (display_context.display_states &&
                         display_context.standard_notation)
                     {
-                        fputs("Move: ", move_dump);
+                        fputs("Move: ", output_fh);
                     }
 
                     freecell_solver_user_stringify_move_w_state(instance,
                         state_as_string, move,
                         display_context.standard_notation);
-                    fprintf(move_dump,
+                    fprintf(output_fh,
                         (display_context.standard_notation ? "%s " : "%s\n"),
                         state_as_string);
                     move_num++;
@@ -107,14 +104,14 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                         if ((move_num % 10 == 0) ||
                             display_context.display_states)
                         {
-                            putc('\n', move_dump);
+                            putc('\n', output_fh);
                         }
                     }
                     if (display_context.display_states)
                     {
-                        putc('\n', move_dump);
+                        putc('\n', output_fh);
                     }
-                    fflush(move_dump);
+                    fflush(output_fh);
                 }
 
                 if (display_context.display_states)
@@ -125,20 +122,20 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                         display_context.canonized_order_output FC_SOLVE__PASS_T(
                             display_context.display_10_as_t));
 
-                    fprintf(move_dump, "%s\n", state_as_string);
+                    fprintf(output_fh, "%s\n", state_as_string);
                 }
 
                 if (display_context.display_states ||
                     (!display_context.standard_notation))
                 {
-                    fputs("\n====================\n\n", move_dump);
+                    fputs("\n====================\n\n", output_fh);
                 }
             }
 
             if (display_context.standard_notation &&
                 (!display_context.display_states))
             {
-                fputs("\n\n", move_dump);
+                fputs("\n\n", output_fh);
             }
         }
 #endif
