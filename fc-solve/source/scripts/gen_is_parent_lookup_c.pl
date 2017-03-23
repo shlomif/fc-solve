@@ -19,8 +19,14 @@ sub make_card
     return ( ( $rank << 2 ) | $suit );
 }
 
+sub key
+{
+    my ( $parent, $child ) = @_;
+    return "${parent}\t${child}";
+}
+
 my $NUM_CARDS = 64;
-my @lookup = ( map { '' } ( 0 .. $NUM_CARDS ) );
+my %lookup;
 
 foreach my $parent_suit (@SUITS)
 {
@@ -33,8 +39,12 @@ foreach my $parent_suit (@SUITS)
                 if (    ( $parent_rank == $child_rank + 1 )
                     and ( ( $parent_suit & 0x1 ) != ( $child_suit & 0x1 ) ) )
                 {
-                    vec( $lookup[ make_card( $parent_rank, $parent_suit ) ],
-                        make_card( $child_rank, $child_suit ), 1 )
+                    $lookup{
+                        key(
+                            make_card( $parent_rank, $parent_suit ),
+                            make_card( $child_rank,  $child_suit ),
+                        )
+                        }
                         = $TRUE;
                 }
             }
@@ -54,11 +64,16 @@ path("is_parent.c")->spew_utf8(
     qq/#include "is_parent.h"\n\n/ . "$DECL = {" . join(
         ',',
         map {
-            my $row = $_;
-            '{'
-                . join( ',',
-                map { vec( $lookup[$row], $_, 1 ) ? 'TRUE' : 'FALSE' }
-                    ( 0 .. $NUM_CARDS - 1 ) )
+## Please see file perltidy.ERR
+            my $parent = $_;
+            '{' . join(
+                ',',
+                map {
+                    exists( $lookup{ key( $parent, $_ ) } )
+                        ? 'TRUE'
+                        : 'FALSE'
+                } ( 0 .. $NUM_CARDS - 1 )
+                )
                 . '}'
         } ( 0 .. $NUM_CARDS - 1 )
         )
