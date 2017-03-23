@@ -7,8 +7,10 @@ use Path::Tiny qw/ path /;
 
 my $TRUE = 1;
 
-my @SUITS = ( 0 .. 3 );
-my @RANKS = ( 1 .. 13 );
+my $MAX_RANK     = 13;
+my @SUITS        = ( 0 .. 3 );
+my @RANKS        = ( 1 .. $MAX_RANK );
+my @PARENT_RANKS = ( 2 .. $MAX_RANK );
 
 sub make_card
 {
@@ -27,29 +29,21 @@ my %lookup;
 
 foreach my $parent_suit (@SUITS)
 {
-    foreach my $parent_rank (@RANKS)
+    foreach my $parent_rank (@PARENT_RANKS)
     {
-        foreach my $child_suit (@SUITS)
+        my $parent = make_card( $parent_rank, $parent_suit );
+        my $start = ( ( $parent_suit ^ 0x1 ) & ( ~0x2 ) );
+        foreach my $child_suit ( $start, $start + 2 )
         {
-            foreach my $child_rank (@RANKS)
+            foreach my $child_rank ( $parent_rank - 1 )
             {
-                if (    ( $parent_rank == $child_rank + 1 )
-                    and ( ( $parent_suit & 0x1 ) != ( $child_suit & 0x1 ) ) )
-                {
-                    $lookup{
-                        key(
-                            make_card( $parent_rank, $parent_suit ),
-                            make_card( $child_rank,  $child_suit ),
-                        )
-                        }
-                        = $TRUE;
-                }
+                $lookup{ key( $parent, make_card( $child_rank, $child_suit ), )
+                } = $TRUE;
             }
         }
     }
 }
 
-my $LEN = ( ( 64 * 64 ) );
 my $DECL = qq#const fcs_bool_t fc_solve_is_parent_buf[$NUM_CARDS][$NUM_CARDS]#;
 path("is_parent.h")->spew_utf8(<<"EOF");
 #pragma once
