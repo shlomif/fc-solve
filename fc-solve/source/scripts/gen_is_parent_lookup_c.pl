@@ -24,7 +24,8 @@ sub key
     return "${parent}\t${child}";
 }
 
-my $NUM_CARDS = 64;
+my $NUM_CHILD_CARDS = 64;
+my $NUM_PARENT_CARDS = make_card( $MAX_RANK, $SUITS[-1] ) + 1;
 my %lookup;
 
 foreach my $parent_suit (@SUITS)
@@ -44,7 +45,8 @@ foreach my $parent_suit (@SUITS)
     }
 }
 
-my $DECL = qq#const fcs_bool_t fc_solve_is_parent_buf[$NUM_CARDS][$NUM_CARDS]#;
+my $DECL =
+qq#const fcs_bool_t fc_solve_is_parent_buf[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#;
 path("is_parent.h")->spew_utf8(<<"EOF");
 #pragma once
 #include "bool.h"
@@ -63,10 +65,10 @@ path("is_parent.c")->spew_utf8(
                     exists( $lookup{ key( $parent, $_ ) } )
                         ? 'TRUE'
                         : 'FALSE'
-                } ( 0 .. $NUM_CARDS - 1 )
+                } ( 0 .. $NUM_CHILD_CARDS - 1 )
                 )
                 . '}'
-        } ( 0 .. $NUM_CARDS - 1 )
+        } ( 0 .. $NUM_PARENT_CARDS - 1 )
         )
         . "};"
 );
