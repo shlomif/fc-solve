@@ -3,12 +3,9 @@
 use strict;
 use warnings;
 use autodie;
-use File::Spec ();
 use Path::Tiny qw/ path /;
-use List::Util qw/ product sum /;
 
-my $FALSE = 0;
-my $TRUE  = 1;
+my $TRUE = 1;
 
 my @SUITS = ( 0 .. 3 );
 my @RANKS = ( 1 .. 13 );
