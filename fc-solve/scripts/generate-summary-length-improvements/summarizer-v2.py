@@ -8,6 +8,8 @@ import json
 if sys.version_info > (3,):
     xrange = range
 
+MAX_SEED = 10294
+
 home = expanduser("~")
 
 basedir = home + "/Backup/Arcs"
@@ -49,7 +51,6 @@ state = None
 with open(STATE_FN) as fh:
     state = json.loads(fh.read())
 
-MAX_SEED = 9586
 print("Seed\tN\tSum\tMax")
 sys.stdout.write(state['output'])
 for seed in xrange(state['reached_seed'], MAX_SEED + 1):
