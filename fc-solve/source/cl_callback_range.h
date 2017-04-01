@@ -25,15 +25,11 @@ static int cmd_line_callback(void *const instance, const int argc GCC_UNUSED,
     freecell_solver_str_t argv[], const int arg, int *const num_to_skip,
     int *const ret GCC_UNUSED, void *const context)
 {
-    fc_solve_display_information_context_t *const dc =
-        (fc_solve_display_information_context_t *)context;
-
-    *num_to_skip = 0;
     const char *const arg_str = argv[arg];
-
-    if (!cmd_line_cb__handle_common(arg_str, instance, dc))
+    if (!cmd_line_cb__handle_common(arg_str, instance,
+            (fc_solve_display_information_context_t *)context))
     {
-        fc_solve_err("Unknown option %s!\n", argv[arg]);
+        fc_solve_err("Unknown option %s!\n", arg_str);
     }
     *num_to_skip = 1;
     return FCS_CMD_LINE_SKIP;

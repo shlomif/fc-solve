@@ -401,7 +401,6 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
     {
         *display_context = INITIAL_DISPLAY_CONTEXT;
         freecell_solver_user_set_iter_handler_long(instance, NULL, NULL);
-        *num_to_skip = 0;
         return FCS_CMD_LINE_OK;
     }
     else

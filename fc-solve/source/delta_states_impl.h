@@ -124,13 +124,13 @@ static inline void fc_solve_get_column_encoding_composite(
     const int col_len = fcs_col_len(col);
     const int num_derived_cards = col_len - num_orig_cards;
 
-    int num_cards_in_seq = num_derived_cards;
+    int_fast16_t num_cards_in_seq = num_derived_cards;
     fcs_card_t init_card = fc_solve_empty_card;
 
     if ((num_orig_cards == 0) && num_derived_cards)
     {
         init_card = fcs_col_get_card(col, 0);
-        num_cards_in_seq--;
+        --num_cards_in_seq;
     }
 
     /* Prepare the encoding. */
@@ -372,7 +372,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
         }
 
         const int num_derived_cards = fc_solve_bit_reader_read(bit_r, 4);
-        int num_cards_in_seq = num_derived_cards;
+        int_fast16_t num_cards_in_seq = num_derived_cards;
 
         if ((num_orig_cards == 0) && num_derived_cards)
         {
@@ -381,14 +381,14 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
             PROCESS_CARD(card);
             fcs_col_push_card(col, card);
 
-            num_cards_in_seq--;
+            --num_cards_in_seq;
         }
 
         if (num_cards_in_seq)
         {
             fcs_card_t last_card = fcs_col_get_card(col, fcs_col_len(col) - 1);
 
-            for (int i = 0; i < num_cards_in_seq; i++)
+            for (int_fast16_t i = 0; i < num_cards_in_seq; i++)
             {
                 const int suit_bit = fc_solve_bit_reader_read(bit_r, 1);
                 const fcs_card_t new_card =
