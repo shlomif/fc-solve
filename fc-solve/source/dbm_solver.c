@@ -478,9 +478,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
         if (instance->common.should_terminate == QUEUE_TERMINATE)
         {
             fcs_dbm_queue_item_t physical_item;
-            fcs_dbm_queue_item_t *item;
-
-            item = &physical_item;
+            fcs_dbm_queue_item_t *const item = &physical_item;
 
             while (fcs_offloading_queue__extract(
                 &(instance->queue), (fcs_offloading_queue_item_t *)(&token)))

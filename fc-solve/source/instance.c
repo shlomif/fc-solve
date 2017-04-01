@@ -263,10 +263,6 @@ static inline
                                                 .befs_weights =
                                                     fc_solve_default_befs_weights,
                                             },
-                                        .pqueue =
-                                            {
-                                                .Elements = NULL,
-                                            },
                                     },
                                 .brfs =
                                     {

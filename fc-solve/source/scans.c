@@ -430,7 +430,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
 
     fcs_states_linked_list_item_t *queue = NULL;
     fcs_states_linked_list_item_t *queue_last_item = NULL;
-    pri_queue_t *pqueue = NULL;
+    pri_queue_t *pqueue;
 
     int error_code;
 
