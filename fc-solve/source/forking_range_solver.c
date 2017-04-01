@@ -74,37 +74,32 @@ typedef struct
 typedef struct
 {
     fcs_int_limit_t num_iters;
-    int num_finished_boards;
+    int_fast32_t num_finished_boards;
 } response_t;
 
 static inline int worker_func(const worker_t w, void *const instance)
 {
     /* I'm one of the slaves */
-    request_t request;
-    response_t response;
+    request_t req;
 
     while (1)
     {
-        response.num_iters = 0;
+        read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req));
 
-        read(w.parent_to_child_pipe[READ_FD], &request, sizeof(request));
-
-        if (request.board_num == -1)
+        if (req.board_num == -1)
         {
             break;
         }
 
-        response.num_finished_boards =
-            request.quota_end - request.board_num + 1;
+        response_t response = {
+            .num_finished_boards = req.quota_end - req.board_num + 1,
+            .num_iters = 0};
 
-#define board_num (request.board_num)
-        for (; board_num <= request.quota_end; board_num++)
+        for (; req.board_num <= req.quota_end; req.board_num++)
         {
-            range_solvers__solve(instance, board_num, &response.num_iters);
+            range_solvers__solve(instance, req.board_num, &response.num_iters);
             freecell_solver_user_recycle(instance);
         }
-#undef board_num
-
         write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
     }
 
