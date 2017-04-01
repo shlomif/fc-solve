@@ -198,9 +198,14 @@ typedef struct
     fcs_meta_compact_allocator_t meta_alloc;
 } fcs_user_t;
 
+static inline fc_solve_instance_t *user_obj(fcs_user_t *const user)
+{
+    return &user->active_flare->obj;
+}
+
 static inline fc_solve_instance_t *active_obj(void *const api_instance)
 {
-    return (&(((fcs_user_t *)api_instance)->active_flare->obj));
+    return user_obj((fcs_user_t *)api_instance);
 }
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -1339,7 +1344,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
          defined(HARD_CODED_NUM_DECKS)))
-    fc_solve_instance_t *const instance = &(user->active_flare->obj);
+    var_AUTO(instance, user_obj(user));
 #endif
 
     fc_solve_apply_move(&(user->running_state.s), NULL,
@@ -1360,7 +1365,7 @@ DLLEXPORT void freecell_solver_user_current_state_stringify(void *api_instance,
 
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
          defined(HARD_CODED_NUM_DECKS)))
-    fc_solve_instance_t *const instance = &(user->active_flare->obj);
+    var_AUTO(instance, user_obj(user));
 #endif
 
     fc_solve_state_as_string(output_string, &(user->running_state.s),
@@ -1727,7 +1732,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
 
     return user->iterations_board_started_at.num_checked_states +
            max(user->active_flare->obj_stats.num_checked_states,
-               user->active_flare->obj.i__num_checked_states) -
+               user_obj(user)->i__num_checked_states) -
            user->init_num_checked_states.num_checked_states;
 }
 
@@ -2201,7 +2206,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     fc_solve_soft_thread_t *const soft_thread =
-        fc_solve_new_hard_thread(&(user->active_flare->obj));
+        fc_solve_new_hard_thread(user_obj(user));
 
     if (soft_thread == NULL)
     {
