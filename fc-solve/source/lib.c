@@ -198,6 +198,11 @@ typedef struct
     fcs_meta_compact_allocator_t meta_alloc;
 } fcs_user_t;
 
+static inline fc_solve_instance_t *active_obj(void *const api_instance)
+{
+    return (&(((fcs_user_t *)api_instance)->active_flare->obj));
+}
+
 #ifndef FCS_WITHOUT_ITER_HANDLER
 static void iter_handler_wrapper(void *api_instance, fcs_int_limit_t iter_num,
     int depth, void *lp_instance GCC_UNUSED, fcs_kv_state_t *ptr_state,
@@ -1735,9 +1740,7 @@ int DLLEXPORT freecell_solver_user_get_num_times(void *const api_instance)
 int DLLEXPORT freecell_solver_user_get_limit_iterations(
     void *const api_instance)
 {
-    const fcs_user_t *const user = (const fcs_user_t *)api_instance;
-
-    return user->active_flare->obj.effective_max_num_checked_states;
+    return active_obj(api_instance)->effective_max_num_checked_states;
 }
 #endif
 
@@ -1762,10 +1765,8 @@ int DLLEXPORT freecell_solver_user_get_moves_left(
 void DLLEXPORT freecell_solver_user_set_solution_optimization(
     void *const api_instance, const int optimize)
 {
-    fcs_user_t *const user = (fcs_user_t *)api_instance;
-
-    STRUCT_SET_FLAG_TO(&(user->active_flare->obj),
-        FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
+    STRUCT_SET_FLAG_TO(
+        active_obj(api_instance), FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
 #endif
 
@@ -2089,8 +2090,7 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
 {
 #if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
          defined(HARD_CODED_NUM_DECKS)))
-    fcs_user_t *const user = (fcs_user_t *)api_instance;
-    fc_solve_instance_t *const instance = &(user->active_flare->obj);
+    fc_solve_instance_t *const instance = active_obj(api_instance);
 #endif
 
     const_AUTO(
@@ -2147,9 +2147,7 @@ int DLLEXPORT freecell_solver_user_get_num_states_in_collection(
 void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
     void *api_instance, fcs_int_limit_t max_num_states)
 {
-    fcs_user_t *const user = (fcs_user_t * const)api_instance;
-
-    user->active_flare->obj.effective_max_num_states_in_collection =
+    active_obj(api_instance)->effective_max_num_states_in_collection =
         ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
 }
 
@@ -2166,9 +2164,7 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
 DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     void *const api_instance GCC_UNUSED, const long max_num_states GCC_UNUSED)
 {
-    fcs_user_t *const user = (fcs_user_t * const)api_instance;
-
-    user->active_flare->obj.effective_trim_states_in_collection_from =
+    active_obj(api_instance)->effective_trim_states_in_collection_from =
         ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
 }
 #endif
@@ -2221,19 +2217,15 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
     void *const api_instance)
 {
-    const fcs_user_t *const user = (const fcs_user_t *)api_instance;
-
-    return user->active_flare->obj.next_soft_thread_id;
+    return active_obj(api_instance)->next_soft_thread_id;
 }
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 void DLLEXPORT freecell_solver_user_set_calc_real_depth(
     void *const api_instance, const int calc_real_depth)
 {
-    fcs_user_t *const user = (fcs_user_t *)api_instance;
-
-    STRUCT_SET_FLAG_TO(&(user->active_flare->obj), FCS_RUNTIME_CALC_REAL_DEPTH,
-        calc_real_depth);
+    STRUCT_SET_FLAG_TO(
+        active_obj(api_instance), FCS_RUNTIME_CALC_REAL_DEPTH, calc_real_depth);
 }
 #endif
 
@@ -2307,27 +2299,19 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     void *const api_instance,
     const char *const tests_order FCS__PASS_ERR_STR(char **const error_string))
 {
-    fcs_user_t *const user = (fcs_user_t *)api_instance;
-
-    fc_solve_free_tests_order(&(user->active_flare->obj.opt_tests_order));
-
-    STRUCT_CLEAR_FLAG(
-        &(user->active_flare->obj), FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
-
+    var_AUTO(obj, active_obj(api_instance));
+    fc_solve_free_tests_order(&obj->opt_tests_order);
+    STRUCT_CLEAR_FLAG(obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
 #ifdef FCS_WITH_ERROR_STRS
     char static_error_string[120];
 #endif
-    const int ret =
-        fc_solve_apply_tests_order(&(user->active_flare->obj.opt_tests_order),
-            tests_order FCS__PASS_ERR_STR(static_error_string));
-
+    const int ret = fc_solve_apply_tests_order(&(obj->opt_tests_order),
+        tests_order FCS__PASS_ERR_STR(static_error_string));
     SET_ERROR_VAR(error_string, static_error_string);
     if (!ret)
     {
-        STRUCT_TURN_ON_FLAG(
-            &(user->active_flare->obj), FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
+        STRUCT_TURN_ON_FLAG(obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
-
     return ret;
 }
 #endif
@@ -2351,7 +2335,6 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
             error_string, "Unknown pruning value - must be \"r:tf\" or empty.");
         return 1;
     }
-
     return 0;
 }
 
@@ -2359,9 +2342,7 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
 void DLLEXPORT freecell_solver_user_set_reparent_states(
     void *const api_instance, const int to_reparent_states)
 {
-    fcs_user_t *const user = (fcs_user_t *)api_instance;
-
-    STRUCT_SET_FLAG_TO(&(user->active_flare->obj),
+    STRUCT_SET_FLAG_TO(active_obj(api_instance),
         FCS_RUNTIME_TO_REPARENT_STATES_PROTO, to_reparent_states);
 }
 #endif
@@ -2370,10 +2351,8 @@ void DLLEXPORT freecell_solver_user_set_reparent_states(
 void DLLEXPORT freecell_solver_user_set_scans_synergy(
     void *const api_instance, const int synergy)
 {
-    fcs_user_t *const user = (fcs_user_t *)api_instance;
-
     STRUCT_SET_FLAG_TO(
-        &(user->active_flare->obj), FCS_RUNTIME_SCANS_SYNERGY, synergy);
+        active_obj(api_instance), FCS_RUNTIME_SCANS_SYNERGY, synergy);
 }
 #endif
 
@@ -2498,14 +2477,11 @@ DLLEXPORT const char *freecell_solver_user_get_lib_version(
 DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
     void *const api_instance)
 {
-    const fcs_user_t *const user = (const fcs_user_t *)api_instance;
-
 #ifdef FCS_SINGLE_HARD_THREAD
-    const fc_solve_hard_thread_t *const hard_thread =
-        &(user->active_flare->obj);
+    const fc_solve_hard_thread_t *const hard_thread = active_obj(api_instance);
 #else
     const fc_solve_hard_thread_t *const hard_thread =
-        user->active_flare->obj.current_hard_thread;
+        active_obj(api_instance)->current_hard_thread;
 #endif
 
     return HT_FIELD(hard_thread, soft_threads)[HT_FIELD(hard_thread, st_idx)]
