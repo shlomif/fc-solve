@@ -640,10 +640,8 @@ void fc_solve_finish_instance(fc_solve_instance_t *const instance)
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
         g_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
-        {
-            Word_t rc_word;
-            JHSFA(rc_word, instance->judy_array);
-        }
+        Word_t rc_word;
+        JHSFA(rc_word, instance->judy_array);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
         g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
@@ -670,10 +668,8 @@ in the process */
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
     fc_solve_columns_google_hash_free(instance->stacks_hash);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
-    {
-        Word_t rc_word;
-        JHSFA(rc_word, instance->stacks_judy_array);
-    }
+    Word_t rc_word;
+    JHSFA(rc_word, instance->stacks_judy_array);
 #else
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
@@ -690,10 +686,8 @@ in the process */
 #ifdef FCS_RCS_STATES
 
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
-    {
-        Word_t rc_word;
-        JLFA(rc_word, instance->rcs_states_cache.states_values_to_keys_map);
-    }
+    Word_t rc_word;
+    JLFA(rc_word, instance->rcs_states_cache.states_values_to_keys_map);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
     fc_solve_kaz_tree_free_nodes(instance->rcs_states_cache.kaz_tree);
     fc_solve_kaz_tree_destroy(instance->rcs_states_cache.kaz_tree);

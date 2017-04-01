@@ -401,21 +401,20 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
 {
     if (calc_real_depth)
     {
-        int this_real_depth = 0;
+        int_fast32_t this_real_depth = -1;
         fcs_collectible_state_t *temp_state = ptr_state_orig;
         /* Count the number of states until the original state. */
         while (temp_state != NULL)
         {
             temp_state = FCS_S_PARENT(temp_state);
-            this_real_depth++;
+            ++this_real_depth;
         }
-        this_real_depth--;
         temp_state = ptr_state_orig;
         /* Assign the new depth throughout the path */
         while (FCS_S_DEPTH(temp_state) != this_real_depth)
         {
             FCS_S_DEPTH(temp_state) = this_real_depth;
-            this_real_depth--;
+            --this_real_depth;
             temp_state = FCS_S_PARENT(temp_state);
         }
     }
@@ -527,7 +526,7 @@ static inline void mark_as_dead_end__proto(
     if (temp_state != NULL)
     {
         /* Decrease the refcount of the state */
-        (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;
+        --(FCS_S_NUM_ACTIVE_CHILDREN(temp_state));
         while ((FCS_S_NUM_ACTIVE_CHILDREN(temp_state) == 0) &&
                (FCS_S_VISITED(temp_state) & FCS_VISITED_ALL_TESTS_DONE))
         {
