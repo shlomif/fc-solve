@@ -85,16 +85,15 @@ static inline int worker_func(const worker_t w, void *const instance)
     while (1)
     {
         read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req));
-
         if (req.board_num == -1)
         {
             break;
         }
 
         response_t response = {
+            .num_iters = 0,
             .num_finished_boards = req.quota_end - req.board_num + 1,
-            .num_iters = 0};
-
+        };
         for (; req.board_num <= req.quota_end; req.board_num++)
         {
             range_solvers__solve(instance, req.board_num, &response.num_iters);
@@ -116,26 +115,26 @@ static inline void write_request(const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr,
     const worker_t *const worker)
 {
-    request_t request;
+    request_t req;
     if ((*next_board_num_ptr) > end_board)
     {
         /* We only absolutely need to initialize .board_num here, but the
          * Coverity Scan scanner complains about quota_end being uninitialized
          * when passed to write() so we initialize it here as well.
          * */
-        request = (request_t){.board_num = -1, .quota_end = -1};
+        req = (request_t){.board_num = -1, .quota_end = -1};
     }
     else
     {
-        request.board_num = *(next_board_num_ptr);
+        req.board_num = *(next_board_num_ptr);
         if (((*next_board_num_ptr) += board_num_step) > end_board)
         {
             (*next_board_num_ptr) = end_board + 1;
         }
-        request.quota_end = (*next_board_num_ptr) - 1;
+        req.quota_end = (*next_board_num_ptr) - 1;
     }
 
-    write(worker->parent_to_child_pipe[WRITE_FD], &request, sizeof(request));
+    write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req));
 }
 
 static inline void transaction(const worker_t *const worker, const int read_fd,
