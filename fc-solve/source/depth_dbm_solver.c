@@ -337,13 +337,9 @@ int main(int argc, char *argv[])
                 fc_solve_err("--batch-size must be at least 1.\n");
             }
         }
-        else if (!strcmp(argv[*arg], "-o"))
+        else if ((param = TRY_PARAM("-o")))
         {
-            if (++(*arg) == argc)
-            {
-                fc_solve_err("-o came without an argument.\n");
-            }
-            out_filename = argv[*arg];
+            out_filename = param;
         }
         else
         {

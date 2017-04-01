@@ -1253,7 +1253,6 @@ static inline int fc_solve_soft_dfs_do_solve(
 
 #undef state
 
-#undef pass
 #undef ptr_state_key
 
 #ifdef FCS_FREECELL_ONLY
