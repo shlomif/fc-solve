@@ -365,7 +365,7 @@ struct fc_solve_hard_thread_struct
     /*
      * The index for the soft-thread that is currently processed
      * */
-    int st_idx;
+    int_fast32_t st_idx;
     /*
      * This is the mechanism used to allocate memory for stacks, states
      * and move stacks.
@@ -391,7 +391,7 @@ struct fc_solve_hard_thread_struct
     fcs_prelude_item_t *prelude;
 
     fcs_bool_t allocated_from_list;
-    int num_soft_threads;
+    int_fast32_t num_soft_threads;
 
     /*
      * A counter that determines how many of the soft threads that belong
