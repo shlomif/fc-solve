@@ -52,12 +52,10 @@ void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
     DFS_VAR(soft_thread, soft_dfs_info) =
         SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
 
-    fcs_soft_dfs_stack_item_t *soft_dfs_info =
-        DFS_VAR(soft_thread, soft_dfs_info) +
-        DFS_VAR(soft_thread, dfs_max_depth);
+    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info) +
+                                DFS_VAR(soft_thread, dfs_max_depth));
 
-    fcs_soft_dfs_stack_item_t *const end_soft_dfs_info =
-        soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY;
+    const_AUTO(end_soft_dfs_info, soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY);
     for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
         *soft_dfs_info = (fcs_soft_dfs_stack_item_t){

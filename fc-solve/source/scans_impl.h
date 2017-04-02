@@ -486,8 +486,7 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
 {
     for (int depth = 0; depth < DFS_VAR(soft_thread, depth); depth++)
     {
-        fcs_soft_dfs_stack_item_t *soft_dfs_info;
-        soft_dfs_info = &(DFS_VAR(soft_thread, soft_dfs_info)[depth]);
+        var_AUTO(soft_dfs_info, &(DFS_VAR(soft_thread, soft_dfs_info)[depth]));
         int *const rand_indexes = soft_dfs_info->derived_states_random_indexes;
 
         const_AUTO(num_states, soft_dfs_info->derived_states_list.num_states);
@@ -602,10 +601,8 @@ static inline fcs_bool_t fcs__is_state_a_dead_end(
 static inline void free_states_handle_soft_dfs_soft_thread(
     fc_solve_soft_thread_t *const soft_thread)
 {
-    fcs_soft_dfs_stack_item_t *soft_dfs_info =
-        DFS_VAR(soft_thread, soft_dfs_info);
-    fcs_soft_dfs_stack_item_t *const end_soft_dfs_info =
-        soft_dfs_info + DFS_VAR(soft_thread, depth);
+    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info));
+    const_AUTO(end_soft_dfs_info, soft_dfs_info + DFS_VAR(soft_thread, depth));
 
     for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
@@ -778,8 +775,8 @@ static inline int fc_solve_soft_dfs_do_solve(
 #define DEPTH() (*depth_ptr)
     ssize_t *const depth_ptr = &(DFS_VAR(soft_thread, depth));
 
-    fcs_soft_dfs_stack_item_t *the_soft_dfs_info =
-        &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]);
+    var_AUTO(
+        the_soft_dfs_info, &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]));
 
     ssize_t dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
     fcs_bool_t enable_pruning = soft_thread->enable_pruning;
