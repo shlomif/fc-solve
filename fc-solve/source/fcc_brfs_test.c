@@ -54,7 +54,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_state_locs_struct_t locs;
     const int max_num_elements_in_cache = 1000;
     fcs_encoded_state_buffer_t min_by_sorting;
-    fcs_fcc_moves_seq_t start_state_moves_seq;
     void *tree_recycle_bin = NULL;
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -91,8 +90,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_compact_allocator_init(&(moves_list_compact_alloc), &(meta_alloc));
     fcs_fcc_moves_seq_allocator_t moves_list_allocator = {
         .recycle_bin = NULL, .allocator = &(moves_list_compact_alloc)};
-    start_state_moves_seq.count = start_state_moves_count;
-    start_state_moves_seq.moves_list = NULL;
+    fcs_fcc_moves_seq_t start_state_moves_seq = {
+        .count = start_state_moves_count, .moves_list = NULL};
     {
         fcs_fcc_moves_list_item_t **moves_iter =
             &(start_state_moves_seq.moves_list);

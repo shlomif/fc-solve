@@ -164,9 +164,7 @@ typedef char fcs_locs_t;
             (fcs_state_foundation_t)(value))
 
 #define fcs_col_pop_top(col)                                                   \
-    {                                                                          \
-        fcs_col_get_card((col), (--fcs_col_len(col))) = fc_solve_empty_card;   \
-    }
+    (fcs_col_get_card((col), (--fcs_col_len(col))) = fc_solve_empty_card)
 
 #define fcs_col_pop_card(col, into)                                            \
     {                                                                          \
