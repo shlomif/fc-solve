@@ -422,9 +422,7 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
     return;
 }
 #else
-#define calculate_real_depth(calc_real_depth, ptr_state_orig)                  \
-    {                                                                          \
-    }
+#define calculate_real_depth(calc_real_depth, ptr_state_orig)
 #endif
 
 #ifdef DEBUG

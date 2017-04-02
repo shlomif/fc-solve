@@ -52,8 +52,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;
     fcs_state_locs_struct_t locs;
-    dict_t *do_next_fcc_start_points_exist;
-    fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     const int max_num_elements_in_cache = 1000;
     fcs_encoded_state_buffer_t min_by_sorting;
     fcs_fcc_moves_seq_t start_state_moves_seq;
@@ -81,10 +79,11 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_meta_compact_allocator_init(&meta_alloc);
     fc_solve_compact_allocator_init(
         &(start_points_list.allocator), &meta_alloc);
-    do_next_fcc_start_points_exist =
-        fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
+    var_AUTO(do_next_fcc_start_points_exist,
+        fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin));
     dict_t *does_min_by_sorting_exist =
         fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
+    fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     cache_init(&does_state_exist_in_any_FCC_cache, max_num_elements_in_cache,
         &meta_alloc);
 
@@ -202,9 +201,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;
     fcs_encoded_state_buffer_t start_enc_state;
-    dict_t *do_next_fcc_start_points_exist;
     const int max_num_elements_in_cache = 1000000;
-    fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     fcs_encoded_state_buffer_t min_by_sorting;
     void *tree_recycle_bin = NULL;
 
@@ -233,8 +230,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         .list = NULL, .recycle_bin = NULL};
     fc_solve_compact_allocator_init(
         &(start_points_list.allocator), &meta_alloc);
-    do_next_fcc_start_points_exist =
-        fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
+    var_AUTO(do_next_fcc_start_points_exist,
+        fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin));
     dict_t *does_min_by_sorting_exist =
         fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
     fcs_compact_allocator_t temp_allocator;
@@ -259,6 +256,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         }
     }
 
+    fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     cache_init(&does_state_exist_in_any_FCC_cache, max_num_elements_in_cache,
         &meta_alloc);
 
