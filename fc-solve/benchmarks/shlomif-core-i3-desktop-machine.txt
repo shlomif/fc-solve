@@ -939,3 +939,40 @@ Reached Board No. 24000 at 1490135138.160862 (total_num_iters=8302682)
 Reached Board No. 28000 at 1490135139.020557 (total_num_iters=9636225)
 Finished at 1490135139.918105 (total_num_iters=11017439)
 </DUMP>
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l obf"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+multi-threaded solver
+commit ebd65803d04dd63cbff014113f75b84e9359d70a
+(commit Date:   Sat Apr 1 22:31:16 2017 +0300 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l ci7b --prefix="/home/shlomif/apps/fcs"  -l extra_speed
+(With -flto and -fwhole-program).
+Without Makefile.gnu
+sudo_renice.
+-O3
+gcc-5.4.0-2.mga6 (Mageia package)
+lib64tcmalloc-devel-2.5-3.mga6
+With strip.
+
+7.16091179847717s
+
+    Highlight: small optimisations on trunk.
+
+<DUMP>
+Started at 1491079479.489530
+Reached Board No. 4000 at 1491079480.419686 (total_num_iters=358668)
+Reached Board No. 8000 at 1491079481.303750 (total_num_iters=1058827)
+Reached Board No. 12000 at 1491079482.160490 (total_num_iters=3737143)
+Unsolved Board No. 11982 at 1491079482.521761
+Reached Board No. 16000 at 1491079483.141084 (total_num_iters=4095454)
+Reached Board No. 20000 at 1491079484.043544 (total_num_iters=5852231)
+Reached Board No. 24000 at 1491079484.897576 (total_num_iters=6915319)
+Reached Board No. 28000 at 1491079485.750434 (total_num_iters=8643937)
+Reached Board No. 32000 at 1491079486.635520 (total_num_iters=9991017)
+Finished at 1491079486.650442 (total_num_iters=11017439)
+</DUMP>
+
+    ( DUMPS-1491079478-t/dump004 )
