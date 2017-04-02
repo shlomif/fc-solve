@@ -17,22 +17,17 @@
 #include "move.h"
 
 void fc_solve_moves_processed_render_move(
-    const fcs_extended_move_t move, char *const string)
+    const fcs_extended_move_t move, char *string)
 {
     switch (fcs_move_get_type(move.move))
     {
     case FCS_MOVE_TYPE_STACK_TO_STACK:
+        string += sprintf(string, "%d%d", 1 + fcs_move_get_src_stack(move.move),
+            1 + fcs_move_get_dest_stack(move.move));
         if (move.to_empty_stack &&
             (fcs_move_get_num_cards_in_seq(move.move) > 1))
         {
-            sprintf(string, "%i%iv%x", 1 + fcs_move_get_src_stack(move.move),
-                1 + fcs_move_get_dest_stack(move.move),
-                fcs_move_get_num_cards_in_seq(move.move));
-        }
-        else
-        {
-            sprintf(string, "%i%i", 1 + fcs_move_get_src_stack(move.move),
-                1 + fcs_move_get_dest_stack(move.move));
+            sprintf(string, "v%x", fcs_move_get_num_cards_in_seq(move.move));
         }
         break;
 
