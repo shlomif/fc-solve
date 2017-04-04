@@ -33,10 +33,7 @@ typedef struct
     struct timezone tz;
 } fcs_portable_time_t;
 
-#define FCS_GET_TIME(pt)                                                       \
-    {                                                                          \
-        gettimeofday(&((pt).tv), &((pt).tz));                                  \
-    }
+#define FCS_GET_TIME(pt) gettimeofday(&((pt).tv), &((pt).tz))
 #define FCS_TIME_GET_SEC(pt) ((long long)((pt).tv.tv_sec))
 #define FCS_TIME_GET_USEC(pt) ((long long)((pt).tv.tv_usec))
 #define FCS_LL_FMT "%lld"
@@ -49,10 +46,7 @@ typedef struct
     struct _timeb tb;
 } fcs_portable_time_t;
 
-#define FCS_GET_TIME(pt)                                                       \
-    {                                                                          \
-        _ftime(&((pt).tb));                                                    \
-    }
+#define FCS_GET_TIME(pt) _ftime(&((pt).tb))
 #define FCS_TIME_GET_SEC(pt) ((long long)((pt).tb.time))
 #define FCS_TIME_GET_USEC(pt) ((long long)(((pt).tb.millitm) * 1000))
 #define FCS_LL_FMT "%I64d"

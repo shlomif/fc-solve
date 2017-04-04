@@ -184,7 +184,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 
 typedef struct
 {
-    int source_index;
+    int src_idx;
     fcs_bool_t is_col;
 } empty_two_cols_ret_t;
 /*
@@ -197,7 +197,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
         fcs_move_stack_t *const moves_ptr),
     const int cols_indexes[3], const int num_cards_1, const int num_cards_2)
 {
-    empty_two_cols_ret_t ret = {.source_index = -1, .is_col = FALSE};
+    empty_two_cols_ret_t ret = {.src_idx = -1, .is_col = FALSE};
 
     int num_cards_to_move_from_columns[3] = {num_cards_1, num_cards_2, -1};
 
@@ -250,8 +250,8 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
             fcs_move_stack_non_seq_push(moves_ptr,
                 FCS_MOVE_TYPE_STACK_TO_FREECELL, *col_idx, dest_fc_idx);
 
-            ret = (empty_two_cols_ret_t){
-                .source_index = dest_fc_idx, .is_col = FALSE};
+            ret =
+                (empty_two_cols_ret_t){.src_idx = dest_fc_idx, .is_col = FALSE};
             --(*col_num_cards);
             ++dest_fc_idx;
         }
@@ -297,7 +297,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
         fcs_push_1card_seq(moves_ptr, col_idx_val, put_cards_in_col_idx);
 
         ret = (empty_two_cols_ret_t){
-            .source_index = put_cards_in_col_idx, .is_col = TRUE};
+            .src_idx = put_cards_in_col_idx, .is_col = TRUE};
         --(*col_num_cards);
         ++put_cards_in_col_idx;
     }
@@ -616,25 +616,25 @@ DECLARE_MOVE_FUNCTION(
                     cols_indexes, below_c - dc, 0);
 
                 fcs_card_t moved_card;
-#define source_index last_dest.source_index
+#define src_idx last_dest.src_idx
                 if (last_dest.is_col)
                 {
                     fcs_cards_column_t new_source_col =
-                        fcs_state_get_col(new_state, source_index);
+                        fcs_state_get_col(new_state, src_idx);
 
                     fcs_col_pop_card(new_source_col, moved_card);
 
-                    fcs_push_1card_seq(moves, source_index, ds);
+                    fcs_push_1card_seq(moves, src_idx, ds);
                 }
                 else
                 {
-                    moved_card = fcs_freecell_card(new_state, source_index);
-                    fcs_empty_freecell(new_state, source_index);
+                    moved_card = fcs_freecell_card(new_state, src_idx);
+                    fcs_empty_freecell(new_state, src_idx);
 
-                    fcs_move_stack_non_seq_push(moves,
-                        FCS_MOVE_TYPE_FREECELL_TO_STACK, source_index, ds);
+                    fcs_move_stack_non_seq_push(
+                        moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, src_idx, ds);
                 }
-#undef source_index
+#undef src_idx
 
                 fcs_col_push_card(new_dest_col, moved_card);
 
@@ -904,7 +904,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                         0);
 
                 const int b = find_empty_stack(raw_ptr_state_raw,
-                    (empty_ret.is_col ? empty_ret.source_index + 1 : 0),
+                    (empty_ret.is_col ? empty_ret.src_idx + 1 : 0),
                     LOCAL_STACKS_NUM);
                 my_copy_stack(b);
 

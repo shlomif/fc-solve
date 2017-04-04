@@ -60,7 +60,7 @@ void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
     {
         *soft_dfs_info = (fcs_soft_dfs_stack_item_t){
             .state = NULL,
-            .tests_list_index = 0,
+            .move_func_list_idx = 0,
             .move_func_idx = 0,
             .current_state_index = 0,
             .derived_states_list =

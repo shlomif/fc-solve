@@ -428,12 +428,13 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
 #ifdef DEBUG
 #define TRACE0(message)                                                        \
     fcs_trace("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "              \
-              "tests_list_index=%d ; move_func_idx=%d ; "                      \
+              "move_func_list_idx=%ld ; move_func_idx=%d ; "                   \
               "current_state_index=%d ; num_states=%ld\n",                     \
-        message, (long int)DFS_VAR(soft_thread, depth),                        \
-        (long int)(the_soft_dfs_info - DFS_VAR(soft_thread, soft_dfs_info)),   \
-        (long int)(instance->i__num_checked_states),                           \
-        the_soft_dfs_info->tests_list_index, the_soft_dfs_info->move_func_idx, \
+        message, (long)DFS_VAR(soft_thread, depth),                            \
+        (long)(the_soft_dfs_info - DFS_VAR(soft_thread, soft_dfs_info)),       \
+        (long)(instance->i__num_checked_states),                               \
+        (long)the_soft_dfs_info->move_func_list_idx,                           \
+        the_soft_dfs_info->move_func_idx,                                      \
         the_soft_dfs_info->current_state_index,                                \
         (long)(derived_states_list ? derived_states_list->num_states : -1))
 
@@ -883,7 +884,7 @@ static inline int fc_solve_soft_dfs_do_solve(
             derived_states_list->num_states)
         {
             /* Check if we already tried all the tests here. */
-            if (the_soft_dfs_info->tests_list_index ==
+            if (the_soft_dfs_info->move_func_list_idx ==
                 THE_MOVE_FUNCS_LIST.num_lists)
             {
                 /* Backtrack to the previous depth. */
@@ -929,7 +930,7 @@ static inline int fc_solve_soft_dfs_do_solve(
             /* If this is the first test, then count the number of unoccupied
                freecells and stacks and check if we are done. */
             if ((the_soft_dfs_info->move_func_idx == 0) &&
-                (the_soft_dfs_info->tests_list_index == 0))
+                (the_soft_dfs_info->move_func_list_idx == 0))
             {
 #ifndef FCS_WITHOUT_ITER_HANDLER
                 TRACE0("In iter_handler");
@@ -994,7 +995,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                         fc_solve_sfs_raymond_prune(soft_thread, &pass);
                     if (derived)
                     {
-                        the_soft_dfs_info->tests_list_index =
+                        the_soft_dfs_info->move_func_list_idx =
                             THE_MOVE_FUNCS_LIST.num_lists;
                         fc_solve_derived_states_list_add_state(
                             derived_states_list, derived, 0);
@@ -1019,19 +1020,17 @@ static inline int fc_solve_soft_dfs_do_solve(
 
             TRACE0("After iter_handler");
 
-            const int orig_tests_list_index =
-                the_soft_dfs_info->tests_list_index;
-
+            const_AUTO(orig_idx, the_soft_dfs_info->move_func_list_idx);
             const fc_solve_state_weighting_t *const weighting =
-                &(THE_MOVE_FUNCS_LIST.lists[orig_tests_list_index].weighting);
+                &(THE_MOVE_FUNCS_LIST.lists[orig_idx].weighting);
 
-            if (the_soft_dfs_info->tests_list_index <
+            if (the_soft_dfs_info->move_func_list_idx <
                 THE_MOVE_FUNCS_LIST.num_lists)
             {
                 /* Always do the first test */
                 local_shuffling_type =
                     THE_MOVE_FUNCS_LIST
-                        .lists[the_soft_dfs_info->tests_list_index]
+                        .lists[the_soft_dfs_info->move_func_list_idx]
                         .shuffling_type;
 
                 do
@@ -1039,7 +1038,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                     VERIFY_PTR_STATE_TRACE0("Verify Bar");
 
                     THE_MOVE_FUNCS_LIST
-                        .lists[the_soft_dfs_info->tests_list_index]
+                        .lists[the_soft_dfs_info->move_func_list_idx]
                         .tests[the_soft_dfs_info->move_func_idx](
                             soft_thread, &pass, derived_states_list);
 
@@ -1048,10 +1047,10 @@ static inline int fc_solve_soft_dfs_do_solve(
                     /* Move the counter to the next test */
                     if ((++the_soft_dfs_info->move_func_idx) ==
                         THE_MOVE_FUNCS_LIST
-                            .lists[the_soft_dfs_info->tests_list_index]
+                            .lists[the_soft_dfs_info->move_func_list_idx]
                             .num_move_funcs)
                     {
-                        the_soft_dfs_info->tests_list_index++;
+                        the_soft_dfs_info->move_func_list_idx++;
                         the_soft_dfs_info->move_func_idx = 0;
                         break;
                     }
@@ -1110,8 +1109,7 @@ static inline int fc_solve_soft_dfs_do_solve(
 
                     case FCS_WEIGHTING:
                     {
-                        if (orig_tests_list_index <
-                            THE_MOVE_FUNCS_LIST.num_lists)
+                        if (orig_idx < THE_MOVE_FUNCS_LIST.num_lists)
                         {
                             fcs_derived_states_list_item_t *const
                                 derived_states = derived_states_list->states;
@@ -1202,7 +1200,7 @@ static inline int fc_solve_soft_dfs_do_solve(
 
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify after recurse");
 
-                the_soft_dfs_info->tests_list_index = 0;
+                the_soft_dfs_info->move_func_list_idx = 0;
                 the_soft_dfs_info->move_func_idx = 0;
                 the_soft_dfs_info->current_state_index = 0;
                 derived_states_list = &(the_soft_dfs_info->derived_states_list);
