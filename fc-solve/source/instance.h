@@ -310,9 +310,8 @@ typedef struct
 typedef void *fcs_instance_debug_iter_output_context_t;
 
 typedef void (*fcs_instance_debug_iter_output_func_t)(
-    fcs_instance_debug_iter_output_context_t, fcs_int_limit_t iter_num,
-    int depth, void *instance, fcs_kv_state_t *state,
-    fcs_int_limit_t parent_iter_num);
+    fcs_instance_debug_iter_output_context_t, fcs_int_limit_t, int, void *,
+    fcs_kv_state_t *, fcs_int_limit_t);
 #endif
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;

@@ -208,12 +208,6 @@ static inline fc_solve_instance_t *active_obj(void *const api_instance)
     return user_obj((fcs_user_t *)api_instance);
 }
 
-#ifndef FCS_WITHOUT_ITER_HANDLER
-static void iter_handler_wrapper(void *api_instance, fcs_int_limit_t iter_num,
-    int depth, void *lp_instance GCC_UNUSED, fcs_kv_state_t *ptr_state,
-    fcs_int_limit_t parent_iter_num);
-#endif
-
 #define INSTANCES_LOOP_START()                                                 \
     const_SLOT(end_of_instances_list, user);                                   \
     for (fcs_instance_item_t *instance_item = user->instances_list;            \
