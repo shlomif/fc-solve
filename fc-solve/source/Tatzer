@@ -255,19 +255,7 @@ GetOptions(
         }
         return;
     },
-    'rwd' => sub {
-        my ($opt, $val) = @_;
-
-        $build_type = "RelWithDebInfo";
-
-        return;
-    },
-    'kazlib' => sub { $STR_OPTS{'p|pos'}{value} = $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE'; },
-    'judy' => sub { return set_both("JUDY"); },
     'hash' => \&set_hash,
-    'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
-    'dense' => sub { return _set_to_google_hash("DENSE"); },
-    'sparse' => sub { return _set_to_google_hash("SPARSE"); },
     'profile' => sub {
         my ($opt, $val) = @_;
         if ($val)
@@ -285,6 +273,18 @@ GetOptions(
         return;
     },
     'gen=s' => \$generate_what,
+    'rwd' => sub {
+        my ($opt, $val) = @_;
+
+        $build_type = "RelWithDebInfo";
+
+        return;
+    },
+    'kazlib' => sub { $STR_OPTS{'p|pos'}{value} = $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE'; },
+    'judy' => sub { return set_both("JUDY"); },
+    'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
+    'dense' => sub { return _set_to_google_hash("DENSE"); },
+    'sparse' => sub { return _set_to_google_hash("SPARSE"); },
     (map {; "$_!" => \($bool_opts_with_false_defaults__values{$_}) } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
     (map {; "$_!" => \($true_bool_opts__values{$_}) } @TRUE_BOOL_KEYS),
     (map {; "$_=i" => \($int_opts__values{$_}) } @INT_OPS__KEYS),
