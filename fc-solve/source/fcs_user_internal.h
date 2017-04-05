@@ -14,8 +14,6 @@
 #pragma once
 
 #include "fcs_dllexport.h"
-#include "fcs_enums.h"
-#include "fcs_move.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -21,7 +21,10 @@ extern "C" {
 
 #include "config.h"
 
+#ifdef FCS_WITH_MOVES
 #include "fcs_move.h"
+#endif
+
 #include "fcs_enums.h"
 
 #include "rinutils.h"

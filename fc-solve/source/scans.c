@@ -791,8 +791,9 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
 extern void fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t *const soft_thread,
     fcs_kv_state_t *const raw_ptr_state_raw,
-    fcs_kv_state_t *const raw_ptr_new_state_raw, const int state_context_value,
-    fcs_move_stack_t *const moves,
+    fcs_kv_state_t *const raw_ptr_new_state_raw,
+    const int state_context_value FCS__pass_moves(
+        fcs_move_stack_t *const moves),
     fcs_derived_states_list_t *const derived_states_list)
 {
     const_SLOT(hard_thread, soft_thread);

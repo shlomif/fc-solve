@@ -172,8 +172,9 @@ extern int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const,
     fcs_kv_state_t *const SFS__PASS_MOVE_STACK(fcs_move_stack_t *const));
 
 extern void fc_solve_sfs_check_state_end(fc_solve_soft_thread_t *const,
-    fcs_kv_state_t *const, fcs_kv_state_t *const, const int,
-    fcs_move_stack_t *const, fcs_derived_states_list_t *const);
+    fcs_kv_state_t *const, fcs_kv_state_t *const,
+    const int FCS__pass_moves(fcs_move_stack_t *const),
+    fcs_derived_states_list_t *const);
 
 #ifdef __cplusplus
 }

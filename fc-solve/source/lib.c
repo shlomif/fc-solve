@@ -797,6 +797,29 @@ static void recycle_instance(
 }
 
 #ifndef FCS_USE_COMPACT_MOVE_TOKENS
+#define user_move_to_internal_move(x) (x)
+#else
+static inline fcs_internal_move_t user_move_to_internal_move(
+    const fcs_move_t user_move)
+{
+    fcs_internal_move_t internal_move;
+
+    /* Convert the internal_move to a user move. */
+    fcs_int_move_set_src_stack(
+        internal_move, fcs_move_get_src_stack(user_move));
+    fcs_int_move_set_dest_stack(
+        internal_move, fcs_move_get_dest_stack(user_move));
+    fcs_int_move_set_type(internal_move, fcs_move_get_type(user_move));
+    fcs_int_move_set_num_cards_in_seq(
+        internal_move, fcs_move_get_num_cards_in_seq(user_move));
+
+    return internal_move;
+}
+#endif
+
+#ifdef FCS_WITH_MOVES
+
+#ifndef FCS_USE_COMPACT_MOVE_TOKENS
 #define internal_move_to_user_move(x) (x)
 #else
 static inline const fcs_move_t internal_move_to_user_move(
@@ -814,27 +837,6 @@ static inline const fcs_move_t internal_move_to_user_move(
         user_move, fcs_int_move_get_num_cards_in_seq(internal_move));
 
     return user_move;
-}
-#endif
-
-#ifndef FCS_USE_COMPACT_MOVE_TOKENS
-#define user_move_to_internal_move(x) (x)
-#else
-static inline const fcs_internal_move_t user_move_to_internal_move(
-    const fcs_move_t user_move)
-{
-    fcs_internal_move_t internal_move;
-
-    /* Convert the internal_move to a user move. */
-    fcs_int_move_set_src_stack(
-        internal_move, fcs_move_get_src_stack(user_move));
-    fcs_int_move_set_dest_stack(
-        internal_move, fcs_move_get_dest_stack(user_move));
-    fcs_int_move_set_type(internal_move, fcs_move_get_type(user_move));
-    fcs_int_move_set_num_cards_in_seq(
-        internal_move, fcs_move_get_num_cards_in_seq(user_move));
-
-    return internal_move;
 }
 #endif
 
@@ -862,6 +864,7 @@ static inline void calc_moves_seq(const fcs_move_stack_t *const solution_moves,
     moves_seq->num_moves = num_moves;
     moves_seq->moves = ret_moves;
 }
+#endif
 
 #if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
 static void trace_flare_solution(

@@ -16,13 +16,15 @@
  */
 #pragma once
 
-#include "fcs_move.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "config.h"
+
+#ifdef FCS_WITH_MOVES
+
+#include "fcs_move.h"
 
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
 typedef struct
@@ -92,6 +94,8 @@ typedef struct
     fcs_internal_move_t *moves;
     size_t num_moves;
 } fcs_move_stack_t;
+
+#endif
 
 #ifdef __cplusplus
 }
