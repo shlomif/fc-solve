@@ -79,10 +79,20 @@ EOF
     "};\n"
 );
 
-my $inc_h = 'cmd_line_inc.h';
+my $inc_h      = 'cmd_line_inc.h';
+my $temp_inc_h = 'temp__cmd_line_inc.h';
+
+sub temp_del
+{
+    if ( -e $temp_inc_h )
+    {
+        unlink($temp_inc_h);
+    }
+}
 
 sub del
 {
+    temp_del;
     if ( -e $inc_h )
     {
         unlink($inc_h);
@@ -91,14 +101,25 @@ sub del
 
 del();
 if (
-    system( 'gperf', '-L', 'ANSI-C', '-t', $gperf_fn, "--output-file=$inc_h" ) )
+    system(
+        'gperf', '-L',      'ANSI-C',
+        '-t',    $gperf_fn, "--output-file=$temp_inc_h"
+    )
+    )
 {
     del();
     die "Running gperf failed!";
 }
-path($inc_h)
-    ->edit_utf8(
-    sub { s#(^|\n)(struct CommandOption \*(?:$|\n|\r\n))#${1}static $2#gms; } );
+path($inc_h)->spew_utf8(
+    do
+    {
+        my $str = path($temp_inc_h)->slurp_utf8();
+        $str =~
+            s#(^|\n)(struct CommandOption \*(?:$|\n|\r\n))#${1}static $2#gms;
+        $str;
+        }
+);
+temp_del;
 
 __END__
 
