@@ -30,14 +30,14 @@ typedef struct
 } fc_solve_bit_writer_t;
 
 static inline void fc_solve_bit_writer_init(
-    fc_solve_bit_writer_t *writer, fcs_uchar_t *start)
+    fc_solve_bit_writer_t *const writer, fcs_uchar_t *const start)
 {
     *(writer->start = writer->current = start) = 0;
     writer->bit_in_char_idx = 0;
 }
 
 static inline void fc_solve_bit_writer_write(
-    fc_solve_bit_writer_t *writer, int len, fc_solve_bit_data_t data)
+    fc_solve_bit_writer_t *const writer, int len, fc_solve_bit_data_t data)
 {
     for (; len; len--, (data >>= 1))
     {

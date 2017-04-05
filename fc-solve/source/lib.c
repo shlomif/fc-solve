@@ -796,31 +796,11 @@ static void recycle_instance(
     return;
 }
 
-#ifndef FCS_USE_COMPACT_MOVE_TOKENS
-#define user_move_to_internal_move(x) (x)
-#else
-static inline fcs_internal_move_t user_move_to_internal_move(
-    const fcs_move_t user_move)
-{
-    fcs_internal_move_t internal_move;
-
-    /* Convert the internal_move to a user move. */
-    fcs_int_move_set_src_stack(
-        internal_move, fcs_move_get_src_stack(user_move));
-    fcs_int_move_set_dest_stack(
-        internal_move, fcs_move_get_dest_stack(user_move));
-    fcs_int_move_set_type(internal_move, fcs_move_get_type(user_move));
-    fcs_int_move_set_num_cards_in_seq(
-        internal_move, fcs_move_get_num_cards_in_seq(user_move));
-
-    return internal_move;
-}
-#endif
-
 #ifdef FCS_WITH_MOVES
 
 #ifndef FCS_USE_COMPACT_MOVE_TOKENS
 #define internal_move_to_user_move(x) (x)
+#define user_move_to_internal_move(x) (x)
 #else
 static inline const fcs_move_t internal_move_to_user_move(
     const fcs_internal_move_t internal_move)
@@ -837,6 +817,22 @@ static inline const fcs_move_t internal_move_to_user_move(
         user_move, fcs_int_move_get_num_cards_in_seq(internal_move));
 
     return user_move;
+}
+static inline fcs_internal_move_t user_move_to_internal_move(
+    const fcs_move_t user_move)
+{
+    fcs_internal_move_t internal_move;
+
+    /* Convert the internal_move to a user move. */
+    fcs_int_move_set_src_stack(
+        internal_move, fcs_move_get_src_stack(user_move));
+    fcs_int_move_set_dest_stack(
+        internal_move, fcs_move_get_dest_stack(user_move));
+    fcs_int_move_set_type(internal_move, fcs_move_get_type(user_move));
+    fcs_int_move_set_num_cards_in_seq(
+        internal_move, fcs_move_get_num_cards_in_seq(user_move));
+
+    return internal_move;
 }
 #endif
 
@@ -1321,9 +1317,7 @@ static inline fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
     trace_flare_solution(user, flare);
     return flare;
 }
-#endif
 
-#ifdef FCS_WITH_MOVES
 int DLLEXPORT freecell_solver_user_get_next_move(
     void *const api_instance, fcs_move_t *const user_move)
 {
