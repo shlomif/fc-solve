@@ -27,6 +27,7 @@ extern "C" {
 #include "dbm_common.h"
 
 #define RANK_KING 13
+#define CARD_ARRAY_LEN ((RANK_KING + 1) * FCS_NUM_SUITS)
 
 typedef struct
 {
@@ -37,7 +38,7 @@ typedef struct
     size_t num_columns;
     fcs_state_t *init_state, *derived_state;
     int bits_per_orig_cards_in_column;
-    int card_states[4 * RANK_KING];
+    int card_states[CARD_ARRAY_LEN];
     int8_t bakers_dozen_topmost_cards_lookup[((1 << 6) / 8) + 1];
     fcs_var_base_reader_t r;
     fcs_var_base_writer_t w;
