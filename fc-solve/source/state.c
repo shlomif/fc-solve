@@ -92,6 +92,7 @@ void fc_solve_canonize_state(
 }
 #undef state_key
 
+#ifdef FCS_WITH_MOVES
 void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
 #define state_key (ptr_state_key)
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
@@ -139,6 +140,7 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
     }
 }
 #undef state_key
+#endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 int fc_solve_state_compare_equal(const void *const s1, const void *const s2)

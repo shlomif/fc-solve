@@ -68,7 +68,9 @@ typedef struct
 #endif
     fcs_stats_t obj_stats;
     fcs_bool_t was_solution_traced;
+#ifdef FCS_WITH_MOVES
     fcs_state_locs_struct_t trace_solution_state_locs;
+#endif
 } fcs_flare_item_t;
 
 #ifdef FCS_WITH_FLARES
@@ -160,8 +162,10 @@ typedef struct
 #if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
     fcs_state_keyval_pair_t initial_non_canonized_state;
 #endif
+#ifdef FCS_WITH_MOVES
     fcs_state_locs_struct_t state_locs;
     fcs_state_locs_struct_t initial_state_locs;
+#endif
     int ret_code;
     fcs_bool_t all_instances_were_suspended;
     fcs_state_validity_ret_t state_validity_ret;
@@ -1046,10 +1050,10 @@ static inline int resume_solution(fcs_user_t *const user)
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
 #endif
-
+#ifdef FCS_WITH_MOVES
             fc_solve_init_locs(&(user->initial_state_locs));
             user->state_locs = user->initial_state_locs;
-
+#endif
             /* running_state and initial_non_canonized_state are
              * normalized states. So We're duplicating
              * state to it before user->state is canonized.
@@ -1059,10 +1063,14 @@ static inline int resume_solution(fcs_user_t *const user)
             FCS_STATE__DUP_keyval_pair(
                 user->initial_non_canonized_state, user->state);
 #endif
-
+#ifdef FCS_WITH_MOVES
             fc_solve_canonize_state_with_locs(&(user->state.s),
                 &(user->state_locs)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
                     PASS_STACKS(INSTANCE_STACKS_NUM));
+#else
+            fc_solve_canonize_state(&(user->state.s)PASS_FREECELLS(
+                INSTANCE_FREECELLS_NUM) PASS_STACKS(INSTANCE_STACKS_NUM));
+#endif
             fc_solve_init_instance(instance);
         }
 
@@ -1346,7 +1354,6 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 
     return 0;
 }
-#endif
 
 DLLEXPORT void freecell_solver_user_current_state_stringify(void *api_instance,
     char *const output_string FC_SOLVE__PASS_PARSABLE(int parseable_output),
@@ -1379,6 +1386,7 @@ DLLEXPORT char *freecell_solver_user_current_state_as_string(
 
     return state_as_string;
 }
+#endif
 #endif
 
 static void user_free_resources(fcs_user_t *const user)
