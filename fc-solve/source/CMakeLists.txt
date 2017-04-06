@@ -664,18 +664,14 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         dbm_solver.c
         ${_dbm_modules}
     )
-
     ADD_EXECUTABLE(depth_dbm_fc_solver
         depth_dbm_solver.c
         ${_dbm_modules}
     )
-
-    IF (1)
     ADD_EXECUTABLE(split_fcc_fc_solver
         split_fcc_solver.c
         ${_dbm_modules}
     )
-    ENDIF()
 
     SET (EXTRA_SOLVERS )
     IF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES") AND "${WITH_JUDY}")
