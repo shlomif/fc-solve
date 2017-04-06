@@ -56,13 +56,15 @@ foreach my $parent_suit (@SUITS)
 
 sub emit
 {
-    my ( $DECL, $header_fn, $c_fn, $header_headers, $contents ) = @_;
+    my ( $DECL, $bn, $header_headers, $contents ) = @_;
+
+    my $header_fn = "$bn.h";
 
     path($header_fn)
         ->spew_utf8( "#pragma once\n"
             . join( '', map { qq{#include $_\n} } @$header_headers )
             . "extern $DECL;\n" );
-    path($c_fn)
+    path("$bn.c")
         ->spew_utf8( qq/#include "$header_fn"\n\n$DECL = {/
             . join( ',', @$contents )
             . "};\n" );
@@ -72,8 +74,7 @@ sub emit
 
 emit(
 qq#const fcs_bool_t fc_solve_is_parent_buf[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
-    'is_parent.h',
-    'is_parent.c',
+    'is_parent',
     [ q/"bool.h"/, ],
     [
         map {
@@ -92,15 +93,13 @@ qq#const fcs_bool_t fc_solve_is_parent_buf[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#
 );
 emit(
     qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
-    'debondt__state_pos.h',
-    'debondt__state_pos.c',
+    'debondt__state_pos',
     [ q/<stddef.h>/, ],
     [ map { '{' . join( ',', @$_ ) . '}'; } @state_pos ],
 );
 emit(
     qq#const size_t fc_solve__card_pos[@{[scalar @card_pos]}]#,
-    'debondt__card_pos.h',
-    'debondt__card_pos.c',
+    'debondt__card_pos',
     [ q/<stddef.h>/, ],
     [ map { $_ || 0 } @card_pos ],
 );
