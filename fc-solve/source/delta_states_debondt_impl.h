@@ -414,7 +414,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
             if (fcs_col_len(col))
             {
-                orig_top_most_cards[(size_t)fcs_col_get_card(col, 0)] = TRUE;
+                orig_top_most_cards[CARD_POS(fcs_col_get_card(col, 0))] = TRUE;
             }
         }
     }
@@ -488,7 +488,7 @@ static void fc_solve_debondt_delta_stater_decode(
                         }
                         else if (item_opt == OPT_TOPMOST)
                         {
-                            if (!orig_top_most_cards[(size_t)card])
+                            if (!orig_top_most_cards[CARD_POS(card)])
                             {
                                 new_top_most_cards[next_new_top_most_cards++] =
                                     card;
