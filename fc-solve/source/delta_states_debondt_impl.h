@@ -424,8 +424,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
             if (fcs_col_len(col))
             {
-                const fcs_card_t card = fcs_col_get_card(col, 0);
-                orig_top_most_cards[(size_t)card] = TRUE;
+                orig_top_most_cards[(size_t)fcs_col_get_card(col, 0)] = TRUE;
             }
         }
     }
