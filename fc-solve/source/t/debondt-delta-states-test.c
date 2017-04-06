@@ -29,6 +29,8 @@
 #include "../indirect_buffer.h"
 #include "../trim_trailing_whitespace.h"
 #include "../render_state.h"
+#include "debondt__card_pos.c"
+#include "debondt__state_pos.c"
 
 static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
 {

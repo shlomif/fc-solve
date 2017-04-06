@@ -199,7 +199,11 @@ ADD_CUSTOM_COMMAND(
 )
 SET (is_parent_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_is_parent_lookup_c.pl")
 SET (is_parent_args "${is_parent_gen}")
-SET (is_parent_output "${CMAKE_CURRENT_BINARY_DIR}/is_parent.c" "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h")
+SET (is_parent_output
+    "${CMAKE_CURRENT_BINARY_DIR}/debondt__card_pos.c" "${CMAKE_CURRENT_BINARY_DIR}/debondt__card_pos.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/debondt__state_pos.c" "${CMAKE_CURRENT_BINARY_DIR}/debondt__state_pos.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/is_parent.c" "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h"
+    )
 add_gen_c(${is_parent_output})
 ADD_CUSTOM_COMMAND(
     OUTPUT ${is_parent_output}
@@ -570,7 +574,7 @@ FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tes
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 FCS_ADD_EXEC_NO_INSTALL(summary-fc-solve summarizing_solver.c)
 
-SET (DBM_FCC_COMMON card.c is_parent.c meta_alloc.c state.c)
+SET (DBM_FCC_COMMON card.c debondt__card_pos.c debondt__state_pos.c is_parent.c meta_alloc.c state.c)
 
 CHECK_TYPE_SIZE("__int128" INT128 LANGUAGE C)
 IF (HAVE_INT128)
@@ -1134,6 +1138,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
     ADD_LIBRARY(fcs_debondt_delta_states_test
         SHARED
         card.c state.c delta_states_debondt.c
+        debondt__card_pos.c debondt__state_pos.c
     )
     TARGET_LINK_LIBRARIES(fcs_debondt_delta_states_test ${LIBGMP_LIB})
     ADD_LIBRARY(fcs_dbm_calc_derived_test

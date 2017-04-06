@@ -26,6 +26,8 @@
 #include "delta_states.h"
 #include "delta_states_debondt.h"
 #include "debondt_delta_states_iface.h"
+#include "debondt__card_pos.h"
+#include "debondt__state_pos.h"
 #include "var_base_reader.h"
 #include "var_base_writer.h"
 
@@ -194,8 +196,8 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
             for (unsigned long r = 1; r <= max_rank; r++)
             {
-#define STATE_POS(suit_idx, rank) (rank - 1 + suit_idx * RANK_KING)
-#define CARD_POS(card) (STATE_POS((fcs_card_suit(card)), (fcs_card_rank(card))))
+#define STATE_POS(suit_idx, rank) fc_solve__state_pos[rank][suit_idx]
+#define CARD_POS(card) fc_solve__card_pos[(size_t)(card)]
                 self->card_states[STATE_POS(suit_idx, r)] = OPT_DONT_CARE;
             }
         }
