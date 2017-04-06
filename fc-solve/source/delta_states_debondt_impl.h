@@ -240,17 +240,11 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                     /* Skip Aces which were already set. */
                     if (fcs_card_rank(this_card) != 1)
                     {
-                        if (fcs_card_rank(this_card) + 1 ==
-                            fcs_card_rank(parent_card))
-                        {
-                            self->card_states[CARD_POS(this_card)] =
-                                wanted_suit_idx_opt(parent_card);
-                        }
-                        else
-                        {
-                            self->card_states[CARD_POS(this_card)] =
-                                OPT__BAKERS_DOZEN__ORIG_POS;
-                        }
+                        self->card_states[CARD_POS(this_card)] =
+                            ((fcs_card_rank(this_card) + 1 ==
+                                 fcs_card_rank(parent_card))
+                                    ? wanted_suit_idx_opt(parent_card)
+                                    : OPT__BAKERS_DOZEN__ORIG_POS);
                     }
                 }
             }
