@@ -658,27 +658,17 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         LINK_DIRECTORIES("${LEVELDB_SOURCE_DIR}")
         LIST (INSERT DBM_LIBS 0 "leveldb")
     ENDIF ()
-    SET (_dbm_modules ${DBM_FCC_COMMON} ${_dbm_mod} ${BIN_TREE_MODULE})
+    MACRO (DBM_EXE exe c_file)
+        ADD_EXECUTABLE("${exe}" "${c_file}" ${DBM_FCC_COMMON} ${_dbm_mod} ${BIN_TREE_MODULE})
+    ENDMACRO()
 
-    ADD_EXECUTABLE(dbm_fc_solver
-        dbm_solver.c
-        ${_dbm_modules}
-    )
-    ADD_EXECUTABLE(depth_dbm_fc_solver
-        depth_dbm_solver.c
-        ${_dbm_modules}
-    )
-    ADD_EXECUTABLE(split_fcc_fc_solver
-        split_fcc_solver.c
-        ${_dbm_modules}
-    )
+    DBM_EXE(dbm_fc_solver dbm_solver.c)
+    DBM_EXE(depth_dbm_fc_solver depth_dbm_solver.c)
+    DBM_EXE(split_fcc_fc_solver split_fcc_solver.c)
 
     SET (dbm_solvers dbm_fc_solver depth_dbm_fc_solver split_fcc_fc_solver)
     IF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES") AND "${WITH_JUDY}")
-        ADD_EXECUTABLE(pseudo_dfs_fc_solver
-            pseudo_dfs_atomic_moves_solver.c
-            ${_dbm_modules}
-        )
+        DBM_EXE(pseudo_dfs_fc_solver pseudo_dfs_atomic_moves_solver.c)
         TARGET_LINK_LIBRARIES("pseudo_dfs_fc_solver" ${LIBJUDY_LIB})
         LIST(APPEND dbm_solvers "pseudo_dfs_fc_solver")
     ELSE ()
