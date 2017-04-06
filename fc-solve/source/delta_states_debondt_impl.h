@@ -195,21 +195,21 @@ static void fc_solve_debondt_delta_stater_encode_composite(
             for (unsigned long r = 1; r <= max_rank; r++)
             {
 #define CARD_POS(card) ((size_t)(card))
+#define CARD_STATE(card) self->card_states[CARD_POS(card)]
+#define SET_CARD_STATE(card, opt) CARD_STATE(card) = (opt)
 #define STATE_POS(suit_idx, rank) CARD_POS(fcs_make_card(rank, suit_idx))
                 self->card_states[STATE_POS(suit_idx, r)] = OPT_DONT_CARE;
             }
         }
     }
 
+    for (int fc_idx = 0; fc_idx < self->num_freecells; fc_idx++)
     {
-        for (int fc_idx = 0; fc_idx < self->num_freecells; fc_idx++)
-        {
-            const fcs_card_t card = fcs_freecell_card(*derived, fc_idx);
+        const fcs_card_t card = fcs_freecell_card(*derived, fc_idx);
 
-            if (fcs_card_is_valid(card))
-            {
-                self->card_states[CARD_POS(card)] = OPT_FREECELL;
-            }
+        if (fcs_card_is_valid(card))
+        {
+            SET_CARD_STATE(card, OPT_FREECELL);
         }
     }
 
@@ -227,8 +227,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                 /* Skip Aces which were already set. */
                 if (fcs_card_rank(top_card) != 1)
                 {
-                    self->card_states[CARD_POS(top_card)] =
-                        OPT__BAKERS_DOZEN__ORIG_POS;
+                    SET_CARD_STATE(top_card, OPT__BAKERS_DOZEN__ORIG_POS);
                 }
 
                 for (int pos = 1; pos < col_len; pos++)
@@ -240,11 +239,11 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                     /* Skip Aces which were already set. */
                     if (fcs_card_rank(this_card) != 1)
                     {
-                        self->card_states[CARD_POS(this_card)] =
+                        SET_CARD_STATE(this_card,
                             ((fcs_card_rank(this_card) + 1 ==
                                  fcs_card_rank(parent_card))
                                     ? wanted_suit_idx_opt(parent_card)
-                                    : OPT__BAKERS_DOZEN__ORIG_POS);
+                                    : OPT__BAKERS_DOZEN__ORIG_POS));
                     }
                 }
             }
@@ -263,7 +262,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                 if (fcs_card_rank(top_card) != 1)
                 {
-                    self->card_states[CARD_POS(top_card)] = OPT_TOPMOST;
+                    SET_CARD_STATE(top_card, OPT_TOPMOST);
                 }
 
                 fcs_card_t parent_card = top_card;
@@ -275,14 +274,14 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                     if (fcs_card_rank(child_card) != 1)
                     {
-                        self->card_states[CARD_POS(child_card)] =
-                            calc_child_card_option(
-                                local_variant, parent_card, child_card
+                        const int opt = calc_child_card_option(
+                            local_variant, parent_card, child_card
 #ifndef FCS_FREECELL_ONLY
-                                ,
-                                self->sequences_are_built_by
+                            ,
+                            self->sequences_are_built_by
 #endif
-                                );
+                            );
+                        SET_CARD_STATE(child_card, opt);
                     }
 
                     parent_card = child_card;
@@ -356,7 +355,7 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
             const fcs_card_t candidate_card =
                 fcs_make_card(candidate_rank, suit);
 
-            if (self->card_states[CARD_POS(candidate_card)] == wanted_opt)
+            if (CARD_STATE(candidate_card) == wanted_opt)
             {
                 child_card = candidate_card;
                 break;
@@ -430,7 +429,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
             if (!IS_IN_FOUNDATIONS(card))
             {
-                self->card_states[CARD_POS(card)] = OPT__BAKERS_DOZEN__ORIG_POS;
+                SET_CARD_STATE(card, OPT__BAKERS_DOZEN__ORIG_POS);
             }
         }
     }
@@ -452,8 +451,7 @@ static void fc_solve_debondt_delta_stater_decode(
                 {
                     if (!IS_IN_FOUNDATIONS(card))
                     {
-                        self->card_states[CARD_POS(card)] =
-                            OPT__BAKERS_DOZEN__ORIG_POS;
+                        SET_CARD_STATE(card, OPT__BAKERS_DOZEN__ORIG_POS);
                     }
                     continue;
                 }
@@ -522,7 +520,7 @@ static void fc_solve_debondt_delta_stater_decode(
         if (orig_col_len)
         {
             top_card = fcs_col_get_card(orig_col, 0);
-            top_opt = self->card_states[CARD_POS(top_card)];
+            top_opt = CARD_STATE(top_card);
         }
         else
         {
@@ -558,14 +556,14 @@ static void fc_solve_debondt_delta_stater_decode(
                 child_card = fcs_col_get_card(orig_col, pos);
 
                 if ((!IS_IN_FOUNDATIONS(child_card)) &&
-                    (self->card_states[CARD_POS(child_card)] ==
-                        calc_child_card_option(
-                            local_variant, parent_card, child_card
+                    (CARD_STATE(child_card) == calc_child_card_option(
+                                                   local_variant, parent_card,
+                                                   child_card
 #ifndef FCS_FREECELL_ONLY
-                            ,
-                            self->sequences_are_built_by
+                                                   ,
+                                                   self->sequences_are_built_by
 #endif
-                            )))
+                                                   )))
                 {
                     fcs_col_push_card(col, child_card);
                     parent_card = child_card;
