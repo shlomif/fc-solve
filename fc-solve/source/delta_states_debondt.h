@@ -26,7 +26,6 @@ extern "C" {
 
 #include "dbm_common.h"
 
-#define RANK_KING 13
 #define CARD_ARRAY_LEN ((RANK_KING + 1) * FCS_NUM_SUITS)
 
 typedef struct
