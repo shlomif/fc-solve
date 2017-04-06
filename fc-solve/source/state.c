@@ -69,7 +69,7 @@ void fc_solve_canonize_state(
                 COPY_STACK(GET_STACK(c - 1), temp_stack);
             }
 
-            c--;
+            --c;
         }
     }
 
@@ -80,13 +80,13 @@ void fc_solve_canonize_state(
         size_t c = b;
 
         while ((c > 0) && ((fc_solve_card_compare(
-                               (GET_FREECELL(c)), (GET_FREECELL(c - 1)))) < 0))
+                               GET_FREECELL(c), GET_FREECELL(c - 1))) < 0))
         {
             const fcs_card_t temp_freecell = GET_FREECELL(c);
             GET_FREECELL(c) = GET_FREECELL(c - 1);
             GET_FREECELL(c - 1) = temp_freecell;
 
-            c--;
+            --c;
         }
     }
 }
@@ -113,7 +113,7 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
             locs->stack_locs[c] = locs->stack_locs[c - 1];
             locs->stack_locs[c - 1] = swap_loc;
 
-            c--;
+            --c;
         }
     }
 
@@ -124,7 +124,7 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
         size_t c = b;
 
         while ((c > 0) && ((fc_solve_card_compare(
-                               (GET_FREECELL(c)), (GET_FREECELL(c - 1)))) < 0))
+                               GET_FREECELL(c), GET_FREECELL(c - 1))) < 0))
         {
             const fcs_card_t temp_freecell = GET_FREECELL(c);
             GET_FREECELL(c) = GET_FREECELL(c - 1);
@@ -134,7 +134,7 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
             locs->fc_locs[c] = locs->fc_locs[c - 1];
             locs->fc_locs[c - 1] = swap_loc;
 
-            c--;
+            --c;
         }
     }
 }
