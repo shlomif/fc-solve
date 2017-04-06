@@ -384,7 +384,6 @@ static void fc_solve_debondt_delta_stater_decode(
     const fcs_dbm_variant_type_t local_variant,
     fcs_var_base_reader_t *const reader, fcs_state_t *const ret)
 {
-    unsigned char orig_top_most_cards[4 * RANK_KING];
     fcs_card_t new_top_most_cards[MAX_NUM_STACKS];
 
     fc_solve_debondt_delta_stater__init_card_states(self);
@@ -416,7 +415,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
     const int num_freecells = self->num_freecells;
 
-    memset(orig_top_most_cards, '\0', sizeof(orig_top_most_cards));
+    fcs_bool_t orig_top_most_cards[(RANK_KING + 1) * FCS_NUM_SUITS] = {FALSE};
     {
         for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
@@ -426,7 +425,7 @@ static void fc_solve_debondt_delta_stater_decode(
             if (fcs_col_len(col))
             {
                 const fcs_card_t card = fcs_col_get_card(col, 0);
-                orig_top_most_cards[CARD_POS(card)] = 1;
+                orig_top_most_cards[(size_t)card] = TRUE;
             }
         }
     }
@@ -502,7 +501,7 @@ static void fc_solve_debondt_delta_stater_decode(
                         }
                         else if (item_opt == OPT_TOPMOST)
                         {
-                            if (!orig_top_most_cards[CARD_POS(card)])
+                            if (!orig_top_most_cards[(size_t)card])
                             {
                                 new_top_most_cards[next_new_top_most_cards++] =
                                     card;
