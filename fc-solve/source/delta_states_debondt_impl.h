@@ -197,8 +197,8 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 #define CARD_POS(card) ((size_t)(card))
 #define CARD_STATE(card) self->card_states[CARD_POS(card)]
 #define SET_CARD_STATE(card, opt) CARD_STATE(card) = (opt)
-#define STATE_POS(rank, suit_idx) CARD_POS(fcs_make_card(rank, suit_idx))
-                self->card_states[STATE_POS(r, suit_idx)] = OPT_DONT_CARE;
+#define RS_STATE(rank, suit_idx) CARD_STATE(fcs_make_card(rank, suit_idx))
+                RS_STATE(r, suit_idx) = OPT_DONT_CARE;
             }
         }
     }
@@ -303,8 +303,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
         {
             for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
             {
-                const unsigned long opt =
-                    self->card_states[STATE_POS(rank, suit_idx)];
+                const unsigned long opt = RS_STATE(rank, suit_idx);
                 unsigned long base;
 
                 if (IS_BAKERS_DOZEN())
@@ -387,7 +386,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
             for (unsigned long rank = 1; rank <= foundation_rank; rank++)
             {
-                self->card_states[STATE_POS(rank, suit_idx)] =
+                RS_STATE(rank, suit_idx) =
                     (IS_BAKERS_DOZEN() ? OPT__BAKERS_DOZEN__IN_FOUNDATION
                                        : OPT_IN_FOUNDATION);
             }
@@ -457,14 +456,13 @@ static void fc_solve_debondt_delta_stater_decode(
                 }
             }
 
-            const int existing_opt =
-                self->card_states[STATE_POS(rank, suit_idx)];
+            const int existing_opt = RS_STATE(rank, suit_idx);
 
             if (rank == 1)
             {
                 if (existing_opt < 0)
                 {
-                    self->card_states[STATE_POS(rank, suit_idx)] = orig_pos_opt;
+                    RS_STATE(rank, suit_idx) = orig_pos_opt;
                 }
             }
             else
@@ -478,7 +476,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
                 if (existing_opt < 0)
                 {
-                    self->card_states[STATE_POS(rank, suit_idx)] = item_opt;
+                    RS_STATE(rank, suit_idx) = item_opt;
 
                     if (!IS_BAKERS_DOZEN())
                     {
