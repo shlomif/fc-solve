@@ -2086,6 +2086,7 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(void *const api_instance,
 #define HARD_CODED_UNUSED GCC_UNUSED
 #endif
 
+#ifdef FCS_WITH_MOVES
 DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
     void *const api_instance HARD_CODED_UNUSED, char *output_string,
     void *const ptr_state_void FC_SOLVE__PASS_PARSABLE(
@@ -2106,6 +2107,7 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
                 FC_SOLVE__PASS_PARSABLE(parseable_output),
         canonized_order_output PASS_T(display_10_as_t));
 }
+#endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT char *freecell_solver_user_iter_state_as_string(

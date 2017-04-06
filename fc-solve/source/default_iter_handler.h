@@ -9,6 +9,7 @@
  */
 #pragma once
 #include "fcs_user.h"
+#include "config.h"
 #include "output_to_file.h"
 #include "iter_handler_base.h"
 
@@ -16,6 +17,7 @@ static void my_iter_handler(void *const user_instance,
     const fcs_int_limit_t iter_num, const int depth, void *const ptr_state,
     const fcs_int_limit_t parent_iter_num, void *const context)
 {
+#ifdef FCS_WITH_MOVES
     const fc_solve_display_information_context_t *const display_context =
         (const fc_solve_display_information_context_t *const)context;
     my_iter_handler_base(
@@ -30,4 +32,5 @@ static void my_iter_handler(void *const user_instance,
                 display_context->display_10_as_t));
         printf("%s\n---------------\n\n\n", state_string);
     }
+#endif
 }

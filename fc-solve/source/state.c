@@ -155,6 +155,7 @@ int fc_solve_state_compare_with_context(
     return memcmp(s1, s2, sizeof(fcs_state_t));
 }
 
+#ifdef FCS_WITH_MOVES
 static inline void render_freecell_card(const fcs_card_t card,
     char *const freecell PASS_T(const fcs_bool_t display_10_as_t))
 {
@@ -375,3 +376,4 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
     }
     *(output_s) = '\0';
 }
+#endif
