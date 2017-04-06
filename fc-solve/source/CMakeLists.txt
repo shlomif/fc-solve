@@ -673,26 +673,22 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         ${_dbm_modules}
     )
 
-    SET (EXTRA_SOLVERS )
+    SET (dbm_solvers dbm_fc_solver depth_dbm_fc_solver split_fcc_fc_solver)
     IF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES") AND "${WITH_JUDY}")
         ADD_EXECUTABLE(pseudo_dfs_fc_solver
             pseudo_dfs_atomic_moves_solver.c
             ${_dbm_modules}
         )
         TARGET_LINK_LIBRARIES("pseudo_dfs_fc_solver" ${LIBJUDY_LIB})
-        LIST(APPEND EXTRA_SOLVERS "pseudo_dfs_fc_solver")
+        LIST(APPEND dbm_solvers "pseudo_dfs_fc_solver")
     ELSE ()
         gen_error_exe( pseudo_dfs_fc_solver )
     ENDIF ()
 
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
 
-    SET (dbm_solvers dbm_fc_solver depth_dbm_fc_solver split_fcc_fc_solver)
-    FOREACH (TGT ${dbm_solvers} ${EXTRA_SOLVERS})
+    FOREACH (TGT ${dbm_solvers})
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB})
-    ENDFOREACH ()
-
-    FOREACH (TGT ${dbm_solvers} ${EXTRA_SOLVERS})
         SET_TARGET_PROPERTIES("${TGT}"
             PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
         )
