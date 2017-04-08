@@ -364,7 +364,7 @@ program? If so - how?</h3>
 
 <p>
 Yes, you can, as long as you accept the
-<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a> . We
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>. We
 also would appreciate an acknowledgement and a link to the Freecell Solver
 home page, in the About Dialogue, and in other places.
 </p>
@@ -686,7 +686,7 @@ Best-First-Search (BeFS) scans.
 
 <li>
 <p>
-Different types of moves, with configurable order and grouping .
+Different types of moves, with configurable order and grouping.
 </p>
 </li>
 

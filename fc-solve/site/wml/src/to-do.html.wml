@@ -184,7 +184,7 @@ Solitaire Suite written in Java</a>, with Freecell and many other games.
 <p>
 Note that <a href="http://ivm.sourceforge.net/">Internet C++</a> assuming
 it becomes popular, may eventually eliminate the need for it, since the C
-compiler gcc can compile code to it virtual machine . However, at the moment,
+compiler gcc can compile code to its virtual machine. However, at the moment,
 Java is the de-facto technology for making programs run inside a browser.
 </p>
 
