@@ -161,33 +161,6 @@ Those with uni-processor machines are better off using several soft-threads
 within a single hard-thread that are arbitrated by the program.
 </p>
 
-<h3 id="java">Porting to Java</h3>
-
-<p>
-Imagine being able to browse to a web-site which will present you with
-a Java applet implementing Freecell with a built-in solver. At the moment
-Freecell Solver is written in ANSI C, and requires compilation or downloading
-a binary or a program that integrates it. If it is converted to Java, however,
-it can be deployed on most modern Internet-connected systems without the
-need for pre-installation.
-</p>
-
-<p>
-Writing an equivalent Java version (perhaps without some of the specific ANSI
-C optimizations that Freecell Solver has), would be a very cool thing. I did
-not get to do it yet, because I keep having new ideas for improving the C
-versions. Note that as far as the graphical user-interface is concerned, there
-should not be too much problem, because there's already <a href="http://javaboutique.internet.com/JSolitaire/">an open-source
-Solitaire Suite written in Java</a>, with Freecell and many other games.
-</p>
-
-<p>
-Note that <a href="http://ivm.sourceforge.net/">Internet C++</a> assuming
-it becomes popular, may eventually eliminate the need for it, since the C
-compiler gcc can compile code to its virtual machine. However, at the moment,
-Java is the de-facto technology for making programs run inside a browser.
-</p>
-
 <h3 id="failed_allocs">Safety from Failed Memory Allocations</h3>
 
 <p>
@@ -511,3 +484,66 @@ older storage method that stores the position's layout itself in memory is
 still available as a compile-time option and will continue to be maintained.
 </p>
 
+<h3 id="java">Porting to Java</h3>
+
+<p>
+Imagine being able to browse to a web-site which will present you with
+a Java applet implementing Freecell with a built-in solver. At the moment
+Freecell Solver is written in ANSI C, and requires compilation or downloading
+a binary or a program that integrates it. If it is converted to Java, however,
+it can be deployed on most modern Internet-connected systems without the
+need for pre-installation.
+</p>
+
+<p>
+Writing an equivalent Java version (perhaps without some of the specific ANSI
+C optimizations that Freecell Solver has), would be a very cool thing. I did
+not get to do it yet, because I keep having new ideas for improving the C
+versions. Note that as far as the graphical user-interface is concerned, there
+should not be too much problem, because there's already <a href="http://javaboutique.internet.com/JSolitaire/">an open-source
+Solitaire Suite written in Java</a>, with Freecell and many other games.
+</p>
+
+<p>
+Note that <a href="http://ivm.sourceforge.net/">Internet C++</a> assuming
+it becomes popular, may eventually eliminate the need for it, since the C
+compiler gcc can compile code to its virtual machine. However, at the moment,
+Java is the de-facto technology for making programs run inside a browser.
+</p>
+
+<h4 id="java__note">Note</h4>
+
+<ol>
+
+<li>
+<p>
+We now provide a browser-side JavaScript <a href="$(ROOT)/js-fc-solve/">port</a>
+of Freecell Solver courtesy of the Emscripten compiler, which has proven useful
+for some people.
+</p>
+</li>
+
+<li>
+<p>
+Java fell out of fashion as a technology for browser-side applets.
+</p>
+</li>
+
+<li>
+<p>
+There are some <a href="$(ROOT)/links.html#other_solvers">other solvers</a>
+that were written in Java from the ground up in case there's interest in that.
+</p>
+</li>
+
+<li>
+<p>
+In the future, it may be possible to compile the Freecell Solver’s C code
+to Java instead of JavaScript.
+</p>
+</li>
+</ol>
+
+<p>
+As a result of all these points, we mark this task as done.
+</p>
