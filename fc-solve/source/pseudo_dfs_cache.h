@@ -138,7 +138,7 @@ static inline fcs_pdfs_cache_key_info_t *fcs_pdfs_cache_insert(
     {
         cache_key = (fcs_pdfs_cache_key_info_t *)fcs_compact_alloc_ptr(
             &(cache->states_values_to_keys_allocator), sizeof(*cache_key));
-        cache->count_elements_in_cache++;
+        ++cache->count_elements_in_cache;
     }
 
     cache_key->key = *key;

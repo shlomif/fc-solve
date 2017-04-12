@@ -267,7 +267,7 @@ static inline void fc_solve_cache_stacks(
 
     fcs_cards_column_t *current_stack = new_state_key->columns;
 
-    for (int i = 0; i < LOCAL_STACKS_NUM; i++, current_stack++)
+    for (int i = 0; i < LOCAL_STACKS_NUM; ++i, ++current_stack)
     {
         /*
          * If the stack is not a copy - it is already cached so skip

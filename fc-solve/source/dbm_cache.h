@@ -145,7 +145,7 @@ static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
         cache_key = (fcs_cache_key_info_t *)fcs_compact_alloc_ptr(
             &(cache->states_values_to_keys_allocator), sizeof(*cache_key));
         cache_key->moves_to_key = NULL;
-        cache->count_elements_in_cache++;
+        ++cache->count_elements_in_cache;
     }
 
     cache_key->key = *key;

@@ -189,7 +189,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
         new_cache_state->lower_pri = new_cache_state->higher_pri = NULL;
 
-        cache->count_elements_in_cache++;
+        ++cache->count_elements_in_cache;
 
         if (!FCS_S_PARENT(parents_stack[parents_stack_len - 1].state_val))
         {

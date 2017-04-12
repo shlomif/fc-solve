@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
     }
 
     size_t num_workers = 3;
-    int board_num_step = 1;
+    long long board_num_step = 1;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
 
     for (; arg < argc; arg++)
