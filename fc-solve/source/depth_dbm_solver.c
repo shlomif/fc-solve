@@ -229,19 +229,10 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
             );
 
-        /* Now recycle the derived_list */
         for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
-            var_AUTO(list, derived_lists[batch_i]);
-            while (list)
-            {
-#define derived_list_next derived_iter
-                derived_list_next = list->next;
-                list->next = derived_list_recycle_bin;
-                derived_list_recycle_bin = list;
-                list = derived_list_next;
-#undef derived_list_next
-            }
+            fcs_derived_state_list__recycle(
+                &derived_list_recycle_bin, &derived_lists[batch_i]);
         }
         /* End handle item. */
         /* End of main thread loop */

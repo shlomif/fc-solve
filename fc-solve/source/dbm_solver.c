@@ -227,15 +227,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
                 );
 
-            /* Now recycle the derived_list */
-            while (derived_list)
-            {
-                fcs_derived_state_t *const derived_list_next =
-                    derived_list->next;
-                derived_list->next = derived_list_recycle_bin;
-                derived_list_recycle_bin = derived_list;
-                derived_list = derived_list_next;
-            }
+            fcs_derived_state_list__recycle(
+                &derived_list_recycle_bin, &derived_list);
             /* End handle item. */
         }
         /* End of main thread loop */

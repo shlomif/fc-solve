@@ -45,6 +45,23 @@ typedef struct fcs_derived_state_struct
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 } fcs_derived_state_t;
 
+static inline void fcs_derived_state_list__recycle(
+    fcs_derived_state_t **const p_recycle_bin,
+    fcs_derived_state_t **const p_list)
+{
+    var_AUTO(list, *p_list);
+    var_AUTO(bin, *p_recycle_bin);
+    while (list)
+    {
+        var_AUTO(list_next, list->next);
+        list->next = bin;
+        bin = list;
+        list = list_next;
+    }
+    *p_recycle_bin = bin;
+    *p_list = NULL;
+}
+
 #define MAKE_MOVE(src, dest) ((fcs_fcc_move_t)((src) | ((dest) << 4)))
 #define COL2MOVE(idx) (idx)
 #define FREECELL2MOVE(idx) (idx + 8)

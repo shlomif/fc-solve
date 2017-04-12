@@ -139,12 +139,10 @@ static inline void instance__inspect_new_state(
             stack_item->next_states[i] = derived_list->state;
             insert_state(&(instance->store), &(stack_item->next_states[i]));
         }
-#define derived_list_next derived_iter
-        derived_list_next = derived_list->next;
+        var_AUTO(list_next, derived_list->next);
         derived_list->next = instance->derived_list_recycle_bin;
         instance->derived_list_recycle_bin = derived_list;
-        derived_list = derived_list_next;
-#undef derived_list_next
+        derived_list = list_next;
     }
 
     return;
