@@ -391,7 +391,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     }
     BEFS_M_VAR(soft_thread, first_state_to_check) =
         FCS_STATE_keyval_pair_to_collectible(
-            HT_INSTANCE(soft_thread->hard_thread)->state_copy_ptr);
+            fcs_st_instance(soft_thread)->state_copy_ptr);
 }
 
 /*

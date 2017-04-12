@@ -884,24 +884,15 @@ struct fc_solve_instance_struct
 };
 
 #ifdef FCS_SINGLE_HARD_THREAD
-static inline fc_solve_instance_t *fcs_st_instance(
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    return soft_thread->hard_thread;
-}
 #define HT_FIELD(ht, field) (ht)->hard_thread.field
 #define HT_INSTANCE(hard_thread) (hard_thread)
 #define INST_HT0(instance) ((instance)->hard_thread)
 #else
-static inline fc_solve_instance_t *fcs_st_instance(
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    return soft_thread->hard_thread->instance;
-}
 #define HT_FIELD(hard_thread, field) (hard_thread)->field
 #define HT_INSTANCE(hard_thread) ((hard_thread)->instance)
 #define INST_HT0(instance) ((instance)->hard_threads[0])
 #endif
+#define fcs_st_instance(soft_thread) HT_INSTANCE((soft_thread)->hard_thread)
 
 #define DFS_VAR(soft_thread, var) (soft_thread)->method_specific.soft_dfs.var
 #define BEFS_VAR(soft_thread, var)                                             \

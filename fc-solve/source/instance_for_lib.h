@@ -922,7 +922,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_soft_thread_update_initial_cards_val(soft_thread);
-    fc_solve_instance_t *const instance = HT_INSTANCE(soft_thread->hard_thread);
+    fc_solve_instance_t *const instance = fcs_st_instance(soft_thread);
 
     /*
         Allocate some space for the states at depth 0.

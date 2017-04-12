@@ -205,7 +205,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
     int *col_num_cards = num_cards_to_move_from_columns;
 
 #if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_INSTANCE_GAME_PARAMS(HT_INSTANCE(soft_thread->hard_thread));
+    SET_INSTANCE_GAME_PARAMS(fcs_st_instance(soft_thread));
 #endif
 
 #ifdef INDIRECT_STACK_STATES
@@ -1580,10 +1580,8 @@ static inline int calc_foundation_to_put_card_on(
     const fcs_state_t *const ptr_state, const fcs_card_t card)
 {
 #ifndef FCS_FREECELL_ONLY
-    const fc_solve_instance_t *const instance =
-        HT_INSTANCE(soft_thread->hard_thread);
+    const_AUTO(instance, fcs_st_instance(soft_thread));
 #endif
-
     MOVE_FUNCS__define_seqs_built_by();
 
     for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)

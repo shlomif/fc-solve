@@ -50,7 +50,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
 {
 #if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS) &&      \
          defined(FCS_DISABLE_SIMPLE_SIMON)))
-    fc_solve_instance_t *const instance = HT_INSTANCE(soft_thread->hard_thread);
+    var_AUTO(instance, fcs_st_instance(soft_thread));
     SET_GAME_PARAMS();
 #endif
 

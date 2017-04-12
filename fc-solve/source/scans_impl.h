@@ -237,8 +237,7 @@ static inline pq_rating_t befs_rate_state(
     const fcs_state_t *const state, const int negated_depth)
 {
 #ifndef FCS_FREECELL_ONLY
-    const fc_solve_instance_t *const instance =
-        HT_INSTANCE(soft_thread->hard_thread);
+    const_AUTO(instance, fcs_st_instance(soft_thread));
     const int sequences_are_built_by =
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
