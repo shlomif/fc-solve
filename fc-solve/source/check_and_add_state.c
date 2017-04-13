@@ -540,10 +540,10 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
     return HANDLE_existing_void(existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    existing_state_val =
-        (fcs_state_extra_info_t *)rbsearch(new_state_val, instance->tree);
-    is_state_new = ((*existing_state_val) == new_state_val);
-
+    const_AUTO(new_state_void, FCS_STATE_kv_to_collectible(new_state));
+    const void *existing_void = rbsearch(new_state_void, instance->tree);
+    return HANDLE_existing_void(
+        existing_void == new_state_void ? NULL : existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
 #ifdef FCS_RCS_STATES
     instance->tree_new_state_key = new_state->key;
