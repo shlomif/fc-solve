@@ -168,9 +168,7 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 #endif
 
 extern fcs_bool_t fc_solve_check_and_add_state(
-    fc_solve_hard_thread_t *const hard_thread,
-    fcs_kv_state_t *const new_state_val,
-    fcs_kv_state_t *const existing_state_val);
+    fc_solve_hard_thread_t *, fcs_kv_state_t *, fcs_kv_state_t *);
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 extern guint fc_solve_hash_function(gconstpointer key);
