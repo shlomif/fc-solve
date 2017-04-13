@@ -313,12 +313,12 @@ if ($bool_opts_with_false_defaults__values{rcs})
     $STR_OPTS{'states-type'}{'value'} = 'COMPACT_STATES';
 }
 
-if ($STR_OPTS{'livavl2-p'}{value})
+if ($STR_OPTS{'libavl2-p'}{value})
 {
     $STR_OPTS{'p|pos'}{value} = 'LIBAVL2_TREE';
 }
 
-if ($STR_OPTS{'livavl2-c'}{value})
+if ($STR_OPTS{'libavl2-c'}{value})
 {
     $STR_OPTS{'c|cols'}{value} = 'LIBAVL2_TREE';
 }
