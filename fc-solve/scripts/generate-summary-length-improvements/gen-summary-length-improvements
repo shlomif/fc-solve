@@ -20,7 +20,7 @@ my $BASE = 'theme1';
 
 io->dir($OUTPUT_PATH)->mkpath;
 
-foreach my $seed (10500 .. 20000)
+foreach my $seed (10500 .. 90000)
 {
     my $out_fn = qq#$OUTPUT_PATH/lens-$BASE--seed=$seed.txt#;
     if (! -e $out_fn)
