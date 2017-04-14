@@ -566,7 +566,7 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
             }
 
             /* Tough luck - gotta parse the string. ;-) */
-            const char *cmd_end, *item_end;
+            const char *item_end;
             const char *item_start = instance_item->flares_plan_string;
             if (instance_item->plan)
             {
@@ -576,8 +576,7 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
             }
             do
             {
-                cmd_end = strchr(item_start, ':');
-
+                const char *cmd_end = strchr(item_start, ':');
                 if (!cmd_end)
                 {
                     SET_ERROR("Could not find a \":\" for a command.");
@@ -586,13 +585,9 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
                 if (string_starts_with(item_start, "Run", cmd_end))
                 {
-
                     /* It's a Run item - handle it. */
-                    cmd_end++;
-                    const int_fast32_t count_iters = atoi(cmd_end);
-
+                    const int_fast32_t count_iters = atoi(++cmd_end);
                     const char *at_sign = cmd_end;
-
                     while ((*at_sign) && isdigit(*at_sign))
                     {
                         at_sign++;
