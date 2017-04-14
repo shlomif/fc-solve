@@ -77,7 +77,7 @@ typedef struct
     int_fast32_t num_finished_boards;
 } response_t;
 
-static inline int worker_func(const worker_t w, void *const instance)
+static inline void worker_func(const worker_t w, void *const instance)
 {
     /* I'm one of the slaves */
     request_t req;
@@ -107,8 +107,6 @@ static inline int worker_func(const worker_t w, void *const instance)
 
     close(w.child_to_parent_pipe[WRITE_FD]);
     close(w.parent_to_child_pipe[READ_FD]);
-
-    return 0;
 }
 
 static inline void write_request(const long long end_board,
@@ -247,7 +245,8 @@ int main(int argc, char *argv[])
             const_AUTO(w, workers[idx]);
             close(w.parent_to_child_pipe[WRITE_FD]);
             close(w.child_to_parent_pipe[READ_FD]);
-            return worker_func(w, instance);
+            worker_func(w, instance);
+            return 0;
         }
 
         default:
