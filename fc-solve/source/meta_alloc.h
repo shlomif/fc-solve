@@ -36,8 +36,7 @@ typedef struct
     fcs_meta_compact_allocator_t *meta;
 } fcs_compact_allocator_t;
 
-extern void fc_solve_compact_allocator_extend(
-    fcs_compact_allocator_t *const allocator);
+extern void fc_solve_compact_allocator_extend(fcs_compact_allocator_t *);
 
 /* To be called after the meta_alloc was set. */
 static inline void fc_solve_compact_allocator_init_helper(
@@ -54,11 +53,10 @@ static inline void fc_solve_meta_compact_allocator_init(
 }
 
 extern void fc_solve_meta_compact_allocator_finish(
-    fcs_meta_compact_allocator_t *const meta_allocator);
+    fcs_meta_compact_allocator_t *);
 
 extern void fc_solve_compact_allocator_init(
-    fcs_compact_allocator_t *const allocator,
-    fcs_meta_compact_allocator_t *const meta_allocator);
+    fcs_compact_allocator_t *, fcs_meta_compact_allocator_t *);
 
 static inline void *fcs_compact_alloc_ptr(
     fcs_compact_allocator_t *const allocator, const size_t how_much_proto)

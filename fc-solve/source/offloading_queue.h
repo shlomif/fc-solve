@@ -82,7 +82,8 @@ static inline void fcs_offloading_queue__init(
     return;
 }
 
-static inline void fcs_offloading_queue__destroy(fcs_offloading_queue_t *queue)
+static inline void fcs_offloading_queue__destroy(
+    fcs_offloading_queue_t *const queue)
 {
     fc_solve_compact_allocator_finish(&(queue->queue_allocator));
 }
@@ -113,7 +114,8 @@ static inline fcs_bool_t fcs_offloading_queue__extract(
 }
 
 static inline void fcs_offloading_queue__insert(
-    fcs_offloading_queue_t *queue, const fcs_offloading_queue_item_t *datum)
+    fcs_offloading_queue_t *const queue,
+    const fcs_offloading_queue_item_t *const datum)
 {
     fcs_Q_item_wrapper_t *new_item;
 
@@ -300,7 +302,8 @@ static inline void fcs_offloading_queue__init(
     queue->page_idx_for_backup = 1;
 }
 
-static inline void fcs_offloading_queue__destroy(fcs_offloading_queue_t *queue)
+static inline void fcs_offloading_queue__destroy(
+    fcs_offloading_queue_t *const queue)
 {
     fcs_offloading_queue_page__destroy(&(queue->pages[0]));
     fcs_offloading_queue_page__destroy(&(queue->pages[1]));

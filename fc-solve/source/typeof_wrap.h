@@ -16,15 +16,11 @@
 extern "C" {
 #endif
 
-/*
- * These emulate the C++ auto keyword.
- * */
+// These emulate the C++ auto keyword.
 #define const_AUTO(myvar, expr) const typeof(expr) myvar = (expr)
 #define var_AUTO(myvar, expr) typeof(expr) myvar = (expr)
 
-/*
- * Common macros for object slots.
- * */
+// Common macros for object slots.
 #define const_SLOT(myslot, obj) const_AUTO(myslot, (obj)->myslot)
 
 #ifdef __cplusplus
