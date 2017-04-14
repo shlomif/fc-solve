@@ -611,8 +611,7 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
                      * ",")
                      * or alternatively the end of the string.
                      * */
-                    item_end = strchr(after_at_sign, ',');
-                    if (!item_end)
+                    if (!((item_end = strchr(after_at_sign, ','))))
                     {
                         item_end = strchr(after_at_sign, '\0');
                     }
@@ -641,16 +640,13 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 }
                 else if (string_starts_with(item_start, "RunIndef", cmd_end))
                 {
-
-                    cmd_end++;
-                    item_end = strchr(cmd_end, ',');
-                    if (item_end)
+                    if (strchr(++cmd_end, ','))
                     {
                         SET_ERROR("Junk after last RunIndef command. Must "
                                   "be the final command.");
                         return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
                     }
-                    item_end = cmd_end + strlen(cmd_end);
+                    item_end = strchr(cmd_end, '\0');
 
                     fcs_flare_item_t *const flare = find_flare(
                         flares, end_of_flares, cmd_end, item_end - cmd_end);
