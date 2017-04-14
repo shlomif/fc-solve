@@ -815,7 +815,6 @@ extern void fc_solve_sfs_check_state_end(
     if (!fc_solve_check_and_add_state(
             hard_thread, raw_ptr_new_state_raw, &existing_state))
     {
-#define existing_state_val (existing_state.val)
         if (HT_FIELD(hard_thread, allocated_from_list))
         {
             ptr_new_state_foo->parent = instance->list_of_vacant_states;
@@ -845,21 +844,21 @@ extern void fc_solve_sfs_check_state_end(
         {
 #ifdef FCS_WITH_MOVES
             /* Make a copy of "moves" because "moves" will be destroyed */
-            existing_state_val->moves_to_parent =
+            existing_state.val->moves_to_parent =
                 fc_solve_move_stack_compact_allocate(hard_thread, moves);
 #endif
-            if (!(existing_state_val->visited & FCS_VISITED_DEAD_END))
+            if (!(existing_state.val->visited & FCS_VISITED_DEAD_END))
             {
                 if ((--(FCS_S_NUM_ACTIVE_CHILDREN(
-                        existing_state_val->parent))) == 0)
+                        existing_state.val->parent))) == 0)
                 {
-                    MARK_AS_DEAD_END(existing_state_val->parent);
+                    MARK_AS_DEAD_END(existing_state.val->parent);
                 }
                 ptr_state->num_active_children++;
             }
-            existing_state_val->parent = INFO_STATE_PTR(raw_ptr_state_raw);
+            existing_state.val->parent = INFO_STATE_PTR(raw_ptr_state_raw);
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-            existing_state_val->depth = ptr_state->depth + 1;
+            existing_state.val->depth = ptr_state->depth + 1;
 #endif
         }
 #endif
