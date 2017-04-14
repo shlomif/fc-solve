@@ -81,15 +81,9 @@ static inline void worker_func(const worker_t w, void *const instance)
 {
     /* I'm one of the slaves */
     request_t req;
-
-    while (1)
+    while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)),
+        req.board_num != -1)
     {
-        read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req));
-        if (req.board_num == -1)
-        {
-            break;
-        }
-
         response_t response = {
             .num_iters = 0,
             .num_finished_boards = req.quota_end - req.board_num + 1,
@@ -101,10 +95,8 @@ static inline void worker_func(const worker_t w, void *const instance)
         }
         write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
     }
-
     /* Cleanup */
     freecell_solver_user_free(instance);
-
     close(w.child_to_parent_pipe[WRITE_FD]);
     close(w.parent_to_child_pipe[READ_FD]);
 }
