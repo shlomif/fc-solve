@@ -53,8 +53,6 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
 
 // These are some macros to make it easier for the programmer.
 #define ptr_state_key (raw_ptr_state_raw->key)
-#define val_ptr_state_val (raw_ptr_state_raw->val)
-
 #define ptr_new_state &(pass_new_state)
 #define state_key (*ptr_state_key)
 #define new_state_key (*(pass_new_state.key))
