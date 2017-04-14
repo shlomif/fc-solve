@@ -160,14 +160,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
         my_copy_stack(stack_idx);
 
         fcs_cards_column_t new_src_col =
-            fcs_state_get_col(new_state, stack_idx);
+            fcs_state_get_col(new_state_key, stack_idx);
         for (a = 0; a < FCS_MAX_RANK; a++)
         {
             fcs_col_pop_top(new_src_col);
         }
 
         const int suit = fcs_card_suit(card);
-        fcs_set_foundation(new_state, suit, FCS_MAX_RANK);
+        fcs_set_foundation(new_state_key, suit, FCS_MAX_RANK);
 
         fcs_move_stack_non_seq_push(
             moves, FCS_MOVE_TYPE_SEQ_TO_FOUNDATION, stack_idx, suit);
@@ -1149,6 +1149,5 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 }
 
 #undef state
-#undef new_state
 
 #endif /* #ifdef FCS_DISABLE_SIMPLE_SIMON */

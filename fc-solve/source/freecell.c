@@ -101,8 +101,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
             sfs_check_state_begin();
 
             my_copy_stack(stack_idx);
-            fcs_state_pop_col_top(&new_state, stack_idx);
-            fcs_increment_foundation(new_state, deck * 4 + fcs_card_suit(card));
+            fcs_state_pop_col_top(&new_state_key, stack_idx);
+            fcs_increment_foundation(
+                new_state_key, deck * 4 + fcs_card_suit(card));
 
             fcs_move_stack_non_seq_push(moves,
                 FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
@@ -165,9 +166,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
             /* We can put it there */
             sfs_check_state_begin()
 
-                fcs_empty_freecell(new_state, fc);
+                fcs_empty_freecell(new_state_key, fc);
 
-            fcs_increment_foundation(new_state, deck * 4 + fcs_card_suit(card));
+            fcs_increment_foundation(
+                new_state_key, deck * 4 + fcs_card_suit(card));
 
             fcs_move_stack_non_seq_push(moves,
                 FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION, fc,
@@ -450,11 +452,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                 NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves), cols_indexes,
                 dest_cards_num - dc - 1, 0);
 
-            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
+            fcs_cards_column_t new_dest_col =
+                fcs_state_get_col(new_state_key, ds);
 
             /* Now put the freecell card on top of the stack */
             fcs_col_push_card(new_dest_col, src_card);
-            fcs_empty_freecell(new_state, fc);
+            fcs_empty_freecell(new_state_key, fc);
 
             fcs_move_stack_non_seq_push(
                 moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, ds);
@@ -523,8 +526,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
                 empty_two_cols_from_new_state(soft_thread,
                     NEW_STATE_BY_REF() SFS__PASS_MOVE_STACK(moves),
                     cols_indexes, cards_num - (c + 1), 0);
-                fcs_state_pop_col_top(&new_state, stack_idx);
-                fcs_increment_foundation(new_state, dest_found);
+                fcs_state_pop_col_top(&new_state_key, stack_idx);
+                fcs_increment_foundation(new_state_key, dest_found);
                 fcs_move_stack_non_seq_push(moves,
                     FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx, dest_found);
                 sfs_check_state_end();
@@ -598,7 +601,7 @@ DECLARE_MOVE_FUNCTION(
                     my_copy_stack(ds);
 
                 fcs_cards_column_t new_dest_col =
-                    fcs_state_get_col(new_state, ds);
+                    fcs_state_get_col(new_state_key, ds);
 
                 const int cols_indexes[3] = {ds, -1, -1};
 
@@ -618,7 +621,7 @@ DECLARE_MOVE_FUNCTION(
                 if (last_dest.is_col)
                 {
                     fcs_cards_column_t new_source_col =
-                        fcs_state_get_col(new_state, src_idx);
+                        fcs_state_get_col(new_state_key, src_idx);
 
                     fcs_col_pop_card(new_source_col, moved_card);
 
@@ -626,8 +629,8 @@ DECLARE_MOVE_FUNCTION(
                 }
                 else
                 {
-                    moved_card = fcs_freecell_card(new_state, src_idx);
-                    fcs_empty_freecell(new_state, src_idx);
+                    moved_card = fcs_freecell_card(new_state_key, src_idx);
+                    fcs_empty_freecell(new_state_key, src_idx);
 
                     fcs_move_stack_non_seq_push(
                         moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, src_idx, ds);
@@ -956,9 +959,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
             my_copy_stack(stack_idx);
 
             fcs_cards_column_t new_src_col =
-                fcs_state_get_col(new_state, stack_idx);
+                fcs_state_get_col(new_state_key, stack_idx);
             fcs_col_push_card(new_src_col, card);
-            fcs_empty_freecell(new_state, fc);
+            fcs_empty_freecell(new_state_key, fc);
             fcs_move_stack_non_seq_push(
                 moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, stack_idx);
             sfs_check_state_end();
@@ -1157,7 +1160,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
         my_copy_stack(stack_idx);
 
         const fcs_cards_column_t new_src_col =
-            fcs_state_get_col(new_state, stack_idx);
+            fcs_state_get_col(new_state_key, stack_idx);
 
         int b = 0;
         for (int c = 0; c < cards_num; ++c, ++b)
@@ -1165,7 +1168,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
             /* Find a vacant freecell */
             for (; b < LOCAL_FREECELLS_NUM; ++b)
             {
-                if (fcs_freecell_is_empty(new_state, b))
+                if (fcs_freecell_is_empty(new_state_key, b))
                 {
                     break;
                 }
@@ -1173,7 +1176,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
             fcs_card_t top_card;
             fcs_col_pop_card(new_src_col, top_card);
 
-            fcs_put_card_in_freecell(new_state, b, top_card);
+            fcs_put_card_in_freecell(new_state_key, b, top_card);
 
             fcs_move_stack_non_seq_push(
                 moves, FCS_MOVE_TYPE_STACK_TO_FREECELL, stack_idx, b);
@@ -1342,10 +1345,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 
         my_copy_stack(stack_idx);
         my_copy_stack(empty_stack_idx);
-        fcs_state_pop_col_top(&new_state, stack_idx);
+        fcs_state_pop_col_top(&new_state_key, stack_idx);
 
         fcs_cards_column_t empty_stack_col =
-            fcs_state_get_col(new_state, empty_stack_idx);
+            fcs_state_get_col(new_state_key, empty_stack_idx);
         fcs_col_push_card(empty_stack_col, card);
 
         fcs_push_1card_seq(moves, stack_idx, empty_stack_idx);
@@ -1402,8 +1405,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
             my_copy_stack(stack_idx);
             my_copy_stack(ds);
 
-            fcs_state_pop_col_top(&new_state, stack_idx);
-            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
+            fcs_state_pop_col_top(&new_state_key, stack_idx);
+            fcs_cards_column_t new_dest_col =
+                fcs_state_get_col(new_state_key, ds);
             fcs_col_push_card(new_dest_col, card);
             fcs_push_1card_seq(moves, stack_idx, ds);
 
@@ -1453,8 +1457,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
         sfs_check_state_begin();
 
         my_copy_stack(stack_idx);
-        fcs_state_pop_col_top(&new_state, stack_idx);
-        fcs_put_card_in_freecell(new_state, ds, card);
+        fcs_state_pop_col_top(&new_state_key, stack_idx);
+        fcs_put_card_in_freecell(new_state_key, ds, card);
 
         fcs_move_stack_non_seq_push(
             moves, FCS_MOVE_TYPE_STACK_TO_FREECELL, stack_idx, ds);
@@ -1498,8 +1502,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
             sfs_check_state_begin();
 
             my_copy_stack(ds);
-            fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
-            fcs_empty_freecell(new_state, fc);
+            fcs_cards_column_t new_dest_col =
+                fcs_state_get_col(new_state_key, ds);
+            fcs_empty_freecell(new_state_key, fc);
             fcs_col_push_card(new_dest_col, card);
             fcs_move_stack_non_seq_push(
                 moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, ds);
@@ -1544,8 +1549,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         sfs_check_state_begin();
 
         my_copy_stack(ds);
-        fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state, ds);
-        fcs_empty_freecell(new_state, fc);
+        fcs_cards_column_t new_dest_col = fcs_state_get_col(new_state_key, ds);
+        fcs_empty_freecell(new_state_key, fc);
         fcs_col_push_card(new_dest_col, card);
         fcs_move_stack_non_seq_push(
             moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, ds);
@@ -1628,7 +1633,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             const fcs_cards_column_t col =
-                fcs_state_get_col(new_state, stack_idx);
+                fcs_state_get_col(new_state_key, stack_idx);
             const int cards_num = fcs_col_len(col);
 
             if (cards_num)
@@ -1643,8 +1648,8 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
                     num_cards_moved++;
 
                     my_copy_stack(stack_idx);
-                    fcs_state_pop_col_top(&new_state, stack_idx);
-                    fcs_increment_foundation(new_state, dest_foundation);
+                    fcs_state_pop_col_top(&new_state_key, stack_idx);
+                    fcs_increment_foundation(new_state_key, dest_foundation);
                     fcs_move_stack_non_seq_push(moves,
                         FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
                         dest_foundation);
@@ -1655,7 +1660,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
         /* Now check the same for the free cells */
         for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
-            const fcs_card_t card = fcs_freecell_card(new_state, fc);
+            const fcs_card_t card = fcs_freecell_card(new_state_key, fc);
             if (fcs_card_is_valid(card))
             {
                 const int dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON();
@@ -1665,9 +1670,9 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
 
                     /* We can put it there */
 
-                    fcs_empty_freecell(new_state, fc);
+                    fcs_empty_freecell(new_state_key, fc);
 
-                    fcs_increment_foundation(new_state, dest_foundation);
+                    fcs_increment_foundation(new_state_key, dest_foundation);
                     fcs_move_stack_non_seq_push(moves,
                         FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION, fc,
                         dest_foundation);
