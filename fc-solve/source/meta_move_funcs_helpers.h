@@ -62,7 +62,6 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
 #define state_val (*val_ptr_state_val)
 #define new_state_key (*(pass_new_state.key))
 #define new_state_val (*(pass_new_state.val))
-#define NEW_STATE_BY_REF() (&pass_new_state)
 #define state (state_key)
 
 #define sfs_check_state_begin()                                                \
