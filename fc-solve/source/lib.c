@@ -934,10 +934,9 @@ static int get_flare_move_count(
 }
 #endif
 
-static inline fcs_instance_item_t *get_current_instance_item(
-    fcs_user_t const *user)
+static inline fcs_instance_item_t *CURR_INST(fcs_user_t *const user)
 {
-    return (user->current_instance);
+    return user->current_instance;
 }
 
 static inline int resume_solution(fcs_user_t *const user)
@@ -952,8 +951,7 @@ static inline int resume_solution(fcs_user_t *const user)
      * */
     do
     {
-        fcs_instance_item_t *const instance_item =
-            get_current_instance_item(user);
+        fcs_instance_item_t *const instance_item = CURR_INST(user);
 
 #ifdef FCS_WITH_FLARES
         if (instance_item->current_plan_item_idx ==
@@ -1313,15 +1311,14 @@ int DLLEXPORT freecell_solver_user_solve_board(
 }
 
 #ifdef FCS_WITH_MOVES
+#ifdef FCS_WITH_FLARES
+#define SINGLE_FLARE(user) CURR_INST(user)->minimal_flare
+#else
+#define SINGLE_FLARE(user) (&(CURR_INST(user)->single_flare))
+#endif
 static inline fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
 {
-#ifdef FCS_WITH_FLARES
-    fcs_flare_item_t *const flare =
-        get_current_instance_item(user)->minimal_flare;
-#else
-    fcs_flare_item_t *const flare =
-        &(get_current_instance_item(user)->single_flare);
-#endif
+    fcs_flare_item_t *const flare = SINGLE_FLARE(user);
     trace_flare_solution(user, flare);
     return flare;
 }
@@ -2250,8 +2247,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
     const freecell_solver_str_t name GCC_UNUSED)
 {
     fcs_flare_item_t *const flare =
-        get_current_instance_item((fcs_user_t *)api_instance)->end_of_flares -
-        1;
+        CURR_INST((fcs_user_t *)api_instance)->end_of_flares - 1;
 
     strncpy(flare->name, name, COUNT(flare->name));
     flare->name[COUNT(flare->name) - 1] = '\0';
@@ -2277,7 +2273,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-    fcs_instance_item_t *const instance_item = get_current_instance_item(user);
+    fcs_instance_item_t *const instance_item = CURR_INST(user);
 
     free(instance_item->flares_plan_string);
     instance_item->flares_plan_string =
@@ -2369,7 +2365,7 @@ int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)
 
 static int user_next_flare(fcs_user_t *const user)
 {
-    fcs_instance_item_t *const instance_item = get_current_instance_item(user);
+    fcs_instance_item_t *const instance_item = CURR_INST(user);
 #ifdef FCS_WITH_FLARES
     const_AUTO(
         num_flares, instance_item->end_of_flares - instance_item->flares);
@@ -2433,7 +2429,7 @@ static int user_next_instance(fcs_user_t *const user)
     user->end_of_instances_list =
         (user->current_instance = user->instances_list + num_instances) + 1;
 
-    *(get_current_instance_item(user)) = (fcs_instance_item_t){
+    *(CURR_INST(user)) = (fcs_instance_item_t){
 #ifdef FCS_WITH_FLARES
         .flares = NULL,
         .end_of_flares = NULL,
@@ -2526,23 +2522,15 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
 int DLLEXPORT freecell_solver_user_get_moves_sequence(
     void *const api_instance, fcs_moves_sequence_t *const moves_seq)
 {
-    const fcs_user_t *const user = (const fcs_user_t *)api_instance;
+    fcs_user_t *const user = (fcs_user_t *)api_instance;
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
     {
         return -2;
     }
-#ifdef FCS_WITH_FLARES
-    const fcs_moves_sequence_t *const src_moves_seq =
-        &(get_current_instance_item(user)->minimal_flare->moves_seq);
-#else
-    const fcs_moves_sequence_t *const src_moves_seq =
-        &(get_current_instance_item(user)->single_flare.moves_seq);
-#endif
-
+    const_AUTO(src_moves_seq, &(SINGLE_FLARE(user)->moves_seq));
     moves_seq->moves = memdup(src_moves_seq->moves,
         (sizeof(src_moves_seq->moves[0]) *
             (moves_seq->num_moves = src_moves_seq->num_moves)));
-
     return 0;
 }
 #endif
@@ -2606,8 +2594,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *const api_instance GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    return get_current_instance_item((fcs_user_t * const)api_instance)
-        ->num_plan_items;
+    return CURR_INST((fcs_user_t * const)api_instance)->num_plan_items;
 #else
     return 0;
 #endif
@@ -2617,9 +2604,7 @@ const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    switch (get_current_instance_item((fcs_user_t * const)api_instance)
-                ->plan[item_idx]
-                .type)
+    switch (CURR_INST((fcs_user_t * const)api_instance)->plan[item_idx].type)
     {
     case FLARES_PLAN_RUN_INDEFINITELY:
         return "RunIndef";
@@ -2644,7 +2629,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
 {
 #ifdef FCS_WITH_FLARES
     fcs_instance_item_t *const instance_item =
-        get_current_instance_item((fcs_user_t * const)api_instance);
+        CURR_INST((fcs_user_t * const)api_instance);
     return instance_item->plan[item_idx].flare - instance_item->flares;
 #else
     return 0;
@@ -2655,7 +2640,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    return get_current_instance_item((fcs_user_t * const)api_instance)
+    return CURR_INST((fcs_user_t * const)api_instance)
         ->plan[item_idx]
         .count_iters;
 #else
