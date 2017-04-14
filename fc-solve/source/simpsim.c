@@ -26,8 +26,6 @@ char fc_solve_simple_simon_nothing;
 
 #else
 
-#include "instance.h"
-
 #include "meta_move_funcs_helpers.h"
 
 static inline fcs_bool_t fcs_is_ss_false_parent(

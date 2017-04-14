@@ -17,8 +17,6 @@
 #include <limits.h>
 #include <assert.h>
 #include "config.h"
-#include "state.h"
-#include "instance.h"
 #include "scans.h"
 #include "meta_move_funcs_helpers.h"
 #include "freecell.h"
