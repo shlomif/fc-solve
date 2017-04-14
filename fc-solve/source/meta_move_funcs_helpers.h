@@ -59,10 +59,8 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
 #define state (state_key)
 
 #define sfs_check_state_begin()                                                \
-    {                                                                          \
-        fc_solve_sfs_check_state_begin(hard_thread, &pass_new_state,           \
-            raw_ptr_state_raw SFS__PASS_MOVE_STACK(moves));                    \
-    }
+    fc_solve_sfs_check_state_begin(hard_thread, &pass_new_state,               \
+        raw_ptr_state_raw SFS__PASS_MOVE_STACK(moves))
 
 #define sfs_check_state_end()                                                  \
     fc_solve_sfs_check_state_end(soft_thread, raw_ptr_state_raw,               \
