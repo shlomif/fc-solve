@@ -41,9 +41,9 @@ void fc_solve_compact_allocator_init(fcs_compact_allocator_t *const allocator,
 static inline char *meta_request_new_buffer(
     fcs_meta_compact_allocator_t *const meta_allocator)
 {
-    if (meta_allocator->recycle_bin)
+    char *const ret = meta_allocator->recycle_bin;
+    if (ret)
     {
-        char *ret = meta_allocator->recycle_bin;
         meta_allocator->recycle_bin = OLD_LIST_NEXT(ret);
         return ret;
     }
@@ -68,14 +68,12 @@ void fc_solve_meta_compact_allocator_finish(
     fcs_meta_compact_allocator_t *const meta_allocator)
 {
     char *iter, *iter_next;
-
     for (iter = meta_allocator->recycle_bin,
         iter_next = iter ? OLD_LIST_NEXT(iter) : NULL;
          iter_next; iter = iter_next, iter_next = OLD_LIST_NEXT(iter))
     {
         free(iter);
     }
-
     free(iter);
     meta_allocator->recycle_bin = NULL;
 }
