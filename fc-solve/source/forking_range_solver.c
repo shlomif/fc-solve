@@ -88,7 +88,7 @@ static inline void worker_func(const worker_t w, void *const instance)
             .num_iters = 0,
             .num_finished_boards = req.quota_end - req.board_num + 1,
         };
-        for (; req.board_num <= req.quota_end; req.board_num++)
+        for (; req.board_num <= req.quota_end; ++req.board_num)
         {
             range_solvers__solve(instance, req.board_num, &response.num_iters);
             freecell_solver_user_recycle(instance);
@@ -151,15 +151,15 @@ static inline int read_fd(const worker_t *const worker)
 
 int main(int argc, char *argv[])
 {
-    int arg = 1;
+    int arg = 0;
 
     if (argc < 4)
     {
         help_err("Not Enough Arguments!\n");
     }
-    long long next_board_num = atoll(argv[arg++]);
-    const long long end_board = atoll(argv[arg++]);
-    const long long stop_at = atoll(argv[arg++]);
+    long long next_board_num = atoll(argv[++arg]);
+    const long long end_board = atoll(argv[++arg]);
+    const long long stop_at = atoll(argv[++arg]);
     if (stop_at <= 0)
     {
         help_err("print_step (the third argument) must be greater than 0.\n");
@@ -169,12 +169,11 @@ int main(int argc, char *argv[])
     long long board_num_step = 1;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
 
-    for (; arg < argc; arg++)
+    for (++arg; arg < argc; ++arg)
     {
         if (!strcmp(argv[arg], "--total-iterations-limit"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err(
                     "--total-iterations-limit came without an argument!\n");
@@ -183,8 +182,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--num-workers"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--num-workers came without an argument!\n");
             }
@@ -192,8 +190,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--worker-step"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--worker-step came without an argument!\n");
             }
@@ -211,7 +208,7 @@ int main(int argc, char *argv[])
         instance, total_iterations_limit_per_board);
     worker_t workers[num_workers];
 
-    for (size_t idx = 0; idx < num_workers; idx++)
+    for (size_t idx = 0; idx < num_workers; ++idx)
     {
         if (pipe(workers[idx].child_to_parent_pipe))
         {
@@ -268,7 +265,7 @@ int main(int argc, char *argv[])
         int mymax = -1;
 #endif
 
-        for (size_t idx = 0; idx < num_workers; idx++)
+        for (size_t idx = 0; idx < num_workers; ++idx)
         {
             const int fd = read_fd(&workers[idx]);
 #ifdef USE_EPOLL
@@ -289,7 +286,7 @@ int main(int argc, char *argv[])
 #endif
         }
 #ifndef USE_EPOLL
-        mymax++;
+        ++mymax;
 #endif
         int total_num_finished_boards = 0;
         const long long total_num_boards_to_check =
@@ -298,7 +295,7 @@ int main(int argc, char *argv[])
         long long next_milestone = next_board_num + stop_at;
         next_milestone -= (next_milestone % stop_at);
 
-        for (size_t idx = 0; idx < num_workers; idx++)
+        for (size_t idx = 0; idx < num_workers; ++idx)
         {
             write_request(
                 end_board, board_num_step, &next_board_num, &(workers[idx]));
@@ -325,7 +322,7 @@ int main(int argc, char *argv[])
                 exit(EXIT_FAILURE);
             }
 
-            for (int i = 0; i < nfds; i++)
+            for (int i = 0; i < nfds; ++i)
             {
                 const worker_t *const worker = events[i].data.ptr;
                 transaction(worker, read_fd(worker), &total_num_finished_boards,
@@ -343,7 +340,7 @@ int main(int argc, char *argv[])
             }
             else if (select_ret)
             {
-                for (size_t idx = 0; idx < num_workers; idx++)
+                for (size_t idx = 0; idx < num_workers; ++idx)
                 {
                     const int fd = read_fd(&workers[idx]);
 
@@ -362,7 +359,7 @@ int main(int argc, char *argv[])
     }
 
     int status;
-    for (size_t idx = 0; idx < num_workers; idx++)
+    for (size_t idx = 0; idx < num_workers; ++idx)
     {
         wait(&status);
     }
