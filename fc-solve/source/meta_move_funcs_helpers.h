@@ -51,9 +51,7 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
 }
 #endif
 
-/*
- *  These are some macros to make it easier for the programmer.
- * */
+// These are some macros to make it easier for the programmer.
 #define ptr_state_key (raw_ptr_state_raw->key)
 #define val_ptr_state_val (raw_ptr_state_raw->val)
 
@@ -61,7 +59,6 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
 #define state_key (*ptr_state_key)
 #define state_val (*val_ptr_state_val)
 #define new_state_key (*(pass_new_state.key))
-#define new_state_val (*(pass_new_state.val))
 #define state (state_key)
 
 #define sfs_check_state_begin()                                                \
@@ -175,7 +172,8 @@ static inline void fc_solve_move_sequence_function(
     tests_define_indirect_stack_states_accessors();
 
 #define my_copy_stack(idx)                                                     \
-    fcs_copy_stack(new_state_key, new_state_val, idx, indirect_stacks_buffer);
+    fcs_copy_stack(                                                            \
+        new_state_key, *(pass_new_state.val), idx, indirect_stacks_buffer);
 
 /*
  * This macro assists in implementing this prune:
