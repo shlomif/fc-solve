@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * simpsim.c - a module that contains Simple Simon Moves.
- */
+// simpsim.c - a module that contains Simple Simon moves.
 
 #include "dll_thunk.h"
 #include <stdio.h>

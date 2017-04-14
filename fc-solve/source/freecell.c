@@ -7,9 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * freecell.c - The various movement tests performed by Freecell Solver
- */
+// freecell.c - a module that contains moves of the Freecell-games family.
+
 #include "dll_thunk.h"
 #include <stdlib.h>
 #include <string.h>
