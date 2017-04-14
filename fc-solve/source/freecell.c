@@ -1090,25 +1090,23 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
                 /* We can move it */
 
-                {
-                    sfs_check_state_begin();
-                    // Fill the freecells with the top cards
-                    my_copy_stack(ds);
+                sfs_check_state_begin();
+                // Fill the freecells with the top cards
+                my_copy_stack(ds);
 
-                    const int cols_indexes[3] = {ds, -1, -1};
-                    empty_two_cols_from_new_state(soft_thread,
-                        ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
-                        freestacks_to_fill + freecells_to_fill, 0);
+                const int cols_indexes[3] = {ds, -1, -1};
+                empty_two_cols_from_new_state(soft_thread,
+                    ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
+                    freestacks_to_fill + freecells_to_fill, 0);
 
-                    my_copy_stack(stack_idx);
+                my_copy_stack(stack_idx);
 
-                    fcs_move_sequence(ds, stack_idx, cards_num - c);
+                fcs_move_sequence(ds, stack_idx, cards_num - c);
 
-                    state_context_value =
-                        ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);
+                state_context_value =
+                    ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);
 
-                    sfs_check_state_end();
-                }
+                sfs_check_state_end();
             }
         }
     }
