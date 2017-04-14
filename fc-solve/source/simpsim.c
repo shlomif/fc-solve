@@ -243,10 +243,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
         /* We can do it - so let's move */
 
         sfs_check_state_begin();
-
-        my_copy_stack(stack_idx);
-        my_copy_stack(ds);
-
+        copy_two_stacks(stack_idx, ds);
         fcs_move_sequence(ds, stack_idx, cards_num - h - 1);
         sfs_check_state_end();
         LOOK_FOR_TRUE_PARENT_AT_TOP__END()
@@ -356,12 +353,8 @@ DECLARE_MOVE_FUNCTION(
     /* We can do it - so let's move */
 
     sfs_check_state_begin();
-
-    my_copy_stack(stack_idx);
-    my_copy_stack(ds);
-
+    copy_two_stacks(stack_idx, ds);
     fcs_move_sequence(ds, stack_idx, cards_num - h);
-
     sfs_check_state_end();
     STACK_DEST_LOOP_END()
 #undef h
@@ -624,11 +617,8 @@ DECLARE_MOVE_FUNCTION(
                  * */
 
                 sfs_check_state_begin();
-
-                my_copy_stack(stack_idx);
-                my_copy_stack(ds);
-
-                /* Move the junk cards to their place */
+                copy_two_stacks(stack_idx, ds);
+                // Move the junk cards to their place
                 move_sequences_analysis_seqs_loop(
                     &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs, ds,
                     dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
@@ -688,13 +678,9 @@ DECLARE_MOVE_FUNCTION(
                         (calc_max_simple_simon_seq_move(
                              seqs.after_junk_num_freestacks) > num_true_seqs)))
                 {
-
-                    sfs_check_state_begin();
-
-                    my_copy_stack(stack_idx);
-                    my_copy_stack(ds);
-
                     /* Let's boogie - we can move everything */
+                    sfs_check_state_begin();
+                    copy_two_stacks(stack_idx, ds);
 
                     /* Move the junk cards to their place */
                     move_sequences_analysis_seqs_loop(
@@ -829,12 +815,8 @@ DECLARE_MOVE_FUNCTION(
                 num_true_seqs))
         {
             /* We can do it - so let's move everything */
-
             sfs_check_state_begin();
-
-            my_copy_stack(stack_idx);
-            my_copy_stack(ds);
-
+            copy_two_stacks(stack_idx, ds);
             /* Move the junk cards to their place */
 
             for (int seq_index = 0;
@@ -843,12 +825,8 @@ DECLARE_MOVE_FUNCTION(
                 const s_e_src_t s_e = calc_start_end_src_stack(seq_index, &seqs,
                     after_end_of_junk, cards_num, stack_idx, ds,
                     dest_cards_num);
-
-                my_copy_stack(s_e.src_stack);
-
                 const_AUTO(dest_col_i, seqs.junk_move_to_stacks[seq_index]);
-                my_copy_stack(dest_col_i);
-
+                copy_two_stacks(s_e.src_stack, dest_col_i);
                 fcs_move_sequence(dest_col_i, s_e.src_stack, s_e.cards_num);
             }
 
@@ -970,12 +948,8 @@ DECLARE_MOVE_FUNCTION(
         if (POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, dc, stack_idx, ds, TRUE))
         {
             /* We can do it - so let's move */
-
             sfs_check_state_begin();
-
-            my_copy_stack(stack_idx);
-            my_copy_stack(ds);
-
+            copy_two_stacks(stack_idx, ds);
             /* Move the junk cards to their place */
             move_sequences_analysis_seqs_loop(
                 &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs, ds,
@@ -1075,14 +1049,10 @@ DECLARE_MOVE_FUNCTION(
             move_sequences_analysis_seqs_loop(
                 &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs, stack_idx,
                 cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
-
-            {
-                const_AUTO(
-                    src_col_i, seqs.junk_move_to_stacks[child_seq_index]);
-                my_copy_stack(src_col_i);
-                fcs_move_sequence(stack_idx, src_col_i,
-                    end_of_child_seq - child_card_height + 1);
-            }
+            const_AUTO(src_col_i, seqs.junk_move_to_stacks[child_seq_index]);
+            my_copy_stack(src_col_i);
+            fcs_move_sequence(
+                stack_idx, src_col_i, end_of_child_seq - child_card_height + 1);
 
             sfs_check_state_end();
         }
@@ -1132,10 +1102,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 
     /* We can do it - so let's perform the move */
     sfs_check_state_begin();
-
-    my_copy_stack(stack_idx);
-    my_copy_stack(ds);
-
+    copy_two_stacks(stack_idx, ds);
     fcs_move_sequence(ds, stack_idx, cards_num - h);
     sfs_check_state_end();
     STACK_DEST_LOOP_END()

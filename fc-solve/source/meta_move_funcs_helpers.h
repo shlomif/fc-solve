@@ -160,7 +160,10 @@ static inline void fc_solve_move_sequence_function(
 
 #define my_copy_stack(idx)                                                     \
     fcs_copy_stack(                                                            \
-        new_state_key, *(pass_new_state.val), idx, indirect_stacks_buffer);
+        new_state_key, *(pass_new_state.val), idx, indirect_stacks_buffer)
+#define copy_two_stacks(idx1, idx2)                                            \
+    my_copy_stack(idx1);                                                       \
+    my_copy_stack(idx2)
 
 /*
  * This macro assists in implementing this prune:

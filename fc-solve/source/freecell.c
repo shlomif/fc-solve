@@ -772,8 +772,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     continue;
                 }
                 sfs_check_state_begin();
-                my_copy_stack(stack_idx);
-                my_copy_stack(ds);
+                copy_two_stacks(stack_idx, ds);
                 const int cols_indexes[3] = {ds, stack_idx, -1};
                 empty_two_cols_from_new_state(soft_thread,
                     ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
@@ -848,10 +847,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                     continue;
                 }
                 sfs_check_state_begin();
-
-                my_copy_stack(ds);
-                my_copy_stack(stack_idx);
-
+                copy_two_stacks(stack_idx, ds);
                 fcs_move_sequence(ds, stack_idx, iter.col_len - c);
 
                 sfs_check_state_end();
@@ -1092,15 +1088,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
                 sfs_check_state_begin();
                 // Fill the freecells with the top cards
-                my_copy_stack(ds);
-
+                copy_two_stacks(stack_idx, ds);
                 const int cols_indexes[3] = {ds, -1, -1};
                 empty_two_cols_from_new_state(soft_thread,
                     ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
                     freestacks_to_fill + freecells_to_fill, 0);
-
-                my_copy_stack(stack_idx);
-
                 fcs_move_sequence(ds, stack_idx, cards_num - c);
 
                 state_context_value =
@@ -1221,8 +1213,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
                         {
                             /* Let's move it */
                             sfs_check_state_begin();
-                            my_copy_stack(stack_idx);
-                            my_copy_stack(ds);
+                            copy_two_stacks(stack_idx, ds);
                             fcs_move_sequence(ds, stack_idx, c, cards_num-1);
                             sfs_check_state_end();
                         }
@@ -1276,8 +1267,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
             {
                 /* It's a King - so let's move it */
                 sfs_check_state_begin();
-                my_copy_stack(stack_idx);
-                my_copy_stack(ds);
+                copy_two_stacks(stack_idx, ds);
                 fcs_move_sequence(ds, stack_idx, c, cards_num-1);
                 sfs_check_state_end();
             }
@@ -1334,9 +1324,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         }
         /* Let's move it */
         sfs_check_state_begin();
-
-        my_copy_stack(stack_idx);
-        my_copy_stack(empty_stack_idx);
+        copy_two_stacks(stack_idx, empty_stack_idx);
         fcs_state_pop_col_top(&new_state_key, stack_idx);
 
         fcs_cards_column_t empty_stack_col =
@@ -1393,10 +1381,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
                 continue;
             }
             sfs_check_state_begin();
-
-            my_copy_stack(stack_idx);
-            my_copy_stack(ds);
-
+            copy_two_stacks(stack_idx, ds);
             fcs_state_pop_col_top(&new_state_key, stack_idx);
             fcs_cards_column_t new_dest_col =
                 fcs_state_get_col(new_state_key, ds);
