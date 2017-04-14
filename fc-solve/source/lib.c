@@ -941,8 +941,6 @@ static inline fcs_instance_item_t *CURR_INST(fcs_user_t *const user)
 
 static inline int resume_solution(fcs_user_t *const user)
 {
-    fcs_stats_t init_num_checked_states;
-
     int ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
     const_SLOT(end_of_instances_list, user);
@@ -1115,12 +1113,10 @@ static inline int resume_solution(fcs_user_t *const user)
         }
 
         user->init_num_checked_states.num_checked_states =
-            init_num_checked_states.num_checked_states =
-                instance->i__num_checked_states;
+            instance->i__num_checked_states;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
         user->init_num_checked_states.num_states_in_collection =
-            init_num_checked_states.num_states_in_collection =
-                instance->num_states_in_collection;
+            instance->num_states_in_collection;
 #endif
 
         if (is_start_of_flare_solving)
@@ -1156,7 +1152,7 @@ static inline int resume_solution(fcs_user_t *const user)
             instance->num_states_in_collection;
 #endif
         const_AUTO(delta, flare->obj_stats.num_checked_states -
-                              init_num_checked_states.num_checked_states);
+                              user->init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
 #ifdef FCS_WITH_FLARES
         if (flare_iters_quota >= 0)
@@ -1168,7 +1164,7 @@ static inline int resume_solution(fcs_user_t *const user)
 #ifndef FCS_DISABLE_NUM_STORED_STATES
         user->iterations_board_started_at.num_states_in_collection +=
             flare->obj_stats.num_states_in_collection -
-            init_num_checked_states.num_states_in_collection;
+            user->init_num_checked_states.num_states_in_collection;
 #endif
         user->init_num_checked_states = flare->obj_stats;
 

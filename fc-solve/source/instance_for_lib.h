@@ -52,7 +52,7 @@ static inline fc_solve_soft_thread_t *fc_solve_new_hard_thread(
     fc_solve_instance__init_hard_thread(instance,
         (ret = &(instance->hard_threads[instance->num_hard_threads])));
 
-    instance->num_hard_threads++;
+    ++instance->num_hard_threads;
 
     return &(ret->soft_threads[0]);
 }
