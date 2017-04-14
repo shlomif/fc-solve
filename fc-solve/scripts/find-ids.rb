@@ -26,6 +26,7 @@ ARGV.each do |fn|
         while (l = file.gets)
             l.gsub!(/\/\*.*?\*\//m, "");
             l.gsub!(/(?:"([^\\]|\\.)*?")|(?:'[^'']+?')/m, " ");
+            l.gsub!(/\/\/.*/m, "");
             if (m = /\A(.*?)((?:\/\*)|\z)/m.match(l))
                 before = m[1]
                 open_comment = m[2]
