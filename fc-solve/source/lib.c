@@ -481,7 +481,7 @@ static inline void add_to_plan(fcs_instance_item_t *const instance_item,
     const flares_plan_type_t mytype, fcs_flare_item_t *const flare,
     const int_fast32_t count_iters)
 {
-    const int next_item = instance_item->num_plan_items;
+    const_AUTO(next_item, instance_item->num_plan_items);
 
     instance_item->plan =
         SREALLOC(instance_item->plan, ++(instance_item->num_plan_items));
@@ -677,7 +677,7 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
     INSTANCES_LOOP_START()
     const_SLOT(num_plan_items, instance_item);
     const_SLOT(plan, instance_item);
-    for (int i = 0; i < num_plan_items; i++)
+    for (size_t i = 0; i < num_plan_items; i++)
     {
         flares_plan_item *const item = plan + i;
         switch (item->type)
@@ -1282,7 +1282,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
     INSTANCES_LOOP_START()
     const_SLOT(num_plan_items, instance_item);
     const_SLOT(plan, instance_item);
-    for (int i = 0; i < num_plan_items; i++)
+    for (size_t i = 0; i < num_plan_items; i++)
     {
         flares_plan_item *item = plan + i;
         item->remaining_quota = item->initial_quota;
