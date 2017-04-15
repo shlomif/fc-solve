@@ -185,13 +185,8 @@ typedef char fcs_locs_t;
 
 #if defined(COMPACT_STATES)
 
-#define fcs_duplicate_state_extra(dest_info)                                   \
-    {                                                                          \
-    }
-
-#define fcs_copy_stack(state_key, state_val, idx, buffer)                      \
-    {                                                                          \
-    }
+#define fcs_duplicate_state_extra(dest_info)
+#define fcs_copy_stack(state_key, state_val, idx, buffer)
 
 #endif
 

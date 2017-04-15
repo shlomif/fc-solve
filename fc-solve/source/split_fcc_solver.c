@@ -556,7 +556,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
                 fc_solve_delta_stater_decode_into_state(&(thread->delta_stater),
                     key->s, &state, indirect_stacks_buffer);
-                char state_str[2000];
+                fcs_render_state_str_t state_str;
                 FCS__RENDER_STATE(state_str, &(state.s), &locs);
                 fprintf(stderr, "Check Key: <<<\n%s\n>>>\n\n[%s %s %ld %s]\n\n",
                     state_str, fingerprint_base64, state_base64,
@@ -587,14 +587,12 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     instance->start_key_moves_count = (key_ptr->kv.val.depth);
 #endif
 
+    dbm__spawn_threads(instance, num_threads, threads);
+    if (!instance->common.queue_solution_was_found)
     {
-        dbm__spawn_threads(instance, num_threads, threads);
-        if (!instance->common.queue_solution_was_found)
-        {
-            mark_and_sweep_old_states(instance,
-                fc_solve_dbm_store_get_dict(instance->coll.cache_store.store),
-                instance->curr_depth);
-        }
+        mark_and_sweep_old_states(instance,
+            fc_solve_dbm_store_get_dict(instance->coll.cache_store.store),
+            instance->curr_depth);
     }
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }

@@ -85,14 +85,10 @@ static inline void fc_solve_move_sequence_function(
 
 #define tests_define_accessors_rcs_states()                                    \
     fcs_state_t my_new_out_state_key;                                          \
-    {                                                                          \
-        pass_new_state.key = &my_new_out_state_key;                            \
-    }
+    pass_new_state.key = &my_new_out_state_key
 
 #else
-#define tests_define_accessors_rcs_states()                                    \
-    {                                                                          \
-    }
+#define tests_define_accessors_rcs_states()
 #endif
 
 #ifdef FCS_FREECELL_ONLY
@@ -144,7 +140,7 @@ static inline void fc_solve_move_sequence_function(
     int state_context_value = 0;                                               \
     fcs_kv_state_t pass_new_state;                                             \
     tests_define_accessors_freecell_only();                                    \
-    tests_define_accessors_rcs_states();
+    tests_define_accessors_rcs_states()
 
 #ifdef INDIRECT_STACK_STATES
 #define tests_define_indirect_stack_states_accessors()                         \
@@ -156,7 +152,7 @@ static inline void fc_solve_move_sequence_function(
 
 #define tests_define_accessors()                                               \
     tests_define_accessors_no_stacks();                                        \
-    tests_define_indirect_stack_states_accessors();
+    tests_define_indirect_stack_states_accessors()
 
 #define my_copy_stack(idx)                                                     \
     fcs_copy_stack(                                                            \

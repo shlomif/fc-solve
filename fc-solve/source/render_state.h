@@ -9,6 +9,7 @@
  */
 #pragma once
 
+typedef char fcs_render_state_str_t[2000];
 #define FCS__RENDER_STATE(state_str, state_ptr, locs)                          \
     fc_solve_state_as_string(state_str, state_ptr,                             \
         locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)             \
@@ -18,7 +19,7 @@
 #ifdef DEBUG_OUT
 #define FCS__OUTPUT_STATE(out_fh, prefix, state_ptr, locs)                     \
     {                                                                          \
-        char state_str[2000];                                                  \
+        fcs_render_state_str_t state_str;                                      \
         FCS__RENDER_STATE(state_str, state_ptr, locs);                         \
         fprintf(out_fh, "%s<<<\n%s>>>\n\n", prefix, state_str);                \
         fflush(out_fh);                                                        \

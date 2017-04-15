@@ -41,18 +41,13 @@ static void print_help(void)
 {
     printf("\n%s",
         "freecell-solver-fork-solve start end print_step\n"
-        "    [--num-workers n] [--worker-step step] [--total-iterations-limit "
-        "limit]\n"
-        "   [fc-solve Arguments...]\n"
+        "    [--num-workers n] [--worker-step step] [fc-solve Arguments...]\n"
         "\n"
         "Solves a sequence of boards from the Microsoft/Freecell Pro Deals\n"
         "\n"
         "start - the first board in the sequence\n"
         "end - the last board in the sequence (inclusive)\n"
-        "print_step - at which division to print a status line\n"
-        "\n"
-        "--total-iterations-limit  limit\n"
-        "     Limits each board for up to 'limit' iterations.\n");
+        "print_step - at which division to print a status line\n");
 }
 
 static long long total_num_iters = 0;
@@ -167,20 +162,9 @@ int main(int argc, char *argv[])
 
     size_t num_workers = 3;
     long long board_num_step = 1;
-    fcs_int_limit_t total_iterations_limit_per_board = -1;
-
     for (++arg; arg < argc; ++arg)
     {
-        if (!strcmp(argv[arg], "--total-iterations-limit"))
-        {
-            if (++arg == argc)
-            {
-                help_err(
-                    "--total-iterations-limit came without an argument!\n");
-            }
-            total_iterations_limit_per_board = (fcs_int_limit_t)atol(argv[arg]);
-        }
-        else if (!strcmp(argv[arg], "--num-workers"))
+        if (!strcmp(argv[arg], "--num-workers"))
         {
             if (++arg == argc)
             {
@@ -204,8 +188,6 @@ int main(int argc, char *argv[])
 
     fc_solve_print_started_at();
     void *const instance = simple_alloc_and_parse(argc, argv, &arg);
-    freecell_solver_user_limit_iterations_long(
-        instance, total_iterations_limit_per_board);
     worker_t workers[num_workers];
 
     for (size_t idx = 0; idx < num_workers; ++idx)

@@ -249,7 +249,7 @@ static inline void instance_debug_out_state(
     fc_solve_delta_stater_decode_into_state(
         &global_delta_stater, enc_state->s, &state, indirect_stacks_buffer);
 
-    char state_str[1000];
+    fcs_render_state_str_t state_str;
     FCS__RENDER_STATE(state_str, &(state.s), &locs);
     fprintf(instance->common.out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
     fflush(instance->common.out_fh);
@@ -444,12 +444,10 @@ static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     const char *param;
     if ((param = TRY_PARAM("--pre-cache-max-count")))
     {
-        const_AUTO(pre_cache_max_count, atol(param));
-        if (pre_cache_max_count < 1000)
+        if ((inp->pre_cache_max_count = atol(param)) < 1000)
         {
             fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
         }
-        inp->pre_cache_max_count = pre_cache_max_count;
         return TRUE;
     }
     else if ((param = TRY_PARAM("--game")))
@@ -475,12 +473,10 @@ static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     }
     else if ((param = TRY_PARAM("--num-threads")))
     {
-        const_AUTO(num_threads, (size_t)atoi(param));
-        if (num_threads < 1)
+        if ((inp->num_threads = (size_t)atoi(param)) < 1)
         {
             fc_solve_err("--num-threads must be at least 1.\n");
         }
-        inp->num_threads = num_threads;
         return TRUE;
     }
     else if ((param = TRY_PARAM("--iters-delta-limit")))
@@ -490,12 +486,10 @@ static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     }
     else if ((param = TRY_PARAM("--caches-delta")))
     {
-        const_AUTO(caches_delta, atol(param));
-        if (caches_delta < 1000)
+        if ((inp->caches_delta = atol(param)) < 1000)
         {
             fc_solve_err("--caches-delta must be at least 1,000.\n");
         }
-        inp->caches_delta = caches_delta;
         return TRUE;
     }
     else if ((param = TRY_PARAM("--dbm-store-path")))

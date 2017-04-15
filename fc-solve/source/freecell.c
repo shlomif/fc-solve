@@ -1554,7 +1554,7 @@ static inline int_fast32_t calc_foundation_to_put_card_on(
     const int_fast32_t rank_min_1 = rank - 1;
     const int_fast32_t rank_min_2 = rank - 2;
 
-    for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+    for (int_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
     {
         const int_fast32_t ret_val = ((deck << 2) | suit);
         if (fcs_foundation_value(*ptr_state, ret_val) == rank_min_1)
@@ -1567,7 +1567,7 @@ static inline int_fast32_t calc_foundation_to_put_card_on(
             }
 #endif
 
-            int other_deck_idx;
+            int_fast32_t other_deck_idx;
             for (other_deck_idx = 0; other_deck_idx < (INSTANCE_DECKS_NUM << 2);
                  other_deck_idx++)
             {

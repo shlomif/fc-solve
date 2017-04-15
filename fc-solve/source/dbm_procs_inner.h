@@ -144,7 +144,7 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
             move_to_string(move, move_buffer);
         }
 
-        char state_str[1000];
+        fcs_render_state_str_t state_str;
         FCS__RENDER_STATE(state_str, &(state.s), &locs);
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n", state_str,
