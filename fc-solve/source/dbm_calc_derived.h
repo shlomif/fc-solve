@@ -154,29 +154,29 @@ static inline int calc_foundation_to_put_card_on(
     /* needed by the macros. */
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
-    for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+    const int_fast32_t rank = fcs_card_rank(card);
+    const int_fast32_t suit = fcs_card_suit(card);
+    for (uint_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
     {
-        if (fcs_foundation_value(*ptr_state,
-                (deck << 2) + fcs_card_suit(card)) == fcs_card_rank(card) - 1)
+        if (fcs_foundation_value(*ptr_state, (deck << 2) + suit) == rank - 1)
         {
-            int other_deck_idx;
+            uint_fast32_t other_deck_idx;
 
             for (other_deck_idx = 0; other_deck_idx < (INSTANCE_DECKS_NUM << 2);
-                 other_deck_idx++)
+                 ++other_deck_idx)
             {
                 if (fcs_foundation_value(*ptr_state, other_deck_idx) <
-                    fcs_card_rank(card) - 2 -
+                    rank - 2 -
                         (FCS__SEQS_ARE_BUILT_BY_RANK()
                                 ? 0
-                                : ((other_deck_idx & 0x1) ==
-                                      (fcs_card_suit(card) & 0x1))))
+                                : ((other_deck_idx & 0x1) == (suit & 0x1))))
                 {
                     break;
                 }
             }
             if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
             {
-                return (deck << 2) + fcs_card_suit(card);
+                return (deck << 2) + suit;
             }
         }
     }

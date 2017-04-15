@@ -1541,7 +1541,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 #define CALC_FOUNDATION_TO_PUT_CARD_ON()                                       \
     calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card)
 
-static inline int calc_foundation_to_put_card_on(
+static inline int_fast32_t calc_foundation_to_put_card_on(
     const fc_solve_soft_thread_t *const soft_thread,
     const fcs_state_t *const ptr_state, const fcs_card_t card)
 {
@@ -1549,12 +1549,15 @@ static inline int calc_foundation_to_put_card_on(
     const_AUTO(instance, fcs_st_instance(soft_thread));
 #endif
     MOVE_FUNCS__define_seqs_built_by();
+    const int_fast32_t rank = fcs_card_rank(card);
+    const int_fast32_t suit = fcs_card_suit(card);
+    const int_fast32_t rank_min_1 = rank - 1;
+    const int_fast32_t rank_min_2 = rank - 2;
 
     for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
     {
-        const int ret_val = ((deck << 2) | fcs_card_suit(card));
-        if (fcs_foundation_value(*ptr_state, ret_val) ==
-            fcs_card_rank(card) - 1)
+        const int_fast32_t ret_val = ((deck << 2) | suit);
+        if (fcs_foundation_value(*ptr_state, ret_val) == rank_min_1)
         {
 /* Always put on the foundation if it is built-by-suit */
 #ifndef FCS_FREECELL_ONLY
@@ -1569,11 +1572,10 @@ static inline int calc_foundation_to_put_card_on(
                  other_deck_idx++)
             {
                 if (fcs_foundation_value(*ptr_state, other_deck_idx) <
-                    fcs_card_rank(card) - 2 -
-                        (FCS__SEQS_ARE_BUILT_BY_RANK()
-                                ? 0
-                                : ((other_deck_idx & 0x1) ==
-                                      (fcs_card_suit(card) & 0x1))))
+                    rank_min_2 - (FCS__SEQS_ARE_BUILT_BY_RANK()
+                                         ? 0
+                                         : ((other_deck_idx & 0x1) ==
+                                               (fcs_card_suit(card) & 0x1))))
                 {
                     break;
                 }
@@ -1613,48 +1615,50 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
                 fcs_state_get_col(new_state_key, stack_idx);
             const int cards_num = fcs_col_len(col);
 
-            if (cards_num)
+            if (!cards_num)
             {
-                /* Get the top card in the stack */
-                const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
-
-                const int dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON();
-                if (dest_foundation >= 0)
-                {
-                    /* We can safely move it. */
-                    num_cards_moved++;
-
-                    my_copy_stack(stack_idx);
-                    fcs_state_pop_col_top(&new_state_key, stack_idx);
-                    fcs_increment_foundation(new_state_key, dest_foundation);
-                    fcs_move_stack_non_seq_push(moves,
-                        FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
-                        dest_foundation);
-                }
+                continue;
             }
+            /* Get the top card in the stack */
+            const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+
+            const_AUTO(dest_foundation, CALC_FOUNDATION_TO_PUT_CARD_ON());
+            if (dest_foundation < 0)
+            {
+                continue;
+            }
+            /* We can safely move it. */
+            num_cards_moved++;
+
+            my_copy_stack(stack_idx);
+            fcs_state_pop_col_top(&new_state_key, stack_idx);
+            fcs_increment_foundation(new_state_key, dest_foundation);
+            fcs_move_stack_non_seq_push(moves,
+                FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx, dest_foundation);
         }
 
         /* Now check the same for the free cells */
         for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
             const fcs_card_t card = fcs_freecell_card(new_state_key, fc);
-            if (fcs_card_is_valid(card))
+            if (fcs_card_is_empty(card))
             {
-                const int dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON();
-                if (dest_foundation >= 0)
-                {
-                    num_cards_moved++;
-
-                    /* We can put it there */
-
-                    fcs_empty_freecell(new_state_key, fc);
-
-                    fcs_increment_foundation(new_state_key, dest_foundation);
-                    fcs_move_stack_non_seq_push(moves,
-                        FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION, fc,
-                        dest_foundation);
-                }
+                continue;
             }
+            const_AUTO(dest_foundation, CALC_FOUNDATION_TO_PUT_CARD_ON());
+            if (dest_foundation < 0)
+            {
+                continue;
+            }
+            num_cards_moved++;
+
+            /* We can put it there */
+
+            fcs_empty_freecell(new_state_key, fc);
+
+            fcs_increment_foundation(new_state_key, dest_foundation);
+            fcs_move_stack_non_seq_push(moves,
+                FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION, fc, dest_foundation);
         }
         if (num_cards_moved)
         {
