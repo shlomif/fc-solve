@@ -311,17 +311,11 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 #endif
 
 #ifdef DEBUG
-
 #define TRACE0(message)                                                        \
     fcs_trace("BestFS - %s ; Iters=%ld.\n", message,                           \
-        (long)(*instance_num_checked_states_ptr));
-
+        (long)(*instance_num_checked_states_ptr))
 #else
-
-#define TRACE0(no_use)                                                         \
-    {                                                                          \
-    }
-
+#define TRACE0(no_use)
 #endif
 
 #define my_brfs_queue (BRFS_VAR(soft_thread, bfs_queue))

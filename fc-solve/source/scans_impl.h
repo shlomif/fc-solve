@@ -209,11 +209,7 @@ static inline void fcs_trace(const char *const format, ...)
     fcs_trace("BestFS(rate_state) - %s ; rating=%.40f .\n", message, 0.1)
 
 #else
-
-#define TRACE0(no_use)                                                         \
-    {                                                                          \
-    }
-
+#define TRACE0(no_use)
 #endif
 
 static inline fcs_game_limit_t count_num_vacant_freecells(
@@ -455,17 +451,9 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
     }
 
 #else
-
-#define TRACE0(no_use)                                                         \
-    {                                                                          \
-    }
-#define VERIFY_PTR_STATE_TRACE0(no_use)                                        \
-    {                                                                          \
-    }
-#define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(no_use)                            \
-    {                                                                          \
-    }
-
+#define TRACE0(no_use)
+#define VERIFY_PTR_STATE_TRACE0(no_use)
+#define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(no_use)
 #endif
 
 #ifdef DEBUG

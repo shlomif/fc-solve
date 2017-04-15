@@ -140,13 +140,11 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_name(instance, "freecell");
 #else
-    {
 #ifdef FCS_WITH_ERROR_STRS
-        char no_use[120];
+    char no_use[120];
 #endif
-        fc_solve_apply_tests_order(&(instance->instance_tests_order),
-            "[01][23456789]" FCS__PASS_ERR_STR(no_use));
-    }
+    fc_solve_apply_tests_order(&(instance->instance_tests_order),
+        "[01][23456789]" FCS__PASS_ERR_STR(no_use));
 #endif
 
 /****************************************/
@@ -541,18 +539,16 @@ static inline void fc_solve_start_instance_process_with_board(
         NULL, DB_BTREE, O_CREAT | O_RDWR, 0777, NULL, NULL, &(instance->db));
 #endif
 
-    {
-        fcs_kv_state_t no_use;
-        fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr);
+    fcs_kv_state_t no_use;
+    fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr);
 
-        fc_solve_check_and_add_state(
+    fc_solve_check_and_add_state(
 #ifdef FCS_SINGLE_HARD_THREAD
-            instance,
+        instance,
 #else
-            instance->hard_threads,
+        instance->hard_threads,
 #endif
-            &pass_copy, &no_use);
-    }
+        &pass_copy, &no_use);
 
 #ifndef FCS_SINGLE_HARD_THREAD
     instance->current_hard_thread = instance->hard_threads;
