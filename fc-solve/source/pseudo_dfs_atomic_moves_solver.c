@@ -70,7 +70,7 @@ typedef struct
 
     long pre_cache_max_count;
     /* The stack */
-    int stack_depth, max_stack_depth;
+    ssize_t stack_depth, max_stack_depth;
     pseduo_dfs_stack_item_t *stack;
     long count_num_processed, max_count_num_processed;
     fcs_bool_t solution_was_found;
@@ -88,19 +88,18 @@ static inline void instance__inspect_new_state(
 
     if (fcs_pdfs_cache_does_key_exist(&(instance->cache), &(state->s)))
     {
-        instance->stack_depth--;
+        --instance->stack_depth;
         return;
     }
     const fcs_dbm_variant_type_t local_variant = instance->local_variant;
-    const int depth = (instance->stack_depth);
-    const int max_depth = instance->max_stack_depth;
+    const_AUTO(depth, instance->stack_depth);
+    const_AUTO(max_depth, instance->max_stack_depth);
     if (depth == max_depth)
     {
         instance->stack =
             SREALLOC(instance->stack, ++(instance->max_stack_depth));
-        pseduo_dfs_stack_item_t *const stack_item = instance->stack + max_depth;
-        stack_item->next_states = NULL;
-        stack_item->max_count_next_states = 0;
+        instance->stack[max_depth] = {
+            .next_states = NULL, .max_count_next_states = 0};
     }
     pseduo_dfs_stack_item_t *const stack_item = instance->stack + depth;
     stack_item->curr_state = state;
@@ -179,7 +178,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
 
 static inline void instance_free(fcs_dbm_solver_instance_t *const instance)
 {
-    for (int d = 0; d < instance->stack_depth; d++)
+    for (ssize_t d = 0; d < instance->stack_depth; d++)
     {
         free(instance->stack[d].next_states);
         instance->stack[d].next_states = NULL;
@@ -201,7 +200,7 @@ static inline void instance_run(fcs_dbm_solver_instance_t *const instance)
     while (instance->count_num_processed < instance->max_count_num_processed &&
            (instance->should_terminate == DONT_TERMINATE))
     {
-        const int depth = (instance->stack_depth);
+        const_AUTO(depth, instance->stack_depth);
         if (depth < 0)
         {
             instance->should_terminate = QUEUE_TERMINATE;
@@ -220,11 +219,11 @@ static inline void instance_run(fcs_dbm_solver_instance_t *const instance)
                 }
                 stack_item->count_next_states = 0;
                 stack_item->next_state_idx = 0;
-                (instance->stack_depth)--;
+                --(instance->stack_depth);
             }
             else
             {
-                instance->stack_depth++;
+                ++instance->stack_depth;
                 instance__inspect_new_state(
                     instance, &(stack_item->next_states[idx]));
             }
