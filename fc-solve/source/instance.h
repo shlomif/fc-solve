@@ -914,7 +914,7 @@ struct fc_solve_instance_struct
 #include "pat.h"
 #endif
 
-extern int fc_solve_befs_or_bfs_do_solve(
+extern fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t *const soft_thread);
 
 extern void fc_solve_increase_dfs_max_depth(

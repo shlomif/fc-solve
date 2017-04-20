@@ -8,7 +8,7 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 /*
- * fcs_enums.h - header file for various Freecell Solver Enumertaions. Common
+ * fcs_enums.h - header file for various Freecell Solver Enumerations. Common
  * to the main program headers and to the library headers.
  */
 #pragma once
@@ -38,8 +38,7 @@ enum
     FCS_TALON_KLONDIKE
 };
 
-enum
-{
+typedef enum {
     FCS_STATE_WAS_SOLVED,
     FCS_STATE_IS_NOT_SOLVEABLE,
     FCS_STATE_ALREADY_EXISTS,
@@ -53,7 +52,7 @@ enum
     FCS_STATE_DOES_NOT_EXIST,
     FCS_STATE_OPTIMIZED,
     FCS_STATE_FLARES_PLAN_ERROR
-};
+} fc_solve_solve_process_ret_t;
 
 typedef enum {
     FCS_PRESET_CODE_OK,

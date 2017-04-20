@@ -1245,7 +1245,7 @@ static inline int fc_solve_soft_dfs_do_solve(
  * fc_solve_patsolve_do_solve() is the event loop of the
  * Patsolve scan.
  */
-static inline int fc_solve_patsolve_do_solve(
+static inline fc_solve_solve_process_ret_t fc_solve_patsolve_do_solve(
     fc_solve_soft_thread_t *const soft_thread)
 {
     const_SLOT(hard_thread, soft_thread);

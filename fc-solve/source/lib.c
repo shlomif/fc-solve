@@ -53,7 +53,7 @@ static const fcs_stats_t initial_stats = {.num_checked_states = 0,
 typedef struct
 {
     fc_solve_instance_t obj;
-    int ret_code;
+    fc_solve_solve_process_ret_t ret_code;
     /* Whether the instance is ready to be input with (i.e:
      * was recycled already.) */
     fcs_bool_t instance_is_ready;
@@ -930,9 +930,10 @@ static inline fcs_instance_item_t *CURR_INST(fcs_user_t *const user)
     return user->current_instance;
 }
 
-static inline int resume_solution(fcs_user_t *const user)
+static inline fc_solve_solve_process_ret_t resume_solution(
+    fcs_user_t *const user)
 {
-    int ret = FCS_STATE_IS_NOT_SOLVEABLE;
+    fc_solve_solve_process_ret_t ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
     const_SLOT(end_of_instances_list, user);
     /*

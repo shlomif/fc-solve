@@ -397,7 +397,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(
  *  It goes on in this fashion until the final state was reached or
  *  there are no more states in the queue.
 */
-int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
+fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
+    fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
@@ -424,7 +425,7 @@ int fc_solve_befs_or_bfs_do_solve(fc_solve_soft_thread_t *const soft_thread)
     fcs_states_linked_list_item_t *queue_last_item = NULL;
     pri_queue_t *pqueue = NULL;
 
-    int error_code;
+    fc_solve_solve_process_ret_t error_code;
 
     fcs_int_limit_t hard_thread_max_num_checked_states;
 

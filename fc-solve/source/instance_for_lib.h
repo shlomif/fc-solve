@@ -1043,7 +1043,8 @@ static inline void switch_to_next_soft_thread(
         instance->effective_max_num_checked_states)                            \
             instance_check_exceeded__num_states(instance))
 
-static inline int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
+static inline fc_solve_solve_process_ret_t run_hard_thread(
+    fc_solve_hard_thread_t *const hard_thread)
 {
     const size_t prelude_num_items = HT_FIELD(hard_thread, prelude_num_items);
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -1057,7 +1058,7 @@ static inline int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
      * hard thread are finished.
      * */
 
-    int ret = FCS_STATE_SUSPEND_PROCESS;
+    fc_solve_solve_process_ret_t ret = FCS_STATE_SUSPEND_PROCESS;
     const int_fast32_t num_soft_threads =
         HT_FIELD(hard_thread, num_soft_threads);
     const fcs_prelude_item_t *const prelude = HT_FIELD(hard_thread, prelude);
@@ -1197,9 +1198,10 @@ static inline int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
 #endif
 
 /* Resume a solution process that was stopped in the middle */
-static inline int fc_solve_resume_instance(fc_solve_instance_t *const instance)
+static inline fc_solve_solve_process_ret_t fc_solve_resume_instance(
+    fc_solve_instance_t *const instance)
 {
-    int ret = FCS_STATE_SUSPEND_PROCESS;
+    fc_solve_solve_process_ret_t ret = FCS_STATE_SUSPEND_PROCESS;
 
 /*
  * If the optimization thread is defined, it means we are in the
