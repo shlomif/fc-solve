@@ -440,7 +440,7 @@ static inline fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
         /* Let's try to find a suitable parent on top one of the stacks */
         int clear_junk_dest_stack;
         for (clear_junk_dest_stack = 0; clear_junk_dest_stack < stacks_num;
-             clear_junk_dest_stack++)
+             ++clear_junk_dest_stack)
         {
             const fcs_const_cards_column_t clear_junk_dest_col =
                 fcs_state_get_col(state, clear_junk_dest_stack);
@@ -459,38 +459,34 @@ static inline fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
                 if (calc_max_simple_simon_seq_move(after_junk_num_freestacks) >=
                     the_num_true_seqs)
                 {
-                    stacks_map[clear_junk_dest_stack] = TRUE;
-                    break;
+                    goto found;
                 }
             }
         }
 
-        if (clear_junk_dest_stack == stacks_num)
+        /* Check if there is a vacant stack */
+        if (behavior_flag ||
+            (!((num_vacant_stacks > 0) &&
+                (calc_max_simple_simon_seq_move(
+                     after_junk_num_freestacks - 1) >= the_num_true_seqs))))
         {
-            /* Check if there is a vacant stack */
-            if (behavior_flag ||
-                (!((num_vacant_stacks > 0) &&
-                    (calc_max_simple_simon_seq_move(
-                         after_junk_num_freestacks - 1) >= the_num_true_seqs))))
+            break;
+        }
+        --after_junk_num_freestacks;
+        /* Find an empty stack and designate it as the destination for the
+         * junk */
+        for (clear_junk_dest_stack = 0;; ++clear_junk_dest_stack)
+        {
+            if ((fcs_col_len(fcs_state_get_col(state, clear_junk_dest_stack)) ==
+                    0) &&
+                (!stacks_map[clear_junk_dest_stack]))
             {
                 break;
             }
-            /* Find an empty stack and designate it as the destination for the
-             * junk */
-            for (clear_junk_dest_stack = 0; clear_junk_dest_stack < stacks_num;
-                 clear_junk_dest_stack++)
-            {
-                if ((fcs_col_len(fcs_state_get_col(
-                         state, clear_junk_dest_stack)) == 0) &&
-                    (!stacks_map[clear_junk_dest_stack]))
-                {
-                    stacks_map[clear_junk_dest_stack] = TRUE;
-                    break;
-                }
-            }
-            after_junk_num_freestacks--;
         }
 
+    found:
+        stacks_map[clear_junk_dest_stack] = TRUE;
         seqs->junk_move_to_stacks[false_seq_idx] = clear_junk_dest_stack;
     }
 
