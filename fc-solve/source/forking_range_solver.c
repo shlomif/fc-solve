@@ -232,112 +232,108 @@ int main(int argc, char *argv[])
 
     freecell_solver_user_free(instance);
 
-    {
 /* I'm the master. */
 #ifdef USE_EPOLL
-        const int epollfd = epoll_create1(0);
-        if (epollfd == -1)
+    const int epollfd = epoll_create1(0);
+    if (epollfd == -1)
+    {
+        perror("epoll_create1");
+        exit(EXIT_FAILURE);
+    }
+#else
+    fd_set initial_readers;
+    FD_ZERO(&initial_readers);
+    int mymax = -1;
+#endif
+
+    for (size_t idx = 0; idx < num_workers; ++idx)
+    {
+        const int fd = read_fd(&workers[idx]);
+#ifdef USE_EPOLL
+        struct epoll_event ev = {
+            .events = EPOLLIN, .data.ptr = &(workers[idx]),
+        };
+        if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1)
         {
-            perror("epoll_create1");
+            perror("epoll_ctl: listen_sock");
             exit(EXIT_FAILURE);
         }
 #else
-        fd_set initial_readers;
-        FD_ZERO(&initial_readers);
-        int mymax = -1;
-#endif
-
-        for (size_t idx = 0; idx < num_workers; ++idx)
+        FD_SET(fd, &initial_readers);
+        if (fd > mymax)
         {
-            const int fd = read_fd(&workers[idx]);
-#ifdef USE_EPOLL
-            struct epoll_event ev = {
-                .events = EPOLLIN, .data.ptr = &(workers[idx]),
-            };
-            if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1)
-            {
-                perror("epoll_ctl: listen_sock");
-                exit(EXIT_FAILURE);
-            }
-#else
-            FD_SET(fd, &initial_readers);
-            if (fd > mymax)
-            {
-                mymax = fd;
-            }
-#endif
+            mymax = fd;
         }
+#endif
+    }
 #ifndef USE_EPOLL
-        ++mymax;
+    ++mymax;
 #endif
-        int total_num_finished_boards = 0;
-        const long long total_num_boards_to_check =
-            end_board - next_board_num + 1;
+    int total_num_finished_boards = 0;
+    const long long total_num_boards_to_check = end_board - next_board_num + 1;
 
-        long long next_milestone = next_board_num + stop_at;
-        next_milestone -= (next_milestone % stop_at);
+    long long next_milestone = next_board_num + stop_at;
+    next_milestone -= (next_milestone % stop_at);
 
-        for (size_t idx = 0; idx < num_workers; ++idx)
-        {
-            write_request(
-                end_board, board_num_step, &next_board_num, &(workers[idx]));
-        }
+    for (size_t idx = 0; idx < num_workers; ++idx)
+    {
+        write_request(
+            end_board, board_num_step, &next_board_num, &(workers[idx]));
+    }
 
 #ifdef USE_EPOLL
 #define MAX_EVENTS 10
-        struct epoll_event events[MAX_EVENTS];
+    struct epoll_event events[MAX_EVENTS];
 #endif
 
-        while (total_num_finished_boards < total_num_boards_to_check)
+    while (total_num_finished_boards < total_num_boards_to_check)
+    {
+        if (total_num_finished_boards >= next_milestone)
         {
-            if (total_num_finished_boards >= next_milestone)
-            {
-                fc_solve_print_reached(next_milestone, total_num_iters);
-                next_milestone += stop_at;
-            }
+            fc_solve_print_reached(next_milestone, total_num_iters);
+            next_milestone += stop_at;
+        }
 
 #ifdef USE_EPOLL
-            const int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
-            if (nfds == -1)
-            {
-                perror("epoll_pwait");
-                exit(EXIT_FAILURE);
-            }
+        const int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+        if (nfds == -1)
+        {
+            perror("epoll_pwait");
+            exit(EXIT_FAILURE);
+        }
 
-            for (int i = 0; i < nfds; ++i)
-            {
-                const worker_t *const worker = events[i].data.ptr;
-                transaction(worker, read_fd(worker), &total_num_finished_boards,
-                    end_board, board_num_step, &next_board_num);
-            }
+        for (int i = 0; i < nfds; ++i)
+        {
+            const worker_t *const worker = events[i].data.ptr;
+            transaction(worker, read_fd(worker), &total_num_finished_boards,
+                end_board, board_num_step, &next_board_num);
+        }
 
 #else
-            fd_set readers = initial_readers;
-            /* I'm the master. */
-            const int select_ret = select(mymax, &readers, NULL, NULL, NULL);
+        fd_set readers = initial_readers;
+        /* I'm the master. */
+        const int select_ret = select(mymax, &readers, NULL, NULL, NULL);
 
-            if (select_ret == -1)
+        if (select_ret == -1)
+        {
+            perror("select()");
+        }
+        else if (select_ret)
+        {
+            for (size_t idx = 0; idx < num_workers; ++idx)
             {
-                perror("select()");
-            }
-            else if (select_ret)
-            {
-                for (size_t idx = 0; idx < num_workers; ++idx)
+                const int fd = read_fd(&workers[idx]);
+
+                if (FD_ISSET(fd, &readers))
                 {
-                    const int fd = read_fd(&workers[idx]);
-
-                    if (FD_ISSET(fd, &readers))
-                    {
-                        /* FD_ISSET can be set on EOF, so we check if
-                         * read failed. */
-                        transaction(&(workers[idx]), fd,
-                            &total_num_finished_boards, end_board,
-                            board_num_step, &next_board_num);
-                    }
+                    /* FD_ISSET can be set on EOF, so we check if
+                     * read failed. */
+                    transaction(&(workers[idx]), fd, &total_num_finished_boards,
+                        end_board, board_num_step, &next_board_num);
                 }
             }
-#endif
         }
+#endif
     }
 
     int status;

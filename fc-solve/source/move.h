@@ -241,18 +241,18 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
                  *state_key, fcs_move_get_dest_stack(move))) ==
                 fcs_move_get_num_cards_in_seq(move)))
         {
-            sprintf(string, "%i%iv%x", 1 + fcs_move_get_src_stack(move),
+            sprintf(string, "%d%dv%x", 1 + fcs_move_get_src_stack(move),
                 1 + fcs_move_get_dest_stack(move),
                 fcs_move_get_num_cards_in_seq(move));
         }
         else if (standard_notation)
         {
-            sprintf(string, "%i%i", 1 + fcs_move_get_src_stack(move),
+            sprintf(string, "%d%d", 1 + fcs_move_get_src_stack(move),
                 1 + fcs_move_get_dest_stack(move));
         }
         else
         {
-            sprintf(string, "Move %i cards from stack %i to stack %i",
+            sprintf(string, "Move %d cards from stack %d to stack %d",
                 fcs_move_get_num_cards_in_seq(move),
                 fcs_move_get_src_stack(move), fcs_move_get_dest_stack(move));
         }
@@ -292,12 +292,12 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
     case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         if (standard_notation)
         {
-            sprintf(string, "%i%c", 1 + fcs_move_get_src_stack(move),
+            sprintf(string, "%d%c", 1 + fcs_move_get_src_stack(move),
                 fc_solve__freecell_to_char(fcs_move_get_dest_freecell(move)));
         }
         else
         {
-            sprintf(string, "Move a card from stack %i to freecell %i",
+            sprintf(string, "Move a card from stack %d to freecell %d",
                 fcs_move_get_src_stack(move), fcs_move_get_dest_freecell(move));
         }
 
@@ -306,11 +306,11 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
     case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         if (standard_notation)
         {
-            sprintf(string, "%ih", 1 + fcs_move_get_src_stack(move));
+            sprintf(string, "%dh", 1 + fcs_move_get_src_stack(move));
         }
         else
         {
-            sprintf(string, "Move a card from stack %i to the foundations",
+            sprintf(string, "Move a card from stack %d to the foundations",
                 fcs_move_get_src_stack(move));
         }
 
@@ -333,12 +333,12 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
     case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
         if (standard_notation)
         {
-            sprintf(string, "%ih", fcs_move_get_src_stack(move));
+            sprintf(string, "%dh", fcs_move_get_src_stack(move));
         }
         else
         {
             sprintf(string,
-                "Move the sequence on top of Stack %i to the foundations",
+                "Move the sequence on top of Stack %d to the foundations",
                 fcs_move_get_src_stack(move));
         }
         break;

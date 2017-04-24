@@ -261,7 +261,8 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
                 "%-16s        H-%1s C-%1s D-%1s S-%1s\n", "", decks[i * 4],
                 decks[i * 4 + 1], decks[i * 4 + 2], decks[i * 4 + 3]);
         }
-        fc_solve_append_string_sprintf("%s", "\n\n");
+        append_char('\n');
+        append_char('\n');
 
         for (int s = 0; s < STACKS_NUM__VAL; s++)
         {
@@ -290,7 +291,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
                 const int col_len = fcs_col_len(col);
                 if (card_idx >= col_len)
                 {
-                    fc_solve_append_string_sprintf("    ");
+                    fc_solve_append_string_sprintf("%s", "    ");
                 }
                 else
                 {
@@ -300,7 +301,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
                     fc_solve_append_string_sprintf("%3s ", stack_card_str);
                 }
             }
-            fc_solve_append_string_sprintf("%s", "\n");
+            append_char('\n');
         }
     }
     else
