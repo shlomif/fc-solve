@@ -414,6 +414,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
 #undef IS_ARG
 
 static void *instance;
+static fc_solve_display_information_context_t display_context;
 #ifndef WIN32
 static int command_num = 0;
 static int debug_iter_output_on = FALSE;
@@ -422,8 +423,6 @@ static void select_signal_handler(int signal_num GCC_UNUSED)
 {
     command_num = (command_num + 1) % 3;
 }
-
-static fc_solve_display_information_context_t *global_display_context;
 
 static void command_signal_handler(int signal_num GCC_UNUSED)
 {
@@ -443,14 +442,14 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
         else
         {
             freecell_solver_user_set_iter_handler_long(
-                instance, my_iter_handler, global_display_context);
+                instance, my_iter_handler, &display_context);
             debug_iter_output_on = TRUE;
         }
         break;
 
     case 2:
-        global_display_context->debug_iter_state_output =
-            !global_display_context->debug_iter_state_output;
+        display_context.debug_iter_state_output =
+            !display_context.debug_iter_state_output;
         break;
     }
     command_num = 0;
@@ -534,16 +533,10 @@ static inline FILE *fc_solve_calc_file_handle(
 
 static inline int fc_solve_main__main(int argc, char *argv[])
 {
-    fc_solve_display_information_context_t display_context =
-        INITIAL_DISPLAY_CONTEXT;
-
+    display_context = INITIAL_DISPLAY_CONTEXT;
     int arg = 1;
     instance = alloc_instance_and_parse(argc, argv, &arg, known_parameters,
         fc_solve__cmd_line_callback, &display_context, FALSE);
-
-#ifndef WIN32
-    global_display_context = &display_context;
-#endif
 
     FILE *const f = fc_solve_calc_file_handle(argc, argv, arg);
     if (!f)

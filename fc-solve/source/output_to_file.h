@@ -34,7 +34,6 @@ typedef struct
     fcs_bool_t display_10_as_t;
 #endif
     fcs_bool_t display_parent_iter_num;
-    fcs_bool_t debug_iter_output_on;
     fcs_bool_t display_moves;
     fcs_bool_t display_states;
     fcs_bool_t show_exceeded_limits;
