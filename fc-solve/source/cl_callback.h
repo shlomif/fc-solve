@@ -413,6 +413,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
 
 #undef IS_ARG
 
+static void *instance;
 #ifndef WIN32
 static int command_num = 0;
 static int debug_iter_output_on = FALSE;
@@ -422,7 +423,6 @@ static void select_signal_handler(int signal_num GCC_UNUSED)
     command_num = (command_num + 1) % 3;
 }
 
-static void *current_instance;
 static fc_solve_display_information_context_t *global_display_context;
 
 static void command_signal_handler(int signal_num GCC_UNUSED)
@@ -431,20 +431,19 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
     {
     case 0:
         fprintf(stderr, "The number of iterations is %li\n",
-            (long)freecell_solver_user_get_num_times_long(current_instance));
+            (long)freecell_solver_user_get_num_times_long(instance));
         break;
 
     case 1:
         if (debug_iter_output_on)
         {
-            freecell_solver_user_set_iter_handler_long(
-                current_instance, NULL, NULL);
+            freecell_solver_user_set_iter_handler_long(instance, NULL, NULL);
             debug_iter_output_on = FALSE;
         }
         else
         {
             freecell_solver_user_set_iter_handler_long(
-                current_instance, my_iter_handler, global_display_context);
+                instance, my_iter_handler, global_display_context);
             debug_iter_output_on = TRUE;
         }
         break;
@@ -459,7 +458,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
 
 static void abort_signal_handler(int signal_num GCC_UNUSED)
 {
-    freecell_solver_user_limit_iterations_long(current_instance, 0);
+    freecell_solver_user_limit_iterations_long(instance, 0);
 }
 #endif
 
@@ -539,12 +538,11 @@ static inline int fc_solve_main__main(int argc, char *argv[])
         INITIAL_DISPLAY_CONTEXT;
 
     int arg = 1;
-    void *const instance = alloc_instance_and_parse(argc, argv, &arg,
-        known_parameters, fc_solve__cmd_line_callback, &display_context, FALSE);
+    instance = alloc_instance_and_parse(argc, argv, &arg, known_parameters,
+        fc_solve__cmd_line_callback, &display_context, FALSE);
 
 #ifndef WIN32
     global_display_context = &display_context;
-    current_instance = instance;
 #endif
 
     FILE *const f = fc_solve_calc_file_handle(argc, argv, arg);
