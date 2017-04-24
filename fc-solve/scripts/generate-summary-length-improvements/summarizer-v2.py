@@ -8,7 +8,7 @@ import json
 if sys.version_info > (3,):
     xrange = range
 
-MAX_SEED = 14523
+MAX_SEED = 16283
 
 home = expanduser("~")
 
