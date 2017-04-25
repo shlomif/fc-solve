@@ -12,7 +12,6 @@
  * depth-dependent
  * performance of two scans.
  */
-#include <stdio.h>
 #include <string.h>
 
 #include "rinutils.h"

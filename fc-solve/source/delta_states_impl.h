@@ -15,7 +15,6 @@
 #include "dll_thunk.h"
 
 #include <string.h>
-#include <stdio.h>
 
 #include "state.h"
 #include "bit_rw.h"

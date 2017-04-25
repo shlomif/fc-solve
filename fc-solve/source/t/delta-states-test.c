@@ -13,7 +13,6 @@
  */
 
 #include <string.h>
-#include <stdio.h>
 
 #include <tap.h>
 

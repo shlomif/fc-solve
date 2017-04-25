@@ -16,7 +16,6 @@
  *      - test_multi_parallel.c
  *      - threaded_range_solver.c
  */
-#include <stdio.h>
 #include <string.h>
 
 #ifdef __linux__

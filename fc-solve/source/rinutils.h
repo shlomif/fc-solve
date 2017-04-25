@@ -13,6 +13,8 @@
  */
 #pragma once
 
+#include <stdio.h>
+
 #include "alloc_wrap.h"
 #include "bool.h"
 #include "count.h"

@@ -14,7 +14,6 @@
 #include "dll_thunk.h"
 
 #include <string.h>
-#include <stdio.h>
 
 #include "config.h"
 #undef FCS_RCS_STATES

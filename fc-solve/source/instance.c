@@ -16,7 +16,6 @@
 
 #include <string.h>
 #include <limits.h>
-#include <stdio.h>
 
 #include <sys/types.h>
 #include <limits.h>

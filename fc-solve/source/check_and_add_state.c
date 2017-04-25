@@ -14,7 +14,6 @@
 #include "dll_thunk.h"
 
 #include <string.h>
-#include <stdio.h>
 
 #include "instance.h"
 

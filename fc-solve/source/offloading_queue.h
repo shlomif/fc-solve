@@ -19,7 +19,6 @@ extern "C" {
 
 #include <string.h>
 #include <limits.h>
-#include <stdio.h>
 #include <unistd.h>
 
 #include "config.h"

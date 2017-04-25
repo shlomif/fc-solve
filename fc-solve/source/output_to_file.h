@@ -16,7 +16,6 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
 #include "rinutils.h"
 #include "fcs_enums.h"
 #include "fcs_user.h"

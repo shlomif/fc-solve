@@ -11,7 +11,6 @@
  * summarizing_solver.c - solves several indices of deals and prints a summary
  * of the solutions of each one.
  * */
-#include <stdio.h>
 #include <string.h>
 
 #include "fcs_user.h"

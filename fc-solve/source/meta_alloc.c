@@ -16,11 +16,7 @@
  */
 
 #include "dll_thunk.h"
-
-#include <stdio.h>
-
 #include "config.h"
-
 #include "meta_alloc.h"
 
 #define ALLOCED_SIZE (FCS_IA_PACK_SIZE * 1024 - (256 + 128))

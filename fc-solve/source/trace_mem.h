@@ -21,7 +21,6 @@ extern "C" {
 #ifdef FCS_TRACE_MEM
 #include <unistd.h>
 #include <sys/types.h>
-#include <stdio.h>
 
 static int rss_found = 0;
 static long max_rss_delta_deal = -1;

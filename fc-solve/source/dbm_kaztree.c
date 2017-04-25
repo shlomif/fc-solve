@@ -8,7 +8,6 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 #include <sys/types.h>
-#include <stdio.h>
 
 #include "dbm_solver.h"
 #include "generic_tree.h"

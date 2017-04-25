@@ -17,8 +17,6 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-
 #include "state.h"
 #include "internal_move_struct.h"
 #include "indirect_buffer.h"

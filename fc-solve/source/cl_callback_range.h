@@ -10,7 +10,6 @@
 #pragma once
 
 #include <string.h>
-#include <stdio.h>
 
 #include "fcs_cl.h"
 #include "rinutils.h"

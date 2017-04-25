@@ -14,7 +14,6 @@
  */
 
 #include "dll_thunk.h"
-#include <stdio.h>
 #include <string.h>
 #include "split_cmd_line.h"
 

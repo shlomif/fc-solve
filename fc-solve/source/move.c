@@ -13,7 +13,6 @@
 
 #include "dll_thunk.h"
 
-#include <stdio.h>
 #include <string.h>
 
 #include "move.h"

@@ -7,7 +7,6 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 

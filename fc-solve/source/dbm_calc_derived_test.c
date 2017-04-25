@@ -14,7 +14,6 @@
  */
 #include "dll_thunk.h"
 #include <string.h>
-#include <stdio.h>
 #include <assert.h>
 
 #include "config.h"
