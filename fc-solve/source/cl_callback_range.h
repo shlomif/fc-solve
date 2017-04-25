@@ -9,8 +9,6 @@
  */
 #pragma once
 
-#include <string.h>
-
 #include "fcs_cl.h"
 #include "rinutils.h"
 #include "output_to_file.h"

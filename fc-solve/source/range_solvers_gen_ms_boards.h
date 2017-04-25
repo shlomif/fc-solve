@@ -18,8 +18,6 @@
 extern "C" {
 #endif
 
-#include <string.h>
-
 #include "gen_ms_boards__rand.h"
 
 typedef int CARD;

@@ -22,7 +22,6 @@
 #include "asprintf.h"
 #endif
 
-#include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
 #ifdef _WIN32

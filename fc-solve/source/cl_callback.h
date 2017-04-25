@@ -9,7 +9,6 @@
  */
 #pragma once
 
-#include <string.h>
 #include <signal.h>
 
 #include "fcs_cl.h"

@@ -16,8 +16,6 @@
  *      - test_multi_parallel.c
  *      - threaded_range_solver.c
  */
-#include <string.h>
-
 #ifdef __linux__
 #define USE_EPOLL
 #endif

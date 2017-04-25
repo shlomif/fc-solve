@@ -13,10 +13,7 @@
  */
 #include "dll_thunk.h"
 
-#include <string.h>
-
 #include "instance.h"
-
 #include "move_stack_compact_alloc.h"
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \

@@ -13,8 +13,6 @@
 
 #include "dll_thunk.h"
 
-#include <string.h>
-
 #include "move.h"
 #include "state.h"
 #include "fcs_enums.h"

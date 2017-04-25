@@ -11,7 +11,6 @@
  * gen_ms_boards__hll_iface.c - high-level-language interface to the rand.
  */
 #include "gen_ms_boards__hll_iface.h"
-#include <string.h>
 
 static fc_solve__hll_ms_rand_t singleton = {.gamenumber = 1, .seedx = 1};
 

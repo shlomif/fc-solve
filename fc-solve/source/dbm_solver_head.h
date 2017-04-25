@@ -18,7 +18,6 @@
 extern "C" {
 #endif
 
-#include <string.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <assert.h>

@@ -16,7 +16,6 @@
  */
 
 #include "dll_thunk.h"
-#include <string.h>
 #include "bit_rw.h"
 #include "state.h"
 #include "indirect_buffer.h"

@@ -16,8 +16,6 @@
 extern "C" {
 #endif
 
-#include <string.h>
-
 #include "fcs_back_compat.h"
 #include "instance.h"
 

@@ -13,7 +13,6 @@
  * ctypes, etc.
  */
 #include "dll_thunk.h"
-#include <string.h>
 #include <assert.h>
 
 #include "config.h"

@@ -12,8 +12,6 @@
  * depth-dependent
  * performance of two scans.
  */
-#include <string.h>
-
 #include "rinutils.h"
 #include "fcs_user.h"
 #include "fcs_cl.h"

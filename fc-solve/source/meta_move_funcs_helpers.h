@@ -19,8 +19,6 @@
 extern "C" {
 #endif
 
-#include <string.h>
-
 #include "instance.h"
 
 static inline int max0(const int e) { return max(e, 0); }

@@ -13,7 +13,6 @@
  */
 
 #include "dll_thunk.h"
-#include <string.h>
 #include <limits.h>
 #include <assert.h>
 

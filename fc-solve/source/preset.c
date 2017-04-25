@@ -13,8 +13,6 @@
 
 #include "dll_thunk.h"
 
-#include <string.h>
-
 #include "instance.h"
 #include "preset.h"
 #include "move_funcs_order.h"

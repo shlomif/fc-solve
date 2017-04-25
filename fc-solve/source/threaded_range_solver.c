@@ -15,7 +15,6 @@
  *      - fc_pro_range_solver.c
  *      - test_multi_parallel.c
  */
-#include <string.h>
 #include <pthread.h>
 #ifndef WIN32
 #include <unistd.h>

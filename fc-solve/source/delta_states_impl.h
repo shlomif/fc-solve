@@ -14,8 +14,6 @@
  */
 #include "dll_thunk.h"
 
-#include <string.h>
-
 #include "state.h"
 #include "bit_rw.h"
 #include "delta_states_iface.h"

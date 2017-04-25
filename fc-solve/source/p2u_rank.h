@@ -15,7 +15,6 @@
 extern "C" {
 #endif
 
-#include <string.h>
 #include "config.h"
 #include "rinutils.h"
 /*
