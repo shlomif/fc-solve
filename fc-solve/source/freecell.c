@@ -10,10 +10,8 @@
 // freecell.c - a module that contains moves of the Freecell-games family.
 
 #include "dll_thunk.h"
-#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <limits.h>
 #include <assert.h>
 #include "config.h"
 #include "scans.h"

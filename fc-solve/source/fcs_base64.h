@@ -8,7 +8,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <stdlib.h>
 
 #include "rinutils.h"
 

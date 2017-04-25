@@ -14,7 +14,6 @@
 #include "dll_thunk.h"
 
 #include <string.h>
-#include <stdlib.h>
 
 #include "instance.h"
 #include "preset.h"

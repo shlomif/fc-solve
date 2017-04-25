@@ -14,7 +14,6 @@
 
 #include "dll_thunk.h"
 #include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include "set_weights.h"
 #include "fcs_user.h"

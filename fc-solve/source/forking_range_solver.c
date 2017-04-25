@@ -17,7 +17,6 @@
  *      - threaded_range_solver.c
  */
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #ifdef __linux__

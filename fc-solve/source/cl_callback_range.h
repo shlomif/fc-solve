@@ -11,7 +11,6 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "fcs_cl.h"
 #include "rinutils.h"

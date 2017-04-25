@@ -9,7 +9,6 @@
  */
 #include <sys/types.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <db.h>
 
 #include "dbm_solver.h"

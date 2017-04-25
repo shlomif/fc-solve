@@ -17,8 +17,6 @@
 extern "C" {
 #endif
 
-#include <stdlib.h>
-
 #include "config.h"
 
 #include "state.h"
