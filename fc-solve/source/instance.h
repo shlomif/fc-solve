@@ -98,7 +98,6 @@ extern "C" {
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
 #include <sys/types.h>
-#include <limits.h>
 #include <db.h>
 #endif
 

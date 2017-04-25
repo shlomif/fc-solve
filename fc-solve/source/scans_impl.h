@@ -16,7 +16,6 @@
 extern "C" {
 #endif
 
-#include <limits.h>
 #include <assert.h>
 
 #include "config.h"

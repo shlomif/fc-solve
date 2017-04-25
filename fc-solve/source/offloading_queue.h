@@ -17,7 +17,6 @@
 extern "C" {
 #endif
 
-#include <limits.h>
 #include <unistd.h>
 
 #include "config.h"

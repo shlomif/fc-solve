@@ -41,7 +41,6 @@
 extern "C" {
 #endif
 
-#include <limits.h>
 #include "state.h"
 
 /* manage a priority queue as a heap

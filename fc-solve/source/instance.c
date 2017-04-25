@@ -14,10 +14,7 @@
 
 #include "dll_thunk.h"
 
-#include <limits.h>
-
 #include <sys/types.h>
-#include <limits.h>
 
 #define NUM_CHECKED_STATES_STEP 50
 

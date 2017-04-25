@@ -13,6 +13,7 @@
  */
 #pragma once
 
+#include <limits.h>
 #include <stdio.h>
 
 #include "alloc_wrap.h"

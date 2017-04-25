@@ -13,8 +13,6 @@
  */
 
 #include "dll_thunk.h"
-#include <limits.h>
-
 #include "config.h"
 #include "state.h"
 #include "scans.h"

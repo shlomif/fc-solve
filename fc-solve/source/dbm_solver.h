@@ -15,10 +15,7 @@ extern "C" {
 
 #include "config.h"
 
-#include <limits.h>
-
 #include "generic_tree.h"
-
 #include "delta_states.h"
 
 /* We need it for the typedef of fcs_fcc_move_t. */
