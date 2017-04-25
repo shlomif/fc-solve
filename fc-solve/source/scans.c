@@ -14,7 +14,6 @@
 
 #include "dll_thunk.h"
 #include <limits.h>
-#include <assert.h>
 
 #include "config.h"
 #include "state.h"

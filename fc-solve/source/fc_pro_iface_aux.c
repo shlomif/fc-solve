@@ -7,8 +7,6 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-#include <assert.h>
-
 #include "fc_pro_iface_pos.h"
 #include "rinutils.h"
 #include "move.h"

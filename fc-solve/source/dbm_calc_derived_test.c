@@ -94,7 +94,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         FCS__RENDER_STATE(debug_ret[idx].state_string, &(iter->state.s), &locs);
         /* TODO : Put something meaningful there by passing it to the function.
          */
-        idx++;
+        ++idx;
         iter = iter->next;
     }
 

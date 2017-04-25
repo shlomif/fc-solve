@@ -13,7 +13,6 @@
  */
 #pragma once
 
-#include <assert.h>
 #include "var_base_int.h"
 
 typedef struct

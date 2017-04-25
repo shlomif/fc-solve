@@ -20,7 +20,6 @@ extern "C" {
 
 #include <pthread.h>
 #include <unistd.h>
-#include <assert.h>
 #include <limits.h>
 
 #if 0
