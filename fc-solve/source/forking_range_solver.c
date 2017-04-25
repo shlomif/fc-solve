@@ -24,7 +24,6 @@
 #include <unistd.h>
 #endif
 #include <sys/time.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 
 #ifdef USE_EPOLL

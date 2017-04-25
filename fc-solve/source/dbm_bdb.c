@@ -7,7 +7,6 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-#include <sys/types.h>
 #include <db.h>
 
 #include "dbm_solver.h"
