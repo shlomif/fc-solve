@@ -19,7 +19,6 @@ extern "C" {
 #endif
 
 #include <pthread.h>
-#include <unistd.h>
 
 #if 0
 #define DEBUG_FOO

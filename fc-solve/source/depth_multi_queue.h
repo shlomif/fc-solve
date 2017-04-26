@@ -18,8 +18,6 @@
 extern "C" {
 #endif
 
-#include <unistd.h>
-
 #include "config.h"
 #include "state.h"
 

@@ -19,8 +19,6 @@ extern "C" {
 #include "rinutils.h"
 
 #ifdef FCS_TRACE_MEM
-#include <unistd.h>
-
 static int rss_found = 0;
 static long max_rss_delta_deal = -1;
 static long long int prev_rss = -1, max_rss_delta = -1;

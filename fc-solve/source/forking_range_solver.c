@@ -20,9 +20,6 @@
 #define USE_EPOLL
 #endif
 
-#ifndef WIN32
-#include <unistd.h>
-#endif
 #include <sys/time.h>
 #include <sys/wait.h>
 

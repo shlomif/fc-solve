@@ -15,6 +15,9 @@
 
 #include <limits.h>
 #include <stdio.h>
+#ifdef __unix__
+#include <unistd.h>
+#endif
 
 #include "alloc_wrap.h"
 #include "bool.h"

@@ -16,9 +16,6 @@
  *      - test_multi_parallel.c
  */
 #include <pthread.h>
-#ifndef WIN32
-#include <unistd.h>
-#endif
 
 #include "range_solvers.h"
 
