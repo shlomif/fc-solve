@@ -13,7 +13,6 @@
  * performance of two scans.
  */
 #include "rinutils.h"
-#include "fcs_user.h"
 #include "fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "help_err.h"

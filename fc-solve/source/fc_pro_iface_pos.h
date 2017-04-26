@@ -17,9 +17,7 @@
 extern "C" {
 #endif
 
-#include "fcs_user.h"
 #include "fcs_cl.h"
-
 #include "state.h"
 
 typedef struct

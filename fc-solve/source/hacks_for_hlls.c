@@ -13,13 +13,7 @@
  */
 
 #include "dll_thunk.h"
-#include "set_weights.h"
-#include "fcs_user.h"
 #include "fcs_cl.h"
-#include "split_cmd_line.h"
-#include "prefix.h"
-#include "rinutils.h"
-#include "cmd_line_enum.h"
 
 DLLEXPORT void freecell_solver_user_stringify_move_ptr(
     void *const user_instance, char *const output_string,

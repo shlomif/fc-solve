@@ -29,7 +29,6 @@
 #endif
 
 #include "set_weights.h"
-#include "fcs_user.h"
 #include "fcs_cl.h"
 #include "split_cmd_line.h"
 
