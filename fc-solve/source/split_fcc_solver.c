@@ -268,7 +268,9 @@ static void *instance_run_solver_thread(void *const void_arg)
         {
             /* Sleep until more items become available in the
              * queue. */
-            usleep(5000);
+            const struct timespec ts = {.tv_sec = 0, .tv_nsec = 5000000};
+            struct timespec no_use;
+            nanosleep(&ts, &no_use);
         }
         else
         {

@@ -15,6 +15,7 @@
 
 #include <limits.h>
 #include <stdio.h>
+#include <time.h>
 #ifdef __unix__
 #include <unistd.h>
 #endif
