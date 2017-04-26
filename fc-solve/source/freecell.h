@@ -18,7 +18,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
 /* For fc_solve_soft_thread_t and fcs_derived_states_list_t */
 #include "instance.h"
 

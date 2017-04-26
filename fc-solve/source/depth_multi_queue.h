@@ -18,7 +18,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
 #include "state.h"
 
 #include "offloading_queue.h"

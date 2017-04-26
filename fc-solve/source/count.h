@@ -7,13 +7,7 @@
  *
  * Copyright (c) 2016 Shlomi Fish
  */
-
-/*
- * count.h - define the COUNT macro.
- */
-
+// count.h - define the COUNT macro.
 #pragma once
-
-#include "config.h"
 
 #define COUNT(arr) (sizeof(arr) / sizeof(arr[0]))

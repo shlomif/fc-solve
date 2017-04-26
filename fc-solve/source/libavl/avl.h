@@ -26,7 +26,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "config.h"
 #include "meta_alloc.h"
 
 #if SIZEOF_VOID_P == 4

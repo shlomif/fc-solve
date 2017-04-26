@@ -16,8 +16,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
-
 #include "state.h"
 
 typedef enum {

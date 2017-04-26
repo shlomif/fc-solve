@@ -32,7 +32,6 @@ extern "C" {
 #endif
 
 #include "config.h"
-
 #undef FCS_RCS_STATES
 
 #include "lock.h"

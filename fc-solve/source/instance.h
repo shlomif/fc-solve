@@ -19,7 +19,6 @@ extern "C" {
 
 #include <math.h>
 
-#include "config.h"
 #include "state.h"
 #include "move.h"
 #include "fcs_enums.h"

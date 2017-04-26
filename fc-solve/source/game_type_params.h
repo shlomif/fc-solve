@@ -12,7 +12,6 @@
  */
 #pragma once
 
-#include "config.h"
 #include "game_type_limit.h"
 
 typedef struct

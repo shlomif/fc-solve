@@ -17,7 +17,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
 #include "state.h"
 
 typedef const unsigned char *fcs_offloading_queue_item_t;

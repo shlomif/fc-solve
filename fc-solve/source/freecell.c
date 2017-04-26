@@ -11,7 +11,6 @@
 
 #include "dll_thunk.h"
 #include <assert.h>
-#include "config.h"
 #include "scans.h"
 #include "meta_move_funcs_helpers.h"
 #include "freecell.h"

@@ -12,7 +12,6 @@
  */
 
 #include "dll_thunk.h"
-#include "config.h"
 #include "state.h"
 #include "fcs_enums.h"
 

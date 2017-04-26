@@ -13,8 +13,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
-
 #include "generic_tree.h"
 #include "delta_states.h"
 

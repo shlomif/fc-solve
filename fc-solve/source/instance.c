@@ -16,8 +16,6 @@
 
 #define NUM_CHECKED_STATES_STEP 50
 
-#include "config.h"
-
 #include "instance_for_lib.h"
 #include "instance.h"
 #include "move_funcs_order.h"

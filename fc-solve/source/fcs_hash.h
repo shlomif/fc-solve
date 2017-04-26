@@ -17,8 +17,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
-
 #include "meta_alloc.h"
 #include "rinutils.h"
 

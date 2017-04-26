@@ -17,7 +17,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
 #include <Judy.h>
 #include "state.h"
 #include "meta_alloc.h"

@@ -18,8 +18,6 @@ extern "C" {
 
 #include <assert.h>
 
-#include "config.h"
-
 #include "scans.h"
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES

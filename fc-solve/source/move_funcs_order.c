@@ -11,7 +11,6 @@
  * move_funcs_order.c - contains the fc_solve_apply_tests_order function.
  */
 #include "dll_thunk.h"
-#include "config.h"
 #include "fcs_back_compat.h"
 #include "move_funcs_order.h"
 #include "set_weights.h"

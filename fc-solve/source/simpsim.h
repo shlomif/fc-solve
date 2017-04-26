@@ -17,10 +17,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
-/* For fcs_state_keyval_pair_t */
-#include "state.h"
-/* For fc_solve_soft_thread_t and fcs_derived_states_list_t */
 #include "instance.h"
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON

@@ -18,12 +18,9 @@ extern "C" {
 #endif
 
 #include <assert.h>
-#include "config.h"
-
 #include "state.h"
 #include "meta_alloc.h"
 #include "fcs_enums.h"
-
 #include "dbm_common.h"
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"

@@ -17,13 +17,10 @@
 extern "C" {
 #endif
 
-#include "config.h"
 #include "state.h"
-
 #include "delta_states.h"
 #include "var_base_writer.h"
 #include "var_base_reader.h"
-
 #include "dbm_common.h"
 
 #define CARD_ARRAY_LEN ((RANK_KING + 1) * FCS_NUM_SUITS)

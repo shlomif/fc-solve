@@ -17,7 +17,6 @@
 extern "C" {
 #endif
 
-#include "config.h"
 #include "instance.h"
 
 static inline void fc_solve__assign_dest_stack_and_col_ptr(

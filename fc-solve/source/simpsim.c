@@ -10,7 +10,6 @@
 // simpsim.c - a module that contains Simple Simon moves.
 
 #include "dll_thunk.h"
-#include "config.h"
 #include "simpsim.h"
 #include "scans.h"
 

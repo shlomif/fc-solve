@@ -26,7 +26,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "config.h"
 #include "meta_alloc.h"
 
 /* No longer needed. */
