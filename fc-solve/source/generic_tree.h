@@ -30,7 +30,6 @@ typedef void *dict_key_t;
 #define fc_solve_kaz_tree_alloc_insert(tree, value) rb_insert(tree, value)
 #else
 
-#include "rinutils.h"
 #include "kaz_tree.h"
 
 static inline void fc_solve_kaz_tree_delete_by_value(

@@ -12,7 +12,6 @@
  * of the solutions of each one.
  * */
 #include "fcs_cl.h"
-#include "rinutils.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 

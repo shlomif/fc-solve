@@ -8,7 +8,6 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 #include "fc_pro_iface_pos.h"
-#include "rinutils.h"
 #include "move.h"
 
 void fc_solve_moves_processed_render_move(
