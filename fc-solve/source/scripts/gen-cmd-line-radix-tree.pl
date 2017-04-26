@@ -80,14 +80,19 @@ EOF
 );
 
 my $inc_h      = 'cmd_line_inc.h';
-my $temp_inc_h = 'temp__cmd_line_inc.h';
+my $tempdir    = Path::Tiny->tempdir;
+my $temp_inc_h = $tempdir->child('temp__cmd_line_inc.h');
 
 sub temp_del
 {
-    if ( -e $temp_inc_h )
+    if (0)
     {
-        unlink($temp_inc_h);
+        if ( -e $temp_inc_h )
+        {
+            unlink($temp_inc_h);
+        }
     }
+    return;
 }
 
 sub del
