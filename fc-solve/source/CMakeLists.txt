@@ -432,15 +432,10 @@ IF (LIBAVL2_TREE_TYPES)
     INCLUDE_DIRECTORIES(BEFORE "${LIBAVL2_COPIED_MODULES_DIR}")
     FOREACH (TREE_TYPE ${LIBAVL2_TREE_TYPES})
         SET (C_FN "${TREE_TYPE}.c")
-        SET (H_FN "${TREE_TYPE}.h")
-        CONFIGURE_FILE ("${LIBAVL2_SOURCE_DIR}/${C_FN}"
-            "${LIBAVL2_COPIED_MODULES_DIR}/${C_FN}"
-            COPYONLY
-        )
-        CONFIGURE_FILE ("${LIBAVL2_SOURCE_DIR}/${H_FN}"
-            "${LIBAVL2_COPIED_MODULES_DIR}/${H_FN}"
-            COPYONLY
-        )
+        FOREACH (fn "${C_FN}" "${TREE_TYPE}.h")
+            FILE (COPY "${LIBAVL2_SOURCE_DIR}/${fn}"
+                DESTINATION "${LIBAVL2_COPIED_MODULES_DIR}/")
+        ENDFOREACH()
         add_lib_mods("${LIBAVL2_COPIED_MODULES_DIR}/${C_FN}")
     ENDFOREACH ()
 ENDIF ()
