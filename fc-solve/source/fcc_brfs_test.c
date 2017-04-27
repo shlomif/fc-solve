@@ -10,8 +10,6 @@
 /*
  * fcc_brfs_test.c - provide utility routines to test fcc_brfs.h
  */
-
-#include "dll_thunk.h"
 #include "config.h"
 #undef FCS_RCS_STATES
 

@@ -9,7 +9,6 @@
  */
 // card.c - functions to convert cards and card components to and from
 // their user representation.
-#include "dll_thunk.h"
 #include "state.h"
 #include "p2u_rank.h"
 

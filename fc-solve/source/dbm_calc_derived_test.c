@@ -12,7 +12,6 @@
  * This is compiled into a shared library and then loaded by Inline::C,
  * ctypes, etc.
  */
-#include "dll_thunk.h"
 #include <assert.h>
 
 #include "config.h"

@@ -10,7 +10,6 @@
 /*
  * lib.c - library interface functions of Freecell Solver.
  */
-#include "dll_thunk.h"
 #include "instance_for_lib.h"
 #include "preset.h"
 #include "fcs_user.h"

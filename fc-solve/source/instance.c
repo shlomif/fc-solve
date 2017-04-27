@@ -11,9 +11,6 @@
  * instance.c - instance/hard_thread/soft_thread functions for
  * Freecell Solver.
  */
-
-#include "dll_thunk.h"
-
 #define NUM_CHECKED_STATES_STEP 50
 
 #include "instance_for_lib.h"

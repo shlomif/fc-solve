@@ -12,7 +12,6 @@
  * Currently Hard DFS, Soft-DFS, Random-DFS, BeFS and BFS are implemented.
  */
 
-#include "dll_thunk.h"
 #include "scans.h"
 #include "meta_alloc.h"
 #include "instance.h"

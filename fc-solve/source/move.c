@@ -8,8 +8,6 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 // move.c - move and move stacks routines for Freecell Solver
-#include "dll_thunk.h"
-
 #include "move.h"
 #include "state.h"
 #include "fcs_enums.h"

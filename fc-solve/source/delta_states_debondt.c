@@ -15,7 +15,6 @@
  * This encoding improves upon the original delta_states.c .
  */
 
-#include "dll_thunk.h"
 #include "delta_states_debondt_impl.h"
 #include "render_state.h"
 

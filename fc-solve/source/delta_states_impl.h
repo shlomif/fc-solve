@@ -12,8 +12,6 @@
  * states are encoded and decoded based on a compact delta from the initial
  * state.
  */
-#include "dll_thunk.h"
-
 #include "bit_rw.h"
 #include "delta_states_iface.h"
 #include "delta_states.h"

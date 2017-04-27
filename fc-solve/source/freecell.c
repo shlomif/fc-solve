@@ -9,7 +9,6 @@
  */
 // freecell.c - a module that contains moves of the Freecell-games family.
 
-#include "dll_thunk.h"
 #include <assert.h>
 #include "scans.h"
 #include "meta_move_funcs_helpers.h"

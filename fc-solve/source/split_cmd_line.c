@@ -13,7 +13,6 @@
  * line arguments from files.
  */
 
-#include "dll_thunk.h"
 #include "split_cmd_line.h"
 
 typedef struct

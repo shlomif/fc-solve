@@ -11,7 +11,6 @@
  * state.c - state functions module for Freecell Solver
  */
 
-#include "dll_thunk.h"
 #include "state.h"
 #include "fcs_enums.h"
 

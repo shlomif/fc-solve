@@ -12,7 +12,6 @@
  * languages.
  */
 
-#include "dll_thunk.h"
 #include "fcs_cl.h"
 
 DLLEXPORT void freecell_solver_user_stringify_move_ptr(

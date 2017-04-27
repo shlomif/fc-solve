@@ -12,8 +12,6 @@
  * routines. Useful for more easily configuring a Freecell Solver instance.
  */
 
-#include "dll_thunk.h"
-
 #include "config.h"
 
 #ifdef HAVE_VASPRINTF

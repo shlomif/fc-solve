@@ -15,7 +15,6 @@
  * This encoding improves upon the original delta_states.c .
  */
 
-#include "dll_thunk.h"
 #include "bit_rw.h"
 #include "indirect_buffer.h"
 #include "delta_states_iface.h"
