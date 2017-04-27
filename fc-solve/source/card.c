@@ -7,11 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * card.c - functions to convert cards and card components to and from
- * their user representation.
- */
-
+// card.c - functions to convert cards and card components to and from
+// their user representation.
 #include "dll_thunk.h"
 #include "state.h"
 #include "p2u_rank.h"
@@ -20,20 +17,14 @@
 DEFINE_fc_solve_empty_card();
 #endif
 
-/*
- * Converts a suit to its user representation.
- *
- * */
+// Converts a suit to its user representation.
 static inline void fc_solve_p2u_suit(const int suit, char *str)
 {
-    *(str++) = "HCDS"[suit];
-    *(str) = '\0';
+    str[0] = "HCDS"[suit];
+    str[1] = '\0';
 }
 
-/*
- * Convert an entire card to its user representation.
- *
- * */
+// Convert an entire card to its user representation.
 void fc_solve_card_stringify(
     const fcs_card_t card, char *const str PASS_T(const fcs_bool_t t))
 {

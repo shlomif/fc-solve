@@ -18,8 +18,6 @@
 extern "C" {
 #endif
 
-#include "state.h"
-
 #include "offloading_queue.h"
 
 typedef struct

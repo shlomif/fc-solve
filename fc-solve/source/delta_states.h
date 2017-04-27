@@ -17,7 +17,6 @@
 extern "C" {
 #endif
 
-#include "state.h"
 #include "dbm_common.h"
 
 #ifdef FCS_DEBONDT_DELTA_STATES

@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * state.h - header file for state functions and macros for Freecell Solver
- */
+// state.h - header file for state functions and macros for Freecell Solver
 #pragma once
 
 #ifdef __cplusplus

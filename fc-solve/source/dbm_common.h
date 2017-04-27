@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_common.h - some common definitions (constants/etc.) for the DBM solver.
- */
+// dbm_common.h - some common definitions (constants/etc.) for the DBM solver.
 #pragma once
 
 #ifdef __cplusplus

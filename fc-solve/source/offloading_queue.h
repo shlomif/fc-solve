@@ -17,8 +17,6 @@
 extern "C" {
 #endif
 
-#include "state.h"
-
 typedef const unsigned char *fcs_offloading_queue_item_t;
 
 typedef struct

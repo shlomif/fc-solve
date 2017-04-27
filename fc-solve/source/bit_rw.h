@@ -7,14 +7,9 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-/*
- * bit_rw.h - bit readers and writers. Used by delta_states.c .
- */
+// bit_rw.h - bit readers and writers. Used by delta_states.c .
 
 #pragma once
-
-#include "state.h"
-#include "fcs_enums.h"
 
 #define NUM_BITS_IN_BYTES 8
 

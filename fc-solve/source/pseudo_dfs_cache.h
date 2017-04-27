@@ -18,7 +18,6 @@ extern "C" {
 #endif
 
 #include <Judy.h>
-#include "state.h"
 #include "meta_alloc.h"
 #include "fcs_enums.h"
 #include "dbm_common.h"

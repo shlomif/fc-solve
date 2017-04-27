@@ -21,7 +21,6 @@
 #include "move_funcs_order.h"
 #include "preset.h"
 #include "scans.h"
-#include "state.h"
 
 /*
     General use of this interface:

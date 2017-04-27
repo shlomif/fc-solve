@@ -17,7 +17,6 @@
 extern "C" {
 #endif
 
-#include "state.h"
 #include "delta_states.h"
 #include "var_base_writer.h"
 #include "var_base_reader.h"
