@@ -485,7 +485,7 @@ IF (FCS_MAX_NUM_SCANS_BUCKETS)
     ADD_DEFINITIONS("-DFCS_MAX_NUM_SCANS_BUCKETS=${FCS_MAX_NUM_SCANS_BUCKETS}")
 ENDIF ()
 
-# So it can find the includes when building libavl.avl.h.
+# So it can find the includes when building libavl/rb.h.
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # So it can find config.h

@@ -19,7 +19,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -I. -I$(SRC_DIR)/libavl/ -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
+CFLAGS := -I. -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
@@ -273,7 +273,7 @@ freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FC_PRO_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
 
 clean:
-	rm -f *.o libavl/*.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
+	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver.so*
 
 %.show:
 	@echo "$* = $($*)"
