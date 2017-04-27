@@ -18,7 +18,6 @@
 extern "C" {
 #endif
 
-/* For fc_solve_soft_thread_t and fcs_derived_states_list_t */
 #include "instance.h"
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds);

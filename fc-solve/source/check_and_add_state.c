@@ -12,7 +12,6 @@
  * fc_solve_check_and_add_state().
  */
 
-#include "instance.h"
 #include "move_stack_compact_alloc.h"
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \

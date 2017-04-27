@@ -19,8 +19,6 @@
 extern "C" {
 #endif
 
-#include "instance.h"
-
 static inline int max0(const int e) { return max(e, 0); }
 #ifdef FCS_FREECELL_ONLY
 #define calc_max_sequence_move(num_freecells, num_empty_cols)                  \

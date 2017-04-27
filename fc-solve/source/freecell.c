@@ -11,8 +11,8 @@
 
 #include <assert.h>
 #include "scans.h"
-#include "meta_move_funcs_helpers.h"
 #include "freecell.h"
+#include "meta_move_funcs_helpers.h"
 
 #ifdef FCS_FREECELL_ONLY
 
