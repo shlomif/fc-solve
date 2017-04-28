@@ -14,8 +14,6 @@
 #include "state.h"
 #include "fcs_enums.h"
 
-#include "p2u_rank.h"
-
 #ifdef COMPACT_STATES
 #define GET_CARD(s) (((const fcs_card_t *const)(s))[1])
 static inline int fcs_stack_compare(const void *s1, const void *s2)
@@ -141,13 +139,14 @@ int fc_solve_state_compare_equal(const void *const s1, const void *const s2)
 }
 #endif
 
-int fc_solve_state_compare_with_context(
-    const void *s1, const void *s2, fcs_compare_context_t context GCC_UNUSED)
+int fc_solve_state_compare_with_context(const void *const s1,
+    const void *const s2, fcs_compare_context_t context GCC_UNUSED)
 {
     return memcmp(s1, s2, sizeof(fcs_state_t));
 }
 
 #ifdef FCS_WITH_MOVES
+#include "rank2str.h"
 static inline void render_freecell_card(const fcs_card_t card,
     char *const freecell PASS_T(const fcs_bool_t display_10_as_t))
 {
@@ -203,7 +202,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
 
     for (int i = 0; i < (DECKS_NUM__VAL << 2); i++)
     {
-        fc_solve_p2u_rank(
+        rank2str(
             fcs_foundation_value(*state, i), decks[i] PASS_T(display_10_as_t));
         if (decks[i][0] == ' ')
             decks[i][0] = '0';

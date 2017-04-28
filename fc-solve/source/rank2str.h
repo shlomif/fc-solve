@@ -7,9 +7,6 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * p2u_rank.h - header file for the p2u_rank function.
- */
 #pragma once
 #ifdef __cplusplus
 extern "C" {
@@ -52,17 +49,15 @@ static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
 static const char cards_char_map[15] = (CARD_ZERO() "A23456789TJQK");
 #endif
 
-static inline void fc_solve_p2u_rank(
+static inline void rank2str(
     const int rank_idx, char *const str PASS_T(const fcs_bool_t t))
 {
-    {
 #define INDEX() (rank_idx)
 #ifdef FC_SOLVE_IMPLICIT_T_RANK
-        str[0] = cards_char_map[INDEX()];
-        str[1] = '\0';
+    str[0] = cards_char_map[INDEX()];
+    str[1] = '\0';
 #else
-        strcpy(str, (t ? card_map_3_T : card_map_3_10)[INDEX()]);
+    strcpy(str, (t ? card_map_3_T : card_map_3_10)[INDEX()]);
 #endif
 #undef INDEX
-    }
 }

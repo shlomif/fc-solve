@@ -10,14 +10,14 @@
 // card.c - functions to convert cards and card components to and from
 // their user representation.
 #include "state.h"
-#include "p2u_rank.h"
+#include "rank2str.h"
 
 #ifdef DEFINE_fc_solve_empty_card
 DEFINE_fc_solve_empty_card();
 #endif
 
 // Converts a suit to its user representation.
-static inline void fc_solve_p2u_suit(const int suit, char *str)
+static inline void suit2str(const int suit, char *str)
 {
     str[0] = "HCDS"[suit];
     str[1] = '\0';
@@ -27,6 +27,6 @@ static inline void fc_solve_p2u_suit(const int suit, char *str)
 void fc_solve_card_stringify(
     const fcs_card_t card, char *const str PASS_T(const fcs_bool_t t))
 {
-    fc_solve_p2u_rank(fcs_card_rank(card), str PASS_T(t));
-    fc_solve_p2u_suit(fcs_card_suit(card), strchr(str, '\0'));
+    rank2str(fcs_card_rank(card), str PASS_T(t));
+    suit2str(fcs_card_suit(card), strchr(str, '\0'));
 }

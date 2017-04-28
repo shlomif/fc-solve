@@ -659,7 +659,7 @@ static inline void col_seqs_iter__calc_end(col_seqs_iter_t *const iter)
     const_SLOT(sequences_are_built_by, iter);
 #endif
     for ((*iter).seq_end = (*iter).c; (*iter).seq_end < (*iter).col_len_minus_1;
-         (*iter).seq_end++)
+         ++((*iter).seq_end))
     {
         if (!fcs_is_parent_card(
                 fcs_col_get_card((*iter).col, (*iter).seq_end + 1),

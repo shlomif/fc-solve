@@ -326,10 +326,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
         /* Extract the card from the source. */
         if (src < 8)
         {
-            fcs_cards_column_t src_col;
-            src_col = fcs_state_get_col(the_state, src);
-            src_card = fcs_col_get_card(src_col, fcs_col_len(src_col) - 1);
-            fcs_col_pop_top(src_col);
+            var_AUTO(src_col, fcs_state_get_col(the_state, src));
+            fcs_col_pop_card(src_col, src_card);
         }
         else
         {

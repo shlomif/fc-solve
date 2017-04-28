@@ -143,7 +143,7 @@ typedef struct
         (dest_info).stacks_copy_on_write_flags = 0;                            \
     }
 
-typedef char fcs_locs_t;
+typedef uint8_t fcs_locs_t;
 
 #else
 #error Neither COMPACT_STATES nor INDIRECT_STACK_STATES are not defined.
@@ -480,16 +480,17 @@ typedef void *fcs_compare_context_t;
 typedef const void *fcs_compare_context_t;
 #endif
 
-static inline int fc_solve_state_compare(const void *s1, const void *s2)
+static inline int fc_solve_state_compare(
+    const void *const s1, const void *const s2)
 {
     return memcmp(s1, s2, sizeof(fcs_state_t));
 }
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-extern int fc_solve_state_compare_equal(const void *s1, const void *s2);
+extern int fc_solve_state_compare_equal(const void *, const void *);
 #endif
 extern int fc_solve_state_compare_with_context(
-    const void *s1, const void *s2, fcs_compare_context_t context);
+    const void *, const void *, fcs_compare_context_t);
 
 /*
  * Convert an entire card to its user representation.
@@ -511,7 +512,7 @@ extern void fc_solve_card_stringify(
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-static inline int fc_solve_u2p_suit(const char *suit)
+static inline int fcs_str2suit(const char *suit)
 {
     while (TRUE)
     {
@@ -539,7 +540,7 @@ static inline int fc_solve_u2p_suit(const char *suit)
  * the program.
  * */
 
-static inline int fc_solve_u2p_rank(const char *string)
+static inline int fcs_str2rank(const char *string)
 {
     while (1)
     {
@@ -595,7 +596,7 @@ static inline int fc_solve_u2p_rank(const char *string)
  * */
 static inline fcs_card_t fc_solve_card_parse_str(const char *const str)
 {
-    return fcs_make_card(fc_solve_u2p_rank(str), fc_solve_u2p_suit(str));
+    return fcs_make_card(fcs_str2rank(str), fcs_str2suit(str));
 }
 
 #ifdef INDIRECT_STACK_STATES
@@ -741,12 +742,12 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
                 fcs_put_card_in_freecell(out, c,
                     ((*str == '*') || (*str == '-')) ? fc_solve_empty_card : ({
-                        const char rank = fc_solve_u2p_rank(str);
+                        const char rank = fcs_str2rank(str);
                         if (!rank)
                         {
                             return FALSE;
                         }
-                        fcs_make_card(rank, fc_solve_u2p_suit(str));
+                        fcs_make_card(rank, fcs_str2suit(str));
                     }));
             }
 
@@ -782,13 +783,13 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                     str++;
                 if ((*str == '\n') || (*str == '\r'))
                     break;
-                const int f_idx = fc_solve_u2p_suit(str);
+                const int f_idx = fcs_str2suit(str);
                 str++;
                 while (*str == '-')
                     str++;
-                /* Workaround for fc_solve_u2p_rank's willingness
+                /* Workaround for fcs_str2rank's willingness
                  * to designate the string '0' as 10. */
-                const int c = ((str[0] == '0') ? 0 : fc_solve_u2p_rank(str));
+                const int c = ((str[0] == '0') ? 0 : fcs_str2rank(str));
                 while ((*str != ' ') && (*str != '\t') && (*str != '\n') &&
                        (*str != '\r'))
                 {
