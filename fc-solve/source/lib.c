@@ -148,7 +148,9 @@ typedef struct
      * */
     fcs_flare_item_t *active_flare;
     fcs_state_keyval_pair_t state;
+#ifdef FCS_WITH_MOVES
     fcs_state_keyval_pair_t running_state;
+#endif
 #if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
     fcs_state_keyval_pair_t initial_non_canonized_state;
 #endif
@@ -1031,12 +1033,12 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #ifdef FCS_WITH_MOVES
             fc_solve_init_locs(&(user->initial_state_locs));
             user->state_locs = user->initial_state_locs;
-#endif
             /* running_state and initial_non_canonized_state are
              * normalized states. So We're duplicating
              * state to it before user->state is canonized.
              * */
             FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
+#endif
 #if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
             FCS_STATE__DUP_keyval_pair(
                 user->initial_non_canonized_state, user->state);
