@@ -147,8 +147,8 @@ typedef struct
      * A pointer to the currently active instance out of the sequence
      * */
     fcs_flare_item_t *active_flare;
-    fcs_state_keyval_pair_t state;
 #ifdef FCS_WITH_MOVES
+    fcs_state_keyval_pair_t state;
     fcs_state_keyval_pair_t running_state;
 #endif
 #if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
@@ -1008,10 +1008,16 @@ static inline fc_solve_solve_process_ret_t resume_solution(
         const fcs_bool_t is_start_of_flare_solving =
             (flare->ret_code == FCS_STATE_NOT_BEGAN_YET);
 
+#ifdef FCS_WITH_MOVES
+#define STATE user->state
+#else
+        fcs_state_keyval_pair_t state;
+#define STATE state
+#endif
         if (is_start_of_flare_solving)
         {
             if (!fc_solve_initial_user_state_to_c(user->state_string_copy,
-                    &(user->state), INSTANCE_FREECELLS_NUM, INSTANCE_STACKS_NUM,
+                    &STATE, INSTANCE_FREECELLS_NUM, INSTANCE_STACKS_NUM,
                     INSTANCE_DECKS_NUM, user->indirect_stacks_buffer))
             {
                 user->state_validity_ret =
@@ -1022,9 +1028,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
             if (FCS_STATE_VALIDITY__OK !=
                 (user->state_validity_ret = fc_solve_check_state_validity(
-                     &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                         PASS_STACKS(INSTANCE_STACKS_NUM)
-                             PASS_DECKS(INSTANCE_DECKS_NUM),
+                     &(STATE)PASS_FREECELLS(INSTANCE_FREECELLS_NUM) PASS_STACKS(
+                         INSTANCE_STACKS_NUM) PASS_DECKS(INSTANCE_DECKS_NUM),
                      &(user->state_validity_card))))
             {
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
@@ -1035,20 +1040,20 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             user->state_locs = user->initial_state_locs;
             /* running_state and initial_non_canonized_state are
              * normalized states. So We're duplicating
-             * state to it before user->state is canonized.
+             * STATE to it before it is canonized.
              * */
-            FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
+            FCS_STATE__DUP_keyval_pair(user->running_state, STATE);
 #endif
 #if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
             FCS_STATE__DUP_keyval_pair(
-                user->initial_non_canonized_state, user->state);
+                user->initial_non_canonized_state, STATE);
 #endif
 #ifdef FCS_WITH_MOVES
-            fc_solve_canonize_state_with_locs(&(user->state.s),
+            fc_solve_canonize_state_with_locs(&(STATE.s),
                 &(user->state_locs)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
                     PASS_STACKS(INSTANCE_STACKS_NUM));
 #else
-            fc_solve_canonize_state(&(user->state.s)PASS_FREECELLS(
+            fc_solve_canonize_state(&(STATE.s)PASS_FREECELLS(
                 INSTANCE_FREECELLS_NUM) PASS_STACKS(INSTANCE_STACKS_NUM));
 #endif
             fc_solve_init_instance(instance);
@@ -1105,7 +1110,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 
         if (is_start_of_flare_solving)
         {
-            fc_solve_start_instance_process_with_board(instance, &(user->state),
+            fc_solve_start_instance_process_with_board(instance, &STATE,
 #if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
                 &(user->initial_non_canonized_state)
 #else
@@ -1239,6 +1244,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
     return (
         user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret);
 }
+#undef STATE
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
 int DLLEXPORT freecell_solver_user_resume_solution(void *const api_instance)
