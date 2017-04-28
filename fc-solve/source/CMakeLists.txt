@@ -265,7 +265,6 @@ ADD_CUSTOM_TARGET(
 )
 
 SET (FREECELL_SOLVER_LIB_MODULES
-    card.c
     check_and_add_state.c
     cmd_line.c
     freecell.c
@@ -289,6 +288,9 @@ MACRO(add_lib_mods)
     LIST (APPEND FREECELL_SOLVER_LIB_MODULES ${ARGV})
 ENDMACRO()
 
+IF (NOT "${FCS_DISABLE_MOVES_TRACKING}")
+    add_lib_mods(card.c)
+ENDIF ()
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
     add_lib_mods(${patsolve_modules})
 ENDIF ()
