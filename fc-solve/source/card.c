@@ -12,10 +12,6 @@
 #include "state.h"
 #include "rank2str.h"
 
-#ifdef DEFINE_fc_solve_empty_card
-DEFINE_fc_solve_empty_card();
-#endif
-
 // Converts a suit to its user representation.
 static inline void suit2str(const int suit, char *str)
 {
