@@ -20,7 +20,6 @@
 #define USE_EPOLL
 #endif
 
-#include <sys/time.h>
 #include <sys/wait.h>
 
 #ifdef USE_EPOLL
