@@ -11,8 +11,6 @@
  * instance.c - instance/hard_thread/soft_thread functions for
  * Freecell Solver.
  */
-#define NUM_CHECKED_STATES_STEP 50
-
 #include "instance_for_lib.h"
 #include "instance.h"
 #include "move_funcs_order.h"
@@ -271,7 +269,7 @@ static inline
 #endif
         .super_method_type = FCS_SUPER_METHOD_DFS,
         .master_to_randomize = FALSE,
-        .checked_states_step = NUM_CHECKED_STATES_STEP,
+        .checked_states_step = 50,
         .name = "",
         .enable_pruning = FALSE,
 #ifndef FCS_DISABLE_PATSOLVE
