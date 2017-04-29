@@ -224,7 +224,8 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
             char *dashes_ptr = dashes_s;
             char freecells_s[128];
             char *freecells_s_end = freecells_s;
-            for (int b = 0; b < min(FREECELLS_NUM__VAL - i * 4, 4); b++)
+            const_AUTO(lim, min(FREECELLS_NUM__VAL - i * 4, 4));
+            for (int b = 0; b < lim; b++)
             {
                 one_card_buffer freecell;
                 render_freecell_card(

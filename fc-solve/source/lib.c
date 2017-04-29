@@ -1062,9 +1062,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #define NUM_ITERS_LIMITS 2
 #endif
 #define NUM_ITERS_LIMITS_MINUS_1 (NUM_ITERS_LIMITS - 1)
-#ifndef min
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#endif
 
         {
             const fcs_int_limit_t limits[NUM_ITERS_LIMITS_MINUS_1] = {
