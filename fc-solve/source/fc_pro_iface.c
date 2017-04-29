@@ -142,14 +142,14 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 {
                     fcs_col_pop_card(col, card);
                     fcs_increment_foundation(pos, fcs_card_suit(card));
-                    virtual_stack_len[src]--;
+                    --virtual_stack_len[src];
                     moves_processed_add_new_move(
                         ret, (fcs_extended_move_t){
                                  .move = move, .to_empty_stack = FALSE});
                 }
                 else
                 {
-                    virtual_stack_len[src]--;
+                    --virtual_stack_len[src];
                 }
             }
             break;
@@ -186,7 +186,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
 #ifndef NDEBUG
                 virtual_freecell_len[src] = 0;
 #endif
-                virtual_stack_len[dest]++;
+                ++virtual_stack_len[dest];
             }
             break;
 
@@ -210,7 +210,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                     fcs_col_pop_card(col, temp_card);
                     fcs_put_card_in_freecell(pos, dest, temp_card);
                 }
-                virtual_stack_len[src]--;
+                --virtual_stack_len[src];
 #ifndef NDEBUG
                 virtual_freecell_len[dest] = 1;
 #endif

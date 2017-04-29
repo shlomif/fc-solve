@@ -283,13 +283,12 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
                     move_funcs[num_move_funcs++] = bit_idx;
                 }
             }
-            move_funcs = SREALLOC(
-                move_funcs, ((num_move_funcs & (~(TESTS_ORDER_GROW_BY - 1))) +
-                                TESTS_ORDER_GROW_BY));
+            move_funcs = SREALLOC(move_funcs,
+                ((num_move_funcs & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
             instance->opt_tests_order = (typeof(instance->opt_tests_order)){
                 .num_groups = 1,
-                .groups = SMALLOC(
-                    instance->opt_tests_order.groups, TESTS_ORDER_GROW_BY),
+                .groups =
+                    SMALLOC(instance->opt_tests_order.groups, MOVES_GROW_BY),
             };
             instance->opt_tests_order.groups[0] =
                 (typeof(instance->opt_tests_order.groups[0])){

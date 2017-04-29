@@ -68,10 +68,7 @@ static inline void pre_cache_insert(fcs_pre_cache_t *pre_cache,
 static inline fcs_bool_t pre_cache_does_key_exist(
     fcs_pre_cache_t *pre_cache, fcs_encoded_state_buffer_t *key)
 {
-    fcs_pre_cache_key_val_pair_t to_check;
-
-    to_check.key = *key;
-
+    fcs_pre_cache_key_val_pair_t to_check = {.key = *key};
     return (
         fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
 }

@@ -25,11 +25,11 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
 {
     int i;
     fc_solve_free_tests_order(tests_order);
-    tests_order->groups = SMALLOC(tests_order->groups, TESTS_ORDER_GROW_BY);
+    tests_order->groups = SMALLOC(tests_order->groups, MOVES_GROW_BY);
     tests_order->groups[tests_order->num_groups].num = 0;
     tests_order->groups[tests_order->num_groups].order_group_tests =
         SMALLOC(tests_order->groups[tests_order->num_groups].order_group_tests,
-            TESTS_ORDER_GROW_BY);
+            MOVES_GROW_BY);
     tests_order->groups[tests_order->num_groups].shuffling_type =
         FCS_NO_SHUFFLING;
 
@@ -52,17 +52,17 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
             is_start_group = TRUE;
             if (tests_order->groups[tests_order->num_groups - 1].num)
             {
-                if (!(tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
+                if (!(tests_order->num_groups & (MOVES_GROW_BY - 1)))
                 {
                     tests_order->groups = SREALLOC(tests_order->groups,
-                        tests_order->num_groups + TESTS_ORDER_GROW_BY);
+                        tests_order->num_groups + MOVES_GROW_BY);
                 }
 
                 tests_order->groups[tests_order->num_groups].num = 0;
                 tests_order->groups[tests_order->num_groups].order_group_tests =
                     SMALLOC(tests_order->groups[tests_order->num_groups]
                                 .order_group_tests,
-                        TESTS_ORDER_GROW_BY);
+                        MOVES_GROW_BY);
 
                 tests_order->num_groups++;
             }
@@ -143,16 +143,16 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
 
             if (tests_order->groups[tests_order->num_groups - 1].num)
             {
-                if (!(tests_order->num_groups & (TESTS_ORDER_GROW_BY - 1)))
+                if (!(tests_order->num_groups & (MOVES_GROW_BY - 1)))
                 {
                     tests_order->groups = SREALLOC(tests_order->groups,
-                        tests_order->num_groups + TESTS_ORDER_GROW_BY);
+                        tests_order->num_groups + MOVES_GROW_BY);
                 }
                 tests_order->groups[tests_order->num_groups].num = 0;
                 tests_order->groups[tests_order->num_groups].order_group_tests =
                     SMALLOC(tests_order->groups[tests_order->num_groups]
                                 .order_group_tests,
-                        TESTS_ORDER_GROW_BY);
+                        MOVES_GROW_BY);
 
                 tests_order->num_groups++;
             }
@@ -162,13 +162,13 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
         }
 
         if (!(tests_order->groups[tests_order->num_groups - 1].num &
-                (TESTS_ORDER_GROW_BY - 1)))
+                (MOVES_GROW_BY - 1)))
         {
             tests_order->groups[tests_order->num_groups - 1].order_group_tests =
                 SREALLOC(tests_order->groups[tests_order->num_groups - 1]
                              .order_group_tests,
                     tests_order->groups[tests_order->num_groups - 1].num +
-                        TESTS_ORDER_GROW_BY);
+                        MOVES_GROW_BY);
         }
 
         const char test_name[2] = {string[i], '\0'};

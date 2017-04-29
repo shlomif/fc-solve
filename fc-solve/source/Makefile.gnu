@@ -135,7 +135,7 @@ ifneq ($(DISABLE_PATSOLVE),0)
 	CFLAGS += -DFCS_DISABLE_PATSOLVE=1
 endif
 
-EXTRA_CFLAGS =
+EXTRA_CFLAGS = -Dfreecell_solver_EXPORTS
 CFLAGS += $(EXTRA_CFLAGS)
 
 LFLAGS := -O3 -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $(EXTRA_CFLAGS)
@@ -263,7 +263,7 @@ freecell-solver-range-parallel-solve: $(T_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: $(THR_MAIN_OBJECT) $(STATIC_LIB)
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) $(TCMALLOC_LINK)
 
 freecell-solver-fork-solve: $(FORK_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(TCMALLOC_LINK) $(END_LFLAGS)

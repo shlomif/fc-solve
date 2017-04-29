@@ -17,12 +17,8 @@
 
 #ifdef T
 #define TRACE(my_format, ...)                                                  \
-    {                                                                          \
-        fprintf(out_fh, my_format, __VA_ARGS__);                               \
-        fflush(out_fh);                                                        \
-    }
+    fprintf(out_fh, my_format, __VA_ARGS__);                                   \
+    fflush(out_fh)
 #else
-#define TRACE(a, ...)                                                          \
-    {                                                                          \
-    }
+#define TRACE(a, ...)
 #endif

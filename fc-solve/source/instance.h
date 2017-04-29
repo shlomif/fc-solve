@@ -197,7 +197,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
 
 #define ST_LOOP__GET_INDEX() (soft_thread - ht_soft_threads)
 
-#define TESTS_ORDER_GROW_BY 16
+#define MOVES_GROW_BY 16
 
 typedef struct
 {
@@ -1006,18 +1006,16 @@ static inline fcs_tests_order_t tests_order_dup(fcs_tests_order_t *const orig)
 {
     const_SLOT(num_groups, orig);
     fcs_tests_order_t ret = (fcs_tests_order_t){.num_groups = num_groups,
-        .groups = memdup(
-            orig->groups, sizeof(orig->groups[0]) *
-                              ((num_groups & (~(TESTS_ORDER_GROW_BY - 1))) +
-                                  TESTS_ORDER_GROW_BY))};
+        .groups = memdup(orig->groups,
+            sizeof(orig->groups[0]) *
+                ((num_groups & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
 
     for (int i = 0; i < num_groups; i++)
     {
-        ret.groups[i].order_group_tests =
-            memdup(ret.groups[i].order_group_tests,
-                sizeof(ret.groups[i].order_group_tests[0]) *
-                    ((ret.groups[i].num & (~(TESTS_ORDER_GROW_BY - 1))) +
-                        TESTS_ORDER_GROW_BY));
+        ret.groups[i].order_group_tests = memdup(
+            ret.groups[i].order_group_tests,
+            sizeof(ret.groups[i].order_group_tests[0]) *
+                ((ret.groups[i].num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
     }
 
     return ret;
