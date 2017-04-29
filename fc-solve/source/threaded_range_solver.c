@@ -37,7 +37,7 @@ static pthread_mutex_t next_board_num_lock;
 static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
 static fcs_int_limit_t update_total_num_iters_threshold = 1000000;
 static char **context_argv;
-static int context_arg = 1, context_argc;
+static int context_arg = 4, context_argc;
 static long long total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
@@ -103,21 +103,20 @@ int main(int argc, char *argv[])
     {
         help_err("Not Enough Arguments!\n");
     }
-    next_board_num = atoll(argv[context_arg++]);
-    past_end_board = 1 + atoll(argv[context_arg++]);
+    next_board_num = atoll(argv[1]);
+    past_end_board = 1 + atoll(argv[2]);
 
-    if ((stop_at = atoll(argv[context_arg++])) <= 0)
+    if ((stop_at = atoll(argv[3])) <= 0)
     {
         help_err("print_step (the third argument) must be greater than 0.\n");
     }
 
     int num_workers = 3;
-    for (; context_arg < argc; context_arg++)
+    for (; context_arg < argc; ++context_arg)
     {
         if (!strcmp(argv[context_arg], "--num-workers"))
         {
-            context_arg++;
-            if (context_arg == argc)
+            if (++context_arg == argc)
             {
                 help_err("--num-workers came without an argument!\n");
             }
@@ -125,8 +124,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[context_arg], "--worker-step"))
         {
-            context_arg++;
-            if (context_arg == argc)
+            if (++context_arg == argc)
             {
                 help_err("--worker-step came without an argument!\n");
             }
@@ -134,8 +132,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[context_arg], "--iters-update-on"))
         {
-            context_arg++;
-            if (context_arg == argc)
+            if (++context_arg == argc)
             {
                 help_err("--iters-update-on came without an argument!\n");
             }
