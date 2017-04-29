@@ -47,50 +47,22 @@ const int NUM_CARDS = (4*13);
 #define     MAXPOS         21
 #define     MAXCOL          9    /* includes top row as column 0 */
 
+static const char *card_to_string_values = "A23456789TJQK";
+static const char *card_to_string_suits = "CDHS";
 static char * card_to_string(char * s, const CARD card, const fcs_bool_t not_append_ws, const fcs_bool_t print_ts)
 {
-    const int suit = SUIT(card);
-    const int v = VALUE(card)+1;
+    const int v = VALUE(card);
 
-    if (v == 1)
+    if ((v == 9) && (!print_ts))
     {
-        strcpy(s, "A");
-    }
-    else if (v < 10)
-    {
-        sprintf(s, "%i", v);
-    }
-    else if (v == 10)
-    {
-        if (print_ts)
-        {
-            strcpy(s, "T");
-        }
-        else
-        {
-            strcpy(s, "10");
-        }
+        strcpy(s, "10");
     }
     else
     {
-        strcpy(s, (v == 11)?"J":((v == 12)?"Q":"K"));
+        sprintf(s, "%c", card_to_string_values[v]);
     }
 
-    switch (suit)
-    {
-        case CLUB:
-            strcat(s, "C");
-            break;
-        case DIAMOND:
-            strcat(s, "D");
-            break;
-        case HEART:
-            strcat(s, "H");
-            break;
-        case SPADE:
-            strcat(s, "S");
-            break;
-    }
+    sprintf(strchr(s, '\0'), "%c", card_to_string_suits[SUIT(card)]);
 
     if (!not_append_ws)
     {
@@ -139,7 +111,7 @@ int main(int argc, char * argv[])
     {
         for (int c=0 ; c < (6+(stack<5)) ; c++)
         {
-            char card_string[10];
+            char card_string[5];
             printf("%s",
                 card_to_string(
                     card_string,
