@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * delta_states_iface.h - some public interface functions for delta_state.c
- * (without all the baggage).
- */
+// delta_states_iface.h - some public interface functions for delta_state.c
+// (without all the baggage).
 
 #pragma once
 
@@ -21,8 +19,7 @@ extern "C" {
 #include "dbm_common.h"
 
 extern char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
-    const char *derived_state_str_proto);
+    fcs_dbm_variant_type_t, const char *, const char *);
 
 #ifdef __cplusplus
 }

@@ -144,8 +144,7 @@ static inline void fcs_init_encoded_state(fcs_encoded_state_buffer_t *enc_state)
 }
 
 extern char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
-    const char *derived_state_str_proto);
+    fcs_dbm_variant_type_t, const char *, const char *);
 
 #ifdef __cplusplus
 }

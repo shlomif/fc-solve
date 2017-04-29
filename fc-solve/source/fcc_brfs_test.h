@@ -48,22 +48,18 @@ typedef struct
 } fcs_FCC_start_point_result_t;
 
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
-    fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
-    const int start_state_moves_count,
-    const fcs_fcc_move_t *const start_state_moves,
-    fcs_FCC_start_point_result_t **out_fcc_start_points,
-    long *const out_num_new_positions);
+    fcs_dbm_variant_type_t, const char *, const int,
+    const fcs_fcc_move_t *const, fcs_FCC_start_point_result_t **, long *const);
 
 DLLEXPORT void fc_solve_user_INTERNAL_free_fcc_start_points(
-    fcs_FCC_start_point_result_t *const out_fcc_start_points);
+    fcs_FCC_start_point_result_t *const);
 
-DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
-    fcs_dbm_variant_type_t local_variant, const char *init_state_str_proto,
-    const char *start_state_str_proto,
+DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(fcs_dbm_variant_type_t,
+    const char *, const char *,
     /* NULL-terminated */
-    const char **min_states,
+    const char **,
     /* NULL-terminated */
-    const char **states_in_cache, fcs_bool_t *const out_is_fcc_new);
+    const char **, fcs_bool_t *const);
 
 #ifdef __cplusplus
 }

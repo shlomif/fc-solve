@@ -147,20 +147,18 @@ typedef struct
     size_t write_to_idx;
     size_t read_from_idx;
     unsigned char *data;
-} fcs_offloading_queue_page_t;
+} off_q_page_t;
 
-static inline void fcs_offloading_queue_page__recycle(
-    fcs_offloading_queue_page_t *const page)
+static inline void fcs_offloading_queue_page__recycle(off_q_page_t *const page)
 {
     page->write_to_idx = 0;
     page->read_from_idx = 0;
 }
 
 static inline void fcs_offloading_queue_page__init(
-    fcs_offloading_queue_page_t *const page, const long page_index,
-    const long queue_id)
+    off_q_page_t *const page, const long page_index, const long queue_id)
 {
-    fcs_offloading_queue_page_t new_page = {.page_index = page_index,
+    off_q_page_t new_page = {.page_index = page_index,
         .queue_id = queue_id,
         .data =
             malloc(sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE)};
@@ -170,22 +168,20 @@ static inline void fcs_offloading_queue_page__init(
     return;
 }
 
-static inline void fcs_offloading_queue_page__destroy(
-    fcs_offloading_queue_page_t *const page)
+static inline void fcs_offloading_queue_page__destroy(off_q_page_t *const page)
 {
     free(page->data);
     page->data = NULL;
 }
 
 static inline fcs_bool_t fcs_offloading_queue_page__can_extract(
-    const fcs_offloading_queue_page_t *const page)
+    const off_q_page_t *const page)
 {
     return (page->read_from_idx < page->write_to_idx);
 }
 
 static inline void fcs_offloading_queue_page__extract(
-    fcs_offloading_queue_page_t *const page,
-    fcs_offloading_queue_item_t *const out_item)
+    off_q_page_t *const page, fcs_offloading_queue_item_t *const out_item)
 {
     memcpy(out_item,
         (page->data + sizeof(*out_item) * ((page->read_from_idx)++)),
@@ -193,21 +189,20 @@ static inline void fcs_offloading_queue_page__extract(
 }
 
 static inline fcs_bool_t fcs_offloading_queue_page__can_insert(
-    const fcs_offloading_queue_page_t *const page)
+    const off_q_page_t *const page)
 {
     return (page->write_to_idx < NUM_ITEMS_PER_PAGE);
 }
 
 static inline void fcs_offloading_queue_page__insert(
-    fcs_offloading_queue_page_t *const page,
-    const fcs_offloading_queue_item_t *const in_item)
+    off_q_page_t *const page, const fcs_offloading_queue_item_t *const in_item)
 {
     memcpy(page->data + ((page->write_to_idx)++) * sizeof(*in_item), in_item,
         sizeof(*in_item));
 }
 
 static inline const char *fcs_offloading_queue_page__calc_filename(
-    fcs_offloading_queue_page_t *const page, char *const buffer,
+    off_q_page_t *const page, char *const buffer,
     const char *const offload_dir_path)
 {
     sprintf(buffer, "%s/fcs_queue%lXq_%020lX.page", offload_dir_path,
@@ -217,21 +212,19 @@ static inline const char *fcs_offloading_queue_page__calc_filename(
 }
 
 static inline void fcs_offloading_queue_page__start_after(
-    fcs_offloading_queue_page_t *const page,
-    const fcs_offloading_queue_page_t *const other_page)
+    off_q_page_t *const page, const off_q_page_t *const other_page)
 {
     page->page_index = other_page->page_index + 1;
     fcs_offloading_queue_page__recycle(page);
 }
 
-static inline void fcs_offloading_queue_page__bump(
-    fcs_offloading_queue_page_t *const page)
+static inline void fcs_offloading_queue_page__bump(off_q_page_t *const page)
 {
     fcs_offloading_queue_page__start_after(page, page);
 }
 
 static inline void fcs_offloading_queue_page__read_next_from_disk(
-    fcs_offloading_queue_page_t *const page, const char *const offload_dir_path)
+    off_q_page_t *const page, const char *const offload_dir_path)
 {
     fcs_offloading_queue_page__bump(page);
     char page_filename[PATH_MAX + 1];
@@ -253,7 +246,7 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
 }
 
 static inline void fcs_offloading_queue_page__offload(
-    fcs_offloading_queue_page_t *const page, const char *const offload_dir_path)
+    off_q_page_t *const page, const char *const offload_dir_path)
 {
     char page_filename[PATH_MAX + 1];
 
@@ -278,7 +271,7 @@ typedef struct
      */
     int_fast32_t page_idx_to_write_to, page_idx_for_backup,
         page_idx_to_read_from;
-    fcs_offloading_queue_page_t pages[2];
+    off_q_page_t pages[2];
 } fcs_offloading_queue_t;
 
 static inline void fcs_offloading_queue__init(
