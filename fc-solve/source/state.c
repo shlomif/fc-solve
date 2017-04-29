@@ -168,7 +168,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
         const fcs_bool_t display_10_as_t))
 {
     typedef char one_card_buffer[4];
-    char decks[MAX_NUM_DECKS * 4][10];
+    char founds[MAX_NUM_DECKS * 4][10];
 
 #define fc_solve_append_string_sprintf(...)                                    \
     output_s += sprintf(output_s, __VA_ARGS__)
@@ -203,9 +203,9 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
     for (int i = 0; i < (DECKS_NUM__VAL << 2); i++)
     {
         rank2str(
-            fcs_foundation_value(*state, i), decks[i] PASS_T(display_10_as_t));
-        if (decks[i][0] == ' ')
-            decks[i][0] = '0';
+            fcs_foundation_value(*state, i), founds[i] PASS_T(display_10_as_t));
+        if (founds[i][0] == ' ')
+            founds[i][0] = '0';
     }
 
 #if 0
@@ -238,8 +238,8 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
             {
                 fc_solve_append_string_sprintf(
                     "%-16s        H-%1s C-%1s D-%1s S-%1s\n", freecells_s,
-                    decks[i * 4], decks[i * 4 + 1], decks[i * 4 + 2],
-                    decks[i * 4 + 3]);
+                    founds[i * 4], founds[i * 4 + 1], founds[i * 4 + 2],
+                    founds[i * 4 + 3]);
             }
             else
             {
@@ -250,8 +250,8 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
         for (; i < DECKS_NUM__VAL; i++)
         {
             fc_solve_append_string_sprintf(
-                "%-16s        H-%1s C-%1s D-%1s S-%1s\n", "", decks[i * 4],
-                decks[i * 4 + 1], decks[i * 4 + 2], decks[i * 4 + 3]);
+                "%-16s        H-%1s C-%1s D-%1s S-%1s\n", "", founds[i * 4],
+                founds[i * 4 + 1], founds[i * 4 + 2], founds[i * 4 + 3]);
         }
         append_char('\n');
         append_char('\n');
@@ -302,8 +302,8 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
         fc_solve_append_string_sprintf("%s", "Foundations:");
         for (int i = 0; i < (DECKS_NUM__VAL << 2); i += 4)
         {
-            fc_solve_append_string_sprintf(" H-%s C-%s D-%s S-%s", decks[i],
-                decks[i + 1], decks[i + 2], decks[i + 3]);
+            fc_solve_append_string_sprintf(" H-%s C-%s D-%s S-%s", founds[i],
+                founds[i + 1], founds[i + 2], founds[i + 3]);
         }
 #ifndef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
         append_char(' ');

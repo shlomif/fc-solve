@@ -119,7 +119,7 @@ typedef struct
     fcs_bool_t was_flare_found, was_flare_finished;
 #endif
     int limit;
-} fcs_instance_item_t;
+} instance_item_t;
 
 typedef struct
 {
@@ -128,8 +128,7 @@ typedef struct
      * one after the other in case the previous ones could not solve
      * the board
      * */
-    fcs_instance_item_t *current_instance, *instances_list,
-        *end_of_instances_list;
+    instance_item_t *current_instance, *instances_list, *end_of_instances_list;
     /*
      * The global (sequence-wide) limit of the iterations. Used
      * by limit_iterations() and friends
@@ -206,7 +205,7 @@ static inline fc_solve_instance_t *active_obj(void *const api_instance)
 
 #define INSTANCES_LOOP_START()                                                 \
     const_SLOT(end_of_instances_list, user);                                   \
-    for (fcs_instance_item_t *instance_item = user->instances_list;            \
+    for (instance_item_t *instance_item = user->instances_list;                \
          instance_item < end_of_instances_list; instance_item++)               \
     {
 
@@ -469,7 +468,7 @@ static inline flares_plan_item create_plan_item(const flares_plan_type_t mytype,
         .type = mytype, .flare = flare, .count_iters = count_iters};
 }
 
-static inline void add_to_plan(fcs_instance_item_t *const instance_item,
+static inline void add_to_plan(instance_item_t *const instance_item,
     const flares_plan_type_t mytype, fcs_flare_item_t *const flare,
     const int_fast32_t count_iters)
 {
@@ -482,21 +481,19 @@ static inline void add_to_plan(fcs_instance_item_t *const instance_item,
         create_plan_item(mytype, flare, count_iters);
 }
 
-static inline void add_count_iters_to_plan(
-    fcs_instance_item_t *const instance_item, fcs_flare_item_t *const flare,
-    const int_fast32_t count_iters)
+static inline void add_count_iters_to_plan(instance_item_t *const instance_item,
+    fcs_flare_item_t *const flare, const int_fast32_t count_iters)
 {
     add_to_plan(instance_item, FLARES_PLAN_RUN_COUNT_ITERS, flare, count_iters);
 }
 
-static inline void add_checkpoint_to_plan(
-    fcs_instance_item_t *const instance_item)
+static inline void add_checkpoint_to_plan(instance_item_t *const instance_item)
 {
     add_to_plan(instance_item, FLARES_PLAN_CHECKPOINT, NULL, -1);
 }
 
 static inline void add_run_indef_to_plan(
-    fcs_instance_item_t *const instance_item, fcs_flare_item_t *const flare)
+    instance_item_t *const instance_item, fcs_flare_item_t *const flare)
 {
     add_to_plan(instance_item, FLARES_PLAN_RUN_INDEFINITELY, flare, -1);
 }
@@ -524,7 +521,7 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
 {
     {
         const_SLOT(end_of_instances_list, user);
-        for (fcs_instance_item_t *instance_item = user->instances_list;
+        for (instance_item_t *instance_item = user->instances_list;
              instance_item < end_of_instances_list; instance_item++)
         {
             if (instance_item->flares_plan_compiled)
@@ -738,7 +735,7 @@ static inline void recycle_flare(fcs_flare_item_t *const flare)
 }
 
 static void recycle_instance(
-    fcs_user_t *const user, fcs_instance_item_t *const instance_item)
+    fcs_user_t *const user, instance_item_t *const instance_item)
 {
     INSTANCE_ITEM_FLARES_LOOP_START()
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
@@ -917,7 +914,7 @@ static int get_flare_move_count(
 }
 #endif
 
-static inline fcs_instance_item_t *CURR_INST(fcs_user_t *const user)
+static inline instance_item_t *CURR_INST(fcs_user_t *const user)
 {
     return user->current_instance;
 }
@@ -933,7 +930,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
      * */
     do
     {
-        fcs_instance_item_t *const instance_item = CURR_INST(user);
+        instance_item_t *const instance_item = CURR_INST(user);
 
 #ifdef FCS_WITH_FLARES
         if (instance_item->current_plan_item_idx ==
@@ -2253,7 +2250,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-    fcs_instance_item_t *const instance_item = CURR_INST(user);
+    instance_item_t *const instance_item = CURR_INST(user);
 
     free(instance_item->flares_plan_string);
     instance_item->flares_plan_string =
@@ -2268,7 +2265,7 @@ void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-    for (fcs_instance_item_t *instance_item = user->instances_list;
+    for (instance_item_t *instance_item = user->instances_list;
          instance_item < user->end_of_instances_list; instance_item++)
     {
         recycle_instance(user, instance_item);
@@ -2345,7 +2342,7 @@ int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)
 
 static int user_next_flare(fcs_user_t *const user)
 {
-    fcs_instance_item_t *const instance_item = CURR_INST(user);
+    instance_item_t *const instance_item = CURR_INST(user);
 #ifdef FCS_WITH_FLARES
     const_AUTO(
         num_flares, instance_item->end_of_flares - instance_item->flares);
@@ -2409,7 +2406,7 @@ static int user_next_instance(fcs_user_t *const user)
     user->end_of_instances_list =
         (user->current_instance = user->instances_list + num_instances) + 1;
 
-    *(CURR_INST(user)) = (fcs_instance_item_t){
+    *(CURR_INST(user)) = (instance_item_t){
 #ifdef FCS_WITH_FLARES
         .flares = NULL,
         .end_of_flares = NULL,
@@ -2608,7 +2605,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    fcs_instance_item_t *const instance_item =
+    instance_item_t *const instance_item =
         CURR_INST((fcs_user_t * const)api_instance);
     return instance_item->plan[item_idx].flare - instance_item->flares;
 #else

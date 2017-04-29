@@ -761,7 +761,7 @@ static inline int fc_solve_soft_dfs_do_solve(
         the_soft_dfs_info, &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]));
 
     ssize_t dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
-    fcs_bool_t enable_pruning = soft_thread->enable_pruning;
+    const_SLOT(enable_pruning, soft_thread);
 
     DECLARE_STATE();
     ASSIGN_ptr_state(the_soft_dfs_info->state);

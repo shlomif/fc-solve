@@ -146,12 +146,12 @@ typedef struct
 typedef uint8_t fcs_locs_t;
 
 #else
-#error Neither COMPACT_STATES nor INDIRECT_STACK_STATES are not defined.
+#error Neither COMPACT_STATES nor INDIRECT_STACK_STATES are defined.
 #endif /* #if defined COMPACT_STATES -                                         \
           #elif defined INDIRECT_STACK_STATES                                  \
         */
 
-/* These are macros or functions that are common to all three _STATES types. */
+/* These are macros or functions that are common to all the _STATES types. */
 
 #define fcs_freecell_card_suit(state, f)                                       \
     (fcs_card_suit(fcs_freecell_card((state), (f))))

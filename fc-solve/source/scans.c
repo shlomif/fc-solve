@@ -19,13 +19,7 @@
 #include "simpsim.h"
 #include "move_funcs_maps.h"
 
-#if 0
-#define DEBUG 1
-#endif
-
-#if 1
 #undef DEBUG
-#endif
 
 #include "scans_impl.h"
 
