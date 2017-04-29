@@ -92,11 +92,6 @@ struct fcs_dbm_solver_thread_struct
     fcs_meta_compact_allocator_t thread_meta_alloc;
 };
 
-typedef struct
-{
-    fcs_dbm_solver_thread_t *thread;
-} thread_arg_t;
-
 static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_derived_state_t *derived_list_recycle_bin = NULL, *derived_iter;

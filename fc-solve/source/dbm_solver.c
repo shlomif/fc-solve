@@ -115,11 +115,6 @@ struct fcs_dbm_solver_thread_struct
     fc_solve_delta_stater_t delta_stater;
 };
 
-typedef struct
-{
-    fcs_dbm_solver_thread_t *thread;
-} thread_arg_t;
-
 static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item_t physical_item;
@@ -130,8 +125,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_dbm_record_t *token = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    thread_arg_t *const arg = (thread_arg_t *)void_arg;
-    fcs_dbm_solver_thread_t *const thread = arg->thread;
+    const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
     fcs_dbm_solver_instance_t *const instance = thread->instance;
     fc_solve_delta_stater_t *const delta_stater = &(thread->delta_stater);
 

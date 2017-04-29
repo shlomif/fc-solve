@@ -145,6 +145,11 @@ static inline void pre_cache_offload_and_reset(fcs_pre_cache_t *const pre_cache,
 
 typedef struct fcs_dbm_solver_thread_struct fcs_dbm_solver_thread_t;
 
+typedef struct
+{
+    fcs_dbm_solver_thread_t *thread;
+} thread_arg_t;
+
 static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     fcs_dbm_solver_instance_t *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
