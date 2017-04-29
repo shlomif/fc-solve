@@ -272,20 +272,20 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
              *
              * */
             size_t num_move_funcs = 0;
-            size_t *tests =
-                SMALLOC(tests, sizeof(total_move_funcs_bitmask) * 8);
+            size_t *move_funcs =
+                SMALLOC(move_funcs, sizeof(total_move_funcs_bitmask) * 8);
 
             for (size_t bit_idx = 0; total_move_funcs_bitmask != 0;
                  bit_idx++, total_move_funcs_bitmask >>= 1)
             {
                 if ((total_move_funcs_bitmask & 0x1) != 0)
                 {
-                    tests[num_move_funcs++] = bit_idx;
+                    move_funcs[num_move_funcs++] = bit_idx;
                 }
             }
-            tests = SREALLOC(
-                tests, ((num_move_funcs & (~(TESTS_ORDER_GROW_BY - 1))) +
-                           TESTS_ORDER_GROW_BY));
+            move_funcs = SREALLOC(
+                move_funcs, ((num_move_funcs & (~(TESTS_ORDER_GROW_BY - 1))) +
+                                TESTS_ORDER_GROW_BY));
             instance->opt_tests_order = (typeof(instance->opt_tests_order)){
                 .num_groups = 1,
                 .groups = SMALLOC(
@@ -293,7 +293,7 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
             };
             instance->opt_tests_order.groups[0] =
                 (typeof(instance->opt_tests_order.groups[0])){
-                    .order_group_tests = tests,
+                    .order_group_tests = move_funcs,
                     .num = num_move_funcs,
                     .shuffling_type = FCS_NO_SHUFFLING,
                 };
@@ -601,17 +601,18 @@ static inline void fc_solve_release_tests_list(
     const_SLOT(num_units, arr);
     for (size_t unit_idx = 0; unit_idx < num_units; unit_idx++)
     {
-        if (arr->by_depth_units[unit_idx].tests.lists)
+        if (arr->by_depth_units[unit_idx].move_funcs.lists)
         {
             fcs_tests_list_t *const lists =
-                arr->by_depth_units[unit_idx].tests.lists;
+                arr->by_depth_units[unit_idx].move_funcs.lists;
             const_AUTO(
-                num_lists, arr->by_depth_units[unit_idx].tests.num_lists);
+                num_lists, arr->by_depth_units[unit_idx].move_funcs.num_lists);
 
-            for (typeof(arr->by_depth_units[unit_idx].tests.num_lists) i = 0;
+            for (typeof(arr->by_depth_units[unit_idx].move_funcs.num_lists)
+                     i = 0;
                  i < num_lists; i++)
             {
-                free(lists[i].tests);
+                free(lists[i].move_funcs);
             }
             free(lists);
         }
@@ -954,7 +955,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
             const_AUTO(tests_order_num,
                 by_depth_tests_order[depth_idx].tests_order.num_groups);
 
-            const_AUTO(moves_list_of_lists, &(unit->tests));
+            const_AUTO(moves_list_of_lists, &(unit->move_funcs));
 
             *moves_list_of_lists = (typeof(*moves_list_of_lists)){
                 .num_lists = 0,
@@ -978,7 +979,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
                             ? tests_order_groups[group_idx].shuffling_type
                             : FCS_NO_SHUFFLING);
                 *tests_list_struct_ptr = (typeof(*tests_list_struct_ptr)){
-                    .tests = tests_list,
+                    .move_funcs = tests_list,
                     .num_move_funcs = num,
                     .shuffling_type = shuffling_type,
                 };

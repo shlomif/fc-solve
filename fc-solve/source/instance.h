@@ -420,7 +420,7 @@ typedef struct
 
 typedef struct
 {
-    fc_solve_solve_for_state_move_func_t *tests;
+    fc_solve_solve_for_state_move_func_t *move_funcs;
     /* num_move_funcs should be int instead of size_t for performance.*/
     int num_move_funcs;
     fcs_tests_group_type_t shuffling_type;
@@ -436,7 +436,7 @@ typedef struct
 typedef struct
 {
     ssize_t max_depth;
-    fcs_tests_list_of_lists tests;
+    fcs_tests_list_of_lists move_funcs;
 } fcs_tests_by_depth_unit_t;
 
 typedef struct

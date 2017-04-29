@@ -192,7 +192,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
         }
     }
 
-    for (parents_stack_len--; parents_stack_len > 0; parents_stack_len--)
+    for (--parents_stack_len; parents_stack_len > 0; --parents_stack_len)
     {
 
         new_cache_state = parents_stack[parents_stack_len - 1].new_cache_state;

@@ -786,7 +786,7 @@ static inline int fc_solve_soft_dfs_do_solve(
         by_depth_min_depth = (curr_by_depth_unit == by_depth_units)            \
                                  ? 0                                           \
                                  : GET_DEPTH(curr_by_depth_unit - 1);          \
-        the_tests_list_ptr = &(curr_by_depth_unit->tests);                     \
+        the_tests_list_ptr = &(curr_by_depth_unit->move_funcs);                \
     }
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
@@ -1020,7 +1020,7 @@ static inline int fc_solve_soft_dfs_do_solve(
 
                     THE_MOVE_FUNCS_LIST
                         .lists[the_soft_dfs_info->move_func_list_idx]
-                        .tests[the_soft_dfs_info->move_func_idx](
+                        .move_funcs[the_soft_dfs_info->move_func_idx](
                             soft_thread, &pass, derived_states_list);
 
                     VERIFY_PTR_STATE_TRACE0("Verify Glanko");
