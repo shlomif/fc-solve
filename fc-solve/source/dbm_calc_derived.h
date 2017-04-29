@@ -532,9 +532,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             BEGIN_NEW_STATE()
 
             fcs_state_pop_col_top(&new_state, stack_idx);
-            fcs_cards_column_t empty_stack_col =
-                fcs_state_get_col(new_state, empty_stack_idx);
-            fcs_col_push_card(empty_stack_col, card);
+            fcs_state_push(&new_state, empty_stack_idx, card);
 
             COMMIT_NEW_STATE(COL2MOVE(stack_idx), COL2MOVE(empty_stack_idx),
                 FROM_COL_IS_REVERSIBLE_MOVE(), card)

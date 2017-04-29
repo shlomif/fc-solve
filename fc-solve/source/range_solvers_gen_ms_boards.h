@@ -85,9 +85,8 @@ static inline void get_board_l(const long long gamenumber, char *const ret)
                 microsoft_rand__game_num_rand(&seedx, gamenumber) %
                 num_cards_left;
             const int col = (i & (8 - 1));
-            const int card_idx = i >> 3;
             card_to_string(
-                &ret[3 * (col * 7 - ((col > 4) ? (col - 4) : 0) + card_idx)],
+                &ret[3 * (col * 7 - ((col > 4) ? (col - 4) : 0) + (i >> 3))],
                 deck[j]);
             deck[j] = deck[--num_cards_left];
         }

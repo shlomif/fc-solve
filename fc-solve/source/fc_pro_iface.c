@@ -180,8 +180,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                     moves_processed_add_new_move(
                         ret, (fcs_extended_move_t){
                                  .move = move, .to_empty_stack = FALSE});
-                    fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
-                    fcs_col_push_card(dest_col, fcs_freecell_card(pos, src));
+                    fcs_state_push(&pos, dest, fcs_freecell_card(pos, src));
                     fcs_empty_freecell(pos, src);
                 }
 #ifndef NDEBUG

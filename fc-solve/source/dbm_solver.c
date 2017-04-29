@@ -348,10 +348,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
         /* Apply src_card to dest. */
         if (dest < 8)
         {
-            fcs_cards_column_t dest_col;
-            dest_col = fcs_state_get_col(the_state, dest);
-
-            fcs_col_push_card(dest_col, src_card);
+            fcs_state_push(&the_state, dest, src_card);
         }
         else
         {

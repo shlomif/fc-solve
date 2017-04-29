@@ -262,19 +262,18 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
         }
         append_char('\n');
 
-        int max_num_cards = 0;
-        for (int s = 0; s < STACKS_NUM__VAL; s++)
+        size_t max_num_cards = 0;
+        for (size_t s = 0; s < STACKS_NUM__VAL; ++s)
         {
-            fcs_const_cards_column_t col =
-                fcs_state_get_col(*state, stack_locs[s]);
-            const int col_len = fcs_col_len(col);
+            const size_t col_len =
+                fcs_col_len(fcs_state_get_col(*state, stack_locs[s]));
             if (col_len > max_num_cards)
             {
                 max_num_cards = col_len;
             }
         }
 
-        for (int card_idx = 0; card_idx < max_num_cards; card_idx++)
+        for (size_t card_idx = 0; card_idx < max_num_cards; ++card_idx)
         {
             for (int s = 0; s < STACKS_NUM__VAL; s++)
             {
@@ -342,14 +341,15 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
         }
         append_char('\n');
 
-        for (int s = 0; s < STACKS_NUM__VAL; s++)
+        for (int s = 0; s < STACKS_NUM__VAL; ++s)
         {
             fcs_const_cards_column_t col =
                 fcs_state_get_col(*state, stack_locs[s]);
-            const int col_len = fcs_col_len(col);
+            const size_t col_len =
+                fcs_col_len(fcs_state_get_col(*state, stack_locs[s]));
             append_char(':');
 
-            for (int card_idx = 0; card_idx < col_len; card_idx++)
+            for (size_t card_idx = 0; card_idx < col_len; ++card_idx)
             {
                 one_card_buffer stack_card_str;
                 fc_solve_card_stringify(fcs_col_get_card(col, card_idx),

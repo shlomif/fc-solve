@@ -283,9 +283,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
         const int col_idx_val = *col_idx;
         const fcs_card_t top_card =
             fcs_state_pop_col_card(new_key, col_idx_val);
-        const fcs_cards_column_t new_b_col =
-            fcs_state_get_col(*new_key, put_cards_in_col_idx);
-        fcs_col_push_card(new_b_col, top_card);
+        fcs_state_push(new_key, put_cards_in_col_idx, top_card);
 
         fcs_push_1card_seq(moves_ptr, col_idx_val, put_cards_in_col_idx);
 
@@ -938,9 +936,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 
             my_copy_stack(stack_idx);
 
-            fcs_cards_column_t new_src_col =
-                fcs_state_get_col(new_state_key, stack_idx);
-            fcs_col_push_card(new_src_col, card);
+            fcs_state_push(&new_state_key, stack_idx, card);
             fcs_empty_freecell(new_state_key, fc);
             fcs_move_stack_non_seq_push(
                 moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, stack_idx);
@@ -1313,11 +1309,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         sfs_check_state_begin();
         copy_two_stacks(stack_idx, empty_stack_idx);
         fcs_state_pop_col_top(&new_state_key, stack_idx);
-
-        fcs_cards_column_t empty_stack_col =
-            fcs_state_get_col(new_state_key, empty_stack_idx);
-        fcs_col_push_card(empty_stack_col, card);
-
+        fcs_state_push(&new_state_key, empty_stack_idx, card);
         fcs_push_1card_seq(moves, stack_idx, empty_stack_idx);
 
         sfs_check_state_end();

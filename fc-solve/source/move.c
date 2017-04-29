@@ -42,13 +42,10 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
     }
     break;
     case FCS_MOVE_TYPE_FREECELL_TO_STACK:
-    {
-        col = fcs_state_get_col(*state_key, fcs_int_move_get_dest_stack(move));
-        fcs_col_push_card(col,
+        fcs_state_push(state_key, fcs_int_move_get_dest_stack(move),
             fcs_freecell_card(*state_key, fcs_int_move_get_src_freecell(move)));
         fcs_empty_freecell(*state_key, fcs_int_move_get_src_freecell(move));
-    }
-    break;
+        break;
     case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
     {
         card =
