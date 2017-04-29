@@ -25,8 +25,8 @@ extern "C" {
 #include "dbm_calc_derived_iface.h"
 #include "dbm_lru_cache.h"
 
-static int fc_solve_compare_lru_cache_keys(
-    const void *void_a, const void *void_b, void *context GCC_UNUSED)
+static int fc_solve_compare_lru_cache_keys(const void *const void_a,
+    const void *const void_b, void *context GCC_UNUSED)
 {
 #define GET_PARAM(p) ((((const fcs_cache_key_info_t *)(p))->key))
     return memcmp(

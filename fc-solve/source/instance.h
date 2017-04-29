@@ -986,8 +986,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
     fc_solve_instance_t *const instance,
     fcs_collectible_state_t *const orig_ptr_state_val);
 
-extern int fc_solve_compare_lru_cache_keys(
-    const void *const void_a, const void *const void_b, void *const context);
+extern int fc_solve_compare_lru_cache_keys(const void *, const void *, void *);
 
 #endif
 
