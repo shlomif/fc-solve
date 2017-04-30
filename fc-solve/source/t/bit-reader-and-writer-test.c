@@ -16,6 +16,7 @@
 #include <stdio.h>
 
 #include <tap.h>
+#include "config.h"
 #include "../bit_rw.h"
 
 static int main_tests(void)
