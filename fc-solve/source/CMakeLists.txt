@@ -203,6 +203,7 @@ SET (is_parent_output
     "${CMAKE_CURRENT_BINARY_DIR}/debondt__card_pos.c" "${CMAKE_CURRENT_BINARY_DIR}/debondt__card_pos.h"
     "${CMAKE_CURRENT_BINARY_DIR}/debondt__state_pos.c" "${CMAKE_CURRENT_BINARY_DIR}/debondt__state_pos.h"
     "${CMAKE_CURRENT_BINARY_DIR}/is_parent.c" "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.c" "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.h"
     )
 add_gen_c(${is_parent_output})
 ADD_CUSTOM_COMMAND(
@@ -275,6 +276,7 @@ SET (FREECELL_SOLVER_LIB_MODULES
     move.c
     move_funcs_order.c
     preset.c
+    pos_by_rank__freecell.c
     rate_state.c
     scans.c
     simpsim.c

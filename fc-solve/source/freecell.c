@@ -333,6 +333,16 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
     const int suit_positions_by_rank_step =                                    \
         (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
+#ifdef FCS_FREECELL_ONLY
+#include "pos_by_rank__freecell.h"
+#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
+    const_AUTO(pos_pos, pos_by_rank__freecell[src_card]);                      \
+    const int8_t *pos_idx_to_check = &positions_by_rank[pos_pos.start];        \
+    const int8_t *const last_pos_idx = &positions_by_rank[pos_pos.end];        \
+                                                                               \
+    for (; pos_idx_to_check < last_pos_idx;                                    \
+         pos_idx_to_check += suit_positions_by_rank_step)
+#else
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
     const int8_t *pos_idx_to_check = &positions_by_rank[(                      \
         FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card)))];                   \
@@ -343,6 +353,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
          FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card);             \
          pos_idx_to_check < last_pos_idx;                                      \
          pos_idx_to_check += suit_positions_by_rank_step)
+#endif
 
 static inline fcs_game_limit_t calc_num_vacant_slots(
     const fc_solve_soft_thread_t *const soft_thread,
