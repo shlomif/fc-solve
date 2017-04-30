@@ -516,8 +516,6 @@ static inline fcs_dbm_record_t *cache_store__has_key(
     {
         return NULL;
     }
-#endif
-#ifndef FCS_DBM_CACHE_ONLY
     else if (fc_solve_dbm_store_does_key_exist(cache_store->store, key->s))
     {
         cache_insert(&(cache_store->cache), key, NULL, '\0');

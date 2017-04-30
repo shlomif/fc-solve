@@ -485,54 +485,48 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 fflush(out_fh);
 
 #ifdef FCS_DBM_CACHE_ONLY
+                fcs_fcc_move_t *move_ptr = item->moves_to_key;
+                if (move_ptr)
                 {
-                    fcs_fcc_move_t *move_ptr = item->moves_to_key;
-                    if (move_ptr)
+                    while (*(move_ptr))
                     {
-                        while (*(move_ptr))
-                        {
-                            fprintf(out_fh, "%.2X,", *(move_ptr));
-                            move_ptr++;
-                        }
+                        fprintf(out_fh, "%.2X,", *(move_ptr));
+                        move_ptr++;
                     }
                 }
 #else
-                {
-                    int trace_num;
-                    fcs_encoded_state_buffer_t *trace;
+                int trace_num;
+                fcs_encoded_state_buffer_t *trace;
 
-                    calc_trace(token, &trace, &trace_num);
+                calc_trace(token, &trace, &trace_num);
 
 /*
- * We stop at 1 because the deepest state does not contain
- * a move (as it is the ultimate state).
- * */
+* We stop at 1 because the deepest state does not contain
+* a move (as it is the ultimate state).
+* */
 #define PENULTIMATE_DEPTH 1
-                    for (int i = trace_num - 1; i >= PENULTIMATE_DEPTH; i--)
-                    {
-                        fprintf(out_fh, "%.2X,",
-                            get_move_from_parent_to_child(
-                                instance, delta, trace[i], trace[i - 1]));
-                    }
-#undef PENULTIMATE_DEPTH
-                    free(trace);
+                for (int i = trace_num - 1; i >= PENULTIMATE_DEPTH; i--)
+                {
+                    fprintf(
+                        out_fh, "%.2X,", get_move_from_parent_to_child(instance,
+                                             delta, trace[i], trace[i - 1]));
                 }
+#undef PENULTIMATE_DEPTH
+                free(trace);
 #endif
                 fprintf(out_fh, "\n");
                 fflush(out_fh);
 #ifdef DEBUG_OUT
-                {
-                    fcs_state_keyval_pair_t state;
-                    fcs_state_locs_struct_t locs;
-                    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+                fcs_state_keyval_pair_t state;
+                fcs_state_locs_struct_t locs;
+                DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-                    fc_solve_init_locs(&locs);
+                fc_solve_init_locs(&locs);
 
-                    fc_solve_delta_stater_decode_into_state(
-                        delta, item->key.s, &state, indirect_stacks_buffer);
+                fc_solve_delta_stater_decode_into_state(
+                    delta, item->key.s, &state, indirect_stacks_buffer);
 
-                    FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
-                }
+                FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 #endif
             }
         }
@@ -548,7 +542,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
     }
 
     TRACE("%s\n", "handle_and_destroy_instance_solution end");
-
     instance_destroy(instance);
 
     return ret;
