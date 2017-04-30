@@ -52,8 +52,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
 #endif
     )
 {
-#if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS) &&      \
-         defined(FCS_DISABLE_SIMPLE_SIMON)))
+#ifndef HARD_CODED_ALL
     var_AUTO(instance, fcs_st_instance(soft_thread));
     SET_GAME_PARAMS();
 #endif

@@ -93,11 +93,7 @@ static inline void fc_solve_initialize_befs_rater(
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
 #endif
-
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) ||                                   \
-     (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
-    SET_GAME_PARAMS();
-#endif
+    HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
     const fcs_bool_t bool_unlimited_sequence_move =
@@ -227,10 +223,7 @@ static inline pq_rating_t befs_rate_state(
     const int sequences_are_built_by =
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) ||                                   \
-     (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
-    SET_GAME_PARAMS();
-#endif
+    HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
     const fcs_bool_t unlimited_sequence_move_var =

@@ -270,6 +270,14 @@ extern "C" {
 #endif
 #endif
 
+#if (defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
+         defined(HARD_CODED_NUM_DECKS))
+#define HARD_CODED_ALL
+#define HARD__SET_GAME_PARAMS()
+#else
+#define HARD__SET_GAME_PARAMS() SET_GAME_PARAMS()
+#endif
+
 #ifdef __cplusplus
 }
 #endif

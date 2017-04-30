@@ -1312,8 +1312,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         return 1;
     }
 
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
-         defined(HARD_CODED_NUM_DECKS)))
+#ifndef HARD_CODED_ALL
     var_AUTO(instance, user_obj(user));
 #endif
 
@@ -1331,9 +1330,7 @@ DLLEXPORT void freecell_solver_user_current_state_stringify(void *api_instance,
     int canonized_order_output FC_SOLVE__PASS_T(int display_10_as_t))
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
-
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
-         defined(HARD_CODED_NUM_DECKS)))
+#ifndef HARD_CODED_ALL
     var_AUTO(instance, user_obj(user));
 #endif
 
@@ -2050,11 +2047,10 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(void *const api_instance,
 }
 #endif
 
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
-         defined(HARD_CODED_NUM_DECKS)))
-#define HARD_CODED_UNUSED
-#else
+#ifdef HARD_CODED_ALL
 #define HARD_CODED_UNUSED GCC_UNUSED
+#else
+#define HARD_CODED_UNUSED
 #endif
 
 #ifdef FCS_WITH_MOVES
@@ -2064,8 +2060,7 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
         const int parseable_output),
     const int canonized_order_output PASS_T(const int display_10_as_t))
 {
-#if (!(defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
-         defined(HARD_CODED_NUM_DECKS)))
+#ifndef HARD_CODED_ALL
     fc_solve_instance_t *const instance = active_obj(api_instance);
 #endif
 

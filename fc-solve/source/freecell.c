@@ -371,10 +371,7 @@ static inline fcs_game_limit_t calc_num_vacant_slots(
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
     MOVE_FUNCS__define_common();
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) ||                                   \
-     (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
-    SET_GAME_PARAMS();
-#endif
+    HARD__SET_GAME_PARAMS();
 
     const fcs_game_limit_t num_vacant_slots =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
@@ -696,10 +693,7 @@ static inline void col_seqs_iter__advance(col_seqs_iter_t *const iter)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 {
     MOVE_FUNCS__define_common();
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) ||                                   \
-     (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
-    SET_GAME_PARAMS();
-#endif
+    HARD__SET_GAME_PARAMS();
     const_SLOT(num_vacant_freecells, soft_thread);
     const_SLOT(num_vacant_stacks, soft_thread);
     const fcs_game_limit_t num_virtual_vacant_stacks =
@@ -961,10 +955,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 {
     MOVE_FUNCS__define_common();
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) ||                                   \
-     (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_DECKS)))
-    SET_GAME_PARAMS();
-#endif
+    HARD__SET_GAME_PARAMS();
     const fcs_game_limit_t num_vacant_freecells =
         soft_thread->num_vacant_freecells;
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
