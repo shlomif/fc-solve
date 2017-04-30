@@ -12,6 +12,7 @@ my $NUM_SUITS    = 4;
 my @SUITS        = ( 0 .. $NUM_SUITS - 1 );
 my @RANKS        = ( 1 .. $MAX_RANK );
 my @PARENT_RANKS = ( 2 .. $MAX_RANK );
+my $MAX_NUM_DECKS = 1;
 
 sub make_card
 {
@@ -30,6 +31,7 @@ my $NUM_PARENT_CARDS = make_card( $MAX_RANK, $SUITS[-1] ) + 1;
 my %lookup;
 my @state_pos = ( map { [ (0) x $NUM_SUITS ] } 0 .. $MAX_RANK );
 my @card_pos;
+my @positions_by_rank__lookup;
 
 foreach my $parent_suit (@SUITS)
 {
@@ -39,6 +41,7 @@ foreach my $parent_suit (@SUITS)
         $state_pos[$parent_rank][$parent_suit] = $card_pos[$parent] =
             $parent_rank - 1 + $parent_suit * $MAX_RANK;
 
+        $positions_by_rank__lookup[$parent] = ($MAX_NUM_DECKS << 3) * ($parent_rank - 1) + ($parent_suit << 1);
         if ( $parent_rank > 1 )
         {
             my $start = ( ( $parent_suit ^ 0x1 ) & ( ~0x2 ) );
@@ -102,4 +105,10 @@ emit(
     'debondt__card_pos',
     [ q/<stddef.h>/, ],
     [ map { $_ || 0 } @card_pos ],
+);
+emit(
+    qq#const size_t positions_by_rank__lookup[@{[scalar @positions_by_rank__lookup]}]#,
+    'pos_by_rank__lookup',
+    [ q/<stddef.h>/, ],
+    [ map { $_ || 0 } @positions_by_rank__lookup ],
 );
