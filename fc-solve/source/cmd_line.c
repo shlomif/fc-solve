@@ -511,19 +511,14 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_BEFS_WEIGHTS: /* STRINGS=-asw|--a-star-weights; */
         {
             PROCESS_OPT_ARG();
+            double befs_weights[FCS_NUM_BEFS_WEIGHTS];
+            const char *const s = *arg;
 
+            fc_solve_set_weights(s, strchr(s, '\0'), befs_weights);
+            for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
             {
-                double befs_weights[FCS_NUM_BEFS_WEIGHTS];
-
-                const char *const s = *arg;
-
-                fc_solve_set_weights(s, strchr(s, '\0'), befs_weights);
-
-                for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
-                {
-                    freecell_solver_user_set_a_star_weight(
-                        instance, i, befs_weights[i]);
-                }
+                freecell_solver_user_set_a_star_weight(
+                    instance, i, befs_weights[i]);
             }
         }
         break;
