@@ -250,22 +250,10 @@ typedef struct
     fcs_by_depth_tests_order_t *by_depth_tests;
 } fcs_by_depth_tests_order_array_t;
 
-#define STRUCT_CLEAR_FLAG(instance, flag)                                      \
-    {                                                                          \
-        (instance)->flag = FALSE;                                              \
-    }
-
-#define STRUCT_TURN_ON_FLAG(instance, flag)                                    \
-    {                                                                          \
-        (instance)->flag = TRUE;                                               \
-    }
-
+#define STRUCT_CLEAR_FLAG(instance, flag) (instance)->flag = FALSE
+#define STRUCT_TURN_ON_FLAG(instance, flag) (instance)->flag = TRUE
 #define STRUCT_QUERY_FLAG(instance, flag) ((instance)->flag)
-
-#define STRUCT_SET_FLAG_TO(instance, flag, value)                              \
-    {                                                                          \
-        (instance)->flag = (value);                                            \
-    }
+#define STRUCT_SET_FLAG_TO(instance, flag, value) (instance)->flag = (value)
 
 #ifdef FCS_RCS_STATES
 struct fcs_cache_key_info_struct
