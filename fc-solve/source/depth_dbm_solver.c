@@ -117,7 +117,6 @@ static void *instance_run_solver_thread(void *const void_arg)
     TRACE("%s\n", "instance_run_solver_thread start");
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
-    int queue_num_extracted_and_processed = 0;
     fcs_dbm_record_t *tokens[max_batch_size];
     fcs_derived_state_t *derived_lists[max_batch_size];
     while (TRUE)
@@ -156,9 +155,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                     }
                 }
 
-                queue_num_extracted_and_processed =
-                    instance->common.queue_num_extracted_and_processed;
-                should_break = (!queue_num_extracted_and_processed);
+                should_break =
+                    !instance->common.queue_num_extracted_and_processed;
 
                 prev_size = batch_size;
                 if ((!should_break) && (batch_size == 0))

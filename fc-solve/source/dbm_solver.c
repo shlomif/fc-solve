@@ -130,7 +130,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fc_solve_delta_stater_t *const delta_stater = &(thread->delta_stater);
 
     fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
-    int queue_num_extracted_and_processed = 0;
+    long queue_num_extracted_and_processed = 0;
 
     fcs_compact_allocator_t derived_list_allocator;
     fc_solve_compact_allocator_init(
@@ -152,7 +152,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         if (prev_item)
         {
-            instance->common.queue_num_extracted_and_processed--;
+            --instance->common.queue_num_extracted_and_processed;
         }
 
         if (instance->common.should_terminate == DONT_TERMINATE)
