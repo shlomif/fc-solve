@@ -157,7 +157,7 @@ typedef uint8_t fcs_locs_t;
     (fcs_card_suit(fcs_freecell_card((state), (f))))
 
 #define fcs_increment_foundation(state, foundation_idx)                        \
-    ((fcs_foundation_value((state), (foundation_idx)))++)
+    (++(fcs_foundation_value((state), (foundation_idx))))
 
 #define fcs_set_foundation(state, foundation_idx, value)                       \
     ((fcs_foundation_value((state), (foundation_idx))) =                       \

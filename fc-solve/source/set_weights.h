@@ -22,7 +22,7 @@ extern "C" {
 static inline void fc_solve_set_weights(freecell_solver_str_t start_num,
     const freecell_solver_str_t string_end, double *const befs_weights)
 {
-    for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
+    for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; ++i)
     {
         while (*start_num == ',')
         {
