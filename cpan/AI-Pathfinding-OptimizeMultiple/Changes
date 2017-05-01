@@ -1,3 +1,8 @@
+v0.0.15     2017-05-01
+    - Skip adding ~$ files to the MANIFEST.
+        - See https://rt.cpan.org/Ticket/Display.html?id=121485 .
+        - Thanks to Toby Inkster.
+
 v0.0.14     2017-05-01
     - Convert dist.ini to use the @SHLOMIF bundle.
     - Fix a bug where a pdl was passed instead of an int.
