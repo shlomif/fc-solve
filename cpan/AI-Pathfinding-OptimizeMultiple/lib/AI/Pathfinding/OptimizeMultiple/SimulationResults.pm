@@ -7,8 +7,6 @@ use 5.012;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.13';
-
 has status => (isa => 'Str', is => 'ro', required => 1,);
 has total_iters => (isa => 'Int', is => 'ro', required => 1,);
 has scan_runs => (isa => 'ArrayRef[AI::Pathfinding::OptimizeMultiple::ScanRun]', is => 'ro', required => 1,);

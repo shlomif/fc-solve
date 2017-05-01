@@ -9,8 +9,6 @@ use MooX qw/late/;
 
 use PDL ();
 
-our $VERSION = '0.0.13';
-
 use vars (qw(@fields));
 
 has _main => (is => 'rw');

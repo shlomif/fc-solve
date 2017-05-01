@@ -17,8 +17,6 @@ use MooX qw/late/;
 use PDL;
 use Scalar::Util qw/ blessed /;
 
-our $VERSION = '0.0.13';
-
 has chosen_scans => (isa => 'ArrayRef', is => 'rw');
 has _iter_idx => (isa => 'Int', is => 'rw', default => sub { 0; },);
 has _num_boards => (isa => 'Int', is => 'ro', init_arg => 'num_boards',);

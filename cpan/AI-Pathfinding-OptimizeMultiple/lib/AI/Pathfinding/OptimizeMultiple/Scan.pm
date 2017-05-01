@@ -7,8 +7,6 @@ use 5.012;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.13';
-
 has cmd_line => (isa => 'Str', is => 'ro', required => 1,);
 has id => (isa => 'Str', is => 'ro', required => 1,);
 has used => (isa => 'Bool', is => 'rw', default => sub { 0; });

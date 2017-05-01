@@ -1,5 +1,8 @@
+v0.0.14     2017-05-01
+    - Convert dist.ini to use the @SHLOMIF bundle.
+
 v0.0.13     2016-04-20
-    - Imrove the exception handling due to a non-Exception::Class error:
+    - Improve the exception handling due to a non-Exception::Class error:
         - http://www.cpantesters.org/cpan/report/f631b3e2-03b5-11e6-b1a3-5205ef11d1c8
         - Thanks also to the example code in
         https://metacpan.org/pod/Exception::Class .

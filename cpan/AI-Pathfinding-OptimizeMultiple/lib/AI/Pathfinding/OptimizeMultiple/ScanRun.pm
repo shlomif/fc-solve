@@ -7,8 +7,6 @@ use 5.012;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.13';
-
 has iters => (isa => 'Int', is => 'rw', required => 1);
 has scan_idx => (isa => 'Int', is => 'ro', required => 1);
 
