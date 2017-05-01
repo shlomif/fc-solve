@@ -26,17 +26,15 @@ static int fc_solve_get_column_orig_num_cards(
 #ifndef FCS_FREECELL_ONLY
     const_SLOT(sequences_are_built_by, self);
 #endif
-    int num_cards;
-    for (num_cards = fcs_col_len(col); num_cards >= 2; num_cards--)
+    for (int num_cards = fcs_col_len(col); num_cards >= 2; --num_cards)
     {
         if (!fcs_is_parent_card(fcs_col_get_card(col, num_cards - 1),
                 fcs_col_get_card(col, num_cards - 2)))
         {
-            break;
+            return num_cards;
         }
     }
-
-    return ((num_cards >= 2) ? num_cards : 0);
+    return 0;
 }
 
 static void fc_solve_delta_stater_init(
