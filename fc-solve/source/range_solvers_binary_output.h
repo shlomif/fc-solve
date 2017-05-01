@@ -108,8 +108,7 @@ static inline void bin_init(binary_output_t *const bin,
         FILE *const in = fopen(bin->filename, "rb");
         if (!in)
         {
-            bin->fh = fopen(bin->filename, "wb");
-            if (!bin->fh)
+            if (!(bin->fh = fopen(bin->filename, "wb")))
             {
                 fc_solve_err(
                     "Could not open \"%s\" for writing!\n", bin->filename);
@@ -143,8 +142,7 @@ static inline void bin_init(binary_output_t *const bin,
                     "Output file was already finished being generated.\n");
             }
             fclose(in);
-            bin->fh = fopen(bin->filename, "ab");
-            if (!bin->fh)
+            if (!(bin->fh = fopen(bin->filename, "ab")))
             {
                 fc_solve_err(
                     "Could not open \"%s\" for writing!\n", bin->filename);
