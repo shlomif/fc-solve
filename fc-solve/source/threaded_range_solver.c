@@ -112,12 +112,11 @@ int main(int argc, char *argv[])
     }
 
     int num_workers = 3;
-    for (; context_arg < argc; context_arg++)
+    for (; context_arg < argc; ++context_arg)
     {
         if (!strcmp(argv[context_arg], "--num-workers"))
         {
-            context_arg++;
-            if (context_arg == argc)
+            if (++context_arg == argc)
             {
                 help_err("--num-workers came without an argument!\n");
             }
@@ -125,8 +124,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[context_arg], "--worker-step"))
         {
-            context_arg++;
-            if (context_arg == argc)
+            if (++context_arg == argc)
             {
                 help_err("--worker-step came without an argument!\n");
             }
@@ -134,8 +132,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[context_arg], "--iters-update-on"))
         {
-            context_arg++;
-            if (context_arg == argc)
+            if (++context_arg == argc)
             {
                 help_err("--iters-update-on came without an argument!\n");
             }
