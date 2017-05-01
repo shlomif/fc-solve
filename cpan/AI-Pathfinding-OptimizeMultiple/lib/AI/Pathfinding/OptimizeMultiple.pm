@@ -250,8 +250,8 @@ sub _get_iter_state_params_speed
     return
     {
         quota => $iters_quota,
-        num_solved => $num_solved_in_iter,
-        scan_idx => $selected_scan_idx,
+        num_solved => $num_solved_in_iter->at(0),
+        scan_idx => $selected_scan_idx->at(0),
     };
 }
 
