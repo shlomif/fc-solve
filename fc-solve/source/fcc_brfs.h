@@ -233,12 +233,9 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
 
     new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
         &(queue_allocator), sizeof(*new_item));
-
-    new_item->key = start_state;
-    new_item->next = NULL;
-    new_item->moves_seq.count = 0;
-    new_item->moves_seq.moves_list = NULL;
-
+    *new_item = (typeof(*new_item)){.key = start_state,
+        .next = NULL,
+        .moves_seq = {.count = 0, .moves_list = NULL}};
     queue_head = queue_tail = new_item;
 
     derived_list_recycle_bin = NULL;
