@@ -191,6 +191,17 @@ static inline char *calc_errstr_s(const char *const format, ...)
 #define ASSIGN_ERR_STR(error_string, format, ...)
 #define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)
 #endif
+#define PROCESS_OPT_ARG()                                                      \
+    {                                                                          \
+        if ((++arg) == arg_argc)                                               \
+        {                                                                      \
+            *last_arg = arg - 1 - &(argv[0]);                                  \
+            return FCS_CMD_LINE_PARAM_WITH_NO_ARG;                             \
+        }                                                                      \
+    }
+#define RET_ERROR_IN_ARG()                                                     \
+    *last_arg = arg - &(argv[0]);                                              \
+    return FCS_CMD_LINE_ERROR_IN_ARG
 #define RET_ERR_STR(...)                                                       \
     ASSIGN_ERR_STR(__VA_ARGS__);                                               \
     RET_ERROR_IN_ARG()
@@ -290,19 +301,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             *last_arg = arg - &(argv[0]);
             return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
 
-#define PROCESS_OPT_ARG()                                                      \
-    {                                                                          \
-        if ((++arg) == arg_argc)                                               \
-        {                                                                      \
-            *last_arg = arg - 1 - &(argv[0]);                                  \
-            return FCS_CMD_LINE_PARAM_WITH_NO_ARG;                             \
-        }                                                                      \
-    }
-
-#define RET_ERROR_IN_ARG()                                                     \
-    *last_arg = arg - &(argv[0]);                                              \
-    return FCS_CMD_LINE_ERROR_IN_ARG;
-
         case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
         {
             PROCESS_OPT_ARG();
@@ -334,8 +332,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_FREECELLS
-            if (freecell_solver_user_set_num_freecells(
-                    instance, atoi((*arg))) != 0)
+            if (freecell_solver_user_set_num_freecells(instance, atoi(*arg)) !=
+                0)
             {
                 RET_ERR_STR(error_string,
                     "Error! The freecells\' number "
@@ -351,8 +349,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_STACKS
-            if (freecell_solver_user_set_num_stacks(instance, atoi((*arg))) !=
-                0)
+            if (freecell_solver_user_set_num_stacks(instance, atoi(*arg)) != 0)
             {
                 RET_ERR_STR(error_string,
                     "Error! The stacks\' number "
@@ -368,7 +365,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_DECKS
-            if (freecell_solver_user_set_num_decks(instance, atoi((*arg))) != 0)
+            if (freecell_solver_user_set_num_decks(instance, atoi(*arg)) != 0)
             {
                 RET_ERR_STR(error_string,
                     "Error! The decks\' number "
@@ -527,7 +524,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 
-            freecell_solver_user_set_random_seed(instance, atoi((*arg)));
+            freecell_solver_user_set_random_seed(instance, atoi(*arg));
         }
         break;
 
@@ -585,7 +582,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         {
             PROCESS_OPT_ARG();
 
-            freecell_solver_user_set_soft_thread_step(instance, atoi((*arg)));
+            freecell_solver_user_set_soft_thread_step(instance, atoi(*arg));
         }
         break;
 
@@ -708,7 +705,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 if (*s == ',')
                 {
-                    num_file_args_to_skip = atoi((*arg));
+                    num_file_args_to_skip = atoi(*arg);
                     s++;
                 }
 
@@ -825,7 +822,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 if (*s == ',')
                 {
-                    min_depth = atoi((*arg));
+                    min_depth = atoi(*arg);
                     s++;
                 }
                 else

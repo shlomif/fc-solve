@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
             {
                 help_err("--worker-step came without an argument!\n");
             }
-            board_num_step = atoi(argv[arg]);
+            board_num_step = atoll(argv[arg]);
         }
         else
         {
