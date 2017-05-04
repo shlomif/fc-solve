@@ -32,7 +32,9 @@ static void my_iter_handler(void *const user_instance,
         {
             void *const pruner = freecell_solver_user_alloc();
 
+#ifndef HARD_CODED_NUM_FREECELLS
             freecell_solver_user_set_num_freecells(pruner, 2);
+#endif
 #ifdef FCS_WITH_ERROR_STRS
             char *error_string;
 #endif

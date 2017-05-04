@@ -1558,6 +1558,7 @@ static void apply_game_params_for_all_instances(fcs_user_t *const user)
 
 #endif
 
+#if !(defined(FCS_BREAK_BACKWARD_COMPAT_1) && defined(FCS_FREECELL_ONLY))
 #ifndef HARD_CODED_NUM_FREECELLS
 
 int DLLEXPORT freecell_solver_user_set_num_freecells(
@@ -1652,6 +1653,7 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
     return 0;
 }
 
+#endif
 #endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -1782,6 +1784,7 @@ void DLLEXPORT freecell_solver_user_limit_depth(
 }
 #endif
 
+#if !(defined(FCS_BREAK_BACKWARD_COMPAT_1) && defined(FCS_FREECELL_ONLY))
 int DLLEXPORT freecell_solver_user_get_max_num_freecells(void)
 {
     return MAX_NUM_FREECELLS;
@@ -1796,6 +1799,7 @@ int DLLEXPORT freecell_solver_user_get_max_num_decks(void)
 {
     return MAX_NUM_DECKS;
 }
+#endif
 
 #ifdef FCS_WITH_ERROR_STRS
 void freecell_solver_user_get_invalid_state_error_into_string(
