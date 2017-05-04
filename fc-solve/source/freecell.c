@@ -1542,24 +1542,20 @@ static inline int_fast32_t calc_foundation_to_put_card_on(
                 return ret_val;
             }
 #endif
-
-            int_fast32_t other_deck_idx;
-            for (other_deck_idx = 0; other_deck_idx < (INSTANCE_DECKS_NUM << 2);
-                 other_deck_idx++)
+            const size_t lim = (INSTANCE_DECKS_NUM << 2);
+            for (size_t f = 0; f < lim; ++f)
             {
-                if (fcs_foundation_value(*ptr_state, other_deck_idx) <
-                    rank_min_2 - (FCS__SEQS_ARE_BUILT_BY_RANK()
-                                         ? 0
-                                         : ((other_deck_idx & 0x1) ==
-                                               (fcs_card_suit(card) & 0x1))))
+                if (fcs_foundation_value(*ptr_state, f) <
+                    rank_min_2 -
+                        (FCS__SEQS_ARE_BUILT_BY_RANK()
+                                ? 0
+                                : ((f & 0x1) == (fcs_card_suit(card) & 0x1))))
                 {
-                    break;
+                    goto next_iter;
                 }
             }
-            if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
-            {
-                return ret_val;
-            }
+            return ret_val;
+        next_iter:;
         }
     }
 
