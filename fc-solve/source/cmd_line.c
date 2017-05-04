@@ -101,7 +101,7 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
         (const char *)global_presetrc, user_preset_dir,
     };
     fcs_bool_t read_next_preset = FALSE;
-    for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); path_idx++)
+    for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); ++path_idx)
     {
         const char *const path = presetrc_pathes[path_idx];
         if (path == NULL)
