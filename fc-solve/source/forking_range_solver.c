@@ -327,10 +327,9 @@ int main(int argc, char *argv[])
 #endif
     }
 
-    int status;
     for (size_t idx = 0; idx < num_workers; ++idx)
     {
-        wait(&status);
+        wait(NULL);
     }
 
     fc_solve_print_finished(total_num_iters);

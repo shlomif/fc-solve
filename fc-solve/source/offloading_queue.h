@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * offloading_queue.h - header file for the offloading-to-hard-disk
- * queue.
- */
+// offloading_queue.h - header file for the offloading-to-hard-disk queue.
 #pragma once
 
 #ifdef __cplusplus
@@ -137,7 +134,6 @@ static inline void fcs_offloading_queue__insert(
     return;
 }
 
-/* Implement the standard in-memory queue as a linked list. */
 #else
 
 const size_t NUM_ITEMS_PER_PAGE = (128 * 1024);
