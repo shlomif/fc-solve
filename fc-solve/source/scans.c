@@ -354,12 +354,12 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         for (size_t group_idx = 0;
              group_idx < soft_thread->by_depth_tests_order.by_depth_tests[0]
                              .tests_order.num_groups;
-             group_idx++)
+             ++group_idx)
         {
             add_to_move_funcs_list(&tests_list, &num,
                 soft_thread->by_depth_tests_order.by_depth_tests[0]
                     .tests_order.groups[group_idx]
-                    .order_group_tests,
+                    .order_group_moves,
                 soft_thread->by_depth_tests_order.by_depth_tests[0]
                     .tests_order.groups[group_idx]
                     .num);

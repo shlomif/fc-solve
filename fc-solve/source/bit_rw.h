@@ -71,7 +71,7 @@ static inline fc_solve_bit_data_t fc_solve_bit_reader_read(
 
         if (reader->bit_in_char_idx == NUM_BITS_IN_BYTES)
         {
-            reader->current++;
+            ++reader->current;
             reader->bit_in_char_idx = 0;
         }
     }

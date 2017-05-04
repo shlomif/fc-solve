@@ -27,8 +27,8 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
     fc_solve_free_tests_order(tests_order);
     tests_order->groups = SMALLOC(tests_order->groups, MOVES_GROW_BY);
     tests_order->groups[tests_order->num_groups].num = 0;
-    tests_order->groups[tests_order->num_groups].order_group_tests =
-        SMALLOC(tests_order->groups[tests_order->num_groups].order_group_tests,
+    tests_order->groups[tests_order->num_groups].order_group_moves =
+        SMALLOC(tests_order->groups[tests_order->num_groups].order_group_moves,
             MOVES_GROW_BY);
     tests_order->groups[tests_order->num_groups].shuffling_type =
         FCS_NO_SHUFFLING;
@@ -59,9 +59,9 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
                 }
 
                 tests_order->groups[tests_order->num_groups].num = 0;
-                tests_order->groups[tests_order->num_groups].order_group_tests =
+                tests_order->groups[tests_order->num_groups].order_group_moves =
                     SMALLOC(tests_order->groups[tests_order->num_groups]
-                                .order_group_tests,
+                                .order_group_moves,
                         MOVES_GROW_BY);
 
                 tests_order->num_groups++;
@@ -149,9 +149,9 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
                         tests_order->num_groups + MOVES_GROW_BY);
                 }
                 tests_order->groups[tests_order->num_groups].num = 0;
-                tests_order->groups[tests_order->num_groups].order_group_tests =
+                tests_order->groups[tests_order->num_groups].order_group_moves =
                     SMALLOC(tests_order->groups[tests_order->num_groups]
-                                .order_group_tests,
+                                .order_group_moves,
                         MOVES_GROW_BY);
 
                 tests_order->num_groups++;
@@ -164,15 +164,15 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
         if (!(tests_order->groups[tests_order->num_groups - 1].num &
                 (MOVES_GROW_BY - 1)))
         {
-            tests_order->groups[tests_order->num_groups - 1].order_group_tests =
+            tests_order->groups[tests_order->num_groups - 1].order_group_moves =
                 SREALLOC(tests_order->groups[tests_order->num_groups - 1]
-                             .order_group_tests,
+                             .order_group_moves,
                     tests_order->groups[tests_order->num_groups - 1].num +
                         MOVES_GROW_BY);
         }
 
         const char test_name[2] = {string[i], '\0'};
-        tests_order->groups[tests_order->num_groups - 1].order_group_tests
+        tests_order->groups[tests_order->num_groups - 1].order_group_moves
             [tests_order->groups[tests_order->num_groups - 1].num++] =
             fc_solve_string_to_test_num(test_name);
         is_start_group = FALSE;
@@ -186,8 +186,8 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
     if (!tests_order->groups[tests_order->num_groups - 1].num)
     {
         tests_order->num_groups--;
-        free(tests_order->groups[tests_order->num_groups].order_group_tests);
-        tests_order->groups[tests_order->num_groups].order_group_tests = NULL;
+        free(tests_order->groups[tests_order->num_groups].order_group_moves);
+        tests_order->groups[tests_order->num_groups].order_group_moves = NULL;
     }
 
 #ifdef FCS_WITH_ERROR_STRS

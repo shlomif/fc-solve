@@ -107,7 +107,7 @@ static inline void accumulate_tests_by_ptr(
         group_ptr + st_tests_order->num_groups;
     for (; group_ptr < groups_end; group_ptr++)
     {
-        const size_t *test_ptr = group_ptr->order_group_tests;
+        const size_t *test_ptr = group_ptr->order_group_moves;
         const size_t *const tests_end = test_ptr + group_ptr->num;
         for (; test_ptr < tests_end; test_ptr++)
         {

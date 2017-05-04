@@ -183,12 +183,12 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                     for (int group_idx = 0;
                          group_idx <
                          by_depth_tests_order[depth_idx].tests_order.num_groups;
-                         group_idx++)
+                         ++group_idx)
                     {
                         const size_t *const move_funcs_idxs =
                             by_depth_tests_order[depth_idx]
                                 .tests_order.groups[group_idx]
-                                .order_group_tests;
+                                .order_group_moves;
                         const_AUTO(
                             tests_order_num, by_depth_tests_order[depth_idx]
                                                  .tests_order.groups[group_idx]

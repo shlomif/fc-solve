@@ -292,7 +292,7 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
             };
             instance->opt_tests_order.groups[0] =
                 (typeof(instance->opt_tests_order.groups[0])){
-                    .order_group_tests = move_funcs,
+                    .order_group_moves = move_funcs,
                     .num = num_move_funcs,
                     .shuffling_type = FCS_NO_SHUFFLING,
                 };
@@ -961,12 +961,12 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
                 .lists = SMALLOC(moves_list_of_lists->lists, tests_order_num),
             };
 
-            for (size_t group_idx = 0; group_idx < tests_order_num; group_idx++)
+            for (size_t group_idx = 0; group_idx < tests_order_num; ++group_idx)
             {
                 size_t num = 0;
                 fc_solve_solve_for_state_move_func_t *tests_list = NULL;
                 add_to_move_funcs_list(&tests_list, &num,
-                    tests_order_groups[group_idx].order_group_tests,
+                    tests_order_groups[group_idx].order_group_moves,
                     tests_order_groups[group_idx].num);
                 /* TODO : convert to C99 struct initializers. */
                 const_AUTO(tests_list_struct_ptr,
