@@ -2190,11 +2190,13 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 #endif
 }
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
     void *const api_instance)
 {
     return active_obj(api_instance)->next_soft_thread_id;
 }
+#endif
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 void DLLEXPORT freecell_solver_user_set_calc_real_depth(
