@@ -584,21 +584,16 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     /* Perform Horne's Prune on all the states,
      * or just set their num irreversible moves counts.
      * */
+    for (var_AUTO(derived_iter, *derived_list); derived_iter;
+         derived_iter = derived_iter->next)
     {
-        fcs_derived_state_t *derived_iter;
-
-        for (derived_iter = (*derived_list); derived_iter;)
-        {
-            derived_iter->num_non_reversible_moves_including_prune =
-                (derived_iter->core_irreversible_moves_count +
-                    (perform_horne_prune
-                            ? horne_prune(local_variant, &(derived_iter->state),
-                                  &(derived_iter
-                                          ->which_irreversible_moves_bitmask),
-                                  NULL, NULL)
-                            : 0));
-            derived_iter = derived_iter->next;
-        }
+        derived_iter->num_non_reversible_moves_including_prune =
+            (derived_iter->core_irreversible_moves_count +
+                (perform_horne_prune
+                        ? horne_prune(local_variant, &(derived_iter->state),
+                              &(derived_iter->which_irreversible_moves_bitmask),
+                              NULL, NULL)
+                        : 0));
     }
 
     return FALSE;

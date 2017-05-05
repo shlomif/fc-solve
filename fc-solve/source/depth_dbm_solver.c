@@ -292,7 +292,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
                 instance->colls_by_depth[instance->curr_depth]
                     .cache_store.store),
             instance->curr_depth);
-        instance->curr_depth++;
+        ++instance->curr_depth;
     }
 
     dbm__free_threads(instance, num_threads, threads, free_thread);

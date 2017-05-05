@@ -544,9 +544,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
             for (pos = 1; pos < orig_col_len; pos++)
             {
-                fcs_card_t child_card;
-
-                child_card = fcs_col_get_card(orig_col, pos);
+                const fcs_card_t child_card = fcs_col_get_card(orig_col, pos);
 
                 if ((!IS_IN_FOUNDATIONS(child_card)) &&
                     (CARD_STATE(child_card) == calc_child_card_option(
