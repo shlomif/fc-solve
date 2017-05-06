@@ -63,9 +63,51 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     {
         fputs("-=-=-=-=-=-=-=-=-=-=-=-\n\n", output_fh);
 #ifdef FCS_WITH_MOVES
+        fcs_move_t move;
+        char state_as_string[1000];
+
+        if (display_context.display_states)
         {
-            fcs_move_t move;
-            char state_as_string[1000];
+            freecell_solver_user_current_state_stringify(instance,
+                state_as_string FC_SOLVE__PASS_PARSABLE(
+                    display_context.parseable_output),
+                display_context.canonized_order_output FC_SOLVE__PASS_T(
+                    display_context.display_10_as_t));
+
+            fputs(state_as_string, output_fh);
+            fputs("\n\n====================\n\n", output_fh);
+        }
+
+        int move_num = 0;
+        while (freecell_solver_user_get_next_move(instance, &move) == 0)
+        {
+            if (display_context.display_moves)
+            {
+                if (display_context.display_states &&
+                    display_context.standard_notation)
+                {
+                    fputs("Move: ", output_fh);
+                }
+
+                freecell_solver_user_stringify_move_w_state(instance,
+                    state_as_string, move, display_context.standard_notation);
+                fprintf(output_fh,
+                    (display_context.standard_notation ? "%s " : "%s\n"),
+                    state_as_string);
+                move_num++;
+                if (display_context.standard_notation)
+                {
+                    if ((move_num % 10 == 0) || display_context.display_states)
+                    {
+                        putc('\n', output_fh);
+                    }
+                }
+                if (display_context.display_states)
+                {
+                    putc('\n', output_fh);
+                }
+                fflush(output_fh);
+            }
 
             if (display_context.display_states)
             {
@@ -75,66 +117,20 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
                     display_context.canonized_order_output FC_SOLVE__PASS_T(
                         display_context.display_10_as_t));
 
-                fputs(state_as_string, output_fh);
-                fputs("\n\n====================\n\n", output_fh);
+                fprintf(output_fh, "%s\n", state_as_string);
             }
 
-            int move_num = 0;
-            while (freecell_solver_user_get_next_move(instance, &move) == 0)
+            if (display_context.display_states ||
+                (!display_context.standard_notation))
             {
-                if (display_context.display_moves)
-                {
-                    if (display_context.display_states &&
-                        display_context.standard_notation)
-                    {
-                        fputs("Move: ", output_fh);
-                    }
-
-                    freecell_solver_user_stringify_move_w_state(instance,
-                        state_as_string, move,
-                        display_context.standard_notation);
-                    fprintf(output_fh,
-                        (display_context.standard_notation ? "%s " : "%s\n"),
-                        state_as_string);
-                    move_num++;
-                    if (display_context.standard_notation)
-                    {
-                        if ((move_num % 10 == 0) ||
-                            display_context.display_states)
-                        {
-                            putc('\n', output_fh);
-                        }
-                    }
-                    if (display_context.display_states)
-                    {
-                        putc('\n', output_fh);
-                    }
-                    fflush(output_fh);
-                }
-
-                if (display_context.display_states)
-                {
-                    freecell_solver_user_current_state_stringify(instance,
-                        state_as_string FC_SOLVE__PASS_PARSABLE(
-                            display_context.parseable_output),
-                        display_context.canonized_order_output FC_SOLVE__PASS_T(
-                            display_context.display_10_as_t));
-
-                    fprintf(output_fh, "%s\n", state_as_string);
-                }
-
-                if (display_context.display_states ||
-                    (!display_context.standard_notation))
-                {
-                    fputs("\n====================\n\n", output_fh);
-                }
+                fputs("\n====================\n\n", output_fh);
             }
+        }
 
-            if (display_context.standard_notation &&
-                (!display_context.display_states))
-            {
-                fputs("\n\n", output_fh);
-            }
+        if (display_context.standard_notation &&
+            (!display_context.display_states))
+        {
+            fputs("\n\n", output_fh);
         }
 #endif
 

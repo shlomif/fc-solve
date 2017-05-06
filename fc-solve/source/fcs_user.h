@@ -112,20 +112,19 @@ DLLEXPORT extern int freecell_solver_user_set_game(void *user_instance,
 #endif
 
 DLLEXPORT extern void freecell_solver_user_set_solution_optimization(
-    void *const user_instance, const int optimize);
+    void *user_instance, int optimize);
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern char *freecell_solver_user_move_to_string(
     fcs_move_t move, int standard_notation);
 
 DLLEXPORT extern char *freecell_solver_user_move_to_string_w_state(
-    void *const user_instance, const fcs_move_t move,
-    const int standard_notation);
+    void *user_instance, fcs_move_t move, int standard_notation);
 #endif
 
 DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
-    void *const user_instance, char *const output_string, const fcs_move_t move,
-    const int standard_notation);
+    void *user_instance, char *output_string, fcs_move_t move,
+    int standard_notation);
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern void freecell_solver_user_limit_depth(
