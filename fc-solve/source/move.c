@@ -47,42 +47,33 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
         fcs_empty_freecell(*state_key, fcs_int_move_get_src_freecell(move));
         break;
     case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
-    {
         card =
             fcs_freecell_card(*state_key, fcs_int_move_get_src_freecell(move));
         fcs_put_card_in_freecell(
             *state_key, fcs_int_move_get_dest_freecell(move), card);
         fcs_empty_freecell(*state_key, fcs_int_move_get_src_freecell(move));
-    }
-    break;
+        break;
 
     case FCS_MOVE_TYPE_STACK_TO_FREECELL:
-    {
         col = fcs_state_get_col(*state_key, fcs_int_move_get_src_stack(move));
         fcs_col_pop_card(col, card);
         fcs_put_card_in_freecell(
             *state_key, fcs_int_move_get_dest_freecell(move), card);
-    }
-    break;
+        break;
 
     case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
-    {
         col = fcs_state_get_col(*state_key, fcs_int_move_get_src_stack(move));
         fcs_col_pop_top(col);
         fcs_increment_foundation(*state_key, fcs_int_move_get_foundation(move));
-    }
-    break;
+        break;
 
     case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
-    {
         fcs_empty_freecell(*state_key, fcs_int_move_get_src_freecell(move));
         fcs_increment_foundation(*state_key, fcs_int_move_get_foundation(move));
-    }
-    break;
+        break;
 
 #ifndef FCS_FREECELL_ONLY
     case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
-    {
         col = fcs_state_get_col(*state_key, fcs_int_move_get_src_stack(move));
         for (int i = 0; i < 13; i++)
         {
@@ -90,12 +81,10 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
             fcs_increment_foundation(
                 *state_key, fcs_int_move_get_foundation(move));
         }
-    }
-    break;
+        break;
 #endif
 
     case FCS_MOVE_TYPE_CANONIZE:
-    {
         if (locs)
         {
             fc_solve_canonize_state_with_locs(state_key,
@@ -106,8 +95,7 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
             fc_solve_canonize_state(state_key PASS_FREECELLS(freecells_num)
                     PASS_STACKS(stacks_num));
         }
-    }
-    break;
+        break;
     }
 #undef state_key
 }

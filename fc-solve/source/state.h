@@ -712,11 +712,11 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
-            for (int c = 0; c < FREECELLS_NUM__VAL; c++)
+            for (size_t c = 0; c < FREECELLS_NUM__VAL; ++c)
             {
                 fcs_empty_freecell(out, c);
             }
-            for (int c = 0; c < FREECELLS_NUM__VAL; c++)
+            for (size_t c = 0; c < FREECELLS_NUM__VAL; ++c)
             {
                 if (c != 0)
                 {
@@ -754,9 +754,9 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             while (*str != '\n')
             {
                 HANDLE_EOS();
-                str++;
+                ++str;
             }
-            s--;
+            --s;
             continue;
         }
 

@@ -1238,19 +1238,14 @@ static inline fc_solve_solve_process_ret_t fc_solve_patsolve_do_solve(
     pats_scan->max_num_checked_states =
         start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) -
                          NUM_CHECKED_STATES);
-
     pats_scan->status = FCS_PATS__NOSOL;
-
     fc_solve_pats__do_it(pats_scan);
 
-    {
-        const_AUTO(
-            after_scan_delta, pats_scan->num_checked_states - start_from);
+    const_AUTO(after_scan_delta, pats_scan->num_checked_states - start_from);
 #ifndef FCS_SINGLE_HARD_THREAD
-        HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
+    HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
 #endif
-        HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
-    }
+    HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
 
     switch (pats_scan->status)
     {

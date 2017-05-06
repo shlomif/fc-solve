@@ -890,23 +890,19 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_PATSOLVE_X_PARAM: /* STRINGS=--patsolve-x-param; */
         {
             PROCESS_OPT_ARG();
-
 #ifndef FCS_DISABLE_PATSOLVE
+            int position, x_param_val;
+            if (sscanf((*arg), "%d,%d", &position, &x_param_val) != 2)
             {
-                int position, x_param_val;
-                if (sscanf((*arg), "%d,%d", &position, &x_param_val) != 2)
-                {
-                    RET_ERR_STR(error_string, "%s",
-                        "Wrong format for --patsolve-x-param");
-                }
-                if (freecell_solver_user_set_patsolve_x_param(instance,
-                        position,
-                        x_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
-                {
-                    RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
-                        "Error in patsolve X param setting!\n%s\n",
-                        fcs_user_errstr);
-                }
+                RET_ERR_STR(
+                    error_string, "%s", "Wrong format for --patsolve-x-param");
+            }
+            if (freecell_solver_user_set_patsolve_x_param(instance, position,
+                    x_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
+            {
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                    "Error in patsolve X param setting!\n%s\n",
+                    fcs_user_errstr);
             }
 #endif
         }
@@ -915,24 +911,20 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_PATSOLVE_Y_PARAM: /* STRINGS=--patsolve-y-param; */
         {
             PROCESS_OPT_ARG();
-
 #ifndef FCS_DISABLE_PATSOLVE
+            int position;
+            double y_param_val;
+            if (sscanf((*arg), "%d,%lf", &position, &y_param_val) != 2)
             {
-                int position;
-                double y_param_val;
-                if (sscanf((*arg), "%d,%lf", &position, &y_param_val) != 2)
-                {
-                    RET_ERR_STR(error_string, "%s",
-                        "Wrong format for --patsolve-y-param");
-                }
-                if (freecell_solver_user_set_patsolve_y_param(instance,
-                        position,
-                        y_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
-                {
-                    RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
-                        "Error in patsolve Y param setting!\n%s\n",
-                        fcs_user_errstr);
-                }
+                RET_ERR_STR(
+                    error_string, "%s", "Wrong format for --patsolve-y-param");
+            }
+            if (freecell_solver_user_set_patsolve_y_param(instance, position,
+                    y_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
+            {
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                    "Error in patsolve Y param setting!\n%s\n",
+                    fcs_user_errstr);
             }
 #endif
         }

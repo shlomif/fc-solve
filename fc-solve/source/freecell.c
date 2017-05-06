@@ -158,16 +158,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
             sfs_check_state_begin();
 
             fcs_empty_freecell(new_state_key, fc);
-
             fcs_increment_foundation(
                 new_state_key, deck * 4 + fcs_card_suit(card));
-
             fcs_move_stack_non_seq_push(moves,
                 FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION, fc,
                 deck * 4 + fcs_card_suit(card));
 
             sfs_check_state_end();
-
             break;
         }
     }
@@ -452,7 +449,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
             /* Now put the freecell card on top of the stack */
             fcs_state_push(&new_state_key, ds, src_card);
             fcs_empty_freecell(new_state_key, fc);
-
             fcs_move_stack_non_seq_push(
                 moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, ds);
 
@@ -622,7 +618,6 @@ DECLARE_MOVE_FUNCTION(
                 {
                     moved_card = fcs_freecell_card(new_state_key, src_idx);
                     fcs_empty_freecell(new_state_key, src_idx);
-
                     fcs_move_stack_non_seq_push(
                         moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, src_idx, ds);
                 }
@@ -1624,10 +1619,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
             }
             num_cards_moved++;
 
-            /* We can put it there */
-
             fcs_empty_freecell(new_state_key, fc);
-
             fcs_increment_foundation(new_state_key, dest_foundation);
             fcs_move_stack_non_seq_push(moves,
                 FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION, fc, dest_foundation);

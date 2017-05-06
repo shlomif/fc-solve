@@ -1106,10 +1106,10 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
                     sizeof(pats_scan->current_pos.indirect_stacks_buffer));
 
 #ifndef HARD_CODED_NUM_STACKS
-                const int stacks_num = INSTANCE_STACKS_NUM;
+                const size_t stacks_num = INSTANCE_STACKS_NUM;
 #endif
 
-                for (int i = 0; i < STACKS_NUM__VAL; i++)
+                for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
                 {
                     fcs_cards_column_t src_col =
                         fcs_state_get_col(pats_scan->current_pos.s, i);
