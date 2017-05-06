@@ -478,7 +478,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
         solution_moves_ptr->moves =
             SREALLOC(solution_moves_ptr->moves, num_moves);
         var_AUTO(mp, pats_scan->moves_to_win);
-        for (int i = 0; i < num_moves; i++, mp++)
+        for (size_t i = 0; i < num_moves; ++i, ++mp)
         {
             const fcs_card_t card = mp->card;
             fcs_internal_move_t out_move = fc_solve_empty_move;
