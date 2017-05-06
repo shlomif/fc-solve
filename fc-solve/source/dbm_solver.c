@@ -241,7 +241,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 static fcs_bool_t populate_instance_with_intermediate_input_line(
     fcs_dbm_solver_instance_t *const instance,
     fc_solve_delta_stater_t *const delta,
-    fcs_state_keyval_pair_t *const init_state_ptr, char *line,
+    fcs_state_keyval_pair_t *const init_state_ptr, char *const line,
     const long line_num, fcs_encoded_state_buffer_t *const parent_state_enc)
 {
     fcs_encoded_state_buffer_t final_stack_encoded_state;

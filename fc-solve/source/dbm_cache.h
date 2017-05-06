@@ -59,8 +59,9 @@ static inline void cache_destroy(fcs_lru_cache_t *cache)
         &(cache->states_values_to_keys_allocator));
 }
 
-static inline void cache_init(fcs_lru_cache_t *cache,
-    long max_num_elements_in_cache, fcs_meta_compact_allocator_t *meta_alloc)
+static inline void cache_init(fcs_lru_cache_t *const cache,
+    const long max_num_elements_in_cache,
+    fcs_meta_compact_allocator_t *const meta_alloc)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);

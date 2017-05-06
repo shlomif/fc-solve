@@ -148,8 +148,8 @@ static inline void instance__inspect_new_state(
 }
 
 static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_variant_type_t local_variant, fcs_cache_key_t *init_state,
-    long max_num_elements_in_cache)
+    const fcs_dbm_variant_type_t local_variant,
+    fcs_cache_key_t *const init_state, const long max_num_elements_in_cache)
 {
     instance->local_variant = local_variant;
     instance->solution_was_found = FALSE;
@@ -286,7 +286,6 @@ int main(int argc, char *argv[])
 {
     fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     const long delta_limit = 100000;
-    const int max_num_elements_in_cache = 8000000;
     const char *filename = argv[1];
     FILE *const fh = fopen(filename, "r");
     if (fh == NULL)
@@ -300,8 +299,7 @@ int main(int argc, char *argv[])
 
     fcs_dbm_solver_instance_t instance;
 
-    instance_init(
-        &instance, local_variant, &init_state_pair, max_num_elements_in_cache);
+    instance_init(&instance, local_variant, &init_state_pair, 8000000);
 
 #define LOG_FILENAME "fc-solve-pseudo-dfs.log.txt"
 

@@ -49,13 +49,13 @@ typedef struct
 
 #ifdef FCS_EXPLICIT_REFCOUNT
 static inline fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
-    fcs_dbm_record_t *rec)
+    fcs_dbm_record_t *const rec)
 {
     return (fcs_dbm_record_t *)(rec->parent_and_refcount);
 }
 #else
 static inline fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
-    fcs_dbm_record_t *rec)
+    fcs_dbm_record_t *const rec)
 {
     return (fcs_dbm_record_t *)(rec->parent_and_refcount &
                                 (~(((uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT)));
@@ -72,12 +72,14 @@ static inline void fcs_dbm_record_set_parent_ptr(
 }
 
 #ifdef FCS_EXPLICIT_REFCOUNT
-static inline unsigned char fcs_dbm_record_get_refcount(fcs_dbm_record_t *rec)
+static inline unsigned char fcs_dbm_record_get_refcount(
+    const fcs_dbm_record_t *const rec)
 {
     return rec->refcount;
 }
 #else
-static inline unsigned char fcs_dbm_record_get_refcount(fcs_dbm_record_t *rec)
+static inline unsigned char fcs_dbm_record_get_refcount(
+    const fcs_dbm_record_t *const rec)
 {
     return (unsigned char)(rec->parent_and_refcount >> FCS_DBM_RECORD_SHIFT);
 }
