@@ -104,8 +104,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
             break;
         }
     }
-
-    return;
 }
 
 static inline void sort_derived_states(
@@ -168,8 +166,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
             break;
         }
     }
-
-    return;
 }
 
 typedef struct
@@ -465,17 +461,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     }
 
     sort_derived_states(derived_states_list, derived_start_idx);
-
-    return;
 }
 
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+#define FC__STACKS__SET_PARAMS() SET_GAME_PARAMS()
+#else
+#define FC__STACKS__SET_PARAMS()
+#endif
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
+    FC__STACKS__SET_PARAMS();
     const fcs_game_limit_t num_vacant_slots =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
 
@@ -526,18 +523,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
             }
         }
     }
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack)
 {
     MOVE_FUNCS__define_common();
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
-
+    FC__STACKS__SET_PARAMS();
     const fcs_game_limit_t num_vacant_slots_plus_1 =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card()) + 1;
 
@@ -628,8 +620,6 @@ DECLARE_MOVE_FUNCTION(
             }
         }
     }
-
-    return;
 }
 #undef ds
 #undef dest_col
@@ -786,9 +776,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     {
         return;
     }
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
+    FC__STACKS__SET_PARAMS();
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
     if (num_vacant_stacks == 0)
     {
@@ -893,8 +881,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
             }
         }
     }
-
-    return;
 }
 
 /* Let's try to put cards that occupy freecells on an empty stack */
@@ -906,45 +892,41 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     {
         return;
     }
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
-
-    if (soft_thread->num_vacant_stacks)
+    FC__STACKS__SET_PARAMS();
+    if (!soft_thread->num_vacant_stacks)
     {
-        int stack_idx;
-        for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        return;
+    }
+    int stack_idx;
+    for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+    {
+        if (fcs_col_len(fcs_state_get_col(state, stack_idx)) == 0)
         {
-            if (fcs_col_len(fcs_state_get_col(state, stack_idx)) == 0)
-            {
-                break;
-            }
-        }
-
-        for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
-        {
-            const fcs_card_t card = fcs_freecell_card(state, fc);
-
-            if ((IS_FILLED_BY_KINGS_ONLY()) ? (fcs_card_rank(card) != 13)
-                                            : fcs_card_is_empty(card))
-            {
-                continue;
-            }
-            /* We can move it */
-
-            sfs_check_state_begin();
-
-            my_copy_stack(stack_idx);
-
-            fcs_state_push(&new_state_key, stack_idx, card);
-            fcs_empty_freecell(new_state_key, fc);
-            fcs_move_stack_non_seq_push(
-                moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, stack_idx);
-            sfs_check_state_end();
+            break;
         }
     }
 
-    return;
+    for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
+    {
+        const fcs_card_t card = fcs_freecell_card(state, fc);
+
+        if ((IS_FILLED_BY_KINGS_ONLY()) ? (fcs_card_rank(card) != 13)
+                                        : fcs_card_is_empty(card))
+        {
+            continue;
+        }
+        /* We can move it */
+
+        sfs_check_state_begin();
+
+        my_copy_stack(stack_idx);
+
+        fcs_state_push(&new_state_key, stack_idx, card);
+        fcs_empty_freecell(new_state_key, fc);
+        fcs_move_stack_non_seq_push(
+            moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, stack_idx);
+        sfs_check_state_end();
+    }
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
@@ -1094,10 +1076,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
     {
         return;
     }
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
-
+    FC__STACKS__SET_PARAMS();
     const fcs_game_limit_t num_vacant_freecells =
         soft_thread->num_vacant_freecells;
 
@@ -1203,8 +1182,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
             }
         }
     }
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
@@ -1253,8 +1230,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
             }
         }
     }
-
-    return;
 }
 #endif
 
@@ -1371,10 +1346,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 {
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
-
+    FC__STACKS__SET_PARAMS();
     const fcs_game_limit_t num_vacant_freecells =
         soft_thread->num_vacant_freecells;
 
@@ -1422,11 +1394,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 {
     tests_define_accessors();
     MOVE_FUNCS__define_seqs_built_by();
-
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
-
+    FC__STACKS__SET_PARAMS();
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
         const fcs_card_t card = fcs_freecell_card(state, fc);
@@ -1461,22 +1429,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
             sfs_check_state_end();
         }
     }
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 {
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
+    FC__STACKS__SET_PARAMS();
     if (IS_FILLED_BY_NONE())
     {
         return;
     }
-
     if (soft_thread->num_vacant_stacks == 0)
     {
         return;
@@ -1505,8 +1468,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
         sfs_check_state_end();
     }
-
-    return;
 }
 
 #define CALC_FOUNDATION_TO_PUT_CARD_ON()                                       \
