@@ -373,21 +373,19 @@ static void fc_solve_debondt_delta_stater_decode(
 
     fc_solve_debondt_delta_stater__init_card_states(self);
 
+    for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
     {
-        for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
+        const unsigned long foundation_rank =
+            fc_solve_var_base_reader_read(reader, FOUNDATION_BASE);
+
+        for (unsigned long rank = 1; rank <= foundation_rank; ++rank)
         {
-            const unsigned long foundation_rank =
-                fc_solve_var_base_reader_read(reader, FOUNDATION_BASE);
-
-            for (unsigned long rank = 1; rank <= foundation_rank; rank++)
-            {
-                RS_STATE(rank, suit_idx) =
-                    (IS_BAKERS_DOZEN() ? OPT__BAKERS_DOZEN__IN_FOUNDATION
-                                       : OPT_IN_FOUNDATION);
-            }
-
-            fcs_set_foundation(*ret, suit_idx, foundation_rank);
+            RS_STATE(rank, suit_idx) =
+                (IS_BAKERS_DOZEN() ? OPT__BAKERS_DOZEN__IN_FOUNDATION
+                                   : OPT_IN_FOUNDATION);
         }
+
+        fcs_set_foundation(*ret, suit_idx, foundation_rank);
     }
 
 #define IS_IN_FOUNDATIONS(card)                                                \
@@ -401,16 +399,13 @@ static void fc_solve_debondt_delta_stater_decode(
     const int num_freecells = self->num_freecells;
 
     fcs_bool_t orig_top_most_cards[CARD_ARRAY_LEN] = {FALSE};
+    for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
     {
-        for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
-        {
-            const fcs_cards_column_t col =
-                fcs_state_get_col(*init_state, col_idx);
+        const fcs_cards_column_t col = fcs_state_get_col(*init_state, col_idx);
 
-            if (fcs_col_len(col))
-            {
-                orig_top_most_cards[CARD_POS(fcs_col_get_card(col, 0))] = TRUE;
-            }
+        if (fcs_col_len(col))
+        {
+            orig_top_most_cards[CARD_POS(fcs_col_get_card(col, 0))] = TRUE;
         }
     }
 
