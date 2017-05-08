@@ -738,10 +738,7 @@ static inline int fc_solve_soft_dfs_do_solve(
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
 #endif
-
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
+    FC__STACKS__SET_PARAMS();
 
 #define DEPTH() (*depth_ptr)
     ssize_t *const depth_ptr = &(DFS_VAR(soft_thread, depth));

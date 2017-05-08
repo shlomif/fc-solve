@@ -463,11 +463,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     sort_derived_states(derived_states_list, derived_start_idx);
 }
 
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-#define FC__STACKS__SET_PARAMS() SET_GAME_PARAMS()
-#else
-#define FC__STACKS__SET_PARAMS()
-#endif
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
     tests_define_accessors();

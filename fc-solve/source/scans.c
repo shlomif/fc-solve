@@ -86,10 +86,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     PWord_t PValue;
 #endif
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
-
+    FC__STACKS__SET_PARAMS();
     fcs_lru_cache_t *cache = &(instance->rcs_states_cache);
 
     ssize_t parents_stack_len = 1;
@@ -446,11 +443,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         queue = my_brfs_queue;
         queue_last_item = my_brfs_queue_last_item;
     }
-
-#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
-    SET_GAME_PARAMS();
-#endif
-
+    FC__STACKS__SET_PARAMS();
     CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
 
 #ifndef FCS_WITHOUT_ITER_HANDLER

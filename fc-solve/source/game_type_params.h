@@ -81,5 +81,10 @@ typedef struct
 #define INSTANCE_EMPTY_STACKS_FILL ((INSTANCE_GAME_FLAGS >> 2) & 0x3)
 
 #endif
+#if ((!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_STACKS)))
+#define FC__STACKS__SET_PARAMS() SET_GAME_PARAMS()
+#else
+#define FC__STACKS__SET_PARAMS()
+#endif
 
 } fcs_game_type_params_t;
