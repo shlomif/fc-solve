@@ -86,5 +86,9 @@ typedef struct
 #else
 #define FC__STACKS__SET_PARAMS()
 #endif
-
+#ifndef HARD_CODED_NUM_STACKS
+#define STACKS__SET_PARAMS() SET_GAME_PARAMS()
+#else
+#define STACKS__SET_PARAMS()
+#endif
 } fcs_game_type_params_t;

@@ -65,10 +65,7 @@ static inline int find_empty_stack(fcs_kv_state_t *const raw_ptr_state_raw,
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 {
     tests_define_accessors();
-
-#ifndef HARD_CODED_NUM_STACKS
-    SET_GAME_PARAMS();
-#endif
+    STACKS__SET_PARAMS();
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
@@ -1240,10 +1237,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     {
         return;
     }
-#ifndef HARD_CODED_NUM_STACKS
-    SET_GAME_PARAMS();
-#endif
-
+    STACKS__SET_PARAMS();
     int empty_stack_idx;
     for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;
          empty_stack_idx++)
@@ -1289,10 +1283,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 {
     MOVE_FUNCS__define_common();
-#ifndef HARD_CODED_NUM_STACKS
-    SET_GAME_PARAMS();
-#endif
-
+    STACKS__SET_PARAMS();
     const int num_cards_in_col_threshold = CALC_num_cards_in_col_threshold();
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
@@ -1518,10 +1509,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
     fcs_kv_state_t *const raw_ptr_state_raw)
 {
     tests_define_accessors();
-#ifndef HARD_CODED_NUM_STACKS
-    SET_GAME_PARAMS();
-#endif
-
+    STACKS__SET_PARAMS();
     fcs_derived_states_list_t derived_states_list_struct = {
         .states = NULL, .num_states = 0};
 

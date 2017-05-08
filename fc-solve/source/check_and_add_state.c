@@ -248,10 +248,7 @@ static inline void fc_solve_cache_stacks(
 #else
     fc_solve_instance_t *const instance = hard_thread->instance;
 #endif
-
-#ifndef HARD_CODED_NUM_STACKS
-    SET_GAME_PARAMS();
-#endif
+    STACKS__SET_PARAMS();
     register fcs_state_t *const new_state_key = new_state->key;
     register fcs_state_extra_info_t *const new_state_info = new_state->val;
 
