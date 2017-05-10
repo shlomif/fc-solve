@@ -97,7 +97,7 @@ static inline void fcs_depth_multi_queue__init(
 static inline void fcs_depth_multi_queue__destroy(
     fcs_depth_multi_queue_t *const queue)
 {
-    int limit = queue->max_depth - queue->min_depth;
+    const int limit = queue->max_depth - queue->min_depth;
     if (queue->queues_by_depth == NULL)
     {
         return;
