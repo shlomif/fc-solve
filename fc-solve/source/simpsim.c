@@ -839,9 +839,9 @@ typedef fcs_pos_by_rank_t ds_dc_t;
 static inline void sort_ds_dcs(ds_dc_t *const ds_dcs, const int len)
 {
 #define start ds_dcs
-    ds_dc_t *const limit = start + len;
+    ds_dc_t *const end = start + len;
 
-    for (ds_dc_t *b = start + 1; b < limit; b++)
+    for (ds_dc_t *b = start + 1; b < end; b++)
     {
         for (ds_dc_t *c = b;
              (c > start) &&

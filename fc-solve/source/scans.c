@@ -255,34 +255,31 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
     free(parents_stack);
 
-    if (cache->count_elements_in_cache > cache->max_num_elements_in_cache)
-    {
-        long count = cache->count_elements_in_cache;
-        long limit = cache->max_num_elements_in_cache;
+    var_AUTO(count, cache->count_elements_in_cache);
+    const_AUTO(limit, cache->max_num_elements_in_cache);
 
-        while (count > limit)
-        {
-            fcs_cache_key_info_t *lowest_pri = cache->lowest_pri;
+    while (count > limit)
+    {
+        fcs_cache_key_info_t *lowest_pri = cache->lowest_pri;
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
-            int rc_int;
-            JLD(rc_int, cache->states_values_to_keys_map,
-                (Word_t)(lowest_pri->val_ptr));
+        int rc_int;
+        JLD(rc_int, cache->states_values_to_keys_map,
+            (Word_t)(lowest_pri->val_ptr));
 #else
-            fc_solve_kaz_tree_delete_free(cache->kaz_tree,
-                fc_solve_kaz_tree_lookup(cache->kaz_tree, lowest_pri));
+        fc_solve_kaz_tree_delete_free(cache->kaz_tree,
+            fc_solve_kaz_tree_lookup(cache->kaz_tree, lowest_pri));
 #endif
 
-            cache->lowest_pri = lowest_pri->higher_pri;
-            cache->lowest_pri->lower_pri = NULL;
+        cache->lowest_pri = lowest_pri->higher_pri;
+        cache->lowest_pri->lower_pri = NULL;
 
-            NEXT_CACHE_STATE(lowest_pri) = cache->recycle_bin;
+        NEXT_CACHE_STATE(lowest_pri) = cache->recycle_bin;
 
-            cache->recycle_bin = lowest_pri;
-            count--;
-        }
-
-        cache->count_elements_in_cache = count;
+        cache->recycle_bin = lowest_pri;
+        --count;
     }
+
+    cache->count_elements_in_cache = count;
 
     return &(new_cache_state->key);
 }

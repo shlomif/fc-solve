@@ -2485,7 +2485,7 @@ DLLEXPORT const char *freecell_solver_user_get_last_error_string(
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 #ifdef FCS_RCS_STATES
 int DLLEXPORT freecell_solver_user_set_cache_limit(
-    void *const api_instance GCC_UNUSED, const long limit GCC_UNUSED)
+    void *const api_instance, const long limit)
 {
     if (limit <= 0)
     {
