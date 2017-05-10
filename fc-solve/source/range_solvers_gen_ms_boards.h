@@ -48,16 +48,15 @@ static inline void card_to_string(char *const s, const CARD card)
  * we'll devise a header for this routine.
  *
  * */
-void DLLEXPORT fc_solve_get_board_l(
-    const long long gamenumber, char *const ret);
+void DLLEXPORT fc_solve_get_board_l(const long long deal_idx, char *const ret);
 
 extern void DLLEXPORT fc_solve_get_board_l(
-    const long long gamenumber, char *const ret)
+    const long long deal_idx, char *const ret)
 #else
-static inline void get_board_l(const long long gamenumber, char *const ret)
+static inline void get_board_l(const long long deal_idx, char *const ret)
 #endif
 {
-    long long seedx = microsoft_rand__calc_init_seedx(gamenumber);
+    long long seedx = microsoft_rand__calc_init_seedx(deal_idx);
     strcpy(ret, "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"
@@ -82,7 +81,7 @@ static inline void get_board_l(const long long gamenumber, char *const ret)
         for (int i = 0; i < 52; i++)
         {
             const microsoft_rand_uint_t j =
-                microsoft_rand__game_num_rand(&seedx, gamenumber) %
+                microsoft_rand__game_num_rand(&seedx, deal_idx) %
                 num_cards_left;
             const int col = (i & (8 - 1));
             card_to_string(
@@ -104,17 +103,17 @@ static inline void get_board_l(const long long gamenumber, char *const ret)
  * we'll devise a header for this routine.
  *
  * */
-void DLLEXPORT fc_solve_get_board(long gamenumber, char *ret);
+void DLLEXPORT fc_solve_get_board(long deal_idx, char *ret);
 
-extern void DLLEXPORT fc_solve_get_board(long gamenumber, char *ret)
+extern void DLLEXPORT fc_solve_get_board(long deal_idx, char *ret)
 #else
-static inline void get_board(long gamenumber, char *ret)
+static inline void get_board(long deal_idx, char *ret)
 #endif
 {
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
-    fc_solve_get_board_l((long long)gamenumber, ret);
+    fc_solve_get_board_l((long long)deal_idx, ret);
 #else
-    get_board_l((long long)gamenumber, ret);
+    get_board_l((long long)deal_idx, ret);
 #endif
 }
 

@@ -20,15 +20,14 @@ extern "C" {
 
 typedef struct
 {
-    microsoft_rand_t gamenumber;
+    microsoft_rand_t deal_idx;
     microsoft_rand_t seedx;
 } fc_solve__hll_ms_rand_t;
 
 extern fc_solve__hll_ms_rand_t *fc_solve__hll_ms_rand__get_singleton(void);
 extern void fc_solve__hll_ms_rand__init(
-    fc_solve__hll_ms_rand_t *const instance, const char *const gamenumber);
-extern int fc_solve__hll_ms_rand__mod_rand(
-    fc_solve__hll_ms_rand_t *const instance, const int limit);
+    fc_solve__hll_ms_rand_t *, const char *);
+extern int fc_solve__hll_ms_rand__mod_rand(fc_solve__hll_ms_rand_t *, int);
 
 #ifdef __cplusplus
 }

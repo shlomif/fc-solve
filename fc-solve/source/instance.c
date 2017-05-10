@@ -477,12 +477,12 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
         solution_moves_ptr->num_moves = num_moves;
         solution_moves_ptr->moves =
             SREALLOC(solution_moves_ptr->moves, num_moves);
-        var_AUTO(mp, pats_scan->moves_to_win);
-        for (size_t i = 0; i < num_moves; ++i, ++mp)
+        var_AUTO(move_ptr, pats_scan->moves_to_win);
+        for (size_t i = 0; i < num_moves; ++i, ++move_ptr)
         {
-            const fcs_card_t card = mp->card;
+            const fcs_card_t card = move_ptr->card;
             fcs_internal_move_t out_move = fc_solve_empty_move;
-            switch (mp->totype)
+            switch (move_ptr->totype)
             {
             case FCS_PATS__TYPE_FREECELL:
             {
@@ -539,7 +539,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
             break;
             default:
             {
-                const fcs_card_t dest_card = mp->destcard;
+                const fcs_card_t dest_card = move_ptr->destcard;
                 const find_card_ret_t src = find_card_src_string(s,
                     card PASS_FREECELLS(FREECELLS_NUM__VAL)
                         PASS_STACKS(STACKS_NUM__VAL));
