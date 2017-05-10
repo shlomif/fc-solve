@@ -17,6 +17,7 @@
 extern "C" {
 #endif
 
+#include "typeof_wrap.h"
 #include <stdio.h>
 #ifndef WIN32
 #include <sys/time.h>
@@ -58,28 +59,31 @@ typedef struct
 };
 #endif
 
+static inline fcs_portable_time_t fcs_get_time(void)
+{
+    fcs_portable_time_t ret;
+    FCS_GET_TIME(ret);
+    return ret;
+}
 #define FCS_T_FMT FCS_LL_FMT "." FCS_LL6_FMT
 #define FCS_B_AT_FMT "Board No. " FCS_LL_FMT " at " FCS_T_FMT
 static inline void fc_solve_print_intractable(const long long board_num)
 {
-    fcs_portable_time_t mytime;
-    FCS_GET_TIME(mytime);
+    const_AUTO(mytime, fcs_get_time());
     printf("Intractable " FCS_B_AT_FMT "\n", board_num,
         FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime));
 }
 
 static inline void fc_solve_print_unsolved(const long long board_num)
 {
-    fcs_portable_time_t mytime;
-    FCS_GET_TIME(mytime);
+    const_AUTO(mytime, fcs_get_time());
     printf("Unsolved " FCS_B_AT_FMT "\n", board_num, FCS_TIME_GET_SEC(mytime),
         FCS_TIME_GET_USEC(mytime));
 }
 
 static inline void fc_solve_print_started_at(void)
 {
-    fcs_portable_time_t mytime;
-    FCS_GET_TIME(mytime);
+    const_AUTO(mytime, fcs_get_time());
     printf("Started at " FCS_T_FMT "\n", FCS_TIME_GET_SEC(mytime),
         FCS_TIME_GET_USEC(mytime));
 }
@@ -87,8 +91,7 @@ static inline void fc_solve_print_started_at(void)
 static inline void fc_solve_print_reached(
     const long long board_num, const long long total_num_iters)
 {
-    fcs_portable_time_t mytime;
-    FCS_GET_TIME(mytime);
+    const_AUTO(mytime, fcs_get_time());
     printf("Reached " FCS_B_AT_FMT " (total_num_iters=" FCS_LL_FMT ")\n",
         board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime),
         total_num_iters);
@@ -96,8 +99,7 @@ static inline void fc_solve_print_reached(
 
 static inline void fc_solve_print_finished(const long long total_num_iters)
 {
-    fcs_portable_time_t mytime;
-    FCS_GET_TIME(mytime);
+    const_AUTO(mytime, fcs_get_time());
     printf(("Finished at " FCS_T_FMT " (total_num_iters=" FCS_LL_FMT ")\n"),
         FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime), total_num_iters);
 }

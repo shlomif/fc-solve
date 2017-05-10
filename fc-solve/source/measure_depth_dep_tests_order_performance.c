@@ -201,14 +201,12 @@ int main(int argc, char *argv[])
             get_board(board_num, state_string);
 
             freecell_solver_user_limit_iterations_long(instance, iters_limit);
-
-            FCS_GET_TIME(curr_result->start_time);
+            curr_result->start_time = fcs_get_time();
 
             curr_result->verdict =
                 freecell_solver_user_solve_board(instance, state_string);
 
-            FCS_GET_TIME(curr_result->end_time);
-
+            curr_result->end_time = fcs_get_time();
             curr_result->num_iters =
                 freecell_solver_user_get_num_times_long(instance);
 

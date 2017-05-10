@@ -220,9 +220,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
 
 static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
 {
-    fcs_portable_time_t mytime;
-    FCS_GET_TIME(mytime);
-
+    const_AUTO(mytime, fcs_get_time());
     FILE *const out_fh = instance->common.out_fh;
     fprintf(out_fh,
         ("Reached %ld ; States-in-collection: %ld ; Time: " FCS_T_FMT "\n"
