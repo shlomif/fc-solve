@@ -117,7 +117,9 @@ typedef struct
     fcs_flare_item_t single_flare;
     fcs_bool_t was_flare_found, was_flare_finished;
 #endif
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     fcs_int_limit_t limit;
+#endif
 } instance_item_t;
 
 typedef struct
@@ -1054,7 +1056,11 @@ static inline fc_solve_solve_process_ret_t resume_solution(
     (user->iterations_board_started_at.num_checked_states + increment)
 #define PARAMETERIZED_LIMIT(increment)                                         \
     (((increment) < 0) ? (-1) : PARAMETERIZED_FIXED_LIMIT(increment))
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define local_limit() (-1)
+#else
 #define local_limit() (instance_item->limit)
+#endif
 #ifdef FCS_WITH_FLARES
 #define NUM_ITERS_LIMITS 3
 #else
@@ -1202,10 +1208,11 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                 current_plan_item->initial_quota;
 #endif
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
-            /*
-             * Determine if we exceeded the instance-specific quota and if
-             * so, designate it as unsolvable.
-             * */
+/*
+ * Determine if we exceeded the instance-specific quota and if
+ * so, designate it as unsolvable.
+ * */
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
             if ((local_limit() >= 0) &&
                 (instance->i__num_checked_states >= local_limit()))
             {
@@ -1219,6 +1226,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                 user->current_instance++;
                 continue;
             }
+#endif
 #ifdef FCS_WITH_FLARES
             instance_item->all_plan_items_finished_so_far = FALSE;
 #else
@@ -2349,7 +2357,9 @@ static int user_next_flare(fcs_user_t *const user)
 #else
     fcs_flare_item_t *const flare = &(instance_item->single_flare);
 #endif
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     instance_item->limit = -1;
+#endif
     fc_solve_instance_t *const instance = &(flare->obj);
 
     user->active_flare = flare;
