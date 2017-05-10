@@ -646,11 +646,15 @@ static inline void fc_solve_state_init_proto(
 #endif
 }
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define FCS_RESTRICTED_PARSE_STATE
+#else
 static const char *const fc_solve_freecells_prefixes[] = {
     "FC:", "Freecells:", "Freecell:", NULL};
 
 static const char *const fc_solve_foundations_prefixes[] = {"Decks:", "Deck:",
     "Founds:", "Foundations:", "Foundation:", "Found:", NULL};
+#endif
 #if defined(WIN32) && (!defined(HAVE_STRNCASECMP))
 #ifndef strncasecmp
 #define strncasecmp(a, b, c) (strnicmp((a), (b), (c)))
@@ -669,8 +673,9 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     fcs_state_keyval_pair_t *const out_state FREECELLS_STACKS_DECKS__ARGS()
         IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
+#ifndef FCS_RESTRICTED_PARSE_STATE
     const char *const *prefix;
-
+#endif
     fc_solve_state_init(out_state, STACKS_NUM__VAL, indirect_stacks_buffer);
     const char *str = string;
 
@@ -701,6 +706,12 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         first_line = FALSE;
 
+#ifdef FCS_RESTRICTED_PARSE_STATE
+        const_AUTO(new_str, try_str_prefix(str, "Freecells:"));
+        if (new_str)
+        {
+            str = new_str;
+#else
         for (prefix = fc_solve_freecells_prefixes; (*prefix); prefix++)
         {
             if (!strncasecmp(str, (*prefix), strlen(*prefix)))
@@ -712,6 +723,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
+#endif
             for (size_t c = 0; c < FREECELLS_NUM__VAL; ++c)
             {
                 fcs_empty_freecell(out, c);
@@ -724,7 +736,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                            ((*str) != '\n') && ((*str) != '\r'))
                     {
                         HANDLE_EOS();
-                        str++;
+                        ++str;
                     }
                     if ((*str == '\n') || (*str == '\r'))
                     {
@@ -760,6 +772,12 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             continue;
         }
 
+#ifdef FCS_RESTRICTED_PARSE_STATE
+        const_AUTO(new_str2, try_str_prefix(str, "Foundations:"));
+        if (new_str2)
+        {
+            str = new_str2;
+#else
         for (prefix = fc_solve_foundations_prefixes; (*prefix); prefix++)
         {
             if (!strncasecmp(str, (*prefix), strlen(*prefix)))
@@ -771,6 +789,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         if (*prefix)
         {
+#endif
             for (int f_idx = 0; f_idx < (DECKS_NUM__VAL << 2); f_idx++)
             {
                 fcs_set_foundation(out, f_idx, 0);

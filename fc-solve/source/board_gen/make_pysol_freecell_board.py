@@ -354,7 +354,7 @@ class Board:
         return self.columns.add(idx, card)
 
     def print_freecells(self):
-        print("FC: " + column_to_string(self.freecells))
+        print("Freecells: " + column_to_string(self.freecells))
 
     def print_talon(self):
         print("Talon: " + column_to_string(self.talon))
