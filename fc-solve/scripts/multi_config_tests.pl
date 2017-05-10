@@ -267,7 +267,7 @@ if ( $ENV{FC_SOLVE_GIT_CHECKOUT} )
     run_cmd( 'git checkout', { cmd => [qw(git checkout master)], } );
     run_cmd( 'git pull', { cmd => [qw(git pull --ff-only origin master)], } );
 }
-else
+elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
 {
     if ( !-d "avl-2.0.3" )
     {
