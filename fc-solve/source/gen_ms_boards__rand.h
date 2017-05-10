@@ -25,11 +25,10 @@ typedef uint32_t microsoft_rand_uint_t;
 typedef long long microsoft_rand_t;
 
 static inline microsoft_rand_t microsoft_rand__calc_init_seedx(
-    const microsoft_rand_t gamenumber)
+    const microsoft_rand_t deal_idx)
 {
-    return (microsoft_rand_uint_t)((gamenumber < 0x100000000LL)
-                                       ? gamenumber
-                                       : (gamenumber - 0x100000000LL));
+    return (microsoft_rand_uint_t)(
+        (deal_idx < 0x100000000LL) ? deal_idx : (deal_idx - 0x100000000LL));
 }
 
 static inline microsoft_rand_uint_t microsoft_rand_rand(
