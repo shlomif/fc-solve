@@ -47,7 +47,6 @@ typedef struct
     /* Whether the instance is ready to be input with (i.e:
      * was recycled already.) */
     fcs_bool_t instance_is_ready;
-    int limit;
     char name[FCS_MAX_FLARE_NAME_LEN];
 #ifdef FCS_WITH_MOVES
     uint_fast32_t next_move_idx;
@@ -118,7 +117,7 @@ typedef struct
     fcs_flare_item_t single_flare;
     fcs_bool_t was_flare_found, was_flare_finished;
 #endif
-    int limit;
+    fcs_int_limit_t limit;
 } instance_item_t;
 
 typedef struct
@@ -2350,7 +2349,7 @@ static int user_next_flare(fcs_user_t *const user)
 #else
     fcs_flare_item_t *const flare = &(instance_item->single_flare);
 #endif
-    instance_item->limit = flare->limit = -1;
+    instance_item->limit = -1;
     fc_solve_instance_t *const instance = &(flare->obj);
 
     user->active_flare = flare;
