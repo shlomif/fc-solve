@@ -201,7 +201,7 @@ _test_out(
         blurb    => "Testing for Forecell",
         cmd      => [qw(1977 forecell)],
         expected => <<'EOF',
-FC: 2D 8H 5S 6H
+Freecells: 2D 8H 5S 6H
 QH JC 7D 8S 4D 2C
 JD JH KS 9C QD 2S
 AD 10S 9D 3C 9S AC
@@ -220,7 +220,7 @@ _test_out(
         blurb    => "Seahaven 100 Output",
         cmd      => [qw(100 seahaven_towers)],
         expected => <<'EOF',
-FC: - 9S 5S
+Freecells: - 9S 5S
 AD 5C 9C 9H 2C
 JS 9D 6H 7H 2H
 4S 4H AC 3C KH
@@ -289,7 +289,7 @@ _test_out(
         blurb    => "Eight Off 314",
         cmd      => [qw(-t 314 eight_off)],
         expected => <<'EOF',
-FC: TD - 8D - 5D - 6S -
+Freecells: TD - 8D - 5D - 6S -
 7C QD 8H AS AD 2S
 5C 5H 2C QH 8C TS
 3H JD 4C 3S AH 9C
