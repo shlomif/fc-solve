@@ -259,7 +259,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
         }
         if (!fcs_is_ss_suit_true(card, prev_card))
         {
-            num_true_seqs++;
+            ++num_true_seqs;
             /* We can no longer perform the move so go to the next
              * stack. */
             if (calc_max_simple_simon_seq_move(num_vacant_stacks) <
@@ -293,7 +293,7 @@ static inline int get_seq_h(
 
         if (!fcs_is_ss_suit_true(next_card, card))
         {
-            num_true_seqs++;
+            ++num_true_seqs;
         }
 
         card = next_card;
@@ -630,7 +630,7 @@ DECLARE_MOVE_FUNCTION(
         }
         if (should_increment_num_true_seqs)
         {
-            num_true_seqs++;
+            ++num_true_seqs;
         }
     }
     STACK_SOURCE_LOOP_END()
@@ -691,7 +691,7 @@ DECLARE_MOVE_FUNCTION(
             }
             if (!fcs_is_ss_suit_true(card, above_card))
             {
-                num_true_seqs++;
+                ++num_true_seqs;
             }
             card = above_card;
         }
@@ -784,7 +784,7 @@ DECLARE_MOVE_FUNCTION(
         }
         if (!fcs_is_ss_suit_true(next_card, card))
         {
-            num_true_seqs++;
+            ++num_true_seqs;
         }
         card = next_card;
     }
