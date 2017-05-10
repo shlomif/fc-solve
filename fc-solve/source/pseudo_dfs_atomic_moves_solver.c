@@ -143,8 +143,6 @@ static inline void instance__inspect_new_state(
         instance->derived_list_recycle_bin = derived_list;
         derived_list = list_next;
     }
-
-    return;
 }
 
 static inline void instance_init(fcs_dbm_solver_instance_t *const instance,

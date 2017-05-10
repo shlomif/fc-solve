@@ -25,8 +25,6 @@ void fc_solve_compact_allocator_init(fcs_compact_allocator_t *const allocator,
     allocator->meta = meta_allocator;
 
     fc_solve_compact_allocator_init_helper(allocator);
-
-    return;
 }
 
 #define OLD_LIST_NEXT(ptr) (*((char **)(ptr)))

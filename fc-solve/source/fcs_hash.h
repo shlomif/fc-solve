@@ -153,8 +153,6 @@ static inline void fc_solve_hash_init(
 #endif
 
     fc_solve_compact_allocator_init(&(hash->allocator), meta_alloc);
-
-    return;
 }
 
 static inline void fc_solve_hash_free(fc_solve_hash_t *const hash)

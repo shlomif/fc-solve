@@ -69,8 +69,6 @@ static inline void fcs_offloading_queue__init(
 
     queue->queue_head = queue->queue_tail = queue->queue_recycle_bin = NULL;
     fcs_queue_stats_init(&queue->stats);
-
-    return;
 }
 
 static inline void fcs_offloading_queue__destroy(
@@ -131,7 +129,6 @@ static inline void fcs_offloading_queue__insert(
         queue->queue_head = queue->queue_tail = new_item;
     }
     q_stats_insert(&queue->stats);
-    return;
 }
 
 #else
@@ -160,8 +157,6 @@ static inline void fcs_offloading_queue_page__init(
             malloc(sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE)};
     *page = new_page;
     fcs_offloading_queue_page__recycle(page);
-
-    return;
 }
 
 static inline void fcs_offloading_queue_page__destroy(off_q_page_t *const page)

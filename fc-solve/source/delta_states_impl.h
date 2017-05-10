@@ -160,7 +160,6 @@ static inline void fc_solve_get_column_encoding_composite(
 static inline void fc_solve_get_freecells_encoding(
     fc_solve_delta_stater_t *const self, fc_solve_bit_writer_t *const bit_w)
 {
-
     const fcs_state_t *const derived = self->derived_state;
     const_SLOT(num_freecells, self);
 
@@ -171,10 +170,10 @@ static inline void fc_solve_get_freecells_encoding(
     }
 
     /* Sort the freecells using selection-sort. */
-    for (int i = 0; i < num_freecells; i++)
+    for (int i = 0; i < num_freecells; ++i)
     {
         int min_idx = i;
-        for (int j = i + 1; j < num_freecells; j++)
+        for (int j = i + 1; j < num_freecells; ++j)
         {
             if (fcs_card2char(freecells[j]) < fcs_card2char(freecells[min_idx]))
             {
