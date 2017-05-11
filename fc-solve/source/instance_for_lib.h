@@ -419,12 +419,9 @@ static inline void fc_solve_start_instance_process_with_board(
 
 #ifdef INDIRECT_STACK_STATES
     {
-        int i;
-        char *buffer;
+        char *const buffer = INST_HT0(instance).indirect_stacks_buffer;
 
-        buffer = INST_HT0(instance).indirect_stacks_buffer;
-
-        for (i = 0; i < INSTANCE_STACKS_NUM; i++)
+        for (int i = 0; i < INSTANCE_STACKS_NUM; i++)
         {
             fcs_copy_stack(state_copy_ptr->s, state_copy_ptr->info, i, buffer);
         }

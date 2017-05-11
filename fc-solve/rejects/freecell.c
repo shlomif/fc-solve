@@ -182,3 +182,107 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_get_card_from_klondike_talon)
 }
 
 #endif
+
+/* Disabling Yukon solving for the time being. */
+#if 0
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent)
+{
+    int stack_idx, cards_num, c, ds;
+    int dest_cards_num;
+    fcs_card_t card;
+    fcs_card_t dest_card;
+    fcs_cards_column_t dest_col, col;
+
+#ifndef HARD_CODED_NUM_STACKS
+    const int stacks_num = INSTANCE_STACKS_NUM;
+#endif
+    tests_define_accessors();
+
+    for( ds=0 ; ds < LOCAL_STACKS_NUM ; ds++ )
+    {
+        dest_col = fcs_state_get_col(state, ds);
+        dest_cards_num = fcs_col_len(dest_col);
+        if (dest_cards_num > 0)
+        {
+            dest_card = fcs_col_get_card(dest_col, dest_cards_num-1);
+            for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+            {
+                if (stack_idx == ds)
+                {
+                    continue;
+                }
+                col = fcs_state_get_col(state, stack_idx);
+                cards_num = fcs_col_len(col);
+                for( c=cards_num-1 ; c >= 0 ; c--)
+                {
+                    card = fcs_col_get_card(col, c);
+                    if (fcs_is_parent_card(card, dest_card))
+                    {
+
+                        /* We can move it there - now let's check to see
+                         * if it is already above a suitable parent. */
+                        if ((c == 0) ||
+                            (! fcs_is_parent_card(card, fcs_col_get_card(col, c-1))))
+                        {
+                            /* Let's move it */
+                            sfs_check_state_begin();
+                            copy_two_stacks(stack_idx, ds);
+                            fcs_move_sequence(ds, stack_idx, c, cards_num-1);
+                            sfs_check_state_end();
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack)
+{
+    int stack_idx, cards_num, c, ds;
+    fcs_card_t card;
+    fcs_cards_column_t col;
+
+#ifndef HARD_CODED_NUM_STACKS
+    const int stacks_num = INSTANCE_STACKS_NUM;
+#endif
+
+    fcs_game_limit_t num_vacant_stacks;
+    tests_define_accessors();
+
+    num_vacant_stacks = soft_thread->num_vacant_stacks;
+    if (num_vacant_stacks == 0)
+    {
+        return;
+    }
+
+    for(ds=0;ds<LOCAL_STACKS_NUM;ds++)
+    {
+        if (fcs_col_len(
+            fcs_state_get_col(state, ds)
+            ) == 0)
+        {
+            break;
+        }
+    }
+
+    for( stack_idx=0 ; stack_idx < LOCAL_STACKS_NUM ; stack_idx++)
+    {
+        col = fcs_state_get_col(state, stack_idx);
+        cards_num = fcs_col_len(col);
+        for( c=cards_num-1 ; c >= 1 ; c--)
+        {
+            card = fcs_col_get_card(col, c);
+            if (fcs_card_rank(card) == 13)
+            {
+                /* It's a King - so let's move it */
+                sfs_check_state_begin();
+                copy_two_stacks(stack_idx, ds);
+                fcs_move_sequence(ds, stack_idx, c, cards_num-1);
+                sfs_check_state_end();
+            }
+        }
+    }
+}
+#endif
