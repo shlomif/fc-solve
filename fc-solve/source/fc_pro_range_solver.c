@@ -54,14 +54,11 @@ int main(int argc, char *argv[])
     {
         if (!strcmp(argv[arg], "--variant"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--variant came without an argument!\n");
             }
-            variant = argv[arg];
-
-            if (strlen(variant) > 50)
+            if (strlen(variant = argv[arg]) > 50)
             {
                 help_err("--variant's argument is too long!\n");
             }

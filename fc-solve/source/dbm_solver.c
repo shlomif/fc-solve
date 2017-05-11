@@ -138,7 +138,6 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_derived_state_t *derived_list_recycle_bin = NULL;
     fcs_derived_state_t *derived_list = NULL;
     FILE *const out_fh = instance->common.out_fh;
-
     fcs_dbm_variant_type_t local_variant = instance->common.variant;
 
     TRACE("%s\n", "instance_run_solver_thread start");
@@ -497,7 +496,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 #else
                 int trace_num;
                 fcs_encoded_state_buffer_t *trace;
-
                 calc_trace(token, &trace, &trace_num);
 
 /*

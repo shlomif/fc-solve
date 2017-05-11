@@ -562,9 +562,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
             }
 #endif
             fflush(instance->fcc_exit_points_out_fh);
-
             fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
-
             free(trace);
         }
     }
