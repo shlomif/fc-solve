@@ -647,7 +647,7 @@ static inline void fc_solve_state_init_proto(
 }
 
 #ifdef FCS_BREAK_BACKWARD_COMPAT_1
-#define FCS_RESTRICTED_PARSE_STATE
+#define FCS_PARSE_try_prefix(str, p, p_s) try_str_prefix(str, p)
 #else
 static const char *const fc_solve_freecells_prefixes[] = {
     "FC:", "Freecells:", "Freecell:", NULL};
@@ -667,6 +667,7 @@ static inline const char *fc_solve__try_prefixes(
     }
     return NULL;
 }
+#define FCS_PARSE_try_prefix(str, p, p_s) fc_solve__try_prefixes(str, p_s)
 #endif
 #if defined(WIN32) && (!defined(HAVE_STRNCASECMP))
 #ifndef strncasecmp
@@ -716,12 +717,8 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         first_line = FALSE;
 
-#ifdef FCS_RESTRICTED_PARSE_STATE
-        const_AUTO(new_str, try_str_prefix(str, "Freecells:"));
-#else
-        const_AUTO(
-            new_str, fc_solve__try_prefixes(str, fc_solve_freecells_prefixes));
-#endif
+        const_AUTO(new_str, FCS_PARSE_try_prefix(str, "Freecells:",
+                                fc_solve_freecells_prefixes));
         if (new_str)
         {
             str = new_str;
@@ -773,12 +770,8 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             continue;
         }
 
-#ifdef FCS_RESTRICTED_PARSE_STATE
-        const_AUTO(new_str2, try_str_prefix(str, "Foundations:"));
-#else
-        const_AUTO(new_str2,
-            fc_solve__try_prefixes(str, fc_solve_foundations_prefixes));
-#endif
+        const_AUTO(new_str2, FCS_PARSE_try_prefix(str, "Foundations:",
+                                 fc_solve_foundations_prefixes));
         if (new_str2)
         {
             str = new_str2;
