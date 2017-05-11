@@ -654,6 +654,19 @@ static const char *const fc_solve_freecells_prefixes[] = {
 
 static const char *const fc_solve_foundations_prefixes[] = {"Decks:", "Deck:",
     "Founds:", "Foundations:", "Foundation:", "Found:", NULL};
+
+static inline const char *fc_solve__try_prefixes(
+    const char *const str, const char *const *const prefixes)
+{
+    for (const char *const *prefix = prefixes; (*prefix); ++prefix)
+    {
+        if (!strncasecmp(str, (*prefix), strlen(*prefix)))
+        {
+            return str + strlen(*prefix);
+        }
+    }
+    return NULL;
+}
 #endif
 #if defined(WIN32) && (!defined(HAVE_STRNCASECMP))
 #ifndef strncasecmp
@@ -673,9 +686,6 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     fcs_state_keyval_pair_t *const out_state FREECELLS_STACKS_DECKS__ARGS()
         IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
-#ifndef FCS_RESTRICTED_PARSE_STATE
-    const char *const *prefix;
-#endif
     fc_solve_state_init(out_state, STACKS_NUM__VAL, indirect_stacks_buffer);
     const char *str = string;
 
@@ -708,22 +718,13 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
 #ifdef FCS_RESTRICTED_PARSE_STATE
         const_AUTO(new_str, try_str_prefix(str, "Freecells:"));
+#else
+        const_AUTO(
+            new_str, fc_solve__try_prefixes(str, fc_solve_freecells_prefixes));
+#endif
         if (new_str)
         {
             str = new_str;
-#else
-        for (prefix = fc_solve_freecells_prefixes; (*prefix); prefix++)
-        {
-            if (!strncasecmp(str, (*prefix), strlen(*prefix)))
-            {
-                str += strlen(*prefix);
-                break;
-            }
-        }
-
-        if (*prefix)
-        {
-#endif
             for (size_t c = 0; c < FREECELLS_NUM__VAL; ++c)
             {
                 fcs_empty_freecell(out, c);
@@ -774,22 +775,13 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
 #ifdef FCS_RESTRICTED_PARSE_STATE
         const_AUTO(new_str2, try_str_prefix(str, "Foundations:"));
+#else
+        const_AUTO(new_str2,
+            fc_solve__try_prefixes(str, fc_solve_foundations_prefixes));
+#endif
         if (new_str2)
         {
             str = new_str2;
-#else
-        for (prefix = fc_solve_foundations_prefixes; (*prefix); prefix++)
-        {
-            if (!strncasecmp(str, (*prefix), strlen(*prefix)))
-            {
-                str += strlen(*prefix);
-                break;
-            }
-        }
-
-        if (*prefix)
-        {
-#endif
             for (int f_idx = 0; f_idx < (DECKS_NUM__VAL << 2); f_idx++)
             {
                 fcs_set_foundation(out, f_idx, 0);
