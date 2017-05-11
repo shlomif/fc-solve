@@ -84,9 +84,9 @@ static void fc_solve_debondt_delta_stater_init(
 
             if (col_len > 0)
             {
-                const fcs_card_t top_card = fcs_col_get_card(col, 0);
+                const_AUTO(top_card, fcs_col_get_card(col, 0));
                 self->bakers_dozen_topmost_cards_lookup[top_card >> 3] |=
-                    (1 << top_card & (8 - 1));
+                    (1 << (top_card & (8 - 1)));
             }
         }
     }
@@ -217,7 +217,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
             if (col_len > 0)
             {
-                const fcs_card_t top_card = fcs_col_get_card(col, 0);
+                const_AUTO(top_card, fcs_col_get_card(col, 0));
 
                 /* Skip Aces which were already set. */
                 if (fcs_card_rank(top_card) != 1)
@@ -253,15 +253,13 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
             if (col_len > 0)
             {
-                fcs_card_t top_card = fcs_col_get_card(col, 0);
-
+                const_AUTO(top_card, fcs_col_get_card(col, 0));
                 if (fcs_card_rank(top_card) != 1)
                 {
                     SET_CARD_STATE(top_card, OPT_TOPMOST);
                 }
 
                 fcs_card_t parent_card = top_card;
-
                 for (int child_idx = 1; child_idx < col_len; child_idx++)
                 {
                     const fcs_card_t child_card =
@@ -530,14 +528,9 @@ static void fc_solve_debondt_delta_stater_decode(
         }
         else
         {
-            fcs_card_t parent_card;
-            int pos;
-
             fcs_col_push_card(col, top_card);
-
-            parent_card = top_card;
-
-            for (pos = 1; pos < orig_col_len; pos++)
+            var_AUTO(parent_card, top_card);
+            for (int pos = 1; pos < orig_col_len; pos++)
             {
                 const fcs_card_t child_card = fcs_col_get_card(orig_col, pos);
 

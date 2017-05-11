@@ -225,9 +225,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
                 break;
             }
 
-            const fcs_card_t top_card =
-                fcs_state_pop_col_card(new_key, *col_idx);
-
+            const_AUTO(top_card, fcs_state_pop_col_card(new_key, *col_idx));
             fcs_put_card_in_freecell(*new_key, dest_fc_idx, top_card);
 
             fcs_move_stack_non_seq_push(moves_ptr,
@@ -271,8 +269,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
             indirect_stacks_buffer);
 
         const int col_idx_val = *col_idx;
-        const fcs_card_t top_card =
-            fcs_state_pop_col_card(new_key, col_idx_val);
+        const_AUTO(top_card, fcs_state_pop_col_card(new_key, col_idx_val));
         fcs_state_push(new_key, put_cards_in_col_idx, top_card);
 
         fcs_push_1card_seq(moves_ptr, col_idx_val, put_cards_in_col_idx);
