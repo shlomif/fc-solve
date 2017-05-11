@@ -161,18 +161,14 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
 
 static inline void instance_destroy(fcs_dbm_solver_instance_t *instance)
 {
-    fcs_dbm_collection_by_depth_t *coll;
-
     fc_solve_compact_allocator_finish(&(instance->fcc_entry_points_allocator));
     fc_solve_meta_compact_allocator_finish(&(instance->fcc_meta_alloc));
-    {
-        coll = &(instance->coll);
-        fcs_depth_multi_queue__destroy(&(coll->depth_queue));
+    fcs_dbm_collection_by_depth_t *coll = &(instance->coll);
+    fcs_depth_multi_queue__destroy(&(coll->depth_queue));
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
-        fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
+    fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
 #endif
-        DESTROY_CACHE(coll);
-    }
+    DESTROY_CACHE(coll);
     fcs_lock_destroy(&instance->common.storage_lock);
     fcs_lock_destroy(&instance->global_lock);
     fcs_lock_destroy(&instance->fcc_entry_points_lock);
@@ -394,11 +390,8 @@ static void *instance_run_solver_thread(void *const void_arg)
     }
 
     free(base64_encoding_buffer);
-
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
-
     TRACE("%s\n", "instance_run_solver_thread end");
-
     return NULL;
 }
 

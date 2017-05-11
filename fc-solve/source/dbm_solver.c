@@ -231,9 +231,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     }
 
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
-
     TRACE("%s\n", "instance_run_solver_thread end");
-
     return NULL;
 }
 

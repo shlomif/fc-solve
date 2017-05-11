@@ -158,7 +158,6 @@ static inline void fc_solve_hash_init(
 static inline void fc_solve_hash_free(fc_solve_hash_t *const hash)
 {
     fc_solve_compact_allocator_finish(&(hash->allocator));
-
     free(hash->entries);
     hash->entries = NULL;
 }

@@ -188,7 +188,6 @@ static inline void instance_free(fcs_dbm_solver_instance_t *const instance)
     JHSFA(rc_word, instance->store);
 
     fcs_pdfs_cache_destroy(&(instance->cache));
-
     fc_solve_compact_allocator_finish(&(instance->derived_list_allocator));
     fc_solve_meta_compact_allocator_finish(&(instance->meta_alloc));
 }

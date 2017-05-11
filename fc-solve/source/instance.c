@@ -678,12 +678,9 @@ in the process */
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
-
     fc_solve_compact_allocator_finish(
         &(instance->rcs_states_cache.states_values_to_keys_allocator));
-
 #endif
-
     clean_soft_dfs(instance);
 }
 

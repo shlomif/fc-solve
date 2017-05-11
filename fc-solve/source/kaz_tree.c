@@ -375,7 +375,6 @@ static void safe_traverse(dict_t *dict, void (*func)(dnode_t *, void *))
 void fc_solve_kaz_tree_destroy(dict_t *dict)
 {
     assert(dict_isempty(dict));
-
     fc_solve_compact_allocator_finish(&(dict->dict_allocator));
     free(dict);
 }

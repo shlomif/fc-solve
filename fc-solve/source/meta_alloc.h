@@ -86,8 +86,7 @@ static inline void fcs_compact_alloc_release(
     allocator->ptr = allocator->rollback_ptr;
 }
 
-extern void fc_solve_compact_allocator_finish(
-    fcs_compact_allocator_t *const allocator);
+extern void fc_solve_compact_allocator_finish(fcs_compact_allocator_t *);
 
 static inline fcs_collectible_state_t *fcs_state_ia_alloc_into_var(
     fcs_compact_allocator_t *const allocator)

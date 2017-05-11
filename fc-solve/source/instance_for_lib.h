@@ -578,9 +578,7 @@ static inline void free_instance_hard_thread_callback(
     free(HT_FIELD(hard_thread, prelude_as_string));
     free(HT_FIELD(hard_thread, prelude));
     fcs_move_stack_static_destroy(HT_FIELD(hard_thread, reusable_move_stack));
-
     free(HT_FIELD(hard_thread, soft_threads));
-
     fc_solve_compact_allocator_finish(&(HT_FIELD(hard_thread, allocator)));
 }
 
