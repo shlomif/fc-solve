@@ -79,7 +79,6 @@
 2010s
 28-Sep-2002
 2Ffc-solve
-2Ffc-solve
 2Fpresets
 2Ftrunk
 32K
@@ -176,7 +175,6 @@ ESR
 EXE
 Egele
 Emscripten
-Ettlinger
 Ettlinger
 Ettlinger's
 Expat
@@ -460,7 +458,6 @@ automagically
 automatic-build-for-982-2fc-solving
 avl
 backend
-backend
 backends
 bakers_dozen
 bakers_game
@@ -481,7 +478,6 @@ bugreport
 build-on-win32
 bz2
 c's
-ccmake
 ccmake
 cd
 cgi
@@ -511,7 +507,6 @@ ctypes
 curr_depth
 dbm-freecell-solver-2fc-results-on-Amadiro-machine
 dbm_fc_solver
-dbm_solver
 dbm_solver
 debian
 delta_states
@@ -616,7 +611,6 @@ honor
 https
 i1
 i2
-i2
 i3
 ibm
 icc
@@ -715,7 +709,6 @@ perlresume
 pi-make-microsoft-freecell-board
 pkg-config
 pkill
-pkill
 pl
 plaintext
 plspider
@@ -746,7 +739,6 @@ pysol
 pysol-4
 qs
 qsi
-qsi
 random-DFS
 random-dfs
 random2
@@ -775,7 +767,6 @@ screencasts
 scriptable
 seahaven
 segfault
-segfaults
 segfaults
 sh
 shlomif
@@ -850,7 +841,6 @@ ver
 visited_iter
 vs
 wc
-wc
 weblog
 webscalability
 whitelisted
@@ -860,7 +850,6 @@ wikipedia
 wml
 world-writable
 wrt
-www
 www
 wxPython
 wxWindows
@@ -1124,4 +1113,3 @@ iPhone
 Der
 FreecellSolver-0
 diff
-
