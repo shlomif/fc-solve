@@ -173,9 +173,7 @@ typedef uint8_t fcs_locs_t;
     }
 
 #define fcs_col_push_card(col, from)                                           \
-    {                                                                          \
-        fcs_col_get_card((col), ((fcs_col_len(col))++)) = (from);              \
-    }
+    fcs_col_get_card((col), ((fcs_col_len(col))++)) = (from)
 
 #define fcs_freecell_is_empty(state, idx)                                      \
     (fcs_card_is_empty(fcs_freecell_card(state, idx)))

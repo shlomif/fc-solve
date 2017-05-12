@@ -116,7 +116,6 @@ static unsigned char get_move_from_parent_to_child(
 static void trace_solution(fcs_dbm_solver_instance_t *const instance,
     FILE *const out_fh, fc_solve_delta_stater_t *const delta)
 {
-
     fprintf(out_fh, "%s\n", "Success!");
     fflush(out_fh);
 /* Now trace the solution */

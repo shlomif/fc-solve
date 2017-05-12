@@ -476,7 +476,6 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                     fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
                 }
 #endif
-
                 fprintf(out_fh, "%s", "|");
                 fflush(out_fh);
 

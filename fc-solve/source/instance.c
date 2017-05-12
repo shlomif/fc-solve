@@ -591,7 +591,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 const fcs_move_stack_t *const stack = FCS_S_MOVES_TO_PARENT(s1);
                 const fcs_internal_move_t *const moves = stack->moves;
                 for (int move_idx = stack->num_moves - 1; move_idx >= 0;
-                     move_idx--)
+                     --move_idx)
                 {
                     fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
                 }
