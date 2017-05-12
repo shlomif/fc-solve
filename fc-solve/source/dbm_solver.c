@@ -94,11 +94,10 @@ static inline void instance_check_key(
 #ifndef FCS_DBM_WITHOUT_CACHES
         fcs_cache_key_info_t *cache_key = cache_store__insert_key(
             &(instance->cache_store), key, parent, moves_to_parent, move);
-        endif
 #endif
-            /* Now insert it into the queue. */
+        /* Now insert it into the queue. */
 
-            ++ instance->common.count_of_items_in_queue;
+        ++instance->common.count_of_items_in_queue;
         ++instance->common.num_states_in_collection;
 
         instance_debug_out_state(instance, &(token->key));

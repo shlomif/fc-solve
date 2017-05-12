@@ -34,26 +34,19 @@ static int fc_solve_compare_lru_cache_keys(const void *const void_a,
 #undef GET_PARAM
 }
 
+static inline void cache_destroy_key(fcs_cache_key_info_t *cache_key)
+{
+    for (; cache_key; cache_key = RECYCLE_BIN_NEXT(cache_key))
+    {
+        free(cache_key->moves_to_key);
+        cache_key->moves_to_key = NULL;
+    }
+}
+
 static inline void cache_destroy(fcs_lru_cache_t *cache)
 {
-    {
-#define NUM_CHAINS_TO_RELEASE 2
-        fcs_cache_key_info_t *const to_release[NUM_CHAINS_TO_RELEASE] = {
-            cache->recycle_bin, cache->lowest_pri};
-
-        for (size_t i = 0; i < COUNT(to_release); i++)
-        {
-            fcs_cache_key_info_t *cache_key;
-
-            for (cache_key = to_release[i]; cache_key;
-                 cache_key = RECYCLE_BIN_NEXT(cache_key))
-            {
-                free(cache_key->moves_to_key);
-                cache_key->moves_to_key = NULL;
-            }
-        }
-#undef NUM_CHAINS_TO_RELEASE
-    }
+    cache_destroy_key(cache->recycle_bin);
+    cache_destroy_key(cache->lowest_pri);
     fc_solve_kaz_tree_destroy(cache->kaz_tree);
     fc_solve_compact_allocator_finish(
         &(cache->states_values_to_keys_allocator));

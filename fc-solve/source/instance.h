@@ -281,9 +281,7 @@ typedef struct
     fcs_compact_allocator_t states_values_to_keys_allocator;
     fcs_int_limit_t count_elements_in_cache, max_num_elements_in_cache;
 
-    fcs_cache_key_info_t *lowest_pri, *highest_pri;
-
-    fcs_cache_key_info_t *recycle_bin;
+    fcs_cache_key_info_t *lowest_pri, *highest_pri, *recycle_bin;
 } fcs_lru_cache_t;
 
 #endif
