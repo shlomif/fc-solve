@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
                 buffer, sizeof(buffer[0]), COUNT(buffer) - 1, from_make_pysol);
             pclose(from_make_pysol);
         }
-        buffer[COUNT(buffer) - 1] = '\0';
+        LAST(buffer) = '\0';
 
         long num_moves;
         const char *verdict;

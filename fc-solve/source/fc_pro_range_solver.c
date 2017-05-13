@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
             pclose(from_make_pysol);
         }
 
-        buffer[COUNT(buffer) - 1] = '\0';
+        LAST(buffer) = '\0';
 
         int num_iters;
         int num_moves;

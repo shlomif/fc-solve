@@ -186,7 +186,7 @@ static inline void fc_solve__hard_thread__compile_prelude(
         }
         char p_scan_copy[FCS_MAX_IDENT_LEN];
         strncpy(p_scan_copy, p_scan, COUNT(p_scan_copy));
-        p_scan_copy[p - p_scan] = p_scan_copy[COUNT(p_scan_copy) - 1] = '\0';
+        p_scan_copy[p - p_scan] = LAST(p_scan_copy) = '\0';
         p++;
 
         ST_LOOP_START()

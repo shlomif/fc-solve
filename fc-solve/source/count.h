@@ -11,3 +11,4 @@
 #pragma once
 
 #define COUNT(arr) (sizeof(arr) / sizeof(arr[0]))
+#define LAST(arr) (arr)[COUNT(arr) - 1]

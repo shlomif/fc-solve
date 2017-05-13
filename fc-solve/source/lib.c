@@ -2220,7 +2220,7 @@ void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
 
     strncpy(soft_thread->name, name, COUNT(soft_thread->name));
-    soft_thread->name[COUNT(soft_thread->name) - 1] = '\0';
+    LAST(soft_thread->name) = '\0';
 }
 
 #ifdef FCS_WITH_FLARES
@@ -2232,7 +2232,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
         CURR_INST((fcs_user_t *)api_instance)->end_of_flares - 1;
 
     strncpy(flare->name, name, COUNT(flare->name));
-    flare->name[COUNT(flare->name) - 1] = '\0';
+    LAST(flare->name) = '\0';
 }
 #endif
 
