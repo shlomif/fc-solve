@@ -186,7 +186,7 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
      * */
     long *const out_num_new_positions,
     /* [Input/Output]: the list allocator. */
-    fcs_fcc_moves_seq_allocator_t *moves_list_allocator,
+    fcs_fcc_moves_seq_allocator_t *const moves_list_allocator,
     /* [Input/Output]: The meta allocator - needed to allocate and free
      * the compact allocators. */
     fcs_meta_compact_allocator_t *const meta_alloc)
@@ -429,7 +429,7 @@ static fcs_bool_t fc_solve_add_start_point_in_mem(
     const fcs_fcc_moves_list_item_t *start_iter =
         start_state_moves_seq->moves_list;
     const int count_start_state_moves = start_state_moves_seq->count;
-    fcs_fcc_moves_seq_allocator_t *moves_list_allocator =
+    fcs_fcc_moves_seq_allocator_t *const moves_list_allocator =
         context->moves_list_allocator;
     for (; pos_in_moves < count_start_state_moves;)
     {
