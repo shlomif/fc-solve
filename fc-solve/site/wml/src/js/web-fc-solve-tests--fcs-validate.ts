@@ -463,7 +463,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state BoardParseResult tests #1", function(a: Assert) {
-        a.expect(6);
+        a.expect(7);
         {
             let ms_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
 "5H QH 3C AC 3H 4H QD\n" +
@@ -508,12 +508,15 @@ export function test_fcs_validate()
                 ParseErrorType.LINE_PARSE_ERROR,
                 "Error of right type."
             );
+            let loc = error.locs[0];
             // TEST
             a.equal(
-                error.locs[0].type_,
+                loc.type_,
                 ErrorLocationType.ErrorLocationType_Column,
                 'Error location of right type.',
             );
+            // TEST
+            a.equal(loc.idx, 1, 'Column index #1');
         }
     });
 }
