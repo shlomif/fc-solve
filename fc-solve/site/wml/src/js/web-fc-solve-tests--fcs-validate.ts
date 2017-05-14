@@ -463,7 +463,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state BoardParseResult tests #1", function(a: Assert) {
-        a.expect(3);
+        a.expect(4);
         {
             let ms_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
 "5H QH 3C AC 3H 4H QD\n" +
@@ -484,7 +484,22 @@ export function test_fcs_validate()
             // TEST
             a.deepEqual(result.columns[0].col.getArrOfStrs(),
                 '4C 2C 9C 8C QS 4S 2H'.split(' '),
-                'column 0 was parsed fine.')
+                'column 0 was parsed fine.');
+        }
+
+        {
+            let nonsense_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
+"NONSENSE:: 5H QH 3C AC 3H 4H QD\n" +
+"QC 9S 6H 9H 3S KS 3D\n" +
+"5D 2S JC 5C JH 6D AS\n" +
+"2D KD TH TC TD 8D\n" +
+"7H JS KH TS KC 7C\n" +
+"AH 5S 6S AD 8H JD\n" +
+"7S 6C 7D 4D 8S 9D\n" ;
+            let result = new BoardParseResult(8, 4, nonsense_deal_24);
+
+            // TEST
+            a.ok( (!result.is_valid), "not validly parsed.");
         }
     });
 }

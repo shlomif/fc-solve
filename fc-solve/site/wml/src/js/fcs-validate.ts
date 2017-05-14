@@ -485,6 +485,7 @@ export class BoardParseResult {
         that.num_stacks = num_stacks;
         that.num_freecells = num_freecells;
 
+        that.errors = [];
         that.columns = [];
         var p = new StringParser(orig_s);
         for (var i=0; i < num_stacks; i++) {
