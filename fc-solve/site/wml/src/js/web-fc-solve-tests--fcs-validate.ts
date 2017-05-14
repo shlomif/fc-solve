@@ -463,7 +463,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state BoardParseResult tests #1", function(a: Assert) {
-        a.expect(1);
+        a.expect(2);
         {
             let ms_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
 "5H QH 3C AC 3H 4H QD\n" +
@@ -477,6 +477,9 @@ export function test_fcs_validate()
 
             // TEST
             a.ok( result.is_valid, "parsed correctly.");
+
+            // TEST
+            a.equal(result.columns.length, 8, 'There are 8 columns');
         }
     });
 }
