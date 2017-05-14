@@ -1935,7 +1935,8 @@ DLLEXPORT extern void freecell_solver_user_set_befs_weights(
         BEFS_VAR(soft_thread, weighting).befs_weights.weights;
     for (size_t i = 0; i < count; i++)
     {
-        weights[i] = max(input_weights[i], 0.0);
+        const_AUTO(w, input_weights[i]);
+        weights[i] = max(w, 0.0);
     }
 }
 
