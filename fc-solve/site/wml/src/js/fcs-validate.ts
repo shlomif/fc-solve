@@ -472,7 +472,7 @@ class ParseError {
     }
 }
 
-class BoardParseResult {
+export class BoardParseResult {
     public errors: Array<ParseError>;
     public is_valid: boolean;
     public foundations: FoundationsParseResult;
@@ -492,7 +492,18 @@ class BoardParseResult {
             var l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             var col = fcs_js__column_from_string(start_char_idx, l);
             if (! col.is_correct) {
-                that.errors.push(new ParseError(ParseErrorType.LINE_PARSE_ERROR, [new ErrorLocation(ErrorLocationType.ErrorLocationType_Column, i, start_char_idx, p.getConsumed())], fcs_js__card_from_string('AH')));
+                that.errors.push(new ParseError(
+                    ParseErrorType.LINE_PARSE_ERROR,
+                    [new ErrorLocation(
+                        ErrorLocationType.ErrorLocationType_Column,
+                        i,
+                        start_char_idx,
+                        p.getConsumed()
+                    )
+                    ],
+                    fcs_js__card_from_string('AH')
+                    )
+                );
                 that.is_valid = false;
                 return;
             }
