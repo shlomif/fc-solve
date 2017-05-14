@@ -507,7 +507,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         if (check_if_limits_exceeded())
         {
             BEFS_M_VAR(soft_thread, first_state_to_check) = PTR_STATE;
-
             TRACE0("error_code - FCS_STATE_SUSPEND_PROCESS");
             error_code = FCS_STATE_SUSPEND_PROCESS;
             goto my_return_label;
@@ -560,7 +559,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             );
 
         TRACE0("perform_tests");
-
         /*
          * Do all the tests at one go, because that is the way it should be
          * done for BFS and BeFS.
@@ -581,7 +579,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         /* Increase the number of iterations by one .
          * */
         BUMP_NUM_CHECKED_STATES();
-
         TRACE0("Insert all states");
         /* Insert all the derived states into the PQ or Queue */
         fcs_derived_states_list_item_t *derived_iter;

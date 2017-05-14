@@ -65,7 +65,7 @@ typedef struct
 {
     size_t max_size;
     size_t current_size;
-    pq_element_t *Elements; /* pointer to void pointers */
+    pq_element_t *elems; /* pointer to void pointers */
 } pri_queue_t;
 
 /* given an index to any element in a binary tree stored in a linear array with
@@ -87,13 +87,13 @@ typedef struct
 static inline void fc_solve_pq_init(pri_queue_t *const pq)
 {
     pq->current_size = 0;
-    pq->Elements = SMALLOC(pq->Elements, (pq->max_size = 1024) + 1);
+    pq->elems = SMALLOC(pq->elems, (pq->max_size = 1024) + 1);
 }
 
 static inline void fc_solve_PQueueFree(pri_queue_t *pq)
 {
-    free(pq->Elements);
-    pq->Elements = NULL;
+    free(pq->elems);
+    pq->elems = NULL;
 }
 
 /* Join a priority queue
@@ -106,11 +106,11 @@ static inline void fc_solve_pq_push(pri_queue_t *const pq,
 
     if (i > pq->max_size)
     {
-        pq->Elements =
-            (pq_element_t *)SREALLOC(pq->Elements, (pq->max_size += 256) + 1);
+        pq->elems =
+            (pq_element_t *)SREALLOC(pq->elems, (pq->max_size += 256) + 1);
     }
 
-    const_SLOT(Elements, pq);
+    const_SLOT(elems, pq);
     /* set i to the first unused element and increment current_size */
     /* while the parent of the space we're putting the new node into is
        worse than
@@ -122,20 +122,20 @@ static inline void fc_solve_pq_push(pri_queue_t *const pq,
        we need to loops
        with the comparison operator flipped... */
 
-    while ((i == PQ_FIRST_ENTRY
-                   ? (FC_SOLVE_PQUEUE_MaxRating) /* return biggest
-                                                    possible rating if
-                                                    first element */
-                   : (fcs_pq_rating(Elements[PQ_PARENT_INDEX(i)]))) < r)
+    while (
+        (i == PQ_FIRST_ENTRY ? (FC_SOLVE_PQUEUE_MaxRating) /* return biggest
+                                                              possible rating if
+                                                              first element */
+                             : (fcs_pq_rating(elems[PQ_PARENT_INDEX(i)]))) < r)
     {
-        Elements[i] = Elements[PQ_PARENT_INDEX(i)];
+        elems[i] = elems[PQ_PARENT_INDEX(i)];
 
         i = PQ_PARENT_INDEX(i);
     }
 
     /* then add the element at the space we created. */
-    Elements[i].val = val;
-    Elements[i].rating = r;
+    elems[i].val = val;
+    elems[i].rating = r;
 }
 
 static inline fcs_bool_t fc_solve_is_pqueue_empty(pri_queue_t *pq)
@@ -158,12 +158,12 @@ static inline void fc_solve_pq_pop(
         *val = NULL;
         return;
     }
-    const_SLOT(Elements, pq);
+    const_SLOT(elems, pq);
     const_SLOT(current_size, pq);
-    *val = Elements[PQ_FIRST_ENTRY].val;
+    *val = elems[PQ_FIRST_ENTRY].val;
 
     /* get pointer to last element in tree */
-    const_AUTO(last_elem, Elements[current_size]);
+    const_AUTO(last_elem, elems[current_size]);
 
     const_AUTO(new_current_size, current_size - 1);
     /* code to pop an element from an ascending (top to bottom) pqueue */
@@ -177,15 +177,15 @@ static inline void fc_solve_pq_pop(
     {
         /* set child to the smaller of the two children... */
 
-        if ((child != new_current_size) && (fcs_pq_rating(Elements[child + 1]) >
-                                               fcs_pq_rating(Elements[child])))
+        if ((child != new_current_size) &&
+            (fcs_pq_rating(elems[child + 1]) > fcs_pq_rating(elems[child])))
         {
             child++;
         }
 
-        if (fcs_pq_rating(last_elem) < fcs_pq_rating(Elements[child]))
+        if (fcs_pq_rating(last_elem) < fcs_pq_rating(elems[child]))
         {
-            Elements[i] = Elements[child];
+            elems[i] = elems[child];
         }
         else
         {
@@ -193,7 +193,7 @@ static inline void fc_solve_pq_pop(
         }
     }
 
-    Elements[i] = last_elem;
+    elems[i] = last_elem;
     pq->current_size = new_current_size;
 
     return;

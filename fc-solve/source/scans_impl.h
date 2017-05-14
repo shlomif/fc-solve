@@ -322,7 +322,6 @@ static inline pq_rating_t befs_rate_state(
     }
 
     TRACE0("Before return");
-
     return ((int)sum);
 #undef CALC_VACANCY_VAL
 }
@@ -668,11 +667,10 @@ static inline void free_states(fc_solve_instance_t *const instance)
                 {
                     pri_queue_t new_pq;
                     fc_solve_pq_init(&(new_pq));
-                    const_AUTO(
-                        Elements, BEFS_VAR(soft_thread, pqueue).Elements);
+                    const_AUTO(elems, BEFS_VAR(soft_thread, pqueue).elems);
                     const_AUTO(end_element,
-                        Elements + BEFS_VAR(soft_thread, pqueue).current_size);
-                    for (pq_element_t *next_element = Elements + PQ_FIRST_ENTRY;
+                        elems + BEFS_VAR(soft_thread, pqueue).current_size);
+                    for (pq_element_t *next_element = elems + PQ_FIRST_ENTRY;
                          next_element <= end_element; next_element++)
                     {
                         if (!fcs__is_state_a_dead_end((*next_element).val))
@@ -986,7 +984,6 @@ static inline int fc_solve_soft_dfs_do_solve(
             }
 
             TRACE0("After iter_handler");
-
             const_AUTO(orig_idx, the_soft_dfs_info->move_func_list_idx);
             const fc_solve_state_weighting_t *const weighting =
                 &(THE_MOVE_FUNCS_LIST.lists[orig_idx].weighting);

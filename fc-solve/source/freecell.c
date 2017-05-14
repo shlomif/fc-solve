@@ -1003,7 +1003,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
  * already filters the fcs_is_parent_card check for us.
  * */
 #ifdef FCS_POS_BY_RANK__ENABLE_PARENT_CHECK
-                fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+                const_AUTO(dest_card, fcs_col_get_card(dest_col, dc));
                 /* Don't move if there's a sequence of cards in the
                  * destination.
                  * */
