@@ -463,7 +463,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state BoardParseResult tests #1", function(a: Assert) {
-        a.expect(7);
+        a.expect(9);
         {
             let ms_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
 "5H QH 3C AC 3H 4H QD\n" +
@@ -488,9 +488,11 @@ export function test_fcs_validate()
         }
 
         {
-            let nonsense_deal_24 = "4C 2C 9C 8C QS 4S 2H\n" +
-"NONSENSE:: 5H QH 3C AC 3H 4H QD\n" +
-"QC 9S 6H 9H 3S KS 3D\n" +
+            let col1_s = "4C 2C 9C 8C QS 4S 2H\n";
+            let col2_s = "NONSENSE:: 5H QH 3C AC 3H 4H QD\n";
+
+            let nonsense_deal_24 = col1_s + col2_s +
+                "QC 9S 6H 9H 3S KS 3D\n" +
 "5D 2S JC 5C JH 6D AS\n" +
 "2D KD TH TC TD 8D\n" +
 "7H JS KH TS KC 7C\n" +
@@ -517,6 +519,13 @@ export function test_fcs_validate()
             );
             // TEST
             a.equal(loc.idx, 1, 'Column index #1');
+
+            // TEST
+            a.equal(loc.start, col1_s.length, 'Location start is sane.');
+
+            // TEST
+            a.equal(loc.end, col1_s.length + col2_s.length,
+                'Location end is correct.');
         }
     });
 }
