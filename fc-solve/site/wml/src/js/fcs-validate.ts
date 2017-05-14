@@ -429,7 +429,7 @@ export function fcs_js__foundations_from_string(num_decks: number, start_char_id
     return make_ret(true, '');
 }
 
-enum ErrorLocationType {
+export enum ErrorLocationType {
     ErrorLocationType_Foundations,
     ErrorLocationType_Freecells,
     ErrorLocationType_Column,
@@ -450,7 +450,7 @@ class ErrorLocation {
     }
 }
 
-enum ParseErrorType {
+export enum ParseErrorType {
     VALID,
     TOO_MUCH_OF_CARD,
     NOT_ENOUGH_OF_CARD,
