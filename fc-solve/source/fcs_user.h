@@ -12,6 +12,7 @@
  */
 #pragma once
 
+#include <stddef.h>
 #include "fcs_dllexport.h"
 #include "fcs_enums.h"
 #include "fcs_move.h"
@@ -177,8 +178,13 @@ DLLEXPORT extern int freecell_solver_user_set_empty_stacks_filled_by(
 DLLEXPORT extern int freecell_solver_user_set_sequence_move(
     void *user_instance, int unlimited_sequence_move);
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_2
 DLLEXPORT extern int freecell_solver_user_set_a_star_weight(
-    void *const user_instance, const int my_index, const double weight);
+    void *user_instance, int my_index, double weight);
+#endif
+
+DLLEXPORT extern void freecell_solver_user_set_befs_weights(
+    void *user_instance, size_t count, const double *weights);
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 typedef void (*freecell_solver_user_iter_handler_t)(void *user_instance,

@@ -23,6 +23,7 @@ extern "C" {
 #endif
 
 #cmakedefine FCS_BREAK_BACKWARD_COMPAT_1
+#cmakedefine FCS_BREAK_BACKWARD_COMPAT_2
 
 #ifdef FCS_BREAK_BACKWARD_COMPAT_1
 #ifndef FC_SOLVE_IMPLICIT_T_RANK

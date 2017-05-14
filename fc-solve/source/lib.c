@@ -1924,6 +1924,22 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
 }
 #endif
 
+DLLEXPORT extern void freecell_solver_user_set_befs_weights(
+    void *const api_instance, const size_t input_count,
+    const double *const input_weights)
+{
+    fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
+    const size_t count = min(input_count,
+        COUNT(BEFS_VAR(soft_thread, weighting).befs_weights.weights));
+    double *const weights =
+        BEFS_VAR(soft_thread, weighting).befs_weights.weights;
+    for (size_t i = 0; i < count; i++)
+    {
+        weights[i] = max(input_weights[i], 0.0);
+    }
+}
+
+#ifndef FCS_BREAK_BACKWARD_COMPAT_2
 int DLLEXPORT freecell_solver_user_set_a_star_weight(
     void *const api_instance, const int my_index, const double weight)
 {
@@ -1942,6 +1958,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 
     return 0;
 }
+#endif
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(

@@ -506,11 +506,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             const char *const s = *arg;
 
             fc_solve_set_weights(s, strchr(s, '\0'), befs_weights);
-            for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
-            {
-                freecell_solver_user_set_a_star_weight(
-                    instance, i, befs_weights[i]);
-            }
+            freecell_solver_user_set_befs_weights(
+                instance, FCS_NUM_BEFS_WEIGHTS, befs_weights);
         }
         break;
 
