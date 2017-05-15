@@ -147,7 +147,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     if (a > FCS_MAX_RANK)
     {
         /* We can move this sequence up there */
-
         sfs_check_state_begin();
 
         my_copy_stack(stack_idx);
@@ -1033,7 +1032,6 @@ DECLARE_MOVE_FUNCTION(
                 continue;
             }
             /* We can do it - so let's move everything */
-
             sfs_check_state_begin();
 
             /* Move the junk cards to their place */

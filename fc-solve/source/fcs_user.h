@@ -279,7 +279,7 @@ DLLEXPORT extern int freecell_solver_user_set_hard_thread_prelude(
     void *const user_instance, freecell_solver_str_t prelude);
 
 DLLEXPORT extern int freecell_solver_user_set_flares_plan(
-    void *const api_instance, freecell_solver_str_t prelude);
+    void *const api_instance, freecell_solver_str_t plan);
 
 DLLEXPORT extern void freecell_solver_user_recycle(void *const user_instance);
 

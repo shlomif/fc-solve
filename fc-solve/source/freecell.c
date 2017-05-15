@@ -85,7 +85,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
                 continue;
             }
             /* We can put it there */
-
             sfs_check_state_begin();
 
             my_copy_stack(stack_idx);
@@ -905,7 +904,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
             continue;
         }
         /* We can move it */
-
         sfs_check_state_begin();
 
         my_copy_stack(stack_idx);
@@ -1036,7 +1034,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                 }
 
                 /* We can move it */
-
                 sfs_check_state_begin();
                 // Fill the freecells with the top cards
                 copy_two_stacks(stack_idx, ds);
@@ -1475,7 +1472,6 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
     if (cards_were_moved)
     {
         ptr_next_state = derived_states_list_struct.states[0].state_ptr;
-
         /*
          * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
          * hurt if it's already there, and if it's a state that was
