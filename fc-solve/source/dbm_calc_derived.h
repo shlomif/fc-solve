@@ -378,7 +378,6 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
 {
     fcs_derived_state_t *ptr_new_state;
     int ds;
-    fcs_cards_column_t col;
     int empty_stack_idx = -1;
 
     /* needed by the macros. */
@@ -393,7 +392,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     /* Move top stack cards to foundations. */
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        col = fcs_state_get_col(the_state, stack_idx);
+        const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
         const_AUTO(cards_num, fcs_col_len(col));
         if (cards_num == 0)
         {
@@ -458,7 +457,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     /* Move stack card on top of a parent */
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        col = fcs_state_get_col(the_state, stack_idx);
+        const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
         const_AUTO(cards_num, fcs_col_len(col));
         if (cards_num <= cards_num_min_limit)
         {
@@ -515,7 +514,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         /* Stack Card to Empty Stack */
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
-            col = fcs_state_get_col(the_state, stack_idx);
+            const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
             const_AUTO(cards_num, fcs_col_len(col));
             /* Bug fix: if there's only one card in a column, there's no
              * point moving it to a new empty column.
@@ -560,7 +559,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         /* Stack Card to Empty Freecell */
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
-            col = fcs_state_get_col(the_state, stack_idx);
+            const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
             const_AUTO(cards_num, fcs_col_len(col));
             if (cards_num <= cards_num_min_limit)
             {
