@@ -377,7 +377,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     const fcs_bool_t perform_horne_prune)
 {
     fcs_derived_state_t *ptr_new_state;
-    int stack_idx, cards_num, ds;
+    int ds;
     fcs_cards_column_t col;
     int deck, suit;
     int empty_stack_idx = -1;
@@ -392,10 +392,10 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     }
 
     /* Move top stack cards to foundations. */
-    for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+    for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         col = fcs_state_get_col(the_state, stack_idx);
-        cards_num = fcs_col_len(col);
+        const_AUTO(cards_num, fcs_col_len(col));
         if (cards_num == 0)
         {
             empty_stack_idx = stack_idx;
@@ -424,9 +424,8 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     }
 
     int empty_fc_idx = -1;
-#define fc_idx stack_idx
     /* Move freecell cards to foundations. */
-    for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
+    for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
         if (fcs_card_is_empty(card))
@@ -458,10 +457,10 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 1 : 0);
 
     /* Move stack card on top of a parent */
-    for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+    for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         col = fcs_state_get_col(the_state, stack_idx);
-        cards_num = fcs_col_len(col);
+        const_AUTO(cards_num, fcs_col_len(col));
         if (cards_num <= cards_num_min_limit)
         {
             continue;
@@ -487,7 +486,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     }
 
     /* Move freecell card on top of a parent */
-    for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
+    for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
         if (!fcs_card_is_valid(card))
@@ -515,10 +514,10 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         (empty_stack_idx >= 0))
     {
         /* Stack Card to Empty Stack */
-        for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             col = fcs_state_get_col(the_state, stack_idx);
-            cards_num = fcs_col_len(col);
+            const_AUTO(cards_num, fcs_col_len(col));
             /* Bug fix: if there's only one card in a column, there's no
              * point moving it to a new empty column.
              * */
@@ -539,7 +538,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         }
 
         /* Freecell card -> Empty Stack. */
-        for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
+        for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
         {
             const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
             if (fcs_card_is_empty(card))
@@ -560,10 +559,10 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     if (empty_fc_idx >= 0)
     {
         /* Stack Card to Empty Freecell */
-        for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             col = fcs_state_get_col(the_state, stack_idx);
-            cards_num = fcs_col_len(col);
+            const_AUTO(cards_num, fcs_col_len(col));
             if (cards_num <= cards_num_min_limit)
             {
                 continue;
@@ -579,8 +578,6 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
                 FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
     }
-#undef fc_idx
-
     /* Perform Horne's Prune on all the states,
      * or just set their num irreversible moves counts.
      * */
