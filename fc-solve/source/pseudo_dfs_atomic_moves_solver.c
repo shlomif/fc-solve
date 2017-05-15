@@ -242,20 +242,14 @@ static inline void instance__print_coords_to_log(
     {
         fprintf(log_fh, "%d,", stack_item->next_state_idx);
     }
-
 #if 1
-    {
-
-        fcs_state_locs_struct_t locs;
-        fc_solve_init_locs(&locs);
-        char state_as_string[2000];
-        FCS__RENDER_STATE(
-            state_as_string, &(end_stack_item->curr_state->s), &locs);
-        printf("Found State=<<'STATE'\n%s\nSTATE\n\n", state_as_string);
-        fflush(stdout);
-    }
+    fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&locs);
+    char state_as_string[2000];
+    FCS__RENDER_STATE(state_as_string, &(end_stack_item->curr_state->s), &locs);
+    printf("Found State=<<'STATE'\n%s\nSTATE\n\n", state_as_string);
+    fflush(stdout);
 #endif
-
     fprintf(log_fh, "]\n");
 }
 

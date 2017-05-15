@@ -719,7 +719,8 @@ static inline fcs_bool_t duplicate_string_while_adding_a_trailing_newline(
     }
     else
     {
-        strcpy(s, "\n");
+        s[0] = '\n';
+        s[1] = '\0';
     }
     return TRUE;
 }

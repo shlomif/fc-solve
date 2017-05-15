@@ -427,8 +427,6 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
     }
 
     dbm__free_threads(instance, num_threads, threads, free_thread);
-
-    return;
 }
 
 /* Returns if the process should terminate. */
