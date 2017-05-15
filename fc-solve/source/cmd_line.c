@@ -192,12 +192,10 @@ static inline char *calc_errstr_s(const char *const format, ...)
 #define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)
 #endif
 #define PROCESS_OPT_ARG()                                                      \
+    if ((++arg) == arg_argc)                                                   \
     {                                                                          \
-        if ((++arg) == arg_argc)                                               \
-        {                                                                      \
-            *last_arg = arg - 1 - &(argv[0]);                                  \
-            return FCS_CMD_LINE_PARAM_WITH_NO_ARG;                             \
-        }                                                                      \
+        *last_arg = arg - 1 - &(argv[0]);                                      \
+        return FCS_CMD_LINE_PARAM_WITH_NO_ARG;                                 \
     }
 #define RET_ERROR_IN_ARG()                                                     \
     *last_arg = arg - &(argv[0]);                                              \
@@ -302,21 +300,16 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
 
         case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
-        {
             PROCESS_OPT_ARG();
-        }
-        break;
+            break;
 
         case FCS_OPT_MAX_ITERS: /* STRINGS=-mi|--max-iters; */
-        {
             PROCESS_OPT_ARG();
 
             freecell_solver_user_limit_iterations_long(instance, atol((*arg)));
-        }
-        break;
+            break;
 
         case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */
-        {
             PROCESS_OPT_ARG();
 
             if (freecell_solver_user_set_depth_tests_order(instance, 0,
@@ -325,11 +318,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                     "Error in tests' order!\n%s\n", fcs_user_errstr);
             }
-        }
-        break;
+            break;
 
         case FCS_OPT_FREECELLS_NUM: /* STRINGS=--freecells-num; */
-        {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_FREECELLS
             if (freecell_solver_user_set_num_freecells(instance, atoi(*arg)) !=
@@ -342,11 +333,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     freecell_solver_user_get_max_num_freecells());
             }
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_STACKS_NUM: /* STRINGS=--stacks-num; */
-        {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_STACKS
             if (freecell_solver_user_set_num_stacks(instance, atoi(*arg)) != 0)
@@ -358,11 +347,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     freecell_solver_user_get_max_num_stacks());
             }
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_DECKS_NUM: /* STRINGS=--decks-num; */
-        {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_DECKS
             if (freecell_solver_user_set_num_decks(instance, atoi(*arg)) != 0)
@@ -374,8 +361,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     freecell_solver_user_get_max_num_decks());
             }
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_SEQUENCES_ARE_BUILT_BY: /* STRINGS=--sequences-are-built-by;
                                                 */
@@ -393,14 +379,12 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         break;
 
         case FCS_OPT_SEQUENCE_MOVE: /* STRINGS=--sequence-move; */
-        {
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
             freecell_solver_user_set_sequence_move(
                 instance, !strcmp((*arg), "unlimited"));
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_EMPTY_STACKS_FILLED_BY: /* STRINGS=--empty-stacks-filled-by;
                                                 */
@@ -690,7 +674,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         break;
 
         case FCS_OPT_READ_FROM_FILE: /* STRINGS=--read-from-file; */
-        {
             PROCESS_OPT_ARG();
 
             if (file_nesting_count != 0)
@@ -778,8 +761,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 fc_solve_args_man_free(&args_man);
             }
-        }
-        break;
+            break;
 
         case FCS_OPT_LOAD_CONFIG: /* STRINGS=-l|--load-config; */
         {
@@ -811,43 +793,37 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                                              */
         {
             PROCESS_OPT_ARG();
-
+            int min_depth = 0;
+            const char *s = (*arg);
+            while (isdigit(*s))
             {
-                int min_depth = 0;
+                s++;
+            }
+            if (*s == ',')
+            {
+                min_depth = atoi(*arg);
+                s++;
+            }
+            else
+            {
+                s = (*arg);
+            }
 
-                const char *s = (*arg);
-                while (isdigit(*s))
-                {
-                    s++;
-                }
-                if (*s == ',')
-                {
-                    min_depth = atoi(*arg);
-                    s++;
-                }
-                else
-                {
-                    s = (*arg);
-                }
-
-                /* Note: passing (*arg) instead of s to the
-                 * set_depth_tests_order is likely wrong, but when doing
-                 * it right, the tests fail.
-                 * */
-                if (freecell_solver_user_set_depth_tests_order(instance,
-                        min_depth,
-                        ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg))
-                            FCS__PASS_ERR_STR(&fcs_user_errstr)))
-                {
-                    RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
-                        "Error in depth tests' order!\n%s\n", fcs_user_errstr);
-                }
+            /* Note: passing (*arg) instead of s to the
+             * set_depth_tests_order is likely wrong, but when doing
+             * it right, the tests fail.
+             * */
+            if (freecell_solver_user_set_depth_tests_order(instance, min_depth,
+                    ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg))
+                        FCS__PASS_ERR_STR(&fcs_user_errstr)))
+            {
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                    "Error in depth tests' order!\n%s\n", fcs_user_errstr);
             }
         }
         break;
 
         case FCS_OPT_SET_PRUNING: /* STRINGS=-sp|--set-pruning; */
-        {
             PROCESS_OPT_ARG();
             if (freecell_solver_user_set_pruning(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
@@ -856,23 +832,18 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr);
             }
-        }
-        break;
+            break;
 
         case FCS_OPT_CACHE_LIMIT: /* STRINGS=--cache-limit; */
-        {
             PROCESS_OPT_ARG();
-
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 #ifdef FCS_RCS_STATES
             freecell_solver_user_set_cache_limit(instance, atol(*arg));
 #endif
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_FLARES_CHOICE: /* STRINGS=--flares-choice; */
-        {
             PROCESS_OPT_ARG();
 
 #ifdef FCS_WITH_FLARES
@@ -884,8 +855,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
 #endif
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_PATSOLVE_X_PARAM: /* STRINGS=--patsolve-x-param; */
         {

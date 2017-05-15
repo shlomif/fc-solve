@@ -71,8 +71,7 @@ extern int fc_solve_compare_lru_cache_keys(const void *const void_a,
 {
 #define GET_PARAM(p)                                                           \
     ((fcs_lru_side_t)(((const fcs_cache_key_info_t *)(p))->val_ptr))
-    fcs_lru_side_t a = GET_PARAM(void_a);
-    fcs_lru_side_t b = GET_PARAM(void_b);
+    const fcs_lru_side_t a = GET_PARAM(void_a), b = GET_PARAM(void_b);
 
     return ((a > b) ? 1 : (a < b) ? (-1) : 0);
 #undef GET_PARAM
@@ -539,9 +538,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             (num_vacant_freecells == LOCAL_FREECELLS_NUM))
         {
             instance->final_state = PTR_STATE;
-
             BUMP_NUM_CHECKED_STATES();
-
             error_code = FCS_STATE_WAS_SOLVED;
             goto my_return_label;
         }

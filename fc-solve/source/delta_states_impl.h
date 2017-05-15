@@ -229,8 +229,8 @@ static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
         cols_indexes[non_orig_idx] = cols_indexes[empty_col_idx];
         cols_indexes[empty_col_idx] = swap_int;
 
-        non_orig_idx++;
-        empty_col_idx--;
+        ++non_orig_idx;
+        --empty_col_idx;
     }
 }
 
@@ -256,45 +256,42 @@ static void fc_solve_delta_stater_encode_composite(
      * */
     fc_solve_delta__promote_empty_cols(num_columns, cols_indexes, cols);
 
-    {
-        int new_non_orig_cols_indexes[MAX_NUM_STACKS];
-        int new_non_orig_cols_indexes_count = 0;
+    int new_non_orig_cols_indexes[MAX_NUM_STACKS];
+    int new_non_orig_cols_indexes_count = 0;
 
-        /* Filter the new_non_orig_cols_indexes */
-        for (int i = 0; i < num_columns; i++)
+    /* Filter the new_non_orig_cols_indexes */
+    for (int i = 0; i < num_columns; i++)
+    {
+        if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
         {
-            if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
-            {
-                new_non_orig_cols_indexes[new_non_orig_cols_indexes_count++] =
-                    cols_indexes[i];
-            }
+            new_non_orig_cols_indexes[new_non_orig_cols_indexes_count++] =
+                cols_indexes[i];
         }
+    }
 
 /* Sort the new_non_orig_cols_indexes_count using insertion-sort. */
 #define COMP_BY(idx)                                                           \
     (fcs_card2char(fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0)))
 #define ITEM_IDX(idx) (new_non_orig_cols_indexes[idx])
 #define COMP_BY_IDX(idx) (COMP_BY(ITEM_IDX(idx)))
-        for (int b = 1; b < new_non_orig_cols_indexes_count; b++)
+    for (int b = 1; b < new_non_orig_cols_indexes_count; b++)
+    {
+        for (int c = b; (c > 0) && (COMP_BY_IDX(c - 1) > COMP_BY_IDX(c)); c--)
         {
-            for (int c = b; (c > 0) && (COMP_BY_IDX(c - 1) > COMP_BY_IDX(c));
-                 c--)
-            {
-                const_AUTO(swap_int, ITEM_IDX(c));
-                ITEM_IDX(c) = ITEM_IDX(c - 1);
-                ITEM_IDX(c - 1) = swap_int;
-            }
+            const_AUTO(swap_int, ITEM_IDX(c));
+            ITEM_IDX(c) = ITEM_IDX(c - 1);
+            ITEM_IDX(c - 1) = swap_int;
         }
+    }
 #undef COMP_BY_IDX
 #undef ITEM_IDX
 #undef COMP_BY
 #undef b
-        for (int i = 0, sorted_idx = 0; i < num_columns; i++)
+    for (int i = 0, sorted_idx = 0; i < num_columns; i++)
+    {
+        if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
         {
-            if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
-            {
-                cols_indexes[i] = new_non_orig_cols_indexes[sorted_idx++];
-            }
+            cols_indexes[i] = new_non_orig_cols_indexes[sorted_idx++];
         }
     }
 

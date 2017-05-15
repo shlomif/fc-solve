@@ -356,11 +356,9 @@ static inline pq_rating_t befs_rate_state(
 #endif
 
 #define ASSIGN_ptr_state(my_value)                                             \
+    if ((PTR_STATE = my_value))                                                \
     {                                                                          \
-        if ((PTR_STATE = my_value))                                            \
-        {                                                                      \
-            FCS_ASSIGN_STATE_KEY();                                            \
-        }                                                                      \
+        FCS_ASSIGN_STATE_KEY();                                                \
     }
 
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
@@ -869,11 +867,8 @@ static inline int fc_solve_soft_dfs_do_solve(
                     the_soft_dfs_info--;
                     derived_states_list =
                         &(the_soft_dfs_info->derived_states_list);
-
                     ASSIGN_ptr_state(the_soft_dfs_info->state);
-
                     VERIFY_PTR_STATE_TRACE0("Verify Foo");
-
                     soft_thread->num_vacant_freecells =
                         the_soft_dfs_info->num_vacant_freecells;
                     soft_thread->num_vacant_stacks =
@@ -928,9 +923,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                              (num_vacant_freecells == LOCAL_FREECELLS_NUM)))
                 {
                     instance->final_state = PTR_STATE;
-
                     BUMP_NUM_CHECKED_STATES();
-
                     TRACE0("Returning FCS_STATE_WAS_SOLVED");
                     return FCS_STATE_WAS_SOLVED;
                 }
@@ -1158,10 +1151,8 @@ static inline int fc_solve_soft_dfs_do_solve(
                 }
                 the_soft_dfs_info->current_state_index = state_idx;
                 the_soft_dfs_info++;
-
                 ASSIGN_ptr_state(single_derived_state);
                 the_soft_dfs_info->state = PTR_STATE;
-
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify after recurse");
 
                 the_soft_dfs_info->move_func_list_idx = 0;

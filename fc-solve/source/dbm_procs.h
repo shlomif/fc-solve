@@ -138,7 +138,7 @@ static inline void pre_cache_offload_and_reset(fcs_pre_cache_t *const pre_cache,
 
 #endif
 
-#endif /* FCS_DBM_WITHOUT_CACHES */
+#endif // FCS_DBM_WITHOUT_CACHES
 
 typedef struct fcs_dbm_solver_thread_struct fcs_dbm_solver_thread_t;
 

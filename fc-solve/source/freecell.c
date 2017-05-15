@@ -570,9 +570,7 @@ DECLARE_MOVE_FUNCTION(
                 sfs_check_state_begin();
 
                 my_copy_stack(ds);
-
                 const int cols_indexes[3] = {ds, -1, -1};
-
                 const empty_two_cols_ret_t last_dest =
                     empty_two_cols_from_new_state(soft_thread,
                         ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
@@ -849,9 +847,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 sfs_check_state_begin();
 
                 /* Fill the freecells with the top cards */
-
                 my_copy_stack(stack_idx);
-
                 const int cols_indexes[3] = {stack_idx, -1, -1};
                 const empty_two_cols_ret_t empty_ret =
                     empty_two_cols_from_new_state(soft_thread,
