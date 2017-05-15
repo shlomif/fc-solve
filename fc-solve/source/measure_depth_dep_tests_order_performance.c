@@ -105,8 +105,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--output-to"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--output-to came without an argument!\n");
             }
@@ -114,8 +113,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--scan1-to"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--scan1-to came without an argument!\n");
             }
@@ -123,8 +121,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--scan2-to"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--scan1-to came without an argument!\n");
             }
@@ -132,8 +129,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--iters-limit"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--iters-limit came without an argument!\n");
             }
@@ -141,8 +137,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--max-var-depth"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--max-var-depth came without an argument!\n");
             }

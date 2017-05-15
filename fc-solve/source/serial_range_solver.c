@@ -48,8 +48,7 @@ int main(int argc, char *argv[])
     {
         if (!strcmp(argv[arg], "--binary-output-to"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--binary-output-to came without an argument!\n");
             }
@@ -57,8 +56,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--total-iterations-limit"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err(
                     "--total-iterations-limit came without an argument!\n");
@@ -68,8 +66,7 @@ int main(int argc, char *argv[])
         }
         else if (!strcmp(argv[arg], "--solutions-directory"))
         {
-            arg++;
-            if (arg == argc)
+            if (++arg == argc)
             {
                 help_err("--solutions-directory came without an argument!\n");
             }
