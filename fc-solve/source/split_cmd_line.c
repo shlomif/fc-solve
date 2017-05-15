@@ -49,8 +49,6 @@ static inline void add_to_last_arg(
         manager->last_arg_end += new_last_arg - manager->last_arg + 1024;
         manager->last_arg = new_last_arg;
     }
-
-    return;
 }
 
 static inline void push_args_last_arg(args_man_wrapper_t *const manager)
@@ -72,8 +70,6 @@ static inline void push_args_last_arg(args_man_wrapper_t *const manager)
 
     /* Reset last_arg_ptr so we will have an entirely new argument */
     manager->last_arg_ptr = manager->last_arg;
-
-    return;
 }
 
 static inline fcs_bool_t is_whitespace(const char c)

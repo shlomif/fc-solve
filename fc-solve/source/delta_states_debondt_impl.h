@@ -115,12 +115,10 @@ static inline void fc_solve_debondt_delta_stater_set_derived(
     self->derived_state = state;
 }
 
-#define GET_SUIT_BIT(card) (((fcs_card_suit(card)) & 0x2) >> 1)
-
 static inline int wanted_suit_bit_opt(const fcs_card_t parent_card)
 {
-    return GET_SUIT_BIT(parent_card) ? OPT_PARENT_SUIT_MOD_IS_1
-                                     : OPT_PARENT_SUIT_MOD_IS_0;
+    return ((fcs_card_suit(parent_card) & 0x2) ? OPT_PARENT_SUIT_MOD_IS_1
+                                               : OPT_PARENT_SUIT_MOD_IS_0);
 }
 
 static inline int wanted_suit_idx_opt(const fcs_card_t parent_card)

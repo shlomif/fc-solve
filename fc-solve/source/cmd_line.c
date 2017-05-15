@@ -915,7 +915,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args(void *instance, int argc,
     freecell_solver_str_t *known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void *const callback_context FCS__PASS_ERR_STR(char **error_string),
-    int *last_arg)
+    int *const last_arg)
 {
     return freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         instance, argc, argv, start_arg, known_parameters, callback,

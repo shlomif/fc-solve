@@ -158,7 +158,7 @@ typedef struct
     fcs_state_locs_struct_t state_locs;
     fcs_state_locs_struct_t initial_state_locs;
 #endif
-    int ret_code;
+    fc_solve_solve_process_ret_t ret_code;
     fcs_bool_t all_instances_were_suspended;
     fcs_state_validity_ret_t state_validity_ret;
     fcs_card_t state_validity_card;
@@ -967,7 +967,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                 user->init_num_checked_states = user->active_flare->obj_stats;
 
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
-
                 break;
             }
             else
@@ -990,7 +989,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                 user->init_num_checked_states = flare->obj_stats;
 
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
-
                 break;
             }
             else
@@ -1369,7 +1367,7 @@ static void user_free_resources(fcs_user_t *const user)
 {
     FLARES_LOOP_START()
     {
-        const int ret_code = flare->ret_code;
+        const_SLOT(ret_code, flare);
         fc_solve_instance_t *const instance = &(flare->obj);
 
         if ((ret_code != FCS_STATE_NOT_BEGAN_YET) &&

@@ -141,10 +141,8 @@ static inline void fc_solve_get_column_encoding_composite(
     for (int i = col_len - num_cards_in_seq; i < col_len; i++)
     {
 #define GET_SUIT_BIT(card) (((fcs_card_suit(card)) & 0x2) >> 1)
-
         fc_solve_bit_writer_write(
             &bit_w, 1, GET_SUIT_BIT(fcs_col_get_card(col, i)));
-
 #undef GET_SUIT_BIT
     }
 
