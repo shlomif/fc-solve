@@ -145,7 +145,6 @@ static inline int calc_foundation_to_put_card_on(
     const fcs_card_t card)
 {
 #ifndef FCS_FREECELL_ONLY
-    /* needed by the macros. */
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
     const int_fast32_t rank = fcs_card_rank(card);
@@ -217,7 +216,6 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
     fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];
     int count_moves_so_far = 0;
     int count_additional_irrev_moves = 0;
-
 #ifndef FCS_FREECELL_ONLY
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #endif
@@ -378,10 +376,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
 {
     fcs_derived_state_t *ptr_new_state;
     int empty_stack_idx = -1;
-
-    /* needed by the macros. */
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-
 #define new_state (ptr_new_state->state.s)
     if (is_state_solved(local_variant, init_state_kv_ptr))
     {
