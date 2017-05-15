@@ -197,9 +197,7 @@ int main(int argc, char *argv[])
         switch (fork())
         {
         case -1:
-        {
             fc_solve_err("Fork for worker No. %zd failed! Exiting.\n", idx);
-        }
 
         case 0:
         {
@@ -212,12 +210,10 @@ int main(int argc, char *argv[])
         }
 
         default:
-        {
             /* I'm the parent. */
             close(workers[idx].parent_to_child_pipe[READ_FD]);
             close(workers[idx].child_to_parent_pipe[WRITE_FD]);
-        }
-        break;
+            break;
         }
     }
 
@@ -331,7 +327,6 @@ int main(int argc, char *argv[])
     {
         wait(NULL);
     }
-
     fc_solve_print_finished(total_num_iters);
     return 0;
 }

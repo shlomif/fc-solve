@@ -226,11 +226,9 @@ args_man_t fc_solve_args_man_chop(const char *const string)
                     break;
 
                 default:
-
                     in_arg = TRUE;
                     add_to_last_arg(&manager, *s);
                     s++;
-
                     break;
                 }
             }
