@@ -377,7 +377,6 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     const fcs_bool_t perform_horne_prune)
 {
     fcs_derived_state_t *ptr_new_state;
-    int ds;
     int empty_stack_idx = -1;
 
     /* needed by the macros. */
@@ -465,7 +464,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         }
         const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
 
-        for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
+        for (int ds = 0; ds < LOCAL_STACKS_NUM; ++ds)
         {
             if (ds == stack_idx || card_cannot_be_placed(&the_state, ds, card,
                                        sequences_are_built_by))
@@ -491,7 +490,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         {
             continue;
         }
-        for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
+        for (int ds = 0; ds < LOCAL_STACKS_NUM; ++ds)
         {
             if (card_cannot_be_placed(
                     &the_state, ds, card, sequences_are_built_by))
