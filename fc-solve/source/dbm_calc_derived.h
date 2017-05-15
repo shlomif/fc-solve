@@ -379,7 +379,6 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     fcs_derived_state_t *ptr_new_state;
     int ds;
     fcs_cards_column_t col;
-    int deck, suit;
     int empty_stack_idx = -1;
 
     /* needed by the macros. */
@@ -403,8 +402,8 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         }
         /* Get the top card in the stack */
         const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
-        suit = fcs_card_suit(card);
-        for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+        const_AUTO(suit, fcs_card_suit(card));
+        for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
         {
             if (fcs_foundation_value(the_state, deck * 4 + suit) !=
                 fcs_card_rank(card) - 1)
@@ -433,8 +432,8 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             empty_fc_idx = fc_idx;
             continue;
         }
-        suit = fcs_card_suit(card);
-        for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+        const_AUTO(suit, fcs_card_suit(card));
+        for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
         {
             if (fcs_foundation_value(the_state, deck * 4 + suit) !=
                 fcs_card_rank(card) - 1)
