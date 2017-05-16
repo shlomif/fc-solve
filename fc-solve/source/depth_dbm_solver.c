@@ -273,8 +273,8 @@ static inline void instance_check_key(
     }
 }
 
-static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
-    fcs_state_keyval_pair_t *init_state, size_t num_threads)
+static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
+    fcs_state_keyval_pair_t *const init_state, const size_t num_threads)
 {
     const_AUTO(threads,
         dbm__calc_threads(instance, init_state, num_threads, init_thread));

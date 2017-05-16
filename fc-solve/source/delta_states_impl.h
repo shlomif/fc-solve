@@ -437,9 +437,10 @@ static inline void fc_solve_delta_stater_encode_into_buffer(
 }
 
 static inline void fcs_init_and_encode_state(
-    fc_solve_delta_stater_t *delta_stater,
-    const fcs_dbm_variant_type_t local_variant, fcs_state_keyval_pair_t *state,
-    fcs_encoded_state_buffer_t *enc_state)
+    fc_solve_delta_stater_t *const delta_stater,
+    const fcs_dbm_variant_type_t local_variant,
+    fcs_state_keyval_pair_t *const state,
+    fcs_encoded_state_buffer_t *const enc_state)
 {
     fcs_init_encoded_state(enc_state);
 

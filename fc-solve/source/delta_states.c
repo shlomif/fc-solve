@@ -24,7 +24,6 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     const char *const derived_state_s)
 {
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
-    fc_solve_delta_stater_t delta;
     fcs_uchar_t enc_state[24];
     fc_solve_bit_reader_t bit_r;
     fcs_state_locs_struct_t locs;
@@ -40,6 +39,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fc_solve_initial_user_state_to_c(derived_state_s, &derived_state,
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, derived_stacks_buffer);
 
+    fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(
         &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
 #ifndef FCS_FREECELL_ONLY

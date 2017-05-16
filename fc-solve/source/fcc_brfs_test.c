@@ -20,8 +20,9 @@
 #include "render_state.h"
 
 static void fc_solve_state_string_to_enc(
-    const fcs_dbm_variant_type_t local_variant, fc_solve_delta_stater_t *delta,
-    const char *const state_s_proto, fcs_encoded_state_buffer_t *enc_state)
+    const fcs_dbm_variant_type_t local_variant,
+    fc_solve_delta_stater_t *const delta, const char *const state_s_proto,
+    fcs_encoded_state_buffer_t *const enc_state)
 {
     fcs_state_keyval_pair_t state;
     DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
