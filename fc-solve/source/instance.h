@@ -30,21 +30,15 @@ extern "C" {
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE) ||               \
     (defined(INDIRECT_STACK_STATES) &&                                         \
         (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE))
-
 #include <redblack.h>
-
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-
 #include "fcs_libavl2_state_storage.h"
-
 #endif
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
-
 #include "fcs_libavl2_stack_storage.h"
-
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE) ||                      \
@@ -52,9 +46,7 @@ extern "C" {
     (defined(INDIRECT_STACK_STATES) &&                                         \
         ((FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE) ||                 \
             (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)))
-
 #include <glib.h>
-
 #endif
 
 #if ((defined(FCS_RCS_STATES) &&                                               \
@@ -62,36 +54,23 @@ extern "C" {
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY) ||                          \
      (defined(INDIRECT_STACK_STATES) &&                                        \
          (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)))
-
 #include <Judy.h>
-
 #endif
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \
      (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH))
-
 #include "fcs_hash.h"
-
 #endif
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH) ||              \
+    (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
 #include "google_hash.h"
-
-#endif
-
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-
-#include "google_hash.h"
-
 #endif
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE) ||                      \
      (defined(FCS_RCS_STATES) &&                                               \
          (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)))
-
 #include "kaz_tree.h"
-
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)

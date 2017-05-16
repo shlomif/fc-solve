@@ -52,12 +52,12 @@ extern "C" {
     ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id) >> FCS_CHAR_BIT_SIZE_LOG2] &    \
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1))))
 
-#ifdef COMPACT_STATES
-
 typedef char fcs_card_t;
 typedef fcs_card_t *fcs_cards_column_t;
 typedef const fcs_card_t *fcs_const_cards_column_t;
 typedef fcs_card_t fcs_state_foundation_t;
+
+#ifdef COMPACT_STATES
 /*
  * Card:
  * Bits 0-3 - Card Number
@@ -106,13 +106,7 @@ typedef char fcs_locs_t;
 #define fcs_foundation_value(state, d)                                         \
     ((state).data[FCS_FOUNDATIONS_OFFSET + (d)])
 
-#elif defined(INDIRECT_STACK_STATES) /* #ifdef COMPACT_STATES */
-
-typedef char fcs_card_t;
-typedef fcs_card_t *fcs_cards_column_t;
-typedef const fcs_card_t *fcs_const_cards_column_t;
-typedef char fcs_state_foundation_t;
-
+#elif defined(INDIRECT_STACK_STATES) // #ifdef COMPACT_STATES
 typedef struct
 {
     fcs_cards_column_t columns[MAX_NUM_STACKS];
