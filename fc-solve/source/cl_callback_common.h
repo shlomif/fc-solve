@@ -10,6 +10,7 @@
 #pragma once
 
 #define IS_ARG(s) (!strcmp(arg_str, (s)))
+#define IS_ARG_LONG(shrt, lng) (IS_ARG("-" shrt) || IS_ARG("--" lng))
 
 static inline void set_iter_handler(
     void *const instance, fc_solve_display_information_context_t *const dc)
@@ -20,64 +21,64 @@ static inline void set_iter_handler(
 static inline fcs_bool_t cmd_line_cb__handle_common(const char *const arg_str,
     void *const instance, fc_solve_display_information_context_t *const dc)
 {
-    if (IS_ARG("-i") || IS_ARG("--iter-output"))
+    if (IS_ARG_LONG("i", "iter-output"))
     {
         set_iter_handler(instance, dc);
         return TRUE;
     }
-    else if (IS_ARG("-s") || IS_ARG("--state-output"))
+    else if (IS_ARG_LONG("s", "state-output"))
     {
         set_iter_handler(instance, dc);
         dc->debug_iter_state_output = TRUE;
         return TRUE;
     }
-    else if (IS_ARG("-p") || IS_ARG("--parseable-output"))
+    else if (IS_ARG_LONG("p", "parseable-output"))
     {
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
         dc->parseable_output = TRUE;
 #endif
         return TRUE;
     }
-    else if (IS_ARG("-c") || IS_ARG("--canonized-order-output"))
+    else if (IS_ARG_LONG("c", "canonized-order-output"))
     {
         dc->canonized_order_output = TRUE;
         return TRUE;
     }
-    else if (IS_ARG("-t") || IS_ARG("--display-10-as-t"))
+    else if (IS_ARG_LONG("t", "display-10-as-t"))
     {
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
         dc->display_10_as_t = TRUE;
 #endif
         return TRUE;
     }
-    else if (IS_ARG("-m") || IS_ARG("--display-moves"))
+    else if (IS_ARG_LONG("m", "display-moves"))
     {
         dc->display_moves = TRUE;
         dc->display_states = FALSE;
         return TRUE;
     }
-    else if (IS_ARG("-sn") || IS_ARG("--standard-notation"))
+    else if (IS_ARG_LONG("sn", "standard-notation"))
     {
         dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_REGULAR;
         return TRUE;
     }
-    else if (IS_ARG("-snx") || IS_ARG("--standard-notation-extended"))
+    else if (IS_ARG_LONG("snx", "standard-notation-extended"))
     {
         dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_EXTENDED;
         return TRUE;
     }
-    else if (IS_ARG("-sam") || IS_ARG("--display-states-and-moves"))
+    else if (IS_ARG_LONG("sam", "display-states-and-moves"))
     {
         dc->display_moves = TRUE;
         dc->display_states = TRUE;
         return TRUE;
     }
-    else if (IS_ARG("-pi") || IS_ARG("--display-parent-iter"))
+    else if (IS_ARG_LONG("pi", "display-parent-iter"))
     {
         dc->display_parent_iter_num = TRUE;
         return TRUE;
     }
-    else if (IS_ARG("-sel") || IS_ARG("--show-exceeded-limits"))
+    else if (IS_ARG_LONG("sel", "show-exceeded-limits"))
     {
         dc->show_exceeded_limits = TRUE;
         return TRUE;

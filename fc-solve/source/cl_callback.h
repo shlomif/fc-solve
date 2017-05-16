@@ -365,7 +365,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
-    else if (IS_ARG("-h") || IS_ARG("--help"))
+    else if (IS_ARG_LONG("h", "help"))
     {
         const char *help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
         if (help_key == NULL)
@@ -382,7 +382,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
-    else if (IS_ARG("-o") || IS_ARG("--output"))
+    else if (IS_ARG_LONG("o", "output"))
     {
         const int next_arg = arg + 1;
         if (next_arg == argc)
