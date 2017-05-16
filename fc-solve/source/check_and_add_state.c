@@ -579,21 +579,19 @@ fcs_bool_t fc_solve_check_and_add_state(
     }
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
+    DBT key, value;
+    key.data = new_state;
+    key.size = sizeof(*new_state);
+    if ((is_state_new =
+                (instance->db->get(instance->db, NULL, &key, &value, 0) == 0)))
     {
-        DBT key, value;
-        key.data = new_state;
-        key.size = sizeof(*new_state);
-        if ((is_state_new = (instance->db->get(
-                                 instance->db, NULL, &key, &value, 0) == 0)))
-        {
-            /* The new state was not found. Let's insert it.
-             * The value must be the same as the key, so g_tree_lookup()
-             * will return it. */
+        /* The new state was not found. Let's insert it.
+         * The value must be the same as the key, so g_tree_lookup()
+         * will return it. */
 
-            value.data = key.data;
-            value.size = key.size;
-            instance->db->put(instance->db, NULL, &key, &value, 0);
-        }
+        value.data = key.data;
+        value.size = key.size;
+        instance->db->put(instance->db, NULL, &key, &value, 0);
     }
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     PWord_t *PValue;
