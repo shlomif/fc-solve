@@ -363,7 +363,6 @@ static inline fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(
  *
  * */
 #ifdef FCS_RCS_STATES
-
 typedef fcs_state_extra_info_t fcs_collectible_state_t;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 

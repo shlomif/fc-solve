@@ -60,7 +60,6 @@ void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
 }
 
 #ifdef FCS_RCS_STATES
-
 /* TODO : Unit-test this function as it had had a bug beforehand
  * because fcs_lru_side_t had been an unsigned long.
  * */
@@ -284,7 +283,6 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 }
 
 #undef NEXT_CACHE_STATE
-
 #endif
 
 #ifdef DEBUG

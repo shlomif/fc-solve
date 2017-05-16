@@ -120,7 +120,7 @@ static inline void *fc_solve_hash_insert(
 #define MY_HASH_COMPARE() (!MY_HASH_COMPARE_PROTO())
 
 /* Define MY_HASH_COMPARE_PROTO() */
-#if defined(FCS_RCS_STATES)
+#ifdef FCS_RCS_STATES
 
 #define MY_HASH_COMPARE_PROTO()                                                \
     (fc_solve_state_compare(key_id,                                            \
