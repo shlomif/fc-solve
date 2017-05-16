@@ -25,6 +25,7 @@ var freecell_solver_user_get_invalid_state_error_into_string;
 var freecell_solver_user_cmd_line_parse_args_with_file_nesting_count;
 var fc_solve_Pointer_stringify;
 var fc_solve_FS_createFolder;
+var fc_solve_FS_writeFile;
 var fc_solve_FS_createDataFile;
 var fc_solve_getValue;
 var fc_solve_setValue;
@@ -54,6 +55,7 @@ function FC_Solve_init_wrappers_with_module(Module)
 
     fc_solve_Pointer_stringify = function(ptr) { return Module.Pointer_stringify(ptr); };
     fc_solve_FS_createFolder = function(p1, p2, p3, p4) { return Module.FS_createFolder(p1, p2, p3, p4); };
+    fc_solve_FS_writeFile = function(p1, p2, p3) { return Module.FS.writeFile(p1, p2, p3); };
     fc_solve_FS_createDataFile = function(p1, p2, p3, p4, p5) { return Module.FS_createDataFile(p1, p2, p3, p4, p5); };
     fc_solve_getValue = function(p1, p2) { return Module.getValue(p1, p2); };
     fc_solve_setValue = function(p1, p2, p3) { return Module.setValue(p1, p2, p3); };
@@ -121,7 +123,11 @@ class FC_Solve {
                     throw "Foo";
                 }
 
-                that._initialize_obj( ret_obj );
+                if (that._initialize_obj( ret_obj ) != 0) {
+                    alert ("Failed to initialize solver (Bug!)");
+                    freecell_solver_user_free(ret_obj);
+                    throw "Bar";
+                }
 
                 return ret_obj;
             })();
@@ -246,12 +252,12 @@ class FC_Solve {
                 if (that.string_params) {
                     var error_string_ptr_buf = alloc_wrap(128, "error string buffer", "Engo");
                     // Create a file with the contents of string_params.
-                    var base_path = '/' + that.dir_base;
-                    var base_dh = fc_solve_FS_createFolder('/', that.dir_base, true, true);
+                    // var base_path = '/' + that.dir_base;
+                    var base_path = '/';
+                    // var base_dh = fc_solve_FS_createFolder('/', that.dir_base, true, true);
                     var file_basename = 'string-params.fc-solve.txt';
-                    var string_params_file_path = base_path + '/' + file_basename;
-                    fc_solve_FS_createDataFile(base_dh, file_basename, that.string_params,
-                        true, true);
+                    var string_params_file_path = base_path + file_basename;
+                    fc_solve_FS_writeFile(string_params_file_path, that.string_params, {});
 
 
                     var args_buf = alloc_wrap(4*2, "args buf", "Seed");
@@ -293,11 +299,11 @@ class FC_Solve {
                         throw "Foo";
                     }
                 }
-                return;
+                return 0;
             }
             catch (e) {
                 that.set_status("error", "Error");
-                return;
+                return -1;
             }
         }
         do_solve(proto_board_string) {
