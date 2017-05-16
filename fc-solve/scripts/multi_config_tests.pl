@@ -287,6 +287,11 @@ q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
 
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
+my $ARCH = 'x64';
+
+# load the t prefix.
+my @LB = ( '-l', $ARCH . 'b' );
+my @LT = ( '-l', $ARCH . 't' );
 
 reg_test(
     "prepare_dist fcc_solver",
@@ -329,7 +334,7 @@ reg_test(
     "build_only: maximum speed preset",
     {
         do_not_test => 1,
-        tatzer_args => [qw(-l x64b -l extra_speed --disable-err-strs)]
+        tatzer_args => [ @LB, qw(-l extra_speed --disable-err-strs) ]
     }
 );
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
@@ -341,8 +346,7 @@ reg_test( "--rcs",   { tatzer_args => [qw(--rcs)] } );
 reg_test(
     "libavl2 with COMPACT_STATES",
     {
-        tatzer_args =>
-            [qw(-l x64t --states-type=COMPACT_STATES --libavl2-p=prb)]
+        tatzer_args => [ @LT, qw(--states-type=COMPACT_STATES --libavl2-p=prb) ]
     }
 );
 
@@ -350,14 +354,14 @@ reg_test(
     "libavl2 with COMPACT_STATES and --rcs",
     {
         tatzer_args =>
-            [qw(-l x64t --states-type=COMPACT_STATES --libavl2-p=prb --rcs)]
+            [ @LT, qw(--states-type=COMPACT_STATES --libavl2-p=prb --rcs) ]
     }
 );
 
 reg_test(
     "libavl2 with INDIRECT_STATES",
     {
-        tatzer_args => [qw(-l x64t --libavl2-p=prb)]
+        tatzer_args => [ @LT, qw(--libavl2-p=prb) ]
     }
 );
 
@@ -378,21 +382,21 @@ reg_test(
 reg_test(
     "No FCS_SINGLE_HARD_THREAD",
     {
-        tatzer_args => [qw(-l x64t --nosingle-ht)]
+        tatzer_args => [ @LT, '--nosingle-ht' ]
     }
 );
 
 reg_test(
     "Break Backward Compatibility #1",
     {
-        tatzer_args => [qw(-l x64t --break-back-compat-1)]
+        tatzer_args => [ @LT, '--break-back-compat-1' ]
     }
 );
 
 reg_test(
     "Freecell-only (as well as Break Backcompat)",
     {
-        tatzer_args => [qw(-l x64t --break-back-compat-1 --fc-only)]
+        tatzer_args => [ @LT, qw(--break-back-compat-1 --fc-only) ]
     }
 );
 
