@@ -118,9 +118,6 @@ static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item_t physical_item;
     fcs_state_keyval_pair_t state;
-#ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
-#endif
     fcs_dbm_record_t *token = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -141,6 +138,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
     TRACE("%s\n", "instance_run_solver_thread start");
 #ifdef DEBUG_OUT
+    fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
 #endif
     while (1)
@@ -511,9 +509,8 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 #ifdef DEBUG_OUT
                 fcs_state_keyval_pair_t state;
                 fcs_state_locs_struct_t locs;
-                DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
                 fc_solve_init_locs(&locs);
+                DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
                 fc_solve_delta_stater_decode_into_state(
                     delta, item->key.s, &state, indirect_stacks_buffer);

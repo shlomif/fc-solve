@@ -242,7 +242,6 @@ static inline void instance_debug_out_state(
     fcs_state_keyval_pair_t state;
     fcs_state_locs_struct_t locs;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
     fc_solve_init_locs(&locs);
     const_AUTO(local_variant, instance->common.variant);
     /* Handle item. */

@@ -126,16 +126,13 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
 {
     fcs_state_keyval_pair_t init_state;
     fcs_state_locs_struct_t locs;
-    int prune_ret;
-
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
     fc_solve_init_locs(&locs);
 
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
-    prune_ret = horne_prune__simple(local_variant, &init_state);
+    const_AUTO(prune_ret, horne_prune__simple(local_variant, &init_state));
     *ret_state_s = SMALLOC(*ret_state_s, 1000);
     FCS__RENDER_STATE(*ret_state_s, &(init_state.s), &locs);
 

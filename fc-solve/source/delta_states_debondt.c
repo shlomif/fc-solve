@@ -30,6 +30,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     fc_solve_debondt_delta_stater_t delta;
     fcs_uchar_t enc_state[24];
     fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&locs);
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     DECLARE_IND_BUF_T(derived_stacks_buffer)
@@ -64,8 +65,6 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     fc_solve_debondt_delta_stater_decode(
         &delta, local_variant, &(delta.r), &(new_derived_state.s));
 
-    fc_solve_init_locs(&locs);
-
     char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
     FCS__RENDER_STATE(new_derived_as_str, &(new_derived_state.s), &locs);
 
@@ -73,5 +72,4 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 
     return new_derived_as_str;
 }
-
 #endif
