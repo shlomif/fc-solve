@@ -605,19 +605,16 @@ static inline void fc_solve_state_init_proto(
         IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     memset(&(state->s), 0, sizeof(state->s));
-
 #ifdef INDIRECT_STACK_STATES
+    int i;
+    for (i = 0; i < STACKS_NUM__VAL; i++)
     {
-        int i;
-        for (i = 0; i < STACKS_NUM__VAL; i++)
-        {
-            memset(state->s.columns[i] = &indirect_stacks_buffer[i << 7], '\0',
-                MAX_NUM_DECKS * 52 + 1);
-        }
-        for (; i < MAX_NUM_STACKS; i++)
-        {
-            state->s.columns[i] = NULL;
-        }
+        memset(state->s.columns[i] = &indirect_stacks_buffer[i << 7], '\0',
+            MAX_NUM_DECKS * 52 + 1);
+    }
+    for (; i < MAX_NUM_STACKS; i++)
+    {
+        state->s.columns[i] = NULL;
     }
 #endif
     state->info.parent = NULL;
@@ -966,7 +963,7 @@ static inline int fc_solve_card_compare(
     return (c1) - (c2);
 }
 
-#if defined(INDIRECT_STACK_STATES)
+#ifdef INDIRECT_STACK_STATES
 static inline int fc_solve_stack_compare_for_comparison(
     const void *const v_s1, const void *const v_s2)
 {
@@ -1004,7 +1001,6 @@ static inline int fc_solve_stack_compare_for_comparison(
         return 0;
     }
 }
-
 #endif
 
 static inline void set_scan_visited(
