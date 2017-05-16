@@ -10120,6 +10120,7 @@ function test_js_fc_solve_class(my_callback)
         );
     });
 
+
     QUnit.test("FC_Solve Expanded Moves test", function(assert) {
         assert.expect(3);
 
@@ -10251,6 +10252,54 @@ function test_js_fc_solve_class(my_callback)
 ": 6D QC 8S TH 7D 8H\n" +
 "",
             "deal_ms_fc_board for 6e9");
+    });
+
+    QUnit.test("FC_Solve custom baker's game preset twice", function(assert) {
+        var ms10_deal = "5S KD JC TS 9D KH 8D\n" +
+"5H 2S 9H 7H TD AD 6D\n" +
+"6H QD 6C TC AH 8S TH\n" +
+"6S 2D 7C QC QS 7D 3H\n" +
+"5D AS 7S KC 3D AC\n" +
+"4D 9C QH 4H 4C 5C\n" +
+"2H 3S 8H 9S JS 4S\n" +
+"JH JD 3C KS 2C 8C\n" +
+            "";
+
+        assert.expect(2);
+
+        var instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            set_status_callback: function () { return; },
+            string_params: '--game bakers_game -to 01ABCDE',
+        });
+
+        // TEST
+        assert.ok ((!test_for_equal(
+                assert,
+                instance,
+                ms10_deal,
+                '',
+                ''
+                )),
+            "do_solve was successful."
+        );
+
+        instance = new FC_Solve({
+            cmd_line_preset: 'default',
+            set_status_callback: function () { return; },
+            string_params: '--game bakers_game -to 01ABCDE',
+        });
+
+        // TEST
+        assert.ok ((!test_for_equal(
+                assert,
+                instance,
+                ms10_deal,
+                '',
+                ''
+                )),
+            "do_solve was successful."
+        );
     });
 
     my_callback();
