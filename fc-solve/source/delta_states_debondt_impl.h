@@ -392,7 +392,7 @@ static void fc_solve_debondt_delta_stater_decode(
     const int orig_pos_opt =
         (IS_BAKERS_DOZEN() ? OPT__BAKERS_DOZEN__ORIG_POS : OPT_ORIG_POS);
 
-    const int num_freecells = self->num_freecells;
+    const_SLOT(num_freecells, self);
 
     fcs_bool_t orig_top_most_cards[CARD_ARRAY_LEN] = {FALSE};
     for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
