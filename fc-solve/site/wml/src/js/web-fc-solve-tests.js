@@ -10277,7 +10277,7 @@ function test_js_fc_solve_class(my_callback)
                 string_params: '--game bakers_game -to 01ABCDE',
             });
 
-            // TEST
+            // TEST*2
             assert.ok ((!test_for_equal(
                         assert,
                         instance,
