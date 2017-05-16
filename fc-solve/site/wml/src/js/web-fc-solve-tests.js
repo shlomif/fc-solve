@@ -10255,6 +10255,8 @@ function test_js_fc_solve_class(my_callback)
     });
 
     QUnit.test("FC_Solve custom baker's game preset twice", function(assert) {
+        // This is microsoft deal #10 which is impossible to solve in
+        // Baker's Game.
         var ms10_deal = "5S KD JC TS 9D KH 8D\n" +
 "5H 2S 9H 7H TD AD 6D\n" +
 "6H QD 6C TC AH 8S TH\n" +
@@ -10267,39 +10269,25 @@ function test_js_fc_solve_class(my_callback)
 
         assert.expect(2);
 
-        var instance = new FC_Solve({
-            cmd_line_preset: 'default',
-            set_status_callback: function () { return; },
-            string_params: '--game bakers_game -to 01ABCDE',
-        });
+        for (var mytry = 1; mytry <= 2; mytry++)
+        {
+            var instance = new FC_Solve({
+                cmd_line_preset: 'default',
+                set_status_callback: function () { return; },
+                string_params: '--game bakers_game -to 01ABCDE',
+            });
 
-        // TEST
-        assert.ok ((!test_for_equal(
-                assert,
-                instance,
-                ms10_deal,
-                '',
-                ''
-                )),
-            "do_solve was successful."
-        );
-
-        instance = new FC_Solve({
-            cmd_line_preset: 'default',
-            set_status_callback: function () { return; },
-            string_params: '--game bakers_game -to 01ABCDE',
-        });
-
-        // TEST
-        assert.ok ((!test_for_equal(
-                assert,
-                instance,
-                ms10_deal,
-                '',
-                ''
-                )),
-            "do_solve was successful."
-        );
+            // TEST
+            assert.ok ((!test_for_equal(
+                        assert,
+                        instance,
+                        ms10_deal,
+                        '',
+                        ''
+            )),
+                "do_solve failed try=" + mytry
+            );
+        }
     });
 
     my_callback();
