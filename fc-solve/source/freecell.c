@@ -529,8 +529,7 @@ DECLARE_MOVE_FUNCTION(
     {
         fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
         const int cards_num = fcs_col_len(col);
-#define dest_cards_num cards_num
-        const int start_dc = max0(dest_cards_num - num_vacant_slots_plus_1);
+        const int start_dc = max0(cards_num - num_vacant_slots_plus_1);
 
         for (int c = start_dc + 2; c < cards_num; c++)
         {
@@ -609,7 +608,6 @@ DECLARE_MOVE_FUNCTION(
 }
 #undef ds
 #undef dest_col
-#undef dest_cards_num
 
 #define CALC_num_virtual_vacant_stacks()                                       \
     (tests__is_filled_by_any_card() ? num_vacant_stacks : 0)
@@ -987,7 +985,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                 const int_fast32_t dc = pos_idx_to_check[1];
 
                 fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-                int dest_cards_num = fcs_col_len(dest_col);
+                const int dest_cards_num = fcs_col_len(dest_col);
 
 /* Corresponding cards - see if it is feasible to move
    the source to the destination. */
