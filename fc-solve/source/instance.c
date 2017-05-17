@@ -86,17 +86,17 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
     fc_solve_soft_thread_t *const soft_thread)
 {
     const_AUTO(
-        by_depth_tests, soft_thread->by_depth_tests_order.by_depth_tests);
+        by_depth_moves, soft_thread->by_depth_tests_order.by_depth_moves);
     const_AUTO(num, soft_thread->by_depth_tests_order.num);
     for (size_t depth_idx = 0; depth_idx < num; depth_idx++)
     {
-        fc_solve_free_tests_order(&(by_depth_tests[depth_idx].tests_order));
+        fc_solve_free_tests_order(&(by_depth_moves[depth_idx].tests_order));
     }
 
     soft_thread->by_depth_tests_order.num = 0;
 
-    free(by_depth_tests);
-    soft_thread->by_depth_tests_order.by_depth_tests = NULL;
+    free(by_depth_moves);
+    soft_thread->by_depth_tests_order.by_depth_moves = NULL;
 }
 
 static inline void accumulate_tests_by_ptr(
@@ -120,7 +120,7 @@ static inline void accumulate_tests_order(
     fc_solve_soft_thread_t *const soft_thread, void *const context)
 {
     accumulate_tests_by_ptr((size_t *)context,
-        &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order));
+        &(soft_thread->by_depth_tests_order.by_depth_moves[0].tests_order));
 }
 
 static inline void determine_scan_completeness(
@@ -129,7 +129,7 @@ static inline void determine_scan_completeness(
     size_t tests_order = 0;
 
     accumulate_tests_by_ptr(&tests_order,
-        &(soft_thread->by_depth_tests_order.by_depth_tests[0].tests_order));
+        &(soft_thread->by_depth_tests_order.by_depth_moves[0].tests_order));
 
     STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
         (tests_order == *(size_t *)global_tests_order));
@@ -260,8 +260,8 @@ static inline
         .by_depth_tests_order =
             {
                 .num = 1,
-                .by_depth_tests =
-                    SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
+                .by_depth_moves =
+                    SMALLOC1(soft_thread->by_depth_tests_order.by_depth_moves),
             },
         .is_befs = FALSE,
 #ifdef FCS_WITH_MOVES
@@ -276,8 +276,8 @@ static inline
         .pats_scan = NULL,
 #endif
     };
-    soft_thread->by_depth_tests_order.by_depth_tests[0] =
-        (typeof(soft_thread->by_depth_tests_order.by_depth_tests[0])){
+    soft_thread->by_depth_tests_order.by_depth_moves[0] =
+        (typeof(soft_thread->by_depth_tests_order.by_depth_moves[0])){
             .max_depth = SSIZE_MAX,
             .tests_order = tests_order_dup(
                 &(fcs_st_instance(soft_thread)->instance_tests_order)),

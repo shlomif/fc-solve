@@ -226,7 +226,7 @@ typedef struct
 typedef struct
 {
     size_t num;
-    fcs_by_depth_tests_order_t *by_depth_tests;
+    fcs_by_depth_tests_order_t *by_depth_moves;
 } fcs_by_depth_tests_order_array_t;
 
 #define STRUCT_CLEAR_FLAG(instance, flag) (instance)->flag = FALSE
