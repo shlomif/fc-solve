@@ -1,6 +1,11 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - Fix the formatting of the "Game Type:"+select on firefox.
+      @ Added [Wed 2017-05-17]
+    - Make sure to clear/nullify the existing solution after pressing Solve
+      again.
+      @ Added [Wed 2017-05-17]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
         * in a separate git branch
         * Added [Sat 2013-01-12]
