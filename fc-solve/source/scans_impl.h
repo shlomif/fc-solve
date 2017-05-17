@@ -1014,89 +1014,84 @@ static inline int fc_solve_soft_dfs_do_solve(
                 } while (local_shuffling_type != FCS_NO_SHUFFLING);
             }
 
+            const_SLOT(num_states, derived_states_list);
+            if (num_states >
+                the_soft_dfs_info->derived_states_random_indexes_max_size)
             {
-                const_SLOT(num_states, derived_states_list);
+                the_soft_dfs_info->derived_states_random_indexes_max_size =
+                    num_states;
+                the_soft_dfs_info->derived_states_random_indexes = SREALLOC(
+                    the_soft_dfs_info->derived_states_random_indexes,
+                    the_soft_dfs_info->derived_states_random_indexes_max_size);
+            }
+            fcs_rating_with_index_t *const rand_array =
+                the_soft_dfs_info->derived_states_random_indexes;
 
-                if (num_states >
-                    the_soft_dfs_info->derived_states_random_indexes_max_size)
-                {
-                    the_soft_dfs_info->derived_states_random_indexes_max_size =
-                        num_states;
-                    the_soft_dfs_info->derived_states_random_indexes = SREALLOC(
-                        the_soft_dfs_info->derived_states_random_indexes,
-                        the_soft_dfs_info
-                            ->derived_states_random_indexes_max_size);
-                }
-                fcs_rating_with_index_t *const rand_array =
-                    the_soft_dfs_info->derived_states_random_indexes;
+            VERIFY_PTR_STATE_TRACE0("Verify Panter");
 
-                VERIFY_PTR_STATE_TRACE0("Verify Panter");
-
-                for (size_t i = 0; i < num_states; i++)
+            for (size_t i = 0; i < num_states; i++)
+            {
+                rand_array[i].idx = i;
+            }
+            /* If we just conducted the tests for a random group -
+             * randomize. Else - keep those indexes as the unity vector.
+             *
+             * Also, do not randomize if this is a pure soft-DFS scan.
+             *
+             * Also, do not randomize/sort if there's only one derived
+             * state or less, because in that case, there is nothing
+             * to reorder.
+             * */
+            if (num_states > 1)
+            {
+                switch (local_shuffling_type)
                 {
-                    rand_array[i].idx = i;
-                }
-                /* If we just conducted the tests for a random group -
-                 * randomize. Else - keep those indexes as the unity vector.
-                 *
-                 * Also, do not randomize if this is a pure soft-DFS scan.
-                 *
-                 * Also, do not randomize/sort if there's only one derived
-                 * state or less, because in that case, there is nothing
-                 * to reorder.
-                 * */
-                if (num_states > 1)
+                case FCS_RAND:
                 {
-                    switch (local_shuffling_type)
+                    for (size_t i = num_states - 1; i > 0; i--)
                     {
-                    case FCS_RAND:
-                    {
-                        for (size_t i = num_states - 1; i > 0; i--)
-                        {
-                            const typeof(i) j =
-                                (fc_solve_rand_get_random_number(rand_gen) %
-                                    (i + 1));
+                        const typeof(i) j =
+                            (fc_solve_rand_get_random_number(rand_gen) %
+                                (i + 1));
 
-                            const_AUTO(swap_save, rand_array[i]);
-                            rand_array[i] = rand_array[j];
-                            rand_array[j] = swap_save;
-                        }
+                        const_AUTO(swap_save, rand_array[i]);
+                        rand_array[i] = rand_array[j];
+                        rand_array[j] = swap_save;
                     }
-                    break;
+                }
+                break;
 
-                    case FCS_WEIGHTING:
+                case FCS_WEIGHTING:
+                {
+                    if (orig_idx < THE_MOVE_FUNCS_LIST.num_lists)
                     {
-                        if (orig_idx < THE_MOVE_FUNCS_LIST.num_lists)
+                        fcs_derived_states_list_item_t *const derived_states =
+                            derived_states_list->states;
+                        for (size_t i = 0; i < num_states; i++)
                         {
-                            fcs_derived_states_list_item_t *const
-                                derived_states = derived_states_list->states;
-                            for (size_t i = 0; i < num_states; i++)
-                            {
-                                rand_array[i].rating = befs_rate_state(
-                                    soft_thread, weighting,
+                            rand_array[i].rating = befs_rate_state(soft_thread,
+                                weighting,
 #ifdef FCS_RCS_STATES
-                                    fc_solve_lookup_state_key_from_val(instance,
-                                        derived_states[rand_array[i].idx]
-                                            .state_ptr),
+                                fc_solve_lookup_state_key_from_val(
+                                    instance, derived_states[rand_array[i].idx]
+                                                  .state_ptr),
 #else
-                                    &(derived_states[rand_array[i].idx]
-                                            .state_ptr->s),
+                                &(derived_states[rand_array[i].idx]
+                                        .state_ptr->s),
 #endif
-                                    BEFS_MAX_DEPTH -
-                                        calc_depth(
-                                            derived_states[rand_array[i].idx]
-                                                .state_ptr));
-                            }
-
-                            qsort(rand_array, num_states, sizeof(rand_array[0]),
-                                compare_rating_with_index);
+                                BEFS_MAX_DEPTH -
+                                    calc_depth(derived_states[rand_array[i].idx]
+                                                   .state_ptr));
                         }
-                    }
-                    break;
 
-                    case FCS_NO_SHUFFLING:
-                        break;
+                        qsort(rand_array, num_states, sizeof(rand_array[0]),
+                            compare_rating_with_index);
                     }
+                }
+                break;
+
+                case FCS_NO_SHUFFLING:
+                    break;
                 }
             }
 
