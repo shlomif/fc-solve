@@ -385,7 +385,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
                 break;
             }
             else if (min_depth <
-                     soft_thread->by_depth_tests_order.by_depth_tests[depth_idx]
+                     soft_thread->by_depth_tests_order.by_depth_moves[depth_idx]
                          .max_depth)
             {
                 break;
@@ -397,30 +397,30 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 
     if (depth_idx == soft_thread->by_depth_tests_order.num)
     {
-        soft_thread->by_depth_tests_order.by_depth_tests =
-            SREALLOC(soft_thread->by_depth_tests_order.by_depth_tests,
+        soft_thread->by_depth_tests_order.by_depth_moves =
+            SREALLOC(soft_thread->by_depth_tests_order.by_depth_moves,
                 ++soft_thread->by_depth_tests_order.num);
 
-        soft_thread->by_depth_tests_order.by_depth_tests[depth_idx]
+        soft_thread->by_depth_tests_order.by_depth_moves[depth_idx]
             .tests_order.num_groups = 0;
-        soft_thread->by_depth_tests_order.by_depth_tests[depth_idx]
+        soft_thread->by_depth_tests_order.by_depth_moves[depth_idx]
             .tests_order.groups = NULL;
     }
 
     if (depth_idx > 0)
     {
-        soft_thread->by_depth_tests_order.by_depth_tests[depth_idx - 1]
+        soft_thread->by_depth_tests_order.by_depth_moves[depth_idx - 1]
             .max_depth = min_depth;
     }
 
-    soft_thread->by_depth_tests_order.by_depth_tests[depth_idx].max_depth =
+    soft_thread->by_depth_tests_order.by_depth_moves[depth_idx].max_depth =
         SSIZE_MAX;
 
 #ifdef FCS_WITH_ERROR_STRS
     char static_error_string[120];
 #endif
     const int ret_code = fc_solve_apply_tests_order(
-        &(soft_thread->by_depth_tests_order.by_depth_tests[depth_idx]
+        &(soft_thread->by_depth_tests_order.by_depth_moves[depth_idx]
                 .tests_order),
         tests_order FCS__PASS_ERR_STR(static_error_string));
 
@@ -431,12 +431,12 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
          further_depth_idx++)
     {
         fc_solve_free_tests_order(&(
-            soft_thread->by_depth_tests_order.by_depth_tests[further_depth_idx]
+            soft_thread->by_depth_tests_order.by_depth_moves[further_depth_idx]
                 .tests_order));
     }
 
-    soft_thread->by_depth_tests_order.by_depth_tests =
-        SREALLOC(soft_thread->by_depth_tests_order.by_depth_tests,
+    soft_thread->by_depth_tests_order.by_depth_moves =
+        SREALLOC(soft_thread->by_depth_tests_order.by_depth_moves,
             soft_thread->by_depth_tests_order.num = depth_idx + 1);
 
     return ret_code;
@@ -2643,7 +2643,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
     void *const api_instance, const int depth_idx)
 {
     return api_soft_thread(api_instance)
-        ->by_depth_tests_order.by_depth_tests[depth_idx]
+        ->by_depth_tests_order.by_depth_moves[depth_idx]
         .max_depth;
 }
 

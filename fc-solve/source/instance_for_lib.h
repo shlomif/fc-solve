@@ -769,7 +769,7 @@ static inline void fc_solve__setup_optimization_thread__helper(
 {
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
-        if (soft_thread->by_depth_tests_order.by_depth_tests != NULL)
+        if (soft_thread->by_depth_tests_order.by_depth_moves != NULL)
         {
             fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
         }
@@ -777,11 +777,11 @@ static inline void fc_solve__setup_optimization_thread__helper(
         soft_thread->by_depth_tests_order =
             (typeof(soft_thread->by_depth_tests_order)){
                 .num = 1,
-                .by_depth_tests =
-                    SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
+                .by_depth_moves =
+                    SMALLOC1(soft_thread->by_depth_tests_order.by_depth_moves),
             };
-        soft_thread->by_depth_tests_order.by_depth_tests[0] =
-            (typeof(soft_thread->by_depth_tests_order.by_depth_tests[0])){
+        soft_thread->by_depth_tests_order.by_depth_moves[0] =
+            (typeof(soft_thread->by_depth_tests_order.by_depth_moves[0])){
                 .max_depth = SSIZE_MAX,
                 .tests_order = tests_order_dup(&(instance->opt_tests_order)),
             };
@@ -935,7 +935,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
             (arr_ptr->num_units = soft_thread->by_depth_tests_order.num));
 
         const fcs_by_depth_tests_order_t *const by_depth_tests_order =
-            soft_thread->by_depth_tests_order.by_depth_tests;
+            soft_thread->by_depth_tests_order.by_depth_moves;
 
         var_AUTO(unit, arr_ptr->by_depth_units);
         const_AUTO(depth_num, soft_thread->by_depth_tests_order.num);
