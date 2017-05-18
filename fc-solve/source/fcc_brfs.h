@@ -195,8 +195,8 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
     fcs_dbm_queue_item_t *queue_head, *queue_tail, *queue_recycle_bin = NULL,
                                                    *new_item, *extracted_item;
     fcs_compact_allocator_t queue_allocator, derived_list_allocator;
-    fcs_derived_state_t *derived_list, *derived_list_recycle_bin = NULL,
-                                       *derived_iter, *next_derived_iter;
+    fcs_derived_state_t *derived_list_recycle_bin = NULL, *derived_iter,
+                        *next_derived_iter;
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
@@ -270,7 +270,7 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
         }
 
         /* Calculate the derived list. */
-        derived_list = NULL;
+        fcs_derived_state_t *derived_list = NULL;
 
         /* Handle item. */
         fc_solve_delta_stater_decode_into_state(&delta_stater,
