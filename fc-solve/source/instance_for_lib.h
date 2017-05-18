@@ -936,7 +936,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
 
         var_AUTO(unit, arr_ptr->by_depth_units);
         const_AUTO(depth_num, soft_thread->by_depth_tests_order.num);
-        for (size_t depth_idx = 0; depth_idx < depth_num; depth_idx++, unit++)
+        for (size_t depth_idx = 0; depth_idx < depth_num; ++depth_idx, ++unit)
         {
             unit->max_depth = by_depth_tests_order[depth_idx].max_depth;
 

@@ -359,8 +359,6 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     void *const api_instance, const int min_depth,
     const char *const tests_order FCS__PASS_ERR_STR(char **const error_string))
 {
-    int depth_idx;
-
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
 
     if (min_depth < 0)
@@ -369,13 +367,10 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
         return 1;
     }
 
-    if (min_depth == 0)
+    int depth_idx = 0;
+    if (min_depth > 0)
     {
-        depth_idx = 0;
-    }
-    else
-    {
-        for (depth_idx = 0;; depth_idx++)
+        for (;; ++depth_idx)
         {
             if (depth_idx == soft_thread->by_depth_tests_order.num - 1)
             {
@@ -389,7 +384,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
             }
         }
 
-        depth_idx++;
+        ++depth_idx;
     }
 
     if (depth_idx == soft_thread->by_depth_tests_order.num)
