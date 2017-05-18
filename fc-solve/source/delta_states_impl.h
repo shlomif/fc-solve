@@ -330,7 +330,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
     {
         const fcs_card_t card =
             fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));
-        if (!(card == fc_solve_empty_card))
+        if (fcs_card_is_valid(card))
         {
             PROCESS_CARD(card);
         }

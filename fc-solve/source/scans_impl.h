@@ -298,7 +298,7 @@ static inline pq_rating_t befs_rate_state(
                     weighting->seqs_over_renegade_cards_factor));
     }
 
-    double num_cards_not_on_parents_weight =
+    const double num_cards_not_on_parents_weight =
         weighting->num_cards_not_on_parents_factor;
     if (num_cards_not_on_parents_weight)
     {

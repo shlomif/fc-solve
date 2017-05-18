@@ -1930,7 +1930,6 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
     }
 
     BEFS_VAR(soft_thread, weighting).befs_weights.weights[my_index] = weight;
-
     return 0;
 }
 

@@ -554,7 +554,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                     fcs_int_move_set_num_cards_in_seq(out_move, 1);
                 }
                 fcs_int_move_set_dest_stack(out_move,
-                    ((dest_card == fc_solve_empty_card)
+                    (fcs_card_is_empty(dest_card)
                             ? find_empty_col(s PASS_STACKS(STACKS_NUM__VAL))
                             : find_col_card(
                                   s, dest_card PASS_STACKS(STACKS_NUM__VAL))));

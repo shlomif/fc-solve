@@ -107,7 +107,6 @@ static inline void fcs_offloading_queue__insert(
     const fcs_offloading_queue_item_t *const datum)
 {
     fcs_Q_item_wrapper_t *new_item;
-
     if (queue->queue_recycle_bin)
     {
         queue->queue_recycle_bin = (new_item = queue->queue_recycle_bin)->next;

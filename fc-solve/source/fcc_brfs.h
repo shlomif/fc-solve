@@ -193,7 +193,7 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
 {
     void *tree_recycle_bin = NULL;
     fcs_dbm_queue_item_t *queue_head, *queue_tail, *queue_recycle_bin = NULL,
-                                                   *new_item, *extracted_item;
+                                                   *extracted_item;
     fcs_derived_state_t *derived_list_recycle_bin = NULL, *derived_iter,
                         *next_derived_iter;
     fcs_state_keyval_pair_t state;
@@ -229,8 +229,9 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
     dict_t *traversed_states =
         fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
 
-    new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
-        &(queue_allocator), sizeof(*new_item));
+    fcs_dbm_queue_item_t *new_item =
+        (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
+            &(queue_allocator), sizeof(*new_item));
     *new_item = (typeof(*new_item)){.key = start_state,
         .next = NULL,
         .moves_seq = {.count = 0, .moves_list = NULL}};

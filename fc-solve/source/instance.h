@@ -454,21 +454,16 @@ struct fc_solve_soft_thread_struct
             ssize_t dfs_max_depth;
 
             /*
-             * These are stacks used by the Soft-DFS for various uses.
+             * Soft-DFS uses a stack of fcs_soft_dfs_stack_item_t s.
              *
-             * states_to_check - an array of states to be checked next. Not
+             * derived_states_list - a list of states to be checked next. Not
              * all of them will be checked because it is possible that future
              * states already visited them.
              *
-             * states_to_check_move_stacks - an array of move stacks that
-             * lead to those states.
-             *
-             * num_states_to_check - the size of states_to_check[i]
-             *
-             * current_state_indexes - the index of the last checked state
+             * current_state_index - the index of the last checked state
              * in depth i.
              *
-             * test_indexes - the index of the test that was last
+             * move_func_list_idx - the index of the test list that is
              * performed. FCS performs each test separately, so
              * states_to_check and friends will not be overpopulated.
              *
@@ -479,7 +474,6 @@ struct fc_solve_soft_thread_struct
              * num_vacant_freecells - ditto for the freecells.
              *
              * */
-
             fcs_soft_dfs_stack_item_t *soft_dfs_info;
 
             /* The depth of the DFS stacks */

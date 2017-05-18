@@ -186,7 +186,6 @@ static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
     fcs_fcc_moves_seq_allocator_t *allocator)
 {
     fcs_fcc_moves_list_item_t *new_item;
-
     if (allocator->recycle_bin)
     {
         allocator->recycle_bin = (new_item = allocator->recycle_bin)->next;
@@ -197,7 +196,6 @@ static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
             allocator->allocator, sizeof(*new_item));
     }
     new_item->next = NULL;
-
     return new_item;
 }
 
