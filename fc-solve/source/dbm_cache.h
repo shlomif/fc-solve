@@ -142,9 +142,8 @@ static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
     cache_key->key = *key;
     if (moves_to_parent)
     {
-        size_t len;
         fcs_fcc_move_t *moves;
-        len = strlen((const char *)moves_to_parent);
+        const_AUTO(len, strlen((const char *)moves_to_parent));
         cache_key->moves_to_key = moves =
             SREALLOC(cache_key->moves_to_key, len + 1 + 1);
         memcpy(moves, moves_to_parent, len);

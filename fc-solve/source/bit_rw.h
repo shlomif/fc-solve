@@ -61,10 +61,8 @@ static inline void fc_solve_bit_reader_init(
 static inline fc_solve_bit_data_t fc_solve_bit_reader_read(
     fc_solve_bit_reader_t *reader, int len)
 {
-    int idx;
     fc_solve_bit_data_t ret = 0;
-
-    for (idx = 0; idx < len; idx++)
+    for (int idx = 0; idx < len; ++idx)
     {
         ret |= (((*(reader->current) >> (reader->bit_in_char_idx++)) & 0x1)
                 << idx);
@@ -75,6 +73,5 @@ static inline fc_solve_bit_data_t fc_solve_bit_reader_read(
             reader->bit_in_char_idx = 0;
         }
     }
-
     return ret;
 }
