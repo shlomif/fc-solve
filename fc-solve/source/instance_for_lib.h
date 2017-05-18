@@ -565,8 +565,6 @@ static inline void fc_solve_start_instance_process_with_board(
     STRUCT_SET_FLAG_TO(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL,
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO));
 #endif
-
-    return;
 }
 
 static inline void free_instance_hard_thread_callback(
@@ -704,8 +702,6 @@ static inline void fc_solve_instance__recycle_hard_thread(
         }
 #endif
     }
-
-    return;
 }
 
 static inline fc_solve_soft_thread_t *fc_solve_instance_get_first_soft_thread(
@@ -909,17 +905,13 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
 {
     fc_solve_soft_thread_update_initial_cards_val(soft_thread);
     fc_solve_instance_t *const instance = fcs_st_instance(soft_thread);
-
     /*
         Allocate some space for the states at depth 0.
     */
     DFS_VAR(soft_thread, depth) = 0;
-
     fc_solve_increase_dfs_max_depth(soft_thread);
-
     DFS_VAR(soft_thread, soft_dfs_info)
     [0].state = FCS_STATE_keyval_pair_to_collectible(instance->state_copy_ptr);
-
     fc_solve_rand_init(
         &(DFS_VAR(soft_thread, rand_gen)), DFS_VAR(soft_thread, rand_seed));
 
@@ -989,8 +981,6 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
                 moves_list_of_lists->lists, moves_list_of_lists->num_lists);
         }
     }
-
-    return;
 }
 
 /*

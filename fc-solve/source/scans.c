@@ -32,14 +32,12 @@ void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
 {
     const_AUTO(new_dfs_max_depth,
         DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
-
     DFS_VAR(soft_thread, soft_dfs_info) =
         SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
-
     var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info) +
                                 DFS_VAR(soft_thread, dfs_max_depth));
-
     const_AUTO(end_soft_dfs_info, soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY);
+
     for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
     {
         *soft_dfs_info = (fcs_soft_dfs_stack_item_t){
@@ -316,8 +314,6 @@ static inline void fc_solve_initialize_bfs_queue(
     my_brfs_queue_last_item->next = NULL;
 
     my_brfs_recycle_bin = NULL;
-
-    return;
 }
 
 void fc_solve_soft_thread_init_befs_or_bfs(
@@ -832,6 +828,4 @@ extern void fc_solve_sfs_check_state_end(
         fc_solve_derived_states_list_add_state(derived_states_list,
             INFO_STATE_PTR(raw_ptr_new_state_raw), state_context_value);
     }
-
-    return;
 }

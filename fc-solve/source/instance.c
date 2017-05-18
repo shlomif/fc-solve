@@ -76,9 +76,7 @@ static inline void soft_thread_clean_soft_dfs(
     }
 
     free(soft_dfs_info);
-
     DFS_VAR(soft_thread, soft_dfs_info) = NULL;
-
     DFS_VAR(soft_thread, dfs_max_depth) = 0;
 }
 

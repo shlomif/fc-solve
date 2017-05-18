@@ -393,8 +393,6 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
             temp_state = FCS_S_PARENT(temp_state);
         }
     }
-
-    return;
 }
 #else
 #define calculate_real_depth(calc_real_depth, ptr_state_orig)
@@ -466,8 +464,6 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
                     .state_ptr);
         }
     }
-
-    return;
 }
 #define VERIFY_SOFT_DFS_STACK(soft_thread) verify_soft_dfs_stack(soft_thread)
 #else
@@ -601,8 +597,6 @@ static inline void free_states_handle_soft_dfs_soft_thread(
         soft_dfs_info->derived_states_list.num_states =
             dest_rand_index_ptr - rand_indexes;
     }
-
-    return;
 }
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \
@@ -749,9 +743,7 @@ static inline int fc_solve_soft_dfs_do_solve(
     ASSIGN_ptr_state(the_soft_dfs_info->state);
     fcs_derived_states_list_t *derived_states_list =
         &(the_soft_dfs_info->derived_states_list);
-
     fcs_rand_t *const rand_gen = &(DFS_VAR(soft_thread, rand_gen));
-
     calculate_real_depth(calc_real_depth, PTR_STATE);
 
     fcs_tests_by_depth_unit_t *by_depth_units =
