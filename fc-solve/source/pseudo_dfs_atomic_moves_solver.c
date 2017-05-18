@@ -117,15 +117,11 @@ static inline void instance__inspect_new_state(
 
     stack_item->count_next_states = 0;
     stack_item->next_state_idx = 0;
-    fcs_kv_state_t kv;
     /* Now recycle the derived_list */
     while (derived_list)
     {
-        kv.key = &(derived_list->state.s);
-        kv.val = &(derived_list->state.info);
-        fc_solve_canonize_state(
-            kv.key PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM));
-
+        fc_solve_canonize_state(&(derived_list->state.s)PASS_FREECELLS(
+            FREECELLS_NUM) PASS_STACKS(STACKS_NUM));
         if (!lookup_state(
                 &(instance->store), &(instance->cache), &(derived_list->state)))
         {
