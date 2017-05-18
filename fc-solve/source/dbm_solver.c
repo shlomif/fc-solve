@@ -276,7 +276,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     }
 
     /* Skip the '|'. */
-    s_ptr++;
+    ++s_ptr;
 
     FCS_STATE__DUP_keyval_pair(running_state, *init_state_ptr);
 
