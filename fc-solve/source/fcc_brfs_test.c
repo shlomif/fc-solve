@@ -49,7 +49,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_init_locs(&locs);
     fcs_encoded_state_buffer_t min_by_sorting;
     void *tree_recycle_bin = NULL;
-
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,
@@ -193,7 +192,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     fcs_encoded_state_buffer_t start_enc_state;
     fcs_encoded_state_buffer_t min_by_sorting;
     void *tree_recycle_bin = NULL;
-
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,

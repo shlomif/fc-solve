@@ -454,7 +454,6 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
         var_AUTO(num_moves, pats_scan->num_moves_to_win);
 
         fcs_state_keyval_pair_t s_and_info;
-
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         FCS_STATE__DUP_keyval_pair(s_and_info, *(instance->state_copy_ptr));
 

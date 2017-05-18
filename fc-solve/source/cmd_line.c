@@ -255,9 +255,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     char *fcs_user_errstr;
     *error_string = NULL;
 #endif
-
     const freecell_solver_str_t *const arg_argc = &(argv[argc]);
-
     freecell_solver_str_t *arg = &(argv[start_arg]);
     for (; arg < arg_argc; arg++)
     {
@@ -641,10 +639,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
             if (file_nesting_count != 0)
             {
-                freecell_solver_str_t s;
                 FILE *f;
                 int num_file_args_to_skip = 0;
-                s = (*arg);
+                freecell_solver_str_t s = (*arg);
                 while (isdigit(*s))
                 {
                     s++;

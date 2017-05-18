@@ -201,7 +201,6 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
     long num_new_positions = 0;
-
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
 /* Some sanity checks. */
