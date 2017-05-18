@@ -93,13 +93,8 @@ static inline void *fc_solve_hash_insert(
 #if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
     const_SLOT(hash_type, hash);
 #endif
-/* Get the index of the appropriate chain in the hash table */
-#define PLACE() (hash_value & (hash->size_bitmask))
-
-    typeof(hash->entries[0]) *const list = (hash->entries + PLACE());
-
-#undef PLACE
-
+    typeof(hash->entries[0]) *const list =
+        (hash->entries + (hash_value & (hash->size_bitmask)));
     fcs_hash_item_t **item_placeholder;
     /* If first_item is non-existent */
     if (list->first_item == NULL)
