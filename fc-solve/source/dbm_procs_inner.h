@@ -80,12 +80,12 @@ static unsigned char get_move_from_parent_to_child(
     fcs_state_keyval_pair_t parent_state;
     fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL,
                         *derived_iter;
-    fcs_compact_allocator_t derived_list_allocator;
-    fcs_meta_compact_allocator_t meta_alloc;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     const_AUTO(local_variant, instance->common.variant);
 
+    fcs_meta_compact_allocator_t meta_alloc;
     fc_solve_meta_compact_allocator_init(&meta_alloc);
+    fcs_compact_allocator_t derived_list_allocator;
     fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
     fc_solve_delta_stater_decode_into_state(
         delta, parent.s, &parent_state, indirect_stacks_buffer);

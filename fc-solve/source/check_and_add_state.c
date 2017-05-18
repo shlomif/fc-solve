@@ -251,10 +251,8 @@ static inline void fc_solve_cache_stacks(
     STACKS__SET_PARAMS();
     register fcs_state_t *const new_state_key = new_state->key;
     register fcs_state_extra_info_t *const new_state_info = new_state->val;
-
     fcs_compact_allocator_t *const stacks_allocator =
         &(HT_FIELD(hard_thread, allocator));
-
     fcs_cards_column_t *current_stack = new_state_key->columns;
 
     for (int i = 0; i < LOCAL_STACKS_NUM; ++i, ++current_stack)

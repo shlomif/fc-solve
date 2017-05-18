@@ -194,7 +194,6 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
     void *tree_recycle_bin = NULL;
     fcs_dbm_queue_item_t *queue_head, *queue_tail, *queue_recycle_bin = NULL,
                                                    *new_item, *extracted_item;
-    fcs_compact_allocator_t queue_allocator, derived_list_allocator;
     fcs_derived_state_t *derived_list_recycle_bin = NULL, *derived_iter,
                         *next_derived_iter;
     fcs_state_keyval_pair_t state;
@@ -213,7 +212,8 @@ static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
     assert(does_state_exist_in_any_FCC_cache);
 #endif
 
-    /* Initialize the queue_allocator. */
+    /* Initialize the allocators. */
+    fcs_compact_allocator_t queue_allocator, derived_list_allocator;
     fc_solve_compact_allocator_init(&(queue_allocator), meta_alloc);
     fc_solve_compact_allocator_init(&(derived_list_allocator), meta_alloc);
 

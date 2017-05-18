@@ -34,8 +34,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fcs_state_locs_struct_t locs;
     fcs_derived_state_t *derived_list = NULL;
     fcs_derived_state_t *derived_list_recycle_bin = NULL;
-    fcs_compact_allocator_t allocator;
-    fcs_meta_compact_allocator_t meta_alloc;
     size_t states_count = 0;
     fcs_derived_state_t *iter;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -54,7 +52,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 
+    fcs_meta_compact_allocator_t meta_alloc;
     fc_solve_meta_compact_allocator_init(&meta_alloc);
+    fcs_compact_allocator_t allocator;
     fc_solve_compact_allocator_init(&allocator, &meta_alloc);
 
     instance_solver_thread_calc_derived_states(local_variant, &init_state, NULL,
