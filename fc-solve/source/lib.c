@@ -822,9 +822,7 @@ static inline void calc_moves_seq(const fcs_move_stack_t *const solution_moves,
 
     const_SLOT(num_moves, solution_moves);
     fcs_internal_move_t *next_move_ptr = solution_moves->moves + num_moves;
-
     fcs_move_t *const ret_moves = SMALLOC(ret_moves, num_moves);
-
     if (!ret_moves)
     {
         return;
@@ -1345,11 +1343,9 @@ DLLEXPORT char *freecell_solver_user_current_state_as_string(
     int canonized_order_output FC_SOLVE__PASS_T(int display_10_as_t))
 {
     char *state_as_string = SMALLOC(state_as_string, 1000);
-
     freecell_solver_user_current_state_stringify(api_instance,
         state_as_string FC_SOLVE__PASS_PARSABLE(parseable_output),
         canonized_order_output FC_SOLVE__PASS_T(display_10_as_t));
-
     return state_as_string;
 }
 #endif

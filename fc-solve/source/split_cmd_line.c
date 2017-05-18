@@ -54,9 +54,7 @@ static inline void add_to_last_arg(
 static inline void push_args_last_arg(args_man_wrapper_t *const manager)
 {
     const int len = manager->last_arg_ptr - manager->last_arg;
-
     char *const new_arg = SMALLOC(new_arg, len + 1);
-
     strncpy(new_arg, manager->last_arg, len);
     new_arg[len] = '\0';
 
@@ -89,7 +87,6 @@ args_man_t fc_solve_args_man_chop(const char *const string)
     const char *s = string;
 
     args_man_wrapper_t manager = {.args_man = fc_solve_args_man_alloc()};
-
     manager.last_arg_ptr = manager.last_arg = SMALLOC(manager.last_arg, 1024);
     manager.last_arg_end = manager.last_arg + 1023;
 
