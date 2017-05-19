@@ -287,7 +287,8 @@ q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
 
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
-my $ARCH = 'x64';
+# my $ARCH = 'x64';
+my $ARCH = 'n2';
 
 # load the t prefix.
 my @LB = ( '-l', $ARCH . 'b' );
