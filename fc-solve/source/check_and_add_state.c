@@ -363,11 +363,7 @@ static inline void fc_solve_cache_stacks(
 }
 
 #else /* #ifdef INDIRECT_STACK_STATES */
-
-#define fc_solve_cache_stacks(hard_thread, new_state_key)                      \
-    {                                                                          \
-    }
-
+#define fc_solve_cache_stacks(hard_thread, new_state_key)
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)

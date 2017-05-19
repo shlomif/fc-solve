@@ -856,7 +856,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                 }
                 else
                 {
-                    the_soft_dfs_info--;
+                    --the_soft_dfs_info;
                     derived_states_list =
                         &(the_soft_dfs_info->derived_states_list);
                     ASSIGN_ptr_state(the_soft_dfs_info->state);
@@ -1139,7 +1139,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                     RECALC_BY_DEPTH_LIMITS();
                 }
                 the_soft_dfs_info->current_state_index = state_idx;
-                the_soft_dfs_info++;
+                ++the_soft_dfs_info;
                 ASSIGN_ptr_state(single_derived_state);
                 the_soft_dfs_info->state = PTR_STATE;
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify after recurse");

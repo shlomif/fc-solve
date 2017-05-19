@@ -395,7 +395,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
             const fcs_const_cards_column_t dest_col =
                 fcs_state_get_col(state, ds);
-
             const int dest_cards_num = fcs_col_len(dest_col);
             /* Let's check if we can put it there */
 
@@ -551,17 +550,16 @@ DECLARE_MOVE_FUNCTION(
  * dc >= dest_cards_num - num_vacant_slots - 1
  * */
 #define ds stack_idx
-#define dest_col col
             /* Check if it can be moved to something on the same stack */
             for (int dc = start_dc; dc < below_c; dc++)
             {
-                const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+                const fcs_card_t dest_card = fcs_col_get_card(col, dc);
                 const int next_dc = dc + 1;
                 if ((!fcs_is_parent_card(card, dest_card)) ||
                     /* Corresponding cards - see if it is feasible to move
                        the source to the destination. */
                     fcs_is_parent_card(
-                        fcs_col_get_card(dest_col, next_dc), dest_card))
+                        fcs_col_get_card(col, next_dc), dest_card))
                 {
                     continue;
                 }
@@ -607,7 +605,6 @@ DECLARE_MOVE_FUNCTION(
     }
 }
 #undef ds
-#undef dest_col
 
 #define CALC_num_virtual_vacant_stacks()                                       \
     (tests__is_filled_by_any_card() ? num_vacant_stacks : 0)
@@ -1277,12 +1274,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
             fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
-            if (!fcs_col_len(dest_col))
+            const_AUTO(l, fcs_col_len(dest_col));
+            if (!l)
             {
                 continue;
             }
-            const fcs_card_t dest_card =
-                fcs_col_get_card(dest_col, fcs_col_len(dest_col) - 1);
+            const fcs_card_t dest_card = fcs_col_get_card(dest_col, l - 1);
             if (!fcs_is_parent_card(card, dest_card))
             {
                 continue;
