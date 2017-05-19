@@ -218,7 +218,7 @@ static inline void fc_solve__hard_thread__compile_prelude(
 
 static inline void set_next_soft_thread(
     fc_solve_hard_thread_t *const hard_thread, const int_fast32_t scan_idx,
-    const int quota, int_fast32_t *const st_idx_ptr)
+    const fcs_int_limit_t quota, int_fast32_t *const st_idx_ptr)
 {
     (*st_idx_ptr) = scan_idx;
     /*

@@ -418,14 +418,7 @@ struct fc_solve_soft_thread_struct
      * */
     int id;
 
-    /*
-     * The tests' order indicates which tests (i.e: kinds of multi-moves) to
-     * do at what order. This is most relevant to DFS and Soft-DFS.
-     *
-     * tests_order_num is the number of tests in the test's order. Notice
-     * that it can be lower than FCS_TESTS_NUM, thus enabling several tests
-     * to be removed completely.
-     * */
+    // The moves' order indicates which move funcs to run.
     fcs_by_depth_tests_order_array_t by_depth_moves_order;
 
     /* The super-method type - can be  */
@@ -543,7 +536,7 @@ struct fc_solve_soft_thread_struct
     /*
      * The number of iterations with which to process this scan
      * */
-    int checked_states_step;
+    fcs_int_limit_t checked_states_step;
 
     /*
      * A string that serves as an identification for the user.
