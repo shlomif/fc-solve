@@ -286,36 +286,33 @@ static void fc_solve_debondt_delta_stater_encode_composite(
      *
      * Skip encoding the aces, and the kings are encoded with less bits.
      */
+    const int top_rank_for_iter = get_top_rank_for_iter(local_variant);
+    for (int rank = 2; rank <= top_rank_for_iter; rank++)
     {
-        const int top_rank_for_iter = get_top_rank_for_iter(local_variant);
-        for (int rank = 2; rank <= top_rank_for_iter; rank++)
+        for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
         {
-            for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
+            const unsigned long opt = RS_STATE(rank, suit_idx);
+            unsigned long base;
+
+            if (IS_BAKERS_DOZEN())
             {
-                const unsigned long opt = RS_STATE(rank, suit_idx);
-                unsigned long base;
+                const_AUTO(card, fcs_card2char(fcs_make_card(rank, suit_idx)));
 
-                if (IS_BAKERS_DOZEN())
+                if (self->bakers_dozen_topmost_cards_lookup[card >> 3] &
+                    (1 << (card & (8 - 1))))
                 {
-                    const_AUTO(
-                        card, fcs_card2char(fcs_make_card(rank, suit_idx)));
-
-                    if (self->bakers_dozen_topmost_cards_lookup[card >> 3] &
-                        (1 << (card & (8 - 1))))
-                    {
-                        continue;
-                    }
-                    base = NUM__BAKERS_DOZEN__OPTS;
+                    continue;
                 }
-                else
-                {
-                    base = ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS);
-                }
-
-                assert(opt < base);
-
-                fc_solve_var_base_writer_write(writer, base, opt);
+                base = NUM__BAKERS_DOZEN__OPTS;
             }
+            else
+            {
+                base = ((rank == RANK_KING) ? NUM_KING_OPTS : NUM_OPTS);
+            }
+
+            assert(opt < base);
+
+            fc_solve_var_base_writer_write(writer, base, opt);
         }
     }
 }
