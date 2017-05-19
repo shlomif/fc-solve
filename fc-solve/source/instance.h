@@ -713,7 +713,7 @@ struct fc_solve_instance_struct
 #endif
 
     /*
-     * This is the master tests order. It is used to initialize all
+     * This is the master moves' funcs order. It is used to initialize all
      * the new Soft-Threads.
      * */
     fcs_tests_order_t instance_tests_order;
@@ -790,13 +790,14 @@ struct fc_solve_instance_struct
      * */
     fcs_meta_compact_allocator_t *meta_alloc;
 
+#if (defined(FCS_WITH_MOVES) && (!defined(FCS_DISABLE_PATSOLVE)))
     /*
      * The soft_thread that solved the state.
      *
      * Needed to trace the patsolve solutions.
      * */
     fc_solve_soft_thread_t *solving_soft_thread;
-
+#endif
 #ifndef FCS_DISABLE_PATSOLVE
     /*
      * This is intended to be used by the patsolve scan which is

@@ -1156,11 +1156,12 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
         }
 
         const fcs_bool_t was_solved = (ret == FCS_STATE_WAS_SOLVED);
+#if (defined(FCS_WITH_MOVES) && (!defined(FCS_DISABLE_PATSOLVE)))
         if (was_solved)
         {
             instance->solving_soft_thread = soft_thread;
         }
-
+#endif
         if (was_solved || ((ret == FCS_STATE_SUSPEND_PROCESS) &&
                               instance__check_exceeded_stats(instance)))
         {
