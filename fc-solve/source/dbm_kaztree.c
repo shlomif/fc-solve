@@ -36,7 +36,6 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
 #endif
 
     *store = (fcs_dbm_store_t)db;
-    return;
 }
 
 dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)

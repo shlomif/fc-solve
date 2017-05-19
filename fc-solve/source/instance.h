@@ -933,8 +933,6 @@ static inline void fc_solve_soft_thread_update_initial_cards_val(
                 col, fcs_col_len(col) - 1));
     }
     soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
-
-    return;
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(

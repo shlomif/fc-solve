@@ -167,8 +167,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
         sfs_check_state_end();
     }
     STACK_SOURCE_LOOP_END()
-
-    return;
 }
 
 #define LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)                           \
@@ -355,8 +353,6 @@ DECLARE_MOVE_FUNCTION(
     STACK_DEST_LOOP_END()
 #undef h
     STACK_SOURCE_LOOP_END()
-
-    return;
 }
 
 /*
@@ -633,8 +629,6 @@ DECLARE_MOVE_FUNCTION(
         }
     }
     STACK_SOURCE_LOOP_END()
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(
@@ -696,8 +690,6 @@ DECLARE_MOVE_FUNCTION(
         }
     }
     STACK_SOURCE_LOOP_END()
-
-    return;
 }
 
 /*
@@ -954,8 +946,6 @@ DECLARE_MOVE_FUNCTION(
         }
     }
     STACK_SOURCE_LOOP_END()
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(
@@ -1049,8 +1039,6 @@ DECLARE_MOVE_FUNCTION(
         }
     }
     STACK_SOURCE_LOOP_END()
-
-    return;
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
@@ -1098,8 +1086,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     sfs_check_state_end();
     STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()
-
-    return;
 }
 
 #undef state

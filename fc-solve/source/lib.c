@@ -286,8 +286,6 @@ static void user_initialize(fcs_user_t *const user)
     clear_error(user);
 
     user_next_instance(user);
-
-    return;
 }
 
 void DLLEXPORT *freecell_solver_user_alloc(void)
@@ -770,8 +768,6 @@ static void recycle_instance(
 #else
     instance_item->was_flare_found = instance_item->was_flare_finished = FALSE;
 #endif
-
-    return;
 }
 
 #ifdef FCS_WITH_MOVES
@@ -1546,8 +1542,6 @@ static void apply_game_params_for_all_instances(fcs_user_t *const user)
         calc_variant_suit_mask_and_desired_suit_value(instance);
     }
     FLARES_LOOP_END()
-
-    return;
 }
 
 #endif

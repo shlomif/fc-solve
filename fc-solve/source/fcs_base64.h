@@ -55,8 +55,6 @@ static void base64_encode(const unsigned char *data, const size_t input_length,
         encoded_data[*output_length - 1 - i] = '=';
 
     encoded_data[*output_length] = '\0';
-
-    return;
 }
 
 static int base64_decode(const char *data, const size_t input_length,

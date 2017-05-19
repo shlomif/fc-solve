@@ -286,8 +286,6 @@ static void calc_trace(fcs_dbm_record_t *const ptr_initial_record,
 #undef GROW_BY
     *ptr_trace_num = trace_num;
     *ptr_trace = trace;
-
-    return;
 }
 
 static inline void mark_and_sweep_old_states(

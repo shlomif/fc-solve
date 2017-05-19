@@ -152,8 +152,6 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     fprintf(output_fh, "This scan generated %ld states.\n",
         (long)freecell_solver_user_get_num_states_in_collection_long(instance));
 #endif
-
-    return;
 }
 
 #ifdef __cplusplus

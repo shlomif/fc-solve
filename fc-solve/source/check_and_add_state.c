@@ -428,8 +428,6 @@ static inline void upon_new_state(fc_solve_instance_t *const instance,
 #endif
     ++instance->num_states_in_collection;
 #endif
-
-    return;
 }
 
 #define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);

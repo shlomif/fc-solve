@@ -195,8 +195,6 @@ static inline void fc_solve_pq_pop(
 
     elems[i] = last_elem;
     pq->current_size = new_current_size;
-
-    return;
 }
 
 #ifdef __cplusplus

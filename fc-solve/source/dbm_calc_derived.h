@@ -114,8 +114,6 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
         ((((*by_rank_ptr) >> (suit_times_two)) & ((1 << 2) - 1)) + count);
     *by_rank_ptr &= (~((((unsigned char)0x3) << (suit_times_two))));
     *by_rank_ptr |= (new_count << (suit_times_two));
-
-    return;
 }
 
 #define COMMIT_NEW_STATE_WITH_COUNT(src, dest, count, moved_card)              \
