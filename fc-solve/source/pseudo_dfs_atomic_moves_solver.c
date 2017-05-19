@@ -275,7 +275,7 @@ int main(int argc, char *argv[])
     const long delta_limit = 100000;
     const char *filename = argv[1];
     FILE *const fh = fopen(filename, "r");
-    if (fh == NULL)
+    if (!fh)
     {
         fc_solve_err("Could not open file '%s' for input.\n", filename);
     }
@@ -289,26 +289,22 @@ int main(int argc, char *argv[])
     instance_init(&instance, local_variant, &init_state_pair, 8000000);
 
 #define LOG_FILENAME "fc-solve-pseudo-dfs.log.txt"
-
+    FILE *const last_line_fh = popen(("tail -1 " LOG_FILENAME), "r");
+    if (last_line_fh)
     {
-        FILE *const last_line_fh = popen(("tail -1 " LOG_FILENAME), "r");
-
-        if (last_line_fh)
+        long count_num_processed;
+        if (fscanf(last_line_fh, "At %ld iterations Coords=[",
+                &count_num_processed) == 1)
         {
-            long count_num_processed;
-            if (fscanf(last_line_fh, "At %ld iterations Coords=[",
-                    &count_num_processed) == 1)
-            {
-                instance__load_coords_from_fh(&instance, last_line_fh);
-                /*
-                 * instance__inspect_new_state increments count_num_processed
-                 * so let's set it after loading the coordinates.
-                 * */
-                instance.count_num_processed = count_num_processed;
-            }
+            instance__load_coords_from_fh(&instance, last_line_fh);
+            /*
+             * instance__inspect_new_state increments count_num_processed
+             * so let's set it after loading the coordinates.
+             * */
+            instance.count_num_processed = count_num_processed;
         }
-        pclose(last_line_fh);
     }
+    pclose(last_line_fh);
 
     instance.max_count_num_processed =
         instance.count_num_processed + delta_limit;

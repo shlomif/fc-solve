@@ -108,7 +108,7 @@ RB_GENERATE_STATIC(
 static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     const fcs_dbm_common_input_t *const inp,
     fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
-    FILE *out_fh)
+    FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->fcc_meta_alloc));
     instance->fcc_entry_points = FccEntryPointList_init;
@@ -681,7 +681,6 @@ int main(int argc, char *argv[])
         &instance, &inp, &fingerprint_which_irreversible_moves_bitmask, stdout);
 
     FILE *fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
-
     if (!fingerprint_fh)
     {
         fc_solve_err("Cannot open '%s' for reading. Exiting.",

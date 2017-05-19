@@ -109,7 +109,7 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
             continue;
         }
         FILE *f = fopen(path, "rt");
-        if (f == NULL)
+        if (!f)
         {
             continue;
         }
@@ -668,13 +668,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
 
                 /* Try to open from the local path */
-                if (f == NULL)
+                if (!f)
                 {
                     f = fopen(s, "rt");
                 }
 
                 /* If we still could not open it return an error */
-                if (f == NULL)
+                if (!f)
                 {
                     RET_ERR_STR(error_string,
                         "Could not open file \"%s\"!\nQuitting.\n", s);
