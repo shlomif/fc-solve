@@ -157,17 +157,16 @@ static inline void add_to_move_funcs_list(
     size_t *const num_so_far, const size_t *const indexes,
     const size_t count_to_add)
 {
-    const size_t num = *num_so_far;
+    size_t num = *num_so_far;
     fc_solve_solve_for_state_move_func_t *const move_funcs_list =
         SREALLOC(*out_move_funcs_list, num + count_to_add);
-    size_t next_i = num;
-    for (size_t i = 0; i < count_to_add; i++)
+    for (size_t i = 0; i < count_to_add; ++i)
     {
-        move_funcs_list[next_i++] = fc_solve_sfs_move_funcs[indexes[i]];
+        move_funcs_list[num++] = fc_solve_sfs_move_funcs[indexes[i]];
     }
 
     *out_move_funcs_list = move_funcs_list;
-    *num_so_far = next_i;
+    *num_so_far = num;
 }
 
 extern int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const,

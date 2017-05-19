@@ -178,25 +178,23 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
         ST_LOOP_START()
 #endif
 
+        switch (callback_choice)
         {
-            switch (callback_choice)
-            {
-            case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
-                soft_thread_clean_soft_dfs(soft_thread);
-                break;
+        case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
+            soft_thread_clean_soft_dfs(soft_thread);
+            break;
 
-            case FOREACH_SOFT_THREAD_FREE_INSTANCE:
-                fc_solve_free_instance_soft_thread_callback(soft_thread);
-                break;
+        case FOREACH_SOFT_THREAD_FREE_INSTANCE:
+            fc_solve_free_instance_soft_thread_callback(soft_thread);
+            break;
 
-            case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
-                accumulate_tests_order(soft_thread, context);
-                break;
+        case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
+            accumulate_tests_order(soft_thread, context);
+            break;
 
-            case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
-                determine_scan_completeness(soft_thread, context);
-                break;
-            }
+        case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
+            determine_scan_completeness(soft_thread, context);
+            break;
         }
 #ifdef FCS_SINGLE_HARD_THREAD
     }
