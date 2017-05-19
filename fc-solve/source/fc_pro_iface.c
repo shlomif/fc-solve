@@ -90,14 +90,12 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             for (i = 0; i < 8; i++)
             {
                 fcs_cards_column_t col = fcs_state_get_col(pos, i);
-                if (fcs_col_len(col) > 0)
+                const_AUTO(l, fcs_col_len(col));
+                if (l && fc_solve_fc_pro__can_be_moved(
+                             &pos, fcs_col_get_card(col, l - 1)))
                 {
-                    if (fc_solve_fc_pro__can_be_moved(
-                            &pos, fcs_col_get_card(col, fcs_col_len(col) - 1)))
-                    {
-                        fcs_col_pop_top(col);
-                        break;
-                    }
+                    fcs_col_pop_top(col);
+                    break;
                 }
             }
             if (i < 8)
