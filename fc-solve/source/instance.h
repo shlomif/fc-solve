@@ -310,17 +310,6 @@ struct fc_solve_hard_thread_struct
     fcs_int_limit_t ht__max_num_checked_states;
 
     /*
-     * These variables are used to compute the MD5 checksum of a state
-     * that is about to be checked. I decided to make them globals so
-     * they won't have to be re-allocated and freed all the time.
-     *
-     * Notice that it is only used with my internal hash implmentation
-     * as GLib requires a dedicated hash function, which cannot
-     * access the instance.
-     *
-     * */
-
-    /*
      * The index for the soft-thread that is currently processed
      * */
     int_fast32_t st_idx;
