@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * freecell.h - header file of the Freecell move functions
- * ("solve-for-state"/"sfs").
- */
+// freecell.h - header file of the Freecell move functions
 
 #pragma once
 
@@ -21,40 +18,21 @@ extern "C" {
 #include "instance.h"
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds);
-
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_move_stack_cards_to_a_parent_on_the_same_stack);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack);
-
-#if 0
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_card_to_parent);
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_yukon_move_kings_to_empty_stack);
-#endif
 
 #ifdef __cplusplus
 }

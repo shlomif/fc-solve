@@ -22,30 +22,22 @@ extern "C" {
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent);
-
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent);
-
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above);
-
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_with_some_cards_above_to_true_parent);
-
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above);
-
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above);
-
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_to_parent_on_the_same_stack);
-
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent);
 
-#endif /* #ifndef FCS_DISABLE_SIMPLE_SIMON */
+#endif
 
 #ifdef __cplusplus
 }
