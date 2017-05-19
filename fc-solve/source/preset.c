@@ -173,24 +173,24 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
             {
                 /* Check every test */
 
-                fcs_by_depth_tests_order_t *const by_depth_tests_order =
-                    soft_thread->by_depth_tests_order.by_depth_moves;
+                fcs_by_depth_tests_order_t *const by_depth_moves_order =
+                    soft_thread->by_depth_moves_order.by_depth_moves;
 
                 for (int depth_idx = 0;
-                     depth_idx < soft_thread->by_depth_tests_order.num;
+                     depth_idx < soft_thread->by_depth_moves_order.num;
                      depth_idx++)
                 {
                     for (int group_idx = 0;
                          group_idx <
-                         by_depth_tests_order[depth_idx].tests_order.num_groups;
+                         by_depth_moves_order[depth_idx].tests_order.num_groups;
                          ++group_idx)
                     {
                         const size_t *const move_funcs_idxs =
-                            by_depth_tests_order[depth_idx]
+                            by_depth_moves_order[depth_idx]
                                 .tests_order.groups[group_idx]
                                 .order_group_moves;
                         const_AUTO(
-                            tests_order_num, by_depth_tests_order[depth_idx]
+                            tests_order_num, by_depth_moves_order[depth_idx]
                                                  .tests_order.groups[group_idx]
                                                  .num);
 
@@ -215,7 +215,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                             if (*s == '\0')
                             {
                                 fc_solve_apply_tests_order(
-                                    &(by_depth_tests_order[depth_idx]
+                                    &(by_depth_moves_order[depth_idx]
                                             .tests_order),
                                     preset.tests_order FCS__PASS_ERR_STR(
                                         no_use));

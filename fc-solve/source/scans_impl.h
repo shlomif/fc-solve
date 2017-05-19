@@ -914,7 +914,9 @@ static inline int fc_solve_soft_dfs_do_solve(
                 if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
                              (num_vacant_freecells == LOCAL_FREECELLS_NUM)))
                 {
+#ifdef FCS_WITH_MOVES
                     instance->final_state = PTR_STATE;
+#endif
                     BUMP_NUM_CHECKED_STATES();
                     TRACE0("Returning FCS_STATE_WAS_SOLVED");
                     return FCS_STATE_WAS_SOLVED;

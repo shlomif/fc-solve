@@ -313,11 +313,9 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
     fc_solve_bit_reader_t *const bit_r, fcs_state_t *const ret)
 {
 #define PROCESS_CARD(card)                                                     \
+    if (fcs_card_rank(card) < foundations[fcs_card_suit(card)])                \
     {                                                                          \
-        if (fcs_card_rank(card) < foundations[fcs_card_suit(card)])            \
-        {                                                                      \
-            foundations[fcs_card_suit(card)] = fcs_card_rank(card);            \
-        }                                                                      \
+        foundations[fcs_card_suit(card)] = fcs_card_rank(card);                \
     }
 
     const_SLOT(num_freecells, self);

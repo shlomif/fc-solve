@@ -759,19 +759,19 @@ static inline void fc_solve__setup_optimization_thread__helper(
 {
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
-        if (soft_thread->by_depth_tests_order.by_depth_moves != NULL)
+        if (soft_thread->by_depth_moves_order.by_depth_moves != NULL)
         {
             fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
         }
 
-        soft_thread->by_depth_tests_order =
-            (typeof(soft_thread->by_depth_tests_order)){
+        soft_thread->by_depth_moves_order =
+            (typeof(soft_thread->by_depth_moves_order)){
                 .num = 1,
                 .by_depth_moves =
-                    SMALLOC1(soft_thread->by_depth_tests_order.by_depth_moves),
+                    SMALLOC1(soft_thread->by_depth_moves_order.by_depth_moves),
             };
-        soft_thread->by_depth_tests_order.by_depth_moves[0] =
-            (typeof(soft_thread->by_depth_tests_order.by_depth_moves[0])){
+        soft_thread->by_depth_moves_order.by_depth_moves[0] =
+            (typeof(soft_thread->by_depth_moves_order.by_depth_moves[0])){
                 .max_depth = SSIZE_MAX,
                 .tests_order = tests_order_dup(&(instance->opt_tests_order)),
             };
@@ -918,22 +918,22 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
         fcs_tests_by_depth_array_t *const arr_ptr =
             &(DFS_VAR(soft_thread, tests_by_depth_array));
         arr_ptr->by_depth_units = SMALLOC(arr_ptr->by_depth_units,
-            (arr_ptr->num_units = soft_thread->by_depth_tests_order.num));
+            (arr_ptr->num_units = soft_thread->by_depth_moves_order.num));
 
-        const fcs_by_depth_tests_order_t *const by_depth_tests_order =
-            soft_thread->by_depth_tests_order.by_depth_moves;
+        const fcs_by_depth_tests_order_t *const by_depth_moves_order =
+            soft_thread->by_depth_moves_order.by_depth_moves;
 
         var_AUTO(unit, arr_ptr->by_depth_units);
-        const_AUTO(depth_num, soft_thread->by_depth_tests_order.num);
+        const_AUTO(depth_num, soft_thread->by_depth_moves_order.num);
         for (size_t depth_idx = 0; depth_idx < depth_num; ++depth_idx, ++unit)
         {
-            unit->max_depth = by_depth_tests_order[depth_idx].max_depth;
+            unit->max_depth = by_depth_moves_order[depth_idx].max_depth;
 
             fcs_tests_order_group_t *const tests_order_groups =
-                by_depth_tests_order[depth_idx].tests_order.groups;
+                by_depth_moves_order[depth_idx].tests_order.groups;
 
             const_AUTO(tests_order_num,
-                by_depth_tests_order[depth_idx].tests_order.num_groups);
+                by_depth_moves_order[depth_idx].tests_order.num_groups);
 
             const_AUTO(moves_list_of_lists, &(unit->move_funcs));
 

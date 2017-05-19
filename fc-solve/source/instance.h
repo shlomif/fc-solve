@@ -437,7 +437,7 @@ struct fc_solve_soft_thread_struct
      * that it can be lower than FCS_TESTS_NUM, thus enabling several tests
      * to be removed completely.
      * */
-    fcs_by_depth_tests_order_array_t by_depth_tests_order;
+    fcs_by_depth_tests_order_array_t by_depth_moves_order;
 
     /* The super-method type - can be  */
     fcs_super_method_type_t super_method_type;
@@ -792,12 +792,12 @@ struct fc_solve_instance_struct
     /* This is a place-holder for the initial state */
     fcs_state_keyval_pair_t *state_copy_ptr;
 
+#ifdef FCS_WITH_MOVES
     /* This is the final state that the scan recommends to the
      * interface
      * */
     fcs_collectible_state_t *final_state;
 
-#ifdef FCS_WITH_MOVES
     /*
      * A move stack that contains the moves leading to the solution.
      *

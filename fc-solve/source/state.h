@@ -197,11 +197,9 @@ static inline fcs_card_t fcs_make_card(const int rank, const int suit)
 #define fcs_char2card(c) (c)
 
 #define fcs_col_len(col) (((col)[0]))
-
 #define fcs_col_get_card(col, card_idx) ((col)[(card_idx) + 1])
 
 #define fcs_card_rank(card) ((card) >> 2)
-
 #define fcs_card_suit(card) ((card)&0x03)
 
 static inline fcs_card_t fcs_col_get_rank(
