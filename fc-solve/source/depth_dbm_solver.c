@@ -70,7 +70,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_condvar_init(&(instance->monitor));
 }
 
-static inline void instance_destroy(fcs_dbm_solver_instance_t *instance)
+static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
 {
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {

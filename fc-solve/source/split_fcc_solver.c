@@ -159,7 +159,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     }
 }
 
-static inline void instance_destroy(fcs_dbm_solver_instance_t *instance)
+static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
 {
     fc_solve_compact_allocator_finish(&(instance->fcc_entry_points_allocator));
     fc_solve_meta_compact_allocator_finish(&(instance->fcc_meta_alloc));
@@ -674,131 +674,125 @@ int main(int argc, char *argv[])
 #endif
             );
 
+    fcs_dbm_solver_instance_t instance;
+    FccEntryPointNode *key_ptr = NULL;
+    fcs_encoded_state_buffer_t parent_state_enc;
+
+    instance_init(
+        &instance, &inp, &fingerprint_which_irreversible_moves_bitmask, stdout);
+
+    FILE *fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
+
+    if (!fingerprint_fh)
     {
-        fcs_dbm_solver_instance_t instance;
-        FccEntryPointNode *key_ptr = NULL;
-        fcs_encoded_state_buffer_t parent_state_enc;
-
-        instance_init(&instance, &inp,
-            &fingerprint_which_irreversible_moves_bitmask, stdout);
-
-        FILE *fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
-
-        if (!fingerprint_fh)
-        {
-            fc_solve_err("Cannot open '%s' for reading. Exiting.",
-                fingerprint_input_location_path);
-        }
-
-#ifdef HAVE_GETLINE
-        instance.fingerprint_line = NULL;
-        instance.fingerprint_line_size = 0;
-#else
-        instance.fingerprint_line_size = 16000;
-        instance.fingerprint_line =
-            SMALLOC(instance.fingerprint_line, instance.fingerprint_line_size);
-#endif
-
-        long location_in_file = 0;
-        fcs_bool_t was_init = FALSE;
-#ifdef HAVE_GETLINE
-        while (getline(&instance.fingerprint_line,
-                   &instance.fingerprint_line_size, fingerprint_fh) != -1)
-#else
-        while (fgets(instance.fingerprint_line,
-            instance.fingerprint_line_size - 1, fingerprint_fh))
-#endif
-        {
-            FccEntryPointNode *const entry_point = fcs_compact_alloc_ptr(
-                &(instance.fcc_entry_points_allocator), sizeof(*entry_point));
-            fcs_dbm_record_set_parent_ptr(&(entry_point->kv.key), NULL);
-            char state_base64[100];
-            int state_depth;
-            sscanf(instance.fingerprint_line, "%99s %d", state_base64,
-                &state_depth);
-            size_t unused_size;
-            base64_decode(state_base64, strlen(state_base64),
-                ((unsigned char *)&(entry_point->kv.key.key)), &(unused_size));
-
-            assert(unused_size == sizeof(entry_point->kv.key.key));
-
-            /* TODO : Should traverse starting from key. */
-            key_ptr = entry_point;
-            /* The NULL parent_state_enc and move for indicating this is the
-             * initial state. */
-            fcs_init_encoded_state(&(parent_state_enc));
-
-/*
- * These states should be traversed - not blocked, so don't
- * put them inside the store.
- * */
-#if 0
-#ifndef FCS_DBM_WITHOUT_CACHES
-            cache_store__insert_key(&(instance.cache_store), &(key_ptr->kv.key.key), &parent_state_enc, NULL, '\0');
-#else
-            token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL, TRUE);
-#endif
-
-#if 0
-            entry_point->kv.val.was_consumed =
-                entry_point->kv.val.is_reachable =
-                FALSE;
-#endif
-#endif
-            entry_point->kv.val.location_in_file = location_in_file;
-
-            RB_INSERT(
-                FccEntryPointList, &(instance.fcc_entry_points), entry_point);
-
-            {
-                const fcs_offloading_queue_item_t token = ((
-                    const fcs_offloading_queue_item_t)(&(entry_point->kv.key)));
-                if (was_init)
-                {
-                    fcs_depth_multi_queue__insert(
-                        &(instance.coll.depth_queue), state_depth, &(token));
-                }
-                else
-                {
-                    fcs_depth_multi_queue__init(&(instance.coll.depth_queue),
-                        instance.offload_dir_path, state_depth, &(token));
-                    was_init = TRUE;
-                }
-            }
-            ++instance.common.num_states_in_collection;
-            ++instance.common.count_of_items_in_queue;
-            /* Valid for the next iteration: */
-            location_in_file = ftell(fingerprint_fh);
-        }
-
-        fseek(fingerprint_fh, 0, SEEK_SET);
-        instance.fingerprint_fh = fingerprint_fh;
-
-        long count_of_instance_runs = 0;
-        instance.moves_to_state = NULL;
-        instance.max_moves_to_state_len = instance.moves_to_state_len = 0;
-
-        count_of_instance_runs++;
-
-        char fcc_exit_points_out_fn[PATH_MAX + 1],
-            fcc_exit_points_out_fn_temp[PATH_MAX + 1];
-        sprintf(fcc_exit_points_out_fn, "%s/exits.%ld", path_to_output_dir,
-            count_of_instance_runs);
-        sprintf(fcc_exit_points_out_fn_temp, "%s.temp", fcc_exit_points_out_fn);
-        instance.fcc_exit_points_out_fh =
-            fopen(fcc_exit_points_out_fn_temp, "wt");
-
-        instance_run_all_threads(
-            &instance, &init_state, key_ptr, NUM_THREADS());
-        fclose(instance.fcc_exit_points_out_fh);
-        rename(fcc_exit_points_out_fn_temp, fcc_exit_points_out_fn);
-        fclose(fingerprint_fh);
-        handle_and_destroy_instance_solution(&instance, &delta);
-        free(instance.moves_to_state);
-        free(instance.moves_base64_encoding_buffer);
-        free(instance.fingerprint_line);
+        fc_solve_err("Cannot open '%s' for reading. Exiting.",
+            fingerprint_input_location_path);
     }
 
+#ifdef HAVE_GETLINE
+    instance.fingerprint_line = NULL;
+    instance.fingerprint_line_size = 0;
+#else
+    instance.fingerprint_line_size = 16000;
+    instance.fingerprint_line =
+        SMALLOC(instance.fingerprint_line, instance.fingerprint_line_size);
+#endif
+
+    long location_in_file = 0;
+    fcs_bool_t was_init = FALSE;
+#ifdef HAVE_GETLINE
+    while (getline(&instance.fingerprint_line, &instance.fingerprint_line_size,
+               fingerprint_fh) != -1)
+#else
+    while (fgets(instance.fingerprint_line, instance.fingerprint_line_size - 1,
+        fingerprint_fh))
+#endif
+    {
+        FccEntryPointNode *const entry_point = fcs_compact_alloc_ptr(
+            &(instance.fcc_entry_points_allocator), sizeof(*entry_point));
+        fcs_dbm_record_set_parent_ptr(&(entry_point->kv.key), NULL);
+        char state_base64[100];
+        int state_depth;
+        sscanf(
+            instance.fingerprint_line, "%99s %d", state_base64, &state_depth);
+        size_t unused_size;
+        base64_decode(state_base64, strlen(state_base64),
+            ((unsigned char *)&(entry_point->kv.key.key)), &(unused_size));
+
+        assert(unused_size == sizeof(entry_point->kv.key.key));
+
+        /* TODO : Should traverse starting from key. */
+        key_ptr = entry_point;
+        /* The NULL parent_state_enc and move for indicating this is the
+         * initial state. */
+        fcs_init_encoded_state(&(parent_state_enc));
+
+/*
+* These states should be traversed - not blocked, so don't
+* put them inside the store.
+* */
+#if 0
+#ifndef FCS_DBM_WITHOUT_CACHES
+        cache_store__insert_key(&(instance.cache_store), &(key_ptr->kv.key.key), &parent_state_enc, NULL, '\0');
+#else
+        token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL, TRUE);
+#endif
+
+#if 0
+        entry_point->kv.val.was_consumed =
+            entry_point->kv.val.is_reachable =
+            FALSE;
+#endif
+#endif
+        entry_point->kv.val.location_in_file = location_in_file;
+
+        RB_INSERT(FccEntryPointList, &(instance.fcc_entry_points), entry_point);
+
+        {
+            const fcs_offloading_queue_item_t token =
+                ((const fcs_offloading_queue_item_t)(&(entry_point->kv.key)));
+            if (was_init)
+            {
+                fcs_depth_multi_queue__insert(
+                    &(instance.coll.depth_queue), state_depth, &(token));
+            }
+            else
+            {
+                fcs_depth_multi_queue__init(&(instance.coll.depth_queue),
+                    instance.offload_dir_path, state_depth, &(token));
+                was_init = TRUE;
+            }
+        }
+        ++instance.common.num_states_in_collection;
+        ++instance.common.count_of_items_in_queue;
+        /* Valid for the next iteration: */
+        location_in_file = ftell(fingerprint_fh);
+    }
+
+    fseek(fingerprint_fh, 0, SEEK_SET);
+    instance.fingerprint_fh = fingerprint_fh;
+
+    long count_of_instance_runs = 0;
+    instance.moves_to_state = NULL;
+    instance.max_moves_to_state_len = instance.moves_to_state_len = 0;
+
+    count_of_instance_runs++;
+
+    char fcc_exit_points_out_fn[PATH_MAX + 1],
+        fcc_exit_points_out_fn_temp[PATH_MAX + 1];
+    sprintf(fcc_exit_points_out_fn, "%s/exits.%ld", path_to_output_dir,
+        count_of_instance_runs);
+    sprintf(fcc_exit_points_out_fn_temp, "%s.temp", fcc_exit_points_out_fn);
+    instance.fcc_exit_points_out_fh = fopen(fcc_exit_points_out_fn_temp, "wt");
+
+    instance_run_all_threads(&instance, &init_state, key_ptr, NUM_THREADS());
+    fclose(instance.fcc_exit_points_out_fh);
+    rename(fcc_exit_points_out_fn_temp, fcc_exit_points_out_fn);
+    fclose(fingerprint_fh);
+    handle_and_destroy_instance_solution(&instance, &delta);
+    free(instance.moves_to_state);
+    free(instance.moves_base64_encoding_buffer);
+    free(instance.fingerprint_line);
     fc_solve_delta_stater_release(&delta);
 
     return 0;

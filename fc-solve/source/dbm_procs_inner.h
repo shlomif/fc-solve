@@ -74,7 +74,7 @@ static inline void dbm__free_threads(fcs_dbm_solver_instance_t *const instance,
 }
 
 static unsigned char get_move_from_parent_to_child(
-    fcs_dbm_solver_instance_t *instance, fc_solve_delta_stater_t *delta,
+    fcs_dbm_solver_instance_t *const instance, fc_solve_delta_stater_t *delta,
     fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
 {
     fcs_state_keyval_pair_t parent_state;

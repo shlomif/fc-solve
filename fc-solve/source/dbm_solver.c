@@ -49,9 +49,8 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
         inp->caches_delta);
 }
 
-static inline void instance_recycle(fcs_dbm_solver_instance_t *instance)
+static inline void instance_recycle(fcs_dbm_solver_instance_t *const instance)
 {
-
     fcs_offloading_queue__destroy(&(instance->queue));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     fcs_offloading_queue__init(
@@ -67,7 +66,7 @@ static inline void instance_recycle(fcs_dbm_solver_instance_t *instance)
     instance->common.count_of_items_in_queue = 0;
 }
 
-static inline void instance_destroy(fcs_dbm_solver_instance_t *instance)
+static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
 {
     fcs_offloading_queue__destroy(&(instance->queue));
     DESTROY_CACHE(instance);
@@ -405,7 +404,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 static void init_thread(fcs_dbm_solver_thread_t *const thread) {}
 static void free_thread(fcs_dbm_solver_thread_t *const thread) {}
 
-static void instance_run_all_threads(fcs_dbm_solver_instance_t *instance,
+static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
     fcs_state_keyval_pair_t *init_state, const size_t num_threads)
 {
     const_AUTO(threads,

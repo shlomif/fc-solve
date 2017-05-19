@@ -159,7 +159,8 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     );
 
 static inline fcs_bool_t instance_check_multiple_keys(
-    fcs_dbm_solver_thread_t *thread, fcs_dbm_solver_instance_t *instance,
+    fcs_dbm_solver_thread_t *const thread,
+    fcs_dbm_solver_instance_t *const instance,
     fcs_dbm__cache_store__common_t *const cache_store,
     fcs_meta_compact_allocator_t *const meta_alloc, fcs_derived_state_t **lists,
     size_t batch_size
@@ -237,7 +238,8 @@ static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
 #ifdef DEBUG_FOO
 
 static inline void instance_debug_out_state(
-    fcs_dbm_solver_instance_t *instance, fcs_encoded_state_buffer_t *enc_state)
+    fcs_dbm_solver_instance_t *const instance,
+    fcs_encoded_state_buffer_t *enc_state)
 {
     fcs_state_keyval_pair_t state;
     fcs_state_locs_struct_t locs;
