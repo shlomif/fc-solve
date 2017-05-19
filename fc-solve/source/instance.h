@@ -570,13 +570,9 @@ struct fc_solve_soft_thread_struct
 
 struct fc_solve_instance_struct
 {
-    /*
-     * The parameters of the game - see the declaration of
-     * fcs_game_type_params_t .
-     *
-     * */
-    fcs_game_type_params_t game_params;
+// The parameters of the game - see the declaration of fcs_game_type_params_t .
 #ifndef FCS_FREECELL_ONLY
+    fcs_game_type_params_t game_params;
 #ifndef FCS_DISABLE_PATSOLVE
     fcs_card_t game_variant_suit_mask;
     fcs_card_t game_variant_desired_suit_value;
