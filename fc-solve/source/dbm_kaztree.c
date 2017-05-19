@@ -111,7 +111,6 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
 
     dict_key_t existing =
         fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
-
     if (!existing)
     {
         return FALSE;

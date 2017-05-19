@@ -77,11 +77,10 @@ static inline void cache_populate_from_pre_cache(
     fcs_lru_cache_t *const cache, fcs_pre_cache_t *const pre_cache)
 {
 #ifdef FCS_DBM_USE_LIBAVL
-    dict_t *kaz_tree;
     struct rb_traverser trav;
     dict_key_t item;
 
-    kaz_tree = pre_cache->kaz_tree;
+    var_AUTO(kaz_tree, pre_cache->kaz_tree);
     rb_t_init(&trav, kaz_tree);
 
     for (item = rb_t_first(&trav, kaz_tree); item; item = rb_t_next(&trav))
@@ -91,9 +90,7 @@ static inline void cache_populate_from_pre_cache(
     }
 #else
     dnode_t *node;
-    dict_t *kaz_tree;
-
-    kaz_tree = pre_cache->kaz_tree;
+    var_AUTO(kaz_tree, pre_cache->kaz_tree);
 
     for (node = fc_solve_kaz_tree_first(kaz_tree); node;
          node = fc_solve_kaz_tree_next(kaz_tree, node))

@@ -33,7 +33,7 @@ typedef void *dict_key_t;
 #include "kaz_tree.h"
 
 static inline void fc_solve_kaz_tree_delete_by_value(
-    dict_t *kaz_tree, dict_key_t value)
+    dict_t *const kaz_tree, dict_key_t value)
 {
     fc_solve_kaz_tree_delete_free(
         kaz_tree, fc_solve_kaz_tree_lookup(kaz_tree, value));

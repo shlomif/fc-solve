@@ -1416,7 +1416,6 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_x_param(
     const int x_param_val FCS__PASS_ERR_STR(char **const error_string))
 {
     const_SLOT(pats_scan, api_soft_thread(api_instance));
-
     if (!pats_scan)
     {
         ALLOC_ERROR_STRING(error_string, "Not using the \"patsolve\" scan.");
@@ -1441,7 +1440,6 @@ extern int DLLEXPORT freecell_solver_user_set_patsolve_y_param(
     const double y_param_val FCS__PASS_ERR_STR(char **const error_string))
 {
     const_SLOT(pats_scan, api_soft_thread(api_instance));
-
     if (!pats_scan)
     {
         ALLOC_ERROR_STRING(error_string, "Not using the \"patsolve\" scan.");
