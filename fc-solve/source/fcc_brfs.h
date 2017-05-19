@@ -137,7 +137,7 @@ static inline void fcc_brfs_add_key_to_tree(
     fc_solve_kaz_tree_alloc_insert(tree, key_to_add);
 }
 
-static void perform_FCC_brfs(fcs_dbm_variant_type_t local_variant,
+static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair_t *init_state,
     /* The start state. */

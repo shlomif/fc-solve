@@ -163,9 +163,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
         new_cache_state->val_ptr =
             parents_stack[parents_stack_len - 1].state_val;
 #endif
-
         new_cache_state->lower_pri = new_cache_state->higher_pri = NULL;
-
         ++cache->count_elements_in_cache;
 
         if (!FCS_S_PARENT(parents_stack[parents_stack_len - 1].state_val))
@@ -187,7 +185,6 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
     for (--parents_stack_len; parents_stack_len > 0; --parents_stack_len)
     {
-
         new_cache_state = parents_stack[parents_stack_len - 1].new_cache_state;
 
         fcs_state_t *const pass_key = &(new_cache_state->key);
