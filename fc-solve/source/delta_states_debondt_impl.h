@@ -211,31 +211,31 @@ static void fc_solve_debondt_delta_stater_encode_composite(
             const fcs_cards_column_t col = fcs_state_get_col(*derived, col_idx);
             const int col_len = fcs_col_len(col);
 
-            if (col_len > 0)
+            if (!col_len)
             {
-                const_AUTO(top_card, fcs_col_get_card(col, 0));
+                continue;
+            }
+            const_AUTO(top_card, fcs_col_get_card(col, 0));
+
+            /* Skip Aces which were already set. */
+            if (fcs_card_rank(top_card) != 1)
+            {
+                SET_CARD_STATE(top_card, OPT__BAKERS_DOZEN__ORIG_POS);
+            }
+
+            for (int pos = 1; pos < col_len; pos++)
+            {
+                const fcs_card_t parent_card = fcs_col_get_card(col, pos - 1);
+                const fcs_card_t this_card = fcs_col_get_card(col, pos);
 
                 /* Skip Aces which were already set. */
-                if (fcs_card_rank(top_card) != 1)
+                if (fcs_card_rank(this_card) != 1)
                 {
-                    SET_CARD_STATE(top_card, OPT__BAKERS_DOZEN__ORIG_POS);
-                }
-
-                for (int pos = 1; pos < col_len; pos++)
-                {
-                    const fcs_card_t parent_card =
-                        fcs_col_get_card(col, pos - 1);
-                    const fcs_card_t this_card = fcs_col_get_card(col, pos);
-
-                    /* Skip Aces which were already set. */
-                    if (fcs_card_rank(this_card) != 1)
-                    {
-                        SET_CARD_STATE(this_card,
-                            ((fcs_card_rank(this_card) + 1 ==
-                                 fcs_card_rank(parent_card))
-                                    ? wanted_suit_idx_opt(parent_card)
-                                    : OPT__BAKERS_DOZEN__ORIG_POS));
-                    }
+                    SET_CARD_STATE(
+                        this_card, ((fcs_card_rank(this_card) + 1 ==
+                                        fcs_card_rank(parent_card))
+                                           ? wanted_suit_idx_opt(parent_card)
+                                           : OPT__BAKERS_DOZEN__ORIG_POS));
                 }
             }
         }
@@ -247,34 +247,34 @@ static void fc_solve_debondt_delta_stater_encode_composite(
             const fcs_cards_column_t col = fcs_state_get_col(*derived, col_idx);
             const int col_len = fcs_col_len(col);
 
-            if (col_len > 0)
+            if (!col_len)
             {
-                const_AUTO(top_card, fcs_col_get_card(col, 0));
-                if (fcs_card_rank(top_card) != 1)
-                {
-                    SET_CARD_STATE(top_card, OPT_TOPMOST);
-                }
+                continue;
+            }
+            const_AUTO(top_card, fcs_col_get_card(col, 0));
+            if (fcs_card_rank(top_card) != 1)
+            {
+                SET_CARD_STATE(top_card, OPT_TOPMOST);
+            }
 
-                fcs_card_t parent_card = top_card;
-                for (int child_idx = 1; child_idx < col_len; child_idx++)
-                {
-                    const fcs_card_t child_card =
-                        fcs_col_get_card(col, child_idx);
+            fcs_card_t parent_card = top_card;
+            for (int child_idx = 1; child_idx < col_len; child_idx++)
+            {
+                const fcs_card_t child_card = fcs_col_get_card(col, child_idx);
 
-                    if (fcs_card_rank(child_card) != 1)
-                    {
-                        const int opt = calc_child_card_option(
-                            local_variant, parent_card, child_card
+                if (fcs_card_rank(child_card) != 1)
+                {
+                    const int opt = calc_child_card_option(
+                        local_variant, parent_card, child_card
 #ifndef FCS_FREECELL_ONLY
-                            ,
-                            self->sequences_are_built_by
+                        ,
+                        self->sequences_are_built_by
 #endif
-                            );
-                        SET_CARD_STATE(child_card, opt);
-                    }
-
-                    parent_card = child_card;
+                        );
+                    SET_CARD_STATE(child_card, opt);
                 }
+
+                parent_card = child_card;
             }
         }
     }
