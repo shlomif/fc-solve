@@ -202,7 +202,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             }
 
             /* Encode all the states. */
-            for (fcs_derived_state_t *derived_iter = derived_list; derived_iter;
+            for (var_AUTO(derived_iter, derived_list); derived_iter;
                  derived_iter = derived_iter->next)
             {
                 fcs_init_and_encode_state(delta_stater, local_variant,

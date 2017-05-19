@@ -194,8 +194,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     void *tree_recycle_bin = NULL;
     fcs_dbm_queue_item_t *queue_head, *queue_tail, *queue_recycle_bin = NULL,
                                                    *extracted_item;
-    fcs_derived_state_t *derived_list_recycle_bin = NULL, *derived_iter,
-                        *next_derived_iter;
+    fcs_derived_state_t *derived_list_recycle_bin = NULL, *next_derived_iter;
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min;
@@ -296,7 +295,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
         }
 
         /* Enqueue the new elements to the queue. */
-        for (derived_iter = derived_list; derived_iter;
+        for (var_AUTO(derived_iter, derived_list); derived_iter;
              derived_iter = next_derived_iter)
         {
             const fcs_bool_t is_reversible =

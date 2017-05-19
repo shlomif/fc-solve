@@ -78,8 +78,7 @@ static unsigned char get_move_from_parent_to_child(
     fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
 {
     fcs_state_keyval_pair_t parent_state;
-    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL,
-                        *derived_iter;
+    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     const_AUTO(local_variant, instance->common.variant);
 
@@ -94,7 +93,7 @@ static unsigned char get_move_from_parent_to_child(
         NULL, &derived_list, &derived_list_recycle_bin, &derived_list_allocator,
         TRUE);
 
-    for (derived_iter = derived_list; derived_iter;
+    for (var_AUTO(derived_iter, derived_list); derived_iter;
          derived_iter = derived_iter->next)
     {
         fcs_encoded_state_buffer_t got_child;

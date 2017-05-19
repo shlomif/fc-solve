@@ -104,7 +104,7 @@ static inline void instance__inspect_new_state(
     pseduo_dfs_stack_item_t *const stack_item = instance->stack + depth;
     stack_item->curr_state = state;
 
-    fcs_derived_state_t *derived_list = NULL, *derived_iter = NULL;
+    fcs_derived_state_t *derived_list = NULL;
 
     if (instance_solver_thread_calc_derived_states(instance->local_variant,
             state, NULL, &derived_list, &(instance->derived_list_recycle_bin),

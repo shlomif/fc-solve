@@ -188,8 +188,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t *token = NULL;
-    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL,
-                        *derived_iter;
+    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL;
     fcs_compact_allocator_t derived_list_allocator;
     fcs_state_keyval_pair_t state;
     char *base64_encoding_buffer = NULL;
@@ -364,7 +363,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             }
 
             /* Encode all the states. */
-            for (derived_iter = derived_list; derived_iter;
+            for (var_AUTO(derived_iter, derived_list); derived_iter;
                  derived_iter = derived_iter->next)
             {
                 fcs_init_and_encode_state(delta_stater, local_variant,

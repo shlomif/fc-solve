@@ -405,9 +405,7 @@ static inline void fc_solve_delta_stater_decode_into_state_proto(
 {
     fc_solve_bit_reader_t bit_r;
     fc_solve_bit_reader_init(&bit_r, enc_state + 1);
-
     fc_solve_state_init(ret, STACKS_NUM, indirect_stacks_buffer);
-
     fc_solve_delta_stater_decode(delta_stater, &bit_r, &(ret->s));
 }
 

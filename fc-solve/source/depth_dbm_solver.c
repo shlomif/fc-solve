@@ -94,7 +94,7 @@ struct fcs_dbm_solver_thread_struct
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
-    fcs_derived_state_t *derived_list_recycle_bin = NULL, *derived_iter;
+    fcs_derived_state_t *derived_list_recycle_bin = NULL;
     fcs_state_keyval_pair_t state;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
@@ -206,7 +206,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         /* Encode all the states. */
         for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
-            for (derived_iter = derived_lists[batch_i]; derived_iter;
+            for (var_AUTO(derived_iter, derived_lists[batch_i]); derived_iter;
                  derived_iter = derived_iter->next)
             {
                 fcs_init_and_encode_state(delta_stater, local_variant,
