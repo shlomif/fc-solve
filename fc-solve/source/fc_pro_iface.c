@@ -92,14 +92,10 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 fcs_cards_column_t col = fcs_state_get_col(pos, i);
                 if (fcs_col_len(col) > 0)
                 {
-                    const fcs_card_t card =
-                        fcs_col_get_card(col, fcs_col_len(col) - 1);
-                    /* Check if we can safely move it */
-                    if (fc_solve_fc_pro__can_be_moved(&pos, card))
+                    if (fc_solve_fc_pro__can_be_moved(
+                            &pos, fcs_col_get_card(col, fcs_col_len(col) - 1)))
                     {
                         fcs_col_pop_top(col);
-                        /* An Automove. */
-
                         break;
                     }
                 }
@@ -110,17 +106,12 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             }
             for (j = 0; j < num_freecells; j++)
             {
-                if (!fcs_freecell_is_empty(pos, j))
+                const fcs_card_t card = fcs_freecell_card(pos, j);
+                if (fcs_card_is_valid(card) &&
+                    fc_solve_fc_pro__can_be_moved(&pos, card))
                 {
-                    const fcs_card_t card = fcs_freecell_card(pos, j);
-                    /* Check if we can safely move it */
-                    if (fc_solve_fc_pro__can_be_moved(&pos, card))
-                    {
-                        fcs_empty_freecell(pos, j);
-
-                        /* We've just done an auto-move */
-                        break;
-                    }
+                    fcs_empty_freecell(pos, j);
+                    break;
                 }
             }
             if ((i == 8) && (j == num_freecells))
