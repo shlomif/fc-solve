@@ -191,14 +191,12 @@ static inline void fcs_offloading_queue_page__insert(
         sizeof(*in_item));
 }
 
-static inline const char *fcs_offloading_queue_page__calc_filename(
+static inline void fcs_offloading_queue_page__calc_filename(
     off_q_page_t *const page, char *const buffer,
     const char *const offload_dir_path)
 {
     sprintf(buffer, "%s/fcs_queue%lXq_%020lX.page", offload_dir_path,
         page->queue_id, page->page_index);
-
-    return buffer;
 }
 
 static inline void fcs_offloading_queue_page__start_after(
@@ -220,7 +218,6 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
     char page_filename[PATH_MAX + 1];
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
-
     FILE *const f = fopen(page_filename, "rb");
     fread(
         page->data, sizeof(fcs_offloading_queue_item_t), NUM_ITEMS_PER_PAGE, f);
@@ -239,10 +236,8 @@ static inline void fcs_offloading_queue_page__offload(
     off_q_page_t *const page, const char *const offload_dir_path)
 {
     char page_filename[PATH_MAX + 1];
-
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
-
     FILE *const f = fopen(page_filename, "wb");
     fwrite(
         page->data, sizeof(fcs_offloading_queue_item_t), NUM_ITEMS_PER_PAGE, f);
