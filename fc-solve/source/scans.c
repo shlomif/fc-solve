@@ -124,34 +124,32 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
             }
         }
 #else
+        if (cache->recycle_bin)
         {
-            if (cache->recycle_bin)
-            {
-                new_cache_state = cache->recycle_bin;
-                cache->recycle_bin = NEXT_CACHE_STATE(new_cache_state);
-            }
-            else
-            {
-                new_cache_state = fcs_compact_alloc_ptr(
-                    &(cache->states_values_to_keys_allocator),
+            new_cache_state = cache->recycle_bin;
+            cache->recycle_bin = NEXT_CACHE_STATE(new_cache_state);
+        }
+        else
+        {
+            new_cache_state =
+                fcs_compact_alloc_ptr(&(cache->states_values_to_keys_allocator),
                     sizeof(*new_cache_state));
-            }
+        }
 
-            new_cache_state->val_ptr =
-                parents_stack[parents_stack_len - 1].state_val;
-            fcs_cache_key_info_t *const existing_cache_state =
-                (fcs_cache_key_info_t *)fc_solve_kaz_tree_alloc_insert(
-                    cache->kaz_tree, new_cache_state);
+        new_cache_state->val_ptr =
+            parents_stack[parents_stack_len - 1].state_val;
+        fcs_cache_key_info_t *const existing_cache_state =
+            (fcs_cache_key_info_t *)fc_solve_kaz_tree_alloc_insert(
+                cache->kaz_tree, new_cache_state);
 
-            if (existing_cache_state)
-            {
-                NEXT_CACHE_STATE(new_cache_state) = cache->recycle_bin;
-                cache->recycle_bin = new_cache_state;
+        if (existing_cache_state)
+        {
+            NEXT_CACHE_STATE(new_cache_state) = cache->recycle_bin;
+            cache->recycle_bin = new_cache_state;
 
-                parents_stack[parents_stack_len - 1].new_cache_state =
-                    new_cache_state = existing_cache_state;
-                break;
-            }
+            parents_stack[parents_stack_len - 1].new_cache_state =
+                new_cache_state = existing_cache_state;
+            break;
         }
 #endif
 
