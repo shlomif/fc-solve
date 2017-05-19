@@ -25,6 +25,22 @@ static inline void moves_processed_add_new_move(
     moves->moves[moves->num_moves - 1] = new_move;
 }
 
+static inline fcs_bool_t fc_solve_fc_pro__can_be_moved(
+    fcs_state_t *const s, const fcs_card_t card)
+{
+    const int rank = fcs_card_rank(card);
+    const int suit = fcs_card_suit(card);
+    if ((fcs_foundation_value(*s, suit ^ 0x1) >= rank - 2) &&
+        (fcs_foundation_value(*s, suit ^ 0x1 ^ 0x2) >= rank - 2) &&
+        (fcs_foundation_value(*s, suit ^ 0x2) >= rank - 3) &&
+        (fcs_foundation_value(*s, suit) == rank - 1))
+    {
+        fcs_increment_foundation(*s, suit);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
     fcs_state_keyval_pair_t *const orig, const int num_freecells,
     const fcs_moves_sequence_t *const moves_seq)
@@ -78,16 +94,9 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 {
                     const fcs_card_t card =
                         fcs_col_get_card(col, fcs_col_len(col) - 1);
-                    const int rank = fcs_card_rank(card);
-                    const int suit = fcs_card_suit(card);
                     /* Check if we can safely move it */
-                    if ((fcs_foundation_value(pos, suit ^ 0x1) >= rank - 2) &&
-                        (fcs_foundation_value(pos, suit ^ 0x1 ^ 0x2) >=
-                            rank - 2) &&
-                        (fcs_foundation_value(pos, suit ^ 0x2) >= rank - 3) &&
-                        (fcs_foundation_value(pos, suit) == rank - 1))
+                    if (fc_solve_fc_pro__can_be_moved(&pos, card))
                     {
-                        fcs_increment_foundation(pos, suit);
                         fcs_col_pop_top(col);
                         /* An Automove. */
 
@@ -104,16 +113,9 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 if (!fcs_freecell_is_empty(pos, j))
                 {
                     const fcs_card_t card = fcs_freecell_card(pos, j);
-                    const int rank = fcs_card_rank(card);
-                    const int suit = fcs_card_suit(card);
                     /* Check if we can safely move it */
-                    if ((fcs_foundation_value(pos, suit ^ 0x1) >= rank - 2) &&
-                        (fcs_foundation_value(pos, suit ^ 0x1 ^ 0x2) >=
-                            rank - 2) &&
-                        (fcs_foundation_value(pos, suit ^ 0x2) >= rank - 3) &&
-                        (fcs_foundation_value(pos, suit) == rank - 1))
+                    if (fc_solve_fc_pro__can_be_moved(&pos, card))
                     {
-                        fcs_increment_foundation(pos, suit);
                         fcs_empty_freecell(pos, j);
 
                         /* We've just done an auto-move */

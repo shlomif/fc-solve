@@ -294,7 +294,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     running_parent = fc_solve_dbm_store_insert_key_value(
         instance->cache_store.store, &(running_key), running_parent, TRUE);
 #endif
-    instance->common.num_states_in_collection++;
+    ++instance->common.num_states_in_collection;
 
     int hex_digits;
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
@@ -373,7 +373,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             return FALSE;
         }
 #endif
-        instance->common.num_states_in_collection++;
+        ++instance->common.num_states_in_collection;
 
         /* We need to do the round-trip from encoding back
          * to decoding, because the order can change after

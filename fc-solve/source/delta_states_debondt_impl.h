@@ -176,23 +176,21 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
     fc_solve_debondt_delta_stater__init_card_states(self);
 
+    for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
     {
-        for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
+        const unsigned long rank = fcs_foundation_value(*derived, suit_idx);
+
+        fc_solve_var_base_writer_write(writer, FOUNDATION_BASE, rank);
+
+        const unsigned long max_rank = ((rank < 1) ? 1 : rank);
+
+        for (unsigned long r = 1; r <= max_rank; r++)
         {
-            const unsigned long rank = fcs_foundation_value(*derived, suit_idx);
-
-            fc_solve_var_base_writer_write(writer, FOUNDATION_BASE, rank);
-
-            const unsigned long max_rank = ((rank < 1) ? 1 : rank);
-
-            for (unsigned long r = 1; r <= max_rank; r++)
-            {
 #define CARD_POS(card) ((size_t)(card))
 #define CARD_STATE(card) self->card_states[CARD_POS(card)]
 #define SET_CARD_STATE(card, opt) CARD_STATE(card) = (opt)
 #define RS_STATE(rank, suit_idx) CARD_STATE(fcs_make_card(rank, suit_idx))
-                RS_STATE(r, suit_idx) = OPT_DONT_CARE;
-            }
+            RS_STATE(r, suit_idx) = OPT_DONT_CARE;
         }
     }
 
