@@ -104,6 +104,7 @@ sub src_filenames
         'state.h',
         'str_utils.h',
         $on_fcc->(['sys/tree.h',]),
+        'try_param.h',
         'typeof_wrap.h',
         'unused.h',
         'var_base_int.h',
