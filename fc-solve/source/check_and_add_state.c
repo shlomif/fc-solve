@@ -261,7 +261,7 @@ static inline void fc_solve_cache_stacks(
             continue;
         }
 
-        fcs_cards_column_t column = fcs_state_get_col(*(new_state_key), i);
+        var_AUTO(column, fcs_state_get_col(*(new_state_key), i));
         const int col_len = (fcs_col_len(column) + 1);
 
         char *const new_ptr =

@@ -223,7 +223,7 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
         num_cards_moved = 0;
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
-            fcs_cards_column_t col = fcs_state_get_col(the_state, stack_idx);
+            var_AUTO(col, fcs_state_get_col(the_state, stack_idx));
             const int cards_num = fcs_col_len(col);
             if (!cards_num)
             {
