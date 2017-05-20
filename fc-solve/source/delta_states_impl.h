@@ -108,7 +108,7 @@ static inline void fc_solve_get_column_encoding_composite(
     fc_solve_column_encoding_composite_t *const ret)
 {
     const fcs_state_t *const derived = self->derived_state;
-    fcs_const_cards_column_t col = fcs_state_get_col(*derived, col_idx);
+    const_AUTO(col, fcs_state_get_col(*derived, col_idx));
 
     const_AUTO(num_orig_cards, fc_solve_get_column_orig_num_cards(self, col));
     const int col_len = fcs_col_len(col);
@@ -339,12 +339,10 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
 
     for (size_t col_idx = 0; col_idx < num_columns; col_idx++)
     {
-        const fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
+        const_AUTO(col, fcs_state_get_col(*ret, col_idx));
         const int num_orig_cards =
             fc_solve_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
-
-        fcs_const_cards_column_t orig_col =
-            fcs_state_get_col(*init_state, col_idx);
+        const_AUTO(orig_col, fcs_state_get_col(*init_state, col_idx));
 
         for (int i = 0; i < num_orig_cards; i++)
         {

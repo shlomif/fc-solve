@@ -903,7 +903,7 @@ static inline void fc_solve_soft_thread_update_initial_cards_val(
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     for (int a = 0; a < INSTANCE_STACKS_NUM; a++)
     {
-        const fcs_const_cards_column_t col = fcs_state_get_col(*s, a);
+        const_AUTO(col, fcs_state_get_col(*s, a));
         cards_under_sequences +=
             FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(
 #ifndef FCS_FREECELL_ONLY

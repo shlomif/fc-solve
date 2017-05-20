@@ -1088,8 +1088,8 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
 
                 for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
                 {
-                    fcs_cards_column_t src_col =
-                        fcs_state_get_col(pats_scan->current_pos.s, i);
+                    var_AUTO(src_col,
+                        fcs_state_get_col(pats_scan->current_pos.s, i));
                     char *dest = &(
                         pats_scan->current_pos.indirect_stacks_buffer[i << 7]);
                     memmove(dest, src_col, fcs_col_len(src_col) + 1);

@@ -804,7 +804,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             ++str;
         }
 
-        fcs_cards_column_t col = fcs_state_get_col(out, s);
+        var_AUTO(col, fcs_state_get_col(out, s));
         for (int c = 0; c < MAX_NUM_CARDS_IN_A_STACK; c++)
         {
             /* Move to the next card */
@@ -903,7 +903,7 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
     /* Mark the card_counts in the columns */
     for (int s = 0; s < STACKS_NUM__VAL; s++)
     {
-        const fcs_const_cards_column_t col = fcs_state_get_col(*state, s);
+        const_AUTO(col, fcs_state_get_col(*state, s));
         const int col_len = fcs_col_len(col);
         for (int c = 0; c < col_len; c++)
         {
@@ -1074,7 +1074,7 @@ static inline void fcs_col_transfer_cards(fcs_cards_column_t dest_col,
 static inline fcs_card_t fcs_state_pop_col_card(
     fcs_state_t *const state, const int col_idx)
 {
-    const fcs_cards_column_t col = fcs_state_get_col(*state, col_idx);
+    var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_card_t ret;
     fcs_col_pop_card(col, ret);
     return ret;
@@ -1083,14 +1083,14 @@ static inline fcs_card_t fcs_state_pop_col_card(
 static inline void fcs_state_pop_col_top(
     fcs_state_t *const state, const int col_idx)
 {
-    const fcs_cards_column_t col = fcs_state_get_col(*state, col_idx);
+    var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_col_pop_top(col);
 }
 
 static inline void fcs_state_push(
     fcs_state_t *const state, const int col_idx, const fcs_card_t card)
 {
-    const fcs_cards_column_t col = fcs_state_get_col(*state, col_idx);
+    var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_col_push_card(col, card);
 }
 

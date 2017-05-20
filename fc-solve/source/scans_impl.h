@@ -254,7 +254,7 @@ static inline pq_rating_t befs_rate_state(
     {
         for (int a = 0; a < LOCAL_STACKS_NUM; a++)
         {
-            const fcs_const_cards_column_t col = fcs_state_get_col(*state, a);
+            const_AUTO(col, fcs_state_get_col(*state, a));
             const int cards_num = fcs_col_len(col);
 
             if (cards_num <= 1)
@@ -305,9 +305,7 @@ static inline pq_rating_t befs_rate_state(
         int num_cards_not_on_parents = (LOCAL_DECKS_NUM * 52);
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
-            const fcs_const_cards_column_t col =
-                fcs_state_get_col(*state, stack_idx);
-
+            const_AUTO(col, fcs_state_get_col(*state, stack_idx));
             const uint_fast16_t col_len = fcs_col_len(col);
             for (uint_fast16_t h = 1; h < col_len; h++)
             {

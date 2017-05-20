@@ -69,7 +69,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        var_AUTO(col, fcs_state_get_col(state, stack_idx));
         const size_t cards_num = fcs_col_len(col);
         if (!cards_num)
         {
@@ -393,8 +393,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
             }
             const int_fast32_t dc = pos_idx_to_check[1];
 
-            const fcs_const_cards_column_t dest_col =
-                fcs_state_get_col(state, ds);
+            const_AUTO(dest_col, fcs_state_get_col(state, ds));
             const int dest_cards_num = fcs_col_len(dest_col);
             /* Let's check if we can put it there */
 
@@ -470,7 +469,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        var_AUTO(col, fcs_state_get_col(state, stack_idx));
         const int cards_num = fcs_col_len(col);
         /*
          * We starts from cards_num-2 because the top card is already covered
@@ -526,7 +525,7 @@ DECLARE_MOVE_FUNCTION(
      * */
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        var_AUTO(col, fcs_state_get_col(state, stack_idx));
         const int cards_num = fcs_col_len(col);
         const int start_dc = max0(cards_num - num_vacant_slots_plus_1);
 
@@ -582,11 +581,9 @@ DECLARE_MOVE_FUNCTION(
 #define src_idx last_dest.src_idx
                 if (last_dest.is_col)
                 {
-                    fcs_cards_column_t new_source_col =
-                        fcs_state_get_col(new_state_key, src_idx);
-
+                    var_AUTO(new_source_col,
+                        fcs_state_get_col(new_state_key, src_idx));
                     fcs_col_pop_card(new_source_col, moved_card);
-
                     fcs_push_1card_seq(moves, src_idx, ds);
                 }
                 else
@@ -703,8 +700,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     continue;
                 }
                 const int_fast32_t dc = pos_idx_to_check[1];
-                const fcs_const_cards_column_t dest_col =
-                    fcs_state_get_col(state, ds);
+                const_AUTO(dest_col, fcs_state_get_col(state, ds));
                 const int dest_num_cards = fcs_col_len(dest_col) - dc - 1;
 
                 int num_cards_to_relocate = dest_num_cards + col_num_cards;
@@ -927,7 +923,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        var_AUTO(col, fcs_state_get_col(state, stack_idx));
         const int cards_num = fcs_col_len(col);
 
         /*
@@ -981,7 +977,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                 }
                 const int_fast32_t dc = pos_idx_to_check[1];
 
-                fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+                var_AUTO(dest_col, fcs_state_get_col(state, ds));
                 const int dest_cards_num = fcs_col_len(dest_col);
 
 /* Corresponding cards - see if it is feasible to move
@@ -1067,7 +1063,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
     }
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        var_AUTO(col, fcs_state_get_col(state, stack_idx));
         const int cards_num = fcs_col_len(col);
 
         if ((!cards_num) || (cards_num > num_vacant_freecells))
@@ -1079,8 +1075,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 
         my_copy_stack(stack_idx);
 
-        const fcs_cards_column_t new_src_col =
-            fcs_state_get_col(new_state_key, stack_idx);
+        const_AUTO(new_src_col, fcs_state_get_col(new_state_key, stack_idx));
 
         int b = 0;
         for (int c = 0; c < cards_num; ++c, ++b)
@@ -1131,7 +1126,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        var_AUTO(col, fcs_state_get_col(state, stack_idx));
         const int cards_num = fcs_col_len(col);
 
         /* Bug fix: if there's only one card in a column, there's no
@@ -1169,7 +1164,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        var_AUTO(col, fcs_state_get_col(state, stack_idx));
         const int cards_num = fcs_col_len(col);
 
         if (cards_num <= num_cards_in_col_threshold)
@@ -1185,7 +1180,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
                 continue;
             }
 
-            fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+            var_AUTO(dest_col, fcs_state_get_col(state, ds));
             const int dest_cards_num = fcs_col_len(dest_col);
 
             if (!dest_cards_num)
@@ -1235,7 +1230,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);
+        var_AUTO(col, fcs_state_get_col(state, stack_idx));
         const int cards_num = fcs_col_len(col);
         if (cards_num <= num_cards_in_col_threshold)
         {
@@ -1273,7 +1268,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
-            fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+            var_AUTO(dest_col, fcs_state_get_col(state, ds));
             const_AUTO(l, fcs_col_len(dest_col));
             if (!l)
             {
@@ -1403,8 +1398,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
         num_cards_moved = 0;
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
-            const fcs_cards_column_t col =
-                fcs_state_get_col(new_state_key, stack_idx);
+            const_AUTO(col, fcs_state_get_col(new_state_key, stack_idx));
             const int cards_num = fcs_col_len(col);
 
             if (!cards_num)

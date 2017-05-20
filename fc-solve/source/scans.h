@@ -69,8 +69,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
             (fcs_pos_by_rank_t *)positions_by_rank;
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
-            const fcs_const_cards_column_t dest_col =
-                fcs_state_get_col(*ptr_state_key, ds);
+            const_AUTO(dest_col, fcs_state_get_col(*ptr_state_key, ds));
             const int dest_cards_num = fcs_col_len(dest_col);
 
             for (int dc = 0; dc < dest_cards_num; dc++)
@@ -106,8 +105,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
 
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
-            const fcs_const_cards_column_t dest_col =
-                fcs_state_get_col(state_key, ds);
+            const_AUTO(dest_col, fcs_state_get_col(state_key, ds));
             int top_card_idx = fcs_col_len(dest_col);
 
             if (unlikely((top_card_idx--) == 0))

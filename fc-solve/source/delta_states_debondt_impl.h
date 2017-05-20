@@ -78,8 +78,7 @@ static void fc_solve_debondt_delta_stater_init(
     {
         for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
-            const fcs_cards_column_t col =
-                fcs_state_get_col(*init_state, col_idx);
+            const_AUTO(col, fcs_state_get_col(*init_state, col_idx));
             const int col_len = fcs_col_len(col);
 
             if (col_len > 0)
@@ -208,7 +207,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     {
         for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
-            const fcs_cards_column_t col = fcs_state_get_col(*derived, col_idx);
+            const_AUTO(col, fcs_state_get_col(*derived, col_idx));
             const int col_len = fcs_col_len(col);
 
             if (!col_len)
@@ -244,7 +243,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
     {
         for (size_t col_idx = 0; col_idx < self->num_columns; col_idx++)
         {
-            const fcs_cards_column_t col = fcs_state_get_col(*derived, col_idx);
+            const_AUTO(col, fcs_state_get_col(*derived, col_idx));
             const int col_len = fcs_col_len(col);
 
             if (!col_len)
@@ -392,7 +391,7 @@ static void fc_solve_debondt_delta_stater_decode(
     fcs_bool_t orig_top_most_cards[CARD_ARRAY_LEN] = {FALSE};
     for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
     {
-        const fcs_cards_column_t col = fcs_state_get_col(*init_state, col_idx);
+        const_AUTO(col, fcs_state_get_col(*init_state, col_idx));
 
         if (fcs_col_len(col))
         {
@@ -492,8 +491,7 @@ static void fc_solve_debondt_delta_stater_decode(
         int top_opt;
 
         fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
-        const fcs_cards_column_t orig_col =
-            fcs_state_get_col(*init_state, col_idx);
+        const_AUTO(orig_col, fcs_state_get_col(*init_state, col_idx));
         const_AUTO(orig_col_len, fcs_col_len(orig_col));
 
         if (orig_col_len)

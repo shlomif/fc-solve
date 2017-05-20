@@ -45,7 +45,7 @@ static inline fcs_bool_t fcs_is_ss_true_parent(
 #define STACK_SOURCE_LOOP_START(min_num_cards)                                 \
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)         \
     {                                                                          \
-        const fcs_cards_column_t col = fcs_state_get_col(state, stack_idx);    \
+        const_AUTO(col, fcs_state_get_col(state, stack_idx));                  \
         const int cards_num = fcs_col_len(col);                                \
         if (cards_num < min_num_cards)                                         \
         {                                                                      \
@@ -62,7 +62,7 @@ static inline fcs_bool_t fcs_is_ss_true_parent(
             continue;                                                          \
         }                                                                      \
                                                                                \
-        const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);      \
+        const_AUTO(dest_col, fcs_state_get_col(state, ds));                    \
         const int dest_cards_num = fcs_col_len(dest_col);                      \
                                                                                \
         if (dest_cards_num < min_num_cards)                                    \
@@ -151,8 +151,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 
         my_copy_stack(stack_idx);
 
-        fcs_cards_column_t new_src_col =
-            fcs_state_get_col(new_state_key, stack_idx);
+        var_AUTO(new_src_col, fcs_state_get_col(new_state_key, stack_idx));
         for (a = 0; a < FCS_MAX_RANK; a++)
         {
             fcs_col_pop_top(new_src_col);
@@ -179,7 +178,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
         if (ds != stack_idx)                                                   \
         {                                                                      \
             const int dc = pos.height;                                         \
-            const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);  \
+            const_AUTO(dest_col, fcs_state_get_col(state, ds));                \
             const int dest_cards_num = fcs_col_len(dest_col);
 
 #define LOOK_FOR_TRUE_PARENT_with_ds_dc__END()                                 \
@@ -922,7 +921,7 @@ DECLARE_MOVE_FUNCTION(
     {
         const size_t ds = ds_dcs[i].col;
         const size_t dc = ds_dcs[i].height;
-        const fcs_cards_column_t dest_col = fcs_state_get_col(state, ds);
+        const_AUTO(dest_col, fcs_state_get_col(state, ds));
         const int dest_cards_num = fcs_col_len(dest_col);
 
         /* This is a suitable parent - let's check if there's a sequence above

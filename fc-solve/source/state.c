@@ -278,8 +278,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
         {
             for (int s = 0; s < STACKS_NUM__VAL; s++)
             {
-                fcs_const_cards_column_t col =
-                    fcs_state_get_col(*state, stack_locs[s]);
+                const_AUTO(col, fcs_state_get_col(*state, stack_locs[s]));
                 const int col_len = fcs_col_len(col);
                 if (card_idx >= col_len)
                 {
@@ -344,8 +343,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
 
         for (int s = 0; s < STACKS_NUM__VAL; ++s)
         {
-            fcs_const_cards_column_t col =
-                fcs_state_get_col(*state, stack_locs[s]);
+            const_AUTO(col, fcs_state_get_col(*state, stack_locs[s]));
             const size_t col_len =
                 fcs_col_len(fcs_state_get_col(*state, stack_locs[s]));
             append_char(':');

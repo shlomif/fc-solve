@@ -379,7 +379,7 @@ static inline int find_col_card(const fcs_state_t *const dynamic_state,
 {
     for (int i = 0; i < STACKS_NUM__VAL; i++)
     {
-        fcs_const_cards_column_t col = fcs_state_get_col(*dynamic_state, i);
+        const_AUTO(col, fcs_state_get_col(*dynamic_state, i));
         const int col_len = fcs_col_len(col);
         if (col_len > 0 && (fcs_col_get_card(col, col_len - 1) == needle))
         {
@@ -485,8 +485,8 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 for (src_col_idx = 0; src_col_idx < STACKS_NUM__VAL;
                      src_col_idx++)
                 {
-                    fcs_cards_column_t src_col =
-                        fcs_state_get_col(s_and_info.s, src_col_idx);
+                    var_AUTO(
+                        src_col, fcs_state_get_col(s_and_info.s, src_col_idx));
                     const int src_cards_num = fcs_col_len(src_col);
                     if (src_cards_num)
                     {

@@ -70,8 +70,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
 
     for (i = 0; i < 8; i++)
     {
-        fcs_cards_column_t col = fcs_state_get_col(pos, i);
-        virtual_stack_len[i] = fcs_col_len(col);
+        virtual_stack_len[i] = fcs_col_len(fcs_state_get_col(pos, i));
     }
 #ifndef NDEBUG
     for (i = 0; i < num_freecells; i++)
@@ -89,7 +88,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
         {
             for (i = 0; i < 8; i++)
             {
-                fcs_cards_column_t col = fcs_state_get_col(pos, i);
+                var_AUTO(col, fcs_state_get_col(pos, i));
                 const_AUTO(l, fcs_col_len(col));
                 if (l && fc_solve_fc_pro__can_be_moved(
                              &pos, fcs_col_get_card(col, l - 1)))
@@ -125,7 +124,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         {
             const int src = fcs_move_get_src_stack(move);
-            fcs_cards_column_t col = fcs_state_get_col(pos, src);
+            var_AUTO(col, fcs_state_get_col(pos, src));
             assert(virtual_stack_len[src] >= fcs_col_len(col));
             if (virtual_stack_len[src] == fcs_col_len(col))
             {
@@ -184,7 +183,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             const int src = fcs_move_get_src_stack(move);
             const int dest = fcs_move_get_dest_freecell(move);
             assert(virtual_stack_len[src] > 0);
-            fcs_cards_column_t col = fcs_state_get_col(pos, src);
+            var_AUTO(col, fcs_state_get_col(pos, src));
             assert(fcs_col_len(col) <= virtual_stack_len[src]);
             if (fcs_col_len(col) < virtual_stack_len[src])
             {
@@ -211,8 +210,8 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             const_AUTO(src, fcs_move_get_src_freecell(move));
             const_AUTO(dest, fcs_move_get_dest_stack(move));
             int num_cards = fcs_move_get_num_cards_in_seq(move);
-            fcs_cards_column_t src_col = fcs_state_get_col(pos, src);
-            fcs_cards_column_t dest_col = fcs_state_get_col(pos, dest);
+            var_AUTO(src_col, fcs_state_get_col(pos, src));
+            var_AUTO(dest_col, fcs_state_get_col(pos, dest));
             const int src_len = fcs_col_len(src_col);
             assert(virtual_stack_len[src] >= src_len);
             if (virtual_stack_len[src] > src_len)
