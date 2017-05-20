@@ -51,7 +51,6 @@ static void fc_solve_delta_stater_init(
 #endif
     self->num_columns = num_columns;
     self->num_freecells = num_freecells;
-
     self->init_state = init_state;
 
     int max_num_cards = 0;

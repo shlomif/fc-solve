@@ -38,7 +38,6 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 
     fc_solve_initial_user_state_to_c(init_state_s, &init_state, FREECELLS_NUM,
         STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
-
     fc_solve_initial_user_state_to_c(derived_state_s, &derived_state,
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, derived_stacks_buffer);
 

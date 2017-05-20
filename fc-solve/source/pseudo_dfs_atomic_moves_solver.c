@@ -166,7 +166,6 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
         &(instance->cache), max_num_elements_in_cache, &(instance->meta_alloc));
 
     insert_state(&(instance->store), init_state);
-
     instance__inspect_new_state(instance, init_state);
 }
 
