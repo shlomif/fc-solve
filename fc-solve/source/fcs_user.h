@@ -43,7 +43,7 @@ DLLEXPORT extern void freecell_solver_user_limit_iterations(
     void *user_instance, int max_iters);
 
 DLLEXPORT extern int freecell_solver_user_set_tests_order(void *user_instance,
-    const char *tests_order FCS__PASS_ERR_STR(char **error_string));
+    const char *moves_order FCS__PASS_ERR_STR(char **error_string));
 #endif
 
 DLLEXPORT extern int freecell_solver_user_solve_board(
@@ -285,7 +285,7 @@ DLLEXPORT extern void freecell_solver_user_recycle(void *const user_instance);
 
 DLLEXPORT extern int freecell_solver_user_set_optimization_scan_tests_order(
     void *const user_instance,
-    const char *const tests_order FCS__PASS_ERR_STR(char **const error_string));
+    const char *const moves_order FCS__PASS_ERR_STR(char **const error_string));
 
 DLLEXPORT extern void freecell_solver_user_set_reparent_states(
     void *const user_instance, const int to_reparent_states);
@@ -327,11 +327,11 @@ DLLEXPORT const char *freecell_solver_user_get_last_error_string(
 #endif
 
 /*
- * This sets the tests_order from min_depth onwards.
+ * This sets the moves_order from min_depth onwards.
  * */
 DLLEXPORT extern int freecell_solver_user_set_depth_tests_order(
     void *const user_instance, const int min_depth,
-    const char *const tests_order FCS__PASS_ERR_STR(char **const error_string));
+    const char *const moves_order FCS__PASS_ERR_STR(char **const error_string));
 
 DLLEXPORT extern int freecell_solver_user_set_pruning(void *const user_instance,
     const char *const pruning FCS__PASS_ERR_STR(char **const error_string));

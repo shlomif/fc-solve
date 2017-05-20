@@ -182,16 +182,16 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                 {
                     for (int group_idx = 0;
                          group_idx <
-                         by_depth_moves_order[depth_idx].tests_order.num_groups;
+                         by_depth_moves_order[depth_idx].moves_order.num_groups;
                          ++group_idx)
                     {
                         const size_t *const move_funcs_idxs =
                             by_depth_moves_order[depth_idx]
-                                .tests_order.groups[group_idx]
+                                .moves_order.groups[group_idx]
                                 .order_group_moves;
                         const_AUTO(
                             tests_order_num, by_depth_moves_order[depth_idx]
-                                                 .tests_order.groups[group_idx]
+                                                 .moves_order.groups[group_idx]
                                                  .num);
 
                         for (size_t num_valid_move_funcs = 0;
@@ -216,8 +216,8 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                             {
                                 fc_solve_apply_tests_order(
                                     &(by_depth_moves_order[depth_idx]
-                                            .tests_order),
-                                    preset.tests_order FCS__PASS_ERR_STR(
+                                            .moves_order),
+                                    preset.moves_order FCS__PASS_ERR_STR(
                                         no_use));
                                 break;
                             }
@@ -230,7 +230,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
 
     /* Assign the master tests order */
     fc_solve_apply_tests_order(&(instance->instance_tests_order),
-        preset.tests_order FCS__PASS_ERR_STR(no_use));
+        preset.moves_order FCS__PASS_ERR_STR(no_use));
 #undef preset
     return FCS_PRESET_CODE_OK;
 }

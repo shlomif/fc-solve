@@ -88,7 +88,7 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
     const_AUTO(num, soft_thread->by_depth_moves_order.num);
     for (size_t i = 0; i < num; ++i)
     {
-        fc_solve_free_tests_order(&(by_depth_moves[i].tests_order));
+        fc_solve_free_tests_order(&(by_depth_moves[i].moves_order));
     }
 
     soft_thread->by_depth_moves_order.num = 0;
@@ -98,7 +98,7 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
 }
 
 static inline void accumulate_tests_by_ptr(
-    size_t *const tests_order, fcs_tests_order_t *const st_tests_order)
+    size_t *const moves_order, fcs_tests_order_t *const st_tests_order)
 {
     const fcs_tests_order_group_t *group_ptr = st_tests_order->groups;
     const fcs_tests_order_group_t *const groups_end =
@@ -109,7 +109,7 @@ static inline void accumulate_tests_by_ptr(
         const size_t *const tests_end = test_ptr + group_ptr->num;
         for (; test_ptr < tests_end; test_ptr++)
         {
-            *tests_order |= (1 << (*test_ptr));
+            *moves_order |= (1 << (*test_ptr));
         }
     }
 }
@@ -118,19 +118,19 @@ static inline void accumulate_tests_order(
     fc_solve_soft_thread_t *const soft_thread, void *const context)
 {
     accumulate_tests_by_ptr((size_t *)context,
-        &(soft_thread->by_depth_moves_order.by_depth_moves[0].tests_order));
+        &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
 }
 
 static inline void determine_scan_completeness(
     fc_solve_soft_thread_t *const soft_thread, void *const global_tests_order)
 {
-    size_t tests_order = 0;
+    size_t moves_order = 0;
 
-    accumulate_tests_by_ptr(&tests_order,
-        &(soft_thread->by_depth_moves_order.by_depth_moves[0].tests_order));
+    accumulate_tests_by_ptr(&moves_order,
+        &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
 
     STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
-        (tests_order == *(size_t *)global_tests_order));
+        (moves_order == *(size_t *)global_tests_order));
 }
 
 void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
@@ -275,7 +275,7 @@ static inline
     soft_thread->by_depth_moves_order.by_depth_moves[0] =
         (typeof(soft_thread->by_depth_moves_order.by_depth_moves[0])){
             .max_depth = SSIZE_MAX,
-            .tests_order = tests_order_dup(
+            .moves_order = tests_order_dup(
                 &(fcs_st_instance(soft_thread)->instance_tests_order)),
         };
 

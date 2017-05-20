@@ -20,20 +20,20 @@
 #define SET_ERR(s)
 #endif
 
-int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
+int fc_solve_apply_tests_order(fcs_tests_order_t *const moves_order,
     const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
     int i;
-    fc_solve_free_tests_order(tests_order);
-    tests_order->groups = SMALLOC(tests_order->groups, MOVES_GROW_BY);
-    tests_order->groups[tests_order->num_groups].num = 0;
-    tests_order->groups[tests_order->num_groups].order_group_moves =
-        SMALLOC(tests_order->groups[tests_order->num_groups].order_group_moves,
+    fc_solve_free_tests_order(moves_order);
+    moves_order->groups = SMALLOC(moves_order->groups, MOVES_GROW_BY);
+    moves_order->groups[moves_order->num_groups].num = 0;
+    moves_order->groups[moves_order->num_groups].order_group_moves =
+        SMALLOC(moves_order->groups[moves_order->num_groups].order_group_moves,
             MOVES_GROW_BY);
-    tests_order->groups[tests_order->num_groups].shuffling_type =
+    moves_order->groups[moves_order->num_groups].shuffling_type =
         FCS_NO_SHUFFLING;
 
-    tests_order->num_groups++;
+    moves_order->num_groups++;
 
     const_AUTO(len, strlen(string));
     fcs_bool_t is_group = FALSE;
@@ -50,23 +50,23 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
             }
             is_group = TRUE;
             is_start_group = TRUE;
-            if (tests_order->groups[tests_order->num_groups - 1].num)
+            if (moves_order->groups[moves_order->num_groups - 1].num)
             {
-                if (!(tests_order->num_groups & (MOVES_GROW_BY - 1)))
+                if (!(moves_order->num_groups & (MOVES_GROW_BY - 1)))
                 {
-                    tests_order->groups = SREALLOC(tests_order->groups,
-                        tests_order->num_groups + MOVES_GROW_BY);
+                    moves_order->groups = SREALLOC(moves_order->groups,
+                        moves_order->num_groups + MOVES_GROW_BY);
                 }
 
-                tests_order->groups[tests_order->num_groups].num = 0;
-                tests_order->groups[tests_order->num_groups].order_group_moves =
-                    SMALLOC(tests_order->groups[tests_order->num_groups]
+                moves_order->groups[moves_order->num_groups].num = 0;
+                moves_order->groups[moves_order->num_groups].order_group_moves =
+                    SMALLOC(moves_order->groups[moves_order->num_groups]
                                 .order_group_moves,
                         MOVES_GROW_BY);
 
-                tests_order->num_groups++;
+                moves_order->num_groups++;
             }
-            tests_order->groups[tests_order->num_groups - 1].shuffling_type =
+            moves_order->groups[moves_order->num_groups - 1].shuffling_type =
                 FCS_RAND;
             continue;
         }
@@ -96,12 +96,12 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
                 }
                 if (string_starts_with(string + i, "rand", open_paren))
                 {
-                    tests_order->groups[tests_order->num_groups - 1]
+                    moves_order->groups[moves_order->num_groups - 1]
                         .shuffling_type = FCS_RAND;
                 }
                 else if (string_starts_with(string + i, "asw", open_paren))
                 {
-                    tests_order->groups[tests_order->num_groups - 1]
+                    moves_order->groups[moves_order->num_groups - 1]
                         .shuffling_type = FCS_WEIGHTING;
                 }
                 else
@@ -116,11 +116,11 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
                     SET_ERR("= ordering function not terminated with a ')'");
                     return 7;
                 }
-                if (tests_order->groups[tests_order->num_groups - 1]
+                if (moves_order->groups[moves_order->num_groups - 1]
                         .shuffling_type == FCS_WEIGHTING)
                 {
                     fc_solve_set_weights(aft_open_paren, close_paren,
-                        tests_order->groups[tests_order->num_groups - 1]
+                        moves_order->groups[moves_order->num_groups - 1]
                             .weighting.befs_weights.weights);
                 }
                 else
@@ -141,39 +141,39 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
             is_group = FALSE;
             is_start_group = FALSE;
 
-            if (tests_order->groups[tests_order->num_groups - 1].num)
+            if (moves_order->groups[moves_order->num_groups - 1].num)
             {
-                if (!(tests_order->num_groups & (MOVES_GROW_BY - 1)))
+                if (!(moves_order->num_groups & (MOVES_GROW_BY - 1)))
                 {
-                    tests_order->groups = SREALLOC(tests_order->groups,
-                        tests_order->num_groups + MOVES_GROW_BY);
+                    moves_order->groups = SREALLOC(moves_order->groups,
+                        moves_order->num_groups + MOVES_GROW_BY);
                 }
-                tests_order->groups[tests_order->num_groups].num = 0;
-                tests_order->groups[tests_order->num_groups].order_group_moves =
-                    SMALLOC(tests_order->groups[tests_order->num_groups]
+                moves_order->groups[moves_order->num_groups].num = 0;
+                moves_order->groups[moves_order->num_groups].order_group_moves =
+                    SMALLOC(moves_order->groups[moves_order->num_groups]
                                 .order_group_moves,
                         MOVES_GROW_BY);
 
-                tests_order->num_groups++;
+                moves_order->num_groups++;
             }
-            tests_order->groups[tests_order->num_groups - 1].shuffling_type =
+            moves_order->groups[moves_order->num_groups - 1].shuffling_type =
                 FCS_NO_SHUFFLING;
             continue;
         }
 
-        if (!(tests_order->groups[tests_order->num_groups - 1].num &
+        if (!(moves_order->groups[moves_order->num_groups - 1].num &
                 (MOVES_GROW_BY - 1)))
         {
-            tests_order->groups[tests_order->num_groups - 1].order_group_moves =
-                SREALLOC(tests_order->groups[tests_order->num_groups - 1]
+            moves_order->groups[moves_order->num_groups - 1].order_group_moves =
+                SREALLOC(moves_order->groups[moves_order->num_groups - 1]
                              .order_group_moves,
-                    tests_order->groups[tests_order->num_groups - 1].num +
+                    moves_order->groups[moves_order->num_groups - 1].num +
                         MOVES_GROW_BY);
         }
 
         const char test_name[2] = {string[i], '\0'};
-        tests_order->groups[tests_order->num_groups - 1].order_group_moves
-            [tests_order->groups[tests_order->num_groups - 1].num++] =
+        moves_order->groups[moves_order->num_groups - 1].order_group_moves
+            [moves_order->groups[moves_order->num_groups - 1].num++] =
             fc_solve_string_to_test_num(test_name);
         is_start_group = FALSE;
     }
@@ -183,11 +183,11 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const tests_order,
         return 4;
     }
 
-    if (!tests_order->groups[tests_order->num_groups - 1].num)
+    if (!moves_order->groups[moves_order->num_groups - 1].num)
     {
-        tests_order->num_groups--;
-        free(tests_order->groups[tests_order->num_groups].order_group_moves);
-        tests_order->groups[tests_order->num_groups].order_group_moves = NULL;
+        moves_order->num_groups--;
+        free(moves_order->groups[moves_order->num_groups].order_group_moves);
+        moves_order->groups[moves_order->num_groups].order_group_moves = NULL;
     }
 
 #ifdef FCS_WITH_ERROR_STRS

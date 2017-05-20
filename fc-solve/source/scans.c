@@ -335,15 +335,15 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
         for (size_t group_idx = 0;
              group_idx < soft_thread->by_depth_moves_order.by_depth_moves[0]
-                             .tests_order.num_groups;
+                             .moves_order.num_groups;
              ++group_idx)
         {
             add_to_move_funcs_list(&tests_list, &num,
                 soft_thread->by_depth_moves_order.by_depth_moves[0]
-                    .tests_order.groups[group_idx]
+                    .moves_order.groups[group_idx]
                     .order_group_moves,
                 soft_thread->by_depth_moves_order.by_depth_moves[0]
-                    .tests_order.groups[group_idx]
+                    .moves_order.groups[group_idx]
                     .num);
         }
         BEFS_M_VAR(soft_thread, tests_list) = tests_list;

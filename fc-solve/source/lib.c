@@ -355,7 +355,7 @@ static inline fc_solve_soft_thread_t *api_soft_thread(void *const api_instance)
 
 int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     void *const api_instance, const int min_depth,
-    const char *const tests_order FCS__PASS_ERR_STR(char **const error_string))
+    const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
 {
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
 
@@ -392,9 +392,9 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
                 ++soft_thread->by_depth_moves_order.num);
 
         soft_thread->by_depth_moves_order.by_depth_moves[depth_idx]
-            .tests_order.num_groups = 0;
+            .moves_order.num_groups = 0;
         soft_thread->by_depth_moves_order.by_depth_moves[depth_idx]
-            .tests_order.groups = NULL;
+            .moves_order.groups = NULL;
     }
 
     if (depth_idx > 0)
@@ -411,8 +411,8 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 #endif
     const int ret_code = fc_solve_apply_tests_order(
         &(soft_thread->by_depth_moves_order.by_depth_moves[depth_idx]
-                .tests_order),
-        tests_order FCS__PASS_ERR_STR(static_error_string));
+                .moves_order),
+        moves_order FCS__PASS_ERR_STR(static_error_string));
 
     SET_ERROR_VAR(error_string, static_error_string);
 
@@ -422,7 +422,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     {
         fc_solve_free_tests_order(&(
             soft_thread->by_depth_moves_order.by_depth_moves[further_depth_idx]
-                .tests_order));
+                .moves_order));
     }
 
     soft_thread->by_depth_moves_order.by_depth_moves =
@@ -434,10 +434,10 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_set_tests_order(void *api_instance,
-    const char *tests_order FCS__PASS_ERR_STR(char **error_string))
+    const char *moves_order FCS__PASS_ERR_STR(char **error_string))
 {
     return freecell_solver_user_set_depth_tests_order(
-        api_instance, 0, tests_order FCS__PASS_ERR_STR(error_string));
+        api_instance, 0, moves_order FCS__PASS_ERR_STR(error_string));
 }
 #endif
 
@@ -2257,7 +2257,7 @@ void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
 #ifdef FCS_WITH_MOVES
 int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     void *const api_instance,
-    const char *const tests_order FCS__PASS_ERR_STR(char **const error_string))
+    const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
 {
     var_AUTO(obj, active_obj(api_instance));
     fc_solve_free_tests_order(&obj->opt_tests_order);
@@ -2266,7 +2266,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     char static_error_string[120];
 #endif
     const int ret = fc_solve_apply_tests_order(&(obj->opt_tests_order),
-        tests_order FCS__PASS_ERR_STR(static_error_string));
+        moves_order FCS__PASS_ERR_STR(static_error_string));
     SET_ERROR_VAR(error_string, static_error_string);
     if (!ret)
     {

@@ -48,13 +48,13 @@ typedef struct
 static const char *known_parameters[] = {NULL};
 
 static void set_tests_order(
-    void *const instance, const int min_depth, const char *const tests_order)
+    void *const instance, const int min_depth, const char *const moves_order)
 {
 #ifdef FCS_WITH_ERROR_STRS
     char *error_string;
 #endif
     if (freecell_solver_user_set_depth_tests_order(
-            instance, min_depth, tests_order FCS__PASS_ERR_STR(&error_string)))
+            instance, min_depth, moves_order FCS__PASS_ERR_STR(&error_string)))
     {
 #ifdef FCS_WITH_ERROR_STRS
         fprintf(stderr, "Error! Got '%s'!\n", error_string);

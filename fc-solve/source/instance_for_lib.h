@@ -771,7 +771,7 @@ static inline void fc_solve__setup_optimization_thread__helper(
         soft_thread->by_depth_moves_order.by_depth_moves[0] =
             (typeof(soft_thread->by_depth_moves_order.by_depth_moves[0])){
                 .max_depth = SSIZE_MAX,
-                .tests_order = tests_order_dup(&(instance->opt_tests_order)),
+                .moves_order = tests_order_dup(&(instance->opt_tests_order)),
             };
     }
 
@@ -928,10 +928,10 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
             unit->max_depth = by_depth_moves_order[depth_idx].max_depth;
 
             fcs_tests_order_group_t *const tests_order_groups =
-                by_depth_moves_order[depth_idx].tests_order.groups;
+                by_depth_moves_order[depth_idx].moves_order.groups;
 
             const_AUTO(tests_order_num,
-                by_depth_moves_order[depth_idx].tests_order.num_groups);
+                by_depth_moves_order[depth_idx].moves_order.num_groups);
 
             const_AUTO(moves_list_of_lists, &(unit->move_funcs));
 

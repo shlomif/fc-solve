@@ -220,7 +220,7 @@ typedef struct
 typedef struct
 {
     ssize_t max_depth;
-    fcs_tests_order_t tests_order;
+    fcs_tests_order_t moves_order;
 } fcs_by_depth_tests_order_t;
 
 typedef struct
@@ -996,17 +996,17 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     whatever memory was allocated by alloc_instance().
   */
 
-static inline void fc_solve_free_tests_order(fcs_tests_order_t *tests_order)
+static inline void fc_solve_free_tests_order(fcs_tests_order_t *moves_order)
 {
-    const_SLOT(groups, tests_order);
-    const_SLOT(num_groups, tests_order);
+    const_SLOT(groups, moves_order);
+    const_SLOT(num_groups, moves_order);
     for (size_t group_idx = 0; group_idx < num_groups; ++group_idx)
     {
         free(groups[group_idx].order_group_moves);
     }
     free(groups);
-    tests_order->groups = NULL;
-    tests_order->num_groups = 0;
+    moves_order->groups = NULL;
+    moves_order->num_groups = 0;
 }
 
 /***********************************************************/

@@ -30,7 +30,7 @@ typedef struct
 
     fcs_game_type_params_t game_params;
 
-    char tests_order[FCS_MOVE_FUNCS_NUM * 3 + 1];
+    char moves_order[FCS_MOVE_FUNCS_NUM * 3 + 1];
     char allowed_tests[FCS_MOVE_FUNCS_NUM * 3 + 1];
 } fcs_preset_t;
 
