@@ -47,7 +47,7 @@ dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)
  * Returns TRUE if the key was added (it didn't already exist.)
  * */
 fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
-    const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *parent,
+    const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *const parent,
     const fcs_bool_t should_modify_parent GCC_UNUSED)
 {
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS

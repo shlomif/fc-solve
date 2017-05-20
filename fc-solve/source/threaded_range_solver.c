@@ -18,6 +18,7 @@
 #include <pthread.h>
 
 #include "range_solvers.h"
+#include "try_param.h"
 
 static void print_help(void)
 {
@@ -37,15 +38,15 @@ static pthread_mutex_t next_board_num_lock;
 static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
 static fcs_int_limit_t update_total_num_iters_threshold = 1000000;
 static char **context_argv;
-static int context_arg = 1, context_argc;
+static int arg = 1, context_argc;
 static long long total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
 static void *worker_thread(void *GCC_UNUSED void_arg)
 {
-    int arg = context_arg;
+    int ctx_arg = arg;
     void *const instance =
-        simple_alloc_and_parse(context_argc, context_argv, &arg);
+        simple_alloc_and_parse(context_argc, context_argv, &ctx_arg);
     fcs_int_limit_t total_num_iters_temp = 0;
     long long board_num;
     do
@@ -103,40 +104,29 @@ int main(int argc, char *argv[])
     {
         help_err("Not Enough Arguments!\n");
     }
-    next_board_num = atoll(argv[context_arg++]);
-    past_end_board = 1 + atoll(argv[context_arg++]);
+    next_board_num = atoll(argv[arg++]);
+    past_end_board = 1 + atoll(argv[arg++]);
 
-    if ((stop_at = atoll(argv[context_arg++])) <= 0)
+    if ((stop_at = atoll(argv[arg++])) <= 0)
     {
         help_err("print_step (the third argument) must be greater than 0.\n");
     }
 
     int num_workers = 3;
-    for (; context_arg < argc; ++context_arg)
+    for (; arg < argc; ++arg)
     {
-        if (!strcmp(argv[context_arg], "--num-workers"))
+        const char *param;
+        if ((param = TRY_P("--num-workers")))
         {
-            if (++context_arg == argc)
-            {
-                help_err("--num-workers came without an argument!\n");
-            }
-            num_workers = atoi(argv[context_arg]);
+            num_workers = atoi(param);
         }
-        else if (!strcmp(argv[context_arg], "--worker-step"))
+        else if ((param = TRY_P("--worker-step")))
         {
-            if (++context_arg == argc)
-            {
-                help_err("--worker-step came without an argument!\n");
-            }
-            board_num_step = atoll(argv[context_arg]);
+            board_num_step = atoll(param);
         }
-        else if (!strcmp(argv[context_arg], "--iters-update-on"))
+        else if ((param = TRY_P("--iters-update-on")))
         {
-            if (++context_arg == argc)
-            {
-                help_err("--iters-update-on came without an argument!\n");
-            }
-            update_total_num_iters_threshold = atol(argv[context_arg]);
+            update_total_num_iters_threshold = atol(param);
         }
         else
         {

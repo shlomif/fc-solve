@@ -14,6 +14,7 @@
 
 #include "dbm_move_to_string.h"
 #include "render_state.h"
+#include "try_param.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -401,20 +402,6 @@ static inline void fcs_dbm__cache_store__init(
 #endif
 }
 
-static const char *try_argv_param(
-    const int argc, char **const argv, int *const arg, const char *const flag)
-{
-    if (!strcmp(argv[*arg], flag))
-    {
-        if (++(*arg) == argc)
-        {
-            fc_solve_err("%s came without an argument!\n", flag);
-        }
-        return argv[*arg];
-    }
-    return NULL;
-}
-
 typedef struct
 {
     fcs_dbm_variant_type_t local_variant;
@@ -432,8 +419,6 @@ static const fcs_dbm_common_input_t fcs_dbm_common_input_init = {
     .caches_delta = 1000000,
     .num_threads = 2};
 
-#define TRY_PARAM(s) try_argv_param(argc, argv, arg, s)
-#define TRY_P(s) try_argv_param(argc, argv, &arg, s)
 static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     char **const argv, int *const arg, fcs_dbm_common_input_t *const inp)
 {

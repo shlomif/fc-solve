@@ -27,6 +27,7 @@
 #endif
 
 #include "range_solvers.h"
+#include "try_param.h"
 
 static void print_help(void)
 {
@@ -155,21 +156,14 @@ int main(int argc, char *argv[])
     long long board_num_step = 1;
     for (++arg; arg < argc; ++arg)
     {
-        if (!strcmp(argv[arg], "--num-workers"))
+        const char *param;
+        if ((param = TRY_P("--num-workers")))
         {
-            if (++arg == argc)
-            {
-                help_err("--num-workers came without an argument!\n");
-            }
-            num_workers = atoi(argv[arg]);
+            num_workers = atoi(param);
         }
-        else if (!strcmp(argv[arg], "--worker-step"))
+        else if ((param = TRY_P("--worker-step")))
         {
-            if (++arg == argc)
-            {
-                help_err("--worker-step came without an argument!\n");
-            }
-            board_num_step = atoll(argv[arg]);
+            board_num_step = atoll(param);
         }
         else
         {
