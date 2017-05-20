@@ -1399,9 +1399,7 @@ static void user_free_resources(fcs_user_t *const user)
 void DLLEXPORT freecell_solver_user_free(void *const api_instance)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
-
     user_free_resources(user);
-
     free(user);
 }
 
@@ -2417,11 +2415,8 @@ int DLLEXPORT freecell_solver_user_next_flare(
 int DLLEXPORT freecell_solver_user_reset(void *const api_instance)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
-
     user_free_resources(user);
-
     user_initialize(user);
-
     return 0;
 }
 

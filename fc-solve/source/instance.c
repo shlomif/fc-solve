@@ -498,18 +498,17 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                     }
                 }
 
-                int dest;
-                for (dest = 0; dest < FREECELLS_NUM__VAL; dest++)
+                for (int dest = 0; dest < FREECELLS_NUM__VAL; dest++)
                 {
                     if (fcs_freecell_is_empty(s_and_info.s, dest))
                     {
+                        fcs_int_move_set_type(
+                            out_move, FCS_MOVE_TYPE_STACK_TO_FREECELL);
+                        fcs_int_move_set_src_stack(out_move, src_col_idx);
+                        fcs_int_move_set_dest_freecell(out_move, dest);
                         break;
                     }
                 }
-                fcs_int_move_set_type(
-                    out_move, FCS_MOVE_TYPE_STACK_TO_FREECELL);
-                fcs_int_move_set_src_stack(out_move, src_col_idx);
-                fcs_int_move_set_dest_freecell(out_move, dest);
             }
             break;
             case FCS_PATS__TYPE_FOUNDATION:

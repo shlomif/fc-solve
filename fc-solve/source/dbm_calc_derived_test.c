@@ -31,7 +31,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 {
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;
-    fcs_state_locs_struct_t locs;
     fcs_derived_state_t *derived_list = NULL;
     fcs_derived_state_t *derived_list_recycle_bin = NULL;
     size_t states_count = 0;
@@ -75,6 +74,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         SMALLOC(debug_ret, states_count);
     *(out_derived_states) = debug_ret;
 
+    fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
 
     iter = derived_list;
@@ -125,8 +125,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     const char *init_state_str_proto, char **ret_state_s)
 {
     fcs_state_keyval_pair_t init_state;
-    fcs_state_locs_struct_t locs;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
+    fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
 
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,

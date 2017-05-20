@@ -43,9 +43,7 @@ static inline void fc_solve_var_base_writer_write(
     const unsigned long item)
 {
     assert(item < base);
-
     FCS_var_base_int__addmul_ui(w->data, w->multiplier, item);
-
     FCS_var_base_int__mul_ui(w->multiplier, base);
 }
 
