@@ -358,6 +358,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
     if (cmd_line_cb__handle_common(arg_str, instance, display_context))
     {
     }
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
     else if (IS_ARG("--version"))
     {
         printf("fc-solve\nlibfreecell-solver version %s\n",
@@ -365,6 +366,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
+#endif
     else if (IS_ARG_LONG("h", "help"))
     {
         const char *help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");

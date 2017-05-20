@@ -4,10 +4,17 @@ use strict;
 use warnings;
 use autodie;
 
-use Test::More tests => 2;
+use Test::More;
 use String::ShellQuote qw/ shell_quote /;
-use FC_Solve::Paths qw( $FC_SOLVE_EXE );
-
+use FC_Solve::Paths qw( $FC_SOLVE_EXE is_break );
+if ( is_break() )
+{
+    plan skip_all => "Does not work with BREAK_BACK_COMPAT";
+}
+else
+{
+    plan tests => 2;
+}
 {
     open my $good_ver_fh, "<", "$ENV{FCS_SRC_PATH}/ver.txt";
     my $good_ver = <$good_ver_fh>;

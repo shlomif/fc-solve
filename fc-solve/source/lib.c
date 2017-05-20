@@ -2426,13 +2426,13 @@ int DLLEXPORT freecell_solver_user_reset(void *const api_instance)
     user_initialize(user);
     return 0;
 }
-#endif
 
 DLLEXPORT const char *freecell_solver_user_get_lib_version(
     void *api_instance GCC_UNUSED)
 {
     return VERSION;
 }
+#endif
 
 /* TODO : optionally Remove from the API */
 DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(

@@ -7,7 +7,7 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -40,6 +40,7 @@ sub _is_tag
 
     return ( ( $ENV{FCS_TEST_TAGS} // '' ) =~ /\b\Q$tag\E\b/ );
 }
+my $BREAK_TAG   = _is_tag('break_backcompat');
 my $FC_ONLY     = _is_tag('fc_only');
 my $NO_FLARES   = _is_tag('no_flares');
 my $NO_PATSOLVE = _is_tag('no_pats');
@@ -72,6 +73,11 @@ sub bin_board
 sub data_file
 {
     return File::Spec->catfile( $DATA_DIR, @{ shift @_ } );
+}
+
+sub is_break
+{
+    return $BREAK_TAG;
 }
 
 sub is_freecell_only

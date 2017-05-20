@@ -309,10 +309,10 @@ DLLEXPORT extern int freecell_solver_user_next_flare(void *const api_instance);
  * */
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern int freecell_solver_user_reset(void *const user_instance);
-#endif
 
 DLLEXPORT const char *freecell_solver_user_get_lib_version(
     void *const user_instance);
+#endif
 
 DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
     void *const user_instance);
