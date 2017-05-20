@@ -39,8 +39,8 @@ static inline int fc_solve_string_to_test_num(const char *const s)
     return (result ? result->move_func_num : 0);
 }
 
-extern int fc_solve_apply_tests_order(fcs_tests_order_t *tests_order,
-    const char *string FCS__PASS_ERR_STR(char *const error_string));
+extern int fc_solve_apply_tests_order(
+    fcs_tests_order_t *, const char *FCS__PASS_ERR_STR(char *));
 
 #ifdef __cplusplus
 }
