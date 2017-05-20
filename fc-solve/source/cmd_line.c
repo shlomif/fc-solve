@@ -631,7 +631,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         break;
 
         case FCS_OPT_RESET: /* STRINGS=--reset; */
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
             freecell_solver_user_reset(instance);
+#endif
             break;
 
         case FCS_OPT_READ_FROM_FILE: /* STRINGS=--read-from-file; */

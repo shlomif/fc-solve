@@ -307,7 +307,9 @@ DLLEXPORT extern int freecell_solver_user_next_flare(void *const api_instance);
  * This function resets the user_instance, making it lose
  * all the previous command line arguments it encountered
  * */
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern int freecell_solver_user_reset(void *const user_instance);
+#endif
 
 DLLEXPORT const char *freecell_solver_user_get_lib_version(
     void *const user_instance);

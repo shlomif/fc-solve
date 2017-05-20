@@ -1347,7 +1347,13 @@ DLLEXPORT char *freecell_solver_user_current_state_as_string(
 #endif
 #endif
 
-static void user_free_resources(fcs_user_t *const user)
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define MYINLINE inline
+#else
+#define MYINLINE
+#endif
+
+static MYINLINE void user_free_resources(fcs_user_t *const user)
 {
     FLARES_LOOP_START()
     {
@@ -2412,6 +2418,7 @@ int DLLEXPORT freecell_solver_user_next_flare(
 }
 #endif
 
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_reset(void *const api_instance)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
@@ -2419,6 +2426,7 @@ int DLLEXPORT freecell_solver_user_reset(void *const api_instance)
     user_initialize(user);
     return 0;
 }
+#endif
 
 DLLEXPORT const char *freecell_solver_user_get_lib_version(
     void *api_instance GCC_UNUSED)
