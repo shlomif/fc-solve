@@ -1934,10 +1934,6 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 typedef struct
 {
     fcs_state_t *key;
-#if 0
-    fcs_state_extra_info_t * val;
-    fcs_collectible_state_t * s;
-#endif
     fcs_state_locs_struct_t locs;
 } fcs_standalone_state_ptrs_t;
 

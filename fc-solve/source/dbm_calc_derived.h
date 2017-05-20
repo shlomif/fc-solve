@@ -225,32 +225,33 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
         {
             fcs_cards_column_t col = fcs_state_get_col(the_state, stack_idx);
             const int cards_num = fcs_col_len(col);
-            if (cards_num)
+            if (!cards_num)
             {
-                /* Get the top card in the stack */
-                const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
-                const int dest_foundation = calc_foundation_to_put_card_on(
-                    local_variant, &the_state, card);
-                if (dest_foundation >= 0)
+                continue;
+            }
+            /* Get the top card in the stack */
+            const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+            const int dest_foundation =
+                calc_foundation_to_put_card_on(local_variant, &the_state, card);
+            if (dest_foundation >= 0)
+            {
+                const_AUTO(is_reversible, FROM_COL_IS_REVERSIBLE_MOVE());
+                if (!is_reversible)
                 {
-                    const_AUTO(is_reversible, FROM_COL_IS_REVERSIBLE_MOVE());
-                    if (!is_reversible)
-                    {
-                        count_additional_irrev_moves++;
-                    }
-                    /* We can safely move it. */
-                    num_cards_moved++;
-                    fc_solve_add_to_irrev_moves_bitmask(
-                        which_irreversible_moves_bitmask, card,
-                        COUNT_NON_REV(is_reversible));
-
-                    fcs_col_pop_top(col);
-
-                    fcs_increment_foundation(the_state, dest_foundation);
-
-                    additional_moves[count_moves_so_far++] = MAKE_MOVE(
-                        COL2MOVE(stack_idx), FOUND2MOVE(dest_foundation));
+                    count_additional_irrev_moves++;
                 }
+                /* We can safely move it. */
+                num_cards_moved++;
+                fc_solve_add_to_irrev_moves_bitmask(
+                    which_irreversible_moves_bitmask, card,
+                    COUNT_NON_REV(is_reversible));
+
+                fcs_col_pop_top(col);
+
+                fcs_increment_foundation(the_state, dest_foundation);
+
+                additional_moves[count_moves_so_far++] =
+                    MAKE_MOVE(COL2MOVE(stack_idx), FOUND2MOVE(dest_foundation));
             }
         }
 
