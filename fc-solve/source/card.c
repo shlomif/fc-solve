@@ -13,7 +13,7 @@
 #include "rank2str.h"
 
 // Converts a suit to its user representation.
-static inline void suit2str(const int suit, char *str)
+static inline void suit2str(const int suit, char *const str)
 {
     str[0] = "HCDS"[suit];
     str[1] = '\0';

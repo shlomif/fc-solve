@@ -696,9 +696,9 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             while ((*str) != '\n')
             {
                 HANDLE_EOS();
-                str++;
+                ++str;
             }
-            str++;
+            ++str;
         }
 
         first_line = FALSE;
@@ -726,12 +726,12 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                     {
                         break;
                     }
-                    str++;
+                    ++str;
                 }
 
                 while ((*str == ' ') || (*str == '\t'))
                 {
-                    str++;
+                    ++str;
                 }
                 if ((*str == '\r') || (*str == '\n'))
                     break;
@@ -770,13 +770,13 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
             while (1)
             {
                 while ((*str == ' ') || (*str == '\t'))
-                    str++;
+                    ++str;
                 if ((*str == '\n') || (*str == '\r'))
                     break;
                 const int f_idx = fcs_str2suit(str);
-                str++;
+                ++str;
                 while (*str == '-')
-                    str++;
+                    ++str;
                 /* Workaround for fcs_str2rank's willingness
                  * to designate the string '0' as 10. */
                 const int c = ((str[0] == '0') ? 0 : fcs_str2rank(str));
@@ -784,7 +784,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                        (*str != '\r'))
                 {
                     HANDLE_EOS();
-                    str++;
+                    ++str;
                 }
 
                 fcs_set_foundation(out, ((decks_index[f_idx] << 2) + f_idx), c);
@@ -801,7 +801,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
          * input states from -p -t mid-play. */
         if ((*str) == ':')
         {
-            str++;
+            ++str;
         }
 
         fcs_cards_column_t col = fcs_state_get_col(out, s);
@@ -814,7 +814,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
                        ((*str) != '\n') && ((*str) != '\r'))
                 {
                     HANDLE_EOS();
-                    str++;
+                    ++str;
                 }
                 if ((*str == '\n') || (*str == '\r'))
                 {
@@ -824,7 +824,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
             while ((*str == ' ') || (*str == '\t'))
             {
-                str++;
+                ++str;
             }
             HANDLE_EOS();
             if ((*str == '\n') || (*str == '\r'))
