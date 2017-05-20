@@ -338,7 +338,7 @@ static inline int horne_prune__simple(
     return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
 }
 
-static inline fcs_bool_t card_cannot_be_placed(fcs_state_t *s,
+static inline fcs_bool_t card_cannot_be_placed(const fcs_state_t *const s,
     const u_int16_t ds, const fcs_card_t card, const int sequences_are_built_by)
 {
     const_AUTO(col, fcs_state_get_col(*s, ds));
