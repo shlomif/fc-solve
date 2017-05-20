@@ -14,6 +14,7 @@
 #include "fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
+#include "try_param.h"
 
 static void __attribute__((noreturn)) print_help(void)
 {
@@ -85,14 +86,10 @@ int main(int argc, char *argv[])
 
     for (; arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--variant"))
+        const char *param;
+        if ((param = TRY_P("--variant")))
         {
-            if (++arg == argc)
-            {
-                fprintf(stderr, "--variant came without an argument!\n");
-                print_help();
-            }
-            if (strlen(variant = argv[arg]) > 50)
+            if (strlen(variant = param) > 50)
             {
                 fprintf(stderr, "--variant's argument is too long!\n");
                 print_help();

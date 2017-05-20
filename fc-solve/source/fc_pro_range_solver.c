@@ -17,6 +17,7 @@
 #include "range_solvers_binary_output.h"
 #include "fc_pro_iface_pos.h"
 #include "help_err.h"
+#include "try_param.h"
 
 static inline void fc_pro_get_board(long deal_idx,
     fcs_state_string_t state_string,
@@ -52,34 +53,22 @@ int main(int argc, char *argv[])
 
     for (; arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--variant"))
+        const char *param;
+        if ((param = TRY_P("--variant")))
         {
-            if (++arg == argc)
-            {
-                help_err("--variant came without an argument!\n");
-            }
-            if (strlen(variant = argv[arg]) > 50)
+            if (strlen(variant = param) > 50)
             {
                 help_err("--variant's argument is too long!\n");
             }
         }
-        else if (!strcmp(argv[arg], "--binary-output-to"))
+        else if ((param = TRY_P("--binary-output-to")))
         {
-            if (++arg == argc)
-            {
-                help_err("--binary-output-to came without an argument!\n");
-            }
-            binary_output.filename = argv[arg];
+            binary_output.filename = param;
         }
-        else if (!strcmp(argv[arg], "--total-iterations-limit"))
+        else if ((param = TRY_P("--total-iterations-limit")))
         {
-            if (++arg == argc)
-            {
-                help_err(
-                    "--total-iterations-limit came without an argument!\n");
-            }
             was_total_iterations_limit_per_board_set = TRUE;
-            total_iterations_limit_per_board = atol(argv[arg]);
+            total_iterations_limit_per_board = atol(param);
         }
         else
         {
