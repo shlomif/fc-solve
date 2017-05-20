@@ -21,6 +21,7 @@
 #include "handle_parsing.h"
 #include "trace_mem.h"
 #include "help_err.h"
+#include "try_param.h"
 
 int main(int argc, char *argv[])
 {
@@ -46,33 +47,21 @@ int main(int argc, char *argv[])
 
     for (; arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--binary-output-to"))
+        const char *param;
+        if ((param = TRY_P("--binary-output-to")))
         {
-            if (++arg == argc)
-            {
-                help_err("--binary-output-to came without an argument!\n");
-            }
-            binary_output.filename = argv[arg];
+            binary_output.filename = param;
         }
-        else if (!strcmp(argv[arg], "--total-iterations-limit"))
+        else if ((param = TRY_P("--total-iterations-limit")))
         {
-            if (++arg == argc)
-            {
-                help_err(
-                    "--total-iterations-limit came without an argument!\n");
-            }
             was_total_iterations_limit_per_board_set = TRUE;
-            total_iterations_limit_per_board = (fcs_int_limit_t)atol(argv[arg]);
+            total_iterations_limit_per_board = (fcs_int_limit_t)atol(param);
         }
-        else if (!strcmp(argv[arg], "--solutions-directory"))
+        else if ((param = TRY_P("--solutions-directory")))
         {
-            if (++arg == argc)
-            {
-                help_err("--solutions-directory came without an argument!\n");
-            }
-            solutions_directory = argv[arg];
+            solutions_directory = param;
             solution_fn =
-                SMALLOC(solution_fn, strlen(solutions_directory) + 1024);
+                SREALLOC(solution_fn, strlen(solutions_directory) + 1024);
         }
         else
         {
