@@ -10,6 +10,7 @@
 #include "fc_pro_iface_pos.h"
 #include "move.h"
 
+#ifdef FCS_WITH_MOVES
 void fc_solve_moves_processed_render_move(
     const fcs_extended_move_t move, char *string)
 {
@@ -25,7 +26,6 @@ void fc_solve_moves_processed_render_move(
         }
         break;
 
-#ifdef FCS_WITH_MOVES
     case FCS_MOVE_TYPE_FREECELL_TO_STACK:
     case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
     case FCS_MOVE_TYPE_STACK_TO_FREECELL:
@@ -35,10 +35,10 @@ void fc_solve_moves_processed_render_move(
         fc_solve_move_to_string_w_state(
             string, NULL, move.move, FC_SOLVE__STANDARD_NOTATION_EXTENDED);
         break;
-#endif
 
     default:
         string[0] = '\0';
         break;
     }
 }
+#endif

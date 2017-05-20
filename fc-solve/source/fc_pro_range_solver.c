@@ -179,6 +179,7 @@ int main(int argc, char *argv[])
         printf("%s\n", "[[Start]]");
         if (fc_pro_moves.moves)
         {
+#ifdef FCS_WITH_MOVES
             fcs_extended_move_t move;
             int len = 0;
             while (
@@ -188,6 +189,7 @@ int main(int argc, char *argv[])
                 fc_solve_moves_processed_render_move(move, temp_str);
                 printf("%s%c", temp_str, ((((++len) % 10) == 0) ? '\n' : ' '));
             }
+#endif
             fc_solve_moves_processed_free(&fc_pro_moves);
         }
         printf("\n%s\n", "[[End]]");
