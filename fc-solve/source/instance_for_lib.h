@@ -445,10 +445,8 @@ static inline void fc_solve_start_instance_process_with_board(
     instance->tree = fcs_libavl2_states_tree_create(
         STATE_STORAGE_TREE_COMPARE(), STATE_STORAGE_TREE_CONTEXT(), NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
-
     instance->tree = fc_solve_kaz_tree_create(
         STATE_STORAGE_TREE_COMPARE(), STATE_STORAGE_TREE_CONTEXT());
-
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     instance->tree = g_tree_new(fc_solve_state_compare);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
