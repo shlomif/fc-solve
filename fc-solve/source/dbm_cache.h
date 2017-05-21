@@ -119,9 +119,7 @@ static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
     const fcs_fcc_move_t final_move)
 {
     fcs_cache_key_info_t *cache_key;
-    dict_t *kaz_tree;
-
-    kaz_tree = cache->kaz_tree;
+    var_AUTO(kaz_tree, cache->kaz_tree);
 
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
     {
