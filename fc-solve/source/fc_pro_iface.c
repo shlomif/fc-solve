@@ -70,7 +70,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
 
     for (i = 0; i < 8; i++)
     {
-        virtual_stack_len[i] = fcs_col_len(fcs_state_get_col(pos, i));
+        virtual_stack_len[i] = fcs_state_col_len(pos, i);
     }
 #ifndef NDEBUG
     for (i = 0; i < num_freecells; i++)

@@ -365,7 +365,7 @@ static inline int find_empty_col(
 {
     for (int i = 0; i < STACKS_NUM__VAL; i++)
     {
-        if (!fcs_col_len(fcs_state_get_col(*dynamic_state, i)))
+        if (fcs_state_col_is_empty(*dynamic_state, i))
         {
             return i;
         }

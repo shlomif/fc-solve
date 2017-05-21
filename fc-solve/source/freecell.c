@@ -41,7 +41,7 @@ static inline int find_empty_stack(fcs_kv_state_t *const raw_ptr_state_raw,
 {
     for (int ret = start_from; ret < local_stacks_num; ret++)
     {
-        if (fcs_col_len(fcs_state_get_col(state, ret)) == 0)
+        if (fcs_state_col_is_empty(state, ret))
         {
             return ret;
         }
@@ -875,7 +875,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     int stack_idx;
     for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        if (fcs_col_len(fcs_state_get_col(state, stack_idx)) == 0)
+        if (fcs_state_col_is_empty(state, stack_idx))
         {
             break;
         }
@@ -1118,7 +1118,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
     for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;
          empty_stack_idx++)
     {
-        if (fcs_col_len(fcs_state_get_col(state, empty_stack_idx)) == 0)
+        if (fcs_state_col_is_empty(state, empty_stack_idx))
         {
             break;
         }

@@ -468,8 +468,7 @@ static inline fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
          * junk */
         for (clear_junk_dest_stack = 0;; ++clear_junk_dest_stack)
         {
-            if ((fcs_col_len(fcs_state_get_col(state, clear_junk_dest_stack)) ==
-                    0) &&
+            if (fcs_state_col_is_empty(state, clear_junk_dest_stack) &&
                 (!stacks_map[clear_junk_dest_stack]))
             {
                 break;

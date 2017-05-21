@@ -230,8 +230,7 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
             /* More than one card was moved */
             (fcs_move_get_num_cards_in_seq(move) > 1) &&
             /* It was a move to an empty stack */
-            (fcs_col_len(fcs_state_get_col(
-                 *state_key, fcs_move_get_dest_stack(move))) ==
+            (fcs_state_col_len(*state_key, fcs_move_get_dest_stack(move)) ==
                 fcs_move_get_num_cards_in_seq(move)))
         {
             sprintf(string, "%d%dv%x", 1 + fcs_move_get_src_stack(move),

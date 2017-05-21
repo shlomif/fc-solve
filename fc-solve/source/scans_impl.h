@@ -439,7 +439,7 @@ static void verify_state_sanity(const fcs_state_t *const ptr_state)
 #ifndef NDEBUG
     for (int i = 0; i < 8; i++)
     {
-        const int l = fcs_col_len(fcs_state_get_col(*(ptr_state), i));
+        const int l = fcs_state_col_len(*(ptr_state), i);
         assert((l >= 0) && (l <= 7 + 12));
     }
 #endif
@@ -537,9 +537,9 @@ static inline fcs_game_limit_t count_num_vacant_stacks(
 
     for (int i = 0; i < stacks_num; i++)
     {
-        if (fcs_col_len(fcs_state_get_col(*state_ptr, i)) == 0)
+        if (fcs_state_col_is_empty(*state_ptr, i))
         {
-            num_vacant_stacks++;
+            ++num_vacant_stacks;
         }
     }
 
