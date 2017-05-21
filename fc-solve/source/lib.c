@@ -252,7 +252,13 @@ static inline void clear_error(fcs_user_t *const user)
 #define clear_error(user)
 #endif
 
-static void user_initialize(fcs_user_t *const user)
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define MYINLINE inline
+#else
+#define MYINLINE
+#endif
+
+static MYINLINE void user_initialize(fcs_user_t *const user)
 {
 #ifndef FCS_FREECELL_ONLY
     const fcs_preset_t *freecell_preset;
@@ -1345,12 +1351,6 @@ DLLEXPORT char *freecell_solver_user_current_state_as_string(
     return state_as_string;
 }
 #endif
-#endif
-
-#ifdef FCS_BREAK_BACKWARD_COMPAT_1
-#define MYINLINE inline
-#else
-#define MYINLINE
 #endif
 
 static MYINLINE void user_free_resources(fcs_user_t *const user)
