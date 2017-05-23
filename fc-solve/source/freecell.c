@@ -322,7 +322,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
 #ifdef FCS_FREECELL_ONLY
 #include "pos_by_rank__freecell.h"
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
-    const_AUTO(pos_pos, pos_by_rank__freecell[src_card]);                      \
+    const_AUTO(pos_pos, pos_by_rank__freecell[(int)src_card]);                 \
     const int8_t *pos_idx_to_check = &positions_by_rank[pos_pos.start];        \
     const int8_t *const last_pos_idx = &positions_by_rank[pos_pos.end];        \
                                                                                \
