@@ -1116,7 +1116,7 @@ it is so fast.
 Signal Combinations
 -------------------
 
-If you are working on a UNIX or a similar system then you can set some
+If you are working on a UNIX or a similar system, then you can set some
 run-time options in "fc-solve" by sending it some signal
 combinations.
 
