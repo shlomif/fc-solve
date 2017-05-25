@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use Path::Tiny qw/ path /;
 use FC_Solve::CmdLine::Expand ();
 use Socket qw(:crlf);
 
@@ -18,7 +19,7 @@ sub _normalize_lf_list
     return [ map { _normalize_lf($_) } @{ shift @_ } ];
 }
 
-sub check
+sub compile_cmd_line
 {
     my $args       = shift;
     my $input_argv = $args->{argv};
@@ -30,7 +31,7 @@ sub check
     );
 
     my $expanded = _normalize_lf_list( $obj->argv() );
-    my $out      = "void my_init_instance(void *const instance)\n{\n";
+    my $out = "static inline void my_init_instance(void *const instance)\n{\n";
 
     my %one_param = (
         '-dto' => {
@@ -102,20 +103,36 @@ sub check
         {
             $out .= qq#freecell_solver_user_next_soft_thread(instance);\n#;
         }
+        elsif ( $s eq '-asw' )
+        {
+            my $param = $expanded->[ ++$i ];
+            my @vals = split /,/, $param;
+            while ( my ( $pos, $v ) = each @vals )
+            {
+                $out .=
+qq#freecell_solver_user_set_a_star_weight(instance, $pos, $v);\n#;
+            }
+        }
         else
         {
-            print "$s\n";
+            die "Unrecognised command line argument <$s>!";
         }
     }
 
     $out .= "}\n";
-    print $out;
+    path( $args->{out_fn} )->spew_utf8($out);
 
     return;
 }
 
 # TEST
-check( { argv => [ '-l', 'obf', ], name => 'obf', }, );
+compile_cmd_line(
+    {
+        argv   => [ '-l', 'obf', ],
+        name   => 'obf',
+        out_fn => 'fc_solve__theme__obf.c',
+    },
+);
 
 __END__
 
