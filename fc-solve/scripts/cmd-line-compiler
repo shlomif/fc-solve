@@ -1,0 +1,133 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use FC_Solve::CmdLine::Expand ();
+use Socket qw(:crlf);
+
+sub _normalize_lf
+{
+    my ($s) = @_;
+    $s =~ s#$CRLF#$LF#g;
+    return $s;
+}
+
+sub _normalize_lf_list
+{
+    return [ map { _normalize_lf($_) } @{ shift @_ } ];
+}
+
+sub check
+{
+    my $args       = shift;
+    my $input_argv = $args->{argv};
+
+    my $obj = FC_Solve::CmdLine::Expand->new(
+        {
+            input_argv => $input_argv,
+        }
+    );
+
+    my $expanded = _normalize_lf_list( $obj->argv() );
+    my $out      = "void my_init_instance(void *const instance)\n{\n";
+
+    my %one_param = (
+        '-dto' => {
+            f => 'freecell_solver_user_set_depth_tests_order',
+            p => sub {
+                my $p = shift;
+                my ( $complete, $d, $to ) = $p =~ /\A(([0-9]+),(.*))\z/ms;
+                return qq#$d, "$complete" FCS__PASS_ERR_STR(&fcs_user_errstr)#;
+            },
+        },
+        '-dto2' => {
+            f => 'freecell_solver_user_set_depth_tests_order',
+            p => sub {
+                my $p = shift;
+                my ( $complete, $d, $to ) = $p =~ /\A(([0-9]+),(.*))\z/ms;
+                return qq#$d, "$to" FCS__PASS_ERR_STR(&fcs_user_errstr)#;
+            },
+        },
+        '--method' => {
+            f => 'freecell_solver_user_set_solving_method',
+            p => sub {
+                return {
+                    'random-dfs' => 'FCS_METHOD_RANDOM_DFS',
+                    'a-star'     => 'FCS_METHOD_A_STAR',
+                }->{ shift(@_) };
+            },
+        },
+        '--prelude' => {
+            f => 'freecell_solver_user_set_hard_thread_prelude',
+            p => sub { return qq#"# . shift . qq#"#; },
+        },
+        '-seed' => {
+            f => 'freecell_solver_user_set_random_seed',
+            p => sub { return shift; },
+        },
+        '-sp' => {
+            f => 'freecell_solver_user_set_pruning',
+            p => sub {
+                return qq#"# . shift
+                    . qq#" FCS__PASS_ERR_STR(&fcs_user_errstr)#;
+            },
+        },
+        '-step' => {
+            f => 'freecell_solver_user_set_soft_thread_step',
+            p => sub { return shift; },
+        },
+        '--st-name' => {
+            f => 'freecell_solver_user_set_soft_thread_name',
+            p => sub { return qq#"# . shift . qq#"#; },
+        },
+        '-to' => {
+            f => 'freecell_solver_user_set_depth_tests_order',
+            p => sub {
+                return qq#0, "# . shift
+                    . qq#" FCS__PASS_ERR_STR(&fcs_user_errstr)#;
+            },
+        },
+    );
+
+    for ( my $i = 0 ; $i < @$expanded ; ++$i )
+    {
+        my $s = $expanded->[$i];
+        if ( my $rec = $one_param{$s} )
+        {
+            my $param = $expanded->[ ++$i ];
+            $out .= "$rec->{f}(instance," . $rec->{p}->($param) . ");\n";
+        }
+        elsif ( $s eq '-nst' )
+        {
+            $out .= qq#freecell_solver_user_next_soft_thread(instance);\n#;
+        }
+        else
+        {
+            print "$s\n";
+        }
+    }
+
+    $out .= "}\n";
+    print $out;
+
+    return;
+}
+
+# TEST
+check( { argv => [ '-l', 'obf', ], name => 'obf', }, );
+
+__END__
+
+=head1 COPYRIGHT AND LICENSE
+
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
+
+Copyright (c) 2009 Shlomi Fish
+
+=cut
+
