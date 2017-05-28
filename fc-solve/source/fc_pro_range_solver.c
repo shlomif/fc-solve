@@ -91,11 +91,13 @@ int main(int argc, char *argv[])
     freecell_solver_user_apply_preset(instance, variant);
 #endif
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     if (was_total_iterations_limit_per_board_set)
     {
         freecell_solver_user_limit_iterations_long(
             instance, total_iterations_limit_per_board);
     }
+#endif
 
     char buffer[2000];
     for (long long board_num = start_board; board_num <= end_board; board_num++)

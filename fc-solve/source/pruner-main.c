@@ -43,7 +43,9 @@ static void my_iter_handler(void *const user_instance,
 #ifdef FCS_WITH_ERROR_STRS
             free(error_string);
 #endif
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             freecell_solver_user_limit_iterations_long(pruner, 128 * 1024);
+#endif
 
             const int ret =
                 freecell_solver_user_solve_board(pruner, state_string);

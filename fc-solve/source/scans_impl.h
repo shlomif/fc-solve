@@ -703,8 +703,12 @@ static inline fcs_int_limit_t calc_ht_max_num_states(
     const fc_solve_hard_thread_t *const hard_thread)
 {
     const_AUTO(a, HT_FIELD(hard_thread, ht__max_num_checked_states));
+#ifdef FCS_WITHOUT_MAX_NUM_STATES
+    return a;
+#else
     const_AUTO(b, CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER());
     return min(a, b);
+#endif
 }
 /*
  * fc_solve_soft_dfs_do_solve() is the event loop of the

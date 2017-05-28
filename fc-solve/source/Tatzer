@@ -38,6 +38,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'with-compact-moves' => 'FCS_USE_COMPACT_MOVE_TOKENS',
     'without-depth-field' => 'FCS_WITHOUT_DEPTH_FIELD',
     'without-fc-pro' => 'FCS_WITHOUT_FC_PRO_MOVES_COUNT',
+    'without-max-num-states' => 'FCS_WITHOUT_MAX_NUM_STATES',
     'without-iter-handler' => 'FCS_WITHOUT_ITER_HANDLER',
     'without-trim' => 'FCS_WITHOUT_TRIM_MAX_STORED_STATES',
     'without-visited-iter' => 'FCS_WITHOUT_VISITED_ITER',
@@ -156,7 +157,7 @@ my %themes =
     reduce_mem => [ qw(-l bench -l mem_reduction_settings) ],
     fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=1) ],
     testing => [qw(--rwd --dbm=kaztree --test-suite --num-stacks=13),],
-    extra_speed => [qw(--break-back-compat-1 --without-fc-pro --without-trim --disable-flares --disable-moves-track --disable-check-valid --disable-patsolve --disable-resume --hard-code-reparent-states  --hard-code-calc-real-depth --disable-err-strs --disable-num-stored-states),],
+    extra_speed => [qw(--break-back-compat-1 --without-fc-pro --without-max-num-states --without-trim --disable-flares --disable-moves-track --disable-check-valid --disable-patsolve --disable-resume --hard-code-reparent-states  --hard-code-calc-real-depth --disable-err-strs --disable-num-stored-states),],
 );
 
 foreach my $rec (

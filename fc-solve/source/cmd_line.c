@@ -303,8 +303,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_MAX_ITERS: /* STRINGS=-mi|--max-iters; */
             PROCESS_OPT_ARG();
-
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             freecell_solver_user_limit_iterations_long(instance, atol((*arg)));
+#endif
             break;
 
         case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */

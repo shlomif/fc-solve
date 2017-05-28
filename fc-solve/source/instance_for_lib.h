@@ -70,7 +70,9 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
     *(instance) = (fc_solve_instance_t){
         .meta_alloc = meta_alloc,
         .i__num_checked_states = 0,
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
         .effective_max_num_checked_states = FCS_INT_LIMIT_MAX,
+#endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES
         .num_states_in_collection = 0,
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
@@ -1013,10 +1015,15 @@ static inline void switch_to_next_soft_thread(
     || (instance->num_states_in_collection >=                                  \
            instance->effective_max_num_states_in_collection)
 #endif
+#ifdef FCS_WITHOUT_MAX_NUM_STATES
+#define instance__check_exceeded_stats(instance) FALSE
+#else
 #define instance__check_exceeded_stats(instance)                               \
-    ((instance->i__num_checked_states >=                                       \
-        instance->effective_max_num_checked_states)                            \
-            instance_check_exceeded__num_states(instance))
+    ((ret == FCS_STATE_SUSPEND_PROCESS) &&                                     \
+        ((instance->i__num_checked_states >=                                   \
+            instance->effective_max_num_checked_states)                        \
+                instance_check_exceeded__num_states(instance)))
+#endif
 
 static inline fc_solve_solve_process_ret_t run_hard_thread(
     fc_solve_hard_thread_t *const hard_thread)
@@ -1160,8 +1167,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
             instance->solving_soft_thread = soft_thread;
         }
 #endif
-        if (was_solved || ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-                              instance__check_exceeded_stats(instance)))
+        if (was_solved || instance__check_exceeded_stats(instance))
         {
             return ret;
         }
@@ -1232,8 +1238,7 @@ static inline fc_solve_solve_process_ret_t fc_solve_resume_instance(
                 ret = run_hard_thread(hard_thread);
                 if ((ret == FCS_STATE_IS_NOT_SOLVEABLE) ||
                     (ret == FCS_STATE_WAS_SOLVED) ||
-                    ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-                        instance__check_exceeded_stats(instance)))
+                    instance__check_exceeded_stats(instance))
                 {
                     goto end_of_hard_threads_loop;
                 }

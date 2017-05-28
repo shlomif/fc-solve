@@ -582,6 +582,7 @@ struct fc_solve_instance_struct
     /* The number of states that were checked by the solving algorithm. */
     fcs_int_limit_t i__num_checked_states;
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     /*
      * Limit for the maximal number of checked states. max_num_checked_states
      * is useful because it can limit the amount of consumed memory (and time).
@@ -592,6 +593,7 @@ struct fc_solve_instance_struct
      * Normally should be used instead.
      * */
     fcs_int_limit_t effective_max_num_checked_states;
+#endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     fcs_int_limit_t effective_max_num_states_in_collection;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES

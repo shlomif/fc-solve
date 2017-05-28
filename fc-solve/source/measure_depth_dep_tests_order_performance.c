@@ -195,7 +195,9 @@ int main(int argc, char *argv[])
             fcs_state_string_t state_string;
             get_board(board_num, state_string);
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             freecell_solver_user_limit_iterations_long(instance, iters_limit);
+#endif
             curr_result->start_time = fcs_get_time();
 
             curr_result->verdict =

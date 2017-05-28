@@ -456,7 +456,9 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
 
 static void abort_signal_handler(int signal_num GCC_UNUSED)
 {
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     freecell_solver_user_limit_iterations_long(instance, 0);
+#endif
 }
 #endif
 

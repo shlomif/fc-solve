@@ -130,11 +130,13 @@ typedef struct
      * the board
      * */
     instance_item_t *current_instance, *instances_list, *end_of_instances_list;
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     /*
      * The global (sequence-wide) limit of the iterations. Used
      * by limit_iterations() and friends
      * */
     fcs_int_limit_t current_iterations_limit;
+#endif
     /*
      * The number of iterations this board started at.
      * */
@@ -278,7 +280,9 @@ static MYINLINE void user_initialize(fcs_user_t *const user)
     user->iter_handler = NULL;
 #endif
 #endif
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     user->current_iterations_limit = -1;
+#endif
 
     user->iterations_board_started_at = initial_stats;
     user->all_instances_were_suspended = TRUE;
@@ -333,6 +337,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 }
 #endif
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
 void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void *const api_instance, const fcs_int_limit_t max_iters)
 {
@@ -352,6 +357,7 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
 {
     ((fcs_user_t *)api_instance)->current_instance->limit = max_iters;
 }
+#endif
 #endif
 
 static inline fc_solve_soft_thread_t *api_soft_thread(void *const api_instance)
@@ -1059,6 +1065,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #endif
 #define NUM_ITERS_LIMITS_MINUS_1 (NUM_ITERS_LIMITS - 1)
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
         {
             const fcs_int_limit_t limits[NUM_ITERS_LIMITS_MINUS_1] = {
                 user->current_iterations_limit
@@ -1085,6 +1092,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                                    user->iterations_board_started_at
                                        .num_checked_states));
         }
+#endif
 
         user->init_num_checked_states.num_checked_states =
             instance->i__num_checked_states;
@@ -1169,6 +1177,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             instance_item->was_flare_finished = TRUE;
 #endif
         }
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
         else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
         {
             /*
@@ -1224,6 +1233,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             instance_item->was_flare_finished = TRUE;
 #endif
         }
+#endif
 
     } while ((user->current_instance < end_of_instances_list) &&
              (ret == FCS_STATE_IS_NOT_SOLVEABLE));
