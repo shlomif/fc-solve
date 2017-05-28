@@ -1,18 +1,61 @@
+diff --git a/fc-solve/scripts/cmd-line-compiler--apply-changes-to-range-solvers.patch b/fc-solve/scripts/cmd-line-compiler--apply-changes-to-range-solvers.patch
+index 913c52dd..e69de29b 100644
+--- a/fc-solve/scripts/cmd-line-compiler--apply-changes-to-range-solvers.patch
++++ b/fc-solve/scripts/cmd-line-compiler--apply-changes-to-range-solvers.patch
+@@ -1,37 +0,0 @@
+-diff --git a/fc-solve/source/handle_parsing.h b/fc-solve/source/handle_parsing.h
+-index 1c86538d..fac53d89 100644
+---- a/fc-solve/source/handle_parsing.h
+-+++ b/fc-solve/source/handle_parsing.h
+-@@ -19,8 +19,8 @@ extern "C" {
+- #endif
+- 
+- #include "rinutils.h"
+-+#if 0
+- #include "fcs_cl.h"
+--
+- enum
+- {
+-     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
+-@@ -73,12 +73,22 @@ static inline void *alloc_instance_and_parse(const int argc, char **const argv,
+- 
+-     return instance;
+- }
+-+#else
+-+#include "fcs_user.h"
+-+#include "fc_solve__theme__obf.c"
+-+#endif
+- 
+- static inline void *simple_alloc_and_parse(
+-     const int argc, char **const argv, int *const arg_ptr)
+- {
+-+#if 0
+-     return alloc_instance_and_parse(
+-         argc, argv, arg_ptr, NULL, NULL, NULL, TRUE);
+-+#else
+-+    void *const instance = freecell_solver_user_alloc();
+-+    my_init_instance(instance);
+-+    return instance;
+-+#endif
+- }
+- 
+- static inline void print_flares_plan_error(void *const instance)
 diff --git a/fc-solve/source/handle_parsing.h b/fc-solve/source/handle_parsing.h
-index 1c86538d..fac53d89 100644
+index 1c86538d..034870fc 100644
 --- a/fc-solve/source/handle_parsing.h
 +++ b/fc-solve/source/handle_parsing.h
-@@ -19,8 +19,8 @@ extern "C" {
+@@ -19,8 +19,9 @@ extern "C" {
  #endif
  
  #include "rinutils.h"
-+#if 0
++#define FCS_USE_COMPILED_PRESET
++#ifndef FCS_USE_COMPILED_PRESET
  #include "fcs_cl.h"
 -
  enum
  {
      EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
-@@ -73,12 +73,22 @@ static inline void *alloc_instance_and_parse(const int argc, char **const argv,
+@@ -73,12 +74,22 @@ static inline void *alloc_instance_and_parse(const int argc, char **const argv,
  
      return instance;
  }
@@ -24,7 +67,7 @@ index 1c86538d..fac53d89 100644
  static inline void *simple_alloc_and_parse(
      const int argc, char **const argv, int *const arg_ptr)
  {
-+#if 0
++#ifndef FCS_USE_COMPILED_PRESET
      return alloc_instance_and_parse(
          argc, argv, arg_ptr, NULL, NULL, NULL, TRUE);
 +#else
@@ -35,3 +78,21 @@ index 1c86538d..fac53d89 100644
  }
  
  static inline void print_flares_plan_error(void *const instance)
+diff --git a/fc-solve/source/serial_range_solver.c b/fc-solve/source/serial_range_solver.c
+index a20ae265..45952300 100644
+--- a/fc-solve/source/serial_range_solver.c
++++ b/fc-solve/source/serial_range_solver.c
+@@ -74,8 +74,13 @@ int main(int argc, char *argv[])
+ 
+     fc_solve_display_information_context_t display_context =
+         INITIAL_DISPLAY_CONTEXT;
++#ifndef FCS_USE_COMPILED_PRESET
+     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
+         known_parameters, cmd_line_callback, &display_context, TRUE);
++#else
++    void *const instance =
++        simple_alloc_and_parse(argc, argv, &arg);
++#endif
+ 
+     bin_init(&binary_output, &start_board, &end_board,
+         &total_iterations_limit_per_board);
