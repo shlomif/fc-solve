@@ -237,7 +237,7 @@ static inline fc_solve_instance_t *active_obj(void *const api_instance)
     INSTANCE_ITEM_FLARES_LOOP_END()                                            \
     INSTANCES_LOOP_END()
 
-static int user_next_instance(fcs_user_t *user);
+static void user_next_instance(fcs_user_t *user);
 
 #ifdef FCS_WITH_ERROR_STRS
 #define ALLOC_ERROR_STRING(var, s) *(var) = strdup(s)
@@ -2328,10 +2328,18 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 
 int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)
 {
-    return user_next_instance((fcs_user_t *)api_instance);
+    user_next_instance((fcs_user_t *)api_instance);
+
+    return 0;
 }
 
-static int user_next_flare(fcs_user_t *const user)
+#ifdef FCS_WITH_FLARES
+#define FLARE_INLINE
+#else
+#define FLARE_INLINE inline
+#endif
+
+static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
 {
     instance_item_t *const instance_item = CURR_INST(user);
 #ifdef FCS_WITH_FLARES
@@ -2386,11 +2394,9 @@ static int user_next_flare(fcs_user_t *const user)
 #endif
     flare->instance_is_ready = TRUE;
     flare->obj_stats = initial_stats;
-
-    return 0;
 }
 
-static int user_next_instance(fcs_user_t *const user)
+static void user_next_instance(fcs_user_t *const user)
 {
     const_AUTO(
         num_instances, user->end_of_instances_list - user->instances_list);
@@ -2417,14 +2423,15 @@ static int user_next_instance(fcs_user_t *const user)
 
     /* ret_code and limit are set at user_next_flare(). */
 
-    return user_next_flare(user);
+    user_next_flare(user);
 }
 
 #ifdef FCS_WITH_FLARES
-int DLLEXPORT freecell_solver_user_next_flare(
-    void *const api_instance GCC_UNUSED)
+int DLLEXPORT freecell_solver_user_next_flare(void *const api_instance)
 {
-    return user_next_flare((fcs_user_t *)api_instance);
+    user_next_flare((fcs_user_t *)api_instance);
+
+    return 0;
 }
 #endif
 
