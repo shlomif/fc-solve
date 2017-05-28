@@ -19,8 +19,9 @@ extern "C" {
 #endif
 
 #include "rinutils.h"
+#define FCS_USE_COMPILED_PRESET
+#ifndef FCS_USE_COMPILED_PRESET
 #include "fcs_cl.h"
-
 enum
 {
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
@@ -73,12 +74,22 @@ static inline void *alloc_instance_and_parse(const int argc, char **const argv,
 
     return instance;
 }
+#else
+#include "fcs_user.h"
+#include "fc_solve__theme__obf.c"
+#endif
 
 static inline void *simple_alloc_and_parse(
     const int argc, char **const argv, int *const arg_ptr)
 {
+#ifndef FCS_USE_COMPILED_PRESET
     return alloc_instance_and_parse(
         argc, argv, arg_ptr, NULL, NULL, NULL, TRUE);
+#else
+    void *const instance = freecell_solver_user_alloc();
+    my_init_instance(instance);
+    return instance;
+#endif
 }
 
 static inline void print_flares_plan_error(void *const instance)

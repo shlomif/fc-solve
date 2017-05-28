@@ -74,8 +74,13 @@ int main(int argc, char *argv[])
 
     fc_solve_display_information_context_t display_context =
         INITIAL_DISPLAY_CONTEXT;
+#ifndef FCS_USE_COMPILED_PRESET
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
         known_parameters, cmd_line_callback, &display_context, TRUE);
+#else
+    void *const instance =
+        simple_alloc_and_parse(argc, argv, &arg);
+#endif
 
     bin_init(&binary_output, &start_board, &end_board,
         &total_iterations_limit_per_board);
