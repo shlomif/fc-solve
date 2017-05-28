@@ -31,11 +31,10 @@ static inline fcs_bool_t check_num_states_in_collection(
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define check_if_limits_exceeded__num()                                        \
-    ((*instance_num_checked_states_ptr) == hard_thread_max_num_checked_states)
+    ((*instance_num_checked_states_ptr) == max_num_states)
 #else
 #define check_if_limits_exceeded__num()                                        \
-    ((*hard_thread_num_checked_states_ptr) ==                                  \
-        hard_thread_max_num_checked_states)
+    ((*hard_thread_num_checked_states_ptr) == max_num_states)
 #endif
 
 #ifdef FCS_DISABLE_NUM_STORED_STATES
@@ -784,8 +783,7 @@ static inline int fc_solve_soft_dfs_do_solve(
         &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES()                              \
-    const_AUTO(hard_thread_max_num_checked_states,                             \
-        calc_ht_max_num_states(instance, hard_thread))
+    const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread))
 
     CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
 
