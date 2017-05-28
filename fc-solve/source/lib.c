@@ -237,7 +237,205 @@ static inline fc_solve_instance_t *active_obj(void *const api_instance)
     INSTANCE_ITEM_FLARES_LOOP_END()                                            \
     INSTANCES_LOOP_END()
 
-static void user_next_instance(fcs_user_t *user);
+#ifdef FCS_WITH_FLARES
+#define FLARE_INLINE
+#else
+#define FLARE_INLINE inline
+#endif
+
+static inline instance_item_t *CURR_INST(fcs_user_t *const user)
+{
+    return user->current_instance;
+}
+
+#ifndef FCS_FREECELL_ONLY
+static inline void calc_variant_suit_mask_and_desired_suit_value(
+    fc_solve_instance_t *const instance)
+{
+#ifndef FCS_DISABLE_PATSOLVE
+    instance->game_variant_suit_mask = FCS_PATS__COLOR;
+    instance->game_variant_desired_suit_value = FCS_PATS__COLOR;
+    if ((GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) ==
+            FCS_SEQ_BUILT_BY_SUIT))
+    {
+        instance->game_variant_suit_mask = FCS_PATS__SUIT;
+        instance->game_variant_desired_suit_value = 0;
+    }
+#endif
+}
+
+static void apply_game_params_for_all_instances(fcs_user_t *const user)
+{
+    FLARES_LOOP_START()
+    {
+        fc_solve_instance_t *const instance = &(flare->obj);
+        instance->game_params = user->common_preset.game_params;
+        calc_variant_suit_mask_and_desired_suit_value(instance);
+    }
+    FLARES_LOOP_END()
+}
+#endif
+
+typedef struct
+{
+    fcs_state_t *key;
+    fcs_state_locs_struct_t locs;
+} fcs_standalone_state_ptrs_t;
+
+#ifndef FCS_WITHOUT_ITER_HANDLER
+static void iter_handler_wrapper(void *const api_instance,
+    const fcs_int_limit_t iter_num, const int depth,
+    void *lp_instance GCC_UNUSED, fcs_kv_state_t *const ptr_state,
+    const fcs_int_limit_t parent_iter_num)
+{
+    fcs_user_t *const user = (fcs_user_t *)api_instance;
+
+    fcs_standalone_state_ptrs_t state_raw = {
+        .key = ptr_state->key,
+    };
+    fc_solve_init_locs(&(state_raw.locs));
+
+#define CALL(func_ptr)                                                         \
+    (func_ptr)(api_instance, iter_num, depth, (void *)&state_raw,              \
+        parent_iter_num, user->iter_handler_context)
+
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+    CALL(user->long_iter_handler);
+#else
+    if (user->long_iter_handler)
+    {
+        CALL(user->long_iter_handler);
+    }
+    else
+    {
+        CALL(user->iter_handler);
+    }
+#endif
+#undef CALL
+}
+
+static inline void set_debug_iter_output_func_to_val(
+    fcs_user_t *const user, const fcs_instance_debug_iter_output_func_t value)
+{
+    FLARES_LOOP_START()
+    flare->obj.debug_iter_output_func = value;
+    FLARES_LOOP_END()
+}
+
+static inline void set_any_iter_handler(void *const api_instance,
+    const freecell_solver_user_long_iter_handler_t long_iter_handler,
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+    const freecell_solver_user_iter_handler_t iter_handler,
+#endif
+    void *const iter_handler_context)
+{
+    fcs_user_t *const user = (fcs_user_t *)api_instance;
+
+    user->long_iter_handler = long_iter_handler;
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+    user->iter_handler = iter_handler;
+#endif
+
+    fcs_instance_debug_iter_output_func_t cb = NULL;
+    if (
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+        iter_handler ||
+#endif
+        long_iter_handler)
+    {
+        user->iter_handler_context = iter_handler_context;
+        cb = iter_handler_wrapper;
+    }
+    set_debug_iter_output_func_to_val(user, cb);
+}
+#endif
+
+static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
+{
+    instance_item_t *const instance_item = CURR_INST(user);
+#ifdef FCS_WITH_FLARES
+    const_AUTO(
+        num_flares, instance_item->end_of_flares - instance_item->flares);
+    instance_item->flares = SREALLOC(instance_item->flares, num_flares + 1);
+    fcs_flare_item_t *const flare = instance_item->flares + num_flares;
+    instance_item->end_of_flares = flare + 1;
+#else
+    fcs_flare_item_t *const flare = &(instance_item->single_flare);
+#endif
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+    instance_item->limit = -1;
+#endif
+    fc_solve_instance_t *const instance = &(flare->obj);
+
+    user->active_flare = flare;
+    fc_solve_alloc_instance(instance, &(user->meta_alloc));
+
+    /*
+     * Switch the soft_thread variable so it won't refer to the old
+     * instance
+     * */
+    user->soft_thread = fc_solve_instance_get_first_soft_thread(instance);
+
+#ifndef FCS_FREECELL_ONLY
+    fc_solve_apply_preset_by_ptr(instance, &(user->common_preset));
+    calc_variant_suit_mask_and_desired_suit_value(instance);
+#endif
+
+    user->ret_code = flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
+
+#ifndef FCS_WITHOUT_ITER_HANDLER
+    instance->debug_iter_output_func = ((
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+                                            user->iter_handler ||
+#endif
+                                            user->long_iter_handler)
+                                            ? iter_handler_wrapper
+                                            : NULL);
+    instance->debug_iter_output_context = user;
+#endif
+
+#ifdef FCS_WITH_MOVES
+    flare->moves_seq.num_moves = 0;
+    flare->moves_seq.moves = NULL;
+#endif
+
+    flare->name[0] = '\0';
+#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
+    flare->fc_pro_moves.moves = NULL;
+#endif
+    flare->instance_is_ready = TRUE;
+    flare->obj_stats = initial_stats;
+}
+
+static void user_next_instance(fcs_user_t *const user)
+{
+    const_AUTO(
+        num_instances, user->end_of_instances_list - user->instances_list);
+    user->instances_list = SREALLOC(user->instances_list, num_instances + 1);
+
+    user->end_of_instances_list =
+        (user->current_instance = user->instances_list + num_instances) + 1;
+
+    *(CURR_INST(user)) = (instance_item_t){
+#ifdef FCS_WITH_FLARES
+        .flares = NULL,
+        .end_of_flares = NULL,
+        .plan = NULL,
+        .num_plan_items = 0,
+        .flares_plan_string = NULL,
+        .flares_plan_compiled = FALSE,
+        .current_plan_item_idx = 0,
+        .minimal_flare = NULL,
+        .all_plan_items_finished_so_far = TRUE,
+#else
+        .was_flare_finished = FALSE,
+#endif
+    };
+
+    /* ret_code and limit are set at user_next_flare(). */
+
+    user_next_flare(user);
+}
 
 #ifdef FCS_WITH_ERROR_STRS
 #define ALLOC_ERROR_STRING(var, s) *(var) = strdup(s)
@@ -914,11 +1112,6 @@ static int get_flare_move_count(
 }
 #endif
 
-static inline instance_item_t *CURR_INST(fcs_user_t *const user)
-{
-    return user->current_instance;
-}
-
 static inline fc_solve_solve_process_ret_t resume_solution(
     fcs_user_t *const user)
 {
@@ -1529,35 +1722,6 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     soft_thread->super_method_type = super_method_type;
 }
 
-#ifndef FCS_FREECELL_ONLY
-static inline void calc_variant_suit_mask_and_desired_suit_value(
-    fc_solve_instance_t *const instance)
-{
-#ifndef FCS_DISABLE_PATSOLVE
-    instance->game_variant_suit_mask = FCS_PATS__COLOR;
-    instance->game_variant_desired_suit_value = FCS_PATS__COLOR;
-    if ((GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance) ==
-            FCS_SEQ_BUILT_BY_SUIT))
-    {
-        instance->game_variant_suit_mask = FCS_PATS__SUIT;
-        instance->game_variant_desired_suit_value = 0;
-    }
-#endif
-}
-
-static void apply_game_params_for_all_instances(fcs_user_t *const user)
-{
-    FLARES_LOOP_START()
-    {
-        fc_solve_instance_t *const instance = &(flare->obj);
-        instance->game_params = user->common_preset.game_params;
-        calc_variant_suit_mask_and_desired_suit_value(instance);
-    }
-    FLARES_LOOP_END()
-}
-
-#endif
-
 #if !(defined(FCS_BREAK_BACKWARD_COMPAT_1) && defined(FCS_FREECELL_ONLY))
 #ifndef HARD_CODED_NUM_FREECELLS
 
@@ -1945,80 +2109,6 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
 
 #endif
 
-typedef struct
-{
-    fcs_state_t *key;
-    fcs_state_locs_struct_t locs;
-} fcs_standalone_state_ptrs_t;
-
-#ifndef FCS_WITHOUT_ITER_HANDLER
-static void iter_handler_wrapper(void *const api_instance,
-    const fcs_int_limit_t iter_num, const int depth,
-    void *lp_instance GCC_UNUSED, fcs_kv_state_t *const ptr_state,
-    const fcs_int_limit_t parent_iter_num)
-{
-    fcs_user_t *const user = (fcs_user_t *)api_instance;
-
-    fcs_standalone_state_ptrs_t state_raw = {
-        .key = ptr_state->key,
-    };
-    fc_solve_init_locs(&(state_raw.locs));
-
-#define CALL(func_ptr)                                                         \
-    (func_ptr)(api_instance, iter_num, depth, (void *)&state_raw,              \
-        parent_iter_num, user->iter_handler_context)
-
-#ifdef FCS_BREAK_BACKWARD_COMPAT_1
-    CALL(user->long_iter_handler);
-#else
-    if (user->long_iter_handler)
-    {
-        CALL(user->long_iter_handler);
-    }
-    else
-    {
-        CALL(user->iter_handler);
-    }
-#endif
-#undef CALL
-}
-
-static inline void set_debug_iter_output_func_to_val(
-    fcs_user_t *const user, const fcs_instance_debug_iter_output_func_t value)
-{
-    FLARES_LOOP_START()
-    flare->obj.debug_iter_output_func = value;
-    FLARES_LOOP_END()
-}
-
-static inline void set_any_iter_handler(void *const api_instance,
-    const freecell_solver_user_long_iter_handler_t long_iter_handler,
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-    const freecell_solver_user_iter_handler_t iter_handler,
-#endif
-    void *const iter_handler_context)
-{
-    fcs_user_t *const user = (fcs_user_t *)api_instance;
-
-    user->long_iter_handler = long_iter_handler;
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-    user->iter_handler = iter_handler;
-#endif
-
-    fcs_instance_debug_iter_output_func_t cb = NULL;
-    if (
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-        iter_handler ||
-#endif
-        long_iter_handler)
-    {
-        user->iter_handler_context = iter_handler_context;
-        cb = iter_handler_wrapper;
-    }
-    set_debug_iter_output_func_to_val(user, cb);
-}
-#endif
-
 /* TODO : Add an compile-time option to remove the iteration handler and all
  * related code. */
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -2331,99 +2421,6 @@ int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)
     user_next_instance((fcs_user_t *)api_instance);
 
     return 0;
-}
-
-#ifdef FCS_WITH_FLARES
-#define FLARE_INLINE
-#else
-#define FLARE_INLINE inline
-#endif
-
-static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
-{
-    instance_item_t *const instance_item = CURR_INST(user);
-#ifdef FCS_WITH_FLARES
-    const_AUTO(
-        num_flares, instance_item->end_of_flares - instance_item->flares);
-    instance_item->flares = SREALLOC(instance_item->flares, num_flares + 1);
-    fcs_flare_item_t *const flare = instance_item->flares + num_flares;
-    instance_item->end_of_flares = flare + 1;
-#else
-    fcs_flare_item_t *const flare = &(instance_item->single_flare);
-#endif
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-    instance_item->limit = -1;
-#endif
-    fc_solve_instance_t *const instance = &(flare->obj);
-
-    user->active_flare = flare;
-    fc_solve_alloc_instance(instance, &(user->meta_alloc));
-
-    /*
-     * Switch the soft_thread variable so it won't refer to the old
-     * instance
-     * */
-    user->soft_thread = fc_solve_instance_get_first_soft_thread(instance);
-
-#ifndef FCS_FREECELL_ONLY
-    fc_solve_apply_preset_by_ptr(instance, &(user->common_preset));
-    calc_variant_suit_mask_and_desired_suit_value(instance);
-#endif
-
-    user->ret_code = flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
-
-#ifndef FCS_WITHOUT_ITER_HANDLER
-    instance->debug_iter_output_func = ((
-#ifndef FCS_BREAK_BACKWARD_COMPAT_1
-                                            user->iter_handler ||
-#endif
-                                            user->long_iter_handler)
-                                            ? iter_handler_wrapper
-                                            : NULL);
-    instance->debug_iter_output_context = user;
-#endif
-
-#ifdef FCS_WITH_MOVES
-    flare->moves_seq.num_moves = 0;
-    flare->moves_seq.moves = NULL;
-#endif
-
-    flare->name[0] = '\0';
-#ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
-    flare->fc_pro_moves.moves = NULL;
-#endif
-    flare->instance_is_ready = TRUE;
-    flare->obj_stats = initial_stats;
-}
-
-static void user_next_instance(fcs_user_t *const user)
-{
-    const_AUTO(
-        num_instances, user->end_of_instances_list - user->instances_list);
-    user->instances_list = SREALLOC(user->instances_list, num_instances + 1);
-
-    user->end_of_instances_list =
-        (user->current_instance = user->instances_list + num_instances) + 1;
-
-    *(CURR_INST(user)) = (instance_item_t){
-#ifdef FCS_WITH_FLARES
-        .flares = NULL,
-        .end_of_flares = NULL,
-        .plan = NULL,
-        .num_plan_items = 0,
-        .flares_plan_string = NULL,
-        .flares_plan_compiled = FALSE,
-        .current_plan_item_idx = 0,
-        .minimal_flare = NULL,
-        .all_plan_items_finished_so_far = TRUE,
-#else
-        .was_flare_finished = FALSE,
-#endif
-    };
-
-    /* ret_code and limit are set at user_next_flare(). */
-
-    user_next_flare(user);
 }
 
 #ifdef FCS_WITH_FLARES
