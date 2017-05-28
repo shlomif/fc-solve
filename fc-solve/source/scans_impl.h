@@ -696,7 +696,7 @@ static inline void free_states(fc_solve_instance_t *const instance)
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
     (HT_FIELD(hard_thread, ht__num_checked_states) +                           \
         (instance->effective_max_num_checked_states -                          \
-            *(instance_num_checked_states_ptr)))
+            (instance->i__num_checked_states)))
 #endif
 static inline fcs_int_limit_t calc_ht_max_num_states(
     const fc_solve_instance_t *const instance,
