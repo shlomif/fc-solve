@@ -352,7 +352,7 @@ static inline void set_any_iter_handler(void *const api_instance,
 
 static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
 {
-    instance_item_t *const instance_item = CURR_INST(user);
+    const_AUTO(instance_item, CURR_INST(user));
 #ifdef FCS_WITH_FLARES
     const_AUTO(
         num_flares, instance_item->end_of_flares - instance_item->flares);
@@ -1123,7 +1123,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
      * */
     do
     {
-        instance_item_t *const instance_item = CURR_INST(user);
+        const_AUTO(instance_item, CURR_INST(user));
 
 #ifdef FCS_WITH_FLARES
         if (instance_item->current_plan_item_idx ==
@@ -2330,9 +2330,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
     const char *const flares_plan_string GCC_UNUSED)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
-
-    instance_item_t *const instance_item = CURR_INST(user);
-
+    const_AUTO(instance_item, CURR_INST(user));
     free(instance_item->flares_plan_string);
     instance_item->flares_plan_string =
         (flares_plan_string ? strdup(flares_plan_string) : NULL);
@@ -2601,8 +2599,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    instance_item_t *const instance_item =
-        CURR_INST((fcs_user_t * const)api_instance);
+    const_AUTO(instance_item, CURR_INST((fcs_user_t * const)api_instance));
     return instance_item->plan[item_idx].flare - instance_item->flares;
 #else
     return 0;
