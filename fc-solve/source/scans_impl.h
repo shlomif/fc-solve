@@ -690,6 +690,23 @@ static inline void free_states(fc_solve_instance_t *const instance)
 }
 #endif
 
+#ifdef FCS_SINGLE_HARD_THREAD
+#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
+    (instance->effective_max_num_checked_states)
+#else
+#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
+    (HT_FIELD(hard_thread, ht__num_checked_states) +                           \
+        (instance->effective_max_num_checked_states -                          \
+            *(instance_num_checked_states_ptr)))
+#endif
+static inline fcs_int_limit_t calc_ht_max_num_states(
+    const fc_solve_instance_t *const instance,
+    const fc_solve_hard_thread_t *const hard_thread)
+{
+    const_AUTO(a, HT_FIELD(hard_thread, ht__max_num_checked_states));
+    const_AUTO(b, CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER());
+    return min(a, b);
+}
 /*
  * fc_solve_soft_dfs_do_solve() is the event loop of the
  * Random-DFS scan. DFS which is recursive in nature is handled here
@@ -766,27 +783,9 @@ static inline int fc_solve_soft_dfs_do_solve(
     fcs_int_limit_t *const hard_thread_num_checked_states_ptr =
         &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
-
-#ifdef FCS_SINGLE_HARD_THREAD
-#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
-    (instance->effective_max_num_checked_states)
-#else
-#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
-    (HT_FIELD(hard_thread, ht__num_checked_states) +                           \
-        (instance->effective_max_num_checked_states -                          \
-            *(instance_num_checked_states_ptr)))
-#endif
-
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES()                              \
-    var_AUTO(hard_thread_max_num_checked_states,                               \
-        HT_FIELD(hard_thread, ht__max_num_checked_states));                    \
-    {                                                                          \
-        const fcs_int_limit_t lim =                                            \
-            CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER();                 \
-                                                                               \
-        hard_thread_max_num_checked_states =                                   \
-            min(hard_thread_max_num_checked_states, lim);                      \
-    }
+    const_AUTO(hard_thread_max_num_checked_states,                             \
+        calc_ht_max_num_states(instance, hard_thread))
 
     CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
 
