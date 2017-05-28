@@ -390,14 +390,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fcs_states_linked_list_item_t *queue = NULL;
     fcs_states_linked_list_item_t *queue_last_item = NULL;
     pri_queue_t *pqueue = NULL;
-
     fc_solve_solve_process_ret_t error_code;
-
-    fcs_int_limit_t hard_thread_max_num_checked_states;
-
-    fcs_derived_states_list_t derived;
-    derived.num_states = 0;
-    derived.states = NULL;
+    fcs_derived_states_list_t derived = {.num_states = 0, .states = NULL};
 
     const fc_solve_solve_for_state_move_func_t *const tests_list =
         BEFS_M_VAR(soft_thread, tests_list);

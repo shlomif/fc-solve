@@ -722,7 +722,6 @@ static inline int fc_solve_soft_dfs_do_solve(
     const_AUTO(soft_thread_id, soft_thread->id);
     const fcs_tests_list_of_lists *the_tests_list_ptr;
     fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
-    fcs_int_limit_t hard_thread_max_num_checked_states;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
 #endif
@@ -779,9 +778,8 @@ static inline int fc_solve_soft_dfs_do_solve(
 #endif
 
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES()                              \
-    hard_thread_max_num_checked_states =                                       \
-        HT_FIELD(hard_thread, ht__max_num_checked_states);                     \
-                                                                               \
+    var_AUTO(hard_thread_max_num_checked_states,                               \
+        HT_FIELD(hard_thread, ht__max_num_checked_states));                    \
     {                                                                          \
         const fcs_int_limit_t lim =                                            \
             CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER();                 \
