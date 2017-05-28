@@ -3,9 +3,22 @@
 use strict;
 use warnings;
 
-use Path::Tiny qw/ path /;
-use FC_Solve::CmdLine::Expand ();
+BEGIN
+{
+if (!@ARGV or $ARGV[0] ne 'compile')
+{
+    print <<'EOF'
+To run do:
+export FCS_PATH="`pwd`" FCS_SRC_PATH="`pwd`/../source"
+perl ../scripts/cmd-line-compiler compile
+EOF
+}
+};
+
 use Socket qw(:crlf);
+use Path::Tiny qw/ path /;
+use lib "$ENV{FCS_SRC_PATH}/t/lib";
+use FC_Solve::CmdLine::Expand ();
 
 sub _normalize_lf
 {
@@ -31,7 +44,12 @@ sub compile_cmd_line
     );
 
     my $expanded = _normalize_lf_list( $obj->argv() );
-    my $out = "static inline void my_init_instance(void *const instance)\n{\n";
+    my $out = <<'EOF';
+#pragma once
+
+static inline void my_init_instance(void *const instance)
+{
+EOF
 
     my %one_param = (
         '-dto' => {
@@ -125,12 +143,13 @@ qq#freecell_solver_user_set_a_star_weight(instance, $pos, $v);\n#;
     return;
 }
 
+
 # TEST
 compile_cmd_line(
     {
         argv   => [ '-l', 'obf', ],
         name   => 'obf',
-        out_fn => 'fc_solve__theme__obf.c',
+        out_fn => 'fc_solve__precompiled__theme.h',
     },
 );
 

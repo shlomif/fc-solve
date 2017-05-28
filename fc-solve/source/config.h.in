@@ -63,6 +63,7 @@ extern "C" {
 #cmakedefine FCS_DISABLE_NUM_STORED_STATES
 #cmakedefine FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
 #cmakedefine FCS_DISABLE_STATE_VALIDITY_CHECK
+#cmakedefine FCS_USE_PRECOMPILED_CMD_LINE_THEME
 /*
  * This flag controls a hash behaviour. It seems to improve things somewhat.
  * */

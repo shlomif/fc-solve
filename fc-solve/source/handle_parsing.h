@@ -19,8 +19,12 @@ extern "C" {
 #endif
 
 #include "rinutils.h"
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 #include "fcs_cl.h"
-
+#else
+#include "fcs_user.h"
+#include "fc_solve__precompiled__theme.h"
+#endif
 enum
 {
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
@@ -32,7 +36,9 @@ static inline void *alloc_instance_and_parse(const int argc, char **const argv,
     void *const callback_context, const fcs_bool_t only_recognized)
 {
     void *const instance = freecell_solver_user_alloc();
-
+#ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    my_init_instance(instance);
+#else
 #ifdef FCS_WITH_ERROR_STRS
     char *error_string;
 #endif
@@ -70,7 +76,7 @@ static inline void *alloc_instance_and_parse(const int argc, char **const argv,
         freecell_solver_user_free(instance);
         exit(-1);
     }
-
+#endif
     return instance;
 }
 
