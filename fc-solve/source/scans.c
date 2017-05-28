@@ -423,8 +423,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         queue_last_item = my_brfs_queue_last_item;
     }
     FC__STACKS__SET_PARAMS();
-    CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
-
+    const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread));
 #ifndef FCS_WITHOUT_ITER_HANDLER
     const fcs_instance_debug_iter_output_func_t debug_iter_output_func =
         instance->debug_iter_output_func;

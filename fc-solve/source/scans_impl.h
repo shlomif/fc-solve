@@ -782,11 +782,7 @@ static inline int fc_solve_soft_dfs_do_solve(
     fcs_int_limit_t *const hard_thread_num_checked_states_ptr =
         &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
-#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES()                              \
-    const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread))
-
-    CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES();
-
+    const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread));
 #ifndef FCS_WITHOUT_ITER_HANDLER
     const fcs_instance_debug_iter_output_func_t debug_iter_output_func =
         instance->debug_iter_output_func;
