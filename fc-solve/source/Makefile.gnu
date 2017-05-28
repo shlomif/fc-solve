@@ -41,7 +41,7 @@ STD_FLAG := -std=gnu11
 ifeq ($(COMPILER),gcc)
 	CC = gcc
 	GCC_COMPAT := 1
-	CFLAGS += $(STD_FLAG)
+	CFLAGS += $(STD_FLAG) -Werror=implicit-function-declaration
 else ifeq ($(COMPILER),clang)
 	CC = clang
 	GCC_COMPAT := 1
@@ -158,6 +158,11 @@ TARGETS = fc-solve $(FCS_SHARED_LIB) \
           freecell-solver-fork-solve \
           freecell-solver-fc-pro-range-solve
 
+TARGETS = \
+          freecell-solver-fork-solve \
+          freecell-solver-multi-thread-solve \
+          freecell-solver-range-parallel-solve \
+
 all: $(TARGETS)
 
 board_gen: dummy
@@ -171,7 +176,9 @@ dummy:
 GEN_C_OBJECTS := \
 	is_parent.o         \
 	move_funcs_maps.o   \
+	pos_by_rank__freecell.o \
 	rate_state.o        \
+
 
 SOURCE_OBJECTS :=             \
           card.o              \
