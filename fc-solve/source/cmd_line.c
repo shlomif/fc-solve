@@ -523,7 +523,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             break;
 
         case FCS_OPT_NEXT_INSTANCE: /* STRINGS=-ni|--next-instance; */
+#ifdef FCS_WITH_NI
             freecell_solver_user_next_instance(instance);
+#endif
             break;
 
         case FCS_OPT_NEXT_FLARE: /* STRINGS=-nf|--next-flare; */

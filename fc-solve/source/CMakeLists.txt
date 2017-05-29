@@ -141,6 +141,7 @@ option (FCS_WITHOUT_TRIM_MAX_STORED_STATES "Don't include the trim-max-stored-st
 option (FCS_WITHOUT_ITER_HANDLER "Don't include the iteration handler functionality (should make things faster).")
 option (FCS_WITHOUT_MAX_NUM_STATES "Don't include the iterations limit functionality (should make things faster).")
 option (FCS_DISABLE_MULTI_FLARES "Disable the multi-flaring functionality. May make things faster but break compatibilty. Enable at your own risk.")
+option (FCS_DISABLE_MULTI_NEXT_INSTS "Disable the --next-instance/-ni functionality. May make things faster but break compatibilty. Enable at your own risk.")
 option (FCS_DISABLE_MOVES_TRACKING "Disable the moves-tracking functionality. May make things faster but break a lot of compatibilty. Enable at your own risk.")
 option (FCS_DISABLE_NUM_STORED_STATES "Disable the num-stored-states functionality. May make things faster but breaks compatibilty. Enable at your own risk.")
 option (FCS_DISABLE_ERROR_STRINGS "Disables passing/setting the error strings - breaks a lot of compatibility - enable at your own risk.")

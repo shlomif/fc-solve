@@ -124,12 +124,16 @@ typedef struct
 
 typedef struct
 {
+#ifdef FCS_WITH_NI
     /*
      * This is a list of several consecutive instances that are run
      * one after the other in case the previous ones could not solve
      * the board
      * */
     instance_item_t *current_instance, *instances_list, *end_of_instances_list;
+#else
+    instance_item_t single_inst;
+#endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     /*
      * The global (sequence-wide) limit of the iterations. Used
@@ -203,11 +207,28 @@ static inline fc_solve_instance_t *active_obj(void *const api_instance)
     return user_obj((fcs_user_t *)api_instance);
 }
 
+static inline instance_item_t *CURR_INST(fcs_user_t *const user)
+{
+#ifdef FCS_WITH_NI
+    return user->current_instance;
+#else
+    return &user->single_inst;
+#endif
+}
+
+#ifdef FCS_WITH_NI
 #define INSTANCES_LOOP_START()                                                 \
-    const_SLOT(end_of_instances_list, user);                                   \
-    for (instance_item_t *instance_item = user->instances_list;                \
-         instance_item < end_of_instances_list; instance_item++)               \
-    {
+    {                                                                          \
+        const_SLOT(end_of_instances_list, user);                               \
+        for (instance_item_t *instance_item = user->instances_list;            \
+             instance_item < end_of_instances_list; instance_item++)           \
+        {
+#else
+#define INSTANCES_LOOP_START()                                                 \
+    do                                                                         \
+    {                                                                          \
+        const_AUTO(instance_item, CURR_INST(user));
+#endif
 
 #ifdef FCS_WITH_FLARES
 
@@ -228,7 +249,16 @@ static inline fc_solve_instance_t *active_obj(void *const api_instance)
 
 #define INSTANCE_ITEM_FLARES_LOOP_END() }
 
-#define INSTANCES_LOOP_END() }
+#ifdef FCS_WITH_NI
+#define INSTANCES_LOOP_END()                                                   \
+    }                                                                          \
+    }
+#else
+#define INSTANCES_LOOP_END()                                                   \
+    }                                                                          \
+    while (0)                                                                  \
+        ;
+#endif
 
 #define FLARES_LOOP_START()                                                    \
     INSTANCES_LOOP_START()                                                     \
@@ -242,11 +272,6 @@ static inline fc_solve_instance_t *active_obj(void *const api_instance)
 #else
 #define FLARE_INLINE inline
 #endif
-
-static inline instance_item_t *CURR_INST(fcs_user_t *const user)
-{
-    return user->current_instance;
-}
 
 #ifndef FCS_FREECELL_ONLY
 static inline void calc_variant_suit_mask_and_desired_suit_value(
@@ -407,14 +432,22 @@ static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
     flare->obj_stats = initial_stats;
 }
 
-static void user_next_instance(fcs_user_t *const user)
+#ifdef FCS_WITH_NI
+#define NI_INLINE
+#else
+#define NI_INLINE inline
+#endif
+
+static NI_INLINE void user_next_instance(fcs_user_t *const user)
 {
+#ifdef FCS_WITH_NI
     const_AUTO(
         num_instances, user->end_of_instances_list - user->instances_list);
     user->instances_list = SREALLOC(user->instances_list, num_instances + 1);
 
     user->end_of_instances_list =
         (user->current_instance = user->instances_list + num_instances) + 1;
+#endif
 
     *(CURR_INST(user)) = (instance_item_t){
 #ifdef FCS_WITH_FLARES
@@ -433,7 +466,6 @@ static void user_next_instance(fcs_user_t *const user)
     };
 
     /* ret_code and limit are set at user_next_flare(). */
-
     user_next_flare(user);
 }
 
@@ -470,8 +502,10 @@ static MYINLINE void user_initialize(fcs_user_t *const user)
 
     fc_solve_meta_compact_allocator_init(&(user->meta_alloc));
 
+#ifdef FCS_WITH_NI
     user->instances_list = NULL;
     user->end_of_instances_list = NULL;
+#endif
 #ifndef FCS_WITHOUT_ITER_HANDLER
     user->long_iter_handler = NULL;
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -720,148 +754,143 @@ static inline fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
 static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t *const user)
 {
+    INSTANCES_LOOP_START()
+    if (instance_item->flares_plan_compiled)
     {
-        const_SLOT(end_of_instances_list, user);
-        for (instance_item_t *instance_item = user->instances_list;
-             instance_item < end_of_instances_list; instance_item++)
-        {
-            if (instance_item->flares_plan_compiled)
-            {
-                continue;
-            }
-            fcs_flare_item_t *const flares = instance_item->flares;
-            const_SLOT(end_of_flares, instance_item);
-
-            /* If the plan string is NULL or empty, then set the plan
-             * to run only the first flare indefinitely. (And then have
-             * an implicit checkpoint for good measure.) */
-            if ((!instance_item->flares_plan_string) ||
-                (!instance_item->flares_plan_string[0]))
-            {
-                if (instance_item->plan)
-                {
-                    free(instance_item->plan);
-                }
-                instance_item->num_plan_items = 2;
-                instance_item->plan =
-                    SMALLOC(instance_item->plan, instance_item->num_plan_items);
-                /* Set to the first flare. */
-                instance_item->plan[0] = create_plan_item(
-                    FLARES_PLAN_RUN_INDEFINITELY, instance_item->flares, -1);
-                instance_item->plan[1] =
-                    create_plan_item(FLARES_PLAN_CHECKPOINT, NULL, -1);
-
-                instance_item->flares_plan_compiled = TRUE;
-                continue;
-            }
-
-            /* Tough luck - gotta parse the string. ;-) */
-            const char *item_end;
-            const char *item_start = instance_item->flares_plan_string;
-            if (instance_item->plan)
-            {
-                free(instance_item->plan);
-                instance_item->plan = NULL;
-                instance_item->num_plan_items = 0;
-            }
-            do
-            {
-                const char *cmd_end = strchr(item_start, ':');
-                if (!cmd_end)
-                {
-                    SET_ERROR("Could not find a \":\" for a command.");
-                    return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
-                }
-
-                if (string_starts_with(item_start, "Run", cmd_end))
-                {
-                    /* It's a Run item - handle it. */
-                    const int_fast32_t count_iters = atoi(++cmd_end);
-                    const char *at_sign = cmd_end;
-                    while ((*at_sign) && isdigit(*at_sign))
-                    {
-                        at_sign++;
-                    }
-
-                    if (*at_sign != '@')
-                    {
-                        SET_ERROR("Could not find a \"@\" directly after "
-                                  "the digits after the 'Run:' command.");
-                        return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
-                    }
-                    const char *const after_at_sign = at_sign + 1;
-
-                    /*
-                     * Position item_end at the end of item (designated by
-                     * ",")
-                     * or alternatively the end of the string.
-                     * */
-                    if (!((item_end = strchr(after_at_sign, ','))))
-                    {
-                        item_end = strchr(after_at_sign, '\0');
-                    }
-
-                    fcs_flare_item_t *const flare = find_flare(flares,
-                        end_of_flares, after_at_sign, item_end - after_at_sign);
-
-                    if (!flare)
-                    {
-                        SET_ERROR("Unknown flare name.");
-                        return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
-                    }
-
-                    add_count_iters_to_plan(instance_item, flare, count_iters);
-                }
-                else if (string_starts_with(item_start, "CP", cmd_end))
-                {
-                    item_end = cmd_end + 1;
-                    if (!(((*item_end) == ',') || (!(*item_end))))
-                    {
-                        SET_ERROR("Junk after CP (Checkpoint) command.");
-                        return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
-                    }
-
-                    add_checkpoint_to_plan(instance_item);
-                }
-                else if (string_starts_with(item_start, "RunIndef", cmd_end))
-                {
-                    if (strchr(++cmd_end, ','))
-                    {
-                        SET_ERROR("Junk after last RunIndef command. Must "
-                                  "be the final command.");
-                        return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
-                    }
-                    item_end = strchr(cmd_end, '\0');
-
-                    fcs_flare_item_t *const flare = find_flare(
-                        flares, end_of_flares, cmd_end, item_end - cmd_end);
-                    if (!flare)
-                    {
-                        SET_ERROR("Unknown flare name in RunIndef command.");
-                        return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
-                    }
-
-                    add_run_indef_to_plan(instance_item, flare);
-                }
-                else
-                {
-                    SET_ERROR("Unknown command.");
-                    return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
-                }
-                item_start = item_end + 1;
-            } while (*item_end);
-
-            if ((!instance_item->plan) ||
-                instance_item->plan[instance_item->num_plan_items - 1].type !=
-                    FLARES_PLAN_CHECKPOINT)
-            {
-                add_checkpoint_to_plan(instance_item);
-            }
-
-            instance_item->flares_plan_compiled = TRUE;
-            continue;
-        }
+        continue;
     }
+    fcs_flare_item_t *const flares = instance_item->flares;
+    const_SLOT(end_of_flares, instance_item);
+
+    /* If the plan string is NULL or empty, then set the plan
+     * to run only the first flare indefinitely. (And then have
+     * an implicit checkpoint for good measure.) */
+    if ((!instance_item->flares_plan_string) ||
+        (!instance_item->flares_plan_string[0]))
+    {
+        if (instance_item->plan)
+        {
+            free(instance_item->plan);
+        }
+        instance_item->num_plan_items = 2;
+        instance_item->plan =
+            SMALLOC(instance_item->plan, instance_item->num_plan_items);
+        /* Set to the first flare. */
+        instance_item->plan[0] = create_plan_item(
+            FLARES_PLAN_RUN_INDEFINITELY, instance_item->flares, -1);
+        instance_item->plan[1] =
+            create_plan_item(FLARES_PLAN_CHECKPOINT, NULL, -1);
+
+        instance_item->flares_plan_compiled = TRUE;
+        continue;
+    }
+
+    /* Tough luck - gotta parse the string. ;-) */
+    const char *item_end;
+    const char *item_start = instance_item->flares_plan_string;
+    if (instance_item->plan)
+    {
+        free(instance_item->plan);
+        instance_item->plan = NULL;
+        instance_item->num_plan_items = 0;
+    }
+    do
+    {
+        const char *cmd_end = strchr(item_start, ':');
+        if (!cmd_end)
+        {
+            SET_ERROR("Could not find a \":\" for a command.");
+            return FCS_COMPILE_FLARES_RET_COLON_NOT_FOUND;
+        }
+
+        if (string_starts_with(item_start, "Run", cmd_end))
+        {
+            /* It's a Run item - handle it. */
+            const int_fast32_t count_iters = atoi(++cmd_end);
+            const char *at_sign = cmd_end;
+            while ((*at_sign) && isdigit(*at_sign))
+            {
+                at_sign++;
+            }
+
+            if (*at_sign != '@')
+            {
+                SET_ERROR("Could not find a \"@\" directly after "
+                          "the digits after the 'Run:' command.");
+                return FCS_COMPILE_FLARES_RET_RUN_AT_SIGN_NOT_FOUND;
+            }
+            const char *const after_at_sign = at_sign + 1;
+
+            /*
+             * Position item_end at the end of item (designated by
+             * ",")
+             * or alternatively the end of the string.
+             * */
+            if (!((item_end = strchr(after_at_sign, ','))))
+            {
+                item_end = strchr(after_at_sign, '\0');
+            }
+
+            fcs_flare_item_t *const flare = find_flare(
+                flares, end_of_flares, after_at_sign, item_end - after_at_sign);
+
+            if (!flare)
+            {
+                SET_ERROR("Unknown flare name.");
+                return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
+            }
+
+            add_count_iters_to_plan(instance_item, flare, count_iters);
+        }
+        else if (string_starts_with(item_start, "CP", cmd_end))
+        {
+            item_end = cmd_end + 1;
+            if (!(((*item_end) == ',') || (!(*item_end))))
+            {
+                SET_ERROR("Junk after CP (Checkpoint) command.");
+                return FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP;
+            }
+
+            add_checkpoint_to_plan(instance_item);
+        }
+        else if (string_starts_with(item_start, "RunIndef", cmd_end))
+        {
+            if (strchr(++cmd_end, ','))
+            {
+                SET_ERROR("Junk after last RunIndef command. Must "
+                          "be the final command.");
+                return FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF;
+            }
+            item_end = strchr(cmd_end, '\0');
+
+            fcs_flare_item_t *const flare =
+                find_flare(flares, end_of_flares, cmd_end, item_end - cmd_end);
+            if (!flare)
+            {
+                SET_ERROR("Unknown flare name in RunIndef command.");
+                return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
+            }
+
+            add_run_indef_to_plan(instance_item, flare);
+        }
+        else
+        {
+            SET_ERROR("Unknown command.");
+            return FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND;
+        }
+        item_start = item_end + 1;
+    } while (*item_end);
+
+    if ((!instance_item->plan) ||
+        instance_item->plan[instance_item->num_plan_items - 1].type !=
+            FLARES_PLAN_CHECKPOINT)
+    {
+        add_checkpoint_to_plan(instance_item);
+    }
+
+    instance_item->flares_plan_compiled = TRUE;
+    continue;
+    INSTANCES_LOOP_END()
 
     const_SLOT(flares_iters_factor, user);
     INSTANCES_LOOP_START()
@@ -1111,13 +1140,21 @@ static int get_flare_move_count(
 #undef RET
 }
 #endif
-
+#ifdef FCS_WITH_NI
+#define BUMP_CURR_INST() user->current_instance++
+#else
+#define BUMP_CURR_INST() finished = TRUE
+#endif
 static inline fc_solve_solve_process_ret_t resume_solution(
     fcs_user_t *const user)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
+#ifdef FCS_WITH_NI
     const_SLOT(end_of_instances_list, user);
+#else
+    fcs_bool_t finished = FALSE;
+#endif
     /*
      * I expect user->current_instance to be initialized with some value.
      * */
@@ -1137,7 +1174,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             if (instance_item->all_plan_items_finished_so_far)
             {
                 recycle_instance(user, instance_item);
-                user->current_instance++;
+                BUMP_CURR_INST();
                 continue;
             }
             /* Otherwise - restart the plan again. */
@@ -1185,7 +1222,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             else
             {
                 recycle_instance(user, instance_item);
-                user->current_instance++;
+                BUMP_CURR_INST();
                 continue;
             }
         }
@@ -1416,7 +1453,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                     instance->num_states_in_collection;
 #endif
                 recycle_instance(user, instance_item);
-                user->current_instance++;
+                BUMP_CURR_INST();
                 continue;
             }
 #endif
@@ -1428,8 +1465,13 @@ static inline fc_solve_solve_process_ret_t resume_solution(
         }
 #endif
 
-    } while ((user->current_instance < end_of_instances_list) &&
-             (ret == FCS_STATE_IS_NOT_SOLVEABLE));
+    } while (
+#ifdef FCS_WITH_NI
+        (user->current_instance < end_of_instances_list)
+#else
+        (!finished)
+#endif
+        && (ret == FCS_STATE_IS_NOT_SOLVEABLE));
 
     return (
         user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret);
@@ -1453,8 +1495,9 @@ int DLLEXPORT freecell_solver_user_solve_board(
         return FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
     }
 
+#ifdef FCS_WITH_NI
     user->current_instance = user->instances_list;
-
+#endif
 #ifndef FCS_FREECELL_ONLY
     {
         FLARES_LOOP_START()
@@ -1601,7 +1644,9 @@ static MYINLINE void user_free_resources(fcs_user_t *const user)
 #endif
     INSTANCES_LOOP_END()
 
+#ifdef FCS_WITH_NI
     free(user->instances_list);
+#endif
     fc_solve_meta_compact_allocator_finish(&(user->meta_alloc));
 }
 
@@ -2344,11 +2389,9 @@ void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-    for (instance_item_t *instance_item = user->instances_list;
-         instance_item < user->end_of_instances_list; instance_item++)
-    {
-        recycle_instance(user, instance_item);
-    }
+    INSTANCES_LOOP_START()
+    recycle_instance(user, instance_item);
+    INSTANCES_LOOP_END()
     user->iterations_board_started_at = initial_stats;
 }
 
@@ -2414,12 +2457,14 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 }
 #endif
 
+#ifdef FCS_WITH_NI
 int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)
 {
     user_next_instance((fcs_user_t *)api_instance);
 
     return 0;
 }
+#endif
 
 #ifdef FCS_WITH_FLARES
 int DLLEXPORT freecell_solver_user_next_flare(void *const api_instance)

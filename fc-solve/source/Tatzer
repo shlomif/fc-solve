@@ -21,6 +21,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'disable-err-strs' => 'FCS_DISABLE_ERROR_STRINGS',
     'disable-flares' => 'FCS_DISABLE_MULTI_FLARES',
     'disable-moves-track' => 'FCS_DISABLE_MOVES_TRACKING',
+    'disable-ni' => 'FCS_DISABLE_MULTI_NEXT_INSTS',
     'disable-num-stored-states' => 'FCS_DISABLE_NUM_STORED_STATES',
     'disable-resume' => 'FCS_WITHOUT_EXPORTED_RESUME_SOLUTION',
     'disable-patsolve' => 'FCS_DISABLE_PATSOLVE',
