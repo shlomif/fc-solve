@@ -2279,17 +2279,14 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
 int DLLEXPORT freecell_solver_user_next_soft_thread(void *const api_instance)
 {
     fcs_user_t *const user = (fcs_user_t * const)api_instance;
-
-    fc_solve_soft_thread_t *const soft_thread =
-        fc_solve_new_soft_thread(user->soft_thread->hard_thread);
-
+    const_AUTO(
+        soft_thread, fc_solve_new_soft_thread(user->soft_thread->hard_thread));
     if (soft_thread == NULL)
     {
         return 1;
     }
 
     user->soft_thread = soft_thread;
-
     return 0;
 }
 
