@@ -536,9 +536,15 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread; */
         case FCS_OPT_NEXT_HARD_THREAD: /* STRINGS=-nht|--next-hard-thread; */
-            if ((opt == FCS_OPT_NEXT_SOFT_THREAD)
+            if (
+#ifdef FCS_SINGLE_HARD_THREAD
+                freecell_solver_user_next_soft_thread(instance)
+#else
+                (opt == FCS_OPT_NEXT_SOFT_THREAD)
                     ? freecell_solver_user_next_soft_thread(instance)
-                    : freecell_solver_user_next_hard_thread(instance))
+                    : freecell_solver_user_next_hard_thread(instance)
+#endif
+                    )
             {
                 RET_ERR_STR(error_string, "%s",
                     "The maximal number of soft threads has been exceeded\n");

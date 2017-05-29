@@ -2299,6 +2299,7 @@ extern void DLLEXPORT freecell_solver_user_set_soft_thread_step(
     api_soft_thread(api_instance)->checked_states_step = checked_states_step;
 }
 
+#if (!(defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_BREAK_BACKWARD_COMPAT_1)))
 int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -2319,6 +2320,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
     return 0;
 #endif
 }
+#endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
