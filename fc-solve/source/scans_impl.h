@@ -794,13 +794,11 @@ static inline int fc_solve_soft_dfs_do_solve(
 #endif
 
     fcs_tests_by_depth_unit_t *curr_by_depth_unit;
+    for (curr_by_depth_unit = by_depth_units;
+         (DEPTH() >= GET_DEPTH(curr_by_depth_unit)); ++curr_by_depth_unit)
     {
-        for (curr_by_depth_unit = by_depth_units;
-             (DEPTH() >= GET_DEPTH(curr_by_depth_unit)); curr_by_depth_unit++)
-        {
-        }
-        RECALC_BY_DEPTH_LIMITS();
     }
+    RECALC_BY_DEPTH_LIMITS();
 
     /*
         The main loop.
