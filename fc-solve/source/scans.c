@@ -425,10 +425,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     FC__STACKS__SET_PARAMS();
     const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread));
 #ifndef FCS_WITHOUT_ITER_HANDLER
-    const fcs_instance_debug_iter_output_func_t debug_iter_output_func =
-        instance->debug_iter_output_func;
-    const fcs_instance_debug_iter_output_context_t debug_iter_output_context =
-        instance->debug_iter_output_context;
+    const_SLOT(debug_iter_output_func, instance);
+    const_SLOT(debug_iter_output_context, instance);
 #endif
 
     /* Continue as long as there are states in the queue or

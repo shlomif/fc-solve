@@ -787,10 +787,8 @@ static inline int fc_solve_soft_dfs_do_solve(
 #endif
     const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread));
 #ifndef FCS_WITHOUT_ITER_HANDLER
-    const fcs_instance_debug_iter_output_func_t debug_iter_output_func =
-        instance->debug_iter_output_func;
-    const fcs_instance_debug_iter_output_context_t debug_iter_output_context =
-        instance->debug_iter_output_context;
+    const_SLOT(debug_iter_output_func, instance);
+    const_SLOT(debug_iter_output_context, instance);
 #endif
 
     fcs_tests_by_depth_unit_t *curr_by_depth_unit;
