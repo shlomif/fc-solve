@@ -762,9 +762,8 @@ static inline int fc_solve_soft_dfs_do_solve(
         &(the_soft_dfs_info->derived_states_list);
     fcs_rand_t *const rand_gen = &(DFS_VAR(soft_thread, rand_gen));
     calculate_real_depth(calc_real_depth, PTR_STATE);
-
-    fcs_tests_by_depth_unit_t *by_depth_units =
-        DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units;
+    const_AUTO(by_depth_units,
+        DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units);
 
 #define THE_MOVE_FUNCS_LIST (*the_tests_list_ptr)
     TRACE0("Before depth loop");
