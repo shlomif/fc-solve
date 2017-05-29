@@ -1141,9 +1141,11 @@ static int get_flare_move_count(
 }
 #endif
 #ifdef FCS_WITH_NI
-#define BUMP_CURR_INST() user->current_instance++
+#define BUMP_CURR_INST()                                                       \
+    user->current_instance++;                                                  \
+    continue
 #else
-#define BUMP_CURR_INST() finished = TRUE
+#define BUMP_CURR_INST() break
 #endif
 static inline fc_solve_solve_process_ret_t resume_solution(
     fcs_user_t *const user)
@@ -1152,8 +1154,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 
 #ifdef FCS_WITH_NI
     const_SLOT(end_of_instances_list, user);
-#else
-    fcs_bool_t finished = FALSE;
 #endif
     /*
      * I expect user->current_instance to be initialized with some value.
@@ -1175,7 +1175,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             {
                 recycle_instance(user, instance_item);
                 BUMP_CURR_INST();
-                continue;
             }
             /* Otherwise - restart the plan again. */
             else
@@ -1223,7 +1222,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             {
                 recycle_instance(user, instance_item);
                 BUMP_CURR_INST();
-                continue;
             }
         }
 #endif
@@ -1454,7 +1452,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #endif
                 recycle_instance(user, instance_item);
                 BUMP_CURR_INST();
-                continue;
             }
 #endif
 #ifdef FCS_WITH_FLARES
@@ -1467,11 +1464,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 
     } while (
 #ifdef FCS_WITH_NI
-        (user->current_instance < end_of_instances_list)
-#else
-        (!finished)
+        (user->current_instance < end_of_instances_list) &&
 #endif
-        && (ret == FCS_STATE_IS_NOT_SOLVEABLE));
+        (ret == FCS_STATE_IS_NOT_SOLVEABLE));
 
     return (
         user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret);
