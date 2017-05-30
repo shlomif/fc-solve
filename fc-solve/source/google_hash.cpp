@@ -7,12 +7,8 @@
  *
  * Copyright (c) 2010 Shlomi Fish
  */
-
-/*
- * google_hash.cpp - module file for Google's dense_hash_map as adapted
- * for Freecell Solver.
- */
-
+// google_hash.cpp - module file for Google's dense_hash_map as adapted
+// for Freecell Solver.
 #include "google_hash.h"
 
 #if ((FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE) ||  \

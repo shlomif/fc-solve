@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2010 Shlomi Fish
  */
-/*
- * google_hash.h - header file for Google's dense_hash_map as adapted
- * for Freecell Solver.
- */
+// google_hash.h - header file for Google's dense_hash_map as adapted
+// for Freecell Solver.
 
 #pragma once
 
