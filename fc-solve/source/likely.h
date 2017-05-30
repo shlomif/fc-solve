@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2010 Shlomi Fish
  */
-/*
- * likely.h - the purpose of this file is to define the likely
- * and unlikely macros. See: https://lwn.net/Articles/255364/ .
- */
+// likely.h - the purpose of this file is to define the likely
+// and unlikely macros. See: https://lwn.net/Articles/255364/ .
 #pragma once
 
 #if defined(__GNUC__)

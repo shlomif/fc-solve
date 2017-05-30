@@ -188,7 +188,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 #define LOOK_FOR_TRUE_PARENT_AT_TOP__START(card)                               \
     LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card) if (dc == dest_cards_num - 1) \
     {
-
 #define LOOK_FOR_TRUE_PARENT_AT_TOP__END()                                     \
     }                                                                          \
     LOOK_FOR_TRUE_PARENT_with_ds_dc__END()

@@ -197,7 +197,6 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
         for (; next_move < moves_end; next_move++)
         {
-
             fc_solve_apply_move(pass_key, NULL,
                 (*next_move)PASS_FREECELLS(LOCAL_FREECELLS_NUM)
                     PASS_STACKS(LOCAL_STACKS_NUM));

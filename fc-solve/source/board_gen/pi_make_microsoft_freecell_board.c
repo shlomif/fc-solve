@@ -74,10 +74,8 @@ static char * card_to_string(char * s, const CARD card, const fcs_bool_t not_app
 
 int main(int argc, char * argv[])
 {
-
-    CARD    card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
-
-    int  num_cards_left = NUM_CARDS;          /*  cards left to be chosen in shuffle */
+    CARD card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
+    int num_cards_left = NUM_CARDS; /*  cards left to be chosen in shuffle */
     CARD deck[NUM_CARDS];            /* deck of 52 unique cards */
     fcs_bool_t print_ts = FALSE;
 

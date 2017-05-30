@@ -43,7 +43,6 @@ static inline int fcs_stack_compare(const void *s1, const void *s2)
 void fc_solve_canonize_state(
     fcs_state_t *const ptr_state_key FREECELLS_AND_STACKS_ARGS())
 {
-
 #define state_key (ptr_state_key)
     /* Insertion-sort the columns */
 

@@ -238,13 +238,11 @@ static inline instance_item_t *CURR_INST(fcs_user_t *const user)
     for (fcs_flare_item_t *flare = instance_item->flares;                      \
          flare < end_of_flares; flare++)                                       \
     {
-
 #else
 
 #define INSTANCE_ITEM_FLARES_LOOP_START()                                      \
     fcs_flare_item_t *const flare = &(instance_item->single_flare);            \
     {
-
 #endif
 
 #define INSTANCE_ITEM_FLARES_LOOP_END() }

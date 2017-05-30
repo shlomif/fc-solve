@@ -167,7 +167,6 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
 
         switch (move_type)
         {
-
         case FCS_MOVE_TYPE_STACK_TO_STACK:
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
             fcs_int_move_set_dest_stack(out_move,

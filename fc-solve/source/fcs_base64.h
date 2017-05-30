@@ -34,7 +34,6 @@ static void base64_encode(const unsigned char *data, const size_t input_length,
    malloc()s to avoid memory fragmentation. */
     size_t *const output_length)
 {
-
     *output_length = 4 * ((input_length + 2) / 3);
 
     for (size_t i = 0, j = 0; i < input_length;)
@@ -60,7 +59,6 @@ static void base64_encode(const unsigned char *data, const size_t input_length,
 static int base64_decode(const char *data, const size_t input_length,
     unsigned char *decoded_data, size_t *const output_length)
 {
-
     if (input_length % 4 != 0)
         return -1;
 
@@ -72,7 +70,6 @@ static int base64_decode(const char *data, const size_t input_length,
 
     for (size_t i = 0, j = 0; i < input_length;)
     {
-
 #define DECODE()                                                               \
     (data[i] == '=' ? 0 & i++                                                  \
                     : decoding_table[(size_t)(unsigned char)(data[i++])])
