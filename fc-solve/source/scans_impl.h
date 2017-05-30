@@ -1076,12 +1076,10 @@ static inline int fc_solve_soft_dfs_do_solve(
                     break;
                 }
             }
-
             VERIFY_PTR_STATE_TRACE0("Verify Rondora");
 
-            /* We just performed a test, so the index of the first state that
-               ought to be checked in this depth is 0.
-               */
+            // We just performed a test, so the index of the first state that
+            // ought to be checked in this depth is 0.
             the_soft_dfs_info->current_state_index = 0;
         }
 
@@ -1104,23 +1102,15 @@ static inline int fc_solve_soft_dfs_do_solve(
                 (!is_scan_visited(single_derived_state, soft_thread_id)))
             {
                 BUMP_NUM_CHECKED_STATES();
-
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [After BUMP]");
-
                 set_scan_visited(single_derived_state, soft_thread_id);
-
 #ifndef FCS_WITHOUT_VISITED_ITER
                 FCS_S_VISITED_ITER(single_derived_state) =
                     instance->i__num_checked_states;
 #endif
-
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [aft set_visit]");
-
-                /*
-                    I'm using current_state_indexes[depth]-1 because we
-                   already
-                    increased it by one, so now it refers to the next state.
-                */
+                // I'm using current_state_indexes[depth]-1 because we already
+                // increased it by one, so now it refers to the next state.
                 if (unlikely(++DEPTH() >= by_depth_max_depth))
                 {
                     curr_by_depth_unit++;
@@ -1144,32 +1134,24 @@ static inline int fc_solve_soft_dfs_do_solve(
                 if (check_num_states_in_collection(instance))
                 {
                     VERIFY_PTR_STATE_TRACE0("Verify Bakers_Game");
-
                     free_states(instance);
-
                     VERIFY_PTR_STATE_TRACE0("Verify Penguin");
                 }
 #endif
-
                 if (check_if_limits_exceeded())
                 {
                     TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside "
                            "current_state_index)");
                     return FCS_STATE_SUSPEND_PROCESS;
                 }
-
                 goto main_loop;
             }
         }
         the_soft_dfs_info->current_state_index = num_states;
     }
-
-    /*
-     * We need to bump the number of iterations so it will be ready with
-     * a fresh iterations number for the next scan that takes place.
-     * */
+    // We need to bump the number of iterations so it will be ready with
+    // a fresh iterations number for the next scan that takes place.
     BUMP_NUM_CHECKED_STATES();
-
     DEPTH() = -1;
 
     return FCS_STATE_IS_NOT_SOLVEABLE;
