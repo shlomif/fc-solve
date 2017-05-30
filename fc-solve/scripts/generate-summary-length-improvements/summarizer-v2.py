@@ -8,7 +8,7 @@ import json
 if sys.version_info > (3,):
     xrange = range
 
-MAX_SEED = 16283
+MAX_SEED = 16688
 
 home = expanduser("~")
 
@@ -27,7 +27,7 @@ NUM_DEALS = 32000
 
 
 def calc_init_state():
-    state = {'start_nums': [], 'reached_seed': 1, 'mysum': 0,
+    state = {'start_nums': [], 'reached_seed': 0, 'mysum': 0,
              'my_num_improved': 0, 'my_max': 0, 'output': '', }
     with open(basedir + "/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt") as fh:
         for l in fh:
@@ -53,7 +53,8 @@ with open(STATE_FN) as fh:
 
 print("Seed\tN\tSum\tMax")
 sys.stdout.write(state['output'])
-for seed in xrange(state['reached_seed'], MAX_SEED + 1):
+added_lines = []
+for seed in xrange(state['reached_seed'] + 1, MAX_SEED + 1):
     with open(basedir +
               "/fcs-summary-len-seed/lens-theme1--seed=%d.txt" % seed) as fh:
         i = 0
@@ -74,8 +75,9 @@ for seed in xrange(state['reached_seed'], MAX_SEED + 1):
     out_line = ("%d\t%d\t%d\t%d" %
                 (seed, state['my_num_improved'],
                  state['mysum'], state['my_max']))
-    state['output'] += out_line + "\n"
+    added_lines.append(out_line + "\n")
     print(out_line)
 
+state['output'] += ''.join(added_lines)
 state['reached_seed'] = MAX_SEED
 write_state(state)
