@@ -35,21 +35,22 @@
 
 typedef int CARD;
 
-const int NUM_CARDS = (4*13);
-#define     CLUB            0               /*  SUIT(card)  */
-#define     DIAMOND         1
-#define     HEART           2
-#define     SPADE           3
+const int NUM_CARDS = (4 * 13);
+#define CLUB 0 /*  SUIT(card)  */
+#define DIAMOND 1
+#define HEART 2
+#define SPADE 3
 
-#define     SUIT(card)      ((card) % 4)
-#define     VALUE(card)     ((card) / 4)
+#define SUIT(card) ((card) % 4)
+#define VALUE(card) ((card) / 4)
 
-#define     MAXPOS         21
-#define     MAXCOL          9    /* includes top row as column 0 */
+#define MAXPOS 21
+#define MAXCOL 9 /* includes top row as column 0 */
 
 static const char *card_to_string_values = "A23456789TJQK";
 static const char *card_to_string_suits = "CDHS";
-static char * card_to_string(char * s, const CARD card, const fcs_bool_t not_append_ws, const fcs_bool_t print_ts)
+static char *card_to_string(char *s, const CARD card,
+    const fcs_bool_t not_append_ws, const fcs_bool_t print_ts)
 {
     const int v = VALUE(card);
 
@@ -72,11 +73,11 @@ static char * card_to_string(char * s, const CARD card, const fcs_bool_t not_app
     return s;
 }
 
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
-    CARD card[MAXCOL][MAXPOS];    /* current layout of cards, CARDs are ints */
+    CARD card[MAXCOL][MAXPOS]; /* current layout of cards, CARDs are ints */
     int num_cards_left = NUM_CARDS; /*  cards left to be chosen in shuffle */
-    CARD deck[NUM_CARDS];            /* deck of 52 unique cards */
+    CARD deck[NUM_CARDS];           /* deck of 52 unique cards */
     fcs_bool_t print_ts = FALSE;
 
     int arg = 1;
@@ -88,36 +89,30 @@ int main(int argc, char * argv[])
             arg++;
         }
     }
-    const long long gamenumber = ((arg < argc) ? atoll(argv[arg++]) : (long long)time(NULL));
+    const long long gamenumber =
+        ((arg < argc) ? atoll(argv[arg++]) : (long long)time(NULL));
 
     /* shuffle cards */
 
-    for (int i = 0; i < NUM_CARDS; i++)      /* put unique card in each deck loc. */
+    for (int i = 0; i < NUM_CARDS; i++) /* put unique card in each deck loc. */
         deck[i] = i;
 
     long long seedx = microsoft_rand__calc_init_seedx(gamenumber);
     for (int i = 0; i < NUM_CARDS; i++)
     {
         const microsoft_rand_uint_t j =
-                microsoft_rand__game_num_rand(&seedx, gamenumber) %
-                num_cards_left;
-        card[(i%8)+1][i/8] = deck[j];
+            microsoft_rand__game_num_rand(&seedx, gamenumber) % num_cards_left;
+        card[(i % 8) + 1][i / 8] = deck[j];
         deck[j] = deck[--num_cards_left];
     }
 
-    for (int stack=1 ; stack<9 ; stack++ )
+    for (int stack = 1; stack < 9; stack++)
     {
-        for (int c=0 ; c < (6+(stack<5)) ; c++)
+        for (int c = 0; c < (6 + (stack < 5)); c++)
         {
             char card_string[5];
-            printf("%s",
-                card_to_string(
-                    card_string,
-                    card[stack][c],
-                    (c == (6+(stack<5))),
-                    print_ts
-                )
-            );
+            printf("%s", card_to_string(card_string, card[stack][c],
+                             (c == (6 + (stack < 5))), print_ts));
         }
         printf("%s", "\n");
     }
