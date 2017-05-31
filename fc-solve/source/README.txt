@@ -7,13 +7,13 @@ Shlomi Fish <shlomif@cpan.org>
 Introduction
 ------------
 
-This is Freecell Solver version 4.8.x, a program that automatically
+This is Freecell Solver version 4.10.x, a program that automatically
 solves most layouts of Freecell, and similar Solitaire variants as
 well as those of Simple Simon.
 
-Freecell Solver is distributed under the MIT/X11 License
+Freecell Solver is distributed under the MIT/Expat License
 ( http://en.wikipedia.org/wiki/MIT_License ), a free, permissive,
-public-domain like, open-source license.
+open-source license.
 
 Note that the Freecell Solver source and Win32 binary distributions *do not*
 provide a graphical user-interface (GUI) and are primarily meant to be used

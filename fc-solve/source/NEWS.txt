@@ -1,8 +1,19 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2017-01-20
+:Date: 2017-05-31
 :Revision: $Id$
+
+Version 4.10.0: (31-May-2017)
+-----------------------------
+
+1. Add some new compile-time options that may make the runtime faster, but
+may remove or break functionality.
+
+2. Convert the python-based automated tests to use cffi, which is more modern
+and recommended, instead of ctypes.
+
+3. Many code cleanups, refactorings, and optimizations.
 
 Version 4.8.0: (20-Jan-2017)
 ----------------------------
