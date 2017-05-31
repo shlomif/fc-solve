@@ -16,6 +16,7 @@
 #include "fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "help_err.h"
+#include "try_param.h"
 
 static void print_help(void)
 {
@@ -75,7 +76,7 @@ int main(int argc, char *argv[])
     char *error_string;
 #endif
     const char *scan1_to = NULL, *scan2_to = NULL;
-    char *output_filename = NULL;
+    const char *output_filename = NULL;
 
     int arg = 1, start_from_arg = -1, end_args = -1;
 
@@ -88,6 +89,7 @@ int main(int argc, char *argv[])
 
     for (; arg < argc; arg++)
     {
+        const char *param;
         if (!strcmp(argv[arg], "--args-start"))
         {
             arg++;
@@ -103,45 +105,25 @@ int main(int argc, char *argv[])
             }
             end_args = arg;
         }
-        else if (!strcmp(argv[arg], "--output-to"))
+        else if ((param = TRY_P("--output-to")))
         {
-            if (++arg == argc)
-            {
-                help_err("--output-to came without an argument!\n");
-            }
-            output_filename = argv[arg];
+            output_filename = param;
         }
-        else if (!strcmp(argv[arg], "--scan1-to"))
+        else if ((param = TRY_P("--scan1-to")))
         {
-            if (++arg == argc)
-            {
-                help_err("--scan1-to came without an argument!\n");
-            }
-            scan1_to = argv[arg];
+            scan1_to = param;
         }
-        else if (!strcmp(argv[arg], "--scan2-to"))
+        else if ((param = TRY_P("--scan2-to")))
         {
-            if (++arg == argc)
-            {
-                help_err("--scan1-to came without an argument!\n");
-            }
-            scan2_to = argv[arg];
+            scan2_to = param;
         }
-        else if (!strcmp(argv[arg], "--iters-limit"))
+        else if ((param = TRY_P("--iters-limit")))
         {
-            if (++arg == argc)
-            {
-                help_err("--iters-limit came without an argument!\n");
-            }
-            iters_limit = (fcs_int_limit_t)atol(argv[arg]);
+            iters_limit = (fcs_int_limit_t)atol(param);
         }
-        else if (!strcmp(argv[arg], "--max-var-depth"))
+        else if ((param = TRY_P("--max-var-depth")))
         {
-            if (++arg == argc)
-            {
-                help_err("--max-var-depth came without an argument!\n");
-            }
-            max_var_depth_to_check = atoi(argv[arg]);
+            max_var_depth_to_check = atoi(param);
         }
         else
         {

@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * fcs_enums.h - header file for various Freecell Solver Enumerations. Common
- * to the main program headers and to the library headers.
- */
+// fcs_enums.h - header file for various Freecell Solver Enumerations. Common
+// to the main program headers and to the library headers.
 #pragma once
 
 #ifdef __cplusplus
