@@ -963,6 +963,7 @@ sublicense
 28-Jul-2000
 DD-MMM-YYYY
 appveyor
+cffi
 ci
 dbm-solver
 depth_dbm_fc_solve
