@@ -993,7 +993,8 @@ static inline int fc_solve_soft_dfs_do_solve(
                         the_soft_dfs_info->move_func_idx = 0;
                         break;
                     }
-                } while (local_shuffling_type != FCS_NO_SHUFFLING);
+                } while ((local_shuffling_type != FCS_NO_SHUFFLING) ||
+                         (derived_states_list->num_states == 0));
             }
 
             const_SLOT(num_states, derived_states_list);
