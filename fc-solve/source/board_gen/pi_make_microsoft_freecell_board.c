@@ -36,20 +36,14 @@
 typedef int CARD;
 
 const int NUM_CARDS = (4 * 13);
-#define CLUB 0 /*  SUIT(card)  */
-#define DIAMOND 1
-#define HEART 2
-#define SPADE 3
-
 #define SUIT(card) ((card) % 4)
 #define VALUE(card) ((card) / 4)
 
-#define MAXPOS 21
 #define MAXCOL 9 /* includes top row as column 0 */
 
 static const char *card_to_string_values = "A23456789TJQK";
 static const char *card_to_string_suits = "CDHS";
-static char *card_to_string(char *s, const CARD card,
+static void card_to_string(char *const s, const CARD card,
     const fcs_bool_t not_append_ws, const fcs_bool_t print_ts)
 {
     const int v = VALUE(card);
@@ -69,13 +63,11 @@ static char *card_to_string(char *s, const CARD card,
     {
         strcat(s, " ");
     }
-
-    return s;
 }
 
 int main(int argc, char *argv[])
 {
-    CARD card[MAXCOL][MAXPOS]; /* current layout of cards, CARDs are ints */
+    CARD card[MAXCOL][7]; /* current layout of cards, CARDs are ints */
     int num_cards_left = NUM_CARDS; /*  cards left to be chosen in shuffle */
     CARD deck[NUM_CARDS];           /* deck of 52 unique cards */
     fcs_bool_t print_ts = FALSE;
@@ -111,10 +103,11 @@ int main(int argc, char *argv[])
         for (int c = 0; c < (6 + (stack < 5)); c++)
         {
             char card_string[5];
-            printf("%s", card_to_string(card_string, card[stack][c],
-                             (c == (6 + (stack < 5))), print_ts));
+            card_to_string(card_string, card[stack][c],
+                (c == (6 + (stack < 5))), print_ts);
+            fputs(card_string, stdout);
         }
-        printf("%s", "\n");
+        putchar('\n');
     }
 
     return 0;
