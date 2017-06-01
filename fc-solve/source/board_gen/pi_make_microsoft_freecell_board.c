@@ -100,11 +100,12 @@ int main(int argc, char *argv[])
 
     for (int stack = 0; stack < 8; stack++)
     {
-        for (int c = 0; c < (6 + (stack < 4)); c++)
+        const int lim = 6 + (stack < 4);
+        for (int c = 0; c < lim; c++)
         {
             char card_string[5];
-            card_to_string(card_string, card[stack][c],
-                (c == (6 + (stack < 5))), print_ts);
+            card_to_string(
+                card_string, card[stack][c], (c == lim - 1), print_ts);
             fputs(card_string, stdout);
         }
         putchar('\n');
