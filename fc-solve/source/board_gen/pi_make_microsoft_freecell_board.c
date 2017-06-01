@@ -39,7 +39,7 @@ const int NUM_CARDS = (4 * 13);
 #define SUIT(card) ((card) % 4)
 #define VALUE(card) ((card) / 4)
 
-#define MAXCOL 9 /* includes top row as column 0 */
+#define MAXCOL 8
 
 static const char *card_to_string_values = "A23456789TJQK";
 static const char *card_to_string_suits = "CDHS";
@@ -94,13 +94,13 @@ int main(int argc, char *argv[])
     {
         const microsoft_rand_uint_t j =
             microsoft_rand__game_num_rand(&seedx, gamenumber) % num_cards_left;
-        card[(i % 8) + 1][i / 8] = deck[j];
+        card[i % 8][i / 8] = deck[j];
         deck[j] = deck[--num_cards_left];
     }
 
-    for (int stack = 1; stack < 9; stack++)
+    for (int stack = 0; stack < 8; stack++)
     {
-        for (int c = 0; c < (6 + (stack < 5)); c++)
+        for (int c = 0; c < (6 + (stack < 4)); c++)
         {
             char card_string[5];
             card_to_string(card_string, card[stack][c],
