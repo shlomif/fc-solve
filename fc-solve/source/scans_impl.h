@@ -841,23 +841,20 @@ static inline int fc_solve_soft_dfs_do_solve(
                 {
                     break;
                 }
-                else
-                {
-                    the_soft_dfs_info->derived_states_list = derived_list;
-                    --the_soft_dfs_info;
-                    derived_list = the_soft_dfs_info->derived_states_list;
-                    ASSIGN_ptr_state(the_soft_dfs_info->state);
-                    VERIFY_PTR_STATE_TRACE0("Verify Foo");
-                    soft_thread->num_vacant_freecells =
-                        the_soft_dfs_info->num_vacant_freecells;
-                    soft_thread->num_vacant_stacks =
-                        the_soft_dfs_info->num_vacant_stacks;
+                the_soft_dfs_info->derived_states_list = derived_list;
+                --the_soft_dfs_info;
+                derived_list = the_soft_dfs_info->derived_states_list;
+                ASSIGN_ptr_state(the_soft_dfs_info->state);
+                VERIFY_PTR_STATE_TRACE0("Verify Foo");
+                soft_thread->num_vacant_freecells =
+                    the_soft_dfs_info->num_vacant_freecells;
+                soft_thread->num_vacant_stacks =
+                    the_soft_dfs_info->num_vacant_stacks;
 
-                    if (unlikely(DEPTH() < by_depth_min_depth))
-                    {
-                        curr_by_depth_unit--;
-                        RECALC_BY_DEPTH_LIMITS();
-                    }
+                if (unlikely(DEPTH() < by_depth_min_depth))
+                {
+                    curr_by_depth_unit--;
+                    RECALC_BY_DEPTH_LIMITS();
                 }
 
                 continue; /* Just to make sure depth is not -1 now */
