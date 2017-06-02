@@ -406,7 +406,7 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
         (long)the_soft_dfs_info->move_func_list_idx,                           \
         the_soft_dfs_info->move_func_idx,                                      \
         the_soft_dfs_info->current_state_index,                                \
-        (long)(derived_states_list ? derived_states_list->num_states : -1))
+        (long)(derived_list.num_states))
 
 #define VERIFY_STATE_SANITY() verify_state_sanity(&FCS_SCANS_the_state)
 
