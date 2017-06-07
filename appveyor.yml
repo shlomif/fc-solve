@@ -61,7 +61,7 @@ test_script:
     - cd pkg-build
     # For generating 32-bit release binaries.
     - SET PATH=C:\MinGW\bin;%PATH%
-    - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite
+    - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
     - gmake package
     - perl -E "use File::Find; find(sub {say $File::Find::name if /\.exe\z/;}, q/./);"
 cache:
