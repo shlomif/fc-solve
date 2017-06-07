@@ -70,5 +70,5 @@ cache:
     - C:\strawberry
 shallow_clone: true
 artifacts:
-    - path: '**\pkg-build\freecell-solver-[1-9]*-win32.exe'
+    - path: '**\pkg-build\freecell-solver-*-win32.exe'
       name: Freecell Solver Win32 Package
