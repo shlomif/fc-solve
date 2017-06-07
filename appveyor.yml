@@ -56,6 +56,12 @@ test_script:
     # Trying this hack to take more precendence for Inline::C / etc.
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
     - perl ../source/run-tests.pl
+    - cd ..
+    - mkdir pkg-build
+    - cd pkg-build
+    - cmake -G "MinGW Makefiles" -DFCS_WITH_TEST_SUITE= -DFCS_ENABLE_DBM_SOLVER= ..\source
+    - gmake package
+    - perl -E "use File::Find; find(sub {print $File::Find::name if /\.exe\z/;}, q/./);"
 cache:
     - C:\libtap
     - C:\_P5
