@@ -202,7 +202,7 @@ foreach my $rec (
     if (defined(my $HOME = $ENV{HOME}))
     {
         # For use by PySolFC
-        $bb_def->(_pysol => ['--num-stacks=14', "--prefix=$HOME/apps/fcs-for-pysol",]);
+        $bb_def->(_pysol => ['--num-stacks=14', '--nobreak-back-compat-1', "--prefix=$HOME/apps/fcs-for-pysol",]);
     }
 }
 
