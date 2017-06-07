@@ -43,6 +43,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(COPYING|Manifest|check_layout|convert_[a-z]+|fc-solve\\\\.ico|dondorf-king\\\\.bmp|threaded_main\\\\.c|patmain\\\\.c|run-tests\\\\.pl|read_layout\\\\.h|print_layout\\\\.h)$"
 )
 
+SET(_win32_static_lib_flags )
 IF(WIN32 AND NOT UNIX)
     # There is a bug in NSI that does not handle full unix paths properly. Make
     # sure there is at least one set of four (4) backlasshes.
@@ -58,11 +59,10 @@ IF(WIN32 AND NOT UNIX)
     SET(CPACK_NSIS_MUI_UNIICON ${CPACK_NSIS_MUI_ICON})
     SET(CPACK_PACKAGE_ICON ${CPACK_NSIS_MUI_ICON})
     SET(CPACK_NSIS_MODIFY_PATH "ON")
-    # See:
-    # https://stackoverflow.com/questions/4702732/the-program-cant-start-because-libgcc-s-dw2-1-dll-is-missing#4703059
     IF (${CMAKE_COMPILER_IS_GNUCC})
         IF (CMAKE_BUILD_TYPE STREQUAL release)
-            ADD_DEFINITIONS("-static-libgcc" "-static-libstdc++")
+            MESSAGE (WARNING "gcc/win32/release diag")
+            SET (_win32_static_lib_flags "-static-libgcc" "-static-libstdc++")
         ENDIF ()
     ENDIF ()
 ELSE()
@@ -70,6 +70,8 @@ ELSE()
   SET(CPACK_SOURCE_STRIP_FILES "")
 ENDIF()
 
+    # See:
+    # https://stackoverflow.com/questions/4702732/the-program-cant-start-because-libgcc-s-dw2-1-dll-is-missing#4703059
 SET(CPACK_PACKAGE_EXECUTABLES
     "fc-solve" "Single-Game Solver"
 )
@@ -716,9 +718,11 @@ IF (FCS_LINK_TO_STATIC)
     LIST (APPEND TARGETS ${FREECELL_SOLVER_EXECUTABLES})
 ENDIF()
 
+ADD_DEFINITIONS(${_win32_static_lib_flags})
 FOREACH (TGT ${TARGETS})
     TARGET_LINK_LIBRARIES (${TGT}
         ${MATH_LIB} ${LIBTCMALLOC_LIB_LIST} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
+        ${_win32_static_lib_flags}
     )
 ENDFOREACH ()
 
