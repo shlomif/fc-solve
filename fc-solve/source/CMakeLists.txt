@@ -58,6 +58,13 @@ IF(WIN32 AND NOT UNIX)
     SET(CPACK_NSIS_MUI_UNIICON ${CPACK_NSIS_MUI_ICON})
     SET(CPACK_PACKAGE_ICON ${CPACK_NSIS_MUI_ICON})
     SET(CPACK_NSIS_MODIFY_PATH "ON")
+    # See:
+    # https://stackoverflow.com/questions/4702732/the-program-cant-start-because-libgcc-s-dw2-1-dll-is-missing#4703059
+    IF (${CMAKE_COMPILER_IS_GNUCC})
+        IF (CMAKE_BUILD_TYPE STREQUAL release)
+            ADD_DEFINITIONS("-static-libgcc" "-static-libstdc++")
+        ENDIF ()
+    ENDIF ()
 ELSE()
   SET(CPACK_STRIP_FILES "fc-solve")
   SET(CPACK_SOURCE_STRIP_FILES "")
