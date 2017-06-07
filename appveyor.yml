@@ -59,9 +59,9 @@ test_script:
     - cd ..
     - mkdir pkg-build
     - cd pkg-build
-    - cmake -G "MinGW Makefiles" -DFCS_WITH_TEST_SUITE= -DFCS_ENABLE_DBM_SOLVER= ..\source
+    - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite
     - gmake package
-    - perl -E "use File::Find; find(sub {print $File::Find::name if /\.exe\z/;}, q/./);"
+    - perl -E "use File::Find; find(sub {say $File::Find::name if /\.exe\z/;}, q/./);"
 cache:
     - C:\libtap
     - C:\_P5
