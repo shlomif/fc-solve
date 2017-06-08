@@ -740,7 +740,7 @@ static inline int fc_solve_soft_dfs_do_solve(
     const fcs_bool_t is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const_AUTO(soft_thread_id, soft_thread->id);
-    const fcs_tests_list_of_lists *the_tests_list_ptr;
+    fcs_tests_list_of_lists the_moves_list;
     fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
@@ -765,7 +765,7 @@ static inline int fc_solve_soft_dfs_do_solve(
     const_AUTO(by_depth_units,
         DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units);
 
-#define THE_MOVE_FUNCS_LIST (*the_tests_list_ptr)
+#define THE_MOVE_FUNCS_LIST the_moves_list
     TRACE0("Before depth loop");
 
 #define GET_DEPTH(ptr) ((ptr)->max_depth)
@@ -776,7 +776,7 @@ static inline int fc_solve_soft_dfs_do_solve(
         by_depth_min_depth = (curr_by_depth_unit == by_depth_units)            \
                                  ? 0                                           \
                                  : GET_DEPTH(curr_by_depth_unit - 1);          \
-        the_tests_list_ptr = &(curr_by_depth_unit->move_funcs);                \
+        the_moves_list = curr_by_depth_unit->move_funcs;                       \
     }
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
