@@ -4,6 +4,12 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2017-05-31
 :Revision: $Id$
 
+Version 4.12.0: (FILL IN)
+-------------------------
+
+1. Fix a problem where the fc-pro-range-solver ignored game parameters such
+as +--freecells-num 0+. (Thanks to Larry).
+
 Version 4.10.0: (31-May-2017)
 -----------------------------
 

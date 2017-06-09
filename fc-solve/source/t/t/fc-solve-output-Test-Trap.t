@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 21;
 use File::Temp qw( tempdir );
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
@@ -268,6 +268,31 @@ SKIP:
         qr/\AThe command line parameter "-l" requires an argument/ms,
         "Command line parameter without argument displays its name",
     );
+}
+
+{
+SKIP:
+    {
+        if ( is_freecell_only() )
+        {
+            Test::More::skip( "without freecell", 1 );
+        }
+
+        trap
+        {
+            system( bin_exe_raw( ['freecell-solver-fc-pro-range-solve'] ),
+                '1', '2', '1', '--freecells-num', 0, );
+        };
+
+        my $out = $trap->stdout();
+
+        # TEST
+        like(
+            $out,
+qr/^Unsolved Board No\. 1 at [0-9]+\.[0-9]+\n\[\[Num Iters\]\]=[^\n]*\n\[\[Num FCS Moves\]\]=-2\n/ms,
+            '--freecells-num is respected without a variant',
+        );
+    }
 }
 __END__
 
