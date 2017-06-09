@@ -953,6 +953,7 @@ sublicense
 01-Jul-2011
 06-Jun-2000
 07-Jun-2009
+09-Jun-2017
 10-Jul-2009
 14-Jul-2010
 22-Sep-2016
@@ -968,6 +969,7 @@ ci
 dbm-solver
 depth_dbm_fc_solve
 depth_dbm_solver
+fc-pro-range-solver
 fc-solve-temp
 int128
 int128-optimisation
