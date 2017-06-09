@@ -75,20 +75,16 @@ static inline void get_board_l(const long long deal_idx, char *const ret)
         deck[i] = i;
     }
 
+    microsoft_rand_uint_t num_cards_left = 52;
+    for (int i = 0; i < 52; i++)
     {
-        microsoft_rand_uint_t num_cards_left =
-            52; /*  cards left to be chosen in shuffle */
-        for (int i = 0; i < 52; i++)
-        {
-            const microsoft_rand_uint_t j =
-                microsoft_rand__game_num_rand(&seedx, deal_idx) %
-                num_cards_left;
-            const int col = (i & (8 - 1));
-            card_to_string(
-                &ret[3 * (col * 7 - ((col > 4) ? (col - 4) : 0) + (i >> 3))],
-                deck[j]);
-            deck[j] = deck[--num_cards_left];
-        }
+        const microsoft_rand_uint_t j =
+            microsoft_rand__game_num_rand(&seedx, deal_idx) % num_cards_left;
+        const int col = (i & (8 - 1));
+        card_to_string(
+            &ret[3 * (col * 7 - ((col > 4) ? (col - 4) : 0) + (i >> 3))],
+            deck[j]);
+        deck[j] = deck[--num_cards_left];
     }
 }
 
