@@ -4,11 +4,16 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2017-05-31
 :Revision: $Id$
 
-Version 4.12.0: (FILL IN)
--------------------------
+Version 4.12.0: (09-Jun-2017)
+-----------------------------
 
 1. Fix a problem where the fc-pro-range-solver ignored game parameters such
 as +--freecells-num 0+. (Thanks to Larry).
+
+2. Enable building an MS Windows 32-bit installer using AppVeyor. This will
+facilitate releasing them along with the source.
+
+3. Some more minor cleanups and optimizations.
 
 Version 4.10.0: (31-May-2017)
 -----------------------------
