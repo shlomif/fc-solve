@@ -5,18 +5,10 @@ use warnings;
 
 use Test::More tests => 21;
 use File::Temp qw( tempdir );
-use Socket qw(:crlf);
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 use FC_Solve::Paths
-    qw( bin_board bin_exe_raw is_freecell_only is_without_dbm samp_board $FC_SOLVE__RAW );
-
-sub _normalize_lf
-{
-    my ($s) = @_;
-    $s =~ s#$CRLF#$LF#g;
-    return $s;
-}
+    qw( bin_board bin_exe_raw is_freecell_only is_without_dbm normalize_lf samp_board $FC_SOLVE__RAW );
 
 my $MID24_BOARD = samp_board('24-mid.board');
 
@@ -292,7 +284,7 @@ SKIP:
                 '1', '2', '1', '--freecells-num', 0, );
         };
 
-        my $out = _normalize_lf( scalar $trap->stdout() );
+        my $out = normalize_lf( scalar $trap->stdout() );
 
         # TEST
         like(

@@ -2,12 +2,13 @@ package FC_Solve::Paths;
 
 use strict;
 use warnings;
+use Socket qw(:crlf);
 use String::ShellQuote qw/shell_quote/;
 
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind samp_board samp_preset samp_sol);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -120,6 +121,13 @@ sub samp_sol
 sub samp_preset
 {
     return File::Spec->catfile( $PRESETS_DIR, shift );
+}
+
+sub normalize_lf
+{
+    my ($s) = @_;
+    $s =~ s#$CRLF#$LF#g;
+    return $s;
 }
 
 1;

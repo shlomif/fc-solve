@@ -8,18 +8,11 @@ use FC_Solve::CmdLine::Simulate ();
 use Test::More tests => 6;
 
 use Test::Differences qw/ eq_or_diff /;
-use Socket qw(:crlf);
-
-sub _normalize_lf
-{
-    my ($s) = @_;
-    $s =~ s#$CRLF#$LF#g;
-    return $s;
-}
+use FC_Solve::Paths qw( normalize_lf );
 
 sub _normalize_lf_list
 {
-    return [ map { _normalize_lf($_) } @{ shift @_ } ];
+    return [ map { normalize_lf($_) } @{ shift @_ } ];
 }
 
 sub check

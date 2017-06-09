@@ -9,20 +9,12 @@ use Carp                ();
 use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
-use Socket qw(:crlf);
 use FC_Solve::Paths
-    qw/ $IS_WIN bin_board bin_exe_raw is_without_dbm samp_board /;
-
-sub _normalize_lf
-{
-    my ($s) = @_;
-    $s =~ s#$CRLF#$LF#g;
-    return $s;
-}
+    qw/ $IS_WIN bin_board bin_exe_raw is_without_dbm normalize_lf samp_board /;
 
 sub _get
 {
-    return _normalize_lf( join( '', @{ shift->{out_lines} } ) );
+    return normalize_lf( join( '', @{ shift->{out_lines} } ) );
 }
 
 sub trap_board

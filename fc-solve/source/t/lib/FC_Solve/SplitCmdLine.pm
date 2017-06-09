@@ -3,7 +3,7 @@ package FC_Solve::SplitCmdLine;
 use strict;
 use warnings;
 
-use Socket qw(:crlf);
+use FC_Solve::Paths qw( normalize_lf );
 
 use FC_Solve::InlineWrap (
     C => <<"EOF",
@@ -25,17 +25,10 @@ SV * _internal_parse_args(char * input) {
 EOF
 );
 
-sub _normalize_lf
-{
-    my ($s) = @_;
-    $s =~ s#$CRLF#$LF#g;
-    return $s;
-}
-
 sub split_cmd_line_string
 {
     my ( $class, $input_string ) = @_;
-    return _internal_parse_args( _normalize_lf($input_string) );
+    return _internal_parse_args( normalize_lf($input_string) );
 }
 
 1;
