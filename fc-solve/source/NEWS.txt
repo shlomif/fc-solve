@@ -4,6 +4,12 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2017-05-31
 :Revision: $Id$
 
+Version 4.12.1: (10-Jun-2017)
+-----------------------------
+
+1. Fix dealing of high indexed (above 2G) deals with on some 32-bit and/or
+MS Windows platforms.
+
 Version 4.12.0: (09-Jun-2017)
 -----------------------------
 
