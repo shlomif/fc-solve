@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 10;
 use Data::Dumper (qw/Dumper/);
 use FC_Solve::Paths qw( is_freecell_only is_without_patsolve samp_board );
 
@@ -186,12 +186,6 @@ verify_solution_test(
         theme => [ "--method", "a-star", "--set-pruning", "r:tf" ],
     },
     "Solving Deal #1 with --method a-star and set-pruning run-to-founds",
-);
-
-# TEST
-verify_solution_test(
-    { deal => 246, theme => [ "-l", "eo" ], },
-    "Solving Deal #246 with the enlightened-ostrich"
 );
 
 # TEST

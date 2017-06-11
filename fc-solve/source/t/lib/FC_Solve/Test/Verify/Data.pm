@@ -88,6 +88,11 @@ __PACKAGE__->populate(
             args => { deal => 24, variant => "simple_simon", theme => [], },
             msg => "Simple Simon #24 with default theme",
         },
+        '246_eo' => {
+            args => { deal => 246, theme => [ "-l", "eo" ], },
+            msg => "Solving Deal #246 with the enlightened-ostrich",
+        },
+
         '19806_simple_simon__default' => {
             args => { deal => 19806, variant => "simple_simon", theme => [], },
             msg => "Simple Simon #19806 with default theme",
