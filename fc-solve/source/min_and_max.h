@@ -7,14 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * min_and_max.h - header file for the min(a,b) and max(a,b) macros.
- */
+// min_and_max.h - header file for the min(a,b) and max(a,b) macros.
 #pragma once
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifndef min
 #define min(a, b) ((a) < (b) ? (a) : (b))
@@ -22,8 +16,4 @@ extern "C" {
 
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
-#endif
-
-#ifdef __cplusplus
-}
 #endif

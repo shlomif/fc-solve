@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2016 Shlomi Fish
  */
-/*
- * rinutils.h - a common header for Rindolf's (= Shlomi Fish) utility
- * headers.
- */
+// rinutils.h - a common header for Rindolf's (= Shlomi Fish) utility headers.
 #pragma once
 
 #include <limits.h>
@@ -27,7 +24,6 @@
 #include "fcs_limit.h"
 #include "likely.h"
 #include "min_and_max.h"
-#include "portable_int32.h"
 #include "portable_time.h"
 #include "str_utils.h"
 #include "typeof_wrap.h"

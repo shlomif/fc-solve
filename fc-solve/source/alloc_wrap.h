@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * alloc_wrap.h - convenient wrappers for malloc(), realloc(), etc.
- */
+// alloc_wrap.h - convenient wrappers for malloc(), realloc(), etc.
 #pragma once
 
 #ifdef __cplusplus

@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * str_utils.h - string utilities.
- */
+// str_utils.h - string utilities.
 #pragma once
 
 #ifdef __cplusplus

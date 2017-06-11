@@ -7,11 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * fcs_limit.h - the purpose of this file is to define the fcs_int_limit_t
- * type, and the FCS_INT_LIMIT_MAX constant.
- */
-
+// fcs_limit.h - the purpose of this file is to define the fcs_int_limit_t
+// type, and the FCS_INT_LIMIT_MAX constant.
 #pragma once
 
 #include <stdint.h>
