@@ -7,14 +7,8 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * typeof_wrap.h - convenient wrappers for GCC's typeof
- */
+// typeof_wrap.h - convenient wrappers for GCC's typeof
 #pragma once
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 // These emulate the C++ auto keyword.
 #define const_AUTO(myvar, expr) const typeof(expr) myvar = (expr)
@@ -22,7 +16,3 @@ extern "C" {
 
 // Common macros for object slots.
 #define const_SLOT(myslot, obj) const_AUTO(myslot, (obj)->myslot)
-
-#ifdef __cplusplus
-};
-#endif

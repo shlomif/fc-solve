@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2009 Shlomi Fish
  */
-/*
- * unused.h - the purpose of this file is to define the GCC_UNUSED
- * macro to suppress unused parameters warnings / remarks.
- */
+// unused.h - define the GCC_UNUSED macro to suppress unused parameters
+// warnings / remarks.
 #pragma once
 
 #if defined(__GNUC__)
