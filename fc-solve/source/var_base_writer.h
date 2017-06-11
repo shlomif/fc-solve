@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * var_base_writer.h - write to a packed integer using digits of variable
- * bases. Also see var_base_reader.h which complements it.
- */
+// var_base_writer.h - write to a packed integer using digits of variable
+// bases. Also see var_base_reader.h which complements it.
 #pragma once
 
 #include <assert.h>
@@ -52,20 +50,21 @@ static inline size_t fc_solve_var_base_writer_get_data(
 {
     size_t count = 0;
 
+    var_AUTO(data, w->data);
 #define NUM_BITS 8
-    while (FCS_var_base_int__not_zero(w->data))
+    while (FCS_var_base_int__not_zero(data))
     {
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
-        exported[count++] =
-            (unsigned char)((w->data) & (((1 << NUM_BITS) - 1)));
-        w->data >>= NUM_BITS;
+        exported[count++] = (unsigned char)((data) & (((1 << NUM_BITS) - 1)));
+        data >>= NUM_BITS;
 #else
-        mpz_fdiv_r_2exp(w->remainder, w->data, NUM_BITS);
-        mpz_fdiv_q_2exp(w->data, w->data, NUM_BITS);
+        mpz_fdiv_r_2exp(w->remainder, data, NUM_BITS);
+        mpz_fdiv_q_2exp(w->data, data, NUM_BITS);
         exported[count++] =
             (unsigned char)FCS_var_base_int__get_ui(w->remainder);
 #endif
     }
+    w->data = data;
 
     return count;
 }

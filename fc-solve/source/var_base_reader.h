@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * var_base_reader.h - read from a packed integer using digits of variable
- * bases. Also see var_base_writer.h which complements it.
- */
+// var_base_reader.h - read from a packed integer using digits of variable
+// bases. Also see var_base_writer.h which complements it.
 #pragma once
 
 #include "var_base_int.h"

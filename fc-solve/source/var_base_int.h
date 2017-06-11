@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2016 Shlomi Fish
  */
-/*
- * var_base_int.h - abstract/wrap either mpz_t or the faster unsigned __int128.
- */
+// var_base_int.h - abstract/wrap either mpz_t or the faster unsigned __int128.
 #pragma once
 #include "config.h"
 #include "rinutils.h"
@@ -30,10 +28,9 @@ typedef unsigned __int128 fcs_var_base_int_t;
 #define FCS_var_base_int__mul_ui(i, ul) (i) *= (ul)
 #define FCS_var_base_int__not_zero(i) ((i) != 0)
 
-#else /* FCS_USE_INT128_FOR_VAR_BASE */
+#else
 
-/* Use GMP instead */
-
+// Use GMP instead
 #include <gmp.h>
 
 typedef mpz_t fcs_var_base_int_t;
@@ -49,4 +46,4 @@ typedef mpz_t fcs_var_base_int_t;
 #define FCS_var_base_int__mul_ui(i, ul) mpz_mul_ui((i), (i), (ul))
 #define FCS_var_base_int__not_zero(i) (mpz_cmp_ui(i, 0) != 0)
 
-#endif /* FCS_USE_INT128_FOR_VAR_BASE */
+#endif
