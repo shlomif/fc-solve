@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 11;
 use Data::Dumper (qw/Dumper/);
 use FC_Solve::Paths qw( is_freecell_only is_without_patsolve samp_board );
 
@@ -90,16 +90,6 @@ verify_solution_test(
 
     },
     "sequence move unlimited is indeed unlimited (even if not esf-by-any)."
-);
-
-# TEST
-verify_solution_test(
-    {
-        deal    => 1,
-        variant => "simple_simon",
-        theme   => [ "-l", "tlm", ],
-    },
-    "Simple Simon #1 using the 'the-last-mohican' theme",
 );
 
 # TEST

@@ -120,6 +120,14 @@ __PACKAGE__->populate(
             },
             msg => "Simple Simon #1 using an -ni",
         },
+        'simple_simon__tlm' => {
+            args => {
+                deal    => 1,
+                variant => "simple_simon",
+                theme   => [ "-l", "tlm" ],
+            },
+            msg => "Simple Simon #1 using the 'the-last-mohican' theme",
+        },
     ]
 );
 
