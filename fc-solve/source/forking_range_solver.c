@@ -13,7 +13,7 @@
  *
  *  See also:
  *      - fc_pro_range_solver.c
- *      - test_multi_parallel.c
+ *      - serial_range_solver.c
  *      - threaded_range_solver.c
  */
 #ifdef __linux__

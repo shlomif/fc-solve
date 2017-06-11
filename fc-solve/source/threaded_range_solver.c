@@ -8,12 +8,13 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 /*
- *  threaded_range_solver.c - a range solver that solves different boards in
- *  several POSIX threads.
+ * threaded_range_solver.c - a range solver that solves different boards in
+ * several POSIX threads.
  *
- *  See also:
- *      - fc_pro_range_solver.c
- *      - test_multi_parallel.c
+ * See also:
+ * - fc_pro_range_solver.c
+ * - forking_range_solver.c
+ * - serial_range_solver.c
  */
 #include <pthread.h>
 

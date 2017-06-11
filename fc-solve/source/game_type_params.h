@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * game_type_params.h: provide fcs_game_type_params_t
- */
+// game_type_params.h: provide fcs_game_type_params_t
 #pragma once
 
 #include "game_type_limit.h"
