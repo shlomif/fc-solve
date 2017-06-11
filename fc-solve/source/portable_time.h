@@ -7,26 +7,18 @@
  *
  * Copyright (c) 2010 Shlomi Fish
  */
-/*
- * portable_time.h - the Freecell Solver (mostly) portable time handling
- * routines. Works on Win32 and UNIX-like systems.
- */
+// portable_time.h - the Freecell Solver mostly portable time handling
+// routines. Works on Win32 and UNIX-like systems.
 #pragma once
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "typeof_wrap.h"
 #include <stdio.h>
-#ifndef WIN32
-#include <sys/time.h>
-#else
-#include <sys/types.h>
-#include <sys/timeb.h>
-#endif
 
 #ifndef WIN32
+#include <sys/time.h>
 
 typedef struct
 {
@@ -41,6 +33,8 @@ typedef struct
 #define FCS_LL6_FMT "%.6lld"
 #define FCS_LL9_FMT "%09lld"
 #else
+#include <sys/types.h>
+#include <sys/timeb.h>
 
 typedef struct
 {
@@ -53,10 +47,6 @@ typedef struct
 #define FCS_LL_FMT "%I64d"
 #define FCS_LL6_FMT "%.6I64d"
 #define FCS_LL9_FMT "%09I64d"
-#endif
-
-#ifdef __cplusplus
-};
 #endif
 
 static inline fcs_portable_time_t fcs_get_time(void)
@@ -103,3 +93,7 @@ static inline void fc_solve_print_finished(const long long total_num_iters)
     printf(("Finished at " FCS_T_FMT " (total_num_iters=" FCS_LL_FMT ")\n"),
         FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime), total_num_iters);
 }
+
+#ifdef __cplusplus
+};
+#endif
