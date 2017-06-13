@@ -809,12 +809,14 @@ static inline int fc_solve_optimize_solution(
     if (!instance->is_optimization_st)
     {
         fc_solve_init_soft_thread(instance, optimization_soft_thread);
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
         /* Copy enable_pruning from the thread that reached the solution,
          * because otherwise -opt in conjunction with -sp r:tf will fail.
          * */
         optimization_soft_thread->enable_pruning =
             instance->hard_thread.soft_threads[instance->hard_thread.st_idx]
                 .enable_pruning;
+#endif
         instance->is_optimization_st = TRUE;
     }
 
@@ -854,12 +856,14 @@ static inline int fc_solve_optimize_solution(
 
         soft_thread = optimization_thread->soft_threads;
 
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
         /* Copy enable_pruning from the thread that reached the solution,
          * because otherwise -opt in conjunction with -sp r:tf will fail.
          * */
         soft_thread->enable_pruning =
             old_hard_thread->soft_threads[old_hard_thread->st_idx]
                 .enable_pruning;
+#endif
     }
     else
     {

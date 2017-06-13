@@ -543,12 +543,14 @@ struct fc_solve_soft_thread_struct
      * */
     char name[FCS_MAX_IDENT_LEN];
 
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
     /*
      * Whether pruning should be done.
      * This variable is temporary - there should be a better pruning
      * abstraction with several optional prunes.
      * */
     fcs_bool_t enable_pruning;
+#endif
 
 #ifndef FCS_DISABLE_PATSOLVE
     /*

@@ -267,7 +267,9 @@ static inline
         .master_to_randomize = FALSE,
         .checked_states_step = 50,
         .name = "",
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
         .enable_pruning = FALSE,
+#endif
 #ifndef FCS_DISABLE_PATSOLVE
         .pats_scan = NULL,
 #endif

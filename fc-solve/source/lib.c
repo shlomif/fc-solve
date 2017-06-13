@@ -2409,6 +2409,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 }
 #endif
 
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
 extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
     const char *pruning FCS__PASS_ERR_STR(char **error_string))
 {
@@ -2430,6 +2431,7 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
     }
     return 0;
 }
+#endif
 
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
 void DLLEXPORT freecell_solver_user_set_reparent_states(

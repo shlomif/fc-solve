@@ -30,6 +30,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'hard-code-calc-real-depth' => 'FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE',
     'hard-code-reparent-states' => 'FCS_HARD_CODE_REPARENT_STATES_AS_FALSE',
     'hard-code-scans-synergy' => 'FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE',
+    'hard-code-sp-rtf' => 'FCS_ENABLE_PRUNE__R_TF__UNCOND',
     'hard-code-theme' => 'FCS_USE_PRECOMPILED_CMD_LINE_THEME',
     'omit-frame' => 'OPTIMIZATION_OMIT_FRAME_POINTER',
     'rcs' => 'FCS_ENABLE_RCS_STATES',

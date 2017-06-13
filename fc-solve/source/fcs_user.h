@@ -333,8 +333,10 @@ DLLEXPORT extern int freecell_solver_user_set_depth_tests_order(
     void *const user_instance, const int min_depth,
     const char *const moves_order FCS__PASS_ERR_STR(char **const error_string));
 
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
 DLLEXPORT extern int freecell_solver_user_set_pruning(void *const user_instance,
     const char *const pruning FCS__PASS_ERR_STR(char **const error_string));
+#endif
 
 DLLEXPORT extern int freecell_solver_user_set_cache_limit(
     void *const user_instance, long limit);

@@ -796,6 +796,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_SET_PRUNING: /* STRINGS=-sp|--set-pruning; */
             PROCESS_OPT_ARG();
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
             if (freecell_solver_user_set_pruning(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
@@ -803,6 +804,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr);
             }
+#endif
             break;
 
         case FCS_OPT_CACHE_LIMIT: /* STRINGS=--cache-limit; */

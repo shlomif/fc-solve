@@ -399,7 +399,9 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
 
     DECLARE_STATE();
     ASSIGN_ptr_state(BEFS_M_VAR(soft_thread, first_state_to_check));
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
+#endif
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
         &(instance->i__num_checked_states);

@@ -545,13 +545,23 @@ static inline fcs_game_limit_t count_num_vacant_stacks(
     return num_vacant_stacks;
 }
 
+static inline fcs_bool_t fcs__should_state_be_pruned__state(
+    const fcs_collectible_state_t *const ptr_state)
+{
+    return (!(FCS_S_VISITED(ptr_state) & FCS_VISITED_GENERATED_BY_PRUNING));
+}
+
+#ifdef FCS_ENABLE_PRUNE__R_TF__UNCOND
+#define fcs__should_state_be_pruned(enable_pruning, ptr_state)                 \
+    fcs__should_state_be_pruned__state(ptr_state)
+#else
 static inline fcs_bool_t fcs__should_state_be_pruned(
     const fcs_bool_t enable_pruning,
     const fcs_collectible_state_t *const ptr_state)
 {
-    return (enable_pruning &&
-            (!(FCS_S_VISITED(ptr_state) & FCS_VISITED_GENERATED_BY_PRUNING)));
+    return (enable_pruning && fcs__should_state_be_pruned__state(ptr_state));
 }
+#endif
 
 static inline fcs_bool_t fcs__is_state_a_dead_end(
     const fcs_collectible_state_t *const ptr_state)
@@ -754,7 +764,9 @@ static inline int fc_solve_soft_dfs_do_solve(
         the_soft_dfs_info, &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]));
 
     ssize_t dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
     const_SLOT(enable_pruning, soft_thread);
+#endif
 
     DECLARE_STATE();
     ASSIGN_ptr_state(the_soft_dfs_info->state);
