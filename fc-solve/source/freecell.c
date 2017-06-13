@@ -1386,11 +1386,8 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
 {
     tests_define_accessors();
     STACKS__SET_PARAMS();
-    fcs_derived_states_list_t derived_states_list_struct = {
-        .states = NULL, .num_states = 0};
 
     sfs_check_state_begin();
-
     fcs_bool_t cards_were_moved = FALSE;
     uint_fast32_t num_cards_moved;
     do
@@ -1449,27 +1446,24 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
         }
     } while (num_cards_moved);
 
+    if (!cards_were_moved)
+    {
+        return NULL;
+    }
+    fcs_derived_states_list_t derived_states_list_struct = {
+        .states = NULL, .num_states = 0};
 #define derived_states_list (&derived_states_list_struct)
     sfs_check_state_end();
 #undef derived_states_list
-
-    register fcs_collectible_state_t *ptr_next_state;
-    if (cards_were_moved)
-    {
-        ptr_next_state = derived_states_list_struct.states[0].state_ptr;
-        /*
-         * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
-         * hurt if it's already there, and if it's a state that was
-         * found by other means, we still shouldn't prune it, because
-         * it is already "prune-perfect".
-         * */
-        FCS_S_VISITED(ptr_next_state) |= FCS_VISITED_GENERATED_BY_PRUNING;
-    }
-    else
-    {
-        ptr_next_state = NULL;
-    }
-
+    register fcs_collectible_state_t *const ptr_next_state =
+        derived_states_list_struct.states[0].state_ptr;
     free(derived_states_list_struct.states);
+    /*
+     * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
+     * hurt if it's already there, and if it's a state that was
+     * found by other means, we still shouldn't prune it, because
+     * it is already "prune-perfect".
+     * */
+    FCS_S_VISITED(ptr_next_state) |= FCS_VISITED_GENERATED_BY_PRUNING;
     return ptr_next_state;
 }
