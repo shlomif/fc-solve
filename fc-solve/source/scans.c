@@ -732,13 +732,11 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
     return 0;
 }
 
-extern void fc_solve_sfs_check_state_end(
+extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t *const soft_thread,
     fcs_kv_state_t *const raw_ptr_state_raw,
-    fcs_kv_state_t *const raw_ptr_new_state_raw,
-    const int state_context_value FCS__pass_moves(
-        fcs_move_stack_t *const moves),
-    fcs_derived_states_list_t *const derived_states_list)
+    fcs_kv_state_t *const raw_ptr_new_state_raw FCS__pass_moves(
+        fcs_move_stack_t *const moves))
 {
     const_SLOT(hard_thread, soft_thread);
     const_AUTO(instance, HT_INSTANCE(hard_thread));
@@ -806,13 +804,10 @@ extern void fc_solve_sfs_check_state_end(
 #endif
         }
 #endif
-
-        fc_solve_derived_states_list_add_state(derived_states_list,
-            FCS_STATE_kv_to_collectible(&existing_state), state_context_value);
+        return FCS_STATE_kv_to_collectible(&existing_state);
     }
     else
     {
-        fc_solve_derived_states_list_add_state(derived_states_list,
-            INFO_STATE_PTR(raw_ptr_new_state_raw), state_context_value);
+        return INFO_STATE_PTR(raw_ptr_new_state_raw);
     }
 }
