@@ -14,9 +14,7 @@ use Games::Solitaire::Verify::Solution ();
 sub verify_solution_test
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    my $args = shift;
-    my $msg  = shift;
+    my ( $args, $msg ) = @_;
 
     if ( exists( $args->{variant} ) and is_freecell_only() )
     {
@@ -25,19 +23,19 @@ q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#
         );
     }
 
-    my $cmd_line      = FC_Solve::GetOutput->new($args);
-    my $cmd_line_args = $cmd_line->open_cmd_line;
-
-    my $fc_solve_output = $cmd_line_args->{fh};
-    my $variant         = $cmd_line->variant;
-    my $is_custom       = $cmd_line->is_custom;
+    my $cmd_line        = FC_Solve::GetOutput->new($args);
+    my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => $fc_solve_output,
-            variant  => $variant,
-            ( $is_custom ? ( variant_params => $args->{variant_params} ) : () ),
+            variant  => $cmd_line->variant,
+            (
+                $cmd_line->is_custom
+                ? ( variant_params => $args->{variant_params} )
+                : ()
+            ),
         },
     );
 
