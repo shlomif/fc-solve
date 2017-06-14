@@ -113,6 +113,13 @@ __PACKAGE__->populate(
             },
             msg => "Simple Simon #1 using an -ni",
         },
+        'nht' => {
+            args => {
+                deal  => 24,
+                theme => [ "-nht", ],
+            },
+            msg => "Testing a solution with the -nht flag.",
+        },
         'simple_simon__next_instance' => {
             args => {
                 deal    => 1,
