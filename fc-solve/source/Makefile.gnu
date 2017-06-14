@@ -152,13 +152,9 @@ ifneq ($(PROFILE),0)
 endif
 
 FCS_SHARED_LIB = libfreecell-solver.so.0
-TARGETS = fc-solve $(FCS_SHARED_LIB) \
-          freecell-solver-range-parallel-solve \
-          freecell-solver-multi-thread-solve \
-          freecell-solver-fork-solve \
-          freecell-solver-fc-pro-range-solve
 
-TARGETS = \
+TARGETS = fc-solve $(FCS_SHARED_LIB) \
+          freecell-solver-fc-pro-range-solve \
           freecell-solver-fork-solve \
           freecell-solver-multi-thread-solve \
           freecell-solver-range-parallel-solve \
