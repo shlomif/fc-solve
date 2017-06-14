@@ -144,6 +144,14 @@ __PACKAGE__->populate(
             },
             msg => "Testing a solution with the -nht flag.",
         },
+        'pats24' => {
+            args => {
+                deal          => 24,
+                theme         => [ "--method", "patsolve", ],
+                uses_patsolve => 1,
+            },
+            msg => "Solving Deal #24 with patsolve",
+        },
         'simple_simon__next_instance' => {
             args => {
                 deal    => 1,

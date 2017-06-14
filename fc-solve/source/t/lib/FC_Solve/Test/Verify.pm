@@ -3,7 +3,7 @@ package FC_Solve::Test::Verify;
 use strict;
 use warnings;
 
-use FC_Solve::Paths qw( is_freecell_only );
+use FC_Solve::Paths qw( is_freecell_only is_without_patsolve );
 
 # Short for run.
 sub r
@@ -17,6 +17,11 @@ sub r
     if ( exists $args->{variant} and is_freecell_only() )
     {
         return Test::More::ok( 1, 'skipped due to freecell-only' );
+    }
+    if ( exists( $args->{uses_patsolve} ) and is_without_patsolve() )
+    {
+        return Test::More::ok( 1,
+            q#Test skipped because it uses patsolve on a build without it.# );
     }
 
     my $cmd_line        = FC_Solve::GetOutput->new($args);
