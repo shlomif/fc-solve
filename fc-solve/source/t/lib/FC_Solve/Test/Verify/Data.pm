@@ -25,6 +25,13 @@ __PACKAGE__->populate(
             args => { deal => 1, theme => [ "--set-pruning", "r:tf", ], },
             msg => "Solving Deal #1 with set-pruning run-to-founds",
         },
+        '1_sp_a_star' => {
+            args => {
+                deal  => 1,
+                theme => [ "--method", "a-star", "--set-pruning", "r:tf" ],
+            },
+            msg => "Solving Deal #1 with a-star and sp-r-tf",
+        },
         'id24' => {
             args => { deal => 24 },
             msg  => "Verifying the solution of deal #24",
