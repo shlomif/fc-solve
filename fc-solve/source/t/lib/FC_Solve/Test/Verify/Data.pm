@@ -21,6 +21,10 @@ sub validate_and_transform
 
 __PACKAGE__->populate(
     [
+        '1_sp' => {
+            args => { deal => 1, theme => [ "--set-pruning", "r:tf", ], },
+            msg => "Solving Deal #1 with set-pruning run-to-founds",
+        },
         'id24' => {
             args => { deal => 24 },
             msg  => "Verifying the solution of deal #24",
@@ -32,6 +36,10 @@ __PACKAGE__->populate(
         '24_default' => {
             args => { deal => 24, theme => [], },
             msg => "Solving Deal #24 with the default heuristic",
+        },
+        '24_sp' => {
+            args => { deal => 24, theme => [ "--set-pruning", "r:tf", ], },
+            msg => "Solving Deal #24 with set-pruning run-to-founds",
         },
         '617_jgl' => {
             args => { deal => 617, theme => [ "-l", "john-galt-line" ], },

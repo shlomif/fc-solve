@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 7;
 use Data::Dumper (qw/Dumper/);
 use FC_Solve::Paths qw( is_freecell_only is_without_patsolve samp_board );
 
@@ -150,24 +150,6 @@ verify_solution_test(
         ),
     },
     "Checking the 2-freecells '-seed 236' preset."
-);
-
-# TEST
-verify_solution_test(
-    {
-        deal  => 24,
-        theme => [ "--set-pruning", "r:tf" ],
-    },
-    "Solving Deal #24 with set-pruning run-to-founds",
-);
-
-# TEST
-verify_solution_test(
-    {
-        deal  => 1,
-        theme => [ "--set-pruning", "r:tf" ],
-    },
-    "Solving Deal #1 with set-pruning run-to-founds",
 );
 
 # TEST
