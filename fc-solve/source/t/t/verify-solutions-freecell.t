@@ -33,7 +33,12 @@ q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#
             variant  => $cmd_line->variant,
             (
                 $cmd_line->is_custom
-                ? ( variant_params => $args->{variant_params} )
+                ? (
+                    variant_params =>
+                        Games::Solitaire::Verify::VariantParams->new(
+                        $args->{variant_params}
+                        )
+                    )
                 : ()
             ),
         },
@@ -70,17 +75,14 @@ verify_solution_test(
             qw(--freecells-num 0 --empty-stacks-filled-by kings --sequence-move unlimited)
         ],
         variant        => "custom",
-        variant_params => Games::Solitaire::Verify::VariantParams->new(
-            {
-                'num_decks'              => 1,
-                'num_columns'            => 8,
-                'num_freecells'          => 0,
-                'sequence_move'          => "unlimited",
-                'seq_build_by'           => "alt_color",
-                'empty_stacks_filled_by' => "kings",
-            }
-        ),
-
+        variant_params => {
+            'num_decks'              => 1,
+            'num_columns'            => 8,
+            'num_freecells'          => 0,
+            'sequence_move'          => "unlimited",
+            'seq_build_by'           => "alt_color",
+            'empty_stacks_filled_by' => "kings",
+        },
     },
     "sequence move unlimited is indeed unlimited (even if not esf-by-any)."
 );
@@ -96,16 +98,14 @@ verify_solution_test(
         ],
         variant        => "custom",
         msdeals        => 1,
-        variant_params => Games::Solitaire::Verify::VariantParams->new(
-            {
-                'num_decks'              => 1,
-                'num_columns'            => 8,
-                'num_freecells'          => 2,
-                'sequence_move'          => "limited",
-                'seq_build_by'           => "alt_color",
-                'empty_stacks_filled_by' => "any",
-            }
-        ),
+        variant_params => {
+            'num_decks'              => 1,
+            'num_columns'            => 8,
+            'num_freecells'          => 2,
+            'sequence_move'          => "limited",
+            'seq_build_by'           => "alt_color",
+            'empty_stacks_filled_by' => "any",
+        },
     },
     "Checking the 2-freecells '-seed 33' preset."
 );
@@ -121,16 +121,14 @@ verify_solution_test(
         ],
         variant        => "custom",
         msdeals        => 1,
-        variant_params => Games::Solitaire::Verify::VariantParams->new(
-            {
-                'num_decks'              => 1,
-                'num_columns'            => 8,
-                'num_freecells'          => 2,
-                'sequence_move'          => "limited",
-                'seq_build_by'           => "alt_color",
-                'empty_stacks_filled_by' => "any",
-            }
-        ),
+        variant_params => {
+            'num_decks'              => 1,
+            'num_columns'            => 8,
+            'num_freecells'          => 2,
+            'sequence_move'          => "limited",
+            'seq_build_by'           => "alt_color",
+            'empty_stacks_filled_by' => "any",
+        },
     },
     "Checking the 2-freecells '-seed 236' preset."
 );

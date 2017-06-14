@@ -28,6 +28,7 @@ sub r
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
 
     require Games::Solitaire::Verify::Solution;
+    require Games::Solitaire::Verify::VariantParams;
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
@@ -36,7 +37,12 @@ sub r
             variant  => $cmd_line->variant,
             (
                 $cmd_line->is_custom
-                ? ( variant_params => $args->{variant_params} )
+                ? (
+                    variant_params =>
+                        Games::Solitaire::Verify::VariantParams->new(
+                        $args->{variant_params}
+                        )
+                    )
                 : ()
             ),
         },
