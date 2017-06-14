@@ -75,6 +75,7 @@ elif test "$mode" = "use" ; then
 
 elif test "$mode" = "gen" ; then
 
+    rm -f *.gcda
     if test "$compiler" = "gcc" ; then
         pgo_flags="-fprofile-generate"
     elif test "$compiler" = "icc" ; then
