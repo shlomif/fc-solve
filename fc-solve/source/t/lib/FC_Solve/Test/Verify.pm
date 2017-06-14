@@ -3,7 +3,7 @@ package FC_Solve::Test::Verify;
 use strict;
 use warnings;
 
-use FC_Solve::Paths qw( is_freecell_only is_without_patsolve );
+use FC_Solve::Paths qw( is_freecell_only is_without_patsolve samp_board );
 
 # Short for run.
 sub r
@@ -22,6 +22,10 @@ sub r
     {
         return Test::More::ok( 1,
             q#Test skipped because it uses patsolve on a build without it.# );
+    }
+    if ( defined( my $bb = delete( $args->{samp_board} ) ) )
+    {
+        $args->{board} = samp_board($bb);
     }
 
     my $cmd_line        = FC_Solve::GetOutput->new($args);

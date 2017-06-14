@@ -5,12 +5,11 @@ use warnings;
 
 use Test::More tests => 2;
 use FC_Solve::Test::Verify ();
-use FC_Solve::Paths qw( samp_board );
 
 # TEST
 FC_Solve::Test::Verify::r(
     {
-        board => samp_board("24-mid-with-colons.board"),
+        samp_board => "24-mid-with-colons.board",
     },
 "Accepting a board with leading colons as directly input from the -p -t solution",
 );
@@ -18,10 +17,8 @@ FC_Solve::Test::Verify::r(
 # TEST
 FC_Solve::Test::Verify::r(
     {
-        board =>
-            samp_board( "larrysan-kings-only-0-freecells-unlimited-move.board",
-            ),
-        theme => [
+        samp_board => "larrysan-kings-only-0-freecells-unlimited-move.board",
+        theme      => [
             qw(--freecells-num 0 --empty-stacks-filled-by kings --sequence-move unlimited)
         ],
         variant        => "custom",
