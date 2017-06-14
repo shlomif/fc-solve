@@ -4,61 +4,11 @@ use strict;
 use warnings;
 
 use Test::More tests => 2;
-use Data::Dumper (qw/Dumper/);
-use FC_Solve::Paths qw( is_freecell_only samp_board );
-
-use FC_Solve::GetOutput ();
-
-use Games::Solitaire::Verify::Solution ();
-
-sub verify_solution_test
-{
-    local $Test::Builder::Level = $Test::Builder::Level + 1;
-    my ( $args, $msg ) = @_;
-
-    if ( exists( $args->{variant} ) and is_freecell_only() )
-    {
-        return ok( 1,
-q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#
-        );
-    }
-
-    my $cmd_line        = FC_Solve::GetOutput->new($args);
-    my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
-
-    # Initialise a column
-    my $solution = Games::Solitaire::Verify::Solution->new(
-        {
-            input_fh => $fc_solve_output,
-            variant  => $cmd_line->variant,
-            (
-                $cmd_line->is_custom
-                ? (
-                    variant_params =>
-                        Games::Solitaire::Verify::VariantParams->new(
-                        $args->{variant_params}
-                        )
-                    )
-                : ()
-            ),
-        },
-    );
-
-    my $verdict = $solution->verify();
-    my $test_verdict = ok( !$verdict, $msg );
-
-    if ( !$test_verdict )
-    {
-        diag( "Verdict == " . Dumper($verdict) );
-    }
-
-    close($fc_solve_output);
-
-    return $test_verdict;
-}
+use FC_Solve::Test::Verify ();
+use FC_Solve::Paths qw( samp_board );
 
 # TEST
-verify_solution_test(
+FC_Solve::Test::Verify::r(
     {
         board => samp_board("24-mid-with-colons.board"),
     },
@@ -66,7 +16,7 @@ verify_solution_test(
 );
 
 # TEST
-verify_solution_test(
+FC_Solve::Test::Verify::r(
     {
         board =>
             samp_board( "larrysan-kings-only-0-freecells-unlimited-move.board",
@@ -100,4 +50,3 @@ or distributed except according to the terms contained in the COPYING file.
 Copyright (c) 2000 Shlomi Fish
 
 =cut
-
