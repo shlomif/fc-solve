@@ -1108,6 +1108,9 @@ static void trace_flare_solution(
 static int get_flare_move_count(
     fcs_user_t *const user, fcs_flare_item_t *const flare)
 {
+#ifndef FCS_WITH_MOVES
+    return 0;
+#else
     trace_flare_solution(user, flare);
 #define RET() return flare->moves_seq.num_moves
 #ifdef FCS_WITHOUT_FC_PRO_MOVES_COUNT
@@ -1136,6 +1139,7 @@ static int get_flare_move_count(
 #endif
 
 #undef RET
+#endif
 }
 #endif
 #ifdef FCS_WITH_NI
