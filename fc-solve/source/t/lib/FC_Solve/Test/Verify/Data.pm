@@ -108,6 +108,49 @@ __PACKAGE__->populate(
             msg => "Solving Deal #246 with the enlightened-ostrich",
         },
 
+        # This command line theme yields an especially short solution to the
+        # previously intractable deal #12 .
+        '2fc_12' => {
+            args => {
+                deal  => 12,
+                theme => [
+                    qw(--freecells-num 2 -to '[012][347]' --method random-dfs -seed 33)
+                ],
+                variant        => "custom",
+                msdeals        => 1,
+                variant_params => {
+                    'num_decks'              => 1,
+                    'num_columns'            => 8,
+                    'num_freecells'          => 2,
+                    'sequence_move'          => "limited",
+                    'seq_build_by'           => "alt_color",
+                    'empty_stacks_filled_by' => "any",
+                },
+            },
+            msg => "Checking the 2-freecells '-seed 33' preset.",
+        },
+
+        # This command line theme yields an ever shorter solution to the
+        # previously intractable deal #12 .
+        '2fc_12_shorter' => {
+            args => {
+                deal  => 12,
+                theme => [
+                    qw(--freecells-num 2 -to '[012][347]' --method random-dfs -seed 236)
+                ],
+                variant        => "custom",
+                msdeals        => 1,
+                variant_params => {
+                    'num_decks'              => 1,
+                    'num_columns'            => 8,
+                    'num_freecells'          => 2,
+                    'sequence_move'          => "limited",
+                    'seq_build_by'           => "alt_color",
+                    'empty_stacks_filled_by' => "any",
+                },
+            },
+            msg => "Checking the 2-freecells '-seed 236' preset.",
+        },
         '19806_simple_simon__default' => {
             args => { deal => 19806, variant => "simple_simon", theme => [], },
             msg => "Simple Simon #19806 with default theme",

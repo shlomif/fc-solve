@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 2;
 use Data::Dumper (qw/Dumper/);
 use FC_Solve::Paths qw( is_freecell_only samp_board );
 
@@ -85,52 +85,6 @@ verify_solution_test(
         },
     },
     "sequence move unlimited is indeed unlimited (even if not esf-by-any)."
-);
-
-# This command line theme yields an especially short solution to the
-# previously intractable deal #12 .
-# TEST
-verify_solution_test(
-    {
-        deal  => 12,
-        theme => [
-            qw(--freecells-num 2 -to '[012][347]' --method random-dfs -seed 33)
-        ],
-        variant        => "custom",
-        msdeals        => 1,
-        variant_params => {
-            'num_decks'              => 1,
-            'num_columns'            => 8,
-            'num_freecells'          => 2,
-            'sequence_move'          => "limited",
-            'seq_build_by'           => "alt_color",
-            'empty_stacks_filled_by' => "any",
-        },
-    },
-    "Checking the 2-freecells '-seed 33' preset."
-);
-
-# This command line theme yields an ever shorter solution to the
-# previously intractable deal #12 .
-# TEST
-verify_solution_test(
-    {
-        deal  => 12,
-        theme => [
-            qw(--freecells-num 2 -to '[012][347]' --method random-dfs -seed 236)
-        ],
-        variant        => "custom",
-        msdeals        => 1,
-        variant_params => {
-            'num_decks'              => 1,
-            'num_columns'            => 8,
-            'num_freecells'          => 2,
-            'sequence_move'          => "limited",
-            'seq_build_by'           => "alt_color",
-            'empty_stacks_filled_by' => "any",
-        },
-    },
-    "Checking the 2-freecells '-seed 236' preset."
 );
 
 __END__
