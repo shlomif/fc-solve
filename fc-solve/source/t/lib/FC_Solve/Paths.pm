@@ -112,7 +112,6 @@ sub samp_board
     return File::Spec->catfile( $BOARDS_DIR, shift );
 }
 
-# Returns a board from the sample-boards directory.
 sub samp_sol
 {
     return File::Spec->catfile( $SOLS_DIR, shift );
