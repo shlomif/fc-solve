@@ -180,6 +180,13 @@ __PACKAGE__->populate(
             msg =>
 "There is a solution for 254,076 with -l by and a scans synergy.",
         },
+        'lead_colons' => {
+            args => {
+                samp_board => "24-mid-with-colons.board",
+            },
+            msg =>
+"Accepting a board with leading colons as directly input from the -p -t solution",
+        },
         'nht' => {
             args => {
                 deal  => 24,
@@ -214,6 +221,26 @@ __PACKAGE__->populate(
                 theme   => [ "-l", "tlm" ],
             },
             msg => "Simple Simon #1 using the 'the-last-mohican' theme",
+        },
+        'unlimited_seq_move' => {
+            args => {
+                samp_board =>
+                    "larrysan-kings-only-0-freecells-unlimited-move.board",
+                theme => [
+                    qw(--freecells-num 0 --empty-stacks-filled-by kings --sequence-move unlimited)
+                ],
+                variant        => "custom",
+                variant_params => {
+                    'num_decks'              => 1,
+                    'num_columns'            => 8,
+                    'num_freecells'          => 0,
+                    'sequence_move'          => "unlimited",
+                    'seq_build_by'           => "alt_color",
+                    'empty_stacks_filled_by' => "kings",
+                },
+            },
+            msg =>
+"sequence move unlimited is indeed unlimited (even if not esf-by-any).",
         },
     ]
 );
