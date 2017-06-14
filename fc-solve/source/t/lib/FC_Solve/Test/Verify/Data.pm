@@ -128,6 +128,15 @@ __PACKAGE__->populate(
             },
             msg => "Simple Simon #1 using an -ni",
         },
+        'l_by' => {
+            args => {
+                deal    => 254076,
+                msdeals => 1,
+                theme   => [ "-l", "by", "--scans-synergy", "dead-end-marks" ],
+            },
+            msg =>
+"There is a solution for 254,076 with -l by and a scans synergy.",
+        },
         'nht' => {
             args => {
                 deal  => 24,

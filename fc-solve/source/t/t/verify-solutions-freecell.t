@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 5;
 use Data::Dumper (qw/Dumper/);
 use FC_Solve::Paths qw( is_freecell_only is_without_patsolve samp_board );
 
@@ -90,16 +90,6 @@ verify_solution_test(
 
     },
     "sequence move unlimited is indeed unlimited (even if not esf-by-any)."
-);
-
-# TEST
-verify_solution_test(
-    {
-        deal    => 254076,
-        msdeals => 1,
-        theme   => [ "-l", "by", "--scans-synergy", "dead-end-marks" ],
-    },
-    "There is a solution for 254,076 with -l by and a scans synergy.",
 );
 
 # This command line theme yields an especially short solution to the
