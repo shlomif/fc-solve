@@ -34,6 +34,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "~$"
     "\\\\.pyc$"
     "/tags$"
+    "fcs-freecell-24\\\\.txt$"
     "^${PROJECT_SOURCE_DIR}/ids\\\\.txt$"
     "^${PROJECT_SOURCE_DIR}/scripts/ids-whitelist(\\\\.txt)?"
     "/(build|BUILD|B)/"

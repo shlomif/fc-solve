@@ -43,10 +43,16 @@ use FC_Solve::ShaAndLen ();
     );
 }
 
+SKIP:
 {
     my $sha = FC_Solve::ShaAndLen->new();
+    my $FN  = samp_sol('fcs-freecell-24.txt');
 
-    open my $in, "<", samp_sol('fcs-freecell-24.txt');
+    if ( !-e $FN )
+    {
+        skip( "File does not exist.", 2 );
+    }
+    open my $in, "<", $FN;
     $sha->add_file($in);
     close($in);
 
