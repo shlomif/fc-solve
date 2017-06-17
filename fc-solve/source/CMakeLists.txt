@@ -41,7 +41,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/Presets/testing-presets"
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/(\\\\.(git|hg)|appveyor|\\\\.travis|CI-testing)"
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(OLD|Rejects|cmake|ga|patsolve-specific|t/)"
-    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(CMakeLists\\\\.txt|COPYING|Manifest|check_layout|config\\\\.h\\\\.in|convert_[a-z]+|fc-solve\\\\.ico|dondorf-king\\\\.bmp|threaded_main\\\\.c|patmain\\\\.c|run-tests\\\\.pl|read_layout\\\\.h|print_layout\\\\.h)$"
+    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(CMakeLists\\\\.txt|COPYING|Manifest|Parameters|check_layout|config\\\\.h\\\\.in|convert_[a-z]+|fc-solve\\\\.ico|dondorf-king\\\\.bmp|threaded_main\\\\.c|patmain\\\\.c|run-tests\\\\.pl|read_layout\\\\.h|print_layout\\\\.h)$"
 )
 
 SET(_win32_static_lib_flags )
