@@ -177,7 +177,7 @@ ENDIF ()
 SET (pats_dir "patsolve-shlomif")
 
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
-    EXECUTE_PROCESS(COMMAND "git" "clone" "--branch" "make-code-suitable-for-fc-solve" "git@github.com:shlomif/patsolve.git" "${pats_dir}"
+    EXECUTE_PROCESS(COMMAND "git" "clone" "--branch" "make-code-suitable-for-fc-solve" "https://github.com/shlomif/patsolve.git" "${pats_dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
