@@ -38,16 +38,22 @@ static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t next_board_num_lock;
 static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
 static fcs_int_limit_t update_total_num_iters_threshold = 1000000;
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 static char **context_argv;
 static int arg = 1, context_argc;
+#endif
 static long long total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
 static void *worker_thread(void *GCC_UNUSED void_arg)
 {
+#ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    void *const instance = simple_alloc_and_parse(0, NULL, NULL);
+#else
     int ctx_arg = arg;
     void *const instance =
         simple_alloc_and_parse(context_argc, context_argv, &ctx_arg);
+#endif
     fcs_int_limit_t total_num_iters_temp = 0;
     long long board_num;
     do
@@ -105,6 +111,9 @@ int main(int argc, char *argv[])
     {
         help_err("Not Enough Arguments!\n");
     }
+#ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    int arg = 1;
+#endif
     next_board_num = atoll(argv[arg++]);
     past_end_board = 1 + atoll(argv[arg++]);
 
@@ -136,8 +145,10 @@ int main(int argc, char *argv[])
     }
 
     fc_solve_print_started_at();
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     context_argc = argc;
     context_argv = argv;
+#endif
     pthread_t workers[num_workers];
 
     for (int idx = 0; idx < num_workers; idx++)
