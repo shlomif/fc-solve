@@ -37,7 +37,7 @@ static void print_help(void)
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t next_board_num_lock;
 static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
-static fcs_int_limit_t update_total_num_iters_threshold = 1000000;
+#define UPDATE_TOTAL_NUM_ITERS_THRESHOLD 1000000
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 static char **context_argv;
 static int arg = 1, context_argc;
@@ -54,7 +54,7 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
     void *const instance =
         simple_alloc_and_parse(context_argc, context_argv, &ctx_arg);
 #endif
-    fcs_int_limit_t total_num_iters_temp = 0;
+    typeof(total_num_iters) total_num_iters_temp = 0;
     long long board_num;
     do
     {
@@ -72,7 +72,7 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
             {
                 goto theme_error;
             }
-            if (total_num_iters_temp >= update_total_num_iters_threshold)
+            if (total_num_iters_temp >= UPDATE_TOTAL_NUM_ITERS_THRESHOLD)
             {
                 pthread_mutex_lock(&total_num_iters_lock);
                 total_num_iters += total_num_iters_temp;
@@ -133,10 +133,6 @@ int main(int argc, char *argv[])
         else if ((param = TRY_P("--worker-step")))
         {
             board_num_step = atoll(param);
-        }
-        else if ((param = TRY_P("--iters-update-on")))
-        {
-            update_total_num_iters_threshold = atol(param);
         }
         else
         {
