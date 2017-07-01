@@ -42,7 +42,7 @@ static void print_help(void)
         "print_step - at which division to print a status line\n");
 }
 
-static long long total_num_iters = 0;
+static long long total_num_iters = 0, total_num_finished_boards = 0;
 
 #define READ_FD 0
 #define WRITE_FD 1
@@ -112,8 +112,8 @@ static inline void write_request(const long long end_board,
 }
 
 static inline void transaction(const worker_t *const worker, const int read_fd,
-    long long *const total_num_finished_boards, const long long end_board,
-    const long long board_num_step, long long *const next_board_num_ptr)
+    const long long end_board, const long long board_num_step,
+    long long *const next_board_num_ptr)
 {
     response_t response;
     if (read(read_fd, &response, sizeof(response)) <
@@ -121,9 +121,8 @@ static inline void transaction(const worker_t *const worker, const int read_fd,
     {
         return;
     }
-
     total_num_iters += response.num_iters;
-    (*total_num_finished_boards) += response.num_finished_boards;
+    total_num_finished_boards += response.num_finished_boards;
 
     write_request(end_board, board_num_step, next_board_num_ptr, worker);
 }
@@ -247,7 +246,6 @@ int main(int argc, char *argv[])
 #ifndef USE_EPOLL
     ++mymax;
 #endif
-    long long total_num_finished_boards = 0;
     const long long total_num_boards_to_check = end_board - next_board_num + 1;
 
     long long next_milestone = next_board_num + stop_at;
@@ -283,8 +281,8 @@ int main(int argc, char *argv[])
         for (int i = 0; i < nfds; ++i)
         {
             const worker_t *const worker = events[i].data.ptr;
-            transaction(worker, read_fd(worker), &total_num_finished_boards,
-                end_board, board_num_step, &next_board_num);
+            transaction(worker, read_fd(worker), end_board, board_num_step,
+                &next_board_num);
         }
 #else
         fd_set readers = initial_readers;
@@ -305,8 +303,8 @@ int main(int argc, char *argv[])
                 {
                     /* FD_ISSET can be set on EOF, so we check if
                      * read failed. */
-                    transaction(&(workers[idx]), fd, &total_num_finished_boards,
-                        end_board, board_num_step, &next_board_num);
+                    transaction(&(workers[idx]), fd, end_board, board_num_step,
+                        &next_board_num);
                 }
             }
         }
