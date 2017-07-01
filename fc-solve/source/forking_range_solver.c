@@ -60,7 +60,7 @@ typedef struct
 
 typedef struct
 {
-    fcs_int_limit_t num_iters;
+    long long num_iters;
     int_fast32_t num_finished_boards;
 } response_t;
 
