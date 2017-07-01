@@ -48,20 +48,17 @@ static long long total_num_iters = 0;
 #define WRITE_FD 1
 typedef struct
 {
-    int child_to_parent_pipe[2];
-    int parent_to_child_pipe[2];
+    int child_to_parent_pipe[2], parent_to_child_pipe[2];
 } worker_t;
 
 typedef struct
 {
-    long long board_num;
-    long long quota_end;
+    long long board_num, quota_end;
 } request_t;
 
 typedef struct
 {
-    long long num_iters;
-    int_fast32_t num_finished_boards;
+    long long num_iters, num_finished_boards;
 } response_t;
 
 static inline void worker_func(const worker_t w, void *const instance)
@@ -115,7 +112,7 @@ static inline void write_request(const long long end_board,
 }
 
 static inline void transaction(const worker_t *const worker, const int read_fd,
-    int *const total_num_finished_boards, const long long end_board,
+    long long *const total_num_finished_boards, const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr)
 {
     response_t response;
@@ -250,7 +247,7 @@ int main(int argc, char *argv[])
 #ifndef USE_EPOLL
     ++mymax;
 #endif
-    int total_num_finished_boards = 0;
+    long long total_num_finished_boards = 0;
     const long long total_num_boards_to_check = end_board - next_board_num + 1;
 
     long long next_milestone = next_board_num + stop_at;
@@ -289,7 +286,6 @@ int main(int argc, char *argv[])
             transaction(worker, read_fd(worker), &total_num_finished_boards,
                 end_board, board_num_step, &next_board_num);
         }
-
 #else
         fd_set readers = initial_readers;
         /* I'm the master. */
