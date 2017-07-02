@@ -293,6 +293,11 @@ my $ARCH = 'n2';
 # Load the b or t suffixes.
 my @LB = ( '-l', $ARCH . 'b' );
 my @LT = ( '-l', $ARCH . 't' );
+sub reg_lt_test
+{
+    my $blurb = shift;
+    return reg_test($blurb, {tatzer_args => [@LT, @_]});
+}
 
 reg_test(
     "prepare_dist fcc_solver",
@@ -331,12 +336,7 @@ reg_test(
         },
     },
 );
-reg_test(
-    "-l n2t with --disable-patsolve",
-    {
-        tatzer_args => [ @LT, '--disable-patsolve', ]
-    }
-);
+reg_lt_test( "-l n2t with --disable-patsolve", '--disable-patsolve',);
 reg_test(
     "build_only: maximum speed preset",
     {
@@ -350,27 +350,13 @@ reg_test( "Non-Debondt Delta States",
 reg_test( "Default", { tatzer_args => [] } );
 reg_test( "--rcs",   { tatzer_args => [qw(--rcs)] } );
 
-reg_test(
-    "libavl2 with COMPACT_STATES",
-    {
-        tatzer_args => [ @LT, qw(--states-type=COMPACT_STATES --libavl2-p=prb) ]
-    }
-);
+reg_lt_test( "libavl2 with COMPACT_STATES",
+    qw(--states-type=COMPACT_STATES --libavl2-p=prb));
 
-reg_test(
-    "libavl2 with COMPACT_STATES and --rcs",
-    {
-        tatzer_args =>
-            [ @LT, qw(--states-type=COMPACT_STATES --libavl2-p=prb --rcs) ]
-    }
-);
+reg_lt_test( "libavl2 with COMPACT_STATES and --rcs",
+    qw(--states-type=COMPACT_STATES --libavl2-p=prb --rcs),);
 
-reg_test(
-    "libavl2 with INDIRECT_STATES",
-    {
-        tatzer_args => [ @LT, qw(--libavl2-p=prb) ]
-    }
-);
+reg_lt_test( "libavl2 with INDIRECT_STATES", qw(--libavl2-p=prb), );
 
 reg_test(
     "without-depth-field",
@@ -386,26 +372,12 @@ reg_test(
     }
 );
 
-reg_test(
-    "No FCS_SINGLE_HARD_THREAD",
-    {
-        tatzer_args => [ @LT, '--nosingle-ht' ]
-    }
-);
+reg_lt_test( "No FCS_SINGLE_HARD_THREAD", '--nosingle-ht');
 
-reg_test(
-    "Break Backward Compatibility #1",
-    {
-        tatzer_args => [ @LT, '--break-back-compat-1' ]
-    }
-);
+reg_lt_test( "Break Backward Compatibility #1", '--break-back-compat-1');
 
-reg_test(
-    "Freecell-only (as well as Break Backcompat)",
-    {
-        tatzer_args => [ @LT, qw(--break-back-compat-1 --fc-only) ]
-    }
-);
+reg_lt_test( "Freecell-only (as well as Break Backcompat)",
+        qw(--break-back-compat-1 --fc-only),);
 
 foreach my $run (@tests)
 {
