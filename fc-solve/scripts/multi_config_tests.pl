@@ -293,10 +293,15 @@ my $ARCH = 'n2';
 # Load the b or t suffixes.
 my @LB = ( '-l', $ARCH . 'b' );
 my @LT = ( '-l', $ARCH . 't' );
+sub reg_tatzer_test
+{
+    my $blurb = shift;
+    return reg_test($blurb, {tatzer_args => [@_]});
+}
 sub reg_lt_test
 {
     my $blurb = shift;
-    return reg_test($blurb, {tatzer_args => [@LT, @_]});
+    return reg_tatzer_test($blurb, @LT, @_);
 }
 sub reg_prep
 {
@@ -322,8 +327,8 @@ reg_test(
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
-reg_test( "Default", { tatzer_args => [] } );
-reg_test( "--rcs",   { tatzer_args => [qw(--rcs)] } );
+reg_tatzer_test( "Default", ());
+reg_tatzer_test( "--rcs", qw(--rcs));
 
 reg_lt_test( "libavl2 with COMPACT_STATES",
     qw(--states-type=COMPACT_STATES --libavl2-p=prb));
@@ -333,20 +338,8 @@ reg_lt_test( "libavl2 with COMPACT_STATES and --rcs",
 
 reg_lt_test( "libavl2 with INDIRECT_STATES", qw(--libavl2-p=prb), );
 
-reg_test(
-    "without-depth-field",
-    {
-        tatzer_args => [qw(--without-depth-field)],
-    }
-);
-
-reg_test(
-    "without-depth-field and rcs",
-    {
-        tatzer_args => [qw(--without-depth-field --rcs)],
-    }
-);
-
+reg_tatzer_test( "without-depth-field",qw(--without-depth-field));
+reg_tatzer_test( "without-depth-field and rcs",qw(--without-depth-field --rcs));
 reg_lt_test( "No FCS_SINGLE_HARD_THREAD", '--nosingle-ht');
 
 reg_lt_test( "Break Backward Compatibility #1", '--break-back-compat-1');
