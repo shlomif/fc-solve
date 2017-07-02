@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * lib.c - library interface functions of Freecell Solver.
- */
+// lib.c - library interface functions of Freecell Solver.
 #include "instance_for_lib.h"
 #include "preset.h"
 #include "fcs_user.h"
@@ -157,7 +155,7 @@ typedef struct
 #ifdef FCS_WITH_MOVES
     fcs_state_keyval_pair_t running_state;
 #endif
-#if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
+#if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
     fcs_state_keyval_pair_t initial_non_canonized_state;
 #endif
 #ifdef FCS_WITH_MOVES
@@ -1264,7 +1262,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
              * */
             FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
 #endif
-#if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
+#if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
             FCS_STATE__DUP_keyval_pair(
                 user->initial_non_canonized_state, user->state);
 #endif
@@ -1334,7 +1332,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
         if (is_start_of_flare_solving)
         {
             fc_solve_start_instance_process_with_board(instance, &(user->state),
-#if defined(FCS_WITH_FLARES) && !defined(FCS_DISABLE_PATSOLVE)
+#if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
                 &(user->initial_non_canonized_state)
 #else
                 NULL

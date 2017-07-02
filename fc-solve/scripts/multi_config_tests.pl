@@ -290,7 +290,7 @@ q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
 # my $ARCH = 'x64';
 my $ARCH = 'n2';
 
-# load the t prefix.
+# Load the b or t suffixes.
 my @LB = ( '-l', $ARCH . 'b' );
 my @LT = ( '-l', $ARCH . 't' );
 
@@ -330,6 +330,12 @@ reg_test(
             args => [],
         },
     },
+);
+reg_test(
+    "-l n2t with --disable-patsolve",
+    {
+        tatzer_args => [ @LT, '--disable-patsolve', ]
+    }
 );
 reg_test(
     "build_only: maximum speed preset",
