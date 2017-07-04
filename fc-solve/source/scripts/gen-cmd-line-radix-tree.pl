@@ -1,4 +1,3 @@
-
 use strict;
 use warnings;
 use autodie;
@@ -83,21 +82,8 @@ my $inc_h      = 'cmd_line_inc.h';
 my $tempdir    = Path::Tiny->tempdir;
 my $temp_inc_h = $tempdir->child('temp__cmd_line_inc.h');
 
-sub temp_del
-{
-    if (0)
-    {
-        if ( -e $temp_inc_h )
-        {
-            unlink($temp_inc_h);
-        }
-    }
-    return;
-}
-
 sub del
 {
-    temp_del;
     if ( -e $inc_h )
     {
         unlink($inc_h);
@@ -124,7 +110,6 @@ path($inc_h)->spew_utf8(
         $str;
         }
 );
-temp_del;
 
 __END__
 
