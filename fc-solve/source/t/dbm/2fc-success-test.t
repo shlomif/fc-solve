@@ -24,4 +24,3 @@ use FC_Solve::Paths qw/ samp_board samp_sol /;
     # TEST
     eq_or_diff( $got_text, $expected_text, "Texts are the same" )
 }
-
