@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * trace_mem.h - trace memory.
- */
+// trace_mem.h - trace memory.
 #pragma once
 
 #ifdef __cplusplus
@@ -20,10 +18,9 @@ extern "C" {
 
 #ifdef FCS_TRACE_MEM
 static int rss_found = 0;
-static long max_rss_delta_deal = -1;
-static long long int prev_rss = -1, max_rss_delta = -1;
+static long long max_rss_delta_deal = -1, prev_rss = -1, max_rss_delta = -1;
 
-static inline void trace_mem(const int board_num)
+static inline void trace_mem(const long long board_num)
 {
     long long int rss;
     unsigned long long unused_unsigned;
@@ -81,7 +78,7 @@ static inline void trace_mem(const int board_num)
             max_rss_delta = rss_delta;
             max_rss_delta_deal = board_num;
         }
-        printf("Max RSS delta %lld encountered at deal %ld\n", max_rss_delta,
+        printf("Max RSS delta %lld encountered at deal %lld\n", max_rss_delta,
             max_rss_delta_deal);
     }
     prev_rss = rss;
@@ -92,7 +89,7 @@ static inline void trace_mem(const int board_num)
 }
 #else
 
-static inline void trace_mem(const int board_num GCC_UNUSED) {}
+static inline void trace_mem(const long long board_num GCC_UNUSED) {}
 
 #endif
 #ifdef __cplusplus

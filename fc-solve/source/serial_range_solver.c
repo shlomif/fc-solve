@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    for (long long board_num = start_board; board_num <= end_board; board_num++)
+    for (long long board_num = start_board; board_num <= end_board; ++board_num)
     {
         fcs_state_string_t state_string;
         get_board(board_num, state_string);
