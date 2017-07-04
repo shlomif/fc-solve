@@ -825,17 +825,6 @@ INSTALL(
     DESTINATION "bin"
 )
 
-# Cancelled out.
-IF ()
-    RUN_POD2MAN(
-        "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.pod"
-        "fc-solve.6"
-        "6"
-        "Freecell Solver"
-        "Freecell Solver ${VERSION}"
-    )
-ENDIF ()
-
 SET (fc_solve_manpage "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.6")
 
 IF (UNIX AND FCS_BUILD_DOCS)

@@ -40,3 +40,13 @@ FOREACH(KEYWORD "inline" "__inline__" "__inline")
    ENDIF()
 ENDFOREACH()
 
+# Cancelled out.
+IF ()
+    RUN_POD2MAN(
+        "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.pod"
+        "fc-solve.6"
+        "6"
+        "Freecell Solver"
+        "Freecell Solver ${VERSION}"
+    )
+ENDIF ()

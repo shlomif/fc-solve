@@ -21,7 +21,7 @@ in:
 2. The README and USAGE text files in the Freecell Solver documentation
 directory. (usually: /usr/share/doc/freecell-solver-FCS_VERSION/* ).
 
-This man page is only a symbolic one, so sorry if you were looking for more
+This man page is only a rudimentary one, so sorry if you were looking for more
 detailed information. It is possible that it will someday be more encompassing
 , as I'm thinking of converting the documentation to perl POD.
 

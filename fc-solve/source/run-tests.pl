@@ -185,15 +185,6 @@ GetOptions(
         }
     }
 
-# Cancelled because it is done by the build system.
-# if (! glob('t/valgrind--*.t'))
-# {
-# my $start = time();
-# system($^X, "$abs_bindir/scripts/generate-individual-valgrind-test-scripts.pl");
-# my $end = time();
-# print "StartGen=$start\nEndGen=$end\n";
-# }
-
     # Put the valgrind tests last, because they take a long time.
     my @tests =
         sort {
@@ -227,22 +218,20 @@ GetOptions(
         @tests = grep { !/valgrind/ } @tests;
     }
 
+    print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
+    print STDERR "FCS_SRC_PATH = $ENV{FCS_SRC_PATH}\n";
+    print STDERR "FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>\n";
+    if ( $ENV{FCS_TEST_SHELL} )
     {
-        print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
-        print STDERR "FCS_SRC_PATH = $ENV{FCS_SRC_PATH}\n";
-        print STDERR "FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>\n";
-        if ( $ENV{FCS_TEST_SHELL} )
-        {
-            system("bash");
-        }
-        elsif (@execute)
-        {
-            system(@execute);
-        }
-        else
-        {
-            run_tests( \@tests );
-        }
+        system("bash");
+    }
+    elsif (@execute)
+    {
+        system(@execute);
+    }
+    else
+    {
+        run_tests( \@tests );
     }
 }
 

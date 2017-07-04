@@ -21,29 +21,24 @@ if ( !defined($src) )
 {
     die "src not specified.";
 }
-
 if ( !defined($dest) )
 {
     die "dest not specified.";
 }
-
 if ( !defined($sect) )
 {
     die "section not specified.";
 }
-
 if ( !defined($center) )
 {
     die "center not specified.";
 }
-
 if ( !defined($release) )
 {
     die "release not specified.";
 }
 
 my $dir = tempdir( CLEANUP => 1 );
-
 my $pod = "$dir/Hoola.pod";
 
 if ( !-e $src )
