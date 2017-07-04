@@ -59,7 +59,12 @@ GetOptions(
     '--glob=s'       => \$tests_glob,
     '--prove!'       => \$use_prove,
     '--jobs|j=n'     => \$num_jobs,
-) or die "--glob='tests_glob'";
+) or die "Wrong opts - $!";
+
+sub myglob
+{
+    return glob( shift . "/$tests_glob" );
+}
 
 {
     my $fcs_path = Cwd::getcwd();
@@ -173,11 +178,11 @@ GetOptions(
             || ( basename($a) cmp basename($b) )
             || ( $a cmp $b )
         } (
-        glob("t/$tests_glob"),
-        glob("./$tests_glob"),
+        myglob('t'),
+        myglob('.'),
         (
               ( $fcs_path ne $abs_bindir )
-            ? ( glob("$abs_bindir/t/t/$tests_glob") )
+            ? ( myglob("$abs_bindir/t/t") )
             : ()
         ),
         );
