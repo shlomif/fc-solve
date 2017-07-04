@@ -56,6 +56,7 @@ extern "C" {
  * operation.
  * */
 #cmakedefine FCS_WITHOUT_DEPTH_FIELD
+#cmakedefine FCS_WITHOUT_CMD_LINE_HELP
 #cmakedefine FCS_WITHOUT_ITER_HANDLER
 #cmakedefine FCS_WITHOUT_MAX_NUM_STATES
 #cmakedefine FCS_DISABLE_MULTI_FLARES

@@ -21,6 +21,7 @@
 #include "range_solvers.h"
 #include "try_param.h"
 
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
 {
     printf("\n%s",
@@ -33,6 +34,7 @@ static void print_help(void)
         "end - the last board in the sequence (inclusive)\n"
         "print_step - at which division to print a status line\n");
 }
+#endif
 
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t next_board_num_lock;

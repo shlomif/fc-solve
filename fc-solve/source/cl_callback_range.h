@@ -37,6 +37,7 @@ static const char *known_parameters[] = {"-i", "--iter-output", "-s",
     "--standard-notation-extended", "-sam", "--display-states-and-moves", "-t",
     "--display-10-as-t", "-pi", "--display-parent-iter", NULL};
 
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
 {
     printf("\n%s",
@@ -55,3 +56,4 @@ static void print_help(void)
         "--total-iterations-limit  limit\n"
         "     Limits each board for up to 'limit' iterations.\n");
 }
+#endif

@@ -18,6 +18,7 @@
 #include "help_err.h"
 #include "try_param.h"
 
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
 {
     printf("\n%s",
@@ -38,6 +39,7 @@ static void print_help(void)
         "--total-iterations-limit  limit\n"
         "     Limits each board for up to 'limit' iterations.\n");
 }
+#endif
 
 typedef struct
 {
