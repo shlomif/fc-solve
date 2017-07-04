@@ -64,8 +64,8 @@ test_script:
     - gmake package
 cache:
     - C:\libtap
-    # - C:\_P5
-    # - C:\strawberry
+    - C:\_P5
+    - C:\strawberry
 shallow_clone: true
 artifacts:
     - path: 'fc-solve\pkg-build\freecell-solver-*-win32.exe'
