@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * gen_boards_lib.c - library for generating a Microsoft Freecell
- * board using shared library calls.
- */
+// gen_boards_lib.c - library for generating a Microsoft Freecell
+// board using shared library calls.
 
 #define FCS_GEN_BOARDS_WITH_EXTERNAL_API
 #include "range_solvers_gen_ms_boards.h"
