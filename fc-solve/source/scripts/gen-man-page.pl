@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 use strict;
 use warnings;
 
@@ -30,7 +28,7 @@ my $usage  = path($usage_path)->slurp_utf8;
 
 $usage =~ s{\A.*?(^The programs *$)}{$1}ms;
 
-my $manify_text = <<'EOF';
+my $MANIFY_TEXT = <<'EOF';
 :doctype: manpage
 
 NAME
@@ -38,11 +36,11 @@ NAME
 fc-solve - automated solver for Freecell and related Solitiare variants
 EOF
 
-my $man_title = 'fc-solve(6)';
+my $TITLE = 'fc-solve(6)';
 
 $readme =~ s/\AFreecell Solver Readme File\n(=+)\n/
-    $man_title . "\n" . '=' x length($man_title) . "\n"/ge;
-$readme =~ s/(:Revision[^\n]*\n)/$1$manify_text/ms;
+    $TITLE . "\n" . '=' x length($TITLE) . "\n"/ge;
+$readme =~ s/(:Revision[^\n]*\n)/$1$MANIFY_TEXT/ms;
 
 path($out_path)->spew_utf8( $readme, "\n\n", $usage );
 

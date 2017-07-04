@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 use strict;
 use warnings;
 
@@ -316,4 +314,3 @@ DEALS:
     }
     $pm->wait_all_children;
 }
-
