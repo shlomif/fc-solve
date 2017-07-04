@@ -46,7 +46,7 @@ Where sudo_renice is something like:
 +
 https://bitbucket.org/shlomif/shlomif-computer-settings/src/c8189d118c1f68c24a99c916c3fdd48275aeb0fd/shlomif-settings/home-bin-executables/bin/sudo_renice?at=default
 
-8. To see the results, you can use +perl ../source/scripts/time-fcs.pl
+8. To see the results, you can use +perl ../scripts/time-fcs.pl
 DUMPS-*/*+ and copy-and-paste the results to the Freecell Solver developers
 with specifications of your computer that are as detailed as possible.
 
@@ -56,8 +56,7 @@ Getting the test suite up and running
 These are instruction how to get the test suite up and running:
 
 1. Install the dependencies: Subversion, CMake (2.6.3 or later only), make,
-gcc, g\++, valgrind, perl5 (at least perl-5.8.9, perl-5.10.0 or above is
-recommended),
+gcc, g\++, valgrind, perl5 (at least perl-5.14)
 +
 +
 * On Debian:
@@ -66,7 +65,7 @@ recommended),
 apt-get install subversion cmake make gcc g++ valgrind perl
 --------------------
 +
-* On Mandriva/Mageia:
+* On Mageia:
 +
 -------------------
 urpmi subversion cmake make gcc g++ valgrind perl perl-devel
@@ -135,8 +134,9 @@ Style Guidelines
 
 Freecell Solver uses its own style (largely based on the Allman style:
 http://en.wikipedia.org/wiki/Indent_style#Allman_style ),
-based on the preferences of its primary author (Shlomi Fish). Some guidelines
-for the style will be given here.
+based on the preferences of its primary author (Shlomi Fish). The style is
+largely enforced by the "clang-format" formatter (using its 3.9.1 version
+currently). Some guidelines for the style will be given here.
 
 4 Spaces for Indentation
 ~~~~~~~~~~~~~~~~~~~~~~~~
