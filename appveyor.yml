@@ -3,9 +3,8 @@
 # Thanks!
 install:
     - choco install ag
+    - choco install strawberryperl
     - if not exist C:\libtap mkdir C:\libtap
-    - if not exist C:\libtap\strawberry-perl-5.24.0.1-64bit.msi curl -fsS -o C:\libtap\strawberry-perl-5.24.0.1-64bit.msi http://strawberryperl.com/download/5.24.0.1/strawberry-perl-5.24.0.1-64bit.msi
-    - if not exist C:\strawberry\perl\bin\perl.exe msiexec /i C:\libtap\strawberry-perl-5.24.0.1-64bit.msi /quiet /qn /norestart /log install.log INSTALLDIR="C:\strawberry"
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - python3 -mpip install cffi
@@ -63,12 +62,11 @@ test_script:
     - SET PATH=C:\MinGW\bin;%PATH%
     - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
     - gmake package
-    - perl -E "use File::Find; find(sub {say $File::Find::name if /\.exe\z/;}, q/./);"
 cache:
     - C:\libtap
     - C:\_P5
     - C:\strawberry
 shallow_clone: true
 artifacts:
-    - path: '**\pkg-build\freecell-solver-*-win32.exe'
+    - path: 'fc-solve\pkg-build\freecell-solver-*-win32.exe'
       name: Freecell Solver Win32 Package
