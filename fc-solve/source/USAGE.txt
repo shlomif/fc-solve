@@ -1137,4 +1137,3 @@ option -i/--iter-output.
 If you send it two USR2 signals and then USR1, then +fc-solve+
 will also print the board of every state. Again, this will only be done
 assuming the iteration output is turned on.
-

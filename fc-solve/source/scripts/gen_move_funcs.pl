@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use Path::Tiny qw/ path /;
 
 # The move functions
 # 'function' - The function name without the fc_solve_sfs_ prefix
@@ -148,10 +149,7 @@ for ( my $i = 0 ; $i < scalar(@move_funcs) ; $i++ )
 my $fcs_move_funcs_num = scalar(@move_funcs);
 my $fcs_aliases_num    = scalar( keys(%aliases) );
 
-my $num_filename = 'move_funcs_maps.h';
-open my $num_fh, '>', $num_filename
-    or die "Cannot open '$num_filename' for writing - $!";
-print {$num_fh} <<"EOF" ;
+path('move_funcs_maps.h')->spew_utf8(<<"EOF");
 
 /*
     This file is generated from gen_move_funcs.pl.
@@ -175,7 +173,6 @@ typedef struct
 extern fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM];
 extern fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM];
 EOF
-close($num_fh);
 
 sub func_name
 {
@@ -200,10 +197,7 @@ my $aliases_string = join(
             ( sort { $a cmp $b } keys(%aliases) )
     )
 );
-my $move_funcs_filename = 'move_funcs_maps.c';
-open my $move_funcs_fh, '>', $move_funcs_filename
-    or die "Cannot open '$move_funcs_filename' for writing - $!";
-print {$move_funcs_fh} <<"EOF" ;
+path('move_funcs_maps.c')->spew_utf8(<<"EOF");
 /*
     This file is generated from gen_move_funcs.pl.
 
@@ -231,6 +225,3 @@ fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_A
 $aliases_string
 };
 EOF
-
-close($move_funcs_fh);
-

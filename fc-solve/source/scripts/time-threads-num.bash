@@ -65,4 +65,3 @@ for NUM in $(seq "$MIN" "$MAX") ; do
         --num-workers "$NUM" \
         $ARGS > "$(printf "%s/dump%.3i" "$DUMPS_DIR" "$NUM")"
 done
-

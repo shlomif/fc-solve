@@ -97,4 +97,3 @@ run_make FREECELL_ONLY=1 \
     EXTRA_CFLAGS="$pgo_flags" \
     COMPILER="$real_compiler" \
     $make_vars
-

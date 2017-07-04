@@ -30,26 +30,23 @@ sub test_base64
 
 # TEST:$test_base64=$c;
 
-{
-    # TEST*$test_base64
-    test_base64( 'FooBar24', 'String FooBar24' );
+# TEST*$test_base64
+test_base64( 'FooBar24', 'String FooBar24' );
 
-    # TEST*$test_base64
-    test_base64( "\0", 'Single NUL' );
+# TEST*$test_base64
+test_base64( "\0", 'Single NUL' );
 
-    # TEST*$test_base64
-    test_base64( "\0\0", 'Double NUL' );
+# TEST*$test_base64
+test_base64( "\0\0", 'Double NUL' );
 
-    # TEST*$test_base64
-    test_base64( "\0\0\0", 'Triple NUL' );
+# TEST*$test_base64
+test_base64( "\0\0\0", 'Triple NUL' );
 
-    # TEST*$test_base64
-    test_base64( "\0\0\0\0", 'Quadruple NUL' );
+# TEST*$test_base64
+test_base64( "\0\0\0\0", 'Quadruple NUL' );
 
-    # TEST*$test_base64
-    test_base64( "\0\0bc\0\0", 'Between NULs' );
+# TEST*$test_base64
+test_base64( "\0\0bc\0\0", 'Between NULs' );
 
-    # TEST*$test_base64
-    test_base64( "\0b\0c\0d/+:", 'Between Three NULs' );
-}
-
+# TEST*$test_base64
+test_base64( "\0b\0c\0d/+:", 'Between Three NULs' );

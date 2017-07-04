@@ -89,4 +89,3 @@ Unlimited sequence move:
 ------------------------
 
 calc_max_sequence_move == MAX_INT
-

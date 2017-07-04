@@ -24,4 +24,3 @@ ENDIF ()
 IF (NOT ASCIIDOC_FOUND AND Asciidoc_FIND_REQUIRED)
     MESSAGE(FATAL_ERROR "Could not find asciidoc")
 ENDIF ()
-

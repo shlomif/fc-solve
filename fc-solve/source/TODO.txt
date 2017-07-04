@@ -205,4 +205,3 @@ To be considered
 
 * Add a limit to stacks number (in the case of Indirect Stack States),
 number of states that are stored anywhere, etc.
-

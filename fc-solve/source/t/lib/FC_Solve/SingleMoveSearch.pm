@@ -28,4 +28,3 @@ sub compile_move_spec
 }
 
 1;
-

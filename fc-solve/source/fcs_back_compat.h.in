@@ -83,4 +83,3 @@ extern "C" {
 #endif
 
 #endif    /* #ifndef FC_SOLVE__BACK_COMPAT_H */
-
