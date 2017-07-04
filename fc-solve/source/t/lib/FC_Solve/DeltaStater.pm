@@ -132,7 +132,7 @@ sub _init
 
         while ( $bitmask <= $num_cards )
         {
-            $num_bits++;
+            ++$num_bits;
             $bitmask <<= 1;
         }
 
@@ -312,7 +312,7 @@ sub _composite_get_cols_and_indexes
             }
             continue
             {
-                $non_orig_idx++;
+                ++$non_orig_idx;
             }
 
             if ( $non_orig_idx == @cols )
@@ -330,7 +330,7 @@ sub _composite_get_cols_and_indexes
             }
             continue
             {
-                $empty_idx--;
+                --$empty_idx;
             }
 
             if ( ( $empty_idx < 0 ) || ( $empty_idx < $non_orig_idx ) )
@@ -340,8 +340,8 @@ sub _composite_get_cols_and_indexes
 
             @cols_indexes[ $non_orig_idx,  $empty_idx ] =
                 @cols_indexes[ $empty_idx, $non_orig_idx ];
-            $non_orig_idx++;
-            $empty_idx--;
+            ++$non_orig_idx;
+            --$empty_idx;
         }
     }
 
@@ -518,14 +518,11 @@ sub decode
     }
 
     my $state = $self->_calc_new_empty_state_obj();
-
     foreach my $col (@columns)
     {
         $state->add_column($col);
     }
-
     $state->set_freecells($freecells);
-
     $state->set_foundations($foundations_obj);
 
     return $state;

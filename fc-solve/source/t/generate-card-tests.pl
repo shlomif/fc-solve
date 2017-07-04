@@ -24,20 +24,6 @@ sub rank_normalize
 my $implicit_t = ( path("../fcs_back_compat.h")->slurp_utf8 =~
         /^#define FCS_BREAK_BACKWARD_COMPAT_1\r?$/ms ? 1 : 0 );
 
-my @suits = (qw(H C D S));
-my @ranks = (
-    "A",
-    ( 2 .. 9 ),
-    {
-        't'     => "T",
-        'non_t' => "10",
-    },
-    ,
-    "J", "Q", "K"
-);
-
-@ranks = ( map { rank_normalize($_) } @ranks );
-
 my $template = Template->new( { ABSOLUTE => 1, }, );
 
 sub indexify
@@ -50,8 +36,22 @@ sub indexify
 }
 
 my $args = {
-    'suits'      => indexify( 0, \@suits ),
-    'ranks'      => indexify( 1, \@ranks ),
+    'suits' => indexify( 0, [qw(H C D S)] ),
+    'ranks' => indexify(
+        1,
+        [
+            map { rank_normalize($_) } (
+                "A",
+                ( 2 .. 9 ),
+                {
+                    't'     => "T",
+                    'non_t' => "10",
+                },
+                ,
+                "J", "Q", "K"
+            )
+        ]
+    ),
     'implicit_t' => $implicit_t,
 };
 
