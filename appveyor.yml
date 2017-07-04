@@ -64,7 +64,7 @@ test_script:
     - gmake package
 cache:
     - C:\libtap
-    - C:\_P5
+    # - C:\_P5
     # - C:\strawberry
 shallow_clone: true
 artifacts:
