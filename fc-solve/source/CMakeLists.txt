@@ -1136,17 +1136,6 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
     TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
 ENDIF ()
 
-ADD_CUSTOM_TARGET(
-    "dist"
-    COMMAND make package_source
-    COMMAND
-    "perl" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/normalize-cmake-source-tarballs-time-stamps.pl"
-    "--version" "${VERSION}"
-    "--package-base" "${CPACK_PACKAGE_NAME}"
-    "--source-dir" "${CMAKE_CURRENT_SOURCE_DIR}"
-    "--binary-dir" "${CMAKE_CURRENT_BINARY_DIR}"
-)
-
 INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
 
 # Empty list

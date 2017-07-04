@@ -50,3 +50,15 @@ IF ()
         "Freecell Solver ${VERSION}"
     )
 ENDIF ()
+
+ADD_CUSTOM_TARGET(
+    "dist"
+    COMMAND make package_source
+    COMMAND
+    "perl" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/normalize-cmake-source-tarballs-time-stamps.pl"
+    "--version" "${VERSION}"
+    "--package-base" "${CPACK_PACKAGE_NAME}"
+    "--source-dir" "${CMAKE_CURRENT_SOURCE_DIR}"
+    "--binary-dir" "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
