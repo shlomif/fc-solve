@@ -1,8 +1,7 @@
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void);
 #endif
-static inline __attribute__((noreturn)) void help_err(
-    const char *const msg, ...)
+static __attribute__((noreturn)) void help_err(const char *const msg, ...)
 {
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
     va_list ap;
