@@ -30,7 +30,6 @@ run(
     ]
 );
 
-# my $make_path = "C:/Dwimperl/c/bin/mingw32-make";
 my $make_path = 'C:/strawberry/c/bin/mingw32-make';
 
 run( [ $make_path, ] );

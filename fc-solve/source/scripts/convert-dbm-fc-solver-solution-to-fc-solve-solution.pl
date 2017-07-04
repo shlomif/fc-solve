@@ -128,6 +128,46 @@ sub _init
     return;
 }
 
+sub _read_next_state
+{
+    my ( $self, $fh ) = @_;
+    my $line = <$fh>;
+    chomp($line);
+    if ( $line eq "END" )
+    {
+        return;
+    }
+    elsif ( $line ne "--------" )
+    {
+        die "Incorrect format.";
+    }
+
+    my $s = <$fh>;
+LINES:
+    while ( $line = <$fh> )
+    {
+        if ( $line !~ /\S/ )
+        {
+            last LINES;
+        }
+        $s .= $line;
+    }
+    $line = <$fh>;
+    chomp($line);
+    if ( $line ne "==" )
+    {
+        die "Cannot find '==' terminator";
+    }
+
+    return Games::Solitaire::Verify::State->new(
+        {
+            variant        => "custom",
+            variant_params => $self->_variant_params(),
+            string         => $s,
+        },
+    );
+}
+
 sub run
 {
     my $self = shift;
@@ -166,45 +206,7 @@ LINES_PREFIX:
         die "State was not solved successfully.";
     }
 
-    my $read_next_state = sub {
-        my $line = <$fh>;
-        chomp($line);
-        if ( $line eq "END" )
-        {
-            return;
-        }
-        elsif ( $line ne "--------" )
-        {
-            die "Incorrect format.";
-        }
-
-        my $s = <$fh>;
-    LINES:
-        while ( $line = <$fh> )
-        {
-            if ( $line !~ /\S/ )
-            {
-                last LINES;
-            }
-            $s .= $line;
-        }
-        $line = <$fh>;
-        chomp($line);
-        if ( $line ne "==" )
-        {
-            die "Cannot find '==' terminator";
-        }
-
-        return Games::Solitaire::Verify::State->new(
-            {
-                variant        => "custom",
-                variant_params => $self->_variant_params(),
-                string         => $s,
-            },
-        );
-    };
-
-    my $initial_state = $read_next_state->();
+    my $initial_state = $self->_read_next_state($fh);
 
     my $running_state = $initial_state->clone();
 
@@ -381,7 +383,7 @@ MOVES:
             }
         }
 
-        my $new_state = $read_next_state->();
+        my $new_state = $self->_read_next_state($fh);
 
         my $populate_new_resource_indexes = sub {
             my ( $iter, $get_pivot_cb ) = @_;
@@ -483,13 +485,11 @@ MOVES:
 
         $verify_state->set_foundations( $running_state->_foundations->clone() );
 
+        my $v_s = $verify_state->to_string();
+        my $n_s = $new_state->to_string();
+        if ( $v_s ne $n_s )
         {
-            my $v_s = $verify_state->to_string();
-            my $n_s = $new_state->to_string();
-            if ( $v_s ne $n_s )
-            {
-                die "States mismatch:\n<<\n$v_s\n>>\n vs:\n<<\n$n_s\n>>\n.";
-            }
+            die "States mismatch:\n<<\n$v_s\n>>\n vs:\n<<\n$n_s\n>>\n.";
         }
 
         @cols_indexes = @$new_cols_indexes;
