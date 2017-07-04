@@ -65,7 +65,7 @@ test_script:
 cache:
     - C:\libtap
     - C:\_P5
-    - C:\strawberry
+    # - C:\strawberry
 shallow_clone: true
 artifacts:
     - path: 'fc-solve\pkg-build\freecell-solver-*-win32.exe'
