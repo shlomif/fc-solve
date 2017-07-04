@@ -25,7 +25,7 @@ theme="$FCS_PGO_THEME"
 
 run_make()
 {
-    make -r -j4 -f "$src"/Makefile.gnu SRC_DIR="$src" "$@"
+    make -r -j4 -f "$src"/../scripts/Makefile.gnu SRC_DIR="$src" "$@"
 }
 
 m_clean()
