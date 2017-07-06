@@ -111,9 +111,8 @@ my @move_funcs = (
 );
 
 my ( %declared_move_funcs, %aliases );
-for ( my $i = 0 ; $i < scalar(@move_funcs) ; $i++ )
+while ( my ( $i, $move_func_struct ) = each @move_funcs )
 {
-    my $move_func_struct = $move_funcs[$i];
     if ( !exists( $move_func_struct->{'function'} ) )
     {
         die "Move function #$i does not have a function field";
@@ -122,11 +121,11 @@ for ( my $i = 0 ; $i < scalar(@move_funcs) ; $i++ )
     {
         die "Move function #$i does not have an aliases field";
     }
-    if ( !( ref( $move_func_struct->{'aliases'} ) eq "ARRAY" ) )
+    if ( ref( $move_func_struct->{'aliases'} ) ne "ARRAY" )
     {
         die "Move function #$i 's aliases is not an array ref";
     }
-    if ( scalar( keys(%$move_func_struct) ) > 2 )
+    if ( keys(%$move_func_struct) > 2 )
     {
         die "Move function #$i has excess elements";
     }
@@ -146,23 +145,12 @@ for ( my $i = 0 ; $i < scalar(@move_funcs) ; $i++ )
     }
 }
 
-my $fcs_move_funcs_num = scalar(@move_funcs);
-my $fcs_aliases_num    = scalar( keys(%aliases) );
-
 path('move_funcs_maps.h')->spew_utf8(<<"EOF");
-
-/*
-    This file is generated from gen_move_funcs.pl.
-
-    Do not edit by hand!!!
-*/
+// This file is generated from gen_move_funcs.pl.
+// Do not edit by hand!!!
 #pragma once
-
-#include "config.h"
-
-#define FCS_MOVE_FUNCS_NUM $fcs_move_funcs_num
-
-#define FCS_MOVE_FUNCS_ALIASES_NUM $fcs_aliases_num
+#define FCS_MOVE_FUNCS_NUM @{[0+@move_funcs]}
+#define FCS_MOVE_FUNCS_ALIASES_NUM @{[0+keys%aliases]}
 
 typedef struct
 {
@@ -178,14 +166,7 @@ sub func_name
 {
     my $f = shift;
     my $s = "fc_solve_sfs_$f";
-    if ( $f =~ /simple_simon/ )
-    {
-        return "WRAP_SIMPSIM($s)";
-    }
-    else
-    {
-        return $s;
-    }
+    return $f =~ /simple_simon/ ? "WRAP_SIMPSIM($s)" : $s;
 }
 
 my $move_funcs_string = join( ",\n",
@@ -198,12 +179,8 @@ my $aliases_string = join(
     )
 );
 path('move_funcs_maps.c')->spew_utf8(<<"EOF");
-/*
-    This file is generated from gen_move_funcs.pl.
-
-    Do not edit by hand!!!
-*/
-
+// This file is generated from gen_move_funcs.pl.
+// Do not edit by hand!!!
 #include "instance.h"
 #include "freecell.h"
 #include "simpsim.h"
