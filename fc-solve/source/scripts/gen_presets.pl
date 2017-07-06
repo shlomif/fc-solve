@@ -36,23 +36,18 @@ my @strings;
 sub compile_preset
 {
     my $preset_name = shift;
-
-    my $preset = $presets{$preset_name};
+    my $preset      = $presets{$preset_name};
 
     # For inheritance
     my $compiled = shift || {};
 
     my @params = @{$preset};
-
-    my ( $cmd, $arg );
-
     eval {
-
-        while ( $cmd = shift(@params) )
+        while ( my $cmd = shift(@params) )
         {
-            $arg = shift(@params);
+            my $arg = shift(@params);
 
-            if ( $cmd =~ /^(i|inherits?)$/ )
+            if ( $cmd =~ /^(?:i|inherits?)$/ )
             {
                 if ( !exists( $presets{$arg} ) )
                 {
@@ -60,56 +55,56 @@ sub compile_preset
                 }
                 compile_preset( $arg, $compiled );
             }
-            elsif ( $cmd =~ /^(s|stacks?)$/ )
+            elsif ( $cmd =~ /^(?:s|stacks?)$/ )
             {
-                if ( $arg !~ /^(\d+)$/ )
+                if ( $arg !~ /^[0-9]+$/ )
                 {
                     die "Argument to stacks is not an integer!\n";
                 }
                 $compiled->{'stacks'} = $arg;
             }
-            elsif ( $cmd =~ /^(f|freecells?)$/ )
+            elsif ( $cmd =~ /^(?:f|freecells?)$/ )
             {
-                if ( $arg !~ /^(\d+)$/ )
+                if ( $arg !~ /^[0-9]+$/ )
                 {
                     die "Argument to freecells is not an integer!\n";
                 }
                 $compiled->{'freecells'} = $arg;
             }
-            elsif ( $cmd =~ /^(d|decks?)$/ )
+            elsif ( $cmd =~ /^(?:d|decks?)$/ )
             {
-                if ( $arg !~ /^(1|2)$/ )
+                if ( $arg !~ /^(?:1|2)$/ )
                 {
                     die "Argument to decks is not 1 or 2!\n";
                 }
                 $compiled->{'decks'} = $arg;
             }
-            elsif ( $cmd =~ /^(sbb|seqs_build_by)$/ )
+            elsif ( $cmd =~ /^(?:sbb|seqs_build_by)$/ )
             {
-                if ( $arg !~ /^(ac|suit|rank)$/ )
+                if ( $arg !~ /^(?:ac|suit|rank)$/ )
                 {
                     die "Argument to stacks_build_by is improper!\n";
                 }
                 $compiled->{'seqs_build_by'} = $arg;
             }
-            elsif ( $cmd =~ /^(sm|(seq|sequence)_move)$/ )
+            elsif ( $cmd =~ /^(?:sm|(?:seq|sequence)_move)$/ )
             {
-                if ( $arg !~ /^(limited|unlimited)$/ )
+                if ( $arg !~ /^(?:limited|unlimited)$/ )
                 {
                     die "Argument to sequence move is not limited/unlimited!\n";
                 }
                 $compiled->{'sequence_move'} =
                     ( ( $arg eq "unlimited" ) ? 1 : 0 );
             }
-            elsif ( $cmd =~ /^(esf|empty_stacks_fill(ed(_by)?)?)$/ )
+            elsif ( $cmd =~ /^(?:esf|empty_stacks_fill(?:ed(?:_by)?)?)$/ )
             {
-                if ( $arg !~ /^(any_card|kings_only|none)$/ )
+                if ( $arg !~ /^(?:any_card|kings_only|none)$/ )
                 {
                     die "Improper parameter to Empty Stacks Filled By!\n";
                 }
                 $compiled->{'empty_stacks_fill'} = $arg;
             }
-            elsif ( $cmd =~ /^(to|tests_order)$/ )
+            elsif ( $cmd =~ /^(?:to|tests_order)$/ )
             {
                 if ( $arg =~ /[^0-9a-hA-G\[\(\)\]]/ )
                 {
@@ -117,7 +112,7 @@ sub compile_preset
                 }
                 $compiled->{'tests_order'} = $arg;
             }
-            elsif ( $cmd =~ /^(at|allowed_tests)$/ )
+            elsif ( $cmd =~ /^(?:at|allowed_tests)$/ )
             {
                 if ( $arg =~ /[^0-9a-iA-G]/ )
                 {
@@ -130,7 +125,6 @@ sub compile_preset
                 die "Unknown Command $cmd\n";
             }
         }
-
     };
 
     if ($@)
@@ -163,15 +157,10 @@ EOF
 
 sub preset_to_string
 {
-    my $preset_name = shift;
-    my $pc          = shift;
+    my ( $preset_name, $pc ) = @_;
 
-    my @lines = ();
-
-    my $arg;
-
+    my @lines;
     eval {
-
         push @lines, ( "FCS_PRESET_" . uc($preset_name) );
 
         if ( !exists( $pc->{'freecells'} ) )
@@ -196,7 +185,7 @@ sub preset_to_string
         {
             die "Seqs Build by was not defined!\n";
         }
-        $arg = $pc->{'seqs_build_by'};
+        my $arg = $pc->{'seqs_build_by'};
         push @lines,
             (
             "FCS_SEQ_BUILT_BY_"
@@ -217,12 +206,12 @@ sub preset_to_string
         {
             die "Empty Stacks Fill is undefined!\n";
         }
-        $arg = $pc->{'empty_stacks_fill'};
+        my $esf = $pc->{'empty_stacks_fill'};
         push @lines,
             "FCS_ES_FILLED_BY_"
             . (
-              ( $arg eq "none" )     ? "NONE"
-            : ( $arg eq "any_card" ) ? "ANY_CARD"
+              ( $esf eq "none" )     ? "NONE"
+            : ( $esf eq "any_card" ) ? "ANY_CARD"
             :                          "KINGS_ONLY"
             );
 
@@ -237,7 +226,6 @@ sub preset_to_string
             die "Allowed Tests' is undefined!\n";
         }
         push @lines, "\"" . $pc->{'allowed_tests'} . "\"";
-
     };
 
     if ($@)
@@ -246,22 +234,17 @@ sub preset_to_string
     }
 
     my %vars;
-
     @vars{qw(preset fc s d sbb sm esf tests_order allowed_tests)} = @lines;
 
     my $ret;
-
     $c_template->process( \$c_template_input, \%vars, \$ret );
-
     $ret =~ s{\s+\z}{}ms;
-
     return $ret;
 }
 
 sub preset_to_docbook_string
 {
-    my $preset_name = shift;
-    my $pc          = shift;
+    my ( $preset_name, $pc ) = @_;
     my @lines;
 
     push @lines,
@@ -292,8 +275,7 @@ sub preset_to_docbook_string
 
 sub preset_to_perl_module
 {
-    my $preset_name = shift;
-    my $pc          = shift;
+    my ( $preset_name, $pc ) = @_;
 
     my %sbb_map = (
         'ac'   => "alt_color",
@@ -347,9 +329,7 @@ EOF
 
 sub preset_to_pod
 {
-    my $preset_name = shift;
-    my $pc          = shift;
-
+    my ($preset_name) = @_;
     return "=item * $preset_name\n\n";
 }
 
@@ -387,12 +367,9 @@ else
 PRESETS_LOOP:
 foreach my $preset_name ( sort { $a cmp $b } keys(%presets) )
 {
-    if ( $preset_name eq "simple_simon" )
+    if ( $preset_name eq "simple_simon" and $mode eq "docbook" )
     {
-        if ( $mode eq "docbook" )
-        {
-            next PRESETS_LOOP;
-        }
+        next PRESETS_LOOP;
     }
 
     my $preset_compiled = compile_preset($preset_name);
@@ -405,15 +382,14 @@ if ( $mode eq "docbook" )
 }
 elsif ( $mode eq "c" )
 {
-    print {$out_fh}
-        <<'EOF',
-/* This file was auto-generated by gen_presets.pl. DO NOT EDIT BY HAND */
+    print {$out_fh} <<"EOF";
+// This file was auto-generated by gen_presets.pl. DO NOT EDIT BY HAND
 
+static const fcs_preset_t fcs_presets[@{[0+@strings]}] =
+{
+@{[join( ",\n", @strings )]}
+};
 EOF
-        "static const fcs_preset_t fcs_presets[" . scalar(@strings) . "] =\n",
-        "{\n",
-        join( ",\n", @strings ),
-        "\n};\n";
 }
 elsif ( $mode eq "perl-mod" )
 {
@@ -425,15 +401,10 @@ elsif ( $mode eq "perl-mod" )
 elsif ( $mode eq "pod" )
 {
     print "=head1 PARAMETERS\n\n";
-
     print "=head2 Variants IDs\n\n";
-
     print "This is a list of the available variant IDs.\n\n";
-
     print "=over 4\n\n";
-
     print join( "", @strings );
-
     print "=back\n\n";
 }
 
