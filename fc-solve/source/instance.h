@@ -1033,6 +1033,11 @@ static inline fcs_bool_t fcs_get_calc_real_depth(
 }
 #endif
 
+#ifdef FCS_WITH_MOVES
+extern void fc_solve_trace_solution(fc_solve_instance_t *const instance);
+#endif
+extern void fc_solve_finish_instance(fc_solve_instance_t *const instance);
+
 #ifdef __cplusplus
 }
 #endif
