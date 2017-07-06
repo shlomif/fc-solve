@@ -113,19 +113,19 @@ emit(
     [ map { '{' . join( ',', @$_ ) . '}'; } @state_pos ],
 );
 emit(
-    qq#const size_t fc_solve__card_pos[@{[scalar @card_pos]}]#,
+    qq#const size_t fc_solve__card_pos[@{[0+@card_pos]}]#,
     'debondt__card_pos',
     [ q/<stddef.h>/, ],
     [ map { $_ || 0 } @card_pos ],
 );
 emit(
-qq#const size_t positions_by_rank__lookup[@{[scalar @positions_by_rank__lookup]}]#,
+qq#const size_t positions_by_rank__lookup[@{[0+@positions_by_rank__lookup]}]#,
     'pos_by_rank__lookup',
     [ q/<stddef.h>/, ],
     [ map { $_ || 0 } @positions_by_rank__lookup ],
 );
 emit(
-qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[scalar @pos_by_rank]}]#,
+qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
     'pos_by_rank__freecell',
     [ q/<stddef.h>/, ],
     [

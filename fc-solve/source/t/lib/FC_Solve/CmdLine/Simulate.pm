@@ -14,7 +14,7 @@ sub _build_expander
 
     return FC_Solve::CmdLine::Expand->new(
         {
-            input_argv => scalar( $self->input_argv ),
+            input_argv => $self->input_argv,
         }
     );
 }
@@ -41,7 +41,7 @@ sub get_flares_num
 {
     my ( $self, $idx ) = @_;
 
-    return scalar( @{ $self->_flares } );
+    return scalar @{ $self->_flares };
 }
 
 sub get_flare_by_idx

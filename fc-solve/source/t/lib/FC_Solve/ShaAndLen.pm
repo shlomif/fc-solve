@@ -88,7 +88,7 @@ sub add_processed_slurp
         local $/;
         $buffer = <$fh>;
     }
-    return $self->add( scalar( $callback->($buffer) ) );
+    return $self->add( scalar $callback->($buffer) );
 }
 
 1;
