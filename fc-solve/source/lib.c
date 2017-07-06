@@ -875,6 +875,12 @@ static int compare_rating_with_index(
 #define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(no_use)
 #endif
 
+static inline fcs_bool_t fcs__is_state_a_dead_end(
+    const fcs_collectible_state_t *const ptr_state)
+{
+    return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
+}
+
 #if (((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                \
          (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)) &&        \
      !defined(FCS_WITHOUT_TRIM_MAX_STORED_STATES))

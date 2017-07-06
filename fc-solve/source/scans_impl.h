@@ -209,7 +209,7 @@ static inline pq_rating_t befs_rate_state(
     if (num_cards_out_lookup_table[1])
     {
         const int num_foundations = (LOCAL_DECKS_NUM << 2);
-        for (int found_idx = 0; found_idx < num_foundations; found_idx++)
+        for (int found_idx = 0; found_idx < num_foundations; ++found_idx)
         {
             sum += num_cards_out_lookup_table[(
                 int)(fcs_foundation_value((*state), found_idx))];
@@ -219,7 +219,7 @@ static inline pq_rating_t befs_rate_state(
     fcs_game_limit_t num_vacant_stacks = 0;
     if (weighting->should_go_over_stacks)
     {
-        for (int a = 0; a < LOCAL_STACKS_NUM; a++)
+        for (int a = 0; a < LOCAL_STACKS_NUM; ++a)
         {
             const_AUTO(col, fcs_state_get_col(*state, a));
             const int cards_num = fcs_col_len(col);
@@ -228,7 +228,7 @@ static inline pq_rating_t befs_rate_state(
             {
                 if (cards_num == 0)
                 {
-                    num_vacant_stacks++;
+                    ++num_vacant_stacks;
                 }
                 continue;
             }
@@ -459,12 +459,6 @@ static inline fcs_bool_t fcs__should_state_be_pruned(
     return (enable_pruning && fcs__should_state_be_pruned__state(ptr_state));
 }
 #endif
-
-static inline fcs_bool_t fcs__is_state_a_dead_end(
-    const fcs_collectible_state_t *const ptr_state)
-{
-    return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
-}
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
