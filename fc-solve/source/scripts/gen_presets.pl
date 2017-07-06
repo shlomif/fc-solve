@@ -35,12 +35,8 @@ my @strings;
 
 sub compile_preset
 {
-    my $preset_name = shift;
-    my $preset      = $presets{$preset_name};
-
-    # For inheritance
-    my $compiled = shift || {};
-
+    my ( $preset_name, $compiled ) = @_;
+    my $preset = $presets{$preset_name};
     my @params = @{$preset};
     eval {
         while ( my $cmd = shift(@params) )
@@ -126,13 +122,11 @@ sub compile_preset
             }
         }
     };
-
     if ($@)
     {
         die "Preset Name: $preset_name\n$@";
     }
-
-    return $compiled;
+    return;
 }
 
 my $c_template = Template->new();
@@ -372,7 +366,8 @@ foreach my $preset_name ( sort { $a cmp $b } keys(%presets) )
         next PRESETS_LOOP;
     }
 
-    my $preset_compiled = compile_preset($preset_name);
+    my $preset_compiled = {};
+    compile_preset( $preset_name, $preset_compiled );
     push @strings, $mode_callbacks{$mode}->( $preset_name, $preset_compiled );
 }
 
