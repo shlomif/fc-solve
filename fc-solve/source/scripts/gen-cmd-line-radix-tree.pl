@@ -2,7 +2,6 @@ use strict;
 use warnings;
 use autodie;
 
-use List::Util qw(first);
 use FindBin;
 use Path::Tiny qw/ path /;
 
