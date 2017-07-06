@@ -838,6 +838,93 @@ static int compare_rating_with_index(
 #define VERIFY_PTR_STATE_TRACE0(no_use)
 #define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(no_use)
 #endif
+
+#if (((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                \
+         (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)) &&        \
+     !defined(FCS_WITHOUT_TRIM_MAX_STORED_STATES))
+static fcs_bool_t free_states_should_delete(
+    void *const key, void *const context)
+{
+    fc_solve_instance_t *const instance = (fc_solve_instance_t * const)context;
+    fcs_collectible_state_t *const ptr_state =
+        (fcs_collectible_state_t * const)key;
+
+    if (fcs__is_state_a_dead_end(ptr_state))
+    {
+        FCS_S_NEXT(ptr_state) = instance->list_of_vacant_states;
+        instance->list_of_vacant_states = ptr_state;
+
+        instance->active_num_states_in_collection--;
+
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+#endif
+
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
+static inline void free_states(fc_solve_instance_t *const instance)
+{
+#ifdef DEBUG
+    printf("%s\n", "FREE_STATES HIT");
+#endif
+#if (!((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||               \
+         (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
+    return;
+#else
+    {
+        /* First of all, let's make sure the soft_threads will no longer
+         * traverse to the freed states that are currently dead ends.
+         * */
+
+        HT_LOOP_START()
+        {
+            ST_LOOP_START()
+            {
+                if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
+                {
+                    free_states_handle_soft_dfs_soft_thread(soft_thread);
+                }
+                else if (soft_thread->is_befs)
+                {
+                    pri_queue_t new_pq;
+                    fc_solve_pq_init(&(new_pq));
+                    const_AUTO(elems, BEFS_VAR(soft_thread, pqueue).elems);
+                    const_AUTO(end_element,
+                        elems + BEFS_VAR(soft_thread, pqueue).current_size);
+                    for (pq_element_t *next_element = elems + PQ_FIRST_ENTRY;
+                         next_element <= end_element; next_element++)
+                    {
+                        if (!fcs__is_state_a_dead_end((*next_element).val))
+                        {
+                            fc_solve_pq_push(&new_pq, (*next_element).val,
+                                (*next_element).rating);
+                        }
+                    }
+
+                    fc_solve_st_free_pq(soft_thread);
+                    BEFS_VAR(soft_thread, pqueue) = new_pq;
+                }
+            }
+        }
+
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+        /* Now let's recycle the states. */
+        fc_solve_hash_foreach(
+            &(instance->hash), free_states_should_delete, ((void *)instance));
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
+        /* Now let's recycle the states. */
+        fc_solve_states_google_hash_foreach(
+            instance->hash, free_states_should_delete, ((void *)instance));
+#endif
+    }
+#endif
+}
+#endif
+
 /*
  * fc_solve_soft_dfs_do_solve() is the event loop of the
  * Random-DFS scan. DFS which is recursive in nature is handled here
@@ -1393,6 +1480,41 @@ static inline void switch_to_next_soft_thread(
             soft_threads[next_st_idx].checked_states_step, st_idx_ptr);
     }
 }
+
+#ifndef FCS_DISABLE_PATSOLVE
+// fc_solve_patsolve_do_solve() is the event loop of the Patsolve scan.
+static inline fc_solve_solve_process_ret_t fc_solve_patsolve_do_solve(
+    fc_solve_soft_thread_t *const soft_thread)
+{
+    const_SLOT(hard_thread, soft_thread);
+    const_SLOT(pats_scan, soft_thread);
+    const_AUTO(start_from, pats_scan->num_checked_states);
+
+    pats_scan->max_num_checked_states =
+        start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) -
+                         NUM_CHECKED_STATES);
+    pats_scan->status = FCS_PATS__NOSOL;
+    fc_solve_pats__do_it(pats_scan);
+
+    const_AUTO(after_scan_delta, pats_scan->num_checked_states - start_from);
+#ifndef FCS_SINGLE_HARD_THREAD
+    HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
+#endif
+    HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
+
+    switch (pats_scan->status)
+    {
+    case FCS_PATS__WIN:
+        return FCS_STATE_WAS_SOLVED;
+
+    case FCS_PATS__NOSOL:
+        return FCS_STATE_IS_NOT_SOLVEABLE;
+
+    default:
+        return FCS_STATE_SUSPEND_PROCESS;
+    }
+}
+#endif
 
 static inline int fc_solve__soft_thread__do_solve(
     fc_solve_soft_thread_t *const soft_thread)

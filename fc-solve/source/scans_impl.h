@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * scans_impl.h - code implementing the various scans as inline functions.
- */
+// scans_impl.h - code implementing the various scans as inline functions.
 #pragma once
 
 #ifdef __cplusplus
@@ -161,28 +159,6 @@ static inline fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
 #endif
 }
 
-#ifdef DEBUG
-
-static inline void fcs_trace(const char *const format, ...)
-{
-    va_list my_va_list;
-    va_start(my_va_list, format);
-
-    if (getenv("FCS_TRACE"))
-    {
-        vfprintf(stdout, format, my_va_list);
-        fflush(stdout);
-    }
-    va_end(my_va_list);
-}
-
-#define TRACE0(message)                                                        \
-    fcs_trace("BestFS(rate_state) - %s ; rating=%.40f .\n", message, 0.1)
-
-#else
-#define TRACE0(no_use)
-#endif
-
 static inline fcs_game_limit_t count_num_vacant_freecells(
     const fcs_game_limit_t freecells_num, const fcs_state_t *const state_ptr)
 {
@@ -303,12 +279,15 @@ static inline pq_rating_t befs_rate_state(
         }
         sum += num_cards_not_on_parents * num_cards_not_on_parents_weight;
     }
-
-    TRACE0("Before return");
+#ifdef DEBUG
+    if (getenv("FCS_TRACE"))
+    {
+        printf("BestFS(rate_state) - %s ; rating=%.40f .\n", message, 0.1)
+    }
+#endif
     return ((int)sum);
 #undef CALC_VACANCY_VAL
 }
-#undef TRACE0
 
 #ifdef FCS_RCS_STATES
 
@@ -556,98 +535,11 @@ static inline void free_states_handle_soft_dfs_soft_thread(
     }
 }
 
-#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \
-     (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH))
-#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static fcs_bool_t free_states_should_delete(
-    void *const key, void *const context)
-{
-    fc_solve_instance_t *const instance = (fc_solve_instance_t * const)context;
-    fcs_collectible_state_t *const ptr_state =
-        (fcs_collectible_state_t * const)key;
-
-    if (fcs__is_state_a_dead_end(ptr_state))
-    {
-        FCS_S_NEXT(ptr_state) = instance->list_of_vacant_states;
-        instance->list_of_vacant_states = ptr_state;
-
-        instance->active_num_states_in_collection--;
-
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-#endif
-#endif
-
 static inline void fc_solve_st_free_pq(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_PQueueFree(&(BEFS_VAR(soft_thread, pqueue)));
 }
-
-#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static inline void free_states(fc_solve_instance_t *const instance)
-{
-#ifdef DEBUG
-    printf("%s\n", "FREE_STATES HIT");
-#endif
-#if (!((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||               \
-         (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
-    return;
-#else
-    {
-        /* First of all, let's make sure the soft_threads will no longer
-         * traverse to the freed states that are currently dead ends.
-         * */
-
-        HT_LOOP_START()
-        {
-            ST_LOOP_START()
-            {
-                if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
-                {
-                    free_states_handle_soft_dfs_soft_thread(soft_thread);
-                }
-                else if (soft_thread->is_befs)
-                {
-                    pri_queue_t new_pq;
-                    fc_solve_pq_init(&(new_pq));
-                    const_AUTO(elems, BEFS_VAR(soft_thread, pqueue).elems);
-                    const_AUTO(end_element,
-                        elems + BEFS_VAR(soft_thread, pqueue).current_size);
-                    for (pq_element_t *next_element = elems + PQ_FIRST_ENTRY;
-                         next_element <= end_element; next_element++)
-                    {
-                        if (!fcs__is_state_a_dead_end((*next_element).val))
-                        {
-                            fc_solve_pq_push(&new_pq, (*next_element).val,
-                                (*next_element).rating);
-                        }
-                    }
-
-                    fc_solve_st_free_pq(soft_thread);
-                    BEFS_VAR(soft_thread, pqueue) = new_pq;
-                }
-            }
-        }
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-        /* Now let's recycle the states. */
-        fc_solve_hash_foreach(
-            &(instance->hash), free_states_should_delete, ((void *)instance));
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-        /* Now let's recycle the states. */
-        fc_solve_states_google_hash_foreach(
-            instance->hash, free_states_should_delete, ((void *)instance));
-#endif
-    }
-#endif
-}
-#endif
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
@@ -677,46 +569,6 @@ static inline fcs_int_limit_t calc_ht_max_num_states(
 
 #ifdef FCS_FREECELL_ONLY
 #undef unlimited_sequence_move
-#endif
-
-#undef TRACE0
-
-#ifndef FCS_DISABLE_PATSOLVE
-/*
- * fc_solve_patsolve_do_solve() is the event loop of the
- * Patsolve scan.
- */
-static inline fc_solve_solve_process_ret_t fc_solve_patsolve_do_solve(
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    const_SLOT(hard_thread, soft_thread);
-    const_SLOT(pats_scan, soft_thread);
-    const_AUTO(start_from, pats_scan->num_checked_states);
-
-    pats_scan->max_num_checked_states =
-        start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) -
-                         NUM_CHECKED_STATES);
-    pats_scan->status = FCS_PATS__NOSOL;
-    fc_solve_pats__do_it(pats_scan);
-
-    const_AUTO(after_scan_delta, pats_scan->num_checked_states - start_from);
-#ifndef FCS_SINGLE_HARD_THREAD
-    HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
-#endif
-    HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
-
-    switch (pats_scan->status)
-    {
-    case FCS_PATS__WIN:
-        return FCS_STATE_WAS_SOLVED;
-
-    case FCS_PATS__NOSOL:
-        return FCS_STATE_IS_NOT_SOLVEABLE;
-
-    default:
-        return FCS_STATE_SUSPEND_PROCESS;
-    }
-}
 #endif
 
 #ifdef __cplusplus
