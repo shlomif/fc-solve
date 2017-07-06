@@ -159,6 +159,21 @@ static inline fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
 #endif
 }
 
+#ifdef DEBUG
+static inline void fcs_trace(const char *const format, ...)
+{
+    va_list my_va_list;
+    va_start(my_va_list, format);
+
+    if (getenv("FCS_TRACE"))
+    {
+        vfprintf(stdout, format, my_va_list);
+        fflush(stdout);
+    }
+    va_end(my_va_list);
+}
+#endif
+
 static inline fcs_game_limit_t count_num_vacant_freecells(
     const fcs_game_limit_t freecells_num, const fcs_state_t *const state_ptr)
 {
@@ -279,11 +294,10 @@ static inline pq_rating_t befs_rate_state(
         }
         sum += num_cards_not_on_parents * num_cards_not_on_parents_weight;
     }
+
 #ifdef DEBUG
-    if (getenv("FCS_TRACE"))
-    {
-        printf("BestFS(rate_state) - %s ; rating=%.40f .\n", message, 0.1)
-    }
+    fcs_trace(
+        "BestFS(rate_state) - %s ; rating=%.40f .\n", "Before return", 0.1);
 #endif
     return ((int)sum);
 #undef CALC_VACANCY_VAL
