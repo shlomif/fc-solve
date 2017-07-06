@@ -17,6 +17,19 @@
 #include "fc_pro_iface_pos.h"
 #endif
 
+#ifdef DEBUG
+static void verify_state_sanity(const fcs_state_t *const ptr_state)
+{
+#ifndef NDEBUG
+    for (int i = 0; i < 8; i++)
+    {
+        const int l = fcs_state_col_len(*(ptr_state), i);
+        assert((l >= 0) && (l <= 7 + 12));
+    }
+#endif
+}
+#endif
+
 #ifndef FCS_SINGLE_HARD_THREAD
 static inline fc_solve_soft_thread_t *fc_solve_new_hard_thread(
     fc_solve_instance_t *const instance)
@@ -791,6 +804,29 @@ static inline int fc_solve_optimize_solution(
 #endif
 #endif
 
+#ifdef DEBUG_VERIFY_SOFT_DFS_STACK
+static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
+{
+    for (int depth = 0; depth < DFS_VAR(soft_thread, depth); depth++)
+    {
+        var_AUTO(soft_dfs_info, &(DFS_VAR(soft_thread, soft_dfs_info)[depth]));
+        int *const rand_indexes = soft_dfs_info->derived_states_random_indexes;
+
+        const_AUTO(num_states, soft_dfs_info->derived_states_list.num_states);
+
+        for (size_t i = soft_dfs_info->current_state_index; i < num_states; i++)
+        {
+            verify_state_sanity(
+                soft_dfs_info->derived_states_list.states[rand_indexes[i]]
+                    .state_ptr);
+        }
+    }
+}
+#define VERIFY_SOFT_DFS_STACK(soft_thread) verify_soft_dfs_stack(soft_thread)
+#else
+#define VERIFY_SOFT_DFS_STACK(soft_thread)
+#endif
+
 static int compare_rating_with_index(
     const void *const void_a, const void *const void_b)
 {
@@ -866,6 +902,43 @@ static fcs_bool_t free_states_should_delete(
 #endif
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
+static inline void free_states_handle_soft_dfs_soft_thread(
+    fc_solve_soft_thread_t *const soft_thread)
+{
+    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info));
+    const_AUTO(end_soft_dfs_info, soft_dfs_info + DFS_VAR(soft_thread, depth));
+
+    for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
+    {
+        const_AUTO(rand_indexes, soft_dfs_info->derived_states_random_indexes);
+
+        /*
+         * We start from current_state_index instead of current_state_index+1
+         * because that is the next state to be checked - it is referenced
+         * by current_state_index++ instead of ++current_state_index .
+         * */
+        fcs_rating_with_index_t *dest_rand_index_ptr =
+            rand_indexes + soft_dfs_info->current_state_index;
+        const fcs_rating_with_index_t *rand_index_ptr = dest_rand_index_ptr;
+
+        fcs_rating_with_index_t *const end_rand_index_ptr =
+            rand_indexes + soft_dfs_info->derived_states_list.num_states;
+
+        fcs_derived_states_list_item_t *const states =
+            soft_dfs_info->derived_states_list.states;
+        for (; rand_index_ptr < end_rand_index_ptr; rand_index_ptr++)
+        {
+            if (!fcs__is_state_a_dead_end(
+                    states[rand_index_ptr->idx].state_ptr))
+            {
+                *(dest_rand_index_ptr++) = *(rand_index_ptr);
+            }
+        }
+        soft_dfs_info->derived_states_list.num_states =
+            dest_rand_index_ptr - rand_indexes;
+    }
+}
+
 static inline void free_states(fc_solve_instance_t *const instance)
 {
 #ifdef DEBUG
@@ -922,6 +995,15 @@ static inline void free_states(fc_solve_instance_t *const instance)
 #endif
     }
 #endif
+}
+#endif
+
+#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
+static inline fcs_bool_t check_num_states_in_collection(
+    const fc_solve_instance_t *const instance)
+{
+    return (instance->active_num_states_in_collection >=
+            instance->effective_trim_states_in_collection_from);
 }
 #endif
 

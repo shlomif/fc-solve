@@ -65,6 +65,12 @@ static inline void instance_free_solution_moves(
 }
 #endif
 
+static inline void fc_solve_st_free_pq(
+    fc_solve_soft_thread_t *const soft_thread)
+{
+    fc_solve_PQueueFree(&(BEFS_VAR(soft_thread, pqueue)));
+}
+
 static inline void fc_solve_free_instance_soft_thread_callback(
     fc_solve_soft_thread_t *const soft_thread)
 {

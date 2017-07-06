@@ -18,15 +18,6 @@ extern "C" {
 
 #include "scans.h"
 
-#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static inline fcs_bool_t check_num_states_in_collection(
-    const fc_solve_instance_t *const instance)
-{
-    return (instance->active_num_states_in_collection >=
-            instance->effective_trim_states_in_collection_from);
-}
-#endif
-
 #ifdef FCS_SINGLE_HARD_THREAD
 #define check_if_limits_exceeded__num()                                        \
     ((*instance_num_checked_states_ptr) == max_num_states)
@@ -93,9 +84,9 @@ static inline void fc_solve_initialize_befs_rater(
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
-    const fcs_bool_t bool_unlimited_sequence_move =
+    const fcs_bool_t unlimited_sequence_move_var =
         INSTANCE_UNLIMITED_SEQUENCE_MOVE;
-#define unlimited_sequence_move bool_unlimited_sequence_move
+#define unlimited_sequence_move unlimited_sequence_move_var
 #else
 #define unlimited_sequence_move FALSE
 #endif
@@ -374,43 +365,6 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
 #define calculate_real_depth(calc_real_depth, ptr_state_orig)
 #endif
 
-#ifdef DEBUG
-
-static void verify_state_sanity(const fcs_state_t *const ptr_state)
-{
-#ifndef NDEBUG
-    for (int i = 0; i < 8; i++)
-    {
-        const int l = fcs_state_col_len(*(ptr_state), i);
-        assert((l >= 0) && (l <= 7 + 12));
-    }
-#endif
-}
-
-#ifdef DEBUG_VERIFY_SOFT_DFS_STACK
-static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
-{
-    for (int depth = 0; depth < DFS_VAR(soft_thread, depth); depth++)
-    {
-        var_AUTO(soft_dfs_info, &(DFS_VAR(soft_thread, soft_dfs_info)[depth]));
-        int *const rand_indexes = soft_dfs_info->derived_states_random_indexes;
-
-        const_AUTO(num_states, soft_dfs_info->derived_states_list.num_states);
-
-        for (size_t i = soft_dfs_info->current_state_index; i < num_states; i++)
-        {
-            verify_state_sanity(
-                soft_dfs_info->derived_states_list.states[rand_indexes[i]]
-                    .state_ptr);
-        }
-    }
-}
-#define VERIFY_SOFT_DFS_STACK(soft_thread) verify_soft_dfs_stack(soft_thread)
-#else
-#define VERIFY_SOFT_DFS_STACK(soft_thread)
-#endif
-
-#endif
 /*
  * The mark_as_dead_end() inline function marks a state as a dead end, and
  * afterwards propagates this information to its parent and ancestor states.
@@ -512,49 +466,6 @@ static inline fcs_bool_t fcs__is_state_a_dead_end(
     return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
 }
 
-static inline void free_states_handle_soft_dfs_soft_thread(
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info));
-    const_AUTO(end_soft_dfs_info, soft_dfs_info + DFS_VAR(soft_thread, depth));
-
-    for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
-    {
-        const_AUTO(rand_indexes, soft_dfs_info->derived_states_random_indexes);
-
-        /*
-         * We start from current_state_index instead of current_state_index+1
-         * because that is the next state to be checked - it is referenced
-         * by current_state_index++ instead of ++current_state_index .
-         * */
-        fcs_rating_with_index_t *dest_rand_index_ptr =
-            rand_indexes + soft_dfs_info->current_state_index;
-        const fcs_rating_with_index_t *rand_index_ptr = dest_rand_index_ptr;
-
-        fcs_rating_with_index_t *const end_rand_index_ptr =
-            rand_indexes + soft_dfs_info->derived_states_list.num_states;
-
-        fcs_derived_states_list_item_t *const states =
-            soft_dfs_info->derived_states_list.states;
-        for (; rand_index_ptr < end_rand_index_ptr; rand_index_ptr++)
-        {
-            if (!fcs__is_state_a_dead_end(
-                    states[rand_index_ptr->idx].state_ptr))
-            {
-                *(dest_rand_index_ptr++) = *(rand_index_ptr);
-            }
-        }
-        soft_dfs_info->derived_states_list.num_states =
-            dest_rand_index_ptr - rand_indexes;
-    }
-}
-
-static inline void fc_solve_st_free_pq(
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    fc_solve_PQueueFree(&(BEFS_VAR(soft_thread, pqueue)));
-}
-
 #ifdef FCS_SINGLE_HARD_THREAD
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
     (instance->effective_max_num_checked_states)
@@ -578,12 +489,8 @@ static inline fcs_int_limit_t calc_ht_max_num_states(
 }
 
 #undef state
-
 #undef ptr_state_key
-
-#ifdef FCS_FREECELL_ONLY
 #undef unlimited_sequence_move
-#endif
 
 #ifdef __cplusplus
 }

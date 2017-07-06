@@ -90,7 +90,7 @@ static inline void fc_solve_pq_init(pri_queue_t *const pq)
     pq->elems = SMALLOC(pq->elems, (pq->max_size = 1024) + 1);
 }
 
-static inline void fc_solve_PQueueFree(pri_queue_t *pq)
+static inline void fc_solve_PQueueFree(pri_queue_t *const pq)
 {
     free(pq->elems);
     pq->elems = NULL;
