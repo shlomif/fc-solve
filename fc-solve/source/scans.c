@@ -16,7 +16,6 @@
 #include "meta_alloc.h"
 #include "move_stack_compact_alloc.h"
 #include "freecell.h"
-#include "simpsim.h"
 #include "move_funcs_maps.h"
 
 #undef DEBUG
