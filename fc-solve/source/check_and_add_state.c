@@ -496,18 +496,19 @@ fcs_bool_t fc_solve_check_and_add_state(
         hash_value_int &= (~(1 << ((sizeof(hash_value_int) << 3) - 1)));
     }
 #endif
-    return HANDLE_existing_void(fc_solve_hash_insert(&(instance->hash),
 #ifdef FCS_RCS_STATES
-        new_state->val, new_state->key,
+#define A new_state->val, new_state->key
 #else
-        FCS_STATE_kv_to_collectible(new_state),
+#define A FCS_STATE_kv_to_collectible(new_state)
 #endif
-        perl_hash_function((ub1 *)(new_state_key), sizeof(*(new_state_key)))
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-            ,
-        hash_value_int
+#define B , hash_value_int
+#else
+#define B
 #endif
-        ));
+    return HANDLE_existing_void(fc_solve_hash_insert(&(instance->hash), A,
+        perl_hash_function((ub1 *)(new_state_key), sizeof(*(new_state_key)))
+            B));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     void *existing_void;
     if (!fc_solve_states_google_hash_insert(instance->hash,
