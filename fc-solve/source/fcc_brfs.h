@@ -197,7 +197,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     fcs_derived_state_t *derived_list_recycle_bin = NULL, *next_derived_iter;
     fcs_state_keyval_pair_t state;
     fcs_bool_t running_min_was_assigned = FALSE;
-    fcs_encoded_state_buffer_t running_min;
+    fcs_encoded_state_buffer_t running_min = {{0}};
     long num_new_positions = 0;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 

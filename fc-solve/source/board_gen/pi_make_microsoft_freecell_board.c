@@ -35,7 +35,7 @@
 
 typedef int CARD;
 
-const int NUM_CARDS = (4 * 13);
+#define NUM_CARDS (4 * 13)
 #define SUIT(card) ((card) % 4)
 #define VALUE(card) ((card) / 4)
 
