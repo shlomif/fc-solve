@@ -908,12 +908,17 @@ static inline void fc_solve_soft_thread_update_initial_cards_val(
     for (int a = 0; a < INSTANCE_STACKS_NUM; a++)
     {
         const_AUTO(col, fcs_state_get_col(*s, a));
+        const_AUTO(col_len, fcs_col_len(col));
+        if (col_len <= 1)
+        {
+            continue;
+        }
         cards_under_sequences +=
             FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(
 #ifndef FCS_FREECELL_ONLY
                 sequences_are_built_by,
 #endif
-                col, fcs_col_len(col) - 1));
+                col, col_len - 1));
     }
     soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
 }
