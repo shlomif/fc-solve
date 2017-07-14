@@ -384,12 +384,6 @@ static int fc_solve_rcs_states_compare(
 
 #define STATE_STORAGE_TREE_COMPARE() fc_solve_rcs_states_compare
 #define STATE_STORAGE_TREE_CONTEXT() instance
-
-#else
-
-#define STATE_STORAGE_TREE_COMPARE() fc_solve_state_compare_with_context
-#define STATE_STORAGE_TREE_CONTEXT() NULL
-
 #endif
 
 static inline void set_next_prelude_item(
@@ -446,8 +440,7 @@ static inline void fc_solve_start_instance_process_with_board(
 
 /* Initialize the data structure that will manage the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    instance->tree =
-        rbinit(STATE_STORAGE_TREE_COMPARE(), STATE_STORAGE_TREE_CONTEXT());
+    instance->tree = rbinit(fc_solve_state_compare_with_context, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 
     instance->tree = fcs_libavl2_states_tree_create(
@@ -2466,7 +2459,7 @@ void DLLEXPORT freecell_solver_user_limit_iterations_long(
 void DLLEXPORT freecell_solver_user_limit_iterations(
     void *const api_instance, const int max_iters)
 {
-    return freecell_solver_user_limit_iterations_long(
+    freecell_solver_user_limit_iterations_long(
         api_instance, (fcs_int_limit_t)max_iters);
 }
 
@@ -3599,8 +3592,9 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     if (int_method == FCS_METHOD_HARD_DFS)
     {
-        return freecell_solver_user_set_solving_method(
+        freecell_solver_user_set_solving_method(
             api_instance, FCS_METHOD_SOFT_DFS);
+        return;
     }
 #endif
     fcs_super_method_type_t super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
@@ -4145,7 +4139,7 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
 void DLLEXPORT freecell_solver_user_limit_num_states_in_collection(
     void *const api_instance, const int max_num_states)
 {
-    return freecell_solver_user_limit_num_states_in_collection_long(
+    freecell_solver_user_limit_num_states_in_collection_long(
         api_instance, (fcs_int_limit_t)max_num_states);
 }
 #endif
@@ -4509,16 +4503,10 @@ const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
     {
     case FLARES_PLAN_RUN_INDEFINITELY:
         return "RunIndef";
-        break;
     case FLARES_PLAN_RUN_COUNT_ITERS:
         return "Run";
-        break;
     case FLARES_PLAN_CHECKPOINT:
         return "CP";
-        break;
-    default:
-        fc_solve_err("%s\n", "Unknown flares plan item type. Something is "
-                             "Wrong on the Internet.");
     }
 #else
     return "";
