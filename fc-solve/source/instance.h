@@ -895,9 +895,12 @@ static inline void fc_solve_soft_thread_update_initial_cards_val(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_instance_t *const instance = fcs_st_instance(soft_thread);
-#ifndef FCS_FREECELL_ONLY
+#ifdef FCS_FREECELL_ONLY
+#define SEQS_BUILT_BY
+#else
     const int sequences_are_built_by =
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+#define SEQS_BUILT_BY sequences_are_built_by,
 #endif
     /* We cannot use typeof here because clang complains about double
      * const.
@@ -913,12 +916,8 @@ static inline void fc_solve_soft_thread_update_initial_cards_val(
         {
             continue;
         }
-        cards_under_sequences +=
-            FCS_SEQS_OVER_RENEGADE_POWER(update_col_cards_under_sequences(
-#ifndef FCS_FREECELL_ONLY
-                sequences_are_built_by,
-#endif
-                col, col_len - 1));
+        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER(
+            update_col_cards_under_sequences(SEQS_BUILT_BY col, col_len - 1));
     }
     soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
 }
