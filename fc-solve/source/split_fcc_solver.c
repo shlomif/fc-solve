@@ -59,7 +59,7 @@ static inline int FccEntryPointNode_compare(
 }
 
 RB_HEAD(FccEntryPointList, FccEntryPointNode);
-const FccEntryPointList FccEntryPointList_init =
+static const FccEntryPointList FccEntryPointList_init =
     RB_INITIALIZER(&(instance->fcc_entry_points));
 
 typedef struct
@@ -101,7 +101,6 @@ typedef struct
 
 #include "dbm_procs.h"
 #include "fcs_base64.h"
-#define __unused GCC_UNUSED
 RB_GENERATE_STATIC(
     FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 

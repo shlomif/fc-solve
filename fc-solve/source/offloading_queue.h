@@ -132,7 +132,7 @@ static inline void fcs_offloading_queue__insert(
 
 #else
 
-const size_t NUM_ITEMS_PER_PAGE = (128 * 1024);
+static const size_t NUM_ITEMS_PER_PAGE = (128 * 1024);
 typedef struct
 {
     long page_index, queue_id;
