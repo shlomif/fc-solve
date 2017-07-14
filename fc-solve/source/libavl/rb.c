@@ -74,8 +74,6 @@ static inline enum rb_color rb_set_color(struct rb_node *const node, const enum 
 }
 #endif
 
-#define NODEPTR_SET_COLOR(p, b) rb_set_color((p), (b))
-
 /* Creates and returns a new table
    with comparison function |compare| using parameter |param|
    and memory allocator |allocator|.
