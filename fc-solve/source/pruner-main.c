@@ -59,7 +59,6 @@ static void my_iter_handler(void *const user_instance,
                 printf("\n\nVerdict: SOLVED\n\nYay! We found a solution from "
                        "this one.");
                 exit(0);
-                break;
 
             case FCS_STATE_IS_NOT_SOLVEABLE:
                 printf("\n\nVerdict: PRUNED\n\n");
@@ -68,7 +67,6 @@ static void my_iter_handler(void *const user_instance,
             default:
                 printf("\n\nVerdict: unknown ret code: %d\n\n", ret);
                 exit(-1);
-                break;
             }
             freecell_solver_user_free(pruner);
         }

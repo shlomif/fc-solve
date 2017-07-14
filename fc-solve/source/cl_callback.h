@@ -23,7 +23,7 @@ typedef struct
     const char *screen;
 } help_screen_t;
 
-help_screen_t help_screens[] = {
+static help_screen_t help_screens[] = {
     {"configs",
         "These configurations are usually faster than the unmodified run:\n"
         "\n"
