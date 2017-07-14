@@ -578,22 +578,22 @@ DECLARE_MOVE_FUNCTION(
                     below_c - dc, 0);
 
                 fcs_card_t moved_card;
-#define src_idx last_dest.src_idx
+#define s_idx last_dest.src_idx
                 if (last_dest.is_col)
                 {
                     var_AUTO(new_source_col,
-                        fcs_state_get_col(new_state_key, src_idx));
+                        fcs_state_get_col(new_state_key, s_idx));
                     fcs_col_pop_card(new_source_col, moved_card);
-                    fcs_push_1card_seq(moves, src_idx, ds);
+                    fcs_push_1card_seq(moves, s_idx, ds);
                 }
                 else
                 {
-                    moved_card = fcs_freecell_card(new_state_key, src_idx);
-                    fcs_empty_freecell(new_state_key, src_idx);
+                    moved_card = fcs_freecell_card(new_state_key, s_idx);
+                    fcs_empty_freecell(new_state_key, s_idx);
                     fcs_move_stack_non_seq_push(
-                        moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, src_idx, ds);
+                        moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, s_idx, ds);
                 }
-#undef src_idx
+#undef s_idx
                 fcs_state_push(&new_state_key, ds, moved_card);
 
                 sfs_check_state_end();
