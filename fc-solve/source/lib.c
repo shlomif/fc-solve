@@ -1598,7 +1598,7 @@ static inline fc_solve_solve_process_ret_t fc_solve_patsolve_do_solve(
     case FCS_PATS__NOSOL:
         return FCS_STATE_IS_NOT_SOLVEABLE;
 
-    default:
+    case FCS_PATS__FAIL:
         return FCS_STATE_SUSPEND_PROCESS;
     }
 }
@@ -1619,9 +1619,6 @@ static inline int fc_solve__soft_thread__do_solve(
     case FCS_SUPER_METHOD_PATSOLVE:
         return fc_solve_patsolve_do_solve(soft_thread);
 #endif
-
-    default:
-        return FCS_STATE_IS_NOT_SOLVEABLE;
     }
 }
 
