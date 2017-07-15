@@ -954,8 +954,6 @@ enum
     FCS_VISITED_GENERATED_BY_PRUNING = 0x10,
 };
 
-#define FCS_WITH_CARD_COMPARE_LOOKUP
-
 static inline int fc_solve_card_compare(
     const fcs_card_t c1, const fcs_card_t c2)
 {

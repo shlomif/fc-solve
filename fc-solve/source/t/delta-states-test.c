@@ -202,7 +202,6 @@ static int main_tests(void)
             ok (enc.bit_in_char_idx == 7, "Only 7 bits (2).");
         }
 
-#define SUIT_HC 0
 #define SUIT_DS 1
 
         {

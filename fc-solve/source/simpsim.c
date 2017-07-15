@@ -16,9 +16,7 @@
  * FCS_DISABLE_SIMPLE_SIMON.
  * */
 #ifdef FCS_DISABLE_SIMPLE_SIMON
-
 char fc_solve_simple_simon_nothing;
-
 #else
 
 #include "meta_move_funcs_helpers.h"

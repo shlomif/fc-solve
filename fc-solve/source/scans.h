@@ -62,8 +62,6 @@ static inline void fc_solve__calc_positions_by_rank_data(
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     if (is_simple_simon)
     {
-#define FCS_SS_POS_BY_RANK_SIZE                                                \
-    (sizeof(fcs_pos_by_rank_t) * FCS_SS_POS_BY_RANK_LEN)
 #define FCS_POS_IDX(rank, suit) ((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank))
         fcs_pos_by_rank_t *const p_by_r =
             (fcs_pos_by_rank_t *)positions_by_rank;

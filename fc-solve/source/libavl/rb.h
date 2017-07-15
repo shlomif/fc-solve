@@ -118,10 +118,6 @@ enum rb_color
     RB_RED      /* Red. */
   };
 
-#define L(node, i) (avl_process_link(node->rb_mylink[i]))
-#define SET_L(node, i, val) (avl_set_link(node, i, val))
-#define NODEPTR_GET_COLOR(p) avl_get_color(p)
-
 /* RB traverser structure. */
 struct rb_traverser
   {

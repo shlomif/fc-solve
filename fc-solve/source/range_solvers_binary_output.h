@@ -31,8 +31,7 @@ typedef struct
 
 static const binary_output_t INIT_BINARY_OUTPUT = {.filename = NULL};
 
-#define BINARY_OUTPUT_NUM_INTS 16
-#define BINARY_OUTPUT_BUF_SIZE (sizeof(int) * BINARY_OUTPUT_NUM_INTS)
+#define BINARY_OUTPUT_BUF_SIZE (sizeof(int) * 16)
 #define SIZE_INT 4
 
 static inline void write_me(binary_output_t *const bin)

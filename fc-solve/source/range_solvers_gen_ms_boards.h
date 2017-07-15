@@ -25,7 +25,6 @@ typedef int CARD;
 #define SUIT(card) ((card) & (4 - 1))
 #define VALUE(card) ((card) >> 2)
 
-#define MAXPOS 7
 #define MAXCOL 8
 
 static const char *card_to_string_values = "A23456789TJQK";

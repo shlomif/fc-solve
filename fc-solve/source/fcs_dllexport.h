@@ -9,14 +9,7 @@
  */
 #pragma once
 
-#ifdef _MSC_VER
-#ifdef BUILDING_DLL
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT __declspec(dllimport)
-#endif
-#define DLLLOCAL
-#elif defined(__EMSCRIPTEN__)
+#ifdef __EMSCRIPTEN__
 #include "emscripten.h"
 #define DLLEXPORT EMSCRIPTEN_KEEPALIVE
 #define DLLLOCAL __attribute__((visibility("hidden")))

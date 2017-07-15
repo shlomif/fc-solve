@@ -207,10 +207,6 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
             founds[i][0] = '0';
     }
 
-#if 0
-    fc_solve_append_string_init(&app_str_struct);
-#endif
-
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     if (!parseable_output)
     {
