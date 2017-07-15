@@ -382,8 +382,20 @@ static int fc_solve_rcs_states_compare(
 
 #endif
 
+#endif
+
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) ||                  \
+     (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE) ||                      \
+     (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE))
+
+#ifdef FCS_RCS_STATES
 #define STATE_STORAGE_TREE_COMPARE() fc_solve_rcs_states_compare
 #define STATE_STORAGE_TREE_CONTEXT() instance
+#else
+#define STATE_STORAGE_TREE_COMPARE() fc_solve_state_compare_with_context
+#define STATE_STORAGE_TREE_CONTEXT() NULL
+#endif
+
 #endif
 
 static inline void set_next_prelude_item(
@@ -440,7 +452,8 @@ static inline void fc_solve_start_instance_process_with_board(
 
 /* Initialize the data structure that will manage the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    instance->tree = rbinit(fc_solve_state_compare_with_context, NULL);
+    instance->tree =
+        rbinit(STATE_STORAGE_TREE_COMPARE(), STATE_STORAGE_TREE_CONTEXT());
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
 
     instance->tree = fcs_libavl2_states_tree_create(
