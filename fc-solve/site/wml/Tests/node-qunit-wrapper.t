@@ -9,7 +9,7 @@ my $output = `$CMD`;
 
 my $count_fails = 0;
 pos$output = 0;
-while($output =~ /\G.*?[^0-9]([0-9]+) tests of ([0-9]+) passed\./)
+while ($output =~ /\G.*?[^0-9]([0-9]+) tests of ([0-9]+) passed\./g)
 {
     if ($1 ne $2)
     {
