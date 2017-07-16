@@ -8,8 +8,15 @@ my $CMD = q#NODE_PATH="`pwd`"/lib/for-node/js qunit-cli lib/for-node/test-code.j
 my $output = `$CMD`;
 
 my $count_fails = 0;
-my $destroyed_output = $output;
-$destroyed_output=~ s/[^0-9]([0-9]+) tests of ([0-9]+) passed\./if ($1 ne $2) { ++$count_fails; }/eg;
+pos$output = 0;
+while($output =~ /\G.*?[^0-9]([0-9]+) tests of ([0-9]+) passed\./)
+{
+    if ($1 ne $2)
+    {
+        ++$count_fails;
+    }
+}
+
 # TEST
 if (!is($count_fails, 0, "All QUnit tests passed."))
 {
