@@ -71,6 +71,7 @@
 01-Jul-2013
 0rc5
 1-win32
+10-Jun-2017
 100K
 12-Jul-2002
 12-Jun-2012
@@ -963,6 +964,7 @@ sublicense
 26-Jun-2013
 27-Sep-2015
 28-Jul-2000
+2G
 DD-MMM-YYYY
 appveyor
 cffi
