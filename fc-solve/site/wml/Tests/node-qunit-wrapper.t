@@ -7,8 +7,11 @@ my $CMD = q#NODE_PATH="`pwd`"/lib/for-node/js qunit-cli lib/for-node/test-code.j
 
 my $output = `$CMD`;
 
+my $count_fails = 0;
+my $destroyed_output = $output;
+$destroyed_output=~ s/[^0-9]([0-9]+) tests of ([0-9]+) passed\./if ($1 ne $2) { ++$count_fails; }/eg;
 # TEST
-if (!like($output, qr/[^0-9]([0-9]+) tests of \1 passed\./, "All QUnit tests passed."))
+if (!is($count_fails, 0, "All QUnit tests passed."))
 {
     diag("OUTPUT == <<$output>>");
 }
