@@ -36,39 +36,37 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
     case FCS_MOVE_TYPE_STACK_TO_STACK:
     {
         fcs_col_transfer_cards(
-            fcs_state_get_col(*state_key, fcs_int_move_get_dest_stack(move)),
+            fcs_state_get_col(*state_key, fcs_int_move_get_dest(move)),
             fcs_state_get_col(*state_key, fcs_int_move_get_src(move)),
             fcs_int_move_get_num_cards_in_seq(move));
     }
     break;
     case FCS_MOVE_TYPE_FREECELL_TO_STACK:
-        fcs_state_push(state_key, fcs_int_move_get_dest_stack(move),
+        fcs_state_push(state_key, fcs_int_move_get_dest(move),
             fcs_freecell_card(*state_key, fcs_int_move_get_src(move)));
         fcs_empty_freecell(*state_key, fcs_int_move_get_src(move));
         break;
     case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
         card = fcs_freecell_card(*state_key, fcs_int_move_get_src(move));
-        fcs_put_card_in_freecell(
-            *state_key, fcs_int_move_get_dest_freecell(move), card);
+        fcs_put_card_in_freecell(*state_key, fcs_int_move_get_dest(move), card);
         fcs_empty_freecell(*state_key, fcs_int_move_get_src(move));
         break;
 
     case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         col = fcs_state_get_col(*state_key, fcs_int_move_get_src(move));
         fcs_col_pop_card(col, card);
-        fcs_put_card_in_freecell(
-            *state_key, fcs_int_move_get_dest_freecell(move), card);
+        fcs_put_card_in_freecell(*state_key, fcs_int_move_get_dest(move), card);
         break;
 
     case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         col = fcs_state_get_col(*state_key, fcs_int_move_get_src(move));
         fcs_col_pop_top(col);
-        fcs_increment_foundation(*state_key, fcs_int_move_get_foundation(move));
+        fcs_increment_foundation(*state_key, fcs_int_move_get_dest(move));
         break;
 
     case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
         fcs_empty_freecell(*state_key, fcs_int_move_get_src(move));
-        fcs_increment_foundation(*state_key, fcs_int_move_get_foundation(move));
+        fcs_increment_foundation(*state_key, fcs_int_move_get_dest(move));
         break;
 
 #ifndef FCS_FREECELL_ONLY
@@ -77,8 +75,7 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
         for (int i = 0; i < 13; i++)
         {
             fcs_col_pop_top(col);
-            fcs_increment_foundation(
-                *state_key, fcs_int_move_get_foundation(move));
+            fcs_increment_foundation(*state_key, fcs_int_move_get_dest(move));
         }
         break;
 #endif

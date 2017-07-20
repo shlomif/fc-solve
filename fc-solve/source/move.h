@@ -170,20 +170,19 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
         case FCS_MOVE_TYPE_STACK_TO_STACK:
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
             fcs_int_move_set_dest(out_move,
-                locs->stack_locs[(int)fcs_int_move_get_dest_stack(in_move)]);
+                locs->stack_locs[(int)fcs_int_move_get_dest(in_move)]);
             break;
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
-            fcs_int_move_set_dest(out_move,
-                locs->fc_locs[(int)fcs_int_move_get_dest_freecell(in_move)]);
+            fcs_int_move_set_dest(
+                out_move, locs->fc_locs[(int)fcs_int_move_get_dest(in_move)]);
             break;
 
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
-            fcs_int_move_set_dest(
-                out_move, fcs_int_move_get_foundation(in_move));
+            fcs_int_move_set_dest(out_move, fcs_int_move_get_dest(in_move));
             break;
         default:
             break;
