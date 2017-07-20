@@ -49,7 +49,7 @@ static inline void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
     fcs_internal_move_t temp_move;
 
     fcs_int_move_set_type(temp_move, type);
-    fcs_int_move_set_src_stack(temp_move, src);
+    fcs_int_move_set_src(temp_move, src);
     fcs_int_move_set_dest_stack(temp_move, dest);
     fcs_int_move_set_num_cards_in_seq(temp_move, num_cards_in_seq);
 
@@ -152,13 +152,13 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
-            fcs_int_move_set_src_stack(out_move,
+            fcs_int_move_set_src(out_move,
                 locs->stack_locs[(int)fcs_int_move_get_src_stack(in_move)]);
             break;
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
-            fcs_int_move_set_src_freecell(out_move,
+            fcs_int_move_set_src(out_move,
                 locs->fc_locs[(int)fcs_int_move_get_src_freecell(in_move)]);
             break;
         default:

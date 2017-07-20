@@ -506,7 +506,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                     {
                         fcs_int_move_set_type(
                             out_move, FCS_MOVE_TYPE_STACK_TO_FREECELL);
-                        fcs_int_move_set_src_stack(out_move, src_col_idx);
+                        fcs_int_move_set_src(out_move, src_col_idx);
                         fcs_int_move_set_dest_freecell(out_move, dest);
                         break;
                     }
@@ -522,14 +522,13 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION);
-                    fcs_int_move_set_src_freecell(out_move, src.idx);
                 }
                 else
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
-                    fcs_int_move_set_src_stack(out_move, src.idx);
                 }
+                fcs_int_move_set_src(out_move, src.idx);
                 fcs_int_move_set_foundation(out_move, fcs_card_suit(card));
             }
             break;
@@ -543,15 +542,14 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_FREECELL_TO_STACK);
-                    fcs_int_move_set_src_freecell(out_move, src.idx);
                 }
                 else
                 {
                     fcs_int_move_set_type(
                         out_move, FCS_MOVE_TYPE_STACK_TO_STACK);
-                    fcs_int_move_set_src_stack(out_move, src.idx);
                     fcs_int_move_set_num_cards_in_seq(out_move, 1);
                 }
+                fcs_int_move_set_src(out_move, src.idx);
                 fcs_int_move_set_dest_stack(out_move,
                     (fcs_card_is_empty(dest_card)
                             ? find_empty_col(s PASS_STACKS(STACKS_NUM__VAL))

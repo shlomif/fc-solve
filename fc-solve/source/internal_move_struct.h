@@ -39,10 +39,7 @@ typedef fcs_move_t fcs_internal_move_t;
 #endif
 
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
-#define fcs_int_move_set_src_stack(move, value)                                \
-    (move).src = ((unsigned int)(value));
-#define fcs_int_move_set_src_freecell(move, value)                             \
-    (move).src = ((unsigned int)(value));
+#define fcs_int_move_set_src(move, value) (move).src = ((unsigned int)(value));
 #define fcs_int_move_set_dest_stack(move, value)                               \
     (move).dest = ((unsigned int)(value));
 #define fcs_int_move_set_dest_freecell(move, value)                            \
@@ -64,10 +61,8 @@ typedef fcs_move_t fcs_internal_move_t;
 
 #else /* Not FCS_USE_COMPACT_MOVE_TOKENS */
 
-#define fcs_int_move_set_src_stack(move, value)                                \
+#define fcs_int_move_set_src(move, value)                                      \
     fcs_move_set_src_stack((move), (value))
-#define fcs_int_move_set_src_freecell(move, value)                             \
-    fcs_move_set_src_freecell((move), (value))
 #define fcs_int_move_set_dest_stack(move, value)                               \
     fcs_move_set_dest_stack((move), (value))
 #define fcs_int_move_set_dest_freecell(move, value)                            \
