@@ -182,7 +182,7 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
         case FCS_MOVE_TYPE_SEQ_TO_FOUNDATION:
-            fcs_int_move_set_foundation(
+            fcs_int_move_set_dest(
                 out_move, fcs_int_move_get_foundation(in_move));
             break;
         default:

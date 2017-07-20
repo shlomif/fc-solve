@@ -529,7 +529,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                         out_move, FCS_MOVE_TYPE_STACK_TO_FOUNDATION);
                 }
                 fcs_int_move_set_src(out_move, src.idx);
-                fcs_int_move_set_foundation(out_move, fcs_card_suit(card));
+                fcs_int_move_set_dest(out_move, fcs_card_suit(card));
             }
             break;
             default:
