@@ -2930,8 +2930,7 @@ static inline fcs_internal_move_t user_move_to_internal_move(
 
     /* Convert the internal_move to a user move. */
     fcs_int_move_set_src(internal_move, fcs_move_get_src_stack(user_move));
-    fcs_int_move_set_dest_stack(
-        internal_move, fcs_move_get_dest_stack(user_move));
+    fcs_int_move_set_dest(internal_move, fcs_move_get_dest_stack(user_move));
     fcs_int_move_set_type(internal_move, fcs_move_get_type(user_move));
     fcs_int_move_set_num_cards_in_seq(
         internal_move, fcs_move_get_num_cards_in_seq(user_move));
