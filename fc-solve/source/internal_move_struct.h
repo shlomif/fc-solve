@@ -7,13 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * internal_move_struct.h - header file for the internal move structure
- * of Freecell Solver.
- *
- * This file is not exposed to the outside.
- *
- */
+// internal_move_struct.h - header file for the internal move structure.
+//
+// This file is not exposed to the outside.
 #pragma once
 
 #ifdef __cplusplus
