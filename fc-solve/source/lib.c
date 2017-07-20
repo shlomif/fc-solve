@@ -2913,8 +2913,7 @@ static inline fcs_move_t internal_move_to_user_move(
     fcs_move_t user_move;
 
     /* Convert the internal_move to a user move. */
-    fcs_move_set_src_stack(
-        user_move, fcs_int_move_get_src_stack(internal_move));
+    fcs_move_set_src_stack(user_move, fcs_int_move_get_src(internal_move));
     fcs_move_set_dest_stack(
         user_move, fcs_int_move_get_dest_stack(internal_move));
     fcs_move_set_type(user_move, fcs_int_move_get_type(internal_move));
