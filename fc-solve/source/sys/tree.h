@@ -26,9 +26,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#ifndef	FC_SOLVE__SYS_TREE_H
-#define	FC_SOLVE__SYS_TREE_H
+#pragma once
 
 #include "unused.h"
 #ifndef _WIN32
@@ -764,5 +762,3 @@ name##_RB_MINMAX(struct name *head, int val)				\
 	for ((x) = RB_MAX(name, head);					\
 	    ((x) != NULL) && ((y) = name##_RB_PREV(x), (x) != NULL);	\
 	     (x) = (y))
-
-#endif	/* FC_SOLVE__SYS_TREE_H_ */

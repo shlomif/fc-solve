@@ -78,13 +78,7 @@ extern "C" {
 #endif
 
 #include "pqueue.h"
-
 #include "meta_alloc.h"
-
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-#define FCS_SS_POS_BY_RANK_WIDTH (13 + 1)
-#define FCS_SS_POS_BY_RANK_LEN (FCS_SS_POS_BY_RANK_WIDTH * 4)
-#endif
 
 /* We need 2 chars per card - one for the column_idx and one
  * for the card_idx.
@@ -105,6 +99,8 @@ typedef struct
 } fcs_pos_by_rank_t;
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
+#define FCS_SS_POS_BY_RANK_WIDTH (FCS_RANK_KING + 1)
+#define FCS_SS_POS_BY_RANK_LEN (FCS_SS_POS_BY_RANK_WIDTH * 4)
 #define FCS_BOTH__POS_BY_RANK__SIZE                                            \
     (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank_t),                   \
         FCS_POS_BY_RANK_LEN))

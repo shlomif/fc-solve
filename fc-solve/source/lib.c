@@ -1907,8 +1907,6 @@ static inline fc_solve_solve_process_ret_t fc_solve_resume_instance(
 #undef hard_thread
 #endif
 
-#define FCS_MAX_FLARE_NAME_LEN 30
-
 typedef struct
 {
     fcs_int_limit_t num_checked_states;
@@ -1935,7 +1933,7 @@ typedef struct
     /* Whether the instance is ready to be input with (i.e:
      * was recycled already.) */
     fcs_bool_t instance_is_ready;
-    char name[FCS_MAX_FLARE_NAME_LEN];
+    char name[30];
 #ifdef FCS_WITH_MOVES
     uint_fast32_t next_move_idx;
     fcs_moves_sequence_t moves_seq;

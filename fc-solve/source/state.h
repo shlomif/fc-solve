@@ -95,16 +95,12 @@ typedef char fcs_locs_t;
 
 #define fcs_state_get_col(state, col_idx)                                      \
     ((state).data + ((col_idx) * (MAX_NUM_CARDS_IN_A_STACK + 1)))
-
-#define FCS_FREECELLS_OFFSET ((MAX_NUM_STACKS) * (MAX_NUM_CARDS_IN_A_STACK + 1))
-
-#define fcs_freecell_card(state, f) ((state).data[FCS_FREECELLS_OFFSET + (f)])
-
-#define FCS_FOUNDATIONS_OFFSET                                                 \
-    (((MAX_NUM_STACKS) * (MAX_NUM_CARDS_IN_A_STACK + 1)) + (MAX_NUM_FREECELLS))
-
+#define fcs_freecell_card(state, f)                                            \
+    ((state).data[(MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1)) + (f)])
 #define fcs_foundation_value(state, d)                                         \
-    ((state).data[FCS_FOUNDATIONS_OFFSET + (d)])
+    ((state).data[((MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1)) +         \
+                      MAX_NUM_FREECELLS) +                                     \
+                  (d)])
 
 #elif defined(INDIRECT_STACK_STATES) // #ifdef COMPACT_STATES
 typedef struct
@@ -451,11 +447,9 @@ static inline void FCS_STATE_collectible_to_kv(
 #define DECKS_NUM__VAL decks_num
 #endif
 
-#define DECKS_NUM__ARG PASS_DECKS(const int decks_num)
-
 #define FREECELLS_AND_STACKS_ARGS() FREECELLS_NUM__ARG STACKS_NUM__ARG
 #define FREECELLS_STACKS_DECKS__ARGS()                                         \
-    FREECELLS_AND_STACKS_ARGS() DECKS_NUM__ARG
+    FREECELLS_AND_STACKS_ARGS() PASS_DECKS(const int decks_num)
 
 #define PASS_T(arg) FC_SOLVE__PASS_T(arg)
 

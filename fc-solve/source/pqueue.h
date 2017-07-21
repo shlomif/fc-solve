@@ -43,13 +43,8 @@ extern "C" {
 
 #include "state.h"
 
-/* manage a priority queue as a heap
-   the heap is implemented as a fixed size array of pointers to your data */
-
 #define FC_SOLVE_PQUEUE_MaxRating INT_MAX
-
 typedef int pq_rating_t;
-
 typedef struct
 {
     fcs_collectible_state_t *val;

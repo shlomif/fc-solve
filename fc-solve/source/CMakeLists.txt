@@ -402,21 +402,16 @@ IF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
     ADD_TREE_TYPE("${TREE_TYPE}")
     FILE (MAKE_DIRECTORY "${LIBAVL2_COPIED_MODULES_DIR}")
     INCLUDE_DIRECTORIES(BEFORE "${LIBAVL2_COPIED_MODULES_DIR}")
-    SET (MPROT "FC_SOLVE__STATE_STORAGE_H")
     SET (PREFIXO "fcs_libavl2_states_tree")
     FILE (WRITE "${LIBAVL2_COPIED_MODULES_DIR}/fcs_libavl2_state_storage.h"
 "
-#ifndef ${MPROT}
-#define ${MPROT}
-
+#pragma once
 #include \"${TREE_TYPE}.h\"
 
 typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
 #define ${PREFIXO}_insert(a,b) ${TREE_TYPE}_insert((a),(b))
 #define ${PREFIXO}_create(a,b,c) ${TREE_TYPE}_create((a),(b),(c))
 #define ${PREFIXO}_destroy(a,b) ${TREE_TYPE}_destroy((a),(b))
-
-#endif /* ${MPROT} */
 "
 )
 
@@ -427,21 +422,16 @@ IF ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_LIBAVL2_TREE")
     SET (TREE_TYPE "${FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE}")
     ADD_TREE_TYPE("${TREE_TYPE}")
     FILE (MAKE_DIRECTORY "${LIBAVL2_COPIED_MODULES_DIR}")
-    SET (MPROT "FC_SOLVE__STACK_STORAGE_H")
     SET (PREFIXO "fcs_libavl2_stacks_tree")
     FILE (WRITE "${LIBAVL2_COPIED_MODULES_DIR}/fcs_libavl2_stack_storage.h"
 "
-#ifndef ${MPROT}
-#define ${MPROT}
-
+#pragma once
 #include \"${TREE_TYPE}.h\"
 
 typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
 #define ${PREFIXO}_insert(a,b) ${TREE_TYPE}_insert((a),(b))
 #define ${PREFIXO}_create(a,b,c) ${TREE_TYPE}_create((a),(b),(c))
 #define ${PREFIXO}_destroy(a,b) ${TREE_TYPE}_destroy((a),(b))
-
-#endif /* ${MPROT} */
 "
     )
 

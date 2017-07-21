@@ -405,10 +405,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
  * cab be skipped.
  * */
 
-/*
- * We don't need this check because the positions_by_rank
- * already filters the fcs_is_parent_card check for us.
- * */
+// We don't need this check because the positions_by_rank
+// already filters the fcs_is_parent_card check for us.
 #ifdef FCS_POS_BY_RANK__ENABLE_PARENT_CHECK
             const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
             if (!((dest_cards_num == next_dc) ||
@@ -983,10 +981,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 /* Corresponding cards - see if it is feasible to move
    the source to the destination. */
 
-/*
- * We don't need this check because the positions_by_rank
- * already filters the fcs_is_parent_card check for us.
- * */
+// We don't need this check because the positions_by_rank
+// already filters the fcs_is_parent_card check for us.
 #ifdef FCS_POS_BY_RANK__ENABLE_PARENT_CHECK
                 const_AUTO(dest_card, fcs_col_get_card(dest_col, dc));
                 /* Don't move if there's a sequence of cards in the
