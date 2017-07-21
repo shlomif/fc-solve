@@ -204,7 +204,7 @@ static inline void fc_solve__hard_thread__compile_prelude(
                 break;
             }
         }
-        if (ST_LOOP__WAS_FINISHED())
+        if (soft_thread == end_soft_thread)
         {
             free(prelude);
             return;
@@ -216,7 +216,7 @@ static inline void fc_solve__hard_thread__compile_prelude(
         }
 #undef PRELUDE_GROW_BY
         prelude[num_items++] = (typeof(prelude[0])){
-            .scan_idx = ST_LOOP__GET_INDEX(), .quota = p_quota};
+            .scan_idx = soft_thread - ht_soft_threads, .quota = p_quota};
     }
 
     HT_FIELD(hard_thread, prelude) = SREALLOC(prelude, num_items);
@@ -2074,12 +2074,9 @@ typedef struct
 #ifndef FCS_FREECELL_ONLY
     fcs_preset_t common_preset;
 #endif
-
 #ifdef FCS_WITH_ERROR_STRS
-#define MAX_ERROR_STRING_LEN 160
-    char error_string[MAX_ERROR_STRING_LEN];
+    char error_string[160];
 #endif
-
     fcs_meta_compact_allocator_t meta_alloc;
 } fcs_user_t;
 
@@ -2606,21 +2603,9 @@ static inline void add_to_plan(instance_item_t *const instance_item,
         create_plan_item(mytype, flare, count_iters);
 }
 
-static inline void add_count_iters_to_plan(instance_item_t *const instance_item,
-    fcs_flare_item_t *const flare, const int_fast32_t count_iters)
-{
-    add_to_plan(instance_item, FLARES_PLAN_RUN_COUNT_ITERS, flare, count_iters);
-}
-
 static inline void add_checkpoint_to_plan(instance_item_t *const instance_item)
 {
     add_to_plan(instance_item, FLARES_PLAN_CHECKPOINT, NULL, -1);
-}
-
-static inline void add_run_indef_to_plan(
-    instance_item_t *const instance_item, fcs_flare_item_t *const flare)
-{
-    add_to_plan(instance_item, FLARES_PLAN_RUN_INDEFINITELY, flare, -1);
 }
 
 static inline fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
@@ -2730,7 +2715,8 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
             }
 
-            add_count_iters_to_plan(instance_item, flare, count_iters);
+            add_to_plan(
+                instance_item, FLARES_PLAN_RUN_COUNT_ITERS, flare, count_iters);
         }
         else if (string_starts_with(item_start, "CP", cmd_end))
         {
@@ -2760,8 +2746,7 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
                 SET_ERROR("Unknown flare name in RunIndef command.");
                 return FCS_COMPILE_FLARES_RET_UNKNOWN_FLARE_NAME;
             }
-
-            add_run_indef_to_plan(instance_item, flare);
+            add_to_plan(instance_item, FLARES_PLAN_RUN_INDEFINITELY, flare, -1);
         }
         else
         {

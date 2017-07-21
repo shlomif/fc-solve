@@ -21,7 +21,6 @@ extern "C" {
 
 #include "move.h"
 #include "fcs_enums.h"
-
 #include "rate_state.h"
 #include "indirect_buffer.h"
 #include "rand.h"
@@ -90,9 +89,8 @@ extern "C" {
  * */
 #define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
 
-/* We don't keep track of kings (rank == 13). */
-#define NUM_POS_BY_RANK_SLOTS 13
-#define FCS_POS_BY_RANK_LEN (NUM_POS_BY_RANK_SLOTS * FCS_POS_BY_RANK_WIDTH)
+// We don't keep track of kings
+#define FCS_POS_BY_RANK_LEN (FCS_RANK_KING * FCS_POS_BY_RANK_WIDTH)
 typedef struct
 {
     char col, height;
@@ -167,11 +165,6 @@ extern guint fc_solve_hash_function(gconstpointer key);
     fc_solve_soft_thread_t *const end_soft_thread =                            \
         ht_soft_threads + HT_FIELD(hard_thread, num_soft_threads);             \
     for (; soft_thread < end_soft_thread; soft_thread++)
-
-#define ST_LOOP__WAS_FINISHED() (soft_thread == end_soft_thread)
-
-#define ST_LOOP__GET_INDEX() (soft_thread - ht_soft_threads)
-
 #define MOVES_GROW_BY 16
 
 typedef struct

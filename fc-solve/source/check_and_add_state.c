@@ -108,10 +108,8 @@ static inline void *fc_solve_hash_insert(
         fcs_hash_item_t *item = list->first_item;
         fcs_hash_item_t *last_item = NULL;
 
-/*
- * MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
- * states order. We need to negate it for the desired condition of equality.
- * */
+// MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
+// states order. We need to negate it for the desired condition of equality.
 #define MY_HASH_COMPARE() (!MY_HASH_COMPARE_PROTO())
 
 /* Define MY_HASH_COMPARE_PROTO() */

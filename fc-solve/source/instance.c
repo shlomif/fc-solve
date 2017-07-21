@@ -114,25 +114,6 @@ static inline void accumulate_tests_by_ptr(
     }
 }
 
-static inline void accumulate_tests_order(
-    fc_solve_soft_thread_t *const soft_thread, void *const context)
-{
-    accumulate_tests_by_ptr((size_t *)context,
-        &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
-}
-
-static inline void determine_scan_completeness(
-    fc_solve_soft_thread_t *const soft_thread, void *const global_tests_order)
-{
-    size_t moves_order = 0;
-
-    accumulate_tests_by_ptr(&moves_order,
-        &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
-
-    STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
-        (moves_order == *(size_t *)global_tests_order));
-}
-
 void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     const fcs_foreach_st_callback_choice_t callback_choice, void *const context)
 {
@@ -189,24 +170,29 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
             break;
 
         case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
-            accumulate_tests_order(soft_thread, context);
+            accumulate_tests_by_ptr((size_t *)context,
+                &(soft_thread->by_depth_moves_order.by_depth_moves[0]
+                        .moves_order));
             break;
 
         case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
-            determine_scan_completeness(soft_thread, context);
-            break;
+        {
+            size_t moves_order = 0;
+
+            accumulate_tests_by_ptr(&moves_order,
+                &(soft_thread->by_depth_moves_order.by_depth_moves[0]
+                        .moves_order));
+
+            STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
+                (moves_order == *(size_t *)context));
+        }
+        break;
         }
 #ifdef FCS_SINGLE_HARD_THREAD
     }
 #else
     }
 #endif
-}
-
-static inline void clean_soft_dfs(fc_solve_instance_t *const instance)
-{
-    fc_solve_foreach_soft_thread(
-        instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
 #ifndef FCS_SINGLE_HARD_THREAD
@@ -672,7 +658,8 @@ in the process */
     fc_solve_compact_allocator_finish(
         &(instance->rcs_states_cache.states_values_to_keys_allocator));
 #endif
-    clean_soft_dfs(instance);
+    fc_solve_foreach_soft_thread(
+        instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
 fc_solve_soft_thread_t *fc_solve_new_soft_thread(

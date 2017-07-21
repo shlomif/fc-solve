@@ -60,28 +60,22 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
     char *env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
 
 #ifdef _WIN32
-
     char windows_exe_dir[MAX_PATH] = "";
     char windows_global_presetc[MAX_PATH + 100] = "";
-
-    /* Will contain exe path */
     const HMODULE hModule = GetModuleHandle(NULL);
     if (hModule != NULL)
     {
-        /* When passing NULL to GetModuleHandle, it returns handle of exe itself
-         */
+        // When passing NULL to GetModuleHandle, it returns handle of exe itself
         GetModuleFileName(hModule, windows_exe_dir, (sizeof(windows_exe_dir)));
+        /* Remove the basename and keep only the dirname. */
+        char *s = windows_exe_dir + strlen(windows_exe_dir) - 1;
+        while ((s > windows_exe_dir) && (!((*s == '/') || (*s == '\\'))))
         {
-            /* Remove the basename and keep only the dirname. */
-            char *s = windows_exe_dir + strlen(windows_exe_dir) - 1;
-            while ((s > windows_exe_dir) && (!((*s == '/') || (*s == '\\'))))
-            {
-                s--;
-            }
-            if (s > windows_exe_dir)
-            {
-                *s = '\0';
-            }
+            s--;
+        }
+        if (s > windows_exe_dir)
+        {
+            *s = '\0';
         }
         sprintf(windows_global_presetc, "%s/../share/freecell-solver/presetrc",
             windows_exe_dir);
@@ -91,7 +85,6 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
     {
         global_presetrc = NULL;
     }
-
 #else
     global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
 #endif

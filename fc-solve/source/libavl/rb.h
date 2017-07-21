@@ -19,21 +19,11 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
    02110-1301 USA.
 */
-
-#ifndef RB_H
-#define RB_H 1
-
+#pragma once
 #include <stddef.h>
 #include <stdint.h>
 
 #include "meta_alloc.h"
-
-/* No longer needed. */
-#if 0
-#if SIZEOF_VOID_P == 4
-#define WITH_AVL_BALANCE_FIELD 1
-#endif
-#endif
 
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
 #include "delta_states.h"
@@ -159,7 +149,7 @@ void *rb_t_replace (struct rb_traverser *, void *);
 
 static inline int rb_get_decommissioned_flag(struct rb_node *const node)
 {
-    return ((signed char)(node->rb_mylink[1] & 0x1));
+    return ((int)(node->rb_mylink[1] & 0x1));
 }
 
 static inline void rb_set_decommissioned_flag(struct rb_node *const node, const int decommissioned_flag)
@@ -167,4 +157,3 @@ static inline void rb_set_decommissioned_flag(struct rb_node *const node, const 
     node->rb_mylink[1] &= (~0x1UL);
     node->rb_mylink[1] |= (decommissioned_flag ? 0x1UL : 0x0UL);
 }
-#endif /* rb.h */

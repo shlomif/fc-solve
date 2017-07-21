@@ -148,23 +148,18 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     instance->local_variant = local_variant;
     instance->solution_was_found = FALSE;
     instance->should_terminate = DONT_TERMINATE;
-
     instance->count_num_processed = 0;
     instance->max_count_num_processed = LONG_MAX;
-
     instance->store = (Pvoid_t)NULL;
     instance->stack = NULL;
     instance->max_stack_depth = 0;
     instance->stack_depth = 0;
-
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
     fc_solve_compact_allocator_init(
         &(instance->derived_list_allocator), &(instance->meta_alloc));
     instance->derived_list_recycle_bin = NULL;
-
     fcs_pdfs_cache_init(
         &(instance->cache), max_num_elements_in_cache, &(instance->meta_alloc));
-
     insert_state(&(instance->store), init_state);
     instance__inspect_new_state(instance, init_state);
 }

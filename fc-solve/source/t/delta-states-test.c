@@ -201,9 +201,7 @@ static int main_tests(void)
              * */
             ok (enc.bit_in_char_idx == 7, "Only 7 bits (2).");
         }
-
 #define SUIT_DS 1
-
         {
             fc_solve_column_encoding_composite_t enc;
             fc_solve_get_column_encoding_composite(&delta, 1, &enc);

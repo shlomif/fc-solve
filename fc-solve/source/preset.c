@@ -117,11 +117,9 @@ static const fcs_preset_name_t fcs_preset_names[23] = {
     },
 };
 
-#define NUM_PRESETS ((int)COUNT(fcs_preset_names))
-
 static inline int fcs_get_preset_id_by_name(const char *const name)
 {
-    for (int i = 0; i < NUM_PRESETS; i++)
+    for (int i = 0; i < (int)COUNT(fcs_preset_names); i++)
     {
         if (!strcmp(name, fcs_preset_names[i].name))
         {

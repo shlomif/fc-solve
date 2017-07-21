@@ -11,7 +11,7 @@
 // and unlikely macros. See: https://lwn.net/Articles/255364/ .
 #pragma once
 
-#if defined(__GNUC__)
+#ifdef __GNUC__
 #define unlikely(expr) __builtin_expect(!!(expr), 0)
 #define likely(expr) __builtin_expect(!!(expr), 1)
 #else
