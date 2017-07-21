@@ -396,45 +396,26 @@ MACRO(ADD_TREE_TYPE TREE_TYPE)
     LIST(REMOVE_DUPLICATES LIBAVL2_TREE_TYPES)
 ENDMACRO()
 
-IF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
-
-    SET (TREE_TYPE "${FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE}")
+MACRO(write_tree TREE_TYPE PREFIXO fn)
     ADD_TREE_TYPE("${TREE_TYPE}")
     FILE (MAKE_DIRECTORY "${LIBAVL2_COPIED_MODULES_DIR}")
-    INCLUDE_DIRECTORIES(BEFORE "${LIBAVL2_COPIED_MODULES_DIR}")
-    SET (PREFIXO "fcs_libavl2_states_tree")
-    FILE (WRITE "${LIBAVL2_COPIED_MODULES_DIR}/fcs_libavl2_state_storage.h"
-"
-#pragma once
+    FILE (WRITE "${LIBAVL2_COPIED_MODULES_DIR}/${fn}"
+"#pragma once
 #include \"${TREE_TYPE}.h\"
 
 typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
 #define ${PREFIXO}_insert(a,b) ${TREE_TYPE}_insert((a),(b))
 #define ${PREFIXO}_create(a,b,c) ${TREE_TYPE}_create((a),(b),(c))
 #define ${PREFIXO}_destroy(a,b) ${TREE_TYPE}_destroy((a),(b))
-"
-)
+")
+ENDMACRO()
 
+IF ("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBAVL2_TREE")
+    write_tree("${FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE}" "fcs_libavl2_states_tree" "fcs_libavl2_state_storage.h")
 ENDIF ()
 
 IF ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_LIBAVL2_TREE")
-
-    SET (TREE_TYPE "${FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE}")
-    ADD_TREE_TYPE("${TREE_TYPE}")
-    FILE (MAKE_DIRECTORY "${LIBAVL2_COPIED_MODULES_DIR}")
-    SET (PREFIXO "fcs_libavl2_stacks_tree")
-    FILE (WRITE "${LIBAVL2_COPIED_MODULES_DIR}/fcs_libavl2_stack_storage.h"
-"
-#pragma once
-#include \"${TREE_TYPE}.h\"
-
-typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
-#define ${PREFIXO}_insert(a,b) ${TREE_TYPE}_insert((a),(b))
-#define ${PREFIXO}_create(a,b,c) ${TREE_TYPE}_create((a),(b),(c))
-#define ${PREFIXO}_destroy(a,b) ${TREE_TYPE}_destroy((a),(b))
-"
-    )
-
+    write_tree("${FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE}" "fcs_libavl2_stacks_tree" "fcs_libavl2_stack_storage.h")
 ENDIF ()
 
 IF (LIBAVL2_TREE_TYPES)
