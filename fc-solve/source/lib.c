@@ -275,56 +275,52 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
             &(HT_FIELD(hard_thread, st_idx)));
     }
 
-    {
-        size_t total_move_funcs_bitmask = 0;
-        fc_solve_foreach_soft_thread(instance,
-            FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER, &total_move_funcs_bitmask);
-        fc_solve_foreach_soft_thread(instance,
-            FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS,
-            &total_move_funcs_bitmask);
+    size_t total_move_funcs_bitmask = 0;
+    fc_solve_foreach_soft_thread(instance,
+        FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER, &total_move_funcs_bitmask);
+    fc_solve_foreach_soft_thread(instance,
+        FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS,
+        &total_move_funcs_bitmask);
 #ifdef FCS_WITH_MOVES
-        if (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
-        {
-            /*
-             *
-             * What this code does is convert the bit map of
-             * total_move_funcs_bitmask
-             * to a valid tests order.
-             *
-             * */
-            size_t num_move_funcs = 0;
-            size_t *move_funcs =
-                SMALLOC(move_funcs, sizeof(total_move_funcs_bitmask) * 8);
+    if (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
+    {
+        /*
+         *
+         * What this code does is convert the bit map of
+         * total_move_funcs_bitmask
+         * to a valid tests order.
+         *
+         * */
+        size_t num_move_funcs = 0;
+        size_t *move_funcs =
+            SMALLOC(move_funcs, sizeof(total_move_funcs_bitmask) * 8);
 
-            for (size_t bit_idx = 0; total_move_funcs_bitmask != 0;
-                 bit_idx++, total_move_funcs_bitmask >>= 1)
+        for (size_t bit_idx = 0; total_move_funcs_bitmask != 0;
+             bit_idx++, total_move_funcs_bitmask >>= 1)
+        {
+            if ((total_move_funcs_bitmask & 0x1) != 0)
             {
-                if ((total_move_funcs_bitmask & 0x1) != 0)
-                {
-                    move_funcs[num_move_funcs++] = bit_idx;
-                }
+                move_funcs[num_move_funcs++] = bit_idx;
             }
-            move_funcs = SREALLOC(move_funcs,
-                ((num_move_funcs & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
-            instance->opt_tests_order = (typeof(instance->opt_tests_order)){
-                .num_groups = 1,
-                .groups =
-                    SMALLOC(instance->opt_tests_order.groups, MOVES_GROW_BY),
-            };
-            instance->opt_tests_order.groups[0] =
-                (typeof(instance->opt_tests_order.groups[0])){
-                    .order_group_moves = move_funcs,
-                    .num = num_move_funcs,
-                    .shuffling_type = FCS_NO_SHUFFLING,
-                };
-            STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
         }
-#endif
+        move_funcs = SREALLOC(move_funcs,
+            ((num_move_funcs & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
+        instance->opt_tests_order = (typeof(instance->opt_tests_order)){
+            .num_groups = 1,
+            .groups = SMALLOC(instance->opt_tests_order.groups, MOVES_GROW_BY),
+        };
+        instance->opt_tests_order.groups[0] =
+            (typeof(instance->opt_tests_order.groups[0])){
+                .order_group_moves = move_funcs,
+                .num = num_move_funcs,
+                .shuffling_type = FCS_NO_SHUFFLING,
+            };
+        STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
+#endif
 
 #ifdef FCS_RCS_STATES
-    fcs_lru_cache_t *cache = &(instance->rcs_states_cache);
-
+    fcs_lru_cache_t *const cache = &(instance->rcs_states_cache);
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
@@ -1820,7 +1816,6 @@ static inline fc_solve_solve_process_ret_t fc_solve_resume_instance(
     fc_solve_instance_t *const instance)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_SUSPEND_PROCESS;
-
 /*
  * If the optimization thread is defined, it means we are in the
  * optimization phase of the total scan. In that case, just call

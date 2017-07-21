@@ -141,30 +141,21 @@ typedef uint8_t fcs_locs_t;
           #elif defined INDIRECT_STACK_STATES                                  \
         */
 
-/* These are macros or functions that are common to all the _STATES types. */
-
-#define fcs_freecell_card_suit(state, f)                                       \
-    (fcs_card_suit(fcs_freecell_card((state), (f))))
-
+// These are macros or functions that are common to all the _STATES types.
 #define fcs_increment_foundation(state, foundation_idx)                        \
     (++(fcs_foundation_value((state), (foundation_idx))))
-
 #define fcs_set_foundation(state, foundation_idx, value)                       \
     ((fcs_foundation_value((state), (foundation_idx))) =                       \
             (fcs_state_foundation_t)(value))
-
 #define fcs_col_pop_top(col)                                                   \
     (fcs_col_get_card((col), (--fcs_col_len(col))) = fc_solve_empty_card)
-
 #define fcs_col_pop_card(col, into)                                            \
     {                                                                          \
         into = fcs_col_get_card((col), (fcs_col_len(col) - 1));                \
         fcs_col_pop_top(col);                                                  \
     }
-
 #define fcs_col_push_card(col, from)                                           \
     fcs_col_get_card((col), ((fcs_col_len(col))++)) = (from)
-
 #define fcs_freecell_is_empty(state, idx)                                      \
     (fcs_card_is_empty(fcs_freecell_card(state, idx)))
 

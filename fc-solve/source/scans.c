@@ -300,11 +300,8 @@ static inline void fc_solve_initialize_bfs_queue(
     /* Initialize the BFS queue. We have one dummy element at the beginning
        in order to make operations simpler. */
     my_brfs_queue = NEW_BRFS_QUEUE_ITEM();
-
     my_brfs_queue_last_item = my_brfs_queue->next = NEW_BRFS_QUEUE_ITEM();
-
     my_brfs_queue_last_item->next = NULL;
-
     my_brfs_recycle_bin = NULL;
 }
 

@@ -150,7 +150,8 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 moves_processed_add_new_move(
                     ret, (fcs_extended_move_t){
                              .move = move, .to_empty_stack = FALSE});
-            fcs_increment_foundation(pos, fcs_freecell_card_suit(pos, src));
+            fcs_increment_foundation(
+                pos, fcs_card_suit(fcs_freecell_card(pos, src)));
             fcs_empty_freecell(pos, src);
 #ifndef NDEBUG
             virtual_freecell_len[src] = 0;
