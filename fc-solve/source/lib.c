@@ -62,6 +62,20 @@ static inline fc_solve_soft_thread_t *fc_solve_new_hard_thread(
 }
 #endif
 
+#ifndef FCS_FREECELL_ONLY
+static inline fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name(
+    fc_solve_instance_t *const instance, const char *const name)
+{
+    const fcs_preset_t *preset_ptr;
+    const_AUTO(ret, fc_solve_get_preset_by_name(name, &preset_ptr));
+    if (ret != FCS_PRESET_CODE_OK)
+    {
+        return ret;
+    }
+    return fc_solve_apply_preset_by_ptr(instance, preset_ptr);
+}
+#endif
+
 /*
     This function allocates a Freecell Solver instance struct and set the
     default values in it. After the call to this function, the program can
@@ -134,7 +148,6 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
         .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE,
         .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = FALSE,
 #endif
-
 #ifdef FCS_RCS_STATES
         .rcs_states_cache.max_num_elements_in_cache = 10000,
 #endif
@@ -2794,15 +2807,12 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
 }
 #endif
 
-/*
- * Add a trailing newline to the string if it does not exist.
- */
 #define MY_MARGIN 3
 #define TRAILING_CHAR '\n'
 static inline fcs_bool_t duplicate_string_while_adding_a_trailing_newline(
     char *const s, const char *const orig_str)
 {
-    const int len = strlen(orig_str);
+    const size_t len = strlen(orig_str);
     /*
      * If orig_str is the empty string then there is no
      * penultimate character.
@@ -3363,7 +3373,6 @@ int DLLEXPORT freecell_solver_user_solve_board(
     {
         return FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
     }
-
 #ifdef FCS_WITH_NI
     user->current_instance = user->instances_list;
 #endif
@@ -3481,15 +3490,11 @@ static MYINLINE void user_free_resources(fcs_user_t *const user)
         {
             fc_solve_finish_instance(instance);
         }
-
         fc_solve_free_instance(instance);
-
         flare->name[0] = '\0';
-
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
         fc_solve_moves_processed_free(&(flare->fc_pro_moves));
 #endif
-
 #ifdef FCS_WITH_MOVES
         if (flare->moves_seq.moves)
         {

@@ -9,16 +9,8 @@ lib = ffi.dlopen("../libfcs_gen_ms_freecell_boards." +
                  ("dll" if (platform.system() == 'Windows') else "so"))
 
 ffi.cdef('''
-    void fc_solve_get_board(long gamenumber, char * ret);
     void fc_solve_get_board_l(long long gamenumber, char * ret);
 ''')
-
-
-def test_board(idx, want_string):
-    buf = ffi.new('char [500]')
-    lib.fc_solve_get_board(idx, buf)
-    ok(ffi.string(buf) == bytes(want_string, 'UTF-8'),
-       ("board %d was generated fine" % (idx)))
 
 
 def test_board_l(idx, want_string):
@@ -32,7 +24,7 @@ def main():
     plan(6)
 
     # TEST
-    test_board(
+    test_board_l(
         24,
         """4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
@@ -46,7 +38,7 @@ AH 5S 6S AD 8H JD
     )
 
     # TEST
-    test_board(
+    test_board_l(
         11982,
         """AH 3D KD JC 6C JD KC
 AS 3H 6H 5D 2C 7D 8D
@@ -60,7 +52,7 @@ JS KS 3C 7C 7S 5H
     )
 
     # TEST
-    test_board(
+    test_board_l(
         1234567,
         """2H 7S 4S 4D 8C KD QD
 9C KH 5D 6C TC 5H 7D

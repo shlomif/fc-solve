@@ -57,8 +57,6 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
             "%s/.freecell-solver/presetrc", home_dir);
     }
     const char *global_presetrc;
-    char *env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
-
 #ifdef _WIN32
     char windows_exe_dir[MAX_PATH] = "";
     char windows_global_presetc[MAX_PATH + 100] = "";
@@ -89,7 +87,7 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
     global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
 #endif
     const char *const presetrc_pathes[4] = {
-        (const char *)env_var_presetrc,
+        (const char *)getenv("FREECELL_SOLVER_PRESETRC"),
         (home_dir ? ((const char *)home_dir_presetrc) : NULL),
         (const char *)global_presetrc, user_preset_dir,
     };
