@@ -16,7 +16,7 @@ fi
 pgo_flags=""
 make_vars=()
 
-src="$(perl -e 'use File::Basename qw(dirname); use File::Spec; print File::Spec->rel2abs(dirname(shift(@ARGV))."/..");' "$0")"
+src="$(perl -e 'use File::Basename qw(dirname); use File::Spec; print File::Spec->rel2abs(dirname(shift(@ARGV))."/../source/");' "$0")"
 # echo "src_dir=$src"
 
 # theme="-l te"
@@ -38,7 +38,7 @@ run_self()
     local cmd="$1"
     shift
 
-    bash "$src"/scripts/pgo.bash "$real_compiler" "$cmd"
+    bash "$src"/../scripts/pgo.bash "$real_compiler" "$cmd"
 }
 
 run_timing()
