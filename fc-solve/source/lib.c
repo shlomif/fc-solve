@@ -1019,15 +1019,6 @@ static inline void free_states(fc_solve_instance_t *const instance)
 }
 #endif
 
-#ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static inline fcs_bool_t check_num_states_in_collection(
-    const fc_solve_instance_t *const instance)
-{
-    return (instance->active_num_states_in_collection >=
-            instance->effective_trim_states_in_collection_from);
-}
-#endif
-
 /*
  * fc_solve_soft_dfs_do_solve() is the event loop of the
  * Random-DFS scan. DFS which is recursive in nature is handled here
@@ -1449,7 +1440,8 @@ static inline int fc_solve_soft_dfs_do_solve(
                 calculate_real_depth(calc_real_depth, PTR_STATE);
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-                if (check_num_states_in_collection(instance))
+                if (instance->active_num_states_in_collection >=
+                    instance->effective_trim_states_in_collection_from)
                 {
                     VERIFY_PTR_STATE_TRACE0("Verify Bakers_Game");
                     free_states(instance);

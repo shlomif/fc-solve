@@ -78,7 +78,6 @@ typedef void * avl_key_t;
 /* Tree data structure. */
 #define rb_root rb_proto_root.rb_mylink[0]
 #define TREE_AVL_ROOT(tree) (rb_process_link((tree)->rb_root))
-#define SET_TREE_AVL_ROOT(tree, val) rb_set_link(&(tree->rb_proto_root), 0, val)
 
 /* An RB tree node. */
 struct rb_node

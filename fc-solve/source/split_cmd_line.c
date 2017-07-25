@@ -112,118 +112,116 @@ args_man_t fc_solve_args_man_chop(const char *const string)
             continue;
         }
 
+        fcs_bool_t should_still_loop = TRUE;
+        fcs_bool_t in_arg = FALSE;
+        while (should_still_loop)
         {
-            fcs_bool_t should_still_loop = TRUE;
-            fcs_bool_t in_arg = FALSE;
-            while (should_still_loop)
+            switch (*s)
             {
-                switch (*s)
-                {
-                case ' ':
-                case '\t':
-                case '\n':
-                case '\0':
-                case '\r':
+            case ' ':
+            case '\t':
+            case '\n':
+            case '\0':
+            case '\r':
 
-                    push_next_arg_flag = TRUE;
-                    should_still_loop = FALSE;
+                push_next_arg_flag = TRUE;
+                should_still_loop = FALSE;
 
-                    break;
-
-                case '\\':
-                {
-                    const_AUTO(next_char, *(++s));
-                    s++;
-                    switch (next_char)
-                    {
-                    case '\0':
-                        s--;
-                        push_next_arg_flag = TRUE;
-                        should_still_loop = FALSE;
-                        break;
-                    case '\r':
-                    case '\n':
-                        /* Skip to the next line. */
-                        if (!in_arg)
-                        {
-                            should_still_loop = FALSE;
-                        }
-                        break;
-                    default:
-                        add_to_last_arg(&manager, next_char);
-                        break;
-                    }
-                }
                 break;
 
-                case '\"':
-
-                    in_arg = TRUE;
-                    while (TRUE)
-                    {
-                        const_AUTO(c, *(++s));
-                        switch (c)
-                        {
-                        case '\"':
-                            ++s;
-                        case '\0':
-                            goto after_quote;
-
-                        case '\\':
-                        {
-                            const_AUTO(next_char, *(++s));
-
-                            switch (next_char)
-                            {
-                            case '\0':
-                                push_args_last_arg(&manager);
-                                goto END_OF_LOOP;
-
-                            case '\n':
-                            case '\r':
-                                /* Do nothing */
-                                break;
-
-                            case '\\':
-                            case '\"':
-                                add_to_last_arg(&manager, next_char);
-                                break;
-
-                            default:
-                                add_to_last_arg(&manager, '\\');
-                                add_to_last_arg(&manager, next_char);
-                                break;
-                            }
-                        }
-                        break;
-                        default:
-                        {
-                            add_to_last_arg(&manager, c);
-                        }
-                        break;
-                        }
-                    }
-                after_quote:
-                    break;
-
-                case '#':
-
-                    in_arg = FALSE;
-                    /* Skip to the next line */
-                    while ((*s != '\0') && (*s != '\n'))
-                    {
-                        s++;
-                    }
+            case '\\':
+            {
+                const_AUTO(next_char, *(++s));
+                s++;
+                switch (next_char)
+                {
+                case '\0':
+                    s--;
                     push_next_arg_flag = TRUE;
                     should_still_loop = FALSE;
                     break;
-
+                case '\r':
+                case '\n':
+                    /* Skip to the next line. */
+                    if (!in_arg)
+                    {
+                        should_still_loop = FALSE;
+                    }
+                    break;
                 default:
-                    in_arg = TRUE;
-                    add_to_last_arg(&manager, *s);
-                    s++;
+                    add_to_last_arg(&manager, next_char);
                     break;
                 }
+            }
+            break;
+
+            case '\"':
+
+                in_arg = TRUE;
+                while (TRUE)
+                {
+                    const_AUTO(c, *(++s));
+                    switch (c)
+                    {
+                    case '\"':
+                        ++s;
+                    case '\0':
+                        goto after_quote;
+
+                    case '\\':
+                    {
+                        const_AUTO(next_char, *(++s));
+
+                        switch (next_char)
+                        {
+                        case '\0':
+                            push_args_last_arg(&manager);
+                            goto END_OF_LOOP;
+
+                        case '\n':
+                        case '\r':
+                            /* Do nothing */
+                            break;
+
+                        case '\\':
+                        case '\"':
+                            add_to_last_arg(&manager, next_char);
+                            break;
+
+                        default:
+                            add_to_last_arg(&manager, '\\');
+                            add_to_last_arg(&manager, next_char);
+                            break;
+                        }
+                    }
+                    break;
+                    default:
+                    {
+                        add_to_last_arg(&manager, c);
+                    }
+                    break;
+                    }
+                }
+            after_quote:
+                break;
+
+            case '#':
+
+                in_arg = FALSE;
+                /* Skip to the next line */
+                while ((*s != '\0') && (*s != '\n'))
+                {
+                    s++;
+                }
+                push_next_arg_flag = TRUE;
+                should_still_loop = FALSE;
+                break;
+
+            default:
+                in_arg = TRUE;
+                add_to_last_arg(&manager, *s);
+                s++;
+                break;
             }
         }
 
