@@ -55,7 +55,10 @@ else ifeq ($(COMPILER),clang)
 	RANLIB := llvm-ranlib
 else ifeq ($(COMPILER),icc)
 	CC = icc
+	LTO_FLAGS := -ipo -ffat-lto-objects
 	GCC_COMPAT := 1
+	CFLAGS += $(STD_FLAG) -Werror=implicit-function-declaration
+	# END_LFLAGS += -pthread -lstdc++
 else ifeq ($(COMPILER),sun)
 	CFLAGS :=
 	CC = cc
@@ -139,7 +142,8 @@ endif
 EXTRA_CFLAGS = -Dfreecell_solver_EXPORTS
 CFLAGS += $(EXTRA_CFLAGS)
 
-LFLAGS := -O3 -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $(EXTRA_CFLAGS)
+# LFLAGS := -pthread -O3 -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS) -fwhole-program $(EXTRA_CFLAGS)
+LFLAGS := -O3 -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS) -fwhole-program $(EXTRA_CFLAGS)
 
 # Toggle for profiling information.
 ifneq ($(PROFILE),0)
@@ -246,7 +250,7 @@ $(STATIC_LIB): $(FCS_OBJECTS)
 $(FCS_SHARED_LIB): $(FCS_OBJECTS)
 	$(CREATE_SHARED) $(LIB_LINK_PRE) $(TCMALLOC_LINK) -o $@ $^ $(END_SHARED)
 	if ! test -e libfreecell-solver.so ; then \
-		ln -s $@ libfreecell-solver.so ; \
+		ln -sf $@ libfreecell-solver.so ; \
 	fi
 
 ifeq ($(COMPILER),tcc)
@@ -267,10 +271,10 @@ freecell-solver-range-parallel-solve: $(T_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: $(THR_MAIN_OBJECT) $(STATIC_LIB)
-	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) $(TCMALLOC_LINK)
 
 freecell-solver-fork-solve: $(FORK_MAIN_OBJECT) $(STATIC_LIB)
-	$(CC) $(TCMALLOC_LINK) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) $(TCMALLOC_LINK)
 
 
 freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
