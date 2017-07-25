@@ -344,8 +344,8 @@ static void my_iter_handler(
     void *, fcs_int_limit_t, int, void *, fcs_int_limit_t, void *);
 #include "cl_callback_common.h"
 static int fc_solve__cmd_line_callback(void *const instance, const int argc,
-    const char *argv[], const int arg, int *const num_to_skip, int *const ret,
-    void *const context)
+    const char **const argv, const int arg, int *const num_to_skip,
+    int *const ret, void *const context)
 {
     fc_solve_display_information_context_t *const display_context =
         (fc_solve_display_information_context_t *)context;
@@ -497,7 +497,7 @@ static inline int solve_board(void * const instance, const char * const user_sta
 #endif
 
 static inline FILE *fc_solve_calc_file_handle(
-    const int argc, char *argv[], const int arg)
+    const int argc, char **const argv, const int arg)
 {
     if ((arg == argc) || (!strcmp(argv[arg], "-")))
     {
@@ -532,7 +532,7 @@ static inline FILE *fc_solve_calc_file_handle(
     }
 }
 
-static inline int fc_solve_main__main(int argc, char *argv[])
+static inline int fc_solve_main__main(const int argc, char **const argv)
 {
     display_context = INITIAL_DISPLAY_CONTEXT;
     int arg = 1;
