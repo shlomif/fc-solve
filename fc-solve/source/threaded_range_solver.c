@@ -50,11 +50,10 @@ static pthread_mutex_t total_num_iters_lock;
 static void *worker_thread(void *GCC_UNUSED void_arg)
 {
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
-    void *const instance = simple_alloc_and_parse(0, NULL, NULL);
+    void *const instance = simple_alloc_and_parse(0, NULL, 0);
 #else
-    int ctx_arg = arg;
     void *const instance =
-        simple_alloc_and_parse(context_argc, context_argv, &ctx_arg);
+        simple_alloc_and_parse(context_argc, context_argv, arg);
 #endif
     typeof(total_num_iters) total_num_iters_temp = 0;
     long long board_num;

@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
     }
 
     fc_solve_print_started_at();
-    void *const instance = simple_alloc_and_parse(argc, argv, &arg);
+    void *const instance = simple_alloc_and_parse(argc, argv, arg);
     worker_t workers[num_workers];
 
     for (size_t idx = 0; idx < num_workers; ++idx)

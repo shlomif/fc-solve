@@ -1352,7 +1352,6 @@ static inline int fc_solve_soft_dfs_do_solve(
                 break;
 
                 case FCS_WEIGHTING:
-                {
                     if (orig_idx < THE_MOVE_FUNCS_LIST.num_lists)
                     {
                         fcs_derived_states_list_item_t *const derived_states =
@@ -1377,8 +1376,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                         qsort(rand_array, num_states, sizeof(rand_array[0]),
                             compare_rating_with_index);
                     }
-                }
-                break;
+                    break;
 
                 case FCS_NO_SHUFFLING:
                     break;

@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    void *const instance = simple_alloc_and_parse(argc, argv, &arg);
+    void *const instance = simple_alloc_and_parse(argc, argv, arg);
 
     const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
 #ifndef FCS_FREECELL_ONLY
