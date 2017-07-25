@@ -54,11 +54,21 @@ if test "$mode" = "total" ; then
 
     m_clean && \
     run_self "gen" && \
-    run_timing 1 32000 4000 $theme && \
+    run_self "time" && \
     m_clean && \
     run_self "use"
 
     exit 0
+
+elif test "$mode" = "clean" ; then
+
+    m_clean
+    exit $?
+
+elif test "$mode" = "time" ; then
+
+    run_timing 1 32000 4000 $theme
+    exit $?
 
 elif test "$mode" = "use" ; then
 
