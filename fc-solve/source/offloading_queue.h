@@ -150,11 +150,10 @@ static inline void fcs_offloading_queue_page__recycle(off_q_page_t *const page)
 static inline void fcs_offloading_queue_page__init(
     off_q_page_t *const page, const long page_index, const long queue_id)
 {
-    off_q_page_t new_page = {.page_index = page_index,
+    *page = (typeof(*page)){.page_index = page_index,
         .queue_id = queue_id,
         .data =
             malloc(sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE)};
-    *page = new_page;
     fcs_offloading_queue_page__recycle(page);
 }
 
