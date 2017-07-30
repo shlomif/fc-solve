@@ -842,18 +842,6 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
 #define VERIFY_SOFT_DFS_STACK(soft_thread)
 #endif
 
-static int compare_rating_with_index(
-    const void *const void_a, const void *const void_b)
-{
-    const fcs_rating_with_index_t *const a =
-        (const fcs_rating_with_index_t *const)void_a;
-    const fcs_rating_with_index_t *const b =
-        (const fcs_rating_with_index_t *const)void_b;
-
-    return ((a->rating < b->rating)
-                ? -1
-                : (a->rating > b->rating) ? 1 : (a->idx - b->idx));
-}
 #ifdef DEBUG
 #define TRACE0(message)                                                        \
     fcs_trace("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "              \
@@ -1370,8 +1358,19 @@ static inline int fc_solve_soft_dfs_do_solve(
                                     calc_depth(derived_states[i].state_ptr));
                         }
 
-                        qsort(rand_array, num_states, sizeof(rand_array[0]),
-                            compare_rating_with_index);
+                        const_AUTO(end, rand_array + num_states);
+                        // Insertion-sort rand_array
+                        for (typeof(rand_array[0]) *p = rand_array + 1; p < end;
+                             p++)
+                        {
+                            var_AUTO(move, p);
+                            while (move > rand_array && move->rating < move[-1].rating)
+                            {
+                                const_AUTO(temp, *move);
+                                *move = move[-1];
+                                *(--move) = temp;
+                            }
+                        }
                     }
                     break;
 
