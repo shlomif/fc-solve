@@ -1362,15 +1362,12 @@ static inline int fc_solve_soft_dfs_do_solve(
                                 weighting,
 #ifdef FCS_RCS_STATES
                                 fc_solve_lookup_state_key_from_val(
-                                    instance, derived_states[rand_array[i].idx]
-                                                  .state_ptr),
+                                    instance, derived_states[i].state_ptr),
 #else
-                                &(derived_states[rand_array[i].idx]
-                                        .state_ptr->s),
+                                &(derived_states[i].state_ptr->s),
 #endif
                                 BEFS_MAX_DEPTH -
-                                    calc_depth(derived_states[rand_array[i].idx]
-                                                   .state_ptr));
+                                    calc_depth(derived_states[i].state_ptr));
                         }
 
                         qsort(rand_array, num_states, sizeof(rand_array[0]),
