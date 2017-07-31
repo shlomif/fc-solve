@@ -259,11 +259,6 @@ int main(int argc, char *argv[])
             end_board, board_num_step, &next_board_num, &(workers[idx]));
     }
 
-#ifdef USE_EPOLL
-#define MAX_EVENTS 10
-    struct epoll_event events[MAX_EVENTS];
-#endif
-
     while (total_num_finished_boards < total_num_boards_to_check)
     {
         if (total_num_finished_boards >= next_milestone)
@@ -271,9 +266,9 @@ int main(int argc, char *argv[])
             fc_solve_print_reached(next_milestone, total_num_iters);
             next_milestone += stop_at;
         }
-
 #ifdef USE_EPOLL
-        const int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+        struct epoll_event events[10];
+        const int nfds = epoll_wait(epollfd, events, COUNT(events), -1);
         if (nfds == -1)
         {
             perror("epoll_pwait");
