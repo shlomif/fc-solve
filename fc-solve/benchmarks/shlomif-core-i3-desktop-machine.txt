@@ -1241,3 +1241,43 @@ Finished at 1497432579.143650 (total_num_iters=11017439)
 </DUMP>
 
     ( DUMPS-1497432571-t/dump004 )
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l obf"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+forking solver and threaded solver
+commit 62a9689feda5d27424048213656198b07d7d5fad
+(commit Date:   Mon Jul 31 00:33:59 2017 +0300 )
+With (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l n2b --prefix="/home/shlomif/apps/fcs"  -l extra_speed --hard-code-theme --disable-ni
+(With -flto and -fwhole-program).
+With (!) Makefile.gnu
+sudo_renice.
+-O3
+export PATH=/home/shlomif/apps/gcc-4.9.3/bin:"$PATH"
+lib64tcmalloc-devel-2.5-3.mga6
+With/without strip.
+
+6.20510315895081s
+
+    Highlight: in do_soft_dfs, convert from qsort() to custom insertion sort.
+
+<DUMP>
+Started at 1501452521.021268
+Started at 1501452521.021268
+Unsolved Board No. 11982 at 1501452523.657621
+Started at 1501452521.021268
+Started at 1501452521.021268
+Started at 1501452521.021268
+Reached Board No. 4000 at 1501452521.826084 (total_num_iters=1413271)
+Reached Board No. 8000 at 1501452522.596429 (total_num_iters=2787181)
+Reached Board No. 12000 at 1501452523.341889 (total_num_iters=4123941)
+Reached Board No. 16000 at 1501452524.196083 (total_num_iters=5599888)
+Reached Board No. 20000 at 1501452524.974530 (total_num_iters=6984235)
+Reached Board No. 24000 at 1501452525.708907 (total_num_iters=8302682)
+Reached Board No. 28000 at 1501452526.449465 (total_num_iters=9636225)
+Finished at 1501452527.226371 (total_num_iters=11017439)
+</DUMP>
+
+    ( DUMPS-1501452520-p/dump004 )
