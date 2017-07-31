@@ -1144,7 +1144,6 @@ static inline int fc_solve_soft_dfs_do_solve(
                 --the_soft_dfs_info;
                 derived_list = the_soft_dfs_info->derived_states_list;
                 ASSIGN_ptr_state(the_soft_dfs_info->state);
-                VERIFY_PTR_STATE_TRACE0("Verify Foo");
                 soft_thread->num_vacant_freecells =
                     the_soft_dfs_info->num_vacant_freecells;
                 soft_thread->num_vacant_stacks =
@@ -1269,14 +1268,10 @@ static inline int fc_solve_soft_dfs_do_solve(
 
                 do
                 {
-                    VERIFY_PTR_STATE_TRACE0("Verify Bar");
-
                     THE_MOVE_FUNCS_LIST
                         .lists[the_soft_dfs_info->move_func_list_idx]
                         .move_funcs[the_soft_dfs_info->move_func_idx](
                             soft_thread, &pass, &derived_list);
-
-                    VERIFY_PTR_STATE_TRACE0("Verify Glanko");
 
                     /* Move the counter to the next test */
                     if ((++the_soft_dfs_info->move_func_idx) ==
@@ -1304,8 +1299,6 @@ static inline int fc_solve_soft_dfs_do_solve(
             }
             fcs_rating_with_index_t *const rand_array =
                 the_soft_dfs_info->derived_states_random_indexes;
-
-            VERIFY_PTR_STATE_TRACE0("Verify Panter");
 
             for (size_t i = 0; i < num_states; i++)
             {
@@ -1364,7 +1357,8 @@ static inline int fc_solve_soft_dfs_do_solve(
                              p++)
                         {
                             var_AUTO(move, p);
-                            while (move > rand_array && move->rating < move[-1].rating)
+                            while (move > rand_array &&
+                                   move->rating < move[-1].rating)
                             {
                                 const_AUTO(temp, *move);
                                 *move = move[-1];
@@ -1378,8 +1372,6 @@ static inline int fc_solve_soft_dfs_do_solve(
                     break;
                 }
             }
-            VERIFY_PTR_STATE_TRACE0("Verify Rondora");
-
             // We just performed a test, so the index of the first state that
             // ought to be checked in this depth is 0.
             the_soft_dfs_info->current_state_index = 0;
@@ -1391,7 +1383,6 @@ static inline int fc_solve_soft_dfs_do_solve(
         var_AUTO(state_idx, the_soft_dfs_info->current_state_index - 1);
         const fcs_rating_with_index_t *rand_int_ptr =
             the_soft_dfs_info->derived_states_random_indexes + state_idx;
-        VERIFY_PTR_STATE_TRACE0("Verify Klondike");
 
         while (++state_idx < num_states)
         {
@@ -1437,9 +1428,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                 if (instance->active_num_states_in_collection >=
                     instance->effective_trim_states_in_collection_from)
                 {
-                    VERIFY_PTR_STATE_TRACE0("Verify Bakers_Game");
                     free_states(instance);
-                    VERIFY_PTR_STATE_TRACE0("Verify Penguin");
                 }
 #endif
                 if (check_if_limits_exceeded())
