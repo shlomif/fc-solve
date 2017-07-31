@@ -116,7 +116,7 @@ endif
 
 # The malloc library should appear as early as possible in the link stage
 # per the instructions in the E-mail from Hoard malloc's Emery Berger.
-TCMALLOC_LINK = -ltcmalloc
+TCMALLOC_LINK = -ltcmalloc_minimal
 # TCMALLOC_LINK = $(HOME)/Download/unpack/prog/lockless_allocator/libllalloc.a
 # TCMALLOC_LINK = -lzmalloc
 # TCMALLOC_LINK = -lhoard
