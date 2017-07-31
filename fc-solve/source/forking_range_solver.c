@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
             next_milestone += stop_at;
         }
 #ifdef USE_EPOLL
-        struct epoll_event events[10];
+        struct epoll_event events[4];
         const int nfds = epoll_wait(epollfd, events, COUNT(events), -1);
         if (nfds == -1)
         {
