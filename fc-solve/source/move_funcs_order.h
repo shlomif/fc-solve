@@ -23,13 +23,13 @@ static inline int fc_solve_string_to_test_num_compare_func(
     const void *const a, const void *const b)
 {
 #define MAP(x) (((const fcs_move_func_aliases_mapping_t *const)(x))->alias)
-    return strcmp(MAP(a), MAP(b));
+    return MAP(a) - MAP(b);
 }
 #undef MAP
 
 static inline int fc_solve_string_to_test_num(const char *const s)
 {
-    const fcs_move_func_aliases_mapping_t needle = {.alias = {s[0], '\0'}};
+    const fcs_move_func_aliases_mapping_t needle = {.alias = s[0]};
     const fcs_move_func_aliases_mapping_t *const result =
         (fcs_move_func_aliases_mapping_t *)bsearch(&needle,
             fc_solve_sfs_move_funcs_aliases, FCS_MOVE_FUNCS_ALIASES_NUM,

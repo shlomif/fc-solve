@@ -154,7 +154,7 @@ path('move_funcs_maps.h')->spew_utf8(<<"EOF");
 
 typedef struct
 {
-    char alias[2];
+    char alias;
     int move_func_num;
 } fcs_move_func_aliases_mapping_t;
 
@@ -174,7 +174,7 @@ my $move_funcs_string = join( ",\n",
 my $aliases_string = join(
     ",\n",
     (
-        map { "    { \"$_\", " . $declared_move_funcs{ $aliases{$_} } . " }" }
+        map { "    { '$_', " . $declared_move_funcs{ $aliases{$_} } . " }" }
             ( sort { $a cmp $b } keys(%aliases) )
     )
 );
