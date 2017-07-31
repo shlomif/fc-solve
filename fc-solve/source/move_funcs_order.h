@@ -19,24 +19,28 @@ extern "C" {
 #include "fcs_back_compat.h"
 #include "instance.h"
 
-static inline int fc_solve_string_to_test_num_compare_func(
-    const void *const a, const void *const b)
-{
-#define MAP(x) (((const fcs_move_func_aliases_mapping_t *const)(x))->alias)
-    return MAP(a) - MAP(b);
-}
-#undef MAP
-
 static inline int fc_solve_string_to_test_num(const char *const s)
 {
-    const fcs_move_func_aliases_mapping_t needle = {.alias = s[0]};
-    const fcs_move_func_aliases_mapping_t *const result =
-        (fcs_move_func_aliases_mapping_t *)bsearch(&needle,
-            fc_solve_sfs_move_funcs_aliases, FCS_MOVE_FUNCS_ALIASES_NUM,
-            sizeof(fc_solve_sfs_move_funcs_aliases[0]),
-            fc_solve_string_to_test_num_compare_func);
-
-    return (result ? result->move_func_num : 0);
+    const_AUTO(needle, s[0]);
+    ssize_t l = 0, r = FCS_MOVE_FUNCS_ALIASES_NUM - 1;
+    while (l <= r)
+    {
+        const_AUTO(m, ((l + r) >> 1));
+        const_AUTO(found, fc_solve_sfs_move_funcs_aliases[m]);
+        if (found.alias < needle)
+        {
+            l = m + 1;
+        }
+        else if (found.alias > needle)
+        {
+            r = m - 1;
+        }
+        else
+        {
+            return found.move_func_num;
+        }
+    }
+    return 0;
 }
 
 extern int fc_solve_apply_tests_order(
