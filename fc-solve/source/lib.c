@@ -1588,7 +1588,7 @@ static inline fc_solve_solve_process_ret_t fc_solve_patsolve_do_solve(
     case FCS_PATS__NOSOL:
         return FCS_STATE_IS_NOT_SOLVEABLE;
 
-    case FCS_PATS__FAIL:
+    default:
         return FCS_STATE_SUSPEND_PROCESS;
     }
 }
@@ -1601,14 +1601,12 @@ static inline int fc_solve__soft_thread__do_solve(
     {
     case FCS_SUPER_METHOD_DFS:
         return fc_solve_soft_dfs_do_solve(soft_thread);
-
-    case FCS_SUPER_METHOD_BEFS_BRFS:
-        return fc_solve_befs_or_bfs_do_solve(soft_thread);
-
 #ifndef FCS_DISABLE_PATSOLVE
     case FCS_SUPER_METHOD_PATSOLVE:
         return fc_solve_patsolve_do_solve(soft_thread);
 #endif
+    default:
+        return fc_solve_befs_or_bfs_do_solve(soft_thread);
     }
 }
 
@@ -4472,7 +4470,7 @@ const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
         return "RunIndef";
     case FLARES_PLAN_RUN_COUNT_ITERS:
         return "Run";
-    case FLARES_PLAN_CHECKPOINT:
+    default:
         return "CP";
     }
 #else
