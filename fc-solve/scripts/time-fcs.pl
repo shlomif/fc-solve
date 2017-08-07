@@ -23,6 +23,7 @@ sub get_time
     }
 }
 
+my $output = '';
 foreach my $fn (@ARGV)
 {
     my @lines = path($fn)->lines_utf8;
@@ -32,10 +33,12 @@ foreach my $fn (@ARGV)
     }
     if ( @ARGV > 1 )
     {
-        print $fn. ':';
+        $output .= $fn . ':';
     }
-    print +( get_time( $lines[-1] ) - get_time( $lines[0] ) ), "\n";
+    $output .= +( get_time( $lines[-1] ) - get_time( $lines[0] ) ) . "\n";
 }
+
+print $output;
 
 =head1 COPYRIGHT AND LICENSE
 
