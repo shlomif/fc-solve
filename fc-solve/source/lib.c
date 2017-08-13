@@ -3885,8 +3885,12 @@ void freecell_solver_user_get_invalid_state_error_into_string(
          * so we should call fc_solve_card_stringify on there only.
          * */
         char card_str[4];
+#ifdef FCS_WITH_MOVES
         fc_solve_card_stringify(
             user->state_validity_card, card_str FC_SOLVE__PASS_T(print_ts));
+#else
+        card_str[0] = '\0';
+#endif
 
         sprintf(string, "%s%s.", ((ret == FCS_STATE_VALIDITY__EXTRA_CARD)
                                          ? "There's an extra card: "
