@@ -11,10 +11,7 @@ if ( is_break() )
 {
     plan skip_all => "Does not work with BREAK_BACK_COMPAT";
 }
-else
-{
-    plan tests => 2;
-}
+plan tests => 2;
 {
     open my $good_ver_fh, "<", "$ENV{FCS_SRC_PATH}/ver.txt";
     my $good_ver = <$good_ver_fh>;

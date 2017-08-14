@@ -7,14 +7,11 @@ use FC_Solve::Paths qw/ dll_file /;
 
 BEGIN
 {
-    if ( -f dll_file('fcs_fcc_brfs_test') )
-    {
-        plan tests => 12;
-    }
-    else
+    if ( not -f dll_file('fcs_fcc_brfs_test') )
     {
         plan skip_all => "Test object shared object not found - incompatible.";
     }
+    plan tests => 12;
 }
 
 package FccStartPoint;

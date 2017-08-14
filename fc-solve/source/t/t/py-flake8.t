@@ -11,21 +11,18 @@ use String::ShellQuote qw/ shell_quote /;
 
 my $flake8 = which('flake8');
 
-if ($flake8)
-{
-    plan tests => 2;
-    my $cmd = shell_quote( $flake8, $ENV{FCS_SRC_PATH} );
-
-    # TEST
-    eq_or_diff( scalar(`$cmd`), '', "flake8 is happy with the code." );
-
-    # TEST
-    is( $?, 0, 'flake8 exited succesfully' );
-}
-else
+if ( !$flake8 )
 {
     plan skip_all => "No flake8 found.";
 }
+plan tests => 2;
+my $cmd = shell_quote( $flake8, $ENV{FCS_SRC_PATH} );
+
+# TEST
+eq_or_diff( scalar(`$cmd`), '', "flake8 is happy with the code." );
+
+# TEST
+is( $?, 0, 'flake8 exited succesfully' );
 
 __END__
 

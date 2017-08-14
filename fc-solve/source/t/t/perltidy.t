@@ -9,10 +9,7 @@ if ( $ENV{FCS_TEST_SKIP_PERLTIDY} )
     Test::More::plan( 'skip_all' =>
             "Skipping perltidy test because FCS_TEST_SKIP_PERLTIDY was set" );
 }
-else
-{
-    require Test::Code::TidyAll;
+require Test::Code::TidyAll;
 
-    Test::Code::TidyAll::tidyall_ok(
-        conf_file => "$ENV{FCS_SRC_PATH}/.tidyallrc", );
-}
+Test::Code::TidyAll::tidyall_ok( conf_file => "$ENV{FCS_SRC_PATH}/.tidyallrc",
+);
