@@ -1867,23 +1867,16 @@ static inline fc_solve_solve_process_ret_t fc_solve_resume_instance(
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
         }
     }
-
 #ifdef FCS_WITH_MOVES
-    if (ret == FCS_STATE_WAS_SOLVED)
+    // Call optimize_solution only once. Make sure that if it has already
+    // run - we retain the old ret.
+    if (ret == FCS_STATE_WAS_SOLVED &&
+        STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH) &&
+        !STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
     {
-        if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH))
-        {
-            /* Call optimize_solution only once. Make sure that if
-             * it has already run - we retain the old ret. */
-            if (!STRUCT_QUERY_FLAG(
-                    instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
-            {
-                ret = fc_solve_optimize_solution(instance);
-            }
-        }
+        ret = fc_solve_optimize_solution(instance);
     }
 #endif
-
     return ret;
 }
 #ifdef FCS_SINGLE_HARD_THREAD
