@@ -2232,12 +2232,6 @@ static inline void set_any_iter_handler(void *const api_instance,
 }
 #endif
 
-static inline fc_solve_soft_thread_t *fc_solve_instance_get_first_soft_thread(
-    fc_solve_instance_t *const instance)
-{
-    return &(INST_HT0(instance).soft_threads[0]);
-}
-
 static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
 {
     const_AUTO(instance_item, CURR_INST(user));
@@ -2257,12 +2251,8 @@ static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
 
     user->active_flare = flare;
     fc_solve_alloc_instance(instance, &(user->meta_alloc));
-
-    /*
-     * Switch the soft_thread variable so it won't refer to the old
-     * instance
-     * */
-    user->soft_thread = fc_solve_instance_get_first_soft_thread(instance);
+    // Switch the soft_thread variable so it won't refer to the old instance
+    user->soft_thread = &(INST_HT0(instance).soft_threads[0]);
 
 #ifndef FCS_FREECELL_ONLY
     fc_solve_apply_preset_by_ptr(instance, &(user->common_preset));
