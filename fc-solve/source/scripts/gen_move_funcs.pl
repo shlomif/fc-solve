@@ -152,14 +152,10 @@ path('move_funcs_maps.h')->spew_utf8(<<"EOF");
 #define FCS_MOVE_FUNCS_NUM @{[0+@move_funcs]}
 #define FCS_MOVE_FUNCS_ALIASES_NUM @{[0+keys%aliases]}
 
-typedef struct
-{
-    char alias;
-    int move_func_num;
-} fcs_move_func_aliases_mapping_t;
+typedef uint8_t fcs_move_func_aliases_mapping_t;
 
 extern fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM];
-extern fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM];
+extern fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[256];
 EOF
 
 sub func_name
@@ -172,11 +168,11 @@ sub func_name
 my $move_funcs_string = join( ",\n",
     ( map { "    " . func_name( $_->{'function'} ) } @move_funcs ) );
 my $aliases_string = join(
-    ",\n",
-    (
-        map { "    { '$_', " . $declared_move_funcs{ $aliases{$_} } . " }" }
-            ( sort { $a cmp $b } keys(%aliases) )
-    )
+    ',',
+    map {
+        my $c = $aliases{ chr($_) };
+        defined($c) ? $declared_move_funcs{$c} : 0
+    } 0 .. ( 256 - 1 )
 );
 path('move_funcs_maps.c')->spew_utf8(<<"EOF");
 // This file is generated from gen_move_funcs.pl.
@@ -197,7 +193,7 @@ $move_funcs_string
 };
 
 
-fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[FCS_MOVE_FUNCS_ALIASES_NUM] =
+fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[256] =
 {
 $aliases_string
 };

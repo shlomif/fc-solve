@@ -21,25 +21,7 @@ extern "C" {
 
 static inline int fc_solve_string_to_test_num(const char needle)
 {
-    ssize_t l = 0, r = FCS_MOVE_FUNCS_ALIASES_NUM - 1;
-    while (l <= r)
-    {
-        const_AUTO(m, ((l + r) >> 1));
-        const_AUTO(found, fc_solve_sfs_move_funcs_aliases[m]);
-        if (found.alias < needle)
-        {
-            l = m + 1;
-        }
-        else if (found.alias > needle)
-        {
-            r = m - 1;
-        }
-        else
-        {
-            return found.move_func_num;
-        }
-    }
-    return 0;
+    return fc_solve_sfs_move_funcs_aliases[(size_t)(uint8_t)needle];
 }
 
 extern int fc_solve_apply_tests_order(
