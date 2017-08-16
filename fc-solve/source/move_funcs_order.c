@@ -171,10 +171,9 @@ int fc_solve_apply_tests_order(fcs_tests_order_t *const moves_order,
                         MOVES_GROW_BY);
         }
 
-        const char test_name[2] = {string[i], '\0'};
         moves_order->groups[moves_order->num_groups - 1].order_group_moves
             [moves_order->groups[moves_order->num_groups - 1].num++] =
-            fc_solve_string_to_test_num(test_name);
+            fc_solve_string_to_test_num(string[i]);
         is_start_group = FALSE;
     }
     if (i != len)

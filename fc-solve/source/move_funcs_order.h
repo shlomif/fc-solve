@@ -19,9 +19,8 @@ extern "C" {
 #include "fcs_back_compat.h"
 #include "instance.h"
 
-static inline int fc_solve_string_to_test_num(const char *const s)
+static inline int fc_solve_string_to_test_num(const char needle)
 {
-    const_AUTO(needle, s[0]);
     ssize_t l = 0, r = FCS_MOVE_FUNCS_ALIASES_NUM - 1;
     while (l <= r)
     {
