@@ -13,16 +13,13 @@ def main(argv):
     libc = CDLL("libc.so.6")
 
     user = fcs.freecell_solver_user_alloc()
-
     board = open(argv.pop(0)).read()
-
     fcs.freecell_solver_user_solve_board(
         user,
         c_char_p(
            bytes(board, 'UTF-8')
         )
     )
-
     fcs.freecell_solver_user_current_state_as_string.restype = c_void_p
 
     class MOVE(Structure):
@@ -40,7 +37,6 @@ def main(argv):
         libc.free(as_string)
 
     print("-=-=-=-=-=-=-=-=-=-=-=-\n\n")
-
     print_state()
 
     while (fcs.freecell_solver_user_get_next_move(user, pointer(move)) == 0):
@@ -51,9 +47,6 @@ def main(argv):
         libc.free(as_string)
         print_state()
     fcs.freecell_solver_user_free(user)
-
-
-# ----------------------------------------------------------------------
 
 
 if __name__ == "__main__":

@@ -159,7 +159,6 @@ int main(int argc, char *argv[])
          min_depth_for_scan2 < max_var_depth_to_check; min_depth_for_scan2++)
     {
         void *const instance = freecell_solver_user_alloc();
-
         if (start_from_arg >= 0)
         {
             freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
@@ -167,7 +166,6 @@ int main(int argc, char *argv[])
                 start_from_arg, known_parameters, NULL,
                 NULL FCS__PASS_ERR_STR(&error_string), &arg, -1, NULL);
         }
-
         set_tests_order(instance, 0, scan1_to);
         set_tests_order(instance, min_depth_for_scan2, scan2_to);
 
@@ -183,10 +181,8 @@ int main(int argc, char *argv[])
             freecell_solver_user_limit_iterations_long(instance, iters_limit);
 #endif
             curr_result->start_time = fcs_get_time();
-
             curr_result->verdict =
                 freecell_solver_user_solve_board(instance, state_string);
-
             curr_result->end_time = fcs_get_time();
             curr_result->num_iters =
                 freecell_solver_user_get_num_times_long(instance);
@@ -214,8 +210,6 @@ int main(int argc, char *argv[])
 
             FPRINTF_TIME("start", start_time);
             FPRINTF_TIME("end", end_time);
-
-#undef FPRINTF_TIME
         }
         fflush(output_fh);
     }

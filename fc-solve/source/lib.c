@@ -2377,18 +2377,14 @@ static MYINLINE void user_initialize(fcs_user_t *const user)
 #endif
     user->flares_iters_factor = 1.0;
 #endif
-
     clear_error(user);
-
     user_next_instance(user);
 }
 
 void DLLEXPORT *freecell_solver_user_alloc(void)
 {
     fcs_user_t *const ret = (fcs_user_t *)SMALLOC1(ret);
-
     user_initialize(ret);
-
     return (void *)ret;
 }
 
