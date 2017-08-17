@@ -62,7 +62,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
     int i, j;
 
     const int num_back_end_moves = moves_seq->num_moves;
-    typeof(moves_seq->moves[0]) *next_move_ptr = moves_seq->moves - 1;
+    var_PTR(next_move_ptr, moves_seq->moves - 1);
 
     ret->num_moves = 0;
     ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);

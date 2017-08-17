@@ -13,6 +13,9 @@
 // These emulate the C++ auto keyword.
 #define const_AUTO(myvar, expr) const typeof(expr) myvar = (expr)
 #define var_AUTO(myvar, expr) typeof(expr) myvar = (expr)
+#define var_PTR(myvar, expr) typeof((expr)[0]) *myvar = (expr)
+#define const_PTR(myvar, expr) typeof((expr)[0]) *const myvar = (expr)
 
 // Common macros for object slots.
 #define const_SLOT(myslot, obj) const_AUTO(myslot, (obj)->myslot)
+#define var_S_SLOT(myslot, obj) const_AUTO(myslot, (obj).myslot)

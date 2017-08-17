@@ -96,8 +96,8 @@ static inline void fc_solve_initialize_befs_rater(
         (LOCAL_DECKS_NUM * 52);
 
     double out_sum = 0.0;
-    typeof(weighting->num_cards_out_lookup_table[0]) *const
-        num_cards_out_lookup_table = weighting->num_cards_out_lookup_table;
+    const_PTR(
+        num_cards_out_lookup_table, weighting->num_cards_out_lookup_table);
     for (int i = 0; i <= 13; i++, out_sum += num_cards_out_factor)
     {
         num_cards_out_lookup_table[i] = out_sum;
@@ -204,8 +204,8 @@ static inline pq_rating_t befs_rate_state(
     fc_solve_seq_cards_power_type_t seqs_over_renegade_cards = 0;
 
     double sum = (max(0, negated_depth) * weighting->depth_factor);
-    typeof(weighting->num_cards_out_lookup_table[0]) *const
-        num_cards_out_lookup_table = weighting->num_cards_out_lookup_table;
+    const_PTR(
+        num_cards_out_lookup_table, weighting->num_cards_out_lookup_table);
     if (num_cards_out_lookup_table[1])
     {
         const int num_foundations = (LOCAL_DECKS_NUM << 2);

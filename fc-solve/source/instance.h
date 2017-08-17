@@ -891,9 +891,7 @@ static inline void fc_solve_soft_thread_update_initial_cards_val(
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #define SEQS_BUILT_BY sequences_are_built_by,
 #endif
-    /* We cannot use typeof here because clang complains about double
-     * const.
-     * */
+    // We cannot use typeof here because clang complains about double const.
     const fcs_state_t *const s = &(instance->state_copy_ptr->s);
 
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;

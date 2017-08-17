@@ -1353,8 +1353,7 @@ static inline int fc_solve_soft_dfs_do_solve(
 
                         const_AUTO(end, rand_array + num_states);
                         // Insertion-sort rand_array
-                        for (typeof(rand_array[0]) *p = rand_array + 1; p < end;
-                             p++)
+                        for (var_PTR(p, rand_array + 1); p < end; ++p)
                         {
                             var_AUTO(move, p);
                             while (move > rand_array &&
