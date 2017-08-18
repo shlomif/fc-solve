@@ -324,6 +324,13 @@ reg_test(
         tatzer_args => [ @LB, qw(-l extra_speed --disable-err-strs) ]
     }
 );
+reg_test(
+    "build_only: no iter-handler",
+    {
+        do_not_test => 1,
+        tatzer_args => [ @LB, qw(-l extra_speed --without-iter-handler) ]
+    }
+);
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );

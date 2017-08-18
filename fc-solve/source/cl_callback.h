@@ -398,7 +398,9 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
     else if (IS_ARG("--reset"))
     {
         *display_context = INITIAL_DISPLAY_CONTEXT;
+#ifndef FCS_WITHOUT_ITER_HANDLER
         freecell_solver_user_set_iter_handler_long(instance, NULL, NULL);
+#endif
         return FCS_CMD_LINE_OK;
     }
     else
@@ -433,6 +435,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
         break;
 
     case 1:
+#ifndef FCS_WITHOUT_ITER_HANDLER
         if (debug_iter_output_on)
         {
             freecell_solver_user_set_iter_handler_long(instance, NULL, NULL);
@@ -444,6 +447,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
                 instance, my_iter_handler, &display_context);
             debug_iter_output_on = TRUE;
         }
+#endif
         break;
 
     case 2:
