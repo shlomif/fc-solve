@@ -109,14 +109,16 @@ ifeq ($(GCC_COMPAT),1)
 	else ifeq ($(OPT_AND_DEBUG),1)
 		CFLAGS += -g -O2 $(MARCH_FLAG) $(LTO_FLAGS)
 	else
+		# CFLAGS += $(MACHINE_OPT) -DNDEBUG $(STD_FLAG) -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS)
 		CFLAGS += $(MACHINE_OPT) $(MARCH_FLAG) -DNDEBUG -fomit-frame-pointer $(LTO_FLAGS) -fvisibility=hidden
 	endif
-	CFLAGS += -fPIC
+	# CFLAGS += -fPIC
 endif
 
 # The malloc library should appear as early as possible in the link stage
 # per the instructions in the E-mail from Hoard malloc's Emery Berger.
-TCMALLOC_LINK = -ltcmalloc_minimal
+# TCMALLOC_LINK = -ltcmalloc_minimal
+TCMALLOC_LINK = -ltcmalloc
 # TCMALLOC_LINK = $(HOME)/Download/unpack/prog/lockless_allocator/libllalloc.a
 # TCMALLOC_LINK = -lzmalloc
 # TCMALLOC_LINK = -lhoard
@@ -139,7 +141,7 @@ ifneq ($(DISABLE_PATSOLVE),0)
 	CFLAGS += -DFCS_DISABLE_PATSOLVE=1
 endif
 
-EXTRA_CFLAGS = -Dfreecell_solver_EXPORTS
+# EXTRA_CFLAGS = -Dfreecell_solver_EXPORTS
 CFLAGS += $(EXTRA_CFLAGS)
 
 # LFLAGS := -pthread -O3 -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS) -fwhole-program $(EXTRA_CFLAGS)
@@ -181,8 +183,8 @@ GEN_C_OBJECTS := \
 	rate_state.o        \
 
 
+          # card.o
 SOURCE_OBJECTS :=             \
-          card.o              \
           check_and_add_state.o \
           cmd_line.o          \
           freecell.o          \
@@ -229,7 +231,7 @@ $(SOURCE_OBJECTS) $(MAIN_OBJECT) $(T_MAIN_OBJECT) $(THR_MAIN_OBJECT) $(FORK_MAIN
 	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $< $(END_OFLAGS)
 
 $(GEN_C_OBJECTS): %.o: %.c
-	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $< $(END_OFLAGS)
+	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $(PWD)/$< $(END_OFLAGS)
 
 $(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
 	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
@@ -259,9 +261,11 @@ else
     # LIB_LINK_PRE := -Wl,-rpath,.
 endif
 
+LFLAGS := -rdynamic $(LFLAGS)
 # LIB_LINK_PRE += -L.
 # LIB_LINK_POST := -lfreecell-solver
-LIB_LINK_POST := -rdynamic libfcs.a
+# LIB_LINK_POST := -rdynamic libfcs.a
+LIB_LINK_POST := libfcs.a
 # LIB_LINK_POST := -l$(STATIC_LIB_BASE)
 
 fc-solve: $(MAIN_OBJECT) fc_pro_iface.o $(STATIC_LIB)
@@ -271,7 +275,8 @@ freecell-solver-range-parallel-solve: $(T_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) $(END_LFLAGS)
 
 freecell-solver-multi-thread-solve: $(THR_MAIN_OBJECT) $(STATIC_LIB)
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) $(TCMALLOC_LINK)
+	$(CC) -O3 -DNDEBUG -rdynamic -fvisibility=hidden -march=native -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $< -o $@ -Wl,-rpath,:::::::::::::::::::::::::: $(LIB_LINK_POST) -lpthread -lm -ltcmalloc
+	# $(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) $(TCMALLOC_LINK)
 
 freecell-solver-fork-solve: $(FORK_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) $(TCMALLOC_LINK)
