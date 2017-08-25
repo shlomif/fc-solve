@@ -1318,3 +1318,41 @@ Finished at 1502126071.883952 (total_num_iters=11017439)
 </DUMP>
 
     ( DUMPS-1502126064-t/dump004 )
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l obf"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+forking solver and threaded solver
+commit c7a9eb5cbdaf19fb46a7e0f7d9eb2ecde598234d
+(commit Date:   Fri Aug 18 17:38:16 2017 +0300 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l n2b --prefix="/home/shlomif/apps/fcs"  -l extra_speed --hard-code-theme --disable-ni --nowithout-help --without-iter-handler
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+gcc-7.2.0-0.RC.1.mga7
+tcmalloc from its git master, built using gcc
+With/without strip.
+
+6.02488899230957s
+
+    Highlight: new compiler and --without-iter-handler .
+
+<DUMP>
+Started at 1503075831.021643
+Reached Board No. 4000 at 1503075831.804920 (total_num_iters=360309)
+Reached Board No. 8000 at 1503075832.547052 (total_num_iters=702725)
+Reached Board No. 12000 at 1503075833.268002 (total_num_iters=4033983)
+Unsolved Board No. 11982 at 1503075833.588947
+Reached Board No. 16000 at 1503075834.096899 (total_num_iters=4413194)
+Reached Board No. 20000 at 1503075834.856247 (total_num_iters=4762354)
+Reached Board No. 24000 at 1503075835.574181 (total_num_iters=7847102)
+Reached Board No. 28000 at 1503075836.291352 (total_num_iters=8216770)
+Reached Board No. 32000 at 1503075837.035663 (total_num_iters=8563175)
+Finished at 1503075837.046532 (total_num_iters=11017439)
+</DUMP>
+
+    ( DUMPS-1503075830-t/dump004 )
+
