@@ -5,15 +5,15 @@ use warnings;
 
 BEGIN
 {
-if (!@ARGV or $ARGV[0] ne 'compile')
-{
-    print <<'EOF'
+    if ( !@ARGV or $ARGV[0] ne 'compile' )
+    {
+        print <<'EOF'
 To run do:
 export FCS_PATH="`pwd`" FCS_SRC_PATH="`pwd`/../source"
 perl ../scripts/cmd-line-compiler compile
 EOF
+    }
 }
-};
 
 use Socket qw(:crlf);
 use Path::Tiny qw/ path /;
@@ -44,7 +44,7 @@ sub compile_cmd_line
     );
 
     my $expanded = _normalize_lf_list( $obj->argv() );
-    my $out = <<'EOF';
+    my $out      = <<'EOF';
 #pragma once
 
 static inline void my_init_instance(void *const instance)
@@ -143,11 +143,14 @@ qq#freecell_solver_user_set_a_star_weight(instance, $pos, $v);\n#;
     return;
 }
 
-
 # TEST
 compile_cmd_line(
     {
-        argv   => [ '-l', 'obf', ],
+        # argv   => [ '-l', 'obf', ],
+        argv => [
+            '--read-from-file',
+            "4,$ENV{FCS_SRC_PATH}/../scripts/TEST_OPTIMIZATIONS/obf-mod3.sh",
+        ],
         name   => 'obf',
         out_fn => 'fc_solve__precompiled__theme.h',
     },
