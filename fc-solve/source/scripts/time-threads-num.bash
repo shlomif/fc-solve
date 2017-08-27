@@ -1,21 +1,21 @@
 #!/bin/bash
 
-RUN_SERIAL=false
+run_serial=false
 PROG="${PROG:-./freecell-solver-multi-thread-solve}"
-MAX_BOARD="32000"
+max_board="32000"
 suf='t'
 
 while getopts "spt:" flag ; do
     # Run the serial scan first.
     if   [ "$flag" = "s" ] ; then
-        RUN_SERIAL=true
+        run_serial=true
     # Run the multi-process version instead of the multi-threaded version.
     elif [ "$flag" = "p" ] ; then
         PROG="./freecell-solver-fork-solve"
         suf='p'
     # Maximal board - mnemonic - "to".
     elif [ "$flag" = "t" ] ; then
-        MAX_BOARD="$OPTARG"
+        max_board="$OPTARG"
     fi
 done
 
@@ -24,10 +24,10 @@ while [ $OPTIND -ne 1 ] ; do
     let OPTIND--
 done
 
-MIN="${1:-1}"
+min="${1:-1}"
 shift
 
-MAX="${1:-6}"
+max="${1:-6}"
 shift
 
 OUT_DIR="${OUT_DIR:-.}"
@@ -35,8 +35,8 @@ ARGS="${ARGS:--l gi}"
 
 # strip * > /dev/null 2>&1
 
-DUMPS_DIR="$OUT_DIR/$(date +"DUMPS-%s")-$suf"
-mkdir -p "$DUMPS_DIR"
+dumps_dir="$OUT_DIR/$(date +"DUMPS-%s")-$suf"
+mkdir -p "$dumps_dir"
 
 p_dir="__p"
 if ! test -e "$p_dir" ; then
@@ -49,19 +49,19 @@ fi
 
 export FREECELL_SOLVER_PRESETRC="$(ls $(pwd)/"$p_dir"/presetrc)"
 
-if $RUN_SERIAL ; then
+if $run_serial ; then
     echo "Testing Serial Run"
     # For letting the screen update.
     sleep 1
-    ./freecell-solver-range-parallel-solve 1 "$MAX_BOARD" 4000 $ARGS > "$DUMPS_DIR"/dump
+    ./freecell-solver-range-parallel-solve 1 "$max_board" 4000 $ARGS > "$dumps_dir"/dump
 fi
 
 
-for NUM in $(seq "$MIN" "$MAX") ; do
-    echo "Testing $NUM"
+for num in $(seq "$min" "$max") ; do
+    echo "Testing $num"
     # For letting the screen update.
     sleep 1
-    $PROG 1 "$MAX_BOARD" 4000 \
-        --num-workers "$NUM" \
-        $ARGS > "$(printf "%s/dump%.3i" "$DUMPS_DIR" "$NUM")"
+    $PROG 1 "$max_board" 4000 \
+        --num-workers "$num" \
+        $ARGS > "$(printf "%s/dump%.3i" "$dumps_dir" "$num")"
 done
