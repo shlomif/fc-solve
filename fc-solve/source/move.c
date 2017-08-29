@@ -29,8 +29,8 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
 {
     fcs_card_t card;
     fcs_cards_column_t col;
-    const_AUTO(src, fcs_int_move_get_src(move));
-    const_AUTO(dest, fcs_int_move_get_dest(move));
+    const int src = fcs_int_move_get_src(move);
+    const int dest = fcs_int_move_get_dest(move);
 
 #define state_key (ptr_state_key)
     switch (fcs_int_move_get_type(move))
