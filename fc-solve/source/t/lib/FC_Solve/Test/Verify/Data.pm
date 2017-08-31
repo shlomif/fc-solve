@@ -48,6 +48,18 @@ __PACKAGE__->populate(
             args => { deal => 24, theme => [ "--set-pruning", "r:tf", ], },
             msg => "Solving Deal #24 with set-pruning run-to-founds",
         },
+        '110_dto2' => {
+            args => {
+                deal  => 110,
+                theme => [
+                    "--method", "random-dfs",
+                    "-dto2",    "9,[012][4678]",
+                    "-dto2",    "9,[01234678]=asw(1)",
+                    "-seed",    10468
+                ]
+            },
+            msg => "A configuration with which the solver got stuck."
+        },
         '617_jgl' => {
             args => { deal => 617, theme => [ "-l", "john-galt-line" ], },
             msg => "Solving Deal #617 with the john-galt-line",

@@ -2466,7 +2466,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
             {
                 break;
             }
-            else if (min_depth <
+            else if (min_depth <=
                      soft_thread->by_depth_moves_order.by_depth_moves[depth_idx]
                          .max_depth)
             {
