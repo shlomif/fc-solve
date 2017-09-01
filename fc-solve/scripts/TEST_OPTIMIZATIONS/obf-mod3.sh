@@ -18,7 +18,7 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -to "[01][23457]" -dto2 "8,[0123][4567]" -seed 38693 -step 500 -sp r:tf --st-name sB -nst \
 --method random-dfs -to "[01][23457]" -dto2 "7,[0123][4567]" -seed 98361 -step 500 -sp r:tf --st-name sD -nst \
 --method random-dfs -to "[01][23457]" -dto2 "7,[0123][4567]" -seed 115235 -step 500 -sp r:tf --st-name sE -nst \
---method random-dfs -to "[01][23457]" -dto2 "7,[012]=asw(1)[4567]" -seed 44250 -step 500 -sp r:tf --st-name sF -nst \
+--method random-dfs -to "[01][23457]" -dto2 "9,012[4567]" -seed 44250 -step 500 -sp r:tf --st-name sF -nst \
 --method random-dfs -to "[01][23457]" -dto2 "5,[0123][4567]"  -seed 33627 -step 500 -sp r:tf --st-name sG -nst \
 --method random-dfs -to "[01][23457]" -dto2 "5,[0123][4567]" -seed 18296 -step 500 -sp r:tf --st-name sH -nst \
 --method random-dfs -to "01[2357]" -dto2 "9,[012][4678]" -dto2 "15,[01234678]=asw(1)" -seed 10468 -step 500 -sp r:tf --st-name sI \
