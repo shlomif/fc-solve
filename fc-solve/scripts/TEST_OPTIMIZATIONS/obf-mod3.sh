@@ -1,7 +1,5 @@
 #!/bin/sh
-# This scan is derived from ct-mod13.sh in scripts/TEST_OPTIMIZATIONS .
-# Its name is derived from https://www.youtube.com/watch?v=DNq1bkrWjbk in
-# memory of Christina Grimmie.
+# This scan is derived from the obf scan.
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -seed 2 -to 0[01][23456789] -step 500 -sp r:tf --st-name 3 -nst \
 --method random-dfs -seed 3 -to "0[124]=asw(1)[367]=asw(1)" -step 500 -sp r:tf --st-name 5 -nst \
@@ -20,6 +18,6 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -to "[01][23457]" -dto2 "7,[0123][4567]" -seed 115235 -step 500 -sp r:tf --st-name sE -nst \
 --method random-dfs -to "01[23457]" -dto2 "9,012[4567]" -seed 44250 -step 500 -sp r:tf --st-name sF -nst \
 --method random-dfs -to "[01][23457]" -dto2 "5,[0123][4567]"  -seed 33627 -step 500 -sp r:tf --st-name sG -nst \
---method random-dfs -to "[01][23457]" -dto2 "5,[0123][4567]" -seed 18296 -step 500 -sp r:tf --st-name sH -nst \
+--method random-dfs -to "[01][23457]" -dto2 "5,[0123][4567]" -dto2 "10,[01234567]=asw(1)" -seed 18296 -step 500 -sp r:tf --st-name sH -nst \
 --method random-dfs -to "01[2357]" -dto2 "9,[012][4678]" -dto2 "15,[01234678]=asw(1)" -seed 10468 -step 500 -sp r:tf --st-name sI \
 --prelude "295@24,340@5,380@9,414@sI,600@sF,490@sH,428@sG,760@32,380@12,380@24,380@10,380@5,200@s1,200@new,222@sE,225@sD,266@sB,380@3,380@9,380@24,380@18,760@20,380@11,760@24,380@11"
