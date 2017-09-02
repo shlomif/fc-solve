@@ -196,6 +196,12 @@ and then:
 * Get the tests to run and pass on MS Windows (32-bit/64-bit) and implement
 AppVeyor Continuous Integration.
 
+* Adapt +-dto2+ to other parameters aside from depth, such as
+total-number-of-cards-in-the-foundations or maximal foundation value.
+
+* Set up a +-dto2+ like scheme for +--method a-star+ where we change the tests
+order based on the depth/etc.
+
 To be considered
 ----------------
 
