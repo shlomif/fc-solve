@@ -103,7 +103,7 @@ $(ARC_DOCS): $(D)/% : ../../source/%.txt
 	cp -f "$<" "$@"
 
 $(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
-	cp -f "$<" "$@"
+	cat "$<" | perl -0777 -lapE 's#<table #<table summary="identifiers on the left, descriptions on the right" #g' > "$@"
 
 $(HTMLS): $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
 	WML_LATEMP_PATH="$$(perl -MFile::Spec -e 'print File::Spec->rel2abs(shift)' '$@')" ; \

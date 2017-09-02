@@ -5,6 +5,7 @@ Shlomi Fish <shlomif@cpan.org>
 :Revision: $Id$
 
 
+[id="the_programs"]
 The programs
 ------------
 
@@ -21,6 +22,7 @@ If command line arguments have parameters, they are followed in separate
 parameters - Freecell Solver won't recognise a parameter preceded by an equal
 sign. +--st-name=myname+ is invalid, while +--st-name myname+ is OK.
 
+[id="scope_of_the_opts"]
 The Scope of the Options
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -40,17 +42,20 @@ soft threads.
 
 5. Soft-thread-specific - affects only the current soft thread.
 
+[id="getting_help"]
 Getting Help
 ------------
 
+[id="help_flag"]
 -h , --help
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 *Global*
 
 This option displays a help text on the screen. This help gives a help
 display summarizing some ways to use the program and get more help.
 
+[id="version_flag"]
 --version
 ~~~~~~~~~
 
@@ -59,6 +64,7 @@ display summarizing some ways to use the program and get more help.
 This option displays the version number of the components that make
 the executable (and then exits).
 
+[id="help-configs_flag"]
 --help-configs
 ~~~~~~~~~~~~~~
 
@@ -66,6 +72,7 @@ the executable (and then exits).
 
 Some help on the various configurations of Freecell Solver.
 
+[id="help-options_flag"]
 --help-options
 ~~~~~~~~~~~~~~
 
@@ -73,6 +80,7 @@ Some help on the various configurations of Freecell Solver.
 
 A help screen giving an overview of all available options.
 
+[id="help-real-help_flag"]
 --help-real-help
 ~~~~~~~~~~~~~~~~
 
@@ -80,6 +88,7 @@ A help screen giving an overview of all available options.
 
 Explains how to change the default help screen to a different one.
 
+[id="help-short-sol_flag"]
 --help-short-sol
 ~~~~~~~~~~~~~~~~
 
@@ -87,6 +96,7 @@ Explains how to change the default help screen to a different one.
 
 How to generate shorter solutions.
 
+[id="help-summary_flag"]
 --help-summary
 ~~~~~~~~~~~~~~
 
@@ -94,9 +104,11 @@ How to generate shorter solutions.
 
 The default help screen.
 
+[id="output_options"]
 Output Options
 --------------
 
+[id="parseable-output_flag"]
 -p , --parseable-output
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -109,6 +121,7 @@ separate line. Plus, Each column will be displayed horizontally, in its
 own line, while beginning with a +:+.
 
 
+[id="display-10-as-t_flag"]
 -t , --display-10-as-t
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -149,6 +162,7 @@ Freecells:
 : 7S 6C 7D 4D 8S 9D
 ---------------------
 
+[id="canonized-order-output_flag"]
 -c , --canonized-order-output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -162,6 +176,7 @@ One should be warned that that way the place of a given stack in the
 board will not be preserved throughout the solution.
 
 
+[id="display-moves_flag"]
 -m , --display-moves
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -189,6 +204,7 @@ Move a card from stack 6 to freecell 0
 Move a card from stack 6 to freecell 1
 ----------------------
 
+[id="standard-notation_flag"]
 -sn , --standard-notation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -204,6 +220,7 @@ web-page:
 
 http://home.earthlink.net/~fomalhaut/freecell.html
 
+[id="standard-notation-extended_flag"]
 -snx , --standard-notation-extended
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -214,6 +231,7 @@ move is made to an empty stack with more than one card in the sequence,
 the move will be followed with "v" and the number of cards moved in
 hexadecimal.
 
+[id="display-states-and-moves_flag"]
 -sam , --display-states-and-moves
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -276,6 +294,7 @@ Freecells:  JD
 Move a card from stack 6 to freecell 1
 --------------------------------
 
+[id="display-parent-iter_flag"]
 -pi , --display-parent-iter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -286,6 +305,7 @@ display the iteration index of the state from which the current state
 was derived. This is especially useful for BeFS (so-called +a-star+) or
 BFS scans.
 
+[id="output_flag"]
 -o [filename] , --output [filename]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -304,6 +324,7 @@ Will put the solution to the file in 2405.board in the file
 $ fc-solve --output 2405.solution.txt 2405.board
 ----------------------
 
+[id="show-exceeded-limits_flag"]
 -sel , --show-exceeded-limits
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -319,9 +340,11 @@ is possible.
 This option is not the default, to retain compatibility with previous versions
 of Freecell Solver, and was added in version 3.12.0 of fc-solve.
 
+[id="game_variants_options"]
 Game Variants Options
 ---------------------
 
+[id="freecells-num_flag"]
 --freecells-num [Number of Freecells]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -335,6 +358,7 @@ This maximum is hard-coded into the program, and can be specified at
 compile-time by modifying the file +config.h+. See the file +INSTALL+
 (or alternatively +INSTALL.html+) for details.
 
+[id="stacks-num_flag"]
 --stacks-num [Number of Stacks]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -345,6 +369,7 @@ this number cannot exceed the maximal number of stacks, which can be
 specified in the file +config.h+ during compile-time of Freecell
 Solver.
 
+[id="decks-num_flag"]
 --decks-num [Number of Decks]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -354,6 +379,7 @@ This options specifies how many decks are found in the board. This number
 cannot exceed the maximal number of decks, which can be specified by the
 Freecell Solver build system.
 
+[id="sequences-are-built-by_flag"]
 --sequences-are-built-by {suit|alternate_color|rank}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -362,6 +388,7 @@ Freecell Solver build system.
 This option specifies whether a card sequence is built by suit or by
 alternate colour or by rank regardless of suit.
 
+[id="sequence-move_flag"]
 --sequence-move {limited|unlimited}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -370,7 +397,7 @@ alternate colour or by rank regardless of suit.
 This option specifies whether the sequence move is limited by the
 number of freecells or vacant stacks or not.
 
-
+[id="empty-stacks-filled-by_flag"]
 --empty-stacks-filled-by {kings|none|all}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -378,7 +405,7 @@ number of freecells or vacant stacks or not.
 
 Specifies which cards can fill an empty stack.
 
-
+[id="game_flag"]
 --game [game] , --preset [game] , -g [game]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -416,6 +443,7 @@ Note: in order to solve Der Katzenschwanz and Die Schlange I recommend you
 compile Freecell Solver with the INDIRECT_STACK_STATES option, or else it will
 consume much more memory. For details consult the file INSTALL.
 
+[id="game_flag_examples"]
 Examples
 ~~~~~~~~
 
@@ -438,9 +466,11 @@ by rank, and unlimited sequence move, do:
 $ fc-solve -g freecell --sequences-are-built-by rank --sequence-move unlimited
 ------------------------------------------
 
+[id="solving_algorithm_options"]
 Solving Algorithm Options
 -------------------------
 
+[id="max-iters_flag"]
 -mi [Iterations num] , --max-iters [Iterations num]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -449,7 +479,7 @@ Solving Algorithm Options
 This parameter limits the maximal number of states to check. This will
 give a rough limit on the time spent to solve a given board.
 
-
+[id="max-depth_flag"]
 -md [Maximal depth] , --max-depth [Maximal depth]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -460,6 +490,7 @@ maximal recursion depth. Generally speaking, it's not a good idea to
 set it, because that way several important intermediate states may become
 inaccessible.
 
+[id="max-stored-states_flag"]
 -mss [num] , --max-stored-states [num]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -469,6 +500,7 @@ Limits the number of the states stored by the program in the computer's
 memory. This differs from the maximal number of iterations in the sense, that
 it is possible that a stored state was not checked yet.
 
+[id="trim-max-stored-states_flag"]
 -tmss [num] , --trim-max-stored-states [num]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -478,6 +510,7 @@ This also limits the number of trimmed stored states, but this time will
 try to trim them once the limit has been reached (which is time consuming
 and may cause states to be traversed again in the future).
 
+[id="tests-order_flag"]
 -to [Test's Order] , --tests-order [Test's Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -548,6 +581,7 @@ hand, if one specifies something like "=asw(5,0,5,0,0,5)", then the numbers
 inside the parentheses will be treated as weights for the same ordering
 function used by the +-asw+ flag (see below).
 
+[id="depth-tests-order2_flag"]
 -dto2 [Min Depth],[Tests' Order] , --depth-tests-order2 [Min Depth],[Tests' Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -603,6 +637,7 @@ This does the same thing as the previous example.
 below which mutilates the tests order parameter and is still provided for
 backward compatibility.
 
+[id="depth-tests-order_flag"]
 -dto [Min Depth],[Tests' Order] , --depth-tests-order [Min Depth],[Tests' Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -612,6 +647,7 @@ This is equivalent to specifying +-dto2 [Min Depth],[Min Depth],[Tests' Order]+
 This option is provided for backward compatibility with older versions of
 Freecell Solver.
 
+[id="method_flag"]
 -me [Solving Method] , --method [Solving Method]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -640,6 +676,7 @@ The Random-DFS scan processes every tests' random group, randomizes the
 states that it found and recurses into them one by one. Standalone tests
 that do not belong to any group, are processed in a non-random manner.
 
+[id="a-star-weight_flag"]
 -asw [BeFS Weights] , --a-star-weight [BeFS Weights]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -662,7 +699,7 @@ and to the number of cards out.
 
 The default weights are respectively: {0.5, 0, 0.3, 0, 0.2, 0}
 
-
+[id="seed_flag"]
 -seed [Seed Number]
 ~~~~~~~~~~~~~~~~~~~
 
@@ -672,6 +709,7 @@ Specifies a seed to be used by Freecell Solver's internal random number
 generator. This seed may alter the behaviour and speed of the +random-dfs+
 scan.
 
+[id="set-pruning_flag"]
 --set-pruning [Pruning] , -sp [Pruning]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -683,6 +721,7 @@ for "Run: to foundations") for Horne's rule. See:
 
 http://tech.groups.yahoo.com/group/fc-solve-discuss/message/214
 
+[id="optimize-solution_flag"]
 -opt , --optimize-solution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -691,7 +730,7 @@ http://tech.groups.yahoo.com/group/fc-solve-discuss/message/214
 This option instructs Freecell Solver to try and optimize the solution
 path so it will have a smaller number of moves.
 
-
+[id="optimization-tests-order_flag"]
 -opt-to [tests order] , --optimization-tests-order [tests order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -701,7 +740,7 @@ This argument specifies the test order for the optimization scan, in case
 it should be different than an order that contains all the tests that were
 used in all the normal scans.
 
-
+[id="reparent-states_flag"]
 --reparent-states
 ~~~~~~~~~~~~~~~~~
 
@@ -711,6 +750,7 @@ This option specifies that states that were encountered whose depth in the
 states graph can be improved should be reparented to the new parent. This
 option can possibly make solutions shorter.
 
+[id="calc-real-depth_flag"]
 --calc-real-depth
 ~~~~~~~~~~~~~~~~~
 
@@ -720,6 +760,7 @@ This option becomes effective only if +--reparent-states+ is specified. What
 it does, is explicitly calculate the depth of the state by tracing its path
 to the initial state. This may make depth consideration more accurate.
 
+[id="patsolve-x-param_flag"]
 --patsolve-x-param [pos],[value]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -734,6 +775,7 @@ Examples:
 --patsolve-x-param 2,100
 ---------------------
 
+[id="patsolve-y-param_flag"]
 --patsolve-y-param [pos],[value]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -749,6 +791,7 @@ Examples:
 --patsolve-y-param 1,103.2
 ---------------------
 
+[id="running_several_scans_in_parallel"]
 Running Several Scans in Parallel
 ---------------------------------
 
@@ -758,6 +801,7 @@ parallel on the same state collection. Each scan resides in its own
 one can create use several parallel scans. Once one of the scans
 reaches a solution, the solution will be displayed.
 
+[id="next-soft-thread_flag"]
 -nst , --next-soft-thread
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -773,6 +817,7 @@ $ fc-solve --method a-star -nst --method soft-dfs -to 0123467 myboard.txt
 will run an BeFS scan and a Soft-DFS scan with a tests order of 0123467 on
 myboard.txt.
 
+[id="soft-thread-step_flag"]
 -step [Step] , --soft-thread-step [Step]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -785,6 +830,7 @@ step, one can give a certain scan a longer run-time and a higher priority.
 *Note:* after some experimentation, we have concluded that the +--prelude+
 option normally yields better results, but +-step+ can be used as a fallback.
 
+[id="next-hard-thread_flag"]
 -nht , --next-hard-thread
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -794,7 +840,7 @@ This argument lets one initialize the next hard thread. If Freecell Solver was
 compiled with such support, then it is possible to run each hard thread in its
 own system thread. Each hard-thread contains one or more soft threads.
 
-
+[id="st-name_flag"]
 --st-name [soft thread name]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -803,7 +849,7 @@ own system thread. Each hard-thread contains one or more soft threads.
 This argument sets the name used to identify the current soft thread. This name
 can later be used to construct the prelude (see below).
 
-
+[id="prelude_flag"]
 --prelude [\i1@st1{,\i2@st2{,\i3@st3...}}]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -826,6 +872,7 @@ run the scans one after the other in the sequence they were defined for their
 step number.
 
 
+[id="scans-synergy_flag"]
 --scans-synergy {none|dead-end-marks}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -838,6 +885,7 @@ that they have withdrawn from, and states whose all their derived states are
 such, as "dead ends". This may or may not improve the speed of the solution.
 
 
+[id="next-instance_flag"]
 -ni , --next-instance
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -849,6 +897,7 @@ one would run and so on. One use of it is to run an atomic moves scan
 after a meta-moves scan, so we will always get an accurate verdict and
 still enjoy some of the speed benefits of the meta-moves scan.
 
+[id="next-flare_flag"]
 -nf , --next-flare
 ~~~~~~~~~~~~~~~~~~
 
@@ -860,6 +909,7 @@ or defaulting to running only the first flare (which isn't very useful). Out
 of all the flares that are successful in solving a board, Freecell Solver
 picks the one with the shortest solution.
 
+[id="flare-name_flag"]
 --flare-name [flare name]
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -867,6 +917,7 @@ picks the one with the shortest solution.
 
 This is a name that identifies the flare for use in the flares' plan.
 
+[id="flares-plan_flag"]
 --flares-plan [flare plan]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -909,6 +960,7 @@ Using checkpoints one can yield a possibly sub-optimal (as far as solution
 length is concerned) solution that will still solve faster than letting all
 the flares run.
 
+[id="flares-choice_flag"]
 --flares-choice [choice]
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -924,6 +976,7 @@ on the length of the solution in Freecell Solver's moves.
 number of Freecell Pro moves, while not considering implicit moves to the
 foundations using Horne's Prune / Raymond Prune.
 
+[id="flares-iters-factor_flag"]
 -fif [factor] , --flares-iters-factor [factor]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -958,6 +1011,7 @@ Is equivalent to:
 --flares-plan "Run:250@MyFlare,Run:1000@FooFlare"
 ------------
 
+[id="cache-limit_flag"]
 --cache-limit [cache limit]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -969,9 +1023,11 @@ a positive integer and the higher it is, the more quickly it is likely
 that Freecell Solver will run, but it will also consume more memory. (The
 entire point of +FCS_RCS_STATES+ is to conserve memory).
 
+[id="meta-options"]
 Meta-Options
 ------------
 
+[id="reset_flag"]
 --reset
 ~~~~~~~
 
@@ -981,7 +1037,7 @@ This option resets the program to its initial state, losing all the
 configuration logic that was input to it up to that state. Afterwards,
 it can be set to a different configuration, again.
 
-
+[id="read-from-file_flag"]
 --read-from-file [num_skip,]filename
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -995,7 +1051,7 @@ backslash escapes characters).
 The filename can be preceded by an optional number of the arguments to
 skip followed by a comma. (the default is 0)
 
-
+[id="load-config_flag"]
 -l [preset] , --load-config [preset]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1085,11 +1141,11 @@ who later contributed to Freecell Solver and to Freecell research.
 
 They can be abbreviated into their lowercase acronym (i.e: "ak" or "rtt").
 
-
+[id="run-time-display-options"]
 Run-time Display Options
 ------------------------
 
-
+[id="iter-output_flag"]
 -i , --iter-output
 ~~~~~~~~~~~~~~~~~~
 
@@ -1100,7 +1156,7 @@ recursion depth of every state which is checked, to the standard
 output. It's a good way to keep track of how it's doing, but the output
 slows it down a bit.
 
-
+[id="state-output_flag"]
 -s , --state-output
 ~~~~~~~~~~~~~~~~~~~
 
@@ -1112,7 +1168,7 @@ formation of the board itself, for every state that is checked.
 Freecell Solver, but you usually cannot make what is going on because
 it is so fast.
 
-
+[id="signal_combinations"]
 Signal Combinations
 -------------------
 

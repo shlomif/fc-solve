@@ -959,6 +959,7 @@ IF(ASCIIDOC_FOUND)
             ADD_CUSTOM_COMMAND(
                 OUTPUT "${_html_out}"
                 COMMAND ${ASCIIDOC_EXECUTABLE}
+                    "-a" "linkcss"
                     -o ${_html_out} "${_full_file}"
                 DEPENDS "${_full_file}"
                 COMMENT "Asciidoc ${_in}"
