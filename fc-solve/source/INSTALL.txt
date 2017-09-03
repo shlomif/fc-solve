@@ -4,6 +4,7 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-08-29
 :Revision: $Id$
 
+[id="compilation"]
 Quick and Dirty Compilation
 ---------------------------
 
@@ -37,6 +38,7 @@ It will also build and install the board generation program. More
 information about them can be found in the "board_gen" sub-directory of
 this distribution.
 
+[id="changing_limits"]
 Changing the Maximal number of Freecells or Stacks or Cards per Stack
 ---------------------------------------------------------------------
 
@@ -53,6 +55,7 @@ initial cards per stack.
 Notice that it's very important to set the maximal number of initial cards
 per stack, or else it's possible that a stack will eventually overflow.
 
+[id="compact_states"]
 #"Compact" States#
 ------------------
 
@@ -66,12 +69,14 @@ seems indirect stack states are at least slightly faster even for games
 whose stacks are not very long. If you still would wish to enable it,
 pass the "-DSTATES_TYPE=COMPACT_STATES" flag to CMake.
 
+[id="win32_install"]
 Installing under Win32
 ----------------------
 
 Consult the CMake documentation for generating a Visual C++ , MinGW32
 etc. compatible makefile or project.
 
+[id="testing"]
 Testing
 -------
 
