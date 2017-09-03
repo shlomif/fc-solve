@@ -1,6 +1,7 @@
 Freecell Solver Copyright and Licensing Information
 ===================================================
 
+[id="licensing"]
 Freecell Solver Copyright and Licensing Information
 ---------------------------------------------------
 
