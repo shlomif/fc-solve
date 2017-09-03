@@ -4,6 +4,7 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2016-09-22
 :Revision: $Id$
 
+[id="intro"]
 Introduction
 ------------
 
@@ -26,11 +27,13 @@ I hope you'll enjoy using Freecell Solver, and make the best of it.
 
 -- Shlomi Fish ( http://www.shlomifish.org/ )
 
+[id="build"]
 Building
 --------
 
 Read the file +INSTALL.txt+ for information on how to do that.
 
+[id="usage"]
 Usage
 -----
 
@@ -130,6 +133,7 @@ Solver accepts, read the +USAGE.txt+ file in this directory.
 To solve Simple Simon boards append +--game simple_simon+ right after
 the "fc-solve" program name.
 
+[id="board_gen_programs"]
 The board generation programs
 -----------------------------
 
@@ -139,6 +143,7 @@ implementations can be found in the "board_gen/" sub-directory. Read the
 
 In any case, they can save you the time of inputting the board yourself.
 
+[id="complete_examples"]
 Some complete examples for layouts
 ----------------------------------
 
@@ -187,13 +192,14 @@ KC QH JS TH 9S
 4D
 -----------------------
 
+[id="how_to_read_sol"]
 How to read the solutions
 -------------------------
 
 The file +USAGE.txt+ covers all of Freecell Solver’s command line options,
 but it may be too exhaustive for casual users. As a result, here is a shorter
 tutorial. First of all whenever invoking +fc-solve+ one should add the
-flags +-p -t -sam -sel+ which will make the solution easier to grok. Then,
+flags +-p -t -sam -sel+ which will make the solution easier to understand. Then,
 assuming the board could be successfully solved, one will be given the layouts
 in the solution (in the format given above) vis-a-vis with the moves as the
 string. Note that the indexes of the resources given in the moves are
