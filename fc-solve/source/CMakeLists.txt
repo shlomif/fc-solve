@@ -956,10 +956,15 @@ IF(ASCIIDOC_FOUND)
         # -a toc
         SET (htmls )
         IF (NOT "${_file}" STREQUAL "${_fc_solve_txt}")
+            SET (_flags )
+            IF ("${_file}" STREQUAL "NEWS.txt")
+                LIST(APPEND _flags "--attribute=idprefix=news__")
+            ENDIF ()
             ADD_CUSTOM_COMMAND(
                 OUTPUT "${_html_out}"
                 COMMAND ${ASCIIDOC_EXECUTABLE}
                     "-a" "linkcss"
+                    ${_flags}
                     -o ${_html_out} "${_full_file}"
                 DEPENDS "${_full_file}"
                 COMMENT "Asciidoc ${_in}"

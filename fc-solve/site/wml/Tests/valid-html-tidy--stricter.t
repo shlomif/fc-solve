@@ -34,7 +34,7 @@ MyTidy->new(
             my $fn = shift;
             return not(
                 exists $whitelist{$fn}
-                or $fn =~ m#\A dest/(?: docs/distro/[N] | js/jquery-ui/ ) #x,
+                or $fn =~ m#\A dest/(?: js/jquery-ui/ ) #x,
             );
         },
         targets => ['./dest'],

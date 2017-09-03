@@ -70,7 +70,7 @@ Version 4.6.0: (04-Dec-2016)
 3. Apply the large Freecell Pro seeds deals generation to the board generators
 and range solvers.
 
-4. Option to use +__int128+ instead of libGMP for the DBM solvers - a
+4. Option to use +$$_$$$$_$$int128+ instead of libGMP for the DBM solvers - a
 significant speed-up, see
 http://fc-solve.shlomifish.org/charts/dbm-solver-__int128-optimisation/ .
 
@@ -457,7 +457,7 @@ was unsolved.
 
 4. Add a +--solutions-directory+ argument to +test_multi_parallel.c+ .
 
-5. Fix the rpm spec - +%{version}+ instead of +%{PACKAGE_VERSION}+ .
+5. Fix the rpm spec - +%\{version\}+ instead of +%\{PACKAGE_VERSION\}+ .
 
 6. Add +scripts/parallel-range-solver-total+ to solve a range of deals in
 parallel by splitting them into chunks.

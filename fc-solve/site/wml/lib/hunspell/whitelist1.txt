@@ -966,10 +966,12 @@ sublicense
 28-Jul-2000
 2G
 DD-MMM-YYYY
+PACKAGE_VERSION
 appveyor
 cffi
 ci
 dbm-solver
+dbm-solver-__int128-optimisation
 depth_dbm_fc_solve
 depth_dbm_solver
 fc-pro-range-solver
