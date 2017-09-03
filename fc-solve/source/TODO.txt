@@ -4,9 +4,11 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2009-08-14
 :Revision: $Id$
 
+[id="pressing"]
 Pressing
 --------
 
+[id="non_pressing"]
 Non-pressing
 ------------
 
@@ -149,6 +151,7 @@ Verdict: Solved ; Iters: 433 ; Length: 89
 ** http://stackoverflow.com/questions/776283/what-does-the-restrict-keyword-mean-in-c
 ** https://duckduckgo.com/?q=restrict+keyword+c&ia=web
 
+[id="long_term"]
 Long-term
 ---------
 
@@ -202,6 +205,7 @@ total-number-of-cards-in-the-foundations or maximal foundation value.
 * Set up a +-dto2+ like scheme for +--method a-star+ where we change the tests
 order based on the depth/etc.
 
+[id="to_be_considered"]
 To be considered
 ----------------
 
