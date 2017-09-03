@@ -584,20 +584,7 @@ ENDMACRO ()
 CMAKE_POLICY(SET CMP0054 NEW)
 
 MACRO(gen_error_exe myprog)
-    SET (tgt "${myprog}__target")
-    SET (_dest "${CMAKE_CURRENT_BINARY_DIR}/${myprog}")
-    SET (_src  "${CMAKE_SOURCE_DIR}/scripts/err-on-unbuilt-executable.pl")
-
-    ADD_CUSTOM_COMMAND(
-        OUTPUT "${_dest}"
-        DEPENDS "${_src}"
-        COMMAND "${CMAKE_COMMAND}" "-E" "copy" "${_src}" "${_dest}"
-    )
-
-    ADD_CUSTOM_TARGET(
-        "${tgt}"
-        ALL DEPENDS "${_dest}"
-    )
+    ADD_COPY_TARGET("${myprog}__target" "${CMAKE_SOURCE_DIR}/scripts/err-on-unbuilt-executable.pl" "${CMAKE_CURRENT_BINARY_DIR}/${myprog}")
 ENDMACRO()
 
 SET (DEBONDT_DELTA_STATES )
