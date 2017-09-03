@@ -41,7 +41,9 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
 DOCS_PROTO = AUTHORS COPYING INSTALL NEWS README TODO USAGE
+DOCS_AUX_PROTO = asciidoc.css asciidoc.js
 ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
+DOCS_AUX = $(patsubst %,$(D)/docs/distro/%,$(DOCS_AUX_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
 INCLUDES_PROTO = std/logo.wml
@@ -79,7 +81,7 @@ CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-s
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
-dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
+dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
 dummy: $(DEST_LIBFREECELL_SOLVER_JS_MEM)
 
@@ -100,6 +102,9 @@ $(D) $(SUBDIRS): % :
 RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 
 $(ARC_DOCS): $(D)/% : ../../source/%.txt
+	cp -f "$<" "$@"
+
+$(DOCS_AUX): $(D)/docs/distro/% : ../../source/%
 	cp -f "$<" "$@"
 
 $(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
