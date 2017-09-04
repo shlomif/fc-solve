@@ -21,18 +21,6 @@ solver (at least initially]):
 ** invalid characters.
 ** misformatting of the format.
 
-* Try to convert the fcs_is_parent() functions to a lookup bit vector based
-on 64*64 bits.
-
-* Currently +var_base*.h+ use many type casting and other minor inefficiencies.
-Refactor/optimize to avoid that.
-
-* Try different +fcs_hash.c+ hash fill factors, and try to avoid unnecessary
-calculations to check if it should be rehashed.
-
-* Try to convert to an open addressing hash instead of chaining (for better
-memory localisation).
-
 * Find how well the solver performs with different permutations of the
 order of columns/freecells.
 ** See if it's possible to combine several scans on such different
@@ -55,12 +43,6 @@ card was moved from (using a colored →) and where it was placed.
 loop stop it when it's doing the optimization scan, then the optimization scan
 goes on until it ends.
 ** Not sure about it.
-
-* Investigate a way to have positions_by_rank also index according to the
-suit, and to traverse only the possible parents or children based on the
-suit.
-
-* In the states handling, there's still some room for pointer arithmetics.
 
 * Implement more of Kevin Atkinson's Common Lisp solver's atomic move types,
 and try to construct good heuristics out of them.
@@ -165,8 +147,6 @@ Long-term
 
 * Write a multi-threaded version.
 
-* Port to Java (?)
-
 * Add a switch to ask the user if he wants to continue and enter a bigger
 iterations limit.
 
@@ -175,9 +155,6 @@ iterations limit.
 * Experiment with a delta-based state storage.
     - see delta_states_debondt.c - port it to the main libfreecell-solver.
     - see: http://fc-solve.shlomifish.org/to-do.html#orig_calc_states .
-
-* Make the dbm_fc_solver not dependent on http://gmplib.org/ by implementing
-our own big ints.
 
 * Adapt the scans based on the parameters of the initial board.
 +
@@ -196,9 +173,6 @@ and then:
 
 * Interactive mode? Continue a scan that reached its limit.
 
-* Get the tests to run and pass on MS Windows (32-bit/64-bit) and implement
-AppVeyor Continuous Integration.
-
 * Adapt +-dto2+ to other parameters aside from depth, such as
 total-number-of-cards-in-the-foundations or maximal foundation value.
 
@@ -212,6 +186,3 @@ To be considered
 * Make the code https://sourceforge.net/projects/splint/[splint]-clean.
 
 * Write a multi-process client/server program.
-
-* Add a limit to stacks number (in the case of Indirect Stack States),
-number of states that are stored anywhere, etc.
