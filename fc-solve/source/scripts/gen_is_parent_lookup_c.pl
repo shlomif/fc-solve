@@ -5,7 +5,8 @@ use warnings;
 use autodie;
 use Path::Tiny qw/ path /;
 
-my $TRUE = 1;
+my $FALSE = 0;
+my $TRUE  = 1;
 
 my $MAX_RANK              = 13;
 my $NUM_SUITS             = 4;
@@ -27,8 +28,9 @@ sub key
     return "${parent}\t${child}";
 }
 
-my $NUM_CHILD_CARDS = 64;
+my $NUM_CHILD_CARDS  = 64;
 my $NUM_PARENT_CARDS = make_card( $MAX_RANK, $SUITS[-1] ) + 1;
+my @is_king          = ( ($FALSE) x $NUM_PARENT_CARDS );
 my %lookup;
 my @state_pos = ( map { [ (0) x $NUM_SUITS ] } 0 .. $MAX_RANK );
 my @card_pos;
@@ -40,6 +42,7 @@ foreach my $parent_suit (@SUITS)
     foreach my $parent_rank (@RANKS)
     {
         my $parent = make_card( $parent_rank, $parent_suit );
+        $is_king[$parent] = ( $parent_rank == $MAX_RANK ? $TRUE : $FALSE );
         $state_pos[$parent_rank][$parent_suit] = $card_pos[$parent] =
             $parent_rank - 1 + $parent_suit * $MAX_RANK;
 
@@ -87,6 +90,12 @@ sub emit
     return;
 }
 
+emit(
+    qq#const fcs_bool_t fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
+    'is_king',
+    [ q/"bool.h"/, ],
+    [ map { $_ ? 'TRUE' : 'FALSE' } @is_king ],
+);
 emit(
 qq#const fcs_bool_t fc_solve_is_parent_buf[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
     'is_parent',

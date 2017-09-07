@@ -197,9 +197,10 @@ static inline fcs_card_t fcs_col_get_rank(
     return fcs_card_rank(fcs_col_get_card(col, card_idx));
 }
 #define FCS_RANK_KING 13
+#include "is_king.h"
 static inline fcs_bool_t fcs_card_is_king(const fcs_card_t card)
 {
-    return (fcs_card_rank(card) == FCS_RANK_KING);
+    return fc_solve_is_king_buf[(size_t)card];
 }
 
 static inline fcs_bool_t fcs_col_is_king(
