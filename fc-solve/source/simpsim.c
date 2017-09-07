@@ -167,7 +167,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 }
 
 #define LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)                           \
-    if (fcs_card_rank(card) < 13)                                              \
+    if (!fcs_card_is_king(card))                                               \
     {                                                                          \
         const fcs_pos_by_rank_t pos = positions_by_rank[FCS_POS_IDX(           \
             fcs_card_rank(card) + 1, fcs_card_suit(card))];                    \
@@ -891,7 +891,7 @@ DECLARE_MOVE_FUNCTION(
 #define h 0
     const fcs_card_t card = fcs_col_get_card(col, h);
 
-    if (fcs_card_rank(card) == 13)
+    if (fcs_card_is_king(card))
     {
         continue;
     }
