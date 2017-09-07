@@ -380,7 +380,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
                 /* The Cell should not be empty. */
                 fcs_card_is_valid(src_card) &&
                 /* We cannot put a king anywhere. */
-                (fcs_card_rank(src_card) != 13)))
+                (!fcs_card_is_king(src_card))))
         {
             continue;
         }
@@ -684,7 +684,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
             const fcs_card_t card = fcs_col_get_card(iter.col, iter.c);
             /* Skip if it's a King - nothing to put it on. */
-            if (unlikely(fcs_card_rank(card) == 13))
+            if (unlikely(fcs_card_is_king(card)))
             {
                 continue;
             }
@@ -883,7 +883,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     {
         const fcs_card_t card = fcs_freecell_card(state, fc);
 
-        if ((IS_FILLED_BY_KINGS_ONLY()) ? (fcs_card_rank(card) != 13)
+        if ((IS_FILLED_BY_KINGS_ONLY()) ? (!fcs_card_is_king(card))
                                         : fcs_card_is_empty(card))
         {
             continue;
@@ -1134,7 +1134,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         }
         const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
 
-        if (IS_FILLED_BY_KINGS_ONLY() && (fcs_card_rank(card) != 13))
+        if (IS_FILLED_BY_KINGS_ONLY() && (!fcs_card_is_king(card)))
         {
             continue;
         }
@@ -1311,7 +1311,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         const fcs_card_t card = fcs_freecell_card(state, fc);
 
         if (fcs_card_is_empty(card) ||
-            (IS_FILLED_BY_KINGS_ONLY() && (fcs_card_rank(card) != 13)))
+            (IS_FILLED_BY_KINGS_ONLY() && (!fcs_card_is_king(card))))
         {
             continue;
         }

@@ -197,11 +197,15 @@ static inline fcs_card_t fcs_col_get_rank(
     return fcs_card_rank(fcs_col_get_card(col, card_idx));
 }
 #define FCS_RANK_KING 13
+static inline fcs_bool_t fcs_card_is_king(const fcs_card_t card)
+{
+    return (fcs_card_rank(card) == FCS_RANK_KING);
+}
 
 static inline fcs_bool_t fcs_col_is_king(
     const fcs_const_cards_column_t col, const int card_idx)
 {
-    return (fcs_col_get_rank(col, card_idx) == FCS_RANK_KING);
+    return fcs_card_is_king(fcs_col_get_card(col, card_idx));
 }
 
 struct fcs_state_keyval_pair_struct;
