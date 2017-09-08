@@ -1,5 +1,7 @@
 os: linux
 dist: trusty
+# See https://github.com/travis-ci/travis-ci/issues/8378 ; remove later
+group: deprecated-2017Q3
 python:
     - '3.6'
 before_install:
