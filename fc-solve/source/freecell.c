@@ -918,8 +918,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
     const fcs_game_limit_t num_virtual_vacant_freecells =
         num_vacant_freecells + 1;
     const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
-    const fcs_game_limit_t num_virtual_vacant_stacks =
-        CALC_num_virtual_vacant_stacks();
+    const fcs_game_limit_t num_virtual_vacant_stacks = num_vacant_stacks - 1;
     if (!num_vacant_stacks)
     {
         return;
@@ -939,7 +938,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
         const fcs_card_t src_card = fcs_freecell_card(state, fc);
 
         if (fcs_card_is_empty(src_card) ||
-            ((!IS_FILLED_BY_KINGS_ONLY()) || (!fcs_card_is_king(src_card))))
+            (IS_FILLED_BY_KINGS_ONLY() && fcs_card_is_king(src_card)))
         {
             continue;
         }
@@ -983,14 +982,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                 }
                 sfs_check_state_begin();
                 copy_two_stacks(stack_idx, dest_stack_idx);
-                fcs_state_push(&new_state_key, dest_stack_idx, card);
+                fcs_state_push(&new_state_key, dest_stack_idx, src_card);
                 fcs_empty_freecell(new_state_key, fc);
                 fcs_move_stack_non_seq_push(
                     moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, dest_stack_idx);
-                const int cols_indexes[3] = {dest_stack_idx, stack_idx, -1};
+                const int cols_indexes[3] = {stack_idx, -1, -1};
                 empty_two_cols_from_new_state(soft_thread,
-                    ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes, 0,
-                    col_num_cards);
+                    ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
+                    col_num_cards, 0);
                 fcs_move_sequence(
                     dest_stack_idx, stack_idx, iter.seq_end - iter.c + 1);
                 sfs_check_state_end();

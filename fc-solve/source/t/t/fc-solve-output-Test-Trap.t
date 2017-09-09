@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 use File::Temp qw( tempdir );
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
@@ -11,6 +11,23 @@ use FC_Solve::Paths
     qw( bin_board bin_exe_raw is_freecell_only is_without_dbm normalize_lf samp_board $FC_SOLVE__RAW );
 
 my $MID24_BOARD = samp_board('24-mid.board');
+
+{
+    trap
+    {
+        system( $FC_SOLVE__RAW,
+            qw/-s -i -p -t -sam -sel -to j/,
+            samp_board('24-mod-to-test-fc-to-empty-s.board')
+        );
+    };
+
+    my $needle = qr#^Iteration: 1\r?\nDepth: 1\r?\n#ms;
+
+    # TEST
+    like( $trap->stdout(), $needle,
+        "Found some derived states with the new move-freecells-to-empty-cols",
+    );
+}
 
 {
     trap
