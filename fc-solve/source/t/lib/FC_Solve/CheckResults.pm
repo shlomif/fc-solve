@@ -167,15 +167,12 @@ q#Test skipped because it uses flares, and we are running on a build without fla
 
     if ( !$test_verdict )
     {
-        diag(     "Expected Digest: "
-                . $info->{'hexdigest'} . "\n"
-                . "Got Digest: "
-                . $sha->hexdigest() . "\n"
-                . "Expected Len: "
-                . $info->{'len'} . "\n"
-                . "Got Len: "
-                . $sha->len()
-                . "\n" );
+        diag(<<"EOF");
+Expected Digest: $info->{hexdigest}
+Got Digest: @{[$sha->hexdigest()]}
+Expected Len: $info->{len}
+Got Len: @{[$sha->len()]}
+EOF
     }
 
     close($fc_solve_output);
