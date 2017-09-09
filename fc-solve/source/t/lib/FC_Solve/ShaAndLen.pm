@@ -79,16 +79,12 @@ sub add_file
 
 sub add_processed_slurp
 {
-    my $self     = shift;
-    my $fh       = shift;
-    my $callback = shift;
-
-    my $buffer;
-    {
-        local $/;
-        $buffer = <$fh>;
-    }
-    return $self->add( scalar $callback->($buffer) );
+    my ( $self, $fh, $cb ) = @_;
+    return $self->add(
+        scalar $cb->(
+            do { local $/; scalar <$fh>; }
+        )
+    );
 }
 
 1;
