@@ -192,6 +192,13 @@ __PACKAGE__->populate(
             msg =>
 "There is a solution for 254,076 with -l by and a scans synergy.",
         },
+        'freecell25_j_move' => {
+            args => {
+                deal  => 25,
+                theme => [ "-to", "0123456j89" ],
+            },
+            msg => "Verify the 'j' move - fc2EmptyS",
+        },
         'lead_colons' => {
             args => {
                 samp_board => "24-mid-with-colons.board",
