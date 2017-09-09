@@ -108,6 +108,10 @@ my @move_funcs = (
         'function' => "simple_simon_move_sequence_to_false_parent",
         'aliases'  => [qw(i)],
     },
+    {
+        'function' => "move_fc_to_empty_and_put_on_top",
+        'aliases'  => [qw(j)],
+    },
 );
 
 my ( %declared_move_funcs, %aliases );

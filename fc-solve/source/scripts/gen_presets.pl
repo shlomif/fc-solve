@@ -19,7 +19,7 @@ my %presets = (
     'fan'      => [qw(i freecell s 18 sbb suit sm limited esf kings_only f 0)],
     'forecell' => [qw(i freecell esf kings_only)],
     'freecell' => [
-        qw(s 8 f 4 d 1 sbb ac sm limited esf any_card to [01][23456789] at 0123456789ABCDE)
+        qw(s 8 f 4 d 1 sbb ac sm limited esf any_card to [01][23456789] at 0123456789ABCDEj)
     ],
     'good_measure'            => [qw(i bakers_dozen s 10)],
     'kings_only_bakers_game'  => [qw(i bakers_game esf kings_only)],
@@ -110,7 +110,7 @@ sub compile_preset
             }
             elsif ( $cmd =~ /^(?:at|allowed_tests)$/ )
             {
-                if ( $arg =~ /[^0-9a-iA-G]/ )
+                if ( $arg =~ /[^0-9a-jA-G]/ )
                 {
                     die "Unrecognized character in Allowed Tests!\n";
                 }
