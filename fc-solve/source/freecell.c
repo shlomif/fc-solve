@@ -698,8 +698,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     continue;
                 }
                 const int_fast32_t dc = pos_idx_to_check[1];
-                const_AUTO(dest_col, fcs_state_get_col(state, ds));
-                const int dest_num_cards = fcs_col_len(dest_col) - dc - 1;
+                const int dest_num_cards =
+                    fcs_state_col_len(state, ds) - dc - 1;
 
                 int num_cards_to_relocate = dest_num_cards + col_num_cards;
 
