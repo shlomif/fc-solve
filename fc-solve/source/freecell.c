@@ -901,6 +901,133 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     }
 }
 
+/* Let's try to put cards that occupy freecells on an empty stack and
+ * immediately put a child card on top. See:
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/584
+ * */
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
+{
+    MOVE_FUNCS__define_common();
+    if (IS_FILLED_BY_NONE())
+    {
+        return;
+    }
+    FC__STACKS__SET_PARAMS();
+    const fcs_game_limit_t num_vacant_freecells =
+        soft_thread->num_vacant_freecells;
+    const fcs_game_limit_t num_virtual_vacant_freecells =
+        num_vacant_freecells + 1;
+    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    const fcs_game_limit_t num_virtual_vacant_stacks =
+        CALC_num_virtual_vacant_stacks();
+    if (!num_vacant_stacks)
+    {
+        return;
+    }
+    int dest_stack_idx;
+    for (dest_stack_idx = 0; dest_stack_idx < LOCAL_STACKS_NUM;
+         dest_stack_idx++)
+    {
+        if (fcs_state_col_is_empty(state, dest_stack_idx))
+        {
+            break;
+        }
+    }
+
+    for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
+    {
+        const fcs_card_t src_card = fcs_freecell_card(state, fc);
+
+        if (fcs_card_is_empty(src_card) ||
+            ((!IS_FILLED_BY_KINGS_ONLY()) || (!fcs_card_is_king(src_card))))
+        {
+            continue;
+        }
+        for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; ++stack_idx)
+        {
+            col_seqs_iter_t iter = col_seqs_iter__create(&state,
+                stack_idx PASS_sequences_are_built_by(sequences_are_built_by));
+            for (; iter.c < iter.col_len; col_seqs_iter__advance(&iter))
+            {
+                if (MOVE_FUNCS__should_not_empty_columns() && (iter.c == 0))
+                {
+                    continue;
+                }
+                const int col_num_cards = iter.col_len_minus_1 - iter.seq_end;
+                /* Find a card which this card can be put on; */
+
+                const fcs_card_t card = fcs_col_get_card(iter.col, iter.c);
+                if (!unlikely(fcs_is_parent_card(card, src_card)))
+                {
+                    continue;
+                }
+                int num_cards_to_relocate = col_num_cards;
+
+                const int freecells_to_fill =
+                    min(num_cards_to_relocate, num_virtual_vacant_freecells);
+
+                num_cards_to_relocate -= freecells_to_fill;
+
+                const int freestacks_to_fill =
+                    min(num_cards_to_relocate, num_virtual_vacant_stacks);
+                num_cards_to_relocate -= freestacks_to_fill;
+
+                if (!unlikely(
+                        (num_cards_to_relocate == 0) &&
+                        (calc_max_sequence_move(
+                             num_virtual_vacant_freecells - freecells_to_fill,
+                             num_virtual_vacant_stacks - freestacks_to_fill) >=
+                            iter.seq_end - iter.c + 1)))
+                {
+                    continue;
+                }
+                sfs_check_state_begin();
+                copy_two_stacks(stack_idx, dest_stack_idx);
+                fcs_state_push(&new_state_key, dest_stack_idx, card);
+                fcs_empty_freecell(new_state_key, fc);
+                fcs_move_stack_non_seq_push(
+                    moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, dest_stack_idx);
+                const int cols_indexes[3] = {dest_stack_idx, stack_idx, -1};
+                empty_two_cols_from_new_state(soft_thread,
+                    ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes, 0,
+                    col_num_cards);
+                fcs_move_sequence(
+                    dest_stack_idx, stack_idx, iter.seq_end - iter.c + 1);
+                sfs_check_state_end();
+            }
+        }
+        for (int dest_fc = 0; dest_fc < LOCAL_FREECELLS_NUM; ++dest_fc)
+        {
+            if (dest_fc == fc)
+            {
+                continue;
+            }
+            const fcs_card_t dest_card = fcs_freecell_card(state, dest_fc);
+            if (fcs_card_is_empty(dest_card))
+            {
+                continue;
+            }
+            if (!unlikely(fcs_is_parent_card(dest_card, src_card)))
+            {
+                continue;
+            }
+            sfs_check_state_begin();
+
+            my_copy_stack(dest_stack_idx);
+
+            fcs_state_push(&new_state_key, dest_stack_idx, src_card);
+            fcs_state_push(&new_state_key, dest_stack_idx, dest_card);
+            fcs_empty_freecell(new_state_key, fc);
+            fcs_empty_freecell(new_state_key, dest_fc);
+            fcs_move_stack_non_seq_push(
+                moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, dest_stack_idx);
+            fcs_move_stack_non_seq_push(moves, FCS_MOVE_TYPE_FREECELL_TO_STACK,
+                dest_fc, dest_stack_idx);
+            sfs_check_state_end();
+        }
+    }
+}
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 {
     MOVE_FUNCS__define_common();
