@@ -149,7 +149,7 @@ compile_cmd_line(
         # argv   => [ '-l', 'obf', ],
         argv => [
             '--read-from-file',
-            "4,$ENV{FCS_SRC_PATH}/../scripts/TEST_OPTIMIZATIONS/obf-mod3.sh",
+            "4,$ENV{FCS_SRC_PATH}/../scripts/TEST_OPTIMIZATIONS/obf-mod4.sh",
         ],
         name   => 'obf',
         out_fn => 'fc_solve__precompiled__theme.h',
