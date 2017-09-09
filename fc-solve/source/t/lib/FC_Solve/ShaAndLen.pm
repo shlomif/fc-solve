@@ -20,48 +20,39 @@ sub new
 {
     my $class = shift;
     my $self  = {};
-
     bless $self, $class;
-
     $self->_init(@_);
-
     return $self;
 }
 
 sub _init
 {
-    my $self = shift;
-    my $args = shift;
+    my ( $self, $args ) = @_;
 
     $self->_len(0);
     $self->_hasher( Digest::SHA->new(256) );
 
-    return 0;
+    return;
 }
 
 sub add
 {
-    my $self   = shift;
-    my $string = shift;
+    my ( $self, $str ) = @_;
 
-    $self->_len( $self->_len() + length($string) );
-    $self->_hasher->add($string);
+    $self->_len( $self->_len() + length($str) );
+    $self->_hasher->add($str);
 
     return;
 }
 
 sub len
 {
-    my $self = shift;
-
-    return $self->_len();
+    return shift->_len();
 }
 
 sub hexdigest
 {
-    my $self = shift;
-
-    return $self->_hasher->clone()->hexdigest();
+    return shift->_hasher->clone()->hexdigest();
 }
 
 sub _unity
@@ -71,9 +62,7 @@ sub _unity
 
 sub add_file
 {
-    my $self = shift;
-    my $fh   = shift;
-
+    my ( $self, $fh ) = @_;
     return $self->add_processed_slurp( $fh, \&_unity );
 }
 
