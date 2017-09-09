@@ -28,24 +28,18 @@ sub new
 {
     my $class = shift;
     my $self  = {};
-
     bless $self, $class;
-
     $self->_init(@_);
-
     return $self;
 }
 
 sub _init
 {
-    my $self = shift;
-    my $args = shift;
-
+    my ( $self, $args ) = @_;
     $self->digests_storage_fn( $args->{data_filename} );
     $self->digests_storage( LoadFile( $self->digests_storage_fn() ) );
     $self->trim_stats( $args->{trim_stats} );
-
-    return 0;
+    return;
 }
 
 sub end
@@ -62,9 +56,7 @@ sub end
 
 sub should_fill_in_id
 {
-    my $self = shift;
-
-    my $id = shift;
+    my ( $self, $id ) = @_;
 
     return (
         exists( $self->digests_storage->{digests}->{$id} )
@@ -76,9 +68,7 @@ sub should_fill_in_id
 # Short for a test to verify a solution.
 sub vtest
 {
-    my $self = shift;
-    my $args = shift;
-    my $msg  = shift;
+    my ( $self, $args, $msg ) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     if ( exists( $args->{variant} ) and is_freecell_only() )
@@ -94,23 +84,20 @@ q#Test skipped because it uses flares, and we are running on a build without fla
         );
     }
 
-    if ( !$args->{id} )
-    {
-        Carp::confess("ID not specified");
-    }
-
     my $id = $args->{id};
-
+    if ( !$id )
+    {
+        Carp::confess 'ID not specified';
+    }
     my $output_file      = $args->{output_file};
     my $complete_command = $args->{complete_command};
 
     my $fc_solve_output;
-
     if ($complete_command)
     {
         open $fc_solve_output, "$complete_command |"
             or Carp::confess
-            "Error! Could not open the complete command pipeline";
+            'Error! Could not open the complete command pipeline';
     }
     elsif ( !$output_file )
     {
@@ -123,7 +110,7 @@ q#Test skipped because it uses flares, and we are running on a build without fla
         my @cmd = FC_Solve::GetOutput->new($args)->calc_cmd_line->{cmd_line};
         if ( system(@cmd) )
         {
-            Carp::confess "Error: could not execute the fc-solve pipeline.";
+            Carp::confess 'Error: could not execute the fc-solve pipeline.';
         }
         open $fc_solve_output, "<", $output_file
             or Carp::confess("Could not open file for reading - $!");
@@ -133,7 +120,7 @@ q#Test skipped because it uses flares, and we are running on a build without fla
 
     if ( $ENV{'FCS_DUMP_SOLS'} )
     {
-        open my $out, ">", "$id.SOLUTION.txt"
+        open my $out, '>', "$id.SOLUTION.txt"
             or die "Cannot open '$id.txt' for writing";
 
         local $/;
