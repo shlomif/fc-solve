@@ -20,4 +20,4 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -to "[01][2345j]" -dto2 "5,[0123][456j]" -dto2 "13,[0123456j]=asw(1)" -seed 33627 -step 500 -sp r:tf --st-name sG -nst \
 --method random-dfs -to "[01][2345j]" -dto2 "5,[0123][456j]" -dto2 "13,[0123456j]=asw(1)" -seed 18296 -step 500 -sp r:tf --st-name sH -nst \
 --method random-dfs -to "01[235j]" -dto2 "9,[012][46j8]" -dto2 "15,[012346j8]=asw(1)" -seed 10468 -step 500 -sp r:tf --st-name sI \
---prelude "295@24,230@5,280@9,414@sI,600@sF,490@sH,428@sG,760@32,380@12,380@24,380@10,380@5,200@s1,200@new,222@sE,225@sD,266@sB,380@3,380@9,380@24,380@18,760@20,380@11,760@24,380@11"
+--prelude "295@24,230@5,280@9,414@sI,400@sF,490@sH,428@sG,760@32,380@12,281@24,380@10,76@5,192@s1,200@new,222@sE,225@sD,266@sB,380@3,380@9,380@24,380@18,760@20,380@11,760@24,380@11"
