@@ -883,8 +883,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     {
         const fcs_card_t card = fcs_freecell_card(state, fc);
 
-        if ((IS_FILLED_BY_KINGS_ONLY()) ? (!fcs_card_is_king(card))
-                                        : fcs_card_is_empty(card))
+        if (fcs_card_is_empty(card) ||
+            (IS_FILLED_BY_KINGS_ONLY() && !fcs_card_is_king(card)))
         {
             continue;
         }
@@ -938,7 +938,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
         const fcs_card_t src_card = fcs_freecell_card(state, fc);
 
         if (fcs_card_is_empty(src_card) ||
-            (IS_FILLED_BY_KINGS_ONLY() && fcs_card_is_king(src_card)))
+            (IS_FILLED_BY_KINGS_ONLY() && !fcs_card_is_king(src_card)))
         {
             continue;
         }
