@@ -1,4 +1,5 @@
 import re
+import statistics
 import sys
 from six import print_
 
@@ -62,12 +63,25 @@ class PreludeAnalyzer(object):
         else:
             raise BaseException('Cannot fit in prelude.')
 
+    def report(self):
+        for s in self._stages:
+            d = s['data']
+            prefix = '%d @ %s : ' % (s['quota'], s['id'])
+            l = len(d)
+            if l == 0:
+                print_("%s%s" % (prefix, '[EMPTY]'))
+            else:
+                print_("%snum=%d min=%d max=%d avg=%f median=%f" %
+                       (prefix, l, min(d), max(d), statistics.mean(d),
+                        statistics.median(d)))
+
 
 def main():
     p = PreludeAnalyzer('../scripts/TEST_OPTIMIZATIONS/obf-mod4.sh')
     for i in iters_count_iterator('serial.dump'):
-        print_(i)
+        # print_(i)
         p.insert(i)
+    p.report()
 
 
 if __name__ == "__main__":
