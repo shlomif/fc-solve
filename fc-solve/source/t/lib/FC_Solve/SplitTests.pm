@@ -56,7 +56,7 @@ sub gen
 #!/usr/bin/perl
 use Test::More tests => 1;
 use $module;
-${module}::r(@{[$dump->($data->{args}) . "," . $dump->($data->{msg})]});
+${module}::r(@{[$dump->(+{id => $args->{id},%{$data->{args}}}) . "," . $dump->($data->{msg})]});
 EOF
             },
             data_obj => $data_obj,

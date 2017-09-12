@@ -73,6 +73,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
     )
 
     FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/t")
+    FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/verify-cache")
 
     SET (EXE_FILE "bit-reader-and-writer-test.t.exe")
 

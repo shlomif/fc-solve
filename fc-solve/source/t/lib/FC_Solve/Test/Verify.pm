@@ -3,7 +3,9 @@ package FC_Solve::Test::Verify;
 use strict;
 use warnings;
 
-use FC_Solve::Paths qw( is_freecell_only is_without_patsolve samp_board );
+use FC_Solve::Paths
+    qw( bin_file is_freecell_only is_without_patsolve samp_board );
+use Path::Tiny qw( path );
 
 # Short for run.
 sub r
@@ -27,17 +29,34 @@ sub r
     {
         $args->{board} = samp_board($bb);
     }
+    my $id = delete $args->{id};
 
     my $cmd_line        = FC_Solve::GetOutput->new($args);
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
+    my $contents        = do { local $/; <$fc_solve_output>; };
+    close($fc_solve_output);
+    require Digest::SHA;
+    my $hasher = Digest::SHA->new(256);
+    $hasher->add($contents);
+    my $got_sum = $hasher->hexdigest;
 
+    my $fn = bin_file( [ 't', 'verify-cache', "$id.sha" ] );
+    if ( -e $fn )
+    {
+        return Test::More::is(
+            $got_sum,
+            path($fn)->slurp_raw,
+            "Cached checksum matches."
+        );
+    }
     require Games::Solitaire::Verify::Solution;
     require Games::Solitaire::Verify::VariantParams;
 
     # Initialise a column
+    open my $in, '<', \$contents;
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $fc_solve_output,
+            input_fh => $in,
             variant  => $cmd_line->variant,
             (
                 $cmd_line->is_custom
@@ -60,8 +79,10 @@ sub r
         require Data::Dumper;
         Test::More::diag( "Verdict == " . Data::Dumper::Dumper($verdict) );
     }
-
-    close($fc_solve_output);
+    else
+    {
+        path($fn)->spew_raw($got_sum);
+    }
 
     return $test_verdict;
 }
