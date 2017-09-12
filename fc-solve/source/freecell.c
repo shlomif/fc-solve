@@ -941,6 +941,35 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
         {
             continue;
         }
+        for (int dest_fc = 0; dest_fc < LOCAL_FREECELLS_NUM; ++dest_fc)
+        {
+            if (dest_fc == fc)
+            {
+                continue;
+            }
+            const fcs_card_t dest_card = fcs_freecell_card(state, dest_fc);
+            if (fcs_card_is_empty(dest_card))
+            {
+                continue;
+            }
+            if (!unlikely(fcs_is_parent_card(dest_card, src_card)))
+            {
+                continue;
+            }
+            sfs_check_state_begin();
+
+            my_copy_stack(dest_stack_idx);
+
+            fcs_state_push(&new_state_key, dest_stack_idx, src_card);
+            fcs_state_push(&new_state_key, dest_stack_idx, dest_card);
+            fcs_empty_freecell(new_state_key, fc);
+            fcs_empty_freecell(new_state_key, dest_fc);
+            fcs_move_stack_non_seq_push(
+                moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, dest_stack_idx);
+            fcs_move_stack_non_seq_push(moves, FCS_MOVE_TYPE_FREECELL_TO_STACK,
+                dest_fc, dest_stack_idx);
+            sfs_check_state_end();
+        }
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; ++stack_idx)
         {
             col_seqs_iter_t iter = col_seqs_iter__create(&state,
@@ -993,35 +1022,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                     dest_stack_idx, stack_idx, iter.seq_end - iter.c + 1);
                 sfs_check_state_end();
             }
-        }
-        for (int dest_fc = 0; dest_fc < LOCAL_FREECELLS_NUM; ++dest_fc)
-        {
-            if (dest_fc == fc)
-            {
-                continue;
-            }
-            const fcs_card_t dest_card = fcs_freecell_card(state, dest_fc);
-            if (fcs_card_is_empty(dest_card))
-            {
-                continue;
-            }
-            if (!unlikely(fcs_is_parent_card(dest_card, src_card)))
-            {
-                continue;
-            }
-            sfs_check_state_begin();
-
-            my_copy_stack(dest_stack_idx);
-
-            fcs_state_push(&new_state_key, dest_stack_idx, src_card);
-            fcs_state_push(&new_state_key, dest_stack_idx, dest_card);
-            fcs_empty_freecell(new_state_key, fc);
-            fcs_empty_freecell(new_state_key, dest_fc);
-            fcs_move_stack_non_seq_push(
-                moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, dest_stack_idx);
-            fcs_move_stack_non_seq_push(moves, FCS_MOVE_TYPE_FREECELL_TO_STACK,
-                dest_fc, dest_stack_idx);
-            sfs_check_state_end();
         }
     }
 }
