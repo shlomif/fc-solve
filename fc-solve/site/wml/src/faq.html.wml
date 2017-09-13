@@ -652,7 +652,7 @@ times faster</a> and I naturally find a 24 factor performance decrease
 unacceptable.
 </p>
 
-<h3 id="algo">How does Freecell Solver solves Freecell? Which algorithm
+<h3 id="algo">How does Freecell Solver solve Freecell? Which algorithm
 does it use?</h3>
 
 <p>
