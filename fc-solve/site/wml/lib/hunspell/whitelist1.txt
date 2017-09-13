@@ -614,6 +614,7 @@ https
 i1
 i2
 i3
+iPhone
 ibm
 icc
 icc's
@@ -1113,7 +1114,6 @@ js
 ==== In: dest/links.html
 
 Screencasts
-iPhone
 
 ==== In: dest/pysol/index.html
 
