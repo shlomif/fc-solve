@@ -20,10 +20,13 @@
 #include "cl_callback_range.h"
 #include "handle_parsing.h"
 #include "trace_mem.h"
-#include "help_err.h"
 #include "try_param.h"
+#include "range_solvers.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) { return main_main_wrapper(argc, argv); }
+
+static inline int range_solvers_main(int argc, char *argv[], int arg,
+    long long start_board, long long end_board, const long long stop_at)
 {
     long long total_num_iters = 0;
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
@@ -31,27 +34,6 @@ int main(int argc, char *argv[])
     binary_output_t binary_output = INIT_BINARY_OUTPUT;
     const char *solutions_directory = NULL;
     char *solution_fn = NULL;
-    int arg = 1;
-
-    if (argc < 4)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("Not Enough Arguments!\n");
-#else
-        return -1;
-#endif
-    }
-    long long start_board = atoll(argv[arg++]);
-    long long end_board = atoll(argv[arg++]);
-    const long long stop_at = atoll(argv[arg++]);
-    if (stop_at <= 0)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("print_step (the third argument) must be greater than 0.\n");
-#else
-        return -1;
-#endif
-    }
 
     for (; arg < argc; arg++)
     {
