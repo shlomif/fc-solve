@@ -35,14 +35,22 @@ int main(int argc, char *argv[])
 
     if (argc < 4)
     {
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
         help_err("Not Enough Arguments!\n");
+#else
+        return -1;
+#endif
     }
     long long start_board = atoll(argv[arg++]);
     long long end_board = atoll(argv[arg++]);
     const long long stop_at = atoll(argv[arg++]);
     if (stop_at <= 0)
     {
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
         help_err("print_step (the third argument) must be greater than 0.\n");
+#else
+        return -1;
+#endif
     }
 
     for (; arg < argc; arg++)

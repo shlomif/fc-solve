@@ -84,7 +84,11 @@ int main(int argc, char *argv[])
 
     if (argc < 3)
     {
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
         help_err("Not Enough Arguments!\n");
+#else
+        return -1;
+#endif
     }
     const_AUTO(start_board, atoi(argv[arg++]));
     const_AUTO(end_board, atoi(argv[arg++]));
