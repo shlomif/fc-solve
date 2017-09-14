@@ -15,14 +15,14 @@
 #include "rinutils.h"
 #include "fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
-#include "help_err.h"
 #include "try_param.h"
+#include "range_solvers.h"
 
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
 {
     printf("\n%s",
-        "measure-depth-dep-tests-order-performance start end\n"
+        "measure-depth-dep-tests-order-performance start end stop_at\n"
         "   [--args-start] [--args-end] [--output-to]\n"
         "[--scan1-to] [--scan2-to] [--iters-limit]\n"
         "[--max-ver-depth]"
@@ -69,7 +69,11 @@ static void set_tests_order(
     }
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) { return main_main_wrapper(argc, argv); }
+
+static inline int range_solvers_main(int argc, char *argv[], int arg,
+    const long long start_board, const long long end_board,
+    const long long stop_at)
 {
     /* char buffer[2048]; */
     fcs_int_limit_t iters_limit = 100000;
@@ -80,18 +84,7 @@ int main(int argc, char *argv[])
     const char *scan1_to = NULL, *scan2_to = NULL;
     const char *output_filename = NULL;
 
-    int arg = 1, start_from_arg = -1, end_args = -1;
-
-    if (argc < 3)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("Not Enough Arguments!\n");
-#else
-        return -1;
-#endif
-    }
-    const_AUTO(start_board, atoi(argv[arg++]));
-    const_AUTO(end_board, atoi(argv[arg++]));
+    int start_from_arg = -1, end_args = -1;
 
     for (; arg < argc; arg++)
     {
