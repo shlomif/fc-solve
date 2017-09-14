@@ -108,28 +108,18 @@ int main(int argc, char *argv[])
 {
     next_board_num_lock = initial_mutex_constant;
     total_num_iters_lock = initial_mutex_constant;
-    if (argc < 4)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("Not Enough Arguments!\n");
-#else
-        return -1;
-#endif
-    }
-#ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
-    int arg = 1;
-#endif
-    next_board_num = atoll(argv[arg++]);
-    past_end_board = 1 + atoll(argv[arg++]);
 
-    if ((stop_at = atoll(argv[arg++])) <= 0)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("print_step (the third argument) must be greater than 0.\n");
-#else
-        return -1;
-#endif
-    }
+    return main_main_wrapper(argc, argv);
+}
+
+static inline int range_solvers_main(int argc, char *argv[], int par__arg,
+    const long long par__next_board_num, const long long par__end_board,
+    const long long par__stop_at)
+{
+    arg = par__arg;
+    next_board_num = par__next_board_num;
+    past_end_board = 1 + par__end_board;
+    stop_at = par__stop_at;
 
     int num_workers = 3;
     for (; arg < argc; ++arg)

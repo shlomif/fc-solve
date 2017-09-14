@@ -41,3 +41,32 @@ static inline fcs_bool_t range_solvers__solve(void *const instance,
     *total_num_iters_temp += freecell_solver_user_get_num_times_long(instance);
     return FALSE;
 }
+
+static inline int range_solvers_main(
+    int argc, char *argv[], int arg, long long, long long, long long);
+static inline int main_main_wrapper(int argc, char *argv[])
+{
+    if (argc < 4)
+    {
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
+        help_err("Not Enough Arguments!\n");
+#else
+        return -1;
+#endif
+    }
+    int arg = 1;
+    const long long next_board_num = atoll(argv[arg++]);
+    const long long end_board = 1 + atoll(argv[arg++]);
+    const long long stop_at = atoll(argv[arg++]);
+
+    if (stop_at <= 0)
+    {
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
+        help_err("print_step (the third argument) must be greater than 0.\n");
+#else
+        return -1;
+#endif
+    }
+    return range_solvers_main(
+        argc, argv, arg, next_board_num, end_board, stop_at);
+}

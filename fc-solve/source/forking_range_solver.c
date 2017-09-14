@@ -134,33 +134,15 @@ static inline int read_fd(const worker_t *const worker)
     return worker->child_to_parent_pipe[READ_FD];
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) { return main_main_wrapper(argc, argv); }
+
+static inline int range_solvers_main(int argc, char *argv[], int arg,
+    long long next_board_num, const long long end_board,
+    const long long stop_at)
 {
-    int arg = 0;
-
-    if (argc < 4)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("Not Enough Arguments!\n");
-#else
-        return -1;
-#endif
-    }
-    long long next_board_num = atoll(argv[++arg]);
-    const long long end_board = atoll(argv[++arg]);
-    const long long stop_at = atoll(argv[++arg]);
-    if (stop_at <= 0)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("print_step (the third argument) must be greater than 0.\n");
-#else
-        return -1;
-#endif
-    }
-
     size_t num_workers = 3;
     long long board_num_step = 1;
-    for (++arg; arg < argc; ++arg)
+    for (; arg < argc; ++arg)
     {
         const char *param;
         if ((param = TRY_P("--num-workers")))
