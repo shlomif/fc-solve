@@ -112,11 +112,15 @@ int main(int argc, char *argv[])
     return main_main_wrapper(argc, argv);
 }
 
-static inline int range_solvers_main(int argc, char *argv[], int par__arg,
+static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
     const long long par__next_board_num, const long long par__end_board,
     const long long par__stop_at)
 {
+#ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    int arg = par__arg;
+#else
     arg = par__arg;
+#endif
     next_board_num = par__next_board_num;
     past_end_board = 1 + par__end_board;
     stop_at = par__stop_at;
