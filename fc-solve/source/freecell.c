@@ -698,10 +698,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     continue;
                 }
                 const int_fast32_t dc = pos_idx_to_check[1];
-                const int dest_num_cards =
+                const int dest_cards_num =
                     fcs_state_col_len(state, ds) - dc - 1;
 
-                int num_cards_to_relocate = dest_num_cards + col_num_cards;
+                int num_cards_to_relocate = dest_cards_num + col_num_cards;
 
                 const int freecells_to_fill =
                     min(num_cards_to_relocate, num_vacant_freecells);
@@ -726,7 +726,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 const int cols_indexes[3] = {ds, stack_idx, -1};
                 empty_two_cols_from_new_state(soft_thread,
                     ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
-                    dest_num_cards, col_num_cards);
+                    dest_cards_num, col_num_cards);
                 fcs_move_sequence(ds, stack_idx, iter.seq_end - iter.c + 1);
                 /*
                  * This is to preserve the order that the
