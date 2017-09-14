@@ -16,7 +16,6 @@
 #include "range_solvers_gen_ms_boards.h"
 #include "range_solvers_binary_output.h"
 #include "fc_pro_iface_pos.h"
-#include "help_err.h"
 #include "try_param.h"
 
 static inline void fc_pro_get_board(const long long deal_idx,
@@ -29,35 +28,18 @@ static inline void fc_pro_get_board(const long long deal_idx,
 }
 
 #include "cl_callback_range.h"
+#include "range_solvers.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) { return main_main_wrapper(argc, argv); }
+
+static inline int range_solvers_main(int argc, char *argv[], int arg,
+    long long start_board, long long end_board, const long long stop_at)
 {
     const char *variant = "freecell";
     long long total_num_iters = 0;
     fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
     binary_output_t binary_output = INIT_BINARY_OUTPUT;
-    int arg = 1;
-
-    if (argc < 4)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("Not Enough Arguments!\n");
-#else
-        return -1;
-#endif
-    }
-    long long start_board = atoll(argv[arg++]);
-    long long end_board = atoll(argv[arg++]);
-    const long long stop_at = atoll(argv[arg++]);
-    if (stop_at <= 0)
-    {
-#ifndef FCS_WITHOUT_CMD_LINE_HELP
-        help_err("print_step (the third argument) must be greater than 0.\n");
-#else
-        return -1;
-#endif
-    }
 
     for (; arg < argc; arg++)
     {
