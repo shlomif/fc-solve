@@ -242,6 +242,7 @@ Google
 Google's
 Greenspun
 Gtk
+HYBRID_STACKS_STATES
 Har'El
 Hard-DFS
 Heineman's
@@ -863,6 +864,14 @@ xargs
 xpat2
 xpat2-1
 xz
+
+==== In: dest/articles/how-we-benchmark/v1/index.html
+
+-c1
+-n0
+ionice
+sudo
+sudo_renice
 
 ==== In: dest/charts/dbm-solver-__int128-optimisation/index.html
 
