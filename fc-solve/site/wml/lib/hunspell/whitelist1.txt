@@ -867,9 +867,11 @@ xz
 
 ==== In: dest/articles/how-we-benchmark/v1/index.html
 
+-O3
 -c1
 -n0
 ionice
+powertop
 sudo
 sudo_renice
 
