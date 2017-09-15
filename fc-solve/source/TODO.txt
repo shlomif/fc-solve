@@ -179,10 +179,6 @@ total-number-of-cards-in-the-foundations or maximal foundation value.
 * Set up a +-dto2+ like scheme for +--method a-star+ where we change the tests
 order based on the depth/etc.
 
-* Set up a move func which moves a card from a freecell to an empty stack and
-immediately puts a child card on top.
-** See: https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/584
-
 * Work on HYBRID_STACKS_STATES where if the stacks are shorter than 8 cards,
 then one can store them in the normally pointer bytes, by specifying whether
 the stack is a pointer or a direct stack using the low bit. (An improvement

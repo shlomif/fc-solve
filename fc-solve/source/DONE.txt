@@ -613,3 +613,7 @@ AppVeyor Continuous Integration.
 
 * Add a limit to stacks number (in the case of Indirect Stack States),
 number of states that are stored anywhere, etc.
+
+* Set up a move func which moves a card from a freecell to an empty stack and
+immediately puts a child card on top.
+** See: https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/584
