@@ -46,7 +46,18 @@ sudo nice -n-20 ionice -c1 -n0 sudo -u "$USER" "$@"
 
 <h3>Use the same machine for both timings</h3>
 
-<h3>Make sure the process is the only thing running</h3>
+<h3>Make sure the process is practically the only thing running</h3>
+
+<p>
+We noticed that running an X environment with a resource-heavy desktop
+environment such as <a href="https://en.wikipedia.org/wiki/KDE">KDE</a>
+Plasma, can slow down the program and skew the result. As a result, it is
+a good idea to stop X and use a virtual console or a remote shell such
+as <a href="https://en.wikipedia.org/wiki/Secure_Shell">ssh</a>, and use
+a process monitor such as
+<a href="https://en.wikipedia.org/wiki/Htop">htop</a>
+to make sure nothing else that consume CPU or RAM is running.
+</p>
 
 <h3>Make sure the system is not overheated</h3>
 

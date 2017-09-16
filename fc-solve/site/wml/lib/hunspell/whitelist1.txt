@@ -870,8 +870,10 @@ xz
 -O3
 -c1
 -n0
+htop
 ionice
 powertop
+ssh
 sudo
 sudo_renice
 
