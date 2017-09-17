@@ -870,9 +870,10 @@ xz
 -O3
 -c1
 -n0
+PowerTOP
 htop
 ionice
-powertop
+lm_sensors
 ssh
 sudo
 sudo_renice

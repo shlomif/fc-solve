@@ -66,7 +66,12 @@ to make sure nothing else that consume CPU or RAM is running.
 <h3>Make sure the system is not overheated</h3>
 
 <p>
-sensors, powertop.
+We noticed that once the computer becomes overheated, the CPU is
+being throttled and performance decreases. Make sure this is not the case
+by making use of the "sensors" command from <a href="https://en.wikipedia.org/wiki/Lm_sensors">lm_sensors</a>,
+<a href="https://en.wikipedia.org/wiki/PowerTOP">PowerTOP</a>,
+and perhaps by waiting a little using the UNIX
+<a href="https://en.wikipedia.org/wiki/Sleep_%28Unix%29">sleep command</a>.
 </p>
 
 <h3>Time several times</h3>
