@@ -79,7 +79,7 @@ and perhaps by waiting a little using the UNIX
 <p>
 Keep track of the results, and try to see which are generally (minimally,
 on average, etc.) faster. Also see <a href="https://www.mail-archive.com/linux-il@cs.huji.ac.il/msg58950.html">some previous discussion</a> of it
-on the Linux-IL mailing list.
+on the Linux-IL mailing list.e
 </p>
 
 <h3>Compile flags</h3>
@@ -89,6 +89,14 @@ on the Linux-IL mailing list.
 </p>
 
 <h3>malloc library</h3>
+
+<p>
+One should link against a
+<a href="http://blog.reverberate.org/2009/02/one-malloc-to-rule-them-all.html">fast malloc library</a>. <a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">TCMalloc</a>
+is the best performer for us, but your kilometrage may vary.
+Other prominent mallocs not mentioned in the link are <a href="http://locklessinc.com/">the Lockless Inc. one</a>
+and <a href="https://github.com/r-lyeh/ltalloc">ltalloc</a>
+</p>
 <h2 id="links">Links and References</h2>
 
 <ul>

@@ -871,10 +871,15 @@ xz
 -c1
 -n0
 Linux-IL
+Lockless
 PowerTOP
+TCMalloc
 htop
 ionice
+kilometrage
 lm_sensors
+ltalloc
+mallocs
 ssh
 sudo
 sudo_renice
