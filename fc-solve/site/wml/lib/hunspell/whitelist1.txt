@@ -870,6 +870,7 @@ xz
 -O3
 -c1
 -n0
+Linux-IL
 PowerTOP
 htop
 ionice

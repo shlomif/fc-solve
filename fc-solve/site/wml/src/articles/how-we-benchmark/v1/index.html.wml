@@ -74,7 +74,13 @@ and perhaps by waiting a little using the UNIX
 <a href="https://en.wikipedia.org/wiki/Sleep_%28Unix%29">sleep command</a>.
 </p>
 
-<h3>Time several times</h3>
+<h3>Run each benchmarked process several times</h3>
+
+<p>
+Keep track of the results, and try to see which are generally (minimally,
+on average, etc.) faster. Also see <a href="https://www.mail-archive.com/linux-il@cs.huji.ac.il/msg58950.html">some previous discussion</a> of it
+on the Linux-IL mailing list.
+</p>
 
 <h3>Compile flags</h3>
 
