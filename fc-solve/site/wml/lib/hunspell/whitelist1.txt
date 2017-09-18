@@ -872,6 +872,7 @@ xz
 -n0
 Linux-IL
 Lockless
+Phoronix
 PowerTOP
 TCMalloc
 htop
@@ -883,6 +884,7 @@ mallocs
 ssh
 sudo
 sudo_renice
+wikibook
 
 ==== In: dest/charts/dbm-solver-__int128-optimisation/index.html
 

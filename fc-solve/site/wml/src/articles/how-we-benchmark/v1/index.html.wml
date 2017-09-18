@@ -106,26 +106,17 @@ and <a href="https://github.com/r-lyeh/ltalloc">ltalloc</a>
 
 <li>
 <p>
-<a href="https://drive.google.com/drive/u/0/folders/0B6WZWNModsLfaEIzbnM5UkpHek0">Theodore Pringle’s lists of impossible and intractable FC-Pro deals</a> - on
-Google Drive.
+<a href="http://phoronix-test-suite.com/">The Phoronix Test Suite</a> - a
+test suite that benchmarks Linux and other systems. No first hand experience
+with it.
 </p>
 </li>
 
 <li>
 <p>
-<a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/scripts/prepare-self-contained-dbm-etc-solvers-packages-for-hpc-machines/prepare_aws_depth_dbm_fc_solver_self_contained_package.pl">The script used to prepare the source package for deployment</a>
+<a href="https://en.wikibooks.org/wiki/Optimizing_Code_for_Speed"><i>Optimizing
+Code for Speed</i></a> - an earlier wikibook written by me.
 </p>
 </li>
 
-<li>
-<p>
-<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1483">fc-solve-discuss thread about the effort</a>
-</p>
-</li>
-
-<li>
-<p>
-<a href="$(ROOT)/charts/fc-pro--4fc-intractable-deals--report/data/">Log/output files of the runs</a>
-</p>
-</li>
 </ul>
