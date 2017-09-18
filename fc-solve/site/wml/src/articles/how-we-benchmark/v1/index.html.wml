@@ -85,7 +85,9 @@ on the Linux-IL mailing list.e
 <h3>Compile flags</h3>
 
 <p>
--O3 -march=native.
+You should build both versions using CPU flags for maximal performance such
+as <code>-O3</code>, <code>-march=native</code> and possibly
+<code>-fomit-frame-pointer</code>.
 </p>
 
 <h3>malloc library</h3>
@@ -97,6 +99,7 @@ is the best performer for us, but your kilometrage may vary.
 Other prominent mallocs, which are not mentioned in the first link, are <a href="http://locklessinc.com/">the Lockless Inc. one</a>
 and <a href="https://github.com/r-lyeh/ltalloc">ltalloc</a>
 </p>
+
 <h2 id="links">Links and References</h2>
 
 <ul>
