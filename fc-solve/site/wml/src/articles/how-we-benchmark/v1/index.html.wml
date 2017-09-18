@@ -47,7 +47,9 @@ sudo nice -n-20 ionice -c1 -n0 sudo -u "$USER" "$@"
 <h3>Use the same machine and same operating system installation for both timings</h3>
 
 <p>
-Don’t compare apples to oranges.
+It is important to run both the "before" and "after" versions of the benchmark
+on the same physical computer, with the same system installation and in
+similar conditions - one after the other.
 </p>
 
 <h3>Make sure the benchmarked process is practically the only thing running</h3>
