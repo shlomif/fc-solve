@@ -23,6 +23,15 @@ insights into it.
 <b>Publishing Date:</b> 12 December 2016.
 </p>
 
+<p>
+This article aims to collect and share the insights we accumulated from
+benchmarking
+<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a> which is a
+CPU and RAM intensive software application written in C. It is written from
+the point of view of benchmarking it on a modern
+<a href="https://en.wikipedia.org/wiki/Linux">GNU/Linux</a> installation.
+</p>
+
 <h2 id="points">Points</h2>
 
 <h3 id="sudo_renice">Use the “sudo_renice” script</h3>
