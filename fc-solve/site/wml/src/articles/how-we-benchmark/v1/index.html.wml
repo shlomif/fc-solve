@@ -62,7 +62,10 @@ a good idea to stop X and use a virtual console or a remote shell such
 as <a href="https://en.wikipedia.org/wiki/Secure_Shell">ssh</a>, and use
 a process monitor such as
 <a href="https://en.wikipedia.org/wiki/Htop">htop</a>
-to make sure nothing else that consume CPU or RAM is running.
+to make sure nothing else that consumes CPU or RAM is running (such as
+system services or
+<a href="https://en.wikipedia.org/wiki/Daemon_(computing)">daemons</a>,
+or stale processes that were not killed).
 </p>
 
 <h3>Make sure the system is not overheated</h3>
