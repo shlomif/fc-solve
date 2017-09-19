@@ -3,7 +3,7 @@
 freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -seed 2 -to 0[01][23456j89] -step 500 -sp r:tf --st-name 3 -nst \
 --method random-dfs -seed 3 -to "0[124]=asw(1)j[36]=asw(1)" -step 500 -sp r:tf --st-name 5 -nst \
---method random-dfs -seed 4 -to 0j26[34] -step 500 -sp r:tf --st-name 9 -nst \
+--method random-dfs -seed 5 -to 0j26[34] -step 500 -sp r:tf --st-name 9 -nst \
 --method random-dfs -to [01][23456j89] -seed 8 -step 500 -sp r:tf --st-name 10 -nst \
 --method a-star -asw 0.2,0.8,0,0,0 -step 500 -sp r:tf --st-name 11 -nst \
 --method random-dfs -to "[01]=asw(1)[23456j89]=asw(1)" -step 500 -sp r:tf --st-name 12 -nst \
