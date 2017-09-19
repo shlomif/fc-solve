@@ -12,7 +12,6 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -to 01j234 -dto2 "21,016[234j]=asw(1)" -step 500 -sp r:tf --st-name 24 -nst \
 --method random-dfs -to 0123456j -dto2 "13,01[8j465]=asw(1)" -dto2 "26,26[013458j]=asw(1)" -step 500 -sp r:tf --st-name 32 -nst \
 --method random-dfs -to "0123" -dto2 "6,01[2435]=asw(3,20,10,0,1)" -dto2 "13,[0123456j]=asw(1)" -step 500 -sp r:tf --st-name new -nst \
---method random-dfs -to "[01][23468]" -dto2 "8,[0123468]=asw(1)" -seed 1547 -step 500 -sp r:tf --st-name s1 -nst \
 --method random-dfs -to "[01][2345j]" -dto2 "8,[0123][456j]" -seed 38693 -step 500 -sp r:tf --st-name sB -nst \
 --method random-dfs -to "[01][2345j]" -dto2 "7,[0123][456j]" -seed 98361 -step 500 -sp r:tf --st-name sD -nst \
 --method random-dfs -to "[01][2345j]" -dto2 "7,[0123][456j]" -seed 115235 -step 500 -sp r:tf --st-name sE -nst \
@@ -20,4 +19,4 @@ freecell-solver-range-parallel-solve 1 32000 1 \
 --method random-dfs -to "[01][2345j]" -dto2 "5,[0123][456j]" -dto2 "13,[0123456j]=asw(1)" -seed 33627 -step 500 -sp r:tf --st-name sG -nst \
 --method random-dfs -to "[01][2345j]" -dto2 "5,[0123][456j]" -dto2 "13,[0123456j]=asw(1)" -seed 18296 -step 500 -sp r:tf --st-name sH -nst \
 --method random-dfs -to "012j[35]" -dto2 "9,[012]j[468]" -dto2 "15,[012346j8]=asw(1)" -seed 10468 -step 500 -sp r:tf --st-name sI \
---prelude "295@24,230@5,280@9,414@sI,400@sF,490@sH,428@sG,760@32,380@12,281@24,380@10,76@5,192@s1,200@new,222@sE,225@sD,266@sB,380@3,380@9,380@24,760@20,380@11,760@24,380@11"
+--prelude "295@24,230@5,280@9,412@sI,400@sF,490@sH,428@sG,760@32,380@12,281@24,380@10,76@5,200@new,222@sE,225@sD,266@sB,380@3,380@9,380@24,760@20,380@11,760@24,380@11"
