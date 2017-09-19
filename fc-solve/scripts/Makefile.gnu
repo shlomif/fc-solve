@@ -19,7 +19,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -I. -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
+CFLAGS := -I$(PWD) -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
@@ -145,7 +145,7 @@ endif
 CFLAGS += $(EXTRA_CFLAGS)
 
 # LFLAGS := -pthread -O3 -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS) -fwhole-program $(EXTRA_CFLAGS)
-LFLAGS := -O3 -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS) -fwhole-program $(EXTRA_CFLAGS)
+LFLAGS := $(MACHINE_OPT) -DNDEBUG -fvisibility=hidden $(MARCH_FLAG) -fomit-frame-pointer $(LTO_FLAGS) -fwhole-program $(EXTRA_CFLAGS)
 
 # Toggle for profiling information.
 ifneq ($(PROFILE),0)
