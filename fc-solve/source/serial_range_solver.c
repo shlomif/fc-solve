@@ -23,8 +23,6 @@
 #include "try_param.h"
 #include "range_solvers.h"
 
-int main(int argc, char *argv[]) { return main_main_wrapper(argc, argv); }
-
 static inline int range_solvers_main(int argc, char *argv[], int arg,
     long long start_board, long long end_board, const long long stop_at)
 {

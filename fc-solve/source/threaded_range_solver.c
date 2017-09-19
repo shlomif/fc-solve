@@ -104,18 +104,12 @@ theme_error:
     return NULL;
 }
 
-int main(int argc, char *argv[])
-{
-    next_board_num_lock = initial_mutex_constant;
-    total_num_iters_lock = initial_mutex_constant;
-
-    return main_main_wrapper(argc, argv);
-}
-
 static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
     const long long par__next_board_num, const long long par__end_board,
     const long long par__stop_at)
 {
+    next_board_num_lock = initial_mutex_constant;
+    total_num_iters_lock = initial_mutex_constant;
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     int arg = par__arg;
 #else

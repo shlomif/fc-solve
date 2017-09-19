@@ -134,8 +134,6 @@ static inline int read_fd(const worker_t *const worker)
     return worker->child_to_parent_pipe[READ_FD];
 }
 
-int main(int argc, char *argv[]) { return main_main_wrapper(argc, argv); }
-
 static inline int range_solvers_main(int argc, char *argv[], int arg,
     long long next_board_num, const long long end_board,
     const long long stop_at)

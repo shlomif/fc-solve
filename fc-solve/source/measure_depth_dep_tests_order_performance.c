@@ -69,8 +69,6 @@ static void set_tests_order(
     }
 }
 
-int main(int argc, char *argv[]) { return main_main_wrapper(argc, argv); }
-
 static inline int range_solvers_main(int argc, char *argv[], int arg,
     const long long start_board, const long long end_board,
     const long long stop_at)

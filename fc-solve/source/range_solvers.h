@@ -56,7 +56,7 @@ static inline fcs_bool_t range_solvers__solve(void *const instance,
 
 static inline int range_solvers_main(
     int argc, char *argv[], int arg, long long, long long, long long);
-static inline int main_main_wrapper(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     if (argc < 4)
     {
