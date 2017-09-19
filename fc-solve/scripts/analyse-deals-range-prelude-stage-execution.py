@@ -23,10 +23,11 @@ def iters_count_iterator(fn):
                 if m:
                     new = long(m.group(1))
                     if skip:
+                        yield 'skip'
                         skip = False
                     else:
-                        yield new-last
-                    last = long(m.group(1))
+                        yield new - last
+                    last = new
 
 
 class PreludeAnalyzer(object):
@@ -52,10 +53,12 @@ class PreludeAnalyzer(object):
             else:
                 raise BaseException('Cannot find prelude.')
 
-    def insert(self, i):
+    def insert(self, idx, i):
+        print_("Got idx=%d iters=%d" % (idx, i))
         for s in self._stages:
             quota = s['quota']
             if i <= quota:
+                print_("Put %d in %s" % (idx, s['id']))
                 s['data'].append(i)
                 break
             else:
@@ -78,9 +81,10 @@ class PreludeAnalyzer(object):
 
 def main():
     p = PreludeAnalyzer('../scripts/TEST_OPTIMIZATIONS/obf-mod4.sh')
-    for i in iters_count_iterator('serial.dump'):
+    for idx, i in enumerate(iters_count_iterator('serial.dump')):
         # print_(i)
-        p.insert(i)
+        if i != 'skip':
+            p.insert(idx+1, i)
     p.report()
 
 
