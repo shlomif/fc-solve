@@ -1,3 +1,7 @@
+# NOTE : this script needs to be rethought because it does not take into
+# account soft threads (= scans) that finished without solving before their
+# quota completion.
+
 import re
 import statistics
 import sys
