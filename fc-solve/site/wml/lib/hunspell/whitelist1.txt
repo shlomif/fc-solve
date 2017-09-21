@@ -869,6 +869,7 @@ xz
 
 -O3
 -c1
+-flto
 -n0
 Linux-IL
 Lockless

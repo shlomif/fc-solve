@@ -100,8 +100,10 @@ on the Linux-IL mailing list.e
 
 <p>
 You should build both versions using CPU flags for maximal performance such
-as <code>-O3</code>, <code>-march=native</code> and possibly
-<code>-fomit-frame-pointer</code>.
+as <code>-O3</code>, <code>-march=native</code>, <code>-flto</code>,
+<code>-fwhole-program</code>, and possibly
+<code>-fomit-frame-pointer</code>. <a href="https://en.wikipedia.org/wiki/Profile-guided_optimization">Profile-guided optimization</a> may prove
+useful as well.
 </p>
 
 <h3>malloc library</h3>
