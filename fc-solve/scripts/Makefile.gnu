@@ -158,6 +158,8 @@ ifneq ($(PROFILE),0)
 	endif
 endif
 
+END_LFLAGS += $(TCMALLOC_LINK)
+
 FCS_SHARED_LIB = libfreecell-solver.so.0
 
 TARGETS = fc-solve $(FCS_SHARED_LIB) \
@@ -277,10 +279,10 @@ freecell-solver-range-parallel-solve: $(T_MAIN_OBJECT) $(STATIC_LIB)
 
 freecell-solver-multi-thread-solve: $(THR_MAIN_OBJECT) $(STATIC_LIB)
 	# $(CC) -O3 -DNDEBUG -rdynamic -fvisibility=hidden -march=native -fomit-frame-pointer -flto -ffat-lto-objects -fwhole-program $< -o $@ -Wl,-rpath,:::::::::::::::::::::::::: $(LIB_LINK_POST) -lpthread -lm -ltcmalloc
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) $(TCMALLOC_LINK)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
 freecell-solver-fork-solve: $(FORK_MAIN_OBJECT) $(STATIC_LIB)
-	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS) $(TCMALLOC_LINK)
+	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
 
 
 freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
