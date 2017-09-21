@@ -12,6 +12,7 @@ if test "$real_compiler" = "clang" ; then
 else
     compiler="$real_compiler"
 fi
+p='-fprofile-update=atomic'
 
 pgo_flags=""
 make_vars=()
@@ -73,7 +74,7 @@ elif test "$mode" = "time" ; then
 elif test "$mode" = "use" ; then
 
     if test "$compiler" = "gcc" ; then
-        pgo_flags="-fprofile-use"
+        pgo_flags="-fprofile-use $p"
     elif test "$compiler" = "icc" ; then
         pgo_flags="-prof-use"
     else
@@ -87,7 +88,7 @@ elif test "$mode" = "gen" ; then
 
     rm -f *.gcda
     if test "$compiler" = "gcc" ; then
-        pgo_flags="-fprofile-generate"
+        pgo_flags="-fprofile-generate $p"
     elif test "$compiler" = "icc" ; then
         pgo_flags="-prof-gen"
     else
