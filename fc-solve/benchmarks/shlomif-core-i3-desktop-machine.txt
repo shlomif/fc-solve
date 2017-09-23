@@ -1356,3 +1356,40 @@ Finished at 1503075837.046532 (total_num_iters=11017439)
 
     ( DUMPS-1503075830-t/dump004 )
 
+---------------------------------------------------------
+
+export FCS_PGO_THEME="--read-from-file 4,/home/shlomif/progs/freecell/git/fc-solve/fc-solve/scripts/TEST_OPTIMIZATIONS/obf-mod4.sh"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+forking solver and threaded solver
+commit 24b6edd357de0ae66866d0d2ca38cd1e87ece31a
+(commit Date:   Thu Sep 21 16:12:21 2017 +0300 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l n2b --prefix="/home/shlomif/apps/fcs"  -l extra_speed --hard-code-theme --disable-ni --without-help --without-iter-handler
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+gcc-7.2.1-20170831.1.mga7
+tcmalloc from its git master, built using gcc
+With/without strip.
+
+3.66986799240112s
+
+    Highlight: mutating the components of the scan, then adding the 'j' move, and then mutating again.
+
+<DUMP>
+Started at 1505851703.719071
+Reached Board No. 4000 at 1505851704.147594 (total_num_iters=191109)
+Reached Board No. 8000 at 1505851704.585162 (total_num_iters=577668)
+Reached Board No. 12000 at 1505851705.016280 (total_num_iters=770031)
+Reached Board No. 16000 at 1505851705.642085 (total_num_iters=1617548)
+Unsolved Board No. 11982 at 1505851705.685273
+Reached Board No. 20000 at 1505851706.075398 (total_num_iters=2567422)
+Reached Board No. 24000 at 1505851706.512239 (total_num_iters=4232315)
+Reached Board No. 28000 at 1505851706.928867 (total_num_iters=4419013)
+Reached Board No. 32000 at 1505851707.382487 (total_num_iters=5204355)
+Finished at 1505851707.388939 (total_num_iters=6433667)
+</DUMP>
+
+    ( DUMPS-1505851702-t/dump004 )
+
