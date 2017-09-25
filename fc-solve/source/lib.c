@@ -890,9 +890,9 @@ static inline fcs_bool_t fcs__is_state_a_dead_end(
 static fcs_bool_t free_states_should_delete(
     void *const key, void *const context)
 {
-    fc_solve_instance_t *const instance = (fc_solve_instance_t * const)context;
+    fc_solve_instance_t *const instance = (fc_solve_instance_t * const) context;
     fcs_collectible_state_t *const ptr_state =
-        (fcs_collectible_state_t * const)key;
+        (fcs_collectible_state_t * const) key;
 
     if (fcs__is_state_a_dead_end(ptr_state))
     {
@@ -1226,7 +1226,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                 if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
                 {
                     fcs_collectible_state_t *const derived =
-                        fc_solve_sfs_raymond_prune(soft_thread, &pass);
+                        fc_solve_sfs_raymond_prune(soft_thread, pass);
                     if (derived)
                     {
                         the_soft_dfs_info->move_func_list_idx =
@@ -1271,7 +1271,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                     THE_MOVE_FUNCS_LIST
                         .lists[the_soft_dfs_info->move_func_list_idx]
                         .move_funcs[the_soft_dfs_info->move_func_idx](
-                            soft_thread, &pass, &derived_list);
+                            soft_thread, pass, &derived_list);
 
                     /* Move the counter to the next test */
                     if ((++the_soft_dfs_info->move_func_idx) ==
@@ -2421,7 +2421,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void *const api_instance, const fcs_int_limit_t max_iters)
 {
-    ((fcs_user_t * const)api_instance)->current_iterations_limit = max_iters;
+    ((fcs_user_t * const) api_instance)->current_iterations_limit = max_iters;
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2442,7 +2442,7 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
 
 static inline fc_solve_soft_thread_t *api_soft_thread(void *const api_instance)
 {
-    return ((fcs_user_t * const)api_instance)->soft_thread;
+    return ((fcs_user_t * const) api_instance)->soft_thread;
 }
 
 int DLLEXPORT freecell_solver_user_set_depth_tests_order(
@@ -3193,8 +3193,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(
         flare->obj_stats.num_states_in_collection =
             instance->num_states_in_collection;
 #endif
-        const_AUTO(delta, flare->obj_stats.num_checked_states -
-                              user->init_num_checked_states.num_checked_states);
+        const_AUTO(delta,
+            flare->obj_stats.num_checked_states -
+                user->init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
 #ifdef FCS_WITH_FLARES
         if (flare_iters_quota >= 0)
@@ -3611,7 +3612,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 #ifdef FC_SOLVE_JAVASCRIPT_QUERYING
 int DLLEXPORT freecell_solver_user_get_num_freecells(void *const api_instance)
 {
-    return (((fcs_user_t * const)api_instance)
+    return (((fcs_user_t * const) api_instance)
                 ->common_preset.game_params.freecells_num);
 }
 #endif
@@ -3645,7 +3646,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
 #ifdef FC_SOLVE_JAVASCRIPT_QUERYING
 int DLLEXPORT freecell_solver_user_get_num_stacks(void *const api_instance)
 {
-    return (((fcs_user_t * const)api_instance)
+    return (((fcs_user_t * const) api_instance)
                 ->common_preset.game_params.stacks_num);
 }
 #endif
@@ -3945,7 +3946,7 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
         return 1;
     }
 
-    fcs_user_t *const user = (fcs_user_t * const)api_instance;
+    fcs_user_t *const user = (fcs_user_t * const) api_instance;
     user->common_preset.game_params.game_flags &= (~(0x3 << 2));
     user->common_preset.game_params.game_flags |= (empty_stacks_fill << 2);
     apply_game_params_for_all_instances(user);
@@ -4105,7 +4106,7 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(void *const api_instance)
 {
-    fcs_user_t *const user = (fcs_user_t * const)api_instance;
+    fcs_user_t *const user = (fcs_user_t * const) api_instance;
     const_AUTO(
         soft_thread, fc_solve_new_soft_thread(user->soft_thread->hard_thread));
     if (soft_thread == NULL)
@@ -4338,7 +4339,7 @@ DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
 DLLEXPORT const char *freecell_solver_user_get_last_error_string(
     void *const api_instance)
 {
-    return (((fcs_user_t * const)api_instance)->error_string);
+    return (((fcs_user_t * const) api_instance)->error_string);
 }
 #endif
 
@@ -4438,7 +4439,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *const api_instance GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    return CURR_INST((fcs_user_t * const)api_instance)->num_plan_items;
+    return CURR_INST((fcs_user_t * const) api_instance)->num_plan_items;
 #else
     return 0;
 #endif
@@ -4448,7 +4449,7 @@ const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    switch (CURR_INST((fcs_user_t * const)api_instance)->plan[item_idx].type)
+    switch (CURR_INST((fcs_user_t * const) api_instance)->plan[item_idx].type)
     {
     case FLARES_PLAN_RUN_INDEFINITELY:
         return "RunIndef";
@@ -4466,7 +4467,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    const_AUTO(instance_item, CURR_INST((fcs_user_t * const)api_instance));
+    const_AUTO(instance_item, CURR_INST((fcs_user_t * const) api_instance));
     return instance_item->plan[item_idx].flare - instance_item->flares;
 #else
     return 0;
@@ -4477,7 +4478,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    return CURR_INST((fcs_user_t * const)api_instance)
+    return CURR_INST((fcs_user_t * const) api_instance)
         ->plan[item_idx]
         .count_iters;
 #else

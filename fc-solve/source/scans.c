@@ -32,8 +32,9 @@ void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
         DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
     DFS_VAR(soft_thread, soft_dfs_info) =
         SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
-    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info) +
-                                DFS_VAR(soft_thread, dfs_max_depth));
+    var_AUTO(soft_dfs_info,
+        DFS_VAR(soft_thread, soft_dfs_info) +
+            DFS_VAR(soft_thread, dfs_max_depth));
     const_AUTO(end_soft_dfs_info, soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY);
 
     for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
@@ -445,7 +446,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
         {
             fcs_collectible_state_t *const after_pruning_state =
-                fc_solve_sfs_raymond_prune(soft_thread, &pass);
+                fc_solve_sfs_raymond_prune(soft_thread, pass);
             if (after_pruning_state)
             {
                 ASSIGN_ptr_state(after_pruning_state);
@@ -543,7 +544,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
                  tests_list;
              move_func_ptr < tests_list_end; move_func_ptr++)
         {
-            (*move_func_ptr)(soft_thread, &pass, &derived);
+            (*move_func_ptr)(soft_thread, pass, &derived);
         }
 
         if (is_a_complete_scan)
@@ -678,7 +679,7 @@ my_return_label:
  * */
 int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
     fcs_kv_state_t *const out_new_state_out,
-    fcs_kv_state_t *const raw_ptr_state_raw SFS__PASS_MOVE_STACK(
+    fcs_kv_state_t raw_state_raw SFS__PASS_MOVE_STACK(
         fcs_move_stack_t *const moves))
 {
     fcs_collectible_state_t *raw_ptr_new_state;
@@ -698,7 +699,7 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
     }
 
     FCS_STATE_collectible_to_kv(out_new_state_out, raw_ptr_new_state);
-    fcs_duplicate_kv_state(out_new_state_out, raw_ptr_state_raw);
+    fcs_duplicate_kv_state(out_new_state_out, &raw_state_raw);
 #ifdef FCS_RCS_STATES
 #define INFO_STATE_PTR(kv_ptr) ((kv_ptr)->val)
 #else
@@ -708,7 +709,7 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.
      * */
-    FCS_S_PARENT(raw_ptr_new_state) = INFO_STATE_PTR(raw_ptr_state_raw);
+    FCS_S_PARENT(raw_ptr_new_state) = INFO_STATE_PTR(&raw_state_raw);
 #ifdef FCS_WITH_MOVES
     FCS_S_MOVES_TO_PARENT(raw_ptr_new_state) = moves;
 #endif
@@ -730,8 +731,7 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
-    fc_solve_soft_thread_t *const soft_thread,
-    fcs_kv_state_t *const raw_ptr_state_raw,
+    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t raw_state_raw,
     fcs_kv_state_t *const raw_ptr_new_state_raw FCS__pass_moves(
         fcs_move_stack_t *const moves))
 {
@@ -749,7 +749,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
     fcs_kv_state_t existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
-#define ptr_state (raw_ptr_state_raw->val)
+#define ptr_state (raw_state_raw.val)
 
     if (!fc_solve_check_and_add_state(
             hard_thread, raw_ptr_new_state_raw, &existing_state))
@@ -779,7 +779,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
             (kv_calc_depth(&existing_state) >
-                kv_calc_depth(raw_ptr_state_raw) + 1))
+                kv_calc_depth(&raw_state_raw) + 1))
         {
 #ifdef FCS_WITH_MOVES
             /* Make a copy of "moves" because "moves" will be destroyed */
@@ -795,7 +795,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
                 }
                 ptr_state->num_active_children++;
             }
-            existing_state.val->parent = INFO_STATE_PTR(raw_ptr_state_raw);
+            existing_state.val->parent = INFO_STATE_PTR(&raw_state_raw);
 #ifndef FCS_WITHOUT_DEPTH_FIELD
             existing_state.val->depth = ptr_state->depth + 1;
 #endif

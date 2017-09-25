@@ -187,10 +187,10 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                             by_depth_moves_order[depth_idx]
                                 .moves_order.groups[group_idx]
                                 .order_group_moves;
-                        const_AUTO(
-                            tests_order_num, by_depth_moves_order[depth_idx]
-                                                 .moves_order.groups[group_idx]
-                                                 .num);
+                        const_AUTO(tests_order_num,
+                            by_depth_moves_order[depth_idx]
+                                .moves_order.groups[group_idx]
+                                .num);
 
                         for (size_t num_valid_move_funcs = 0;
                              num_valid_move_funcs < tests_order_num;

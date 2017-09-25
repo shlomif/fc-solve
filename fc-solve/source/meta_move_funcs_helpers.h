@@ -46,7 +46,7 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
 #endif
 
 // These are some macros to make it easier for the programmer.
-#define ptr_state_key (raw_ptr_state_raw->key)
+#define ptr_state_key (raw_state_raw.key)
 #define ptr_new_state &(pass_new_state)
 #define state_key (*ptr_state_key)
 #define new_state_key (*(pass_new_state.key))
@@ -54,11 +54,11 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
 
 #define sfs_check_state_begin()                                                \
     fc_solve_sfs_check_state_begin(hard_thread, &pass_new_state,               \
-        raw_ptr_state_raw SFS__PASS_MOVE_STACK(moves))
+        raw_state_raw SFS__PASS_MOVE_STACK(moves))
 
 #define sfs_check_state_end()                                                  \
     fc_solve_derived_states_list_add_state(derived_states_list,                \
-        fc_solve_sfs_check_state_end(soft_thread, raw_ptr_state_raw,           \
+        fc_solve_sfs_check_state_end(soft_thread, raw_state_raw,               \
             &pass_new_state FCS__pass_moves(moves)),                           \
         state_context_value)
 

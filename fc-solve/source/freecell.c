@@ -36,7 +36,7 @@
 #define moves_ptr NULL
 #endif
 
-static inline int find_empty_stack(fcs_kv_state_t *const raw_ptr_state_raw,
+static inline int find_empty_stack(fcs_kv_state_t raw_state_raw,
     const int start_from, const int local_stacks_num)
 {
     for (int ret = start_from; ret < local_stacks_num; ret++)
@@ -261,7 +261,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
 
         /*  Find a vacant stack */
         put_cards_in_col_idx = find_empty_stack(
-            kv_ptr_new_state, put_cards_in_col_idx, LOCAL_STACKS_NUM);
+            *kv_ptr_new_state, put_cards_in_col_idx, LOCAL_STACKS_NUM);
         assert(put_cards_in_col_idx < LOCAL_STACKS_NUM);
 
         fcs_copy_stack(*new_key, *(kv_ptr_new_state->val), put_cards_in_col_idx,
@@ -765,7 +765,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
         calc_max_sequence_move(num_vacant_freecells, num_vacant_stacks - 1);
 
     /* Now try to move sequences to empty stacks */
-    const int ds = find_empty_stack(raw_ptr_state_raw, 0, LOCAL_STACKS_NUM);
+    const int ds = find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         col_seqs_iter_t iter = col_seqs_iter__create(&state,
@@ -843,7 +843,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                         ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
                         freecells_to_fill + freestacks_to_fill, 0);
 
-                const int b = find_empty_stack(raw_ptr_state_raw,
+                const int b = find_empty_stack(raw_state_raw,
                     (empty_ret.is_col ? empty_ret.src_idx + 1 : 0),
                     LOCAL_STACKS_NUM);
                 my_copy_stack(b);
@@ -1429,7 +1429,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     }
 
     /* Find a vacant stack */
-    const int ds = find_empty_stack(raw_ptr_state_raw, 0, LOCAL_STACKS_NUM);
+    const int ds = find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
 
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
@@ -1502,8 +1502,7 @@ static inline int_fast32_t calc_foundation_to_put_card_on(
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t *const soft_thread,
-    fcs_kv_state_t *const raw_ptr_state_raw)
+    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t raw_state_raw)
 {
     tests_define_accessors();
     STACKS__SET_PARAMS();

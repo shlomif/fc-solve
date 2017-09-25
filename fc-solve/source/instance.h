@@ -127,7 +127,7 @@ struct fc_solve_soft_thread_struct;
 struct fc_solve_instance_struct;
 
 typedef void (*fc_solve_solve_for_state_move_func_t)(
-    struct fc_solve_soft_thread_struct *, fcs_kv_state_t *,
+    struct fc_solve_soft_thread_struct *, fcs_kv_state_t,
     fcs_derived_states_list_t *);
 
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -910,7 +910,7 @@ static inline void fc_solve_soft_thread_update_initial_cards_val(
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t *const, fcs_kv_state_t *const);
+    fc_solve_soft_thread_t *const, fcs_kv_state_t);
 
 #ifdef FCS_RCS_STATES
 fcs_state_t *fc_solve_lookup_state_key_from_val(
@@ -1008,7 +1008,7 @@ static inline void fc_solve_free_tests_order(fcs_tests_order_t *moves_order)
 
 #define DECLARE_MOVE_FUNCTION(name)                                            \
     extern void name(fc_solve_soft_thread_t *const soft_thread,                \
-        fcs_kv_state_t *const raw_ptr_state_raw,                               \
+        fcs_kv_state_t raw_state_raw,                                          \
         fcs_derived_states_list_t *const derived_states_list)
 
 #ifdef FCS_SINGLE_HARD_THREAD

@@ -695,8 +695,8 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
 
         first_line = FALSE;
 
-        const_AUTO(new_str, FCS_PARSE_try_prefix(str, "Freecells:",
-                                fc_solve_freecells_prefixes));
+        const_AUTO(new_str, FCS_PARSE_try_prefix(str,
+                                "Freecells:", fc_solve_freecells_prefixes));
         if (new_str)
         {
             str = new_str;

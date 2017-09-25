@@ -167,10 +167,10 @@ static inline void add_to_move_funcs_list(
 
 extern int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const,
     fcs_kv_state_t *const,
-    fcs_kv_state_t *const SFS__PASS_MOVE_STACK(fcs_move_stack_t *const));
+    fcs_kv_state_t SFS__PASS_MOVE_STACK(fcs_move_stack_t *const));
 
 extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
-    fc_solve_soft_thread_t *, fcs_kv_state_t *,
+    fc_solve_soft_thread_t *, fcs_kv_state_t,
     fcs_kv_state_t *FCS__pass_moves(fcs_move_stack_t *));
 
 #ifdef __cplusplus
