@@ -126,7 +126,7 @@ static inline void sort_derived_states(
  * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 {
-    tests_define_accessors_no_stacks();
+    tests_define_accessors_no_stacks(tests_state_context_val);
 
 #ifndef HARD_CODED_NUM_FREECELLS
     SET_GAME_PARAMS();
@@ -1504,7 +1504,8 @@ static inline int_fast32_t calc_foundation_to_put_card_on(
 extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t raw_state_raw)
 {
-    tests_define_accessors();
+#define EMPTY
+    tests_define_accessors__generic(EMPTY);
     STACKS__SET_PARAMS();
 
     sfs_check_state_begin();
@@ -1570,14 +1571,9 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
     {
         return NULL;
     }
-    fcs_derived_states_list_t derived_states_list_struct = {
-        .states = NULL, .num_states = 0};
-#define derived_states_list (&derived_states_list_struct)
-    sfs_check_state_end();
-#undef derived_states_list
-    register fcs_collectible_state_t *const ptr_next_state =
-        derived_states_list_struct.states[0].state_ptr;
-    free(derived_states_list_struct.states);
+    register const_AUTO(
+        ptr_next_state, fc_solve_sfs_check_state_end(soft_thread, raw_state_raw,
+                            &pass_new_state FCS__pass_moves(moves)));
     /*
      * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
      * hurt if it's already there, and if it's a state that was

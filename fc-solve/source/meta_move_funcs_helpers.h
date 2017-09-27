@@ -126,14 +126,14 @@ static inline void fc_solve_move_sequence_function(
 #define tests_define_accessors_move_stack()
 #endif
 
+#define tests_state_context_val int state_context_value = 0;
 /*
  * This macro defines these accessors to have some value.
  * */
-#define tests_define_accessors_no_stacks()                                     \
+#define tests_define_accessors_no_stacks(MORE)                                 \
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;      \
     tests_define_accessors_move_stack();                                       \
-    int state_context_value = 0;                                               \
-    fcs_kv_state_t pass_new_state;                                             \
+    MORE fcs_kv_state_t pass_new_state;                                        \
     tests_define_accessors_freecell_only();                                    \
     tests_define_accessors_rcs_states()
 
@@ -145,10 +145,12 @@ static inline void fc_solve_move_sequence_function(
 #define tests_define_indirect_stack_states_accessors()
 #endif
 
-#define tests_define_accessors()                                               \
-    tests_define_accessors_no_stacks();                                        \
+#define tests_define_accessors__generic(MORE)                                  \
+    tests_define_accessors_no_stacks(MORE);                                    \
     tests_define_indirect_stack_states_accessors()
 
+#define tests_define_accessors()                                               \
+    tests_define_accessors__generic(tests_state_context_val)
 #define my_copy_stack(idx)                                                     \
     fcs_copy_stack(                                                            \
         new_state_key, *(pass_new_state.val), idx, indirect_stacks_buffer)
