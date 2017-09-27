@@ -312,10 +312,8 @@ static inline pq_rating_t befs_rate_state(
 #define FCS_SCANS_the_state (PTR_STATE->s)
 #define VERIFY_DERIVED_STATE() verify_state_sanity(&(single_derived_state->s))
 #define FCS_ASSIGN_STATE_KEY()                                                 \
-    {                                                                          \
-        pass.key = &(FCS_SCANS_the_state);                                     \
-        pass.val = &(PTR_STATE->info);                                         \
-    }
+    (pass = (typeof(pass)){                                                    \
+         .key = &FCS_SCANS_the_state, .val = &(PTR_STATE->info)})
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE()                                                        \
     fcs_collectible_state_t *ptr_state_raw;                                    \
