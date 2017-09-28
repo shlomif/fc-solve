@@ -412,7 +412,7 @@ Specifies which cards can fill an empty stack.
 *Global*
 
 Specifies the type of game. Each preset implies several of the
-settings options above and sometimes even the tests order below. The
+settings options above and sometimes even the moves’ order below. The
 default configuration is for Freecell.
 
 Available presets:
@@ -511,22 +511,22 @@ try to trim them once the limit has been reached (which is time consuming
 and may cause states to be traversed again in the future).
 
 [id="tests-order_flag"]
--to [Test's Order] , --tests-order [Test's Order]
+-to [Moves’ Order] , --tests-order [Moves Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *Soft-thread-specific*
 
-This option specifies the order in which Freecell Solver will try the
-different types of moves that it can perform. Each move is specified by
-one character, and they are performed in the order in which they appear
-in the parameter string. You can omit tests by not including their
+This option specifies the order in which Freecell Solver will try the different
+types of moves (formerly termed "tests") that it can perform. Each move is
+specified by one character, and they are performed in the order in which they
+appear in the parameter string. You can omit moves by not including their
 corresponding characters in the string.
 
-The tests along with their characters are:
+The moves along with their characters are:
 
 [width="80%",cols="1,10"]
 |====================================================
-2+|Freecell Tests:
+2+|Freecell Moves:
 |'0' | put top stack cards in the foundations.
 |'1' | put freecell cards in the foundations.
 |'2' | put freecell cards on top of stacks.
@@ -538,13 +538,13 @@ The tests along with their characters are:
 |'8' | move cards to a different parent.
 |'9' | empty an entire stack into the freecells.
 |'j' | put freecell cards on empty stacks and right away put cards on top.
-2+|Atomic Freecell Tests:
+2+|Atomic Freecell Moves:
 |'A' | move a stack card to an empty stack.
 |'B' | move a stack card to a parent on a different stack.
 |'C' | move a stack card to a freecell.
 |'D' | move a freecell card to a parent.
 |'E' | move a freecell card to an empty stack.
-2+|Simple Simon Tests:
+2+|Simple Simon Moves:
 |'a' | move a full sequence to the foundations.
 |'b' | move a sequence to a true parent of his.
 |'c' | move a whole stack sequence to a false parent (in order to clear the stack)
@@ -559,20 +559,20 @@ cards above it.
 much slower).
 |=====================================================
 
-Manipulating the tests order can be very helpful to the quick solution
+Manipulating the moves order can be very helpful to the quick solution
 of a given board. If you found that a certain board cannot be solved in
 after a long time or in a certain maximal number of iterations, you
-should try different tests' orders. Usually, one can find a test order
+should try different moves' orders. Usually, one can find a moves order
 that solves a board very quickly.
 
-Note that this test order usually makes sense only for the Soft-DFS
+Note that this moves order usually makes sense only for the Soft-DFS
 and Random DFS scans (see the +--method+ option below).
 
-Also note that Freecell tests are not suitable for solving Simple Simon games
-and Simple Simon tests are not suitable for solving anything except Simple
+Also note that Freecell moves are not suitable for solving Simple Simon games
+and Simple Simon moves are not suitable for solving anything except Simple
 Simon.
 
-Tests can be grouped together into groups using parenthesis
+Moves can be grouped together into groups using parenthesis
 (e.g: "(0123)") or square brackets ("[012][3456789]"). Such grouping is
 only relevant to the Random DFS scan (see below). A group may optionally
 be followed by the equal sign "=" and by an ordering specifier. If one
@@ -583,18 +583,18 @@ inside the parentheses will be treated as weights for the same ordering
 function used by the +-asw+ flag (see below).
 
 [id="depth-tests-order2_flag"]
--dto2 [Min Depth],[Tests' Order] , --depth-tests-order2 [Min Depth],[Tests' Order]
+-dto2 [Min Depth],[Moves' Order] , --depth-tests-order2 [Min Depth],[Moves' Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *Soft-thread-specific*
 
-Sets the Tests' order starting from the minimal depth onwards. This way, if
-a Soft-DFS scan recurses deeply into the game, it will use a different tests'
+Sets the Moves' order starting from the minimal depth onwards. This way, if
+a Soft-DFS scan recurses deeply into the game, it will use a different moves'
 order.
 
-Note that if you set the tests' order of a minimal depth of say 50, then it
-will override all the tests' order of 50 and above. As a result, it is
-recommended that you set the minimal depth tests order in an increasing
+Note that if you set the moves' order of a minimal depth of say 50, then it
+will override all the moves' order of 50 and above. As a result, it is
+recommended that you set the minimal depth moves order in an increasing
 depth.
 
 It should be noted that the +-to+ or +--tests-order+ option above is
@@ -606,27 +606,27 @@ Here are some examples:
 -to 0123456789 -dto 30,0138924567
 ---------------------
 
-This sets the tests' order to +0123456789+ for all depths below 30 and to
+This sets the moves' order to +0123456789+ for all depths below 30 and to
 +0138924567+ for all depths above it.
 
 ---------------------
 -to 0123457 -dto 10,750123 -dto 25,710235
 ---------------------
 
-This sets the tests' order to +0123457+ for depths -9 (those below 10),
+This sets the moves' order to +0123457+ for depths -9 (those below 10),
 to +750123+ for depths 10-24, and to +710235+ for the depths 25 onwards.
 
 ---------------------
 -to 0123457 -dto "10,[012357]=asw(1)"
 ---------------------
 
-This sorts the tests starting from 10 onward based on the asw() function.
+This sorts the moves starting from 10 onward based on the asw() function.
 
 ---------------------
 -to 0123457 -dto "10,[012357]=rand()"
 ---------------------
 
-This randomises the tests from 10 onward.
+This randomises the moves from 10 onward.
 
 ---------------------
 -to 0123457 -dto "10,[012357]"
@@ -635,15 +635,15 @@ This randomises the tests from 10 onward.
 This does the same thing as the previous example.
 
 *Note* : This option should be used instead of the older +-dto+ option given
-below which mutilates the tests order parameter and is still provided for
+below which mutilates the moves order parameter and is still provided for
 backward compatibility.
 
 [id="depth-tests-order_flag"]
--dto [Min Depth],[Tests' Order] , --depth-tests-order [Min Depth],[Tests' Order]
+-dto [Min Depth],[Moves' Order] , --depth-tests-order [Min Depth],[Moves' Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is equivalent to specifying +-dto2 [Min Depth],[Min Depth],[Tests' Order]+
-- i.e: the "[Min Depth]," string is prefixed to the given tests order.
+This is equivalent to specifying +-dto2 [Min Depth],[Min Depth],[Moves' Order]+
+- i.e: the "[Min Depth]," string is prefixed to the given moves order.
 
 This option is provided for backward compatibility with older versions of
 Freecell Solver.
@@ -673,8 +673,8 @@ supply to it.  (see the "-seed" option below.)
 BFS does not yield good results, and +a-star+ has a mixed behaviour, so for
 the time being I recommend using Soft-DFS or Random-DFS.
 
-The Random-DFS scan processes every tests' random group, randomizes the
-states that it found and recurses into them one by one. Standalone tests
+The Random-DFS scan processes every moves' random group, randomizes the
+states that it found and recurses into them one by one. Standalone moves
 that do not belong to any group, are processed in a non-random manner.
 
 [id="a-star-weight_flag"]
@@ -732,13 +732,13 @@ This option instructs Freecell Solver to try and optimize the solution
 path so it will have a smaller number of moves.
 
 [id="optimization-tests-order_flag"]
--opt-to [tests order] , --optimization-tests-order [tests order]
+-opt-to [moves order] , --optimization-tests-order [moves order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *Flare-wide*
 
-This argument specifies the test order for the optimization scan, in case
-it should be different than an order that contains all the tests that were
+This argument specifies the moves order for the optimization scan, in case
+it should be different than an order that contains all the moves that were
 used in all the normal scans.
 
 [id="reparent-states_flag"]
@@ -815,7 +815,7 @@ options initialize it. For example:
 $ fc-solve --method a-star -nst --method soft-dfs -to 0123467 myboard.txt
 ----------------------
 
-will run an BeFS scan and a Soft-DFS scan with a tests order of 0123467 on
+will run an BeFS scan and a Soft-DFS scan with a moves order of 0123467 on
 myboard.txt.
 
 [id="soft-thread-step_flag"]
