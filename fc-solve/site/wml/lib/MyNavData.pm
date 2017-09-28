@@ -115,7 +115,7 @@ my $tree_contents =
         {
             'text' => "Support",
             'url' => "support.html",
-            'title' => "Report bugs, get help and get other support",
+            'title' => "Report bugs, get help, and get other support",
         },
         {
             'separator' => 1,
