@@ -3,10 +3,6 @@
 
 <latemp_subject "How We Benchmark Freecell Solver (Version 1)" />
 
-<h2* id="toc">Table of contents</h2*>
-
-<toc />
-
 <h2 id="summary">Summary</h2>
 
 <img src="cat-on-a-bench.jpg" alt="A cat sitting on a bench" style="float:right;margin:1em" />
@@ -18,6 +14,10 @@ two or more versions of our software to determine which version runs faster. It
 may provide some insights for your benchmarking efforts, and we welcome further
 insights into it.
 </p>
+
+<h2* id="toc">Table of contents</h2*>
+
+<toc />
 
 <h2 id="intro">Introduction</h2>
 
