@@ -122,6 +122,26 @@ my $tree_contents =
             'skip' => 1,
         },
         {
+            'text' => "Articles and Reports",
+            'url' => "articles/",
+            subs =>
+            [
+                {
+                    'text' => "How We Benchmark Freecell Solver",
+                    'url' => "articles/how-we-benchmark/v1/",
+                },
+                {
+                    'text' => "4FC Deals Solvability Statistics",
+                    'url' => "charts/fc-pro--4fc-deals-solvability--report/",
+                    'title' => "Report: The solvability statistics of the Freecell Pro 4-Freecells Deals",
+                },
+            ],
+        },
+        {
+            'separator' => 1,
+            'skip' => 1,
+        },
+        {
             'text' => "Old News Items",
             'url' => "old-news.html",
         },
