@@ -537,6 +537,7 @@ The tests along with their characters are:
 |'7' | put freecell cards on empty stacks.
 |'8' | move cards to a different parent.
 |'9' | empty an entire stack into the freecells.
+|'j' | put freecell cards on empty stacks and right away put cards on top.
 2+|Atomic Freecell Tests:
 |'A' | move a stack card to an empty stack.
 |'B' | move a stack card to a parent on a different stack.
