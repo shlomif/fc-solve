@@ -1,16 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
-SET (private_mod_path "${CMAKE_SOURCE_DIR}/cmake")
-LIST (APPEND CMAKE_MODULE_PATH "${private_mod_path}")
-SET (_result)
-INCLUDE(Shlomif_Common OPTIONAL RESULT_VARIABLE _result)
-
-IF ("${_result}" STREQUAL "NOTFOUND")
-    MESSAGE (WARNING "Could not find Shlomif_Common.cmake - you can find it here: https://bitbucket.org/shlomif/shlomif-cmake-modules/overview ; trying to download it for you.")
-    FILE (DOWNLOAD "https://bitbucket.org/shlomif/shlomif-cmake-modules/raw/default/shlomif-cmake-modules/Shlomif_Common.cmake" "${private_mod_path}/Shlomif_Common.cmake")
-    INCLUDE(Shlomif_Common)
-ENDIF ()
-
+INCLUDE ("${CMAKE_SOURCE_DIR}/cmake/shlomif_common_bootstrap.cmake")
 SHLOMIF_COMMON_SETUP("${private_mod_path}")
 
 CMAKE_POLICY(SET CMP0054 NEW)
