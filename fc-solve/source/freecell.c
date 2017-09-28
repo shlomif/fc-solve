@@ -651,6 +651,30 @@ static inline void col_seqs_iter__advance(col_seqs_iter_t *const iter)
     col_seqs_iter__calc_end(iter);
 }
 
+static inline fcs_bool_t check_if_can_relocate(const fcs_game_limit_t start,
+    const fcs_game_limit_t num_virtual_vacant_freecells,
+    const fcs_game_limit_t num_virtual_vacant_stacks,
+    const col_seqs_iter_t *const iter PASS_sequences_are_built_by(
+        const fc_solve_instance_t *const instance))
+{
+    MOVE_FUNCS__define_empty_stacks_fill();
+    fcs_game_limit_t num_cards_to_relocate = start;
+    const fcs_game_limit_t freecells_to_fill =
+        min(num_cards_to_relocate, num_virtual_vacant_freecells);
+
+    num_cards_to_relocate -= freecells_to_fill;
+
+    const fcs_game_limit_t freestacks_to_fill =
+        min(num_cards_to_relocate, num_virtual_vacant_stacks);
+    num_cards_to_relocate -= freestacks_to_fill;
+
+    return ((num_cards_to_relocate == 0) &&
+            (calc_max_sequence_move(
+                 num_virtual_vacant_freecells - freecells_to_fill,
+                 num_virtual_vacant_stacks - freestacks_to_fill) >=
+                iter->seq_end - iter->c + 1));
+}
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 {
     MOVE_FUNCS__define_common();
@@ -700,24 +724,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 const int_fast32_t dc = pos_idx_to_check[1];
                 const int dest_cards_num =
                     fcs_state_col_len(state, ds) - dc - 1;
-
-                int num_cards_to_relocate = dest_cards_num + col_num_cards;
-
-                const int freecells_to_fill =
-                    min(num_cards_to_relocate, num_vacant_freecells);
-
-                num_cards_to_relocate -= freecells_to_fill;
-
-                const int freestacks_to_fill =
-                    min(num_cards_to_relocate, num_virtual_vacant_stacks);
-                num_cards_to_relocate -= freestacks_to_fill;
-
                 if (!unlikely(
-                        (num_cards_to_relocate == 0) &&
-                        (calc_max_sequence_move(
-                             num_vacant_freecells - freecells_to_fill,
-                             num_virtual_vacant_stacks - freestacks_to_fill) >=
-                            iter.seq_end - iter.c + 1)))
+                        check_if_can_relocate(dest_cards_num + col_num_cards,
+                            num_vacant_freecells, num_virtual_vacant_stacks,
+                            &iter PASS_sequences_are_built_by(instance))))
                 {
                     continue;
                 }
@@ -988,23 +998,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                 {
                     continue;
                 }
-                int num_cards_to_relocate = col_num_cards;
-
-                const int freecells_to_fill =
-                    min(num_cards_to_relocate, num_virtual_vacant_freecells);
-
-                num_cards_to_relocate -= freecells_to_fill;
-
-                const int freestacks_to_fill =
-                    min(num_cards_to_relocate, num_virtual_vacant_stacks);
-                num_cards_to_relocate -= freestacks_to_fill;
-
-                if (!unlikely(
-                        (num_cards_to_relocate == 0) &&
-                        (calc_max_sequence_move(
-                             num_virtual_vacant_freecells - freecells_to_fill,
-                             num_virtual_vacant_stacks - freestacks_to_fill) >=
-                            iter.seq_end - iter.c + 1)))
+                if (!unlikely(check_if_can_relocate(col_num_cards,
+                        num_virtual_vacant_freecells, num_virtual_vacant_stacks,
+                        &iter PASS_sequences_are_built_by(instance))))
                 {
                     continue;
                 }
