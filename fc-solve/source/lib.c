@@ -1482,7 +1482,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
         {
             unit->max_depth = by_depth_moves_order[depth_idx].max_depth;
 
-            fcs_tests_order_group_t *const tests_order_groups =
+            fcs_moves_group *const tests_order_groups =
                 by_depth_moves_order[depth_idx].moves_order.groups;
 
             const_AUTO(tests_order_num,

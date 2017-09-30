@@ -196,12 +196,12 @@ typedef struct
     size_t *order_group_moves;
     fcs_moves_group_kind shuffling_type;
     fc_solve_state_weighting_t weighting;
-} fcs_tests_order_group_t;
+} fcs_moves_group;
 
 typedef struct
 {
     size_t num_groups;
-    fcs_tests_order_group_t *groups;
+    fcs_moves_group *groups;
 } fcs_tests_order_t;
 
 typedef struct
