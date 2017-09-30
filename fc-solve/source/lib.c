@@ -1038,7 +1038,7 @@ static inline int fc_solve_soft_dfs_do_solve(
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const_AUTO(soft_thread_id, soft_thread->id);
     fcs_tests_list_of_lists the_moves_list;
-    fcs_tests_group_type_t local_shuffling_type = FCS_NO_SHUFFLING;
+    fcs_moves_group_kind local_shuffling_type = FCS_NO_SHUFFLING;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
 #endif
@@ -1507,7 +1507,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
                     &(moves_list_of_lists
                             ->lists[moves_list_of_lists->num_lists++]));
 
-                const fcs_tests_group_type_t shuffling_type =
+                const fcs_moves_group_kind shuffling_type =
                     (master_to_randomize
                             ? tests_order_groups[group_idx].shuffling_type
                             : FCS_NO_SHUFFLING);

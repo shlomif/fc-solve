@@ -188,13 +188,13 @@ typedef enum {
     FCS_NO_SHUFFLING,
     FCS_RAND,
     FCS_WEIGHTING,
-} fcs_tests_group_type_t;
+} fcs_moves_group_kind;
 
 typedef struct
 {
     size_t num;
     size_t *order_group_moves;
-    fcs_tests_group_type_t shuffling_type;
+    fcs_moves_group_kind shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_tests_order_group_t;
 
@@ -364,7 +364,7 @@ typedef struct
     fc_solve_solve_for_state_move_func_t *move_funcs;
     /* num_move_funcs should be int instead of size_t for performance.*/
     int num_move_funcs;
-    fcs_tests_group_type_t shuffling_type;
+    fcs_moves_group_kind shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_move_funcs_list;
 
