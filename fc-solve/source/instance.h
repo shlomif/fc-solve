@@ -208,12 +208,12 @@ typedef struct
 {
     ssize_t max_depth;
     fcs_moves_order moves_order;
-} fcs_by_depth_tests_order_t;
+} fcs_by_depth_moves_order;
 
 typedef struct
 {
     size_t num;
-    fcs_by_depth_tests_order_t *by_depth_moves;
+    fcs_by_depth_moves_order *by_depth_moves;
 } fcs_by_depth_tests_order_array_t;
 
 #define STRUCT_CLEAR_FLAG(instance, flag) (instance)->flag = FALSE

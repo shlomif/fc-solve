@@ -1473,7 +1473,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
         arr_ptr->by_depth_units = SMALLOC(arr_ptr->by_depth_units,
             (arr_ptr->num_units = soft_thread->by_depth_moves_order.num));
 
-        const fcs_by_depth_tests_order_t *const by_depth_moves_order =
+        const fcs_by_depth_moves_order *const by_depth_moves_order =
             soft_thread->by_depth_moves_order.by_depth_moves;
 
         var_AUTO(unit, arr_ptr->by_depth_units);

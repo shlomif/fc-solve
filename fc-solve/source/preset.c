@@ -171,7 +171,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
             {
                 /* Check every test */
 
-                fcs_by_depth_tests_order_t *const by_depth_moves_order =
+                fcs_by_depth_moves_order *const by_depth_moves_order =
                     soft_thread->by_depth_moves_order.by_depth_moves;
 
                 for (int depth_idx = 0;
