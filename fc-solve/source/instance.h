@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * instance.h - header file of fc_solve_instance_t / fc_solve_hard_thread_t /
- * fc_solve_soft_thread_t .
- */
+// instance.h - header file of fc_solve_instance_t / fc_solve_hard_thread_t /
+// fc_solve_soft_thread_t .
 #pragma once
 
 #ifdef __cplusplus
@@ -368,12 +366,12 @@ typedef struct
     int num_move_funcs;
     fcs_tests_group_type_t shuffling_type;
     fc_solve_state_weighting_t weighting;
-} fcs_tests_list_t;
+} fcs_move_funcs_list;
 
 typedef struct
 {
     uint_fast32_t num_lists;
-    fcs_tests_list_t *lists;
+    fcs_move_funcs_list *lists;
 } fcs_tests_list_of_lists;
 
 typedef struct

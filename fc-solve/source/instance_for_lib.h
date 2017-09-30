@@ -35,7 +35,7 @@ static inline void fc_solve_release_tests_list(
     {
         if (arr->by_depth_units[unit_idx].move_funcs.lists)
         {
-            fcs_tests_list_t *const lists =
+            fcs_move_funcs_list *const lists =
                 arr->by_depth_units[unit_idx].move_funcs.lists;
             const_AUTO(
                 num_lists, arr->by_depth_units[unit_idx].move_funcs.num_lists);
