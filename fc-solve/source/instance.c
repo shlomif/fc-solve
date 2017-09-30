@@ -98,7 +98,7 @@ extern void fc_solve_free_soft_thread_by_depth_test_array(
 }
 
 static inline void accumulate_tests_by_ptr(
-    size_t *const moves_order, fcs_tests_order_t *const st_tests_order)
+    size_t *const moves_order, fcs_moves_order *const st_tests_order)
 {
     const fcs_moves_group *group_ptr = st_tests_order->groups;
     const fcs_moves_group *const groups_end =

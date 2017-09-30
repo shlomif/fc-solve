@@ -20,7 +20,7 @@
 #define SET_ERR(s)
 #endif
 
-int fc_solve_apply_tests_order(fcs_tests_order_t *const moves_order,
+int fc_solve_apply_tests_order(fcs_moves_order *const moves_order,
     const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
     int i;

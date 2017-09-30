@@ -202,12 +202,12 @@ typedef struct
 {
     size_t num_groups;
     fcs_moves_group *groups;
-} fcs_tests_order_t;
+} fcs_moves_order;
 
 typedef struct
 {
     ssize_t max_depth;
-    fcs_tests_order_t moves_order;
+    fcs_moves_order moves_order;
 } fcs_by_depth_tests_order_t;
 
 typedef struct
@@ -707,7 +707,7 @@ struct fc_solve_instance_struct
      * This is the master moves' funcs order. It is used to initialize all
      * the new Soft-Threads.
      * */
-    fcs_tests_order_t instance_tests_order;
+    fcs_moves_order instance_tests_order;
 
     /*
      * A counter that determines how many of the hard threads that belong
@@ -720,7 +720,7 @@ struct fc_solve_instance_struct
     /*
      * The tests order for the optimization scan as specified by the user.
      * */
-    fcs_tests_order_t opt_tests_order;
+    fcs_moves_order opt_tests_order;
 #endif
 
 #ifdef FCS_RCS_STATES
@@ -931,10 +931,10 @@ extern void fc_solve_instance__init_hard_thread(
 extern void fc_solve_free_soft_thread_by_depth_test_array(
     fc_solve_soft_thread_t *const soft_thread);
 
-static inline fcs_tests_order_t tests_order_dup(fcs_tests_order_t *const orig)
+static inline fcs_moves_order tests_order_dup(fcs_moves_order *const orig)
 {
     const_SLOT(num_groups, orig);
-    fcs_tests_order_t ret = (fcs_tests_order_t){.num_groups = num_groups,
+    fcs_moves_order ret = (fcs_moves_order){.num_groups = num_groups,
         .groups = memdup(orig->groups,
             sizeof(orig->groups[0]) *
                 ((num_groups & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
@@ -989,7 +989,7 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     whatever memory was allocated by alloc_instance().
   */
 
-static inline void fc_solve_free_tests_order(fcs_tests_order_t *moves_order)
+static inline void fc_solve_free_tests_order(fcs_moves_order *moves_order)
 {
     const_SLOT(groups, moves_order);
     const_SLOT(num_groups, moves_order);

@@ -25,7 +25,7 @@ static inline int fc_solve_string_to_test_num(const char needle)
 }
 
 extern int fc_solve_apply_tests_order(
-    fcs_tests_order_t *, const char *FCS__PASS_ERR_STR(char *));
+    fcs_moves_order *, const char *FCS__PASS_ERR_STR(char *));
 
 #ifdef __cplusplus
 }
