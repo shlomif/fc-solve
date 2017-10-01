@@ -693,11 +693,9 @@ struct fc_solve_instance_struct
 #endif
 #endif
 
-    /*
-     * This is the master moves' funcs order. It is used to initialize all
-     * the new Soft-Threads.
-     * */
-    fcs_moves_order instance_tests_order;
+    // The master moves' order. It is used to initialize all the new
+    // Soft-Threads.
+    fcs_moves_order instance_moves_order;
 
     /*
      * A counter that determines how many of the hard threads that belong

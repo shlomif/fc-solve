@@ -101,7 +101,7 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
 #endif
         .effective_max_num_states_in_collection = FCS_INT_LIMIT_MAX,
 #endif
-        .instance_tests_order =
+        .instance_moves_order =
             {
                 .num_groups = 0, .groups = NULL,
             },
@@ -622,7 +622,7 @@ static inline void fc_solve_free_instance(fc_solve_instance_t *const instance)
     }
 #endif
 #endif
-    fc_solve_free_tests_order(&(instance->instance_tests_order));
+    fc_solve_free_tests_order(&(instance->instance_moves_order));
 #ifdef FCS_WITH_MOVES
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {

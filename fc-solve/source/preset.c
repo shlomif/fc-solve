@@ -226,7 +226,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     }
 
     /* Assign the master tests order */
-    fc_solve_apply_tests_order(&(instance->instance_tests_order),
+    fc_solve_apply_tests_order(&(instance->instance_moves_order),
         preset.moves_order FCS__PASS_ERR_STR(no_use));
 #undef preset
     return FCS_PRESET_CODE_OK;
