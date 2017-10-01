@@ -210,12 +210,6 @@ typedef struct
     fcs_moves_order moves_order;
 } fcs_by_depth_moves_order;
 
-typedef struct
-{
-    size_t num;
-    fcs_by_depth_moves_order *by_depth_moves;
-} fcs_by_depth_tests_order_array_t;
-
 #define STRUCT_CLEAR_FLAG(instance, flag) (instance)->flag = FALSE
 #define STRUCT_TURN_ON_FLAG(instance, flag) (instance)->flag = TRUE
 #define STRUCT_QUERY_FLAG(instance, flag) ((instance)->flag)
@@ -406,7 +400,11 @@ struct fc_solve_soft_thread_struct
     int id;
 
     // The moves' order indicates which move funcs to run.
-    fcs_by_depth_tests_order_array_t by_depth_moves_order;
+    struct
+    {
+        size_t num;
+        fcs_by_depth_moves_order *by_depth_moves;
+    } by_depth_moves_order;
 
     /* The super-method type - can be  */
     fcs_super_method_type_t super_method_type;
