@@ -1061,8 +1061,8 @@ static inline int fc_solve_soft_dfs_do_solve(
         the_soft_dfs_info->derived_states_list;
     fcs_rand_t *const rand_gen = &(DFS_VAR(soft_thread, rand_gen));
     calculate_real_depth(calc_real_depth, PTR_STATE);
-    const_AUTO(by_depth_units,
-        DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units);
+    const_AUTO(
+        by_depth_units, DFS_VAR(soft_thread, moves_by_depth).by_depth_units);
 
 #define THE_MOVE_FUNCS_LIST the_moves_list
     TRACE0("Before depth loop");
@@ -1464,11 +1464,11 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_rand_init(
         &(DFS_VAR(soft_thread, rand_gen)), DFS_VAR(soft_thread, rand_seed));
 
-    if (!DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units)
+    if (!DFS_VAR(soft_thread, moves_by_depth).by_depth_units)
     {
         const_SLOT(master_to_randomize, soft_thread);
         fcs_moves_by_depth_array *const arr_ptr =
-            &(DFS_VAR(soft_thread, tests_by_depth_array));
+            &(DFS_VAR(soft_thread, moves_by_depth));
         arr_ptr->by_depth_units = SMALLOC(arr_ptr->by_depth_units,
             (arr_ptr->num_units = soft_thread->by_depth_moves_order.num));
 

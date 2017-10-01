@@ -29,7 +29,7 @@ static inline void fc_solve_release_tests_list(
 
     /* Free the DFS data. */
     fcs_moves_by_depth_array *const arr =
-        &(DFS_VAR(soft_thread, tests_by_depth_array));
+        &(DFS_VAR(soft_thread, moves_by_depth));
     const_SLOT(num_units, arr);
     for (size_t unit_idx = 0; unit_idx < num_units; unit_idx++)
     {

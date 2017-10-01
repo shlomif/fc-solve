@@ -212,7 +212,7 @@ static inline
                         .dfs_max_depth = 0,
                         .soft_dfs_info = NULL,
                         .depth = 0,
-                        .tests_by_depth_array =
+                        .moves_by_depth =
                             {
                                 .num_units = 0, .by_depth_units = NULL,
                             },

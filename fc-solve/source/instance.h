@@ -459,7 +459,7 @@ struct fc_solve_soft_thread_struct
             /*
              * The moves to be performed in a preprocessed form.
              * */
-            fcs_moves_by_depth_array tests_by_depth_array;
+            fcs_moves_by_depth_array moves_by_depth;
         } soft_dfs;
         struct
         {
