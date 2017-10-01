@@ -162,7 +162,7 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
 #ifdef FCS_WITH_ERROR_STRS
     char no_use[120];
 #endif
-    fc_solve_apply_tests_order(&(instance->instance_tests_order),
+    fc_solve_apply_tests_order(&(instance->instance_moves_order),
         "[01][23456789]" FCS__PASS_ERR_STR(no_use));
 #endif
 
