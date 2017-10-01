@@ -378,7 +378,7 @@ typedef struct
 {
     int num_units;
     fcs_moves_by_depth_unit_t *by_depth_units;
-} fcs_tests_by_depth_array_t;
+} fcs_moves_by_depth_array;
 
 typedef enum {
     FCS_SUPER_METHOD_DFS,
@@ -459,7 +459,7 @@ struct fc_solve_soft_thread_struct
             /*
              * The tests to be performed in a preprocessed form.
              * */
-            fcs_tests_by_depth_array_t tests_by_depth_array;
+            fcs_moves_by_depth_array tests_by_depth_array;
         } soft_dfs;
         struct
         {

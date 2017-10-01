@@ -1467,7 +1467,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
     if (!DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units)
     {
         const_SLOT(master_to_randomize, soft_thread);
-        fcs_tests_by_depth_array_t *const arr_ptr =
+        fcs_moves_by_depth_array *const arr_ptr =
             &(DFS_VAR(soft_thread, tests_by_depth_array));
         arr_ptr->by_depth_units = SMALLOC(arr_ptr->by_depth_units,
             (arr_ptr->num_units = soft_thread->by_depth_moves_order.num));
