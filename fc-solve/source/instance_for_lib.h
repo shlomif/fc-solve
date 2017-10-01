@@ -76,7 +76,7 @@ static inline void fc_solve_free_instance_soft_thread_callback(
 {
     fc_solve_st_free_pq(soft_thread);
     fc_solve_release_tests_list(soft_thread);
-    fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
+    fc_solve_free_soft_thread_by_depth_move_array(soft_thread);
 #ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(pats_scan, soft_thread);
 

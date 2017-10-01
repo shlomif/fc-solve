@@ -699,7 +699,7 @@ static inline void fc_solve__setup_optimization_thread__helper(
     {
         if (soft_thread->by_depth_moves_order.by_depth_moves != NULL)
         {
-            fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
+            fc_solve_free_soft_thread_by_depth_move_array(soft_thread);
         }
 
         soft_thread->by_depth_moves_order =

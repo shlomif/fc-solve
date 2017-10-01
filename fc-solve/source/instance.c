@@ -80,7 +80,7 @@ static inline void soft_thread_clean_soft_dfs(
     DFS_VAR(soft_thread, dfs_max_depth) = 0;
 }
 
-extern void fc_solve_free_soft_thread_by_depth_test_array(
+extern void fc_solve_free_soft_thread_by_depth_move_array(
     fc_solve_soft_thread_t *const soft_thread)
 {
     const_AUTO(
