@@ -975,7 +975,7 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     whatever memory was allocated by alloc_instance().
   */
 
-static inline void fc_solve_free_tests_order(fcs_moves_order *moves_order)
+static inline void moves_order__free(fcs_moves_order *moves_order)
 {
     const_SLOT(groups, moves_order);
     const_SLOT(num_groups, moves_order);

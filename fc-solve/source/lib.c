@@ -621,11 +621,11 @@ static inline void fc_solve_free_instance(fc_solve_instance_t *const instance)
     }
 #endif
 #endif
-    fc_solve_free_tests_order(&(instance->instance_moves_order));
+    moves_order__free(&(instance->instance_moves_order));
 #ifdef FCS_WITH_MOVES
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
-        fc_solve_free_tests_order(&(instance->opt_moves));
+        moves_order__free(&(instance->opt_moves));
     }
     instance_free_solution_moves(instance);
 #endif
@@ -2510,7 +2510,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
          further_depth_idx < soft_thread->by_depth_moves_order.num;
          further_depth_idx++)
     {
-        fc_solve_free_tests_order(&(
+        moves_order__free(&(
             soft_thread->by_depth_moves_order.by_depth_moves[further_depth_idx]
                 .moves_order));
     }
@@ -4226,7 +4226,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
 {
     var_AUTO(obj, active_obj(api_instance));
-    fc_solve_free_tests_order(&obj->opt_moves);
+    moves_order__free(&obj->opt_moves);
     STRUCT_CLEAR_FLAG(obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
 #ifdef FCS_WITH_ERROR_STRS
     char static_error_string[120];

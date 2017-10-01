@@ -88,7 +88,7 @@ extern void fc_solve_free_soft_thread_by_depth_move_array(
     const_AUTO(num, soft_thread->by_depth_moves_order.num);
     for (size_t i = 0; i < num; ++i)
     {
-        fc_solve_free_tests_order(&(by_depth_moves[i].moves_order));
+        moves_order__free(&(by_depth_moves[i].moves_order));
     }
 
     soft_thread->by_depth_moves_order.num = 0;

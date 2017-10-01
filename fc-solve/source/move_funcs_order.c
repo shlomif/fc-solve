@@ -24,7 +24,7 @@ int fc_solve_apply_tests_order(fcs_moves_order *const moves_order,
     const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
     int i;
-    fc_solve_free_tests_order(moves_order);
+    moves_order__free(moves_order);
     moves_order->groups = SMALLOC(moves_order->groups, MOVES_GROW_BY);
     moves_order->groups[moves_order->num_groups].num = 0;
     moves_order->groups[moves_order->num_groups].order_group_moves =
