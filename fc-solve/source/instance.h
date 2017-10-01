@@ -303,7 +303,7 @@ struct fc_solve_hard_thread_struct
 #ifdef FCS_WITH_MOVES
     /*
      * This is a move stack that is used and re-used by the
-     * tests functions of this hard thread
+     * moves functions of this hard thread
      * */
     fcs_move_stack_t reusable_move_stack;
 #endif
@@ -366,12 +366,12 @@ typedef struct
 {
     uint_fast32_t num_lists;
     fcs_move_funcs_list *lists;
-} fcs_tests_list_of_lists;
+} fcs_moves_list_of_lists;
 
 typedef struct
 {
     ssize_t max_depth;
-    fcs_tests_list_of_lists move_funcs;
+    fcs_moves_list_of_lists move_funcs;
 } fcs_tests_by_depth_unit_t;
 
 typedef struct

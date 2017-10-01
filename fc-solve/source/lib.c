@@ -1037,7 +1037,7 @@ static inline int fc_solve_soft_dfs_do_solve(
     const fcs_bool_t is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const_AUTO(soft_thread_id, soft_thread->id);
-    fcs_tests_list_of_lists the_moves_list;
+    fcs_moves_list_of_lists the_moves_list;
     fcs_moves_group_kind local_shuffling_type = FCS_NO_SHUFFLING;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
