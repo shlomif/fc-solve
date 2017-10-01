@@ -220,7 +220,7 @@ static inline
                     },
                 .befs =
                     {
-                        .tests_list = NULL,
+                        .moves_list = NULL,
                         .meth =
                             {
                                 .befs =

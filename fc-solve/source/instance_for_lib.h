@@ -24,8 +24,8 @@ static inline void fc_solve_release_tests_list(
     fc_solve_soft_thread_t *const soft_thread)
 {
     /* Free the BeFS data. */
-    free(BEFS_M_VAR(soft_thread, tests_list));
-    BEFS_M_VAR(soft_thread, tests_list) = NULL;
+    free(BEFS_M_VAR(soft_thread, moves_list));
+    BEFS_M_VAR(soft_thread, moves_list) = NULL;
 
     /* Free the DFS data. */
     fcs_moves_by_depth_array *const arr =

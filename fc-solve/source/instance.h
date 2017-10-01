@@ -430,8 +430,8 @@ struct fc_solve_soft_thread_struct
              * current_state_index - the index of the last checked state
              * in depth i.
              *
-             * move_func_list_idx - the index of the test list that is
-             * performed. FCS performs each test separately, so
+             * move_func_list_idx - the index of the move list that is
+             * performed. FCS performs each move separately, so
              * states_to_check and friends will not be overpopulated.
              *
              * num_vacant_stacks - the number of unoccpied stacks that
@@ -457,14 +457,14 @@ struct fc_solve_soft_thread_struct
             int rand_seed;
 
             /*
-             * The tests to be performed in a preprocessed form.
+             * The moves to be performed in a preprocessed form.
              * */
             fcs_moves_by_depth_array tests_by_depth_array;
         } soft_dfs;
         struct
         {
             fcs__positions_by_rank_t befs_positions_by_rank;
-            fc_solve_solve_for_state_move_func_t *tests_list, *tests_list_end;
+            fc_solve_solve_for_state_move_func_t *moves_list, *moves_list_end;
             struct
             {
                 struct

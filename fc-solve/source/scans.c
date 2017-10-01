@@ -323,17 +323,17 @@ void fc_solve_soft_thread_init_befs_or_bfs(
         fc_solve_initialize_bfs_queue(soft_thread);
     }
 
-    if (!BEFS_M_VAR(soft_thread, tests_list))
+    if (!BEFS_M_VAR(soft_thread, moves_list))
     {
         size_t num = 0;
-        fc_solve_solve_for_state_move_func_t *tests_list = NULL;
+        fc_solve_solve_for_state_move_func_t *moves_list = NULL;
 
         for (size_t group_idx = 0;
              group_idx < soft_thread->by_depth_moves_order.by_depth_moves[0]
                              .moves_order.num_groups;
              ++group_idx)
         {
-            add_to_move_funcs_list(&tests_list, &num,
+            add_to_move_funcs_list(&moves_list, &num,
                 soft_thread->by_depth_moves_order.by_depth_moves[0]
                     .moves_order.groups[group_idx]
                     .order_group_moves,
@@ -341,8 +341,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(
                     .moves_order.groups[group_idx]
                     .num);
         }
-        BEFS_M_VAR(soft_thread, tests_list) = tests_list;
-        BEFS_M_VAR(soft_thread, tests_list_end) = tests_list + num;
+        BEFS_M_VAR(soft_thread, moves_list) = moves_list;
+        BEFS_M_VAR(soft_thread, moves_list_end) = moves_list + num;
     }
     BEFS_M_VAR(soft_thread, first_state_to_check) =
         FCS_STATE_keyval_pair_to_collectible(
@@ -388,10 +388,10 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fc_solve_solve_process_ret_t error_code;
     fcs_derived_states_list_t derived = {.num_states = 0, .states = NULL};
 
-    const fc_solve_solve_for_state_move_func_t *const tests_list =
-        BEFS_M_VAR(soft_thread, tests_list);
-    const fc_solve_solve_for_state_move_func_t *const tests_list_end =
-        BEFS_M_VAR(soft_thread, tests_list_end);
+    const fc_solve_solve_for_state_move_func_t *const moves_list =
+        BEFS_M_VAR(soft_thread, moves_list);
+    const fc_solve_solve_for_state_move_func_t *const moves_list_end =
+        BEFS_M_VAR(soft_thread, moves_list_end);
 
     DECLARE_STATE();
     ASSIGN_ptr_state(BEFS_M_VAR(soft_thread, first_state_to_check));
@@ -541,8 +541,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         */
         derived.num_states = 0;
         for (const fc_solve_solve_for_state_move_func_t *move_func_ptr =
-                 tests_list;
-             move_func_ptr < tests_list_end; move_func_ptr++)
+                 moves_list;
+             move_func_ptr < moves_list_end; move_func_ptr++)
         {
             (*move_func_ptr)(soft_thread, pass, &derived);
         }
