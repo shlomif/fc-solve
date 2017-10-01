@@ -705,10 +705,8 @@ struct fc_solve_instance_struct
     int num_hard_threads_finished;
 
 #ifdef FCS_WITH_MOVES
-    /*
-     * The tests order for the optimization scan as specified by the user.
-     * */
-    fcs_moves_order opt_tests_order;
+    // The moves for the optimization scan, as specified by the user.
+    fcs_moves_order opt_moves;
 #endif
 
 #ifdef FCS_RCS_STATES

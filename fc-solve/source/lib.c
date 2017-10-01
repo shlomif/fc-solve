@@ -107,7 +107,7 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
             },
         .list_of_vacant_states = NULL,
 #ifdef FCS_WITH_MOVES
-        .opt_tests_order =
+        .opt_moves =
             {
                 .num_groups = 0, .groups = NULL,
             },
@@ -305,16 +305,15 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
         }
         move_funcs = SREALLOC(move_funcs,
             ((num_move_funcs & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
-        instance->opt_tests_order = (typeof(instance->opt_tests_order)){
+        instance->opt_moves = (typeof(instance->opt_moves)){
             .num_groups = 1,
-            .groups = SMALLOC(instance->opt_tests_order.groups, MOVES_GROW_BY),
+            .groups = SMALLOC(instance->opt_moves.groups, MOVES_GROW_BY),
         };
-        instance->opt_tests_order.groups[0] =
-            (typeof(instance->opt_tests_order.groups[0])){
-                .order_group_moves = move_funcs,
-                .num = num_move_funcs,
-                .shuffling_type = FCS_NO_SHUFFLING,
-            };
+        instance->opt_moves.groups[0] = (typeof(instance->opt_moves.groups[0])){
+            .order_group_moves = move_funcs,
+            .num = num_move_funcs,
+            .shuffling_type = FCS_NO_SHUFFLING,
+        };
         STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
 #endif
@@ -626,7 +625,7 @@ static inline void fc_solve_free_instance(fc_solve_instance_t *const instance)
 #ifdef FCS_WITH_MOVES
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
-        fc_solve_free_tests_order(&(instance->opt_tests_order));
+        fc_solve_free_tests_order(&(instance->opt_moves));
     }
     instance_free_solution_moves(instance);
 #endif
@@ -712,7 +711,7 @@ static inline void fc_solve__setup_optimization_thread__helper(
         soft_thread->by_depth_moves_order.by_depth_moves[0] =
             (typeof(soft_thread->by_depth_moves_order.by_depth_moves[0])){
                 .max_depth = SSIZE_MAX,
-                .moves_order = tests_order_dup(&(instance->opt_tests_order)),
+                .moves_order = tests_order_dup(&(instance->opt_moves)),
             };
     }
 
@@ -4227,13 +4226,13 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
 {
     var_AUTO(obj, active_obj(api_instance));
-    fc_solve_free_tests_order(&obj->opt_tests_order);
+    fc_solve_free_tests_order(&obj->opt_moves);
     STRUCT_CLEAR_FLAG(obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
 #ifdef FCS_WITH_ERROR_STRS
     char static_error_string[120];
 #endif
-    const int ret = fc_solve_apply_tests_order(&(obj->opt_tests_order),
-        moves_order FCS__PASS_ERR_STR(static_error_string));
+    const int ret = fc_solve_apply_tests_order(
+        &(obj->opt_moves), moves_order FCS__PASS_ERR_STR(static_error_string));
     SET_ERROR_VAR(error_string, static_error_string);
     if (!ret)
     {
