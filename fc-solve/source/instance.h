@@ -506,17 +506,9 @@ struct fc_solve_soft_thread_struct
     fcs_bool_t FCS_SOFT_THREAD_IS_FINISHED, FCS_SOFT_THREAD_INITIALIZED,
         FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN;
 
-    /*
-     * The number of vacant stacks in the current state - is read by
-     * the move functions in freecell.c .
-     * */
-    fcs_game_limit_t num_vacant_stacks;
-
-    /*
-     * The number of vacant freecells in the current state - is read
-     * from the test functions in freecell.c .
-     * */
-    fcs_game_limit_t num_vacant_freecells;
+    // The numbers of vacant stacks and freecells in the current state - is
+    // read by the move functions in freecell.c .
+    fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
 
     /*
      * The number of iterations with which to process this scan
