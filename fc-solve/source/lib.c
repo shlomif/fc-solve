@@ -711,7 +711,7 @@ static inline void fc_solve__setup_optimization_thread__helper(
         soft_thread->by_depth_moves_order.by_depth_moves[0] =
             (typeof(soft_thread->by_depth_moves_order.by_depth_moves[0])){
                 .max_depth = SSIZE_MAX,
-                .moves_order = tests_order_dup(&(instance->opt_moves)),
+                .moves_order = moves_order_dup(&(instance->opt_moves)),
             };
     }
 

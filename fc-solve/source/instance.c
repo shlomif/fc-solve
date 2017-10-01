@@ -263,7 +263,7 @@ static inline
     soft_thread->by_depth_moves_order.by_depth_moves[0] =
         (typeof(soft_thread->by_depth_moves_order.by_depth_moves[0])){
             .max_depth = SSIZE_MAX,
-            .moves_order = tests_order_dup(
+            .moves_order = moves_order_dup(
                 &(fcs_st_instance(soft_thread)->instance_moves_order)),
         };
 

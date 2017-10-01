@@ -917,7 +917,7 @@ extern void fc_solve_instance__init_hard_thread(
 extern void fc_solve_free_soft_thread_by_depth_move_array(
     fc_solve_soft_thread_t *const soft_thread);
 
-static inline fcs_moves_order tests_order_dup(fcs_moves_order *const orig)
+static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 {
     const_SLOT(num_groups, orig);
     fcs_moves_order ret = (fcs_moves_order){.num_groups = num_groups,
