@@ -177,10 +177,8 @@ typedef struct
         num_cards_not_on_parents_factor;
 
     double num_cards_out_lookup_table[14];
-    /*
-     * The BeFS weights of the different BeFS tests. Those
-     * weights determine the commulative priority of the state.
-     * */
+    // The BeFS weights of the different BeFS tests. Those
+    // weights determine the commulative priority of the state.
     fcs_default_weights_t befs_weights;
 } fc_solve_state_weighting_t;
 
