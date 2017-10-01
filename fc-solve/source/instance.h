@@ -372,12 +372,12 @@ typedef struct
 {
     ssize_t max_depth;
     fcs_moves_list_of_lists move_funcs;
-} fcs_tests_by_depth_unit_t;
+} fcs_moves_by_depth_unit_t;
 
 typedef struct
 {
     int num_units;
-    fcs_tests_by_depth_unit_t *by_depth_units;
+    fcs_moves_by_depth_unit_t *by_depth_units;
 } fcs_tests_by_depth_array_t;
 
 typedef enum {

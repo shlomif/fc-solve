@@ -1090,9 +1090,8 @@ static inline int fc_solve_soft_dfs_do_solve(
     const_SLOT(debug_iter_output_context, instance);
 #endif
 
-    fcs_tests_by_depth_unit_t *curr_by_depth_unit;
-    for (curr_by_depth_unit = by_depth_units;
-         (DEPTH() >= GET_DEPTH(curr_by_depth_unit)); ++curr_by_depth_unit)
+    fcs_moves_by_depth_unit_t *curr_by_depth_unit = by_depth_units;
+    for (; (DEPTH() >= GET_DEPTH(curr_by_depth_unit)); ++curr_by_depth_unit)
     {
     }
     RECALC_BY_DEPTH_LIMITS();
