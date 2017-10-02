@@ -705,7 +705,7 @@ kind of input does it accept?</h3>
 <p>
 The API of the solver accepts a textual representation in a certain well-formed
 format of the starting layout of the game's board (which may be a mid-play
-layout), parses it and start the processing from it. This allows Freecell
+layout), parses it, and starts the processing from it. This allows Freecell
 Solver to accept any arbitrary layout, not just the initial layouts of Microsoft
 Freecell or a different Solitaire implementation.
 </p>
@@ -714,13 +714,13 @@ Freecell or a different Solitaire implementation.
 We did not bother with graphically extracting the cards, because it is harder
 to do, and would have limited the utility and generality of the solver.
 Nevertheless, the solver can be input with a text layout based on that which
-seems to be the approach taken by <a href="https://www.youtube.com/watch?v=oGgnyysFNTQ">iPhone Freecell Bot</a> demo.
+seems to be the approach taken by the <a href="https://www.youtube.com/watch?v=oGgnyysFNTQ">iPhone Freecell Bot</a> demo.
 </p>
 
 <p>
 Note that Freecell Solver also ships with some programs that generate the
 initial deals of some popular Solitaire implementations, and some
 <a href="links.html#front_ends">implementations of Solitaire</a> provide
-integration with Freecell Solver, that provides it with automated input and
+integration with Freecell Solver, that provides it with automated input, and
 also uses its moves output to display the solution.
 </p>
