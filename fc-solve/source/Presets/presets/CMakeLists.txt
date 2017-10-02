@@ -5,6 +5,7 @@ INSTALL(
         "blue-yonder.sh"
         "children-playing-ball.sh"
         "conspiracy-theory.sh"
+        "cookie-monster.sh"
         "cool-jives.sh"
         "crooked-nose.sh"
         "enlightened-ostrich.sh"
