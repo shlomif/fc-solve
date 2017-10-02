@@ -10,7 +10,8 @@ Version 4.14.0: (02-Oct-2017)
 1. Add a new 'j' move of moving cards from freecells to empty columns and
 immediately putting cards on top.
 
-2. Add a new +-l cookie-monster+ command line preset based on it.
+2. Add a new +-l cookie-monster+ command line preset based on it which sports
+improved speed.
 
 3. Fixed a bug with a potential hang with two identically-depthed +-dto2+
 flags:
