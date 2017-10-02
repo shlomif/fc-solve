@@ -68,5 +68,3 @@ static void my_iter_handler(void *const user_instance,
     }
 #endif
 }
-
-int main(int argc, char *argv[]) { return fc_solve_main__main(argc, argv); }

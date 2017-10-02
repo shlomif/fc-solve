@@ -536,7 +536,7 @@ static inline FILE *fc_solve_calc_file_handle(
     }
 }
 
-static inline int fc_solve_main__main(const int argc, char **const argv)
+int main(const int argc, char **const argv)
 {
     display_context = INITIAL_DISPLAY_CONTEXT;
     int arg = 1;
