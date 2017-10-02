@@ -62,10 +62,10 @@ test_script:
     - SET PATH=C:\MinGW\bin;%PATH%
     - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
     - gmake package
-# cache:
-#     - C:\libtap
-#     - C:\_P5
-#     - C:\strawberry
+cache:
+    - C:\libtap
+    - C:\_P5
+    - C:\strawberry
 shallow_clone: true
 artifacts:
     - path: 'fc-solve\pkg-build\freecell-solver-*-win32.exe'
