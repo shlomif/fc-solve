@@ -244,7 +244,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
     while (total_num_finished_boards < total_num_boards_to_check)
     {
-        if (total_num_finished_boards >= next_milestone)
+        while (total_num_finished_boards >= next_milestone)
         {
             fc_solve_print_reached(next_milestone, total_num_iters);
             next_milestone += stop_at;
@@ -290,9 +290,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
 #endif
     }
-    if (total_num_finished_boards >= next_milestone)
+    while (total_num_finished_boards >= next_milestone)
     {
         fc_solve_print_reached(next_milestone, total_num_iters);
+        next_milestone += stop_at;
     }
 
     for (size_t idx = 0; idx < num_workers; ++idx)
