@@ -63,30 +63,6 @@ typedef struct
     long long num_iters, num_finished_boards;
 } response_t;
 
-static inline void worker_func(const worker_t w, void *const instance)
-{
-    /* I'm one of the slaves */
-    request_t req;
-    while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)),
-        req.board_num != -1)
-    {
-        response_t response = {
-            .num_iters = 0,
-            .num_finished_boards = req.quota_end - req.board_num + 1,
-        };
-        for (; req.board_num <= req.quota_end; ++req.board_num)
-        {
-            range_solvers__solve(instance, req.board_num, &response.num_iters);
-            freecell_solver_user_recycle(instance);
-        }
-        write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
-    }
-    /* Cleanup */
-    freecell_solver_user_free(instance);
-    close(w.child_to_parent_pipe[WRITE_FD]);
-    close(w.parent_to_child_pipe[READ_FD]);
-}
-
 static inline void write_request(const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr,
     const worker_t *const worker)
@@ -185,7 +161,28 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             const_AUTO(w, workers[idx]);
             close(w.parent_to_child_pipe[WRITE_FD]);
             close(w.child_to_parent_pipe[READ_FD]);
-            worker_func(w, instance);
+            /* I'm one of the slaves */
+            request_t req;
+            while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)),
+                req.board_num != -1)
+            {
+                response_t response = {
+                    .num_iters = 0,
+                    .num_finished_boards = req.quota_end - req.board_num + 1,
+                };
+                for (; req.board_num <= req.quota_end; ++req.board_num)
+                {
+                    range_solvers__solve(
+                        instance, req.board_num, &response.num_iters);
+                    freecell_solver_user_recycle(instance);
+                }
+                write(w.child_to_parent_pipe[WRITE_FD], &response,
+                    sizeof(response));
+            }
+            /* Cleanup */
+            freecell_solver_user_free(instance);
+            close(w.child_to_parent_pipe[WRITE_FD]);
+            close(w.parent_to_child_pipe[READ_FD]);
             return 0;
         }
 
