@@ -293,30 +293,39 @@ my $ARCH = 'n2';
 # Load the b or t suffixes.
 my @LB = ( '-l', $ARCH . 'b' );
 my @LT = ( '-l', $ARCH . 't' );
+
 sub reg_tatzer_test
 {
     my $blurb = shift;
-    return reg_test($blurb, {tatzer_args => [@_]});
+    return reg_test( $blurb, { tatzer_args => [@_] } );
 }
+
 sub reg_lt_test
 {
     my $blurb = shift;
-    return reg_tatzer_test($blurb, @LT, @_);
-}
-sub reg_prep
-{
-    my ($blurb, $base) = @_;
-    return reg_test($blurb,
-        { prepare_dist_args => { base => $base, args => []}});
+    return reg_tatzer_test( $blurb, @LT, @_ );
 }
 
-reg_prep( "prepare_dist fcc_solver", 'prepare_fcc_solver_self_contained_package.pl');
+sub reg_prep
+{
+    my ( $blurb, $base ) = @_;
+    return reg_test( $blurb,
+        { prepare_dist_args => { base => $base, args => [] } } );
+}
+
+reg_test(
+    "No int128",
+    { cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ] }
+);
+reg_prep( "prepare_dist fcc_solver",
+    'prepare_fcc_solver_self_contained_package.pl' );
 reg_prep( "prepare_dist AWS",
-    'prepare_aws_depth_dbm_fc_solver_self_contained_package.pl');
+    'prepare_aws_depth_dbm_fc_solver_self_contained_package.pl' );
 reg_prep( "prepare_dist vendu",
-    'prepare_vendu_depth_dbm_fc_solver_self_contained_package.pl');
-reg_prep( "prepare_dist pbs", 'prepare_pbs_dbm_solver_self_contained_package.pl');
-reg_lt_test( "-l n2t with --disable-patsolve", '--disable-patsolve',);
+    'prepare_vendu_depth_dbm_fc_solver_self_contained_package.pl' );
+reg_prep( "prepare_dist pbs",
+    'prepare_pbs_dbm_solver_self_contained_package.pl' );
+reg_lt_test( "-l n2t with --disable-patsolve", '--disable-patsolve', );
 reg_test(
     "build_only: maximum speed preset",
     {
@@ -334,25 +343,30 @@ reg_test(
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
-reg_tatzer_test( "Default", ());
-reg_tatzer_test( "--rcs", qw(--rcs));
+reg_tatzer_test( "Default", () );
+reg_tatzer_test( "--rcs", qw(--rcs) );
 
 reg_lt_test( "libavl2 with COMPACT_STATES",
-    qw(--states-type=COMPACT_STATES --libavl2-p=prb));
+    qw(--states-type=COMPACT_STATES --libavl2-p=prb) );
 
-reg_lt_test( "libavl2 with COMPACT_STATES and --rcs",
-    qw(--states-type=COMPACT_STATES --libavl2-p=prb --rcs),);
+reg_lt_test(
+    "libavl2 with COMPACT_STATES and --rcs",
+    qw(--states-type=COMPACT_STATES --libavl2-p=prb --rcs),
+);
 
 reg_lt_test( "libavl2 with INDIRECT_STATES", qw(--libavl2-p=prb), );
 
-reg_tatzer_test( "without-depth-field",qw(--without-depth-field));
-reg_tatzer_test( "without-depth-field and rcs",qw(--without-depth-field --rcs));
-reg_lt_test( "No FCS_SINGLE_HARD_THREAD", '--nosingle-ht');
+reg_tatzer_test( "without-depth-field", qw(--without-depth-field) );
+reg_tatzer_test( "without-depth-field and rcs",
+    qw(--without-depth-field --rcs) );
+reg_lt_test( "No FCS_SINGLE_HARD_THREAD", '--nosingle-ht' );
 
-reg_lt_test( "Break Backward Compatibility #1", '--break-back-compat-1');
+reg_lt_test( "Break Backward Compatibility #1", '--break-back-compat-1' );
 
-reg_lt_test( "Freecell-only (as well as Break Backcompat)",
-        qw(--break-back-compat-1 --fc-only),);
+reg_lt_test(
+    "Freecell-only (as well as Break Backcompat)",
+    qw(--break-back-compat-1 --fc-only),
+);
 
 foreach my $run (@tests)
 {
