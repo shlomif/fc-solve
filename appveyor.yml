@@ -63,9 +63,9 @@ test_script:
     - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
     - gmake package
 cache:
-    # - C:\libtap
-    # - C:\_P5
-    # - C:\strawberry
+    - C:\libtap
+    - C:\_P5
+    - C:\strawberry
 shallow_clone: true
 artifacts:
     - path: 'fc-solve\pkg-build\freecell-solver-*-win32.exe'
