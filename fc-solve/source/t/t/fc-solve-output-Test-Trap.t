@@ -295,25 +295,34 @@ SKIP:
         'freecell-solver-range-parallel-solve'
         )
     {
-        # TEST:$exe=4;
-        trap
+    SKIP:
         {
-            system( bin_exe_raw( [$exe] ), '1', '2', '1', '-l', 'cm', );
-        };
-        my $out = normalize_lf( scalar $trap->stdout() );
+            my $full_exe = bin_exe_raw( [$exe] );
+            if ( not -e $full_exe )
+            {
+                Test::More::skip( "[$exe] not found.", 4 );
+            }
 
-        # TEST*$exe
-        like( $out, qr#^Reached Board No\. 1 at#ms, "[$exe] board no. 1" );
+            # TEST:$exe=4;
+            trap
+            {
+                system( $full_exe, '1', '2', '1', '-l', 'cm', );
+            };
+            my $out = normalize_lf( scalar $trap->stdout() );
 
-        # TEST*$exe
-        like( $out, qr#^Reached Board No\. 2 at#ms, "[$exe] board no. 2" );
+            # TEST*$exe
+            like( $out, qr#^Reached Board No\. 1 at#ms, "[$exe] board no. 1" );
 
-        # TEST*$exe
-        unlike(
-            $out,
-            qr#Reached Board No\. 3#ms,
-            "[$exe] board no. 3 is not present"
-        );
+            # TEST*$exe
+            like( $out, qr#^Reached Board No\. 2 at#ms, "[$exe] board no. 2" );
+
+            # TEST*$exe
+            unlike(
+                $out,
+                qr#Reached Board No\. 3#ms,
+                "[$exe] board no. 3 is not present"
+            );
+        }
     }
 }
 
