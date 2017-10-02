@@ -50,21 +50,29 @@ static inline size_t fc_solve_var_base_writer_get_data(
 {
     size_t count = 0;
 
-    var_AUTO(data, w->data);
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+    var_AUTO(data_, w->data);
+#else
+#define data_ w->data
+#endif
 #define NUM_BITS 8
-    while (FCS_var_base_int__not_zero(data))
+    while (FCS_var_base_int__not_zero(data_))
     {
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
-        exported[count++] = (unsigned char)((data) & (((1 << NUM_BITS) - 1)));
-        data >>= NUM_BITS;
+        exported[count++] = (unsigned char)((data_) & (((1 << NUM_BITS) - 1)));
+        data_ >>= NUM_BITS;
 #else
-        mpz_fdiv_r_2exp(w->remainder, data, NUM_BITS);
-        mpz_fdiv_q_2exp(w->data, data, NUM_BITS);
+        mpz_fdiv_r_2exp(w->remainder, w->data, NUM_BITS);
+        mpz_fdiv_q_2exp(w->data, w->data, NUM_BITS);
         exported[count++] =
             (unsigned char)FCS_var_base_int__get_ui(w->remainder);
 #endif
     }
-    w->data = data;
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+    w->data = data_;
+#else
+#undef data_
+#endif
 
     return count;
 }
