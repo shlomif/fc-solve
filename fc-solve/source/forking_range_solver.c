@@ -238,9 +238,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 #endif
     const long long total_num_boards_to_check = end_board - next_board_num + 1;
 
-    long long next_milestone = next_board_num + stop_at;
-    next_milestone -= (next_milestone % stop_at);
-
+    long long next_milestone = stop_at;
     for (size_t idx = 0; idx < num_workers; ++idx)
     {
         write_request(
@@ -294,6 +292,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             }
         }
 #endif
+    }
+    if (total_num_finished_boards >= next_milestone)
+    {
+        fc_solve_print_reached(next_milestone, total_num_iters);
     }
 
     for (size_t idx = 0; idx < num_workers; ++idx)

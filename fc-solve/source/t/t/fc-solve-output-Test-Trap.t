@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 34;
 use File::Temp qw( tempdir );
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
@@ -285,6 +285,36 @@ SKIP:
         qr/\AThe command line parameter "-l" requires an argument/ms,
         "Command line parameter without argument displays its name",
     );
+}
+
+{
+    foreach my $exe (
+        'freecell-solver-fc-pro-range-solve',
+        'freecell-solver-fork-solve',
+        'freecell-solver-multi-thread-solve',
+        'freecell-solver-range-parallel-solve'
+        )
+    {
+        # TEST:$exe=4;
+        trap
+        {
+            system( bin_exe_raw( [$exe] ), '1', '2', '1', '-l', 'cm', );
+        };
+        my $out = normalize_lf( scalar $trap->stdout() );
+
+        # TEST*$exe
+        like( $out, qr#^Reached Board No\. 1 at#ms, "[$exe] board no. 1" );
+
+        # TEST*$exe
+        like( $out, qr#^Reached Board No\. 2 at#ms, "[$exe] board no. 2" );
+
+        # TEST*$exe
+        unlike(
+            $out,
+            qr#Reached Board No\. 3#ms,
+            "[$exe] board no. 3 is not present"
+        );
+    }
 }
 
 {

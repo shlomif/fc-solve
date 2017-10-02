@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     }
     int arg = 1;
     const long long next_board_num = atoll(argv[arg++]);
-    const long long end_board = 1 + atoll(argv[arg++]);
+    const long long end_board = atoll(argv[arg++]);
     const long long stop_at = atoll(argv[arg++]);
 
     if (stop_at <= 0)
