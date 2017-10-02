@@ -27,8 +27,8 @@ static help_screen_t help_screens[] = {
     {"configs",
         "These configurations are usually faster than the unmodified run:\n"
         "\n"
-        "    fc-solve -l foss-nessy\n"
-        "    fc-solve -l the-iglu-cabal\n"
+        "    fc-solve -l cookie-monster\n"
+        "    fc-solve -l one-big-family\n"
         "\n"
         "Or if you want an accurate verdict:\n"
         "\n"
@@ -66,8 +66,8 @@ static help_screen_t help_screens[] = {
     {"short-sol",
         "The following configurations may produce shorter solutions:\n"
         "\n"
+        "    fc-solve -l video-editing\n"
         "    fc-solve -l children-playing-ball\n"
-        "    fc-solve -l gooey-unknown-thing\n"
         "    fc-solve -l slick-rock\n"
         "\n"
         "You may also try adding the \"-opt\" and/or \"--reparent-states\" "
