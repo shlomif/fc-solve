@@ -300,7 +300,7 @@ SKIP:
             my $full_exe = bin_exe_raw( [$exe] );
             if ( not -e $full_exe )
             {
-                Test::More::skip( "[$exe] not found.", 4 );
+                Test::More::skip( "[$exe] not found.", 3 );
             }
 
             # TEST:$exe=4;
