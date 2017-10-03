@@ -20,7 +20,7 @@ extern "C" {
 #include "preset.h"
 #include "move_funcs_order.h"
 
-static inline void fc_solve_release_tests_list(
+static inline void fcs_free_moves_list(
     fc_solve_soft_thread_t *const soft_thread)
 {
     /* Free the BeFS data. */
@@ -75,7 +75,7 @@ static inline void fc_solve_free_instance_soft_thread_callback(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_st_free_pq(soft_thread);
-    fc_solve_release_tests_list(soft_thread);
+    fcs_free_moves_list(soft_thread);
     fc_solve_free_soft_thread_by_depth_move_array(soft_thread);
 #ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(pats_scan, soft_thread);
