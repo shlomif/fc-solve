@@ -125,6 +125,12 @@ __PACKAGE__->populate(
             msg =>
 qq{range-parallel-solve for board #2 using the BeFS method valgrind}
         },
+        'range_parallel_solve_l_as_3fc' => {
+            prog => "freecell-solver-range-parallel-solve",
+            argv => [qw(285 285 1 --freecells-num 3 -l as)],
+            msg =>
+qq{"range-parallel-solve --freecells-num 3 -l as" returned no errors}
+        },
         'range_parallel_solve_l_gi' => {
             prog => "freecell-solver-range-parallel-solve",
             argv => [ "1", "2", "1", "-l", "gi" ],

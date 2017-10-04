@@ -1134,11 +1134,12 @@ static inline int fc_solve_soft_dfs_do_solve(
                     MARK_AS_DEAD_END(PTR_STATE);
                 }
 
+                /* Set it now in case DEPTH() == 0 and we break */
+                the_soft_dfs_info->derived_states_list = derived_list;
                 if (unlikely(--DEPTH() < 0))
                 {
                     break;
                 }
-                the_soft_dfs_info->derived_states_list = derived_list;
                 --the_soft_dfs_info;
                 derived_list = the_soft_dfs_info->derived_states_list;
                 ASSIGN_ptr_state(the_soft_dfs_info->state);
