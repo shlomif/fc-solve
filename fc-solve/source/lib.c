@@ -371,7 +371,8 @@ static int fcs_stack_compare_for_comparison_with_context(const void *const v_s1,
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
 
 static inline fcs_state_t *rcs_states_get_state(
-    fc_solve_instance_t *const instance, fcs_collectible_state_t *const state)
+    fc_solve_instance_t *const instance,
+    const fcs_collectible_state_t *const state)
 {
     return ((state == instance->tree_new_state)
                 ? instance->tree_new_state_key
@@ -384,8 +385,9 @@ static int fc_solve_rcs_states_compare(
     fc_solve_instance_t *const instance = (fc_solve_instance_t *)context;
 
     return fc_solve_state_compare(
-        rcs_states_get_state(instance, (fcs_collectible_state_t *)void_a),
-        rcs_states_get_state(instance, (fcs_collectible_state_t *)void_b));
+        rcs_states_get_state(instance, (const fcs_collectible_state_t *)void_a),
+        rcs_states_get_state(
+            instance, (const fcs_collectible_state_t *)void_b));
 }
 
 #endif

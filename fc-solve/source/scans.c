@@ -76,7 +76,7 @@ extern int fc_solve_compare_lru_cache_keys(const void *const void_a,
 #define NEXT_CACHE_STATE(s) ((s)->lower_pri)
 fcs_state_t *fc_solve_lookup_state_key_from_val(
     fc_solve_instance_t *const instance,
-    fcs_collectible_state_t *const orig_ptr_state_val)
+    const fcs_collectible_state_t *const orig_ptr_state_val)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     PWord_t PValue;
@@ -90,7 +90,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
     struct
     {
         fcs_cache_key_info_t *new_cache_state;
-        fcs_collectible_state_t *state_val;
+        const fcs_collectible_state_t *state_val;
     } *parents_stack = SMALLOC(parents_stack, parents_stack_max_len);
 
     parents_stack[0].state_val = orig_ptr_state_val;

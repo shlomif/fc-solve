@@ -216,7 +216,7 @@ typedef struct
 #ifdef FCS_RCS_STATES
 struct fcs_cache_key_info_struct
 {
-    fcs_collectible_state_t *val_ptr;
+    const fcs_collectible_state_t *val_ptr;
     fcs_state_t key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
@@ -895,9 +895,8 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t *const, fcs_kv_state_t);
 
 #ifdef FCS_RCS_STATES
-fcs_state_t *fc_solve_lookup_state_key_from_val(
-    fc_solve_instance_t *const instance,
-    fcs_collectible_state_t *const orig_ptr_state_val);
+fcs_state_t *fc_solve_lookup_state_key_from_val(fc_solve_instance_t *instance,
+    const fcs_collectible_state_t *orig_ptr_state_val);
 
 extern int fc_solve_compare_lru_cache_keys(const void *, const void *, void *);
 
