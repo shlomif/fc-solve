@@ -7,11 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * preset.h - header file of the preset management functions for Freecell
- * Solver.
- * This header is internal to Freecell Solver.
- */
+// preset.h - header file of the preset management functions for Freecell
+// Solver. This header is internal.
 #pragma once
 
 #ifdef __cplusplus

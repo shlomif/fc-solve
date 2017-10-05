@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * preset.c - game presets management for Freecell Solver
- */
+// preset.c - game presets management
 #include "preset.h"
 #include "move_funcs_order.h"
 
