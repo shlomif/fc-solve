@@ -25,7 +25,7 @@ extern "C" {
 
 typedef struct
 {
-    unsigned long long allowed_tests;
+    unsigned long long allowed_moves;
     int preset_id;
 
     fcs_game_type_params_t game_params;

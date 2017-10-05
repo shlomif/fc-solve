@@ -196,7 +196,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                              num_valid_move_funcs < tests_order_num;
                              num_valid_move_funcs++)
                         {
-                            if (!(preset.allowed_tests &
+                            if (!(preset.allowed_moves &
                                     (1 << move_funcs_idxs
                                             [num_valid_move_funcs])))
                             {
