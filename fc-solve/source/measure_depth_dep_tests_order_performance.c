@@ -53,9 +53,7 @@ static const char *known_parameters[] = {NULL};
 static void set_tests_order(
     void *const instance, const int min_depth, const char *const moves_order)
 {
-#ifdef FCS_WITH_ERROR_STRS
-    char *error_string;
-#endif
+    FCS__DECL_ERR_PTR(error_string);
     if (freecell_solver_user_set_depth_tests_order(
             instance, min_depth, moves_order FCS__PASS_ERR_STR(&error_string)))
     {
@@ -76,9 +74,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     /* char buffer[2048]; */
     fcs_int_limit_t iters_limit = 100000;
     int max_var_depth_to_check = 100;
-#ifdef FCS_WITH_ERROR_STRS
-    char *error_string;
-#endif
+    FCS__DECL_ERR_PTR(error_string);
     const char *scan1_to = NULL, *scan2_to = NULL;
     const char *output_filename = NULL;
 

@@ -33,9 +33,7 @@ static void my_iter_handler(void *const user_instance,
 #ifndef HARD_CODED_NUM_FREECELLS
         freecell_solver_user_set_num_freecells(pruner, 2);
 #endif
-#ifdef FCS_WITH_ERROR_STRS
-        char *error_string;
-#endif
+        FCS__DECL_ERR_PTR(error_string);
         freecell_solver_user_set_depth_tests_order(
             pruner, 0, "01ABCDE" FCS__PASS_ERR_STR(&error_string));
 #ifdef FCS_WITH_ERROR_STRS

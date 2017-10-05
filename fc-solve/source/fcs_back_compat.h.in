@@ -73,8 +73,12 @@ extern "C" {
 #endif
 
 #ifdef FCS_WITH_ERROR_STRS
+#define FCS__DECL_ERR_BUF(var) char var[120];
+#define FCS__DECL_ERR_PTR(var) char *var;
 #define FCS__PASS_ERR_STR(arg) , arg
 #else
+#define FCS__DECL_ERR_BUF(var)
+#define FCS__DECL_ERR_PTR(var)
 #define FCS__PASS_ERR_STR(arg)
 #endif
 

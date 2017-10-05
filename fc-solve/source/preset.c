@@ -131,9 +131,7 @@ static inline int fcs_get_preset_id_by_name(const char *const name)
 static inline void apply_moves(fcs_moves_order *moves_order,
     const unsigned long long allowed_moves, const char *const s)
 {
-#ifdef FCS_WITH_ERROR_STRS
-    char no_use[120];
-#endif
+    FCS__DECL_ERR_BUF(no_use);
     for (int group_idx = 0; group_idx < moves_order->num_groups; ++group_idx)
     {
         const size_t *const move_funcs_idxs =
@@ -155,10 +153,7 @@ static inline void apply_moves(fcs_moves_order *moves_order,
 fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     fc_solve_instance_t *const instance, const fcs_preset_t *const preset_ptr)
 {
-#ifdef FCS_WITH_ERROR_STRS
-    char no_use[120];
-#endif
-
+    FCS__DECL_ERR_BUF(no_use);
 #define preset (*preset_ptr)
     if (preset.game_params.freecells_num > MAX_NUM_FREECELLS)
     {

@@ -331,7 +331,7 @@ int main(const int argc, char **const argv)
     case FCS_STATE_INVALID_STATE:
     {
 #ifdef FCS_WITH_ERROR_STRS
-        char error_string[80];
+        char error_string[120];
 
         freecell_solver_user_get_invalid_state_error_into_string(instance,
             error_string FC_SOLVE__PASS_T(display_context.display_10_as_t));

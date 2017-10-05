@@ -39,9 +39,7 @@ static inline void *alloc_instance_and_parse(const int argc, char **const argv,
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     my_init_instance(instance);
 #else
-#ifdef FCS_WITH_ERROR_STRS
-    char *error_string;
-#endif
+    FCS__DECL_ERR_PTR(error_string);
     switch (freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         instance, argc, (freecell_solver_str_t *)(void *)argv, (*arg_ptr),
         known_parameters, callback,
