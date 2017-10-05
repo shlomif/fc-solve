@@ -154,11 +154,8 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     instance->is_simple_simon = (preset.preset_id == FCS_PRESET_SIMPLE_SIMON);
 #endif
 
-/*
- * This code makes sure that all the tests in all the existing
- * soft threads are acceptable by the new preset.
- * */
-
+// This code makes sure that all the moves in all the existing
+// soft threads are acceptable by the new preset.
 #ifdef FCS_SINGLE_HARD_THREAD
     if (instance->next_soft_thread_id)
 #endif
@@ -167,8 +164,6 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
         {
             ST_LOOP_START()
             {
-                /* Check every test */
-
                 fcs_by_depth_moves_order *const by_depth_moves_order =
                     soft_thread->by_depth_moves_order.by_depth_moves;
 
@@ -185,13 +180,13 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                             by_depth_moves_order[depth_idx]
                                 .moves_order.groups[group_idx]
                                 .order_group_moves;
-                        const_AUTO(tests_order_num,
+                        const_AUTO(moves_order_num,
                             by_depth_moves_order[depth_idx]
                                 .moves_order.groups[group_idx]
                                 .num);
 
                         for (size_t num_valid_move_funcs = 0;
-                             num_valid_move_funcs < tests_order_num;
+                             num_valid_move_funcs < moves_order_num;
                              num_valid_move_funcs++)
                         {
                             if (!(preset.allowed_moves &
@@ -212,7 +207,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
         }
     }
 
-    /* Assign the master tests order */
+    // Assign the master moves order
     fc_solve_apply_moves_order(&(instance->instance_moves_order),
         preset.moves_order FCS__PASS_ERR_STR(no_use));
 #undef preset

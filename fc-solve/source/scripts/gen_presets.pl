@@ -106,13 +106,13 @@ sub compile_preset
                 }
                 $compiled->{'empty_stacks_fill'} = $arg;
             }
-            elsif ( $cmd =~ /^(?:to|tests_order)$/ )
+            elsif ( $cmd =~ /^(?:to|moves_order)$/ )
             {
                 if ( $arg =~ /[^0-9a-hA-G\[\(\)\]]/ )
                 {
                     die "Unrecognized character in Tests order!\n";
                 }
-                $compiled->{'tests_order'} = $arg;
+                $compiled->{'moves_order'} = $arg;
             }
             elsif ( $cmd =~ /^(?:am|allowed_moves)$/ )
             {
@@ -157,7 +157,7 @@ my $c_template_input = <<"EOF";
             [% esf %]
         ),
 
-        [% tests_order %]
+        [% moves_order %]
     }
 EOF
 
@@ -221,11 +221,11 @@ sub preset_to_string
             :                          "KINGS_ONLY"
             );
 
-        if ( !exists( $pc->{'tests_order'} ) )
+        if ( !exists( $pc->{'moves_order'} ) )
         {
             die "Tests order is undefined!\n";
         }
-        push @lines, "\"" . $pc->{'tests_order'} . "\"";
+        push @lines, "\"" . $pc->{'moves_order'} . "\"";
 
         if ( !exists( $pc->{'allowed_moves'} ) )
         {
@@ -240,7 +240,7 @@ sub preset_to_string
     }
 
     my %vars;
-    @vars{qw(preset fc s d sbb sm esf tests_order allowed_moves)} = @lines;
+    @vars{qw(preset fc s d sbb sm esf moves_order allowed_moves)} = @lines;
 
     my $ret;
     $c_template->process( \$c_template_input, \%vars, \$ret );
