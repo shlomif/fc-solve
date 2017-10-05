@@ -128,6 +128,30 @@ static inline int fcs_get_preset_id_by_name(const char *const name)
     return -1;
 }
 
+static inline void apply_moves(fcs_moves_order *moves_order,
+    const unsigned long long allowed_moves, const char *const s)
+{
+#ifdef FCS_WITH_ERROR_STRS
+    char no_use[120];
+#endif
+    for (int group_idx = 0; group_idx < moves_order->num_groups; ++group_idx)
+    {
+        const size_t *const move_funcs_idxs =
+            moves_order->groups[group_idx].order_group_moves;
+        const_AUTO(moves_order_num, moves_order->groups[group_idx].num);
+
+        for (size_t move_i = 0; move_i < moves_order_num; move_i++)
+        {
+            if (!(allowed_moves & (1 << move_funcs_idxs[move_i])))
+            {
+                fc_solve_apply_moves_order(
+                    moves_order, s FCS__PASS_ERR_STR(no_use));
+                return;
+            }
+        }
+    }
+}
+
 fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     fc_solve_instance_t *const instance, const fcs_preset_t *const preset_ptr)
 {
@@ -171,37 +195,8 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                      depth_idx < soft_thread->by_depth_moves_order.num;
                      depth_idx++)
                 {
-                    for (int group_idx = 0;
-                         group_idx <
-                         by_depth_moves_order[depth_idx].moves_order.num_groups;
-                         ++group_idx)
-                    {
-                        const size_t *const move_funcs_idxs =
-                            by_depth_moves_order[depth_idx]
-                                .moves_order.groups[group_idx]
-                                .order_group_moves;
-                        const_AUTO(moves_order_num,
-                            by_depth_moves_order[depth_idx]
-                                .moves_order.groups[group_idx]
-                                .num);
-
-                        for (size_t num_valid_move_funcs = 0;
-                             num_valid_move_funcs < moves_order_num;
-                             num_valid_move_funcs++)
-                        {
-                            if (!(preset.allowed_moves &
-                                    (1 << move_funcs_idxs
-                                            [num_valid_move_funcs])))
-                            {
-                                fc_solve_apply_moves_order(
-                                    &(by_depth_moves_order[depth_idx]
-                                            .moves_order),
-                                    preset.moves_order FCS__PASS_ERR_STR(
-                                        no_use));
-                                break;
-                            }
-                        }
-                    }
+                    apply_moves(&by_depth_moves_order[depth_idx].moves_order,
+                        preset.allowed_moves, preset.moves_order);
                 }
             }
         }
