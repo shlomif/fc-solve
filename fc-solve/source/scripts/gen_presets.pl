@@ -15,7 +15,7 @@ my $aliases             = FC_Solve::MoveFuncs::aliases();
 my %presets = (
     'bakers_game'  => [qw(i freecell sbb suit)],
     'bakers_dozen' => [
-        qw(s 13 f 0 d 1 sbb rank sm limited esf none to 0123456789 at 0123456789)
+        qw(s 13 f 0 d 1 sbb rank sm limited esf none to 0123456789 am 0123456789)
     ],
     'beleaguered_castle' => [qw(i freecell sbb rank f 0)],
     'cruel'              => [qw(i bakers_dozen s 12 sbb suit)],
@@ -25,14 +25,14 @@ my %presets = (
     'fan'      => [qw(i freecell s 18 sbb suit sm limited esf kings_only f 0)],
     'forecell' => [qw(i freecell esf kings_only)],
     'freecell' => [
-        qw(s 8 f 4 d 1 sbb ac sm limited esf any_card to [01][23456789] at 0123456789ABCDEj)
+        qw(s 8 f 4 d 1 sbb ac sm limited esf any_card to [01][23456789] am 0123456789ABCDEj)
     ],
     'good_measure'            => [qw(i bakers_dozen s 10)],
     'kings_only_bakers_game'  => [qw(i bakers_game esf kings_only)],
     'relaxed_freecell'        => [qw(i freecell sm unlimited)],
     'relaxed_seahaven_towers' => [qw(i seahaven_towers sm unlimited)],
     'seahaven_towers'         => [qw(i bakers_game esf kings_only s 10)],
-    'simple_simon' => [qw(i bakers_game s 10 f 0 to abcdefgh at abcdefghi)],
+    'simple_simon' => [qw(i bakers_game s 10 f 0 to abcdefgh am abcdefghi)],
 
     # 'yukon' => [ qw(i freecell s 7 f 0 to ABCDEFG) ],
 );
@@ -114,11 +114,11 @@ sub compile_preset
                 }
                 $compiled->{'tests_order'} = $arg;
             }
-            elsif ( $cmd =~ /^(?:at|allowed_tests)$/ )
+            elsif ( $cmd =~ /^(?:am|allowed_moves)$/ )
             {
                 if ( $arg =~ /[^0-9a-jA-G]/ )
                 {
-                    die "Unrecognized character in Allowed Tests!\n";
+                    die "Unrecognized character in Allowed moves!\n";
                 }
                 my $total = 0;
                 foreach my $char ( split //, $arg )
@@ -126,7 +126,7 @@ sub compile_preset
                     $total |=
                         ( 1 << $declared_move_funcs->{ $aliases->{$char} } );
                 }
-                $compiled->{'allowed_tests'} = sprintf( "0x%XLL", $total );
+                $compiled->{'allowed_moves'} = sprintf( "0x%XLL", $total );
             }
             else
             {
@@ -145,7 +145,7 @@ my $c_template = Template->new();
 
 my $c_template_input = <<"EOF";
     {
-        [% allowed_tests %],
+        [% allowed_moves %],
         [% preset %],
         MAKE_GAME_PARAMS(
             [% fc %],
@@ -227,11 +227,11 @@ sub preset_to_string
         }
         push @lines, "\"" . $pc->{'tests_order'} . "\"";
 
-        if ( !exists( $pc->{'allowed_tests'} ) )
+        if ( !exists( $pc->{'allowed_moves'} ) )
         {
-            die "Allowed Tests' is undefined!\n";
+            die "Allowed moves is undefined!\n";
         }
-        push @lines, $pc->{'allowed_tests'};
+        push @lines, $pc->{'allowed_moves'};
     };
 
     if ($@)
@@ -240,7 +240,7 @@ sub preset_to_string
     }
 
     my %vars;
-    @vars{qw(preset fc s d sbb sm esf tests_order allowed_tests)} = @lines;
+    @vars{qw(preset fc s d sbb sm esf tests_order allowed_moves)} = @lines;
 
     my $ret;
     $c_template->process( \$c_template_input, \%vars, \$ret );
