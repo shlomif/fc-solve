@@ -262,6 +262,7 @@ ADD_CUSTOM_COMMAND(
 SET (MOVE_C move_funcs_maps.c)
 SET (MOVE_H move_funcs_maps.h)
 SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_move_funcs.pl")
+SET (MOVE_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
 
 add_gen_c("${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
         "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}")
@@ -271,7 +272,7 @@ ADD_CUSTOM_COMMAND(
         "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
         "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}"
     COMMAND "${PERL_EXECUTABLE}" "${MOVE_GEN}"
-    DEPENDS "${MOVE_GEN}"
+    DEPENDS "${MOVE_GEN}" "${MOVE_GEN_MOD}"
 )
 
 ADD_CUSTOM_TARGET(
