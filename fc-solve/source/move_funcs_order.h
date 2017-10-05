@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * move_funcs_order.h - contains the fc_solve_apply_tests_order function.
- */
+// move_funcs_order.h - contains the fc_solve_apply_moves_order function.
 #pragma once
 
 #ifdef __cplusplus
@@ -19,12 +17,12 @@ extern "C" {
 #include "fcs_back_compat.h"
 #include "instance.h"
 
-static inline int fc_solve_string_to_test_num(const char needle)
+static inline int fc_solve_string_to_move_num(const char needle)
 {
     return fc_solve_sfs_move_funcs_aliases[(size_t)(uint8_t)needle];
 }
 
-extern int fc_solve_apply_tests_order(
+extern int fc_solve_apply_moves_order(
     fcs_moves_order *, const char *FCS__PASS_ERR_STR(char *));
 
 #ifdef __cplusplus

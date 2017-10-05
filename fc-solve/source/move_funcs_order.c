@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * move_funcs_order.c - contains the fc_solve_apply_tests_order function.
- */
+// move_funcs_order.c - contains the fc_solve_apply_moves_order function.
 #include "fcs_back_compat.h"
 #include "move_funcs_order.h"
 #include "set_weights.h"
@@ -20,7 +18,7 @@
 #define SET_ERR(s)
 #endif
 
-int fc_solve_apply_tests_order(fcs_moves_order *const moves_order,
+int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
     const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
     int i;
@@ -173,7 +171,7 @@ int fc_solve_apply_tests_order(fcs_moves_order *const moves_order,
 
         moves_order->groups[moves_order->num_groups - 1].order_group_moves
             [moves_order->groups[moves_order->num_groups - 1].num++] =
-            fc_solve_string_to_test_num(string[i]);
+            fc_solve_string_to_move_num(string[i]);
         is_start_group = FALSE;
     }
     if (i != len)

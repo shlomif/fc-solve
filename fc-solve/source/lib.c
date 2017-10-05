@@ -162,7 +162,7 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
 #ifdef FCS_WITH_ERROR_STRS
     char no_use[120];
 #endif
-    fc_solve_apply_tests_order(&(instance->instance_moves_order),
+    fc_solve_apply_moves_order(&(instance->instance_moves_order),
         "[01][23456789]" FCS__PASS_ERR_STR(no_use));
 #endif
 
@@ -2502,7 +2502,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 #ifdef FCS_WITH_ERROR_STRS
     char static_error_string[120];
 #endif
-    const int ret_code = fc_solve_apply_tests_order(
+    const int ret_code = fc_solve_apply_moves_order(
         &(soft_thread->by_depth_moves_order.by_depth_moves[depth_idx]
                 .moves_order),
         moves_order FCS__PASS_ERR_STR(static_error_string));
@@ -4234,7 +4234,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 #ifdef FCS_WITH_ERROR_STRS
     char static_error_string[120];
 #endif
-    const int ret = fc_solve_apply_tests_order(
+    const int ret = fc_solve_apply_moves_order(
         &(obj->opt_moves), moves_order FCS__PASS_ERR_STR(static_error_string));
     SET_ERROR_VAR(error_string, static_error_string);
     if (!ret)

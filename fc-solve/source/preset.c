@@ -202,7 +202,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                                 /* Check if this test corresponds to this
                                  * character */
                                 if (move_funcs_idxs[num_valid_move_funcs] ==
-                                    fc_solve_string_to_test_num(*s))
+                                    fc_solve_string_to_move_num(*s))
                                 {
                                     break;
                                 }
@@ -211,7 +211,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                              * this test is unacceptable by this preset. */
                             if (*s == '\0')
                             {
-                                fc_solve_apply_tests_order(
+                                fc_solve_apply_moves_order(
                                     &(by_depth_moves_order[depth_idx]
                                             .moves_order),
                                     preset.moves_order FCS__PASS_ERR_STR(
@@ -226,7 +226,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     }
 
     /* Assign the master tests order */
-    fc_solve_apply_tests_order(&(instance->instance_moves_order),
+    fc_solve_apply_moves_order(&(instance->instance_moves_order),
         preset.moves_order FCS__PASS_ERR_STR(no_use));
 #undef preset
     return FCS_PRESET_CODE_OK;
