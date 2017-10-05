@@ -186,6 +186,7 @@ MACRO(add_gen_c)
     LIST(APPEND _gen_c_files ${ARGV})
 ENDMACRO ()
 
+SET (MOVE_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
 SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_presets.pl")
 SET (presets_gen_output "${CMAKE_CURRENT_BINARY_DIR}/fcs_presets_generated.h")
 SET (presets_gen_args "${presets_gen}" "--mode=c" "--output" "${presets_gen_output}")
@@ -196,7 +197,7 @@ ADD_CUSTOM_COMMAND(
     OUTPUT "${presets_gen_output}"
     COMMAND "${PERL_EXECUTABLE}"
     ARGS ${presets_gen_args}
-    DEPENDS "${presets_gen}"
+    DEPENDS "${presets_gen}" "${MOVE_GEN_MOD}"
 )
 SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_rate_state_c.pl")
 SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -262,7 +263,6 @@ ADD_CUSTOM_COMMAND(
 SET (MOVE_C move_funcs_maps.c)
 SET (MOVE_H move_funcs_maps.h)
 SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_move_funcs.pl")
-SET (MOVE_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
 
 add_gen_c("${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
         "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}")

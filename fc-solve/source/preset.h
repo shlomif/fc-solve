@@ -25,12 +25,12 @@ extern "C" {
 
 typedef struct
 {
+    unsigned long long allowed_tests;
     int preset_id;
 
     fcs_game_type_params_t game_params;
 
     char moves_order[FCS_MOVE_FUNCS_NUM * 3 + 1];
-    char allowed_tests[FCS_MOVE_FUNCS_NUM * 3 + 1];
 } fcs_preset_t;
 
 extern fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(

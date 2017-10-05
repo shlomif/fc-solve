@@ -5,6 +5,12 @@ use warnings;
 
 use Getopt::Long qw/ GetOptions /;
 use Template;
+use FindBin ();
+use lib "$FindBin::Bin/../t/lib";
+use FC_Solve::MoveFuncs;
+
+my $declared_move_funcs = FC_Solve::MoveFuncs::declared_move_funcs();
+my $aliases             = FC_Solve::MoveFuncs::aliases();
 
 my %presets = (
     'bakers_game'  => [qw(i freecell sbb suit)],
@@ -114,7 +120,13 @@ sub compile_preset
                 {
                     die "Unrecognized character in Allowed Tests!\n";
                 }
-                $compiled->{'allowed_tests'} = $arg;
+                my $total = 0;
+                foreach my $char ( split //, $arg )
+                {
+                    $total |=
+                        ( 1 << $declared_move_funcs->{ $aliases->{$char} } );
+                }
+                $compiled->{'allowed_tests'} = sprintf( "0x%XLL", $total );
             }
             else
             {
@@ -133,6 +145,7 @@ my $c_template = Template->new();
 
 my $c_template_input = <<"EOF";
     {
+        [% allowed_tests %],
         [% preset %],
         MAKE_GAME_PARAMS(
             [% fc %],
@@ -144,8 +157,7 @@ my $c_template_input = <<"EOF";
             [% esf %]
         ),
 
-        [% tests_order %],
-        [% allowed_tests %]
+        [% tests_order %]
     }
 EOF
 
@@ -219,7 +231,7 @@ sub preset_to_string
         {
             die "Allowed Tests' is undefined!\n";
         }
-        push @lines, "\"" . $pc->{'allowed_tests'} . "\"";
+        push @lines, $pc->{'allowed_tests'};
     };
 
     if ($@)

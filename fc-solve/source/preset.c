@@ -196,20 +196,9 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                              num_valid_move_funcs < tests_order_num;
                              num_valid_move_funcs++)
                         {
-                            const char *s;
-                            for (s = preset.allowed_tests; *s != '\0'; s++)
-                            {
-                                /* Check if this test corresponds to this
-                                 * character */
-                                if (move_funcs_idxs[num_valid_move_funcs] ==
-                                    fc_solve_string_to_move_num(*s))
-                                {
-                                    break;
-                                }
-                            }
-                            /* If the end of the string was reached, it means
-                             * this test is unacceptable by this preset. */
-                            if (*s == '\0')
+                            if (!(preset.allowed_tests &
+                                    (1 << move_funcs_idxs
+                                            [num_valid_move_funcs])))
                             {
                                 fc_solve_apply_moves_order(
                                     &(by_depth_moves_order[depth_idx]
