@@ -35,6 +35,7 @@ sub r
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
     my $contents        = do { local $/; <$fc_solve_output>; };
     close($fc_solve_output);
+    $contents =~ s/ +$//gm;
     require Digest::SHA;
     my $hasher = Digest::SHA->new(256);
     $hasher->add($contents);
