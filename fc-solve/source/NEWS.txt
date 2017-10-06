@@ -1,8 +1,17 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2017-10-02
+:Date: 2017-10-06
 :Revision: $Id$
+
+Version 4.14.1: (06-Oct-2017)
+-----------------------------
+
+1. Fix the compilation and tests when +__int128+ is not available (e.g: on
+x86-32 systems).
+
+2. Fix a double-free error in certain conditions. Thanks to Theodore Pringle.
+See: https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1554
 
 Version 4.14.0: (02-Oct-2017)
 -----------------------------
