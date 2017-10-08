@@ -134,13 +134,13 @@ static inline void apply_moves(fcs_moves_order *moves_order,
     FCS__DECL_ERR_BUF(no_use);
     for (int group_idx = 0; group_idx < moves_order->num_groups; ++group_idx)
     {
-        const size_t *const move_funcs_idxs =
-            moves_order->groups[group_idx].order_group_moves;
+        const fcs_move_func *const move_funcs_idxs =
+            moves_order->groups[group_idx].move_funcs;
         const_AUTO(moves_order_num, moves_order->groups[group_idx].num);
 
         for (size_t move_i = 0; move_i < moves_order_num; move_i++)
         {
-            if (!(allowed_moves & (1 << move_funcs_idxs[move_i])))
+            if (!(allowed_moves & (1 << move_funcs_idxs[move_i].idx)))
             {
                 fc_solve_apply_moves_order(
                     moves_order, s FCS__PASS_ERR_STR(no_use));

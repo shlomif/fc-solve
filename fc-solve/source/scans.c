@@ -326,7 +326,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     if (!BEFS_M_VAR(soft_thread, moves_list))
     {
         size_t num = 0;
-        fc_solve_solve_for_state_move_func_t *moves_list = NULL;
+        fcs_move_func *moves_list = NULL;
 
         for (size_t group_idx = 0;
              group_idx < soft_thread->by_depth_moves_order.by_depth_moves[0]
@@ -336,7 +336,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
             add_to_move_funcs_list(&moves_list, &num,
                 soft_thread->by_depth_moves_order.by_depth_moves[0]
                     .moves_order.groups[group_idx]
-                    .order_group_moves,
+                    .move_funcs,
                 soft_thread->by_depth_moves_order.by_depth_moves[0]
                     .moves_order.groups[group_idx]
                     .num);
@@ -388,9 +388,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fc_solve_solve_process_ret_t error_code;
     fcs_derived_states_list_t derived = {.num_states = 0, .states = NULL};
 
-    const fc_solve_solve_for_state_move_func_t *const moves_list =
-        BEFS_M_VAR(soft_thread, moves_list);
-    const fc_solve_solve_for_state_move_func_t *const moves_list_end =
+    const fcs_move_func *const moves_list = BEFS_M_VAR(soft_thread, moves_list);
+    const fcs_move_func *const moves_list_end =
         BEFS_M_VAR(soft_thread, moves_list_end);
 
     DECLARE_STATE();
@@ -540,11 +539,10 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
          * done for BFS and BeFS.
         */
         derived.num_states = 0;
-        for (const fc_solve_solve_for_state_move_func_t *move_func_ptr =
-                 moves_list;
+        for (const fcs_move_func *move_func_ptr = moves_list;
              move_func_ptr < moves_list_end; move_func_ptr++)
         {
-            (*move_func_ptr)(soft_thread, pass, &derived);
+            move_func_ptr->f(soft_thread, pass, &derived);
         }
 
         if (is_a_complete_scan)

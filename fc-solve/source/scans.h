@@ -149,16 +149,15 @@ static inline const int8_t *fc_solve_calc_positions_by_rank_location(
 }
 
 static inline void add_to_move_funcs_list(
-    fc_solve_solve_for_state_move_func_t **const out_move_funcs_list,
-    size_t *const num_so_far, const size_t *const indexes,
-    const size_t count_to_add)
+    fcs_move_func **const out_move_funcs_list, size_t *const num_so_far,
+    const fcs_move_func *const indexes, const size_t count_to_add)
 {
     size_t num = *num_so_far;
-    fc_solve_solve_for_state_move_func_t *const move_funcs_list =
+    fcs_move_func *const move_funcs_list =
         SREALLOC(*out_move_funcs_list, num + count_to_add);
     for (size_t i = 0; i < count_to_add; ++i)
     {
-        move_funcs_list[num++] = fc_solve_sfs_move_funcs[indexes[i]];
+        move_funcs_list[num++].f = fc_solve_sfs_move_funcs[indexes[i].idx];
     }
 
     *out_move_funcs_list = move_funcs_list;

@@ -188,10 +188,15 @@ typedef enum {
     FCS_WEIGHTING,
 } fcs_moves_group_kind;
 
+typedef union {
+    fc_solve_solve_for_state_move_func_t f;
+    uint_fast32_t idx;
+} fcs_move_func;
+
 typedef struct
 {
-    size_t num;
-    size_t *order_group_moves;
+    fcs_move_func *move_funcs;
+    uint_fast32_t num;
     fcs_moves_group_kind shuffling_type;
     fc_solve_state_weighting_t weighting;
 } fcs_moves_group;
@@ -353,17 +358,8 @@ typedef struct
 
 typedef struct
 {
-    fc_solve_solve_for_state_move_func_t *move_funcs;
-    /* num_move_funcs should be int instead of size_t for performance.*/
-    int num_move_funcs;
-    fcs_moves_group_kind shuffling_type;
-    fc_solve_state_weighting_t weighting;
-} fcs_move_funcs_list;
-
-typedef struct
-{
     uint_fast32_t num_lists;
-    fcs_move_funcs_list *lists;
+    fcs_moves_group *lists;
 } fcs_moves_list_of_lists;
 
 typedef struct
@@ -462,7 +458,7 @@ struct fc_solve_soft_thread_struct
         struct
         {
             fcs__positions_by_rank_t befs_positions_by_rank;
-            fc_solve_solve_for_state_move_func_t *moves_list, *moves_list_end;
+            fcs_move_func *moves_list, *moves_list_end;
             struct
             {
                 struct
@@ -924,9 +920,8 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 
     for (int i = 0; i < num_groups; i++)
     {
-        ret.groups[i].order_group_moves = memdup(
-            ret.groups[i].order_group_moves,
-            sizeof(ret.groups[i].order_group_moves[0]) *
+        ret.groups[i].move_funcs = memdup(ret.groups[i].move_funcs,
+            sizeof(ret.groups[i].move_funcs[0]) *
                 ((ret.groups[i].num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
     }
 
@@ -978,7 +973,7 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     const_SLOT(num_groups, moves_order);
     for (size_t group_idx = 0; group_idx < num_groups; ++group_idx)
     {
-        free(groups[group_idx].order_group_moves);
+        free(groups[group_idx].move_funcs);
     }
     free(groups);
     moves_order->groups = NULL;

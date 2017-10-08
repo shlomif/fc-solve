@@ -35,7 +35,7 @@ static inline void fcs_free_moves_list(
     {
         if (arr->by_depth_units[unit_idx].move_funcs.lists)
         {
-            fcs_move_funcs_list *const lists =
+            fcs_moves_group *const lists =
                 arr->by_depth_units[unit_idx].move_funcs.lists;
             const_AUTO(
                 num_lists, arr->by_depth_units[unit_idx].move_funcs.num_lists);

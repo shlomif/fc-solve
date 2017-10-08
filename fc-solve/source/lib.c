@@ -290,7 +290,7 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
          *
          * */
         size_t num_move_funcs = 0;
-        size_t *move_funcs =
+        fcs_move_func *move_funcs =
             SMALLOC(move_funcs, sizeof(total_move_funcs_bitmask) * 8);
 
         for (size_t bit_idx = 0; total_move_funcs_bitmask != 0;
@@ -298,7 +298,7 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
         {
             if ((total_move_funcs_bitmask & 0x1) != 0)
             {
-                move_funcs[num_move_funcs++] = bit_idx;
+                move_funcs[num_move_funcs++].idx = bit_idx;
             }
         }
         move_funcs = SREALLOC(move_funcs,
@@ -308,7 +308,7 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
             .groups = SMALLOC(instance->opt_moves.groups, MOVES_GROW_BY),
         };
         instance->opt_moves.groups[0] = (typeof(instance->opt_moves.groups[0])){
-            .order_group_moves = move_funcs,
+            .move_funcs = move_funcs,
             .num = num_move_funcs,
             .shuffling_type = FCS_NO_SHUFFLING,
         };
@@ -1269,14 +1269,14 @@ static inline int fc_solve_soft_dfs_do_solve(
                 {
                     THE_MOVE_FUNCS_LIST
                         .lists[the_soft_dfs_info->move_func_list_idx]
-                        .move_funcs[the_soft_dfs_info->move_func_idx](
-                            soft_thread, pass, &derived_list);
+                        .move_funcs[the_soft_dfs_info->move_func_idx]
+                        .f(soft_thread, pass, &derived_list);
 
                     /* Move the counter to the next test */
                     if ((++the_soft_dfs_info->move_func_idx) ==
                         THE_MOVE_FUNCS_LIST
                             .lists[the_soft_dfs_info->move_func_list_idx]
-                            .num_move_funcs)
+                            .num)
                     {
                         the_soft_dfs_info->move_func_list_idx++;
                         the_soft_dfs_info->move_func_idx = 0;
@@ -1497,9 +1497,9 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
             for (size_t group_idx = 0; group_idx < tests_order_num; ++group_idx)
             {
                 size_t num = 0;
-                fc_solve_solve_for_state_move_func_t *tests_list = NULL;
+                fcs_move_func *tests_list = NULL;
                 add_to_move_funcs_list(&tests_list, &num,
-                    tests_order_groups[group_idx].order_group_moves,
+                    tests_order_groups[group_idx].move_funcs,
                     tests_order_groups[group_idx].num);
                 /* TODO : convert to C99 struct initializers. */
                 const_AUTO(tests_list_struct_ptr,
@@ -1512,7 +1512,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
                             : FCS_NO_SHUFFLING);
                 *tests_list_struct_ptr = (typeof(*tests_list_struct_ptr)){
                     .move_funcs = tests_list,
-                    .num_move_funcs = num,
+                    .num = num,
                     .shuffling_type = shuffling_type,
                 };
 
