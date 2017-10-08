@@ -132,7 +132,7 @@ static inline void apply_moves(fcs_moves_order *moves_order,
     const unsigned long long allowed_moves, const char *const s)
 {
     FCS__DECL_ERR_BUF(no_use);
-    for (int group_idx = 0; group_idx < moves_order->num_groups; ++group_idx)
+    for (int group_idx = 0; group_idx < moves_order->num; ++group_idx)
     {
         const fcs_move_func *const move_funcs_idxs =
             moves_order->groups[group_idx].move_funcs;

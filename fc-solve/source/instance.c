@@ -101,8 +101,7 @@ static inline void accumulate_tests_by_ptr(
     size_t *const moves_order, fcs_moves_order *const st_tests_order)
 {
     const fcs_moves_group *group_ptr = st_tests_order->groups;
-    const fcs_moves_group *const groups_end =
-        group_ptr + st_tests_order->num_groups;
+    const fcs_moves_group *const groups_end = group_ptr + st_tests_order->num;
     for (; group_ptr < groups_end; group_ptr++)
     {
         const fcs_move_func *test_ptr = group_ptr->move_funcs;

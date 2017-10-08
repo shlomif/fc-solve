@@ -330,7 +330,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 
         for (size_t group_idx = 0;
              group_idx < soft_thread->by_depth_moves_order.by_depth_moves[0]
-                             .moves_order.num_groups;
+                             .moves_order.num;
              ++group_idx)
         {
             add_to_move_funcs_list(&moves_list, &num,

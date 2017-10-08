@@ -203,7 +203,7 @@ typedef struct
 
 typedef struct
 {
-    size_t num_groups;
+    uint_fast32_t num;
     fcs_moves_group *groups;
 } fcs_moves_order;
 
@@ -358,14 +358,8 @@ typedef struct
 
 typedef struct
 {
-    uint_fast32_t num_lists;
-    fcs_moves_group *lists;
-} fcs_moves_list_of_lists;
-
-typedef struct
-{
     ssize_t max_depth;
-    fcs_moves_list_of_lists move_funcs;
+    fcs_moves_order move_funcs;
 } fcs_moves_by_depth_unit_t;
 
 typedef struct
@@ -912,13 +906,13 @@ extern void fc_solve_free_soft_thread_by_depth_move_array(
 
 static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 {
-    const_SLOT(num_groups, orig);
-    fcs_moves_order ret = (fcs_moves_order){.num_groups = num_groups,
+    const_SLOT(num, orig);
+    fcs_moves_order ret = (fcs_moves_order){.num = num,
         .groups = memdup(orig->groups,
             sizeof(orig->groups[0]) *
-                ((num_groups & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
+                ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
 
-    for (int i = 0; i < num_groups; i++)
+    for (int i = 0; i < num; i++)
     {
         ret.groups[i].move_funcs = memdup(ret.groups[i].move_funcs,
             sizeof(ret.groups[i].move_funcs[0]) *
@@ -970,14 +964,14 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
 static inline void moves_order__free(fcs_moves_order *moves_order)
 {
     const_SLOT(groups, moves_order);
-    const_SLOT(num_groups, moves_order);
-    for (size_t group_idx = 0; group_idx < num_groups; ++group_idx)
+    const_SLOT(num, moves_order);
+    for (size_t group_idx = 0; group_idx < num; ++group_idx)
     {
         free(groups[group_idx].move_funcs);
     }
     free(groups);
     moves_order->groups = NULL;
-    moves_order->num_groups = 0;
+    moves_order->num = 0;
 }
 
 /***********************************************************/
