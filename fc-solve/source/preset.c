@@ -150,7 +150,7 @@ static inline int fcs_get_preset_id_by_name(const char *const name)
     return -1;
 }
 
-static inline fcs_bool_t apply_moves(
+static inline fcs_bool_t should_apply(
     fcs_moves_group *moves_order, const unsigned long long allowed_moves)
 {
     if (moves_order->shuffling_type == FCS_SINGLE)
@@ -161,7 +161,7 @@ static inline fcs_bool_t apply_moves(
     const_SLOT(num, moves_order);
     for (uint_fast32_t i = 0; i < num; i++)
     {
-        if (apply_moves(&(moves_order->m.move_funcs[i]), allowed_moves))
+        if (should_apply(&(moves_order->m.move_funcs[i]), allowed_moves))
         {
             return TRUE;
         }
@@ -211,7 +211,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                 {
                     var_AUTO(moves_order,
                         &by_depth_moves_order[depth_idx].moves_order);
-                    if (apply_moves(moves_order, preset.allowed_moves))
+                    if (should_apply(moves_order, preset.allowed_moves))
                     {
                         fc_solve_apply_moves_order(moves_order,
                             preset.moves_order FCS__PASS_ERR_STR(no_use));
