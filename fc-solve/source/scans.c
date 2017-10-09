@@ -333,13 +333,12 @@ void fc_solve_soft_thread_init_befs_or_bfs(
                              .moves_order.num;
              ++group_idx)
         {
+            const_AUTO(g,
+                &soft_thread->by_depth_moves_order.by_depth_moves[0]
+                     .moves_order.m.move_funcs[group_idx]);
             add_to_move_funcs_list(&moves_list, &num,
-                soft_thread->by_depth_moves_order.by_depth_moves[0]
-                    .moves_order.m.move_funcs[group_idx]
-                    .m.move_funcs,
-                soft_thread->by_depth_moves_order.by_depth_moves[0]
-                    .moves_order.m.move_funcs[group_idx]
-                    .num);
+                ((g->shuffling_type == FCS_SINGLE) ? g : g->m.move_funcs),
+                g->num);
         }
         BEFS_M_VAR(soft_thread, moves_list) = moves_list;
         BEFS_M_VAR(soft_thread, moves_list_end) = moves_list + num;
