@@ -956,17 +956,17 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
 
 static inline void moves_order__free(fcs_moves_group *moves_order)
 {
-    const_SLOT(num, moves_order);
     if (moves_order->shuffling_type != FCS_SINGLE)
     {
+        const_SLOT(num, moves_order);
         for (uint_fast32_t i = 0; i < num; i++)
         {
             moves_order__free(&(moves_order->m.move_funcs[i]));
         }
         free(moves_order->m.move_funcs);
         moves_order->m.move_funcs = NULL;
+        moves_order->num = 0;
     }
-    moves_order->num = 0;
 }
 
     /***********************************************************/
