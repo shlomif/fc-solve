@@ -188,9 +188,7 @@ int fc_solve_apply_moves_order(fcs_moves_group *const moves_order,
 
     if (!moves_order->m.move_funcs[moves_order->num - 1].num)
     {
-        moves_order->num--;
-        free(moves_order->m.move_funcs[moves_order->num].m.move_funcs);
-        moves_order->m.move_funcs[moves_order->num].m.move_funcs = NULL;
+        moves_order__free(&moves_order->m.move_funcs[--moves_order->num]);
     }
 
 #ifdef FCS_WITH_ERROR_STRS

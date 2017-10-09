@@ -964,6 +964,7 @@ static inline void moves_order__free(fcs_moves_group *moves_order)
             moves_order__free(&(moves_order->m.move_funcs[i]));
         }
         free(moves_order->m.move_funcs);
+        moves_order->m.move_funcs = NULL;
     }
     moves_order->num = 0;
 }
