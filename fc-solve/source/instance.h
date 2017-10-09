@@ -183,19 +183,19 @@ typedef struct
 } fc_solve_state_weighting_t;
 
 typedef enum {
+    FCS_SINGLE,
     FCS_NO_SHUFFLING,
     FCS_RAND,
     FCS_WEIGHTING,
 } fcs_moves_group_kind;
 
-typedef union {
-    fc_solve_solve_for_state_move_func_t f;
-    uint_fast32_t idx;
-} fcs_move_func;
-
-typedef struct
+typedef struct fcs_moves_group_struct
 {
-    fcs_move_func *move_funcs;
+    union {
+        fc_solve_solve_for_state_move_func_t f;
+        uint_fast32_t idx;
+        struct fcs_moves_group_struct *move_funcs;
+    } m;
     uint_fast32_t num;
     fcs_moves_group_kind shuffling_type;
     fc_solve_state_weighting_t weighting;
@@ -203,14 +203,8 @@ typedef struct
 
 typedef struct
 {
-    uint_fast32_t num;
-    fcs_moves_group *groups;
-} fcs_moves_order;
-
-typedef struct
-{
     ssize_t max_depth;
-    fcs_moves_order moves_order;
+    fcs_moves_group moves_order;
 } fcs_by_depth_moves_order;
 
 #define STRUCT_CLEAR_FLAG(instance, flag) (instance)->flag = FALSE
@@ -359,7 +353,7 @@ typedef struct
 typedef struct
 {
     ssize_t max_depth;
-    fcs_moves_order move_funcs;
+    fcs_moves_group move_funcs;
 } fcs_moves_by_depth_unit_t;
 
 typedef struct
@@ -452,7 +446,7 @@ struct fc_solve_soft_thread_struct
         struct
         {
             fcs__positions_by_rank_t befs_positions_by_rank;
-            fcs_move_func *moves_list, *moves_list_end;
+            fcs_moves_group *moves_list, *moves_list_end;
             struct
             {
                 struct
@@ -683,7 +677,7 @@ struct fc_solve_instance_struct
 
     // The master moves' order. It is used to initialize all the new
     // Soft-Threads.
-    fcs_moves_order instance_moves_order;
+    fcs_moves_group instance_moves_order;
 
     /*
      * A counter that determines how many of the hard threads that belong
@@ -694,7 +688,7 @@ struct fc_solve_instance_struct
 
 #ifdef FCS_WITH_MOVES
     // The moves for the optimization scan, as specified by the user.
-    fcs_moves_order opt_moves;
+    fcs_moves_group opt_moves;
 #endif
 
 #ifdef FCS_RCS_STATES
@@ -904,21 +898,20 @@ extern void fc_solve_instance__init_hard_thread(
 extern void fc_solve_free_soft_thread_by_depth_move_array(
     fc_solve_soft_thread_t *const soft_thread);
 
-static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
+static inline fcs_moves_group moves_order_dup(fcs_moves_group *const orig)
 {
     const_SLOT(num, orig);
-    fcs_moves_order ret = (fcs_moves_order){.num = num,
-        .groups = memdup(orig->groups,
-            sizeof(orig->groups[0]) *
-                ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
-
-    for (int i = 0; i < num; i++)
+    fcs_moves_group ret = *orig;
+    if (ret.shuffling_type != FCS_SINGLE)
     {
-        ret.groups[i].move_funcs = memdup(ret.groups[i].move_funcs,
-            sizeof(ret.groups[i].move_funcs[0]) *
-                ((ret.groups[i].num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
+        fcs_moves_group *groups =
+            SMALLOC(groups, ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
+        for (uint_fast32_t i = 0; i < num; i++)
+        {
+            groups[i] = moves_order_dup(&(orig->m.move_funcs[i]));
+        }
+        ret.m.move_funcs = groups;
     }
-
     return ret;
 }
 
@@ -961,16 +954,17 @@ extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     whatever memory was allocated by alloc_instance().
   */
 
-static inline void moves_order__free(fcs_moves_order *moves_order)
+static inline void moves_order__free(fcs_moves_group *moves_order)
 {
-    const_SLOT(groups, moves_order);
     const_SLOT(num, moves_order);
-    for (size_t group_idx = 0; group_idx < num; ++group_idx)
+    if (moves_order->shuffling_type != FCS_SINGLE)
     {
-        free(groups[group_idx].move_funcs);
+        for (uint_fast32_t i = 0; i < num; i++)
+        {
+            moves_order__free(&(moves_order->m.move_funcs[i]));
+        }
+        free(moves_order->m.move_funcs);
     }
-    free(groups);
-    moves_order->groups = NULL;
     moves_order->num = 0;
 }
 

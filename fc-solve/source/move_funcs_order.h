@@ -23,7 +23,7 @@ static inline int fc_solve_string_to_move_num(const char needle)
 }
 
 extern int fc_solve_apply_moves_order(
-    fcs_moves_order *, const char *FCS__PASS_ERR_STR(char *));
+    fcs_moves_group *, const char *FCS__PASS_ERR_STR(char *));
 
 #ifdef __cplusplus
 }

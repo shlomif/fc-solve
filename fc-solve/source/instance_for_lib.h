@@ -33,19 +33,7 @@ static inline void fcs_free_moves_list(
     const_SLOT(num_units, arr);
     for (size_t unit_idx = 0; unit_idx < num_units; unit_idx++)
     {
-        if (arr->by_depth_units[unit_idx].move_funcs.groups)
-        {
-            fcs_moves_group *const groups =
-                arr->by_depth_units[unit_idx].move_funcs.groups;
-            const_AUTO(num, arr->by_depth_units[unit_idx].move_funcs.num);
-
-            for (typeof(arr->by_depth_units[unit_idx].move_funcs.num) i = 0;
-                 i < num; i++)
-            {
-                free(groups[i].move_funcs);
-            }
-            free(groups);
-        }
+        moves_order__free(&(arr->by_depth_units[unit_idx].move_funcs));
     }
     free(arr->by_depth_units);
     arr->by_depth_units = NULL;

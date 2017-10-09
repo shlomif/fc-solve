@@ -104,14 +104,16 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
         .instance_moves_order =
             {
                 .num = 0,
-                .groups = NULL,
+                .shuffling_type = FCS_NO_SHUFFLING,
+                .m.move_funcs = NULL,
             },
         .list_of_vacant_states = NULL,
 #ifdef FCS_WITH_MOVES
         .opt_moves =
             {
                 .num = 0,
-                .groups = NULL,
+                .shuffling_type = FCS_NO_SHUFFLING,
+                .m.move_funcs = NULL,
             },
 #endif
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -284,15 +286,10 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
 #ifdef FCS_WITH_MOVES
     if (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
-        /*
-         *
-         * What this code does is convert the bit map of
-         * total_move_funcs_bitmask
-         * to a valid tests order.
-         *
-         * */
+        // What this code does is convert the bit map of
+        // total_move_funcs_bitmask to a valid tests order.
         size_t num_move_funcs = 0;
-        fcs_move_func *move_funcs =
+        fcs_moves_group *move_funcs =
             SMALLOC(move_funcs, sizeof(total_move_funcs_bitmask) * 8);
 
         for (size_t bit_idx = 0; total_move_funcs_bitmask != 0;
@@ -300,20 +297,24 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
         {
             if ((total_move_funcs_bitmask & 0x1) != 0)
             {
-                move_funcs[num_move_funcs++].idx = bit_idx;
+                move_funcs[num_move_funcs++] = (fcs_moves_group){
+                    .shuffling_type = FCS_SINGLE, .m.idx = bit_idx};
             }
         }
         move_funcs = SREALLOC(move_funcs,
             ((num_move_funcs & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
         instance->opt_moves = (typeof(instance->opt_moves)){
             .num = 1,
-            .groups = SMALLOC(instance->opt_moves.groups, MOVES_GROW_BY),
-        };
-        instance->opt_moves.groups[0] = (typeof(instance->opt_moves.groups[0])){
-            .move_funcs = move_funcs,
-            .num = num_move_funcs,
             .shuffling_type = FCS_NO_SHUFFLING,
+            .m.move_funcs =
+                SMALLOC(instance->opt_moves.m.move_funcs, MOVES_GROW_BY),
         };
+        instance->opt_moves.m.move_funcs[0] =
+            (typeof(instance->opt_moves.m.move_funcs[0])){
+                .m.move_funcs = move_funcs,
+                .num = num_move_funcs,
+                .shuffling_type = FCS_NO_SHUFFLING,
+            };
         STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
 #endif
@@ -1038,7 +1039,7 @@ static inline int fc_solve_soft_dfs_do_solve(
     const fcs_bool_t is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const_AUTO(soft_thread_id, soft_thread->id);
-    fcs_moves_order the_moves_list;
+    fcs_moves_group the_moves_list;
     fcs_moves_group_kind local_shuffling_type = FCS_NO_SHUFFLING;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
@@ -1262,27 +1263,27 @@ static inline int fc_solve_soft_dfs_do_solve(
             TRACE0("After iter_handler");
             const_AUTO(orig_idx, the_soft_dfs_info->move_func_list_idx);
             const fc_solve_state_weighting_t *const weighting =
-                &(THE_MOVE_FUNCS_LIST.groups[orig_idx].weighting);
+                &(THE_MOVE_FUNCS_LIST.m.move_funcs[orig_idx].weighting);
 
             if (the_soft_dfs_info->move_func_list_idx < THE_MOVE_FUNCS_LIST.num)
             {
                 /* Always do the first test */
                 local_shuffling_type =
-                    THE_MOVE_FUNCS_LIST
-                        .groups[the_soft_dfs_info->move_func_list_idx]
+                    THE_MOVE_FUNCS_LIST.m
+                        .move_funcs[the_soft_dfs_info->move_func_list_idx]
                         .shuffling_type;
 
                 do
                 {
-                    THE_MOVE_FUNCS_LIST
-                        .groups[the_soft_dfs_info->move_func_list_idx]
-                        .move_funcs[the_soft_dfs_info->move_func_idx]
-                        .f(soft_thread, pass, &derived_list);
+                    THE_MOVE_FUNCS_LIST.m
+                        .move_funcs[the_soft_dfs_info->move_func_list_idx]
+                        .m.move_funcs[the_soft_dfs_info->move_func_idx]
+                        .m.f(soft_thread, pass, &derived_list);
 
                     /* Move the counter to the next test */
                     if ((++the_soft_dfs_info->move_func_idx) ==
-                        THE_MOVE_FUNCS_LIST
-                            .groups[the_soft_dfs_info->move_func_list_idx]
+                        THE_MOVE_FUNCS_LIST.m
+                            .move_funcs[the_soft_dfs_info->move_func_list_idx]
                             .num)
                     {
                         the_soft_dfs_info->move_func_list_idx++;
@@ -1489,7 +1490,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
             unit->max_depth = by_depth_moves_order[depth_idx].max_depth;
 
             fcs_moves_group *const tests_order_groups =
-                by_depth_moves_order[depth_idx].moves_order.groups;
+                by_depth_moves_order[depth_idx].moves_order.m.move_funcs;
 
             const_AUTO(tests_order_num,
                 by_depth_moves_order[depth_idx].moves_order.num);
@@ -1498,26 +1499,29 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
 
             *moves_list_of_lists = (typeof(*moves_list_of_lists)){
                 .num = 0,
-                .groups = SMALLOC(moves_list_of_lists->groups, tests_order_num),
+                .shuffling_type = FCS_NO_SHUFFLING,
+                .m.move_funcs =
+                    SMALLOC(moves_list_of_lists->m.move_funcs, tests_order_num),
             };
 
             for (size_t group_idx = 0; group_idx < tests_order_num; ++group_idx)
             {
                 size_t num = 0;
-                fcs_move_func *tests_list = NULL;
+                fcs_moves_group *tests_list = NULL;
                 add_to_move_funcs_list(&tests_list, &num,
-                    tests_order_groups[group_idx].move_funcs,
+                    tests_order_groups[group_idx].m.move_funcs,
                     tests_order_groups[group_idx].num);
                 /* TODO : convert to C99 struct initializers. */
                 const_AUTO(tests_list_struct_ptr,
-                    &(moves_list_of_lists->groups[moves_list_of_lists->num++]));
+                    &(moves_list_of_lists->m
+                            .move_funcs[moves_list_of_lists->num++]));
 
                 const fcs_moves_group_kind shuffling_type =
                     (master_to_randomize
                             ? tests_order_groups[group_idx].shuffling_type
                             : FCS_NO_SHUFFLING);
                 *tests_list_struct_ptr = (typeof(*tests_list_struct_ptr)){
-                    .move_funcs = tests_list,
+                    .m.move_funcs = tests_list,
                     .num = num,
                     .shuffling_type = shuffling_type,
                 };
@@ -1532,8 +1536,8 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
                 }
             }
 
-            moves_list_of_lists->groups =
-                SREALLOC(moves_list_of_lists->groups, moves_list_of_lists->num);
+            moves_list_of_lists->m.move_funcs = SREALLOC(
+                moves_list_of_lists->m.move_funcs, moves_list_of_lists->num);
         }
     }
 }
@@ -2495,9 +2499,8 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
                 ++soft_thread->by_depth_moves_order.num);
 
         soft_thread->by_depth_moves_order.by_depth_moves[depth_idx]
-            .moves_order.num = 0;
-        soft_thread->by_depth_moves_order.by_depth_moves[depth_idx]
-            .moves_order.groups = NULL;
+            .moves_order = (fcs_moves_group){
+            .num = 0, .m.move_funcs = NULL, .shuffling_type = FCS_NO_SHUFFLING};
     }
 
     if (depth_idx > 0)

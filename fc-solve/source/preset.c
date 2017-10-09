@@ -150,26 +150,23 @@ static inline int fcs_get_preset_id_by_name(const char *const name)
     return -1;
 }
 
-static inline void apply_moves(fcs_moves_order *moves_order,
-    const unsigned long long allowed_moves, const char *const s)
+static inline fcs_bool_t apply_moves(
+    fcs_moves_group *moves_order, const unsigned long long allowed_moves)
 {
-    FCS__DECL_ERR_BUF(no_use);
-    for (int group_idx = 0; group_idx < moves_order->num; ++group_idx)
+    if (moves_order->shuffling_type == FCS_SINGLE)
     {
-        const fcs_move_func *const move_funcs_idxs =
-            moves_order->groups[group_idx].move_funcs;
-        const_AUTO(moves_order_num, moves_order->groups[group_idx].num);
+        return (!(allowed_moves & (1 << moves_order->m.idx)));
+    }
 
-        for (size_t move_i = 0; move_i < moves_order_num; move_i++)
+    const_SLOT(num, moves_order);
+    for (uint_fast32_t i = 0; i < num; i++)
+    {
+        if (apply_moves(&(moves_order->m.move_funcs[i]), allowed_moves))
         {
-            if (!(allowed_moves & (1 << move_funcs_idxs[move_i].idx)))
-            {
-                fc_solve_apply_moves_order(
-                    moves_order, s FCS__PASS_ERR_STR(no_use));
-                return;
-            }
+            return TRUE;
         }
     }
+    return FALSE;
 }
 
 fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
@@ -212,8 +209,13 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                      depth_idx < soft_thread->by_depth_moves_order.num;
                      depth_idx++)
                 {
-                    apply_moves(&by_depth_moves_order[depth_idx].moves_order,
-                        preset.allowed_moves, preset.moves_order);
+                    var_AUTO(moves_order,
+                        &by_depth_moves_order[depth_idx].moves_order);
+                    if (apply_moves(moves_order, preset.allowed_moves))
+                    {
+                        fc_solve_apply_moves_order(moves_order,
+                            preset.moves_order FCS__PASS_ERR_STR(no_use));
+                    }
                 }
             }
         }

@@ -18,16 +18,20 @@
 #define SET_ERR(s)
 #endif
 
-int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
+int fc_solve_apply_moves_order(fcs_moves_group *const moves_order,
     const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
     int i;
     moves_order__free(moves_order);
-    moves_order->groups = SMALLOC(moves_order->groups, MOVES_GROW_BY);
-    moves_order->groups[moves_order->num].num = 0;
-    moves_order->groups[moves_order->num].move_funcs = SMALLOC(
-        moves_order->groups[moves_order->num].move_funcs, MOVES_GROW_BY);
-    moves_order->groups[moves_order->num].shuffling_type = FCS_NO_SHUFFLING;
+    moves_order->shuffling_type = FCS_NO_SHUFFLING;
+    moves_order->m.move_funcs =
+        SMALLOC(moves_order->m.move_funcs, MOVES_GROW_BY);
+    moves_order->m.move_funcs[moves_order->num].num = 0;
+    moves_order->m.move_funcs[moves_order->num].m.move_funcs =
+        SMALLOC(moves_order->m.move_funcs[moves_order->num].m.move_funcs,
+            MOVES_GROW_BY);
+    moves_order->m.move_funcs[moves_order->num].shuffling_type =
+        FCS_NO_SHUFFLING;
 
     moves_order->num++;
 
@@ -46,22 +50,25 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
             }
             is_group = TRUE;
             is_start_group = TRUE;
-            if (moves_order->groups[moves_order->num - 1].num)
+            if (moves_order->m.move_funcs[moves_order->num - 1].num)
             {
                 if (!(moves_order->num & (MOVES_GROW_BY - 1)))
                 {
-                    moves_order->groups = SREALLOC(
-                        moves_order->groups, moves_order->num + MOVES_GROW_BY);
+                    moves_order->m.move_funcs =
+                        SREALLOC(moves_order->m.move_funcs,
+                            moves_order->num + MOVES_GROW_BY);
                 }
 
-                moves_order->groups[moves_order->num].num = 0;
-                moves_order->groups[moves_order->num].move_funcs =
-                    SMALLOC(moves_order->groups[moves_order->num].move_funcs,
-                        MOVES_GROW_BY);
+                moves_order->m.move_funcs[moves_order->num].num = 0;
+                moves_order->m.move_funcs[moves_order->num]
+                    .m.move_funcs = SMALLOC(
+                    moves_order->m.move_funcs[moves_order->num].m.move_funcs,
+                    MOVES_GROW_BY);
 
                 moves_order->num++;
             }
-            moves_order->groups[moves_order->num - 1].shuffling_type = FCS_RAND;
+            moves_order->m.move_funcs[moves_order->num - 1].shuffling_type =
+                FCS_RAND;
             continue;
         }
 
@@ -90,13 +97,13 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
                 }
                 if (string_starts_with(string + i, "rand", open_paren))
                 {
-                    moves_order->groups[moves_order->num - 1].shuffling_type =
-                        FCS_RAND;
+                    moves_order->m.move_funcs[moves_order->num - 1]
+                        .shuffling_type = FCS_RAND;
                 }
                 else if (string_starts_with(string + i, "asw", open_paren))
                 {
-                    moves_order->groups[moves_order->num - 1].shuffling_type =
-                        FCS_WEIGHTING;
+                    moves_order->m.move_funcs[moves_order->num - 1]
+                        .shuffling_type = FCS_WEIGHTING;
                 }
                 else
                 {
@@ -110,11 +117,11 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
                     SET_ERR("= ordering function not terminated with a ')'");
                     return 7;
                 }
-                if (moves_order->groups[moves_order->num - 1].shuffling_type ==
-                    FCS_WEIGHTING)
+                if (moves_order->m.move_funcs[moves_order->num - 1]
+                        .shuffling_type == FCS_WEIGHTING)
                 {
                     fc_solve_set_weights(aft_open_paren, close_paren,
-                        moves_order->groups[moves_order->num - 1]
+                        moves_order->m.move_funcs[moves_order->num - 1]
                             .weighting.befs_weights.weights);
                 }
                 else
@@ -135,36 +142,42 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
             is_group = FALSE;
             is_start_group = FALSE;
 
-            if (moves_order->groups[moves_order->num - 1].num)
+            if (moves_order->m.move_funcs[moves_order->num - 1].num)
             {
                 if (!(moves_order->num & (MOVES_GROW_BY - 1)))
                 {
-                    moves_order->groups = SREALLOC(
-                        moves_order->groups, moves_order->num + MOVES_GROW_BY);
+                    moves_order->m.move_funcs =
+                        SREALLOC(moves_order->m.move_funcs,
+                            moves_order->num + MOVES_GROW_BY);
                 }
-                moves_order->groups[moves_order->num].num = 0;
-                moves_order->groups[moves_order->num].move_funcs =
-                    SMALLOC(moves_order->groups[moves_order->num].move_funcs,
-                        MOVES_GROW_BY);
+                moves_order->m.move_funcs[moves_order->num].num = 0;
+                moves_order->m.move_funcs[moves_order->num]
+                    .m.move_funcs = SMALLOC(
+                    moves_order->m.move_funcs[moves_order->num].m.move_funcs,
+                    MOVES_GROW_BY);
 
                 moves_order->num++;
             }
-            moves_order->groups[moves_order->num - 1].shuffling_type =
+            moves_order->m.move_funcs[moves_order->num - 1].shuffling_type =
                 FCS_NO_SHUFFLING;
             continue;
         }
 
-        if (!(moves_order->groups[moves_order->num - 1].num &
+        if (!(moves_order->m.move_funcs[moves_order->num - 1].num &
                 (MOVES_GROW_BY - 1)))
         {
-            moves_order->groups[moves_order->num - 1].move_funcs = SREALLOC(
-                moves_order->groups[moves_order->num - 1].move_funcs,
-                moves_order->groups[moves_order->num - 1].num + MOVES_GROW_BY);
+            moves_order->m.move_funcs[moves_order->num - 1]
+                .m.move_funcs = SREALLOC(
+                moves_order->m.move_funcs[moves_order->num - 1].m.move_funcs,
+                moves_order->m.move_funcs[moves_order->num - 1].num +
+                    MOVES_GROW_BY);
         }
 
-        moves_order->groups[moves_order->num - 1]
-            .move_funcs[moves_order->groups[moves_order->num - 1].num++]
-            .idx = fc_solve_string_to_move_num(string[i]);
+        moves_order->m.move_funcs[moves_order->num - 1]
+            .m
+            .move_funcs[moves_order->m.move_funcs[moves_order->num - 1].num++] =
+            (fcs_moves_group){.m.idx = fc_solve_string_to_move_num(string[i]),
+                .shuffling_type = FCS_SINGLE};
         is_start_group = FALSE;
     }
     if (i != len)
@@ -173,11 +186,11 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
         return 4;
     }
 
-    if (!moves_order->groups[moves_order->num - 1].num)
+    if (!moves_order->m.move_funcs[moves_order->num - 1].num)
     {
         moves_order->num--;
-        free(moves_order->groups[moves_order->num].move_funcs);
-        moves_order->groups[moves_order->num].move_funcs = NULL;
+        free(moves_order->m.move_funcs[moves_order->num].m.move_funcs);
+        moves_order->m.move_funcs[moves_order->num].m.move_funcs = NULL;
     }
 
 #ifdef FCS_WITH_ERROR_STRS

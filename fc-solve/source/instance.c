@@ -98,17 +98,19 @@ extern void fc_solve_free_soft_thread_by_depth_move_array(
 }
 
 static inline void accumulate_tests_by_ptr(
-    size_t *const moves_order, fcs_moves_order *const st_tests_order)
+    size_t *const moves_order, fcs_moves_group *const st_tests_order)
 {
-    const fcs_moves_group *group_ptr = st_tests_order->groups;
-    const fcs_moves_group *const groups_end = group_ptr + st_tests_order->num;
-    for (; group_ptr < groups_end; group_ptr++)
+    if (st_tests_order->shuffling_type == FCS_SINGLE)
     {
-        const fcs_move_func *test_ptr = group_ptr->move_funcs;
-        const fcs_move_func *const tests_end = test_ptr + group_ptr->num;
-        for (; test_ptr < tests_end; test_ptr++)
+        *moves_order |= (1 << (st_tests_order->m.idx));
+    }
+    else
+    {
+        const_SLOT(num, st_tests_order);
+        for (uint_fast32_t i = 0; i < num; i++)
         {
-            *moves_order |= (1 << (test_ptr->idx));
+            accumulate_tests_by_ptr(
+                moves_order, &(st_tests_order->m.move_funcs[i]));
         }
     }
 }
