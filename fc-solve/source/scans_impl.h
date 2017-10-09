@@ -484,6 +484,57 @@ static inline fcs_int_limit_t calc_ht_max_num_states(
 #undef ptr_state_key
 #undef unlimited_sequence_move
 
+static void init_group(fc_solve_soft_thread_t *const soft_thread,
+    fcs_moves_group *const out, const fcs_moves_group *const in)
+{
+    if (in->shuffling_type == FCS_SINGLE)
+    {
+        *out = (typeof(*out)){
+            .num = 1,
+            .shuffling_type = FCS_SINGLE,
+            .m.fun = fc_solve_sfs_move_funcs[in->m.idx],
+        };
+        return;
+    }
+    const fcs_moves_group_kind shuffling_type =
+        (soft_thread->master_to_randomize ? in->shuffling_type
+                                          : FCS_NO_SHUFFLING);
+    const_AUTO(tests_order_num, in->num);
+    *out = (typeof(*out)){
+        .num = tests_order_num,
+        .shuffling_type = shuffling_type,
+        .m.move_funcs = SMALLOC(out->m.move_funcs, tests_order_num),
+    };
+
+    for (size_t group_idx = 0; group_idx < tests_order_num; ++group_idx)
+    {
+        init_group(soft_thread, &out->m.move_funcs[group_idx],
+            &in->m.move_funcs[group_idx]);
+    }
+    if (shuffling_type == FCS_WEIGHTING)
+    {
+        out->weighting = in->weighting;
+
+        fc_solve_initialize_befs_rater(soft_thread, &(out->weighting));
+    }
+}
+
+static inline void add_to_move_funcs_list(
+    fc_solve_soft_thread_t *const soft_thread,
+    fcs_moves_group **const out_move_funcs_list, size_t *const num_so_far,
+    const fcs_moves_group *const indexes, const size_t count_to_add)
+{
+    size_t num = *num_so_far;
+    fcs_moves_group *const move_funcs_list =
+        SREALLOC(*out_move_funcs_list, num + count_to_add);
+    for (size_t i = 0; i < count_to_add; ++i)
+    {
+        init_group(soft_thread, &move_funcs_list[num++], &indexes[i]);
+    }
+
+    *out_move_funcs_list = move_funcs_list;
+    *num_so_far = num;
+}
 #ifdef __cplusplus
 }
 #endif

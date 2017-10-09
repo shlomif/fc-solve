@@ -336,7 +336,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
             const_AUTO(g,
                 &soft_thread->by_depth_moves_order.by_depth_moves[0]
                      .moves_order.m.move_funcs[group_idx]);
-            add_to_move_funcs_list(&moves_list, &num,
+            add_to_move_funcs_list(soft_thread, &moves_list, &num,
                 ((g->shuffling_type == FCS_SINGLE) ? g : g->m.move_funcs),
                 g->num);
         }

@@ -24,8 +24,18 @@ static inline void fcs_free_moves_list(
     fc_solve_soft_thread_t *const soft_thread)
 {
     /* Free the BeFS data. */
-    free(BEFS_M_VAR(soft_thread, moves_list));
-    BEFS_M_VAR(soft_thread, moves_list) = NULL;
+    var_AUTO(moves_list, BEFS_M_VAR(soft_thread, moves_list));
+    const_AUTO(moves_list_end, BEFS_M_VAR(soft_thread, moves_list_end));
+    if (moves_list)
+    {
+        while (moves_list != moves_list_end)
+        {
+            moves_order__free(moves_list++);
+        }
+        free(BEFS_M_VAR(soft_thread, moves_list));
+        BEFS_M_VAR(soft_thread, moves_list) = NULL;
+        BEFS_M_VAR(soft_thread, moves_list_end) = NULL;
+    }
 
     /* Free the DFS data. */
     fcs_moves_by_depth_array *const arr =

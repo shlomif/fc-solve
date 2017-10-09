@@ -29,7 +29,6 @@ static int parse_group(fcs_moves_group *const moves_order,
 
     const_AUTO(string, *ptr_s);
     const_AUTO(len, strlen(string));
-    fcs_bool_t is_start_group = TRUE;
 
     for (i = 0; i < len; i++)
     {
@@ -55,7 +54,7 @@ static int parse_group(fcs_moves_group *const moves_order,
 
         if ((string[i] == ')') || (string[i] == ']'))
         {
-            if (is_start_group)
+            if (!i)
             {
                 SET_ERR("There's an empty group.");
                 return 2;
@@ -123,7 +122,6 @@ static int parse_group(fcs_moves_group *const moves_order,
         moves_order->m.move_funcs[moves_order->num - 1] =
             (fcs_moves_group){.m.idx = fc_solve_string_to_move_num(string[i]),
                 .shuffling_type = FCS_SINGLE};
-        is_start_group = FALSE;
     }
     *ptr_s = string + i;
     SET_ERR("Unclosed group.");
