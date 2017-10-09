@@ -78,6 +78,10 @@ static int parse_group(fcs_moves_group *const moves_order,
                 {
                     moves_order->shuffling_type = FCS_WEIGHTING;
                 }
+                else if (string_starts_with(string + i, "seq", open_paren))
+                {
+                    moves_order->shuffling_type = FCS_MOVE_KIND_SEQ;
+                }
                 else
                 {
                     SET_ERR("Unknown = ordering function");
@@ -99,7 +103,9 @@ static int parse_group(fcs_moves_group *const moves_order,
                 {
                     if (close_paren != aft_open_paren)
                     {
-                        SET_ERR("=rand() arguments are not empty.");
+                        SET_ERR((moves_order->shuffling_type == FCS_RAND)
+                                    ? "=rand() arguments are not empty."
+                                    : "=seq() arguments are not empty.");
                         return 8;
                     }
                 }

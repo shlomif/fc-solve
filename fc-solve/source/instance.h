@@ -187,6 +187,7 @@ typedef enum {
     FCS_NO_SHUFFLING,
     FCS_RAND,
     FCS_WEIGHTING,
+    FCS_MOVE_KIND_SEQ,
 } fcs_moves_group_kind;
 
 typedef struct fcs_moves_group_struct
