@@ -543,7 +543,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         for (const fcs_moves_group *move_func_ptr = moves_list;
              move_func_ptr < moves_list_end; move_func_ptr++)
         {
-            move_func_ptr->m.f(soft_thread, pass, &derived);
+            fc_solve__moves_order__call(
+                *move_func_ptr, soft_thread, pass, &derived);
         }
 
         if (is_a_complete_scan)

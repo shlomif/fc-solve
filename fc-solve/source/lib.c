@@ -1009,6 +1009,95 @@ static inline void free_states(fc_solve_instance_t *const instance)
 }
 #endif
 
+void fc_solve__moves_order__call(const fcs_moves_group g,
+    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t pass,
+    fcs_derived_states_list_t *const derived_list)
+{
+    if (g.shuffling_type == FCS_SINGLE)
+    {
+        g.m.fun(soft_thread, pass, derived_list);
+        return;
+    }
+    const size_t init_num_states = derived_list->num_states;
+    const_AUTO(num, g.num);
+    for (uint_fast32_t i = 0; i < num; i++)
+    {
+        fc_solve__moves_order__call(
+            g.m.move_funcs[i], soft_thread, pass, derived_list);
+    }
+    const size_t new_num_states = derived_list->num_states;
+    const_AUTO(num_states, new_num_states - init_num_states);
+    if (g.shuffling_type == FCS_NO_SHUFFLING || num_states <= 1)
+    {
+        return;
+    }
+    fcs_rand_t *const rand_gen = &(DFS_VAR(soft_thread, rand_gen));
+    fcs_rating_with_index_t rand_array[num_states];
+    for (size_t i = 0; i < num_states; i++)
+    {
+        rand_array[i].idx = i;
+    }
+    fcs_derived_states_list_item_t *const derived_states =
+        derived_list->states + init_num_states;
+    switch (g.shuffling_type)
+    {
+    case FCS_RAND:
+    {
+        for (size_t i = num_states - 1; i > 0; i--)
+        {
+            const typeof(i) j =
+                (fc_solve_rand_get_random_number(rand_gen) % (i + 1));
+
+            const_AUTO(swap_save, rand_array[i]);
+            rand_array[i] = rand_array[j];
+            rand_array[j] = swap_save;
+        }
+    }
+    break;
+
+    case FCS_WEIGHTING:
+    {
+        const fc_solve_state_weighting_t *const weighting = &g.weighting;
+#ifdef FCS_RCS_STATES
+        fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
+        fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
+#endif
+        for (size_t i = 0; i < num_states; i++)
+        {
+            rand_array[i].rating = befs_rate_state(soft_thread, weighting,
+#ifdef FCS_RCS_STATES
+                fc_solve_lookup_state_key_from_val(
+                    instance, derived_states[i].state_ptr),
+#else
+                &(derived_states[i].state_ptr->s),
+#endif
+                BEFS_MAX_DEPTH - calc_depth(derived_states[i].state_ptr));
+        }
+
+        const_AUTO(end, rand_array + num_states);
+        // Insertion-sort rand_array
+        for (var_PTR(p, rand_array + 1); p < end; ++p)
+        {
+            var_AUTO(move, p);
+            while (move > rand_array && move->rating < move[-1].rating)
+            {
+                const_AUTO(temp, *move);
+                *move = move[-1];
+                *(--move) = temp;
+            }
+        }
+    }
+    break;
+    }
+    fcs_derived_states_list_item_t new_derived_states[num_states];
+    for (size_t i = 0; i < num_states; i++)
+    {
+        new_derived_states[i] = derived_states[rand_array[i].idx];
+    }
+    memcpy(derived_states, new_derived_states,
+        num_states * sizeof(derived_states[0]));
+}
+
 /*
  * fc_solve_soft_dfs_do_solve() is the event loop of the
  * Random-DFS scan. DFS which is recursive in nature is handled here
@@ -1275,10 +1364,11 @@ static inline int fc_solve_soft_dfs_do_solve(
 
                 do
                 {
-                    THE_MOVE_FUNCS_LIST.m
-                        .move_funcs[the_soft_dfs_info->move_func_list_idx]
-                        .m.move_funcs[the_soft_dfs_info->move_func_idx]
-                        .m.f(soft_thread, pass, &derived_list);
+                    fc_solve__moves_order__call(
+                        THE_MOVE_FUNCS_LIST.m
+                            .move_funcs[the_soft_dfs_info->move_func_list_idx]
+                            .m.move_funcs[the_soft_dfs_info->move_func_idx],
+                        soft_thread, pass, &derived_list);
 
                     /* Move the counter to the next test */
                     if ((++the_soft_dfs_info->move_func_idx) ==

@@ -192,7 +192,7 @@ typedef enum {
 typedef struct fcs_moves_group_struct
 {
     union {
-        fc_solve_solve_for_state_move_func_t f;
+        fc_solve_solve_for_state_move_func_t fun;
         uint_fast32_t idx;
         struct fcs_moves_group_struct *move_funcs;
     } m;
@@ -993,6 +993,10 @@ static inline fcs_bool_t fcs_get_calc_real_depth(
 extern void fc_solve_trace_solution(fc_solve_instance_t *const instance);
 #endif
 extern void fc_solve_finish_instance(fc_solve_instance_t *const instance);
+
+extern void fc_solve__moves_order__call(const fcs_moves_group g,
+    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t pass,
+    fcs_derived_states_list_t *const derived_list);
 
 #ifdef __cplusplus
 }

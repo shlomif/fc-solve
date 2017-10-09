@@ -157,9 +157,9 @@ static inline void add_to_move_funcs_list(
         SREALLOC(*out_move_funcs_list, num + count_to_add);
     for (size_t i = 0; i < count_to_add; ++i)
     {
-        move_funcs_list[num++] =
-            (fcs_moves_group){.m.f = fc_solve_sfs_move_funcs[indexes[i].m.idx],
-                .shuffling_type = FCS_SINGLE};
+        move_funcs_list[num++] = (fcs_moves_group){
+            .m.fun = fc_solve_sfs_move_funcs[indexes[i].m.idx],
+            .shuffling_type = FCS_SINGLE};
     }
 
     *out_move_funcs_list = move_funcs_list;
