@@ -1013,6 +1013,21 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
     fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t pass,
     fcs_derived_states_list_t *const derived_list)
 {
+    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
+    fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
+#if 0
+    char output_string[4000];
+    fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&(locs));
+    verify_state_sanity(pass.key);
+    fc_solve_state_as_string(output_string, pass.key,
+        &(locs)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+            PASS_STACKS(INSTANCE_STACKS_NUM) PASS_DECKS(INSTANCE_DECKS_NUM)
+                FC_SOLVE__PASS_PARSABLE(TRUE),
+        FALSE PASS_T(TRUE));
+    printf("Got=<<<\n%s\n>>>\n", output_string);
+    fflush(stdout);
+#endif
     if (g.shuffling_type == FCS_SINGLE)
     {
         g.m.fun(soft_thread, pass, derived_list);
@@ -1021,6 +1036,13 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
     const_AUTO(num, g.num);
     if (g.shuffling_type == FCS_MOVE_KIND_SEQ)
     {
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+        const fcs_bool_t is_simple_simon = instance->is_simple_simon;
+#endif
+#define DEPTH() (*depth_ptr)
+#define the_soft_dfs_info (&(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]))
+        ssize_t *const depth_ptr = &(DFS_VAR(soft_thread, depth));
+        ++DEPTH();
         fcs_derived_states_list_t prev_derived_list = {
             .num_states = 0, .states = NULL,
         };
@@ -1029,13 +1051,31 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
         };
         fc_solve_derived_states_list_add_state(
             &prev_derived_list, FCS_STATE_kv_to_collectible(&pass), 0);
-        for (uint_fast32_t i = 0; i < num; i++)
+        for (uint_fast32_t i = 0; (i < num) && prev_derived_list.num_states;
+             i++)
         {
             for (uint_fast32_t s = 0; s < prev_derived_list.num_states; s++)
             {
                 fcs_kv_state_t this_pass;
                 FCS_STATE_collectible_to_kv(
                     &this_pass, prev_derived_list.states[s].state_ptr);
+                const fcs_game_limit_t num_vacant_freecells =
+                    count_num_vacant_freecells(
+                        INSTANCE_FREECELLS_NUM, this_pass.key);
+                const fcs_game_limit_t num_vacant_stacks =
+                    count_num_vacant_stacks(INSTANCE_STACKS_NUM, this_pass.key);
+                soft_thread->num_vacant_freecells =
+                    the_soft_dfs_info->num_vacant_freecells =
+                        num_vacant_freecells;
+                soft_thread->num_vacant_stacks =
+                    the_soft_dfs_info->num_vacant_stacks = num_vacant_stacks;
+                fc_solve__calc_positions_by_rank_data(soft_thread,
+                    this_pass.key, (the_soft_dfs_info->positions_by_rank)
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+                                       ,
+                    is_simple_simon
+#endif
+                    );
                 fc_solve__moves_order__call(g.m.move_funcs[i], soft_thread,
                     this_pass, &next_derived_list);
             }
@@ -1052,6 +1092,12 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
                 derived_list, prev_derived_list.states[i].state_ptr, 0);
         }
         free(prev_derived_list.states);
+        --DEPTH();
+        soft_thread->num_vacant_stacks = the_soft_dfs_info->num_vacant_stacks;
+        soft_thread->num_vacant_freecells =
+            the_soft_dfs_info->num_vacant_freecells;
+#undef the_soft_dfs_info
+#undef DEPTH
         return;
     }
     const size_t init_num_states = derived_list->num_states;
@@ -1229,10 +1275,11 @@ static inline int fc_solve_soft_dfs_do_solve(
     while (1)
     {
     main_loop:
-        /*
-            Increase the "maximal" depth if it is about to be exceeded.
-        */
-        if (unlikely(DEPTH() + 1 >= dfs_max_depth))
+// Increase the "maximal" depth if it is about to be exceeded.
+// DEPTH_MARGIN is for the =seq() group kind.
+#define DEPTH_MARGIN 15
+
+        if (unlikely(DEPTH() + (1 + DEPTH_MARGIN) >= dfs_max_depth))
         {
             fc_solve_increase_dfs_max_depth(soft_thread);
 
@@ -1309,7 +1356,23 @@ static inline int fc_solve_soft_dfs_do_solve(
                                       soft_thread, soft_dfs_info)[DEPTH() - 1]
                                                          .state))
 #endif
-                    );
+
+                const fcs_game_limit_t num_vacant_freecells =
+                    count_num_vacant_freecells(
+                        INSTANCE_FREECELLS_NUM, &FCS_SCANS_the_state);
+                const fcs_game_limit_t num_vacant_stacks =
+                    count_num_vacant_stacks(
+                        LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
+                /* Check if we have reached the empty state */
+                if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
+                             (num_vacant_freecells == LOCAL_FREECELLS_NUM)))
+                {
+#ifdef FCS_WITH_MOVES
+                    instance->final_state = PTR_STATE;
+#endif
+                    BUMP_NUM_CHECKED_STATES();
+                    TRACE0("Returning FCS_STATE_WAS_SOLVED");
+                    return FCS_STATE_WAS_SOLVED;
                 }
 #endif
                 /* Perform the pruning. */
