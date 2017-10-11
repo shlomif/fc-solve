@@ -15,9 +15,34 @@ EMBED_FILE_MUNGE_PL = $(SRC_DIR)/../scripts/emscripten-embed-munge.pl
 
 PATS_C_FILES = $(patsubst %,patsolve-shlomif/patsolve/%,param.c pat.c patsolve.c tree.c)
 
-LIB_C_FILES = scans.c lib.c preset.c instance.c move_funcs_order.c   meta_alloc.c cmd_line.c card.c state.c check_and_add_state.c split_cmd_line.c simpsim.c freecell.c move.c fc_pro_iface.c gen_ms_boards__hll_iface.c hacks_for_hlls.c $(PATS_C_FILES)
+LIB_C_FILES = \
+card.c \
+check_and_add_state.c \
+cmd_line.c \
+fc_pro_iface.c \
+freecell.c \
+gen_ms_boards__hll_iface.c \
+hacks_for_hlls.c \
+instance.c \
+lib.c \
+meta_alloc.c \
+move.c \
+move_funcs_order.c \
+preset.c \
+scans.c \
+simpsim.c \
+split_cmd_line.c \
+state.c \
+$(PATS_C_FILES)
 
-CMAKE_C_FILES = move_funcs_maps.c rate_state.c
+CMAKE_C_FILES = \
+is_king.c \
+is_parent.c \
+move_funcs_maps.c \
+pos_by_rank__freecell.c \
+rate_state.c \
+
+
 C_FILES = main.c $(LIB_C_FILES)
 
 
