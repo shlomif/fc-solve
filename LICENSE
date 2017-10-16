@@ -70,3 +70,7 @@ IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 --------------------------------------------------------------------------
 
++libavl2/prb.c+ and +libavl2/prb.h+ are derived from their equivalents in
+GNU's libavl2, licensed under version 3 or later of the LGPL (
+https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License ) with all
+modifications placed under a CC0/Expat dual licence.
