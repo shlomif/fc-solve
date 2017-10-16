@@ -209,7 +209,7 @@ your bug as I make changes.
 
 Copyright 2007 Shlomi Fish, all rights reserved.
 
-This program is released under the MIT X11 License.
+This program is released under the MIT Expat License.
 
 =cut
 

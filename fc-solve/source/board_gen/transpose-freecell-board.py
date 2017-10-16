@@ -5,7 +5,7 @@
 #
 # Copyright by Shlomi Fish, 2016
 #
-# Licensed under the MIT/X11 License.
+# Licensed under the MIT/Expat License.
 
 # imports
 import sys

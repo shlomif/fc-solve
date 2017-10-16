@@ -19,7 +19,7 @@ Seahaven Towers, as well as
 Simon</a> boards. Freecell Solver is
 <a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free
 and open source software</a> freely available under the
-<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/X11 License</a>.
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat License</a>.
 It can be <a href="$(ROOT)/js-fc-solve/text/">used online</a> (which
 requires a modern enough web browser with JavaScript support),
 or <a href="$(ROOT)/download.html">downloaded</a> either as

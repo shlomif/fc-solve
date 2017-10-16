@@ -2,7 +2,7 @@
 /*
  * Microsoft C Run-time-Library-compatible Random Number Generator
  * Copyright by Shlomi Fish, 2011.
- * Released under the MIT/X11 License
+ * Released under the MIT/Expat License
  * ( http://en.wikipedia.org/wiki/MIT_License ).
  * */
 class MSRand {

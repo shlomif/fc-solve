@@ -1,7 +1,7 @@
 # The Freecell Solver Repository Root README
 
 [Freecell Solver](http://fc-solve.shlomifish.org/) is an open source
-(distributed under the MIT/X11 licence) library, written in C, for attempting
+(distributed under the MIT/Expat licence) library, written in C, for attempting
 to solve several variants of card Solitaire/Patience, including
 [Freecell](http://en.wikipedia.org/wiki/FreeCell) ,
 [Baker’s Game](http://en.wikipedia.org/wiki/Baker%27s_Game) ,

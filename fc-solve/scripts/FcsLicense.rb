@@ -1,4 +1,4 @@
-$X11L_TEMPLATE = <<"EOF";
+$ExpatL_TEMPLATE = <<"EOF";
 Copyright (c) <year> <copyright holders>
 
 Permission is hereby granted, free of charge, to any person
@@ -24,7 +24,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 EOF
 
 def license_to_comment()
-    text = $X11L_TEMPLATE
+    text = $ExpatL_TEMPLATE
     text += "\n"
     text.gsub!(/^/, " * ");
     text.sub!(/ \*/, "/*");
@@ -77,7 +77,7 @@ EOF
 end
 
 def license_to_perl_pod()
-    text = $X11L_TEMPLATE
+    text = $ExpatL_TEMPLATE
     text += "\n"
     text.sub!(/<year>/, "2000");
     text.sub!(/<copyright holders>/, "Shlomi Fish");

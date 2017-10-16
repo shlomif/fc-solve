@@ -546,10 +546,10 @@ available on GitHub, under the open source FreeBSD licence.
 
 <li>
 <p>
-<a href="https://github.com/ShootMe/KlondikeSolver">ShootMe's
+<a href="https://github.com/ShootMe/Klondike-Solver">ShootMe's
 Klondike Solver</a> - a solver for Klondike Solitaire (known as the “Solitaire”
 game from Windows) written in C++ and available under the permissive
-MIT/X11 Licence.
+MIT/Expat Licence.
 </p>
 </li>
 

@@ -35,7 +35,7 @@
 
 ## This file originated from the file game.py in the PySolFC-1.1
 ## distribution. Shlomi Fish disclaims all rights to his modifications and
-## places them under the public domain or MIT/X11 licence.
+## places them under the public domain or MIT/Expat licence.
 
 # imports
 import time

@@ -8,7 +8,7 @@
  *
  * - http://www.solitairelaboratory.com/mshuffle.txt
  *
- * Under MIT/X11 Licence.
+ * Under MIT/Expat Licence.
  *
  * */
 

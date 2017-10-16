@@ -27,7 +27,7 @@
  * Originally written by Justin-Heyes Jones
  * Modified by Shlomi Fish, 2000
  *
- * This file is available under either the MIT/X11 license (see above)
+ * This file is available under either the MIT/Expat license (see above)
  * or the public domain.
  *
  * Check out Justin-Heyes Jones' A* page from which this code has
