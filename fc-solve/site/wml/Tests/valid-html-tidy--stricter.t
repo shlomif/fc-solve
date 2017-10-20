@@ -22,11 +22,7 @@ sub calc_tidy
 
 package main;
 
-my %whitelist = (
-    map { $_ => 1 } (
-        'dest/old-news.html',
-    ),
-);
+my %whitelist = ( map { $_ => 1 } (), );
 
 MyTidy->new(
     {
