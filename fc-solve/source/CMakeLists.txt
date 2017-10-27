@@ -510,12 +510,7 @@ SET_TARGET_PROPERTIES(freecell-solver
     PROPERTIES VERSION 0.5.0 SOVERSION 0
     )
 
-IF (UNIX)
-    SET(MATH_LIB "m")
-ELSE()
-    SET(MATH_LIB )
-ENDIF()
-
+FIND_LIBM()
 SET(LIBTCMALLOC_LIB_LIST)
 
 # Avoid linking to tcmalloc if the test suite is enabled due to:
@@ -683,7 +678,7 @@ ENDIF()
 ADD_DEFINITIONS(${_win32_static_lib_flags})
 FOREACH (TGT ${TARGETS})
     TARGET_LINK_LIBRARIES (${TGT}
-        ${MATH_LIB} ${LIBTCMALLOC_LIB_LIST} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
+        ${MATH_LIB_LIST} ${LIBTCMALLOC_LIB_LIST} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
         ${_win32_static_lib_flags}
     )
 ENDFOREACH ()
