@@ -286,6 +286,7 @@ SET (FREECELL_SOLVER_LIB_MODULES
     freecell.c
     instance.c
     is_king.c
+    is_king.h
     is_parent.c
     lib.c
     meta_alloc.c
@@ -554,7 +555,7 @@ FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tes
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 FCS_ADD_EXEC_NO_INSTALL(summary-fc-solve summarizing_solver.c)
 
-SET (DBM_FCC_COMMON card.c is_king.c is_parent.c meta_alloc.c state.c)
+SET (DBM_FCC_COMMON card.c is_king.c is_king.h is_parent.c meta_alloc.c state.c)
 
 IF (NOT FCS_AVOID_INT128)
     CHECK_TYPE_SIZE("__int128" INT128 LANGUAGE C)
