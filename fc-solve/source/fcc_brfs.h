@@ -174,7 +174,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     /* [Input/Output]: The ${next}_depth_FCCs.DoesExist
      * (for the right depth based on the current depth and pruning.)
      * Of type Map{min_by_sorting => Bool Exists} DoesExist.
-    */
+     */
     dict_t *does_min_by_sorting_exist,
     /* [Input/Output]: The LRU cache.
      * Of type <<LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache>>
@@ -224,7 +224,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
         ,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-        );
+    );
     dict_t *traversed_states =
         fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
 

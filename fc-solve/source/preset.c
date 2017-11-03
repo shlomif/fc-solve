@@ -32,7 +32,7 @@ enum
 };
 
 #define MAKE_GAME_PARAMS(freecells_num, stacks_num, decks_num, seqs_build_by,  \
-                         seq_move, empty_stacks_fill)                          \
+    seq_move, empty_stacks_fill)                                               \
     {                                                                          \
         freecells_num, stacks_num, decks_num,                                  \
             (seqs_build_by | (empty_stacks_fill << 2) | (seq_move << 4))       \
@@ -48,70 +48,92 @@ typedef struct
 
 static const fcs_preset_name_t fcs_preset_names[23] = {
     {
-        "bakers_dozen", FCS_PRESET_BAKERS_DOZEN,
+        "bakers_dozen",
+        FCS_PRESET_BAKERS_DOZEN,
     },
     {
-        "bakers_game", FCS_PRESET_BAKERS_GAME,
+        "bakers_game",
+        FCS_PRESET_BAKERS_GAME,
     },
     {
-        "beleaguered_castle", FCS_PRESET_BELEAGUERED_CASTLE,
+        "beleaguered_castle",
+        FCS_PRESET_BELEAGUERED_CASTLE,
     },
     {
-        "citadel", FCS_PRESET_BELEAGUERED_CASTLE,
+        "citadel",
+        FCS_PRESET_BELEAGUERED_CASTLE,
     },
     {
-        "cruel", FCS_PRESET_CRUEL,
+        "cruel",
+        FCS_PRESET_CRUEL,
     },
     {
-        "der_katzenschwanz", FCS_PRESET_DER_KATZENSCHWANZ,
+        "der_katzenschwanz",
+        FCS_PRESET_DER_KATZENSCHWANZ,
     },
     {
-        "der_katz", FCS_PRESET_DER_KATZENSCHWANZ,
+        "der_katz",
+        FCS_PRESET_DER_KATZENSCHWANZ,
     },
     {
-        "die_schlange", FCS_PRESET_DIE_SCHLANGE,
+        "die_schlange",
+        FCS_PRESET_DIE_SCHLANGE,
     },
     {
-        "eight_off", FCS_PRESET_EIGHT_OFF,
+        "eight_off",
+        FCS_PRESET_EIGHT_OFF,
     },
     {
-        "fan", FCS_PRESET_FAN,
+        "fan",
+        FCS_PRESET_FAN,
     },
     {
-        "forecell", FCS_PRESET_FORECELL,
+        "forecell",
+        FCS_PRESET_FORECELL,
     },
     {
-        "freecell", FCS_PRESET_FREECELL,
+        "freecell",
+        FCS_PRESET_FREECELL,
     },
     {
-        "good_measure", FCS_PRESET_GOOD_MEASURE,
+        "good_measure",
+        FCS_PRESET_GOOD_MEASURE,
     },
     {
-        "ko_bakers_game", FCS_PRESET_KINGS_ONLY_BAKERS_GAME,
+        "ko_bakers_game",
+        FCS_PRESET_KINGS_ONLY_BAKERS_GAME,
     },
     {
-        "kings_only_bakers_game", FCS_PRESET_KINGS_ONLY_BAKERS_GAME,
+        "kings_only_bakers_game",
+        FCS_PRESET_KINGS_ONLY_BAKERS_GAME,
     },
     {
-        "relaxed_freecell", FCS_PRESET_RELAXED_FREECELL,
+        "relaxed_freecell",
+        FCS_PRESET_RELAXED_FREECELL,
     },
     {
-        "relaxed_seahaven_towers", FCS_PRESET_RELAXED_SEAHAVEN_TOWERS,
+        "relaxed_seahaven_towers",
+        FCS_PRESET_RELAXED_SEAHAVEN_TOWERS,
     },
     {
-        "relaxed_seahaven", FCS_PRESET_RELAXED_SEAHAVEN_TOWERS,
+        "relaxed_seahaven",
+        FCS_PRESET_RELAXED_SEAHAVEN_TOWERS,
     },
     {
-        "seahaven_towers", FCS_PRESET_SEAHAVEN_TOWERS,
+        "seahaven_towers",
+        FCS_PRESET_SEAHAVEN_TOWERS,
     },
     {
-        "seahaven", FCS_PRESET_SEAHAVEN_TOWERS,
+        "seahaven",
+        FCS_PRESET_SEAHAVEN_TOWERS,
     },
     {
-        "simple_simon", FCS_PRESET_SIMPLE_SIMON,
+        "simple_simon",
+        FCS_PRESET_SIMPLE_SIMON,
     },
     {
-        "streets_and_alleys", FCS_PRESET_BELEAGUERED_CASTLE,
+        "streets_and_alleys",
+        FCS_PRESET_BELEAGUERED_CASTLE,
     },
 };
 

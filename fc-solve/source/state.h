@@ -654,8 +654,7 @@ static inline const char *fc_solve__try_prefixes(
 #endif
 
 #define fc_solve_initial_user_state_to_c(string, out_state, freecells_num,     \
-                                         stacks_num, decks_num,                \
-                                         indirect_stacks_buffer)               \
+    stacks_num, decks_num, indirect_stacks_buffer)                             \
     fc_solve_initial_user_state_to_c_proto(string,                             \
         out_state PASS_FREECELLS(freecells_num) PASS_STACKS(stacks_num)        \
             PASS_DECKS(decks_num) PASS_IND_BUF_T(indirect_stacks_buffer))
@@ -997,13 +996,13 @@ static inline void set_scan_visited(
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1)));
 }
 
-/*
- * This macro determines if child can be placed above parent.
- *
- * The variable sequences_are_built_by has to be initialized to
- * the sequences_are_built_by member of the instance.
- *
- * */
+    /*
+     * This macro determines if child can be placed above parent.
+     *
+     * The variable sequences_are_built_by has to be initialized to
+     * the sequences_are_built_by member of the instance.
+     *
+     * */
 
 #ifdef FCS_FREECELL_ONLY
 

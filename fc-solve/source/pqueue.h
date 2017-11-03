@@ -34,7 +34,7 @@
  * originated:
  *
  * http://www.heyes-jones.com/astar.html
-*/
+ */
 #pragma once
 
 #ifdef __cplusplus

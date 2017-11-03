@@ -89,7 +89,8 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
     const char *const presetrc_pathes[4] = {
         (const char *)getenv("FREECELL_SOLVER_PRESETRC"),
         (home_dir ? ((const char *)home_dir_presetrc) : NULL),
-        (const char *)global_presetrc, user_preset_dir,
+        (const char *)global_presetrc,
+        user_preset_dir,
     };
     fcs_bool_t read_next_preset = FALSE;
     for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); ++path_idx)
@@ -354,7 +355,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             break;
 
         case FCS_OPT_SEQUENCES_ARE_BUILT_BY: /* STRINGS=--sequences-are-built-by;
-                                                */
+                                              */
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
@@ -377,7 +378,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             break;
 
         case FCS_OPT_EMPTY_STACKS_FILLED_BY: /* STRINGS=--empty-stacks-filled-by;
-                                                */
+                                              */
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
@@ -505,7 +506,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             break;
 
         case FCS_OPT_TRIM_MAX_STORED_STATES: /* STRINGS=-tmss|--trim-max-stored-states;
-                                                */
+                                              */
             PROCESS_OPT_ARG();
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
             freecell_solver_set_stored_states_trimming_limit(
@@ -535,7 +536,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     ? freecell_solver_user_next_soft_thread(instance)
                     : freecell_solver_user_next_hard_thread(instance)
 #endif
-                    )
+            )
             {
                 RET_ERR_STR(error_string, "%s",
                     "The maximal number of soft threads has been exceeded\n");
@@ -584,7 +585,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             break;
 
         case FCS_OPT_FLARES_ITERS_FACTOR: /* STRINGS=-fif|--flares-iters-factor;
-                                             */
+                                           */
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flares_iters_factor(instance, atof(*arg));
@@ -592,7 +593,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             break;
 
         case FCS_OPT_OPTIMIZATION_TESTS_ORDER: /* STRINGS=-opt-to|--optimization-tests-order;
-                                                  */
+                                                */
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_MOVES
             if (freecell_solver_user_set_optimization_scan_tests_order(
@@ -707,9 +708,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                                     *)(args_man.argv + num_file_args_to_skip),
                             0, known_parameters, callback,
                             callback_context FCS__PASS_ERR_STR(error_string),
-                            last_arg, ((file_nesting_count < 0)
-                                              ? file_nesting_count
-                                              : (file_nesting_count - 1)),
+                            last_arg,
+                            ((file_nesting_count < 0)
+                                    ? file_nesting_count
+                                    : (file_nesting_count - 1)),
                             opened_files_dir);
 
                     if (!((ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION) ||
@@ -752,7 +754,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_DEPTH_TESTS_ORDER: /* STRINGS=-dto|--depth-tests-order; */
         case FCS_OPT_DEPTH_TESTS_ORDER_2: /* STRINGS=-dto2|--depth-tests-order2;
-                                             */
+                                           */
         {
             PROCESS_OPT_ARG();
             int min_depth = 0;

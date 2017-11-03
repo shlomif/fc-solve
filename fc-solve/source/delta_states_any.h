@@ -51,8 +51,8 @@ static inline void fc_solve_delta_stater_init(
     fc_solve_debondt_delta_stater_release(a)
 #endif
 
-/****************************************************/
-/* compare_enc_states */
+    /****************************************************/
+    /* compare_enc_states */
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 

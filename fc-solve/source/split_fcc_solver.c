@@ -375,7 +375,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 ,
                 item->moves_to_key
 #endif
-                );
+            );
 
             fcs_derived_state_list__recycle(
                 &derived_list_recycle_bin, &derived_list);
@@ -413,7 +413,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     ,
     const fcs_fcc_move_t *moves_to_parent
 #endif
-    )
+)
 {
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
@@ -670,7 +670,7 @@ int main(int argc, char *argv[])
         ,
         CALC_SEQUENCES_ARE_BUILT_BY()
 #endif
-            );
+    );
 
     fcs_dbm_solver_instance_t instance;
     FccEntryPointNode *key_ptr = NULL;
@@ -725,9 +725,9 @@ int main(int argc, char *argv[])
         fcs_init_encoded_state(&(parent_state_enc));
 
 /*
-* These states should be traversed - not blocked, so don't
-* put them inside the store.
-* */
+ * These states should be traversed - not blocked, so don't
+ * put them inside the store.
+ * */
 #if 0
 #ifndef FCS_DBM_WITHOUT_CACHES
         cache_store__insert_key(&(instance.cache_store), &(key_ptr->kv.key.key), &parent_state_enc, NULL, '\0');

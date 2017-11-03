@@ -215,7 +215,8 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         const int fd = read_fd(&workers[idx]);
 #ifdef USE_EPOLL
         struct epoll_event ev = {
-            .events = EPOLLIN, .data.ptr = &(workers[idx]),
+            .events = EPOLLIN,
+            .data.ptr = &(workers[idx]),
         };
         if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1)
         {

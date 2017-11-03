@@ -838,7 +838,7 @@ static inline int update_col_cards_under_sequences(
 #endif
     const fcs_const_cards_column_t col,
     int d /* One less than cards_num of col. */
-    )
+)
 {
     fcs_card_t this_card = fcs_col_get_card(col, d);
     fcs_card_t prev_card = fcs_col_get_card(col, d - 1);
@@ -974,7 +974,7 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     moves_order->num = 0;
 }
 
-/***********************************************************/
+    /***********************************************************/
 
 #define DECLARE_MOVE_FUNCTION(name)                                            \
     extern void name(fc_solve_soft_thread_t *const soft_thread,                \

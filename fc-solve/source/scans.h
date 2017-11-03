@@ -50,7 +50,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
     ,
     const fcs_bool_t is_simple_simon
 #endif
-    )
+)
 {
 #ifndef HARD_CODED_ALL
     var_AUTO(instance, fcs_st_instance(soft_thread));
