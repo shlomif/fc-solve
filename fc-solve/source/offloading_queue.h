@@ -15,6 +15,9 @@ extern "C" {
 #endif
 
 #include "rinutils.h"
+#ifdef __unix__
+#include <fcntl.h>
+#endif
 
 typedef const unsigned char *fcs_offloading_queue_item_t;
 
@@ -217,10 +220,17 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
     char page_filename[PATH_MAX + 1];
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
+#ifdef __unix__
+    const int f = open(page_filename, O_RDONLY);
+    read(f, page->data,
+        sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE);
+    close(f);
+#else
     FILE *const f = fopen(page_filename, "rb");
     fread(
         page->data, sizeof(fcs_offloading_queue_item_t), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
+#endif
 
     /* We need to set this limit because it's a read-only page that we
      * retrieve from the disk and otherwise ->can_extract() will return
@@ -237,10 +247,17 @@ static inline void fcs_offloading_queue_page__offload(
     char page_filename[PATH_MAX + 1];
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
+#ifdef __unix__
+    const int f = creat(page_filename, 0644);
+    write(f, page->data,
+        sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE);
+    close(f);
+#else
     FILE *const f = fopen(page_filename, "wb");
     fwrite(
         page->data, sizeof(fcs_offloading_queue_item_t), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
+#endif
 }
 
 typedef struct
@@ -327,7 +344,7 @@ static inline fcs_bool_t fcs_offloading_queue__extract(
          *
          * if (queue->_page_idx_to_read_from->page_index ==
          *     queue->_page_idx_to_write_to->page_index)
-        */
+         */
         if (queue->pages[queue->page_idx_to_read_from].page_index + 1 ==
             queue->pages[queue->page_idx_to_write_to].page_index)
         {
