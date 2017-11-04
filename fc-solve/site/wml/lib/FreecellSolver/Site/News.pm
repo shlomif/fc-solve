@@ -47,6 +47,7 @@ sub file_to_news_item
     $text =~ s!<ol>!<ol class="newsitem">!g;
     $text =~ s!<ul>!<ul class="newsitem">!g;
     $text =~ s#<div class="blogger-post-footer"><img.*?</div>##ms;
+    $text =~ s#<(/?)tt#<${1}code#g;
     $filename =~ /\A(\d{4})-(\d{2})-(\d{2})\.html\z/;
     my ($y, $m, $d) = ($1, $2, $3);
     return

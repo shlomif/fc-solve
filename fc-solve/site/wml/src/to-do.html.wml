@@ -65,7 +65,7 @@ each inspected state), and convert the code to using them.
 
 <p>
 <b>Note:</b> This was implemented to a very limited extent in only three
-of the "test" functions in <tt>freecell.c</tt>. (As determined by profiling)
+of the "test" functions in <code>freecell.c</code>. (As determined by profiling)
 It should be implemented in other test functions as well, while possibly
 extending the functionality scope.
 </p>
@@ -149,7 +149,7 @@ A <a href="http://groups.yahoo.com/group/fc-solve-discuss/message/377">scheme
 for Multi-threading Freecell Solver</a> was proposed by Shlomi Fish, but the
 actual implementation of the locking was not implemented yet. To do so, one
 should write an abstraction of threading and locking mechanisms
-(<tt>fc_solve_thread_*</tt>), which will either default to doing nothing,
+(<code>fc_solve_thread_*</code>), which will either default to doing nothing,
 or to running the appropriate threading functions of any threading API (be
 it POSIX threads, the Win32 API, APR or whatever).
 </p>
@@ -170,8 +170,8 @@ fail, it can easily cause the entire process running it to crash.
 </p>
 
 <p>
-What needs to be implemented is a way to check if <tt>malloc()</tt> and
-<tt>realloc</tt> calls returned NULL, and if so, free all other allocated
+What needs to be implemented is a way to check if <code>malloc()</code> and
+<code>realloc</code> calls returned NULL, and if so, free all other allocated
 memory and propagate the memory upward to the calling functions. There
 are several ways in which it can be achieved. One would be by defining an
 exception class, much like that of Java only passed as one of the function
@@ -291,15 +291,15 @@ something else.)
 
 <p>
 At the moment, the global Freecell Solver identifiers use the
-<tt>freecell_solver_</tt> prefix. However, this prefix is too long and
-makes the code hard to read. Using the <tt>fcs_</tt> prefix wouldn't be
+<code>freecell_solver_</code> prefix. However, this prefix is too long and
+makes the code hard to read. Using the <code>fcs_</code> prefix wouldn't be
 desirable either, because
 <a href="http://www.google.com/search?q=fcs&amp;ie=UTF-8&amp;oe=UTF-8">we
 don't own the fcs</a> prefix. However
 <a href="http://www.google.com/search?q=fc+solve&amp;ie=UTF-8&amp;oe=UTF-8">fc-solve
-is ours</a> and as a result, we can use <tt>fc_solve_</tt> instead. Note that
+is ours</a> and as a result, we can use <code>fc_solve_</code> instead. Note that
 for backwards compatibility, the Freecell Solver interface functions should
-be named <tt>freecell_solver_user_</tt>. This is not an issue because they
+be named <code>freecell_solver_user_</code>. This is not an issue because they
 are not used internally.
 </p>
 

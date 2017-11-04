@@ -311,7 +311,7 @@ and does not require system multi-threading.
 <p>
 Freecell Solver 2.6.0 has been spotted in the wild. This version features
 atomic moves, which are slower than the traditional ones, but guarantee
-a true verdict. It also has a <tt>--prelude</tt> switch that allows running
+a true verdict. It also has a <code>--prelude</code> switch that allows running
 a static order of quotas at start for the participating soft threads, and
 makes constructing faster solving presets easier.
 </p>
@@ -394,7 +394,7 @@ is already ready for Christmas 2008, and was released today. The highlights
 are a new configuration and build system based on <a
 href="http://www.cmake.org/">CMake</a>, which results in faster configurations
 and builds, and a much reduced archive size; a new suite of automated tests;
-an optimisation to the command line processing and a new <tt>--version</tt>
+an optimisation to the command line processing and a new <code>--version</code>
 flag.
 </p>
 

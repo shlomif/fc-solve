@@ -78,7 +78,7 @@ interactive installer will start.
 />
 
 <p>
-Type <tt>apt-get install freecell-solver</tt> as root. The version may be
+Type <code>apt-get install freecell-solver</code> as root. The version may be
 somewhat old, but hopefully mostly bug-free. Also see the
 <a href="http://packages.debian.org/source/squeeze/freecell-solver">Debian Package page</a>.
 </p>
@@ -99,7 +99,7 @@ None yet.
     class="dist_logo" />
 
 <p>
-Type <tt>urpmi freecell-solver</tt>. You may need to configure the right
+Type <code>urpmi freecell-solver</code>. You may need to configure the right
 appropriate networked repositories in the Mageia Control Centre.
 </p>
 

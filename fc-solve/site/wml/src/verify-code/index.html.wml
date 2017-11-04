@@ -40,7 +40,7 @@ variants supported by Freecell Solver.
 
 <li>
 Input and output are compatible with that of Freecell Solver's
-<tt>-p -t -sam</tt> output (including several quirks).
+<code>-p -t -sam</code> output (including several quirks).
 </li>
 
 <li>

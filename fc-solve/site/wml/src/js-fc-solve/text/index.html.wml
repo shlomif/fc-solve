@@ -331,7 +331,7 @@ implementation of the populate-with-sample-board button.
 <li>
 <p>
 <a href="http://en.wikipedia.org/wiki/User:Amire80">Amir Aharoni</a> - tipped
-me regarding integrating <tt>@font-face</tt> into my CSS.
+me regarding integrating <code>@font-face</code> into my CSS.
 </p>
 </li>
 

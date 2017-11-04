@@ -397,7 +397,7 @@ code</a> is available.
 <a href="http://www.ensicaen.ismra.fr/~delvare/devel/gfreecell/gfreecell.html">
 Gfreecell</a> -
 an implementation of Freecell for Gtk+ with its own solver.
-Source code is available, but it's in French. <tt>%-)</tt>
+Source code is available, but it's in French. <code>%-)</code>
 </p>
 </li>
 
