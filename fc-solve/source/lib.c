@@ -1908,7 +1908,9 @@ typedef struct
     /* Whether the instance is ready to be input with (i.e:
      * was recycled already.) */
     fcs_bool_t instance_is_ready;
+#ifdef FCS_WITH_FLARES
     char name[30];
+#endif
 #ifdef FCS_WITH_MOVES
     uint_fast32_t next_move_idx;
     fcs_moves_sequence_t moves_seq;
@@ -2276,7 +2278,9 @@ static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
     flare->moves_seq.moves = NULL;
 #endif
 
+#ifdef FCS_WITH_FLARES
     flare->name[0] = '\0';
+#endif
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     flare->fc_pro_moves.moves = NULL;
 #endif
@@ -3444,7 +3448,9 @@ static MYINLINE void user_free_resources(fcs_user_t *const user)
             fc_solve_finish_instance(instance);
         }
         fc_solve_free_instance(instance);
+#ifdef FCS_WITH_FLARES
         flare->name[0] = '\0';
+#endif
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
         fc_solve_moves_processed_free(&(flare->fc_pro_moves));
 #endif
