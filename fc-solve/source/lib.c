@@ -3294,7 +3294,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #ifdef FCS_WITH_NI
         (user->current_instance < end_of_instances_list) &&
 #endif
-        (ret == FCS_STATE_IS_NOT_SOLVEABLE));
+        ret == FCS_STATE_IS_NOT_SOLVEABLE);
 
     return (
         user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret);
