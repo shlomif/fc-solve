@@ -2026,7 +2026,9 @@ typedef struct
     fcs_state_locs_struct_t initial_state_locs;
 #endif
     fc_solve_solve_process_ret_t ret_code;
+#ifdef FCS_WITH_NI
     fcs_bool_t all_instances_were_suspended;
+#endif
     fcs_state_validity_ret_t state_validity_ret;
     fcs_card_t state_validity_card;
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -2367,7 +2369,9 @@ static MYINLINE void user_initialize(fcs_user_t *const user)
 #endif
 
     user->iterations_board_started_at = initial_stats;
+#ifdef FCS_WITH_NI
     user->all_instances_were_suspended = TRUE;
+#endif
 #ifdef FCS_WITH_FLARES
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     user->flares_choice = FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN;
@@ -3178,11 +3182,12 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                 fc_solve_resume_instance(instance);
             flare->instance_is_ready = FALSE;
         }
-
+#ifdef FCS_WITH_NI
         if (ret != FCS_STATE_SUSPEND_PROCESS)
         {
             user->all_instances_were_suspended = FALSE;
         }
+#endif
 
         flare->obj_stats.num_checked_states = instance->i__num_checked_states;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
@@ -3296,8 +3301,12 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #endif
         ret == FCS_STATE_IS_NOT_SOLVEABLE);
 
+#ifdef FCS_WITH_NI
     return (
         user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret);
+#else
+    return ret;
+#endif
 }
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
