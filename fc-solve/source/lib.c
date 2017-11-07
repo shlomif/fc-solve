@@ -1999,24 +1999,22 @@ typedef struct
     instance_item_t single_inst;
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-    /*
-     * The global (sequence-wide) limit of the iterations. Used
-     * by limit_iterations() and friends
-     * */
+    // The global (sequence-wide) limit of the iterations. Used
+    // by limit_iterations() and friends
     fcs_int_limit_t current_iterations_limit;
 #endif
-    /*
-     * The number of iterations this board started at.
-     * */
     fcs_stats_t iterations_board_started_at;
-    /*
-     * The number of iterations that the current instance started solving from.
-     * */
+    // The number of iterations that the current instance started solving from.
     fcs_stats_t init_num_checked_states;
-    /*
-     * A pointer to the currently active instance out of the sequence
-     * */
+    // A pointer to the currently active flare out of the sequence
+#if defined(FCS_WITH_NI) || defined(FCS_WITH_FLARES)
+#define ACTIVE_FLARE(user) ((user)->active_flare)
+#define SET_ACTIVE_FLARE(user, flare) ((user)->active_flare = (flare))
     fcs_flare_item_t *active_flare;
+#else
+#define ACTIVE_FLARE(user) (&((user)->single_inst.single_flare))
+#define SET_ACTIVE_FLARE(user, flare)
+#endif
     fcs_state_keyval_pair_t state;
 #ifdef FCS_WITH_MOVES
     fcs_state_keyval_pair_t running_state;
@@ -2060,7 +2058,7 @@ typedef struct
 
 static inline fc_solve_instance_t *user_obj(fcs_user_t *const user)
 {
-    return &user->active_flare->obj;
+    return &(ACTIVE_FLARE(user)->obj);
 }
 
 static inline fc_solve_instance_t *active_obj(void *const api_instance)
@@ -2251,7 +2249,7 @@ static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
 #endif
     fc_solve_instance_t *const instance = &(flare->obj);
 
-    user->active_flare = flare;
+    SET_ACTIVE_FLARE(user, flare);
     fc_solve_alloc_instance(instance, &(user->meta_alloc));
     // Switch the soft_thread variable so it won't refer to the old instance
     user->soft_thread = &(INST_HT0(instance).soft_threads[0]);
@@ -3023,8 +3021,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(
         {
             if (instance_item->minimal_flare)
             {
-                user->active_flare = instance_item->minimal_flare;
-                user->init_num_checked_states = user->active_flare->obj_stats;
+                SET_ACTIVE_FLARE(user, instance_item->minimal_flare);
+                user->init_num_checked_states = ACTIVE_FLARE(user)->obj_stats;
 
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
                 break;
@@ -3057,7 +3055,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #endif
         fc_solve_instance_t *const instance = &(flare->obj);
 
-        user->active_flare = flare;
+        SET_ACTIVE_FLARE(user, flare);
         const fcs_bool_t is_start_of_flare_solving =
             (flare->ret_code == FCS_STATE_NOT_BEGAN_YET);
 
@@ -3733,7 +3731,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     return user->iterations_board_started_at.num_checked_states +
-           max(user->active_flare->obj_stats.num_checked_states,
+           max(ACTIVE_FLARE(user)->obj_stats.num_checked_states,
                user_obj(user)->i__num_checked_states) -
            user->init_num_checked_states.num_checked_states;
 }
@@ -4068,7 +4066,7 @@ freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     return user->iterations_board_started_at.num_states_in_collection +
-           user->active_flare->obj_stats.num_states_in_collection -
+           ACTIVE_FLARE(user)->obj_stats.num_states_in_collection -
            user->init_num_checked_states.num_states_in_collection;
 }
 
