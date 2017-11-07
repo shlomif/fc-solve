@@ -25,7 +25,7 @@ typedef struct
     fcs_cache_key_t *curr_state;
     fcs_cache_key_t *next_states;
     int count_next_states, max_count_next_states, next_state_idx;
-} pseduo_dfs_stack_item_t;
+} pseudo_dfs_stack_item_t;
 
 typedef Pvoid_t store_t;
 
@@ -71,7 +71,7 @@ typedef struct
     long pre_cache_max_count;
     /* The stack */
     ssize_t stack_depth, max_stack_depth;
-    pseduo_dfs_stack_item_t *stack;
+    pseudo_dfs_stack_item_t *stack;
     long count_num_processed, max_count_num_processed;
     fcs_bool_t solution_was_found;
     enum TERMINATE_REASON should_terminate;
@@ -98,10 +98,10 @@ static inline void instance__inspect_new_state(
     {
         instance->stack =
             SREALLOC(instance->stack, ++(instance->max_stack_depth));
-        instance->stack[max_depth] = {
+        instance->stack[max_depth] = (pseudo_dfs_stack_item_t){
             .next_states = NULL, .max_count_next_states = 0};
     }
-    pseduo_dfs_stack_item_t *const stack_item = instance->stack + depth;
+    pseudo_dfs_stack_item_t *const stack_item = instance->stack + depth;
     stack_item->curr_state = state;
 
     fcs_derived_state_t *derived_list = NULL;
@@ -194,7 +194,7 @@ static inline void instance_run(fcs_dbm_solver_instance_t *const instance)
         }
         else
         {
-            pseduo_dfs_stack_item_t *const stack_item = instance->stack + depth;
+            pseudo_dfs_stack_item_t *const stack_item = instance->stack + depth;
             const int idx = (stack_item->next_state_idx)++;
             if (idx == stack_item->count_next_states)
             {
@@ -225,14 +225,21 @@ static inline void instance__print_coords_to_log(
     fprintf(
         log_fh, "At %ld iterations Coords=[", instance->count_num_processed);
 
-    const pseduo_dfs_stack_item_t *stack_item = instance->stack;
-    const pseduo_dfs_stack_item_t *const end_stack_item =
+    const pseudo_dfs_stack_item_t *stack_item = instance->stack;
+    const pseudo_dfs_stack_item_t *const end_stack_item =
         stack_item + instance->stack_depth;
     for (; stack_item <= end_stack_item; stack_item++)
     {
         fprintf(log_fh, "%d,", stack_item->next_state_idx);
+#if 0
+    fcs_state_locs_struct_t locs;
+    fc_solve_init_locs(&locs);
+    char state_as_string[2000];
+    FCS__RENDER_STATE(state_as_string, &(stack_item->curr_state->s), &locs);
+    fprintf(log_fh, "Found State=<<'STATE'\n%s\nSTATE\n\n", state_as_string);
+#endif
     }
-#if 1
+#if 0
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
     char state_as_string[2000];
@@ -252,7 +259,7 @@ static inline void instance__load_coords_from_fh(
         const int coord = coord_from_input - 1;
         if (coord >= 0)
         {
-            pseduo_dfs_stack_item_t *const stack_item =
+            pseudo_dfs_stack_item_t *const stack_item =
                 &(instance->stack[instance->stack_depth++]);
             stack_item->next_state_idx = coord + 1;
             instance__inspect_new_state(

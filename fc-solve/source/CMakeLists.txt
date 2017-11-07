@@ -638,7 +638,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
     DBM_EXE(depth_dbm_fc_solver depth_dbm_solver.c)
     DBM_EXE(split_fcc_fc_solver split_fcc_solver.c)
 
-    IF (NOT (${STATES_TYPE} STREQUAL "INDIRECT_STACK_STATES") AND "${WITH_JUDY}")
+    IF ((NOT ("${STATES_TYPE}" STREQUAL "INDIRECT_STACK_STATES")) AND "${WITH_JUDY}")
         DBM_EXE(pseudo_dfs_fc_solver pseudo_dfs_atomic_moves_solver.c)
         TARGET_LINK_LIBRARIES("pseudo_dfs_fc_solver" ${LIBJUDY_LIB})
     ELSE ()
