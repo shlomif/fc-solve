@@ -1980,7 +1980,6 @@ typedef struct
     fcs_bool_t all_plan_items_finished_so_far;
 #else
     fcs_flare_item_t single_flare;
-    fcs_bool_t was_flare_found, was_flare_finished;
 #endif
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     fcs_int_limit_t limit;
@@ -2318,8 +2317,6 @@ static NI_INLINE void user_next_instance(fcs_user_t *const user)
         .current_plan_item_idx = 0,
         .minimal_flare = NULL,
         .all_plan_items_finished_so_far = TRUE,
-#else
-        .was_flare_finished = FALSE,
 #endif
     };
 
@@ -2843,8 +2840,6 @@ static void recycle_instance(
 #ifdef FCS_WITH_FLARES
     instance_item->current_plan_item_idx = 0;
     instance_item->minimal_flare = NULL;
-#else
-    instance_item->was_flare_found = instance_item->was_flare_finished = FALSE;
 #endif
 }
 
@@ -3047,20 +3042,17 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #else
         fcs_flare_item_t *const flare = &(instance_item->single_flare);
 
-        if (instance_item->was_flare_finished)
+        if (flare->ret_code == FCS_STATE_WAS_SOLVED)
         {
-            if (instance_item->was_flare_found)
-            {
-                user->init_num_checked_states = flare->obj_stats;
+            user->init_num_checked_states = flare->obj_stats;
 
-                ret = user->ret_code = FCS_STATE_WAS_SOLVED;
-                break;
-            }
-            else
-            {
-                recycle_instance(user, instance_item);
-                BUMP_CURR_INST();
-            }
+            ret = user->ret_code = FCS_STATE_WAS_SOLVED;
+            break;
+        }
+        else if (flare->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
+        {
+            recycle_instance(user, instance_item);
+            BUMP_CURR_INST();
         }
 #endif
         fc_solve_instance_t *const instance = &(flare->obj);
@@ -3229,9 +3221,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             {
                 instance_item->minimal_flare = flare;
             }
-#else
-            instance_item->was_flare_found = TRUE;
-            instance_item->was_flare_finished = TRUE;
 #endif
             ret = user->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
         }
@@ -3242,9 +3231,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                 fc_solve_recycle_instance(instance);
                 flare->instance_is_ready = TRUE;
             }
-#ifndef FCS_WITH_FLARES
-            instance_item->was_flare_finished = TRUE;
-#endif
         }
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
         else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
@@ -3298,7 +3284,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #ifdef FCS_WITH_FLARES
             instance_item->all_plan_items_finished_so_far = FALSE;
 #else
-            instance_item->was_flare_finished = TRUE;
+            flare->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
 #endif
         }
 #endif
