@@ -1919,7 +1919,9 @@ typedef struct
     fcs_moves_processed_t fc_pro_moves;
 #endif
     fcs_stats_t obj_stats;
+#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
     fcs_bool_t was_solution_traced;
+#endif
 #ifdef FCS_WITH_MOVES
     fcs_state_locs_struct_t trace_solution_state_locs;
 #endif
@@ -3217,7 +3219,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
+#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
             flare->was_solution_traced = FALSE;
+#endif
 #ifdef FCS_WITH_FLARES
             if ((!(instance_item->minimal_flare)) ||
                 (get_flare_move_count(user, instance_item->minimal_flare) >
