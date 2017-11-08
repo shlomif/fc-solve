@@ -2015,6 +2015,7 @@ typedef struct
 #define ACTIVE_FLARE(user) (&((user)->single_inst.single_flare))
 #define SET_ACTIVE_FLARE(user, flare)
 #endif
+#define OBJ_STATS(user) (ACTIVE_FLARE(user)->obj_stats)
     fcs_state_keyval_pair_t state;
 #ifdef FCS_WITH_MOVES
     fcs_state_keyval_pair_t running_state;
@@ -3022,7 +3023,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             if (instance_item->minimal_flare)
             {
                 SET_ACTIVE_FLARE(user, instance_item->minimal_flare);
-                user->init_num_checked_states = ACTIVE_FLARE(user)->obj_stats;
+                user->init_num_checked_states = OBJ_STATS(user);
 
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
                 break;
@@ -3731,7 +3732,7 @@ fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     return user->iterations_board_started_at.num_checked_states +
-           max(ACTIVE_FLARE(user)->obj_stats.num_checked_states,
+           max(OBJ_STATS(user).num_checked_states,
                user_obj(user)->i__num_checked_states) -
            user->init_num_checked_states.num_checked_states;
 }
@@ -4066,7 +4067,7 @@ freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     return user->iterations_board_started_at.num_states_in_collection +
-           ACTIVE_FLARE(user)->obj_stats.num_states_in_collection -
+           OBJ_STATS(user).num_states_in_collection -
            user->init_num_checked_states.num_states_in_collection;
 }
 
