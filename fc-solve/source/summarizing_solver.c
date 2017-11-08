@@ -26,16 +26,21 @@ static void __attribute__((noreturn)) print_help(void)
     exit(-1);
 }
 
-static long deals[32000];
-static size_t num_deals = 0;
+static long *mydeals = NULL;
+static size_t num_deals = 0, max_num_deals = 0;
 
 static inline void append(long idx)
 {
-    if (num_deals == COUNT(deals))
+    if (num_deals == max_num_deals)
     {
-        fc_solve_err("Number of deals exceeded %ld!\n", (long)(COUNT(deals)));
+        mydeals = SREALLOC(mydeals, max_num_deals += 1000);
+        if (!mydeals)
+        {
+            fc_solve_err(
+                "Number of deals exceeded %ld!\n", (long)max_num_deals);
+        }
     }
-    deals[num_deals++] = idx;
+    mydeals[num_deals++] = idx;
 }
 
 int main(int argc, char *argv[])
@@ -109,7 +114,7 @@ int main(int argc, char *argv[])
 
     for (size_t deal_idx = 0; deal_idx < num_deals; deal_idx++)
     {
-        const_AUTO(board_num, deals[deal_idx]);
+        const_AUTO(board_num, mydeals[deal_idx]);
         if (variant_is_freecell)
         {
             get_board_l(board_num, buffer);
@@ -159,6 +164,7 @@ int main(int argc, char *argv[])
     }
 
     freecell_solver_user_free(instance);
+    free(mydeals);
 
     return 0;
 }
