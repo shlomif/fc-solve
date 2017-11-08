@@ -74,6 +74,35 @@ int main(int argc, char *argv[])
                 fc_solve_err("seq without args!\n");
             }
         }
+        if (!strcmp(argv[arg], "slurp"))
+        {
+            arg++;
+            if (arg < argc)
+            {
+                const_AUTO(fn, argv[arg++]);
+                FILE *f = fopen(fn, "rt");
+                if (f)
+                {
+                    while (!feof(f))
+                    {
+                        long deal;
+                        if (fscanf(f, "%ld", &deal) == 1)
+                        {
+                            append(deal);
+                        }
+                    }
+                    fclose(f);
+                }
+                else
+                {
+                    fc_solve_err("Cannot slurp file!\n");
+                }
+            }
+            else
+            {
+                fc_solve_err("slurp without arg!\n");
+            }
+        }
         else
         {
             append(atol(argv[arg++]));
