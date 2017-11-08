@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * summarizing_solver.c - solves several indices of deals and prints a summary
- * of the solutions of each one.
- * */
+// summarizing_solver.c - solves several indices of deals and prints a summary
+// of the solutions of each one.
 #include "fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
