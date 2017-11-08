@@ -2031,8 +2031,10 @@ typedef struct
 #ifdef FCS_WITH_NI
     fcs_bool_t all_instances_were_suspended;
 #endif
+#ifdef FCS_WITH_ERROR_STRS
     fcs_state_validity_ret_t state_validity_ret;
     fcs_card_t state_validity_card;
+#endif
 #ifndef FCS_WITHOUT_ITER_HANDLER
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     freecell_solver_user_iter_handler_t iter_handler;
@@ -3066,18 +3068,32 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                     &(user->state), INSTANCE_FREECELLS_NUM, INSTANCE_STACKS_NUM,
                     INSTANCE_DECKS_NUM, user->indirect_stacks_buffer))
             {
+#ifdef FCS_WITH_ERROR_STRS
                 user->state_validity_ret =
                     FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
+#endif
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
 
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
+#ifdef FCS_WITH_ERROR_STRS
+            fcs_card_t state_validity_card;
+#endif
             if (FCS_STATE_VALIDITY__OK !=
-                (user->state_validity_ret = fc_solve_check_state_validity(
-                     &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                         PASS_STACKS(INSTANCE_STACKS_NUM)
-                             PASS_DECKS(INSTANCE_DECKS_NUM),
-                     &(user->state_validity_card))))
+                (
+#ifdef FCS_WITH_ERROR_STRS
+                    user->state_validity_ret =
+#endif
+                        fc_solve_check_state_validity(
+                            &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+                                PASS_STACKS(INSTANCE_STACKS_NUM)
+                                    PASS_DECKS(INSTANCE_DECKS_NUM),
+#ifdef FCS_WITH_ERROR_STRS
+                            &state_validity_card
+#else
+                        &(user->state_validity_card)
+#endif
+                            )))
             {
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
             }
