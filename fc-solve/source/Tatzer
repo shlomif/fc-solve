@@ -109,8 +109,8 @@ for my $k (@STR_OPTS__KEYS)
     $STR_OPTS{$k}{'prefix'} //= '';
 }
 
-$STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
 $STR_OPTS{'prefix'}{value} = '/usr';
+$STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
 
 my $build_type = "debug";
 my $generate_what;
@@ -167,11 +167,11 @@ my %themes =
 );
 
 foreach my $rec (
-    {id => "p4", a => "pentium4"},
-    {id => "x64", a => "barcelona"},
     {id => "c2", a => "core2",},
     {id => "ci7", a => "corei7-avx",},
     {id => "n2", a => "native",},
+    {id => "p4", a => "pentium4"},
+    {id => "x64", a => "barcelona"},
 )
 {
     my $id = $rec->{id};
