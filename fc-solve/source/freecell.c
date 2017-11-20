@@ -1502,7 +1502,16 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
 {
 #define EMPTY
     tests_define_accessors__generic(EMPTY);
+    MOVE_FUNCS__define_empty_stacks_fill();
+    MOVE_FUNCS__define_seqs_built_by();
     STACKS__SET_PARAMS();
+    const_SLOT(num_vacant_stacks, soft_thread);
+    const fcs_game_limit_t num_vacant_freecells =
+        soft_thread->num_vacant_freecells;
+    const int max_sequence_len =
+        calc_max_sequence_move(num_vacant_freecells, num_vacant_stacks - 1);
+    const fcs_game_limit_t num_virtual_vacant_stacks =
+        CALC_num_virtual_vacant_stacks();
 
     sfs_check_state_begin();
     fcs_bool_t cards_were_moved = FALSE;
@@ -1520,11 +1529,40 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
                 continue;
             }
             /* Get the top card in the stack */
-            const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+            fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
 
-            const_AUTO(dest_foundation, CALC_FOUNDATION_TO_PUT_CARD_ON());
+            var_AUTO(dest_foundation, CALC_FOUNDATION_TO_PUT_CARD_ON());
             if (dest_foundation < 0)
             {
+                if (cards_num == 1 || num_virtual_vacant_stacks == 0 ||
+                    (cards_num - 1 > max_sequence_len))
+                {
+                    continue;
+                }
+                card = fcs_col_get_card(col, 0);
+                dest_foundation = CALC_FOUNDATION_TO_PUT_CARD_ON();
+                if (dest_foundation < 0)
+                {
+                    continue;
+                }
+                col_seqs_iter_t iter = col_seqs_iter__create(
+                    &state, stack_idx PASS_sequences_are_built_by(
+                                sequences_are_built_by));
+                col_seqs_iter__advance(&iter);
+                if (iter.seq_end != iter.col_len_minus_1)
+                {
+                    continue;
+                }
+                ++num_cards_moved;
+                const int ds =
+                    find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
+                copy_two_stacks(stack_idx, ds);
+                fcs_move_sequence(ds, stack_idx, iter.seq_end);
+                fcs_state_pop_col_top(&new_state_key, stack_idx);
+                fcs_increment_foundation(new_state_key, dest_foundation);
+                fcs_move_stack_non_seq_push(moves,
+                    FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
+                    dest_foundation);
                 continue;
             }
             /* We can safely move it. */

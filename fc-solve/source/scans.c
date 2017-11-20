@@ -433,6 +433,24 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     while (PTR_STATE != NULL)
     {
         TRACE0("Start of loop");
+        {
+            const fcs_game_limit_t num_vacant_freecells =
+                count_num_vacant_freecells(
+                    LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
+            const fcs_game_limit_t num_vacant_stacks =
+                count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
+            if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
+                (num_vacant_freecells == LOCAL_FREECELLS_NUM))
+            {
+#ifdef FCS_WITH_MOVES
+                instance->final_state = PTR_STATE;
+#endif
+                error_code = FCS_STATE_WAS_SOLVED;
+                goto my_return_label;
+            }
+            soft_thread->num_vacant_freecells = num_vacant_freecells;
+            soft_thread->num_vacant_stacks = num_vacant_stacks;
+        }
         /*
          * If we do the pruning after checking for being visited, then
          * there's a risk of inconsistent result when being interrupted
@@ -449,6 +467,25 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             if (after_pruning_state)
             {
                 ASSIGN_ptr_state(after_pruning_state);
+                {
+                    const fcs_game_limit_t num_vacant_freecells =
+                        count_num_vacant_freecells(
+                            LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
+                    const fcs_game_limit_t num_vacant_stacks =
+                        count_num_vacant_stacks(
+                            LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
+                    if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
+                        (num_vacant_freecells == LOCAL_FREECELLS_NUM))
+                    {
+#ifdef FCS_WITH_MOVES
+                        instance->final_state = PTR_STATE;
+#endif
+                        error_code = FCS_STATE_WAS_SOLVED;
+                        goto my_return_label;
+                    }
+                    soft_thread->num_vacant_freecells = num_vacant_freecells;
+                    soft_thread->num_vacant_stacks = num_vacant_stacks;
+                }
             }
         }
 
@@ -505,26 +542,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         }
 #endif
 
-        const fcs_game_limit_t num_vacant_freecells =
-            count_num_vacant_freecells(
-                LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
-        const fcs_game_limit_t num_vacant_stacks =
-            count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
-        if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
-            (num_vacant_freecells == LOCAL_FREECELLS_NUM))
-        {
-#ifdef FCS_WITH_MOVES
-            instance->final_state = PTR_STATE;
-#endif
-            BUMP_NUM_CHECKED_STATES();
-            error_code = FCS_STATE_WAS_SOLVED;
-            goto my_return_label;
-        }
-
         calculate_real_depth(calc_real_depth, PTR_STATE);
 
-        soft_thread->num_vacant_freecells = num_vacant_freecells;
-        soft_thread->num_vacant_stacks = num_vacant_stacks;
         fc_solve__calc_positions_by_rank_data(
             soft_thread, &FCS_SCANS_the_state, befs_positions_by_rank
 #ifndef FCS_DISABLE_SIMPLE_SIMON
