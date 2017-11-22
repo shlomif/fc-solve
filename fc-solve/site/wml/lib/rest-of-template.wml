@@ -36,7 +36,7 @@ Please consider
 </li>
 </ul>
 <br />
-<a href="<rss_feed />" rel="rss feed" title="Subscribe to Our News"><img
+<a href="<rss_feed />" title="Subscribe to Our News"><img
     src="$(ROOT)/images/rss.png"
     alt="RSS Feed"
     class="bless"

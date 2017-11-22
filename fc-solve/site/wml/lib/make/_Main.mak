@@ -67,7 +67,8 @@ WML_FLAGS += $(COMMON_PREPROC_FLAGS)
 WML_FLAGS += --passoption=2,-X3074 \
 	-DLATEMP_SERVER=fc-solve -DLATEMP_THEME=better-scm \
 	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/ \
-	-I $${HOME}/apps/wml
+	-I $${HOME}/apps/wml \
+	--passoption=7,--skip=summary
 
 JS_MEM_BASE = libfreecell-solver.js.mem
 LIBFREECELL_SOLVER_JS_DIR = lib/fc-solve-for-javascript
