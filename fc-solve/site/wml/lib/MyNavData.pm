@@ -143,7 +143,7 @@ my $tree_contents =
         },
         {
             'text' => "Old News Items",
-            'url' => "old-news.html",
+            'url' => "old-news/",
         },
     ],
 };

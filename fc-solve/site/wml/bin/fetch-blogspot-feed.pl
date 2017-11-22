@@ -11,4 +11,4 @@ my $feed = FreecellSolver::Site::Rss->new();
 $feed->run();
 
 # Touch the files so they'll be recompiled.
-utime(undef, undef, "src/index.html.wml", "src/old-news.html.wml");
+utime(undef, undef, "src/index.html.wml", "src/old-news/index.xhtml.wml");

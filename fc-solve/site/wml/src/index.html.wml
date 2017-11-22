@@ -47,7 +47,7 @@ in the <a href="features.html"><b>Features List</b></a>.
     print_utf8 ( $news->render_front_page() );
 }:>
 
-<h3 class="plain"><a href="old-news.html">Previous News Items</a></h3>
+<h3 class="plain"><a href="old-news/">Previous News Items</a></h3>
 
 <h2>Links</h2>
 
@@ -77,8 +77,8 @@ boards can be solved.
 <a href="http://www.heyes-jones.com/astar.html">Justin Heyes-Jones’s A* page</a> - a page about the A* scan.
 </li>
 <li>
-<a href="$(ROOT)/download.html#download_other_solvers">
-patsolve</a> - a program by Dr. Tom Holroyd that solves Freecell and
+<a href="$(ROOT)/download.html#download_other_solvers">patsolve</a> -
+a program by Dr. Tom Holroyd that solves Freecell and
 Seahaven Towers games. There are some fundamental differences between its
 architecture and that of Freecell Solver, so it might be worthwhile to take a
 look. I've done some modifications on it to fix some build bugs.
