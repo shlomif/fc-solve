@@ -1187,50 +1187,15 @@ static inline int fc_solve_soft_dfs_do_solve(
                     );
                 }
 #endif
-
-                const fcs_game_limit_t num_vacant_freecells =
-                    count_num_vacant_freecells(
-                        LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
-                const fcs_game_limit_t num_vacant_stacks =
-                    count_num_vacant_stacks(
-                        LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
-                /* Check if we have reached the empty state */
-                if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
-                             (num_vacant_freecells == LOCAL_FREECELLS_NUM)))
-                {
-#ifdef FCS_WITH_MOVES
-                    instance->final_state = PTR_STATE;
-#endif
-                    BUMP_NUM_CHECKED_STATES();
-                    TRACE0("Returning FCS_STATE_WAS_SOLVED");
-                    return FCS_STATE_WAS_SOLVED;
-                }
-                /*
-                    Cache num_vacant_freecells and num_vacant_stacks in their
-                    appropriate stacks, so they won't be calculated over and
-                   over
-                    again.
-                  */
-                soft_thread->num_vacant_freecells =
-                    the_soft_dfs_info->num_vacant_freecells =
-                        num_vacant_freecells;
-                soft_thread->num_vacant_stacks =
-                    the_soft_dfs_info->num_vacant_stacks = num_vacant_stacks;
-                fc_solve__calc_positions_by_rank_data(soft_thread,
-                    &FCS_SCANS_the_state, (the_soft_dfs_info->positions_by_rank)
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-                                              ,
-                    is_simple_simon
-#endif
-                );
-
                 /* Perform the pruning. */
+                fcs_bool_t was_pruned = FALSE;
                 if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
                 {
                     fcs_collectible_state_t *const derived =
                         fc_solve_sfs_raymond_prune(soft_thread, pass);
                     if (derived)
                     {
+                        was_pruned = TRUE;
                         the_soft_dfs_info->move_func_list_idx =
                             THE_MOVE_FUNCS_LIST.num;
                         fc_solve_derived_states_list_add_state(
@@ -1251,6 +1216,46 @@ static inline int fc_solve_soft_dfs_do_solve(
                         the_soft_dfs_info->derived_states_random_indexes[0]
                             .idx = 0;
                     }
+                }
+
+                if (!was_pruned)
+                {
+                    const fcs_game_limit_t num_vacant_freecells =
+                        count_num_vacant_freecells(
+                            LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
+                    const fcs_game_limit_t num_vacant_stacks =
+                        count_num_vacant_stacks(
+                            LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
+                    /* Check if we have reached the empty state */
+                    if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
+                                 (num_vacant_freecells == LOCAL_FREECELLS_NUM)))
+                    {
+#ifdef FCS_WITH_MOVES
+                        instance->final_state = PTR_STATE;
+#endif
+                        BUMP_NUM_CHECKED_STATES();
+                        TRACE0("Returning FCS_STATE_WAS_SOLVED");
+                        return FCS_STATE_WAS_SOLVED;
+                    }
+                    /*
+                        Cache num_vacant_freecells and num_vacant_stacks in
+                       their appropriate stacks, so they won't be calculated
+                       over and over again.
+                      */
+                    soft_thread->num_vacant_freecells =
+                        the_soft_dfs_info->num_vacant_freecells =
+                            num_vacant_freecells;
+                    soft_thread->num_vacant_stacks =
+                        the_soft_dfs_info->num_vacant_stacks =
+                            num_vacant_stacks;
+                    fc_solve__calc_positions_by_rank_data(
+                        soft_thread, &FCS_SCANS_the_state,
+                        (the_soft_dfs_info->positions_by_rank)
+#ifndef FCS_DISABLE_SIMPLE_SIMON
+                            ,
+                        is_simple_simon
+#endif
+                    );
                 }
             }
 
