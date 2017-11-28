@@ -1044,10 +1044,12 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
         ssize_t *const depth_ptr = &(DFS_VAR(soft_thread, depth));
         ++DEPTH();
         fcs_derived_states_list_t prev_derived_list = {
-            .num_states = 0, .states = NULL,
+            .num_states = 0,
+            .states = NULL,
         };
         fcs_derived_states_list_t next_derived_list = {
-            .num_states = 0, .states = NULL,
+            .num_states = 0,
+            .states = NULL,
         };
         fc_solve_derived_states_list_add_state(
             &prev_derived_list, FCS_STATE_kv_to_collectible(&pass), 0);
@@ -1075,7 +1077,7 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
                                        ,
                     is_simple_simon
 #endif
-                    );
+                );
                 fc_solve__moves_order__call(g.m.move_funcs[i], soft_thread,
                     this_pass, &next_derived_list);
             }
@@ -1083,7 +1085,8 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
             prev_derived_list = next_derived_list;
 
             next_derived_list = (fcs_derived_states_list_t){
-                .num_states = 0, .states = NULL,
+                .num_states = 0,
+                .states = NULL,
             };
         }
         for (uint_fast32_t i = 0; i < prev_derived_list.num_states; i++)
@@ -1356,6 +1359,9 @@ static inline int fc_solve_soft_dfs_do_solve(
                                       soft_thread, soft_dfs_info)[DEPTH() - 1]
                                                          .state))
 #endif
+                    );
+                }
+#endif
 
                 const fcs_game_limit_t num_vacant_freecells =
                     count_num_vacant_freecells(
@@ -1374,7 +1380,6 @@ static inline int fc_solve_soft_dfs_do_solve(
                     TRACE0("Returning FCS_STATE_WAS_SOLVED");
                     return FCS_STATE_WAS_SOLVED;
                 }
-#endif
                 /* Perform the pruning. */
                 fcs_bool_t was_pruned = FALSE;
                 if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
@@ -1462,9 +1467,9 @@ static inline int fc_solve_soft_dfs_do_solve(
 
                 do
                 {
-                    const_AUTO(g,
-                        &(THE_MOVE_FUNCS_LIST.m.move_funcs
-                                [the_soft_dfs_info->move_func_list_idx]));
+                    const_AUTO(
+                        g, &(THE_MOVE_FUNCS_LIST.m.move_funcs
+                                   [the_soft_dfs_info->move_func_list_idx]));
                     fc_solve__moves_order__call(
                         ((g->shuffling_type == FCS_SINGLE)
                                 ? *g
