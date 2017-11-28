@@ -15,7 +15,7 @@
 #include "scans.h"
 #include "meta_alloc.h"
 #include "move_stack_compact_alloc.h"
-#include "freecell.h"
+#include "instance.h"
 
 #undef DEBUG
 

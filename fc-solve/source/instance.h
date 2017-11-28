@@ -882,7 +882,7 @@ static inline void fc_solve_soft_thread_update_initial_cards_val(
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t *const, fcs_kv_state_t);
+    fc_solve_soft_thread_t *, fcs_kv_state_t);
 
 #ifdef FCS_RCS_STATES
 fcs_state_t *fc_solve_lookup_state_key_from_val(fc_solve_instance_t *instance,
