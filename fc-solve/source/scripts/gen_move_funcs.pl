@@ -41,7 +41,6 @@ my $aliases_string = join(
 path('move_funcs_maps.c')->spew_utf8(<<"EOF");
 // This file is generated from gen_move_funcs.pl.
 // Do not edit by hand!!!
-#include "instance.h"
 #include "freecell.h"
 #include "simpsim.h"
 
