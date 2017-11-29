@@ -154,7 +154,7 @@ my %themes =
 (
     tt => [qw(-r --notest-suite --static)],
     bench => [qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1)],
-    fc_bench => [qw( -l bench --fc-only --without-fc-pro) ],
+    fc_bench => [qw( -l bench --fc-only --without-fc-pro --nobuild-docs ) ],
     mem_reduction_settings => [qw(
         --rcs --with-compact-moves --without-depth-field
         )],
