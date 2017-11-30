@@ -3,28 +3,11 @@
 use strict;
 use warnings;
 
-package MyTidy;
-
-use MooX qw/ late /;
-
-extends('Test::HTML::Tidy::Recursive');
-
-sub calc_tidy
-{
-    my $self = shift;
-
-    my $tidy = HTML::Tidy->new( { output_xhtml => 1, } );
-
-    # $tidy->ignore( type => TIDY_WARNING, type => TIDY_INFO );
-
-    return $tidy;
-}
-
-package main;
+use Test::HTML::Tidy::Recursive::Strict;
 
 my %whitelist = ( map { $_ => 1 } ('dest/old-news/index.xhtml'), );
 
-MyTidy->new(
+Test::HTML::Tidy::Recursive::Strict->new(
     {
         filename_filter => sub {
             my $fn = shift;
