@@ -229,10 +229,14 @@ class CardsStringParser<CardType> extends StringParser {
     }
 }
 
-export function fcs_js__column_from_string(start_char_idx: number, orig_s: string): ColumnParseResult {
+export function fcs_js__column_from_string(start_char_idx: number, orig_s: string, force_leading_colon: boolean): ColumnParseResult {
     var p = new CardsStringParser<Card>(orig_s, fcs_js__card_from_string);
 
-    p.consume_match('^((?:\: +)?)');
+    var match = p.consume_match('^((?:\: +)?)');
+
+    if (force_leading_colon && !match) {
+        return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Columns must start with a ":" in strict mode.', []);
+    }
 
     var ret = p.loop(card_re, () => { return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Wrong card format - should be [Rank][Suit]', []); });
     if (ret) {
@@ -491,7 +495,7 @@ export class BoardParseResult {
         for (var i=0; i < num_stacks; i++) {
             const start_char_idx = p.getConsumed();
             var l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
-            var col = fcs_js__column_from_string(start_char_idx, l);
+            var col = fcs_js__column_from_string(start_char_idx, l, true);
             if (! col.is_correct) {
                 that.errors.push(new ParseError(
                     ParseErrorType.LINE_PARSE_ERROR,

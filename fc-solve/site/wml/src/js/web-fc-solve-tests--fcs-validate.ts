@@ -52,7 +52,7 @@ export function test_fcs_validate()
         {
             var start_char_idx = 10;
             var col_str = 'KS QD';
-            var result = fcs_js__column_from_string(start_char_idx, col_str);
+            var result = fcs_js__column_from_string(start_char_idx, col_str, false);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -74,7 +74,7 @@ export function test_fcs_validate()
         }
 
         {
-            var result = fcs_js__column_from_string(0, '3C AH 7D 6S');
+            var result = fcs_js__column_from_string(0, '3C AH 7D 6S', false);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -86,7 +86,7 @@ export function test_fcs_validate()
         }
 
         {
-            var result = fcs_js__column_from_string(0, '3C HA');
+            var result = fcs_js__column_from_string(0, '3C HA', false);
 
             // TEST
             a.ok ((! result.is_correct), "Column is incorrectly formatted.");
@@ -99,7 +99,7 @@ export function test_fcs_validate()
         }
 
         {
-            var result = fcs_js__column_from_string(0, ': 3D AH KH');
+            var result = fcs_js__column_from_string(0, ': 3D AH KH', true);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -109,8 +109,8 @@ export function test_fcs_validate()
         }
 
         {
-            var input_str = '3C AH 7D 6S  # This is a comment.';
-            var result = fcs_js__column_from_string(0, input_str);
+            var input_str = ': 3C AH 7D 6S  # This is a comment.';
+            var result = fcs_js__column_from_string(0, input_str, true);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -124,8 +124,8 @@ export function test_fcs_validate()
         }
 
         {
-            var input_str = "3S AD 7D 6S  # This is a comment.\n";
-            var result = fcs_js__column_from_string(0, input_str);
+            var input_str = ": 3S AD 7D 6S  # This is a comment.\n";
+            var result = fcs_js__column_from_string(0, input_str, true);
 
             // TEST
             a.ok (result.is_correct, "Newline terminated Column was parsed correctly.");
