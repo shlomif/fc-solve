@@ -565,6 +565,7 @@ struct fc_solve_instance_struct
     fcs_int_limit_t effective_trim_states_in_collection_from;
 #endif
 #endif
+    fc_solve_seq_cards_power_type_t initial_cards_under_sequences_value;
 /*
  * tree is the balanced binary tree that is used to store and index
  * the checked states.
@@ -776,7 +777,6 @@ struct fc_solve_instance_struct
      * */
     fcs_bool_t is_simple_simon;
 #endif
-    fc_solve_seq_cards_power_type_t initial_cards_under_sequences_value;
 };
 
 #ifdef FCS_SINGLE_HARD_THREAD
