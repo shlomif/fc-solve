@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * rate_state.h - for rating states.
- */
+// rate_state.h - for rating states.
 #pragma once
 
 #ifdef __cplusplus

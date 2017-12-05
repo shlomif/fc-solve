@@ -397,8 +397,6 @@ struct fc_solve_soft_thread_struct
     /* The super-method type - can be  */
     fcs_super_method_type_t super_method_type;
 
-    fc_solve_seq_cards_power_type_t initial_cards_under_sequences_value;
-
     struct
     {
         struct
@@ -778,6 +776,7 @@ struct fc_solve_instance_struct
      * */
     fcs_bool_t is_simple_simon;
 #endif
+    fc_solve_seq_cards_power_type_t initial_cards_under_sequences_value;
 };
 
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -850,35 +849,6 @@ static inline int update_col_cards_under_sequences(
     {
     }
     return d;
-}
-
-static inline void fc_solve_soft_thread_update_initial_cards_val(
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    fc_solve_instance_t *const instance = fcs_st_instance(soft_thread);
-#ifdef FCS_FREECELL_ONLY
-#define SEQS_BUILT_BY
-#else
-    const int sequences_are_built_by =
-        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
-#define SEQS_BUILT_BY sequences_are_built_by,
-#endif
-    // We cannot use typeof here because clang complains about double const.
-    const fcs_state_t *const s = &(instance->state_copy_ptr->s);
-
-    fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
-    for (int a = 0; a < INSTANCE_STACKS_NUM; a++)
-    {
-        const_AUTO(col, fcs_state_get_col(*s, a));
-        const_AUTO(col_len, fcs_col_len(col));
-        if (col_len <= 1)
-        {
-            continue;
-        }
-        cards_under_sequences += FCS_SEQS_OVER_RENEGADE_POWER(
-            update_col_cards_under_sequences(SEQS_BUILT_BY col, col_len - 1));
-    }
-    soft_thread->initial_cards_under_sequences_value = cards_under_sequences;
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(

@@ -77,10 +77,8 @@ static inline void fc_solve_initialize_befs_rater(
     {
         normalized_befs_weights[i] = ((befs_weights[i] /= sum) * INT_MAX);
     }
-#ifndef HARD_CODED_NUM_STACKS
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
-#endif
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
@@ -114,7 +112,7 @@ static inline void fc_solve_initialize_befs_rater(
 
     weighting->cards_under_sequences_factor =
         normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] /
-        soft_thread->initial_cards_under_sequences_value;
+        instance->initial_cards_under_sequences_value;
 
     weighting->seqs_over_renegade_cards_factor =
         normalized_befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] /
@@ -185,8 +183,8 @@ static inline pq_rating_t befs_rate_state(
     const fc_solve_state_weighting_t *const weighting,
     const fcs_state_t *const state, const int negated_depth)
 {
-#ifndef FCS_FREECELL_ONLY
     const_AUTO(instance, fcs_st_instance(soft_thread));
+#ifndef FCS_FREECELL_ONLY
     const int sequences_are_built_by =
         GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
 #endif
@@ -258,7 +256,7 @@ static inline pq_rating_t befs_rate_state(
                       : ((num_vacant_freecells + 1) << num_vacant_stacks))     \
             : (unlimited_sequence_move ? (num_vacant_freecells) : 0))
         sum += ((CALC_VACANCY_VAL() * weighting->max_sequence_move_factor) +
-                ((soft_thread->initial_cards_under_sequences_value -
+                ((instance->initial_cards_under_sequences_value -
                      cards_under_sequences) *
                     weighting->cards_under_sequences_factor) +
                 (seqs_over_renegade_cards *

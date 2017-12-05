@@ -309,8 +309,6 @@ static inline void fc_solve_initialize_bfs_queue(
 void fc_solve_soft_thread_init_befs_or_bfs(
     fc_solve_soft_thread_t *const soft_thread)
 {
-    fc_solve_soft_thread_update_initial_cards_val(soft_thread);
-
     if (soft_thread->is_befs)
     {
 #define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
