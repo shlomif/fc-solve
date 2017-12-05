@@ -38,11 +38,11 @@ class LinesHandler:
                                           not_at_start_msg):
         i = self._find_indexes(myregex, too_many_msg, not_at_start_msg)
         if i == self.line_num:
-            l = self.content[self.line_num]
-            if not re.match(validregex, l):
+            line = self.content[self.line_num]
+            if not re.match(validregex, line):
                 raise ValueError(wrong_fmt_msg)
             self.line_num += 1
-            return re.sub(r'\s+$', '', l)
+            return re.sub(r'\s+$', '', line)
         else:
             return None
 
@@ -78,7 +78,7 @@ def shlomif_main(args):
         with open(input_fn) as f:
             content = f.readlines()
 
-    layout = [[None for x in range(0, 52)] for l in range(0, 52)]
+    layout = [[None for x in range(0, 52)] for line in range(0, 52)]
 
     rank_re = r'[A23456789TJQK]'
     suit_re = r'[HCDS]'
@@ -109,11 +109,11 @@ def shlomif_main(args):
     max_col = -1
 
     while h.line_num < len(content):
-        l = content[h.line_num]
+        line = content[h.line_num]
         x = 0
         pos = 0
-        while x < len(l):
-            s = l[x:min(x+3, len(l))]
+        while x < len(line):
+            s = line[x:min(x+3, len(line))]
             card = None
             if not re.match(r'^\s*$', s):
                 m = re.match(r'^(' + card_re + r') ?$', s)
@@ -132,11 +132,11 @@ def shlomif_main(args):
         h.line_num += 1
 
     for idx in range(0, max_col + 1):
-        l = layout[idx]
-        while not l[-1]:
-            l.pop()
-        for x in range(0, len(l)):
-            if not l[x]:
+        line = layout[idx]
+        while not line[-1]:
+            line.pop()
+        for x in range(0, len(line)):
+            if not line[x]:
                 raise ValueError(
                     "Stack no. %d contains a gap at position no. %d. Aborting."
                     % (idx+1, x+1)
@@ -149,8 +149,8 @@ def shlomif_main(args):
             return
         _out_line(foundations_line)
         _out_line(freecells_line)
-        for l in layout[0:max_col+1]:
-            _out_line(" ".join([":"] + l))
+        for line in layout[0:max_col+1]:
+            _out_line(" ".join([":"] + line))
 
     return 0
 
