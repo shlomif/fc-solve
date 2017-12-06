@@ -201,15 +201,15 @@ ADD_CUSTOM_COMMAND(
 )
 SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_rate_state_c.pl")
 SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
-SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c")
-add_gen_c("${rate_state_output}")
+SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c" "${CMAKE_CURRENT_BINARY_DIR}/rate_state.h")
+add_gen_c(${rate_state_output})
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
 ADD_CUSTOM_COMMAND(
-    OUTPUT "${rate_state_output}"
+    OUTPUT ${rate_state_output}
     COMMAND "${PERL_EXECUTABLE}"
     ARGS ${rate_state_args}
-    DEPENDS "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}/rate_state.h"
+    DEPENDS "${rate_state_gen}"
 )
 SET (is_parent_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_is_parent_lookup_c.pl")
 SET (is_parent_args "${is_parent_gen}")
