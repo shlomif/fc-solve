@@ -458,24 +458,6 @@ static inline void fc_solve_start_instance_process_with_board(
 #ifndef FCS_DISABLE_PATSOLVE
     instance->initial_non_canonized_state = initial_non_canonized_state;
 #endif
-    /* Initialize the first state to init_state */
-    instance->state_copy = (typeof(instance->state_copy)){.s = init_state->s,
-        .info = {
-#ifdef INDIRECT_STACK_STATES
-            .stacks_copy_on_write_flags = ~0,
-#endif
-
-/* Initialize the state to be a base state for the game tree */
-#ifndef FCS_WITHOUT_DEPTH_FIELD
-            .depth = 0,
-#endif
-#ifdef FCS_WITH_MOVES
-            .moves_to_parent = NULL,
-#endif
-            .visited = 0,
-            .parent = NULL,
-            .scan_visited = {0}}};
-    update_initial_cards_val(instance);
 
 /* Initialize the data structure that will manage the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
@@ -565,11 +547,26 @@ static inline void fc_solve_start_instance_process_with_board(
     db_open(
         NULL, DB_BTREE, O_CREAT | O_RDWR, 0777, NULL, NULL, &(instance->db));
 #endif
+    // Initialize the first state to init_state
+    instance->state_copy = (typeof(instance->state_copy)){.s = init_state->s,
+        .info = {
+#ifdef INDIRECT_STACK_STATES
+            .stacks_copy_on_write_flags = ~0,
+#endif
+// Initialize the state to be a base state for the game tree
+#ifndef FCS_WITHOUT_DEPTH_FIELD
+            .depth = 0,
+#endif
+#ifdef FCS_WITH_MOVES
+            .moves_to_parent = NULL,
+#endif
+            .visited = 0,
+            .parent = NULL,
+            .scan_visited = {0}}};
+    update_initial_cards_val(instance);
 
-    fcs_kv_state_t no_use;
-    fcs_kv_state_t pass_copy =
-        FCS_STATE_keyval_pair_to_kv(&instance->state_copy);
-
+    fcs_kv_state_t no_use,
+        pass_copy = FCS_STATE_keyval_pair_to_kv(&instance->state_copy);
     fc_solve_check_and_add_state(
 #ifdef FCS_SINGLE_HARD_THREAD
         instance,
@@ -597,7 +594,6 @@ static inline void fc_solve_start_instance_process_with_board(
             }
         }
     }
-
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
     STRUCT_SET_FLAG_TO(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL,
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_PROTO));
