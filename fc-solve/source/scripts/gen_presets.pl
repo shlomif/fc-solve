@@ -45,6 +45,7 @@ sub compile_preset
     my $preset = $presets{$preset_name};
     my @params = @{$preset};
     eval {
+        CMD:
         while ( my $cmd = shift(@params) )
         {
             my $arg    = shift(@params);
@@ -70,53 +71,29 @@ sub compile_preset
                     die "Unknown inheritor!\n";
                 }
                 compile_preset( $arg, $compiled );
+                next CMD;
             }
-            elsif ( $handle->( qr/s|stacks?/, qr/[0-9]+/, 'stacks' ) )
-            {
-            }
-            elsif ( $handle->( qr/f|freecells?/, qr/[0-9]+/, 'freecells' ) )
-            {
-            }
-            elsif ( $handle->( qr/d|decks?/, qr/[12]/, 'decks' ) )
-            {
-            }
-            elsif (
-                $handle->(
-                    qr/sbb|seqs_build_by/, qr/ac|suit|rank/m,
-                    'seqs_build_by'
-                )
-                )
-            {
-            }
-            elsif (
-                $handle->(
+            for my $params (
+                [ qr/s|stacks?/,         qr/[0-9]+/,        'stacks' ],
+                [ qr/f|freecells?/,      qr/[0-9]+/,        'freecells' ],
+                [ qr/d|decks?/,          qr/[12]/,          'decks' ],
+                [ qr/sbb|seqs_build_by/, qr/ac|suit|rank/m, 'seqs_build_by' ],
+                [
                     qr/(?:sm|(?:seq|sequence)_move)/,
                     qr/limited|unlimited/,
                     'sequence_move',
                     sub { return shift =~ /un/ ? 1 : 0; }
-                )
-                )
-            {
-            }
-            elsif (
-                $handle->(
+                ],
+                [
                     qr/(?:esf|empty_stacks_fill(?:ed(?:_by)?)?)/,
                     qr/(?:any_card|kings_only|none)/,
                     'empty_stacks_fill'
-                )
-                )
-            {
-            }
-            elsif (
-                $handle->(
+                ],
+                [
                     qr/(?:to|moves_order)/, qr/[0-9a-hA-G\[\(\)\]]+/,
                     'moves_order'
-                )
-                )
-            {
-            }
-            elsif (
-                $handle->(
+                ],
+                [
                     qr/(?:am|allowed_moves)/,
                     qr/[0-9a-jA-G]+/,
                     'allowed_moves',
@@ -130,14 +107,15 @@ sub compile_preset
                         }
                         return sprintf( "0x%XLL", $total );
                     }
-                )
+                ],
                 )
             {
+                if ( $handle->(@$params) )
+                {
+                    next CMD;
+                }
             }
-            else
-            {
-                die "Unknown Command $cmd\n";
-            }
+            die "Unknown Command $cmd\n";
         }
     };
     if ($@)
