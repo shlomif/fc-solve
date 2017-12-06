@@ -199,18 +199,9 @@ ADD_CUSTOM_COMMAND(
     ARGS ${presets_gen_args}
     DEPENDS "${presets_gen}" "${MOVE_GEN_MOD}"
 )
-SET (rate_state_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_rate_state_c.pl")
-SET (rate_state_args "${rate_state_gen}" "${CMAKE_CURRENT_SOURCE_DIR}")
 SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c" "${CMAKE_CURRENT_BINARY_DIR}/rate_state.h")
-add_gen_c(${rate_state_output})
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
-ADD_CUSTOM_COMMAND(
-    OUTPUT ${rate_state_output}
-    COMMAND "${PERL_EXECUTABLE}"
-    ARGS ${rate_state_args}
-    DEPENDS "${rate_state_gen}"
-)
 SET (is_parent_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_is_parent_lookup_c.pl")
 SET (is_parent_args "${is_parent_gen}")
 SET (is_parent_output
@@ -219,6 +210,7 @@ SET (is_parent_output
     "${CMAKE_CURRENT_BINARY_DIR}/is_king.c" "${CMAKE_CURRENT_BINARY_DIR}/is_king.h"
     "${CMAKE_CURRENT_BINARY_DIR}/is_parent.c" "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h"
     "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.c" "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.h"
+    ${rate_state_output}
     )
 add_gen_c(${is_parent_output})
 ADD_CUSTOM_COMMAND(
@@ -227,8 +219,6 @@ ADD_CUSTOM_COMMAND(
     ARGS ${is_parent_args}
     DEPENDS "${is_parent_gen}"
 )
-
-EXECUTE_PROCESS(COMMAND "perl" ${rate_state_args})
 
 SET (patsolve_dir "${pats_dir}/patsolve")
 SET (p_dir "${patsolve_dir}")

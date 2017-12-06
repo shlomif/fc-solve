@@ -145,3 +145,17 @@ qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
     ],
     "\ntypedef struct { size_t start, end; } pos_by_rank__freecell_t;\n",
 );
+{
+    my $TYPE_NAME  = 'fc_solve_seq_cards_power_type_t';
+    my $ARRAY_NAME = 'fc_solve_seqs_over_cards_lookup';
+    my $POWER      = 1.3;
+    my $TOP        = 2 * 13 * 4 + 1;
+    my $DECL       = "const $TYPE_NAME ${ARRAY_NAME}[$TOP]";
+    emit(
+        $DECL,
+        'rate_state',
+        [],
+        [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
+"\ntypedef double $TYPE_NAME;\n#define FCS_SEQS_OVER_RENEGADE_POWER(n) ${ARRAY_NAME}[(n)]\n",
+    );
+}
