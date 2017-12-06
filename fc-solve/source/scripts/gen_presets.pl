@@ -47,7 +47,21 @@ sub compile_preset
     eval {
         while ( my $cmd = shift(@params) )
         {
-            my $arg = shift(@params);
+            my $arg    = shift(@params);
+            my $handle = sub {
+                my ( $CMD_RE, $ARG_RE, $NAME, $cb ) = @_;
+                $cb //= sub { return shift; };
+                if ( $cmd =~ /\A(?:$CMD_RE)\z/ )
+                {
+                    if ( $arg !~ /\A(?:$ARG_RE)\z/ )
+                    {
+                        die "Argument to $NAME is invalid!\n";
+                    }
+                    $compiled->{$NAME} = $cb->($arg);
+                    return 1;
+                }
+                return;
+            };
 
             if ( $cmd =~ /^(?:i|inherits?)$/ )
             {
@@ -57,76 +71,68 @@ sub compile_preset
                 }
                 compile_preset( $arg, $compiled );
             }
-            elsif ( $cmd =~ /^(?:s|stacks?)$/ )
+            elsif ( $handle->( qr/s|stacks?/, qr/[0-9]+/, 'stacks' ) )
             {
-                if ( $arg !~ /^[0-9]+$/ )
-                {
-                    die "Argument to stacks is not an integer!\n";
-                }
-                $compiled->{'stacks'} = $arg;
             }
-            elsif ( $cmd =~ /^(?:f|freecells?)$/ )
+            elsif ( $handle->( qr/f|freecells?/, qr/[0-9]+/, 'freecells' ) )
             {
-                if ( $arg !~ /^[0-9]+$/ )
-                {
-                    die "Argument to freecells is not an integer!\n";
-                }
-                $compiled->{'freecells'} = $arg;
             }
-            elsif ( $cmd =~ /^(?:d|decks?)$/ )
+            elsif ( $handle->( qr/d|decks?/, qr/[12]/, 'decks' ) )
             {
-                if ( $arg !~ /^(?:1|2)$/ )
-                {
-                    die "Argument to decks is not 1 or 2!\n";
-                }
-                $compiled->{'decks'} = $arg;
             }
-            elsif ( $cmd =~ /^(?:sbb|seqs_build_by)$/ )
+            elsif (
+                $handle->(
+                    qr/sbb|seqs_build_by/, qr/ac|suit|rank/m,
+                    'seqs_build_by'
+                )
+                )
             {
-                if ( $arg !~ /^(?:ac|suit|rank)$/ )
-                {
-                    die "Argument to stacks_build_by is improper!\n";
-                }
-                $compiled->{'seqs_build_by'} = $arg;
             }
-            elsif ( $cmd =~ /^(?:sm|(?:seq|sequence)_move)$/ )
+            elsif (
+                $handle->(
+                    qr/(?:sm|(?:seq|sequence)_move)/,
+                    qr/limited|unlimited/,
+                    'sequence_move',
+                    sub { return shift =~ /un/ ? 1 : 0; }
+                )
+                )
             {
-                if ( $arg !~ /^(?:limited|unlimited)$/ )
-                {
-                    die "Argument to sequence move is not limited/unlimited!\n";
-                }
-                $compiled->{'sequence_move'} =
-                    ( ( $arg eq "unlimited" ) ? 1 : 0 );
             }
-            elsif ( $cmd =~ /^(?:esf|empty_stacks_fill(?:ed(?:_by)?)?)$/ )
+            elsif (
+                $handle->(
+                    qr/(?:esf|empty_stacks_fill(?:ed(?:_by)?)?)/,
+                    qr/(?:any_card|kings_only|none)/,
+                    'empty_stacks_fill'
+                )
+                )
             {
-                if ( $arg !~ /^(?:any_card|kings_only|none)$/ )
-                {
-                    die "Improper parameter to Empty Stacks Filled By!\n";
-                }
-                $compiled->{'empty_stacks_fill'} = $arg;
             }
-            elsif ( $cmd =~ /^(?:to|moves_order)$/ )
+            elsif (
+                $handle->(
+                    qr/(?:to|moves_order)/, qr/[0-9a-hA-G\[\(\)\]]+/,
+                    'moves_order'
+                )
+                )
             {
-                if ( $arg =~ /[^0-9a-hA-G\[\(\)\]]/ )
-                {
-                    die "Unrecognized character in Tests order!\n";
-                }
-                $compiled->{'moves_order'} = $arg;
             }
-            elsif ( $cmd =~ /^(?:am|allowed_moves)$/ )
+            elsif (
+                $handle->(
+                    qr/(?:am|allowed_moves)/,
+                    qr/[0-9a-jA-G]+/,
+                    'allowed_moves',
+                    sub {
+                        my $total = 0;
+                        foreach my $char ( split //, shift )
+                        {
+                            $total |=
+                                ( 1 << $declared_move_funcs->{ $aliases->{$char}
+                                } );
+                        }
+                        return sprintf( "0x%XLL", $total );
+                    }
+                )
+                )
             {
-                if ( $arg =~ /[^0-9a-jA-G]/ )
-                {
-                    die "Unrecognized character in Allowed moves!\n";
-                }
-                my $total = 0;
-                foreach my $char ( split //, $arg )
-                {
-                    $total |=
-                        ( 1 << $declared_move_funcs->{ $aliases->{$char} } );
-                }
-                $compiled->{'allowed_moves'} = sprintf( "0x%XLL", $total );
             }
             else
             {
