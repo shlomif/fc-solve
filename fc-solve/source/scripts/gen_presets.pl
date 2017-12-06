@@ -48,21 +48,7 @@ sub compile_preset
         CMD:
         while ( my $cmd = shift(@params) )
         {
-            my $arg    = shift(@params);
-            my $handle = sub {
-                my ( $CMD_RE, $ARG_RE, $NAME, $cb ) = @_;
-                $cb //= sub { return shift; };
-                if ( $cmd =~ /\A(?:$CMD_RE)\z/ )
-                {
-                    if ( $arg !~ /\A(?:$ARG_RE)\z/ )
-                    {
-                        die "Argument to $NAME is invalid!\n";
-                    }
-                    $compiled->{$NAME} = $cb->($arg);
-                    return 1;
-                }
-                return;
-            };
+            my $arg = shift(@params);
 
             if ( $cmd =~ /^(?:i|inherits?)$/ )
             {
@@ -110,8 +96,15 @@ sub compile_preset
                 ],
                 )
             {
-                if ( $handle->(@$params) )
+                my ( $CMD_RE, $ARG_RE, $NAME, $cb ) = @$params;
+                $cb //= sub { return shift; };
+                if ( $cmd =~ /\A(?:$CMD_RE)\z/ )
                 {
+                    if ( $arg !~ /\A(?:$ARG_RE)\z/ )
+                    {
+                        die "Argument to $NAME is invalid!\n";
+                    }
+                    $compiled->{$NAME} = $cb->($arg);
                     next CMD;
                 }
             }
