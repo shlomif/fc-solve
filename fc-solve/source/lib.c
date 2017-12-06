@@ -458,26 +458,23 @@ static inline void fc_solve_start_instance_process_with_board(
 #ifndef FCS_DISABLE_PATSOLVE
     instance->initial_non_canonized_state = initial_non_canonized_state;
 #endif
-    /* Allocate the first state and initialize it to init_state */
-    fcs_state_keyval_pair_t *const state_copy_ptr = &instance->state_copy;
-
-    *state_copy_ptr = *init_state;
+    /* Initialize the first state to init_state */
+    instance->state_copy = (typeof(instance->state_copy)){.s = init_state->s,
+        .info = {
 #ifdef INDIRECT_STACK_STATES
-    state_copy_ptr->info.stacks_copy_on_write_flags = ~0;
+            .stacks_copy_on_write_flags = ~0,
 #endif
 
 /* Initialize the state to be a base state for the game tree */
 #ifndef FCS_WITHOUT_DEPTH_FIELD
-    state_copy_ptr->info.depth = 0;
+            .depth = 0,
 #endif
 #ifdef FCS_WITH_MOVES
-    state_copy_ptr->info.moves_to_parent = NULL;
+            .moves_to_parent = NULL,
 #endif
-    state_copy_ptr->info.visited = 0;
-    state_copy_ptr->info.parent = NULL;
-    memset(&(state_copy_ptr->info.scan_visited), '\0',
-        sizeof(state_copy_ptr->info.scan_visited));
-
+            .visited = 0,
+            .parent = NULL,
+            .scan_visited = {0}}};
     update_initial_cards_val(instance);
 
 /* Initialize the data structure that will manage the state collection */
@@ -570,7 +567,8 @@ static inline void fc_solve_start_instance_process_with_board(
 #endif
 
     fcs_kv_state_t no_use;
-    fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr);
+    fcs_kv_state_t pass_copy =
+        FCS_STATE_keyval_pair_to_kv(&instance->state_copy);
 
     fc_solve_check_and_add_state(
 #ifdef FCS_SINGLE_HARD_THREAD
