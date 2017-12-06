@@ -183,7 +183,7 @@ sub run_tests
     my ( $blurb_base_base, $args ) = @_;
 
     my $idx = $test_index++;
-    my $blurb_base = sprintf "%s [idx=%d / %d]", $blurb_base_base, $idx,
+    my $blurb_base = sprintf "%s [ idx = %d / %d ]", $blurb_base_base, $idx,
         scalar(@tests);
 
     my $tatzer_args       = $args->{'tatzer_args'};
