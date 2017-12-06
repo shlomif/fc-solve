@@ -150,9 +150,8 @@ qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
     my $ARRAY_NAME = 'fc_solve_seqs_over_cards_lookup';
     my $POWER      = 1.3;
     my $TOP        = 2 * 13 * 4 + 1;
-    my $DECL       = "const $TYPE_NAME ${ARRAY_NAME}[$TOP]";
     emit(
-        $DECL,
+        "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
         'rate_state',
         [],
         [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
