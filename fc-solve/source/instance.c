@@ -439,7 +439,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
 
         fcs_state_keyval_pair_t s_and_info;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
-        FCS_STATE__DUP_keyval_pair(s_and_info, *(instance->state_copy_ptr));
+        FCS_STATE__DUP_keyval_pair(s_and_info, (instance->state_copy));
 
 #ifndef HARD_CODED_NUM_STACKS
         const int stacks_num = INSTANCE_STACKS_NUM;

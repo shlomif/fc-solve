@@ -165,7 +165,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
         if (!FCS_S_PARENT(parents_stack[parents_stack_len - 1].state_val))
         {
-            new_cache_state->key = instance->state_copy_ptr->s;
+            new_cache_state->key = instance->state_copy.s;
             break;
         }
         else
@@ -344,7 +344,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     }
     BEFS_M_VAR(soft_thread, first_state_to_check) =
         FCS_STATE_keyval_pair_to_collectible(
-            fcs_st_instance(soft_thread)->state_copy_ptr);
+            &fcs_st_instance(soft_thread)->state_copy);
 }
 
 /*

@@ -428,7 +428,7 @@ static inline void update_initial_cards_val(fc_solve_instance_t *const instance)
 #define SEQS_BUILT_BY sequences_are_built_by,
 #endif
     // We cannot use typeof here because clang complains about double const.
-    const fcs_state_t *const s = &(instance->state_copy_ptr->s);
+    const fcs_state_t *const s = &(instance->state_copy.s);
 
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     for (int a = 0; a < INSTANCE_STACKS_NUM; a++)
@@ -459,12 +459,9 @@ static inline void fc_solve_start_instance_process_with_board(
     instance->initial_non_canonized_state = initial_non_canonized_state;
 #endif
     /* Allocate the first state and initialize it to init_state */
-    fcs_state_keyval_pair_t *const state_copy_ptr =
-        (fcs_state_keyval_pair_t *)fcs_compact_alloc_ptr(
-            &(INST_HT0(instance).allocator), sizeof(*state_copy_ptr));
+    fcs_state_keyval_pair_t *const state_copy_ptr = &instance->state_copy;
 
-    FCS_STATE__DUP_keyval_pair(*state_copy_ptr, *init_state);
-
+    *state_copy_ptr = *init_state;
 #ifdef INDIRECT_STACK_STATES
     state_copy_ptr->info.stacks_copy_on_write_flags = ~0;
 #endif
@@ -481,7 +478,6 @@ static inline void fc_solve_start_instance_process_with_board(
     memset(&(state_copy_ptr->info.scan_visited), '\0',
         sizeof(state_copy_ptr->info.scan_visited));
 
-    instance->state_copy_ptr = state_copy_ptr;
     update_initial_cards_val(instance);
 
 /* Initialize the data structure that will manage the state collection */
@@ -1490,7 +1486,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
     DFS_VAR(soft_thread, depth) = 0;
     fc_solve_increase_dfs_max_depth(soft_thread);
     DFS_VAR(soft_thread, soft_dfs_info)
-    [0].state = FCS_STATE_keyval_pair_to_collectible(instance->state_copy_ptr);
+    [0].state = FCS_STATE_keyval_pair_to_collectible(&instance->state_copy);
     fc_solve_rand_init(
         &(DFS_VAR(soft_thread, rand_gen)), DFS_VAR(soft_thread, rand_seed));
 

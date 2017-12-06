@@ -731,8 +731,8 @@ struct fc_solve_instance_struct
      * */
     int next_soft_thread_id;
 
-    /* This is a place-holder for the initial state */
-    fcs_state_keyval_pair_t *state_copy_ptr;
+    /* This is the initial state */
+    fcs_state_keyval_pair_t state_copy;
 
 #ifdef FCS_WITH_MOVES
     /* This is the final state that the scan recommends to the
