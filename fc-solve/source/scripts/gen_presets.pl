@@ -143,7 +143,7 @@ sub compile_preset
 
 my $c_template = Template->new();
 
-my $c_template_input = <<"EOF";
+my $C_TEMPLATE_INPUT = <<"EOF";
     {
         [% allowed_moves %],
         [% preset %],
@@ -243,7 +243,7 @@ sub preset_to_string
     @vars{qw(preset fc s d sbb sm esf moves_order allowed_moves)} = @lines;
 
     my $ret;
-    $c_template->process( \$c_template_input, \%vars, \$ret );
+    $c_template->process( \$C_TEMPLATE_INPUT, \%vars, \$ret );
     $ret =~ s{\s+\z}{}ms;
     return $ret;
 }
