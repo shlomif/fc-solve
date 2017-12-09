@@ -72,11 +72,12 @@ sub all_info
     return Text::Sprintf::Named->new(
         {
             fmt => join( "",
-                map { "$_ ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" } (@fields) )
+                map { "$_ [%(blurb)s] ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" } (@fields) )
         }
         )->format(
         {
             args => {
+                blurb => scalar($self->blurb),
                 map {
                     my $name = $_;
                     ( $name => $self->_stringify_value($name) )
