@@ -391,7 +391,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         BEFS_M_VAR(soft_thread, moves_list_end);
 
     DECLARE_STATE();
-    ASSIGN_ptr_state(BEFS_M_VAR(soft_thread, first_state_to_check));
+    PTR_STATE = BEFS_M_VAR(soft_thread, first_state_to_check);
+    FCS_ASSIGN_STATE_KEY();
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
     const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
 #endif

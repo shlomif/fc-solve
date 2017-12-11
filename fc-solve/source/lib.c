@@ -853,8 +853,6 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
     }
 }
 #define VERIFY_SOFT_DFS_STACK(soft_thread) verify_soft_dfs_stack(soft_thread)
-#else
-#define VERIFY_SOFT_DFS_STACK(soft_thread)
 #endif
 
 #ifdef DEBUG
@@ -872,13 +870,6 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
 
 #define VERIFY_STATE_SANITY() verify_state_sanity(&FCS_SCANS_the_state)
 
-#define VERIFY_PTR_STATE_TRACE0(string)                                        \
-    {                                                                          \
-        TRACE0(string);                                                        \
-        VERIFY_STATE_SANITY();                                                 \
-        VERIFY_SOFT_DFS_STACK(soft_thread);                                    \
-    }
-
 #define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(string)                            \
     {                                                                          \
         TRACE0(string);                                                        \
@@ -889,7 +880,6 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
 
 #else
 #define TRACE0(no_use)
-#define VERIFY_PTR_STATE_TRACE0(no_use)
 #define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(no_use)
 #endif
 
