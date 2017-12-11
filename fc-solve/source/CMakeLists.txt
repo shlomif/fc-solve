@@ -324,6 +324,7 @@ ENDIF ()
 INCLUDE(CheckSymbolExists)
 
 SET (CMAKE_REQUIRED_DEFINITIONS "-D_GNU_SOURCE=1")
+ADD_DEFINITIONS ("-D_GNU_SOURCE=1")
 CHECK_SYMBOL_EXISTS("vasprintf" "stdio.h" HAVE_VASPRINTF)
 
 IF (NOT "${HAVE_VASPRINTF}")
@@ -450,7 +451,7 @@ ENDIF ()
 SHLOMIF_FINALIZE_FLAGS()
 
 IF ("$ENV{FCS_CLANG}")
-    ADD_DEFINITIONS("-Weverything -Wno-language-extension-token -Wno-format-nonliteral -Wno-padded -Wno-gnu-statement-expression -Wno-unused-parameter -Wno-vla -Wno-extra-semi -Wno-cast-align -Wno-used-but-marked-unused -Wno-cast-qual -Wno-conversion -Wno-sign-compare -Wno-overlength-strings -Wno-comma")
+    ADD_DEFINITIONS("-Weverything -Wno-language-extension-token -Wno-format-nonliteral -Wno-padded -Wno-gnu-statement-expression -Wno-unused-parameter -Wno-vla -Wno-extra-semi -Wno-cast-align -Wno-used-but-marked-unused -Wno-cast-qual -Wno-conversion -Wno-sign-compare -Wno-overlength-strings -Wno-comma -Wno-disabled-macro-expansion")
 ENDIF ()
 
 IF (FCS_TRACE_MEM)

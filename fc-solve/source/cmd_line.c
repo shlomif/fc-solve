@@ -14,9 +14,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_VASPRINTF
-#define _GNU_SOURCE
-#else
+#ifndef HAVE_VASPRINTF
 #include "asprintf.h"
 #endif
 
