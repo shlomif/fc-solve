@@ -234,7 +234,7 @@ export function fcs_js__column_from_string(start_char_idx: number, orig_s: strin
 
     var match = p.consume_match('^((?:\: +)?)');
 
-    if (force_leading_colon && !match) {
+    if (force_leading_colon && (!match[1].length)) {
         return new ColumnParseResult(false, start_char_idx, p.getConsumed(), 'Columns must start with a ":" in strict mode.', []);
     }
 
