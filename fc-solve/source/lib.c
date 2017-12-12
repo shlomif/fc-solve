@@ -834,6 +834,8 @@ static inline int fc_solve_optimize_solution(
 #endif
 #endif
 
+#ifdef DEBUG
+
 #ifdef DEBUG_VERIFY_SOFT_DFS_STACK
 static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
 {
@@ -853,9 +855,10 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
     }
 }
 #define VERIFY_SOFT_DFS_STACK(soft_thread) verify_soft_dfs_stack(soft_thread)
+#else
+#define VERIFY_SOFT_DFS_STACK(soft_thread)
 #endif
 
-#ifdef DEBUG
 #define TRACE0(message)                                                        \
     fcs_trace("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "              \
               "move_func_list_idx=%ld ; move_func_idx=%d ; "                   \
