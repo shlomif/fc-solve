@@ -474,7 +474,7 @@ export function test_fcs_validate()
         }
     });
     QUnit.test("verify_state BoardParseResult tests #1", function(a: Assert) {
-        a.expect(9);
+        a.expect(11);
         {
         let ms_deal_24 = ": 4C 2C 9C 8C QS 4S 2H\n" +
 ": 5H QH 3C AC 3H 4H QD\n" +
@@ -496,6 +496,16 @@ export function test_fcs_validate()
             a.deepEqual(result.columns[0].col.getArrOfStrs(),
                 '4C 2C 9C 8C QS 4S 2H'.split(' '),
                 'column 0 was parsed fine.');
+
+            // TEST
+            a.deepEqual(result.columns[1].col.getArrOfStrs(),
+                '5H QH 3C AC 3H 4H QD'.split(' '),
+                'column 1 was parsed fine.');
+
+            // TEST
+            a.deepEqual(result.columns[7].col.getArrOfStrs(),
+                '7S 6C 7D 4D 8S 9D'.split(' '),
+                'column 7 was parsed fine.');
         }
 
         {
