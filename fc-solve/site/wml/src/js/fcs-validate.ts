@@ -492,6 +492,28 @@ export class BoardParseResult {
         that.errors = [];
         that.columns = [];
         var p = new StringParser(orig_s);
+        if (p.match(/^Freecells:/)) {
+            const start_char_idx = p.getConsumed();
+            var l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
+            var fc = fcs_js__freecells_from_string(num_freecells, start_char_idx, l);
+            that.freecells = fc;
+            if (! fc.is_correct) {
+                that.errors.push(new ParseError(
+                    ParseErrorType.LINE_PARSE_ERROR,
+                    [new ErrorLocation(
+                        ErrorLocationType.ErrorLocationType_Freecells,
+                        0,
+                        start_char_idx,
+                        p.getConsumed()
+                    )
+                    ],
+                    fcs_js__card_from_string('AH')
+                    )
+                );
+                that.is_valid = false;
+                return;
+            }
+        }
         for (var i=0; i < num_stacks; i++) {
             const start_char_idx = p.getConsumed();
             var l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
