@@ -550,7 +550,7 @@ export function test_fcs_validate()
         }
    });
     QUnit.test("verify_state BoardParseResult - Freecells", function(a: Assert) {
-        a.expect(3);
+        a.expect(4);
         {
             const ms_deal_24_w_Freecells = "Freecells: 2H - 8D\n" +
                 ": 4C 2C 9C 8C QS 4S\n" +
@@ -573,6 +573,10 @@ export function test_fcs_validate()
             a.deepEqual(result.columns[0].col.getArrOfStrs(),
                 '4C 2C 9C 8C QS 4S'.split(' '),
                 'column 0 was parsed fine.');
+
+            // TEST
+            a.deepEqual(result.freecells.freecells.getArrOfStrs(), ['2H', '-', '8D', '-'],
+                        "freecell contents is fine.");
         }
 
    });
