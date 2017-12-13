@@ -272,7 +272,6 @@ ADD_CUSTOM_TARGET(
 
 SET (FREECELL_SOLVER_LIB_MODULES
     check_and_add_state.c
-    cmd_line.c
     freecell.c
     instance.c
     is_king.c
@@ -287,7 +286,6 @@ SET (FREECELL_SOLVER_LIB_MODULES
     rate_state.c
     scans.c
     simpsim.c
-    split_cmd_line.c
     state.c
     "${MOVE_C}"
     "${BIN_CL_INC_H}"
@@ -302,6 +300,9 @@ IF (NOT "${FCS_DISABLE_MOVES_TRACKING}")
 ENDIF ()
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
     add_lib_mods(${patsolve_modules})
+ENDIF ()
+IF (NOT "${FCS_USE_PRECOMPILED_CMD_LINE_THEME}")
+    add_lib_mods(cmd_line.c split_cmd_line.c)
 ENDIF ()
 
 IF (FCS_FREECELL_ONLY)
@@ -542,7 +543,9 @@ IF ("${FCS_WITHOUT_FC_PRO_MOVES_COUNT}")
     LIST(APPEND _mods fc_pro_iface.c)
 ENDIF ()
 FCS_ADD_EXEC(freecell-solver-fc-pro-range-solve ${_mods})
-FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tests_order_performance.c)
+IF (NOT "${FCS_USE_PRECOMPILED_CMD_LINE_THEME}")
+    FCS_ADD_EXEC_NO_INSTALL(measure-depth-dep-tests-order-perf measure_depth_dep_tests_order_performance.c)
+ENDIF ()
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 FCS_ADD_EXEC_NO_INSTALL(summary-fc-solve summarizing_solver.c)
 
