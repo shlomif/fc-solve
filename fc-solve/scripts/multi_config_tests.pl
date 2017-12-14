@@ -218,8 +218,10 @@ sub run_tests
     my $tatzer_args       = $args->{'tatzer_args'};
     my $cmake_args        = $args->{'cmake_args'};
     my $prepare_dist_args = $args->{'prepare_dist_args'};
+    my $website_args      = $args->{'website_args'};
 
-    if ( 1 != grep { $_ } ( $tatzer_args, $cmake_args, $prepare_dist_args ) )
+    if ( 1 != grep { $_ }
+        ( $tatzer_args, $cmake_args, $prepare_dist_args, $website_args ) )
     {
         die
 "One and only one of tatzer_args or cmake_args or prepare_dist_args must be specified.";
@@ -255,6 +257,22 @@ sub run_tests
         );
         rmtree( $DIR, 0, $SAFE );
         unlink($ARC);
+    }
+    elsif ($website_args)
+    {
+        chdir('../site/wml');
+        run_cmd(
+            "$blurb_base : ./gen-helpers",
+            { cmd => [ $^X, 'gen-helpers.pl' ] }
+        );
+        run_cmd( "$blurb_base : make",
+            { cmd => [ 'make', "-j$NUM_PROCESSORS", ] } );
+        if ( not $args->{do_not_test} )
+        {
+            run_cmd( "$blurb_base : test", { cmd => [ 'make', 'test', ] } );
+        }
+
+        chdir($cwd);
     }
     else
     {
@@ -338,6 +356,12 @@ sub reg_prep
 }
 
 reg_tatzer_test( "Default", () );
+reg_test( 'Website #1', { website_args => [] } );
+
+reg_test(
+    "No int128",
+    { cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ] }
+);
 reg_prep( "prepare_dist fcc_solver",
     'prepare_fcc_solver_self_contained_package.pl' );
 reg_prep( "prepare_dist AWS",
@@ -347,10 +371,6 @@ reg_prep( "prepare_dist vendu",
 reg_prep( "prepare_dist pbs",
     'prepare_pbs_dbm_solver_self_contained_package.pl' );
 reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
-reg_test(
-    "No int128",
-    { cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ] }
-);
 reg_lt_test( "-l n2t with --disable-patsolve", '--disable-patsolve', );
 reg_test(
     "build_only: maximum speed preset",
