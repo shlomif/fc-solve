@@ -260,13 +260,24 @@ sub run_tests
     }
     elsif ($website_args)
     {
-        chdir('../site/wml');
+        chdir("$cwd/../site/wml");
         run_cmd(
             "$blurb_base : ./gen-helpers",
             { cmd => [ $^X, 'gen-helpers.pl' ] }
         );
-        run_cmd( "$blurb_base : make",
-            { cmd => [ 'make', "-j$NUM_PROCESSORS", ] } );
+        run_cmd(
+            "$blurb_base : make",
+            {
+                cmd => [
+                    $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
+                    ? ( 'docker', 'exec', '-it', 'emscripten', 'make' )
+                    : (
+                        'bash', '-c',
+                        ". ~/bin/Dev-Path-Configs-Source-Me.bash ; make"
+                    )
+                ]
+            }
+        );
         if ( not $args->{do_not_test} )
         {
             run_cmd( "$blurb_base : test", { cmd => [ 'make', 'test', ] } );

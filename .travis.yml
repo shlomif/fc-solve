@@ -9,7 +9,7 @@ before_install:
       # Temporary workaround for a problem in running the Inline::C test
       # suite with latest EU::MM - install Inline::C with no tests.
       #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
-    - sudo cpanm --notest Inline::C
+    - sudo cpanm --notest Alien::Tidyp Inline::C
       # Speed up installing the deps.
     - sudo cpanm --notest Task::FreecellSolver::Testing Task::Sites::ShlomiFish
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
