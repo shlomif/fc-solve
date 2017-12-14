@@ -1,17 +1,15 @@
-
-
 // Adapted from http://www.inventpartners.com/javascript_is_int - thanks.
 function is_int(input: number): boolean {
-    var value:string = "" + input;
-    if ((parseFloat(value) == parseInt(value)) && !isNaN(input)) {
+    const value: string = "" + input;
+    if ((parseFloat(value) === parseInt(value, 10)) && !isNaN(input)) {
         return true;
     } else {
         return false;
     }
 }
 
-var _ranks__int_to_str:string = "0A23456789TJQK";
-var _ranks__str_to_int = {};
+const _ranks__int_to_str: string = "0A23456789TJQK";
+const _ranks__str_to_int = {};
 function _perl_range(start: number, end: number): Array<number> {
     var ret: Array<number> = [];
 
@@ -25,7 +23,7 @@ function _perl_range(start: number, end: number): Array<number> {
 _perl_range(1,13).forEach(function (rank) {
     _ranks__str_to_int[_ranks__int_to_str.substring(rank, rank+1)] = rank;
 });
-var _suits__int_to_str:string = "HCDS";
+var _suits__int_to_str: string = "HCDS";
 var _suits__str_to_int = {};
 _perl_range(0,3).forEach(function (suit) {
     _suits__str_to_int[_suits__int_to_str.substring(suit, suit+1)] = suit;
@@ -150,7 +148,7 @@ class StringParser {
 
     consume(m: RegExpMatchArray): void {
         var that = this;
-        var len_match:number = m[1].length;
+        var len_match: number = m[1].length;
         that.consumed += len_match;
         that.s = that.s.substring(len_match);
 
@@ -445,7 +443,7 @@ class ErrorLocation {
     public start: number;
     public end: number;
 
-    constructor(t: ErrorLocationType, idx: number, start: number, end:number) {
+    constructor(t: ErrorLocationType, idx: number, start: number, end: number) {
         this.type_ = t;
         this.idx = idx;
         this.start = start;
