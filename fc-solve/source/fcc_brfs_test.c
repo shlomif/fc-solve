@@ -61,7 +61,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         ,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-    );
+        );
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 
@@ -204,7 +204,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         ,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-    );
+        );
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 

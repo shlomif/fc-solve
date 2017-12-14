@@ -50,7 +50,7 @@ static inline void fcs_depth_multi_queue__new_queue(
         ,
         queue->meta_alloc
 #endif
-    );
+            );
 }
 
 static inline void fcs_depth_multi_queue__insert(

@@ -277,9 +277,9 @@ static int verify_dict_has_node(dnode_t *nil, dnode_t *root, dnode_t *node)
 }
 #endif
 
-    /*
-     * Dynamically allocate and initialize a dictionary object.
-     */
+/*
+ * Dynamically allocate and initialize a dictionary object.
+ */
 
 #ifdef NO_FC_SOLVE
 dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp, void *context)
@@ -405,9 +405,9 @@ void dict_free(dict_t *dict)
 }
 #endif
 
-    /*
-     * Initialize a user-supplied dictionary object.
-     */
+/*
+ * Initialize a user-supplied dictionary object.
+ */
 
 #ifdef NO_FC_SOLVE
 dict_t *dict_init(dict_t *dict, dictcount_t maxcount, dict_comp_t comp)
@@ -1146,10 +1146,10 @@ static inline dnode_t *dnode_init(dnode_t *dnode)
     return dnode;
 }
 
-    /*
-     * Allocate a node using the dictionary's allocator routine, give it
-     * the data item.
-     */
+/*
+ * Allocate a node using the dictionary's allocator routine, give it
+ * the data item.
+ */
 
 #ifdef NO_FC_SOLVE
 dict_ret_key_t fc_solve_kaz_tree_alloc_insert(

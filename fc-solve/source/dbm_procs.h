@@ -151,7 +151,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     ,
     const fcs_fcc_move_t *moves_to_parent
 #endif
-);
+    );
 
 static inline fcs_bool_t instance_check_multiple_keys(
     fcs_dbm_solver_thread_t *const thread,
@@ -163,7 +163,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
     ,
     const fcs_fcc_move_t *moves_to_parent
 #endif
-)
+    )
 {
     /* Small optimization in case the list is empty. */
     if (batch_size == 1 && !lists[0])
@@ -182,7 +182,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
                     ,
                 moves_to_parent
 #endif
-            );
+                );
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
             if (cache_store->pre_cache.count_elements >=

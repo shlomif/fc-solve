@@ -47,7 +47,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         ,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-    );
+        );
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 

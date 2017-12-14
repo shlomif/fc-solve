@@ -38,7 +38,7 @@ typedef unsigned char ub1;
 
 static inline ub4 perl_hash_function(register const ub1 *s_ptr, /* the key */
     register const ub4 length /* the length of the key */
-)
+    )
 {
     register ub4 hash_value_int = 0;
     register const ub1 *s_end = s_ptr + length;

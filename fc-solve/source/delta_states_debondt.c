@@ -47,7 +47,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
         ,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-    );
+        );
 
     fc_solve_debondt_delta_stater_set_derived(&delta, &(derived_state.s));
 

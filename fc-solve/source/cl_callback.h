@@ -288,9 +288,8 @@ static inline FILE *fc_solve_calc_file_handle(
     }
     else if (argv[arg][0] == '-')
     {
-        fprintf(stderr,
-            "Unknown option \"%s\". "
-            "Type \"%s --help\" for usage information.\n",
+        fprintf(stderr, "Unknown option \"%s\". "
+                        "Type \"%s --help\" for usage information.\n",
             argv[arg], argv[0]);
         return NULL;
     }

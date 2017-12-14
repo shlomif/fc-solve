@@ -6,6 +6,12 @@ before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -y cmake cmake-data cpanminus gperf libgmp-dev libgoogle-perftools-dev libperl-dev mercurial ninja-build python3 python3-setuptools perl python3-pip silversearcher-ag valgrind wml
     - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
+      # Temporary workaround for a problem in running the Inline::C test
+      # suite with latest EU::MM - install Inline::C with no tests.
+      #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
+    - sudo cpanm --notest Inline::C
+      # Speed up installing the deps.
+    - sudo cpanm --notest Task::FreecellSolver::Testing Task::Sites::ShlomiFish
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
 install:
     - which python3

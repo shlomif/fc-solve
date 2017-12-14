@@ -212,8 +212,7 @@ static inline
                         .depth = 0,
                         .moves_by_depth =
                             {
-                                .num_units = 0,
-                                .by_depth_units = NULL,
+                                .num_units = 0, .by_depth_units = NULL,
                             },
                         .rand_seed = 24,
                     },
@@ -299,7 +298,7 @@ void fc_solve_instance__init_hard_thread(
 #else
         instance->meta_alloc
 #endif
-    );
+        );
 
 #ifdef FCS_WITH_MOVES
     HT_FIELD(hard_thread, reusable_move_stack) = fcs_move_stack__new();

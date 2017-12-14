@@ -57,7 +57,7 @@ static void fc_solve_debondt_delta_stater_init(
     ,
     const int sequences_are_built_by
 #endif
-)
+    )
 {
 #ifndef FCS_FREECELL_ONLY
     self->sequences_are_built_by = sequences_are_built_by;
@@ -132,7 +132,7 @@ static inline int calc_child_card_option(
     ,
     const int sequences_are_built_by
 #endif
-)
+    )
 {
     if (IS_BAKERS_DOZEN())
     {
@@ -269,7 +269,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                         ,
                         self->sequences_are_built_by
 #endif
-                    );
+                        );
                     SET_CARD_STATE(child_card, opt);
                 }
 

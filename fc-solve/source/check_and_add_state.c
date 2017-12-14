@@ -88,7 +88,7 @@ static inline void *fc_solve_hash_insert(
     ,
     const fc_solve_hash_value_t secondary_hash_value
 #endif
-)
+    )
 {
 #if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
     const_SLOT(hash_type, hash);
@@ -211,7 +211,7 @@ typedef unsigned char ub1;
 
 static inline ul perl_hash_function(register const ub1 *s_ptr, /* the key */
     register const ul len /* the length of the key */
-)
+    )
 {
     register ul hash_value_int = 0;
     register const ub1 *const s_end = s_ptr + len;
@@ -306,7 +306,7 @@ static inline void fc_solve_cache_stacks(
                 ,
             hash_value_int
 #endif
-        );
+            );
         REPLACE_WITH_CACHED(cached_stack);
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
@@ -470,13 +470,13 @@ fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_canonize_state(new_state_key PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
             PASS_STACKS(INSTANCE_STACKS_NUM));
 
-    /*
-        The objective of this part of the code is:
-        1. To check if new_state_key / new_state_val is already in the
-       prev_states collection.
-        2. If not, to add it and to set check to true.
-        3. If so, to set check to false.
-      */
+/*
+    The objective of this part of the code is:
+    1. To check if new_state_key / new_state_val is already in the
+   prev_states collection.
+    2. If not, to add it and to set check to true.
+    3. If so, to set check to false.
+  */
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
@@ -566,7 +566,7 @@ fcs_bool_t fc_solve_check_and_add_state(
         g_hash_table_insert(
             instance->hash, (gpointer)new_state_key, (gpointer)new_state_val
 
-        );
+            );
     }
 
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
