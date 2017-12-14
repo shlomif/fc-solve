@@ -14,7 +14,7 @@ sub import
 
     my ($pkg) = caller(0);
 
-    my $src = delete( $args{C} );
+    my $src  = delete( $args{C} );
     my $libs = delete( $args{l} ) // '';
 
     my @workaround_for_a_heisenbug =
