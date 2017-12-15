@@ -265,6 +265,7 @@ sub run_tests
             "$blurb_base : ./gen-helpers",
             { cmd => [ $^X, 'gen-helpers.pl' ] }
         );
+        run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
         run_cmd(
             "$blurb_base : make",
             {
