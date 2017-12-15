@@ -300,7 +300,9 @@ class Freecells {
 class FreecellsParseResult extends BaseResult {
     public freecells: Freecells;
 
-    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, num_freecells: number, fc: MaybeCard[]) {
+    constructor(is_correct: boolean, start_char_idx: number,
+                num_consumed_chars: number, error: string,
+                num_freecells: number, fc: MaybeCard[]) {
         super(is_correct, start_char_idx, num_consumed_chars, error);
         if (is_correct) {
             this.freecells = new Freecells(num_freecells, fc);
@@ -308,18 +310,28 @@ class FreecellsParseResult extends BaseResult {
     }
 }
 
-export function fcs_js__freecells_from_string(num_freecells: number, start_char_idx: number, orig_s: string): FreecellsParseResult {
-    const p = new CardsStringParser<MaybeCard>(orig_s, (card_str) => { return ((card_str == '-') ? null : fcs_js__card_from_string(card_str)); });
+export function fcs_js__freecells_from_string(
+    num_freecells: number, start_char_idx: number, orig_s: string):
+    FreecellsParseResult {
+    const p = new CardsStringParser<MaybeCard>(orig_s, (card_str) => {
+        return ((card_str === '-') ? null :
+            fcs_js__card_from_string(card_str));
+    });
 
-    function make_ret (verdict: boolean, err_str: string) {
-        return new FreecellsParseResult(verdict, start_char_idx, p.getConsumed(), err_str, num_freecells, verdict ? p.cards : []);
+    function make_ret(verdict: boolean, err_str: string) {
+        return new FreecellsParseResult(
+            verdict, start_char_idx, p.getConsumed(), err_str,
+            num_freecells, verdict ? p.cards : []);
     }
 
     if (!p.consume_match(/^(Freecells\: +)/)) {
         return make_ret(false, 'Wrong line prefix for freecells - should be "Freecells:"');
     }
 
-    const ret = p.loop("\\-|(?:" + card_re + ')', () => { return make_ret(false, 'Wrong card format - should be [Rank][Suit]'); });
+    const ret = p.loop("\\-|(?:" + card_re + ')', () => {
+        return make_ret(
+            false, 'Wrong card format - should be [Rank][Suit]');
+    });
 
     if (ret) {
         return ret;
@@ -329,7 +341,7 @@ export function fcs_js__freecells_from_string(num_freecells: number, start_char_
         p.cards.push(null);
     }
 
-    if (p.cards.length != num_freecells) {
+    if (p.cards.length !== num_freecells) {
         return make_ret(false, 'Too many cards specified in Freecells line.');
     }
 
@@ -340,23 +352,8 @@ export class Foundations {
     private ranks: number[];
 
     constructor() {
-        this.ranks = [-1,-1,-1,-1];
+        this.ranks = [-1, -1, -1, -1];
     }
-
-    private _validateDeckSuit(deck: number, suit: number) {
-        if (deck !== 0) {
-            throw "multiple decks are not supported.";
-        }
-        if (!is_int(suit)) {
-            throw "suit is not an integer.";
-        }
-        if (! ((suit >= 0) && (suit < 4))) {
-            throw "suit is out of range.";
-        }
-
-        return;
-    }
-
 
     public getByIdx(deck: number, suit: number) {
         this._validateDeckSuit(deck, suit);
@@ -370,7 +367,7 @@ export class Foundations {
             throw "Rank must be an integer.";
         }
 
-        if (! ((rank >=0 ) && (rank <= 13))) {
+        if (! ((rank >= 0 ) && (rank <= 13))) {
             throw "rank is out of range.";
         }
 
@@ -386,18 +383,35 @@ export class Foundations {
     public finalize(): void {
         const that = this;
         for (let i = 0; i < 4; i++) {
-            if (that.getByIdx(0,i) < 0) {
-                that.setByIdx(0,i,0);
+            if (that.getByIdx(0, i) < 0) {
+                that.setByIdx(0, i, 0);
             }
         }
         return;
     }
-};
+
+    private _validateDeckSuit(deck: number, suit: number) {
+        if (deck !== 0) {
+            throw "multiple decks are not supported.";
+        }
+        if (!is_int(suit)) {
+            throw "suit is not an integer.";
+        }
+        if (! ((suit >= 0) && (suit < 4))) {
+            throw "suit is out of range.";
+        }
+
+        return;
+    }
+}
 
 class FoundationsParseResult extends BaseResult {
     public foundations: Foundations;
 
-    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, foundations: Foundations) {
+    constructor(
+        is_correct: boolean, start_char_idx: number,
+        num_consumed_chars: number, error: string,
+        foundations: Foundations) {
         super(is_correct, start_char_idx, num_consumed_chars, error);
         if (is_correct) {
             this.foundations = foundations;
@@ -405,16 +419,18 @@ class FoundationsParseResult extends BaseResult {
     }
 }
 
-export function fcs_js__foundations_from_string(num_decks: number, start_char_idx: number, orig_s: string): FoundationsParseResult {
+export function fcs_js__foundations_from_string(
+    num_decks: number, start_char_idx: number, orig_s: string):
+    FoundationsParseResult {
 
-    if (num_decks != 1) {
+    if (num_decks !== 1) {
         throw "Can only handle 1 decks.";
     }
 
     const p = new StringParser(orig_s);
-    const founds = new Foundations;
+    const founds = new Foundations();
 
-    function make_ret (verdict: boolean, err_str: string) {
+    function make_ret(verdict: boolean, err_str: string) {
         if (verdict) {
             founds.finalize();
         }
@@ -445,7 +461,7 @@ export enum ErrorLocationType {
     ErrorLocationType_Foundations,
     ErrorLocationType_Freecells,
     ErrorLocationType_Column,
-};
+}
 
 class ErrorLocation {
     public type_: ErrorLocationType;
@@ -469,7 +485,7 @@ export enum ParseErrorType {
     FOUNDATIONS_NOT_AT_START,
     FREECELLS_NOT_AT_START,
     LINE_PARSE_ERROR,
-};
+}
 
 class ParseError {
     public type_: ParseErrorType;
@@ -512,17 +528,17 @@ export class BoardParseResult {
                         ErrorLocationType.ErrorLocationType_Freecells,
                         0,
                         start_char_idx,
-                        p.getConsumed()
-                    )
+                        p.getConsumed(),
+                    ),
                     ],
-                    fcs_js__card_from_string('AH')
-                    )
+                    fcs_js__card_from_string('AH'),
+                ),
                 );
                 that.is_valid = false;
                 return;
             }
         }
-        for (let i=0; i < num_stacks; i++) {
+        for (let i = 0; i < num_stacks; i++) {
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             const col = fcs_js__column_from_string(start_char_idx, l, true);
@@ -533,11 +549,11 @@ export class BoardParseResult {
                         ErrorLocationType.ErrorLocationType_Column,
                         i,
                         start_char_idx,
-                        p.getConsumed()
-                    )
+                        p.getConsumed(),
+                    ),
                     ],
-                    fcs_js__card_from_string('AH')
-                    )
+                    fcs_js__card_from_string('AH'),
+                    ),
                 );
                 that.is_valid = false;
                 return;
