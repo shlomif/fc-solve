@@ -260,7 +260,9 @@ sub run_tests
     }
     elsif ($website_args)
     {
-        chdir("$cwd/../site/wml");
+        my $DIR = "$cwd/../site/wml";
+        chdir($DIR);
+        local $ENV{PWD} = $DIR;
         run_cmd(
             "$blurb_base : ./gen-helpers",
             { cmd => [ $^X, 'gen-helpers.pl' ] }
