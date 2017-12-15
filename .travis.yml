@@ -11,7 +11,7 @@ before_install:
       #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
     - sudo cpanm --notest Alien::Tidyp Inline::C
       # Speed up installing the deps.
-    - sudo cpanm --notest Pod::Xhtml Task::FreecellSolver::Testing Task::Sites::ShlomiFish
+    - sudo cpanm --notest File::ReadBackwards Pod::Xhtml Task::FreecellSolver::Testing Task::Sites::ShlomiFish
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
     - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/wml-extended-apis && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
     - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/wml-affiliations && cd wml-affiliations/wml && bash Install.bash )
