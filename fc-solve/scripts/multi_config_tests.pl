@@ -267,13 +267,17 @@ sub run_tests
             "$blurb_base : ./gen-helpers",
             { cmd => [ $^X, 'gen-helpers.pl' ] }
         );
-        run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
+
+        # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
         run_cmd(
             "$blurb_base : make",
             {
                 cmd => [
                     $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
-                    ? ( 'docker', 'exec', '-it', 'emscripten', 'make' )
+                    ? (
+                        'docker', 'exec', '-it', 'emscripten', 'bash', '-c',
+                        qq#cd "$DIR" && make#,
+                        )
                     : (
                         'bash', '-c',
                         ". ~/bin/Dev-Path-Configs-Source-Me.bash ; make"
