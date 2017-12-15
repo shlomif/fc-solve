@@ -5,6 +5,9 @@
     ],
     "jsRules": {},
     "rules": {
+        "max-classes-per-file": 90000,
+        "no-string-throw": false,
+        "quotemark": false,
         "variable-name": false
     },
     "rulesDirectory": []

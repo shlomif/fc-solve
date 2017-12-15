@@ -10,23 +10,23 @@ function is_int(input: number): boolean {
 
 const _ranks__int_to_str: string = "0A23456789TJQK";
 const _ranks__str_to_int = {};
-function _perl_range(start: number, end: number): Array<number> {
-    var ret: Array<number> = [];
+function _perl_range(start: number, end: number): number[] {
+    const ret: number[] = [];
 
-    for (var i = start; i <= end; i++) {
+    for (let i = start; i <= end; i++) {
         ret.push(i);
     }
 
     return ret;
 }
 
-_perl_range(1,13).forEach(function (rank) {
-    _ranks__str_to_int[_ranks__int_to_str.substring(rank, rank+1)] = rank;
+_perl_range(1, 13).forEach((rank) => {
+    _ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
 });
-var _suits__int_to_str: string = "HCDS";
-var _suits__str_to_int = {};
-_perl_range(0,3).forEach(function (suit) {
-    _suits__str_to_int[_suits__int_to_str.substring(suit, suit+1)] = suit;
+const _suits__int_to_str: string = "HCDS";
+const _suits__str_to_int = {};
+_perl_range(0, 3).forEach((suit) => {
+    _suits__str_to_int[_suits__int_to_str.substring(suit, suit + 1)] = suit;
 });
 
 class Card {
@@ -56,32 +56,33 @@ class Card {
         this.suit = suit;
     }
 
-    getRank(): number {
+    public getRank(): number {
         return this.rank;
     }
 
-    getSuit(): number {
+    public getSuit(): number {
         return this.suit;
     }
 
-    toString(): string {
-        return _ranks__int_to_str.substring(this.rank, this.rank+1) + _suits__int_to_str.substring(this.suit, this.suit+1);
+    public toString(): string {
+        return _ranks__int_to_str.substring(this.rank, this.rank + 1) +
+            _suits__int_to_str.substring(this.suit, this.suit + 1);
     }
 }
 
 class Column {
-    private cards: Array<Card>;
+    private cards: Card[];
 
-    constructor(cards: Array<Card>) {
+    constructor(cards: Card[]) {
         this.cards = cards;
     }
 
-    getLen(): number {
+    public getLen(): number {
         return this.cards.length;
     }
 
-    getCard(idx: number) {
-        var that = this;
+    public getCard(idx: number) {
+        const that = this;
         if (idx < 0) {
             throw "idx is below zero.";
         }
@@ -91,20 +92,19 @@ class Column {
         return that.cards[idx];
     }
 
-    getArrOfStrs(): Array<string> {
-        var that = this;
-        return _perl_range(0, that.getLen()-1).map(function (i) {
+    public getArrOfStrs(): string[] {
+        const that = this;
+        return _perl_range(0, that.getLen() - 1).map((i) => {
             return that.getCard(i).toString();
         });
     }
 }
 
-
 const suit_re: string = '[HCDS]';
 const rank_re: string = '[A23456789TJQK]';
 const card_re: string = '(' + rank_re + ')(' + suit_re + ')';
 export function fcs_js__card_from_string(s: string): Card {
-    var m = s.match('^' + card_re + '$');
+    const m = s.match('^' + card_re + '$');
     if (! m) {
         throw "Invalid format for a card - \"" + s + "\"";
     }
@@ -123,7 +123,8 @@ class BaseResult {
         this.error = error;
         this.start_char_idx = start_char_idx;
     }
-    getEnd(): number {
+
+    public getEnd(): number {
         return (this.start_char_idx + this.num_consumed_chars);
     }
 }
@@ -131,7 +132,8 @@ class BaseResult {
 class ColumnParseResult extends BaseResult {
     public col: Column;
 
-    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string, cards: Array<Card>) {
+    constructor(is_correct: boolean, start_char_idx: number,
+                num_consumed_chars: number, error: string, cards: Card[]) {
         super(is_correct, start_char_idx, num_consumed_chars, error);
         this.col = new Column(cards);
     }
@@ -146,30 +148,30 @@ class StringParser {
         this.consumed = 0;
     }
 
-    consume(m: RegExpMatchArray): void {
-        var that = this;
-        var len_match: number = m[1].length;
+    public consume(m: RegExpMatchArray): void {
+        const that = this;
+        const len_match: number = m[1].length;
         that.consumed += len_match;
         that.s = that.s.substring(len_match);
 
         return;
     }
 
-    getConsumed(): number {
+    public getConsumed(): number {
         return this.consumed;
     }
 
-    isNotEmpty(): boolean {
+    public isNotEmpty(): boolean {
         return (this.s.length > 0);
     }
 
-    match(re: any): RegExpMatchArray {
+    public match(re: any): RegExpMatchArray {
         return this.s.match(re);
     }
 
-    consume_match(re: any): RegExpMatchArray {
-        var that = this;
-        var m = that.match(re);
+    public consume_match(re: any): RegExpMatchArray {
+        const that = this;
+        const m = that.match(re);
         if (m) {
             that.consume(m);
         }
@@ -178,40 +180,40 @@ class StringParser {
 }
 
 class CardsStringParser<CardType> extends StringParser {
+    public cards: CardType[];
     private is_start: boolean;
-    public cards: Array<CardType>;
     private card_mapper: ((string) => CardType);
 
     constructor(s: string, card_mapper) {
-        super(s)
+        super(s);
         this.is_start = true;
         this.cards = [];
         this.card_mapper = card_mapper;
     }
 
-    afterStart(): void {
+    public afterStart(): void {
         this.is_start = false;
 
         return;
     }
 
-    getStartSpace(): string {
+    public getStartSpace(): string {
         return (this.is_start ? '' : ' +');
     }
 
-    should_loop(): boolean {
+    public should_loop(): boolean {
         var that = this;
         return (that.isNotEmpty() && (!that.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)));
     }
 
-    add(m: RegExpMatchArray): void {
+    public add(m: RegExpMatchArray): void {
         this.cards.push(this.card_mapper(m[2]));
 
         this.afterStart();
         return;
     }
 
-    loop(re: any, callback: (() => any)): any {
+    public loop(re: any, callback: (() => any)): any {
         var p = this;
 
         while (p.should_loop()) {
@@ -262,11 +264,11 @@ class Freecells {
         this.cards = cards;
     }
 
-    getNum(): number {
+    public getNum(): number {
         return this.num_freecells;
     }
 
-    getCard(idx: number) {
+    public getCard(idx: number) {
         var that = this;
         if (idx < 0) {
             throw "idx is below zero.";
@@ -277,7 +279,7 @@ class Freecells {
         return that.cards[idx];
     }
 
-    getArrOfStrs(): Array<string> {
+    public getArrOfStrs(): Array<string> {
         var that = this;
         return _perl_range(0, that.getNum()-1).map(function (i) {
             var card = that.getCard(i);
@@ -348,12 +350,12 @@ export class Foundations {
     }
 
 
-    getByIdx(deck: number, suit: number) {
+    public getByIdx(deck: number, suit: number) {
         this._validateDeckSuit(deck, suit);
         return this.ranks[suit];
     }
 
-    setByIdx(deck: number, suit: number, rank: number): boolean {
+    public setByIdx(deck: number, suit: number, rank: number): boolean {
         this._validateDeckSuit(deck, suit);
 
         if (!is_int(rank)) {
@@ -373,7 +375,7 @@ export class Foundations {
         return true;
     }
 
-    finalize(): void {
+    public finalize(): void {
         var that = this;
         for (var i = 0; i < 4; i++) {
             if (that.getByIdx(0,i) < 0) {
@@ -539,5 +541,3 @@ export class BoardParseResult {
         return;
     }
 }
-
-
