@@ -1,14 +1,22 @@
-import { fcs_js__foundations_from_string, fcs_js__freecells_from_string, fcs_js__column_from_string, fcs_js__card_from_string, Foundations, BoardParseResult, ErrorLocationType, ParseErrorType } from "./fcs-validate";
+import {
+    BoardParseResult,
+    ErrorLocationType,
+    fcs_js__card_from_string,
+    fcs_js__column_from_string,
+    fcs_js__foundations_from_string,
+    fcs_js__freecells_from_string,
+    Foundations,
+    ParseErrorType,
+} from "./fcs-validate";
 
-export function test_fcs_validate()
-{
+export function test_fcs_validate() {
     QUnit.module("FC_Solve.JavaScript.InputValidation");
 
-    QUnit.test("verify_state Card class tests", function(a : Assert) {
+    QUnit.test("verify_state Card class tests", (a: Assert) => {
         a.expect(9);
 
         {
-            var c = fcs_js__card_from_string('TH');
+            const c = fcs_js__card_from_string('TH');
 
             // TEST
             a.equal(c.getRank(), 10, "Card(TH).getRank() is fine.");
@@ -21,7 +29,7 @@ export function test_fcs_validate()
         }
 
         {
-            var c = fcs_js__card_from_string('AH');
+            const c = fcs_js__card_from_string('AH');
 
             // TEST
             a.equal(c.getRank(), 1, "Card(AH).getRank() is fine.");
@@ -34,7 +42,7 @@ export function test_fcs_validate()
         }
 
         {
-            var c = fcs_js__card_from_string('AC');
+            const c = fcs_js__card_from_string('AC');
 
             // TEST
             a.equal(c.getRank(), 1, "Card(AC).getRank() is fine.");
@@ -46,13 +54,13 @@ export function test_fcs_validate()
             a.equal(c.toString(), 'AC', "Card(AC).toString() works.");
         }
     });
-    QUnit.test("verify_state Column class tests", function(a: Assert) {
+    QUnit.test("verify_state Column class tests", (a: Assert) => {
         a.expect(20);
 
         {
-            var start_char_idx = 10;
-            var col_str = 'KS QD';
-            var result = fcs_js__column_from_string(start_char_idx, col_str, false);
+            const start_char_idx = 10;
+            const col_str = 'KS QD';
+            const result = fcs_js__column_from_string(start_char_idx, col_str, false);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -63,7 +71,7 @@ export function test_fcs_validate()
             // TEST
             a.equal(result.getEnd(), start_char_idx + col_str.length);
 
-            var col = result.col;
+            const col = result.col;
 
             // TEST
             a.deepEqual(col.getArrOfStrs(), ['KS', 'QD'],
@@ -74,19 +82,19 @@ export function test_fcs_validate()
         }
 
         {
-            var result = fcs_js__column_from_string(0, '3C AH 7D 6S', false);
+            const result = fcs_js__column_from_string(0, '3C AH 7D 6S', false);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
 
-            var col = result.col;
+            const col = result.col;
 
             // TEST
             a.deepEqual(col.getArrOfStrs(), ['3C', 'AH', '7D', '6S'], "col contents are fine.");
         }
 
         {
-            var result = fcs_js__column_from_string(0, '3C HA', false);
+            const result = fcs_js__column_from_string(0, '3C HA', false);
 
             // TEST
             a.ok ((! result.is_correct), "Column is incorrectly formatted.");
@@ -99,7 +107,7 @@ export function test_fcs_validate()
         }
 
         {
-            var result = fcs_js__column_from_string(0, ': 3D AH KH', true);
+            const result = fcs_js__column_from_string(0, ': 3D AH KH', true);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -109,8 +117,8 @@ export function test_fcs_validate()
         }
 
         {
-            var input_str = ': 3C AH 7D 6S  # This is a comment.';
-            var result = fcs_js__column_from_string(0, input_str, true);
+            const input_str = ': 3C AH 7D 6S  # This is a comment.';
+            const result = fcs_js__column_from_string(0, input_str, true);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -124,27 +132,29 @@ export function test_fcs_validate()
         }
 
         {
-            var input_str = ": 3S AD 7D 6S  # This is a comment.\n";
-            var result = fcs_js__column_from_string(0, input_str, true);
+            const input_str = ": 3S AD 7D 6S  # This is a comment.\n";
+            const result = fcs_js__column_from_string(0, input_str, true);
 
             // TEST
             a.ok (result.is_correct, "Newline terminated Column was parsed correctly.");
 
             // TEST
-            a.equal (result.num_consumed_chars, input_str.length, 'Newline terminated - Consumed input_str.length characters.');
+            a.equal (
+                result.num_consumed_chars, input_str.length,
+                'Newline terminated - Consumed input_str.length characters.');
 
-            var col = result.col;
+            const col = result.col;
 
             // TEST
             a.deepEqual(col.getArrOfStrs(),
                 ['3S', 'AD', '7D', '6S'],
-                "Newline terminated - col contents are fine."
+                "Newline terminated - col contents are fine.",
             );
         }
 
         {
-            var input_str = "3S AD 7D 6S  # This is a comment.\n";
-            var result = fcs_js__column_from_string(0, input_str, true);
+            const input_str = "3S AD 7D 6S  # This is a comment.\n";
+            const result = fcs_js__column_from_string(0, input_str, true);
 
             // TEST
             a.ok (! result.is_correct, "strict mode does not match col wo colon.");
@@ -153,15 +163,15 @@ export function test_fcs_validate()
             a.equal (result.error, 'Columns must start with a ":" in strict mode.', 'Correct error');
         }
     });
-    QUnit.test("verify_state Freecells class tests", function(a: Assert) {
+    QUnit.test("verify_state Freecells class tests", (a: Assert) => {
         a.expect(43);
 
         {
-            var start_char_idx = 10;
-            var str = "Freecells: 5C 2H 3D 9H";
-            var num_freecells = 4;
+            const start_char_idx = 10;
+            const str = "Freecells: 5C 2H 3D 9H";
+            const num_freecells = 4;
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -181,11 +191,11 @@ export function test_fcs_validate()
         }
 
         {
-            var start_char_idx = 10;
-            var str = "Freecells: 5C 2H";
-            var num_freecells = 4;
+            const start_char_idx = 10;
+            const str = "Freecells: 5C 2H";
+            const num_freecells = 4;
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -205,11 +215,11 @@ export function test_fcs_validate()
         }
 
         {
-            var start_char_idx = 39;
-            var str = "Freecells: - TC - 9H";
-            var num_freecells = 4;
+            const start_char_idx = 39;
+            const str = "Freecells: - TC - 9H";
+            const num_freecells = 4;
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -233,7 +243,7 @@ export function test_fcs_validate()
             const str = "Freecells: - - 6D 9H";
             const num_freecells = 6;
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.ok (result.is_correct, "Column was parsed correctly.");
@@ -257,7 +267,7 @@ export function test_fcs_validate()
             const str = "Freecells: - - 6D 9H -";
             const num_freecells = 6;
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.ok (result.is_correct, "Trailing Empty FC - Column was parsed correctly.");
@@ -282,7 +292,7 @@ export function test_fcs_validate()
             const num_freecells = 4;
             const test_name = "With trailing newline. ";
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.ok (result.is_correct, test_name + "Column was parsed correctly.");
@@ -307,7 +317,7 @@ export function test_fcs_validate()
             const num_freecells = 4;
             const test_name = "With comment. ";
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.ok (result.is_correct, test_name + "Column was parsed correctly.");
@@ -332,7 +342,7 @@ export function test_fcs_validate()
             const num_freecells = 5;
             const test_name = "With a comment and a newline - ";
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.ok (result.is_correct, test_name + "Column was parsed correctly.");
@@ -356,7 +366,7 @@ export function test_fcs_validate()
             const str = "F-Junk: 5C 2H 3D 9H";
             const num_freecells = 4;
 
-            var result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
+            const result = fcs_js__freecells_from_string(num_freecells, start_char_idx, str);
 
             // TEST
             a.notOk (result.is_correct, "Freecells has wrong prefix.");
@@ -369,38 +379,38 @@ export function test_fcs_validate()
         }
 
     });
-    QUnit.test("verify_state Foundations class tests", function(a: Assert) {
+    QUnit.test("verify_state Foundations class tests", (a: Assert) => {
         a.expect(22);
         {
-            var f = new Foundations();
+            const f = new Foundations();
 
             // TEST
-            a.equal(f.getByIdx(0,0), (-1), "founds.getByIdx works.");
+            a.equal(f.getByIdx(0, 0), (-1), "founds.getByIdx works.");
 
             // TEST
-            a.equal(f.setByIdx(0,0,0), true, "founds.setByIdx works.");
+            a.equal(f.setByIdx(0, 0, 0), true, "founds.setByIdx works.");
             // TEST
-            a.equal(f.getByIdx(0,0), 0, "founds.getByIdx works after assignment.");
+            a.equal(f.getByIdx(0, 0), 0, "founds.getByIdx works after assignment.");
             // TEST
-            a.equal(f.setByIdx(0,0,5), false, "founds.setByIdx does not assign again.");
+            a.equal(f.setByIdx(0, 0, 5), false, "founds.setByIdx does not assign again.");
             // TEST
-            a.equal(f.getByIdx(0,0), 0, "founds.getByIdx assigned only once.");
+            a.equal(f.getByIdx(0, 0), 0, "founds.getByIdx assigned only once.");
 
         }
 
         {
-            var f = new Foundations();
+            const f = new Foundations();
 
             // TEST
-            a.equal(f.setByIdx(0,2,11), true, "founds.setByIdx #2.");
+            a.equal(f.setByIdx(0, 2, 11), true, "founds.setByIdx #2.");
 
             // TEST
-            a.equal(f.getByIdx(0,0), -1, "founds.getByIdx works.");
+            a.equal(f.getByIdx(0, 0), -1, "founds.getByIdx works.");
 
             // TEST
-            a.equal(f.getByIdx(0,2), 11, "founds.getByIdx works after assignment.");
+            a.equal(f.getByIdx(0, 2), 11, "founds.getByIdx works after assignment.");
             // TEST
-            a.equal(f.setByIdx(0,2,11), false, "founds.setByIdx does not assign again.");
+            a.equal(f.setByIdx(0, 2, 11), false, "founds.setByIdx does not assign again.");
         }
 
         {
@@ -473,10 +483,10 @@ export function test_fcs_validate()
 
         }
     });
-    QUnit.test("verify_state BoardParseResult tests #1", function(a: Assert) {
+    QUnit.test("verify_state BoardParseResult tests #1", (a: Assert) => {
         a.expect(11);
         {
-        let ms_deal_24 = ": 4C 2C 9C 8C QS 4S 2H\n" +
+            const ms_deal_24 = ": 4C 2C 9C 8C QS 4S 2H\n" +
 ": 5H QH 3C AC 3H 4H QD\n" +
 ": QC 9S 6H 9H 3S KS 3D\n" +
 ": 5D 2S JC 5C JH 6D AS\n" +
@@ -484,7 +494,7 @@ export function test_fcs_validate()
 ": 7H JS KH TS KC 7C\n" +
 ": AH 5S 6S AD 8H JD\n" +
 ": 7S 6C 7D 4D 8S 9D\n" ;
-            let result = new BoardParseResult(8, 4, ms_deal_24);
+            const result = new BoardParseResult(8, 4, ms_deal_24);
 
             // TEST
             a.ok( result.is_valid, "parsed correctly.");
@@ -509,29 +519,29 @@ export function test_fcs_validate()
         }
 
         {
-            let col1_s = ": 4C 2C 9C 8C QS 4S 2H\n";
-            let col2_s = "NONSENSE:: 5H QH 3C AC 3H 4H QD\n";
+            const col1_s = ": 4C 2C 9C 8C QS 4S 2H\n";
+            const col2_s = "NONSENSE:: 5H QH 3C AC 3H 4H QD\n";
 
-            let nonsense_deal_24 = col1_s + col2_s +
+            const nonsense_deal_24 = col1_s + col2_s +
                 ": QC 9S 6H 9H 3S KS 3D\n" +
 ": 5D 2S JC 5C JH 6D AS\n" +
 ": 2D KD TH TC TD 8D\n" +
 ": 7H JS KH TS KC 7C\n" +
 ": AH 5S 6S AD 8H JD\n" +
 ": 7S 6C 7D 4D 8S 9D\n" ;
-            let result = new BoardParseResult(8, 4, nonsense_deal_24);
+            const result = new BoardParseResult(8, 4, nonsense_deal_24);
 
             // TEST
             a.ok( (!result.is_valid), "not validly parsed.");
 
-            let error = result.errors[0];
+            const error = result.errors[0];
             // TEST
             a.equal(
                 error.type_,
                 ParseErrorType.LINE_PARSE_ERROR,
-                "Error of right type."
+                "Error of right type.",
             );
-            let loc = error.locs[0];
+            const loc = error.locs[0];
             // TEST
             a.equal(
                 loc.type_,
@@ -549,7 +559,7 @@ export function test_fcs_validate()
                 'Location end is correct.');
         }
    });
-    QUnit.test("verify_state BoardParseResult - Freecells", function(a: Assert) {
+    QUnit.test("verify_state BoardParseResult - Freecells", (a: Assert) => {
         a.expect(4);
         {
             const ms_deal_24_w_Freecells = "Freecells: 2H - 8D\n" +
