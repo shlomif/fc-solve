@@ -278,6 +278,19 @@ sub run_tests
         #                 qq#cd "$DIR" && make#,
         #                 )
         # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
+        if ( $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER} )
+        {
+            my $P =
+qq#/home/travis/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source#;
+            while ( my $x = $P =~ m#(/)#g )
+            {
+                my $path = substr( $P, 0, pos($P) );
+                print "<$path>\n",
+                    scalar(`docker exec -it emscripten echo $path/*`), "\n";
+            }
+            exit(-1);
+        }
+        #
         run_cmd(
             "$blurb_base : make",
             {
