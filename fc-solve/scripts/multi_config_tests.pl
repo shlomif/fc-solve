@@ -261,6 +261,11 @@ sub run_tests
     elsif ($website_args)
     {
         my $DIR = "$cwd/../site/wml";
+        my $PATH_PREFIX =
+            $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
+            ? "$cwd/../scripts/dockerized-emscripten/:"
+            : "";
+        local $ENV{PATH} = $PATH_PREFIX . $ENV{PATH};
         chdir($DIR);
         local $ENV{PWD} = $DIR;
         run_cmd(
@@ -268,16 +273,17 @@ sub run_tests
             { cmd => [ $^X, 'gen-helpers.pl' ] }
         );
 
+        # (
+        #                 'docker', 'exec', '-it', 'emscripten', 'bash', '-c',
+        #                 qq#cd "$DIR" && make#,
+        #                 )
         # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
         run_cmd(
             "$blurb_base : make",
             {
                 cmd => [
                     $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
-                    ? (
-                        'docker', 'exec', '-it', 'emscripten', 'bash', '-c',
-                        qq#cd "$DIR" && make#,
-                        )
+                    ? ('make')
                     : (
                         'bash', '-c',
                         ". ~/bin/Dev-Path-Configs-Source-Me.bash ; make"
