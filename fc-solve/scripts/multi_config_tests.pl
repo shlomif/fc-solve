@@ -280,7 +280,7 @@ sub run_tests
         # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
         if ( $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER} )
         {
-            foreach $component (qw# travis emscripten #)
+            foreach my $component (qw# travis emscripten #)
             {
                 my $P =
 qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source#;
