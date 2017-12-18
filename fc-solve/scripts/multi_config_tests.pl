@@ -280,13 +280,18 @@ sub run_tests
         # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
         if ( $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER} )
         {
-            my $P =
-qq#/home/travis/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source#;
-            while ( my $x = $P =~ m#(/)#g )
+            foreach $component (qw# travis emscripten #)
             {
-                my $path = substr( $P, 0, pos($P) );
-                print "<$path>\n",
-                    scalar(`docker exec -it emscripten bash -c 'echo $path/*'`), "\n";
+                my $P =
+qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source#;
+                while ( my $x = $P =~ m#(/)#g )
+                {
+                    my $path = substr( $P, 0, pos($P) );
+                    print "<$path>\n",
+                        scalar(
+                        `docker exec -it emscripten bash -c 'echo $path/*'`),
+                        "\n";
+                }
             }
             exit(-1);
         }
