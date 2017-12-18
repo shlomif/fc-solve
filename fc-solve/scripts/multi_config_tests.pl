@@ -286,7 +286,7 @@ qq#/home/travis/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source#
             {
                 my $path = substr( $P, 0, pos($P) );
                 print "<$path>\n",
-                    scalar(`docker exec -it emscripten echo '$path/*'`), "\n";
+                    scalar(`docker exec -it emscripten bash -c 'echo $path/*'`), "\n";
             }
             exit(-1);
         }
