@@ -74,7 +74,7 @@ SKIP:
             Test::More::skip( "Skipping valgrind test for no_dbm solvers", 1 );
         }
         elsif (
-            !Test::RunValgrind->new( {} )->run(
+            !Test::RunValgrind->new( { supress_stderr => 1, } )->run(
                 {
                     log_fn => $args->{log_fn},
                     blurb  => $msg,
