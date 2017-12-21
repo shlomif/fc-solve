@@ -7,14 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * meta_alloc.c - the Freecell Solver compact allocator based on the
- * meta-allocator concept that is used to collect the pages allocated by
- * the standard allocator after it is destroyed and to recycle them.
- *
- * Also see alloc.c.
- */
-
+// meta_alloc.c - the Freecell Solver compact allocator based on the
+// meta-allocator concept that is used to collect the pages allocated by
+// the standard allocator after it is destroyed and to recycle them.
 #include "meta_alloc.h"
 
 #define ALLOCED_SIZE (FCS_IA_PACK_SIZE * 1024 - (256 + 128))
