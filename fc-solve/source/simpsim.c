@@ -970,16 +970,9 @@ DECLARE_MOVE_FUNCTION(
             {
                 continue;
             }
-/* We have a matching parent and child cards */
-#if 0
-                printf("Stack %i, Parent %i, Child %i\n", stack_idx, parent_card_height, child_card_height);
-                fflush(stdout);
-#endif
-
-            /*
-             * Now let's try to find stacks to place the cards above
-             * the child card.
-             * */
+            // We have a matching parent and child cards
+            // Now let's try to find stacks to place the cards above the child
+            // card.
 
             int end_of_child_seq = child_card_height;
             size_t child_num_true_seqs = 1;
@@ -991,7 +984,7 @@ DECLARE_MOVE_FUNCTION(
                 child_num_true_seqs += (!fcs_is_ss_true_parent(
                     fcs_col_get_card(col, end_of_child_seq),
                     fcs_col_get_card(col, end_of_child_seq + 1)));
-                end_of_child_seq++;
+                ++end_of_child_seq;
             }
 
             sequences_analysis_t seqs;
