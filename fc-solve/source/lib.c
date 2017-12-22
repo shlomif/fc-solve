@@ -174,6 +174,7 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
 #endif
 }
 
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 static inline void fc_solve__hard_thread__compile_prelude(
     fc_solve_hard_thread_t *const hard_thread)
 {
@@ -236,6 +237,7 @@ static inline void fc_solve__hard_thread__compile_prelude(
     HT_FIELD(hard_thread, prelude_num_items) = num_items;
     HT_FIELD(hard_thread, prelude_idx) = 0;
 }
+#endif
 
 static inline void set_next_soft_thread(
     fc_solve_hard_thread_t *const hard_thread, const int_fast32_t scan_idx,
@@ -263,6 +265,7 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
 #else
         ST_LOOP_START() { soft_thread->hard_thread = instance; }
 #endif
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
         if (HT_FIELD(hard_thread, prelude_as_string))
         {
             if (!HT_FIELD(hard_thread, prelude))
@@ -270,6 +273,7 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
                 fc_solve__hard_thread__compile_prelude(hard_thread);
             }
         }
+#endif
         set_next_soft_thread(hard_thread, 0,
             HT_FIELD(hard_thread, soft_threads)[0].checked_states_step,
             &(HT_FIELD(hard_thread, st_idx)));
@@ -603,8 +607,10 @@ static inline void fc_solve_start_instance_process_with_board(
 static inline void free_instance_hard_thread_callback(
     fc_solve_hard_thread_t *const hard_thread)
 {
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     free(HT_FIELD(hard_thread, prelude_as_string));
     free(HT_FIELD(hard_thread, prelude));
+#endif
     fcs_move_stack_static_destroy(HT_FIELD(hard_thread, reusable_move_stack));
     free(HT_FIELD(hard_thread, soft_threads));
     fc_solve_compact_allocator_finish(&(HT_FIELD(hard_thread, allocator)));
@@ -4195,6 +4201,7 @@ void DLLEXPORT freecell_solver_user_set_calc_real_depth(
 }
 #endif
 
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     void *const api_instance, const freecell_solver_str_t name)
 {
@@ -4202,6 +4209,7 @@ void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     strncpy(soft_thread->name, name, COUNT(soft_thread->name));
     LAST(soft_thread->name) = '\0';
 }
+#endif
 
 #ifdef FCS_WITH_FLARES
 void DLLEXPORT freecell_solver_user_set_flare_name(
@@ -4215,6 +4223,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
 }
 #endif
 
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
     void *const api_instance, const char *const prelude)
 {
@@ -4226,6 +4235,18 @@ int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
 
     return 0;
 }
+#else
+void DLLEXPORT fc_solve_user_set_ht_compiled_prelude(void *const api_instance,
+    const size_t num, const fc_solve_prelude_item *const prelude)
+{
+    fcs_user_t *const user = (fcs_user_t *)api_instance;
+    fc_solve_hard_thread_t *const hard_thread = user->soft_thread->hard_thread;
+
+    HT_FIELD(hard_thread, prelude_num_items) = num;
+    HT_FIELD(hard_thread, prelude) = prelude;
+}
+
+#endif
 
 #ifdef FCS_WITH_FLARES
 int DLLEXPORT freecell_solver_user_set_flares_plan(
@@ -4349,6 +4370,7 @@ DLLEXPORT const char *freecell_solver_user_get_lib_version(
 }
 #endif
 
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 /* TODO : optionally Remove from the API */
 DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
     void *const api_instance)
@@ -4363,6 +4385,7 @@ DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
     return HT_FIELD(hard_thread, soft_threads)[HT_FIELD(hard_thread, st_idx)]
         .name;
 }
+#endif
 
 #ifdef FCS_WITH_ERROR_STRS
 DLLEXPORT const char *freecell_solver_user_get_last_error_string(

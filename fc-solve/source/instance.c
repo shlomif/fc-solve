@@ -252,7 +252,9 @@ static inline
         .super_method_type = FCS_SUPER_METHOD_DFS,
         .master_to_randomize = FALSE,
         .checked_states_step = 50,
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
         .name = "",
+#endif
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
         .enable_pruning = FALSE,
 #endif
@@ -285,8 +287,9 @@ void fc_solve_instance__init_hard_thread(
     HT_FIELD(hard_thread, soft_threads) = NULL;
 
     fc_solve_new_soft_thread(hard_thread);
-
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     HT_FIELD(hard_thread, prelude_as_string) = NULL;
+#endif
     HT_FIELD(hard_thread, prelude) = NULL;
     HT_FIELD(hard_thread, prelude_num_items) = 0;
     HT_FIELD(hard_thread, prelude_idx) = 0;

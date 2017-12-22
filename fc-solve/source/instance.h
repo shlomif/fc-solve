@@ -311,7 +311,11 @@ struct fc_solve_hard_thread_struct
 
     size_t prelude_num_items;
     size_t prelude_idx;
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    fc_solve_prelude_item *prelude;
+#else
     const fc_solve_prelude_item *prelude;
+#endif
 
     fcs_bool_t allocated_from_list;
     int_fast32_t num_soft_threads;
@@ -323,7 +327,9 @@ struct fc_solve_hard_thread_struct
      * */
     int num_soft_threads_finished;
 
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     char *prelude_as_string;
+#endif
 };
 
 /********************************************/
@@ -493,10 +499,10 @@ struct fc_solve_soft_thread_struct
      * */
     fcs_int_limit_t checked_states_step;
 
-    /*
-     * A string that serves as an identification for the user.
-     * */
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    // A string that serves as an identification for the user.
     char name[FCS_MAX_IDENT_LEN];
+#endif
 
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
     /*

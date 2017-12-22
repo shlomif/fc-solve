@@ -46,11 +46,14 @@ sub compile_cmd_line
     my $expanded = _normalize_lf_list( $obj->argv() );
     my $out      = <<'EOF';
 #pragma once
-
+#define freecell_solver_user_set_soft_thread_name(st, n)
+extern void fc_solve_user_set_ht_compiled_prelude(void *, size_t, const fc_solve_prelude_item *);
 static inline void my_init_instance(void *const instance)
 {
 EOF
 
+    my %names;
+    my $soft_thread_idx = 0;
     my %one_param = (
         '-dto' => {
             f => 'freecell_solver_user_set_depth_tests_order',
@@ -77,10 +80,6 @@ EOF
                 }->{ shift(@_) };
             },
         },
-        '--prelude' => {
-            f => 'freecell_solver_user_set_hard_thread_prelude',
-            p => sub { return qq#"# . shift . qq#"#; },
-        },
         '-seed' => {
             f => 'freecell_solver_user_set_random_seed',
             p => sub { return shift; },
@@ -98,7 +97,7 @@ EOF
         },
         '--st-name' => {
             f => 'freecell_solver_user_set_soft_thread_name',
-            p => sub { return qq#"# . shift . qq#"#; },
+            p => sub { my $name = shift; $names{$name} = $soft_thread_idx; return qq#"$name"#; },
         },
         '-to' => {
             f => 'freecell_solver_user_set_depth_tests_order',
@@ -117,8 +116,20 @@ EOF
             my $param = $expanded->[ ++$i ];
             $out .= "$rec->{f}(instance," . $rec->{p}->($param) . ");\n";
         }
+        elsif ( $s eq '--prelude') {
+            my $param = $expanded->[ ++$i ];
+            my $f = 'fc_solve_user_set_ht_compiled_prelude';
+            my @pre = map { [ split/\@/, $_]} split /,/, $param;
+            $out .= <<"EOF"
+{
+    static const fc_solve_prelude_item prelude[@{[scalar @pre]}] = {@{[join ",", map { "{.quota = $_->[0], .scan_idx = " . $names{$_->[1]} . '}' } @pre]}};
+    $f(instance, @{[scalar @pre]}, prelude);
+}
+EOF
+        }
         elsif ( $s eq '-nst' )
         {
+            ++$soft_thread_idx;
             $out .= qq#freecell_solver_user_next_soft_thread(instance);\n#;
         }
         elsif ( $s eq '-asw' )
