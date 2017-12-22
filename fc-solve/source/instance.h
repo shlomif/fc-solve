@@ -19,6 +19,7 @@ extern "C" {
 
 #include "move.h"
 #include "fcs_enums.h"
+#include "fcs_user.h"
 #include "rate_state.h"
 #include "indirect_buffer.h"
 #include "rand.h"
@@ -258,16 +259,7 @@ typedef void (*fcs_instance_debug_iter_output_func_t)(
 #endif
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
-
 typedef struct fc_solve_instance_struct fc_solve_instance_t;
-
-/***************************************************/
-
-typedef struct
-{
-    size_t scan_idx;
-    size_t quota;
-} fcs_prelude_item_t;
 
 struct fc_solve_hard_thread_struct
 {
@@ -319,7 +311,7 @@ struct fc_solve_hard_thread_struct
 
     size_t prelude_num_items;
     size_t prelude_idx;
-    fcs_prelude_item_t *prelude;
+    const fc_solve_prelude_item *prelude;
 
     fcs_bool_t allocated_from_list;
     int_fast32_t num_soft_threads;

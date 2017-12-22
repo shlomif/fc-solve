@@ -11,6 +11,7 @@
  * fcs_user.h - main header file for the Freecell Solver library.
  */
 #pragma once
+#include <stddef.h>
 
 #include "fcs_dllexport.h"
 #include "fcs_enums.h"
@@ -357,6 +358,12 @@ DLLEXPORT extern int freecell_solver_user_set_patsolve_x_param(
 DLLEXPORT extern int freecell_solver_user_set_patsolve_y_param(
     void *const api_instance, const int position,
     const double y_param_val FCS__PASS_ERR_STR(char **const error_string));
+
+typedef struct
+{
+    size_t scan_idx;
+    size_t quota;
+} fc_solve_prelude_item;
 
 #ifdef __cplusplus
 }
