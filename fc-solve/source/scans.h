@@ -31,8 +31,7 @@ static inline void fc_solve__assign_dest_stack_and_col_ptr(
                                      (fcs_card_suit(dest_card) << 1)];
 #endif
 
-// #if ((!defined(HARD_CODED_NUM_DECKS)) || (HARD_CODED_NUM_DECKS > 1))
-#if 1
+#if ((!defined(HARD_CODED_NUM_DECKS)) || (HARD_CODED_NUM_DECKS > 1))
     for (; (*ptr) != -1; ptr += (4 << 1))
     {
     }
