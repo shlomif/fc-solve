@@ -235,7 +235,6 @@ static inline void fc_solve__hard_thread__compile_prelude(
 
     HT_FIELD(hard_thread, prelude) = SREALLOC(prelude, num_items);
     HT_FIELD(hard_thread, prelude_num_items) = num_items;
-    HT_FIELD(hard_thread, prelude_idx) = 0;
 }
 #endif
 

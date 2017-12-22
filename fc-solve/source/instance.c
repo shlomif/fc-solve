@@ -292,7 +292,6 @@ void fc_solve_instance__init_hard_thread(
 #endif
     HT_FIELD(hard_thread, prelude) = NULL;
     HT_FIELD(hard_thread, prelude_num_items) = 0;
-    HT_FIELD(hard_thread, prelude_idx) = 0;
 
     fc_solve_reset_hard_thread(hard_thread);
     fc_solve_compact_allocator_init(&(HT_FIELD(hard_thread, allocator)),
