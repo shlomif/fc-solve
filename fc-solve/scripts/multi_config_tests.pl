@@ -72,19 +72,20 @@ sub all_info
     return Text::Sprintf::Named->new(
         {
             fmt => join( "",
-                map { "$_ [%(blurb)s] ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" } (@fields) )
+                map { "$_ [%(blurb)s] ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" }
+                    (@fields) )
         }
-        )->format(
+    )->format(
         {
             args => {
-                blurb => scalar($self->blurb),
+                blurb => scalar( $self->blurb ),
                 map {
                     my $name = $_;
                     ( $name => $self->_stringify_value($name) )
                 } @fields
             }
         }
-        );
+    );
 }
 
 sub emit_all
@@ -314,6 +315,7 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
+reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
 reg_test(
     "No int128",
     { cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ] }

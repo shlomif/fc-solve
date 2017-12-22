@@ -3734,6 +3734,7 @@ int DLLEXPORT freecell_solver_user_set_game(void *const api_instance,
     {
         return 3;
     }
+#ifndef FCS_FREECELL_ONLY
     if (freecell_solver_user_set_sequences_are_built_by_type(
             api_instance, sequences_are_built_by))
     {
@@ -3749,7 +3750,7 @@ int DLLEXPORT freecell_solver_user_set_game(void *const api_instance,
     {
         return 6;
     }
-
+#endif
     return 0;
 }
 #endif
