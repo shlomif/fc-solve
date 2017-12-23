@@ -584,16 +584,12 @@ static inline void fc_solve_start_instance_process_with_board(
     {
         HT_LOOP_START()
         {
-            if (HT_FIELD(hard_thread, prelude) != NULL)
+            HT_FIELD(hard_thread, prelude_idx) = 0;
+            if (HT_FIELD(hard_thread, prelude))
             {
-                HT_FIELD(hard_thread, prelude_idx) = 0;
                 set_next_prelude_item(hard_thread,
                     HT_FIELD(hard_thread, prelude),
                     &(HT_FIELD(hard_thread, st_idx)));
-            }
-            else
-            {
-                HT_FIELD(hard_thread, prelude_num_items) = 0;
             }
         }
     }
