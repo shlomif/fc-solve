@@ -12,8 +12,6 @@ Freecell Solver test suite.
 
 =cut
 
-our $VERSION = 'v0.0.11';
-
 # Load the dependencies so we'll be sure they are installed.
 use Carp;
 use Cwd;
