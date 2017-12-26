@@ -47,7 +47,6 @@ sub compile_cmd_line
     my $out      = <<'EOF';
 #pragma once
 #define freecell_solver_user_set_soft_thread_name(st, n)
-extern void fc_solve_user_set_ht_compiled_prelude(void *, size_t, const fc_solve_prelude_item *);
 static inline void my_init_instance(void *const instance)
 {
 EOF

@@ -1627,9 +1627,7 @@ static inline int fc_solve__soft_thread__do_solve(
 /* instance__check_exceeded_stats() cannot be an inline function because if
  * it is, the code becomes considerably slower (at least on gcc-5.4.0 on x86-64
  * Linux). */
-#ifdef FCS_DISABLE_NUM_STORED_STATES
-#define instance_check_exceeded__num_states(instance)
-#else
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 #define instance_check_exceeded__num_states(instance)                          \
     || (instance->num_states_in_collection >=                                  \
            instance->effective_max_num_states_in_collection)
@@ -2136,9 +2134,6 @@ static inline instance_item_t *CURR_INST(fcs_user_t *const user)
 #define FLARES_LOOP_START()                                                    \
     INSTANCES_LOOP_START()                                                     \
     INSTANCE_ITEM_FLARES_LOOP_START()
-#define FLARES_LOOP_END()                                                      \
-    INSTANCE_ITEM_FLARES_LOOP_END()                                            \
-    INSTANCES_LOOP_END()
 
 #ifdef FCS_WITH_FLARES
 #define FLARE_INLINE
@@ -2170,7 +2165,8 @@ static void apply_game_params_for_all_instances(fcs_user_t *const user)
         instance->game_params = user->common_preset.game_params;
         calc_variant_suit_mask_and_desired_suit_value(instance);
     }
-    FLARES_LOOP_END()
+    INSTANCE_ITEM_FLARES_LOOP_END()
+    INSTANCES_LOOP_END()
 }
 #endif
 
@@ -2217,7 +2213,8 @@ static inline void set_debug_iter_output_func_to_val(
 {
     FLARES_LOOP_START()
     flare->obj.debug_iter_output_func = value;
-    FLARES_LOOP_END()
+    INSTANCE_ITEM_FLARES_LOOP_END()
+    INSTANCES_LOOP_END()
 }
 
 static inline void set_any_iter_handler(void *const api_instance,
@@ -2320,8 +2317,8 @@ static NI_INLINE void user_next_instance(fcs_user_t *const user)
         (user->current_instance = user->instances_list + num_instances) + 1;
 #endif
 
-    *(CURR_INST(user)) = (instance_item_t){
 #ifdef FCS_WITH_FLARES
+    *(CURR_INST(user)) = (instance_item_t){
         .flares = NULL,
         .end_of_flares = NULL,
         .plan = NULL,
@@ -2331,8 +2328,8 @@ static NI_INLINE void user_next_instance(fcs_user_t *const user)
         .current_plan_item_idx = 0,
         .minimal_flare = NULL,
         .all_plan_items_finished_so_far = TRUE,
-#endif
     };
+#endif
 
     /* ret_code and limit are set at user_next_flare(). */
     user_next_flare(user);
@@ -2341,7 +2338,6 @@ static NI_INLINE void user_next_instance(fcs_user_t *const user)
 #ifdef FCS_WITH_ERROR_STRS
 #define ALLOC_ERROR_STRING(var, s) *(var) = strdup(s)
 #define SET_ERROR_VAR(var, s) *(var) = (((s)[0]) ? strdup(s) : NULL)
-#define SET_ERROR(s) strcpy(user->error_string, s)
 static inline void clear_error(fcs_user_t *const user)
 {
     user->error_string[0] = '\0';
@@ -2349,7 +2345,6 @@ static inline void clear_error(fcs_user_t *const user)
 #else
 #define ALLOC_ERROR_STRING(var, s)
 #define SET_ERROR_VAR(var, s)
-#define SET_ERROR(s)
 #define clear_error(user)
 #endif
 
@@ -2428,7 +2423,8 @@ int DLLEXPORT freecell_solver_user_apply_preset(
     {
         return status2;
     }
-    FLARES_LOOP_END()
+    INSTANCE_ITEM_FLARES_LOOP_END()
+    INSTANCES_LOOP_END()
 
     fcs_duplicate_preset(user->common_preset, *new_preset_ptr);
 
@@ -2603,6 +2599,12 @@ static inline fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
     }
     return NULL;
 }
+
+#ifdef FCS_WITH_ERROR_STRS
+#define SET_ERROR(s) strcpy(user->error_string, s)
+#else
+#define SET_ERROR(s)
+#endif
 
 static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
     fcs_user_t *const user)
@@ -3135,10 +3137,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             fc_solve_init_instance(instance);
         }
 
-#define PARAMETERIZED_FIXED_LIMIT(increment)                                   \
-    (user->iterations_board_started_at.num_checked_states + increment)
-#define PARAMETERIZED_LIMIT(increment)                                         \
-    (((increment) < 0) ? (-1) : PARAMETERIZED_FIXED_LIMIT(increment))
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
 #ifdef FCS_BREAK_BACKWARD_COMPAT_1
 #define local_limit() (-1)
 #else
@@ -3150,12 +3149,14 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #define NUM_ITERS_LIMITS 2
 #endif
 #define NUM_ITERS_LIMITS_MINUS_1 (NUM_ITERS_LIMITS - 1)
-
-#ifndef FCS_WITHOUT_MAX_NUM_STATES
         {
             const fcs_int_limit_t limits[NUM_ITERS_LIMITS_MINUS_1] = {
                 user->current_iterations_limit
 #ifdef FCS_WITH_FLARES
+#define PARAMETERIZED_FIXED_LIMIT(increment)                                   \
+    (user->iterations_board_started_at.num_checked_states + increment)
+#define PARAMETERIZED_LIMIT(increment)                                         \
+    (((increment) < 0) ? (-1) : PARAMETERIZED_FIXED_LIMIT(increment))
                 ,
                 PARAMETERIZED_LIMIT(flare_iters_quota)
 #endif
@@ -3355,7 +3356,8 @@ int DLLEXPORT freecell_solver_user_solve_board(
     {
         FLARES_LOOP_START()
         fc_solve_apply_preset_by_ptr(&(flare->obj), &(user->common_preset));
-        FLARES_LOOP_END()
+        INSTANCE_ITEM_FLARES_LOOP_END()
+        INSTANCES_LOOP_END()
     }
 #endif
 #ifdef FCS_WITH_FLARES
@@ -4041,13 +4043,14 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(void *const api_instance,
 }
 #endif
 
+#ifdef FCS_WITH_MOVES
+
 #ifdef HARD_CODED_ALL
 #define HARD_CODED_UNUSED GCC_UNUSED
 #else
 #define HARD_CODED_UNUSED
 #endif
 
-#ifdef FCS_WITH_MOVES
 DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
     void *const api_instance HARD_CODED_UNUSED, char *output_string,
     void *const ptr_state_void FC_SOLVE__PASS_PARSABLE(
@@ -4403,7 +4406,8 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
 
     FLARES_LOOP_START()
     flare->obj.rcs_states_cache.max_num_elements_in_cache = limit;
-    FLARES_LOOP_END()
+    INSTANCE_ITEM_FLARES_LOOP_END()
+    INSTANCES_LOOP_END()
 
     return 0;
 }

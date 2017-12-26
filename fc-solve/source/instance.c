@@ -350,6 +350,13 @@ typedef struct
     } type;
 } find_card_ret_t;
 
+/*
+ * This function traces the solution from the final state down
+ * to the initial state
+ * */
+#ifdef FCS_WITH_MOVES
+
+#ifndef FCS_DISABLE_PATSOLVE
 static inline int find_empty_col(
     const fcs_state_t *const dynamic_state STACKS_NUM__ARG)
 {
@@ -412,12 +419,8 @@ static inline find_card_ret_t find_card_src_string(
         return (find_card_ret_t){.idx = src_col_idx, .type = COLUMN};
     }
 }
+#endif
 
-/*
- * This function traces the solution from the final state down
- * to the initial state
- * */
-#ifdef FCS_WITH_MOVES
 extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
 {
     fcs_internal_move_t canonize_move = fc_solve_empty_move;

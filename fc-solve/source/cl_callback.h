@@ -107,8 +107,10 @@ static void print_help_string(const char *key)
     }
 }
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
 static void my_iter_handler(
     void *, fcs_int_limit_t, int, void *, fcs_int_limit_t, void *);
+#endif
 #include "cl_callback_common.h"
 static int fc_solve__cmd_line_callback(void *const instance, const int argc,
     const char **const argv, const int arg, int *const num_to_skip,

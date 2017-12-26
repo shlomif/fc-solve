@@ -365,6 +365,9 @@ typedef struct
     size_t quota;
 } fc_solve_prelude_item;
 
+DLLEXPORT extern void fc_solve_user_set_ht_compiled_prelude(
+    void *, size_t, const fc_solve_prelude_item *);
+
 #ifdef __cplusplus
 }
 #endif

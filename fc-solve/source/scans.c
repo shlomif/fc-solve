@@ -746,7 +746,6 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
     fcs_kv_state_t existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
-#define ptr_state (raw_state_raw.val)
 
     if (!fc_solve_check_and_add_state(
             hard_thread, raw_ptr_new_state_raw, &existing_state))
@@ -774,6 +773,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
  * already have, then re-assign its parent to this state.
  * */
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
+#define ptr_state (raw_state_raw.val)
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
             (kv_calc_depth(&existing_state) >
                 kv_calc_depth(&raw_state_raw) + 1))

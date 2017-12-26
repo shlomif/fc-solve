@@ -31,11 +31,6 @@
 
 #endif
 
-#ifndef FCS_WITH_MOVES
-#define moves NULL
-#define moves_ptr NULL
-#endif
-
 static inline int find_empty_stack(fcs_kv_state_t raw_state_raw,
     const int start_from, const int local_stacks_num)
 {
@@ -288,9 +283,6 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
 
 #ifdef FCS_FREECELL_ONLY
 
-#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)             \
-    ((fcs_card_suit(card) ^ 0x1) & (0x2 - 1))
-
 #define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP() (2)
 
 #else
@@ -307,11 +299,12 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
             ? 1                                                                \
             : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
 
-#endif
-
 #define FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)                   \
     FCS_POS_BY_RANK_MAP(                                                       \
         FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card))
+
+#endif
+
 #define FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP()                                 \
     FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 

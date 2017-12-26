@@ -13,6 +13,7 @@
 #include "cl_callback.h"
 #include "iter_handler_base.h"
 
+#ifndef FCS_WITHOUT_ITER_HANDLER
 static void my_iter_handler(void *const user_instance,
     const fcs_int_limit_t iter_num, const int depth, void *const ptr_state,
     const fcs_int_limit_t parent_iter_num, void *const context)
@@ -66,3 +67,4 @@ static void my_iter_handler(void *const user_instance,
     }
 #endif
 }
+#endif

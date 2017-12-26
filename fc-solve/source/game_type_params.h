@@ -12,8 +12,10 @@
 
 #include "game_type_limit.h"
 
+#ifndef FCS_FREECELL_ONLY
 typedef struct
 {
+#endif
 /*
  * The number of Freecells, Stacks and Foundations present in the game.
  *
@@ -89,4 +91,6 @@ typedef struct
 #else
 #define STACKS__SET_PARAMS()
 #endif
+#ifndef FCS_FREECELL_ONLY
 } fcs_game_type_params_t;
+#endif
