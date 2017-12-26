@@ -164,7 +164,7 @@ use Term::ANSIColor qw(colored);
 
 local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 
-my $test_index     = 1;
+my $TEST_BASE_IDX  = 1;
 my $NUM_PROCESSORS = 4;
 
 my $FALSE = 0;
@@ -193,9 +193,8 @@ sub _calc_build_path
 
 sub run_tests
 {
-    my ( $blurb_base_base, $args ) = @_;
+    my ( $idx, $blurb_base_base, $args ) = @_;
 
-    my $idx = $test_index++;
     my $blurb_base = sprintf "%s [ idx = %d / %d ]", $blurb_base_base, $idx,
         scalar(@tests);
 
@@ -380,7 +379,7 @@ reg_lt_test(
 {
     my @found =
         grep { -e $_ }
-        map  { _calc_build_path( $test_index + $_ ); } keys @tests;
+        map  { _calc_build_path( $TEST_BASE_IDX + $_ ); } keys @tests;
     if (@found)
     {
         die
@@ -388,9 +387,9 @@ reg_lt_test(
     }
 }
 
-foreach my $run (@tests)
+while ( my ( $idx, $run ) = each @tests )
 {
-    run_tests(@$run);
+    run_tests( $TEST_BASE_IDX + $idx, @$run );
 }
 
 print colored( "All tests successful.",
