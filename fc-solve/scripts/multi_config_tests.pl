@@ -180,6 +180,17 @@ sub reg_test
     push @tests, [@_];
 }
 
+sub _calc_build_path
+{
+    my ($idx) = @_;
+
+    return File::Spec->rel2abs(
+        File::Spec->catdir(
+            File::Spec->curdir(), File::Spec->updir(), "build-$idx"
+        )
+    );
+}
+
 sub run_tests
 {
     my ( $blurb_base_base, $args ) = @_;
@@ -199,12 +210,7 @@ sub run_tests
     }
 
     my $cwd        = getcwd();
-    my $build_path = File::Spec->rel2abs(
-        File::Spec->catdir(
-            File::Spec->curdir(), File::Spec->updir(), "build-$idx"
-        )
-    );
-
+    my $build_path = _calc_build_path($idx);
     local %ENV = %ENV;
     delete( $ENV{FCS_USE_TEST_RUN} );
     $ENV{TEST_JOBS} = $NUM_PROCESSORS;
@@ -370,6 +376,17 @@ reg_lt_test(
     "Freecell-only (as well as Break Backcompat)",
     qw(--break-back-compat-1 --fc-only),
 );
+
+{
+    my @found =
+        grep { -e $_ }
+        map  { _calc_build_path( $test_index + $_ ); } keys @tests;
+    if (@found)
+    {
+        die
+"The following build dirs exist and interfere with the build - [ @found ]. Please remove them!";
+    }
+}
 
 foreach my $run (@tests)
 {
