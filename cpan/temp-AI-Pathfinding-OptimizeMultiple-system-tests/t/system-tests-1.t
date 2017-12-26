@@ -24,4 +24,3 @@ use Carp;
         "results are identical"
     );
 }
-

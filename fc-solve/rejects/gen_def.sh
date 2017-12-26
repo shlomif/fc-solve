@@ -12,4 +12,3 @@ cat fcs_user.h fcs_cl.h |
         A=`expr $A + 1` ;
      done
     )
-

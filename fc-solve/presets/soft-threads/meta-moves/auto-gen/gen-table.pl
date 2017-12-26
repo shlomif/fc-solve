@@ -51,4 +51,3 @@ foreach my $board_idx (1 .. $top_board_idx)
 }
 
 print $tb;
-

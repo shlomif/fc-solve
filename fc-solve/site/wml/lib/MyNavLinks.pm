@@ -122,4 +122,3 @@ sub get_total_html
 }
 
 1;
-

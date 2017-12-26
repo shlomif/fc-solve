@@ -47,4 +47,3 @@ package main;
     # TEST
     is ($obj2->render_text("Hi"), "BOLD: Hi", "Testing true bold.");
 }
-

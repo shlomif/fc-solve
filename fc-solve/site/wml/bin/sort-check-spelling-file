@@ -8,4 +8,3 @@ use lib './lib';
 use Shlomif::Spelling::Whitelist;
 
 Shlomif::Spelling::Whitelist->new->write_sorted_file;
-

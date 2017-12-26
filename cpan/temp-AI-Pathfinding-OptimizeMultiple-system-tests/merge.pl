@@ -71,6 +71,3 @@ foreach my $scan (grep { ($_->{'src'} eq "other") && (-e get_fn($_->{'src'}, $_-
         system("cp", get_fn("other", $scan->{'id'}), get_fn("this", $new_id));
     }
 }
-
-
-

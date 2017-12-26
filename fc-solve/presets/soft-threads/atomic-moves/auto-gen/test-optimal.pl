@@ -32,4 +32,3 @@ for(my $limit = 200 ; $limit < 1000 ; $limit++)
     }
     print "$limit : $max_ind " . ($limit-$max_ind) . "\n"
 }
-

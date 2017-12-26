@@ -2780,4 +2780,3 @@ EOF
         "After KS to empty pile move.",
     );
 }
-

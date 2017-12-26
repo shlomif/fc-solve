@@ -22,4 +22,3 @@ foreach my $scan_rec (@{$input_obj->selected_scans()})
     }
     $input_obj->time_scan({ %$params, id => $id, argv => \@cmd_line, });
 }
-

@@ -37,4 +37,3 @@ else
 {
     print $input_obj->get_scans_iters_pdls()->{$scan_id}->at($board_idx-$start_board), "\n";
 }
-

@@ -64,4 +64,3 @@ mytest "1 9 24 100" $cool_jives -ni $fools_gold
 # Testing the A* weights
 mytest "1 24 100" --method a-star -asw "0.2,0.3,0.5,0,0"
 mytest "1 24 100" --method a-star -asw "0.5,0,0.3,0,0"
-

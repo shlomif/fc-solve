@@ -192,4 +192,3 @@ Actually executed the command-line application.
 Shlomi Fish, L<http://www.shlomifish.org/>.
 
 =cut
-

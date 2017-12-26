@@ -32,4 +32,3 @@ use Carp;
         "perl process.pl results are identical"
     );
 }
-

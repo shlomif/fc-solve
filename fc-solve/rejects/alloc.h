@@ -26,4 +26,3 @@ extern void fc_solve_compact_allocator_foreach(
     allocator->ptr += fcs_compact_alloc_into_var_MYSIZE(what_t);      \
     result = (what_t *)allocator->rollback_ptr;       \
 }
-

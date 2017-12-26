@@ -45,4 +45,3 @@ io("include.mak")->print($text);
 io()->file('Makefile')->print("include lib/make/_Main.mak\n");
 
 1;
-

@@ -36,4 +36,3 @@ sub PDL::Core::string {
 }
 
 1;
-

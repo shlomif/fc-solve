@@ -7,4 +7,3 @@
 #include "shlomif/affiliations.wml"
 
 #include "rest-of-template.wml"
-

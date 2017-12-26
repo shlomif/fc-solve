@@ -22,5 +22,3 @@ foreach my $board (PDL::list($which_boards))
 {
     print "$board: " . join(",", sort { (($b <=> 0) <=> ($a <=> 0)) || ($a <=> $b) } PDL::list($scans_data->slice(($board-1).",:"))) . "\n";
 }
-
-

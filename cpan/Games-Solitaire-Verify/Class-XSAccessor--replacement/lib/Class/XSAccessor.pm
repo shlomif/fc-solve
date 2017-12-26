@@ -36,4 +36,3 @@ sub import
 }
 
 1;
-

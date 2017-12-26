@@ -10,4 +10,3 @@
     use Text::WrapAsUtf8 qw/ print_utf8 /;
     print_utf8( $news->render_old() );
 }:>
-

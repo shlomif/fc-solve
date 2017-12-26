@@ -37,6 +37,3 @@ ____debug_run()
 
     perl -d -MSplitFcc -e 'SplitFcc->new->driver_run()' -- --fingerprint="$id"
 }
-
-
-

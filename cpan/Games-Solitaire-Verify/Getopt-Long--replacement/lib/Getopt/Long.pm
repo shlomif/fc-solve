@@ -52,4 +52,3 @@ sub GetOptionsFromArray
 }
 
 1;
-

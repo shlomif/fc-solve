@@ -58,4 +58,3 @@ static GCC_INLINE char * strndup (const char *s, size_t size)
 #endif
 
 #endif /* #ifndef FC_SOLVE__STRNDUP_H */
-

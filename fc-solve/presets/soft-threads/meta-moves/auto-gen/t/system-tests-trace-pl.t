@@ -21,4 +21,3 @@ use Test::Differences qw( eq_or_diff );
         "perl trace.pl gives the same results for amateur-star.sh",
     );
 }
-

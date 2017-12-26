@@ -150,4 +150,3 @@ released. Else, it is kept there.
 
 4. Hash Elements - The elements of the hash linked lists are compactly
 allocated with a specialized hash allocator.
-

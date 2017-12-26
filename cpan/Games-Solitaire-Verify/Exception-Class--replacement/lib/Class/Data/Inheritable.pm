@@ -149,3 +149,4 @@ modified under the same terms as Perl itself.
 
 L<perltooc> has a very elaborate discussion of class data in Perl.
 
+=cut

@@ -27,4 +27,3 @@ $text =~ s#(</canvas>)#$1\n<strong>Input:</strong>\n<textarea class="emscripten"
 $text =~ s/FS.init\(\)/$replacement/;
 
 print $text;
-

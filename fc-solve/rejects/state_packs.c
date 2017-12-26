@@ -37,4 +37,3 @@ void fc_solve_state_ia_init(fc_solve_state_packs_t * state_packs)
 
     state_packs->num_states_in_last_pack = 0;
 }
-

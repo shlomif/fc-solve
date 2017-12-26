@@ -14,4 +14,3 @@ test_psgi $app, sub {
 
     ok( $cb->( GET '/' )->is_success, '[GET /] successful' );
 };
-

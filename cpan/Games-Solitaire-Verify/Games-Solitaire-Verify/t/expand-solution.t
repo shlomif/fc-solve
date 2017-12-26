@@ -76,4 +76,3 @@ foreach my $class (qw(
         "Class=$class No column moves.");
 
 }
-

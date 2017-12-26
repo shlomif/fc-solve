@@ -25,4 +25,3 @@ foreach my $arg (@c_args[0 .. ($#c_args-1)])
     print "$arg, ";
 }
 print $c_args[-1], "\n};\n";
-

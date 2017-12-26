@@ -92,4 +92,3 @@ foreach my $board (0 .. $input_obj->num_boards()-1)
     }
     print (($board+$start_board) . ": ", $results->total_iters(), "\n");
 }
-

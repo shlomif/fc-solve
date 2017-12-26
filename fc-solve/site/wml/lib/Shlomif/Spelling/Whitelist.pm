@@ -10,4 +10,3 @@ extends('HTML::Spelling::Site::Whitelist');
 has '+filename' => (default => 'lib/hunspell/whitelist1.txt');
 
 1;
-

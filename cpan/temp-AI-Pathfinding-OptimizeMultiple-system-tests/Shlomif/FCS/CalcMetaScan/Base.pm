@@ -99,4 +99,3 @@ EOF
 }
 
 1; # End of Shlomif::FCS::CalcMetaScan::Move
-

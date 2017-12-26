@@ -42,4 +42,3 @@ void fc_solve_rand_srand(fcs_rand_t * rand, int seed)
     rand->seed = seed;
 }
 #endif
-

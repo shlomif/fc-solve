@@ -19,4 +19,3 @@ foreach my $scan_rec (@$prev_scans)
     }
     MyInput::time_scan({ id => $id, argv => \@cmd_line, });
 }
-

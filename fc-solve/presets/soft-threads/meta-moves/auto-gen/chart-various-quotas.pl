@@ -48,4 +48,3 @@ foreach my $quota ($start_quota .. $end_quota)
 }
 
 $data_out->close();
-

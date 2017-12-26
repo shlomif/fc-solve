@@ -62,4 +62,3 @@ foreach my $board (1 .. $num_boards)
     }
     print (($board+$start_board-1) . ": $total_iters\n");
 }
-

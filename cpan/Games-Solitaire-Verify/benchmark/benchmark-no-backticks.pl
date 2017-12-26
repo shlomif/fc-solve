@@ -33,4 +33,3 @@ foreach my $board_idx ($FIRST_INDEX .. $LAST_INDEX)
 {
     print solve (\@game_params, $board_idx);
 }
-

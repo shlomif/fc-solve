@@ -54,4 +54,3 @@ $template->process(\$NINJA_TEXT,
     $ARGS,
     'build.ninja',
 ) or die $template->error;
-

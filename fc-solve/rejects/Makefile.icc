@@ -120,4 +120,3 @@ clean:
 	rm -f *.o $(TARGETS) libfcs.a test-lib mtest libfreecell-solver*
 
 endif
-

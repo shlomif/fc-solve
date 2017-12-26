@@ -56,4 +56,3 @@ else
 {
     print $input_obj->get_scans_data()->at($board_idx-$start_board, $scan_idx), "\n";
 }
-

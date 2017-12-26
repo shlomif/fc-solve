@@ -26,4 +26,3 @@ my $finder = Test::TrailingSpace->new(
 $finder->no_trailing_space(
     "No trailing space was found."
 );
-

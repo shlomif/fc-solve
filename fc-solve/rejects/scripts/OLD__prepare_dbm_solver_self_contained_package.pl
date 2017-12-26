@@ -47,4 +47,3 @@ all: \$(TARGET)
 run: all
 \t./\$(TARGET) --num-threads 64 \$(BOARD) | tee \$(DEAL_IDX).dump
 EOF
-

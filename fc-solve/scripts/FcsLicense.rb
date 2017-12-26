@@ -90,4 +90,3 @@ def change_perl_file(filename)
         fh.write(license_to_perl_pod())
     end
 end
-

@@ -488,4 +488,3 @@ EOF
         "State clone works with a custom variant_params."
     );
 }
-

@@ -57,5 +57,3 @@ What it does is the following:
 5. Compile Freecell Solver.
 6. Place the relevant files in a directory structure by copying them.
 7. Create a zip archive of them.
-
-

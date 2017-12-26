@@ -22,4 +22,3 @@ my $iface = AI::Pathfinding::OptimizeMultiple::App::CmdLine->new(
     }
 );
 $iface->run_flares();
-

@@ -17,4 +17,3 @@ use AI::Pathfinding::OptimizeMultiple::App::CmdLine;
 
 my $iface = AI::Pathfinding::OptimizeMultiple::App::CmdLine->new({ argv => [@ARGV], }, );
 $iface->run();
-

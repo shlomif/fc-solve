@@ -52,4 +52,3 @@ int fc_solve_merge_large_and_small_sorted_arrays
 #endif
 
 #endif /* FC_SOLVE__FCS_DATA_H */
-

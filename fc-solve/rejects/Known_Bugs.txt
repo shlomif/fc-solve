@@ -10,4 +10,3 @@
 
 since +--trim-max-stored-states+ is a rarely used feature we decided to
 release Freecell Solver 3.4.0 with this bug present.
-
