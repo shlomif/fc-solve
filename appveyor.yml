@@ -56,6 +56,11 @@ test_script:
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
     - perl ../source/run-tests.pl
     - cd ..
+    - mkdir pkg-build-win64
+    - cd pkg-build-win64
+    - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
+    - gmake package
+    - cd ..
     - mkdir pkg-build
     - cd pkg-build
     # For generating 32-bit release binaries.
@@ -70,3 +75,5 @@ shallow_clone: true
 artifacts:
     - path: 'fc-solve\pkg-build\freecell-solver-*-win32.exe'
       name: Freecell Solver Win32 Package
+    - path: 'fc-solve\pkg-build-win64\freecell-solver-*-win64.exe'
+      name: Freecell Solver Win64 Package
