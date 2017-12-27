@@ -51,6 +51,8 @@ test_script:
     - echo %PATH%
     - gmake
     - type cmd_line_inc.h
+    - python3 -mpip install cffi
+    - python3 -mpip install random2
     - gmake boards
     # Trying this hack to take more precendence for Inline::C / etc.
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
