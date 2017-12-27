@@ -834,8 +834,9 @@ MACRO(GEN_BOARD idx)
     SET(board "${idx}.board")
     ADD_CUSTOM_COMMAND(
         OUTPUT ${board}
-        COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/board_gen/make_pysol_freecell_board.py"
-        ARGS "--ms" "-t" "${idx}" ">" "${board}"
+        COMMAND "python3"
+        ARGS "${CMAKE_CURRENT_SOURCE_DIR}/board_gen/make_pysol_freecell_board.py"
+        "--ms" "-t" "${idx}" ">" "${board}"
     )
     add_boards("${board}")
 ENDMACRO()
