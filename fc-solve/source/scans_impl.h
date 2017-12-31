@@ -68,6 +68,7 @@ static inline void fc_solve_initialize_befs_rater(
         sum = 1;
     }
     const_AUTO(factor, INT_MAX / sum);
+#define W(idx) (befs_weights[idx] * factor)
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
     HARD__SET_GAME_PARAMS();
@@ -81,8 +82,7 @@ static inline void fc_solve_initialize_befs_rater(
 #endif
 
     const double num_cards_out_factor =
-        befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] * factor /
-        (LOCAL_DECKS_NUM * 52);
+        W(FCS_BEFS_WEIGHT_CARDS_OUT) / (LOCAL_DECKS_NUM * 52);
 
     double out_sum = 0.0;
     const_PTR(
@@ -93,7 +93,7 @@ static inline void fc_solve_initialize_befs_rater(
     }
 
     weighting->max_sequence_move_factor =
-        befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] * factor /
+        W(FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE) /
         (is_filled_by_any_card()
                 ? (unlimited_sequence_move
                           ? (LOCAL_FREECELLS_NUM + INSTANCE_STACKS_NUM)
@@ -102,19 +102,17 @@ static inline void fc_solve_initialize_befs_rater(
                 : (unlimited_sequence_move ? LOCAL_FREECELLS_NUM : 1));
 
     weighting->cards_under_sequences_factor =
-        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] * factor /
+        W(FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES) /
         instance->initial_cards_under_sequences_value;
 
     weighting->seqs_over_renegade_cards_factor =
-        befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] * factor /
+        W(FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS) /
         FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM * (13 * 4));
 
-    weighting->depth_factor =
-        befs_weights[FCS_BEFS_WEIGHT_DEPTH] * factor / BEFS_MAX_DEPTH;
+    weighting->depth_factor = W(FCS_BEFS_WEIGHT_DEPTH) / BEFS_MAX_DEPTH;
 
     weighting->num_cards_not_on_parents_factor =
-        befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] * factor /
-        (LOCAL_DECKS_NUM * 52);
+        W(FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS) / (LOCAL_DECKS_NUM * 52);
 
     weighting->should_go_over_stacks =
         (weighting->max_sequence_move_factor ||
@@ -122,6 +120,7 @@ static inline void fc_solve_initialize_befs_rater(
             weighting->seqs_over_renegade_cards_factor);
 }
 #undef unlimited_sequence_move
+#undef W
 
 typedef int fcs_depth_t;
 
