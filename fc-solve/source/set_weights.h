@@ -42,7 +42,8 @@ static inline void fc_solve_set_weights(freecell_solver_str_t start_num,
             return;
         }
         char *end_num;
-        befs_weights[i] = strtod(start_num, &end_num);
+        const_AUTO(val, strtod(start_num, &end_num));
+        befs_weights[i] = max(val, 0.0);
         start_num = end_num;
     }
 }

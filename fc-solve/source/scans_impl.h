@@ -56,17 +56,13 @@ static inline void fc_solve_initialize_befs_rater(
     fc_solve_soft_thread_t *const soft_thread,
     fc_solve_state_weighting_t *const weighting)
 {
-    double *const befs_weights = weighting->befs_weights.weights;
+    const double *const befs_weights = weighting->befs_weights.weights;
     double normalized_befs_weights[COUNT(weighting->befs_weights.weights)];
 
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
     double sum = 0;
     for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
     {
-        if (befs_weights[i] < 0)
-        {
-            befs_weights[i] = fc_solve_default_befs_weights.weights[i];
-        }
         sum += befs_weights[i];
     }
     if (sum < 1e-6)
@@ -75,7 +71,7 @@ static inline void fc_solve_initialize_befs_rater(
     }
     for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
     {
-        normalized_befs_weights[i] = ((befs_weights[i] /= sum) * INT_MAX);
+        normalized_befs_weights[i] = ((befs_weights[i] / sum) * INT_MAX);
     }
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
