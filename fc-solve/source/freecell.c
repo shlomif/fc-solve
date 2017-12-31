@@ -299,18 +299,11 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
             ? 1                                                                \
             : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
 
-#define FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)                   \
-    FCS_POS_BY_RANK_MAP(                                                       \
-        FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card))
-
 #endif
-
-#define FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP()                                 \
-    FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #define FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS()                                 \
     const int suit_positions_by_rank_step =                                    \
-        (FCS_CARD_SUIT_POSITIONS_BY_RANK_STEP())
+        FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
 
 #ifdef FCS_FREECELL_ONLY
 #include "pos_by_rank__freecell.h"
@@ -328,8 +321,8 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
     const int8_t *const last_pos_idx =                                         \
         pos_idx_to_check + FCS_POS_BY_RANK_WIDTH;                              \
                                                                                \
-    for (pos_idx_to_check +=                                                   \
-         FCS_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card);             \
+    for (pos_idx_to_check += FCS_POS_BY_RANK_MAP(                              \
+             FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card));  \
          pos_idx_to_check < last_pos_idx;                                      \
          pos_idx_to_check += suit_positions_by_rank_step)
 #endif
