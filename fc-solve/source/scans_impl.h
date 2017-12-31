@@ -57,8 +57,6 @@ static inline void fc_solve_initialize_befs_rater(
     fc_solve_state_weighting_t *const weighting)
 {
     const double *const befs_weights = weighting->befs_weights.weights;
-    double normalized_befs_weights[COUNT(weighting->befs_weights.weights)];
-
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
     double sum = 0;
     for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
@@ -69,10 +67,7 @@ static inline void fc_solve_initialize_befs_rater(
     {
         sum = 1;
     }
-    for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
-    {
-        normalized_befs_weights[i] = ((befs_weights[i] / sum) * INT_MAX);
-    }
+    const_AUTO(factor, INT_MAX / sum);
     fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
     HARD__SET_GAME_PARAMS();
@@ -86,7 +81,7 @@ static inline void fc_solve_initialize_befs_rater(
 #endif
 
     const double num_cards_out_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] /
+        befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] * factor /
         (LOCAL_DECKS_NUM * 52);
 
     double out_sum = 0.0;
@@ -98,7 +93,7 @@ static inline void fc_solve_initialize_befs_rater(
     }
 
     weighting->max_sequence_move_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
+        befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] * factor /
         (is_filled_by_any_card()
                 ? (unlimited_sequence_move
                           ? (LOCAL_FREECELLS_NUM + INSTANCE_STACKS_NUM)
@@ -107,18 +102,18 @@ static inline void fc_solve_initialize_befs_rater(
                 : (unlimited_sequence_move ? LOCAL_FREECELLS_NUM : 1));
 
     weighting->cards_under_sequences_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] /
+        befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] * factor /
         instance->initial_cards_under_sequences_value;
 
     weighting->seqs_over_renegade_cards_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] /
+        befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] * factor /
         FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM * (13 * 4));
 
     weighting->depth_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
+        befs_weights[FCS_BEFS_WEIGHT_DEPTH] * factor / BEFS_MAX_DEPTH;
 
     weighting->num_cards_not_on_parents_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] /
+        befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] * factor /
         (LOCAL_DECKS_NUM * 52);
 
     weighting->should_go_over_stacks =
