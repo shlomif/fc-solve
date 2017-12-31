@@ -131,7 +131,7 @@ sub which_irrev_moves_as_hashref
                     ->[$suit_int];
                 my $v = vec( $bitmask, ( $rank_int << 2 ) + $suit_int, 2 );
                 $v ? ( $card => $v ) : ();
-                } ( 0 .. ( 4 - 1 ) )
+            } ( 0 .. ( 4 - 1 ) )
         } ( 0 .. ( 13 - 1 ) )
     };
 }
