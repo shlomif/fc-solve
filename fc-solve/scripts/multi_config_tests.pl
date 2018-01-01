@@ -191,6 +191,8 @@ sub _calc_build_path
     );
 }
 
+my $CWD = getcwd();
+
 sub run_tests
 {
     my ( $idx, $blurb_base_base, $args ) = @_;
@@ -208,7 +210,6 @@ sub run_tests
 "One and only one of tatzer_args or cmake_args or prepare_dist_args must be specified.";
     }
 
-    my $cwd        = getcwd();
     my $build_path = _calc_build_path($idx);
     local %ENV = %ENV;
     delete( $ENV{FCS_USE_TEST_RUN} );
@@ -234,7 +235,7 @@ sub run_tests
             { cmd => [ "tar", "-xvf", "dbm_fcs_for_sub.tar.xz" ], } );
         chdir('dbm_fcs_for_sub');
         run_cmd( "$blurb_base : make", { cmd => ['make'], } );
-        chdir($cwd);
+        chdir($CWD);
         rmtree( 'dbm_fcs_for_sub', 0, $SAFE );
         unlink('dbm_fcs_for_sub.tar.xz');
     }
@@ -257,10 +258,10 @@ sub run_tests
         if ( not $args->{do_not_test} )
         {
             run_cmd( "$blurb_base : test",
-                { cmd => [ $^X, "$cwd/run-tests.pl" ] } );
+                { cmd => [ $^X, "$CWD/run-tests.pl" ] } );
         }
 
-        chdir($cwd);
+        chdir($CWD);
         rmtree( $build_path, 0, $SAFE );
     }
 
@@ -320,12 +321,6 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
-{
-    my $cwd = getcwd();
-    chdir("../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/");
-    run_cmd( "Games-Solitaire-Verify dzil", { cmd => [qw(dzil test --all)] } );
-    chdir($cwd);
-}
 reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
 reg_test(
     "No int128",
@@ -392,6 +387,9 @@ reg_lt_test(
 "The following build dirs exist and interfere with the build - [ @found ]. Please remove them!";
     }
 }
+chdir("../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/");
+run_cmd( "Games-Solitaire-Verify dzil", { cmd => [qw(dzil test --all)] } );
+chdir($CWD);
 
 while ( my ( $idx, $run ) = each @tests )
 {
