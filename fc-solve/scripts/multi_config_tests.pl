@@ -320,6 +320,12 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
+{
+    my $cwd = getcwd();
+    chdir("../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/");
+    run_cmd( "Games-Solitaire-Verify dzil", { cmd => [qw(dzil test --all)] } );
+    chdir($cwd);
+}
 reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
 reg_test(
     "No int128",
