@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 #
-# transpose-freecell-board.py - Program to transpose the input board from
-# being playstacks-in-text-columns to being playstacks-in-lines.
+# find-freecell-deal-index.py - a program to find out the Freecell deal index
+# based on the initial cards layout.
 #
-# Copyright by Shlomi Fish, 2016
+# Copyright by Shlomi Fish, 2018
 #
 # Licensed under the MIT/Expat License.
 
