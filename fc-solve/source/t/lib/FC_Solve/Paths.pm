@@ -8,7 +8,7 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol);
 
 use File::Spec ();
 
@@ -33,7 +33,8 @@ my $FC_SOLVE__RAW__RAW = "$FCS_PATH/fc-solve";
 our $FC_SOLVE__RAW = _correct_path($FC_SOLVE__RAW__RAW) . $EXE_SUF;
 our $FC_SOLVE_EXE  = _correct_path( shell_quote($FC_SOLVE__RAW__RAW) );
 my $PY3 = ( $IS_WIN ? 'python3 ' : '' );
-our $MAKE_PYSOL = "${PY3}../board_gen/make_pysol_freecell_board.py";
+our $MAKE_PYSOL      = "${PY3}../board_gen/make_pysol_freecell_board.py";
+our $FIND_DEAL_INDEX = "${PY3}../board_gen/find-freecell-deal-index.py";
 
 sub _is_tag
 {

@@ -3,10 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 33;
 use Test::Differences qw/ eq_or_diff /;
 
-use FC_Solve::Paths qw/ $MAKE_PYSOL bin_exe_raw /;
+use FC_Solve::Paths qw/ $FIND_DEAL_INDEX $MAKE_PYSOL bin_board bin_exe_raw /;
 use FC_Solve::Trim qw/trim_trail_ws/;
 
 sub _test_out
@@ -18,6 +18,21 @@ sub _test_out
     my $cmd_line_args = $args->{cmd};
 
     my $got = `$MAKE_PYSOL @$cmd_line_args`;
+
+    eq_or_diff( $got, $args->{expected}, $args->{blurb} );
+
+    return;
+}
+
+sub _test_find_index
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my ($args) = @_;
+
+    my $cmd_line_args = $args->{cmd};
+
+    my $got = `$FIND_DEAL_INDEX @$cmd_line_args`;
 
     eq_or_diff( $got, $args->{expected}, $args->{blurb} );
 
@@ -646,6 +661,15 @@ _test_out(
         blurb    => "make_pysol --ms board even longer (> 4 G) seed.",
         cmd      => [qw(--ms -t 6000000000)],
         expected => $MS6E9,
+    }
+);
+
+# TEST
+_test_find_index(
+    {
+        blurb    => "find-deal-index for deal No. 1941",
+        cmd      => [ '--ms', bin_board("1941.board") ],
+        expected => "Found deal = 1941\n",
     }
 );
 
