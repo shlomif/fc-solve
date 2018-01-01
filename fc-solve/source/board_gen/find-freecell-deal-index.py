@@ -93,23 +93,25 @@ def shlomif_main(args):
         cards[n], cards[j] = cards[j], cards[n]
         n -= 1
 
-    for d in xrange(1, (1 << 33)):
+    def is_right(d):
         r = LCRandom31()
         r.setSeed(d)
         n = len(ints)
         i = 0
-        verdict = True
         while n > 0:
             if r.randint(0, n) != ints[i]:
-                verdict = False
-                break
+                return False
             i += 1
             n -= 1
-        if verdict:
+        return True
+
+    for d in xrange(1, (1 << 33)):
+        if is_right(d):
             if output_to_stdout:
                 print("Found deal = %d" % d)
-            break
-    return 0
+            return 0
+    print("Not found!")
+    return -1
 
 
 if __name__ == "__main__":
