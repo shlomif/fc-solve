@@ -152,7 +152,7 @@ class PysolRandom:
         while n > 0:
             j = self.randint(0, n)
             seq[n], seq[j] = seq[j], seq[n]
-            n = n - 1
+            n -= 1
 
 
 # /***********************************************************************
