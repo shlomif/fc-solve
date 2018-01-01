@@ -15,15 +15,14 @@ use Template;
 use Template::Stash;
 
 # Define a method to return a substring.
-$Template::Stash::SCALAR_OPS->{ 'substr' } = sub {
-    return substr($_[0], $_[1], $_[2]);
+$Template::Stash::SCALAR_OPS->{'substr'} = sub {
+    return substr( $_[0], $_[1], $_[2] );
 };
-
 
 sub new
 {
     my $class = shift;
-    my $self = {};
+    my $self  = {};
     bless $self, $class;
     $self->initialize(@_);
     return $self;
@@ -45,47 +44,44 @@ sub get_nav_buttons_html
     my $with_accesskey = $args{'with_accesskey'};
 
     my $nav_links = $self->nav_links();
-    my $root = $self->root();
+    my $root      = $self->root();
 
-    my $template =
-        Template->new(
+    my $template = Template->new(
         {
             'POST_CHOMP' => 1,
         }
-        );
+    );
 
-    my @buttons =
-    (
+    my @buttons = (
         {
-            'dir' => "prev",
+            'dir'    => "prev",
             'button' => "left",
-            'title' => "Previous Page",
+            'title'  => "Previous Page",
         },
         {
-            'dir' => "up",
+            'dir'    => "up",
             'button' => "up",
-            'title' => "Up in the Site",
+            'title'  => "Up in the Site",
         },
         {
-            'dir' => "next",
+            'dir'    => "next",
             'button' => "right",
-            'title' => "Next Page",
+            'title'  => "Next Page",
         },
     );
 
     foreach my $button (@buttons)
     {
         my $dir = $button->{'dir'};
-        if ($button->{'exists'} = exists($nav_links->{$dir}))
+        if ( $button->{'exists'} = exists( $nav_links->{$dir} ) )
         {
             $button->{'link'} = $nav_links->{$dir};
         }
     }
 
-    my $vars =
-    {
-        'buttons' => \@buttons,
-        'root' => $root,
+    my $vars = {
+        'buttons'        => \@buttons,
+        'root'           => $root,
         'with_accesskey' => $with_accesskey,
     };
 
@@ -108,7 +104,7 @@ EOF
 
     my $nav_buttons_html = "";
 
-    $template->process(\$nav_links_template, $vars, \$nav_buttons_html);
+    $template->process( \$nav_links_template, $vars, \$nav_buttons_html );
     return $nav_buttons_html;
 }
 
@@ -116,9 +112,10 @@ sub get_total_html
 {
     my $self = shift;
 
-    return "<ul class=\"nav_links\">\n" .
-        $self->get_nav_buttons_html(@_) .
-        "\n</ul>";
+    return
+          "<ul class=\"nav_links\">\n"
+        . $self->get_nav_buttons_html(@_)
+        . "\n</ul>";
 }
 
 1;

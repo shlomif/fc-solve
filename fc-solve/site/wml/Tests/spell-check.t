@@ -13,7 +13,7 @@ use Test::More tests => 1;
     my $status = $?;
 
     # TEST
-    is ($output, '', "No spelling errors.");
+    is( $output, '', "No spelling errors." );
 
     if ($status)
     {

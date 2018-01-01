@@ -15,17 +15,20 @@ use FreecellSolver::ExtractGames ();
 
     # TEST
     eq_or_diff(
-        [ grep { $_->{name} eq q#Eight Off# } @{$obj->games} ],
+        [ grep { $_->{name} eq q#Eight Off# } @{ $obj->games } ],
         [ { id => 'eight_off', name => q#Eight Off# }, ],
         "Found eight_off",
     );
 
     # TEST
     eq_or_diff(
-        [ grep { $_->{name} =~ m#\A(?:Eight Off|Forecell)\z# } @{$obj->games} ],
+        [
+            grep { $_->{name} =~ m#\A(?:Eight Off|Forecell)\z# }
+                @{ $obj->games }
+        ],
         [
             { id => 'eight_off', name => q#Eight Off# },
-            { id => 'forecell', name => q#Forecell# },
+            { id => 'forecell',  name => q#Forecell# },
         ],
         "Found eight_off",
     );
@@ -33,7 +36,7 @@ use FreecellSolver::ExtractGames ();
     # TEST
     like(
         scalar( $obj->calc_html() ),
-        qr#<option value="freecell" selected="selected">Freecell \(default\)</option>#,
+qr#<option value="freecell" selected="selected">Freecell \(default\)</option>#,
         "selected freecell.",
     );
 }

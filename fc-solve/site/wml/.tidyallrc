@@ -1,0 +1,8 @@
+[PerlTidy]
+select = **/*.{pl,pm,t}
+argv = -ci=4 -bl -cti=0
+ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/*
+
+[PerlCritic]
+select = **/*.{pl,pm,t}
+ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/*
