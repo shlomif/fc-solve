@@ -10,7 +10,6 @@
 # imports
 import sys
 import re
-from six import print_
 from make_pysol_freecell_board import createCards, LCRandom31
 
 if sys.version_info > (3,):
@@ -108,7 +107,7 @@ def shlomif_main(args):
             n -= 1
         if verdict:
             if output_to_stdout:
-                print_("Found deal = %d" % d)
+                print("Found deal = %d" % d)
             break
     return 0
 
