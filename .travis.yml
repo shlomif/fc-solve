@@ -19,7 +19,7 @@ install:
     - sudo cpanm --notest Inline::C
       # Speed up installing the deps.
     - sudo cpanm --notest Task::FreecellSolver::Testing
-    - sudo cpanm --notest Dist::Zilla Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
+    - sudo cpanm --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
     - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | sudo cpanm --notest)
     - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
     - tar -xvf libtap-1.12.0.tar.bz2
