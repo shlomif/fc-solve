@@ -70,8 +70,12 @@ INSTALL(
         "bin"
 )
 
-
 ADD_CUSTOM_TARGET(
     "docs_pods" ALL
     DEPENDS ${_pod_targets}
+)
+
+ADD_LIBRARY (fcs_find_deal
+    SHARED
+    find_deal.c
 )
