@@ -90,7 +90,7 @@ def shlomif_main(args):
             raise ValueError("Foo")
         j = idx[0]
         ints.append(j)
-        cards[n], cards[j] = cards[j], cards[n]
+        cards[j] = cards[n]
         n -= 1
 
     def is_right(d):
