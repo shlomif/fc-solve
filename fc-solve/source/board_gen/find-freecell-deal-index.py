@@ -97,11 +97,9 @@ def shlomif_main(args):
         r = LCRandom31()
         r.setSeed(d)
         n = len(ints)
-        i = 0
-        while n > 0:
-            if r.randint(0, n) != ints[i]:
+        for i in ints:
+            if r.randint(0, n) != i:
                 return False
-            i += 1
             n -= 1
         return True
 
