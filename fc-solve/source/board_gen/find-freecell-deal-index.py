@@ -76,7 +76,7 @@ def shlomif_main(args):
     for i in range(13):
         for j in (0, 39, 26, 13):
             c.append(cards[i + j])
-    cards = c
+    cards = [x.to_s() for x in c]
 
     # Reverse shuffle:
     ints = []
@@ -85,7 +85,7 @@ def shlomif_main(args):
         col = i // 8
         row = i % 8
         s = m.group(1 + col + (4*7+(row-4)*6 if row >= 4 else row*7))
-        idx = [j for j in range(n+1) if cards[j].to_s() == s]
+        idx = [j for j in range(n+1) if cards[j] == s]
         if len(idx) != 1:
             raise ValueError("Foo")
         j = idx[0]
