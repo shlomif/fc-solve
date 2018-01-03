@@ -7,11 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * gen_ms_boards__rand.h - a header file that defines some
- * static (and preferably inline) routines for the MS Freecell deals
- * generation random number generator.
- */
+// gen_ms_boards__rand.h - a header file that defines some
+// static (and preferably inline) routines for the MS Freecell deals
+// generation random number generator.
 #pragma once
 
 #ifdef __cplusplus
