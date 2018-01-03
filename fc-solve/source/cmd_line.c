@@ -156,6 +156,7 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
     return TRUE;
 }
 
+#ifdef FCS_WITH_ERROR_STRS
 static inline char *calc_errstr_s(const char *const format, ...)
 {
     va_list my_va_list;
@@ -171,7 +172,6 @@ static inline char *calc_errstr_s(const char *const format, ...)
     return errstr;
 }
 
-#ifdef FCS_WITH_ERROR_STRS
 #define ASSIGN_ERR_STR(error_string, format, ...)                              \
     *(error_string) = calc_errstr_s(format, __VA_ARGS__)
 #define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)    \
