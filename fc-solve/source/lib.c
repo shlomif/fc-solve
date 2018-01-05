@@ -1627,14 +1627,16 @@ static inline int fc_solve__soft_thread__do_solve(
 /* instance__check_exceeded_stats() cannot be an inline function because if
  * it is, the code becomes considerably slower (at least on gcc-5.4.0 on x86-64
  * Linux). */
-#ifndef FCS_DISABLE_NUM_STORED_STATES
+#ifdef FCS_WITHOUT_MAX_NUM_STATES
+#define instance__check_exceeded_stats(instance) FALSE
+#else
+#ifdef FCS_DISABLE_NUM_STORED_STATES
+#define instance_check_exceeded__num_states(instance)
+#else
 #define instance_check_exceeded__num_states(instance)                          \
     || (instance->num_states_in_collection >=                                  \
            instance->effective_max_num_states_in_collection)
 #endif
-#ifdef FCS_WITHOUT_MAX_NUM_STATES
-#define instance__check_exceeded_stats(instance) FALSE
-#else
 #define instance__check_exceeded_stats(instance)                               \
     ((ret == FCS_STATE_SUSPEND_PROCESS) &&                                     \
         ((instance->i__num_checked_states >=                                   \
