@@ -7,11 +7,9 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-/*
- * delta_states.c - "delta states" are an encoding of states, where the
- * states are encoded and decoded based on a compact delta from the original
- * state.
- */
+// delta_states.c - "delta states" are an encoding of states, where the
+// states are encoded and decoded based on a compact delta from the original
+// state.
 #include "delta_states_impl.h"
 #include "render_state.h"
 
@@ -61,7 +59,11 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fc_solve_delta_stater_decode(&delta, &bit_r, &(new_derived_state.s));
 
     char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
+#ifdef FCS_WITH_MOVES
     FCS__RENDER_STATE(new_derived_as_str, &(new_derived_state.s), &locs);
+#else
+    new_derived_as_str[0] = '\0';
+#endif
 
     fc_solve_delta_stater_release(&delta);
 
