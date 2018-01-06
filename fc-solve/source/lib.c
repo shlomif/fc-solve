@@ -892,32 +892,6 @@ static inline fcs_bool_t fcs__is_state_a_dead_end(
     return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
 }
 
-#if (((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                \
-         (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)) &&        \
-     !defined(FCS_WITHOUT_TRIM_MAX_STORED_STATES))
-static fcs_bool_t free_states_should_delete(
-    void *const key, void *const context)
-{
-    fc_solve_instance_t *const instance = (fc_solve_instance_t *const)context;
-    fcs_collectible_state_t *const ptr_state =
-        (fcs_collectible_state_t *const)key;
-
-    if (fcs__is_state_a_dead_end(ptr_state))
-    {
-        FCS_S_NEXT(ptr_state) = instance->list_of_vacant_states;
-        instance->list_of_vacant_states = ptr_state;
-
-        instance->active_num_states_in_collection--;
-
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-#endif
-
 #ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 #if (!((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||               \
@@ -958,6 +932,28 @@ static inline void free_states_handle_soft_dfs_soft_thread(
         }
         soft_dfs_info->derived_states_list.num_states =
             dest_rand_index_ptr - rand_indexes;
+    }
+}
+
+static fcs_bool_t free_states_should_delete(
+    void *const key, void *const context)
+{
+    fc_solve_instance_t *const instance = (fc_solve_instance_t *const)context;
+    fcs_collectible_state_t *const ptr_state =
+        (fcs_collectible_state_t *const)key;
+
+    if (fcs__is_state_a_dead_end(ptr_state))
+    {
+        FCS_S_NEXT(ptr_state) = instance->list_of_vacant_states;
+        instance->list_of_vacant_states = ptr_state;
+
+        --instance->active_num_states_in_collection;
+
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
     }
 }
 
@@ -2920,7 +2916,7 @@ static inline void calc_moves_seq(const fcs_move_stack_t *const solution_moves,
 }
 #endif
 
-#if defined(FCS_WITH_MOVES) && defined(FCS_WITH_FLARES)
+#ifdef FCS_WITH_MOVES
 static void trace_flare_solution(
     fcs_user_t *const user, fcs_flare_item_t *const flare)
 {
