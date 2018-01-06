@@ -12,6 +12,7 @@ use warnings;
 use File::Path qw(rmtree);
 use File::Basename qw(dirname);
 use Getopt::Long;
+use Path::Tiny qw/path/;
 
 my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
 (
@@ -166,6 +167,41 @@ my %themes =
     pdfs => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
 );
 
+my $SEED = $ENV{FCS_THEME_RAND};
+if (defined $SEED)
+{
+    my %k;
+    foreach my $flags (values%themes)
+    {
+        for (my $idx = 0; $idx < @$flags ; ++$idx)
+        {
+            my $flag = $flags->[$idx];
+            if ($flag eq '-l')
+            {
+                ++$idx;
+            }
+            else
+            {
+                $k{$flag} = 1;
+            }
+        }
+    }
+    my @k = sort { $a cmp $b } keys %k;
+
+    srand($SEED);
+    my @subset;
+    foreach my $key (@k)
+    {
+        if (int rand(2) == 0)
+        {
+            push @subset, $key;
+        }
+    }
+    my $FN = "run-t-$SEED.bash";
+    path($FN)->spew_utf8("$^X $0 @subset\n");
+    delete $ENV{FCS_THEME_RAND};
+    exec("bash", $FN);
+}
 foreach my $rec (
     {id => "c2", a => "core2",},
     {id => "ci7", a => "corei7-avx",},
@@ -211,6 +247,7 @@ foreach my $rec (
 }
 
 my @new_argv = @ARGV;
+
 
 CALC_NEW_ARGV:
 for (my $idx = 0; $idx < @new_argv ; $idx++)
