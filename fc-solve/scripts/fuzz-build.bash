@@ -1,6 +1,6 @@
 #!/bin/bash
 export CC=/usr/bin/clang CXX=/usr/bin/clang++ FCS_CLANG=1 CFLAGS="-Werror"
-seed=1
+seed=97
 while true
 do
     echo "Checking seed=$seed"
