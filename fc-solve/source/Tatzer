@@ -167,9 +167,14 @@ my %themes =
     pdfs => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
 );
 
-my $SEED = $ENV{FCS_THEME_RAND};
+my $SEED_KEY = 'FCS_THEME_RAND';
+my $SEED = $ENV{$SEED_KEY};
 if (defined $SEED)
 {
+    if ($SEED =~ /[^0-9]/)
+    {
+        die "Invalid value for seed!";
+    }
     my %k;
     foreach my $flags (values%themes)
     {
@@ -188,18 +193,19 @@ if (defined $SEED)
     }
     my @k = sort { $a cmp $b } keys %k;
 
-    srand($SEED);
+    require Math::Random::MT;
+    my $gen = Math::Random::MT->new($SEED);
     my @subset;
     foreach my $key (@k)
     {
-        if (int rand(2) == 0)
+        if ($gen->rand() < 0.5)
         {
             push @subset, $key;
         }
     }
     my $FN = "run-t-$SEED.bash";
     path($FN)->spew_utf8("$^X $0 @subset\n");
-    delete $ENV{FCS_THEME_RAND};
+    delete $ENV{$SEED_KEY};
     exec("bash", $FN);
 }
 foreach my $rec (
