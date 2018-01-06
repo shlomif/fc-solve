@@ -8,13 +8,18 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 #pragma once
+#include "config.h"
 
 typedef char fcs_render_state_str_t[2000];
+#ifdef FCS_WITH_MOVES
 #define FCS__RENDER_STATE(state_str, state_ptr, locs)                          \
     fc_solve_state_as_string(state_str, state_ptr,                             \
         locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)             \
             PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(TRUE),               \
         FALSE FC_SOLVE__PASS_T(TRUE))
+#else
+#define FCS__RENDER_STATE(state_str, state_ptr, locs) ((state_str)[0] = '\0')
+#endif
 
 #ifdef DEBUG_OUT
 #define FCS__OUTPUT_STATE(out_fh, prefix, state_ptr, locs)                     \

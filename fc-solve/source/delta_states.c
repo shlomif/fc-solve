@@ -59,14 +59,9 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fc_solve_delta_stater_decode(&delta, &bit_r, &(new_derived_state.s));
 
     char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
-#ifdef FCS_WITH_MOVES
     FCS__RENDER_STATE(new_derived_as_str, &(new_derived_state.s), &locs);
-#else
-    new_derived_as_str[0] = '\0';
-#endif
 
     fc_solve_delta_stater_release(&delta);
-
     return new_derived_as_str;
 }
 

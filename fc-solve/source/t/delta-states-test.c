@@ -54,11 +54,7 @@ static int test_encode_and_decode(const fcs_dbm_variant_type_t local_variant, fc
     );
 
     char as_str[4000];
-#ifdef FCS_WITH_MOVES
     FCS__RENDER_STATE(as_str, &(new_derived_state.s), &locs);
-#else
-    as_str[0] = '\0';
-#endif
     trim_trailing_whitespace(as_str);
 
     if (!(verdict = ok(!strcmp(as_str, expected_str), "%s", blurb)))
