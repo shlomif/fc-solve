@@ -3775,7 +3775,11 @@ int DLLEXPORT freecell_solver_user_get_num_times(void *const api_instance)
 int DLLEXPORT freecell_solver_user_get_limit_iterations(
     void *const api_instance)
 {
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     return active_obj(api_instance)->effective_max_num_checked_states;
+#else
+    return 0;
+#endif
 }
 #endif
 
