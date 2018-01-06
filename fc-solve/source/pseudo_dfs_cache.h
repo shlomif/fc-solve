@@ -70,7 +70,7 @@ static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache_t *const cache,
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static inline const fcs_bool_t fcs_pdfs_cache_does_key_exist(
+static inline fcs_bool_t fcs_pdfs_cache_does_key_exist(
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
 {
     fcs_pdfs_cache_key_info_t *existing;

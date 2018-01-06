@@ -918,7 +918,12 @@ static fcs_bool_t free_states_should_delete(
 }
 #endif
 
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
+#if (!((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||               \
+         (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
+#define free_states(i)
+#else
 static inline void free_states_handle_soft_dfs_soft_thread(
     fc_solve_soft_thread_t *const soft_thread)
 {
@@ -958,61 +963,53 @@ static inline void free_states_handle_soft_dfs_soft_thread(
 
 static inline void free_states(fc_solve_instance_t *const instance)
 {
-#ifdef DEBUG
-    printf("%s\n", "FREE_STATES HIT");
-#endif
-#if (!((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||               \
-         (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
-    return;
-#else
+    /* First of all, let's make sure the soft_threads will no longer
+     * traverse to the freed states that are currently dead ends.
+     * */
+
+    HT_LOOP_START()
     {
-        /* First of all, let's make sure the soft_threads will no longer
-         * traverse to the freed states that are currently dead ends.
-         * */
-
-        HT_LOOP_START()
+        ST_LOOP_START()
         {
-            ST_LOOP_START()
+            if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
             {
-                if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
+                free_states_handle_soft_dfs_soft_thread(soft_thread);
+            }
+            else if (soft_thread->is_befs)
+            {
+                pri_queue_t new_pq;
+                fc_solve_pq_init(&(new_pq));
+                const_AUTO(elems, BEFS_VAR(soft_thread, pqueue).elems);
+                const_AUTO(end_element,
+                    elems + BEFS_VAR(soft_thread, pqueue).current_size);
+                for (pq_element_t *next_element = elems + PQ_FIRST_ENTRY;
+                     next_element <= end_element; next_element++)
                 {
-                    free_states_handle_soft_dfs_soft_thread(soft_thread);
-                }
-                else if (soft_thread->is_befs)
-                {
-                    pri_queue_t new_pq;
-                    fc_solve_pq_init(&(new_pq));
-                    const_AUTO(elems, BEFS_VAR(soft_thread, pqueue).elems);
-                    const_AUTO(end_element,
-                        elems + BEFS_VAR(soft_thread, pqueue).current_size);
-                    for (pq_element_t *next_element = elems + PQ_FIRST_ENTRY;
-                         next_element <= end_element; next_element++)
+                    if (!fcs__is_state_a_dead_end((*next_element).val))
                     {
-                        if (!fcs__is_state_a_dead_end((*next_element).val))
-                        {
-                            fc_solve_pq_push(&new_pq, (*next_element).val,
-                                (*next_element).rating);
-                        }
+                        fc_solve_pq_push(&new_pq, (*next_element).val,
+                            (*next_element).rating);
                     }
-
-                    fc_solve_st_free_pq(soft_thread);
-                    BEFS_VAR(soft_thread, pqueue) = new_pq;
                 }
+
+                fc_solve_st_free_pq(soft_thread);
+                BEFS_VAR(soft_thread, pqueue) = new_pq;
             }
         }
+    }
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-        /* Now let's recycle the states. */
-        fc_solve_hash_foreach(
-            &(instance->hash), free_states_should_delete, ((void *)instance));
+    /* Now let's recycle the states. */
+    fc_solve_hash_foreach(
+        &(instance->hash), free_states_should_delete, ((void *)instance));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-        /* Now let's recycle the states. */
-        fc_solve_states_google_hash_foreach(
-            instance->hash, free_states_should_delete, ((void *)instance));
-#endif
-    }
+    /* Now let's recycle the states. */
+    fc_solve_states_google_hash_foreach(
+        instance->hash, free_states_should_delete, ((void *)instance));
 #endif
 }
+#endif
+#endif
 #endif
 
 /*
@@ -1438,12 +1435,14 @@ static inline int fc_solve_soft_dfs_do_solve(
 
                 calculate_real_depth(calc_real_depth, PTR_STATE);
 
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
                 if (instance->active_num_states_in_collection >=
                     instance->effective_trim_states_in_collection_from)
                 {
                     free_states(instance);
                 }
+#endif
 #endif
                 if (check_if_limits_exceeded())
                 {
@@ -2921,7 +2920,7 @@ static inline void calc_moves_seq(const fcs_move_stack_t *const solution_moves,
 }
 #endif
 
-#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
+#if defined(FCS_WITH_MOVES) && defined(FCS_WITH_FLARES)
 static void trace_flare_solution(
     fcs_user_t *const user, fcs_flare_item_t *const flare)
 {
@@ -3093,7 +3092,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             }
 
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
-#ifdef FCS_WITH_ERROR_STRS
+#ifndef FCS_WITH_ERROR_STRS
             fcs_card_t state_validity_card;
 #endif
             if (FCS_STATE_VALIDITY__OK !=
@@ -3106,11 +3105,11 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                                 PASS_STACKS(INSTANCE_STACKS_NUM)
                                     PASS_DECKS(INSTANCE_DECKS_NUM),
 #ifdef FCS_WITH_ERROR_STRS
-                            &state_validity_card
+                            &(user->state_validity_card)
 #else
-                        &(user->state_validity_card)
+                        &state_validity_card
 #endif
-                            )))
+                                )))
             {
                 return (user->ret_code = FCS_STATE_INVALID_STATE);
             }

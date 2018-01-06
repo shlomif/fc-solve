@@ -44,7 +44,7 @@ static inline void insert_state(store_t *store, fcs_cache_key_t *key)
     *PValue = 1;
 }
 
-static inline const fcs_bool_t lookup_state(store_t *const store,
+static inline fcs_bool_t lookup_state(store_t *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     Word_t *PValue;
@@ -91,7 +91,9 @@ static inline void instance__inspect_new_state(
         --instance->stack_depth;
         return;
     }
+#if 0
     const fcs_dbm_variant_type_t local_variant = instance->local_variant;
+#endif
     const_AUTO(depth, instance->stack_depth);
     const_AUTO(max_depth, instance->max_stack_depth);
     if (depth == max_depth)
@@ -221,7 +223,9 @@ static inline void instance_run(fcs_dbm_solver_instance_t *const instance)
 static inline void instance__print_coords_to_log(
     fcs_dbm_solver_instance_t *const instance, FILE *const log_fh)
 {
+#if 0
     const fcs_dbm_variant_type_t local_variant = instance->local_variant;
+#endif
     fprintf(
         log_fh, "At %ld iterations Coords=[", instance->count_num_processed);
 

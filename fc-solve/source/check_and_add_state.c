@@ -202,6 +202,10 @@ static inline void *fc_solve_hash_insert(
 
 #endif
 
+#if ((defined(INDIRECT_STACK_STATES) &&                                        \
+         (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)) ||            \
+     (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH))
+
 typedef unsigned long ul;
 typedef unsigned char ub1;
 
@@ -220,6 +224,7 @@ static inline ul perl_hash_function(register const ub1 *s_ptr, /* the key */
 
     return hash_value_int;
 }
+#endif
 
 #ifdef INDIRECT_STACK_STATES
 
@@ -585,20 +590,13 @@ fcs_bool_t fc_solve_check_and_add_state(
     JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
 
     /* later_todo : Handle out-of-memory. */
-    if (*PValue == 0)
+    const_AUTO(val, *PValue);
+    if (val == 0)
     {
         /* A new state. */
         *PValue = (PWord_t)(FCS_STATE_kv_to_collectible(new_state));
-        ON_STATE_NEW();
-        return TRUE;
     }
-    else
-    {
-        /* Already exists. */
-        FCS_STATE_collectible_to_kv(
-            existing_state_raw, (fcs_collectible_state_t *)(*PValue));
-        return FALSE;
-    }
+    return HANDLE_existing_void(val);
 #else
 #error Unknown FCS_STATE_STORAGE. Please define it to a valid value.
 #endif

@@ -506,9 +506,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_TRIM_MAX_STORED_STATES: /* STRINGS=-tmss|--trim-max-stored-states;
                                               */
             PROCESS_OPT_ARG();
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
             freecell_solver_set_stored_states_trimming_limit(
                 instance, atol((*arg)));
+#endif
 #endif
             break;
 
