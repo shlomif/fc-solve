@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-
-/*
- * A test for the delta states routines.
- */
+// A test for the delta states routines.
 
 #include <string.h>
 
@@ -23,6 +20,9 @@
 #include "../indirect_buffer.h"
 #include "../trim_trailing_whitespace.h"
 #include "../render_state.h"
+#ifdef FCS_FREECELL_ONLY
+#include "is_parent.c"
+#endif
 
 static fcs_card_t make_card(int rank, int suit)
 {

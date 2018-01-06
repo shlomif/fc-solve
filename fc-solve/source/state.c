@@ -212,7 +212,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
     {
         int i;
         for (i = 0; i < ((FREECELLS_NUM__VAL / 4) +
-                            ((FREECELLS_NUM__VAL % 4 == 0) ? 0 : 1));
+                            ((FREECELLS_NUM__VAL % 4 == (0)) ? 0 : 1));
              i++)
         {
             char dashes_s[128];
