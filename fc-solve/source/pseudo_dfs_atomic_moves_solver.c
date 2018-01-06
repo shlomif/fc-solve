@@ -91,7 +91,7 @@ static inline void instance__inspect_new_state(
         --instance->stack_depth;
         return;
     }
-#if 0
+#ifndef FCS_FREECELL_ONLY
     const fcs_dbm_variant_type_t local_variant = instance->local_variant;
 #endif
     const_AUTO(depth, instance->stack_depth);
