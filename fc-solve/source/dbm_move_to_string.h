@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_move_to_string.h - the move_to_string function.
- */
+// dbm_move_to_string.h - the move_to_string function.
 #pragma once
 
 #include "rinutils.h"

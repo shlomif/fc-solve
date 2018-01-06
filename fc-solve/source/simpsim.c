@@ -91,10 +91,6 @@ static inline fcs_bool_t fcs_is_ss_true_parent(
 
 #define STACKS_MAP_LEN MAX_NUM_STACKS
 
-#ifndef FCS_WITH_MOVES
-#define moves NULL
-#endif
-
 static inline void init_stacks_map(
     fcs_bool_t *const stacks_map, const int stack_idx, const int ds)
 {

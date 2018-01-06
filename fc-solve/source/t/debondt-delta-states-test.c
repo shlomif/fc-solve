@@ -58,7 +58,11 @@ static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delt
     );
 
     char as_str[1000];
+#ifdef FCS_WITH_MOVES
     FCS__RENDER_STATE( as_str, &(new_derived_state.s), &locs);
+#else
+    as_str[0] = '\0';
+#endif
     trim_trailing_whitespace(as_str);
 
     const int verdict = ok(!strcmp(as_str, expected_str), "%s", blurb);

@@ -140,7 +140,11 @@ static void trace_solution(fcs_dbm_solver_instance_t *const instance,
         }
 
         fcs_render_state_str_t state_str;
+#ifdef FCS_WITH_MOVES
         FCS__RENDER_STATE(state_str, &(state.s), &locs);
+#else
+        state_str[0] = '\0';
+#endif
 
         fprintf(out_fh, "--------\n%s\n==\n%s\n", state_str,
             (i > 0) ? move_buffer : "END");

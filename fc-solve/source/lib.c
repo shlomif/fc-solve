@@ -3816,8 +3816,10 @@ DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
+#ifdef FCS_WITH_MOVES
     fc_solve_move_to_string_w_state(
         output_string, &(user->running_state), move, standard_notation);
+#endif
 }
 #endif
 
@@ -3826,8 +3828,12 @@ DLLEXPORT char *freecell_solver_user_move_to_string(
     const fcs_move_t move, const int standard_notation)
 {
     char *const ret = SMALLOC(ret, 256);
+#ifdef FCS_WITH_MOVES
     fc_solve_move_to_string_w_state(
         ret, NULL, move, (standard_notation == 2) ? 1 : standard_notation);
+#else
+    ret[0] = '\0';
+#endif
     return ret;
 }
 
@@ -3836,8 +3842,12 @@ DLLEXPORT char *freecell_solver_user_move_to_string_w_state(
     const int standard_notation)
 {
     char *ret = SMALLOC(ret, 256);
+#ifdef FCS_WITH_MOVES
     freecell_solver_user_stringify_move_w_state(
         api_instance, ret, move, standard_notation);
+#else
+    ret[0] = '\0';
+#endif
     return ret;
 }
 #endif
@@ -4081,9 +4091,13 @@ DLLEXPORT char *freecell_solver_user_iter_state_as_string(
     const int canonized_order_output PASS_T(const int display_10_as_t))
 {
     char *state_as_string = SMALLOC(state_as_string, 1000);
+#ifdef FCS_WITH_MOVES
     freecell_solver_user_iter_state_stringify(api_instance, state_as_string,
         ptr_state_void FC_SOLVE__PASS_PARSABLE(parseable_output),
         canonized_order_output PASS_T(display_10_as_t));
+#else
+    state_as_string[0] = '\0';
+#endif
     return state_as_string;
 }
 #endif
