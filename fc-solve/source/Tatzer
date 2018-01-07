@@ -256,7 +256,7 @@ my @new_argv = @ARGV;
 
 
 CALC_NEW_ARGV:
-for (my $idx = 0; $idx < @new_argv ; $idx++)
+for (my $idx = 0; $idx < @new_argv ; ++$idx)
 {
     if (my ($arg_val) = $new_argv[$idx] =~ m{\A-l(.*)\z}ms)
     {
