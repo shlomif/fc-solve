@@ -11,7 +11,7 @@
 import sys
 import re
 from make_pysol_freecell_board import createCards
-from find_index_lib_py import lib
+from find_index_lib_py import ffi, lib
 
 if sys.version_info > (3,):
     long = int
@@ -94,13 +94,22 @@ def shlomif_main(args):
         cards[j] = cards[n]
         n -= 1
 
-    ret = lib.fc_solve_find_deal_in_range(1, ((1 << 33) - 1), ints)
+    obj = lib.fc_solve_user__find_deal__alloc()
+    lib.fc_solve_user__find_deal__fill(
+        obj, "".join(["%-10d" % x for x in ints]))
+    ret = int(ffi.string(lib.fc_solve_user__find_deal__run(
+        obj, "1", "%d" % ((1 << 33) - 1))))
+
+    ret_code = 0
     if ret >= 0:
         if output_to_stdout:
             print("Found deal = %d" % ret)
-        return 0
-    print("Not found!")
-    return -1
+        ret_code = 0
+    else:
+        print("Not found!")
+        ret_code = -1
+    lib.fc_solve_user__find_deal__free(obj)
+    return ret_code
 
 
 if __name__ == "__main__":
