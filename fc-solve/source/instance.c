@@ -113,6 +113,38 @@ static inline void accumulate_tests_by_ptr(
     }
 }
 
+static inline void soft_thread_run_cb(fc_solve_soft_thread_t *const soft_thread,
+    const fcs_foreach_st_callback_choice_t callback_choice, void *const context)
+{
+    switch (callback_choice)
+    {
+    case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
+        soft_thread_clean_soft_dfs(soft_thread);
+        break;
+
+    case FOREACH_SOFT_THREAD_FREE_INSTANCE:
+        fc_solve_free_instance_soft_thread_callback(soft_thread);
+        break;
+
+    case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
+        accumulate_tests_by_ptr((size_t *)context,
+            &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
+        break;
+
+    case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
+    {
+        size_t moves_order = 0;
+
+        accumulate_tests_by_ptr(&moves_order,
+            &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
+
+        STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
+            (moves_order == *(size_t *)context));
+    }
+    break;
+    }
+}
+
 void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     const fcs_foreach_st_callback_choice_t callback_choice, void *const context)
 {
@@ -136,6 +168,8 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
         {
             break;
         }
+        soft_thread_run_cb(soft_thread, callback_choice, context);
+    }
 #else
     for (uint_fast32_t ht_idx = 0; ht_idx <= instance->num_hard_threads;
          ht_idx++)
@@ -156,40 +190,9 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
             break;
         }
         ST_LOOP_START()
-#endif
-
-        switch (callback_choice)
         {
-        case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
-            soft_thread_clean_soft_dfs(soft_thread);
-            break;
-
-        case FOREACH_SOFT_THREAD_FREE_INSTANCE:
-            fc_solve_free_instance_soft_thread_callback(soft_thread);
-            break;
-
-        case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
-            accumulate_tests_by_ptr((size_t *)context,
-                &(soft_thread->by_depth_moves_order.by_depth_moves[0]
-                        .moves_order));
-            break;
-
-        case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
-        {
-            size_t moves_order = 0;
-
-            accumulate_tests_by_ptr(&moves_order,
-                &(soft_thread->by_depth_moves_order.by_depth_moves[0]
-                        .moves_order));
-
-            STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
-                (moves_order == *(size_t *)context));
+            soft_thread_run_cb(soft_thread, callback_choice, context);
         }
-        break;
-        }
-#ifdef FCS_SINGLE_HARD_THREAD
-    }
-#else
     }
 #endif
 }
@@ -601,19 +604,19 @@ void fc_solve_finish_instance(fc_solve_instance_t *const instance)
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_states_tree_destroy(instance->tree, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
-        fc_solve_kaz_tree_free_nodes(instance->tree);
-        fc_solve_kaz_tree_destroy(instance->tree);
+    fc_solve_kaz_tree_free_nodes(instance->tree);
+    fc_solve_kaz_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-        g_tree_destroy(instance->tree);
+    g_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
-        Word_t rc_word;
-        JHSFA(rc_word, instance->judy_array);
+    Word_t rc_word;
+    JHSFA(rc_word, instance->judy_array);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-        g_hash_table_destroy(instance->hash);
+    g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-        fc_solve_hash_free(&(instance->hash));
+    fc_solve_hash_free(&(instance->hash));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-        fc_solve_states_google_hash_free(instance->hash);
+    fc_solve_states_google_hash_free(instance->hash);
 #else
 #error FCS_STATE_STORAGE is not defined
 #endif
