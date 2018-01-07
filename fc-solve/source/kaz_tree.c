@@ -858,7 +858,7 @@ dict_ret_key_t fc_solve_kaz_tree_insert(
     node->right = nil;
 
 #ifdef NO_FC_SOLVE
-    dict->dict_nodecount++;
+    ++dict->dict_nodecount;
 #endif
 
     /* red black adjustments */
@@ -1031,7 +1031,7 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
     target->left = NULL;
 
 #ifdef NO_FC_SOLVE
-    dict->dict_nodecount--;
+    --dict->dict_nodecount;
 #endif
 
     assert(verify_bintree(dict));
@@ -1416,7 +1416,7 @@ void dict_load_next(dict_load_t *load, dnode_t *newnode, const void *key)
     nil->right = newnode;
     newnode->left = nil;
 #ifdef NO_FC_SOLVE
-    dict->dict_nodecount++;
+    ++dict->dict_nodecount;
 #endif
 }
 

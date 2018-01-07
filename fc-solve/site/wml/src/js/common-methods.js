@@ -67,7 +67,7 @@ if (!Array.prototype.map) {
         A[ k ] = mappedValue;
       }
       // d. Increase k by 1.
-      k++;
+      ++k;
     }
 
     // 9. return A
@@ -104,7 +104,7 @@ if (!Array.prototype.filter)
 
         var res = [];
         var thisp = arguments[1];
-        for (var i = 0; i < len; i++)
+        for (var i = 0; i < len; ++i)
         {
             if (i in t)
             {

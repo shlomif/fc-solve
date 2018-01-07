@@ -298,13 +298,13 @@ typedef struct
     fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
 } fcs_state_locs_struct_t;
 
-static inline void fc_solve_init_locs(fcs_state_locs_struct_t *locs)
+static inline void fc_solve_init_locs(fcs_state_locs_struct_t *const locs)
 {
-    for (int i = 0; i < MAX_NUM_STACKS; i++)
+    for (int i = 0; i < MAX_NUM_STACKS; ++i)
     {
         locs->stack_locs[i] = (fcs_locs_t)i;
     }
-    for (int i = 0; i < MAX_NUM_FREECELLS; i++)
+    for (int i = 0; i < MAX_NUM_FREECELLS; ++i)
     {
         locs->fc_locs[i] = (fcs_locs_t)i;
     }
@@ -510,7 +510,7 @@ static inline int fcs_str2suit(const char *suit)
         case 'S':
             return 3;
         default:
-            suit++;
+            ++suit;
         }
     }
 }
@@ -567,7 +567,7 @@ static inline int fcs_str2rank(const char *string)
         case '9':
             return 9;
         default:
-            string++;
+            ++string;
         }
     }
 }
@@ -596,12 +596,12 @@ static inline void fc_solve_state_init_proto(
     memset(&(state->s), 0, sizeof(state->s));
 #ifdef INDIRECT_STACK_STATES
     int i;
-    for (i = 0; i < STACKS_NUM__VAL; i++)
+    for (i = 0; i < STACKS_NUM__VAL; ++i)
     {
         memset(state->s.columns[i] = &indirect_stacks_buffer[i << 7], '\0',
             MAX_NUM_DECKS * 52 + 1);
     }
-    for (; i < MAX_NUM_STACKS; i++)
+    for (; i < MAX_NUM_STACKS; ++i)
     {
         state->s.columns[i] = NULL;
     }
