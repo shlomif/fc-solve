@@ -63,8 +63,7 @@ static inline void instance_free_solution_moves(
 }
 #endif
 
-static inline void fc_solve_st_free_pq(
-    fc_solve_soft_thread_t *const soft_thread)
+static inline void st_free_pq(fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_PQueueFree(&(BEFS_VAR(soft_thread, pqueue)));
 }
@@ -72,7 +71,7 @@ static inline void fc_solve_st_free_pq(
 static inline void fc_solve_free_instance_soft_thread_callback(
     fc_solve_soft_thread_t *const soft_thread)
 {
-    fc_solve_st_free_pq(soft_thread);
+    st_free_pq(soft_thread);
     fcs_free_moves_list(soft_thread);
     fc_solve_free_soft_thread_by_depth_move_array(soft_thread);
 #ifndef FCS_DISABLE_PATSOLVE

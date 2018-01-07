@@ -656,8 +656,7 @@ static inline void fc_solve_instance__recycle_hard_thread(
 
     ST_LOOP_START()
     {
-        fc_solve_st_free_pq(soft_thread);
-
+        st_free_pq(soft_thread);
         fc_solve_reset_soft_thread(soft_thread);
 
 #ifndef FCS_DISABLE_PATSOLVE
@@ -987,8 +986,7 @@ static inline void free_states(fc_solve_instance_t *const instance)
                             (*next_element).rating);
                     }
                 }
-
-                fc_solve_st_free_pq(soft_thread);
+                st_free_pq(soft_thread);
                 BEFS_VAR(soft_thread, pqueue) = new_pq;
             }
         }
