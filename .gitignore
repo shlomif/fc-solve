@@ -42,6 +42,7 @@ fc-solve/site/wml/bin/Run-YUI-Compressor
 fc-solve/site/wml/bin/clean-up-docbook-xhtml-1.1.xslt
 fc-solve/site/wml/bin/gen-build-deps
 fc-solve/site/wml/bin/jsmin
+fc-solve/site/wml/bin/sort-check-spelling-file
 fc-solve/site/wml/bin/spell-checker-iface
 fc-solve/site/wml/bin/translate-Vered-XML
 fc-solve/site/wml/dest
