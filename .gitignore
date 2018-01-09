@@ -38,6 +38,7 @@ fc-solve/site/wml/Tests/case-insense-file-collision.t
 fc-solve/site/wml/Tests/data/cache/spelling-timestamp.json
 fc-solve/site/wml/Tests/spell-check-is-sorted.t
 fc-solve/site/wml/Tests/tidyall.t
+fc-solve/site/wml/bin/Run-YUI-Compressor
 fc-solve/site/wml/bin/clean-up-docbook-xhtml-1.1.xslt
 fc-solve/site/wml/bin/gen-build-deps
 fc-solve/site/wml/bin/jsmin
