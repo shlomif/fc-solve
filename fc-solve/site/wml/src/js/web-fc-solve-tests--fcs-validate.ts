@@ -558,9 +558,9 @@ export function test_fcs_validate() {
             a.equal(loc.end, col1_s.length + col2_s.length,
                 'Location end is correct.');
         }
-   });
+    });
     QUnit.test("verify_state BoardParseResult - Freecells", (a: Assert) => {
-        a.expect(4);
+        a.expect(11);
         {
             const ms_deal_24_w_Freecells = "Freecells: 2H - 8D\n" +
                 ": 4C 2C 9C 8C QS 4S\n" +
@@ -589,5 +589,51 @@ export function test_fcs_validate() {
                         "freecell contents is fine.");
         }
 
-   });
+        {
+            const fc_s = "Freecells: 2H - 8D 6C 4H\n";
+            const ms_deal_24_w_Freecells = fc_s +
+                ": 4C 2C 9C 8C QS 4S\n" +
+": 5H QH 3C AC 3H 4H QD\n" +
+": QC 9S 6H 9H 3S KS 3D\n" +
+": 5D 2S JC 5C JH 6D AS\n" +
+": 2D KD TH TC TD\n" +
+": 7H JS KH TS KC 7C\n" +
+": AH 5S 6S AD 8H JD\n" +
+": 7S 6C 7D 4D 8S 9D\n" ;
+            const result = new BoardParseResult(8, 4, ms_deal_24_w_Freecells);
+
+            // TEST
+            a.ok( (!result.is_valid), "not validly parsed.");
+
+            const error = result.errors[0];
+            // TEST
+            a.equal(
+                error.type_,
+                ParseErrorType.LINE_PARSE_ERROR,
+                "Error of right type.",
+            );
+            const loc = error.locs[0];
+            // TEST
+            a.equal(
+                loc.type_,
+                ErrorLocationType.ErrorLocationType_Freecells,
+                'Error location of right type.',
+            );
+            // TEST
+            a.equal(loc.idx, 0, 'Column index #0');
+
+            // TEST
+            a.equal(loc.start, 0, 'Location start is sane.');
+
+            // TEST
+            a.equal(loc.end, fc_s.length, 'Location end is correct.');
+
+            const fc_err = result.freecells;
+
+            // TEST
+            a.equal(fc_err.error, 'Too many cards specified in Freecells line.',
+                'error is correct.');
+        }
+
+    });
 }
