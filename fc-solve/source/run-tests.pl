@@ -192,6 +192,7 @@ sub myglob
         my $re = qr/$exclude_re_s/ms;
         @tests = grep { basename($_) !~ $re } @tests;
     }
+    @tests = grep { basename($_) !~ /\A(?:lextab|yacctab)\.py\z/ } @tests;
 
     if ( !$ENV{FCS_TEST_BUILD} )
     {
