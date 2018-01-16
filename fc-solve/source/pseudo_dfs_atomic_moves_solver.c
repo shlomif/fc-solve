@@ -12,7 +12,7 @@
  * pseudo-DFS scan. See ../docs/distributed-pseudo-dfs-solver-spec.txt
  */
 
-#define FCS_LRU_KEY_IS_STATE
+// #define FCS_LRU_KEY_IS_STATE
 
 #include "dbm_solver_head.h"
 #include "pseudo_dfs_cache.h"
@@ -32,7 +32,7 @@ typedef Pvoid_t store_t;
 static inline void delete_state(store_t *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
-    fcs_pdfs_cache_insert(cache, &(key->s));
+    fcs_pdfs_cache_insert(cache, key);
     int rc_int;
     JHSD(rc_int, *store, &(key->s), sizeof(key->s));
 }
@@ -48,7 +48,7 @@ static inline fcs_bool_t lookup_state(store_t *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     Word_t *PValue;
-    JHSG(PValue, *store, &(key->s), sizeof(key->s));
+    JHSG(PValue, *store, key, sizeof(key));
 #if 1
     return (PValue != NULL);
 #else
@@ -79,6 +79,8 @@ typedef struct
     fcs_meta_compact_allocator_t meta_alloc;
     fcs_derived_state_t *derived_list_recycle_bin;
     fcs_dbm_variant_type_t local_variant;
+    fc_solve_delta_stater_t delta_stater;
+    fcs_cache_key_t init_key;
 } fcs_dbm_solver_instance_t;
 
 static inline void instance__inspect_new_state(
@@ -86,14 +88,12 @@ static inline void instance__inspect_new_state(
 {
     instance->count_num_processed++;
 
-    if (fcs_pdfs_cache_does_key_exist(&(instance->cache), &(state->s)))
+    if (fcs_pdfs_cache_does_key_exist(&(instance->cache), state))
     {
         --instance->stack_depth;
         return;
     }
-#ifndef FCS_FREECELL_ONLY
-    const fcs_dbm_variant_type_t local_variant = instance->local_variant;
-#endif
+    const_AUTO(local_variant, instance->local_variant);
     const_AUTO(depth, instance->stack_depth);
     const_AUTO(max_depth, instance->max_stack_depth);
     if (depth == max_depth)
@@ -108,8 +108,12 @@ static inline void instance__inspect_new_state(
 
     fcs_derived_state_t *derived_list = NULL;
 
-    if (instance_solver_thread_calc_derived_states(instance->local_variant,
-            state, NULL, &derived_list, &(instance->derived_list_recycle_bin),
+    fcs_state_keyval_pair_t s;
+    const_AUTO(delta_stater, &(instance->delta_stater));
+    fc_solve_delta_stater_decode_into_state(
+        delta_stater, state->s, &s, indirect_stacks_buffer);
+    if (instance_solver_thread_calc_derived_states(instance->local_variant, &s,
+            NULL, &derived_list, &(instance->derived_list_recycle_bin),
             &(instance->derived_list_allocator), TRUE))
     {
         instance->should_terminate = SOLUTION_FOUND_TERMINATE;
@@ -124,8 +128,10 @@ static inline void instance__inspect_new_state(
     {
         fc_solve_canonize_state(&(derived_list->state.s)PASS_FREECELLS(
             FREECELLS_NUM) PASS_STACKS(STACKS_NUM));
+        fcs_init_and_encode_state(delta_stater, local_variant,
+            &(derived_list->state), &(derived_list->key));
         if (!lookup_state(
-                &(instance->store), &(instance->cache), &(derived_list->state)))
+                &(instance->store), &(instance->cache), &(derived_list->key)))
         {
             int i = (stack_item->count_next_states)++;
             if (i >= stack_item->max_count_next_states)
@@ -133,7 +139,7 @@ static inline void instance__inspect_new_state(
                 stack_item->next_states = SREALLOC(stack_item->next_states,
                     ++(stack_item->max_count_next_states));
             }
-            stack_item->next_states[i] = derived_list->state;
+            stack_item->next_states[i] = derived_list->key;
             insert_state(&(instance->store), &(stack_item->next_states[i]));
         }
         var_AUTO(list_next, derived_list->next);
@@ -145,9 +151,19 @@ static inline void instance__inspect_new_state(
 
 static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     const fcs_dbm_variant_type_t local_variant,
-    fcs_cache_key_t *const init_state, const long max_num_elements_in_cache)
+    fcs_state_keyval_pair_t *const init_state,
+    const long max_num_elements_in_cache)
 {
     instance->local_variant = local_variant;
+    fc_solve_delta_stater_init(
+        &(instance->delta_stater), &(init_state->s), STACKS_NUM, FREECELLS_NUM
+#ifndef FCS_FREECELL_ONLY
+        ,
+        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
+#endif
+    );
+    fcs_init_and_encode_state(&instance->delta_stater, local_variant,
+        init_state, &instance->init_key);
     instance->solution_was_found = FALSE;
     instance->should_terminate = DONT_TERMINATE;
     instance->count_num_processed = 0;
@@ -162,8 +178,8 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     instance->derived_list_recycle_bin = NULL;
     fcs_pdfs_cache_init(
         &(instance->cache), max_num_elements_in_cache, &(instance->meta_alloc));
-    insert_state(&(instance->store), init_state);
-    instance__inspect_new_state(instance, init_state);
+    insert_state(&(instance->store), &instance->init_key);
+    instance__inspect_new_state(instance, &instance->init_key);
 }
 
 static inline void instance_free(fcs_dbm_solver_instance_t *const instance)
@@ -291,7 +307,7 @@ int main(int argc, char *argv[])
 
     fcs_dbm_solver_instance_t instance;
 
-    instance_init(&instance, local_variant, &init_state_pair, 8000000);
+    instance_init(&instance, local_variant, &init_state_pair, 16000000);
 
 #define LOG_FILENAME "fc-solve-pseudo-dfs.log.txt"
     FILE *const last_line_fh = popen(("tail -1 " LOG_FILENAME), "r");

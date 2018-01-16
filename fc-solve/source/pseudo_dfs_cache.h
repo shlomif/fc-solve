@@ -24,7 +24,7 @@ extern "C" {
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
 
-typedef fcs_state_t fcs_pdfs_key_t;
+typedef fcs_encoded_state_buffer_t fcs_pdfs_key_t;
 
 typedef struct fcs_pdfs_key_info_struct
 {

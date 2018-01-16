@@ -21,7 +21,7 @@
 static void verify_state_sanity(const fcs_state_t *const ptr_state)
 {
 #ifndef NDEBUG
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 8; ++i)
     {
         const int l = fcs_state_col_len(*(ptr_state), i);
         assert((l >= 0) && (l <= 7 + 12));
@@ -839,14 +839,14 @@ static inline int fc_solve_optimize_solution(
 #ifdef DEBUG_VERIFY_SOFT_DFS_STACK
 static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
 {
-    for (int depth = 0; depth < DFS_VAR(soft_thread, depth); depth++)
+    for (int depth = 0; depth < DFS_VAR(soft_thread, depth); ++depth)
     {
         var_AUTO(soft_dfs_info, &(DFS_VAR(soft_thread, soft_dfs_info)[depth]));
         int *const rand_indexes = soft_dfs_info->derived_states_random_indexes;
 
         const_AUTO(num_states, soft_dfs_info->derived_states_list.num_states);
 
-        for (size_t i = soft_dfs_info->current_state_index; i < num_states; i++)
+        for (size_t i = soft_dfs_info->current_state_index; i < num_states; ++i)
         {
             verify_state_sanity(
                 soft_dfs_info->derived_states_list.states[rand_indexes[i]]
