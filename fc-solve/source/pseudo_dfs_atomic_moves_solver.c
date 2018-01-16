@@ -34,13 +34,13 @@ static inline void delete_state(store_t *const store,
 {
     fcs_pdfs_cache_insert(cache, key);
     int rc_int;
-    JHSD(rc_int, *store, &(key->s), sizeof(key->s));
+    JHSD(rc_int, *store, key, sizeof(*key));
 }
 
 static inline void insert_state(store_t *store, fcs_cache_key_t *key)
 {
     Word_t *PValue;
-    JHSI(PValue, *store, &(key->s), sizeof(key->s));
+    JHSI(PValue, *store, key, sizeof(*key));
     *PValue = 1;
 }
 
@@ -48,7 +48,7 @@ static inline fcs_bool_t lookup_state(store_t *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     Word_t *PValue;
-    JHSG(PValue, *store, key, sizeof(key));
+    JHSG(PValue, *store, key, sizeof(*key));
 #if 1
     return (PValue != NULL);
 #else
@@ -86,7 +86,12 @@ typedef struct
 static inline void instance__inspect_new_state(
     fcs_dbm_solver_instance_t *const instance, fcs_cache_key_t *const state)
 {
-    instance->count_num_processed++;
+    if (++instance->count_num_processed % 1000000 == 0)
+    {
+        printf("Reached iteration %lld\n",
+            (long long)instance->count_num_processed);
+        fflush(stdout);
+    }
 
     if (fcs_pdfs_cache_does_key_exist(&(instance->cache), state))
     {
@@ -100,6 +105,8 @@ static inline void instance__inspect_new_state(
     {
         instance->stack =
             SREALLOC(instance->stack, ++(instance->max_stack_depth));
+        printf("Increasing to %lld\n", instance->max_stack_depth);
+        fflush(stdout);
         instance->stack[max_depth] = (pseudo_dfs_stack_item_t){
             .next_states = NULL, .max_count_next_states = 0};
     }
@@ -307,7 +314,7 @@ int main(int argc, char *argv[])
 
     fcs_dbm_solver_instance_t instance;
 
-    instance_init(&instance, local_variant, &init_state_pair, 16000000);
+    instance_init(&instance, local_variant, &init_state_pair, 70000000);
 
 #define LOG_FILENAME "fc-solve-pseudo-dfs.log.txt"
     FILE *const last_line_fh = popen(("tail -1 " LOG_FILENAME), "r");
