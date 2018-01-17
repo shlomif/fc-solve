@@ -242,7 +242,7 @@ sub run_tests
                 ],
             },
         );
-        my $DIR = 'dbm_fcs_for_sub';
+        my $DIR = 'dbm_fcs_dist';
         my $ARC = "$DIR.tar.xz";
         run_cmd( "$blurb_base : untar", { cmd => [ "tar", "-xvf", $ARC ], } );
         _chdir_run(

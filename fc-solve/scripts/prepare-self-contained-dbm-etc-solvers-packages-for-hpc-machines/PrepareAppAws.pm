@@ -48,14 +48,13 @@ if ($who eq 'am')
     $sub = 0;
 }
 
-my $dest_dir_base;
+my $dest_dir_base = 'dbm_fcs_dist';
 if ($sub)
 {
     $flto = 1;
     $num_threads = 24;
     $mem = 500;
     $num_hours = 700;
-    $dest_dir_base = 'dbm_fcs_for_sub';
 }
 elsif ($is_am)
 {
@@ -64,7 +63,6 @@ elsif ($is_am)
     $mem = 64;
     $num_hours = 700;
     $march_flag = '';
-    $dest_dir_base = 'dbm_fcs_for_amadiro';
 }
 return PrepareCommon->new({fcc_solver => scalar($self->fcc_solver), depth_dbm => $depth_dbm, dest_dir_base => $dest_dir_base, flto => $flto, num_threads => $num_threads, mem => $mem, num_hours => $num_hours, march_flag => $march_flag, deals => $self->deals, num_freecells => $self->num_freecells})->run;
 }
