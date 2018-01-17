@@ -210,6 +210,10 @@ sub run_tests
 
     my $blurb_base = sprintf "%s [ idx = %d / %d ]", $blurb_base_base, $idx,
         scalar(@tests);
+    my $run = sub {
+        my ( $DESC, $cmd ) = @_;
+        run_cmd( "$blurb_base : $DESC", { cmd => [@$cmd] } );
+    };
 
     my $tatzer_args       = $args->{'tatzer_args'};
     my $cmake_args        = $args->{'cmake_args'};
@@ -232,23 +236,21 @@ sub run_tests
 
     if ($prepare_dist_args)
     {
-        run_cmd(
-            "$blurb_base : prepare dist",
-            {
-                cmd => [
-                    $^X,
+        $run->(
+            "prepare dist",
+            [
+                $^X,
 "../scripts/prepare-self-contained-dbm-etc-solvers-packages-for-hpc-machines/$prepare_dist_args->{base}",
-                    @{ $prepare_dist_args->{args} }
-                ],
-            },
+                @{ $prepare_dist_args->{args} }
+            ],
         );
         my $DIR = 'dbm_fcs_dist';
         my $ARC = "$DIR.tar.xz";
-        run_cmd( "$blurb_base : untar", { cmd => [ "tar", "-xvf", $ARC ], } );
+        $run->( "untar", [ "tar", "-xvf", $ARC ] );
         _chdir_run(
             $DIR,
             sub {
-                run_cmd( "$blurb_base : make", { cmd => ['make'], } );
+                $run->( 'make', ['make'], );
             }
         );
         rmtree( $DIR, 0, $SAFE );
@@ -262,20 +264,16 @@ sub run_tests
             sub {
                 if ($tatzer_args)
                 {
-                    run_cmd( "$blurb_base : Tatzer",
-                        { cmd => [ '../source/Tatzer', @$tatzer_args ] } );
+                    $run->( "Tatzer", [ '../source/Tatzer', @$tatzer_args ] );
                 }
                 else
                 {
-                    run_cmd( "$blurb_base : cmake",
-                        { cmd => [ 'cmake', @$cmake_args, '../source' ] } );
+                    $run->( "cmake", [ 'cmake', @$cmake_args, '../source' ] );
                 }
-                run_cmd( "$blurb_base : make",
-                    { cmd => [ 'make', "-j$NUM_PROCESSORS" ] } );
+                $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
                 if ( not $args->{do_not_test} )
                 {
-                    run_cmd( "$blurb_base : test",
-                        { cmd => [ $^X, "$CWD/run-tests.pl" ] } );
+                    $run->( "test", [ $^X, "$CWD/run-tests.pl" ] );
                 }
 
             }
