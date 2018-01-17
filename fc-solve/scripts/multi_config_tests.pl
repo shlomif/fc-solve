@@ -242,16 +242,17 @@ sub run_tests
                 ],
             },
         );
-        run_cmd( "$blurb_base : untar",
-            { cmd => [ "tar", "-xvf", "dbm_fcs_for_sub.tar.xz" ], } );
+        my $DIR = 'dbm_fcs_for_sub';
+        my $ARC = "$DIR.tar.xz";
+        run_cmd( "$blurb_base : untar", { cmd => [ "tar", "-xvf", $ARC ], } );
         _chdir_run(
-            'dbm_fcs_for_sub',
+            $DIR,
             sub {
                 run_cmd( "$blurb_base : make", { cmd => ['make'], } );
             }
         );
-        rmtree( 'dbm_fcs_for_sub', 0, $SAFE );
-        unlink('dbm_fcs_for_sub.tar.xz');
+        rmtree( $DIR, 0, $SAFE );
+        unlink($ARC);
     }
     else
     {
