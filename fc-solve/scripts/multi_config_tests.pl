@@ -193,6 +193,17 @@ sub _calc_build_path
 
 my $CWD = getcwd();
 
+sub _chdir_run
+{
+    my ( $DIR, $cb ) = @_;
+
+    chdir($DIR);
+    $cb->();
+    chdir($CWD);
+
+    return;
+}
+
 sub run_tests
 {
     my ( $idx, $blurb_base_base, $args ) = @_;
@@ -233,35 +244,41 @@ sub run_tests
         );
         run_cmd( "$blurb_base : untar",
             { cmd => [ "tar", "-xvf", "dbm_fcs_for_sub.tar.xz" ], } );
-        chdir('dbm_fcs_for_sub');
-        run_cmd( "$blurb_base : make", { cmd => ['make'], } );
-        chdir($CWD);
+        _chdir_run(
+            'dbm_fcs_for_sub',
+            sub {
+                run_cmd( "$blurb_base : make", { cmd => ['make'], } );
+            }
+        );
         rmtree( 'dbm_fcs_for_sub', 0, $SAFE );
         unlink('dbm_fcs_for_sub.tar.xz');
     }
     else
     {
         mkdir($build_path);
-        chdir($build_path);
-        if ($tatzer_args)
-        {
-            run_cmd( "$blurb_base : Tatzer",
-                { cmd => [ '../source/Tatzer', @$tatzer_args ] } );
-        }
-        else
-        {
-            run_cmd( "$blurb_base : cmake",
-                { cmd => [ 'cmake', @$cmake_args, '../source' ] } );
-        }
-        run_cmd( "$blurb_base : make",
-            { cmd => [ 'make', "-j$NUM_PROCESSORS" ] } );
-        if ( not $args->{do_not_test} )
-        {
-            run_cmd( "$blurb_base : test",
-                { cmd => [ $^X, "$CWD/run-tests.pl" ] } );
-        }
+        _chdir_run(
+            $build_path,
+            sub {
+                if ($tatzer_args)
+                {
+                    run_cmd( "$blurb_base : Tatzer",
+                        { cmd => [ '../source/Tatzer', @$tatzer_args ] } );
+                }
+                else
+                {
+                    run_cmd( "$blurb_base : cmake",
+                        { cmd => [ 'cmake', @$cmake_args, '../source' ] } );
+                }
+                run_cmd( "$blurb_base : make",
+                    { cmd => [ 'make', "-j$NUM_PROCESSORS" ] } );
+                if ( not $args->{do_not_test} )
+                {
+                    run_cmd( "$blurb_base : test",
+                        { cmd => [ $^X, "$CWD/run-tests.pl" ] } );
+                }
 
-        chdir($CWD);
+            }
+        );
         rmtree( $build_path, 0, $SAFE );
     }
 
@@ -387,9 +404,13 @@ reg_lt_test(
 "The following build dirs exist and interfere with the build - [ @found ]. Please remove them!";
     }
 }
-chdir("../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/");
-run_cmd( "Games-Solitaire-Verify dzil", { cmd => [qw(dzil test --all)] } );
-chdir($CWD);
+_chdir_run(
+    '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
+    sub {
+        run_cmd( "Games-Solitaire-Verify dzil",
+            { cmd => [qw(dzil test --all)] } );
+    }
+);
 
 while ( my ( $idx, $run ) = each @tests )
 {
