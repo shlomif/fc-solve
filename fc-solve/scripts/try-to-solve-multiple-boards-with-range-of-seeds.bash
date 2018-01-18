@@ -8,10 +8,12 @@ calc_deals()
 calc_deals
 
 for d in $deals ; do
-    ./board_gen/pi-make-microsoft-freecell-board -t "$d" > "$d"
+    if ! test -e "$d" ; then
+        ./board_gen/pi-make-microsoft-freecell-board -t "$d" > "$d"
+    fi
 done
 
-seed=4
+seed=5
 while test -n "$deals" ; do
     echo "Trying seed = $seed"
     export SEED="$seed"
