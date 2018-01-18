@@ -138,6 +138,7 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 %files
 %defattr(-,root,root)
 /usr/bin/fc-solve
+/usr/bin/find-freecell-deal-index.py
 /usr/bin/freecell-solver-fc-pro-range-solve
 /usr/bin/freecell-solver-multi-thread-solve
 /usr/bin/freecell-solver-range-parallel-solve
@@ -150,7 +151,6 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 %files -n libfreecell-solver0-devel
 %defattr(-,root,root)
 /usr/include/freecell-solver/*.h
-/usr/bin/freecell-solver-config
 %{_libdir}/pkgconfig/*.pc
 
 %clean

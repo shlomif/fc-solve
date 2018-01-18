@@ -744,11 +744,6 @@ CONFIGURE_FILE(
     )
 
 CONFIGURE_FILE(
-    ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}-config.in
-    ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_NAME}-config
-    )
-
-CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/lib${CPACK_PACKAGE_NAME}.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/lib${CPACK_PACKAGE_NAME}.pc
     @ONLY
@@ -770,11 +765,6 @@ IF (WIN32 AND NOT UNIX)
         DESTINATION "bin"
     )
 ENDIF ()
-
-INSTALL(
-    FILES "${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_NAME}-config"
-    DESTINATION "bin"
-)
 
 SET (fc_solve_manpage "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.6")
 
@@ -1113,27 +1103,6 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
 ENDIF ()
 
 INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
-
-# Empty list
-SET (_pod_targets )
-
-RUN_POD2MAN(
-    "_pod_targets"
-    "freecell-solver-config.pod"
-    "freecell-solver-config.1"
-    "1"
-    "Freecell Solver"
-    "Freecell Solver ${VERSION}"
-)
-
-IF (UNIX)
-    INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/freecell-solver-config.1" 1)
-ENDIF ()
-
-ADD_CUSTOM_TARGET(
-    "fcs_config_docs_pods" ALL
-    DEPENDS ${_pod_targets}
-)
 
 ADD_SUBDIRECTORY ("t")
 ADD_SUBDIRECTORY ("board_gen")
