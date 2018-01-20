@@ -105,7 +105,6 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
         }
         const_AUTO(move, *(++next_move_ptr));
 
-        fcs_card_t card;
         switch (fcs_move_get_type(move))
         {
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
@@ -115,17 +114,14 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             assert(virtual_stack_len[src] >= fcs_col_len(col));
             if (virtual_stack_len[src] == fcs_col_len(col))
             {
+                fcs_card_t card;
                 fcs_col_pop_card(col, card);
                 fcs_increment_foundation(pos, fcs_card_suit(card));
-                --virtual_stack_len[src];
                 moves_processed_add_new_move(
                     ret, (fcs_extended_move_t){
                              .move = move, .to_empty_stack = FALSE});
             }
-            else
-            {
-                --virtual_stack_len[src];
-            }
+            --virtual_stack_len[src];
         }
         break;
 
