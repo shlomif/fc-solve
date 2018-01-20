@@ -47,60 +47,46 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     FCS_STATE__DUP_keyval_pair(pos_proto, *orig);
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 8; ++i)
     {
         fcs_copy_stack(pos_proto.s, pos_proto.info, i, indirect_stacks_buffer);
     }
 
 #define pos (pos_proto.s)
     int virtual_stack_len[8];
-    int i, j;
-
     const int num_back_end_moves = moves_seq->num_moves;
     var_PTR(next_move_ptr, moves_seq->moves - 1);
-
     ret->num_moves = 0;
     ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);
     ret->next_move_idx = 0;
-
-    for (i = 0; i < 8; i++)
+    for (int i = 0; i < 8; ++i)
     {
         virtual_stack_len[i] = fcs_state_col_len(pos, i);
     }
 
     for (int move_idx = 0; move_idx < num_back_end_moves; move_idx++)
     {
-        // Move safe cards to the foundations
-        while (1)
+    // Move safe cards to the foundations
+    loop_start:
+        for (int i = 0; i < 8; ++i)
         {
-            for (i = 0; i < 8; i++)
+            var_AUTO(col, fcs_state_get_col(pos, i));
+            const_AUTO(l, fcs_col_len(col));
+            if (l && fc_solve_fc_pro__can_be_moved(
+                         &pos, fcs_col_get_card(col, l - 1)))
             {
-                var_AUTO(col, fcs_state_get_col(pos, i));
-                const_AUTO(l, fcs_col_len(col));
-                if (l && fc_solve_fc_pro__can_be_moved(
-                             &pos, fcs_col_get_card(col, l - 1)))
-                {
-                    fcs_col_pop_top(col);
-                    break;
-                }
+                fcs_col_pop_top(col);
+                goto loop_start;
             }
-            if (i < 8)
+        }
+        for (int j = 0; j < num_freecells; j++)
+        {
+            const fcs_card_t card = fcs_freecell_card(pos, j);
+            if (fcs_card_is_valid(card) &&
+                fc_solve_fc_pro__can_be_moved(&pos, card))
             {
-                continue;
-            }
-            for (j = 0; j < num_freecells; j++)
-            {
-                const fcs_card_t card = fcs_freecell_card(pos, j);
-                if (fcs_card_is_valid(card) &&
-                    fc_solve_fc_pro__can_be_moved(&pos, card))
-                {
-                    fcs_empty_freecell(pos, j);
-                    break;
-                }
-            }
-            if ((i == 8) && (j == num_freecells))
-            {
-                break;
+                fcs_empty_freecell(pos, j);
+                goto loop_start;
             }
         }
         const_AUTO(move, *(++next_move_ptr));
