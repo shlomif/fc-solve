@@ -1,8 +1,20 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2017-10-06
+:Date: 2018-01-21
 :Revision: $Id$
+
+Version 4.16.0: (21-Jan-2018)
+-----------------------------
+
+1. Add a new +-l looking-glass+ command line preset, which provides improved
+speed.
+
+2. Add some programs to find the deal index of a card layout.
+
+3. Remove "freecell-solver-config" - one should use pkg-config instead.
+
+4. Many small optimizations and cleanups.
 
 Version 4.14.1: (06-Oct-2017)
 -----------------------------
