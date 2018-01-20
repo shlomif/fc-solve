@@ -8,9 +8,7 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 #include <assert.h>
-
 #include "fc_pro_iface_pos.h"
-
 #include "rinutils.h"
 
 #define MOVES_PROCESSED_GROW_BY 32
@@ -56,9 +54,6 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
 
 #define pos (pos_proto.s)
     int virtual_stack_len[8];
-#ifndef NDEBUG
-    int virtual_freecell_len[12];
-#endif
     int i, j;
 
     const int num_back_end_moves = moves_seq->num_moves;
@@ -72,18 +67,10 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
     {
         virtual_stack_len[i] = fcs_state_col_len(pos, i);
     }
-#ifndef NDEBUG
-    for (i = 0; i < num_freecells; i++)
-    {
-        virtual_freecell_len[i] = fcs_freecell_is_empty(pos, i) ? 0 : 1;
-    }
-#endif
 
     for (int move_idx = 0; move_idx < num_back_end_moves; move_idx++)
     {
-        /*
-         * Move safe cards to the foundations
-         * */
+        // Move safe cards to the foundations
         while (1)
         {
             for (i = 0; i < 8; i++)
@@ -145,7 +132,6 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
         {
             const int src = fcs_move_get_src_freecell(move);
-            assert((virtual_freecell_len[src] == 1));
             if (!fcs_freecell_is_empty(pos, src))
                 moves_processed_add_new_move(
                     ret, (fcs_extended_move_t){
@@ -153,9 +139,6 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             fcs_increment_foundation(
                 pos, fcs_card_suit(fcs_freecell_card(pos, src)));
             fcs_empty_freecell(pos, src);
-#ifndef NDEBUG
-            virtual_freecell_len[src] = 0;
-#endif
         }
         break;
 
@@ -163,7 +146,6 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
         {
             const_AUTO(src, fcs_move_get_src_freecell(move));
             const_AUTO(dest, fcs_move_get_dest_stack(move));
-            assert(virtual_freecell_len[src] == 1);
             if (!fcs_freecell_is_empty(pos, src))
             {
                 moves_processed_add_new_move(
@@ -172,9 +154,6 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 fcs_state_push(&pos, dest, fcs_freecell_card(pos, src));
                 fcs_empty_freecell(pos, src);
             }
-#ifndef NDEBUG
-            virtual_freecell_len[src] = 0;
-#endif
             ++virtual_stack_len[dest];
         }
         break;
@@ -186,11 +165,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
             assert(virtual_stack_len[src] > 0);
             var_AUTO(col, fcs_state_get_col(pos, src));
             assert(fcs_col_len(col) <= virtual_stack_len[src]);
-            if (fcs_col_len(col) < virtual_stack_len[src])
-            {
-                /* Do nothing */
-            }
-            else
+            if (fcs_col_len(col) >= virtual_stack_len[src])
             {
                 moves_processed_add_new_move(
                     ret, (fcs_extended_move_t){
@@ -200,9 +175,6 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed_t *const ret,
                 fcs_put_card_in_freecell(pos, dest, temp_card);
             }
             --virtual_stack_len[src];
-#ifndef NDEBUG
-            virtual_freecell_len[dest] = 1;
-#endif
         }
         break;
 
