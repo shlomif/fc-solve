@@ -230,7 +230,7 @@ Used for preparing Microsoft Windows packages.
 <a href="http://strawberryperl.com/">Strawberry Perl</a> - an open source
 distribution of Perl 5 for Windows, which is used to help build the Freecell
 Solver’s package there. For a while, we also used
-<a href="http://dwimperl.com/">DWIM Perl for Windows</a>, which is
+<a href="http://dwimperl.szabgab.com/">DWIM Perl for Windows</a>, which is
 based on Strawberry and is more encompassing, but it fell out
 of maintenance.
 </p>
