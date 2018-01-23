@@ -88,7 +88,6 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         "bit-reader-and-writer-test.c"
         PROPERTIES
             OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../bit_rw.h"
-            GENERATED "1"
     )
 
     IF ("${DEBONDT_DELTA_STATES}")
