@@ -892,32 +892,6 @@ static inline fcs_bool_t fcs__is_state_a_dead_end(
 }
 
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-#if (((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                \
-         (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)) &&        \
-     !defined(FCS_WITHOUT_TRIM_MAX_STORED_STATES))
-static fcs_bool_t free_states_should_delete(
-    void *const key, void *const context)
-{
-    fc_solve_instance_t *const instance = (fc_solve_instance_t *const)context;
-    fcs_collectible_state_t *const ptr_state =
-        (fcs_collectible_state_t *const)key;
-
-    if (fcs__is_state_a_dead_end(ptr_state))
-    {
-        FCS_S_NEXT(ptr_state) = instance->list_of_vacant_states;
-        instance->list_of_vacant_states = ptr_state;
-
-        instance->active_num_states_in_collection--;
-
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-#endif
-
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 #if (!((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||               \
          (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
@@ -957,6 +931,28 @@ static inline void free_states_handle_soft_dfs_soft_thread(
         }
         soft_dfs_info->derived_states_list.num_states =
             dest_rand_index_ptr - rand_indexes;
+    }
+}
+
+static fcs_bool_t free_states_should_delete(
+    void *const key, void *const context)
+{
+    fc_solve_instance_t *const instance = (fc_solve_instance_t *const)context;
+    fcs_collectible_state_t *const ptr_state =
+        (fcs_collectible_state_t *const)key;
+
+    if (fcs__is_state_a_dead_end(ptr_state))
+    {
+        FCS_S_NEXT(ptr_state) = instance->list_of_vacant_states;
+        instance->list_of_vacant_states = ptr_state;
+
+        --instance->active_num_states_in_collection;
+
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
     }
 }
 
@@ -2016,7 +2012,7 @@ typedef struct
     fcs_stats_t iterations_board_started_at;
     // The number of iterations that the current instance started solving from.
     fcs_stats_t init_num_checked_states;
-// A pointer to the currently active flare out of the sequence
+    // A pointer to the currently active flare out of the sequence
 #if defined(FCS_WITH_NI) || defined(FCS_WITH_FLARES)
 #define ACTIVE_FLARE(user) ((user)->active_flare)
 #define SET_ACTIVE_FLARE(user, flare) ((user)->active_flare = (flare))
