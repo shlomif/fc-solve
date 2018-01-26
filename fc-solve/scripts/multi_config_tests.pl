@@ -303,8 +303,9 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                     $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
                     ? ('make')
                     : (
-                        'bash', '-c',
-                        ". ~/bin/Dev-Path-Configs-Source-Me.bash ; make"
+                        'bash',
+                        '-c',
+". ~/bin/Dev-Path-Configs-Source-Me.bash ; make 2>&1 | tail -300"
                     )
                 ]
             }
