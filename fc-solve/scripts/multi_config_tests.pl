@@ -337,6 +337,7 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
+reg_tatzer_test( "Default", () );
 reg_prep( "prepare_dist fcc_solver",
     'prepare_fcc_solver_self_contained_package.pl' );
 reg_prep( "prepare_dist AWS",
@@ -368,7 +369,6 @@ reg_test(
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
-reg_tatzer_test( "Default", () );
 reg_tatzer_test( "--rcs", qw(--rcs) );
 
 reg_lt_test( "libavl2 with COMPACT_STATES",
@@ -413,6 +413,20 @@ _chdir_run(
 
 while ( my ( $idx, $run ) = each @tests )
 {
+    if ( $idx == 1 )
+    {
+        _chdir_run(
+            '../site/wml',
+            sub {
+                run_cmd(
+                    "Website gen-helpers",
+                    {
+                        cmd => [ $^X, 'gen-helpers.pl' ],
+                    }
+                );
+            },
+        );
+    }
     run_tests( $TEST_BASE_IDX + $idx, @$run );
 }
 
