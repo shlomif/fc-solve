@@ -68,7 +68,7 @@ DLLEXPORT extern char *freecell_solver_user_current_state_as_string(
     ,
     int display_10_as_t
 #endif
-    );
+);
 #endif
 
 DLLEXPORT extern void freecell_solver_user_current_state_stringify(
@@ -83,7 +83,7 @@ DLLEXPORT extern void freecell_solver_user_current_state_stringify(
     ,
     int display_10_as_t
 #endif
-    );
+);
 
 DLLEXPORT extern void freecell_solver_user_free(void *user_instance);
 
@@ -154,7 +154,7 @@ DLLEXPORT void freecell_solver_user_get_invalid_state_error_into_string(
     ,
     const int print_ts
 #endif
-    );
+);
 #endif
 
 #ifdef FCS_WITH_ERROR_STRS
@@ -165,7 +165,7 @@ DLLEXPORT extern char *freecell_solver_user_get_invalid_state_error_string(
     ,
     int print_ts
 #endif
-    );
+);
 #endif
 #endif
 
@@ -214,7 +214,7 @@ DLLEXPORT extern char *freecell_solver_user_iter_state_as_string(
     ,
     const int display_10_as_t
 #endif
-    );
+);
 #endif
 
 DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
@@ -229,7 +229,7 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
     ,
     const int display_10_as_t
 #endif
-    );
+);
 
 DLLEXPORT extern void freecell_solver_user_set_random_seed(
     void *const user_instance, const int seed);

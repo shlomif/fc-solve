@@ -220,7 +220,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             ,
             item->moves_to_key
 #endif
-            );
+        );
 
         for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
         {
@@ -250,7 +250,7 @@ static inline void instance_check_key(
     ,
     const fcs_fcc_move_t *moves_to_parent
 #endif
-    )
+)
 {
     const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
     fcs_dbm_record_t *token;
@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
         ,
         CALC_SEQUENCES_ARE_BUILT_BY()
 #endif
-            );
+    );
 
 #define KEY_PTR() (key_ptr)
     fcs_dbm_solver_instance_t instance;

@@ -56,8 +56,9 @@ static inline void *alloc_instance_and_parse(const int argc, char **const argv,
         }
         break;
     case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
-        fprintf(stderr, "The command line parameter \"%s\" requires an argument"
-                        " and was not supplied with one.\n",
+        fprintf(stderr,
+            "The command line parameter \"%s\" requires an argument"
+            " and was not supplied with one.\n",
             argv[*arg_ptr]);
         freecell_solver_user_free(instance);
         exit(-1);

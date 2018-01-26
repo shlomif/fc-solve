@@ -414,8 +414,9 @@ static inline fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
 
         /* Find a suitable place to put it */
         const fcs_card_t the_card =
-            is_ultimate_iter ? src_card : fcs_col_get_card(col,
-                                              seqs->seq_points[false_seq_idx]);
+            is_ultimate_iter
+                ? src_card
+                : fcs_col_get_card(col, seqs->seq_points[false_seq_idx]);
 
         const size_t the_num_true_seqs =
             is_ultimate_iter ? num_src_junk_true_seqs

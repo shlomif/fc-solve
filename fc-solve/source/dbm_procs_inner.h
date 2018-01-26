@@ -37,7 +37,7 @@ static inline main_thread_item_t *dbm__calc_threads(
         ,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-        );
+    );
 #endif
     for (size_t i = 0; i < num_threads; i++)
     {
@@ -48,7 +48,7 @@ static inline main_thread_item_t *dbm__calc_threads(
             ,
             FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-            );
+        );
         init_thread_cb(threads[i].arg.thread = &(threads[i].thread));
     }
     return threads;

@@ -224,7 +224,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
         ,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-        );
+    );
     dict_t *traversed_states =
         fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
 

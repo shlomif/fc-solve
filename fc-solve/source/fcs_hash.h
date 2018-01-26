@@ -123,7 +123,7 @@ static inline void fc_solve_hash_init(
 #else
 #endif
 #endif
-    )
+)
 {
     const typeof(hash->size) initial_hash_size = 2048;
 

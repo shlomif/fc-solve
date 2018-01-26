@@ -85,7 +85,7 @@ static inline void instance_check_key(
     ,
     const fcs_fcc_move_t *moves_to_parent
 #endif
-    )
+)
 {
     fcs_dbm_record_t *token;
     if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
@@ -216,7 +216,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 ,
                 item->moves_to_key
 #endif
-                );
+            );
 
             fcs_derived_state_list__recycle(
                 &derived_list_recycle_bin, &derived_list);
@@ -496,9 +496,9 @@ static fcs_bool_t handle_and_destroy_instance_solution(
 #define PENULTIMATE_DEPTH 1
                 for (int i = trace_num - 1; i >= PENULTIMATE_DEPTH; i--)
                 {
-                    fprintf(
-                        out_fh, "%.2X,", get_move_from_parent_to_child(instance,
-                                             delta, trace[i], trace[i - 1]));
+                    fprintf(out_fh, "%.2X,",
+                        get_move_from_parent_to_child(
+                            instance, delta, trace[i], trace[i - 1]));
                 }
 #undef PENULTIMATE_DEPTH
                 free(trace);
@@ -592,7 +592,7 @@ int main(int argc, char *argv[])
         ,
         FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #endif
-        );
+    );
 
     if (intermediate_input_filename)
     {
@@ -669,16 +669,18 @@ int main(int argc, char *argv[])
                     else if (limit_instance.common.should_terminate ==
                              MAX_ITERS_TERMINATE)
                     {
-                        fprintf(out_fh, "Reached Max-or-more iterations of %ld "
-                                        "in intermediate-input line No. %ld.\n",
+                        fprintf(out_fh,
+                            "Reached Max-or-more iterations of %ld "
+                            "in intermediate-input line No. %ld.\n",
                             limit_instance.common.max_count_num_processed,
                             line_num);
                     }
                     else if (limit_instance.common.should_terminate ==
                              DONT_TERMINATE)
                     {
-                        fprintf(out_fh, "Pruning due to unsolvability in "
-                                        "intermediate-input line No. %ld\n",
+                        fprintf(out_fh,
+                            "Pruning due to unsolvability in "
+                            "intermediate-input line No. %ld\n",
                             line_num);
                         skip_queue_output = TRUE;
                     }

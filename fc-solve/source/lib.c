@@ -103,13 +103,15 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
 #endif
         .instance_moves_order =
             {
-                .num = 0, .groups = NULL,
+                .num = 0,
+                .groups = NULL,
             },
         .list_of_vacant_states = NULL,
 #ifdef FCS_WITH_MOVES
         .opt_moves =
             {
-                .num = 0, .groups = NULL,
+                .num = 0,
+                .groups = NULL,
             },
 #endif
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -491,7 +493,7 @@ static inline void fc_solve_start_instance_process_with_board(
         fc_solve_state_compare
 #endif
 #endif
-        );
+    );
 #ifdef FCS_RCS_STATES
     instance->hash.instance = instance;
 #endif
@@ -503,7 +505,7 @@ static inline void fc_solve_start_instance_process_with_board(
 #error FCS_STATE_STORAGE is not defined
 #endif
 
-/****************************************************/
+    /****************************************************/
 
 #ifdef INDIRECT_STACK_STATES
 /* Initialize the data structure that will manage the stack
@@ -519,7 +521,7 @@ static inline void fc_solve_start_instance_process_with_board(
         fc_solve_stack_compare_for_comparison
 #endif
 #endif
-        );
+    );
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     instance->stacks_tree = fcs_libavl2_stacks_tree_create(
         fcs_stack_compare_for_comparison_with_context, NULL, NULL);
@@ -541,7 +543,7 @@ static inline void fc_solve_start_instance_process_with_board(
 #endif
 #endif
 
-/***********************************************/
+    /***********************************************/
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     /* Not working - ignore */
@@ -896,9 +898,9 @@ static inline fcs_bool_t fcs__is_state_a_dead_end(
 static fcs_bool_t free_states_should_delete(
     void *const key, void *const context)
 {
-    fc_solve_instance_t *const instance = (fc_solve_instance_t * const) context;
+    fc_solve_instance_t *const instance = (fc_solve_instance_t *const)context;
     fcs_collectible_state_t *const ptr_state =
-        (fcs_collectible_state_t * const) key;
+        (fcs_collectible_state_t *const)key;
 
     if (fcs__is_state_a_dead_end(ptr_state))
     {
@@ -955,28 +957,6 @@ static inline void free_states_handle_soft_dfs_soft_thread(
         }
         soft_dfs_info->derived_states_list.num_states =
             dest_rand_index_ptr - rand_indexes;
-    }
-}
-
-static fcs_bool_t free_states_should_delete(
-    void *const key, void *const context)
-{
-    fc_solve_instance_t *const instance = (fc_solve_instance_t *const)context;
-    fcs_collectible_state_t *const ptr_state =
-        (fcs_collectible_state_t *const)key;
-
-    if (fcs__is_state_a_dead_end(ptr_state))
-    {
-        FCS_S_NEXT(ptr_state) = instance->list_of_vacant_states;
-        instance->list_of_vacant_states = ptr_state;
-
-        --instance->active_num_states_in_collection;
-
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
     }
 }
 
@@ -1202,12 +1182,13 @@ static inline int fc_solve_soft_dfs_do_solve(
 #ifdef FCS_WITHOUT_VISITED_ITER
                         0
 #else
-                        ((DEPTH() == 0) ? 0 : FCS_S_VISITED_ITER(DFS_VAR(
-                                                  soft_thread,
-                                                  soft_dfs_info)[DEPTH() - 1]
-                                                                     .state))
+                        ((DEPTH() == 0)
+                                ? 0
+                                : FCS_S_VISITED_ITER(DFS_VAR(
+                                      soft_thread, soft_dfs_info)[DEPTH() - 1]
+                                                         .state))
 #endif
-                        );
+                    );
                 }
 #endif
                 /* Perform the pruning. */
@@ -1278,7 +1259,7 @@ static inline int fc_solve_soft_dfs_do_solve(
                             ,
                         is_simple_simon
 #endif
-                        );
+                    );
                 }
             }
 
@@ -1835,7 +1816,7 @@ static inline fc_solve_solve_process_ret_t fc_solve_resume_instance(
 #else
             &(instance->optimization_thread->soft_threads[0])
 #endif
-                );
+        );
     }
     else
 #endif
@@ -2454,7 +2435,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void *const api_instance, const fcs_int_limit_t max_iters)
 {
-    ((fcs_user_t * const) api_instance)->current_iterations_limit = max_iters;
+    ((fcs_user_t *const)api_instance)->current_iterations_limit = max_iters;
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2475,7 +2456,7 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
 
 static inline fc_solve_soft_thread_t *api_soft_thread(void *const api_instance)
 {
-    return ((fcs_user_t * const) api_instance)->soft_thread;
+    return ((fcs_user_t *const)api_instance)->soft_thread;
 }
 
 int DLLEXPORT freecell_solver_user_set_depth_tests_order(
@@ -3214,7 +3195,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #else
                 NULL
 #endif
-                    );
+            );
         }
 
         const fcs_bool_t was_run_now =
@@ -3239,9 +3220,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(
         flare->obj_stats.num_states_in_collection =
             instance->num_states_in_collection;
 #endif
-        const_AUTO(delta,
-            flare->obj_stats.num_checked_states -
-                user->init_num_checked_states.num_checked_states);
+        const_AUTO(delta, flare->obj_stats.num_checked_states -
+                              user->init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
 #ifdef FCS_WITH_FLARES
         if (flare_iters_quota >= 0)
@@ -3294,7 +3274,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                 || (instance->num_states_in_collection >=
                        instance->effective_max_num_states_in_collection)
 #endif
-                    )
+            )
             {
 /* Bug fix:
  * We need to resume from the last flare in case we exceed
@@ -3661,7 +3641,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 #ifdef FC_SOLVE_JAVASCRIPT_QUERYING
 int DLLEXPORT freecell_solver_user_get_num_freecells(void *const api_instance)
 {
-    return (((fcs_user_t * const) api_instance)
+    return (((fcs_user_t *const)api_instance)
                 ->common_preset.game_params.freecells_num);
 }
 #endif
@@ -3695,7 +3675,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
 #ifdef FC_SOLVE_JAVASCRIPT_QUERYING
 int DLLEXPORT freecell_solver_user_get_num_stacks(void *const api_instance)
 {
-    return (((fcs_user_t * const) api_instance)
+    return (((fcs_user_t *const)api_instance)
                 ->common_preset.game_params.stacks_num);
 }
 #endif
@@ -3905,7 +3885,7 @@ void freecell_solver_user_get_invalid_state_error_into_string(
     ,
     const int print_ts
 #endif
-    )
+)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
@@ -3935,9 +3915,10 @@ void freecell_solver_user_get_invalid_state_error_into_string(
         card_str[0] = '\0';
 #endif
 
-        sprintf(string, "%s%s.", ((ret == FCS_STATE_VALIDITY__EXTRA_CARD)
-                                         ? "There's an extra card: "
-                                         : "There's a missing card: "),
+        sprintf(string, "%s%s.",
+            ((ret == FCS_STATE_VALIDITY__EXTRA_CARD)
+                    ? "There's an extra card: "
+                    : "There's a missing card: "),
             card_str);
     }
     break;
@@ -3957,7 +3938,7 @@ char *freecell_solver_user_get_invalid_state_error_string(
     ,
     const int print_ts
 #endif
-    )
+)
 {
     char *ret = malloc(80);
     freecell_solver_user_get_invalid_state_error_into_string(
@@ -4010,7 +3991,7 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
         return 1;
     }
 
-    fcs_user_t *const user = (fcs_user_t * const) api_instance;
+    fcs_user_t *const user = (fcs_user_t *const)api_instance;
     user->common_preset.game_params.game_flags &= (~(0x3 << 2));
     user->common_preset.game_params.game_flags |= (empty_stacks_fill << 2);
     apply_game_params_for_all_instances(user);
@@ -4022,8 +4003,10 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
     void *const api_instance, const int my_index, const double weight)
 {
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
-    if ((my_index < 0) || (my_index >= (int)(COUNT(BEFS_VAR(soft_thread,
-                                           weighting).befs_weights.weights))))
+    if ((my_index < 0) ||
+        (my_index >=
+            (int)(COUNT(
+                BEFS_VAR(soft_thread, weighting).befs_weights.weights))))
     {
         return 1;
     }
@@ -4175,7 +4158,7 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
 
 int DLLEXPORT freecell_solver_user_next_soft_thread(void *const api_instance)
 {
-    fcs_user_t *const user = (fcs_user_t * const) api_instance;
+    fcs_user_t *const user = (fcs_user_t *const)api_instance;
     const_AUTO(
         soft_thread, fc_solve_new_soft_thread(user->soft_thread->hard_thread));
     if (soft_thread == NULL)
@@ -4423,7 +4406,7 @@ DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
 DLLEXPORT const char *freecell_solver_user_get_last_error_string(
     void *const api_instance)
 {
-    return (((fcs_user_t * const) api_instance)->error_string);
+    return (((fcs_user_t *const)api_instance)->error_string);
 }
 #endif
 
@@ -4524,7 +4507,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *const api_instance GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    return CURR_INST((fcs_user_t * const) api_instance)->num_plan_items;
+    return CURR_INST((fcs_user_t *const)api_instance)->num_plan_items;
 #else
     return 0;
 #endif
@@ -4534,7 +4517,7 @@ const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    switch (CURR_INST((fcs_user_t * const) api_instance)->plan[item_idx].type)
+    switch (CURR_INST((fcs_user_t *const)api_instance)->plan[item_idx].type)
     {
     case FLARES_PLAN_RUN_INDEFINITELY:
         return "RunIndef";
@@ -4552,7 +4535,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    const_AUTO(instance_item, CURR_INST((fcs_user_t * const) api_instance));
+    const_AUTO(instance_item, CURR_INST((fcs_user_t *const)api_instance));
     return instance_item->plan[item_idx].flare - instance_item->flares;
 #else
     return 0;
@@ -4563,7 +4546,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    return CURR_INST((fcs_user_t * const) api_instance)
+    return CURR_INST((fcs_user_t *const)api_instance)
         ->plan[item_idx]
         .count_iters;
 #else

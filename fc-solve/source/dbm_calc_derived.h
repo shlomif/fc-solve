@@ -198,8 +198,9 @@ static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
 }
 
 #define FROM_COL_IS_REVERSIBLE_MOVE()                                          \
-    ((cards_num <= 1) ? TRUE : fcs_is_parent_card(card,                        \
-                                   fcs_col_get_card(col, cards_num - 2)))
+    ((cards_num <= 1)                                                          \
+            ? TRUE                                                             \
+            : fcs_is_parent_card(card, fcs_col_get_card(col, cards_num - 2)))
 #define COUNT_NON_REV(is_reversible) ((is_reversible) ? 1 : 2)
 
 /* Returns the number of amortized irreversible moves performed. */

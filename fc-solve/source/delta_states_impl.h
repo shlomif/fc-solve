@@ -44,7 +44,7 @@ static void fc_solve_delta_stater_init(
     ,
     const int sequences_are_built_by
 #endif
-    )
+)
 {
 #ifndef FCS_FREECELL_ONLY
     self->sequences_are_built_by = sequences_are_built_by;
@@ -178,13 +178,13 @@ static inline void fc_solve_get_freecells_encoding(
             }
         }
         const_AUTO(i_card, freecells[i]);
-        fc_solve_bit_writer_write(
-            bit_w, 6, fcs_card2char((min_idx != i) ? ({
+        fc_solve_bit_writer_write(bit_w, 6,
+            fcs_card2char((min_idx != i) ? ({
                 const_AUTO(min_card, freecells[min_idx]);
                 freecells[min_idx] = i_card;
                 min_card;
             })
-                                                   : i_card));
+                                         : i_card));
     }
 }
 

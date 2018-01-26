@@ -32,9 +32,8 @@ void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
         DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
     DFS_VAR(soft_thread, soft_dfs_info) =
         SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
-    var_AUTO(soft_dfs_info,
-        DFS_VAR(soft_thread, soft_dfs_info) +
-            DFS_VAR(soft_thread, dfs_max_depth));
+    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info) +
+                                DFS_VAR(soft_thread, dfs_max_depth));
     const_AUTO(end_soft_dfs_info, soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY);
 
     for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
@@ -46,7 +45,8 @@ void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
             .current_state_index = 0,
             .derived_states_list =
                 {
-                    .num_states = 0, .states = NULL,
+                    .num_states = 0,
+                    .states = NULL,
                 },
             .derived_states_random_indexes = NULL,
             .derived_states_random_indexes_max_size = 0,
@@ -500,7 +500,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
                         ? 0
                         : FCS_S_VISITED_ITER(FCS_S_PARENT(PTR_STATE)))
 #endif
-                );
+            );
         }
 #endif
 
@@ -530,7 +530,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             ,
             is_simple_simon
 #endif
-            );
+        );
 
         TRACE0("perform_tests");
         /*

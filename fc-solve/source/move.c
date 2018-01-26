@@ -105,9 +105,9 @@ void fc_solve_derived_states_list_add_state(
     if ((!((list->num_states + (list->states != NULL)) &
             (DERIVED_STATES_LIST_GROW_BY - 1))))
     {
-        list->states = SREALLOC(list->states,
-            list->num_states + (list->states != NULL) +
-                DERIVED_STATES_LIST_GROW_BY);
+        list->states =
+            SREALLOC(list->states, list->num_states + (list->states != NULL) +
+                                       DERIVED_STATES_LIST_GROW_BY);
     }
     list->states[list->num_states++] = (fcs_derived_states_list_item_t){
         .state_ptr = state, .context.i = context};
