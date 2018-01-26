@@ -337,11 +337,6 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
-reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
-reg_test(
-    "No int128",
-    { cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ] }
-);
 reg_prep( "prepare_dist fcc_solver",
     'prepare_fcc_solver_self_contained_package.pl' );
 reg_prep( "prepare_dist AWS",
@@ -350,6 +345,11 @@ reg_prep( "prepare_dist vendu",
     'prepare_vendu_depth_dbm_fc_solver_self_contained_package.pl' );
 reg_prep( "prepare_dist pbs",
     'prepare_pbs_dbm_solver_self_contained_package.pl' );
+reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
+reg_test(
+    "No int128",
+    { cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ] }
+);
 reg_lt_test( "-l n2t with --disable-patsolve", '--disable-patsolve', );
 reg_test(
     "build_only: maximum speed preset",

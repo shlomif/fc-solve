@@ -271,12 +271,17 @@ ADD_CUSTOM_TARGET(
     DEPENDS ${_gen_c_files}
 )
 
+SET (FREECELL_SOLVER_LIB_HEADERS
+    is_king.h
+    "${BIN_CL_INC_H}"
+    "${presets_gen_output}"
+)
+
 SET (FREECELL_SOLVER_LIB_MODULES
     check_and_add_state.c
     freecell.c
     instance.c
     is_king.c
-    is_king.h
     is_parent.c
     lib.c
     meta_alloc.c
@@ -289,8 +294,6 @@ SET (FREECELL_SOLVER_LIB_MODULES
     simpsim.c
     state.c
     "${MOVE_C}"
-    "${BIN_CL_INC_H}"
-    "${presets_gen_output}"
 )
 MACRO(add_lib_mods)
     LIST (APPEND FREECELL_SOLVER_LIB_MODULES ${ARGV})
@@ -474,14 +477,14 @@ SET (FREECELL_SOLVER_LIBS)
 
 ADD_LIBRARY (freecell-solver
     SHARED
-    ${FREECELL_SOLVER_LIB_MODULES}
+    ${FREECELL_SOLVER_LIB_MODULES} ${FREECELL_SOLVER_LIB_HEADERS}
     )
 
 LIST (APPEND FREECELL_SOLVER_LIBS "freecell-solver")
 IF (BUILD_STATIC_LIBRARY)
     ADD_LIBRARY (freecell-solver-static
         STATIC
-        ${FREECELL_SOLVER_LIB_MODULES}
+        ${FREECELL_SOLVER_LIB_MODULES} ${FREECELL_SOLVER_LIB_HEADERS}
     )
     LIST (APPEND FREECELL_SOLVER_LIBS "freecell-solver-static")
 
@@ -1081,12 +1084,12 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
     # The delta-states testing library
     ADD_LIBRARY(fcs_delta_states_test
         SHARED
-        card.c state.c delta_states.c
+        card.c state.c delta_states.c ${FREECELL_SOLVER_LIB_HEADERS}
     )
     # The DeBondt delta-states testing library
     ADD_LIBRARY(fcs_debondt_delta_states_test
         SHARED
-        card.c state.c delta_states_debondt.c
+        card.c state.c delta_states_debondt.c ${FREECELL_SOLVER_LIB_HEADERS}
     )
     TARGET_LINK_LIBRARIES(fcs_debondt_delta_states_test ${LIBGMP_LIB})
     ADD_LIBRARY(fcs_dbm_calc_derived_test

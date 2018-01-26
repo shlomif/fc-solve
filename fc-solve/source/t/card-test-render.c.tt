@@ -3,7 +3,7 @@
 #include <tap.h>
 #include <string.h>
 
-#include "../card.c"
+#include "card.c"
 
 static int main_tests(void)
 {

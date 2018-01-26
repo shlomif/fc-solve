@@ -13,13 +13,13 @@
 
 #include <tap.h>
 
-#include "../card.c"
-#include "../state.c"
-#include "../delta_states_impl.h"
-#include "../delta_states.h"
-#include "../indirect_buffer.h"
-#include "../trim_trailing_whitespace.h"
-#include "../render_state.h"
+#include "card.c"
+#include "state.c"
+#include "delta_states_impl.h"
+#include "delta_states.h"
+#include "indirect_buffer.h"
+#include "trim_trailing_whitespace.h"
+#include "render_state.h"
 #ifdef FCS_FREECELL_ONLY
 #include "is_parent.c"
 #endif

@@ -21,7 +21,7 @@
 #define FCS_COMPILE_DEBUG_FUNCTIONS
 #endif
 
-#include "../dbm_kaztree_compare.h"
+#include "dbm_kaztree_compare.h"
 #include "bool.h"
 
 static int main_tests(void)

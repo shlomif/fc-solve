@@ -21,14 +21,14 @@
 #define FCS_COMPILE_DEBUG_FUNCTIONS
 #endif
 
-#include "../card.c"
-#include "../state.c"
+#include "card.c"
+#include "state.c"
 #include "is_parent.c"
-#include "../delta_states_debondt_impl.h"
-#include "../delta_states.h"
-#include "../indirect_buffer.h"
-#include "../trim_trailing_whitespace.h"
-#include "../render_state.h"
+#include "delta_states_debondt_impl.h"
+#include "delta_states.h"
+#include "indirect_buffer.h"
+#include "trim_trailing_whitespace.h"
+#include "render_state.h"
 
 static int debondt_test_encode_and_decode(fc_solve_debondt_delta_stater_t * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
 {
