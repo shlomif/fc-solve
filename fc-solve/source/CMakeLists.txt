@@ -464,7 +464,7 @@ IF (FCS_MAX_NUM_SCANS_BUCKETS)
     ADD_DEFINITIONS("-DFCS_MAX_NUM_SCANS_BUCKETS=${FCS_MAX_NUM_SCANS_BUCKETS}")
 ENDIF ()
 
-# So it can find the includes when building libavl/rb.h.
+# So it can find the includes when building fcs-libavl/rb.h.
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # So it can find config.h
@@ -602,7 +602,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
     SET (DBM_DEFINITIONS )
 
     IF (FCS_DBM_TREE_BACKEND STREQUAL "libavl2")
-        SET (BIN_TREE_MODULE "libavl/rb.c")
+        SET (BIN_TREE_MODULE "fcs-libavl/rb.c")
         ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1")
         LIST (APPEND DBM_DEFINITIONS "FCS_LIBAVL_STORE_WHOLE_KEYS=1"
             "FCS_DBM_RECORD_POINTER_REPR=1")
@@ -640,7 +640,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         gen_error_exe( pseudo_dfs_fc_solver )
     ENDIF ()
 
-    INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/libavl")
+    INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/fcs-libavl")
 
     FOREACH (TGT ${dbm_solvers})
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB})

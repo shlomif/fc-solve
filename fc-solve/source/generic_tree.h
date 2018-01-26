@@ -7,11 +7,8 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * generic_tree.h - provide a unified interface to either kaz_tree.h
- * or libavl/rb.h .
- */
-
+// generic_tree.h - provide a unified interface to either kaz_tree.h
+// or fcs-libavl/rb.h .
 #pragma once
 
 #include "config.h"
