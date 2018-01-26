@@ -1,7 +1,5 @@
 os: linux
 dist: trusty
-# See https://github.com/travis-ci/travis-ci/issues/8378 ; remove later
-group: deprecated-2017Q3
 python:
     - '3.6'
 before_install:
@@ -13,10 +11,6 @@ install:
     - sudo -H `which python3` -m pip install cffi
     - sudo -H `which python3` -m pip install random2
     - sudo -H `which python3` -m pip install Zenfilter
-      # Temporary workaround for a problem in running the Inline::C test
-      # suite with latest EU::MM - install Inline::C with no tests.
-      #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
-    - sudo cpanm --notest Inline::C
       # Speed up installing the deps.
     - sudo cpanm --notest Task::FreecellSolver::Testing
     - sudo cpanm --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
