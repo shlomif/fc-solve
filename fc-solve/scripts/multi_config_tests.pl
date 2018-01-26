@@ -260,10 +260,10 @@ sub run_tests
     }
     elsif ($website_args)
     {
-        my $DIR = "$cwd/../site/wml";
+        my $DIR = "$CWD/../site/wml";
         my $PATH_PREFIX =
             $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
-            ? "$cwd/../scripts/dockerized-emscripten/:"
+            ? "$CWD/../scripts/dockerized-emscripten/:"
             : "";
         local $ENV{PATH} = $PATH_PREFIX . $ENV{PATH};
         chdir($DIR);
@@ -314,7 +314,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
             run_cmd( "$blurb_base : test", { cmd => [ 'make', 'test', ] } );
         }
 
-        chdir($cwd);
+        chdir($CWD);
     }
     else
     {
