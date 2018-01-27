@@ -21,7 +21,7 @@ install:
     - sudo -H `which python3` -m pip install random2
     - sudo -H `which python3` -m pip install Zenfilter
       # For G-S-V dzil
-    - sudo cpanm --quiet --notest Dist::Zilla Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
+    - sudo cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website
     - sudo cpanm --quiet --notest File::Find::Object::Rule HTML::Latemp::GenMakeHelpers IO::All
     - sudo cpanm --quiet --notest Task::FreecellSolver::Testing
