@@ -20,8 +20,8 @@ install:
     - sudo -H `which python3` -m pip install cookiecutter
     - sudo -H `which python3` -m pip install random2
     - sudo -H `which python3` -m pip install Zenfilter
-      # Speed up installing the deps.
-    - sudo cpanm --quiet --notest Dist::Zilla Pod::Weaver::Section::Support
+      # For G-S-V dzil
+    - sudo cpanm --quiet --notest Dist::Zilla Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website
     - sudo cpanm --quiet --notest File::Find::Object::Rule HTML::Latemp::GenMakeHelpers IO::All
     - sudo cpanm --quiet --notest Task::FreecellSolver::Testing
