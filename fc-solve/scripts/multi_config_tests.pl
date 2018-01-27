@@ -312,7 +312,20 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
         );
         if ( not $args->{do_not_test} )
         {
-            run_cmd( "$blurb_base : test", { cmd => [ 'make', 'test', ] } );
+            run_cmd(
+                "$blurb_base : test",
+                {
+                    cmd => [
+                        $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
+                        ? ( 'make', 'test' )
+                        : (
+                            'bash',
+                            '-c',
+". ~/bin/Dev-Path-Configs-Source-Me.bash ; make test 2>&1 | tail -300"
+                        )
+                    ]
+                }
+            );
         }
 
         chdir($CWD);
