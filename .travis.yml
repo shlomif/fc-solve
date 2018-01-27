@@ -23,7 +23,7 @@ install:
       # For G-S-V dzil
     - sudo cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website
-    - sudo cpanm --quiet --notest Carp::Always File::Find::Object::Rule HTML::Latemp::GenMakeHelpers IO::All
+    - sudo cpanm --quiet --notest Carp::Always File::Find::Object::Rule File::Which HTML::Latemp::GenMakeHelpers HTML::Spelling::Site HTML::TokeParser::Simple IO::All List::MoreUtils Moo MooX MooX::late Path::Tiny Perl::Tidu Template Test::Code::TidyAll Test::HTML::Recursive::DeprecatedTags Test::HTML::Tidy::Recursive Test::HTML::Tidy::Recursive::Strict XML::Feed
     - sudo cpanm --quiet --notest Task::FreecellSolver::Testing
     - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | sudo cpanm --notest)
     - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
