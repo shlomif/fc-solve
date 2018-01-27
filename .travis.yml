@@ -6,12 +6,7 @@ before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -y asciidoc cmake cmake-data cpanminus gperf libgmp-dev libgoogle-perftools-dev libperl-dev mercurial ninja-build python3 python3-setuptools perl python3-pip silversearcher-ag valgrind wml
     - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
-      # Temporary workaround for a problem in running the Inline::C test
-      # suite with latest EU::MM - install Inline::C with no tests.
-      #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
-    - sudo cpanm --notest Alien::Tidyp Inline::C
       # Speed up installing the deps.
-    - sudo cpanm --notest File::ReadBackwards Pod::Xhtml Task::FreecellSolver::Testing Task::Sites::ShlomiFish Text::WrapAsUtf8
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
     - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/wml-extended-apis && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
     - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/wml-affiliations && cd wml-affiliations/wml && bash Install.bash )
@@ -26,11 +21,10 @@ install:
     - sudo -H `which python3` -m pip install random2
     - sudo -H `which python3` -m pip install Zenfilter
       # Speed up installing the deps.
-    - sudo cpanm --notest Task::FreecellSolver::Testing
-    - sudo cpanm --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
+    - sudo cpanm --quiet --notest Dist::Zilla Pod::Weaver::Section::Support
       # For the website
-    - sudo cpanm --notest File::Find::Object::Rule HTML::Latemp::GenMakeHelpers IO::All
-    - sudo cpanm --notest Task::FreecellSolver::Testing Task::Sites::ShlomiFish
+    - sudo cpanm --quiet --notest File::Find::Object::Rule HTML::Latemp::GenMakeHelpers IO::All
+    - sudo cpanm --quiet --notest Task::FreecellSolver::Testing
     - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | sudo cpanm --notest)
     - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
     - tar -xvf libtap-1.12.0.tar.bz2
