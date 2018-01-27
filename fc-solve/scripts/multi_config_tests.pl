@@ -305,7 +305,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                     : (
                         'bash',
                         '-c',
-". ~/bin/Dev-Path-Configs-Source-Me.bash ; make 2>&1 | tail -300"
+". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; make 2>&1 | tail -300"
                     )
                 ]
             }
@@ -321,7 +321,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                         : (
                             'bash',
                             '-c',
-". ~/bin/Dev-Path-Configs-Source-Me.bash ; make test 2>&1 | tail -300"
+". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; make test 2>&1 | tail -300"
                         )
                     ]
                 }
