@@ -412,7 +412,11 @@ sub reg_prep
 }
 
 reg_tatzer_test( "Default", () );
-reg_test( 'Website #1', { website_args => [] } );
+
+sub disabling_website_build_for_now
+{
+    reg_test( 'Website #1', { website_args => [] } );
+}
 
 reg_test(
     "No int128",
