@@ -1,5 +1,5 @@
-DEBUG = 0
-PROFILE = 0
+DEBUG = 1
+PROFILE = 2
 WITH_TRACES = 0
 FREECELL_ONLY = 1
 DISABLE_PATSOLVE = 1
@@ -19,7 +19,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -I$(PWD) -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve
+CFLAGS := -I$(PWD) -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve -D_GNU_SOURCE
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
@@ -41,7 +41,7 @@ STD_FLAG := -std=gnu11
 ifeq ($(COMPILER),gcc)
 	CC = gcc
 	GCC_COMPAT := 1
-	CFLAGS += $(STD_FLAG) -Werror=implicit-function-declaration
+	CFLAGS += $(STD_FLAG) -Werror=implicit-function-declaration -fPIC
 else ifeq ($(COMPILER),clang)
 	CC = clang
 	GCC_COMPAT := 1
