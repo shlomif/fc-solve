@@ -604,12 +604,12 @@ static inline void col_seqs_iter__calc_end(col_seqs_iter_t *const iter)
 #ifndef FCS_FREECELL_ONLY
     const_SLOT(sequences_are_built_by, iter);
 #endif
+    const_SLOT(col, iter);
     for ((*iter).seq_end = (*iter).c; (*iter).seq_end < (*iter).col_len_minus_1;
          ++((*iter).seq_end))
     {
-        if (!fcs_is_parent_card(
-                fcs_col_get_card((*iter).col, (*iter).seq_end + 1),
-                fcs_col_get_card((*iter).col, (*iter).seq_end)))
+        if (!fcs_is_parent_card(fcs_col_get_card(col, (*iter).seq_end + 1),
+                fcs_col_get_card(col, (*iter).seq_end)))
         {
             break;
         }
