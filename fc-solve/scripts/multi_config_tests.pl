@@ -510,10 +510,10 @@ while ( my ( $idx, $run ) = each @tests )
     run_tests( $TEST_BASE_IDX + $idx, @$run );
 }
 
-print colored( "All tests successful.",
-    ( $ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green' ) ),
-    "\n";
-
+my $COL  = $ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'};
+my $TEXT = "All tests successful.";
+print $COL ? colored( $TEXT, $COL ) : $TEXT;
+print "\n";
 exit(0);
 
 __END__
