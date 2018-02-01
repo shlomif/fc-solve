@@ -85,8 +85,10 @@ CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-s
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
 ifeq ($(SKIP_EMCC),1)
+	LIBFREECELL_SOLVER_JS__NODE__TARGETS =
 	LIBFREECELL_SOLVER_JS__TARGETS =
 else
+	LIBFREECELL_SOLVER_JS__NODE__TARGETS = lib/for-node/js/libfreecell-solver.min.js
 	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM)
 endif
 
@@ -197,7 +199,7 @@ TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
 TYPESCRIPT_COMMON_DEFS_FILES = src/js/typings/index.d.ts
 
-JS_DEST_FILES__NODE = lib/for-node/js/libfreecell-solver.min.js lib/for-node/js/web-fc-solve.js lib/for-node/js/web-fc-solve--expand-moves.js lib/for-node/js/web-fc-solve-tests.js
+JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/web-fc-solve.js lib/for-node/js/web-fc-solve--expand-moves.js lib/for-node/js/web-fc-solve-tests.js
 
 all: $(JS_DEST_FILES__NODE)
 
@@ -264,10 +266,10 @@ upload_local: all
 	$(RSYNC) $(D)/ /var/www/html/shlomif/fc-solve-temp
 
 test: all
-	prove Tests/*.t
+	SKIP_EMCC="$(SKIP_EMCC)" prove Tests/*.t
 
 runtest: all
-	runprove Tests/*.t
+	SKIP_EMCC="$(SKIP_EMCC)" runprove Tests/*.t
 
 clean:
 	rm -f lib/fc-solve-for-javascript/*.bc lib/fc-solve-for-javascript/*.js $(TYPESCRIPT_DEST_FILES__NODE) $(TYPESCRIPT_DEST_FILES) $(TS_CHART_DEST)
