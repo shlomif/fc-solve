@@ -31,6 +31,8 @@ install:
     - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )
     - ( a="$(pwd)"; mkdir B2 && cd B2 && hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules && cd shlomif-cmake-modules/shlomif-cmake-modules && cp -f "$(pwd)"/Shlomif_Common.cmake "$a"/fc-solve/source/cmake/ )
     - ( cd fc-solve/site/wml && npm install babel-cli babel-preset-es2015 babel-preset-stage-2 uglify-es )
+    # For the site
+    - gem install sass compass compass-blueprint
 perl:
     - "5.24"
 python:
