@@ -295,37 +295,28 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
             }
             exit(-1);
         }
-        #
-        run_cmd(
-            "$blurb_base : make",
-            {
-                cmd => [
-                    $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
-                    ? ('make')
-                    : (
-                        'bash',
-                        '-c',
-". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; make 2>&1 | tail -300"
-                    )
-                ]
-            }
-        );
-        if ( not $args->{do_not_test} )
-        {
-            run_cmd(
-                "$blurb_base : test",
+        my $run = sub {
+            my ($ARGS) = @_;
+            unshift @$ARGS, "SKIP_EMCC=1";
+            return run_cmd(
+                "$blurb_base : make @$ARGS",
                 {
                     cmd => [
                         $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
-                        ? ( 'make', 'test' )
+                        ? ( 'make', @$ARGS )
                         : (
                             'bash',
                             '-c',
-". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; make test 2>&1 | tail -300"
+". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; make @$ARGS 2>&1 | tail -300"
                         )
                     ]
                 }
             );
+        };
+        $run->( [] );
+        if ( not $args->{do_not_test} )
+        {
+            $run->( ['test'] );
         }
 
         chdir($CWD);
@@ -417,6 +408,7 @@ sub disabling_website_build_for_now
 {
     reg_test( 'Website #1', { website_args => [] } );
 }
+disabling_website_build_for_now();
 
 reg_test(
     "No int128",

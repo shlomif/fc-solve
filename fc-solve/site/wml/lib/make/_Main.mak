@@ -13,6 +13,8 @@ DEVEL_VER_USE_CACHE = 1
 # Toggle to generate production code with compressed and merged JS code/etc.
 PROD = 0
 
+SKIP_EMCC = 0
+
 RSYNC = rsync --progress --verbose --rsh=ssh -a --inplace
 
 D = ./dest
@@ -82,9 +84,15 @@ CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-s
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
-dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
+ifeq ($(SKIP_EMCC),1)
+	LIBFREECELL_SOLVER_JS__TARGETS =
+else
+	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM)
+endif
 
-dummy: $(DEST_LIBFREECELL_SOLVER_JS_MEM)
+dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
+
+dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
