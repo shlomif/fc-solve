@@ -265,7 +265,8 @@ sub run_tests
             $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
             ? "$CWD/../scripts/dockerized-emscripten/:"
             : "";
-        local $ENV{PATH} = $PATH_PREFIX . $ENV{PATH};
+        local $ENV{PATH} =
+            $PATH_PREFIX . $ENV{PATH} . ":$DIR/node_modules/.bin/";
         chdir($DIR);
         local $ENV{PWD} = $DIR;
         run_cmd(
