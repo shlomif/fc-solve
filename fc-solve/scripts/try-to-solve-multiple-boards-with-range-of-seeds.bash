@@ -14,7 +14,7 @@ for d in $deals ; do
     fi
 done
 
-seed=42
+seed=55
 while test -n "$deals" ; do
     echo "Trying seed = $seed"
     export SEED="$seed"
