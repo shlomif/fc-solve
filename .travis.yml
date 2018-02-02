@@ -12,10 +12,6 @@ before_install:
     - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/wml-affiliations && cd wml-affiliations/wml && bash Install.bash )
     - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/latemp && cd latemp/support-headers && perl install.pl )
 install:
-    - ls /home/travis/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source/main.c || true
-    - ls /home/travis/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source/*.[ch] || true
-    - which python3
-    - python3 --version
     - sudo -H `which python3` -m pip install cffi cookiecutter random2 Zenfilter
       # For G-S-V dzil
     - sudo cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
