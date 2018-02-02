@@ -267,60 +267,63 @@ sub run_tests
             : "";
         local $ENV{PATH} =
             $PATH_PREFIX . $ENV{PATH} . ":$DIR/node_modules/.bin/";
-        chdir($DIR);
-        local $ENV{PWD} = $DIR;
-        run_cmd(
-            "$blurb_base : ./gen-helpers",
-            { cmd => [ $^X, 'gen-helpers.pl' ] }
-        );
+        _chdir_run(
+            $DIR,
+            sub {
+                local $ENV{PWD} = $DIR;
+                run_cmd(
+                    "$blurb_base : ./gen-helpers",
+                    { cmd => [ $^X, 'gen-helpers.pl' ] }
+                );
 
-        # (
-        #                 'docker', 'exec', '-it', 'emscripten', 'bash', '-c',
-        #                 qq#cd "$DIR" && make#,
-        #                 )
-        # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
-        if ( $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER} )
-        {
-            foreach my $component (qw# travis emscripten #)
-            {
-                my $P =
-qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source#;
-                while ( my $x = $P =~ m#(/)#g )
+          # (
+          #                 'docker', 'exec', '-it', 'emscripten', 'bash', '-c',
+          #                 qq#cd "$DIR" && make#,
+          #                 )
+          # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
+                if ( $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER} )
                 {
-                    my $path = substr( $P, 0, pos($P) );
-                    print "<$path>\n",
-                        scalar(
-                        `docker exec -it emscripten bash -c 'echo $path/*'`),
-                        "\n";
+                    foreach my $component (qw# travis emscripten #)
+                    {
+                        my $P =
+qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source#;
+                        while ( my $x = $P =~ m#(/)#g )
+                        {
+                            my $path = substr( $P, 0, pos($P) );
+                            print "<$path>\n",
+                                scalar(
+`docker exec -it emscripten bash -c 'echo $path/*'`
+                                ),
+                                "\n";
+                        }
+                    }
+                    exit(-1);
+                }
+                my $run = sub {
+                    my ($args) = @_;
+                    unshift @$args, 'make', 'SKIP_EMCC=1';
+                    return run_cmd(
+                        "$blurb_base : @$args",
+                        {
+                            cmd => [
+                                $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
+                                ? (@$args)
+                                : (
+                                    'bash',
+                                    '-c',
+". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; @$args 2>&1 | tail -300"
+                                )
+                            ]
+                        }
+                    );
+                };
+                $run->( [] );
+                if ( not $args->{do_not_test} )
+                {
+                    $run->( ['test'] );
                 }
             }
-            exit(-1);
-        }
-        my $run = sub {
-            my ($ARGS) = @_;
-            unshift @$ARGS, "SKIP_EMCC=1";
-            return run_cmd(
-                "$blurb_base : make @$ARGS",
-                {
-                    cmd => [
-                        $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
-                        ? ( 'make', @$ARGS )
-                        : (
-                            'bash',
-                            '-c',
-". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; make @$ARGS 2>&1 | tail -300"
-                        )
-                    ]
-                }
-            );
-        };
-        $run->( [] );
-        if ( not $args->{do_not_test} )
-        {
-            $run->( ['test'] );
-        }
-
-        chdir($CWD);
+        );
     }
     else
     {
@@ -486,20 +489,6 @@ _chdir_run(
 
 while ( my ( $idx, $run ) = each @tests )
 {
-    if ( $idx == 1 )
-    {
-        _chdir_run(
-            '../site/wml',
-            sub {
-                run_cmd(
-                    "Website gen-helpers",
-                    {
-                        cmd => [ $^X, 'gen-helpers.pl' ],
-                    }
-                );
-            },
-        );
-    }
     run_tests( $TEST_BASE_IDX + $idx, @$run );
 }
 
