@@ -3,20 +3,20 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use lib './lib';
 
+use Test::More;
+
+if ( $ENV{SKIP_SPELL_CHECK} )
 {
-    my $SCRIPT = './bin/spell-checker-iface';
-    my $output = `$SCRIPT 2>&1`;
-    chomp($output);
-
-    my $status = $?;
-
-    # TEST
-    is( $output, '', "No spelling errors." );
-
-    if ($status)
-    {
-        die "Failed to execute $SCRIPT!";
-    }
+    plan skip_all => 'Skipping spell check due to environment variable';
 }
+else
+{
+    plan tests => 1;
+}
+
+use Shlomif::Spelling::Iface;
+
+# TEST
+Shlomif::Spelling::Iface->new->test_spelling("No spelling errors.");
