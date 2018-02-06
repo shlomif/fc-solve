@@ -413,7 +413,7 @@ def createCards(num_decks, print_ts):
         for suit in range(4):
             for rank in range(13):
                 cards.append(Card(id, rank+1, suit, print_ts))
-                id = id + 1
+                id += 1
     return cards
 
 
@@ -543,7 +543,7 @@ class Game:
         if self.no_more_cards():
             raise StopIteration
         c = self.cards[self.card_idx]
-        self.card_idx = self.card_idx + 1
+        self.card_idx += 1
         return c
 
     def new_cards(self, cards):
@@ -576,7 +576,7 @@ class Game:
 
         for card in game:
             if card.is_king():
-                col_idx = col_idx + 1
+                col_idx += 1
             if not ((game.game_id == "die_schlange") and (card.rank == 1)):
                 game.add(col_idx, card)
 
@@ -612,14 +612,14 @@ class Game:
         for c in cards:
             if c.is_king():
                 kings.append(i)
-            i = i + 1
+            i += 1
         for i in kings:
             j = i % n
             while j < i:
                 if not cards[j].is_king():
                     cards[i], cards[j] = cards[j], cards[i]
                     break
-                j = j + n
+                j += n
 
         game.new_cards(cards)
 
@@ -659,7 +659,7 @@ class Game:
         while num_cards >= 3:
             for s in range(num_cards):
                 game.add(s, next(game))
-            num_cards = num_cards - 1
+            num_cards -= 1
 
         for s in range(10):
             game.add(s, next(game))
@@ -682,17 +682,15 @@ class Game:
                 sitems.append((sort_order, i, c))
                 if len(sitems) >= ncards:
                     break
-            i = i - 1
+            i -= 1
         sitems.sort()
         sitems.reverse()
-        scards = [item[2] for item in sitems]
-        return cards, scards
+        return cards, [item[2] for item in sitems]
 
     def _shuffleHookMoveToBottom(self, cards, func, ncards=999999):
         # move cards to bottom of the Talon (i.e. last cards to be dealt)
         cards, scards = self._shuffleHookMoveSorter(cards, func, ncards)
-        ret = scards + cards
-        return ret
+        return scards + cards
 
     def _shuffleHookMoveToTop(self, cards, func, ncards=999999):
         # move cards to top of the Talon (i.e. last cards to be dealt)
@@ -767,20 +765,21 @@ class Game:
 
 
 def shlomif_main(args):
-    print_ts = 0
+    print_ts = False
     which_deals = PysolRandom.DEALS_PYSOL
     while args[1][0] == '-':
-        if (args[1] == "-t"):
-            print_ts = 1
+        a = args[1]
+        if a == "-t":
+            print_ts = True
             args.pop(0)
-        elif ((args[1] == "--pysolfc") or (args[1] == "-F")):
+        elif ((a == "--pysolfc") or (a == "-F")):
             which_deals = PysolRandom.DEALS_PYSOLFC
             args.pop(0)
-        elif ((args[1] == "--ms") or (args[1] == "-M")):
+        elif ((a == "--ms") or (a == "-M")):
             which_deals = PysolRandom.DEALS_MS
             args.pop(0)
         else:
-            raise ValueError("Unknown flag " + args[1] + "!")
+            raise ValueError("Unknown flag " + a + "!")
 
     game_num = int(args[1])
     if (len(args) >= 3):
