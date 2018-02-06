@@ -405,10 +405,7 @@ class Game:
                                 "die_schlange", "gypsy")
 
     def get_num_decks(self):
-        if self.is_two_decks():
-            return 2
-        else:
-            return 1
+        return 2 if self.is_two_decks() else 1
 
     def deal(self):
         orig_cards = createCards(self.get_num_decks(), self.print_ts)
@@ -440,15 +437,14 @@ class Game:
         self.card_idx = 0
 
     def add(self, idx, card):
-        return self.board.add(idx, card)
+        self.board.add(idx, card)
 
     def add_freecell(self, card):
-        return self.board.add_freecell(card)
+        self.board.add_freecell(card)
 
     def cyclical_deal(game, num_cards, num_cols, flipped=False):
         for i in range(num_cards):
             game.add(i % num_cols, next(game).flip(flipped=flipped))
-        return i
 
     def add_all_to_talon(game):
         for card in game:
@@ -485,11 +481,8 @@ class Game:
 
     def seahaven(game):
         game.board = Board(10, with_freecells=True)
-
         game.add_freecell(empty_card())
-
         game.cyclical_deal(50, 10)
-
         for card in game:
             game.add_freecell(card)
 
@@ -511,18 +504,14 @@ class Game:
                 j += n
 
         game.new_cards(cards)
-
         game.board = Board(13)
-
         game.cyclical_deal(52, 13)
 
     def gypsy(game):
         num_cols = 8
         game.board = Board(num_cols, with_talon=True)
-
         game.cyclical_deal(num_cols*2, num_cols, flipped=True)
         game.cyclical_deal(num_cols, num_cols, flipped=False)
-
         game.add_all_to_talon()
 
     def klondike(game):
@@ -534,30 +523,23 @@ class Game:
                 game.add(s, next(game).flip())
 
         game.cyclical_deal(num_cols, num_cols)
-
         game.add_all_to_talon()
-
         if not (game.game_id == "small_harp"):
             game.board.reverse_cols()
 
     def simple_simon(game):
         game.board = Board(10)
-
         num_cards = 9
-
         while num_cards >= 3:
             for s in range(num_cards):
                 game.add(s, next(game))
             num_cards -= 1
-
         for s in range(10):
             game.add(s, next(game))
 
     def fan(game):
         game.board = Board(18)
-
         game.cyclical_deal(52-1, 17)
-
         game.add(17, next(game))
 
     def _shuffleHookMoveSorter(self, cards, func, ncards):
