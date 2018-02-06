@@ -249,11 +249,11 @@ class Board:
         self.with_talon = with_talon
         self.with_foundations = with_foundations
         self.columns = Columns(num_columns)
-        if (self.with_freecells):
+        if self.with_freecells:
             self.freecells = []
-        if (self.with_talon):
+        if self.with_talon:
             self.talon = []
-        if (self.with_foundations):
+        if self.with_foundations:
             self.foundations = [empty_card() for s in range(4)]
 
     def reverse_cols(self):
@@ -278,11 +278,11 @@ class Board:
             print("Foundations:" + ("".join([" "+s for s in cells])))
 
     def output(self):
-        if (self.with_talon):
+        if self.with_talon:
             self.print_talon()
-        if (self.with_foundations):
+        if self.with_foundations:
             self.print_foundations()
-        if (self.with_freecells):
+        if self.with_freecells:
             self.print_freecells()
         self.columns.output()
 
@@ -301,12 +301,11 @@ class Board:
         if not self.with_foundations:
             raise AttributeError("Layout does not have foundations!")
 
-        if ((self.foundations[card.suit].rank+1) == card.rank):
+        if self.foundations[card.suit].rank+1 == card.rank:
             self.foundations[card.suit] = card
             return True
         else:
             return False
-        self.talon.append(card)
 
 
 def empty_card():
@@ -334,7 +333,7 @@ def shuffle(orig_cards, game_num, which_deals):
     ms = ((game_num <= 32000) or which_deals == PysolRandom.DEALS_MS)
     if ms:
         fcards = []
-        if (len(orig_cards) == 52):
+        if len(orig_cards) == 52:
             for i in range(13):
                 for j in (0, 39, 26, 13):
                     fcards.append(orig_cards[i + j])
@@ -459,7 +458,7 @@ class Game:
     # These are the games variants:
     # Each one is a callback.
     def der_katz(game):
-        if (game.game_id == "die_schlange"):
+        if game.game_id == "die_schlange":
             print("Foundations: H-A S-A D-A C-A H-A S-A D-A C-A")
 
         game.board = Board(9)
@@ -637,7 +636,7 @@ class Game:
             if game.no_more_cards():
                 break
 
-        if (game.game_id == "streets_and_alleys"):
+        if game.game_id == "streets_and_alleys":
             game.cyclical_deal(4, 4)
 
     def yukon(game):
@@ -663,17 +662,17 @@ def shlomif_main(args):
         if a == "-t":
             print_ts = True
             args.pop(0)
-        elif ((a == "--pysolfc") or (a == "-F")):
+        elif (a == "--pysolfc") or (a == "-F"):
             which_deals = PysolRandom.DEALS_PYSOLFC
             args.pop(0)
-        elif ((a == "--ms") or (a == "-M")):
+        elif (a == "--ms") or (a == "-M"):
             which_deals = PysolRandom.DEALS_MS
             args.pop(0)
         else:
             raise ValueError("Unknown flag " + a + "!")
 
     game_num = int(args[1])
-    if (len(args) >= 3):
+    if len(args) >= 3:
         which_game = args[2]
     else:
         which_game = "freecell"
