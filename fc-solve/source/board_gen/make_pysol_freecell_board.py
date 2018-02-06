@@ -355,11 +355,8 @@ def shuffle(orig_cards, game_num, which_deals):
                     fcards.append(orig_cards[i + j])
             orig_cards = fcards
     else:
-        r = 0
-        if (which_deals == PysolRandom.DEALS_PYSOLFC):
-            r = MTRandom()
-        else:
-            r = LCRandom64()
+        r = MTRandom() if which_deals == PysolRandom.DEALS_PYSOLFC else \
+            LCRandom64()
         r.setSeed(game_num)
     r.shuffle(orig_cards)
 
