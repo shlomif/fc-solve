@@ -65,12 +65,6 @@ import random2
 class PysolRandom:
     MAX_SEED = 0
 
-    ORIGIN_UNKNOWN = 0
-    ORIGIN_RANDOM = 1
-    ORIGIN_PREVIEW = 2         # random from preview
-    ORIGIN_SELECTED = 3         # manually entered
-    ORIGIN_NEXT_GAME = 4        # "Next game number"
-
     DEALS_PYSOL = 0
     DEALS_PYSOLFC = 1
     DEALS_MS = 2
@@ -79,7 +73,6 @@ class PysolRandom:
         if seed is None:
             seed = self._getRandomSeed()
         self.initial_seed = self.setSeed(seed)
-        self.origin = self.ORIGIN_UNKNOWN
 
     def __str__(self):
         return self.str(self.initial_seed)
@@ -218,12 +211,6 @@ class LCRandom31(PysolRandom):
 class BasicRandom:
     MAX_SEED = 100000000000000000000  # 20 digits
 
-    ORIGIN_UNKNOWN = 0
-    ORIGIN_RANDOM = 1
-    ORIGIN_PREVIEW = 2         # random from preview
-    ORIGIN_SELECTED = 3         # manually entered
-    ORIGIN_NEXT_GAME = 4        # "Next game number"
-
     def __str__(self):
         return self.str(self.initial_seed)
 
@@ -255,7 +242,6 @@ class MTRandom(BasicRandom, random2.Random):
         random2.Random.__init__(self, seed)
         self.initial_seed = seed
         self.initial_state = self.getstate()
-        self.origin = self.ORIGIN_UNKNOWN
 
     def reset(self):
         self.setstate(self.initial_state)
