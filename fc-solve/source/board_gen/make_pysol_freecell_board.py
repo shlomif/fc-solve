@@ -126,11 +126,6 @@ class PysolRandom:
 class LCRandom64(PysolRandom):
     MAX_SEED = 0xffffffffffffffff  # 64 bits
 
-    def str(self, seed):
-        s = repr(int(seed))[:-1]
-        s = "0"*(20-len(s)) + s
-        return s
-
     def random(self):
         self.seed = (self.seed*6364136223846793005 + 1) & self.MAX_SEED
         return ((self.seed >> 21) & 0x7fffffff) / 2147483648.0
@@ -143,9 +138,6 @@ class LCRandom64(PysolRandom):
 
 class LCRandom31(PysolRandom):
     MAX_SEED = ((1 << (32+2))-1)         # 34 bits
-
-    def str(self, seed):
-        return "%05d" % int(seed)
 
     def _convertSeed(self, seed):
         seed = int(seed)
@@ -177,9 +169,6 @@ class LCRandom31(PysolRandom):
 
 class BasicRandom:
     MAX_SEED = 100000000000000000000  # 20 digits
-
-    def str(self, seed):
-        return '%020d' % seed
 
     def increaseSeed(self, seed):
         if seed < self.MAX_SEED:
