@@ -52,7 +52,6 @@
 
 # imports
 import sys
-import time
 import random2
 
 # /***********************************************************************
@@ -69,20 +68,6 @@ class PysolRandom:
     DEALS_PYSOLFC = 1
     DEALS_MS = 2
 
-    def __init__(self, seed=None):
-        if seed is None:
-            seed = self._getRandomSeed()
-        self.initial_seed = self.setSeed(seed)
-
-    def __str__(self):
-        return self.str(self.initial_seed)
-
-    def reset(self):
-        self.seed = self.initial_seed
-
-    def getSeed(self):
-        return self.seed
-
     def setSeed(self, seed):
         seed = self._convertSeed(seed)
         if type(seed) is not int:
@@ -91,13 +76,6 @@ class PysolRandom:
             raise ValueError("seed out of range")
         self.seed = seed
         return seed
-
-    #
-    # implementation
-    #
-
-    def choice(self, seq):
-        return seq[int(self.random() * len(seq))]
 
     # Get a random integer in the range [a, b] including both end points.
     def randint(self, a, b):
@@ -122,11 +100,6 @@ class PysolRandom:
         if seed < self.MAX_SEED:
             return seed + 1
         return 0
-
-    def _getRandomSeed(self):
-        t = int(time.time() * 256.0)
-        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1)
-        return t
 
     #
     # shuffle
@@ -205,35 +178,20 @@ class LCRandom31(PysolRandom):
 class BasicRandom:
     MAX_SEED = 100000000000000000000  # 20 digits
 
-    def __str__(self):
-        return self.str(self.initial_seed)
-
     def str(self, seed):
         return '%020d' % seed
-
-    def reset(self):
-        raise ValueError("Subclass responsibility")
 
     def increaseSeed(self, seed):
         if seed < self.MAX_SEED:
             return seed + 1
         return 0
 
-    def _getRandomSeed(self):
-        t = int(time.time() * 256.0)
-        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1)
-        return t
-
 
 class MTRandom(BasicRandom, random2.Random):
 
     def setSeed(self, seed):
         random2.Random.__init__(self, seed)
-        self.initial_seed = seed
         self.initial_state = self.getstate()
-
-    def reset(self):
-        self.setstate(self.initial_state)
 
 
 class Card:
