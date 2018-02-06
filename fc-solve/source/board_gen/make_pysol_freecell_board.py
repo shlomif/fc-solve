@@ -204,9 +204,7 @@ class Card:
     def to_s(self):
         if self.empty:
             return "-"
-        ret = ""
-        ret = ret + self.rank_s()
-        ret = ret + self.suit_s()
+        ret = self.rank_s() + self.suit_s()
         if self.flipped:
             ret = "<" + ret + ">"
 
