@@ -345,21 +345,18 @@ def flip_card(card_str, flip):
 
 
 def shuffle(orig_cards, game_num, which_deals):
-    if ((game_num <= 32000) or which_deals == PysolRandom.DEALS_MS):
-        r = LCRandom31()
-        r.setSeed(game_num)
+    ms = ((game_num <= 32000) or which_deals == PysolRandom.DEALS_MS)
+    if ms:
         fcards = []
         if (len(orig_cards) == 52):
             for i in range(13):
                 for j in (0, 39, 26, 13):
                     fcards.append(orig_cards[i + j])
             orig_cards = fcards
-    else:
-        r = MTRandom() if which_deals == PysolRandom.DEALS_PYSOLFC else \
-            LCRandom64()
-        r.setSeed(game_num)
+    r = LCRandom31() if ms else MTRandom() if \
+        which_deals == PysolRandom.DEALS_PYSOLFC else LCRandom64()
+    r.setSeed(game_num)
     r.shuffle(orig_cards)
-
     return orig_cards
 
 
