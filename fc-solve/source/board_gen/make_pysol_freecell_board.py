@@ -220,9 +220,6 @@ class Card:
         new_card.flipped = flipped
         return new_card
 
-    def is_empty(self):
-        return self.empty
-
 
 class Columns:
 
@@ -260,10 +257,10 @@ class Board:
             self.foundations = [empty_card() for s in range(4)]
 
     def reverse_cols(self):
-        return self.columns.rev()
+        self.columns.rev()
 
     def add(self, idx, card):
-        return self.columns.add(idx, card)
+        self.columns.add(idx, card)
 
     def print_freecells(self):
         print("Freecells: " + column_to_string(self.freecells))
@@ -274,7 +271,7 @@ class Board:
     def print_foundations(self):
         cells = []
         for f in [2, 0, 3, 1]:
-            if not self.foundations[f].is_empty():
+            if not self.foundations[f].empty:
                 cells.append(self.foundations[f].found_s())
 
         if len(cells):
@@ -329,19 +326,8 @@ def createCards(num_decks, print_ts):
     return cards
 
 
-def column_to_list_of_strings(col):
-    return [c.to_s() for c in col]
-
-
 def column_to_string(col):
-    return " ".join(column_to_list_of_strings(col))
-
-
-def flip_card(card_str, flip):
-    if flip:
-        return "<" + card_str + ">"
-    else:
-        return card_str
+    return " ".join([c.to_s() for c in col])
 
 
 def shuffle(orig_cards, game_num, which_deals):
