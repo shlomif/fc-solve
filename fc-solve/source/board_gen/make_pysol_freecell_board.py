@@ -301,11 +301,10 @@ class Board:
         if not self.with_foundations:
             raise AttributeError("Layout does not have foundations!")
 
-        if self.foundations[card.suit].rank+1 == card.rank:
+        res = self.foundations[card.suit].rank+1 == card.rank
+        if res:
             self.foundations[card.suit] = card
-            return True
-        else:
-            return False
+        return res
 
 
 def empty_card():
