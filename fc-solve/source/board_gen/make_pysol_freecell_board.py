@@ -96,11 +96,6 @@ class PysolRandom:
     def _convertSeed(self, seed):
         return int(seed)
 
-    def increaseSeed(self, seed):
-        if seed < self.MAX_SEED:
-            return seed + 1
-        return 0
-
     #
     # shuffle
     #   see: Knuth, Vol. 2, Chapter 3.4.2, Algorithm P
@@ -169,11 +164,6 @@ class LCRandom31(PysolRandom):
 
 class BasicRandom:
     MAX_SEED = 100000000000000000000  # 20 digits
-
-    def increaseSeed(self, seed):
-        if seed < self.MAX_SEED:
-            return seed + 1
-        return 0
 
 
 class MTRandom(BasicRandom, random2.Random):
