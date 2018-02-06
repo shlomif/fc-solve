@@ -92,12 +92,6 @@ class PysolRandom:
         self.seed = seed
         return seed
 
-    def copy(self):
-        random = PysolRandom(0)
-        random.__class__ = self.__class__
-        random.__dict__.update(self.__dict__)
-        return random
-
     #
     # implementation
     #
@@ -219,11 +213,6 @@ class BasicRandom:
 
     def reset(self):
         raise ValueError("Subclass responsibility")
-
-    def copy(self):
-        random = self.__class__(0)
-        random.__dict__.update(self.__dict__)
-        return random
 
     def increaseSeed(self, seed):
         if seed < self.MAX_SEED:
