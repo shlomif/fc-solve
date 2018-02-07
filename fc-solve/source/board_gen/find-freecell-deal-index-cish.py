@@ -11,9 +11,6 @@ import sys
 from make_board_fc_solve import find_index_main
 from find_index_lib_py import ffi, lib
 
-if sys.version_info > (3,):
-    xrange = range
-
 
 def find_ret(ints):
     obj = lib.fc_solve_user__find_deal__alloc()
