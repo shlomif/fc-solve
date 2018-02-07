@@ -26,9 +26,9 @@ class Card(object):
 
 
 def createCards(num_decks, print_ts):
-    id = 0
     ret = []
-    for d in range(num_decks):
+    for _ in range(num_decks):
+        id = 0
         for s in range(4):
             for r in range(13):
                 ret.append(Card(id, r+1, s, print_ts))
