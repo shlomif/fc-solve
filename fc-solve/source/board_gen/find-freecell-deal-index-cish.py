@@ -10,7 +10,7 @@
 # imports
 import sys
 import re
-from make_board_fc_solve import createCards
+from make_board_fc_solve import createCards, ms_rearrange
 from find_index_lib_py import ffi, lib
 
 if sys.version_info > (3,):
@@ -72,12 +72,7 @@ def shlomif_main(args):
     if not m:
         raise ValueError("Could not match.")
 
-    cards = createCards(1, True)
-    c = []
-    for i in range(13):
-        for j in (0, 39, 26, 13):
-            c.append(cards[i + j])
-    cards = [x.to_s() for x in c]
+    cards = [x.to_s() for x in ms_rearrange(createCards(1, True))]
 
     # Reverse shuffle:
     ints = []

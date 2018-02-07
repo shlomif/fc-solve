@@ -92,3 +92,13 @@ class LCRandom31(RandomBase):
 
     def randint(self, a, b):
         return a + self.random() % (b+1-a)
+
+
+def ms_rearrange(cards):
+    if len(cards) != 52:
+        return cards
+    c = []
+    for i in range(13):
+        for j in (0, 39, 26, 13):
+            c.append(cards[i + j])
+    return c
