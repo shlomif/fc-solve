@@ -53,6 +53,7 @@
 # imports
 import sys
 import random2
+from make_board_fc_solve import LCRandom31
 
 # /***********************************************************************
 # // Abstract PySol Random number generator.
@@ -125,36 +126,6 @@ class LCRandom64(PysolRandom):
         self.seed = (self.seed*6364136223846793005 + 1) & self.MAX_SEED
         return ((self.seed >> 21) & 0x7fffffff) / 2147483648.0
 
-
-# /***********************************************************************
-# // Linear Congruential random generator
-# // In PySol this is only used for 0 <= seed <= 32000.
-# ************************************************************************/
-
-class LCRandom31(PysolRandom):
-    MAX_SEED = ((1 << (32+2))-1)         # 34 bits
-
-    def _convertSeed(self, seed):
-        seed = int(seed)
-        self.seedx = (seed if (seed < 0x100000000) else (seed - 0x100000000))
-        return seed
-
-    def _rando(self):
-        self.seedx = (self.seedx*214013 + 2531011) & self.MAX_SEED
-        return ((self.seedx >> 16) & 0x7fff)
-
-    def _randp(self):
-        self.seedx = (self.seedx*214013 + 2531011) & self.MAX_SEED
-        return ((self.seedx >> 16) & 0xffff)
-
-    def randint(self, a, b):
-        if self.seed < 0x100000000:
-            ret = self._rando()
-            ret = (ret if (self.seed < 0x80000000) else (ret | 0x8000))
-        else:
-            ret = self._randp() + 1
-
-        return a + ret % (b+1-a)
 
 # ************************************************************************
 # * Mersenne Twister random number generator

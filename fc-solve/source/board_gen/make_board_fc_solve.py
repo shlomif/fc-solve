@@ -61,3 +61,8 @@ class LCRandom31:
     def _rand(self):
         self.seedx = ((self.seedx) * 214013 + 2531011) & self.MAX_SEED
         return (self.seedx >> 16) & 0x7fff
+
+    def shuffle(self, seq):
+        for n in range(len(seq)-1, 0, -1):
+            j = self.randint(0, n)
+            seq[n], seq[j] = seq[j], seq[n]
