@@ -65,7 +65,7 @@ class RandomBase:
             seq[n], seq[j] = seq[j], seq[n]
 
     def randint(self, a, b):
-        return a + self.random() % (b+1-a)
+        return a + int(self.random() * (b+1-a))
 
 
 class LCRandom31(RandomBase):
@@ -89,3 +89,6 @@ class LCRandom31(RandomBase):
     def _rand(self):
         self.seedx = ((self.seedx) * 214013 + 2531011) & self.MAX_SEED
         return (self.seedx >> 16) & 0x7fff
+
+    def randint(self, a, b):
+        return a + self.random() % (b+1-a)

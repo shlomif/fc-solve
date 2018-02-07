@@ -78,9 +78,6 @@ class PysolRandom(RandomBase):
         self.seed = seed
         return seed
 
-    # Get a random integer in the range [a, b] including both end points.
-    def randint(self, a, b):
-        return a + int(self.random() * (b+1-a))
     #
     # subclass overrideable
     #
