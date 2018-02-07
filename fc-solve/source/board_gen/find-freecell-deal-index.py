@@ -96,13 +96,21 @@ def shlomif_main(args):
             n -= 1
         return True
 
+    ret = -1
     for d in xrange(1, (1 << 33)):
         if is_right(d):
-            if output_to_stdout:
-                print("Found deal = %d" % d)
-            return 0
-    print("Not found!")
-    return -1
+            ret = d
+            break
+
+    ret_code = 0
+    if ret >= 0:
+        if output_to_stdout:
+            print("Found deal = %d" % ret)
+        ret_code = 0
+    else:
+        print("Not found!")
+        ret_code = -1
+    return ret_code
 
 
 if __name__ == "__main__":

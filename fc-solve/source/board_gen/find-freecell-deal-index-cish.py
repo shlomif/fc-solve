@@ -92,6 +92,7 @@ def shlomif_main(args):
         obj, "".join(["%-10d" % x for x in ints]))
     ret = int(ffi.string(lib.fc_solve_user__find_deal__run(
         obj, "1", "%d" % ((1 << 33) - 1))))
+    lib.fc_solve_user__find_deal__free(obj)
 
     ret_code = 0
     if ret >= 0:
@@ -101,7 +102,6 @@ def shlomif_main(args):
     else:
         print("Not found!")
         ret_code = -1
-    lib.fc_solve_user__find_deal__free(obj)
     return ret_code
 
 
