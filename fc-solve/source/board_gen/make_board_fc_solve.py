@@ -59,6 +59,10 @@ def createCards(num_decks, print_ts):
 
 
 class RandomBase:
+    DEALS_PYSOL = 0
+    DEALS_PYSOLFC = 1
+    DEALS_MS = 2
+
     def shuffle(self, seq):
         for n in range(len(seq)-1, 0, -1):
             j = self.randint(0, n)

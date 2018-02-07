@@ -66,10 +66,6 @@ from make_board_fc_solve import createCards, ms_rearrange, Card, LCRandom31, \
 class PysolRandom(RandomBase):
     MAX_SEED = 0
 
-    DEALS_PYSOL = 0
-    DEALS_PYSOLFC = 1
-    DEALS_MS = 2
-
     def setSeed(self, seed):
         seed = self._convertSeed(seed)
         if type(seed) is not int:
@@ -217,11 +213,11 @@ def column_to_string(col):
 
 
 def shuffle(orig_cards, game_num, which_deals):
-    ms = ((game_num <= 32000) or which_deals == PysolRandom.DEALS_MS)
+    ms = ((game_num <= 32000) or which_deals == RandomBase.DEALS_MS)
     if ms:
         orig_cards = ms_rearrange(orig_cards)
     r = LCRandom31() if ms else MTRandom() if \
-        which_deals == PysolRandom.DEALS_PYSOLFC else LCRandom64()
+        which_deals == RandomBase.DEALS_PYSOLFC else LCRandom64()
     r.setSeed(game_num)
     r.shuffle(orig_cards)
     return orig_cards
@@ -512,17 +508,17 @@ class Game:
 
 def shlomif_main(args):
     print_ts = False
-    which_deals = PysolRandom.DEALS_PYSOL
+    which_deals = RandomBase.DEALS_PYSOL
     while args[1][0] == '-':
         a = args[1]
         if a == "-t":
             print_ts = True
             args.pop(0)
         elif (a == "--pysolfc") or (a == "-F"):
-            which_deals = PysolRandom.DEALS_PYSOLFC
+            which_deals = RandomBase.DEALS_PYSOLFC
             args.pop(0)
         elif (a == "--ms") or (a == "-M"):
-            which_deals = PysolRandom.DEALS_MS
+            which_deals = RandomBase.DEALS_MS
             args.pop(0)
         else:
             raise ValueError("Unknown flag " + a + "!")
