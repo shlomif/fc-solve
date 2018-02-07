@@ -53,7 +53,7 @@
 # imports
 import sys
 import random2
-from make_board_fc_solve import LCRandom31
+from make_board_fc_solve import LCRandom31, RandomBase
 
 # /***********************************************************************
 # // Abstract PySol Random number generator.
@@ -62,7 +62,7 @@ from make_board_fc_solve import LCRandom31
 # ************************************************************************/
 
 
-class PysolRandom:
+class PysolRandom(RandomBase):
     MAX_SEED = 0
 
     DEALS_PYSOL = 0
@@ -81,34 +81,12 @@ class PysolRandom:
     # Get a random integer in the range [a, b] including both end points.
     def randint(self, a, b):
         return a + int(self.random() * (b+1-a))
-
-    #
-    # subclass responsibility
-    #
-
-    # Get the next random number in the range [0.0, 1.0).
-    def random(self):
-        raise ValueError("Subclass responsibility")
-
     #
     # subclass overrideable
     #
 
     def _convertSeed(self, seed):
         return int(seed)
-
-    #
-    # shuffle
-    #   see: Knuth, Vol. 2, Chapter 3.4.2, Algorithm P
-    #   see: FAQ of sci.crypt: "How do I shuffle cards ?"
-    #
-
-    def shuffle(self, seq):
-        n = len(seq) - 1
-        while n > 0:
-            j = self.randint(0, n)
-            seq[n], seq[j] = seq[j], seq[n]
-            n -= 1
 
 
 # /***********************************************************************

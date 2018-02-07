@@ -36,17 +36,24 @@ def createCards(num_decks, print_ts):
     return ret
 
 
-class LCRandom31:
+class RandomBase:
+    def shuffle(self, seq):
+        for n in range(len(seq)-1, 0, -1):
+            j = self.randint(0, n)
+            seq[n], seq[j] = seq[j], seq[n]
+
+    def randint(self, a, b):
+        return a + self.random() % (b+1-a)
+
+
+class LCRandom31(RandomBase):
     MAX_SEED = ((1 << (32+2))-1)         # 34 bits
 
     def setSeed(self, seed):
         self.seed = seed
         self.seedx = seed if (seed < 0x100000000) else (seed - 0x100000000)
 
-    def randint(self, a, b):
-        return a + self._gn_rand() % (b+1-a)
-
-    def _gn_rand(self):
+    def random(self):
         if (self.seed < 0x100000000):
             ret = self._rand()
             return (ret if (self.seed < 0x80000000) else (ret | 0x8000))
@@ -60,8 +67,3 @@ class LCRandom31:
     def _rand(self):
         self.seedx = ((self.seedx) * 214013 + 2531011) & self.MAX_SEED
         return (self.seedx >> 16) & 0x7fff
-
-    def shuffle(self, seq):
-        for n in range(len(seq)-1, 0, -1):
-            j = self.randint(0, n)
-            seq[n], seq[j] = seq[j], seq[n]
