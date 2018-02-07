@@ -154,7 +154,7 @@ class LCRandom31(PysolRandom):
         else:
             ret = self._randp() + 1
 
-        return a + (ret % (b+1-a))
+        return a + ret % (b+1-a)
 
 # ************************************************************************
 # * Mersenne Twister random number generator

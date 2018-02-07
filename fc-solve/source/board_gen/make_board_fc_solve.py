@@ -35,3 +35,29 @@ def createCards(num_decks, print_ts):
                 ret.append(Card(id, r+1, s, print_ts))
                 id += 1
     return ret
+
+
+class LCRandom31:
+    MAX_SEED = ((1 << (32+2))-1)         # 34 bits
+
+    def setSeed(self, seed):
+        self.seed = seed
+        self.seedx = seed if (seed < 0x100000000) else (seed - 0x100000000)
+
+    def randint(self, a, b):
+        return a + self._gn_rand() % (b+1-a)
+
+    def _gn_rand(self):
+        if (self.seed < 0x100000000):
+            ret = self._rand()
+            return (ret if (self.seed < 0x80000000) else (ret | 0x8000))
+        else:
+            return self._randp() + 1
+
+    def _randp(self):
+        self.seedx = ((self.seedx) * 214013 + 2531011) & self.MAX_SEED
+        return (self.seedx >> 16) & 0xffff
+
+    def _rand(self):
+        self.seedx = ((self.seedx) * 214013 + 2531011) & self.MAX_SEED
+        return (self.seedx >> 16) & 0x7fff

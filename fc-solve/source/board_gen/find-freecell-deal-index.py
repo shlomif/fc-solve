@@ -10,8 +10,7 @@
 # imports
 import sys
 import re
-from make_pysol_freecell_board import LCRandom31
-from make_board_fc_solve import createCards
+from make_board_fc_solve import createCards, LCRandom31
 
 if sys.version_info > (3,):
     long = int
