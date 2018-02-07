@@ -8,8 +8,12 @@
 
 
 class Card(object):
+    ACE = 1
+    KING = 13
+
     def __init__(self, id, rank, suit, print_ts):
         self.id, self.rank, self.suit, self.print_ts = id, rank, suit, print_ts
+        self.empty, self.flipped = False, False
 
     def rank_s(self):
         ret = "0A23456789TJQK"[self.rank]
@@ -21,7 +25,25 @@ class Card(object):
         return 'CSHD'[self.suit]
 
     def to_s(self):
+        if self.empty:
+            return '-'
         ret = self.rank_s() + self.suit_s()
+        if self.flipped:
+            ret = '<' + ret + '>'
+        return ret
+
+    def found_s(self):
+        return self.suit_s() + '-' + self.rank_s()
+
+    def is_ace(self):
+        return self.rank == self.ACE
+
+    def is_king(self):
+        return self.rank == self.KING
+
+    def flip(self, flipped=True):
+        ret = Card(self.id, self.rank, self.suit, self.print_ts)
+        ret.flipped = flipped
         return ret
 
 

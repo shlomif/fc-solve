@@ -53,7 +53,7 @@
 # imports
 import sys
 import random2
-from make_board_fc_solve import LCRandom31, RandomBase
+from make_board_fc_solve import createCards, Card, LCRandom31, RandomBase
 
 # /***********************************************************************
 # // Abstract PySol Random number generator.
@@ -120,52 +120,6 @@ class MTRandom(BasicRandom, random2.Random):
     def setSeed(self, seed):
         random2.Random.__init__(self, seed)
         self.initial_state = self.getstate()
-
-
-class Card:
-
-    ACE = 1
-    KING = 13
-
-    def __init__(self, id, rank, suit, print_ts):
-        self.id = id
-        self.rank = rank
-        self.suit = suit
-        self.flipped = False
-        self.print_ts = print_ts
-        self.empty = False
-
-    def is_king(self):
-        return self.rank == self.KING
-
-    def is_ace(self):
-        return self.rank == self.ACE
-
-    def rank_s(self):
-        s = "0A23456789TJQK"[self.rank]
-        if (not self.print_ts) and s == "T":
-            s = "10"
-        return s
-
-    def suit_s(self):
-        return "CSHD"[self.suit]
-
-    def to_s(self):
-        if self.empty:
-            return "-"
-        ret = self.rank_s() + self.suit_s()
-        if self.flipped:
-            ret = "<" + ret + ">"
-
-        return ret
-
-    def found_s(self):
-        return self.suit_s() + "-" + self.rank_s()
-
-    def flip(self, flipped=True):
-        new_card = Card(self.id, self.rank, self.suit, self.print_ts)
-        new_card.flipped = flipped
-        return new_card
 
 
 class Columns:
@@ -258,17 +212,6 @@ def empty_card():
     ret = Card(0, 0, 0, 1)
     ret.empty = True
     return ret
-
-
-def createCards(num_decks, print_ts):
-    cards = []
-    for deck in range(num_decks):
-        id = 0
-        for suit in range(4):
-            for rank in range(13):
-                cards.append(Card(id, rank+1, suit, print_ts))
-                id += 1
-    return cards
 
 
 def column_to_string(col):
