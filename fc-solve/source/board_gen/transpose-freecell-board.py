@@ -7,7 +7,6 @@
 #
 # Licensed under the MIT/Expat License.
 
-# imports
 import sys
 import re
 

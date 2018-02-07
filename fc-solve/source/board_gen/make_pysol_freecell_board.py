@@ -49,8 +49,6 @@
 #
 # ---------------------------------------------------------------------------
 
-
-# imports
 import sys
 import random2
 from make_board_fc_solve import createCards, ms_rearrange, Card, LCRandom31, \

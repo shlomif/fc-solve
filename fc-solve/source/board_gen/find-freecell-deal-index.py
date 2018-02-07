@@ -7,13 +7,11 @@
 #
 # Licensed under the MIT/Expat License.
 
-# imports
 import sys
 import re
 from make_board_fc_solve import createCards, ms_rearrange, LCRandom31
 
 if sys.version_info > (3,):
-    long = int
     xrange = range
 
 

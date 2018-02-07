@@ -7,14 +7,12 @@
 #
 # Licensed under the MIT/Expat License.
 
-# imports
 import sys
 import re
 from make_board_fc_solve import createCards, ms_rearrange
 from find_index_lib_py import ffi, lib
 
 if sys.version_info > (3,):
-    long = int
     xrange = range
 
 
