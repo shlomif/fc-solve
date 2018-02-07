@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 #
-# find-freecell-deal-index.py - a program to find out the Freecell deal index
-# based on the initial cards layout.
+# make_board_fc_solve.py - Expat-licensed routines for the board-gen code.
 #
 # Copyright by Shlomi Fish, 2018
 #
