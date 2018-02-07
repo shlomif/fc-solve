@@ -109,7 +109,7 @@ class BasicRandom:
     MAX_SEED = 100000000000000000000  # 20 digits
 
 
-class MTRandom(BasicRandom, random2.Random):
+class MTRandom(RandomBase, BasicRandom, random2.Random):
 
     def setSeed(self, seed):
         random2.Random.__init__(self, seed)
@@ -214,13 +214,10 @@ def column_to_string(col):
 
 def shuffle(orig_cards, game_num, which_deals):
     ms = ((game_num <= 32000) or which_deals == RandomBase.DEALS_MS)
-    if ms:
-        orig_cards = ms_rearrange(orig_cards)
     r = LCRandom31() if ms else MTRandom() if \
         which_deals == RandomBase.DEALS_PYSOLFC else LCRandom64()
     r.setSeed(game_num)
-    r.shuffle(orig_cards)
-    return orig_cards
+    return r.shuffle(ms_rearrange(orig_cards) if ms else orig_cards)
 
 
 class Game:

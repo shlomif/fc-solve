@@ -67,6 +67,7 @@ class RandomBase:
         for n in range(len(seq)-1, 0, -1):
             j = self.randint(0, n)
             seq[n], seq[j] = seq[j], seq[n]
+        return seq
 
     def randint(self, a, b):
         return a + int(self.random() * (b+1-a))
