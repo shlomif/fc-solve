@@ -9,7 +9,6 @@
  */
 // freecell.c - a module that contains moves of the Freecell-games family.
 
-#include <assert.h>
 #include "scans.h"
 #include "freecell.h"
 #include "meta_move_funcs_helpers.h"
@@ -257,7 +256,6 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
         /*  Find a vacant stack */
         put_cards_in_col_idx = find_empty_stack(
             *kv_ptr_new_state, put_cards_in_col_idx, LOCAL_STACKS_NUM);
-        assert(put_cards_in_col_idx < LOCAL_STACKS_NUM);
 
         fcs_copy_stack(*new_key, *(kv_ptr_new_state->val), put_cards_in_col_idx,
             indirect_stacks_buffer);
