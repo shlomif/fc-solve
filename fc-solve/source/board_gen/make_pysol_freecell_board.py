@@ -79,17 +79,6 @@ class Board(BoardBase):
             self.print_freecells()
         self.columns.output()
 
-    def add_freecell(self, card):
-        if not self.with_freecells:
-            raise AttributeError("Layout does not have freecells!")
-        self.freecells.append(card)
-
-    def add_talon(self, card):
-        if not self.with_talon:
-            raise AttributeError("Layout does not have a talon!")
-
-        self.talon.append(card)
-
     def put_into_founds(self, card):
         if not self.with_foundations:
             raise AttributeError("Layout does not have foundations!")

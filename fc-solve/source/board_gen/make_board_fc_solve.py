@@ -196,6 +196,16 @@ class BoardBase:
     def add(self, idx, card):
         self.columns.add(idx, card)
 
+    def add_freecell(self, card):
+        if not self.with_freecells:
+            raise AttributeError("Layout does not have freecells!")
+        self.freecells.append(card)
+
+    def add_talon(self, card):
+        if not self.with_talon:
+            raise AttributeError("Layout does not have a talon!")
+        self.talon.append(card)
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True
