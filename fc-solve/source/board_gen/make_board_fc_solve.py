@@ -206,6 +206,14 @@ class BoardBase:
             raise AttributeError("Layout does not have a talon!")
         self.talon.append(card)
 
+    def put_into_founds(self, card):
+        if not self.with_foundations:
+            raise AttributeError("Layout does not have foundations!")
+        res = self.foundations[card.suit].rank+1 == card.rank
+        if res:
+            self.foundations[card.suit] = card
+        return res
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True

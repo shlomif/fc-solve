@@ -79,15 +79,6 @@ class Board(BoardBase):
             self.print_freecells()
         self.columns.output()
 
-    def put_into_founds(self, card):
-        if not self.with_foundations:
-            raise AttributeError("Layout does not have foundations!")
-
-        res = self.foundations[card.suit].rank+1 == card.rank
-        if res:
-            self.foundations[card.suit] = card
-        return res
-
 
 def shuffle(orig_cards, game_num, which_deals):
     ms = ((game_num <= 32000) or which_deals == RandomBase.DEALS_MS)
