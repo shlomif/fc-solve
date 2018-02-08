@@ -6,6 +6,7 @@
 #
 # Licensed under the MIT/Expat License.
 
+import random2
 import re
 import sys
 
@@ -110,6 +111,15 @@ class LCRandom31(RandomBase):
 
     def randint(self, a, b):
         return a + self.random() % (b+1-a)
+
+
+# * Mersenne Twister random number generator
+class MTRandom(RandomBase, random2.Random):
+    MAX_SEED = 100000000000000000000  # 20 digits
+
+    def setSeed(self, seed):
+        random2.Random.__init__(self, seed)
+        self.initial_state = self.getstate()
 
 
 def ms_rearrange(cards):

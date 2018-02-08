@@ -50,9 +50,8 @@
 # ---------------------------------------------------------------------------
 
 import sys
-import random2
 from make_board_fc_solve import column_to_string, createCards, empty_card, \
-    ms_rearrange, LCRandom31, RandomBase
+    ms_rearrange, LCRandom31, MTRandom, RandomBase
 
 # /***********************************************************************
 # // Abstract PySol Random number generator.
@@ -95,23 +94,6 @@ class LCRandom64(PysolRandom):
     def random(self):
         self.seed = (self.seed*6364136223846793005 + 1) & self.MAX_SEED
         return ((self.seed >> 21) & 0x7fffffff) / 2147483648.0
-
-
-# ************************************************************************
-# * Mersenne Twister random number generator
-# * uses standard python module `random'
-# ************************************************************************
-
-
-class BasicRandom:
-    MAX_SEED = 100000000000000000000  # 20 digits
-
-
-class MTRandom(RandomBase, BasicRandom, random2.Random):
-
-    def setSeed(self, seed):
-        random2.Random.__init__(self, seed)
-        self.initial_state = self.getstate()
 
 
 class Columns:
