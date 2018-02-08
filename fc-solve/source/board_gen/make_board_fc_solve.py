@@ -295,6 +295,29 @@ class BaseGame:
         getattr(self, game_class)()
         self.board.output()
 
+    def new_cards(self, cards):
+        self.cards = cards
+        self.card_idx = 0
+
+    def deal(self):
+        cards = shuffle(createCards(self.get_num_decks(), self.print_ts),
+                        self.game_num, self.which_deals)
+        cards.reverse()
+        self.new_cards(cards)
+
+    def __iter__(self):
+        return self
+
+    def no_more_cards(self):
+        return self.card_idx >= len(self.cards)
+
+    def __next__(self):
+        if self.no_more_cards():
+            raise StopIteration
+        c = self.cards[self.card_idx]
+        self.card_idx += 1
+        return c
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True

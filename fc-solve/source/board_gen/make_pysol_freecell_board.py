@@ -50,35 +50,10 @@
 # ---------------------------------------------------------------------------
 
 import sys
-from make_board_fc_solve import createCards, empty_card, shuffle, RandomBase, \
-        Board, BaseGame
+from make_board_fc_solve import empty_card, RandomBase, Board, BaseGame
 
 
 class Game(BaseGame):
-    def deal(self):
-        cards = shuffle(createCards(self.get_num_decks(), self.print_ts),
-                        self.game_num, self.which_deals)
-        cards.reverse()
-        self.cards = cards
-        self.card_idx = 0
-
-    def __iter__(self):
-        return self
-
-    def no_more_cards(self):
-        return self.card_idx >= len(self.cards)
-
-    def __next__(self):
-        if self.no_more_cards():
-            raise StopIteration
-        c = self.cards[self.card_idx]
-        self.card_idx += 1
-        return c
-
-    def new_cards(self, cards):
-        self.cards = cards
-        self.card_idx = 0
-
     def add(self, idx, card):
         self.board.add(idx, card)
 
