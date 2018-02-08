@@ -98,6 +98,22 @@ class PysolRandom(RandomBase):
     def _convertSeed(self, seed):
         return int(seed)
 
+# /***********************************************************************
+# // Linear Congruential random generator
+# //
+# // Knuth, Donald.E., "The Art of Computer Programming,", Vol 2,
+# // Seminumerical Algorithms, Third Edition, Addison-Wesley, 1998,
+# // p. 106 (line 26) & p. 108
+# ************************************************************************/
+
+
+class LCRandom64(PysolRandom):
+    MAX_SEED = 0xffffffffffffffff  # 64 bits
+
+    def random(self):
+        self.seed = (self.seed*6364136223846793005 + 1) & self.MAX_SEED
+        return ((self.seed >> 21) & 0x7fffffff) / 2147483648.0
+
 
 class LCRandom31(RandomBase):
     MAX_SEED = ((1 << (32+2))-1)         # 34 bits

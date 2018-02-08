@@ -51,27 +51,10 @@
 
 import sys
 from make_board_fc_solve import column_to_string, createCards, empty_card, \
-    ms_rearrange, LCRandom31, MTRandom, RandomBase, PysolRandom
-
-# /***********************************************************************
-# // Linear Congruential random generator
-# //
-# // Knuth, Donald.E., "The Art of Computer Programming,", Vol 2,
-# // Seminumerical Algorithms, Third Edition, Addison-Wesley, 1998,
-# // p. 106 (line 26) & p. 108
-# ************************************************************************/
-
-
-class LCRandom64(PysolRandom):
-    MAX_SEED = 0xffffffffffffffff  # 64 bits
-
-    def random(self):
-        self.seed = (self.seed*6364136223846793005 + 1) & self.MAX_SEED
-        return ((self.seed >> 21) & 0x7fffffff) / 2147483648.0
+    ms_rearrange, LCRandom31, LCRandom64, MTRandom, RandomBase
 
 
 class Columns:
-
     def __init__(self, num):
         self.num = num
         cols = []
