@@ -160,6 +160,22 @@ def ms_rearrange(cards):
     return c
 
 
+class Columns:
+    def __init__(self, num):
+        self.num = num
+        self.cols = [[] for _ in range(num)]
+
+    def add(self, idx, card):
+        self.cols[idx].append(card)
+
+    def rev(self):
+        self.cols.reverse()
+
+    def output(self):
+        for c in self.cols:
+            print(column_to_string(c))
+
+
 def find_index_main(args, find_ret):
     output_to_stdout = True
     is_ms = False

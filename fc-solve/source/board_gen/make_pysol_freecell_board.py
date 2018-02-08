@@ -51,27 +51,7 @@
 
 import sys
 from make_board_fc_solve import column_to_string, createCards, empty_card, \
-    ms_rearrange, LCRandom31, LCRandom64, MTRandom, RandomBase
-
-
-class Columns:
-    def __init__(self, num):
-        self.num = num
-        cols = []
-        for i in range(num):
-            cols.append([])
-
-        self.cols = cols
-
-    def add(self, idx, card):
-        self.cols[idx].append(card)
-
-    def rev(self):
-        self.cols.reverse()
-
-    def output(self):
-        for column in self.cols:
-            print(column_to_string(column))
+    ms_rearrange, LCRandom31, LCRandom64, MTRandom, RandomBase, Columns
 
 
 class Board:
