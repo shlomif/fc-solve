@@ -233,6 +233,14 @@ class Board:
         self.columns.output()
 
 
+def shuffle(cards, game_num, which_deals):
+    ms = ((game_num <= 32000) or (which_deals == RandomBase.DEALS_MS))
+    r = LCRandom31() if ms else MTRandom() if which_deals == \
+        RandomBase.DEALS_PYSOLFC else LCRandom64()
+    r.setSeed(game_num)
+    return r.shuffle(ms_rearrange(cards) if ms else cards)
+
+
 def find_index_main(args, find_ret):
     output_to_stdout = True
     is_ms = False

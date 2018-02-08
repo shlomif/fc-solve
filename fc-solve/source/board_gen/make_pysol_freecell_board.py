@@ -50,16 +50,8 @@
 # ---------------------------------------------------------------------------
 
 import sys
-from make_board_fc_solve import createCards, empty_card, \
-    ms_rearrange, LCRandom31, LCRandom64, MTRandom, RandomBase, Board
-
-
-def shuffle(orig_cards, game_num, which_deals):
-    ms = ((game_num <= 32000) or which_deals == RandomBase.DEALS_MS)
-    r = LCRandom31() if ms else MTRandom() if \
-        which_deals == RandomBase.DEALS_PYSOLFC else LCRandom64()
-    r.setSeed(game_num)
-    return r.shuffle(ms_rearrange(orig_cards) if ms else orig_cards)
+from make_board_fc_solve import createCards, empty_card, shuffle, RandomBase, \
+        Board
 
 
 class Game:
