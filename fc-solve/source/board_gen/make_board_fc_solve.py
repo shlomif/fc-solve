@@ -190,6 +190,9 @@ class BoardBase:
         if self.with_foundations:
             self.foundations = [empty_card() for s in range(4)]
 
+    def reverse_cols(self):
+        self.columns.rev()
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True

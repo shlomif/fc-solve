@@ -55,9 +55,6 @@ from make_board_fc_solve import column_to_string, createCards, empty_card, \
 
 
 class Board(BoardBase):
-    def reverse_cols(self):
-        self.columns.rev()
-
     def add(self, idx, card):
         self.columns.add(idx, card)
 
