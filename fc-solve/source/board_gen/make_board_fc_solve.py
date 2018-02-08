@@ -193,6 +193,9 @@ class BoardBase:
     def reverse_cols(self):
         self.columns.rev()
 
+    def add(self, idx, card):
+        self.columns.add(idx, card)
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True

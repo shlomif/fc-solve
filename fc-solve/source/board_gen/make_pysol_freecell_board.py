@@ -55,9 +55,6 @@ from make_board_fc_solve import column_to_string, createCards, empty_card, \
 
 
 class Board(BoardBase):
-    def add(self, idx, card):
-        self.columns.add(idx, card)
-
     def print_freecells(self):
         print("Freecells: " + column_to_string(self.freecells))
 
