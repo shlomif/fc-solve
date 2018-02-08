@@ -50,34 +50,8 @@
 # ---------------------------------------------------------------------------
 
 import sys
-from make_board_fc_solve import column_to_string, createCards, empty_card, \
-    ms_rearrange, LCRandom31, LCRandom64, MTRandom, RandomBase, BoardBase
-
-
-class Board(BoardBase):
-    def print_freecells(self):
-        print("Freecells: " + column_to_string(self.freecells))
-
-    def print_talon(self):
-        print("Talon: " + column_to_string(self.talon))
-
-    def print_foundations(self):
-        cells = []
-        for f in [2, 0, 3, 1]:
-            if not self.foundations[f].empty:
-                cells.append(self.foundations[f].found_s())
-
-        if len(cells):
-            print("Foundations:" + ("".join([" "+s for s in cells])))
-
-    def output(self):
-        if self.with_talon:
-            self.print_talon()
-        if self.with_foundations:
-            self.print_foundations()
-        if self.with_freecells:
-            self.print_freecells()
-        self.columns.output()
+from make_board_fc_solve import createCards, empty_card, \
+    ms_rearrange, LCRandom31, LCRandom64, MTRandom, RandomBase, Board
 
 
 def shuffle(orig_cards, game_num, which_deals):

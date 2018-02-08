@@ -176,7 +176,7 @@ class Columns:
             print(column_to_string(c))
 
 
-class BoardBase:
+class Board:
     def __init__(self, num_columns, with_freecells=False,
                  with_talon=False, with_foundations=False):
         self.with_freecells = with_freecells
@@ -213,6 +213,24 @@ class BoardBase:
         if res:
             self.foundations[card.suit] = card
         return res
+
+    def print_foundations(self):
+        cells = []
+        for f in [2, 0, 3, 1]:
+            if not self.foundations[f].empty:
+                cells.append(self.foundations[f].found_s())
+
+        if len(cells):
+            print("Foundations:" + ("".join([" "+s for s in cells])))
+
+    def output(self):
+        if self.with_talon:
+            print("Talon: " + column_to_string(self.talon))
+        if self.with_foundations:
+            self.print_foundations()
+        if self.with_freecells:
+            print("Freecells: " + column_to_string(self.freecells))
+        self.columns.output()
 
 
 def find_index_main(args, find_ret):
