@@ -176,6 +176,21 @@ class Columns:
             print(column_to_string(c))
 
 
+class BoardBase:
+    def __init__(self, num_columns, with_freecells=False,
+                 with_talon=False, with_foundations=False):
+        self.with_freecells = with_freecells
+        self.with_talon = with_talon
+        self.with_foundations = with_foundations
+        self.columns = Columns(num_columns)
+        if self.with_freecells:
+            self.freecells = []
+        if self.with_talon:
+            self.talon = []
+        if self.with_foundations:
+            self.foundations = [empty_card() for s in range(4)]
+
+
 def find_index_main(args, find_ret):
     output_to_stdout = True
     is_ms = False

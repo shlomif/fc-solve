@@ -51,23 +51,10 @@
 
 import sys
 from make_board_fc_solve import column_to_string, createCards, empty_card, \
-    ms_rearrange, LCRandom31, LCRandom64, MTRandom, RandomBase, Columns
+    ms_rearrange, LCRandom31, LCRandom64, MTRandom, RandomBase, BoardBase
 
 
-class Board:
-    def __init__(self, num_columns, with_freecells=False,
-                 with_talon=False, with_foundations=False):
-        self.with_freecells = with_freecells
-        self.with_talon = with_talon
-        self.with_foundations = with_foundations
-        self.columns = Columns(num_columns)
-        if self.with_freecells:
-            self.freecells = []
-        if self.with_talon:
-            self.talon = []
-        if self.with_foundations:
-            self.foundations = [empty_card() for s in range(4)]
-
+class Board(BoardBase):
     def reverse_cols(self):
         self.columns.rev()
 
