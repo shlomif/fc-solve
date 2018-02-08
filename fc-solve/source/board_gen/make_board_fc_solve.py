@@ -279,6 +279,13 @@ class BaseGame:
         self.print_ts = print_ts
         self.which_deals = which_deals
 
+    def is_two_decks(self):
+        return self.game_id in ("der_katz", "der_katzenschwantz",
+                                "die_schlange", "gypsy")
+
+    def get_num_decks(self):
+        return 2 if self.is_two_decks() else 1
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True

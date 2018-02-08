@@ -67,13 +67,6 @@ class Game(BaseGame):
     def lookup(self):
         return self.games_map[self.game_id]
 
-    def is_two_decks(self):
-        return self.game_id in ("der_katz", "der_katzenschwantz",
-                                "die_schlange", "gypsy")
-
-    def get_num_decks(self):
-        return 2 if self.is_two_decks() else 1
-
     def deal(self):
         cards = shuffle(createCards(self.get_num_decks(), self.print_ts),
                         self.game_num, self.which_deals)
