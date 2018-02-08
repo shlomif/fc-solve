@@ -87,6 +87,18 @@ class RandomBase:
         return a + int(self.random() * (b+1-a))
 
 
+class PysolRandom(RandomBase):
+    def setSeed(self, seed):
+        seed = self._convertSeed(seed)
+        if not 0 <= seed <= self.MAX_SEED:
+            raise ValueError("seed is out of range")
+        self.seed = seed
+        return seed
+
+    def _convertSeed(self, seed):
+        return int(seed)
+
+
 class LCRandom31(RandomBase):
     MAX_SEED = ((1 << (32+2))-1)         # 34 bits
 

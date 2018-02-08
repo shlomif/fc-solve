@@ -51,34 +51,7 @@
 
 import sys
 from make_board_fc_solve import column_to_string, createCards, empty_card, \
-    ms_rearrange, LCRandom31, MTRandom, RandomBase
-
-# /***********************************************************************
-# // Abstract PySol Random number generator.
-# //
-# // We use a seed of type long in the range [0, MAX_SEED].
-# ************************************************************************/
-
-
-class PysolRandom(RandomBase):
-    MAX_SEED = 0
-
-    def setSeed(self, seed):
-        seed = self._convertSeed(seed)
-        if type(seed) is not int:
-            raise TypeError("seeds must be longs")
-        if not (0 <= seed <= self.MAX_SEED):
-            raise ValueError("seed out of range")
-        self.seed = seed
-        return seed
-
-    #
-    # subclass overrideable
-    #
-
-    def _convertSeed(self, seed):
-        return int(seed)
-
+    ms_rearrange, LCRandom31, MTRandom, RandomBase, PysolRandom
 
 # /***********************************************************************
 # // Linear Congruential random generator
@@ -87,6 +60,7 @@ class PysolRandom(RandomBase):
 # // Seminumerical Algorithms, Third Edition, Addison-Wesley, 1998,
 # // p. 106 (line 26) & p. 108
 # ************************************************************************/
+
 
 class LCRandom64(PysolRandom):
     MAX_SEED = 0xffffffffffffffff  # 64 bits
