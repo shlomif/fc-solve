@@ -55,20 +55,6 @@ from make_board_fc_solve import createCards, empty_card, shuffle, RandomBase, \
 
 
 class Game(BaseGame):
-    def __init__(self, game_id, game_num, which_deals, print_ts):
-        mymap = {}
-        for k in list(self.REVERSE_MAP.keys()):
-            if self.REVERSE_MAP[k] is None:
-                mymap[k] = k
-            else:
-                for alias in self.REVERSE_MAP[k]:
-                    mymap[alias] = k
-        self.games_map = mymap
-        self.game_id = game_id
-        self.game_num = game_num
-        self.print_ts = print_ts
-        self.which_deals = which_deals
-
     def print_layout(self):
         game_class = self.lookup()
         if not game_class:

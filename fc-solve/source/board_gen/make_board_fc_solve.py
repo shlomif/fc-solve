@@ -245,28 +245,39 @@ class BaseGame:
     REVERSE_MAP = \
         {
                 "freecell":
-                ["freecell", "forecell", "bakers_game",
+                ["forecell", "bakers_game",
                  "ko_bakers_game", "kings_only_bakers_game",
                  "relaxed_freecell", "eight_off"],
                 "der_katz":
-                ["der_katz", "der_katzenschwantz", "die_schlange"],
+                ["der_katzenschwantz", "die_schlange"],
                 "seahaven":
-                ["seahaven_towers", "seahaven", "relaxed_seahaven",
+                ["seahaven_towers", "relaxed_seahaven",
                  "relaxed_seahaven_towers"],
                 "bakers_dozen": None,
                 "gypsy": None,
                 "klondike":
-                ["klondike", "klondike_by_threes",
+                ["klondike_by_threes",
                  "casino_klondike", "small_harp", "thumb_and_pouch",
                  "vegas_klondike", "whitehead"],
                 "simple_simon": None,
                 "yukon": None,
                 "beleaguered_castle":
-                ["beleaguered_castle", "streets_and_alleys", "citadel"],
+                ["streets_and_alleys", "citadel"],
                 "fan": None,
                 "black_hole": None,
                 "all_in_a_row": None,
         }
+
+    def __init__(self, game_id, game_num, which_deals, print_ts):
+        mymap = {}
+        for k, v in self.REVERSE_MAP.items():
+            for name in [k] + (v if v else []):
+                mymap[name] = k
+        self.games_map = mymap
+        self.game_id = game_id
+        self.game_num = game_num
+        self.print_ts = print_ts
+        self.which_deals = which_deals
 
 
 def find_index_main(args, find_ret):
