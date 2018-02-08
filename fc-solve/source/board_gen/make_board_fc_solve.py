@@ -241,6 +241,34 @@ def shuffle(cards, game_num, which_deals):
     return r.shuffle(ms_rearrange(cards) if ms else cards)
 
 
+class BaseGame:
+    REVERSE_MAP = \
+        {
+                "freecell":
+                ["freecell", "forecell", "bakers_game",
+                 "ko_bakers_game", "kings_only_bakers_game",
+                 "relaxed_freecell", "eight_off"],
+                "der_katz":
+                ["der_katz", "der_katzenschwantz", "die_schlange"],
+                "seahaven":
+                ["seahaven_towers", "seahaven", "relaxed_seahaven",
+                 "relaxed_seahaven_towers"],
+                "bakers_dozen": None,
+                "gypsy": None,
+                "klondike":
+                ["klondike", "klondike_by_threes",
+                 "casino_klondike", "small_harp", "thumb_and_pouch",
+                 "vegas_klondike", "whitehead"],
+                "simple_simon": None,
+                "yukon": None,
+                "beleaguered_castle":
+                ["beleaguered_castle", "streets_and_alleys", "citadel"],
+                "fan": None,
+                "black_hole": None,
+                "all_in_a_row": None,
+        }
+
+
 def find_index_main(args, find_ret):
     output_to_stdout = True
     is_ms = False
