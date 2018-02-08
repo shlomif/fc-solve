@@ -286,6 +286,15 @@ class BaseGame:
     def get_num_decks(self):
         return 2 if self.is_two_decks() else 1
 
+    def print_layout(self):
+        game_class = self.games_map[self.game_id]
+        if not game_class:
+            raise ValueError("Unknown game type " + self.game_id + "\n")
+
+        self.deal()
+        getattr(self, game_class)()
+        self.board.output()
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True

@@ -55,18 +55,6 @@ from make_board_fc_solve import createCards, empty_card, shuffle, RandomBase, \
 
 
 class Game(BaseGame):
-    def print_layout(self):
-        game_class = self.lookup()
-        if not game_class:
-            raise ValueError("Unknown game type " + self.game_id + "\n")
-
-        self.deal()
-        getattr(self, game_class)()
-        self.board.output()
-
-    def lookup(self):
-        return self.games_map[self.game_id]
-
     def deal(self):
         cards = shuffle(createCards(self.get_num_decks(), self.print_ts),
                         self.game_num, self.which_deals)
