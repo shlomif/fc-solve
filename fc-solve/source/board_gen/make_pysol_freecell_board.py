@@ -51,8 +51,8 @@
 
 import sys
 import random2
-from make_board_fc_solve import createCards, empty_card, ms_rearrange, \
-    LCRandom31, RandomBase
+from make_board_fc_solve import column_to_string, createCards, empty_card, \
+    ms_rearrange, LCRandom31, RandomBase
 
 # /***********************************************************************
 # // Abstract PySol Random number generator.
@@ -198,10 +198,6 @@ class Board:
         if res:
             self.foundations[card.suit] = card
         return res
-
-
-def column_to_string(col):
-    return " ".join([c.to_s() for c in col])
 
 
 def shuffle(orig_cards, game_num, which_deals):

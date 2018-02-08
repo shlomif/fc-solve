@@ -56,6 +56,10 @@ def empty_card():
     return ret
 
 
+def column_to_string(col):
+    return ' '.join([x.to_s() for x in col])
+
+
 def createCards(num_decks, print_ts):
     ret = []
     for _ in range(num_decks):
