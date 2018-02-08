@@ -50,6 +50,12 @@ class Card(object):
         return ret
 
 
+def empty_card():
+    ret = Card(0, 0, 0, True)
+    ret.empty = True
+    return ret
+
+
 def createCards(num_decks, print_ts):
     ret = []
     for _ in range(num_decks):
