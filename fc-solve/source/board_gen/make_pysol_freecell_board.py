@@ -50,32 +50,11 @@
 # ---------------------------------------------------------------------------
 
 import sys
-from make_board_fc_solve import RandomBase, Board, BaseGame
+from make_board_fc_solve import RandomBase, BaseGame
 
 
 class Game(BaseGame):
-    # These are the games variants:
-    # Each one is a callback.
-    def bakers_dozen(game):
-        i, n = 0, 13
-        kings = []
-        cards = game.cards
-        cards.reverse()
-        for c in cards:
-            if c.is_king():
-                kings.append(i)
-            i += 1
-        for i in kings:
-            j = i % n
-            while j < i:
-                if not cards[j].is_king():
-                    cards[i], cards[j] = cards[j], cards[i]
-                    break
-                j += n
-
-        game.new_cards(cards)
-        game.board = Board(13)
-        game.cyclical_deal(52, 13)
+    pass
 
 
 def shlomif_main(args):

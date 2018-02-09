@@ -366,6 +366,20 @@ class BaseGame:
         game.cyclical_deal(52, 13)
         print('Foundations: -')
 
+    def bakers_dozen(game):
+        n = 13
+        cards = list(reversed(game.cards))
+        for i in [i for i, c in enumerate(cards) if c.is_king()]:
+            j = i % n
+            while j < i:
+                if not cards[j].is_king():
+                    cards[i], cards[j] = cards[j], cards[i]
+                    break
+                j += n
+        game.new_cards(cards)
+        game.board = Board(13)
+        game.cyclical_deal(52, 13)
+
     def beleaguered_castle(game):
         game.board = Board(8, with_foundations=True)
         if game.game_id in ('beleaguered_castle', 'citadel'):
