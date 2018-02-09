@@ -103,22 +103,6 @@ class Game(BaseGame):
         if not (game.game_id == "small_harp"):
             game.board.reverse_cols()
 
-    def _shuffleHookMoveSorter(self, cards, func, ncards):
-        # note that we reverse the cards, so that smaller sort_orders
-        # will be nearer to the top of the Talon
-        sitems, i = [], len(cards)
-        for c in cards[:]:
-            select, sort_order = func(c)
-            if select:
-                cards.remove(c)
-                sitems.append((sort_order, i, c))
-                if len(sitems) >= ncards:
-                    break
-            i -= 1
-        sitems.sort()
-        sitems.reverse()
-        return cards, [item[2] for item in sitems]
-
     def black_hole(game):
         game.board = Board(17)
 

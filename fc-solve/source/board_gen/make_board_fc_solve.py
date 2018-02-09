@@ -335,6 +335,20 @@ class BaseGame:
     def add_empty_fc(self):
         self.add_freecell(empty_card())
 
+    def _shuffleHookMoveSorter(self, cards, cb, ncards):
+        extracted, i, new = [], len(cards), []
+        for c in cards:
+            select, ord_ = cb(c)
+            if select:
+                extracted.append((ord_, i, c))
+                if len(extracted) >= ncards:
+                    new += cards[(len(cards)-i+1):]
+                    break
+            else:
+                new.append(c)
+            i -= 1
+        return new, [x[2] for x in reversed(sorted(extracted))]
+
     def _shuffleHookMoveToBottom(self, inp, cb, ncards=999999):
         cards, scards = self._shuffleHookMoveSorter(inp, cb, ncards)
         return scards + cards
