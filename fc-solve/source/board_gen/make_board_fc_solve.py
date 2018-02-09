@@ -355,7 +355,7 @@ class BaseGame:
         num_cols = 8
         game.board = Board(num_cols, with_talon=True)
         game.cyclical_deal(num_cols*2, num_cols, flipped=True)
-        game.cyclical_deal(num_cols, num_cols, flipped=False)
+        game.cyclical_deal(num_cols, num_cols)
         game.add_all_to_talon()
 
     def seahaven(game):
@@ -370,6 +370,17 @@ class BaseGame:
         for num_cards in range(9, 2, -1):
             game.cyclical_deal(num_cards, num_cards)
         game.cyclical_deal(10, 10)
+
+    def yukon(game):
+        num_cols = 7
+        game.board = Board(num_cols)
+        for i in range(1, num_cols):
+            for j in range(i, num_cols):
+                game.add(j, next(game).flip())
+        for i in range(4):
+            for j in range(1, num_cols):
+                game.add(j, next(game))
+        game.cyclical_deal(num_cols, num_cols)
 
 
 def find_index_main(args, find_ret):

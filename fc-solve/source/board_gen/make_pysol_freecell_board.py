@@ -181,20 +181,6 @@ class Game(BaseGame):
         if game.game_id == "streets_and_alleys":
             game.cyclical_deal(4, 4)
 
-    def yukon(game):
-        num_cols = 7
-        game.board = Board(num_cols)
-
-        for i in range(1, num_cols):
-            for j in range(i, num_cols):
-                game.add(j, next(game).flip())
-
-        for i in range(4):
-            for j in range(1, num_cols):
-                game.add(j, next(game))
-
-        game.cyclical_deal(num_cols, num_cols)
-
 
 def shlomif_main(args):
     print_ts = False
