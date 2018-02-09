@@ -351,19 +351,19 @@ class BaseGame:
                 if game.game_id == "eight_off":
                     game.add_empty_fc()
 
-    def seahaven(game):
-        game.board = Board(10, with_freecells=True)
-        game.cyclical_deal(50, 10)
-        game.add_empty_fc()
-        for c in game:
-            game.add_freecell(c)
-
     def gypsy(game):
         num_cols = 8
         game.board = Board(num_cols, with_talon=True)
         game.cyclical_deal(num_cols*2, num_cols, flipped=True)
         game.cyclical_deal(num_cols, num_cols, flipped=False)
         game.add_all_to_talon()
+
+    def seahaven(game):
+        game.board = Board(10, with_freecells=True)
+        game.cyclical_deal(50, 10)
+        game.add_empty_fc()
+        for c in game:
+            game.add_freecell(c)
 
 
 def find_index_main(args, find_ret):
