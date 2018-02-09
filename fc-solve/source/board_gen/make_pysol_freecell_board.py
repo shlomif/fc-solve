@@ -69,20 +69,6 @@ class Game(BaseGame):
             if not ((game.game_id == "die_schlange") and (card.rank == 1)):
                 game.add(col_idx, card)
 
-    def freecell(game):
-        is_fc = (game.game_id in ('forecell', 'eight_off'))
-
-        game.board = Board(8, with_freecells=is_fc)
-
-        if is_fc:
-            game.cyclical_deal(48, 8)
-            for card in game:
-                game.add_freecell(card)
-                if game.game_id == "eight_off":
-                    game.add_freecell(empty_card())
-        else:
-            game.cyclical_deal(52, 8)
-
     def seahaven(game):
         game.board = Board(10, with_freecells=True)
         game.add_freecell(empty_card())

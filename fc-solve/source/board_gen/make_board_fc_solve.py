@@ -332,6 +332,17 @@ class BaseGame:
         for c in self:
             self.board.add_talon(c)
 
+    def freecell(game):
+        is_fc = (game.game_id in ("forecell", "eight_off"))
+        game.board = Board(8, with_freecells=is_fc)
+        game.cyclical_deal((48 if is_fc else 52), 8)
+
+        if is_fc:
+            for c in game:
+                game.add_freecell(c)
+                if game.game_id == "eight_off":
+                    game.add_freecell(empty_card())
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True
