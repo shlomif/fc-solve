@@ -318,6 +318,12 @@ class BaseGame:
         self.card_idx += 1
         return c
 
+    def add(self, idx, card):
+        self.board.add(idx, card)
+
+    def add_freecell(self, card):
+        self.board.add_freecell(card)
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True

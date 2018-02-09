@@ -54,12 +54,6 @@ from make_board_fc_solve import empty_card, RandomBase, Board, BaseGame
 
 
 class Game(BaseGame):
-    def add(self, idx, card):
-        self.board.add(idx, card)
-
-    def add_freecell(self, card):
-        self.board.add_freecell(card)
-
     def cyclical_deal(game, num_cards, num_cols, flipped=False):
         for i in range(num_cards):
             game.add(i % num_cols, next(game).flip(flipped=flipped))
