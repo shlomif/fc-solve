@@ -241,7 +241,7 @@ def shuffle(cards, game_num, which_deals):
     return r.shuffle(ms_rearrange(cards) if ms else cards)
 
 
-class BaseGame:
+class Game:
     REVERSE_MAP = \
         {
                 "freecell":

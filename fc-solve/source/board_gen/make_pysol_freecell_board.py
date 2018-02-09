@@ -50,11 +50,7 @@
 # ---------------------------------------------------------------------------
 
 import sys
-from make_board_fc_solve import RandomBase, BaseGame
-
-
-class Game(BaseGame):
-    pass
+from make_board_fc_solve import RandomBase, Game
 
 
 def shlomif_main(args):
