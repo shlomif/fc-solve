@@ -8,7 +8,7 @@
 # Licensed under the MIT/Expat License.
 
 import sys
-from make_board_fc_solve import find_index_main, LCRandom31
+from make_pysol_freecell_board import find_index_main, LCRandom31
 
 if sys.version_info > (3,):
     xrange = range

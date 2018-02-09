@@ -29,7 +29,6 @@ MACRO(my_board_gen_prog myprog tgt)
 ENDMACRO()
 
 my_board_gen_prog("find-freecell-deal-index.py" "find_index_prog")
-my_board_gen_prog("make_board_fc_solve.py" "make_board_fc_solve")
 my_board_gen_prog("make_pysol_freecell_board.py" "make_pysol_board")
 my_board_gen_prog("transpose-freecell-board.py" "transpose_freecell_board_prog")
 # Empty list

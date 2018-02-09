@@ -8,7 +8,7 @@
 # Licensed under the MIT/Expat License.
 
 import sys
-from make_board_fc_solve import find_index_main
+from make_pysol_freecell_board import find_index_main
 from find_index_lib_py import ffi, lib
 
 
