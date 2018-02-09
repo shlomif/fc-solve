@@ -366,6 +366,27 @@ class BaseGame:
         game.cyclical_deal(52, 13)
         print('Foundations: -')
 
+    def beleaguered_castle(game):
+        game.board = Board(8, with_foundations=True)
+        if game.game_id in ('beleaguered_castle', 'citadel'):
+            new = []
+            for c in game:
+                if c.is_ace():
+                    game.board.put_into_founds(c)
+                else:
+                    new.append(c)
+            game.new_cards(new)
+        for _ in range(6):
+            for s in range(8):
+                c = next(game)
+                if not ((game.game_id == 'citadel') and
+                        game.board.put_into_founds(c)):
+                    game.add(s, c)
+            if game.no_more_cards():
+                break
+        if game.game_id == 'streets_and_alleys':
+            game.cyclical_deal(4, 4)
+
     def black_hole(game):
         game.board = Board(17)
         game.cards = game._shuffleHookMoveToBottom(

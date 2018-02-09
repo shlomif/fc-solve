@@ -77,34 +77,6 @@ class Game(BaseGame):
         game.board = Board(13)
         game.cyclical_deal(52, 13)
 
-    def beleaguered_castle(game):
-        aces_up = game.game_id in ("beleaguered_castle", "citadel")
-
-        game.board = Board(8, with_foundations=True)
-
-        if aces_up:
-            new_cards = []
-
-            for c in game:
-                if c.is_ace():
-                    game.board.put_into_founds(c)
-                else:
-                    new_cards.append(c)
-
-            game.new_cards(new_cards)
-
-        for i in range(6):
-            for s in range(8):
-                c = next(game)
-                if not ((game.game_id == "citadel") and
-                        game.board.put_into_founds(c)):
-                    game.add(s, c)
-            if game.no_more_cards():
-                break
-
-        if game.game_id == "streets_and_alleys":
-            game.cyclical_deal(4, 4)
-
 
 def shlomif_main(args):
     print_ts = False
