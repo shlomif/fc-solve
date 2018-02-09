@@ -56,19 +56,6 @@ from make_board_fc_solve import RandomBase, Board, BaseGame
 class Game(BaseGame):
     # These are the games variants:
     # Each one is a callback.
-    def der_katz(game):
-        if game.game_id == "die_schlange":
-            print("Foundations: H-A S-A D-A C-A H-A S-A D-A C-A")
-
-        game.board = Board(9)
-        col_idx = 0
-
-        for card in game:
-            if card.is_king():
-                col_idx += 1
-            if not ((game.game_id == "die_schlange") and (card.rank == 1)):
-                game.add(col_idx, card)
-
     def bakers_dozen(game):
         i, n = 0, 13
         kings = []

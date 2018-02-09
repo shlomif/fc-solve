@@ -376,6 +376,18 @@ class BaseGame:
         game.cyclical_deal(52-1, 17)
         print('Foundations: AS')
 
+    def der_katz(game):
+        is_ds = game.game_id == 'die_schlange'
+        if is_ds:
+            print('Foundations: H-A S-A D-A C-A H-A S-A D-A C-A')
+        game.board = Board(9)
+        i = 0
+        for c in game:
+            if c.is_king():
+                i += 1
+            if not (is_ds and c.is_ace()):
+                game.add(i, c)
+
     def fan(game):
         game.board = Board(18)
         game.cyclical_deal(52-1, 17)
