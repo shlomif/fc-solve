@@ -50,35 +50,7 @@
 # ---------------------------------------------------------------------------
 
 import sys
-from make_board_fc_solve import RandomBase, Game
-
-
-def shlomif_main(args):
-    print_ts = False
-    which_deals = RandomBase.DEALS_PYSOL
-    while args[1][0] == '-':
-        a = args[1]
-        if a == "-t":
-            print_ts = True
-            args.pop(0)
-        elif (a == "--pysolfc") or (a == "-F"):
-            which_deals = RandomBase.DEALS_PYSOLFC
-            args.pop(0)
-        elif (a == "--ms") or (a == "-M"):
-            which_deals = RandomBase.DEALS_MS
-            args.pop(0)
-        else:
-            raise ValueError("Unknown flag " + a + "!")
-
-    game_num = int(args[1])
-    if len(args) >= 3:
-        which_game = args[2]
-    else:
-        which_game = "freecell"
-
-    game = Game(which_game, game_num, which_deals, print_ts)
-    game.print_layout()
-
+from make_board_fc_solve import shlomif_main
 
 if __name__ == "__main__":
     sys.exit(shlomif_main(sys.argv))

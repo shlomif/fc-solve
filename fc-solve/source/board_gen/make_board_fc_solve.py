@@ -481,6 +481,33 @@ class Game:
         game.cyclical_deal(num_cols, num_cols)
 
 
+def shlomif_main(args):
+    print_ts = False
+    which_deals = RandomBase.DEALS_PYSOL
+    while args[1][0] == '-':
+        a = args[1]
+        if a == "-t":
+            print_ts = True
+            args.pop(0)
+        elif (a == "--pysolfc") or (a == "-F"):
+            which_deals = RandomBase.DEALS_PYSOLFC
+            args.pop(0)
+        elif (a == "--ms") or (a == "-M"):
+            which_deals = RandomBase.DEALS_MS
+            args.pop(0)
+        else:
+            raise ValueError("Unknown flag " + a + "!")
+
+    game_num = int(args[1])
+    if len(args) >= 3:
+        which_game = args[2]
+    else:
+        which_game = "freecell"
+
+    game = Game(which_game, game_num, which_deals, print_ts)
+    game.print_layout()
+
+
 def find_index_main(args, find_ret):
     output_to_stdout = True
     is_ms = False
@@ -563,3 +590,7 @@ def find_index_main(args, find_ret):
         print("Not found!")
         ret_code = -1
     return ret_code
+
+
+if __name__ == "__main__":
+    sys.exit(shlomif_main(sys.argv))
