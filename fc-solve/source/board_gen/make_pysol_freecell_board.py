@@ -90,13 +90,6 @@ class Game(BaseGame):
         game.board = Board(13)
         game.cyclical_deal(52, 13)
 
-    def gypsy(game):
-        num_cols = 8
-        game.board = Board(num_cols, with_talon=True)
-        game.cyclical_deal(num_cols*2, num_cols, flipped=True)
-        game.cyclical_deal(num_cols, num_cols, flipped=False)
-        game.add_all_to_talon()
-
     def klondike(game):
         num_cols = 7
         game.board = Board(num_cols, with_talon=True)
