@@ -113,11 +113,6 @@ class Game(BaseGame):
         for s in range(10):
             game.add(s, next(game))
 
-    def fan(game):
-        game.board = Board(18)
-        game.cyclical_deal(52-1, 17)
-        game.add(17, next(game))
-
     def _shuffleHookMoveSorter(self, cards, func, ncards):
         # note that we reverse the cards, so that smaller sort_orders
         # will be nearer to the top of the Talon

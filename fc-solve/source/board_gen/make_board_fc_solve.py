@@ -335,6 +335,11 @@ class BaseGame:
     def add_empty_fc(self):
         self.add_freecell(empty_card())
 
+    def fan(game):
+        game.board = Board(18)
+        game.cyclical_deal(52-1, 17)
+        game.add(17, next(game))
+
     def freecell(game):
         is_fc = (game.game_id in ("forecell", "eight_off"))
         game.board = Board(8, with_freecells=is_fc)
