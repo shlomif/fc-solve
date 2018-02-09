@@ -54,10 +54,6 @@ from make_board_fc_solve import empty_card, RandomBase, Board, BaseGame
 
 
 class Game(BaseGame):
-    def add_all_to_talon(game):
-        for card in game:
-            game.board.add_talon(card)
-
     # These are the games variants:
     # Each one is a callback.
     def der_katz(game):

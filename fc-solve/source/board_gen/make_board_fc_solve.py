@@ -328,6 +328,10 @@ class BaseGame:
         for i in range(num_cards):
             self.add(i % num_cols, next(self).flip(flipped=flipped))
 
+    def add_all_to_talon(self):
+        for c in self:
+            self.board.add_talon(c)
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True
