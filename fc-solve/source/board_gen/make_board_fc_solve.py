@@ -332,6 +332,9 @@ class BaseGame:
         for c in self:
             self.board.add_talon(c)
 
+    def add_empty_fc(self):
+        self.add_freecell(empty_card())
+
     def freecell(game):
         is_fc = (game.game_id in ("forecell", "eight_off"))
         game.board = Board(8, with_freecells=is_fc)
@@ -341,7 +344,14 @@ class BaseGame:
             for c in game:
                 game.add_freecell(c)
                 if game.game_id == "eight_off":
-                    game.add_freecell(empty_card())
+                    game.add_empty_fc()
+
+    def seahaven(game):
+        game.board = Board(10, with_freecells=True)
+        game.cyclical_deal(50, 10)
+        game.add_empty_fc()
+        for c in game:
+            game.add_freecell(c)
 
 
 def find_index_main(args, find_ret):

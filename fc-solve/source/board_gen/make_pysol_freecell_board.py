@@ -50,7 +50,7 @@
 # ---------------------------------------------------------------------------
 
 import sys
-from make_board_fc_solve import empty_card, RandomBase, Board, BaseGame
+from make_board_fc_solve import RandomBase, Board, BaseGame
 
 
 class Game(BaseGame):
@@ -68,13 +68,6 @@ class Game(BaseGame):
                 col_idx += 1
             if not ((game.game_id == "die_schlange") and (card.rank == 1)):
                 game.add(col_idx, card)
-
-    def seahaven(game):
-        game.board = Board(10, with_freecells=True)
-        game.add_freecell(empty_card())
-        game.cyclical_deal(50, 10)
-        for card in game:
-            game.add_freecell(card)
 
     def bakers_dozen(game):
         i, n = 0, 13
