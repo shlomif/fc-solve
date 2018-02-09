@@ -103,17 +103,6 @@ class Game(BaseGame):
         if not (game.game_id == "small_harp"):
             game.board.reverse_cols()
 
-    def all_in_a_row(game):
-        game.board = Board(13)
-
-        # move Ace to bottom of the Talon (i.e. last cards to be dealt)
-        game.cards = game._shuffleHookMoveToTop(
-            game.cards,
-            lambda c: (c.id == 13, c.suit),
-            1)
-        game.cyclical_deal(52, 13)
-        print("Foundations: -")
-
     def beleaguered_castle(game):
         aces_up = game.game_id in ("beleaguered_castle", "citadel")
 

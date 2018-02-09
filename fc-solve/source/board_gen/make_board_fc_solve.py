@@ -357,6 +357,15 @@ class BaseGame:
         cards, scards = self._shuffleHookMoveSorter(inp, cb, ncards)
         return cards + scards
 
+    def all_in_a_row(game):
+        game.board = Board(13)
+        game.cards = game._shuffleHookMoveToTop(
+            game.cards,
+            lambda c: (c.id == 13, c.suit),
+            1)
+        game.cyclical_deal(52, 13)
+        print('Foundations: -')
+
     def black_hole(game):
         game.board = Board(17)
         game.cards = game._shuffleHookMoveToBottom(
