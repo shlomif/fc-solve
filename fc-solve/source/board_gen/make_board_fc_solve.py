@@ -399,6 +399,16 @@ class BaseGame:
         game.cyclical_deal(num_cols, num_cols)
         game.add_all_to_talon()
 
+    def klondike(game):
+        num_cols = 7
+        game.board = Board(num_cols, with_talon=True)
+        for r in range(num_cols-1, 0, -1):
+            game.cyclical_deal(r, r, flipped=True)
+        game.cyclical_deal(num_cols, num_cols)
+        game.add_all_to_talon()
+        if not (game.game_id == 'small_harp'):
+            game.board.reverse_cols()
+
     def seahaven(game):
         game.board = Board(10, with_freecells=True)
         game.cyclical_deal(50, 10)

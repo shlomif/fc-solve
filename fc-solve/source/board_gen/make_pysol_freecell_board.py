@@ -90,19 +90,6 @@ class Game(BaseGame):
         game.board = Board(13)
         game.cyclical_deal(52, 13)
 
-    def klondike(game):
-        num_cols = 7
-        game.board = Board(num_cols, with_talon=True)
-
-        for r in range(1, num_cols):
-            for s in range(num_cols-r):
-                game.add(s, next(game).flip())
-
-        game.cyclical_deal(num_cols, num_cols)
-        game.add_all_to_talon()
-        if not (game.game_id == "small_harp"):
-            game.board.reverse_cols()
-
     def beleaguered_castle(game):
         aces_up = game.game_id in ("beleaguered_castle", "citadel")
 
