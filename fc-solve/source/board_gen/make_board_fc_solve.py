@@ -357,6 +357,16 @@ class BaseGame:
         cards, scards = self._shuffleHookMoveSorter(inp, cb, ncards)
         return cards + scards
 
+    def black_hole(game):
+        game.board = Board(17)
+        game.cards = game._shuffleHookMoveToBottom(
+            game.cards,
+            lambda c: (c.id == 13, c.suit),
+            1)
+        next(game)
+        game.cyclical_deal(52-1, 17)
+        print('Foundations: AS')
+
     def fan(game):
         game.board = Board(18)
         game.cyclical_deal(52-1, 17)
