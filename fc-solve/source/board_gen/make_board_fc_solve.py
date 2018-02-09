@@ -365,6 +365,12 @@ class BaseGame:
         for c in game:
             game.add_freecell(c)
 
+    def simple_simon(game):
+        game.board = Board(10)
+        for num_cards in range(9, 2, -1):
+            game.cyclical_deal(num_cards, num_cards)
+        game.cyclical_deal(10, 10)
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True

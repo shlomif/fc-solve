@@ -103,16 +103,6 @@ class Game(BaseGame):
         if not (game.game_id == "small_harp"):
             game.board.reverse_cols()
 
-    def simple_simon(game):
-        game.board = Board(10)
-        num_cards = 9
-        while num_cards >= 3:
-            for s in range(num_cards):
-                game.add(s, next(game))
-            num_cards -= 1
-        for s in range(10):
-            game.add(s, next(game))
-
     def _shuffleHookMoveSorter(self, cards, func, ncards):
         # note that we reverse the cards, so that smaller sort_orders
         # will be nearer to the top of the Talon
