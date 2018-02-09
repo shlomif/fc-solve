@@ -54,10 +54,6 @@ from make_board_fc_solve import empty_card, RandomBase, Board, BaseGame
 
 
 class Game(BaseGame):
-    def cyclical_deal(game, num_cards, num_cols, flipped=False):
-        for i in range(num_cards):
-            game.add(i % num_cols, next(game).flip(flipped=flipped))
-
     def add_all_to_talon(game):
         for card in game:
             game.board.add_talon(card)

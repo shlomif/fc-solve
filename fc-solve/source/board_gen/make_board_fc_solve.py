@@ -324,6 +324,10 @@ class BaseGame:
     def add_freecell(self, card):
         self.board.add_freecell(card)
 
+    def cyclical_deal(self, num_cards, num_cols, flipped=False):
+        for i in range(num_cards):
+            self.add(i % num_cols, next(self).flip(flipped=flipped))
+
 
 def find_index_main(args, find_ret):
     output_to_stdout = True
