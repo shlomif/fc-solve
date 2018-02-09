@@ -119,16 +119,6 @@ class Game(BaseGame):
         sitems.reverse()
         return cards, [item[2] for item in sitems]
 
-    def _shuffleHookMoveToBottom(self, cards, func, ncards=999999):
-        # move cards to bottom of the Talon (i.e. last cards to be dealt)
-        cards, scards = self._shuffleHookMoveSorter(cards, func, ncards)
-        return scards + cards
-
-    def _shuffleHookMoveToTop(self, cards, func, ncards=999999):
-        # move cards to top of the Talon (i.e. last cards to be dealt)
-        cards, scards = self._shuffleHookMoveSorter(cards, func, ncards)
-        return cards + scards
-
     def black_hole(game):
         game.board = Board(17)
 

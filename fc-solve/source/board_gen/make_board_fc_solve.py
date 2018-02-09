@@ -335,6 +335,14 @@ class BaseGame:
     def add_empty_fc(self):
         self.add_freecell(empty_card())
 
+    def _shuffleHookMoveToBottom(self, inp, cb, ncards=999999):
+        cards, scards = self._shuffleHookMoveSorter(inp, cb, ncards)
+        return scards + cards
+
+    def _shuffleHookMoveToTop(self, inp, cb, ncards=999999):
+        cards, scards = self._shuffleHookMoveSorter(inp, cb, ncards)
+        return cards + scards
+
     def fan(game):
         game.board = Board(18)
         game.cyclical_deal(52-1, 17)
