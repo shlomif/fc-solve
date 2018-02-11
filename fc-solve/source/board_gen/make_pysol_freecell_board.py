@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 #
-# make_board_fc_solve.py - Expat-licensed routines for the board-gen code.
+# make_pysol_freecell_board.py - generate PySol's solitaire deals.
 #
 # Copyright by Shlomi Fish, 2018
 #
 # Licensed under the MIT/Expat License.
-
+#
+# This code is inspired by PySol by Markus F.X.J. Oberhumer and others.
+# See: http://pysolfc.sourceforge.net/ .
 import random2
 import re
 import sys
