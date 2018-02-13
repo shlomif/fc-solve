@@ -443,6 +443,17 @@ static inline fcs_bool_t handle_existing_void(
     else
     {
         ON_STATE_NEW();
+#ifdef DEBUG
+        if (getenv("FCS_DEBUG2"))
+        {
+            printf("%s", "\n\nAdded state: ");
+            for (size_t i = 0; i < sizeof(new_state->key[0]); ++i)
+            {
+                printf("\\x%02x", (int)((unsigned char *)(new_state->key))[i]);
+            }
+            printf("\n\n");
+        }
+#endif
         return TRUE;
     }
 }
