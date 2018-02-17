@@ -80,6 +80,24 @@ static inline int find_empty_stack(fcs_kv_state raw_state_raw,
     return -1;
 }
 
+static inline void sort_derived_states(
+    fcs_derived_states_list_t *const d, const size_t derived_start_idx)
+{
+    var_AUTO(start, d->states + derived_start_idx);
+    const_AUTO(limit, d->states + d->num_states);
+
+    for (var_AUTO(b, start + 1); b < limit; b++)
+    {
+        for (var_AUTO(c, b); (c > start) && (c[0].context.i < c[-1].context.i);
+             c--)
+        {
+            const_AUTO(swap_temp, c[-1]);
+            c[-1] = c[0];
+            c[0] = swap_temp;
+        }
+    }
+}
+
 /*
  * Throughout this code the following local variables are used to quickly
  * access the instance's members:
@@ -101,6 +119,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 {
     tests_define_accessors();
     STACKS__SET_PARAMS();
+// #define TWI
+#ifdef TWI
+    const size_t derived_start_idx = derived_states_list->num_states;
+#endif
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
@@ -131,10 +153,21 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
                 FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
                 deck * 4 + fcs_card_suit(card));
 
+#ifdef TWI
+#if 1
+            state_context_value =
+                (((fcs_card_rank(card)) << 8) | fcs_card_suit(card));
+#else
+            state_context_value = card;
+#endif
+#endif
             sfs_check_state_end();
             break;
         }
     }
+#ifdef TWI
+    sort_derived_states(derived_states_list, derived_start_idx);
+#endif
 }
 
 static inline void sort_derived_states(
@@ -338,7 +371,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     const fcs_game_limit num_vacant_slots =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
 
+#ifdef FLUT
     const size_t derived_start_idx = derived_states_list->num_states;
+#endif
 
     CALC_POSITIONS_BY_RANK();
     /* Let's try to put cards in the freecells on top of stacks */
@@ -411,6 +446,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
             fcs_move_stack_non_seq_push(
                 moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, ds);
 
+#ifdef FLUT
             /*
              * This is to preserve the order that the
              * initial (non-optimized) version of the
@@ -418,12 +454,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
              * and consistency.
              * */
             state_context_value = ((ds << 16) | ((255 - dc) << 8) | fc);
+#endif
 
             sfs_check_state_end();
         }
     }
 
+#ifdef FLUT
     sort_derived_states(derived_states_list, derived_start_idx);
+#endif
 }
 #endif
 
@@ -434,6 +473,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
     FC__STACKS__SET_PARAMS();
     const fcs_game_limit num_vacant_slots =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
+#define RAR
+#ifdef RAR
+    const size_t derived_start_idx = derived_states_list->num_states;
+#endif
 
     /* Now let's check if a card that is under some other cards can be placed
      * in the foundations. */
@@ -477,11 +520,22 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
                 fcs_increment_foundation(new_state_key, dest_found);
                 fcs_move_stack_non_seq_push(moves,
                     FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx, dest_found);
+#ifdef RAR
+#if 1
+                state_context_value =
+                    (((fcs_card_rank(card)) << 8) | fcs_card_suit(card));
+#else
+                state_context_value = card;
+#endif
+#endif
                 sfs_check_state_end();
                 break;
             }
         }
     }
+#ifdef RAR
+    sort_derived_states(derived_states_list, derived_start_idx);
+#endif
 }
 
 DECLARE_MOVE_FUNCTION(
@@ -656,7 +710,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     const_SLOT(num_vacant_stacks, soft_thread);
     const fcs_game_limit num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
-    const size_t derived_start_idx = derived_states_list->num_states;
+    // const size_t derived_start_idx = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
     /* Now let's try to move a card from one stack to the other     *
@@ -714,14 +768,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                  * function used - for backwards-compatibility
                  * and consistency.
                  * */
-                state_context_value =
-                    ((((((stack_idx << 8) | iter.c) << 8) | ds) << 8) | dc);
+                // state_context_value = card;
 
                 sfs_check_state_end();
             }
         }
     }
-    sort_derived_states(derived_states_list, derived_start_idx);
+    // sort_derived_states(derived_states_list, derived_start_idx);
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
@@ -999,7 +1052,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     const fcs_game_limit num_vacant_stacks = soft_thread->num_vacant_stacks;
     const fcs_game_limit num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
+// #define BUTTER
+#ifndef BUTTER
     const int derived_start_idx = derived_states_list->num_states;
+#endif
 
     CALC_POSITIONS_BY_RANK();
     /* This time try to move cards that are already on top of a parent to a
@@ -1112,15 +1168,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                     freestacks_to_fill + freecells_to_fill, 0);
                 fcs_move_sequence(ds, stack_idx, cards_num - c);
 
+#ifndef BUTTER
                 state_context_value =
                     ((((((stack_idx << 8) | c) << 8) | ds) << 8) | dc);
+#endif
 
                 sfs_check_state_end();
             }
         }
     }
 
+#ifndef BUTTER
     sort_derived_states(derived_states_list, derived_start_idx);
+#endif
 }
 
 #if MAX_NUM_FREECELLS > 0
