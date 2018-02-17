@@ -5,6 +5,7 @@ all: dummy
 
 include rules.mak
 include include.mak
+include lib/make/shlomif_common.mak
 
 WITH_DEVEL_VERSION = 1
 
@@ -14,8 +15,6 @@ DEVEL_VER_USE_CACHE = 1
 PROD = 0
 
 SKIP_EMCC = 0
-
-RSYNC = rsync --progress --verbose --rsh=ssh -a --inplace
 
 D = ./dest
 WML_FLAGS = -DBERLIOS=BERLIOS
@@ -265,11 +264,7 @@ upload: all
 upload_local: all
 	$(RSYNC) $(D)/ /var/www/html/shlomif/fc-solve-temp
 
-test: all
-	SKIP_EMCC="$(SKIP_EMCC)" prove Tests/*.t
-
-runtest: all
-	SKIP_EMCC="$(SKIP_EMCC)" runprove Tests/*.t
+TEST_ENV = SKIP_EMCC="$(SKIP_EMCC)"
 
 clean:
 	rm -f lib/fc-solve-for-javascript/*.bc lib/fc-solve-for-javascript/*.js $(TYPESCRIPT_DEST_FILES__NODE) $(TYPESCRIPT_DEST_FILES) $(TS_CHART_DEST)
@@ -277,6 +272,3 @@ clean:
 # A temporary target to edit the active files.
 edit:
 	gvim -o src/js/fcs-validate.ts src/js/web-fc-solve-tests--fcs-validate.ts
-
-%.show:
-	@echo "$* = $($*)"
