@@ -49,21 +49,12 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'without-visited-iter' => 'FCS_WITHOUT_VISITED_ITER',
 );
 
-my @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS = keys %BOOL_OPTS_WITH_FALSE_DEFAULTS;
-
-my %bool_opts_with_false_defaults__values =
-(
-    map { $_ => 0 } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS
-);
-
 my %TRUE_BOOL_OPTS =
 (
     'build-docs' => 'FCS_BUILD_DOCS',
     'test-suite' => 'FCS_WITH_TEST_SUITE',
     'with-ctx-var' => 'FCS_WITH_CONTEXT_VARIABLE',
 );
-my @TRUE_BOOL_KEYS = keys %TRUE_BOOL_OPTS;
-my %true_bool_opts__values = map { $_ => 1 } @TRUE_BOOL_KEYS;
 
 my %INT_OPTS =
 (
@@ -73,14 +64,6 @@ my %INT_OPTS =
     'pack-size' => 'FCS_IA_PACK_SIZE',
     'scan-buckets-num' => 'FCS_MAX_NUM_SCANS_BUCKETS',
 );
-
-my @INT_OPS__KEYS = keys %INT_OPTS;
-
-my %int_opts__values =
-(
-    map { $_ => undef() } @INT_OPS__KEYS
-);
-$int_opts__values{'max-bench-threads-num'} = 4;
 
 my %STR_OPTS =
 (
@@ -103,6 +86,24 @@ my %STR_OPTS =
     ),
 );
 
+my @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS = keys %BOOL_OPTS_WITH_FALSE_DEFAULTS;
+
+my %bool_opts_with_false_defaults__values =
+(
+    map { $_ => 0 } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS
+);
+
+my @TRUE_BOOL_KEYS = keys %TRUE_BOOL_OPTS;
+my %true_bool_opts__values = map { $_ => 1 } @TRUE_BOOL_KEYS;
+
+
+my @INT_OPS__KEYS = keys %INT_OPTS;
+
+my %int_opts__values =
+(
+    map { $_ => undef() } @INT_OPS__KEYS
+);
+
 my @STR_OPTS__KEYS = keys %STR_OPTS;
 for my $k (@STR_OPTS__KEYS)
 {
@@ -110,6 +111,7 @@ for my $k (@STR_OPTS__KEYS)
     $STR_OPTS{$k}{'prefix'} //= '';
 }
 
+$int_opts__values{'max-bench-threads-num'} = 4;
 $STR_OPTS{'prefix'}{value} = '/usr';
 $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
 
@@ -167,6 +169,7 @@ my %themes =
     extra_speed3 => [qw(-l extra_speed2 --no-without-max-num-states --nohard-code-theme)],
     # Role for enabling the pseudo-DFS solver
     pdfs => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
+    pysol_defs => ['--num-stacks=14', '--nobreak-back-compat-1',],
 );
 
 my $SEED_KEY = 'FCS_THEME_RAND';
@@ -210,6 +213,9 @@ if (defined $SEED)
     delete $ENV{$SEED_KEY};
     exec("bash", $FN);
 }
+
+my $HOME = $ENV{HOME};
+
 foreach my $rec (
     {id => "c2", a => "core2",},
     {id => "ci7", a => "corei7-avx",},
@@ -221,7 +227,7 @@ foreach my $rec (
     my $id = $rec->{id};
     my $arch = $rec->{a};
 
-    $themes{$id} = ["--arch=$arch", "--prefix=$ENV{HOME}/apps/fcs",];
+    $themes{$id} = ["--arch=$arch", "--prefix=$HOME/apps/fcs",];
 
     my $def = sub {
         my ($suffix, $theme) = @_;
@@ -247,15 +253,11 @@ foreach my $rec (
     # Testing theme - aims to run the tests quickly
     $bb_def->(t => [qw(-l testing)]);
 
-    if (defined(my $HOME = $ENV{HOME}))
-    {
-        # For use by PySolFC
-        $bb_def->(_pysol => ['--num-stacks=14', '--nobreak-back-compat-1', "--prefix=$HOME/apps/fcs-for-pysol",]);
-    }
+    # For use by PySolFC
+    $bb_def->(_pysol => ['-l', 'pysol_defs', "--prefix=$HOME/apps/fcs-for-pysol",]);
 }
 
 my @new_argv = @ARGV;
-
 
 CALC_NEW_ARGV:
 for (my $idx = 0; $idx < @new_argv ; ++$idx)
