@@ -68,6 +68,10 @@ __PACKAGE__->populate(
             args => { deal => 24, variant => "bakers_game", theme => [], },
             msg  => "Baker's Game Deal #24"
         },
+        '17_lg' => {
+            args => { deal => 17, theme => [ "-l", "looking-glass", ], },
+            msg  => "Freecell Deal No. 17 with the lg preset",
+        },
         '1941_as' => {
             args => { deal => 1941, theme => [ "-l", "amateur-star", ], },
             msg  => "Freecell Dal No. 1941 with the amateur-star preset",
