@@ -74,7 +74,7 @@ __PACKAGE__->populate(
         },
         '1941_as' => {
             args => { deal => 1941, theme => [ "-l", "amateur-star", ], },
-            msg  => "Freecell Dal No. 1941 with the amateur-star preset",
+            msg  => "Freecell Deal No. 1941 with the amateur-star preset",
         },
         '1099_forecell' => {
             args => { deal => 1099, variant => "forecell", theme => [], },
