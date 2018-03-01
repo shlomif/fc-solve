@@ -813,9 +813,6 @@ struct fc_solve_instance_struct
 extern fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t *const soft_thread);
 
-extern void fc_solve_increase_dfs_max_depth(
-    fc_solve_soft_thread_t *const soft_thread);
-
 static inline void *memdup(const void *const src, const size_t my_size)
 {
     void *const dest = malloc(my_size);

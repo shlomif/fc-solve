@@ -25,37 +25,6 @@
 #define kv_calc_depth(ptr_state)                                               \
     calc_depth(FCS_STATE_kv_to_collectible(ptr_state))
 
-#define SOFT_DFS_DEPTH_GROW_BY 16
-void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
-{
-    const_AUTO(new_dfs_max_depth,
-        DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
-    DFS_VAR(soft_thread, soft_dfs_info) =
-        SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
-    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info) +
-                                DFS_VAR(soft_thread, dfs_max_depth));
-    const_AUTO(end_soft_dfs_info, soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY);
-
-    for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
-    {
-        *soft_dfs_info = (fcs_soft_dfs_stack_item_t){
-            .state = NULL,
-            .move_func_list_idx = 0,
-            .move_func_idx = 0,
-            .current_state_index = 0,
-            .derived_states_list =
-                {
-                    .num_states = 0,
-                    .states = NULL,
-                },
-            .derived_states_random_indexes = NULL,
-            .derived_states_random_indexes_max_size = 0,
-        };
-    }
-
-    DFS_VAR(soft_thread, dfs_max_depth) = new_dfs_max_depth;
-}
-
 #ifdef FCS_RCS_STATES
 /* TODO : Unit-test this function as it had had a bug beforehand
  * because fcs_lru_side_t had been an unsigned long.

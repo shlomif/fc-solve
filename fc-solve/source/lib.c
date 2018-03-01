@@ -1006,6 +1006,38 @@ static inline void free_states(fc_solve_instance_t *const instance)
 #endif
 #endif
 
+#define SOFT_DFS_DEPTH_GROW_BY 16
+static void fc_solve_increase_dfs_max_depth(
+    fc_solve_soft_thread_t *const soft_thread)
+{
+    const_AUTO(new_dfs_max_depth,
+        DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
+    DFS_VAR(soft_thread, soft_dfs_info) =
+        SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
+    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info) +
+                                DFS_VAR(soft_thread, dfs_max_depth));
+    const_AUTO(end_soft_dfs_info, soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY);
+
+    for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
+    {
+        *soft_dfs_info = (fcs_soft_dfs_stack_item_t){
+            .state = NULL,
+            .move_func_list_idx = 0,
+            .move_func_idx = 0,
+            .current_state_index = 0,
+            .derived_states_list =
+                {
+                    .num_states = 0,
+                    .states = NULL,
+                },
+            .derived_states_random_indexes = NULL,
+            .derived_states_random_indexes_max_size = 0,
+        };
+    }
+
+    DFS_VAR(soft_thread, dfs_max_depth) = new_dfs_max_depth;
+}
+
 /*
  * fc_solve_soft_dfs_do_solve() is the event loop of the
  * Random-DFS scan. DFS which is recursive in nature is handled here
@@ -1462,9 +1494,7 @@ static inline void fc_solve_soft_thread_init_soft_dfs(
     fc_solve_soft_thread_t *const soft_thread)
 {
     fc_solve_instance_t *const instance = fcs_st_instance(soft_thread);
-    /*
-        Allocate some space for the states at depth 0.
-    */
+    // Allocate some space for the states at depth 0.
     DFS_VAR(soft_thread, depth) = 0;
     fc_solve_increase_dfs_max_depth(soft_thread);
     DFS_VAR(soft_thread, soft_dfs_info)
