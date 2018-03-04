@@ -514,16 +514,16 @@ def find_index_main(args, find_ret):
     output_to_stdout = True
     is_ms = False
     while args[1][0] == '-':
-        if (args[1] == "-o"):
+        if args[1] == "-o":
             args.pop(0)
             if not len(args):
                 raise ValueError("-o must accept an argument.")
             output_to_stdout = False
             args.pop(0)
-        elif (args[1] == '--ms'):
+        elif args[1] == '--ms':
             args.pop(0)
             is_ms = True
-        elif (args[1] == '-'):
+        elif args[1] == '-':
             break
         else:
             raise ValueError("Unknown flag " + args[1] + "!")
@@ -532,8 +532,8 @@ def find_index_main(args, find_ret):
         raise ValueError("only --ms is supported for now!")
     input_from_stdin = True
     input_fn = None
-    if (len(args) >= 2):
-        if (args[1] != "-"):
+    if len(args) >= 2:
+        if args[1] != "-":
             input_fn = args[1]
             input_from_stdin = False
             args.pop(0)
