@@ -483,7 +483,7 @@ class Game:
         game.cyclical_deal(num_cols, num_cols)
 
 
-def shlomif_main(args):
+def make_pysol_board__main(args):
     print_ts = False
     which_deals = RandomBase.DEALS_PYSOL
     while args[1][0] == '-':
@@ -595,4 +595,4 @@ def find_index_main(args, find_ret):
 
 
 if __name__ == "__main__":
-    sys.exit(shlomif_main(sys.argv))
+    sys.exit(make_pysol_board__main(sys.argv))
