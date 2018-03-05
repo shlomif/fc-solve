@@ -191,6 +191,10 @@ class Board:
             self.talon = []
         if self.with_foundations:
             self.foundations = [empty_card() for s in range(4)]
+        self._lines = []
+
+    def add_line(self, string):
+        self._lines.append(string)
 
     def reverse_cols(self):
         self.columns.rev()
@@ -223,16 +227,23 @@ class Board:
                 cells.append(self.foundations[f].found_s())
 
         if len(cells):
-            print("Foundations:" + ("".join([" "+s for s in cells])))
+            self.add_line("Foundations:" + ("".join([" "+s for s in cells])))
 
-    def output(self):
+    def gen_lines(self):
+        self._lines = []
         if self.with_talon:
-            print("Talon: " + column_to_string(self.talon))
+            self.add_line("Talon: " + column_to_string(self.talon))
         if self.with_foundations:
             self.print_foundations()
         if self.with_freecells:
-            print("Freecells: " + column_to_string(self.freecells))
-        self.columns.output()
+            self.add_line("Freecells: " + column_to_string(self.freecells))
+
+        self._lines += [column_to_string(c) for c in self.columns.cols]
+
+    def output(self):
+        self.gen_lines()
+        for l in self._lines:
+            print(l)
 
 
 def shuffle(cards, game_num, which_deals):
