@@ -517,42 +517,7 @@ def make_pysol_board__main(args):
     game.print_layout()
 
 
-def find_index_main(args, find_ret):
-    output_to_stdout = True
-    output_fn = None
-    is_ms = False
-    while args[1][0] == '-':
-        if args[1] == "-o":
-            args.pop(1)
-            if not len(args):
-                raise ValueError("-o must accept an argument.")
-            output_to_stdout = False
-            output_fn = args.pop(1)
-        elif args[1] == '--ms':
-            args.pop(1)
-            is_ms = True
-        elif args[1] == '-':
-            break
-        else:
-            raise ValueError("Unknown flag " + args[1] + "!")
-
-    if not is_ms:
-        raise ValueError("only --ms is supported for now!")
-    input_from_stdin = True
-    input_fn = None
-    if len(args) >= 2:
-        if args[1] != "-":
-            input_fn = args.pop(1)
-            input_from_stdin = False
-
-    content = []
-    if input_from_stdin:
-        content = sys.stdin.readlines()
-    else:
-        with open(input_fn) as f:
-            content = f.readlines()
-    content = ''.join(content)
-
+def find_index__board_string_to_ints(content):
     rank_s = 'A23456789TJQK'
     rank_re = r'[' + rank_s + r']'
     suit_s = 'CSHD'
@@ -588,6 +553,46 @@ def find_index_main(args, find_ret):
         cards[j] = cards[n]
         n -= 1
 
+    return ints
+
+
+def find_index_main(args, find_ret):
+    output_to_stdout = True
+    output_fn = None
+    is_ms = False
+    while args[1][0] == '-':
+        if args[1] == "-o":
+            args.pop(1)
+            if not len(args):
+                raise ValueError("-o must accept an argument.")
+            output_to_stdout = False
+            output_fn = args.pop(1)
+        elif args[1] == '--ms':
+            args.pop(1)
+            is_ms = True
+        elif args[1] == '-':
+            break
+        else:
+            raise ValueError("Unknown flag " + args[1] + "!")
+
+    if not is_ms:
+        raise ValueError("only --ms is supported for now!")
+    input_from_stdin = True
+    input_fn = None
+    if len(args) >= 2:
+        if args[1] != "-":
+            input_fn = args.pop(1)
+            input_from_stdin = False
+
+    content = []
+    if input_from_stdin:
+        content = sys.stdin.readlines()
+    else:
+        with open(input_fn) as f:
+            content = f.readlines()
+
+    content = ''.join(content)
+    ints = find_index__board_string_to_ints(content)
     ret = find_ret(ints)
 
     ret_code = 0
