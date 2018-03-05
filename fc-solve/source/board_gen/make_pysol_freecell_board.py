@@ -490,13 +490,13 @@ def make_pysol_board__main(args):
         a = args[1]
         if a == "-t":
             print_ts = True
-            args.pop(0)
+            args.pop(1)
         elif (a == "--pysolfc") or (a == "-F"):
             which_deals = RandomBase.DEALS_PYSOLFC
-            args.pop(0)
+            args.pop(1)
         elif (a == "--ms") or (a == "-M"):
             which_deals = RandomBase.DEALS_MS
-            args.pop(0)
+            args.pop(1)
         else:
             raise ValueError("Unknown flag " + a + "!")
 
@@ -512,16 +512,17 @@ def make_pysol_board__main(args):
 
 def find_index_main(args, find_ret):
     output_to_stdout = True
+    output_fn = None
     is_ms = False
     while args[1][0] == '-':
         if args[1] == "-o":
-            args.pop(0)
+            args.pop(1)
             if not len(args):
                 raise ValueError("-o must accept an argument.")
             output_to_stdout = False
-            args.pop(0)
+            output_fn = args.pop(1)
         elif args[1] == '--ms':
-            args.pop(0)
+            args.pop(1)
             is_ms = True
         elif args[1] == '-':
             break
@@ -536,7 +537,7 @@ def find_index_main(args, find_ret):
         if args[1] != "-":
             input_fn = args[1]
             input_from_stdin = False
-            args.pop(0)
+            args.pop(1)
 
     content = []
     if input_from_stdin:
@@ -585,8 +586,12 @@ def find_index_main(args, find_ret):
 
     ret_code = 0
     if ret >= 0:
+        s = "Found deal = %d" % ret
         if output_to_stdout:
-            print("Found deal = %d" % ret)
+            print(s)
+        else:
+            with open(output_fn, 'w') as f:
+                f.write("%s\n" % s)
         ret_code = 0
     else:
         print("Not found!")

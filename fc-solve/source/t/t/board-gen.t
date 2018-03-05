@@ -3,8 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 33;
+use Test::More tests => 35;
 use Test::Differences qw/ eq_or_diff /;
+use Path::Tiny qw/ path /;
 
 use FC_Solve::Paths qw/ $FIND_DEAL_INDEX $MAKE_PYSOL bin_board bin_exe_raw /;
 use FC_Solve::Trim qw/trim_trail_ws/;
@@ -671,6 +672,22 @@ _test_find_index(
         cmd      => [ '--ms', bin_board("1941.board") ],
         expected => "Found deal = 1941\n",
     }
+);
+
+# TEST
+_test_find_index(
+    {
+        blurb => "find-deal-index with -o",
+        cmd =>
+            [ '--ms', '-o', bin_board("24.find.txt"), bin_board("24.board") ],
+        expected => q{},
+    }
+);
+
+# TEST
+eq_or_diff(
+    [ scalar path( bin_board("24.find.txt") )->slurp_utf8 ],
+    ["Found deal = 24\n"], "-o flag output to file.",
 );
 
 __END__
