@@ -512,11 +512,7 @@ def make_pysol_board__main(args):
             raise ValueError("Unknown flag " + a + "!")
 
     game_num = int(args[1])
-    if len(args) >= 3:
-        which_game = args[2]
-    else:
-        which_game = "freecell"
-
+    which_game = args[2] if len(args) >= 3 else "freecell"
     game = Game(which_game, game_num, which_deals, print_ts)
     game.print_layout()
 
@@ -546,9 +542,8 @@ def find_index_main(args, find_ret):
     input_fn = None
     if len(args) >= 2:
         if args[1] != "-":
-            input_fn = args[1]
+            input_fn = args.pop(1)
             input_from_stdin = False
-            args.pop(1)
 
     content = []
     if input_from_stdin:
