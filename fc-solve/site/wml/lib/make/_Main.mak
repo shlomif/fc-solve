@@ -116,7 +116,9 @@ $(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
 	touch $@
 
 $(FIND_INDEX__PYJS__DEST): $(FIND_INDEX__PYJS__TGT)
-	$(RSYNC) $(FIND_INDEX__PYJS__TGT_DIR) $(FIND_INDEX__PYJS__DEST_DIR)
+	$(RSYNC) -a $(FIND_INDEX__PYJS__TGT_DIR)/ $(FIND_INDEX__PYJS__DEST_DIR)
+	rm -f $(FIND_INDEX__PYJS__DEST_DIR)/*.html
+
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
 SASS_CMD = sass --style $(SASS_STYLE)
