@@ -83,15 +83,18 @@ CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-s
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
+FIND_INDEX__PYJS__pivot = bootstrap.js
+FIND_INDEX__PYJS__DEST_DIR = $(D)/js/find-index-s2ints/output
+FIND_INDEX__PYJS__DEST = $(FIND_INDEX__PYJS__DEST_DIR)/$(FIND_INDEX__PYJS__pivot)
 FIND_INDEX__PYJS__TGT_DIR = lib/pyjs/find-index-s2ints/output
-FIND_INDEX__PYJS__TGT = $(FIND_INDEX__PYJS__TGT_DIR)/bootstrap.js
+FIND_INDEX__PYJS__TGT = $(FIND_INDEX__PYJS__TGT_DIR)/$(FIND_INDEX__PYJS__pivot)
 
 ifeq ($(SKIP_EMCC),1)
 	FIND_INDEX__PYJS__TARGETS =
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS =
 	LIBFREECELL_SOLVER_JS__TARGETS =
 else
-	FIND_INDEX__PYJS__TARGETS = $(FIND_INDEX__PYJS__TGT)
+	FIND_INDEX__PYJS__TARGETS = $(FIND_INDEX__PYJS__TGT) $(FIND_INDEX__PYJS__DEST)
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS = lib/for-node/js/libfreecell-solver.min.js
 	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM)
 endif
@@ -112,6 +115,8 @@ $(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
 	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__TGT_DIR) -regextype egrep -regex '.*\.(js|html)')
 	touch $@
 
+$(FIND_INDEX__PYJS__DEST): $(FIND_INDEX__PYJS__TGT)
+	$(RSYNC) $(FIND_INDEX__PYJS__TGT_DIR) $(FIND_INDEX__PYJS__DEST_DIR)
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
 SASS_CMD = sass --style $(SASS_STYLE)
