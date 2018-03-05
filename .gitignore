@@ -53,6 +53,7 @@ fc-solve/site/wml/lib/Shlomif/Spelling/Iface.pm
 fc-solve/site/wml/lib/fc-solve-for-javascript/*.bc
 fc-solve/site/wml/lib/fc-solve-for-javascript/CMAKE-BUILD-dir/
 fc-solve/site/wml/lib/fc-solve-for-javascript/__DESTDIR/
+fc-solve/site/wml/lib/fc-solve-for-javascript/board_gen/
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.html
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.html.mem
 fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.js
@@ -65,6 +66,7 @@ fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve-shlomif/patsolve/*.bc
 fc-solve/site/wml/lib/for-node/js/*.js
 fc-solve/site/wml/lib/for-node/libfreecell-solver.js.mem
 fc-solve/site/wml/lib/make/shlomif_common.mak
+fc-solve/site/wml/lib/pyjs/find-index-s2ints/output/
 fc-solve/site/wml/libfreecell-solver.js.mem
 fc-solve/site/wml/rules.mak
 fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings

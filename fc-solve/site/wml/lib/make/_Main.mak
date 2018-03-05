@@ -83,10 +83,15 @@ CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-s
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
+FIND_INDEX__PYJS__TGT_DIR = lib/pyjs/find-index-s2ints/output
+FIND_INDEX__PYJS__TGT = $(FIND_INDEX__PYJS__TGT_DIR)/bootstrap.js
+
 ifeq ($(SKIP_EMCC),1)
+	FIND_INDEX__PYJS__TARGETS =
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS =
 	LIBFREECELL_SOLVER_JS__TARGETS =
 else
+	FIND_INDEX__PYJS__TARGETS = $(FIND_INDEX__PYJS__TGT)
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS = lib/for-node/js/libfreecell-solver.min.js
 	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM)
 endif
@@ -94,6 +99,18 @@ endif
 dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
 dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
+
+dummy: $(FIND_INDEX__PYJS__TARGETS)
+
+FIND_INDEX__PYJS__SRC_BN = fc_solve_find_index_s2ints.py
+
+STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
+
+$(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
+	cp -f $< $(FIND_INDEX__PYJS__SRC_BN)
+	pyjsbuild --output=$(FIND_INDEX__PYJS__TGT_DIR) $(FIND_INDEX__PYJS__SRC_BN)
+	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__TGT_DIR) -regextype egrep -regex '.*\.(js|html)')
+	touch $@
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
@@ -152,7 +169,7 @@ $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA): $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_C
 	find $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR) -type f -print0 | xargs -0 touch
 
 $(LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA)
-	( cd $(LIBFREECELL_SOLVER_JS_DIR) && make -f $(FC_SOLVE_SOURCE_DIR)/../scripts/Makefile.to-javascript.mak SRC_DIR=$(FC_SOLVE_SOURCE_DIR) CMAKE_DIR=$(FC_SOLVE_CMAKE_DIR) && perl -i -lape 's/[ \t]+$$//' *.js *.html)
+	( cd $(LIBFREECELL_SOLVER_JS_DIR) && make -f $(FC_SOLVE_SOURCE_DIR)/../scripts/Makefile.to-javascript.mak SRC_DIR=$(FC_SOLVE_SOURCE_DIR) CMAKE_DIR=$(FC_SOLVE_CMAKE_DIR) && $(STRIP_TRAIL_SPACE) *.js *.html)
 
 clean_js:
 	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.js $(LIBFREECELL_SOLVER_JS_DIR)/*.bc
