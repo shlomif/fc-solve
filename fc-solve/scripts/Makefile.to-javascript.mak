@@ -16,6 +16,7 @@ EMBED_FILE_MUNGE_PL = $(SRC_DIR)/../scripts/emscripten-embed-munge.pl
 PATS_C_FILES = $(patsubst %,patsolve-shlomif/patsolve/%,param.c pat.c patsolve.c tree.c)
 
 LIB_C_FILES = \
+board_gen/find_deal.c \
 card.c \
 check_and_add_state.c \
 cmd_line.c \
@@ -55,24 +56,28 @@ LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.bc,$(CMAKE_C_FILES))
 all: $(RESULT_NODE_JS_EXE) $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS = \
-    fc_solve__hll_ms_rand__get_singleton \
 	fc_solve__hll_ms_rand__init \
 	fc_solve__hll_ms_rand__mod_rand \
+	fc_solve_user__find_deal__alloc \
+	fc_solve_user__find_deal__fill \
+	fc_solve_user__find_deal__free \
+	fc_solve_user__find_deal__run \
 	free \
 	freecell_solver_user_alloc \
-	freecell_solver_user_cmd_line_read_cmd_line_preset \
 	freecell_solver_user_cmd_line_parse_args_with_file_nesting_count \
+	freecell_solver_user_cmd_line_read_cmd_line_preset \
 	freecell_solver_user_current_state_stringify \
 	freecell_solver_user_free \
+	freecell_solver_user_get_invalid_state_error_into_string \
 	freecell_solver_user_get_next_move \
 	freecell_solver_user_get_num_freecells \
 	freecell_solver_user_get_num_stacks \
-	freecell_solver_user_get_invalid_state_error_into_string \
 	freecell_solver_user_limit_iterations_long \
-	freecell_solver_user_stringify_move_ptr \
 	freecell_solver_user_resume_solution \
 	freecell_solver_user_solve_board \
+	freecell_solver_user_stringify_move_ptr \
 	malloc \
+    fc_solve__hll_ms_rand__get_singleton \
 
 NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
 
