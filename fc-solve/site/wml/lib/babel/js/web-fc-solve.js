@@ -8,6 +8,10 @@ define(["web-fc-solve--expand-moves"], function (expand) {
 var fc_solve__hll_ms_rand__get_singleton;
 var fc_solve__hll_ms_rand__init;
 var fc_solve__hll_ms_rand__mod_rand;
+var fc_solve_user__find_deal__alloc;
+var fc_solve_user__find_deal__fill;
+var fc_solve_user__find_deal__free;
+var fc_solve_user__find_deal__run;
 var freecell_solver_user_alloc;
 var freecell_solver_user_solve_board;
 var freecell_solver_user_resume_solution;
@@ -35,6 +39,10 @@ function FC_Solve_init_wrappers_with_module(Module)
     fc_solve__hll_ms_rand__get_singleton = Module.cwrap('fc_solve__hll_ms_rand__get_singleton', 'number', []);
     fc_solve__hll_ms_rand__init = Module.cwrap('fc_solve__hll_ms_rand__init', 'number', ['number', 'string']);
     fc_solve__hll_ms_rand__mod_rand = Module.cwrap('fc_solve__hll_ms_rand__mod_rand', 'number', ['number', 'number']);
+    fc_solve_user__find_deal__alloc = Module.cwrap('fc_solve_user__find_deal__alloc', 'number', []);
+    fc_solve_user__find_deal__fill = Module.cwrap('fc_solve_user__find_deal__fill', 'number', ['number', 'string']);
+    fc_solve_user__find_deal__free = Module.cwrap('fc_solve_user__find_deal__free', 'number', ['number']);
+    fc_solve_user__find_deal__run = Module.cwrap('fc_solve_user__find_deal__run', 'string', ['number', 'string', 'string']);
     freecell_solver_user_alloc = Module.cwrap('freecell_solver_user_alloc', 'number', []);
     freecell_solver_user_solve_board = Module.cwrap('freecell_solver_user_solve_board', 'number', ['number', 'string']);
     freecell_solver_user_resume_solution = Module.cwrap('freecell_solver_user_resume_solution', 'number', ['number']);
@@ -581,10 +589,54 @@ function deal_ms_fc_board(seed) {
     return columns.map(render_column).join("");
 }
 
+class Freecell_Deal_Finder {
+    constructor(args) {
+        let that = this;
+        that.obj = fc_solve_user__find_deal__alloc();
+    }
+
+    fill(str) {
+        let that = this;
+        fc_solve_user__find_deal__fill(that.obj, str);
+        return;
+    }
+
+    release() {
+        fc_solve_user__find_deal__free(this.obj);
+        return;
+    }
+
+    run(abs_start, abs_end, update_cb) {
+        let that = this;
+        const CHUNK = 10000;
+        let start = abs_start;
+
+
+        while (start < abs_end) {
+            update_cb({ start: start});
+            let end = start + CHUNK - 1;
+            if (end > abs_end) {
+                end = abs_end;
+            }
+            const result = fc_solve_user__find_deal__run(
+                that.obj,
+                start.toString(),
+                end.toString()
+            );
+            if (result != "-1") {
+                return {found: true, result: result};
+            }
+            start = end + 1;
+        }
+        return {found: false};
+    }
+};
+
     return { FC_Solve: FC_Solve,
         FC_Solve_init_wrappers_with_module: FC_Solve_init_wrappers_with_module,
         FCS_STATE_SUSPEND_PROCESS: FCS_STATE_SUSPEND_PROCESS,
         FCS_STATE_WAS_SOLVED: FCS_STATE_WAS_SOLVED,
+        Freecell_Deal_Finder: Freecell_Deal_Finder,
         deal_ms_fc_board: deal_ms_fc_board
     };
 });
