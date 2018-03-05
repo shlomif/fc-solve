@@ -28,6 +28,7 @@ MACRO(my_board_gen_prog myprog tgt)
     )
 ENDMACRO()
 
+my_board_gen_prog("fc_solve_find_index_s2ints.py" "fc_solve_find_index_s2ints")
 my_board_gen_prog("find-freecell-deal-index.py" "find_index_prog")
 my_board_gen_prog("make_pysol_freecell_board.py" "make_pysol_board")
 my_board_gen_prog("transpose-freecell-board.py" "transpose_freecell_board_prog")

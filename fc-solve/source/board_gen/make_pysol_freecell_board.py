@@ -11,46 +11,7 @@
 import random2
 import re
 import sys
-
-
-class Card(object):
-    ACE = 1
-    KING = 13
-
-    def __init__(self, id, rank, suit, print_ts):
-        self.id, self.rank, self.suit, self.print_ts = id, rank, suit, print_ts
-        self.empty, self.flipped = False, False
-
-    def rank_s(self):
-        ret = "0A23456789TJQK"[self.rank]
-        if ((not self.print_ts) and ret == 'T'):
-            ret = '10'
-        return ret
-
-    def suit_s(self):
-        return 'CSHD'[self.suit]
-
-    def to_s(self):
-        if self.empty:
-            return '-'
-        ret = self.rank_s() + self.suit_s()
-        if self.flipped:
-            ret = '<' + ret + '>'
-        return ret
-
-    def found_s(self):
-        return self.suit_s() + '-' + self.rank_s()
-
-    def is_ace(self):
-        return self.rank == self.ACE
-
-    def is_king(self):
-        return self.rank == self.KING
-
-    def flip(self, flipped=True):
-        ret = Card(self.id, self.rank, self.suit, self.print_ts)
-        ret.flipped = flipped
-        return ret
+from fc_solve_find_index_s2ints import createCards, Card, ms_rearrange
 
 
 def empty_card():
@@ -61,17 +22,6 @@ def empty_card():
 
 def column_to_string(col):
     return ' '.join([x.to_s() for x in col])
-
-
-def createCards(num_decks, print_ts):
-    ret = []
-    for _ in range(num_decks):
-        id = 0
-        for s in range(4):
-            for r in range(13):
-                ret.append(Card(id, r+1, s, print_ts))
-                id += 1
-    return ret
 
 
 class RandomBase:
@@ -150,16 +100,6 @@ class MTRandom(RandomBase, random2.Random):
     def setSeed(self, seed):
         random2.Random.__init__(self, seed)
         self.initial_state = self.getstate()
-
-
-def ms_rearrange(cards):
-    if len(cards) != 52:
-        return cards
-    c = []
-    for i in range(13):
-        for j in (0, 39, 26, 13):
-            c.append(cards[i + j])
-    return c
 
 
 class Columns:
