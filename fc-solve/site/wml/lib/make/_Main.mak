@@ -84,7 +84,7 @@ CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-s
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
 FIND_INDEX__PYJS__pivot = bootstrap.js
-FIND_INDEX__PYJS__DEST_DIR = $(D)/js/find-index-s2ints/output
+FIND_INDEX__PYJS__DEST_DIR = $(D)/js-fc-solve/automated-tests
 FIND_INDEX__PYJS__DEST = $(FIND_INDEX__PYJS__DEST_DIR)/$(FIND_INDEX__PYJS__pivot)
 FIND_INDEX__PYJS__TGT_DIR = lib/pyjs/find-index-s2ints/output
 FIND_INDEX__PYJS__TGT = $(FIND_INDEX__PYJS__TGT_DIR)/$(FIND_INDEX__PYJS__pivot)
@@ -111,13 +111,13 @@ STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
 $(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
 	cp -f $< $(FIND_INDEX__PYJS__SRC_BN)
-	pyjsbuild --output=$(FIND_INDEX__PYJS__TGT_DIR) $(FIND_INDEX__PYJS__SRC_BN)
+	pyjsbuild --strict --output=$(FIND_INDEX__PYJS__TGT_DIR) $(FIND_INDEX__PYJS__SRC_BN)
 	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__TGT_DIR) -regextype egrep -regex '.*\.(js|html)')
 	touch $@
 
 $(FIND_INDEX__PYJS__DEST): $(FIND_INDEX__PYJS__TGT)
 	$(RSYNC) -a $(FIND_INDEX__PYJS__TGT_DIR)/ $(FIND_INDEX__PYJS__DEST_DIR)
-	rm -f $(FIND_INDEX__PYJS__DEST_DIR)/*.html
+	# rm -f $(FIND_INDEX__PYJS__DEST_DIR)/*.html
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
@@ -280,13 +280,13 @@ $(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf
 	cp -f $< $@
 
 upload: all
-	$(RSYNC) $(D)/ $(UPLOAD_URL)
+	$(RSYNC) -a $(D)/ $(UPLOAD_URL)
 
 # upload_temp: all
 #	$(RSYNC) $(TEMP_UPLOAD_URL)
 
 upload_local: all
-	$(RSYNC) $(D)/ /var/www/html/shlomif/fc-solve-temp
+	$(RSYNC) -a $(D)/ /var/www/html/shlomif/fc-solve-temp
 
 TEST_ENV = SKIP_EMCC="$(SKIP_EMCC)"
 
