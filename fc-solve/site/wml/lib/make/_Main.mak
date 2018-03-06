@@ -83,7 +83,9 @@ CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-s
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
-FIND_INDEX__PYJS__pivot = bootstrap.js
+FIND_INDEX__PYJS__SRC_BN = fc_solve_find_index_s2ints.py
+FIND_INDEX__PYJS__pivot =  __javascript__/fc_solve_find_index_s2ints.js
+
 FIND_INDEX__PYJS__DEST_DIR = $(D)/js-fc-solve/automated-tests
 FIND_INDEX__PYJS__DEST = $(FIND_INDEX__PYJS__DEST_DIR)/$(FIND_INDEX__PYJS__pivot)
 FIND_INDEX__PYJS__TGT_DIR = lib/pyjs/find-index-s2ints/output
@@ -105,13 +107,15 @@ dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
 
 dummy: $(FIND_INDEX__PYJS__TARGETS)
 
-FIND_INDEX__PYJS__SRC_BN = fc_solve_find_index_s2ints.py
-
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
+PIV = __javascript__
 $(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
 	cp -f $< $(FIND_INDEX__PYJS__SRC_BN)
-	pyjsbuild --strict --output=$(FIND_INDEX__PYJS__TGT_DIR) $(FIND_INDEX__PYJS__SRC_BN)
+	transcrypt -b -m -n $(FIND_INDEX__PYJS__SRC_BN)
+	perl -i -lpe 's:(MAX_SHIFTREDUCE_LOOPS\s*=\s*1000)(;):$${1}00$${2}:g' $(PIV)/*.js
+	rm -fr $(FIND_INDEX__PYJS__TGT_DIR)/$(PIV)
+	mv $(PIV) $(FIND_INDEX__PYJS__TGT_DIR)
 	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__TGT_DIR) -regextype egrep -regex '.*\.(js|html)')
 	touch $@
 

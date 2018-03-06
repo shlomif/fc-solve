@@ -3,19 +3,16 @@
 <latemp_subject "Online Freecell solver (Automated tests)" />
 
 <page_extra_head_elements>
-<meta name="pygwt:module" content="fc_solve_find_index_s2ints" />
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/qunit.css" />
 <script type="text/javascript" src="$(ROOT)/js/qunit.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
 <jquery_ui_head_elements />
 <script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
-<script type="text/javascript" src="bootstrap.js"></script>
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>
 
-<iframe id="__pygwt_historyFrame" style="display:none;"></iframe>
 <script type="text/javascript">
 requirejs.config({
     baseUrl: '$(ROOT)/js',
@@ -40,13 +37,13 @@ require(["$(ROOT)/js/web-fc-solve-tests.js"], function (t) {
 ": 7S 6C 7D 4D 8S 9D\n" ;
             //let ints = pyjslib.fc_solve_find_index_s2ints.find_index__board_string_to_ints(ms_deal_24);
             // let ints = lib.fc_solve_find_index_s2ints.find_index__board_string_to_ints(ms_deal_24);
-            // let ints = fc_solve_find_index_s2ints.find_index__board_string_to_ints(ms_deal_24);
             // let ints = window.fc_solve_find_index_s2ints.find_index__board_string_to_ints(ms_deal_24);
             // alert(window.find_index__board_string_to_ints);
-            alert($pyjs);
-            let ints = window.find_index__board_string_to_ints(ms_deal_24);
-            alert(ints);
+            //alert($pyjs);
+            //let ints = window.find_index__board_string_to_ints(ms_deal_24);
+            // alert(ints);
             // Hide passed tests by default.
+            let ints = fc_solve_find_index_s2ints.find_index__board_string_to_ints(ms_deal_24);
             $('#qunit-tests').addClass('hidepass');
             return;
           });

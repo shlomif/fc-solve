@@ -81,11 +81,18 @@ def find_index__board_string_to_ints(content):
     card_re = rank_re + suit_re
     card_re_paren = r'(' + card_re + r')'
 
+    def string_repeat_for_transcrypt(s, n):
+        if n == 0:
+            return ''
+        return s + string_repeat_for_transcrypt(s, n-1)
+
     def make_line(n):
         return r':?[ \t]*' + card_re_paren + \
-            (r'[ \t]+' + card_re_paren) * (n-1) + r'[ \t]*\n'
+            string_repeat_for_transcrypt((r'[ \t]+' + card_re_paren), n-1) + \
+            r'[ \t]*\n'
 
-    complete_re = r'^' + make_line(7) * 4 + make_line(6) * 4 + '\s*$'
+    complete_re = r'^' + string_repeat_for_transcrypt(make_line(7), 4) + \
+        string_repeat_for_transcrypt(make_line(6), 4) + '\s*$'
 
     m = re.match(complete_re, content)
     if not m:
@@ -95,8 +102,8 @@ def find_index__board_string_to_ints(content):
 
     # Reverse shuffle:
     ints = []
-    n = 4 * 13 - 1
-    for i in range(n):
+    limit = n = 4 * 13 - 1
+    for i in range(limit):
         col = i // 8
         row = i % 8
         s = m.group(1 + col + (4*7+(row-4)*6 if row >= 4 else row*7))
