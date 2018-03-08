@@ -2,6 +2,9 @@
 
 use strict;
 use warnings;
+use File::Basename qw/ dirname /;
+
+my $DIR = dirname($0);
 
 while ( my $l = <> )
 {
@@ -11,7 +14,7 @@ while ( my $l = <> )
     {
         print "=== $l\n";
         my $verdict =
-`pi-make-microsoft-freecell-board -t $deal | ../scripts/summarize-fc-solve --freecells-num 3 -- --method random-dfs -sp r:tf -to '[0123456789ABCDE]' -seed $seed`;
+`pi-make-microsoft-freecell-board -t $deal | "$DIR"/summarize-fc-solve --freecells-num 3 -- --method random-dfs -sp r:tf -to '[0123456789ABCDE]' -seed $seed`;
         if ( $? or $verdict !~ /\AVerdict: Solved / )
         {
             die "failed '$l'";
