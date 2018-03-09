@@ -7,7 +7,8 @@ use Test::More tests => 35;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny qw/ path /;
 
-use FC_Solve::Paths qw/ $FIND_DEAL_INDEX $MAKE_PYSOL bin_board bin_exe_raw /;
+use FC_Solve::Paths
+    qw/ $FIND_DEAL_INDEX $MAKE_PYSOL bin_board bin_exe_raw normalize_lf /;
 use FC_Solve::Trim qw/trim_trail_ws/;
 
 sub _test_out
@@ -686,7 +687,7 @@ _test_find_index(
 
 # TEST
 eq_or_diff(
-    [ scalar path( bin_board("24.find.txt") )->slurp_utf8 ],
+    [ normalize_lf( scalar path( bin_board("24.find.txt") )->slurp_utf8 ) ],
     ["Found deal = 24\n"], "-o flag output to file.",
 );
 
