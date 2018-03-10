@@ -193,7 +193,7 @@ version)</a> variants that can be solved:
 <li>Ocean Towers</li>
 <li>Opus</li>
 <li>Penelope's Web</li>
-<li>Penguin</li>
+<li>Penguin (<b>NOTE!</b> This variant is only supported by PySol FC with some magic wrappers. It is not supported directly by Freecell Solver. Please do not ask us about it.)</li>
 <li>Portuguese Solitaire</li>
 <li>Relaxed Freecell</li>
 <li>Relaxed Seahaven Towers</li>
