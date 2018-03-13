@@ -127,23 +127,6 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 </p>
 
-
-<label for="output">Output:</label><br />
-
-<div class="output_form">
-<div id="dynamic_output"></div>
-<textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
-
-<div class="controls">
-
-<input id="one_based" type="checkbox" title="1-based offset" checked="checked" /><label for="one_based">1-based</label><br />
-<input id="unicode_suits" type="checkbox" title="Unicode suits" checked="checked" /><label for="unicode_suits">Unicode suits</label>
-<button id="clear_output" title="Clear the Output Box">Clear Output</button>
-</div>
-</div>
-<br />
-
-
 <div id="fc_solve_bookmark">
 
 <h3 id="bookmark">Bookmark This Form</h3>
@@ -181,25 +164,14 @@ auto-populate the form. This is also useful for reporting problems.
 Enter a board in <a href="#stdin">the input text area</a> in
 <a href="http://fc-solve.shlomifish.org/docs/distro/README.html">Freecell
 Solver’s input format</a> with each line of input representing a column (or
-stack) of cards. Freecells and foundations can also be specified. Numbered
-layouts (compatible with
-<a href="http://en.wikipedia.org/wiki/FreeCell_%28Windows%29">Microsoft
-Windows FreeCell</a>, FreeCell Pro and compatible
-Freecell implementations) can be input using the
-<a href="#deal_number">deal number feature</a>. Press the <a href="#run_do_solve">“Solve” button</a> to
-run the solver, and assuming it was successful, you will be able to read
-and/or copy the output from <a href="#output">the output box</a>.
+stack) of cards.
+Press the <a href="#run_do_solve">“Find” button</a> to
+try to find the deal's index, and assuming it was successful, you will be able
+to read and/or copy the output from the status display.
 </p>
 
 <p>
 Enjoy!
-</p>
-
-<h3 id="other_games">Solving other, similar, games</h3>
-
-<p>
-Click the <a href="#fcs_advanced_toggle">Advanced button</a> and select the
-game from the drop-down.
 </p>
 
 <h2 id="technology">Technology</h2>
@@ -243,17 +215,15 @@ controls based on jQuery.
 
 <li>
 <p>
-<a href="https://getfirebug.com/">Firebug</a> - a web development tool for
-Firefox, that provides a JavaScript debugger, a CSS manipulation tool, DOM
-introspection and more. (The Opera web browser's Opera Dragonfly does something
-similar for Opera, and is also useful.)
+<a href="http://www.google.com/webfonts">Google Web Fonts</a> - provides an
+attractive font for the button leading to this page.
 </p>
 </li>
 
 <li>
 <p>
-<a href="http://www.google.com/webfonts">Google Web Fonts</a> - provides an
-attractive font for the button leading to this page.
+<a href="http://transcrypt.org/">Transcrypt</a> - a Python-to-JavaScript
+compiler.
 </p>
 </li>
 </ul>
@@ -289,6 +259,13 @@ me regarding integrating <code>@font-face</code> into my CSS.
 <p>
 <a href="mailto:ari.i.becker@gmail.com">Ari Becker</a> - tipped me regarding
 unsolvable deals.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/doconix/transcrypt_module/">@doconix</a> - helped
+using transcrypt.
 </p>
 </li>
 

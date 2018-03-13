@@ -1102,6 +1102,13 @@ Rihanna
 solv
 transpose-freecell-board
 
+==== In: dest/js-fc-solve/find-deal/index.html
+
+Transcrypt
+deal's
+doconix
+transcrypt
+
 ==== In: dest/js-fc-solve/text/index.html
 
 Der
