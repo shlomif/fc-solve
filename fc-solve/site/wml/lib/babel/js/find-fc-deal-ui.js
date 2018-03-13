@@ -36,7 +36,7 @@ function find_deal_ui() {
         let df = new w.Freecell_Deal_Finder({});
         df.fill(ints_s);
         let ctl = $("#fc_solve_status");
-        const ret_Deal = df.run(1, ((1 << 30) - 1),
+        const ret_Deal = df.run(1, 0x7FFFFFFF,
             (args) => {
                 ctl.html(escapeHtml("Reached No. " + args.start.toString()));
             }
