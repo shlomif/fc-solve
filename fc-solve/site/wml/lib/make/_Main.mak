@@ -76,7 +76,7 @@ LIBFREECELL_SOLVER_JS_DIR = lib/fc-solve-for-javascript
 LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfreecell-solver.js
 DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(D)/js/libfreecell-solver.js
-DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(D)/js $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .)
+DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(D)/js $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .)
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
@@ -86,7 +86,7 @@ DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 FIND_INDEX__PYJS__SRC_BN = fc_solve_find_index_s2ints.py
 FIND_INDEX__PYJS__pivot =  dist/fc_solve_find_index_s2ints.js
 
-FIND_INDEX__PYJS__DEST_DIR = $(D)/js-fc-solve/automated-tests
+FIND_INDEX__PYJS__DEST_DIR = $(D)/js
 FIND_INDEX__PYJS__DEST = $(FIND_INDEX__PYJS__DEST_DIR)/$(FIND_INDEX__PYJS__pivot)
 FIND_INDEX__PYJS__TGT_DIR = lib/transcrypt_module
 FIND_INDEX__PYJS__PY = $(FIND_INDEX__PYJS__TGT_DIR)/src/$(FIND_INDEX__PYJS__SRC_BN)
@@ -118,9 +118,12 @@ $(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
 	cd $(FIND_INDEX__PYJS__TGT_DIR) && python3 build.py
 	perl -i -lpe 's:(MAX_SHIFTREDUCE_LOOPS\s*=\s*1000)(;):$${1}00$${2}:g' $(PIV)/*.js
 	perl -i -lne 'print unless /String.prototype.strip = / .. /^\s*\}/' $(PIV)/*.js
-	cp -f $(FIND_INDEX__PYJS__DEST) $(FIND_INDEX__PYJS__TGT_DIR)/
 	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__TGT_DIR) -regextype egrep -regex '.*\.(js|html)')
 	touch $@
+
+$(FIND_INDEX__PYJS__DEST): $(FIND_INDEX__PYJS__TGT)
+	mkdir $$(dirname "$@")
+	cp -f $< $@
 
 $(FIND_INDEX__PYJS__NODE): $(FIND_INDEX__PYJS__TGT)
 	cp -f $< $@
@@ -211,7 +214,7 @@ FCS_VALID_DEST = $(D)/js/fcs-validate.js
 
 TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts src/js/typings/index.d.ts
 
-DEST_BABEL_JSES = $(D)/js/ms-rand.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
+DEST_BABEL_JSES = $(D)/js/find-fc-deal-ui.js $(D)/js/ms-rand.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
 
 all: $(TYPINGS) $(DEST_BABEL_JSES)
 
