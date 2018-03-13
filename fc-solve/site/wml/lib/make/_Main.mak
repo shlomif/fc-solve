@@ -84,11 +84,13 @@ CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-s
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
 
 FIND_INDEX__PYJS__SRC_BN = fc_solve_find_index_s2ints.py
-FIND_INDEX__PYJS__pivot =  __javascript__/fc_solve_find_index_s2ints.js
+FIND_INDEX__PYJS__pivot =  dist/fc_solve_find_index_s2ints.js
 
 FIND_INDEX__PYJS__DEST_DIR = $(D)/js-fc-solve/automated-tests
 FIND_INDEX__PYJS__DEST = $(FIND_INDEX__PYJS__DEST_DIR)/$(FIND_INDEX__PYJS__pivot)
-FIND_INDEX__PYJS__TGT_DIR = lib/pyjs/find-index-s2ints/output
+FIND_INDEX__PYJS__TGT_DIR = lib/transcrypt_module
+FIND_INDEX__PYJS__PY = $(FIND_INDEX__PYJS__TGT_DIR)/src/$(FIND_INDEX__PYJS__SRC_BN)
+PIV = $(FIND_INDEX__PYJS__TGT_DIR)/dist
 FIND_INDEX__PYJS__TGT = $(FIND_INDEX__PYJS__TGT_DIR)/$(FIND_INDEX__PYJS__pivot)
 
 FIND_INDEX__PYJS__NODE_DIR = lib/for-node/js
@@ -111,28 +113,17 @@ dummy: $(FIND_INDEX__PYJS__TARGETS)
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
-PIV = __javascript__
 $(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
-	cp -f $< $(FIND_INDEX__PYJS__SRC_BN)
-	transcrypt -b -m -n $(FIND_INDEX__PYJS__SRC_BN)
+	cat $< lib/js-epilogue.py > $(FIND_INDEX__PYJS__PY)
+	cd $(FIND_INDEX__PYJS__TGT_DIR) && python3 build.py
 	perl -i -lpe 's:(MAX_SHIFTREDUCE_LOOPS\s*=\s*1000)(;):$${1}00$${2}:g' $(PIV)/*.js
-	rm -fr $(FIND_INDEX__PYJS__TGT_DIR)/$(PIV)
-	mv $(PIV) $(FIND_INDEX__PYJS__TGT_DIR)
+	perl -i -lne 'print unless /String.prototype.strip = / .. /^\s*\}/' $(PIV)/*.js
+	cp -f $(FIND_INDEX__PYJS__DEST) $(FIND_INDEX__PYJS__TGT_DIR)/
 	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__TGT_DIR) -regextype egrep -regex '.*\.(js|html)')
 	touch $@
 
-$(FIND_INDEX__PYJS__DEST): $(FIND_INDEX__PYJS__TGT)
-	$(RSYNC) -a $(FIND_INDEX__PYJS__TGT_DIR)/ $(FIND_INDEX__PYJS__DEST_DIR)
-
-$(FIND_INDEX__PYJS__NODE): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
-	cp -f $< $(FIND_INDEX__PYJS__SRC_BN)
-	transcrypt -p .none -b $(FIND_INDEX__PYJS__SRC_BN)
-	perl -i -lpe 's:(MAX_SHIFTREDUCE_LOOPS\s*=\s*1000)(;):$${1}00$${2}:g' $(PIV)/*.js
-	rm -fr $(FIND_INDEX__PYJS__NODE_DIR)/$(PIV)
-	mv $(PIV) $(FIND_INDEX__PYJS__NODE_DIR)
-	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__NODE_DIR) -regextype egrep -regex '.*\.(js|html)')
-	touch $@
-	# rm -f $(FIND_INDEX__PYJS__DEST_DIR)/*.html
+$(FIND_INDEX__PYJS__NODE): $(FIND_INDEX__PYJS__TGT)
+	cp -f $< $@
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded

@@ -64,9 +64,14 @@ fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js.mem
 fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
 fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve-shlomif/patsolve/*.bc
 fc-solve/site/wml/lib/for-node/js/*.js
+fc-solve/site/wml/lib/for-node/js/dist/fc_solve_find_index_s2ints.js
 fc-solve/site/wml/lib/for-node/libfreecell-solver.js.mem
 fc-solve/site/wml/lib/make/shlomif_common.mak
 fc-solve/site/wml/lib/pyjs/find-index-s2ints/output/
+fc-solve/site/wml/lib/transcrypt_module/dist/
+fc-solve/site/wml/lib/transcrypt_module/fc_solve_find_index_s2ints.js
+fc-solve/site/wml/lib/transcrypt_module/src/__javascript__/
+fc-solve/site/wml/lib/transcrypt_module/src/fc_solve_find_index_s2ints.py
 fc-solve/site/wml/libfreecell-solver.js.mem
 fc-solve/site/wml/rules.mak
 fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings

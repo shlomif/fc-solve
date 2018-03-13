@@ -116,3 +116,8 @@ def find_index__board_string_to_ints(content):
         n -= 1
 
     return ints
+
+
+def factory():
+    return {'find_index__board_string_to_ints':
+            find_index__board_string_to_ints}
