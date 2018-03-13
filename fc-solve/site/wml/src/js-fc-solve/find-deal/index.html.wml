@@ -1,6 +1,6 @@
 #include '../template.wml'
 
-<latemp_subject "Online Freecell solver (text based)" />
+<latemp_subject "Freecell Deal Finder" />
 
 <page_extra_head_elements>
 <script type="text/javascript">
@@ -101,13 +101,7 @@ require(["$(ROOT)/js/find-fc-deal-ui.js"], function (web_fc_solve_ui) {
 <li><a href="#fc_solve_tabs__ms">Find MS Deal</a></li>
 </ul>
 
-<div class="fcs_common">
 
-<label for="stdin">Input:</label><br />
-<textarea class="emscripten" id="stdin" cols="30" rows="10"></textarea><br />
-<button id="run_do_solve">Find!</button>
-
-</div> ;;; end of fcs_common
 
 <div id="fc_solve_tabs__ms" class="tab">
 
@@ -116,7 +110,12 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 </p>
 
 <div class="fcs_common">
-</div>
+
+<label for="stdin">Input:</label><br />
+<textarea class="emscripten" id="stdin" cols="30" rows="10"></textarea><br />
+<button id="run_do_solve">Find!</button>
+
+</div> ;;; end of fcs_common
 
 </div> ;;; end of fc_solve_tabs__any_board
 
