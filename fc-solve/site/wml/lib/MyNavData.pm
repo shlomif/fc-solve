@@ -43,6 +43,10 @@ my $tree_contents = {
                     'text' => "Text-Based",
                     'url'  => "js-fc-solve/text/",
                 },
+                {
+                    'text' => "Find a deal’s number",
+                    'url'  => "js-fc-solve/find-deal/",
+                },
             ],
         },
         {
