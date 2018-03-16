@@ -54,7 +54,7 @@ static void fc_solve_delta_stater_init(
     self->init_state = init_state;
 
     int max_num_cards = 0;
-    for (size_t col_idx = 0; col_idx < num_columns; col_idx++)
+    for (size_t col_idx = 0; col_idx < num_columns; ++col_idx)
     {
         const_AUTO(num_cards, fc_solve_get_column_orig_num_cards(self,
                                   fcs_state_get_col(*init_state, col_idx)));
@@ -71,7 +71,7 @@ static void fc_solve_delta_stater_init(
 
         while (bitmask <= max_num_cards)
         {
-            num_bits++;
+            ++num_bits;
             bitmask <<= 1;
         }
 
@@ -137,7 +137,7 @@ static inline void fc_solve_get_column_encoding_composite(
         fc_solve_bit_writer_write(&bit_w, 6, fcs_card2char(init_card));
     }
 
-    for (int i = col_len - num_cards_in_seq; i < col_len; i++)
+    for (int i = col_len - num_cards_in_seq; i < col_len; ++i)
     {
 #define GET_SUIT_BIT(card) (((fcs_card_suit(card)) & 0x2) >> 1)
         fc_solve_bit_writer_write(
@@ -161,7 +161,7 @@ static inline void fc_solve_get_freecells_encoding(
     const_SLOT(num_freecells, self);
 
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    for (int i = 0; i < num_freecells; i++)
+    for (int i = 0; i < num_freecells; ++i)
     {
         freecells[i] = fcs_freecell_card(*derived, i);
     }
@@ -196,7 +196,7 @@ static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
 
     while (1)
     {
-        for (; non_orig_idx < num_columns; non_orig_idx++)
+        for (; non_orig_idx < num_columns; ++non_orig_idx)
         {
             if (cols[non_orig_idx].type == COL_TYPE_ENTIRELY_NON_ORIG)
             {
@@ -209,7 +209,7 @@ static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
             break;
         }
 
-        for (; empty_col_idx >= 0; empty_col_idx--)
+        for (; empty_col_idx >= 0; --empty_col_idx)
         {
             if (cols[empty_col_idx].type == COL_TYPE_EMPTY)
             {
@@ -239,7 +239,7 @@ static void fc_solve_delta_stater_encode_composite(
     fcs_state_t *const derived = self->derived_state;
 
     const_SLOT(num_columns, self);
-    for (size_t i = 0; i < num_columns; i++)
+    for (size_t i = 0; i < num_columns; ++i)
     {
         cols_indexes[i] = i;
         fc_solve_get_column_encoding_composite(self, i, &(cols[i]));
@@ -257,7 +257,7 @@ static void fc_solve_delta_stater_encode_composite(
     int new_non_orig_cols_indexes_count = 0;
 
     /* Filter the new_non_orig_cols_indexes */
-    for (int i = 0; i < num_columns; i++)
+    for (int i = 0; i < num_columns; ++i)
     {
         if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
         {
@@ -271,9 +271,9 @@ static void fc_solve_delta_stater_encode_composite(
     (fcs_card2char(fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0)))
 #define ITEM_IDX(idx) (new_non_orig_cols_indexes[idx])
 #define COMP_BY_IDX(idx) (COMP_BY(ITEM_IDX(idx)))
-    for (int b = 1; b < new_non_orig_cols_indexes_count; b++)
+    for (int b = 1; b < new_non_orig_cols_indexes_count; ++b)
     {
-        for (int c = b; (c > 0) && (COMP_BY_IDX(c - 1) > COMP_BY_IDX(c)); c--)
+        for (int c = b; (c > 0) && (COMP_BY_IDX(c - 1) > COMP_BY_IDX(c)); --c)
         {
             const_AUTO(swap_int, ITEM_IDX(c));
             ITEM_IDX(c) = ITEM_IDX(c - 1);
@@ -284,7 +284,7 @@ static void fc_solve_delta_stater_encode_composite(
 #undef ITEM_IDX
 #undef COMP_BY
 #undef b
-    for (int i = 0, sorted_idx = 0; i < num_columns; i++)
+    for (int i = 0, sorted_idx = 0; i < num_columns; ++i)
     {
         if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
         {
@@ -293,13 +293,13 @@ static void fc_solve_delta_stater_encode_composite(
     }
 
     fc_solve_get_freecells_encoding(self, bit_w);
-    for (size_t i = 0; i < num_columns; i++)
+    for (size_t i = 0; i < num_columns; ++i)
     {
         const fc_solve_column_encoding_composite_t *const col_enc =
             (cols + cols_indexes[i]);
         const fcs_uchar_t *enc;
         const fcs_uchar_t *const end = col_enc->end;
-        for (enc = col_enc->enc; enc < end; enc++)
+        for (enc = col_enc->enc; enc < end; ++enc)
         {
             fc_solve_bit_writer_write(bit_w, NUM_BITS_IN_BYTES, (*enc));
         }
@@ -323,7 +323,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
     int foundations[4] = {14, 14, 14, 14};
     /* Read the Freecells. */
 
-    for (int i = 0; i < num_freecells; i++)
+    for (int i = 0; i < num_freecells; ++i)
     {
         const fcs_card_t card =
             fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));
@@ -337,14 +337,14 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
     const_SLOT(num_columns, self);
     const fcs_state_t *const init_state = self->init_state;
 
-    for (size_t col_idx = 0; col_idx < num_columns; col_idx++)
+    for (size_t col_idx = 0; col_idx < num_columns; ++col_idx)
     {
         const_AUTO(col, fcs_state_get_col(*ret, col_idx));
         const int num_orig_cards =
             fc_solve_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
         const_AUTO(orig_col, fcs_state_get_col(*init_state, col_idx));
 
-        for (int i = 0; i < num_orig_cards; i++)
+        for (int i = 0; i < num_orig_cards; ++i)
         {
             const fcs_card_t card = fcs_col_get_card(orig_col, i);
             PROCESS_CARD(card);
@@ -368,7 +368,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
         {
             fcs_card_t last_card = fcs_col_get_card(col, fcs_col_len(col) - 1);
 
-            for (int_fast16_t i = 0; i < num_cards_in_seq; i++)
+            for (int_fast16_t i = 0; i < num_cards_in_seq; ++i)
             {
                 const int suit_bit = fc_solve_bit_reader_read(bit_r, 1);
                 const fcs_card_t new_card =
@@ -384,7 +384,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
         }
     }
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; ++i)
     {
         fcs_set_foundation(*ret, i, foundations[i] - 1);
     }
