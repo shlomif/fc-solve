@@ -120,7 +120,7 @@ require(["$(ROOT)/js/web-fc-solve-ui.js"], function (web_fc_solve_ui) {
 <button id="run_do_solve">Solve!</button>
 <label for="preset">Solving method:</label>
 <select id="preset">
-<option value="cm" selected="selected">“Cookie Monster” (fastest on average)</option>
+<option value="lg" selected="selected">“Looking Glass” (fastest on average)</option>
 <option value="ve">“Video Editing” (short solutions)</option>
 <option value="obf">“One Big Family” (fast on average)</option>
 <option value="default">Default</option>
