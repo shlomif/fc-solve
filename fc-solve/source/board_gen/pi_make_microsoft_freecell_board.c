@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
         if (!strcmp(argv[arg], "-t"))
         {
             print_ts = TRUE;
-            arg++;
+            ++arg;
         }
     }
     const long long gamenumber =
@@ -86,11 +86,11 @@ int main(int argc, char *argv[])
 
     /* shuffle cards */
 
-    for (int i = 0; i < NUM_CARDS; i++) /* put unique card in each deck loc. */
+    for (int i = 0; i < NUM_CARDS; ++i) /* put unique card in each deck loc. */
         deck[i] = i;
 
     long long seedx = microsoft_rand__calc_init_seedx(gamenumber);
-    for (int i = 0; i < NUM_CARDS; i++)
+    for (int i = 0; i < NUM_CARDS; ++i)
     {
         const microsoft_rand_uint_t j =
             microsoft_rand__game_num_rand(&seedx, gamenumber) % num_cards_left;
@@ -98,10 +98,10 @@ int main(int argc, char *argv[])
         deck[j] = deck[--num_cards_left];
     }
 
-    for (int stack = 0; stack < 8; stack++)
+    for (int stack = 0; stack < 8; ++stack)
     {
         const int lim = 6 + (stack < 4);
-        for (int c = 0; c < lim; c++)
+        for (int c = 0; c < lim; ++c)
         {
             char card_string[5];
             card_to_string(
