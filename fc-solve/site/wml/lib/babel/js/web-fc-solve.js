@@ -608,28 +608,39 @@ class Freecell_Deal_Finder {
 
     run(abs_start, abs_end_param, update_cb) {
         let that = this;
-        const CHUNK = bigInt(10000);
+        const CHUNK = bigInt(1000000);
+        that.CHUNKM = CHUNK.add(bigInt.minusOne);
         let start = bigInt(abs_start);
         const abs_end = bigInt(abs_end_param);
+        that.abs_end = abs_end;
+        that.start = start;
+        that.update_cb = update_cb;
 
+        return;
+    }
 
-        while (start.lesser(abs_end)) {
-            update_cb({ start: start});
-            let end = start.add(CHUNK).add(-1);
+    cont() {
+        let that = this;
+        const abs_end = that.abs_end;
+        if (that.start.lesser(abs_end)) {
+            that.update_cb({ start: that.start});
+            let end = that.start.add(that.CHUNKM);
             if (end.gt(abs_end)) {
                 end = abs_end;
             }
             const result = fc_solve_user__find_deal__run(
                 that.obj,
-                start.toString(),
+                that.start.toString(),
                 end.toString()
             );
             if (result != "-1") {
                 return {found: true, result: result};
             }
-            start = end.add(bigInt(1));
+            that.start = end.add(bigInt.one);
+            return {found: false, cont: true};
+        } else {
+            return {found: false, cont: false};
         }
-        return {found: false};
     }
 };
 

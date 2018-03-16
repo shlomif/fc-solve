@@ -10141,7 +10141,8 @@ function test_js_fc_solve_class(my_callback)
         const ints_s = ints.map((i) => { let ret = i.toString(); return " ".repeat(10-ret.length) + ret; }).join('');
         let df = new w.Freecell_Deal_Finder({});
         df.fill(ints_s);
-        const ret_Deal = df.run(1, 1000, (args) => {});
+        df.run(1, 1000, (args) => {});
+        const ret_Deal = df.cont();
         // TEST
         assert.equal(ret_Deal.result, '24', 'Freecell_Deal_Finder');
         } else {

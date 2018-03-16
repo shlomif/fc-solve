@@ -35,16 +35,24 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
         let df = new w.Freecell_Deal_Finder({});
         df.fill(ints_s);
         let ctl = $("#fc_solve_status");
-        const ret_Deal = df.run(1, '8589934591',
+        df.run(1, '8589934591',
                                 (args) => {
                                     ctl.html(escapeHtml("Reached No. " + args.start.toString()));
                                 }
         );
-        if (ret_Deal.found) {
-            ctl.html("Found " + ret_Deal.result.toString());
-        } else {
-            ctl.html("No such deal");
+
+        function resume() {
+            const ret_Deal = df.cont();
+            if (ret_Deal.found) {
+                ctl.html("Found " + ret_Deal.result.toString());
+            } else if (ret_Deal.cont) {
+                setTimeout(() => { resume(); }, 1);
+            } else {
+                ctl.html("No such deal");
+            }
         }
+
+        resume();
     }
 
     function set_up_handlers() {
