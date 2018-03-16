@@ -57,12 +57,12 @@ static inline void soft_thread_clean_soft_dfs(
     const fcs_soft_dfs_stack_item_t *const dfs_max_info_ptr =
         info_ptr + DFS_VAR(soft_thread, dfs_max_depth);
 
-    for (; info_ptr < max_info_ptr; info_ptr++)
+    for (; info_ptr < max_info_ptr; ++info_ptr)
     {
         free(info_ptr->derived_states_list.states);
         free(info_ptr->derived_states_random_indexes);
     }
-    for (; info_ptr < dfs_max_info_ptr; info_ptr++)
+    for (; info_ptr < dfs_max_info_ptr; ++info_ptr)
     {
         if (likely(info_ptr->derived_states_list.states))
         {
@@ -98,11 +98,11 @@ static inline void accumulate_tests_by_ptr(
 {
     const fcs_moves_group *group_ptr = st_tests_order->groups;
     const fcs_moves_group *const groups_end = group_ptr + st_tests_order->num;
-    for (; group_ptr < groups_end; group_ptr++)
+    for (; group_ptr < groups_end; ++group_ptr)
     {
         const fcs_move_func *test_ptr = group_ptr->move_funcs;
         const fcs_move_func *const tests_end = test_ptr + group_ptr->num;
-        for (; test_ptr < tests_end; test_ptr++)
+        for (; test_ptr < tests_end; ++test_ptr)
         {
             *moves_order |= (1 << (test_ptr->idx));
         }
@@ -147,7 +147,7 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
 #ifdef FCS_SINGLE_HARD_THREAD
     const int_fast32_t num_soft_threads =
         instance->hard_thread.num_soft_threads;
-    for (int_fast32_t st_idx = 0; st_idx <= num_soft_threads; st_idx++)
+    for (int_fast32_t st_idx = 0; st_idx <= num_soft_threads; ++st_idx)
     {
         fc_solve_soft_thread_t *soft_thread;
         if (st_idx < num_soft_threads)
@@ -168,7 +168,7 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     }
 #else
     for (uint_fast32_t ht_idx = 0; ht_idx <= instance->num_hard_threads;
-         ht_idx++)
+         ++ht_idx)
     {
         fc_solve_hard_thread_t *hard_thread;
         if (ht_idx < instance->num_hard_threads)
@@ -351,7 +351,7 @@ typedef struct
 static inline int find_empty_col(
     const fcs_state_t *const dynamic_state STACKS_NUM__ARG)
 {
-    for (int i = 0; i < STACKS_NUM__VAL; i++)
+    for (int i = 0; i < STACKS_NUM__VAL; ++i)
     {
         if (fcs_state_col_is_empty(*dynamic_state, i))
         {
@@ -365,7 +365,7 @@ static inline int find_empty_col(
 static inline int find_col_card(const fcs_state_t *const dynamic_state,
     const fcs_card_t needle STACKS_NUM__ARG)
 {
-    for (int i = 0; i < STACKS_NUM__VAL; i++)
+    for (int i = 0; i < STACKS_NUM__VAL; ++i)
     {
         const_AUTO(col, fcs_state_get_col(*dynamic_state, i));
         const int col_len = fcs_col_len(col);
@@ -381,7 +381,7 @@ static inline int find_col_card(const fcs_state_t *const dynamic_state,
 static inline int find_fc_card(const fcs_state_t *const dynamic_state,
     const fcs_card_t needle FREECELLS_NUM__ARG)
 {
-    for (int dest = 0; dest < FREECELLS_NUM__VAL; dest++)
+    for (int dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
     {
         if (fcs_freecell_card(*dynamic_state, dest) == needle)
         {
@@ -446,7 +446,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
 
         fcs_state_t *const s = &(s_and_info.s);
 #ifdef INDIRECT_STACK_STATES
-        for (int i = 0; i < STACKS_NUM__VAL; i++)
+        for (int i = 0; i < STACKS_NUM__VAL; ++i)
         {
             fcs_copy_stack(
                 s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);
@@ -467,7 +467,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
             {
                 int src_col_idx;
                 for (src_col_idx = 0; src_col_idx < STACKS_NUM__VAL;
-                     src_col_idx++)
+                     ++src_col_idx)
                 {
                     var_AUTO(
                         src_col, fcs_state_get_col(s_and_info.s, src_col_idx));
@@ -482,7 +482,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                     }
                 }
 
-                for (int dest = 0; dest < FREECELLS_NUM__VAL; dest++)
+                for (int dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
                 {
                     if (fcs_freecell_is_empty(s_and_info.s, dest))
                     {
