@@ -36,9 +36,10 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
         df.fill(ints_s);
         let ctl = $("#fc_solve_status");
         df.run(1, '8589934591',
-                                (args) => {
-                                    ctl.html(escapeHtml("Reached No. " + args.start.toString()));
-                                }
+            (args) => {
+                ctl.html(escapeHtml("Reached No. " + args.start.toString()));
+                return;
+            }
         );
 
         function resume() {
