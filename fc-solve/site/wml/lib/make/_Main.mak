@@ -115,7 +115,7 @@ dummy: $(FIND_INDEX__PYJS__TARGETS)
 dummy: $(DEST_BIGINT_JS)
 
 $(DEST_BIGINT_JS):
-	browserify -t big-integer -s big-integer -r big-integer -o $@
+	browserify -s big-integer -r big-integer -o $@
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
