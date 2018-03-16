@@ -28,6 +28,12 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
         });
     }
 
+    // Taken from https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+    // thanks.
+    const numberWithCommas = (x) => {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
     function find_deal_ui() {
         const deal_str = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
         const ints = s2i.find_index__board_string_to_ints(deal_str);
@@ -37,7 +43,7 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
         let ctl = $("#fc_solve_status");
         df.run(1, '8589934591',
             (args) => {
-                ctl.html(escapeHtml("Reached No. " + args.start.toString()));
+                ctl.html(escapeHtml("Reached No. " + numberWithCommas(args.start)));
                 return;
             }
         );
