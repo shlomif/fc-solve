@@ -12,12 +12,19 @@ from make_pysol_freecell_board import find_index_main
 from find_index_lib_py import ffi, lib
 
 
+def _to_bytes(s):
+    if sys.version_info > (3,):
+        return bytes(s, 'UTF-8')
+    else:
+        return s
+
+
 def find_ret(ints):
     obj = lib.fc_solve_user__find_deal__alloc()
     lib.fc_solve_user__find_deal__fill(
-        obj, "".join(["%-10d" % x for x in ints]))
+        obj, _to_bytes("".join(["%-10d" % x for x in ints])))
     ret = int(ffi.string(lib.fc_solve_user__find_deal__run(
-        obj, "1", "%d" % ((1 << 33) - 1))))
+        obj, b'1', _to_bytes("%d" % ((1 << 33) - 1)))))
     lib.fc_solve_user__find_deal__free(obj)
     return ret
 
