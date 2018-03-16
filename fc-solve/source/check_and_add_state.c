@@ -206,24 +206,8 @@ static inline void *fc_solve_hash_insert(
          (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)) ||            \
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH))
 
-typedef unsigned long ul;
-typedef unsigned char ub1;
-
-static inline ul perl_hash_function(register const ub1 *s_ptr, /* the key */
-    register const ul len /* the length of the key */
-)
-{
-    register ul hash_value_int = 0;
-    register const ub1 *const s_end = s_ptr + len;
-
-    while (s_ptr < s_end)
-    {
-        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-    }
-    hash_value_int += (hash_value_int >> 5);
-
-    return hash_value_int;
-}
+#define XXH_PRIVATE_API
+#include "xxhash.h"
 #endif
 
 #ifdef INDIRECT_STACK_STATES
@@ -301,7 +285,7 @@ static inline void fc_solve_cache_stacks(
 #endif
 
         cached_stack = fc_solve_hash_insert(&(instance->stacks_hash), column,
-            perl_hash_function((ub1 *)*(current_stack), col_len)
+            XXH64(*(current_stack), col_len, 0)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
                 ,
             hash_value_int
@@ -521,8 +505,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 #define B
 #endif
     return HANDLE_existing_void(fc_solve_hash_insert(&(instance->hash), A,
-        perl_hash_function((ub1 *)(new_state_key), sizeof(*(new_state_key)))
-            B));
+        XXH64(new_state_key, sizeof(*new_state_key), 0) B));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     void *existing_void;
     if (!fc_solve_states_google_hash_insert(instance->hash,
