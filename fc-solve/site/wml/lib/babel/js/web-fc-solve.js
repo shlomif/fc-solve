@@ -2,7 +2,7 @@
 if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
-define(["web-fc-solve--expand-moves"], function (expand) {
+define(["web-fc-solve--expand-moves", 'big-integer'], function (expand, bigInt) {
     var fc_solve_expand_move = expand.fc_solve_expand_move;
 
 var fc_solve__hll_ms_rand__get_singleton;
@@ -606,16 +606,17 @@ class Freecell_Deal_Finder {
         return;
     }
 
-    run(abs_start, abs_end, update_cb) {
+    run(abs_start, abs_end_param, update_cb) {
         let that = this;
-        const CHUNK = 10000;
-        let start = abs_start;
+        const CHUNK = bigInt(10000);
+        let start = bigInt(abs_start);
+        const abs_end = bigInt(abs_end_param);
 
 
-        while (start < abs_end) {
+        while (start.lesser(abs_end)) {
             update_cb({ start: start});
-            let end = start + CHUNK - 1;
-            if (end > abs_end) {
+            let end = start.add(CHUNK).add(-1);
+            if (end.gt(abs_end)) {
                 end = abs_end;
             }
             const result = fc_solve_user__find_deal__run(
@@ -626,7 +627,7 @@ class Freecell_Deal_Finder {
             if (result != "-1") {
                 return {found: true, result: result};
             }
-            start = end + 1;
+            start = end.add(bigInt(1));
         }
         return {found: false};
     }

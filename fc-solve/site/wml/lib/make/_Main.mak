@@ -78,6 +78,7 @@ DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(D)/js/libfreecell-solver.js
 DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(D)/js $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .)
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
+DEST_BIGINT_JS = $(D)/js/big-integer.js
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
@@ -110,6 +111,11 @@ dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(A
 dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
 
 dummy: $(FIND_INDEX__PYJS__TARGETS)
+
+dummy: $(DEST_BIGINT_JS)
+
+$(DEST_BIGINT_JS):
+	browserify -t big-integer -s big-integer -r big-integer -o $@
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
