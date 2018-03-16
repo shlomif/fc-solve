@@ -153,7 +153,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
     fc_solve_hard_thread_t *hard_thread = instance->hard_threads;              \
     fc_solve_hard_thread_t *const end_hard_thread =                            \
         hard_thread + instance->num_hard_threads;                              \
-    for (; hard_thread < end_hard_thread; hard_thread++)
+    for (; hard_thread < end_hard_thread; ++hard_thread)
 #endif
 
 /* ST_LOOP == soft threads' loop - macros to abstract it. */
@@ -163,7 +163,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
     fc_solve_soft_thread_t *soft_thread = ht_soft_threads;                     \
     fc_solve_soft_thread_t *const end_soft_thread =                            \
         ht_soft_threads + HT_FIELD(hard_thread, num_soft_threads);             \
-    for (; soft_thread < end_soft_thread; soft_thread++)
+    for (; soft_thread < end_soft_thread; ++soft_thread)
 #define MOVES_GROW_BY 16
 
 typedef struct
@@ -877,7 +877,7 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
             sizeof(orig->groups[0]) *
                 ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
 
-    for (int i = 0; i < num; i++)
+    for (int i = 0; i < num; ++i)
     {
         ret.groups[i].move_funcs = memdup(ret.groups[i].move_funcs,
             sizeof(ret.groups[i].move_funcs[0]) *
