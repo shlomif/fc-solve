@@ -206,8 +206,7 @@ static inline void *fc_solve_hash_insert(
          (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)) ||            \
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH))
 
-#define XXH_PRIVATE_API
-#include "xxhash.h"
+#include "wrap_xxhash.h"
 #endif
 
 #ifdef INDIRECT_STACK_STATES
@@ -284,10 +283,10 @@ static inline void fc_solve_cache_stacks(
         }
 #endif
 
-        cached_stack = fc_solve_hash_insert(&(instance->stacks_hash), column,
-            XXH64(*(current_stack), col_len, 0)
+        cached_stack = fc_solve_hash_insert(
+            &(instance->stacks_hash), column, DO_XXH(*(current_stack), col_len)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-                ,
+                                                  ,
             hash_value_int
 #endif
         );
@@ -504,8 +503,8 @@ fcs_bool_t fc_solve_check_and_add_state(
 #else
 #define B
 #endif
-    return HANDLE_existing_void(fc_solve_hash_insert(&(instance->hash), A,
-        XXH64(new_state_key, sizeof(*new_state_key), 0) B));
+    return HANDLE_existing_void(fc_solve_hash_insert(
+        &(instance->hash), A, DO_XXH(new_state_key, sizeof(*new_state_key)) B));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     void *existing_void;
     if (!fc_solve_states_google_hash_insert(instance->hash,
