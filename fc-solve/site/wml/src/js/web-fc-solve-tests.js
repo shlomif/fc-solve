@@ -10138,8 +10138,8 @@ function test_js_fc_solve_class(my_callback)
 
         if (true) {
         const ints = s2i.find_index__board_string_to_ints(ms_deal_24);
-        const ints_s = ints.map((i) => { let ret = i.toString(); return " ".repeat(10-ret.length) + ret; }).join('');
-        let df = new w.Freecell_Deal_Finder({});
+        const ints_s = ints.map((i) => { var ret = i.toString(); return " ".repeat(10-ret.length) + ret; }).join('');
+        var df = new w.Freecell_Deal_Finder({});
         df.fill(ints_s);
         df.run(1, 1000, (args) => {});
         const ret_Deal = df.cont();

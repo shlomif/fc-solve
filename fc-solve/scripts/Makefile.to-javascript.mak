@@ -87,7 +87,7 @@ OPT_FLAGS = -O3
 # OPT_FLAGS = -O1
 # OPT_FLAGS =
 
-CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve-shlomif/patsolve/ -I $(CMAKE_DIR) -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
+CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve-shlomif/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.6.4 -I $(CMAKE_DIR) -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
 
 # ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =
