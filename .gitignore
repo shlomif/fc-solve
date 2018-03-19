@@ -112,4 +112,5 @@ fc-solve/source/scripts/ids-whitelist.txt
 fc-solve/source/t/lib/FC_Solve/__pycache__
 fc-solve/source/t/lib/TAP/__pycache__
 fc-solve/source/tags
+fc-solve/source/xxHash-wrapper
 Task-FreecellSolver-Testing/.build

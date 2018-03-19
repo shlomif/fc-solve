@@ -39,6 +39,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/(\\\\.(git|hg)|appveyor|\\\\.travis|CI-testing)"
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(OLD|Rejects|cmake|ga|patsolve-specific|t/)"
     "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(CMakeLists\\\\.txt|COPYING|Manifest|Parameters|check_layout|config\\\\.h\\\\.in|convert_[a-z]+|fc-solve\\\\.ico|dondorf-king\\\\.bmp|threaded_main\\\\.c|patmain\\\\.c|run-tests\\\\.pl|read_layout\\\\.h|print_layout\\\\.h)$"
+    "^${PROJECT_SOURCE_DIR}/xxHash-wrapper/(\\\\.git)"
 )
 
 SET(_win32_static_lib_flags )
@@ -1106,7 +1107,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
 ENDIF ()
 
 INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
-INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/xxHash-0.6.4")
+INCLUDE("${private_mod_path}/xxhash_wrapper_bootstrap.cmake")
 
 ADD_SUBDIRECTORY ("t")
 ADD_SUBDIRECTORY ("board_gen")
