@@ -73,11 +73,11 @@ typedef struct
 
 /* left and right children are index * 2 and (index * 2) +1 respectively */
 #define PQ_LEFT_CHILD_INDEX(i) ((i) << 1)
-/* initialise the priority queue with a maximum size of maxelements. maxrating
-   is the highest or lowest value of an
-   entry in the pqueue depending on whether it is ascending or descending
-   respectively. Finally the bool32 tells you whether
-   the list is sorted ascending or descending... */
+/* initialise the priority queue with a maximum size of maxelements.
+   maxrating is the highest or lowest value of an entry in the pqueue
+   depending on whether it is ascending or descending respectively. Finally
+   the bool32 tells you whether the list is sorted ascending or
+   descending... */
 
 static inline void fc_solve_pq_init(pri_queue_t *const pq)
 {

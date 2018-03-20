@@ -156,9 +156,9 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 static inline fcs_bool_t instance_check_multiple_keys(
     fcs_dbm_solver_thread_t *const thread,
     fcs_dbm_solver_instance_t *const instance,
-    fcs_dbm__cache_store__common_t *const cache_store,
-    fcs_meta_compact_allocator_t *const meta_alloc, fcs_derived_state_t **lists,
-    size_t batch_size
+    fcs_dbm__cache_store__common_t *const cache_store GCC_UNUSED,
+    fcs_meta_compact_allocator_t *const meta_alloc GCC_UNUSED,
+    fcs_derived_state_t **lists, size_t batch_size
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move_t *moves_to_parent
@@ -333,7 +333,7 @@ static inline void mark_and_sweep_old_states(
                 (long long)idx, (long long)items_count);
 #else
             fprintf(
-                out_fh, "Mark+Sweep Progress - %zd/%zd\n", idx, items_count);
+                out_fh, "Mark+Sweep Progress - %zu/%zu\n", idx, items_count);
 #endif
         }
     }
@@ -382,9 +382,9 @@ static inline void instance_increment(fcs_dbm_solver_instance_t *const instance)
 static inline void fcs_dbm__cache_store__init(
     fcs_dbm__cache_store__common_t *const cache_store,
     fcs_dbm_instance_common_elems_t *const common,
-    fcs_meta_compact_allocator_t *const meta_alloc,
-    const char *const dbm_store_path, const long pre_cache_max_count,
-    const long caches_delta)
+    fcs_meta_compact_allocator_t *const meta_alloc GCC_UNUSED,
+    const char *const dbm_store_path, const long pre_cache_max_count GCC_UNUSED,
+    const long caches_delta GCC_UNUSED)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY

@@ -198,7 +198,7 @@ static inline void fcs_offloading_queue_page__calc_filename(
     const char *const offload_dir_path)
 {
     sprintf(buffer, "%s/fcs_queue%lXq_%020lX.page", offload_dir_path,
-        page->queue_id, page->page_index);
+        (unsigned long)(page->queue_id), (unsigned long)(page->page_index));
 }
 
 static inline void fcs_offloading_queue_page__start_after(

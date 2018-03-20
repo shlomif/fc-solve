@@ -23,7 +23,7 @@ static inline void dbm__spawn_threads(fcs_dbm_solver_instance_t *const instance,
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
                 &(threads[i].arg)))
         {
-            fc_solve_err("Worker Thread No. %zd Initialization failed!\n", i);
+            fc_solve_err("Worker Thread No. %zu Initialization failed!\n", i);
         }
     }
 

@@ -470,6 +470,10 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 fcc_entry_key.kv.key.key = trace[trace_num - 1];
                 FccEntryPointNode *val_proto = RB_FIND(FccEntryPointList,
                     &(instance->fcc_entry_points), &fcc_entry_key);
+                if (!val_proto)
+                {
+                    return;
+                }
                 const long location_in_file =
                     val_proto->kv.val.location_in_file;
                 fseek(instance->fingerprint_fh, location_in_file, SEEK_SET);

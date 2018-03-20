@@ -287,9 +287,9 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
         fcs_fcc_moves_list_item_t **iter = &(moves_seq->moves_list);
 
         /* Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
-         * to point at the place to either write the new moves or alternatively
-         * (on parity) on the pointer to allocate a new list_item for the
-         * moves.
+         * to point at the place to either write the new moves or
+         * alternatively (on parity) on the pointer to allocate a new
+         * list_item for the moves.
          *
          * If count is 0, then we should move 0.
          * If count is 1, then we should move 0.

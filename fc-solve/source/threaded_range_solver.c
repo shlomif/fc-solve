@@ -47,7 +47,7 @@ static int arg = 1, context_argc;
 static long long total_num_iters = 0;
 static pthread_mutex_t total_num_iters_lock;
 
-static void *worker_thread(void *GCC_UNUSED void_arg)
+static void *worker_thread(void *void_arg GCC_UNUSED)
 {
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     void *const instance = simple_alloc_and_parse(0, NULL, 0);

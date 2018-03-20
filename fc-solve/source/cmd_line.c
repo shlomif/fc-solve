@@ -157,7 +157,8 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
 }
 
 #ifdef FCS_WITH_ERROR_STRS
-static inline char *calc_errstr_s(const char *const format, ...)
+static inline __attribute__((format(printf, 1, 2))) char *calc_errstr_s(
+    const char *const format, ...)
 {
     va_list my_va_list;
 

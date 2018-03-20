@@ -38,7 +38,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     *store = (fcs_dbm_store_t)db;
 }
 
-dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)
+dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)
 {
     return (((dbm_t *)store)->kaz_tree);
 }

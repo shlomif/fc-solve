@@ -69,7 +69,7 @@ static void set_tests_order(
 
 static inline int range_solvers_main(int argc, char *argv[], int arg,
     const long long start_board, const long long end_board,
-    const long long stop_at)
+    const long long stop_at GCC_UNUSED)
 {
     /* char buffer[2048]; */
     fcs_int_limit_t iters_limit = 100000;

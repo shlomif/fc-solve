@@ -257,7 +257,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     const char *s_ptr = line;
     while (*(s_ptr) != '|')
     {
-        int hex_digits;
+        unsigned int hex_digits;
         if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
         {
             fc_solve_err("Error in reading state in line %ld of the "
@@ -295,7 +295,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #endif
     ++instance->common.num_states_in_collection;
 
-    int hex_digits;
+    unsigned int hex_digits;
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
         FCS__OUTPUT_STATE(
@@ -401,8 +401,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 
 #include "dbm_procs_inner.h"
 
-static void init_thread(fcs_dbm_solver_thread_t *const thread) {}
-static void free_thread(fcs_dbm_solver_thread_t *const thread) {}
+static void init_thread(fcs_dbm_solver_thread_t *const thread GCC_UNUSED) {}
+static void free_thread(fcs_dbm_solver_thread_t *const thread GCC_UNUSED) {}
 
 static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
     fcs_state_keyval_pair_t *init_state, const size_t num_threads)
@@ -414,7 +414,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
                 &(threads[i].arg)))
         {
-            fc_solve_err("Worker Thread No. %zd Initialization failed!\n", i);
+            fc_solve_err("Worker Thread No. %zu Initialization failed!\n", i);
         }
     }
 

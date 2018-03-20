@@ -180,9 +180,9 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
      * Of type <<LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache>>
      * */
     fcs_lru_cache_t *does_state_exist_in_any_FCC_cache,
-    /* [Output]: the number of new positions/states scanned in the FCC. If it's
-     * not new, this will be set to zero (0). It includes the initial position,
-     * but does not include the start points of the new FCC.
+    /* [Output]: the number of new positions/states scanned in the FCC. If
+     * it's not new, this will be set to zero (0). It includes the initial
+     * position, but does not include the start points of the new FCC.
      * */
     long *const out_num_new_positions,
     /* [Input/Output]: the list allocator. */
@@ -342,8 +342,8 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
                  * Allocate a new new_item.
                  *
                  * Note: we need to allocate it for both reversibles
-                 * and non-reversible moves because pointers to their keys are
-                 * kept inside the dict_t-s.
+                 * and non-reversible moves because pointers to their keys
+                 * are kept inside the dict_t-s.
                  * */
                 if (queue_recycle_bin)
                 {

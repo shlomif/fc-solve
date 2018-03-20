@@ -18,7 +18,8 @@
 
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void);
-static __attribute__((noreturn)) void help_err(const char *const msg, ...)
+static __attribute__((noreturn)) __attribute__((format(printf, 1, 2))) void
+help_err(const char *const msg, ...)
 {
     va_list ap;
     va_start(ap, msg);

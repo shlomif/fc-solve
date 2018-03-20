@@ -317,8 +317,8 @@ static inline pq_rating_t befs_rate_state(
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
 /*
- * The calculate_real_depth() inline function traces the path of the state up
- * to the original state, and thus calculates its real depth.
+ * The calculate_real_depth() inline function traces the path of the state
+ * up to the original state, and thus calculates its real depth.
  *
  * It then assigns the newly updated depth throughout the path.
  *

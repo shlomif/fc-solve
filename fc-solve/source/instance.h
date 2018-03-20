@@ -272,8 +272,8 @@ struct fc_solve_hard_thread_struct
 #ifndef FCS_SINGLE_HARD_THREAD
     /*
      * The hard thread count of how many states he checked himself. The
-     * instance num_checked_states can be confusing because other threads modify
-     * it too.
+     * instance num_checked_states can be confusing because other threads
+     * modify it too.
      *
      * Thus, the soft thread switching should be done based on this variable
      * */
@@ -304,8 +304,8 @@ struct fc_solve_hard_thread_struct
 #endif
 
     /*
-     * This is a buffer used to temporarily store the stacks of the duplicated
-     * state.
+     * This is a buffer used to temporarily store the stacks of the
+     * duplicated state.
      * */
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -322,8 +322,8 @@ struct fc_solve_hard_thread_struct
 
     /*
      * A counter that determines how many of the soft threads that belong
-     * to this hard thread have already finished. If it becomes num_soft_threads
-     * this thread is skipped.
+     * to this hard thread have already finished. If it becomes
+     * num_soft_threads this thread is skipped.
      * */
     int num_soft_threads_finished;
 
@@ -407,9 +407,9 @@ struct fc_solve_soft_thread_struct
             /*
              * Soft-DFS uses a stack of fcs_soft_dfs_stack_item_t s.
              *
-             * derived_states_list - a list of states to be checked next. Not
-             * all of them will be checked because it is possible that future
-             * states already visited them.
+             * derived_states_list - a list of states to be checked next.
+             * Not all of them will be checked because it is possible that
+             * future states already visited them.
              *
              * current_state_index - the index of the last checked state
              * in depth i.
@@ -431,7 +431,8 @@ struct fc_solve_soft_thread_struct
             ssize_t depth;
 
             /*
-             * A pseudo-random number generator for use in the random-DFS scan
+             * A pseudo-random number generator for use in the random-DFS
+             * scan
              * */
             fcs_rand_t rand_gen;
 
@@ -454,7 +455,8 @@ struct fc_solve_soft_thread_struct
                 struct
                 {
                     /*
-                     * A linked list that serves as the queue for the BFS scan.
+                     * A linked list that serves as the queue for the BFS
+                     * scan.
                      * */
                     fcs_states_linked_list_item_t *bfs_queue;
                     /*
@@ -547,8 +549,9 @@ struct fc_solve_instance_struct
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     /*
-     * Limit for the maximal number of checked states. max_num_checked_states
-     * is useful because it can limit the amount of consumed memory (and time).
+     * Limit for the maximal number of checked states.
+     * max_num_checked_states is useful because it can limit the amount of
+     * consumed memory (and time).
      *
      * This is the effective number that enables the process to work without
      * checking if it's zero.
@@ -684,8 +687,8 @@ struct fc_solve_instance_struct
 
     /*
      * A counter that determines how many of the hard threads that belong
-     * to this hard thread have already finished. If it becomes num_hard_threads
-     * the instance terminates.
+     * to this hard thread have already finished. If it becomes
+     * num_hard_threads the instance terminates.
      * */
     int num_hard_threads_finished;
 
@@ -710,7 +713,8 @@ struct fc_solve_instance_struct
      * The debug_iter_output variables provide a programmer programmable way
      * to debug the algorithm while it is running. This works well for DFS
      * and Soft-DFS scans but at present support for BeFS and BFS is not
-     * too good, as its hard to tell which state came from which parent state.
+     * too good, as its hard to tell which state came from which parent
+     * state.
      *
      * debug_iter_output_func is a pointer to the function that performs the
      * debugging. If NULL, this feature is not used.
