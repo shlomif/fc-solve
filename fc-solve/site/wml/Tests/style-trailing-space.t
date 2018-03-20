@@ -12,7 +12,7 @@ my $finder = Test::TrailingSpace->new(
         root           => '.',
         filename_regex => qr/./,
         abs_path_prune_re =>
-qr#(?:\A(?:\./)?(?:node_modules)|(?:(?:(?:src|dest(?:-prod)?).*?typings.*\.ts\z)|lib/fc-solve-for-javascript|dest(?:-prod)?/(?:(?:js/$lib)|(?:js-fc-solve/(?:text|automated-tests)/$lib\z))))|(?:lib/for-node/$lib\z)|(?:$lib\z)|(?:\.(?:diff|jpg|patch|png|woff|xcf|xz|zip)\z)#,
+qr#(?:\A(?:\./)?(?:node_modules)|(?:(?:(?:src|dest(?:-prod)?).*?typings.*\.ts\z)|lib/fc-solve-for-javascript|dest(?:-prod)?/(?:(?:js/(?:(?:$lib)|(?:big-integer\.js)))|(?:js-fc-solve/(?:text|automated-tests)/$lib\z))))|(?:lib/for-node/$lib\z)|(?:$lib\z)|(?:\.(?:diff|jpg|patch|png|woff|xcf|xz|zip)\z)#,
     }
 );
 
