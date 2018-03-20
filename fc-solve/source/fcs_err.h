@@ -13,7 +13,9 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-static inline __attribute__((noreturn)) void fc_solve_err(const char *msg, ...)
+static inline __attribute__((noreturn))
+__attribute__((format(printf, 1, 2))) void
+fc_solve_err(const char *msg, ...)
 {
     va_list ap;
 

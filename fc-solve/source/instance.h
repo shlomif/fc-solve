@@ -344,10 +344,10 @@ typedef struct
 {
     fcs_collectible_state_t *state;
     fcs_derived_states_list_t derived_states_list;
-    int_fast32_t move_func_list_idx;
-    int current_state_index;
-    int move_func_idx;
-    int derived_states_random_indexes_max_size;
+    size_t move_func_list_idx;
+    size_t current_state_index;
+    size_t move_func_idx;
+    size_t derived_states_random_indexes_max_size;
     fcs_rating_with_index_t *derived_states_random_indexes;
     fcs__positions_by_rank_t positions_by_rank;
     fcs_game_limit_t num_vacant_stacks;
@@ -362,7 +362,7 @@ typedef struct
 
 typedef struct
 {
-    int num_units;
+    size_t num_units;
     fcs_moves_by_depth_unit_t *by_depth_units;
 } fcs_moves_by_depth_array;
 
@@ -877,7 +877,7 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
             sizeof(orig->groups[0]) *
                 ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
 
-    for (int i = 0; i < num; ++i)
+    for (size_t i = 0; i < num; ++i)
     {
         ret.groups[i].move_funcs = memdup(ret.groups[i].move_funcs,
             sizeof(ret.groups[i].move_funcs[0]) *

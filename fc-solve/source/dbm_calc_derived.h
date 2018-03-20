@@ -138,7 +138,7 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
     COMMIT_NEW_STATE_WITH_COUNT(                                               \
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
-static inline int calc_foundation_to_put_card_on(
+static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
     const fcs_dbm_variant_type_t local_variant, fcs_state_t *const ptr_state,
     const fcs_card_t card)
 {
@@ -350,7 +350,6 @@ static inline fcs_bool_t card_cannot_be_placed(const fcs_state_t *const s,
 
 #define the_state (init_state_kv_ptr->s)
 static inline fcs_bool_t is_state_solved(
-    const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr)
 {
     for (int suit = 0; suit < DECKS_NUM * 4; suit++)
@@ -376,7 +375,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
     int empty_stack_idx = -1;
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #define new_state (ptr_new_state->state.s)
-    if (is_state_solved(local_variant, init_state_kv_ptr))
+    if (is_state_solved(init_state_kv_ptr))
     {
         return TRUE;
     }

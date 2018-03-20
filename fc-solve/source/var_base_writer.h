@@ -22,12 +22,16 @@ typedef struct
     fcs_var_base_int_t remainder;
 } fcs_var_base_writer_t;
 
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+#define fc_solve_var_base_writer_init(s)
+#else
 static inline void fc_solve_var_base_writer_init(fcs_var_base_writer_t *const s)
 {
     FCS_var_base_int__init(s->data);
     FCS_var_base_int__init(s->multiplier);
     FCS_var_base_int__init(s->remainder);
 }
+#endif
 
 static inline void fc_solve_var_base_writer_start(
     fcs_var_base_writer_t *const s)
@@ -77,6 +81,9 @@ static inline size_t fc_solve_var_base_writer_get_data(
     return count;
 }
 
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+#define fc_solve_var_base_writer_release(w)
+#else
 static inline void fc_solve_var_base_writer_release(
     fcs_var_base_writer_t *const w)
 {
@@ -84,3 +91,4 @@ static inline void fc_solve_var_base_writer_release(
     FCS_var_base_int__clear(w->multiplier);
     FCS_var_base_int__clear(w->remainder);
 }
+#endif

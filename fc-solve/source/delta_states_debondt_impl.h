@@ -101,12 +101,16 @@ static inline void fc_solve_debondt_delta_stater__init_card_states(
     }
 }
 
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+#define fc_solve_debondt_delta_stater_release(s)
+#else
 static inline void fc_solve_debondt_delta_stater_release(
     fc_solve_debondt_delta_stater_t *const self)
 {
     fc_solve_var_base_reader_release(&(self->r));
     fc_solve_var_base_writer_release(&(self->w));
 }
+#endif
 
 static inline void fc_solve_debondt_delta_stater_set_derived(
     fc_solve_debondt_delta_stater_t *const self, fcs_state_t *const state)
@@ -370,9 +374,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
         for (unsigned long rank = 1; rank <= foundation_rank; ++rank)
         {
-            RS_STATE(rank, suit_idx) =
-                (IS_BAKERS_DOZEN() ? OPT__BAKERS_DOZEN__IN_FOUNDATION
-                                   : OPT_IN_FOUNDATION);
+            RS_STATE(rank, suit_idx) = OPT_IN_FOUNDATION;
         }
 
         fcs_set_foundation(*ret, suit_idx, foundation_rank);

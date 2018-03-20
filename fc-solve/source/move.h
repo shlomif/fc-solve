@@ -123,7 +123,7 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
     FCS_STATE__DUP_keyval_pair(s_and_info, *init_state);
 
 #ifdef INDIRECT_STACK_STATES
-    for (int i = 0; i < STACKS_NUM__VAL; i++)
+    for (size_t i = 0; i < STACKS_NUM__VAL; i++)
     {
         fcs_copy_stack(
             s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);

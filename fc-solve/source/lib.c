@@ -2481,7 +2481,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
         return 1;
     }
 
-    int depth_idx = 0;
+    size_t depth_idx = 0;
     if (min_depth > 0)
     {
         for (;; ++depth_idx)
@@ -2530,7 +2530,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 
     SET_ERROR_VAR(error_string, static_error_string);
 
-    for (int further_depth_idx = depth_idx + 1;
+    for (size_t further_depth_idx = depth_idx + 1;
          further_depth_idx < soft_thread->by_depth_moves_order.num;
          further_depth_idx++)
     {
@@ -3415,7 +3415,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         return 1;
     }
     fcs_flare_item_t *const flare = calc_moves_flare(user);
-    if (flare->next_move_idx == flare->moves_seq.num_moves)
+    if (flare->next_move_idx == (uint_fast32_t)flare->moves_seq.num_moves)
     {
         return 1;
     }
@@ -3519,7 +3519,8 @@ void DLLEXPORT freecell_solver_user_free(void *const api_instance)
     free(user);
 }
 
-int DLLEXPORT freecell_solver_user_get_current_depth(void *const api_instance)
+int DLLEXPORT __attribute__((pure))
+freecell_solver_user_get_current_depth(void *const api_instance)
 {
     return (DFS_VAR(api_soft_thread(api_instance), depth));
 }
@@ -3767,8 +3768,8 @@ int DLLEXPORT freecell_solver_user_set_game(void *const api_instance,
 }
 #endif
 
-fcs_int_limit_t DLLEXPORT freecell_solver_user_get_num_times_long(
-    void *api_instance)
+fcs_int_limit_t DLLEXPORT __attribute__((pure))
+freecell_solver_user_get_num_times_long(void *api_instance)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
@@ -3872,17 +3873,20 @@ void DLLEXPORT freecell_solver_user_limit_depth(
 #endif
 
 #if !(defined(FCS_BREAK_BACKWARD_COMPAT_1) && defined(FCS_FREECELL_ONLY))
-int DLLEXPORT freecell_solver_user_get_max_num_freecells(void)
+int DLLEXPORT __attribute__((const))
+freecell_solver_user_get_max_num_freecells(void)
 {
     return MAX_NUM_FREECELLS;
 }
 
-int DLLEXPORT freecell_solver_user_get_max_num_stacks(void)
+int DLLEXPORT __attribute__((const))
+freecell_solver_user_get_max_num_stacks(void)
 {
     return MAX_NUM_STACKS;
 }
 
-int DLLEXPORT freecell_solver_user_get_max_num_decks(void)
+int DLLEXPORT __attribute__((const))
+freecell_solver_user_get_max_num_decks(void)
 {
     return MAX_NUM_DECKS;
 }
@@ -4030,7 +4034,7 @@ int DLLEXPORT freecell_solver_user_set_a_star_weight(
 }
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
-double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
+double DLLEXPORT __attribute__((pure)) fc_solve_user_INTERNAL_get_befs_weight(
     void *const api_instance, const int my_index)
 {
     return BEFS_VAR(api_soft_thread(api_instance), weighting)
@@ -4121,7 +4125,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
 }
 
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-fcs_int_limit_t DLLEXPORT
+fcs_int_limit_t DLLEXPORT __attribute__((pure))
 freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
@@ -4397,8 +4401,8 @@ DLLEXPORT const char *freecell_solver_user_get_lib_version(
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 /* TODO : optionally Remove from the API */
-DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
-    void *const api_instance)
+DLLEXPORT __attribute__((pure)) const char *
+freecell_solver_user_get_current_soft_thread_name(void *const api_instance)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
     const fc_solve_hard_thread_t *const hard_thread = active_obj(api_instance);
@@ -4413,8 +4417,8 @@ DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
 #endif
 
 #ifdef FCS_WITH_ERROR_STRS
-DLLEXPORT const char *freecell_solver_user_get_last_error_string(
-    void *const api_instance)
+DLLEXPORT __attribute__((const)) const char *
+freecell_solver_user_get_last_error_string(void *const api_instance)
 {
     return (((fcs_user_t *const)api_instance)->error_string);
 }
@@ -4513,7 +4517,8 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
 #endif
 }
 
-int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
+int DLLEXPORT __attribute__((pure))
+fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *const api_instance GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
@@ -4523,7 +4528,8 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
 #endif
 }
 
-const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
+const DLLEXPORT __attribute__((pure)) char *
+fc_solve_user_INTERNAL_get_flares_plan_item_type(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
@@ -4541,7 +4547,8 @@ const DLLEXPORT char *fc_solve_user_INTERNAL_get_flares_plan_item_type(
 #endif
 }
 
-int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+int DLLEXPORT __attribute__((pure))
+fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
@@ -4552,7 +4559,8 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
 #endif
 }
 
-int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
+int DLLEXPORT __attribute__((pure))
+fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
@@ -4564,13 +4572,14 @@ int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
 #endif
 }
 
-int DLLEXPORT fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
-    void *const api_instance)
+int DLLEXPORT __attribute__((pure))
+fc_solve_user_INTERNAL_get_num_by_depth_tests_order(void *const api_instance)
 {
     return api_soft_thread(api_instance)->by_depth_moves_order.num;
 }
 
-int DLLEXPORT fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+int DLLEXPORT __attribute__((pure))
+fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
     void *const api_instance, const int depth_idx)
 {
     return api_soft_thread(api_instance)

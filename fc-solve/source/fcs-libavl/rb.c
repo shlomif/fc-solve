@@ -784,6 +784,7 @@ rb_t_prev (struct rb_traverser *trav)
 
 /* Returns |trav|'s current item. */
 void *
+__attribute__((pure))
 rb_t_cur (struct rb_traverser *trav)
 {
   assert (trav != NULL);

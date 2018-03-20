@@ -351,7 +351,7 @@ typedef struct
 static inline int find_empty_col(
     const fcs_state_t *const dynamic_state STACKS_NUM__ARG)
 {
-    for (int i = 0; i < STACKS_NUM__VAL; ++i)
+    for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
     {
         if (fcs_state_col_is_empty(*dynamic_state, i))
         {
@@ -365,7 +365,7 @@ static inline int find_empty_col(
 static inline int find_col_card(const fcs_state_t *const dynamic_state,
     const fcs_card_t needle STACKS_NUM__ARG)
 {
-    for (int i = 0; i < STACKS_NUM__VAL; ++i)
+    for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
     {
         const_AUTO(col, fcs_state_get_col(*dynamic_state, i));
         const int col_len = fcs_col_len(col);
@@ -381,7 +381,7 @@ static inline int find_col_card(const fcs_state_t *const dynamic_state,
 static inline int find_fc_card(const fcs_state_t *const dynamic_state,
     const fcs_card_t needle FREECELLS_NUM__ARG)
 {
-    for (int dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
+    for (size_t dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
     {
         if (fcs_freecell_card(*dynamic_state, dest) == needle)
         {

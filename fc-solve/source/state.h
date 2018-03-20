@@ -423,7 +423,7 @@ static inline void FCS_STATE_collectible_to_kv(
 #define FREECELLS_NUM__VAL freecells_num
 #endif
 
-#define FREECELLS_NUM__ARG PASS_FREECELLS(const int freecells_num)
+#define FREECELLS_NUM__ARG PASS_FREECELLS(const size_t freecells_num)
 
 #ifdef HARD_CODED_NUM_STACKS
 #define PASS_STACKS(arg)
@@ -433,7 +433,7 @@ static inline void FCS_STATE_collectible_to_kv(
 #define STACKS_NUM__VAL stacks_num
 #endif
 
-#define STACKS_NUM__ARG PASS_STACKS(const int stacks_num)
+#define STACKS_NUM__ARG PASS_STACKS(const size_t stacks_num)
 
 #ifdef HARD_CODED_NUM_DECKS
 #define PASS_DECKS(arg)
@@ -445,7 +445,7 @@ static inline void FCS_STATE_collectible_to_kv(
 
 #define FREECELLS_AND_STACKS_ARGS() FREECELLS_NUM__ARG STACKS_NUM__ARG
 #define FREECELLS_STACKS_DECKS__ARGS()                                         \
-    FREECELLS_AND_STACKS_ARGS() PASS_DECKS(const int decks_num)
+    FREECELLS_AND_STACKS_ARGS() PASS_DECKS(const size_t decks_num)
 
 #define PASS_T(arg) FC_SOLVE__PASS_T(arg)
 
@@ -493,7 +493,7 @@ extern void fc_solve_card_stringify(
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-static inline int fcs_str2suit(const char *suit)
+static inline __attribute__((pure)) int fcs_str2suit(const char *suit)
 {
     while (TRUE)
     {
@@ -521,7 +521,7 @@ static inline int fcs_str2suit(const char *suit)
  * the program.
  * */
 
-static inline int fcs_str2rank(const char *string)
+static inline __attribute__((pure)) int fcs_str2rank(const char *string)
 {
     while (1)
     {
@@ -575,7 +575,8 @@ static inline int fcs_str2rank(const char *string)
  * This function converts an entire card from its string representations
  * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
  * */
-static inline fcs_card_t fc_solve_card_parse_str(const char *const str)
+static inline __attribute__((pure)) fcs_card_t fc_solve_card_parse_str(
+    const char *const str)
 {
     return fcs_make_card(fcs_str2rank(str), fcs_str2suit(str));
 }
@@ -595,7 +596,7 @@ static inline void fc_solve_state_init_proto(
 {
     memset(&(state->s), 0, sizeof(state->s));
 #ifdef INDIRECT_STACK_STATES
-    int i;
+    size_t i;
     for (i = 0; i < STACKS_NUM__VAL; ++i)
     {
         memset(state->s.columns[i] = &indirect_stacks_buffer[i << 7], '\0',
@@ -679,7 +680,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
         }                                                                      \
     }
 
-    for (int s = 0; s < STACKS_NUM__VAL; s++)
+    for (size_t s = 0; s < STACKS_NUM__VAL; s++)
     {
         /* Move to the next stack */
         if (!first_line)
@@ -752,12 +753,12 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
         if (new_str2)
         {
             str = new_str2;
-            for (int f_idx = 0; f_idx < (DECKS_NUM__VAL << 2); f_idx++)
+            for (size_t f_idx = 0; f_idx < (DECKS_NUM__VAL << 2); f_idx++)
             {
                 fcs_set_foundation(out, f_idx, 0);
             }
 
-            int decks_index[4] = {0, 0, 0, 0};
+            size_t decks_index[4] = {0, 0, 0, 0};
             while (1)
             {
                 while ((*str == ' ') || (*str == '\t'))
@@ -859,7 +860,7 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
         FREECELLS_STACKS_DECKS__ARGS(),
     fcs_card_t *const misplaced_card)
 {
-    int card_counts[FCS_NUM_SUITS][FCS_MAX_RANK + 1];
+    size_t card_counts[FCS_NUM_SUITS][FCS_MAX_RANK + 1];
 
     const fcs_state_t *const state = &(state_pair->s);
 
@@ -873,7 +874,7 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
     }
 
     /* Mark the card_counts in the decks */
-    for (int suit_idx = 0; suit_idx < (DECKS_NUM__VAL << 2); suit_idx++)
+    for (size_t suit_idx = 0; suit_idx < (DECKS_NUM__VAL << 2); suit_idx++)
     {
         for (int c = 1; c <= fcs_foundation_value(*state, suit_idx); c++)
         {
@@ -882,7 +883,7 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
     }
 
     /* Mark the card_counts in the freecells */
-    for (int f = 0; f < FREECELLS_NUM__VAL; f++)
+    for (size_t f = 0; f < FREECELLS_NUM__VAL; f++)
     {
         const fcs_card_t card = fcs_freecell_card(*state, f);
         if (fcs_card_is_valid(card))
@@ -892,7 +893,7 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
     }
 
     /* Mark the card_counts in the columns */
-    for (int s = 0; s < STACKS_NUM__VAL; s++)
+    for (size_t s = 0; s < STACKS_NUM__VAL; s++)
     {
         const_AUTO(col, fcs_state_get_col(*state, s));
         const int col_len = fcs_col_len(col);
@@ -910,9 +911,9 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
 
     /* Now check if there are extra or missing card_counts */
 
-    for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
+    for (size_t suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
     {
-        for (int rank = 1; rank <= FCS_MAX_RANK; rank++)
+        for (size_t rank = 1; rank <= FCS_MAX_RANK; rank++)
         {
             if (card_counts[suit_idx][rank] != DECKS_NUM__VAL)
             {
