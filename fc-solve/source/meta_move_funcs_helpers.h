@@ -39,7 +39,7 @@ static inline int max0(const int e) { return max(e, 0); }
                       ? (((num_freecells) + 1) << (num_empty_cols))            \
                       : ((num_freecells) + 1)))
 
-static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
+static inline size_t calc_max_simple_simon_seq_move(const int num_empty_cols)
 {
     return ((num_empty_cols < 0) ? 0 : (1 << num_empty_cols));
 }

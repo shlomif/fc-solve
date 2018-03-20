@@ -154,7 +154,7 @@ static inline void apply_moves(fcs_moves_order *moves_order,
     const unsigned long long allowed_moves, const char *const s)
 {
     FCS__DECL_ERR_BUF(no_use);
-    for (int group_idx = 0; group_idx < moves_order->num; ++group_idx)
+    for (size_t group_idx = 0; group_idx < moves_order->num; ++group_idx)
     {
         const fcs_move_func *const move_funcs_idxs =
             moves_order->groups[group_idx].move_funcs;
@@ -208,9 +208,9 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                 fcs_by_depth_moves_order *const by_depth_moves_order =
                     soft_thread->by_depth_moves_order.by_depth_moves;
 
-                for (int depth_idx = 0;
+                for (size_t depth_idx = 0;
                      depth_idx < soft_thread->by_depth_moves_order.num;
-                     depth_idx++)
+                     ++depth_idx)
                 {
                     apply_moves(&by_depth_moves_order[depth_idx].moves_order,
                         preset.allowed_moves, preset.moves_order);
