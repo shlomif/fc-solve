@@ -367,7 +367,8 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
         run_cmd(
             'wget avl',
             {
-                cmd => [qw(wget ftp://ftp.gnu.org/pub/gnu/avl/avl-2.0.3.tar.gz)]
+                cmd =>
+                    [qw(wget https://ftp.gnu.org/pub/gnu/avl/avl-2.0.3.tar.gz)]
             }
         );
         run_cmd( 'untar avl', { cmd => [qw(tar -xvf avl-2.0.3.tar.gz)] } );
