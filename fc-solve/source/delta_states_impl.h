@@ -161,16 +161,16 @@ static inline void fc_solve_get_freecells_encoding(
     const_SLOT(num_freecells, self);
 
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    for (int i = 0; i < num_freecells; ++i)
+    for (size_t i = 0; i < num_freecells; ++i)
     {
         freecells[i] = fcs_freecell_card(*derived, i);
     }
 
     /* Sort the freecells using selection-sort. */
-    for (int i = 0; i < num_freecells; ++i)
+    for (size_t i = 0; i < num_freecells; ++i)
     {
-        int min_idx = i;
-        for (int j = i + 1; j < num_freecells; ++j)
+        size_t min_idx = i;
+        for (size_t j = i + 1; j < num_freecells; ++j)
         {
             if (fcs_card2char(freecells[j]) < fcs_card2char(freecells[min_idx]))
             {
@@ -191,8 +191,8 @@ static inline void fc_solve_get_freecells_encoding(
 static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
     int *const cols_indexes, fc_solve_column_encoding_composite_t *const cols)
 {
-    int non_orig_idx = 0;
-    int empty_col_idx = num_columns - 1;
+    size_t non_orig_idx = 0;
+    ssize_t empty_col_idx = num_columns - 1;
 
     while (1)
     {
@@ -217,7 +217,7 @@ static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
             }
         }
 
-        if ((empty_col_idx < 0) || (empty_col_idx < non_orig_idx))
+        if ((empty_col_idx < 0) || (empty_col_idx < (ssize_t)non_orig_idx))
         {
             break;
         }
@@ -257,7 +257,7 @@ static void fc_solve_delta_stater_encode_composite(
     int new_non_orig_cols_indexes_count = 0;
 
     /* Filter the new_non_orig_cols_indexes */
-    for (int i = 0; i < num_columns; ++i)
+    for (size_t i = 0; i < num_columns; ++i)
     {
         if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
         {
@@ -284,7 +284,7 @@ static void fc_solve_delta_stater_encode_composite(
 #undef ITEM_IDX
 #undef COMP_BY
 #undef b
-    for (int i = 0, sorted_idx = 0; i < num_columns; ++i)
+    for (size_t i = 0, sorted_idx = 0; i < num_columns; ++i)
     {
         if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
         {
@@ -323,7 +323,7 @@ static void fc_solve_delta_stater_decode(fc_solve_delta_stater_t *const self,
     int foundations[4] = {14, 14, 14, 14};
     /* Read the Freecells. */
 
-    for (int i = 0; i < num_freecells; ++i)
+    for (size_t i = 0; i < num_freecells; ++i)
     {
         const fcs_card_t card =
             fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));

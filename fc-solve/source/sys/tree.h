@@ -624,7 +624,7 @@ name##_RB_INSERT(struct name *head, struct type *elm)			\
 }									\
 									\
 /* Finds the node with the same key as elm */				\
-attr struct type *							\
+attr struct type *	__attribute__((pure))	\
 name##_RB_FIND(struct name *head, struct type *elm)			\
 {									\
 	struct type *tmp = RB_ROOT(head);				\

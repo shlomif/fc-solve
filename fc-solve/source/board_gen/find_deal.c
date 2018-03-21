@@ -9,7 +9,7 @@
  */
 #include "gen_ms_boards__find_deal.h"
 
-long long DLLEXPORT fc_solve_find_deal_in_range(
+long long DLLEXPORT __attribute__((pure)) fc_solve_find_deal_in_range(
     const long long start, const long long end, const uint_fast32_t *const ints)
 {
     for (long long deal_idx = start; deal_idx <= end; ++deal_idx)
