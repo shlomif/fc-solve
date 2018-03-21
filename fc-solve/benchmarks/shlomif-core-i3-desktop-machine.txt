@@ -1508,3 +1508,44 @@ Finished at 1521242375.982561 (total_num_iters=6271020)
 </DUMP>
 
     ( DUMPS-1521242371-t/dump004 )
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l lg"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+forking solver and threaded solver
+commit 6b68c9a16a5ac40142563bb9254f2dbcd8be41be
+(commit Date:   Wed Mar 21 13:05:41 2018 +0200 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l extra_speed2
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+gcc-7.3.0-3.mga7
+tcmalloc from mageia.
+With strip.
+
+3.29975819587708s
+
+    Highlight:
+
+<DUMP>
+Started at 1521582999.096166
+Started at 1521582999.096166
+Unsolved Board No. 11982 at 1521583000.895161
+Started at 1521582999.096166
+Started at 1521582999.096166
+Started at 1521582999.096166
+Reached Board No. 4000 at 1521582999.483055 (total_num_iters=737713)
+Reached Board No. 8000 at 1521582999.879824 (total_num_iters=1507379)
+Reached Board No. 12000 at 1521583000.263258 (total_num_iters=2241685)
+Reached Board No. 16000 at 1521583000.815616 (total_num_iters=3043163)
+Reached Board No. 20000 at 1521583001.215305 (total_num_iters=3985644)
+Reached Board No. 24000 at 1521583001.603945 (total_num_iters=4730858)
+Reached Board No. 28000 at 1521583001.976251 (total_num_iters=5466931)
+Reached Board No. 32000 at 1521583002.395501 (total_num_iters=6271020)
+Finished at 1521583002.395924 (total_num_iters=6271020)
+</DUMP>
+
+    ( DUMPS-1521582998-p/dump004 )
