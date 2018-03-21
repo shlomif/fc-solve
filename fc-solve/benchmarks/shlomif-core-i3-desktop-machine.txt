@@ -1528,7 +1528,7 @@ With strip.
 
 3.29975819587708s
 
-    Highlight:
+    Highlight: the GCC warnings' elimination work.
 
 <DUMP>
 Started at 1521582999.096166
