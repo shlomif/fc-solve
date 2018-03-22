@@ -982,6 +982,7 @@ PACKAGE_VERSION
 appveyor
 cffi
 ci
+cyan4973
 dbm-solver
 dbm-solver-__int128-optimisation
 depth_dbm_fc_solve
@@ -990,11 +991,13 @@ fc-pro-range-solver
 fc-solve-temp
 int128
 int128-optimisation
+io
 libGMP
 obf
 solution_moves
 transpose-freecell-board
 usleep
+xxHash
 
 ==== In: dest/docs/distro/README.html
 
