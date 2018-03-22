@@ -119,6 +119,7 @@ cd build
 %files
 %defattr(-,root,root)
 /usr/bin/fc-solve
+/usr/bin/fc_solve_find_index_s2ints.py
 /usr/bin/find-freecell-deal-index.py
 /usr/bin/freecell-solver-fc-pro-range-solve
 /usr/bin/freecell-solver-multi-thread-solve
