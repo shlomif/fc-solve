@@ -613,6 +613,14 @@ wikipedia page had support for Freecell programmed by its users.
 
 </li>
 
+<li>
+<p>
+<a href="https://github.com/boundedvariation/Freecell">Haskell freecell
+library</a> - contains a solver. Expat licence. Also see
+<a href="https://www.reddit.com/r/haskell/comments/2dkspq/haskell_freecell_library/">a Reddit discussion</a> about it.
+</p>
+</li>
+
 </ul>
 
 <h2 id="reviews">Reviews of Freecell Solver</h2>
