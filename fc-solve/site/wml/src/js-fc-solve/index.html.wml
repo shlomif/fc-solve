@@ -25,6 +25,22 @@ solve any arbitrary Freecell deal online.
 
 </ul>
 
+<h2 id="find-deal">Freecell Deal Index Finder</h2>
+
+<p>
+Find the deal number of a Freecell deal based on its initial layout.
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="find-deal/"><strong>Deal Finder</strong></a>
+</p>
+</li>
+
+</ul>
+
 <h2 id="rich-webui-based">Rich Web-UI</h2>
 
 <p>
