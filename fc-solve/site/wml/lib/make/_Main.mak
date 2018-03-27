@@ -135,8 +135,8 @@ $(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
 	touch $@
 
 $(FIND_INDEX__PYJS__DEST): $(FIND_INDEX__PYJS__TGT)
-	mkdir $$(dirname "$@")
-	cp -f $< $@
+	mkdir -p $$(dirname "$@")
+	$(MULTI_YUI) -o $@ $<
 
 $(FIND_INDEX__PYJS__NODE): $(FIND_INDEX__PYJS__TGT)
 	cp -f $< $@
@@ -223,7 +223,7 @@ dummy: $(DEST_WEB_RAW_JS)
 $(DEST_WEB_RAW_JS): $(D)/js/%: lib/web-raw-js/%
 	$(MULTI_YUI) -o $@ $<
 
-WEB_FCS_UI_JS_SOURCES = $(D)/js/ms-rand.js src/js/gen-ms-fc-board.js src/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
+WEB_FCS_UI_JS_SOURCES = $(D)/js/ms-rand.js src/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
 
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
@@ -281,9 +281,11 @@ all: $(TS_CHART_DEST) $(TS_CHART2_DEST)
 
 $(TS_CHART_DEST): $(D)/%.js: src/%.ts
 	tsc --module amd --out $@ src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
+	$(MULTI_YUI) -o $@ $@
 
 $(TS_CHART2_DEST): $(D)/%.js: src/%.ts
 	tsc --module amd --out $@ src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
+	$(MULTI_YUI) -o $@ $@
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
 
