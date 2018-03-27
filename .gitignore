@@ -67,6 +67,7 @@ fc-solve/site/wml/lib/for-node/js/*.js
 fc-solve/site/wml/lib/for-node/js/dist/fc_solve_find_index_s2ints.js
 fc-solve/site/wml/lib/for-node/libfreecell-solver.js.mem
 fc-solve/site/wml/lib/make/shlomif_common.mak
+fc-solve/site/wml/lib/out-babel/js/*.js
 fc-solve/site/wml/lib/pyjs/find-index-s2ints/output/
 fc-solve/site/wml/lib/transcrypt_module/dist/
 fc-solve/site/wml/lib/transcrypt_module/fc_solve_find_index_s2ints.js
