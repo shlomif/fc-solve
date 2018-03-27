@@ -1,4 +1,3 @@
-
 SHELL = /bin/bash
 
 all: dummy
@@ -42,9 +41,12 @@ IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
 DOCS_PROTO = AUTHORS COPYING INSTALL NEWS README TODO USAGE
-DOCS_AUX_PROTO = asciidoc.css asciidoc.js
+ADOC_CSS = asciidoc.css
+ADOC_JS = asciidoc.js
+DOCS_AUX_PROTO = $(ADOC_CSS) $(ADOC_JS)
+DOCS_AUX_DIR = $(D)/docs/distro
 ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
-DOCS_AUX = $(patsubst %,$(D)/docs/distro/%,$(DOCS_AUX_PROTO))
+DOCS_AUX = $(patsubst %,$(DOCS_AUX_DIR)/%,$(DOCS_AUX_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
 INCLUDES_PROTO = std/logo.wml
@@ -153,8 +155,11 @@ RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 $(ARC_DOCS): $(D)/% : ../../source/%.txt
 	cp -f "$<" "$@"
 
-$(DOCS_AUX): $(D)/docs/distro/% : ../../source/%
+$(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: ../../source/%
 	cp -f "$<" "$@"
+
+$(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: ../../source/%
+	$(MULTI_YUI) -o $@ $<
 
 $(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
 	cat "$<" | perl -0777 -lapE 's#<table #<table summary="identifiers on the left, descriptions on the right" #g' > "$@"
@@ -204,6 +209,14 @@ $(DEST_LIBFREECELL_SOLVER_JS): $(LIBFREECELL_SOLVER_JS)
 $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 	$(MULTI_YUI) -o $@ $<
 
+WEB_RAW_JS = common-methods.js
+
+DEST_WEB_RAW_JS = $(patsubst %,$(D)/js/%,$(WEB_RAW_JS))
+
+dummy: $(DEST_WEB_RAW_JS)
+
+$(DEST_WEB_RAW_JS): $(D)/js/%: lib/web-raw-js/%
+	$(MULTI_YUI) -o $@ $<
 
 WEB_FCS_UI_JS_SOURCES = $(D)/js/ms-rand.js src/js/gen-ms-fc-board.js src/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
 
@@ -221,11 +234,15 @@ FCS_VALID_DEST = $(D)/js/fcs-validate.js
 TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts src/js/typings/index.d.ts
 
 DEST_BABEL_JSES = $(D)/js/find-fc-deal-ui.js $(D)/js/ms-rand.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
+OUT_BABEL_JSES = $(patsubst $(D)/js/%,lib/out-babel/js/%,$(DEST_BABEL_JSES))
 
 all: $(TYPINGS) $(DEST_BABEL_JSES)
 
-$(DEST_BABEL_JSES): $(D)/%.js: lib/babel/%.js
+$(OUT_BABEL_JSES): lib/out-babel/%.js: lib/babel/%.js
 	babel -o $@ $<
+
+$(DEST_BABEL_JSES): $(D)/%.js: lib/out-babel/%.js
+	$(MULTI_YUI) -o $@ $<
 
 $(TYPINGS):
 	cd src/charts/dbm-solver-__int128-optimisation/ && typings install dt~jquery --global --save
