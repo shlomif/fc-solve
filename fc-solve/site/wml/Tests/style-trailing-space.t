@@ -7,6 +7,7 @@ use Test::TrailingSpace 0.03;
 use Test::More tests => 1;
 
 my $lib    = qr#libfreecell-solver\.js(?:\.mem)?#;
+my $bigint = qr#(?:big-integer\.js)#;
 my $finder = Test::TrailingSpace->new(
     {
         root              => '.',
@@ -15,13 +16,15 @@ my $finder = Test::TrailingSpace->new(
      (?:\A (?:\./)?
         (?:node_modules)
             |
+        (?:lib/out-babel/js/$bigint)
+            |
         (?:
             (?:(?:src|dest(?:-prod)?).*?typings.*\.ts\z)
                 |
             lib/fc-solve-for-javascript
                 |
             dest(?:-prod)?/(?:
-                (?:js/(?:(?:$lib)|(?:big-integer\.js)))
+                (?:js/(?:(?:$lib)|$bigint))
                     |
                 (?:js-fc-solve/(?:text|automated-tests)/$lib\z)
             )
