@@ -288,11 +288,9 @@ SET (FREECELL_SOLVER_LIB_MODULES
     meta_alloc.c
     move.c
     move_funcs_order.c
-    preset.c
     pos_by_rank__freecell.c
     rate_state.c
     scans.c
-    simpsim.c
     state.c
     "${MOVE_C}"
 )
@@ -311,8 +309,9 @@ IF (NOT "${FCS_USE_PRECOMPILED_CMD_LINE_THEME}")
 ENDIF ()
 
 IF (FCS_FREECELL_ONLY)
-    LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES preset.c)
     SET (FCS_DISABLE_SIMPLE_SIMON 1)
+ELSE ()
+    add_lib_mods("preset.c")
 ENDIF ()
 
 IF ("${FCS_DISABLE_MULTI_FLARES}")
@@ -323,8 +322,8 @@ IF (NOT "${FCS_WITHOUT_FC_PRO_MOVES_COUNT}")
     add_lib_mods("fc_pro_iface.c")
 ENDIF ()
 
-IF (FCS_DISABLE_SIMPLE_SIMON)
-    LIST (REMOVE_ITEM FREECELL_SOLVER_LIB_MODULES simpsim.c)
+IF (NOT "${FCS_DISABLE_SIMPLE_SIMON}")
+    add_lib_mods("simpsim.c")
 ENDIF ()
 
 INCLUDE(CheckSymbolExists)
