@@ -7,12 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * split_cmd_line.c: split command line arguments from a big string according
- * to a subset of Bourne shell's semantics. Useful for reading command
- * line arguments from files.
- */
-
+// split_cmd_line.c: split command line arguments from a big string according
+// to a subset of Bourne shell's semantics. Useful for reading command
+// line arguments from files.
 #include "split_cmd_line.h"
 
 typedef struct
