@@ -221,6 +221,8 @@ ADD_CUSTOM_COMMAND(
     ARGS ${is_parent_args}
     DEPENDS "${is_parent_gen}"
 )
+# Execute it right away to avoid missing files/includes
+EXECUTE_PROCESS(COMMAND "${PERL_EXECUTABLE}" ${is_parent_args})
 
 SET (patsolve_dir "${pats_dir}/patsolve")
 SET (p_dir "${patsolve_dir}")
