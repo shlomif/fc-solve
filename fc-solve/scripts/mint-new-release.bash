@@ -9,6 +9,7 @@
 set -x
 set -e
 set -u
+which qunit-cli
 src="$(pwd)"
 build="$src/../prerel-build"
 mkdir "$build"
