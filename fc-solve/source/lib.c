@@ -31,7 +31,7 @@ static void verify_state_sanity(const fcs_state_t *const ptr_state)
 #endif
 
 #ifndef FCS_SINGLE_HARD_THREAD
-static inline fc_solve_soft_thread_t *fc_solve_new_hard_thread(
+static inline fc_solve_soft_thread_t *new_hard_thread(
     fc_solve_instance_t *const instance)
 {
     fc_solve_hard_thread_t *ret;
@@ -63,16 +63,15 @@ static inline fc_solve_soft_thread_t *fc_solve_new_hard_thread(
 #endif
 
 #ifndef FCS_FREECELL_ONLY
-static inline fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name(
+static inline void apply_preset_by_name(
     fc_solve_instance_t *const instance, const char *const name)
 {
     const fcs_preset_t *preset_ptr;
     const_AUTO(ret, fc_solve_get_preset_by_name(name, &preset_ptr));
-    if (ret != FCS_PRESET_CODE_OK)
+    if (ret == FCS_PRESET_CODE_OK)
     {
-        return ret;
+        fc_solve_apply_preset_by_ptr(instance, preset_ptr);
     }
-    return fc_solve_apply_preset_by_ptr(instance, preset_ptr);
 }
 #endif
 
@@ -84,7 +83,7 @@ static inline fc_solve_preset_ret_code_t fc_solve_apply_preset_by_name(
     Afterwards fc_solve_init_instance() should be called in order
     to really prepare it for solving.
   */
-static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
+static inline void alloc_instance(fc_solve_instance_t *const instance,
     fcs_meta_compact_allocator_t *const meta_alloc)
 {
     *(instance) = (fc_solve_instance_t){
@@ -159,7 +158,7 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
     };
 
 #ifndef FCS_FREECELL_ONLY
-    fc_solve_apply_preset_by_name(instance, "freecell");
+    apply_preset_by_name(instance, "freecell");
 #else
     FCS__DECL_ERR_BUF(no_use);
     fc_solve_apply_moves_order(&(instance->instance_moves_order),
@@ -170,13 +169,12 @@ static inline void fc_solve_alloc_instance(fc_solve_instance_t *const instance,
 #ifdef FCS_SINGLE_HARD_THREAD
     fc_solve_instance__init_hard_thread(instance);
 #else
-    fc_solve_new_hard_thread(instance);
+    new_hard_thread(instance);
 #endif
 }
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
-static inline void fc_solve__hard_thread__compile_prelude(
-    fc_solve_hard_thread_t *const hard_thread)
+static inline void compile_prelude(fc_solve_hard_thread_t *const hard_thread)
 {
     fcs_bool_t last_one = FALSE;
     size_t num_items = 0;
@@ -251,7 +249,7 @@ static inline void set_next_soft_thread(
         NUM_CHECKED_STATES + quota;
 }
 
-static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
+static inline void init_instance(fc_solve_instance_t *const instance)
 {
     /* Initialize the state packs */
     HT_LOOP_START()
@@ -265,12 +263,10 @@ static inline void fc_solve_init_instance(fc_solve_instance_t *const instance)
         ST_LOOP_START() { soft_thread->hard_thread = instance; }
 #endif
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
-        if (HT_FIELD(hard_thread, prelude_as_string))
+        if (HT_FIELD(hard_thread, prelude_as_string) &&
+            !HT_FIELD(hard_thread, prelude))
         {
-            if (!HT_FIELD(hard_thread, prelude))
-            {
-                fc_solve__hard_thread__compile_prelude(hard_thread);
-            }
+            compile_prelude(hard_thread);
         }
 #endif
         set_next_soft_thread(hard_thread, 0,
@@ -453,8 +449,7 @@ static inline void update_initial_cards_val(fc_solve_instance_t *const instance)
     does other initialisations. After it, you must call
     fc_solve_resume_instance() repeatedly.
   */
-static inline void fc_solve_start_instance_process_with_board(
-    fc_solve_instance_t *const instance,
+static inline void start_process_with_board(fc_solve_instance_t *const instance,
     fcs_state_keyval_pair_t *const init_state,
     fcs_state_keyval_pair_t *const initial_non_canonized_state)
 {
@@ -2272,7 +2267,7 @@ static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
     fc_solve_instance_t *const instance = &(flare->obj);
 
     SET_ACTIVE_FLARE(user, flare);
-    fc_solve_alloc_instance(instance, &(user->meta_alloc));
+    alloc_instance(instance, &(user->meta_alloc));
     // Switch the soft_thread variable so it won't refer to the old instance
     user->soft_thread = &(INST_HT0(instance).soft_threads[0]);
 
@@ -3143,7 +3138,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             fc_solve_canonize_state(&(user->state.s)PASS_FREECELLS(
                 INSTANCE_FREECELLS_NUM) PASS_STACKS(INSTANCE_STACKS_NUM));
 #endif
-            fc_solve_init_instance(instance);
+            init_instance(instance);
         }
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -3199,7 +3194,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 
         if (is_start_of_flare_solving)
         {
-            fc_solve_start_instance_process_with_board(instance, &(user->state),
+            start_process_with_board(instance, &(user->state),
 #if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
                 &(user->initial_non_canonized_state)
 #else
@@ -4198,8 +4193,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 #else
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-    fc_solve_soft_thread_t *const soft_thread =
-        fc_solve_new_hard_thread(user_obj(user));
+    fc_solve_soft_thread_t *const soft_thread = new_hard_thread(user_obj(user));
 
     if (soft_thread == NULL)
     {
