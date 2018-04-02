@@ -1,0 +1,87 @@
+<page_extra_head_elements>
+<script type="text/javascript">
+(function() {
+    try {
+        var a = new Float64Array(1);
+        return; //no need
+    } catch(e) { window.location.replace("$(ROOT)/js-fc-solve/incompatible-browser.html"); }
+})();
+</script>
+<jquery_ui_head_elements />
+<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
+<define-tag expanded_scripts>
+</define-tag>
+<define-tag production_scripts>
+</define-tag>
+<if "$(PRODUCTION)" "<production_scripts />" "<expanded_scripts />" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
+</page_extra_head_elements>
+
+<define-tag emscripten_common>
+<preserve incs />
+<set-var %attributes />
+
+<script type="text/javascript">
+$(function() { $('.enable_js').addClass('ok'); })
+</script>
+
+<p>
+<a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>
+</p>
+
+</div>
+
+<h2 id="ui">Solver</h2>
+
+<div class="disabled">
+<div class="emscripten" id="status">Downloading...</div>
+<div class="emscripten">
+<!--
+  <progress value="0" max="100" id="progress"></progress>
+-->
+</div>
+</div>
+
+<script type="text/javascript">
+requirejs.config({
+    baseUrl: '$(ROOT)/js',
+    });
+    <get-var incs /> {
+    $(function() {
+        $( "#fc_solve_tabs" ).tabs({
+            activate: function () {
+                web_fc_solve_ui.set_up_handlers();
+
+                return;
+            },
+            beforeActivate: function( event, ui) {
+                var mynew = ui.newPanel;
+                var old = ui.oldPanel;
+
+                var common_old = old.find('.fcs_common');
+                var old_text = common_old.find('textarea').val();
+
+                var common_html = common_old.html();
+
+                common_old.html('');
+
+                var common_new = mynew.find('.fcs_common');
+
+                common_new.html(common_html);
+                common_new.find('textarea').val(old_text);
+
+                return;
+            }
+        });
+        return;
+    });
+
+    web_fc_solve_ui.set_up();
+
+    return;
+});
+</script>
+
+<restore incs />
+</define-tag>
