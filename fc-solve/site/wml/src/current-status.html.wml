@@ -1,4 +1,4 @@
-#include '../template.wml'
+#include "template.wml"
 
 <latemp_subject "What's the Status of Freecell Solver? Is it Dead?" />
 

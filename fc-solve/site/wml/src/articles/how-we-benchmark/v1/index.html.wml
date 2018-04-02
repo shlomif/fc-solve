@@ -1,4 +1,4 @@
-#include '../template.wml'
+#include "template.wml"
 #include "xhtml/1.x/std/toc.wml"
 
 <latemp_subject "How We Benchmark Freecell Solver (Version 1)" />

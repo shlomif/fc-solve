@@ -1,4 +1,4 @@
-#include '../template.wml'
+#include "template.wml"
 
 <latemp_subject "Verifying Solutions of Solitaire Games Automatically" />
 

@@ -1,4 +1,4 @@
-#include '../template.wml'
+#include "template.wml"
 <latemp_subject "Freecell Solver Support" />
 
 <h2 id="bugs">Report Bugs</h2>
