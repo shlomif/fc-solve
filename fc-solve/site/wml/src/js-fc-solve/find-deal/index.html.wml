@@ -243,29 +243,16 @@ I filed about it.
 
 <li>
 <p>
-<a href="http://garage-coding.com/">Stefan Petrea</a> - inspired the
-implementation of the populate-with-sample-board button.
-</p>
-</li>
-
-<li>
-<p>
-<a href="http://en.wikipedia.org/wiki/User:Amire80">Amir Aharoni</a> - tipped
-me regarding integrating <code>@font-face</code> into my CSS.
-</p>
-</li>
-
-<li>
-<p>
-<a href="mailto:ari.i.becker@gmail.com">Ari Becker</a> - tipped me regarding
-unsolvable deals.
-</p>
-</li>
-
-<li>
-<p>
 <a href="https://github.com/doconix/transcrypt_module/">@doconix</a> - helped
 using transcrypt.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/JdeH">@JdeH</a> - helped with the
+<a href="https://github.com/QQuick/Transcrypt/issues/495">Transcrypt issue</a>
+and he is maintaining it.
 </p>
 </li>
 
