@@ -1,4 +1,4 @@
-DEBUG = 1
+DEBUG = 0
 PROFILE = 2
 WITH_TRACES = 0
 FREECELL_ONLY = 1
@@ -19,7 +19,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -I$(PWD) -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve -D_GNU_SOURCE
+CFLAGS := -I$(PWD) -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve -I$(SRC_DIR)/xxHash-wrapper -I$(SRC_DIR)/xxHash-wrapper/xxHash-0.6.4 -D_GNU_SOURCE
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
