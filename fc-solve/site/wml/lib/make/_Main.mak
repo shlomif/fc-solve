@@ -170,7 +170,7 @@ $(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: ../../source/%
 $(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
 	cat "$<" | perl -0777 -lapE 's#<table #<table summary="identifiers on the left, descriptions on the right" #g' > "$@"
 
-$(HTMLS): $(D)/% : src/%.wml src/.wmlrc template.wml $(INCLUDES)
+$(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml $(INCLUDES)
 	WML_LATEMP_PATH="$$(perl -MFile::Spec -e 'print File::Spec->rel2abs(shift)' '$@')" ; \
 	(cd src && wml -o "$${WML_LATEMP_PATH}" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
 
