@@ -40,7 +40,7 @@ mkdir -p "$dumps_dir"
 
 p_dir="__p"
 if ! test -e "$p_dir" ; then
-    cp -R "$(dirname "$0")"/../Presets "$p_dir"
+    cp -R "$(dirname "$0")"/../source/Presets "$p_dir"
     cp "Presets/presetrc" "$p_dir/"
 
     P="$(cd "$p_dir"/presets && pwd)" \
