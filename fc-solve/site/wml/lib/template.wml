@@ -1,3 +1,2 @@
-<set-var latemp_with_head_meta_tags="1" />
 #include "prelude.wml"
 #include "driver.wml"

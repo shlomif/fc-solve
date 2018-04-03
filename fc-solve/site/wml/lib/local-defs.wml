@@ -1,5 +1,6 @@
 <: use Carp::Always; :>
 
-<set-var latemp_with_xml_declaration="1" />
 <set-var latemp_html_standard="xhtml1.1" />
 <set-var latemp_with_breadcrumbs_trail="" />
+<set-var latemp_with_head_meta_tags="1" />
+<set-var latemp_with_xml_declaration="1" />
