@@ -48,6 +48,7 @@ fc-solve/site/wml/bin/translate-Vered-XML
 fc-solve/site/wml/dest
 fc-solve/site/wml/dest-prod
 fc-solve/site/wml/include.mak
+fc-solve/site/wml/lib/Inc/cpan_dists.wml
 fc-solve/site/wml/lib/Shlomif/Spelling/Check.pm
 fc-solve/site/wml/lib/Shlomif/Spelling/Iface.pm
 fc-solve/site/wml/lib/fc-solve-for-javascript/*.bc
@@ -66,6 +67,7 @@ fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve-shlomif/patsolve/*.bc
 fc-solve/site/wml/lib/for-node/js/*.js
 fc-solve/site/wml/lib/for-node/js/dist/fc_solve_find_index_s2ints.js
 fc-solve/site/wml/lib/for-node/libfreecell-solver.js.mem
+fc-solve/site/wml/lib/make/build-deps/build-deps.mak
 fc-solve/site/wml/lib/make/shlomif_common.mak
 fc-solve/site/wml/lib/out-babel/js/*.js
 fc-solve/site/wml/lib/pyjs/find-index-s2ints/output/
