@@ -189,7 +189,7 @@ MACRO(add_gen_c)
 ENDMACRO ()
 
 SET (MOVE_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
-SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_presets.pl")
+SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-presets.pl")
 SET (presets_gen_output "${CMAKE_CURRENT_BINARY_DIR}/fcs_presets_generated.h")
 SET (presets_gen_args "${presets_gen}" "--mode=c" "--output" "${presets_gen_output}")
 add_gen_c("${presets_gen_output}")
