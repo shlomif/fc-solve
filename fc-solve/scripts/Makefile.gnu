@@ -7,6 +7,7 @@ DISABLE_SIMPLE_SIMON := 0
 OPT_FOR_SIZE = 0
 OPT_AND_DEBUG = 0
 NATIVE_ARCH = 1
+STATIC = 0
 
 # Can be any of clang, gcc, icc, lcc, pcc, tcc or tendra
 COMPILER = gcc
@@ -117,11 +118,13 @@ endif
 
 # The malloc library should appear as early as possible in the link stage
 # per the instructions in the E-mail from Hoard malloc's Emery Berger.
-# TCMALLOC_LINK = -ltcmalloc_minimal
-TCMALLOC_LINK = -ltcmalloc
-# TCMALLOC_LINK = $(HOME)/Download/unpack/prog/lockless_allocator/libllalloc.a
-# TCMALLOC_LINK = -lzmalloc
-# TCMALLOC_LINK = -lhoard
+ifeq ($(STATIC),0)
+	# TCMALLOC_LINK = -ltcmalloc_minimal
+	TCMALLOC_LINK = -ltcmalloc
+	# TCMALLOC_LINK = $(HOME)/Download/unpack/prog/lockless_allocator/libllalloc.a
+	# TCMALLOC_LINK = -lzmalloc
+	# TCMALLOC_LINK = -lhoard
+endif
 
 # END_SHARED += $(TCMALLOC_LINK)
 
@@ -139,6 +142,10 @@ endif
 
 ifneq ($(DISABLE_PATSOLVE),0)
 	CFLAGS += -DFCS_DISABLE_PATSOLVE=1
+endif
+
+ifneq ($(STATIC),0)
+	EXTRA_CFLAGS += -static
 endif
 
 # EXTRA_CFLAGS = -Dfreecell_solver_EXPORTS
@@ -162,20 +169,20 @@ END_LFLAGS += $(TCMALLOC_LINK)
 
 FCS_SHARED_LIB = libfreecell-solver.so.0
 
-TARGETS = fc-solve $(FCS_SHARED_LIB) \
+TARGETS = fc-solve \
           freecell-solver-fc-pro-range-solve \
           freecell-solver-fork-solve \
           freecell-solver-multi-thread-solve \
           freecell-solver-range-parallel-solve \
 
+ifeq ($(STATIC),0)
+	TARGETS += $(FCS_SHARED_LIB)
+endif
+
 all: $(TARGETS)
 
-board_gen: dummy
+board_gen:
 	make -C board_gen/
-
-dummy:
-
-
 
 #<<<OBJECTS.START
 GEN_C_OBJECTS := \
@@ -184,7 +191,6 @@ GEN_C_OBJECTS := \
 	move_funcs_maps.o   \
 	pos_by_rank__freecell.o \
 	rate_state.o        \
-
 
           # card.o
 SOURCE_OBJECTS :=             \
@@ -213,7 +219,6 @@ PAT_OBJECTS = \
 		  patsolve.o \
 		  pat.o \
 		  tree.o \
-
 
 ifeq ($(DISABLE_SIMPLE_SIMON),0)
 	OBJECTS += simpsim.o
@@ -264,7 +269,10 @@ else
     # LIB_LINK_PRE := -Wl,-rpath,.
 endif
 
+ifeq ($(STATIC),0)
 LFLAGS := -rdynamic $(LFLAGS)
+endif
+
 # LIB_LINK_PRE += -L.
 # LIB_LINK_POST := -lfreecell-solver
 # LIB_LINK_POST := -rdynamic libfcs.a
@@ -283,7 +291,6 @@ freecell-solver-multi-thread-solve: $(THR_MAIN_OBJECT) $(STATIC_LIB)
 
 freecell-solver-fork-solve: $(FORK_MAIN_OBJECT) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $< $(LIB_LINK_POST) -lpthread $(END_LFLAGS)
-
 
 freecell-solver-fc-pro-range-solve: $(FC_PRO_OBJS) $(STATIC_LIB)
 	$(CC) $(LFLAGS) -o $@ $(LIB_LINK_PRE) $(FC_PRO_OBJS) $(LIB_LINK_POST) $(END_LFLAGS)
