@@ -10,7 +10,7 @@ my $declared_move_funcs = FC_Solve::MoveFuncs::declared_move_funcs();
 my $aliases             = FC_Solve::MoveFuncs::aliases();
 
 path('move_funcs_maps.h')->spew_utf8(<<"EOF");
-// This file is generated from gen_move_funcs.pl.
+// This file is generated from gen-move-funcs.pl.
 // Do not edit by hand!!!
 #pragma once
 #define FCS_MOVE_FUNCS_NUM @{[0+@$move_funcs]}
@@ -39,7 +39,7 @@ my $aliases_string = join(
     } 0 .. ( 256 - 1 )
 );
 path('move_funcs_maps.c')->spew_utf8(<<"EOF");
-// This file is generated from gen_move_funcs.pl.
+// This file is generated from gen-move-funcs.pl.
 // Do not edit by hand!!!
 #include "freecell.h"
 #include "simpsim.h"
