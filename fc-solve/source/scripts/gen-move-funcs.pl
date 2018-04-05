@@ -9,6 +9,11 @@ my $move_funcs          = FC_Solve::MoveFuncs::move_funcs();
 my $declared_move_funcs = FC_Solve::MoveFuncs::declared_move_funcs();
 my $aliases             = FC_Solve::MoveFuncs::aliases();
 
+my $move_funcs_decl =
+"fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM]";
+my $aliases_decl =
+    "fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[256]";
+
 path('move_funcs_maps.h')->spew_utf8(<<"EOF");
 // This file is generated from gen-move-funcs.pl.
 // Do not edit by hand!!!
@@ -18,8 +23,8 @@ path('move_funcs_maps.h')->spew_utf8(<<"EOF");
 
 typedef uint8_t fcs_move_func_aliases_mapping_t;
 
-extern fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM];
-extern fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[256];
+extern $move_funcs_decl;
+extern $aliases_decl;
 EOF
 
 sub func_name
@@ -50,13 +55,12 @@ path('move_funcs_maps.c')->spew_utf8(<<"EOF");
 #define WRAP_SIMPSIM(f) f
 #endif
 
-fc_solve_solve_for_state_move_func_t fc_solve_sfs_move_funcs[FCS_MOVE_FUNCS_NUM] =
+$move_funcs_decl =
 {
 $move_funcs_string
 };
 
-
-fcs_move_func_aliases_mapping_t fc_solve_sfs_move_funcs_aliases[256] =
+$aliases_decl =
 {
 $aliases_string
 };
