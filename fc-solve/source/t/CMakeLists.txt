@@ -147,14 +147,14 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
 
     GEN_INDIVIDUAL_TESTS(
         "generate_valgrind_tests"
-        "${PROJECT_SOURCE_DIR}/scripts/generate-individual-valgrind-test-scripts.pl"
+        "${PROJECT_SOURCE_DIR}/scripts/gen-individual-valgrind-test-scripts.pl"
         "${CMAKE_CURRENT_BINARY_DIR}/t/valgrind--range_parallel_solve__11982_opt.t"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Valgrind.pm"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Valgrind/Data.pm"
     )
     GEN_INDIVIDUAL_TESTS(
         "generate_verify_tests"
-        "${PROJECT_SOURCE_DIR}/scripts/generate-individual-verify-test-scripts.pl"
+        "${PROJECT_SOURCE_DIR}/scripts/gen-individual-verify-test-scripts.pl"
         "${CMAKE_CURRENT_BINARY_DIR}/t/verify--id24.t"
 
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Verify.pm"
@@ -162,7 +162,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
     )
     GEN_INDIVIDUAL_TESTS(
         "generate_cmp_digest_tests"
-        "${PROJECT_SOURCE_DIR}/scripts/generate-individual-compare-digests-test-scripts.pl"
+        "${PROJECT_SOURCE_DIR}/scripts/gen-individual-compare-digests-test-scripts.pl"
         "${CMAKE_CURRENT_BINARY_DIR}/t/cmpdigest--id24.t"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/CheckResults.pm"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/CheckResults/Data.pm"
