@@ -204,7 +204,7 @@ ADD_CUSTOM_COMMAND(
 SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c" "${CMAKE_CURRENT_BINARY_DIR}/rate_state.h")
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
-SET (is_parent_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen_is_parent_lookup_c.pl")
+SET (is_parent_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-c-lookup-files.pl")
 SET (is_parent_args "${is_parent_gen}")
 SET (is_parent_output
     "${CMAKE_CURRENT_BINARY_DIR}/debondt__card_pos.c" "${CMAKE_CURRENT_BINARY_DIR}/debondt__card_pos.h"
