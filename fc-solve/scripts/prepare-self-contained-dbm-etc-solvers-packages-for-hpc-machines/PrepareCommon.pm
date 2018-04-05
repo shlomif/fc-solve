@@ -192,7 +192,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     {
         my $cwd = getcwd();
         chdir($dest_dir);
-        if ( system( $^X, "$src_path/scripts/gen_is_parent_lookup_c.pl" ) != 0 )
+        if ( system( $^X, "$src_path/scripts/gen-c-lookup-files.pl" ) != 0 )
         {
             die "Could not generate is_parent.{c,h}!";
         }
