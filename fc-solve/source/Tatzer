@@ -34,6 +34,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'hard-code-sp-rtf' => 'FCS_ENABLE_PRUNE__R_TF__UNCOND',
     'hard-code-theme' => 'FCS_USE_PRECOMPILED_CMD_LINE_THEME',
     'omit-frame' => 'OPTIMIZATION_OMIT_FRAME_POINTER',
+    'print-solved' => 'FCS_RANGE_SOLVERS_PRINT_SOLVED',
     'rcs' => 'FCS_ENABLE_RCS_STATES',
     'secondary' => 'FCS_ENABLE_SECONDARY_HASH_VALUE',
     'single-ht' => 'FCS_SINGLE_HARD_THREAD',
@@ -170,6 +171,7 @@ my %themes =
     # Role for enabling the pseudo-DFS solver
     pdfs => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
     pysol_defs => ['--num-stacks=14', '--nobreak-back-compat-1',],
+    zerofc => [qw(-l extra_speed3 --nfc=0 --print-solved)],
 );
 
 my $SEED_KEY = 'FCS_THEME_RAND';

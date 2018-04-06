@@ -100,6 +100,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             print_int(&binary_output, -2);
             break;
 
+#ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
+        case FCS_STATE_WAS_SOLVED:
+            printf("Solved Board No. " FCS_LL_FMT "\n", board_num);
+#endif
         default:
             print_int(&binary_output,
                 (int)freecell_solver_user_get_num_times_long(instance));

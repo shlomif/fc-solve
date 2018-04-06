@@ -49,6 +49,11 @@ static inline fcs_bool_t range_solvers__solve(void *const instance,
     case FCS_STATE_IS_NOT_SOLVEABLE:
         fc_solve_print_unsolved(board_num);
         break;
+#ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
+    case FCS_STATE_WAS_SOLVED:
+        printf("Solved Board No. " FCS_LL_FMT "\n", board_num);
+        break;
+#endif
     }
 
     *total_num_iters_temp += freecell_solver_user_get_num_times_long(instance);

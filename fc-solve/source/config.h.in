@@ -67,6 +67,7 @@ extern "C" {
 #cmakedefine FCS_DISABLE_STATE_VALIDITY_CHECK
 #cmakedefine FCS_ENABLE_PRUNE__R_TF__UNCOND
 #cmakedefine FCS_USE_PRECOMPILED_CMD_LINE_THEME
+#cmakedefine FCS_RANGE_SOLVERS_PRINT_SOLVED
 /*
  * This flag controls a hash behaviour. It seems to improve things somewhat.
  * */
@@ -84,7 +85,7 @@ extern "C" {
 // This flag determines whether we are using the more compact but slower,
 // internal move tokens.
 #cmakedefine FCS_USE_COMPACT_MOVE_TOKENS
-#cmakedefine FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY ${FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY}
+#define FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY ${FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY}
 
 #ifndef FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY
 #define FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY 4
