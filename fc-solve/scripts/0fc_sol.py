@@ -10,6 +10,7 @@
 
 """
 
+import os.path
 import re
 import subprocess
 import sys
@@ -19,7 +20,10 @@ SEG = 100000
 start = idx * SEG + 1
 end = (idx + 1) * SEG
 
-with open('results/%010d' % idx, 'w') as o:
+fn = 'results/%010d' % idx
+if os.path.exists(fn):
+    sys.exit()
+with open(fn, 'w') as o:
     def w(cmd, deal):
         o.write("%s\t%d\n" % (cmd, int(deal)))
         o.flush()
