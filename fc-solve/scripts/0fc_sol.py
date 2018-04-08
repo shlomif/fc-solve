@@ -30,7 +30,7 @@ with open(fn, 'w') as o:
     w('Start', start)
     pipe = subprocess.Popen([
         './freecell-solver-range-parallel-solve', str(start), str(end), '1000',
-        '--freecells-num', '0', '-to', '0AB', '-sp', 'r:tf', '-mi', '2000000'
+        '--freecells-num', '0', '-to', '0AB', '-sp', 'r:tf', '-mi', '1000000'
         ],
         bufsize=10000, stdout=subprocess.PIPE).stdout
     for line in pipe:
