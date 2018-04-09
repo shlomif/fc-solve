@@ -69,12 +69,18 @@ test_script:
     - SET PATH=C:\MinGW\bin;%PATH%
     - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
     - gmake package
+    # For generating the binaries zip for https://github.com/shlomif/PySolFC/issues/58 ( PySol )
+    - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r --prefix=c:\fcs-pysol
+    - gmake install
+    - zip -r fc-solve-for-pysol.zip c:/fcs-pysol
 cache:
     - C:\libtap -> appveyor.yml
     - C:\_P5 -> appveyor.yml
     - C:\strawberry -> appveyor.yml
 shallow_clone: true
 artifacts:
+    - path: 'fc-solve\pkg-build\fc-solve-for-pysol.zip'
+      name: Freecell Solver Zip Distribution for PySol FC
     - path: 'fc-solve\pkg-build\freecell-solver-*-win32.exe'
       name: Freecell Solver Win32 Package
     - path: 'fc-solve\pkg-build-win64\freecell-solver-*-win64.exe'
