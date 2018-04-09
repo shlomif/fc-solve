@@ -72,7 +72,7 @@ test_script:
     # For generating the binaries zip for https://github.com/shlomif/PySolFC/issues/58 ( PySol )
     - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r --prefix=c:\fcs-pysol
     - gmake install
-    - zip -r fc-solve-for-pysol.zip c:/fcs-pysol
+    - 7z a fc-solve-for-pysol.zip c:/fcs-pysol
 cache:
     - C:\libtap -> appveyor.yml
     - C:\_P5 -> appveyor.yml
