@@ -70,7 +70,7 @@ test_script:
     - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
     - gmake package
     # For generating the binaries zip for https://github.com/shlomif/PySolFC/issues/58 ( PySol )
-    - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r --prefix=c:\fcs-pysol
+    - perl ../source/Tatzer -G "MinGW Makefiles" -l pysol_defs --notest-suite -r --prefix=c:\fcs-pysol
     - gmake install
     - 7z a fc-solve-for-pysol.zip c:/fcs-pysol
 cache:
