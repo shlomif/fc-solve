@@ -1736,7 +1736,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
             if (++(HT_FIELD(hard_thread, num_soft_threads_finished)) ==
                 num_soft_threads)
             {
-                instance->num_hard_threads_finished++;
+                ++instance->num_hard_threads_finished;
             }
 /*
  * Check if this thread is a complete scan and if so,
@@ -1832,7 +1832,7 @@ static inline fc_solve_solve_process_ret_t resume_instance(
  * 2. It is reset to zero below.
  * */
 #ifndef FCS_SINGLE_HARD_THREAD
-            for (; hard_thread < end_of_hard_threads; hard_thread++)
+            for (; hard_thread < end_of_hard_threads; ++hard_thread)
 #endif
             {
                 ret = run_hard_thread(hard_thread);
@@ -2078,7 +2078,7 @@ static inline instance_item_t *curr_inst(fcs_user_t *const user)
     {                                                                          \
         const_SLOT(end_of_instances_list, user);                               \
         for (instance_item_t *instance_item = user->instances_list;            \
-             instance_item < end_of_instances_list; instance_item++)           \
+             instance_item < end_of_instances_list; ++instance_item)           \
         {
 #else
 #define INSTANCES_LOOP_START()                                                 \
@@ -2093,7 +2093,7 @@ static inline instance_item_t *curr_inst(fcs_user_t *const user)
     const fcs_flare_item_t *const end_of_flares =                              \
         instance_item->end_of_flares;                                          \
     for (fcs_flare_item_t *flare = instance_item->flares;                      \
-         flare < end_of_flares; flare++)                                       \
+         flare < end_of_flares; ++flare)                                       \
     {
 #else
 
@@ -2505,18 +2505,16 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 
     SET_ERROR_VAR(error_string, static_error_string);
 
-    for (size_t further_depth_idx = depth_idx + 1;
-         further_depth_idx < soft_thread->by_depth_moves_order.num;
-         further_depth_idx++)
+    const_AUTO(start, depth_idx + 1);
+    const_AUTO(end, soft_thread->by_depth_moves_order.num);
+    const_AUTO(arr, soft_thread->by_depth_moves_order.by_depth_moves);
+    for (size_t d = start; d < end; ++d)
     {
-        moves_order__free(&(
-            soft_thread->by_depth_moves_order.by_depth_moves[further_depth_idx]
-                .moves_order));
+        moves_order__free(&(arr[d].moves_order));
     }
 
     soft_thread->by_depth_moves_order.by_depth_moves =
-        SREALLOC(soft_thread->by_depth_moves_order.by_depth_moves,
-            soft_thread->by_depth_moves_order.num = depth_idx + 1);
+        SREALLOC(arr, soft_thread->by_depth_moves_order.num = start);
 
     return ret_code;
 }
