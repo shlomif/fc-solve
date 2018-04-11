@@ -7,29 +7,19 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-
 /*
     pi_make_microsoft_freecell_board.c - Program to generate the initial
-    board of Microsoft Freecell or Freecell Pro for input to
-    Freecell Solver.
+    board of Microsoft Freecell or Freecell Pro for input to Freecell Solver.
 
-    Usage: pi-make-microsoft-freecell-board [board-number] | fc-solve
-
-    Note: this program is platform independent because it uses its own srand()
-    and random() functions which are simliar to the ones used by the Microsoft
-    32-bit compilers.
+    Usage: pi-make-microsoft-freecell-board -t [board-number] | fc-solve
 
     Based on the code by Jim Horne (who wrote the original Microsoft Freecell)
     Based on code from the Microsoft C Run-Time Library.
-
     Modified By Shlomi Fish, 2000
 */
-
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
-#include "alloc_wrap.h"
 #include "bool.h"
 #include "range_solvers_gen_ms_boards.h"
 
@@ -59,15 +49,16 @@ int main(int argc, char *argv[])
     else
     {
         const char *p = s;
-        while (*p)
+        char c;
+        while ((c = *p) != '\0')
         {
-            if (*p == 'T')
+            if (c == 'T')
             {
                 fputs("10", stdout);
             }
             else
             {
-                putc(*p, stdout);
+                putc(c, stdout);
             }
             ++p;
         }
