@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * iter_handler_base.h - define the basic my_iter_handler function.
- */
+// iter_handler_base.h - define the basic my_iter_handler function.
 static inline void my_iter_handler_base(const fcs_int_limit_t iter_num,
     const int depth, void *const user_instance,
     const fc_solve_display_information_context_t *const dc,

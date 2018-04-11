@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * output_to_file.h - header file for outputting a solution to a file.
- */
+// output_to_file.h - header file for outputting a solution to a file.
 #pragma once
 
 #ifdef __cplusplus

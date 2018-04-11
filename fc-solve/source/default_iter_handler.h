@@ -8,7 +8,6 @@
  * Copyright (c) 2016 Shlomi Fish
  */
 #pragma once
-#include "fcs_user.h"
 #include "config.h"
 #include "output_to_file.h"
 #include "iter_handler_base.h"
