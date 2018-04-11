@@ -7,7 +7,9 @@ use File::Copy qw( copy );
 use Test::More;
 use File::Which qw( which );
 
-if ( !$ENV{FCS_TEST_CLANG_FORMAT} )
+my $SKIP = 1;
+
+if ( $SKIP or !$ENV{FCS_TEST_CLANG_FORMAT} )
 {
     plan skip_all => "Environment variable to check was set.";
 }

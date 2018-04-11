@@ -4,3 +4,5 @@ AlignAfterOpenBracket: DontAlign
 BreakBeforeBraces: Allman
 IndentWidth:     4
 SortIncludes:    false
+BraceWrapping:
+    AfterExternBlock: false
