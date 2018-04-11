@@ -2505,16 +2505,16 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
 
     SET_ERROR_VAR(error_string, static_error_string);
 
-    const_AUTO(start, depth_idx + 1);
-    const_AUTO(end, soft_thread->by_depth_moves_order.num);
-    const_AUTO(arr, soft_thread->by_depth_moves_order.by_depth_moves);
-    for (size_t d = start; d < end; ++d)
+    for (size_t d = depth_idx + 1; d < soft_thread->by_depth_moves_order.num;
+         ++d)
     {
-        moves_order__free(&(arr[d].moves_order));
+        moves_order__free(
+            &(soft_thread->by_depth_moves_order.by_depth_moves[d].moves_order));
     }
 
     soft_thread->by_depth_moves_order.by_depth_moves =
-        SREALLOC(arr, soft_thread->by_depth_moves_order.num = start);
+        SREALLOC(soft_thread->by_depth_moves_order.by_depth_moves,
+            soft_thread->by_depth_moves_order.num = depth_idx + 1);
 
     return ret_code;
 }
