@@ -7,11 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * handle_parsing.h - header file for convenient wrappers for handling
- * parsing the arguments.
- */
-
+// handle_parsing.h - header file for convenient wrappers for handling
+// parsing the arguments.
 #pragma once
 
 #ifdef __cplusplus

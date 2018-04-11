@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * range_solvers.h - common routines for the range solvers.
- */
+// range_solvers.h - common routines for the range solvers.
 #pragma once
 #include "rinutils.h"
 #include "fcs_cl.h"
