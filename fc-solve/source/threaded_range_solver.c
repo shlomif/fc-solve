@@ -7,17 +7,14 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * threaded_range_solver.c - a range solver that solves different boards in
- * several POSIX threads.
- *
- * See also:
- * - fc_pro_range_solver.c
- * - forking_range_solver.c
- * - serial_range_solver.c
- */
+// threaded_range_solver.c - a range solver that solves different boards in
+// several POSIX threads.
+//
+// See also:
+// - fc_pro_range_solver.c
+// - forking_range_solver.c
+// - serial_range_solver.c
 #include <pthread.h>
-
 #include "range_solvers.h"
 #include "try_param.h"
 
@@ -119,13 +116,13 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
     past_end_board = 1 + par__end_board;
     stop_at = par__stop_at;
 
-    int num_workers = 3;
+    size_t num_workers = 3;
     for (; arg < argc; ++arg)
     {
         const char *param;
         if ((param = TRY_P("--num-workers")))
         {
-            num_workers = atoi(param);
+            num_workers = (size_t)atol(param);
         }
         else if ((param = TRY_P("--worker-step")))
         {
@@ -143,21 +140,20 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
     context_argv = argv;
 #endif
     pthread_t workers[num_workers];
-
-    for (int idx = 0; idx < num_workers; idx++)
+    for (size_t idx = 0; idx < num_workers; ++idx)
     {
         const int check =
             pthread_create(&workers[idx], NULL, worker_thread, NULL);
         if (check)
         {
             fc_solve_err(
-                "Worker Thread No. %d Initialization failed with error %d!\n",
-                idx, check);
+                "Worker Thread No. %lu Initialization failed with error %d!\n",
+                (unsigned long)idx, check);
         }
     }
 
-    /* Wait for all threads to finish. */
-    for (int idx = 0; idx < num_workers; idx++)
+    // Wait for all threads to finish.
+    for (size_t idx = 0; idx < num_workers; ++idx)
     {
         pthread_join(workers[idx], NULL);
     }
