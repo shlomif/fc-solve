@@ -20,7 +20,7 @@ extern "C" {
 
 #include "gen_ms_boards__rand.h"
 
-typedef int CARD;
+typedef size_t CARD;
 
 #define SUIT(card) ((card) & (4 - 1))
 #define VALUE(card) ((card) >> 2)
@@ -69,7 +69,7 @@ static inline void get_board_l(const long long deal_idx, char *const ret)
 
     /* shuffle cards */
 
-    for (int i = 0; i < 52; i++) /* put unique card in each deck loc. */
+    for (size_t i = 0; i < 52; ++i) /* put unique card in each deck loc. */
     {
         deck[i] = i;
     }
