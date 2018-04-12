@@ -34,6 +34,7 @@ static inline void card_to_string(char *const s, const CARD card)
     s[1] = card_to_string_suits[SUIT(card)];
 }
 
+#include "board_gen_lookup1.h"
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
 /* This is to settle gcc's -Wmissing-prototypes which complains about
  * missing prototypes for "extern" subroutines.
@@ -73,13 +74,12 @@ static inline void get_board_l(const long long deal_idx, char *const ret)
     }
 
     microsoft_rand_uint_t num_cards_left = 52;
-    for (int i = 0; i < 52; i++)
+    for (size_t i = 0; i < 52; ++i)
     {
         const microsoft_rand_uint_t j =
             microsoft_rand__game_num_rand(&seedx, deal_idx) % num_cards_left;
-        const int col = (i & (8 - 1));
         card_to_string(
-            &ret[3 * (col * 7 - ((col > 4) ? (col - 4) : 0) + (i >> 3))],
+            &ret[offset_by_i[i]],
             deck[j]);
         deck[j] = deck[--num_cards_left];
     }

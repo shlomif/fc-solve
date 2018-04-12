@@ -70,6 +70,21 @@ foreach my $parent_suit (@SUITS)
     }
 }
 
+path('board_gen_lookup1.h')->spew_utf8(
+    "#pragma once\n",
+    'static const size_t offset_by_i[52] = {',
+    join(
+        ',',
+        map {
+            my $i = $_;
+            my $col = ( $i & ( 8 - 1 ) );
+            3 *
+                ( $col * 7 - ( ( $col > 4 ) ? ( $col - 4 ) : 0 ) + ( $i >> 3 ) )
+        } 0 .. ( 52 - 1 )
+    ),
+    '};'
+);
+
 sub emit
 {
     my ( $DECL, $bn, $header_headers, $contents, $types ) = @_;
