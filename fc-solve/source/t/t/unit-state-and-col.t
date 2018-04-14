@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Test::More tests => 4;
-use Test::Differences (qw( eq_or_diff ));
 
 package FC_Solve::FCS_Perl_State;
 
@@ -99,10 +98,19 @@ sub new
 }
 
 use FC_Solve::Trim qw/trim_trail_ws/;
+use Test::Differences (qw( eq_or_diff ));
 
 sub as_str
 {
     return trim_trail_ws( shift->as_string() );
+}
+
+sub is_str
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    my ( $self, $want, $blurb ) = @_;
+
+    return eq_or_diff( $self->as_str, $want, $blurb );
 }
 
 package main;
@@ -128,8 +136,7 @@ EOF
     my $state = _state1();
 
     # TEST
-    is(
-        $state->as_str,
+    $state->is_str(
         <<'EOF',
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H  KH  JH  TD
@@ -148,8 +155,7 @@ EOF
     $state->transfer_cards( 3, 7, 3 );
 
     # TEST
-    is(
-        $state->as_str,
+    $state->is_str(
         <<'EOF',
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H  KH  JH  TD
@@ -171,8 +177,7 @@ EOF
     $state->empty_freecell(1);
 
     # TEST
-    is(
-        $state->as_str,
+    $state->is_str(
         <<'EOF',
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H      JH  TD
@@ -185,14 +190,13 @@ Freecells:  8H      JH  TD
 : QD 7D 9H KD QS JD TS 9D 8S
 : 5S 4H 3S
 EOF
-        "as_string is working fine."
+        "empty_freecell is working fine."
     );
 
     $state->push_card(2);
 
     # TEST
-    is(
-        $state->as_str,
+    $state->is_str(
         <<'EOF',
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H      JH  TD
