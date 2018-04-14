@@ -84,6 +84,13 @@ sub new
     return FC_Solve::FCS_Perl_State::_proto_new($string);
 }
 
+use FC_Solve::Trim qw/trim_trail_ws/;
+
+sub as_str
+{
+    return trim_trail_ws( shift->as_string() );
+}
+
 package main;
 
 {
@@ -102,11 +109,9 @@ Freecells:  8H  KH  JH  TD
 : 5S 4H 3S
 EOF
 
-    use FC_Solve::Trim qw/trim_trail_ws/;
-
     # TEST
     is(
-        trim_trail_ws( $state->as_string() ),
+        $state->as_str,
         <<'EOF',
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H  KH  JH  TD
@@ -126,7 +131,7 @@ EOF
 
     # TEST
     is(
-        trim_trail_ws( $state->as_string() ),
+        $state->as_str,
         <<'EOF',
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H  KH  JH  TD
