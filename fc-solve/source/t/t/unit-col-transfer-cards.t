@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Differences (qw( eq_or_diff ));
 
 package FC_Solve::FCS_Perl_State;
@@ -18,6 +18,7 @@ typedef struct
 {
     fcs_state_keyval_pair_t state;
     fcs_state_locs_struct_t locs;
+    fcs_card_t card;
     DECLARE_IND_BUF_T(indirect_stacks_buffer);
 } StateInC;
 
@@ -75,6 +76,12 @@ void transfer_cards(SV * obj, int to, int from, int cards_num) {
     fcs_cards_column_t from_col = fcs_state_get_col(*s, from);
     fcs_col_transfer_cards(to_col, from_col, cards_num);
 }
+
+void empty_freecell(SV * obj, int fc_idx) {
+    StateInC * s = deref(obj);
+    s->card = fcs_freecell_card(s->state.s, fc_idx);
+    fcs_empty_freecell(s->state.s, fc_idx);
+}
 EOF
 );
 
@@ -93,10 +100,11 @@ sub as_str
 
 package main;
 
+sub _state1
 {
     # A state from the middle of:
     # pi-make-microsoft-freecell-board -t 1024 | fc-solve -t -sam -p -sel
-    my $state = FC_Solve::FCS_Perl_State->new(<<'EOF');
+    return FC_Solve::FCS_Perl_State->new(<<'EOF');
 Foundations: H-2 C-T D-6 S-A
 Freecells:  8H  KH  JH  TD
 : KC QH
@@ -108,6 +116,9 @@ Freecells:  8H  KH  JH  TD
 : QD 7D 9H KD QS JD TS 9D 8S
 : 5S 4H 3S
 EOF
+}
+{
+    my $state = _state1();
 
     # TEST
     is(
@@ -145,5 +156,28 @@ Freecells:  8H  KH  JH  TD
 :
 EOF
         "cards were transferred."
+    );
+}
+
+{
+    my $state = _state1();
+    $state->empty_freecell(1);
+
+    # TEST
+    is(
+        $state->as_str,
+        <<'EOF',
+Foundations: H-2 C-T D-6 S-A
+Freecells:  8H      JH  TD
+: KC QH
+: 3H KS 7H 2S QC JC JS TH 9S 8D 7S
+:
+: 6H
+: 6S 5H 4S
+:
+: QD 7D 9H KD QS JD TS 9D 8S
+: 5S 4H 3S
+EOF
+        "as_string is working fine."
     );
 }
