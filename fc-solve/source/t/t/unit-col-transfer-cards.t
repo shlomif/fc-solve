@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Test::Differences (qw( eq_or_diff ));
 
 package FC_Solve::FCS_Perl_State;
@@ -78,9 +78,16 @@ void transfer_cards(SV * obj, int to, int from, int cards_num) {
 }
 
 void empty_freecell(SV * obj, int fc_idx) {
-    StateInC * s = deref(obj);
-    s->card = fcs_freecell_card(s->state.s, fc_idx);
-    fcs_empty_freecell(s->state.s, fc_idx);
+    StateInC * o = deref(obj);
+    o->card = fcs_freecell_card(o->state.s, fc_idx);
+    fcs_empty_freecell(o->state.s, fc_idx);
+}
+
+void push_card(SV * obj, int to) {
+    StateInC * o = deref(obj);
+    fcs_state_t * s = &(o->state.s);
+    fcs_cards_column_t to_col = fcs_state_get_col(*s, to);
+    fcs_col_push_card(to_col, o->card);
 }
 EOF
 );
@@ -179,5 +186,25 @@ Freecells:  8H      JH  TD
 : 5S 4H 3S
 EOF
         "as_string is working fine."
+    );
+
+    $state->push_card(2);
+
+    # TEST
+    is(
+        $state->as_str,
+        <<'EOF',
+Foundations: H-2 C-T D-6 S-A
+Freecells:  8H      JH  TD
+: KC QH
+: 3H KS 7H 2S QC JC JS TH 9S 8D 7S
+: KH
+: 6H
+: 6S 5H 4S
+:
+: QD 7D 9H KD QS JD TS 9D 8S
+: 5S 4H 3S
+EOF
+        "fcs_col_push_card",
     );
 }
