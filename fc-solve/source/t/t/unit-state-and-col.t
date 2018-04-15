@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 package FC_Solve::FCS_Perl_State;
 
@@ -87,6 +87,18 @@ void push_card(SV * obj, int to) {
     fcs_state_t * s = &(o->state.s);
     fcs_cards_column_t to_col = fcs_state_get_col(*s, to);
     fcs_col_push_card(to_col, o->card);
+}
+
+void pop_card(SV * obj, int from) {
+    StateInC * o = deref(obj);
+    fcs_state_t * s = &(o->state.s);
+    fcs_cards_column_t from_col = fcs_state_get_col(*s, from);
+    fcs_col_pop_card(from_col, o->card);
+}
+
+void put_in_freecell(SV * obj, int fc_idx) {
+    StateInC * o = deref(obj);
+    fcs_put_card_in_freecell(o->state.s, fc_idx, o->card);
 }
 EOF
 );
@@ -210,5 +222,43 @@ Freecells:  8H      JH  TD
 : 5S 4H 3S
 EOF
         "fcs_col_push_card",
+    );
+
+    $state->pop_card(1);
+
+    # TEST
+    $state->is_str(
+        <<'EOF',
+Foundations: H-2 C-T D-6 S-A
+Freecells:  8H      JH  TD
+: KC QH
+: 3H KS 7H 2S QC JC JS TH 9S 8D
+: KH
+: 6H
+: 6S 5H 4S
+:
+: QD 7D 9H KD QS JD TS 9D 8S
+: 5S 4H 3S
+EOF
+        "fcs_col_pop_card",
+    );
+
+    $state->put_in_freecell(1);
+
+    # TEST
+    $state->is_str(
+        <<'EOF',
+Foundations: H-2 C-T D-6 S-A
+Freecells:  8H  7S  JH  TD
+: KC QH
+: 3H KS 7H 2S QC JC JS TH 9S 8D
+: KH
+: 6H
+: 6S 5H 4S
+:
+: QD 7D 9H KD QS JD TS 9D 8S
+: 5S 4H 3S
+EOF
+        "fcs_put_card_in_freecell",
     );
 }
