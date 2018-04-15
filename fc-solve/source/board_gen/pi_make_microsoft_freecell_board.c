@@ -48,9 +48,9 @@ int main(int argc, char *argv[])
     }
     else
     {
-        const char *p = s;
+        const char *p = s-1;
         char c;
-        while ((c = *p) != '\0')
+        while ((c = *(++p)) != '\0')
         {
             if (c == 'T')
             {
@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
             {
                 putc(c, stdout);
             }
-            ++p;
         }
     }
     return 0;
