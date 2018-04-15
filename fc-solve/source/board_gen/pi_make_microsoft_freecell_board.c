@@ -19,7 +19,6 @@
 */
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include "bool.h"
 #include "range_solvers_gen_ms_boards.h"
 
@@ -28,16 +27,12 @@ int main(int argc, char *argv[])
     fcs_bool_t print_ts = FALSE;
 
     int arg = 1;
-    if (arg < argc)
+    if (arg < argc && !strcmp(argv[arg], "-t"))
     {
-        if (!strcmp(argv[arg], "-t"))
-        {
-            print_ts = TRUE;
-            ++arg;
-        }
+        print_ts = TRUE;
+        ++arg;
     }
-    const long long gamenumber =
-        ((arg < argc) ? atoll(argv[arg++]) : (long long)time(NULL));
+    const long long gamenumber = ((arg < argc) ? atoll(argv[arg++]) : 1);
 
     fcs_state_string_t s;
     get_board_l(gamenumber, s);
