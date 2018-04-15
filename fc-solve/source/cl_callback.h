@@ -119,7 +119,6 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
     fc_solve_display_information_context_t *const display_context =
         (fc_solve_display_information_context_t *)context;
     const char *s;
-
     *num_to_skip = 0;
 
     const char *const arg_str = argv[arg];
@@ -139,11 +138,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
     else if (IS_ARG_LONG("h", "help"))
     {
         const char *help_key = getenv("FREECELL_SOLVER_DEFAULT_HELP");
-        if (help_key == NULL)
-        {
-            help_key = "summary";
-        }
-        print_help_string(help_key);
+        print_help_string(help_key ? help_key : "summary");
         *ret = EXIT_AND_RETURN_0;
         return FCS_CMD_LINE_STOP;
     }
