@@ -1,12 +1,13 @@
+/Task-FreecellSolver-Testing/.build
 /cpan/AI-Pathfinding-OptimizeMultiple/.build
-/cpan/Games-Solitaire-Verify/benchmark/.ninja_deps
-/cpan/Games-Solitaire-Verify/benchmark/.ninja_log
-/cpan/Games-Solitaire-Verify/benchmark/build.ninja
-/cpan/Games-Solitaire-Verify/benchmark/par2.mak
-/cpan/Games-Solitaire-Verify/benchmark/_Inline/
-/cpan/Games-Solitaire-Verify/benchmark/Results/*.res
 /cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/.build
 /cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/tags
+/cpan/Games-Solitaire-Verify/benchmark/.ninja_deps
+/cpan/Games-Solitaire-Verify/benchmark/.ninja_log
+/cpan/Games-Solitaire-Verify/benchmark/Results/*.res
+/cpan/Games-Solitaire-Verify/benchmark/_Inline/
+/cpan/Games-Solitaire-Verify/benchmark/build.ninja
+/cpan/Games-Solitaire-Verify/benchmark/par2.mak
 /cpan/temp-AI-Pathfinding-OptimizeMultiple-system-tests/.data-len-proc
 /cpan/temp-AI-Pathfinding-OptimizeMultiple-system-tests/.data-proc
 /fc-solve/B
@@ -14,10 +15,10 @@
 /fc-solve/presets/flares-based-scans-data/qualified-foo-flares-choice-fc_solve.summary
 /fc-solve/presets/soft-threads/atomic-moves/auto-gen/.data-len-proc
 /fc-solve/presets/soft-threads/atomic-moves/auto-gen/.data-proc
-/fc-solve/presets/soft-threads/meta-moves/auto-gen/2-cells-freecell/.data-len-proc
-/fc-solve/presets/soft-threads/meta-moves/auto-gen/2-cells-freecell/.data-proc
 /fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-len-proc
 /fc-solve/presets/soft-threads/meta-moves/auto-gen/.data-proc
+/fc-solve/presets/soft-threads/meta-moves/auto-gen/2-cells-freecell/.data-len-proc
+/fc-solve/presets/soft-threads/meta-moves/auto-gen/2-cells-freecell/.data-proc
 /fc-solve/scripts/TEST_OPTIMIZATIONS/DUMPS-*
 /fc-solve/scripts/TEST_OPTIMIZATIONS/__p
 /fc-solve/site/http-services/ajax-fc-solve--dancer1/Games-FC_Solve-AJAX-Service/MYMETA.json
@@ -116,4 +117,3 @@
 /fc-solve/source/t/lib/TAP/__pycache__
 /fc-solve/source/tags
 /fc-solve/source/xxHash-wrapper
-/Task-FreecellSolver-Testing/.build
