@@ -848,15 +848,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     {
         return;
     }
-    int stack_idx;
-    for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
-    {
-        if (fcs_state_col_is_empty(state, stack_idx))
-        {
-            break;
-        }
-    }
-
+    const int stack_idx = find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
         const fcs_card_t card = fcs_freecell_card(state, fc);
@@ -902,16 +894,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
     {
         return;
     }
-    int dest_stack_idx;
-    for (dest_stack_idx = 0; dest_stack_idx < LOCAL_STACKS_NUM;
-         dest_stack_idx++)
-    {
-        if (fcs_state_col_is_empty(state, dest_stack_idx))
-        {
-            break;
-        }
-    }
-
+    const int dest_stack_idx = find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
         const fcs_card_t src_card = fcs_freecell_card(state, fc);
@@ -1196,16 +1179,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         return;
     }
     STACKS__SET_PARAMS();
-    int empty_stack_idx;
-    for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;
-         empty_stack_idx++)
-    {
-        if (fcs_state_col_is_empty(state, empty_stack_idx))
-        {
-            break;
-        }
-    }
-
+    const int empty_stack_idx = find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         var_AUTO(col, fcs_state_get_col(state, stack_idx));
