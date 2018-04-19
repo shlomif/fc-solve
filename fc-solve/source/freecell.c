@@ -275,36 +275,14 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
 
 #define CALC_POSITIONS_BY_RANK()                                               \
     const int8_t *const positions_by_rank =                                    \
-        fc_solve_calc_positions_by_rank_location(soft_thread)
+        fc_solve_calc_positions_by_rank_location(soft_thread); \
+    const int suit_positions_by_rank_step = POS_BY_RANK_MAP(POS_BY_RANK_STEP)
 
-#define FCS_POS_BY_RANK_MAP(x) ((x) << 1)
-
-#ifdef FCS_FREECELL_ONLY
-
-#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP() (2)
-
-#else
-
-#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)             \
-    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
-            ? 0                                                                \
-            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)                \
-                  ? fcs_card_suit(card)                                        \
-                  : ((fcs_card_suit(card) ^ 0x1) & (0x2 - 1)))
-
-#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP()                           \
-    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
-            ? 1                                                                \
-            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
-
-#endif
-
-#define FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS()                                 \
-    const int suit_positions_by_rank_step =                                    \
-        FCS_POS_BY_RANK_MAP(FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_STEP())
+#define POS_BY_RANK_MAP(x) ((x) << 1)
 
 #ifdef FCS_FREECELL_ONLY
 #include "pos_by_rank__freecell.h"
+#define POS_BY_RANK_STEP (2)
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
     const_AUTO(pos_pos, pos_by_rank__freecell[(int)src_card]);                 \
     const int8_t *pos_idx_to_check = &positions_by_rank[pos_pos.start];        \
@@ -313,13 +291,24 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
     for (; pos_idx_to_check < last_pos_idx;                                    \
          pos_idx_to_check += suit_positions_by_rank_step)
 #else
+#define POS_BY_RANK_STEP                           \
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
+            ? 1                                                                \
+            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
+#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)             \
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
+            ? 0                                                                \
+            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)                \
+                  ? fcs_card_suit(card)                                        \
+                  : ((fcs_card_suit(card) ^ 0x1) & (0x2 - 1)))
+
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
     const int8_t *pos_idx_to_check = &positions_by_rank[(                      \
         FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card)))];                   \
     const int8_t *const last_pos_idx =                                         \
         pos_idx_to_check + FCS_POS_BY_RANK_WIDTH;                              \
                                                                                \
-    for (pos_idx_to_check += FCS_POS_BY_RANK_MAP(                              \
+    for (pos_idx_to_check += POS_BY_RANK_MAP(                                  \
              FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card));  \
          pos_idx_to_check < last_pos_idx;                                      \
          pos_idx_to_check += suit_positions_by_rank_step)
@@ -349,8 +338,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     const size_t derived_start_idx = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
-    FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS();
-
     /* Let's try to put cards in the freecells on top of stacks */
 
     /* Scan the freecells */
@@ -670,9 +657,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     const size_t derived_start_idx = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
-
-    FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS();
-
     /* Now let's try to move a card from one stack to the other     *
      * Note that it does not involve moving cards lower than king   *
      * to empty stacks                                              */
@@ -1018,9 +1002,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     const int derived_start_idx = derived_states_list->num_states;
 
     CALC_POSITIONS_BY_RANK();
-
-    FCS_POS_IDX_TO_CHECK__INIT_CONSTANTS();
-
     /* This time try to move cards that are already on top of a parent to a
      * different parent */
 
