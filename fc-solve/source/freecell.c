@@ -834,6 +834,17 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     }
 }
 
+#define SET_empty_stack_idx(empty_stack_idx) \
+    int empty_stack_idx; \
+    for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;\
+         empty_stack_idx++)\
+    {\
+        if (fcs_state_col_is_empty(state, empty_stack_idx))\
+        {\
+            break;\
+        }\
+    }
+
 /* Let's try to put cards that occupy freecells on an empty stack */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 {
@@ -848,15 +859,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     {
         return;
     }
-    int empty_stack_idx;
-    for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;
-         empty_stack_idx++)
-    {
-        if (fcs_state_col_is_empty(state, empty_stack_idx))
-        {
-            break;
-        }
-    }
+    SET_empty_stack_idx(empty_stack_idx);
 
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
@@ -903,15 +906,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
     {
         return;
     }
-    int empty_stack_idx;
-    for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;
-         empty_stack_idx++)
-    {
-        if (fcs_state_col_is_empty(state, empty_stack_idx))
-        {
-            break;
-        }
-    }
+    SET_empty_stack_idx(empty_stack_idx);
 
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
@@ -1197,15 +1192,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         return;
     }
     STACKS__SET_PARAMS();
-    int empty_stack_idx;
-    for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;
-         empty_stack_idx++)
-    {
-        if (fcs_state_col_is_empty(state, empty_stack_idx))
-        {
-            break;
-        }
-    }
+    SET_empty_stack_idx(empty_stack_idx);
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
