@@ -124,7 +124,6 @@ extern "C" {
  * The maximal number of Freecells. For efficiency's sake it should be a
  * multiple of 4.
  * */
-
 #ifdef FCS_FREECELL_ONLY
 #define HARD_CODED_NUM_FREECELLS FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY
 #define HARD_CODED_NUM_STACKS 8
@@ -145,11 +144,8 @@ extern "C" {
 
 #cmakedefine FCS_DBM_FREECELLS_NUM ${FCS_DBM_FREECELLS_NUM}
 
-/*
- * The maximal number of Stacks. For efficiency's sake it should be a
- * multiple of 4.
- * */
-
+// The maximal number of Stacks. For efficiency's sake it should be a
+// multiple of 4.
 #ifdef HARD_CODED_NUM_STACKS
 #define MAX_NUM_STACKS HARD_CODED_NUM_STACKS
 #else
@@ -195,8 +191,6 @@ extern "C" {
 
 #define FCS_RCS_CACHE_STORAGE ${FCS_RCS_CACHE_STORAGE}
 
-/* Define to 1 if you have the `m' library (-lm). */
-#cmakedefine HAVE_LIBM
 #cmakedefine HAVE_STRNCASECMP
 #cmakedefine HAVE_VASPRINTF
 #cmakedefine FCS_USE_INT128_FOR_VAR_BASE

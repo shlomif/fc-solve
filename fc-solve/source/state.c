@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * state.c - state functions module for Freecell Solver
- */
-
+// state.c - state functions module for Freecell Solver
 #include "state.h"
 #include "fcs_enums.h"
 
