@@ -660,9 +660,7 @@ int main(int argc, char *argv[])
         }
     }
 
-#ifndef FCS_FREECELL_ONLY
-    const_AUTO(local_variant, inp.local_variant);
-#endif
+    FCS_ON_NOT_FC_ONLY(const_AUTO(local_variant, inp.local_variant));
     const_AUTO(num_threads, inp.num_threads);
 
     /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth.

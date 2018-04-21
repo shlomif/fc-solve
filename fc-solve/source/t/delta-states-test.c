@@ -78,9 +78,7 @@ static int main_tests(void)
         fcs_cards_column_t col;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-#ifndef FCS_FREECELL_ONLY
-        delta.sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR;
-#endif
+        FCS_ON_NOT_FC_ONLY(delta.sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR);
         fc_solve_state_init(&s, STACKS_NUM, indirect_stacks_buffer);
 
         col = fcs_state_get_col(s.s, 0);

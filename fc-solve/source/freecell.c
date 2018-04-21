@@ -13,11 +13,27 @@
 #include "freecell.h"
 #include "meta_move_funcs_helpers.h"
 
+#define CALC_POSITIONS_BY_RANK()                                               \
+    const int8_t *const positions_by_rank =                                    \
+        fc_solve_calc_positions_by_rank_location(soft_thread); \
+    const int suit_positions_by_rank_step = POS_BY_RANK_MAP(POS_BY_RANK_STEP)
+
+#define POS_BY_RANK_MAP(x) ((x) << 1)
+
 #ifdef FCS_FREECELL_ONLY
 
 #define MOVE_FUNCS__define_seqs_built_by()
 #define MOVE_FUNCS__define_empty_stacks_fill()
 #define PASS_sequences_are_built_by(param)
+#include "pos_by_rank__freecell.h"
+#define POS_BY_RANK_STEP (2)
+#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
+    const_AUTO(pos_pos, pos_by_rank__freecell[(int)src_card]);                 \
+    const int8_t *pos_idx_to_check = &positions_by_rank[pos_pos.start];        \
+    const int8_t *const last_pos_idx = &positions_by_rank[pos_pos.end];        \
+                                                                               \
+    for (; pos_idx_to_check < last_pos_idx;                                    \
+         pos_idx_to_check += suit_positions_by_rank_step)
 
 #else
 
@@ -27,6 +43,28 @@
 #define MOVE_FUNCS__define_empty_stacks_fill()                                 \
     const int empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL;
 #define PASS_sequences_are_built_by(param) , param
+#define POS_BY_RANK_STEP                           \
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
+            ? 1                                                                \
+            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
+#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)             \
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
+            ? 0                                                                \
+            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)                \
+                  ? fcs_card_suit(card)                                        \
+                  : ((fcs_card_suit(card) ^ 0x1) & (0x2 - 1)))
+
+#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
+    const int8_t *pos_idx_to_check = &positions_by_rank[(                      \
+        FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card)))];                   \
+    const int8_t *const last_pos_idx =                                         \
+        pos_idx_to_check + FCS_POS_BY_RANK_WIDTH;                              \
+                                                                               \
+    for (pos_idx_to_check += POS_BY_RANK_MAP(                                  \
+             FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card));  \
+         pos_idx_to_check < last_pos_idx;                                      \
+         pos_idx_to_check += suit_positions_by_rank_step)
+
 
 #endif
 
@@ -272,47 +310,6 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
         ++put_cards_in_col_idx;
     }
 }
-
-#define CALC_POSITIONS_BY_RANK()                                               \
-    const int8_t *const positions_by_rank =                                    \
-        fc_solve_calc_positions_by_rank_location(soft_thread); \
-    const int suit_positions_by_rank_step = POS_BY_RANK_MAP(POS_BY_RANK_STEP)
-
-#define POS_BY_RANK_MAP(x) ((x) << 1)
-
-#ifdef FCS_FREECELL_ONLY
-#include "pos_by_rank__freecell.h"
-#define POS_BY_RANK_STEP (2)
-#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
-    const_AUTO(pos_pos, pos_by_rank__freecell[(int)src_card]);                 \
-    const int8_t *pos_idx_to_check = &positions_by_rank[pos_pos.start];        \
-    const int8_t *const last_pos_idx = &positions_by_rank[pos_pos.end];        \
-                                                                               \
-    for (; pos_idx_to_check < last_pos_idx;                                    \
-         pos_idx_to_check += suit_positions_by_rank_step)
-#else
-#define POS_BY_RANK_STEP                           \
-    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
-            ? 1                                                                \
-            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
-#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)             \
-    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
-            ? 0                                                                \
-            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)                \
-                  ? fcs_card_suit(card)                                        \
-                  : ((fcs_card_suit(card) ^ 0x1) & (0x2 - 1)))
-
-#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
-    const int8_t *pos_idx_to_check = &positions_by_rank[(                      \
-        FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card)))];                   \
-    const int8_t *const last_pos_idx =                                         \
-        pos_idx_to_check + FCS_POS_BY_RANK_WIDTH;                              \
-                                                                               \
-    for (pos_idx_to_check += POS_BY_RANK_MAP(                                  \
-             FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card));  \
-         pos_idx_to_check < last_pos_idx;                                      \
-         pos_idx_to_check += suit_positions_by_rank_step)
-#endif
 
 static inline fcs_game_limit_t calc_num_vacant_slots(
     const fc_solve_soft_thread_t *const soft_thread,
@@ -579,16 +576,12 @@ typedef struct
 {
     fcs_cards_column_t col;
     int_fast16_t col_len, col_len_minus_1, c, seq_end;
-#ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by;
-#endif
+    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
 } col_seqs_iter_t;
 
 static inline void col_seqs_iter__calc_end(col_seqs_iter_t *const iter)
 {
-#ifndef FCS_FREECELL_ONLY
-    const_SLOT(sequences_are_built_by, iter);
-#endif
+    FCS_ON_NOT_FC_ONLY(const_SLOT(sequences_are_built_by, iter));
     const_SLOT(col, iter);
     for ((*iter).seq_end = (*iter).c; (*iter).seq_end < (*iter).col_len_minus_1;
          ++((*iter).seq_end))
@@ -606,9 +599,7 @@ static inline col_seqs_iter_t col_seqs_iter__create(
                               const int sequences_are_built_by))
 {
     col_seqs_iter_t ret;
-#ifndef FCS_FREECELL_ONLY
-    ret.sequences_are_built_by = sequences_are_built_by;
-#endif
+    FCS_ON_NOT_FC_ONLY(ret.sequences_are_built_by = sequences_are_built_by);
     ret.col = fcs_state_get_col(*s, stack_idx);
     ret.col_len_minus_1 = (ret.col_len = fcs_col_len(ret.col)) - 1;
     ret.c = 0;
@@ -1409,9 +1400,7 @@ static inline int_fast32_t calc_foundation_to_put_card_on(
     const fc_solve_soft_thread_t *const soft_thread,
     const fcs_state_t *const ptr_state, const fcs_card_t card)
 {
-#ifndef FCS_FREECELL_ONLY
-    const_AUTO(instance, fcs_st_instance(soft_thread));
-#endif
+    FCS_ON_NOT_FC_ONLY(const_AUTO(instance, fcs_st_instance(soft_thread)));
     MOVE_FUNCS__define_seqs_built_by();
     const int_fast32_t rank = fcs_card_rank(card);
     const int_fast32_t suit = fcs_card_suit(card);

@@ -2047,9 +2047,7 @@ typedef struct
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 #define MAX_STATE_STRING_COPY_LEN 2048
     char state_string_copy[MAX_STATE_STRING_COPY_LEN];
-#ifndef FCS_FREECELL_ONLY
-    fcs_preset_t common_preset;
-#endif
+    FCS_ON_NOT_FC_ONLY(fcs_preset_t common_preset);
     FCS__DECL_ERR_BUF(error_string);
     fcs_meta_compact_allocator_t meta_alloc;
 } fcs_user_t;

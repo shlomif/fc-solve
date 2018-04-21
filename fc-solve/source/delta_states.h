@@ -131,9 +131,7 @@ typedef struct
 
 typedef struct
 {
-#ifndef FCS_FREECELL_ONLY
-    int sequences_are_built_by;
-#endif
+    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
     size_t num_freecells;
     size_t num_columns;
     fcs_state_t *init_state, *derived_state;

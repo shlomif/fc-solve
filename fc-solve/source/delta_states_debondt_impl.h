@@ -59,9 +59,7 @@ static void fc_solve_debondt_delta_stater_init(
 #endif
 )
 {
-#ifndef FCS_FREECELL_ONLY
-    self->sequences_are_built_by = sequences_are_built_by;
-#endif
+    FCS_ON_NOT_FC_ONLY(self->sequences_are_built_by = sequences_are_built_by);
 
     self->num_columns = num_columns;
     self->num_freecells = num_freecells;

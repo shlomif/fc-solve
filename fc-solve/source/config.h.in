@@ -132,7 +132,9 @@ extern "C" {
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 #define FCS_DISABLE_SIMPLE_SIMON
 #endif
-
+#define FCS_ON_NOT_FC_ONLY(code)
+#else
+#define FCS_ON_NOT_FC_ONLY(code) code
 #endif
 
 #ifdef HARD_CODED_NUM_FREECELLS

@@ -85,10 +85,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
     {
 #define state_key (*ptr_state_key)
 
-#ifndef FCS_FREECELL_ONLY
-        const int sequences_are_built_by =
-            GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
-#endif
+        FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
 
         /* We need 2 chars per card - one for the column_idx and one
          * for the card_idx.

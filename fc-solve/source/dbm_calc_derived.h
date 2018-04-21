@@ -142,9 +142,7 @@ static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
     const fcs_dbm_variant_type_t local_variant, fcs_state_t *const ptr_state,
     const fcs_card_t card)
 {
-#ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-#endif
+    FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
     const int_fast32_t rank = fcs_card_rank(card);
     const int_fast32_t suit = fcs_card_suit(card);
     for (uint_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
@@ -213,9 +211,7 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
     fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];
     int count_moves_so_far = 0;
     int count_additional_irrev_moves = 0;
-#ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-#endif
+    FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
 
 #define the_state (init_state_kv_ptr->s)
     uint_fast32_t num_cards_moved;

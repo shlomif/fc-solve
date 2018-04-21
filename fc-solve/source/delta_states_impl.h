@@ -23,9 +23,7 @@
 static int fc_solve_get_column_orig_num_cards(
     fc_solve_delta_stater_t *const self, const fcs_const_cards_column_t col)
 {
-#ifndef FCS_FREECELL_ONLY
-    const_SLOT(sequences_are_built_by, self);
-#endif
+    FCS_ON_NOT_FC_ONLY(const_SLOT(sequences_are_built_by, self));
     for (int num_cards = fcs_col_len(col); num_cards >= 2; --num_cards)
     {
         if (!fcs_is_parent_card(fcs_col_get_card(col, num_cards - 1),
@@ -46,9 +44,7 @@ static void fc_solve_delta_stater_init(
 #endif
 )
 {
-#ifndef FCS_FREECELL_ONLY
-    self->sequences_are_built_by = sequences_are_built_by;
-#endif
+    FCS_ON_NOT_FC_ONLY(self->sequences_are_built_by = sequences_are_built_by);
     self->num_columns = num_columns;
     self->num_freecells = num_freecells;
     self->init_state = init_state;

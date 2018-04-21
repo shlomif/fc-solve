@@ -370,10 +370,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_SEQUENCE_MOVE: /* STRINGS=--sequence-move; */
             PROCESS_OPT_ARG();
-#ifndef FCS_FREECELL_ONLY
-            freecell_solver_user_set_sequence_move(
-                instance, !strcmp((*arg), "unlimited"));
-#endif
+            FCS_ON_NOT_FC_ONLY(freecell_solver_user_set_sequence_move( instance, !strcmp((*arg), "unlimited")));
             break;
 
         case FCS_OPT_EMPTY_STACKS_FILLED_BY: /* STRINGS=--empty-stacks-filled-by;
