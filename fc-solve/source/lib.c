@@ -112,6 +112,10 @@ static inline void alloc_instance(fc_solve_instance_t *const instance,
                 .num = 0,
                 .groups = NULL,
             },
+        .solution_moves = (fcs_move_stack_t){.moves = NULL, .num_moves = 0},
+        .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE,
+        .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE,
+        .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = FALSE,
 #endif
 #ifdef FCS_SINGLE_HARD_THREAD
 #ifdef FCS_WITH_MOVES
@@ -128,9 +132,6 @@ static inline void alloc_instance(fc_solve_instance_t *const instance,
 #ifndef FCS_WITHOUT_ITER_HANDLER
         .debug_iter_output_func = NULL,
 #endif
-#ifdef FCS_WITH_MOVES
-        .solution_moves = (fcs_move_stack_t){.moves = NULL, .num_moves = 0},
-#endif
         .num_hard_threads_finished = 0,
 /* Make the 1 the default, because otherwise scans will not cooperate
  * with one another. */
@@ -143,11 +144,6 @@ static inline void alloc_instance(fc_solve_instance_t *const instance,
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
         .FCS_RUNTIME_SCANS_SYNERGY = TRUE,
-#endif
-#ifdef FCS_WITH_MOVES
-        .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE,
-        .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE,
-        .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = FALSE,
 #endif
 #ifdef FCS_RCS_STATES
         .rcs_states_cache.max_num_elements_in_cache = 10000,
@@ -2909,7 +2905,6 @@ static void trace_flare_solution(
     }
 
     fc_solve_instance_t *const instance = &(flare->obj);
-#ifdef FCS_WITH_MOVES
     fc_solve_trace_solution(instance);
     flare->trace_solution_state_locs = user->state_locs;
     fc_solve_move_stack_normalize(&(instance->solution_moves), &(user->state),
@@ -2919,7 +2914,6 @@ static void trace_flare_solution(
     calc_moves_seq(&(instance->solution_moves), &(flare->moves_seq));
     instance_free_solution_moves(instance);
     flare->next_move_idx = 0;
-#endif
     flare->obj_stats.num_checked_states = instance->i__num_checked_states;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     flare->obj_stats.num_states_in_collection =
@@ -3790,19 +3784,15 @@ void DLLEXPORT freecell_solver_user_set_solution_optimization(
     STRUCT_SET_FLAG_TO(
         active_obj(api_instance), FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, optimize);
 }
-#endif
 
-#ifdef FCS_WITH_MOVES
 DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
     void *const api_instance, char *const output_string, const fcs_move_t move,
     const int standard_notation)
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-#ifdef FCS_WITH_MOVES
     fc_solve_move_to_string_w_state(
         output_string, &(user->running_state), move, standard_notation);
-#endif
 }
 #endif
 
