@@ -7,11 +7,8 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_solver_head.h - contains the common part (headers/etc.) from the
- * beginning of depth_dbm_solver.c and dbm_solver.c .
- */
-
+// dbm_solver_head.h - contains the common part (headers/etc.) from the
+// beginning of depth_dbm_solver.c and dbm_solver.c .
 #pragma once
 
 #ifdef __cplusplus
@@ -25,7 +22,7 @@ extern "C" {
 #define FCS_DBM_SINGLE_THREAD 1
 #endif
 
-#include "config.h"
+#include "fcs_conf.h"
 #undef FCS_RCS_STATES
 
 #include "lock.h"

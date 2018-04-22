@@ -8,7 +8,7 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 #pragma once
-#include "config.h"
+#include "fcs_conf.h"
 
 typedef char fcs_render_state_str_t[2000];
 #ifdef FCS_WITH_MOVES

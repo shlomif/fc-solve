@@ -91,24 +91,6 @@ extern "C" {
 #define FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY 4
 #endif
 
-
-#ifndef FCS_DISABLE_MULTI_FLARES
-#define FCS_WITH_FLARES
-#endif
-#ifndef FCS_DISABLE_MULTI_NEXT_INSTS
-#define FCS_WITH_NI
-#endif
-
-#ifndef FCS_DISABLE_MOVES_TRACKING
-#define FCS_WITH_MOVES
-#endif
-
-#ifdef FCS_WITH_MOVES
-#define SFS__PASS_MOVE_STACK(arg) , arg
-#else
-#define SFS__PASS_MOVE_STACK(arg)
-#endif
-
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
 #cmakedefine FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
 #endif
@@ -119,21 +101,6 @@ extern "C" {
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 #cmakedefine FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
-#endif
-/*
- * The maximal number of Freecells. For efficiency's sake it should be a
- * multiple of 4.
- * */
-#ifdef FCS_FREECELL_ONLY
-#define HARD_CODED_NUM_FREECELLS FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY
-#define HARD_CODED_NUM_STACKS 8
-#define HARD_CODED_NUM_DECKS 1
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-#define FCS_DISABLE_SIMPLE_SIMON
-#endif
-#define FCS_ON_NOT_FC_ONLY(code)
-#else
-#define FCS_ON_NOT_FC_ONLY(code) code
 #endif
 
 #ifdef HARD_CODED_NUM_FREECELLS
@@ -198,10 +165,6 @@ extern "C" {
 /* Version number of package */
 #define VERSION "${VERSION}"
 
-#ifndef FCS_INT_BIT_SIZE_LOG2
-#define FCS_INT_BIT_SIZE_LOG2 ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
-#endif
-
 #define FCS_WHICH_STATES_GOOGLE_HASH__DENSE  0
 #define FCS_WHICH_STATES_GOOGLE_HASH__SPARSE 1
 
@@ -210,31 +173,6 @@ extern "C" {
 
 #define FCS_WHICH_COLUMNS_GOOGLE_HASH ${FCS_WHICH_COLUMNS_GOOGLE_HASH}
 #define FCS_WHICH_STATES_GOOGLE_HASH ${FCS_WHICH_STATES_GOOGLE_HASH}
-
-#if defined(FCS_RCS_STATES) && (!defined(COMPACT_STATES) )
-#error FCS_RCS_STATES requires COMPACT_STATES
-#endif
-
-#ifdef _WIN32
-#define plan_tests(...) plan(__VA_ARGS__)
-#endif
-
-#ifdef _POSIX_C_SOURCE
-#if _POSIX_C_SOURCE > 200809L
-#define HAVE_GETLINE 1
-#endif
-#endif
-
-#if (defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
-         defined(HARD_CODED_NUM_DECKS))
-#define HARD_CODED_ALL
-#define HARD__SET_GAME_PARAMS()
-#else
-#define HARD__SET_GAME_PARAMS() SET_GAME_PARAMS()
-#endif
-#ifdef FCS_ENABLE_PRUNE__R_TF__UNCOND
-#define freecell_solver_user_set_pruning(...)
-#endif
 
 #ifdef __cplusplus
 }

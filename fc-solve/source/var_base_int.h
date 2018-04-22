@@ -9,7 +9,7 @@
  */
 // var_base_int.h - abstract/wrap either mpz_t or the faster unsigned __int128.
 #pragma once
-#include "config.h"
+#include "fcs_conf.h"
 #include "rinutils.h"
 
 #ifdef FCS_USE_INT128_FOR_VAR_BASE

@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-#include "config.h"
+#include "fcs_conf.h"
 #include "rinutils.h"
 
 #ifdef CARD_DEBUG_PRES

@@ -74,6 +74,7 @@ sub src_filenames
         'fcs_dllexport.h',
         'fcs-libavl/rb.c',
         'fcs-libavl/rb.h',
+        'fcs_conf.h',
         'fcs_enums.h',
         'fcs_err.h',
         'fcs_limit.h',
