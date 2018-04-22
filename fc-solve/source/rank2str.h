@@ -27,21 +27,16 @@ extern "C" {
         , "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J", "Q", "K"   \
     }
 
-#ifndef FC_SOLVE_IMPLICIT_T_RANK
-static const char card_map_3_10[14][4] = GEN_CARD_MAP("10");
-
-static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
-#else
-static const char cards_char_map[15] = (CARD_ZERO() "A23456789TJQK");
-#endif
-
 static inline void rank2str(
     const int rank_idx, char *const str PASS_T(const fcs_bool_t display_T))
 {
 #ifdef FC_SOLVE_IMPLICIT_T_RANK
+    static const char cards_char_map[15] = (CARD_ZERO() "A23456789TJQK");
     str[0] = cards_char_map[rank_idx];
     str[1] = '\0';
 #else
+    static const char card_map_3_10[14][4] = GEN_CARD_MAP("10");
+    static const char card_map_3_T[14][4] = GEN_CARD_MAP("T");
     strcpy(str, (display_T ? card_map_3_T : card_map_3_10)[rank_idx]);
 #endif
 }
