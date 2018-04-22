@@ -130,11 +130,20 @@ typedef void (*fc_solve_solve_for_state_move_func_t)(
     fcs_derived_states_list_t *);
 
 #ifdef FCS_SINGLE_HARD_THREAD
+#define HT_FIELD(ht, field) (ht)->hard_thread.field
+#define HT_INSTANCE(hard_thread) (hard_thread)
+#define INST_HT0(instance) ((instance)->hard_thread)
+#define NUM_CHECKED_STATES (HT_INSTANCE(hard_thread)->i__num_checked_states)
 typedef struct fc_solve_instance_struct fc_solve_hard_thread_t;
+extern void fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
+    struct fc_solve_soft_thread_struct *const soft_thread);
 #else
+#define HT_FIELD(hard_thread, field) (hard_thread)->field
+#define HT_INSTANCE(hard_thread) ((hard_thread)->instance)
+#define INST_HT0(instance) ((instance)->hard_threads[0])
+#define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
 typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 #endif
-
 extern fcs_bool_t fc_solve_check_and_add_state(
     fc_solve_hard_thread_t *, fcs_kv_state_t *, fcs_kv_state_t *);
 
@@ -781,15 +790,6 @@ struct fc_solve_instance_struct
 #endif
 };
 
-#ifdef FCS_SINGLE_HARD_THREAD
-#define HT_FIELD(ht, field) (ht)->hard_thread.field
-#define HT_INSTANCE(hard_thread) (hard_thread)
-#define INST_HT0(instance) ((instance)->hard_thread)
-#else
-#define HT_FIELD(hard_thread, field) (hard_thread)->field
-#define HT_INSTANCE(hard_thread) ((hard_thread)->instance)
-#define INST_HT0(instance) ((instance)->hard_threads[0])
-#endif
 #define fcs_st_instance(soft_thread) HT_INSTANCE((soft_thread)->hard_thread)
 
 #define DFS_VAR(soft_thread, var) (soft_thread)->method_specific.soft_dfs.var
@@ -950,11 +950,6 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
         fcs_kv_state_t raw_state_raw,                                          \
         fcs_derived_states_list_t *const derived_states_list)
 
-#ifdef FCS_SINGLE_HARD_THREAD
-extern void fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
-    fc_solve_soft_thread_t *const soft_thread);
-#endif
-
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 static inline fcs_bool_t fcs_get_calc_real_depth(
     const fc_solve_instance_t *const instance)
@@ -970,10 +965,4 @@ extern void fc_solve_finish_instance(fc_solve_instance_t *const instance);
 
 #ifdef __cplusplus
 }
-#endif
-
-#ifdef FCS_SINGLE_HARD_THREAD
-#define NUM_CHECKED_STATES (HT_INSTANCE(hard_thread)->i__num_checked_states)
-#else
-#define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
 #endif
