@@ -31,10 +31,7 @@ static inline main_thread_item_t *dbm__calc_threads(
 #ifdef DEBUG_FOO
     fc_solve_delta_stater_init(
         &global_delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
     );
 #endif
     for (size_t i = 0; i < num_threads; i++)
@@ -42,10 +39,7 @@ static inline main_thread_item_t *dbm__calc_threads(
         threads[i].thread.instance = instance;
         fc_solve_delta_stater_init(&(threads[i].thread.delta_stater),
             &(init_state->s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-            ,
-            FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+            PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
         );
         init_thread_cb(threads[i].arg.thread = &(threads[i].thread));
     }

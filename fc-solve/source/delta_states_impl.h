@@ -38,10 +38,7 @@ static int fc_solve_get_column_orig_num_cards(
 static void fc_solve_delta_stater_init(
     fc_solve_delta_stater_t *const self, fcs_state_t *const init_state,
     const size_t num_columns, const int num_freecells
-#ifndef FCS_FREECELL_ONLY
-    ,
-    const int sequences_are_built_by
-#endif
+    PASS_ON_NOT_FC_ONLY(const int sequences_are_built_by)
 )
 {
     FCS_ON_NOT_FC_ONLY(self->sequences_are_built_by = sequences_are_built_by);

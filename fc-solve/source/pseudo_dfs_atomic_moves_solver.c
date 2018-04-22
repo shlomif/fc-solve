@@ -164,10 +164,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     instance->local_variant = local_variant;
     fc_solve_delta_stater_init(
         &(instance->delta_stater), &(init_state->s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
     );
     fcs_init_and_encode_state(&instance->delta_stater, local_variant,
         init_state, &instance->init_key);

@@ -40,10 +40,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(
         &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
     );
 
     fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));

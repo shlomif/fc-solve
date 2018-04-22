@@ -110,9 +110,7 @@ static int main_tests(void)
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-                , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+                PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
                 );
 
         fc_solve_initial_user_state_to_c(
@@ -196,9 +194,7 @@ static int main_tests(void)
             &init_state.s,
             STACKS_NUM,
             FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-            , FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+            PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
         );
 
         fc_solve_initial_user_state_to_c(

@@ -40,8 +40,10 @@ extern "C" {
 #define FCS_DISABLE_SIMPLE_SIMON
 #endif
 #define FCS_ON_NOT_FC_ONLY(code)
+#define PASS_ON_NOT_FC_ONLY(param)
 #else
 #define FCS_ON_NOT_FC_ONLY(code) code
+#define PASS_ON_NOT_FC_ONLY(param) , param
 #endif
 
 #ifndef FCS_INT_BIT_SIZE_LOG2

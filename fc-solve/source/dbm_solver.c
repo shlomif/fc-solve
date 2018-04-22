@@ -588,10 +588,7 @@ int main(int argc, char *argv[])
     const_AUTO(local_variant, inp.local_variant);
     fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
     );
 
     if (intermediate_input_filename)

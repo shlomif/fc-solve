@@ -53,10 +53,7 @@ static void fc_solve_debondt_delta_stater_init(
     fc_solve_debondt_delta_stater_t *const self,
     const fcs_dbm_variant_type_t local_variant, fcs_state_t *const init_state,
     const size_t num_columns, const int num_freecells
-#ifndef FCS_FREECELL_ONLY
-    ,
-    const int sequences_are_built_by
-#endif
+    PASS_ON_NOT_FC_ONLY(const int sequences_are_built_by)
 )
 {
     FCS_ON_NOT_FC_ONLY(self->sequences_are_built_by = sequences_are_built_by);
@@ -130,10 +127,7 @@ static inline int wanted_suit_idx_opt(const fcs_card_t parent_card)
 static inline int calc_child_card_option(
     const fcs_dbm_variant_type_t local_variant, const fcs_card_t parent_card,
     const fcs_card_t child_card
-#ifndef FCS_FREECELL_ONLY
-    ,
-    const int sequences_are_built_by
-#endif
+    PASS_ON_NOT_FC_ONLY(const int sequences_are_built_by)
 )
 {
     if (IS_BAKERS_DOZEN())
@@ -267,10 +261,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                 {
                     const int opt = calc_child_card_option(
                         local_variant, parent_card, child_card
-#ifndef FCS_FREECELL_ONLY
-                        ,
-                        self->sequences_are_built_by
-#endif
+                        PASS_ON_NOT_FC_ONLY(self->sequences_are_built_by)
                     );
                     SET_CARD_STATE(child_card, opt);
                 }
@@ -529,10 +520,7 @@ static void fc_solve_debondt_delta_stater_decode(
                     (CARD_STATE(child_card) == calc_child_card_option(
                                                    local_variant, parent_card,
                                                    child_card
-#ifndef FCS_FREECELL_ONLY
-                                                   ,
-                                                   self->sequences_are_built_by
-#endif
+                                                   PASS_ON_NOT_FC_ONLY(self->sequences_are_built_by)
                                                    )))
                 {
                     fcs_col_push_card(col, child_card);

@@ -668,10 +668,7 @@ int main(int argc, char *argv[])
 
     fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        CALC_SEQUENCES_ARE_BUILT_BY()
-#endif
+        PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY())
     );
 
     fcs_dbm_solver_instance_t instance;

@@ -2336,9 +2336,7 @@ static MYINLINE void user_initialize(fcs_user_t *const user)
 {
 #ifndef FCS_FREECELL_ONLY
     const fcs_preset_t *freecell_preset;
-
     fc_solve_get_preset_by_name("freecell", &freecell_preset);
-
     fcs_duplicate_preset(user->common_preset, *freecell_preset);
 #endif
 

@@ -348,10 +348,7 @@ int main(int argc, char *argv[])
     const_AUTO(local_variant, inp.local_variant);
     fc_solve_delta_stater_t delta;
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        CALC_SEQUENCES_ARE_BUILT_BY()
-#endif
+        PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY())
     );
 
 #define KEY_PTR() (key_ptr)

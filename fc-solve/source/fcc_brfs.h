@@ -220,10 +220,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     fc_solve_delta_stater_t delta_stater;
     fc_solve_delta_stater_init(
         &delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
+        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
     );
     dict_t *traversed_states =
         fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
