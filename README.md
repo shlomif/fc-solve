@@ -62,3 +62,9 @@ Mostly specifications and planning documents.
 ## fc-solve/benchmarks
 
 Logs of various benchmarks of the code.
+
+# Related repositories and links
+
+* [Impossible 4-freecells and 5-freecells deals in Freecell Pro](https://github.com/shlomif/freecell-pro-impossible-deals)
+* [Freecell Pro 3 freecells impossible and intractable deals](https://github.com/shlomif/freecell-pro-3fc-deals--split)
+* [Finding zero freecells deals in the fc-pro range](https://github.com/shlomif/freecell-pro-0fc-deals)
