@@ -68,3 +68,6 @@ Logs of various benchmarks of the code.
 * [Impossible 4-freecells and 5-freecells deals in Freecell Pro](https://github.com/shlomif/freecell-pro-impossible-deals)
 * [Freecell Pro 3 freecells impossible and intractable deals](https://github.com/shlomif/freecell-pro-3fc-deals--split)
 * [Finding zero freecells deals in the fc-pro range](https://github.com/shlomif/freecell-pro-0fc-deals)
+* [The minimal number of freecells needed to win for each deal in the original Microsoft FreeCell 32,000 deals.](https://github.com/shlomif/MicrosoftFreeCell32000-minimal-freecells)
+* [Lack of PGO investigation.](https://github.com/shlomif/investigate-lack-of-PGO-in-gcc-5.2.x--re-fc-solve)
+* [Freecell Solver's Site Assets](https://github.com/shlomif/fc-solve-site-assets)
