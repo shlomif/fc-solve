@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 36;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny qw/ path /;
 
@@ -691,6 +691,14 @@ eq_or_diff(
     ["Found deal = 24\n"], "-o flag output to file.",
 );
 
+# TEST
+_test_find_index(
+    {
+        blurb    => "find-deal-index for no newline board",
+        cmd      => [ '--ms', bin_board("24.no-newline.board") ],
+        expected => "Found deal = 24\n",
+    }
+);
 __END__
 
 =head1 COPYRIGHT AND LICENSE
