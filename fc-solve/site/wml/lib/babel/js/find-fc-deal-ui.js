@@ -35,7 +35,7 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
     };
 
     function find_deal_ui() {
-        const deal_str = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '');
+        const deal_str = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '').replace(/\r+\n/, "\n").replace(/([^\n])$/, "$1\n");
         const ints = s2i.find_index__board_string_to_ints(deal_str);
         const ints_s = ints.map((i) => { let ret = i.toString(); return " ".repeat(10-ret.length) + ret; }).join('');
         let df = new w.Freecell_Deal_Finder({});
