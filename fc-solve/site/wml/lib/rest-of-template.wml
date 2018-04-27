@@ -1,4 +1,3 @@
-#include "shlomif/affiliations.wml"
 #include "share-this.wml"
 
 <define-tag rss_feed whitespace="delete">
