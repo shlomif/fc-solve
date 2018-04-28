@@ -1,19 +1,16 @@
 "use strict";
 
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-
-define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min"], function (base_ui, w, Module) {
-    var FC_Solve = w.FC_Solve;
-    var _my_module = Module()({});
-    var FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
-    var FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
+define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min"],
+       function(base_ui, w, Module) {
+    let FC_Solve = w.FC_Solve;
+    let _my_module = Module()({});
+    const FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
+    const FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
     w.FC_Solve_init_wrappers_with_module(_my_module);
 
 function _increment_move_indices(move_s) {
     return move_s.replace(/(stack|freecell)( )(\d+)/g,
-        function (match, resource_s, sep_s, digit_s) {
+        function(match, resource_s, sep_s, digit_s) {
             return (resource_s + sep_s +
                 (1 + parseInt(digit_s))
             );
@@ -23,7 +20,7 @@ function _increment_move_indices(move_s) {
 
 class FC_Solve_UI {
     constructor() {
-        var that = this;
+        let that = this;
         that._instance = null;
         that._solve_err_code = null;
         that._was_iterations_count_exceeded = false;
@@ -48,7 +45,7 @@ class FC_Solve_UI {
         return text.replace(/^Move[^\n]+$/mg, _increment_move_indices);
     }
     _process_pristine_output(text) {
-        var that = this;
+        let that = this;
 
         return (that._is_one_based_checked()
             ? that._one_based_process(text)
@@ -56,21 +53,21 @@ class FC_Solve_UI {
         );
     }
     _update_output() {
-        var that = this;
+        let that = this;
 
         that._webui_output_set_text(
             that._process_pristine_output(that._calc_pristine_output())
         );
 
         if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
-            var html = '';
+            let html = '';
 
             html += "<ol>\n";
 
-            var inst = that._instance;
-            var seq = inst._proto_states_and_moves_seq;
+            let inst = that._instance;
+            let seq = inst._proto_states_and_moves_seq;
 
-            var _filt = function(str) {
+            let _filt = function(str) {
                 return that._process_pristine_output(
                     inst.unicode_preprocess(
                         str
@@ -78,41 +75,50 @@ class FC_Solve_UI {
                 );
             };
 
-            var _render_state = function(s) {
-                return "<li class=\"state\"><pre>" + _filt(s.str) + "</pre></li>\n\n";
+            let _render_state = function(s) {
+                return "<li class=\"state\"><pre>" + _filt(s.str) +
+                    "</pre></li>\n\n";
             };
 
-            var _out_state = function(i) {
+            let _out_state = function(i) {
                 html += _render_state(seq[i]);
             };
 
             _out_state(0);
-            for (var i = 1; i < seq.length - 1; i+=2) {
-                html += "<li id=\"move_" + i + "\" class=\"move unexpanded\"><span class=\"mega_move\">" + _filt(seq[i].m.str) + "</span>\n<button id=\"expand_move_" + i + "\" class=\"expand_move\">Expand Move</button>\n</li>\n";
+            for (let i = 1; i < seq.length - 1; i+=2) {
+                html += "<li id=\"move_" + i +
+                    "\" class=\"move unexpanded\">" +
+                    "<span class=\"mega_move\">" + _filt(seq[i].m.str) +
+                    "</span>\n<button id=\"expand_move_" + i +
+                    "\" class=\"expand_move\">Expand Move</button>\n</li>\n";
 
                 _out_state(i+1);
             }
             $("#dynamic_output").html(html);
 
-            $("#dynamic_output").on("click", "button.expand_move", function (event) {
-                var button = $(this);
-                var b_id = button.attr('id');
-                var idx = parseInt(b_id.match(/^expand_move_([0-9]+)$/)[1]);
+            $("#dynamic_output").on("click", "button.expand_move",
+                function(event) {
+                let button = $(this);
+                let b_id = button.attr('id');
+                let idx = parseInt(b_id.match(/^expand_move_([0-9]+)$/)[1]);
 
-                var move_ctl = $("#move_" + idx);
-                var calc_class = 'calced';
+                let move_ctl = $("#move_" + idx);
+                let calc_class = 'calced';
                 if (! move_ctl.hasClass(calc_class)) {
-                    var inner_moves = inst._calc_expanded_move(idx);
+                    let inner_moves = inst._calc_expanded_move(idx);
 
-                    var inner_html = '';
+                    let inner_html = '';
 
                     inner_html += "<ol class=\"inner_moves\">";
 
-                    var _out_inner_move = function(i) {
-                        inner_html += "<li class=\"move\"><span class=\"inner_move\">" + _filt(inner_moves[i].str) + "</span>\n</li>\n";
+                    let _out_inner_move = function(i) {
+                        inner_html += "<li class=\"move\">" +
+                            "<span class=\"inner_move\">" +
+                            _filt(inner_moves[i].str) +
+                            "</span>\n</li>\n";
                         return;
-                    }
-                    for (var i = 0; i < inner_moves.length-1 ; i += 2) {
+                    };
+                    for (let i = 0; i < inner_moves.length-1; i += 2) {
                         _out_inner_move(i);
                         inner_html += _render_state(inner_moves[i+1]);
                     }
@@ -125,7 +131,8 @@ class FC_Solve_UI {
                 }
                 move_ctl.toggleClass("expanded");
                 move_ctl.toggleClass("unexpanded");
-                button.text(move_ctl.hasClass("expanded") ? "Unexpand move" : "Expand move");
+                button.text(move_ctl.hasClass("expanded") ?
+                    "Unexpand move" : "Expand move");
             }
             );
         }
@@ -138,14 +145,14 @@ class FC_Solve_UI {
         return;
     }
     _webui_set_status_callback(myclass, mylabel) {
-        var that = this;
+        let that = this;
 
-        var ctl = $("#fc_solve_status");
+        let ctl = $("#fc_solve_status");
         ctl.removeClass();
         ctl.addClass(myclass);
         ctl.html(base_ui.escapeHtml(mylabel));
 
-        var is_exceed = (myclass == "exceeded");
+        let is_exceed = (myclass == "exceeded");
 
         if (is_exceed) {
             that._was_iterations_count_exceeded = true;
@@ -158,12 +165,12 @@ class FC_Solve_UI {
         return;
     }
     _calc_pristine_output(buffer) {
-        var that = this;
+        let that = this;
 
         if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
-            var _expand = that._is_expanded;
-            var _k = _expand ? 1 : 0;
-            var _o = that._pristine_outputs;
+            let _expand = that._is_expanded;
+            let _k = _expand ? 1 : 0;
+            let _o = that._pristine_outputs;
             return (
                 _o[_k] = (_o[_k] || that._instance.generic_display_sol(
                     {
@@ -172,13 +179,12 @@ class FC_Solve_UI {
                 )
                 )
             );
-        }
-        else {
+        } else {
             return "";
         }
     }
     _webui_set_output(buffer) {
-        var that = this;
+        let that = this;
 
         that._re_enable_output();
 
@@ -187,17 +193,19 @@ class FC_Solve_UI {
         return;
     }
     _enqueue_resume() {
-        var that = this;
+        let that = this;
 
         setTimeout(
-            function() { return that.do_resume(); },
+            function() {
+                return that.do_resume();
+            },
             50
         );
 
         return;
     }
     _handle_err_code() {
-        var that = this;
+        let that = this;
         if (that._solve_err_code == FCS_STATE_WAS_SOLVED ) {
             that._webui_set_output();
         } else if (that._solve_err_code == FCS_STATE_SUSPEND_PROCESS
@@ -208,7 +216,7 @@ class FC_Solve_UI {
         return;
     }
     do_resume() {
-        var that = this;
+        let that = this;
 
         that._solve_err_code = that._instance.resume_solution();
 
@@ -217,8 +225,9 @@ class FC_Solve_UI {
         return;
     }
     _get_string_params() {
-        var text = $("#string_params").val();
-        return ('--game ' + $("#game_type").val() + ' ' + (text.match(/\S/) ? text : ''));
+        let text = $("#string_params").val();
+        return ('--game ' + $("#game_type").val() + ' ' +
+                (text.match(/\S/) ? text : ''));
     }
     _get_cmd_line_preset() {
         return $("#preset").val();
@@ -232,9 +241,9 @@ class FC_Solve_UI {
         return;
     }
     do_solve() {
-        var that = this;
+        let that = this;
 
-        that._pristine_outputs = [null,null];
+        that._pristine_outputs = [null, null];
 
         that._disable_output_display();
         that._was_iterations_count_exceeded = false;
@@ -258,9 +267,9 @@ class FC_Solve_UI {
         return;
     }
     toggle_expand() {
-        var that = this;
+        let that = this;
 
-        var ret = (that._is_expanded = ! that._is_expanded);
+        const ret = (that._is_expanded = ! that._is_expanded);
 
         that._webui_set_output();
 
@@ -269,10 +278,10 @@ class FC_Solve_UI {
 }
 
 function toggle_advanced() {
-    var ctl = $("#fcs_advanced");
+    let ctl = $("#fcs_advanced");
     ctl.toggleClass("disabled");
 
-    var set_text = function (my_text) {
+    const set_text = function(my_text) {
         $("#fcs_advanced_toggle").text(my_text);
     };
 
@@ -284,7 +293,17 @@ function toggle_advanced() {
 }
 
 function _create_bmark_obj() {
-    return new base_ui.FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based', 'unicode_suits', 'string_params', 'game_type', ], show: [{ id: 'fcs_advanced', deps: ['string_params',], callback: toggle_advanced,}, ],});
+    return new base_ui.FC_Solve_Bookmarking({
+        bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based',
+            'unicode_suits', 'string_params', 'game_type',
+        ],
+        show: [{
+            id: 'fcs_advanced',
+            deps: ['string_params'],
+            callback: toggle_advanced,
+        },
+        ],
+    });
 }
 
 function on_bookmarking() {
@@ -295,18 +314,16 @@ function restore_bookmark() {
     return _create_bmark_obj().restore_bookmark();
 }
 
-var fcs_ui = new FC_Solve_UI();
+let fcs_ui = new FC_Solve_UI();
 
 function fc_solve_do_solve() {
     return fcs_ui.do_solve();
 }
 
 function on_toggle_one_based() {
-
     if ($("#output").val()) {
         fcs_ui._update_output();
     }
-
     return;
 }
 
@@ -315,8 +332,7 @@ function clear_output() {
 }
 
 function toggle_expand_moves() {
-
-    var is_expanded = fcs_ui.toggle_expand();
+    const is_expanded = fcs_ui.toggle_expand();
 
     $("#expand_moves_toggle").text(
         is_expanded ? "Unexpand Moves" : "Expand Moves"
@@ -338,5 +354,5 @@ function set_up() {
     $("#fc_solve_bookmark_button").click(on_bookmarking);
 }
 
-    return { set_up: set_up, set_up_handlers: set_up_handlers, };
+    return {set_up: set_up, set_up_handlers: set_up_handlers};
 });

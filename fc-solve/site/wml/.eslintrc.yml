@@ -1,0 +1,10 @@
+extends: google
+parserOptions:
+    ecmaVersion: 7
+rules:
+    camelcase: off
+    new-cap: off
+    no-invalid-this: off
+    no-unused-vars: off
+    quotes: off
+    require-jsdoc: off
