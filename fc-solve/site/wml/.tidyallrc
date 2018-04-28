@@ -1,3 +1,7 @@
+[ESLint]
+select = lib/babel/js/web-fc-solve-ui.js
+argv = -c $ROOT/.eslintrc.yml --color
+
 [PerlTidy]
 select = **/*.{pl,pm,t}
 argv = -ci=4 -bl -cti=0
