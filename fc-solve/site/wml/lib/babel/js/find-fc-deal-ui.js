@@ -217,12 +217,12 @@ function restore_bookmark() {
 function set_up_handlers() {
     $("#populate_input").click(populate_input_with_numbered_deal);
     $("#run_do_solve").click(find_deal_ui);
-    $("#fc_solve_bookmark_button").click(on_bookmarking);
 }
 
 function set_up() {
     restore_bookmark();
     set_up_handlers();
+    $("#fc_solve_bookmark_button").click(on_bookmarking);
 }
 
     return { find_deal_ui: find_deal_ui, set_up: set_up, set_up_handlers: set_up_handlers};
