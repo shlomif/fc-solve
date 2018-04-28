@@ -6,25 +6,8 @@ if (typeof define !== 'function') {
 
 define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2ints'], function (base_ui, w, Module, s2i) {
 
-    var FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
     var _my_module = Module()({});
-    var deal_ms_fc_board = w.deal_ms_fc_board;
-    FC_Solve_init_wrappers_with_module(_my_module);
-
-var entityMap = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': '&quot;',
-    "'": '&#39;',
-    "/": '&#x2F;'
-};
-
-function escapeHtml(string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
-        return entityMap[s];
-    });
-}
+    w.FC_Solve_init_wrappers_with_module(_my_module);
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
@@ -54,7 +37,7 @@ function populate_input_with_numbered_deal() {
     $("#stdin").val(
         "# MS Freecell Deal #" + previous_deal_idx +
         "\n#\n" +
-        deal_ms_fc_board(previous_deal_idx)
+        w.deal_ms_fc_board(previous_deal_idx)
     );
 
     return;
@@ -101,7 +84,7 @@ function restore_bookmark() {
         let ctl = $("#fc_solve_status");
         df.run(1, '8589934591',
             (args) => {
-                ctl.html(escapeHtml("Reached No. " + numberWithCommas(args.start)));
+                ctl.html(base_ui.escapeHtml("Reached No. " + numberWithCommas(args.start)));
                 return;
             }
         );

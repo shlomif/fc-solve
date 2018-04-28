@@ -6,27 +6,10 @@ if (typeof define !== 'function') {
 
 define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min"], function (base_ui, w, Module) {
     var FC_Solve = w.FC_Solve;
-    var FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
     var _my_module = Module()({});
     var FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
     var FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
-    var deal_ms_fc_board = w.deal_ms_fc_board;
-    FC_Solve_init_wrappers_with_module(_my_module);
-
-var entityMap = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': '&quot;',
-    "'": '&#39;',
-    "/": '&#x2F;'
-};
-
-function escapeHtml(string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
-        return entityMap[s];
-    });
-}
+    w.FC_Solve_init_wrappers_with_module(_my_module);
 
 function _increment_move_indices(move_s) {
     return move_s.replace(/(stack|freecell)( )(\d+)/g,
@@ -160,7 +143,7 @@ class FC_Solve_UI {
         var ctl = $("#fc_solve_status");
         ctl.removeClass();
         ctl.addClass(myclass);
-        ctl.html(escapeHtml(mylabel));
+        ctl.html(base_ui.escapeHtml(mylabel));
 
         var is_exceed = (myclass == "exceeded");
 
@@ -314,7 +297,7 @@ function populate_input_with_numbered_deal() {
     $("#stdin").val(
         "# MS Freecell Deal #" + previous_deal_idx +
         "\n#\n" +
-        deal_ms_fc_board(previous_deal_idx)
+        w.deal_ms_fc_board(previous_deal_idx)
     );
 
     return;

@@ -6,6 +6,21 @@ if (typeof define !== 'function') {
 
 define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2ints'], function (w, Module, s2i) {
 
+const entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+};
+
+function escapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+        return entityMap[s];
+    });
+}
+
 class FC_Solve_Bookmarking {
     constructor(args) {
         var that = this;
@@ -100,5 +115,5 @@ class FC_Solve_Bookmarking {
     }
 }
 
-    return { FC_Solve_Bookmarking: FC_Solve_Bookmarking, };
+    return { FC_Solve_Bookmarking: FC_Solve_Bookmarking, escapeHtml: escapeHtml, };
 });
