@@ -268,41 +268,6 @@ class FC_Solve_UI {
     }
 }
 
-
-// Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
-// feature.
-var previous_deal_idx = 1;
-
-function populate_input_with_numbered_deal() {
-
-    var input_s = $('#deal_number').val();
-    /*
-    var new_idx = prompt("Enter MS Freecell deal number:");
-
-    // Prompt returned null (user cancelled).
-    if (! new_idx) {
-        return;
-    }
-
-    previous_deal_idx = parseInt(new_idx);
-    */
-
-    if (! input_s.match(/^[1-9][0-9]*$/)) {
-        alert("Wrong input - please enter a positive integer.");
-        return;
-    }
-
-    previous_deal_idx = parseInt(input_s);
-
-    $("#stdin").val(
-        "# MS Freecell Deal #" + previous_deal_idx +
-        "\n#\n" +
-        w.deal_ms_fc_board(previous_deal_idx)
-    );
-
-    return;
-}
-
 function toggle_advanced() {
     var ctl = $("#fcs_advanced");
     ctl.toggleClass("disabled");
@@ -360,7 +325,7 @@ function toggle_expand_moves() {
 }
 
 function set_up_handlers() {
-    $("#populate_input").click(populate_input_with_numbered_deal);
+    $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
     $("#run_do_solve").click(fc_solve_do_solve);
 }
 

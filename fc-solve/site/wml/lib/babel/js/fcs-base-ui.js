@@ -21,6 +21,27 @@ function escapeHtml(string) {
     });
 }
 
+// Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
+// feature.
+function populate_input_with_numbered_deal() {
+
+    let input_s = $('#deal_number').val();
+    if (! input_s.match(/^[1-9][0-9]*$/)) {
+        alert("Wrong input - please enter a positive integer.");
+        return;
+    }
+
+    let previous_deal_idx = parseInt(input_s);
+
+    $("#stdin").val(
+        "# MS Freecell Deal #" + previous_deal_idx +
+        "\n#\n" +
+        w.deal_ms_fc_board(previous_deal_idx)
+    );
+
+    return;
+}
+
 class FC_Solve_Bookmarking {
     constructor(args) {
         var that = this;
@@ -115,5 +136,5 @@ class FC_Solve_Bookmarking {
     }
 }
 
-    return { FC_Solve_Bookmarking: FC_Solve_Bookmarking, escapeHtml: escapeHtml, };
+    return { FC_Solve_Bookmarking: FC_Solve_Bookmarking, escapeHtml: escapeHtml, populate_input_with_numbered_deal: populate_input_with_numbered_deal, };
 });
