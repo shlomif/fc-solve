@@ -62,7 +62,6 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 </p>
 
-<define-tag removed>
 <div id="fc_solve_bookmark">
 
 <h3 id="bookmark">Bookmark This Form</h3>
@@ -93,8 +92,6 @@ auto-populate the form. This is also useful for reporting problems.
 </div> ;;; end of #fc_solve_bookmark
 
 <hr />
-
-</define-tag>
 
 <h2 id="how_to_use">How to Use</h2>
 
