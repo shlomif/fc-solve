@@ -1,5 +1,5 @@
 [ESLint]
-select = lib/babel/js/web-fc-solve-ui.js
+select = lib/babel/js/fcs-base-ui.js lib/babel/js/web-fc-solve-ui.js
 argv = -c $ROOT/.eslintrc.yml --color
 
 [PerlTidy]
