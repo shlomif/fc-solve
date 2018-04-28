@@ -11,20 +11,20 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
     var deal_ms_fc_board = w.deal_ms_fc_board;
     FC_Solve_init_wrappers_with_module(_my_module);
 
-    var entityMap = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': '&quot;',
-        "'": '&#39;',
-        "/": '&#x2F;'
-    };
+var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+};
 
-    function escapeHtml(string) {
-        return String(string).replace(/[&<>"'\/]/g, function (s) {
-            return entityMap[s];
-        });
-    }
+function escapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+        return entityMap[s];
+    });
+}
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
@@ -214,15 +214,16 @@ function restore_bookmark() {
         resume();
     }
 
-    function set_up_handlers() {
-        $("#populate_input").click(populate_input_with_numbered_deal);
-        $("#run_do_solve").click(find_deal_ui);
-        $("#fc_solve_bookmark_button").click(on_bookmarking);
-    }
+function set_up_handlers() {
+    $("#populate_input").click(populate_input_with_numbered_deal);
+    $("#run_do_solve").click(find_deal_ui);
+    $("#fc_solve_bookmark_button").click(on_bookmarking);
+}
 
-    function set_up() {
-        restore_bookmark();
-        set_up_handlers();
-    }
+function set_up() {
+    restore_bookmark();
+    set_up_handlers();
+}
+
     return { find_deal_ui: find_deal_ui, set_up: set_up, set_up_handlers: set_up_handlers};
 });

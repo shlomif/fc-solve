@@ -8,9 +8,11 @@ define(["web-fc-solve", "libfreecell-solver.min"], function (w, Module) {
     // var Module = f.Module;
     var FC_Solve = w.FC_Solve;
     var FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
+    var _my_module = Module()({});
     var FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
     var FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
     var deal_ms_fc_board = w.deal_ms_fc_board;
+    FC_Solve_init_wrappers_with_module(_my_module);
 
 var entityMap = {
     "&": "&amp;",
@@ -36,9 +38,6 @@ function _increment_move_indices(move_s) {
         }
     );
 }
-
-var _my_module = Module()({});
-FC_Solve_init_wrappers_with_module(_my_module);
 
 class FC_Solve_UI {
     constructor() {
@@ -321,7 +320,6 @@ function populate_input_with_numbered_deal() {
 
     return;
 }
-
 
 class FC_Solve_Bookmarking {
     constructor(args) {
