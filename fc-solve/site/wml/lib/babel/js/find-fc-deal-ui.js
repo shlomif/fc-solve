@@ -8,6 +8,7 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
 
     var FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
     var _my_module = Module()({});
+    var deal_ms_fc_board = w.deal_ms_fc_board;
     FC_Solve_init_wrappers_with_module(_my_module);
     function set_up() {
         set_up_handlers();
@@ -28,6 +29,39 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
         });
     }
 
+// Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
+// feature.
+var previous_deal_idx = 1;
+
+function populate_input_with_numbered_deal() {
+
+    var input_s = $('#deal_number').val();
+    /*
+    var new_idx = prompt("Enter MS Freecell deal number:");
+
+    // Prompt returned null (user cancelled).
+    if (! new_idx) {
+        return;
+    }
+
+    previous_deal_idx = parseInt(new_idx);
+    */
+
+    if (! input_s.match(/^[1-9][0-9]*$/)) {
+        alert("Wrong input - please enter a positive integer.");
+        return;
+    }
+
+    previous_deal_idx = parseInt(input_s);
+
+    $("#stdin").val(
+        "# MS Freecell Deal #" + previous_deal_idx +
+        "\n#\n" +
+        deal_ms_fc_board(previous_deal_idx)
+    );
+
+    return;
+}
     // Taken from https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
     // thanks.
     const numberWithCommas = (x) => {
@@ -63,6 +97,7 @@ define(["web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2in
     }
 
     function set_up_handlers() {
+        $("#populate_input").click(populate_input_with_numbered_deal);
         $("#run_do_solve").click(find_deal_ui);
     }
 

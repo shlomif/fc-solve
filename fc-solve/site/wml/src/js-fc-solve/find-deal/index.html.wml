@@ -20,6 +20,7 @@ card solitaire game. <span class="enable_js">Please enable
 
 <ul>
 <li><a href="#fc_solve_tabs__ms">Find MS Deal</a></li>
+<li><a href="#fc_solve_tabs__numbered_deal">Test find a Numbered Deal</a></li>
 </ul>
 
 
@@ -39,6 +40,19 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 </div> ;;; end of fcs_common
 
 </div> ;;; end of fc_solve_tabs__any_board
+
+<div id="fc_solve_tabs__numbered_deal" class="tab">
+
+<p class="first">
+<label for="deal_number">Enter an MS Freecell Deal:</label>
+<input type="text" id="deal_number" size="12" />
+<button id="populate_input" title="Populate Input with a Windows Freecell Numbered Deal">Populate</button><br />
+</p>
+
+<div class="fcs_common">
+</div>
+
+</div> ;;; end of fc_solve_tabs__numbered_deal
 
 </div>
 
