@@ -1,10 +1,8 @@
-SHELL = /bin/bash
-
 all: dummy
 
+include lib/make/shlomif_common.mak
 include lib/make/rules.mak
 include lib/make/include.mak
-include lib/make/shlomif_common.mak
 
 WITH_DEVEL_VERSION = 1
 
@@ -56,12 +54,8 @@ INCLUDES = $(addprefix lib/,$(INCLUDES_PROTO))
 # SUBDIRS_WITH_INDEXES = $(WIN32_BUILD_SUBDIRS)
 #
 SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
-
 INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
-
-COMMON_PREPROC_FLAGS = -I $$HOME/conf/wml/Latemp/lib -I../lib
-LATEMP_WML_FLAGS := $(shell latemp-config --wml-flags)
 
 TTML_FLAGS += $(COMMON_PREPROC_FLAGS)
 WML_FLAGS += $(COMMON_PREPROC_FLAGS)
