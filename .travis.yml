@@ -24,7 +24,7 @@ install:
     - tar -xvf libtap-1.12.0.tar.bz2
     - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )
     - ( a="$(pwd)"; mkdir B2 && cd B2 && hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules && cd shlomif-cmake-modules/shlomif-cmake-modules && cp -f "$(pwd)"/Shlomif_Common.cmake "$a"/fc-solve/source/cmake/ )
-    - ( cd fc-solve/site/wml && npm install babel-cli babel-preset-es2015 babel-preset-stage-2 big-integer browserify eslint eslint-config-google qunit-cli requirejs typings uglify-es )
+    - ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
     # For the site
     - gem install sass compass compass-blueprint
 perl:
