@@ -1,19 +1,15 @@
 "use strict";
 
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-
-define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min", 'dist/fc_solve_find_index_s2ints'], function (base_ui, w, Module, s2i) {
-
-    var _my_module = Module()({});
+define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min",
+    'dist/fc_solve_find_index_s2ints'], function(base_ui, w, Module, s2i) {
+    let _my_module = Module()({});
     w.FC_Solve_init_wrappers_with_module(_my_module);
 
 function toggle_advanced() {
-    var ctl = $("#fcs_advanced");
+    let ctl = $("#fcs_advanced");
     ctl.toggleClass("disabled");
 
-    var set_text = function (my_text) {
+    function set_text(my_text) {
         $("#fcs_advanced_toggle").text(my_text);
     };
 
@@ -25,7 +21,10 @@ function toggle_advanced() {
 }
 
 function _create_bmark_obj() {
-    return new base_ui.FC_Solve_Bookmarking({ bookmark_controls: ['stdin', 'deal_number',], show: [],});
+    return new base_ui.FC_Solve_Bookmarking({
+        bookmark_controls: ['stdin', 'deal_number'],
+        show: [],
+    });
 }
 
 function on_bookmarking() {
@@ -42,15 +41,21 @@ function restore_bookmark() {
     };
 
     function find_deal_ui() {
-        const deal_str = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '').replace(/\r+\n/, "\n").replace(/([^\n])$/, "$1\n");
+        const deal_str = $("#stdin").val().replace(/#[^\r\n]*\r?\n?/g, '').
+            replace(/\r+\n/, "\n").replace(/([^\n])$/, "$1\n");
         const ints = s2i.find_index__board_string_to_ints(deal_str);
-        const ints_s = ints.map((i) => { let ret = i.toString(); return " ".repeat(10-ret.length) + ret; }).join('');
+        const ints_s = ints.map((i) => {
+            let ret = i.toString();
+            return " ".repeat(10-ret.length) + ret;
+        }).join('');
         let df = new w.Freecell_Deal_Finder({});
         df.fill(ints_s);
         let ctl = $("#fc_solve_status");
         df.run(1, '8589934591',
             (args) => {
-                ctl.html(base_ui.escapeHtml("Reached No. " + numberWithCommas(args.start)));
+                ctl.html(base_ui.escapeHtml(
+                    "Reached No. " + numberWithCommas(args.start)
+                ));
                 return;
             }
         );
@@ -60,7 +65,9 @@ function restore_bookmark() {
             if (ret_Deal.found) {
                 ctl.html("Found " + ret_Deal.result.toString());
             } else if (ret_Deal.cont) {
-                setTimeout(() => { resume(); }, 1);
+                setTimeout(() => {
+                    resume();
+                }, 1);
             } else {
                 ctl.html("No such deal");
             }
@@ -80,5 +87,9 @@ function set_up() {
     $("#fc_solve_bookmark_button").click(on_bookmarking);
 }
 
-    return { find_deal_ui: find_deal_ui, set_up: set_up, set_up_handlers: set_up_handlers};
+    return {
+        find_deal_ui: find_deal_ui,
+        set_up: set_up,
+        set_up_handlers: set_up_handlers,
+    };
 });
