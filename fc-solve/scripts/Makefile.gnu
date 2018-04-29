@@ -20,7 +20,7 @@ ifeq ($(FREECELL_ONLY),1)
 	DISABLE_SIMPLE_SIMON := 1
 endif
 
-CFLAGS := -I$(PWD) -I$(SRC_DIR) -I$(SRC_DIR)/patsolve-shlomif/patsolve -I$(SRC_DIR)/xxHash-wrapper -I$(SRC_DIR)/xxHash-wrapper/xxHash-0.6.4 -D_GNU_SOURCE
+CFLAGS := -I$(PWD) -I$(SRC_DIR) -I$(SRC_DIR)/patsolve/patsolve -I$(SRC_DIR)/xxHash-wrapper -I$(SRC_DIR)/xxHash-wrapper/xxHash-0.6.4 -D_GNU_SOURCE
 GCC_COMPAT :=
 INIT_CFLAGS := -Wp,-MD,.deps/$(*F).pp
 
@@ -241,7 +241,7 @@ $(SOURCE_OBJECTS) $(MAIN_OBJECT) $(T_MAIN_OBJECT) $(THR_MAIN_OBJECT) $(FORK_MAIN
 $(GEN_C_OBJECTS): %.o: %.c
 	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $(PWD)/$< $(END_OFLAGS)
 
-$(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve-shlomif/patsolve/%.c
+$(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve/patsolve/%.c
 	$(CC) $(INIT_CFLAGS) -c $(CFLAGS) -o $@ $< $(END_OFLAGS)
 
 STATIC_LIB_BASE = fcs

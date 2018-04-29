@@ -13,7 +13,7 @@ RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 EMBED_FILE_MUNGE_PL = $(SRC_DIR)/../scripts/emscripten-embed-munge.pl
 
-PATS_C_FILES = $(patsubst %,patsolve-shlomif/patsolve/%,param.c pat.c patsolve.c tree.c)
+PATS_C_FILES = $(patsubst %,patsolve/patsolve/%,param.c pat.c patsolve.c tree.c)
 
 LIB_C_FILES = \
 board_gen/find_deal.c \
@@ -87,7 +87,7 @@ OPT_FLAGS = -O3
 # OPT_FLAGS = -O1
 # OPT_FLAGS =
 
-CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve-shlomif/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.6.4 -I $(CMAKE_DIR) -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
+CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.6.4 -I $(CMAKE_DIR) -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
 
 # ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =

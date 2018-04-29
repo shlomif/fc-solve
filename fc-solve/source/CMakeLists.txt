@@ -36,9 +36,9 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "^${PROJECT_SOURCE_DIR}/scripts/ids-whitelist(\\\\.txt)?"
     "/(build|BUILD|B)/"
     "/Presets/testing-presets"
-    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/(\\\\.(git|hg)|appveyor|\\\\.travis|CI-testing)"
-    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(OLD|Rejects|cmake|ga|patsolve-specific|t/)"
-    "^${PROJECT_SOURCE_DIR}/patsolve-shlomif/patsolve/(CMakeLists\\\\.txt|COPYING|Manifest|Parameters|check_layout|config\\\\.h\\\\.in|convert_[a-z]+|fc-solve\\\\.ico|dondorf-king\\\\.bmp|threaded_main\\\\.c|patmain\\\\.c|run-tests\\\\.pl|read_layout\\\\.h|print_layout\\\\.h)$"
+    "^${PROJECT_SOURCE_DIR}/patsolve/(\\\\.(git)|appveyor|\\\\.travis|CI-testing)"
+    "^${PROJECT_SOURCE_DIR}/patsolve/patsolve/(OLD|Rejects|cmake|ga|patsolve-specific|t/)"
+    "^${PROJECT_SOURCE_DIR}/patsolve/patsolve/(CMakeLists\\\\.txt|COPYING|Manifest|Parameters|check_layout|config\\\\.h\\\\.in|convert_[a-z]+|fc-solve\\\\.ico|dondorf-king\\\\.bmp|threaded_main\\\\.c|patmain\\\\.c|run-tests\\\\.pl|read_layout\\\\.h|print_layout\\\\.h)$"
     "^${PROJECT_SOURCE_DIR}/xxHash-wrapper/(\\\\.git)"
 )
 
@@ -176,7 +176,7 @@ IF (FCS_ENABLE_RCS_STATES)
 ENDIF ()
 
 # Clone the patsolve repository with the appropriate branch.
-SET (pats_dir "patsolve-shlomif")
+SET (pats_dir "patsolve")
 
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
     EXECUTE_PROCESS(COMMAND "git" "clone" "https://github.com/shlomif/patsolve.git" "${pats_dir}"
