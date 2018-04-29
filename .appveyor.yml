@@ -85,4 +85,3 @@ artifacts:
       name: Freecell Solver Win32 Package
     - path: 'fc-solve\pkg-build-win64\freecell-solver-*-win64.exe'
       name: Freecell Solver Win64 Package
-
