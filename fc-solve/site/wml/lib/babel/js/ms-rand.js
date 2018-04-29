@@ -7,7 +7,7 @@
  * */
 class MSRand {
     constructor(args) {
-        var that = this;
+        let that = this;
         that.gamenumber = args.gamenumber;
         that.rander = fc_solve__hll_ms_rand__get_singleton();
         fc_solve__hll_ms_rand__init(that.rander, "" + that.gamenumber);
@@ -18,10 +18,10 @@ class MSRand {
     }
     shuffle(deck) {
         if (deck.length) {
-            var i = deck.length;
+            let i = deck.length;
             while (--i) {
-                var j = this.max_rand(i+1);
-                var tmp = deck[i];
+                const j = this.max_rand(i+1);
+                const tmp = deck[i];
                 deck[i] = deck[j];
                 deck[j] = tmp;
             }
