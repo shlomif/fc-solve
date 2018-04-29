@@ -414,7 +414,7 @@ class FC_Solve {
             );
         }
         unicode_preprocess(out_buffer) {
-            var that = this;
+            let that = this;
 
             if (! that.is_unicode_cards) {
                 return out_buffer;
@@ -423,7 +423,7 @@ class FC_Solve {
             return that._replace_found(that._replace_card(out_buffer));
         }
         _calc_states_and_moves_seq() {
-            var that = this;
+            let that = this;
 
             if (that._pre_expand_states_and_moves_seq) {
                 return;
@@ -431,36 +431,50 @@ class FC_Solve {
 
             // A sequence to hold the moves and states for post-processing,
             // such as expanding multi-card moves.
-            var states_and_moves_sequence = [];
+            let states_and_moves_sequence = [];
 
-            var _out_state = function(s) {
-                states_and_moves_sequence.push({ type: 's', str: s});
+            function _out_state(s) {
+                states_and_moves_sequence.push({type: 's', str: s});
             };
 
-            var get_state_str = function () {
-                freecell_solver_user_current_state_stringify(that.obj, that._state_string_buffer, 1, 0, 1);
+            function get_state_str() {
+                freecell_solver_user_current_state_stringify(
+                    that.obj, that._state_string_buffer, 1, 0, 1
+                );
 
                 return fc_solve_Pointer_stringify(that._state_string_buffer);
             };
 
-            _out_state (get_state_str() );
+            _out_state(get_state_str());
 
-            var move_ret_code;
+            let move_ret_code;
             // 128 bytes are enough to hold a move.
-            var move_buffer = alloc_wrap(128, "a buffer for the move", "maven");
-            while ((move_ret_code = freecell_solver_user_get_next_move(that.obj, move_buffer)) == 0) {
-                var state_as_string = get_state_str();
-                freecell_solver_user_stringify_move_ptr(that.obj, that._move_string_buffer, move_buffer, 0);
-                var move_as_string = fc_solve_Pointer_stringify(that._move_string_buffer);
+            const move_buffer = alloc_wrap(
+                128, "a buffer for the move", "maven");
+            while ((move_ret_code = freecell_solver_user_get_next_move(
+                that.obj, move_buffer)) == 0) {
+                const state_as_string = get_state_str();
+                freecell_solver_user_stringify_move_ptr(
+                    that.obj, that._move_string_buffer, move_buffer, 0);
+                const move_as_string = fc_solve_Pointer_stringify(
+                    that._move_string_buffer);
 
-                states_and_moves_sequence.push({ type: 'm', m: { type: 'm', str: move_as_string}, exp: null, is_exp: false});
+                states_and_moves_sequence.push({
+                    type: 'm',
+                    m: {
+                        type: 'm',
+                        str: move_as_string,
+                    },
+                    exp: null,
+                    is_exp: false,
+                });
                 _out_state(state_as_string);
             }
 
             that._proto_states_and_moves_seq = states_and_moves_sequence;
             that._pre_expand_states_and_moves_seq =
                 states_and_moves_sequence.map(
-                    function (item) {
+                    function(item) {
                         return (item.type == 'm' ? item.m : item);
                     }
                 );
@@ -478,9 +492,9 @@ class FC_Solve {
             return;
         }
         _calc_expanded_move(idx) {
-            var that = this;
+            let that = this;
 
-            var states_and_moves_sequence = that._proto_states_and_moves_seq;
+            let states_and_moves_sequence = that._proto_states_and_moves_seq;
 
             if (! states_and_moves_sequence[idx].exp) {
                 states_and_moves_sequence[idx].exp =
