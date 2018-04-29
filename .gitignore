@@ -77,6 +77,8 @@
 /fc-solve/site/wml/lib/transcrypt_module/src/__javascript__/
 /fc-solve/site/wml/lib/transcrypt_module/src/fc_solve_find_index_s2ints.py
 /fc-solve/site/wml/libfreecell-solver.js.mem
+/fc-solve/site/wml/node_modules
+/fc-solve/site/wml/package-lock.json
 /fc-solve/site/wml/rules.mak
 /fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings
 /fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings.json
