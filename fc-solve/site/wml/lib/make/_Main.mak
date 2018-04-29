@@ -17,6 +17,10 @@ SKIP_EMCC = 0
 
 D = ./dest
 
+define DEF_WML_PATH
+fn="$$PWD/$@" ;
+endef
+
 #D = /home/httpd/html/ip-noise
 
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
@@ -167,8 +171,7 @@ $(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
 	cat "$<" | perl -0777 -lapE 's#<table #<table summary="identifiers on the left, descriptions on the right" #g' > "$@"
 
 $(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml $(INCLUDES)
-	WML_LATEMP_PATH="$$(perl -MFile::Spec -e 'print File::Spec->rel2abs(shift)' '$@')" ; \
-	(cd src && wml -o "$${WML_LATEMP_PATH}" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
+	$(call DEF_WML_PATH) (cd src && wml -o "$$fn" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
 
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@
