@@ -13,40 +13,42 @@
  * */
 
 function deal_ms_fc_board(seed) {
-    var randomizer = new MSRand({ gamenumber: seed });
-    var num_cols = 8;
+    let randomizer = new MSRand({gamenumber: seed});
+    const num_cols = 8;
 
-    var _perl_range = function(start, end) {
-        var ret = [];
+    function _perl_range(start, end) {
+        let ret = [];
 
-        for (var i = start; i <= end; i++) {
+        for (let i = start; i <= end; i++) {
             ret.push(i);
         }
 
         return ret;
     };
 
-    var columns = _perl_range(0, num_cols-1).map(function () { return []; });
-    var deck = _perl_range(0, 4*13-1);
+    let columns = _perl_range(0, num_cols-1).map(function() {
+        return [];
+    });
+    let deck = _perl_range(0, 4*13-1);
 
     randomizer.shuffle(deck);
 
-    deck = deck.reverse()
+    deck = deck.reverse();
 
-    for (var i = 0; i < 52; i++) {
+    for (let i = 0; i < 52; i++) {
         columns[i % num_cols].push(deck[i]);
     }
 
-    var render_card = function (card) {
-        var suit = (card % 4);
-        var rank = Math.floor(card / 4);
+    let render_card = function(card) {
+        const suit = (card % 4);
+        const rank = Math.floor(card / 4);
 
         return "A23456789TJQK".charAt(rank) + "CDHS".charAt(suit);
-    }
+    };
 
-    var render_column = function(col) {
+    let render_column = function(col) {
         return ": " + col.map(render_card).join(" ") + "\n";
-    }
+    };
 
     return columns.map(render_column).join("");
 }
