@@ -18,6 +18,11 @@
 3. `make test`
 4. `make PROD=1`
 
+To upload, use:
+
+1. `make upload`
+2. `make PROD=1 upload`
+
 ## Assets.
 
 The assets (downloads/tarballs/etc.) for this site are kept in a
