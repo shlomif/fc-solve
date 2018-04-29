@@ -73,10 +73,11 @@ test_script:
     - perl ../source/Tatzer -G "MinGW Makefiles" -l pysol_defs --notest-suite -r --prefix=c:\fcs-pysol
     - gmake install
     - 7z a fc-solve-for-pysol.zip c:/fcs-pysol
-cache:
-    - C:\libtap -> appveyor.yml
-    - C:\_P5 -> appveyor.yml
-    - C:\strawberry -> appveyor.yml
+# Disabling due to cache invalidation problems
+# cache:
+#     - C:\libtap -> .appveyor.yml
+#     - C:\_P5 -> .appveyor.yml
+#     - C:\strawberry -> .appveyor.yml
 shallow_clone: true
 artifacts:
     - path: 'fc-solve\pkg-build\fc-solve-for-pysol.zip'
