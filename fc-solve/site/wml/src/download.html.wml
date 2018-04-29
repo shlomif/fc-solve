@@ -161,7 +161,9 @@ up-and-running.
 <ul>
 
 <li>
-<link_to_download_file "patsolve-shlomif-3.0.3.tar.bz2" />
+<link_to_download_file "patsolve-shlomif-3.0.3.tar.bz2" /> -
+see <a href="https://github.com/shlomif/patsolve">the git repository</a>
+for a more up-to-date version.
 </li>
 
 <li>

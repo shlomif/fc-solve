@@ -372,13 +372,17 @@ We have competition. But there's nothing wrong with competition. ;-)
 <ul>
 <li id="patsolve">
 <p>
-<a href="https://bitbucket.org/shlomif/patsolve-shlomif">patsolve</a> -
+<a href="https://github.com/shlomif/patsolve">patsolve</a> -
 an ANSI C program that automatically solves games of Freecell and Seahaven
 Towers. The open source code is available - originally under the GPL,
-but later converted into the MIT/Expat licence, in hope of future integration
+but later converted into the MIT/Expat licence, in hope of a future integration
 with Freecell Solver. Its author, Tom Holroyd, and I discussed Freecell
 solving for quite a few E-mail transactions, before I established the
 mailing-list.
+</p>
+<p>
+Note that I later modified the code and integrated it with the Freecell
+Solver code-base.
 </p>
 </li>
 
