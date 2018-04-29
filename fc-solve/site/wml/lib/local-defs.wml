@@ -1,5 +1,7 @@
 <: use Carp::Always; :>
 
+<set-var latemp_server=fc-solve />
+<set-var host="<latemp_default_val "<get-var latemp_server />" "$(LATEMP_SERVER)" />" />
 <set-var latemp_html_standard="xhtml1.1" />
 <set-var latemp_with_breadcrumbs_trail="" />
 <set-var latemp_with_head_meta_tags="1" />
