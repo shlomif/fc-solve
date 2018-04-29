@@ -80,8 +80,8 @@ DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(D)/js/libfreecell-solver.js
 DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(D)/js $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .)
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
-BASE_BIGINT_JS = big-integer.js
-DEST_BIGINT_JS = $(D)/js/$(BASE_BIGINT_JS)
+BASE_BIGINT_JS = big-integer.js qunit.js
+DEST_BIGINT_JS = $(patsubst %,$(D)/js/%,$(BASE_BIGINT_JS))
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
@@ -117,13 +117,14 @@ dummy: $(FIND_INDEX__PYJS__TARGETS)
 
 dummy: $(DEST_BIGINT_JS)
 
-OUT_BIGINT_JS = lib/out-babel/js/$(BASE_BIGINT_JS)
+OUT_PREF = lib/out-babel/js
+OUT_BIGINT_JS = $(patsubst %,$(OUT_PREF)/%,$(BASE_BIGINT_JS))
 
-$(DEST_BIGINT_JS): $(OUT_BIGINT_JS)
+$(DEST_BIGINT_JS): $(D)/js/%: $(OUT_PREF)/%
 	$(MULTI_YUI) -o $@ $<
 
-$(OUT_BIGINT_JS):
-	browserify -s big-integer -r big-integer -o $@
+$(OUT_BIGINT_JS): %:
+	base="$(patsubst $(OUT_PREF)/%.js,%,$@)" ; browserify -s "$$base" -r "$$base" -o $@
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
