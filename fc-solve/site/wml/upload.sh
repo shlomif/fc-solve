@@ -3,7 +3,6 @@
 RSYNC="rsync --progress --verbose --rsh=ssh -r"
 
 make
-BERLIOS=BERLIOS make
 stable_ver="`./get-recent-stable-version.sh`"
 pushd .
 cd ./dest

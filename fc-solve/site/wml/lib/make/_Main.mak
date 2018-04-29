@@ -16,7 +16,6 @@ PROD = 0
 SKIP_EMCC = 0
 
 D = ./dest
-WML_FLAGS = -DBERLIOS=BERLIOS
 
 #D = /home/httpd/html/ip-noise
 
@@ -26,17 +25,13 @@ UPLOAD_URL = $(TEMP_UPLOAD_URL)
 ifeq ($(PROD),1)
 
 	D = ./dest-prod
-
 	WML_FLAGS += -DPRODUCTION=1
-
 	UPLOAD_URL = hostgator:domains/fc-solve/public_html
 
 endif
 
 IMAGES_PRE1 = $(SRC_IMAGES)
 IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
-
-# WML_FLAGS = -DBERLIOS=BERLIOS
 
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
