@@ -239,7 +239,7 @@ FCS_VALID_DEST = $(D)/js/fcs-validate.js
 
 TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts src/js/typings/index.d.ts
 
-DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js
+DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js $(D)/js/web-fc-solve-tests.js
 OUT_BABEL_JSES = $(patsubst $(D)/js/%,lib/out-babel/js/%,$(DEST_BABEL_JSES))
 
 all: $(TYPINGS) $(DEST_BABEL_JSES)
