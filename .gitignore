@@ -48,7 +48,6 @@
 /fc-solve/site/wml/bin/translate-Vered-XML
 /fc-solve/site/wml/dest
 /fc-solve/site/wml/dest-prod
-/fc-solve/site/wml/include.mak
 /fc-solve/site/wml/lib/Inc/cpan_dists.wml
 /fc-solve/site/wml/lib/Shlomif/Spelling/Check.pm
 /fc-solve/site/wml/lib/Shlomif/Spelling/Iface.pm
@@ -69,6 +68,8 @@
 /fc-solve/site/wml/lib/for-node/js/dist/fc_solve_find_index_s2ints.js
 /fc-solve/site/wml/lib/for-node/libfreecell-solver.js.mem
 /fc-solve/site/wml/lib/make/build-deps/build-deps.mak
+/fc-solve/site/wml/lib/make/include.mak
+/fc-solve/site/wml/lib/make/rules.mak
 /fc-solve/site/wml/lib/make/shlomif_common.mak
 /fc-solve/site/wml/lib/out-babel/js/*.js
 /fc-solve/site/wml/lib/pyjs/find-index-s2ints/output/
@@ -79,7 +80,6 @@
 /fc-solve/site/wml/libfreecell-solver.js.mem
 /fc-solve/site/wml/node_modules
 /fc-solve/site/wml/package-lock.json
-/fc-solve/site/wml/rules.mak
 /fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings
 /fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings.json
 /fc-solve/site/wml/src/js/typings

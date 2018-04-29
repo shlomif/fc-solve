@@ -2,8 +2,8 @@ SHELL = /bin/bash
 
 all: dummy
 
-include rules.mak
-include include.mak
+include lib/make/rules.mak
+include lib/make/include.mak
 include lib/make/shlomif_common.mak
 
 WITH_DEVEL_VERSION = 1
