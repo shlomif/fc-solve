@@ -1,8 +1,12 @@
 "use strict";
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
+function mydef(x, y) {
+    if (typeof define !== 'function') {
+        return require('amdefine')(module)(x, y);
+    } else {
+        return define(x, y);
+    }
 }
-define(["web-fc-solve--expand-moves", 'big-integer'],
+mydef(["web-fc-solve--expand-moves", 'big-integer'],
     function(expand, bigInt) {
     let fc_solve_expand_move = expand.fc_solve_expand_move;
 
