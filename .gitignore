@@ -63,7 +63,7 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js.mem
 /fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
-/fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve-shlomif/patsolve/*.bc
+/fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve/patsolve/*.bc
 /fc-solve/site/wml/lib/for-node/js/*.js
 /fc-solve/site/wml/lib/for-node/js/dist/fc_solve_find_index_s2ints.js
 /fc-solve/site/wml/lib/for-node/libfreecell-solver.js.mem
@@ -113,7 +113,7 @@
 /fc-solve/source/fc-solve.xml
 /fc-solve/source/freecell-solver.spec
 /fc-solve/source/ids.txt
-/fc-solve/source/patsolve-shlomif
+/fc-solve/source/patsolve
 /fc-solve/source/scripts/ids-whitelist.txt
 /fc-solve/source/t/lib/FC_Solve/__pycache__
 /fc-solve/source/t/lib/TAP/__pycache__
