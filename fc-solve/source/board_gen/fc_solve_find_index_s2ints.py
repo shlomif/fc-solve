@@ -73,7 +73,7 @@ def ms_rearrange(cards):
 
 
 def find_index__board_string_to_ints(content):
-    if content[-1] != '\n':
+    if len(content) > 0 and content[-1] != '\n':
         content += '\n'
 
     rank_s = 'A23456789TJQK'

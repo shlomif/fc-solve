@@ -461,7 +461,7 @@ def find_index_main(args, find_ret):
     output_to_stdout = True
     output_fn = None
     is_ms = False
-    while args[1][0] == '-':
+    while len(args) >= 2 and args[1][0] == '-':
         if args[1] == "-o":
             args.pop(1)
             if not len(args):
