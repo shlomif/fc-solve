@@ -15,12 +15,6 @@ SKIP_EMCC = 0
 
 D = ./dest
 
-define DEF_WML_PATH
-fn="$$PWD/$@" ;
-endef
-
-#D = /home/httpd/html/ip-noise
-
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
