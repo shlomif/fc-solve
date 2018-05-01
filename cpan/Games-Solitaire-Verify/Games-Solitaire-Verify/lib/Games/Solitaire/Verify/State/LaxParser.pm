@@ -10,8 +10,6 @@ states (or positions) of the entire board.
 
 =cut
 
-our $VERSION = '0.1701';
-
 use parent 'Games::Solitaire::Verify::State';
 
 sub _from_string

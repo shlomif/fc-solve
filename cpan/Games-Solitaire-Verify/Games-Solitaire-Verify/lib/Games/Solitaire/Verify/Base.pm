@@ -9,10 +9,6 @@ Games::Solitaire::Verify::Base - a base class.
 
 =cut
 
-use vars qw($VERSION);
-
-$VERSION = '0.1701';
-
 use Class::XSAccessor;
 
 =head1 SYNOPSIS

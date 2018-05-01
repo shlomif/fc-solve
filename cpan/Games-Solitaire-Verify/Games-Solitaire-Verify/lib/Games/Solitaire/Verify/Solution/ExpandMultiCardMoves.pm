@@ -11,8 +11,6 @@ moves.
 
 =cut
 
-our $VERSION = '0.1701';
-
 use parent 'Games::Solitaire::Verify::Solution::Base';
 
 # TODO : Merge with lib/Games/Solitaire/Verify/Solution.pm

@@ -10,8 +10,6 @@ columns that are composed of a sequence of cards.
 
 =cut
 
-our $VERSION = '0.1701';
-
 use parent 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::Exception;

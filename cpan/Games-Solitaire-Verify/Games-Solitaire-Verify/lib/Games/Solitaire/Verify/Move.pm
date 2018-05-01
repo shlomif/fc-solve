@@ -8,13 +8,7 @@ use strict;
 Games::Solitaire::Verify::Move - a class wrapper for an individual
 Solitaire move.
 
-=head1 VERSION
-
-Version 0.01
-
 =cut
-
-our $VERSION = '0.1701';
 
 use parent 'Games::Solitaire::Verify::Base';
 

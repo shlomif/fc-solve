@@ -12,8 +12,6 @@ of Freecell Solver (or a similar solve)
 
 =cut
 
-our $VERSION = '0.1701';
-
 use parent 'Games::Solitaire::Verify::Solution::Base';
 
 use Games::Solitaire::Verify::Exception;

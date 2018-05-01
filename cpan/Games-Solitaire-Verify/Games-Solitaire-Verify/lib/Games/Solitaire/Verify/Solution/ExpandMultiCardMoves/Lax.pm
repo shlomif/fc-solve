@@ -12,8 +12,6 @@ laxer expansion.
 
 =cut
 
-our $VERSION = '0.1701';
-
 sub _assign_read_new_state
 {
     my ($self, $str) = @_;

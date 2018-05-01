@@ -10,10 +10,6 @@ classes for G::S::Verify.
 
 =cut
 
-use vars qw($VERSION);
-
-$VERSION = '0.1701';
-
 use Exception::Class (
     'Games::Solitaire::Verify::Exception',
     'Games::Solitaire::Verify::Exception::Parse' =>
