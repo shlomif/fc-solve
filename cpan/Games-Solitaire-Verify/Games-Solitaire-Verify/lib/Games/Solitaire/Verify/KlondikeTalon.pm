@@ -17,12 +17,16 @@ use Games::Solitaire::Verify::Card;
 
 use List::Util qw(first);
 
-__PACKAGE__->mk_acc_ref([qw(
-    _max_num_redeals
-    _num_redeals_so_far
-    _undealt_cards
-    _waste
-    )]);
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            _max_num_redeals
+            _num_redeals_so_far
+            _undealt_cards
+            _waste
+            )
+    ]
+);
 
 =head1 SYNOPSIS
 
@@ -37,19 +41,15 @@ __PACKAGE__->mk_acc_ref([qw(
 sub _input_from_string
 {
     my $self = shift;
-    my $str = shift;
+    my $str  = shift;
 
-    if (my ($cards_str) = ($str =~ /\ATalon: (.*)\z/ms))
+    if ( my ($cards_str) = ( $str =~ /\ATalon: (.*)\z/ms ) )
     {
         $self->_undealt_cards(
             [
-                map { Games::Solitaire::Verify::Card->new(
-                    {
-                        string => $_,
-                    }
-                )
-                }
-                split /\s+/, $cards_str
+                map { Games::Solitaire::Verify::Card->new( { string => $_, } ) }
+                    split /\s+/,
+                $cards_str
             ]
         );
     }
@@ -61,20 +61,18 @@ sub _input_from_string
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    $self->_max_num_redeals(
-        $args->{max_num_redeals}
-    );
+    $self->_max_num_redeals( $args->{max_num_redeals} );
 
     $self->_num_redeals_so_far(0);
 
-    $self->_undealt_cards([]);
-    $self->_waste([]);
+    $self->_undealt_cards( [] );
+    $self->_waste(         [] );
 
-    if (exists($args->{string}))
+    if ( exists( $args->{string} ) )
     {
-        $self->_input_from_string($args->{string});
+        $self->_input_from_string( $args->{string} );
     }
 
     return;
@@ -90,12 +88,12 @@ sub draw
 {
     my $self = shift;
 
-    if (! @{ $self->_undealt_cards() })
+    if ( !@{ $self->_undealt_cards() } )
     {
         die "Cannot draw.";
     }
 
-    push @{$self->_waste()}, shift( @{$self->_undealt_cards()} );
+    push @{ $self->_waste() }, shift( @{ $self->_undealt_cards() } );
 
     return;
 }
@@ -110,12 +108,12 @@ sub extract_top
 {
     my $self = shift;
 
-    if (! @{ $self->_waste() })
+    if ( !@{ $self->_waste() } )
     {
         die "Cannot extract_top.";
     }
 
-    return pop(@{$self->_waste()});
+    return pop( @{ $self->_waste() } );
 }
 
 =head2 $self->redeal()
@@ -128,21 +126,21 @@ sub redeal
 {
     my $self = shift;
 
-    if (@{$self->_undealt_cards()})
+    if ( @{ $self->_undealt_cards() } )
     {
         die "Cannot redeal while there are remaining cards.";
     }
 
-    if ($self->_num_redeals_so_far() == $self->_max_num_redeals())
+    if ( $self->_num_redeals_so_far() == $self->_max_num_redeals() )
     {
         die "Cannot redeal because maximal number exceeded.";
     }
 
-    $self->_num_redeals_so_far($self->_num_redeals_so_far() + 1);
+    $self->_num_redeals_so_far( $self->_num_redeals_so_far() + 1 );
 
-    push @{$self->_undealt_cards()}, @{$self->_waste()};
+    push @{ $self->_undealt_cards() }, @{ $self->_waste() };
 
-    $self->_waste([]);
+    $self->_waste( [] );
 
     return;
 }
@@ -157,12 +155,9 @@ sub to_string
 {
     my $self = shift;
 
-    return join(" ", "Talon:",
-        (map { $_->fast_s() } reverse @{$self->_waste()}),
-        '==>',
-        (map { $_->fast_s() } @{$self->_undealt_cards()}),
-        '<==',
-    );
+    return join( " ",
+        "Talon:", ( map { $_->fast_s() } reverse @{ $self->_waste() } ),
+        '==>', ( map { $_->fast_s() } @{ $self->_undealt_cards() } ), '<==', );
 }
 
-1; # End of Games::Solitaire::Verify::KlondikeTalon
+1;    # End of Games::Solitaire::Verify::KlondikeTalon

@@ -15,10 +15,14 @@ use parent 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception;
 use Games::Solitaire::Verify::Card;
 
-__PACKAGE__->mk_acc_ref([qw(
-    _cards
-    _s
-    )]);
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            _cards
+            _s
+            )
+    ]
+);
 
 =head1 SYNOPSIS
 
@@ -42,27 +46,21 @@ __PACKAGE__->mk_acc_ref([qw(
 
 sub _from_string
 {
-    my ($self, $str) = @_;
+    my ( $self, $str ) = @_;
 
-    if ($str !~ s{\A:(?: )?}{})
+    if ( $str !~ s{\A:(?: )?}{} )
     {
         Games::Solitaire::Verify::Exception::Parse::Column::Prefix->throw(
-            error => "String does not start with \": \"",
-        );
+            error => "String does not start with \": \"", );
     }
 
     # Ignore trailing whitespace, so we don't have -1.
-    my @cards = split(/ +/, $str);
+    my @cards = split( / +/, $str );
 
     $self->_cards(
         [
-            map
-            {
-                Games::Solitaire::Verify::Card->new(
-                    {string => $_ }
-                )
-            }
-            @cards
+            map { Games::Solitaire::Verify::Card->new( { string => $_ } ) }
+                @cards
         ]
     );
 
@@ -73,22 +71,22 @@ sub _from_string
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    if (exists($args->{string}))
+    if ( exists( $args->{string} ) )
     {
-        return $self->_from_string($args->{string});
+        return $self->_from_string( $args->{string} );
     }
-    elsif (exists($args->{cards}))
+    elsif ( exists( $args->{cards} ) )
     {
-        $self->_cards($args->{cards});
+        $self->_cards( $args->{cards} );
 
         $self->_recalc;
         return;
     }
     else
     {
-        die "Cannot init - no 'string' or 'cards' specified."
+        die "Cannot init - no 'string' or 'cards' specified.";
     }
 }
 
@@ -102,7 +100,7 @@ sub len
 {
     my $self = shift;
 
-    return scalar(@{$self->_cards()});
+    return scalar( @{ $self->_cards() } );
 }
 
 =head2 $column->pos($idx)
@@ -115,7 +113,7 @@ at position $idx in Column. $idx starts at 0.
 sub pos
 {
     my $self = shift;
-    my $idx = shift;
+    my $idx  = shift;
 
     return $self->_cards->[$idx];
 }
@@ -145,7 +143,7 @@ sub clone
 
     my $new_col = Games::Solitaire::Verify::Column->new(
         {
-            cards => [ map { $_->clone() } @{$self->_cards()} ],
+            cards => [ map { $_->clone() } @{ $self->_cards() } ],
         }
     );
 
@@ -162,8 +160,8 @@ Appends the cards in the argument array reference to the column.
 
 sub append_cards
 {
-    my ($S, $c) = @_;
-    push @{$S->_cards()}, @$c;
+    my ( $S, $c ) = @_;
+    push @{ $S->_cards() }, @$c;
     $S->_recalc;
     return;
 }
@@ -177,11 +175,11 @@ append_cards() is faster.
 
 sub append
 {
-    my ($self, $more_cards) = @_;
+    my ( $self, $more_cards ) = @_;
 
     my $more_copy = $more_cards->clone();
 
-    return $self->append_cards($more_copy->_cards);
+    return $self->append_cards( $more_copy->_cards );
 }
 
 =head2 $column->push($card)
@@ -192,9 +190,9 @@ Appends a single card to the top of the column.
 
 sub push
 {
-    my ($self, $card) = @_;
+    my ( $self, $card ) = @_;
 
-    push @{$self->_cards()}, $card;
+    push @{ $self->_cards() }, $card;
 
     $self->_recalc;
 
@@ -211,7 +209,7 @@ sub pop
 {
     my $self = shift;
 
-    my $card = pop(@{$self->_cards()});
+    my $card = pop( @{ $self->_cards() } );
 
     $self->_recalc;
 
@@ -229,9 +227,9 @@ array reference) in their original order in the column.
 
 sub popN
 {
-    my ($S, $c) = @_;
+    my ( $S, $c ) = @_;
 
-    my @r = splice(@{$S->_cards()}, -$c);
+    my @r = splice( @{ $S->_cards() }, -$c );
 
     $S->_recalc;
 
@@ -249,14 +247,7 @@ sub _recalc
     my $self = shift;
 
     $self->_s(
-        join(' ',
-            ':',
-            (map
-                { $_->fast_s() }
-                @{$self->_cards()}
-            )
-        )
-    );
+        join( ' ', ':', ( map { $_->fast_s() } @{ $self->_cards() } ) ) );
 
     return;
 }
@@ -266,4 +257,4 @@ sub to_string
     return shift->_s;
 }
 
-1; # End of Games::Solitaire::Verify::Column
+1;    # End of Games::Solitaire::Verify::Column

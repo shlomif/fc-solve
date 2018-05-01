@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 34;
-use Games::Solitaire::Verify::State ();
+use Games::Solitaire::Verify::State            ();
 use Games::Solitaire::Verify::State::LaxParser ();
 
 {
@@ -22,51 +22,51 @@ Freecells:  3D      JH  9H
 EOF
     my $board = Games::Solitaire::Verify::State->new(
         {
-            string => $string,
+            string  => $string,
             variant => "freecell",
         }
     );
 
     # TEST
-    is ($board->get_foundation_value("H", 0), 6, "Foundation H Value");
+    is( $board->get_foundation_value( "H", 0 ), 6, "Foundation H Value" );
 
     # TEST
-    is ($board->get_foundation_value("C", 0), 1, "Foundation C Value");
+    is( $board->get_foundation_value( "C", 0 ), 1, "Foundation C Value" );
 
     # TEST
-    is ($board->get_foundation_value("D", 0), 1, "Foundation D Value");
+    is( $board->get_foundation_value( "D", 0 ), 1, "Foundation D Value" );
 
     # TEST
-    is ($board->get_foundation_value("S", 0), 4, "Foundation S Value");
+    is( $board->get_foundation_value( "S", 0 ), 4, "Foundation S Value" );
 
     # TEST
-    is ($board->get_freecell(0)->to_string(), "3D", "Freecell 0");
+    is( $board->get_freecell(0)->to_string(), "3D", "Freecell 0" );
 
     # TEST
-    ok (!defined($board->get_freecell(1)), "Freecell 1");
+    ok( !defined( $board->get_freecell(1) ), "Freecell 1" );
 
     # TEST
-    is ($board->get_freecell(2)->to_string(), "JH", "Freecell 2");
+    is( $board->get_freecell(2)->to_string(), "JH", "Freecell 2" );
 
     # TEST
-    is ($board->get_freecell(3)->to_string(), "9H", "Freecell 9");
+    is( $board->get_freecell(3)->to_string(), "9H", "Freecell 9" );
 
     # TEST
-    is ($board->num_freecells(), 4, "Num Freecells");
+    is( $board->num_freecells(), 4, "Num Freecells" );
 
     # TEST
-    is ($board->num_empty_freecells(), 1, "Num empty freecells");
+    is( $board->num_empty_freecells(), 1, "Num empty freecells" );
 
     # TEST
-    is ($board->num_columns(), 8, "Num columns");
+    is( $board->num_columns(), 8, "Num columns" );
 
     # TEST
-    is ($board->get_column(0)->to_string(), ": 4C 2C 9C 8C QS JD",
-        "Column 0"
-    );
+    is( $board->get_column(0)->to_string(), ": 4C 2C 9C 8C QS JD", "Column 0" );
 
     # TEST
-    is ($board->get_column(5)->to_string(), ": 7H JS KH TS KC QD JC",
+    is(
+        $board->get_column(5)->to_string(),
+        ": 7H JS KH TS KC QD JC",
         "Column 5"
     );
 }
@@ -87,13 +87,13 @@ EOF
 
     my $board = Games::Solitaire::Verify::State->new(
         {
-            string => $string,
+            string  => $string,
             variant => "freecell",
         }
     );
 
     # TEST
-    is ($board->num_empty_columns(), 3, "Num empty columns")
+    is( $board->num_empty_columns(), 3, "Num empty columns" )
 }
 
 {
@@ -112,7 +112,7 @@ EOF
 
     my $board = Games::Solitaire::Verify::State->new(
         {
-            string => $string,
+            string  => $string,
             variant => "freecell",
         }
     );
@@ -120,20 +120,21 @@ EOF
     my $copy = $board->clone();
 
     # TEST
-    ok ($copy, "Copied");
+    ok( $copy, "Copied" );
 
     # TEST
-    is ($copy->get_column(1)->to_string(), ": KS QH JC TD",
+    is(
+        $copy->get_column(1)->to_string(),
+        ": KS QH JC TD",
         "Column 1 of Copy",
     );
 
     # TEST
-    is ($copy->get_column(5)->to_string(), ": KC QD",
-        "Column 5 of Copy",
-    );
+    is( $copy->get_column(5)->to_string(), ": KC QD", "Column 5 of Copy", );
 
     # TEST
-    is ($copy->get_foundation_value("C", 0), 7, "Foundation C Value of Copy");
+    is( $copy->get_foundation_value( "C", 0 ), 7,
+        "Foundation C Value of Copy" );
 }
 
 {
@@ -151,13 +152,13 @@ Freecells:  3D      JH  9H
 EOF
     my $board = Games::Solitaire::Verify::State->new(
         {
-            string => $string,
+            string  => $string,
             variant => "freecell",
         }
     );
 
     # Do a simple move.
-    $board->set_freecell(1, $board->get_column(3)->pop());
+    $board->set_freecell( 1, $board->get_column(3)->pop() );
 
     my $new_board = <<"EOF";
 Foundations: H-6 C-A D-A S-4
@@ -173,7 +174,7 @@ Freecells:  3D  3C  JH  9H
 EOF
 
     # TEST
-    is ($board->to_string(), $new_board, "Testing to_string() on a board");
+    is( $board->to_string(), $new_board, "Testing to_string() on a board" );
 }
 
 {
@@ -192,13 +193,13 @@ EOF
 
     my $board = Games::Solitaire::Verify::State->new(
         {
-            string => $string,
+            string  => $string,
             variant => "freecell",
         }
     );
 
     # TEST
-    is ($board->to_string(), $string, "Testing board with H-0");
+    is( $board->to_string(), $string, "Testing board with H-0" );
 }
 
 {
@@ -220,9 +221,9 @@ EOF
     eval {
         $board = Games::Solitaire::Verify::State->new(
             {
-                string => $string,
+                string  => $string,
                 variant => "freecell",
-        }
+            }
         );
     };
 
@@ -255,9 +256,9 @@ EOF
     eval {
         $board = Games::Solitaire::Verify::State->new(
             {
-                string => $string,
+                string  => $string,
                 variant => "freecell",
-        }
+            }
         );
     };
 
@@ -280,20 +281,19 @@ EOF
 
     my $column = Games::Solitaire::Verify::Column->new(
         {
-            cards =>
-            [
+            cards => [
                 Games::Solitaire::Verify::Card->new(
                     {
                         string => "KH",
-                        id => 1,
-                        data => { key => 'Foo', },
+                        id     => 1,
+                        data   => { key => 'Foo', },
                     },
                 ),
                 Games::Solitaire::Verify::Card->new(
                     {
                         string => "QS",
-                        id => 2,
-                        data => { key => 'Bar', },
+                        id     => 2,
+                        data   => { key => 'Bar', },
                     }
                 ),
             ],
@@ -303,7 +303,7 @@ EOF
     $board->add_column($column);
 
     # TEST
-    is ($board->get_column(0)->pos(0)->id(), 1, "First card has ID '1'");
+    is( $board->get_column(0)->pos(0)->id(), 1, "First card has ID '1'" );
 
     # TEST
     is_deeply(
@@ -313,9 +313,9 @@ EOF
     );
 
     # TEST
-    is ($board->get_column(0)->pos(1)->id(), 2, "Second card has ID '2'");
+    is( $board->get_column(0)->pos(1)->id(), 2, "Second card has ID '2'" );
 
-    foreach my $idx (1 .. (8-1))
+    foreach my $idx ( 1 .. ( 8 - 1 ) )
     {
         $board->add_column(
             Games::Solitaire::Verify::Column->new(
@@ -330,7 +330,7 @@ EOF
         Games::Solitaire::Verify::Foundations->new(
             {
                 num_decks => $board->num_decks(),
-                string => 'Foundations: H-A C-A D-0 S-0',
+                string    => 'Foundations: H-A C-A D-0 S-0',
             },
         ),
     );
@@ -346,10 +346,11 @@ EOF
     my $copy = $board->clone();
 
     # TEST
-    is ($copy->get_column(0)->pos(0)->id(), 1, "First card in copy has ID '1'");
+    is( $copy->get_column(0)->pos(0)->id(), 1,
+        "First card in copy has ID '1'" );
 
     # TEST
-    is_deeply (
+    is_deeply(
         $copy->get_column(0)->pos(0)->data(),
         { key => 'Foo' },
         "First card in copy has right data."
@@ -366,20 +367,19 @@ EOF
 
     my $column = Games::Solitaire::Verify::Column->new(
         {
-            cards =>
-            [
+            cards => [
                 Games::Solitaire::Verify::Card->new(
                     {
                         string => "KH",
-                        id => 1,
-                        data => { key => 'Foo', },
+                        id     => 1,
+                        data   => { key => 'Foo', },
                     },
                 ),
                 Games::Solitaire::Verify::Card->new(
                     {
                         string => "QS",
-                        id => 2,
-                        data => { key => 'Bar', },
+                        id     => 2,
+                        data   => { key => 'Bar', },
                     }
                 ),
             ],
@@ -388,7 +388,7 @@ EOF
 
     $board->add_column($column);
 
-    foreach my $idx (1 .. (8-1))
+    foreach my $idx ( 1 .. ( 8 - 1 ) )
     {
         $board->add_column(
             Games::Solitaire::Verify::Column->new(
@@ -403,7 +403,7 @@ EOF
         Games::Solitaire::Verify::Foundations->new(
             {
                 num_decks => $board->num_decks(),
-                string => 'Foundations: H-A C-A D-0 S-0',
+                string    => 'Foundations: H-A C-A D-0 S-0',
             },
         ),
     );
@@ -416,22 +416,24 @@ EOF
 
     $board->set_freecells($freecells);
 
-    $board->set_freecell(0,
+    $board->set_freecell(
+        0,
         Games::Solitaire::Verify::Card->new(
             {
                 string => "6D",
-                id => 64,
-                data => { key => 'This is 6D', },
+                id     => 64,
+                data   => { key => 'This is 6D', },
             },
         )
     );
 
-    $board->set_freecell(2,
+    $board->set_freecell(
+        2,
         Games::Solitaire::Verify::Card->new(
             {
                 string => "TH",
-                id => 101,
-                data => { key => 'This is TH', aref => [0, 55],},
+                id     => 101,
+                data   => { key => 'This is TH', aref => [ 0, 55 ], },
             },
         )
     );
@@ -439,17 +441,17 @@ EOF
     my $copy = $board->clone();
 
     # TEST
-    is ($copy->get_freecell(0)->id(), 64, "ID of cloned freecell 0");
+    is( $copy->get_freecell(0)->id(), 64, "ID of cloned freecell 0" );
 
     # TEST
-    is ($copy->get_freecell(2)->id(), 101, "ID of cloned freecell 0");
+    is( $copy->get_freecell(2)->id(), 101, "ID of cloned freecell 0" );
 
     # TEST
     is_deeply(
         $copy->get_freecell(2)->data(),
         {
-            key => 'This is TH',
-            aref => [0, 55],
+            key  => 'This is TH',
+            aref => [ 0, 55 ],
         },
         'Data of Cloned Freecell #2',
     );
@@ -470,24 +472,23 @@ Freecells:  3D  JH
 : 9D 8S
 : 7S 6C 7D 6S 5D
 EOF
-    my $two_fc_variant = Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
+    my $two_fc_variant =
+        Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id(
+        'freecell');
 
     $two_fc_variant->num_freecells($num_freecells);
 
-    my $board =
-        Games::Solitaire::Verify::State->new(
-            {
-                string => $string,
-                variant => 'custom',
-                variant_params => $two_fc_variant,
-            },
-        );
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string         => $string,
+            variant        => 'custom',
+            variant_params => $two_fc_variant,
+        },
+    );
 
     # TEST
-    is ($board->clone->to_string(),
-        $string,
-        "State clone works with a custom variant_params."
-    );
+    is( $board->clone->to_string(),
+        $string, "State clone works with a custom variant_params." );
 }
 {
     my $string = <<"EOF";
@@ -503,32 +504,30 @@ Freecells:
 : 7S 6C 7D 4D 8S 9D
 EOF
 
-    my $board =
-        Games::Solitaire::Verify::State->new(
-            {
-                string => $string,
-                variant => 'freecell',
-            },
-        );
-
-    # TEST
-    is ($board->clone->to_string(),
-        $string,
-        "State clone works with initial board.",
+    my $board = Games::Solitaire::Verify::State->new(
+        {
+            string  => $string,
+            variant => 'freecell',
+        },
     );
 
-    $board =
-        Games::Solitaire::Verify::State::LaxParser->new(
-            {
-                string => $string,
-                variant => 'freecell',
-            },
-        );
+    # TEST
+    is(
+        $board->clone->to_string(),
+        $string, "State clone works with initial board.",
+    );
+
+    $board = Games::Solitaire::Verify::State::LaxParser->new(
+        {
+            string  => $string,
+            variant => 'freecell',
+        },
+    );
 
     # TEST
-    is ($board->clone->to_string(),
-        $string,
-        "State clone works with LaxParser.",
+    is(
+        $board->clone->to_string(),
+        $string, "State clone works with LaxParser.",
     );
 
     my $lax_string = <<"EOF";
@@ -542,17 +541,13 @@ AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 EOF
 
-    $board =
-        Games::Solitaire::Verify::State::LaxParser->new(
-            {
-                string => $lax_string,
-                variant => 'freecell',
-            },
-        );
+    $board = Games::Solitaire::Verify::State::LaxParser->new(
+        {
+            string  => $lax_string,
+            variant => 'freecell',
+        },
+    );
 
     # TEST
-    is ($board->clone->to_string(),
-        $string,
-        "LaxParser string parse.",
-    );
+    is( $board->clone->to_string(), $string, "LaxParser string parse.", );
 }

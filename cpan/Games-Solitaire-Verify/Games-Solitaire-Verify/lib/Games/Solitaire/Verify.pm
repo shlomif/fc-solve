@@ -49,4 +49,4 @@ Shlomi Fish, L<http://www.shlomifish.org/>.
 
 =cut
 
-1; # End of Games::Solitaire::Verify
+1;    # End of Games::Solitaire::Verify

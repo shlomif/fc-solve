@@ -16,7 +16,7 @@ use parent 'Games::Solitaire::Verify::Solution::Base';
 # TODO : Merge with lib/Games/Solitaire/Verify/Solution.pm
 
 use POSIX qw( ceil );
-use IO::Handle; # For $fh->print(...)
+use IO::Handle;    # For $fh->print(...)
 
 use Games::Solitaire::Verify::Exception;
 use Games::Solitaire::Verify::Card;
@@ -26,10 +26,14 @@ use Games::Solitaire::Verify::State;
 
 use List::Util qw( min );
 
-__PACKAGE__->mk_acc_ref([qw(
-    _move_line
-    _output_fh
-    )]);
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            _move_line
+            _output_fh
+            )
+    ]
+);
 
 =head1 SYNOPSIS
 
@@ -78,20 +82,20 @@ L<Games::Solitaire::Verify::VariantParams> object.
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
     $self->SUPER::_init($args);
 
     $self->_st(undef);
     $self->_reached_end(0);
-    $self->_output_fh($args->{output_fh});
+    $self->_output_fh( $args->{output_fh} );
 
     return 0;
 }
 
 sub _out
 {
-    my ($self, $text) = @_;
+    my ( $self, $text ) = @_;
 
     $self->_output_fh()->print($text);
 
@@ -100,30 +104,30 @@ sub _out
 
 sub _out_line
 {
-    my ($self, $line) = @_;
+    my ( $self, $line ) = @_;
 
     return $self->_out($line);
 }
 
 sub _assign_read_new_state
 {
-    my ($self, $str) = @_;
+    my ( $self, $str ) = @_;
 
     my $new_state = Games::Solitaire::Verify::State->new(
-            {
-                string => $str,
-                @{$self->_V},
-            }
-        );
+        {
+            string => $str,
+            @{ $self->_V },
+        }
+    );
 
-    if (!defined($self->_st()))
+    if ( !defined( $self->_st() ) )
     {
         # Do nothing.
 
     }
     else
     {
-        if ($self->_st()->to_string() ne $str)
+        if ( $self->_st()->to_string() ne $str )
         {
             die "States don't match";
         }
@@ -139,7 +143,7 @@ sub _read_state
 
     my $line = $self->_l();
 
-    if ($line ne "\n")
+    if ( $line ne "\n" )
     {
         die "Non empty line before state";
     }
@@ -148,7 +152,7 @@ sub _read_state
 
     my $str = "";
 
-    while (($line = $self->_l()) && ($line ne "\n"))
+    while ( ( $line = $self->_l() ) && ( $line ne "\n" ) )
     {
         $str .= $line;
     }
@@ -158,12 +162,12 @@ sub _read_state
     $self->_out($str);
 
     $self->_out_line("\n");
-    while (defined($line = $self->_l()) && ($line eq "\n"))
+    while ( defined( $line = $self->_l() ) && ( $line eq "\n" ) )
     {
         $self->_out_line($line);
     }
 
-    if ($line !~ m{\A={3,}\n\z})
+    if ( $line !~ m{\A={3,}\n\z} )
     {
         die "No ======== separator";
     }
@@ -178,7 +182,7 @@ sub _read_move
 
     my $line = $self->_l();
 
-    if ($line ne "\n")
+    if ( $line ne "\n" )
     {
         die "No empty line before move";
     }
@@ -187,12 +191,12 @@ sub _read_move
 
     $line = $self->_l();
 
-    if ($line eq "This game is solveable.\n")
+    if ( $line eq "This game is solveable.\n" )
     {
         $self->_reached_end(1);
         $self->_out_line($line);
 
-        while (defined($line = $self->_l()))
+        while ( defined( $line = $self->_l() ) )
         {
             $self->_out_line($line);
         }
@@ -204,17 +208,17 @@ sub _read_move
 
     $self->_move_line($line);
 
-    $self->_move(Games::Solitaire::Verify::Move->new(
+    $self->_move(
+        Games::Solitaire::Verify::Move->new(
             {
                 fcs_string => $line,
-                game => $self->_variant(),
+                game       => $self->_variant(),
             }
         )
     );
 
     return;
 }
-
 
 =begin notes
 
@@ -239,11 +243,11 @@ moves.
 
 sub _find_max_step
 {
-    my ($self, $n) = @_;
+    my ( $self, $n ) = @_;
 
     my $x = 1;
 
-    while (($x << 1) < $n)
+    while ( ( $x << 1 ) < $n )
     {
         $x <<= 1;
     }
@@ -255,32 +259,32 @@ sub _apply_move
 {
     my $self = shift;
 
-    if (($self->_move->source_type eq "stack")
-      && ($self->_move->dest_type eq "stack")
-      && ($self->_move->num_cards > 1)
-      && ($self->_variant_params->sequence_move() eq "limited")
-        )
+    if (   ( $self->_move->source_type eq "stack" )
+        && ( $self->_move->dest_type eq "stack" )
+        && ( $self->_move->num_cards > 1 )
+        && ( $self->_variant_params->sequence_move() eq "limited" ) )
     {
         my $ultimate_num_cards = $self->_move->num_cards;
-        my $ultimate_source = $self->_move->source;
-        my $ultimate_dest = $self->_move->dest;
+        my $ultimate_source    = $self->_move->source;
+        my $ultimate_dest      = $self->_move->dest;
 
         # Need to process this move.
         my @empty_fc_indexes;
         my @empty_stack_indexes;
 
-        foreach my $idx (0 .. ($self->_st->num_freecells()-1))
+        foreach my $idx ( 0 .. ( $self->_st->num_freecells() - 1 ) )
         {
-            if (!defined($self->_st->get_freecell($idx)))
+            if ( !defined( $self->_st->get_freecell($idx) ) )
             {
                 push @empty_fc_indexes, $idx;
             }
         }
 
-        foreach my $idx (0 .. ($self->_st->num_columns()-1))
+        foreach my $idx ( 0 .. ( $self->_st->num_columns() - 1 ) )
         {
-            if (($idx != $ultimate_dest) && ($idx != $ultimate_source) &&
-                (! $self->_st->get_column($idx)->len()))
+            if (   ( $idx != $ultimate_dest )
+                && ( $idx != $ultimate_source )
+                && ( !$self->_st->get_column($idx)->len() ) )
             {
                 push @empty_stack_indexes, $idx;
             }
@@ -292,12 +296,11 @@ sub _apply_move
         push @num_cards_moved_at_each_stage, $num_cards;
         my $step_width = 1 + @empty_fc_indexes;
         while (
-            ($num_cards = min(
-                    $num_cards + $step_width,
-                    $ultimate_num_cards
-                ))
-            < $ultimate_num_cards
-        )
+            (
+                $num_cards =
+                min( $num_cards + $step_width, $ultimate_num_cards )
+            ) < $ultimate_num_cards
+            )
         {
             push @num_cards_moved_at_each_stage, $num_cards;
         }
@@ -310,10 +313,7 @@ sub _apply_move
 
         my $past_first_output_state_promise = sub {
             $self->_out(
-                "\n"
-                . $self->_st->to_string
-                . "\n\n====================\n\n"
-            );
+                "\n" . $self->_st->to_string . "\n\n====================\n\n" );
 
             return;
         };
@@ -323,21 +323,21 @@ sub _apply_move
 
             $output_state_promise->();
 
+            $self->_out_line( $move_line . "\n" );
 
-            $self->_out_line($move_line."\n");
-
-            if (my $verdict = $self->_st()->verify_and_perform_move(
+            if (
+                my $verdict = $self->_st()->verify_and_perform_move(
                     Games::Solitaire::Verify::Move->new(
                         {
                             fcs_string => $move_line,
-                            game => $self->_variant(),
+                            game       => $self->_variant(),
                         }
                     )
                 )
-            )
+                )
             {
                 Games::Solitaire::Verify::Exception::VerifyMove->throw(
-                    error => "Wrong Move",
+                    error   => "Wrong Move",
                     problem => $verdict,
                 );
             }
@@ -348,21 +348,21 @@ sub _apply_move
         };
 
         my $move_using_freecells = sub {
-            my ($source, $dest, $count) = @_;
+            my ( $source, $dest, $count ) = @_;
 
             my $num_cards_thru_freecell = $count - 1;
-            for my $i (0 .. $num_cards_thru_freecell - 1)
+            for my $i ( 0 .. $num_cards_thru_freecell - 1 )
             {
                 $add_move->(
-                    "Move a card from stack $source to freecell $empty_fc_indexes[$i]"
+"Move a card from stack $source to freecell $empty_fc_indexes[$i]"
                 );
             }
             $add_move->("Move 1 cards from stack $source to stack $dest");
 
-            for my $i (reverse (0 .. $num_cards_thru_freecell - 1))
+            for my $i ( reverse( 0 .. $num_cards_thru_freecell - 1 ) )
             {
                 $add_move->(
-                    "Move a card from freecell $empty_fc_indexes[$i] to stack $dest"
+"Move a card from freecell $empty_fc_indexes[$i] to stack $dest"
                 );
             }
 
@@ -371,9 +371,9 @@ sub _apply_move
 
         my $recursive_move;
         $recursive_move = sub {
-            my ($source, $dest, $num_cards, $empty_cols) = @_;
+            my ( $source, $dest, $num_cards, $empty_cols ) = @_;
 
-            if ($num_cards <= 0)
+            if ( $num_cards <= 0 )
             {
                 # Do nothing - the no-op.
                 #$move_using_freecells->($source, $dest,
@@ -387,37 +387,35 @@ sub _apply_move
                 my @running_empty_cols = @$empty_cols;
                 my @steps;
 
-                while (ceil($num_cards / $step_width) > 1)
+                while ( ceil( $num_cards / $step_width ) > 1 )
                 {
                     # Top power of two in $num_steps
                     my $rec_num_steps = $self->_find_max_step(
-                        ceil( $num_cards / $step_width )
-                    );
+                        ceil( $num_cards / $step_width ) );
                     my $count_cards = $rec_num_steps * $step_width;
-                    my $temp_dest = shift(@running_empty_cols);
+                    my $temp_dest   = shift(@running_empty_cols);
                     $recursive_move->(
-                        $source,
-                        $temp_dest,
-                        $count_cards,
+                        $source, $temp_dest, $count_cards,
                         [@running_empty_cols],
                     );
 
-                    push @steps, +{
-                        'source' => $source, 'dest' => $temp_dest, count => $count_cards
-                    };
+                    push @steps,
+                        +{
+                        'source' => $source,
+                        'dest'   => $temp_dest,
+                        count    => $count_cards
+                        };
                     $num_cards -= $count_cards;
                 }
-                $move_using_freecells->($source, $dest, $num_cards);
+                $move_using_freecells->( $source, $dest, $num_cards );
 
-                foreach my $s (reverse(@steps))
+                foreach my $s ( reverse(@steps) )
                 {
                     $recursive_move->(
-                        $s->{dest},
-                        $dest,
-                        $s->{count},
-                        [@running_empty_cols]
+                        $s->{dest}, $dest, $s->{count}, [@running_empty_cols]
                     );
-                    @running_empty_cols = (sort { $a <=> $b } @running_empty_cols, $s->{dest});
+                    @running_empty_cols =
+                        ( sort { $a <=> $b } @running_empty_cols, $s->{dest} );
                 }
                 return;
             }
@@ -425,17 +423,17 @@ sub _apply_move
 
         $recursive_move->(
             $ultimate_source, $ultimate_dest,
-            $ultimate_num_cards,
-            [@empty_stack_indexes],
+            $ultimate_num_cards, [@empty_stack_indexes],
         );
     }
     else
     {
         $self->_out_line( $self->_move_line . "\n" );
-        if (my $verdict = $self->_st()->verify_and_perform_move($self->_move()))
+        if ( my $verdict =
+            $self->_st()->verify_and_perform_move( $self->_move() ) )
         {
             Games::Solitaire::Verify::Exception::VerifyMove->throw(
-                error => "Wrong Move",
+                error   => "Wrong Move",
                 problem => $verdict,
             );
         }
@@ -458,7 +456,7 @@ sub verify
 
         my $line = $self->_l();
 
-        if ($line !~ m{\A(-=)+-\n\z})
+        if ( $line !~ m{\A(-=)+-\n\z} )
         {
             die "Incorrect start";
         }
@@ -466,7 +464,7 @@ sub verify
 
         $self->_read_state();
 
-        while (!defined(scalar($self->_read_move())))
+        while ( !defined( scalar( $self->_read_move() ) ) )
         {
             $self->_apply_move();
             $self->_read_state();
@@ -474,12 +472,14 @@ sub verify
     };
 
     my $err;
-    if (! $@)
+    if ( !$@ )
     {
         # Do nothing - no exception was thrown.
     }
-    elsif ($err =
-        Exception::Class->caught('Games::Solitaire::Verify::Exception::VerifyMove'))
+    elsif (
+        $err = Exception::Class->caught(
+            'Games::Solitaire::Verify::Exception::VerifyMove')
+        )
     {
         return { error => $err, line_num => $self->_ln(), };
     }
@@ -492,4 +492,4 @@ sub verify
     return;
 }
 
-1; # End of Games::Solitaire::Verify::Solution::ExpandMultiCardMoves
+1;    # End of Games::Solitaire::Verify::Solution::ExpandMultiCardMoves

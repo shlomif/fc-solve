@@ -17,13 +17,13 @@ __PACKAGE__->mk_acc_ref(
         qw(
             _filename
             _variant_params
-        )
+            )
     ]
 );
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
     my $argv = $args->{'argv'};
 
@@ -34,27 +34,27 @@ sub _init
     GetOptionsFromArray(
         $argv,
         'g|game|variant=s' => sub {
-            my (undef, $game) = @_;
+            my ( undef, $game ) = @_;
 
             $variant_params = $variant_map->get_variant_by_id($game);
 
-            if (!defined($variant_params))
+            if ( !defined($variant_params) )
             {
                 die "Unknown variant '$game'!\n";
             }
         },
         'freecells-num=i' => sub {
-            my (undef, $n) = @_;
+            my ( undef, $n ) = @_;
             $variant_params->num_freecells($n);
         },
         'stacks-num=i' => sub {
-            my (undef, $n) = @_;
+            my ( undef, $n ) = @_;
             $variant_params->num_columns($n);
         },
         'decks-num=i' => sub {
-            my (undef, $n) = @_;
+            my ( undef, $n ) = @_;
 
-            if (! ( ($n == 1) || ($n == 2) ) )
+            if ( !( ( $n == 1 ) || ( $n == 2 ) ) )
             {
                 die "Decks should be 1 or 2.";
             }
@@ -62,19 +62,16 @@ sub _init
             $variant_params->num_decks($n);
         },
         'sequences-are-built-by=s' => sub {
-            my (undef, $val) = @_;
+            my ( undef, $val ) = @_;
 
-            my %seqs_build_by =
-            (
-                (map { $_ => $_ }
-                    (qw(alt_color suit rank))
-                ),
+            my %seqs_build_by = (
+                ( map { $_ => $_ } (qw(alt_color suit rank)) ),
                 "alternate_color" => "alt_color",
             );
 
             my $proc_val = $seqs_build_by{$val};
 
-            if (! defined($proc_val))
+            if ( !defined($proc_val) )
             {
                 die "Unknown sequences-are-built-by '$val'!";
             }
@@ -82,12 +79,12 @@ sub _init
             $variant_params->seqs_build_by($proc_val);
         },
         'empty-stacks-filled-by=s' => sub {
-            my (undef, $val) = @_;
+            my ( undef, $val ) = @_;
 
             my %empty_stacks_filled_by_map =
-            (map { $_ => 1 } (qw(kings any none)));
+                ( map { $_ => 1 } (qw(kings any none)) );
 
-            if (! exists($empty_stacks_filled_by_map{$val}))
+            if ( !exists( $empty_stacks_filled_by_map{$val} ) )
             {
                 die "Unknown empty stacks filled by '$val'!";
             }
@@ -95,23 +92,22 @@ sub _init
             $variant_params->empty_stacks_filled_by($val);
         },
         'sequence-move=s' => sub {
-            my (undef, $val) = @_;
+            my ( undef, $val ) = @_;
 
-            my %seq_moves = (map { $_ => 1 } (qw(limited unlimited)));
+            my %seq_moves = ( map { $_ => 1 } (qw(limited unlimited)) );
 
-            if (! exists ($seq_moves{$val}) )
+            if ( !exists( $seq_moves{$val} ) )
             {
                 die "Unknown sequence move '$val'!";
             }
 
             $variant_params->sequence_move($val);
         },
-    )
-        or die "Cannot process command line arguments";
+    ) or die "Cannot process command line arguments";
 
     my $filename = shift(@$argv);
 
-    if (!defined($filename))
+    if ( !defined($filename) )
     {
         $filename = "-";
     }
@@ -126,12 +122,12 @@ sub run
 {
     my $self = shift;
 
-    my $filename = $self->_filename();
+    my $filename       = $self->_filename();
     my $variant_params = $self->_variant_params();
 
     my $fh;
 
-    if ($filename eq "-")
+    if ( $filename eq "-" )
     {
         $fh = *STDIN;
     }
@@ -141,17 +137,18 @@ sub run
             or die "Cannot open '$filename' - $!";
     }
 
-    my $solution = Games::Solitaire::Verify::Solution::ExpandMultiCardMoves->new(
+    my $solution =
+        Games::Solitaire::Verify::Solution::ExpandMultiCardMoves->new(
         {
-            input_fh => $fh,
-            variant => "custom",
+            input_fh       => $fh,
+            variant        => "custom",
             variant_params => $variant_params,
-            output_fh => \*STDOUT,
+            output_fh      => \*STDOUT,
         },
-    );
+        );
 
     my $verdict = $solution->verify();
-    if (!$verdict)
+    if ( !$verdict )
     {
         exit(0);
     }

@@ -15,13 +15,11 @@ use Test::More tests => 6;
 
 use Games::Solitaire::Verify::App::CmdLine::From_Patsolve;
 
-my $sol_fn = File::Spec->catfile(File::Spec->curdir(),
-    qw(t data sample-solutions patsolve-338741497-win-solution.txt)
-);
+my $sol_fn = File::Spec->catfile( File::Spec->curdir(),
+    qw(t data sample-solutions patsolve-338741497-win-solution.txt) );
 
-my $board_fn = File::Spec->catfile(File::Spec->curdir(),
-    qw(t data boards 338741497.board)
-);
+my $board_fn = File::Spec->catfile( File::Spec->curdir(),
+    qw(t data boards 338741497.board) );
 
 sub _slurp
 {
@@ -41,20 +39,20 @@ sub _slurp
 {
     my $obj = Games::Solitaire::Verify::App::CmdLine::From_Patsolve->new(
         {
-            argv => [qw(-g freecell), $board_fn, $sol_fn,],
+            argv => [ qw(-g freecell), $board_fn, $sol_fn, ],
         }
     );
 
     $obj->_read_initial_state();
 
     # TEST
-    ok (1, "_read_initial_state is successful.");
+    ok( 1, "_read_initial_state is successful." );
 
     $obj->_perform_move("2S to temp");
 
     # TEST
-    eq_or_diff (
-        scalar ( $obj->_get_buffer ),
+    eq_or_diff(
+        scalar( $obj->_get_buffer ),
         <<"EOF",
 -=-=-=-=-=-=-=-=-=-=-=-
 
@@ -97,8 +95,8 @@ EOF
     $obj->_perform_move('5C to 6D');
 
     # TEST
-    eq_or_diff (
-        scalar ( $obj->_get_buffer ),
+    eq_or_diff(
+        scalar( $obj->_get_buffer ),
         <<"EOF",
 -=-=-=-=-=-=-=-=-=-=-=-
 
@@ -191,8 +189,8 @@ EOF
     $obj->_perform_move('AC out');
 
     # TEST
-    eq_or_diff (
-        scalar ( $obj->_get_buffer ),
+    eq_or_diff(
+        scalar( $obj->_get_buffer ),
         <<"EOF",
 -=-=-=-=-=-=-=-=-=-=-=-
 
@@ -370,8 +368,8 @@ EOF
     $obj->_perform_move('KS to empty pile');
 
     # TEST
-    eq_or_diff (
-        scalar ( $obj->_get_buffer ),
+    eq_or_diff(
+        scalar( $obj->_get_buffer ),
         <<"EOF",
 -=-=-=-=-=-=-=-=-=-=-=-
 
@@ -701,15 +699,15 @@ EOF
 {
     my $obj = Games::Solitaire::Verify::App::CmdLine::From_Patsolve->new(
         {
-            argv => [qw(-g freecell), $board_fn, $sol_fn,],
+            argv => [ qw(-g freecell), $board_fn, $sol_fn, ],
         }
     );
 
     $obj->_process_main();
 
     # TEST
-    eq_or_diff (
-        scalar ( $obj->_get_buffer ),
+    eq_or_diff(
+        scalar( $obj->_get_buffer ),
         <<"EOF",
 -=-=-=-=-=-=-=-=-=-=-=-
 
