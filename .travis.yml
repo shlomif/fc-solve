@@ -15,7 +15,7 @@ before_install:
 install:
     - sudo -H `which python3` -m pip install cffi cookiecutter random2 Zenfilter
       # For G-S-V dzil
-    - sudo cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::Kwalitee Test::Pod Test::Pod::Coverage
+    - sudo cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website
     - sudo cpanm --quiet --notest Carp::Always Code::TidyAll::Plugin::ESLint File::Find::Object::Rule File::ReadBackwards File::Which HTML::Latemp::GenMakeHelpers HTML::Spelling::Site HTML::TokeParser::Simple IO::All List::MoreUtils Moo MooX MooX::late Path::Tiny Perl::Critic Perl::Tidy Template Test::Code::TidyAll Test::HTML::Recursive::DeprecatedTags Test::HTML::Tidy::Recursive Test::HTML::Tidy::Recursive::Strict Text::WrapAsUtf8 XML::Feed
     - sudo cpanm --quiet --notest Task::FreecellSolver::Testing
