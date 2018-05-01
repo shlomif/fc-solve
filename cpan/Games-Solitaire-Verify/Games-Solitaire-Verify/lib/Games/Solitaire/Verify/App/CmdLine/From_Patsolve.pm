@@ -10,6 +10,7 @@ use parent 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::VariantsMap;
 use Games::Solitaire::Verify::Solution;
 use Games::Solitaire::Verify::State;
+use Games::Solitaire::Verify::State::LaxParser;
 use Games::Solitaire::Verify::Move;
 
 use List::MoreUtils qw(firstidx);
@@ -176,7 +177,7 @@ sub _read_initial_state
     my $self = shift;
 
     $self->_st(
-        Games::Solitaire::Verify::State->new(
+        Games::Solitaire::Verify::State::LaxParser->new(
             {
                 string => scalar(_slurp($self->_filename)),
                 variant => 'custom',
