@@ -10261,16 +10261,16 @@ function test_js_fc_solve_class(my_callback) {
 
         // TEST
         assert.equal(deal_ms_fc_board(3000000000),
-": 8D TS JS TD JH JD JC\n" +
-": 4D QS TH AD 4S TC 3C\n" +
-": 9H KH QH 4C 5C KD AS\n" +
-": 9D 5D 8S 4H KS 6S 9S\n" +
-": 6H 2S 7H 3D KC 2C\n" +
-": 9C 7C QC 7S QD 7D\n" +
-": 6C 3H 8H AC 6D 3S\n" +
-": 8C AH 2H 5H 2D 5S\n" +
-                "",
-            "deal_ms_fc_board for 3e9");
+            `: 8D TS JS TD JH JD JC
+: 4D QS TH AD 4S TC 3C
+: 9H KH QH 4C 5C KD AS
+: 9D 5D 8S 4H KS 6S 9S
+: 6H 2S 7H 3D KC 2C
+: 9C 7C QC 7S QD 7D
+: 6C 3H 8H AC 6D 3S
+: 8C AH 2H 5H 2D 5S
+`,
+        "deal_ms_fc_board for 3e9");
 
         // TEST
         assert.equal(deal_ms_fc_board(6000000000),
@@ -10283,22 +10283,21 @@ function test_js_fc_solve_class(my_callback) {
 : 5C 5H 2S KC 9S 4S
 : 6D QC 8S TH 7D 8H
 `,
-    "deal_ms_fc_board for 6e9");
+         "deal_ms_fc_board for 6e9");
     });
 
     QUnit.test("FC_Solve custom baker's game preset twice", function(assert) {
         // This is microsoft deal #10 which is impossible to solve in
         // Baker's Game.
-        const ms10_deal = "5S KD JC TS 9D KH 8D\n" +
-"5H 2S 9H 7H TD AD 6D\n" +
-"6H QD 6C TC AH 8S TH\n" +
-"6S 2D 7C QC QS 7D 3H\n" +
-"5D AS 7S KC 3D AC\n" +
-"4D 9C QH 4H 4C 5C\n" +
-"2H 3S 8H 9S JS 4S\n" +
-"JH JD 3C KS 2C 8C\n" +
-            "";
-
+        const ms10_deal =`5S KD JC TS 9D KH 8D
+5H 2S 9H 7H TD AD 6D
+6H QD 6C TC AH 8S TH
+6S 2D 7C QC QS 7D 3H
+5D AS 7S KC 3D AC
+4D 9C QH 4H 4C 5C
+2H 3S 8H 9S JS 4S
+JH JD 3C KS 2C 8C
+`;
         assert.expect(2);
 
         for (let mytry = 1; mytry <= 2; ++mytry) {

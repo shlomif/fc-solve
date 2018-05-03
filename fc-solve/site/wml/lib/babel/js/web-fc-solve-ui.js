@@ -11,9 +11,7 @@ define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min"],
 function _increment_move_indices(move_s) {
     return move_s.replace(/(stack|freecell)( )(\d+)/g,
         function(match, resource_s, sep_s, digit_s) {
-            return (resource_s + sep_s +
-                (1 + parseInt(digit_s))
-            );
+            return (resource_s + sep_s + (1 + parseInt(digit_s)));
         }
     );
 }
