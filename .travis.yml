@@ -9,9 +9,9 @@ before_install:
     - sudo cpanm Text::Hunspell
     - sudo cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
-    - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/wml-extended-apis && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
-    - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/wml-affiliations && cd wml-affiliations/wml && bash Install.bash )
-    - ( cd .. && hg clone https://shlomif@bitbucket.org/shlomif/latemp && cd latemp/support-headers && perl install.pl )
+    - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
+    - ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
+    - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
 install:
     - sudo -H `which python3` -m pip install cffi cookiecutter random2 Zenfilter
       # For G-S-V dzil
@@ -23,7 +23,6 @@ install:
     - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
     - tar -xvf libtap-1.12.0.tar.bz2
     - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )
-    - ( a="$(pwd)"; mkdir B2 && cd B2 && hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules && cd shlomif-cmake-modules/shlomif-cmake-modules && cp -f "$(pwd)"/Shlomif_Common.cmake "$a"/fc-solve/source/cmake/ )
     - ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
     # For the site
     - gem install sass compass compass-blueprint
