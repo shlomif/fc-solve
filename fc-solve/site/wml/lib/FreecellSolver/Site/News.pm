@@ -4,10 +4,7 @@ use strict;
 use warnings;
 use autodie;
 use utf8;
-
 use parent 'HTML::Widgets::NavMenu::Object';
-use parent 'Class::Accessor';
-
 use Path::Tiny qw/ path /;
 use MyOldNews ();
 use DateTime  ();

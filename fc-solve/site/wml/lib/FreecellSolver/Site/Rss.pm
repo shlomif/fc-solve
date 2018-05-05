@@ -2,21 +2,24 @@ package FreecellSolver::Site::Rss;
 
 use strict;
 use warnings;
-
 use autodie;
-
-use base 'HTML::Widgets::NavMenu::Object';
-use base 'Class::Accessor';
+use parent 'HTML::Widgets::NavMenu::Object';
 
 use XML::Feed ();
 use CGI       ();
 use Encode qw/ decode /;
 
-__PACKAGE__->mk_accessors(
-    qw(
-        feed
-        )
-);
+sub feed
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{feed} = shift;
+    }
+
+    return $self->{feed};
+}
 
 sub _init
 {
@@ -27,7 +30,7 @@ sub _init
         or die XML::Feed->errstr;
     $self->feed($feed);
 
-    return 0;
+    return;
 }
 
 sub _calc_entry_body
@@ -63,6 +66,7 @@ sub run
         print {$out_fh} $text;
         close($out_fh);
     }
+    return;
 }
 
 1;

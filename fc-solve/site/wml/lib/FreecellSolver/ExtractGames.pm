@@ -42,8 +42,6 @@ sub calc_html
 qq#<option value="$_->{id}"$sel>@{[escapeHTML($_->{name})]}</option>#
         } @{ $self->games() }
         ) . "</select>";
-
-    return;
 }
 
 1;

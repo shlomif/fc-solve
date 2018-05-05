@@ -24,15 +24,6 @@ __PACKAGE__->mk_acc_ref(
     ]
 );
 
-sub new
-{
-    my $class = shift;
-    my $self  = {};
-    bless $self, $class;
-    $self->_init(@_);
-    return $self;
-}
-
 sub _init
 {
     my ( $self, $args ) = @_;
