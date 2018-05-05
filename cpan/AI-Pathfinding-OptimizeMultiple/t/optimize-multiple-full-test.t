@@ -18,70 +18,58 @@ sub test_based_on_data
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my ($scans_aref, $quotas_aref, $want_results, $stats_factors, $blurb) = @_;
+    my ( $scans_aref, $quotas_aref, $want_results, $stats_factors, $blurb ) =
+        @_;
 
     my $results_aref = [];
 
-    my $selected_scans =
-    [
-        map
-        {
+    my $selected_scans = [
+        map {
             my $id = $_->{name};
 
             AI::Pathfinding::OptimizeMultiple::Scan->new(
-                id => $id,
+                id       => $id,
                 cmd_line => "-l $id",
-            )
-        }
-        @{$scans_aref},
+                )
+        } @{$scans_aref},
     ];
 
-    my %num_boards = (map { scalar(@{$_->{data}}) => 1 } @$scans_aref);
+    my %num_boards = ( map { scalar( @{ $_->{data} } ) => 1 } @$scans_aref );
 
     my @nums = keys(%num_boards);
-    if (@nums != 1)
+    if ( @nums != 1 )
     {
-        Carp::confess( "num is not 1.");
+        Carp::confess("num is not 1.");
     }
 
     my $obj = AI::Pathfinding::OptimizeMultiple->new(
         {
-            scans =>
-            [
-                map { +{ name => $_->{name} } } @$scans_aref,
-            ],
+            scans      => [ map { +{ name => $_->{name} } } @$scans_aref, ],
             num_boards => $nums[0],
             scans_iters_pdls =>
-            {
-                map { $_->{name} => pdl($_->{data}), } @$scans_aref,
-            },
-            quotas => $quotas_aref,
+                { map { $_->{name} => pdl( $_->{data} ), } @$scans_aref, },
+            quotas         => $quotas_aref,
             selected_scans => $selected_scans,
-            optimize_for => "speed",
-            ($stats_factors ? (stats_factors => $stats_factors) : ()),
+            optimize_for   => "speed",
+            ( $stats_factors ? ( stats_factors => $stats_factors ) : () ),
         }
     );
 
     $obj->calc_meta_scan();
 
-    my @have =
-    (map
-        {
+    my @have = (
+        map {
             +{
-                name => $scans_aref->[$_->scan_idx]->{name},
+                name  => $scans_aref->[ $_->scan_idx ]->{name},
                 iters => $_->iters,
-            }
-        }
-        @{$obj->chosen_scans()}
+                }
+        } @{ $obj->chosen_scans() }
     );
 
     # TEST:$c++;
-    return eq_or_diff(
-        \@have,
-        $want_results,
-        "$blurb - (eq_or_diff)",
-    );
+    return eq_or_diff( \@have, $want_results, "$blurb - (eq_or_diff)", );
 }
+
 # TEST:$test_based_on_data=$c;
 
 {
@@ -90,25 +78,25 @@ sub test_based_on_data
         [
             {
                 name => "first",
-                data => [200,400,500],
+                data => [ 200, 400, 500 ],
             },
             {
                 name => "second",
-                data => [300,50,1000],
+                data => [ 300, 50, 1000 ],
             },
             {
                 name => "third",
-                data => [10,10,100000],
+                data => [ 10, 10, 100000 ],
             },
         ],
-        [200, 500, ],
+        [ 200, 500, ],
         [
             {
-                name => "third",
+                name  => "third",
                 iters => 200,
             },
             {
-                name => "first",
+                name  => "first",
                 iters => 500,
             },
         ],
@@ -123,25 +111,25 @@ sub test_based_on_data
         [
             {
                 name => "first",
-                data => [50_000,100_000,100_000,1_000_000,2_000_000],
+                data => [ 50_000, 100_000, 100_000, 1_000_000, 2_000_000 ],
             },
             {
                 name => "second",
-                data => [100,200,200,300,300],
+                data => [ 100, 200, 200, 300, 300 ],
             },
             {
                 name => "third",
-                data => [2000,2000,2000,2000,2000],
+                data => [ 2000, 2000, 2000, 2000, 2000 ],
             },
         ],
-        [100, 300,],
+        [ 100, 300, ],
         [
             {
-                name => "first",
+                name  => "first",
                 iters => 100_000,
             },
             {
-                name => "second",
+                name  => "second",
                 iters => 300,
             },
         ],
@@ -158,25 +146,25 @@ sub test_based_on_data
         [
             {
                 name => "first",
-                data => [50_000,99_500,100_000,1_000_000,2_000_000],
+                data => [ 50_000, 99_500, 100_000, 1_000_000, 2_000_000 ],
             },
             {
                 name => "second",
-                data => [100,200,200,300,300],
+                data => [ 100, 200, 200, 300, 300 ],
             },
             {
                 name => "third",
-                data => [2000,2000,2000,2000,2000],
+                data => [ 2000, 2000, 2000, 2000, 2000 ],
             },
         ],
-        [100, 300,],
+        [ 100, 300, ],
         [
             {
-                name => "first",
+                name  => "first",
                 iters => 100_000,
             },
             {
-                name => "second",
+                name  => "second",
                 iters => 300,
             },
         ],
@@ -193,25 +181,25 @@ sub test_based_on_data
         [
             {
                 name => "first",
-                data => [50_000,99_500,100_000,-1,-1,],
+                data => [ 50_000, 99_500, 100_000, -1, -1, ],
             },
             {
                 name => "second",
-                data => [100,200,200,300,300],
+                data => [ 100, 200, 200, 300, 300 ],
             },
             {
                 name => "third",
-                data => [2000,2000,2000,2000,2000],
+                data => [ 2000, 2000, 2000, 2000, 2000 ],
             },
         ],
-        [100, 300,],
+        [ 100, 300, ],
         [
             {
-                name => "first",
+                name  => "first",
                 iters => 100_000,
             },
             {
-                name => "second",
+                name  => "second",
                 iters => 300,
             },
         ],

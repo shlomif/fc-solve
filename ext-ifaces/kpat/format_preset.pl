@@ -7,17 +7,17 @@ sub arg_to_c
     return "\"$arg\"";
 }
 
-my @args = (map { chomp($_); $_ } (<>));
+my @args = ( map { chomp($_); $_ } (<>) );
 my $length = 0;
 
 my @c_args = map { &arg_to_c($_) } @args;
 
 print "const char const * args[" . scalar(@c_args) . "] = \n";
 print "{\n";
-foreach my $arg (@c_args[0 .. ($#c_args-1)])
+foreach my $arg ( @c_args[ 0 .. ( $#c_args - 1 ) ] )
 {
-    $length += length($arg)+2;
-    if ($length > 60)
+    $length += length($arg) + 2;
+    if ( $length > 60 )
     {
         print "\n";
         $length = 0;

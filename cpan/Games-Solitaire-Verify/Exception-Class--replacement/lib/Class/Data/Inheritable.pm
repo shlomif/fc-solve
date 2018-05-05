@@ -6,26 +6,28 @@ $VERSION = '0.08';
 
 use Carp ();
 
-sub mk_classdata {
-    my ($declaredclass, $attribute, $data) = @_;
+sub mk_classdata
+{
+    my ( $declaredclass, $attribute, $data ) = @_;
 
-    if( ref $declaredclass ) {
+    if ( ref $declaredclass )
+    {
         Carp::croak("mk_classdata() is a class method, not an object method");
     }
 
     my $accessor = sub {
-        my $wantclass = ref($_[0]) || $_[0];
+        my $wantclass = ref( $_[0] ) || $_[0];
 
         return $wantclass->mk_classdata($attribute)->(@_)
-          if @_>1 && $wantclass ne $declaredclass;
+            if @_ > 1 && $wantclass ne $declaredclass;
 
-        $data = $_[1] if @_>1;
+        $data = $_[1] if @_ > 1;
         return $data;
     };
 
     my $alias = "_${attribute}_accessor";
-    *{$declaredclass.'::'.$attribute} = $accessor;
-    *{$declaredclass.'::'.$alias}     = $accessor;
+    *{ $declaredclass . '::' . $attribute } = $accessor;
+    *{ $declaredclass . '::' . $alias }     = $accessor;
 }
 
 1;

@@ -20,7 +20,7 @@ sub ceil
 
     my $i = int($x);
 
-    if ($i < $x)
+    if ( $i < $x )
     {
         $i += 1;
     }

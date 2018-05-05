@@ -11,11 +11,11 @@ sub import
 
     my %what = @_;
 
-    my $mapping = delete ( $what{'accessors'} );
+    my $mapping = delete( $what{'accessors'} );
 
-    if (defined ($mapping))
+    if ( defined($mapping) )
     {
-        foreach my $meth_name (keys %$mapping)
+        foreach my $meth_name ( keys %$mapping )
         {
             my $slot = $mapping->{$meth_name};
 

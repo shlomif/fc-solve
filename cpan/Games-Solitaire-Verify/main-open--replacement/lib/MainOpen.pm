@@ -8,7 +8,7 @@ my @file_handles;
 sub enqueue_file
 {
     my ($fh) = @_;
-    push @file_handles, (bless $fh, 'MainOpen');
+    push @file_handles, ( bless $fh, 'MainOpen' );
 }
 
 sub my_open

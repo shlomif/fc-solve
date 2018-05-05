@@ -16,20 +16,21 @@ use Games::Solitaire::Verify::App::CmdLine;
 my @args = @ARGV;
 
 my $separator = first_index { $_ eq '--' } @args;
-if ($separator < 0)
+if ( $separator < 0 )
 {
-    die "You must specify both [Game Params] and [Extra fc-solve Args]. See --help";
+    die
+"You must specify both [Game Params] and [Extra fc-solve Args]. See --help";
 }
 
-my @game_params = @args[0 .. $separator - 1];
-my @fc_solve_args = (@game_params, @args[$separator+1 .. $#args]);
+my @game_params = @args[ 0 .. $separator - 1 ];
+my @fc_solve_args = ( @game_params, @args[ $separator + 1 .. $#args ] );
 
-my $FIRST_INDEX = ($ENV{F} || 1);
-my $LAST_INDEX = ($ENV{L} || 100);
+my $FIRST_INDEX = ( $ENV{F} || 1 );
+my $LAST_INDEX  = ( $ENV{L} || 100 );
 
-fc_solve_init(\@fc_solve_args);
+fc_solve_init( \@fc_solve_args );
 
-foreach my $board_idx ($FIRST_INDEX .. $LAST_INDEX)
+foreach my $board_idx ( $FIRST_INDEX .. $LAST_INDEX )
 {
-    print solve (\@game_params, $board_idx);
+    print solve ( \@game_params, $board_idx );
 }

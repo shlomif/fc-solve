@@ -3,55 +3,55 @@
 use strict;
 use warnings;
 
-my $string = join("", <>);
+my $string = join( "", <> );
 
 my @args;
 
 my $last_arg = "";
 
-my @chars = split(//, $string);
+my @chars = split( //, $string );
 
 my $next_char;
 
 push @chars, "\0";
 
-for (my $i = 0 ; $i < @chars;)
+for ( my $i = 0 ; $i < @chars ; )
 {
-    while ($chars[$i] =~ /^[ \t\n]$/)
+    while ( $chars[$i] =~ /^[ \t\n]$/ )
     {
         $i++;
     }
-    if ($chars[$i] eq "\0")
+    if ( $chars[$i] eq "\0" )
     {
         last;
     }
-    AFTER_WS:
-    while ($chars[$i] =~ /^[^ \t\n"\\\0]$/)
+AFTER_WS:
+    while ( $chars[$i] =~ /^[^ \t\n"\\\0]$/ )
     {
         $last_arg .= $chars[$i];
         $i++;
     }
 
-    if ($chars[$i] =~ /^[ \t\n\0]$/)
+    if ( $chars[$i] =~ /^[ \t\n\0]$/ )
     {
-        NEXT_ARG:
+    NEXT_ARG:
         push @args, $last_arg;
         $last_arg = "";
-        if ($chars[$i] eq "\0")
+        if ( $chars[$i] eq "\0" )
         {
             last;
         }
     }
-    elsif ($chars[$i] eq "\\")
+    elsif ( $chars[$i] eq "\\" )
     {
-        my $next_char = $chars[++$i];
+        my $next_char = $chars[ ++$i ];
         $i++;
-        if ($next_char eq "\0")
+        if ( $next_char eq "\0" )
         {
             $i--;
             goto NEXT_ARG;
         }
-        elsif (($next_char eq "\n") || ($next_char eq "\r"))
+        elsif ( ( $next_char eq "\n" ) || ( $next_char eq "\r" ) )
         {
             goto NEXT_ARG;
         }
@@ -60,25 +60,26 @@ for (my $i = 0 ; $i < @chars;)
             $last_arg .= $next_char;
         }
     }
+
     # Reached Here
-    elsif ($chars[$i] eq "\"")
+    elsif ( $chars[$i] eq "\"" )
     {
         $i++;
-        while(($chars[$i] ne "\"") && ($chars[$i] ne "\0"))
+        while ( ( $chars[$i] ne "\"" ) && ( $chars[$i] ne "\0" ) )
         {
-            if ($chars[$i] eq "\\")
+            if ( $chars[$i] eq "\\" )
             {
-                $next_char = $chars[++$i];
-                if ($next_char eq "\0")
+                $next_char = $chars[ ++$i ];
+                if ( $next_char eq "\0" )
                 {
                     push @args, $last_arg;
                     goto END_OF_LOOP;
                 }
-                elsif (($next_char eq "\n") || ($next_char eq "\r"))
+                elsif ( ( $next_char eq "\n" ) || ( $next_char eq "\r" ) )
                 {
                     # Do nothing
                 }
-                elsif (($next_char eq "\\") || ($next_char eq "\""))
+                elsif ( ( $next_char eq "\\" ) || ( $next_char eq "\"" ) )
                 {
                     $last_arg .= $next_char;
                 }
@@ -100,7 +101,7 @@ for (my $i = 0 ; $i < @chars;)
 }
 
 END_OF_LOOP:
-while (my ($i, $arg) = each @args)
+while ( my ( $i, $arg ) = each @args )
 {
     print "$i: $arg\n";
 }

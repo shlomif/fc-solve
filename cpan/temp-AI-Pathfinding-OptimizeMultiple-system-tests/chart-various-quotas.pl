@@ -9,12 +9,12 @@ use List::Util qw(first);
 my $log_fn = "iters-by-quotas.txt";
 
 my $start_quota = 100;
-my $end_quota = 1_000;
+my $end_quota   = 1_000;
 
-if (-e $log_fn)
+if ( -e $log_fn )
 {
     my $last_line = `tail -1 $log_fn`;
-    if (($start_quota) = $last_line =~ m{\A(\d+)})
+    if ( ($start_quota) = $last_line =~ m{\A(\d+)} )
     {
         # Everything is OK - do nothing.
     }
@@ -28,7 +28,7 @@ open my $data_out, ">>", $log_fn
     or die "Could not open '$log_fn' for append";
 $data_out->autoflush();
 
-foreach my $quota ($start_quota .. $end_quota)
+foreach my $quota ( $start_quota .. $end_quota )
 {
     open my $process, "-|",
         $^X,
