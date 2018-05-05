@@ -28,15 +28,15 @@ sub plog2
     while (@specs)
     {
         my $count = shift(@specs);
-        my $base = shift(@specs);
+        my $base  = shift(@specs);
 
         push @clauses, "log2($base) * $count";
         $total += log($base) * $count;
     }
 
-    my $num_bits = $total/log(2);
-    my $num_bytes = ceil($num_bits / 8);
-    print join(' + ', @clauses), " = $num_bits bits (bytes: $num_bytes)\n";
+    my $num_bits  = $total / log(2);
+    my $num_bytes = ceil( $num_bits / 8 );
+    print join( ' + ', @clauses ), " = $num_bits bits (bytes: $num_bytes)\n";
 }
 
 1;

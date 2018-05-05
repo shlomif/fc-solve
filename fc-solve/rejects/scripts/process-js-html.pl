@@ -22,8 +22,10 @@ FS.init((function() {
 }} )())
 END_JS
 
-$text =~ s#(</head>)#\n<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>\n$1#;
-$text =~ s#(</canvas>)#$1\n<strong>Input:</strong>\n<textarea class="emscripten" id="stdin" rows="10"></textarea>\n#;
+$text =~
+s#(</head>)#\n<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>\n$1#;
+$text =~
+s#(</canvas>)#$1\n<strong>Input:</strong>\n<textarea class="emscripten" id="stdin" rows="10"></textarea>\n#;
 $text =~ s/FS.init\(\)/$replacement/;
 
 print $text;

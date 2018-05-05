@@ -200,5 +200,3 @@ sub move
         addmove();
     }
 }
-
-__END__

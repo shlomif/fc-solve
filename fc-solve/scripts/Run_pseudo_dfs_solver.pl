@@ -7,7 +7,7 @@ use warnings;
 
 exec(
     "./pseudo_dfs_fc_solver",
-<<'EOF'
+    <<'EOF'
 Freecells: 2H
 3H 9C 5H TS 9H QD JS
 TC 8H 9S AC 6S 3D 4D

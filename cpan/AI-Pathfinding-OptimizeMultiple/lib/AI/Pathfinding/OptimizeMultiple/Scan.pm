@@ -7,9 +7,9 @@ use 5.012;
 
 use MooX qw/late/;
 
-has cmd_line => (isa => 'Str', is => 'ro', required => 1,);
-has id => (isa => 'Str', is => 'ro', required => 1,);
-has used => (isa => 'Bool', is => 'rw', default => sub { 0; });
+has cmd_line => ( isa => 'Str',  is => 'ro', required => 1, );
+has id       => ( isa => 'Str',  is => 'ro', required => 1, );
+has used     => ( isa => 'Bool', is => 'rw', default  => sub { 0; } );
 
 sub mark_as_used
 {
@@ -23,14 +23,12 @@ sub is_used
     return $self->used();
 }
 
-
 sub data_file_path
 {
     my $self = shift;
 
-    return "./data/" . $self->id() .  ".data.bin";
+    return "./data/" . $self->id() . ".data.bin";
 }
-
 
 1;
 

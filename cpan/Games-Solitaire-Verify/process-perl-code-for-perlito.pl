@@ -7,7 +7,9 @@ sub _gen_accessors
 {
     my ($words_str) = @_;
 
-    return join( "\n\n", map {
+    return join(
+        "\n\n",
+        map {
             my $acc = $_;
             <<"EOF" } $words_str =~ /(\w+)/g );
 sub $acc

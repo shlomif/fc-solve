@@ -8,21 +8,20 @@ use PDL ();
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 use vars (qw(@fields %fields_map));
-@fields = (qw(
-    _main
-    _num_solved
-    _quota
-    _scan_idx
-));
-
-use Exception::Class
-(
-    'Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas'
+@fields = (
+    qw(
+        _main
+        _num_solved
+        _quota
+        _scan_idx
+        )
 );
 
-%fields_map = (map { $_ => 1 } @fields);
+use Exception::Class ('Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas');
 
-__PACKAGE__->mk_acc_ref(\@fields);
+%fields_map = ( map { $_ => 1 } @fields );
+
+__PACKAGE__->mk_acc_ref( \@fields );
 
 sub _init
 {
@@ -39,7 +38,7 @@ sub _init
 
 sub attach_to
 {
-    my $self = shift;
+    my $self     = shift;
     my $main_obj = shift;
 
     $self->_main($main_obj);
@@ -50,13 +49,12 @@ sub attach_to
 sub get_chosen_struct
 {
     my $self = shift;
-    return
-        Shlomif::FCS::CalcMetaScan::ScanRun->new(
-            {
-                iters => $self->_quota(),
-                scan => $self->_scan_idx()
-            }
-        );
+    return Shlomif::FCS::CalcMetaScan::ScanRun->new(
+        {
+            iters => $self->_quota(),
+            scan  => $self->_scan_idx()
+        }
+    );
 }
 
 sub detach
@@ -74,10 +72,7 @@ sub idx_slice
     my @dims = $scans_data->dims();
 
     return $scans_data->slice(
-        join(",",
-            ":", $self->_scan_idx(), (("(0)") x (@dims-2))
-        )
-    );
+        join( ",", ":", $self->_scan_idx(), ( ("(0)") x ( @dims - 2 ) ) ) );
 }
 
 sub update_total_iters
@@ -89,40 +84,41 @@ sub update_total_iters
 
     # Add the total iterations for all the states that were solved by
     # this scan.
-    $state->_main()->_add_to_total_iters(
-        PDL::sum((($r <= $state->_quota()) & ($r > 0)) * $r)
-    );
+    $state->_main()
+        ->_add_to_total_iters(
+        PDL::sum( ( ( $r <= $state->_quota() ) & ( $r > 0 ) ) * $r ) );
 
     # Find all the states that weren't solved.
-    my $indexes = PDL::which(($r > $state->_quota()) | ($r < 0));
+    my $indexes = PDL::which( ( $r > $state->_quota() ) | ( $r < 0 ) );
 
     # Add the iterations for all the states that have not been solved
     # yet.
-    $state->_main()->_add_to_total_iters($indexes->nelem() * $state->_quota());
+    $state->_main()
+        ->_add_to_total_iters( $indexes->nelem() * $state->_quota() );
 
     # Keep only the states that have not been solved yet.
-    $state->_main()->_scans_data(
-        $state->_main()->_scans_data()->dice($indexes, "X")->copy()
-    );
+    $state->_main()
+        ->_scans_data(
+        $state->_main()->_scans_data()->dice( $indexes, "X" )->copy() );
 }
 
 sub update_idx_slice
 {
     my $state = shift;
-    my $r = $state->idx_slice()->copy();
+    my $r     = $state->idx_slice()->copy();
+
     # $r cannot be 0, because the ones that were 0, were already solved
     # in $state->update_total_iters().
     my $idx_slice = $state->idx_slice();
     $idx_slice .=
-        (($r > 0) * ($r - $state->_quota())) +
-        (($r < 0) * ($r                  ));
+        ( ( $r > 0 ) * ( $r - $state->_quota() ) ) + ( ( $r < 0 ) * ($r) );
 }
 
 sub _mark_as_used
 {
     my $state = shift;
 
-    $state->_main()->_selected_scans()->[$state->_scan_idx()]->mark_as_used();
+    $state->_main()->_selected_scans()->[ $state->_scan_idx() ]->mark_as_used();
 
     return;
 }
@@ -131,7 +127,7 @@ sub _add_chosen
 {
     my $state = shift;
 
-    push @{$state->_main()->chosen_scans()}, $state->get_chosen_struct();
+    push @{ $state->_main()->chosen_scans() }, $state->get_chosen_struct();
 
     return;
 }
@@ -140,7 +136,7 @@ sub _update_total_boards_solved
 {
     my $state = shift;
 
-    $state->_main()->_add_to_total_boards_solved($state->_num_solved());
+    $state->_main()->_add_to_total_boards_solved( $state->_num_solved() );
 
     return;
 }
@@ -151,8 +147,8 @@ sub _trace_wrapper
 
     $state->_main()->_trace(
         {
-            'iters_quota' => $state->_quota(),
-            'selected_scan_idx' => $state->_scan_idx(),
+            'iters_quota'         => $state->_quota(),
+            'selected_scan_idx'   => $state->_scan_idx(),
             'total_boards_solved' => $state->_main()->_total_boards_solved(),
         }
     );

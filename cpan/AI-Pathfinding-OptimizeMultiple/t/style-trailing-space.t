@@ -18,11 +18,10 @@ else
 my $finder = Test::TrailingSpace->new(
     {
         root => '.',
-        filename_regex => qr/(?:(?:\.(?:t|pm|pl|PL|yml|json|arc|vim))|README|Changes|LICENSE)\z/,
+        filename_regex =>
+qr/(?:(?:\.(?:t|pm|pl|PL|yml|json|arc|vim))|README|Changes|LICENSE)\z/,
     },
 );
 
 # TEST
-$finder->no_trailing_space(
-    "No trailing space was found."
-);
+$finder->no_trailing_space("No trailing space was found.");

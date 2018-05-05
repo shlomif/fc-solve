@@ -30,7 +30,7 @@ sub rand30
     my $one = $self->rand;
     my $two = $self->rand;
 
-    return ($one | ($two << 15));
+    return ( $one | ( $two << 15 ) );
 }
 
 package main;
@@ -41,48 +41,49 @@ use Data::Dump qw(dd);
 use FC_Solve::QueuePrototype;
 use FC_Solve::QueueInC;
 
-my ($items_per_page, $data_seed, $interval_seed) = @ARGV;
+my ( $items_per_page, $data_seed, $interval_seed ) = @ARGV;
 
-my $input_gen =  RandGen->new(seed => $data_seed);
-my $output_gen = RandGen->new(seed => $data_seed);
-my $interval_gen = RandGen->new(seed => $interval_seed);
+my $input_gen    = RandGen->new( seed => $data_seed );
+my $output_gen   = RandGen->new( seed => $data_seed );
+my $interval_gen = RandGen->new( seed => $interval_seed );
 
-my $queue_offload_dir_path = path($ENV{TMPDIR})->child("queue-offload-dir");
-);
+my $queue_offload_dir_path = path( $ENV{TMPDIR} )->child("queue-offload-dir");
 $queue_offload_dir_path->mkpath;
 
-my $class = $ENV{'USE_C'} ? 'FC_Solve::QueueInC' :
-    'FC_Solve::QueuePrototype';
+my $class =
+    $ENV{'USE_C'}
+    ? 'FC_Solve::QueueInC'
+    : 'FC_Solve::QueuePrototype';
 
 my $queue = $class->new(
     {
         num_items_per_page => $items_per_page,
-        offload_dir_path => "$queue_offload_dir_path",
+        offload_dir_path   => "$queue_offload_dir_path",
     }
 );
 
-while ($queue->get_num_extracted() < 1_000_000)
+while ( $queue->get_num_extracted() < 1_000_000 )
 {
     # Insert some items.
     {
         my $interval = $interval_gen->rand30() % 1_000;
 
-        foreach my $idx (1 .. $interval)
+        foreach my $idx ( 1 .. $interval )
         {
-            $queue->insert($input_gen->rand30());
+            $queue->insert( $input_gen->rand30() );
         }
     }
 
     {
         my $interval = $interval_gen->rand30() % 1_000;
 
-        foreach my $idx (1 .. $interval)
+        foreach my $idx ( 1 .. $interval )
         {
-            if (! $queue->get_num_items_in_queue())
+            if ( !$queue->get_num_items_in_queue() )
             {
                 last;
             }
-            if ($queue->extract() != $output_gen->rand30())
+            if ( $queue->extract() != $output_gen->rand30() )
             {
                 print "Problem occured.";
                 dd($queue);

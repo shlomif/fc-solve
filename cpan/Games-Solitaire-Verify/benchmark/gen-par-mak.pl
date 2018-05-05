@@ -6,22 +6,22 @@ use warnings;
 use IO::All;
 use Template;
 
-my $MIN = 1;
-my $MAX = 32_000;
+my $MIN  = 1;
+my $MAX  = 32_000;
 my $STEP = 100;
 
 my $ARGS = +{
-    min => $MIN,
-    max => ($MAX / $STEP),
+    min  => $MIN,
+    max  => ( $MAX / $STEP ),
     step => $STEP,
-    res => sub {
+    res  => sub {
         return "Results/" . shift . ".res";
     },
 };
 
 my $template = Template->new(
     {
-            EVAL_PERL    => 1,               # evaluate Perl code blocks
+        EVAL_PERL => 1,    # evaluate Perl code blocks
     }
 );
 
@@ -34,10 +34,7 @@ all:[% FOREACH i = [min .. max] %] [% res(i) %][% END %]
 [% END %]
 EOF
 
-$template->process(\$TEXT,
-    $ARGS,
-    'par2.mak',
-) or die $template->error;
+$template->process( \$TEXT, $ARGS, 'par2.mak', ) or die $template->error;
 
 my $NINJA_TEXT = <<'EOF';
 rule b
@@ -50,7 +47,5 @@ build [% res(i) %]: b
 [% END %]
 EOF
 
-$template->process(\$NINJA_TEXT,
-    $ARGS,
-    'build.ninja',
-) or die $template->error;
+$template->process( \$NINJA_TEXT, $ARGS, 'build.ninja', )
+    or die $template->error;

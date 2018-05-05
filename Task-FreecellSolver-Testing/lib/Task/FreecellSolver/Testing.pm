@@ -53,4 +53,4 @@ Shlomi Fish, L<http://www.shlomifish.org/>
 
 =cut
 
-1; # End of Task::FreecellSolver::Testing
+1;    # End of Task::FreecellSolver::Testing

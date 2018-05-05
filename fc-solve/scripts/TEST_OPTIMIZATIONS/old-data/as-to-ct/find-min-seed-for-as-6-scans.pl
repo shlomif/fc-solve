@@ -29,7 +29,7 @@ my $x = <<'EOF';
  31302	15004
 EOF
 
-my @deals = (<<'EOF' =~ /^ *([0-9]+)/gms);
+my @deals = ( <<'EOF' =~ /^ *([0-9]+)/gms );
  25599	10156
  27188	10164
  25315	10195
@@ -54,8 +54,7 @@ my @deals = (<<'EOF' =~ /^ *([0-9]+)/gms);
 EOF
 
 # 4973 1120 [4267 Verdict: Solved ; Iters: 82 ; Length: 112 1120] [1347 Verdict: Solved ; Iters: 101 ; Length: 119 1120] [10660 Verdict: Solved ; Iters: 102 ; Length: 113 1120] [31326 Verdict: Solved ; Iters: 106 ; Length: 161 1120] ; --method random-dfs -to "01[234579]"
-my @scans =
-(
+my @scans = (
     q#--method random-dfs -to "01[2345789]"#,
     q#--method random-dfs -to "01[234579]"#,
     q#--method random-dfs -to "01[234589]"#,
@@ -65,8 +64,8 @@ my @scans =
 
 FindSeed->find(
     {
-        scan => \@scans,
-        deals => \@deals,
+        scan      => \@scans,
+        deals     => \@deals,
         threshold => 4,
     },
 );

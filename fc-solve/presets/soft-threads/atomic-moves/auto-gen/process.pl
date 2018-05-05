@@ -4,4 +4,4 @@ use strict;
 use warnings;
 
 my $dir = "../../meta-moves/auto-gen/";
-exec($^X, "-I$dir", "$dir/process.pl", @ARGV);
+exec( $^X, "-I$dir", "$dir/process.pl", @ARGV );

@@ -17,21 +17,29 @@ use MooX qw/late/;
 use PDL;
 use Scalar::Util qw/ blessed /;
 
-has chosen_scans => (isa => 'ArrayRef', is => 'rw');
-has _iter_idx => (isa => 'Int', is => 'rw', default => sub { 0; },);
-has _num_boards => (isa => 'Int', is => 'ro', init_arg => 'num_boards',);
-has _orig_scans_data => (isa => 'PDL', is => 'rw');
-has _optimize_for => (isa => 'Str', is => 'ro', init_arg => 'optimize_for',);
-has _scans_data   => (isa => 'PDL', is => 'rw');
-has _selected_scans => (isa => 'ArrayRef', is => 'ro', init_arg => 'selected_scans',);
-has _status => (isa => 'Str', is => 'rw');
-has _quotas => (isa => 'ArrayRef[Int]', is => 'ro', init_arg => 'quotas');
-has _total_boards_solved => (isa => 'Int', is => 'rw');
-has _total_iters => (isa => 'Int', is => 'rw');
-has _trace_cb => (isa => 'Maybe[CodeRef]', is => 'ro', init_arg => 'trace_cb');
-has _scans_meta_data => (isa => 'ArrayRef', is => 'ro', init_arg => 'scans');
-has _scans_iters_pdls => (isa => 'HashRef', is => 'rw', init_arg => 'scans_iters_pdls');
-has _stats_factors => (isa => 'HashRef', is => 'ro', init_arg => 'stats_factors', default => sub { return +{}; },);
+has chosen_scans => ( isa => 'ArrayRef', is => 'rw' );
+has _iter_idx => ( isa => 'Int', is => 'rw', default => sub { 0; }, );
+has _num_boards      => ( isa => 'Int', is => 'ro', init_arg => 'num_boards', );
+has _orig_scans_data => ( isa => 'PDL', is => 'rw' );
+has _optimize_for => ( isa => 'Str', is => 'ro', init_arg => 'optimize_for', );
+has _scans_data   => ( isa => 'PDL', is => 'rw' );
+has _selected_scans =>
+    ( isa => 'ArrayRef', is => 'ro', init_arg => 'selected_scans', );
+has _status => ( isa => 'Str', is => 'rw' );
+has _quotas => ( isa => 'ArrayRef[Int]', is => 'ro', init_arg => 'quotas' );
+has _total_boards_solved => ( isa => 'Int', is => 'rw' );
+has _total_iters         => ( isa => 'Int', is => 'rw' );
+has _trace_cb =>
+    ( isa => 'Maybe[CodeRef]', is => 'ro', init_arg => 'trace_cb' );
+has _scans_meta_data => ( isa => 'ArrayRef', is => 'ro', init_arg => 'scans' );
+has _scans_iters_pdls =>
+    ( isa => 'HashRef', is => 'rw', init_arg => 'scans_iters_pdls' );
+has _stats_factors => (
+    isa      => 'HashRef',
+    is       => 'ro',
+    init_arg => 'stats_factors',
+    default  => sub { return +{}; },
+);
 
 sub BUILD
 {
@@ -41,25 +49,26 @@ sub BUILD
 
     my $scans_data = PDL::cat(
         map {
-            my $id = $_->id();
-            my $pdl = $self->_scans_iters_pdls()->{$id};
+            my $id     = $_->id();
+            my $pdl    = $self->_scans_iters_pdls()->{$id};
             my $factor = $self->_stats_factors->{$id};
-            (defined($factor)
-                ? (($pdl >= 0) * (($pdl / $factor)->ceil()) + ($pdl < 0) *  $pdl)
+            (
+                defined($factor)
+                ? ( ( $pdl >= 0 ) * ( ( $pdl / $factor )->ceil() ) +
+                        ( $pdl < 0 ) * $pdl )
                 : $pdl
             );
-        }
-        @{$self->_selected_scans()}
+        } @{ $self->_selected_scans() }
     );
 
     $self->_orig_scans_data($scans_data);
-    $self->_scans_data($self->_orig_scans_data()->copy());
+    $self->_scans_data( $self->_orig_scans_data()->copy() );
 
     return 0;
 }
 
-my $BOARDS_DIM = 0;
-my $SCANS_DIM = 1;
+my $BOARDS_DIM     = 0;
+my $SCANS_DIM      = 1;
 my $STATISTICS_DIM = 2;
 
 sub _next_iter_idx
@@ -68,7 +77,7 @@ sub _next_iter_idx
 
     my $ret = $self->_iter_idx();
 
-    $self->_iter_idx($ret+1);
+    $self->_iter_idx( $ret + 1 );
 
     return $ret;
 }
@@ -79,7 +88,7 @@ sub _get_next_quota
 
     my $iter = $self->_next_iter_idx();
 
-    if (ref($self->_quotas()) eq "ARRAY")
+    if ( ref( $self->_quotas() ) eq "ARRAY" )
     {
         return $self->_quotas()->[$iter];
     }
@@ -95,11 +104,10 @@ sub _calc_get_iter_state_param_method
 
     my $optimize_for = $self->_optimize_for();
 
-    my %resolve =
-    (
-        len => "_get_iter_state_params_len",
+    my %resolve = (
+        len        => "_get_iter_state_params_len",
         minmax_len => "_get_iter_state_params_minmax_len",
-        speed => "_get_iter_state_params_speed",
+        speed      => "_get_iter_state_params_speed",
     );
 
     return $resolve{$optimize_for};
@@ -125,51 +133,48 @@ sub _my_xchg_sum_over
 {
     my $pdl = shift;
 
-    return _my_sum_over($pdl->xchg(0,1));
+    return _my_sum_over( $pdl->xchg( 0, 1 ) );
 }
 
 sub _get_iter_state_params_len
 {
     my $self = shift;
 
-    my $iters_quota = 0;
+    my $iters_quota        = 0;
     my $num_solved_in_iter = 0;
     my $selected_scan_idx;
 
     # If no boards were solved, then try with a larger quota
-    while ($num_solved_in_iter == 0)
+    while ( $num_solved_in_iter == 0 )
     {
         my $q_more = $self->_get_next_quota();
-        if (!defined($q_more))
+        if ( !defined($q_more) )
         {
             AI::Pathfinding::OptimizeMultiple::Error::OutOfQuotas->throw(
-                error => "No q_more",
-            );
+                error => "No q_more", );
         }
 
         $iters_quota += $q_more;
 
-        my $iters = $self->_scans_data()->slice(":,:,0");
-        my $solved = (($iters <= $iters_quota) & ($iters > 0));
-        my $num_moves = $self->_scans_data->slice(":,:,2");
+        my $iters        = $self->_scans_data()->slice(":,:,0");
+        my $solved       = ( ( $iters <= $iters_quota ) & ( $iters > 0 ) );
+        my $num_moves    = $self->_scans_data->slice(":,:,2");
         my $solved_moves = $solved * $num_moves;
 
-        my $solved_moves_sums = _my_sum_over($solved_moves);
+        my $solved_moves_sums   = _my_sum_over($solved_moves);
         my $solved_moves_counts = _my_sum_over($solved);
-        my $solved_moves_avgs = $solved_moves_sums / $solved_moves_counts;
+        my $solved_moves_avgs   = $solved_moves_sums / $solved_moves_counts;
 
-        (undef, undef, $selected_scan_idx, undef) =
-            $solved_moves_avgs->minmaximum()
-            ;
+        ( undef, undef, $selected_scan_idx, undef ) =
+            $solved_moves_avgs->minmaximum();
 
         $num_solved_in_iter = $solved_moves_counts->at($selected_scan_idx);
     }
 
-    return
-    {
-        quota => $iters_quota,
+    return {
+        quota      => $iters_quota,
         num_solved => $num_solved_in_iter,
-        scan_idx => $selected_scan_idx,
+        scan_idx   => $selected_scan_idx,
     };
 }
 
@@ -177,43 +182,40 @@ sub _get_iter_state_params_minmax_len
 {
     my $self = shift;
 
-    my $iters_quota = 0;
+    my $iters_quota        = 0;
     my $num_solved_in_iter = 0;
     my $selected_scan_idx;
 
     # If no boards were solved, then try with a larger quota
-    while ($num_solved_in_iter == 0)
+    while ( $num_solved_in_iter == 0 )
     {
         my $q_more = $self->_get_next_quota();
-        if (!defined($q_more))
+        if ( !defined($q_more) )
         {
             AI::Pathfinding::OptimizeMultiple::Error::OutOfQuotas->throw(
-                error => "No q_more",
-            );
+                error => "No q_more", );
         }
 
         $iters_quota += $q_more;
 
-        my $iters = $self->_scans_data()->slice(":,:,0");
-        my $solved = (($iters <= $iters_quota) & ($iters > 0));
-        my $num_moves = $self->_scans_data->slice(":,:,2");
+        my $iters        = $self->_scans_data()->slice(":,:,0");
+        my $solved       = ( ( $iters <= $iters_quota ) & ( $iters > 0 ) );
+        my $num_moves    = $self->_scans_data->slice(":,:,2");
         my $solved_moves = $solved * $num_moves;
 
         my $solved_moves_maxima = $solved_moves->maximum()->slice(":,(0),(0)");
         my $solved_moves_counts = _my_sum_over($solved);
 
-        (undef, undef, $selected_scan_idx, undef) =
-            $solved_moves_maxima->minmaximum()
-            ;
+        ( undef, undef, $selected_scan_idx, undef ) =
+            $solved_moves_maxima->minmaximum();
 
         $num_solved_in_iter = $solved_moves_counts->at($selected_scan_idx);
     }
 
-    return
-    {
-        quota => $iters_quota,
+    return {
+        quota      => $iters_quota,
         num_solved => $num_solved_in_iter,
-        scan_idx => $selected_scan_idx,
+        scan_idx   => $selected_scan_idx,
     };
 }
 
@@ -221,37 +223,35 @@ sub _get_iter_state_params_speed
 {
     my $self = shift;
 
-    my $iters_quota = 0;
+    my $iters_quota        = 0;
     my $num_solved_in_iter = 0;
     my $selected_scan_idx;
 
     # If no boards were solved, then try with a larger quota
-    while ($num_solved_in_iter == 0)
+    while ( $num_solved_in_iter == 0 )
     {
         my $q_more = $self->_get_next_quota();
-        if (!defined($q_more))
+        if ( !defined($q_more) )
         {
             AI::Pathfinding::OptimizeMultiple::Error::OutOfQuotas->throw(
-                error => "No q_more"
-            );
+                error => "No q_more" );
         }
 
         $iters_quota += $q_more;
 
-        (undef, $num_solved_in_iter, undef, $selected_scan_idx) =
+        ( undef, $num_solved_in_iter, undef, $selected_scan_idx ) =
             PDL::minmaximum(
-                PDL::sumover(
-                    ($self->_scans_data() <= $iters_quota) &
-                    ($self->_scans_data() > 0)
-                )
-              );
+            PDL::sumover(
+                ( $self->_scans_data() <= $iters_quota ) &
+                    ( $self->_scans_data() > 0 )
+            )
+            );
     }
 
-    return
-    {
-        quota => $iters_quota,
+    return {
+        quota      => $iters_quota,
         num_solved => $num_solved_in_iter->at(0),
-        scan_idx => $selected_scan_idx->at(0),
+        scan_idx   => $selected_scan_idx->at(0),
     };
 }
 
@@ -261,7 +261,7 @@ sub _get_selected_scan
 
     my $iter_state =
         AI::Pathfinding::OptimizeMultiple::IterState->new(
-            $self->_get_iter_state_params(),
+        $self->_get_iter_state_params(),
         );
 
     $iter_state->attach_to($self);
@@ -279,7 +279,7 @@ sub _inspect_quota
 
     $state->update_total_iters();
 
-    if ($self->_total_boards_solved() == $self->_num_boards())
+    if ( $self->_total_boards_solved() == $self->_num_boards() )
     {
         $self->_status("solved_all");
     }
@@ -291,27 +291,29 @@ sub _inspect_quota
     $state->detach();
 }
 
-
 sub calc_meta_scan
 {
     my $self = shift;
 
-    $self->chosen_scans([]);
+    $self->chosen_scans( [] );
 
     $self->_total_boards_solved(0);
     $self->_total_iters(0);
 
     $self->_status("iterating");
+
     # $self->_inspect_quota() throws ::Error::OutOfQuotas if
     # it does not have any available quotas.
-    eval
-    {
-        while ($self->_status() eq "iterating")
+    eval {
+        while ( $self->_status() eq "iterating" )
         {
             $self->_inspect_quota();
         }
     };
-    if (my $err = Exception::Class->caught('AI::Pathfinding::OptimizeMultiple::Error::OutOfQuotas'))
+    if (
+        my $err = Exception::Class->caught(
+            'AI::Pathfinding::OptimizeMultiple::Error::OutOfQuotas')
+        )
     {
         $self->_status("out_of_quotas");
     }
@@ -320,7 +322,7 @@ sub calc_meta_scan
         $err = Exception::Class->caught();
         if ($err)
         {
-            if (not ( blessed $err && $err->can('rethrow')))
+            if ( not( blessed $err && $err->can('rethrow') ) )
             {
                 die $err;
             }
@@ -331,26 +333,23 @@ sub calc_meta_scan
     return;
 }
 
-
 sub _get_num_scans
 {
     my $self = shift;
 
-    return (($self->_scans_data()->dims())[$SCANS_DIM]);
+    return ( ( $self->_scans_data()->dims() )[$SCANS_DIM] );
 }
 
 sub _calc_chosen_scan
 {
-    my ($self, $selected_scan_idx, $iters_quota) = @_;
+    my ( $self, $selected_scan_idx, $iters_quota ) = @_;
 
-    return
-    AI::Pathfinding::OptimizeMultiple::ScanRun->new(
+    return AI::Pathfinding::OptimizeMultiple::ScanRun->new(
         {
             iters => (
-                $iters_quota
-                * (
+                $iters_quota * (
                     $self->_stats_factors->{
-                        ($self->_selected_scans->[$selected_scan_idx]->id()),
+                        ( $self->_selected_scans->[$selected_scan_idx]->id() ),
                     } // 1
                 )
             ),
@@ -363,7 +362,7 @@ sub calc_flares_meta_scan
 {
     my $self = shift;
 
-    $self->chosen_scans([]);
+    $self->chosen_scans( [] );
 
     $self->_total_boards_solved(0);
     $self->_total_iters(0);
@@ -371,19 +370,18 @@ sub calc_flares_meta_scan
     $self->_status("iterating");
 
     my $iters_quota = 0;
-    my $flares_num_iters = PDL::Core::pdl([(0) x $self->_get_num_scans()]);
-    my $ones_constant = PDL::Core::pdl(
-        [map { [1] } (1 .. $self->_get_num_scans())]
-    );
+    my $flares_num_iters = PDL::Core::pdl( [ (0) x $self->_get_num_scans() ] );
+    my $ones_constant =
+        PDL::Core::pdl( [ map { [1] } ( 1 .. $self->_get_num_scans() ) ] );
 
     my $next_num_iters_for_each_scan_x_scan =
-        (($ones_constant x $flares_num_iters));
-
+        ( ( $ones_constant x $flares_num_iters ) );
 
     my $num_moves = $self->_scans_data->slice(":,:,1");
 
     # The number of moves for dimension 0,1,2 above.
-    my $num_moves_repeat = $num_moves->clump(1..2)->xchg(0,1)->dummy(0,$self->_get_num_scans());
+    my $num_moves_repeat = $num_moves->clump( 1 .. 2 )->xchg( 0, 1 )
+        ->dummy( 0, $self->_get_num_scans() );
 
     my $selected_scan_idx;
 
@@ -393,73 +391,75 @@ sub calc_flares_meta_scan
 
     my $last_avg = $UNSOLVED_NUM_MOVES_CONSTANT;
 
-    FLARES_LOOP:
-    while (my $q_more = $self->_get_next_quota())
+FLARES_LOOP:
+    while ( my $q_more = $self->_get_next_quota() )
     {
         $iters_quota += $q_more;
 
         # Next number of iterations for each scan x scan combination.
-        my $next_num_iters =
-            (($ones_constant x $flares_num_iters) +
-                (PDL::MatrixOps::identity($self->_get_num_scans())
-                    * $iters_quota
-                )
-            );
+        my $next_num_iters = (
+            ( $ones_constant x $flares_num_iters ) + (
+                PDL::MatrixOps::identity( $self->_get_num_scans() ) *
+                    $iters_quota
+            )
+        );
 
         # print "\$next_num_iters = $next_num_iters\n";
 
         my $iters = $self->_scans_data()->slice(":,:,0");
 
         my $iters_repeat =
-            $iters->dummy(0,$self->_get_num_scans())->xchg(1,2)->clump(2 .. 3);
+            $iters->dummy( 0, $self->_get_num_scans() )->xchg( 1, 2 )
+            ->clump( 2 .. 3 );
 
         # print "\$iters_repeat =", join(",",$iters_repeat->dims()), "\n";
 
         my $next_num_iters_repeat =
-            $next_num_iters->dummy(0,$self->_num_boards())->xchg(0,2);
+            $next_num_iters->dummy( 0, $self->_num_boards() )->xchg( 0, 2 );
 
-        # print "\$next_num_iters_repeat =", join(",",$next_num_iters_repeat->dims()), "\n";
+# print "\$next_num_iters_repeat =", join(",",$next_num_iters_repeat->dims()), "\n";
 
         # A boolean tensor of which boards were solved:
         # Dimension 0 - Which scan is it. - size - _get_num_scans()
         # Dimension 1 - Which scan we added the quota to
         #   - size - _get_num_scans()
         # Dimension 2 - Which board. - size - _num_boards()
-        my $solved = ($iters_repeat >= 0) * ($iters_repeat < $next_num_iters_repeat);
+        my $solved =
+            ( $iters_repeat >= 0 ) * ( $iters_repeat < $next_num_iters_repeat );
 
-        # print "\$num_moves_repeat =", join(",",$num_moves_repeat->dims()), "\n";
-
-
+      # print "\$num_moves_repeat =", join(",",$num_moves_repeat->dims()), "\n";
 
         my $num_moves_solved =
-            ($solved * $num_moves_repeat) + ($solved->not() * $UNSOLVED_NUM_MOVES_CONSTANT);
+            ( $solved * $num_moves_repeat ) +
+            ( $solved->not() * $UNSOLVED_NUM_MOVES_CONSTANT );
 
-        my $minimal_num_moves_solved = $num_moves_solved->xchg(0,1)->minimum();
+        my $minimal_num_moves_solved =
+            $num_moves_solved->xchg( 0, 1 )->minimum();
 
         my $which_minima_are_solved =
-            ($minimal_num_moves_solved != $UNSOLVED_NUM_MOVES_CONSTANT)
-            ;
+            ( $minimal_num_moves_solved != $UNSOLVED_NUM_MOVES_CONSTANT );
 
         my $minimal_with_zeroes =
             $which_minima_are_solved * $minimal_num_moves_solved;
 
-        my $solved_moves_sums = _my_xchg_sum_over($minimal_with_zeroes);
+        my $solved_moves_sums   = _my_xchg_sum_over($minimal_with_zeroes);
         my $solved_moves_counts = _my_xchg_sum_over($which_minima_are_solved);
-        my $solved_moves_avgs = $solved_moves_sums / $solved_moves_counts;
+        my $solved_moves_avgs   = $solved_moves_sums / $solved_moves_counts;
 
         # print join(",", $solved_moves_avgs->minmaximum()), "\n";
 
         my $min_avg;
 
-        ($min_avg, undef, $selected_scan_idx, undef) =
-            $solved_moves_avgs->minmaximum()
-            ;
+        ( $min_avg, undef, $selected_scan_idx, undef ) =
+            $solved_moves_avgs->minmaximum();
 
         $last_avg = $min_avg;
 
-        push @{$self->chosen_scans()}, $self->_calc_chosen_scan($selected_scan_idx, $iters_quota);
+        push @{ $self->chosen_scans() },
+            $self->_calc_chosen_scan( $selected_scan_idx, $iters_quota );
 
-        $flares_num_iters->set($selected_scan_idx, $flares_num_iters->at($selected_scan_idx)+$iters_quota);
+        $flares_num_iters->set( $selected_scan_idx,
+            $flares_num_iters->at($selected_scan_idx) + $iters_quota );
         $self->_selected_scans()->[$selected_scan_idx]->mark_as_used();
 
         $iters_quota = 0;
@@ -467,63 +467,61 @@ sub calc_flares_meta_scan
         my $num_solved = $solved_moves_counts->at($selected_scan_idx);
 
         my $flares_num_iters_repeat =
-            $flares_num_iters->dummy(0,$self->_num_boards());
+            $flares_num_iters->dummy( 0, $self->_num_boards() );
 
         # A boolean tensor:
         # Dimension 0 - board.
         # Dimension 1 - scans.
         my $solved_with_which_iter =
-            ($flares_num_iters_repeat >= $iters->clump(1 .. 2))
-            & ($iters->clump(1 .. 2) >= 0)
-            ;
+            ( $flares_num_iters_repeat >= $iters->clump( 1 .. 2 ) ) &
+            ( $iters->clump( 1 .. 2 ) >= 0 );
 
-        my $total_num_iters =
-        (
-            ($solved_with_which_iter * $flares_num_iters_repeat)->sum()
-            + ($solved_with_which_iter->not()->andover()
-                * $flares_num_iters->sum())->sum()
+        my $total_num_iters = (
+            ( $solved_with_which_iter * $flares_num_iters_repeat )->sum() + (
+                $solved_with_which_iter->not()->andover() *
+                    $flares_num_iters->sum()
+            )->sum()
         );
 
-        print "Finished ", $loop_iter_num++, " ; #Solved = $num_solved ; Iters = $total_num_iters ; Avg = $min_avg\n";
+        print "Finished ", $loop_iter_num++,
+" ; #Solved = $num_solved ; Iters = $total_num_iters ; Avg = $min_avg\n";
         STDOUT->flush();
     }
 }
 
-
 sub calc_board_iters
 {
-    my $self = shift;
+    my $self  = shift;
     my $board = shift;
 
     my $board_iters = 0;
 
-    my @info = PDL::list($self->_orig_scans_data()->slice("$board,:"));
+    my @info      = PDL::list( $self->_orig_scans_data()->slice("$board,:") );
     my @orig_info = @info;
 
-    foreach my $s (@{$self->chosen_scans()})
+    foreach my $s ( @{ $self->chosen_scans() } )
     {
-        if (($info[$s->scan_idx()] > 0) && ($info[$s->scan_idx()] <= $s->iters()))
+        if (   ( $info[ $s->scan_idx() ] > 0 )
+            && ( $info[ $s->scan_idx() ] <= $s->iters() ) )
         {
-            $board_iters += $info[$s->iters()];
+            $board_iters += $info[ $s->iters() ];
             last;
         }
         else
         {
-            if ($info[$s->scan_idx()] > 0)
+            if ( $info[ $s->scan_idx() ] > 0 )
             {
-                $info[$s->scan_idx()] -= $s->iters();
+                $info[ $s->scan_idx() ] -= $s->iters();
             }
             $board_iters += $s->iters();
         }
     }
 
-    return
-        {
-            'per_scan_iters' => \@orig_info,
-            'board_iters' => $board_iters,
-        };
+    return {
+        'per_scan_iters' => \@orig_info,
+        'board_iters'    => $board_iters,
+    };
 }
-
 
 sub get_final_status
 {
@@ -532,21 +530,20 @@ sub get_final_status
     return $self->_status();
 }
 
-
 sub simulate_board
 {
-    my ($self, $board_idx, $args) = @_;
+    my ( $self, $board_idx, $args ) = @_;
 
-    if ($board_idx !~ /\A[0-9]+\z/)
+    if ( $board_idx !~ /\A[0-9]+\z/ )
     {
         die "Board index '$board_idx' is not numeric!";
     }
 
     $args ||= {};
 
-    my $chosen_scans = ($args->{chosen_scans} || $self->chosen_scans);
+    my $chosen_scans = ( $args->{chosen_scans} || $self->chosen_scans );
 
-    my @info = PDL::list($self->_orig_scans_data()->slice("$board_idx,:"));
+    my @info = PDL::list( $self->_orig_scans_data()->slice("$board_idx,:") );
 
     my $board_iters = 0;
 
@@ -564,15 +561,16 @@ sub simulate_board
         return;
     };
 
-    SCANS_LOOP:
+SCANS_LOOP:
     foreach my $s (@$chosen_scans)
     {
-        if (($info[$s->scan_idx()] > 0) && ($info[$s->scan_idx()] <= $s->iters()))
+        if (   ( $info[ $s->scan_idx() ] > 0 )
+            && ( $info[ $s->scan_idx() ] <= $s->iters() ) )
         {
             $add_new_scan_run->(
                 AI::Pathfinding::OptimizeMultiple::ScanRun->new(
                     {
-                        iters => $info[$s->scan_idx()],
+                        iters    => $info[ $s->scan_idx() ],
                         scan_idx => $s->scan_idx(),
                     },
                 )
@@ -583,15 +581,15 @@ sub simulate_board
         }
         else
         {
-            if ($info[$s->scan_idx()] > 0)
+            if ( $info[ $s->scan_idx() ] > 0 )
             {
-                $info[$s->scan_idx()] -= $s->iters();
+                $info[ $s->scan_idx() ] -= $s->iters();
             }
 
             $add_new_scan_run->(
                 AI::Pathfinding::OptimizeMultiple::ScanRun->new(
                     {
-                        iters => $s->iters(),
+                        iters    => $s->iters(),
                         scan_idx => $s->scan_idx(),
                     },
                 )
@@ -599,28 +597,26 @@ sub simulate_board
         }
     }
 
-    return
-        AI::Pathfinding::OptimizeMultiple::SimulationResults->new(
-            {
-                status => $status,
-                scan_runs => \@scan_runs,
-                total_iters => $board_iters,
-            }
-        );
+    return AI::Pathfinding::OptimizeMultiple::SimulationResults->new(
+        {
+            status      => $status,
+            scan_runs   => \@scan_runs,
+            total_iters => $board_iters,
+        }
+    );
 }
 
 sub _trace
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    if (my $trace_callback = $self->_trace_cb())
+    if ( my $trace_callback = $self->_trace_cb() )
     {
         $trace_callback->($args);
     }
 
     return;
 }
-
 
 sub get_total_iters
 {
@@ -635,7 +631,7 @@ sub _add_to_total_iters
 
     my $how_much = shift;
 
-    $self->_total_iters($self->_total_iters() + $how_much);
+    $self->_total_iters( $self->_total_iters() + $how_much );
 
     return;
 }
@@ -646,12 +642,12 @@ sub _add_to_total_boards_solved
 
     my $how_much = shift;
 
-    $self->_total_boards_solved($self->_total_boards_solved() + $how_much);
+    $self->_total_boards_solved( $self->_total_boards_solved() + $how_much );
 
     return;
 }
 
-1; # End of AI::Pathfinding::OptimizeMultiple
+1;    # End of AI::Pathfinding::OptimizeMultiple
 
 =pod
 

@@ -9,34 +9,33 @@ use AI::Pathfinding::OptimizeMultiple::DataInputObj;
 
 use PDL ();
 
-has start_board => (is => 'ro', isa => 'Int', default => 1);
-has num_boards  => (is => 'ro', isa => 'Int', default => 32000);
+has start_board => ( is => 'ro', isa => 'Int', default => 1 );
+has num_boards  => ( is => 'ro', isa => 'Int', default => 32000 );
 has input_obj   => (
-    is => 'ro',
-    isa => 'AI::Pathfinding::OptimizeMultiple::DataInputObj',
-    lazy => 1,
+    is      => 'ro',
+    isa     => 'AI::Pathfinding::OptimizeMultiple::DataInputObj',
+    lazy    => 1,
     default => sub {
         my ($self) = @_;
 
         return AI::Pathfinding::OptimizeMultiple::DataInputObj->new(
             {
                 start_board => $self->start_board,
-                num_boards => $self->num_boards,
+                num_boards  => $self->num_boards,
             }
         );
     },
-    handles =>
-    [
+    handles => [
         qw(
-        _get_scan_cmd_line
-        get_next_id
-        get_scans_lens_iters_pdls
-        get_scans_iters_pdls
-        get_scan_ids_aref
-        lookup_scan_idx_based_on_id
-        selected_scans
-        time_scan
-        )
+            _get_scan_cmd_line
+            get_next_id
+            get_scans_lens_iters_pdls
+            get_scans_iters_pdls
+            get_scan_ids_aref
+            lookup_scan_idx_based_on_id
+            selected_scans
+            time_scan
+            )
     ]
 );
 
@@ -45,11 +44,11 @@ sub calc_params_from_environment
     my ($self) = @_;
 
     my %params;
-    if (exists($ENV{FC_NUM}))
+    if ( exists( $ENV{FC_NUM} ) )
     {
         $params{freecells_num} = $ENV{FC_NUM};
     }
-    if (exists($ENV{FC_VARIANT}))
+    if ( exists( $ENV{FC_VARIANT} ) )
     {
         $params{variant} = $ENV{FC_VARIANT};
     }
@@ -63,9 +62,9 @@ sub calc_scans_lens_data
 
     my $data_hash_ref = $self->get_scans_lens_iters_pdls();
 
-    my $scans_lens_data = PDL::cat( @{$data_hash_ref}{
-            @{ $self->get_scan_ids_aref }
-        })->xchg(1,3)->clump(2..3);
+    my $scans_lens_data =
+        PDL::cat( @{$data_hash_ref}{ @{ $self->get_scan_ids_aref } } )
+        ->xchg( 1, 3 )->clump( 2 .. 3 );
 
     return $scans_lens_data;
 }
@@ -76,7 +75,8 @@ sub calc_scans_data_wo_lens
 
     my $data_hash_ref = $self->get_scans_iters_pdls();
 
-    my $scans_data = PDL::cat( @{$data_hash_ref}{@{ $self->get_scan_ids_aref } } );
+    my $scans_data =
+        PDL::cat( @{$data_hash_ref}{ @{ $self->get_scan_ids_aref } } );
 
     return $scans_data;
 }

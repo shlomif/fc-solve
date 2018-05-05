@@ -10,18 +10,19 @@ open my $dump_fh, '<', '982.dump'
     or die "Cannot open 982.dump for reading - $!";
 
 my $line_idx = 0;
+
 sub read_state
 {
     my $ret = '';
-    while (my $line = <$dump_fh>)
+    while ( my $line = <$dump_fh> )
     {
         $line_idx++;
-        if ($line =~ /\AFoundations: /)
+        if ( $line =~ /\AFoundations: / )
         {
             $ret .= $line;
             $line = <$dump_fh>;
             $line_idx++;
-            while ($line =~ /\S/)
+            while ( $line =~ /\S/ )
             {
                 $ret .= $line;
                 $line = <$dump_fh>;
@@ -37,7 +38,7 @@ my $init_state_str = read_state();
 
 my %encoded_counts;
 
-while (my $state = read_state())
+while ( my $state = read_state() )
 {
     my $delta = Games::Solitaire::FC_Solve::DeltaStater->new(
         {
@@ -53,13 +54,14 @@ while (my $state = read_state())
 
     my $encoded = $delta->encode();
 
-    $encoded_counts{length($encoded)}++;
+    $encoded_counts{ length($encoded) }++;
 
-    if ($delta->decode($encoded)->to_string() ne $state)
+    if ( $delta->decode($encoded)->to_string() ne $state )
     {
         die "Wrong encoding/decoding process at line $line_idx!";
     }
 
     print "Counts:\n";
-    print map { "$_ => $encoded_counts{$_}\n" } sort { $a <=> $b } keys(%encoded_counts);
+    print map { "$_ => $encoded_counts{$_}\n" }
+        sort  { $a <=> $b } keys(%encoded_counts);
 }

@@ -5,9 +5,9 @@ use warnings;
 
 sub process
 {
-    my ($ident, $field) = @_;
+    my ( $ident, $field ) = @_;
 
-    if ($field eq "s")
+    if ( $field eq "s" )
     {
         return $ident . "_key";
     }
@@ -20,19 +20,20 @@ sub process
 while (<>)
 {
     chomp;
+
     # An fcs_state_t function parameter
     if (m{\A\s+fcs_state_t\s*\*\s*(\w+)_key\s*,\s*\z})
     {
         my $ident = $1;
         print "$_\n";
-        PARAM_LOOP:
-        while(<>)
+    PARAM_LOOP:
+        while (<>)
         {
             chomp;
             if (m{\A\{})
             {
                 print "$_\n";
-                FUNC_LOOP:
+            FUNC_LOOP:
                 while (<>)
                 {
                     chomp;
