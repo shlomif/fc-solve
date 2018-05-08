@@ -15,11 +15,11 @@
 
 typedef struct
 {
-    fcs_var_base_int_t data;
+    var_base_int data;
 #ifndef FCS_USE_INT128_FOR_VAR_BASE
     /* To avoid memory fragmentation, we keep those here and re use them. */
-    fcs_var_base_int_t data_byte_offset;
-    fcs_var_base_int_t r;
+    var_base_int data_byte_offset;
+    var_base_int r;
 #endif
 } fcs_var_base_reader_t;
 
@@ -43,7 +43,7 @@ static inline void fc_solve_var_base_reader_start(
     for (size_t count = 0; count < data_len; count++, shift_count += NUM_BITS)
     {
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
-        s->data |= (((fcs_var_base_int_t)data[count]) << shift_count);
+        s->data |= (((var_base_int)data[count]) << shift_count);
 #else
         FCS_var_base_int__set_ui(
             s->data_byte_offset, (unsigned long)data[count]);
@@ -57,7 +57,7 @@ static inline unsigned long fc_solve_var_base_reader_read(
     fcs_var_base_reader_t *const reader, const unsigned long base)
 {
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
-    fcs_var_base_int_t rem;
+    var_base_int rem;
 #else
 #define rem (reader->r)
 #endif

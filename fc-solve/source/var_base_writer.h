@@ -16,10 +16,10 @@
 
 typedef struct
 {
-    fcs_var_base_int_t data;
-    fcs_var_base_int_t multiplier;
+    var_base_int data;
+    var_base_int multiplier;
     /* To avoid memory fragmentation, we keep those here and re use them. */
-    fcs_var_base_int_t remainder;
+    var_base_int remainder;
 } fcs_var_base_writer_t;
 
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
