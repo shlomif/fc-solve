@@ -13,7 +13,7 @@
 typedef struct
 {
     dbm_solver_thread thread;
-    thread_arg_t arg;
+    thread_arg arg;
     pthread_t id;
 } main_thread_item;
 

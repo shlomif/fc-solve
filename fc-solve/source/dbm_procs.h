@@ -140,7 +140,7 @@ typedef struct fcs_dbm_solver_thread_struct dbm_solver_thread;
 typedef struct
 {
     dbm_solver_thread *thread;
-} thread_arg_t;
+} thread_arg;
 
 static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,

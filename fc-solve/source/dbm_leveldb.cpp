@@ -18,7 +18,7 @@ extern "C" void fc_solve_dbm_store_init(
     *store = (fcs_dbm_store_t)db;
 }
 
-extern "C" fcs_bool_t fc_solve_dbm_store_does_key_exist(
+extern "C" bool fc_solve_dbm_store_does_key_exist(
     fcs_dbm_store_t store, const unsigned char *key_raw)
 {
     leveldb::Slice key((const char *)(key_raw + 1), key_raw[0]);
@@ -29,7 +29,7 @@ extern "C" fcs_bool_t fc_solve_dbm_store_does_key_exist(
         .ok();
 }
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(fcs_dbm_store_t store,
+bool fc_solve_dbm_store_lookup_parent_and_move(fcs_dbm_store_t store,
     const unsigned char *key_raw, unsigned char *parent_and_move)
 {
     leveldb::Slice key((const char *)(key_raw + 1), key_raw[0]);

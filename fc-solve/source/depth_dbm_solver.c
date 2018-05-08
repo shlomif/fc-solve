@@ -102,7 +102,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
+    const_AUTO(thread, ((thread_arg *)void_arg)->thread);
     const_SLOT(instance, thread);
     const_AUTO(delta_stater, &(thread->delta_stater));
     const_AUTO(local_variant, instance->common.variant);

@@ -27,9 +27,9 @@ typedef struct
     int count_next_states, max_count_next_states, next_state_idx;
 } pseudo_dfs_stack_item_t;
 
-typedef Pvoid_t store_t;
+typedef Pvoid_t store_type;
 
-static inline void delete_state(store_t *const store,
+static inline void delete_state(store_type *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     fcs_pdfs_cache_insert(cache, key);
@@ -37,14 +37,14 @@ static inline void delete_state(store_t *const store,
     JHSD(rc_int, *store, key, sizeof(*key));
 }
 
-static inline void insert_state(store_t *store, fcs_cache_key_t *key)
+static inline void insert_state(store_type *store, fcs_cache_key_t *key)
 {
     Word_t *PValue;
     JHSI(PValue, *store, key, sizeof(*key));
     *PValue = 1;
 }
 
-static inline bool lookup_state(store_t *const store,
+static inline bool lookup_state(store_type *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     Word_t *PValue;
@@ -65,7 +65,7 @@ static inline bool lookup_state(store_t *const store,
 
 typedef struct
 {
-    store_t store;
+    store_type store;
     fcs_pseudo_dfs_lru_cache_t cache;
 
     long pre_cache_max_count;

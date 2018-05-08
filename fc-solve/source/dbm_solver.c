@@ -120,7 +120,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_dbm_record_t *token = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
+    const_AUTO(thread, ((thread_arg *)void_arg)->thread);
     dbm_solver_instance *const instance = thread->instance;
     fcs_delta_stater *const delta_stater = &(thread->delta_stater);
 

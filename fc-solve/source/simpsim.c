@@ -692,21 +692,21 @@ typedef struct
 {
     int cards_num;
     int src_stack;
-} s_e_src_t;
+} s_e_src_type;
 
-static inline s_e_src_t calc_start_end_src_stack(const int seq_index,
+static inline s_e_src_type calc_start_end_src_stack(const int seq_index,
     const sequences_analysis_t *const seqs, const int after_end_of_junk,
     const int cards_num, const int stack_idx, const int ds,
     const int dest_cards_num)
 {
     if ((size_t)seq_index == seqs->num_separate_false_seqs)
     {
-        return (const s_e_src_t){
+        return (const s_e_src_type){
             .cards_num = cards_num - after_end_of_junk, .src_stack = stack_idx};
     }
     else
     {
-        return (const s_e_src_t){
+        return (const s_e_src_type){
             .cards_num = (((seq_index == 0) ? dest_cards_num
                                             : seqs->seq_points[seq_index - 1]) -
                           seqs->seq_points[seq_index]),
@@ -799,7 +799,7 @@ DECLARE_MOVE_FUNCTION(
             for (size_t seq_index = 0;
                  seq_index < seqs.num_separate_false_seqs + 1; seq_index++)
             {
-                const s_e_src_t s_e = calc_start_end_src_stack(seq_index, &seqs,
+                const s_e_src_type s_e = calc_start_end_src_stack(seq_index, &seqs,
                     after_end_of_junk, cards_num, stack_idx, ds,
                     dest_cards_num);
                 const_AUTO(dest_col_i, seqs.junk_move_to_stacks[seq_index]);
@@ -818,16 +818,16 @@ DECLARE_MOVE_FUNCTION(
         return;
 }
 
-typedef fcs_pos_by_rank_t ds_dc_t;
+typedef fcs_pos_by_rank_t ds_dc_type;
 
-static inline void sort_ds_dcs(ds_dc_t *const ds_dcs, const int len)
+static inline void sort_ds_dcs(ds_dc_type *const ds_dcs, const int len)
 {
 #define start ds_dcs
-    ds_dc_t *const end = start + len;
+    ds_dc_type *const end = start + len;
 
-    for (ds_dc_t *b = start + 1; b < end; b++)
+    for (ds_dc_type *b = start + 1; b < end; b++)
     {
-        for (ds_dc_t *c = b;
+        for (ds_dc_type *c = b;
              (c > start) &&
              (c[0].col < c[-1].col ||
                  (c[0].col == c[-1].col && c[0].height > c[-1].height));
@@ -894,7 +894,7 @@ DECLARE_MOVE_FUNCTION(
     {
         continue;
     }
-    ds_dc_t ds_dcs[4];
+    ds_dc_type ds_dcs[4];
     size_t len = 0;
     for (size_t parent_suit = 0; parent_suit < 4; parent_suit++)
     {
