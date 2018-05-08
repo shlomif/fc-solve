@@ -424,7 +424,7 @@ static inline void update_initial_cards_val(fc_solve_instance_t *const instance)
     // We cannot use typeof here because clang complains about double const.
     const fcs_state *const s = &(instance->state_copy.s);
 
-    fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
+    fcs_seq_cards_power_type cards_under_sequences = 0;
     for (int a = 0; a < INSTANCE_STACKS_NUM; a++)
     {
         const_AUTO(col, fcs_state_get_col(*s, a));

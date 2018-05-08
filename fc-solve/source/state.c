@@ -137,7 +137,7 @@ int fc_solve_state_compare_equal(const void *const s1, const void *const s2)
 
 int __attribute__((pure))
 fc_solve_state_compare_with_context(const void *const s1, const void *const s2,
-    fcs_compare_context_t context GCC_UNUSED)
+    fcs_compare_context context GCC_UNUSED)
 {
     return memcmp(s1, s2, sizeof(fcs_state));
 }

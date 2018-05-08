@@ -44,8 +44,6 @@ extern "C" {
 
 #define BEFS_MAX_DEPTH 20000
 
-extern const fcs_default_weights_t fc_solve_default_befs_weights;
-
 #ifdef FCS_FREECELL_ONLY
 #define is_filled_by_any_card() TRUE
 #else
@@ -186,8 +184,8 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
 #define unlimited_sequence_move FALSE
 #endif
 
-    fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
-    fc_solve_seq_cards_power_type_t seqs_over_renegade_cards = 0;
+    fcs_seq_cards_power_type cards_under_sequences = 0;
+    fcs_seq_cards_power_type seqs_over_renegade_cards = 0;
 
     double sum = (max(0, negated_depth) * weighting->depth_factor);
     const_PTR(

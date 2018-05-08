@@ -178,7 +178,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
 typedef struct
 {
     double weights[FCS_NUM_BEFS_WEIGHTS];
-} fcs_default_weights_t;
+} fcs_default_weights;
 typedef struct
 {
     bool should_go_over_stacks;
@@ -189,7 +189,7 @@ typedef struct
     double num_cards_out_lookup_table[14];
     // The BeFS weights of the different BeFS tests. Those
     // weights determine the commulative priority of the state.
-    fcs_default_weights_t befs_weights;
+    fcs_default_weights befs_weights;
 } fc_solve_state_weighting_t;
 
 typedef enum {
@@ -573,7 +573,7 @@ struct fc_solve_instance_struct
     fcs_int_limit_t effective_trim_states_in_collection_from;
 #endif
 #endif
-    fc_solve_seq_cards_power_type_t initial_cards_under_sequences_value;
+    fcs_seq_cards_power_type initial_cards_under_sequences_value;
 /*
  * tree is the balanced binary tree that is used to store and index
  * the checked states.

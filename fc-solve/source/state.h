@@ -455,9 +455,9 @@ void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS());
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-typedef void *fcs_compare_context_t;
+typedef void *fcs_compare_context;
 #else
-typedef const void *fcs_compare_context_t;
+typedef const void *fcs_compare_context;
 #endif
 
 static inline int fc_solve_state_compare(
@@ -470,7 +470,7 @@ static inline int fc_solve_state_compare(
 extern int fc_solve_state_compare_equal(const void *, const void *);
 #endif
 extern int fc_solve_state_compare_with_context(
-    const void *, const void *, fcs_compare_context_t);
+    const void *, const void *, fcs_compare_context);
 
 /*
  * Convert an entire card to its user representation.

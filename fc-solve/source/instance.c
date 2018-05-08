@@ -36,7 +36,7 @@
     a guideline for the end-user.
 */
 
-const fcs_default_weights_t fc_solve_default_befs_weights = {
+const fcs_default_weights fc_solve_default_befs_weights = {
     .weights = {0.5, 0, 0.3, 0, 0.2, 0}};
 
 static inline void soft_thread_clean_soft_dfs(
