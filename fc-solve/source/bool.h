@@ -7,13 +7,11 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-// bool.h - the purpose of this file is to define the fcs_bool_t type
+// bool.h - the purpose of this file is to define the bool type
 // and the related constants of TRUE and FALSE.
 #pragma once
 #include "fcs_conf.h"
 #include <stdbool.h>
-
-typedef bool fcs_bool_t;
 
 #ifndef FALSE
 #define FALSE false

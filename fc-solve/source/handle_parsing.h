@@ -30,7 +30,7 @@ enum
 static inline void *alloc_instance_and_parse(const int argc, char **const argv,
     int *const arg_ptr, freecell_solver_str_t *const known_parameters,
     const freecell_solver_user_cmd_line_known_commands_callback_t callback,
-    void *const callback_context, const fcs_bool_t only_recognized)
+    void *const callback_context, const bool only_recognized)
 {
     void *const instance = freecell_solver_user_alloc();
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME

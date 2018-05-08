@@ -164,7 +164,7 @@ static inline void fc_solve_hash_free(fc_solve_hash_t *const hash)
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
 static inline void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
-    fcs_bool_t (*should_delete_ptr)(void *const key, void *const context),
+    bool (*should_delete_ptr)(void *const key, void *const context),
     void *const context)
 {
     const_SLOT(size, hash);

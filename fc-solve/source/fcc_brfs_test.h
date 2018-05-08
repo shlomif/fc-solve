@@ -59,7 +59,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(fcs_dbm_variant_type_t,
     /* NULL-terminated */
     const char **,
     /* NULL-terminated */
-    const char **, fcs_bool_t *const);
+    const char **, bool *const);
 
 #ifdef __cplusplus
 }

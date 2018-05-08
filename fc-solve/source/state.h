@@ -197,12 +197,12 @@ static inline fcs_card_t fcs_col_get_rank(
 }
 #define FCS_RANK_KING 13
 #include "is_king.h"
-static inline fcs_bool_t fcs_card_is_king(const fcs_card_t card)
+static inline bool fcs_card_is_king(const fcs_card_t card)
 {
     return fc_solve_is_king_buf[(size_t)card];
 }
 
-static inline fcs_bool_t fcs_col_is_king(
+static inline bool fcs_col_is_king(
     const fcs_const_cards_column_t col, const int card_idx)
 {
     return fcs_card_is_king(fcs_col_get_card(col, card_idx));
@@ -477,7 +477,7 @@ extern int fc_solve_state_compare_with_context(
  *
  * */
 extern void fc_solve_card_stringify(
-    const fcs_card_t card, char *const str PASS_T(const fcs_bool_t t));
+    const fcs_card_t card, char *const str PASS_T(const bool t));
 
 #ifdef FC_SOLVE__STRICTER_BOARD_PARSING
 #define FC_SOLVE_MAP_CHAR(c) (c)
@@ -659,7 +659,7 @@ static inline const char *fc_solve__try_prefixes(
         out_state PASS_FREECELLS(freecells_num) PASS_STACKS(stacks_num)        \
             PASS_DECKS(decks_num) PASS_IND_BUF_T(indirect_stacks_buffer))
 
-static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
+static inline bool fc_solve_initial_user_state_to_c_proto(
     const char *const string,
     fcs_state_keyval_pair_t *const out_state FREECELLS_STACKS_DECKS__ARGS()
         IND_BUF_T_PARAM(indirect_stacks_buffer))
@@ -667,7 +667,7 @@ static inline fcs_bool_t fc_solve_initial_user_state_to_c_proto(
     fc_solve_state_init(out_state, STACKS_NUM__VAL, indirect_stacks_buffer);
     const char *str = string;
 
-    fcs_bool_t first_line = TRUE;
+    bool first_line = TRUE;
 
 #define out (out_state->s)
 /* Handle the end of string - shouldn't happen */
@@ -841,9 +841,9 @@ extern void fc_solve_state_as_string(char *output_s,
     const fcs_state_t *const state,
     const fcs_state_locs_struct_t *const state_locs
         FREECELLS_STACKS_DECKS__ARGS()
-            FC_SOLVE__PASS_PARSABLE(const fcs_bool_t parseable_output),
-    const fcs_bool_t canonized_order_output PASS_T(
-        const fcs_bool_t display_10_as_t));
+            FC_SOLVE__PASS_PARSABLE(const bool parseable_output),
+    const bool canonized_order_output PASS_T(
+        const bool display_10_as_t));
 
 typedef enum {
     FCS_STATE_VALIDITY__OK = 0,
@@ -1007,7 +1007,7 @@ static inline void set_scan_visited(
 #ifdef FCS_FREECELL_ONLY
 
 #include "is_parent.h"
-static inline fcs_bool_t fcs_is_parent_card(
+static inline bool fcs_is_parent_card(
     const fcs_card_t child, const fcs_card_t parent)
 {
     return fc_solve_is_parent_buf[(size_t)parent][(size_t)child];
@@ -1015,7 +1015,7 @@ static inline fcs_bool_t fcs_is_parent_card(
 
 #else
 
-static inline fcs_bool_t fcs_is_parent_card__helper(const fcs_card_t child,
+static inline bool fcs_is_parent_card__helper(const fcs_card_t child,
     const fcs_card_t parent, const int sequences_are_built_by)
 {
     return ((fcs_card_rank(child) + 1 == fcs_card_rank(parent)) &&

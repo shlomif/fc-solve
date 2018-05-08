@@ -31,14 +31,14 @@ extern fcs_states_google_hash_handle_t fc_solve_states_google_hash_new(void);
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern fcs_bool_t fc_solve_states_google_hash_insert(
+extern bool fc_solve_states_google_hash_insert(
     fcs_states_google_hash_handle_t hash, void *key, void **existing_key);
 
 void fc_solve_states_google_hash_free(fcs_states_google_hash_handle_t hash);
 
 extern void fc_solve_states_google_hash_foreach(
     fcs_states_google_hash_handle_t hash,
-    fcs_bool_t (*should_delete_ptr)(void *key, void *context), void *context);
+    bool (*should_delete_ptr)(void *key, void *context), void *context);
 
 #endif
 
@@ -55,7 +55,7 @@ extern fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new(void);
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern fcs_bool_t fc_solve_columns_google_hash_insert(
+extern bool fc_solve_columns_google_hash_insert(
     fcs_columns_google_hash_handle_t hash, void *key, void **existing_key);
 
 void fc_solve_columns_google_hash_free(fcs_columns_google_hash_handle_t hash);

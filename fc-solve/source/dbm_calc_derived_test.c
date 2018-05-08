@@ -24,7 +24,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     const fcs_dbm_variant_type_t local_variant,
     const char *init_state_str_proto, int *const num_out_derived_states,
     fcs_derived_state_debug_t **out_derived_states,
-    const fcs_bool_t perform_horne_prune)
+    const bool perform_horne_prune)
 {
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;

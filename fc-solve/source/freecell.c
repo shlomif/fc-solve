@@ -199,7 +199,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 typedef struct
 {
     int src_idx;
-    fcs_bool_t is_col;
+    bool is_col;
 } empty_two_cols_ret_t;
 /*
  * This function empties two stacks from the new state
@@ -313,7 +313,7 @@ static inline empty_two_cols_ret_t empty_two_cols_from_new_state(
 
 static inline fcs_game_limit_t calc_num_vacant_slots(
     const fc_solve_soft_thread_t *const soft_thread,
-    const fcs_bool_t is_filled_by_any_card)
+    const bool is_filled_by_any_card)
 {
     return (soft_thread->num_vacant_freecells +
             (is_filled_by_any_card ? soft_thread->num_vacant_stacks : 0));
@@ -613,7 +613,7 @@ static inline void col_seqs_iter__advance(col_seqs_iter_t *const iter)
     col_seqs_iter__calc_end(iter);
 }
 
-static inline fcs_bool_t check_if_can_relocate(const fcs_game_limit_t start,
+static inline bool check_if_can_relocate(const fcs_game_limit_t start,
     const fcs_game_limit_t num_virtual_vacant_freecells,
     const fcs_game_limit_t num_virtual_vacant_stacks,
     const col_seqs_iter_t *const iter PASS_sequences_are_built_by(
@@ -1447,7 +1447,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
     STACKS__SET_PARAMS();
 
     sfs_check_state_begin();
-    fcs_bool_t cards_were_moved = FALSE;
+    bool cards_were_moved = FALSE;
     uint_fast32_t num_cards_moved;
     do
     {

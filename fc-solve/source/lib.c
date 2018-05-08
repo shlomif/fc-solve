@@ -172,7 +172,7 @@ static inline void alloc_instance(fc_solve_instance_t *const instance,
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 static inline void compile_prelude(fc_solve_hard_thread_t *const hard_thread)
 {
-    fcs_bool_t last_one = FALSE;
+    bool last_one = FALSE;
     size_t num_items = 0;
     fc_solve_prelude_item *prelude = NULL;
 
@@ -864,7 +864,7 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
 #define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(no_use)
 #endif
 
-static inline fcs_bool_t fcs__is_state_a_dead_end(
+static inline bool fcs__is_state_a_dead_end(
     const fcs_collectible_state_t *const ptr_state)
 {
     return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
@@ -913,7 +913,7 @@ static inline void free_states_handle_soft_dfs_soft_thread(
     }
 }
 
-static fcs_bool_t free_states_should_delete(
+static bool free_states_should_delete(
     void *const key, void *const context)
 {
     fc_solve_instance_t *const instance = (fc_solve_instance_t *const)context;
@@ -1011,19 +1011,19 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
     ssize_t by_depth_max_depth, by_depth_min_depth;
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-    const fcs_bool_t is_simple_simon = instance->is_simple_simon;
+    const bool is_simple_simon = instance->is_simple_simon;
 #endif
 
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
-    const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
+    const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-    const fcs_bool_t scans_synergy =
+    const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
 
-    const fcs_bool_t is_a_complete_scan =
+    const bool is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     const_AUTO(soft_thread_id, soft_thread->id);
     fcs_moves_order the_moves_list;
@@ -1178,7 +1178,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
                 }
 #endif
                 /* Perform the pruning. */
-                fcs_bool_t was_pruned = FALSE;
+                bool was_pruned = FALSE;
                 if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
                 {
                     fcs_collectible_state_t *const derived =
@@ -1757,7 +1757,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
             }
         }
 
-        const fcs_bool_t was_solved = (ret == FCS_STATE_WAS_SOLVED);
+        const bool was_solved = (ret == FCS_STATE_WAS_SOLVED);
 #if (defined(FCS_WITH_MOVES) && (!defined(FCS_DISABLE_PATSOLVE)))
         if (was_solved)
         {
@@ -1898,7 +1898,7 @@ typedef struct
     fc_solve_solve_process_ret_t ret_code;
     /* Whether the instance is ready to be input with (i.e:
      * was recycled already.) */
-    fcs_bool_t instance_is_ready;
+    bool instance_is_ready;
 #ifdef FCS_WITH_FLARES
     char name[30];
 #endif
@@ -1911,7 +1911,7 @@ typedef struct
 #endif
     fcs_stats_t obj_stats;
 #if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
-    fcs_bool_t was_solution_traced;
+    bool was_solution_traced;
 #endif
 #ifdef FCS_WITH_MOVES
     fcs_state_locs_struct_t trace_solution_state_locs;
@@ -1967,8 +1967,8 @@ typedef struct
      * and if so, compiles the flares plan, and sets the flares_plan_compiled
      * string to true.
      */
-    fcs_bool_t flares_plan_compiled;
-    fcs_bool_t all_plan_items_finished_so_far;
+    bool flares_plan_compiled;
+    bool all_plan_items_finished_so_far;
 #else
     fcs_flare_item_t single_flare;
 #endif
@@ -2020,7 +2020,7 @@ typedef struct
 #endif
     fc_solve_solve_process_ret_t ret_code;
 #ifdef FCS_WITH_NI
-    fcs_bool_t all_instances_were_suspended;
+    bool all_instances_were_suspended;
 #endif
 #ifdef FCS_WITH_ERROR_STRS
     fcs_state_validity_ret_t state_validity_ret;
@@ -2750,7 +2750,7 @@ static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
 
 #define MY_MARGIN 3
 #define TRAILING_CHAR '\n'
-static inline fcs_bool_t duplicate_string_while_adding_a_trailing_newline(
+static inline bool duplicate_string_while_adding_a_trailing_newline(
     char *const s, const char *const orig_str)
 {
     const size_t len = strlen(orig_str);
@@ -3046,7 +3046,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
         fc_solve_instance_t *const instance = &(flare->obj);
 
         SET_ACTIVE_FLARE(user, flare);
-        const fcs_bool_t is_start_of_flare_solving =
+        const bool is_start_of_flare_solving =
             (flare->ret_code == FCS_STATE_NOT_BEGAN_YET);
 
         if (is_start_of_flare_solving)
@@ -3171,7 +3171,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             );
         }
 
-        const fcs_bool_t was_run_now =
+        const bool was_run_now =
             ((flare->ret_code == FCS_STATE_SUSPEND_PROCESS) ||
                 (flare->ret_code == FCS_STATE_NOT_BEGAN_YET));
 

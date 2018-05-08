@@ -48,7 +48,7 @@ dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)
  * */
 fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
     const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *const parent,
-    const fcs_bool_t should_modify_parent GCC_UNUSED)
+    const bool should_modify_parent GCC_UNUSED)
 {
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
     fcs_dbm_record_t record_on_stack;
@@ -78,7 +78,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
     to_check->key = *key;
     to_check->parent = parent->parent;
 #endif
-    fcs_bool_t ret =
+    bool ret =
         (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
@@ -103,7 +103,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
     }
 }
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent(
+bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store_t store, const unsigned char *key, unsigned char *parent)
 {
     fcs_dbm_record_t to_check = {

@@ -27,7 +27,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     long long start_board, long long end_board, const long long stop_at)
 {
     long long total_num_iters = 0;
-    fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
+    bool was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
     binary_output_t binary_output = INIT_BINARY_OUTPUT;
     const char *solutions_directory = NULL;

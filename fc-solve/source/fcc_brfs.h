@@ -158,7 +158,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
      * [Output] a callback to add a point to the next_start_points,
      * and its context.
      */
-    fcs_bool_t (*add_start_point)(
+    bool (*add_start_point)(
         const fcs_encoded_state_buffer_t *const enc_state,
         const fcs_fcc_moves_seq_t *const start_state_moves_seq,
         fcs_fcc_moves_seq_t *const after_start_moves_seq,
@@ -167,7 +167,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
 #endif
     /* [Output]: Is the min_by_sorting new.
      * */
-    fcs_bool_t *is_min_by_sorting_new,
+    bool *is_min_by_sorting_new,
     /* [Output]: The min_by_sorting.
      * */
     fcs_encoded_state_buffer_t *const min_by_sorting,
@@ -196,7 +196,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
                                                    *extracted_item;
     fcs_derived_state_t *derived_list_recycle_bin = NULL, *next_derived_iter;
     fcs_state_keyval_pair_t state;
-    fcs_bool_t running_min_was_assigned = FALSE;
+    bool running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min = {{0}};
     long num_new_positions = 0;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -295,7 +295,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
         for (var_AUTO(derived_iter, derived_list); derived_iter;
              derived_iter = next_derived_iter)
         {
-            const fcs_bool_t is_reversible =
+            const bool is_reversible =
                 (derived_iter->core_irreversible_moves_count == 0);
             fcs_init_and_encode_state(&delta_stater, local_variant,
                 &(derived_iter->state), &(new_item->key));
@@ -396,7 +396,7 @@ typedef struct
 /*
  * Returns if already exist (the NOT of if the state is new).
  */
-static fcs_bool_t fc_solve_add_start_point_in_mem(
+static bool fc_solve_add_start_point_in_mem(
     const fcs_encoded_state_buffer_t *const enc_state,
     const fcs_fcc_moves_seq_t *const start_state_moves_seq,
     fcs_fcc_moves_seq_t *const after_start_moves_seq,

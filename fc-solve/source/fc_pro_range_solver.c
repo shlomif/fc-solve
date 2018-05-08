@@ -35,7 +35,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 {
     const char *variant = "freecell";
     long long total_num_iters = 0;
-    fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
+    bool was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
     binary_output_t binary_output = INIT_BINARY_OUTPUT;
 
@@ -78,7 +78,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
     bin_init(&binary_output, &start_board, &end_board,
         &total_iterations_limit_per_board);
-    const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
+    const bool variant_is_freecell = (!strcmp(variant, "freecell"));
 #ifndef FCS_FREECELL_ONLY
     if (!variant_is_freecell)
     {

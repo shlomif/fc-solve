@@ -44,7 +44,7 @@ static inline void q_stats_extract(fcs_queue_stats_t *const q)
     q->num_extracted++;
 }
 
-static inline fcs_bool_t q_stats_is_empty(fcs_queue_stats_t *const q)
+static inline bool q_stats_is_empty(fcs_queue_stats_t *const q)
 {
     return (q->num_items_in_queue == 0);
 }
@@ -80,7 +80,7 @@ static inline void fcs_offloading_queue__destroy(
     fc_solve_compact_allocator_finish(&(queue->queue_allocator));
 }
 
-static inline fcs_bool_t fcs_offloading_queue__extract(
+static inline bool fcs_offloading_queue__extract(
     fcs_offloading_queue_t *const queue,
     fcs_offloading_queue_item_t *const return_item)
 {
@@ -166,7 +166,7 @@ static inline void fcs_offloading_queue_page__destroy(off_q_page_t *const page)
     page->data = NULL;
 }
 
-static inline fcs_bool_t fcs_offloading_queue_page__can_extract(
+static inline bool fcs_offloading_queue_page__can_extract(
     const off_q_page_t *const page)
 {
     return (page->read_from_idx < page->write_to_idx);
@@ -180,7 +180,7 @@ static inline void fcs_offloading_queue_page__extract(
         sizeof(*out_item));
 }
 
-static inline fcs_bool_t fcs_offloading_queue_page__can_insert(
+static inline bool fcs_offloading_queue_page__can_insert(
     const off_q_page_t *const page)
 {
     return (page->write_to_idx < NUM_ITEMS_PER_PAGE);
@@ -327,7 +327,7 @@ static inline void fcs_offloading_queue__insert(
     q_stats_insert(&queue->stats);
 }
 
-static inline fcs_bool_t fcs_offloading_queue__extract(
+static inline bool fcs_offloading_queue__extract(
     fcs_offloading_queue_t *const queue,
     fcs_offloading_queue_item_t *const return_item)
 {

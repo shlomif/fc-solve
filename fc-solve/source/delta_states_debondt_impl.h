@@ -379,7 +379,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
     const_SLOT(num_freecells, self);
 
-    fcs_bool_t orig_top_most_cards[CARD_ARRAY_LEN] = {FALSE};
+    bool orig_top_most_cards[CARD_ARRAY_LEN] = {FALSE};
     for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
     {
         const_AUTO(col, fcs_state_get_col(*init_state, col_idx));

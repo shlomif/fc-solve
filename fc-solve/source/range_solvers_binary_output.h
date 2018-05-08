@@ -72,7 +72,7 @@ static inline void bin_close(binary_output_t *const bin)
     }
 }
 
-static inline fcs_bool_t read_int(FILE *const f, long long *const dest)
+static inline bool read_int(FILE *const f, long long *const dest)
 {
     unsigned char buffer[SIZE_INT];
     if (fread(buffer, 1, SIZE_INT, f) != SIZE_INT)

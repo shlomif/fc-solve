@@ -231,7 +231,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     return NULL;
 }
 
-static fcs_bool_t populate_instance_with_intermediate_input_line(
+static bool populate_instance_with_intermediate_input_line(
     dbm_solver_instance *const instance,
     fc_solve_delta_stater_t *const delta,
     fcs_state_keyval_pair_t *const init_state_ptr, char *const line,
@@ -427,12 +427,12 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
 }
 
 /* Returns if the process should terminate. */
-static fcs_bool_t handle_and_destroy_instance_solution(
+static bool handle_and_destroy_instance_solution(
     dbm_solver_instance *const instance,
     fc_solve_delta_stater_t *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
-    fcs_bool_t ret = FALSE;
+    bool ret = FALSE;
     fcs_dbm_record_t *token;
 #ifdef DEBUG_OUT
     fcs_dbm_variant_type_t local_variant = instance->common.variant;
@@ -540,7 +540,7 @@ int main(int argc, char *argv[])
     long start_line = 1;
     const char *out_filename = NULL, *intermediate_input_filename = NULL;
     FILE *intermediate_in_fh = NULL;
-    fcs_bool_t skip_queue_output = FALSE;
+    bool skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     const char *param;
     fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
@@ -612,14 +612,14 @@ int main(int argc, char *argv[])
         char *line = SMALLOC(line, line_size);
 #endif
         long line_num = 0;
-        fcs_bool_t queue_solution_was_found = FALSE;
+        bool queue_solution_was_found = FALSE;
         dbm_solver_instance queue_instance;
         dbm_solver_instance limit_instance;
 
         instance_init(&queue_instance, &inp, -1, out_fh);
         instance_init(&limit_instance, &inp, inp.iters_delta_limit, out_fh);
 
-        fcs_bool_t found_line;
+        bool found_line;
         do
         {
             ++line_num;

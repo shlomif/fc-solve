@@ -75,7 +75,7 @@ static inline void cache_init(fcs_lru_cache_t *const cache,
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static inline fcs_bool_t cache_does_key_exist(
+static inline bool cache_does_key_exist(
     fcs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     const fcs_cache_key_info_t to_check = {.key = *key};

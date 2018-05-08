@@ -28,7 +28,7 @@ extern "C" {
     }
 
 static inline void rank2str(
-    const int rank_idx, char *const str PASS_T(const fcs_bool_t display_T))
+    const int rank_idx, char *const str PASS_T(const bool display_T))
 {
 #ifdef FC_SOLVE_IMPLICIT_T_RANK
     static const char cards_char_map[15] = (CARD_ZERO() "A23456789TJQK");

@@ -23,7 +23,7 @@ static inline void moves_processed_add_new_move(
     moves->moves[moves->num_moves - 1] = new_move;
 }
 
-static inline fcs_bool_t fc_solve_fc_pro__can_be_moved(
+static inline bool fc_solve_fc_pro__can_be_moved(
     fcs_state_t *const s, const fcs_card_t card)
 {
     const int rank = fcs_card_rank(card);

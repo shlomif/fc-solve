@@ -75,7 +75,7 @@ typedef struct
     fcs_lock_t fcc_entry_points_lock;
     FccEntryPointNode *start_key_ptr;
 #if 0
-    fcs_bool_t was_start_key_reachable;
+    bool was_start_key_reachable;
 #endif
     int start_key_moves_count;
     fcs_lock_t output_lock;
@@ -213,7 +213,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     TRACE("%s\n", "instance_run_solver_thread start");
     const_AUTO(coll, &(instance->coll));
 #if 0
-    fcs_bool_t was_start_key_reachable = instance->was_start_key_reachable;
+    bool was_start_key_reachable = instance->was_start_key_reachable;
 #endif
     while (1)
     {
@@ -278,8 +278,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                 &(key)
             );
 
-            fcs_bool_t to_prune = FALSE;
-            fcs_bool_t to_output = FALSE;
+            bool to_prune = FALSE;
+            bool to_output = FALSE;
             if (val_proto)
             {
                 val_proto->kv.val.is_reachable = TRUE;
@@ -695,7 +695,7 @@ int main(int argc, char *argv[])
 #endif
 
     long location_in_file = 0;
-    fcs_bool_t was_init = FALSE;
+    bool was_init = FALSE;
 #ifdef HAVE_GETLINE
     while (getline(&instance.fingerprint_line, &instance.fingerprint_line_size,
                fingerprint_fh) != -1)

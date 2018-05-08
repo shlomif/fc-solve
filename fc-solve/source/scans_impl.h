@@ -74,7 +74,7 @@ static inline void fc_solve_initialize_befs_rater(
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
-    const fcs_bool_t unlimited_sequence_move_var =
+    const bool unlimited_sequence_move_var =
         INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move unlimited_sequence_move_var
 #else
@@ -179,7 +179,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
-    const fcs_bool_t unlimited_sequence_move_var =
+    const bool unlimited_sequence_move_var =
         INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move unlimited_sequence_move_var
 #else
@@ -322,7 +322,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
  *
  * */
 
-static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
+static inline void calculate_real_depth(const bool calc_real_depth,
     fcs_collectible_state_t *const ptr_state_orig)
 {
     if (calc_real_depth)
@@ -426,7 +426,7 @@ static inline fcs_game_limit_t count_num_vacant_stacks(
     return num_vacant_stacks;
 }
 
-static inline fcs_bool_t fcs__should_state_be_pruned__state(
+static inline bool fcs__should_state_be_pruned__state(
     const fcs_collectible_state_t *const ptr_state)
 {
     return (!(FCS_S_VISITED(ptr_state) & FCS_VISITED_GENERATED_BY_PRUNING));
@@ -436,8 +436,8 @@ static inline fcs_bool_t fcs__should_state_be_pruned__state(
 #define fcs__should_state_be_pruned(enable_pruning, ptr_state)                 \
     fcs__should_state_be_pruned__state(ptr_state)
 #else
-static inline fcs_bool_t fcs__should_state_be_pruned(
-    const fcs_bool_t enable_pruning,
+static inline bool fcs__should_state_be_pruned(
+    const bool enable_pruning,
     const fcs_collectible_state_t *const ptr_state)
 {
     return (enable_pruning && fcs__should_state_be_pruned__state(ptr_state));

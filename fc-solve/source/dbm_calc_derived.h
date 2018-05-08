@@ -335,7 +335,7 @@ static inline int horne_prune__simple(
     return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
 }
 
-static inline fcs_bool_t card_cannot_be_placed(const fcs_state_t *const s,
+static inline bool card_cannot_be_placed(const fcs_state_t *const s,
     const uint16_t ds, const fcs_card_t card, const int sequences_are_built_by)
 {
     const_AUTO(col, fcs_state_get_col(*s, ds));
@@ -345,7 +345,7 @@ static inline fcs_bool_t card_cannot_be_placed(const fcs_state_t *const s,
 }
 
 #define the_state (init_state_kv_ptr->s)
-static inline fcs_bool_t is_state_solved(
+static inline bool is_state_solved(
     fcs_state_keyval_pair_t *const init_state_kv_ptr)
 {
     for (int suit = 0; suit < DECKS_NUM * 4; suit++)
@@ -358,14 +358,14 @@ static inline fcs_bool_t is_state_solved(
     return TRUE;
 }
 
-static inline fcs_bool_t instance_solver_thread_calc_derived_states(
+static inline bool instance_solver_thread_calc_derived_states(
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
     fcs_dbm_record_t *const parent_ptr,
     fcs_derived_state_t **const derived_list,
     fcs_derived_state_t **const derived_list_recycle_bin,
     fcs_compact_allocator_t *const derived_list_allocator,
-    const fcs_bool_t perform_horne_prune)
+    const bool perform_horne_prune)
 {
     fcs_derived_state_t *ptr_new_state;
     int empty_stack_idx = -1;

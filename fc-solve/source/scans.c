@@ -332,18 +332,18 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-    const fcs_bool_t is_simple_simon = instance->is_simple_simon;
+    const bool is_simple_simon = instance->is_simple_simon;
 #endif
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
-    const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
+    const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-    const fcs_bool_t scans_synergy =
+    const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
     const_AUTO(soft_thread_id, soft_thread->id);
-    const fcs_bool_t is_a_complete_scan =
+    const bool is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
@@ -363,7 +363,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     PTR_STATE = BEFS_M_VAR(soft_thread, first_state_to_check);
     FCS_ASSIGN_STATE_KEY();
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-    const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
+    const bool enable_pruning = soft_thread->enable_pruning;
 #endif
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
@@ -705,11 +705,11 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
     const_AUTO(instance, HT_INSTANCE(hard_thread));
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
-    const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
+    const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
 #if !defined(FCS_HARD_CODE_REPARENT_STATES_AS_FALSE) &&                        \
     !defined(FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE)
-    const fcs_bool_t scans_synergy =
+    const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
     fcs_kv_state_t existing_state;

@@ -21,19 +21,19 @@ char fc_solve_simple_simon_nothing;
 
 #include "meta_move_funcs_helpers.h"
 
-static inline fcs_bool_t fcs_is_ss_false_parent(
+static inline bool fcs_is_ss_false_parent(
     const fcs_card_t parent, const fcs_card_t child)
 {
     return (fcs_card_rank(parent) == fcs_card_rank(child) + 1);
 }
 
-static inline fcs_bool_t fcs_is_ss_suit_true(
+static inline bool fcs_is_ss_suit_true(
     const fcs_card_t parent, const fcs_card_t child)
 {
     return (fcs_card_suit(parent) == fcs_card_suit(child));
 }
 
-static inline fcs_bool_t fcs_is_ss_true_parent(
+static inline bool fcs_is_ss_true_parent(
     const fcs_card_t parent, const fcs_card_t child)
 {
     return (fcs_is_ss_false_parent(parent, child) &&
@@ -92,7 +92,7 @@ static inline fcs_bool_t fcs_is_ss_true_parent(
 #define STACKS_MAP_LEN MAX_NUM_STACKS
 
 static inline void init_stacks_map(
-    fcs_bool_t *const stacks_map, const int stack_idx, const int ds)
+    bool *const stacks_map, const int stack_idx, const int ds)
 {
     for (int i = 0; i < STACKS_MAP_LEN; i++)
     {
@@ -389,15 +389,15 @@ static inline void populate_seq_points(const fcs_cards_column_t dest_col,
     generic_populate_seq_points(dest_col, dc, seqs, fcs_col_len(dest_col));
 }
 
-static inline fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
+static inline bool generic_false_seq_index_loop(const int stacks_num,
     fcs_kv_state_t raw_state_raw, const int num_vacant_stacks,
     const fcs_cards_column_t col, sequences_analysis_t *const seqs,
-    const int stack_idx, const int ds, const fcs_bool_t behavior_flag,
-    const fcs_bool_t should_src_col, const fcs_card_t src_card,
+    const int stack_idx, const int ds, const bool behavior_flag,
+    const bool should_src_col, const fcs_card_t src_card,
     const size_t num_src_junk_true_seqs)
 {
     const size_t num_separate_false_seqs = seqs->num_separate_false_seqs;
-    fcs_bool_t stacks_map[STACKS_MAP_LEN];
+    bool stacks_map[STACKS_MAP_LEN];
     init_stacks_map(stacks_map, stack_idx, ds);
 
     int after_junk_num_freestacks = num_vacant_stacks;
@@ -410,7 +410,7 @@ static inline fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
     for (false_seq_idx = 0; false_seq_idx < false_seq_index_limit;
          false_seq_idx++)
     {
-        const fcs_bool_t is_ultimate_iter =
+        const bool is_ultimate_iter =
             (false_seq_idx == num_separate_false_seqs);
 
         /* Find a suitable place to put it */
@@ -479,10 +479,10 @@ static inline fcs_bool_t generic_false_seq_index_loop(const int stacks_num,
     return (false_seq_idx == false_seq_index_limit);
 }
 
-static inline fcs_bool_t false_seq_index_loop(const int stacks_num,
+static inline bool false_seq_index_loop(const int stacks_num,
     fcs_kv_state_t raw_state_raw, const int num_vacant_stacks,
     const fcs_cards_column_t col, sequences_analysis_t *const seqs,
-    const int stack_idx, const int ds, const fcs_bool_t behavior_flag)
+    const int stack_idx, const int ds, const bool behavior_flag)
 {
     return generic_false_seq_index_loop(stacks_num, raw_state_raw,
         num_vacant_stacks, col, seqs, stack_idx, ds, behavior_flag,
@@ -560,9 +560,9 @@ DECLARE_MOVE_FUNCTION(
     for (int h = cards_num - 2; h >= -1; h--)
     {
         const fcs_card_t card = fcs_col_get_card(col, h + 1);
-        fcs_bool_t should_search = TRUE;
-        fcs_bool_t should_increment_num_true_seqs = FALSE;
-        fcs_bool_t should_break;
+        bool should_search = TRUE;
+        bool should_increment_num_true_seqs = FALSE;
+        bool should_break;
         /* Stop if we reached the bottom of the stack */
         if (!((should_break = (h == -1))))
         {

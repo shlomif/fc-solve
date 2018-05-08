@@ -413,7 +413,7 @@ static inline void upon_new_state(fc_solve_instance_t *const instance,
 }
 
 #define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
-static inline fcs_bool_t handle_existing_void(
+static inline bool handle_existing_void(
     fc_solve_instance_t *const instance,
     fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
     fcs_kv_state_t *const existing_state_raw, void *const existing_void)
@@ -444,7 +444,7 @@ static inline fcs_bool_t handle_existing_void(
     handle_existing_void(                                                      \
         instance, hard_thread, new_state, existing_state_raw, (existing_void))
 
-fcs_bool_t fc_solve_check_and_add_state(
+bool fc_solve_check_and_add_state(
     fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
     fcs_kv_state_t *const existing_state_raw)
 {

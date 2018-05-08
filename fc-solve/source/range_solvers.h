@@ -28,7 +28,7 @@ help_err(const char *const msg, ...)
 }
 #endif
 
-static inline fcs_bool_t range_solvers__solve(void *const instance,
+static inline bool range_solvers__solve(void *const instance,
     const long long board_num, long long *const total_num_iters_temp)
 {
     fcs_state_string_t state_string;

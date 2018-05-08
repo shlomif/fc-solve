@@ -66,7 +66,7 @@ static inline void pre_cache_insert(fcs_pre_cache_t *pre_cache,
     pre_cache->count_elements++;
 }
 
-static inline fcs_bool_t pre_cache_does_key_exist(
+static inline bool pre_cache_does_key_exist(
     fcs_pre_cache_t *pre_cache, fcs_encoded_state_buffer_t *key)
 {
     fcs_pre_cache_key_val_pair_t to_check = {.key = *key};
@@ -153,7 +153,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 #endif
 );
 
-static inline fcs_bool_t instance_check_multiple_keys(
+static inline bool instance_check_multiple_keys(
     dbm_solver_thread *const thread,
     dbm_solver_instance *const instance,
     fcs_dbm__cache_store__common_t *const cache_store GCC_UNUSED,
@@ -196,7 +196,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
         }
     }
 #ifdef MAX_FCC_DEPTH
-    const fcs_bool_t have_more = !q_stats_is_empty(
+    const bool have_more = !q_stats_is_empty(
         &instance->colls_by_depth[instance->curr_depth].queue.stats);
 
     if (have_more)
@@ -208,7 +208,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
         fcs_condvar_broadcast(&(instance->monitor));
     }
 #else
-    const fcs_bool_t have_more = FALSE;
+    const bool have_more = FALSE;
 #endif
     fcs_lock_unlock(&instance->common.storage_lock);
     return have_more;
@@ -416,7 +416,7 @@ static const fcs_dbm_common_input_t fcs_dbm_common_input_init = {
     .caches_delta = 1000000,
     .num_threads = 2};
 
-static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
+static inline bool fcs_dbm__extract_common_from_argv(const int argc,
     char **const argv, int *const arg, fcs_dbm_common_input_t *const inp)
 {
     const char *param;

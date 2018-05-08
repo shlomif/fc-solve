@@ -46,14 +46,14 @@ typedef struct
 typedef void *fcs_dbm_store_t;
 void fc_solve_dbm_store_init(fcs_dbm_store_t *, const char *, void **);
 dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store_t);
-fcs_bool_t fc_solve_dbm_store_does_key_exist(
+bool fc_solve_dbm_store_does_key_exist(
     fcs_dbm_store_t, const unsigned char *);
-fcs_bool_t fc_solve_dbm_store_lookup_parent(
+bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store_t, const unsigned char *const, unsigned char *const);
 
 fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
     const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *parent,
-    const fcs_bool_t should_modify_parent);
+    const bool should_modify_parent);
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 void fc_solve_dbm_store_offload_pre_cache(
@@ -92,7 +92,7 @@ typedef struct
     FILE *out_fh;
     fcs_dbm_variant_type_t variant;
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
-    fcs_bool_t queue_solution_was_found;
+    bool queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
 #ifdef FCS_DBM_WITHOUT_CACHES
     fcs_dbm_record_t *queue_solution_ptr;

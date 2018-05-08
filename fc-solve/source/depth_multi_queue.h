@@ -110,7 +110,7 @@ static inline void fcs_depth_multi_queue__destroy(
     queue->queues_by_depth = NULL;
 }
 
-static inline fcs_bool_t fcs_depth_multi_queue__extract(
+static inline bool fcs_depth_multi_queue__extract(
     fcs_depth_multi_queue_t *const queue, int *const return_depth,
     fcs_offloading_queue_item_t *const return_item)
 {

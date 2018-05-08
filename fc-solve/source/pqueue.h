@@ -133,7 +133,7 @@ static inline void fc_solve_pq_push(pri_queue_t *const pq,
     elems[i].rating = r;
 }
 
-static inline fcs_bool_t fc_solve_is_pqueue_empty(pri_queue_t *pq)
+static inline bool fc_solve_is_pqueue_empty(pri_queue_t *pq)
 {
     return (pq->current_size == 0);
 }

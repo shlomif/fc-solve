@@ -69,7 +69,7 @@ static inline void fcs_push_1card_seq(
         stack, FCS_MOVE_TYPE_STACK_TO_STACK, src, dest, 1);
 }
 
-static inline fcs_bool_t fc_solve_move_stack_pop(
+static inline bool fc_solve_move_stack_pop(
     fcs_move_stack_t *const stack, fcs_internal_move_t *const move)
 {
     if (stack->num_moves > 0)

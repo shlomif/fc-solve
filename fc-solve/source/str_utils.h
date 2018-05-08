@@ -17,7 +17,7 @@ extern "C" {
 #include "bool.h"
 #include <string.h>
 
-static inline fcs_bool_t string_starts_with(
+static inline bool string_starts_with(
     const char *const str, const char *const prefix, const char *const end)
 {
     register const size_t check_len = (size_t)(end - str);

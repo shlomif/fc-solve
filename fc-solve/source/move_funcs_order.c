@@ -32,8 +32,8 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
     moves_order->num++;
 
     const_AUTO(len, strlen(string));
-    fcs_bool_t is_group = FALSE;
-    fcs_bool_t is_start_group = FALSE;
+    bool is_group = FALSE;
+    bool is_start_group = FALSE;
 
     for (i = 0; i < len; i++)
     {

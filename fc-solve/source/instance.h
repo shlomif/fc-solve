@@ -144,7 +144,7 @@ extern void fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
 #define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
 typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
 #endif
-extern fcs_bool_t fc_solve_check_and_add_state(
+extern bool fc_solve_check_and_add_state(
     fc_solve_hard_thread_t *, fcs_kv_state_t *, fcs_kv_state_t *);
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
@@ -181,7 +181,7 @@ typedef struct
 } fcs_default_weights_t;
 typedef struct
 {
-    fcs_bool_t should_go_over_stacks;
+    bool should_go_over_stacks;
     double max_sequence_move_factor, cards_under_sequences_factor,
         seqs_over_renegade_cards_factor, depth_factor,
         num_cards_not_on_parents_factor;
@@ -326,7 +326,7 @@ struct fc_solve_hard_thread_struct
     const fc_solve_prelude_item *prelude;
 #endif
 
-    fcs_bool_t allocated_from_list;
+    bool allocated_from_list;
     int_fast32_t num_soft_threads;
 
     /*
@@ -498,7 +498,7 @@ struct fc_solve_soft_thread_struct
         } befs;
     } method_specific;
 
-    fcs_bool_t FCS_SOFT_THREAD_IS_FINISHED, FCS_SOFT_THREAD_INITIALIZED,
+    bool FCS_SOFT_THREAD_IS_FINISHED, FCS_SOFT_THREAD_INITIALIZED,
         FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN;
 
     // The numbers of vacant stacks and freecells in the current state - is
@@ -521,7 +521,7 @@ struct fc_solve_soft_thread_struct
      * This variable is temporary - there should be a better pruning
      * abstraction with several optional prunes.
      * */
-    fcs_bool_t enable_pruning;
+    bool enable_pruning;
 #endif
 
 #ifndef FCS_DISABLE_PATSOLVE
@@ -533,8 +533,8 @@ struct fc_solve_soft_thread_struct
     /*
      * Differentiates between SOFT_DFS and RANDOM_DFS.
      * */
-    fcs_bool_t master_to_randomize;
-    fcs_bool_t is_befs
+    bool master_to_randomize;
+    bool is_befs
 #ifdef FCS_WITH_MOVES
         ,
         is_optimize_scan
@@ -639,20 +639,20 @@ struct fc_solve_instance_struct
 #endif
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
-    fcs_bool_t FCS_RUNTIME_CALC_REAL_DEPTH;
+    bool FCS_RUNTIME_CALC_REAL_DEPTH;
 #endif
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
-    fcs_bool_t FCS_RUNTIME_TO_REPARENT_STATES_REAL;
+    bool FCS_RUNTIME_TO_REPARENT_STATES_REAL;
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-    fcs_bool_t FCS_RUNTIME_SCANS_SYNERGY;
+    bool FCS_RUNTIME_SCANS_SYNERGY;
 #endif
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
-    fcs_bool_t FCS_RUNTIME_TO_REPARENT_STATES_PROTO;
+    bool FCS_RUNTIME_TO_REPARENT_STATES_PROTO;
 #endif
     ;
 #ifdef FCS_WITH_MOVES
-    fcs_bool_t FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH,
+    bool FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH,
         FCS_RUNTIME_IN_OPTIMIZATION_THREAD, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
 #endif
 
@@ -671,7 +671,7 @@ struct fc_solve_instance_struct
 #ifdef FCS_SINGLE_HARD_THREAD
     struct fc_solve_hard_thread_struct hard_thread;
 #ifdef FCS_WITH_MOVES
-    fcs_bool_t is_optimization_st;
+    bool is_optimization_st;
     struct fc_solve_soft_thread_struct optimization_soft_thread;
 #endif
 #else
@@ -786,7 +786,7 @@ struct fc_solve_instance_struct
     /*
      * Whether or not this is a Simple Simon-like game.
      * */
-    fcs_bool_t is_simple_simon;
+    bool is_simple_simon;
 #endif
 };
 
@@ -951,7 +951,7 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
         fcs_derived_states_list_t *const derived_states_list)
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
-static inline fcs_bool_t fcs_get_calc_real_depth(
+static inline bool fcs_get_calc_real_depth(
     const fc_solve_instance_t *const instance)
 {
     return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);

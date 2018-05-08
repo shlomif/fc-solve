@@ -34,7 +34,7 @@ typedef struct
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fcs_dbm_variant_type_t, const char *, int *, fcs_derived_state_debug_t **,
-    fcs_bool_t);
+    bool);
 
 DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
     const int num_derived_states,

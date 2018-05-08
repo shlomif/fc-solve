@@ -23,7 +23,7 @@ extern "C" {
 typedef struct
 {
     fcs_move_t move;
-    fcs_bool_t to_empty_stack;
+    bool to_empty_stack;
 } fcs_extended_move_t;
 
 typedef struct
@@ -43,7 +43,7 @@ static inline int fc_solve_moves_processed_get_moves_left(
     return moves->num_moves - moves->next_move_idx;
 }
 
-static inline fcs_bool_t fc_solve_moves_processed_get_next_move(
+static inline bool fc_solve_moves_processed_get_next_move(
     fcs_moves_processed_t *const moves, fcs_extended_move_t *const move)
 {
     if (moves->next_move_idx == moves->num_moves)

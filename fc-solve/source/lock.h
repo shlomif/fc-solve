@@ -32,7 +32,7 @@ extern "C" {
 
 #ifdef FCS_DBM_SINGLE_THREAD
 
-typedef fcs_bool_t fcs_lock_t;
+typedef bool fcs_lock_t;
 static inline void fcs_lock_lock(fcs_lock_t *const lock) {}
 static inline void fcs_lock_unlock(fcs_lock_t *const lock) {}
 static inline void fcs_lock_init(fcs_lock_t *const lock) {}

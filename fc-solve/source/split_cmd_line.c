@@ -67,7 +67,7 @@ static inline void push_args_last_arg(args_man_wrapper_t *const manager)
     manager->last_arg_ptr = manager->last_arg;
 }
 
-static inline fcs_bool_t is_whitespace(const char c)
+static inline bool is_whitespace(const char c)
 {
     return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
 }
@@ -89,7 +89,7 @@ args_man_t fc_solve_args_man_chop(const char *const string)
 
     while (*s != '\0')
     {
-        fcs_bool_t push_next_arg_flag = FALSE;
+        bool push_next_arg_flag = FALSE;
 
         while (is_whitespace(*s))
         {
@@ -109,8 +109,8 @@ args_man_t fc_solve_args_man_chop(const char *const string)
             continue;
         }
 
-        fcs_bool_t should_still_loop = TRUE;
-        fcs_bool_t in_arg = FALSE;
+        bool should_still_loop = TRUE;
+        bool in_arg = FALSE;
         while (should_still_loop)
         {
             switch (*s)

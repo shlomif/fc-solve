@@ -40,7 +40,7 @@ static inline void nullify_newline(char *const line)
 }
 
 #define MAX_PATH_LEN 4000
-static inline fcs_bool_t read_preset(const char *const preset_name,
+static inline bool read_preset(const char *const preset_name,
     args_man_t *const args_man, char *const opened_files_dir,
     const char *const user_preset_dir)
 {
@@ -87,7 +87,7 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
         (const char *)global_presetrc,
         user_preset_dir,
     };
-    fcs_bool_t read_next_preset = FALSE;
+    bool read_next_preset = FALSE;
     for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); ++path_idx)
     {
         const char *const path = presetrc_pathes[path_idx];

@@ -54,7 +54,7 @@ err:
     my_close(db->dbp, ret);
 }
 
-fcs_bool_t fc_solve_dbm_store_does_key_exist(
+bool fc_solve_dbm_store_does_key_exist(
     fcs_dbm_store_t store, const unsigned char *const key_raw)
 {
     unsigned char dummy[100];
@@ -81,7 +81,7 @@ fcs_bool_t fc_solve_dbm_store_does_key_exist(
     }
 }
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
+bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
     const unsigned char *const key_raw, unsigned char *const parent)
 {
     dbm_t *db = (dbm_t *)store;

@@ -45,12 +45,12 @@ static inline void free_thread(dbm_solver_thread *const thread)
 }
 
 /* Returns if the process should terminate. */
-static fcs_bool_t handle_and_destroy_instance_solution(
+static bool handle_and_destroy_instance_solution(
     dbm_solver_instance *const instance,
     fc_solve_delta_stater_t *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
-    fcs_bool_t ret = FALSE;
+    bool ret = FALSE;
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
     instance_print_stats(instance);
     if (instance->common.queue_solution_was_found)

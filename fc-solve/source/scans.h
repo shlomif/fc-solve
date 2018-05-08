@@ -47,7 +47,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
     fcs__positions_by_rank_t positions_by_rank
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     ,
-    const fcs_bool_t is_simple_simon
+    const bool is_simple_simon
 #endif
 )
 {

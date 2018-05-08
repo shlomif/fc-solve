@@ -106,13 +106,13 @@ sub emit
 }
 
 emit(
-    qq#const fcs_bool_t fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
+    qq#const bool fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
     'is_king',
     [ q/"bool.h"/, ],
     [ map { $_ ? 'TRUE' : 'FALSE' } @is_king ],
 );
 emit(
-qq#const fcs_bool_t fc_solve_is_parent_buf[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
+    qq#const bool fc_solve_is_parent_buf[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
     'is_parent',
     [ q/"bool.h"/, ],
     [

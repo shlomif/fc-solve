@@ -44,7 +44,7 @@ static inline void insert_state(store_t *store, fcs_cache_key_t *key)
     *PValue = 1;
 }
 
-static inline fcs_bool_t lookup_state(store_t *const store,
+static inline bool lookup_state(store_t *const store,
     fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
     Word_t *PValue;
@@ -73,7 +73,7 @@ typedef struct
     ssize_t stack_depth, max_stack_depth;
     pseudo_dfs_stack_item_t *stack;
     long count_num_processed, max_count_num_processed;
-    fcs_bool_t solution_was_found;
+    bool solution_was_found;
     enum TERMINATE_REASON should_terminate;
     fcs_compact_allocator_t derived_list_allocator;
     fcs_meta_compact_allocator_t meta_alloc;

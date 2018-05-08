@@ -20,7 +20,7 @@ static inline void set_iter_handler(
 #endif
 }
 
-static inline fcs_bool_t cmd_line_cb__handle_common(const char *const arg_str,
+static inline bool cmd_line_cb__handle_common(const char *const arg_str,
     void *const instance, fc_solve_display_information_context_t *const dc)
 {
     if (IS_ARG_LONG("i", "iter-output"))

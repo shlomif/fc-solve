@@ -22,18 +22,18 @@ typedef struct
 {
     const char *output_filename;
     int standard_notation;
-    fcs_bool_t debug_iter_state_output;
+    bool debug_iter_state_output;
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-    fcs_bool_t parseable_output;
+    bool parseable_output;
 #endif
-    fcs_bool_t canonized_order_output;
+    bool canonized_order_output;
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
-    fcs_bool_t display_10_as_t;
+    bool display_10_as_t;
 #endif
-    fcs_bool_t display_parent_iter_num;
-    fcs_bool_t display_moves;
-    fcs_bool_t display_states;
-    fcs_bool_t show_exceeded_limits;
+    bool display_parent_iter_num;
+    bool display_moves;
+    bool display_states;
+    bool show_exceeded_limits;
 } fc_solve_display_information_context_t;
 
 static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT = {
