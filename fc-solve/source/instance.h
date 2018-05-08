@@ -260,10 +260,8 @@ typedef struct
 #endif
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
-typedef void *fcs_instance_debug_iter_output_context_t;
-
 typedef void (*fcs_instance_debug_iter_output_func_t)(
-    fcs_instance_debug_iter_output_context_t, fcs_int_limit_t, int, void *,
+    void *, fcs_int_limit_t, int, void *,
     fcs_kv_state_t *, fcs_int_limit_t);
 #endif
 
@@ -367,12 +365,12 @@ typedef struct
 {
     ssize_t max_depth;
     fcs_moves_order move_funcs;
-} fcs_moves_by_depth_unit_t;
+} moves_by_depth_unit;
 
 typedef struct
 {
     size_t num_units;
-    fcs_moves_by_depth_unit_t *by_depth_units;
+    moves_by_depth_unit *by_depth_units;
 } fcs_moves_by_depth_array;
 
 typedef enum {
@@ -734,7 +732,7 @@ struct fc_solve_instance_struct
      * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
      * */
     fcs_instance_debug_iter_output_func_t debug_iter_output_func;
-    fcs_instance_debug_iter_output_context_t debug_iter_output_context;
+    void* debug_iter_output_context;
 #endif
 
     /*

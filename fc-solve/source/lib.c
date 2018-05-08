@@ -1080,7 +1080,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
     const_SLOT(debug_iter_output_context, instance);
 #endif
 
-    fcs_moves_by_depth_unit_t *curr_by_depth_unit = by_depth_units;
+    const moves_by_depth_unit *curr_by_depth_unit = by_depth_units;
     for (; (DEPTH() >= GET_DEPTH(curr_by_depth_unit)); ++curr_by_depth_unit)
     {
     }

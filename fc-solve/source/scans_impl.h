@@ -122,12 +122,12 @@ static inline void fc_solve_initialize_befs_rater(
 #undef unlimited_sequence_move
 #undef W
 
-typedef int fcs_depth_t;
+typedef int fcs_depth;
 
-static inline fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
+static inline fcs_depth calc_depth(fcs_collectible_state_t *ptr_state)
 {
 #ifdef FCS_WITHOUT_DEPTH_FIELD
-    register fcs_depth_t ret = 0;
+    register fcs_depth ret = 0;
     while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
     {
         ++ret;

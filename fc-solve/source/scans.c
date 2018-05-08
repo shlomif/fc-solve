@@ -27,16 +27,16 @@
 
 #ifdef FCS_RCS_STATES
 /* TODO : Unit-test this function as it had had a bug beforehand
- * because fcs_lru_side_t had been an unsigned long.
+ * because lru_side had been an unsigned long.
  * */
-typedef const char *fcs_lru_side_t;
+typedef const char *lru_side;
 
 extern int fc_solve_compare_lru_cache_keys(const void *const void_a,
     const void *const void_b, void *const context GCC_UNUSED)
 {
 #define GET_PARAM(p)                                                           \
-    ((fcs_lru_side_t)(((const fcs_cache_key_info *)(p))->val_ptr))
-    const fcs_lru_side_t a = GET_PARAM(void_a), b = GET_PARAM(void_b);
+    ((lru_side)(((const fcs_cache_key_info *)(p))->val_ptr))
+    const lru_side a = GET_PARAM(void_a), b = GET_PARAM(void_b);
 
     return ((a > b) ? 1 : (a < b) ? (-1) : 0);
 #undef GET_PARAM
