@@ -42,7 +42,7 @@ const fcs_default_weights fc_solve_default_befs_weights = {
 static inline void soft_thread_clean_soft_dfs(
     fc_solve_soft_thread_t *const soft_thread)
 {
-    fcs_soft_dfs_stack_item_t *const soft_dfs_info =
+    fcs_soft_dfs_stack_item *const soft_dfs_info =
         DFS_VAR(soft_thread, soft_dfs_info);
     // Check if a Soft-DFS-type scan was called in the first place
     if (!soft_dfs_info)
@@ -51,10 +51,10 @@ static inline void soft_thread_clean_soft_dfs(
     }
 
     // De-allocate the Soft-DFS specific stacks
-    const fcs_soft_dfs_stack_item_t *info_ptr = soft_dfs_info;
-    const fcs_soft_dfs_stack_item_t *const max_info_ptr =
+    const fcs_soft_dfs_stack_item *info_ptr = soft_dfs_info;
+    const fcs_soft_dfs_stack_item *const max_info_ptr =
         info_ptr + DFS_VAR(soft_thread, depth);
-    const fcs_soft_dfs_stack_item_t *const dfs_max_info_ptr =
+    const fcs_soft_dfs_stack_item *const dfs_max_info_ptr =
         info_ptr + DFS_VAR(soft_thread, dfs_max_depth);
 
     for (; info_ptr < max_info_ptr; ++info_ptr)
@@ -341,7 +341,7 @@ typedef struct
         FREECELL,
         COLUMN
     } type;
-} find_card_ret_t;
+} find_card_ret;
 
 // This function traces the solution from the final state down to the initial
 // state
@@ -392,7 +392,7 @@ static inline int find_fc_card(const fcs_state *const dynamic_state,
     return -1;
 }
 
-static inline find_card_ret_t find_card_src_string(
+static inline find_card_ret find_card_src_string(
     const fcs_state *const dynamic_state,
     const fcs_card_t needle FREECELLS_AND_STACKS_ARGS())
 {
@@ -400,14 +400,14 @@ static inline find_card_ret_t find_card_src_string(
         find_col_card(dynamic_state, needle PASS_STACKS(STACKS_NUM__VAL));
     if (src_col_idx < 0)
     {
-        return (find_card_ret_t){
+        return (find_card_ret){
             .idx = (find_fc_card(
                 dynamic_state, needle PASS_FREECELLS(FREECELLS_NUM__VAL))),
             .type = FREECELL};
     }
     else
     {
-        return (find_card_ret_t){.idx = src_col_idx, .type = COLUMN};
+        return (find_card_ret){.idx = src_col_idx, .type = COLUMN};
     }
 }
 #endif
@@ -497,7 +497,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
             break;
             case FCS_PATS__TYPE_FOUNDATION:
             {
-                const find_card_ret_t src = find_card_src_string(
+                const find_card_ret src = find_card_src_string(
                     &(s_and_info.s), card PASS_FREECELLS(FREECELLS_NUM__VAL)
                                          PASS_STACKS(STACKS_NUM__VAL));
                 if (src.type == FREECELL)
@@ -517,7 +517,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
             default:
             {
                 const fcs_card_t dest_card = move_ptr->destcard;
-                const find_card_ret_t src = find_card_src_string(s,
+                const find_card_ret src = find_card_src_string(s,
                     card PASS_FREECELLS(FREECELLS_NUM__VAL)
                         PASS_STACKS(STACKS_NUM__VAL));
                 if (src.type == FREECELL)

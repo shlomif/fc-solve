@@ -77,7 +77,7 @@ typedef sparse_hash_set<char *, state_hash, state_equality> StatesGoogleHash;
 typedef dense_hash_set<char *, state_hash, state_equality> StatesGoogleHash;
 #endif
 
-extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
+extern "C" fcs_states_google_hash_handle fc_solve_states_google_hash_new()
 {
     StatesGoogleHash *ret = new StatesGoogleHash;
 
@@ -85,7 +85,7 @@ extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
     ret->set_empty_key(NULL);
 #endif
 
-    return (fcs_states_google_hash_handle_t)(ret);
+    return (fcs_states_google_hash_handle)(ret);
 }
 
 /*
@@ -96,7 +96,7 @@ extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
  * was set to it.
  */
 extern "C" bool fc_solve_states_google_hash_insert(
-    fcs_states_google_hash_handle_t void_hash, void *key, void **existing_key)
+    fcs_states_google_hash_handle void_hash, void *key, void **existing_key)
 {
     StatesGoogleHash *hash = (StatesGoogleHash *)void_hash;
     std::pair<StatesGoogleHash::iterator, bool> result =
@@ -117,7 +117,7 @@ extern "C" bool fc_solve_states_google_hash_insert(
 }
 
 extern "C" void fc_solve_states_google_hash_free(
-    fcs_states_google_hash_handle_t void_hash)
+    fcs_states_google_hash_handle void_hash)
 {
     StatesGoogleHash *hash = (StatesGoogleHash *)void_hash;
 
@@ -127,7 +127,7 @@ extern "C" void fc_solve_states_google_hash_free(
 }
 
 extern void fc_solve_states_google_hash_foreach(
-    fcs_states_google_hash_handle_t void_hash,
+    fcs_states_google_hash_handle void_hash,
     bool (*should_delete_ptr)(void *key, void *context), void *context)
 {
     StatesGoogleHash *hash = (StatesGoogleHash *)void_hash;

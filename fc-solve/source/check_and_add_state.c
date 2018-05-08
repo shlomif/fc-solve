@@ -231,7 +231,7 @@ static inline void fc_solve_cache_stacks(
 #endif
     STACKS__SET_PARAMS();
     register fcs_state *const new_state_key = new_state->key;
-    register fcs_state_extra_info_t *const new_state_info = new_state->val;
+    register fcs_state_extra_info *const new_state_info = new_state->val;
     compact_allocator *const stacks_allocator =
         &(HT_FIELD(hard_thread, allocator));
     fcs_cards_column_t *current_stack = new_state_key->columns;
@@ -381,7 +381,7 @@ guint fc_solve_hash_function(gconstpointer key)
 
 static inline void upon_new_state(fc_solve_instance_t *const instance,
     fc_solve_hard_thread_t *const hard_thread,
-    fcs_state_extra_info_t *const new_state_info)
+    fcs_state_extra_info *const new_state_info)
 {
     fcs_collectible_state_t *const parent_state = new_state_info->parent;
     /* The new state was not found in the cache, and it was already inserted */

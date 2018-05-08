@@ -344,7 +344,7 @@ struct fc_solve_hard_thread_struct
 typedef struct
 {
     int idx;
-    pq_rating_t rating;
+    pq_rating rating;
 } fcs_rating_with_index_t;
 
 typedef struct
@@ -359,7 +359,7 @@ typedef struct
     fcs__positions_by_rank positions_by_rank;
     fcs_game_limit_t num_vacant_stacks;
     fcs_game_limit_t num_vacant_freecells;
-} fcs_soft_dfs_stack_item_t;
+} fcs_soft_dfs_stack_item;
 
 typedef struct
 {
@@ -412,7 +412,7 @@ struct fc_solve_soft_thread_struct
             ssize_t dfs_max_depth;
 
             /*
-             * Soft-DFS uses a stack of fcs_soft_dfs_stack_item_t s.
+             * Soft-DFS uses a stack of fcs_soft_dfs_stack_item s.
              *
              * derived_states_list - a list of states to be checked next.
              * Not all of them will be checked because it is possible that
@@ -432,7 +432,7 @@ struct fc_solve_soft_thread_struct
              * num_vacant_freecells - ditto for the freecells.
              *
              * */
-            fcs_soft_dfs_stack_item_t *soft_dfs_info;
+            fcs_soft_dfs_stack_item *soft_dfs_info;
 
             /* The depth of the DFS stacks */
             ssize_t depth;
@@ -600,7 +600,7 @@ struct fc_solve_instance_struct
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     hash_table hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-    fcs_states_google_hash_handle_t hash;
+    fcs_states_google_hash_handle hash;
 #endif
 
 #if defined(INDIRECT_STACK_STATES)

@@ -309,7 +309,7 @@ static inline void fc_solve_init_locs(fcs_state_locs_struct_t *const locs)
     }
 }
 
-typedef struct fcs_state_extra_info_struct fcs_state_extra_info_t;
+typedef struct fcs_state_extra_info_struct fcs_state_extra_info;
 
 struct fcs_state_keyval_pair_struct
 {
@@ -317,7 +317,7 @@ struct fcs_state_keyval_pair_struct
         struct
         {
             fcs_state s;
-            fcs_state_extra_info_t info;
+            fcs_state_extra_info info;
         };
         struct fcs_state_keyval_pair_struct *next;
     };
@@ -328,7 +328,7 @@ typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
 typedef struct
 {
     fcs_state *key;
-    fcs_state_extra_info_t *val;
+    fcs_state_extra_info *val;
 } fcs_kv_state_t;
 
 static inline fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(
@@ -354,7 +354,7 @@ static inline fcs_kv_state_t FCS_STATE_keyval_pair_to_kv(
  *
  * */
 #ifdef FCS_RCS_STATES
-typedef fcs_state_extra_info_t fcs_collectible_state_t;
+typedef fcs_state_extra_info fcs_collectible_state_t;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 
 #define fcs_duplicate_state(x, y) fcs_duplicate_kv_state((x), (y))

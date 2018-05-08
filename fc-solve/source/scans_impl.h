@@ -166,7 +166,7 @@ static inline fcs_game_limit_t count_num_vacant_freecells(
     return num_vacant_freecells;
 }
 
-static inline pq_rating_t befs_rate_state(
+static inline pq_rating befs_rate_state(
     const fc_solve_soft_thread_t *const soft_thread,
     const fcs_state_weighting *const weighting,
     const fcs_state *const state, const int negated_depth)

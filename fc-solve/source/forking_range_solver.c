@@ -51,7 +51,7 @@ static long long total_num_iters = 0, total_num_finished_boards = 0;
 typedef struct
 {
     int child_to_parent_pipe[2], parent_to_child_pipe[2];
-} worker_t;
+} fcs_worker;
 
 typedef struct
 {
@@ -65,7 +65,7 @@ typedef struct
 
 static inline void write_request(const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr,
-    const worker_t *const worker)
+    const fcs_worker *const worker)
 {
     request_type req;
     if ((*next_board_num_ptr) > end_board)
@@ -89,7 +89,7 @@ static inline void write_request(const long long end_board,
     write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req));
 }
 
-static inline void transaction(const worker_t *const worker, const int read_fd,
+static inline void transaction(const fcs_worker *const worker, const int read_fd,
     const long long end_board, const long long board_num_step,
     long long *const next_board_num_ptr)
 {
@@ -105,7 +105,7 @@ static inline void transaction(const worker_t *const worker, const int read_fd,
     write_request(end_board, board_num_step, next_board_num_ptr, worker);
 }
 
-static inline int read_fd(const worker_t *const worker)
+static inline int read_fd(const fcs_worker *const worker)
 {
     return worker->child_to_parent_pipe[READ_FD];
 }
@@ -135,7 +135,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
     fc_solve_print_started_at();
     void *const instance = simple_alloc_and_parse(argc, argv, arg);
-    worker_t workers[num_workers];
+    fcs_worker workers[num_workers];
 
     for (size_t idx = 0; idx < num_workers; ++idx)
     {
@@ -261,7 +261,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
         for (int i = 0; i < nfds; ++i)
         {
-            const worker_t *const worker = events[i].data.ptr;
+            const fcs_worker *const worker = events[i].data.ptr;
             transaction(worker, read_fd(worker), end_board, board_num_step,
                 &next_board_num);
         }

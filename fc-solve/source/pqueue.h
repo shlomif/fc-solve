@@ -44,14 +44,14 @@ extern "C" {
 #include "state.h"
 
 #define FC_SOLVE_PQUEUE_MaxRating INT_MAX
-typedef int pq_rating_t;
+typedef int pq_rating;
 typedef struct
 {
     fcs_collectible_state_t *val;
-    pq_rating_t rating;
+    pq_rating rating;
 } pq_element;
 
-static inline pq_rating_t fcs_pq_rating(const pq_element elem)
+static inline pq_rating fcs_pq_rating(const pq_element elem)
 {
     return elem.rating;
 }
@@ -95,7 +95,7 @@ static inline void fc_solve_PQueueFree(pri_queue_t *const pq)
    "r" is the rating of the item you're adding for sorting purposes */
 
 static inline void fc_solve_pq_push(pri_queue_t *const pq,
-    fcs_collectible_state_t *const val, const pq_rating_t r)
+    fcs_collectible_state_t *const val, const pq_rating r)
 {
     var_AUTO(i, ++(pq->current_size));
 
