@@ -38,7 +38,7 @@ static inline int fcs_stack_compare(const void *s1, const void *s2)
 #define GET_FREECELL(c) (fcs_freecell_card(*state_key, (c)))
 
 void fc_solve_canonize_state(
-    fcs_state_t *const ptr_state_key FREECELLS_AND_STACKS_ARGS())
+    fcs_state *const ptr_state_key FREECELLS_AND_STACKS_ARGS())
 {
 #define state_key (ptr_state_key)
     /* Insertion-sort the columns */
@@ -79,7 +79,7 @@ void fc_solve_canonize_state(
 #undef state_key
 
 #ifdef FCS_WITH_MOVES
-void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
+void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
 #define state_key (ptr_state_key)
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
 {
@@ -131,7 +131,7 @@ void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 int fc_solve_state_compare_equal(const void *const s1, const void *const s2)
 {
-    return (!memcmp(s1, s2, sizeof(fcs_state_t)));
+    return (!memcmp(s1, s2, sizeof(fcs_state)));
 }
 #endif
 
@@ -139,7 +139,7 @@ int __attribute__((pure))
 fc_solve_state_compare_with_context(const void *const s1, const void *const s2,
     fcs_compare_context_t context GCC_UNUSED)
 {
-    return memcmp(s1, s2, sizeof(fcs_state_t));
+    return memcmp(s1, s2, sizeof(fcs_state));
 }
 
 #ifdef FCS_WITH_MOVES
@@ -157,7 +157,7 @@ static inline void render_freecell_card(const fcs_card_t card,
     }
 }
 
-void fc_solve_state_as_string(char *output_s, const fcs_state_t *const state,
+void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
     const fcs_state_locs_struct_t *const state_locs
         FREECELLS_STACKS_DECKS__ARGS()
             FC_SOLVE__PASS_PARSABLE(const bool parseable_output),

@@ -86,7 +86,7 @@ static inline bool fc_solve_move_stack_pop(
 #define fcs_move_stack_static_destroy(stack) free((stack).moves)
 #define fcs_move_stack_reset(stack) (stack)->num_moves = 0
 
-void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
+void fc_solve_apply_move(fcs_state *const ptr_state_key,
     fcs_state_locs_struct_t *const locs,
     const fcs_internal_move_t move FREECELLS_AND_STACKS_ARGS());
 

@@ -595,7 +595,7 @@ static inline void col_seqs_iter__calc_end(col_seqs_iter_t *const iter)
 }
 
 static inline col_seqs_iter_t col_seqs_iter__create(
-    fcs_state_t *const s, const int stack_idx PASS_sequences_are_built_by(
+    fcs_state *const s, const int stack_idx PASS_sequences_are_built_by(
                               const int sequences_are_built_by))
 {
     col_seqs_iter_t ret;
@@ -1398,7 +1398,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
 static inline int_fast32_t calc_foundation_to_put_card_on(
     const fc_solve_soft_thread_t *const soft_thread,
-    const fcs_state_t *const ptr_state, const fcs_card_t card)
+    const fcs_state *const ptr_state, const fcs_card_t card)
 {
     FCS_ON_NOT_FC_ONLY(const_AUTO(instance, fcs_st_instance(soft_thread)));
     MOVE_FUNCS__define_seqs_built_by();

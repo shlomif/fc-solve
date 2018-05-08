@@ -43,7 +43,7 @@ static inline void fc_solve__assign_dest_stack_and_col_ptr(
 
 static inline void fc_solve__calc_positions_by_rank_data(
     fc_solve_soft_thread_t *const soft_thread,
-    const fcs_state_t *const ptr_state_key,
+    const fcs_state *const ptr_state_key,
     fcs__positions_by_rank_t positions_by_rank
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     ,

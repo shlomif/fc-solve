@@ -68,7 +68,7 @@ typedef struct
 {
     fcs_card_t data[MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1) +
                     MAX_NUM_FREECELLS + 4 * MAX_NUM_DECKS];
-} fcs_state_t;
+} fcs_state;
 
 /*
  * Stack: 0 - Number of cards
@@ -107,7 +107,7 @@ typedef struct
     fcs_cards_column_t columns[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
     fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
-} fcs_state_t;
+} fcs_state;
 
 #define fcs_state_get_col(state, col_idx) ((state).columns[(col_idx)])
 
@@ -316,7 +316,7 @@ struct fcs_state_keyval_pair_struct
     union {
         struct
         {
-            fcs_state_t s;
+            fcs_state s;
             fcs_state_extra_info_t info;
         };
         struct fcs_state_keyval_pair_struct *next;
@@ -327,7 +327,7 @@ typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
 
 typedef struct
 {
-    fcs_state_t *key;
+    fcs_state *key;
     fcs_state_extra_info_t *val;
 } fcs_kv_state_t;
 
@@ -449,9 +449,9 @@ static inline void FCS_STATE_collectible_to_kv(
 #define PASS_T(arg) FC_SOLVE__PASS_T(arg)
 
 extern void fc_solve_canonize_state(
-    fcs_state_t *const ptr_state_key FREECELLS_AND_STACKS_ARGS());
+    fcs_state *const ptr_state_key FREECELLS_AND_STACKS_ARGS());
 
-void fc_solve_canonize_state_with_locs(fcs_state_t *const ptr_state_key,
+void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS());
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_LIBREDBLACK_TREE)
@@ -463,7 +463,7 @@ typedef const void *fcs_compare_context_t;
 static inline int fc_solve_state_compare(
     const void *const s1, const void *const s2)
 {
-    return memcmp(s1, s2, sizeof(fcs_state_t));
+    return memcmp(s1, s2, sizeof(fcs_state));
 }
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
@@ -838,7 +838,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
 #undef HANDLE_EOS
 
 extern void fc_solve_state_as_string(char *output_s,
-    const fcs_state_t *const state,
+    const fcs_state *const state,
     const fcs_state_locs_struct_t *const state_locs
         FREECELLS_STACKS_DECKS__ARGS()
             FC_SOLVE__PASS_PARSABLE(const bool parseable_output),
@@ -861,7 +861,7 @@ static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
 {
     size_t card_counts[FCS_NUM_SUITS][FCS_MAX_RANK + 1];
 
-    const fcs_state_t *const state = &(state_pair->s);
+    const fcs_state *const state = &(state_pair->s);
 
     /* Initialize all card_counts to 0 */
     for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
@@ -1050,7 +1050,7 @@ static inline void fcs_col_transfer_cards(fcs_cards_column_t dest_col,
 }
 
 static inline fcs_card_t fcs_state_pop_col_card(
-    fcs_state_t *const state, const int col_idx)
+    fcs_state *const state, const int col_idx)
 {
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_card_t ret;
@@ -1059,14 +1059,14 @@ static inline fcs_card_t fcs_state_pop_col_card(
 }
 
 static inline void fcs_state_pop_col_top(
-    fcs_state_t *const state, const int col_idx)
+    fcs_state *const state, const int col_idx)
 {
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_col_pop_top(col);
 }
 
 static inline void fcs_state_push(
-    fcs_state_t *const state, const int col_idx, const fcs_card_t card)
+    fcs_state *const state, const int col_idx, const fcs_card_t card)
 {
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_col_push_card(col, card);

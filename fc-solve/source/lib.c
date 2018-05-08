@@ -18,7 +18,7 @@
 #endif
 
 #ifdef DEBUG
-static void verify_state_sanity(const fcs_state_t *const ptr_state)
+static void verify_state_sanity(const fcs_state *const ptr_state)
 {
 #ifndef NDEBUG
     for (int i = 0; i < 8; ++i)
@@ -364,7 +364,7 @@ static int cmp_stacks_w_context(const void *const v_s1, const void *const v_s2,
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) ||                  \
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
 
-static inline fcs_state_t *rcs_states_get_state(
+static inline fcs_state *rcs_states_get_state(
     fc_solve_instance_t *const instance,
     const fcs_collectible_state_t *const state)
 {
@@ -422,7 +422,7 @@ static inline void update_initial_cards_val(fc_solve_instance_t *const instance)
 #define SEQS_BUILT_BY sequences_are_built_by,
 #endif
     // We cannot use typeof here because clang complains about double const.
-    const fcs_state_t *const s = &(instance->state_copy.s);
+    const fcs_state *const s = &(instance->state_copy.s);
 
     fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
     for (int a = 0; a < INSTANCE_STACKS_NUM; a++)
@@ -2150,7 +2150,7 @@ static void apply_game_params_for_all_instances(fcs_user_t *const user)
 
 typedef struct
 {
-    fcs_state_t *key;
+    fcs_state *key;
     fcs_state_locs_struct_t locs;
 } fcs_standalone_state_ptrs_t;
 

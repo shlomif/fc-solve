@@ -43,7 +43,7 @@ extern int fc_solve_compare_lru_cache_keys(const void *const void_a,
 }
 
 #define NEXT_CACHE_STATE(s) ((s)->lower_pri)
-fcs_state_t *fc_solve_lookup_state_key_from_val(
+fcs_state *fc_solve_lookup_state_key_from_val(
     fc_solve_instance_t *const instance,
     const fcs_collectible_state_t *const orig_ptr_state_val)
 {
@@ -153,7 +153,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
     {
         new_cache_state = parents_stack[parents_stack_len - 1].new_cache_state;
 
-        fcs_state_t *const pass_key = &(new_cache_state->key);
+        fcs_state *const pass_key = &(new_cache_state->key);
         *pass_key = parents_stack[parents_stack_len].new_cache_state->key;
 
         const fcs_move_stack_t *const stack_ptr__moves_to_parent =

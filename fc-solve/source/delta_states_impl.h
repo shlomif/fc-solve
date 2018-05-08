@@ -36,7 +36,7 @@ static int fc_solve_get_column_orig_num_cards(
 }
 
 static void fc_solve_delta_stater_init(
-    fcs_delta_stater *const self, fcs_state_t *const init_state,
+    fcs_delta_stater *const self, fcs_state *const init_state,
     const size_t num_columns, const int num_freecells
     PASS_ON_NOT_FC_ONLY(const int sequences_are_built_by)
 )
@@ -78,7 +78,7 @@ static inline void fc_solve_delta_stater_release(
 }
 
 static inline void fc_solve_delta_stater_set_derived(
-    fcs_delta_stater *const self, fcs_state_t *const state)
+    fcs_delta_stater *const self, fcs_state *const state)
 {
     self->derived_state = state;
 }
@@ -100,7 +100,7 @@ static inline void fc_solve_get_column_encoding_composite(
     fcs_delta_stater *const self, const int col_idx,
     fc_solve_column_encoding_composite_t *const ret)
 {
-    const fcs_state_t *const derived = self->derived_state;
+    const fcs_state *const derived = self->derived_state;
     const_AUTO(col, fcs_state_get_col(*derived, col_idx));
 
     const_AUTO(num_orig_cards, fc_solve_get_column_orig_num_cards(self, col));
@@ -150,7 +150,7 @@ static inline void fc_solve_get_column_encoding_composite(
 static inline void fc_solve_get_freecells_encoding(
     fcs_delta_stater *const self, fc_solve_bit_writer_t *const bit_w)
 {
-    const fcs_state_t *const derived = self->derived_state;
+    const fcs_state *const derived = self->derived_state;
     const_SLOT(num_freecells, self);
 
     fcs_card_t freecells[MAX_NUM_FREECELLS];
@@ -229,7 +229,7 @@ static void fc_solve_delta_stater_encode_composite(
 {
     int cols_indexes[MAX_NUM_STACKS];
     fc_solve_column_encoding_composite_t cols[MAX_NUM_STACKS];
-    fcs_state_t *const derived = self->derived_state;
+    fcs_state *const derived = self->derived_state;
 
     const_SLOT(num_columns, self);
     for (size_t i = 0; i < num_columns; ++i)
@@ -302,7 +302,7 @@ static void fc_solve_delta_stater_encode_composite(
 
 /* ret must be an empty state. */
 static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
-    fc_solve_bit_reader_t *const bit_r, fcs_state_t *const ret)
+    fc_solve_bit_reader_t *const bit_r, fcs_state *const ret)
 {
 #define PROCESS_CARD(card)                                                     \
     if (fcs_card_rank(card) < foundations[fcs_card_suit(card)])                \
@@ -328,7 +328,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     }
 
     const_SLOT(num_columns, self);
-    const fcs_state_t *const init_state = self->init_state;
+    const fcs_state *const init_state = self->init_state;
 
     for (size_t col_idx = 0; col_idx < num_columns; ++col_idx)
     {

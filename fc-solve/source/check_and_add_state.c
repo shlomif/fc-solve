@@ -230,7 +230,7 @@ static inline void fc_solve_cache_stacks(
     fc_solve_instance_t *const instance = hard_thread->instance;
 #endif
     STACKS__SET_PARAMS();
-    register fcs_state_t *const new_state_key = new_state->key;
+    register fcs_state *const new_state_key = new_state->key;
     register fcs_state_extra_info_t *const new_state_info = new_state->val;
     compact_allocator *const stacks_allocator =
         &(HT_FIELD(hard_thread, allocator));
@@ -347,7 +347,7 @@ static inline void fc_solve_cache_stacks(
 guint fc_solve_hash_function(gconstpointer key)
 {
     const char *s_ptr = (char *)key;
-    const char *const s_end = s_ptr + sizeof(fcs_state_t);
+    const char *const s_end = s_ptr + sizeof(fcs_state);
     guint hash_value = 0;
     while (s_ptr < s_end)
     {

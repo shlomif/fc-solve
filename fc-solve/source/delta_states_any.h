@@ -31,7 +31,7 @@ extern "C" {
     fcs_debondt_init_and_encode_state(a, b, c, d)
 #ifdef FCS_FREECELL_ONLY
 static inline void fc_solve_delta_stater_init(
-    fc_solve_debondt_delta_stater_t *const delta, fcs_state_t *const init_state,
+    fc_solve_debondt_delta_stater_t *const delta, fcs_state *const init_state,
     const size_t num_columns, const int num_freecells)
 {
     fc_solve_debondt_delta_stater_init(delta, FCS_DBM_VARIANT_2FC_FREECELL,
@@ -39,7 +39,7 @@ static inline void fc_solve_delta_stater_init(
 }
 #else
 static inline void fc_solve_delta_stater_init(
-    fc_solve_debondt_delta_stater_t *const delta, fcs_state_t *const init_state,
+    fc_solve_debondt_delta_stater_t *const delta, fcs_state *const init_state,
     const size_t num_columns, const int num_freecells,
     const int sequences_are_built_by)
 {

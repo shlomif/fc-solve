@@ -154,7 +154,7 @@ static inline void fcs_trace(const char *const format, ...)
 #endif
 
 static inline fcs_game_limit_t count_num_vacant_freecells(
-    const fcs_game_limit_t freecells_num, const fcs_state_t *const state_ptr)
+    const fcs_game_limit_t freecells_num, const fcs_state *const state_ptr)
 {
     fcs_game_limit_t num_vacant_freecells = 0;
     for (int i = 0; i < freecells_num; i++)
@@ -171,7 +171,7 @@ static inline fcs_game_limit_t count_num_vacant_freecells(
 static inline pq_rating_t befs_rate_state(
     const fc_solve_soft_thread_t *const soft_thread,
     const fc_solve_state_weighting_t *const weighting,
-    const fcs_state_t *const state, const int negated_depth)
+    const fcs_state *const state, const int negated_depth)
 {
     const_AUTO(instance, fcs_st_instance(soft_thread));
             FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by =
@@ -290,7 +290,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
     (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE()                                                        \
-    fcs_state_t state_key;                                                     \
+    fcs_state state_key;                                                     \
     fcs_kv_state_t pass = {.key = &(state_key)}
 
 #else
@@ -411,7 +411,7 @@ static inline void mark_as_dead_end__proto(
     }
 
 static inline fcs_game_limit_t count_num_vacant_stacks(
-    const fcs_game_limit_t stacks_num, const fcs_state_t *const state_ptr)
+    const fcs_game_limit_t stacks_num, const fcs_state *const state_ptr)
 {
     fcs_game_limit_t num_vacant_stacks = 0;
 

@@ -139,7 +139,7 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
 static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
-    const fcs_dbm_variant_type_t local_variant, fcs_state_t *const ptr_state,
+    const fcs_dbm_variant_type_t local_variant, fcs_state *const ptr_state,
     const fcs_card_t card)
 {
     FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
@@ -335,7 +335,7 @@ static inline int horne_prune__simple(
     return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
 }
 
-static inline bool card_cannot_be_placed(const fcs_state_t *const s,
+static inline bool card_cannot_be_placed(const fcs_state *const s,
     const uint16_t ds, const fcs_card_t card, const int sequences_are_built_by)
 {
     const_AUTO(col, fcs_state_get_col(*s, ds));

@@ -232,7 +232,7 @@ typedef struct
 struct fcs_cache_key_info_struct
 {
     const fcs_collectible_state_t *val_ptr;
-    fcs_state_t key;
+    fcs_state key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.
@@ -711,7 +711,7 @@ struct fc_solve_instance_struct
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) ||                  \
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
-    fcs_state_t *tree_new_state_key;
+    fcs_state *tree_new_state_key;
     fcs_collectible_state_t *tree_new_state;
 #endif
 
@@ -854,7 +854,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
     fc_solve_soft_thread_t *, fcs_kv_state_t);
 
 #ifdef FCS_RCS_STATES
-fcs_state_t *fc_solve_lookup_state_key_from_val(fc_solve_instance_t *instance,
+fcs_state *fc_solve_lookup_state_key_from_val(fc_solve_instance_t *instance,
     const fcs_collectible_state_t *orig_ptr_state_val);
 
 extern int fc_solve_compare_lru_cache_keys(const void *, const void *, void *);

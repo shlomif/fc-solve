@@ -24,7 +24,7 @@ static inline void moves_processed_add_new_move(
 }
 
 static inline bool fc_solve_fc_pro__can_be_moved(
-    fcs_state_t *const s, const fcs_card_t card)
+    fcs_state *const s, const fcs_card_t card)
 {
     const int rank = fcs_card_rank(card);
     const int suit = fcs_card_suit(card);

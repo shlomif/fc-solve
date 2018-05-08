@@ -63,7 +63,7 @@ static inline size_t calc_max_simple_simon_seq_move(const int num_empty_cols)
         state_context_value)
 
 static inline void fc_solve_move_sequence_function(
-    fcs_state_t *const s FCS__pass_moves(fcs_move_stack_t *const moves),
+    fcs_state *const s FCS__pass_moves(fcs_move_stack_t *const moves),
     const size_t dest_col_i, const size_t src_col_i, const size_t cards_num)
 {
     fcs_col_transfer_cards(fcs_state_get_col(*s, dest_col_i),
@@ -79,7 +79,7 @@ static inline void fc_solve_move_sequence_function(
 #ifdef FCS_RCS_STATES
 
 #define tests_define_accessors_rcs_states()                                    \
-    fcs_state_t my_new_out_state_key;                                          \
+    fcs_state my_new_out_state_key;                                          \
     pass_new_state.key = &my_new_out_state_key
 
 #else

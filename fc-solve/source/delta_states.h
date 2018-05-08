@@ -134,7 +134,7 @@ typedef struct
     FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
     size_t num_freecells;
     size_t num_columns;
-    fcs_state_t *init_state, *derived_state;
+    fcs_state *init_state, *derived_state;
     int bits_per_orig_cards_in_column;
 } fcs_delta_stater;
 

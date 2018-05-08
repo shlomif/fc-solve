@@ -23,7 +23,7 @@ const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
 /*
  * This function performs a given move on a state
  */
-void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
+void fc_solve_apply_move(fcs_state *const ptr_state_key,
     fcs_state_locs_struct_t *const locs,
     const fcs_internal_move_t move FREECELLS_AND_STACKS_ARGS())
 {

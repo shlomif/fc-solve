@@ -349,7 +349,7 @@ typedef struct
 
 #ifndef FCS_DISABLE_PATSOLVE
 static inline int find_empty_col(
-    const fcs_state_t *const dynamic_state STACKS_NUM__ARG)
+    const fcs_state *const dynamic_state STACKS_NUM__ARG)
 {
     for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
     {
@@ -362,7 +362,7 @@ static inline int find_empty_col(
     return -1;
 }
 
-static inline int find_col_card(const fcs_state_t *const dynamic_state,
+static inline int find_col_card(const fcs_state *const dynamic_state,
     const fcs_card_t needle STACKS_NUM__ARG)
 {
     for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
@@ -378,7 +378,7 @@ static inline int find_col_card(const fcs_state_t *const dynamic_state,
     return -1;
 }
 
-static inline int find_fc_card(const fcs_state_t *const dynamic_state,
+static inline int find_fc_card(const fcs_state *const dynamic_state,
     const fcs_card_t needle FREECELLS_NUM__ARG)
 {
     for (size_t dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
@@ -393,7 +393,7 @@ static inline int find_fc_card(const fcs_state_t *const dynamic_state,
 }
 
 static inline find_card_ret_t find_card_src_string(
-    const fcs_state_t *const dynamic_state,
+    const fcs_state *const dynamic_state,
     const fcs_card_t needle FREECELLS_AND_STACKS_ARGS())
 {
     const int src_col_idx =
@@ -444,7 +444,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
         const int freecells_num = INSTANCE_FREECELLS_NUM;
 #endif
 
-        fcs_state_t *const s = &(s_and_info.s);
+        fcs_state *const s = &(s_and_info.s);
 #ifdef INDIRECT_STACK_STATES
         for (int i = 0; i < STACKS_NUM__VAL; ++i)
         {
