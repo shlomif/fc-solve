@@ -399,7 +399,7 @@ MACRO(write_tree TREE_TYPE PREFIXO fn)
 "#pragma once
 #include \"${TREE_TYPE}.h\"
 
-typedef struct ${TREE_TYPE}_table ${PREFIXO}_table_t;
+typedef struct ${TREE_TYPE}_table ${PREFIXO}_table;
 #define ${PREFIXO}_insert(a,b) ${TREE_TYPE}_insert((a),(b))
 #define ${PREFIXO}_create(a,b,c) ${TREE_TYPE}_create((a),(b),(c))
 #define ${PREFIXO}_destroy(a,b) ${TREE_TYPE}_destroy((a),(b))

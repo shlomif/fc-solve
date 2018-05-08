@@ -1929,7 +1929,7 @@ typedef enum {
 typedef enum {
     FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN,
     FLARES_CHOICE_FCPRO_SOLUTION_LEN
-} flares_choice_type_t;
+} flares_choice_type;
 #endif
 
 typedef fcs_int_limit_t flare_iters_quota_t;
@@ -2035,7 +2035,7 @@ typedef struct
 #endif
 #ifdef FCS_WITH_FLARES
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
-    flares_choice_type_t flares_choice;
+    flares_choice_type flares_choice;
 #endif
     double flares_iters_factor;
 #endif
@@ -2528,7 +2528,7 @@ typedef enum {
     FCS_COMPILE_FLARES_RET_JUNK_AFTER_CP,
     FCS_COMPILE_FLARES_RET_UNKNOWN_COMMAND,
     FCS_COMPILE_FLARES_RUN_JUNK_AFTER_LAST_RUN_INDEF
-} fcs_compile_flares_ret_t;
+} fcs_compile_flares_ret;
 
 #ifdef FCS_WITH_FLARES
 static inline flares_plan_item create_plan_item(const flares_plan_type_t mytype,
@@ -2580,7 +2580,7 @@ static inline fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
 #define SET_ERROR(s)
 #endif
 
-static inline fcs_compile_flares_ret_t user_compile_all_flares_plans(
+static inline fcs_compile_flares_ret user_compile_all_flares_plans(
     fcs_user_t *const user)
 {
     INSTANCES_LOOP_START()
@@ -4461,7 +4461,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
 {
 #ifdef FCS_WITH_FLARES
     fcs_user_t *const user = (fcs_user_t *)api_instance;
-    const fcs_compile_flares_ret_t ret = user_compile_all_flares_plans(user);
+    const fcs_compile_flares_ret ret = user_compile_all_flares_plans(user);
 #ifdef FCS_WITH_ERROR_STRS
     SET_ERROR_VAR(error_string, user->error_string);
 #else

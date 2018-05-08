@@ -125,7 +125,7 @@ struct fc_solve_hard_thread_struct;
 struct fc_solve_soft_thread_struct;
 struct fc_solve_instance_struct;
 
-typedef void (*fc_solve_solve_for_state_move_func_t)(
+typedef void (*fc_solve_solve_for_state_move_func)(
     struct fc_solve_soft_thread_struct *, fcs_kv_state_t,
     fcs_derived_states_list_t *);
 
@@ -199,7 +199,7 @@ typedef enum {
 } fcs_moves_group_kind;
 
 typedef union {
-    fc_solve_solve_for_state_move_func_t f;
+    fc_solve_solve_for_state_move_func f;
     uint_fast32_t idx;
 } fcs_move_func;
 
@@ -586,7 +586,7 @@ struct fc_solve_instance_struct
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     Pvoid_t judy_array;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-    fcs_libavl2_states_tree_table_t *tree;
+    fcs_libavl2_states_tree_table *tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
     GTree *tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
@@ -613,7 +613,7 @@ struct fc_solve_instance_struct
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     hash_table stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
-    fcs_libavl2_stacks_tree_table_t *stacks_tree;
+    fcs_libavl2_stacks_tree_table *stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     struct rbtree *stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)

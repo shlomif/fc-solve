@@ -44,7 +44,7 @@ static inline void fcs_lock_lock(fcs_lock_t *const lock)
 {
     pthread_rwlock_fcfs_gain_write(*lock);
 }
-static inline void fcs_lock_unlock(fcs_lock_t *const lock){}
+static inline void fcs_lock_unlock(fcs_lock_t *const lock)
 {
     pthread_rwlock_fcfs_release(*lock);
 }

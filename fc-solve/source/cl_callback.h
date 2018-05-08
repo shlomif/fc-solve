@@ -21,9 +21,9 @@ typedef struct
 {
     const char *key;
     const char *screen;
-} help_screen_t;
+} help_screen;
 
-static help_screen_t help_screens[] = {
+static help_screen help_screens[] = {
     {"configs",
         "These configurations are usually faster than the unmodified run:\n"
         "\n"
@@ -243,7 +243,7 @@ static freecell_solver_str_t known_parameters[] = {"-h", "--help",
 typedef enum {
     SUCCESS = 0,
     ERROR = -1,
-} exit_code_t;
+} exit_code_type;
 
 #if 0
 static inline int solve_board(void * const instance, const char * const user_state)
@@ -323,7 +323,7 @@ int main(const int argc, char **const argv)
     signal(SIGABRT, abort_signal_handler);
 #endif
     const int ret = solve_board(instance, user_state.s);
-    exit_code_t exit_code = SUCCESS;
+    exit_code_type exit_code = SUCCESS;
     switch (ret)
     {
     case FCS_STATE_INVALID_STATE:

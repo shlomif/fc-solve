@@ -44,9 +44,9 @@ typedef struct
 {
     const char name[32];
     int preset_id;
-} fcs_preset_name_t;
+} preset_name;
 
-static const fcs_preset_name_t fcs_preset_names[23] = {
+static const preset_name fcs_preset_names[23] = {
     {
         "bakers_dozen",
         FCS_PRESET_BAKERS_DOZEN,
