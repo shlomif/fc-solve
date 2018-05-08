@@ -79,7 +79,7 @@ typedef struct
     fcs_meta_compact_allocator_t meta_alloc;
     fcs_derived_state_t *derived_list_recycle_bin;
     fcs_dbm_variant_type_t local_variant;
-    fc_solve_delta_stater_t delta_stater;
+    fcs_delta_stater delta_stater;
     fcs_cache_key_t init_key;
 } dbm_solver_instance;
 

@@ -66,7 +66,7 @@ static inline void dbm__free_threads(dbm_solver_instance *const instance,
 }
 
 static unsigned char get_move_from_parent_to_child(
-    dbm_solver_instance *const instance, fc_solve_delta_stater_t *delta,
+    dbm_solver_instance *const instance, fcs_delta_stater *delta,
     fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
 {
     fcs_state_keyval_pair_t parent_state;
@@ -103,7 +103,7 @@ static unsigned char get_move_from_parent_to_child(
 }
 
 static void trace_solution(dbm_solver_instance *const instance,
-    FILE *const out_fh, fc_solve_delta_stater_t *const delta)
+    FILE *const out_fh, fcs_delta_stater *const delta)
 {
     fprintf(out_fh, "%s\n", "Success!");
     fflush(out_fh);

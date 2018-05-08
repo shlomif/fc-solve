@@ -136,7 +136,7 @@ typedef struct
     size_t num_columns;
     fcs_state_t *init_state, *derived_state;
     int bits_per_orig_cards_in_column;
-} fc_solve_delta_stater_t;
+} fcs_delta_stater;
 
 static inline void fcs_init_encoded_state(fcs_encoded_state_buffer_t *enc_state)
 {

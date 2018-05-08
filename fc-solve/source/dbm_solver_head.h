@@ -53,7 +53,7 @@ extern "C" {
 #include "dbm_trace.h"
 
 #ifdef DEBUG_FOO
-fc_solve_delta_stater_t global_delta_stater;
+fcs_delta_stater global_delta_stater;
 #endif
 
 #ifdef __cplusplus

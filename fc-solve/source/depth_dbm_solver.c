@@ -88,7 +88,7 @@ static inline void instance_destroy(dbm_solver_instance *const instance)
 struct fcs_dbm_solver_thread_struct
 {
     dbm_solver_instance *instance;
-    fc_solve_delta_stater_t delta_stater;
+    fcs_delta_stater delta_stater;
     fcs_meta_compact_allocator_t thread_meta_alloc;
 };
 
@@ -346,7 +346,7 @@ int main(int argc, char *argv[])
     horne_prune__simple(inp.local_variant, &init_state);
 
     const_AUTO(local_variant, inp.local_variant);
-    fc_solve_delta_stater_t delta;
+    fcs_delta_stater delta;
     fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
         PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY())
     );

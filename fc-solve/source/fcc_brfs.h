@@ -217,7 +217,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     fc_solve_compact_allocator_init(&(derived_list_allocator), meta_alloc);
 
     /* TODO : maybe pass delta_stater as an argument  */
-    fc_solve_delta_stater_t delta_stater;
+    fcs_delta_stater delta_stater;
     fc_solve_delta_stater_init(
         &delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
         PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)

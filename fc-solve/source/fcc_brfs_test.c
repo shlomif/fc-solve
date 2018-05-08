@@ -19,7 +19,7 @@
 
 static void fc_solve_state_string_to_enc(
     const fcs_dbm_variant_type_t local_variant,
-    fc_solve_delta_stater_t *const delta, const char *const state_s_proto,
+    fcs_delta_stater *const delta, const char *const state_s_proto,
     fcs_encoded_state_buffer_t *const enc_state)
 {
     fcs_state_keyval_pair_t state;
@@ -52,7 +52,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
-    fc_solve_delta_stater_t delta;
+    fcs_delta_stater delta;
     fc_solve_delta_stater_init(
         &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
         PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
@@ -192,7 +192,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
-    fc_solve_delta_stater_t delta;
+    fcs_delta_stater delta;
     fc_solve_delta_stater_init(
         &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
         PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
