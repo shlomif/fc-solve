@@ -17,7 +17,7 @@ typedef struct
     args_man_t args_man;
     /* These fields are for internal use only. */
     char *last_arg, *last_arg_ptr, *last_arg_end;
-} args_man_wrapper_t;
+} args_man_wrapper;
 
 void fc_solve_args_man_free(args_man_t *const manager)
 {
@@ -34,7 +34,7 @@ void fc_solve_args_man_free(args_man_t *const manager)
 }
 
 static inline void add_to_last_arg(
-    args_man_wrapper_t *const manager, const char c)
+    args_man_wrapper *const manager, const char c)
 {
     *(manager->last_arg_ptr++) = c;
 
@@ -48,7 +48,7 @@ static inline void add_to_last_arg(
     }
 }
 
-static inline void push_args_last_arg(args_man_wrapper_t *const manager)
+static inline void push_args_last_arg(args_man_wrapper *const manager)
 {
     const int len = manager->last_arg_ptr - manager->last_arg;
     char *const new_arg = SMALLOC(new_arg, len + 1);
@@ -83,7 +83,7 @@ args_man_t fc_solve_args_man_chop(const char *const string)
 {
     const char *s = string;
 
-    args_man_wrapper_t manager = {.args_man = fc_solve_args_man_alloc()};
+    args_man_wrapper manager = {.args_man = fc_solve_args_man_alloc()};
     manager.last_arg_ptr = manager.last_arg = SMALLOC(manager.last_arg, 1024);
     manager.last_arg_end = manager.last_arg + 1023;
 

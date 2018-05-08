@@ -379,7 +379,7 @@ typedef enum {
 #ifndef FCS_DISABLE_PATSOLVE
     FCS_SUPER_METHOD_PATSOLVE,
 #endif
-} fcs_super_method_type_t;
+} fcs_super_method_type;
 
 struct fc_solve__patsolve_thread_struct;
 struct fc_solve_soft_thread_struct
@@ -400,7 +400,7 @@ struct fc_solve_soft_thread_struct
     } by_depth_moves_order;
 
     /* The super-method type - can be  */
-    fcs_super_method_type_t super_method_type;
+    fcs_super_method_type super_method_type;
 
     struct
     {

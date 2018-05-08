@@ -61,7 +61,7 @@ typedef struct
 typedef struct
 {
     long long num_iters, num_finished_boards;
-} response_t;
+} response_type;
 
 static inline void write_request(const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr,
@@ -93,7 +93,7 @@ static inline void transaction(const worker_t *const worker, const int read_fd,
     const long long end_board, const long long board_num_step,
     long long *const next_board_num_ptr)
 {
-    response_t response;
+    response_type response;
     if (read(read_fd, &response, sizeof(response)) <
         (ssize_t)(sizeof(response)))
     {
@@ -166,7 +166,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)),
                 req.board_num != -1)
             {
-                response_t response = {
+                response_type response = {
                     .num_iters = 0,
                     .num_finished_boards = req.quota_end - req.board_num + 1,
                 };

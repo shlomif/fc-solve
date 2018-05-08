@@ -54,7 +54,7 @@ extern "C" {
 typedef char fcs_card_t;
 typedef fcs_card_t *fcs_cards_column_t;
 typedef const fcs_card_t *fcs_const_cards_column_t;
-typedef fcs_card_t fcs_state_foundation_t;
+typedef fcs_card_t fcs_state_foundation;
 
 #ifdef COMPACT_STATES
 /*
@@ -106,7 +106,7 @@ typedef struct
 {
     fcs_cards_column_t columns[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
-    fcs_state_foundation_t foundations[MAX_NUM_DECKS * 4];
+    fcs_state_foundation foundations[MAX_NUM_DECKS * 4];
 } fcs_state;
 
 #define fcs_state_get_col(state, col_idx) ((state).columns[(col_idx)])
@@ -145,7 +145,7 @@ typedef uint8_t fcs_locs_t;
     (++(fcs_foundation_value((state), (foundation_idx))))
 #define fcs_set_foundation(state, foundation_idx, value)                       \
     ((fcs_foundation_value((state), (foundation_idx))) =                       \
-            (fcs_state_foundation_t)(value))
+            (fcs_state_foundation)(value))
 #define fcs_col_pop_top(col)                                                   \
     (fcs_col_get_card((col), (--fcs_col_len(col))) = fc_solve_empty_card)
 #define fcs_col_pop_card(col, into)                                            \
@@ -851,10 +851,10 @@ typedef enum {
     FCS_STATE_VALIDITY__EXTRA_CARD = 2,
     FCS_STATE_VALIDITY__EMPTY_SLOT = 3,
     FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT = 4
-} fcs_state_validity_ret_t;
+} state_validity_ret;
 
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
-static inline fcs_state_validity_ret_t fc_solve_check_state_validity(
+static inline state_validity_ret fc_solve_check_state_validity(
     const fcs_state_keyval_pair_t *const state_pair
         FREECELLS_STACKS_DECKS__ARGS(),
     fcs_card_t *const misplaced_card)

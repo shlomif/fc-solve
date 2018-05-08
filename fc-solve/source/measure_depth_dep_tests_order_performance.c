@@ -46,7 +46,7 @@ typedef struct
     fcs_portable_time_t start_time, end_time;
     fcs_int_limit_t num_iters;
     int verdict;
-} result_t;
+} result;
 
 static const char *known_parameters[] = {NULL};
 
@@ -142,7 +142,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     fc_solve_print_started_at();
     fflush(stdout);
 
-    result_t *const results =
+    result *const results =
         SMALLOC(results, (size_t)(end_board - start_board + 1));
 
     FILE *const output_fh = fopen(output_filename, "wt");
@@ -160,7 +160,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         set_tests_order(instance, 0, scan1_to);
         set_tests_order(instance, min_depth_for_scan2, scan2_to);
 
-        result_t *curr_result;
+        result *curr_result;
         int board_num;
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)

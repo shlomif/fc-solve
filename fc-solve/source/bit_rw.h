@@ -8,12 +8,12 @@
  * Copyright (c) 2011 Shlomi Fish
  */
 // bit_rw.h - bit readers and writers. Used by delta_states.c .
-
 #pragma once
+#include <stddef.h>
 
 #define NUM_BITS_IN_BYTES 8
 
-typedef int fc_solve_bit_data_t;
+typedef size_t fcs_bit_data;
 typedef unsigned char fcs_uchar_t;
 
 typedef struct
@@ -31,7 +31,7 @@ static inline void fc_solve_bit_writer_init(
 }
 
 static inline void fc_solve_bit_writer_write(
-    fc_solve_bit_writer_t *const writer, int len, fc_solve_bit_data_t data)
+    fc_solve_bit_writer_t *const writer, int len, fcs_bit_data data)
 {
     for (; len; len--, (data >>= 1))
     {
@@ -58,10 +58,10 @@ static inline void fc_solve_bit_reader_init(
     reader->bit_in_char_idx = 0;
 }
 
-static inline fc_solve_bit_data_t fc_solve_bit_reader_read(
+static inline fcs_bit_data fc_solve_bit_reader_read(
     fc_solve_bit_reader_t *reader, int len)
 {
-    fc_solve_bit_data_t ret = 0;
+    fcs_bit_data ret = 0;
     for (int idx = 0; idx < len; ++idx)
     {
         ret |= (((*(reader->current) >> (reader->bit_in_char_idx++)) & 0x1)

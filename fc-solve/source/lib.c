@@ -2023,7 +2023,7 @@ typedef struct
     bool all_instances_were_suspended;
 #endif
 #ifdef FCS_WITH_ERROR_STRS
-    fcs_state_validity_ret_t state_validity_ret;
+    state_validity_ret state_validity_ret;
     fcs_card_t state_validity_card;
 #endif
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -2152,7 +2152,7 @@ typedef struct
 {
     fcs_state *key;
     fcs_state_locs_struct_t locs;
-} fcs_standalone_state_ptrs_t;
+} standalone_state_ptrs;
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
 static void iter_handler_wrapper(void *const api_instance,
@@ -2162,7 +2162,7 @@ static void iter_handler_wrapper(void *const api_instance,
 {
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-    fcs_standalone_state_ptrs_t state_raw = {
+    standalone_state_ptrs state_raw = {
         .key = ptr_state->key,
     };
     fc_solve_init_locs(&(state_raw.locs));
@@ -3545,7 +3545,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         return;
     }
 #endif
-    fcs_super_method_type_t super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
+    fcs_super_method_type super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
     fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
     switch (int_method)
     {
@@ -4047,7 +4047,7 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
 #endif
 
     const_AUTO(
-        ptr_state, ((const fcs_standalone_state_ptrs_t *const)ptr_state_void));
+        ptr_state, ((const standalone_state_ptrs *const)ptr_state_void));
 
     fc_solve_state_as_string(output_string, ptr_state->key,
         &(ptr_state->locs)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
