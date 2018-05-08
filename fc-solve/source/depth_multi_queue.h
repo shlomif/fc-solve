@@ -33,7 +33,7 @@ typedef struct
     fcs_offloading_queue_t *queues_by_depth;
     long next_queue_id;
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
-    fcs_meta_compact_allocator_t *meta_alloc;
+    meta_allocator *meta_alloc;
 #endif
 } fcs_depth_multi_queue_t;
 

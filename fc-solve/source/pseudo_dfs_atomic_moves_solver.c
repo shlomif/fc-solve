@@ -76,7 +76,7 @@ typedef struct
     bool solution_was_found;
     enum TERMINATE_REASON should_terminate;
     compact_allocator derived_list_allocator;
-    fcs_meta_compact_allocator_t meta_alloc;
+    meta_allocator meta_alloc;
     fcs_derived_state_t *derived_list_recycle_bin;
     fcs_dbm_variant_type_t local_variant;
     fcs_delta_stater delta_stater;

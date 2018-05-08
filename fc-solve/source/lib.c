@@ -84,7 +84,7 @@ static inline void apply_preset_by_name(
     to really prepare it for solving.
   */
 static inline void alloc_instance(fc_solve_instance_t *const instance,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+    meta_allocator *const meta_alloc)
 {
     *(instance) = (fc_solve_instance_t){
         .meta_alloc = meta_alloc,
@@ -2045,7 +2045,7 @@ typedef struct
     char state_string_copy[MAX_STATE_STRING_COPY_LEN];
     FCS_ON_NOT_FC_ONLY(fcs_preset_t common_preset);
     FCS__DECL_ERR_BUF(error_string);
-    fcs_meta_compact_allocator_t meta_alloc;
+    meta_allocator meta_alloc;
 } fcs_user_t;
 
 static inline fc_solve_instance_t *user_obj(fcs_user_t *const user)

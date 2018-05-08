@@ -20,7 +20,7 @@ typedef struct
 {
     fcs_dbm__cache_store__common_t cache_store;
     /* The queue */
-    fcs_meta_compact_allocator_t meta_alloc;
+    meta_allocator meta_alloc;
     fcs_offloading_queue_t queue;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     const char *offload_dir_path;

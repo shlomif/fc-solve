@@ -600,7 +600,7 @@ struct fc_solve_instance_struct
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     GHashTable *hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_t hash;
+    hash_table hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     fcs_states_google_hash_handle_t hash;
 #endif
@@ -611,7 +611,7 @@ struct fc_solve_instance_struct
  * used.
  * */
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_t stacks_hash;
+    hash_table stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_table_t *stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
@@ -763,7 +763,7 @@ struct fc_solve_instance_struct
     /*
      * The meta allocator - see meta_alloc.h.
      * */
-    fcs_meta_compact_allocator_t *meta_alloc;
+    meta_allocator *meta_alloc;
 
 #if (defined(FCS_WITH_MOVES) && (!defined(FCS_DISABLE_PATSOLVE)))
     /*

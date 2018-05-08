@@ -103,16 +103,16 @@ typedef struct
 #ifdef FCS_RCS_STATES
     struct fc_solve_instance_struct *instance;
 #endif
-} fc_solve_hash_t;
+} hash_table;
 
 static inline void fcs_hash_set_max_num_elems(
-    fc_solve_hash_t *const hash, const fcs_int_limit_t new_size)
+    hash_table *const hash, const fcs_int_limit_t new_size)
 {
     hash->max_num_elems_before_resize = (new_size << 1);
 }
 
 static inline void fc_solve_hash_init(
-    fcs_meta_compact_allocator_t *const meta_alloc, fc_solve_hash_t *const hash,
+    meta_allocator *const meta_alloc, hash_table *const hash,
 #ifdef FCS_INLINED_HASH_COMPARISON
     const enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
@@ -155,7 +155,7 @@ static inline void fc_solve_hash_init(
     fc_solve_compact_allocator_init(&(hash->allocator), meta_alloc);
 }
 
-static inline void fc_solve_hash_free(fc_solve_hash_t *const hash)
+static inline void fc_solve_hash_free(hash_table *const hash)
 {
     fc_solve_compact_allocator_finish(&(hash->allocator));
     free(hash->entries);
@@ -163,7 +163,7 @@ static inline void fc_solve_hash_free(fc_solve_hash_t *const hash)
 }
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static inline void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
+static inline void fc_solve_hash_foreach(hash_table *const hash,
     bool (*should_delete_ptr)(void *const key, void *const context),
     void *const context)
 {

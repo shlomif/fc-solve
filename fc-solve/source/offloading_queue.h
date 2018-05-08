@@ -66,7 +66,7 @@ typedef struct
 
 static inline void fcs_offloading_queue__init(
     fcs_offloading_queue_t *const queue,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+    meta_allocator *const meta_alloc)
 {
     fc_solve_compact_allocator_init(&(queue->queue_allocator), meta_alloc);
 

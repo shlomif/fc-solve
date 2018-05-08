@@ -74,7 +74,7 @@ static unsigned char get_move_from_parent_to_child(
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     const_AUTO(local_variant, instance->common.variant);
 
-    fcs_meta_compact_allocator_t meta_alloc;
+    meta_allocator meta_alloc;
     fc_solve_meta_compact_allocator_init(&meta_alloc);
     compact_allocator derived_list_allocator;
     fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);

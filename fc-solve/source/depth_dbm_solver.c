@@ -22,7 +22,7 @@
 typedef struct
 {
     fcs_dbm__cache_store__common_t cache_store;
-    fcs_meta_compact_allocator_t queue_meta_alloc;
+    meta_allocator queue_meta_alloc;
     fcs_offloading_queue_t queue;
 } fcs_dbm_collection_by_depth_t;
 
@@ -89,7 +89,7 @@ struct fcs_dbm_solver_thread_struct
 {
     dbm_solver_instance *instance;
     fcs_delta_stater delta_stater;
-    fcs_meta_compact_allocator_t thread_meta_alloc;
+    meta_allocator thread_meta_alloc;
 };
 
 static void *instance_run_solver_thread(void *const void_arg)

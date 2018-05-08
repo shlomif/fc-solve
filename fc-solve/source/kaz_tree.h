@@ -130,7 +130,7 @@ typedef struct dict_load_t
 extern dict_t *dict_create(dictcount_t, dict_comp_t, void *);
 #else
 extern dict_t *fc_solve_kaz_tree_create(
-    dict_comp_t, void *, fcs_meta_compact_allocator_t *);
+    dict_comp_t, void *, meta_allocator *);
 #endif
 #if 0
 extern void dict_set_allocator(dict_t *, dnode_alloc_t, dnode_free_t, void *);
@@ -141,7 +141,7 @@ extern void fc_solve_kaz_tree_free_nodes(dict_t *);
 extern void dict_free(dict_t *);
 extern dict_t *dict_init(dict_t *, dictcount_t, dict_comp_t);
 #else
-extern dict_t *dict_init(dict_t *, dict_comp_t, fcs_meta_compact_allocator_t *);
+extern dict_t *dict_init(dict_t *, dict_comp_t, meta_allocator *);
 #endif
 #ifdef NO_FC_SOLVE
 extern void dict_init_like(dict_t *, const dict_t *);

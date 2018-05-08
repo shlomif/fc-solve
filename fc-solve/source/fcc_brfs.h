@@ -121,7 +121,7 @@ static inline void fc_solve__internal__copy_moves(
 }
 
 static inline dict_t *fcc_brfs_kaz_tree_create(
-    fcs_meta_compact_allocator_t *const meta_alloc,
+    meta_allocator *const meta_alloc,
     void **const tree_recycle_bin)
 {
     return fc_solve_kaz_tree_create(
@@ -189,7 +189,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     fcs_fcc_moves_seq_allocator_t *const moves_list_allocator,
     /* [Input/Output]: The meta allocator - needed to allocate and free
      * the compact allocators. */
-    fcs_meta_compact_allocator_t *const meta_alloc)
+    meta_allocator *const meta_alloc)
 {
     void *tree_recycle_bin = NULL;
     fcs_dbm_queue_item_t *queue_head, *queue_tail, *queue_recycle_bin = NULL,

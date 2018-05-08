@@ -15,9 +15,9 @@
 #define ALLOCED_SIZE (FCS_IA_PACK_SIZE * 1024 - (256 + 128))
 
 void fc_solve_compact_allocator_init(compact_allocator *const allocator,
-    fcs_meta_compact_allocator_t *const meta_allocator)
+    meta_allocator *const meta_alloc)
 {
-    allocator->meta = meta_allocator;
+    allocator->meta = meta_alloc;
 
     fc_solve_compact_allocator_init_helper(allocator);
 }
@@ -25,12 +25,12 @@ void fc_solve_compact_allocator_init(compact_allocator *const allocator,
 #define OLD_LIST_NEXT(ptr) (*((char **)(ptr)))
 #define OLD_LIST_DATA(ptr) ((char *)(&(((char **)(ptr))[1])))
 static inline char *meta_request_new_buffer(
-    fcs_meta_compact_allocator_t *const meta_allocator)
+    meta_allocator *const meta_alloc)
 {
-    char *const ret = meta_allocator->recycle_bin;
+    char *const ret = meta_alloc->recycle_bin;
     if (ret)
     {
-        meta_allocator->recycle_bin = OLD_LIST_NEXT(ret);
+        meta_alloc->recycle_bin = OLD_LIST_NEXT(ret);
         return ret;
     }
     else
@@ -51,23 +51,23 @@ void fc_solve_compact_allocator_extend(compact_allocator *const allocator)
 }
 
 void fc_solve_meta_compact_allocator_finish(
-    fcs_meta_compact_allocator_t *const meta_allocator)
+    meta_allocator *const meta_alloc)
 {
     char *iter, *iter_next;
-    for (iter = meta_allocator->recycle_bin,
+    for (iter = meta_alloc->recycle_bin,
         iter_next = iter ? OLD_LIST_NEXT(iter) : NULL;
          iter_next; iter = iter_next, iter_next = OLD_LIST_NEXT(iter))
     {
         free(iter);
     }
     free(iter);
-    meta_allocator->recycle_bin = NULL;
+    meta_alloc->recycle_bin = NULL;
 }
 
 void fc_solve_compact_allocator_finish(compact_allocator *const allocator)
 {
     char *iter, *iter_next;
-    fcs_meta_compact_allocator_t *const meta = allocator->meta;
+    meta_allocator *const meta = allocator->meta;
     var_AUTO(bin, meta->recycle_bin);
     // Enqueue all the allocated buffers in the meta allocator for re-use.
     for (iter = allocator->old_list, iter_next = OLD_LIST_NEXT(iter); iter_next;

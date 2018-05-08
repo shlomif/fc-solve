@@ -24,7 +24,7 @@
 typedef struct
 {
     fcs_dbm__cache_store__common_t cache_store;
-    fcs_meta_compact_allocator_t queue_meta_alloc;
+    meta_allocator queue_meta_alloc;
     fcs_depth_multi_queue_t depth_queue;
 } fcs_dbm_collection_by_depth_t;
 
@@ -69,7 +69,7 @@ typedef struct
     const char *offload_dir_path;
     int curr_depth;
     fcs_dbm_instance_common_elems_t common;
-    fcs_meta_compact_allocator_t fcc_meta_alloc;
+    meta_allocator fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
     compact_allocator fcc_entry_points_allocator;
     fcs_lock_t fcc_entry_points_lock;
@@ -179,7 +179,7 @@ struct fcs_dbm_solver_thread_struct
 {
     dbm_solver_instance *instance;
     fcs_delta_stater delta_stater;
-    fcs_meta_compact_allocator_t thread_meta_alloc;
+    meta_allocator thread_meta_alloc;
     int state_depth;
 };
 

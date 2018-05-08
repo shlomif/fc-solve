@@ -32,7 +32,7 @@ static int fc_solve_compare_pre_cache_keys(
 }
 
 static inline void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+    meta_allocator *const meta_alloc)
 {
     pre_cache_ptr->tree_recycle_bin = NULL;
     pre_cache_ptr->kaz_tree =
@@ -125,7 +125,7 @@ static inline void pre_cache_offload_and_destroy(
 
 static inline void pre_cache_offload_and_reset(fcs_pre_cache_t *const pre_cache,
     const fcs_dbm_store_t store, fcs_lru_cache_t *const cache,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+    meta_allocator *const meta_alloc)
 {
     pre_cache_offload_and_destroy(pre_cache, store, cache);
     pre_cache_init(pre_cache, meta_alloc);
@@ -157,7 +157,7 @@ static inline bool instance_check_multiple_keys(
     dbm_solver_thread *const thread,
     dbm_solver_instance *const instance,
     fcs_dbm__cache_store__common_t *const cache_store GCC_UNUSED,
-    fcs_meta_compact_allocator_t *const meta_alloc GCC_UNUSED,
+    meta_allocator *const meta_alloc GCC_UNUSED,
     fcs_derived_state_t **lists, size_t batch_size
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
@@ -382,7 +382,7 @@ static inline void instance_increment(dbm_solver_instance *const instance)
 static inline void fcs_dbm__cache_store__init(
     fcs_dbm__cache_store__common_t *const cache_store,
     fcs_dbm_instance_common_elems_t *const common,
-    fcs_meta_compact_allocator_t *const meta_alloc GCC_UNUSED,
+    meta_allocator *const meta_alloc GCC_UNUSED,
     const char *const dbm_store_path, const long pre_cache_max_count GCC_UNUSED,
     const long caches_delta GCC_UNUSED)
 {

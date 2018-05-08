@@ -120,7 +120,7 @@ struct rb_traverser
 
 /* Table functions. */
 struct rb_table *rb_create (rb_comparison_func *, void *,
-                              fcs_meta_compact_allocator_t *, void * * common_recycle_bin);
+                              meta_allocator *, void * * common_recycle_bin);
 struct rb_table *rb_copy (const struct rb_table *, rb_copy_func *,
                             rb_item_func *);
 void rb_destroy (struct rb_table *, rb_item_func *);

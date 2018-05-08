@@ -25,7 +25,7 @@ extern "C" {
 typedef struct
 {
     char *recycle_bin;
-} fcs_meta_compact_allocator_t;
+} meta_allocator;
 
 typedef struct
 {
@@ -33,7 +33,7 @@ typedef struct
     char *max_ptr;
     char *ptr;
     char *rollback_ptr;
-    fcs_meta_compact_allocator_t *meta;
+    meta_allocator *meta;
 } compact_allocator;
 
 extern void fc_solve_compact_allocator_extend(compact_allocator *);
@@ -47,16 +47,16 @@ static inline void fc_solve_compact_allocator_init_helper(
 }
 
 static inline void fc_solve_meta_compact_allocator_init(
-    fcs_meta_compact_allocator_t *const meta)
+    meta_allocator *const meta)
 {
     meta->recycle_bin = NULL;
 }
 
 extern void fc_solve_meta_compact_allocator_finish(
-    fcs_meta_compact_allocator_t *);
+    meta_allocator *);
 
 extern void fc_solve_compact_allocator_init(
-    compact_allocator *, fcs_meta_compact_allocator_t *);
+    compact_allocator *, meta_allocator *);
 
 static inline void *fcs_compact_alloc_ptr(
     compact_allocator *const allocator, const size_t how_much_proto)

@@ -80,7 +80,7 @@ static inline enum rb_color rb_set_color(struct rb_node *const node, const enum 
    Returns |NULL| if memory allocation failed. */
 struct rb_table *
 rb_create (rb_comparison_func *compare, void *param,
-            fcs_meta_compact_allocator_t *meta_alloc, void * * common_recycle_bin)
+            meta_allocator *meta_alloc, void * * common_recycle_bin)
 {
   struct rb_table *tree;
 

@@ -20,7 +20,7 @@
     This function "rehashes" a hash. I.e: it increases the size of its
     hash table, allowing for smaller chains, and faster lookup.
   */
-static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
+static inline void fc_solve_hash_rehash(hash_table *const hash)
 {
     const int old_size = hash->size;
 
@@ -79,7 +79,7 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
  * Returns the existing key if the key is not new (= a truthy pointer).
  */
 static inline void *fc_solve_hash_insert(
-    fc_solve_hash_t *const hash, void *const key,
+    hash_table *const hash, void *const key,
 #ifdef FCS_RCS_STATES
     void *const key_id,
 #endif
