@@ -75,7 +75,7 @@ static inline void instance_destroy(dbm_solver_instance *const instance)
 }
 
 static inline void instance_check_key(
-    fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
+    dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const int key_depth GCC_UNUSED,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,
@@ -401,8 +401,8 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 
 #include "dbm_procs_inner.h"
 
-static void init_thread(fcs_dbm_solver_thread_t *const thread GCC_UNUSED) {}
-static void free_thread(fcs_dbm_solver_thread_t *const thread GCC_UNUSED) {}
+static void init_thread(dbm_solver_thread *const thread GCC_UNUSED) {}
+static void free_thread(dbm_solver_thread *const thread GCC_UNUSED) {}
 
 static void instance_run_all_threads(dbm_solver_instance *const instance,
     fcs_state_keyval_pair_t *init_state, const size_t num_threads)

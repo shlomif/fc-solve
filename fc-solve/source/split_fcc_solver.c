@@ -404,7 +404,7 @@ static inline void instance_alloc_num_moves(
     }
 }
 
-static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
+static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,

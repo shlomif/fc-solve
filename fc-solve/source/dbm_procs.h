@@ -135,14 +135,14 @@ static inline void pre_cache_offload_and_reset(fcs_pre_cache_t *const pre_cache,
 
 #endif // FCS_DBM_WITHOUT_CACHES
 
-typedef struct fcs_dbm_solver_thread_struct fcs_dbm_solver_thread_t;
+typedef struct fcs_dbm_solver_thread_struct dbm_solver_thread;
 
 typedef struct
 {
-    fcs_dbm_solver_thread_t *thread;
+    dbm_solver_thread *thread;
 } thread_arg_t;
 
-static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
+static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move,
@@ -154,7 +154,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 );
 
 static inline fcs_bool_t instance_check_multiple_keys(
-    fcs_dbm_solver_thread_t *const thread,
+    dbm_solver_thread *const thread,
     dbm_solver_instance *const instance,
     fcs_dbm__cache_store__common_t *const cache_store GCC_UNUSED,
     fcs_meta_compact_allocator_t *const meta_alloc GCC_UNUSED,

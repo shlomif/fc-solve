@@ -240,7 +240,7 @@ thread_end:
 #include "depth_dbm_procs.h"
 
 static inline void instance_check_key(
-    fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
+    dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,

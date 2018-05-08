@@ -12,7 +12,7 @@
 #include "read_state.h"
 typedef struct
 {
-    fcs_dbm_solver_thread_t thread;
+    dbm_solver_thread thread;
     thread_arg_t arg;
     pthread_t id;
 } main_thread_item_t;
@@ -20,7 +20,7 @@ typedef struct
 static inline main_thread_item_t *dbm__calc_threads(
     dbm_solver_instance *const instance,
     fcs_state_keyval_pair_t *const init_state, const size_t num_threads,
-    void (*init_thread_cb)(fcs_dbm_solver_thread_t *))
+    void (*init_thread_cb)(dbm_solver_thread *))
 {
 #ifdef T
     FILE *const out_fh = instance->common.out_fh;
@@ -48,7 +48,7 @@ static inline main_thread_item_t *dbm__calc_threads(
 
 static inline void dbm__free_threads(dbm_solver_instance *const instance,
     const size_t num_threads, main_thread_item_t *const threads,
-    void (*free_thread_cb)(fcs_dbm_solver_thread_t *))
+    void (*free_thread_cb)(dbm_solver_thread *))
 {
 #ifdef T
     FILE *const out_fh = instance->common.out_fh;
