@@ -26,12 +26,12 @@ typedef struct
     const char *offload_dir_path;
 #endif
     fcs_dbm_instance_common_elems_t common;
-} fcs_dbm_solver_instance_t;
+} dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH() 0
 
 #include "dbm_procs.h"
-static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
+static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input_t *const inp, const long iters_delta_limit,
     FILE *const out_fh)
 {
@@ -49,7 +49,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
         inp->caches_delta);
 }
 
-static inline void instance_recycle(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_recycle(dbm_solver_instance *const instance)
 {
     fcs_offloading_queue__destroy(&(instance->queue));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -66,7 +66,7 @@ static inline void instance_recycle(fcs_dbm_solver_instance_t *const instance)
     instance->common.count_of_items_in_queue = 0;
 }
 
-static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_destroy(dbm_solver_instance *const instance)
 {
     fcs_offloading_queue__destroy(&(instance->queue));
     DESTROY_CACHE(instance);
@@ -76,7 +76,7 @@ static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
 
 static inline void instance_check_key(
     fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth GCC_UNUSED,
+    dbm_solver_instance *const instance, const int key_depth GCC_UNUSED,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
@@ -109,7 +109,7 @@ static inline void instance_check_key(
 
 struct fcs_dbm_solver_thread_struct
 {
-    fcs_dbm_solver_instance_t *instance;
+    dbm_solver_instance *instance;
     fc_solve_delta_stater_t delta_stater;
 };
 
@@ -121,7 +121,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
-    fcs_dbm_solver_instance_t *const instance = thread->instance;
+    dbm_solver_instance *const instance = thread->instance;
     fc_solve_delta_stater_t *const delta_stater = &(thread->delta_stater);
 
     fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
@@ -232,7 +232,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 }
 
 static fcs_bool_t populate_instance_with_intermediate_input_line(
-    fcs_dbm_solver_instance_t *const instance,
+    dbm_solver_instance *const instance,
     fc_solve_delta_stater_t *const delta,
     fcs_state_keyval_pair_t *const init_state_ptr, char *const line,
     const long line_num, fcs_encoded_state_buffer_t *const parent_state_enc)
@@ -404,7 +404,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 static void init_thread(fcs_dbm_solver_thread_t *const thread GCC_UNUSED) {}
 static void free_thread(fcs_dbm_solver_thread_t *const thread GCC_UNUSED) {}
 
-static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
+static void instance_run_all_threads(dbm_solver_instance *const instance,
     fcs_state_keyval_pair_t *init_state, const size_t num_threads)
 {
     const_AUTO(threads,
@@ -428,7 +428,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
 
 /* Returns if the process should terminate. */
 static fcs_bool_t handle_and_destroy_instance_solution(
-    fcs_dbm_solver_instance_t *const instance,
+    dbm_solver_instance *const instance,
     fc_solve_delta_stater_t *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
@@ -613,8 +613,8 @@ int main(int argc, char *argv[])
 #endif
         long line_num = 0;
         fcs_bool_t queue_solution_was_found = FALSE;
-        fcs_dbm_solver_instance_t queue_instance;
-        fcs_dbm_solver_instance_t limit_instance;
+        dbm_solver_instance queue_instance;
+        dbm_solver_instance limit_instance;
 
         instance_init(&queue_instance, &inp, -1, out_fh);
         instance_init(&limit_instance, &inp, inp.iters_delta_limit, out_fh);
@@ -726,7 +726,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        fcs_dbm_solver_instance_t instance;
+        dbm_solver_instance instance;
         instance_init(&instance, &inp, inp.iters_delta_limit, out_fh);
         fcs_encoded_state_buffer_t *key_ptr;
 #define KEY_PTR() (key_ptr)

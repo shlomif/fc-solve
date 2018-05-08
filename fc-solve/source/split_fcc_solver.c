@@ -94,7 +94,7 @@ typedef struct
     char *moves_base64_encoding_buffer;
     size_t moves_base64_encoding_buffer_max_len;
     const char *dbm_store_path;
-} fcs_dbm_solver_instance_t;
+} dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH()                                                 \
     (instance->curr_depth + list->num_non_reversible_moves_including_prune)
@@ -104,7 +104,7 @@ typedef struct
 RB_GENERATE_STATIC(
     FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 
-static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
+static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input_t *const inp,
     fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
     FILE *const out_fh)
@@ -158,7 +158,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     }
 }
 
-static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_destroy(dbm_solver_instance *const instance)
 {
     fc_solve_compact_allocator_finish(&(instance->fcc_entry_points_allocator));
     fc_solve_meta_compact_allocator_finish(&(instance->fcc_meta_alloc));
@@ -177,7 +177,7 @@ static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
 
 struct fcs_dbm_solver_thread_struct
 {
-    fcs_dbm_solver_instance_t *instance;
+    dbm_solver_instance *instance;
     fc_solve_delta_stater_t delta_stater;
     fcs_meta_compact_allocator_t thread_meta_alloc;
     int state_depth;
@@ -394,7 +394,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 #include "depth_dbm_procs.h"
 
 static inline void instance_alloc_num_moves(
-    fcs_dbm_solver_instance_t *const instance, const size_t buffer_size)
+    dbm_solver_instance *const instance, const size_t buffer_size)
 {
     if (buffer_size > instance->max_moves_to_state_len)
     {
@@ -405,7 +405,7 @@ static inline void instance_alloc_num_moves(
 }
 
 static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth,
+    dbm_solver_instance *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
@@ -561,7 +561,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
     }
 }
 
-static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
+static void instance_run_all_threads(dbm_solver_instance *const instance,
     fcs_state_keyval_pair_t *const init_state, FccEntryPointNode *key_ptr,
     const size_t num_threads)
 {
@@ -671,7 +671,7 @@ int main(int argc, char *argv[])
         PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY())
     );
 
-    fcs_dbm_solver_instance_t instance;
+    dbm_solver_instance instance;
     FccEntryPointNode *key_ptr = NULL;
     fcs_encoded_state_buffer_t parent_state_enc;
 

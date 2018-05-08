@@ -18,7 +18,7 @@ typedef struct
 } main_thread_item_t;
 
 static inline main_thread_item_t *dbm__calc_threads(
-    fcs_dbm_solver_instance_t *const instance,
+    dbm_solver_instance *const instance,
     fcs_state_keyval_pair_t *const init_state, const size_t num_threads,
     void (*init_thread_cb)(fcs_dbm_solver_thread_t *))
 {
@@ -46,7 +46,7 @@ static inline main_thread_item_t *dbm__calc_threads(
     return threads;
 }
 
-static inline void dbm__free_threads(fcs_dbm_solver_instance_t *const instance,
+static inline void dbm__free_threads(dbm_solver_instance *const instance,
     const size_t num_threads, main_thread_item_t *const threads,
     void (*free_thread_cb)(fcs_dbm_solver_thread_t *))
 {
@@ -66,7 +66,7 @@ static inline void dbm__free_threads(fcs_dbm_solver_instance_t *const instance,
 }
 
 static unsigned char get_move_from_parent_to_child(
-    fcs_dbm_solver_instance_t *const instance, fc_solve_delta_stater_t *delta,
+    dbm_solver_instance *const instance, fc_solve_delta_stater_t *delta,
     fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
 {
     fcs_state_keyval_pair_t parent_state;
@@ -102,7 +102,7 @@ static unsigned char get_move_from_parent_to_child(
     fc_solve_err("%s\n", "Failed to find move. Terminating.");
 }
 
-static void trace_solution(fcs_dbm_solver_instance_t *const instance,
+static void trace_solution(dbm_solver_instance *const instance,
     FILE *const out_fh, fc_solve_delta_stater_t *const delta)
 {
     fprintf(out_fh, "%s\n", "Success!");

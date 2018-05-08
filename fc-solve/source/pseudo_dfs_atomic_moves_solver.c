@@ -81,10 +81,10 @@ typedef struct
     fcs_dbm_variant_type_t local_variant;
     fc_solve_delta_stater_t delta_stater;
     fcs_cache_key_t init_key;
-} fcs_dbm_solver_instance_t;
+} dbm_solver_instance;
 
 static inline void instance__inspect_new_state(
-    fcs_dbm_solver_instance_t *const instance, fcs_cache_key_t *const state)
+    dbm_solver_instance *const instance, fcs_cache_key_t *const state)
 {
     if (++instance->count_num_processed % 1000000 == 0)
     {
@@ -156,7 +156,7 @@ static inline void instance__inspect_new_state(
     }
 }
 
-static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
+static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state,
     const long max_num_elements_in_cache)
@@ -186,7 +186,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     instance__inspect_new_state(instance, &instance->init_key);
 }
 
-static inline void instance_free(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_free(dbm_solver_instance *const instance)
 {
     for (ssize_t d = 0; d < instance->stack_depth; d++)
     {
@@ -204,7 +204,7 @@ static inline void instance_free(fcs_dbm_solver_instance_t *const instance)
     fc_solve_meta_compact_allocator_finish(&(instance->meta_alloc));
 }
 
-static inline void instance_run(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_run(dbm_solver_instance *const instance)
 {
     while (instance->count_num_processed < instance->max_count_num_processed &&
            (instance->should_terminate == DONT_TERMINATE))
@@ -241,7 +241,7 @@ static inline void instance_run(fcs_dbm_solver_instance_t *const instance)
 }
 
 static inline void instance__print_coords_to_log(
-    fcs_dbm_solver_instance_t *const instance, FILE *const log_fh)
+    dbm_solver_instance *const instance, FILE *const log_fh)
 {
 #if 0
     const fcs_dbm_variant_type_t local_variant = instance->local_variant;
@@ -275,7 +275,7 @@ static inline void instance__print_coords_to_log(
 }
 
 static inline void instance__load_coords_from_fh(
-    fcs_dbm_solver_instance_t *const instance, FILE *const fh)
+    dbm_solver_instance *const instance, FILE *const fh)
 {
     int coord_from_input;
     while (fscanf(fh, "%d,", &coord_from_input) == 1)
@@ -309,7 +309,7 @@ int main(int argc, char *argv[])
     fc_solve_initial_user_state_to_c(
         user_state.s, &init_state_pair, FREECELLS_NUM, STACKS_NUM, 1, NULL);
 
-    fcs_dbm_solver_instance_t instance;
+    dbm_solver_instance instance;
 
     instance_init(&instance, local_variant, &init_state_pair, 70000000);
 

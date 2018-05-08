@@ -143,7 +143,7 @@ typedef struct
 } thread_arg_t;
 
 static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth,
+    dbm_solver_instance *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move,
     const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
@@ -155,7 +155,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 
 static inline fcs_bool_t instance_check_multiple_keys(
     fcs_dbm_solver_thread_t *const thread,
-    fcs_dbm_solver_instance_t *const instance,
+    dbm_solver_instance *const instance,
     fcs_dbm__cache_store__common_t *const cache_store GCC_UNUSED,
     fcs_meta_compact_allocator_t *const meta_alloc GCC_UNUSED,
     fcs_derived_state_t **lists, size_t batch_size
@@ -214,7 +214,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
     return have_more;
 }
 
-static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
+static void instance_print_stats(dbm_solver_instance *const instance)
 {
     const_AUTO(mytime, fcs_get_time());
     FILE *const out_fh = instance->common.out_fh;
@@ -233,7 +233,7 @@ static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
 #ifdef DEBUG_FOO
 
 static inline void instance_debug_out_state(
-    fcs_dbm_solver_instance_t *const instance,
+    dbm_solver_instance *const instance,
     fcs_encoded_state_buffer_t *enc_state)
 {
     fcs_state_keyval_pair_t state;
@@ -286,7 +286,7 @@ static void calc_trace(fcs_dbm_record_t *const ptr_initial_record,
 }
 
 static inline void mark_and_sweep_old_states(
-    fcs_dbm_solver_instance_t *const instance, dict_t *const kaz_tree,
+    dbm_solver_instance *const instance, dict_t *const kaz_tree,
     const int curr_depth)
 {
     /* Now that we are about to ascend to a new depth, let's
@@ -364,7 +364,7 @@ static inline void mark_and_sweep_old_states(
 #define DESTROY_CACHE(instance) DESTROY_STORE(instance)
 #endif
 
-static inline void instance_increment(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_increment(dbm_solver_instance *const instance)
 {
     --instance->common.count_of_items_in_queue;
     ++instance->common.queue_num_extracted_and_processed;

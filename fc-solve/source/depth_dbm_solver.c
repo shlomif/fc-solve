@@ -36,13 +36,13 @@ typedef struct
     int curr_depth;
     fcs_dbm_instance_common_elems_t common;
     batch_size_t max_batch_size;
-} fcs_dbm_solver_instance_t;
+} dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH()                                                 \
     (instance->curr_depth + list->num_non_reversible_moves_including_prune)
 
 #include "dbm_procs.h"
-static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
+static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input_t *const inp, const batch_size_t max_batch_size,
     FILE *const out_fh)
 {
@@ -70,7 +70,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_condvar_init(&(instance->monitor));
 }
 
-static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_destroy(dbm_solver_instance *const instance)
 {
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
@@ -87,7 +87,7 @@ static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
 
 struct fcs_dbm_solver_thread_struct
 {
-    fcs_dbm_solver_instance_t *instance;
+    dbm_solver_instance *instance;
     fc_solve_delta_stater_t delta_stater;
     fcs_meta_compact_allocator_t thread_meta_alloc;
 };
@@ -241,7 +241,7 @@ thread_end:
 
 static inline void instance_check_key(
     fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth,
+    dbm_solver_instance *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
@@ -273,7 +273,7 @@ static inline void instance_check_key(
     }
 }
 
-static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
+static void instance_run_all_threads(dbm_solver_instance *const instance,
     fcs_state_keyval_pair_t *const init_state, const size_t num_threads)
 {
     const_AUTO(threads,
@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
     );
 
 #define KEY_PTR() (key_ptr)
-    fcs_dbm_solver_instance_t instance;
+    dbm_solver_instance instance;
     instance_init(&instance, &inp, max_batch_size, out_fh);
 
     fcs_encoded_state_buffer_t *const key_ptr = &(instance.common.first_key);

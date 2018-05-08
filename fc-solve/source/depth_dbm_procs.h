@@ -11,7 +11,7 @@
 
 #include "dbm_procs_inner.h"
 
-static inline void dbm__spawn_threads(fcs_dbm_solver_instance_t *const instance,
+static inline void dbm__spawn_threads(dbm_solver_instance *const instance,
     const size_t num_threads, main_thread_item_t *const threads)
 {
 #ifdef T
@@ -46,7 +46,7 @@ static inline void free_thread(fcs_dbm_solver_thread_t *const thread)
 
 /* Returns if the process should terminate. */
 static fcs_bool_t handle_and_destroy_instance_solution(
-    fcs_dbm_solver_instance_t *const instance,
+    dbm_solver_instance *const instance,
     fc_solve_delta_stater_t *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
