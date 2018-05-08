@@ -83,10 +83,10 @@ static inline void *fc_solve_hash_insert(
 #ifdef FCS_RCS_STATES
     void *const key_id,
 #endif
-    const fc_solve_hash_value_t hash_value
+    const fcs_hash_value hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     ,
-    const fc_solve_hash_value_t secondary_hash_value
+    const fcs_hash_value secondary_hash_value
 #endif
 )
 {
@@ -262,7 +262,7 @@ static inline void fc_solve_cache_stacks(
         /* Calculate the hash value for the stack */
         /* This hash function was ripped from the Perl source code.
          * (It is not derived work however). */
-        fc_solve_hash_value_t hash_value_int = 0;
+        fcs_hash_value hash_value_int = 0;
         {
             const char *s_ptr = (char *)(*(current_stack));
             const char *s_end = s_ptr + fcs_col_len(s_ptr) + 1;
@@ -271,15 +271,6 @@ static inline void fc_solve_cache_stacks(
                 hash_value_int += (hash_value_int << 5) + *(s_ptr++);
             }
             hash_value_int += (hash_value_int >> 5);
-        }
-
-        if (hash_value_int < 0)
-        {
-            /*
-             * This is a bit mask that nullifies the sign bit of the
-             * number so it will always be positive
-             * */
-            hash_value_int &= (~(1 << ((sizeof(hash_value_int) << 3) - 1)));
         }
 #endif
 
@@ -474,7 +465,7 @@ bool fc_solve_check_and_add_state(
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    fc_solve_hash_value_t hash_value_int = 0;
+    fcs_hash_value hash_value_int = 0;
     {
         const char *s_ptr = (char *)new_state_key;
         const char *s_end = s_ptr + sizeof(*new_state_key);
@@ -483,14 +474,6 @@ bool fc_solve_check_and_add_state(
             hash_value_int += (hash_value_int << 5) + *(s_ptr++);
         }
         hash_value_int += (hash_value_int >> 5);
-    }
-    if (hash_value_int < 0)
-    {
-        /*
-         * This is a bit mask that nullifies the sign bit of the
-         * number so it will always be positive
-         * */
-        hash_value_int &= (~(1 << ((sizeof(hash_value_int) << 3) - 1)));
     }
 #endif
 #ifdef FCS_RCS_STATES

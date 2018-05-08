@@ -28,7 +28,7 @@ enum FCS_INLINED_HASH_DATA_TYPE
 };
 #endif
 
-typedef int fc_solve_hash_value_t;
+typedef size_t fcs_hash_value;
 
 struct fc_solve_hash_symlink_item_struct
 {
@@ -36,13 +36,13 @@ struct fc_solve_hash_symlink_item_struct
     void *key;
     /* We also store the hash value corresponding to this key for faster
        comparisons */
-    fc_solve_hash_value_t hash_value;
+    fcs_hash_value hash_value;
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     /*
      * We also store a secondary hash value, which is not used for indexing,
      * but is used to speed up comparison.
      * */
-    fc_solve_hash_value_t secondary_hash_value;
+    fcs_hash_value secondary_hash_value;
 #endif
     /* The next item in the list */
     struct fc_solve_hash_symlink_item_struct *next;
