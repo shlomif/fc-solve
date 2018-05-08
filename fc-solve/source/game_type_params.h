@@ -92,5 +92,5 @@ typedef struct
 #define STACKS__SET_PARAMS()
 #endif
 #ifndef FCS_FREECELL_ONLY
-} fcs_game_type_params_t;
+} fcs_game_type_params;
 #endif

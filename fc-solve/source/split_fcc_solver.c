@@ -546,7 +546,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
                 fc_solve_delta_stater_decode_into_state(&(thread->delta_stater),
                     key->s, &state, indirect_stacks_buffer);
-                fcs_render_state_str_t state_str;
+                fcs_render_state_str state_str;
                 FCS__RENDER_STATE(state_str, &(state.s), &locs);
                 fprintf(stderr, "Check Key: <<<\n%s\n>>>\n\n[%s %s %ld %s]\n\n",
                     state_str, fingerprint_base64, state_base64,

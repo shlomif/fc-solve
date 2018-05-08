@@ -391,7 +391,7 @@ typedef struct
     fcs_FCC_start_points_list_t *next_start_points_list;
     dict_t *do_next_fcc_start_points_exist;
     fcs_fcc_moves_seq_allocator_t *moves_list_allocator;
-} add_start_point_context_t;
+} add_start_point_context;
 
 /*
  * Returns if already exist (the NOT of if the state is new).
@@ -402,8 +402,8 @@ static bool fc_solve_add_start_point_in_mem(
     fcs_fcc_moves_seq_t *const after_start_moves_seq,
     const unsigned char extra_move, void *const void_context)
 {
-    add_start_point_context_t *const context =
-        (add_start_point_context_t *)void_context;
+    add_start_point_context *const context =
+        (add_start_point_context *)void_context;
     dict_t *const tree = context->do_next_fcc_start_points_exist;
 
     if (fc_solve_kaz_tree_lookup_value(tree, enc_state))

@@ -1923,7 +1923,7 @@ typedef enum {
     FLARES_PLAN_RUN_INDEFINITELY,
     FLARES_PLAN_RUN_COUNT_ITERS,
     FLARES_PLAN_CHECKPOINT,
-} flares_plan_type_t;
+} flares_plan_type;
 
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
 typedef enum {
@@ -1943,7 +1943,7 @@ static inline flare_iters_quota_t normalize_iters_quota(
 typedef struct
 {
     fcs_flare_item_t *flare;
-    flares_plan_type_t type;
+    flares_plan_type type;
     flare_iters_quota_t remaining_quota, initial_quota;
     int_fast32_t count_iters;
 } flares_plan_item;
@@ -2187,7 +2187,7 @@ static void iter_handler_wrapper(void *const api_instance,
 }
 
 static inline void set_debug_iter_output_func_to_val(
-    fcs_user_t *const user, const fcs_instance_debug_iter_output_func_t value)
+    fcs_user_t *const user, const instance_debug_iter_output_func value)
 {
     FLARES_LOOP_START()
     flare->obj.debug_iter_output_func = value;
@@ -2209,7 +2209,7 @@ static inline void set_any_iter_handler(void *const api_instance,
     user->iter_handler = iter_handler;
 #endif
 
-    fcs_instance_debug_iter_output_func_t cb = NULL;
+    instance_debug_iter_output_func cb = NULL;
     if (
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
         iter_handler ||
@@ -2531,7 +2531,7 @@ typedef enum {
 } fcs_compile_flares_ret;
 
 #ifdef FCS_WITH_FLARES
-static inline flares_plan_item create_plan_item(const flares_plan_type_t mytype,
+static inline flares_plan_item create_plan_item(const flares_plan_type mytype,
     fcs_flare_item_t *const flare, const int_fast32_t count_iters)
 {
     return (const flares_plan_item){
@@ -2539,7 +2539,7 @@ static inline flares_plan_item create_plan_item(const flares_plan_type_t mytype,
 }
 
 static inline void add_to_plan(instance_item_t *const instance_item,
-    const flares_plan_type_t mytype, fcs_flare_item_t *const flare,
+    const flares_plan_type mytype, fcs_flare_item_t *const flare,
     const int_fast32_t count_iters)
 {
     const_AUTO(next_item, instance_item->num_plan_items);

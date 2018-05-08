@@ -56,7 +56,7 @@ typedef struct
 typedef struct
 {
     long long board_num, quota_end;
-} request_t;
+} request_type;
 
 typedef struct
 {
@@ -67,14 +67,14 @@ static inline void write_request(const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr,
     const worker_t *const worker)
 {
-    request_t req;
+    request_type req;
     if ((*next_board_num_ptr) > end_board)
     {
         /* We only absolutely need to initialize .board_num here, but the
          * Coverity Scan scanner complains about quota_end being uninitialized
          * when passed to write() so we initialize it here as well.
          * */
-        req = (request_t){.board_num = -1, .quota_end = -1};
+        req = (request_type){.board_num = -1, .quota_end = -1};
     }
     else
     {
@@ -162,7 +162,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             close(w.parent_to_child_pipe[WRITE_FD]);
             close(w.child_to_parent_pipe[READ_FD]);
             /* I'm one of the slaves */
-            request_t req;
+            request_type req;
             while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)),
                 req.board_num != -1)
             {

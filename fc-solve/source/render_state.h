@@ -10,7 +10,7 @@
 #pragma once
 #include "fcs_conf.h"
 
-typedef char fcs_render_state_str_t[2000];
+typedef char fcs_render_state_str[2000];
 #ifdef FCS_WITH_MOVES
 #define FCS__RENDER_STATE(state_str, state_ptr, locs)                          \
     fc_solve_state_as_string(state_str, state_ptr,                             \
@@ -24,7 +24,7 @@ typedef char fcs_render_state_str_t[2000];
 #ifdef DEBUG_OUT
 #define FCS__OUTPUT_STATE(out_fh, prefix, state_ptr, locs)                     \
     {                                                                          \
-        fcs_render_state_str_t state_str;                                      \
+        fcs_render_state_str state_str;                                      \
         FCS__RENDER_STATE(state_str, state_ptr, locs);                         \
         fprintf(out_fh, "%s<<<\n%s>>>\n\n", prefix, state_str);                \
         fflush(out_fh);                                                        \

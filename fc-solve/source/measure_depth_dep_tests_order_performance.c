@@ -43,7 +43,7 @@ static void print_help(void)
 
 typedef struct
 {
-    fcs_portable_time_t start_time, end_time;
+    fcs_portable_time start_time, end_time;
     fcs_int_limit_t num_iters;
     int verdict;
 } result;

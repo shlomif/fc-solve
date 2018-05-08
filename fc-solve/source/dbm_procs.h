@@ -245,7 +245,7 @@ static inline void instance_debug_out_state(
     fc_solve_delta_stater_decode_into_state(
         &global_delta_stater, enc_state->s, &state, indirect_stacks_buffer);
 
-    fcs_render_state_str_t state_str;
+    fcs_render_state_str state_str;
     FCS__RENDER_STATE(state_str, &(state.s), &locs);
     fprintf(instance->common.out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
     fflush(instance->common.out_fh);

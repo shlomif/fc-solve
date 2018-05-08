@@ -55,12 +55,12 @@ typedef struct fcs_Q_item_wrapper_struct
 {
     fcs_offloading_queue_item_t datum;
     struct fcs_Q_item_wrapper_struct *next;
-} fcs_Q_item_wrapper_t;
+} fcs_Q_item_wrapper;
 
 typedef struct
 {
     compact_allocator queue_allocator;
-    fcs_Q_item_wrapper_t *queue_head, *queue_tail, *queue_recycle_bin;
+    fcs_Q_item_wrapper *queue_head, *queue_tail, *queue_recycle_bin;
     fcs_queue_stats_t stats;
 } fcs_offloading_queue_t;
 
@@ -84,7 +84,7 @@ static inline bool fcs_offloading_queue__extract(
     fcs_offloading_queue_t *const queue,
     fcs_offloading_queue_item_t *const return_item)
 {
-    fcs_Q_item_wrapper_t *const item = queue->queue_head;
+    fcs_Q_item_wrapper *const item = queue->queue_head;
 
     if (!item)
     {
@@ -109,14 +109,14 @@ static inline void fcs_offloading_queue__insert(
     fcs_offloading_queue_t *const queue,
     const fcs_offloading_queue_item_t *const datum)
 {
-    fcs_Q_item_wrapper_t *new_item;
+    fcs_Q_item_wrapper *new_item;
     if (queue->queue_recycle_bin)
     {
         queue->queue_recycle_bin = (new_item = queue->queue_recycle_bin)->next;
     }
     else
     {
-        new_item = (fcs_Q_item_wrapper_t *)fcs_compact_alloc_ptr(
+        new_item = (fcs_Q_item_wrapper *)fcs_compact_alloc_ptr(
             &(queue->queue_allocator), sizeof(*new_item));
     }
     new_item->datum = *datum;

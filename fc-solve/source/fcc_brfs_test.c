@@ -98,7 +98,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         }
     }
 
-    add_start_point_context_t add_start_point_context = {
+    add_start_point_context ctx = {
         .do_next_fcc_start_points_exist = do_next_fcc_start_points_exist,
         .next_start_points_list = &start_points_list,
         .moves_list_allocator = &moves_list_allocator,
@@ -106,7 +106,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     bool is_min_by_sorting_new;
     perform_FCC_brfs(local_variant, &(init_state), enc_state,
         &start_state_moves_seq, fc_solve_add_start_point_in_mem,
-        &add_start_point_context, &is_min_by_sorting_new, &min_by_sorting,
+        &ctx, &is_min_by_sorting_new, &min_by_sorting,
         does_min_by_sorting_exist, &does_state_exist_in_any_FCC_cache,
         out_num_new_positions, &moves_list_allocator, &meta_alloc);
 
@@ -257,7 +257,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     }
 
     fcs_fcc_moves_seq_t init_moves_seq = {.moves_list = NULL, .count = 0};
-    add_start_point_context_t add_start_point_context = {
+    add_start_point_context ctx = {
         .do_next_fcc_start_points_exist = do_next_fcc_start_points_exist,
         .next_start_points_list = &start_points_list,
         .moves_list_allocator = &moves_list_allocator,
@@ -265,7 +265,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     long num_new_positions_temp;
     perform_FCC_brfs(local_variant, &(init_state), start_enc_state,
         &init_moves_seq, fc_solve_add_start_point_in_mem,
-        &add_start_point_context, out_is_fcc_new, &min_by_sorting,
+        &ctx, out_is_fcc_new, &min_by_sorting,
         does_min_by_sorting_exist, &does_state_exist_in_any_FCC_cache,
         &num_new_positions_temp, &moves_list_allocator, &meta_alloc);
 

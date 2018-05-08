@@ -110,7 +110,7 @@ static inline void accumulate_tests_by_ptr(
 }
 
 static inline void soft_thread_run_cb(fc_solve_soft_thread_t *const soft_thread,
-    const fcs_foreach_st_callback_choice_t callback_choice, void *const context)
+    const foreach_st_callback_choice callback_choice, void *const context)
 {
     switch (callback_choice)
     {
@@ -142,7 +142,7 @@ static inline void soft_thread_run_cb(fc_solve_soft_thread_t *const soft_thread,
 }
 
 void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
-    const fcs_foreach_st_callback_choice_t callback_choice, void *const context)
+    const foreach_st_callback_choice callback_choice, void *const context)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
     const int_fast32_t num_soft_threads =

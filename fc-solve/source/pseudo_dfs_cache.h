@@ -24,11 +24,11 @@ extern "C" {
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
 
-typedef fcs_encoded_state_buffer_t fcs_pdfs_key_t;
+typedef fcs_encoded_state_buffer_t fcs_pdfs_key;
 
 typedef struct fcs_pdfs_key_info_struct
 {
-    fcs_pdfs_key_t key;
+    fcs_pdfs_key key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.
@@ -71,7 +71,7 @@ static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache_t *const cache,
 }
 
 static inline bool fcs_pdfs_cache_does_key_exist(
-    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
+    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key *const key)
 {
     fcs_pdfs_cache_key_info_t *existing;
 
@@ -117,7 +117,7 @@ static inline bool fcs_pdfs_cache_does_key_exist(
 }
 
 static inline fcs_pdfs_cache_key_info_t *fcs_pdfs_cache_insert(
-    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
+    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key *const key)
 {
     fcs_pdfs_cache_key_info_t *cache_key;
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)

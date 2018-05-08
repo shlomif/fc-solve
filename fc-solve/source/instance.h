@@ -105,7 +105,7 @@ typedef struct
 #define FCS_BOTH__POS_BY_RANK__SIZE FCS_POS_BY_RANK_LEN
 #endif
 
-typedef int8_t fcs__positions_by_rank_t[FCS_BOTH__POS_BY_RANK__SIZE];
+typedef int8_t fcs__positions_by_rank[FCS_BOTH__POS_BY_RANK__SIZE];
 
 /*
  * This is a linked list item that is used to implement a queue for the BFS
@@ -260,7 +260,7 @@ typedef struct
 #endif
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
-typedef void (*fcs_instance_debug_iter_output_func_t)(
+typedef void (*instance_debug_iter_output_func)(
     void *, fcs_int_limit_t, int, void *,
     fcs_kv_state_t *, fcs_int_limit_t);
 #endif
@@ -356,7 +356,7 @@ typedef struct
     size_t move_func_idx;
     size_t derived_states_random_indexes_max_size;
     fcs_rating_with_index_t *derived_states_random_indexes;
-    fcs__positions_by_rank_t positions_by_rank;
+    fcs__positions_by_rank positions_by_rank;
     fcs_game_limit_t num_vacant_stacks;
     fcs_game_limit_t num_vacant_freecells;
 } fcs_soft_dfs_stack_item_t;
@@ -455,7 +455,7 @@ struct fc_solve_soft_thread_struct
         } soft_dfs;
         struct
         {
-            fcs__positions_by_rank_t befs_positions_by_rank;
+            fcs__positions_by_rank befs_positions_by_rank;
             fcs_move_func *moves_list, *moves_list_end;
             struct
             {
@@ -544,7 +544,7 @@ struct fc_solve_instance_struct
 {
 // The parameters of the game - see the declaration of fcs_game_type_params_t .
 #ifndef FCS_FREECELL_ONLY
-    fcs_game_type_params_t game_params;
+    fcs_game_type_params game_params;
 #ifndef FCS_DISABLE_PATSOLVE
     fcs_card_t game_variant_suit_mask;
     fcs_card_t game_variant_desired_suit_value;
@@ -619,7 +619,7 @@ struct fc_solve_instance_struct
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     GHashTable *stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-    fcs_columns_google_hash_handle_t stacks_hash;
+    fcs_columns_google_hash_handle stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     Pvoid_t stacks_judy_array;
 #else
@@ -731,7 +731,7 @@ struct fc_solve_instance_struct
      *
      * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
      * */
-    fcs_instance_debug_iter_output_func_t debug_iter_output_func;
+    instance_debug_iter_output_func debug_iter_output_func;
     void* debug_iter_output_context;
 #endif
 
@@ -916,10 +916,10 @@ typedef enum {
     FOREACH_SOFT_THREAD_FREE_INSTANCE,
     FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
     FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS
-} fcs_foreach_st_callback_choice_t;
+} foreach_st_callback_choice;
 
 extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
-    const fcs_foreach_st_callback_choice_t callback_choice,
+    const foreach_st_callback_choice callback_choice,
     void *const context);
 
 /*

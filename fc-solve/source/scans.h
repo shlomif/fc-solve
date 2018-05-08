@@ -44,7 +44,7 @@ static inline void fc_solve__assign_dest_stack_and_col_ptr(
 static inline void fc_solve__calc_positions_by_rank_data(
     fc_solve_soft_thread_t *const soft_thread,
     const fcs_state *const ptr_state_key,
-    fcs__positions_by_rank_t positions_by_rank
+    fcs__positions_by_rank positions_by_rank
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     ,
     const bool is_simple_simon
@@ -56,7 +56,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
     SET_GAME_PARAMS();
 #endif
 
-    memset(positions_by_rank, -1, sizeof(fcs__positions_by_rank_t));
+    memset(positions_by_rank, -1, sizeof(fcs__positions_by_rank));
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     if (is_simple_simon)
