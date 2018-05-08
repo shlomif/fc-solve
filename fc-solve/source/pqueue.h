@@ -49,9 +49,9 @@ typedef struct
 {
     fcs_collectible_state_t *val;
     pq_rating_t rating;
-} pq_element_t;
+} pq_element;
 
-static inline pq_rating_t fcs_pq_rating(const pq_element_t elem)
+static inline pq_rating_t fcs_pq_rating(const pq_element elem)
 {
     return elem.rating;
 }
@@ -60,7 +60,7 @@ typedef struct
 {
     size_t max_size;
     size_t current_size;
-    pq_element_t *elems; /* pointer to void pointers */
+    pq_element *elems; /* pointer to void pointers */
 } pri_queue_t;
 
 /* given an index to any element in a binary tree stored in a linear array with
@@ -101,8 +101,7 @@ static inline void fc_solve_pq_push(pri_queue_t *const pq,
 
     if (i > pq->max_size)
     {
-        pq->elems =
-            (pq_element_t *)SREALLOC(pq->elems, (pq->max_size += 256) + 1);
+        pq->elems = SREALLOC(pq->elems, (pq->max_size += 256) + 1);
     }
 
     const_SLOT(elems, pq);

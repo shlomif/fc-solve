@@ -956,7 +956,7 @@ static inline void free_states(fc_solve_instance_t *const instance)
                 const_AUTO(elems, BEFS_VAR(soft_thread, pqueue).elems);
                 const_AUTO(end_element,
                     elems + BEFS_VAR(soft_thread, pqueue).current_size);
-                for (pq_element_t *next_element = elems + PQ_FIRST_ENTRY;
+                for (pq_element *next_element = elems + PQ_FIRST_ENTRY;
                      next_element <= end_element; next_element++)
                 {
                     if (!fcs__is_state_a_dead_end((*next_element).val))
