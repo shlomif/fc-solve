@@ -506,7 +506,7 @@ static inline fcs_dbm_record_t *cache_store__has_key(
 }
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-static inline fcs_cache_key_info_t *cache_store__insert_key(
+static inline fcs_cache_key_info *cache_store__insert_key(
     fcs_dbm__cache_store__common_t *const cache_store,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const fcs_fcc_move_t *const moves_to_parent,

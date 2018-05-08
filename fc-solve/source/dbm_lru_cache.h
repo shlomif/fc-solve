@@ -33,7 +33,7 @@ struct fcs_cache_key_info_struct
     struct fcs_cache_key_info_struct *lower_pri, *higher_pri;
 };
 
-typedef struct fcs_cache_key_info_struct fcs_cache_key_info_t;
+typedef struct fcs_cache_key_info_struct fcs_cache_key_info;
 
 typedef struct
 {
@@ -47,7 +47,7 @@ typedef struct
     compact_allocator states_values_to_keys_allocator;
     long count_elements_in_cache, max_num_elements_in_cache;
 
-    fcs_cache_key_info_t *lowest_pri, *highest_pri, *recycle_bin;
+    fcs_cache_key_info *lowest_pri, *highest_pri, *recycle_bin;
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
     void *tree_recycle_bin;
 } fcs_lru_cache_t;

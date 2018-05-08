@@ -28,13 +28,13 @@ extern "C" {
 static int fc_solve_compare_lru_cache_keys(const void *const void_a,
     const void *const void_b, void *context GCC_UNUSED)
 {
-#define GET_PARAM(p) ((((const fcs_cache_key_info_t *)(p))->key))
+#define GET_PARAM(p) ((((const fcs_cache_key_info *)(p))->key))
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
 
-static inline void cache_destroy_key(fcs_cache_key_info_t *cache_key)
+static inline void cache_destroy_key(fcs_cache_key_info *cache_key)
 {
     for (; cache_key; cache_key = RECYCLE_BIN_NEXT(cache_key))
     {
@@ -78,7 +78,7 @@ static inline void cache_init(fcs_lru_cache_t *const cache,
 static inline bool cache_does_key_exist(
     fcs_lru_cache_t *const cache, fcs_cache_key_t *const key)
 {
-    const fcs_cache_key_info_t to_check = {.key = *key};
+    const fcs_cache_key_info to_check = {.key = *key};
     const dict_key_t existing_key =
         fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
     if (!existing_key)
@@ -88,8 +88,8 @@ static inline bool cache_does_key_exist(
     else
     {
         /* First - promote this key to the top of the cache. */
-        fcs_cache_key_info_t *const existing =
-            (fcs_cache_key_info_t *)existing_key;
+        fcs_cache_key_info *const existing =
+            (fcs_cache_key_info *)existing_key;
 
         if (existing->higher_pri)
         {
@@ -114,11 +114,11 @@ static inline bool cache_does_key_exist(
     }
 }
 
-static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
+static inline fcs_cache_key_info *cache_insert(fcs_lru_cache_t *cache,
     const fcs_cache_key_t *key, const fcs_fcc_move_t *moves_to_parent,
     const fcs_fcc_move_t final_move)
 {
-    fcs_cache_key_info_t *cache_key;
+    fcs_cache_key_info *cache_key;
     var_AUTO(kaz_tree, cache->kaz_tree);
 
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
@@ -131,7 +131,7 @@ static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
     }
     else
     {
-        cache_key = (fcs_cache_key_info_t *)fcs_compact_alloc_ptr(
+        cache_key = (fcs_cache_key_info *)fcs_compact_alloc_ptr(
             &(cache->states_values_to_keys_allocator), sizeof(*cache_key));
         cache_key->moves_to_key = NULL;
         ++cache->count_elements_in_cache;

@@ -35,7 +35,7 @@ extern int fc_solve_compare_lru_cache_keys(const void *const void_a,
     const void *const void_b, void *const context GCC_UNUSED)
 {
 #define GET_PARAM(p)                                                           \
-    ((fcs_lru_side_t)(((const fcs_cache_key_info_t *)(p))->val_ptr))
+    ((fcs_lru_side_t)(((const fcs_cache_key_info *)(p))->val_ptr))
     const fcs_lru_side_t a = GET_PARAM(void_a), b = GET_PARAM(void_b);
 
     return ((a > b) ? 1 : (a < b) ? (-1) : 0);
@@ -58,13 +58,13 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
     struct
     {
-        fcs_cache_key_info_t *new_cache_state;
+        fcs_cache_key_info *new_cache_state;
         const fcs_collectible_state_t *state_val;
     } *parents_stack = SMALLOC(parents_stack, parents_stack_max_len);
 
     parents_stack[0].state_val = orig_ptr_state_val;
 
-    fcs_cache_key_info_t *new_cache_state;
+    fcs_cache_key_info *new_cache_state;
     while (1)
     {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
@@ -73,7 +73,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
         if (*PValue)
         {
             parents_stack[parents_stack_len - 1].new_cache_state =
-                new_cache_state = (fcs_cache_key_info_t *)(*PValue);
+                new_cache_state = (fcs_cache_key_info *)(*PValue);
             break;
         }
         else
@@ -106,8 +106,8 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
         new_cache_state->val_ptr =
             parents_stack[parents_stack_len - 1].state_val;
-        fcs_cache_key_info_t *const existing_cache_state =
-            (fcs_cache_key_info_t *)fc_solve_kaz_tree_alloc_insert(
+        fcs_cache_key_info *const existing_cache_state =
+            (fcs_cache_key_info *)fc_solve_kaz_tree_alloc_insert(
                 cache->kaz_tree, new_cache_state);
 
         if (existing_cache_state)
@@ -218,7 +218,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
     while (count > limit)
     {
-        fcs_cache_key_info_t *lowest_pri = cache->lowest_pri;
+        fcs_cache_key_info *lowest_pri = cache->lowest_pri;
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
         int rc_int;
         JLD(rc_int, cache->states_values_to_keys_map,

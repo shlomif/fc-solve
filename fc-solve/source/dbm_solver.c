@@ -91,7 +91,7 @@ static inline void instance_check_key(
     if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES
-        fcs_cache_key_info_t *cache_key = cache_store__insert_key(
+        fcs_cache_key_info *cache_key = cache_store__insert_key(
             &(instance->cache_store), key, parent, moves_to_parent, move);
 #endif
         /* Now insert it into the queue. */
