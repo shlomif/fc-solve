@@ -35,8 +35,8 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
 
     const int new_size_bitmask = new_size - 1;
 
-    var_AUTO(entries, hash->entries);
-    fc_solve_hash_symlink_t *const new_entries =
+    const_SLOT(entries, hash);
+    hash_table_entry *const new_entries =
         calloc(new_size, sizeof(new_entries[0]));
 
     /* Copy the items to the new hash while not allocating them again */

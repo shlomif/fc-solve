@@ -53,7 +53,7 @@ typedef struct fc_solve_hash_symlink_item_struct hash_item;
 typedef struct
 {
     hash_item *first_item;
-} fc_solve_hash_symlink_t;
+} hash_table_entry;
 
 struct fc_solve_instance_struct;
 
@@ -70,7 +70,7 @@ typedef int (*fcs_hash_compare_function_t)(
 typedef struct
 {
     /* The vector of the hash table itself */
-    fc_solve_hash_symlink_t *entries;
+    hash_table_entry *entries;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     /* The list of vacant items as freed by the garbage collector. Use
      * if before allocating more. */
@@ -136,7 +136,7 @@ static inline void fc_solve_hash_init(
     /* Allocate a table of size entries */
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the end of each chain is right at the start. */
-    hash->entries = (fc_solve_hash_symlink_t *)calloc(
+    hash->entries = (hash_table_entry *)calloc(
         initial_hash_size, sizeof(hash->entries[0]));
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
