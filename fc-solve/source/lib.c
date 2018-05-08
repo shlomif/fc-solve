@@ -1879,9 +1879,9 @@ typedef struct
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     fcs_int_limit_t num_states_in_collection;
 #endif
-} fcs_stats_t;
+} fcs_stats;
 
-static const fcs_stats_t initial_stats = {.num_checked_states = 0,
+static const fcs_stats initial_stats = {.num_checked_states = 0,
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     .num_states_in_collection = 0
 #endif
@@ -1909,7 +1909,7 @@ typedef struct
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     fcs_moves_processed_t fc_pro_moves;
 #endif
-    fcs_stats_t obj_stats;
+    fcs_stats obj_stats;
 #if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
     bool was_solution_traced;
 #endif
@@ -1932,10 +1932,10 @@ typedef enum {
 } flares_choice_type;
 #endif
 
-typedef fcs_int_limit_t flare_iters_quota_t;
+typedef fcs_int_limit_t flare_iters_quota;
 
-static inline flare_iters_quota_t normalize_iters_quota(
-    const flare_iters_quota_t i)
+static inline flare_iters_quota normalize_iters_quota(
+    const flare_iters_quota i)
 {
     return max(i, 0);
 }
@@ -1944,7 +1944,7 @@ typedef struct
 {
     fcs_flare_item_t *flare;
     flares_plan_type type;
-    flare_iters_quota_t remaining_quota, initial_quota;
+    flare_iters_quota remaining_quota, initial_quota;
     int_fast32_t count_iters;
 } flares_plan_item;
 
@@ -1994,9 +1994,9 @@ typedef struct
     // by limit_iterations() and friends
     fcs_int_limit_t current_iterations_limit;
 #endif
-    fcs_stats_t iterations_board_started_at;
+    fcs_stats iterations_board_started_at;
     // The number of iterations that the current instance started solving from.
-    fcs_stats_t init_num_checked_states;
+    fcs_stats init_num_checked_states;
     // A pointer to the currently active flare out of the sequence
 #if defined(FCS_WITH_NI) || defined(FCS_WITH_FLARES)
 #define ACTIVE_FLARE(user) ((user)->active_flare)
@@ -3023,7 +3023,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             }
         }
 
-        const flare_iters_quota_t flare_iters_quota =
+        const flare_iters_quota iters_quota =
             current_plan_item->remaining_quota;
 
         fcs_flare_item_t *const flare = current_plan_item->flare;
@@ -3130,7 +3130,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #define PARAMETERIZED_LIMIT(increment)                                         \
     (((increment) < 0) ? (-1) : PARAMETERIZED_FIXED_LIMIT(increment))
                 ,
-                PARAMETERIZED_LIMIT(flare_iters_quota)
+                PARAMETERIZED_LIMIT(iters_quota)
 #endif
             };
 
@@ -3196,10 +3196,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(
                               user->init_num_checked_states.num_checked_states);
         user->iterations_board_started_at.num_checked_states += delta;
 #ifdef FCS_WITH_FLARES
-        if (flare_iters_quota >= 0)
+        if (iters_quota >= 0)
         {
             current_plan_item->remaining_quota =
-                normalize_iters_quota(flare_iters_quota - delta);
+                normalize_iters_quota(iters_quota - delta);
         }
 #endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES

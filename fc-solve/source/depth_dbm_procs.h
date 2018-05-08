@@ -12,7 +12,7 @@
 #include "dbm_procs_inner.h"
 
 static inline void dbm__spawn_threads(dbm_solver_instance *const instance,
-    const size_t num_threads, main_thread_item_t *const threads)
+    const size_t num_threads, main_thread_item *const threads)
 {
 #ifdef T
     FILE *const out_fh = instance->common.out_fh;

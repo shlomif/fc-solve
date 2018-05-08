@@ -15,9 +15,9 @@ typedef struct
     dbm_solver_thread thread;
     thread_arg_t arg;
     pthread_t id;
-} main_thread_item_t;
+} main_thread_item;
 
-static inline main_thread_item_t *dbm__calc_threads(
+static inline main_thread_item *dbm__calc_threads(
     dbm_solver_instance *const instance,
     fcs_state_keyval_pair_t *const init_state, const size_t num_threads,
     void (*init_thread_cb)(dbm_solver_thread *))
@@ -26,7 +26,7 @@ static inline main_thread_item_t *dbm__calc_threads(
     FILE *const out_fh = instance->common.out_fh;
 #endif
     FCS_ON_NOT_FC_ONLY(const_AUTO(local_variant, instance->common.variant));
-    main_thread_item_t *const threads = SMALLOC(threads, num_threads);
+    main_thread_item *const threads = SMALLOC(threads, num_threads);
     TRACE("%s\n", "instance_run_all_threads start");
 #ifdef DEBUG_FOO
     fc_solve_delta_stater_init(
@@ -47,7 +47,7 @@ static inline main_thread_item_t *dbm__calc_threads(
 }
 
 static inline void dbm__free_threads(dbm_solver_instance *const instance,
-    const size_t num_threads, main_thread_item_t *const threads,
+    const size_t num_threads, main_thread_item *const threads,
     void (*free_thread_cb)(dbm_solver_thread *))
 {
 #ifdef T
