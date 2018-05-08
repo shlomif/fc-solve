@@ -18,15 +18,15 @@ extern "C" {
 
 #include "rinutils.h"
 
-typedef long fcs_rand_t;
+typedef long fcs_rand_gen;
 
 static inline void fc_solve_rand_init(
-    fcs_rand_t *const my_rand, const unsigned int seed)
+    fcs_rand_gen *const my_rand, const unsigned int seed)
 {
     *my_rand = (long)seed;
 }
 
-static inline int fc_solve_rand_rand15(fcs_rand_t *const my_rand)
+static inline int fc_solve_rand_rand15(fcs_rand_gen *const my_rand)
 {
     return ((((*my_rand) = ((*my_rand) * 214013 + 2531011)) >> 16) & 0x7fff);
 }
@@ -37,7 +37,7 @@ static inline int fc_solve_rand_rand15(fcs_rand_t *const my_rand)
  * 15-bit ones.
  *
  * */
-static inline int fc_solve_rand_get_random_number(fcs_rand_t *const my_rand)
+static inline int fc_solve_rand_get_random_number(fcs_rand_gen *const my_rand)
 {
     const int first = fc_solve_rand_rand15(my_rand);
     return (first | (fc_solve_rand_rand15(my_rand) << 15));

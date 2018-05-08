@@ -441,7 +441,7 @@ struct fc_solve_soft_thread_struct
              * A pseudo-random number generator for use in the random-DFS
              * scan
              * */
-            fcs_rand_t rand_gen;
+            fcs_rand_gen rand_gen;
 
             /*
              * The initial seed of this random number generator

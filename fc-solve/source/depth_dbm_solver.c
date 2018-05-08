@@ -24,13 +24,13 @@ typedef struct
     fcs_dbm__cache_store__common_t cache_store;
     meta_allocator queue_meta_alloc;
     fcs_offloading_queue_t queue;
-} fcs_dbm_collection_by_depth_t;
+} fcs_dbm_collection_by_depth;
 
 #define MAX_FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 typedef size_t batch_size_t;
 typedef struct
 {
-    fcs_dbm_collection_by_depth_t colls_by_depth[MAX_FCC_DEPTH];
+    fcs_dbm_collection_by_depth colls_by_depth[MAX_FCC_DEPTH];
     fcs_condvar_t monitor;
     const char *offload_dir_path;
     int curr_depth;

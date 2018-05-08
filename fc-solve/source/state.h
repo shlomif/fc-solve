@@ -90,7 +90,7 @@ typedef struct
  * Bytes 164-167 - Decks
  */
 
-typedef char fcs_locs_t;
+typedef char fcs_locs_type;
 
 #define fcs_state_get_col(state, col_idx)                                      \
     ((state).data + ((col_idx) * (MAX_NUM_CARDS_IN_A_STACK + 1)))
@@ -132,7 +132,7 @@ typedef struct
         (dest_info).stacks_copy_on_write_flags = 0;                            \
     }
 
-typedef uint8_t fcs_locs_t;
+typedef uint8_t fcs_locs_type;
 
 #else
 #error Neither COMPACT_STATES nor INDIRECT_STACK_STATES are defined.
@@ -293,19 +293,19 @@ typedef struct
      * in the permutation of them. They are sorted by the canonization
      * function.
      * */
-    fcs_locs_t stack_locs[MAX_NUM_STACKS];
-    fcs_locs_t fc_locs[MAX_NUM_FREECELLS];
+    fcs_locs_type stack_locs[MAX_NUM_STACKS];
+    fcs_locs_type fc_locs[MAX_NUM_FREECELLS];
 } fcs_state_locs_struct_t;
 
 static inline void fc_solve_init_locs(fcs_state_locs_struct_t *const locs)
 {
     for (int i = 0; i < MAX_NUM_STACKS; ++i)
     {
-        locs->stack_locs[i] = (fcs_locs_t)i;
+        locs->stack_locs[i] = (fcs_locs_type)i;
     }
     for (int i = 0; i < MAX_NUM_FREECELLS; ++i)
     {
-        locs->fc_locs[i] = (fcs_locs_t)i;
+        locs->fc_locs[i] = (fcs_locs_type)i;
     }
 }
 

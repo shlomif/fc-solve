@@ -26,7 +26,7 @@ typedef struct
     fcs_dbm__cache_store__common_t cache_store;
     meta_allocator queue_meta_alloc;
     fcs_depth_multi_queue_t depth_queue;
-} fcs_dbm_collection_by_depth_t;
+} fcs_dbm_collection_by_depth;
 
 typedef struct FccEntryPointList FccEntryPointList;
 typedef struct FccEntryPointNode FccEntryPointNode;
@@ -64,7 +64,7 @@ static const FccEntryPointList FccEntryPointList_init =
 
 typedef struct
 {
-    fcs_dbm_collection_by_depth_t coll;
+    fcs_dbm_collection_by_depth coll;
     fcs_lock_t global_lock;
     const char *offload_dir_path;
     int curr_depth;
@@ -150,7 +150,7 @@ static inline void instance_init(dbm_solver_instance *const instance,
     fcs_lock_init(&instance->fcc_entry_points_lock);
     fcs_lock_init(&instance->fcc_exit_points_output_lock);
     {
-        fcs_dbm_collection_by_depth_t *const coll = &(instance->coll);
+        fcs_dbm_collection_by_depth *const coll = &(instance->coll);
 
         fcs_dbm__cache_store__init(&(coll->cache_store), &(instance->common),
             &(coll->queue_meta_alloc), inp->dbm_store_path,
@@ -162,7 +162,7 @@ static inline void instance_destroy(dbm_solver_instance *const instance)
 {
     fc_solve_compact_allocator_finish(&(instance->fcc_entry_points_allocator));
     fc_solve_meta_compact_allocator_finish(&(instance->fcc_meta_alloc));
-    fcs_dbm_collection_by_depth_t *coll = &(instance->coll);
+    fcs_dbm_collection_by_depth *coll = &(instance->coll);
     fcs_depth_multi_queue__destroy(&(coll->depth_queue));
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
     fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
