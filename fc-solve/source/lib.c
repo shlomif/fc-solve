@@ -1251,7 +1251,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
 
             TRACE0("After iter_handler");
             const_AUTO(orig_idx, the_soft_dfs_info->move_func_list_idx);
-            const fc_solve_state_weighting_t *const weighting =
+            const fcs_state_weighting *const weighting =
                 &(THE_MOVE_FUNCS_LIST.groups[orig_idx].weighting);
 
             if (the_soft_dfs_info->move_func_list_idx < THE_MOVE_FUNCS_LIST.num)

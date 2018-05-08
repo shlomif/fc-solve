@@ -52,7 +52,7 @@ extern "C" {
 #endif
 static inline void fc_solve_initialize_befs_rater(
     fc_solve_soft_thread_t *const soft_thread,
-    fc_solve_state_weighting_t *const weighting)
+    fcs_state_weighting *const weighting)
 {
     const double *const befs_weights = weighting->befs_weights.weights;
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
@@ -168,7 +168,7 @@ static inline fcs_game_limit_t count_num_vacant_freecells(
 
 static inline pq_rating_t befs_rate_state(
     const fc_solve_soft_thread_t *const soft_thread,
-    const fc_solve_state_weighting_t *const weighting,
+    const fcs_state_weighting *const weighting,
     const fcs_state *const state, const int negated_depth)
 {
     const_AUTO(instance, fcs_st_instance(soft_thread));

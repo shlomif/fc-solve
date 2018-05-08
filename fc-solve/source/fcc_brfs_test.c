@@ -60,7 +60,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 
-    fcs_FCC_start_points_list_t start_points_list = {
+    fcs_FCC_start_points_list start_points_list = {
         .list = NULL, .recycle_bin = NULL};
     meta_allocator meta_alloc;
     fc_solve_meta_compact_allocator_init(&meta_alloc);
@@ -110,7 +110,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         does_min_by_sorting_exist, &does_state_exist_in_any_FCC_cache,
         out_num_new_positions, &moves_list_allocator, &meta_alloc);
 
-    const fcs_FCC_start_point_t *iter = start_points_list.list;
+    const fcs_FCC_start_point *iter = start_points_list.list;
 
     size_t states_count = 0;
     while (iter)
@@ -205,7 +205,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
     meta_allocator meta_alloc;
     fc_solve_meta_compact_allocator_init(&meta_alloc);
-    fcs_FCC_start_points_list_t start_points_list = {
+    fcs_FCC_start_points_list start_points_list = {
         .list = NULL, .recycle_bin = NULL};
     fc_solve_compact_allocator_init(
         &(start_points_list.allocator), &meta_alloc);

@@ -190,7 +190,7 @@ typedef struct
     // The BeFS weights of the different BeFS tests. Those
     // weights determine the commulative priority of the state.
     fcs_default_weights befs_weights;
-} fc_solve_state_weighting_t;
+} fcs_state_weighting;
 
 typedef enum {
     FCS_NO_SHUFFLING,
@@ -208,7 +208,7 @@ typedef struct
     fcs_move_func *move_funcs;
     uint_fast32_t num;
     fcs_moves_group_kind shuffling_type;
-    fc_solve_state_weighting_t weighting;
+    fcs_state_weighting weighting;
 } fcs_moves_group;
 
 typedef struct
@@ -485,7 +485,7 @@ struct fc_solve_soft_thread_struct
                      * The priority queue of the BeFS scan
                      * */
                     pri_queue_t pqueue;
-                    fc_solve_state_weighting_t weighting;
+                    fcs_state_weighting weighting;
                 } befs;
             } meth;
             /*

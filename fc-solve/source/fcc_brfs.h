@@ -34,14 +34,14 @@ typedef struct fcs_FCC_start_point_struct
     fcs_encoded_state_buffer_t enc_state;
     fcs_fcc_moves_seq_t moves_seq;
     struct fcs_FCC_start_point_struct *next;
-} fcs_FCC_start_point_t;
+} fcs_FCC_start_point;
 
 typedef struct
 {
-    fcs_FCC_start_point_t *list;
+    fcs_FCC_start_point *list;
     compact_allocator allocator;
-    fcs_FCC_start_point_t *recycle_bin;
-} fcs_FCC_start_points_list_t;
+    fcs_FCC_start_point *recycle_bin;
+} fcs_FCC_start_points_list;
 
 static int fc_solve_compare_encoded_states(const void *const void_a,
     const void *const void_b, void *const context GCC_UNUSED)
@@ -148,7 +148,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
 #if 0
     /* [Output]: FCC start points.
      * */
-    fcs_FCC_start_points_list_t * fcc_start_points,
+    fcs_FCC_start_points_list * fcc_start_points,
     /* [Input/Output]: make sure the fcc_start_points don't repeat themselves,
      * in the same FCC-based-depth.
      * */
@@ -388,7 +388,7 @@ free_resources:
 
 typedef struct
 {
-    fcs_FCC_start_points_list_t *next_start_points_list;
+    fcs_FCC_start_points_list *next_start_points_list;
     dict_t *do_next_fcc_start_points_exist;
     fcs_fcc_moves_seq_allocator_t *moves_list_allocator;
 } add_start_point_context;
@@ -444,9 +444,9 @@ static bool fc_solve_add_start_point_in_mem(
         &end_moves_iter, extra_move, moves_list_allocator);
 
     /* Enqueue the new FCC start point. */
-    fcs_FCC_start_points_list_t *const fcc_start_points =
+    fcs_FCC_start_points_list *const fcc_start_points =
         context->next_start_points_list;
-    fcs_FCC_start_point_t *new_start_point;
+    fcs_FCC_start_point *new_start_point;
     if (fcc_start_points->recycle_bin)
     {
         new_start_point = fcc_start_points->recycle_bin;
@@ -454,7 +454,7 @@ static bool fc_solve_add_start_point_in_mem(
     }
     else
     {
-        new_start_point = (fcs_FCC_start_point_t *)fcs_compact_alloc_ptr(
+        new_start_point = (fcs_FCC_start_point *)fcs_compact_alloc_ptr(
             &(fcc_start_points->allocator), sizeof(*new_start_point));
     }
     *new_start_point = (typeof(*new_start_point)){.enc_state = *enc_state,
