@@ -127,7 +127,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
     long queue_num_extracted_and_processed = 0;
 
-    fcs_compact_allocator_t derived_list_allocator;
+    compact_allocator derived_list_allocator;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(instance->meta_alloc));
     fcs_derived_state_t *derived_list_recycle_bin = NULL;

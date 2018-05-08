@@ -47,7 +47,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     fcs_meta_compact_allocator_t meta_alloc;
     fc_solve_meta_compact_allocator_init(&meta_alloc);
-    fcs_compact_allocator_t allocator;
+    compact_allocator allocator;
     fc_solve_compact_allocator_init(&allocator, &meta_alloc);
 
     instance_solver_thread_calc_derived_states(local_variant, &init_state, NULL,

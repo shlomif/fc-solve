@@ -76,7 +76,7 @@ static unsigned char get_move_from_parent_to_child(
 
     fcs_meta_compact_allocator_t meta_alloc;
     fc_solve_meta_compact_allocator_init(&meta_alloc);
-    fcs_compact_allocator_t derived_list_allocator;
+    compact_allocator derived_list_allocator;
     fc_solve_compact_allocator_init(&(derived_list_allocator), &meta_alloc);
     fc_solve_delta_stater_decode_into_state(
         delta, parent.s, &parent_state, indirect_stacks_buffer);

@@ -102,7 +102,7 @@ typedef struct dict_t
     dnode_alloc_t dict_allocnode;
     dnode_free_t dict_free_node;
 #else
-    fcs_compact_allocator_t dict_allocator;
+    compact_allocator dict_allocator;
     dnode_t *dict_recycle_bin;
 #endif
     void *dict_context;

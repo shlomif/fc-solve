@@ -17,7 +17,7 @@ typedef struct
     dict_t *kaz_tree;
     fcs_meta_compact_allocator_t meta_alloc;
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
-    fcs_compact_allocator_t allocator;
+    compact_allocator allocator;
 #endif
 } dbm_t;
 

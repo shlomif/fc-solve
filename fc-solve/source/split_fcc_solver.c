@@ -71,7 +71,7 @@ typedef struct
     fcs_dbm_instance_common_elems_t common;
     fcs_meta_compact_allocator_t fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
-    fcs_compact_allocator_t fcc_entry_points_allocator;
+    compact_allocator fcc_entry_points_allocator;
     fcs_lock_t fcc_entry_points_lock;
     FccEntryPointNode *start_key_ptr;
 #if 0
@@ -188,7 +188,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_dbm_queue_item_t physical_item;
     fcs_dbm_record_t *token = NULL;
     fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL;
-    fcs_compact_allocator_t derived_list_allocator;
+    compact_allocator derived_list_allocator;
     fcs_state_keyval_pair_t state;
     char *base64_encoding_buffer = NULL;
 #if 0

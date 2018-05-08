@@ -59,7 +59,7 @@ typedef struct fcs_Q_item_wrapper_struct
 
 typedef struct
 {
-    fcs_compact_allocator_t queue_allocator;
+    compact_allocator queue_allocator;
     fcs_Q_item_wrapper_t *queue_head, *queue_tail, *queue_recycle_bin;
     fcs_queue_stats_t stats;
 } fcs_offloading_queue_t;

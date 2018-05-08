@@ -175,7 +175,7 @@ static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
 typedef struct
 {
     fcs_fcc_moves_list_item_t *recycle_bin;
-    fcs_compact_allocator_t *allocator;
+    compact_allocator *allocator;
 } fcs_fcc_moves_seq_allocator_t;
 
 static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
@@ -364,7 +364,7 @@ static inline bool instance_solver_thread_calc_derived_states(
     fcs_dbm_record_t *const parent_ptr,
     fcs_derived_state_t **const derived_list,
     fcs_derived_state_t **const derived_list_recycle_bin,
-    fcs_compact_allocator_t *const derived_list_allocator,
+    compact_allocator *const derived_list_allocator,
     const bool perform_horne_prune)
 {
     fcs_derived_state_t *ptr_new_state;

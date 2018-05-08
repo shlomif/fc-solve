@@ -39,7 +39,7 @@ typedef struct fcs_FCC_start_point_struct
 typedef struct
 {
     fcs_FCC_start_point_t *list;
-    fcs_compact_allocator_t allocator;
+    compact_allocator allocator;
     fcs_FCC_start_point_t *recycle_bin;
 } fcs_FCC_start_points_list_t;
 
@@ -212,7 +212,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
 #endif
 
     /* Initialize the allocators. */
-    fcs_compact_allocator_t queue_allocator, derived_list_allocator;
+    compact_allocator queue_allocator, derived_list_allocator;
     fc_solve_compact_allocator_init(&(queue_allocator), meta_alloc);
     fc_solve_compact_allocator_init(&(derived_list_allocator), meta_alloc);
 

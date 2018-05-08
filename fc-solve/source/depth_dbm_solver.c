@@ -109,7 +109,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_SLOT(max_batch_size, instance);
 
     batch_size_t prev_size = 0;
-    fcs_compact_allocator_t derived_list_allocator;
+    compact_allocator derived_list_allocator;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(thread->thread_meta_alloc));
     const_AUTO(out_fh, instance->common.out_fh);

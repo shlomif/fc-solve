@@ -251,7 +251,7 @@ typedef struct
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
-    fcs_compact_allocator_t states_values_to_keys_allocator;
+    compact_allocator states_values_to_keys_allocator;
     fcs_int_limit_t count_elements_in_cache, max_num_elements_in_cache;
 
     fcs_cache_key_info_t *lowest_pri, *highest_pri, *recycle_bin;
@@ -302,7 +302,7 @@ struct fc_solve_hard_thread_struct
      * This is the mechanism used to allocate memory for stacks, states
      * and move stacks.
      * */
-    fcs_compact_allocator_t allocator;
+    compact_allocator allocator;
 
 #ifdef FCS_WITH_MOVES
     /*

@@ -59,10 +59,10 @@ struct fc_solve_instance_struct;
 
 #ifndef FCS_INLINED_HASH_COMPARISON
 #ifdef FCS_WITH_CONTEXT_VARIABLE
-typedef int (*fcs_hash_compare_function_t)(
+typedef int (*hash_compare_function)(
     const void *const, const void *const, void *context);
 #else
-typedef int (*fcs_hash_compare_function_t)(
+typedef int (*hash_compare_function)(
     const void *const, const void *const);
 #endif
 #endif
@@ -81,7 +81,7 @@ typedef struct
 #ifdef FCS_INLINED_HASH_COMPARISON
     enum FCS_INLINED_HASH_DATA_TYPE hash_type;
 #else
-    fcs_hash_compare_function_t compare_function;
+    hash_compare_function compare_function;
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     /* A context to pass to the comparison function */
     void *context;
@@ -99,7 +99,7 @@ typedef struct
 
     fcs_int_limit_t max_num_elems_before_resize;
 
-    fcs_compact_allocator_t allocator;
+    compact_allocator allocator;
 #ifdef FCS_RCS_STATES
     struct fc_solve_instance_struct *instance;
 #endif
@@ -116,7 +116,7 @@ static inline void fc_solve_hash_init(
 #ifdef FCS_INLINED_HASH_COMPARISON
     const enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
-    fcs_hash_compare_function_t compare_function
+    hash_compare_function compare_function
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     ,
     void *const context

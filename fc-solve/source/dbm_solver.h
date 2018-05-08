@@ -36,7 +36,7 @@ typedef union fcs_pre_cache_key_val_pair_struct {
 typedef struct
 {
     dict_t *kaz_tree;
-    fcs_compact_allocator_t kv_allocator;
+    compact_allocator kv_allocator;
     fcs_pre_cache_key_val_pair_t *kv_recycle_bin;
     long count_elements;
     void *tree_recycle_bin;

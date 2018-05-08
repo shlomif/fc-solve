@@ -14,7 +14,7 @@
 
 #define ALLOCED_SIZE (FCS_IA_PACK_SIZE * 1024 - (256 + 128))
 
-void fc_solve_compact_allocator_init(fcs_compact_allocator_t *const allocator,
+void fc_solve_compact_allocator_init(compact_allocator *const allocator,
     fcs_meta_compact_allocator_t *const meta_allocator)
 {
     allocator->meta = meta_allocator;
@@ -39,7 +39,7 @@ static inline char *meta_request_new_buffer(
     }
 }
 
-void fc_solve_compact_allocator_extend(fcs_compact_allocator_t *const allocator)
+void fc_solve_compact_allocator_extend(compact_allocator *const allocator)
 {
     char *const new_data = meta_request_new_buffer(allocator->meta);
 
@@ -64,7 +64,7 @@ void fc_solve_meta_compact_allocator_finish(
     meta_allocator->recycle_bin = NULL;
 }
 
-void fc_solve_compact_allocator_finish(fcs_compact_allocator_t *const allocator)
+void fc_solve_compact_allocator_finish(compact_allocator *const allocator)
 {
     char *iter, *iter_next;
     fcs_meta_compact_allocator_t *const meta = allocator->meta;

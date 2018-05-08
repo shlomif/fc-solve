@@ -73,7 +73,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
     cache_init(&does_state_exist_in_any_FCC_cache, 1000, &meta_alloc);
 
-    fcs_compact_allocator_t moves_list_compact_alloc;
+    compact_allocator moves_list_compact_alloc;
     fc_solve_compact_allocator_init(&(moves_list_compact_alloc), &(meta_alloc));
     fcs_fcc_moves_seq_allocator_t moves_list_allocator = {
         .recycle_bin = NULL, .allocator = &(moves_list_compact_alloc)};
@@ -213,7 +213,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin));
     dict_t *does_min_by_sorting_exist =
         fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
-    fcs_compact_allocator_t temp_allocator;
+    compact_allocator temp_allocator;
     fc_solve_compact_allocator_init(&(temp_allocator), &meta_alloc);
     fcs_fcc_moves_seq_allocator_t moves_list_allocator = {
         .recycle_bin = NULL, .allocator = &(temp_allocator)};
