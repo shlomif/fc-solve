@@ -42,7 +42,7 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
     /* Copy the items to the new hash while not allocating them again */
     for (int i = 0; i < old_size; i++)
     {
-        fcs_hash_item_t *item = entries[i].first_item;
+        hash_item *item = entries[i].first_item;
         /* traverse the chain item by item */
         while (item != NULL)
         {
@@ -51,7 +51,7 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
 
             /* Store the next item in the linked list in a safe place,
                so we can retrieve it after the assignment */
-            fcs_hash_item_t *const next_item = item->next;
+            hash_item *const next_item = item->next;
             /* It is placed in front of the first element in the chain,
                so it should link to it */
             item->next = new_entries[place].first_item;
@@ -95,7 +95,7 @@ static inline void *fc_solve_hash_insert(
 #endif
     typeof(hash->entries[0]) *const list =
         (hash->entries + (hash_value & (hash->size_bitmask)));
-    fcs_hash_item_t **item_placeholder;
+    hash_item **item_placeholder;
     /* If first_item is non-existent */
     if (list->first_item == NULL)
     {
@@ -105,8 +105,8 @@ static inline void *fc_solve_hash_insert(
     else
     {
         /* Initialize item to the chain's first_item */
-        fcs_hash_item_t *item = list->first_item;
-        fcs_hash_item_t *last_item = NULL;
+        hash_item *item = list->first_item;
+        hash_item *last_item = NULL;
 
 // MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
 // states order. We need to negate it for the desired condition of equality.
@@ -169,9 +169,9 @@ static inline void *fc_solve_hash_insert(
 
 #define ITEM_ALLOC() fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item))
 #ifdef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    fcs_hash_item_t *const item = ITEM_ALLOC();
+    hash_item *const item = ITEM_ALLOC();
 #else
-    fcs_hash_item_t *item;
+    hash_item *item;
 
     if ((item = hash->list_of_vacant_items))
     {
