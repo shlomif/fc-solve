@@ -108,7 +108,7 @@ typedef struct
     size_t junk_move_to_stacks[MAX_NUM_STACKS];
     int after_junk_num_freestacks;
     size_t above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
-} sequences_analysis_t;
+} sequences_analysis;
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
@@ -356,7 +356,7 @@ DECLARE_MOVE_FUNCTION(
  */
 static inline void generic_populate_seq_points(
     const fcs_cards_column_t dest_col, const int dc,
-    sequences_analysis_t *const seqs, const int dest_cards_num)
+    sequences_analysis *const seqs, const int dest_cards_num)
 {
     size_t num_separate_false_seqs = seqs->num_separate_false_seqs;
     seqs->above_num_true_seqs[num_separate_false_seqs] = 1;
@@ -383,7 +383,7 @@ static inline void generic_populate_seq_points(
 }
 
 static inline void populate_seq_points(const fcs_cards_column_t dest_col,
-    const int dc, sequences_analysis_t *const seqs)
+    const int dc, sequences_analysis *const seqs)
 {
     seqs->num_separate_false_seqs = 0;
     generic_populate_seq_points(dest_col, dc, seqs, fcs_col_len(dest_col));
@@ -391,7 +391,7 @@ static inline void populate_seq_points(const fcs_cards_column_t dest_col,
 
 static inline bool generic_false_seq_index_loop(const int stacks_num,
     fcs_kv_state_t raw_state_raw, const int num_vacant_stacks,
-    const fcs_cards_column_t col, sequences_analysis_t *const seqs,
+    const fcs_cards_column_t col, sequences_analysis *const seqs,
     const int stack_idx, const int ds, const bool behavior_flag,
     const bool should_src_col, const fcs_card_t src_card,
     const size_t num_src_junk_true_seqs)
@@ -481,7 +481,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
 
 static inline bool false_seq_index_loop(const int stacks_num,
     fcs_kv_state_t raw_state_raw, const int num_vacant_stacks,
-    const fcs_cards_column_t col, sequences_analysis_t *const seqs,
+    const fcs_cards_column_t col, sequences_analysis *const seqs,
     const int stack_idx, const int ds, const bool behavior_flag)
 {
     return generic_false_seq_index_loop(stacks_num, raw_state_raw,
@@ -504,7 +504,7 @@ static inline bool false_seq_index_loop(const int stacks_num,
 static inline void move_sequences_analysis_seqs_loop(
     fcs_kv_state_t *const ptr_to_pass_new_state SFS__PASS_MOVE_STACK(
         fcs_move_stack_t *const moves),
-    const sequences_analysis_t *const seqs_ptr, int source_col_idx,
+    const sequences_analysis *const seqs_ptr, int source_col_idx,
     int source_col_cards_num IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
 #define pass_new_state (*ptr_to_pass_new_state)
@@ -583,7 +583,7 @@ DECLARE_MOVE_FUNCTION(
             LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)
                 /* This is a suitable parent - let's check if there's a sequence
                    above it. */
-                sequences_analysis_t seqs;
+                sequences_analysis seqs;
 
             if ((POPULATE_AND_CHECK_IF_FALSE_SEQ(
                      dest_col, dc, stack_idx, ds, FALSE) &&
@@ -650,7 +650,7 @@ DECLARE_MOVE_FUNCTION(
                 LOOK_FOR_TRUE_PARENT_AT_TOP__START(h_card)
                 /* This is a suitable parent - let's check if we
                  * have enough empty stacks to make the move feasible */
-                sequences_analysis_t seqs;
+                sequences_analysis seqs;
 
                 if ((POPULATE_AND_CHECK_IF_FALSE_SEQ(
                          col, end_of_src_seq - 1, stack_idx, ds, FALSE) &&
@@ -695,7 +695,7 @@ typedef struct
 } s_e_src_type;
 
 static inline s_e_src_type calc_start_end_src_stack(const int seq_index,
-    const sequences_analysis_t *const seqs, const int after_end_of_junk,
+    const sequences_analysis *const seqs, const int after_end_of_junk,
     const int cards_num, const int stack_idx, const int ds,
     const int dest_cards_num)
 {
@@ -780,7 +780,7 @@ DECLARE_MOVE_FUNCTION(
     {
         /* This is a suitable parent - let's check if there's a sequence above
          * it. */
-        sequences_analysis_t seqs;
+        sequences_analysis seqs;
 
         populate_seq_points(dest_col, dc, &seqs);
 
@@ -921,7 +921,7 @@ DECLARE_MOVE_FUNCTION(
 
         /* This is a suitable parent - let's check if there's a sequence above
          * it. */
-        sequences_analysis_t seqs;
+        sequences_analysis seqs;
 
         if (POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, dc, stack_idx, ds, TRUE))
         {
@@ -985,7 +985,7 @@ DECLARE_MOVE_FUNCTION(
                 ++end_of_child_seq;
             }
 
-            sequences_analysis_t seqs;
+            sequences_analysis seqs;
             populate_seq_points(col, end_of_child_seq, &seqs);
 
             /* Add the child to the seq_points */

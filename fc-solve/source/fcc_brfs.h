@@ -32,7 +32,7 @@ extern "C" {
 typedef struct fcs_FCC_start_point_struct
 {
     fcs_encoded_state_buffer_t enc_state;
-    fcs_fcc_moves_seq_t moves_seq;
+    fcs_fcc_moves_seq moves_seq;
     struct fcs_FCC_start_point_struct *next;
 } fcs_FCC_start_point;
 
@@ -53,7 +53,7 @@ static int fc_solve_compare_encoded_states(const void *const void_a,
 }
 
 static inline void fc_solve_fcc_release_moves_seq(
-    fcs_fcc_moves_seq_t *const moves_seq,
+    fcs_fcc_moves_seq *const moves_seq,
     fcs_fcc_moves_seq_allocator *const moves_list_allocator)
 {
     fcs_fcc_moves_list_item_t *iter = moves_seq->moves_list;
@@ -78,7 +78,7 @@ static inline void fc_solve_fcc_release_moves_seq(
 }
 
 static inline void fc_solve__internal__copy_moves(
-    fcs_fcc_moves_seq_t *const moves_seq, int *const ptr_to_pos_in_moves,
+    fcs_fcc_moves_seq *const moves_seq, int *const ptr_to_pos_in_moves,
     fcs_fcc_moves_list_item_t ***const ptr_to_end_moves_iter,
     const unsigned char extra_move,
     fcs_fcc_moves_seq_allocator *const moves_list_allocator)
@@ -144,7 +144,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     fcs_encoded_state_buffer_t start_state,
     /* The moves leading up to the state.
      * */
-    const fcs_fcc_moves_seq_t *const start_state_moves_seq,
+    const fcs_fcc_moves_seq *const start_state_moves_seq,
 #if 0
     /* [Output]: FCC start points.
      * */
@@ -160,8 +160,8 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
      */
     bool (*add_start_point)(
         const fcs_encoded_state_buffer_t *const enc_state,
-        const fcs_fcc_moves_seq_t *const start_state_moves_seq,
-        fcs_fcc_moves_seq_t *const after_start_moves_seq,
+        const fcs_fcc_moves_seq *const start_state_moves_seq,
+        fcs_fcc_moves_seq *const after_start_moves_seq,
         const unsigned char extra_move, void *const context),
     void *add_start_point_context,
 #endif
@@ -398,8 +398,8 @@ typedef struct
  */
 static bool fc_solve_add_start_point_in_mem(
     const fcs_encoded_state_buffer_t *const enc_state,
-    const fcs_fcc_moves_seq_t *const start_state_moves_seq,
-    fcs_fcc_moves_seq_t *const after_start_moves_seq,
+    const fcs_fcc_moves_seq *const start_state_moves_seq,
+    fcs_fcc_moves_seq *const after_start_moves_seq,
     const unsigned char extra_move, void *const void_context)
 {
     add_start_point_context *const context =

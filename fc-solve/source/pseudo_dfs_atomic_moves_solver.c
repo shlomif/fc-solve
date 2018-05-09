@@ -22,22 +22,22 @@
 
 typedef struct
 {
-    fcs_cache_key_t *curr_state;
-    fcs_cache_key_t *next_states;
+    fcs_cache_key *curr_state;
+    fcs_cache_key *next_states;
     int count_next_states, max_count_next_states, next_state_idx;
 } pseudo_dfs_stack_item;
 
 typedef Pvoid_t store_type;
 
 static inline void delete_state(store_type *const store,
-    fcs_pseudo_dfs_lru_cache *const cache, fcs_cache_key_t *const key)
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_cache_key *const key)
 {
     fcs_pdfs_cache_insert(cache, key);
     int rc_int;
     JHSD(rc_int, *store, key, sizeof(*key));
 }
 
-static inline void insert_state(store_type *store, fcs_cache_key_t *key)
+static inline void insert_state(store_type *store, fcs_cache_key *key)
 {
     Word_t *PValue;
     JHSI(PValue, *store, key, sizeof(*key));
@@ -45,7 +45,7 @@ static inline void insert_state(store_type *store, fcs_cache_key_t *key)
 }
 
 static inline bool lookup_state(store_type *const store,
-    fcs_pseudo_dfs_lru_cache *const cache, fcs_cache_key_t *const key)
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_cache_key *const key)
 {
     Word_t *PValue;
     JHSG(PValue, *store, key, sizeof(*key));
@@ -80,11 +80,11 @@ typedef struct
     fcs_derived_state_t *derived_list_recycle_bin;
     fcs_dbm_variant_type_t local_variant;
     fcs_delta_stater delta_stater;
-    fcs_cache_key_t init_key;
+    fcs_cache_key init_key;
 } dbm_solver_instance;
 
 static inline void instance__inspect_new_state(
-    dbm_solver_instance *const instance, fcs_cache_key_t *const state)
+    dbm_solver_instance *const instance, fcs_cache_key *const state)
 {
     if (++instance->count_num_processed % 1000000 == 0)
     {

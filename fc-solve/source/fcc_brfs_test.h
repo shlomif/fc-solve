@@ -38,7 +38,7 @@ typedef struct
 {
     int count;
     fcs_fcc_moves_list_item_t *moves_list;
-} fcs_fcc_moves_seq_t;
+} fcs_fcc_moves_seq;
 
 typedef struct
 {

@@ -14,12 +14,12 @@
 
 typedef struct
 {
-    args_man_t args_man;
+    fcs_args_man args_man;
     /* These fields are for internal use only. */
     char *last_arg, *last_arg_ptr, *last_arg_end;
 } args_man_wrapper;
 
-void fc_solve_args_man_free(args_man_t *const manager)
+void fc_solve_args_man_free(fcs_args_man *const manager)
 {
     const_SLOT(argc, manager);
     const_SLOT(argv, manager);
@@ -72,14 +72,14 @@ static inline bool is_whitespace(const char c)
     return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
 }
 
-static inline args_man_t fc_solve_args_man_alloc(void)
+static inline fcs_args_man fc_solve_args_man_alloc(void)
 {
-    const args_man_t ret = {
+    const fcs_args_man ret = {
         .argc = 0, .argv = SMALLOC(ret.argv, FC_SOLVE__ARGS_MAN_GROW_BY)};
     return ret;
 }
 
-args_man_t fc_solve_args_man_chop(const char *const string)
+fcs_args_man fc_solve_args_man_chop(const char *const string)
 {
     const char *s = string;
 

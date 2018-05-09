@@ -41,7 +41,7 @@ static inline void nullify_newline(char *const line)
 
 #define MAX_PATH_LEN 4000
 static inline bool read_preset(const char *const preset_name,
-    args_man_t *const args_man, char *const opened_files_dir,
+    fcs_args_man *const args_man, char *const opened_files_dir,
     const char *const user_preset_dir)
 {
     char home_dir_presetrc[MAX_PATH_LEN];
@@ -201,7 +201,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
         char **const error_string),
     const int file_nesting_count, freecell_solver_str_t opened_files_dir)
 {
-    args_man_t preset_args;
+    fcs_args_man preset_args;
     char dir[MAX_PATH_LEN];
 
     dir[0] = '\0';
@@ -691,7 +691,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 buffer[fread(buffer, 1, file_len, f)] = '\0';
                 fclose(f);
 
-                args_man_t args_man = fc_solve_args_man_chop(buffer);
+                fcs_args_man args_man = fc_solve_args_man_chop(buffer);
                 free(buffer);
 
                 if (num_file_args_to_skip < args_man.argc)

@@ -24,18 +24,18 @@ typedef struct
 {
     fcs_move_t move;
     bool to_empty_stack;
-} fcs_extended_move_t;
+} fcs_extended_move;
 
 typedef struct
 {
     size_t next_move_idx;
     size_t num_moves;
-    fcs_extended_move_t *moves;
+    fcs_extended_move *moves;
 } fcs_moves_processed;
 
 void fc_solve_moves_processed_gen(fcs_moves_processed *,
     fcs_state_keyval_pair_t *, int, const fcs_moves_sequence_t *);
-void fc_solve_moves_processed_render_move(fcs_extended_move_t, char *);
+void fc_solve_moves_processed_render_move(fcs_extended_move, char *);
 
 static inline int fc_solve_moves_processed_get_moves_left(
     const fcs_moves_processed *const moves)
@@ -44,7 +44,7 @@ static inline int fc_solve_moves_processed_get_moves_left(
 }
 
 static inline bool fc_solve_moves_processed_get_next_move(
-    fcs_moves_processed *const moves, fcs_extended_move_t *const move)
+    fcs_moves_processed *const moves, fcs_extended_move *const move)
 {
     if (moves->next_move_idx == moves->num_moves)
     {

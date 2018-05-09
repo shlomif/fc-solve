@@ -77,7 +77,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fc_solve_compact_allocator_init(&(moves_list_compact_alloc), &(meta_alloc));
     fcs_fcc_moves_seq_allocator moves_list_allocator = {
         .recycle_bin = NULL, .allocator = &(moves_list_compact_alloc)};
-    fcs_fcc_moves_seq_t start_state_moves_seq = {
+    fcs_fcc_moves_seq start_state_moves_seq = {
         .count = start_state_moves_count, .moves_list = NULL};
     {
         fcs_fcc_moves_list_item_t **moves_iter =
@@ -256,7 +256,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         }
     }
 
-    fcs_fcc_moves_seq_t init_moves_seq = {.moves_list = NULL, .count = 0};
+    fcs_fcc_moves_seq init_moves_seq = {.moves_list = NULL, .count = 0};
     add_start_point_context ctx = {
         .do_next_fcc_start_points_exist = do_next_fcc_start_points_exist,
         .next_start_points_list = &start_points_list,

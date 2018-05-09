@@ -205,7 +205,7 @@ static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
 static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
     fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
-    fcs_fcc_moves_seq_t *const moves_seq,
+    fcs_fcc_moves_seq *const moves_seq,
     fcs_fcc_moves_seq_allocator *const allocator)
 {
     fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];

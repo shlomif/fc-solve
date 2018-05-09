@@ -177,7 +177,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         if (fc_pro_moves.moves)
         {
 #ifdef FCS_WITH_MOVES
-            fcs_extended_move_t move;
+            fcs_extended_move move;
             int len = 0;
             while (
                 !fc_solve_moves_processed_get_next_move(&fc_pro_moves, &move))

@@ -76,7 +76,7 @@ static inline void cache_init(fcs_lru_cache_t *const cache,
 }
 
 static inline bool cache_does_key_exist(
-    fcs_lru_cache_t *const cache, fcs_cache_key_t *const key)
+    fcs_lru_cache_t *const cache, fcs_cache_key *const key)
 {
     const fcs_cache_key_info to_check = {.key = *key};
     const dict_key_t existing_key =
@@ -115,7 +115,7 @@ static inline bool cache_does_key_exist(
 }
 
 static inline fcs_cache_key_info *cache_insert(fcs_lru_cache_t *cache,
-    const fcs_cache_key_t *key, const fcs_fcc_move_t *moves_to_parent,
+    const fcs_cache_key *key, const fcs_fcc_move_t *moves_to_parent,
     const fcs_fcc_move_t final_move)
 {
     fcs_cache_key_info *cache_key;
