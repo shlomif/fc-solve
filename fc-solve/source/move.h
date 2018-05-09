@@ -358,12 +358,12 @@ typedef struct
         int i;
         char c[sizeof(void *) / sizeof(char)];
     } context;
-} fcs_derived_states_list_item_t;
+} fcs_derived_states_list_item;
 
 typedef struct
 {
     size_t num_states;
-    fcs_derived_states_list_item_t *states;
+    fcs_derived_states_list_item *states;
 } fcs_derived_states_list_t;
 
 extern void fc_solve_derived_states_list_add_state(

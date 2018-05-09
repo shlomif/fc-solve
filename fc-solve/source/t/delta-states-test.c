@@ -177,7 +177,7 @@ static int main_tests(void)
         fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));
 
         {
-            fc_solve_column_encoding_composite_t enc;
+            fcs_column_encoding_composite enc;
             fc_solve_get_column_encoding_composite(&delta, 0, &enc);
 
             /* TEST
@@ -199,7 +199,7 @@ static int main_tests(void)
         }
 #define SUIT_DS 1
         {
-            fc_solve_column_encoding_composite_t enc;
+            fcs_column_encoding_composite enc;
             fc_solve_get_column_encoding_composite(&delta, 1, &enc);
 
             /* TEST
@@ -222,7 +222,7 @@ static int main_tests(void)
         }
 
         {
-            fc_solve_column_encoding_composite_t enc;
+            fcs_column_encoding_composite enc;
             fcs_card_t card_9S;
 
             fc_solve_get_column_encoding_composite(&delta, 5, &enc);

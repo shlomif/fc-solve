@@ -25,7 +25,7 @@ extern "C" {
 static int fc_solve_compare_pre_cache_keys(
     const void *const void_a, const void *const void_b, void *const context)
 {
-#define GET_PARAM(p) ((((const fcs_pre_cache_key_val_pair_t *)(p))->key))
+#define GET_PARAM(p) ((((const pre_cache_key_val_pair *)(p))->key))
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
@@ -47,7 +47,7 @@ static inline void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
 static inline void pre_cache_insert(fcs_pre_cache_t *pre_cache,
     fcs_encoded_state_buffer_t *key, fcs_encoded_state_buffer_t *parent)
 {
-    fcs_pre_cache_key_val_pair_t *to_insert;
+    pre_cache_key_val_pair *to_insert;
 
     if (pre_cache->kv_recycle_bin)
     {
@@ -69,7 +69,7 @@ static inline void pre_cache_insert(fcs_pre_cache_t *pre_cache,
 static inline bool pre_cache_does_key_exist(
     fcs_pre_cache_t *pre_cache, fcs_encoded_state_buffer_t *key)
 {
-    fcs_pre_cache_key_val_pair_t to_check = {.key = *key};
+    pre_cache_key_val_pair to_check = {.key = *key};
     return (
         fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
 }
@@ -85,7 +85,7 @@ static inline void cache_populate_from_pre_cache(
     for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
          item = rb_t_next(&trav))
     {
-        cache_insert(cache, &(((fcs_pre_cache_key_val_pair_t *)(item))->key),
+        cache_insert(cache, &(((pre_cache_key_val_pair *)(item))->key),
             NULL, '\0');
     }
 #else
@@ -94,7 +94,7 @@ static inline void cache_populate_from_pre_cache(
          node = fc_solve_kaz_tree_next(kaz_tree, node))
     {
         cache_insert(
-            cache, &(((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->key));
+            cache, &(((pre_cache_key_val_pair *)(node->dict_key))->key));
     }
 #endif
 }
@@ -156,7 +156,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 static inline bool instance_check_multiple_keys(
     dbm_solver_thread *const thread,
     dbm_solver_instance *const instance,
-    fcs_dbm__cache_store__common_t *const cache_store GCC_UNUSED,
+    fcs_dbm__cache_store__common *const cache_store GCC_UNUSED,
     meta_allocator *const meta_alloc GCC_UNUSED,
     fcs_derived_state_t **lists, size_t batch_size
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -380,7 +380,7 @@ static inline void instance_increment(dbm_solver_instance *const instance)
 }
 
 static inline void fcs_dbm__cache_store__init(
-    fcs_dbm__cache_store__common_t *const cache_store,
+    fcs_dbm__cache_store__common *const cache_store,
     dbm_instance_common_elems *const common,
     meta_allocator *const meta_alloc GCC_UNUSED,
     const char *const dbm_store_path, const long pre_cache_max_count GCC_UNUSED,
@@ -479,7 +479,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
 }
 
 static inline fcs_dbm_record_t *cache_store__has_key(
-    fcs_dbm__cache_store__common_t *const cache_store,
+    fcs_dbm__cache_store__common *const cache_store,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -507,7 +507,7 @@ static inline fcs_dbm_record_t *cache_store__has_key(
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 static inline fcs_cache_key_info *cache_store__insert_key(
-    fcs_dbm__cache_store__common_t *const cache_store,
+    fcs_dbm__cache_store__common *const cache_store,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const fcs_fcc_move_t *const moves_to_parent,
     const unsigned char move GCC_UNUSED)

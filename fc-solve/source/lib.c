@@ -898,7 +898,7 @@ static inline void free_states_handle_soft_dfs_soft_thread(
         rating_with_index *const end_rand_index_ptr =
             rand_indexes + soft_dfs_info->derived_states_list.num_states;
 
-        fcs_derived_states_list_item_t *const states =
+        fcs_derived_states_list_item *const states =
             soft_dfs_info->derived_states_list.states;
         for (; rand_index_ptr < end_rand_index_ptr; rand_index_ptr++)
         {
@@ -1331,7 +1331,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
                 case FCS_WEIGHTING:
                     if (orig_idx < THE_MOVE_FUNCS_LIST.num)
                     {
-                        fcs_derived_states_list_item_t *const derived_states =
+                        fcs_derived_states_list_item *const derived_states =
                             derived_list.states;
                         for (size_t i = 0; i < num_states; i++)
                         {
@@ -1373,7 +1373,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
         }
 
         const_AUTO(num_states, derived_list.num_states);
-        fcs_derived_states_list_item_t *const derived_states =
+        fcs_derived_states_list_item *const derived_states =
             derived_list.states;
         var_AUTO(state_idx, the_soft_dfs_info->current_state_index - 1);
         const rating_with_index *rand_int_ptr =

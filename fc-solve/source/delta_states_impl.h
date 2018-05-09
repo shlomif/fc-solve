@@ -94,11 +94,11 @@ typedef struct
     fcs_uchar_t enc[4];
     fcs_uchar_t *end;
     int bit_in_char_idx;
-} fc_solve_column_encoding_composite_t;
+} fcs_column_encoding_composite;
 
 static inline void fc_solve_get_column_encoding_composite(
     fcs_delta_stater *const self, const int col_idx,
-    fc_solve_column_encoding_composite_t *const ret)
+    fcs_column_encoding_composite *const ret)
 {
     const fcs_state *const derived = self->derived_state;
     const_AUTO(col, fcs_state_get_col(*derived, col_idx));
@@ -182,7 +182,7 @@ static inline void fc_solve_get_freecells_encoding(
 }
 
 static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
-    int *const cols_indexes, fc_solve_column_encoding_composite_t *const cols)
+    int *const cols_indexes, fcs_column_encoding_composite *const cols)
 {
     size_t non_orig_idx = 0;
     ssize_t empty_col_idx = num_columns - 1;
@@ -228,7 +228,7 @@ static void fc_solve_delta_stater_encode_composite(
     fcs_delta_stater *const self, fc_solve_bit_writer_t *const bit_w)
 {
     int cols_indexes[MAX_NUM_STACKS];
-    fc_solve_column_encoding_composite_t cols[MAX_NUM_STACKS];
+    fcs_column_encoding_composite cols[MAX_NUM_STACKS];
     fcs_state *const derived = self->derived_state;
 
     const_SLOT(num_columns, self);
@@ -288,7 +288,7 @@ static void fc_solve_delta_stater_encode_composite(
     fc_solve_get_freecells_encoding(self, bit_w);
     for (size_t i = 0; i < num_columns; ++i)
     {
-        const fc_solve_column_encoding_composite_t *const col_enc =
+        const fcs_column_encoding_composite *const col_enc =
             (cols + cols_indexes[i]);
         const fcs_uchar_t *enc;
         const fcs_uchar_t *const end = col_enc->end;

@@ -31,13 +31,13 @@ typedef union fcs_pre_cache_key_val_pair_struct {
         fcs_encoded_state_buffer_t parent;
     };
     union fcs_pre_cache_key_val_pair_struct *next;
-} fcs_pre_cache_key_val_pair_t;
+} pre_cache_key_val_pair;
 
 typedef struct
 {
     dict_t *kaz_tree;
     compact_allocator kv_allocator;
-    fcs_pre_cache_key_val_pair_t *kv_recycle_bin;
+    pre_cache_key_val_pair *kv_recycle_bin;
     long count_elements;
     void *tree_recycle_bin;
 } fcs_pre_cache_t;
@@ -154,7 +154,7 @@ typedef struct
 
     /* The queue */
     long pre_cache_max_count;
-} fcs_dbm__cache_store__common_t;
+} fcs_dbm__cache_store__common;
 
 #ifdef __cplusplus
 }

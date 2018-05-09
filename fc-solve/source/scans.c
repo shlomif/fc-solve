@@ -523,8 +523,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         BUMP_NUM_CHECKED_STATES();
         TRACE0("Insert all states");
         /* Insert all the derived states into the PQ or Queue */
-        fcs_derived_states_list_item_t *derived_iter;
-        fcs_derived_states_list_item_t *derived_end;
+        fcs_derived_states_list_item *derived_iter, *derived_end;
         for (derived_end = (derived_iter = derived.states) + derived.num_states;
              derived_iter < derived_end; derived_iter++)
         {

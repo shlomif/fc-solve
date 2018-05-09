@@ -21,7 +21,7 @@
 
 typedef struct
 {
-    fcs_dbm__cache_store__common_t cache_store;
+    fcs_dbm__cache_store__common cache_store;
     meta_allocator queue_meta_alloc;
     fcs_offloading_queue_t queue;
 } fcs_dbm_collection_by_depth;
