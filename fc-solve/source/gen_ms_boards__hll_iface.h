@@ -20,8 +20,8 @@ extern "C" {
 
 typedef struct
 {
-    microsoft_rand_t deal_idx;
-    microsoft_rand_t seedx;
+    microsoft_rand deal_idx;
+    microsoft_rand seedx;
 } fc_solve__hll_ms_rand;
 
 extern fc_solve__hll_ms_rand *fc_solve__hll_ms_rand__get_singleton(void);
