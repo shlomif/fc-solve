@@ -30,15 +30,15 @@ typedef struct
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
     fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
-} fcs_derived_state_debug_t;
+} fcs_derived_state_debug;
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
-    fcs_dbm_variant_type_t, const char *, int *, fcs_derived_state_debug_t **,
+    fcs_dbm_variant_type_t, const char *, int *, fcs_derived_state_debug **,
     bool);
 
 DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
     const int num_derived_states,
-    fcs_derived_state_debug_t *const derived_states);
+    fcs_derived_state_debug *const derived_states);
 
 /*
  * The char * returned is malloc()ed and should be free()ed.

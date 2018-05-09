@@ -381,7 +381,7 @@ static inline void instance_increment(dbm_solver_instance *const instance)
 
 static inline void fcs_dbm__cache_store__init(
     fcs_dbm__cache_store__common_t *const cache_store,
-    fcs_dbm_instance_common_elems_t *const common,
+    dbm_instance_common_elems *const common,
     meta_allocator *const meta_alloc GCC_UNUSED,
     const char *const dbm_store_path, const long pre_cache_max_count GCC_UNUSED,
     const long caches_delta GCC_UNUSED)

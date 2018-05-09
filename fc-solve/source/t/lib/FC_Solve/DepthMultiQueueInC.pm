@@ -11,7 +11,7 @@ use FC_Solve::InlineWrap (
 
 typedef struct
 {
-    fcs_depth_multi_queue_t q;
+    fcs_depth_multi_queue q;
 } QueueInC;
 
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_depth, int first_item_i) {
@@ -32,7 +32,7 @@ static inline QueueInC * deref(SV * const obj) {
     return (QueueInC*)SvIV(SvRV(obj));
 }
 
-static inline fcs_depth_multi_queue_t * q(SV * const obj) {
+static inline fcs_depth_multi_queue * q(SV * const obj) {
     return &(deref(obj)->q);
 }
 

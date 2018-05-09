@@ -28,7 +28,7 @@ typedef struct
 } FccStartPoint;
 
 AV * find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
-    fcs_FCC_start_point_result_t * fcc_start_points;
+    fcs_FCC_start_point_result * fcc_start_points;
     long num_new_positions;
     STRLEN count_start_moves = SvLEN(moves_prefix);
 

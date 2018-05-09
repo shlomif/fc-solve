@@ -53,7 +53,7 @@ extern "C" {
 
 typedef char fcs_card_t;
 typedef fcs_card_t *fcs_cards_column_t;
-typedef const fcs_card_t *fcs_const_cards_column_t;
+typedef const fcs_card_t *fcs_const_cards_column;
 typedef fcs_card_t fcs_state_foundation;
 
 #ifdef COMPACT_STATES
@@ -191,7 +191,7 @@ static inline fcs_card_t fcs_make_card(const int rank, const int suit)
 #define fcs_card_suit(card) ((card)&0x03)
 
 static inline fcs_card_t fcs_col_get_rank(
-    const fcs_const_cards_column_t col, const int card_idx)
+    const fcs_const_cards_column col, const int card_idx)
 {
     return fcs_card_rank(fcs_col_get_card(col, card_idx));
 }
@@ -203,7 +203,7 @@ static inline bool fcs_card_is_king(const fcs_card_t card)
 }
 
 static inline bool fcs_col_is_king(
-    const fcs_const_cards_column_t col, const int card_idx)
+    const fcs_const_cards_column col, const int card_idx)
 {
     return fcs_card_is_king(fcs_col_get_card(col, card_idx));
 }

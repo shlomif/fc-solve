@@ -63,7 +63,7 @@ static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static const pthread_cond_t initial_cond_constant = PTHREAD_COND_INITIALIZER;
 
 typedef pthread_mutex_t fcs_lock_t;
-typedef pthread_cond_t fcs_condvar_t;
+typedef pthread_cond_t fcs_condvar;
 static inline void fcs_lock_lock(fcs_lock_t *const lock)
 {
     pthread_mutex_lock(lock);
@@ -80,29 +80,29 @@ static inline void fcs_lock_destroy(fcs_lock_t *const lock)
 {
     pthread_mutex_destroy(lock);
 }
-static inline void fcs_condvar_init(fcs_condvar_t *const cond)
+static inline void fcs_condvar_init(fcs_condvar *const cond)
 {
     *cond = initial_cond_constant;
     pthread_cond_init(cond, NULL);
 }
 
-static inline void fcs_condvar_destroy(fcs_condvar_t *const cond)
+static inline void fcs_condvar_destroy(fcs_condvar *const cond)
 {
     pthread_cond_destroy(cond);
 }
 
 static inline void fcs_condvar__wait_on(
-    fcs_condvar_t *const cond, fcs_lock_t *const lock)
+    fcs_condvar *const cond, fcs_lock_t *const lock)
 {
     pthread_cond_wait(cond, lock);
 }
 
-static inline void fcs_condvar_signal(fcs_condvar_t *const cond)
+static inline void fcs_condvar_signal(fcs_condvar *const cond)
 {
     pthread_cond_signal(cond);
 }
 
-static inline void fcs_condvar_broadcast(fcs_condvar_t *const cond)
+static inline void fcs_condvar_broadcast(fcs_condvar *const cond)
 {
     pthread_cond_broadcast(cond);
 }

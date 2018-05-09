@@ -31,10 +31,10 @@ typedef size_t batch_size_t;
 typedef struct
 {
     fcs_dbm_collection_by_depth colls_by_depth[MAX_FCC_DEPTH];
-    fcs_condvar_t monitor;
+    fcs_condvar monitor;
     const char *offload_dir_path;
     int curr_depth;
-    fcs_dbm_instance_common_elems_t common;
+    dbm_instance_common_elems common;
     batch_size_t max_batch_size;
 } dbm_solver_instance;
 

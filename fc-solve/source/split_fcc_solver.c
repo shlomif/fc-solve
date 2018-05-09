@@ -25,7 +25,7 @@ typedef struct
 {
     fcs_dbm__cache_store__common_t cache_store;
     meta_allocator queue_meta_alloc;
-    fcs_depth_multi_queue_t depth_queue;
+    fcs_depth_multi_queue depth_queue;
 } fcs_dbm_collection_by_depth;
 
 typedef struct FccEntryPointList FccEntryPointList;
@@ -68,7 +68,7 @@ typedef struct
     fcs_lock_t global_lock;
     const char *offload_dir_path;
     int curr_depth;
-    fcs_dbm_instance_common_elems_t common;
+    dbm_instance_common_elems common;
     meta_allocator fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
     compact_allocator fcc_entry_points_allocator;

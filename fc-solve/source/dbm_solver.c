@@ -25,7 +25,7 @@ typedef struct
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     const char *offload_dir_path;
 #endif
-    fcs_dbm_instance_common_elems_t common;
+    dbm_instance_common_elems common;
 } dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH() 0

@@ -262,7 +262,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 }
 
 static inline int get_seq_h(
-    const fcs_const_cards_column_t col, size_t *const num_true_seqs_out_ptr)
+    const fcs_const_cards_column col, size_t *const num_true_seqs_out_ptr)
 {
     const int cards_num = fcs_col_len(col);
 
@@ -428,7 +428,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
         for (clear_junk_dest_stack = 0; clear_junk_dest_stack < stacks_num;
              ++clear_junk_dest_stack)
         {
-            const fcs_const_cards_column_t clear_junk_dest_col =
+            const fcs_const_cards_column clear_junk_dest_col =
                 fcs_state_get_col(state, clear_junk_dest_stack);
             const int clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
 

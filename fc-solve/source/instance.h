@@ -832,7 +832,7 @@ static inline int update_col_cards_under_sequences(
 #ifndef FCS_FREECELL_ONLY
     const int sequences_are_built_by,
 #endif
-    const fcs_const_cards_column_t col,
+    const fcs_const_cards_column col,
     int d /* One less than cards_num of col. */
 )
 {

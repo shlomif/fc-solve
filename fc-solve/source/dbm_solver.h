@@ -100,10 +100,10 @@ typedef struct
     fcs_encoded_state_buffer_t queue_solution;
 #endif
     void *tree_recycle_bin;
-} fcs_dbm_instance_common_elems_t;
+} dbm_instance_common_elems;
 
 static inline void fcs_dbm__found_solution(
-    fcs_dbm_instance_common_elems_t *const common,
+    dbm_instance_common_elems *const common,
     fcs_dbm_record_t *const token, fcs_dbm_queue_item_t *const item GCC_UNUSED)
 {
     common->should_terminate = SOLUTION_FOUND_TERMINATE;
@@ -116,7 +116,7 @@ static inline void fcs_dbm__found_solution(
 }
 
 static inline void fcs_dbm__common_init(
-    fcs_dbm_instance_common_elems_t *const common, const long iters_delta_limit,
+    dbm_instance_common_elems *const common, const long iters_delta_limit,
     const fcs_dbm_variant_type_t local_variant, FILE *const out_fh)
 {
     common->variant = local_variant;

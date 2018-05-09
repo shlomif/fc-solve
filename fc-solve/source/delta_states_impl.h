@@ -21,7 +21,7 @@
 #endif
 
 static int fc_solve_get_column_orig_num_cards(
-    fcs_delta_stater *const self, const fcs_const_cards_column_t col)
+    fcs_delta_stater *const self, const fcs_const_cards_column col)
 {
     FCS_ON_NOT_FC_ONLY(const_SLOT(sequences_are_built_by, self));
     for (int num_cards = fcs_col_len(col); num_cards >= 2; --num_cards)
