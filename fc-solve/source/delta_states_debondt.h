@@ -33,7 +33,7 @@ typedef struct
     int bits_per_orig_cards_in_column;
     int card_states[CARD_ARRAY_LEN];
     int8_t bakers_dozen_topmost_cards_lookup[((1 << 6) / 8) + 1];
-    fcs_var_base_reader_t r;
+    fcs_var_base_reader r;
     fcs_var_base_writer_t w;
 } fc_solve_debondt_delta_stater_t;
 

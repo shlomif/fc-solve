@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
     {
         fc_solve_err("Could not open file '%s' for input.\n", filename);
     }
-    const fcs_user_state_str_t user_state = read_state(fh);
+    const fcs_user_state_str user_state = read_state(fh);
     fcs_state_keyval_pair_t init_state_pair;
     fc_solve_initial_user_state_to_c(
         user_state.s, &init_state_pair, FREECELLS_NUM, STACKS_NUM, 1, NULL);

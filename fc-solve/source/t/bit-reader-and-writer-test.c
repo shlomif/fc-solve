@@ -41,7 +41,7 @@ static int main_tests(void)
         ok (buffer[1] == 3, "Extra byte write works.");
 
         {
-            fc_solve_bit_reader_t reader;
+            fcs_bit_reader reader;
 
             fc_solve_bit_reader_init(&reader, buffer);
 

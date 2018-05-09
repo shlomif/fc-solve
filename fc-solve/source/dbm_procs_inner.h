@@ -151,7 +151,7 @@ static inline void read_state_from_file(
     {
         fc_solve_err("Could not open file '%s' for input.\n", filename);
     }
-    const fcs_user_state_str_t user_state = read_state(fh);
+    const fcs_user_state_str user_state = read_state(fh);
     fc_solve_initial_user_state_to_c(user_state.s, init_state, FREECELLS_NUM,
         STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK

@@ -302,7 +302,7 @@ static void fc_solve_delta_stater_encode_composite(
 
 /* ret must be an empty state. */
 static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
-    fc_solve_bit_reader_t *const bit_r, fcs_state *const ret)
+    fcs_bit_reader *const bit_r, fcs_state *const ret)
 {
 #define PROCESS_CARD(card)                                                     \
     if (fcs_card_rank(card) < foundations[fcs_card_suit(card)])                \
@@ -391,7 +391,7 @@ static inline void fc_solve_delta_stater_decode_into_state_proto(
     const fcs_uchar_t *const enc_state,
     fcs_state_keyval_pair_t *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
-    fc_solve_bit_reader_t bit_r;
+    fcs_bit_reader bit_r;
     fc_solve_bit_reader_init(&bit_r, enc_state + 1);
     fc_solve_state_init(ret, STACKS_NUM, indirect_stacks_buffer);
     fc_solve_delta_stater_decode(delta_stater, &bit_r, &(ret->s));

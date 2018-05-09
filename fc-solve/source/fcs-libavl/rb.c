@@ -130,7 +130,7 @@ rb_find (const struct rb_table *tree, const void *item)
    If a duplicate item is found in the tree,
    returns a pointer to the duplicate without inserting |item|.
    Returns |NULL| in case of memory allocation failure. */
-avl_key_t *
+avl_key_type *
 rb_probe (struct rb_table *tree, void *item)
 {
   struct rb_node *pa[RB_MAX_HEIGHT]; /* Nodes on stack. */
@@ -263,7 +263,7 @@ rb_probe (struct rb_table *tree, void *item)
 void *
 rb_insert (struct rb_table *table, void *item)
 {
-  avl_key_t*p = rb_probe (table, item);
+  avl_key_type*p = rb_probe (table, item);
   return p == NULL || AVL_KEY_EQUAL_TO_PTR(*p, item) ? NULL : AVL_KEY_PTR_PTR(p);
 }
 
@@ -274,7 +274,7 @@ rb_insert (struct rb_table *table, void *item)
 void *
 rb_replace (struct rb_table *table, void *item)
 {
-  avl_key_t *p = rb_probe (table, item);
+  avl_key_type *p = rb_probe (table, item);
   if (p == NULL || AVL_KEY_EQUAL_TO_PTR(p, item))
     return NULL;
   else
@@ -633,7 +633,7 @@ rb_t_find (struct rb_traverser *trav, struct rb_table *tree, void *item)
 void *
 rb_t_insert (struct rb_traverser *trav, struct rb_table *tree, void *item)
 {
-  avl_key_t *p;
+  avl_key_type *p;
 
   assert (trav != NULL && tree != NULL && item != NULL);
 

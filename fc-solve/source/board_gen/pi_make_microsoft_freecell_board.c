@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     }
     const long long gamenumber = ((arg < argc) ? atoll(argv[arg++]) : 1);
 
-    fcs_state_string_t s;
+    fcs_state_string s;
     get_board_l(gamenumber, s);
 
     if (print_ts)

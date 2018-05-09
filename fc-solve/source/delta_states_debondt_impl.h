@@ -350,7 +350,7 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
 static void fc_solve_debondt_delta_stater_decode(
     fc_solve_debondt_delta_stater_t *const self,
     const fcs_dbm_variant_type_t local_variant,
-    fcs_var_base_reader_t *const reader, fcs_state *const ret)
+    fcs_var_base_reader *const reader, fcs_state *const ret)
 {
     fcs_card_t new_top_most_cards[MAX_NUM_STACKS];
 

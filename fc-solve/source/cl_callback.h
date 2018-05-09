@@ -315,7 +315,7 @@ int main(const int argc, char **const argv)
         return -1;
     }
 
-    const fcs_user_state_str_t user_state = read_state(f);
+    const fcs_user_state_str user_state = read_state(f);
 /* Win32 Does not have those signals */
 #ifndef WIN32
     signal(SIGUSR1, command_signal_handler);

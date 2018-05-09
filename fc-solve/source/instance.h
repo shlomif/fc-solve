@@ -345,7 +345,7 @@ typedef struct
 {
     int idx;
     pq_rating rating;
-} fcs_rating_with_index_t;
+} rating_with_index;
 
 typedef struct
 {
@@ -355,7 +355,7 @@ typedef struct
     size_t current_state_index;
     size_t move_func_idx;
     size_t derived_states_random_indexes_max_size;
-    fcs_rating_with_index_t *derived_states_random_indexes;
+    rating_with_index *derived_states_random_indexes;
     fcs__positions_by_rank positions_by_rank;
     fcs_game_limit_t num_vacant_stacks;
     fcs_game_limit_t num_vacant_freecells;

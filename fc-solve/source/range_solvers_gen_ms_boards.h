@@ -92,7 +92,7 @@ static inline void get_board(long deal_idx, char *ret)
 }
 #endif
 
-typedef char fcs_state_string_t[52 * 3 + 8 + 1];
+typedef char fcs_state_string[52 * 3 + 8 + 1];
 
 #ifdef __cplusplus
 }

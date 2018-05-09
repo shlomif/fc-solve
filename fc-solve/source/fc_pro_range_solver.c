@@ -19,7 +19,7 @@
 #include "try_param.h"
 
 static inline void fc_pro_get_board(const long long deal_idx,
-    fcs_state_string_t state_string,
+    fcs_state_string state_string,
     fcs_state_keyval_pair_t *const pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     get_board_l(deal_idx, state_string);
@@ -37,7 +37,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     long long total_num_iters = 0;
     bool was_total_iterations_limit_per_board_set = FALSE;
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-    binary_output_t binary_output = INIT_BINARY_OUTPUT;
+    fcs_binary_output binary_output = INIT_BINARY_OUTPUT;
 
     for (; arg < argc; arg++)
     {

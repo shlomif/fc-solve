@@ -891,11 +891,11 @@ static inline void free_states_handle_soft_dfs_soft_thread(
          * because that is the next state to be checked - it is referenced
          * by current_state_index++ instead of ++current_state_index .
          * */
-        fcs_rating_with_index_t *dest_rand_index_ptr =
+        rating_with_index *dest_rand_index_ptr =
             rand_indexes + soft_dfs_info->current_state_index;
-        const fcs_rating_with_index_t *rand_index_ptr = dest_rand_index_ptr;
+        const rating_with_index *rand_index_ptr = dest_rand_index_ptr;
 
-        fcs_rating_with_index_t *const end_rand_index_ptr =
+        rating_with_index *const end_rand_index_ptr =
             rand_indexes + soft_dfs_info->derived_states_list.num_states;
 
         fcs_derived_states_list_item_t *const states =
@@ -1293,7 +1293,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
                     the_soft_dfs_info->derived_states_random_indexes,
                     the_soft_dfs_info->derived_states_random_indexes_max_size);
             }
-            fcs_rating_with_index_t *const rand_array =
+            rating_with_index *const rand_array =
                 the_soft_dfs_info->derived_states_random_indexes;
 
             for (size_t i = 0; i < num_states; i++)
@@ -1376,7 +1376,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
         fcs_derived_states_list_item_t *const derived_states =
             derived_list.states;
         var_AUTO(state_idx, the_soft_dfs_info->current_state_index - 1);
-        const fcs_rating_with_index_t *rand_int_ptr =
+        const rating_with_index *rand_int_ptr =
             the_soft_dfs_info->derived_states_random_indexes + state_idx;
 
         while (++state_idx < num_states)

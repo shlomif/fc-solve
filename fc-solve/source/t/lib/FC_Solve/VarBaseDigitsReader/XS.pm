@@ -9,8 +9,8 @@ use FC_Solve::InlineWrap (
 
 SV* _proto_new(SV * data_proto) {
 
-        fcs_var_base_reader_t * s;
-        New(42, s, 1, fcs_var_base_reader_t);
+        fcs_var_base_reader * s;
+        New(42, s, 1, fcs_var_base_reader);
 
         STRLEN data_len;
         unsigned char * const data = (unsigned char *)sv_2pvbyte(data_proto, &data_len);
@@ -24,8 +24,8 @@ SV* _proto_new(SV * data_proto) {
         return obj_ref;
 }
 
-static inline fcs_var_base_reader_t * _var_base_deref(SV * const obj) {
-    return ((fcs_var_base_reader_t *)SvIV(SvRV(obj)));
+static inline fcs_var_base_reader * _var_base_deref(SV * const obj) {
+    return ((fcs_var_base_reader *)SvIV(SvRV(obj)));
 }
 
 int _var_base_reader__read(SV* obj, int base) {
@@ -33,7 +33,7 @@ int _var_base_reader__read(SV* obj, int base) {
 }
 
 void DESTROY(SV* obj) {
-    fcs_var_base_reader_t * const s = _var_base_deref(obj);
+    fcs_var_base_reader * const s = _var_base_deref(obj);
     fc_solve_var_base_reader_release(s);
     Safefree(s);
 }

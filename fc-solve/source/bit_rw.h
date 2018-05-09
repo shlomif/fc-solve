@@ -49,17 +49,17 @@ typedef struct
     const fcs_uchar_t *current;
     int bit_in_char_idx;
     const fcs_uchar_t *start;
-} fc_solve_bit_reader_t;
+} fcs_bit_reader;
 
 static inline void fc_solve_bit_reader_init(
-    fc_solve_bit_reader_t *const reader, const fcs_uchar_t *const start)
+    fcs_bit_reader *const reader, const fcs_uchar_t *const start)
 {
     reader->start = reader->current = start;
     reader->bit_in_char_idx = 0;
 }
 
 static inline fcs_bit_data fc_solve_bit_reader_read(
-    fc_solve_bit_reader_t *reader, int len)
+    fcs_bit_reader *reader, int len)
 {
     fcs_bit_data ret = 0;
     for (int idx = 0; idx < len; ++idx)

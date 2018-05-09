@@ -58,14 +58,14 @@ void rb_free (struct libavl_allocator *, void *);
 #endif
 
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
-typedef fcs_dbm_record_t avl_key_t;
+typedef fcs_dbm_record_t avl_key_type;
 #define AVL_KEY_PTR_PTR(p) (p)
 #define NODE_DATA_PTR(p) (&((p)->rb_data))
 #define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->rb_data) = *(fcs_dbm_record_t *)ptr)
 #define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(fcs_dbm_record_t *)ptr)
 #define AVL_KEY_EQUAL_TO_PTR(key, ptr) (!memcmp(&(key), (ptr), sizeof(key)))
 #else
-typedef void * avl_key_t;
+typedef void * avl_key_type;
 #define AVL_KEY_PTR_PTR(p) (*(p))
 #define NODE_DATA_PTR(p) ((p)->rb_data)
 #define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->rb_data) = ptr)
@@ -82,7 +82,7 @@ typedef void * avl_key_t;
 /* An RB tree node. */
 struct rb_node
   {
-    avl_key_t rb_data;                /* Pointer to data. */
+    avl_key_type rb_data;                /* Pointer to data. */
     uintptr_t rb_mylink[2];  /* Subtrees. */
 #ifdef WITH_AVL_BALANCE_FIELD
     unsigned char rb_color;       /* Balance factor. */
@@ -124,7 +124,7 @@ struct rb_table *rb_create (rb_comparison_func *, void *,
 struct rb_table *rb_copy (const struct rb_table *, rb_copy_func *,
                             rb_item_func *);
 void rb_destroy (struct rb_table *, rb_item_func *);
-avl_key_t *rb_probe (struct rb_table *, void *);
+avl_key_type *rb_probe (struct rb_table *, void *);
 void *rb_insert (struct rb_table *, void *);
 void *rb_replace (struct rb_table *, void *);
 void *rb_delete (struct rb_table *, const void *);

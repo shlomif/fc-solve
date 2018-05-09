@@ -31,7 +31,7 @@ help_err(const char *const msg, ...)
 static inline bool range_solvers__solve(void *const instance,
     const long long board_num, long long *const total_num_iters_temp)
 {
-    fcs_state_string_t state_string;
+    fcs_state_string state_string;
     get_board(board_num, state_string);
 
     switch (freecell_solver_user_solve_board(instance, state_string))
