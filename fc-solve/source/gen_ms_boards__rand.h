@@ -18,37 +18,37 @@ extern "C" {
 
 #include "rinutils.h"
 
-typedef uint32_t microsoft_rand_uint_t;
+typedef uint32_t microsoft_rand_uint;
 
 typedef long long microsoft_rand_t;
 
 static inline microsoft_rand_t microsoft_rand__calc_init_seedx(
     const microsoft_rand_t deal_idx)
 {
-    return (microsoft_rand_uint_t)(
+    return (microsoft_rand_uint)(
         (deal_idx < 0x100000000LL) ? deal_idx : (deal_idx - 0x100000000LL));
 }
 
-static inline microsoft_rand_uint_t microsoft_rand_rand(
+static inline microsoft_rand_uint microsoft_rand_rand(
     microsoft_rand_t *const my_rand)
 {
     *my_rand = ((*my_rand) * 214013 + 2531011);
     return ((*my_rand) >> 16) & 0x7fff;
 }
 
-static inline microsoft_rand_uint_t microsoft_rand_randp(
+static inline microsoft_rand_uint microsoft_rand_randp(
     microsoft_rand_t *const my_rand)
 {
     *my_rand = ((*my_rand) * 214013 + 2531011);
     return ((*my_rand) >> 16) & 0xffff;
 }
 
-static inline microsoft_rand_uint_t microsoft_rand__game_num_rand(
+static inline microsoft_rand_uint microsoft_rand__game_num_rand(
     microsoft_rand_t *const seedx_ptr, const long long gnGameNumber)
 {
     if (gnGameNumber < 0x100000000LL)
     {
-        const microsoft_rand_uint_t ret = microsoft_rand_rand(seedx_ptr);
+        const microsoft_rand_uint ret = microsoft_rand_rand(seedx_ptr);
         return ((gnGameNumber < 0x80000000) ? ret : (ret | 0x8000));
     }
     else

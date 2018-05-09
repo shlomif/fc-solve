@@ -1047,7 +1047,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
     DECLARE_STATE();
     PTR_STATE = the_soft_dfs_info->state;
     FCS_ASSIGN_STATE_KEY();
-    fcs_derived_states_list_t derived_list =
+    fcs_derived_states_list derived_list =
         the_soft_dfs_info->derived_states_list;
     fcs_rand_gen *const rand_gen = &(DFS_VAR(soft_thread, rand_gen));
     calculate_real_depth(calc_real_depth, PTR_STATE);

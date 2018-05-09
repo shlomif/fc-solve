@@ -364,10 +364,10 @@ typedef struct
 {
     size_t num_states;
     fcs_derived_states_list_item *states;
-} fcs_derived_states_list_t;
+} fcs_derived_states_list;
 
 extern void fc_solve_derived_states_list_add_state(
-    fcs_derived_states_list_t *, fcs_collectible_state_t *, int);
+    fcs_derived_states_list *, fcs_collectible_state_t *, int);
 
 #ifdef __cplusplus
 }

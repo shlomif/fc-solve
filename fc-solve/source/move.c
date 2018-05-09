@@ -99,7 +99,7 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
 
 #define DERIVED_STATES_LIST_GROW_BY 16
 void fc_solve_derived_states_list_add_state(
-    fcs_derived_states_list_t *const list, fcs_collectible_state_t *const state,
+    fcs_derived_states_list *const list, fcs_collectible_state_t *const state,
     const int context)
 {
     if ((!((list->num_states + (list->states != NULL)) &

@@ -127,7 +127,7 @@ struct fc_solve_instance_struct;
 
 typedef void (*fc_solve_solve_for_state_move_func)(
     struct fc_solve_soft_thread_struct *, fcs_kv_state_t,
-    fcs_derived_states_list_t *);
+    fcs_derived_states_list *);
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define HT_FIELD(ht, field) (ht)->hard_thread.field
@@ -350,7 +350,7 @@ typedef struct
 typedef struct
 {
     fcs_collectible_state_t *state;
-    fcs_derived_states_list_t derived_states_list;
+    fcs_derived_states_list derived_states_list;
     size_t move_func_list_idx;
     size_t current_state_index;
     size_t move_func_idx;
@@ -946,7 +946,7 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
 #define DECLARE_MOVE_FUNCTION(name)                                            \
     extern void name(fc_solve_soft_thread_t *const soft_thread,                \
         fcs_kv_state_t raw_state_raw,                                          \
-        fcs_derived_states_list_t *const derived_states_list)
+        fcs_derived_states_list *const derived_states_list)
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 static inline bool fcs_get_calc_real_depth(

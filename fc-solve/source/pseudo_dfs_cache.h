@@ -44,10 +44,9 @@ typedef struct
     fcs_pdfs_cache_key_info *lowest_pri, *highest_pri;
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
     fcs_pdfs_cache_key_info *recycle_bin;
-} fcs_pseudo_dfs_lru_cache_t;
+} fcs_pseudo_dfs_lru_cache;
 
-static inline void fcs_pdfs_cache_destroy(
-    fcs_pseudo_dfs_lru_cache_t *const cache)
+static inline void fcs_pdfs_cache_destroy(fcs_pseudo_dfs_lru_cache *const cache)
 {
     Word_t rc_word;
     JHSFA(rc_word, cache->states_values_to_keys_map);
@@ -55,7 +54,7 @@ static inline void fcs_pdfs_cache_destroy(
         &(cache->states_values_to_keys_allocator));
 }
 
-static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache_t *const cache,
+static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache *const cache,
     const long max_num_elements_in_cache,
     meta_allocator *const meta_alloc)
 {
@@ -71,7 +70,7 @@ static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache_t *const cache,
 }
 
 static inline bool fcs_pdfs_cache_does_key_exist(
-    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key *const key)
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_pdfs_key *const key)
 {
     fcs_pdfs_cache_key_info *existing;
 
@@ -117,7 +116,7 @@ static inline bool fcs_pdfs_cache_does_key_exist(
 }
 
 static inline fcs_pdfs_cache_key_info *fcs_pdfs_cache_insert(
-    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key *const key)
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_pdfs_key *const key)
 {
     fcs_pdfs_cache_key_info *cache_key;
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)

@@ -405,9 +405,9 @@ typedef struct
     const char *offload_dir_path, *dbm_store_path;
     long pre_cache_max_count, iters_delta_limit, caches_delta;
     size_t num_threads;
-} fcs_dbm_common_input_t;
+} fcs_dbm_common_input;
 
-static const fcs_dbm_common_input_t fcs_dbm_common_input_init = {
+static const fcs_dbm_common_input fcs_dbm_common_input_init = {
     .local_variant = FCS_DBM_VARIANT_2FC_FREECELL,
     .offload_dir_path = NULL,
     .dbm_store_path = "./fc_solve_dbm_store",
@@ -417,7 +417,7 @@ static const fcs_dbm_common_input_t fcs_dbm_common_input_init = {
     .num_threads = 2};
 
 static inline bool fcs_dbm__extract_common_from_argv(const int argc,
-    char **const argv, int *const arg, fcs_dbm_common_input_t *const inp)
+    char **const argv, int *const arg, fcs_dbm_common_input *const inp)
 {
     const char *param;
     if ((param = TRY_PARAM("--pre-cache-max-count")))

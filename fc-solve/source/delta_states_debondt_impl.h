@@ -165,7 +165,7 @@ static inline int get_top_rank_for_iter(
 static void fc_solve_debondt_delta_stater_encode_composite(
     fc_solve_debondt_delta_stater_t *const self,
     const fcs_dbm_variant_type_t local_variant,
-    fcs_var_base_writer_t *const writer)
+    fcs_var_base_writer *const writer)
 {
     fcs_state *const derived = self->derived_state;
 

@@ -32,7 +32,7 @@ typedef struct
 
 #include "dbm_procs.h"
 static inline void instance_init(dbm_solver_instance *const instance,
-    const fcs_dbm_common_input_t *const inp, const long iters_delta_limit,
+    const fcs_dbm_common_input *const inp, const long iters_delta_limit,
     FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
@@ -543,7 +543,7 @@ int main(int argc, char *argv[])
     bool skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     const char *param;
-    fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
+    fcs_dbm_common_input inp = fcs_dbm_common_input_init;
 
     int arg;
     for (arg = 1; arg < argc; arg++)

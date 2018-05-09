@@ -25,12 +25,12 @@ typedef struct
     fcs_cache_key_t *curr_state;
     fcs_cache_key_t *next_states;
     int count_next_states, max_count_next_states, next_state_idx;
-} pseudo_dfs_stack_item_t;
+} pseudo_dfs_stack_item;
 
 typedef Pvoid_t store_type;
 
 static inline void delete_state(store_type *const store,
-    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_cache_key_t *const key)
 {
     fcs_pdfs_cache_insert(cache, key);
     int rc_int;
@@ -45,7 +45,7 @@ static inline void insert_state(store_type *store, fcs_cache_key_t *key)
 }
 
 static inline bool lookup_state(store_type *const store,
-    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_cache_key_t *const key)
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_cache_key_t *const key)
 {
     Word_t *PValue;
     JHSG(PValue, *store, key, sizeof(*key));
@@ -66,12 +66,12 @@ static inline bool lookup_state(store_type *const store,
 typedef struct
 {
     store_type store;
-    fcs_pseudo_dfs_lru_cache_t cache;
+    fcs_pseudo_dfs_lru_cache cache;
 
     long pre_cache_max_count;
     /* The stack */
     ssize_t stack_depth, max_stack_depth;
-    pseudo_dfs_stack_item_t *stack;
+    pseudo_dfs_stack_item *stack;
     long count_num_processed, max_count_num_processed;
     bool solution_was_found;
     enum TERMINATE_REASON should_terminate;
@@ -107,10 +107,10 @@ static inline void instance__inspect_new_state(
             SREALLOC(instance->stack, ++(instance->max_stack_depth));
         printf("Increasing to %lld\n", instance->max_stack_depth);
         fflush(stdout);
-        instance->stack[max_depth] = (pseudo_dfs_stack_item_t){
+        instance->stack[max_depth] = (pseudo_dfs_stack_item){
             .next_states = NULL, .max_count_next_states = 0};
     }
-    pseudo_dfs_stack_item_t *const stack_item = instance->stack + depth;
+    pseudo_dfs_stack_item *const stack_item = instance->stack + depth;
     stack_item->curr_state = state;
 
     fcs_derived_state_t *derived_list = NULL;
@@ -216,7 +216,7 @@ static inline void instance_run(dbm_solver_instance *const instance)
         }
         else
         {
-            pseudo_dfs_stack_item_t *const stack_item = instance->stack + depth;
+            pseudo_dfs_stack_item *const stack_item = instance->stack + depth;
             const int idx = (stack_item->next_state_idx)++;
             if (idx == stack_item->count_next_states)
             {
@@ -249,8 +249,8 @@ static inline void instance__print_coords_to_log(
     fprintf(
         log_fh, "At %ld iterations Coords=[", instance->count_num_processed);
 
-    const pseudo_dfs_stack_item_t *stack_item = instance->stack;
-    const pseudo_dfs_stack_item_t *const end_stack_item =
+    const pseudo_dfs_stack_item *stack_item = instance->stack;
+    const pseudo_dfs_stack_item *const end_stack_item =
         stack_item + instance->stack_depth;
     for (; stack_item <= end_stack_item; stack_item++)
     {
@@ -283,7 +283,7 @@ static inline void instance__load_coords_from_fh(
         const int coord = coord_from_input - 1;
         if (coord >= 0)
         {
-            pseudo_dfs_stack_item_t *const stack_item =
+            pseudo_dfs_stack_item *const stack_item =
                 &(instance->stack[instance->stack_depth++]);
             stack_item->next_state_idx = coord + 1;
             instance__inspect_new_state(

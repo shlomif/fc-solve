@@ -20,12 +20,12 @@ typedef struct
     var_base_int multiplier;
     /* To avoid memory fragmentation, we keep those here and re use them. */
     var_base_int remainder;
-} fcs_var_base_writer_t;
+} fcs_var_base_writer;
 
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
 #define fc_solve_var_base_writer_init(s)
 #else
-static inline void fc_solve_var_base_writer_init(fcs_var_base_writer_t *const s)
+static inline void fc_solve_var_base_writer_init(fcs_var_base_writer *const s)
 {
     FCS_var_base_int__init(s->data);
     FCS_var_base_int__init(s->multiplier);
@@ -34,14 +34,14 @@ static inline void fc_solve_var_base_writer_init(fcs_var_base_writer_t *const s)
 #endif
 
 static inline void fc_solve_var_base_writer_start(
-    fcs_var_base_writer_t *const s)
+    fcs_var_base_writer *const s)
 {
     FCS_var_base_int__set_ui(s->data, 0);
     FCS_var_base_int__set_ui(s->multiplier, 1);
 }
 
 static inline void fc_solve_var_base_writer_write(
-    fcs_var_base_writer_t *const w, const unsigned long base,
+    fcs_var_base_writer *const w, const unsigned long base,
     const unsigned long item)
 {
     assert(item < base);
@@ -50,7 +50,7 @@ static inline void fc_solve_var_base_writer_write(
 }
 
 static inline size_t fc_solve_var_base_writer_get_data(
-    fcs_var_base_writer_t *const w, unsigned char *const exported)
+    fcs_var_base_writer *const w, unsigned char *const exported)
 {
     size_t count = 0;
 
@@ -85,7 +85,7 @@ static inline size_t fc_solve_var_base_writer_get_data(
 #define fc_solve_var_base_writer_release(w)
 #else
 static inline void fc_solve_var_base_writer_release(
-    fcs_var_base_writer_t *const w)
+    fcs_var_base_writer *const w)
 {
     FCS_var_base_int__clear(w->data);
     FCS_var_base_int__clear(w->multiplier);

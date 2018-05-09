@@ -105,7 +105,7 @@ RB_GENERATE_STATIC(
     FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 
 static inline void instance_init(dbm_solver_instance *const instance,
-    const fcs_dbm_common_input_t *const inp,
+    const fcs_dbm_common_input *const inp,
     fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
     FILE *const out_fh)
 {
@@ -598,7 +598,7 @@ int main(int argc, char *argv[])
     const char *filename = NULL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     const char *param;
-    fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
+    fcs_dbm_common_input inp = fcs_dbm_common_input_init;
 
     int arg;
     for (arg = 1; arg < argc; arg++)

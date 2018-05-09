@@ -23,7 +23,7 @@ extern "C" {
 typedef struct
 {
     const char *offload_dir_path;
-    fcs_queue_stats_t stats;
+    fcs_queue_stats stats;
     long min_depth, max_depth, max_depth_margin;
     /*
      * page_to_write_to, page_for_backup and page_to_read_from always

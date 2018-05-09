@@ -353,7 +353,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fcs_states_linked_list_item_t *queue_last_item = NULL;
     pri_queue_t *pqueue = NULL;
     fc_solve_solve_process_ret_t error_code;
-    fcs_derived_states_list_t derived = {.num_states = 0, .states = NULL};
+    fcs_derived_states_list derived = {.num_states = 0, .states = NULL};
 
     const fcs_move_func *const moves_list = BEFS_M_VAR(soft_thread, moves_list);
     const fcs_move_func *const moves_list_end =

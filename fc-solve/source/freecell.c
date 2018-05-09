@@ -135,7 +135,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 }
 
 static inline void sort_derived_states(
-    fcs_derived_states_list_t *const d, const size_t derived_start_idx)
+    fcs_derived_states_list *const d, const size_t derived_start_idx)
 {
     var_AUTO(start, d->states + derived_start_idx);
     const_AUTO(limit, d->states + d->num_states);
@@ -577,9 +577,9 @@ typedef struct
     fcs_cards_column_t col;
     int_fast16_t col_len, col_len_minus_1, c, seq_end;
     FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
-} col_seqs_iter_t;
+} col_seqs_iter;
 
-static inline void col_seqs_iter__calc_end(col_seqs_iter_t *const iter)
+static inline void col_seqs_iter__calc_end(col_seqs_iter *const iter)
 {
     FCS_ON_NOT_FC_ONLY(const_SLOT(sequences_are_built_by, iter));
     const_SLOT(col, iter);
@@ -594,11 +594,11 @@ static inline void col_seqs_iter__calc_end(col_seqs_iter_t *const iter)
     }
 }
 
-static inline col_seqs_iter_t col_seqs_iter__create(
+static inline col_seqs_iter col_seqs_iter__create(
     fcs_state *const s, const int stack_idx PASS_sequences_are_built_by(
                               const int sequences_are_built_by))
 {
-    col_seqs_iter_t ret;
+    col_seqs_iter ret;
     FCS_ON_NOT_FC_ONLY(ret.sequences_are_built_by = sequences_are_built_by);
     ret.col = fcs_state_get_col(*s, stack_idx);
     ret.col_len_minus_1 = (ret.col_len = fcs_col_len(ret.col)) - 1;
@@ -607,7 +607,7 @@ static inline col_seqs_iter_t col_seqs_iter__create(
     return ret;
 }
 
-static inline void col_seqs_iter__advance(col_seqs_iter_t *const iter)
+static inline void col_seqs_iter__advance(col_seqs_iter *const iter)
 {
     iter->c = iter->seq_end + 1;
     col_seqs_iter__calc_end(iter);
@@ -616,7 +616,7 @@ static inline void col_seqs_iter__advance(col_seqs_iter_t *const iter)
 static inline bool check_if_can_relocate(const fcs_game_limit_t start,
     const fcs_game_limit_t num_virtual_vacant_freecells,
     const fcs_game_limit_t num_virtual_vacant_stacks,
-    const col_seqs_iter_t *const iter PASS_sequences_are_built_by(
+    const col_seqs_iter *const iter PASS_sequences_are_built_by(
         const fc_solve_instance_t *const instance))
 {
     MOVE_FUNCS__define_empty_stacks_fill();
@@ -654,7 +654,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        col_seqs_iter_t iter = col_seqs_iter__create(&state,
+        col_seqs_iter iter = col_seqs_iter__create(&state,
             stack_idx PASS_sequences_are_built_by(sequences_are_built_by));
         for (; iter.c < iter.col_len; col_seqs_iter__advance(&iter))
         {
@@ -737,7 +737,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     const int ds = find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        col_seqs_iter_t iter = col_seqs_iter__create(&state,
+        col_seqs_iter iter = col_seqs_iter__create(&state,
             stack_idx PASS_sequences_are_built_by(sequences_are_built_by));
         for (; iter.c < iter.col_len; col_seqs_iter__advance(&iter))
         {
@@ -937,7 +937,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
         }
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; ++stack_idx)
         {
-            col_seqs_iter_t iter = col_seqs_iter__create(&state,
+            col_seqs_iter iter = col_seqs_iter__create(&state,
                 stack_idx PASS_sequences_are_built_by(sequences_are_built_by));
             for (; iter.c < iter.col_len; col_seqs_iter__advance(&iter))
             {
