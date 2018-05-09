@@ -30,7 +30,7 @@ typedef struct
      * point to the two "pages" below, but they can be swapped and
      * page_for_backup may be NULL.
      */
-    fcs_offloading_queue_t *queues_by_depth;
+    fcs_offloading_queue *queues_by_depth;
     long next_queue_id;
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
     meta_allocator *meta_alloc;
@@ -40,7 +40,7 @@ typedef struct
 #define DEPTH_Q_GROW_BY 32
 
 static inline void fcs_depth_multi_queue__new_queue(
-    fcs_depth_multi_queue *const queue, fcs_offloading_queue_t *const q)
+    fcs_depth_multi_queue *const queue, fcs_offloading_queue *const q)
 {
     fcs_offloading_queue__init(q
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE

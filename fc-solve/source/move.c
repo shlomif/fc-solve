@@ -28,7 +28,7 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
     const fcs_internal_move_t move FREECELLS_AND_STACKS_ARGS())
 {
     fcs_card_t card;
-    fcs_cards_column_t col;
+    fcs_cards_column col;
     const int src = fcs_int_move_get_src(move);
     const int dest = fcs_int_move_get_dest(move);
 

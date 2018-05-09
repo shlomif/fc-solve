@@ -75,7 +75,7 @@ static int main_tests(void)
         fcs_state_keyval_pair_t s;
         fcs_delta_stater delta;
 
-        fcs_cards_column_t col;
+        fcs_cards_column col;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
         FCS_ON_NOT_FC_ONLY(delta.sequences_are_built_by = FCS_SEQ_BUILT_BY_ALTERNATE_COLOR);

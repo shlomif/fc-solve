@@ -73,7 +73,7 @@ typedef struct fcs_dbm_queue_item_struct
 #endif
 
     struct fcs_dbm_queue_item_struct *next;
-} fcs_dbm_queue_item_t;
+} fcs_dbm_queue_item;
 
 enum TERMINATE_REASON
 {
@@ -104,7 +104,7 @@ typedef struct
 
 static inline void fcs_dbm__found_solution(
     dbm_instance_common_elems *const common,
-    fcs_dbm_record_t *const token, fcs_dbm_queue_item_t *const item GCC_UNUSED)
+    fcs_dbm_record_t *const token, fcs_dbm_queue_item *const item GCC_UNUSED)
 {
     common->should_terminate = SOLUTION_FOUND_TERMINATE;
     common->queue_solution_was_found = TRUE;

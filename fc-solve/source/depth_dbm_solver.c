@@ -23,7 +23,7 @@ typedef struct
 {
     fcs_dbm__cache_store__common cache_store;
     meta_allocator queue_meta_alloc;
-    fcs_offloading_queue_t queue;
+    fcs_offloading_queue queue;
 } fcs_dbm_collection_by_depth;
 
 #define MAX_FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
@@ -192,7 +192,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &state, token, &derived_lists[batch_i],
                     &derived_list_recycle_bin, &derived_list_allocator, TRUE))
             {
-                fcs_dbm_queue_item_t physical_item;
+                fcs_dbm_queue_item physical_item;
                 physical_item.key = token->key;
                 fcs_lock_lock(&instance->common.storage_lock);
                 fcs_dbm__found_solution(

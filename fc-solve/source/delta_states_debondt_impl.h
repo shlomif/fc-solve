@@ -312,7 +312,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 static inline void
 fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
     fc_solve_debondt_delta_stater_t *const self,
-    const fcs_dbm_variant_type_t local_variant, fcs_cards_column_t *const col)
+    const fcs_dbm_variant_type_t local_variant, fcs_cards_column *const col)
 {
     fcs_card_t parent_card = fcs_col_get_card(*col, fcs_col_len(*col) - 1);
 
@@ -481,7 +481,7 @@ static void fc_solve_debondt_delta_stater_decode(
         fcs_card_t top_card;
         int top_opt;
 
-        fcs_cards_column_t col = fcs_state_get_col(*ret, col_idx);
+        fcs_cards_column col = fcs_state_get_col(*ret, col_idx);
         const_AUTO(orig_col, fcs_state_get_col(*init_state, col_idx));
         const_AUTO(orig_col_len, fcs_col_len(orig_col));
 

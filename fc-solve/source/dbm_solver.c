@@ -21,7 +21,7 @@ typedef struct
     fcs_dbm__cache_store__common cache_store;
     /* The queue */
     meta_allocator meta_alloc;
-    fcs_offloading_queue_t queue;
+    fcs_offloading_queue queue;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     const char *offload_dir_path;
 #endif
@@ -115,7 +115,7 @@ struct fcs_dbm_solver_thread_struct
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
-    fcs_dbm_queue_item_t physical_item;
+    fcs_dbm_queue_item physical_item;
     fcs_state_keyval_pair_t state;
     fcs_dbm_record_t *token = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -124,7 +124,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     dbm_solver_instance *const instance = thread->instance;
     fcs_delta_stater *const delta_stater = &(thread->delta_stater);
 
-    fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
+    fcs_dbm_queue_item *item = NULL, *prev_item = NULL;
     long queue_num_extracted_and_processed = 0;
 
     compact_allocator derived_list_allocator;
@@ -452,8 +452,8 @@ static bool handle_and_destroy_instance_solution(
         fflush(out_fh);
         if (instance->common.should_terminate == QUEUE_TERMINATE)
         {
-            fcs_dbm_queue_item_t physical_item;
-            fcs_dbm_queue_item_t *const item = &physical_item;
+            fcs_dbm_queue_item physical_item;
+            fcs_dbm_queue_item *const item = &physical_item;
 
             while (fcs_offloading_queue__extract(
                 &(instance->queue), (fcs_offloading_queue_item_t *)(&token)))

@@ -574,7 +574,7 @@ DECLARE_MOVE_FUNCTION(
 
 typedef struct
 {
-    fcs_cards_column_t col;
+    fcs_cards_column col;
     int_fast16_t col_len, col_len_minus_1, c, seq_end;
     FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
 } col_seqs_iter;

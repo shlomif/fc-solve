@@ -71,8 +71,8 @@ SV * as_string(SV * obj) {
 
 void transfer_cards(SV * obj, int to, int from, int cards_num) {
     fcs_state * s = &(deref(obj)->state.s);
-    fcs_cards_column_t to_col = fcs_state_get_col(*s, to);
-    fcs_cards_column_t from_col = fcs_state_get_col(*s, from);
+    fcs_cards_column to_col = fcs_state_get_col(*s, to);
+    fcs_cards_column from_col = fcs_state_get_col(*s, from);
     fcs_col_transfer_cards(to_col, from_col, cards_num);
 }
 
@@ -85,14 +85,14 @@ void empty_freecell(SV * obj, int fc_idx) {
 void push_card(SV * obj, int to) {
     StateInC * o = deref(obj);
     fcs_state * s = &(o->state.s);
-    fcs_cards_column_t to_col = fcs_state_get_col(*s, to);
+    fcs_cards_column to_col = fcs_state_get_col(*s, to);
     fcs_col_push_card(to_col, o->card);
 }
 
 void pop_card(SV * obj, int from) {
     StateInC * o = deref(obj);
     fcs_state * s = &(o->state.s);
-    fcs_cards_column_t from_col = fcs_state_get_col(*s, from);
+    fcs_cards_column from_col = fcs_state_get_col(*s, from);
     fcs_col_pop_card(from_col, o->card);
 }
 

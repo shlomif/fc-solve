@@ -62,10 +62,10 @@ typedef struct
     compact_allocator queue_allocator;
     fcs_Q_item_wrapper *queue_head, *queue_tail, *queue_recycle_bin;
     fcs_queue_stats stats;
-} fcs_offloading_queue_t;
+} fcs_offloading_queue;
 
 static inline void fcs_offloading_queue__init(
-    fcs_offloading_queue_t *const queue,
+    fcs_offloading_queue *const queue,
     meta_allocator *const meta_alloc)
 {
     fc_solve_compact_allocator_init(&(queue->queue_allocator), meta_alloc);
@@ -75,13 +75,13 @@ static inline void fcs_offloading_queue__init(
 }
 
 static inline void fcs_offloading_queue__destroy(
-    fcs_offloading_queue_t *const queue)
+    fcs_offloading_queue *const queue)
 {
     fc_solve_compact_allocator_finish(&(queue->queue_allocator));
 }
 
 static inline bool fcs_offloading_queue__extract(
-    fcs_offloading_queue_t *const queue,
+    fcs_offloading_queue *const queue,
     fcs_offloading_queue_item_t *const return_item)
 {
     fcs_Q_item_wrapper *const item = queue->queue_head;
@@ -106,7 +106,7 @@ static inline bool fcs_offloading_queue__extract(
 }
 
 static inline void fcs_offloading_queue__insert(
-    fcs_offloading_queue_t *const queue,
+    fcs_offloading_queue *const queue,
     const fcs_offloading_queue_item_t *const datum)
 {
     fcs_Q_item_wrapper *new_item;
@@ -273,10 +273,10 @@ typedef struct
     int_fast32_t page_idx_to_write_to, page_idx_for_backup,
         page_idx_to_read_from;
     off_q_page_t pages[2];
-} fcs_offloading_queue_t;
+} fcs_offloading_queue;
 
 static inline void fcs_offloading_queue__init(
-    fcs_offloading_queue_t *const queue, const char *const offload_dir_path,
+    fcs_offloading_queue *const queue, const char *const offload_dir_path,
     const long id)
 {
     queue->offload_dir_path = offload_dir_path;
@@ -291,14 +291,14 @@ static inline void fcs_offloading_queue__init(
 }
 
 static inline void fcs_offloading_queue__destroy(
-    fcs_offloading_queue_t *const queue)
+    fcs_offloading_queue *const queue)
 {
     fcs_offloading_queue_page__destroy(&(queue->pages[0]));
     fcs_offloading_queue_page__destroy(&(queue->pages[1]));
 }
 
 static inline void fcs_offloading_queue__insert(
-    fcs_offloading_queue_t *queue, const fcs_offloading_queue_item_t *item)
+    fcs_offloading_queue *queue, const fcs_offloading_queue_item_t *item)
 {
     if (!fcs_offloading_queue_page__can_insert(
             queue->pages + queue->page_idx_to_write_to))
@@ -328,7 +328,7 @@ static inline void fcs_offloading_queue__insert(
 }
 
 static inline bool fcs_offloading_queue__extract(
-    fcs_offloading_queue_t *const queue,
+    fcs_offloading_queue *const queue,
     fcs_offloading_queue_item_t *const return_item)
 {
     if (q_stats_is_empty(&queue->stats))

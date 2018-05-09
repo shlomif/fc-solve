@@ -192,7 +192,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     meta_allocator *const meta_alloc)
 {
     void *tree_recycle_bin = NULL;
-    fcs_dbm_queue_item_t *queue_head, *queue_tail, *queue_recycle_bin = NULL,
+    fcs_dbm_queue_item *queue_head, *queue_tail, *queue_recycle_bin = NULL,
                                                    *extracted_item;
     fcs_derived_state_t *derived_list_recycle_bin = NULL, *next_derived_iter;
     fcs_state_keyval_pair_t state;
@@ -225,8 +225,8 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     dict_t *traversed_states =
         fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
 
-    fcs_dbm_queue_item_t *new_item =
-        (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
+    fcs_dbm_queue_item *new_item =
+        (fcs_dbm_queue_item *)fcs_compact_alloc_ptr(
             &(queue_allocator), sizeof(*new_item));
     *new_item = (typeof(*new_item)){.key = start_state,
         .next = NULL,
@@ -287,7 +287,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
         }
         else
         {
-            new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
+            new_item = (fcs_dbm_queue_item *)fcs_compact_alloc_ptr(
                 &(queue_allocator), sizeof(*new_item));
         }
 
@@ -349,7 +349,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
                 }
                 else
                 {
-                    new_item = (fcs_dbm_queue_item_t *)fcs_compact_alloc_ptr(
+                    new_item = (fcs_dbm_queue_item *)fcs_compact_alloc_ptr(
                         &(queue_allocator), sizeof(*new_item));
                 }
             }

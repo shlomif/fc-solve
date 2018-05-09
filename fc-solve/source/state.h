@@ -52,7 +52,7 @@ extern "C" {
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1))))
 
 typedef char fcs_card_t;
-typedef fcs_card_t *fcs_cards_column_t;
+typedef fcs_card_t *fcs_cards_column;
 typedef const fcs_card_t *fcs_const_cards_column;
 typedef fcs_card_t fcs_state_foundation;
 
@@ -104,7 +104,7 @@ typedef char fcs_locs_type;
 #elif defined(INDIRECT_STACK_STATES) // #ifdef COMPACT_STATES
 typedef struct
 {
-    fcs_cards_column_t columns[MAX_NUM_STACKS];
+    fcs_cards_column columns[MAX_NUM_STACKS];
     fcs_card_t freecells[MAX_NUM_FREECELLS];
     fcs_state_foundation foundations[MAX_NUM_DECKS * 4];
 } fcs_state;
@@ -1037,8 +1037,8 @@ static inline bool fcs_is_parent_card__helper(const fcs_card_t child,
         fcs_duplicate_state_extra((dest).info);                                \
     }
 
-static inline void fcs_col_transfer_cards(fcs_cards_column_t dest_col,
-    fcs_cards_column_t src_col, const int cards_num)
+static inline void fcs_col_transfer_cards(fcs_cards_column dest_col,
+    fcs_cards_column src_col, const int cards_num)
 {
     fcs_card_t *const src_cards_ptr =
         &fcs_col_get_card(src_col, (fcs_col_len(src_col) -= cards_num));

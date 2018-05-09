@@ -355,7 +355,7 @@ DECLARE_MOVE_FUNCTION(
  *
  */
 static inline void generic_populate_seq_points(
-    const fcs_cards_column_t dest_col, const int dc,
+    const fcs_cards_column dest_col, const int dc,
     sequences_analysis *const seqs, const int dest_cards_num)
 {
     size_t num_separate_false_seqs = seqs->num_separate_false_seqs;
@@ -382,7 +382,7 @@ static inline void generic_populate_seq_points(
     seqs->num_separate_false_seqs = num_separate_false_seqs;
 }
 
-static inline void populate_seq_points(const fcs_cards_column_t dest_col,
+static inline void populate_seq_points(const fcs_cards_column dest_col,
     const int dc, sequences_analysis *const seqs)
 {
     seqs->num_separate_false_seqs = 0;
@@ -391,7 +391,7 @@ static inline void populate_seq_points(const fcs_cards_column_t dest_col,
 
 static inline bool generic_false_seq_index_loop(const int stacks_num,
     fcs_kv_state_t raw_state_raw, const int num_vacant_stacks,
-    const fcs_cards_column_t col, sequences_analysis *const seqs,
+    const fcs_cards_column col, sequences_analysis *const seqs,
     const int stack_idx, const int ds, const bool behavior_flag,
     const bool should_src_col, const fcs_card_t src_card,
     const size_t num_src_junk_true_seqs)
@@ -481,7 +481,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
 
 static inline bool false_seq_index_loop(const int stacks_num,
     fcs_kv_state_t raw_state_raw, const int num_vacant_stacks,
-    const fcs_cards_column_t col, sequences_analysis *const seqs,
+    const fcs_cards_column col, sequences_analysis *const seqs,
     const int stack_idx, const int ds, const bool behavior_flag)
 {
     return generic_false_seq_index_loop(stacks_num, raw_state_raw,

@@ -11,7 +11,7 @@ use FC_Solve::InlineWrap (
 
 typedef struct
 {
-    fcs_offloading_queue_t q;
+    fcs_offloading_queue q;
 } QueueInC;
 
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue_id) {
@@ -31,7 +31,7 @@ static inline QueueInC * deref(SV * const obj) {
     return (QueueInC*)SvIV(SvRV(obj));
 }
 
-static inline fcs_offloading_queue_t * q(SV * const obj) {
+static inline fcs_offloading_queue * q(SV * const obj) {
     return &(deref(obj)->q);
 }
 

@@ -234,7 +234,7 @@ static inline void fc_solve_cache_stacks(
     register fcs_state_extra_info *const new_state_info = new_state->val;
     compact_allocator *const stacks_allocator =
         &(HT_FIELD(hard_thread, allocator));
-    fcs_cards_column_t *current_stack = new_state_key->columns;
+    fcs_cards_column *current_stack = new_state_key->columns;
 
     for (int i = 0; i < LOCAL_STACKS_NUM; ++i, ++current_stack)
     {
