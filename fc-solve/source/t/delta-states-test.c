@@ -256,7 +256,7 @@ static int main_tests(void)
         }
 
         {
-            fc_solve_bit_writer_t bit_w;
+            fc_solve_bit_writer bit_w;
             fcs_bit_reader bit_r;
             fcs_uchar_t enc[10];
 

@@ -61,7 +61,7 @@ typedef struct
     size_t max_size;
     size_t current_size;
     pq_element *elems; /* pointer to void pointers */
-} pri_queue_t;
+} pri_queue;
 
 /* given an index to any element in a binary tree stored in a linear array with
    the root at 1 and
@@ -79,13 +79,13 @@ typedef struct
    the bool32 tells you whether the list is sorted ascending or
    descending... */
 
-static inline void fc_solve_pq_init(pri_queue_t *const pq)
+static inline void fc_solve_pq_init(pri_queue *const pq)
 {
     pq->current_size = 0;
     pq->elems = SMALLOC(pq->elems, (pq->max_size = 1024) + 1);
 }
 
-static inline void fc_solve_PQueueFree(pri_queue_t *const pq)
+static inline void fc_solve_PQueueFree(pri_queue *const pq)
 {
     free(pq->elems);
     pq->elems = NULL;
@@ -94,7 +94,7 @@ static inline void fc_solve_PQueueFree(pri_queue_t *const pq)
 /* Join a priority queue
    "r" is the rating of the item you're adding for sorting purposes */
 
-static inline void fc_solve_pq_push(pri_queue_t *const pq,
+static inline void fc_solve_pq_push(pri_queue *const pq,
     fcs_collectible_state_t *const val, const pq_rating r)
 {
     var_AUTO(i, ++(pq->current_size));
@@ -132,7 +132,7 @@ static inline void fc_solve_pq_push(pri_queue_t *const pq,
     elems[i].rating = r;
 }
 
-static inline bool fc_solve_is_pqueue_empty(pri_queue_t *pq)
+static inline bool fc_solve_is_pqueue_empty(pri_queue *pq)
 {
     return (pq->current_size == 0);
 }
@@ -145,7 +145,7 @@ static inline bool fc_solve_is_pqueue_empty(pri_queue_t *pq)
  * */
 
 static inline void fc_solve_pq_pop(
-    pri_queue_t *const pq, fcs_collectible_state_t **const val)
+    pri_queue *const pq, fcs_collectible_state_t **const val)
 {
     if (fc_solve_is_pqueue_empty(pq))
     {

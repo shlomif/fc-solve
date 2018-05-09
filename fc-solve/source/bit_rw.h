@@ -21,17 +21,17 @@ typedef struct
     fcs_uchar_t *current;
     int bit_in_char_idx;
     fcs_uchar_t *start;
-} fc_solve_bit_writer_t;
+} fc_solve_bit_writer;
 
 static inline void fc_solve_bit_writer_init(
-    fc_solve_bit_writer_t *const writer, fcs_uchar_t *const start)
+    fc_solve_bit_writer *const writer, fcs_uchar_t *const start)
 {
     *(writer->start = writer->current = start) = 0;
     writer->bit_in_char_idx = 0;
 }
 
 static inline void fc_solve_bit_writer_write(
-    fc_solve_bit_writer_t *const writer, int len, fcs_bit_data data)
+    fc_solve_bit_writer *const writer, int len, fcs_bit_data data)
 {
     for (; len; len--, (data >>= 1))
     {

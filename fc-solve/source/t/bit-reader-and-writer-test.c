@@ -19,7 +19,7 @@ static int main_tests(void)
 {
     {
         unsigned char buffer[10];
-        fc_solve_bit_writer_t writer;
+        fc_solve_bit_writer writer;
 
         fc_solve_bit_writer_init(&writer, buffer);
 

@@ -951,7 +951,7 @@ static inline void free_states(fc_solve_instance_t *const instance)
             }
             else if (soft_thread->is_befs)
             {
-                pri_queue_t new_pq;
+                pri_queue new_pq;
                 fc_solve_pq_init(&(new_pq));
                 const_AUTO(elems, BEFS_VAR(soft_thread, pqueue).elems);
                 const_AUTO(end_element,
@@ -1907,7 +1907,7 @@ typedef struct
     fcs_moves_sequence_t moves_seq;
 #endif
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
-    fcs_moves_processed_t fc_pro_moves;
+    fcs_moves_processed fc_pro_moves;
 #endif
     fcs_stats obj_stats;
 #if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
@@ -1975,7 +1975,7 @@ typedef struct
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     fcs_int_limit_t limit;
 #endif
-} instance_item_t;
+} fcs_instance_item;
 
 typedef struct
 {
@@ -1985,9 +1985,9 @@ typedef struct
      * one after the other in case the previous ones could not solve
      * the board
      * */
-    instance_item_t *current_instance, *instances_list, *end_of_instances_list;
+    fcs_instance_item *current_instance, *instances_list, *end_of_instances_list;
 #else
-    instance_item_t single_inst;
+    fcs_instance_item single_inst;
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     // The global (sequence-wide) limit of the iterations. Used
@@ -2058,7 +2058,7 @@ static inline fc_solve_instance_t *active_obj(void *const api_instance)
     return user_obj((fcs_user_t *)api_instance);
 }
 
-static inline instance_item_t *curr_inst(fcs_user_t *const user)
+static inline fcs_instance_item *curr_inst(fcs_user_t *const user)
 {
 #ifdef FCS_WITH_NI
     return user->current_instance;
@@ -2071,7 +2071,7 @@ static inline instance_item_t *curr_inst(fcs_user_t *const user)
 #define INSTANCES_LOOP_START()                                                 \
     {                                                                          \
         const_SLOT(end_of_instances_list, user);                               \
-        for (instance_item_t *instance_item = user->instances_list;            \
+        for (fcs_instance_item *instance_item = user->instances_list;            \
              instance_item < end_of_instances_list; ++instance_item)           \
         {
 #else
@@ -2296,7 +2296,7 @@ static NI_INLINE void user_next_instance(fcs_user_t *const user)
 #endif
 
 #ifdef FCS_WITH_FLARES
-    *(curr_inst(user)) = (instance_item_t){
+    *(curr_inst(user)) = (fcs_instance_item){
         .flares = NULL,
         .end_of_flares = NULL,
         .plan = NULL,
@@ -2538,7 +2538,7 @@ static inline flares_plan_item create_plan_item(const flares_plan_type mytype,
         .type = mytype, .flare = flare, .count_iters = count_iters};
 }
 
-static inline void add_to_plan(instance_item_t *const instance_item,
+static inline void add_to_plan(fcs_instance_item *const instance_item,
     const flares_plan_type mytype, fcs_flare_item_t *const flare,
     const int_fast32_t count_iters)
 {
@@ -2551,7 +2551,7 @@ static inline void add_to_plan(instance_item_t *const instance_item,
         create_plan_item(mytype, flare, count_iters);
 }
 
-static inline void add_checkpoint_to_plan(instance_item_t *const instance_item)
+static inline void add_checkpoint_to_plan(fcs_instance_item *const instance_item)
 {
     add_to_plan(instance_item, FLARES_PLAN_CHECKPOINT, NULL, -1);
 }
@@ -2792,7 +2792,7 @@ static inline void recycle_flare(fcs_flare_item_t *const flare)
 }
 
 static void recycle_instance(
-    fcs_user_t *const user, instance_item_t *const instance_item)
+    fcs_user_t *const user, fcs_instance_item *const instance_item)
 {
     INSTANCE_ITEM_FLARES_LOOP_START()
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT

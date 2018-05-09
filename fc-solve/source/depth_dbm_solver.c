@@ -27,7 +27,7 @@ typedef struct
 } fcs_dbm_collection_by_depth;
 
 #define MAX_FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
-typedef size_t batch_size_t;
+typedef size_t fcs_batch_size;
 typedef struct
 {
     fcs_dbm_collection_by_depth colls_by_depth[MAX_FCC_DEPTH];
@@ -35,7 +35,7 @@ typedef struct
     const char *offload_dir_path;
     int curr_depth;
     dbm_instance_common_elems common;
-    batch_size_t max_batch_size;
+    fcs_batch_size max_batch_size;
 } dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH()                                                 \
@@ -43,7 +43,7 @@ typedef struct
 
 #include "dbm_procs.h"
 static inline void instance_init(dbm_solver_instance *const instance,
-    const fcs_dbm_common_input *const inp, const batch_size_t max_batch_size,
+    const fcs_dbm_common_input *const inp, const fcs_batch_size max_batch_size,
     FILE *const out_fh)
 {
     instance->max_batch_size = max_batch_size;
@@ -108,7 +108,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_AUTO(local_variant, instance->common.variant);
     const_SLOT(max_batch_size, instance);
 
-    batch_size_t prev_size = 0;
+    fcs_batch_size prev_size = 0;
     compact_allocator derived_list_allocator;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(thread->thread_meta_alloc));
@@ -124,7 +124,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         /* First of all extract a batch of items. */
         fcs_lock_lock(&instance->common.storage_lock);
         bool should_break = FALSE;
-        batch_size_t batch_size = 0;
+        fcs_batch_size batch_size = 0;
         if (prev_size > 0)
         {
             if (!(instance->common.queue_num_extracted_and_processed -=
@@ -179,7 +179,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             continue;
         }
 
-        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
+        for (fcs_batch_size batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             const_AUTO(token, tokens[batch_i]);
             /* Handle item. */
@@ -204,7 +204,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         }
 
         /* Encode all the states. */
-        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
+        for (fcs_batch_size batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             for (var_AUTO(derived_iter, derived_lists[batch_i]); derived_iter;
                  derived_iter = derived_iter->next)
@@ -222,7 +222,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
         );
 
-        for (batch_size_t batch_i = 0; batch_i < batch_size; ++batch_i)
+        for (fcs_batch_size batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             fcs_derived_state_list__recycle(
                 &derived_list_recycle_bin, &derived_lists[batch_i]);
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
     const char *out_filename = NULL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     fcs_dbm_common_input inp = fcs_dbm_common_input_init;
-    batch_size_t max_batch_size = 1;
+    fcs_batch_size max_batch_size = 1;
     const char *param;
 
     int real_arg;
@@ -313,7 +313,7 @@ int main(int argc, char *argv[])
         }
         else if ((param = TRY_PARAM("--batch-size")))
         {
-            max_batch_size = (batch_size_t)atol(param);
+            max_batch_size = (fcs_batch_size)atol(param);
             if (max_batch_size < 1)
             {
                 fc_solve_err("--batch-size must be at least 1.\n");

@@ -20,7 +20,7 @@ fc_solve__hll_ms_rand *fc_solve__hll_ms_rand__get_singleton(void)
 void fc_solve__hll_ms_rand__init(
     fc_solve__hll_ms_rand *const instance, const char *const gamenumber_s)
 {
-    const microsoft_rand_t deal_idx = atoll(gamenumber_s);
+    const microsoft_rand deal_idx = atoll(gamenumber_s);
     instance->deal_idx = deal_idx;
     instance->seedx = microsoft_rand__calc_init_seedx(deal_idx);
 }

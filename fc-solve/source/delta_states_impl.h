@@ -117,7 +117,7 @@ static inline void fc_solve_get_column_encoding_composite(
     }
 
     /* Prepare the encoding. */
-    fc_solve_bit_writer_t bit_w;
+    fc_solve_bit_writer bit_w;
     fc_solve_bit_writer_init(&bit_w, ret->enc);
 
     fc_solve_bit_writer_write(
@@ -148,7 +148,7 @@ static inline void fc_solve_get_column_encoding_composite(
 }
 
 static inline void fc_solve_get_freecells_encoding(
-    fcs_delta_stater *const self, fc_solve_bit_writer_t *const bit_w)
+    fcs_delta_stater *const self, fc_solve_bit_writer *const bit_w)
 {
     const fcs_state *const derived = self->derived_state;
     const_SLOT(num_freecells, self);
@@ -225,7 +225,7 @@ static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
 }
 
 static void fc_solve_delta_stater_encode_composite(
-    fcs_delta_stater *const self, fc_solve_bit_writer_t *const bit_w)
+    fcs_delta_stater *const self, fc_solve_bit_writer *const bit_w)
 {
     int cols_indexes[MAX_NUM_STACKS];
     fcs_column_encoding_composite cols[MAX_NUM_STACKS];
@@ -414,7 +414,7 @@ static inline void fc_solve_delta_stater_encode_into_buffer(
     const fcs_dbm_variant_type_t local_variant GCC_UNUSED,
     fcs_state_keyval_pair_t *const state, unsigned char *const out_enc_state)
 {
-    fc_solve_bit_writer_t bit_w;
+    fc_solve_bit_writer bit_w;
     fc_solve_bit_writer_init(&bit_w, out_enc_state + 1);
     fc_solve_delta_stater_set_derived(delta_stater, &(state->s));
     fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);

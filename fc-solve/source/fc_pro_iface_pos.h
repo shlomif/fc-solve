@@ -31,20 +31,20 @@ typedef struct
     size_t next_move_idx;
     size_t num_moves;
     fcs_extended_move_t *moves;
-} fcs_moves_processed_t;
+} fcs_moves_processed;
 
-void fc_solve_moves_processed_gen(fcs_moves_processed_t *,
+void fc_solve_moves_processed_gen(fcs_moves_processed *,
     fcs_state_keyval_pair_t *, int, const fcs_moves_sequence_t *);
 void fc_solve_moves_processed_render_move(fcs_extended_move_t, char *);
 
 static inline int fc_solve_moves_processed_get_moves_left(
-    const fcs_moves_processed_t *const moves)
+    const fcs_moves_processed *const moves)
 {
     return moves->num_moves - moves->next_move_idx;
 }
 
 static inline bool fc_solve_moves_processed_get_next_move(
-    fcs_moves_processed_t *const moves, fcs_extended_move_t *const move)
+    fcs_moves_processed *const moves, fcs_extended_move_t *const move)
 {
     if (moves->next_move_idx == moves->num_moves)
     {
@@ -55,7 +55,7 @@ static inline bool fc_solve_moves_processed_get_next_move(
 }
 
 static inline void fc_solve_moves_processed_free(
-    fcs_moves_processed_t *const moves)
+    fcs_moves_processed *const moves)
 {
     free(moves->moves);
     moves->moves = NULL;

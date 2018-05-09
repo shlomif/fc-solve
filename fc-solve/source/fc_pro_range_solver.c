@@ -123,7 +123,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         int num_iters;
         int num_moves;
         int num_fcpro_moves;
-        fcs_moves_processed_t fc_pro_moves = {.moves = NULL};
+        fcs_moves_processed fc_pro_moves = {.moves = NULL};
 
         switch (freecell_solver_user_solve_board(instance, buffer))
         {

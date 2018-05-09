@@ -115,7 +115,7 @@ typedef struct fcs_states_linked_list_item_struct
 {
     fcs_collectible_state_t *s;
     struct fcs_states_linked_list_item_struct *next;
-} fcs_states_linked_list_item_t;
+} fcs_states_linked_list_item;
 
 /*
  * Declare these structures because they will be used within
@@ -465,26 +465,26 @@ struct fc_solve_soft_thread_struct
                      * A linked list that serves as the queue for the BFS
                      * scan.
                      * */
-                    fcs_states_linked_list_item_t *bfs_queue;
+                    fcs_states_linked_list_item *bfs_queue;
                     /*
                      * The last item in the linked list, so new items can be
                      * added at
                      * it, thus making it a queue.
                      * */
-                    fcs_states_linked_list_item_t *bfs_queue_last_item;
+                    fcs_states_linked_list_item *bfs_queue_last_item;
                     /*
                      * A linked list of items that were freed from
                      * the queue and should be reused before allocating new
                      * items.
                      * */
-                    fcs_states_linked_list_item_t *recycle_bin;
+                    fcs_states_linked_list_item *recycle_bin;
                 } brfs;
                 struct
                 {
                     /*
                      * The priority queue of the BeFS scan
                      * */
-                    pri_queue_t pqueue;
+                    pri_queue pqueue;
                     fcs_state_weighting weighting;
                 } befs;
             } meth;

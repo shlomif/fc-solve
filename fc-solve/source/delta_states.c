@@ -48,7 +48,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fc_solve_state_init(
         &new_derived_state, STACKS_NUM, new_derived_indirect_stacks_buffer);
 
-    fc_solve_bit_writer_t bit_w;
+    fc_solve_bit_writer bit_w;
     fc_solve_bit_writer_init(&bit_w, enc_state);
     fc_solve_delta_stater_encode_composite(&delta, &bit_w);
 
