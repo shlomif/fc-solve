@@ -173,7 +173,7 @@ static inline void apply_moves(fcs_moves_order *moves_order,
 }
 
 fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
-    fc_solve_instance_t *const instance, const fcs_preset_t *const preset_ptr)
+    fc_solve_instance_t *const instance, const fcs_preset *const preset_ptr)
 {
     FCS__DECL_ERR_BUF(no_use);
 #define preset (*preset_ptr)
@@ -227,7 +227,7 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
 }
 
 static inline fc_solve_preset_ret_code_t fcs_get_preset_by_id(
-    const int preset_id, const fcs_preset_t **const preset_ptr)
+    const int preset_id, const fcs_preset **const preset_ptr)
 {
     for (size_t preset_index = 0; preset_index < COUNT(fcs_presets);
          preset_index++)
@@ -243,7 +243,7 @@ static inline fc_solve_preset_ret_code_t fcs_get_preset_by_id(
 }
 
 fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
-    const char *const name, const fcs_preset_t **const preset_ptr)
+    const char *const name, const fcs_preset **const preset_ptr)
 {
     return fcs_get_preset_by_id(fcs_get_preset_id_by_name(name), preset_ptr);
 }

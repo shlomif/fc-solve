@@ -62,8 +62,8 @@ static inline void fc_solve__calc_positions_by_rank_data(
     if (is_simple_simon)
     {
 #define FCS_POS_IDX(rank, suit) ((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank))
-        fcs_pos_by_rank_t *const p_by_r =
-            (fcs_pos_by_rank_t *)positions_by_rank;
+        fcs_pos_by_rank *const p_by_r =
+            (fcs_pos_by_rank *)positions_by_rank;
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
             const_AUTO(dest_col, fcs_state_get_col(*ptr_state_key, ds));
@@ -76,7 +76,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
                 const int rank = fcs_card_rank(card);
 
                 p_by_r[FCS_POS_IDX(rank, suit)] =
-                    (fcs_pos_by_rank_t){.col = ds, .height = dc};
+                    (fcs_pos_by_rank){.col = ds, .height = dc};
             }
         }
     }

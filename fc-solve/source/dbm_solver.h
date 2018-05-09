@@ -40,7 +40,7 @@ typedef struct
     pre_cache_key_val_pair *kv_recycle_bin;
     long count_elements;
     void *tree_recycle_bin;
-} fcs_pre_cache_t;
+} fcs_pre_cache;
 #endif
 
 typedef void *fcs_dbm_store_t;
@@ -57,7 +57,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 void fc_solve_dbm_store_offload_pre_cache(
-    fcs_dbm_store_t store, fcs_pre_cache_t *const pre_cache);
+    fcs_dbm_store_t store, fcs_pre_cache *const pre_cache);
 #endif
 
 void fc_solve_dbm_store_destroy(fcs_dbm_store_t store);
@@ -144,7 +144,7 @@ typedef struct
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-    fcs_pre_cache_t pre_cache;
+    fcs_pre_cache pre_cache;
 #endif
     fcs_lru_cache_t cache;
 #endif

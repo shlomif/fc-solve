@@ -108,7 +108,7 @@ bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
 }
 
 extern void fc_solve_dbm_store_offload_pre_cache(
-    fcs_dbm_store_t store, fcs_pre_cache_t *const pre_cache)
+    fcs_dbm_store_t store, fcs_pre_cache *const pre_cache)
 {
     dbm_t *const db = (dbm_t *)store;
     dict_t *const kaz_tree = pre_cache->kaz_tree;

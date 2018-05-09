@@ -93,13 +93,13 @@ extern "C" {
 typedef struct
 {
     char col, height;
-} fcs_pos_by_rank_t;
+} fcs_pos_by_rank;
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 #define FCS_SS_POS_BY_RANK_WIDTH (FCS_RANK_KING + 1)
 #define FCS_SS_POS_BY_RANK_LEN (FCS_SS_POS_BY_RANK_WIDTH * 4)
 #define FCS_BOTH__POS_BY_RANK__SIZE                                            \
-    (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank_t),                   \
+    (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank),                   \
         FCS_POS_BY_RANK_LEN))
 #else
 #define FCS_BOTH__POS_BY_RANK__SIZE FCS_POS_BY_RANK_LEN

@@ -66,7 +66,7 @@ static inline fc_solve_soft_thread_t *new_hard_thread(
 static inline void apply_preset_by_name(
     fc_solve_instance_t *const instance, const char *const name)
 {
-    const fcs_preset_t *preset_ptr;
+    const fcs_preset *preset_ptr;
     const_AUTO(ret, fc_solve_get_preset_by_name(name, &preset_ptr));
     if (ret == FCS_PRESET_CODE_OK)
     {
@@ -2043,7 +2043,7 @@ typedef struct
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 #define MAX_STATE_STRING_COPY_LEN 2048
     char state_string_copy[MAX_STATE_STRING_COPY_LEN];
-    FCS_ON_NOT_FC_ONLY(fcs_preset_t common_preset);
+    FCS_ON_NOT_FC_ONLY(fcs_preset common_preset);
     FCS__DECL_ERR_BUF(error_string);
     meta_allocator meta_alloc;
 } fcs_user_t;
@@ -2335,7 +2335,7 @@ static inline void clear_error(fcs_user_t *const user)
 static MYINLINE void user_initialize(fcs_user_t *const user)
 {
 #ifndef FCS_FREECELL_ONLY
-    const fcs_preset_t *freecell_preset;
+    const fcs_preset *freecell_preset;
     fc_solve_get_preset_by_name("freecell", &freecell_preset);
     fcs_duplicate_preset(user->common_preset, *freecell_preset);
 #endif
@@ -2381,7 +2381,7 @@ void DLLEXPORT *freecell_solver_user_alloc(void)
 int DLLEXPORT freecell_solver_user_apply_preset(
     void *const api_instance, const char *const preset_name)
 {
-    const fcs_preset_t *new_preset_ptr;
+    const fcs_preset *new_preset_ptr;
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
     const_AUTO(

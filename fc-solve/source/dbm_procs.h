@@ -31,7 +31,7 @@ static int fc_solve_compare_pre_cache_keys(
 #undef GET_PARAM
 }
 
-static inline void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
+static inline void pre_cache_init(fcs_pre_cache *const pre_cache_ptr,
     meta_allocator *const meta_alloc)
 {
     pre_cache_ptr->tree_recycle_bin = NULL;
@@ -44,7 +44,7 @@ static inline void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
     pre_cache_ptr->count_elements = 0;
 }
 
-static inline void pre_cache_insert(fcs_pre_cache_t *pre_cache,
+static inline void pre_cache_insert(fcs_pre_cache *pre_cache,
     fcs_encoded_state_buffer_t *key, fcs_encoded_state_buffer_t *parent)
 {
     pre_cache_key_val_pair *to_insert;
@@ -67,7 +67,7 @@ static inline void pre_cache_insert(fcs_pre_cache_t *pre_cache,
 }
 
 static inline bool pre_cache_does_key_exist(
-    fcs_pre_cache_t *pre_cache, fcs_encoded_state_buffer_t *key)
+    fcs_pre_cache *pre_cache, fcs_encoded_state_buffer_t *key)
 {
     pre_cache_key_val_pair to_check = {.key = *key};
     return (
@@ -75,7 +75,7 @@ static inline bool pre_cache_does_key_exist(
 }
 
 static inline void cache_populate_from_pre_cache(
-    fcs_lru_cache_t *const cache, fcs_pre_cache_t *const pre_cache)
+    fcs_lru_cache_t *const cache, fcs_pre_cache *const pre_cache)
 {
 #ifdef FCS_DBM_USE_LIBAVL
     struct rb_traverser trav;
@@ -100,7 +100,7 @@ static inline void cache_populate_from_pre_cache(
 }
 
 static inline void pre_cache_offload_and_destroy(
-    fcs_pre_cache_t *const pre_cache, fcs_dbm_store_t store,
+    fcs_pre_cache *const pre_cache, fcs_dbm_store_t store,
     fcs_lru_cache_t *const cache)
 {
     fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
@@ -123,7 +123,7 @@ static inline void pre_cache_offload_and_destroy(
 
 #ifndef FCS_DBM_CACHE_ONLY
 
-static inline void pre_cache_offload_and_reset(fcs_pre_cache_t *const pre_cache,
+static inline void pre_cache_offload_and_reset(fcs_pre_cache *const pre_cache,
     const fcs_dbm_store_t store, fcs_lru_cache_t *const cache,
     meta_allocator *const meta_alloc)
 {
