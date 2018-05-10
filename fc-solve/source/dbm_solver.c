@@ -79,7 +79,7 @@ static inline void instance_check_key(
     dbm_solver_instance *const instance, const int key_depth GCC_UNUSED,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,
-    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
 #ifdef FCS_DBM_CACHE_ONLY
     ,

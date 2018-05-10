@@ -33,7 +33,7 @@ typedef struct fcs_derived_state_struct
     fcs_dbm_record_t *parent;
     struct fcs_derived_state_struct *next;
     int core_irreversible_moves_count;
-    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
+    fcs_which_moves_bitmask which_irreversible_moves_bitmask;
     fcs_fcc_move_t move;
     int num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -104,7 +104,7 @@ static inline void fcs_derived_state_list__recycle(
     }
 
 static inline void fc_solve_add_to_irrev_moves_bitmask(
-    fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
+    fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
     const fcs_card_t moved_card, const int count)
 {
     unsigned char *const by_rank_ptr =
@@ -204,7 +204,7 @@ static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
 /* Returns the number of amortized irreversible moves performed. */
 static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
-    fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
+    fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
     fcs_fcc_moves_seq *const moves_seq,
     fcs_fcc_moves_seq_allocator *const allocator)
 {
@@ -331,7 +331,7 @@ static inline int horne_prune__simple(
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr)
 {
-    fcs_which_moves_bitmask_t no_use = {{'\0'}};
+    fcs_which_moves_bitmask no_use = {{'\0'}};
     return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
 }
 

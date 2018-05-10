@@ -23,7 +23,7 @@ static int cmd_line_callback(void *const instance, const int argc GCC_UNUSED,
 {
     const char *const arg_str = argv[arg];
     if (!cmd_line_cb__handle_common(arg_str, instance,
-            (fc_solve_display_information_context_t *)context))
+            (fc_solve_display_information_context *)context))
     {
         fc_solve_err("Unknown option %s!\n", arg_str);
     }

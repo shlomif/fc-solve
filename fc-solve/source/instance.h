@@ -255,7 +255,7 @@ typedef struct
     fcs_int_limit_t count_elements_in_cache, max_num_elements_in_cache;
 
     fcs_cache_key_info *lowest_pri, *highest_pri, *recycle_bin;
-} fcs_lru_cache_t;
+} fcs_lru_cache;
 
 #endif
 
@@ -705,7 +705,7 @@ struct fc_solve_instance_struct
 #endif
 
 #ifdef FCS_RCS_STATES
-    fcs_lru_cache_t rcs_states_cache;
+    fcs_lru_cache rcs_states_cache;
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) ||                  \
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))

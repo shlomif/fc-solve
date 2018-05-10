@@ -43,7 +43,7 @@ static inline void cache_destroy_key(fcs_cache_key_info *cache_key)
     }
 }
 
-static inline void cache_destroy(fcs_lru_cache_t *cache)
+static inline void cache_destroy(fcs_lru_cache *cache)
 {
     cache_destroy_key(cache->recycle_bin);
     cache_destroy_key(cache->lowest_pri);
@@ -52,7 +52,7 @@ static inline void cache_destroy(fcs_lru_cache_t *cache)
         &(cache->states_values_to_keys_allocator));
 }
 
-static inline void cache_init(fcs_lru_cache_t *const cache,
+static inline void cache_init(fcs_lru_cache *const cache,
     const long max_num_elements_in_cache,
     meta_allocator *const meta_alloc)
 {
@@ -76,7 +76,7 @@ static inline void cache_init(fcs_lru_cache_t *const cache,
 }
 
 static inline bool cache_does_key_exist(
-    fcs_lru_cache_t *const cache, fcs_cache_key *const key)
+    fcs_lru_cache *const cache, fcs_cache_key *const key)
 {
     const fcs_cache_key_info to_check = {.key = *key};
     const dict_key_t existing_key =
@@ -114,7 +114,7 @@ static inline bool cache_does_key_exist(
     }
 }
 
-static inline fcs_cache_key_info *cache_insert(fcs_lru_cache_t *cache,
+static inline fcs_cache_key_info *cache_insert(fcs_lru_cache *cache,
     const fcs_cache_key *key, const fcs_fcc_move_t *moves_to_parent,
     const fcs_fcc_move_t final_move)
 {

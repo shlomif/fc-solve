@@ -146,7 +146,7 @@ typedef struct
 #ifndef FCS_DBM_CACHE_ONLY
     fcs_pre_cache pre_cache;
 #endif
-    fcs_lru_cache_t cache;
+    fcs_lru_cache cache;
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
     fcs_dbm_store_t store;

@@ -50,7 +50,7 @@ typedef struct
     fcs_cache_key_info *lowest_pri, *highest_pri, *recycle_bin;
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
     void *tree_recycle_bin;
-} fcs_lru_cache_t;
+} fcs_lru_cache;
 
 #ifdef __cplusplus
 }

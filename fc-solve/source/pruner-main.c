@@ -19,8 +19,8 @@ static void my_iter_handler(void *const user_instance,
     const fcs_int_limit_t parent_iter_num, void *const context)
 {
 #ifdef FCS_WITH_MOVES
-    const fc_solve_display_information_context_t *const dc =
-        (const fc_solve_display_information_context_t *const)context;
+    const fc_solve_display_information_context *const dc =
+        (const fc_solve_display_information_context *const)context;
     my_iter_handler_base(iter_num, depth, user_instance, dc, parent_iter_num);
     if (dc->debug_iter_state_output)
     {

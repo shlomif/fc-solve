@@ -13,7 +13,7 @@
 #define IS_ARG_LONG(shrt, lng) (IS_ARG("-" shrt) || IS_ARG("--" lng))
 
 static inline void set_iter_handler(
-    void *const instance, fc_solve_display_information_context_t *const dc)
+    void *const instance, fc_solve_display_information_context *const dc)
 {
 #ifndef FCS_WITHOUT_ITER_HANDLER
     freecell_solver_user_set_iter_handler_long(instance, my_iter_handler, dc);
@@ -21,7 +21,7 @@ static inline void set_iter_handler(
 }
 
 static inline bool cmd_line_cb__handle_common(const char *const arg_str,
-    void *const instance, fc_solve_display_information_context_t *const dc)
+    void *const instance, fc_solve_display_information_context *const dc)
 {
     if (IS_ARG_LONG("i", "iter-output"))
     {

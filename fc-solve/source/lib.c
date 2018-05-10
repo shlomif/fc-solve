@@ -314,7 +314,7 @@ static inline void init_instance(fc_solve_instance_t *const instance)
 #endif
 
 #ifdef FCS_RCS_STATES
-    fcs_lru_cache_t *const cache = &(instance->rcs_states_cache);
+    fcs_lru_cache *const cache = &(instance->rcs_states_cache);
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)

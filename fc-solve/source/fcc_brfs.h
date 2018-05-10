@@ -179,7 +179,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     /* [Input/Output]: The LRU cache.
      * Of type <<LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache>>
      * */
-    fcs_lru_cache_t *does_state_exist_in_any_FCC_cache,
+    fcs_lru_cache *does_state_exist_in_any_FCC_cache,
     /* [Output]: the number of new positions/states scanned in the FCC. If
      * it's not new, this will be set to zero (0). It includes the initial
      * position, but does not include the start points of the new FCC.

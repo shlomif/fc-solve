@@ -116,8 +116,8 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
     const char **const argv, const int arg, int *const num_to_skip,
     int *const ret, void *const context)
 {
-    fc_solve_display_information_context_t *const display_context =
-        (fc_solve_display_information_context_t *)context;
+    fc_solve_display_information_context *const display_context =
+        (fc_solve_display_information_context *)context;
     const char *s;
     *num_to_skip = 0;
 
@@ -179,7 +179,7 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
 #undef IS_ARG
 
 static void *instance;
-static fc_solve_display_information_context_t display_context;
+static fc_solve_display_information_context display_context;
 #ifndef WIN32
 static int command_num = 0;
 static int debug_iter_output_on = FALSE;

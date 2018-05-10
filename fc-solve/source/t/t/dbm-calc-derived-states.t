@@ -27,7 +27,7 @@ typedef struct
     unsigned char move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
-    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
+    fcs_which_moves_bitmask which_irreversible_moves_bitmask;
 } DerivedState;
 
 AV * perl_perform_horne_prune(char * init_state_s) {

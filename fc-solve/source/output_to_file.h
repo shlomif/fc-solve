@@ -34,9 +34,9 @@ typedef struct
     bool display_moves;
     bool display_states;
     bool show_exceeded_limits;
-} fc_solve_display_information_context_t;
+} fc_solve_display_information_context;
 
-static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT = {
+static const fc_solve_display_information_context INITIAL_DISPLAY_CONTEXT = {
     .debug_iter_state_output = FALSE,
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     .parseable_output = FALSE,
@@ -54,7 +54,7 @@ static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT = {
 
 static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     void *const instance, const int ret,
-    const fc_solve_display_information_context_t *const dc_ptr)
+    const fc_solve_display_information_context *const dc_ptr)
 {
     const_AUTO(display_context, (*dc_ptr));
     if (ret == FCS_STATE_WAS_SOLVED)

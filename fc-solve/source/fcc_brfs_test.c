@@ -70,7 +70,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin));
     dict_t *does_min_by_sorting_exist =
         fcc_brfs_kaz_tree_create(&meta_alloc, &tree_recycle_bin);
-    fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
+    fcs_lru_cache does_state_exist_in_any_FCC_cache;
     cache_init(&does_state_exist_in_any_FCC_cache, 1000, &meta_alloc);
 
     compact_allocator moves_list_compact_alloc;
@@ -235,7 +235,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         }
     }
 
-    fcs_lru_cache_t does_state_exist_in_any_FCC_cache;
+    fcs_lru_cache does_state_exist_in_any_FCC_cache;
     cache_init(&does_state_exist_in_any_FCC_cache, 1000000, &meta_alloc);
 
     /* Populate does_state_exist_in_any_FCC_cache from states_in_cache */

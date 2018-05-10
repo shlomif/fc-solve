@@ -21,7 +21,7 @@ extern "C" {
 typedef struct
 {
     unsigned char s[RANK_KING];
-} fcs_which_moves_bitmask_t;
+} fcs_which_moves_bitmask;
 
 typedef struct
 {
@@ -29,7 +29,7 @@ typedef struct
     unsigned char move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
-    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
+    fcs_which_moves_bitmask which_irreversible_moves_bitmask;
 } fcs_derived_state_debug;
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(

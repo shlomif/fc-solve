@@ -82,7 +82,7 @@ typedef struct
 #if 0
     FILE * consumed_states_fh;
 #endif
-    fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask;
+    fcs_which_moves_bitmask fingerprint_which_irreversible_moves_bitmask;
     fcs_lock_t fcc_exit_points_output_lock;
     FILE *fcc_exit_points_out_fh;
     FILE *fingerprint_fh;
@@ -106,7 +106,7 @@ RB_GENERATE_STATIC(
 
 static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input *const inp,
-    fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
+    fcs_which_moves_bitmask *fingerprint_which_irreversible_moves_bitmask,
     FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->fcc_meta_alloc));
@@ -408,7 +408,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move GCC_UNUSED,
-    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move_t *moves_to_parent
@@ -451,7 +451,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 
             /* Calculate the new fingerprint to which the exit
              * point belongs. */
-            fcs_which_moves_bitmask_t new_fingerprint = {{'\0'}};
+            fcs_which_moves_bitmask new_fingerprint = {{'\0'}};
             for (size_t i = 0; i < COUNT(new_fingerprint.s); i++)
             {
                 new_fingerprint.s[i] =
@@ -644,7 +644,7 @@ int main(int argc, char *argv[])
     read_state_from_file(inp.local_variant, filename,
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     horne_prune__simple(inp.local_variant, &init_state);
-    fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask = {
+    fcs_which_moves_bitmask fingerprint_which_irreversible_moves_bitmask = {
         {'\0'}};
     {
         size_t fingerprint_data_len = 0;

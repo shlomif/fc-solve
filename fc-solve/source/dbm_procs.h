@@ -75,7 +75,7 @@ static inline bool pre_cache_does_key_exist(
 }
 
 static inline void cache_populate_from_pre_cache(
-    fcs_lru_cache_t *const cache, fcs_pre_cache *const pre_cache)
+    fcs_lru_cache *const cache, fcs_pre_cache *const pre_cache)
 {
 #ifdef FCS_DBM_USE_LIBAVL
     struct rb_traverser trav;
@@ -101,7 +101,7 @@ static inline void cache_populate_from_pre_cache(
 
 static inline void pre_cache_offload_and_destroy(
     fcs_pre_cache *const pre_cache, fcs_dbm_store_t store,
-    fcs_lru_cache_t *const cache)
+    fcs_lru_cache *const cache)
 {
     fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
     cache_populate_from_pre_cache(cache, pre_cache);
@@ -124,7 +124,7 @@ static inline void pre_cache_offload_and_destroy(
 #ifndef FCS_DBM_CACHE_ONLY
 
 static inline void pre_cache_offload_and_reset(fcs_pre_cache *const pre_cache,
-    const fcs_dbm_store_t store, fcs_lru_cache_t *const cache,
+    const fcs_dbm_store_t store, fcs_lru_cache *const cache,
     meta_allocator *const meta_alloc)
 {
     pre_cache_offload_and_destroy(pre_cache, store, cache);
@@ -146,7 +146,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
     const unsigned char move,
-    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move_t *moves_to_parent

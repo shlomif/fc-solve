@@ -51,7 +51,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(
     PWord_t PValue;
 #endif
     FC__STACKS__SET_PARAMS();
-    fcs_lru_cache_t *cache = &(instance->rcs_states_cache);
+    fcs_lru_cache *cache = &(instance->rcs_states_cache);
 
     ssize_t parents_stack_len = 1;
     ssize_t parents_stack_max_len = 16;

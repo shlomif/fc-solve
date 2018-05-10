@@ -71,7 +71,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     fc_solve_print_started_at();
     fflush(stdout);
 
-    fc_solve_display_information_context_t display_context =
+    fc_solve_display_information_context display_context =
         INITIAL_DISPLAY_CONTEXT;
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
         known_parameters, cmd_line_callback, &display_context, TRUE);
