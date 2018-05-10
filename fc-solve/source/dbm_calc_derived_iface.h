@@ -33,7 +33,7 @@ typedef struct
 } fcs_derived_state_debug;
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
-    fcs_dbm_variant_type_t, const char *, int *, fcs_derived_state_debug **,
+    fcs_dbm_variant_type, const char *, int *, fcs_derived_state_debug **,
     bool);
 
 DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
@@ -44,7 +44,7 @@ DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
-    fcs_dbm_variant_type_t, const char *, char **);
+    fcs_dbm_variant_type, const char *, char **);
 
 DLLEXPORT void fc_solve_user_INTERNAL_perform_horne_prune__free_ret_state_s(
     char *const ret_state_s);

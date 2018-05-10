@@ -170,7 +170,7 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
     for (uint_fast32_t ht_idx = 0; ht_idx <= instance->num_hard_threads;
          ++ht_idx)
     {
-        fc_solve_hard_thread_t *hard_thread;
+        fcs_hard_thread *hard_thread;
         if (ht_idx < instance->num_hard_threads)
         {
             hard_thread = &(instance->hard_threads[ht_idx]);
@@ -197,7 +197,7 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
 static inline
 #endif
     void
-    fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
+    fc_solve_init_soft_thread(fcs_hard_thread *const hard_thread,
         fc_solve_soft_thread_t *const soft_thread)
 {
     *soft_thread = (fc_solve_soft_thread_t){
@@ -275,7 +275,7 @@ void fc_solve_instance__init_hard_thread(
 #ifndef FCS_SINGLE_HARD_THREAD
     fc_solve_instance_t *const instance,
 #endif
-    fc_solve_hard_thread_t *const hard_thread)
+    fcs_hard_thread *const hard_thread)
 {
 #ifndef FCS_SINGLE_HARD_THREAD
     hard_thread->instance = instance;
@@ -656,7 +656,7 @@ void fc_solve_finish_instance(fc_solve_instance_t *const instance)
 }
 
 fc_solve_soft_thread_t *fc_solve_new_soft_thread(
-    fc_solve_hard_thread_t *const hard_thread)
+    fcs_hard_thread *const hard_thread)
 {
     if (HT_INSTANCE(hard_thread)->next_soft_thread_id == MAX_NUM_SCANS)
     {

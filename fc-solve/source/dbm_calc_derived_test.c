@@ -21,7 +21,7 @@
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
-    const fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type local_variant,
     const char *init_state_str_proto, int *const num_out_derived_states,
     fcs_derived_state_debug **out_derived_states,
     const bool perform_horne_prune)
@@ -115,7 +115,7 @@ DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
-    const fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type local_variant,
     const char *init_state_str_proto, char **ret_state_s)
 {
     fcs_state_keyval_pair_t init_state;

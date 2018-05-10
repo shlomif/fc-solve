@@ -265,7 +265,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(
 static inline void fc_solve_initialize_bfs_queue(
     fc_solve_soft_thread_t *const soft_thread)
 {
-    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
 
     /* Initialize the BFS queue. We have one dummy element at the beginning
        in order to make operations simpler. */
@@ -328,7 +328,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
 fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fc_solve_soft_thread_t *const soft_thread)
 {
-    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
@@ -473,10 +473,10 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         }
 #endif
 
-        const fcs_game_limit_t num_vacant_freecells =
+        const fcs_game_limit num_vacant_freecells =
             count_num_vacant_freecells(
                 LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
-        const fcs_game_limit_t num_vacant_stacks =
+        const fcs_game_limit num_vacant_stacks =
             count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
         if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
             (num_vacant_freecells == LOCAL_FREECELLS_NUM))
@@ -531,12 +531,12 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             if (is_befs)
             {
 #ifdef FCS_RCS_STATES
-                fcs_kv_state_t new_pass = {
+                fcs_kv_state new_pass = {
                     .key = fc_solve_lookup_state_key_from_val(
                         instance, scans_ptr_new_state),
                     .val = scans_ptr_new_state};
 #else
-                fcs_kv_state_t new_pass =
+                fcs_kv_state new_pass =
                     FCS_STATE_keyval_pair_to_kv(scans_ptr_new_state);
 #endif
                 fc_solve_pq_push(pqueue, scans_ptr_new_state,
@@ -642,9 +642,9 @@ my_return_label:
  * These functions are used by the move functions in freecell.c and
  * simpsim.c.
  * */
-int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
-    fcs_kv_state_t *const out_new_state_out,
-    fcs_kv_state_t raw_state_raw SFS__PASS_MOVE_STACK(
+int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
+    fcs_kv_state *const out_new_state_out,
+    fcs_kv_state raw_state_raw SFS__PASS_MOVE_STACK(
         fcs_move_stack *const moves))
 {
     fcs_collectible_state_t *raw_ptr_new_state;
@@ -696,8 +696,8 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
-    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t raw_state_raw,
-    fcs_kv_state_t *const raw_ptr_new_state_raw FCS__pass_moves(
+    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state raw_state_raw,
+    fcs_kv_state *const raw_ptr_new_state_raw FCS__pass_moves(
         fcs_move_stack *const moves))
 {
     const_SLOT(hard_thread, soft_thread);
@@ -711,7 +711,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
     const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
-    fcs_kv_state_t existing_state;
+    fcs_kv_state existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
 

@@ -133,7 +133,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_derived_state *derived_list_recycle_bin = NULL;
     fcs_derived_state *derived_list = NULL;
     FILE *const out_fh = instance->common.out_fh;
-    fcs_dbm_variant_type_t local_variant = instance->common.variant;
+    fcs_dbm_variant_type local_variant = instance->common.variant;
 
     TRACE("%s\n", "instance_run_solver_thread start");
 #ifdef DEBUG_OUT
@@ -435,7 +435,7 @@ static bool handle_and_destroy_instance_solution(
     bool ret = FALSE;
     fcs_dbm_record_t *token;
 #ifdef DEBUG_OUT
-    fcs_dbm_variant_type_t local_variant = instance->common.variant;
+    fcs_dbm_variant_type local_variant = instance->common.variant;
 #endif
 
     TRACE("%s\n", "handle_and_destroy_instance_solution start");

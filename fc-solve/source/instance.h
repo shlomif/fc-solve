@@ -7,7 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-// instance.h - header file of fc_solve_instance_t / fc_solve_hard_thread_t /
+// instance.h - header file of fc_solve_instance_t / fcs_hard_thread /
 // fc_solve_soft_thread_t .
 #pragma once
 
@@ -126,7 +126,7 @@ struct fc_solve_soft_thread_struct;
 struct fc_solve_instance_struct;
 
 typedef void (*fc_solve_solve_for_state_move_func)(
-    struct fc_solve_soft_thread_struct *, fcs_kv_state_t,
+    struct fc_solve_soft_thread_struct *, fcs_kv_state,
     fcs_derived_states_list *);
 
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -134,18 +134,18 @@ typedef void (*fc_solve_solve_for_state_move_func)(
 #define HT_INSTANCE(hard_thread) (hard_thread)
 #define INST_HT0(instance) ((instance)->hard_thread)
 #define NUM_CHECKED_STATES (HT_INSTANCE(hard_thread)->i__num_checked_states)
-typedef struct fc_solve_instance_struct fc_solve_hard_thread_t;
-extern void fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
+typedef struct fc_solve_instance_struct fcs_hard_thread;
+extern void fc_solve_init_soft_thread(fcs_hard_thread *const hard_thread,
     struct fc_solve_soft_thread_struct *const soft_thread);
 #else
 #define HT_FIELD(hard_thread, field) (hard_thread)->field
 #define HT_INSTANCE(hard_thread) ((hard_thread)->instance)
 #define INST_HT0(instance) ((instance)->hard_threads[0])
 #define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
-typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
+typedef struct fc_solve_hard_thread_struct fcs_hard_thread;
 #endif
 extern bool fc_solve_check_and_add_state(
-    fc_solve_hard_thread_t *, fcs_kv_state_t *, fcs_kv_state_t *);
+    fcs_hard_thread *, fcs_kv_state *, fcs_kv_state *);
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 extern guint fc_solve_hash_function(gconstpointer key);
@@ -155,12 +155,12 @@ extern guint fc_solve_hash_function(gconstpointer key);
 /* HT_LOOP == hard threads' loop - macros to abstract it. */
 #ifdef FCS_SINGLE_HARD_THREAD
 
-#define HT_LOOP_START() fc_solve_hard_thread_t *const hard_thread = instance;
+#define HT_LOOP_START() fcs_hard_thread *const hard_thread = instance;
 
 #else
 #define HT_LOOP_START()                                                        \
-    fc_solve_hard_thread_t *hard_thread = instance->hard_threads;              \
-    fc_solve_hard_thread_t *const end_hard_thread =                            \
+    fcs_hard_thread *hard_thread = instance->hard_threads;              \
+    fcs_hard_thread *const end_hard_thread =                            \
         hard_thread + instance->num_hard_threads;                              \
     for (; hard_thread < end_hard_thread; ++hard_thread)
 #endif
@@ -262,7 +262,7 @@ typedef struct
 #ifndef FCS_WITHOUT_ITER_HANDLER
 typedef void (*instance_debug_iter_output_func)(
     void *, fcs_int_limit_t, int, void *,
-    fcs_kv_state_t *, fcs_int_limit_t);
+    fcs_kv_state *, fcs_int_limit_t);
 #endif
 
 typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
@@ -357,8 +357,8 @@ typedef struct
     size_t derived_states_random_indexes_max_size;
     rating_with_index *derived_states_random_indexes;
     fcs__positions_by_rank positions_by_rank;
-    fcs_game_limit_t num_vacant_stacks;
-    fcs_game_limit_t num_vacant_freecells;
+    fcs_game_limit num_vacant_stacks;
+    fcs_game_limit num_vacant_freecells;
 } fcs_soft_dfs_stack_item;
 
 typedef struct
@@ -384,7 +384,7 @@ typedef enum {
 struct fc_solve__patsolve_thread_struct;
 struct fc_solve_soft_thread_struct
 {
-    fc_solve_hard_thread_t *hard_thread;
+    fcs_hard_thread *hard_thread;
 
     /*
      * The ID of the soft thread inside the instance.
@@ -501,7 +501,7 @@ struct fc_solve_soft_thread_struct
 
     // The numbers of vacant stacks and freecells in the current state - is
     // read by the move functions in freecell.c .
-    fcs_game_limit_t num_vacant_stacks, num_vacant_freecells;
+    fcs_game_limit num_vacant_stacks, num_vacant_freecells;
 
     /*
      * The number of iterations with which to process this scan
@@ -678,7 +678,7 @@ struct fc_solve_instance_struct
     /*
      * An iterator over the hard threads.
      * */
-    fc_solve_hard_thread_t *current_hard_thread;
+    fcs_hard_thread *current_hard_thread;
 
 #ifdef FCS_WITH_MOVES
     /*
@@ -849,7 +849,7 @@ static inline int update_col_cards_under_sequences(
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t *, fcs_kv_state_t);
+    fc_solve_soft_thread_t *, fcs_kv_state);
 
 #ifdef FCS_RCS_STATES
 fcs_state *fc_solve_lookup_state_key_from_val(fc_solve_instance_t *instance,
@@ -866,7 +866,7 @@ extern void fc_solve_instance__init_hard_thread(
 #ifndef FCS_SINGLE_HARD_THREAD
     fc_solve_instance_t *const instance,
 #endif
-    fc_solve_hard_thread_t *const hard_thread);
+    fcs_hard_thread *const hard_thread);
 
 extern void fc_solve_free_soft_thread_by_depth_move_array(
     fc_solve_soft_thread_t *const soft_thread);
@@ -890,12 +890,12 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 }
 
 extern fc_solve_soft_thread_t *fc_solve_new_soft_thread(
-    fc_solve_hard_thread_t *const hard_thread);
+    fcs_hard_thread *const hard_thread);
 
 /* This is the commmon code from fc_solve_instance__init_hard_thread() and
  * recycle_hard_thread() */
 static inline void fc_solve_reset_hard_thread(
-    fc_solve_hard_thread_t *const hard_thread)
+    fcs_hard_thread *const hard_thread)
 {
 #ifndef FCS_SINGLE_HARD_THREAD
     HT_FIELD(hard_thread, ht__num_checked_states) = 0;
@@ -945,7 +945,7 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
 
 #define DECLARE_MOVE_FUNCTION(name)                                            \
     extern void name(fc_solve_soft_thread_t *const soft_thread,                \
-        fcs_kv_state_t raw_state_raw,                                          \
+        fcs_kv_state raw_state_raw,                                          \
         fcs_derived_states_list *const derived_states_list)
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE

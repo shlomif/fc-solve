@@ -401,7 +401,7 @@ static inline void fcs_dbm__cache_store__init(
 
 typedef struct
 {
-    fcs_dbm_variant_type_t local_variant;
+    fcs_dbm_variant_type local_variant;
     const char *offload_dir_path, *dbm_store_path;
     long pre_cache_max_count, iters_delta_limit, caches_delta;
     size_t num_threads;

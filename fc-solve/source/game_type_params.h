@@ -31,7 +31,7 @@ typedef struct
 #define SET_GAME_PARAMS() SET_INSTANCE_GAME_PARAMS(instance)
 
 #ifndef HARD_CODED_NUM_FREECELLS
-    fcs_game_limit_t freecells_num;
+    fcs_game_limit freecells_num;
 #define INSTANCE_FREECELLS_NUM (instance->game_params.freecells_num)
 #define LOCAL_FREECELLS_NUM (game_params.freecells_num)
 #else
@@ -40,7 +40,7 @@ typedef struct
 #endif
 
 #ifndef HARD_CODED_NUM_STACKS
-    fcs_game_limit_t stacks_num;
+    fcs_game_limit stacks_num;
 #define INSTANCE_STACKS_NUM (instance->game_params.stacks_num)
 #define LOCAL_STACKS_NUM (game_params.stacks_num)
 #else
@@ -49,7 +49,7 @@ typedef struct
 #endif
 
 #ifndef HARD_CODED_NUM_DECKS
-    fcs_game_limit_t decks_num;
+    fcs_game_limit decks_num;
 #define INSTANCE_DECKS_NUM (instance->game_params.decks_num)
 #define LOCAL_DECKS_NUM (game_params.decks_num)
 #else
@@ -71,7 +71,7 @@ typedef struct
      * moved from one place to the other regardless of the number of
      * unoccupied Freecells there are.
      * */
-    fcs_game_limit_t game_flags;
+    fcs_game_limit game_flags;
 
 #define INSTANCE_GAME_FLAGS (instance->game_params.game_flags)
 #define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)                          \

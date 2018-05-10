@@ -68,7 +68,7 @@
 
 #endif
 
-static inline int find_empty_stack(fcs_kv_state_t raw_state_raw,
+static inline int find_empty_stack(fcs_kv_state raw_state_raw,
     const int start_from, const int local_stacks_num)
 {
     for (int ret = start_from; ret < local_stacks_num; ret++)
@@ -207,7 +207,7 @@ typedef struct
  */
 static inline empty_two_cols_ret empty_two_cols_from_new_state(
     const fc_solve_soft_thread_t *const soft_thread,
-    fcs_kv_state_t *const kv_ptr_new_state SFS__PASS_MOVE_STACK(
+    fcs_kv_state *const kv_ptr_new_state SFS__PASS_MOVE_STACK(
         fcs_move_stack *const moves_ptr),
     const int cols_indexes[3], const int num_cards_1, const int num_cards_2)
 {
@@ -311,7 +311,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
     }
 }
 
-static inline fcs_game_limit_t calc_num_vacant_slots(
+static inline fcs_game_limit calc_num_vacant_slots(
     const fc_solve_soft_thread_t *const soft_thread,
     const bool is_filled_by_any_card)
 {
@@ -329,7 +329,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     MOVE_FUNCS__define_common();
     HARD__SET_GAME_PARAMS();
 
-    const fcs_game_limit_t num_vacant_slots =
+    const fcs_game_limit num_vacant_slots =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
 
     const size_t derived_start_idx = derived_states_list->num_states;
@@ -425,7 +425,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     FC__STACKS__SET_PARAMS();
-    const fcs_game_limit_t num_vacant_slots =
+    const fcs_game_limit num_vacant_slots =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
 
     /* Now let's check if a card that is under some other cards can be placed
@@ -482,7 +482,7 @@ DECLARE_MOVE_FUNCTION(
 {
     MOVE_FUNCS__define_common();
     FC__STACKS__SET_PARAMS();
-    const fcs_game_limit_t num_vacant_slots_plus_1 =
+    const fcs_game_limit num_vacant_slots_plus_1 =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card()) + 1;
 
     /*
@@ -613,20 +613,20 @@ static inline void col_seqs_iter__advance(col_seqs_iter *const iter)
     col_seqs_iter__calc_end(iter);
 }
 
-static inline bool check_if_can_relocate(const fcs_game_limit_t start,
-    const fcs_game_limit_t num_virtual_vacant_freecells,
-    const fcs_game_limit_t num_virtual_vacant_stacks,
+static inline bool check_if_can_relocate(const fcs_game_limit start,
+    const fcs_game_limit num_virtual_vacant_freecells,
+    const fcs_game_limit num_virtual_vacant_stacks,
     const col_seqs_iter *const iter PASS_sequences_are_built_by(
         const fc_solve_instance_t *const instance))
 {
     MOVE_FUNCS__define_empty_stacks_fill();
-    fcs_game_limit_t num_cards_to_relocate = start;
-    const fcs_game_limit_t freecells_to_fill =
+    fcs_game_limit num_cards_to_relocate = start;
+    const fcs_game_limit freecells_to_fill =
         min(num_cards_to_relocate, num_virtual_vacant_freecells);
 
     num_cards_to_relocate -= freecells_to_fill;
 
-    const fcs_game_limit_t freestacks_to_fill =
+    const fcs_game_limit freestacks_to_fill =
         min(num_cards_to_relocate, num_virtual_vacant_stacks);
     num_cards_to_relocate -= freestacks_to_fill;
 
@@ -643,7 +643,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     HARD__SET_GAME_PARAMS();
     const_SLOT(num_vacant_freecells, soft_thread);
     const_SLOT(num_vacant_stacks, soft_thread);
-    const fcs_game_limit_t num_virtual_vacant_stacks =
+    const fcs_game_limit num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
     const size_t derived_start_idx = derived_states_list->num_states;
 
@@ -721,14 +721,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
         return;
     }
     FC__STACKS__SET_PARAMS();
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
+    const fcs_game_limit num_vacant_stacks = soft_thread->num_vacant_stacks;
     if (num_vacant_stacks == 0)
     {
         return;
     }
-    const fcs_game_limit_t num_vacant_freecells =
+    const fcs_game_limit num_vacant_freecells =
         soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_virtual_vacant_stacks =
+    const fcs_game_limit num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
     const int max_sequence_len =
         calc_max_sequence_move(num_vacant_freecells, num_vacant_stacks - 1);
@@ -887,12 +887,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
         return;
     }
     FC__STACKS__SET_PARAMS();
-    const fcs_game_limit_t num_vacant_freecells =
+    const fcs_game_limit num_vacant_freecells =
         soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_virtual_vacant_freecells =
+    const fcs_game_limit num_virtual_vacant_freecells =
         num_vacant_freecells + 1;
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
-    const fcs_game_limit_t num_virtual_vacant_stacks = num_vacant_stacks - 1;
+    const fcs_game_limit num_vacant_stacks = soft_thread->num_vacant_stacks;
+    const fcs_game_limit num_virtual_vacant_stacks = num_vacant_stacks - 1;
     if (!num_vacant_stacks)
     {
         return;
@@ -981,10 +981,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 {
     MOVE_FUNCS__define_common();
     HARD__SET_GAME_PARAMS();
-    const fcs_game_limit_t num_vacant_freecells =
+    const fcs_game_limit num_vacant_freecells =
         soft_thread->num_vacant_freecells;
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks;
-    const fcs_game_limit_t num_virtual_vacant_stacks =
+    const fcs_game_limit num_vacant_stacks = soft_thread->num_vacant_stacks;
+    const fcs_game_limit num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
     const int derived_start_idx = derived_states_list->num_states;
 
@@ -1119,7 +1119,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
         return;
     }
     FC__STACKS__SET_PARAMS();
-    const fcs_game_limit_t num_vacant_freecells =
+    const fcs_game_limit num_vacant_freecells =
         soft_thread->num_vacant_freecells;
 
     /* Now, let's try to empty an entire stack into the freecells, so other
@@ -1270,7 +1270,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     FC__STACKS__SET_PARAMS();
-    const fcs_game_limit_t num_vacant_freecells =
+    const fcs_game_limit num_vacant_freecells =
         soft_thread->num_vacant_freecells;
 
     if (num_vacant_freecells == 0)
@@ -1440,7 +1440,7 @@ static inline int_fast32_t calc_foundation_to_put_card_on(
 }
 
 extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t raw_state_raw)
+    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state raw_state_raw)
 {
 #define EMPTY
     tests_define_accessors__generic(EMPTY);

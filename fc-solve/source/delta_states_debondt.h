@@ -38,7 +38,7 @@ typedef struct
 } fcs_debondt_delta_stater;
 
 extern char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
-    fcs_dbm_variant_type_t, const char *, const char *);
+    fcs_dbm_variant_type, const char *, const char *);
 
 #ifdef __cplusplus
 }

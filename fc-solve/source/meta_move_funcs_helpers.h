@@ -131,9 +131,9 @@ static inline void fc_solve_move_sequence_function(
  * This macro defines these accessors to have some value.
  * */
 #define tests_define_accessors_no_stacks(MORE)                                 \
-    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;      \
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;      \
     tests_define_accessors_move_stack();                                       \
-    MORE fcs_kv_state_t pass_new_state;                                        \
+    MORE fcs_kv_state pass_new_state;                                        \
     tests_define_accessors_freecell_only();                                    \
     tests_define_accessors_rcs_states()
 

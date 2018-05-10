@@ -82,7 +82,7 @@ static inline bool fcs_is_ss_true_parent(
 
 #define SIMPS_define_vacant_stacks_accessors()                                 \
     SIMPS_define_accessors();                                                  \
-    const fcs_game_limit_t num_vacant_stacks = soft_thread->num_vacant_stacks
+    const fcs_game_limit num_vacant_stacks = soft_thread->num_vacant_stacks
 
 #define CALC_POSITIONS_BY_RANK()                                               \
     const fcs_pos_by_rank *const positions_by_rank =                         \
@@ -390,7 +390,7 @@ static inline void populate_seq_points(const fcs_cards_column dest_col,
 }
 
 static inline bool generic_false_seq_index_loop(const int stacks_num,
-    fcs_kv_state_t raw_state_raw, const int num_vacant_stacks,
+    fcs_kv_state raw_state_raw, const int num_vacant_stacks,
     const fcs_cards_column col, sequences_analysis *const seqs,
     const int stack_idx, const int ds, const bool behavior_flag,
     const bool should_src_col, const fcs_card_t src_card,
@@ -480,7 +480,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
 }
 
 static inline bool false_seq_index_loop(const int stacks_num,
-    fcs_kv_state_t raw_state_raw, const int num_vacant_stacks,
+    fcs_kv_state raw_state_raw, const int num_vacant_stacks,
     const fcs_cards_column col, sequences_analysis *const seqs,
     const int stack_idx, const int ds, const bool behavior_flag)
 {
@@ -502,7 +502,7 @@ static inline bool false_seq_index_loop(const int stacks_num,
     })
 
 static inline void move_sequences_analysis_seqs_loop(
-    fcs_kv_state_t *const ptr_to_pass_new_state SFS__PASS_MOVE_STACK(
+    fcs_kv_state *const ptr_to_pass_new_state SFS__PASS_MOVE_STACK(
         fcs_move_stack *const moves),
     const sequences_analysis *const seqs_ptr, int source_col_idx,
     int source_col_cards_num IND_BUF_T_PARAM(indirect_stacks_buffer))

@@ -7,6 +7,6 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-// game_type_limit.h: define fcs_game_limit_t.
+// game_type_limit.h: define fcs_game_limit.
 #pragma once
-typedef unsigned char fcs_game_limit_t;
+typedef unsigned char fcs_game_limit;

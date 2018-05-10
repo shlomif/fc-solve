@@ -139,7 +139,7 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
 static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
-    const fcs_dbm_variant_type_t local_variant, fcs_state *const ptr_state,
+    const fcs_dbm_variant_type local_variant, fcs_state *const ptr_state,
     const fcs_card_t card)
 {
     FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
@@ -202,7 +202,7 @@ static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
 #define COUNT_NON_REV(is_reversible) ((is_reversible) ? 1 : 2)
 
 /* Returns the number of amortized irreversible moves performed. */
-static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
+static inline int horne_prune(const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
     fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
     fcs_fcc_moves_seq *const moves_seq,
@@ -328,7 +328,7 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
 }
 
 static inline int horne_prune__simple(
-    const fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr)
 {
     fcs_which_moves_bitmask no_use = {{'\0'}};
@@ -359,7 +359,7 @@ static inline bool is_state_solved(
 }
 
 static inline bool instance_solver_thread_calc_derived_states(
-    const fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
     fcs_dbm_record_t *const parent_ptr,
     fcs_derived_state **const derived_list,

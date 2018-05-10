@@ -78,7 +78,7 @@ typedef struct
     compact_allocator derived_list_allocator;
     meta_allocator meta_alloc;
     fcs_derived_state *derived_list_recycle_bin;
-    fcs_dbm_variant_type_t local_variant;
+    fcs_dbm_variant_type local_variant;
     fcs_delta_stater delta_stater;
     fcs_cache_key init_key;
 } dbm_solver_instance;
@@ -157,7 +157,7 @@ static inline void instance__inspect_new_state(
 }
 
 static inline void instance_init(dbm_solver_instance *const instance,
-    const fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair_t *const init_state,
     const long max_num_elements_in_cache)
 {
@@ -244,7 +244,7 @@ static inline void instance__print_coords_to_log(
     dbm_solver_instance *const instance, FILE *const log_fh)
 {
 #if 0
-    const fcs_dbm_variant_type_t local_variant = instance->local_variant;
+    const fcs_dbm_variant_type local_variant = instance->local_variant;
 #endif
     fprintf(
         log_fh, "At %ld iterations Coords=[", instance->count_num_processed);
@@ -296,7 +296,7 @@ static inline void instance__load_coords_from_fh(
 
 int main(int argc, char *argv[])
 {
-    fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     const long delta_limit = 100000;
     const char *filename = argv[1];
     FILE *const fh = fopen(filename, "r");

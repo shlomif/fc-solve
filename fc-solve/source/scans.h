@@ -160,13 +160,13 @@ static inline void add_to_move_funcs_list(
     *num_so_far = num;
 }
 
-extern int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const,
-    fcs_kv_state_t *const,
-    fcs_kv_state_t SFS__PASS_MOVE_STACK(fcs_move_stack *const));
+extern int fc_solve_sfs_check_state_begin(fcs_hard_thread *const,
+    fcs_kv_state *const,
+    fcs_kv_state SFS__PASS_MOVE_STACK(fcs_move_stack *const));
 
 extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
-    fc_solve_soft_thread_t *, fcs_kv_state_t,
-    fcs_kv_state_t *FCS__pass_moves(fcs_move_stack *));
+    fc_solve_soft_thread_t *, fcs_kv_state,
+    fcs_kv_state *FCS__pass_moves(fcs_move_stack *));
 
 #ifdef __cplusplus
 }

@@ -29,7 +29,7 @@ static fcs_card_t make_card(int rank, int suit)
     return fcs_make_card(rank, suit);
 }
 
-static int test_encode_and_decode(const fcs_dbm_variant_type_t local_variant, fcs_delta_stater * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
+static int test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs_delta_stater * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
 {
     int verdict;
     fcs_state_keyval_pair_t new_derived_state;
@@ -70,7 +70,7 @@ static int test_encode_and_decode(const fcs_dbm_variant_type_t local_variant, fc
 
 static int main_tests(void)
 {
-    const fcs_dbm_variant_type_t local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     {
         fcs_state_keyval_pair_t s;
         fcs_delta_stater delta;

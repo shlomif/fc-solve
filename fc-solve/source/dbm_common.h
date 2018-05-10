@@ -19,7 +19,7 @@ extern "C" {
 typedef enum {
     FCS_DBM_VARIANT_2FC_FREECELL,
     FCS_DBM_VARIANT_BAKERS_DOZEN,
-} fcs_dbm_variant_type_t;
+} fcs_dbm_variant_type;
 
 #ifndef FCS_DBM_FREECELLS_NUM
 #define FCS_DBM_FREECELLS_NUM 2

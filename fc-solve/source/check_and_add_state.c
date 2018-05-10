@@ -222,7 +222,7 @@ static inline void *fc_solve_hash_insert(
  * replaced_with_cached macro above.
  * */
 static inline void fc_solve_cache_stacks(
-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state)
+    fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
@@ -380,7 +380,7 @@ guint fc_solve_hash_function(gconstpointer key)
  * */
 
 static inline void upon_new_state(fc_solve_instance_t *const instance,
-    fc_solve_hard_thread_t *const hard_thread,
+    fcs_hard_thread *const hard_thread,
     fcs_state_extra_info *const new_state_info)
 {
     fcs_collectible_state_t *const parent_state = new_state_info->parent;
@@ -406,8 +406,8 @@ static inline void upon_new_state(fc_solve_instance_t *const instance,
 #define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
 static inline bool handle_existing_void(
     fc_solve_instance_t *const instance,
-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
-    fcs_kv_state_t *const existing_state_raw, void *const existing_void)
+    fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state,
+    fcs_kv_state *const existing_state_raw, void *const existing_void)
 {
     if (existing_void)
     {
@@ -436,8 +436,8 @@ static inline bool handle_existing_void(
         instance, hard_thread, new_state, existing_state_raw, (existing_void))
 
 bool fc_solve_check_and_add_state(
-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
-    fcs_kv_state_t *const existing_state_raw)
+    fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state,
+    fcs_kv_state *const existing_state_raw)
 {
 /*
  * TODO : these accessor macros are probably out-of-date and won't work with

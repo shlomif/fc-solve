@@ -18,7 +18,7 @@
 #include "render_state.h"
 
 static void fc_solve_state_string_to_enc(
-    const fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type local_variant,
     fcs_delta_stater *const delta, const char *const state_s_proto,
     fcs_encoded_state_buffer_t *const enc_state)
 {
@@ -35,7 +35,7 @@ static void fc_solve_state_string_to_enc(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
-    const fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type local_variant,
     const char *init_state_str_proto, const int start_state_moves_count,
     const fcs_fcc_move *const start_state_moves,
     fcs_FCC_start_point_result **const out_fcc_start_points,
@@ -175,7 +175,7 @@ DLLEXPORT void fc_solve_user_INTERNAL_free_fcc_start_points(
 }
 
 DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
-    const fcs_dbm_variant_type_t local_variant,
+    const fcs_dbm_variant_type local_variant,
     const char *init_state_str_proto, const char *start_state_str_proto,
     /* NULL-terminated */
     const char **min_states,

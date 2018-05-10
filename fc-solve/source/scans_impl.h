@@ -67,7 +67,7 @@ static inline void fc_solve_initialize_befs_rater(
     }
     const_AUTO(factor, INT_MAX / sum);
 #define W(idx) (befs_weights[idx] * factor)
-    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
     HARD__SET_GAME_PARAMS();
 
@@ -151,10 +151,10 @@ static inline void fcs_trace(const char *const format, ...)
 }
 #endif
 
-static inline fcs_game_limit_t count_num_vacant_freecells(
-    const fcs_game_limit_t freecells_num, const fcs_state *const state_ptr)
+static inline fcs_game_limit count_num_vacant_freecells(
+    const fcs_game_limit freecells_num, const fcs_state *const state_ptr)
 {
-    fcs_game_limit_t num_vacant_freecells = 0;
+    fcs_game_limit num_vacant_freecells = 0;
     for (int i = 0; i < freecells_num; i++)
     {
         if (fcs_freecell_is_empty(*state_ptr, i))
@@ -200,7 +200,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
         }
     }
 
-    fcs_game_limit_t num_vacant_stacks = 0;
+    fcs_game_limit num_vacant_stacks = 0;
     if (weighting->should_go_over_stacks)
     {
         for (int a = 0; a < LOCAL_STACKS_NUM; ++a)
@@ -233,7 +233,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
             }
         }
 
-        const fcs_game_limit_t num_vacant_freecells =
+        const fcs_game_limit num_vacant_freecells =
             count_num_vacant_freecells(LOCAL_FREECELLS_NUM, state);
 #define CALC_VACANCY_VAL()                                                     \
     (is_filled_by_any_card()                                                   \
@@ -289,7 +289,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE()                                                        \
     fcs_state state_key;                                                     \
-    fcs_kv_state_t pass = {.key = &(state_key)}
+    fcs_kv_state pass = {.key = &(state_key)}
 
 #else
 
@@ -301,7 +301,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE()                                                        \
     fcs_collectible_state_t *ptr_state_raw;                                    \
-    fcs_kv_state_t pass
+    fcs_kv_state pass
 #endif
 
 #define ASSIGN_ptr_state(my_value)                                             \
@@ -408,10 +408,10 @@ static inline void mark_as_dead_end__proto(
         BUMP_NUM_CHECKED_STATES__HT()                                          \
     }
 
-static inline fcs_game_limit_t count_num_vacant_stacks(
-    const fcs_game_limit_t stacks_num, const fcs_state *const state_ptr)
+static inline fcs_game_limit count_num_vacant_stacks(
+    const fcs_game_limit stacks_num, const fcs_state *const state_ptr)
 {
-    fcs_game_limit_t num_vacant_stacks = 0;
+    fcs_game_limit num_vacant_stacks = 0;
 
     for (int i = 0; i < stacks_num; i++)
     {
@@ -453,7 +453,7 @@ static inline bool fcs__should_state_be_pruned(
 #endif
 static inline fcs_int_limit_t calc_ht_max_num_states(
     const fc_solve_instance_t *const instance,
-    const fc_solve_hard_thread_t *const hard_thread)
+    const fcs_hard_thread *const hard_thread)
 {
     const_AUTO(a, HT_FIELD(hard_thread, ht__max_num_checked_states));
 #ifdef FCS_WITHOUT_MAX_NUM_STATES
