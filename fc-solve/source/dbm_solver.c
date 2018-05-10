@@ -77,7 +77,7 @@ static inline void instance_destroy(dbm_solver_instance *const instance)
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const int key_depth GCC_UNUSED,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
@@ -87,7 +87,7 @@ static inline void instance_check_key(
 #endif
 )
 {
-    fcs_dbm_record_t *token;
+    fcs_dbm_record *token;
     if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -117,7 +117,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item physical_item;
     fcs_state_keyval_pair_t state;
-    fcs_dbm_record_t *token = NULL;
+    fcs_dbm_record *token = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     const_AUTO(thread, ((thread_arg *)void_arg)->thread);
@@ -240,7 +240,7 @@ static bool populate_instance_with_intermediate_input_line(
     fcs_encoded_state_buffer_t final_stack_encoded_state;
     fcs_encoded_state_buffer_t running_key;
     fcs_state_keyval_pair_t running_state;
-    fcs_dbm_record_t *token = NULL;
+    fcs_dbm_record *token = NULL;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
@@ -283,7 +283,7 @@ static bool populate_instance_with_intermediate_input_line(
      * state. */
     fcs_init_and_encode_state(
         delta, local_variant, &(running_state), &running_key);
-    fcs_dbm_record_t *running_parent = NULL;
+    fcs_dbm_record *running_parent = NULL;
 
 #ifdef FCS_DBM_CACHE_ONLY
     fcs_fcc_move *running_moves = NULL;
@@ -433,7 +433,7 @@ static bool handle_and_destroy_instance_solution(
 {
     FILE *const out_fh = instance->common.out_fh;
     bool ret = FALSE;
-    fcs_dbm_record_t *token;
+    fcs_dbm_record *token;
 #ifdef DEBUG_OUT
     fcs_dbm_variant_type local_variant = instance->common.variant;
 #endif
@@ -739,7 +739,7 @@ int main(int argc, char *argv[])
          * initial state. */
         fcs_init_encoded_state(&(parent_state_enc));
 
-        fcs_dbm_record_t *token;
+        fcs_dbm_record *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
         cache_store__insert_key(
             &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');

@@ -352,7 +352,7 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
 
 typedef struct
 {
-    fcs_collectible_state_t *state_ptr;
+    fcs_collectible_state *state_ptr;
     union {
         void *ptr;
         int i;
@@ -367,7 +367,7 @@ typedef struct
 } fcs_derived_states_list;
 
 extern void fc_solve_derived_states_list_add_state(
-    fcs_derived_states_list *, fcs_collectible_state_t *, int);
+    fcs_derived_states_list *, fcs_collectible_state *, int);
 
 #ifdef __cplusplus
 }

@@ -173,7 +173,7 @@ static inline void apply_moves(fcs_moves_order *moves_order,
 }
 
 fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
-    fc_solve_instance_t *const instance, const fcs_preset *const preset_ptr)
+    fcs_instance *const instance, const fcs_preset *const preset_ptr)
 {
     FCS__DECL_ERR_BUF(no_use);
 #define preset (*preset_ptr)

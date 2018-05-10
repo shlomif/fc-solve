@@ -46,12 +46,12 @@ dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
 /*
  * Returns TRUE if the key was added (it didn't already exist.)
  * */
-fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
-    const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *const parent,
+fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
+    const fcs_encoded_state_buffer_t *key, fcs_dbm_record *const parent,
     const bool should_modify_parent GCC_UNUSED)
 {
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
-    fcs_dbm_record_t record_on_stack;
+    fcs_dbm_record record_on_stack;
 
     /* This memset() call is done to please valgrind and for general
      * good measure. It is not absolutely necessary (but should not
@@ -63,11 +63,11 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 
     fcs_dbm *const db = (fcs_dbm *)store;
 
-    fcs_dbm_record_t *to_check;
+    fcs_dbm_record *to_check;
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
     to_check = &record_on_stack;
 #else
-    to_check = (fcs_dbm_record_t *)fcs_compact_alloc_ptr(
+    to_check = (fcs_dbm_record *)fcs_compact_alloc_ptr(
         &(db->allocator), sizeof(*to_check));
 #endif
 
@@ -94,7 +94,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
             fcs_dbm_record_increment_refcount(parent);
         }
 
-        return ((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(
+        return ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
             db->kaz_tree, to_check)));
     }
     else
@@ -106,7 +106,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store store, const unsigned char *key, unsigned char *parent)
 {
-    fcs_dbm_record_t to_check = {
+    fcs_dbm_record to_check = {
         .key = *(const fcs_encoded_state_buffer_t *)key};
 
     dict_key_t existing =
@@ -118,8 +118,8 @@ bool fc_solve_dbm_store_lookup_parent(
     else
     {
 #ifdef FCS_DBM_RECORD_POINTER_REPR
-        fcs_dbm_record_t *const p =
-            fcs_dbm_record_get_parent_ptr((fcs_dbm_record_t *)existing);
+        fcs_dbm_record *const p =
+            fcs_dbm_record_get_parent_ptr((fcs_dbm_record *)existing);
 
         if (p)
         {
@@ -131,7 +131,7 @@ bool fc_solve_dbm_store_lookup_parent(
         }
 #else
         *(fcs_encoded_state_buffer_t *)parent =
-            ((fcs_dbm_record_t *)existing)->parent;
+            ((fcs_dbm_record *)existing)->parent;
 #endif
         return TRUE;
     }

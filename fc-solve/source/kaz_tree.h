@@ -56,7 +56,7 @@ typedef enum { dnode_red, dnode_black } dnode_color_t;
  * nodes.
  */
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
-typedef fcs_dbm_record_t dict_key_t;
+typedef fcs_dbm_record dict_key_t;
 typedef dict_key_t *dict_ret_key_t;
 #else
 typedef void *dict_key_t;

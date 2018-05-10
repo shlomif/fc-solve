@@ -227,7 +227,7 @@ static inline void fc_solve_cache_stacks(
 #ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
-    fc_solve_instance_t *const instance = hard_thread->instance;
+    fcs_instance *const instance = hard_thread->instance;
 #endif
     STACKS__SET_PARAMS();
     register fcs_state *const new_state_key = new_state->key;
@@ -379,11 +379,11 @@ guint fc_solve_hash_function(gconstpointer key)
  *        5b. Add the new state and return TRUE.
  * */
 
-static inline void upon_new_state(fc_solve_instance_t *const instance,
+static inline void upon_new_state(fcs_instance *const instance,
     fcs_hard_thread *const hard_thread,
     fcs_state_extra_info *const new_state_info)
 {
-    fcs_collectible_state_t *const parent_state = new_state_info->parent;
+    fcs_collectible_state *const parent_state = new_state_info->parent;
     /* The new state was not found in the cache, and it was already inserted */
     if (likely(parent_state))
     {
@@ -405,7 +405,7 @@ static inline void upon_new_state(fc_solve_instance_t *const instance,
 
 #define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
 static inline bool handle_existing_void(
-    fc_solve_instance_t *const instance,
+    fcs_instance *const instance,
     fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state,
     fcs_kv_state *const existing_state_raw, void *const existing_void)
 {
@@ -449,7 +449,7 @@ bool fc_solve_check_and_add_state(
 #ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
-    fc_solve_instance_t *const instance = hard_thread->instance;
+    fcs_instance *const instance = hard_thread->instance;
 #endif
     fc_solve_cache_stacks(hard_thread, new_state);
     fc_solve_canonize_state(new_state_key PASS_FREECELLS(INSTANCE_FREECELLS_NUM)

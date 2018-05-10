@@ -31,7 +31,7 @@ static int main_tests(void)
 
         for (size_t pos_idx = 1 ; pos_idx < sizeof( fcs_encoded_state_buffer_t ) ; pos_idx++)
         {
-            fcs_dbm_record_t rec_a, rec_b;
+            fcs_dbm_record rec_a, rec_b;
 
             memset(&rec_a, '\0', sizeof(rec_a));
             memset(&rec_b, '\0', sizeof(rec_a));

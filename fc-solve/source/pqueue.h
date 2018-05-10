@@ -47,7 +47,7 @@ extern "C" {
 typedef int pq_rating;
 typedef struct
 {
-    fcs_collectible_state_t *val;
+    fcs_collectible_state *val;
     pq_rating rating;
 } pq_element;
 
@@ -95,7 +95,7 @@ static inline void fc_solve_PQueueFree(pri_queue *const pq)
    "r" is the rating of the item you're adding for sorting purposes */
 
 static inline void fc_solve_pq_push(pri_queue *const pq,
-    fcs_collectible_state_t *const val, const pq_rating r)
+    fcs_collectible_state *const val, const pq_rating r)
 {
     var_AUTO(i, ++(pq->current_size));
 
@@ -145,7 +145,7 @@ static inline bool fc_solve_is_pqueue_empty(pri_queue *pq)
  * */
 
 static inline void fc_solve_pq_pop(
-    pri_queue *const pq, fcs_collectible_state_t **const val)
+    pri_queue *const pq, fcs_collectible_state **const val)
 {
     if (fc_solve_is_pqueue_empty(pq))
     {

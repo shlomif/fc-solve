@@ -43,27 +43,27 @@ typedef struct
 #ifdef FCS_EXPLICIT_REFCOUNT
     unsigned char refcount;
 #endif
-} fcs_dbm_record_t;
+} fcs_dbm_record;
 
 #define FCS_DBM_RECORD_SHIFT ((sizeof(rec->parent_and_refcount) - 1) * 8)
 
 #ifdef FCS_EXPLICIT_REFCOUNT
-static inline fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
-    fcs_dbm_record_t *const rec)
+static inline fcs_dbm_record *fcs_dbm_record_get_parent_ptr(
+    fcs_dbm_record *const rec)
 {
-    return (fcs_dbm_record_t *)(rec->parent_and_refcount);
+    return (fcs_dbm_record *)(rec->parent_and_refcount);
 }
 #else
-static inline fcs_dbm_record_t *fcs_dbm_record_get_parent_ptr(
-    fcs_dbm_record_t *const rec)
+static inline fcs_dbm_record *fcs_dbm_record_get_parent_ptr(
+    fcs_dbm_record *const rec)
 {
-    return (fcs_dbm_record_t *)(rec->parent_and_refcount &
+    return (fcs_dbm_record *)(rec->parent_and_refcount &
                                 (~(((uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT)));
 }
 #endif
 
 static inline void fcs_dbm_record_set_parent_ptr(
-    fcs_dbm_record_t *const rec, fcs_dbm_record_t *const parent_ptr)
+    fcs_dbm_record *const rec, fcs_dbm_record *const parent_ptr)
 {
     rec->parent_and_refcount = ((uintptr_t)parent_ptr);
 #ifdef FCS_EXPLICIT_REFCOUNT
@@ -73,13 +73,13 @@ static inline void fcs_dbm_record_set_parent_ptr(
 
 #ifdef FCS_EXPLICIT_REFCOUNT
 static inline unsigned char fcs_dbm_record_get_refcount(
-    const fcs_dbm_record_t *const rec)
+    const fcs_dbm_record *const rec)
 {
     return rec->refcount;
 }
 #else
 static inline unsigned char fcs_dbm_record_get_refcount(
-    const fcs_dbm_record_t *const rec)
+    const fcs_dbm_record *const rec)
 {
     return (unsigned char)(rec->parent_and_refcount >> FCS_DBM_RECORD_SHIFT);
 }
@@ -87,13 +87,13 @@ static inline unsigned char fcs_dbm_record_get_refcount(
 
 #ifdef FCS_EXPLICIT_REFCOUNT
 static inline void fcs_dbm_record_set_refcount(
-    fcs_dbm_record_t *const rec, const unsigned char new_val)
+    fcs_dbm_record *const rec, const unsigned char new_val)
 {
     rec->refcount = new_val;
 }
 #else
 static inline void fcs_dbm_record_set_refcount(
-    fcs_dbm_record_t *const rec, const unsigned char new_val)
+    fcs_dbm_record *const rec, const unsigned char new_val)
 {
     rec->parent_and_refcount &=
         (~(((const uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT));
@@ -103,14 +103,14 @@ static inline void fcs_dbm_record_set_refcount(
 #endif
 
 static inline void fcs_dbm_record_increment_refcount(
-    fcs_dbm_record_t *const rec)
+    fcs_dbm_record *const rec)
 {
     fcs_dbm_record_set_refcount(rec, fcs_dbm_record_get_refcount(rec) + 1);
 }
 
 /* Returns the new value so we can tell if it is zero. */
 static inline unsigned char fcs_dbm_record_decrement_refcount(
-    fcs_dbm_record_t *const rec)
+    fcs_dbm_record *const rec)
 {
     const unsigned char new_val = fcs_dbm_record_get_refcount(rec) - 1;
 
@@ -125,7 +125,7 @@ typedef struct
 {
     fcs_encoded_state_buffer_t key;
     fcs_encoded_state_buffer_t parent;
-} fcs_dbm_record_t;
+} fcs_dbm_record;
 
 #endif
 

@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-// instance.h - header file of fc_solve_instance_t / fcs_hard_thread /
-// fc_solve_soft_thread_t .
+// instance.h - header file of fcs_instance / fcs_hard_thread /
+// fcs_soft_thread .
 #pragma once
 
 #ifdef __cplusplus
@@ -113,7 +113,7 @@ typedef int8_t fcs__positions_by_rank[FCS_BOTH__POS_BY_RANK__SIZE];
  * */
 typedef struct fcs_states_linked_list_item_struct
 {
-    fcs_collectible_state_t *s;
+    fcs_collectible_state *s;
     struct fcs_states_linked_list_item_struct *next;
 } fcs_states_linked_list_item;
 
@@ -167,10 +167,10 @@ extern guint fc_solve_hash_function(gconstpointer key);
 
 /* ST_LOOP == soft threads' loop - macros to abstract it. */
 #define ST_LOOP_START()                                                        \
-    fc_solve_soft_thread_t *const ht_soft_threads =                            \
+    fcs_soft_thread *const ht_soft_threads =                            \
         HT_FIELD(hard_thread, soft_threads);                                   \
-    fc_solve_soft_thread_t *soft_thread = ht_soft_threads;                     \
-    fc_solve_soft_thread_t *const end_soft_thread =                            \
+    fcs_soft_thread *soft_thread = ht_soft_threads;                     \
+    fcs_soft_thread *const end_soft_thread =                            \
         ht_soft_threads + HT_FIELD(hard_thread, num_soft_threads);             \
     for (; soft_thread < end_soft_thread; ++soft_thread)
 #define MOVES_GROW_BY 16
@@ -231,7 +231,7 @@ typedef struct
 #ifdef FCS_RCS_STATES
 struct fcs_cache_key_info_struct
 {
-    const fcs_collectible_state_t *val_ptr;
+    const fcs_collectible_state *val_ptr;
     fcs_state key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
@@ -265,13 +265,13 @@ typedef void (*instance_debug_iter_output_func)(
     fcs_kv_state *, fcs_int_limit_t);
 #endif
 
-typedef struct fc_solve_soft_thread_struct fc_solve_soft_thread_t;
-typedef struct fc_solve_instance_struct fc_solve_instance_t;
+typedef struct fc_solve_soft_thread_struct fcs_soft_thread;
+typedef struct fc_solve_instance_struct fcs_instance;
 
 struct fc_solve_hard_thread_struct
 {
 #ifndef FCS_SINGLE_HARD_THREAD
-    fc_solve_instance_t *instance;
+    fcs_instance *instance;
 #endif
 
     struct fc_solve_soft_thread_struct *soft_threads;
@@ -349,7 +349,7 @@ typedef struct
 
 typedef struct
 {
-    fcs_collectible_state_t *state;
+    fcs_collectible_state *state;
     fcs_derived_states_list derived_states_list;
     size_t move_func_list_idx;
     size_t current_state_index;
@@ -492,7 +492,7 @@ struct fc_solve_soft_thread_struct
              * The first state to be checked by the scan. It is a kind of
              * bootstrap for the algorithm.
              * */
-            fcs_collectible_state_t *first_state_to_check;
+            fcs_collectible_state *first_state_to_check;
         } befs;
     } method_specific;
 
@@ -627,7 +627,7 @@ struct fc_solve_instance_struct
 #endif
 #endif
 
-    fcs_collectible_state_t *list_of_vacant_states;
+    fcs_collectible_state *list_of_vacant_states;
 /*
  * Storing using Berkeley DB is not operational for some reason so
  * pay no attention to it for the while
@@ -710,7 +710,7 @@ struct fc_solve_instance_struct
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) ||                  \
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
     fcs_state *tree_new_state_key;
-    fcs_collectible_state_t *tree_new_state;
+    fcs_collectible_state *tree_new_state;
 #endif
 
 #endif
@@ -747,7 +747,7 @@ struct fc_solve_instance_struct
     /* This is the final state that the scan recommends to the
      * interface
      * */
-    fcs_collectible_state_t *final_state;
+    fcs_collectible_state *final_state;
 
     /*
      * A move stack that contains the moves leading to the solution.
@@ -769,7 +769,7 @@ struct fc_solve_instance_struct
      *
      * Needed to trace the patsolve solutions.
      * */
-    fc_solve_soft_thread_t *solving_soft_thread;
+    fcs_soft_thread *solving_soft_thread;
 #endif
 #ifndef FCS_DISABLE_PATSOLVE
     /*
@@ -813,7 +813,7 @@ struct fc_solve_instance_struct
 #endif
 
 extern fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
-    fc_solve_soft_thread_t *const soft_thread);
+    fcs_soft_thread *const soft_thread);
 
 static inline void *memdup(const void *const src, const size_t my_size)
 {
@@ -848,28 +848,28 @@ static inline int update_col_cards_under_sequences(
     return d;
 }
 
-extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t *, fcs_kv_state);
+extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
+    fcs_soft_thread *, fcs_kv_state);
 
 #ifdef FCS_RCS_STATES
-fcs_state *fc_solve_lookup_state_key_from_val(fc_solve_instance_t *instance,
-    const fcs_collectible_state_t *orig_ptr_state_val);
+fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *instance,
+    const fcs_collectible_state *orig_ptr_state_val);
 
 extern int fc_solve_compare_lru_cache_keys(const void *, const void *, void *);
 
 #endif
 
 extern void fc_solve_soft_thread_init_befs_or_bfs(
-    fc_solve_soft_thread_t *const soft_thread);
+    fcs_soft_thread *const soft_thread);
 
 extern void fc_solve_instance__init_hard_thread(
 #ifndef FCS_SINGLE_HARD_THREAD
-    fc_solve_instance_t *const instance,
+    fcs_instance *const instance,
 #endif
     fcs_hard_thread *const hard_thread);
 
 extern void fc_solve_free_soft_thread_by_depth_move_array(
-    fc_solve_soft_thread_t *const soft_thread);
+    fcs_soft_thread *const soft_thread);
 
 static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 {
@@ -889,7 +889,7 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
     return ret;
 }
 
-extern fc_solve_soft_thread_t *fc_solve_new_soft_thread(
+extern fcs_soft_thread *fc_solve_new_soft_thread(
     fcs_hard_thread *const hard_thread);
 
 /* This is the commmon code from fc_solve_instance__init_hard_thread() and
@@ -905,7 +905,7 @@ static inline void fc_solve_reset_hard_thread(
 }
 
 static inline void fc_solve_reset_soft_thread(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
@@ -918,7 +918,7 @@ typedef enum {
     FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS
 } foreach_st_callback_choice;
 
-extern void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
+extern void fc_solve_foreach_soft_thread(fcs_instance *const instance,
     const foreach_st_callback_choice callback_choice,
     void *const context);
 
@@ -944,22 +944,22 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     /***********************************************************/
 
 #define DECLARE_MOVE_FUNCTION(name)                                            \
-    extern void name(fc_solve_soft_thread_t *const soft_thread,                \
+    extern void name(fcs_soft_thread *const soft_thread,                \
         fcs_kv_state raw_state_raw,                                          \
         fcs_derived_states_list *const derived_states_list)
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 static inline bool fcs_get_calc_real_depth(
-    const fc_solve_instance_t *const instance)
+    const fcs_instance *const instance)
 {
     return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 }
 #endif
 
 #ifdef FCS_WITH_MOVES
-extern void fc_solve_trace_solution(fc_solve_instance_t *const instance);
+extern void fc_solve_trace_solution(fcs_instance *const instance);
 #endif
-extern void fc_solve_finish_instance(fc_solve_instance_t *const instance);
+extern void fc_solve_finish_instance(fcs_instance *const instance);
 
 #ifdef __cplusplus
 }

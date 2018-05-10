@@ -25,7 +25,7 @@ extern "C" {
 static int compare_records(
     const void *const void_a, const void *const void_b, void *const context)
 {
-#define GET_PARAM(p) (&(((const fcs_dbm_record_t *)(p))->key))
+#define GET_PARAM(p) (&(((const fcs_dbm_record *)(p))->key))
     const fcs_encoded_state_buffer_t *const a = GET_PARAM(void_a),
                                             *const b = GET_PARAM(void_b);
 #undef GET_PARAM
@@ -47,7 +47,7 @@ static int compare_records(
 static int compare_records(const void *const void_a, const void *const void_b,
     void *const context GCC_UNUSED)
 {
-#define GET_PARAM(p) (((const fcs_dbm_record_t *)(p))->key)
+#define GET_PARAM(p) (((const fcs_dbm_record *)(p))->key)
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM

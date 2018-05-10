@@ -117,7 +117,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     TRACE("%s\n", "instance_run_solver_thread start");
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
-    fcs_dbm_record_t *tokens[max_batch_size];
+    fcs_dbm_record *tokens[max_batch_size];
     fcs_derived_state *derived_lists[max_batch_size];
     while (TRUE)
     {
@@ -242,7 +242,7 @@ thread_end:
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
@@ -253,7 +253,7 @@ static inline void instance_check_key(
 )
 {
     const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
-    fcs_dbm_record_t *token;
+    fcs_dbm_record *token;
 
     if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
@@ -363,7 +363,7 @@ int main(int argc, char *argv[])
     fcs_encoded_state_buffer_t parent_state_enc;
     fcs_init_encoded_state(&(parent_state_enc));
 
-    fcs_dbm_record_t *token;
+    fcs_dbm_record *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
     cache_store__insert_key(
         &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');

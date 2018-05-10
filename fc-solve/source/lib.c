@@ -31,8 +31,8 @@ static void verify_state_sanity(const fcs_state *const ptr_state)
 #endif
 
 #ifndef FCS_SINGLE_HARD_THREAD
-static inline fc_solve_soft_thread_t *new_hard_thread(
-    fc_solve_instance_t *const instance)
+static inline fcs_soft_thread *new_hard_thread(
+    fcs_instance *const instance)
 {
     fcs_hard_thread *ret;
     /* Make sure we are not exceeding the maximal number of soft threads
@@ -64,7 +64,7 @@ static inline fc_solve_soft_thread_t *new_hard_thread(
 
 #ifndef FCS_FREECELL_ONLY
 static inline void apply_preset_by_name(
-    fc_solve_instance_t *const instance, const char *const name)
+    fcs_instance *const instance, const char *const name)
 {
     const fcs_preset *preset_ptr;
     const_AUTO(ret, fc_solve_get_preset_by_name(name, &preset_ptr));
@@ -83,10 +83,10 @@ static inline void apply_preset_by_name(
     Afterwards fc_solve_init_instance() should be called in order
     to really prepare it for solving.
   */
-static inline void alloc_instance(fc_solve_instance_t *const instance,
+static inline void alloc_instance(fcs_instance *const instance,
     meta_allocator *const meta_alloc)
 {
-    *(instance) = (fc_solve_instance_t){
+    *(instance) = (fcs_instance){
         .meta_alloc = meta_alloc,
         .i__num_checked_states = 0,
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -245,7 +245,7 @@ static inline void set_next_soft_thread(
         NUM_CHECKED_STATES + quota;
 }
 
-static inline void init_instance(fc_solve_instance_t *const instance)
+static inline void init_instance(fcs_instance *const instance)
 {
     /* Initialize the state packs */
     HT_LOOP_START()
@@ -365,8 +365,8 @@ static int cmp_stacks_w_context(const void *const v_s1, const void *const v_s2,
      (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE))
 
 static inline fcs_state *rcs_states_get_state(
-    fc_solve_instance_t *const instance,
-    const fcs_collectible_state_t *const state)
+    fcs_instance *const instance,
+    const fcs_collectible_state *const state)
 {
     return ((state == instance->tree_new_state)
                 ? instance->tree_new_state_key
@@ -376,12 +376,12 @@ static inline fcs_state *rcs_states_get_state(
 static int rcs_cmp_states(
     const void *const void_a, const void *const void_b, void *const context)
 {
-    fc_solve_instance_t *const instance = (fc_solve_instance_t *)context;
+    fcs_instance *const instance = (fcs_instance *)context;
 
     return fc_solve_state_compare(
-        rcs_states_get_state(instance, (const fcs_collectible_state_t *)void_a),
+        rcs_states_get_state(instance, (const fcs_collectible_state *)void_a),
         rcs_states_get_state(
-            instance, (const fcs_collectible_state_t *)void_b));
+            instance, (const fcs_collectible_state *)void_b));
 }
 
 #endif
@@ -412,7 +412,7 @@ static inline void set_next_prelude_item(
         hard_thread, next_item.scan_idx, next_item.quota, st_idx_ptr);
 }
 
-static inline void update_initial_cards_val(fc_solve_instance_t *const instance)
+static inline void update_initial_cards_val(fcs_instance *const instance)
 {
 #ifdef FCS_FREECELL_ONLY
 #define SEQS_BUILT_BY
@@ -439,10 +439,10 @@ static inline void update_initial_cards_val(fc_solve_instance_t *const instance)
     instance->initial_cards_under_sequences_value = cards_under_sequences;
 }
 
-// This function associates a board with an fc_solve_instance_t and
+// This function associates a board with an fcs_instance and
 // does other initialisations. After it, you must call resume_instance()
 // repeatedly.
-static inline void start_process_with_board(fc_solve_instance_t *const instance,
+static inline void start_process_with_board(fcs_instance *const instance,
     fcs_state_keyval_pair_t *const init_state,
     fcs_state_keyval_pair_t *const initial_non_canonized_state)
 {
@@ -597,7 +597,7 @@ static inline void free_hard_thread(fcs_hard_thread *const hard_thread)
     fc_solve_compact_allocator_finish(&(HT_FIELD(hard_thread, allocator)));
 }
 
-static inline void free_instance(fc_solve_instance_t *const instance)
+static inline void free_instance(fcs_instance *const instance)
 {
     fc_solve_foreach_soft_thread(
         instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
@@ -655,7 +655,7 @@ static inline void recycle_ht(fcs_hard_thread *const hard_thread)
     }
 }
 
-static inline void recycle_inst(fc_solve_instance_t *const instance)
+static inline void recycle_inst(fcs_instance *const instance)
 {
     fc_solve_finish_instance(instance);
 #ifdef FCS_WITH_MOVES
@@ -690,8 +690,8 @@ static inline void recycle_inst(fc_solve_instance_t *const instance)
 }
 
 #ifdef FCS_WITH_MOVES
-static inline void setup_opt_thread__helper(fc_solve_instance_t *const instance,
-    fc_solve_soft_thread_t *const soft_thread)
+static inline void setup_opt_thread__helper(fcs_instance *const instance,
+    fcs_soft_thread *const soft_thread)
 {
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
@@ -727,9 +727,9 @@ static inline void setup_opt_thread__helper(fc_solve_instance_t *const instance,
     states in the solution path.
 */
 #ifdef FCS_SINGLE_HARD_THREAD
-static inline int optimize_solution(fc_solve_instance_t *const instance)
+static inline int optimize_solution(fcs_instance *const instance)
 {
-    fc_solve_soft_thread_t *const optimization_soft_thread =
+    fcs_soft_thread *const optimization_soft_thread =
         &(instance->optimization_soft_thread);
 
     if (!instance->solution_moves.moves)
@@ -763,9 +763,9 @@ static inline int optimize_solution(fc_solve_instance_t *const instance)
 }
 #undef soft_thread
 #else
-static inline int optimize_solution(fc_solve_instance_t *const instance)
+static inline int optimize_solution(fcs_instance *const instance)
 {
-    fc_solve_soft_thread_t *soft_thread;
+    fcs_soft_thread *soft_thread;
     fcs_hard_thread *optimization_thread;
 
     if (!instance->solution_moves.moves)
@@ -816,7 +816,7 @@ static inline int optimize_solution(fc_solve_instance_t *const instance)
 #ifdef DEBUG
 
 #ifdef DEBUG_VERIFY_SOFT_DFS_STACK
-static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
+static void verify_soft_dfs_stack(fcs_soft_thread *soft_thread)
 {
     for (int depth = 0; depth < DFS_VAR(soft_thread, depth); ++depth)
     {
@@ -865,7 +865,7 @@ static void verify_soft_dfs_stack(fc_solve_soft_thread_t *soft_thread)
 #endif
 
 static inline bool fcs__is_state_a_dead_end(
-    const fcs_collectible_state_t *const ptr_state)
+    const fcs_collectible_state *const ptr_state)
 {
     return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
 }
@@ -877,7 +877,7 @@ static inline bool fcs__is_state_a_dead_end(
 #define free_states(i)
 #else
 static inline void free_states_handle_soft_dfs_soft_thread(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info));
     const_AUTO(end_soft_dfs_info, soft_dfs_info + DFS_VAR(soft_thread, depth));
@@ -916,9 +916,9 @@ static inline void free_states_handle_soft_dfs_soft_thread(
 static bool free_states_should_delete(
     void *const key, void *const context)
 {
-    fc_solve_instance_t *const instance = (fc_solve_instance_t *const)context;
-    fcs_collectible_state_t *const ptr_state =
-        (fcs_collectible_state_t *const)key;
+    fcs_instance *const instance = (fcs_instance *const)context;
+    fcs_collectible_state *const ptr_state =
+        (fcs_collectible_state *const)key;
 
     if (fcs__is_state_a_dead_end(ptr_state))
     {
@@ -935,7 +935,7 @@ static bool free_states_should_delete(
     }
 }
 
-static inline void free_states(fc_solve_instance_t *const instance)
+static inline void free_states(fcs_instance *const instance)
 {
     /* First of all, let's make sure the soft_threads will no longer
      * traverse to the freed states that are currently dead ends.
@@ -986,7 +986,7 @@ static inline void free_states(fc_solve_instance_t *const instance)
 #endif
 
 #define SOFT_DFS_DEPTH_GROW_BY 64
-static void increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
+static void increase_dfs_max_depth(fcs_soft_thread *const soft_thread)
 {
     const_AUTO(new_dfs_max_depth,
         DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
@@ -1003,10 +1003,10 @@ static void increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
 // dfs_solve() is the event loop of the Random-DFS scan. DFS, which is
 // recursive in nature, is handled here without procedural recursion by using
 // some dedicated stacks for the traversal.
-static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
+static inline int dfs_solve(fcs_soft_thread *const soft_thread)
 {
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
     ssize_t by_depth_max_depth, by_depth_min_depth;
 
@@ -1181,7 +1181,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
                 bool was_pruned = FALSE;
                 if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
                 {
-                    fcs_collectible_state_t *const derived =
+                    fcs_collectible_state *const derived =
                         fc_solve_sfs_raymond_prune(soft_thread, pass);
                     if (derived)
                     {
@@ -1381,7 +1381,7 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
 
         while (++state_idx < num_states)
         {
-            fcs_collectible_state_t *const single_derived_state =
+            fcs_collectible_state *const single_derived_state =
                 derived_states[(*(++rand_int_ptr)).idx].state_ptr;
 
             VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
@@ -1448,9 +1448,9 @@ static inline int dfs_solve(fc_solve_soft_thread_t *const soft_thread)
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
 
-static inline void init_dfs(fc_solve_soft_thread_t *const soft_thread)
+static inline void init_dfs(fcs_soft_thread *const soft_thread)
 {
-    fc_solve_instance_t *const instance = fcs_st_instance(soft_thread);
+    fcs_instance *const instance = fcs_st_instance(soft_thread);
     // Allocate some space for the states at depth 0.
     DFS_VAR(soft_thread, depth) = 0;
     increase_dfs_max_depth(soft_thread);
@@ -1534,7 +1534,7 @@ static inline void init_dfs(fc_solve_soft_thread_t *const soft_thread)
 static inline void switch_to_next_soft_thread(
     fcs_hard_thread *const hard_thread,
     const int_fast32_t num_soft_threads,
-    const fc_solve_soft_thread_t *const soft_threads,
+    const fcs_soft_thread *const soft_threads,
     const fc_solve_prelude_item *const prelude, const size_t prelude_num_items,
     int_fast32_t *const st_idx_ptr)
 {
@@ -1553,7 +1553,7 @@ static inline void switch_to_next_soft_thread(
 
 #ifndef FCS_DISABLE_PATSOLVE
 static inline fc_solve_solve_process_ret_t do_patsolve(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     const_SLOT(hard_thread, soft_thread);
     const_SLOT(pats_scan, soft_thread);
@@ -1585,7 +1585,7 @@ static inline fc_solve_solve_process_ret_t do_patsolve(
 }
 #endif
 
-static inline int solve(fc_solve_soft_thread_t *const soft_thread)
+static inline int solve(fcs_soft_thread *const soft_thread)
 {
     switch (soft_thread->super_method_type)
     {
@@ -1629,7 +1629,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
 #ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
-    fc_solve_instance_t *const instance = hard_thread->instance;
+    fcs_instance *const instance = hard_thread->instance;
 #endif
     int_fast32_t *const st_idx_ptr = &(HT_FIELD(hard_thread, st_idx));
     /*
@@ -1641,12 +1641,12 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
     const int_fast32_t num_soft_threads =
         HT_FIELD(hard_thread, num_soft_threads);
     const fc_solve_prelude_item *const prelude = HT_FIELD(hard_thread, prelude);
-    fc_solve_soft_thread_t *const soft_threads =
+    fcs_soft_thread *const soft_threads =
         HT_FIELD(hard_thread, soft_threads);
 
     while (HT_FIELD(hard_thread, num_soft_threads_finished) < num_soft_threads)
     {
-        fc_solve_soft_thread_t *const soft_thread =
+        fcs_soft_thread *const soft_thread =
             &(soft_threads[*st_idx_ptr]);
         /*
          * Move to the next thread if it's already finished
@@ -1778,7 +1778,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
 
 /* Resume a solution process that was stopped in the middle */
 static inline fc_solve_solve_process_ret_t resume_instance(
-    fc_solve_instance_t *const instance)
+    fcs_instance *const instance)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_SUSPEND_PROCESS;
 /*
@@ -1894,7 +1894,7 @@ static const fcs_stats initial_stats = {.num_checked_states = 0,
 
 typedef struct
 {
-    fc_solve_instance_t obj;
+    fcs_instance obj;
     fc_solve_solve_process_ret_t ret_code;
     /* Whether the instance is ready to be input with (i.e:
      * was recycled already.) */
@@ -2039,7 +2039,7 @@ typedef struct
 #endif
     double flares_iters_factor;
 #endif
-    fc_solve_soft_thread_t *soft_thread;
+    fcs_soft_thread *soft_thread;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 #define MAX_STATE_STRING_COPY_LEN 2048
     char state_string_copy[MAX_STATE_STRING_COPY_LEN];
@@ -2048,12 +2048,12 @@ typedef struct
     meta_allocator meta_alloc;
 } fcs_user_t;
 
-static inline fc_solve_instance_t *user_obj(fcs_user_t *const user)
+static inline fcs_instance *user_obj(fcs_user_t *const user)
 {
     return &(ACTIVE_FLARE(user)->obj);
 }
 
-static inline fc_solve_instance_t *active_obj(void *const api_instance)
+static inline fcs_instance *active_obj(void *const api_instance)
 {
     return user_obj((fcs_user_t *)api_instance);
 }
@@ -2121,7 +2121,7 @@ static inline fcs_instance_item *curr_inst(fcs_user_t *const user)
 
 #ifndef FCS_FREECELL_ONLY
 static inline void calc_variant_suit_mask_and_desired_suit_value(
-    fc_solve_instance_t *const instance)
+    fcs_instance *const instance)
 {
 #ifndef FCS_DISABLE_PATSOLVE
     instance->game_variant_suit_mask = FCS_PATS__COLOR;
@@ -2139,7 +2139,7 @@ static void apply_game_params_for_all_instances(fcs_user_t *const user)
 {
     FLARES_LOOP_START()
     {
-        fc_solve_instance_t *const instance = &(flare->obj);
+        fcs_instance *const instance = &(flare->obj);
         instance->game_params = user->common_preset.game_params;
         calc_variant_suit_mask_and_desired_suit_value(instance);
     }
@@ -2238,7 +2238,7 @@ static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     instance_item->limit = -1;
 #endif
-    fc_solve_instance_t *const instance = &(flare->obj);
+    fcs_instance *const instance = &(flare->obj);
 
     SET_ACTIVE_FLARE(user, flare);
     alloc_instance(instance, &(user->meta_alloc));
@@ -2431,7 +2431,7 @@ void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
 #endif
 #endif
 
-static inline fc_solve_soft_thread_t *api_soft_thread(void *const api_instance)
+static inline fcs_soft_thread *api_soft_thread(void *const api_instance)
 {
     return ((fcs_user_t *const)api_instance)->soft_thread;
 }
@@ -2440,7 +2440,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     void *const api_instance, const int min_depth,
     const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
 {
-    fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
+    fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
 
     if (min_depth < 0)
     {
@@ -2902,7 +2902,7 @@ static void trace_flare_solution(
         return;
     }
 
-    fc_solve_instance_t *const instance = &(flare->obj);
+    fcs_instance *const instance = &(flare->obj);
     fc_solve_trace_solution(instance);
     flare->trace_solution_state_locs = user->state_locs;
     fc_solve_move_stack_normalize(&(instance->solution_moves), &(user->state),
@@ -3043,7 +3043,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(
             BUMP_CURR_INST();
         }
 #endif
-        fc_solve_instance_t *const instance = &(flare->obj);
+        fcs_instance *const instance = &(flare->obj);
 
         SET_ACTIVE_FLARE(user, flare);
         const bool is_start_of_flare_solving =
@@ -3430,7 +3430,7 @@ static MYINLINE void user_free_resources(fcs_user_t *const user)
     FLARES_LOOP_START()
     {
         const_SLOT(ret_code, flare);
-        fc_solve_instance_t *const instance = &(flare->obj);
+        fcs_instance *const instance = &(flare->obj);
 
         if ((ret_code != FCS_STATE_NOT_BEGAN_YET) &&
             (ret_code != FCS_STATE_INVALID_STATE) &&
@@ -3546,7 +3546,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     }
 #endif
     fcs_super_method_type super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
-    fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
+    fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
     switch (int_method)
     {
     case FCS_METHOD_BFS:
@@ -3974,7 +3974,7 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
 int DLLEXPORT freecell_solver_user_set_a_star_weight(
     void *const api_instance, const int my_index, const double weight)
 {
-    fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
+    fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
     if ((my_index < 0) ||
         (my_index >=
             (int)(COUNT(
@@ -4043,7 +4043,7 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
     const int canonized_order_output PASS_T(const int display_10_as_t))
 {
 #ifndef HARD_CODED_ALL
-    fc_solve_instance_t *const instance = active_obj(api_instance);
+    fcs_instance *const instance = active_obj(api_instance);
 #endif
 
     const_AUTO(
@@ -4156,7 +4156,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 #else
     fcs_user_t *const user = (fcs_user_t *)api_instance;
 
-    fc_solve_soft_thread_t *const soft_thread = new_hard_thread(user_obj(user));
+    fcs_soft_thread *const soft_thread = new_hard_thread(user_obj(user));
 
     if (soft_thread == NULL)
     {
@@ -4191,7 +4191,7 @@ void DLLEXPORT freecell_solver_user_set_calc_real_depth(
 void DLLEXPORT freecell_solver_user_set_soft_thread_name(
     void *const api_instance, const freecell_solver_str_t name)
 {
-    fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
+    fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
     strncpy(soft_thread->name, name, COUNT(soft_thread->name));
     LAST(soft_thread->name) = '\0';
 }
@@ -4284,7 +4284,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
     const char *pruning FCS__PASS_ERR_STR(char **error_string))
 {
-    fc_solve_soft_thread_t *const soft_thread = api_soft_thread(api_instance);
+    fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
 
     if (!strcmp(pruning, "r:tf"))
     {

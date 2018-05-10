@@ -44,8 +44,8 @@ extern int fc_solve_compare_lru_cache_keys(const void *const void_a,
 
 #define NEXT_CACHE_STATE(s) ((s)->lower_pri)
 fcs_state *fc_solve_lookup_state_key_from_val(
-    fc_solve_instance_t *const instance,
-    const fcs_collectible_state_t *const orig_ptr_state_val)
+    fcs_instance *const instance,
+    const fcs_collectible_state *const orig_ptr_state_val)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     PWord_t PValue;
@@ -59,7 +59,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(
     struct
     {
         fcs_cache_key_info *new_cache_state;
-        const fcs_collectible_state_t *state_val;
+        const fcs_collectible_state *state_val;
     } *parents_stack = SMALLOC(parents_stack, parents_stack_max_len);
 
     parents_stack[0].state_val = orig_ptr_state_val;
@@ -263,7 +263,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(
         sizeof(fcs_states_linked_list_item)));
 
 static inline void fc_solve_initialize_bfs_queue(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
 
@@ -276,7 +276,7 @@ static inline void fc_solve_initialize_bfs_queue(
 }
 
 void fc_solve_soft_thread_init_befs_or_bfs(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     if (soft_thread->is_befs)
     {
@@ -326,10 +326,10 @@ void fc_solve_soft_thread_init_befs_or_bfs(
  *  there are no more states in the queue.
  */
 fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
     const bool is_simple_simon = instance->is_simple_simon;
@@ -412,7 +412,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         TRACE0("Pruning");
         if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
         {
-            fcs_collectible_state_t *const after_pruning_state =
+            fcs_collectible_state *const after_pruning_state =
                 fc_solve_sfs_raymond_prune(soft_thread, pass);
             if (after_pruning_state)
             {
@@ -596,7 +596,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             Extract the next item in the queue/priority queue.
         */
         {
-            fcs_collectible_state_t *new_ptr_state;
+            fcs_collectible_state *new_ptr_state;
             if (is_befs)
             {
                 /* It is an BeFS scan */
@@ -647,8 +647,8 @@ int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
     fcs_kv_state raw_state_raw SFS__PASS_MOVE_STACK(
         fcs_move_stack *const moves))
 {
-    fcs_collectible_state_t *raw_ptr_new_state;
-    fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
+    fcs_collectible_state *raw_ptr_new_state;
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
     if ((HT_FIELD(hard_thread, allocated_from_list) =
                 (instance->list_of_vacant_states != NULL)))
@@ -695,8 +695,8 @@ int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
     return 0;
 }
 
-extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
-    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state raw_state_raw,
+extern fcs_collectible_state *fc_solve_sfs_check_state_end(
+    fcs_soft_thread *const soft_thread, fcs_kv_state raw_state_raw,
     fcs_kv_state *const raw_ptr_new_state_raw FCS__pass_moves(
         fcs_move_stack *const moves))
 {

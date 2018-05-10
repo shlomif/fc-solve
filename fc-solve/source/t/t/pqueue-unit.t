@@ -44,11 +44,11 @@ int is_empty(SV * obj) {
 void push(SV * obj, char * val, int rating) {
     SV * const sv = newSVpv(val, 0);
 
-    fc_solve_pq_push(q(obj), (fcs_collectible_state_t *)sv, rating);
+    fc_solve_pq_push(q(obj), (fcs_collectible_state *)sv, rating);
 }
 
 SV * pop(SV * obj) {
-    fcs_collectible_state_t * val;
+    fcs_collectible_state * val;
 
     fc_solve_pq_pop(q(obj), &val);
 

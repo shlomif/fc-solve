@@ -51,8 +51,8 @@ bool fc_solve_dbm_store_does_key_exist(
 bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store, const unsigned char *const, unsigned char *const);
 
-fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
-    const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *parent,
+fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
+    const fcs_encoded_state_buffer_t *key, fcs_dbm_record *parent,
     const bool should_modify_parent);
 
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -95,7 +95,7 @@ typedef struct
     bool queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
 #ifdef FCS_DBM_WITHOUT_CACHES
-    fcs_dbm_record_t *queue_solution_ptr;
+    fcs_dbm_record *queue_solution_ptr;
 #else
     fcs_encoded_state_buffer_t queue_solution;
 #endif
@@ -104,7 +104,7 @@ typedef struct
 
 static inline void fcs_dbm__found_solution(
     dbm_instance_common_elems *const common,
-    fcs_dbm_record_t *const token, fcs_dbm_queue_item *const item GCC_UNUSED)
+    fcs_dbm_record *const token, fcs_dbm_queue_item *const item GCC_UNUSED)
 {
     common->should_terminate = SOLUTION_FOUND_TERMINATE;
     common->queue_solution_was_found = TRUE;

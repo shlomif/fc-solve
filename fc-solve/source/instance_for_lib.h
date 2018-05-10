@@ -21,7 +21,7 @@ extern "C" {
 #include "move_funcs_order.h"
 
 static inline void fcs_free_moves_list(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     /* Free the BeFS data. */
     free(BEFS_M_VAR(soft_thread, moves_list));
@@ -53,7 +53,7 @@ static inline void fcs_free_moves_list(
 
 #ifdef FCS_WITH_MOVES
 static inline void instance_free_solution_moves(
-    fc_solve_instance_t *const instance)
+    fcs_instance *const instance)
 {
     if (instance->solution_moves.moves)
     {
@@ -63,13 +63,13 @@ static inline void instance_free_solution_moves(
 }
 #endif
 
-static inline void st_free_pq(fc_solve_soft_thread_t *const soft_thread)
+static inline void st_free_pq(fcs_soft_thread *const soft_thread)
 {
     fc_solve_PQueueFree(&(BEFS_VAR(soft_thread, pqueue)));
 }
 
 static inline void fc_solve_free_instance_soft_thread_callback(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     st_free_pq(soft_thread);
     fcs_free_moves_list(soft_thread);

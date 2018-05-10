@@ -88,11 +88,11 @@ static inline void fcs_compact_alloc_release(
 
 extern void fc_solve_compact_allocator_finish(compact_allocator *);
 
-static inline fcs_collectible_state_t *fcs_state_ia_alloc_into_var(
+static inline fcs_collectible_state *fcs_state_ia_alloc_into_var(
     compact_allocator *const allocator)
 {
-    return (fcs_collectible_state_t *)fcs_compact_alloc_ptr(
-        allocator, sizeof(fcs_collectible_state_t));
+    return (fcs_collectible_state *)fcs_compact_alloc_ptr(
+        allocator, sizeof(fcs_collectible_state));
 }
 
 static inline void fc_solve_compact_allocator_recycle(

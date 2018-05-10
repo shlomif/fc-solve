@@ -36,7 +36,7 @@ struct FccEntryPointNode
     RB_ENTRY(FccEntryPointNode) entry_;
     struct
     {
-        fcs_dbm_record_t key;
+        fcs_dbm_record key;
         /* fcc_entry_point_value_t */
         struct
         {
@@ -186,7 +186,7 @@ struct fcs_dbm_solver_thread_struct
 static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item physical_item;
-    fcs_dbm_record_t *token = NULL;
+    fcs_dbm_record *token = NULL;
     fcs_derived_state *derived_list = NULL, *derived_list_recycle_bin = NULL;
     compact_allocator derived_list_allocator;
     fcs_state_keyval_pair_t state;
@@ -406,7 +406,7 @@ static inline void instance_alloc_num_moves(
 
 static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -421,7 +421,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
     const_AUTO(local_variant, instance->common.variant);
 #endif
     const_AUTO(coll, &(instance->coll));
-    fcs_dbm_record_t *token;
+    fcs_dbm_record *token;
     if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES

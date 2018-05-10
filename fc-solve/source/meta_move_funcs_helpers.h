@@ -102,10 +102,10 @@ static inline void fc_solve_move_sequence_function(
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define tests_define_accessors_freecell_only()                                 \
-    fc_solve_instance_t *const instance = hard_thread;
+    fcs_instance *const instance = hard_thread;
 #else
 #define tests_define_accessors_freecell_only()                                 \
-    fc_solve_instance_t *const instance = hard_thread->instance;
+    fcs_instance *const instance = hard_thread->instance;
 #endif
 
 #define tests__is_filled_by_any_card()                                         \

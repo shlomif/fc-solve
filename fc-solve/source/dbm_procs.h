@@ -144,7 +144,7 @@ typedef struct
 
 static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
     const unsigned char move,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -257,7 +257,7 @@ static inline void instance_debug_out_state(
     }
 #endif
 
-static void calc_trace(fcs_dbm_record_t *const ptr_initial_record,
+static void calc_trace(fcs_dbm_record *const ptr_initial_record,
     fcs_encoded_state_buffer_t **const ptr_trace, int *const ptr_trace_num)
 {
 #define GROW_BY 100
@@ -265,7 +265,7 @@ static void calc_trace(fcs_dbm_record_t *const ptr_initial_record,
     size_t trace_max_num = GROW_BY;
     fcs_encoded_state_buffer_t *trace = SMALLOC(trace, trace_max_num);
     fcs_encoded_state_buffer_t *key_ptr = trace;
-    fcs_dbm_record_t *record = ptr_initial_record;
+    fcs_dbm_record *record = ptr_initial_record;
 
     while (record)
     {
@@ -478,9 +478,9 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
     return FALSE;
 }
 
-static inline fcs_dbm_record_t *cache_store__has_key(
+static inline fcs_dbm_record *cache_store__has_key(
     fcs_dbm__cache_store__common *const cache_store,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent)
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
     if (cache_does_key_exist(&(cache_store->cache), key))
@@ -498,7 +498,7 @@ static inline fcs_dbm_record_t *cache_store__has_key(
         return NULL;
     }
 #endif
-    return ((fcs_dbm_record_t *)key);
+    return ((fcs_dbm_record *)key);
 #else
     return fc_solve_dbm_store_insert_key_value(
         cache_store->store, key, parent, TRUE);
@@ -508,7 +508,7 @@ static inline fcs_dbm_record_t *cache_store__has_key(
 #ifndef FCS_DBM_WITHOUT_CACHES
 static inline fcs_cache_key_info *cache_store__insert_key(
     fcs_dbm__cache_store__common *const cache_store,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
+    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
     const fcs_fcc_move *const moves_to_parent,
     const unsigned char move GCC_UNUSED)
 {

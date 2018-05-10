@@ -30,7 +30,7 @@ typedef struct fcs_derived_state_struct
 {
     fcs_state_keyval_pair_t state;
     fcs_encoded_state_buffer_t key;
-    fcs_dbm_record_t *parent;
+    fcs_dbm_record *parent;
     struct fcs_derived_state_struct *next;
     int core_irreversible_moves_count;
     fcs_which_moves_bitmask which_irreversible_moves_bitmask;
@@ -361,7 +361,7 @@ static inline bool is_state_solved(
 static inline bool instance_solver_thread_calc_derived_states(
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
-    fcs_dbm_record_t *const parent_ptr,
+    fcs_dbm_record *const parent_ptr,
     fcs_derived_state **const derived_list,
     fcs_derived_state **const derived_list_recycle_bin,
     compact_allocator *const derived_list_allocator,

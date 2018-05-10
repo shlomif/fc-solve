@@ -58,11 +58,11 @@ void rb_free (struct libavl_allocator *, void *);
 #endif
 
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
-typedef fcs_dbm_record_t avl_key_type;
+typedef fcs_dbm_record avl_key_type;
 #define AVL_KEY_PTR_PTR(p) (p)
 #define NODE_DATA_PTR(p) (&((p)->rb_data))
-#define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->rb_data) = *(fcs_dbm_record_t *)ptr)
-#define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(fcs_dbm_record_t *)ptr)
+#define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->rb_data) = *(fcs_dbm_record *)ptr)
+#define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(fcs_dbm_record *)ptr)
 #define AVL_KEY_EQUAL_TO_PTR(key, ptr) (!memcmp(&(key), (ptr), sizeof(key)))
 #else
 typedef void * avl_key_type;

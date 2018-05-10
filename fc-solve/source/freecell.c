@@ -206,7 +206,7 @@ typedef struct
  * into freeeclls and empty columns
  */
 static inline empty_two_cols_ret empty_two_cols_from_new_state(
-    const fc_solve_soft_thread_t *const soft_thread,
+    const fcs_soft_thread *const soft_thread,
     fcs_kv_state *const kv_ptr_new_state SFS__PASS_MOVE_STACK(
         fcs_move_stack *const moves_ptr),
     const int cols_indexes[3], const int num_cards_1, const int num_cards_2)
@@ -312,7 +312,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
 }
 
 static inline fcs_game_limit calc_num_vacant_slots(
-    const fc_solve_soft_thread_t *const soft_thread,
+    const fcs_soft_thread *const soft_thread,
     const bool is_filled_by_any_card)
 {
     return (soft_thread->num_vacant_freecells +
@@ -617,7 +617,7 @@ static inline bool check_if_can_relocate(const fcs_game_limit start,
     const fcs_game_limit num_virtual_vacant_freecells,
     const fcs_game_limit num_virtual_vacant_stacks,
     const col_seqs_iter *const iter PASS_sequences_are_built_by(
-        const fc_solve_instance_t *const instance))
+        const fcs_instance *const instance))
 {
     MOVE_FUNCS__define_empty_stacks_fill();
     fcs_game_limit num_cards_to_relocate = start;
@@ -1397,7 +1397,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card)
 
 static inline int_fast32_t calc_foundation_to_put_card_on(
-    const fc_solve_soft_thread_t *const soft_thread,
+    const fcs_soft_thread *const soft_thread,
     const fcs_state *const ptr_state, const fcs_card_t card)
 {
     FCS_ON_NOT_FC_ONLY(const_AUTO(instance, fcs_st_instance(soft_thread)));
@@ -1439,8 +1439,8 @@ static inline int_fast32_t calc_foundation_to_put_card_on(
     return -1;
 }
 
-extern fcs_collectible_state_t *fc_solve_sfs_raymond_prune(
-    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state raw_state_raw)
+extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
+    fcs_soft_thread *const soft_thread, fcs_kv_state raw_state_raw)
 {
 #define EMPTY
     tests_define_accessors__generic(EMPTY);

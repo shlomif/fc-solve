@@ -31,7 +31,7 @@ typedef struct
 } fcs_preset;
 
 extern fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
-    fc_solve_instance_t *, const fcs_preset *);
+    fcs_instance *, const fcs_preset *);
 
 extern fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
     const char *, const fcs_preset **);

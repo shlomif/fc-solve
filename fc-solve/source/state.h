@@ -354,27 +354,27 @@ static inline fcs_kv_state FCS_STATE_keyval_pair_to_kv(
  *
  * */
 #ifdef FCS_RCS_STATES
-typedef fcs_state_extra_info fcs_collectible_state_t;
+typedef fcs_state_extra_info fcs_collectible_state;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
 
 #define fcs_duplicate_state(x, y) fcs_duplicate_kv_state((x), (y))
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (&((s)->info))
-static inline fcs_collectible_state_t *FCS_STATE_kv_to_collectible(
+static inline fcs_collectible_state *FCS_STATE_kv_to_collectible(
     fcs_kv_state *const s)
 {
     return s->val;
 }
 
 static inline void FCS_STATE_collectible_to_kv(
-    fcs_kv_state *const ret, fcs_collectible_state_t *const s)
+    fcs_kv_state *const ret, fcs_collectible_state *const s)
 {
     ret->val = s;
 }
 
 #else
 
-typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
+typedef fcs_state_keyval_pair_t fcs_collectible_state;
 
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
 
@@ -385,14 +385,14 @@ typedef fcs_state_keyval_pair_t fcs_collectible_state_t;
     }
 
 #define FCS_STATE_keyval_pair_to_collectible(s) (s)
-static inline fcs_collectible_state_t *FCS_STATE_kv_to_collectible(
+static inline fcs_collectible_state *FCS_STATE_kv_to_collectible(
     fcs_kv_state *const s)
 {
-    return (fcs_collectible_state_t *)(s->key);
+    return (fcs_collectible_state *)(s->key);
 }
 
 static inline void FCS_STATE_collectible_to_kv(
-    fcs_kv_state *const ret, fcs_collectible_state_t *const s)
+    fcs_kv_state *const ret, fcs_collectible_state *const s)
 {
     *ret = FCS_STATE_keyval_pair_to_kv(s);
 }
@@ -990,7 +990,7 @@ static inline int fc_solve_stack_compare_for_comparison(
 #endif
 
 static inline void set_scan_visited(
-    fcs_collectible_state_t *const ptr_state, const int scan_id)
+    fcs_collectible_state *const ptr_state, const int scan_id)
 {
     (FCS_S_SCAN_VISITED(ptr_state))[scan_id >> FCS_CHAR_BIT_SIZE_LOG2] |=
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1)));

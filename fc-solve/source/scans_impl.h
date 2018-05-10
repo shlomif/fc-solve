@@ -51,7 +51,7 @@ extern "C" {
     (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
 #endif
 static inline void fc_solve_initialize_befs_rater(
-    fc_solve_soft_thread_t *const soft_thread,
+    fcs_soft_thread *const soft_thread,
     fcs_state_weighting *const weighting)
 {
     const double *const befs_weights = weighting->befs_weights.weights;
@@ -68,7 +68,7 @@ static inline void fc_solve_initialize_befs_rater(
     const_AUTO(factor, INT_MAX / sum);
 #define W(idx) (befs_weights[idx] * factor)
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
@@ -122,7 +122,7 @@ static inline void fc_solve_initialize_befs_rater(
 
 typedef int fcs_depth;
 
-static inline fcs_depth calc_depth(fcs_collectible_state_t *ptr_state)
+static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state)
 {
 #ifdef FCS_WITHOUT_DEPTH_FIELD
     register fcs_depth ret = 0;
@@ -167,7 +167,7 @@ static inline fcs_game_limit count_num_vacant_freecells(
 }
 
 static inline pq_rating befs_rate_state(
-    const fc_solve_soft_thread_t *const soft_thread,
+    const fcs_soft_thread *const soft_thread,
     const fcs_state_weighting *const weighting,
     const fcs_state *const state, const int negated_depth)
 {
@@ -300,7 +300,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
          .key = &FCS_SCANS_the_state, .val = &(PTR_STATE->info)})
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE()                                                        \
-    fcs_collectible_state_t *ptr_state_raw;                                    \
+    fcs_collectible_state *ptr_state_raw;                                    \
     fcs_kv_state pass
 #endif
 
@@ -321,12 +321,12 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
  * */
 
 static inline void calculate_real_depth(const bool calc_real_depth,
-    fcs_collectible_state_t *const ptr_state_orig)
+    fcs_collectible_state *const ptr_state_orig)
 {
     if (calc_real_depth)
     {
         int_fast32_t this_real_depth = -1;
-        fcs_collectible_state_t *temp_state = ptr_state_orig;
+        fcs_collectible_state *temp_state = ptr_state_orig;
         /* Count the number of states until the original state. */
         while (temp_state != NULL)
         {
@@ -354,9 +354,9 @@ static inline void calculate_real_depth(const bool calc_real_depth,
  * */
 
 static inline void mark_as_dead_end__proto(
-    fcs_collectible_state_t *const ptr_state_input)
+    fcs_collectible_state *const ptr_state_input)
 {
-    fcs_collectible_state_t *temp_state = (ptr_state_input);
+    fcs_collectible_state *temp_state = (ptr_state_input);
     /* Mark as a dead end */
     FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
     temp_state = FCS_S_PARENT(temp_state);
@@ -425,7 +425,7 @@ static inline fcs_game_limit count_num_vacant_stacks(
 }
 
 static inline bool fcs__should_state_be_pruned__state(
-    const fcs_collectible_state_t *const ptr_state)
+    const fcs_collectible_state *const ptr_state)
 {
     return (!(FCS_S_VISITED(ptr_state) & FCS_VISITED_GENERATED_BY_PRUNING));
 }
@@ -436,7 +436,7 @@ static inline bool fcs__should_state_be_pruned__state(
 #else
 static inline bool fcs__should_state_be_pruned(
     const bool enable_pruning,
-    const fcs_collectible_state_t *const ptr_state)
+    const fcs_collectible_state *const ptr_state)
 {
     return (enable_pruning && fcs__should_state_be_pruned__state(ptr_state));
 }
@@ -452,7 +452,7 @@ static inline bool fcs__should_state_be_pruned(
             (instance->i__num_checked_states)))
 #endif
 static inline fcs_int_limit_t calc_ht_max_num_states(
-    const fc_solve_instance_t *const instance,
+    const fcs_instance *const instance,
     const fcs_hard_thread *const hard_thread)
 {
     const_AUTO(a, HT_FIELD(hard_thread, ht__max_num_checked_states));
