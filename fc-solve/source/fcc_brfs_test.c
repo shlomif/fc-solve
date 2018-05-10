@@ -22,7 +22,7 @@ static void fc_solve_state_string_to_enc(
     fcs_delta_stater *const delta, const char *const state_s_proto,
     fcs_encoded_state_buffer_t *const enc_state)
 {
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
     DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
 
     fc_solve_initial_user_state_to_c(state_s_proto, &state, FREECELLS_NUM,
@@ -41,7 +41,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_FCC_start_point_result **const out_fcc_start_points,
     long *const out_num_new_positions)
 {
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     fcs_encoded_state_buffer_t enc_state;
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
@@ -127,7 +127,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     iter = start_points_list.list;
     for (size_t i = 0; i < states_count; i++)
     {
-        fcs_state_keyval_pair_t state;
+        fcs_state_keyval_pair state;
         DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
 
         ret[i].count = iter->moves_seq.count;
@@ -182,7 +182,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     /* NULL-terminated */
     const char **states_in_cache, bool *const out_is_fcc_new)
 {
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     fcs_encoded_state_buffer_t enc_state;
     fcs_encoded_state_buffer_t start_enc_state;
     fcs_encoded_state_buffer_t min_by_sorting;

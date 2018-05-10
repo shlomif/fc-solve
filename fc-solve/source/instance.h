@@ -741,7 +741,7 @@ struct fc_solve_instance_struct
     int next_soft_thread_id;
 
     /* This is the initial state */
-    fcs_state_keyval_pair_t state_copy;
+    fcs_state_keyval_pair state_copy;
 
 #ifdef FCS_WITH_MOVES
     /* This is the final state that the scan recommends to the
@@ -777,7 +777,7 @@ struct fc_solve_instance_struct
      * sensitive to the ordering of the columns/stacks. This is an ugly hack
      * but hopefully it will work.
      * */
-    fcs_state_keyval_pair_t *initial_non_canonized_state;
+    fcs_state_keyval_pair *initial_non_canonized_state;
 #endif
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON

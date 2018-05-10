@@ -323,7 +323,7 @@ struct fcs_state_keyval_pair_struct
     };
 };
 
-typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair_t;
+typedef struct fcs_state_keyval_pair_struct fcs_state_keyval_pair;
 
 typedef struct
 {
@@ -332,7 +332,7 @@ typedef struct
 } fcs_kv_state;
 
 static inline fcs_kv_state FCS_STATE_keyval_pair_to_kv(
-    fcs_state_keyval_pair_t *const s)
+    fcs_state_keyval_pair *const s)
 {
     return (const fcs_kv_state){.key = &(s->s), .val = &(s->info)};
 }
@@ -374,7 +374,7 @@ static inline void FCS_STATE_collectible_to_kv(
 
 #else
 
-typedef fcs_state_keyval_pair_t fcs_collectible_state;
+typedef fcs_state_keyval_pair fcs_collectible_state;
 
 #define FCS_S_ACCESSOR(s, field) (((s)->info).field)
 
@@ -590,7 +590,7 @@ static inline __attribute__((pure)) fcs_card_t fc_solve_card_parse_str(
 #endif
 
 static inline void fc_solve_state_init_proto(
-    fcs_state_keyval_pair_t *const state STACKS_NUM__ARG GCC_UNUSED
+    fcs_state_keyval_pair *const state STACKS_NUM__ARG GCC_UNUSED
         IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     memset(&(state->s), 0, sizeof(state->s));
@@ -661,7 +661,7 @@ static inline const char *fc_solve__try_prefixes(
 
 static inline bool fc_solve_initial_user_state_to_c_proto(
     const char *const string,
-    fcs_state_keyval_pair_t *const out_state FREECELLS_STACKS_DECKS__ARGS()
+    fcs_state_keyval_pair *const out_state FREECELLS_STACKS_DECKS__ARGS()
         IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     fc_solve_state_init(out_state, STACKS_NUM__VAL, indirect_stacks_buffer);
@@ -855,7 +855,7 @@ typedef enum {
 
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
 static inline state_validity_ret fc_solve_check_state_validity(
-    const fcs_state_keyval_pair_t *const state_pair
+    const fcs_state_keyval_pair *const state_pair
         FREECELLS_STACKS_DECKS__ARGS(),
     fcs_card_t *const misplaced_card)
 {

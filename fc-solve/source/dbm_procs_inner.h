@@ -19,7 +19,7 @@ typedef struct
 
 static inline main_thread_item *dbm__calc_threads(
     dbm_solver_instance *const instance,
-    fcs_state_keyval_pair_t *const init_state, const size_t num_threads,
+    fcs_state_keyval_pair *const init_state, const size_t num_threads,
     void (*init_thread_cb)(dbm_solver_thread *))
 {
 #ifdef T
@@ -69,7 +69,7 @@ static unsigned char get_move_from_parent_to_child(
     dbm_solver_instance *const instance, fcs_delta_stater *delta,
     fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
 {
-    fcs_state_keyval_pair_t parent_state;
+    fcs_state_keyval_pair parent_state;
     fcs_derived_state *derived_list = NULL, *derived_list_recycle_bin = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     const_AUTO(local_variant, instance->common.variant);
@@ -111,7 +111,7 @@ static void trace_solution(dbm_solver_instance *const instance,
 #ifdef FCS_DBM_WITHOUT_CACHES
     fcs_encoded_state_buffer_t *trace;
     int trace_num;
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
     unsigned char move = '\0';
     char move_buffer[500];
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -143,7 +143,7 @@ static void trace_solution(dbm_solver_instance *const instance,
 
 static inline void read_state_from_file(
     const fcs_dbm_variant_type local_variant, const char *const filename,
-    fcs_state_keyval_pair_t *const init_state IND_BUF_T_PARAM(
+    fcs_state_keyval_pair *const init_state IND_BUF_T_PARAM(
         init_indirect_stacks_buffer))
 {
     FILE *const fh = fopen(filename, "r");

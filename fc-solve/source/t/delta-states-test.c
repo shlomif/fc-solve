@@ -29,10 +29,10 @@ static fcs_card_t make_card(int rank, int suit)
     return fcs_make_card(rank, suit);
 }
 
-static int test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs_delta_stater * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
+static int test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs_delta_stater * delta, fcs_state_keyval_pair * state, const char * expected_str, const char * blurb)
 {
     int verdict;
-    fcs_state_keyval_pair_t new_derived_state;
+    fcs_state_keyval_pair new_derived_state;
     fcs_uchar enc_state[24];
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct locs;
@@ -72,7 +72,7 @@ static int main_tests(void)
 {
     const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     {
-        fcs_state_keyval_pair_t s;
+        fcs_state_keyval_pair s;
         fcs_delta_stater delta;
 
         fcs_cards_column col;
@@ -123,7 +123,7 @@ static int main_tests(void)
 
     {
         fcs_delta_stater delta;
-        fcs_state_keyval_pair_t init_state, derived_state;
+        fcs_state_keyval_pair init_state, derived_state;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
@@ -313,7 +313,7 @@ static int main_tests(void)
  */
     {
         fcs_delta_stater delta;
-        fcs_state_keyval_pair_t init_state, derived_state;
+        fcs_state_keyval_pair init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
@@ -488,7 +488,7 @@ static int main_tests(void)
  */
     {
         fcs_delta_stater delta;
-        fcs_state_keyval_pair_t init_state, derived_state;
+        fcs_state_keyval_pair init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
@@ -592,7 +592,7 @@ static int main_tests(void)
  */
     {
         fcs_delta_stater delta;
-        fcs_state_keyval_pair_t init_state, derived_state;
+        fcs_state_keyval_pair init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)

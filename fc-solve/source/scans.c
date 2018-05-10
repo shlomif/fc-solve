@@ -669,7 +669,7 @@ int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
 #define INFO_STATE_PTR(kv_ptr) ((kv_ptr)->val)
 #else
 /* TODO : That's very hacky - get rid of it. */
-#define INFO_STATE_PTR(kv_ptr) ((fcs_state_keyval_pair_t *)((kv_ptr)->key))
+#define INFO_STATE_PTR(kv_ptr) ((fcs_state_keyval_pair *)((kv_ptr)->key))
 #endif
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.

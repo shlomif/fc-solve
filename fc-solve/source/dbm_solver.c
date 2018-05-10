@@ -116,7 +116,7 @@ struct fcs_dbm_solver_thread_struct
 static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item physical_item;
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
     fcs_dbm_record *token = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -234,12 +234,12 @@ static void *instance_run_solver_thread(void *const void_arg)
 static bool populate_instance_with_intermediate_input_line(
     dbm_solver_instance *const instance,
     fcs_delta_stater *const delta,
-    fcs_state_keyval_pair_t *const init_state_ptr, char *const line,
+    fcs_state_keyval_pair *const init_state_ptr, char *const line,
     const long line_num, fcs_encoded_state_buffer_t *const parent_state_enc)
 {
     fcs_encoded_state_buffer_t final_stack_encoded_state;
     fcs_encoded_state_buffer_t running_key;
-    fcs_state_keyval_pair_t running_state;
+    fcs_state_keyval_pair running_state;
     fcs_dbm_record *token = NULL;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct locs;
@@ -405,7 +405,7 @@ static void init_thread(dbm_solver_thread *const thread GCC_UNUSED) {}
 static void free_thread(dbm_solver_thread *const thread GCC_UNUSED) {}
 
 static void instance_run_all_threads(dbm_solver_instance *const instance,
-    fcs_state_keyval_pair_t *init_state, const size_t num_threads)
+    fcs_state_keyval_pair *init_state, const size_t num_threads)
 {
     const_AUTO(threads,
         dbm__calc_threads(instance, init_state, num_threads, init_thread));
@@ -506,7 +506,7 @@ static bool handle_and_destroy_instance_solution(
                 fprintf(out_fh, "\n");
                 fflush(out_fh);
 #ifdef DEBUG_OUT
-                fcs_state_keyval_pair_t state;
+                fcs_state_keyval_pair state;
                 fcs_state_locs_struct locs;
                 fc_solve_init_locs(&locs);
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -580,7 +580,7 @@ int main(int argc, char *argv[])
     const_AUTO(num_threads, inp.num_threads);
 
     FILE *const out_fh = calc_out_fh(out_filename);
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     read_state_from_file(inp.local_variant, argv[arg],
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     horne_prune__simple(inp.local_variant, &init_state);

@@ -139,7 +139,7 @@ static inline void fcc_brfs_add_key_to_tree(
 
 static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
     /* The first state in the game, from which all states are encoded. */
-    fcs_state_keyval_pair_t *init_state,
+    fcs_state_keyval_pair *init_state,
     /* The start state. */
     fcs_encoded_state_buffer_t start_state,
     /* The moves leading up to the state.
@@ -195,7 +195,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
     fcs_dbm_queue_item *queue_head, *queue_tail, *queue_recycle_bin = NULL,
                                                    *extracted_item;
     fcs_derived_state *derived_list_recycle_bin = NULL, *next_derived_iter;
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
     bool running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min = {{0}};
     long num_new_positions = 0;

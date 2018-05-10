@@ -236,7 +236,7 @@ static inline void instance_debug_out_state(
     dbm_solver_instance *const instance,
     fcs_encoded_state_buffer_t *enc_state)
 {
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     DECLARE_IND_BUF_T(indirect_stacks_buffer)

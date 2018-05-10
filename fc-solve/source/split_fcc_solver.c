@@ -189,7 +189,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_dbm_record *token = NULL;
     fcs_derived_state *derived_list = NULL, *derived_list_recycle_bin = NULL;
     compact_allocator derived_list_allocator;
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
     char *base64_encoding_buffer = NULL;
 #if 0
     size_t base64_encoding_buffer_max_len = 0;
@@ -542,7 +542,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
                 instance->moves_base64_encoding_buffer);
 #ifdef DEBUG_OUT
             {
-                fcs_state_keyval_pair_t state;
+                fcs_state_keyval_pair state;
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
                 fc_solve_delta_stater_decode_into_state(&(thread->delta_stater),
                     key->s, &state, indirect_stacks_buffer);
@@ -562,7 +562,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 }
 
 static void instance_run_all_threads(dbm_solver_instance *const instance,
-    fcs_state_keyval_pair_t *const init_state, FccEntryPointNode *key_ptr,
+    fcs_state_keyval_pair *const init_state, FccEntryPointNode *key_ptr,
     const size_t num_threads)
 {
     const_AUTO(threads,
@@ -640,7 +640,7 @@ int main(int argc, char *argv[])
         fc_solve_err("One or more of these parameters was not specified: %s\n",
             "--board, --fingerprint, --input, --output, --offload-dir-path");
     }
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     read_state_from_file(inp.local_variant, filename,
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     horne_prune__simple(inp.local_variant, &init_state);

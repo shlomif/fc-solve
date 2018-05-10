@@ -30,9 +30,9 @@
 #include "trim_trailing_whitespace.h"
 #include "render_state.h"
 
-static int debondt_test_encode_and_decode(fcs_debondt_delta_stater * delta, fcs_state_keyval_pair_t * state, const char * expected_str, const char * blurb)
+static int debondt_test_encode_and_decode(fcs_debondt_delta_stater * delta, fcs_state_keyval_pair * state, const char * expected_str, const char * blurb)
 {
-    fcs_state_keyval_pair_t new_derived_state;
+    fcs_state_keyval_pair new_derived_state;
     fcs_encoded_state_buffer_t enc_state;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct locs;
@@ -80,7 +80,7 @@ static int main_tests(void)
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     {
-        fcs_state_keyval_pair_t init_state, derived_state;
+        fcs_state_keyval_pair init_state, derived_state;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
@@ -162,7 +162,7 @@ static int main_tests(void)
  *      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
  */
     {
-        fcs_state_keyval_pair_t init_state, derived_state;
+        fcs_state_keyval_pair init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)

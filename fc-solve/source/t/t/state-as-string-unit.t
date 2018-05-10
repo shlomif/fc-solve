@@ -20,7 +20,7 @@ SV * non_parsable_state_as_string(char * input_state_string) {
 #else
     char ret[4096];
 
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
     DECLARE_IND_BUF_T(indirect_stacks_buffer);
     fc_solve_initial_user_state_to_c(
         input_state_string,

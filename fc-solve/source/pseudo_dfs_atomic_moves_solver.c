@@ -115,7 +115,7 @@ static inline void instance__inspect_new_state(
 
     fcs_derived_state *derived_list = NULL;
 
-    fcs_state_keyval_pair_t s;
+    fcs_state_keyval_pair s;
     const_AUTO(delta_stater, &(instance->delta_stater));
     fc_solve_delta_stater_decode_into_state(
         delta_stater, state->s, &s, indirect_stacks_buffer);
@@ -158,7 +158,7 @@ static inline void instance__inspect_new_state(
 
 static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_variant_type local_variant,
-    fcs_state_keyval_pair_t *const init_state,
+    fcs_state_keyval_pair *const init_state,
     const long max_num_elements_in_cache)
 {
     instance->local_variant = local_variant;
@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
         fc_solve_err("Could not open file '%s' for input.\n", filename);
     }
     const fcs_user_state_str user_state = read_state(fh);
-    fcs_state_keyval_pair_t init_state_pair;
+    fcs_state_keyval_pair init_state_pair;
     fc_solve_initial_user_state_to_c(
         user_state.s, &init_state_pair, FREECELLS_NUM, STACKS_NUM, 1, NULL);
 

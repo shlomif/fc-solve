@@ -95,7 +95,7 @@ struct fcs_dbm_solver_thread_struct
 static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_derived_state *derived_list_recycle_bin = NULL;
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
@@ -274,7 +274,7 @@ static inline void instance_check_key(
 }
 
 static void instance_run_all_threads(dbm_solver_instance *const instance,
-    fcs_state_keyval_pair_t *const init_state, const size_t num_threads)
+    fcs_state_keyval_pair *const init_state, const size_t num_threads)
 {
     const_AUTO(threads,
         dbm__calc_threads(instance, init_state, num_threads, init_thread));
@@ -340,7 +340,7 @@ int main(int argc, char *argv[])
     const_AUTO(num_threads, inp.num_threads);
 
     FILE *const out_fh = calc_out_fh(out_filename);
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     read_state_from_file(inp.local_variant, argv[real_arg],
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     horne_prune__simple(inp.local_variant, &init_state);

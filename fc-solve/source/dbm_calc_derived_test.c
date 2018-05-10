@@ -26,7 +26,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     fcs_derived_state_debug **out_derived_states,
     const bool perform_horne_prune)
 {
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     fcs_encoded_state_buffer_t enc_state;
     fcs_derived_state *derived_list = NULL;
     fcs_derived_state *derived_list_recycle_bin = NULL;
@@ -118,7 +118,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     const fcs_dbm_variant_type local_variant,
     const char *init_state_str_proto, char **ret_state_s)
 {
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);

@@ -34,7 +34,7 @@ typedef struct
 } fcs_moves_processed;
 
 void fc_solve_moves_processed_gen(fcs_moves_processed *,
-    fcs_state_keyval_pair_t *, int, const fcs_moves_sequence_t *);
+    fcs_state_keyval_pair *, int, const fcs_moves_sequence_t *);
 void fc_solve_moves_processed_render_move(fcs_extended_move, char *);
 
 static inline int fc_solve_moves_processed_get_moves_left(

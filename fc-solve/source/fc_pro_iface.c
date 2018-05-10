@@ -40,10 +40,10 @@ static inline bool fc_solve_fc_pro__can_be_moved(
 }
 
 DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
-    fcs_state_keyval_pair_t *const orig, const int num_freecells,
+    fcs_state_keyval_pair *const orig, const int num_freecells,
     const fcs_moves_sequence_t *const moves_seq)
 {
-    fcs_state_keyval_pair_t pos_proto;
+    fcs_state_keyval_pair pos_proto;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     FCS_STATE__DUP_keyval_pair(pos_proto, *orig);

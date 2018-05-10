@@ -443,8 +443,8 @@ static inline void update_initial_cards_val(fcs_instance *const instance)
 // does other initialisations. After it, you must call resume_instance()
 // repeatedly.
 static inline void start_process_with_board(fcs_instance *const instance,
-    fcs_state_keyval_pair_t *const init_state,
-    fcs_state_keyval_pair_t *const initial_non_canonized_state)
+    fcs_state_keyval_pair *const init_state,
+    fcs_state_keyval_pair *const initial_non_canonized_state)
 {
 #ifndef FCS_DISABLE_PATSOLVE
     instance->initial_non_canonized_state = initial_non_canonized_state;
@@ -2007,12 +2007,12 @@ typedef struct
 #define SET_ACTIVE_FLARE(user, flare)
 #endif
 #define OBJ_STATS(user) (ACTIVE_FLARE(user)->obj_stats)
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
 #ifdef FCS_WITH_MOVES
-    fcs_state_keyval_pair_t running_state;
+    fcs_state_keyval_pair running_state;
 #endif
 #if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
-    fcs_state_keyval_pair_t initial_non_canonized_state;
+    fcs_state_keyval_pair initial_non_canonized_state;
 #endif
 #ifdef FCS_WITH_MOVES
     fcs_state_locs_struct state_locs;
