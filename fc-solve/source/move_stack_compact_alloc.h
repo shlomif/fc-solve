@@ -27,8 +27,8 @@ static inline fcs_move_stack_t *fc_solve_move_stack_compact_allocate(
                 sizeof(fcs_move_t) * old_move_stack_to_parent->num_moves));
 
     fcs_move_stack_t *const new_move_stack_to_parent = (fcs_move_stack_t *)ptr;
-    fcs_internal_move_t *const new_moves_to_parent =
-        (fcs_internal_move_t *)(ptr + sizeof(fcs_move_stack_t));
+    fcs_internal_move *const new_moves_to_parent =
+        (fcs_internal_move *)(ptr + sizeof(fcs_move_stack_t));
     new_move_stack_to_parent->moves = new_moves_to_parent;
     new_move_stack_to_parent->num_moves = old_move_stack_to_parent->num_moves;
     memcpy(new_moves_to_parent, old_move_stack_to_parent->moves,

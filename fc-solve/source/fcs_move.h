@@ -7,11 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * fcs_move.h - header file for the move structure and enums of
- * Freecell Solver. This file is common to the main code and to the
- * library headers.
- */
+// fcs_move.h - header file for the move structure and enums of
+// Freecell Solver. This file is common to the main code and to the
+// library headers.
 
 #pragma once
 

@@ -100,7 +100,7 @@ static inline void cache_populate_from_pre_cache(
 }
 
 static inline void pre_cache_offload_and_destroy(
-    fcs_pre_cache *const pre_cache, fcs_dbm_store_t store,
+    fcs_pre_cache *const pre_cache, fcs_dbm_store store,
     fcs_lru_cache *const cache)
 {
     fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
@@ -124,7 +124,7 @@ static inline void pre_cache_offload_and_destroy(
 #ifndef FCS_DBM_CACHE_ONLY
 
 static inline void pre_cache_offload_and_reset(fcs_pre_cache *const pre_cache,
-    const fcs_dbm_store_t store, fcs_lru_cache *const cache,
+    const fcs_dbm_store store, fcs_lru_cache *const cache,
     meta_allocator *const meta_alloc)
 {
     pre_cache_offload_and_destroy(pre_cache, store, cache);
@@ -149,7 +149,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 );
 
@@ -161,7 +161,7 @@ static inline bool instance_check_multiple_keys(
     fcs_derived_state **lists, size_t batch_size
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
@@ -509,7 +509,7 @@ static inline fcs_dbm_record_t *cache_store__has_key(
 static inline fcs_cache_key_info *cache_store__insert_key(
     fcs_dbm__cache_store__common *const cache_store,
     fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
-    const fcs_fcc_move_t *const moves_to_parent,
+    const fcs_fcc_move *const moves_to_parent,
     const unsigned char move GCC_UNUSED)
 {
 #ifndef FCS_DBM_CACHE_ONLY

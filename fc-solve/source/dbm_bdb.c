@@ -27,7 +27,7 @@ static __attribute__((noreturn)) inline void my_close(DB *const dbp, int ret)
     exit(ret);
 }
 
-void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
+void fc_solve_dbm_store_init(fcs_dbm_store *const store,
     const char *const path, void **const recycle_bin_ptr)
 {
     fcs_dbm *db = SMALLOC1(db);
@@ -47,7 +47,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     }
     memset(&(db->key), 0, sizeof(db->key));
     memset(&(db->data), 0, sizeof(db->data));
-    *store = (fcs_dbm_store_t)db;
+    *store = (fcs_dbm_store)db;
     return;
 
 err:
@@ -55,7 +55,7 @@ err:
 }
 
 bool fc_solve_dbm_store_does_key_exist(
-    fcs_dbm_store_t store, const unsigned char *const key_raw)
+    fcs_dbm_store store, const unsigned char *const key_raw)
 {
     unsigned char dummy[100];
 
@@ -81,7 +81,7 @@ bool fc_solve_dbm_store_does_key_exist(
     }
 }
 
-bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
+bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store store,
     const unsigned char *const key_raw, unsigned char *const parent)
 {
     fcs_dbm *db = (fcs_dbm *)store;
@@ -108,7 +108,7 @@ bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
 }
 
 extern void fc_solve_dbm_store_offload_pre_cache(
-    fcs_dbm_store_t store, fcs_pre_cache *const pre_cache)
+    fcs_dbm_store store, fcs_pre_cache *const pre_cache)
 {
     fcs_dbm *const db = (fcs_dbm *)store;
     dict_t *const kaz_tree = pre_cache->kaz_tree;
@@ -132,7 +132,7 @@ extern void fc_solve_dbm_store_offload_pre_cache(
     }
 }
 
-extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
+extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
 {
     fcs_dbm *const db = (fcs_dbm *)store;
     int ret;

@@ -25,7 +25,7 @@ typedef fcs_encoded_state_buffer_t fcs_cache_key;
 struct fcs_cache_key_info_struct
 {
     fcs_cache_key key;
-    fcs_fcc_move_t *moves_to_key;
+    fcs_fcc_move *moves_to_key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.

@@ -36,12 +36,12 @@ static inline fcs_offloading_queue * q(SV * const obj) {
 }
 
 void insert(SV* obj, int item_i) {
-    fcs_offloading_queue_item_t item = (fcs_offloading_queue_item_t)item_i;
+    offloading_queue_item item = (offloading_queue_item)item_i;
     fcs_offloading_queue__insert(q(obj), &item);
 }
 
 SV* extract(SV* obj) {
-    fcs_offloading_queue_item_t item;
+    offloading_queue_item item;
 
     return (fcs_offloading_queue__extract(q(obj), &item))
     ? newSViv((int)item)

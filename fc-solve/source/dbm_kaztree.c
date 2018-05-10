@@ -21,7 +21,7 @@ typedef struct
 #endif
 } fcs_dbm;
 
-void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
+void fc_solve_dbm_store_init(fcs_dbm_store *const store,
     const char *path GCC_UNUSED, void **const recycle_bin_ptr)
 {
     fcs_dbm *const db = SMALLOC1(db);
@@ -35,10 +35,10 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     fc_solve_compact_allocator_init(&(db->allocator), &(db->meta_alloc));
 #endif
 
-    *store = (fcs_dbm_store_t)db;
+    *store = (fcs_dbm_store)db;
 }
 
-dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)
+dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
 {
     return (((fcs_dbm *)store)->kaz_tree);
 }
@@ -46,7 +46,7 @@ dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)
 /*
  * Returns TRUE if the key was added (it didn't already exist.)
  * */
-fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
+fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *const parent,
     const bool should_modify_parent GCC_UNUSED)
 {
@@ -104,7 +104,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
 }
 
 bool fc_solve_dbm_store_lookup_parent(
-    fcs_dbm_store_t store, const unsigned char *key, unsigned char *parent)
+    fcs_dbm_store store, const unsigned char *key, unsigned char *parent)
 {
     fcs_dbm_record_t to_check = {
         .key = *(const fcs_encoded_state_buffer_t *)key};
@@ -137,7 +137,7 @@ bool fc_solve_dbm_store_lookup_parent(
     }
 }
 
-extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
+extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
 {
     fcs_dbm *const db = (fcs_dbm *)store;
 

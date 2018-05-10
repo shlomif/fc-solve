@@ -83,7 +83,7 @@ static inline void instance_check_key(
         GCC_UNUSED
 #ifdef FCS_DBM_CACHE_ONLY
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
@@ -102,7 +102,7 @@ static inline void instance_check_key(
         instance_debug_out_state(instance, &(token->key));
 
         fcs_offloading_queue__insert(
-            &(instance->queue), ((fcs_offloading_queue_item_t *)(&token)));
+            &(instance->queue), ((offloading_queue_item *)(&token)));
         ++instance->common.count_of_items_in_queue;
     }
 }
@@ -153,7 +153,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
             if (fcs_offloading_queue__extract(&(instance->queue),
-                    (fcs_offloading_queue_item_t *)(&token)))
+                    (offloading_queue_item *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -286,7 +286,7 @@ static bool populate_instance_with_intermediate_input_line(
     fcs_dbm_record_t *running_parent = NULL;
 
 #ifdef FCS_DBM_CACHE_ONLY
-    fcs_fcc_move_t *running_moves = NULL;
+    fcs_fcc_move *running_moves = NULL;
     cache_store__insert_key(&(instance->cache_store), &(running_key),
         &running_parent, running_moves, '\0');
 #else
@@ -304,7 +304,7 @@ static bool populate_instance_with_intermediate_input_line(
 
         s_ptr += 3;
 
-        const_AUTO(move, (fcs_fcc_move_t)hex_digits);
+        const_AUTO(move, (fcs_fcc_move)hex_digits);
         /* Apply the move. */
         int src = (move & 0xF);
         int dest = ((move >> 4) & 0xF);
@@ -393,7 +393,7 @@ static bool populate_instance_with_intermediate_input_line(
             line_num);
     }
     fcs_offloading_queue__insert(
-        &(instance->queue), (const fcs_offloading_queue_item_t *)(&token));
+        &(instance->queue), (const offloading_queue_item *)(&token));
     ++instance->common.count_of_items_in_queue;
 
     return TRUE;
@@ -456,7 +456,7 @@ static bool handle_and_destroy_instance_solution(
             fcs_dbm_queue_item *const item = &physical_item;
 
             while (fcs_offloading_queue__extract(
-                &(instance->queue), (fcs_offloading_queue_item_t *)(&token)))
+                &(instance->queue), (offloading_queue_item *)(&token)))
             {
                 physical_item.key = token->key;
 
@@ -475,7 +475,7 @@ static bool handle_and_destroy_instance_solution(
                 fflush(out_fh);
 
 #ifdef FCS_DBM_CACHE_ONLY
-                fcs_fcc_move_t *move_ptr = item->moves_to_key;
+                fcs_fcc_move *move_ptr = item->moves_to_key;
                 if (move_ptr)
                 {
                     while (*(move_ptr))
@@ -749,7 +749,7 @@ int main(int argc, char *argv[])
 #endif
 
         fcs_offloading_queue__insert(
-            &(instance.queue), (const fcs_offloading_queue_item_t *)&token);
+            &(instance.queue), (const offloading_queue_item *)&token);
         ++instance.common.num_states_in_collection;
         ++instance.common.count_of_items_in_queue;
 

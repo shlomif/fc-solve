@@ -65,25 +65,25 @@ static const FccEntryPointList FccEntryPointList_init =
 typedef struct
 {
     fcs_dbm_collection_by_depth coll;
-    fcs_lock_t global_lock;
+    fcs_lock global_lock;
     const char *offload_dir_path;
     int curr_depth;
     dbm_instance_common_elems common;
     meta_allocator fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
     compact_allocator fcc_entry_points_allocator;
-    fcs_lock_t fcc_entry_points_lock;
+    fcs_lock fcc_entry_points_lock;
     FccEntryPointNode *start_key_ptr;
 #if 0
     bool was_start_key_reachable;
 #endif
     int start_key_moves_count;
-    fcs_lock_t output_lock;
+    fcs_lock output_lock;
 #if 0
     FILE * consumed_states_fh;
 #endif
     fcs_which_moves_bitmask fingerprint_which_irreversible_moves_bitmask;
-    fcs_lock_t fcc_exit_points_output_lock;
+    fcs_lock fcc_exit_points_output_lock;
     FILE *fcc_exit_points_out_fh;
     FILE *fingerprint_fh;
     char *fingerprint_line;
@@ -229,7 +229,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         {
             if (fcs_depth_multi_queue__extract(&(coll->depth_queue),
                     &(thread->state_depth),
-                    (fcs_offloading_queue_item_t *)(&token)))
+                    (offloading_queue_item *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -411,7 +411,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
@@ -436,7 +436,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 
             fcs_depth_multi_queue__insert(&(coll->depth_queue),
                 thread->state_depth + 1,
-                (const fcs_offloading_queue_item_t *)(&token));
+                (const offloading_queue_item *)(&token));
 
             ++instance->common.count_of_items_in_queue;
             ++instance->common.num_states_in_collection;
@@ -745,8 +745,8 @@ int main(int argc, char *argv[])
         RB_INSERT(FccEntryPointList, &(instance.fcc_entry_points), entry_point);
 
         {
-            const fcs_offloading_queue_item_t token =
-                ((const fcs_offloading_queue_item_t)(&(entry_point->kv.key)));
+            const offloading_queue_item token =
+                ((const offloading_queue_item)(&(entry_point->kv.key)));
             if (was_init)
             {
                 fcs_depth_multi_queue__insert(

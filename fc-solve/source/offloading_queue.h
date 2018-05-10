@@ -19,7 +19,7 @@ extern "C" {
 #include <fcntl.h>
 #endif
 
-typedef const unsigned char *fcs_offloading_queue_item_t;
+typedef const unsigned char *offloading_queue_item;
 
 typedef struct
 {
@@ -53,7 +53,7 @@ static inline bool q_stats_is_empty(fcs_queue_stats *const q)
 
 typedef struct fcs_Q_item_wrapper_struct
 {
-    fcs_offloading_queue_item_t datum;
+    offloading_queue_item datum;
     struct fcs_Q_item_wrapper_struct *next;
 } fcs_Q_item_wrapper;
 
@@ -82,7 +82,7 @@ static inline void fcs_offloading_queue__destroy(
 
 static inline bool fcs_offloading_queue__extract(
     fcs_offloading_queue *const queue,
-    fcs_offloading_queue_item_t *const return_item)
+    offloading_queue_item *const return_item)
 {
     fcs_Q_item_wrapper *const item = queue->queue_head;
 
@@ -107,7 +107,7 @@ static inline bool fcs_offloading_queue__extract(
 
 static inline void fcs_offloading_queue__insert(
     fcs_offloading_queue *const queue,
-    const fcs_offloading_queue_item_t *const datum)
+    const offloading_queue_item *const datum)
 {
     fcs_Q_item_wrapper *new_item;
     if (queue->queue_recycle_bin)
@@ -156,7 +156,7 @@ static inline void fcs_offloading_queue_page__init(
     *page = (typeof(*page)){.page_index = page_index,
         .queue_id = queue_id,
         .data =
-            malloc(sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE)};
+            malloc(sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE)};
     fcs_offloading_queue_page__recycle(page);
 }
 
@@ -173,7 +173,7 @@ static inline bool fcs_offloading_queue_page__can_extract(
 }
 
 static inline void fcs_offloading_queue_page__extract(
-    off_q_page *const page, fcs_offloading_queue_item_t *const out_item)
+    off_q_page *const page, offloading_queue_item *const out_item)
 {
     memcpy(out_item,
         (page->data + sizeof(*out_item) * ((page->read_from_idx)++)),
@@ -187,7 +187,7 @@ static inline bool fcs_offloading_queue_page__can_insert(
 }
 
 static inline void fcs_offloading_queue_page__insert(
-    off_q_page *const page, const fcs_offloading_queue_item_t *const in_item)
+    off_q_page *const page, const offloading_queue_item *const in_item)
 {
     memcpy(page->data + ((page->write_to_idx)++) * sizeof(*in_item), in_item,
         sizeof(*in_item));
@@ -223,12 +223,12 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
 #ifdef __unix__
     const int f = open(page_filename, O_RDONLY);
     read(f, page->data,
-        sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE);
+        sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
     close(f);
 #else
     FILE *const f = fopen(page_filename, "rb");
     fread(
-        page->data, sizeof(fcs_offloading_queue_item_t), NUM_ITEMS_PER_PAGE, f);
+        page->data, sizeof(offloading_queue_item), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
 #endif
 
@@ -250,12 +250,12 @@ static inline void fcs_offloading_queue_page__offload(
 #ifdef __unix__
     const int f = creat(page_filename, 0644);
     write(f, page->data,
-        sizeof(fcs_offloading_queue_item_t) * NUM_ITEMS_PER_PAGE);
+        sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
     close(f);
 #else
     FILE *const f = fopen(page_filename, "wb");
     fwrite(
-        page->data, sizeof(fcs_offloading_queue_item_t), NUM_ITEMS_PER_PAGE, f);
+        page->data, sizeof(offloading_queue_item), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
 #endif
 }
@@ -298,7 +298,7 @@ static inline void fcs_offloading_queue__destroy(
 }
 
 static inline void fcs_offloading_queue__insert(
-    fcs_offloading_queue *queue, const fcs_offloading_queue_item_t *item)
+    fcs_offloading_queue *queue, const offloading_queue_item *item)
 {
     if (!fcs_offloading_queue_page__can_insert(
             queue->pages + queue->page_idx_to_write_to))
@@ -329,7 +329,7 @@ static inline void fcs_offloading_queue__insert(
 
 static inline bool fcs_offloading_queue__extract(
     fcs_offloading_queue *const queue,
-    fcs_offloading_queue_item_t *const return_item)
+    offloading_queue_item *const return_item)
 {
     if (q_stats_is_empty(&queue->stats))
     {

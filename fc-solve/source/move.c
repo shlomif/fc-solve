@@ -15,9 +15,9 @@
 #ifdef FCS_WITH_MOVES
 
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
-const fcs_internal_move_t fc_solve_empty_move = {0, 0, 0, 0};
+const fcs_internal_move fc_solve_empty_move = {0, 0, 0, 0};
 #else
-const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
+const fcs_internal_move fc_solve_empty_move = {"\0\0\0\0"};
 #endif
 
 /*
@@ -25,7 +25,7 @@ const fcs_internal_move_t fc_solve_empty_move = {"\0\0\0\0"};
  */
 void fc_solve_apply_move(fcs_state *const ptr_state_key,
     fcs_state_locs_struct_t *const locs,
-    const fcs_internal_move_t move FREECELLS_AND_STACKS_ARGS())
+    const fcs_internal_move move FREECELLS_AND_STACKS_ARGS())
 {
     fcs_card_t card;
     fcs_cards_column col;

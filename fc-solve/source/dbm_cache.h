@@ -115,8 +115,8 @@ static inline bool cache_does_key_exist(
 }
 
 static inline fcs_cache_key_info *cache_insert(fcs_lru_cache *cache,
-    const fcs_cache_key *key, const fcs_fcc_move_t *moves_to_parent,
-    const fcs_fcc_move_t final_move)
+    const fcs_cache_key *key, const fcs_fcc_move *moves_to_parent,
+    const fcs_fcc_move final_move)
 {
     fcs_cache_key_info *cache_key;
     var_AUTO(kaz_tree, cache->kaz_tree);
@@ -140,7 +140,7 @@ static inline fcs_cache_key_info *cache_insert(fcs_lru_cache *cache,
     cache_key->key = *key;
     if (moves_to_parent)
     {
-        fcs_fcc_move_t *moves;
+        fcs_fcc_move *moves;
         const_AUTO(len, strlen((const char *)moves_to_parent));
         cache_key->moves_to_key = moves =
             SREALLOC(cache_key->moves_to_key, len + 1 + 1);

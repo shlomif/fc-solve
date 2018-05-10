@@ -143,7 +143,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 for (; batch_size < max_batch_size; ++batch_size)
                 {
                     if (fcs_offloading_queue__extract(
-                            &(coll->queue), (fcs_offloading_queue_item_t
+                            &(coll->queue), (offloading_queue_item
                                                     *)(&tokens[batch_size])))
                     {
                         derived_lists[batch_size] = NULL;
@@ -248,7 +248,7 @@ static inline void instance_check_key(
         GCC_UNUSED
 #ifdef FCS_DBM_CACHE_ONLY
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
@@ -265,7 +265,7 @@ static inline void instance_check_key(
         /* Now insert it into the queue. */
 
         fcs_offloading_queue__insert(
-            &(coll->queue), (const fcs_offloading_queue_item_t *)(&token));
+            &(coll->queue), (const offloading_queue_item *)(&token));
 
         ++instance->common.count_of_items_in_queue;
         ++instance->common.num_states_in_collection;
@@ -373,7 +373,7 @@ int main(int argc, char *argv[])
 #endif
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
-        (const fcs_offloading_queue_item_t *)(&token));
+        (const offloading_queue_item *)(&token));
     ++instance.common.num_states_in_collection;
     ++instance.common.count_of_items_in_queue;
 

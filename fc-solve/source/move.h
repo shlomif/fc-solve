@@ -22,14 +22,14 @@ extern "C" {
 #include "indirect_buffer.h"
 
 #ifdef FCS_WITH_MOVES
-extern const fcs_internal_move_t fc_solve_empty_move;
+extern const fcs_internal_move fc_solve_empty_move;
 #endif
 
 #define FCS_MOVE_STACK_GROW_BY 16
 
 #ifdef FCS_WITH_MOVES
 static inline void fcs_move_stack_push(
-    fcs_move_stack_t *const stack, const fcs_internal_move_t move)
+    fcs_move_stack_t *const stack, const fcs_internal_move move)
 {
     /* If all the moves inside the stack are taken then
        resize the move vector */
@@ -46,7 +46,7 @@ static inline void fcs_move_stack_push(
 static inline void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
     const int type, const int src, const int dest, const int num_cards_in_seq)
 {
-    fcs_internal_move_t temp_move;
+    fcs_internal_move temp_move;
 
     fcs_int_move_set_type(temp_move, type);
     fcs_int_move_set_src(temp_move, src);
@@ -70,7 +70,7 @@ static inline void fcs_push_1card_seq(
 }
 
 static inline bool fc_solve_move_stack_pop(
-    fcs_move_stack_t *const stack, fcs_internal_move_t *const move)
+    fcs_move_stack_t *const stack, fcs_internal_move *const move)
 {
     if (stack->num_moves > 0)
     {
@@ -88,7 +88,7 @@ static inline bool fc_solve_move_stack_pop(
 
 void fc_solve_apply_move(fcs_state *const ptr_state_key,
     fcs_state_locs_struct_t *const locs,
-    const fcs_internal_move_t move FREECELLS_AND_STACKS_ARGS());
+    const fcs_internal_move move FREECELLS_AND_STACKS_ARGS());
 
 /*
     The purpose of this function is to convert the moves from using
@@ -105,7 +105,7 @@ static inline fcs_move_stack_t fcs_move_stack__new(void)
 static inline void fc_solve_move_stack_swallow_stack(
     fcs_move_stack_t *const stack, fcs_move_stack_t *const src_stack)
 {
-    fcs_internal_move_t move;
+    fcs_internal_move move;
     while (!fc_solve_move_stack_pop(src_stack, &move))
     {
         fcs_move_stack_push(stack, move);
@@ -116,10 +116,10 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
     const fcs_state_keyval_pair_t *const init_state,
     fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
 {
-    fcs_internal_move_t in_move;
+    fcs_internal_move in_move;
     fcs_state_keyval_pair_t s_and_info;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    fcs_internal_move_t out_move = fc_solve_empty_move;
+    fcs_internal_move out_move = fc_solve_empty_move;
     FCS_STATE__DUP_keyval_pair(s_and_info, *init_state);
 
 #ifdef INDIRECT_STACK_STATES

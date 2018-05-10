@@ -158,9 +158,9 @@ fcs_state *fc_solve_lookup_state_key_from_val(
 
         const fcs_move_stack_t *const stack_ptr__moves_to_parent =
             parents_stack[parents_stack_len - 1].state_val->moves_to_parent;
-        const fcs_internal_move_t *next_move =
+        const fcs_internal_move *next_move =
             stack_ptr__moves_to_parent->moves;
-        const fcs_internal_move_t *const moves_end =
+        const fcs_internal_move *const moves_end =
             (next_move + stack_ptr__moves_to_parent->num_moves);
 
         for (; next_move < moves_end; next_move++)

@@ -32,27 +32,27 @@ extern "C" {
 
 #ifdef FCS_DBM_SINGLE_THREAD
 
-typedef bool fcs_lock_t;
-static inline void fcs_lock_lock(fcs_lock_t *const lock) {}
-static inline void fcs_lock_unlock(fcs_lock_t *const lock) {}
-static inline void fcs_lock_init(fcs_lock_t *const lock) {}
-static inline void fcs_lock_destroy(fcs_lock_t *const lock) {}
+typedef bool fcs_lock;
+static inline void fcs_lock_lock(fcs_lock *const lock) {}
+static inline void fcs_lock_unlock(fcs_lock *const lock) {}
+static inline void fcs_lock_init(fcs_lock *const lock) {}
+static inline void fcs_lock_destroy(fcs_lock *const lock) {}
 #elif defined(FCS_DBM_USE_RWLOCK)
 
-typedef pthread_rwlock_fcfs_t *fcs_lock_t;
-static inline void fcs_lock_lock(fcs_lock_t *const lock)
+typedef pthread_rwlock_fcfs_t *fcs_lock;
+static inline void fcs_lock_lock(fcs_lock *const lock)
 {
     pthread_rwlock_fcfs_gain_write(*lock);
 }
-static inline void fcs_lock_unlock(fcs_lock_t *const lock)
+static inline void fcs_lock_unlock(fcs_lock *const lock)
 {
     pthread_rwlock_fcfs_release(*lock);
 }
-static inline void fcs_lock_init(fcs_lock_t *const lock)
+static inline void fcs_lock_init(fcs_lock *const lock)
 {
     *lock = pthread_rwlock_fcfs_alloc();
 }
-static inline void fcs_lock_destroy(fcs_lock_t *const lock)
+static inline void fcs_lock_destroy(fcs_lock *const lock)
 {
     pthread_rwlock_fcfs_destroy(*lock);
 }
@@ -62,21 +62,21 @@ static inline void fcs_lock_destroy(fcs_lock_t *const lock)
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static const pthread_cond_t initial_cond_constant = PTHREAD_COND_INITIALIZER;
 
-typedef pthread_mutex_t fcs_lock_t;
+typedef pthread_mutex_t fcs_lock;
 typedef pthread_cond_t fcs_condvar;
-static inline void fcs_lock_lock(fcs_lock_t *const lock)
+static inline void fcs_lock_lock(fcs_lock *const lock)
 {
     pthread_mutex_lock(lock);
 }
-static inline void fcs_lock_init(fcs_lock_t *const lock)
+static inline void fcs_lock_init(fcs_lock *const lock)
 {
     *lock = initial_mutex_constant;
 }
-static inline void fcs_lock_unlock(fcs_lock_t *const lock)
+static inline void fcs_lock_unlock(fcs_lock *const lock)
 {
     pthread_mutex_unlock(lock);
 }
-static inline void fcs_lock_destroy(fcs_lock_t *const lock)
+static inline void fcs_lock_destroy(fcs_lock *const lock)
 {
     pthread_mutex_destroy(lock);
 }
@@ -92,7 +92,7 @@ static inline void fcs_condvar_destroy(fcs_condvar *const cond)
 }
 
 static inline void fcs_condvar__wait_on(
-    fcs_condvar *const cond, fcs_lock_t *const lock)
+    fcs_condvar *const cond, fcs_lock *const lock)
 {
     pthread_cond_wait(cond, lock);
 }

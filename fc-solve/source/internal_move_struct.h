@@ -29,9 +29,9 @@ typedef struct
     unsigned int src : 4;
     unsigned int dest : 4;
     unsigned int num_cards_in_seq : 4;
-} fcs_internal_move_t;
+} fcs_internal_move;
 #else
-typedef fcs_move_t fcs_internal_move_t;
+typedef fcs_move_t fcs_internal_move;
 #endif
 
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
@@ -68,7 +68,7 @@ typedef fcs_move_t fcs_internal_move_t;
 
 typedef struct
 {
-    fcs_internal_move_t *moves;
+    fcs_internal_move *moves;
     size_t num_moves;
 } fcs_move_stack_t;
 

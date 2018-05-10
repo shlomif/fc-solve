@@ -21,7 +21,7 @@ extern "C" {
 
 #include "dbm_common.h"
 
-typedef unsigned char fcs_fcc_move_t;
+typedef unsigned char fcs_fcc_move;
 
 #define FCS_FCC_NUM_MOVES_IN_ITEM 8
 
@@ -30,7 +30,7 @@ typedef struct fcs_fcc_moves_list_item_struct
     struct fcs_fcc_moves_list_item_struct *next;
     struct
     {
-        fcs_fcc_move_t s[FCS_FCC_NUM_MOVES_IN_ITEM];
+        fcs_fcc_move s[FCS_FCC_NUM_MOVES_IN_ITEM];
     } data;
 } fcs_fcc_moves_list_item;
 
@@ -43,13 +43,13 @@ typedef struct
 typedef struct
 {
     int count;
-    fcs_fcc_move_t *moves;
+    fcs_fcc_move *moves;
     char *state_as_string;
 } fcs_FCC_start_point_result;
 
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_dbm_variant_type_t, const char *, const int,
-    const fcs_fcc_move_t *const, fcs_FCC_start_point_result **, long *const);
+    const fcs_fcc_move *const, fcs_FCC_start_point_result **, long *const);
 
 DLLEXPORT void fc_solve_user_INTERNAL_free_fcc_start_points(
     fcs_FCC_start_point_result *const);

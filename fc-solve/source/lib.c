@@ -2840,7 +2840,7 @@ static void recycle_instance(
 #define user_move_to_internal_move(x) (x)
 #else
 static inline fcs_move_t internal_move_to_user_move(
-    const fcs_internal_move_t internal_move)
+    const fcs_internal_move internal_move)
 {
     fcs_move_t user_move;
 
@@ -2853,10 +2853,10 @@ static inline fcs_move_t internal_move_to_user_move(
 
     return user_move;
 }
-static inline fcs_internal_move_t user_move_to_internal_move(
+static inline fcs_internal_move user_move_to_internal_move(
     const fcs_move_t user_move)
 {
-    fcs_internal_move_t internal_move;
+    fcs_internal_move internal_move;
 
     /* Convert the internal_move to a user move. */
     fcs_int_move_set_src(internal_move, fcs_move_get_src_stack(user_move));
@@ -2876,7 +2876,7 @@ static inline void calc_moves_seq(const fcs_move_stack_t *const solution_moves,
     moves_seq->moves = NULL;
 
     const_SLOT(num_moves, solution_moves);
-    fcs_internal_move_t *next_move_ptr = solution_moves->moves + num_moves;
+    fcs_internal_move *next_move_ptr = solution_moves->moves + num_moves;
     fcs_move_t *const ret_moves = SMALLOC(ret_moves, num_moves);
     if (!ret_moves)
     {

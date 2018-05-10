@@ -16,7 +16,7 @@ extern "C" {
 #include "generic_tree.h"
 #include "delta_states.h"
 
-/* We need it for the typedef of fcs_fcc_move_t. */
+/* We need it for the typedef of fcs_fcc_move. */
 #include "fcc_brfs_test.h"
 #include "lock.h"
 
@@ -43,24 +43,24 @@ typedef struct
 } fcs_pre_cache;
 #endif
 
-typedef void *fcs_dbm_store_t;
-void fc_solve_dbm_store_init(fcs_dbm_store_t *, const char *, void **);
-dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store_t);
+typedef void *fcs_dbm_store;
+void fc_solve_dbm_store_init(fcs_dbm_store *, const char *, void **);
+dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store);
 bool fc_solve_dbm_store_does_key_exist(
-    fcs_dbm_store_t, const unsigned char *);
+    fcs_dbm_store, const unsigned char *);
 bool fc_solve_dbm_store_lookup_parent(
-    fcs_dbm_store_t, const unsigned char *const, unsigned char *const);
+    fcs_dbm_store, const unsigned char *const, unsigned char *const);
 
-fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
+fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *parent,
     const bool should_modify_parent);
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 void fc_solve_dbm_store_offload_pre_cache(
-    fcs_dbm_store_t store, fcs_pre_cache *const pre_cache);
+    fcs_dbm_store store, fcs_pre_cache *const pre_cache);
 #endif
 
-void fc_solve_dbm_store_destroy(fcs_dbm_store_t store);
+void fc_solve_dbm_store_destroy(fcs_dbm_store store);
 
 typedef struct fcs_dbm_queue_item_struct
 {
@@ -69,7 +69,7 @@ typedef struct fcs_dbm_queue_item_struct
      * to save space. */
     fcs_fcc_moves_seq moves_seq;
 #ifndef FCS_DBM_WITHOUT_CACHES
-    fcs_fcc_move_t *moves_to_key;
+    fcs_fcc_move *moves_to_key;
 #endif
 
     struct fcs_dbm_queue_item_struct *next;
@@ -85,7 +85,7 @@ enum TERMINATE_REASON
 
 typedef struct
 {
-    fcs_lock_t storage_lock;
+    fcs_lock storage_lock;
     long queue_num_extracted_and_processed;
     fcs_encoded_state_buffer_t first_key;
     long num_states_in_collection;
@@ -149,7 +149,7 @@ typedef struct
     fcs_lru_cache cache;
 #endif
 #ifndef FCS_DBM_CACHE_ONLY
-    fcs_dbm_store_t store;
+    fcs_dbm_store store;
 #endif
 
     /* The queue */

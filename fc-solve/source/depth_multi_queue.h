@@ -55,7 +55,7 @@ static inline void fcs_depth_multi_queue__new_queue(
 
 static inline void fcs_depth_multi_queue__insert(
     fcs_depth_multi_queue *const queue, const int depth,
-    const fcs_offloading_queue_item_t *const item)
+    const offloading_queue_item *const item)
 {
     while (depth > queue->max_depth)
     {
@@ -78,7 +78,7 @@ static inline void fcs_depth_multi_queue__insert(
 
 static inline void fcs_depth_multi_queue__init(
     fcs_depth_multi_queue *const queue, const char *offload_dir_path,
-    const int first_depth, const fcs_offloading_queue_item_t *const first_item)
+    const int first_depth, const offloading_queue_item *const first_item)
 {
     queue->offload_dir_path = offload_dir_path;
     fcs_queue_stats_init(&queue->stats);
@@ -112,7 +112,7 @@ static inline void fcs_depth_multi_queue__destroy(
 
 static inline bool fcs_depth_multi_queue__extract(
     fcs_depth_multi_queue *const queue, int *const return_depth,
-    fcs_offloading_queue_item_t *const return_item)
+    offloading_queue_item *const return_item)
 {
     if (q_stats_is_empty(&queue->stats))
     {

@@ -34,7 +34,7 @@ typedef struct fcs_derived_state_struct
     struct fcs_derived_state_struct *next;
     int core_irreversible_moves_count;
     fcs_which_moves_bitmask which_irreversible_moves_bitmask;
-    fcs_fcc_move_t move;
+    fcs_fcc_move move;
     int num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 } fcs_derived_state;
@@ -56,7 +56,7 @@ static inline void fcs_derived_state_list__recycle(
     *p_list = NULL;
 }
 
-#define MAKE_MOVE(src, dest) ((fcs_fcc_move_t)((src) | ((dest) << 4)))
+#define MAKE_MOVE(src, dest) ((fcs_fcc_move)((src) | ((dest) << 4)))
 #define COL2MOVE(idx) (idx)
 #define FREECELL2MOVE(idx) (idx + 8)
 #define FOUND2MOVE(idx) ((idx) + (8 + 4))
@@ -208,7 +208,7 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
     fcs_fcc_moves_seq *const moves_seq,
     fcs_fcc_moves_seq_allocator *const allocator)
 {
-    fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];
+    fcs_fcc_move additional_moves[RANK_KING * 4 * DECKS_NUM];
     int count_moves_so_far = 0;
     int count_additional_irrev_moves = 0;
     FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());

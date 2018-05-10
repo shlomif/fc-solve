@@ -414,7 +414,7 @@ static inline find_card_ret find_card_src_string(
 
 extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
 {
-    fcs_internal_move_t canonize_move = fc_solve_empty_move;
+    fcs_internal_move canonize_move = fc_solve_empty_move;
     fcs_int_move_set_type(canonize_move, FCS_MOVE_TYPE_CANONIZE);
 
     instance_free_solution_moves(instance);
@@ -460,7 +460,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
         for (size_t i = 0; i < num_moves; ++i, ++move_ptr)
         {
             const fcs_card_t card = move_ptr->card;
-            fcs_internal_move_t out_move = fc_solve_empty_move;
+            fcs_internal_move out_move = fc_solve_empty_move;
             switch (move_ptr->totype)
             {
             case FCS_PATS__TYPE_FREECELL:
@@ -564,7 +564,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
 
             /* Merge the move stack */
             const fcs_move_stack_t *const stack = FCS_S_MOVES_TO_PARENT(s1);
-            const fcs_internal_move_t *const moves = stack->moves;
+            const fcs_internal_move *const moves = stack->moves;
             for (int move_idx = stack->num_moves - 1; move_idx >= 0; --move_idx)
             {
                 fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
