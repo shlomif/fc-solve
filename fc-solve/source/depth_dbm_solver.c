@@ -94,7 +94,7 @@ struct fcs_dbm_solver_thread_struct
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
-    fcs_derived_state_t *derived_list_recycle_bin = NULL;
+    fcs_derived_state *derived_list_recycle_bin = NULL;
     fcs_state_keyval_pair_t state;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct_t locs;
@@ -118,7 +118,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
     fcs_dbm_record_t *tokens[max_batch_size];
-    fcs_derived_state_t *derived_lists[max_batch_size];
+    fcs_derived_state *derived_lists[max_batch_size];
     while (TRUE)
     {
         /* First of all extract a batch of items. */

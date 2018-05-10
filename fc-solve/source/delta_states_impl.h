@@ -91,8 +91,8 @@ typedef struct
         COL_TYPE_ENTIRELY_NON_ORIG,
         COL_TYPE_HAS_ORIG
     } type;
-    fcs_uchar_t enc[4];
-    fcs_uchar_t *end;
+    fcs_uchar enc[4];
+    fcs_uchar *end;
     int bit_in_char_idx;
 } fcs_column_encoding_composite;
 
@@ -290,8 +290,8 @@ static void fc_solve_delta_stater_encode_composite(
     {
         const fcs_column_encoding_composite *const col_enc =
             (cols + cols_indexes[i]);
-        const fcs_uchar_t *enc;
-        const fcs_uchar_t *const end = col_enc->end;
+        const fcs_uchar *enc;
+        const fcs_uchar *const end = col_enc->end;
         for (enc = col_enc->enc; enc < end; ++enc)
         {
             fc_solve_bit_writer_write(bit_w, NUM_BITS_IN_BYTES, (*enc));
@@ -388,7 +388,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 static inline void fc_solve_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type_t local_variant,
     fcs_delta_stater *const delta_stater,
-    const fcs_uchar_t *const enc_state,
+    const fcs_uchar *const enc_state,
     fcs_state_keyval_pair_t *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     fcs_bit_reader bit_r;

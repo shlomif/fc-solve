@@ -27,8 +27,8 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     const char *const derived_state_s)
 {
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
-    fc_solve_debondt_delta_stater_t delta;
-    fcs_uchar_t enc_state[24];
+    fcs_debondt_delta_stater delta;
+    fcs_uchar enc_state[24];
     fcs_state_locs_struct_t locs;
     fc_solve_init_locs(&locs);
 

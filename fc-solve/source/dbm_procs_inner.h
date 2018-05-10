@@ -70,7 +70,7 @@ static unsigned char get_move_from_parent_to_child(
     fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
 {
     fcs_state_keyval_pair_t parent_state;
-    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL;
+    fcs_derived_state *derived_list = NULL, *derived_list_recycle_bin = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     const_AUTO(local_variant, instance->common.variant);
 

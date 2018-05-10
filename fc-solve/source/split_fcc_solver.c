@@ -187,7 +187,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item physical_item;
     fcs_dbm_record_t *token = NULL;
-    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL;
+    fcs_derived_state *derived_list = NULL, *derived_list_recycle_bin = NULL;
     compact_allocator derived_list_allocator;
     fcs_state_keyval_pair_t state;
     char *base64_encoding_buffer = NULL;

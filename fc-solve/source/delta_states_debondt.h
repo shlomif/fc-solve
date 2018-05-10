@@ -35,7 +35,7 @@ typedef struct
     int8_t bakers_dozen_topmost_cards_lookup[((1 << 6) / 8) + 1];
     fcs_var_base_reader r;
     fcs_var_base_writer w;
-} fc_solve_debondt_delta_stater_t;
+} fcs_debondt_delta_stater;
 
 extern char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     fcs_dbm_variant_type_t, const char *, const char *);

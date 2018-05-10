@@ -158,7 +158,7 @@ static inline bool instance_check_multiple_keys(
     dbm_solver_instance *const instance,
     fcs_dbm__cache_store__common *const cache_store GCC_UNUSED,
     meta_allocator *const meta_alloc GCC_UNUSED,
-    fcs_derived_state_t **lists, size_t batch_size
+    fcs_derived_state **lists, size_t batch_size
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move_t *moves_to_parent

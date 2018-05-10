@@ -56,8 +56,8 @@ static inline void fc_solve_fcc_release_moves_seq(
     fcs_fcc_moves_seq *const moves_seq,
     fcs_fcc_moves_seq_allocator *const moves_list_allocator)
 {
-    fcs_fcc_moves_list_item_t *iter = moves_seq->moves_list;
-    fcs_fcc_moves_list_item_t *iter_next;
+    fcs_fcc_moves_list_item *iter = moves_seq->moves_list;
+    fcs_fcc_moves_list_item *iter_next;
 
     if (iter)
     {
@@ -79,13 +79,13 @@ static inline void fc_solve_fcc_release_moves_seq(
 
 static inline void fc_solve__internal__copy_moves(
     fcs_fcc_moves_seq *const moves_seq, int *const ptr_to_pos_in_moves,
-    fcs_fcc_moves_list_item_t ***const ptr_to_end_moves_iter,
+    fcs_fcc_moves_list_item ***const ptr_to_end_moves_iter,
     const unsigned char extra_move,
     fcs_fcc_moves_seq_allocator *const moves_list_allocator)
 {
     int pos_in_moves = *ptr_to_pos_in_moves;
     var_AUTO(end_moves_iter, *ptr_to_end_moves_iter);
-    const fcs_fcc_moves_list_item_t *copy_from_iter = moves_seq->moves_list;
+    const fcs_fcc_moves_list_item *copy_from_iter = moves_seq->moves_list;
     const_SLOT(count, moves_seq);
 
     for (int copy_from_idx = 0; copy_from_idx < count;)
@@ -194,7 +194,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
     void *tree_recycle_bin = NULL;
     fcs_dbm_queue_item *queue_head, *queue_tail, *queue_recycle_bin = NULL,
                                                    *extracted_item;
-    fcs_derived_state_t *derived_list_recycle_bin = NULL, *next_derived_iter;
+    fcs_derived_state *derived_list_recycle_bin = NULL, *next_derived_iter;
     fcs_state_keyval_pair_t state;
     bool running_min_was_assigned = FALSE;
     fcs_encoded_state_buffer_t running_min = {{0}};
@@ -267,7 +267,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
         }
 
         /* Calculate the derived list. */
-        fcs_derived_state_t *derived_list = NULL;
+        fcs_derived_state *derived_list = NULL;
 
         /* Handle item. */
         fc_solve_delta_stater_decode_into_state(&delta_stater,
@@ -312,7 +312,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type_t local_variant,
                 if (is_reversible)
                 {
                     fcc_brfs_add_key_to_tree(traversed_states, &new_item->key);
-                    fcs_fcc_moves_list_item_t *moves_list,
+                    fcs_fcc_moves_list_item *moves_list,
                         **end_moves_iter = &moves_list;
                     /* Fill in the moves. */
                     int pos_in_moves = 0;
@@ -413,14 +413,14 @@ static bool fc_solve_add_start_point_in_mem(
 
     fcc_brfs_add_key_to_tree(tree, enc_state);
     /* Fill in the moves. */
-    fcs_fcc_moves_list_item_t *moves_list;
-    fcs_fcc_moves_list_item_t **end_moves_iter = &moves_list;
+    fcs_fcc_moves_list_item *moves_list;
+    fcs_fcc_moves_list_item **end_moves_iter = &moves_list;
     int pos_in_moves = 0;
     /*
      * TODO : optimise the loop so the data will be copied
      * in one go by jumps of FCS_FCC_NUM_MOVES_IN_ITEM
      * */
-    const fcs_fcc_moves_list_item_t *start_iter =
+    const fcs_fcc_moves_list_item *start_iter =
         start_state_moves_seq->moves_list;
     const int count_start_state_moves = start_state_moves_seq->count;
     fcs_fcc_moves_seq_allocator *const moves_list_allocator =

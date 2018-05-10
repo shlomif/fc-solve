@@ -15,7 +15,7 @@ typedef struct
 {
     DB *dbp;
     DBT key, data;
-} dbm_t;
+} fcs_dbm;
 
 static __attribute__((noreturn)) inline void my_close(DB *const dbp, int ret)
 {
@@ -30,7 +30,7 @@ static __attribute__((noreturn)) inline void my_close(DB *const dbp, int ret)
 void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     const char *const path, void **const recycle_bin_ptr)
 {
-    dbm_t *db = SMALLOC1(db);
+    fcs_dbm *db = SMALLOC1(db);
 
     int ret;
 
@@ -59,7 +59,7 @@ bool fc_solve_dbm_store_does_key_exist(
 {
     unsigned char dummy[100];
 
-    dbm_t *db = (dbm_t *)store;
+    fcs_dbm *db = (fcs_dbm *)store;
     db->key.data = (unsigned char *)key_raw + 1;
     db->key.size = key_raw[0];
     db->data.data = dummy;
@@ -84,7 +84,7 @@ bool fc_solve_dbm_store_does_key_exist(
 bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
     const unsigned char *const key_raw, unsigned char *const parent)
 {
-    dbm_t *db = (dbm_t *)store;
+    fcs_dbm *db = (fcs_dbm *)store;
     db->key.data = (unsigned char *)key_raw + 1;
     db->key.size = key_raw[0];
     db->data.data = parent + 1;
@@ -110,7 +110,7 @@ bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
 extern void fc_solve_dbm_store_offload_pre_cache(
     fcs_dbm_store_t store, fcs_pre_cache *const pre_cache)
 {
-    dbm_t *const db = (dbm_t *)store;
+    fcs_dbm *const db = (fcs_dbm *)store;
     dict_t *const kaz_tree = pre_cache->kaz_tree;
     DB *const dbp = db->dbp;
 
@@ -134,7 +134,7 @@ extern void fc_solve_dbm_store_offload_pre_cache(
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
 {
-    dbm_t *const db = (dbm_t *)store;
+    fcs_dbm *const db = (fcs_dbm *)store;
     int ret;
     if ((ret = db->dbp->close(db->dbp, 0)) != 0)
     {

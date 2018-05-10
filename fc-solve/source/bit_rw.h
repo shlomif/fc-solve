@@ -14,17 +14,17 @@
 #define NUM_BITS_IN_BYTES 8
 
 typedef size_t fcs_bit_data;
-typedef unsigned char fcs_uchar_t;
+typedef unsigned char fcs_uchar;
 
 typedef struct
 {
-    fcs_uchar_t *current;
+    fcs_uchar *current;
     int bit_in_char_idx;
-    fcs_uchar_t *start;
+    fcs_uchar *start;
 } fc_solve_bit_writer;
 
 static inline void fc_solve_bit_writer_init(
-    fc_solve_bit_writer *const writer, fcs_uchar_t *const start)
+    fc_solve_bit_writer *const writer, fcs_uchar *const start)
 {
     *(writer->start = writer->current = start) = 0;
     writer->bit_in_char_idx = 0;
@@ -46,13 +46,13 @@ static inline void fc_solve_bit_writer_write(
 
 typedef struct
 {
-    const fcs_uchar_t *current;
+    const fcs_uchar *current;
     int bit_in_char_idx;
-    const fcs_uchar_t *start;
+    const fcs_uchar *start;
 } fcs_bit_reader;
 
 static inline void fc_solve_bit_reader_init(
-    fcs_bit_reader *const reader, const fcs_uchar_t *const start)
+    fcs_bit_reader *const reader, const fcs_uchar *const start)
 {
     reader->start = reader->current = start;
     reader->bit_in_char_idx = 0;

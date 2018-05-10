@@ -33,7 +33,7 @@ static int test_encode_and_decode(const fcs_dbm_variant_type_t local_variant, fc
 {
     int verdict;
     fcs_state_keyval_pair_t new_derived_state;
-    fcs_uchar_t enc_state[24];
+    fcs_uchar enc_state[24];
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct_t locs;
 
@@ -258,7 +258,7 @@ static int main_tests(void)
         {
             fc_solve_bit_writer bit_w;
             fcs_bit_reader bit_r;
-            fcs_uchar_t enc[10];
+            fcs_uchar enc[10];
 
             fc_solve_bit_writer_init(&bit_w, enc);
             fc_solve_bit_reader_init(&bit_r, enc);

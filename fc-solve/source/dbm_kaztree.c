@@ -19,12 +19,12 @@ typedef struct
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     compact_allocator allocator;
 #endif
-} dbm_t;
+} fcs_dbm;
 
 void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     const char *path GCC_UNUSED, void **const recycle_bin_ptr)
 {
-    dbm_t *const db = SMALLOC1(db);
+    fcs_dbm *const db = SMALLOC1(db);
 
     fc_solve_meta_compact_allocator_init(&(db->meta_alloc));
 
@@ -40,7 +40,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
 
 dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)
 {
-    return (((dbm_t *)store)->kaz_tree);
+    return (((fcs_dbm *)store)->kaz_tree);
 }
 
 /*
@@ -61,7 +61,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
     memset(&record_on_stack, '\0', sizeof(record_on_stack));
 #endif
 
-    dbm_t *const db = (dbm_t *)store;
+    fcs_dbm *const db = (fcs_dbm *)store;
 
     fcs_dbm_record_t *to_check;
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
@@ -110,7 +110,7 @@ bool fc_solve_dbm_store_lookup_parent(
         .key = *(const fcs_encoded_state_buffer_t *)key};
 
     dict_key_t existing =
-        fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
+        fc_solve_kaz_tree_lookup_value(((fcs_dbm *)store)->kaz_tree, &to_check);
     if (!existing)
     {
         return FALSE;
@@ -139,7 +139,7 @@ bool fc_solve_dbm_store_lookup_parent(
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
 {
-    dbm_t *const db = (dbm_t *)store;
+    fcs_dbm *const db = (fcs_dbm *)store;
 
     fc_solve_kaz_tree_destroy(db->kaz_tree);
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS

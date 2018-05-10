@@ -130,8 +130,8 @@ static void *instance_run_solver_thread(void *const void_arg)
     compact_allocator derived_list_allocator;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(instance->meta_alloc));
-    fcs_derived_state_t *derived_list_recycle_bin = NULL;
-    fcs_derived_state_t *derived_list = NULL;
+    fcs_derived_state *derived_list_recycle_bin = NULL;
+    fcs_derived_state *derived_list = NULL;
     FILE *const out_fh = instance->common.out_fh;
     fcs_dbm_variant_type_t local_variant = instance->common.variant;
 

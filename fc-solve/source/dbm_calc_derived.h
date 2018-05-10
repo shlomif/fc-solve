@@ -37,11 +37,11 @@ typedef struct fcs_derived_state_struct
     fcs_fcc_move_t move;
     int num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-} fcs_derived_state_t;
+} fcs_derived_state;
 
 static inline void fcs_derived_state_list__recycle(
-    fcs_derived_state_t **const p_recycle_bin,
-    fcs_derived_state_t **const p_list)
+    fcs_derived_state **const p_recycle_bin,
+    fcs_derived_state **const p_list)
 {
     var_AUTO(list, *p_list);
     var_AUTO(bin, *p_recycle_bin);
@@ -93,7 +93,7 @@ static inline void fcs_derived_state_list__recycle(
         }                                                                      \
         else                                                                   \
         {                                                                      \
-            ptr_new_state = (fcs_derived_state_t *)fcs_compact_alloc_ptr(      \
+            ptr_new_state = (fcs_derived_state *)fcs_compact_alloc_ptr(      \
                 derived_list_allocator, sizeof(*ptr_new_state));               \
         }                                                                      \
         memset(&(ptr_new_state->which_irreversible_moves_bitmask), '\0',       \
@@ -174,21 +174,21 @@ static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
 
 typedef struct
 {
-    fcs_fcc_moves_list_item_t *recycle_bin;
+    fcs_fcc_moves_list_item *recycle_bin;
     compact_allocator *allocator;
 } fcs_fcc_moves_seq_allocator;
 
-static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
+static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
     fcs_fcc_moves_seq_allocator *const allocator)
 {
-    fcs_fcc_moves_list_item_t *new_item;
+    fcs_fcc_moves_list_item *new_item;
     if (allocator->recycle_bin)
     {
         allocator->recycle_bin = (new_item = allocator->recycle_bin)->next;
     }
     else
     {
-        new_item = (fcs_fcc_moves_list_item_t *)fcs_compact_alloc_ptr(
+        new_item = (fcs_fcc_moves_list_item *)fcs_compact_alloc_ptr(
             allocator->allocator, sizeof(*new_item));
     }
     new_item->next = NULL;
@@ -280,7 +280,7 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
     /* modify moves_seq in-place. */
     if (count_moves_so_far && moves_seq)
     {
-        fcs_fcc_moves_list_item_t **iter = &(moves_seq->moves_list);
+        fcs_fcc_moves_list_item **iter = &(moves_seq->moves_list);
 
         /* Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
          * to point at the place to either write the new moves or
@@ -362,12 +362,12 @@ static inline bool instance_solver_thread_calc_derived_states(
     const fcs_dbm_variant_type_t local_variant,
     fcs_state_keyval_pair_t *const init_state_kv_ptr,
     fcs_dbm_record_t *const parent_ptr,
-    fcs_derived_state_t **const derived_list,
-    fcs_derived_state_t **const derived_list_recycle_bin,
+    fcs_derived_state **const derived_list,
+    fcs_derived_state **const derived_list_recycle_bin,
     compact_allocator *const derived_list_allocator,
     const bool perform_horne_prune)
 {
-    fcs_derived_state_t *ptr_new_state;
+    fcs_derived_state *ptr_new_state;
     int empty_stack_idx = -1;
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #define new_state (ptr_new_state->state.s)

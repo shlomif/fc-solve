@@ -80,7 +80,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     fcs_fcc_moves_seq start_state_moves_seq = {
         .count = start_state_moves_count, .moves_list = NULL};
     {
-        fcs_fcc_moves_list_item_t **moves_iter =
+        fcs_fcc_moves_list_item **moves_iter =
             &(start_state_moves_seq.moves_list);
         for (int i = 0; i < start_state_moves_count;)
         {
@@ -133,7 +133,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         ret[i].count = iter->moves_seq.count;
         ret[i].moves = SMALLOC(ret[i].moves, (size_t)ret[i].count);
         {
-            fcs_fcc_moves_list_item_t *moves_iter = iter->moves_seq.moves_list;
+            fcs_fcc_moves_list_item *moves_iter = iter->moves_seq.moves_list;
             for (int moves_idx = 0; moves_idx < ret[i].count;)
             {
                 ret[i].moves[moves_idx] =

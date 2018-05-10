@@ -77,7 +77,7 @@ typedef struct
     enum TERMINATE_REASON should_terminate;
     compact_allocator derived_list_allocator;
     meta_allocator meta_alloc;
-    fcs_derived_state_t *derived_list_recycle_bin;
+    fcs_derived_state *derived_list_recycle_bin;
     fcs_dbm_variant_type_t local_variant;
     fcs_delta_stater delta_stater;
     fcs_cache_key init_key;
@@ -113,7 +113,7 @@ static inline void instance__inspect_new_state(
     pseudo_dfs_stack_item *const stack_item = instance->stack + depth;
     stack_item->curr_state = state;
 
-    fcs_derived_state_t *derived_list = NULL;
+    fcs_derived_state *derived_list = NULL;
 
     fcs_state_keyval_pair_t s;
     const_AUTO(delta_stater, &(instance->delta_stater));

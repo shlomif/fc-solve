@@ -28,10 +28,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 {
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;
-    fcs_derived_state_t *derived_list = NULL;
-    fcs_derived_state_t *derived_list_recycle_bin = NULL;
+    fcs_derived_state *derived_list = NULL;
+    fcs_derived_state *derived_list_recycle_bin = NULL;
     size_t states_count = 0;
-    fcs_derived_state_t *iter;
+    fcs_derived_state *iter;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     fc_solve_initial_user_state_to_c(init_state_str_proto, &init_state,

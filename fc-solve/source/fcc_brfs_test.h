@@ -32,12 +32,12 @@ typedef struct fcs_fcc_moves_list_item_struct
     {
         fcs_fcc_move_t s[FCS_FCC_NUM_MOVES_IN_ITEM];
     } data;
-} fcs_fcc_moves_list_item_t;
+} fcs_fcc_moves_list_item;
 
 typedef struct
 {
     int count;
-    fcs_fcc_moves_list_item_t *moves_list;
+    fcs_fcc_moves_list_item *moves_list;
 } fcs_fcc_moves_seq;
 
 typedef struct
