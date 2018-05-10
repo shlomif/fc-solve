@@ -77,7 +77,7 @@ static inline void instance_destroy(dbm_solver_instance *const instance)
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const int key_depth GCC_UNUSED,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
@@ -235,10 +235,10 @@ static bool populate_instance_with_intermediate_input_line(
     dbm_solver_instance *const instance,
     fcs_delta_stater *const delta,
     fcs_state_keyval_pair *const init_state_ptr, char *const line,
-    const long line_num, fcs_encoded_state_buffer_t *const parent_state_enc)
+    const long line_num, fcs_encoded_state_buffer *const parent_state_enc)
 {
-    fcs_encoded_state_buffer_t final_stack_encoded_state;
-    fcs_encoded_state_buffer_t running_key;
+    fcs_encoded_state_buffer final_stack_encoded_state;
+    fcs_encoded_state_buffer running_key;
     fcs_state_keyval_pair running_state;
     fcs_dbm_record *token = NULL;
 #ifdef DEBUG_OUT
@@ -300,7 +300,7 @@ static bool populate_instance_with_intermediate_input_line(
     {
         FCS__OUTPUT_STATE(
             stdout, "BEFORE_RUNNING_STATE == ", &(running_state.s), &locs);
-        fcs_card_t src_card;
+        fcs_card src_card;
 
         s_ptr += 3;
 
@@ -486,7 +486,7 @@ static bool handle_and_destroy_instance_solution(
                 }
 #else
                 int trace_num;
-                fcs_encoded_state_buffer_t *trace;
+                fcs_encoded_state_buffer *trace;
                 calc_trace(token, &trace, &trace_num);
 
 /*
@@ -646,7 +646,7 @@ int main(int argc, char *argv[])
                 }
                 skip_queue_output = FALSE;
                 {
-                    fcs_encoded_state_buffer_t parent_state_enc;
+                    fcs_encoded_state_buffer parent_state_enc;
                     if (!populate_instance_with_intermediate_input_line(
                             &limit_instance, &delta, &init_state, line,
                             line_num, &parent_state_enc))
@@ -685,7 +685,7 @@ int main(int argc, char *argv[])
 
                 if (!skip_queue_output)
                 {
-                    fcs_encoded_state_buffer_t parent_state_enc;
+                    fcs_encoded_state_buffer parent_state_enc;
                     if (!populate_instance_with_intermediate_input_line(
                             &queue_instance, &delta, &init_state, line,
                             line_num, &parent_state_enc))
@@ -728,9 +728,9 @@ int main(int argc, char *argv[])
     {
         dbm_solver_instance instance;
         instance_init(&instance, &inp, inp.iters_delta_limit, out_fh);
-        fcs_encoded_state_buffer_t *key_ptr;
+        fcs_encoded_state_buffer *key_ptr;
 #define KEY_PTR() (key_ptr)
-        fcs_encoded_state_buffer_t parent_state_enc;
+        fcs_encoded_state_buffer parent_state_enc;
 
         key_ptr = &(instance.common.first_key);
         fcs_init_and_encode_state(

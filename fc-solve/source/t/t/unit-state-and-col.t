@@ -17,7 +17,7 @@ typedef struct
 {
     fcs_state_keyval_pair state;
     fcs_state_locs_struct locs;
-    fcs_card_t card;
+    fcs_card card;
     DECLARE_IND_BUF_T(indirect_stacks_buffer);
 } StateInC;
 

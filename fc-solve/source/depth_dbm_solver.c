@@ -242,7 +242,7 @@ thread_end:
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
@@ -355,12 +355,12 @@ int main(int argc, char *argv[])
     dbm_solver_instance instance;
     instance_init(&instance, &inp, max_batch_size, out_fh);
 
-    fcs_encoded_state_buffer_t *const key_ptr = &(instance.common.first_key);
+    fcs_encoded_state_buffer *const key_ptr = &(instance.common.first_key);
     fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
 
     /* The NULL parent_state_enc and move for indicating this is the
      * initial state. */
-    fcs_encoded_state_buffer_t parent_state_enc;
+    fcs_encoded_state_buffer parent_state_enc;
     fcs_init_encoded_state(&(parent_state_enc));
 
     fcs_dbm_record *token;

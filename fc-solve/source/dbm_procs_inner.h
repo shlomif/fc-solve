@@ -67,7 +67,7 @@ static inline void dbm__free_threads(dbm_solver_instance *const instance,
 
 static unsigned char get_move_from_parent_to_child(
     dbm_solver_instance *const instance, fcs_delta_stater *delta,
-    fcs_encoded_state_buffer_t parent, fcs_encoded_state_buffer_t child)
+    fcs_encoded_state_buffer parent, fcs_encoded_state_buffer child)
 {
     fcs_state_keyval_pair parent_state;
     fcs_derived_state *derived_list = NULL, *derived_list_recycle_bin = NULL;
@@ -88,7 +88,7 @@ static unsigned char get_move_from_parent_to_child(
     for (var_AUTO(derived_iter, derived_list); derived_iter;
          derived_iter = derived_iter->next)
     {
-        fcs_encoded_state_buffer_t got_child;
+        fcs_encoded_state_buffer got_child;
         fcs_init_and_encode_state(
             delta, local_variant, &(derived_iter->state), &got_child);
         if (compare_enc_states(&got_child, &child) == 0)
@@ -109,7 +109,7 @@ static void trace_solution(dbm_solver_instance *const instance,
     fflush(out_fh);
 /* Now trace the solution */
 #ifdef FCS_DBM_WITHOUT_CACHES
-    fcs_encoded_state_buffer_t *trace;
+    fcs_encoded_state_buffer *trace;
     int trace_num;
     fcs_state_keyval_pair state;
     unsigned char move = '\0';
@@ -155,7 +155,7 @@ static inline void read_state_from_file(
     fc_solve_initial_user_state_to_c(user_state.s, init_state, FREECELLS_NUM,
         STACKS_NUM, DECKS_NUM, init_indirect_stacks_buffer);
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
-    fcs_card_t problem_card;
+    fcs_card problem_card;
     if (FCS_STATE_VALIDITY__OK !=
         fc_solve_check_state_validity(init_state PASS_FREECELLS(FREECELLS_NUM)
                                           PASS_STACKS(STACKS_NUM)

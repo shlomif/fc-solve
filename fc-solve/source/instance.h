@@ -546,8 +546,8 @@ struct fc_solve_instance_struct
 #ifndef FCS_FREECELL_ONLY
     fcs_game_type_params game_params;
 #ifndef FCS_DISABLE_PATSOLVE
-    fcs_card_t game_variant_suit_mask;
-    fcs_card_t game_variant_desired_suit_value;
+    fcs_card game_variant_suit_mask;
+    fcs_card game_variant_desired_suit_value;
 #endif
 #endif
 
@@ -836,8 +836,8 @@ static inline int update_col_cards_under_sequences(
     int d /* One less than cards_num of col. */
 )
 {
-    fcs_card_t this_card = fcs_col_get_card(col, d);
-    fcs_card_t prev_card;
+    fcs_card this_card = fcs_col_get_card(col, d);
+    fcs_card prev_card;
     for (; (d > 0) && ({
              prev_card = fcs_col_get_card(col, d - 1);
              fcs_is_parent_card(this_card, prev_card);

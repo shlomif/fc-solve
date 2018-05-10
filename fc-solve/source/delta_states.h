@@ -28,7 +28,7 @@ extern "C" {
 typedef struct
 {
     unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS];
-} fcs_encoded_state_buffer_t;
+} fcs_encoded_state_buffer;
 
 #if SIZEOF_VOID_P == 4
 #define FCS_EXPLICIT_REFCOUNT 1
@@ -38,7 +38,7 @@ typedef struct
 
 typedef struct
 {
-    fcs_encoded_state_buffer_t key;
+    fcs_encoded_state_buffer key;
     uintptr_t parent_and_refcount;
 #ifdef FCS_EXPLICIT_REFCOUNT
     unsigned char refcount;
@@ -123,8 +123,8 @@ static inline unsigned char fcs_dbm_record_decrement_refcount(
 
 typedef struct
 {
-    fcs_encoded_state_buffer_t key;
-    fcs_encoded_state_buffer_t parent;
+    fcs_encoded_state_buffer key;
+    fcs_encoded_state_buffer parent;
 } fcs_dbm_record;
 
 #endif
@@ -138,7 +138,7 @@ typedef struct
     int bits_per_orig_cards_in_column;
 } fcs_delta_stater;
 
-static inline void fcs_init_encoded_state(fcs_encoded_state_buffer_t *enc_state)
+static inline void fcs_init_encoded_state(fcs_encoded_state_buffer *enc_state)
 {
     memset(enc_state, '\0', sizeof(*enc_state));
 }

@@ -406,7 +406,7 @@ static inline void instance_alloc_num_moves(
 
 static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -459,7 +459,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
                     instance->fingerprint_which_irreversible_moves_bitmask.s[i];
             }
             int trace_num;
-            fcs_encoded_state_buffer_t *trace;
+            fcs_encoded_state_buffer *trace;
             fcs_lock_lock(&instance->fcc_exit_points_output_lock);
             /* instance->storage_lock is already locked
              * in instance_check_multiple_keys and we should not
@@ -673,7 +673,7 @@ int main(int argc, char *argv[])
 
     dbm_solver_instance instance;
     FccEntryPointNode *key_ptr = NULL;
-    fcs_encoded_state_buffer_t parent_state_enc;
+    fcs_encoded_state_buffer parent_state_enc;
 
     instance_init(
         &instance, &inp, &fingerprint_which_irreversible_moves_bitmask, stdout);

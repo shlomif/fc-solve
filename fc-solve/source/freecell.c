@@ -108,7 +108,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
             continue;
         }
         /* Get the top card in the stack */
-        const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+        const fcs_card card = fcs_col_get_card(col, cards_num - 1);
         for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
         {
             if (fcs_foundation_value(state, deck * 4 + fcs_card_suit(card)) !=
@@ -167,7 +167,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
     /* Now check the same for the free cells */
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
-        const fcs_card_t card = fcs_freecell_card(state, fc);
+        const fcs_card card = fcs_freecell_card(state, fc);
 
         if (fcs_card_is_empty(card))
         {
@@ -340,7 +340,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     /* Scan the freecells */
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
-        const fcs_card_t src_card = fcs_freecell_card(state, fc);
+        const fcs_card src_card = fcs_freecell_card(state, fc);
 
         /* If the freecell is not empty and dest_card is its parent
          * */
@@ -376,7 +376,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 // We don't need this check because the positions_by_rank
 // already filters the fcs_is_parent_card check for us.
 #ifdef FCS_POS_BY_RANK__ENABLE_PARENT_CHECK
-            const fcs_card_t dest_card = fcs_col_get_card(dest_col, dc);
+            const fcs_card dest_card = fcs_col_get_card(dest_col, dc);
             if (!((dest_cards_num == next_dc) ||
                     ((!fcs_is_parent_card(
                          fcs_col_get_card(dest_col, next_dc), dest_card)) &&
@@ -448,7 +448,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
         const int c_bottom = max0(cards_num - num_vacant_slots_plus_1);
         for (int c = cards_num - 2; c >= c_bottom; c--)
         {
-            const fcs_card_t card = fcs_col_get_card(col, c);
+            const fcs_card card = fcs_col_get_card(col, c);
 
             for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
             {
@@ -499,7 +499,7 @@ DECLARE_MOVE_FUNCTION(
         {
             /* Find a card which this card can be put on; */
 
-            const fcs_card_t card = fcs_col_get_card(col, c);
+            const fcs_card card = fcs_col_get_card(col, c);
 
             /* Do not move cards that are already found above a suitable
              * parent */
@@ -518,7 +518,7 @@ DECLARE_MOVE_FUNCTION(
             /* Check if it can be moved to something on the same stack */
             for (int dc = start_dc; dc < below_c; dc++)
             {
-                const fcs_card_t dest_card = fcs_col_get_card(col, dc);
+                const fcs_card dest_card = fcs_col_get_card(col, dc);
                 const int next_dc = dc + 1;
                 if ((!fcs_is_parent_card(card, dest_card)) ||
                     /* Corresponding cards - see if it is feasible to move
@@ -543,7 +543,7 @@ DECLARE_MOVE_FUNCTION(
                     ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
                     below_c - dc, 0);
 
-                fcs_card_t moved_card;
+                fcs_card moved_card;
 #define s_idx last_dest.src_idx
                 if (last_dest.is_col)
                 {
@@ -665,7 +665,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
             const int col_num_cards = iter.col_len_minus_1 - iter.seq_end;
             /* Find a card which this card can be put on; */
 
-            const fcs_card_t card = fcs_col_get_card(iter.col, iter.c);
+            const fcs_card card = fcs_col_get_card(iter.col, iter.c);
             /* Skip if it's a King - nothing to put it on. */
             if (unlikely(fcs_card_is_king(card)))
             {
@@ -854,7 +854,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
-        const fcs_card_t card = fcs_freecell_card(state, fc);
+        const fcs_card card = fcs_freecell_card(state, fc);
 #define SHOULD_SKIP_FC_CARD(card)                                              \
     (fcs_card_is_empty(card) ||                                                \
         (IS_FILLED_BY_KINGS_ONLY() && !fcs_card_is_king(card)))
@@ -901,7 +901,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
 
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
-        const fcs_card_t src_card = fcs_freecell_card(state, fc);
+        const fcs_card src_card = fcs_freecell_card(state, fc);
         if (SHOULD_SKIP_FC_CARD(src_card))
         {
             continue;
@@ -912,7 +912,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
             {
                 continue;
             }
-            const fcs_card_t dest_card = fcs_freecell_card(state, dest_fc);
+            const fcs_card dest_card = fcs_freecell_card(state, dest_fc);
             if (fcs_card_is_empty(dest_card))
             {
                 continue;
@@ -948,7 +948,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                 const int col_num_cards = iter.col_len_minus_1 - iter.seq_end;
                 /* Find a card which this card can be put on; */
 
-                const fcs_card_t card = fcs_col_get_card(iter.col, iter.c);
+                const fcs_card card = fcs_col_get_card(iter.col, iter.c);
                 if (!unlikely(fcs_is_parent_card(card, src_card)))
                 {
                     continue;
@@ -1009,7 +1009,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
             continue;
         }
 
-        fcs_card_t upper_card = fcs_col_get_card(col, cards_num - 1);
+        fcs_card upper_card = fcs_col_get_card(col, cards_num - 1);
 
         /*
          * min_card_height is the minimal height of the card that is above
@@ -1022,7 +1022,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
          * 2. <= cards_num-1 - because the height 0
          */
         int min_card_height;
-        fcs_card_t lower_card;
+        fcs_card lower_card;
         for (min_card_height = cards_num - 2; min_card_height >= 0;
              upper_card = lower_card, min_card_height--)
         {
@@ -1038,7 +1038,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
         {
             /* Find a card which this card can be put on; */
 
-            const fcs_card_t card = fcs_col_get_card(col, c);
+            const fcs_card card = fcs_col_get_card(col, c);
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
                 const int_fast32_t ds = pos_idx_to_check[0];
@@ -1157,7 +1157,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
                     break;
                 }
             }
-            fcs_card_t top_card;
+            fcs_card top_card;
             fcs_col_pop_card(new_src_col, top_card);
 
             fcs_put_card_in_freecell(new_state_key, b, top_card);
@@ -1197,7 +1197,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         {
             continue;
         }
-        const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+        const fcs_card card = fcs_col_get_card(col, cards_num - 1);
 
         if (IS_FILLED_BY_KINGS_ONLY() && (!fcs_card_is_king(card)))
         {
@@ -1232,7 +1232,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
         {
             continue;
         }
-        const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+        const fcs_card card = fcs_col_get_card(col, cards_num - 1);
 
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
@@ -1248,7 +1248,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
             {
                 continue;
             }
-            const fcs_card_t dest_card =
+            const fcs_card dest_card =
                 fcs_col_get_card(dest_col, fcs_col_len(dest_col) - 1);
             if (!fcs_is_parent_card(card, dest_card))
             {
@@ -1297,7 +1297,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
         {
             continue;
         }
-        const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+        const fcs_card card = fcs_col_get_card(col, cards_num - 1);
 
         /* Let's move it */
         sfs_check_state_begin();
@@ -1320,7 +1320,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
     FC__STACKS__SET_PARAMS();
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
-        const fcs_card_t card = fcs_freecell_card(state, fc);
+        const fcs_card card = fcs_freecell_card(state, fc);
 
         if (fcs_card_is_empty(card))
         {
@@ -1335,7 +1335,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
             {
                 continue;
             }
-            const fcs_card_t dest_card = fcs_col_get_card(dest_col, l - 1);
+            const fcs_card dest_card = fcs_col_get_card(dest_col, l - 1);
             if (!fcs_is_parent_card(card, dest_card))
             {
                 continue;
@@ -1373,7 +1373,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
-        const fcs_card_t card = fcs_freecell_card(state, fc);
+        const fcs_card card = fcs_freecell_card(state, fc);
 
         if (fcs_card_is_empty(card) ||
             (IS_FILLED_BY_KINGS_ONLY() && (!fcs_card_is_king(card))))
@@ -1398,7 +1398,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
 static inline int_fast32_t calc_foundation_to_put_card_on(
     const fcs_soft_thread *const soft_thread,
-    const fcs_state *const ptr_state, const fcs_card_t card)
+    const fcs_state *const ptr_state, const fcs_card card)
 {
     FCS_ON_NOT_FC_ONLY(const_AUTO(instance, fcs_st_instance(soft_thread)));
     MOVE_FUNCS__define_seqs_built_by();
@@ -1462,7 +1462,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
                 continue;
             }
             /* Get the top card in the stack */
-            const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+            const fcs_card card = fcs_col_get_card(col, cards_num - 1);
 
             const_AUTO(dest_foundation, CALC_FOUNDATION_TO_PUT_CARD_ON());
             if (dest_foundation < 0)
@@ -1482,7 +1482,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
         /* Now check the same for the free cells */
         for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
-            const fcs_card_t card = fcs_freecell_card(new_state_key, fc);
+            const fcs_card card = fcs_freecell_card(new_state_key, fc);
             if (fcs_card_is_empty(card))
             {
                 continue;

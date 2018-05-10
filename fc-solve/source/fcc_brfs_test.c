@@ -20,7 +20,7 @@
 static void fc_solve_state_string_to_enc(
     const fcs_dbm_variant_type local_variant,
     fcs_delta_stater *const delta, const char *const state_s_proto,
-    fcs_encoded_state_buffer_t *const enc_state)
+    fcs_encoded_state_buffer *const enc_state)
 {
     fcs_state_keyval_pair state;
     DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
@@ -42,10 +42,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     long *const out_num_new_positions)
 {
     fcs_state_keyval_pair init_state;
-    fcs_encoded_state_buffer_t enc_state;
+    fcs_encoded_state_buffer enc_state;
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
-    fcs_encoded_state_buffer_t min_by_sorting;
+    fcs_encoded_state_buffer min_by_sorting;
     void *tree_recycle_bin = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -183,9 +183,9 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     const char **states_in_cache, bool *const out_is_fcc_new)
 {
     fcs_state_keyval_pair init_state;
-    fcs_encoded_state_buffer_t enc_state;
-    fcs_encoded_state_buffer_t start_enc_state;
-    fcs_encoded_state_buffer_t min_by_sorting;
+    fcs_encoded_state_buffer enc_state;
+    fcs_encoded_state_buffer start_enc_state;
+    fcs_encoded_state_buffer min_by_sorting;
     void *tree_recycle_bin = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -223,8 +223,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
         for (; *(min_states_iter); min_states_iter++)
         {
-            fcs_encoded_state_buffer_t *const min_enc_state =
-                (fcs_encoded_state_buffer_t *)fcs_compact_alloc_ptr(
+            fcs_encoded_state_buffer *const min_enc_state =
+                (fcs_encoded_state_buffer *)fcs_compact_alloc_ptr(
                     &(temp_allocator), sizeof(*min_enc_state));
 
             fc_solve_state_string_to_enc(
@@ -244,8 +244,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
 
         for (; *(min_states_iter); min_states_iter++)
         {
-            fcs_encoded_state_buffer_t *const min_enc_state =
-                (fcs_encoded_state_buffer_t *)fcs_compact_alloc_ptr(
+            fcs_encoded_state_buffer *const min_enc_state =
+                (fcs_encoded_state_buffer *)fcs_compact_alloc_ptr(
                     &(temp_allocator), sizeof(*min_enc_state));
 
             fc_solve_state_string_to_enc(

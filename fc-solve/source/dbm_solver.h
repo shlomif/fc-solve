@@ -27,8 +27,8 @@ extern "C" {
 typedef union fcs_pre_cache_key_val_pair_struct {
     struct
     {
-        fcs_encoded_state_buffer_t key;
-        fcs_encoded_state_buffer_t parent;
+        fcs_encoded_state_buffer key;
+        fcs_encoded_state_buffer parent;
     };
     union fcs_pre_cache_key_val_pair_struct *next;
 } pre_cache_key_val_pair;
@@ -52,7 +52,7 @@ bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store, const unsigned char *const, unsigned char *const);
 
 fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
-    const fcs_encoded_state_buffer_t *key, fcs_dbm_record *parent,
+    const fcs_encoded_state_buffer *key, fcs_dbm_record *parent,
     const bool should_modify_parent);
 
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -64,7 +64,7 @@ void fc_solve_dbm_store_destroy(fcs_dbm_store store);
 
 typedef struct fcs_dbm_queue_item_struct
 {
-    fcs_encoded_state_buffer_t key;
+    fcs_encoded_state_buffer key;
     /* TODO : maybe get rid of moves_seq with FCS_DBM_WITHOUT_CACHES
      * to save space. */
     fcs_fcc_moves_seq moves_seq;
@@ -87,7 +87,7 @@ typedef struct
 {
     fcs_lock storage_lock;
     long queue_num_extracted_and_processed;
-    fcs_encoded_state_buffer_t first_key;
+    fcs_encoded_state_buffer first_key;
     long num_states_in_collection;
     FILE *out_fh;
     fcs_dbm_variant_type variant;
@@ -97,7 +97,7 @@ typedef struct
 #ifdef FCS_DBM_WITHOUT_CACHES
     fcs_dbm_record *queue_solution_ptr;
 #else
-    fcs_encoded_state_buffer_t queue_solution;
+    fcs_encoded_state_buffer queue_solution;
 #endif
     void *tree_recycle_bin;
 } dbm_instance_common_elems;

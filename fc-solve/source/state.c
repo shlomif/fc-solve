@@ -12,7 +12,7 @@
 #include "fcs_enums.h"
 
 #ifdef COMPACT_STATES
-#define GET_CARD(s) (((const fcs_card_t *const)(s))[1])
+#define GET_CARD(s) (((const fcs_card *const)(s))[1])
 static inline int fcs_stack_compare(const void *s1, const void *s2)
 {
     return fc_solve_card_compare(GET_CARD(s1), GET_CARD(s2));
@@ -29,7 +29,7 @@ static inline int fcs_stack_compare(const void *s1, const void *s2)
 
 #elif defined(INDIRECT_STACK_STATES)
 
-#define DECLARE_TEMP_STACK() fcs_card_t *temp_stack
+#define DECLARE_TEMP_STACK() fcs_card *temp_stack
 #define STACK_COMPARE(a, b) (fc_solve_stack_compare_for_comparison(a, b))
 #define GET_STACK(c) (state_key->columns[c])
 #define COPY_STACK(d, s) (d = s)
@@ -68,7 +68,7 @@ void fc_solve_canonize_state(
         while ((c > 0) && ((fc_solve_card_compare(
                                GET_FREECELL(c), GET_FREECELL(c - 1))) < 0))
         {
-            const fcs_card_t temp_freecell = GET_FREECELL(c);
+            const fcs_card temp_freecell = GET_FREECELL(c);
             GET_FREECELL(c) = GET_FREECELL(c - 1);
             GET_FREECELL(c - 1) = temp_freecell;
 
@@ -113,7 +113,7 @@ void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
         while ((c > 0) && ((fc_solve_card_compare(
                                GET_FREECELL(c), GET_FREECELL(c - 1))) < 0))
         {
-            const fcs_card_t temp_freecell = GET_FREECELL(c);
+            const fcs_card temp_freecell = GET_FREECELL(c);
             GET_FREECELL(c) = GET_FREECELL(c - 1);
             GET_FREECELL(c - 1) = temp_freecell;
 
@@ -144,7 +144,7 @@ fc_solve_state_compare_with_context(const void *const s1, const void *const s2,
 
 #ifdef FCS_WITH_MOVES
 #include "rank2str.h"
-static inline void render_freecell_card(const fcs_card_t card,
+static inline void render_freecell_card(const fcs_card card,
     char *const freecell PASS_T(const bool display_10_as_t))
 {
     if (fcs_card_is_empty(card))

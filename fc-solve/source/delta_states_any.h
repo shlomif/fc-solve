@@ -57,7 +57,7 @@ static inline void fc_solve_delta_stater_init(
 #ifdef FCS_DEBONDT_DELTA_STATES
 
 static inline int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
+    const fcs_encoded_state_buffer *a, const fcs_encoded_state_buffer *b)
 {
     return memcmp(a, b, sizeof(*a));
 }
@@ -65,7 +65,7 @@ static inline int compare_enc_states(
 #else
 
 static inline int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
+    const fcs_encoded_state_buffer *a, const fcs_encoded_state_buffer *b)
 {
     if (a->s[0] < b->s[0])
     {

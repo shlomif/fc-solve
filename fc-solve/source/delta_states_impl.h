@@ -108,7 +108,7 @@ static inline void fc_solve_get_column_encoding_composite(
     const int num_derived_cards = col_len - num_orig_cards;
 
     int_fast16_t num_cards_in_seq = num_derived_cards;
-    fcs_card_t init_card = fc_solve_empty_card;
+    fcs_card init_card = fc_solve_empty_card;
 
     if ((num_orig_cards == 0) && num_derived_cards)
     {
@@ -153,7 +153,7 @@ static inline void fc_solve_get_freecells_encoding(
     const fcs_state *const derived = self->derived_state;
     const_SLOT(num_freecells, self);
 
-    fcs_card_t freecells[MAX_NUM_FREECELLS];
+    fcs_card freecells[MAX_NUM_FREECELLS];
     for (size_t i = 0; i < num_freecells; ++i)
     {
         freecells[i] = fcs_freecell_card(*derived, i);
@@ -318,7 +318,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
     for (size_t i = 0; i < num_freecells; ++i)
     {
-        const fcs_card_t card =
+        const fcs_card card =
             fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));
         if (fcs_card_is_valid(card))
         {
@@ -339,7 +339,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
         for (int i = 0; i < num_orig_cards; ++i)
         {
-            const fcs_card_t card = fcs_col_get_card(orig_col, i);
+            const fcs_card card = fcs_col_get_card(orig_col, i);
             PROCESS_CARD(card);
             fcs_col_push_card(col, card);
         }
@@ -349,7 +349,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
         if ((num_orig_cards == 0) && num_derived_cards)
         {
-            const fcs_card_t card =
+            const fcs_card card =
                 fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));
             PROCESS_CARD(card);
             fcs_col_push_card(col, card);
@@ -359,12 +359,12 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
         if (num_cards_in_seq)
         {
-            fcs_card_t last_card = fcs_col_get_card(col, fcs_col_len(col) - 1);
+            fcs_card last_card = fcs_col_get_card(col, fcs_col_len(col) - 1);
 
             for (int_fast16_t i = 0; i < num_cards_in_seq; ++i)
             {
                 const int suit_bit = fc_solve_bit_reader_read(bit_r, 1);
-                const fcs_card_t new_card =
+                const fcs_card new_card =
                     fcs_make_card(fcs_card_rank(last_card) - 1,
                         ((suit_bit << 1) |
                             ((fcs_card_suit(last_card) & 0x1) ^ 0x1)));
@@ -426,7 +426,7 @@ static inline void fcs_init_and_encode_state(
     fcs_delta_stater *const delta_stater,
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const state,
-    fcs_encoded_state_buffer_t *const enc_state)
+    fcs_encoded_state_buffer *const enc_state)
 {
     fcs_init_encoded_state(enc_state);
 

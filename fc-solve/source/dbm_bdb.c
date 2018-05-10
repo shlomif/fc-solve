@@ -88,7 +88,7 @@ bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store store,
     db->key.data = (unsigned char *)key_raw + 1;
     db->key.size = key_raw[0];
     db->data.data = parent + 1;
-    db->data.size = sizeof(fcs_encoded_state_buffer_t) - 1;
+    db->data.size = sizeof(fcs_encoded_state_buffer) - 1;
 
     int ret;
     if ((ret = db->dbp->get(db->dbp, NULL, &(db->key), &(db->data), 0)) == 0)

@@ -113,20 +113,20 @@ static inline void fc_solve_debondt_delta_stater_set_derived(
     self->derived_state = state;
 }
 
-static inline int wanted_suit_bit_opt(const fcs_card_t parent_card)
+static inline int wanted_suit_bit_opt(const fcs_card parent_card)
 {
     return ((fcs_card_suit(parent_card) & 0x2) ? OPT_PARENT_SUIT_MOD_IS_1
                                                : OPT_PARENT_SUIT_MOD_IS_0);
 }
 
-static inline int wanted_suit_idx_opt(const fcs_card_t parent_card)
+static inline int wanted_suit_idx_opt(const fcs_card parent_card)
 {
     return OPT__BAKERS_DOZEN__FIRST_PARENT + fcs_card_suit(parent_card);
 }
 
 static inline int calc_child_card_option(
-    const fcs_dbm_variant_type local_variant, const fcs_card_t parent_card,
-    const fcs_card_t child_card
+    const fcs_dbm_variant_type local_variant, const fcs_card parent_card,
+    const fcs_card child_card
     PASS_ON_NOT_FC_ONLY(const int sequences_are_built_by)
 )
 {
@@ -191,7 +191,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
     for (int fc_idx = 0; fc_idx < self->num_freecells; ++fc_idx)
     {
-        const fcs_card_t card = fcs_freecell_card(*derived, fc_idx);
+        const fcs_card card = fcs_freecell_card(*derived, fc_idx);
 
         if (fcs_card_is_valid(card))
         {
@@ -220,8 +220,8 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
             for (int pos = 1; pos < col_len; ++pos)
             {
-                const fcs_card_t parent_card = fcs_col_get_card(col, pos - 1);
-                const fcs_card_t this_card = fcs_col_get_card(col, pos);
+                const fcs_card parent_card = fcs_col_get_card(col, pos - 1);
+                const fcs_card this_card = fcs_col_get_card(col, pos);
 
                 /* Skip Aces which were already set. */
                 if (fcs_card_rank(this_card) != 1)
@@ -252,10 +252,10 @@ static void fc_solve_debondt_delta_stater_encode_composite(
                 SET_CARD_STATE(top_card, OPT_TOPMOST);
             }
 
-            fcs_card_t parent_card = top_card;
+            fcs_card parent_card = top_card;
             for (int child_idx = 1; child_idx < col_len; ++child_idx)
             {
-                const fcs_card_t child_card = fcs_col_get_card(col, child_idx);
+                const fcs_card child_card = fcs_col_get_card(col, child_idx);
 
                 if (fcs_card_rank(child_card) != 1)
                 {
@@ -314,7 +314,7 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
     fcs_debondt_delta_stater *const self,
     const fcs_dbm_variant_type local_variant, fcs_cards_column *const col)
 {
-    fcs_card_t parent_card = fcs_col_get_card(*col, fcs_col_len(*col) - 1);
+    fcs_card parent_card = fcs_col_get_card(*col, fcs_col_len(*col) - 1);
 
     while (fcs_card_is_valid(parent_card))
     {
@@ -322,14 +322,14 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
             (IS_BAKERS_DOZEN() ? wanted_suit_idx_opt(parent_card)
                                : wanted_suit_bit_opt(parent_card));
 
-        fcs_card_t child_card = fc_solve_empty_card;
+        fcs_card child_card = fc_solve_empty_card;
         const int candidate_rank = fcs_card_rank(parent_card) - 1;
         for (int suit = (IS_BAKERS_DOZEN()
                              ? 0
                              : ((fcs_card_suit(parent_card) & (0x1)) ^ 0x1));
              suit < FCS_NUM_SUITS; suit += (IS_BAKERS_DOZEN() ? 1 : 2))
         {
-            const fcs_card_t candidate_card =
+            const fcs_card candidate_card =
                 fcs_make_card(candidate_rank, suit);
 
             if (CARD_STATE(candidate_card) == wanted_opt)
@@ -352,7 +352,7 @@ static void fc_solve_debondt_delta_stater_decode(
     const fcs_dbm_variant_type local_variant,
     fcs_var_base_reader *const reader, fcs_state *const ret)
 {
-    fcs_card_t new_top_most_cards[MAX_NUM_STACKS];
+    fcs_card new_top_most_cards[MAX_NUM_STACKS];
 
     fc_solve_debondt_delta_stater__init_card_states(self);
 
@@ -395,7 +395,7 @@ static void fc_solve_debondt_delta_stater_decode(
     {
         for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
         {
-            const fcs_card_t card = fcs_make_card(RANK_KING, suit_idx);
+            const fcs_card card = fcs_make_card(RANK_KING, suit_idx);
 
             if (!IS_IN_FOUNDATIONS(card))
             {
@@ -411,7 +411,7 @@ static void fc_solve_debondt_delta_stater_decode(
     {
         for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
         {
-            const fcs_card_t card = fcs_make_card(rank, suit_idx);
+            const fcs_card card = fcs_make_card(rank, suit_idx);
             const_AUTO(card_char, fcs_card2char(card));
 
             if (IS_BAKERS_DOZEN())
@@ -478,7 +478,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
     for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
     {
-        fcs_card_t top_card;
+        fcs_card top_card;
         int top_opt;
 
         fcs_cards_column col = fcs_state_get_col(*ret, col_idx);
@@ -514,7 +514,7 @@ static void fc_solve_debondt_delta_stater_decode(
             var_AUTO(parent_card, top_card);
             for (int pos = 1; pos < orig_col_len; ++pos)
             {
-                const fcs_card_t child_card = fcs_col_get_card(orig_col, pos);
+                const fcs_card child_card = fcs_col_get_card(orig_col, pos);
 
                 if ((!IS_IN_FOUNDATIONS(child_card)) &&
                     (CARD_STATE(child_card) == calc_child_card_option(
@@ -546,7 +546,7 @@ static inline void fc_solve_debondt_delta_stater_decode_into_state_proto(
     fcs_state_keyval_pair *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     fc_solve_var_base_reader_start(
-        &(delta_stater->r), enc_state, sizeof(fcs_encoded_state_buffer_t));
+        &(delta_stater->r), enc_state, sizeof(fcs_encoded_state_buffer));
 
     fc_solve_state_init(ret, STACKS_NUM, indirect_stacks_buffer);
 
@@ -582,7 +582,7 @@ static inline void fcs_debondt_init_and_encode_state(
     fcs_debondt_delta_stater *const delta_stater,
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const state,
-    fcs_encoded_state_buffer_t *const enc_state)
+    fcs_encoded_state_buffer *const enc_state)
 {
     fcs_init_encoded_state(enc_state);
 

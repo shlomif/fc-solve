@@ -27,7 +27,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     const bool perform_horne_prune)
 {
     fcs_state_keyval_pair init_state;
-    fcs_encoded_state_buffer_t enc_state;
+    fcs_encoded_state_buffer enc_state;
     fcs_derived_state *derived_list = NULL;
     fcs_derived_state *derived_list_recycle_bin = NULL;
     size_t states_count = 0;

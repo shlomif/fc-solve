@@ -29,7 +29,7 @@ static int main_tests(void)
     {
         bool all_good = TRUE;
 
-        for (size_t pos_idx = 1 ; pos_idx < sizeof( fcs_encoded_state_buffer_t ) ; pos_idx++)
+        for (size_t pos_idx = 1 ; pos_idx < sizeof( fcs_encoded_state_buffer ) ; pos_idx++)
         {
             fcs_dbm_record rec_a, rec_b;
 

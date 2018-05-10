@@ -21,7 +21,7 @@ extern "C" {
 
 static inline void fc_solve__assign_dest_stack_and_col_ptr(
     int8_t *const positions_by_rank, const int8_t dest_stack,
-    const int8_t dest_col, const fcs_card_t dest_card)
+    const int8_t dest_col, const fcs_card dest_card)
 {
 #ifdef FCS_FREECELL_ONLY
     int8_t *ptr = &positions_by_rank[(dest_card - 4) << 1];
@@ -71,7 +71,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
 
             for (int dc = 0; dc < dest_cards_num; dc++)
             {
-                const fcs_card_t card = fcs_col_get_card(dest_col, dc);
+                const fcs_card card = fcs_col_get_card(dest_col, dc);
                 const int suit = fcs_card_suit(card);
                 const int rank = fcs_card_rank(card);
 
@@ -107,9 +107,9 @@ static inline void fc_solve__calc_positions_by_rank_data(
                 continue;
             }
 
-            fcs_card_t dest_card;
+            fcs_card dest_card;
             {
-                fcs_card_t dest_below_card;
+                fcs_card dest_below_card;
                 dest_card = fcs_col_get_card(dest_col, 0);
                 for (int dc = 0; dc < top_card_idx;
                      dc++, dest_card = dest_below_card)

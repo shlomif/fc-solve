@@ -21,7 +21,7 @@ static inline void suit2str(const int suit, char *const str)
 
 // Convert an entire card to its user representation.
 void fc_solve_card_stringify(
-    const fcs_card_t card, char *const str PASS_T(const bool t))
+    const fcs_card card, char *const str PASS_T(const bool t))
 {
     rank2str(fcs_card_rank(card), str PASS_T(t));
     suit2str(fcs_card_suit(card), strchr(str, '\0'));

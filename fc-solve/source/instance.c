@@ -315,7 +315,7 @@ static guint fc_solve_glib_hash_stack_hash_function(gconstpointer key)
     /* This hash function was ripped from the Perl source code.
      * (It is not derived work however). */
     const char *s_ptr = (char *)key;
-    const char *const s_end = s_ptr + fcs_col_len((fcs_card_t *)key) + 1;
+    const char *const s_end = s_ptr + fcs_col_len((fcs_card *)key) + 1;
     while (s_ptr < s_end)
     {
         hash_value_int += (hash_value_int << 5) + *(s_ptr++);
@@ -363,7 +363,7 @@ static inline int find_empty_col(
 }
 
 static inline int find_col_card(const fcs_state *const dynamic_state,
-    const fcs_card_t needle STACKS_NUM__ARG)
+    const fcs_card needle STACKS_NUM__ARG)
 {
     for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
     {
@@ -379,7 +379,7 @@ static inline int find_col_card(const fcs_state *const dynamic_state,
 }
 
 static inline int find_fc_card(const fcs_state *const dynamic_state,
-    const fcs_card_t needle FREECELLS_NUM__ARG)
+    const fcs_card needle FREECELLS_NUM__ARG)
 {
     for (size_t dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
     {
@@ -394,7 +394,7 @@ static inline int find_fc_card(const fcs_state *const dynamic_state,
 
 static inline find_card_ret find_card_src_string(
     const fcs_state *const dynamic_state,
-    const fcs_card_t needle FREECELLS_AND_STACKS_ARGS())
+    const fcs_card needle FREECELLS_AND_STACKS_ARGS())
 {
     const int src_col_idx =
         find_col_card(dynamic_state, needle PASS_STACKS(STACKS_NUM__VAL));
@@ -459,7 +459,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
         var_AUTO(move_ptr, pats_scan->moves_to_win);
         for (size_t i = 0; i < num_moves; ++i, ++move_ptr)
         {
-            const fcs_card_t card = move_ptr->card;
+            const fcs_card card = move_ptr->card;
             fcs_internal_move out_move = fc_solve_empty_move;
             switch (move_ptr->totype)
             {
@@ -516,7 +516,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
             break;
             default:
             {
-                const fcs_card_t dest_card = move_ptr->destcard;
+                const fcs_card dest_card = move_ptr->destcard;
                 const find_card_ret src = find_card_src_string(s,
                     card PASS_FREECELLS(FREECELLS_NUM__VAL)
                         PASS_STACKS(STACKS_NUM__VAL));

@@ -45,7 +45,7 @@ static inline void pre_cache_init(fcs_pre_cache *const pre_cache_ptr,
 }
 
 static inline void pre_cache_insert(fcs_pre_cache *pre_cache,
-    fcs_encoded_state_buffer_t *key, fcs_encoded_state_buffer_t *parent)
+    fcs_encoded_state_buffer *key, fcs_encoded_state_buffer *parent)
 {
     pre_cache_key_val_pair *to_insert;
 
@@ -67,7 +67,7 @@ static inline void pre_cache_insert(fcs_pre_cache *pre_cache,
 }
 
 static inline bool pre_cache_does_key_exist(
-    fcs_pre_cache *pre_cache, fcs_encoded_state_buffer_t *key)
+    fcs_pre_cache *pre_cache, fcs_encoded_state_buffer *key)
 {
     pre_cache_key_val_pair to_check = {.key = *key};
     return (
@@ -144,7 +144,7 @@ typedef struct
 
 static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const unsigned char move,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -234,7 +234,7 @@ static void instance_print_stats(dbm_solver_instance *const instance)
 
 static inline void instance_debug_out_state(
     dbm_solver_instance *const instance,
-    fcs_encoded_state_buffer_t *enc_state)
+    fcs_encoded_state_buffer *enc_state)
 {
     fcs_state_keyval_pair state;
     fcs_state_locs_struct locs;
@@ -258,13 +258,13 @@ static inline void instance_debug_out_state(
 #endif
 
 static void calc_trace(fcs_dbm_record *const ptr_initial_record,
-    fcs_encoded_state_buffer_t **const ptr_trace, int *const ptr_trace_num)
+    fcs_encoded_state_buffer **const ptr_trace, int *const ptr_trace_num)
 {
 #define GROW_BY 100
     size_t trace_num = 0;
     size_t trace_max_num = GROW_BY;
-    fcs_encoded_state_buffer_t *trace = SMALLOC(trace, trace_max_num);
-    fcs_encoded_state_buffer_t *key_ptr = trace;
+    fcs_encoded_state_buffer *trace = SMALLOC(trace, trace_max_num);
+    fcs_encoded_state_buffer *key_ptr = trace;
     fcs_dbm_record *record = ptr_initial_record;
 
     while (record)
@@ -480,7 +480,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
 
 static inline fcs_dbm_record *cache_store__has_key(
     fcs_dbm__cache_store__common *const cache_store,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent)
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
     if (cache_does_key_exist(&(cache_store->cache), key))
@@ -508,7 +508,7 @@ static inline fcs_dbm_record *cache_store__has_key(
 #ifndef FCS_DBM_WITHOUT_CACHES
 static inline fcs_cache_key_info *cache_store__insert_key(
     fcs_dbm__cache_store__common *const cache_store,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record *const parent,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const fcs_fcc_move *const moves_to_parent,
     const unsigned char move GCC_UNUSED)
 {

@@ -24,7 +24,7 @@ static inline void moves_processed_add_new_move(
 }
 
 static inline bool fc_solve_fc_pro__can_be_moved(
-    fcs_state *const s, const fcs_card_t card)
+    fcs_state *const s, const fcs_card card)
 {
     const int rank = fcs_card_rank(card);
     const int suit = fcs_card_suit(card);
@@ -81,7 +81,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
         }
         for (int j = 0; j < num_freecells; j++)
         {
-            const fcs_card_t card = fcs_freecell_card(pos, j);
+            const fcs_card card = fcs_freecell_card(pos, j);
             if (fcs_card_is_valid(card) &&
                 fc_solve_fc_pro__can_be_moved(&pos, card))
             {
@@ -100,7 +100,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
             assert(virtual_stack_len[src] >= fcs_col_len(col));
             if (virtual_stack_len[src] == fcs_col_len(col))
             {
-                fcs_card_t card;
+                fcs_card card;
                 fcs_col_pop_card(col, card);
                 fcs_increment_foundation(pos, fcs_card_suit(card));
                 moves_processed_add_new_move(
@@ -152,7 +152,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
                 moves_processed_add_new_move(
                     ret, (fcs_extended_move){
                              .move = move, .to_empty_stack = FALSE});
-                fcs_card_t temp_card;
+                fcs_card temp_card;
                 fcs_col_pop_card(col, temp_card);
                 fcs_put_card_in_freecell(pos, dest, temp_card);
             }

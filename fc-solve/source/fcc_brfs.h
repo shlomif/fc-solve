@@ -31,7 +31,7 @@ extern "C" {
 
 typedef struct fcs_FCC_start_point_struct
 {
-    fcs_encoded_state_buffer_t enc_state;
+    fcs_encoded_state_buffer enc_state;
     fcs_fcc_moves_seq moves_seq;
     struct fcs_FCC_start_point_struct *next;
 } fcs_FCC_start_point;
@@ -46,7 +46,7 @@ typedef struct
 static int fc_solve_compare_encoded_states(const void *const void_a,
     const void *const void_b, void *const context GCC_UNUSED)
 {
-#define GET_PARAM(p) ((const fcs_encoded_state_buffer_t *)p)
+#define GET_PARAM(p) ((const fcs_encoded_state_buffer *)p)
     return memcmp(
         GET_PARAM(void_a), GET_PARAM(void_b), sizeof(*(GET_PARAM(void_a))));
 #undef GET_PARAM
@@ -129,9 +129,9 @@ static inline dict_t *fcc_brfs_kaz_tree_create(
 }
 
 static inline void fcc_brfs_add_key_to_tree(
-    dict_t *const tree, const fcs_encoded_state_buffer_t *const val)
+    dict_t *const tree, const fcs_encoded_state_buffer *const val)
 {
-    fcs_encoded_state_buffer_t *key_to_add =
+    fcs_encoded_state_buffer *key_to_add =
         fcs_compact_alloc_ptr(&(tree->dict_allocator), sizeof(*key_to_add));
     *key_to_add = *val;
     fc_solve_kaz_tree_alloc_insert(tree, key_to_add);
@@ -141,7 +141,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
     /* The first state in the game, from which all states are encoded. */
     fcs_state_keyval_pair *init_state,
     /* The start state. */
-    fcs_encoded_state_buffer_t start_state,
+    fcs_encoded_state_buffer start_state,
     /* The moves leading up to the state.
      * */
     const fcs_fcc_moves_seq *const start_state_moves_seq,
@@ -159,7 +159,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
      * and its context.
      */
     bool (*add_start_point)(
-        const fcs_encoded_state_buffer_t *const enc_state,
+        const fcs_encoded_state_buffer *const enc_state,
         const fcs_fcc_moves_seq *const start_state_moves_seq,
         fcs_fcc_moves_seq *const after_start_moves_seq,
         const unsigned char extra_move, void *const context),
@@ -170,7 +170,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
     bool *is_min_by_sorting_new,
     /* [Output]: The min_by_sorting.
      * */
-    fcs_encoded_state_buffer_t *const min_by_sorting,
+    fcs_encoded_state_buffer *const min_by_sorting,
     /* [Input/Output]: The ${next}_depth_FCCs.DoesExist
      * (for the right depth based on the current depth and pruning.)
      * Of type Map{min_by_sorting => Bool Exists} DoesExist.
@@ -197,7 +197,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
     fcs_derived_state *derived_list_recycle_bin = NULL, *next_derived_iter;
     fcs_state_keyval_pair state;
     bool running_min_was_assigned = FALSE;
-    fcs_encoded_state_buffer_t running_min = {{0}};
+    fcs_encoded_state_buffer running_min = {{0}};
     long num_new_positions = 0;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -397,7 +397,7 @@ typedef struct
  * Returns if already exist (the NOT of if the state is new).
  */
 static bool fc_solve_add_start_point_in_mem(
-    const fcs_encoded_state_buffer_t *const enc_state,
+    const fcs_encoded_state_buffer *const enc_state,
     const fcs_fcc_moves_seq *const start_state_moves_seq,
     fcs_fcc_moves_seq *const after_start_moves_seq,
     const unsigned char extra_move, void *const void_context)

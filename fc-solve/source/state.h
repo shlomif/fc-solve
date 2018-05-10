@@ -51,10 +51,10 @@ extern "C" {
     ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id) >> FCS_CHAR_BIT_SIZE_LOG2] &    \
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1))))
 
-typedef char fcs_card_t;
-typedef fcs_card_t *fcs_cards_column;
-typedef const fcs_card_t *fcs_const_cards_column;
-typedef fcs_card_t fcs_state_foundation;
+typedef char fcs_card;
+typedef fcs_card *fcs_cards_column;
+typedef const fcs_card *fcs_const_cards_column;
+typedef fcs_card fcs_state_foundation;
 
 #ifdef COMPACT_STATES
 /*
@@ -66,7 +66,7 @@ typedef fcs_card_t fcs_state_foundation;
 
 typedef struct
 {
-    fcs_card_t data[MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1) +
+    fcs_card data[MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1) +
                     MAX_NUM_FREECELLS + 4 * MAX_NUM_DECKS];
 } fcs_state;
 
@@ -105,7 +105,7 @@ typedef char fcs_locs_type;
 typedef struct
 {
     fcs_cards_column columns[MAX_NUM_STACKS];
-    fcs_card_t freecells[MAX_NUM_FREECELLS];
+    fcs_card freecells[MAX_NUM_FREECELLS];
     fcs_state_foundation foundations[MAX_NUM_DECKS * 4];
 } fcs_state;
 
@@ -174,9 +174,9 @@ typedef uint8_t fcs_locs_type;
 #define fcs_card_is_empty(card) ((card) == 0)
 #define fcs_card_is_valid(card) ((card) != 0)
 
-static inline fcs_card_t fcs_make_card(const int rank, const int suit)
+static inline fcs_card fcs_make_card(const int rank, const int suit)
 {
-    return (fcs_card_t)((((fcs_card_t)rank) << 2) | ((fcs_card_t)suit));
+    return (fcs_card)((((fcs_card)rank) << 2) | ((fcs_card)suit));
 }
 
 #define fcs_card2char(c) (c)
@@ -190,14 +190,14 @@ static inline fcs_card_t fcs_make_card(const int rank, const int suit)
 #define fcs_card_rank(card) ((card) >> 2)
 #define fcs_card_suit(card) ((card)&0x03)
 
-static inline fcs_card_t fcs_col_get_rank(
+static inline fcs_card fcs_col_get_rank(
     const fcs_const_cards_column col, const int card_idx)
 {
     return fcs_card_rank(fcs_col_get_card(col, card_idx));
 }
 #define FCS_RANK_KING 13
 #include "is_king.h"
-static inline bool fcs_card_is_king(const fcs_card_t card)
+static inline bool fcs_card_is_king(const fcs_card card)
 {
     return fc_solve_is_king_buf[(size_t)card];
 }
@@ -412,7 +412,7 @@ static inline void FCS_STATE_collectible_to_kv(
 #define FCS_S_VISITED_ITER(s) FCS_S_ACCESSOR(s, visited_iter)
 #endif
 
-#define fc_solve_empty_card ((fcs_card_t)0)
+#define fc_solve_empty_card ((fcs_card)0)
 
 #ifdef HARD_CODED_NUM_FREECELLS
 #define PASS_FREECELLS(arg)
@@ -477,7 +477,7 @@ extern int fc_solve_state_compare_with_context(
  *
  * */
 extern void fc_solve_card_stringify(
-    const fcs_card_t card, char *const str PASS_T(const bool t));
+    const fcs_card card, char *const str PASS_T(const bool t));
 
 #ifdef FC_SOLVE__STRICTER_BOARD_PARSING
 #define FC_SOLVE_MAP_CHAR(c) (c)
@@ -572,9 +572,9 @@ static inline __attribute__((pure)) int fcs_str2rank(const char *string)
 }
 /*
  * This function converts an entire card from its string representations
- * (e.g: "AH", "KS", "8D"), to a fcs_card_t data type.
+ * (e.g: "AH", "KS", "8D"), to a fcs_card data type.
  * */
-static inline __attribute__((pure)) fcs_card_t fc_solve_card_parse_str(
+static inline __attribute__((pure)) fcs_card fc_solve_card_parse_str(
     const char *const str)
 {
     return fcs_make_card(fcs_str2rank(str), fcs_str2suit(str));
@@ -857,7 +857,7 @@ typedef enum {
 static inline state_validity_ret fc_solve_check_state_validity(
     const fcs_state_keyval_pair *const state_pair
         FREECELLS_STACKS_DECKS__ARGS(),
-    fcs_card_t *const misplaced_card)
+    fcs_card *const misplaced_card)
 {
     size_t card_counts[FCS_NUM_SUITS][FCS_MAX_RANK + 1];
 
@@ -884,7 +884,7 @@ static inline state_validity_ret fc_solve_check_state_validity(
     /* Mark the card_counts in the freecells */
     for (size_t f = 0; f < FREECELLS_NUM__VAL; f++)
     {
-        const fcs_card_t card = fcs_freecell_card(*state, f);
+        const fcs_card card = fcs_freecell_card(*state, f);
         if (fcs_card_is_valid(card))
         {
             card_counts[fcs_card_suit(card)][fcs_card_rank(card)]++;
@@ -898,7 +898,7 @@ static inline state_validity_ret fc_solve_check_state_validity(
         const int col_len = fcs_col_len(col);
         for (int c = 0; c < col_len; c++)
         {
-            const fcs_card_t card = fcs_col_get_card(col, c);
+            const fcs_card card = fcs_col_get_card(col, c);
             if (fcs_card_is_empty(card))
             {
                 *misplaced_card = fc_solve_empty_card;
@@ -944,7 +944,7 @@ enum
 };
 
 static inline int fc_solve_card_compare(
-    const fcs_card_t c1, const fcs_card_t c2)
+    const fcs_card c1, const fcs_card c2)
 {
     return (c1) - (c2);
 }
@@ -953,8 +953,8 @@ static inline int fc_solve_card_compare(
 static inline int fc_solve_stack_compare_for_comparison(
     const void *const v_s1, const void *const v_s2)
 {
-    const fcs_card_t *const s1 = (const fcs_card_t *const)v_s1;
-    const fcs_card_t *const s2 = (const fcs_card_t *const)v_s2;
+    const fcs_card *const s1 = (const fcs_card *const)v_s1;
+    const fcs_card *const s2 = (const fcs_card *const)v_s2;
 
     {
         const int min_len = min(s1[0], s2[0]);
@@ -1008,15 +1008,15 @@ static inline void set_scan_visited(
 
 #include "is_parent.h"
 static inline bool fcs_is_parent_card(
-    const fcs_card_t child, const fcs_card_t parent)
+    const fcs_card child, const fcs_card parent)
 {
     return fc_solve_is_parent_buf[(size_t)parent][(size_t)child];
 }
 
 #else
 
-static inline bool fcs_is_parent_card__helper(const fcs_card_t child,
-    const fcs_card_t parent, const int sequences_are_built_by)
+static inline bool fcs_is_parent_card__helper(const fcs_card child,
+    const fcs_card parent, const int sequences_are_built_by)
 {
     return ((fcs_card_rank(child) + 1 == fcs_card_rank(parent)) &&
             ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
@@ -1040,20 +1040,20 @@ static inline bool fcs_is_parent_card__helper(const fcs_card_t child,
 static inline void fcs_col_transfer_cards(fcs_cards_column dest_col,
     fcs_cards_column src_col, const int cards_num)
 {
-    fcs_card_t *const src_cards_ptr =
+    fcs_card *const src_cards_ptr =
         &fcs_col_get_card(src_col, (fcs_col_len(src_col) -= cards_num));
-    const size_t cards_size = (((size_t)cards_num) * sizeof(fcs_card_t));
+    const size_t cards_size = (((size_t)cards_num) * sizeof(fcs_card));
     memcpy(&fcs_col_get_card(dest_col, fcs_col_len(dest_col)), src_cards_ptr,
         cards_size);
     fcs_col_len(dest_col) += cards_num;
     memset(src_cards_ptr, 0, cards_size);
 }
 
-static inline fcs_card_t fcs_state_pop_col_card(
+static inline fcs_card fcs_state_pop_col_card(
     fcs_state *const state, const int col_idx)
 {
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
-    fcs_card_t ret;
+    fcs_card ret;
     fcs_col_pop_card(col, ret);
     return ret;
 }
@@ -1066,7 +1066,7 @@ static inline void fcs_state_pop_col_top(
 }
 
 static inline void fcs_state_push(
-    fcs_state *const state, const int col_idx, const fcs_card_t card)
+    fcs_state *const state, const int col_idx, const fcs_card card)
 {
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_col_push_card(col, card);

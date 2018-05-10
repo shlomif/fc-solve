@@ -24,7 +24,7 @@
 #include "is_parent.c"
 #endif
 
-static fcs_card_t make_card(int rank, int suit)
+static fcs_card make_card(int rank, int suit)
 {
     return fcs_make_card(rank, suit);
 }
@@ -223,7 +223,7 @@ static int main_tests(void)
 
         {
             fcs_column_encoding_composite enc;
-            fcs_card_t card_9S;
+            fcs_card card_9S;
 
             fc_solve_get_column_encoding_composite(&delta, 5, &enc);
 
@@ -539,7 +539,7 @@ static int main_tests(void)
             derived_indirect_stacks_buffer
         );
 
-        fcs_encoded_state_buffer_t first_enc_state;
+        fcs_encoded_state_buffer first_enc_state;
 
         fcs_init_and_encode_state(
             &delta,
@@ -567,7 +567,7 @@ static int main_tests(void)
             derived_indirect_stacks_buffer
         );
 
-        fcs_encoded_state_buffer_t second_enc_state;
+        fcs_encoded_state_buffer second_enc_state;
 
         fcs_init_and_encode_state(
             &delta,
@@ -642,7 +642,7 @@ static int main_tests(void)
             derived_indirect_stacks_buffer
         );
 
-        fcs_encoded_state_buffer_t first_enc_state;
+        fcs_encoded_state_buffer first_enc_state;
         fcs_init_and_encode_state(
             &delta,
             local_variant,
@@ -669,7 +669,7 @@ static int main_tests(void)
             derived_indirect_stacks_buffer
         );
 
-        fcs_encoded_state_buffer_t second_enc_state;
+        fcs_encoded_state_buffer second_enc_state;
         fcs_init_and_encode_state(
             &delta,
             local_variant,

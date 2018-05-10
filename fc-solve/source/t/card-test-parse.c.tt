@@ -22,7 +22,7 @@ static int main_tests(void)
             _   suit.value
             _   '"') -%]
     {
-        fcs_card_t mycard;
+        fcs_card mycard;
 
         mycard = fc_solve_card_parse_str([% card_string %]);
         /* TEST */

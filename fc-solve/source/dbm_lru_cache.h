@@ -19,7 +19,7 @@ extern "C" {
 #ifdef FCS_LRU_KEY_IS_STATE
 typedef fcs_state_keyval_pair fcs_cache_key;
 #else
-typedef fcs_encoded_state_buffer_t fcs_cache_key;
+typedef fcs_encoded_state_buffer fcs_cache_key;
 #endif
 
 struct fcs_cache_key_info_struct

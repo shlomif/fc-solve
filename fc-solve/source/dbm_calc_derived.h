@@ -29,7 +29,7 @@ extern "C" {
 typedef struct fcs_derived_state_struct
 {
     fcs_state_keyval_pair state;
-    fcs_encoded_state_buffer_t key;
+    fcs_encoded_state_buffer key;
     fcs_dbm_record *parent;
     struct fcs_derived_state_struct *next;
     int core_irreversible_moves_count;
@@ -105,7 +105,7 @@ static inline void fcs_derived_state_list__recycle(
 
 static inline void fc_solve_add_to_irrev_moves_bitmask(
     fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
-    const fcs_card_t moved_card, const int count)
+    const fcs_card moved_card, const int count)
 {
     unsigned char *const by_rank_ptr =
         which_irreversible_moves_bitmask->s + fcs_card_rank(moved_card) - 1;
@@ -140,7 +140,7 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
 
 static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
     const fcs_dbm_variant_type local_variant, fcs_state *const ptr_state,
-    const fcs_card_t card)
+    const fcs_card card)
 {
     FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
     const int_fast32_t rank = fcs_card_rank(card);
@@ -227,7 +227,7 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
                 continue;
             }
             /* Get the top card in the stack */
-            const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+            const fcs_card card = fcs_col_get_card(col, cards_num - 1);
             const int dest_foundation =
                 calc_foundation_to_put_card_on(local_variant, &the_state, card);
             if (dest_foundation >= 0)
@@ -255,7 +255,7 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
         /* Now check the same for the free cells */
         for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
-            const fcs_card_t card = fcs_freecell_card(the_state, fc);
+            const fcs_card card = fcs_freecell_card(the_state, fc);
             if (fcs_card_is_valid(card))
             {
                 const int dest_foundation = calc_foundation_to_put_card_on(
@@ -336,7 +336,7 @@ static inline int horne_prune__simple(
 }
 
 static inline bool card_cannot_be_placed(const fcs_state *const s,
-    const uint16_t ds, const fcs_card_t card, const int sequences_are_built_by)
+    const uint16_t ds, const fcs_card card, const int sequences_are_built_by)
 {
     const_AUTO(col, fcs_state_get_col(*s, ds));
     const_AUTO(col_len, fcs_col_len(col));
