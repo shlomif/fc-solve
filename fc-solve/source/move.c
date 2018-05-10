@@ -24,7 +24,7 @@ const fcs_internal_move fc_solve_empty_move = {"\0\0\0\0"};
  * This function performs a given move on a state
  */
 void fc_solve_apply_move(fcs_state *const ptr_state_key,
-    fcs_state_locs_struct_t *const locs,
+    fcs_state_locs_struct *const locs,
     const fcs_internal_move move FREECELLS_AND_STACKS_ARGS())
 {
     fcs_card_t card;

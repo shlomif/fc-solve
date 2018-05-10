@@ -208,7 +208,7 @@ typedef struct
 static inline empty_two_cols_ret empty_two_cols_from_new_state(
     const fc_solve_soft_thread_t *const soft_thread,
     fcs_kv_state_t *const kv_ptr_new_state SFS__PASS_MOVE_STACK(
-        fcs_move_stack_t *const moves_ptr),
+        fcs_move_stack *const moves_ptr),
     const int cols_indexes[3], const int num_cards_1, const int num_cards_2)
 {
     empty_two_cols_ret ret = {.src_idx = -1, .is_col = FALSE};

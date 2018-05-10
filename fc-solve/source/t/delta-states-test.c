@@ -35,7 +35,7 @@ static int test_encode_and_decode(const fcs_dbm_variant_type_t local_variant, fc
     fcs_state_keyval_pair_t new_derived_state;
     fcs_uchar enc_state[24];
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
 
     fc_solve_init_locs(&locs);
 

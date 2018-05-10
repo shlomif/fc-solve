@@ -256,7 +256,7 @@ static inline void instance__print_coords_to_log(
     {
         fprintf(log_fh, "%d,", stack_item->next_state_idx);
 #if 0
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     char state_as_string[2000];
     FCS__RENDER_STATE(state_as_string, &(stack_item->curr_state->s), &locs);
@@ -264,7 +264,7 @@ static inline void instance__print_coords_to_log(
 #endif
     }
 #if 0
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     char state_as_string[2000];
     FCS__RENDER_STATE(state_as_string, &(end_stack_item->curr_state->s), &locs);

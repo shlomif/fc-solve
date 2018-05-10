@@ -31,7 +31,7 @@ SV * non_parsable_state_as_string(char * input_state_string) {
         indirect_stacks_buffer
         );
 
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs (&locs);
 
     fc_solve_state_as_string(

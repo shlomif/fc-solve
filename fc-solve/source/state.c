@@ -81,7 +81,7 @@ void fc_solve_canonize_state(
 #ifdef FCS_WITH_MOVES
 void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
 #define state_key (ptr_state_key)
-    fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
+    fcs_state_locs_struct *const locs FREECELLS_AND_STACKS_ARGS())
 {
     /* Insertion-sort the columns */
     for (size_t b = 1; b < STACKS_NUM__VAL; b++)
@@ -158,7 +158,7 @@ static inline void render_freecell_card(const fcs_card_t card,
 }
 
 void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
-    const fcs_state_locs_struct_t *const state_locs
+    const fcs_state_locs_struct *const state_locs
         FREECELLS_STACKS_DECKS__ARGS()
             FC_SOLVE__PASS_PARSABLE(const bool parseable_output),
     const bool canonized_order_output PASS_T(

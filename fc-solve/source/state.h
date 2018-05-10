@@ -229,7 +229,7 @@ struct fcs_state_extra_info_struct
     struct fcs_state_keyval_pair_struct *parent;
 #endif
 #ifdef FCS_WITH_MOVES
-    fcs_move_stack_t *moves_to_parent;
+    fcs_move_stack *moves_to_parent;
 #endif
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
@@ -295,9 +295,9 @@ typedef struct
      * */
     fcs_locs_type stack_locs[MAX_NUM_STACKS];
     fcs_locs_type fc_locs[MAX_NUM_FREECELLS];
-} fcs_state_locs_struct_t;
+} fcs_state_locs_struct;
 
-static inline void fc_solve_init_locs(fcs_state_locs_struct_t *const locs)
+static inline void fc_solve_init_locs(fcs_state_locs_struct *const locs)
 {
     for (int i = 0; i < MAX_NUM_STACKS; ++i)
     {
@@ -452,7 +452,7 @@ extern void fc_solve_canonize_state(
     fcs_state *const ptr_state_key FREECELLS_AND_STACKS_ARGS());
 
 void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
-    fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS());
+    fcs_state_locs_struct *const locs FREECELLS_AND_STACKS_ARGS());
 
 #if (FCS_STATE_STORAGE != FCS_STATE_STORAGE_LIBREDBLACK_TREE)
 typedef void *fcs_compare_context;
@@ -839,7 +839,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
 
 extern void fc_solve_state_as_string(char *output_s,
     const fcs_state *const state,
-    const fcs_state_locs_struct_t *const state_locs
+    const fcs_state_locs_struct *const state_locs
         FREECELLS_STACKS_DECKS__ARGS()
             FC_SOLVE__PASS_PARSABLE(const bool parseable_output),
     const bool canonized_order_output PASS_T(

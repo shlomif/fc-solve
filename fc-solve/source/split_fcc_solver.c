@@ -196,7 +196,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
 
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -416,7 +416,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 )
 {
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     const_AUTO(local_variant, instance->common.variant);
 #endif
@@ -589,7 +589,7 @@ int main(int argc, char *argv[])
 {
     build_decoding_table();
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
     const char *mod_base64_fcc_fingerprint = NULL;

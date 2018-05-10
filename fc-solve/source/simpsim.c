@@ -503,7 +503,7 @@ static inline bool false_seq_index_loop(const int stacks_num,
 
 static inline void move_sequences_analysis_seqs_loop(
     fcs_kv_state_t *const ptr_to_pass_new_state SFS__PASS_MOVE_STACK(
-        fcs_move_stack_t *const moves),
+        fcs_move_stack *const moves),
     const sequences_analysis *const seqs_ptr, int source_col_idx,
     int source_col_cards_num IND_BUF_T_PARAM(indirect_stacks_buffer))
 {

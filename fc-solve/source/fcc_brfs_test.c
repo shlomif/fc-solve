@@ -43,7 +43,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
 {
     fcs_state_keyval_pair_t init_state;
     fcs_encoded_state_buffer_t enc_state;
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     fcs_encoded_state_buffer_t min_by_sorting;
     void *tree_recycle_bin = NULL;

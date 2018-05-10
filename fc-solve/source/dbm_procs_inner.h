@@ -115,7 +115,7 @@ static void trace_solution(dbm_solver_instance *const instance,
     unsigned char move = '\0';
     char move_buffer[500];
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     const_AUTO(local_variant, instance->common.variant);
     calc_trace(instance->common.queue_solution_ptr, &trace, &trace_num);

@@ -70,7 +70,7 @@ typedef struct
 {
     fcs_internal_move *moves;
     size_t num_moves;
-} fcs_move_stack_t;
+} fcs_move_stack;
 
 #endif
 

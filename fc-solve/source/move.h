@@ -29,7 +29,7 @@ extern const fcs_internal_move fc_solve_empty_move;
 
 #ifdef FCS_WITH_MOVES
 static inline void fcs_move_stack_push(
-    fcs_move_stack_t *const stack, const fcs_internal_move move)
+    fcs_move_stack *const stack, const fcs_internal_move move)
 {
     /* If all the moves inside the stack are taken then
        resize the move vector */
@@ -43,7 +43,7 @@ static inline void fcs_move_stack_push(
     stack->moves[pos - 1] = move;
 }
 
-static inline void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
+static inline void fcs_move_stack_params_push(fcs_move_stack *const stack,
     const int type, const int src, const int dest, const int num_cards_in_seq)
 {
     fcs_internal_move temp_move;
@@ -56,21 +56,21 @@ static inline void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
     fcs_move_stack_push(stack, temp_move);
 }
 
-static inline void fcs_move_stack_non_seq_push(fcs_move_stack_t *const stack,
+static inline void fcs_move_stack_non_seq_push(fcs_move_stack *const stack,
     const int type, const int src, const int dest)
 {
     fcs_move_stack_params_push(stack, type, src, dest, 1);
 }
 
 static inline void fcs_push_1card_seq(
-    fcs_move_stack_t *const stack, const int src, const int dest)
+    fcs_move_stack *const stack, const int src, const int dest)
 {
     fcs_move_stack_params_push(
         stack, FCS_MOVE_TYPE_STACK_TO_STACK, src, dest, 1);
 }
 
 static inline bool fc_solve_move_stack_pop(
-    fcs_move_stack_t *const stack, fcs_internal_move *const move)
+    fcs_move_stack *const stack, fcs_internal_move *const move)
 {
     if (stack->num_moves > 0)
     {
@@ -87,7 +87,7 @@ static inline bool fc_solve_move_stack_pop(
 #define fcs_move_stack_reset(stack) (stack)->num_moves = 0
 
 void fc_solve_apply_move(fcs_state *const ptr_state_key,
-    fcs_state_locs_struct_t *const locs,
+    fcs_state_locs_struct *const locs,
     const fcs_internal_move move FREECELLS_AND_STACKS_ARGS());
 
 /*
@@ -96,14 +96,14 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
     user positions.
 */
 
-static inline fcs_move_stack_t fcs_move_stack__new(void)
+static inline fcs_move_stack fcs_move_stack__new(void)
 {
-    return (fcs_move_stack_t){.num_moves = 0,
+    return (fcs_move_stack){.num_moves = 0,
         .moves = malloc(sizeof(fcs_move_t) * FCS_MOVE_STACK_GROW_BY)};
 }
 
 static inline void fc_solve_move_stack_swallow_stack(
-    fcs_move_stack_t *const stack, fcs_move_stack_t *const src_stack)
+    fcs_move_stack *const stack, fcs_move_stack *const src_stack)
 {
     fcs_internal_move move;
     while (!fc_solve_move_stack_pop(src_stack, &move))
@@ -112,9 +112,9 @@ static inline void fc_solve_move_stack_swallow_stack(
     }
 }
 
-static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
+static inline void fc_solve_move_stack_normalize(fcs_move_stack *const moves,
     const fcs_state_keyval_pair_t *const init_state,
-    fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
+    fcs_state_locs_struct *const locs FREECELLS_AND_STACKS_ARGS())
 {
     fcs_internal_move in_move;
     fcs_state_keyval_pair_t s_and_info;
@@ -130,7 +130,7 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
     }
 #endif
 
-    fcs_move_stack_t temp_moves = fcs_move_stack__new();
+    fcs_move_stack temp_moves = fcs_move_stack__new();
 
     while (!fc_solve_move_stack_pop(moves, &in_move))
     {

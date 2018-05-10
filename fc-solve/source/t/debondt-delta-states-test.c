@@ -35,7 +35,7 @@ static int debondt_test_encode_and_decode(fcs_debondt_delta_stater * delta, fcs_
     fcs_state_keyval_pair_t new_derived_state;
     fcs_encoded_state_buffer_t enc_state;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fcs_dbm_variant_type_t local_variant;
 
     local_variant = FCS_DBM_VARIANT_2FC_FREECELL;

@@ -307,7 +307,7 @@ struct fc_solve_hard_thread_struct
      * This is a move stack that is used and re-used by the
      * moves functions of this hard thread
      * */
-    fcs_move_stack_t reusable_move_stack;
+    fcs_move_stack reusable_move_stack;
 #endif
 
     /*
@@ -755,7 +755,7 @@ struct fc_solve_instance_struct
      * It is created only after the solution was found by swallowing
      * all the stacks of each depth.
      * */
-    fcs_move_stack_t solution_moves;
+    fcs_move_stack solution_moves;
 #endif
 
     /*

@@ -17,18 +17,18 @@
 #include "move.h"
 
 #ifdef FCS_WITH_MOVES
-static inline fcs_move_stack_t *fc_solve_move_stack_compact_allocate(
+static inline fcs_move_stack *fc_solve_move_stack_compact_allocate(
     fc_solve_hard_thread_t *const hard_thread,
-    fcs_move_stack_t *const old_move_stack_to_parent)
+    fcs_move_stack *const old_move_stack_to_parent)
 {
     char *const ptr =
         (char *)fcs_compact_alloc_ptr(&(HT_FIELD(hard_thread, allocator)),
-            (sizeof(fcs_move_stack_t) +
+            (sizeof(fcs_move_stack) +
                 sizeof(fcs_move_t) * old_move_stack_to_parent->num_moves));
 
-    fcs_move_stack_t *const new_move_stack_to_parent = (fcs_move_stack_t *)ptr;
+    fcs_move_stack *const new_move_stack_to_parent = (fcs_move_stack *)ptr;
     fcs_internal_move *const new_moves_to_parent =
-        (fcs_internal_move *)(ptr + sizeof(fcs_move_stack_t));
+        (fcs_internal_move *)(ptr + sizeof(fcs_move_stack));
     new_move_stack_to_parent->moves = new_moves_to_parent;
     new_move_stack_to_parent->num_moves = old_move_stack_to_parent->num_moves;
     memcpy(new_moves_to_parent, old_move_stack_to_parent->moves,

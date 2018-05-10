@@ -97,7 +97,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_derived_state *derived_list_recycle_bin = NULL;
     fcs_state_keyval_pair_t state;
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)

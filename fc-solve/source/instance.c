@@ -428,7 +428,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
     const_SLOT(solving_soft_thread, instance);
     if (solving_soft_thread->super_method_type == FCS_SUPER_METHOD_PATSOLVE)
     {
-        fcs_state_locs_struct_t locs;
+        fcs_state_locs_struct locs;
         fc_solve_init_locs(&(locs));
         const_SLOT(pats_scan, solving_soft_thread);
         var_AUTO(num_moves, pats_scan->num_moves_to_win);
@@ -563,7 +563,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
             fcs_move_stack_push(solution_moves_ptr, canonize_move);
 
             /* Merge the move stack */
-            const fcs_move_stack_t *const stack = FCS_S_MOVES_TO_PARENT(s1);
+            const fcs_move_stack *const stack = FCS_S_MOVES_TO_PARENT(s1);
             const fcs_internal_move *const moves = stack->moves;
             for (int move_idx = stack->num_moves - 1; move_idx >= 0; --move_idx)
             {

@@ -156,7 +156,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(
         fcs_state *const pass_key = &(new_cache_state->key);
         *pass_key = parents_stack[parents_stack_len].new_cache_state->key;
 
-        const fcs_move_stack_t *const stack_ptr__moves_to_parent =
+        const fcs_move_stack *const stack_ptr__moves_to_parent =
             parents_stack[parents_stack_len - 1].state_val->moves_to_parent;
         const fcs_internal_move *next_move =
             stack_ptr__moves_to_parent->moves;
@@ -645,7 +645,7 @@ my_return_label:
 int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
     fcs_kv_state_t *const out_new_state_out,
     fcs_kv_state_t raw_state_raw SFS__PASS_MOVE_STACK(
-        fcs_move_stack_t *const moves))
+        fcs_move_stack *const moves))
 {
     fcs_collectible_state_t *raw_ptr_new_state;
     fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
@@ -698,7 +698,7 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
 extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
     fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t raw_state_raw,
     fcs_kv_state_t *const raw_ptr_new_state_raw FCS__pass_moves(
-        fcs_move_stack_t *const moves))
+        fcs_move_stack *const moves))
 {
     const_SLOT(hard_thread, soft_thread);
     const_AUTO(instance, HT_INSTANCE(hard_thread));

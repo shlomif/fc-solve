@@ -112,7 +112,7 @@ static inline void alloc_instance(fc_solve_instance_t *const instance,
                 .num = 0,
                 .groups = NULL,
             },
-        .solution_moves = (fcs_move_stack_t){.moves = NULL, .num_moves = 0},
+        .solution_moves = (fcs_move_stack){.moves = NULL, .num_moves = 0},
         .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = FALSE,
         .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = FALSE,
         .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = FALSE,
@@ -1914,9 +1914,9 @@ typedef struct
     bool was_solution_traced;
 #endif
 #ifdef FCS_WITH_MOVES
-    fcs_state_locs_struct_t trace_solution_state_locs;
+    fcs_state_locs_struct trace_solution_state_locs;
 #endif
-} fcs_flare_item_t;
+} flare_item;
 
 #ifdef FCS_WITH_FLARES
 typedef enum {
@@ -1942,7 +1942,7 @@ static inline flare_iters_quota normalize_iters_quota(
 
 typedef struct
 {
-    fcs_flare_item_t *flare;
+    flare_item *flare;
     flares_plan_type type;
     flare_iters_quota remaining_quota, initial_quota;
     int_fast32_t count_iters;
@@ -1953,7 +1953,7 @@ typedef struct
 typedef struct
 {
 #ifdef FCS_WITH_FLARES
-    fcs_flare_item_t *flares, *end_of_flares, *minimal_flare;
+    flare_item *flares, *end_of_flares, *minimal_flare;
     flares_plan_item *plan;
     size_t num_plan_items, current_plan_item_idx;
     char *flares_plan_string;
@@ -1970,7 +1970,7 @@ typedef struct
     bool flares_plan_compiled;
     bool all_plan_items_finished_so_far;
 #else
-    fcs_flare_item_t single_flare;
+    flare_item single_flare;
 #endif
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     fcs_int_limit_t limit;
@@ -2001,7 +2001,7 @@ typedef struct
 #if defined(FCS_WITH_NI) || defined(FCS_WITH_FLARES)
 #define ACTIVE_FLARE(user) ((user)->active_flare)
 #define SET_ACTIVE_FLARE(user, flare) ((user)->active_flare = (flare))
-    fcs_flare_item_t *active_flare;
+    flare_item *active_flare;
 #else
 #define ACTIVE_FLARE(user) (&((user)->single_inst.single_flare))
 #define SET_ACTIVE_FLARE(user, flare)
@@ -2015,8 +2015,8 @@ typedef struct
     fcs_state_keyval_pair_t initial_non_canonized_state;
 #endif
 #ifdef FCS_WITH_MOVES
-    fcs_state_locs_struct_t state_locs;
-    fcs_state_locs_struct_t initial_state_locs;
+    fcs_state_locs_struct state_locs;
+    fcs_state_locs_struct initial_state_locs;
 #endif
     fc_solve_solve_process_ret_t ret_code;
 #ifdef FCS_WITH_NI
@@ -2084,15 +2084,15 @@ static inline fcs_instance_item *curr_inst(fcs_user_t *const user)
 #ifdef FCS_WITH_FLARES
 
 #define INSTANCE_ITEM_FLARES_LOOP_START()                                      \
-    const fcs_flare_item_t *const end_of_flares =                              \
+    const flare_item *const end_of_flares =                              \
         instance_item->end_of_flares;                                          \
-    for (fcs_flare_item_t *flare = instance_item->flares;                      \
+    for (flare_item *flare = instance_item->flares;                      \
          flare < end_of_flares; ++flare)                                       \
     {
 #else
 
 #define INSTANCE_ITEM_FLARES_LOOP_START()                                      \
-    fcs_flare_item_t *const flare = &(instance_item->single_flare);            \
+    flare_item *const flare = &(instance_item->single_flare);            \
     {
 #endif
 
@@ -2151,7 +2151,7 @@ static void apply_game_params_for_all_instances(fcs_user_t *const user)
 typedef struct
 {
     fcs_state *key;
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
 } standalone_state_ptrs;
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -2230,10 +2230,10 @@ static FLARE_INLINE void user_next_flare(fcs_user_t *const user)
     const_AUTO(
         num_flares, instance_item->end_of_flares - instance_item->flares);
     instance_item->flares = SREALLOC(instance_item->flares, num_flares + 1);
-    fcs_flare_item_t *const flare = instance_item->flares + num_flares;
+    flare_item *const flare = instance_item->flares + num_flares;
     instance_item->end_of_flares = flare + 1;
 #else
-    fcs_flare_item_t *const flare = &(instance_item->single_flare);
+    flare_item *const flare = &(instance_item->single_flare);
 #endif
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
     instance_item->limit = -1;
@@ -2532,14 +2532,14 @@ typedef enum {
 
 #ifdef FCS_WITH_FLARES
 static inline flares_plan_item create_plan_item(const flares_plan_type mytype,
-    fcs_flare_item_t *const flare, const int_fast32_t count_iters)
+    flare_item *const flare, const int_fast32_t count_iters)
 {
     return (const flares_plan_item){
         .type = mytype, .flare = flare, .count_iters = count_iters};
 }
 
 static inline void add_to_plan(fcs_instance_item *const instance_item,
-    const flares_plan_type mytype, fcs_flare_item_t *const flare,
+    const flares_plan_type mytype, flare_item *const flare,
     const int_fast32_t count_iters)
 {
     const_AUTO(next_item, instance_item->num_plan_items);
@@ -2556,15 +2556,15 @@ static inline void add_checkpoint_to_plan(fcs_instance_item *const instance_item
     add_to_plan(instance_item, FLARES_PLAN_CHECKPOINT, NULL, -1);
 }
 
-static inline fcs_flare_item_t *find_flare(fcs_flare_item_t *const flares,
-    const fcs_flare_item_t *const end_of_flares, const char *const proto_name,
+static inline flare_item *find_flare(flare_item *const flares,
+    const flare_item *const end_of_flares, const char *const proto_name,
     const size_t name_len)
 {
     char name[name_len + 1];
     strncpy(name, proto_name, name_len);
     name[name_len] = '\0';
 
-    for (fcs_flare_item_t *flare = flares; flare < end_of_flares; flare++)
+    for (flare_item *flare = flares; flare < end_of_flares; flare++)
     {
         if (!strcmp(flare->name, name))
         {
@@ -2588,7 +2588,7 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
     {
         continue;
     }
-    fcs_flare_item_t *const flares = instance_item->flares;
+    flare_item *const flares = instance_item->flares;
     const_SLOT(end_of_flares, instance_item);
 
     /* If the plan string is NULL or empty, then set the plan
@@ -2660,7 +2660,7 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
                 item_end = strchr(after_at_sign, '\0');
             }
 
-            fcs_flare_item_t *const flare = find_flare(
+            flare_item *const flare = find_flare(
                 flares, end_of_flares, after_at_sign, item_end - after_at_sign);
 
             if (!flare)
@@ -2693,7 +2693,7 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
             }
             item_end = strchr(cmd_end, '\0');
 
-            fcs_flare_item_t *const flare =
+            flare_item *const flare =
                 find_flare(flares, end_of_flares, cmd_end, item_end - cmd_end);
             if (!flare)
             {
@@ -2782,7 +2782,7 @@ static inline bool duplicate_string_while_adding_a_trailing_newline(
 #undef TRAILING_CHAR
 #undef MY_MARGIN
 
-static inline void recycle_flare(fcs_flare_item_t *const flare)
+static inline void recycle_flare(flare_item *const flare)
 {
     if (!flare->instance_is_ready)
     {
@@ -2869,7 +2869,7 @@ static inline fcs_internal_move user_move_to_internal_move(
 }
 #endif
 
-static inline void calc_moves_seq(const fcs_move_stack_t *const solution_moves,
+static inline void calc_moves_seq(const fcs_move_stack *const solution_moves,
     fcs_moves_sequence_t *const moves_seq)
 {
     moves_seq->num_moves = 0;
@@ -2895,7 +2895,7 @@ static inline void calc_moves_seq(const fcs_move_stack_t *const solution_moves,
 
 #ifdef FCS_WITH_MOVES
 static void trace_flare_solution(
-    fcs_user_t *const user, fcs_flare_item_t *const flare)
+    fcs_user_t *const user, flare_item *const flare)
 {
     if (flare->was_solution_traced)
     {
@@ -2925,7 +2925,7 @@ static void trace_flare_solution(
 
 #ifdef FCS_WITH_FLARES
 static int get_flare_move_count(
-    fcs_user_t *const user, fcs_flare_item_t *const flare)
+    fcs_user_t *const user, flare_item *const flare)
 {
 #ifndef FCS_WITH_MOVES
     return 0;
@@ -3026,9 +3026,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(
         const flare_iters_quota iters_quota =
             current_plan_item->remaining_quota;
 
-        fcs_flare_item_t *const flare = current_plan_item->flare;
+        flare_item *const flare = current_plan_item->flare;
 #else
-        fcs_flare_item_t *const flare = &(instance_item->single_flare);
+        flare_item *const flare = &(instance_item->single_flare);
 
         if (flare->ret_code == FCS_STATE_WAS_SOLVED)
         {
@@ -3360,9 +3360,9 @@ int DLLEXPORT freecell_solver_user_solve_board(
 #else
 #define SINGLE_FLARE(user) (&(curr_inst(user)->single_flare))
 #endif
-static inline fcs_flare_item_t *calc_moves_flare(fcs_user_t *const user)
+static inline flare_item *calc_moves_flare(fcs_user_t *const user)
 {
-    fcs_flare_item_t *const flare = SINGLE_FLARE(user);
+    flare_item *const flare = SINGLE_FLARE(user);
     trace_flare_solution(user, flare);
     return flare;
 }
@@ -3376,7 +3376,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
     {
         return 1;
     }
-    fcs_flare_item_t *const flare = calc_moves_flare(user);
+    flare_item *const flare = calc_moves_flare(user);
     if (flare->next_move_idx == (uint_fast32_t)flare->moves_seq.num_moves)
     {
         return 1;
@@ -3765,7 +3765,7 @@ int DLLEXPORT freecell_solver_user_get_moves_left(
     fcs_user_t *const user = (fcs_user_t *)api_instance;
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
     {
-        const fcs_flare_item_t *const flare = calc_moves_flare(user);
+        const flare_item *const flare = calc_moves_flare(user);
         return flare->moves_seq.num_moves - flare->next_move_idx;
     }
     else
@@ -4202,7 +4202,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
     void *const api_instance GCC_UNUSED,
     const freecell_solver_str_t name GCC_UNUSED)
 {
-    fcs_flare_item_t *const flare =
+    flare_item *const flare =
         curr_inst((fcs_user_t *)api_instance)->end_of_flares - 1;
     strncpy(flare->name, name, COUNT(flare->name));
     LAST(flare->name) = '\0';

@@ -137,7 +137,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
     TRACE("%s\n", "instance_run_solver_thread start");
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
     while (1)
@@ -242,7 +242,7 @@ static bool populate_instance_with_intermediate_input_line(
     fcs_state_keyval_pair_t running_state;
     fcs_dbm_record_t *token = NULL;
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
 
@@ -507,7 +507,7 @@ static bool handle_and_destroy_instance_solution(
                 fflush(out_fh);
 #ifdef DEBUG_OUT
                 fcs_state_keyval_pair_t state;
-                fcs_state_locs_struct_t locs;
+                fcs_state_locs_struct locs;
                 fc_solve_init_locs(&locs);
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
 

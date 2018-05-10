@@ -29,7 +29,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     fcs_state_keyval_pair_t init_state, derived_state, new_derived_state;
     fcs_debondt_delta_stater delta;
     fcs_uchar enc_state[24];
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 
     DECLARE_IND_BUF_T(indirect_stacks_buffer)

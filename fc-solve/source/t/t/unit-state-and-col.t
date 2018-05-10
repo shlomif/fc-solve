@@ -16,7 +16,7 @@ use FC_Solve::InlineWrap (
 typedef struct
 {
     fcs_state_keyval_pair_t state;
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fcs_card_t card;
     DECLARE_IND_BUF_T(indirect_stacks_buffer);
 } StateInC;
