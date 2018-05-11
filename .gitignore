@@ -66,13 +66,16 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js.mem
+/fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.wasm
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js.mem
+/fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
 /fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve/patsolve/*.bc
 /fc-solve/site/wml/lib/for-node/js/*.js
 /fc-solve/site/wml/lib/for-node/js/dist/fc_solve_find_index_s2ints.js
 /fc-solve/site/wml/lib/for-node/libfreecell-solver.js.mem
+/fc-solve/site/wml/lib/for-node/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/make/build-deps/build-deps.mak
 /fc-solve/site/wml/lib/make/include.mak
 /fc-solve/site/wml/lib/make/rules.mak
@@ -84,6 +87,7 @@
 /fc-solve/site/wml/lib/transcrypt_module/src/__javascript__/
 /fc-solve/site/wml/lib/transcrypt_module/src/fc_solve_find_index_s2ints.py
 /fc-solve/site/wml/libfreecell-solver.js.mem
+/fc-solve/site/wml/libfreecell-solver.wasm
 /fc-solve/site/wml/node_modules
 /fc-solve/site/wml/package-lock.json
 /fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings
