@@ -60,7 +60,7 @@ WML_FLAGS += --passoption=2,-X3074 \
 	-I $${HOME}/apps/wml \
 	--passoption=7,--skip=summary
 
-JS_MEM_BASE = libfreecell-solver.js.mem
+JS_MEM_BASE = libfreecell-solver.wasm
 LIBFREECELL_SOLVER_JS_DIR = lib/fc-solve-for-javascript
 LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfreecell-solver.js
 DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
@@ -79,6 +79,8 @@ FIND_INDEX__PYJS__pivot =  dist/fc_solve_find_index_s2ints.js
 
 FIND_INDEX__PYJS__DEST_DIR = $(D)/js
 FIND_INDEX__PYJS__DEST = $(FIND_INDEX__PYJS__DEST_DIR)/$(FIND_INDEX__PYJS__pivot)
+FIND_INDEX__PYJS__DEST2_DIR = $(D)/js-fc-solve/automated-tests
+FIND_INDEX__PYJS__DEST2 = $(FIND_INDEX__PYJS__DEST2_DIR)/$(FIND_INDEX__PYJS__pivot)
 FIND_INDEX__PYJS__TGT_DIR = lib/transcrypt_module
 FIND_INDEX__PYJS__PY = $(FIND_INDEX__PYJS__TGT_DIR)/src/$(FIND_INDEX__PYJS__SRC_BN)
 PIV = $(FIND_INDEX__PYJS__TGT_DIR)/dist
@@ -91,7 +93,7 @@ ifeq ($(SKIP_EMCC),1)
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS =
 	LIBFREECELL_SOLVER_JS__TARGETS =
 else
-	FIND_INDEX__PYJS__TARGETS = $(FIND_INDEX__PYJS__TGT) $(FIND_INDEX__PYJS__DEST) $(FIND_INDEX__PYJS__NODE)
+	FIND_INDEX__PYJS__TARGETS = $(FIND_INDEX__PYJS__TGT) $(FIND_INDEX__PYJS__DEST) $(FIND_INDEX__PYJS__DEST2) $(FIND_INDEX__PYJS__NODE)
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS = lib/for-node/js/libfreecell-solver.min.js
 	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM)
 endif
@@ -123,7 +125,7 @@ $(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
 	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__TGT_DIR) -regextype egrep -regex '.*\.(js|html)')
 	touch $@
 
-$(FIND_INDEX__PYJS__DEST): $(FIND_INDEX__PYJS__TGT)
+$(FIND_INDEX__PYJS__DEST) $(FIND_INDEX__PYJS__DEST2): %: $(FIND_INDEX__PYJS__TGT)
 	mkdir -p $$(dirname "$@")
 	$(MULTI_YUI) -o $@ $<
 
@@ -219,7 +221,7 @@ $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN): $(LIBFREECELL_SOLVER_JS)
 	cp -f $< $@
 
-$(DEST_LIBFREECELL_SOLVER_JS_MEM): %: lib/fc-solve-for-javascript/libfreecell-solver.js.mem
+$(DEST_LIBFREECELL_SOLVER_JS_MEM): %: lib/fc-solve-for-javascript/$(JS_MEM_BASE)
 	cp -f $< $@
 
 FCS_VALID_DEST = $(D)/js/fcs-validate.js

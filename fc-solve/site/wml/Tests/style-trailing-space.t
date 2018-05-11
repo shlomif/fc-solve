@@ -35,7 +35,7 @@ my $finder = Test::TrailingSpace->new(
         |
     (?:$lib\z)
         |
-    (?:\.(?:diff|jpg|patch|png|woff|xcf|xz|zip)\z)
+    (?:\.(?:diff|jpg|patch|png|wasm|woff|xcf|xz|zip)\z)
     #x,
     }
 );
