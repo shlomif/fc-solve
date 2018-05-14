@@ -6,7 +6,7 @@ use warnings;
 use Test::TrailingSpace 0.03;
 use Test::More tests => 1;
 
-my $lib    = qr#libfreecell-solver\.js(?:\.mem)?#;
+my $lib    = qr#libfreecell-solver(?:-asm)?\.js(?:\.mem)?#;
 my $bigint = qr#(?:big-integer\.js|qunit\.js)#;
 my $finder = Test::TrailingSpace->new(
     {

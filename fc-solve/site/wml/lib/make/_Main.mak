@@ -61,6 +61,7 @@ WML_FLAGS += --passoption=2,-X3074 \
 	--passoption=7,--skip=summary
 
 JS_MEM_BASE = libfreecell-solver.wasm
+JS_MEM_BASE__ASMJS = libfreecell-solver-asm.js.mem
 LIBFREECELL_SOLVER_JS_DIR = lib/fc-solve-for-javascript
 LIBFREECELL_SOLVER_ASMJS_JS_DIR = lib/fc-solve-for-javascript-asmjs
 LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfreecell-solver.js
@@ -68,7 +69,9 @@ LIBFREECELL_SOLVER_ASMJS_JS = $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/libfreecell-sol
 DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_ASMJS_JS = $(D)/js/libfreecell-solver-asm.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(D)/js/libfreecell-solver.js
-DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(D)/js $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .)
+DEST_mem_dirs = $(D)/js $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .
+DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(DEST_mem_dirs))
+DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS = $(patsubst %,%/$(JS_MEM_BASE__ASMJS),$(DEST_mem_dirs))
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
 BASE_BIGINT_JS = big-integer.js qunit.js
 DEST_BIGINT_JS = $(patsubst %,$(D)/js/%,$(BASE_BIGINT_JS))
@@ -98,7 +101,7 @@ ifeq ($(SKIP_EMCC),1)
 else
 	FIND_INDEX__PYJS__TARGETS = $(FIND_INDEX__PYJS__TGT) $(FIND_INDEX__PYJS__DEST) $(FIND_INDEX__PYJS__DEST2) $(FIND_INDEX__PYJS__NODE)
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS = lib/for-node/js/libfreecell-solver.min.js
-	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM) $(DEST_LIBFREECELL_SOLVER_ASMJS_JS)
+	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM) $(DEST_LIBFREECELL_SOLVER_ASMJS_JS) $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS)
 endif
 
 dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
@@ -240,6 +243,9 @@ $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN): $(LIBFREECELL_SOLVER_JS)
 	cp -f $< $@
 
 $(DEST_LIBFREECELL_SOLVER_JS_MEM): %: lib/fc-solve-for-javascript/$(JS_MEM_BASE)
+	cp -f $< $@
+
+$(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS): %: $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/$(JS_MEM_BASE__ASMJS)
 	cp -f $< $@
 
 FCS_VALID_DEST = $(D)/js/fcs-validate.js
