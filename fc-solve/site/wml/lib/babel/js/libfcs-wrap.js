@@ -25,7 +25,7 @@ const supported = (() => {
 })();
 
 mydef([(supported ? "libfreecell-solver.min" :
-//mydef([(false ? "libfreecell-solver.min" :
+// mydef([(false ? "libfreecell-solver.min" :
     "libfreecell-solver-asm")], function(M) {
     return M;
 });
