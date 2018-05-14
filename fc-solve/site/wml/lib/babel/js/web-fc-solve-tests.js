@@ -6,7 +6,7 @@ function mydef(x, y) {
         return define(x, y);
     }
 }
-mydef(["web-fc-solve", "libfreecell-solver.min",
+mydef(["web-fc-solve", "libfcs-wrap",
     'dist/fc_solve_find_index_s2ints.js'], function(w, Module, s2i) {
     let FC_Solve = w.FC_Solve;
     const FC_Solve_init_wrappers_with_module =

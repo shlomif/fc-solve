@@ -1,6 +1,6 @@
 "use strict";
 
-define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min",
+define(["fcs-base-ui", "web-fc-solve", "libfcs-wrap",
     'dist/fc_solve_find_index_s2ints'], function(base_ui, w, Module, s2i) {
     let _my_module = Module()({});
     w.FC_Solve_init_wrappers_with_module(_my_module);

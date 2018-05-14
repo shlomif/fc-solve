@@ -1,6 +1,6 @@
 "use strict";
 
-define(["fcs-base-ui", "web-fc-solve", "libfreecell-solver.min"],
+define(["fcs-base-ui", "web-fc-solve", "libfcs-wrap"],
        function(base_ui, w, Module) {
     let FC_Solve = w.FC_Solve;
     let _my_module = Module()({});

@@ -1,6 +1,6 @@
 "use strict";
 
-define(["web-fc-solve", "libfreecell-solver.min",
+define(["web-fc-solve", "libfcs-wrap",
     'dist/fc_solve_find_index_s2ints'], function(w, Module, s2i) {
 const entityMap = {
     "&": "&amp;",
