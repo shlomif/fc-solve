@@ -1,3 +1,11 @@
+ifeq ($(ASMJS),1)
+	WASM := 0
+	LIBSUF:=-asm
+else
+	WASM := 1
+	LIBSUF:=
+endif
+
 ifeq ($(SRC_DIR),)
 	SRC_DIR := .
 endif
@@ -8,7 +16,7 @@ endif
 
 DATA_DESTDIR = __DESTDIR
 RESULT_NODE_JS_EXE = fc-solve.js
-RESULT_JS_LIB = libfreecell-solver.js
+RESULT_JS_LIB = libfreecell-solver$(LIBSUF).js
 RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 EMBED_FILE_MUNGE_PL = $(SRC_DIR)/../scripts/emscripten-embed-munge.pl
@@ -92,7 +100,7 @@ CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR
 # ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =
 
-EMCC_CFLAGS = -s WASM=1 -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" -s EXTRA_EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'Pointer_stringify', ]" -s MODULARIZE=1 $(CFLAGS) $(ASSERT_FLAGS)
+EMCC_CFLAGS = -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" -s EXTRA_EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'Pointer_stringify']" -s MODULARIZE=1 $(CFLAGS) $(ASSERT_FLAGS)
 
 PRESET_DIR = /fc-solve/share/freecell-solver/
 PRESET_FILES_TO_EMBED := $(shell find $(DATA_DESTDIR)$(PRESET_DIR) -type f | (LC_ALL=C sort))
@@ -108,19 +116,17 @@ $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	mkdir -p "$$(dirname "$@")"
 	emcc $(EMCC_CFLAGS) $< -c -o $@
 
-.PHONY: llvm_and_files
+LLVM_AND_FILES_TARGETS = $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
 
-llvm_and_files: $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
-
-$(RESULT_HTML): llvm_and_files
+$(RESULT_HTML): $(LLVM_AND_FILES_TARGETS)
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
-$(RESULT_NODE_JS_EXE): llvm_and_files
+$(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS)
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
 PRE_JS = $(SRC_DIR)/scripts/pre.js
 POST_JS = $(SRC_DIR)/scripts/post.js
-$(RESULT_JS_LIB): llvm_and_files
+$(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS)
 	# emcc $(EMCC_CFLAGS) --pre-js $(PRE_JS) --post-js $(POST_JS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 	cat $(SRC_DIR)/scripts/pre.js $@ $(SRC_DIR)/scripts/post.js > temp.$@
