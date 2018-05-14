@@ -66,10 +66,8 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/fc-solve-test.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/fc-solve.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/fc-solve.js.mem
-/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/fc-solve.wasm
-/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver.js
-/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver.js.mem
-/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver.wasm
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver-asm.js
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/my-modified-fc-solve-test.html
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/patsolve/patsolve/*.bc
 /fc-solve/site/wml/lib/fc-solve-for-javascript/*.bc
@@ -80,10 +78,8 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.html.mem
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js
-/fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js.mem
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.wasm
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
-/fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js.mem
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
 /fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve/patsolve/*.bc
