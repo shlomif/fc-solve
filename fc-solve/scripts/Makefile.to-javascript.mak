@@ -25,31 +25,11 @@ PATS_C_FILES = $(patsubst %,patsolve/patsolve/%,param.c pat.c patsolve.c tree.c)
 
 LIB_C_FILES = \
 board_gen/find_deal.c \
-card.c \
-check_and_add_state.c \
-cmd_line.c \
-fc_pro_iface.c \
-freecell.c \
 gen_ms_boards__hll_iface.c \
 hacks_for_hlls.c \
-instance.c \
-lib.c \
-meta_alloc.c \
-move.c \
-move_funcs_order.c \
-preset.c \
-scans.c \
-simpsim.c \
-split_cmd_line.c \
-state.c \
-$(PATS_C_FILES)
+
 
 CMAKE_C_FILES = \
-is_king.c \
-is_parent.c \
-move_funcs_maps.c \
-pos_by_rank__freecell.c \
-rate_state.c \
 
 
 C_FILES = main.c $(LIB_C_FILES)

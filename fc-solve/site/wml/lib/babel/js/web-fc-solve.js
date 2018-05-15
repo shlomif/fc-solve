@@ -58,11 +58,12 @@ function FC_Solve_init_wrappers_with_module(Module) {
     fc_solve_user__find_deal__run =
         Module.cwrap('fc_solve_user__find_deal__run', 'string',
                      ['number', 'string', 'string']);
-    freecell_solver_user_alloc =
-        Module.cwrap('freecell_solver_user_alloc', 'number', []);
-    freecell_solver_user_solve_board =
-        Module.cwrap('freecell_solver_user_solve_board', 'number',
-                     ['number', 'string']);
+    //freecell_solver_user_alloc =
+       // Module.cwrap('freecell_solver_user_alloc', 'number', []);
+    // freecell_solver_user_solve_board =
+       // Module.cwrap('freecell_solver_user_solve_board', 'number',
+         //            ['number', 'string']);
+    /*
     freecell_solver_user_resume_solution =
         Module.cwrap('freecell_solver_user_resume_solution', 'number',
                      ['number']);
@@ -70,8 +71,10 @@ function FC_Solve_init_wrappers_with_module(Module) {
         Module.cwrap('freecell_solver_user_cmd_line_read_cmd_line_preset',
              'number', ['number', 'string', 'number', 'number', 'number',
                  'string']);
+                     */
     malloc = Module.cwrap('malloc', 'number', ['number']);
     c_free = Module.cwrap('free', 'number', ['number']);
+    /*
     freecell_solver_user_get_next_move =
         Module.cwrap('freecell_solver_user_get_next_move', 'number',
                      ['number', 'number']);
@@ -102,7 +105,7 @@ function FC_Solve_init_wrappers_with_module(Module) {
     'freecell_solver_user_cmd_line_parse_args_with_file_nesting_count',
     'number', ['number', 'number', 'number', 'number', 'number', 'number',
         'number', 'number', 'number', 'number', 'number']);
-
+*/
     fc_solve_Pointer_stringify = function(ptr) {
         return Module.Pointer_stringify(ptr);
     };
@@ -174,7 +177,8 @@ class FC_Solve {
         that.cmd_line_preset = args.cmd_line_preset;
         that.current_iters_limit = 0;
         that.obj = ( function() {
-                let ret_obj = freecell_solver_user_alloc();
+            return 1;
+                // let ret_obj = freecell_solver_user_alloc();
 
                 // TODO : add an option to customise the limit of the
                 // iterations count.
@@ -265,9 +269,9 @@ class FC_Solve {
             let that = this;
 
             that._increase_iters_limit();
-            const solve_err_code = freecell_solver_user_resume_solution(
+            const solve_err_code = 0; /*freecell_solver_user_resume_solution(
                 that.obj
-            );
+            );*/
             that.handle_err_code(solve_err_code);
             return solve_err_code;
         }
@@ -293,11 +297,11 @@ class FC_Solve {
                 if (cmd_line_preset != "default") {
                     const error_string_ptr_buf = alloc_wrap(
                         128, "error string buffer", "Foo");
-                    const preset_ret =
-                        freecell_solver_user_cmd_line_read_cmd_line_preset(
+                    const preset_ret = 0;
+                        /*freecell_solver_user_cmd_line_read_cmd_line_preset(
                             obj, cmd_line_preset, 0, error_string_ptr_buf,
                             0, null);
-
+*/
                     const error_string_ptr = fc_solve_getValue(
                         error_string_ptr_buf, '*');
 
@@ -397,9 +401,9 @@ class FC_Solve {
 
                 const board_string = that._process_board_string(
                     proto_board_string);
-                const solve_err_code = freecell_solver_user_solve_board(
+                const solve_err_code = 0; 0;  /* freecell_solver_user_solve_board(
                     that.obj, board_string
-                );
+                );*/
                 that.handle_err_code(solve_err_code);
                 return solve_err_code;
             } catch (e) {
@@ -455,8 +459,8 @@ class FC_Solve {
             // 128 bytes are enough to hold a move.
             const move_buffer = alloc_wrap(
                 128, "a buffer for the move", "maven");
-            while ((move_ret_code = freecell_solver_user_get_next_move(
-                that.obj, move_buffer)) == 0) {
+            while ((move_ret_code = 1/* freecell_solver_user_get_next_move(
+                that.obj, move_buffer)*/) == 0) {
                 const state_as_string = get_state_str();
                 freecell_solver_user_stringify_move_ptr(
                     that.obj, that._move_string_buffer, move_buffer, 0);
