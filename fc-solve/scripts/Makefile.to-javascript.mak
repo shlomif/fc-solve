@@ -69,9 +69,9 @@ NEEDED_FUNCTIONS = \
 
 NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
 
-# OPT_FLAGS = -g
+OPT_FLAGS = -g
 # OPT_FLAGS = -O2
-OPT_FLAGS = -O3
+# OPT_FLAGS = -O3
 # OPT_FLAGS = -O1
 # OPT_FLAGS =
 
@@ -80,7 +80,7 @@ CFLAGS = $(OPT_FLAGS) -I . -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR
 # ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =
 
-EMCC_CFLAGS = -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" -s EXTRA_EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'Pointer_stringify']" -s MODULARIZE=1 $(CFLAGS) $(ASSERT_FLAGS)
+EMCC_CFLAGS = -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" -s EXTRA_EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'Pointer_stringify']" -s LEGACY_VM_SUPPORT=1 -s MODULARIZE=1 $(CFLAGS) $(ASSERT_FLAGS)
 
 PRESET_DIR = /fc-solve/share/freecell-solver/
 PRESET_FILES_TO_EMBED := $(shell find $(DATA_DESTDIR)$(PRESET_DIR) -type f | (LC_ALL=C sort))
