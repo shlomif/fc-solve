@@ -1,5 +1,9 @@
 define(["web-fc-solve-tests", "web-fc-solve-tests--fcs-validate", "qunit"], function (t, fcs_valid, QUnit) {
     return function() {
+        QUnit.module("BeforeMeta");
+        QUnit.test("silence_qunit", function(assert) {
+            assert.ok(true, "foo");
+        });
         var test_js_fc_solve_class = t.test_js_fc_solve_class;
         try {
             test_js_fc_solve_class(function () {
