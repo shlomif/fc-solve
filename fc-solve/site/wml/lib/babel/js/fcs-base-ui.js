@@ -1,7 +1,6 @@
 "use strict";
 
-define(["web-fc-solve", "libfcs-wrap",
-    'dist/fc_solve_find_index_s2ints'], function(w, Module, s2i) {
+define(["web-fc-solve"], function(w) {
 const entityMap = {
     "&": "&amp;",
     "<": "&lt;",
