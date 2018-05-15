@@ -1,0 +1,7 @@
+#include "template.wml"
+#include "Inc/js_fc_solve.wml"
+
+<latemp_subject "Freecell Deal Finder" />
+
+<div>
+<emscripten_common incs="require([\"$(ROOT)/js/s2i-test.js\"], function (t)" />

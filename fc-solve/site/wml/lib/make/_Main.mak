@@ -16,7 +16,7 @@ SKIP_EMCC = 0
 D = ./dest
 
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
-# TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
+TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
 ifeq ($(PROD),1)
@@ -253,7 +253,7 @@ FCS_VALID_DEST = $(D)/js/fcs-validate.js
 
 TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts src/js/typings/index.d.ts
 
-DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/libfcs-wrap.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js $(D)/js/web-fc-solve-tests.js
+DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/libfcs-wrap.js $(D)/js/s2i-test.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js $(D)/js/web-fc-solve-tests.js
 OUT_BABEL_JSES = $(patsubst $(D)/js/%,lib/out-babel/js/%,$(DEST_BABEL_JSES))
 
 all: $(TYPINGS) $(DEST_BABEL_JSES)

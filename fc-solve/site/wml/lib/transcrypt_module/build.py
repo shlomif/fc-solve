@@ -19,7 +19,7 @@ def main():
         shutil.rmtree(os.path.join(SROOT, '__javascript__'))
 
     # transpile src/
-    run('transcrypt -b -m --parent=.none src/fc_solve_find_index_s2ints.py')
+    run('transcrypt -xni -b -m --parent=.none src/fc_solve_find_index_s2ints.py')
     shutil.copy(os.path.join(SROOT, '__javascript__', 'fc_solve_find_index_s2ints.min.js'), os.path.join(DROOT, 'fc_solve_find_index_s2ints.min.js'))
     shutil.copy(os.path.join(SROOT, '__javascript__', 'fc_solve_find_index_s2ints.js'), os.path.join(DROOT, 'fc_solve_find_index_s2ints.js'))
 
