@@ -4,7 +4,6 @@
 
 <page_extra_head_elements>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/qunit.css" />
-<script type="text/javascript" src="$(ROOT)/js/qunit.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
 <jquery_ui_head_elements />
 <script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
@@ -24,5 +23,5 @@
 requirejs.config({
     baseUrl: '$(ROOT)/js',
     });
+require(["auto-tests-driver"], function (foo) {foo();});
 </script>
-<script type="text/javascript" src="tests.js"></script>
