@@ -772,3 +772,9 @@ Or arranged with the piles in each text line:
 Here is a <a href="$(ROOT)/images/pysol-freecell-ms11982.png">screenshot
 of that deal in PySol</a>.
 </p>
+
+<p>
+If, and only if, the cards match, please record a solution using
+<a href="http://pysolfc.sourceforge.net/">PySol FC</a> and send us the saved
+game. Make sure you are playing Freecell and not some other variant.
+</p>
