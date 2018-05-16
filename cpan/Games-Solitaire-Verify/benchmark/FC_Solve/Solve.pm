@@ -9,7 +9,7 @@ use Inline (
     C                 => 'DATA',
     CLEAN_AFTER_BUILD => 0,
     INC =>
-"-I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH} -I$ENV{FCS_SRC_PATH}/patsolve-shlomif/patsolve",
+"-I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH} -I$ENV{FCS_SRC_PATH}/patsolve/patsolve",
     LIBS    => "-L" . $ENV{FCS_PATH} . " -lfreecell-solver",
     CCFLAGS => "-std=gnu99",
 
