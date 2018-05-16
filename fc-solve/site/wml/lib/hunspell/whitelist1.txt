@@ -1094,6 +1094,7 @@ iterations's
 
 5-freecells
 NNN
+NRG
 gen_ms_boards__rand
 range_solvers_gen_ms_boards
 

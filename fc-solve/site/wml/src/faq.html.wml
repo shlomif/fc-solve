@@ -778,3 +778,12 @@ If, and only if, the cards match, please record a solution using
 <a href="http://pysolfc.sourceforge.net/">PySol FC</a> and send us the saved
 game. Make sure you are playing Freecell and not some other variant.
 </p>
+
+<p>
+Note that
+<a href="https://www.makorrishon.co.il/nrg/online/10/ART/939/623.html">NRG
+Israel reported</a> (in Hebrew) that an Israeli couple was able to solve
+deal no. 11,982 but they didn't record the solution, and it is possible that
+it exploited a bug in
+<a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">MS Freecell</a>.
+</p>
