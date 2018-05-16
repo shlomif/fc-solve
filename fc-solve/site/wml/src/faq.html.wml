@@ -724,3 +724,51 @@ initial deals of some popular Solitaire implementations, and some
 integration with Freecell Solver, that provides it with automated input, and
 also uses its moves output to display the solution.
 </p>
+
+<h3 id="deal_11982">I found a solution for MS Deal No. 11,982 - should I
+report it to you?</h3>
+
+<p>
+That deal was found to be impossible by most human
+players, and all automated solvers that tried to solve it (including
+<a href="https://github.com/boundedvariation/Freecell">a solver</a> which
+is written in <a href="https://en.wikipedia.org/wiki/Haskell_%28programming_language%29">Haskell</a>,
+which is a statically typed programming language that code that is written in
+it tends to exhibit very few bugs.). Nevertheless, we would welcome a proof
+to the contrary given it actually refers to the actual deal.
+</p>
+
+<p>
+For the record, the card arrangement is:
+</p>
+
+<pre>
+ --  --  --  --  --  --  --  --
+ AH  AS  4H  AC  2D  6S  TS  JS
+ 3D  3H  QS  QC  8S  7H  AD  KS
+ KD  6H  5S  4D  9H  JH  9S  3C
+ JC  5D  5C  8C  9D  TD  KH  7C
+ 6C  2C  TH  QH  6D  TC  4S  7S
+ JD  7D  8H  9C  2H  QD  4C  5H
+ KC  8D  2S  3S
+</pre>
+
+<p>
+Or arranged with the piles in each text line:
+</p>
+
+<pre>
+: AH 3D KD JC 6C JD KC
+: AS 3H 6H 5D 2C 7D 8D
+: 4H QS 5S 5C TH 8H 2S
+: AC QC 4D 8C QH 9C 3S
+: 2D 8S 9H 9D 6D 2H
+: 6S 7H JH TD TC QD
+: TS AD 9S KH 4S 4C
+: JS KS 3C 7C 7S 5H
+</pre>
+
+<p>
+Here is a <a href="$(ROOT)/images/pysol-freecell-ms11982.png">screenshot
+of that deal in PySol</a>.
+</p>
