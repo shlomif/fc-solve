@@ -481,9 +481,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
             (num_vacant_freecells == LOCAL_FREECELLS_NUM))
         {
-#ifdef FCS_WITH_MOVES
-            instance->final_state = PTR_STATE;
-#endif
             BUMP_NUM_CHECKED_STATES();
             error_code = FCS_STATE_WAS_SOLVED;
             goto my_return_label;
@@ -623,6 +620,9 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
 
     error_code = FCS_STATE_IS_NOT_SOLVEABLE;
 my_return_label:
+#ifdef FCS_WITH_MOVES
+    instance->final_state = PTR_STATE;
+#endif
     /* Free the memory that was allocated by the
      * derived states list */
     if (derived.states != NULL)

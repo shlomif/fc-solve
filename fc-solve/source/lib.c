@@ -1433,6 +1433,9 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
                     the_soft_dfs_info->derived_states_list = derived_list;
                     TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside "
                            "current_state_index)");
+#ifdef FCS_WITH_MOVES
+                        instance->final_state = PTR_STATE;
+#endif
                     return FCS_STATE_SUSPEND_PROCESS;
                 }
                 goto main_loop;
