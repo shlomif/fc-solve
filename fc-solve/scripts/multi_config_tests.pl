@@ -273,7 +273,7 @@ sub run_tests
                 local $ENV{PWD} = $DIR;
                 run_cmd(
                     "$blurb_base : ./gen-helpers",
-                    { cmd => [ $^X, 'gen-helpers.pl' ] }
+                    { cmd => [ $^X, 'gen-helpers' ] }
                 );
 
           # (
