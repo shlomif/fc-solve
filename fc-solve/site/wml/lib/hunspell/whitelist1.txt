@@ -1059,9 +1059,6 @@ xxHash
 
 Readme
 
-==== In: dest/docs/distro/README.html , dest/docs/distro/USAGE.html
-
-
 ==== In: dest/docs/distro/TODO.html
 
 --num-threads
@@ -1087,6 +1084,7 @@ var_base
 
 ==== In: dest/docs/distro/USAGE.html
 
+-hoi
 Der
 iterations's
 
