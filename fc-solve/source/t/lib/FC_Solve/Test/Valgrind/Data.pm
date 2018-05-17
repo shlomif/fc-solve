@@ -73,6 +73,14 @@ my $arr = [
         msg =>
 "Check the sanity of crashy-preset-1 which over-rides the soft-thread several times.",
     },
+    'fc-solve-hoi' => {
+        prog => "fc-solve",
+        argv => [
+            qw(-s -i -p -t -sam -sel -hoi -mi 100),
+            { type => 'bin_board', arg => '11982.board', }
+        ],
+        msg => "--hint-on-intractable sanity",
+    },
     'fc-solve-crashy-preset-2' => {
         prog => "fc-solve",
         argv => [
