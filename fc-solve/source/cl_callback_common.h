@@ -85,5 +85,10 @@ static inline bool cmd_line_cb__handle_common(const char *const arg_str,
         dc->show_exceeded_limits = TRUE;
         return TRUE;
     }
+    else if (IS_ARG_LONG("hoi", "hint-on-intractable"))
+    {
+        dc->hint_on_intract = TRUE;
+        return TRUE;
+    }
     return FALSE;
 }

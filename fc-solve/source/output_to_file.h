@@ -34,6 +34,7 @@ typedef struct
     bool display_moves;
     bool display_states;
     bool show_exceeded_limits;
+    bool hint_on_intract;
 } fc_solve_display_information_context;
 
 static const fc_solve_display_information_context INITIAL_DISPLAY_CONTEXT = {
@@ -50,14 +51,17 @@ static const fc_solve_display_information_context INITIAL_DISPLAY_CONTEXT = {
     .display_states = TRUE,
     .standard_notation = FC_SOLVE__STANDARD_NOTATION_NO,
     .output_filename = NULL,
-    .show_exceeded_limits = FALSE};
+    .show_exceeded_limits = FALSE,
+    .hint_on_intract = FALSE,
+};
 
 static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     void *const instance, const int ret,
     const fc_solve_display_information_context *const dc_ptr)
 {
     const_AUTO(display_context, (*dc_ptr));
-    if (ret == FCS_STATE_WAS_SOLVED)
+    bool print = TRUE;
+    if ((ret == FCS_STATE_WAS_SOLVED)||(display_context.hint_on_intract && ret == FCS_STATE_SUSPEND_PROCESS))
     {
         fputs("-=-=-=-=-=-=-=-=-=-=-=-\n\n", output_fh);
 #ifdef FCS_WITH_MOVES
@@ -132,18 +136,24 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
         }
 #endif
 
-        fputs("This game is solveable.\n", output_fh);
+        if (ret == FCS_STATE_WAS_SOLVED)
+        {
+            fputs("This game is solveable.\n", output_fh);
+            print = FALSE;
+        }
     }
-    else if (display_context.show_exceeded_limits &&
-             (ret == FCS_STATE_SUSPEND_PROCESS))
+    if (print)
     {
-        fputs("Iterations count exceeded.\n", output_fh);
+        if (display_context.show_exceeded_limits &&
+            (ret == FCS_STATE_SUSPEND_PROCESS))
+        {
+            fputs("Iterations count exceeded.\n", output_fh);
+        }
+        else
+        {
+            fputs("I could not solve this game.\n", output_fh);
+        }
     }
-    else
-    {
-        fputs("I could not solve this game.\n", output_fh);
-    }
-
     fprintf(output_fh, "Total number of states checked is %ld.\n",
         (long)freecell_solver_user_get_num_times_long(instance));
 #ifndef FCS_DISABLE_NUM_STORED_STATES

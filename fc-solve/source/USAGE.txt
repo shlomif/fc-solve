@@ -340,6 +340,18 @@ is possible.
 This option is not the default, to retain compatibility with previous versions
 of Freecell Solver, and was added in version 3.12.0 of fc-solve.
 
+[id="hint-on-intractable_flag"]
+-hoi , --hint-on-intractable
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
+
+Presents the moves to the intermediate reached state, if the maximal number
+of iterations was reached without a conclusion (= "intractable").
+
+This option is not the default, to retain compatibility with previous versions
+of Freecell Solver, and was added in version 4.20.0 of fc-solve.
+
 [id="game_variants_options"]
 Game Variants Options
 ---------------------

@@ -1762,10 +1762,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
 
         const bool was_solved = (ret == FCS_STATE_WAS_SOLVED);
 #if (defined(FCS_WITH_MOVES) && (!defined(FCS_DISABLE_PATSOLVE)))
-        if (was_solved)
-        {
-            instance->solving_soft_thread = soft_thread;
-        }
+        instance->solving_soft_thread = soft_thread;
 #endif
         if (was_solved || instance__check_exceeded_stats(instance))
         {
@@ -1956,7 +1953,7 @@ typedef struct
 typedef struct
 {
 #ifdef FCS_WITH_FLARES
-    flare_item *flares, *end_of_flares, *minimal_flare;
+    flare_item *flares, *end_of_flares, *minimal_flare, *intract_minimal_flare;
     flares_plan_item *plan;
     size_t num_plan_items, current_plan_item_idx;
     char *flares_plan_string;
@@ -2308,6 +2305,7 @@ static NI_INLINE void user_next_instance(fcs_user *const user)
         .flares_plan_compiled = FALSE,
         .current_plan_item_idx = 0,
         .minimal_flare = NULL,
+        .intract_minimal_flare = NULL,
         .all_plan_items_finished_so_far = TRUE,
     };
 #endif
@@ -2833,6 +2831,7 @@ static void recycle_instance(
 #ifdef FCS_WITH_FLARES
     instance_item->current_plan_item_idx = 0;
     instance_item->minimal_flare = NULL;
+    instance_item->intract_minimal_flare = NULL;
 #endif
 }
 
@@ -3238,6 +3237,12 @@ static inline fc_solve_solve_process_ret_t resume_solution(
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
         else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
         {
+#ifdef FCS_WITH_FLARES
+            instance_item->intract_minimal_flare = flare;
+#endif
+#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
+            flare->was_solution_traced = FALSE;
+#endif
             /*
              * First - check if we exceeded our limit. If so - we must terminate
              * and return now.
@@ -3359,7 +3364,11 @@ int DLLEXPORT freecell_solver_user_solve_board(
 
 #ifdef FCS_WITH_MOVES
 #ifdef FCS_WITH_FLARES
-#define SINGLE_FLARE(user) curr_inst(user)->minimal_flare
+static inline flare_item * SINGLE_FLARE(fcs_user *user)
+{
+    var_AUTO(inst, curr_inst(user));
+    return inst->minimal_flare ? inst->minimal_flare : inst->intract_minimal_flare;
+}
 #else
 #define SINGLE_FLARE(user) (&(curr_inst(user)->single_flare))
 #endif
@@ -3375,7 +3384,13 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 {
     fcs_user *const user = (fcs_user *)api_instance;
 
-    if (user->ret_code != FCS_STATE_WAS_SOLVED)
+    if (!
+        (
+        (user->ret_code == FCS_STATE_WAS_SOLVED)
+            ||
+        (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
+        )
+    )
     {
         return 1;
     }
