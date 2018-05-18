@@ -229,7 +229,7 @@ SET (patsolve_dir "${pats_dir}/patsolve")
 SET (p_dir "${patsolve_dir}")
 
 SET (patsolve_modules
-    "${p_dir}/param.c"
+    "param.c"
     "${p_dir}/pat.c"
     "${p_dir}/patsolve.c"
     "${p_dir}/tree.c"
@@ -305,6 +305,8 @@ IF (NOT "${FCS_DISABLE_MOVES_TRACKING}")
     add_lib_mods(card.c)
 ENDIF ()
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
+    SET (pp_dir "${CMAKE_CURRENT_SOURCE_DIR}/${p_dir}")
+    EXECUTE_PROCESS(COMMAND "python3" "${pp_dir}/param.py" "${pp_dir}/param.dat")
     add_lib_mods(${patsolve_modules})
 ENDIF ()
 IF (NOT "${FCS_USE_PRECOMPILED_CMD_LINE_THEME}")
