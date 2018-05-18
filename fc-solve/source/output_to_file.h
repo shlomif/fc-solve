@@ -60,11 +60,12 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     const fc_solve_display_information_context *const dc_ptr)
 {
     const_AUTO(display_context, (*dc_ptr));
-    bool print = TRUE;
-    if ((ret == FCS_STATE_WAS_SOLVED)||(display_context.hint_on_intract && ret == FCS_STATE_SUSPEND_PROCESS))
+    const bool was_solved = (ret == FCS_STATE_WAS_SOLVED);
+    const bool was_suspend = (ret == FCS_STATE_SUSPEND_PROCESS);
+#ifdef FCS_WITH_MOVES
+    if (was_solved || (display_context.hint_on_intract && was_suspend))
     {
         fputs("-=-=-=-=-=-=-=-=-=-=-=-\n\n", output_fh);
-#ifdef FCS_WITH_MOVES
         fcs_move_t move;
         char state_as_string[1000];
 
@@ -134,26 +135,13 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
         {
             fputs("\n\n", output_fh);
         }
+    }
 #endif
+    fputs((was_solved ? "This game is solveable.\n" :
+            (display_context.show_exceeded_limits && was_suspend) ?
+            "Iterations count exceeded.\n" : "I could not solve this game.\n"),
+        output_fh);
 
-        if (ret == FCS_STATE_WAS_SOLVED)
-        {
-            fputs("This game is solveable.\n", output_fh);
-            print = FALSE;
-        }
-    }
-    if (print)
-    {
-        if (display_context.show_exceeded_limits &&
-            (ret == FCS_STATE_SUSPEND_PROCESS))
-        {
-            fputs("Iterations count exceeded.\n", output_fh);
-        }
-        else
-        {
-            fputs("I could not solve this game.\n", output_fh);
-        }
-    }
     fprintf(output_fh, "Total number of states checked is %ld.\n",
         (long)freecell_solver_user_get_num_times_long(instance));
 #ifndef FCS_DISABLE_NUM_STORED_STATES
