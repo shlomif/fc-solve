@@ -333,7 +333,7 @@ int main(int argc, char *argv[])
     {
         fc_solve_err("%s\n", "Junk arguments!");
     }
-    else if (real_arg == argc)
+    if (real_arg == argc)
     {
         fc_solve_err("%s\n", "No board specified.");
     }

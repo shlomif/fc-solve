@@ -319,18 +319,15 @@ static bool populate_instance_with_intermediate_input_line(
         else
         {
             src -= 8;
-            if (src < 4)
-            {
-                src_card = fcs_freecell_card(the_state, src);
-                fcs_empty_freecell(the_state, src);
-            }
-            else
+            if (src >= 4)
             {
                 fc_solve_err("Error in reading state in line %ld of the "
                              "--intermediate-input - source cannot be a "
                              "foundation.",
                     line_num);
             }
+            src_card = fcs_freecell_card(the_state, src);
+            fcs_empty_freecell(the_state, src);
         }
         /* Apply src_card to dest. */
         if (dest < 8)
@@ -573,7 +570,7 @@ int main(int argc, char *argv[])
     {
         fc_solve_err("%s\n", "Junk arguments!");
     }
-    else if (arg == argc)
+    if (arg == argc)
     {
         fc_solve_err("%s\n", "No board specified.");
     }
