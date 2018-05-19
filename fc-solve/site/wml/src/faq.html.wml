@@ -842,4 +842,26 @@ some code with fc-solve.
 written in C with available source.
 </p>
 </li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/shirl-hart-freecell-solver">Shirl Hart's solver</a> -
+written in Java with an <a href="https://metacpan.org/release/Freecell-App">earlier
+version</a> in Perl 5.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://www.numin8r.us/programs/">Gary Campbell's FCELL.COM</a> - written
+in x86 assembly for DOS.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://sourceforge.net/projects/freecelljsolver/">FreeCell Java Solver</a>
+- open source under the GPLv3.
+</p>
+</li>
 </ol>
