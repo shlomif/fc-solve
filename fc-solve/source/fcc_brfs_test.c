@@ -7,8 +7,10 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-// fcc_brfs_test.c - provide utility routines to test fcc_brfs.h
-#include "fcs_conf.h"
+/*
+ * fcc_brfs_test.c - provide utility routines to test fcc_brfs.h
+ */
+#include "config.h"
 #undef FCS_RCS_STATES
 
 #include "dbm_common.h"

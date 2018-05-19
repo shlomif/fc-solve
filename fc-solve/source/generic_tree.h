@@ -11,7 +11,7 @@
 // or fcs-libavl/rb.h .
 #pragma once
 
-#include "fcs_conf.h"
+#include "config.h"
 
 #ifdef FCS_DBM_USE_LIBAVL
 

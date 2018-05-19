@@ -9,7 +9,8 @@
  */
 // indirect_buffer.h - declare the dll_ind_buf type.
 #pragma once
-#include "fcs_conf.h"
+
+#include "config.h"
 
 #ifdef INDIRECT_STACK_STATES
 typedef char dll_ind_buf[MAX_NUM_STACKS << 7];

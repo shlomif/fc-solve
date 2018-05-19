@@ -7,9 +7,12 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-// cmd_line.c - the Freecell Solver command line arguments-like parsing
-// routines. Useful for more easily configuring a Freecell Solver instance.
-#include "fcs_conf.h"
+/*
+ * cmd_line.c - the Freecell Solver command line arguments-like parsing
+ * routines. Useful for more easily configuring a Freecell Solver instance.
+ */
+
+#include "config.h"
 
 #ifndef HAVE_VASPRINTF
 #include "asprintf.h"

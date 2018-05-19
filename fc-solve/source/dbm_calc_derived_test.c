@@ -7,11 +7,14 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-// dbm_calc_derived_test.c - testing interface for dbm_calc_derived.h .
-// This is compiled into a shared library and then loaded by Inline::C,
-// ctypes, etc.
+/*
+ * dbm_calc_derived_test.c - testing interface for dbm_calc_derived.h .
+ * This is compiled into a shared library and then loaded by Inline::C,
+ * ctypes, etc.
+ */
 #include <assert.h>
-#include "fcs_conf.h"
+
+#include "config.h"
 #undef FCS_RCS_STATES
 #include "delta_states_any.h"
 #include "dbm_calc_derived.h"

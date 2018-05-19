@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#include "fcs_conf.h"
+#include "config.h"
 
 #ifdef FCS_WITH_MOVES
 

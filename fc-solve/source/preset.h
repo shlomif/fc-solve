@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-#include "fcs_conf.h"
+#include "config.h"
 
 #ifndef FCS_FREECELL_ONLY
 #include "instance.h"
