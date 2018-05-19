@@ -197,27 +197,6 @@ extern "C" {
 #error FCS_RCS_STATES requires COMPACT_STATES
 #endif
 
-#ifdef _WIN32
-#define plan_tests(...) plan(__VA_ARGS__)
-#endif
-
-#ifdef _POSIX_C_SOURCE
-#if _POSIX_C_SOURCE > 200809L
-#define HAVE_GETLINE 1
-#endif
-#endif
-
-#if (defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
-         defined(HARD_CODED_NUM_DECKS))
-#define HARD_CODED_ALL
-#define HARD__SET_GAME_PARAMS()
-#else
-#define HARD__SET_GAME_PARAMS() SET_GAME_PARAMS()
-#endif
-#ifdef FCS_ENABLE_PRUNE__R_TF__UNCOND
-#define freecell_solver_user_set_pruning(...)
-#endif
-
 #ifdef __cplusplus
 }
 #endif
