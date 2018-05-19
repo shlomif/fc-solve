@@ -1094,6 +1094,7 @@ iterations's
 NNN
 NRG
 gen_ms_boards__rand
+patsolve-shlomif
 range_solvers_gen_ms_boards
 
 ==== In: dest/index.html , dest/old-news/index.xhtml

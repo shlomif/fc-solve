@@ -776,7 +776,8 @@ of that deal in PySol</a>.
 <p>
 If, and only if, the cards match, please record a solution using
 <a href="http://pysolfc.sourceforge.net/">PySol FC</a> and send us the saved
-game. Make sure you are playing Freecell and not some other variant.
+game. Make sure you are playing Freecell with exactly four reserves and not some other
+variant.
 </p>
 
 <p>
@@ -787,3 +788,58 @@ deal no. 11,982 but they didn't record the solution, and it is possible that
 it exploited a bug in
 <a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">MS Freecell</a>.
 </p>
+
+<hr />
+
+<p>
+A partial list of the solvers that have failed in finding a solution to #11,982:
+</p>
+
+<ol>
+
+<li>
+<p>
+The aforementioned solver written in Haskell.
+</p>
+</li>
+
+<li>
+<p>
+fc-solve / libfreecell-solver - hosted on this site.
+</p>
+</li>
+
+<li>
+<p>
+The dbm_fc_solver - shares some code with fc-solve and part of the Freecell Solver
+distribution.
+</p>
+</li>
+
+<li>
+<p>
+The depth_dbm_fc_solver - shares some code with both dbm_fc_solver and fc-solve.
+</p>
+</li>
+
+<li>
+<p>
+The original <a href="http://cards.wikia.com/wiki/Patsolve">patsolve</a> by Dr. Tom
+Holroyd.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/patsolve">patsolve-shlomif</a> which shares
+some code with fc-solve.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://fc-solve.shlomifish.org/don_woods.html">Don Woods' Freecell Solver</a> -
+written in C with available source.
+</p>
+</li>
+</ol>
