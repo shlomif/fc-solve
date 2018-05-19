@@ -180,10 +180,6 @@ extern "C" {
 /* Version number of package */
 #define VERSION "${VERSION}"
 
-#ifndef FCS_INT_BIT_SIZE_LOG2
-#define FCS_INT_BIT_SIZE_LOG2 ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
-#endif
-
 #define FCS_WHICH_STATES_GOOGLE_HASH__DENSE  0
 #define FCS_WHICH_STATES_GOOGLE_HASH__SPARSE 1
 
@@ -192,10 +188,6 @@ extern "C" {
 
 #define FCS_WHICH_COLUMNS_GOOGLE_HASH ${FCS_WHICH_COLUMNS_GOOGLE_HASH}
 #define FCS_WHICH_STATES_GOOGLE_HASH ${FCS_WHICH_STATES_GOOGLE_HASH}
-
-#if defined(FCS_RCS_STATES) && (!defined(COMPACT_STATES) )
-#error FCS_RCS_STATES requires COMPACT_STATES
-#endif
 
 #ifdef __cplusplus
 }
