@@ -10,8 +10,7 @@
 // bool.h - the purpose of this file is to define the bool type
 // and the related constants of TRUE and FALSE.
 #pragma once
-
-#include "config.h"
+#include "fcs_conf.h"
 #include <stdbool.h>
 
 #ifndef FALSE

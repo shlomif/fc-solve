@@ -7,16 +7,12 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-
-/*
- * A test for the bit reader and writer.
- */
-
+// A test for the bit reader and writer.
 #include <string.h>
 #include <stdio.h>
 
 #include <tap.h>
-#include "config.h"
+#include "fcs_conf.h"
 #include "bit_rw.h"
 
 static int main_tests(void)

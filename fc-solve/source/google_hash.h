@@ -9,14 +9,13 @@
  */
 // google_hash.h - header file for Google's dense_hash_map as adapted
 // for Freecell Solver.
-
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "config.h"
+#include "fcs_conf.h"
 #include "rinutils.h"
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)

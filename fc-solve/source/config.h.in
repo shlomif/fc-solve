@@ -91,24 +91,6 @@ extern "C" {
 #define FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY 4
 #endif
 
-
-#ifndef FCS_DISABLE_MULTI_FLARES
-#define FCS_WITH_FLARES
-#endif
-#ifndef FCS_DISABLE_MULTI_NEXT_INSTS
-#define FCS_WITH_NI
-#endif
-
-#ifndef FCS_DISABLE_MOVES_TRACKING
-#define FCS_WITH_MOVES
-#endif
-
-#ifdef FCS_WITH_MOVES
-#define SFS__PASS_MOVE_STACK(arg) , arg
-#else
-#define SFS__PASS_MOVE_STACK(arg)
-#endif
-
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
 #cmakedefine FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
 #endif
