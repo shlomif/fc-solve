@@ -14,7 +14,7 @@ before_install:
     - ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
     - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
 install:
-    - sudo -H `which python3` -m pip install cffi cookiecutter random2 Zenfilter
+    - sudo -H `which python3` -m pip install cffi cookiecutter random2 six Zenfilter
       # For G-S-V dzil
     - sudo cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website

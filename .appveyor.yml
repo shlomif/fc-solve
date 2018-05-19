@@ -7,8 +7,7 @@ install:
     - if not exist C:\libtap mkdir C:\libtap
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
-    - python3 -mpip install cffi
-    - python3 -mpip install random2
+    - python3 -mpip install cffi random2 six
     - perl -v
     - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
@@ -48,8 +47,7 @@ test_script:
     - echo %PATH%
     - gmake
     - type cmd_line_inc.h
-    - python3 -mpip install cffi
-    - python3 -mpip install random2
+    - python3 -mpip install cffi random2 six
     - gmake boards
     # Trying this hack to take more precendence for Inline::C / etc.
     - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
