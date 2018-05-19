@@ -19,6 +19,7 @@ extern "C" {
 #ifndef FCS_DISABLE_MULTI_FLARES
 #define FCS_WITH_FLARES
 #endif
+
 #ifndef FCS_DISABLE_MULTI_NEXT_INSTS
 #define FCS_WITH_NI
 #endif
@@ -32,10 +33,8 @@ extern "C" {
 #else
 #define SFS__PASS_MOVE_STACK(arg)
 #endif
+
 #ifdef FCS_FREECELL_ONLY
-#define HARD_CODED_NUM_FREECELLS FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY
-#define HARD_CODED_NUM_STACKS 8
-#define HARD_CODED_NUM_DECKS 1
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 #define FCS_DISABLE_SIMPLE_SIMON
 #endif

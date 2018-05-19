@@ -7,7 +7,6 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-
 /*
  * config.h - Configuration file for Freecell Solver
  *
@@ -102,20 +101,11 @@ extern "C" {
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 #cmakedefine FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 #endif
-/*
- * The maximal number of Freecells. For efficiency's sake it should be a
- * multiple of 4.
- * */
+
 #ifdef FCS_FREECELL_ONLY
 #define HARD_CODED_NUM_FREECELLS FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY
 #define HARD_CODED_NUM_STACKS 8
 #define HARD_CODED_NUM_DECKS 1
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-#define FCS_DISABLE_SIMPLE_SIMON
-#endif
-#define FCS_ON_NOT_FC_ONLY(code)
-#else
-#define FCS_ON_NOT_FC_ONLY(code) code
 #endif
 
 #ifdef HARD_CODED_NUM_FREECELLS
@@ -126,16 +116,12 @@ extern "C" {
 
 #cmakedefine FCS_DBM_FREECELLS_NUM ${FCS_DBM_FREECELLS_NUM}
 
-// The maximal number of Stacks. For efficiency's sake it should be a
-// multiple of 4.
 #ifdef HARD_CODED_NUM_STACKS
 #define MAX_NUM_STACKS HARD_CODED_NUM_STACKS
 #else
 #define MAX_NUM_STACKS ${MAX_NUM_STACKS}
 #endif
-/*
- * The maximal number of initial cards that can be found in a stack.
- * */
+
 #define MAX_NUM_INITIAL_CARDS_IN_A_STACK ${MAX_NUM_INITIAL_CARDS_IN_A_STACK}
 
 #ifdef HARD_CODED_NUM_DECKS
@@ -190,5 +176,5 @@ extern "C" {
 #define FCS_WHICH_STATES_GOOGLE_HASH ${FCS_WHICH_STATES_GOOGLE_HASH}
 
 #ifdef __cplusplus
-}
+};
 #endif
