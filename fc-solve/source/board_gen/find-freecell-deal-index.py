@@ -9,9 +9,7 @@
 
 import sys
 from make_pysol_freecell_board import find_index_main, LCRandom31
-
-if sys.version_info > (3,):
-    xrange = range
+from six.moves import range
 
 
 def find_ret(ints):
@@ -25,7 +23,7 @@ def find_ret(ints):
             n -= 1
         return True
 
-    for d in xrange(1, (1 << 33)):
+    for d in range(1, (1 << 33)):
         if is_right(d):
             return d
     return -1
