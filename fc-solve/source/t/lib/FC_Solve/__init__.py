@@ -231,7 +231,6 @@ void freecell_solver_user_recycle(void *api_instance);
             self.user,
             max_iters
         )
-        return
 
     def get_num_times(self):
         return self.lib.freecell_solver_user_get_num_times_long(
@@ -243,4 +242,3 @@ void freecell_solver_user_recycle(void *api_instance);
 
     def recycle(self):
         self.lib.freecell_solver_user_recycle(self.user)
-        return
