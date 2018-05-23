@@ -18,7 +18,8 @@ import sys
 idx = int(sys.argv[1])
 SEG = 100000
 start = idx * SEG + 1
-end = (idx + 1) * SEG
+MAX = ((1 << 33) - 1)
+end = min((idx + 1) * SEG, MAX)
 
 fn = 'results/%010d' % idx
 if os.path.exists(fn):
