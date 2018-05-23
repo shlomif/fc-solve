@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from TAP.Simple import plan
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
-from FC_Solve import FC_Solve
+import unittest
+from FC_Solve import FC_Solve_Suite
 
 
-class MyTests:
+class MyTests(unittest.TestCase):
     def test_null_plan(self):
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         name = "null plan"
 
@@ -24,7 +24,7 @@ class MyTests:
         fcs.flare_plan_item_is_checkpoint(name + " No. 1", 1)
 
     def test_empty_plan(self):
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         name = "empty string plan"
 
@@ -41,7 +41,7 @@ class MyTests:
         fcs.flare_plan_item_is_checkpoint(name + " No. 1", 1)
 
     def test_two_runs(self):
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         name = "Two Run's"
         # TEST*$input_cmd_line
@@ -69,7 +69,7 @@ class MyTests:
     def test_with_checkpoints(self):
         testname = "With checkpoints"
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line(
@@ -109,7 +109,7 @@ class MyTests:
     def test_with_checkpoints_and_explicit_checkpoint(self):
         testname = "With checkpoints with explicit checkpoint at end."
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line(
@@ -150,7 +150,7 @@ class MyTests:
     def test_with_run_indef(self):
         testname = "With RunIndef"
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line(
@@ -187,15 +187,9 @@ class MyTests:
         # TEST*$flare_plan_item_is_checkpoint
         fcs.flare_plan_item_is_checkpoint(("%s No. 4" % (testname)), 4)
 
-    def main(self):
-        self.test_null_plan()
-        self.test_empty_plan()
-        self.test_two_runs()
-        self.test_with_checkpoints()
-        self.test_with_checkpoints_and_explicit_checkpoint()
-        self.test_with_run_indef()
-
 
 if __name__ == "__main__":
-    plan(73)
-    MyTests().main()
+    # plan(73)
+    from pycotap import TAPTestRunner
+    suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
+    TAPTestRunner().run(suite)
