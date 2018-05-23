@@ -122,22 +122,6 @@ void freecell_solver_user_recycle(void *api_instance);
             self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_type(
                 self.user, item_idx))
 
-    def num_by_depth_tests_order_is(self, name, want_num):
-        got_num = self.lib.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
-                self.user
-        )
-
-        ok(want_num == got_num, name + " - by_depth_tests_order.")
-
-    def by_depth_max_depth_of_depth_idx_is(self, name, depth_idx, want_num):
-        got_num = self.lib.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-            self.user,
-            depth_idx
-        )
-
-        ok(want_num == got_num,
-            name + " - max_depth_of_depth_idx_is for" + str(depth_idx) + ".")
-
     def solve_board(self, board):
         return self.lib.freecell_solver_user_solve_board(
                 self.user,
@@ -259,3 +243,19 @@ class FC_Solve_Suite(FC_Solve):
     def flare_plan_item_is_checkpoint(self, name, item_idx):
         # TEST:$flare_plan_item_is_checkpoint++;
         self._eq(self._get_plan_type(item_idx), b"CP", name + " - right type")
+
+    def num_by_depth_tests_order_is(self, name, want_num):
+        got_num = self.lib.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+                self.user
+        )
+
+        self._eq(want_num, got_num, name + " - by_depth_tests_order.")
+
+    def by_depth_max_depth_of_depth_idx_is(self, name, depth_idx, want_num):
+        got_num = self.lib.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+            self.user,
+            depth_idx
+        )
+
+        self._eq(want_num, got_num, "%s - max_depth_of_depth_idx_is for %d." %
+                 (name, depth_idx))

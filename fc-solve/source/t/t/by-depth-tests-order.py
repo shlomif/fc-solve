@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
-from TAP.Simple import plan
+from FC_Solve import FC_Solve_Suite
+import unittest
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
-from FC_Solve import FC_Solve
 
 
-class MyTests:
+class MyTests(unittest.TestCase):
     def test_1(self):
         testname = "test_1"
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line(
@@ -26,7 +26,7 @@ class MyTests:
     def test_2(self):
         testname = "test_1"
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line(
@@ -43,11 +43,9 @@ class MyTests:
         # TEST
         fcs.by_depth_max_depth_of_depth_idx_is(testname, 1, 50)
 
-    def main(self):
-        self.test_1()
-        self.test_2()
-
 
 if __name__ == "__main__":
-    plan(7)
-    MyTests().main()
+    # plan(7)
+    from pycotap import TAPTestRunner
+    suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
+    TAPTestRunner().run(suite)
