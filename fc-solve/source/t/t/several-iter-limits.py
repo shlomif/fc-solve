@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 
-from TAP.Simple import ok, plan
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
-from FC_Solve import FC_Solve
+from FC_Solve import FC_Solve_Suite
 import re
 import os
+import unittest
 
 
-class MyTests:
+class MyTests(unittest.TestCase):
+    def _eq(self, x, y, blurb):
+        return self.assertEqual(x, y, blurb)
+
     def test_resume_solution(self):
         testname = "With RunIndef - "
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         limit = 10
         fcs.limit_iterations(limit)
@@ -39,16 +42,16 @@ AH 5S 6S AD 8H JD
             ret = fcs.resume_solution()
 
         # TEST
-        ok(ret == 0, testname + "State was successfully solved.")
+        self._eq(ret, 0, testname + "State was successfully solved.")
 
         # TEST
-        ok(iters_count_ok == 1,
-           testname + "Iters count was OK throughout the solution.")
+        self._eq(iters_count_ok, 1,
+                 testname + "Iters count was OK throughout the solution.")
 
     def test_num_states_in_collection_after_recycle(self):
         testname = "NumStatesInCol-After-Recycle - "
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         # MS-Freeceel board No. 24.
         fcs.solve_board(
@@ -64,21 +67,21 @@ AH 5S 6S AD 8H JD
         )
 
         # TEST
-        ok(fcs.get_num_times() == 137, testname + "Get num times is OK.")
+        self._eq(fcs.get_num_times(), 137, testname + "Get num times is OK.")
 
         # TEST
-        ok(fcs.get_num_states_in_col() == 191,
-           testname + "Num-states-in-collection is OK.")
+        self._eq(fcs.get_num_states_in_col(), 191,
+                 testname + "Num-states-in-collection is OK.")
 
         fcs.recycle()
 
         # TEST
-        ok(fcs.get_num_times() == 0,
-           testname + "Get num times immediately after recycle.")
+        self._eq(fcs.get_num_times(), 0,
+                 testname + "Get num times immediately after recycle.")
 
         # TEST
-        ok(fcs.get_num_states_in_col() == 0,
-           testname + "Num-states-in-collection immediately after recycle.")
+        self._eq(fcs.get_num_states_in_col(), 0, testname +
+                 "Num-states-in-collection immediately after recycle.")
 
         # MS-Freeceel board No. 24.
         fcs.solve_board(
@@ -94,12 +97,12 @@ AH 5S 6S AD 8H JD
         )
 
         # TEST
-        ok(fcs.get_num_times() == 137,
-           testname + "Get num times after recycle.")
+        self._eq(fcs.get_num_times(), 137, testname +
+                 "Get num times after recycle.")
 
         # TEST
-        ok(fcs.get_num_states_in_col() == 191,
-           testname + "Num-states-in-collection after recycle.")
+        self._eq(fcs.get_num_states_in_col(), 191,
+                 testname + "Num-states-in-collection after recycle.")
 
     def test_num_states_in_collection_after_unsolved(self):
         testname = "NumStatesInCol-After-unsolved - "
@@ -109,13 +112,9 @@ AH 5S 6S AD 8H JD
             tags_str = ''
 
         if re.search(r'\bfc_only\b', tags_str):
-            for idx in range(0, 3):
-                ok(True,
-                   'skipping because not-freecell test on a freecell build',
-                   skip='fc_only')
             return
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line("bakers_game", ['-g', 'bakers_game'])
@@ -134,16 +133,16 @@ JH JD 3C KS 2C 8C
         )
 
         # TEST
-        ok(fcs.get_num_times() == 3436, testname + "Get num times is OK.")
+        self._eq(fcs.get_num_times(), 3436, testname + "Get num times is OK.")
 
         # TEST
-        ok(fcs.get_num_states_in_col() == 3436,
-           testname + "Num-states-in-collection is OK.")
+        self._eq(fcs.get_num_states_in_col(), 3436,
+                 testname + "Num-states-in-collection is OK.")
 
     def test_resume_solution_with_flares(self):
         testname = "-l ve on iterative limiting - "
 
-        fcs = FC_Solve()
+        fcs = FC_Solve_Suite(self)
 
         step = 1000
         hard_limit = 100000
@@ -176,19 +175,15 @@ AC 4C 8S 2D QC JS
             ret = fcs.resume_solution()
 
         # TEST
-        ok(ret == 0, testname + "State was successfully solved.")
+        self._eq(ret, 0, testname + "State was successfully solved.")
 
         # TEST
-        ok(iters_count_ok == 1,
-           testname + "Iters count was OK throughout the solution.")
-
-    def main(self):
-        self.test_resume_solution()
-        self.test_num_states_in_collection_after_recycle()
-        self.test_num_states_in_collection_after_unsolved()
-        self.test_resume_solution_with_flares()
+        self._eq(iters_count_ok, 1,
+                 testname + "Iters count was OK throughout the solution.")
 
 
 if __name__ == "__main__":
-    plan(14)
-    MyTests().main()
+    # plan(14)
+    from pycotap import TAPTestRunner
+    suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
+    TAPTestRunner().run(suite)
