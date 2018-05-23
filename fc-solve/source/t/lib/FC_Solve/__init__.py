@@ -1,4 +1,3 @@
-from TAP.Simple import diag, is_ok, ok
 from cffi import FFI
 import platform
 
@@ -81,13 +80,6 @@ void freecell_solver_user_recycle(void *api_instance);
 
         return (last_arg[0], len(cmd_line_args))
 
-    # TEST:$input_cmd_line=0;
-    def input_cmd_line(self, name, cmd_line_args):
-        ret = self.input_cmd_line__generic(cmd_line_args)
-        # TEST:$input_cmd_line++;
-        is_ok(ret[0], ret[1],
-              name + " - assign weights - processed two arguments")
-
     # TEST:$set_befs=0;
     def _set_befs_weights(self, name, weights_s):
         # TEST:$set_befs=$set_befs+$input_cmd_line;
@@ -95,27 +87,6 @@ void freecell_solver_user_recycle(void *api_instance);
 
     def __destroy__(self):
         self.ffi.freecell_solver_user_free(self.user)
-
-    # TEST:$test_befs=0;
-    def test_befs_weights(self, name, string, weights):
-
-        # TEST:$test_befs=$test_befs+$set_befs;
-        self._set_befs_weights(name, string)
-
-        for idx in range(0, self.NUM_BEFS_WEIGHTS):
-            top = bottom = weights[idx]
-            # floating-point values.
-            if (top != int(top) + 0.0):
-                top = top + 1e-6
-                bottom = bottom - 1e-6
-
-            have = self.lib.fc_solve_user_INTERNAL_get_befs_weight(
-                    self.user, idx)
-            # TEST:$test_befs=$test_befs+$num_befs_weights;
-            if (not ok((bottom <= have) and (have <= top),
-                       name + " - Testing Weight No. " + str(idx))):
-                diag("Should be: [" + str(bottom) + "," + str(top) + "] ; " +
-                     "Is: " + str(have))
 
     def _get_plan_type(self, item_idx):
         return self.ffi.string(
@@ -259,3 +230,24 @@ class FC_Solve_Suite(FC_Solve):
 
         self._eq(want_num, got_num, "%s - max_depth_of_depth_idx_is for %d." %
                  (name, depth_idx))
+
+    # TEST:$test_befs=0;
+    def test_befs_weights(self, name, string, weights):
+        # TEST:$test_befs=$test_befs+$set_befs;
+        self._set_befs_weights(name, string)
+
+        for idx in range(0, self.NUM_BEFS_WEIGHTS):
+            top = bottom = weights[idx]
+            # floating-point values.
+            if (top != int(top) + 0.0):
+                top = top + 1e-6
+                bottom = bottom - 1e-6
+
+            have = self.lib.fc_solve_user_INTERNAL_get_befs_weight(
+                    self.user, idx)
+            # TEST:$test_befs=$test_befs+$num_befs_weights;
+            self.unittest.assertTrue(
+                (bottom <= have) and (have <= top),
+                name + " - Testing Weight No. " + str(idx) +
+                "Should be: [" + str(bottom) + "," + str(top) + "] ; " +
+                "Is: " + str(have))
