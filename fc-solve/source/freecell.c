@@ -158,6 +158,7 @@ static inline void sort_derived_states(
  * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 {
+#if MAX_NUM_FREECELLS > 0
     tests_define_accessors_no_stacks(tests_state_context_val);
 
 #ifndef HARD_CODED_NUM_FREECELLS
@@ -194,6 +195,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
             break;
         }
     }
+#endif
 }
 
 typedef struct
@@ -228,6 +230,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
 #endif
 
     const_AUTO(new_key, kv_ptr_new_state->key);
+#if MAX_NUM_FREECELLS > 0
     {
         int dest_fc_idx = 0;
 
@@ -268,6 +271,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
             ++dest_fc_idx;
         }
     }
+#endif
 
     while ((*col_num_cards) == 0)
     {
@@ -326,6 +330,7 @@ static inline fcs_game_limit calc_num_vacant_slots(
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
+#if MAX_NUM_FREECELLS > 0
     MOVE_FUNCS__define_common();
     HARD__SET_GAME_PARAMS();
 
@@ -418,6 +423,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     }
 
     sort_derived_states(derived_states_list, derived_start_idx);
+#endif
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
@@ -545,13 +551,16 @@ DECLARE_MOVE_FUNCTION(
 
                 fcs_card moved_card;
 #define s_idx last_dest.src_idx
+#if MAX_NUM_FREECELLS > 0
                 if (last_dest.is_col)
+#endif
                 {
                     var_AUTO(new_source_col,
                         fcs_state_get_col(new_state_key, s_idx));
                     fcs_col_pop_card(new_source_col, moved_card);
                     fcs_push_1card_seq(moves, s_idx, ds);
                 }
+#if MAX_NUM_FREECELLS > 0
                 else
                 {
                     moved_card = fcs_freecell_card(new_state_key, s_idx);
@@ -559,6 +568,7 @@ DECLARE_MOVE_FUNCTION(
                     fcs_move_stack_non_seq_push(
                         moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, s_idx, ds);
                 }
+#endif
 #undef s_idx
                 fcs_state_push(&new_state_key, ds, moved_card);
 
@@ -839,6 +849,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 /* Let's try to put cards that occupy freecells on an empty stack */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 {
+#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     if (IS_FILLED_BY_NONE())
@@ -873,6 +884,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
             moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, empty_stack_idx);
         sfs_check_state_end();
     }
+#endif
 }
 
 /* Let's try to put cards that occupy freecells on an empty stack and
@@ -881,6 +893,7 @@ https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/584
  * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
 {
+#if MAX_NUM_FREECELLS > 0
     MOVE_FUNCS__define_common();
     if (IS_FILLED_BY_NONE())
     {
@@ -975,6 +988,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
             }
         }
     }
+#endif
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
@@ -1112,6 +1126,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 {
+#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     if (IS_FILLED_BY_NONE())
@@ -1168,6 +1183,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 
         sfs_check_state_end();
     }
+#endif
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
@@ -1267,6 +1283,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 {
+#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     FC__STACKS__SET_PARAMS();
@@ -1311,10 +1328,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 
         sfs_check_state_end();
     }
+#endif
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 {
+#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_seqs_built_by();
     FC__STACKS__SET_PARAMS();
@@ -1352,10 +1371,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
             sfs_check_state_end();
         }
     }
+#endif
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 {
+#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     FC__STACKS__SET_PARAMS();
@@ -1391,6 +1412,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
         sfs_check_state_end();
     }
+#endif
 }
 
 #define CALC_FOUNDATION_TO_PUT_CARD_ON()                                       \
@@ -1479,6 +1501,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
                 FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx, dest_foundation);
         }
 
+#if MAX_NUM_FREECELLS > 0
         /* Now check the same for the free cells */
         for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
@@ -1499,6 +1522,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
             fcs_move_stack_non_seq_push(moves,
                 FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION, fc, dest_foundation);
         }
+#endif
         if (num_cards_moved)
         {
             cards_were_moved = TRUE;

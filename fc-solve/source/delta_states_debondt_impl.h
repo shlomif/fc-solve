@@ -189,6 +189,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
         }
     }
 
+#if MAX_NUM_FREECELLS > 0
     for (int fc_idx = 0; fc_idx < self->num_freecells; ++fc_idx)
     {
         const fcs_card card = fcs_freecell_card(*derived, fc_idx);
@@ -198,6 +199,7 @@ static void fc_solve_debondt_delta_stater_encode_composite(
             SET_CARD_STATE(card, OPT_FREECELL);
         }
     }
+#endif
 
     if (IS_BAKERS_DOZEN())
     {
@@ -377,7 +379,9 @@ static void fc_solve_debondt_delta_stater_decode(
     const int orig_pos_opt =
         (IS_BAKERS_DOZEN() ? OPT__BAKERS_DOZEN__ORIG_POS : OPT_ORIG_POS);
 
+#if MAX_NUM_FREECELLS > 0
     const_SLOT(num_freecells, self);
+#endif
 
     bool orig_top_most_cards[CARD_ARRAY_LEN] = {FALSE};
     for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
@@ -404,7 +408,9 @@ static void fc_solve_debondt_delta_stater_decode(
         }
     }
 
+#if MAX_NUM_FREECELLS > 0
     int next_freecell_idx = 0;
+#endif
     int next_new_top_most_cards = 0;
     const int top_rank_for_iter = get_top_rank_for_iter(local_variant);
     for (int rank = 1; rank <= top_rank_for_iter; ++rank)
@@ -453,9 +459,11 @@ static void fc_solve_debondt_delta_stater_decode(
                     {
                         if (item_opt == OPT_FREECELL)
                         {
+#if MAX_NUM_FREECELLS > 0
                             fcs_put_card_in_freecell(
                                 *ret, next_freecell_idx, card);
                             ++next_freecell_idx;
+#endif
                         }
                         else if (item_opt == OPT_TOPMOST)
                         {
@@ -471,10 +479,12 @@ static void fc_solve_debondt_delta_stater_decode(
         }
     }
 
+#if MAX_NUM_FREECELLS > 0
     for (; next_freecell_idx < num_freecells; ++next_freecell_idx)
     {
         fcs_empty_freecell(*ret, next_freecell_idx);
     }
+#endif
 
     for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
     {

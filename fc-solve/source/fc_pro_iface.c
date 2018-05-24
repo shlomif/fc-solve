@@ -79,6 +79,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
                 goto loop_start;
             }
         }
+#if MAX_NUM_FREECELLS > 0
         for (int j = 0; j < num_freecells; j++)
         {
             const fcs_card card = fcs_freecell_card(pos, j);
@@ -89,6 +90,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
                 goto loop_start;
             }
         }
+#endif
         const_AUTO(move, *(++next_move_ptr));
 
         switch (fcs_move_get_type(move))
@@ -112,6 +114,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
         break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
+#if MAX_NUM_FREECELLS > 0
         {
             const int src = fcs_move_get_src_freecell(move);
             if (!fcs_freecell_is_empty(pos, src))
@@ -122,9 +125,11 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
                 pos, fcs_card_suit(fcs_freecell_card(pos, src)));
             fcs_empty_freecell(pos, src);
         }
+#endif
         break;
 
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
+#if MAX_NUM_FREECELLS > 0
         {
             const_AUTO(src, fcs_move_get_src_freecell(move));
             const_AUTO(dest, fcs_move_get_dest_stack(move));
@@ -138,9 +143,11 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
             }
             ++virtual_stack_len[dest];
         }
+#endif
         break;
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
+#if MAX_NUM_FREECELLS > 0
         {
             const int src = fcs_move_get_src_stack(move);
             const int dest = fcs_move_get_dest_freecell(move);
@@ -158,6 +165,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
             }
             --virtual_stack_len[src];
         }
+#endif
         break;
 
         case FCS_MOVE_TYPE_STACK_TO_STACK:

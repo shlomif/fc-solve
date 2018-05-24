@@ -105,7 +105,9 @@ typedef char fcs_locs_type;
 typedef struct
 {
     fcs_cards_column columns[MAX_NUM_STACKS];
+#if MAX_NUM_FREECELLS > 0
     fcs_card freecells[MAX_NUM_FREECELLS];
+#endif
     fcs_state_foundation foundations[MAX_NUM_DECKS * 4];
 } fcs_state;
 
@@ -698,6 +700,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
 
         first_line = FALSE;
 
+#if MAX_NUM_FREECELLS > 0
         const_AUTO(new_str, FCS_PARSE_try_prefix(str,
                                 "Freecells:", fc_solve_freecells_prefixes));
         if (new_str)
@@ -750,6 +753,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
             --s;
             continue;
         }
+#endif
 
         const_AUTO(new_str2, FCS_PARSE_try_prefix(str, "Foundations:",
                                  fc_solve_foundations_prefixes));
@@ -885,7 +889,8 @@ static inline state_validity_ret fc_solve_check_state_validity(
         }
     }
 
-    /* Mark the card_counts in the freecells */
+#if MAX_NUM_FREECELLS > 0
+    // Mark the card_counts in the freecells
     for (size_t f = 0; f < FREECELLS_NUM__VAL; f++)
     {
         const fcs_card card = fcs_freecell_card(*state, f);
@@ -894,6 +899,7 @@ static inline state_validity_ret fc_solve_check_state_validity(
             card_counts[fcs_card_suit(card)][fcs_card_rank(card)]++;
         }
     }
+#endif
 
     /* Mark the card_counts in the columns */
     for (size_t s = 0; s < STACKS_NUM__VAL; s++)

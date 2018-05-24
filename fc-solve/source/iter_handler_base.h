@@ -21,7 +21,12 @@ static inline void my_iter_handler_base(const fcs_int_limit_t iter_num,
         (long)freecell_solver_user_get_num_states_in_collection_long(
             user_instance),
 #endif
-        freecell_solver_user_get_current_soft_thread_name(user_instance));
+#ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+        "scan"
+#else
+        freecell_solver_user_get_current_soft_thread_name(user_instance)
+#endif
+        );
     if (dc->display_parent_iter_num)
     {
         printf("Parent Iteration: %li\n", (long)parent_iter_num);

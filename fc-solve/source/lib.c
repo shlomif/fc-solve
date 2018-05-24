@@ -2427,7 +2427,7 @@ void DLLEXPORT freecell_solver_user_limit_iterations(
 void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
     void *const api_instance, const int max_iters)
 {
-    ((fcs_user *)api_instance)->current_instance->limit = max_iters;
+    curr_inst((fcs_user *)api_instance)->limit = max_iters;
 }
 #endif
 #endif

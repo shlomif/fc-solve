@@ -35,7 +35,9 @@ static inline int fcs_stack_compare(const void *s1, const void *s2)
 #define COPY_STACK(d, s) (d = s)
 
 #endif
+#if MAX_NUM_FREECELLS > 0
 #define GET_FREECELL(c) (fcs_freecell_card(*state_key, (c)))
+#endif
 
 void fc_solve_canonize_state(
     fcs_state *const ptr_state_key FREECELLS_AND_STACKS_ARGS())
@@ -59,8 +61,8 @@ void fc_solve_canonize_state(
         }
     }
 
-    /* Insertion-sort the freecells */
-
+#if MAX_NUM_FREECELLS > 0
+    // Insertion-sort the freecells
     for (size_t b = 1; b < FREECELLS_NUM__VAL; b++)
     {
         size_t c = b;
@@ -75,6 +77,7 @@ void fc_solve_canonize_state(
             --c;
         }
     }
+#endif
 }
 #undef state_key
 

@@ -252,7 +252,8 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
             }
         }
 
-        /* Now check the same for the free cells */
+#if MAX_NUM_FREECELLS > 0
+        // Now check the same for the free cells
         for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
             const fcs_card card = fcs_freecell_card(the_state, fc);
@@ -275,6 +276,7 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
                 }
             }
         }
+#endif
     } while (num_cards_moved);
 
     /* modify moves_seq in-place. */
@@ -408,8 +410,9 @@ static inline bool instance_solver_thread_calc_derived_states(
         }
     }
 
+#if MAX_NUM_FREECELLS > 0
     int empty_fc_idx = -1;
-    /* Move freecell cards to foundations. */
+    // Move freecell cards to foundations.
     for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
@@ -437,6 +440,7 @@ static inline bool instance_solver_thread_calc_derived_states(
             break;
         }
     }
+#endif
 
     const int cards_num_min_limit =
         ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 1 : 0);
@@ -470,7 +474,8 @@ static inline bool instance_solver_thread_calc_derived_states(
         }
     }
 
-    /* Move freecell card on top of a parent */
+#if MAX_NUM_FREECELLS > 0
+    // Move freecell card on top of a parent
     for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
@@ -494,6 +499,7 @@ static inline bool instance_solver_thread_calc_derived_states(
             COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx), COL2MOVE(ds), TRUE, card)
         }
     }
+#endif
 
     if ((local_variant != FCS_DBM_VARIANT_BAKERS_DOZEN) &&
         (empty_stack_idx >= 0))
@@ -522,6 +528,7 @@ static inline bool instance_solver_thread_calc_derived_states(
                 FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
 
+#if MAX_NUM_FREECELLS > 0
         /* Freecell card -> Empty Stack. */
         for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
         {
@@ -539,8 +546,10 @@ static inline bool instance_solver_thread_calc_derived_states(
             COMMIT_NEW_STATE(
                 FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx), TRUE, card);
         }
+#endif
     }
 
+#if MAX_NUM_FREECELLS > 0
     if (empty_fc_idx >= 0)
     {
         /* Stack Card to Empty Freecell */
@@ -563,6 +572,7 @@ static inline bool instance_solver_thread_calc_derived_states(
                 FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
     }
+#endif
     /* Perform Horne's Prune on all the states,
      * or just set their num irreversible moves counts.
      * */

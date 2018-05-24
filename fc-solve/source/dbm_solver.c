@@ -326,8 +326,12 @@ static bool populate_instance_with_intermediate_input_line(
                              "foundation.",
                     line_num);
             }
+#if MAX_NUM_FREECELLS > 0
             src_card = fcs_freecell_card(the_state, src);
             fcs_empty_freecell(the_state, src);
+#else
+            abort();
+#endif
         }
         /* Apply src_card to dest. */
         if (dest < 8)
@@ -339,7 +343,9 @@ static bool populate_instance_with_intermediate_input_line(
             dest -= 8;
             if (dest < 4)
             {
+#if MAX_NUM_FREECELLS > 0
                 fcs_put_card_in_freecell(the_state, dest, src_card);
+#endif
             }
             else
             {

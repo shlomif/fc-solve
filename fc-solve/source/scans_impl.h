@@ -154,6 +154,7 @@ static inline void fcs_trace(const char *const format, ...)
 static inline fcs_game_limit count_num_vacant_freecells(
     const fcs_game_limit freecells_num, const fcs_state *const state_ptr)
 {
+#if MAX_NUM_FREECELLS > 0
     fcs_game_limit num_vacant_freecells = 0;
     for (int i = 0; i < freecells_num; i++)
     {
@@ -164,6 +165,9 @@ static inline fcs_game_limit count_num_vacant_freecells(
     }
 
     return num_vacant_freecells;
+#else
+    return 0;
+#endif
 }
 
 static inline pq_rating befs_rate_state(
