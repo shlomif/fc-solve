@@ -1584,6 +1584,9 @@ static inline fc_solve_solve_process_ret_t do_patsolve(
 
     case FCS_PATS__FAIL:
         return FCS_STATE_SUSPEND_PROCESS;
+
+    default:
+        __builtin_unreachable();
     }
 }
 #endif
@@ -1602,6 +1605,9 @@ static inline int solve(fcs_soft_thread *const soft_thread)
     case FCS_SUPER_METHOD_PATSOLVE:
         return do_patsolve(soft_thread);
 #endif
+
+    default:
+        __builtin_unreachable();
     }
 }
 
@@ -4516,6 +4522,8 @@ fc_solve_user_INTERNAL_get_flares_plan_item_type(
         return "Run";
     case FLARES_PLAN_CHECKPOINT:
         return "CP";
+    default:
+        __builtin_unreachable();
     }
 #else
     return "";
