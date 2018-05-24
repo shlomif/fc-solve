@@ -294,7 +294,9 @@ typedef struct
      * function.
      * */
     fcs_locs_type stack_locs[MAX_NUM_STACKS];
+#if MAX_NUM_FREECELLS > 0
     fcs_locs_type fc_locs[MAX_NUM_FREECELLS];
+#endif
 } fcs_state_locs_struct;
 
 static inline void fc_solve_init_locs(fcs_state_locs_struct *const locs)
@@ -303,10 +305,12 @@ static inline void fc_solve_init_locs(fcs_state_locs_struct *const locs)
     {
         locs->stack_locs[i] = (fcs_locs_type)i;
     }
+#if MAX_NUM_FREECELLS > 0
     for (int i = 0; i < MAX_NUM_FREECELLS; ++i)
     {
         locs->fc_locs[i] = (fcs_locs_type)i;
     }
+#endif
 }
 
 typedef struct fcs_state_extra_info_struct fcs_state_extra_info;

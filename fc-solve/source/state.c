@@ -83,7 +83,7 @@ void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
 #define state_key (ptr_state_key)
     fcs_state_locs_struct *const locs FREECELLS_AND_STACKS_ARGS())
 {
-    /* Insertion-sort the columns */
+    // Insertion-sort the columns
     for (size_t b = 1; b < STACKS_NUM__VAL; b++)
     {
         size_t c = b;
@@ -104,8 +104,8 @@ void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
         }
     }
 
-    /* Insertion-sort the freecells */
-
+#if MAX_NUM_FREECELLS > 0
+    // Insertion-sort the freecells
     for (size_t b = 1; b < FREECELLS_NUM__VAL; b++)
     {
         size_t c = b;
@@ -124,6 +124,7 @@ void fc_solve_canonize_state_with_locs(fcs_state *const ptr_state_key,
             --c;
         }
     }
+#endif
 }
 #undef state_key
 #endif
@@ -144,6 +145,7 @@ fc_solve_state_compare_with_context(const void *const s1, const void *const s2,
 
 #ifdef FCS_WITH_MOVES
 #include "rank2str.h"
+#if MAX_NUM_FREECELLS > 0
 static inline void render_freecell_card(const fcs_card card,
     char *const freecell PASS_T(const bool display_10_as_t))
 {
@@ -156,6 +158,7 @@ static inline void render_freecell_card(const fcs_card card,
         fc_solve_card_stringify(card, freecell PASS_T(display_10_as_t));
     }
 }
+#endif
 
 void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
     const fcs_state_locs_struct *const state_locs
@@ -172,7 +175,9 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
 #define append_char(c) *(output_s++) = (c)
 
     size_t stack_locs[MAX_NUM_STACKS];
+#if MAX_NUM_FREECELLS > 0
     size_t freecell_locs[MAX_NUM_FREECELLS];
+#endif
 
     if (canonized_order_output)
     {
@@ -180,10 +185,12 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
         {
             stack_locs[i] = i;
         }
+#if MAX_NUM_FREECELLS > 0
         for (size_t i = 0; i < FREECELLS_NUM__VAL; i++)
         {
             freecell_locs[i] = i;
         }
+#endif
     }
     else
     {
@@ -191,10 +198,12 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
         {
             stack_locs[(int)(state_locs->stack_locs[i])] = i;
         }
+#if MAX_NUM_FREECELLS > 0
         for (size_t i = 0; i < FREECELLS_NUM__VAL; i++)
         {
             freecell_locs[(int)(state_locs->fc_locs[i])] = i;
         }
+#endif
     }
 
     for (size_t i = 0; i < (DECKS_NUM__VAL << 2); i++)
@@ -214,8 +223,9 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
              i++)
         {
             char dashes_s[128];
-            char *dashes_ptr = dashes_s;
             char freecells_s[128];
+#if MAX_NUM_FREECELLS > 0
+            char *dashes_ptr = dashes_s;
             char *freecells_s_end = freecells_s;
             const_AUTO(lim, min(FREECELLS_NUM__VAL - i * 4, 4));
             for (int b = 0; b < lim; b++)
@@ -228,6 +238,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
                 strcpy(dashes_ptr, "--- ");
                 dashes_ptr = strchr(dashes_ptr, '\0');
             }
+#endif
             if (i < DECKS_NUM__VAL)
             {
                 fc_solve_append_string_sprintf(
@@ -302,6 +313,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
 
         fc_solve_append_string_sprintf("%s", "\nFreecells:");
 
+#if MAX_NUM_FREECELLS > 0
 #ifdef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
         int max_freecell_idx = -1;
         for (int i = FREECELLS_NUM__VAL - 1; i >= 0; i--)
@@ -331,6 +343,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
                 append_char(' ');
             }
         }
+#endif
         append_char('\n');
 
         for (size_t s = 0; s < STACKS_NUM__VAL; ++s)

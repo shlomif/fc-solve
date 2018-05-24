@@ -158,8 +158,10 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack *const moves,
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
+#if MAX_NUM_FREECELLS > 0
             fcs_int_move_set_src(
                 out_move, locs->fc_locs[(int)fcs_int_move_get_src(in_move)]);
+#endif
             break;
         default:
             break;
@@ -175,8 +177,10 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack *const moves,
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
+#if MAX_NUM_FREECELLS > 0
             fcs_int_move_set_dest(
                 out_move, locs->fc_locs[(int)fcs_int_move_get_dest(in_move)]);
+#endif
             break;
 
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
