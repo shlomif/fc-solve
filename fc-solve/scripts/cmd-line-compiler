@@ -7,7 +7,7 @@ BEGIN
 {
     if ( !@ARGV or $ARGV[0] ne 'compile' )
     {
-        print <<'EOF'
+        print <<'EOF';
 To run do:
 export FCS_PATH="`pwd`" FCS_SRC_PATH="`pwd`/../source"
 perl ../scripts/cmd-line-compiler compile
@@ -49,11 +49,12 @@ sub compile_cmd_line
 #define freecell_solver_user_set_soft_thread_name(st, n)
 static inline void my_init_instance(void *const instance)
 {
+    FCS__DECL_ERR_PTR(fcs_user_errstr);
 EOF
 
     my %names;
     my $soft_thread_idx = 0;
-    my %one_param = (
+    my %one_param       = (
         '-dto' => {
             f => 'freecell_solver_user_set_depth_tests_order',
             p => sub {
@@ -96,7 +97,11 @@ EOF
         },
         '--st-name' => {
             f => 'freecell_solver_user_set_soft_thread_name',
-            p => sub { my $name = shift; $names{$name} = $soft_thread_idx; return qq#"$name"#; },
+            p => sub {
+                my $name = shift;
+                $names{$name} = $soft_thread_idx;
+                return qq#"$name"#;
+            },
         },
         '-to' => {
             f => 'freecell_solver_user_set_depth_tests_order',
@@ -115,11 +120,12 @@ EOF
             my $param = $expanded->[ ++$i ];
             $out .= "$rec->{f}(instance," . $rec->{p}->($param) . ");\n";
         }
-        elsif ( $s eq '--prelude') {
+        elsif ( $s eq '--prelude' )
+        {
             my $param = $expanded->[ ++$i ];
-            my $f = 'fc_solve_user_set_ht_compiled_prelude';
-            my @pre = map { [ split/\@/, $_]} split /,/, $param;
-            $out .= <<"EOF"
+            my $f     = 'fc_solve_user_set_ht_compiled_prelude';
+            my @pre   = map { [ split /\@/, $_ ] } split /,/, $param;
+            $out .= <<"EOF";
 {
     static const fc_solve_prelude_item prelude[@{[scalar @pre]}] = {@{[join ",", map { "{.quota = $_->[0], .scan_idx = " . $names{$_->[1]} . '}' } @pre]}};
     $f(instance, @{[scalar @pre]}, prelude);

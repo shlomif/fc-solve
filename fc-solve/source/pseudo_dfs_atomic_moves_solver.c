@@ -105,7 +105,7 @@ static inline void instance__inspect_new_state(
     {
         instance->stack =
             SREALLOC(instance->stack, ++(instance->max_stack_depth));
-        printf("Increasing to %lld\n", instance->max_stack_depth);
+        printf("Increasing to %lld\n", (long long)instance->max_stack_depth);
         fflush(stdout);
         instance->stack[max_depth] = (pseudo_dfs_stack_item){
             .next_states = NULL, .max_count_next_states = 0};

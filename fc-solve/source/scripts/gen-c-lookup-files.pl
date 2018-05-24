@@ -82,7 +82,7 @@ path('board_gen_lookup1.h')->spew_utf8(
                 ( $col * 7 - ( ( $col > 4 ) ? ( $col - 4 ) : 0 ) + ( $i >> 3 ) )
         } 0 .. ( 52 - 1 )
     ),
-    '};'
+    "};\n"
 );
 
 sub emit

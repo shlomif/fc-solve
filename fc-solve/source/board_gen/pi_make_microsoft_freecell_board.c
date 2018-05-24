@@ -43,9 +43,9 @@ int main(int argc, char *argv[])
     }
     else
     {
-        const char *p = s-1;
+        const char *p = s;
         char c;
-        while ((c = *(++p)) != '\0')
+        while ((c = *(p++)) != '\0')
         {
             if (c == 'T')
             {
