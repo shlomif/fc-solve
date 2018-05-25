@@ -633,13 +633,15 @@ static inline void fc_solve_state_init_proto(
 #ifdef FCS_BREAK_BACKWARD_COMPAT_1
 #define FCS_PARSE_try_prefix(str, p, p_s) try_str_prefix(str, p)
 #else
+#if MAX_NUM_FREECELLS > 0
 static const char *const fc_solve_freecells_prefixes[] = {
     "FC:", "Freecells:", "Freecell:", NULL};
+#endif
 
 static const char *const fc_solve_foundations_prefixes[] = {"Decks:", "Deck:",
     "Founds:", "Foundations:", "Foundation:", "Found:", NULL};
 
-static inline const char *fc_solve__try_prefixes(
+static inline __attribute__((pure)) const char *fc_solve__try_prefixes(
     const char *const str, const char *const *const prefixes)
 {
     for (const char *const *prefix = prefixes; (*prefix); ++prefix)

@@ -141,7 +141,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
     # "dbm-kaztree-compare-records-test.c" build.
     ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1"
         "-I${CMAKE_CURRENT_SOURCE_DIR}/.."
-        "-I${CMAKE_CURRENT_SOURCE_DIR}/../libavl/"
+        "-I${CMAKE_CURRENT_SOURCE_DIR}/../fcs-libavl/"
         )
     TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})
 

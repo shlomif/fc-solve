@@ -153,7 +153,7 @@ static inline __attribute__((format(printf, 1, 2))) void fcs_trace(
 #endif
 
 static inline fcs_game_limit count_num_vacant_freecells(
-    const fcs_game_limit freecells_num, const fcs_state *const state_ptr)
+    const fcs_game_limit freecells_num GCC_UNUSED, const fcs_state *const state_ptr GCC_UNUSED)
 {
 #if MAX_NUM_FREECELLS > 0
     fcs_game_limit num_vacant_freecells = 0;

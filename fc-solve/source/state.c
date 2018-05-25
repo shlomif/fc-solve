@@ -220,10 +220,10 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     if (!parseable_output)
     {
-        int i;
+        size_t i;
         for (i = 0; i < ((FREECELLS_NUM__VAL / 4) +
                             ((FREECELLS_NUM__VAL % 4 == (0)) ? 0 : 1));
-             i++)
+             ++i)
         {
             char dashes_s[128];
             char freecells_s[128];
@@ -231,7 +231,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
             char *dashes_ptr = dashes_s;
             char *freecells_s_end = freecells_s;
             const_AUTO(lim, min(FREECELLS_NUM__VAL - i * 4, 4));
-            for (int b = 0; b < lim; b++)
+            for (size_t b = 0; b < lim; b++)
             {
                 one_card_buffer freecell;
                 render_freecell_card(
@@ -264,7 +264,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
         append_char('\n');
         append_char('\n');
 
-        for (int s = 0; s < STACKS_NUM__VAL; s++)
+        for (size_t s = 0; s < STACKS_NUM__VAL; s++)
         {
             fc_solve_append_string_sprintf("%s", " -- ");
         }
@@ -282,10 +282,10 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
 
         for (size_t card_idx = 0; card_idx < max_num_cards; ++card_idx)
         {
-            for (int s = 0; s < STACKS_NUM__VAL; s++)
+            for (size_t s = 0; s < STACKS_NUM__VAL; s++)
             {
                 const_AUTO(col, fcs_state_get_col(*state, stack_locs[s]));
-                const int col_len = fcs_col_len(col);
+                const size_t col_len = fcs_col_len(col);
                 if (card_idx >= col_len)
                 {
                     fc_solve_append_string_sprintf("%s", "    ");

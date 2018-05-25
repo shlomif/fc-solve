@@ -1204,7 +1204,7 @@ void fc_solve_kaz_tree_delete_free(dict_t *dict, dnode_t *node)
 #endif
 }
 
-dnode_t *fc_solve_kaz_tree_first(dict_t *dict)
+__attribute__((pure)) dnode_t * fc_solve_kaz_tree_first(dict_t *dict)
 {
     dnode_t *nil = dict_nil(dict), *root = dict_root(dict), *left;
 
@@ -1245,7 +1245,7 @@ dnode_t *dict_last(dict_t *dict)
  */
 #endif
 
-dnode_t *fc_solve_kaz_tree_next(dict_t *dict, dnode_t *curr)
+__attribute__((pure)) dnode_t *fc_solve_kaz_tree_next(dict_t *dict, dnode_t *curr)
 {
     dnode_t *nil = dict_nil(dict), *parent, *left;
 

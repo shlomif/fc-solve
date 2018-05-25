@@ -697,7 +697,7 @@ struct fc_solve_instance_struct
      * to this hard thread have already finished. If it becomes
      * num_hard_threads the instance terminates.
      * */
-    int num_hard_threads_finished;
+    uint_fast32_t num_hard_threads_finished;
 
 #ifdef FCS_WITH_MOVES
     // The moves for the optimization scan, as specified by the user.
@@ -944,9 +944,9 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     /***********************************************************/
 
 #define DECLARE_MOVE_FUNCTION(name)                                            \
-    extern void name(fcs_soft_thread *const soft_thread,                \
-        fcs_kv_state raw_state_raw,                                          \
-        fcs_derived_states_list *const derived_states_list)
+    extern void name(fcs_soft_thread *const soft_thread GCC_UNUSED,                \
+        fcs_kv_state raw_state_raw GCC_UNUSED,                                          \
+        fcs_derived_states_list *const derived_states_list GCC_UNUSED)
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 static inline bool fcs_get_calc_real_depth(

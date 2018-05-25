@@ -31,7 +31,7 @@
  * */
 typedef const char *lru_side;
 
-extern int fc_solve_compare_lru_cache_keys(const void *const void_a,
+extern int __attribute__((pure)) fc_solve_compare_lru_cache_keys(const void *const void_a,
     const void *const void_b, void *const context GCC_UNUSED)
 {
 #define GET_PARAM(p)                                                           \

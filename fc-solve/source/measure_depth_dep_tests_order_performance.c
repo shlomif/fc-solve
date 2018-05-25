@@ -72,7 +72,9 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     const long long stop_at GCC_UNUSED)
 {
     /* char buffer[2048]; */
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     fcs_int_limit_t iters_limit = 100000;
+#endif
     int max_var_depth_to_check = 100;
     FCS__DECL_ERR_PTR(error_string);
     const char *scan1_to = NULL, *scan2_to = NULL;
@@ -112,7 +114,9 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
         else if ((param = TRY_P("--iters-limit")))
         {
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             iters_limit = (fcs_int_limit_t)atol(param);
+#endif
         }
         else if ((param = TRY_P("--max-var-depth")))
         {

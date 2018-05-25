@@ -3722,8 +3722,8 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_set_game(void *const api_instance,
     const int freecells_num, const int stacks_num, const int decks_num,
-    const int sequences_are_built_by, const int unlimited_sequence_move,
-    const int empty_stacks_fill)
+    const int sequences_are_built_by GCC_UNUSED, const int unlimited_sequence_move GCC_UNUSED,
+    const int empty_stacks_fill GCC_UNUSED)
 {
     if (freecell_solver_user_set_num_freecells(api_instance, freecells_num))
     {
@@ -3770,13 +3770,13 @@ freecell_solver_user_get_num_times_long(void *api_instance)
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-int DLLEXPORT freecell_solver_user_get_num_times(void *const api_instance)
+int DLLEXPORT __attribute__((pure)) freecell_solver_user_get_num_times(void *const api_instance)
 {
     return (int)freecell_solver_user_get_num_times_long(api_instance);
 }
 
-int DLLEXPORT freecell_solver_user_get_limit_iterations(
-    void *const api_instance)
+int DLLEXPORT __attribute__((const)) freecell_solver_user_get_limit_iterations(
+    void *const api_instance GCC_UNUSED)
 {
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     return active_obj(api_instance)->effective_max_num_checked_states;
@@ -3852,7 +3852,7 @@ DLLEXPORT char *freecell_solver_user_move_to_string_w_state(
 #endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-void DLLEXPORT freecell_solver_user_limit_depth(
+void DLLEXPORT __attribute__((const)) freecell_solver_user_limit_depth(
     void *const api_instance GCC_UNUSED, const int max_depth GCC_UNUSED)
 {
 }
@@ -4045,15 +4045,21 @@ void DLLEXPORT freecell_solver_user_set_iter_handler_long(void *api_instance,
 #endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
+#ifndef FCS_WITHOUT_ITER_HANDLER
 void DLLEXPORT freecell_solver_user_set_iter_handler(void *const api_instance,
     const freecell_solver_user_iter_handler_t iter_handler,
     void *const iter_handler_context)
 {
-#ifndef FCS_WITHOUT_ITER_HANDLER
     set_any_iter_handler(
         api_instance, NULL, iter_handler, iter_handler_context);
-#endif
 }
+#else
+void DLLEXPORT __attribute__((const)) freecell_solver_user_set_iter_handler(void *const api_instance GCC_UNUSED,
+    const freecell_solver_user_iter_handler_t iter_handler GCC_UNUSED,
+    void *const iter_handler_context GCC_UNUSED)
+{
+}
+#endif
 #endif
 
 #ifdef FCS_WITH_MOVES
@@ -4122,7 +4128,7 @@ freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-int DLLEXPORT freecell_solver_user_get_num_states_in_collection(
+int DLLEXPORT __attribute__((pure)) freecell_solver_user_get_num_states_in_collection(
     void *const api_instance)
 {
     return (int)freecell_solver_user_get_num_states_in_collection_long(
@@ -4199,7 +4205,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 #endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-int DLLEXPORT freecell_solver_user_get_num_soft_threads_in_instance(
+int DLLEXPORT __attribute__((pure)) freecell_solver_user_get_num_soft_threads_in_instance(
     void *const api_instance)
 {
     return active_obj(api_instance)->next_soft_thread_id;
@@ -4377,7 +4383,7 @@ int DLLEXPORT freecell_solver_user_reset(void *const api_instance)
     return 0;
 }
 
-DLLEXPORT const char *freecell_solver_user_get_lib_version(
+DLLEXPORT const char * __attribute__((const)) freecell_solver_user_get_lib_version(
     void *api_instance GCC_UNUSED)
 {
     return VERSION;
