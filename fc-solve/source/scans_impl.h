@@ -137,7 +137,8 @@ static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state)
 }
 
 #ifdef DEBUG
-static inline void fcs_trace(const char *const format, ...)
+static inline __attribute__((format(printf, 1, 2))) void fcs_trace(
+    const char *const format, ...)
 {
     va_list my_va_list;
     va_start(my_va_list, format);
@@ -456,7 +457,7 @@ static inline bool fcs__should_state_be_pruned(
             (instance->i__num_checked_states)))
 #endif
 static inline fcs_int_limit_t calc_ht_max_num_states(
-    const fcs_instance *const instance,
+    const fcs_instance *const instance GCC_UNUSED,
     const fcs_hard_thread *const hard_thread)
 {
     const_AUTO(a, HT_FIELD(hard_thread, ht__max_num_checked_states));

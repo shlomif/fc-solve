@@ -42,7 +42,7 @@ static inline void fc_solve__assign_dest_stack_and_col_ptr(
 }
 
 static inline void fc_solve__calc_positions_by_rank_data(
-    fcs_soft_thread *const soft_thread,
+    fcs_soft_thread *const soft_thread GCC_UNUSED,
     const fcs_state *const ptr_state_key,
     fcs__positions_by_rank positions_by_rank
 #ifndef FCS_DISABLE_SIMPLE_SIMON
@@ -165,7 +165,10 @@ extern int fc_solve_sfs_check_state_begin(fcs_hard_thread *const,
     fcs_kv_state SFS__PASS_MOVE_STACK(fcs_move_stack *const));
 
 extern fcs_collectible_state *fc_solve_sfs_check_state_end(
-    fcs_soft_thread *, fcs_kv_state,
+    fcs_soft_thread *,
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
+    fcs_kv_state,
+#endif
     fcs_kv_state *FCS__pass_moves(fcs_move_stack *));
 
 #ifdef __cplusplus

@@ -45,7 +45,7 @@ static inline void insert_state(store_type *store, fcs_cache_key *key)
 }
 
 static inline bool lookup_state(store_type *const store,
-    fcs_pseudo_dfs_lru_cache *const cache, fcs_cache_key *const key)
+    fcs_pseudo_dfs_lru_cache *const cache GCC_UNUSED, fcs_cache_key *const key)
 {
     Word_t *PValue;
     JHSG(PValue, *store, key, sizeof(*key));
@@ -294,7 +294,7 @@ static inline void instance__load_coords_from_fh(
 
 #include "read_state.h"
 
-int main(int argc, char *argv[])
+int main(int argc GCC_UNUSED, char *argv[])
 {
     fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     const long delta_limit = 100000;

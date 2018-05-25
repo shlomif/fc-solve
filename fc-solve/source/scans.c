@@ -696,9 +696,12 @@ int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
 }
 
 extern fcs_collectible_state *fc_solve_sfs_check_state_end(
-    fcs_soft_thread *const soft_thread, fcs_kv_state raw_state_raw,
+    fcs_soft_thread *const soft_thread,
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
+    fcs_kv_state raw_state_raw,
+#endif
     fcs_kv_state *const raw_ptr_new_state_raw FCS__pass_moves(
-        fcs_move_stack *const moves))
+        fcs_move_stack *const moves GCC_UNUSED))
 {
     const_SLOT(hard_thread, soft_thread);
     const_AUTO(instance, HT_INSTANCE(hard_thread));

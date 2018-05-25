@@ -182,7 +182,9 @@ static void *instance;
 static fc_solve_display_information_context display_context;
 #ifndef WIN32
 static int command_num = 0;
+#ifndef FCS_WITHOUT_ITER_HANDLER
 static int debug_iter_output_on = FALSE;
+#endif
 
 static void select_signal_handler(int signal_num GCC_UNUSED)
 {

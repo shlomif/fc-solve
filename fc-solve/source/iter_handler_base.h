@@ -9,7 +9,7 @@
  */
 // iter_handler_base.h - define the basic my_iter_handler function.
 static inline void my_iter_handler_base(const fcs_int_limit_t iter_num,
-    const int depth, void *const user_instance,
+    const int depth, void *const user_instance GCC_UNUSED,
     const fc_solve_display_information_context *const dc,
     const fcs_int_limit_t parent_iter_num)
 {

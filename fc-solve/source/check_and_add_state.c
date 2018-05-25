@@ -379,8 +379,8 @@ guint fc_solve_hash_function(gconstpointer key)
  *        5b. Add the new state and return TRUE.
  * */
 
-static inline void upon_new_state(fcs_instance *const instance,
-    fcs_hard_thread *const hard_thread,
+static inline void upon_new_state(fcs_instance *const instance GCC_UNUSED,
+    fcs_hard_thread *const hard_thread GCC_UNUSED,
     fcs_state_extra_info *const new_state_info)
 {
     fcs_collectible_state *const parent_state = new_state_info->parent;

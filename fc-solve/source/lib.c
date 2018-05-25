@@ -444,7 +444,7 @@ static inline void update_initial_cards_val(fcs_instance *const instance)
 // repeatedly.
 static inline void start_process_with_board(fcs_instance *const instance,
     fcs_state_keyval_pair *const init_state,
-    fcs_state_keyval_pair *const initial_non_canonized_state)
+    fcs_state_keyval_pair *const initial_non_canonized_state GCC_UNUSED)
 {
 #ifndef FCS_DISABLE_PATSOLVE
     instance->initial_non_canonized_state = initial_non_canonized_state;
@@ -839,14 +839,14 @@ static void verify_soft_dfs_stack(fcs_soft_thread *soft_thread)
 
 #define TRACE0(message)                                                        \
     fcs_trace("%s. Depth=%ld ; the_soft_Depth=%ld ; Iters=%ld ; "              \
-              "move_func_list_idx=%ld ; move_func_idx=%d ; "                   \
-              "current_state_index=%d ; num_states=%ld\n",                     \
+              "move_func_list_idx=%ld ; move_func_idx=%ld ; "                  \
+              "current_state_index=%ld ; num_states=%ld\n",                    \
         message, (long)DFS_VAR(soft_thread, depth),                            \
         (long)(the_soft_dfs_info - DFS_VAR(soft_thread, soft_dfs_info)),       \
         (long)(instance->i__num_checked_states),                               \
         (long)the_soft_dfs_info->move_func_list_idx,                           \
-        the_soft_dfs_info->move_func_idx,                                      \
-        the_soft_dfs_info->current_state_index,                                \
+        (long)the_soft_dfs_info->move_func_idx,                                \
+        (long)the_soft_dfs_info->current_state_index,                          \
         (long)(derived_list.num_states))
 
 #define VERIFY_STATE_SANITY() verify_state_sanity(&FCS_SCANS_the_state)

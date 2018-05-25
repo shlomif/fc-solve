@@ -27,7 +27,9 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     long long start_board, long long end_board, const long long stop_at)
 {
     long long total_num_iters = 0;
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     bool was_total_iterations_limit_per_board_set = FALSE;
+#endif
     fcs_int_limit_t total_iterations_limit_per_board = -1;
     fcs_binary_output binary_output = INIT_BINARY_OUTPUT;
     const char *solutions_directory = NULL;
@@ -42,8 +44,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
         else if ((param = TRY_P("--total-iterations-limit")))
         {
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             was_total_iterations_limit_per_board_set = TRUE;
             total_iterations_limit_per_board = (fcs_int_limit_t)atol(param);
+#endif
         }
         else if ((param = TRY_P("--solutions-directory")))
         {
@@ -100,14 +104,16 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             print_int(&binary_output, -2);
             break;
 
-#ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
         case FCS_STATE_WAS_SOLVED:
+#ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
             printf("Solved Board No. " FCS_LL_FMT "\n", board_num);
 #endif
-        default:
             print_int(&binary_output,
                 (int)freecell_solver_user_get_num_times_long(instance));
             break;
+
+        default:
+            fc_solve_err("%s", "Unknown ret code!");
         }
 
         if (solutions_directory)

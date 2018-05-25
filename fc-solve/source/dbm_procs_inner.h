@@ -142,7 +142,7 @@ static void trace_solution(dbm_solver_instance *const instance,
 }
 
 static inline void read_state_from_file(
-    const fcs_dbm_variant_type local_variant, const char *const filename,
+    const fcs_dbm_variant_type local_variant GCC_UNUSED, const char *const filename,
     fcs_state_keyval_pair *const init_state IND_BUF_T_PARAM(
         init_indirect_stacks_buffer))
 {

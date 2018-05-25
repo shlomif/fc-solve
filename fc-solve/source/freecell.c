@@ -208,7 +208,7 @@ typedef struct
  * into freeeclls and empty columns
  */
 static inline empty_two_cols_ret empty_two_cols_from_new_state(
-    const fcs_soft_thread *const soft_thread,
+    const fcs_soft_thread *const soft_thread GCC_UNUSED,
     fcs_kv_state *const kv_ptr_new_state SFS__PASS_MOVE_STACK(
         fcs_move_stack *const moves_ptr),
     const int cols_indexes[3], const int num_cards_1, const int num_cards_2)
@@ -1419,7 +1419,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
     calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card)
 
 static inline int_fast32_t calc_foundation_to_put_card_on(
-    const fcs_soft_thread *const soft_thread,
+    const fcs_soft_thread *const soft_thread GCC_UNUSED,
     const fcs_state *const ptr_state, const fcs_card card)
 {
     FCS_ON_NOT_FC_ONLY(const_AUTO(instance, fcs_st_instance(soft_thread)));
@@ -1534,7 +1534,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
         return NULL;
     }
     register const_AUTO(
-        ptr_next_state, fc_solve_sfs_check_state_end(soft_thread, raw_state_raw,
+        ptr_next_state, fc_solve_sfs_check_state_end(soft_thread, sfs_check_state_end__arg
                             &pass_new_state FCS__pass_moves(moves)));
     /*
      * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't

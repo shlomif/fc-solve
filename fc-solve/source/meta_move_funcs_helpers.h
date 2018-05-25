@@ -56,9 +56,15 @@ static inline size_t calc_max_simple_simon_seq_move(const int num_empty_cols)
     fc_solve_sfs_check_state_begin(hard_thread, &pass_new_state,               \
         raw_state_raw SFS__PASS_MOVE_STACK(moves))
 
+#ifdef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
+#define sfs_check_state_end__arg
+#else
+#define sfs_check_state_end__arg raw_state_raw,
+#endif
+
 #define sfs_check_state_end()                                                  \
     fc_solve_derived_states_list_add_state(derived_states_list,                \
-        fc_solve_sfs_check_state_end(soft_thread, raw_state_raw,               \
+        fc_solve_sfs_check_state_end(soft_thread, sfs_check_state_end__arg     \
             &pass_new_state FCS__pass_moves(moves)),                           \
         state_context_value)
 
