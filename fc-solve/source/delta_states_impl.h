@@ -147,6 +147,7 @@ static inline void fc_solve_get_column_encoding_composite(
                                                  : COL_TYPE_ENTIRELY_NON_ORIG);
 }
 
+#if MAX_NUM_FREECELLS > 0
 static inline void fc_solve_get_freecells_encoding(
     fcs_delta_stater *const self, fc_solve_bit_writer *const bit_w)
 {
@@ -180,6 +181,7 @@ static inline void fc_solve_get_freecells_encoding(
                                          : i_card));
     }
 }
+#endif
 
 static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
     int *const cols_indexes, fcs_column_encoding_composite *const cols)
@@ -285,7 +287,9 @@ static void fc_solve_delta_stater_encode_composite(
         }
     }
 
+#if MAX_NUM_FREECELLS > 0
     fc_solve_get_freecells_encoding(self, bit_w);
+#endif
     for (size_t i = 0; i < num_columns; ++i)
     {
         const fcs_column_encoding_composite *const col_enc =
@@ -310,12 +314,13 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
         foundations[fcs_card_suit(card)] = fcs_card_rank(card);                \
     }
 
-    const_SLOT(num_freecells, self);
     const_SLOT(bits_per_orig_cards_in_column, self);
 
     int foundations[4] = {14, 14, 14, 14};
     /* Read the Freecells. */
 
+#if MAX_NUM_FREECELLS > 0
+    const_SLOT(num_freecells, self);
     for (size_t i = 0; i < num_freecells; ++i)
     {
         const fcs_card card =
@@ -326,6 +331,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
         }
         fcs_put_card_in_freecell(*ret, i, card);
     }
+#endif
 
     const_SLOT(num_columns, self);
     const fcs_state *const init_state = self->init_state;

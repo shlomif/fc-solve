@@ -255,6 +255,7 @@ static int main_tests(void)
             ok (enc.bit_in_char_idx == (3+4+6-8), "3+4+7 bits (2).");
         }
 
+#if MAX_NUM_FREECELLS > 0
         {
             fc_solve_bit_writer bit_w;
             fcs_bit_reader bit_r;
@@ -282,6 +283,7 @@ static int main_tests(void)
                     "Reached the end of the encoding.");
 
         }
+#endif
 
         /* TEST
          * */

@@ -467,6 +467,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
             fcs_internal_move out_move = fc_solve_empty_move;
             switch (move_ptr->totype)
             {
+#if MAX_NUM_FREECELLS > 0
             case FCS_PATS__TYPE_FREECELL:
             {
                 int src_col_idx;
@@ -499,6 +500,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
                 }
             }
             break;
+#endif
             case FCS_PATS__TYPE_FOUNDATION:
             {
                 const find_card_ret src = find_card_src_string(
