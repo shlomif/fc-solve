@@ -378,6 +378,7 @@ static inline int find_col_card(const fcs_state *const dynamic_state,
     return -1;
 }
 
+#if MAX_NUM_FREECELLS > 0
 static inline int find_fc_card(const fcs_state *const dynamic_state,
     const fcs_card needle FREECELLS_NUM__ARG)
 {
@@ -391,6 +392,7 @@ static inline int find_fc_card(const fcs_state *const dynamic_state,
 
     return -1;
 }
+#endif
 
 static inline find_card_ret find_card_src_string(
     const fcs_state *const dynamic_state,
@@ -398,6 +400,7 @@ static inline find_card_ret find_card_src_string(
 {
     const int src_col_idx =
         find_col_card(dynamic_state, needle PASS_STACKS(STACKS_NUM__VAL));
+#if MAX_NUM_FREECELLS > 0
     if (src_col_idx < 0)
     {
         return (find_card_ret){
@@ -406,6 +409,7 @@ static inline find_card_ret find_card_src_string(
             .type = FREECELL};
     }
     else
+#endif
     {
         return (find_card_ret){.idx = src_col_idx, .type = COLUMN};
     }

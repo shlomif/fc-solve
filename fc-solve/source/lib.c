@@ -2937,7 +2937,7 @@ static void trace_flare_solution(
 
 #ifdef FCS_WITH_FLARES
 static int get_flare_move_count(
-    fcs_user *const user, flare_item *const flare)
+    fcs_user *const user GCC_UNUSED, flare_item *const flare GCC_UNUSED)
 {
 #ifndef FCS_WITH_MOVES
     return 0;
@@ -3888,7 +3888,7 @@ void freecell_solver_user_get_invalid_state_error_into_string(
     void *const api_instance, char *const string
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
     ,
-    const int print_ts
+    const int print_ts GCC_UNUSED
 #endif
 )
 {
