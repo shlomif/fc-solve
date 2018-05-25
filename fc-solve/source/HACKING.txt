@@ -28,7 +28,7 @@ games). Also append these options:
 
 4. Type +make install+.
 
-5. Type +export FCS_PGO_THEME="-l as" ;  bash pgo.bash+ to prepare a GCC Profile-Guided Optimizations (PGO)
+5. Type +export FCS_PGO_THEME="-l lg" ;  bash pgo.bash+ to prepare a GCC Profile-Guided Optimizations (PGO)
 executable.
 
 6. Then you can run a shell script like this one:
@@ -39,7 +39,7 @@ num_threads=4 ; for t in $(seq 1 8) ; do sudo_renice bash -c "$(printf 'ARGS="--
 +
 Where sudo_renice is something like:
 +
-https://bitbucket.org/shlomif/shlomif-computer-settings/src/c8189d118c1f68c24a99c916c3fdd48275aeb0fd/shlomif-settings/home-bin-executables/bin/sudo_renice?at=default
+https://github.com/shlomif/shlomif-computer-settings/blob/master/shlomif-settings/home-bin-executables/bin/sudo_renice
 
 7. To see the results, you can use +perl ../scripts/time-fcs.pl
 DUMPS-*/*+ and copy-and-paste the results to the Freecell Solver developers
@@ -50,7 +50,7 @@ Getting the test suite up and running
 
 These are instruction how to get the test suite up and running:
 
-1. Install the dependencies: Subversion, CMake (2.6.3 or later only), make,
+1. Install the dependencies: Subversion, CMake (3.x or later only), make,
 gcc, g\++, valgrind, perl5 (at least perl-5.14)
 +
 +
@@ -103,7 +103,7 @@ echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bas
 4. Check out the latest Freecell Solver sources:
 +
 -------------------
-git clone https://bitbucket.org/shlomif/fc-solve
+git clone https://github.com/shlomif/fc-solve
 -------------------
 +
 (You can also use http://bundler.caurea.org/ ).
@@ -192,7 +192,7 @@ Comments should come one line before the line that they explain:
 
 ----------------
 /* Check if it can be moved to something on the same stack */
-for(dc=0;dc<c-1;dc++)
+for ( dc = 0 ; dc < c-1 ; dc++ )
 {
     .
     .
