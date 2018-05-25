@@ -21,7 +21,7 @@
 #endif
 
 static int fc_solve_get_column_orig_num_cards(
-    fcs_delta_stater *const self, const fcs_const_cards_column col)
+    fcs_delta_stater *const self GCC_UNUSED, const fcs_const_cards_column col)
 {
     FCS_ON_NOT_FC_ONLY(const_SLOT(sequences_are_built_by, self));
     for (int num_cards = fcs_col_len(col); num_cards >= 2; --num_cards)
@@ -386,7 +386,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 }
 
 static inline void fc_solve_delta_stater_decode_into_state_proto(
-    const fcs_dbm_variant_type local_variant,
+    const fcs_dbm_variant_type local_variant GCC_UNUSED,
     fcs_delta_stater *const delta_stater,
     const fcs_uchar *const enc_state,
     fcs_state_keyval_pair *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))

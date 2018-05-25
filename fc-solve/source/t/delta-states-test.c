@@ -267,12 +267,12 @@ static int main_tests(void)
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&bit_r, 6) == make_card(8, 2),/* 8D */
+            ok ((fcs_card)fc_solve_bit_reader_read(&bit_r, 6) == make_card(8, 2),/* 8D */
                     "First freecell is 8D.");
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&bit_r, 6) == make_card(12, 2), /* QD */
+            ok ((fcs_card)fc_solve_bit_reader_read(&bit_r, 6) == make_card(12, 2), /* QD */
                     "Second freecell is QD.");
 
             /* TEST
@@ -689,7 +689,7 @@ static int main_tests(void)
     return 0;
 }
 
-int main(int argc, char * argv[])
+int main(void)
 {
     plan_tests(24);
     main_tests();

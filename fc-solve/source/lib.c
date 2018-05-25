@@ -2131,7 +2131,7 @@ static inline fcs_instance_item *curr_inst(fcs_user *const user)
 
 #ifndef FCS_FREECELL_ONLY
 static inline void calc_variant_suit_mask_and_desired_suit_value(
-    fcs_instance *const instance)
+    fcs_instance *const instance GCC_UNUSED)
 {
 #ifndef FCS_DISABLE_PATSOLVE
     instance->game_variant_suit_mask = FCS_PATS__COLOR;
@@ -3649,7 +3649,7 @@ int DLLEXPORT freecell_solver_user_get_num_freecells(void *const api_instance)
 
 #else
 
-int DLLEXPORT freecell_solver_user_set_num_freecells(
+int DLLEXPORT __attribute__((const)) freecell_solver_user_set_num_freecells(
     void *api_instance GCC_UNUSED, int freecells_num GCC_UNUSED)
 {
     return 0;
@@ -3683,7 +3683,7 @@ int DLLEXPORT freecell_solver_user_get_num_stacks(void *const api_instance)
 
 #else
 
-int DLLEXPORT freecell_solver_user_set_num_stacks(
+int DLLEXPORT __attribute__((const)) freecell_solver_user_set_num_stacks(
     void *api_instance GCC_UNUSED, int stacks_num GCC_UNUSED)
 {
     return 0;
@@ -3710,7 +3710,7 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 
 #else
 
-int DLLEXPORT freecell_solver_user_set_num_decks(
+int DLLEXPORT __attribute__((const)) freecell_solver_user_set_num_decks(
     void *api_instance GCC_UNUSED, int decks_num GCC_UNUSED)
 {
     return 0;
@@ -3720,7 +3720,12 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
 #endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-int DLLEXPORT freecell_solver_user_set_game(void *const api_instance,
+int DLLEXPORT
+#if ((!defined(FCS_FREECELL_ONLY)) || (!defined(HARD_CODED_NUM_STACKS)) || (!defined(HARD_CODED_NUM_FREECELLS)) || (!defined(HARD_CODED_NUM_DECKS)))
+#else
+__attribute__((const))
+#endif
+freecell_solver_user_set_game(void *const api_instance,
     const int freecells_num, const int stacks_num, const int decks_num,
     const int sequences_are_built_by GCC_UNUSED, const int unlimited_sequence_move GCC_UNUSED,
     const int empty_stacks_fill GCC_UNUSED)
@@ -3824,7 +3829,7 @@ DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT char *freecell_solver_user_move_to_string(
-    const fcs_move_t move, const int standard_notation)
+    const fcs_move_t move GCC_UNUSED, const int standard_notation GCC_UNUSED)
 {
     char *const ret = SMALLOC(ret, 256);
 #ifdef FCS_WITH_MOVES
@@ -3837,8 +3842,8 @@ DLLEXPORT char *freecell_solver_user_move_to_string(
 }
 
 DLLEXPORT char *freecell_solver_user_move_to_string_w_state(
-    void *const api_instance, const fcs_move_t move,
-    const int standard_notation)
+    void *const api_instance GCC_UNUSED, const fcs_move_t move GCC_UNUSED,
+    const int standard_notation GCC_UNUSED)
 {
     char *ret = SMALLOC(ret, 256);
 #ifdef FCS_WITH_MOVES
@@ -4093,10 +4098,10 @@ DLLEXPORT extern void freecell_solver_user_iter_state_stringify(
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT char *freecell_solver_user_iter_state_as_string(
-    void *const api_instance,
-    void *const ptr_state_void FC_SOLVE__PASS_PARSABLE(
-        const int parseable_output),
-    const int canonized_order_output PASS_T(const int display_10_as_t))
+    void *const api_instance GCC_UNUSED,
+    void *const ptr_state_void GCC_UNUSED FC_SOLVE__PASS_PARSABLE(
+        const int parseable_output GCC_UNUSED),
+    const int canonized_order_output GCC_UNUSED PASS_T(const int display_10_as_t GCC_UNUSED))
 {
     char *state_as_string = SMALLOC(state_as_string, 1000);
 #ifdef FCS_WITH_MOVES
@@ -4508,7 +4513,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
 #endif
 }
 
-int DLLEXPORT __attribute__((pure))
+int DLLEXPORT __attribute__((pure)) __attribute__((const))
 fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *const api_instance GCC_UNUSED)
 {
@@ -4519,7 +4524,7 @@ fc_solve_user_INTERNAL_get_flares_plan_num_items(
 #endif
 }
 
-const DLLEXPORT __attribute__((pure)) char *
+const DLLEXPORT __attribute__((pure)) __attribute__((const)) char *
 fc_solve_user_INTERNAL_get_flares_plan_item_type(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
@@ -4542,7 +4547,7 @@ fc_solve_user_INTERNAL_get_flares_plan_item_type(
 #endif
 }
 
-int DLLEXPORT __attribute__((pure))
+int DLLEXPORT __attribute__((pure)) __attribute__((const))
 fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
@@ -4554,7 +4559,7 @@ fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
 #endif
 }
 
-int DLLEXPORT __attribute__((pure))
+int DLLEXPORT __attribute__((pure)) __attribute__((const))
 fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {

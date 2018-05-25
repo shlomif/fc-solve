@@ -195,6 +195,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
             break;
         }
     }
+#else
+    fprintf(stderr, "Don't call me.\n");
 #endif
 }
 
@@ -423,6 +425,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     }
 
     sort_derived_states(derived_states_list, derived_start_idx);
+#else
+    fprintf(stderr, "Don't call me.\n");
 #endif
 }
 
@@ -884,6 +888,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
             moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, empty_stack_idx);
         sfs_check_state_end();
     }
+#else
+    fprintf(stderr, "Don't call me.\n");
 #endif
 }
 
@@ -988,6 +994,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
             }
         }
     }
+#else
+    fprintf(stderr, "Don't call me.\n");
 #endif
 }
 
@@ -1183,6 +1191,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 
         sfs_check_state_end();
     }
+#else
+    fprintf(stderr, "Don't call me.\n");
 #endif
 }
 
@@ -1328,6 +1338,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 
         sfs_check_state_end();
     }
+#else
+    fprintf(stderr, "Don't call me.\n");
 #endif
 }
 
@@ -1371,6 +1383,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
             sfs_check_state_end();
         }
     }
+#else
+    fprintf(stderr, "Don't call me.\n");
 #endif
 }
 
@@ -1412,13 +1426,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
         sfs_check_state_end();
     }
+#else
+    fprintf(stderr, "Don't call me.\n");
 #endif
 }
 
 #define CALC_FOUNDATION_TO_PUT_CARD_ON()                                       \
     calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card)
 
-static inline int_fast32_t calc_foundation_to_put_card_on(
+static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
     const fcs_soft_thread *const soft_thread GCC_UNUSED,
     const fcs_state *const ptr_state, const fcs_card card)
 {

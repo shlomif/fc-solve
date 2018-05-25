@@ -220,14 +220,14 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     if (!parseable_output)
     {
-        size_t i;
-        for (i = 0; i < ((FREECELLS_NUM__VAL / 4) +
+        size_t i = 0;
+#if MAX_NUM_FREECELLS > 0
+        for (; i < ((FREECELLS_NUM__VAL / 4) +
                             ((FREECELLS_NUM__VAL % 4 == (0)) ? 0 : 1));
              ++i)
         {
             char dashes_s[128];
             char freecells_s[128];
-#if MAX_NUM_FREECELLS > 0
             char *dashes_ptr = dashes_s;
             char *freecells_s_end = freecells_s;
             const_AUTO(lim, min(FREECELLS_NUM__VAL - i * 4, 4));
@@ -241,7 +241,6 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
                 strcpy(dashes_ptr, "--- ");
                 dashes_ptr = strchr(dashes_ptr, '\0');
             }
-#endif
             if (i < DECKS_NUM__VAL)
             {
                 fc_solve_append_string_sprintf(
@@ -255,6 +254,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
             }
             fc_solve_append_string_sprintf("%s\n", dashes_s);
         }
+#endif
         for (; i < DECKS_NUM__VAL; i++)
         {
             fc_solve_append_string_sprintf(

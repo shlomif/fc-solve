@@ -13,9 +13,9 @@
 #include "iter_handler_base.h"
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
-static void my_iter_handler(void *const user_instance,
-    const fcs_int_limit_t iter_num, const int depth, void *const ptr_state,
-    const fcs_int_limit_t parent_iter_num, void *const context)
+static void my_iter_handler(void *const user_instance GCC_UNUSED,
+    const fcs_int_limit_t iter_num GCC_UNUSED, const int depth GCC_UNUSED, void *const ptr_state GCC_UNUSED,
+    const fcs_int_limit_t parent_iter_num GCC_UNUSED, void *const context GCC_UNUSED)
 {
 #ifdef FCS_WITH_MOVES
     const fc_solve_display_information_context *const dc =
