@@ -595,8 +595,10 @@ ENDMACRO ()
 # We also need to put the CMAKE_POLICY invocation here or else it still warns.
 CMAKE_POLICY(SET CMP0054 NEW)
 
+SET(unbuilt_err_fn "${CMAKE_SOURCE_DIR}/scripts/err-on-unbuilt-executable.pl")
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E touch "${unbuilt_err_fn}")
 MACRO(gen_error_exe myprog)
-    ADD_COPY_TARGET("${myprog}__target" "${CMAKE_SOURCE_DIR}/scripts/err-on-unbuilt-executable.pl" "${CMAKE_CURRENT_BINARY_DIR}/${myprog}")
+    ADD_COPY_TARGET("${myprog}__target" "${unbuilt_err_fn}" "${CMAKE_CURRENT_BINARY_DIR}/${myprog}")
 ENDMACRO()
 
 SET (DEBONDT_DELTA_STATES )
