@@ -1,6 +1,11 @@
 #!/bin/bash
-export CC=/usr/bin/clang CXX=/usr/bin/clang++ FCS_CLANG=1 CFLAGS="-Werror"
-seed=26
+if test "$1" = 'g'
+then
+    export FCS_GCC=1 CFLAGS="-Werror"
+else
+    export CC=/usr/bin/clang CXX=/usr/bin/clang++ FCS_CLANG=1 CFLAGS="-Werror"
+fi
+seed=1
 while true
 do
     echo "Checking seed=$seed"
