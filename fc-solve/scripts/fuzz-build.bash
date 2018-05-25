@@ -2,10 +2,11 @@
 if test "$1" = 'g'
 then
     export FCS_GCC=1 CFLAGS="-Werror"
+    seed=160
 else
     export CC=/usr/bin/clang CXX=/usr/bin/clang++ FCS_CLANG=1 CFLAGS="-Werror"
+    seed=19
 fi
-seed=1
 while true
 do
     echo "Checking seed=$seed"
