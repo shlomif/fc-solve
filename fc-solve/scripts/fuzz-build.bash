@@ -1,12 +1,20 @@
 #!/bin/bash
+#
+# fuzz-build.bash
+# Copyright (C) 2018 Shlomi Fish <shlomif@cpan.org>
+#
+# Distributed under terms of the MIT license.
+#
+
 if test "$1" = 'g'
 then
-    export FCS_GCC=1 CFLAGS="-Werror"
+    export FCS_GCC=1
     seed=160
 else
-    export CC=/usr/bin/clang CXX=/usr/bin/clang++ FCS_CLANG=1 CFLAGS="-Werror"
+    export CC=/usr/bin/clang CXX=/usr/bin/clang++ FCS_CLANG=1
     seed=19
 fi
+export CFLAGS="-Werror"
 while true
 do
     echo "Checking seed=$seed"
