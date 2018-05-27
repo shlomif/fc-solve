@@ -33,7 +33,10 @@ sub func_name
 {
     my $f = shift;
     my $s = "fc_solve_sfs_$f";
-    return $f =~ /simple_simon/ ? "WRAP_SIMPSIM($s)" : $s;
+    return
+          $f =~ /simple_simon/  ? "WRAP_SIMPSIM($s)"
+        : $f =~ /freecell|_fc_/ ? "WRAP_ZEROFC($s)"
+        :                         $s;
 }
 
 my $move_funcs_string = join( ",\n",
@@ -54,6 +57,12 @@ $GEN
 #define WRAP_SIMPSIM(f) fc_solve_sfs_move_top_stack_cards_to_founds
 #else
 #define WRAP_SIMPSIM(f) f
+#endif
+
+#if MAX_NUM_FREECELLS > 0
+#define WRAP_ZEROFC(f) f
+#else
+#define WRAP_ZEROFC(f) fc_solve_sfs_move_top_stack_cards_to_founds
 #endif
 
 $move_funcs_decl =

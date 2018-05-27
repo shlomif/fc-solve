@@ -152,13 +152,13 @@ static inline void sort_derived_states(
     }
 }
 
+#if MAX_NUM_FREECELLS > 0
 /*
  * This test moves single cards that are present in the freecells to
  * the foundations.
  * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 {
-#if MAX_NUM_FREECELLS > 0
     tests_define_accessors_no_stacks(tests_state_context_val);
 
 #ifndef HARD_CODED_NUM_FREECELLS
@@ -195,10 +195,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
             break;
         }
     }
-#else
-    fprintf(stderr, "Don't call me.\n");
-#endif
 }
+#endif
 
 typedef struct
 {
@@ -330,9 +328,9 @@ static inline fcs_game_limit calc_num_vacant_slots(
     MOVE_FUNCS__define_seqs_built_by();                                        \
     MOVE_FUNCS__define_empty_stacks_fill()
 
+#if MAX_NUM_FREECELLS > 0
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
-#if MAX_NUM_FREECELLS > 0
     MOVE_FUNCS__define_common();
     HARD__SET_GAME_PARAMS();
 
@@ -425,10 +423,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
     }
 
     sort_derived_states(derived_states_list, derived_start_idx);
-#else
-    fprintf(stderr, "Don't call me.\n");
-#endif
 }
+#endif
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
@@ -850,10 +846,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
         }\
     }
 
+#if MAX_NUM_FREECELLS > 0
 /* Let's try to put cards that occupy freecells on an empty stack */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 {
-#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     if (IS_FILLED_BY_NONE())
@@ -888,9 +884,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
             moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, empty_stack_idx);
         sfs_check_state_end();
     }
-#else
-    fprintf(stderr, "Don't call me.\n");
-#endif
 }
 
 /* Let's try to put cards that occupy freecells on an empty stack and
@@ -899,7 +892,6 @@ https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/584
  * */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
 {
-#if MAX_NUM_FREECELLS > 0
     MOVE_FUNCS__define_common();
     if (IS_FILLED_BY_NONE())
     {
@@ -994,10 +986,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
             }
         }
     }
-#else
-    fprintf(stderr, "Don't call me.\n");
-#endif
 }
+#endif
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 {
@@ -1132,9 +1122,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     sort_derived_states(derived_states_list, derived_start_idx);
 }
 
+#if MAX_NUM_FREECELLS > 0
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 {
-#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     if (IS_FILLED_BY_NONE())
@@ -1191,10 +1181,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
 
         sfs_check_state_end();
     }
-#else
-    fprintf(stderr, "Don't call me.\n");
-#endif
 }
+#endif
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
 {
@@ -1291,9 +1279,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_parent)
     }
 }
 
+#if MAX_NUM_FREECELLS > 0
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 {
-#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     FC__STACKS__SET_PARAMS();
@@ -1338,14 +1326,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
 
         sfs_check_state_end();
     }
-#else
-    fprintf(stderr, "Don't call me.\n");
-#endif
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
 {
-#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_seqs_built_by();
     FC__STACKS__SET_PARAMS();
@@ -1383,14 +1367,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
             sfs_check_state_end();
         }
     }
-#else
-    fprintf(stderr, "Don't call me.\n");
-#endif
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 {
-#if MAX_NUM_FREECELLS > 0
     tests_define_accessors();
     MOVE_FUNCS__define_empty_stacks_fill();
     FC__STACKS__SET_PARAMS();
@@ -1426,10 +1406,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 
         sfs_check_state_end();
     }
-#else
-    fprintf(stderr, "Don't call me.\n");
-#endif
 }
+#endif
 
 #define CALC_FOUNDATION_TO_PUT_CARD_ON()                                       \
     calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card)
