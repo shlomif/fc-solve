@@ -62,7 +62,7 @@ $GEN
 #if MAX_NUM_FREECELLS > 0
 #define WRAP_ZEROFC(f) f
 #else
-#define WRAP_ZEROFC(f) fc_solve_sfs_move_top_stack_cards_to_founds
+#define WRAP_ZEROFC(f) fc_solve_sfs_null_move_func
 #endif
 
 $move_funcs_decl =

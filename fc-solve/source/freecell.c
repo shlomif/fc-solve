@@ -90,6 +90,12 @@ static inline int find_empty_stack(fcs_kv_state raw_state_raw,
  * sequences_are_built_by - the type of sequences of this board.
  * */
 
+#if MAX_NUM_FREECELLS == 0
+DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func)
+{
+}
+#endif
+
 /*
  * This function tries to move stack cards that are present at the
  * top of stacks to the foundations.

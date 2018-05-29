@@ -17,6 +17,7 @@ extern "C" {
 
 #include "instance.h"
 
+DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks);
