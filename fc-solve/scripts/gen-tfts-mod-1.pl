@@ -10,9 +10,9 @@ print <<"EOF";
 #!/bin/sh
 freecell-solver-range-parallel-solve 1 32000 1 \\
 @{[pats_fast()]} --st-name p1 -nst \\
---method random-dfs -to "[01ABCDE]=asw(1)" -sp r:tf --st-name s1 -nst \\
+@{[pats([qw(5 1 6 -1 7 11 4 2 2 1 2)], [ 0.0032, 0.32, -3.0])]} --st-name p2 -nst \\
 EOF
 
 print <<'EOF';
---prelude "40000@p1,4000@s1"
+--prelude "13000@p1,2000@p2"
 EOF
