@@ -21,7 +21,7 @@ RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 EMBED_FILE_MUNGE_PL = $(SRC_DIR)/../scripts/emscripten-embed-munge.pl
 
-PATS_C_FILES = $(patsubst %,patsolve/patsolve/%,param.c pat.c patsolve.c tree.c)
+PATS_C_FILES = $(patsubst %,patsolve/patsolve/%,pat.c patsolve.c tree.c)
 
 LIB_C_FILES = \
 board_gen/find_deal.c \
@@ -48,6 +48,7 @@ CMAKE_C_FILES = \
 is_king.c \
 is_parent.c \
 move_funcs_maps.c \
+param.c \
 pos_by_rank__freecell.c \
 rate_state.c \
 
