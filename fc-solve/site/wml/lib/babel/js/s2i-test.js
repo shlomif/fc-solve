@@ -16,6 +16,10 @@ define(['dist/fc_solve_find_index_s2ints'], function(s2i) {
         const deal_str = input_str.replace(/#[^\r\n]*\r?\n?/g, '').
             replace(/\r+\n/, "\n").replace(/([^\n])$/, "$1\n");
         let ints;
+        alert('beforoe');
+        console.log = function(m) {
+            alert(m);
+        };
         try {
             ints = s2i.find_index__board_string_to_ints(deal_str);
             alert(ints.map((i) => i.toString()).join(','));
