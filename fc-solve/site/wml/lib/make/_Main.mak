@@ -251,12 +251,12 @@ $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS): %: $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/
 
 FCS_VALID_DEST = $(D)/js/fcs-validate.js
 
-TYPINGS = src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts src/js/typings/index.d.ts
+TYPINGS =
 
 DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/libfcs-wrap.js $(D)/js/s2i-test.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js $(D)/js/web-fc-solve-tests.js
 OUT_BABEL_JSES = $(patsubst $(D)/js/%,lib/out-babel/js/%,$(DEST_BABEL_JSES))
 
-all: $(TYPINGS) $(DEST_BABEL_JSES)
+all: $(DEST_BABEL_JSES)
 
 $(OUT_BABEL_JSES): lib/out-babel/%.js: lib/babel/%.js
 	babel -o $@ $<
@@ -264,15 +264,11 @@ $(OUT_BABEL_JSES): lib/out-babel/%.js: lib/babel/%.js
 $(DEST_BABEL_JSES): $(D)/%.js: lib/out-babel/%.js
 	$(MULTI_YUI) -o $@ $<
 
-$(TYPINGS):
-	cd src/charts/dbm-solver-__int128-optimisation/ && typings install dt~jquery --global --save
-	cd src/js && typings install dt~qunit --global --save
-
 TEST_FCS_VALID_DEST = $(D)/js/web-fc-solve-tests--fcs-validate.js
 
 TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
-TYPESCRIPT_COMMON_DEFS_FILES = src/js/typings/index.d.ts
+TYPESCRIPT_COMMON_DEFS_FILES =
 
 JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js lib/for-node/js/web-fc-solve.js lib/for-node/js/web-fc-solve--expand-moves.js lib/for-node/js/web-fc-solve-tests.js
 
@@ -295,11 +291,11 @@ TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-f
 all: $(TS_CHART_DEST) $(TS_CHART2_DEST)
 
 $(TS_CHART_DEST): $(D)/%.js: src/%.ts
-	tsc --module amd --out $@ src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
+	tsc --module amd --out $@ ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
 	$(MULTI_YUI) -o $@ $@
 
 $(TS_CHART2_DEST): $(D)/%.js: src/%.ts
-	tsc --module amd --out $@ src/charts/dbm-solver-__int128-optimisation/typings/index.d.ts ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
+	tsc --module amd --out $@ ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
 	$(MULTI_YUI) -o $@ $@
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
