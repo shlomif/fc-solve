@@ -35,9 +35,6 @@ ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
 DOCS_AUX = $(patsubst %,$(DOCS_AUX_DIR)/%,$(DOCS_AUX_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
-INCLUDES_PROTO = std/logo.wml
-INCLUDES = $(addprefix lib/,$(INCLUDES_PROTO))
-
 SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
 
 
@@ -155,7 +152,7 @@ $(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: ../../source/%
 $(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
 	cat "$<" | perl -0777 -lapE 's#<table #<table summary="identifiers on the left, descriptions on the right" #g' > "$@"
 
-$(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml $(INCLUDES)
+$(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
 	$(call DEF_WML_PATH) (cd src && wml -o "$$fn" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
 
 $(IMAGES): $(D)/% : src/%
