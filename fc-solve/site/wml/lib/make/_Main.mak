@@ -4,10 +4,6 @@ include lib/make/shlomif_common.mak
 include lib/make/rules.mak
 include lib/make/include.mak
 
-WITH_DEVEL_VERSION = 1
-
-DEVEL_VER_USE_CACHE = 1
-
 # Toggle to generate production code with compressed and merged JS code/etc.
 PROD = 0
 
@@ -27,9 +23,7 @@ ifeq ($(PROD),1)
 
 endif
 
-IMAGES_PRE1 = $(SRC_IMAGES)
-IMAGES = $(addprefix $(D)/,$(IMAGES_PRE1))
-
+IMAGES = $(addprefix $(D)/,$(SRC_IMAGES))
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
 DOCS_PROTO = AUTHORS COPYING INSTALL NEWS README TODO USAGE
@@ -44,15 +38,9 @@ DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 INCLUDES_PROTO = std/logo.wml
 INCLUDES = $(addprefix lib/,$(INCLUDES_PROTO))
 
-# Remming out because it confuses the validator and no longer needed because
-# the web-server now supports indexes.
-# SUBDIRS_WITH_INDEXES = $(WIN32_BUILD_SUBDIRS)
-#
 SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
-INDEXES = $(addsuffix /index.html,$(SUBDIRS_WITH_INDEXES))
 
 
-TTML_FLAGS += $(COMMON_PREPROC_FLAGS)
 WML_FLAGS += $(COMMON_PREPROC_FLAGS)
 
 WML_FLAGS += --passoption=2,-X3074 \
@@ -105,7 +93,7 @@ else
 	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM) $(DEST_LIBFREECELL_SOLVER_ASMJS_JS) $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS)
 endif
 
-dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(INDEXES) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
+dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
 dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
 
@@ -317,10 +305,6 @@ $(D)/charts/fc-pro--4fc-intractable-deals--report/index.html $(D)/charts/fc-pro-
 all: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
 
 .PHONY:
-
-# Build index.html pages for the appropriate sub-directories.
-$(INDEXES): $(D)/%/index.html : src/% gen_index.pl
-	perl gen_index.pl $< $@
 
 ALL_HTACCESSES = $(D)/.htaccess
 
