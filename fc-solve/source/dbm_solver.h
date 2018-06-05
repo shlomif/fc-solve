@@ -46,8 +46,7 @@ typedef struct
 typedef void *fcs_dbm_store;
 void fc_solve_dbm_store_init(fcs_dbm_store *, const char *, void **);
 dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store);
-bool fc_solve_dbm_store_does_key_exist(
-    fcs_dbm_store, const unsigned char *);
+bool fc_solve_dbm_store_does_key_exist(fcs_dbm_store, const unsigned char *);
 bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store, const unsigned char *const, unsigned char *const);
 
@@ -103,8 +102,8 @@ typedef struct
 } dbm_instance_common_elems;
 
 static inline void fcs_dbm__found_solution(
-    dbm_instance_common_elems *const common,
-    fcs_dbm_record *const token, fcs_dbm_queue_item *const item GCC_UNUSED)
+    dbm_instance_common_elems *const common, fcs_dbm_record *const token,
+    fcs_dbm_queue_item *const item GCC_UNUSED)
 {
     common->should_terminate = SOLUTION_FOUND_TERMINATE;
     common->queue_solution_was_found = TRUE;
@@ -115,9 +114,9 @@ static inline void fcs_dbm__found_solution(
 #endif
 }
 
-static inline void fcs_dbm__common_init(
-    dbm_instance_common_elems *const common, const long iters_delta_limit,
-    const fcs_dbm_variant_type local_variant, FILE *const out_fh)
+static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
+    const long iters_delta_limit, const fcs_dbm_variant_type local_variant,
+    FILE *const out_fh)
 {
     common->variant = local_variant;
     common->out_fh = out_fh;

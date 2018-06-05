@@ -55,8 +55,7 @@ static inline void fcs_pdfs_cache_destroy(fcs_pseudo_dfs_lru_cache *const cache)
 }
 
 static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache *const cache,
-    const long max_num_elements_in_cache,
-    meta_allocator *const meta_alloc)
+    const long max_num_elements_in_cache, meta_allocator *const meta_alloc)
 {
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 

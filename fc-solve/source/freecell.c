@@ -15,7 +15,7 @@
 
 #define CALC_POSITIONS_BY_RANK()                                               \
     const int8_t *const positions_by_rank =                                    \
-        fc_solve_calc_positions_by_rank_location(soft_thread); \
+        fc_solve_calc_positions_by_rank_location(soft_thread);                 \
     const int suit_positions_by_rank_step = POS_BY_RANK_MAP(POS_BY_RANK_STEP)
 
 #define POS_BY_RANK_MAP(x) ((x) << 1)
@@ -43,7 +43,7 @@
 #define MOVE_FUNCS__define_empty_stacks_fill()                                 \
     const int empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL;
 #define PASS_sequences_are_built_by(param) , param
-#define POS_BY_RANK_STEP                           \
+#define POS_BY_RANK_STEP                                                       \
     ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
             ? 1                                                                \
             : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
@@ -64,7 +64,6 @@
              FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card));  \
          pos_idx_to_check < last_pos_idx;                                      \
          pos_idx_to_check += suit_positions_by_rank_step)
-
 
 #endif
 
@@ -91,9 +90,7 @@ static inline int find_empty_stack(fcs_kv_state raw_state_raw,
  * */
 
 #if MAX_NUM_FREECELLS == 0
-DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func)
-{
-}
+DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func) {}
 #endif
 
 /*
@@ -271,8 +268,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
             fcs_move_stack_non_seq_push(moves_ptr,
                 FCS_MOVE_TYPE_STACK_TO_FREECELL, *col_idx, dest_fc_idx);
 
-            ret =
-                (empty_two_cols_ret){.src_idx = dest_fc_idx, .is_col = FALSE};
+            ret = (empty_two_cols_ret){.src_idx = dest_fc_idx, .is_col = FALSE};
             --(*col_num_cards);
             ++dest_fc_idx;
         }
@@ -322,8 +318,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
 }
 
 static inline fcs_game_limit calc_num_vacant_slots(
-    const fcs_soft_thread *const soft_thread,
-    const bool is_filled_by_any_card)
+    const fcs_soft_thread *const soft_thread, const bool is_filled_by_any_card)
 {
     return (soft_thread->num_vacant_freecells +
             (is_filled_by_any_card ? soft_thread->num_vacant_stacks : 0));
@@ -612,7 +607,7 @@ static inline void col_seqs_iter__calc_end(col_seqs_iter *const iter)
 
 static inline col_seqs_iter col_seqs_iter__create(
     fcs_state *const s, const int stack_idx PASS_sequences_are_built_by(
-                              const int sequences_are_built_by))
+                            const int sequences_are_built_by))
 {
     col_seqs_iter ret;
     FCS_ON_NOT_FC_ONLY(ret.sequences_are_built_by = sequences_are_built_by);
@@ -841,15 +836,15 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     }
 }
 
-#define SET_empty_stack_idx(empty_stack_idx) \
-    int empty_stack_idx; \
-    for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;\
-         empty_stack_idx++)\
-    {\
-        if (fcs_state_col_is_empty(state, empty_stack_idx))\
-        {\
-            break;\
-        }\
+#define SET_empty_stack_idx(empty_stack_idx)                                   \
+    int empty_stack_idx;                                                       \
+    for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;              \
+         empty_stack_idx++)                                                    \
+    {                                                                          \
+        if (fcs_state_col_is_empty(state, empty_stack_idx))                    \
+        {                                                                      \
+            break;                                                             \
+        }                                                                      \
     }
 
 #if MAX_NUM_FREECELLS > 0
@@ -980,8 +975,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                 copy_two_stacks(stack_idx, empty_stack_idx);
                 fcs_state_push(&new_state_key, empty_stack_idx, src_card);
                 fcs_empty_freecell(new_state_key, fc);
-                fcs_move_stack_non_seq_push(
-                    moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, empty_stack_idx);
+                fcs_move_stack_non_seq_push(moves,
+                    FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, empty_stack_idx);
                 const int cols_indexes[3] = {stack_idx, -1, -1};
                 empty_two_cols_from_new_state(soft_thread,
                     ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
@@ -1533,9 +1528,9 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
     {
         return NULL;
     }
-    register const_AUTO(
-        ptr_next_state, fc_solve_sfs_check_state_end(soft_thread, sfs_check_state_end__arg
-                            &pass_new_state FCS__pass_moves(moves)));
+    register const_AUTO(ptr_next_state,
+        fc_solve_sfs_check_state_end(soft_thread,
+            sfs_check_state_end__arg & pass_new_state FCS__pass_moves(moves)));
     /*
      * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
      * hurt if it's already there, and if it's a state that was

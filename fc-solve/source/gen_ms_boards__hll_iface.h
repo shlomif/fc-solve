@@ -25,8 +25,7 @@ typedef struct
 } fc_solve__hll_ms_rand;
 
 extern fc_solve__hll_ms_rand *fc_solve__hll_ms_rand__get_singleton(void);
-extern void fc_solve__hll_ms_rand__init(
-    fc_solve__hll_ms_rand *, const char *);
+extern void fc_solve__hll_ms_rand__init(fc_solve__hll_ms_rand *, const char *);
 extern int fc_solve__hll_ms_rand__mod_rand(fc_solve__hll_ms_rand *, int);
 
 #ifdef __cplusplus

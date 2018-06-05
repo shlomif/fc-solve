@@ -18,9 +18,8 @@
 #include "render_state.h"
 
 static void fc_solve_state_string_to_enc(
-    const fcs_dbm_variant_type local_variant,
-    fcs_delta_stater *const delta, const char *const state_s_proto,
-    fcs_encoded_state_buffer *const enc_state)
+    const fcs_dbm_variant_type local_variant, fcs_delta_stater *const delta,
+    const char *const state_s_proto, fcs_encoded_state_buffer *const enc_state)
 {
     fcs_state_keyval_pair state;
     DECLARE_IND_BUF_T(state_indirect_stacks_buffer)
@@ -35,8 +34,8 @@ static void fc_solve_state_string_to_enc(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
-    const fcs_dbm_variant_type local_variant,
-    const char *init_state_str_proto, const int start_state_moves_count,
+    const fcs_dbm_variant_type local_variant, const char *init_state_str_proto,
+    const int start_state_moves_count,
     const fcs_fcc_move *const start_state_moves,
     fcs_FCC_start_point_result **const out_fcc_start_points,
     long *const out_num_new_positions)
@@ -53,10 +52,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(
-        &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-    );
+    fc_solve_delta_stater_init(&delta, &(init_state.s), STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 
@@ -105,10 +102,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
     };
     bool is_min_by_sorting_new;
     perform_FCC_brfs(local_variant, &(init_state), enc_state,
-        &start_state_moves_seq, fc_solve_add_start_point_in_mem,
-        &ctx, &is_min_by_sorting_new, &min_by_sorting,
-        does_min_by_sorting_exist, &does_state_exist_in_any_FCC_cache,
-        out_num_new_positions, &moves_list_allocator, &meta_alloc);
+        &start_state_moves_seq, fc_solve_add_start_point_in_mem, &ctx,
+        &is_min_by_sorting_new, &min_by_sorting, does_min_by_sorting_exist,
+        &does_state_exist_in_any_FCC_cache, out_num_new_positions,
+        &moves_list_allocator, &meta_alloc);
 
     const fcs_FCC_start_point *iter = start_points_list.list;
 
@@ -175,8 +172,8 @@ DLLEXPORT void fc_solve_user_INTERNAL_free_fcc_start_points(
 }
 
 DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
-    const fcs_dbm_variant_type local_variant,
-    const char *init_state_str_proto, const char *start_state_str_proto,
+    const fcs_dbm_variant_type local_variant, const char *init_state_str_proto,
+    const char *start_state_str_proto,
     /* NULL-terminated */
     const char **min_states,
     /* NULL-terminated */
@@ -193,10 +190,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(
-        &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-    );
+    fc_solve_delta_stater_init(&delta, &(init_state.s), STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 
@@ -264,10 +259,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
     };
     long num_new_positions_temp;
     perform_FCC_brfs(local_variant, &(init_state), start_enc_state,
-        &init_moves_seq, fc_solve_add_start_point_in_mem,
-        &ctx, out_is_fcc_new, &min_by_sorting,
-        does_min_by_sorting_exist, &does_state_exist_in_any_FCC_cache,
-        &num_new_positions_temp, &moves_list_allocator, &meta_alloc);
+        &init_moves_seq, fc_solve_add_start_point_in_mem, &ctx, out_is_fcc_new,
+        &min_by_sorting, does_min_by_sorting_exist,
+        &does_state_exist_in_any_FCC_cache, &num_new_positions_temp,
+        &moves_list_allocator, &meta_alloc);
 
     fc_solve_compact_allocator_finish(&(start_points_list.allocator));
     fc_solve_compact_allocator_finish(&(temp_allocator));

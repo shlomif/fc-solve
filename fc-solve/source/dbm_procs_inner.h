@@ -29,18 +29,17 @@ static inline main_thread_item *dbm__calc_threads(
     main_thread_item *const threads = SMALLOC(threads, num_threads);
     TRACE("%s\n", "instance_run_all_threads start");
 #ifdef DEBUG_FOO
-    fc_solve_delta_stater_init(
-        &global_delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-    );
+    fc_solve_delta_stater_init(&global_delta_stater, &(init_state->s),
+        STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 #endif
     for (size_t i = 0; i < num_threads; i++)
     {
         threads[i].thread.instance = instance;
         fc_solve_delta_stater_init(&(threads[i].thread.delta_stater),
-            &(init_state->s), STACKS_NUM, FREECELLS_NUM
-            PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-        );
+            &(init_state->s), STACKS_NUM,
+            FREECELLS_NUM PASS_ON_NOT_FC_ONLY(
+                FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
         init_thread_cb(threads[i].arg.thread = &(threads[i].thread));
     }
     return threads;
@@ -142,7 +141,8 @@ static void trace_solution(dbm_solver_instance *const instance,
 }
 
 static inline void read_state_from_file(
-    const fcs_dbm_variant_type local_variant GCC_UNUSED, const char *const filename,
+    const fcs_dbm_variant_type local_variant GCC_UNUSED,
+    const char *const filename,
     fcs_state_keyval_pair *const init_state IND_BUF_T_PARAM(
         init_indirect_stacks_buffer))
 {

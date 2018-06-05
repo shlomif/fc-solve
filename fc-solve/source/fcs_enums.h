@@ -36,7 +36,8 @@ enum
     FCS_TALON_KLONDIKE
 };
 
-typedef enum {
+typedef enum
+{
     FCS_STATE_WAS_SOLVED,
     FCS_STATE_IS_NOT_SOLVEABLE,
     FCS_STATE_ALREADY_EXISTS,
@@ -52,7 +53,8 @@ typedef enum {
     FCS_STATE_FLARES_PLAN_ERROR
 } fc_solve_solve_process_ret_t;
 
-typedef enum {
+typedef enum
+{
     FCS_PRESET_CODE_OK,
     FCS_PRESET_CODE_NOT_FOUND,
     FCS_PRESET_CODE_FREECELLS_EXCEED_MAX,

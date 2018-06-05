@@ -18,8 +18,8 @@
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    const fcs_dbm_variant_type local_variant GCC_UNUSED, const char *const init_state_s,
-    const char *const derived_state_s)
+    const fcs_dbm_variant_type local_variant GCC_UNUSED,
+    const char *const init_state_s, const char *const derived_state_s)
 {
     fcs_state_keyval_pair init_state, derived_state, new_derived_state;
     fcs_uchar enc_state[24];
@@ -38,10 +38,8 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, derived_stacks_buffer);
 
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(
-        &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-    );
+    fc_solve_delta_stater_init(&delta, &(init_state.s), STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
     fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));
 

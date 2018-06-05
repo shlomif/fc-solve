@@ -26,7 +26,7 @@ static inline void my_iter_handler_base(const fcs_int_limit_t iter_num,
 #else
         freecell_solver_user_get_current_soft_thread_name(user_instance)
 #endif
-        );
+    );
     if (dc->display_parent_iter_num)
     {
         printf("Parent Iteration: %li\n", (long)parent_iter_num);

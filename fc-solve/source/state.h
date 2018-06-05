@@ -67,7 +67,7 @@ typedef fcs_card fcs_state_foundation;
 typedef struct
 {
     fcs_card data[MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1) +
-                    MAX_NUM_FREECELLS + 4 * MAX_NUM_DECKS];
+                  MAX_NUM_FREECELLS + 4 * MAX_NUM_DECKS];
 } fcs_state;
 
 /*
@@ -595,9 +595,8 @@ static inline __attribute__((pure)) fcs_card fc_solve_card_parse_str(
     fc_solve_state_init_proto(state PASS_STACKS(stacks_num))
 #endif
 
-static inline void fc_solve_state_init_proto(
-    fcs_state_keyval_pair *const state STACKS_NUM__ARG GCC_UNUSED
-        IND_BUF_T_PARAM(indirect_stacks_buffer))
+static inline void fc_solve_state_init_proto(fcs_state_keyval_pair *const state
+        STACKS_NUM__ARG GCC_UNUSED IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     memset(&(state->s), 0, sizeof(state->s));
 #ifdef INDIRECT_STACK_STATES
@@ -849,13 +848,12 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
 
 extern void fc_solve_state_as_string(char *output_s,
     const fcs_state *const state,
-    const fcs_state_locs_struct *const state_locs
-        FREECELLS_STACKS_DECKS__ARGS()
-            FC_SOLVE__PASS_PARSABLE(const bool parseable_output),
-    const bool canonized_order_output PASS_T(
-        const bool display_10_as_t));
+    const fcs_state_locs_struct *const state_locs FREECELLS_STACKS_DECKS__ARGS()
+        FC_SOLVE__PASS_PARSABLE(const bool parseable_output),
+    const bool canonized_order_output PASS_T(const bool display_10_as_t));
 
-typedef enum {
+typedef enum
+{
     FCS_STATE_VALIDITY__OK = 0,
     FCS_STATE_VALIDITY__MISSING_CARD = 1,
     FCS_STATE_VALIDITY__EXTRA_CARD = 2,
@@ -955,8 +953,7 @@ enum
     FCS_VISITED_GENERATED_BY_PRUNING = 0x10,
 };
 
-static inline int fc_solve_card_compare(
-    const fcs_card c1, const fcs_card c2)
+static inline int fc_solve_card_compare(const fcs_card c1, const fcs_card c2)
 {
     return (c1) - (c2);
 }
@@ -1008,13 +1005,13 @@ static inline void set_scan_visited(
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1)));
 }
 
-    /*
-     * This macro determines if child can be placed above parent.
-     *
-     * The variable sequences_are_built_by has to be initialized to
-     * the sequences_are_built_by member of the instance.
-     *
-     * */
+/*
+ * This macro determines if child can be placed above parent.
+ *
+ * The variable sequences_are_built_by has to be initialized to
+ * the sequences_are_built_by member of the instance.
+ *
+ * */
 
 #ifdef FCS_FREECELL_ONLY
 
@@ -1049,8 +1046,8 @@ static inline bool fcs_is_parent_card__helper(const fcs_card child,
         fcs_duplicate_state_extra((dest).info);                                \
     }
 
-static inline void fcs_col_transfer_cards(fcs_cards_column dest_col,
-    fcs_cards_column src_col, const int cards_num)
+static inline void fcs_col_transfer_cards(
+    fcs_cards_column dest_col, fcs_cards_column src_col, const int cards_num)
 {
     fcs_card *const src_cards_ptr =
         &fcs_col_get_card(src_col, (fcs_col_len(src_col) -= cards_num));

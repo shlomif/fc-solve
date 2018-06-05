@@ -49,7 +49,11 @@ typedef unsigned long dictcount_t;
  * The dictionary is implemented as a red-black tree
  */
 
-typedef enum { dnode_red, dnode_black } dnode_color_t;
+typedef enum
+{
+    dnode_red,
+    dnode_black
+} dnode_color_t;
 
 /*
  * This is set by dbm_kaztree.c to conserve space when used in the delta-states
@@ -129,8 +133,7 @@ typedef struct dict_load_t
 #ifdef NO_FC_SOLVE
 extern dict_t *dict_create(dictcount_t, dict_comp_t, void *);
 #else
-extern dict_t *fc_solve_kaz_tree_create(
-    dict_comp_t, void *, meta_allocator *);
+extern dict_t *fc_solve_kaz_tree_create(dict_comp_t, void *, meta_allocator *);
 #endif
 #if 0
 extern void dict_set_allocator(dict_t *, dnode_alloc_t, dnode_free_t, void *);

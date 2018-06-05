@@ -31,11 +31,11 @@
  * */
 typedef const char *lru_side;
 
-extern int __attribute__((pure)) fc_solve_compare_lru_cache_keys(const void *const void_a,
+extern int __attribute__((pure))
+fc_solve_compare_lru_cache_keys(const void *const void_a,
     const void *const void_b, void *const context GCC_UNUSED)
 {
-#define GET_PARAM(p)                                                           \
-    ((lru_side)(((const fcs_cache_key_info *)(p))->val_ptr))
+#define GET_PARAM(p) ((lru_side)(((const fcs_cache_key_info *)(p))->val_ptr))
     const lru_side a = GET_PARAM(void_a), b = GET_PARAM(void_b);
 
     return ((a > b) ? 1 : (a < b) ? (-1) : 0);
@@ -43,8 +43,7 @@ extern int __attribute__((pure)) fc_solve_compare_lru_cache_keys(const void *con
 }
 
 #define NEXT_CACHE_STATE(s) ((s)->lower_pri)
-fcs_state *fc_solve_lookup_state_key_from_val(
-    fcs_instance *const instance,
+fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
     const fcs_collectible_state *const orig_ptr_state_val)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
@@ -158,8 +157,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(
 
         const fcs_move_stack *const stack_ptr__moves_to_parent =
             parents_stack[parents_stack_len - 1].state_val->moves_to_parent;
-        const fcs_internal_move *next_move =
-            stack_ptr__moves_to_parent->moves;
+        const fcs_internal_move *next_move = stack_ptr__moves_to_parent->moves;
         const fcs_internal_move *const moves_end =
             (next_move + stack_ptr__moves_to_parent->num_moves);
 
@@ -258,7 +256,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(
 #define my_brfs_recycle_bin (BRFS_VAR(soft_thread, recycle_bin))
 
 #define NEW_BRFS_QUEUE_ITEM()                                                  \
-    ((fcs_states_linked_list_item *)fcs_compact_alloc_ptr(                   \
+    ((fcs_states_linked_list_item *)fcs_compact_alloc_ptr(                     \
         &(HT_FIELD(hard_thread, allocator)),                                   \
         sizeof(fcs_states_linked_list_item)));
 
@@ -275,8 +273,7 @@ static inline void fc_solve_initialize_bfs_queue(
     my_brfs_recycle_bin = NULL;
 }
 
-void fc_solve_soft_thread_init_befs_or_bfs(
-    fcs_soft_thread *const soft_thread)
+void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
 {
     if (soft_thread->is_befs)
     {
@@ -473,9 +470,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         }
 #endif
 
-        const fcs_game_limit num_vacant_freecells =
-            count_num_vacant_freecells(
-                LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
+        const fcs_game_limit num_vacant_freecells = count_num_vacant_freecells(
+            LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
         const fcs_game_limit num_vacant_stacks =
             count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
         if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&

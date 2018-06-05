@@ -24,7 +24,7 @@ typedef char fcs_render_state_str[2000];
 #ifdef DEBUG_OUT
 #define FCS__OUTPUT_STATE(out_fh, prefix, state_ptr, locs)                     \
     {                                                                          \
-        fcs_render_state_str state_str;                                      \
+        fcs_render_state_str state_str;                                        \
         FCS__RENDER_STATE(state_str, state_ptr, locs);                         \
         fprintf(out_fh, "%s<<<\n%s>>>\n\n", prefix, state_str);                \
         fflush(out_fh);                                                        \

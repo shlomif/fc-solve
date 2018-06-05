@@ -6,8 +6,7 @@
 #include "dbm_solver.h"
 #include "dbm_cache.h"
 
-extern "C" void fc_solve_dbm_store_init(
-    fcs_dbm_store *store, const char *path)
+extern "C" void fc_solve_dbm_store_init(fcs_dbm_store *store, const char *path)
 {
     leveldb::DB *db;
     leveldb::Options options;

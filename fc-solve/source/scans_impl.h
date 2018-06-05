@@ -51,8 +51,7 @@ extern "C" {
     (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
 #endif
 static inline void fc_solve_initialize_befs_rater(
-    fcs_soft_thread *const soft_thread,
-    fcs_state_weighting *const weighting)
+    fcs_soft_thread *const soft_thread, fcs_state_weighting *const weighting)
 {
     const double *const befs_weights = weighting->befs_weights.weights;
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
@@ -72,8 +71,7 @@ static inline void fc_solve_initialize_befs_rater(
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
-    const bool unlimited_sequence_move_var =
-        INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+    const bool unlimited_sequence_move_var = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move unlimited_sequence_move_var
 #else
 #define unlimited_sequence_move FALSE
@@ -153,7 +151,8 @@ static inline __attribute__((format(printf, 1, 2))) void fcs_trace(
 #endif
 
 static inline fcs_game_limit count_num_vacant_freecells(
-    const fcs_game_limit freecells_num GCC_UNUSED, const fcs_state *const state_ptr GCC_UNUSED)
+    const fcs_game_limit freecells_num GCC_UNUSED,
+    const fcs_state *const state_ptr GCC_UNUSED)
 {
 #if MAX_NUM_FREECELLS > 0
     fcs_game_limit num_vacant_freecells = 0;
@@ -173,17 +172,16 @@ static inline fcs_game_limit count_num_vacant_freecells(
 
 static inline pq_rating befs_rate_state(
     const fcs_soft_thread *const soft_thread,
-    const fcs_state_weighting *const weighting,
-    const fcs_state *const state, const int negated_depth)
+    const fcs_state_weighting *const weighting, const fcs_state *const state,
+    const int negated_depth)
 {
     const_AUTO(instance, fcs_st_instance(soft_thread));
-            FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by =
-GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
+    FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by =
+                           GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
-    const bool unlimited_sequence_move_var =
-        INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+    const bool unlimited_sequence_move_var = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move unlimited_sequence_move_var
 #else
 #define unlimited_sequence_move FALSE
@@ -293,7 +291,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
     (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE()                                                        \
-    fcs_state state_key;                                                     \
+    fcs_state state_key;                                                       \
     fcs_kv_state pass = {.key = &(state_key)}
 
 #else
@@ -305,7 +303,7 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
          .key = &FCS_SCANS_the_state, .val = &(PTR_STATE->info)})
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE()                                                        \
-    fcs_collectible_state *ptr_state_raw;                                    \
+    fcs_collectible_state *ptr_state_raw;                                      \
     fcs_kv_state pass
 #endif
 
@@ -325,8 +323,8 @@ GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
  *
  * */
 
-static inline void calculate_real_depth(const bool calc_real_depth,
-    fcs_collectible_state *const ptr_state_orig)
+static inline void calculate_real_depth(
+    const bool calc_real_depth, fcs_collectible_state *const ptr_state_orig)
 {
     if (calc_real_depth)
     {
@@ -440,8 +438,7 @@ static inline bool fcs__should_state_be_pruned__state(
     fcs__should_state_be_pruned__state(ptr_state)
 #else
 static inline bool fcs__should_state_be_pruned(
-    const bool enable_pruning,
-    const fcs_collectible_state *const ptr_state)
+    const bool enable_pruning, const fcs_collectible_state *const ptr_state)
 {
     return (enable_pruning && fcs__should_state_be_pruned__state(ptr_state));
 }

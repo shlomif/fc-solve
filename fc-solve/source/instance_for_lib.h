@@ -20,8 +20,7 @@ extern "C" {
 #include "preset.h"
 #include "move_funcs_order.h"
 
-static inline void fcs_free_moves_list(
-    fcs_soft_thread *const soft_thread)
+static inline void fcs_free_moves_list(fcs_soft_thread *const soft_thread)
 {
     /* Free the BeFS data. */
     free(BEFS_M_VAR(soft_thread, moves_list));
@@ -52,8 +51,7 @@ static inline void fcs_free_moves_list(
 }
 
 #ifdef FCS_WITH_MOVES
-static inline void instance_free_solution_moves(
-    fcs_instance *const instance)
+static inline void instance_free_solution_moves(fcs_instance *const instance)
 {
     if (instance->solution_moves.moves)
     {

@@ -40,8 +40,7 @@ typedef struct fcs_derived_state_struct
 } fcs_derived_state;
 
 static inline void fcs_derived_state_list__recycle(
-    fcs_derived_state **const p_recycle_bin,
-    fcs_derived_state **const p_list)
+    fcs_derived_state **const p_recycle_bin, fcs_derived_state **const p_list)
 {
     var_AUTO(list, *p_list);
     var_AUTO(bin, *p_recycle_bin);
@@ -93,7 +92,7 @@ static inline void fcs_derived_state_list__recycle(
         }                                                                      \
         else                                                                   \
         {                                                                      \
-            ptr_new_state = (fcs_derived_state *)fcs_compact_alloc_ptr(      \
+            ptr_new_state = (fcs_derived_state *)fcs_compact_alloc_ptr(        \
                 derived_list_allocator, sizeof(*ptr_new_state));               \
         }                                                                      \
         memset(&(ptr_new_state->which_irreversible_moves_bitmask), '\0',       \
@@ -139,10 +138,11 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
 static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
-    const fcs_dbm_variant_type local_variant GCC_UNUSED, fcs_state *const ptr_state,
-    const fcs_card card)
+    const fcs_dbm_variant_type local_variant GCC_UNUSED,
+    fcs_state *const ptr_state, const fcs_card card)
 {
-    FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
+    FCS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
     const int_fast32_t rank = fcs_card_rank(card);
     const int_fast32_t suit = fcs_card_suit(card);
     for (uint_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
@@ -211,7 +211,8 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
     fcs_fcc_move additional_moves[RANK_KING * 4 * DECKS_NUM];
     int count_moves_so_far = 0;
     int count_additional_irrev_moves = 0;
-    FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
+    FCS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
 
 #define the_state (init_state_kv_ptr->s)
     uint_fast32_t num_cards_moved;
@@ -329,8 +330,7 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
     return count_moves_so_far + count_additional_irrev_moves;
 }
 
-static inline int horne_prune__simple(
-    const fcs_dbm_variant_type local_variant,
+static inline int horne_prune__simple(const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state_kv_ptr)
 {
     fcs_which_moves_bitmask no_use = {{'\0'}};
@@ -338,7 +338,8 @@ static inline int horne_prune__simple(
 }
 
 static inline bool card_cannot_be_placed(const fcs_state *const s,
-    const uint16_t ds, const fcs_card card, const int sequences_are_built_by GCC_UNUSED)
+    const uint16_t ds, const fcs_card card,
+    const int sequences_are_built_by GCC_UNUSED)
 {
     const_AUTO(col, fcs_state_get_col(*s, ds));
     const_AUTO(col_len, fcs_col_len(col));
@@ -363,8 +364,7 @@ static inline bool is_state_solved(
 static inline bool instance_solver_thread_calc_derived_states(
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state_kv_ptr,
-    fcs_dbm_record *const parent_ptr,
-    fcs_derived_state **const derived_list,
+    fcs_dbm_record *const parent_ptr, fcs_derived_state **const derived_list,
     fcs_derived_state **const derived_list_recycle_bin,
     compact_allocator *const derived_list_allocator,
     const bool perform_horne_prune)

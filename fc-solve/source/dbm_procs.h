@@ -31,8 +31,8 @@ static int fc_solve_compare_pre_cache_keys(
 #undef GET_PARAM
 }
 
-static inline void pre_cache_init(fcs_pre_cache *const pre_cache_ptr,
-    meta_allocator *const meta_alloc)
+static inline void pre_cache_init(
+    fcs_pre_cache *const pre_cache_ptr, meta_allocator *const meta_alloc)
 {
     pre_cache_ptr->tree_recycle_bin = NULL;
     pre_cache_ptr->kaz_tree =
@@ -85,8 +85,8 @@ static inline void cache_populate_from_pre_cache(
     for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
          item = rb_t_next(&trav))
     {
-        cache_insert(cache, &(((pre_cache_key_val_pair *)(item))->key),
-            NULL, '\0');
+        cache_insert(
+            cache, &(((pre_cache_key_val_pair *)(item))->key), NULL, '\0');
     }
 #else
     var_AUTO(kaz_tree, pre_cache->kaz_tree);
@@ -99,9 +99,8 @@ static inline void cache_populate_from_pre_cache(
 #endif
 }
 
-static inline void pre_cache_offload_and_destroy(
-    fcs_pre_cache *const pre_cache, fcs_dbm_store store,
-    fcs_lru_cache *const cache)
+static inline void pre_cache_offload_and_destroy(fcs_pre_cache *const pre_cache,
+    fcs_dbm_store store, fcs_lru_cache *const cache)
 {
     fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
     cache_populate_from_pre_cache(cache, pre_cache);
@@ -142,10 +141,10 @@ typedef struct
     dbm_solver_thread *thread;
 } thread_arg;
 
-static inline void instance_check_key(dbm_solver_thread *const thread,
-    dbm_solver_instance *const instance, const int key_depth,
-    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
-    const unsigned char move,
+static inline void instance_check_key(
+    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
+    const int key_depth, fcs_encoded_state_buffer *const key,
+    fcs_dbm_record *const parent, const unsigned char move,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
@@ -154,11 +153,10 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 );
 
 static inline bool instance_check_multiple_keys(
-    dbm_solver_thread *const thread,
-    dbm_solver_instance *const instance,
+    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
     fcs_dbm__cache_store__common *const cache_store GCC_UNUSED,
-    meta_allocator *const meta_alloc GCC_UNUSED,
-    fcs_derived_state **lists, size_t batch_size
+    meta_allocator *const meta_alloc GCC_UNUSED, fcs_derived_state **lists,
+    size_t batch_size
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move *moves_to_parent
@@ -233,8 +231,7 @@ static void instance_print_stats(dbm_solver_instance *const instance)
 #ifdef DEBUG_FOO
 
 static inline void instance_debug_out_state(
-    dbm_solver_instance *const instance,
-    fcs_encoded_state_buffer *enc_state)
+    dbm_solver_instance *const instance, fcs_encoded_state_buffer *enc_state)
 {
     fcs_state_keyval_pair state;
     fcs_state_locs_struct locs;

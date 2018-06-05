@@ -33,16 +33,14 @@ static inline void fc_solve_var_base_writer_init(fcs_var_base_writer *const s)
 }
 #endif
 
-static inline void fc_solve_var_base_writer_start(
-    fcs_var_base_writer *const s)
+static inline void fc_solve_var_base_writer_start(fcs_var_base_writer *const s)
 {
     FCS_var_base_int__set_ui(s->data, 0);
     FCS_var_base_int__set_ui(s->multiplier, 1);
 }
 
-static inline void fc_solve_var_base_writer_write(
-    fcs_var_base_writer *const w, const unsigned long base,
-    const unsigned long item)
+static inline void fc_solve_var_base_writer_write(fcs_var_base_writer *const w,
+    const unsigned long base, const unsigned long item)
 {
     assert(item < base);
     FCS_var_base_int__addmul_ui(w->data, w->multiplier, item);

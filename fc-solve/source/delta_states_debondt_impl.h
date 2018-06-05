@@ -52,9 +52,9 @@ enum
 static void fc_solve_debondt_delta_stater_init(
     fcs_debondt_delta_stater *const self,
     const fcs_dbm_variant_type local_variant, fcs_state *const init_state,
-    const size_t num_columns, const int num_freecells
-    PASS_ON_NOT_FC_ONLY(const int sequences_are_built_by)
-)
+    const size_t num_columns,
+    const int num_freecells PASS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by))
 {
     FCS_ON_NOT_FC_ONLY(self->sequences_are_built_by = sequences_are_built_by);
 
@@ -126,9 +126,8 @@ static inline int wanted_suit_idx_opt(const fcs_card parent_card)
 
 static inline int calc_child_card_option(
     const fcs_dbm_variant_type local_variant, const fcs_card parent_card,
-    const fcs_card child_card
-    PASS_ON_NOT_FC_ONLY(const int sequences_are_built_by)
-)
+    const fcs_card child_card PASS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by))
 {
     if (IS_BAKERS_DOZEN())
     {
@@ -164,8 +163,7 @@ static inline int get_top_rank_for_iter(
 
 static void fc_solve_debondt_delta_stater_encode_composite(
     fcs_debondt_delta_stater *const self,
-    const fcs_dbm_variant_type local_variant,
-    fcs_var_base_writer *const writer)
+    const fcs_dbm_variant_type local_variant, fcs_var_base_writer *const writer)
 {
     fcs_state *const derived = self->derived_state;
 
@@ -261,10 +259,10 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
                 if (fcs_card_rank(child_card) != 1)
                 {
-                    const int opt = calc_child_card_option(
-                        local_variant, parent_card, child_card
-                        PASS_ON_NOT_FC_ONLY(self->sequences_are_built_by)
-                    );
+                    const int opt =
+                        calc_child_card_option(local_variant, parent_card,
+                            child_card PASS_ON_NOT_FC_ONLY(
+                                self->sequences_are_built_by));
                     SET_CARD_STATE(child_card, opt);
                 }
 
@@ -331,8 +329,7 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
                              : ((fcs_card_suit(parent_card) & (0x1)) ^ 0x1));
              suit < FCS_NUM_SUITS; suit += (IS_BAKERS_DOZEN() ? 1 : 2))
         {
-            const fcs_card candidate_card =
-                fcs_make_card(candidate_rank, suit);
+            const fcs_card candidate_card = fcs_make_card(candidate_rank, suit);
 
             if (CARD_STATE(candidate_card) == wanted_opt)
             {
@@ -351,8 +348,8 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
 
 static void fc_solve_debondt_delta_stater_decode(
     fcs_debondt_delta_stater *const self,
-    const fcs_dbm_variant_type local_variant,
-    fcs_var_base_reader *const reader, fcs_state *const ret)
+    const fcs_dbm_variant_type local_variant, fcs_var_base_reader *const reader,
+    fcs_state *const ret)
 {
     fcs_card new_top_most_cards[MAX_NUM_STACKS];
 
@@ -527,11 +524,10 @@ static void fc_solve_debondt_delta_stater_decode(
                 const fcs_card child_card = fcs_col_get_card(orig_col, pos);
 
                 if ((!IS_IN_FOUNDATIONS(child_card)) &&
-                    (CARD_STATE(child_card) == calc_child_card_option(
-                                                   local_variant, parent_card,
-                                                   child_card
-                                                   PASS_ON_NOT_FC_ONLY(self->sequences_are_built_by)
-                                                   )))
+                    (CARD_STATE(child_card) ==
+                        calc_child_card_option(local_variant, parent_card,
+                            child_card PASS_ON_NOT_FC_ONLY(
+                                self->sequences_are_built_by))))
                 {
                     fcs_col_push_card(col, child_card);
                     parent_card = child_card;

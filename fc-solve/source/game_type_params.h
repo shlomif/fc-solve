@@ -16,15 +16,15 @@
 typedef struct
 {
 #endif
-/*
- * The number of Freecells, Stacks and Foundations present in the game.
- *
- * freecells_num and stacks_num are variable and may be specified at
- * the beginning of the execution of the algorithm. However, there
- * is a maximal limit to them which is set in config.h.
- *
- * decks_num can be 1 or 2 .
- * */
+    /*
+     * The number of Freecells, Stacks and Foundations present in the game.
+     *
+     * freecells_num and stacks_num are variable and may be specified at
+     * the beginning of the execution of the algorithm. However, there
+     * is a maximal limit to them which is set in config.h.
+     *
+     * decks_num can be 1 or 2 .
+     * */
 
 #define SET_INSTANCE_GAME_PARAMS(instance) const_SLOT(game_params, instance)
 
@@ -61,17 +61,17 @@ typedef struct
 #define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)                          \
     FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
 #else
-    /* sequences_are_built_by - (bits 0:1) - what two adjacent cards in the
-     * same sequence can be.
-     *
-     * empty_stacks_fill (bits 2:3) - with what cards can empty stacks be
-     * filled with.
-     *
-     * unlimited_sequence_move - (bit 4) - whether an entire sequence can be
-     * moved from one place to the other regardless of the number of
-     * unoccupied Freecells there are.
-     * */
-    fcs_game_limit game_flags;
+/* sequences_are_built_by - (bits 0:1) - what two adjacent cards in the
+ * same sequence can be.
+ *
+ * empty_stacks_fill (bits 2:3) - with what cards can empty stacks be
+ * filled with.
+ *
+ * unlimited_sequence_move - (bit 4) - whether an entire sequence can be
+ * moved from one place to the other regardless of the number of
+ * unoccupied Freecells there are.
+ * */
+fcs_game_limit game_flags;
 
 #define INSTANCE_GAME_FLAGS (instance->game_params.game_flags)
 #define GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance)                          \

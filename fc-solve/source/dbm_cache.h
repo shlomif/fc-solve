@@ -53,8 +53,7 @@ static inline void cache_destroy(fcs_lru_cache *cache)
 }
 
 static inline void cache_init(fcs_lru_cache *const cache,
-    const long max_num_elements_in_cache,
-    meta_allocator *const meta_alloc)
+    const long max_num_elements_in_cache, meta_allocator *const meta_alloc)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
@@ -88,8 +87,7 @@ static inline bool cache_does_key_exist(
     else
     {
         /* First - promote this key to the top of the cache. */
-        fcs_cache_key_info *const existing =
-            (fcs_cache_key_info *)existing_key;
+        fcs_cache_key_info *const existing = (fcs_cache_key_info *)existing_key;
 
         if (existing->higher_pri)
         {

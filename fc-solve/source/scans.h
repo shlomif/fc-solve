@@ -62,8 +62,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
     if (is_simple_simon)
     {
 #define FCS_POS_IDX(rank, suit) ((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank))
-        fcs_pos_by_rank *const p_by_r =
-            (fcs_pos_by_rank *)positions_by_rank;
+        fcs_pos_by_rank *const p_by_r = (fcs_pos_by_rank *)positions_by_rank;
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
             const_AUTO(dest_col, fcs_state_get_col(*ptr_state_key, ds));
@@ -85,7 +84,8 @@ static inline void fc_solve__calc_positions_by_rank_data(
     {
 #define state_key (*ptr_state_key)
 
-        FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by = GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
+        FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by =
+                               GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
 
         /* We need 2 chars per card - one for the column_idx and one
          * for the card_idx.
@@ -164,8 +164,7 @@ extern int fc_solve_sfs_check_state_begin(fcs_hard_thread *const,
     fcs_kv_state *const,
     fcs_kv_state SFS__PASS_MOVE_STACK(fcs_move_stack *const));
 
-extern fcs_collectible_state *fc_solve_sfs_check_state_end(
-    fcs_soft_thread *,
+extern fcs_collectible_state *fc_solve_sfs_check_state_end(fcs_soft_thread *,
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
     fcs_kv_state,
 #endif

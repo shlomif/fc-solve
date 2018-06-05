@@ -12,8 +12,8 @@
 #define IS_ARG(s) (!strcmp(arg_str, (s)))
 #define IS_ARG_LONG(shrt, lng) (IS_ARG("-" shrt) || IS_ARG("--" lng))
 
-static inline void set_iter_handler(
-    void *const instance GCC_UNUSED, fc_solve_display_information_context *const dc GCC_UNUSED)
+static inline void set_iter_handler(void *const instance GCC_UNUSED,
+    fc_solve_display_information_context *const dc GCC_UNUSED)
 {
 #ifndef FCS_WITHOUT_ITER_HANDLER
     freecell_solver_user_set_iter_handler_long(instance, my_iter_handler, dc);

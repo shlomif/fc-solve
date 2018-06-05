@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
                 fc_solve_err("slurp without arg!\n");
             }
             FILE *f = fopen(argv[arg++], "rt");
-            if (! f)
+            if (!f)
             {
                 fc_solve_err("Cannot slurp file!\n");
             }

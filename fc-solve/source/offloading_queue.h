@@ -65,8 +65,7 @@ typedef struct
 } fcs_offloading_queue;
 
 static inline void fcs_offloading_queue__init(
-    fcs_offloading_queue *const queue,
-    meta_allocator *const meta_alloc)
+    fcs_offloading_queue *const queue, meta_allocator *const meta_alloc)
 {
     fc_solve_compact_allocator_init(&(queue->queue_allocator), meta_alloc);
 
@@ -81,8 +80,7 @@ static inline void fcs_offloading_queue__destroy(
 }
 
 static inline bool fcs_offloading_queue__extract(
-    fcs_offloading_queue *const queue,
-    offloading_queue_item *const return_item)
+    fcs_offloading_queue *const queue, offloading_queue_item *const return_item)
 {
     fcs_Q_item_wrapper *const item = queue->queue_head;
 
@@ -106,8 +104,7 @@ static inline bool fcs_offloading_queue__extract(
 }
 
 static inline void fcs_offloading_queue__insert(
-    fcs_offloading_queue *const queue,
-    const offloading_queue_item *const datum)
+    fcs_offloading_queue *const queue, const offloading_queue_item *const datum)
 {
     fcs_Q_item_wrapper *new_item;
     if (queue->queue_recycle_bin)
@@ -155,8 +152,7 @@ static inline void fcs_offloading_queue_page__init(
 {
     *page = (typeof(*page)){.page_index = page_index,
         .queue_id = queue_id,
-        .data =
-            malloc(sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE)};
+        .data = malloc(sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE)};
     fcs_offloading_queue_page__recycle(page);
 }
 
@@ -222,13 +218,11 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
         page, page_filename, offload_dir_path);
 #ifdef __unix__
     const int f = open(page_filename, O_RDONLY);
-    read(f, page->data,
-        sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
+    read(f, page->data, sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
     close(f);
 #else
     FILE *const f = fopen(page_filename, "rb");
-    fread(
-        page->data, sizeof(offloading_queue_item), NUM_ITEMS_PER_PAGE, f);
+    fread(page->data, sizeof(offloading_queue_item), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
 #endif
 
@@ -249,13 +243,11 @@ static inline void fcs_offloading_queue_page__offload(
         page, page_filename, offload_dir_path);
 #ifdef __unix__
     const int f = creat(page_filename, 0644);
-    write(f, page->data,
-        sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
+    write(f, page->data, sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
     close(f);
 #else
     FILE *const f = fopen(page_filename, "wb");
-    fwrite(
-        page->data, sizeof(offloading_queue_item), NUM_ITEMS_PER_PAGE, f);
+    fwrite(page->data, sizeof(offloading_queue_item), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
 #endif
 }
@@ -275,9 +267,8 @@ typedef struct
     off_q_page pages[2];
 } fcs_offloading_queue;
 
-static inline void fcs_offloading_queue__init(
-    fcs_offloading_queue *const queue, const char *const offload_dir_path,
-    const long id)
+static inline void fcs_offloading_queue__init(fcs_offloading_queue *const queue,
+    const char *const offload_dir_path, const long id)
 {
     queue->offload_dir_path = offload_dir_path;
     fcs_queue_stats_init(&queue->stats);
@@ -328,8 +319,7 @@ static inline void fcs_offloading_queue__insert(
 }
 
 static inline bool fcs_offloading_queue__extract(
-    fcs_offloading_queue *const queue,
-    offloading_queue_item *const return_item)
+    fcs_offloading_queue *const queue, offloading_queue_item *const return_item)
 {
     if (q_stats_is_empty(&queue->stats))
     {

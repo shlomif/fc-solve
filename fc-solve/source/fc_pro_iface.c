@@ -105,9 +105,8 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
                 fcs_card card;
                 fcs_col_pop_card(col, card);
                 fcs_increment_foundation(pos, fcs_card_suit(card));
-                moves_processed_add_new_move(
-                    ret, (fcs_extended_move){
-                             .move = move, .to_empty_stack = FALSE});
+                moves_processed_add_new_move(ret,
+                    (fcs_extended_move){.move = move, .to_empty_stack = FALSE});
             }
             --virtual_stack_len[src];
         }
@@ -118,9 +117,8 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
         {
             const int src = fcs_move_get_src_freecell(move);
             if (!fcs_freecell_is_empty(pos, src))
-                moves_processed_add_new_move(
-                    ret, (fcs_extended_move){
-                             .move = move, .to_empty_stack = FALSE});
+                moves_processed_add_new_move(ret,
+                    (fcs_extended_move){.move = move, .to_empty_stack = FALSE});
             fcs_increment_foundation(
                 pos, fcs_card_suit(fcs_freecell_card(pos, src)));
             fcs_empty_freecell(pos, src);
@@ -135,9 +133,8 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
             const_AUTO(dest, fcs_move_get_dest_stack(move));
             if (!fcs_freecell_is_empty(pos, src))
             {
-                moves_processed_add_new_move(
-                    ret, (fcs_extended_move){
-                             .move = move, .to_empty_stack = FALSE});
+                moves_processed_add_new_move(ret,
+                    (fcs_extended_move){.move = move, .to_empty_stack = FALSE});
                 fcs_state_push(&pos, dest, fcs_freecell_card(pos, src));
                 fcs_empty_freecell(pos, src);
             }
@@ -156,9 +153,8 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
             assert(fcs_col_len(col) <= virtual_stack_len[src]);
             if (fcs_col_len(col) >= virtual_stack_len[src])
             {
-                moves_processed_add_new_move(
-                    ret, (fcs_extended_move){
-                             .move = move, .to_empty_stack = FALSE});
+                moves_processed_add_new_move(ret,
+                    (fcs_extended_move){.move = move, .to_empty_stack = FALSE});
                 fcs_card temp_card;
                 fcs_col_pop_card(col, temp_card);
                 fcs_put_card_in_freecell(pos, dest, temp_card);

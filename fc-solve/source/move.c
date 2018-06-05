@@ -47,21 +47,21 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
         fcs_empty_freecell(*state_key, src);
         break;
     case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
-        {
+    {
         fcs_card card = fcs_freecell_card(*state_key, src);
         fcs_put_card_in_freecell(*state_key, dest, card);
         fcs_empty_freecell(*state_key, src);
-        }
-        break;
+    }
+    break;
 
     case FCS_MOVE_TYPE_STACK_TO_FREECELL:
-        {
+    {
         col = fcs_state_get_col(*state_key, src);
         fcs_card card;
         fcs_col_pop_card(col, card);
         fcs_put_card_in_freecell(*state_key, dest, card);
-        }
-        break;
+    }
+    break;
 #endif
     case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
         col = fcs_state_get_col(*state_key, src);
@@ -105,9 +105,8 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
 #endif
 
 #define DERIVED_STATES_LIST_GROW_BY 16
-void fc_solve_derived_states_list_add_state(
-    fcs_derived_states_list *const list, fcs_collectible_state *const state,
-    const int context)
+void fc_solve_derived_states_list_add_state(fcs_derived_states_list *const list,
+    fcs_collectible_state *const state, const int context)
 {
     if ((!((list->num_states + (list->states != NULL)) &
             (DERIVED_STATES_LIST_GROW_BY - 1))))

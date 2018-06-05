@@ -89,9 +89,9 @@ static inline void write_request(const long long end_board,
     write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req));
 }
 
-static inline void transaction(const fcs_worker *const worker, const int read_fd,
-    const long long end_board, const long long board_num_step,
-    long long *const next_board_num_ptr)
+static inline void transaction(const fcs_worker *const worker,
+    const int read_fd, const long long end_board,
+    const long long board_num_step, long long *const next_board_num_ptr)
 {
     response_type response;
     if (read(read_fd, &response, sizeof(response)) <

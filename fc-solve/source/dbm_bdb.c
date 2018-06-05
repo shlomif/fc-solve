@@ -27,8 +27,8 @@ static __attribute__((noreturn)) inline void my_close(DB *const dbp, int ret)
     exit(ret);
 }
 
-void fc_solve_dbm_store_init(fcs_dbm_store *const store,
-    const char *const path, void **const recycle_bin_ptr)
+void fc_solve_dbm_store_init(fcs_dbm_store *const store, const char *const path,
+    void **const recycle_bin_ptr)
 {
     fcs_dbm *db = SMALLOC1(db);
 

@@ -142,9 +142,8 @@ static void *instance_run_solver_thread(void *const void_arg)
             {
                 for (; batch_size < max_batch_size; ++batch_size)
                 {
-                    if (fcs_offloading_queue__extract(
-                            &(coll->queue), (offloading_queue_item
-                                                    *)(&tokens[batch_size])))
+                    if (fcs_offloading_queue__extract(&(coll->queue),
+                            (offloading_queue_item *)(&tokens[batch_size])))
                     {
                         derived_lists[batch_size] = NULL;
                         instance_increment(instance);
@@ -347,9 +346,8 @@ int main(int argc, char *argv[])
 
     const_AUTO(local_variant, inp.local_variant);
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY())
-    );
+    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY()));
 
 #define KEY_PTR() (key_ptr)
     dbm_solver_instance instance;

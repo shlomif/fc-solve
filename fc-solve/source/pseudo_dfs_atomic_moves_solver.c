@@ -162,10 +162,9 @@ static inline void instance_init(dbm_solver_instance *const instance,
     const long max_num_elements_in_cache)
 {
     instance->local_variant = local_variant;
-    fc_solve_delta_stater_init(
-        &(instance->delta_stater), &(init_state->s), STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-    );
+    fc_solve_delta_stater_init(&(instance->delta_stater), &(init_state->s),
+        STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
     fcs_init_and_encode_state(&instance->delta_stater, local_variant,
         init_state, &instance->init_key);
     instance->solution_was_found = FALSE;

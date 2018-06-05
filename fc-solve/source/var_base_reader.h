@@ -33,9 +33,8 @@ static inline void fc_solve_var_base_reader_init(fcs_var_base_reader *const s)
     FCS_var_base_int__init(s->r);
 }
 #endif
-static inline void fc_solve_var_base_reader_start(
-    fcs_var_base_reader *const s, const unsigned char *const data,
-    const size_t data_len)
+static inline void fc_solve_var_base_reader_start(fcs_var_base_reader *const s,
+    const unsigned char *const data, const size_t data_len)
 {
     FCS_var_base_int__set_ui(s->data, 0);
 #define NUM_BITS 8

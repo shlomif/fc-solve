@@ -27,10 +27,13 @@ enum
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
 
-static inline void *alloc_instance_and_parse(const int argc GCC_UNUSED, char **const argv GCC_UNUSED,
-    int *const arg_ptr GCC_UNUSED, freecell_solver_str_t *const known_parameters GCC_UNUSED,
-    const freecell_solver_user_cmd_line_known_commands_callback_t callback GCC_UNUSED,
-    void *const callback_context GCC_UNUSED, const bool only_recognized GCC_UNUSED)
+static inline void *alloc_instance_and_parse(const int argc GCC_UNUSED,
+    char **const argv GCC_UNUSED, int *const arg_ptr GCC_UNUSED,
+    freecell_solver_str_t *const known_parameters GCC_UNUSED,
+    const freecell_solver_user_cmd_line_known_commands_callback_t callback
+        GCC_UNUSED,
+    void *const callback_context GCC_UNUSED,
+    const bool only_recognized GCC_UNUSED)
 {
     void *const instance = freecell_solver_user_alloc();
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME

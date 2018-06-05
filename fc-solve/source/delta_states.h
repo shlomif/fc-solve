@@ -58,7 +58,7 @@ static inline fcs_dbm_record *fcs_dbm_record_get_parent_ptr(
     fcs_dbm_record *const rec)
 {
     return (fcs_dbm_record *)(rec->parent_and_refcount &
-                                (~(((uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT)));
+                              (~(((uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT)));
 }
 #endif
 
@@ -102,8 +102,7 @@ static inline void fcs_dbm_record_set_refcount(
 }
 #endif
 
-static inline void fcs_dbm_record_increment_refcount(
-    fcs_dbm_record *const rec)
+static inline void fcs_dbm_record_increment_refcount(fcs_dbm_record *const rec)
 {
     fcs_dbm_record_set_refcount(rec, fcs_dbm_record_get_refcount(rec) + 1);
 }

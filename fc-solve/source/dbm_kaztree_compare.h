@@ -27,7 +27,7 @@ static int compare_records(
 {
 #define GET_PARAM(p) (&(((const fcs_dbm_record *)(p))->key))
     const fcs_encoded_state_buffer *const a = GET_PARAM(void_a),
-                                            *const b = GET_PARAM(void_b);
+                                          *const b = GET_PARAM(void_b);
 #undef GET_PARAM
 
     if (a->s[0] < b->s[0])

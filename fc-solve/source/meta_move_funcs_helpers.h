@@ -64,8 +64,8 @@ static inline size_t calc_max_simple_simon_seq_move(const int num_empty_cols)
 
 #define sfs_check_state_end()                                                  \
     fc_solve_derived_states_list_add_state(derived_states_list,                \
-        fc_solve_sfs_check_state_end(soft_thread, sfs_check_state_end__arg     \
-            &pass_new_state FCS__pass_moves(moves)),                           \
+        fc_solve_sfs_check_state_end(soft_thread,                              \
+            sfs_check_state_end__arg &pass_new_state FCS__pass_moves(moves)),  \
         state_context_value)
 
 static inline void fc_solve_move_sequence_function(
@@ -85,7 +85,7 @@ static inline void fc_solve_move_sequence_function(
 #ifdef FCS_RCS_STATES
 
 #define tests_define_accessors_rcs_states()                                    \
-    fcs_state my_new_out_state_key;                                          \
+    fcs_state my_new_out_state_key;                                            \
     pass_new_state.key = &my_new_out_state_key
 
 #else
@@ -126,8 +126,7 @@ static inline void fc_solve_move_sequence_function(
 
 #ifdef FCS_WITH_MOVES
 #define tests_define_accessors_move_stack()                                    \
-    fcs_move_stack *const moves =                                            \
-        &(HT_FIELD(hard_thread, reusable_move_stack))
+    fcs_move_stack *const moves = &(HT_FIELD(hard_thread, reusable_move_stack))
 #else
 #define tests_define_accessors_move_stack()
 #endif
@@ -137,9 +136,9 @@ static inline void fc_solve_move_sequence_function(
  * This macro defines these accessors to have some value.
  * */
 #define tests_define_accessors_no_stacks(MORE)                                 \
-    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;      \
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;             \
     tests_define_accessors_move_stack();                                       \
-    MORE fcs_kv_state pass_new_state;                                        \
+    MORE fcs_kv_state pass_new_state;                                          \
     tests_define_accessors_freecell_only();                                    \
     tests_define_accessors_rcs_states()
 

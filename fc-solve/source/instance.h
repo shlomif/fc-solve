@@ -99,8 +99,7 @@ typedef struct
 #define FCS_SS_POS_BY_RANK_WIDTH (FCS_RANK_KING + 1)
 #define FCS_SS_POS_BY_RANK_LEN (FCS_SS_POS_BY_RANK_WIDTH * 4)
 #define FCS_BOTH__POS_BY_RANK__SIZE                                            \
-    (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank),                   \
-        FCS_POS_BY_RANK_LEN))
+    (max(FCS_SS_POS_BY_RANK_LEN * sizeof(fcs_pos_by_rank), FCS_POS_BY_RANK_LEN))
 #else
 #define FCS_BOTH__POS_BY_RANK__SIZE FCS_POS_BY_RANK_LEN
 #endif
@@ -159,18 +158,18 @@ extern guint fc_solve_hash_function(gconstpointer key);
 
 #else
 #define HT_LOOP_START()                                                        \
-    fcs_hard_thread *hard_thread = instance->hard_threads;              \
-    fcs_hard_thread *const end_hard_thread =                            \
+    fcs_hard_thread *hard_thread = instance->hard_threads;                     \
+    fcs_hard_thread *const end_hard_thread =                                   \
         hard_thread + instance->num_hard_threads;                              \
     for (; hard_thread < end_hard_thread; ++hard_thread)
 #endif
 
 /* ST_LOOP == soft threads' loop - macros to abstract it. */
 #define ST_LOOP_START()                                                        \
-    fcs_soft_thread *const ht_soft_threads =                            \
+    fcs_soft_thread *const ht_soft_threads =                                   \
         HT_FIELD(hard_thread, soft_threads);                                   \
-    fcs_soft_thread *soft_thread = ht_soft_threads;                     \
-    fcs_soft_thread *const end_soft_thread =                            \
+    fcs_soft_thread *soft_thread = ht_soft_threads;                            \
+    fcs_soft_thread *const end_soft_thread =                                   \
         ht_soft_threads + HT_FIELD(hard_thread, num_soft_threads);             \
     for (; soft_thread < end_soft_thread; ++soft_thread)
 #define MOVES_GROW_BY 16
@@ -192,7 +191,8 @@ typedef struct
     fcs_default_weights befs_weights;
 } fcs_state_weighting;
 
-typedef enum {
+typedef enum
+{
     FCS_NO_SHUFFLING,
     FCS_RAND,
     FCS_WEIGHTING,
@@ -261,8 +261,7 @@ typedef struct
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
 typedef void (*instance_debug_iter_output_func)(
-    void *, fcs_int_limit_t, int, void *,
-    fcs_kv_state *, fcs_int_limit_t);
+    void *, fcs_int_limit_t, int, void *, fcs_kv_state *, fcs_int_limit_t);
 #endif
 
 typedef struct fc_solve_soft_thread_struct fcs_soft_thread;
@@ -373,7 +372,8 @@ typedef struct
     moves_by_depth_unit *by_depth_units;
 } fcs_moves_by_depth_array;
 
-typedef enum {
+typedef enum
+{
     FCS_SUPER_METHOD_DFS,
     FCS_SUPER_METHOD_BEFS_BRFS,
 #ifndef FCS_DISABLE_PATSOLVE
@@ -650,8 +650,8 @@ struct fc_solve_instance_struct
 #endif
     ;
 #ifdef FCS_WITH_MOVES
-    bool FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH,
-        FCS_RUNTIME_IN_OPTIMIZATION_THREAD, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
+    bool FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH, FCS_RUNTIME_IN_OPTIMIZATION_THREAD,
+        FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
 #endif
 
 /*
@@ -732,7 +732,7 @@ struct fc_solve_instance_struct
      * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
      * */
     instance_debug_iter_output_func debug_iter_output_func;
-    void* debug_iter_output_context;
+    void *debug_iter_output_context;
 #endif
 
     /*
@@ -852,8 +852,8 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
     fcs_soft_thread *, fcs_kv_state);
 
 #ifdef FCS_RCS_STATES
-fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *instance,
-    const fcs_collectible_state *orig_ptr_state_val);
+fcs_state *fc_solve_lookup_state_key_from_val(
+    fcs_instance *instance, const fcs_collectible_state *orig_ptr_state_val);
 
 extern int fc_solve_compare_lru_cache_keys(const void *, const void *, void *);
 
@@ -911,7 +911,8 @@ static inline void fc_solve_reset_soft_thread(
     STRUCT_CLEAR_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
 }
 
-typedef enum {
+typedef enum
+{
     FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS,
     FOREACH_SOFT_THREAD_FREE_INSTANCE,
     FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER,
@@ -919,8 +920,7 @@ typedef enum {
 } foreach_st_callback_choice;
 
 extern void fc_solve_foreach_soft_thread(fcs_instance *const instance,
-    const foreach_st_callback_choice callback_choice,
-    void *const context);
+    const foreach_st_callback_choice callback_choice, void *const context);
 
 /*
     This function is the last function that should be called in the
@@ -941,17 +941,19 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     moves_order->num = 0;
 }
 
-    /***********************************************************/
-#define MOVE_FUNC_ARGS fcs_soft_thread *const soft_thread GCC_UNUSED,      \
-        fcs_kv_state raw_state_raw GCC_UNUSED,                                          \
+/***********************************************************/
+#define MOVE_FUNC_ARGS                                                         \
+    fcs_soft_thread *const soft_thread GCC_UNUSED,                             \
+        fcs_kv_state raw_state_raw GCC_UNUSED,                                 \
         fcs_derived_states_list *const derived_states_list GCC_UNUSED
 
 #define DECLARE_MOVE_FUNCTION(name) extern void name(MOVE_FUNC_ARGS)
-#define DECLARE_PURE_MOVE_FUNCTION(name) extern void __attribute__((const)) __attribute__((pure)) name(MOVE_FUNC_ARGS)
+#define DECLARE_PURE_MOVE_FUNCTION(name)                                       \
+    extern void __attribute__((const)) __attribute__((pure))                   \
+        name(MOVE_FUNC_ARGS)
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
-static inline bool fcs_get_calc_real_depth(
-    const fcs_instance *const instance)
+static inline bool fcs_get_calc_real_depth(const fcs_instance *const instance)
 {
     return STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_CALC_REAL_DEPTH);
 }

@@ -78,9 +78,7 @@ static inline void get_board_l(const long long deal_idx, char *const ret)
     {
         const microsoft_rand_uint j =
             microsoft_rand__game_num_rand(&seedx, deal_idx) % num_cards_left;
-        card_to_string(
-            &ret[offset_by_i[i]],
-            deck[j]);
+        card_to_string(&ret[offset_by_i[i]], deck[j]);
         deck[j] = deck[--num_cards_left];
     }
 }

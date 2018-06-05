@@ -242,7 +242,8 @@ static freecell_solver_str_t known_parameters[] = {"-h", "--help",
     "--display-parent-iter", "-sel", "--show-exceeded-limits", "-o", "--output",
     "-hoi", "--hint-on-intractable", "--reset", "--version", NULL};
 
-typedef enum {
+typedef enum
+{
     SUCCESS = 0,
     ERROR = -1,
 } exit_code_type;

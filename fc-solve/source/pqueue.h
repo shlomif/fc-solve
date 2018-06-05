@@ -94,8 +94,8 @@ static inline void fc_solve_PQueueFree(pri_queue *const pq)
 /* Join a priority queue
    "r" is the rating of the item you're adding for sorting purposes */
 
-static inline void fc_solve_pq_push(pri_queue *const pq,
-    fcs_collectible_state *const val, const pq_rating r)
+static inline void fc_solve_pq_push(
+    pri_queue *const pq, fcs_collectible_state *const val, const pq_rating r)
 {
     var_AUTO(i, ++(pq->current_size));
 

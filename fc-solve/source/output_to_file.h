@@ -137,9 +137,10 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
         }
     }
 #endif
-    fputs((was_solved ? "This game is solveable.\n" :
-            (display_context.show_exceeded_limits && was_suspend) ?
-            "Iterations count exceeded.\n" : "I could not solve this game.\n"),
+    fputs((was_solved ? "This game is solveable.\n"
+                      : (display_context.show_exceeded_limits && was_suspend)
+                            ? "Iterations count exceeded.\n"
+                            : "I could not solve this game.\n"),
         output_fh);
 
     fprintf(output_fh, "Total number of states checked is %ld.\n",

@@ -404,8 +404,7 @@ static inline void upon_new_state(fcs_instance *const instance GCC_UNUSED,
 }
 
 #define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
-static inline bool handle_existing_void(
-    fcs_instance *const instance,
+static inline bool handle_existing_void(fcs_instance *const instance,
     fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state,
     fcs_kv_state *const existing_state_raw, void *const existing_void)
 {
@@ -435,9 +434,8 @@ static inline bool handle_existing_void(
     handle_existing_void(                                                      \
         instance, hard_thread, new_state, existing_state_raw, (existing_void))
 
-bool fc_solve_check_and_add_state(
-    fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state,
-    fcs_kv_state *const existing_state_raw)
+bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
+    fcs_kv_state *const new_state, fcs_kv_state *const existing_state_raw)
 {
 /*
  * TODO : these accessor macros are probably out-of-date and won't work with

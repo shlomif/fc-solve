@@ -7,7 +7,7 @@ use File::Copy qw( copy );
 use Test::More;
 use File::Which qw( which );
 
-my $SKIP = 1;
+my $SKIP = 0;
 
 if ( $SKIP or !$ENV{FCS_TEST_CLANG_FORMAT} )
 {

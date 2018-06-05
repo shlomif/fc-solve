@@ -197,8 +197,8 @@ void fc_solve_foreach_soft_thread(fcs_instance *const instance,
 static inline
 #endif
     void
-    fc_solve_init_soft_thread(fcs_hard_thread *const hard_thread,
-        fcs_soft_thread *const soft_thread)
+    fc_solve_init_soft_thread(
+        fcs_hard_thread *const hard_thread, fcs_soft_thread *const soft_thread)
 {
     *soft_thread = (fcs_soft_thread){
         .hard_thread = hard_thread,
@@ -362,8 +362,8 @@ static inline int find_empty_col(
     return -1;
 }
 
-static inline int find_col_card(const fcs_state *const dynamic_state,
-    const fcs_card needle STACKS_NUM__ARG)
+static inline int find_col_card(
+    const fcs_state *const dynamic_state, const fcs_card needle STACKS_NUM__ARG)
 {
     for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
     {
@@ -403,9 +403,8 @@ static inline find_card_ret find_card_src_string(
 #if MAX_NUM_FREECELLS > 0
     if (src_col_idx < 0)
     {
-        return (find_card_ret){
-            .idx = (find_fc_card(
-                dynamic_state, needle PASS_FREECELLS(FREECELLS_NUM__VAL))),
+        return (find_card_ret){.idx = (find_fc_card(dynamic_state,
+                                   needle PASS_FREECELLS(FREECELLS_NUM__VAL))),
             .type = FREECELL};
     }
     else
@@ -503,9 +502,9 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
 #endif
             case FCS_PATS__TYPE_FOUNDATION:
             {
-                const find_card_ret src = find_card_src_string(
-                    &(s_and_info.s), card PASS_FREECELLS(FREECELLS_NUM__VAL)
-                                         PASS_STACKS(STACKS_NUM__VAL));
+                const find_card_ret src = find_card_src_string(&(s_and_info.s),
+                    card PASS_FREECELLS(FREECELLS_NUM__VAL)
+                        PASS_STACKS(STACKS_NUM__VAL));
                 if (src.type == FREECELL)
                 {
                     fcs_int_move_set_type(
@@ -661,8 +660,7 @@ void fc_solve_finish_instance(fcs_instance *const instance)
         instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
-fcs_soft_thread *fc_solve_new_soft_thread(
-    fcs_hard_thread *const hard_thread)
+fcs_soft_thread *fc_solve_new_soft_thread(fcs_hard_thread *const hard_thread)
 {
     if (HT_INSTANCE(hard_thread)->next_soft_thread_id == MAX_NUM_SCANS)
     {

@@ -152,8 +152,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            if (fcs_offloading_queue__extract(&(instance->queue),
-                    (offloading_queue_item *)(&token)))
+            if (fcs_offloading_queue__extract(
+                    &(instance->queue), (offloading_queue_item *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -232,8 +232,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 }
 
 static bool populate_instance_with_intermediate_input_line(
-    dbm_solver_instance *const instance,
-    fcs_delta_stater *const delta,
+    dbm_solver_instance *const instance, fcs_delta_stater *const delta,
     fcs_state_keyval_pair *const init_state_ptr, char *const line,
     const long line_num, fcs_encoded_state_buffer *const parent_state_enc)
 {
@@ -431,8 +430,7 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
 
 /* Returns if the process should terminate. */
 static bool handle_and_destroy_instance_solution(
-    dbm_solver_instance *const instance,
-    fcs_delta_stater *const delta)
+    dbm_solver_instance *const instance, fcs_delta_stater *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
     bool ret = FALSE;
@@ -590,9 +588,8 @@ int main(int argc, char *argv[])
 
     const_AUTO(local_variant, inp.local_variant);
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-    );
+    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
     if (intermediate_input_filename)
     {

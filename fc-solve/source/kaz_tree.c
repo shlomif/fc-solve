@@ -277,15 +277,15 @@ static int verify_dict_has_node(dnode_t *nil, dnode_t *root, dnode_t *node)
 }
 #endif
 
-    /*
-     * Dynamically allocate and initialize a dictionary object.
-     */
+/*
+ * Dynamically allocate and initialize a dictionary object.
+ */
 
 #ifdef NO_FC_SOLVE
 dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp, void *context)
 #else
-dict_t *fc_solve_kaz_tree_create(dict_comp_t comp, void *context,
-    meta_allocator *meta_alloc)
+dict_t *fc_solve_kaz_tree_create(
+    dict_comp_t comp, void *context, meta_allocator *meta_alloc)
 #endif
 {
     dict_t *dict = (dict_t *)SMALLOC1(dict);
@@ -405,15 +405,14 @@ void dict_free(dict_t *dict)
 }
 #endif
 
-    /*
-     * Initialize a user-supplied dictionary object.
-     */
+/*
+ * Initialize a user-supplied dictionary object.
+ */
 
 #ifdef NO_FC_SOLVE
 dict_t *dict_init(dict_t *dict, dictcount_t maxcount, dict_comp_t comp)
 #else
-dict_t *dict_init(dict_t *dict, dict_comp_t comp,
-    meta_allocator *meta_alloc)
+dict_t *dict_init(dict_t *dict, dict_comp_t comp, meta_allocator *meta_alloc)
 #endif
 {
     dict->compare = comp;
@@ -1146,10 +1145,10 @@ static inline dnode_t *dnode_init(dnode_t *dnode)
     return dnode;
 }
 
-    /*
-     * Allocate a node using the dictionary's allocator routine, give it
-     * the data item.
-     */
+/*
+ * Allocate a node using the dictionary's allocator routine, give it
+ * the data item.
+ */
 
 #ifdef NO_FC_SOLVE
 dict_ret_key_t fc_solve_kaz_tree_alloc_insert(
@@ -1204,7 +1203,7 @@ void fc_solve_kaz_tree_delete_free(dict_t *dict, dnode_t *node)
 #endif
 }
 
-__attribute__((pure)) dnode_t * fc_solve_kaz_tree_first(dict_t *dict)
+__attribute__((pure)) dnode_t *fc_solve_kaz_tree_first(dict_t *dict)
 {
     dnode_t *nil = dict_nil(dict), *root = dict_root(dict), *left;
 
@@ -1245,7 +1244,8 @@ dnode_t *dict_last(dict_t *dict)
  */
 #endif
 
-__attribute__((pure)) dnode_t *fc_solve_kaz_tree_next(dict_t *dict, dnode_t *curr)
+__attribute__((pure)) dnode_t *fc_solve_kaz_tree_next(
+    dict_t *dict, dnode_t *curr)
 {
     dnode_t *nil = dict_nil(dict), *parent, *left;
 

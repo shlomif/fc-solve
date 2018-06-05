@@ -62,8 +62,7 @@ struct fc_solve_instance_struct;
 typedef int (*hash_compare_function)(
     const void *const, const void *const, void *context);
 #else
-typedef int (*hash_compare_function)(
-    const void *const, const void *const);
+typedef int (*hash_compare_function)(const void *const, const void *const);
 #endif
 #endif
 
@@ -136,8 +135,8 @@ static inline void fc_solve_hash_init(
     /* Allocate a table of size entries */
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the end of each chain is right at the start. */
-    hash->entries = (hash_table_entry *)calloc(
-        initial_hash_size, sizeof(hash->entries[0]));
+    hash->entries =
+        (hash_table_entry *)calloc(initial_hash_size, sizeof(hash->entries[0]));
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     hash->list_of_vacant_items = NULL;

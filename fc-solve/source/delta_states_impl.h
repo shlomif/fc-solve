@@ -35,11 +35,10 @@ static int fc_solve_get_column_orig_num_cards(
     return 0;
 }
 
-static void fc_solve_delta_stater_init(
-    fcs_delta_stater *const self, fcs_state *const init_state,
-    const size_t num_columns, const int num_freecells
-    PASS_ON_NOT_FC_ONLY(const int sequences_are_built_by)
-)
+static void fc_solve_delta_stater_init(fcs_delta_stater *const self,
+    fcs_state *const init_state, const size_t num_columns,
+    const int num_freecells PASS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by))
 {
     FCS_ON_NOT_FC_ONLY(self->sequences_are_built_by = sequences_are_built_by);
     self->num_columns = num_columns;
@@ -323,8 +322,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     const_SLOT(num_freecells, self);
     for (size_t i = 0; i < num_freecells; ++i)
     {
-        const fcs_card card =
-            fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));
+        const fcs_card card = fcs_char2card(fc_solve_bit_reader_read(bit_r, 6));
         if (fcs_card_is_valid(card))
         {
             PROCESS_CARD(card);
@@ -393,8 +391,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
 static inline void fc_solve_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type local_variant GCC_UNUSED,
-    fcs_delta_stater *const delta_stater,
-    const fcs_uchar *const enc_state,
+    fcs_delta_stater *const delta_stater, const fcs_uchar *const enc_state,
     fcs_state_keyval_pair *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     fcs_bit_reader bit_r;

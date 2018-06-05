@@ -52,8 +52,7 @@ static inline void fc_solve_meta_compact_allocator_init(
     meta->recycle_bin = NULL;
 }
 
-extern void fc_solve_meta_compact_allocator_finish(
-    meta_allocator *);
+extern void fc_solve_meta_compact_allocator_finish(meta_allocator *);
 
 extern void fc_solve_compact_allocator_init(
     compact_allocator *, meta_allocator *);
@@ -80,8 +79,7 @@ static inline void *fcs_compact_alloc_ptr(
     return allocator->rollback_ptr;
 }
 
-static inline void fcs_compact_alloc_release(
-    compact_allocator *const allocator)
+static inline void fcs_compact_alloc_release(compact_allocator *const allocator)
 {
     allocator->ptr = allocator->rollback_ptr;
 }

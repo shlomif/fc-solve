@@ -164,11 +164,9 @@ static inline void render_freecell_card(const fcs_card card,
 #endif
 
 void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
-    const fcs_state_locs_struct *const state_locs
-        FREECELLS_STACKS_DECKS__ARGS()
-            FC_SOLVE__PASS_PARSABLE(const bool parseable_output),
-    const bool canonized_order_output PASS_T(
-        const bool display_10_as_t))
+    const fcs_state_locs_struct *const state_locs FREECELLS_STACKS_DECKS__ARGS()
+        FC_SOLVE__PASS_PARSABLE(const bool parseable_output),
+    const bool canonized_order_output PASS_T(const bool display_10_as_t))
 {
     typedef char one_card_buffer[4];
     char founds[MAX_NUM_DECKS * 4][10];
@@ -223,7 +221,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
         size_t i = 0;
 #if MAX_NUM_FREECELLS > 0
         for (; i < ((FREECELLS_NUM__VAL / 4) +
-                            ((FREECELLS_NUM__VAL % 4 == (0)) ? 0 : 1));
+                       ((FREECELLS_NUM__VAL % 4 == (0)) ? 0 : 1));
              ++i)
         {
             char dashes_s[128];

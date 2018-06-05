@@ -46,8 +46,7 @@ static inline void free_thread(dbm_solver_thread *const thread)
 
 /* Returns if the process should terminate. */
 static bool handle_and_destroy_instance_solution(
-    dbm_solver_instance *const instance,
-    fcs_delta_stater *const delta)
+    dbm_solver_instance *const instance, fcs_delta_stater *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
     bool ret = FALSE;

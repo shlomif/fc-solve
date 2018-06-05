@@ -46,10 +46,11 @@ extern "C" {
 #endif
 
 #ifndef FCS_INT_BIT_SIZE_LOG2
-#define FCS_INT_BIT_SIZE_LOG2 ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
+#define FCS_INT_BIT_SIZE_LOG2                                                  \
+    ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
 #endif
 
-#if defined(FCS_RCS_STATES) && (!defined(COMPACT_STATES) )
+#if defined(FCS_RCS_STATES) && (!defined(COMPACT_STATES))
 #error FCS_RCS_STATES requires COMPACT_STATES
 #endif
 
@@ -63,8 +64,8 @@ extern "C" {
 #endif
 #endif
 
-#if (defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
-         defined(HARD_CODED_NUM_DECKS))
+#if (defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&    \
+     defined(HARD_CODED_NUM_DECKS))
 #define HARD_CODED_ALL
 #define HARD__SET_GAME_PARAMS()
 #else

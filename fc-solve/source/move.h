@@ -56,8 +56,8 @@ static inline void fcs_move_stack_params_push(fcs_move_stack *const stack,
     fcs_move_stack_push(stack, temp_move);
 }
 
-static inline void fcs_move_stack_non_seq_push(fcs_move_stack *const stack,
-    const int type, const int src, const int dest)
+static inline void fcs_move_stack_non_seq_push(
+    fcs_move_stack *const stack, const int type, const int src, const int dest)
 {
     fcs_move_stack_params_push(stack, type, src, dest, 1);
 }

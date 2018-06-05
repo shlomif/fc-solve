@@ -21,8 +21,8 @@
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
-    const fcs_dbm_variant_type local_variant,
-    const char *init_state_str_proto, int *const num_out_derived_states,
+    const fcs_dbm_variant_type local_variant, const char *init_state_str_proto,
+    int *const num_out_derived_states,
     fcs_derived_state_debug **out_derived_states,
     const bool perform_horne_prune)
 {
@@ -38,10 +38,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(
-        &delta, &(init_state.s), STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-    );
+    fc_solve_delta_stater_init(&delta, &(init_state.s), STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
 
@@ -64,8 +62,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 
     *(num_out_derived_states) = states_count;
 
-    fcs_derived_state_debug *const debug_ret =
-        SMALLOC(debug_ret, states_count);
+    fcs_derived_state_debug *const debug_ret = SMALLOC(debug_ret, states_count);
     *(out_derived_states) = debug_ret;
 
     fcs_state_locs_struct locs;
@@ -100,8 +97,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
 }
 
 DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
-    const int num_derived_states,
-    fcs_derived_state_debug *const derived_states)
+    const int num_derived_states, fcs_derived_state_debug *const derived_states)
 {
     fcs_derived_state_debug *iter = derived_states;
     for (int i = 0; i < num_derived_states; i++, iter++)
@@ -115,8 +111,8 @@ DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
  * The char * returned is malloc()ed and should be free()ed.
  */
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
-    const fcs_dbm_variant_type local_variant,
-    const char *init_state_str_proto, char **ret_state_s)
+    const fcs_dbm_variant_type local_variant, const char *init_state_str_proto,
+    char **ret_state_s)
 {
     fcs_state_keyval_pair init_state;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)

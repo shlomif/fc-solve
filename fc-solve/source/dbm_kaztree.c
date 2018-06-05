@@ -78,8 +78,7 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     to_check->key = *key;
     to_check->parent = parent->parent;
 #endif
-    bool ret =
-        (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
+    bool ret = (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     if (!ret)
@@ -106,8 +105,7 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store store, const unsigned char *key, unsigned char *parent)
 {
-    fcs_dbm_record to_check = {
-        .key = *(const fcs_encoded_state_buffer *)key};
+    fcs_dbm_record to_check = {.key = *(const fcs_encoded_state_buffer *)key};
 
     dict_key_t existing =
         fc_solve_kaz_tree_lookup_value(((fcs_dbm *)store)->kaz_tree, &to_check);

@@ -121,8 +121,7 @@ static inline void fc_solve__internal__copy_moves(
 }
 
 static inline dict_t *fcc_brfs_kaz_tree_create(
-    meta_allocator *const meta_alloc,
-    void **const tree_recycle_bin)
+    meta_allocator *const meta_alloc, void **const tree_recycle_bin)
 {
     return fc_solve_kaz_tree_create(
         fc_solve_compare_encoded_states, NULL, meta_alloc, tree_recycle_bin);
@@ -158,8 +157,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
      * [Output] a callback to add a point to the next_start_points,
      * and its context.
      */
-    bool (*add_start_point)(
-        const fcs_encoded_state_buffer *const enc_state,
+    bool (*add_start_point)(const fcs_encoded_state_buffer *const enc_state,
         const fcs_fcc_moves_seq *const start_state_moves_seq,
         fcs_fcc_moves_seq *const after_start_moves_seq,
         const unsigned char extra_move, void *const context),
@@ -193,7 +191,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
 {
     void *tree_recycle_bin = NULL;
     fcs_dbm_queue_item *queue_head, *queue_tail, *queue_recycle_bin = NULL,
-                                                   *extracted_item;
+                                                 *extracted_item;
     fcs_derived_state *derived_list_recycle_bin = NULL, *next_derived_iter;
     fcs_state_keyval_pair state;
     bool running_min_was_assigned = FALSE;
@@ -218,16 +216,13 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
 
     /* TODO : maybe pass delta_stater as an argument  */
     fcs_delta_stater delta_stater;
-    fc_solve_delta_stater_init(
-        &delta_stater, &(init_state->s), STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-    );
+    fc_solve_delta_stater_init(&delta_stater, &(init_state->s), STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
     dict_t *traversed_states =
         fcc_brfs_kaz_tree_create(meta_alloc, &tree_recycle_bin);
 
-    fcs_dbm_queue_item *new_item =
-        (fcs_dbm_queue_item *)fcs_compact_alloc_ptr(
-            &(queue_allocator), sizeof(*new_item));
+    fcs_dbm_queue_item *new_item = (fcs_dbm_queue_item *)fcs_compact_alloc_ptr(
+        &(queue_allocator), sizeof(*new_item));
     *new_item = (typeof(*new_item)){.key = start_state,
         .next = NULL,
         .moves_seq = {.count = 0, .moves_list = NULL}};

@@ -228,8 +228,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
             if (fcs_depth_multi_queue__extract(&(coll->depth_queue),
-                    &(thread->state_depth),
-                    (offloading_queue_item *)(&token)))
+                    &(thread->state_depth), (offloading_queue_item *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -404,10 +403,10 @@ static inline void instance_alloc_num_moves(
     }
 }
 
-static inline void instance_check_key(dbm_solver_thread *const thread,
-    dbm_solver_instance *const instance, const int key_depth,
-    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
-    const unsigned char move GCC_UNUSED,
+static inline void instance_check_key(
+    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
+    const int key_depth, fcs_encoded_state_buffer *const key,
+    fcs_dbm_record *const parent, const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
@@ -667,9 +666,8 @@ int main(int argc, char *argv[])
      */
 
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
-        PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY())
-    );
+    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY()));
 
     dbm_solver_instance instance;
     FccEntryPointNode *key_ptr = NULL;
