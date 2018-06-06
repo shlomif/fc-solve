@@ -10,9 +10,6 @@ use autodie;
 
 package Games::Solitaire::FC_Solve::Test::Trap::Obj;
 
-use strict;
-use warnings;
-
 use Carp         ();
 use Data::Dumper ();
 use IO::Handle;
@@ -152,9 +149,6 @@ sub trace_all
 }
 
 package main;
-
-use strict;
-use warnings;
 
 use Cwd qw(getcwd);
 use File::Path qw(rmtree);
