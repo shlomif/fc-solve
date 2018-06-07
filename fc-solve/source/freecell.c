@@ -81,7 +81,7 @@ static inline int find_empty_stack(fcs_kv_state raw_state_raw,
 }
 
 static inline void sort_derived_states(
-    fcs_derived_states_list_t *const d, const size_t derived_start_idx)
+    fcs_derived_states_list *const d, const size_t derived_start_idx)
 {
     var_AUTO(start, d->states + derived_start_idx);
     const_AUTO(limit, d->states + d->num_states);
@@ -168,24 +168,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 #ifdef TWI
     sort_derived_states(derived_states_list, derived_start_idx);
 #endif
-}
-
-static inline void sort_derived_states(
-    fcs_derived_states_list *const d, const size_t derived_start_idx)
-{
-    var_AUTO(start, d->states + derived_start_idx);
-    const_AUTO(limit, d->states + d->num_states);
-
-    for (var_AUTO(b, start + 1); b < limit; b++)
-    {
-        for (var_AUTO(c, b); (c > start) && (c[0].context.i < c[-1].context.i);
-             c--)
-        {
-            const_AUTO(swap_temp, c[-1]);
-            c[-1] = c[0];
-            c[0] = swap_temp;
-        }
-    }
 }
 
 #if MAX_NUM_FREECELLS > 0
