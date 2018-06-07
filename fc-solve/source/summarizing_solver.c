@@ -29,7 +29,7 @@ static void __attribute__((noreturn)) print_help(void)
 static long *mydeals = NULL;
 static size_t num_deals = 0, max_num_deals = 0;
 
-static inline void append(long idx)
+static inline void append(const long idx)
 {
     if (num_deals == max_num_deals)
     {
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
                 fc_solve_err("seq without args!\n");
             }
             const long end = atol(argv[arg++]);
-            for (long deal = start; deal <= end; deal++)
+            for (long deal = start; deal <= end; ++deal)
             {
                 append(deal);
             }
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
             {
                 fc_solve_err("slurp without arg!\n");
             }
-            FILE *f = fopen(argv[arg++], "rt");
+            FILE *const f = fopen(argv[arg++], "rt");
             if (!f)
             {
                 fc_solve_err("Cannot slurp file!\n");

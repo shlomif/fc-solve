@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * move_stack_compact_alloc.h - A header file for a (possibly inline) function
- * that compactly allocates a move stack.
- */
+// move_stack_compact_alloc.h - A header file for a (possibly inline) function
+// that compactly allocates a move stack.
 #pragma once
 
 #include "instance.h"

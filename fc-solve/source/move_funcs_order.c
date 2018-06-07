@@ -29,7 +29,7 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
         moves_order->groups[moves_order->num].move_funcs, MOVES_GROW_BY);
     moves_order->groups[moves_order->num].shuffling_type = FCS_NO_SHUFFLING;
 
-    moves_order->num++;
+    ++moves_order->num;
 
     const_AUTO(len, strlen(string));
     bool is_group = FALSE;
@@ -175,7 +175,7 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
 
     if (!moves_order->groups[moves_order->num - 1].num)
     {
-        moves_order->num--;
+        --moves_order->num;
         free(moves_order->groups[moves_order->num].move_funcs);
         moves_order->groups[moves_order->num].move_funcs = NULL;
     }
