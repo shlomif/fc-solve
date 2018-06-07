@@ -40,6 +40,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'single-ht' => 'FCS_SINGLE_HARD_THREAD',
     'static' => 'FCS_LINK_TO_STATIC',
     'tracemem' => 'FCS_TRACE_MEM',
+    'unsafe' => 'FCS_UNSAFE',
     'with-compact-moves' => 'FCS_USE_COMPACT_MOVE_TOKENS',
     'without-depth-field' => 'FCS_WITHOUT_DEPTH_FIELD',
     'without-fc-pro' => 'FCS_WITHOUT_FC_PRO_MOVES_COUNT',
@@ -166,7 +167,7 @@ my %themes =
     fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=2) ],
     testing => [qw(--rwd --dbm=kaztree --test-suite --num-stacks=13),],
     extra_speed => [qw(--break-back-compat-1 --without-fc-pro --without-max-num-states --without-trim --disable-flares --disable-moves-track --disable-check-valid --disable-patsolve --disable-resume --hard-code-reparent-states  --hard-code-calc-real-depth --disable-err-strs --disable-num-stored-states --without-help),],
-    extra_speed2 => [qw(-l n2b), qw(-l extra_speed --hard-code-theme --disable-ni --without-help --without-iter-handler)],
+    extra_speed2 => [qw(-l n2b), qw(-l extra_speed --hard-code-theme --disable-ni --without-help --without-iter-handler --unsafe)],
     extra_speed3 => [qw(-l extra_speed2 --no-without-max-num-states --nohard-code-theme)],
     # Role for enabling the pseudo-DFS solver
     pdfs => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
