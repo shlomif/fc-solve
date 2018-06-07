@@ -68,6 +68,7 @@ extern "C" {
 #cmakedefine FCS_USE_PRECOMPILED_CMD_LINE_THEME
 #cmakedefine FCS_RANGE_SOLVERS_PRINT_SOLVED
 #cmakedefine FCS_UNSAFE
+#cmakedefine FCS_BREAK_BACKWARD_COMPAT_2
 /*
  * This flag controls a hash behaviour. It seems to improve things somewhat.
  * */

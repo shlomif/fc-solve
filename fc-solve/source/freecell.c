@@ -119,10 +119,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 {
     tests_define_accessors();
     STACKS__SET_PARAMS();
-// #define TWI
-#ifdef TWI
-    const size_t derived_start_idx = derived_states_list->num_states;
-#endif
 
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
@@ -153,21 +149,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
                 FCS_MOVE_TYPE_STACK_TO_FOUNDATION, stack_idx,
                 deck * 4 + fcs_card_suit(card));
 
-#ifdef TWI
-#if 1
-            state_context_value =
-                (((fcs_card_rank(card)) << 8) | fcs_card_suit(card));
-#else
-            state_context_value = card;
-#endif
-#endif
             sfs_check_state_end();
             break;
         }
     }
-#ifdef TWI
-    sort_derived_states(derived_states_list, derived_start_idx);
-#endif
 }
 
 #if MAX_NUM_FREECELLS > 0
@@ -345,6 +330,9 @@ static inline fcs_game_limit calc_num_vacant_slots(
     MOVE_FUNCS__define_empty_stacks_fill()
 
 #if MAX_NUM_FREECELLS > 0
+#ifndef FCS_BREAK_BACKWARD_COMPAT_2
+#define FLUT
+#endif
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 {
     MOVE_FUNCS__define_common();
@@ -448,6 +436,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 }
 #endif
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#define RAR
+#endif
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
     tests_define_accessors();
@@ -455,7 +446,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
     FC__STACKS__SET_PARAMS();
     const fcs_game_limit num_vacant_slots =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card());
-#define RAR
 #ifdef RAR
     const size_t derived_start_idx = derived_states_list->num_states;
 #endif
@@ -684,6 +674,9 @@ static inline bool check_if_can_relocate(const fcs_game_limit start,
                 iter->seq_end - iter->c + 1));
 }
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#define CLAP
+#endif
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 {
     MOVE_FUNCS__define_common();
@@ -692,7 +685,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
     const_SLOT(num_vacant_stacks, soft_thread);
     const fcs_game_limit num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
-    // const size_t derived_start_idx = derived_states_list->num_states;
+#ifndef CLAP
+    const size_t derived_start_idx = derived_states_list->num_states;
+#endif
 
     CALC_POSITIONS_BY_RANK();
     /* Now let's try to move a card from one stack to the other     *
@@ -750,13 +745,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                  * function used - for backwards-compatibility
                  * and consistency.
                  * */
-                // state_context_value = card;
+#ifndef CLAP
+                state_context_value =
+                    ((((((stack_idx << 8) | iter.c) << 8) | ds) << 8) | dc);
+#endif
 
                 sfs_check_state_end();
             }
         }
     }
-    // sort_derived_states(derived_states_list, derived_start_idx);
+#ifndef CLAP
+    sort_derived_states(derived_states_list, derived_start_idx);
+#endif
 }
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
@@ -1034,7 +1034,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
     const fcs_game_limit num_vacant_stacks = soft_thread->num_vacant_stacks;
     const fcs_game_limit num_virtual_vacant_stacks =
         CALC_num_virtual_vacant_stacks();
-// #define BUTTER
+#ifndef FCS_BREAK_BACKWARD_COMPAT_2
+#define BUTTER
+#endif
 #ifndef BUTTER
     const int derived_start_idx = derived_states_list->num_states;
 #endif
