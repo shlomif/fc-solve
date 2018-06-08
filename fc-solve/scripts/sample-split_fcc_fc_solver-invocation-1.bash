@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e -x
 export FCS_PATH=/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source/B FCS_SRC_PATH=/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source
 offload_path="./split_fcc_offload_dir_path"
 out_dir="./split_fcc_out_dir"
@@ -27,12 +28,12 @@ input="${idx}.input.txtish"
 if true ; then
     (
         export I="${init_board}"
-        perl -I ../t/t/lib ../../scripts/sample-split_fcc_fc_solver-invocation-1.helper.pl
+        perl -I ../source/t/lib ../scripts/sample-split_fcc_fc_solver-invocation-1.helper.pl
     ) > "$input"
 fi
 ./split_fcc_fc_solver \
     --offload-dir-path "$offload_path" \
     --output "$out_dir" \
     --board "$board" \
-    --fingerprint "$(perl -I ../t/t/lib -E 'use strict; use warnings; use FC_Solve::Base64; print FC_Solve::Base64::base64_encode("\x{02}" . ("\x0" x 12))')" \
+    --fingerprint "$(perl -I ../source/t/lib -E 'use strict; use warnings; use FC_Solve::Base64; print FC_Solve::Base64::base64_encode("\x{02}" . ("\x0" x 12))')" \
     --input "$input"
