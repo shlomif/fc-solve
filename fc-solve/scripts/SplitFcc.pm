@@ -6,6 +6,7 @@ use warnings;
 use autodie;
 
 use MooX qw/late/;
+use Carp ();
 use Getopt::Long qw/GetOptions/;
 use FC_Solve::Base64;
 use File::Path qw/mkpath/;
@@ -45,6 +46,11 @@ sub _calc_fingerprint_dir
 sub _calc_existing_input
 {
     my ( $self, $target_dir ) = @_;
+
+    if ( !-d $target_dir )
+    {
+        Carp::confess("directory $target_dir does not exist!");
+    }
 
     return max(
         map { ( $_->filename() =~ /\Ainput.txtish\.(\d+)\z/ ) ? $1 : (-1) }
