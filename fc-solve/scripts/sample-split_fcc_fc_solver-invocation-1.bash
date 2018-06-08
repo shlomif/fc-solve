@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e -x
-export FCS_PATH=/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source/B FCS_SRC_PATH=/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source
+export FCS_PATH="$HOME"/progs/freecell/git/fc-solve/fc-solve/B FCS_SRC_PATH="$HOME"/progs/freecell/git/fc-solve/fc-solve/source
 offload_path="./split_fcc_offload_dir_path"
 out_dir="./split_fcc_out_dir"
 idx="384243"
