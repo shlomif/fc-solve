@@ -958,7 +958,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
         {
             continue;
         }
+#ifdef RAR2
+        for (int dest_fc = LOCAL_FREECELLS_NUM-1; dest_fc >=0; --dest_fc)
+#else
         for (int dest_fc = 0; dest_fc < LOCAL_FREECELLS_NUM; ++dest_fc)
+#endif
         {
             if (dest_fc == fc)
             {
