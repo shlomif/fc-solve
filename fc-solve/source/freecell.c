@@ -67,6 +67,11 @@
 
 #endif
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#define RAR
+#define RAR2
+#endif
+
 static inline int find_empty_stack(fcs_kv_state raw_state_raw,
     const int start_from, const int local_stacks_num)
 {
@@ -168,8 +173,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
     SET_GAME_PARAMS();
 #endif
 
-    /* Now check the same for the free cells */
-    for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
+#ifdef RAR2
+    for (int fc = LOCAL_FREECELLS_NUM - 1; fc >= 0; --fc)
+#else
+    for (int fc = 0; fc < LOCAL_FREECELLS_NUM; ++fc)
+#endif
     {
         const fcs_card card = fcs_freecell_card(state, fc);
 
@@ -436,10 +444,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 }
 #endif
 
-#ifdef FCS_BREAK_BACKWARD_COMPAT_2
-#define RAR
-#define RAR2
-#endif
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
     tests_define_accessors();
