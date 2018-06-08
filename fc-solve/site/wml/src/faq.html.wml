@@ -40,6 +40,31 @@ but Freecell appears to be the most popular variant out of them, and the
 name is kept for historical reasons.
 </p>
 
+<h3 id="what_is_solitaire">What is Solitaire? Is it the Windows implementation of Klondike?</h3>
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Patience_%28game%29">“Patience” or
+“Solitaire”</a> are any single-player card game, or at least those played
+using the standard
+<a href="https://en.wikipedia.org/wiki/French_playing_cards">French playing cards</a>.
+One such solitaire variant is <a href="https://en.wikipedia.org/wiki/Klondike_(solitaire)">Klondike</a>
+which has become associated with card Solitaire in general, and
+was implemented as
+<a href="https://en.wikipedia.org/wiki/Microsoft_Solitaire">a game for
+Microsoft Windows</a> under the name "Solitaire". Nevertheless, there are many
+other variants of card Solitaire, and Freecell is one of them.
+</p>
+
+<p>
+In some countries, "Solitaire" can also refer to
+<a href="https://en.wikipedia.org/wiki/Peg_solitaire">peg solitaire</a>.
+</p>
+
+<p>
+You can find <a href="$(ROOT)/links.html#other_solvers">a list of solvers</a>
+for various variants of patience games in our links page.
+</p>
+
 <h3 id="what_are_ms_deals">What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?</h3>
 
 <p>
