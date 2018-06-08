@@ -682,7 +682,7 @@ does it use?</h3>
 
 <p>
 The exact algorithm used by “fc-solve” can be configured using the various
-command line arguments it accepts which are documented in the
+command line arguments it accepts, which are documented in the
 <a href="$(ROOT)/docs/distro/README.html">README</a> and
 <a href="$(ROOT)/docs/distro/USAGE.html">USAGE</a> files. Furthermore, the
 “-l” flag can load some predefined configurations, which are essentially a
