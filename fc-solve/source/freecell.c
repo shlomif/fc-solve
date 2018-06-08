@@ -438,6 +438,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
 #ifdef FCS_BREAK_BACKWARD_COMPAT_2
 #define RAR
+#define RAR2
 #endif
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 {
@@ -694,7 +695,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
      * Note that it does not involve moving cards lower than king   *
      * to empty stacks                                              */
 
+#ifdef RAR2__cancelled
+    for (int stack_idx = LOCAL_STACKS_NUM - 1; stack_idx >= 0; --stack_idx)
+#else
     for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+#endif
     {
         col_seqs_iter iter = col_seqs_iter__create(&state,
             stack_idx PASS_sequences_are_built_by(sequences_are_built_by));
@@ -982,7 +987,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                 dest_fc, empty_stack_idx);
             sfs_check_state_end();
         }
+#ifdef RAR2
+        for (int stack_idx = LOCAL_STACKS_NUM - 1; stack_idx >= 0; --stack_idx)
+#else
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; ++stack_idx)
+#endif
         {
             col_seqs_iter iter = col_seqs_iter__create(&state,
                 stack_idx PASS_sequences_are_built_by(sequences_are_built_by));
