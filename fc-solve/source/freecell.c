@@ -951,14 +951,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
     }
     SET_empty_stack_idx(empty_stack_idx);
 
-    for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
+#ifdef RAR2
+    for (int fc = LOCAL_FREECELLS_NUM - 1; fc >= 0; --fc)
+#else
+    for (int fc = 0; fc < LOCAL_FREECELLS_NUM; ++fc)
+#endif
     {
         const fcs_card src_card = fcs_freecell_card(state, fc);
         if (SHOULD_SKIP_FC_CARD(src_card))
         {
             continue;
         }
-#ifdef RAR2
+#ifdef RAR2__cancelled
         for (int dest_fc = LOCAL_FREECELLS_NUM - 1; dest_fc >= 0; --dest_fc)
 #else
         for (int dest_fc = 0; dest_fc < LOCAL_FREECELLS_NUM; ++dest_fc)
@@ -991,7 +995,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                 dest_fc, empty_stack_idx);
             sfs_check_state_end();
         }
-#ifdef RAR2
+#ifdef RAR2__cancelled
         for (int stack_idx = LOCAL_STACKS_NUM - 1; stack_idx >= 0; --stack_idx)
 #else
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; ++stack_idx)
