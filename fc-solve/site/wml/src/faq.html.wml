@@ -890,3 +890,19 @@ in x86 assembly for DOS.
 </p>
 </li>
 </ol>
+
+<h3 id="complexity">What is the runtime complexity of solving Freecell?</h3>
+
+<p>
+Generalised Freecell (where there is an
+arbitrary number of ranks) was shown to be
+an <a href="https://github.com/shlomif/Freenode-programming-channel-FAQ/blob/master/FAQ.mdwn#what-do-np-complete-np-hard-etc-mean">NP-complete problem</a>
+and as a result, it is likely that no efficient solution for solving that
+in the general case can be found (but it is possible that some good heuristics
+can be devised).
+</p>
+
+<p>
+That put aside, Freecell is a degenerate case where the number of ranks is
+fixed at 13 (ace-to-king).
+</p>
