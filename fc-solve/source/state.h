@@ -60,7 +60,7 @@ typedef fcs_card fcs_state_foundation;
 /*
  * Card:
  * Bits 0-3 - Card Number
- * Bits 4-5 - Deck
+ * Bits 4-5 - Suit
  *
  */
 
@@ -82,13 +82,6 @@ typedef struct
  *      MAX_NUM_STACKS*20+MAX_NUM_FREECELLS+3
  *      are Foundations.
  * */
-
-/*  ===== Depracated Information =====
- * Stack: 0 - Number of cards 1-19 - Cards
- * Stacks: stack_num*20 where stack_num >= 0 and stack_num <= 7
- * Bytes 160-163 - Freecells
- * Bytes 164-167 - Decks
- */
 
 typedef char fcs_locs_type;
 
