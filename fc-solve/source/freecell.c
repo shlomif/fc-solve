@@ -135,7 +135,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
         }
         /* Get the top card in the stack */
         const fcs_card card = fcs_col_get_card(col, cards_num - 1);
+#if MAX_NUM_DECKS == 1
+        const int deck = 0;
+#else
         for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+#endif
         {
             if (fcs_foundation_value(state, deck * 4 + fcs_card_suit(card)) !=
                 fcs_card_rank(card) - 1)
@@ -185,7 +189,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
         {
             continue;
         }
+#if MAX_NUM_DECKS == 1
+        const int deck = 0;
+#else
         for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+#endif
         {
             if (fcs_foundation_value(state, deck * 4 + fcs_card_suit(card)) !=
                 fcs_card_rank(card) - 1)
@@ -477,7 +485,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
         {
             const fcs_card card = fcs_col_get_card(col, c);
 
+#if MAX_NUM_DECKS == 1
+            const int deck = 0;
+#else
             for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+#endif
             {
                 const int dest_found = deck * 4 + fcs_card_suit(card);
                 if (fcs_foundation_value(state, dest_found) !=
@@ -1489,7 +1501,11 @@ static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
     const int_fast32_t rank_min_1 = rank - 1;
     const int_fast32_t rank_min_2 = rank - 2;
 
+#if MAX_NUM_DECKS == 1
+    const int_fast32_t deck = 0;
+#else
     for (int_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+#endif
     {
         const int_fast32_t ret_val = ((deck << 2) | suit);
         if (fcs_foundation_value(*ptr_state, ret_val) == rank_min_1)
