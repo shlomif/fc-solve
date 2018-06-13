@@ -177,6 +177,8 @@ extern "C" {
 #define FCS_WHICH_COLUMNS_GOOGLE_HASH ${FCS_WHICH_COLUMNS_GOOGLE_HASH}
 #define FCS_WHICH_STATES_GOOGLE_HASH ${FCS_WHICH_STATES_GOOGLE_HASH}
 
+// How many ranks there are - Ace to King == 13.
+#define FCS_MAX_RANK ${FCS_MAX_RANK}
 #ifdef __cplusplus
 };
 #endif

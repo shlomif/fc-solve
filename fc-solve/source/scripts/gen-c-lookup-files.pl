@@ -8,7 +8,7 @@ use Path::Tiny qw/ path /;
 my $FALSE = 0;
 my $TRUE  = 1;
 
-my $MAX_RANK              = 13;
+my $MAX_RANK              = $ENV{FCS_MAX_RANK} || 13;
 my $NUM_SUITS             = 4;
 my @SUITS                 = ( 0 .. $NUM_SUITS - 1 );
 my @RANKS                 = ( 1 .. $MAX_RANK );
@@ -164,7 +164,7 @@ qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
     my $TYPE_NAME  = 'fcs_seq_cards_power_type';
     my $ARRAY_NAME = 'fc_solve_seqs_over_cards_lookup';
     my $POWER      = 1.3;
-    my $TOP        = 2 * 13 * 4 + 1;
+    my $TOP        = 2 * $MAX_RANK * 4 + 1;
     emit(
         "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
         'rate_state',

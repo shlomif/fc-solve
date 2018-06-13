@@ -39,9 +39,6 @@ extern "C" {
 #define FCS_MAX_NUM_SCANS_BUCKETS 4
 #endif
 
-/* How many ranks there are - Ace to King == 13. */
-#define FCS_MAX_RANK 13
-
 #define FCS_NUM_SUITS 4
 
 #define FCS_CHAR_BIT_SIZE_LOG2 3
@@ -190,7 +187,7 @@ static inline fcs_card fcs_col_get_rank(
 {
     return fcs_card_rank(fcs_col_get_card(col, card_idx));
 }
-#define FCS_RANK_KING 13
+#define FCS_RANK_KING FCS_MAX_RANK
 #include "is_king.h"
 static inline bool fcs_card_is_king(const fcs_card card)
 {

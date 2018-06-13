@@ -62,6 +62,7 @@ my %TRUE_BOOL_OPTS =
 my %INT_OPTS =
 (
     'max-bench-threads-num' => 'MAX_NUM_BENCHMARK_THREADS',
+    'max-rank' => 'FCS_MAX_RANK',
     'nfc' => 'FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY',
     'num-stacks' => 'MAX_NUM_STACKS',
     'pack-size' => 'FCS_IA_PACK_SIZE',
