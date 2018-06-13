@@ -51,12 +51,12 @@ class Card(object):
         return ret
 
 
-def createCards(num_decks, print_ts):
+def createCards(num_decks, print_ts, max_rank=13):
     ret = []
     for _ in range(num_decks):
         id = 0
         for s in range(4):
-            for r in range(13):
+            for r in range(max_rank):
                 ret.append(Card(id, r+1, s, print_ts))
                 id += 1
     return ret

@@ -221,7 +221,7 @@ class Game:
                 "all_in_a_row": None,
         }
 
-    def __init__(self, game_id, game_num, which_deals, print_ts):
+    def __init__(self, game_id, game_num, which_deals, print_ts, max_rank=13):
         mymap = {}
         for k, v in self.REVERSE_MAP.items():
             for name in [k] + (v if v else []):
@@ -231,6 +231,7 @@ class Game:
         self.game_num = game_num
         self.print_ts = print_ts
         self.which_deals = which_deals
+        self.max_rank = max_rank
 
     def is_two_decks(self):
         return self.game_id in ("der_katz", "der_katzenschwantz",
@@ -253,7 +254,8 @@ class Game:
         self.card_idx = 0
 
     def deal(self):
-        cards = shuffle(createCards(self.get_num_decks(), self.print_ts),
+        cards = shuffle(createCards(self.get_num_decks(), self.print_ts,
+                                    self.max_rank),
                         self.game_num, self.which_deals)
         cards.reverse()
         self.new_cards(cards)
@@ -384,7 +386,8 @@ class Game:
     def freecell(game):
         is_fc = (game.game_id in ("forecell", "eight_off"))
         game.board = Board(8, with_freecells=is_fc)
-        game.cyclical_deal((48 if is_fc else 52), 8)
+        game.cyclical_deal(4 *
+                           (game.max_rank-1 if is_fc else game.max_rank), 8)
 
         if is_fc:
             for c in game:
@@ -437,11 +440,15 @@ class Game:
 def make_pysol_board__main(args):
     print_ts = False
     which_deals = RandomBase.DEALS_PYSOL
+    max_rank = 13
     while args[1][0] == '-':
         a = args[1]
         if a == "-t":
             print_ts = True
             args.pop(1)
+        elif (a == "--max-rank"):
+            args.pop(1)
+            max_rank = int(args.pop(1))
         elif (a == "--pysolfc") or (a == "-F"):
             which_deals = RandomBase.DEALS_PYSOLFC
             args.pop(1)
@@ -453,7 +460,7 @@ def make_pysol_board__main(args):
 
     game_num = int(args[1])
     which_game = args[2] if len(args) >= 3 else "freecell"
-    game = Game(which_game, game_num, which_deals, print_ts)
+    game = Game(which_game, game_num, which_deals, print_ts, max_rank)
     game.print_layout()
 
 
