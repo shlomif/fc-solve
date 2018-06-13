@@ -205,7 +205,7 @@ ADD_CUSTOM_COMMAND(
     ARGS ${presets_gen_args}
     DEPENDS "${presets_gen}" "${MOVE_GEN_MOD}"
 )
-SET ($ENV{FCS_MAX_RANK} "${FCS_MAX_RANK}")
+SET (ENV{FCS_MAX_RANK} "${FCS_MAX_RANK}")
 SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c" "${CMAKE_CURRENT_BINARY_DIR}/rate_state.h")
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
