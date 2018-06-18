@@ -71,3 +71,5 @@ Logs of various benchmarks of the code.
 * [The minimal number of freecells needed to win for each deal in the original Microsoft FreeCell 32,000 deals.](https://github.com/shlomif/MicrosoftFreeCell32000-minimal-freecells)
 * [Lack of PGO investigation.](https://github.com/shlomif/investigate-lack-of-PGO-in-gcc-5.2.x--re-fc-solve)
 * [Freecell Solver's Site Assets](https://github.com/shlomif/fc-solve-site-assets)
+* [patsolve](https://github.com/shlomif/patsolve) - a different Solitaire solver with interdependencies on this one.
+* [Haskell Freecell library](https://github.com/shlomif/Freecell)
