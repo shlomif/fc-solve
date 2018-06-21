@@ -521,7 +521,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
 #endif
             }
         }
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
     end_loop:;
+#endif
     }
 #ifdef RAR
     sort_derived_states(derived_states_list, derived_start_idx);
