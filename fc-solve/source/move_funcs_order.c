@@ -12,12 +12,6 @@
 #include "move_funcs_order.h"
 #include "set_weights.h"
 
-#ifdef FCS_WITH_ERROR_STRS
-#define SET_ERR(s) strcpy(error_string, s);
-#else
-#define SET_ERR(s)
-#endif
-
 int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
     const char *string FCS__PASS_ERR_STR(char *const error_string))
 {
@@ -35,6 +29,11 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
 #ifndef FCS_UNSAFE
     bool is_group = FALSE;
     bool is_start_group = FALSE;
+#ifdef FCS_WITH_ERROR_STRS
+#define SET_ERR(s) strcpy(error_string, s);
+#else
+#define SET_ERR(s)
+#endif
 #endif
 
     for (i = 0; i < len; i++)

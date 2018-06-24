@@ -69,7 +69,6 @@
 
 #ifdef FCS_BREAK_BACKWARD_COMPAT_2
 #define RAR
-#define RAR2
 #endif
 
 static inline int find_empty_stack(fcs_kv_state raw_state_raw,
@@ -165,6 +164,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 }
 
 #if MAX_NUM_FREECELLS > 0
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#define RAR2
+#endif
 /*
  * This test moves single cards that are present in the freecells to
  * the foundations.
