@@ -34,7 +34,7 @@
     </ul>
     <h2>Data</h2>
     <div>
-<textarea id="data" style="height:100px;" cols="80" rows="20" readonly="1">
+<textarea id="data" style="height:100px;" cols="80" rows="20" readonly="readonly">
 OldIterations	OldTimeSinceStart	NewTimeSinceStart
 200000	1.31821012496948	0.634008884429932
 300000	2.49772810935974	1.28861284255981
