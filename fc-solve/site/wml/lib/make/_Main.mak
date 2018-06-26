@@ -155,7 +155,7 @@ $(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
 PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
 
 $(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
-	$(call DEF_WML_PATH) (cd src && wml -o "$$fn" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) && $(PROCESS_ALL_INCLUDES) '$@'
+	$(call DEF_WML_PATH) (cd src && wml -o "$$fn" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) && { if test '$@' = "dest/charts/dbm-solver-__int128-optimisation/index.html" ; then true ; else $(PROCESS_ALL_INCLUDES) '$@' ; fi }
 
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@
