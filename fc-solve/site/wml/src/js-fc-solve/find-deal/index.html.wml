@@ -14,7 +14,7 @@ card solitaire game. <span class="enable_js">Please enable
 <strong>JavaScript</strong>.</span>
 </p>
 
-<emscripten_common incs="require([\"$(ROOT)/js/find-fc-deal-ui.js\"], function (web_fc_solve_ui)" />
+<emscripten_common incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)" />
 
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
