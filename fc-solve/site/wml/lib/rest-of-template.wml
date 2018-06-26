@@ -42,7 +42,6 @@ Please consider
     /></a>
 <br />
 <br />
-<project_wonderful_ads__ad_box_code />
 </latemp_affiliations_buttons>
 
 <latemp_top_left_corner_logo>
@@ -162,7 +161,6 @@ $(ROOT)/%0
 <script type="text/javascript" src="$(ROOT)/js/jq.js"></script>
 <link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="<rss_feed />" />
 <link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default" />
-<project_wonderful_ads__loader />
 {#PAGE_EXTRA_HEAD_ELEMENTS#}
 </define-tag>
 

@@ -4,19 +4,18 @@
 </define-tag>
 
 <define-tag share_this_button>
-# This is the addtoany.com button.
+;;; This is the addtoany.com button.
 <p class="share">
 <a href="http://www.addtoany.com/share_save?linkurl=(((((chomp_inc='cache/combined/<get-var host />/<get-var filename />/page_url')))))&amp;linkname="><img src="$(ROOT)/images/share_save_171_16.png" width="171" height="16" class="bless" alt="Share/Bookmark" /></a><br />
 </p>
-# <script src="http://slashdot.org/slashdot-it.js" type="text/javascript"></script>
 </define-tag>
 
 <define-tag digg_button_removed>
 <script src="http://digg.com/tools/diggthis.js" type="text/javascript"></script>
 </define-tag>
 
-# Cancelled completely, because the extra JS can be a huge
-# problem and the button is a bit lame anyway.
+;;; Cancelled completely, because the extra JS can be a huge
+;;; problem and the button is a bit lame anyway.
 <define-tag news_sites_buttons_removed>
 <div class="news_buttons">
 <script type="text/javascript" src="http://reddit.com/button.js?t=2"></script>

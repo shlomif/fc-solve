@@ -152,8 +152,10 @@ $(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: ../../source/%
 $(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
 	cat "$<" | perl -0777 -lapE 's#<table #<table summary="identifiers on the left, descriptions on the right" #g' > "$@"
 
+PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
+
 $(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
-	$(call DEF_WML_PATH) (cd src && wml -o "$$fn" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<))
+	$(call DEF_WML_PATH) (cd src && wml -o "$$fn" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) && $(PROCESS_ALL_INCLUDES) '$@'
 
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@
@@ -305,6 +307,14 @@ all: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
 
 ALL_HTACCESSES = $(D)/.htaccess
 
+GEN_SECT_NAV_MENUS = ./bin/gen-sect-nav-menus.pl
+T2_CACHE_ALL_STAMP = lib/cache/STAMP.one
+$(T2_CACHE_ALL_STAMP): $(GEN_SECT_NAV_MENUS) $(FACTOIDS_NAV_JSON) $(ALL_SUBSECTS_DEPS)
+	perl $(GEN_SECT_NAV_MENUS) $(SRC_DOCS)
+	touch $@
+
+make-dirs:
+sects_cache: make-dirs $(T2_CACHE_ALL_STAMP)
 htaccesses_target: $(ALL_HTACCESSES)
 
 $(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf

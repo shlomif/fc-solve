@@ -5,7 +5,7 @@ use warnings;
 
 my $hosts = {
     'fc-solve' => {
-        'base_url' => "http://fc-solve.shlomifish.org",
+        'base_url' => "http://fc-solve.shlomifish.org/",
     },
 };
 
