@@ -57,6 +57,7 @@
 /fc-solve/site/wml/lib/Shlomif/Out.pm
 /fc-solve/site/wml/lib/Shlomif/Spelling/Check.pm
 /fc-solve/site/wml/lib/Shlomif/Spelling/Iface.pm
+/fc-solve/site/wml/lib/cache/
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/*.bc
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/CMAKE-BUILD-dir/
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/__DESTDIR/
