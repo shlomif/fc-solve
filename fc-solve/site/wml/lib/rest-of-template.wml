@@ -70,6 +70,10 @@ licence</a>.
 </p>
 <!-- /Creative Commons License -->
 
+</latemp_license>
+
+;;; Despite this rdf being removed, the site remains under the CC-by licence.
+<define-tag removed_cc_by_rdf>
 <!--
 
 <rdf:RDF xmlns="http://web.resource.org/cc/"
@@ -100,8 +104,7 @@ licence</a>.
 </rdf:RDF>
 
 -->
-</latemp_license>
-
+</define-tag>
 <define-tag old_removed_self_links>
 <script type="text/javascript">
 <!--
