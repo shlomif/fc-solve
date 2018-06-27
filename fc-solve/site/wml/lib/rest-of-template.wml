@@ -36,14 +36,7 @@ Please consider
 </p>
 </li>
 </ul>
-<br />
-<a href="<rss_feed />" title="Subscribe to Our News"><img
-    src="$(ROOT)/images/rss.png"
-    alt="RSS Feed"
-    class="bless"
-    /></a>
-<br />
-<br />
+<a href="<rss_feed />" title="Subscribe to Our News">RSS Feed</a>
 </latemp_affiliations_buttons>
 
 <latemp_top_left_corner_logo>

@@ -407,6 +407,7 @@ RCS-like
 README
 RISKO
 RPM
+RSS
 RTF
 Railroad
 Random-DFS
