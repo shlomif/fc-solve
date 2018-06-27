@@ -21,10 +21,10 @@ turn some run-time debugging information on and off.
 
 <li>
 Some configurations are very fast: the solver was able to solve the first
-Microsoft Freecell 32,000 deals in 74 seconds on a Pentium 4-2.4 GHz computer.
-(432 layouts per second) before that computer was decommissioned.
-On a Core i3 computer, these deals are solved in 3.67 seconds (8,719 layouts
-per second).
+Microsoft Freecell 32,000 deals in 74 seconds on a Pentium 4-2.4 GHz computer
+(432 layouts per second), before that computer was decommissioned.
+On a Core i3 computer, these deals are now solved in 3.04 seconds (10,526
+layouts per second).
 </li>
 
 <li>
