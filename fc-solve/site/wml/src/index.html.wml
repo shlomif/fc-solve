@@ -61,12 +61,12 @@ to the game.
 Keller’s Freecell site</a> -
 contains the
 <a href="http://www.solitairelaboratory.com/fcfaq.html">Freecell FAQ
-(Frequently Asked Questions)</a> and other stuff.
+(Frequently Asked Questions)</a> and other resources.
 </li>
 <li>
 <a href="http://pysolfc.sourceforge.net/">PySol Fan Club Edition</a> - a
 cross-platform, open-source implementation of many Solitaire games with
-very good embedding of Freecell Solver.
+a good integration of Freecell Solver.
 </li>
 <li>
 <a href="http://people.cs.uu.nl/hansb/d.freecell/freecellhtml.html">
