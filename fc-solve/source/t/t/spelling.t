@@ -14,7 +14,7 @@ use Test::More tests => 1;
     my $count_lines = 0;
     while ( my $l = <$ack_fh> )
     {
-        $count_lines++;
+        ++$count_lines;
         diag($l);
     }
 

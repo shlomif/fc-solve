@@ -18,7 +18,6 @@
 #include "fcs_move.h"
 #include "fcs_limit.h"
 #include "fcs_pats_xy_param.h"
-
 #include "fcs_back_compat.h"
 
 #ifdef __cplusplus

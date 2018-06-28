@@ -7,25 +7,18 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- *  forking_range_solver.c - a range solver that solves different boards in
- *  several UNIX processes.
- *
- *  See also:
- *      - fc_pro_range_solver.c
- *      - serial_range_solver.c
- *      - threaded_range_solver.c
- */
+//  forking_range_solver.c - a range solver that solves different boards in
+//  several UNIX processes.
+//
+//  See also:
+//      - fc_pro_range_solver.c
+//      - serial_range_solver.c
+//      - threaded_range_solver.c
 #ifdef __linux__
 #define USE_EPOLL
-#endif
-
-#include <sys/wait.h>
-
-#ifdef USE_EPOLL
 #include <sys/epoll.h>
 #endif
-
+#include <sys/wait.h>
 #include "range_solvers.h"
 #include "try_param.h"
 

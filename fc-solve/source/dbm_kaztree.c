@@ -9,7 +9,6 @@
  */
 #include "dbm_solver.h"
 #include "generic_tree.h"
-
 #include "dbm_kaztree_compare.h"
 
 typedef struct

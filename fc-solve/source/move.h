@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * move.h - header file for the move and move stacks functions of
- * Freecell Solver
- */
+// move.h - header file for the move and move stacks functions.
 #pragma once
 
 #ifdef __cplusplus
@@ -31,15 +28,12 @@ extern const fcs_internal_move fc_solve_empty_move;
 static inline void fcs_move_stack_push(
     fcs_move_stack *const stack, const fcs_internal_move move)
 {
-    /* If all the moves inside the stack are taken then
-       resize the move vector */
+    // If all the moves inside the stack are taken then resize the move vector
     const size_t pos = ++stack->num_moves;
-
     if (!(pos & (FCS_MOVE_STACK_GROW_BY - 1)))
     {
         stack->moves = SREALLOC(stack->moves, pos + FCS_MOVE_STACK_GROW_BY);
     }
-
     stack->moves[pos - 1] = move;
 }
 
@@ -200,13 +194,9 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack *const moves,
         fcs_move_stack_push((&temp_moves), out_move);
     }
 
-    /*
-     * temp_moves contain the needed moves in reverse order. So let's use
-     * swallow_stack to put them in the original in the correct order.
-     *
-     * */
+    // temp_moves contain the needed moves in reverse order. So let's use
+    // swallow_stack to put them in the original in the correct order.
     fcs_move_stack_reset(moves);
-
     fc_solve_move_stack_swallow_stack(moves, (&temp_moves));
     fcs_move_stack_static_destroy(temp_moves);
 }

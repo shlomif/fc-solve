@@ -7,14 +7,9 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-
-/*
- * A test for the Debondt delta states routines.
- */
-
+// A test for the Debondt delta states routines.
 #include <string.h>
 #include <stdio.h>
-
 #include <tap.h>
 
 #ifndef FCS_COMPILE_DEBUG_FUNCTIONS
@@ -30,17 +25,14 @@
 #include "trim_trailing_whitespace.h"
 #include "render_state.h"
 
-static int debondt_test_encode_and_decode(fcs_debondt_delta_stater * delta, fcs_state_keyval_pair * state, const char * expected_str, const char * blurb)
+static bool debondt_test_encode_and_decode(fcs_debondt_delta_stater *const delta, fcs_state_keyval_pair *const state, const char *const expected_str, const char *const blurb)
 {
     fcs_state_keyval_pair new_derived_state;
     fcs_encoded_state_buffer enc_state;
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct locs;
-    fcs_dbm_variant_type local_variant;
-
-    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
-
     fc_solve_init_locs(&locs);
+    const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     fcs_debondt_init_and_encode_state(
         delta,
@@ -61,7 +53,7 @@ static int debondt_test_encode_and_decode(fcs_debondt_delta_stater * delta, fcs_
     FCS__RENDER_STATE( as_str, &(new_derived_state.s), &locs);
     trim_trailing_whitespace(as_str);
 
-    const int verdict = ok(!strcmp(as_str, expected_str), "%s", blurb);
+    const bool verdict = ok(!strcmp(as_str, expected_str), "%s", blurb);
     if (!verdict)
     {
         diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n",
@@ -69,23 +61,19 @@ static int debondt_test_encode_and_decode(fcs_debondt_delta_stater * delta, fcs_
                 expected_str
             );
     }
-
     return verdict;
 }
 
-static int main_tests(void)
+static void main_tests(void)
 {
-    fcs_dbm_variant_type local_variant;
-
-    local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     {
         fcs_state_keyval_pair init_state, derived_state;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
-        /* MS Freecell No. 982 Initial state.
-         * */
+        // MS Freecell No. 982 Initial state.
         fc_solve_initial_user_state_to_c(
             ("Foundations: H-0 C-0 D-A S-0\n"
             "6D 3C 3H KD 8C 5C\n"
@@ -167,8 +155,7 @@ static int main_tests(void)
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
-        /* MS Freecell No. 24 Initial state.
-         * */
+        // MS Freecell No. 24 Initial state.
         fc_solve_initial_user_state_to_c(
 ("Foundations: H-0 C-0 D-0 S-0\n"
 "Freecells:\n"
@@ -236,12 +223,8 @@ static int main_tests(void)
             ),
             "DeBonodt: encode_composite + decode test No. 2 (deal #24)"
         );
-
-
         fc_solve_debondt_delta_stater_release (&db_delta);
     }
-
-    return 0;
 }
 
 int main(void)

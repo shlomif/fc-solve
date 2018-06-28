@@ -7,12 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * main.c - the main() and related functions of the fc-solve command line
- * executable.
- *
- * It is documented in the documents "README", "USAGE", etc. in the
- * Freecell Solver distribution from http://fc-solve.shlomifish.org/ .
- */
+// main.c - implement the "fc-solve" command line executable.
+//
+// It is documented in the documents "README", "USAGE", etc. in the
+// Freecell Solver distribution from http://fc-solve.shlomifish.org/ .
 #include "cl_callback.h"
 #include "default_iter_handler.h"

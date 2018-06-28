@@ -12,11 +12,7 @@ use FC_Solve::GetOutput ();
 sub assert_directly_ascending_iters
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    my $args = shift;
-    my $msg  = shift;
-
-    $args->{theme} ||= [ "-l", "cj" ];
+    my ( $args, $msg ) = @_;
     local $args->{theme} = [ @{ $args->{theme} }, '-s', '-i' ];
 
     my $scan_id;
@@ -34,83 +30,81 @@ sub assert_directly_ascending_iters
     my $fc_solve_output = $cmd_line_args->{fh};
     my $verdict         = 1;
     my $diag            = "";
+    my $last_iter;
+    my $iters_count;
+LINE_LOOP:
+    while ( my $line = <$fc_solve_output> )
     {
-        my $last_iter;
-        my $iters_count;
-    LINE_LOOP:
-        while ( my $line = <$fc_solve_output> )
+        chomp($line);
+        if ( $line =~ m{\AIteration: (\d+)\z} )
         {
-            chomp($line);
-            if ( $line =~ m{\AIteration: (\d+)\z} )
+            my $new_iter = $1;
+            if ( !defined($last_iter) )
             {
-                my $new_iter = $1;
-                if ( !defined($last_iter) )
+                if ( $new_iter ne "0" )
                 {
-                    if ( $new_iter ne "0" )
-                    {
-                        $verdict = 0;
-                        $diag .= "The iterations do not start at 0.";
-                    }
+                    $verdict = 0;
+                    $diag .= "The iterations do not start at 0.";
                 }
-                else
+            }
+            else
+            {
+                if ( $new_iter != $last_iter + 1 )
                 {
-                    if ( $new_iter != $last_iter + 1 )
+                    $verdict = 0;
+                    $diag .=
+"Iteration $new_iter does not directly follow $last_iter";
+                }
+            }
+            $last_iter = $new_iter;
+            if ( !$verdict )
+            {
+                last LINE_LOOP;
+            }
+        }
+        elsif ( $line =~ m{\AScan: (\S+)\z} )
+        {
+            my $id = $1;
+            if ( defined($scan_id) )
+            {
+                if ( $last_iter <= $scan_id_max_iter )
+                {
+                    if ( $id ne $scan_id )
                     {
                         $verdict = 0;
                         $diag .=
-"Iteration $new_iter does not directly follow $last_iter";
-                    }
-                }
-                $last_iter = $new_iter;
-                if ( !$verdict )
-                {
-                    last LINE_LOOP;
-                }
-            }
-            elsif ( $line =~ m{\AScan: (\S+)\z} )
-            {
-                my $id = $1;
-                if ( defined($scan_id) )
-                {
-                    if ( $last_iter <= $scan_id_max_iter )
-                    {
-                        if ( $id ne $scan_id )
-                        {
-                            $verdict = 0;
-                            $diag .=
 "Wrong scan '$id' instead of '$scan_id' in iteration $last_iter";
-                            last LINE_LOOP;
-                        }
+                        last LINE_LOOP;
                     }
                 }
-            }
-            elsif ( $line =~ m{\ATotal number of states checked is (\d+)\.\z} )
-            {
-                $iters_count = $1;
             }
         }
-
-        if ($verdict)
+        elsif ( $line =~ m{\ATotal number of states checked is (\d+)\.\z} )
         {
-            if ( !defined($iters_count) )
-            {
-                $verdict = 0;
-                $diag    = "Did not encounter total number of states checked.";
-            }
-            elsif ( $iters_count != $last_iter + 1 )
-            {
-                $verdict = 0;
-                $diag =
-"iters_count == $iters_count while last_iter == $last_iter\n"
-                    . "It should be iters_count == last_iter+1";
-            }
-            elsif ( defined($expected_iters_count)
-                && ( $iters_count != $expected_iters_count ) )
-            {
-                $verdict = 0;
-                $diag =
+            $iters_count = $1;
+        }
+    }
+
+    if ($verdict)
+    {
+        if ( !defined($iters_count) )
+        {
+            $verdict = 0;
+            $diag    = "Did not encounter total number of states checked.";
+        }
+        elsif ( $iters_count != $last_iter + 1 )
+        {
+            $verdict = 0;
+            $diag =
+                  "iters_count == $iters_count while last_iter == $last_iter\n"
+                . "It should be iters_count == last_iter+1";
+        }
+        elsif ( defined($expected_iters_count)
+            && ( $iters_count != $expected_iters_count ) )
+        {
+            $verdict = 0;
+            $diag =
 "iters_count == $iters_count while we want exactly $expected_iters_count iterations.";
-            }
         }
     }
 
@@ -138,12 +132,16 @@ assert_directly_ascending_iters( { deal => 1941, theme => [], },
     "Verifying 1941 (The Hardest Deal) with the default algorithm" );
 
 # TEST
-assert_directly_ascending_iters( { deal => 1941 },
-    "Verifying 1941 (The Hardest Deal) with '-l cj'" );
+assert_directly_ascending_iters(
+    { deal => 1941, theme => [qw/-l cj/], },
+    "Verifying 1941 (The Hardest Deal) with '-l cj'"
+);
 
 # TEST
-assert_directly_ascending_iters( { deal => 24 },
-    "Verifying deal No. 24 with '-l cj'" );
+assert_directly_ascending_iters(
+    { deal => 24, theme => [qw/-l cj/], },
+    "Verifying deal No. 24 with '-l cj'"
+);
 
 # TEST
 assert_directly_ascending_iters(
@@ -152,8 +150,10 @@ assert_directly_ascending_iters(
 );
 
 # TEST
-assert_directly_ascending_iters( { deal => 11982, },
-    "Verifying deal No. 11982 (unsolvable) with -l cj" );
+assert_directly_ascending_iters(
+    { deal => 11982, theme => [qw/-l cj/], },
+    "Verifying deal No. 11982 (unsolvable) with -l cj"
+);
 
 # TEST
 assert_directly_ascending_iters(

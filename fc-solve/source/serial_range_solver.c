@@ -7,18 +7,15 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * serial_range_solver.c - the Freecell Solver range solver.
- *
- * Also see:
- *  - fc_pro_range_solver.c - range solver that can count the moves in
- *  the solution and display the FC-Pro ones.
- *  - threaded_range_solver.c - solve different boards in several POSIX
- *  threads.
- */
+// serial_range_solver.c - the Freecell Solver range solver.
+//
+// Also see:
+//  - fc_pro_range_solver.c - range solver that can count the moves in
+//  the solution and display the FC-Pro ones.
+//  - threaded_range_solver.c - solve different boards in several POSIX
+//  threads.
 #include "default_iter_handler.h"
 #include "cl_callback_range.h"
-#include "handle_parsing.h"
 #include "trace_mem.h"
 #include "try_param.h"
 #include "range_solvers.h"
