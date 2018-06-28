@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_calc_derived_iface.h - the public interface to dbm_calc_derived.h
- */
+// dbm_calc_derived_iface.h - the public interface to dbm_calc_derived.h
 #pragma once
 
 #ifdef __cplusplus
@@ -40,9 +38,7 @@ DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
     const int num_derived_states,
     fcs_derived_state_debug *const derived_states);
 
-/*
- * The char * returned is malloc()ed and should be free()ed.
- */
+// The char * returned is malloc()ed and should be free()ed.
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     fcs_dbm_variant_type, const char *, char **);
 

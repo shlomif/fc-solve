@@ -1547,10 +1547,10 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
 
     sfs_check_state_begin();
     bool cards_were_moved = FALSE;
-    uint_fast32_t num_cards_moved;
+    bool num_cards_moved;
     do
     {
-        num_cards_moved = 0;
+        num_cards_moved = FALSE;
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             const_AUTO(col, fcs_state_get_col(new_state_key, stack_idx));
@@ -1569,7 +1569,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
                 continue;
             }
             /* We can safely move it. */
-            num_cards_moved++;
+            num_cards_moved = TRUE;
 
             my_copy_stack(stack_idx);
             fcs_state_pop_col_top(&new_state_key, stack_idx);
@@ -1592,7 +1592,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
             {
                 continue;
             }
-            num_cards_moved++;
+            num_cards_moved = TRUE;
 
             fcs_empty_freecell(new_state_key, fc);
             fcs_increment_foundation(new_state_key, dest_foundation);

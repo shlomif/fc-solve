@@ -7,11 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * range_solvers_gen_ms_boards.h - a header file that defines some
- * static (and preferably inline) routines for generating the Microsoft
- * boards.
- */
+// range_solvers_gen_ms_boards.h - a header file that defines some
+// static (and preferably inline) routines for generating the Microsoft
+// boards.
 #pragma once
 
 #ifdef __cplusplus

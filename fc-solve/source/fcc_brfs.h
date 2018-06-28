@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * fcc_brfs.h - contains the perform_FCC_brfs() function to perform the
- * Breadth-first-search on the Fully-connected-component.
- */
+// fcc_brfs.h - contains the perform_FCC_brfs() function to perform the
+// Breadth-first-search on the Fully-connected-component.
 #pragma once
 
 #ifdef __cplusplus

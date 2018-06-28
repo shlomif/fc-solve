@@ -7,12 +7,10 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * fcc_brfs_test.h - the test interface declarations of fcc_brfs.h and
- * fcc_brfs_test.c .
- *
- * This file is also included by the production code.
- */
+// fcc_brfs_test.h - the test interface declarations of fcc_brfs.h and
+// fcc_brfs_test.c .
+//
+// This file is also included by the production code.
 #pragma once
 
 #ifdef __cplusplus

@@ -7,12 +7,11 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_kaztree_compare.h - contains the comparison routine. The record_t
- * definition can be found in delta_states.h.
- * Intended for dbm_kaztree.c. Should only be included by it and programs
- * that test it.
- */
+// dbm_kaztree_compare.h - contains the comparison routine. The record_t
+// definition can be found in delta_states.h.
+//
+// Intended for dbm_kaztree.c. Should only be included by it and programs
+// that test it.
 #pragma once
 
 #ifdef __cplusplus
