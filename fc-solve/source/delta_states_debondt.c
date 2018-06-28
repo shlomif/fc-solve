@@ -7,14 +7,11 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-/*
- * delta_states_debondt.c - "delta states" are an encoding of states,
- * where the states are encoded and decoded based on a compact delta from the
- * initial state.
- *
- * This encoding improves upon the original delta_states.c .
- */
-
+// delta_states_debondt.c - "delta states" are an encoding of states,
+// where the states are encoded and decoded based on a compact delta from the
+// initial state.
+//
+// This encoding improves upon the original delta_states.c .
 #include "delta_states_debondt_impl.h"
 #include "render_state.h"
 

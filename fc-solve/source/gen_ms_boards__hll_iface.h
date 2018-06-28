@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * gen_ms_boards__hll_iface.h - high-level-language interface to the rand.
- */
+// gen_ms_boards__hll_iface.h - high-level-language interface to the rand.
 #pragma once
 
 #ifdef __cplusplus

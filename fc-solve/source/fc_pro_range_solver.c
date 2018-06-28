@@ -7,11 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * fc_pro_range_solver.c - the FC-Pro range solver. Solves a range of
- * boards and displays the moves counts and the number of moves in their
- * solution.
- */
+// fc_pro_range_solver.c - the FC-Pro range solver. Solves a range of
+// boards and displays the moves counts and the number of moves in their
+// solution.
 #include "default_iter_handler.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "range_solvers_binary_output.h"

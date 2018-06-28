@@ -8,13 +8,11 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 // simpsim.c - a module that contains Simple Simon moves.
-
 #include "simpsim.h"
 #include "scans.h"
 
-/* This is a fallback in case this module is still compiled with
- * FCS_DISABLE_SIMPLE_SIMON.
- * */
+// This is a fallback in case this module is still compiled with
+// FCS_DISABLE_SIMPLE_SIMON.
 #ifdef FCS_DISABLE_SIMPLE_SIMON
 char fc_solve_simple_simon_nothing;
 #else

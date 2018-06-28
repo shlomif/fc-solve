@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * fcs_user.h - main header file for the Freecell Solver library.
- */
+// fcs_user.h - main header file for the Freecell Solver library.
 #pragma once
 #include <stddef.h>
 

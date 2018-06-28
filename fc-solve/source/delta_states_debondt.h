@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * delta_states_debondt.h - header file for the DeBondt delta states encoding.
- */
-
+// delta_states_debondt.h - header file for the DeBondt delta states encoding.
 #pragma once
 
 #ifdef __cplusplus
