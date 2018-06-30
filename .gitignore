@@ -46,6 +46,7 @@
 /fc-solve/site/wml/bin/clean-up-docbook-xhtml-1.1.xslt
 /fc-solve/site/wml/bin/gen-build-deps
 /fc-solve/site/wml/bin/gen-rpm-for-build-deps
+/fc-solve/site/wml/bin/html-min-cli-config-file.conf
 /fc-solve/site/wml/bin/jsmin
 /fc-solve/site/wml/bin/post-incs.pl
 /fc-solve/site/wml/bin/sort-check-spelling-file
