@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 
 use Carp::Always;
-
 use strict;
 use warnings;
 
@@ -36,7 +35,7 @@ sub get_root
     return ( ( $ret eq '' ) ? '.' : $ret );
 }
 
-use Shlomif::Out qw/write_on_change/;
+use File::Update qw/ write_on_change /;
 
 sub _out
 {
