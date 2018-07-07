@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use IO::All;
+use IO::All qw/ io /;
 
 foreach my $f ( io("data/")->filter( sub { m{\.data\.bin\z} } )->all_files )
 {
@@ -12,7 +12,7 @@ foreach my $f ( io("data/")->filter( sub { m{\.data\.bin\z} } )->all_files )
     {
         if ( $elem > 0 )
         {
-            $elem++;
+            ++$elem;
         }
     }
     $f->print( pack( "l*", @array ) );
