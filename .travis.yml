@@ -20,7 +20,7 @@ install:
       # For G-S-V dzil
     - cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website
-    - cpanm --quiet --notest Carp::Always Code::TidyAll::Plugin::ESLint File::Find::Object::Rule File::ReadBackwards File::Update File::Which HTML::Latemp::GenMakeHelpers HTML::Spelling::Site HTML::TokeParser::Simple IO::All List::MoreUtils Moo MooX MooX::late Parallel::ForkManager Path::Tiny Perl::Critic Perl::Tidy Template Test::Code::TidyAll Test::HTML::Recursive::DeprecatedTags Test::HTML::Tidy::Recursive Test::HTML::Tidy::Recursive::Strict Text::WrapAsUtf8 XML::Feed
+    - cpanm --quiet --notest Carp::Always Code::TidyAll::Plugin::ESLint File::Find::Object::Rule File::ReadBackwards File::Update File::Which HTML::Latemp::GenMakeHelpers HTML::Spelling::Site HTML::TokeParser::Simple IO::All List::MoreUtils Moo MooX MooX::late Parallel::ForkManager Path::Tiny Perl::Critic Perl::Tidy Template Test::Code::TidyAll Test::File::Find::CaseCollide Test::HTML::Recursive::DeprecatedTags Test::HTML::Tidy::Recursive Test::HTML::Tidy::Recursive::Strict Text::WrapAsUtf8 XML::Feed
     - cpanm --quiet --notest Task::FreecellSolver::Testing
     - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | cpanm --notest)
     - (cd .. && wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2 && tar -xvf libtap-1.12.0.tar.bz2 && ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install ) ; )
