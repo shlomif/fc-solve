@@ -10,18 +10,18 @@
 # See: http://pysolfc.sourceforge.net/ .
 import random2
 import sys
-from fc_solve_find_index_s2ints import createCards, Card, \
+from fc_solve_find_index_s2ints import createCards, Card, CardRenderer, \
         find_index__board_string_to_ints, ms_rearrange
 
 
 def empty_card():
-    ret = Card(0, 0, 0, True)
+    ret = Card(0, 0, 0)
     ret.empty = True
     return ret
 
 
-def column_to_string(col):
-    return ' '.join([x.to_s() for x in col])
+def column_to_string(renderer, col):
+    return ' '.join([renderer.to_s(x) for x in col])
 
 
 class RandomBase:
@@ -113,10 +113,6 @@ class Columns:
     def rev(self):
         self.cols.reverse()
 
-    def output(self):
-        for c in self.cols:
-            print(column_to_string(c))
-
 
 class Board:
     def __init__(self, num_columns, with_freecells=False,
@@ -160,28 +156,31 @@ class Board:
             self.foundations[card.suit] = card
         return res
 
-    def print_foundations(self):
+    def print_foundations(self, renderer):
         cells = []
         for f in [2, 0, 3, 1]:
             if not self.foundations[f].empty:
-                cells.append(self.foundations[f].found_s())
+                cells.append(renderer.found_s(self.foundations[f]))
 
         if len(cells):
             self.add_line("Foundations:" + ("".join([" "+s for s in cells])))
 
-    def gen_lines(self):
+    def gen_lines(self, renderer):
         self._lines = []
         if self.with_talon:
-            self.add_line("Talon: " + column_to_string(self.talon))
+            self.add_line("Talon: " + column_to_string(renderer,
+                                                       self.talon))
         if self.with_foundations:
-            self.print_foundations()
+            self.print_foundations(renderer)
         if self.with_freecells:
-            self.add_line("Freecells: " + column_to_string(self.freecells))
+            self.add_line("Freecells: " + column_to_string(renderer,
+                                                           self.freecells))
 
-        self._lines += [column_to_string(c) for c in self.columns.cols]
+        self._lines += [
+            column_to_string(renderer, c) for c in self.columns.cols]
 
-    def output(self):
-        self.gen_lines()
+    def output(self, renderer):
+        self.gen_lines(renderer)
         for l in self._lines:
             print(l)
 
@@ -221,7 +220,7 @@ class Game:
                 "all_in_a_row": None,
         }
 
-    def __init__(self, game_id, game_num, which_deals, print_ts, max_rank=13):
+    def __init__(self, game_id, game_num, which_deals, max_rank=13):
         mymap = {}
         for k, v in self.REVERSE_MAP.items():
             for name in [k] + (v if v else []):
@@ -229,7 +228,6 @@ class Game:
         self.games_map = mymap
         self.game_id = game_id
         self.game_num = game_num
-        self.print_ts = print_ts
         self.which_deals = which_deals
         self.max_rank = max_rank
 
@@ -240,21 +238,21 @@ class Game:
     def get_num_decks(self):
         return 2 if self.is_two_decks() else 1
 
-    def print_layout(self):
+    def print_layout(self, renderer):
         game_class = self.games_map[self.game_id]
         if not game_class:
             raise ValueError("Unknown game type " + self.game_id + "\n")
 
         self.deal()
         getattr(self, game_class)()
-        self.board.output()
+        self.board.output(renderer)
 
     def new_cards(self, cards):
         self.cards = cards
         self.card_idx = 0
 
     def deal(self):
-        cards = shuffle(createCards(self.get_num_decks(), self.print_ts,
+        cards = shuffle(createCards(self.get_num_decks(),
                                     self.max_rank),
                         self.game_num, self.which_deals)
         cards.reverse()
@@ -460,8 +458,9 @@ def make_pysol_board__main(args):
 
     game_num = int(args[1])
     which_game = args[2] if len(args) >= 3 else "freecell"
-    game = Game(which_game, game_num, which_deals, print_ts, max_rank)
-    game.print_layout()
+    game = Game(which_game, game_num, which_deals, max_rank)
+    r = CardRenderer(print_ts)
+    game.print_layout(r)
 
 
 def find_index_main(args, find_ret):

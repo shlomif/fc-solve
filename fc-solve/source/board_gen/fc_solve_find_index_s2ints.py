@@ -11,33 +11,16 @@
 import re
 
 
-class Card(object):
+class Card:
     ACE = 1
     KING = 13
 
-    def __init__(self, id, rank, suit, print_ts):
-        self.id, self.rank, self.suit, self.print_ts = id, rank, suit, print_ts
+    def __init__(self, id, rank, suit):
+        self.id, self.rank, self.suit = id, rank, suit
         self.empty, self.flipped = False, False
-
-    def rank_s(self):
-        ret = "0A23456789TJQK"[self.rank]
-        if ((not self.print_ts) and ret == 'T'):
-            ret = '10'
-        return ret
 
     def suit_s(self):
         return 'CSHD'[self.suit]
-
-    def to_s(self):
-        if self.empty:
-            return '-'
-        ret = self.rank_s() + self.suit_s()
-        if self.flipped:
-            ret = '<' + ret + '>'
-        return ret
-
-    def found_s(self):
-        return self.suit_s() + '-' + self.rank_s()
 
     def is_ace(self):
         return self.rank == self.ACE
@@ -46,18 +29,41 @@ class Card(object):
         return self.rank == self.KING
 
     def flip(self, flipped=True):
-        ret = Card(self.id, self.rank, self.suit, self.print_ts)
+        ret = Card(self.id, self.rank, self.suit)
         ret.flipped = flipped
         return ret
 
 
-def createCards(num_decks, print_ts, max_rank=13):
+class CardRenderer:
+    """docstring for CardRenderer"""
+    def __init__(self, print_ts):
+        self.print_ts = print_ts
+
+    def to_s(self, card):
+        if card.empty:
+            return '-'
+        ret = self.rank_s(card) + card.suit_s()
+        if card.flipped:
+            ret = '<' + ret + '>'
+        return ret
+
+    def found_s(self, card):
+        return card.suit_s() + '-' + self.rank_s(card)
+
+    def rank_s(self, card):
+        ret = "0A23456789TJQK"[card.rank]
+        if ((not self.print_ts) and ret == 'T'):
+            ret = '10'
+        return ret
+
+
+def createCards(num_decks, max_rank=13):
     ret = []
     for _ in range(num_decks):
         id = 0
         for s in range(4):
             for r in range(max_rank):
-                ret.append(Card(id, r+1, s, print_ts))
+                ret.append(Card(id, r+1, s))
                 id += 1
     return ret
 
@@ -101,7 +107,8 @@ def find_index__board_string_to_ints(content):
     if not m:
         raise ValueError("Could not match.")
 
-    cards = [x.to_s() for x in ms_rearrange(createCards(1, True))]
+    r = CardRenderer(True)
+    cards = [r.to_s(x) for x in ms_rearrange(createCards(1))]
 
     # Reverse shuffle:
     ints = []
