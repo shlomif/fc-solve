@@ -56,6 +56,9 @@ class CardRenderer:
             ret = '10'
         return ret
 
+    def l_concat(self, lst):
+        return ' '.join([self.to_s(x) for x in lst])
+
 
 def createCards(num_decks, max_rank=13):
     ret = []

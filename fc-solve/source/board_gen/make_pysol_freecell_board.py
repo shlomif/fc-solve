@@ -20,10 +20,6 @@ def empty_card():
     return ret
 
 
-def column_to_string(renderer, col):
-    return ' '.join([renderer.to_s(x) for x in col])
-
-
 class RandomBase:
     DEALS_PYSOL = 0
     DEALS_PYSOLFC = 1
@@ -168,16 +164,13 @@ class Board:
     def gen_lines(self, renderer):
         self._lines = []
         if self.with_talon:
-            self.add_line("Talon: " + column_to_string(renderer,
-                                                       self.talon))
+            self.add_line("Talon: " + renderer.l_concat(self.talon))
         if self.with_foundations:
             self.print_foundations(renderer)
         if self.with_freecells:
-            self.add_line("Freecells: " + column_to_string(renderer,
-                                                           self.freecells))
+            self.add_line("Freecells: " + renderer.l_concat(self.freecells))
 
-        self._lines += [
-            column_to_string(renderer, c) for c in self.columns.cols]
+        self._lines += [renderer.l_concat(c) for c in self.columns.cols]
 
     def output(self, renderer):
         self.gen_lines(renderer)
