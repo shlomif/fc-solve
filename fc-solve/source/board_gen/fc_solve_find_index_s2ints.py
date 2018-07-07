@@ -56,8 +56,11 @@ class CardRenderer:
             ret = '10'
         return ret
 
+    def render_l(self, lst):
+        return [self.to_s(x) for x in lst]
+
     def l_concat(self, lst):
-        return ' '.join([self.to_s(x) for x in lst])
+        return ' '.join(self.render_l(lst))
 
 
 def createCards(num_decks, max_rank=13):
@@ -110,8 +113,7 @@ def find_index__board_string_to_ints(content):
     if not m:
         raise ValueError("Could not match.")
 
-    r = CardRenderer(True)
-    cards = [r.to_s(x) for x in ms_rearrange(createCards(1))]
+    cards = CardRenderer(True).render_l(ms_rearrange(createCards(1)))
 
     # Reverse shuffle:
     ints = []
