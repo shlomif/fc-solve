@@ -458,9 +458,8 @@ def make_pysol_board__main(args):
 
     game_num = int(args[1])
     which_game = args[2] if len(args) >= 3 else "freecell"
-    game = Game(which_game, game_num, which_deals, max_rank)
-    r = CardRenderer(print_ts)
-    game.print_layout(r)
+    Game(which_game, game_num, which_deals, max_rank).print_layout(
+        CardRenderer(print_ts))
 
 
 def find_index_main(args, find_ret):
