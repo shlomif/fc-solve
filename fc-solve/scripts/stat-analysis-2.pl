@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Statistics::Descriptive;
-use Path::Tiny;
+use Path::Tiny qw/ path /;
 
 my $filename = shift(@ARGV);
 

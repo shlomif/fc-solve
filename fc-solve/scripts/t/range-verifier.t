@@ -4,12 +4,11 @@ use strict;
 use warnings;
 
 use Test::More tests => 5;
-use Test::Differences;
+use Test::Differences qw/ eq_or_diff /;
 
 use File::Spec;
 use File::Basename qw( dirname );
-use Path::Tiny;
-
+use Path::Tiny qw/ path /;
 use Storable qw(retrieve);
 
 my $data_dir = File::Spec->catdir( dirname(__FILE__), 'data' );

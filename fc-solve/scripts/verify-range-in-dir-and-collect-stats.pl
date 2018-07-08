@@ -163,7 +163,7 @@ sub _init
 }
 
 use Data::Dumper;
-use Path::Tiny;
+use Path::Tiny qw/ path /;
 
 sub _verify_contents
 {
