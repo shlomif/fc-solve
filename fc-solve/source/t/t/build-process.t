@@ -10,6 +10,7 @@ use Cwd ();
 use File::Path qw/ mkpath rmtree /;
 use Env::Path ();
 use File::Temp qw/ tempdir /;
+use Path::Tiny qw/ path /;
 
 # Remove FCS_TEST_BUILD so we won't run the tests with infinite recursion.
 if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
@@ -59,10 +60,8 @@ sub test_cmd
     test_cmd( [ "make", "package_source" ],
         "make package_source is successful" );
 
-    open my $ver_fh, "<", File::Spec->catfile( $src_path, "ver.txt" );
-    my $version = <$ver_fh>;
-    close($ver_fh);
-    chomp($version);
+    my ($version) = path( File::Spec->catfile( $src_path, "ver.txt" ) )
+        ->lines_utf8( { chomp => 1 } );
 
     my $base     = "freecell-solver-$version";
     my $tar_arc  = "$base.tar";
@@ -125,18 +124,10 @@ sub test_cmd
     mkpath($failing_asciidoc_dir);
 
     my $asciidoc_bin = File::Spec->catfile( $failing_asciidoc_dir, "asciidoc" );
-
-    {
-        open my $out, ">", $asciidoc_bin
-            or die "Cannot write to '$asciidoc_bin'";
-        print {$out} <<"EOF";
+    path($asciidoc_bin)->spew_utf8(<<"EOF");
 #!$^X
 exit(-1);
 EOF
-
-        close($out);
-    }
-
     chmod( 0755, $asciidoc_bin );
 
     # Delete the unpacked directory.
