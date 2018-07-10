@@ -403,7 +403,6 @@ static inline void upon_new_state(fcs_instance *const instance GCC_UNUSED,
 #endif
 }
 
-#define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
 static inline bool handle_existing_void(fcs_instance *const instance,
     fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state,
     fcs_kv_state *const existing_state_raw, void *const existing_void)
@@ -415,7 +414,7 @@ static inline bool handle_existing_void(fcs_instance *const instance,
     }
     else
     {
-        ON_STATE_NEW();
+        upon_new_state(instance, hard_thread, new_state->val);
 #ifdef DEBUG
         if (getenv("FCS_DEBUG2"))
         {
