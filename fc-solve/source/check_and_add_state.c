@@ -346,7 +346,7 @@ static inline void fc_solve_cache_stacks(
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 guint fc_solve_hash_function(gconstpointer key)
 {
-    const char *s_ptr = (char *)key;
+    const char *s_ptr = (const char *)key;
     const char *const s_end = s_ptr + sizeof(fcs_state);
     guint hash_value = 0;
     while (s_ptr < s_end)
@@ -529,15 +529,16 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
     return HANDLE_existing_void(
         existing_void == new_state_void ? NULL : existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-    existing_state_val =
-        g_hash_table_lookup(instance->hash, (gpointer)new_state_key);
-    if ((is_state_new = (existing_state_val == NULL)))
+    const_AUTO(new_state_void, FCS_STATE_kv_to_collectible(new_state));
+    const_AUTO(existing_void,
+        g_hash_table_lookup(instance->hash, (gpointer)new_state_void));
+    if (!existing_void)
     {
         g_hash_table_insert(
-            instance->hash, (gpointer)new_state_key, (gpointer)new_state_val
-
-        );
+            instance->hash, (gpointer)new_state_void, (gpointer)new_state_void);
     }
+    return HANDLE_existing_void(
+        existing_void == new_state_void ? NULL : existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     DBT key, value;
     key.data = new_state;
