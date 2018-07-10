@@ -380,6 +380,19 @@ IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
 
 ENDIF ()
 
+# Search for glib if appropriate.
+IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_GLIB_TREE") OR
+    ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_GLIB_TREE"))
+
+    FIND_PACKAGE (PkgConfig REQUIRED)
+    pkg_check_modules (GLIB REQUIRED glib-2.0)
+
+    include_directories (${GLIB_INCLUDE_DIRS})
+    link_directories (${GLIB_LIBRARY_DIRS})
+    add_definitions (${GLIB_CFLAGS_OTHER})
+
+ENDIF ()
+
 SET (WITH_JUDY )
 
 # Search for Judy ( http://judy.sourceforge.net/ ) if appropriate.
@@ -701,7 +714,7 @@ ENDIF()
 ADD_DEFINITIONS(${_win32_static_lib_flags})
 FOREACH (TGT ${TARGETS})
     TARGET_LINK_LIBRARIES (${TGT}
-        ${MATH_LIB_LIST} ${LIBTCMALLOC_LIB_LIST} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB}
+        ${MATH_LIB_LIST} ${LIBTCMALLOC_LIB_LIST} ${LIBREDBLACK_LIB} ${LIBJUDY_LIB} ${GLIB_LIBRARIES}
         ${_win32_static_lib_flags}
     )
 ENDFOREACH ()

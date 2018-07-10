@@ -518,30 +518,26 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
     return HANDLE_existing_void(fcs_libavl2_states_tree_insert(
         instance->tree, FCS_STATE_kv_to_collectible(new_state)));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-    existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
-    if ((is_state_new = (existing_state_val == NULL)))
+    const_AUTO(new_state_void, FCS_STATE_kv_to_collectible(new_state));
+    const_AUTO(
+        existing_void, g_tree_lookup(instance->tree, (gpointer)new_state_void));
+    if (!existing_void)
     {
-        /* The new state was not found. Let's insert it.
-         * The value must be the same as the key, so g_tree_lookup()
-         * will return it. */
         g_tree_insert(
-            instance->tree, (gpointer)new_state_key, (gpointer)new_state_val);
+            instance->tree, (gpointer)new_state_void, (gpointer)new_state_void);
     }
-
+    return HANDLE_existing_void(
+        existing_void == new_state_void ? NULL : existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     existing_state_val =
         g_hash_table_lookup(instance->hash, (gpointer)new_state_key);
     if ((is_state_new = (existing_state_val == NULL)))
     {
-        /* The new state was not found. Let's insert it.
-         * The value must be the same as the key, so g_tree_lookup()
-         * will return it. */
         g_hash_table_insert(
             instance->hash, (gpointer)new_state_key, (gpointer)new_state_val
 
         );
     }
-
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     DBT key, value;
     key.data = new_state;
