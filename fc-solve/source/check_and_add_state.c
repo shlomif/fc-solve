@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * check_and_add_state.c - the various possible implementations of the function
- * fc_solve_check_and_add_state().
- */
+// check_and_add_state.c - the various possible implementations of the function
+// fc_solve_check_and_add_state().
 
 #include "move_stack_compact_alloc.h"
 

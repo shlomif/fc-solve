@@ -341,14 +341,11 @@ static inline fcs_kv_state FCS_STATE_keyval_pair_to_kv(
         fcs_duplicate_state_extra(*((ptr_dest)->val));                         \
     }
 
-/*
- * This type is the struct that is collectible inside the hash.
- *
- * In FCS_RCS_STATES we only collect the extra_info's and the state themselves
- * are kept in an LRU cache because they can be calculated from the
- * extra_infos and the original state by applying the moves.
- *
- * */
+// This type is the struct that is collectible inside the hash.
+//
+// In FCS_RCS_STATES we only collect the extra_info's and the state themselves
+// are kept in an LRU cache because they can be calculated from the
+// extra_infos and the original state by applying the moves.
 #ifdef FCS_RCS_STATES
 typedef fcs_state_extra_info fcs_collectible_state;
 #define FCS_S_ACCESSOR(s, field) ((s)->field)
