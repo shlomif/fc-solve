@@ -332,10 +332,31 @@ static inline void init_instance(fcs_instance *const instance)
 #endif
 }
 
-/* These are all stack comparison functions to be used for the stacks
-   cache when using INDIRECT_STACK_STATES
-*/
-#if defined(INDIRECT_STACK_STATES)
+// These are all stack comparison functions to be used for the stacks
+// cache when using INDIRECT_STACK_STATES
+#ifdef INDIRECT_STACK_STATES
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
+static guint fc_solve_glib_hash_stack_hash_function(gconstpointer key)
+{
+    guint hash_value_int = 0;
+    /* This hash function was ripped from the Perl source code.
+     * (It is not derived work however). */
+    const char *s_ptr = (const char *)key;
+    const char *const s_end = s_ptr + fcs_col_len((const fcs_card *)key) + 1;
+    while (s_ptr < s_end)
+    {
+        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
+    }
+    hash_value_int += (hash_value_int >> 5);
+
+    return hash_value_int;
+}
+
+static gint fc_solve_glib_hash_stack_compare(gconstpointer a, gconstpointer b)
+{
+    return !(fc_solve_stack_compare_for_comparison(a, b));
+}
+#endif
 
 #if ((FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_TREE) &&                     \
      (FCS_STACK_STORAGE != FCS_STACK_STORAGE_GLIB_HASH) &&                     \
@@ -356,8 +377,8 @@ static int cmp_stacks_w_context(const void *const v_s1, const void *const v_s2,
 }
 #endif
 #endif
-
 #endif
+
 #ifdef FCS_RCS_STATES
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE) ||                  \
@@ -434,31 +455,6 @@ static inline void update_initial_cards_val(fcs_instance *const instance)
     }
     instance->initial_cards_under_sequences_value = cards_under_sequences;
 }
-
-#ifdef INDIRECT_STACK_STATES
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
-static guint fc_solve_glib_hash_stack_hash_function(gconstpointer key)
-{
-    guint hash_value_int = 0;
-    /* This hash function was ripped from the Perl source code.
-     * (It is not derived work however). */
-    const char *s_ptr = (const char *)key;
-    const char *const s_end = s_ptr + fcs_col_len((const fcs_card *)key) + 1;
-    while (s_ptr < s_end)
-    {
-        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-    }
-    hash_value_int += (hash_value_int >> 5);
-
-    return hash_value_int;
-}
-
-static gint fc_solve_glib_hash_stack_compare(gconstpointer a, gconstpointer b)
-{
-    return !(fc_solve_stack_compare_for_comparison(a, b));
-}
-#endif
-#endif
 
 // This function associates a board with an fcs_instance and
 // does other initialisations. After it, you must call resume_instance()
@@ -1710,14 +1706,11 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
                 pats_scan->current_pos.s =
                     instance->initial_non_canonized_state->s;
 #ifdef INDIRECT_STACK_STATES
-
                 memset(pats_scan->current_pos.indirect_stacks_buffer, '\0',
                     sizeof(pats_scan->current_pos.indirect_stacks_buffer));
-
 #ifndef HARD_CODED_NUM_STACKS
                 const size_t stacks_num = INSTANCE_STACKS_NUM;
 #endif
-
                 for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
                 {
                     var_AUTO(src_col,
