@@ -435,6 +435,31 @@ static inline void update_initial_cards_val(fcs_instance *const instance)
     instance->initial_cards_under_sequences_value = cards_under_sequences;
 }
 
+#ifdef INDIRECT_STACK_STATES
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
+static guint fc_solve_glib_hash_stack_hash_function(gconstpointer key)
+{
+    guint hash_value_int = 0;
+    /* This hash function was ripped from the Perl source code.
+     * (It is not derived work however). */
+    const char *s_ptr = (const char *)key;
+    const char *const s_end = s_ptr + fcs_col_len((const fcs_card *)key) + 1;
+    while (s_ptr < s_end)
+    {
+        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
+    }
+    hash_value_int += (hash_value_int >> 5);
+
+    return hash_value_int;
+}
+
+static gint fc_solve_glib_hash_stack_compare(gconstpointer a, gconstpointer b)
+{
+    return !(fc_solve_stack_compare_for_comparison(a, b));
+}
+#endif
+#endif
+
 // This function associates a board with an fcs_instance and
 // does other initialisations. After it, you must call resume_instance()
 // repeatedly.
