@@ -9,7 +9,6 @@
  */
 // A test for the Debondt delta states routines.
 #include <string.h>
-#include <stdio.h>
 #include <tap.h>
 
 #ifndef FCS_COMPILE_DEBUG_FUNCTIONS
@@ -18,13 +17,15 @@
 
 #include "card.c"
 #include "state.c"
-#include "is_parent.c"
 #include "delta_states_any.h"
 #include "indirect_buffer.h"
 #include "trim_trailing_whitespace.h"
 #include "render_state.h"
+#ifdef FCS_FREECELL_ONLY
+#include "is_parent.c"
+#endif
 
-static bool debondt_test_encode_and_decode(fcs_delta_stater *const delta, fcs_state_keyval_pair *const state, const char *const expected_str, const char *const blurb)
+static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs_delta_stater *const delta, fcs_state_keyval_pair *const state, const char *const expected_str, const char *const blurb)
 {
     fcs_state_keyval_pair new_derived_state;
     fcs_encoded_state_buffer enc_state;
@@ -48,7 +49,7 @@ static bool debondt_test_encode_and_decode(fcs_delta_stater *const delta, fcs_st
     );
 
     char as_str[1000];
-    FCS__RENDER_STATE( as_str, &(new_derived_state.s), &locs);
+    FCS__RENDER_STATE(as_str, &(new_derived_state.s), &locs);
     trim_trailing_whitespace(as_str);
 
     const bool verdict = ok(!strcmp(as_str, expected_str), "%s", blurb);
@@ -123,7 +124,8 @@ static void main_tests(void)
 
         /* TEST
          * */
-        debondt_test_encode_and_decode(
+        test_encode_and_decode(
+            local_variant,
             &db_delta,
             &derived_state,
             (
@@ -204,7 +206,8 @@ static void main_tests(void)
 
         /* TEST
          * */
-        debondt_test_encode_and_decode(
+        test_encode_and_decode(
+            local_variant,
             &db_delta,
             &derived_state,
             (
