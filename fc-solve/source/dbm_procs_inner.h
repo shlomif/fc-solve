@@ -25,7 +25,7 @@ static inline main_thread_item *dbm__calc_threads(
 #ifdef T
     FILE *const out_fh = instance->common.out_fh;
 #endif
-    FCS_ON_NOT_FC_ONLY(const_AUTO(local_variant, instance->common.variant));
+    const_AUTO(local_variant, instance->common.variant);
     main_thread_item *const threads = SMALLOC(threads, num_threads);
     TRACE("%s\n", "instance_run_all_threads start");
 #ifdef DEBUG_FOO
