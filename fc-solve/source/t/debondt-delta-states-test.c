@@ -32,7 +32,6 @@ static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs
     DECLARE_IND_BUF_T(new_derived_indirect_stacks_buffer)
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
-    const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
     fcs_init_and_encode_state(
         delta,
@@ -90,9 +89,9 @@ static void main_tests(void)
             indirect_stacks_buffer
         );
 
-        fcs_delta_stater db_delta;
+        fcs_delta_stater delta;
         fc_solve_delta_stater_init(
-            &db_delta,
+            &delta,
                 local_variant,
                 &init_state.s,
                 STACKS_NUM,
@@ -120,13 +119,13 @@ static void main_tests(void)
                 derived_indirect_stacks_buffer
         );
 
-        fc_solve_delta_stater_set_derived(&db_delta, &(derived_state.s));
+        fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));
 
         /* TEST
          * */
         test_encode_and_decode(
             local_variant,
-            &db_delta,
+            &delta,
             &derived_state,
             (
 "Foundations: H-0 C-2 D-A S-0\n"
@@ -142,7 +141,7 @@ static void main_tests(void)
             ),
             "DeBondt: encode_composite + decode test"
         );
-        fc_solve_delta_stater_release (&db_delta);
+        fc_solve_delta_stater_release (&delta);
     }
 
 /* More encode_composite tests - this time from the output of:
@@ -174,9 +173,9 @@ static void main_tests(void)
             indirect_stacks_buffer
         );
 
-        fcs_delta_stater db_delta;
+        fcs_delta_stater delta;
         fc_solve_delta_stater_init(
-            &db_delta,
+            &delta,
             local_variant,
             &init_state.s,
             STACKS_NUM,
@@ -208,7 +207,7 @@ static void main_tests(void)
          * */
         test_encode_and_decode(
             local_variant,
-            &db_delta,
+            &delta,
             &derived_state,
             (
 "Foundations: H-0 C-0 D-0 S-4\n"
@@ -224,7 +223,7 @@ static void main_tests(void)
             ),
             "DeBonodt: encode_composite + decode test No. 2 (deal #24)"
         );
-        fc_solve_delta_stater_release (&db_delta);
+        fc_solve_delta_stater_release (&delta);
     }
 }
 

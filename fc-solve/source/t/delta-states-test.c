@@ -25,12 +25,7 @@
 #include "is_parent.c"
 #endif
 
-static fcs_card make_card(int rank, int suit)
-{
-    return fcs_make_card(rank, suit);
-}
-
-static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs_delta_stater * delta, fcs_state_keyval_pair * state, const char * expected_str, const char * blurb)
+static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs_delta_stater *const delta, fcs_state_keyval_pair *const state, const char *const expected_str, const char *const blurb)
 {
     fcs_state_keyval_pair new_derived_state;
     fcs_encoded_state_buffer enc_state;
@@ -65,6 +60,11 @@ static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs
             );
     }
     return verdict;
+}
+
+static fcs_card make_card(int rank, int suit)
+{
+    return fcs_make_card(rank, suit);
 }
 
 static int main_tests(void)
