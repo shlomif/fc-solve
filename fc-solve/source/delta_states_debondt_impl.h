@@ -540,7 +540,7 @@ static void fc_solve_debondt_delta_stater_decode(fcs_delta_stater *const self,
 #undef IS_IN_FOUNDATIONS
 }
 
-static inline void fc_solve_debondt_delta_stater_decode_into_state_proto(
+static inline void fc_solve_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type local_variant,
     fcs_delta_stater *const delta_stater, const fcs_uchar *const enc_state,
     fcs_state_keyval_pair *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
@@ -557,8 +557,8 @@ static inline void fc_solve_debondt_delta_stater_decode_into_state_proto(
 #ifdef INDIRECT_STACK_STATES
 #define fc_solve_debondt_delta_stater_decode_into_state(                       \
     local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) \
-    fc_solve_debondt_delta_stater_decode_into_state_proto(local_variant,       \
-        delta_stater, enc_state, state_ptr, indirect_stacks_buffer)
+    fc_solve_delta_stater_decode_into_state_proto(local_variant, delta_stater, \
+        enc_state, state_ptr, indirect_stacks_buffer)
 #else
 #define fc_solve_debondt_delta_stater_decode_into_state(                       \
     local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) \
