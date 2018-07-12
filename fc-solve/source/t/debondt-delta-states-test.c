@@ -140,7 +140,7 @@ static void main_tests(void)
             ),
             "DeBondt: encode_composite + decode test"
         );
-        fc_solve_debondt_delta_stater_release (&db_delta);
+        fc_solve_delta_stater_release (&db_delta);
     }
 
 /* More encode_composite tests - this time from the output of:
@@ -221,7 +221,7 @@ static void main_tests(void)
             ),
             "DeBonodt: encode_composite + decode test No. 2 (deal #24)"
         );
-        fc_solve_debondt_delta_stater_release (&db_delta);
+        fc_solve_delta_stater_release (&db_delta);
     }
 }
 

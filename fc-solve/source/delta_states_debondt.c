@@ -60,7 +60,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
     FCS__RENDER_STATE(new_derived_as_str, &(new_derived_state.s), &locs);
 
-    fc_solve_debondt_delta_stater_release(&delta);
+    fc_solve_delta_stater_release(&delta);
 
     return new_derived_as_str;
 }

@@ -45,25 +45,15 @@ static inline void fcs_init_and_encode_state(
 }
 
 #ifdef FCS_DEBONDT_DELTA_STATES
-#ifdef FCS_FREECELL_ONLY
 static inline void fc_solve_delta_stater_init(fcs_delta_stater *const delta,
     fcs_state *const init_state, const size_t num_columns,
-    const int num_freecells)
+    const int num_freecells PASS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by))
 {
     fc_solve_debondt_delta_stater_init(delta, FCS_DBM_VARIANT_2FC_FREECELL,
-        init_state, num_columns, num_freecells);
+        init_state, num_columns,
+        num_freecells PASS_ON_NOT_FC_ONLY(sequences_are_built_by));
 }
-#else
-static inline void fc_solve_delta_stater_init(fcs_delta_stater *const delta,
-    fcs_state *const init_state, const size_t num_columns,
-    const int num_freecells, const int sequences_are_built_by)
-{
-    fc_solve_debondt_delta_stater_init(delta, FCS_DBM_VARIANT_2FC_FREECELL,
-        init_state, num_columns, num_freecells, sequences_are_built_by);
-}
-#endif
-#define fc_solve_delta_stater_release(a)                                       \
-    fc_solve_debondt_delta_stater_release(a)
 #endif
 
 /****************************************************/

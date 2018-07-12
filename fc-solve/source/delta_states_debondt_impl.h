@@ -94,10 +94,9 @@ static inline void fc_solve_debondt_delta_stater__init_card_states(
 }
 
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
-#define fc_solve_debondt_delta_stater_release(s)
+#define fc_solve_delta_stater_release(s)
 #else
-static inline void fc_solve_debondt_delta_stater_release(
-    fcs_delta_stater *const self)
+static inline void fc_solve_delta_stater_release(fcs_delta_stater *const self)
 {
     fc_solve_var_base_reader_release(&(self->r));
     fc_solve_var_base_writer_release(&(self->w));
