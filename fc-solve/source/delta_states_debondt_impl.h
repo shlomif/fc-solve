@@ -555,7 +555,7 @@ static inline void fc_solve_delta_stater_decode_into_state_proto(
         delta_stater, local_variant, &(delta_stater->r), &(ret->s));
 }
 
-static inline void fc_solve_debondt_delta_stater_encode_into_buffer(
+static inline void fc_solve_delta_stater_encode_into_buffer(
     fcs_delta_stater *const delta_stater,
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const state, unsigned char *const out_enc_state)
@@ -575,7 +575,7 @@ static inline void fcs_init_and_encode_state(
 {
     fcs_init_encoded_state(enc_state);
 
-    fc_solve_debondt_delta_stater_encode_into_buffer(
+    fc_solve_delta_stater_encode_into_buffer(
         delta_stater, local_variant, state, enc_state->s);
 }
 #endif
