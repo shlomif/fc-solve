@@ -342,7 +342,7 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
     }
 }
 
-static void fc_solve_debondt_delta_stater_decode(fcs_delta_stater *const self,
+static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     const fcs_dbm_variant_type local_variant, fcs_var_base_reader *const reader,
     fcs_state *const ret)
 {
@@ -551,7 +551,7 @@ static inline void fc_solve_delta_stater_decode_into_state_proto(
 
     fc_solve_state_init(ret, STACKS_NUM, indirect_stacks_buffer);
 
-    fc_solve_debondt_delta_stater_decode(
+    fc_solve_delta_stater_decode(
         delta_stater, local_variant, &(delta_stater->r), &(ret->s));
 }
 

@@ -54,7 +54,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     fc_solve_var_base_writer_get_data(&(delta.w), enc_state);
 
     fc_solve_var_base_reader_start(&(delta.r), enc_state, sizeof(enc_state));
-    fc_solve_debondt_delta_stater_decode(
+    fc_solve_delta_stater_decode(
         &delta, local_variant, &(delta.r), &(new_derived_state.s));
 
     char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);
