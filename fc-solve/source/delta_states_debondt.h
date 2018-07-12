@@ -35,7 +35,7 @@ typedef struct
     fcs_var_base_writer w;
 } fcs_delta_stater;
 
-extern char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
+extern char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fcs_dbm_variant_type, const char *, const char *);
 
 #endif

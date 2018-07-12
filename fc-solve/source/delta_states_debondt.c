@@ -17,10 +17,8 @@
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
-/*
- * The char * returned is malloc()ed and should be free()ed.
- */
-DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
+// The char * returned is malloc()ed and should be free()ed.
+DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     const fcs_dbm_variant_type local_variant, const char *const init_state_s,
     const char *const derived_state_s)
 {
