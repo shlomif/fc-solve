@@ -555,13 +555,13 @@ static inline void fc_solve_delta_stater_decode_into_state_proto(
 }
 
 #ifdef INDIRECT_STACK_STATES
-#define fc_solve_debondt_delta_stater_decode_into_state(                       \
-    local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) \
+#define fc_solve_delta_stater_decode_into_state(                               \
+    delta_stater, enc_state, state_ptr, indirect_stacks_buffer)                \
     fc_solve_delta_stater_decode_into_state_proto(local_variant, delta_stater, \
         enc_state, state_ptr, indirect_stacks_buffer)
 #else
-#define fc_solve_debondt_delta_stater_decode_into_state(                       \
-    local_variant, delta_stater, enc_state, state_ptr, indirect_stacks_buffer) \
+#define fc_solve_delta_stater_decode_into_state(                               \
+    delta_stater, enc_state, state_ptr, indirect_stacks_buffer)                \
     fc_solve_debondt_delta_stater_decode_into_state_proto(                     \
         local_variant, delta_stater, enc_state, state_ptr)
 #endif

@@ -41,8 +41,7 @@ static bool debondt_test_encode_and_decode(fcs_delta_stater *const delta, fcs_st
         &enc_state
     );
 
-    fc_solve_debondt_delta_stater_decode_into_state(
-        local_variant,
+    fc_solve_delta_stater_decode_into_state(
         delta,
         (unsigned char *)&enc_state,
         &(new_derived_state),

@@ -24,8 +24,6 @@ extern "C" {
 #endif
 
 #ifdef FCS_DEBONDT_DELTA_STATES
-#define fc_solve_delta_stater_decode_into_state(a, b, c, d)                    \
-    fc_solve_debondt_delta_stater_decode_into_state(local_variant, a, b, c, d)
 #define fcs_init_and_encode_state(a, b, c, d)                                  \
     fcs_debondt_init_and_encode_state(a, b, c, d)
 #ifdef FCS_FREECELL_ONLY
