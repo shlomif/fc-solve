@@ -578,7 +578,7 @@ static inline void fc_solve_debondt_delta_stater_encode_into_buffer(
     fc_solve_var_base_writer_get_data(&(delta_stater->w), out_enc_state);
 }
 
-static inline void fcs_debondt_init_and_encode_state(
+static inline void fcs_init_and_encode_state(
     fcs_delta_stater *const delta_stater,
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const state,

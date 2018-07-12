@@ -24,8 +24,6 @@ extern "C" {
 #endif
 
 #ifdef FCS_DEBONDT_DELTA_STATES
-#define fcs_init_and_encode_state(a, b, c, d)                                  \
-    fcs_debondt_init_and_encode_state(a, b, c, d)
 #ifdef FCS_FREECELL_ONLY
 static inline void fc_solve_delta_stater_init(fcs_delta_stater *const delta,
     fcs_state *const init_state, const size_t num_columns,

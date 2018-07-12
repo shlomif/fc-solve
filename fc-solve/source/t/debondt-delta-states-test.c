@@ -34,7 +34,7 @@ static bool debondt_test_encode_and_decode(fcs_delta_stater *const delta, fcs_st
     fc_solve_init_locs(&locs);
     const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
-    fcs_debondt_init_and_encode_state(
+    fcs_init_and_encode_state(
         delta,
         local_variant,
         state,
