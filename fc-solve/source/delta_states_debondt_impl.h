@@ -539,6 +539,7 @@ static void fc_solve_debondt_delta_stater_decode(fcs_delta_stater *const self,
     }
 #undef IS_IN_FOUNDATIONS
 }
+#undef IS_BAKERS_DOZEN
 
 static inline void fc_solve_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type local_variant,
@@ -553,18 +554,6 @@ static inline void fc_solve_delta_stater_decode_into_state_proto(
     fc_solve_debondt_delta_stater_decode(
         delta_stater, local_variant, &(delta_stater->r), &(ret->s));
 }
-
-#ifdef INDIRECT_STACK_STATES
-#define fc_solve_delta_stater_decode_into_state(                               \
-    delta_stater, enc_state, state_ptr, indirect_stacks_buffer)                \
-    fc_solve_delta_stater_decode_into_state_proto(local_variant, delta_stater, \
-        enc_state, state_ptr, indirect_stacks_buffer)
-#else
-#define fc_solve_delta_stater_decode_into_state(                               \
-    delta_stater, enc_state, state_ptr, indirect_stacks_buffer)                \
-    fc_solve_debondt_delta_stater_decode_into_state_proto(                     \
-        local_variant, delta_stater, enc_state, state_ptr)
-#endif
 
 static inline void fc_solve_debondt_delta_stater_encode_into_buffer(
     fcs_delta_stater *const delta_stater,
@@ -589,6 +578,4 @@ static inline void fcs_init_and_encode_state(
     fc_solve_debondt_delta_stater_encode_into_buffer(
         delta_stater, local_variant, state, enc_state->s);
 }
-
-#undef IS_BAKERS_DOZEN
 #endif
