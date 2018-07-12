@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * delta_states_any.h - choose between the debondt and non-debondt delta_states
- */
-
+// delta_states_any.h - choose between the debondt and non-debondt delta_states
 #pragma once
 
 #ifdef __cplusplus
@@ -34,6 +31,18 @@ extern "C" {
     fc_solve_delta_stater_decode_into_state_proto(                             \
         local_variant, delta_stater, enc_state, state_ptr)
 #endif
+
+static inline void fcs_init_and_encode_state(
+    fcs_delta_stater *const delta_stater,
+    const fcs_dbm_variant_type local_variant,
+    fcs_state_keyval_pair *const state,
+    fcs_encoded_state_buffer *const enc_state)
+{
+    fcs_init_encoded_state(enc_state);
+
+    fc_solve_delta_stater_encode_into_buffer(
+        delta_stater, local_variant, state, enc_state->s);
+}
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 #ifdef FCS_FREECELL_ONLY
