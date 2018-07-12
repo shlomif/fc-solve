@@ -10,10 +10,11 @@
 // delta_states.c - "delta states" are an encoding of states, where the
 // states are encoded and decoded based on a compact delta from the original
 // state.
-#include "delta_states_impl.h"
+#include "delta_states_any.h"
 #include "render_state.h"
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
+#ifndef FCS_DEBONDT_DELTA_STATES
 /*
  * The char * returned is malloc()ed and should be free()ed.
  */
@@ -60,4 +61,5 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     return new_derived_as_str;
 }
 
+#endif
 #endif

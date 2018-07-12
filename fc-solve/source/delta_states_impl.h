@@ -20,6 +20,7 @@
 #include "dbm_common.h"
 #endif
 
+#ifndef FCS_DEBONDT_DELTA_STATES
 static int fc_solve_get_column_orig_num_cards(
     fcs_delta_stater *const self GCC_UNUSED, const fcs_const_cards_column col)
 {
@@ -436,3 +437,4 @@ static inline void fcs_init_and_encode_state(
     fc_solve_delta_stater_encode_into_buffer(
         delta_stater, local_variant, state, enc_state->s);
 }
+#endif

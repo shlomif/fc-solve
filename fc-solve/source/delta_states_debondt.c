@@ -15,6 +15,7 @@
 #include "delta_states_debondt_impl.h"
 #include "render_state.h"
 
+#ifdef FCS_DEBONDT_DELTA_STATES
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 /*
  * The char * returned is malloc()ed and should be free()ed.
@@ -24,7 +25,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     const char *const derived_state_s)
 {
     fcs_state_keyval_pair init_state, derived_state, new_derived_state;
-    fcs_debondt_delta_stater delta;
+    fcs_delta_stater delta;
     fcs_uchar enc_state[24];
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
@@ -42,14 +43,13 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
         STACKS_NUM,
         FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
-    fc_solve_debondt_delta_stater_set_derived(&delta, &(derived_state.s));
+    fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));
 
     fc_solve_state_init(
         &new_derived_state, STACKS_NUM, new_derived_indirect_stacks_buffer);
 
     fc_solve_var_base_writer_start(&(delta.w));
-    fc_solve_debondt_delta_stater_encode_composite(
-        &delta, local_variant, &(delta.w));
+    fc_solve_delta_stater_encode_composite(&delta, local_variant, &(delta.w));
     memset(enc_state, '\0', sizeof(enc_state));
     fc_solve_var_base_writer_get_data(&(delta.w), enc_state);
 
@@ -64,4 +64,5 @@ DLLEXPORT char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
 
     return new_derived_as_str;
 }
+#endif
 #endif

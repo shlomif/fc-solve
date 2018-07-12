@@ -7,14 +7,11 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-/*
- * delta_states_debondt_impl.h - "delta states" are an encoding of states,
- * where the states are encoded and decoded based on a compact delta from the
- * initial state.
- *
- * This encoding improves upon the original delta_states.c .
- */
-
+// delta_states_debondt_impl.h - "delta states" are an encoding of states,
+// where the states are encoded and decoded based on a compact delta from the
+// initial state.
+//
+// This encoding improves upon the original delta_states.c .
 #include "bit_rw.h"
 #include "indirect_buffer.h"
 #include "delta_states_iface.h"
@@ -28,6 +25,7 @@
 #include "dbm_common.h"
 #endif
 
+#ifdef FCS_DEBONDT_DELTA_STATES
 #define FOUNDATION_BASE (RANK_KING + 1)
 
 enum
@@ -49,8 +47,7 @@ enum
 
 #define IS_BAKERS_DOZEN() (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
 
-static void fc_solve_debondt_delta_stater_init(
-    fcs_debondt_delta_stater *const self,
+static void fc_solve_debondt_delta_stater_init(fcs_delta_stater *const self,
     const fcs_dbm_variant_type local_variant, fcs_state *const init_state,
     const size_t num_columns,
     const int num_freecells PASS_ON_NOT_FC_ONLY(
@@ -87,7 +84,7 @@ static void fc_solve_debondt_delta_stater_init(
 }
 
 static inline void fc_solve_debondt_delta_stater__init_card_states(
-    fcs_debondt_delta_stater *const self)
+    fcs_delta_stater *const self)
 {
     int *const card_states = self->card_states;
     for (size_t i = 0; i < COUNT(self->card_states); ++i)
@@ -100,15 +97,15 @@ static inline void fc_solve_debondt_delta_stater__init_card_states(
 #define fc_solve_debondt_delta_stater_release(s)
 #else
 static inline void fc_solve_debondt_delta_stater_release(
-    fcs_debondt_delta_stater *const self)
+    fcs_delta_stater *const self)
 {
     fc_solve_var_base_reader_release(&(self->r));
     fc_solve_var_base_writer_release(&(self->w));
 }
 #endif
 
-static inline void fc_solve_debondt_delta_stater_set_derived(
-    fcs_debondt_delta_stater *const self, fcs_state *const state)
+static inline void fc_solve_delta_stater_set_derived(
+    fcs_delta_stater *const self, fcs_state *const state)
 {
     self->derived_state = state;
 }
@@ -161,8 +158,7 @@ static inline int get_top_rank_for_iter(
     return (IS_BAKERS_DOZEN() ? (RANK_KING - 1) : RANK_KING);
 }
 
-static void fc_solve_debondt_delta_stater_encode_composite(
-    fcs_debondt_delta_stater *const self,
+static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
     const fcs_dbm_variant_type local_variant, fcs_var_base_writer *const writer)
 {
     fcs_state *const derived = self->derived_state;
@@ -311,8 +307,8 @@ static void fc_solve_debondt_delta_stater_encode_composite(
 
 static inline void
 fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
-    fcs_debondt_delta_stater *const self,
-    const fcs_dbm_variant_type local_variant, fcs_cards_column *const col)
+    fcs_delta_stater *const self, const fcs_dbm_variant_type local_variant,
+    fcs_cards_column *const col)
 {
     fcs_card parent_card = fcs_col_get_card(*col, fcs_col_len(*col) - 1);
 
@@ -346,8 +342,7 @@ fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
     }
 }
 
-static void fc_solve_debondt_delta_stater_decode(
-    fcs_debondt_delta_stater *const self,
+static void fc_solve_debondt_delta_stater_decode(fcs_delta_stater *const self,
     const fcs_dbm_variant_type local_variant, fcs_var_base_reader *const reader,
     fcs_state *const ret)
 {
@@ -547,8 +542,7 @@ static void fc_solve_debondt_delta_stater_decode(
 
 static inline void fc_solve_debondt_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type local_variant,
-    fcs_debondt_delta_stater *const delta_stater,
-    const fcs_uchar *const enc_state,
+    fcs_delta_stater *const delta_stater, const fcs_uchar *const enc_state,
     fcs_state_keyval_pair *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     fc_solve_var_base_reader_start(
@@ -573,19 +567,19 @@ static inline void fc_solve_debondt_delta_stater_decode_into_state_proto(
 #endif
 
 static inline void fc_solve_debondt_delta_stater_encode_into_buffer(
-    fcs_debondt_delta_stater *const delta_stater,
+    fcs_delta_stater *const delta_stater,
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const state, unsigned char *const out_enc_state)
 {
     fc_solve_var_base_writer_start(&(delta_stater->w));
-    fc_solve_debondt_delta_stater_set_derived(delta_stater, &(state->s));
-    fc_solve_debondt_delta_stater_encode_composite(
+    fc_solve_delta_stater_set_derived(delta_stater, &(state->s));
+    fc_solve_delta_stater_encode_composite(
         delta_stater, local_variant, &(delta_stater->w));
     fc_solve_var_base_writer_get_data(&(delta_stater->w), out_enc_state);
 }
 
 static inline void fcs_debondt_init_and_encode_state(
-    fcs_debondt_delta_stater *const delta_stater,
+    fcs_delta_stater *const delta_stater,
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const state,
     fcs_encoded_state_buffer *const enc_state)
@@ -597,3 +591,4 @@ static inline void fcs_debondt_init_and_encode_state(
 }
 
 #undef IS_BAKERS_DOZEN
+#endif

@@ -19,6 +19,7 @@ extern "C" {
 #include "var_base_reader.h"
 #include "dbm_common.h"
 
+#ifdef FCS_DEBONDT_DELTA_STATES
 #define CARD_ARRAY_LEN ((RANK_KING + 1) * FCS_NUM_SUITS)
 
 typedef struct
@@ -32,11 +33,12 @@ typedef struct
     int8_t bakers_dozen_topmost_cards_lookup[((1 << 6) / 8) + 1];
     fcs_var_base_reader r;
     fcs_var_base_writer w;
-} fcs_debondt_delta_stater;
+} fcs_delta_stater;
 
 extern char *fc_solve_user_INTERNAL_debondt_delta_states_enc_and_dec(
     fcs_dbm_variant_type, const char *, const char *);
 
+#endif
 #ifdef __cplusplus
 }
 #endif

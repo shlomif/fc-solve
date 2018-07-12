@@ -25,7 +25,7 @@
 #include "trim_trailing_whitespace.h"
 #include "render_state.h"
 
-static bool debondt_test_encode_and_decode(fcs_debondt_delta_stater *const delta, fcs_state_keyval_pair *const state, const char *const expected_str, const char *const blurb)
+static bool debondt_test_encode_and_decode(fcs_delta_stater *const delta, fcs_state_keyval_pair *const state, const char *const expected_str, const char *const blurb)
 {
     fcs_state_keyval_pair new_derived_state;
     fcs_encoded_state_buffer enc_state;
@@ -91,7 +91,7 @@ static void main_tests(void)
             indirect_stacks_buffer
         );
 
-        fcs_debondt_delta_stater db_delta;
+        fcs_delta_stater db_delta;
         fc_solve_debondt_delta_stater_init(
             &db_delta,
                 local_variant,
@@ -121,7 +121,7 @@ static void main_tests(void)
                 derived_indirect_stacks_buffer
         );
 
-        fc_solve_debondt_delta_stater_set_derived(&db_delta, &(derived_state.s));
+        fc_solve_delta_stater_set_derived(&db_delta, &(derived_state.s));
 
         /* TEST
          * */
@@ -174,7 +174,7 @@ static void main_tests(void)
             indirect_stacks_buffer
         );
 
-        fcs_debondt_delta_stater db_delta;
+        fcs_delta_stater db_delta;
         fc_solve_debondt_delta_stater_init(
             &db_delta,
             local_variant,

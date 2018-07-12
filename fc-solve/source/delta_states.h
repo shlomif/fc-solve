@@ -23,6 +23,14 @@ extern "C" {
 #define FCS_ENCODED_STATE_COUNT_CHARS 16
 #else
 #define FCS_ENCODED_STATE_COUNT_CHARS 24
+typedef struct
+{
+    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
+    size_t num_freecells;
+    size_t num_columns;
+    fcs_state *init_state, *derived_state;
+    int bits_per_orig_cards_in_column;
+} fcs_delta_stater;
 #endif
 
 typedef struct
@@ -127,15 +135,6 @@ typedef struct
 } fcs_dbm_record;
 
 #endif
-
-typedef struct
-{
-    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
-    size_t num_freecells;
-    size_t num_columns;
-    fcs_state *init_state, *derived_state;
-    int bits_per_orig_cards_in_column;
-} fcs_delta_stater;
 
 static inline void fcs_init_encoded_state(fcs_encoded_state_buffer *enc_state)
 {
