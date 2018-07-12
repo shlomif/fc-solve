@@ -83,7 +83,7 @@ static void fc_solve_debondt_delta_stater_init(fcs_delta_stater *const self,
     }
 }
 
-static inline void fc_solve_debondt_delta_stater__init_card_states(
+static inline void fc_solve_delta_stater__init_card_states(
     fcs_delta_stater *const self)
 {
     int *const card_states = self->card_states;
@@ -162,7 +162,7 @@ static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
 {
     fcs_state *const derived = self->derived_state;
 
-    fc_solve_debondt_delta_stater__init_card_states(self);
+    fc_solve_delta_stater__init_card_states(self);
 
     for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
     {
@@ -304,8 +304,7 @@ static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
     }
 }
 
-static inline void
-fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
+static inline void delta_stater__fill_column_with_descendent_cards(
     fcs_delta_stater *const self, const fcs_dbm_variant_type local_variant,
     fcs_cards_column *const col)
 {
@@ -347,7 +346,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 {
     fcs_card new_top_most_cards[MAX_NUM_STACKS];
 
-    fc_solve_debondt_delta_stater__init_card_states(self);
+    fc_solve_delta_stater__init_card_states(self);
 
     for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
     {
@@ -505,7 +504,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
                 fcs_col_push_card(
                     col, new_top_most_cards[--next_new_top_most_cards]);
 
-                fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
+                delta_stater__fill_column_with_descendent_cards(
                     self, local_variant, &col);
             }
         }
@@ -532,7 +531,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
                 }
             }
 
-            fc_solve_debondt_delta_stater__fill_column_with_descendent_cards(
+            delta_stater__fill_column_with_descendent_cards(
                 self, local_variant, &col);
         }
     }
