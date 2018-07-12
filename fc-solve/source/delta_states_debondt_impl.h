@@ -47,17 +47,15 @@ enum
 
 #define IS_BAKERS_DOZEN() (local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN)
 
-static void fc_solve_debondt_delta_stater_init(fcs_delta_stater *const self,
+static inline void fc_solve_delta_stater_init(fcs_delta_stater *const self,
     const fcs_dbm_variant_type local_variant, fcs_state *const init_state,
     const size_t num_columns,
     const int num_freecells PASS_ON_NOT_FC_ONLY(
         const int sequences_are_built_by))
 {
     FCS_ON_NOT_FC_ONLY(self->sequences_are_built_by = sequences_are_built_by);
-
     self->num_columns = num_columns;
     self->num_freecells = num_freecells;
-
     self->init_state = init_state;
 
     memset(self->bakers_dozen_topmost_cards_lookup, '\0',

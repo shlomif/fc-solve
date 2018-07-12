@@ -52,7 +52,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_find_fcc_start_points(
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(&delta, &(init_state.s), STACKS_NUM,
+    fc_solve_delta_stater_init(&delta, FCS_DBM_VARIANT_2FC_FREECELL,
+        &(init_state.s), STACKS_NUM,
         FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);
@@ -190,7 +191,8 @@ DLLEXPORT int fc_solve_user_INTERNAL_is_fcc_new(
         FREECELLS_NUM, STACKS_NUM, DECKS_NUM, indirect_stacks_buffer);
 
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(&delta, &(init_state.s), STACKS_NUM,
+    fc_solve_delta_stater_init(&delta, FCS_DBM_VARIANT_2FC_FREECELL,
+        &(init_state.s), STACKS_NUM,
         FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
     fcs_init_and_encode_state(&delta, local_variant, &(init_state), &enc_state);

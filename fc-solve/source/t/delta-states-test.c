@@ -147,6 +147,7 @@ static int main_tests(void)
 
         fc_solve_delta_stater_init(
             &delta,
+            local_variant,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -341,6 +342,7 @@ static int main_tests(void)
 
         fc_solve_delta_stater_init(
             &delta,
+            local_variant,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -515,6 +517,7 @@ static int main_tests(void)
 
         fc_solve_delta_stater_init(
             &delta,
+            local_variant,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM
@@ -618,6 +621,7 @@ static int main_tests(void)
 
         fc_solve_delta_stater_init(
             &delta,
+            local_variant,
                 &init_state.s,
                 STACKS_NUM,
                 FREECELLS_NUM

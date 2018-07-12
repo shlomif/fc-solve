@@ -90,7 +90,7 @@ static void main_tests(void)
         );
 
         fcs_delta_stater db_delta;
-        fc_solve_debondt_delta_stater_init(
+        fc_solve_delta_stater_init(
             &db_delta,
                 local_variant,
                 &init_state.s,
@@ -173,7 +173,7 @@ static void main_tests(void)
         );
 
         fcs_delta_stater db_delta;
-        fc_solve_debondt_delta_stater_init(
+        fc_solve_delta_stater_init(
             &db_delta,
             local_variant,
             &init_state.s,

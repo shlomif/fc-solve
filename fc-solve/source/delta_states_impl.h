@@ -37,6 +37,7 @@ static int fc_solve_get_column_orig_num_cards(
 }
 
 static void fc_solve_delta_stater_init(fcs_delta_stater *const self,
+    const fcs_dbm_variant_type local_variant GCC_UNUSED,
     fcs_state *const init_state, const size_t num_columns,
     const int num_freecells PASS_ON_NOT_FC_ONLY(
         const int sequences_are_built_by))

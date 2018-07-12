@@ -666,7 +666,7 @@ int main(int argc, char *argv[])
      */
 
     fcs_delta_stater delta;
-    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM,
+    fc_solve_delta_stater_init(&delta, local_variant, &init_state.s, STACKS_NUM,
         FREECELLS_NUM PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY()));
 
     dbm_solver_instance instance;

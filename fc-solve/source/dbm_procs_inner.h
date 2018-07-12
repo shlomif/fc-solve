@@ -37,7 +37,7 @@ static inline main_thread_item *dbm__calc_threads(
     {
         threads[i].thread.instance = instance;
         fc_solve_delta_stater_init(&(threads[i].thread.delta_stater),
-            &(init_state->s), STACKS_NUM,
+            local_variant, &(init_state->s), STACKS_NUM,
             FREECELLS_NUM PASS_ON_NOT_FC_ONLY(
                 FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
         init_thread_cb(threads[i].arg.thread = &(threads[i].thread));
