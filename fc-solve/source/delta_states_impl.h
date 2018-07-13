@@ -7,18 +7,11 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-/*
- * delta_states_impl.h - "delta states" are an encoding of states, where the
- * states are encoded and decoded based on a compact delta from the initial
- * state.
- */
-#include "bit_rw.h"
+// delta_states_impl.h - "delta states" are an encoding of states, where the
+// states are encoded and decoded based on a compact delta from the initial
+// state.
 #include "delta_states_iface.h"
 #include "delta_states.h"
-
-#ifdef FCS_COMPILE_DEBUG_FUNCTIONS
-#include "dbm_common.h"
-#endif
 
 #ifndef FCS_DEBONDT_DELTA_STATES
 static int fc_solve_get_column_orig_num_cards(
@@ -76,12 +69,6 @@ static void fc_solve_delta_stater_init(fcs_delta_stater *const self,
 static inline void fc_solve_delta_stater_release(
     fcs_delta_stater *const self GCC_UNUSED)
 {
-}
-
-static inline void fc_solve_delta_stater_set_derived(
-    fcs_delta_stater *const self, fcs_state *const state)
-{
-    self->derived_state = state;
 }
 
 typedef struct

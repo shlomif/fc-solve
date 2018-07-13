@@ -12,18 +12,11 @@
 // initial state.
 //
 // This encoding improves upon the original delta_states.c .
-#include "bit_rw.h"
 #include "indirect_buffer.h"
 #include "delta_states_iface.h"
 #include "delta_states.h"
-#include "delta_states_debondt.h"
-#include "delta_states_iface.h"
 #include "var_base_reader.h"
 #include "var_base_writer.h"
-
-#ifdef FCS_COMPILE_DEBUG_FUNCTIONS
-#include "dbm_common.h"
-#endif
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 #define FOUNDATION_BASE (RANK_KING + 1)
@@ -100,12 +93,6 @@ static inline void fc_solve_delta_stater_release(fcs_delta_stater *const self)
     fc_solve_var_base_writer_release(&(self->w));
 }
 #endif
-
-static inline void fc_solve_delta_stater_set_derived(
-    fcs_delta_stater *const self, fcs_state *const state)
-{
-    self->derived_state = state;
-}
 
 static inline int wanted_suit_bit_opt(const fcs_card parent_card)
 {

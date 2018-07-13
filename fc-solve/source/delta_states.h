@@ -17,10 +17,31 @@
 extern "C" {
 #endif
 
+#include "bit_rw.h"
 #include "dbm_common.h"
 
 #ifdef FCS_DEBONDT_DELTA_STATES
+#include "var_base_writer.h"
+#include "var_base_reader.h"
 #define FCS_ENCODED_STATE_COUNT_CHARS 16
+#define CARD_ARRAY_LEN ((RANK_KING + 1) * FCS_NUM_SUITS)
+
+typedef struct
+{
+    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
+    int num_freecells;
+    size_t num_columns;
+    fcs_state *init_state, *derived_state;
+    int bits_per_orig_cards_in_column;
+    int card_states[CARD_ARRAY_LEN];
+    int8_t bakers_dozen_topmost_cards_lookup[((1 << 6) / 8) + 1];
+    fcs_var_base_reader r;
+    fcs_var_base_writer w;
+} fcs_delta_stater;
+
+extern char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
+    fcs_dbm_variant_type, const char *, const char *);
+
 #else
 #define FCS_ENCODED_STATE_COUNT_CHARS 24
 typedef struct
@@ -32,6 +53,12 @@ typedef struct
     int bits_per_orig_cards_in_column;
 } fcs_delta_stater;
 #endif
+
+static inline void fc_solve_delta_stater_set_derived(
+    fcs_delta_stater *const self, fcs_state *const state)
+{
+    self->derived_state = state;
+}
 
 typedef struct
 {

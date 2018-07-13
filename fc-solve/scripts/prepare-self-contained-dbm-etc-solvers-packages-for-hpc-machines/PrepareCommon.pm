@@ -63,7 +63,6 @@ sub src_filenames
         'delta_states.h',
         'delta_states_any.h',
         'delta_states_debondt.c',
-        'delta_states_debondt.h',
         'delta_states_debondt_impl.h',
         'delta_states_iface.h',
         'depth_dbm_procs.h',
