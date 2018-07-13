@@ -33,11 +33,11 @@ static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant, fcs
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 
-    fc_solve_delta_stater_encode_into_buffer(
+    fcs_init_and_encode_state(
         delta,
         local_variant,
         state,
-        (unsigned char*)&enc_state
+        &enc_state
     );
 
     fc_solve_delta_stater_decode_into_state(
