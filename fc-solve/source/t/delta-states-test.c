@@ -69,13 +69,11 @@ static void main_tests(void)
     }
 
     {
-        fcs_delta_stater delta;
         fcs_state_keyval_pair init_state, derived_state;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
-        /* MS Freecell No. 982 Initial state.
-         * */
+        // MS Freecell No. 982 Initial state.
         fc_solve_initial_user_state_to_c(
             ("Foundations: H-0 C-0 D-A S-0\n"
             "6D 3C 3H KD 8C 5C\n"
@@ -93,14 +91,15 @@ static void main_tests(void)
             indirect_stacks_buffer
         );
 
+        fcs_delta_stater delta;
         fc_solve_delta_stater_init(
             &delta,
             local_variant,
-                &init_state.s,
-                STACKS_NUM,
-                FREECELLS_NUM
-                PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-                );
+            &init_state.s,
+            STACKS_NUM,
+            FREECELLS_NUM
+            PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
+        );
 
         fc_solve_initial_user_state_to_c(
                 (
@@ -253,7 +252,6 @@ static void main_tests(void)
             ),
             "encode_composite + decode test"
         );
-
         fc_solve_delta_stater_release (&delta);
     }
 
@@ -262,14 +260,12 @@ static void main_tests(void)
  *      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
  */
     {
-        fcs_delta_stater delta;
         fcs_state_keyval_pair init_state, derived_state;
 
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
-        /* MS Freecell No. 24 Initial state.
-         * */
+        // MS Freecell No. 24 Initial state.
         fc_solve_initial_user_state_to_c(
 ("Foundations: H-0 C-0 D-0 S-0\n"
 "Freecells:\n"
@@ -288,14 +284,15 @@ static void main_tests(void)
             indirect_stacks_buffer
         );
 
+        fcs_delta_stater delta;
         fc_solve_delta_stater_init(
             &delta,
             local_variant,
-                &init_state.s,
-                STACKS_NUM,
-                FREECELLS_NUM
-                PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
-                );
+            &init_state.s,
+            STACKS_NUM,
+            FREECELLS_NUM
+            PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR)
+        );
 
         fc_solve_initial_user_state_to_c(
             (
