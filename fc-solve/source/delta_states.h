@@ -39,9 +39,6 @@ typedef struct
     fcs_var_base_writer w;
 } fcs_delta_stater;
 
-extern char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    fcs_dbm_variant_type, const char *, const char *);
-
 #else
 #define FCS_ENCODED_STATE_COUNT_CHARS 24
 typedef struct
@@ -167,9 +164,6 @@ static inline void fcs_init_encoded_state(fcs_encoded_state_buffer *enc_state)
 {
     memset(enc_state, '\0', sizeof(*enc_state));
 }
-
-extern char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    fcs_dbm_variant_type, const char *, const char *);
 
 #ifdef __cplusplus
 }
