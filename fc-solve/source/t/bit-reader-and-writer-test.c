@@ -28,17 +28,17 @@ static int main_tests(void)
 
         /* TEST
          * */
-        ok (buffer[0] == (5 | (1 << 4)), "Write works.");
+        ok(buffer[0] == (5 | (1 << 4)), "Write works.");
 
         fc_solve_bit_writer_write(&writer, 4, (2 | (3 << 2)));
 
         /* TEST
          * */
-        ok (buffer[0] == (5 | (1 << 4) | (2 << 6)), "Extra write works.");
+        ok(buffer[0] == (5 | (1 << 4) | (2 << 6)), "Extra write works.");
 
         /* TEST
          * */
-        ok (buffer[1] == 3, "Extra byte write works.");
+        ok(buffer[1] == 3, "Extra byte write works.");
 
         {
             fcs_bit_reader reader;
@@ -47,18 +47,16 @@ static int main_tests(void)
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&reader, 4) == 5,
-                    "reader 1");
+            ok(fc_solve_bit_reader_read(&reader, 4) == 5, "reader 1");
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&reader, 2) == 1,
-                    "reader 2");
+            ok(fc_solve_bit_reader_read(&reader, 2) == 1, "reader 2");
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&reader, 4) == (2 | (3 << 2)),
-                    "reader 3");
+            ok(fc_solve_bit_reader_read(&reader, 4) == (2 | (3 << 2)),
+                "reader 3");
         }
     }
 

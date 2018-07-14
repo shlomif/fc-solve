@@ -24,7 +24,8 @@ my @filenames =
     grep { !/\Qcmd_line_inc.h\E|\Qrate_state.c\E/ }
     grep { m#\A\Q$SRC_PATH\E/(?i:[a-z])# }
     sort { $a cmp $b }
-    map  { glob "$SRC_PATH/$_ $SRC_PATH/board_gen/$_" } qw/*.c *.h *.cpp *.hpp/;
+    map  { glob "$SRC_PATH/$_ $SRC_PATH/board_gen/$_ $SRC_PATH/t/$_" }
+    qw/*.c *.h *.cpp *.hpp/;
 foreach my $fn (@filenames)
 {
     copy( $fn, "$fn.orig" );
