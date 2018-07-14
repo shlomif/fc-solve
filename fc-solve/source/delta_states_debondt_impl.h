@@ -15,8 +15,6 @@
 #include "indirect_buffer.h"
 #include "delta_states_iface.h"
 #include "delta_states.h"
-#include "var_base_reader.h"
-#include "var_base_writer.h"
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 #define FOUNDATION_BASE (RANK_KING + 1)
