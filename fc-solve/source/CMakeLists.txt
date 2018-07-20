@@ -100,6 +100,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', or 'COMPACT_STATES'). No need to usually change.")
 option (FCS_ENABLE_RCS_STATES "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
+option (FCS_LIBFCS_DELTA_STATES "Whether to use delta states in libfreecell-solver (requires a STATES_TYPE of COMPACT_STATES")
 option (FCS_ENABLE_DBM_SOLVER "Whether to build the DBM solver")
 SET (FCS_DBM_BACKEND "kaztree" CACHE STRING "Type of DBM backend.")
 SET (FCS_DBM_FREECELLS_NUM 2 CACHE STRING "Number of Freecells for the DBM* solvers")

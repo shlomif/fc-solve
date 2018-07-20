@@ -24,6 +24,7 @@ extern "C" {
 #cmakedefine INDIRECT_STACK_STATES
 
 #cmakedefine FCS_RCS_STATES
+#cmakedefine FCS_LIBFCS_DELTA_STATES
 #cmakedefine CARD_DEBUG_PRES
 
 /* The size of a single pack in alloc.c/alloc.h measured in 1024 chars. */

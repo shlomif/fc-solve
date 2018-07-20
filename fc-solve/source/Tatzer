@@ -34,6 +34,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
     'hard-code-scans-synergy' => 'FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE',
     'hard-code-sp-rtf' => 'FCS_ENABLE_PRUNE__R_TF__UNCOND',
     'hard-code-theme' => 'FCS_USE_PRECOMPILED_CMD_LINE_THEME',
+    'libdelta' => 'FCS_LIBFCS_DELTA_STATES',
     'omit-frame' => 'OPTIMIZATION_OMIT_FRAME_POINTER',
     'print-solved' => 'FCS_RANGE_SOLVERS_PRINT_SOLVED',
     'rcs' => 'FCS_ENABLE_RCS_STATES',
@@ -369,7 +370,7 @@ else
     $path_to_source_dir = dirname($0);
 }
 
-if ($bool_opts_with_false_defaults__values{rcs})
+if ($bool_opts_with_false_defaults__values{rcs} or $bool_opts_with_false_defaults__values{libdelta})
 {
     $STR_OPTS{'states-type'}{'value'} = 'COMPACT_STATES';
 }
