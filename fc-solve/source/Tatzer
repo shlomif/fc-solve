@@ -174,7 +174,7 @@ my %themes =
     # Role for enabling the pseudo-DFS solver
     pdfs => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
     pysol_defs => ['--num-stacks=14', '--nobreak-back-compat-1',],
-    zerofc => [qw(-l extra_speed3 --nfc=0 --print-solved)],
+    zerofc => [qw(-l extra_speed3 --nfc=0 --print-solved --dbm=kaztree)],
     zerofcm => [qw(-l zerofc -l fc_reduce_mem)],
 );
 
