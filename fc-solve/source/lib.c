@@ -1332,8 +1332,7 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
                     for (size_t i = num_states - 1; i > 0; i--)
                     {
                         const typeof(i) j =
-                            (fc_solve_rand_get_random_number(rand_gen) %
-                                (i + 1));
+                            fc_solve_rand_get_random_number(rand_gen, i + 1);
 
                         const_AUTO(swap_save, rand_array[i]);
                         rand_array[i] = rand_array[j];
