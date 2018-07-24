@@ -1,8 +1,24 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2018-03-22
+:Date: 2018-07-24
 :Revision: $Id$
+
+Version 4.20.0: (25-Jul-2018)
+-----------------------------
+
+1. New --iter-output-step command-line flag.
+
+2. Add -DFCS_MAX_RANK=... compile time option to set the maximal rank below 13.
+
+3. Add the -DFCS_BREAK_BACKWARD_COMPAT_2=1 compile-time option which improves
+performance but breaks bug-to-bug backward compatibility.
+
+4. Add the -DFCS_UNSAFE=1 option.
+
+5. Converted the python-based testing scripts from TAP.Simple to pycotap.
+
+6. Other speedups and refactorings.
 
 Version 4.18.0: (22-Mar-2018)
 -----------------------------

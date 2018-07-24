@@ -33,7 +33,10 @@
 -ABRT
 -DCMAKE_BUILD_TYPE
 -DFCS_BREAK_BACKWARD_COMPAT_1
+-DFCS_BREAK_BACKWARD_COMPAT_2
 -DFCS_BUILD_DOCS
+-DFCS_MAX_RANK
+-DFCS_UNSAFE
 -DFCS_WITHOUT_DEPTH_FIELD
 -DFCS_WITHOUT_FC_PRO_MOVES_COUNT
 -DFCS_WITH_SUITE
@@ -794,6 +797,7 @@ ptr_state_extra_info_t
 ptr_state_t
 ptr_state_with_locations_t
 py
+pycotap
 pypi
 pysol
 pysol-4
