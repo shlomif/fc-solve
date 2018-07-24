@@ -12,6 +12,7 @@
 --freecells-num
 --help-configs
 --iter-output
+--iter-output-step
 --iters-update-on
 --load-config
 --max-depth

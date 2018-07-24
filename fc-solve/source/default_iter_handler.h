@@ -22,6 +22,11 @@ static void my_iter_handler(void *const user_instance GCC_UNUSED,
 #ifdef FCS_WITH_MOVES
     const fc_solve_display_information_context *const dc =
         (const fc_solve_display_information_context *const)context;
+    const_SLOT(iters_display_step, dc);
+    if (iters_display_step > 1 && (iter_num % iters_display_step != 0))
+    {
+        return;
+    }
     my_iter_handler_base(iter_num, depth, user_instance, dc, parent_iter_num);
     if (dc->debug_iter_state_output)
     {

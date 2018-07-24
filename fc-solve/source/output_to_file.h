@@ -35,6 +35,7 @@ typedef struct
     bool display_states;
     bool show_exceeded_limits;
     bool hint_on_intract;
+    size_t iters_display_step;
 } fc_solve_display_information_context;
 
 static const fc_solve_display_information_context INITIAL_DISPLAY_CONTEXT = {
@@ -53,6 +54,7 @@ static const fc_solve_display_information_context INITIAL_DISPLAY_CONTEXT = {
     .output_filename = NULL,
     .show_exceeded_limits = FALSE,
     .hint_on_intract = FALSE,
+    .iters_display_step = 1,
 };
 
 static inline void fc_solve_output_result_to_file(FILE *const output_fh,

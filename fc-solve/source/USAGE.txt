@@ -1173,6 +1173,25 @@ recursion depth of every state which is checked, to the standard
 output. It's a good way to keep track of how it's doing, but the output
 slows it down a bit.
 
+[id="iter-output-step_flag"]
+--iter-output-step [step]
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Global*
+
+Prints the current iteration if +-i+ is specified, only every +[step]+
+steps, where +[step]+ is a positive integer. For example, if you do
++fc-solve -i --iter-output-step 100+, you will see this:
+
+------------------------
+Iteration: 0
+Iteration: 100
+Iteration: 200
+Iteration: 300
+------------------------
+
+This option has been added in Freecell Solver 4.20.0 and is useful for speeding
+up the runtime process, by avoiding excessive output.
 [id="state-output_flag"]
 -s , --state-output
 ~~~~~~~~~~~~~~~~~~~

@@ -159,6 +159,17 @@ static int fc_solve__cmd_line_callback(void *const instance, const int argc,
         display_context->output_filename = (const char *)argv[next_arg];
         return FCS_CMD_LINE_SKIP;
     }
+    else if (IS_ARG("--iter-output-step"))
+    {
+        const int next_arg = arg + 1;
+        if (next_arg == argc)
+        {
+            return FCS_CMD_LINE_STOP;
+        }
+        *num_to_skip = 2;
+        display_context->iters_display_step = (size_t)atol(argv[next_arg]);
+        return FCS_CMD_LINE_SKIP;
+    }
     else if (IS_ARG("--reset"))
     {
         *display_context = INITIAL_DISPLAY_CONTEXT;
@@ -240,7 +251,8 @@ static freecell_solver_str_t known_parameters[] = {"-h", "--help",
     "--display-moves", "-sn", "--standard-notation", "-snx",
     "--standard-notation-extended", "-sam", "--display-states-and-moves", "-pi",
     "--display-parent-iter", "-sel", "--show-exceeded-limits", "-o", "--output",
-    "-hoi", "--hint-on-intractable", "--reset", "--version", NULL};
+    "-hoi", "--hint-on-intractable", "--iter-output-step", "--reset",
+    "--version", NULL};
 
 typedef enum
 {
