@@ -13,7 +13,7 @@ which cookiecutter
 which qunit-cli
 src="$(pwd)"
 build="$src/../prerel-build"
-assets_dir="$src/../../../Arcs/fc-solve-site-assets/fc-solve-site-assets"
+assets_dir="$src/../../../../Arcs/fc-solve-site-assets/fc-solve-site-assets"
 mkdir "$build"
 cd "$build"
 "$src/Tatzer" -l n2t
