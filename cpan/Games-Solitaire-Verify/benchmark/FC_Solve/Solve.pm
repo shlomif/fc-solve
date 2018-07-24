@@ -107,11 +107,10 @@ __C__
 #include "output_to_file.h"
 #include "range_solvers_gen_ms_boards.h"
 
-static char * buffer;
-static size_t size;
+static char buffer[120000];
 static char board_buf[500];
 
-static fc_solve_display_information_context_t my_context;
+static fc_solve_display_information_context my_context;
 
 static void * fcs;
 
@@ -169,9 +168,7 @@ SV * fc_solve_solve(int board_num)
 {
     get_board(board_num, board_buf);
     const int err_code = freecell_solver_user_solve_board(fcs, board_buf);
-    buffer = NULL;
-    size = 0;
-    FILE * const output_fh = open_memstream(&buffer , &size);
+    FILE * const output_fh = fmemopen(buffer , COUNT(buffer), "wt");
 
     #if 1
     fc_solve_output_result_to_file(output_fh, fcs, err_code, &my_context);
@@ -184,7 +181,6 @@ SV * fc_solve_solve(int board_num)
     freecell_solver_user_recycle(fcs);
 
     SV * const ret = newSVpv(buffer, 0);
-    free(buffer);
 
     return ret;
 }
