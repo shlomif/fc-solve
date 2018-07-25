@@ -758,6 +758,7 @@ optimizing_for_cache
 org
 orig_calc_states
 overrided
+pacman
 palm_patience_getgame
 param
 parsable-output

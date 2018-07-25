@@ -111,6 +111,16 @@ Type <code>urpmi freecell-solver</code>. You may need to configure the right
 appropriate networked repositories in the Mageia Control Centre.
 </p>
 
+<h3 id="distros_arch">Arch Linux</h3>
+
+<img src="$(ROOT)/images/Arch_Linux_logo.svg" alt="Arch Linux Logo"
+    class="dist_logo" style="height:50px" />
+
+<p>
+See <a href="https://www.archlinux.org/packages/extra/x86_64/freecell-solver/">the Arch Linux
+package page</a>. <code>pacman -S freecell-solver</code> should work.
+</p>
+
 <h3 id="distros_freebsd">FreeBSD</h3>
 
 <img src="$(ROOT)/images/Freebsd_logo.svg.png" alt="FreeBSD Logo"
