@@ -34,7 +34,8 @@ sub calc_html
 {
     my $self = shift;
 
-    return qq#<label for="game_type">Game Type:</label><select id="game_type">#
+    return
+qq#<label for="game_type" id="game_type_label">Game Type:</label><select id="game_type">#
         . join(
         '',
         map {

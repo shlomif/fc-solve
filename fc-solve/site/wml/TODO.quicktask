@@ -1,8 +1,6 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-    - Fix the formatting of the "Game Type:"+select on firefox.
-      @ Added [Wed 2017-05-17]
     - Make sure to clear/nullify the existing solution after pressing Solve
       again.
       @ Added [Wed 2017-05-17]
@@ -137,6 +135,9 @@ COMPLETED TASKS:
     - Convert the presets in the combo box to their more updated ones.
         @ DONE [Mon 2016-12-19]
       @ Added [Sat 2016-12-17]
+    - Fix the formatting of the "Game Type:"+select on firefox.
+        @ DONE [Fri 2018-07-27]
+      @ Added [Wed 2017-05-17]
 
 
 
