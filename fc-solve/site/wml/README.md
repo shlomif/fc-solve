@@ -14,9 +14,10 @@
 ## Build procedure.
 
 1. `perl gen-helpers`
-2. `make`
-3. `make test`
-4. `make PROD=1`
+2. `bash bin/install-npm-deps.sh`
+3. `make`
+4. `make test`
+5. `make PROD=1`
 
 To upload, use:
 
