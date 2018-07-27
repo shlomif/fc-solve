@@ -50,6 +50,10 @@ class FC_Solve_UI {
             : text
         );
     }
+    _set_html_output(html) {
+        $("#dynamic_output").html(html);
+        return;
+    }
     _update_output() {
         let that = this;
 
@@ -92,7 +96,7 @@ class FC_Solve_UI {
 
                 _out_state(i+1);
             }
-            $("#dynamic_output").html(html);
+            that._set_html_output(html);
 
             $("#dynamic_output").on("click", "button.expand_move",
                 function(event) {
@@ -238,8 +242,16 @@ class FC_Solve_UI {
 
         return;
     }
+    _clear_output() {
+        let that = this;
+        that._webui_output_set_text('');
+        that._set_html_output('');
+        return;
+    }
     do_solve() {
         let that = this;
+
+        that._clear_output();
 
         that._pristine_outputs = [null, null];
 
@@ -326,7 +338,7 @@ function on_toggle_one_based() {
 }
 
 function clear_output() {
-    return fcs_ui._webui_output_set_text('');
+    return fcs_ui._clear_output();
 }
 
 function toggle_expand_moves() {
