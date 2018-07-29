@@ -202,7 +202,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     const int file_nesting_count, freecell_solver_str_t opened_files_dir)
 {
     fcs_args_man preset_args;
-    char dir[MAX_PATH_LEN];
+    char dir[MAX_PATH_LEN + 1];
 
     dir[0] = '\0';
 

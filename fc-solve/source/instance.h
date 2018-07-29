@@ -948,9 +948,7 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
         fcs_derived_states_list *const derived_states_list GCC_UNUSED
 
 #define DECLARE_MOVE_FUNCTION(name) extern void name(MOVE_FUNC_ARGS)
-#define DECLARE_PURE_MOVE_FUNCTION(name)                                       \
-    extern void __attribute__((const)) __attribute__((pure))                   \
-        name(MOVE_FUNC_ARGS)
+#define DECLARE_PURE_MOVE_FUNCTION(name) extern void name(MOVE_FUNC_ARGS)
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 static inline bool fcs_get_calc_real_depth(const fcs_instance *const instance)

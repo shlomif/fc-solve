@@ -2578,13 +2578,14 @@ static inline void add_checkpoint_to_plan(
     add_to_plan(instance_item, FLARES_PLAN_CHECKPOINT, NULL, -1);
 }
 
+#define MAX_FLARE_LEN_NAME 32
 static inline flare_item *find_flare(flare_item *const flares,
     const flare_item *const end_of_flares, const char *const proto_name,
     const size_t name_len)
 {
-    char name[name_len + 1];
-    strncpy(name, proto_name, name_len);
-    name[name_len] = '\0';
+    char name[MAX_FLARE_LEN_NAME];
+    strncpy(name, proto_name, MAX_FLARE_LEN_NAME - 1);
+    name[min(MAX_FLARE_LEN_NAME - 1, name_len)] = '\0';
 
     for (flare_item *flare = flares; flare < end_of_flares; flare++)
     {
@@ -3865,7 +3866,7 @@ DLLEXPORT char *freecell_solver_user_move_to_string_w_state(
 #endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-void DLLEXPORT __attribute__((const)) freecell_solver_user_limit_depth(
+void DLLEXPORT freecell_solver_user_limit_depth(
     void *const api_instance GCC_UNUSED, const int max_depth GCC_UNUSED)
 {
 }
@@ -4067,8 +4068,8 @@ void DLLEXPORT freecell_solver_user_set_iter_handler(void *const api_instance,
         api_instance, NULL, iter_handler, iter_handler_context);
 }
 #else
-void DLLEXPORT __attribute__((const))
-freecell_solver_user_set_iter_handler(void *const api_instance GCC_UNUSED,
+void DLLEXPORT freecell_solver_user_set_iter_handler(
+    void *const api_instance GCC_UNUSED,
     const freecell_solver_user_iter_handler_t iter_handler GCC_UNUSED,
     void *const iter_handler_context GCC_UNUSED)
 {
@@ -4522,8 +4523,12 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
 #endif
 }
 
-int DLLEXPORT __attribute__((pure)) __attribute__((const))
-fc_solve_user_INTERNAL_get_flares_plan_num_items(
+#ifdef FCS_WITH_FLARES
+#define FLARES_ATTR __attribute__((const))
+#else
+#define FLARES_ATTR __attribute__((pure))
+#endif
+int DLLEXPORT FLARES_ATTR fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *const api_instance GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
@@ -4533,7 +4538,7 @@ fc_solve_user_INTERNAL_get_flares_plan_num_items(
 #endif
 }
 
-const DLLEXPORT __attribute__((pure)) __attribute__((const)) char *
+const DLLEXPORT FLARES_ATTR char *
 fc_solve_user_INTERNAL_get_flares_plan_item_type(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
@@ -4556,8 +4561,7 @@ fc_solve_user_INTERNAL_get_flares_plan_item_type(
 #endif
 }
 
-int DLLEXPORT __attribute__((pure)) __attribute__((const))
-fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+int DLLEXPORT FLARES_ATTR fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
@@ -4568,7 +4572,7 @@ fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
 #endif
 }
 
-int DLLEXPORT __attribute__((pure)) __attribute__((const))
+int DLLEXPORT FLARES_ATTR
 fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {

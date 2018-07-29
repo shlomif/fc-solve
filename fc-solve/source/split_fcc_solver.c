@@ -772,11 +772,12 @@ int main(int argc, char *argv[])
 
     count_of_instance_runs++;
 
-    char fcc_exit_points_out_fn[PATH_MAX + 1],
+    char fcc_exit_points_out_fn[PATH_MAX - 40],
         fcc_exit_points_out_fn_temp[PATH_MAX + 1];
-    sprintf(fcc_exit_points_out_fn, "%s/exits.%ld", path_to_output_dir,
-        count_of_instance_runs);
-    sprintf(fcc_exit_points_out_fn_temp, "%s.temp", fcc_exit_points_out_fn);
+    snprintf(fcc_exit_points_out_fn, COUNT(fcc_exit_points_out_fn),
+        "%s/exits.%ld", path_to_output_dir, count_of_instance_runs);
+    snprintf(fcc_exit_points_out_fn_temp, PATH_MAX, "%s.temp",
+        fcc_exit_points_out_fn);
     instance.fcc_exit_points_out_fh = fopen(fcc_exit_points_out_fn_temp, "wt");
 
     instance_run_all_threads(&instance, &init_state, key_ptr, NUM_THREADS());
