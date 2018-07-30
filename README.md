@@ -63,6 +63,18 @@ Mostly specifications and planning documents.
 
 Logs of various benchmarks of the code.
 
+# How to use the library
+
+The external API, which is provided by
+[fcs_user.h](fc-solve/source/fcs_user.h) ,
+[fcs_cl.h](fc-solve/source/fcs_cl.h) and
+some other headers, is not documented, but it corresponds to the command line
+interface that is
+documented in
+the [USAGE](http://fc-solve.shlomifish.org/docs/distro/USAGE.html) and
+the [README](http://fc-solve.shlomifish.org/docs/distro/README.html) documents,
+has some examples in the code, and should not be hard to use.
+
 # Related repositories and links
 
 * [Impossible 4-freecells and 5-freecells deals in Freecell Pro](https://github.com/shlomif/freecell-pro-impossible-deals)
