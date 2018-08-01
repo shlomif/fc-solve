@@ -7,3 +7,7 @@
 * [convert-patsolve-to-fc-solve-solution](https://metacpan.org/pod/distribution/Games-Solitaire-Verify/script/convert-patsolve-to-fc-solve-solution)
 * [Klondike-Solver](https://github.com/ShootMe/Klondike-Solver) - the repository contains several wrappers and converters.
 * [Convert from fc-solve layouts to input of the Haskell solver](https://github.com/shlomif/Freecell/blob/master/contrib/input-from-fc-solve)
+
+## See Also
+
+* [Discussion about a spec for a Solitaire solution exchange / interchange format](https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1286)
