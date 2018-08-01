@@ -906,3 +906,32 @@ can be devised).
 That put aside, Freecell is a degenerate case where the number of ranks is
 fixed at 13 (ace-to-king).
 </p>
+
+<h3 id="what_is_pysol">What is PySol? What is PySol FC? Are they solvers as well?</h3>
+
+<p>
+No, actually <a href="http://pysolfc.sourceforge.net/">PySol FC</a>, which
+is short for "Python Solitaire Fan Club edition" is an open source suite of
+card solitaire / patience games, which includes, but is not limited to several
+Freecell-like variants. While it includes some solver and hints functionality
+and makes use of Freecell Solver and other solvers, it contains many other
+features including allowing a human to play the games on their own.
+</p>
+
+<p>
+Note that Shlomi Fish, who is the chief maintainer of Freecell Solver, also
+co-maintains PySol FC so he tends to talk about his work on both.
+</p>
+
+<p>
+For some more information, see:
+</p>
+
+<ol>
+
+<li>
+<p>
+<a href="https://en.wikipedia.org/wiki/PySol">Wikipedia Page</a>
+</p>
+</li>
+</ol>
