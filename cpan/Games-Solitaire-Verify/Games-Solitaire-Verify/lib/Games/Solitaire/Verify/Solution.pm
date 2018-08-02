@@ -194,6 +194,7 @@ sub verify
         }
 
         $self->_read_state();
+        $self->_st->verify_contents( { max_rank => 13 } );
 
         while ( !defined( scalar( $self->_read_move() ) ) )
         {

@@ -36,7 +36,19 @@ use Exception::Class (
         isa    => "Games::Solitaire::Verify::Exception::Parse::State",
         fields => ["index"],
     },
-
+    "Games::Solitaire::Verify::Exception::State" => {
+        isa    => "Games::Solitaire::Verify::Exception",
+        fields => ["cards"],
+    },
+    "Games::Solitaire::Verify::Exception::State::ExtraCards" => {
+        isa => "Games::Solitaire::Verify::Exception::State",
+    },
+    "Games::Solitaire::Verify::Exception::State::MissingCards" => {
+        isa => "Games::Solitaire::Verify::Exception::State",
+    },
+    "Games::Solitaire::Verify::Exception::State::TooHighRank" => {
+        isa => "Games::Solitaire::Verify::Exception::State",
+    },
     "Games::Solitaire::Verify::Exception::VariantParams::Param" => {
         isa    => "Games::Solitaire::Verify::Exception",
         fields => ["value"],

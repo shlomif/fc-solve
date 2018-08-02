@@ -847,6 +847,83 @@ sub _mv_freecell_to_stack
     return 0;
 }
 
+=head2 $board->verify_contents({max_rank => 13});
+
+Verify that all the cards inside the state are present and exactly once.
+C<'max_rank'> should be 13 unless you want to only include cards up to a lower
+rank.
+
+This method either throws an exception object or returns normally.
+
+=cut
+
+my @SS = ( @{ Games::Solitaire::Verify::Card->get_suits_seq() } );
+
+sub verify_contents
+{
+    my ( $self, $args ) = @_;
+
+    my $MAX_RANK = $args->{max_rank};
+    my $found    = {};
+    my $register = sub {
+        my $card = shift;
+        if ( $card->rank > $MAX_RANK )
+        {
+            die Games::Solitaire::Verify::Exception::State::TooHighRank->new(
+                cards => [$card], );
+        }
+        my $s = $card->fast_s;
+        if ( ( ++$found->{$s} ) > 1 )
+        {
+            die Games::Solitaire::Verify::Exception::State::ExtraCards->new(
+                cards => [$card], );
+        }
+        return;
+    };
+    for my $fc ( 0 .. $self->num_freecells - 1 )
+    {
+        my $card = $self->get_freecell($fc);
+        if ( defined $card )
+        {
+            $register->($card);
+        }
+    }
+    foreach my $suit (@SS)
+    {
+        for my $rank ( 1 .. $self->get_foundation_value( $suit, 0 ) )
+        {
+            $register->(
+                Games::Solitaire::Verify::Card->new(
+                    {
+                        string => (
+                            Games::Solitaire::Verify::Card->rank_to_string(
+                                $rank)
+                                . $suit
+                        )
+                    }
+                ),
+            );
+        }
+    }
+
+    foreach my $idx ( 0 .. ( $self->num_columns() - 1 ) )
+    {
+        my $col = $self->get_column($idx);
+        for my $pos ( 0 .. $col->len - 1 )
+        {
+            $register->( $col->pos($pos) );
+        }
+    }
+
+    if ( scalar( keys %$found ) != $MAX_RANK * 4 )
+    {
+        die Games::Solitaire::Verify::Exception::State::MissingCards->new(
+            cards => [], );
+    }
+
+    return;
+}
+
 =head2 $self->to_string()
 
 Stringifies the board into the Freecell Solver solution display notation.

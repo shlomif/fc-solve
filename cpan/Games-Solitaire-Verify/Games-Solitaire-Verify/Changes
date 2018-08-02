@@ -1,5 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
+0.1900  2018-08-02
+        - Add verify_contents() to ::State and check for initial board sanity
+        on the solution.
+            - It was an accidental bug/feature.
+
 0.1800  2018-05-02
         - Add lib/Games/Solitaire/Verify/State/LaxParser.pm .
 
