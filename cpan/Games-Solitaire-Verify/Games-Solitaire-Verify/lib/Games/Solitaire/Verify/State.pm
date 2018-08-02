@@ -855,6 +855,8 @@ rank.
 
 This method either throws an exception object or returns normally.
 
+(New in version 0.1900 .)
+
 =cut
 
 my @SS = ( @{ Games::Solitaire::Verify::Card->get_suits_seq() } );
