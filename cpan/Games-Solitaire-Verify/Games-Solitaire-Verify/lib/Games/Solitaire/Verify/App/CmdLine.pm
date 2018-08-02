@@ -16,6 +16,7 @@ __PACKAGE__->mk_acc_ref(
     [
         qw(
             _filename
+            _max_rank
             _variant_params
             )
     ]
@@ -30,6 +31,7 @@ sub _init
     my $variant_map = Games::Solitaire::Verify::VariantsMap->new();
 
     my $variant_params = $variant_map->get_variant_by_id("freecell");
+    my $max_rank       = 13;
 
     GetOptionsFromArray(
         $argv,
@@ -60,6 +62,13 @@ sub _init
             }
 
             $variant_params->num_decks($n);
+        },
+        'max-rank=i' => sub {
+            my ( undef, $n ) = @_;
+
+            $max_rank = $n;
+
+            return;
         },
         'sequences-are-built-by=s' => sub {
             my ( undef, $val ) = @_;
@@ -114,6 +123,7 @@ sub _init
 
     $self->_variant_params($variant_params);
     $self->_filename($filename);
+    $self->_max_rank($max_rank);
 
     return;
 }
@@ -139,6 +149,7 @@ sub run
 
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
+            max_rank       => scalar( $self->_max_rank ),
             input_fh       => $fh,
             variant        => "custom",
             variant_params => $variant_params,
