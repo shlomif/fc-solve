@@ -25,6 +25,7 @@ __PACKAGE__->mk_acc_ref(
             _variant
             _variant_params
             _st
+            _max_rank
             _move
             _reached_end
             )
@@ -60,6 +61,7 @@ sub _init
 {
     my ( $self, $args ) = @_;
 
+    $self->_max_rank( exists( $args->{max_rank} ) ? $args->{max_rank} : 13 );
     $self->_i(
         [
             split /^/ms,

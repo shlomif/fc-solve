@@ -62,6 +62,9 @@ If $variant is C<"custom">, then the constructor also requires a
 C<'variant_params'> key which should be a populated
 L<Games::Solitaire::Verify::VariantParams> object.
 
+One can specify a numeric C<'max_rank'> argument to be lower than 13
+(new in 0.1900).
+
 =cut
 
 sub _init
@@ -194,7 +197,7 @@ sub verify
         }
 
         $self->_read_state();
-        $self->_st->verify_contents( { max_rank => 13 } );
+        $self->_st->verify_contents( { max_rank => $self->_max_rank } );
 
         while ( !defined( scalar( $self->_read_move() ) ) )
         {
