@@ -1098,6 +1098,7 @@ iterations's
 ==== In: dest/faq.html
 
 5-freecells
+Alfille
 NNN
 NRG
 gen_ms_boards__rand

@@ -935,3 +935,17 @@ For some more information, see:
 </p>
 </li>
 </ol>
+
+<h3 id="is_freecell_the_ms_game">"Freecell"? Is it the Microsoft/Windows game?</h3>
+
+<p>
+Yes, and no. The "Freecell" game (see its <a href="https://en.wikipedia.org/wiki/FreeCell">wikipedia entry</a>)
+was invented by Paul Alfille based on an earlier game called "Baker's Game"
+and was implemented for the PLATO educational computer system back in 1978. The
+<a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">Microsoft Windows Freecell</a>
+implementation came later and made the game much more well-known
+and popular, but had some limitations. While Freecell Solver can handle the
+MS FreeCell deals, parameters and rules perfectly fine, it also has run-time
+support for many variations on them, and accepts any arbitrary layout of the
+cards, including those at mid play, as input.
+</p>
