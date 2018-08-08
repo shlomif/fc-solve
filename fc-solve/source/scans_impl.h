@@ -53,9 +53,10 @@ extern "C" {
 static inline void fc_solve_initialize_befs_rater(
     fcs_soft_thread *const soft_thread, fcs_state_weighting *const weighting)
 {
-    const double *const befs_weights = weighting->befs_weights.weights;
+    const fcs_weighting_float *const befs_weights =
+        weighting->befs_weights.weights;
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
-    double sum = 0;
+    fcs_weighting_float sum = 0;
     for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
     {
         sum += befs_weights[i];
@@ -77,10 +78,10 @@ static inline void fc_solve_initialize_befs_rater(
 #define unlimited_sequence_move FALSE
 #endif
 
-    const double num_cards_out_factor =
+    const fcs_weighting_float num_cards_out_factor =
         W(FCS_BEFS_WEIGHT_CARDS_OUT) / (LOCAL_DECKS_NUM * 52);
 
-    double out_sum = 0.0;
+    fcs_weighting_float out_sum = 0.0;
     const_PTR(
         num_cards_out_lookup_table, weighting->num_cards_out_lookup_table);
     for (int i = 0; i <= 13; i++, out_sum += num_cards_out_factor)
@@ -190,7 +191,7 @@ static inline pq_rating befs_rate_state(
     fcs_seq_cards_power_type cards_under_sequences = 0;
     fcs_seq_cards_power_type seqs_over_renegade_cards = 0;
 
-    double sum = (max(0, negated_depth) * weighting->depth_factor);
+    fcs_weighting_float sum = (max(0, negated_depth) * weighting->depth_factor);
     const_PTR(
         num_cards_out_lookup_table, weighting->num_cards_out_lookup_table);
     if (num_cards_out_lookup_table[1])
@@ -252,7 +253,7 @@ static inline pq_rating befs_rate_state(
                     weighting->seqs_over_renegade_cards_factor));
     }
 
-    const double num_cards_not_on_parents_weight =
+    const fcs_weighting_float num_cards_not_on_parents_weight =
         weighting->num_cards_not_on_parents_factor;
     if (num_cards_not_on_parents_weight)
     {

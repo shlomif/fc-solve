@@ -174,18 +174,20 @@ extern guint fc_solve_hash_function(gconstpointer key);
     for (; soft_thread < end_soft_thread; ++soft_thread)
 #define MOVES_GROW_BY 16
 
+typedef double fcs_weighting_float;
+
 typedef struct
 {
-    double weights[FCS_NUM_BEFS_WEIGHTS];
+    fcs_weighting_float weights[FCS_NUM_BEFS_WEIGHTS];
 } fcs_default_weights;
 typedef struct
 {
     bool should_go_over_stacks;
-    double max_sequence_move_factor, cards_under_sequences_factor,
+    fcs_weighting_float max_sequence_move_factor, cards_under_sequences_factor,
         seqs_over_renegade_cards_factor, depth_factor,
         num_cards_not_on_parents_factor;
 
-    double num_cards_out_lookup_table[14];
+    fcs_weighting_float num_cards_out_lookup_table[14];
     // The BeFS weights of the different BeFS tests. Those
     // weights determine the commulative priority of the state.
     fcs_default_weights befs_weights;
