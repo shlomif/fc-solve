@@ -949,3 +949,22 @@ MS FreeCell deals, parameters and rules perfectly fine, it also has run-time
 support for many variations on them, and accepts any arbitrary layout of the
 cards, including those at mid play, as input.
 </p>
+
+<h3 id="is_it_foss">Is Freecell Solver open source?</h3>
+
+<p>
+Freecell Solver is
+<a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free and
+open source software</a>
+under the permissive and common
+<a href="https://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>,
+and provided free-of-charge for download or use online. You can find the
+latest development sources in
+<a href="https://github.com/shlomif/fc-solve">its GitHub repository</a>
+and call also download release source archive files from
+<a href="$(ROOT)/download.html">the download page</a>. Share and enjoy!
+</p>
+
+<p>
+Contributions are welcome.
+</p>
