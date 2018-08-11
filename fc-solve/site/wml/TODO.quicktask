@@ -5,9 +5,6 @@ CURRENT TASKS:
         * Added [Sat 2013-01-12]
     - Add a "How to Contribute" page (perhaps a nav-tree category)
       @ Added [Sun 2016-01-24]
-    - Get rid of the "Advanced" toggle button and place its contents on page
-        * Apparently, the non-FreeCell variants are popular.
-      @ Added [Sat 2018-08-11]
 
 
 LONG TERM:
@@ -148,6 +145,10 @@ COMPLETED TASKS:
     - Write a better README for documenting the website build/maint process.
         @ DONE [Fri 2018-07-27]
       @ Added [Wed 2016-10-05]
+    - Get rid of the "Advanced" toggle button and place its contents on page
+        * Apparently, the non-FreeCell variants are popular.
+        @ DONE [Sat 2018-08-11]
+      @ Added [Sat 2018-08-11]
 
 
 

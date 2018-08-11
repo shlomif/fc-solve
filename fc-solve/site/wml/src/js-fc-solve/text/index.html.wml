@@ -51,7 +51,7 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 <div id="fc_solve_tabs__any_board" class="tab">
 
 <p class="first">
-Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:<br />
+Input a card patience/solitaire layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">
@@ -61,18 +61,14 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 </div>
 
-<p>
-<button id="fcs_advanced_toggle">Advanced ▼</button>
-</p>
-
-<div id="fcs_advanced" class="disabled">
+<div id="fcs_advanced">
 <:{
 use FreecellSolver::ExtractGames;
 print FreecellSolver::ExtractGames->new->calc_html;
 }:>
 <br />
 <label for="string_params">String Parameters:</label><br />
-<textarea class="emscripten" id="string_params" cols="50" rows="30"></textarea>
+<textarea class="emscripten" id="string_params" cols="50" rows="15"></textarea>
 <p>
 (Format as a preset file, with backslashes at the end of lines. See the
 <a href="$(ROOT)/docs/">online documentation</a> for information regarding syntax.)
@@ -156,8 +152,7 @@ Enjoy!
 <h3 id="other_games">Solving other, similar, games</h3>
 
 <p>
-Click the <a href="#fcs_advanced_toggle">Advanced button</a> and select the
-game from the drop-down.
+Select the game from <a href="#game_type_label">the drop-down</a>.
 </p>
 
 <h2 id="technology">Technology</h2>

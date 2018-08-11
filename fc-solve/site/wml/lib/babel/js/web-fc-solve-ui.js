@@ -287,31 +287,10 @@ class FC_Solve_UI {
     }
 }
 
-function toggle_advanced() {
-    let ctl = $("#fcs_advanced");
-    ctl.toggleClass("disabled");
-
-    const set_text = function(my_text) {
-        $("#fcs_advanced_toggle").text(my_text);
-    };
-
-    set_text(
-        ctl.hasClass("disabled") ? "Advanced ▼" : "Advanced ▲"
-    );
-
-    return;
-}
-
 function _create_bmark_obj() {
     return new base_ui.FC_Solve_Bookmarking({
         bookmark_controls: ['stdin', 'preset', 'deal_number', 'one_based',
             'unicode_suits', 'string_params', 'game_type',
-        ],
-        show: [{
-            id: 'fcs_advanced',
-            deps: ['string_params'],
-            callback: toggle_advanced,
-        },
         ],
     });
 }
@@ -358,7 +337,6 @@ function set_up_handlers() {
 function set_up() {
     restore_bookmark();
     set_up_handlers();
-    $("#fcs_advanced_toggle").click(toggle_advanced);
     $("#one_based").click(on_toggle_one_based);
     $("#clear_output").click(clear_output);
     $("#fc_solve_bookmark_button").click(on_bookmarking);

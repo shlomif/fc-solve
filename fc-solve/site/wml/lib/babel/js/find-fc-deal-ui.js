@@ -5,21 +5,6 @@ define(["fcs-base-ui", "web-fc-solve", "libfcs-wrap",
     let _my_module = Module()({});
     w.FC_Solve_init_wrappers_with_module(_my_module);
 
-function toggle_advanced() {
-    let ctl = $("#fcs_advanced");
-    ctl.toggleClass("disabled");
-
-    function set_text(my_text) {
-        $("#fcs_advanced_toggle").text(my_text);
-    };
-
-    set_text(
-        ctl.hasClass("disabled") ? "Advanced ▼" : "Advanced ▲"
-    );
-
-    return;
-}
-
 function _create_bmark_obj() {
     return new base_ui.FC_Solve_Bookmarking({
         bookmark_controls: ['stdin', 'deal_number'],
