@@ -3,8 +3,6 @@
 CURRENT TASKS:
     - Use localStorage for remembering the state of the form.
         * Added [Sat 2013-01-12]
-    - Add a "How to Contribute" page (perhaps a nav-tree category)
-      @ Added [Sun 2016-01-24]
 
 
 LONG TERM:
@@ -149,6 +147,9 @@ COMPLETED TASKS:
         * Apparently, the non-FreeCell variants are popular.
         @ DONE [Sat 2018-08-11]
       @ Added [Sat 2018-08-11]
+    - Add a "How to Contribute" page (perhaps a nav-tree category)
+        @ DONE [Sun 2018-08-12]
+      @ Added [Sun 2016-01-24]
 
 
 
