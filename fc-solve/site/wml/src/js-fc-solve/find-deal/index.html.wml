@@ -62,36 +62,7 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 </p>
 
-<div id="fc_solve_bookmark">
-
-<h3 id="bookmark">Bookmark This Form</h3>
-
-<p>
-You can use the button below to generate a URL that will
-auto-populate the form. This is also useful for reporting problems.
-</p>
-
-<div class="controls_wrapper">
-<button id="fc_solve_bookmark_button">Bookmark</button>
-
-<ul id="fcs_bookmark_wrapper" class="disabled">
-
-<li>
-<label for="fcs_bm_results_input">URL:</label>
-<input type="text" id="fcs_bm_results_input" size="40" readonly="readonly" />
-</li>
-
-<li>
-<a id="fcs_bm_results_a" href="#fcs_bookmark_wrapper">Bookmark Link</a>
-</li>
-
-</ul>
-
-</div> ;;; end of .controls_wrapper
-
-</div> ;;; end of #fc_solve_bookmark
-
-<hr />
+<fc_solve_bookmark__form />
 
 <h2 id="how_to_use">How to Use</h2>
 
