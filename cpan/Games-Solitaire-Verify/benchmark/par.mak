@@ -7,3 +7,7 @@ all: $(RESULTS)
 
 $(RESULTS): %:
 	i="$(patsubst Results/%.res,%,$@)"; F="$$i" L="$$((i + 99))" perl -I. benchmark-no-backticks.pl -- -l cm -ni -l fg > $@
+
+cat: $(RESULTS)
+	cat $(RESULTS)
+
