@@ -282,6 +282,7 @@ Google
 Google's
 Greenspun
 Gtk
+HTML5
 HYBRID_STACKS_STATES
 Har'El
 Hard-DFS
@@ -393,6 +394,7 @@ Perl's
 Petrea
 Phil
 Plaintext
+Plugin
 Presets
 Purim
 PyPI
@@ -712,6 +714,7 @@ libtool
 linuxmafia
 llvm
 llvma
+localStorage
 lowercase
 mak
 make-aisleriot-freecell-board

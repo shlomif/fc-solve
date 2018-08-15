@@ -82,37 +82,7 @@ Enjoy!
 
 <h2 id="technology">Technology</h2>
 
-<p>
-This is a web-based interface to
-<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a>, that was
-translated from the C source code to JavaScript, by using the
-<a href="https://github.com/kripken/emscripten">emscripten</a> LLVM bit-code
-to JavaScript compiler. Like Freecell Solver itself, this JavaScript port
-is open-source software under the permissive
-<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>.
-</p>
-
-<p>
-Other technologies used for writing this page are:
-</p>
-
-<ul>
-
-<li>
-<p>
-<a href="http://jquery.com/">jQuery</a> - the “write less, do more”
-JavaScript library. A convenient JavaScript browser-side library for
-DOM manipulations, UI and much more.
-</p>
-</li>
-
-<li>
-<p>
-<a href="http://jqueryui.com/">jQuery UI</a> - a library for user-interface
-controls based on jQuery.
-</p>
-</li>
-
+<fc_solve_jsfcs__credits__common />
 <li>
 <p>
 <a href="https://github.com/kylefox/jquery-querystring">jquery-querystring</a> -a plugin for jQuery for manipulating query strings.
