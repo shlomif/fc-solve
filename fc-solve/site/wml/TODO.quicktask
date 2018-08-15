@@ -2,6 +2,8 @@
 
 CURRENT TASKS:
     - Use localStorage for remembering the state of the form.
+        * Add it for find-deal too
+        * Credit jquery-phoenix
         * Added [Sat 2013-01-12]
 
 

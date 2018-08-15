@@ -9,7 +9,7 @@
 </script>
 <jquery_ui_head_elements />
 <script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/jquery.phoenix.js"></script>
+<script type="text/javascript" src="$(ROOT)/js/jquery.phoenix.min.js"></script>
 <script type="text/javascript" src="https://raw.githack.com/zloirock/core-js/v2.5.0/client/shim.min.js"></script>
 <script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
 <define-tag expanded_scripts>
@@ -51,6 +51,7 @@ requirejs.config({
     });
     <get-var incs /> {
     $(function() {
+        $('.phoenix').phoenix();
         $( "#fc_solve_tabs" ).tabs({
             activate: function () {
                 web_fc_solve_ui.set_up_handlers();
