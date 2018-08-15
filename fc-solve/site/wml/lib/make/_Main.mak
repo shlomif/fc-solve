@@ -218,6 +218,15 @@ WEB_RAW_JS = common-methods.js
 
 DEST_WEB_RAW_JS = $(patsubst %,$(D)/js/%,$(WEB_RAW_JS))
 
+Phoenix_JS_BASE = jquery.phoenix.min.js
+Phoenix_JS = lib/jquery/jquery-phoenix/$(Phoenix_JS_BASE)
+Phoenix_JS_DEST = $(D)/js/$(Phoenix_JS_BASE)
+
+dummy: $(Phoenix_JS_DEST)
+
+$(Phoenix_JS_DEST): $(Phoenix_JS)
+	cp -f $< $@
+
 dummy: $(DEST_WEB_RAW_JS)
 
 $(DEST_WEB_RAW_JS): $(D)/js/%: lib/web-raw-js/%
