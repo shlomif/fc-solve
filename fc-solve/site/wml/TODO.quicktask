@@ -1,11 +1,6 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-    - Use localStorage for remembering the state of the form.
-        * Add it for find-deal too
-        * Credit jquery-phoenix
-        * Added [Sat 2013-01-12]
-
 
 LONG TERM:
     - Prepare the solver with the GUI.
@@ -152,6 +147,11 @@ COMPLETED TASKS:
     - Add a "How to Contribute" page (perhaps a nav-tree category)
         @ DONE [Sun 2018-08-12]
       @ Added [Sun 2016-01-24]
+    - Use localStorage for remembering the state of the form.
+        * Add it for find-deal too
+        * Credit jquery-phoenix
+        * Added [Sat 2013-01-12]
+        @ DONE [Wed 2018-08-15]
 
 
 
