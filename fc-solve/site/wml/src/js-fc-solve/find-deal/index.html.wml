@@ -34,7 +34,7 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 <div class="fcs_common">
 
 <label for="stdin">Input:</label><br />
-<textarea class="emscripten" id="stdin" cols="30" rows="10"></textarea><br />
+<textarea class="emscripten phoenix" id="stdin" cols="30" rows="10"></textarea><br />
 <button id="run_do_solve">Find!</button>
 
 </div> ;;; end of fcs_common
@@ -45,7 +45,7 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 <p class="first">
 <label for="deal_number">Enter an MS Freecell Deal:</label>
-<input type="text" id="deal_number" size="12" />
+<input type="text" id="deal_number" size="12" class="phoenix" />
 <button id="populate_input" title="Populate Input with a Windows Freecell Numbered Deal">Populate</button><br />
 </p>
 
