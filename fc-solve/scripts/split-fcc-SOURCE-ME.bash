@@ -21,10 +21,22 @@ run()
     perl -MSplitFcc -e 'SplitFcc->new->driver_run()' -- --fingerprint="$id"
 }
 
+_is_int()
+{
+    local n="$1"
+    shift
+    echo "$n" | grep -E '^[0-9]+$'
+}
+
 depth_run()
 {
     depth="$1"
     shift
+    if ! _is_int "$depth"
+    then
+        echo "Usage : depth_run [integer]" 1>&2
+        return
+    fi
     (for i in by-depth/"$depth"/active/* ; do
         echo "===[[[ Running $i ]]]==="
         if ! test -d "$i"
