@@ -4,7 +4,7 @@ export FCS_PATH="$HOME"/progs/freecell/git/fc-solve/fc-solve/B FCS_SRC_PATH="$HO
 offload_path="./split_fcc_offload_dir_path"
 out_dir="./split_fcc_out_dir"
 idx="384243"
-board="${idx}.board"
+board="${idx}.init.init.board"
 if ! test -e "$offload_path" ; then
     mkdir "$offload_path"
 fi
