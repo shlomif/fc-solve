@@ -16,12 +16,16 @@ sub _exec
     }
     return;
 }
-_exec(
-    [ "cd lib/jquery/ && git clone https://github.com/kugaevsky/jquery-phoenix/"
+if ( not -e "lib/jquery/jquery-phoenix/" )
+{
+    _exec(
+        [
+"cd lib/jquery/ && git clone https://github.com/kugaevsky/jquery-phoenix/"
 
-    ],
-    "git clone",
-);
+        ],
+        "git clone",
+    );
+}
 _exec(
     [
         'cookiecutter', '-f', '--no-input',
