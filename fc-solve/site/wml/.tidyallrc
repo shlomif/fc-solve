@@ -10,3 +10,6 @@ ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/*
 [PerlCritic]
 select = **/*.{pl,pm,t}
 ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/* lib/App/Deps/Verify.pm
+
+[TSLint]
+select = src/**/*.ts
