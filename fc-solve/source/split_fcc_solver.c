@@ -7,18 +7,14 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * split_fcc_solver.c - a specialised solver that solves one FCC (=
- * fully connected component) at a time - meant to try to
- * reduce the memory consumption. See
- * ../docs/split-fully-connected-components-based-solver-planning.txt
- * in the Freecell Solver git repository.
- */
-
+// split_fcc_solver.c - a specialised solver that solves one FCC (=
+// fully connected component) at a time - meant to try to
+// reduce the memory consumption. See
+// ../docs/split-fully-connected-components-based-solver-planning.txt
+// in the Freecell Solver git repository.
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
 #include <assert.h>
-
 #include "depth_multi_queue.h"
 
 typedef struct
@@ -127,7 +123,7 @@ static inline void instance_init(dbm_solver_instance *const instance,
         {
             for (size_t i = 0;
                  i < COUNT(fingerprint_which_irreversible_moves_bitmask->s);
-                 i++)
+                 ++i)
             {
                 unsigned char c =
                     fingerprint_which_irreversible_moves_bitmask->s[i];
@@ -451,7 +447,7 @@ static inline void instance_check_key(
             /* Calculate the new fingerprint to which the exit
              * point belongs. */
             fcs_which_moves_bitmask new_fingerprint = {{'\0'}};
-            for (size_t i = 0; i < COUNT(new_fingerprint.s); i++)
+            for (size_t i = 0; i < COUNT(new_fingerprint.s); ++i)
             {
                 new_fingerprint.s[i] =
                     which_irreversible_moves_bitmask->s[i] +
@@ -600,7 +596,7 @@ int main(int argc, char *argv[])
     fcs_dbm_common_input inp = fcs_dbm_common_input_init;
 
     int arg;
-    for (arg = 1; arg < argc; arg++)
+    for (arg = 1; arg < argc; ++arg)
     {
         if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &inp))
         {
@@ -770,7 +766,7 @@ int main(int argc, char *argv[])
     instance.moves_to_state = NULL;
     instance.max_moves_to_state_len = instance.moves_to_state_len = 0;
 
-    count_of_instance_runs++;
+    ++count_of_instance_runs;
 
     char fcc_exit_points_out_fn[PATH_MAX - 40],
         fcc_exit_points_out_fn_temp[PATH_MAX + 1];
