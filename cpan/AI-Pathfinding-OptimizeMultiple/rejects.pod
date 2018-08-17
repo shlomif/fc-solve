@@ -24,10 +24,6 @@ L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-AI-Pathfinding-OptimizeMultiple
 
 L<http://cpanratings.perl.org/d/Games-AI-Pathfinding-OptimizeMultiple>
 
-=item * MetaCPAN
-
-L<http://search.cpan.org/dist/Games-AI-Pathfinding-OptimizeMultiple>
-
 =back
 
 =head1 COPYRIGHT & LICENSE

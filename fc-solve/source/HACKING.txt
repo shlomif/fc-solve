@@ -68,7 +68,7 @@ urpmi subversion cmake make gcc g++ valgrind perl perl-devel
 
 2. Install the dependencies of the test suite:
 +
-* Download +local::lib+ from http://search.cpan.org/dist/local-lib/
+* Download +local::lib+ from https://metacpan.org/release/local-lib
 and follow the instructions to set it up.
 +
 * Restart bash (no need to restart the computer, just open a new terminal

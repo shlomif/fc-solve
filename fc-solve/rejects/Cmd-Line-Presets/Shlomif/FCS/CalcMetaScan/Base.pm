@@ -129,10 +129,6 @@ L<http://annocpan.org/dist/Shlomif-FCS-CalcMetaScan>
 
 L<http://cpanratings.perl.org/d/Shlomif-FCS-CalcMetaScan>
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Shlomif-FCS-CalcMetaScan>
-
 =back
 
 

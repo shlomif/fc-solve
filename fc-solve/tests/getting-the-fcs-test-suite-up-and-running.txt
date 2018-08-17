@@ -64,7 +64,7 @@ development headers.
 
 #. Install the dependencies of the test suite:
 
-	- Download local::lib from http://search.cpan.org/dist/local-lib/
+	- Download local::lib from https://metacpan.org/release/local-lib
 	and follow the instructions to set it up
 	- Restart bash
 	$ export PERL_MM_USE_DEFAULT=1
