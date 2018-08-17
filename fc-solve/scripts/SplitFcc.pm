@@ -33,7 +33,7 @@ sub _calc_depth_dir
 {
     my ( $self, $depth ) = @_;
 
-    return "by-depth/$depth";
+    return "SPLIT_FCC/by-depth/$depth";
 }
 
 sub _calc_fingerprint_dir
