@@ -124,13 +124,21 @@ git clone https://github.com/shlomif/fc-solve
 +
 	$ make test
 
+Running the split_fcc_fc_solver
+-------------------------------
+
+The split_fcc_fc_solver (where "FCC" is "fully-connected-components") is
+an experimental solver whose design is documented in link:../docs/split-fully-connected-components-based-solver-planning.txt[the planning document]
+and in link:../docs/fully-connected-components-based-solver-planning.txt[another one] .
+
+
 Style Guidelines
 ----------------
 
 Freecell Solver uses its own style (largely based on the Allman style:
 http://en.wikipedia.org/wiki/Indent_style#Allman_style ),
 based on the preferences of its primary author (Shlomi Fish). The style is
-largely enforced by the "clang-format" formatter (using its 3.9.1 version
+largely enforced by the "clang-format" formatter (using its 6.0.1 version
 currently). Some guidelines for the style will be given here.
 
 4 Spaces for Indentation
