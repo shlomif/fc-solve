@@ -131,6 +131,24 @@ The split_fcc_fc_solver (where "FCC" is "fully-connected-components") is
 an experimental solver whose design is documented in link:../docs/split-fully-connected-components-based-solver-planning.txt[the planning document]
 and in link:../docs/fully-connected-components-based-solver-planning.txt[another one] .
 
+To run it use in the bash shell:
+
+------------------------------------
+mkdir -p ../B
+cd ../B
+../source/Tatzer -l pdfs
+make
+. ../scripts/split-fcc-SOURCE-ME.bash
+startup
+depth_run 1
+depth_run 2
+depth_run 3
+depth_run 4
+# And so forth with consecutive indices
+------------------------------------
+
+Note that currently some of the runs fail only to succeed on a rerun (
+a https://en.wikipedia.org/wiki/Heisenbug[Heisenbug] ).
 
 Style Guidelines
 ----------------
