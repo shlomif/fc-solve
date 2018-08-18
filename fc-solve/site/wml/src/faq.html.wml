@@ -975,12 +975,18 @@ Contributions are welcome.
 We were trying to conclusively determine whether MS deal no. 384,243 was
 <a href="http://fc-solve.blogspot.com/2012/09/two-freecell-solvability-report-for.html">winnable or impossible to solve with two freecells</a>.
 This was done by running the depth_dbm_fc_solver on an <a href="https://en.wikipedia.org/wiki/Supercomputer">HPC</a>
-node which used <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a>
-and had 512 gigabytes of RAM, which we were given indirect access to thanks
+node which used <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a> processors
+and had 512 gigabytes of RAM. We were given indirect access to it thanks
 to a certain university. Note that steps were taken to reduce the RAM
 consumption and it seems unlikely that there were memory leaks in the code.
 </p>
 
 <p>
-<b>TODO: add more</b>
+It is true that
+<a href="https://en.wikiquote.org/wiki/Bill_Gates#Misattributed">a quote mis-attributed to Bill Gates</a>
+says “640 kB [of RAM] ought to be enough for anybody” but many computing
+tasks require much more than that and Freecell is <a href="#complexity">a hard
+(NP-complete) problem</a>. There may be ways to reduce RAM consumption further
+using a different algorithm, by distributing calculations, or other techniques.
+As usual, patches/<a href="https://help.github.com/articles/about-pull-requests/">pull requests</a> or ideas are welcome.
 </p>
