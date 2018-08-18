@@ -973,12 +973,20 @@ Contributions are welcome.
 
 <p>
 We were trying to conclusively determine whether MS deal no. 384,243 was
-<a href="http://fc-solve.blogspot.com/2012/09/two-freecell-solvability-report-for.html">winnable or impossible to solve with two freecells</a>.
+<a href="http://fc-solve.blogspot.com/2012/09/two-freecell-solvability-report-for.html">winnable or impossible to solve with <b>two</b> freecells</a>.
 This was done by running the depth_dbm_fc_solver on an <a href="https://en.wikipedia.org/wiki/Supercomputer">HPC</a>
 node which used <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a> processors
 and had 512 gigabytes of RAM. We were given indirect access to it thanks
 to a certain university. Note that steps were taken to reduce the RAM
 consumption and it seems unlikely that there were memory leaks in the code.
+</p>
+
+<p>
+We have been able to complete a <a href="$(ROOT)/charts/fc-pro--4fc-deals-solvability--report/">complete scan of all 4 freecell deals in the MS freecell 8.6
+milliard range</a> using an AWS node with only 256 GB of RAM and about
+40-50 GB of hard disk (though we could probably use less or make use
+of <a href="https://github.com/s3fs-fuse/s3fs-fuse">s3fs-fuse</a> or similar
+— to save on costs).
 </p>
 
 <p>
