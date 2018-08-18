@@ -47,6 +47,10 @@
 </p>
 
 <p>
+<b>Updated:</b> 18 August 2018.
+</p>
+
+<p>
 Theodore Pringle had posted <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1466">an announcement</a>
 to the "fc-solve-discuss" group, where he said that he ran a
 <a href="https://en.wikipedia.org/wiki/FreeCell">Freecell</a> solver over all
@@ -192,6 +196,13 @@ Google Drive.
 
 <li>
 <p>
+<a href="https://github.com/shlomif/freecell-pro-impossible-deals">A GitHub
+repository containing the same lists of impossible deals</a>
+</p>
+</li>
+
+<li>
+<p>
 <a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/scripts/prepare-self-contained-dbm-etc-solvers-packages-for-hpc-machines/prepare_aws_depth_dbm_fc_solver_self_contained_package.pl">The script used to prepare the source package for deployment</a>
 </p>
 </li>
@@ -207,4 +218,12 @@ Google Drive.
 <a href="$(ROOT)/charts/fc-pro--4fc-intractable-deals--report/data/">Log/output files of the runs</a>
 </p>
 </li>
+
+<li>
+<p>
+<a href="$(ROOT)/faq.html#what_are_ms_deals">Explanation of what are
+the Microsoft deals</a> - entry in the Freecell Solver FAQ.
+</p>
+</li>
+
 </ul>
