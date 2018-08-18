@@ -968,3 +968,19 @@ and call also download release source archive files from
 <p>
 Contributions are welcome.
 </p>
+
+<h3 id="exceeded_512GB">What were the whereabouts of one of the solvers running out of 512 GB (= gigabyte) of RAM?</h3>
+
+<p>
+We were trying to conclusively determine whether MS deal no. 384,243 was
+<a href="http://fc-solve.blogspot.com/2012/09/two-freecell-solvability-report-for.html">winnable or impossible to solve with two freecells</a>.
+This was done by running the depth_dbm_fc_solver on an <a href="https://en.wikipedia.org/wiki/Supercomputer">HPC</a>
+node which used <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a>
+and had 512 gigabytes of RAM, which we were given indirect access to thanks
+to a certain university. Note that steps were taken to reduce the RAM
+consumption and it seems unlikely that there were memory leaks in the code.
+</p>
+
+<p>
+<b>TODO: add more</b>
+</p>

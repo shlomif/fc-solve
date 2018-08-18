@@ -1102,6 +1102,7 @@ iterations's
 
 5-freecells
 Alfille
+HPC
 NNN
 NRG
 gen_ms_boards__rand
