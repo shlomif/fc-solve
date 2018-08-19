@@ -77,13 +77,14 @@ class FC_Solve_UI {
                 );
             };
 
-            let _render_state = function(s) {
-                return "<li class=\"state\"><pre>" + _filt(s.str) +
+            let _render_state = function(s, pre_indexes) {
+                return "<li class=\"state\"><strong class=\"step_idx\">" +
+                    pre_indexes.map((i) => (((i >> 1)+1)+".")).join('') + "</strong><pre>" + _filt(s.str) +
                     "</pre></li>\n\n";
             };
 
             let _out_state = function(i) {
-                html += _render_state(seq[i]);
+                html += _render_state(seq[i], [i]);
             };
 
             _out_state(0);
@@ -122,7 +123,10 @@ class FC_Solve_UI {
                     };
                     for (let i = 0; i < inner_moves.length-1; i += 2) {
                         _out_inner_move(i);
-                        inner_html += _render_state(inner_moves[i+1]);
+                        inner_html += _render_state(
+                            inner_moves[i+1],
+                                                    [idx, i],
+                        );
                     }
                     _out_inner_move(inner_moves.length-1);
                     inner_html += "</ol>";
