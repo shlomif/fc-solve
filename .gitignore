@@ -54,9 +54,11 @@
 /fc-solve/site/wml/bin/translate-Vered-XML
 /fc-solve/site/wml/dest
 /fc-solve/site/wml/dest-prod
+/fc-solve/site/wml/lib/App/Deps/Verify.pm
 /fc-solve/site/wml/lib/Inc/cpan_dists.wml
 /fc-solve/site/wml/lib/Shlomif/Spelling/Check.pm
 /fc-solve/site/wml/lib/Shlomif/Spelling/Iface.pm
+/fc-solve/site/wml/lib/babel/js/jquery.phoenix.js
 /fc-solve/site/wml/lib/cache/
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/*.bc
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/CMAKE-BUILD-dir/
