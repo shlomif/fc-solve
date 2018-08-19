@@ -23,6 +23,7 @@ ifeq ($(PROD),1)
 
 endif
 
+DEST_JS_DIR = $(D)/js
 IMAGES = $(addprefix $(D)/,$(SRC_IMAGES))
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
@@ -53,24 +54,24 @@ LIBFREECELL_SOLVER_JS_DIR = lib/fc-solve-for-javascript
 LIBFREECELL_SOLVER_ASMJS_JS_DIR = lib/fc-solve-for-javascript-asmjs
 LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfreecell-solver.js
 LIBFREECELL_SOLVER_ASMJS_JS = $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/libfreecell-solver-asm.js
-DEST_LIBFREECELL_SOLVER_JS = $(D)/js/libfreecell-solver.min.js
-DEST_LIBFREECELL_SOLVER_ASMJS_JS = $(D)/js/libfreecell-solver-asm.js
-DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(D)/js/libfreecell-solver.js
-DEST_mem_dirs = $(D)/js $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .
+DEST_LIBFREECELL_SOLVER_JS = $(DEST_JS_DIR)/libfreecell-solver.min.js
+DEST_LIBFREECELL_SOLVER_ASMJS_JS = $(DEST_JS_DIR)/libfreecell-solver-asm.js
+DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(DEST_JS_DIR)/libfreecell-solver.js
+DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .
 DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(DEST_mem_dirs))
 DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS = $(patsubst %,%/$(JS_MEM_BASE__ASMJS),$(DEST_mem_dirs))
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
 BASE_BIGINT_JS = big-integer.js qunit.js
-DEST_BIGINT_JS = $(patsubst %,$(D)/js/%,$(BASE_BIGINT_JS))
+DEST_BIGINT_JS = $(patsubst %,$(DEST_JS_DIR)/%,$(BASE_BIGINT_JS))
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
-DEST_WEB_FC_SOLVE_UI_MIN_JS = $(D)/js/web-fcs.min.js
+DEST_WEB_FC_SOLVE_UI_MIN_JS = $(DEST_JS_DIR)/web-fcs.min.js
 
 FIND_INDEX__PYJS__SRC_BN = fc_solve_find_index_s2ints.py
 FIND_INDEX__PYJS__pivot =  dist/fc_solve_find_index_s2ints.js
 
-FIND_INDEX__PYJS__DEST_DIR = $(D)/js
+FIND_INDEX__PYJS__DEST_DIR = $(DEST_JS_DIR)
 FIND_INDEX__PYJS__DEST = $(FIND_INDEX__PYJS__DEST_DIR)/$(FIND_INDEX__PYJS__pivot)
 FIND_INDEX__PYJS__DEST2_DIR = $(D)/js-fc-solve/automated-tests
 FIND_INDEX__PYJS__DEST2 = $(FIND_INDEX__PYJS__DEST2_DIR)/$(FIND_INDEX__PYJS__pivot)
@@ -102,7 +103,7 @@ dummy: $(DEST_BIGINT_JS)
 OUT_PREF = lib/out-babel/js
 OUT_BIGINT_JS = $(patsubst %,$(OUT_PREF)/%,$(BASE_BIGINT_JS))
 
-$(DEST_BIGINT_JS): $(D)/js/%: $(OUT_PREF)/%
+$(DEST_BIGINT_JS): $(DEST_JS_DIR)/%: $(OUT_PREF)/%
 	$(MULTI_YUI) -o $@ $<
 
 $(OUT_BIGINT_JS): %:
@@ -216,14 +217,14 @@ $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 
 WEB_RAW_JS = common-methods.js
 
-DEST_WEB_RAW_JS = $(patsubst %,$(D)/js/%,$(WEB_RAW_JS))
+DEST_WEB_RAW_JS = $(patsubst %,$(DEST_JS_DIR)/%,$(WEB_RAW_JS))
 
 Phoenix_CS_BASE = jquery.phoenix.coffee
 Phoenix_JS_nonmin_BASE = jquery.phoenix.js
 Phoenix_JS_BASE = jquery.phoenix.min.js
 Phoenix_DIR = lib/jquery/jquery-phoenix
 Phoenix_JS = $(Phoenix_DIR)/$(Phoenix_JS_BASE)
-Phoenix_JS_DEST = $(D)/js/$(Phoenix_JS_BASE)
+Phoenix_JS_DEST = $(DEST_JS_DIR)/$(Phoenix_JS_BASE)
 
 BABEL_SRC_DIR = lib/babel/js
 
@@ -237,10 +238,10 @@ $(Phoenix_JS_DEST): $(Phoenix_JS)
 
 dummy: $(DEST_WEB_RAW_JS)
 
-$(DEST_WEB_RAW_JS): $(D)/js/%: lib/web-raw-js/%
+$(DEST_WEB_RAW_JS): $(DEST_JS_DIR)/%: lib/web-raw-js/%
 	$(MULTI_YUI) -o $@ $<
 
-WEB_FCS_UI_JS_SOURCES =  $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js
+WEB_FCS_UI_JS_SOURCES =  $(DEST_JS_DIR)/web-fc-solve.js $(DEST_JS_DIR)/web-fc-solve-ui.js
 
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
@@ -254,22 +255,22 @@ $(DEST_LIBFREECELL_SOLVER_JS_MEM): %: lib/fc-solve-for-javascript/$(JS_MEM_BASE)
 $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS): %: $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/$(JS_MEM_BASE__ASMJS)
 	cp -f $< $@
 
-FCS_VALID_DEST = $(D)/js/fcs-validate.js
+FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
 
 TYPINGS =
 
-DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/libfcs-wrap.js $(D)/js/$(Phoenix_JS_nonmin_BASE) $(D)/js/s2i-test.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js $(D)/js/web-fc-solve-tests.js
-OUT_BABEL_JSES = $(patsubst $(D)/js/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
+DEST_BABEL_JSES = $(DEST_JS_DIR)/fcs-base-ui.js $(DEST_JS_DIR)/find-fc-deal-ui.js $(DEST_JS_DIR)/libfcs-wrap.js $(DEST_JS_DIR)/$(Phoenix_JS_nonmin_BASE) $(DEST_JS_DIR)/s2i-test.js $(DEST_JS_DIR)/web-fc-solve.js $(DEST_JS_DIR)/web-fc-solve-ui.js $(DEST_JS_DIR)/web-fc-solve--expand-moves.js $(DEST_JS_DIR)/web-fc-solve--expand-moves--mega-test.js $(DEST_JS_DIR)/web-fc-solve-tests.js
+OUT_BABEL_JSES = $(patsubst $(DEST_JS_DIR)/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
 
 all: $(DEST_BABEL_JSES)
 
 $(OUT_BABEL_JSES): $(OUT_PREF)/%.js: $(BABEL_SRC_DIR)/%.js
 	babel -o $@ $<
 
-$(DEST_BABEL_JSES): $(D)/js/%.js: $(OUT_PREF)/%.js
+$(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 	$(MULTI_YUI) -o $@ $<
 
-TEST_FCS_VALID_DEST = $(D)/js/web-fc-solve-tests--fcs-validate.js
+TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/web-fc-solve-tests--fcs-validate.js
 
 TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
