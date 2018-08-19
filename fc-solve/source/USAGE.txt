@@ -1192,6 +1192,7 @@ Iteration: 300
 
 This option has been added in Freecell Solver 4.20.0 and is useful for speeding
 up the runtime process, by avoiding excessive output.
+
 [id="state-output_flag"]
 -s , --state-output
 ~~~~~~~~~~~~~~~~~~~
