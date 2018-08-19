@@ -3,8 +3,6 @@
 CURRENT TASKS:
 
 LONG TERM:
-    - Build and minimize jquery-phoenix from its .coffee sources.
-      @ Added [Sun 2018-08-19]
     - Prepare the solver with the GUI.
         * Added [Sat 2013-01-12]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
@@ -154,6 +152,9 @@ COMPLETED TASKS:
         * Credit jquery-phoenix
         * Added [Sat 2013-01-12]
         @ DONE [Wed 2018-08-15]
+    - Build and minimize jquery-phoenix from its .coffee sources
+        @ DONE [Sun 2018-08-19]
+      @ Added [Sun 2018-08-19]
 
 
 
