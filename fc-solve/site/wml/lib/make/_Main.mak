@@ -218,10 +218,15 @@ WEB_RAW_JS = common-methods.js
 
 DEST_WEB_RAW_JS = $(patsubst %,$(D)/js/%,$(WEB_RAW_JS))
 
+Phoenix_CS_BASE = jquery.phoenix.coffee
+Phoenix_JS_nonmin_BASE = jquery.phoenix.js
 Phoenix_JS_BASE = jquery.phoenix.min.js
-Phoenix_JS = lib/jquery/jquery-phoenix/$(Phoenix_JS_BASE)
+Phoenix_DIR = lib/jquery/jquery-phoenix
+Phoenix_JS = $(Phoenix_DIR)/$(Phoenix_JS_BASE)
 Phoenix_JS_DEST = $(D)/js/$(Phoenix_JS_BASE)
 
+lib/babel/js/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE)
+	coffee --compile -o lib/babel/js $<
 dummy: $(Phoenix_JS_DEST)
 
 $(Phoenix_JS_DEST): $(Phoenix_JS)
@@ -250,7 +255,7 @@ FCS_VALID_DEST = $(D)/js/fcs-validate.js
 
 TYPINGS =
 
-DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/libfcs-wrap.js $(D)/js/s2i-test.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js $(D)/js/web-fc-solve-tests.js
+DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/libfcs-wrap.js $(D)/js/$(Phoenix_JS_nonmin_BASE) $(D)/js/s2i-test.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js $(D)/js/web-fc-solve-tests.js
 OUT_BABEL_JSES = $(patsubst $(D)/js/%,lib/out-babel/js/%,$(DEST_BABEL_JSES))
 
 all: $(DEST_BABEL_JSES)
