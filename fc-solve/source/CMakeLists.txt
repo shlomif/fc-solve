@@ -1153,6 +1153,8 @@ ENDIF ()
 INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
 INCLUDE("${private_mod_path}/xxhash_wrapper_bootstrap.cmake")
 
+INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/from-libzero/zerofmtx/")
+ADD_DEFINITIONS("-DFCS_USE_LIBZERO_MUTEX=1")
 ADD_SUBDIRECTORY ("t")
 ADD_SUBDIRECTORY ("board_gen")
 ADD_SUBDIRECTORY ("man")

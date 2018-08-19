@@ -17,6 +17,18 @@
 #include <pthread.h>
 #include "range_solvers.h"
 #include "try_param.h"
+#ifdef FCS_USE_LIBZERO_MUTEX
+#include <zero/mtx.h>
+typedef zerofmtx lock;
+#define LOCK_INIT_VAL FMTXINITVAL
+#define lock_lock(l) fmtxlk(l)
+#define lock_unlock(l) fmtxunlk(l)
+#else
+typedef pthread_mutex_t lock;
+#define LOCK_INIT_VAL PTHREAD_MUTEX_INITIALIZER
+#define lock_lock(l) pthread_mutex_lock(l)
+#define lock_unlock(l) pthread_mutex_unlock(l)
+#endif
 
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
@@ -33,8 +45,8 @@ static void print_help(void)
 }
 #endif
 
-static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t next_board_num_lock;
+static const lock initial_mutex_constant = LOCK_INIT_VAL;
+static lock next_board_num_lock;
 static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
 #define UPDATE_TOTAL_NUM_ITERS_THRESHOLD 1000000
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
@@ -42,7 +54,7 @@ static char **context_argv;
 static int arg = 1, context_argc;
 #endif
 static long long total_num_iters = 0;
-static pthread_mutex_t total_num_iters_lock;
+static lock total_num_iters_lock;
 
 static void *worker_thread(void *void_arg GCC_UNUSED)
 {
@@ -56,10 +68,10 @@ static void *worker_thread(void *void_arg GCC_UNUSED)
     long long board_num;
     do
     {
-        pthread_mutex_lock(&next_board_num_lock);
+        lock_lock(&next_board_num_lock);
         board_num = next_board_num;
         const long long proposed_quota_end = (next_board_num += board_num_step);
-        pthread_mutex_unlock(&next_board_num_lock);
+        lock_unlock(&next_board_num_lock);
 
         const long long quota_end = min(proposed_quota_end, past_end_board);
 
@@ -72,18 +84,18 @@ static void *worker_thread(void *void_arg GCC_UNUSED)
             }
             if (total_num_iters_temp >= UPDATE_TOTAL_NUM_ITERS_THRESHOLD)
             {
-                pthread_mutex_lock(&total_num_iters_lock);
+                lock_lock(&total_num_iters_lock);
                 total_num_iters += total_num_iters_temp;
-                pthread_mutex_unlock(&total_num_iters_lock);
+                lock_unlock(&total_num_iters_lock);
                 total_num_iters_temp = 0;
             }
 
             if (unlikely(board_num % stop_at == 0))
             {
-                pthread_mutex_lock(&total_num_iters_lock);
+                lock_lock(&total_num_iters_lock);
                 long long total_num_iters_copy =
                     (total_num_iters += total_num_iters_temp);
-                pthread_mutex_unlock(&total_num_iters_lock);
+                lock_unlock(&total_num_iters_lock);
                 total_num_iters_temp = 0;
                 fc_solve_print_reached(board_num, total_num_iters_copy);
             }
@@ -91,9 +103,9 @@ static void *worker_thread(void *void_arg GCC_UNUSED)
         }
     } while (board_num < past_end_board);
 
-    pthread_mutex_lock(&total_num_iters_lock);
+    lock_lock(&total_num_iters_lock);
     total_num_iters += total_num_iters_temp;
-    pthread_mutex_unlock(&total_num_iters_lock);
+    lock_unlock(&total_num_iters_lock);
 
 theme_error:
     freecell_solver_user_free(instance);
