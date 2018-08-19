@@ -259,14 +259,14 @@ FCS_VALID_DEST = $(D)/js/fcs-validate.js
 TYPINGS =
 
 DEST_BABEL_JSES = $(D)/js/fcs-base-ui.js $(D)/js/find-fc-deal-ui.js $(D)/js/libfcs-wrap.js $(D)/js/$(Phoenix_JS_nonmin_BASE) $(D)/js/s2i-test.js $(D)/js/web-fc-solve.js $(D)/js/web-fc-solve-ui.js $(D)/js/web-fc-solve--expand-moves.js $(D)/js/web-fc-solve--expand-moves--mega-test.js $(D)/js/web-fc-solve-tests.js
-OUT_BABEL_JSES = $(patsubst $(D)/js/%,lib/out-babel/js/%,$(DEST_BABEL_JSES))
+OUT_BABEL_JSES = $(patsubst $(D)/js/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
 
 all: $(DEST_BABEL_JSES)
 
-$(OUT_BABEL_JSES): lib/out-babel/js/%.js: $(BABEL_SRC_DIR)/%.js
+$(OUT_BABEL_JSES): $(OUT_PREF)/%.js: $(BABEL_SRC_DIR)/%.js
 	babel -o $@ $<
 
-$(DEST_BABEL_JSES): $(D)/%.js: lib/out-babel/%.js
+$(DEST_BABEL_JSES): $(D)/js/%.js: $(OUT_PREF)/%.js
 	$(MULTI_YUI) -o $@ $<
 
 TEST_FCS_VALID_DEST = $(D)/js/web-fc-solve-tests--fcs-validate.js
