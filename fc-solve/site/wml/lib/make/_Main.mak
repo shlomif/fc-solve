@@ -225,8 +225,11 @@ Phoenix_DIR = lib/jquery/jquery-phoenix
 Phoenix_JS = $(Phoenix_DIR)/$(Phoenix_JS_BASE)
 Phoenix_JS_DEST = $(D)/js/$(Phoenix_JS_BASE)
 
-lib/babel/js/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE)
-	coffee --compile -o lib/babel/js $<
+BABEL_SRC_DIR = lib/babel/js
+
+$(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE)
+	coffee --compile -o $(BABEL_SRC_DIR) $<
+
 dummy: $(Phoenix_JS_DEST)
 
 $(Phoenix_JS_DEST): $(Phoenix_JS)
@@ -260,7 +263,7 @@ OUT_BABEL_JSES = $(patsubst $(D)/js/%,lib/out-babel/js/%,$(DEST_BABEL_JSES))
 
 all: $(DEST_BABEL_JSES)
 
-$(OUT_BABEL_JSES): lib/out-babel/%.js: lib/babel/%.js
+$(OUT_BABEL_JSES): lib/out-babel/js/%.js: $(BABEL_SRC_DIR)/%.js
 	babel -o $@ $<
 
 $(DEST_BABEL_JSES): $(D)/%.js: lib/out-babel/%.js
