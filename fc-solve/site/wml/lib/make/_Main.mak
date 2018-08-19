@@ -62,7 +62,8 @@ DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(DEST_mem_dirs))
 DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS = $(patsubst %,%/$(JS_MEM_BASE__ASMJS),$(DEST_mem_dirs))
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
 BASE_BIGINT_JS = big-integer.js qunit.js
-DEST_BIGINT_JS = $(patsubst %,$(DEST_JS_DIR)/%,$(BASE_BIGINT_JS))
+dest_jsify = $(addprefix $(DEST_JS_DIR)/,$(1))
+DEST_BIGINT_JS = $(call dest_jsify,$(BASE_BIGINT_JS))
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
@@ -217,7 +218,7 @@ $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 
 WEB_RAW_JS = common-methods.js
 
-DEST_WEB_RAW_JS = $(patsubst %,$(DEST_JS_DIR)/%,$(WEB_RAW_JS))
+DEST_WEB_RAW_JS = $(call dest_jsify,$(WEB_RAW_JS))
 
 Phoenix_CS_BASE = jquery.phoenix.coffee
 Phoenix_JS_nonmin_BASE = jquery.phoenix.js
@@ -241,7 +242,7 @@ dummy: $(DEST_WEB_RAW_JS)
 $(DEST_WEB_RAW_JS): $(DEST_JS_DIR)/%: lib/web-raw-js/%
 	$(MULTI_YUI) -o $@ $<
 
-WEB_FCS_UI_JS_SOURCES =  $(DEST_JS_DIR)/web-fc-solve.js $(DEST_JS_DIR)/web-fc-solve-ui.js
+WEB_FCS_UI_JS_SOURCES =  $(call dest_jsify,web-fc-solve.js web-fc-solve-ui.js)
 
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
@@ -259,7 +260,7 @@ FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
 
 TYPINGS =
 
-DEST_BABEL_JSES = $(DEST_JS_DIR)/fcs-base-ui.js $(DEST_JS_DIR)/find-fc-deal-ui.js $(DEST_JS_DIR)/libfcs-wrap.js $(DEST_JS_DIR)/$(Phoenix_JS_nonmin_BASE) $(DEST_JS_DIR)/s2i-test.js $(DEST_JS_DIR)/web-fc-solve.js $(DEST_JS_DIR)/web-fc-solve-ui.js $(DEST_JS_DIR)/web-fc-solve--expand-moves.js $(DEST_JS_DIR)/web-fc-solve--expand-moves--mega-test.js $(DEST_JS_DIR)/web-fc-solve-tests.js
+DEST_BABEL_JSES = $(call dest_jsify,fcs-base-ui.js find-fc-deal-ui.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js web-fc-solve.js web-fc-solve-ui.js web-fc-solve--expand-moves.js web-fc-solve--expand-moves--mega-test.js web-fc-solve-tests.js)
 OUT_BABEL_JSES = $(patsubst $(DEST_JS_DIR)/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
 
 all: $(DEST_BABEL_JSES)
