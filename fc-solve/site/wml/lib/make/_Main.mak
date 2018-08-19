@@ -24,6 +24,7 @@ ifeq ($(PROD),1)
 endif
 
 DEST_JS_DIR = $(D)/js
+BASE_FC_SOLVE_SOURCE_DIR := ../../source
 IMAGES = $(addprefix $(D)/,$(SRC_IMAGES))
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
@@ -112,7 +113,7 @@ $(OUT_BIGINT_JS): %:
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
-$(FIND_INDEX__PYJS__TGT): ../../source/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
+$(FIND_INDEX__PYJS__TGT): $(BASE_FC_SOLVE_SOURCE_DIR)/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
 	cat $< lib/js-epilogue.py > $(FIND_INDEX__PYJS__PY)
 	cd $(FIND_INDEX__PYJS__TGT_DIR) && python3 build.py
 	perl -i -lpe 's:(MAX_SHIFTREDUCE_LOOPS\s*=\s*1000)(;):$${1}00$${2}:g' $(PIV)/*.js
@@ -143,16 +144,16 @@ $(D) $(SUBDIRS): % :
 
 RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 
-$(ARC_DOCS): $(D)/% : ../../source/%.txt
+$(ARC_DOCS): $(D)/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%.txt
 	cp -f "$<" "$@"
 
-$(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: ../../source/%
+$(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
 	cp -f "$<" "$@"
 
-$(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: ../../source/%
+$(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
 	$(MULTI_YUI) -o $@ $<
 
-$(DOCS_HTMLS): $(D)/docs/distro/% : ../../source/%
+$(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
 	cat "$<" | perl -0777 -lapE 's#<table #<table summary="identifiers on the left, descriptions on the right" #g' > "$@"
 
 PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
@@ -167,7 +168,7 @@ $(RAW_SUBDIRS): $(D)/% : src/%
 	rm -fr $@
 	cp -r $< $@
 
-FC_SOLVE_SOURCE_DIR := $(PWD)/../../source
+FC_SOLVE_SOURCE_DIR := $(PWD)/$(BASE_FC_SOLVE_SOURCE_DIR)
 
 LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR = $(LIBFREECELL_SOLVER_JS_DIR)/CMAKE-BUILD-dir
 LIBFREECELL_SOLVER_JS_DIR__CMAKE_CACHE = $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR)/CMakeCache.txt
@@ -317,7 +318,7 @@ $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
 $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
 	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] % 1_000_000 == 0))' < "$<" > "$@"
 
-$(D)/js-fc-solve/text/index.html: lib/FreecellSolver/ExtractGames.pm ../../source/USAGE.txt
+$(D)/js-fc-solve/text/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_SOLVE_SOURCE_DIR)/USAGE.txt
 
 $(D)/charts/fc-pro--4fc-intractable-deals--report/index.html $(D)/charts/fc-pro--4fc-deals-solvability--report/index.html: $(FC_PRO_4FC_FILTERED_TSVS) $(FC_PRO_4FC_TSVS)
 
