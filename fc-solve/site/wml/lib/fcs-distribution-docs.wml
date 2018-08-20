@@ -29,5 +29,17 @@
 <fcs_document fn="TODO" desc="The to-do list" />
 <fcs_document fn="AUTHORS" desc="List of authors and contributors" />
 <fcs_document fn="COPYING" desc="The licensing/copyright terms file of Freecell Solver" />
+<set-var fn="HACKING" />
+<tr>
+<td>
+<a href="$(ROOT)/docs/distro/<get-var fn />.html">CONTRIBUTING</a>
+</td>
+<td>
+<a href="$(ROOT)/<get-var fn />">Plaintext</a>
+</td>
+<td>
+Some guidelines for how to contribute. Note <a href="http://paulgraham.com/gba.html">this</a> regarding the "HACKING" in the filename.
+</td>
+</tr>
 </table>
 </define-tag>

@@ -4,6 +4,7 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2016-09-22
 :Revision: $Id$
 
+[id="benchmarking"]
 Benchmarking a Freecell Solver Release
 --------------------------------------
 
@@ -45,6 +46,7 @@ https://github.com/shlomif/shlomif-computer-settings/blob/master/shlomif-setting
 DUMPS-*/*+ and copy-and-paste the results to the Freecell Solver developers
 with specifications of your computer that are as detailed as possible.
 
+[id="test_suite"]
 Getting the test suite up and running
 -------------------------------------
 
@@ -124,6 +126,7 @@ git clone https://github.com/shlomif/fc-solve
 +
 	$ make test
 
+[id="split_fcc_fc_solver"]
 Running the split_fcc_fc_solver
 -------------------------------
 
@@ -150,6 +153,7 @@ depth_run 4
 Note that currently some of the runs fail only to succeed on a rerun (
 a https://en.wikipedia.org/wiki/Heisenbug[Heisenbug] ).
 
+[id="style_guidelines"]
 Style Guidelines
 ----------------
 
@@ -159,6 +163,7 @@ based on the preferences of its primary author (Shlomi Fish). The style is
 largely enforced by the "clang-format" formatter (using its 6.0.1 version
 currently). Some guidelines for the style will be given here.
 
+[id="four-spaces"]
 4 Spaces for Indentation
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -180,6 +185,7 @@ if (COND())
 }
 ----------------
 
+[id="curly-braces"]
 Curly Braces Alignment
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -211,6 +217,7 @@ if ( COND() )
   }
 ----------------
 
+[id="comments-precede"]
 Comments should precede the lines performing the action
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -228,6 +235,7 @@ for ( dc = 0 ; dc < c-1 ; dc++ )
 
 +TODO: Fill in+
 
+[id="one-line-clauses"]
 One line clauses should be avoided
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -257,6 +265,7 @@ while (COND())
 }
 ----------------
 
+[id="id-naming"]
 Identifier Naming Conventions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -290,6 +299,7 @@ to "befs" in the non-external interface.)
 dfs - Depth-First Search (one of the types of searches used by Freecell Solver)
 ----------------
 
+[id="if-0"]
 Don't comment-out - use #if 0 to temporarily remove code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
