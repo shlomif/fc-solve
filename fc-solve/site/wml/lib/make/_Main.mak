@@ -144,7 +144,7 @@ $(D) $(SUBDIRS): % :
 
 RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 
-$(ARC_DOCS): $(D)/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%.txt
+$(ARC_DOCS): $(D)/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%.asciidoc
 	cp -f "$<" "$@"
 
 $(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
@@ -318,7 +318,7 @@ $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
 $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
 	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] % 1_000_000 == 0))' < "$<" > "$@"
 
-$(D)/js-fc-solve/text/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_SOLVE_SOURCE_DIR)/USAGE.txt
+$(D)/js-fc-solve/text/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_SOLVE_SOURCE_DIR)/USAGE.asciidoc
 
 $(D)/charts/fc-pro--4fc-intractable-deals--report/index.html $(D)/charts/fc-pro--4fc-deals-solvability--report/index.html: $(FC_PRO_4FC_FILTERED_TSVS) $(FC_PRO_4FC_TSVS)
 

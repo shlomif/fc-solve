@@ -739,6 +739,7 @@ move_stack_t
 movie
 movie's
 msec
+mutexes
 myboard
 myname
 namespace
@@ -893,6 +894,7 @@ tlm
 to-javascript
 todate
 toons-for-twenty-somethings
+try_lock
 two-freecell
 two-freecells
 txt
