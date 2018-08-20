@@ -79,7 +79,9 @@ class FC_Solve_UI {
 
             let _render_state = function(s, pre_indexes) {
                 return "<li class=\"state\"><strong class=\"step_idx\">" +
-                    pre_indexes.map((i) => (((i >> 1)+1)+".")).join('') + "</strong><pre>" + _filt(s.str) +
+                    pre_indexes.map((i) => (
+                        ((i >> 1)+1)+".")
+                    ).join('') + "</strong><pre>" + _filt(s.str) +
                     "</pre></li>\n\n";
             };
 
@@ -125,7 +127,7 @@ class FC_Solve_UI {
                         _out_inner_move(i);
                         inner_html += _render_state(
                             inner_moves[i+1],
-                                                    [idx, i],
+                            [idx, i]
                         );
                     }
                     _out_inner_move(inner_moves.length-1);
