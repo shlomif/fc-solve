@@ -86,7 +86,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 
 <div class="output_form">
 <div id="dynamic_output"></div>
-<textarea class="emscripten phoenix" id="output" cols="50" rows="30" readonly="readonly"></textarea>
+<textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
 
 <div class="controls">
 
