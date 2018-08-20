@@ -17,8 +17,8 @@ READ_VERSION_FROM_VER_TXT()
 SET(CPACK_PACKAGE_NAME "freecell-solver")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Freecell Solver")
 SET(CPACK_PACKAGE_VENDOR "Shlomi Fish")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.asciidoc")
+SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.asciidoc")
 
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_DESCRIPTION_SUMMARY} ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 
@@ -925,8 +925,8 @@ IF (found_python3_random2)
     )
 ENDIF ()
 
-SET (_readme "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
-SET (_usage  "${CMAKE_CURRENT_SOURCE_DIR}/USAGE.txt")
+SET (_readme "${CMAKE_CURRENT_SOURCE_DIR}/README.asciidoc")
+SET (_usage  "${CMAKE_CURRENT_SOURCE_DIR}/USAGE.asciidoc")
 SET (_fc_solve_txt "fc-solve.txt")
 
 ADD_CUSTOM_COMMAND(
@@ -950,8 +950,9 @@ IF (FCS_BUILD_DOCS)
     FIND_PACKAGE(Asciidoc)
 ENDIF ()
 
-SET (_docfiles "AUTHORS.txt" "COPYING.txt" "HACKING.txt" "INSTALL.txt"
-    "NEWS.txt" "README.txt" "TODO.txt" "USAGE.txt" "${_fc_solve_txt}"
+SET (_docfiles "AUTHORS.asciidoc" "COPYING.asciidoc" "HACKING.asciidoc"
+    "INSTALL.asciidoc" "NEWS.asciidoc" "README.asciidoc" "TODO.asciidoc"
+    "USAGE.asciidoc" "${_fc_solve_txt}"
 )
 
 SET (docs_to_install)
@@ -995,7 +996,7 @@ IF(ASCIIDOC_FOUND)
         SET (htmls )
         IF (NOT "${_file}" STREQUAL "${_fc_solve_txt}")
             SET (_flags )
-            IF ("${_file}" STREQUAL "NEWS.txt")
+            IF ("${_file}" STREQUAL "NEWS.asciidoc")
                 LIST(APPEND _flags "--attribute=idprefix=news__")
             ENDIF ()
             ADD_CUSTOM_COMMAND(
