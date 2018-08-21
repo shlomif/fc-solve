@@ -72,10 +72,12 @@ static void *worker_thread(void *void_arg GCC_UNUSED)
             }
             if (total_num_iters_temp >= UPDATE_TOTAL_NUM_ITERS_THRESHOLD)
             {
-                pthread_mutex_lock(&total_num_iters_lock);
-                total_num_iters += total_num_iters_temp;
-                pthread_mutex_unlock(&total_num_iters_lock);
-                total_num_iters_temp = 0;
+                if (!pthread_mutex_trylock(&total_num_iters_lock))
+                {
+                    total_num_iters += total_num_iters_temp;
+                    pthread_mutex_unlock(&total_num_iters_lock);
+                    total_num_iters_temp = 0;
+                }
             }
 
             if (unlikely(board_num % stop_at == 0))
