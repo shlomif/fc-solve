@@ -1,85 +1,72 @@
-"use strict";
+import { jq_qs } from './jq_qs';
+import * as w from './web-fc-solve';
+// import jq_querystring as jq_querystring;
 
-define(["web-fc-solve"], function(w) {
 const entityMap = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
     '"': '&quot;',
+    "&": "&amp;",
     "'": '&#39;',
     "/": '&#x2F;',
+    "<": "&lt;",
+    ">": "&gt;",
 };
 
-function escapeHtml(string) {
+export function escapeHtml(string) {
     return String(string).replace(/[&<>"'\/]/g, (s) => entityMap[s]);
 }
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
-function populate_input_with_numbered_deal() {
-    let input_s = $('#deal_number').val();
+export function populate_input_with_numbered_deal() {
+    const input_s: string = $('#deal_number').val() as string;
     if (! input_s.match(/^[1-9][0-9]*$/)) {
         alert("Wrong input - please enter a positive integer.");
         return;
     }
 
-    let previous_deal_idx = parseInt(input_s);
+    const previous_deal_idx = parseInt(input_s, 10);
 
     $("#stdin").val(
         "# MS Freecell Deal #" + previous_deal_idx +
         "\n#\n" +
-        w.deal_ms_fc_board(previous_deal_idx)
+        w.deal_ms_fc_board(previous_deal_idx),
     );
 
     return;
 }
 
-class FC_Solve_Bookmarking {
+export class FC_Solve_Bookmarking {
+    private bookmark_controls;
+    private show;
     constructor(args) {
-        let that = this;
+        const that = this;
 
         that.bookmark_controls = args.bookmark_controls;
         that.show = args.show;
 
         return;
     }
-    _get_loc() {
-        return window.location;
-    }
-    _get_base_url() {
-        let that = this;
-
-        const loc = that._get_loc();
-        return loc.protocol + '//' + loc.host + loc.pathname;
-    }
-    _each_control(cb) {
-        let that = this;
-
-        that.bookmark_controls.forEach(cb);
-
-        return;
-    }
-    on_bookmarking() {
-        let that = this;
+    public on_bookmarking() {
+        const that = this;
 
         function get_v(myid) {
-            let ctl = $('#' + myid);
+            const ctl = $('#' + myid);
             return ctl.is(':checkbox') ?
                 (ctl.is(':checked') ? '1' : '0') : ctl.val();
         }
 
-        let control_values = {};
+        const control_values = {};
 
-        that._each_control(function(myid) {
+        that._each_control((myid) => {
             control_values[myid] = get_v(myid);
         });
 
         const bookmark_string = that._get_base_url() + '?' +
-            $.querystring(control_values);
+            jq_qs.jq_querystring(control_values);
 
         $("#fcs_bm_results_input").val(bookmark_string);
 
-        let a_elem = $("#fcs_bm_results_a");
+        const a_elem = $("#fcs_bm_results_a");
         // Too long to be effective.
         // a_elem.text(bookmark_string);
         a_elem.attr('href', bookmark_string);
@@ -88,8 +75,8 @@ class FC_Solve_Bookmarking {
 
         return;
     }
-    restore_bookmark() {
-        let that = this;
+    public restore_bookmark() {
+        const that = this;
 
         const qs = that._get_loc().search;
 
@@ -98,24 +85,24 @@ class FC_Solve_Bookmarking {
         }
 
         // Remove trailing 1.
-        const params = $.querystring(qs.substr(1));
+        const params = jq_qs.jq_querystring(qs.substr(1));
 
-        that._each_control(function(myid) {
-            let ctl = $('#' + myid);
+        that._each_control((myid) => {
+            const ctl = $('#' + myid);
             if (ctl.is(':checkbox')) {
-                ctl.prop('checked', ((params[myid] == "1") ? true : false));
+                ctl.prop('checked', ((params[myid] === "1") ? true : false));
             } else {
                 ctl.val(params[myid]);
             }
         });
 
-        that.show.forEach(function(rec) {
+        that.show.forEach((rec) => {
             const id = rec.id;
             const deps = rec.deps;
 
             let should_toggle = false;
-            deps.forEach(function(d) {
-                if ($("#" + d).val().length > 0) {
+            deps.forEach((d) => {
+                if (($("#" + d).val() as string).length > 0) {
                     should_toggle = true;
                 }
             });
@@ -129,11 +116,20 @@ class FC_Solve_Bookmarking {
 
         return;
     }
-}
+    private _get_loc() {
+        return window.location;
+    }
+    private _get_base_url() {
+        const that = this;
 
-    return {
-        FC_Solve_Bookmarking: FC_Solve_Bookmarking,
-        escapeHtml: escapeHtml,
-        populate_input_with_numbered_deal: populate_input_with_numbered_deal,
-    };
-});
+        const loc = that._get_loc();
+        return loc.protocol + '//' + loc.host + loc.pathname;
+    }
+    private _each_control(cb) {
+        const that = this;
+
+        that.bookmark_controls.forEach(cb);
+
+        return;
+    }
+}

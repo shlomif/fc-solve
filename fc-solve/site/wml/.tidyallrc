@@ -15,4 +15,4 @@ ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/* lib/App/Deps
 [TSLint]
 argv = -c $ROOT/tslint.json
 select = src/**/*.ts
-ignore = src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts
+ignore = src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts src/js/jq_qs.d.ts
