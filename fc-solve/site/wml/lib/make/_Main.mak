@@ -258,8 +258,6 @@ $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS): %: $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/
 	cp -f $< $@
 
 FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
-FCS_Expand_DEST = $(DEST_JS_DIR)/web-fc-solve--expand-moves.js
-FCS_web_DEST = $(DEST_JS_DIR)/web-fc-solve.js
 
 TYPINGS =
 
@@ -276,7 +274,7 @@ $(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 
 TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/web-fc-solve-tests--fcs-validate.js
 
-TYPESCRIPT_DEST_FILES = $(FCS_Expand_DEST) $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST) $(FCS_web_DEST)
+TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST) $(call dest_jsify,web-fc-solve.js web-fc-solve--expand-moves.js)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
 TYPESCRIPT_COMMON_DEFS_FILES =
 
