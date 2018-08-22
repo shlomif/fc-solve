@@ -62,9 +62,9 @@ DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text 
 DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(DEST_mem_dirs))
 DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS = $(patsubst %,%/$(JS_MEM_BASE__ASMJS),$(DEST_mem_dirs))
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
-BASE_BIGINT_JS = big-integer.js qunit.js
+BASE_BROWSERIFY_JS = big-integer.js qunit.js
 dest_jsify = $(addprefix $(DEST_JS_DIR)/,$(1))
-DEST_BIGINT_JS = $(call dest_jsify,$(BASE_BIGINT_JS))
+DEST_BROWSERIFY_JS = $(call dest_jsify,$(BASE_BROWSERIFY_JS))
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
@@ -100,15 +100,15 @@ dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
 
 dummy: $(FIND_INDEX__PYJS__TARGETS)
 
-dummy: $(DEST_BIGINT_JS)
+dummy: $(DEST_BROWSERIFY_JS)
 
 OUT_PREF = lib/out-babel/js
-OUT_BIGINT_JS = $(patsubst %,$(OUT_PREF)/%,$(BASE_BIGINT_JS))
+OUT_BROWSERIFY_JS = $(patsubst %,$(OUT_PREF)/%,$(BASE_BROWSERIFY_JS))
 
-$(DEST_BIGINT_JS): $(DEST_JS_DIR)/%: $(OUT_PREF)/%
+$(DEST_BROWSERIFY_JS): $(DEST_JS_DIR)/%: $(OUT_PREF)/%
 	$(MULTI_YUI) -o $@ $<
 
-$(OUT_BIGINT_JS): %:
+$(OUT_BROWSERIFY_JS): %:
 	base="$(patsubst $(OUT_PREF)/%.js,%,$@)" ; browserify -s "$$base" -r "$$base" -o $@
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
