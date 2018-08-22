@@ -13,4 +13,6 @@ select = **/*.{pl,pm,t}
 ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/* lib/App/Deps/Verify.pm
 
 [TSLint]
+argv = -c $ROOT/tslint.json
 select = src/**/*.ts
+ignore = src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts
