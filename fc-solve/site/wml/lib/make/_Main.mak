@@ -243,7 +243,7 @@ dummy: $(DEST_WEB_RAW_JS)
 $(DEST_WEB_RAW_JS): $(DEST_JS_DIR)/%: lib/web-raw-js/%
 	$(MULTI_YUI) -o $@ $<
 
-WEB_FCS_UI_JS_SOURCES =  $(call dest_jsify,web-fc-solve.js web-fc-solve-ui.js)
+WEB_FCS_UI_JS_SOURCES =  $(call dest_jsify,web-fc-solve-ui.js)
 
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
@@ -259,10 +259,11 @@ $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS): %: $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/
 
 FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
 FCS_Expand_DEST = $(DEST_JS_DIR)/web-fc-solve--expand-moves.js
+FCS_web_DEST = $(DEST_JS_DIR)/web-fc-solve.js
 
 TYPINGS =
 
-DEST_BABEL_JSES = $(call dest_jsify,fcs-base-ui.js find-fc-deal-ui.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js web-fc-solve.js web-fc-solve-ui.js web-fc-solve--expand-moves--mega-test.js web-fc-solve-tests.js)
+DEST_BABEL_JSES = $(call dest_jsify,fcs-base-ui.js find-fc-deal-ui.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js web-fc-solve-ui.js web-fc-solve--expand-moves--mega-test.js web-fc-solve-tests.js)
 OUT_BABEL_JSES = $(patsubst $(DEST_JS_DIR)/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
 
 all: $(DEST_BABEL_JSES)
@@ -275,11 +276,11 @@ $(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 
 TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/web-fc-solve-tests--fcs-validate.js
 
-TYPESCRIPT_DEST_FILES = $(FCS_Expand_DEST) $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST)
+TYPESCRIPT_DEST_FILES = $(FCS_Expand_DEST) $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST) $(FCS_web_DEST)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
 TYPESCRIPT_COMMON_DEFS_FILES =
 
-JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js lib/for-node/js/web-fc-solve.js lib/for-node/js/web-fc-solve-tests.js
+JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js lib/for-node/js/web-fc-solve-tests.js
 
 all: $(JS_DEST_FILES__NODE)
 
@@ -289,10 +290,10 @@ $(JS_DEST_FILES__NODE): lib/for-node/%.js: dest/%.js
 all: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
 
 $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
-	tsc --module amd --out $@ $(TYPESCRIPT_COMMON_DEFS_FILES) $<
+	tsc --module amd --moduleResolution node --out $@ $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
 $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts
-	tsc --target es5 --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
+	tsc --target es5 --moduleResolution node --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
 TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js
