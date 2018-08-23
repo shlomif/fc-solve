@@ -260,6 +260,26 @@ public GitHub projects.
 </p>
 </li>
 
+<li>
+<p>
+<a href="https://www.appveyor.com/">AppVeyor</a> - a
+hosted <a href="http://en.wikipedia.org/wiki/Continuous_integration">continuous integration (“CI”)</a> service for Windows and Linux builds, provided
+free-of-charge for public GitHub/Bitbucket/GitLab/etc. projects.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://cyan4973.github.io/xxHash/">xxHash</a> - a fast non-cryptographic hash function.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/kripken/emscripten">Emscripten</a> - an LLVM
+to JavaScript compiler.
+</p>
+</li>
 </ul>
 
 <h2 id="front_ends">Programs that use Freecell Solver</h2>

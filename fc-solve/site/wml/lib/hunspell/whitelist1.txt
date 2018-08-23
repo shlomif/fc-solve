@@ -1199,7 +1199,9 @@ js
 
 ==== In: dest/links.html
 
+GitLab
 Screencasts
+xxHash
 
 ==== In: dest/pysol/index.html
 
