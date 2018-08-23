@@ -8,7 +8,7 @@ CSS = $(XHTML)/style.css
 
 DOCMAKE = docmake -v --make
 
-UPLOAD_PATH = shlomif@shell.berlios.de:/home/groups/fc-solve/htdocs/arch_doc/
+UPLOAD_PATH = hostgator:domains/fc-solve/public_html/arch_doc/
 
 all: xhtml pdf rtf
 
