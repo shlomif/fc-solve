@@ -291,7 +291,10 @@ to JavaScript compiler.
 the <a href="http://www.kde.org/">KDE</a> desktop for UNIXes.
 It used to use Freecell Solver to solve its Freecell boards, starting of the
 version that was shipped with KDE 2.1. After KDE 4.0, it converted to use
-a modified version of <a href="#patsolve">Tom Holroyd’s patsolve</a>.
+a modified version of <a href="#patsolve">Tom Holroyd’s patsolve</a>. Note
+that in the recent KDE 5 pre-release of kpat a patch by the Freecell Solver
+developers was applied that converted it to use the latter as a solver for
+Freecell and Simple Simon.
 </p>
 </li>
 
@@ -304,7 +307,7 @@ Direct-X Freecell Implementation for Windows. Shareware.
 
 <li id="freecell-pro">
 <p>
-<a href="http://www.rrhistorical.com/rrdata/Fcpro65/">FreeCell Pro</a> - a
+<a href="http://cards.wikia.com/wiki/FreeCell_Pro">FreeCell Pro</a> - a
 free Freecell implementation for Windows with many professional features.
 Integrated Tom Holroyd's Patsolve, and the original Don Woods' solver
 as well as my own. <a href="don_woods.html">Source code</a> is available.
@@ -316,9 +319,8 @@ as well as my own. <a href="don_woods.html">Source code</a> is available.
 <a href="http://pysolfc.sourceforge.net/">PySolFC</a> - a collection of more
 than 1,000 Solitaire card games originally based on PySol. Open source under
 version 3 of the GPL. Has optional support for playing using the Freecell
-Solver executable. Note that Shlomi Fish maintains several
-<a href="https://github.com/shlomif/PySolFC">branches with enhancements</a>
-for it on GitHub.
+Solver executable. Note that Shlomi Fish has adopted it and now co-maintains
+it, after the previous maintainers became <a href="https://en.wikipedia.org/wiki/Missing_in_action_(disambiguation)">missing in action</a>.
 </p>
 </li>
 
@@ -376,8 +378,11 @@ in Freecell Solver.
 an interview with Adrian Ettlinger, the maintainer of
 <a href="freecell-pro">FreeCell Pro</a>, who
 helped in adapting it to make use of Freecell Solver. Adrian also
-maintains <a href="http://www.rrhistorical.com/rrdata/">a page about the
+maintained <a href="http://www.rrhistorical.com/rrdata/">a page about the
 American Railroad History Database</a>.
+</p>
+<p>
+Sadly, he passed away on 2013 and there is <a href="https://en.wikipedia.org/wiki/Adrian_Ettlinger">a wikipedia page about him</a>.
 </p>
 </li>
 
@@ -509,6 +514,10 @@ a solver for Freecell written in x86 assembly for DOS and compatible
 environments. Reportedly very fast and uses some interesting techniques.
 See <a href="http://groups.yahoo.com/group/fc-solve-discuss/messages/685">some
 discussion of it</a> in the fc-solve-discuss mailing list.
+</p>
+<p>
+Discussions with Mr. Campbell have inspired some techniques for generating shorter
+solutions including the "flares" feature.
 </p>
 </li>
 
@@ -826,6 +835,13 @@ and Baker's Game.
 <a href="http://www.solitaireking.com/">Solitaire King</a> - another
 online Solitaire site. Includes <a href="http://www.solitaireking.com/hebrew">a
 version with a Hebrew interface</a>.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://solitaire.gg/">Solitaire.gg</a> - a web-based solitaire
+with open source code written in <a href="https://en.wikipedia.org/wiki/Scala_(programming_language)">Scala</a>.
 </p>
 </li>
 
