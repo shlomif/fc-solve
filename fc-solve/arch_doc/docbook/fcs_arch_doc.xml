@@ -7,6 +7,7 @@
             <author><personname><firstname>Shlomi</firstname><surname>Fish</surname></personname><affiliation>
                     <address>
                         <email>shlomif@shlomifish.org</email>
+                        <uri type="homepage" xlink:href="http://www.shlomifish.org/">Shlomi Fish’s Homepage</uri>
                     </address>
                 </affiliation></author>
         </authorgroup>
@@ -24,13 +25,14 @@
                 This work is licensed under the
                 <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://creativecommons.org/licenses/by/3.0/">Creative
                     Commons Attribution 3.0 Unported License</link> (or at
-                your option a greater version of it).
+                your option a greater version of it). Whatever source code
+                is provided here is licensed under the <link xlink:href="https://en.wikipedia.org/wiki/MIT_License">Expat variant of the MIT License</link>.
             </para>
             <para>
                 It was written by
                 <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.shlomifish.org/">Shlomi Fish</link>,
                 and one should attribute a derived work to him, while linking
-                to his homepage.
+                to his homepage. Please see <link xlink:href="http://www.shlomifish.org/meta/copyrights/">my interpretation of the licenses</link>.
             </para>
         </legalnotice>
         <revhistory>
