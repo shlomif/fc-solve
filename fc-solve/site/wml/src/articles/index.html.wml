@@ -1,0 +1,11 @@
+#include "template.wml"
+#include "fcs-distribution-docs.wml"
+
+<latemp_subject "Freecell Solver - Articles and Reports" />
+
+<h2 id="docs">Documents</h2>
+
+<h3 class="plain"><a href="$(ROOT)/articles/how-we-benchmark/v1/">How We Benchmark Freecell Solver (Version 1)</a></h3>
+
+<h3 class="plain"><a href="$(ROOT)/charts/fc-pro--4fc-deals-solvability--report/">Report: The solvability statistics of the Freecell Pro 4-Freecells Deals</a></h3>
+
