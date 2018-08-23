@@ -66,6 +66,14 @@
                     yet, but I hope to remedy it soon.
                 </revremark>
             </revision>
+            <revision>
+                <revnumber>2082</revnumber>
+                <date>2018-08-23</date>
+                <authorinitials>shlomif</authorinitials>
+                <revremark>
+                    Converted to DocBook 5.
+                </revremark>
+            </revision>
 
         </revhistory>
     </info>
@@ -252,7 +260,7 @@
             </para>
             <para>
 
-                <filename>lib.c</filename> contain the API functions used by
+                <filename>lib.c</filename> contains the API functions used by
                 the programmer. <filename>cmd_line.c</filename> is an API to
                 analyse a Freecell Solver command line. It itself uses only the
                 <filename>lib.c</filename> API. It provides a more flexible
@@ -277,8 +285,8 @@
 
 
             <para>
-                Freecell Solver solves boards by using Depth-First Search or
-                Best-First-Search scans starting from the initial board. It
+                Freecell Solver solves boards by using <link xlink:href="https://en.wikipedia.org/wiki/Depth-first_search">Depth-First Search</link> or
+                <link xlink:href="https://en.wikipedia.org/wiki/Best-first_search">Best-First-Search</link> scans starting from the initial board. It
                 has a collection of the states, and constructs a tree of the
                 states descending from each state to its "parent". A parent
                 state means the state in which from which it was discovered.
@@ -286,7 +294,7 @@
 
             <para>
 
-                Freecell Solver can run several "tests" on each state. Each test
+                Freecell Solver can run several "move functions" on each state. Each move
                 generates a list of derived states. Some of the tests are
                 Freecell meta-move ones, some are Freecell atomic move ones,
                 and the others are Simple Simon meta-move ones. The order of
@@ -566,7 +574,7 @@
                 </para>
             </section>
 
-            <section xml:id="caas.c"><info><title>caas.c</title></info>
+            <section xml:id="check_and_add_state.c"><info><title>check_and_add_state.c</title></info>
 
                 <para>
                     This file contains the
@@ -706,21 +714,10 @@
 
             <para>
                 As can be seen in <filename>state.h</filename>, Freecell Solver
-                supports three ways to represent a state:
+                supports two ways to represent a state:
             </para>
             <para>
                 <orderedlist inheritnum="ignore" continuation="restarts">
-                    <listitem>
-                        <para>
-                            <emphasis>Debug States</emphasis> -
-                            in this configuration, stack counters,
-                            and cards are represented as 32-bit quantities.
-                            This configuration consumes a lot of memory, and is
-                            the slowest of the three. It is however useful for
-                            debugging, as the debugger will display the state
-                            data-structure very nicely.
-                        </para>
-                    </listitem>
                     <listitem>
                         <para>
                             <emphasis>Compact States</emphasis> - in this
@@ -777,7 +774,7 @@
 
             <para>
                 The stacks are kept in their own stack collection in the
-                freecell_solver_instance struct. When a test wishes to
+                freecell_solver_instance struct. When a move function wishes to
                 create a derived states, it first copies the state, and then
                 marks the flags of all the stacks as cleared. (check
                 <symbol>(*Mark STACKS_COW_CLEAR *)</symbol> in the code).
@@ -999,16 +996,15 @@
         <section xml:id="scm_generating_the_site"><info><title>Generating the Site</title></info>
 
             <para>
-                The site lies in the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://svn.berlios.de/viewcvs/fc-solve/trunk/fc-solve/site/wml/">sub-directory of
-                    fc-solve/site/wml in the Subversion's trunk</link> and
+                The site lies in the <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/site/wml">sub-directory of
+                    fc-solve/site/wml in the VCS repository's trunk</link> and
                 is generated using GNU Make, and
                 <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://thewml.org/">Website
                     Meta Language</link> .
             </para>
 
             <para>
-                The <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://fc-solve.berlios.de/">main site
-                    at BerliOS</link>
+                The <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://fc-solve.shlomifish.org/">main site </link>
                 is generated from a makefile and uploaded to
                 its place using rsync.
             </para>
@@ -1431,10 +1427,10 @@
                     <term>Test Groups</term>
                     <listitem>
                         <para>
-                            A grouping of tests that dictate which one should
-                            be performed one after the and placed into the same
-                            derived states list. Afterwards, this list can be
-                            randomised, or prioritised.
+                            A grouping of tests/move funcs that dictate which
+                            one should be performed one after the and placed
+                            into the same derived states list. Afterwards, this
+                            list can be randomised, or prioritised.
                         </para>
                     </listitem>
                 </varlistentry>
@@ -1446,7 +1442,8 @@
                             and fills a list of derived states according to
                             the moves it can perform. Each game type has
                             several type of tests, which can be ordered and
-                            grouped according to input from the user
+                            grouped according to input from the user. Now the
+                            term "move function/func" is preferred.
                         </para>
                     </listitem>
                 </varlistentry>
