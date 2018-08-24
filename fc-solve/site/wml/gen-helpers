@@ -74,6 +74,6 @@ $text =~
 s!^((?:T2_DOCS|T2_DIRS) = )([^\n]*)!my ($prefix, $files) = ($1,$2); $prefix . ($files =~ s# +ipp\.\S*##gr)!ems;
 _f()->print($text);
 
-io()->file('Makefile')->print("include $DIR/_Main.mak\n");
+io()->file('Makefile')->print("include $DIR/main.mak\n");
 
 _exec( [ 'make', 'sects_cache' ], "sects_cache" );
