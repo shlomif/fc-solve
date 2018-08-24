@@ -1,5 +1,5 @@
 <!-- Converted by db4-upgrade version 1.0 -->
-<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="index">
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="index" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en-GB">
     <info><title>Freecell Solver - Architecture Document</title>
 
 
