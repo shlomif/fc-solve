@@ -12,9 +12,6 @@ Pressing
 Non-pressing
 ------------
 
-* Try using +try_lock()+ instead of +lock()+ for mutexes where appropriate
-and see if it improves performance.
-
 * Write a better initial board/initial layout validation code for the online
 solver (at least initially]):
 ** Exact number of playstacks. (requires introspection).
