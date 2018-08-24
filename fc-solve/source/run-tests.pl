@@ -68,8 +68,9 @@ sub myglob
 
 {
     my $fcs_path = Cwd::getcwd();
-    local $ENV{FCS_PATH}     = $fcs_path;
-    local $ENV{FCS_SRC_PATH} = $abs_bindir;
+    local $ENV{FCS_PATH}                = $fcs_path;
+    local $ENV{FCS_SRC_PATH}            = $abs_bindir;
+    local $ENV{PYTHONDONTWRITEBYTECODE} = '1';
 
     local $ENV{FCS_TEST_TAGS} = join ' ',
         sort { $a cmp $b }
