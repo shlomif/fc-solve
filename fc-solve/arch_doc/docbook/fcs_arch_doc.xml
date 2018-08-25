@@ -94,8 +94,8 @@
             caveats one would encounter when trying to understand it.
         </para>
         <para>
-            This document covers the Freecell Solver 2.8.x architecture, and will
-            be updated to future versions.
+            This document covers the Freecell Solver 2.8.x architecture, and
+            will be updated to future versions.
         </para>
     </chapter>
     <chapter xml:id="coding_conventions"><info><title>Coding Conventions</title></info>
@@ -103,13 +103,14 @@
         <section xml:id="bottom_up_design_and_evolution"><info><title>Bottom-Up Design and Evolution</title></info>
 
             <para>
-
-                Freecell Solver was designed bottom-up: first by writing functions to
-                input cards and then to handle states and finally the algorithm
-                itself. I find that bottom-up design (as evangelised by Paul
-                Graham and others)- start by writing small utility functions
-                and classes and then integrate into a grander scheme, has been
-                a guiding principle when working on Freecell Solver.
+                Freecell Solver was designed bottom-up: first by writing
+                functions to input cards and then to handle states and finally
+                the algorithm itself. I find that bottom-up design (as
+                <link xlink:href="http://www.paulgraham.com/onlisp.html">evangelised
+                    by Paul Graham and others</link>) - start by writing small
+                utility functions and classes and then integrate into a grander
+                scheme, has been a guiding principle when working on Freecell
+                Solver.
 
             </para>
             <para>
@@ -117,29 +118,19 @@
                 incrementally. I also find bottom-up design more natural.
             </para>
         </section>
-        <section xml:id="strict_adherence_to_the_ansi_c_lang"><info><title>Strict Adherence to the ANSI C Language</title></info>
+        <section xml:id="gnu11_c"><info><title>Using the gnu11 C dialect and POSIX</title></info>
 
             <para>
-                Freecell Solver is written in pure ANSI C and uses no gcc extensions, no
-                C99 or C++ extensions. I did allow myself to make use of
-                <emphasis>inline</emphasis> in some places, but they are
-                abstraced so they'll be used only with gcc or other supporting
-                compilers. (see the "GCC_INLINE" macro).
-            </para>
-            <para>
-                Freecell Solver is actively compiled with gcc and with the Visual C++
-                ANSI C compiler. I expect that it should be compilable with
-                other open-source and proprietary compilers on various
-                systems. As this variety of compilers only support the bare
-                ANSI C standard, I have to stick to it. This is despite the
-                fact that such extensions may have made the code more
-                optimised and my life as a programmer much easier.
+                Freecell Solver is written using the <code>-std=gnu11</code>
+                C dialect and can be compiled using GCC and compatible
+                compilers.
             </para>
         </section>
         <section xml:id="strict_adherence_to_the_ansi_c_standard_lib"><info><title>Strict Adherence to the ANSI C Standard Library</title></info>
 
             <para>
-                Freecell Solver is dependant on the ANSI C Standard Library as defined
+                Freecell Solver is dependant on the ANSI C and
+                POSIX Standard Library as defined
                 by the standard and on that library alone. The core FCS code is
                 not dependant on glib, apr or any other abstraction or
                 encapsulation libraries of this kind.
@@ -161,7 +152,7 @@
             <para>
                 All the global symbols of the Freecell Solver modules are prefixed with
                 <symbol>fc_solve_</symbol> prefix. (See
-                <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/842">this
+                <link xlink:href="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/842">this
                     post to the fc-solve-discuss mailing list</link> about why
                 we converted away from <symbol>freecell_solver_</symbol>.
                 Some macros supplied to the user are prefixed with the
