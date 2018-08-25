@@ -16,8 +16,6 @@ sub _exec
     }
     return;
 }
-_exec( [ "make", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
-    "build-deps failed!" );
 if ( not -e "lib/jquery/jquery-phoenix/" )
 {
     _exec(
@@ -36,6 +34,8 @@ _exec(
     ],
     'cookiecutter failed.'
 );
+_exec( [ "make", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
+    "build-deps failed!" );
 require IO::All;
 
 IO::All->import('io');
