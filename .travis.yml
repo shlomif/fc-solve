@@ -10,7 +10,10 @@ before_install:
       # - sudo cpanm Text::Hunspell
     - cpanm local::lib
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+    # For wml
+    - cpanm --notest Bit::Vector Class::XSAccessor GD Getopt::Long IO::All Image::Size Term::ReadKey
     - cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
+    - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
     - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
     - ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
@@ -20,7 +23,7 @@ install:
       # For G-S-V dzil
     - cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website
-    - cpanm --quiet --notest Carp::Always Code::TidyAll::Plugin::ESLint Code::TidyAll::Plugin::TSLint Data::Munge File::Find::Object::Rule File::ReadBackwards File::Update File::Which HTML::Latemp::GenMakeHelpers HTML::Spelling::Site HTML::TokeParser::Simple IO::All List::MoreUtils Moo MooX MooX::late Parallel::ForkManager Path::Tiny Perl::Critic Perl::Tidy Template Test::Code::TidyAll Test::File::Find::CaseCollide Test::HTML::Recursive::DeprecatedTags Test::HTML::Tidy::Recursive Test::HTML::Tidy::Recursive::Strict Text::WrapAsUtf8 XML::Feed
+    - cpanm --quiet --notest App::XML::DocBook::Builder Carp::Always Code::TidyAll::Plugin::ESLint Code::TidyAll::Plugin::TSLint Data::Munge File::Find::Object::Rule File::ReadBackwards File::Update File::Which HTML::Latemp::GenMakeHelpers HTML::Spelling::Site HTML::TokeParser::Simple IO::All List::MoreUtils Moo MooX MooX::late Parallel::ForkManager Path::Tiny Perl::Critic Perl::Tidy Template Test::Code::TidyAll Test::File::Find::CaseCollide Test::HTML::Recursive::DeprecatedTags Test::HTML::Tidy::Recursive Test::HTML::Tidy::Recursive::Strict Text::WrapAsUtf8 XML::Feed
     - cpanm --quiet --notest Task::FreecellSolver::Testing
     - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | cpanm --notest)
     - (cd .. && wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2 && tar -xvf libtap-1.12.0.tar.bz2 && ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install ) ; )
