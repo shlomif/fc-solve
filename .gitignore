@@ -100,6 +100,7 @@
 /fc-solve/site/wml/lib/for-node/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/jquery/jquery-phoenix/
 /fc-solve/site/wml/lib/make/build-deps/build-deps.mak
+/fc-solve/site/wml/lib/make/build-deps/build-deps.stamp
 /fc-solve/site/wml/lib/make/include.mak
 /fc-solve/site/wml/lib/make/rules.mak
 /fc-solve/site/wml/lib/make/shlomif_common.mak
