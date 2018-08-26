@@ -78,6 +78,13 @@ static inline void fc_solve_print_started_at(void)
         FCS_TIME_GET_USEC(mytime));
 }
 
+static inline void fc_solve_print_reached_no_iters(const long long board_num)
+{
+    const_AUTO(mytime, fcs_get_time());
+    printf("Reached " FCS_B_AT_FMT "\n", board_num, FCS_TIME_GET_SEC(mytime),
+        FCS_TIME_GET_USEC(mytime));
+}
+
 static inline void fc_solve_print_reached(
     const long long board_num, const long long total_num_iters)
 {
