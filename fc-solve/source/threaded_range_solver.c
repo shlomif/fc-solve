@@ -139,9 +139,6 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
     for (size_t idx = 0; idx < num_workers; ++idx)
     {
         pthread_join(workers[idx], NULL);
-    }
-    for (size_t idx = 0; idx < num_workers; ++idx)
-    {
         total_num_iters += num_iters[idx];
     }
     fc_solve_print_finished(total_num_iters);
