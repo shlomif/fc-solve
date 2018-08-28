@@ -151,7 +151,9 @@ depth_run 4
 ------------------------------------
 
 Note that currently some of the runs fail only to succeed on a rerun (
-a https://en.wikipedia.org/wiki/Heisenbug[Heisenbug] ).
+a https://en.wikipedia.org/wiki/Heisenbug[Heisenbug] ) - at least on
+Shlomi Fish's local system. If you can investigate why it happens and propose a
+fix, we will appreciate it.
 
 [id="style_guidelines"]
 Style Guidelines
