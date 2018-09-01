@@ -615,33 +615,33 @@ equivalent to using this option with a minimal depth of 0.
 Here are some examples:
 
 ---------------------
--to 0123456789 -dto 30,0138924567
+-to 0123456789 -dto2 30,0138924567
 ---------------------
 
 This sets the moves' order to +0123456789+ for all depths below 30 and to
 +0138924567+ for all depths above it.
 
 ---------------------
--to 0123457 -dto 10,750123 -dto 25,710235
+-to 0123457 -dto2 10,750123 -dto2 25,710235
 ---------------------
 
 This sets the moves' order to +0123457+ for depths -9 (those below 10),
 to +750123+ for depths 10-24, and to +710235+ for the depths 25 onwards.
 
 ---------------------
--to 0123457 -dto "10,[012357]=asw(1)"
+-to 0123457 -dto2 "10,[012357]=asw(1)"
 ---------------------
 
 This sorts the moves starting from 10 onward based on the asw() function.
 
 ---------------------
--to 0123457 -dto "10,[012357]=rand()"
+-to 0123457 -dto2 "10,[012357]=rand()"
 ---------------------
 
 This randomises the moves from 10 onward.
 
 ---------------------
--to 0123457 -dto "10,[012357]"
+-to 0123457 -dto2 "10,[012357]"
 ---------------------
 
 This does the same thing as the previous example.
@@ -816,7 +816,7 @@ reaches a solution, the solution will be displayed.
 
 [id="next-soft-thread_flag"]
 -nst , --next-soft-thread
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *Hard-thread-specific*
 
@@ -832,7 +832,7 @@ myboard.txt.
 
 [id="soft-thread-step_flag"]
 -step [Step] , --soft-thread-step [Step]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *Soft-thread-specific*
 
@@ -1082,7 +1082,7 @@ for information about their format)
 Presets that are shipped with Freecell Solver:
 
 [cols="20%,80%"]
-|===================================================
+|====================================================
 |+abra-kadabra+                |a meta-moves preset
 |+amateur-star+                |a meta-moves preset that yields solutions
 faster on average than +three-eighty+.
