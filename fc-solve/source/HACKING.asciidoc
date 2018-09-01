@@ -106,7 +106,7 @@ echo 'export CPATH="$HOME/apps/libtap/include:$CPATH"' >> ~/.bashrc
 # For CMake finding libtap.
 echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bashrc
 ------------------------------
-
++
 4. Check out the latest Freecell Solver sources:
 +
 -------------------
