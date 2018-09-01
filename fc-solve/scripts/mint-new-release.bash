@@ -10,7 +10,12 @@ set -x
 set -e
 set -u
 which cookiecutter
+which git
+which make
+which perl
 which qunit-cli
+which unxz
+which xz
 src="$(pwd)"
 build="$src/../prerel-build"
 assets_dir="$src/../../../../Arcs/fc-solve-site-assets/fc-solve-site-assets"
