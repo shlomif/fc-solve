@@ -45,11 +45,11 @@ Changing the Maximal number of Freecells or Stacks or Cards per Stack
 The following parameters to the cmake" script which accept an argument
 control the hard-coded parameters of the Freecell Solver executables:
 
-* "-DMAX_NUM_FREECELLS:STRING=$NUM" - The maximal number of freecells
+* +-DMAX_NUM_FREECELLS:STRING=$NUM+ - The maximal number of freecells
 
-* "-DMAX_NUM_STACKS:STRING=$NUM" - The maximal number of stacks (columns)
+* +-DMAX_NUM_STACKS:STRING=$NUM+ - The maximal number of stacks (columns)
 
-* "-DMAX_NUM_INITIAL_CARDS_IN_A_STACK:STRING=$NUM" - The maximal number of
+* +-DMAX_NUM_INITIAL_CARDS_IN_A_STACK:STRING=$NUM+ - The maximal number of
 initial cards per stack.
 
 Notice that it's very important to set the maximal number of initial cards
@@ -67,7 +67,7 @@ Stack States which are the default.
 Compact states used to be faster than Indirect Stack States, but now it
 seems indirect stack states are at least slightly faster even for games
 whose stacks are not very long. If you still would wish to enable it,
-pass the "-DSTATES_TYPE=COMPACT_STATES" flag to CMake.
+pass the +-DSTATES_TYPE=COMPACT_STATES+ flag to CMake.
 
 [id="win32_install"]
 Installing under Win32
@@ -84,8 +84,8 @@ To test Freecell Solver, you need to:
 
 1. Configure it.
 
-2. Run "make install".
+2. Run +make install+.
 
-3. Type "ctest -V" (or "make test" just for the verdict).
+3. Type +ctest -V+ (or +make test+ just for the verdict).
 
 Please report any errors to me ( http://www.shlomifish.org/me/contact-me/ ).
