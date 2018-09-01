@@ -392,9 +392,18 @@ if ($build_type eq "debug")
 }
 
 # This cache is sometimes causing problems.
+eval
+{
 unlink("CMakeCache.txt");
+};
+eval
+{
 rmtree(['_Inline', 't/_Inline']);
+};
+eval
+{
 unlink(glob("*.so"));
+};
 
 my @cmd= ("cmake",
     (defined($ENV{CMAKE_MAKE_PROGRAM}) ? "-DCMAKE_MAKE_PROGRAM=$ENV{CMAKE_MAKE_PROGRAM}" : ()),
