@@ -14,7 +14,11 @@ pthreads-devel package.
 1. Use the git version control system to clone the repository and get a working
 copy.
 
-2. Run +../source/Tatzer -l fc_bench -l extra_speed+ (for a Freecell-only capable solver)
+2. Create a fresh build directory like
++mkdir "$HOME"/progs/freecell/git/fc-solve/fc-solve/source/../build"+
+and cd to it.
+
+3. Run +../source/Tatzer -l fc_bench -l extra_speed+ (for a Freecell-only capable solver)
 or +../source/Tatzer -l bench+ (for a solver that can solve all supported
 games). Also append these options:
 +
@@ -25,14 +29,14 @@ games). Also append these options:
     b. +--prefix=$HOME/opt/fc-solve+ for setting the installation prefix to
     install to.
 
-3. Type +make+ to build everything.
+4. Type +make+ to build everything.
 
-4. Type +make install+.
+5. Type +make install+.
 
-5. Type +export FCS_PGO_THEME="-l lg" ;  bash pgo.bash+ to prepare a GCC Profile-Guided Optimizations (PGO)
+6. Type +export FCS_PGO_THEME="-l lg" ;  bash pgo.bash+ to prepare a GCC Profile-Guided Optimizations (PGO)
 executable.
 
-6. Then you can run a shell script like this one:
+7. Then you can run a shell script like this one:
 +
 --------------------------------------
 num_threads=4 ; for t in $(seq 1 8) ; do sudo_renice bash -c "$(printf 'ARGS="--worker-step 16 $FCS_PGO_THEME" bash ../scripts/time-threads-num.bash %d %d' $num_threads $num_threads)" ; done
@@ -42,7 +46,7 @@ Where sudo_renice is something like:
 +
 https://github.com/shlomif/shlomif-computer-settings/blob/master/shlomif-settings/home-bin-executables/bin/sudo_renice
 
-7. To see the results, you can use +perl ../scripts/time-fcs.pl
+8. To see the results, you can use +perl ../scripts/time-fcs.pl
 DUMPS-*/*+ and copy-and-paste the results to the Freecell Solver developers
 with specifications of your computer that are as detailed as possible.
 
@@ -116,15 +120,21 @@ git clone https://github.com/shlomif/fc-solve
 
 7. Configure the Freecell Solver build
 +
-	$ ../Tatzer
+-------------------
+../Tatzer
+-------------------
 
 8. Build Freecell Solver:
 +
-	$ make
+-------------------
+make
+-------------------
 
 9. Test Freecell Solver:
 +
-	$ make test
+-------------------
+make test
+-------------------
 
 [id="split_fcc_fc_solver"]
 Running the split_fcc_fc_solver
