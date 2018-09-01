@@ -1088,6 +1088,7 @@ perl-devel
 perl5
 pgo
 printf
+progs
 pthreads-devel
 seq
 shlomif-computer-settings
