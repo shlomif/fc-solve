@@ -28,16 +28,22 @@ project also span some other code for testing and for support.
 
 This contains the source of the solver itself. One can use CMake to build it.
 
-## Games-Solitaire-Verify/Games-Solitaire-Verify
+## cpan/Games-Solitaire-Verify/Games-Solitaire-Verify
 
 This is the Games-Solitaire-Verify CPAN module. For more information see:
 
-[https://metacpan.org/release/Games-Solitaire-Verify](https://metacpan.org/release/Games-Solitaire-Verify)
+* [Homepage](http://fc-solve.shlomifish.org/verify-code/)
+* [MetaCPAN](https://metacpan.org/release/Games-Solitaire-Verify)
 
 ## Task-FreecellSolver-Testing
 
 This is a CPAN module for installing the various test dependencies that
 are found on CPAN.
+
+## cpan/Task-FreecellSolver-Testing-MultiConfig
+
+This is a CPAN module for installing the various test dependencies that
+are found on CPAN. More comprehensive.
 
 ## fc-solve/arch\_doc
 
@@ -85,3 +91,7 @@ has some examples in the code, and should not be hard to use.
 * [Freecell Solver's Site Assets](https://github.com/shlomif/fc-solve-site-assets)
 * [patsolve](https://github.com/shlomif/patsolve) - a different Solitaire solver with interdependencies on this one.
 * [Haskell Freecell library](https://github.com/shlomif/Freecell)
+
+* [PySol](https://pysolfc.sourceforge.io/) - an open source Solitaire game collection
+* [kpat](https://games.kde.org/game.php?game=kpat)
+* [solitaire.gg](https://github.com/KyleU/solitaire.gg)
