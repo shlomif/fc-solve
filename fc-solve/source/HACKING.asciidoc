@@ -59,7 +59,6 @@ These are instruction how to get the test suite up and running:
 1. Install the dependencies: Subversion, CMake (3.x or later only), make,
 gcc, g\++, valgrind, perl5 (at least perl-5.14)
 +
-+
 * On Debian:
 +
 --------------------
