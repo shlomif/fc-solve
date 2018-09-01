@@ -8,7 +8,7 @@ Shlomi Fish <shlomif@cpan.org>
 Benchmarking a Freecell Solver Release
 --------------------------------------
 
-Requirements: perl-5.8.x or above, CMake, gcc, bash and a working
+Requirements: perl-5.14.x or above, CMake, gcc, bash and a working
 pthreads-devel package.
 
 1. Use the git version control system to clone the repository and get a working

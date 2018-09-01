@@ -45,7 +45,7 @@ BuildRequires: perl(Test::TrailingSpace)
 BuildRequires: perl(Test::Trap)
 BuildRequires: perl(warnings)
 BuildRequires: perl(YAML::XS)
-BuildRequires: perl-devel
+BuildRequires: perl-devel >= 5.14.0
 BuildRequires: python3-random2
 BuildRequires: tap-devel
 BuildRequires: the_silver_searcher

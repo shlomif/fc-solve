@@ -1,5 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
+use 5.014;
 use strict;
 use warnings;
 use autodie;
