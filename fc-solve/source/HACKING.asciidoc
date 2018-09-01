@@ -89,7 +89,9 @@ libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
 +
 * On Mandriva:
 +
-    # urpmi libtap-devel
+----------------------
+urpmi libtap-devel
+----------------------
 +
 * On Debian:
 +
@@ -115,7 +117,7 @@ git clone https://github.com/shlomif/fc-solve
 
 5. +$ cd fc-solve/fc-solve/source/+
 
-6. +$ mkdir build ; cd build$
+6. +$ mkdir build ; cd build+
 
 7. Configure the Freecell Solver build
 +
