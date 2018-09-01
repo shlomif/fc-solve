@@ -95,7 +95,7 @@ urpmi libtap-devel
 +
 * On Debian:
 +
--------------------------------
+------------------------------
 tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz
 cd tap-1.01
 ./configure --prefix="$HOME/apps/libtap"
