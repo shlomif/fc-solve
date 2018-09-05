@@ -28,10 +28,12 @@ Shlomi Fish
 
 Begin forwarded message:
 
+---------------------------------------------
 Date: Sat, 26 May 2012 15:56:22 +0300
 From: Shlomi Fish <shlomif@...>
 To: Michiel de Bondt <MichieldeB@...>, M.deBondt@...
 Subject: Re: Freecell states
+---------------------------------------------
 
 
 Hi Michiel,
