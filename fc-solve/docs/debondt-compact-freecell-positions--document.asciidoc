@@ -89,7 +89,7 @@ also was able to eventually pack more stuff there, like the leading, or the AVL
 tree's balance).
 
 Now, your suggestion about storing the states of 3 cards in a byte of 256 values
-can be improved by calculating a big +6**52+ number and storing it in the number
+can be improved by calculating a big +6^52+ number and storing it in the number
 of necessary bits:
 
 log2(6) * 52 = 134.4180500375 bits (bytes: 17)
@@ -171,7 +171,7 @@ Best regards,
 
 ­— Shlomi Fish
 
-> Suppose you wish to use e.g. +2**n+ MB for the hash table, with 1 <= n <=
+> Suppose you wish to use e.g. +2^n+ MB for the hash table, with 1 <= n <=
 > 9. Cards 0 to 5 are stored in the first 16 bits of the state
 > representant. Cards 6 to 8 are stored in the next 8 bits. Cards 9 to 47
 > are stored after that.
@@ -200,7 +200,7 @@ Best regards,
 > that there is no next entry, i.e., the end of the bucket is reached, so
 > the index 0 can not be used for the second table.
 >
-> Two tables of +2**(15+n)+ entries of 16 bytes take +2*16*2^15*2^n+ = +2^n+ MB
+> Two tables of +2^(15+n)+ entries of 16 bytes take +2*16*2^15*2^n+ = +2^n+ MB
 > of memory.
 >
 > This way of storing seems efficient to me. To move a row of cards to
