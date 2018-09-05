@@ -92,19 +92,28 @@ Now, your suggestion about storing the states of 3 cards in a byte of 256 values
 can be improved by calculating a big +6^52+ number and storing it in the number
 of necessary bits:
 
-log2(6) * 52 = 134.4180500375 bits (bytes: 17)
+[stem]
+++++
+log_2(6) * 52 = 134.4180500375 bits (bytes: 17)
+++++
 
 That's already an improvement over the potentially long 18 bytes, but we can
 do even better. If you remember, the only valid positions for Aces (given
 Horne's prune) are in their original position (#6 in your case), or in the
 foundation (#4 in your case), so we can have:
 
-log2(6) * 48 + log2(2) * 4 = 128.078200034615 bits (bytes: 17)
+[stem]
+++++
+log_2(6) * 48 + log_2(2) * 4 = 128.078200034615 bits (bytes: 17)
+++++
 
 In addition, cases #2 and #3 are not possible for kings, so they only have 4
 possible cases, so we get:
 
-log2(6) * 44 + log2(2) * 4 + log2(4) * 4 = 125.738350031731 bits (bytes: 16)
+[stem]
+++++
+log_2(6) * 44 + log_2(2) * 4 + log_2(4) * 4 = 125.738350031731 bits (bytes: 16)
+++++
 
 That already fits in 16 bytes or 128 bits.
 
@@ -112,8 +121,11 @@ But we can do even better. If we first encode the value of each foundation
 (from 0 to King - 14 values in total), we can remove one option (#4 in your
 case) from each of the bases and get:
 
-log2(14) * 4 + log2(5) * 44 + log2(1) * 4 + log2(3) * 4 = 123.734105866159 bits
-(bytes: 16)
+[stem]
+++++
+log_2(14) * 4 + log_2(5) * 44 + log_2(1) * 4 + log_2(3) * 4 = 123.734105866159 bits (bytes: 16)
+++++
+
 
 Something else I tried is to encode the length of the cards which remained in
 their original position since the start of play, in each of the 8 columns, like
@@ -130,7 +142,10 @@ so:
 Then since there are 4 columns with seven initial cards and 4 columns of six,
 we get:
 
-log2(7) * 4 + log2(6) * 4 + log2(14) * 4 + log2(4) * 44 + log2(1) * 4 + log2(2) * 4 = 128.798689379345 bits (bytes: 17)
+[stem]
+++++
+log_2(7) * 4 + log_2(6) * 4 + log_2(14) * 4 + log_2(4) * 44 + log_2(1) * 4 + log_2(2) * 4 = 128.798689379345 bits (bytes: 17)
+++++
 
 As you see it made matters worse, so I guess it's better to use the 123.73 bits
 notation.
@@ -153,7 +168,10 @@ possible parent cards, and one empty stack) - 4*3 in total.
 
 In total we get 48 in total. If we add it to the state representation we get:
 
-log2(48) * 1 + log2(14) * 4 + log2(5) * 44 + log2(1) * 4 + log2(3) * 4 = 129.31906836688 bits (bytes: 17)
+[stem]
+++++
+log_2(48) * 1 + log_2(14) * 4 + log_2(5) * 44 + log_2(1) * 4 + log_2(3) * 4 = 129.31906836688 bits (bytes: 17)
+++++
 
 So we need 130 bits. However, there are at least 3*2 of them in the low-bits of
 the three pointers (left tree child, right tree child and
