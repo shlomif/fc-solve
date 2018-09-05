@@ -14,7 +14,7 @@
 #
 # It produces a report like this:
 #
-# http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1097
+# https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1097
 
 daj_results = <<'EOF';
 Of the 33 you have listed, he [= Danny A. Jones] reported:

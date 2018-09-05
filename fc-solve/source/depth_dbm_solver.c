@@ -14,7 +14,7 @@
  * delta_states.c for a very compact storage.
  *
  * In addition, this solver implements the scheme in:
- * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1135
+ * https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1135
  */
 
 #include "dbm_solver_head.h"

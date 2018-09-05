@@ -166,7 +166,8 @@ static inline void fc_solve_move_sequence_function(
 /*
  * This macro assists in implementing this prune:
  *
- * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1121 :
+ * https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1121
+ * :
  *
  * There is no point in moving the last card in a
  * column to a parent on a different column, because then the column won't

@@ -732,7 +732,7 @@ This option sets the pruning algorithm for the soft thread. Current valid
 values are only the empty string (+""+) for no pruning and +r:tf+ (short
 for "Run: to foundations") for Horne's rule. See:
 
-http://tech.groups.yahoo.com/group/fc-solve-discuss/message/214
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/214
 
 [id="optimize-solution_flag"]
 -opt , --optimize-solution

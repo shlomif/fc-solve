@@ -143,7 +143,7 @@ Long-term
 
 * Make a super-strict parsable-output without all the quirks of
 -p -t (see Games-Solitaire-Verify for why).
-** Perhaps see: http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1264 .
+** Perhaps see: https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1264 .
 
 * Write a multi-threaded version.
 

@@ -115,7 +115,7 @@ dbm_fc_solver.
 * *Michiel de Bondt* ( http://www.math.ru.nl/~debondt/ ) - suggested a
 way to improve the delta states algorithm, so states will be stored more
 compactly. Currently implemented in the dbm_fc_solver. See
-http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1115 .
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1115 .
 
 * *Alon Zakai* ( http://github.com/kripken ) - maintainer of
 https://github.com/kripken/emscripten[emscripten], which allows one to convert

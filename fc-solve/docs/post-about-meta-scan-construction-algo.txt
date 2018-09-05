@@ -55,7 +55,7 @@ interrupted will take less time to solve the boards, after it is resumed.
 
 I've recently created a variation of this algorithm:
 
-http://tech.groups.yahoo.com/group/fc-solve-discuss/message/980
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/980
 
 In this variation, instead of assigning the quota to the scan that
 solves the most boards, it is assigned to the scan which generates the

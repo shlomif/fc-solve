@@ -152,7 +152,7 @@
             <para>
                 All the global symbols of the Freecell Solver modules are prefixed with
                 <symbol>fc_solve_</symbol> prefix. (See
-                <link xlink:href="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/842">this
+                <link xlink:href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/842">this
                     post to the fc-solve-discuss mailing list</link> about why
                 we converted away from <symbol>freecell_solver_</symbol>.
                 Some macros supplied to the user are prefixed with the

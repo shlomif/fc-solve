@@ -145,7 +145,7 @@ Revision history for Games-Solitaire-Verify
         affected by kings_only, etc. I.e: it always allows to move an
         arbitrary number of cards when it is specified.
             - Bug discovered based on this post by larrysan:
-            - http://tech.groups.yahoo.com/group/fc-solve-discuss/message/856
+            - https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/856
 
 0.04    2008-08-07
         - Now verify_and_perform_move in Games::Solitaire::Verify::State

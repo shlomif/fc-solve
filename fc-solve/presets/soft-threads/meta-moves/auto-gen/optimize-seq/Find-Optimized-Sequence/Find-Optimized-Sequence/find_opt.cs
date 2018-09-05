@@ -11,7 +11,7 @@
 /*
  * find_opt.cs - this C# code implements the algorithm put forth here:
  *
- * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1026
+ * https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1026
  *
  * Try to find a near-optimal allocation of quotas for a switch-tasked
  * Freecell run, incrementally.

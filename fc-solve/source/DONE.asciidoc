@@ -205,7 +205,7 @@ Freecells:  QD  KD
 +./dbm_fc_solver <(pi-make-microsoft-freecell-board -t 12064)+
 finished after +Reached 3000000 ; States-in-collection: 3018329+ now
 and not after +Reached 11600000 ; States-in-collection: 11617536+ in
-r4339 when http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1097
+r4339 when https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1097
 was reported.
     - I don't recall the exact specifics, but there were some code breakups
     and some compilation flags that did not play nice.
