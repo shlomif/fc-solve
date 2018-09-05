@@ -474,6 +474,15 @@ reg_lt_test(
 "The following build dirs exist and interfere with the build - [ @found ]. Please remove them!";
     }
 }
+
+_chdir_run(
+    '../../',
+    sub {
+        run_cmd( "root tests",
+            { cmd => [ qw(prove), glob('root-tests/t/*.t') ] } );
+    }
+);
+
 _chdir_run(
     '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
     sub {
