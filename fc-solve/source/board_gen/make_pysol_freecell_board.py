@@ -172,10 +172,9 @@ class Board:
 
         self._lines += [renderer.l_concat(c) for c in self.columns.cols]
 
-    def output(self, renderer):
+    def calc_string(self, renderer):
         self.gen_lines(renderer)
-        for l in self._lines:
-            print(l)
+        return "".join(l + "\n" for l in self._lines)
 
 
 def shuffle(cards, game_num, which_deals):
@@ -231,14 +230,17 @@ class Game:
     def get_num_decks(self):
         return 2 if self.is_two_decks() else 1
 
-    def print_layout(self, renderer):
+    def calc_layout_string(self, renderer):
         game_class = self.games_map[self.game_id]
         if not game_class:
             raise ValueError("Unknown game type " + self.game_id + "\n")
 
         self.deal()
         getattr(self, game_class)()
-        self.board.output(renderer)
+        return self.board.calc_string(renderer)
+
+    def print_layout(self, renderer):
+        print(self.calc_layout_string(renderer), sep='', end='')
 
     def new_cards(self, cards):
         self.cards = cards
