@@ -27,13 +27,27 @@ parser.add_argument('--suffix', type=str, required=True,
 parser.add_argument('idxs', nargs='+', default=[],
                     help='indexes')
 args = parser.parse_args(sys.argv[1:])
+dir_ = args.dir
+pre = args.prefix
+suf = args.suffix
 
 rend = CardRenderer(True)
 
-while len(args.idxs):
-    i = args.idxs.pop(0)
-    deal = int(i)
-    fn = os.path.join(args.dir, args.prefix + str(deal) + args.suffix)
+
+def _out_deal(deal):
+    fn = os.path.join(dir_, pre + str(deal) + suf)
     with open(fn, 'wt') as f:
         f.write(Game("freecell", deal, RandomBase.DEALS_MS, 13).
                 calc_layout_string(rend))
+
+
+idxs = args.idxs
+while len(idxs):
+    i = idxs.pop(0)
+    if i == 'seq':
+        start = int(idxs.pop(0))
+        end = int(idxs.pop(0))
+        for deal in range(start, end+1):
+            _out_deal(deal)
+    else:
+        _out_deal(int(i))
