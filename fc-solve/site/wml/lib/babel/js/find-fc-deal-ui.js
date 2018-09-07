@@ -5,20 +5,20 @@ define(["fcs-base-ui", "web-fc-solve", "libfcs-wrap",
     let _my_module = Module()({});
     w.FC_Solve_init_wrappers_with_module(_my_module);
 
-function _create_bmark_obj() {
-    return new base_ui.FC_Solve_Bookmarking({
-        bookmark_controls: ['stdin', 'deal_number'],
-        show: [],
-    });
-}
+    function _create_bmark_obj() {
+        return new base_ui.FC_Solve_Bookmarking({
+            bookmark_controls: ['stdin', 'deal_number'],
+            show: [],
+        });
+    }
 
-function on_bookmarking() {
-    return _create_bmark_obj().on_bookmarking();
-}
+    function on_bookmarking() {
+        return _create_bmark_obj().on_bookmarking();
+    }
 
-function restore_bookmark() {
-    return _create_bmark_obj().restore_bookmark();
-}
+    function restore_bookmark() {
+        return _create_bmark_obj().restore_bookmark();
+    }
     // Taken from https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
     // thanks.
     const numberWithCommas = (x) => {
@@ -61,16 +61,16 @@ function restore_bookmark() {
         resume();
     }
 
-function set_up_handlers() {
-    $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
-    $("#run_do_solve").click(find_deal_ui);
-}
+    function set_up_handlers() {
+        $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
+        $("#run_do_solve").click(find_deal_ui);
+    }
 
-function set_up() {
-    restore_bookmark();
-    set_up_handlers();
-    $("#fc_solve_bookmark_button").click(on_bookmarking);
-}
+    function set_up() {
+        restore_bookmark();
+        set_up_handlers();
+        $("#fc_solve_bookmark_button").click(on_bookmarking);
+    }
 
     return {
         find_deal_ui: find_deal_ui,
