@@ -225,10 +225,10 @@ Phoenix_CS_BASE = jquery.phoenix.coffee
 Phoenix_JS_nonmin_BASE = jquery.phoenix.js
 Phoenix_JS_BASE = jquery.phoenix.min.js
 Phoenix_DIR = lib/jquery/jquery-phoenix
-Phoenix_JS = $(Phoenix_DIR)/$(Phoenix_JS_BASE)
 Phoenix_JS_DEST = $(DEST_JS_DIR)/$(Phoenix_JS_BASE)
 
 BABEL_SRC_DIR = lib/babel/js
+Phoenix_JS = $(BABEL_SRC_DIR)/$(Phoenix_JS_BASE)
 
 $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE)
 	coffee --compile -o $(BABEL_SRC_DIR) $<
@@ -237,6 +237,9 @@ dummy: $(Phoenix_JS_DEST)
 
 $(Phoenix_JS_DEST): $(Phoenix_JS)
 	cp -f $< $@
+
+$(Phoenix_JS): $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE)
+	$(MULTI_YUI) -o $@ $<
 
 dummy: $(DEST_WEB_RAW_JS)
 

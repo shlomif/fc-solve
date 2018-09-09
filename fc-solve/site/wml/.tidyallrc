@@ -1,7 +1,7 @@
 [ESLint]
 select = lib/babel/js/*.js lib/babel/old/*.js
 argv = -c $ROOT/.eslintrc.yml --color
-ignore = lib/babel/js/jquery.phoenix.js
+ignore = lib/babel/js/jquery.phoenix.js lib/babel/js/jquery.phoenix.min.js
 
 [PerlTidy]
 select = **/*.{pl,pm,t}
