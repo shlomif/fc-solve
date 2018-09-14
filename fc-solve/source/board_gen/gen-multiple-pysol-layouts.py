@@ -64,6 +64,9 @@ class GenMulti:
                 end = int(idxs.pop(0))
                 for deal in range(start, end+1):
                     self._out_deal(deal)
+            elif i == 'slurp':
+                for line in open(idxs.pop(0), 'rt'):
+                    self._out_deal(int(line))
             else:
                 self._out_deal(int(i))
         return 0
