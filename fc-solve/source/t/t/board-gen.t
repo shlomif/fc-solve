@@ -3,12 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More tests => 38;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny qw/ path /;
 
 use FC_Solve::Paths
-    qw/ $FIND_DEAL_INDEX $MAKE_PYSOL bin_board bin_exe_raw normalize_lf /;
+    qw/ $FIND_DEAL_INDEX $GEN_MULTI $MAKE_PYSOL bin_board bin_exe_raw normalize_lf /;
 use FC_Solve::Trim qw/trim_trail_ws/;
 
 sub _test_out
@@ -35,6 +35,32 @@ sub _test_find_index
     my $cmd_line_args = $args->{cmd};
 
     my $got = `$FIND_DEAL_INDEX @$cmd_line_args`;
+
+    eq_or_diff( $got, $args->{expected}, $args->{blurb} );
+
+    return;
+}
+
+my $dir = path("gen-multi-foo");
+
+sub _reset_dir
+{
+    $dir->remove_tree;
+    $dir->mkpath;
+}
+
+sub _test_gen_multi
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my ($args) = @_;
+
+    my $cmd_line_args = $args->{cmd};
+
+    _reset_dir;
+
+    # print STDERR "<<$GEN_MULTI @$cmd_line_args>>\n";
+    my $got = `$GEN_MULTI @$cmd_line_args`;
 
     eq_or_diff( $got, $args->{expected}, $args->{blurb} );
 
@@ -699,6 +725,52 @@ _test_find_index(
         expected => "Found deal = 24\n",
     }
 );
+
+# TEST
+_test_gen_multi(
+    {
+        blurb => "gen-multi for black_hole",
+        cmd   => [
+            '--game',   'black_hole',
+            '--dir',    $dir . '',
+            '--prefix', 'pys',
+            '--suffix', '.board',
+            '--',       '45508856405861261758'
+        ],
+        expected => '',
+    }
+);
+
+# TEST
+eq_or_diff(
+    [
+        normalize_lf(
+            scalar $dir->child('pys45508856405861261758.board')->slurp_utf8
+        )
+    ],
+    [<<'EOF'], "gen-multi",
+Foundations: AS
+2S 3D 6S
+2C 5D 7H
+3C 7C 3S
+4C AC JS
+9D QC 4S
+QD 6C 8H
+TC JC TS
+8D 7S 8S
+7D 3H 5H
+JD 9C 2H
+TD 6D QH
+2D KH KC
+4D KD AH
+4H JH 5C
+AD 9S QS
+6H KS TH
+5S 9H 8C
+EOF
+);
+
+$dir->remove_tree;
 __END__
 
 =head1 COPYRIGHT AND LICENSE

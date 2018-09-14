@@ -116,6 +116,7 @@ class Board:
         self.with_freecells = with_freecells
         self.with_talon = with_talon
         self.with_foundations = with_foundations
+        self.raw_foundations_line = None
         self.columns = Columns(num_columns)
         if self.with_freecells:
             self.freecells = []
@@ -167,6 +168,8 @@ class Board:
             self.add_line("Talon: " + renderer.l_concat(self.talon))
         if self.with_foundations:
             self.print_foundations(renderer)
+        if self.raw_foundations_line:
+            self.add_line(self.raw_foundations_line)
         if self.with_freecells:
             self.add_line("Freecells: " + renderer.l_concat(self.freecells))
 
@@ -312,7 +315,7 @@ class Game:
             lambda c: (c.id == 13, c.suit),
             1)
         game.cyclical_deal(52, 13)
-        print('Foundations: -')
+        game.board.raw_foundations_line = 'Foundations: -'
 
     def bakers_dozen(game):
         n = 13
@@ -357,7 +360,7 @@ class Game:
             1)
         next(game)
         game.cyclical_deal(52-1, 17)
-        print('Foundations: AS')
+        game.board.raw_foundations_line = 'Foundations: AS'
 
     def der_katz(game):
         is_ds = game.game_id == 'die_schlange'
