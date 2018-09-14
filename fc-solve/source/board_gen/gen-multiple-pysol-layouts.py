@@ -47,12 +47,12 @@ class GenMulti:
 
         self.rend = CardRenderer(True)
         self.idxs = args.idxs
+        self.game = Game(self.game_variant, 1, self.which_deals, 13)
 
     def _out_deal(self, deal):
         fn = os.path.join(self.dir_, self.pre + str(deal) + self.suf)
         with open(fn, 'wt') as f:
-            f.write(Game(self.game_variant, deal, self.which_deals, 13).
-                    calc_layout_string(self.rend))
+            f.write(self.game.calc_deal_string(deal, self.rend))
 
     def run(self):
         """docstring for run"""

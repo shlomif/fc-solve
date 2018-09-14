@@ -225,6 +225,9 @@ class Game:
         self.game_num = game_num
         self.which_deals = which_deals
         self.max_rank = max_rank
+        self.game_class = self.games_map[self.game_id]
+        if not self.game_class:
+            raise ValueError("Unknown game type " + self.game_id + "\n")
 
     def is_two_decks(self):
         return self.game_id in ("der_katz", "der_katzenschwantz",
@@ -233,13 +236,15 @@ class Game:
     def get_num_decks(self):
         return 2 if self.is_two_decks() else 1
 
-    def calc_layout_string(self, renderer):
-        game_class = self.games_map[self.game_id]
-        if not game_class:
-            raise ValueError("Unknown game type " + self.game_id + "\n")
-
+    def calc_deal_string(self, game_num, renderer):
+        self.game_num = game_num
         self.deal()
-        getattr(self, game_class)()
+        getattr(self, self.game_class)()
+        return self.board.calc_string(renderer)
+
+    def calc_layout_string(self, renderer):
+        self.deal()
+        getattr(self, self.game_class)()
         return self.board.calc_string(renderer)
 
     def print_layout(self, renderer):
