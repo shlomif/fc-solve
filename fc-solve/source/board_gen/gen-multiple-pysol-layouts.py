@@ -37,8 +37,10 @@ class GenMulti:
                             help='indexes')
         args = parser.parse_args(argv[1:])
         self.dir_ = args.dir
-        self.pre = args.prefix
-        self.suf = args.suffix
+        # Sanitize, see:
+        # https://stackoverflow.com/questions/6803505
+        self.pre = os.path.basename(args.prefix)
+        self.suf = os.path.basename(args.suffix)
         self.game_variant = args.game
         self.which_deals = (RandomBase.DEALS_MS if args.ms
                             else RandomBase.DEALS_PYSOLFC)
