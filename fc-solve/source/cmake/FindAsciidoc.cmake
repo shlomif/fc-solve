@@ -7,7 +7,7 @@
 # This file is taken from:
 # http://grahamcox.co.uk/serendipity/index.php?/archives/36-CMake-code-to-support-asciidoc.html
 FIND_PROGRAM(ASCIIDOC_EXECUTABLE
-asciidoc
+asciidoctor
 )
 
 MARK_AS_ADVANCED(
@@ -22,5 +22,5 @@ ENDIF ()
 
 
 IF (NOT ASCIIDOC_FOUND AND Asciidoc_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could not find asciidoc")
+    MESSAGE(FATAL_ERROR "Could not find asciidoctor")
 ENDIF ()

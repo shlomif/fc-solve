@@ -10,6 +10,8 @@ before_install:
       # - sudo cpanm Text::Hunspell
     - cpanm local::lib
     - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+    # For the fc-solve docs
+    - gem install asciidoctor
     # For wml
     - cpanm --notest Bit::Vector Class::XSAccessor GD Getopt::Long IO::All Image::Size Term::ReadKey
     - cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
