@@ -31,7 +31,7 @@ install:
     - (cd .. && wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2 && tar -xvf libtap-1.12.0.tar.bz2 && ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install ) ; )
     - ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
     # For the site
-    - gem install sass compass compass-blueprint
+    - gem install compass compass-blueprint
 perl:
     - "5.24"
 python:
