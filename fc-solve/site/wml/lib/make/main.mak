@@ -29,9 +29,9 @@ IMAGES = $(addprefix $(D)/,$(SRC_IMAGES))
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
 DOCS_PROTO = AUTHORS COPYING HACKING INSTALL NEWS README TODO USAGE
-ADOC_CSS = asciidoc.css
-ADOC_JS = asciidoc.js
-DOCS_AUX_PROTO = $(ADOC_CSS) $(ADOC_JS)
+ADOC_CSS = asciidoctor.css
+# ADOC_JS = asciidoc.js
+DOCS_AUX_PROTO = $(ADOC_CSS)
 DOCS_AUX_DIR = $(D)/docs/distro
 ARC_DOCS = $(patsubst %,$(D)/%,$(DOCS_PROTO))
 DOCS_AUX = $(patsubst %,$(DOCS_AUX_DIR)/%,$(DOCS_AUX_PROTO))
@@ -150,11 +150,11 @@ $(ARC_DOCS): $(D)/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%.asciidoc
 $(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
 	cp -f "$<" "$@"
 
-$(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
-	$(MULTI_YUI) -o $@ $<
+# $(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
+#	$(MULTI_YUI) -o $@ $<
 
 $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
-	cat "$<" | perl -0777 -lapE 's#<table #<table summary="identifiers on the left, descriptions on the right" #g' > "$@"
+	cp -f "$<" "$@"
 
 PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
 

@@ -1,8 +1,8 @@
 ---
 required:
     executables:
-        - exe: "asciidoc"
-          url: "http://www.methods.co.nz/asciidoc/"
+        - exe: "asciidoctor"
+          url: "https://asciidoctor.org/"
         - exe: "cookiecutter"
           url: "https://github.com/audreyr/cookiecutter"
         - exe: "docmake"
