@@ -7,6 +7,9 @@ use Test::HTML::Tidy::Recursive ();
 
 Test::HTML::Tidy::Recursive->new(
     {
-        targets => [ './dest', './dest-prod' ],
+        targets         => [ './dest', './dest-prod' ],
+        filename_filter => sub {
+            return shift !~ m{/docs/distro/};
+        },
     }
 )->run;
