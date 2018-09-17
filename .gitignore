@@ -139,8 +139,7 @@
 /fc-solve/source/TODO.xml
 /fc-solve/source/USAGE.html
 /fc-solve/source/USAGE.xml
-/fc-solve/source/asciidoc.css
-/fc-solve/source/asciidoc.js
+/fc-solve/source/asciidoctor.css
 /fc-solve/source/cmake/Shlomif_Common.cmake
 /fc-solve/source/cmd_line.gperf
 /fc-solve/source/cmd_line_inc.h
