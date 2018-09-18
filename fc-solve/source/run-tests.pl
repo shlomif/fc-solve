@@ -14,8 +14,8 @@ use Env::Path ();
 use Path::Tiny qw/ path /;
 use File::Basename qw/ basename dirname /;
 
-my $bindir     = dirname(__FILE__);
-my $abs_bindir = File::Spec->rel2abs($bindir);
+my $bindir     = path(__FILE__)->parent;
+my $abs_bindir = $bindir->absolute;
 
 # Whether to use prove instead of runprove.
 my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
@@ -75,23 +75,19 @@ sub myglob
 
     local $ENV{FCS_TEST_TAGS} = join ' ',
         sort { $a cmp $b }
-        ( path( File::Spec->catdir( File::Spec->curdir(), "t", "TAGS.txt" ) )
-            ->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g );
+        ( path('.')->child(qw/t TAGS.txt/)->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g );
 
-    my $preset_dest =
-        File::Spec->catdir( File::Spec->curdir(), "t", "Presets" );
-    my $preset_src = File::Spec->catfile( $abs_bindir, "Presets" );
-    my $pset_files_dest = File::Spec->catdir( $preset_dest, "presets" );
-    my $pset_files_src  = File::Spec->catdir( $preset_src,  "presets" );
+    my $preset_dest     = path('.')->child( "t", "Presets" );
+    my $preset_src      = $abs_bindir->child("Presets");
+    my $pset_files_dest = $preset_dest->child("presets");
+    my $pset_files_src  = $preset_src->child("presets");
     mkpath($pset_files_dest);
     foreach my $f ( path($pset_files_src)->children(qr{\.sh\z}) )
     {
-        $f->copy( File::Spec->catfile( $pset_files_dest, $f->basename ) );
+        $f->copy( $pset_files_dest->child( $f->basename ) );
     }
 
-    my $files_dest_abs =
-        File::Spec->rel2abs(
-        File::Spec->catfile( $pset_files_dest, "STUB.TXT" ) );
+    my $files_dest_abs = $pset_files_dest->child("STUB.TXT")->absolute;
 
     $files_dest_abs =~ s{STUB\.TXT\z}{};
 
