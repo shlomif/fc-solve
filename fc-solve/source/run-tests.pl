@@ -5,13 +5,10 @@ use strict;
 use warnings;
 use autodie;
 
-use Cwd ();
-use File::Copy qw/ copy /;
-use File::Path qw/ mkpath /;
 use Getopt::Long qw/ GetOptions /;
 use Env::Path ();
 use Path::Tiny qw/ path /;
-use File::Basename qw/ basename dirname /;
+use File::Basename qw/ basename /;
 
 my $bindir     = path(__FILE__)->parent;
 my $abs_bindir = $bindir->absolute;
@@ -80,7 +77,7 @@ sub myglob
     my $preset_src      = $abs_bindir->child("Presets");
     my $pset_files_dest = $preset_dest->child("presets");
     my $pset_files_src  = $preset_src->child("presets");
-    mkpath($pset_files_dest);
+    $pset_files_dest->mkpath;
     foreach my $f ( path($pset_files_src)->children(qr{\.sh\z}) )
     {
         $f->copy( $pset_files_dest->child( $f->basename ) );
@@ -197,9 +194,12 @@ sub myglob
         @tests = grep { !/valgrind/ } @tests;
     }
 
-    print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
-    print STDERR "FCS_SRC_PATH = $ENV{FCS_SRC_PATH}\n";
-    print STDERR "FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>\n";
+    print STDERR <<"EOF";
+FCS_PATH = $ENV{FCS_PATH}
+FCS_SRC_PATH = $ENV{FCS_SRC_PATH}
+FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>
+EOF
+
     if ( $ENV{FCS_TEST_SHELL} )
     {
         system("bash");
