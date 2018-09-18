@@ -12,7 +12,8 @@ has 'games' => (
     is      => 'ro',
     default => sub {
         my @lines =
-            io->file( dirname(__FILE__) . '/../../../../source/USAGE.asciidoc' )
+            io->file(__FILE__)
+            ->updir->catfile(qw{.. .. .. .. source USAGE.asciidoc})
             ->chomp->getlines;
         my @ret;
         foreach my $l (@lines)

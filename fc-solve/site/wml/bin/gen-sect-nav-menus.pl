@@ -6,7 +6,6 @@ use warnings;
 
 use lib './lib';
 
-use File::Basename qw/ dirname /;
 use Path::Tiny qw/ path /;
 use List::MoreUtils qw/ natatime /;
 
