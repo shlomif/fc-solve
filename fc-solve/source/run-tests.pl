@@ -5,8 +5,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Cwd        ();
-use File::Spec ();
+use Cwd ();
 use File::Copy qw/ copy /;
 use File::Path qw/ mkpath /;
 use Getopt::Long qw/ GetOptions /;
@@ -68,7 +67,7 @@ sub myglob
 }
 
 {
-    my $fcs_path = Cwd::getcwd();
+    my $fcs_path = Path::Tiny->cwd;
     local $ENV{FCS_PATH}                = $fcs_path;
     local $ENV{FCS_SRC_PATH}            = $abs_bindir;
     local $ENV{PYTHONDONTWRITEBYTECODE} = '1';
@@ -91,18 +90,16 @@ sub myglob
 
     $files_dest_abs =~ s{STUB\.TXT\z}{};
 
-    my $testing_preset_rc =
-        File::Spec->rel2abs( File::Spec->catfile( $preset_dest, "presetrc" ) );
-    path($testing_preset_rc)
-        ->spew_utf8(
-        path( File::Spec->catfile( $fcs_path, "Presets", "presetrc" ) )
-            ->slurp_utf8 =~ s{^(dir=)([^\n]*)}{$1$files_dest_abs}gmrs );
+    my $testing_preset_rc = $preset_dest->child("presetrc")->absolute;
+    $testing_preset_rc->spew_utf8(
+        $fcs_path->child( "Presets", "presetrc" )->slurp_utf8 =~
+            s{^(dir=)([^\n]*)}{$1$files_dest_abs}gmrs );
 
     local $ENV{FREECELL_SOLVER_PRESETRC} = $testing_preset_rc;
     local $ENV{FREECELL_SOLVER_QUIET}    = 1;
     Env::Path->PATH->Prepend(
-        File::Spec->catdir( Cwd::getcwd(), "board_gen" ),
-        File::Spec->catdir( $abs_bindir, "t", "scripts" ),
+        Path::Tiny->cwd->child("board_gen"),
+        $abs_bindir->child( "t", "scripts" ),
     );
 
     my $IS_WIN = ( $^O eq "MSWin32" );
@@ -115,7 +112,7 @@ sub myglob
         Env::Path->PATH->Append($fcs_path);
     }
 
-    my $foo_lib_dir = File::Spec->catdir( $abs_bindir, "t", "lib" );
+    my $foo_lib_dir = $abs_bindir->child( "t", "lib" );
     foreach my $add_lib ( Env::Path->PERL5LIB(), Env::Path->PYTHONPATH() )
     {
         $add_lib->Append($foo_lib_dir);
@@ -124,9 +121,7 @@ sub myglob
     my $get_config_fn = sub {
         my $basename = shift;
 
-        return File::Spec->rel2abs(
-            File::Spec->catdir( $bindir, "t", "config", $basename ),
-        );
+        return $bindir->child( "t", "config", $basename )->absolute;
     };
 
     local $ENV{HARNESS_ALT_INTRP_FILE} = $get_config_fn->(
