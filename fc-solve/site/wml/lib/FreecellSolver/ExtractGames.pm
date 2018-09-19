@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use Path::Tiny qw/ path /;
 use CGI qw/ escapeHTML /;
-use File::Basename qw/ dirname /;
 
 use MooX qw/ late /;
 

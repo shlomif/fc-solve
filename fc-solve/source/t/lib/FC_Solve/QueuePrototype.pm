@@ -246,12 +246,13 @@ sub get_page_index
     return $self->_page_index;
 }
 
+use Path::Tiny qw/ path /;
+
 sub _calc_filename
 {
     my ( $self, $offload_dir_path ) = @_;
 
-    return File::Spec->catfile(
-        $offload_dir_path,
+    return path($offload_dir_path)->child(
         sprintf(
             "fcs_q%Xq_%020X.page",
             $self->_queue_id(), $self->get_page_index()

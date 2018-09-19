@@ -6,13 +6,11 @@ use warnings;
 use Test::More tests => 5;
 use Test::Differences qw/ eq_or_diff /;
 
-use File::Spec;
-use File::Basename qw( dirname );
 use Path::Tiny qw/ path /;
 use Storable qw(retrieve);
 
-my $data_dir = File::Spec->catdir( dirname(__FILE__), 'data' );
-my $verifier_data_dir = File::Spec->catfile( $data_dir, 'range-verifier' );
+my $data_dir = path(__FILE__)->parent->child('data' );
+my $verifier_data_dir = $data_dir->child( 'range-verifier' );
 
 my $summary_file = "$verifier_data_dir/summary.txt";
 my $stats_file   = "$verifier_data_dir/summary.stats.perl-storable";

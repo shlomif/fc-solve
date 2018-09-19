@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use File::Spec ();
 use List::MoreUtils qw(none);
 use Cwd ();
 use File::Path qw/ mkpath rmtree /;
@@ -21,7 +20,7 @@ if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
 plan tests => 15;
 
 # Change directory to the Freecell Solver base distribution directory.
-my $src_path = $ENV{"FCS_SRC_PATH"};
+my $src_path = path( $ENV{"FCS_SRC_PATH"} );
 
 sub test_cmd
 {
@@ -60,8 +59,7 @@ sub test_cmd
     test_cmd( [ "make", "package_source" ],
         "make package_source is successful" );
 
-    my ($version) = path( File::Spec->catfile( $src_path, "ver.txt" ) )
-        ->lines_utf8( { chomp => 1 } );
+    my ($version) = $src_path->child("ver.txt")->lines_utf8( { chomp => 1 } );
 
     my $base     = "freecell-solver-$version";
     my $tar_arc  = "$base.tar";
@@ -99,31 +97,20 @@ sub test_cmd
 
     # TEST
     ok(
-        scalar(
-            -f File::Spec->catfile(
-                File::Spec->curdir(), $base, "CMakeLists.txt"
-            )
-        ),
+        scalar( -f path($base)->child("CMakeLists.txt") ),
         "CMakeLists.txt exists",
     );
 
     # TEST
-    ok(
-        scalar(
-            -f File::Spec->catfile(
-                File::Spec->curdir(), $base, "HACKING.txt"
-            )
-        ),
-        "HACKING.txt exists",
-    );
+    ok( scalar( -f path($base)->child("HACKING.txt") ), "HACKING.txt exists", );
 
     chdir($orig_cwd);
 
-    my $failing_asciidoc_dir = File::Spec->catdir( $orig_cwd, "asciidoc-fail" );
+    my $failing_asciidoc_dir = $orig_cwd->child("asciidoc-fail");
     rmtree($failing_asciidoc_dir);
     mkpath($failing_asciidoc_dir);
 
-    my $asciidoc_bin = File::Spec->catfile( $failing_asciidoc_dir, "asciidoc" );
+    my $asciidoc_bin = $failing_asciidoc_dir->child("asciidoc");
     path($asciidoc_bin)->spew_utf8(<<"EOF");
 #!$^X
 exit(-1);
@@ -162,7 +149,10 @@ EOF
 
         # TEST
         ok(
-            ( none { m{/freecell-solver-range-parallel-solve\z} } @tar_lines ),
+            (
+                none { m{/freecell-solver-range-parallel-solve\z} }
+                @tar_lines
+            ),
             "Archive does not contain the range solver executable"
         );
 
