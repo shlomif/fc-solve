@@ -2,7 +2,7 @@ package FreecellSolver::ExtractGames;
 
 use strict;
 use warnings;
-use IO::All qw/ io /;
+use Path::Tiny qw/ path /;
 use CGI qw/ escapeHTML /;
 use File::Basename qw/ dirname /;
 
@@ -12,9 +12,8 @@ has 'games' => (
     is      => 'ro',
     default => sub {
         my @lines =
-            io->file(__FILE__)
-            ->updir->catfile(qw{.. .. .. .. source USAGE.asciidoc})
-            ->chomp->getlines;
+            path(__FILE__)->parent(5)->child(qw(source USAGE.asciidoc))
+            ->lines_utf8( { chomp => 1 } );
         my @ret;
         foreach my $l (@lines)
         {
