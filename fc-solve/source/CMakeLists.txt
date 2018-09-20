@@ -979,11 +979,6 @@ ENDMACRO()
 IF(ASCIIDOC_FOUND)
 
     SET (_pdf_targets)
-    ADD_COPY_TARGET( "asciidoc__css" "/etc/asciidoc/stylesheets/asciidoc.css"
-        "${CMAKE_CURRENT_SOURCE_DIR}/asciidoc.css")
-    TRAIL_SPACE_COPY_TARGET( "asciidoc__js"
-        "/etc/asciidoc/javascripts/asciidoc.js"
-        "${CMAKE_CURRENT_SOURCE_DIR}/asciidoc.js")
     FOREACH(_file ${_docfiles})
         GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
         SET(_in "${_file_we}")
