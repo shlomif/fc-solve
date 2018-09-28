@@ -124,6 +124,7 @@ ifeq ($(STATIC),0)
 	# TCMALLOC_LINK = $(HOME)/Download/unpack/prog/lockless_allocator/libllalloc.a
 	# TCMALLOC_LINK = -lzmalloc
 	# TCMALLOC_LINK = -lhoard
+	# TCMALLOC_LINK = -ljemalloc
 endif
 
 # END_SHARED += $(TCMALLOC_LINK)
