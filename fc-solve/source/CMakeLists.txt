@@ -998,6 +998,7 @@ IF(ASCIIDOC_FOUND)
                 OUTPUT "${_html_out}"
                 COMMAND ${ASCIIDOC_EXECUTABLE}
                     "-a" "linkcss"
+                    "--backend" "xhtml5"
                     ${_flags}
                     -o ${_html_out} "${_full_file}"
                 DEPENDS "${_full_file}"
