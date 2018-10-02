@@ -2,25 +2,7 @@
 
 <latemp_subject "Don Woods' Freecell Solver" />
 
-<h2 id="downloads">Downloads</h2>
-
-<ul>
-
-<li>
-<p>
-<a href="don_woods_solver.zip">don_woods_solver.zip</a>
-</p>
-</li>
-
-<li>
-<p>
-<a href="FC-Pro-Source-2003-05-17.zip">Current Source Code for Freecell Pro</a>
-</p>
-</li>
-
-</ul>
-
-<h2 id="about">About these files</h2>
+<h2_section id="about" title="About these files">
 
 <p>
 This is the source code for the famous Freecell solver by
@@ -51,3 +33,25 @@ which was modified by Wilson Callan and Adrian Ettlinger, is available as part
 of <a href="http://cards.wikia.com/wiki/FreeCell_Pro">Freecell Pro</a>.
 FC-Pro is an open-source GPLed program, whose <a href="FC-Pro-Source-2003-05-17.zip">source code</a> is available.
 </p>
+
+</h2_section>
+
+<h2_section id="downloads" title="Downloads">
+
+<ul>
+
+<li>
+<p>
+<a href="don_woods_solver.zip">don_woods_solver.zip</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="FC-Pro-Source-2003-05-17.zip">Current Source Code for Freecell Pro</a>
+</p>
+</li>
+
+</ul>
+
+</h2_section>
