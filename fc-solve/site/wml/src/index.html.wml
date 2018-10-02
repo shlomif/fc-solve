@@ -9,6 +9,7 @@
 <li><a href="$(ROOT)/links.html#other_solvers">Other Solvers</a></li>
 </ul>
 
+<h2_section id="about" title="About">
 <p>
 This is Freecell Solver - a program that automatically solves layouts of
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
@@ -37,7 +38,9 @@ Solitaire implementations. A more detailed list of features can be found
 in the <a href="features.html"><b>Features List</b></a>.
 </p>
 
-<h2>News</h2>
+</h2_section>
+
+<h2_section id="news" title="News">
 <:{
 
     require FreecellSolver::Site::News;
@@ -48,8 +51,9 @@ in the <a href="features.html"><b>Features List</b></a>.
 }:>
 
 <h3 class="plain"><a href="old-news/">Previous News Items</a></h3>
+</h2_section>
 
-<h2>Links</h2>
+<h2_section id="links" title="Links">
 
 <ul>
 <li>
@@ -96,3 +100,5 @@ Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
 </ul>
 
 <h3 class="plain"><a href="links.html">More Links</a></h3>
+
+</h2_section>

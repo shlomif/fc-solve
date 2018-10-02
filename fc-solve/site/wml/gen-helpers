@@ -5,6 +5,8 @@ use warnings;
 
 use HTML::Latemp::GenMakeHelpers ();
 use File::Find::Object::Rule     ();
+use File::Update qw/ write_on_change /;
+use Path::Tiny qw/ path /;
 
 sub _exec
 {
@@ -76,6 +78,60 @@ $text =~
 s!^((?:T2_DOCS|T2_DIRS) = )([^\n]*)!my ($prefix, $files) = ($1,$2); $prefix . ($files =~ s# +ipp\.\S*##gr)!ems;
 _f()->print($text);
 
+write_on_change(
+    path("lib/h_sections.wml"),
+    \(
+        join "\n",
+        map {
+            my $n = $_;
+
+            # my $tag = "wml_toc_h$n";
+            my $tag = "h$n";
+            <<"EOF"
+<define-tag h${n}_section endtag="required" whitespace="delete">
+
+<set-var h_tag="$tag"  />
+<set-var h_class="h$n" />
+<preserve _wml_id_h$n id href title />
+<set-var %attributes />
+
+<:
+
+0 and die qq|
+%attributes
+
+<get-var h_tag />
+
+<get-var id />
+
+ENDU
+|
+:>
+
+<set-var _wml_id_h$n=<get-var id /> />
+<section class="<get-var h_class />">
+
+<header><$tag id="<get-var _wml_id_h$n />">
+<when <get-var href />>
+<a href="<get-var href />"><get-var title /></a>
+</when>
+<when <not <get-var href /> />>
+<get-var title />
+</when>
+</$tag>
+</header>
+
+%body
+
+</section>
+
+<restore _wml_id_h$n id href title />
+
+</define-tag>
+EOF
+        } 2 .. 6
+    )
+);
 io()->file('Makefile')->print("include $DIR/main.mak\n");
 
 _exec( [ 'make', 'sects_cache' ], "sects_cache" );
