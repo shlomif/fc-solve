@@ -354,6 +354,7 @@ upload_local: all
 	$(RSYNC) -a $(D)/ /var/www/html/shlomif/fc-solve-temp
 
 TEST_ENV = SKIP_EMCC="$(SKIP_EMCC)"
+TEST_TARGETS = Tests/*.{py,t}
 
 clean:
 	rm -f lib/fc-solve-for-javascript/*.bc lib/fc-solve-for-javascript/*.js $(TYPESCRIPT_DEST_FILES__NODE) $(TYPESCRIPT_DEST_FILES) $(TS_CHART_DEST)
