@@ -100,6 +100,7 @@ define(["fcs-base-ui", "web-fc-solve", "libfcs-wrap"],
 
                         _out_state(i+1);
                     }
+                    html += "</ol>\n";
                     that._set_html_output(html);
 
                     $("#dynamic_output").on("click", "button.expand_move",
