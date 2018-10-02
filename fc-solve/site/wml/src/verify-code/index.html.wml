@@ -2,6 +2,8 @@
 
 <latemp_subject "Verifying Solutions of Solitaire Games Automatically" />
 
+<h2_section id="about" title="About">
+
 <p>
 <b>Games-Solitaire-Verify</b> is a <a href="http://www.cpan.org/">CPAN
 (Comprehensive Perl Archive Network)</a> module for verifying solutions of
@@ -9,7 +11,9 @@ Solitaire games. It was designed to serve as an aid in the test suite of
 Freecell Solver, but may prove useful in other contexts.
 </p>
 
-<h2 id="download">Download</h2>
+</h2_section>
+
+<h2_section id="download" title="Download">
 
 <ul>
 
@@ -25,7 +29,9 @@ Repository</a>.
 
 </ul>
 
-<h2 id="features">Features and Limitations</h2>
+</h2_section>
+
+<h2_section id="features" title="Features and Limitations">
 
 <ul>
 
@@ -45,3 +51,6 @@ Can handle the verification of individual cards, columns, entire states
 </li>
 
 </ul>
+
+</h2_section>
+
