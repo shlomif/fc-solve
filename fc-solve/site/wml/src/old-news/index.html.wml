@@ -1,6 +1,4 @@
-#include "prelude.wml"
-<set-var latemp_html_standard="xhtml5" />
-#include "driver.wml"
+#include "template5.wml"
 
 <latemp_subject "Freecell Solver's Previous News Items" />
 <:{
