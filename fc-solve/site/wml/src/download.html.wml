@@ -43,7 +43,7 @@ large number of Solitaire variants.
 
 <download_stop />
 
-<h2 id="latest-stable">Latest Stable Versions</h2>
+<h2_section id="latest-stable" title="Latest Stable Versions">
 
 <table class="downloads">
 <caption>Upper Row - The Freecell Solver Source Code. Lower Row - Windows 32-bit Binaries. Links are at the left; Descriptions are at the Right.</caption>
@@ -76,7 +76,9 @@ Binaries for x86-64 Windows.
 </tr>
 </table>
 
-<h2 id="distributions">How to install in various Linux/etc. distributions</h2>
+</h2_section>
+
+<h2_section id="distributions" title="How to install in various Linux/etc. distributions">
 
 <h3 id="distros_deb_ubuntu">Debian/Ubuntu/Linux Mint</h3>
 
@@ -133,9 +135,11 @@ See <a href="http://www.freshports.org/games/freecell-solver">the FreeBSD
 Freshports page</a>.
 </p>
 
+</h2_section>
+
 <define-tag develversion>
 
-<h2 id="devel-versions">Development Versions</h2>
+<h2_section id="devel-versions" title="Development Versions">
 
 <table class="downloads">
 
@@ -149,12 +153,15 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 </tr>
 
 </table>
+
+</h2_section>
+
 </define-tag>
 
 <ifneq "$(WITH_DEVEL_VERSION)" ""
     "<develversion />" />
 
-<h2 id="vcs-version">Latest Version from Git (= the Version Control System)</h2>
+<h2_section id="vcs-version" title="Latest Version from Git (= the Version Control System)">
 
 <ul>
 <li>
@@ -168,7 +175,9 @@ up-and-running.
 </li>
 </ul>
 
-<h2 id="download_other_solvers">Other Solvers</h2>
+</h2_section>
+
+<h2_section id="download_other_solvers" title="Other Solvers">
 
 <ul>
 
@@ -184,11 +193,15 @@ for a more up-to-date version.
 
 </ul>
 
-<h2 id="docs">Documents</h2>
+</h2_section>
+
+<h2_section id="docs" title="Documents">
 
 <fcs_distribution_documents />
 
-<h2 id="utils">Utility Programs</h2>
+</h2_section>
+
+<h2_section id="utils" title="Utility Programs">
 
 <table class="downloads">
 <tr>
@@ -222,7 +235,9 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 
 </table>
 
-<h2 id="results-and-data">Results and Data</h2>
+</h2_section>
+
+<h2_section id="results-and-data" title="Results and Data">
 
 <table class="downloads">
 <tr>
@@ -237,7 +252,9 @@ Freecell Solver”</a>.
 </tr>
 </table>
 
-<h2 id="older-stable">Older Versions</h2>
+</h2_section>
+
+<h2_section id="older-stable" title="Older Versions">
 
 <define-tag ver>
 <tr>
@@ -310,3 +327,5 @@ Freecell Solver”</a>.
 </table>
 
 <undef ver />
+
+</h2_section>
