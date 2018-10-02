@@ -3,13 +3,17 @@
 
 <latemp_subject "The Freecell Solver Frequently Asked Questions (F.A.Q.) List" />
 
+<section>
+<header>
 <h2* id="toc">Table of contents</h2*>
+</header>
 
 <toc />
+</section>
 
-<h2 id="questions">The Questions</h2>
+<h2_section id="questions" title="The Questions">
 
-<h3 id="what_is_it">What is Freecell Solver? What is a solver for Freecell in general?</h3>
+<h3_section id="what_is_it" title="What is Freecell Solver? What is a solver for Freecell in general?">
 
 <p>
 <a href="https://en.wikipedia.org/wiki/FreeCell">Freecell (or “FreeCell”)</a>
@@ -40,7 +44,9 @@ but Freecell appears to be the most popular variant out of them, and the
 name is kept for historical reasons.
 </p>
 
-<h3 id="what_is_solitaire">What is Solitaire? Is it the Windows implementation of Klondike?</h3>
+</h3_section>
+
+<h3_section id="what_is_solitaire" title="What is Solitaire? Is it the Windows implementation of Klondike?">
 
 <p>
 <a href="https://en.wikipedia.org/wiki/Patience_%28game%29">“Patience” or
@@ -65,7 +71,9 @@ You can find <a href="$(ROOT)/links.html#other_solvers">a list of solvers</a>
 for various variants of patience games in our links page.
 </p>
 
-<h3 id="what_are_ms_deals">What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?</h3>
+</h3_section>
+
+<h3_section id="what_are_ms_deals" title="What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?">
 
 <p>
 Microsoft shipped several implementations of Freecell for its Windows operating
@@ -128,7 +136,9 @@ impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals<
 </li>
 </ol>
 
-<h3 id="solve_all_games">Can Freecell Solver solve all the Freecell layouts?</h3>
+</h3_section>
+
+<h3_section id="solve_all_games" title="Can Freecell Solver solve all the Freecell layouts?">
 
 <p>
 First of all, despite popular belief, a small percentage of the standard
@@ -184,7 +194,9 @@ which is impossible to win with 8 freecells or fewer.
 </li>
 </ol>
 
-<h3 id="a_move_seems_wrong">I think I found a wrong move in the solution? What can I do?</h3>
+</h3_section>
+
+<h3_section id="a_move_seems_wrong" title="I think I found a wrong move in the solution? What can I do?">
 
 <p>
 While it is not unthinkable that Freecell Solver will have a bug and will
@@ -211,7 +223,9 @@ option to expand such moves and one can use it in most modern JavaScript-enabled
 browsers without having to install any additional software on your computer.
 </p>
 
-<h3 id="abuse_of_fc_solve">I think I found an abuse of Freecell Solver. What should I do?</h3>
+</h3_section>
+
+<h3_section id="abuse_of_fc_solve" title="I think I found an abuse of Freecell Solver. What should I do?">
 
 <p>
 We received a report or two about various people or companies distributing
@@ -242,7 +256,9 @@ or library (which violates the no warranty paragraph of the licence) everything
 should be fine and the “abuse” of the program is acceptable.
 </p>
 
-<h3 id="what_are_the_uses_of_a_solver">What are the uses of a solver for Patience/Solitaire card games, such as Freecell Solver?</h3>
+</h3_section>
+
+<h3_section id="what_are_the_uses_of_a_solver" title="What are the uses of a solver for Patience/Solitaire card games, such as Freecell Solver?">
 
 <p>
 Freecell Solver is unlikely to help in curing cancer, or solve world hunger,
@@ -275,7 +291,9 @@ by finding whether reached states are solvable. This provides a combined
 solving technique, that is greater than the sum of both parts.
 </p>
 
-<h3 id="does_anyone_care">Does anyone care about this project? I think no one cares about it except you.</h3>
+</h3_section>
+
+<h3_section id="does_anyone_care" title="Does anyone care about this project? I think no one cares about it except you.">
 
 <p>
 The short answer is that: yes, some people care. As of November 2016, I received
@@ -304,7 +322,9 @@ Freecell may have been declining in popularity lately, but I expect interest
 in it to continue for a while.
 </p>
 
-<h3 id="new_solver_is_too_slow">I started writing a solver for Freecell (of my own) but it is too slow. What can I do?</h3>
+</h3_section>
+
+<h3_section id="new_solver_is_too_slow" title="I started writing a solver for Freecell (of my own) but it is too slow. What can I do?">
 
 <p>
 The problem with many naïve Freecell solving programs is that, while they
@@ -384,8 +404,9 @@ authors of other open-source solvers may be happy for help as well, so if
 you want to help to improve something more mature, then contact us.
 </p>
 
-<h3 id="integrate_fcs_into_program">May I integrate Freecell Solver into my
-program? If so - how?</h3>
+</h3_section>
+
+<h3_section id="integrate_fcs_into_program" title="May I integrate Freecell Solver into my program? If so - how?">
 
 <p>
 Yes, you can, as long as you accept the
@@ -417,7 +438,9 @@ Good luck and please let us know if you run into any trouble, or,
 alternatively, if you are successful.
 </p>
 
-<h3 id="solutions_are_too_long">The Solutions I got are too long. What can I do?</h3>
+</h3_section>
+
+<h3_section id="solutions_are_too_long" title="The Solutions I got are too long. What can I do?">
 
 <p>
 You can try using a flares-based preset such as “video-editing” and
@@ -438,7 +461,9 @@ that will yield something. There are some examples for those in the individual
 flares and soft threads under the “Presets/presets” directory.
 </p>
 
-<h3 id="which_prog_lang">Which programming language (or programming languages) is Freecell Solver written in?</h3>
+</h3_section>
+
+<h3_section id="which_prog_lang" title="Which programming language (or programming languages) is Freecell Solver written in?">
 
 <p>
 The core Freecell Solver source is written in the GNU11 version of
@@ -478,7 +503,9 @@ sh:             970 (2.42%)
 cpp:            277 (0.69%)
 </pre>
 
-<h3 id="why_in_c">Why is Freecell Solver written in C? Why not in another language?</h3>
+</h3_section>
+
+<h3_section id="why_in_c" title="Why is Freecell Solver written in C? Why not in another language?">
 
 <p>
 Part of the reason why Freecell Solver is written in C, is because the first
@@ -568,8 +595,9 @@ is still maintained directly, and the generated JavaScript code is not
 idiomatic JavaScript.
 </p>
 
+</h3_section>
 
-<h3 id="unsolvable_solution">I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?</h3>
+<h3_section id="unsolvable_solution" title="I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?">
 
 <p>
 The default Freecell Solver heuristic may have a small number of deals that
@@ -579,8 +607,9 @@ and the <a href="$(ROOT)/docs/distro/USAGE.html">USAGE.html</a> file for
 more information.
 </p>
 
-<h3 id="is_fc_solve_completed">Have you completed/finished the work on
-Freecell Solver? Is it done yet?</h3>
+</h3_section>
+
+<h3_section id="is_fc_solve_completed" title="Have you completed/finished the work on Freecell Solver? Is it done yet?">
 
 <p>
 I am getting asked that a lot, and I find it a strange notion. It is similar
@@ -614,8 +643,9 @@ earlier blog post</a> about “Finished Projects, Maintained Projects and Those
 that are Up For Adoption”.
 </p>
 
-<h3 id="wasnt_freecell_solved_yet">“‘Freecell Solver’? Hasn’t Freecell been
-solved yet?”</h3>
+</h3_section>
+
+<h3_section id="wasnt_freecell_solved_yet" title="“‘Freecell Solver’? Hasn’t Freecell been solved yet?”">
 
 <p>
 This question shows a basic misunderstanding of what Freecell is, and the
@@ -637,7 +667,9 @@ some layouts, but hopefully the chance of this risk can be minimised
 with the more advanced searches.
 </p>
 
-<h3 id="is_fc_solve_written_in_perl">Is Freecell Solver written in Perl?</h3>
+</h3_section>
+
+<h3_section id="is_fc_solve_written_in_perl" title="Is Freecell Solver written in Perl?">
 
 <p>
 For some reason, some people assume that I (= Shlomi Fish) wrote Freecell
@@ -891,7 +923,9 @@ in x86 assembly for DOS.
 </li>
 </ol>
 
-<h3 id="complexity">What is the runtime complexity of solving Freecell?</h3>
+</h3_section>
+
+<h3_section id="complexity" title="What is the runtime complexity of solving Freecell?">
 
 <p>
 Generalised Freecell (where there is an
@@ -907,7 +941,9 @@ That put aside, Freecell is a degenerate case where the number of ranks is
 fixed at 13 (ace-to-king).
 </p>
 
-<h3 id="what_is_pysol">What is PySol? What is PySol FC? Are they solvers as well?</h3>
+</h3_section>
+
+<h3_section id="what_is_pysol" title="What is PySol? What is PySol FC? Are they solvers as well?">
 
 <p>
 No, actually <a href="http://pysolfc.sourceforge.net/">PySol FC</a>, which
@@ -936,7 +972,9 @@ For some more information, see:
 </li>
 </ol>
 
-<h3 id="is_freecell_the_ms_game">"Freecell"? Is it the Microsoft/Windows game?</h3>
+</h3_section>
+
+<h3_section id="is_freecell_the_ms_game" title="“Freecell”? Is it the Microsoft/Windows game?">
 
 <p>
 Yes, and no. The "Freecell" game (see its <a href="https://en.wikipedia.org/wiki/FreeCell">wikipedia entry</a>)
@@ -950,7 +988,9 @@ support for many variations on them, and accepts any arbitrary layout of the
 cards, including those at mid play, as input.
 </p>
 
-<h3 id="is_it_foss">Is Freecell Solver open source?</h3>
+</h3_section>
+
+<h3_section id="is_it_foss" title="Is Freecell Solver open source?">
 
 <p>
 Freecell Solver is
@@ -969,7 +1009,9 @@ and call also download release source archive files from
 Contributions are welcome.
 </p>
 
-<h3 id="exceeded_512GB">What were the whereabouts of one of the solvers running out of 512 GB (= gigabyte) of RAM?</h3>
+</h3_section>
+
+<h3_section id="exceeded_512GB" title="What were the whereabouts of one of the solvers running out of 512 GB (= gigabyte) of RAM?">
 
 <p>
 We were trying to conclusively determine whether MS deal no. 384,243 was
@@ -998,3 +1040,7 @@ tasks require much more than that and Freecell is <a href="#complexity">a hard
 using a different algorithm, by distributing calculations, or other techniques.
 As usual, patches/<a href="https://help.github.com/articles/about-pull-requests/">pull requests</a> or ideas are welcome.
 </p>
+
+</h3_section>
+
+</h2_section>
