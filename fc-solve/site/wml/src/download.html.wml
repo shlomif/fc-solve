@@ -257,14 +257,14 @@ Freecell Solver”</a>.
 <h2_section id="older-stable" title="Older Versions">
 
 <define-tag ver>
-<tr>
-<td>
+<li>
+<p>
 <a href="$(ROOT)/downloads/fc-solve/freecell-solver-%0.%1.tar.<get-var download_suffix />">Version %0.%1</a>
-</td>
-</tr>
+</p>
+</li>
 </define-tag>
 
-<table class="downloads">
+<ul class="old_vers">
 <set-var download_suffix="xz" />
 <ver "4.18" "0" />
 <ver "4.16" "0" />
@@ -324,7 +324,7 @@ Freecell Solver”</a>.
 <ver "0.6" "2" />
 <ver "0.4" "2" />
 <ver "0.2" "1" />
-</table>
+</ul>
 
 <undef ver />
 
