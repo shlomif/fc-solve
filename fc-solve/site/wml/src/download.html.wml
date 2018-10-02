@@ -1,4 +1,4 @@
-#include "template.wml"
+#include "template5.wml"
 #include "fcs-distribution-docs.wml"
 
 <latemp_subject "Download Freecell Solver" />

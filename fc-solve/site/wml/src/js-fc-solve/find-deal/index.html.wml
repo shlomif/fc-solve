@@ -1,4 +1,4 @@
-#include "template.wml"
+#include "template5.wml"
 #include "Inc/js_fc_solve.wml"
 
 <latemp_subject "Freecell Deal Finder" />

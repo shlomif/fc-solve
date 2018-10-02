@@ -1,4 +1,4 @@
-#include "template.wml"
+#include "template5.wml"
 
 <latemp_subject "Online Freecell solver (Automated tests)" />
 

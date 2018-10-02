@@ -1,4 +1,4 @@
-#include "template.wml"
+#include "template5.wml"
 <latemp_subject "Freecell Solver's Code of Conduct and Diversity Statement" />
 
 <define-tag diversity_statement>
