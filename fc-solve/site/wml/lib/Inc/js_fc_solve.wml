@@ -1,22 +1,22 @@
 <page_extra_head_elements>
-<script type="text/javascript">
+<js_script>
 (function() {
     try {
         var a = new Float64Array(1);
         return; //no need
     } catch(e) { window.location.replace("$(ROOT)/js-fc-solve/incompatible-browser.html"); }
 })();
-</script>
+</js_script>
 <jquery_ui_head_elements />
-<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/jquery.phoenix.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
+<js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
+<js_script src="$(ROOT)/js/jquery.phoenix.js"></js_script>
+<js_script src="$(ROOT)/js/require--debug.js"></js_script>
 <define-tag expanded_scripts>
 </define-tag>
 <define-tag production_scripts>
 </define-tag>
 <define-tag REMOVED>
-<script type="text/javascript" src="https://raw.githack.com/zloirock/core-js/v2.5.0/client/shim.min.js"></script>
+<js_script src="https://raw.githack.com/zloirock/core-js/v2.5.0/client/shim.min.js"></js_script>
 </define-tag>
 
 <if "$(PRODUCTION)" "<production_scripts />" "<expanded_scripts />" />
@@ -27,9 +27,9 @@
 <preserve incs />
 <set-var %attributes />
 
-<script type="text/javascript">
+<js_script>
 $(function() { $('.enable_js').addClass('ok'); })
-</script>
+</js_script>
 
 <p>
 <a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>
@@ -48,7 +48,7 @@ $(function() { $('.enable_js').addClass('ok'); })
 </div>
 </div>
 
-<script type="text/javascript">
+<js_script>
 requirejs.config({
     baseUrl: '$(ROOT)/js',
     });
@@ -87,7 +87,7 @@ requirejs.config({
 
     return;
 });
-</script>
+</js_script>
 
 <restore incs />
 </define-tag>

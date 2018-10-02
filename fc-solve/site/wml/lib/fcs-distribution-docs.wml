@@ -16,7 +16,8 @@
 </define-tag>
 
 <define-tag fcs_distribution_documents>
-<table class="downloads" summary="Links on the left, short descriptions on the right">
+<table class="downloads">
+<caption>Links on the left, short descriptions on the right</caption>
 <tr>
 <th>HTML</th>
 <th>Plaintext</th>

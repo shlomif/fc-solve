@@ -94,7 +94,10 @@ sub get_html_head_nav_links
         my $url   = escape_html( $val->direct_url() );
         my $title = $val->title() || '';
 
-        push @ret, qq{<link rel="$key" href="$url" title="$title" />\n};
+        if ( not( $key eq 'top' || $key eq 'up' ) )
+        {
+            push @ret, qq{<link rel="$key" href="$url" title="$title" />\n};
+        }
     }
 
     return join '', @ret;

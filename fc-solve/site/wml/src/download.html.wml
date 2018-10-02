@@ -44,7 +44,8 @@ large number of Solitaire variants.
 
 <h2 id="latest-stable">Latest Stable Versions</h2>
 
-<table class="downloads" summary="Upper Row - The Freecell Solver Source Code. Lower Row - Windows 32-bit Binaries. Links are at the left; Descriptions are at the Right.">
+<table class="downloads">
+<caption>Upper Row - The Freecell Solver Source Code. Lower Row - Windows 32-bit Binaries. Links are at the left; Descriptions are at the Right.</caption>
 <tr>
 <td>
 <link_to_download_file "freecell-solver-4.20.0.tar.xz" />
@@ -135,7 +136,7 @@ Freshports page</a>.
 
 <h2 id="devel-versions">Development Versions</h2>
 
-<table class="downloads" summary="The Development Version for Freecell Solver. Link for download is on the left; Description is on the right.">
+<table class="downloads">
 
 <tr>
 <td>
@@ -188,7 +189,7 @@ for a more up-to-date version.
 
 <h2 id="utils">Utility Programs</h2>
 
-<table class="downloads" summary="Utility programs and patches for use within various Solitaire Implementations. Links are on the left; descriptions are on the right.">
+<table class="downloads">
 <tr>
 <td>
 <a href="palm_patience_getgame.tar.gz">palm_patience_getgame.tar.gz</a>
@@ -222,7 +223,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 
 <h2 id="results-and-data">Results and Data</h2>
 
-<table class="downloads" summary="Results and Data. Left column is the file to download with the link. Right column is the description">
+<table class="downloads">
 <tr>
 <td>
 <a href="$(ROOT)/downloads/dbm-fc-solver/dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz">dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz</a>
@@ -245,7 +246,7 @@ Freecell Solver”</a>.
 </tr>
 </define-tag>
 
-<table class="downloads" summary="Older versions of Freecell Solver. In decreasing version number.">
+<table class="downloads">
 <set-var download_suffix="xz" />
 <ver "4.18" "0" />
 <ver "4.16" "0" />

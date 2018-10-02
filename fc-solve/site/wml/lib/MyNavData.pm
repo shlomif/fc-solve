@@ -2,6 +2,7 @@ package MyNavData;
 
 use strict;
 use warnings;
+use utf8;
 
 my $hosts = {
     'fc-solve' => {

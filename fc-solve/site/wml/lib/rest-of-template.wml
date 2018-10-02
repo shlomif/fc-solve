@@ -156,8 +156,8 @@ td { vertical-align : top; }
 
 <define-tag jquery_ui_head_elements>
 <js_script src="$(ROOT)/js/jquery-ui/jquery-ui.min.js"></js_script>
-<link rel="stylesheet" type="text/css" href="$(ROOT)/js/jquery-ui/jquery-ui.min.css" media="screen, projection" />
-<link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen, projection" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/js/jquery-ui/jquery-ui.min.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen" />
 </define-tag>
 
 <latemp_after_main_title>
