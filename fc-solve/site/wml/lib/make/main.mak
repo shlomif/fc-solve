@@ -325,7 +325,20 @@ $(D)/js-fc-solve/text/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_S
 
 $(D)/charts/fc-pro--4fc-intractable-deals--report/index.html $(D)/charts/fc-pro--4fc-deals-solvability--report/index.html: $(FC_PRO_4FC_FILTERED_TSVS) $(FC_PRO_4FC_TSVS)
 
+T2_SVGS__BASE := $(filter %.svg,$(IMAGES))
+T2_SVGS__MIN := $(T2_SVGS__BASE:%.svg=%.min.svg)
+T2_SVGS__svgz := $(T2_SVGS__BASE:%.svg=%.svgz)
+
+$(T2_SVGS__MIN): %.min.svg: %.svg
+	minify --svg-decimals 3 -o $@ $<
+
+$(T2_SVGS__svgz): %.svgz: %.min.svg
+	gzip --best < $< > $@
+
+min_svgs: $(T2_SVGS__MIN) $(T2_SVGS__svgz)
+
 all: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
+all: min_svgs
 
 .PHONY:
 
