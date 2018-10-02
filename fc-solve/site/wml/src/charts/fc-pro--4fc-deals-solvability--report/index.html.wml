@@ -1,11 +1,11 @@
-#include "template.wml"
+#include "template5.wml"
 #include "xhtml/1.x/std/toc.wml"
 
 <latemp_subject "Report: The solvability statistics of the Freecell Pro 4-Freecells Deals" />
 
 <page_extra_head_elements>
-<script type="text/javascript" src="$(ROOT)/js/jquery.flot.js"></script>
-<script type="text/javascript" src="$(ROOT)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js"></script>
+<js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
+<js_script src="$(ROOT)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js"></js_script>
 </page_extra_head_elements>
 
 <h2* id="toc">Table of contents</h2*>

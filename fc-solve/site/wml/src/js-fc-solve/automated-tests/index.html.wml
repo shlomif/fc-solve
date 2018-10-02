@@ -4,9 +4,9 @@
 
 <page_extra_head_elements>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/qunit.css" />
-<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
+<js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
 <jquery_ui_head_elements />
-<script type="text/javascript" src="$(ROOT)/js/require--debug.js"></script>
+<js_script src="$(ROOT)/js/require--debug.js"></js_script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
 </page_extra_head_elements>
 
@@ -14,14 +14,14 @@
 
 
 <h1 id="qunit-header">QUnit example</h1>
-<h2 id="qunit-banner"></h2>
+<h2 id="qunit-banner">Banner</h2>
 <div id="qunit-testrunner-toolbar"></div>
-<h2 id="qunit-userAgent"></h2>
+<h2 id="qunit-userAgent">User Agent</h2>
 <ol id="qunit-tests"></ol>
 <div id="qunit-fixture">test markup, will be hidden</div>
-<script type="text/javascript">
+<js_script>
 requirejs.config({
     baseUrl: '$(ROOT)/js',
     });
 require(["auto-tests-driver"], function (foo) {foo();});
-</script>
+</js_script>

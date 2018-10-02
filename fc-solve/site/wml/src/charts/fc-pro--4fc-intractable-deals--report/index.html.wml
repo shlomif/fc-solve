@@ -4,8 +4,8 @@
 <latemp_subject "Report: Solving the Remaining Freecell Pro 4 Freecells Intractable Deals" />
 
 <page_extra_head_elements>
-<script type="text/javascript" src="$(ROOT)/js/jquery.flot.js"></script>
-<script type="text/javascript" src="chart-using-flot.js"></script>
+<js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
+<js_script src="chart-using-flot.js"></js_script>
 </page_extra_head_elements>
 
 <h2* id="toc">Table of contents</h2*>

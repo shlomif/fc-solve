@@ -3,21 +3,21 @@
 <latemp_subject "Online Freecell solver (Automated tests)" />
 
 <page_extra_head_elements>
-<script type="text/javascript" src="$(ROOT)/js/jquery.querystring.js"></script>
+<js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
 <jquery_ui_head_elements />
-<script type="text/javascript" src="$(ROOT)/js/libfreecell-solver.min.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve--expand-moves.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve.js"></script>
+<js_script src="$(ROOT)/js/libfreecell-solver.min.js"></js_script>
+<js_script src="$(ROOT)/js/web-fc-solve--expand-moves.js"></js_script>
+<js_script src="$(ROOT)/js/web-fc-solve.js"></js_script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
-<script type="text/javascript" src="$(ROOT)/js/jquery.ajaxQueue.min.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/web-fc-solve--expand-moves--mega-test.js"></script>
+<js_script src="$(ROOT)/js/jquery.ajaxQueue.min.js"></js_script>
+<js_script src="$(ROOT)/js/web-fc-solve--expand-moves--mega-test.js"></js_script>
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>
 
 <h2 id="deal_idx_update" style="color: red">Not started</h2>
 
-<script type="text/javascript">
+<js_script>
   \$(document).ready(function () {
       try {
           test_js_fc_solve_class();
@@ -26,7 +26,7 @@
           alert(err);
       }
   });
-</script>
+</js_script>
 
 <h2>AJAX Output</h2>
 
@@ -37,8 +37,8 @@
 <textarea id="js_fcs_out"></textarea>
 
 <h1 id="qunit-header">QUnit example</h1>
-<h2 id="qunit-banner"></h2>
+<h2 id="qunit-banner">Banner</h2>
 <div id="qunit-testrunner-toolbar"></div>
-<h2 id="qunit-userAgent"></h2>
+<h2 id="qunit-userAgent">User Agent</h2>
 <ol id="qunit-tests"></ol>
 <div id="qunit-fixture">test markup, will be hidden</div>
