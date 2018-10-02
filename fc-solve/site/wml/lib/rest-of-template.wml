@@ -87,11 +87,11 @@ licence</a>.
 -->
 </define-tag>
 <define-tag old_removed_self_links>
-<script type="text/javascript">
+<js_script>
 <!--
 $("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]").each(function(i){ \$(this).append( ' <span class="selfl">[<a href="#' + this.id + '">link</a>]</span>' ) })
 -->
-</script>
+</js_script>
 </define-tag>
 
 <latemp_webmaster>
@@ -121,8 +121,8 @@ $(ROOT)/%0
 </define-tag>
 
 <define-tag my_extra_head_elements>
-<script type="text/javascript" src="$(ROOT)/js/common-methods.js"></script>
-<script type="text/javascript" src="$(ROOT)/js/jq.js"></script>
+<js_script src="$(ROOT)/js/common-methods.js"></js_script>
+<js_script src="$(ROOT)/js/jq.js"></js_script>
 <link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="<rss_feed />" />
 <link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default" />
 {#PAGE_EXTRA_HEAD_ELEMENTS#}
@@ -155,7 +155,7 @@ td { vertical-align : top; }
 </define-tag>
 
 <define-tag jquery_ui_head_elements>
-<script type="text/javascript" src="$(ROOT)/js/jquery-ui/jquery-ui.min.js"></script>
+<js_script src="$(ROOT)/js/jquery-ui/jquery-ui.min.js"></js_script>
 <link rel="stylesheet" type="text/css" href="$(ROOT)/js/jquery-ui/jquery-ui.min.css" media="screen, projection" />
 <link rel="stylesheet" type="text/css" href="$(ROOT)/jqui-override.css" media="screen, projection" />
 </define-tag>
