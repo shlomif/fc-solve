@@ -71,10 +71,12 @@ my $tree_contents = {
             'url'  => "links.html",
             'subs' => [
                 {
+                    'skip' => 1,
                     'text' => "Other Solvers",
                     'url'  => "links.html#other_solvers",
                 },
                 {
+                    'skip' => 1,
                     'text' => "Front Ends",
                     'url'  => "links.html#front_ends",
                 },
