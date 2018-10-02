@@ -17,10 +17,11 @@
 </define-tag>
 
 <define-tag download_stop>
-<div class="stop">
+<section class="stop">
+<header>
 <img src="$(ROOT)/images/Stop_hand_nuvola.png" class="sign" alt="Stop Sign" />
-
 <h2 id="download-gui-instead">Stop! Don't you want a Graphical Interface?</h2>
+</header>
 
 <p>
 Freecell Solver is <b>not</b> a graphical program, and is instead oriented
@@ -37,7 +38,7 @@ which is open-source, cross-platform, configurable, and supports a very
 large number of Solitaire variants.
 </p>
 
-</div>
+</section>
 </define-tag>
 
 <download_stop />
