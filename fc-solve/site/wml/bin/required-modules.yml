@@ -44,6 +44,7 @@ required:
         File::Which: 0
         HTML::Latemp::GenMakeHelpers: 0
         HTML::Spelling::Site: 0
+        HTML::T5: 0
         HTML::TokeParser::Simple: 0
         IO::All: 0
         List::MoreUtils: 0
