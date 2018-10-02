@@ -335,4 +335,8 @@ a.solve_online_button {
     height: auto;
     border:0;
     margin-bottom:0.5em;
+    padding: 0.5em;
+    &:hover {
+        background-color: PaleGreen;
+    }
 }
