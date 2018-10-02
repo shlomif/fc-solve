@@ -1,0 +1,145 @@
+textarea.emscripten {
+    font-family: monospace;
+    width: 60%;
+    margin-top: 1em;
+    border: #686 2pt solid;
+    border-radius: 5pt;
+
+    &:hover {
+        border-color: #8A8;
+    }
+}
+
+.disabled {
+    display: none;
+}
+
+#fc_solve_output {
+    border: green 3pt solid;
+    padding: .5em;
+    background-color: #B0CFE1;
+    overflow: scroll;
+    height: 50em;
+    width: 70em;
+}
+
+#populate_input {
+    /* float: right; */
+    /* margin-right: 200px; */
+    clear: left;
+    font-size: 130%;
+}
+
+#run_do_solve {
+    font-size: 130%;
+    margin-top: .5em;
+}
+
+#preset {
+    margin-right: 2em;
+}
+
+#fc_solve_status {
+    font-weight: bold;
+
+    &.not_started {
+        color: black;
+    }
+
+    &.running {
+        color: blue;
+    }
+
+    &.solved {
+        color: green;
+    }
+
+    &.exceeded, &.impossible {
+        color: purple;
+    }
+
+    &.error {
+        color: red;
+    }
+}
+
+#status_wrap {
+    border: orange 1pt solid;
+    padding: .5em;
+}
+
+.fc_solve_tabs .tab {
+    width: 100%;
+    overflow: hidden;
+}
+
+.enable_js {
+    &.ok {
+        display: none;
+    }
+
+    strong {
+        color: red;
+    }
+}
+
+#about_sect, .instructions_link {
+    font-size: 120%;
+}
+
+#fc_solve_bookmark {
+    margin-top: 1em;
+    border: black 1pt solid;
+    padding-left: 1em;
+    padding-bottom: 1em;
+    padding-right: 1em;
+    clear: left;
+
+    .controls_wrapper {
+        margin-left: 1em;
+    }
+}
+
+#fc_solve_bookmark_button {
+    font-size: 120%;
+}
+
+#fcs_bookmark_wrapper {
+    margin-left: 0;
+
+    > li {
+        margin-bottom: .5em;
+    }
+}
+
+.output_form {
+    #output, .controls {
+        float: left;
+        vertical-align: top;
+        margin-bottom: 2em;
+    }
+
+    .controls {
+        margin-top: 1em;
+        margin-left: 2em;
+    }
+
+    #one_based {
+        margin-bottom: 2em;
+    }
+}
+
+#fcs_advanced {
+    border: black 1pt solid;
+    padding: 1em;
+}
+
+#game_type {
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-top: 1em;
+}
+
+.state {
+    margin-top: 1em;
+}
