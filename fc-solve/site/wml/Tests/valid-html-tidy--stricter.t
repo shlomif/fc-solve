@@ -5,7 +5,8 @@ use warnings;
 
 use Test::HTML::Tidy::Recursive::Strict;
 
-my %whitelist = ( map { $_ => 1 } ('dest/old-news/index.html'), );
+my %whitelist =
+    ( map { $_ => 1 } ( 'dest/index.html', 'dest/old-news/index.html', ), );
 
 Test::HTML::Tidy::Recursive::Strict->new(
     {
