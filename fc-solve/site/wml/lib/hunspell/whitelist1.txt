@@ -1176,7 +1176,7 @@ patsolve-shlomif
 range_solvers_gen_ms_boards
 s3fs-fuse
 
-==== In: dest/index.html , dest/old-news/index.xhtml
+==== In: dest/index.html , dest/old-news/index.html
 
 01ABCDE
 Der
