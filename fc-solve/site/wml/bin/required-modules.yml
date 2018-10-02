@@ -50,7 +50,7 @@ required:
         Moo: 0
         MooX: 0
         MooX::late: 0
-        Parallel::ForkManager: 0
+        Parallel::ForkManager::Segmented: 0
         Path::Tiny: 0
         Perl::Critic: 0
         Perl::Tidy: 0
