@@ -9,6 +9,8 @@ required:
           url: "http://www.shlomifish.org/open-source/projects/docmake/"
         - exe: "latemp-config"
           url: "http://web-cpan.shlomifish.org/latemp/"
+        - exe: "minify"
+          url: "https://github.com/tdewolff/minify/tree/master/cmd/minify"
         - exe: "node"
           url: "https://nodejs.org/en/"
         - exe: "npm"
