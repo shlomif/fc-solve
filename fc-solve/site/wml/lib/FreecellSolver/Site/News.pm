@@ -93,12 +93,13 @@ sub get_item_html
     my $date  = $item->{date};
 
     return
-          "<h3 class=\"newsitem\" id=\""
+          "<article><header><h3 class=\"newsitem\" id=\""
         . $date->strftime("news-%Y-%m-%d") . "\">"
         . $date->strftime("%d-%b-%Y")
         . ( defined($title) ? ": $title" : "" )
-        . "</h3>\n\n"
-        . $item->{'body'};
+        . "</h3></header>\n\n"
+        . $item->{'body'}
+        . "</article>\n";
 }
 
 sub render_items
