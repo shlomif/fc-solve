@@ -3,6 +3,8 @@
 CURRENT TASKS:
 
 LONG TERM:
+    - Convert the long strings in lib/babel/js/web-fc-solve-tests.js
+        * To separate files with some JS/JSON code generation.
     - Prepare the solver with the GUI.
         * Added [Sat 2013-01-12]
     - Play with using http://twitter.github.com/bootstrap/ for the site.
