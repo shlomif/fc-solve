@@ -9,7 +9,7 @@ function is_int(input: number): boolean {
 }
 
 const _ranks__int_to_str: string = "0A23456789TJQK";
-const _ranks__str_to_int = {};
+export const ranks__str_to_int = {};
 function _perl_range(start: number, end: number): number[] {
     const ret: number[] = [];
 
@@ -21,7 +21,7 @@ function _perl_range(start: number, end: number): number[] {
 }
 
 _perl_range(1, 13).forEach((rank) => {
-    _ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
+    ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
 });
 const _suits__int_to_str: string = "HCDS";
 const _suits__str_to_int = {};
@@ -108,7 +108,7 @@ export function fcs_js__card_from_string(s: string): Card {
     if (! m) {
         throw "Invalid format for a card - \"" + s + "\"";
     }
-    return new Card(_ranks__str_to_int[m[1]], _suits__str_to_int[m[2]]);
+    return new Card(ranks__str_to_int[m[1]], _suits__str_to_int[m[2]]);
 }
 
 class BaseResult {
@@ -450,7 +450,7 @@ export function fcs_js__foundations_from_string(
             return make_ret(false, "Could not match a foundation string [HCDS]-[A23456789TJQK]");
         }
         const suit = m[2];
-        if (!founds.setByIdx(0, _suits__str_to_int[suit], _ranks__str_to_int[m[3]])) {
+        if (!founds.setByIdx(0, _suits__str_to_int[suit], ranks__str_to_int[m[3]])) {
             return make_ret(false, "Suit \"" + suit + "\" was already set.");
         }
     }

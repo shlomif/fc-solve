@@ -12,6 +12,8 @@ SKIP_EMCC = 0
 D = ./dest
 
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
+# TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-t2
+# TEMP_UPLOAD_URL = /var/www/html/shlomif/fc-solve-temp/
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
@@ -290,11 +292,11 @@ $(JS_DEST_FILES__NODE): lib/for-node/%.js: dest/%.js
 
 all: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
 
-$(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts
-	tsc --module amd --moduleResolution node --out $@ $(TYPESCRIPT_COMMON_DEFS_FILES) $<
+$(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts src/js/web-fc-solve.ts
+	tsc --target es6 --module amd --moduleResolution node --out $@ $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
 $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts
-	tsc --target es5 --moduleResolution node --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
+	tsc --target es6 --moduleResolution node --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
 TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js

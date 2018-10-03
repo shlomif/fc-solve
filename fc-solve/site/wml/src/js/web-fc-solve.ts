@@ -1,4 +1,5 @@
 import * as bigInt from 'big-integer';
+import * as validate from "./fcs-validate";
 import * as expand from "./web-fc-solve--expand-moves";
 
 const fc_solve_expand_move = expand.fc_solve_expand_move;
@@ -147,9 +148,19 @@ const iters_step = 1000;
 const upper_iters_limit = 128 * 1024;
 
 const fc_solve_2uni_suit_map = {H: '♥', C: '♣', D: '♦', S: '♠'};
+const fc_solve_2uni_suit_map_num = {H: 1, C: 3, D: 2, S: 0};
 
 function fc_solve_2uni_card(match, p1, p2, offset, mystring) {
     return p1 + fc_solve_2uni_suit_map[p2];
+}
+
+function fc_solve_2uni_char_card(match, p1, p2, offset, mystring) {
+    const rank = validate.ranks__str_to_int[p1];
+
+    const ret = String.fromCodePoint(
+        fc_solve_2uni_suit_map_num[p2] * 16 + 0x1F0A0 + rank,
+    );
+    return ret;
 }
 
 function fc_solve_2uni_found(match, p1, p2, offset, mystring) {
@@ -161,6 +172,7 @@ export class FC_Solve {
     private string_params: string[];
     private set_status_callback: any;
     private is_unicode_cards: boolean;
+    private is_unicode_cards_chars: boolean;
     private cmd_line_preset: string;
     private current_iters_limit: number;
     private obj: any;
@@ -177,6 +189,7 @@ export class FC_Solve {
         that.string_params = args.string_params;
         that.set_status_callback = args.set_status_callback;
         that.is_unicode_cards = (args.is_unicode_cards || false);
+        that.is_unicode_cards_chars = (args.is_unicode_cards_chars || false);
         that.cmd_line_preset = args.cmd_line_preset;
         that.current_iters_limit = 0;
         that.obj = ( () => {
@@ -297,7 +310,11 @@ export class FC_Solve {
             return out_buffer;
         }
 
-        return that._replace_found(that._replace_card(out_buffer));
+        if (that.is_unicode_cards_chars) {
+            return that._replace_found(that._replace_char_card(out_buffer));
+        } else {
+            return that._replace_found(that._replace_card(out_buffer));
+        }
     }
     public display_solution(args) {
         const that = this;
@@ -592,6 +609,11 @@ export class FC_Solve {
             that.set_status("error", "Error");
             return -1;
         }
+    }
+    private _replace_char_card(s) {
+        return s.replace(/\b([A2-9TJQK])([HCDS])\b/g,
+            fc_solve_2uni_char_card,
+        );
     }
     private _replace_card(s) {
         return s.replace(/\b([A2-9TJQK])([HCDS])\b/g,
