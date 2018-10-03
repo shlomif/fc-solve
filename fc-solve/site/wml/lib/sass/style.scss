@@ -19,19 +19,21 @@
 body {
     @include body-background;
     @include default_font_family;
+    margin: 0;
 }
 
 #faux {
     @include body-background;
-    width: 100%;
 }
 #container-all {
+    width: 100%;
     display: table-row;
     position: relative;
 }
 
 #show_navbar {
     width: 100%;
+    height: 100px;
 
     &.on {
         width: 20%;
@@ -41,7 +43,7 @@ body {
     width: 20%;
 }
 #navbar_wrapper, #show_navbar {
-    padding: 1em;
+    // padding: 1em;
 
     &.novis {
         width: 0%;
