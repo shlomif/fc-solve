@@ -1,2 +1,3 @@
 24_default_ascii
 24_default_unicode_suits
+24_default_unicode_cards
