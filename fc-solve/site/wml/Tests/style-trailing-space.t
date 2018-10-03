@@ -33,6 +33,8 @@ my $finder = Test::TrailingSpace->new(
         |
     (?:lib/for-node/$lib\z)
         |
+    (?:\.sass-cache)
+        |
     (?:$lib\z)
         |
     (?:\.(?:diff|jpg|patch|png|wasm|woff|xcf|xz|zip)\z)
