@@ -58,6 +58,7 @@ body {
 #main {
     // width: 80%
     width: auto;
+    padding: 0.5em;
 
     @include cell;
 
