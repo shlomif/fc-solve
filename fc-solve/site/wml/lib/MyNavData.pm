@@ -64,6 +64,12 @@ my $tree_contents = {
                     'title' => "Architecture Document",
                     'url'   => "arch_doc/",
                 },
+                {
+                    'skip'  => 1,
+                    'text'  => "Old Doxygen",
+                    'title' => "Hypertext Cross-Reference",
+                    'url'   => "michael_mann/",
+                },
             ],
         },
         {
