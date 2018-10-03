@@ -41,7 +41,10 @@ body {
     }
 }
 #navbar_wrapper {
+    @include cell;
     width: 20%;
+    height: 100%;
+    background-color: #C5CAE2;
 }
 #navbar_wrapper, #show_navbar {
     // padding: 1em;
@@ -51,12 +54,6 @@ body {
         padding: 0;
     }
 }
-
-#navbar_wrapper {
-    @include cell;
-    height: 100%;
-}
-
 #main {
     // width: 80%
     width: auto;
@@ -106,7 +103,6 @@ ul {
 }
 
 .navbar {
-    background-color: #C5CAE2;
     height: 100%;
     padding: 1em;
     margin-bottom:0;
