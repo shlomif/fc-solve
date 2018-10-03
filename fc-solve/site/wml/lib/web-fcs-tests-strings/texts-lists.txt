@@ -1,4 +1,5 @@
 24_default_ascii
 24_default_unicode_suits
 24_default_unicode_cards
+solution_for_board_without_trailing_newline
 solution_for_pysol_simple_simon_deal_24__default
