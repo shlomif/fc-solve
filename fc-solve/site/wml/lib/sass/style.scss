@@ -60,8 +60,14 @@ body {
     // width: 80%
     width: auto;
     padding: 1em;
+    padding-top: 0;
 
     @include cell;
+
+    h1 {
+        padding-top: 0;
+        margin-top: 0;
+    }
 
     .news * , .wrap-me * {
         @include wrap;
@@ -123,9 +129,6 @@ h3 {
 }
 
 h2, h3 {
-    -moz-border-radius: 0 5px 5px 5px;
-    -webkit-border-radius: 0 5px 5px 5px;
-    -khtml-border-radius: 0 5px 5px 5px;
     border-radius: 0 5px 5px 5px;
     clear: right;
 }
@@ -370,10 +373,6 @@ a.solve_online_button {
     border: 1px solid #ddd;
     background: #fff;
     background: linear-gradient(#f6f6f6 0, #fff 50px);
-    background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
-    background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
-    background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
-    background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
     box-shadow: 0 3px 10px rgba(0, 0, 0, .15);
 }
 
@@ -430,7 +429,8 @@ a.solve_online_button {
 
 code {
     background-color: PowderBlue;
-    padding: 0.3em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
     &:hover {
         background-color: LightBlue;
     }

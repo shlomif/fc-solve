@@ -18,13 +18,17 @@ Freecell Solver, but may prove useful in other contexts.
 <ul>
 
 <li>
+<p>
 <a href="https://metacpan.org/release/Games-Solitaire-Verify"><b>Latest
 Stable Version on CPAN</b></a> - includes online documentation.
+</p>
 </li>
 
 <li>
+<p>
 <a href="https://github.com/shlomif/fc-solve/tree/master/cpan/Games-Solitaire-Verify">Git
 Repository</a>.
+</p>
 </li>
 
 </ul>
@@ -36,18 +40,24 @@ Repository</a>.
 <ul>
 
 <li>
+<p>
 Modular design for implementing game variants - supports most of the
 variants supported by Freecell Solver.
+</p>
 </li>
 
 <li>
+<p>
 Input and output are compatible with that of Freecell Solver's
 <code>-p -t -sam -sel</code> output (including several quirks).
+</p>
 </li>
 
 <li>
+<p>
 Can handle the verification of individual cards, columns, entire states
 (= board layouts), moves and entire solutions.
+</p>
 </li>
 
 </ul>
