@@ -224,7 +224,7 @@ Supports games of one and two decks.
 List of <a href="http://pysolfc.sourceforge.net/">PySol (PySolFC
 version)</a> variants that can be solved:
 </p>
-<ul>
+<ul class="game_variants">
 <li>American Canister</li>
 <li>Baker’s Dozen</li>
 <li>Baker’s Game</li>
