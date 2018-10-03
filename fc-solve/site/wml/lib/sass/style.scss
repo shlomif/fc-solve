@@ -217,6 +217,12 @@ table.downloads, .fcs_depth_dbm_deals {
     border: #444 medium solid;
 }
 
+.downloads {
+    td, th {
+        text-align: left;
+    }
+}
+
 .downloads, .fcs_depth_dbm_deals {
     td, th {
         vertical-align: top;
