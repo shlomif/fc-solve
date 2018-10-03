@@ -2,7 +2,7 @@
 
 <latemp_subject "Freecell Solver Links" />
 
-<h2 id="resources">Resources</h2>
+<h2_section id="resources" title="Resources">
 
 <p class="desc">
 Freecell Solver Resources on the Net.
@@ -92,7 +92,9 @@ contains the old Subversion repository.
 
 </ul>
 
-<h2 id="technologies">Technologies</h2>
+</h2_section>
+
+<h2_section id="technologies" title="Technologies">
 
 <p class="desc">
 Technologies used by Freecell Solver or that aided in its development.
@@ -282,7 +284,9 @@ to JavaScript compiler.
 </li>
 </ul>
 
-<h2 id="front_ends">Programs that use Freecell Solver</h2>
+</h2_section>
+
+<h2_section id="front_ends" title="Programs that use Freecell Solver">
 
 <ul>
 <li>
@@ -326,12 +330,13 @@ it, after the previous maintainers became <a href="https://en.wikipedia.org/wiki
 
 </ul>
 
-<h2 id="people">People</h2>
+</h2_section>
+
+<h2_section id="people" title="People">
 
 <p class="desc">
 Links to the homepages of people who contributed in any way to Freecell
-Solver. Because of spamming issues, I don't put their E-mails here. In case
-you want their E-mail address, either go to their homepage or send me an E-mail.
+Solver.
 </p>
 
 <ul>
@@ -388,7 +393,9 @@ Sadly, he passed away on 2013 and there is <a href="https://en.wikipedia.org/wik
 
 </ul>
 
-<h2 id="other_solvers">Other Solvers</h2>
+</h2_section>
+
+<h2_section id="other_solvers" title="Other Solvers">
 
 <p class="desc">
 We have competition. But there's nothing wrong with competition. ;-)
@@ -656,7 +663,9 @@ library</a> - contains a solver. Expat licence. Also see
 
 </ul>
 
-<h2 id="reviews">Reviews of Freecell Solver</h2>
+</h2_section>
+
+<h2_section id="reviews" title="Reviews of Freecell Solver">
 
 <ul>
 <li>
@@ -695,7 +704,9 @@ Thought of the Moment Regarding Freecell Solver</a>
 </li>
 </ul>
 
-<h2 id="videos">Videos: Screencasts, demos, etc.</h2>
+</h2_section>
+
+<h2_section id="videos" title="Videos: Screencasts, demos, etc.">
 
 <ul>
 
@@ -724,7 +735,9 @@ an external iPhone device.
 </li>
 </ul>
 
-<h2 id="old_pages">Old pages of this site</h2>
+</h2_section>
+
+<h2_section id="old_pages" title="Old pages of this site">
 
 <p>
 These are some old pages of this site that are no longer of relevance and
@@ -763,7 +776,9 @@ originally planned, but this is no longer actively pursued.
 
 </ul>
 
-<h2 id="general_freecell">General Freecell Links</h2>
+</h2_section>
+
+<h2_section id="general_freecell" title="General Freecell Links">
 
 <ul>
 <li>
@@ -846,3 +861,5 @@ with open source code written in <a href="https://en.wikipedia.org/wiki/Scala_(p
 </li>
 
 </ul>
+
+</h2_section>
