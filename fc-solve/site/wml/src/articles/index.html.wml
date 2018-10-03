@@ -3,9 +3,29 @@
 
 <latemp_subject "Freecell Solver - Articles and Reports" />
 
-<h2 id="docs">Documents</h2>
+<h2_section id="about" title="About">
 
-<h3 class="plain"><a href="$(ROOT)/articles/how-we-benchmark/v1/">How We Benchmark Freecell Solver (Version 1)</a></h3>
+<p>
+These are articles and reports by the Freecell Solver developers.
+</p>
 
-<h3 class="plain"><a href="$(ROOT)/charts/fc-pro--4fc-deals-solvability--report/">Report: The solvability statistics of the Freecell Pro 4-Freecells Deals</a></h3>
+</h2_section>
 
+<h2_section id="docs" title="Documents">
+
+<ul>
+<li>
+<p>
+<a href="$(ROOT)/articles/how-we-benchmark/v1/">How We Benchmark Freecell Solver (Version 1)</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="$(ROOT)/charts/fc-pro--4fc-deals-solvability--report/">Report: The solvability statistics of the Freecell Pro 4-Freecells Deals</a>
+</p>
+</li>
+
+</ul>
+
+</h2_section>
