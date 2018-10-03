@@ -17,7 +17,6 @@
 
 <define-tag fcs_distribution_documents>
 <table class="downloads">
-<caption>Links on the left, short descriptions on the right</caption>
 <tr>
 <th>HTML</th>
 <th>Plaintext</th>

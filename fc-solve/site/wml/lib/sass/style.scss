@@ -54,6 +54,7 @@ body {
 
 #navbar_wrapper {
     @include cell;
+    height: 100%;
 }
 
 #main {
@@ -65,8 +66,8 @@ body {
     @include cell;
 
     h1 {
-        padding-top: 0;
-        margin-top: 0;
+        // padding-top: 0;
+        // margin-top: 0;
     }
 
     .news * , .wrap-me * {
@@ -106,7 +107,9 @@ ul {
 
 .navbar {
     background-color: #C5CAE2;
+    height: 100%;
     padding: 1em;
+    margin-bottom:0;
 }
 
 .navbar .center {
