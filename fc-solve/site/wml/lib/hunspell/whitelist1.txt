@@ -585,6 +585,7 @@ disinforming
 dll
 dmalloc
 don_woods_solver
+doxygen
 earthlink
 edu
 eight_off

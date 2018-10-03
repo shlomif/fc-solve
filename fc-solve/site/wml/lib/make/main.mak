@@ -342,7 +342,7 @@ all: min_svgs
 
 .PHONY:
 
-ALL_HTACCESSES = $(D)/.htaccess
+ALL_HTACCESSES = $(D)/.htaccess $(D)/michael_mann/.htaccess
 
 GEN_SECT_NAV_MENUS = ./bin/gen-sect-nav-menus.pl
 T2_CACHE_ALL_STAMP = lib/cache/STAMP.one

@@ -92,6 +92,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 
 <input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
 <input id="unicode_suits" type="checkbox" title="Unicode suits" class="phoenix" checked="checked" /><label for="unicode_suits">Unicode suits</label>
+<br />
 <button id="clear_output" title="Clear the Output Box">Clear Output</button>
 </div>
 </div>
