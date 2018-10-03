@@ -1,9 +1,73 @@
 @import "common-style";
 
-body {
+@mixin body-background {
     background-color: white;
+}
 
+@mixin cell {
+    display: table-cell;
+}
+
+@mixin wrap {
+    // word-break: break-all;
+
+    overflow-wrap: break-word;
+    // word-wrap: break-word;
+    word-wrap: normal;
+}
+
+body {
+    @include body-background;
     @include default_font_family;
+}
+
+#faux {
+    @include body-background;
+    width: 100%;
+}
+#container-all {
+    display: table-row;
+    position: relative;
+}
+
+#show_navbar {
+    width: 100%;
+
+    &.on {
+        width: 20%;
+    }
+}
+#navbar_wrapper {
+    width: 20%;
+}
+#navbar_wrapper, #show_navbar {
+    padding: 1em;
+
+    &.novis {
+        width: 0%;
+        padding: 0;
+    }
+}
+
+#navbar_wrapper {
+    @include cell;
+}
+
+#main {
+    // width: 80%
+    width: auto;
+
+    @include cell;
+
+    .news * , .wrap-me * {
+        @include wrap;
+    }
+    * {
+        // word-break: break-all;
+
+        // overflow-wrap: break-word;
+        // word-wrap: break-word;
+    }
 }
 
 a {
@@ -16,15 +80,6 @@ a {
     &:hover {
         color: red;
     }
-}
-
-.navbar {
-    float: left;
-    width: 20%;
-    padding-left: .5em;
-    padding-right: .5em;
-    padding-top: 1.5em;
-    padding-bottom: 2em;
 }
 
 ul {
@@ -343,6 +398,20 @@ a.solve_online_button {
 
 #clear_output {
     margin-top: 2em;
+}
+
+.navbar {
+    &.novis {
+        display: none;
+    }
+}
+
+@media(max-width: 900px) {
+    #navbar_wrapper {
+        @include body-background;
+        border: 2px black solid;
+        position: absolute;
+    }
 }
 
 * {

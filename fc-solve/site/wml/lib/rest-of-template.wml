@@ -122,6 +122,8 @@ $(ROOT)/%0
 <define-tag my_extra_head_elements>
 <js_script src="$(ROOT)/js/common-methods.js"></js_script>
 <js_script src="$(ROOT)/js/jq.js"></js_script>
+<js_script src="$(ROOT)/js/toggler.js"></js_script>
+<js_script src="$(ROOT)/js/toggle_sect.js"></js_script>
 <link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="<rss_feed />" />
 <link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default" />
 {#PAGE_EXTRA_HEAD_ELEMENTS#}

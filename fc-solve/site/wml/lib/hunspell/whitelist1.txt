@@ -374,6 +374,7 @@ NUM
 NUM_COLUMNS
 NUM_DECKS
 Nadav
+NavBar
 NoSQL
 Nullsoft
 Oberhumer

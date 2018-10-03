@@ -43,8 +43,8 @@ SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
 WML_FLAGS += $(COMMON_PREPROC_FLAGS)
 
 WML_FLAGS += --passoption=2,-X3074 \
-			 -DLATEMP_THEME=better-scm \
-	$(LATEMP_WML_FLAGS) --passoption=3,-I../lib/ \
+			 -DLATEMP_THEME=sf.org1 \
+	$(LATEMP_WML_FLAGS) --passoption=2,-I../lib/ --passoption=3,-I../lib/ \
 	-I $${HOME}/apps/wml \
 	--passoption=7,--skip=imgsize,summary \
 
