@@ -46,7 +46,10 @@ large number of Solitaire variants.
 <h2_section id="latest-stable" title="Latest Stable Versions">
 
 <table class="downloads">
-<caption>Upper Row - The Freecell Solver Source Code. Lower Row - Windows 32-bit Binaries. Links are at the left; Descriptions are at the Right.</caption>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
 <tr>
 <td>
 <link_to_download_file "freecell-solver-4.20.0.tar.xz" />
@@ -214,9 +217,10 @@ for a more up-to-date version.
 <h2_section id="utils" title="Utility Programs">
 
 <table class="downloads">
+<when>
 <tr>
 <td>
-<a href="palm_patience_getgame.tar.gz">palm_patience_getgame.tar.gz</a>
+<a href="palm_patience_getgame.tar.gz">Palm Pat Dumper</a>
 </td>
 <td>
 Dumps games from Patience 2.5 on PalmOS. You need all the
@@ -224,6 +228,7 @@ usual PalmOS tools to use this. The README tells you where
 you can find Patience 2.5. prc file included.
 </td>
 </tr>
+</when>
 
 <tr>
 <td>
@@ -236,7 +241,7 @@ This is a patch for xpat2 that dumps its games to a file.
 
 <tr>
 <td>
-<a href="patience-1.9.patch">patience-1.9.patch</a>
+<a href="patience-1.9.patch">patience 1.9 patch</a>
 </td>
 <td>
 Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html">"Patience" Tcl implementation</a>.
@@ -252,7 +257,7 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 <table class="downloads">
 <tr>
 <td>
-<a href="$(ROOT)/downloads/dbm-fc-solver/dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz">dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz</a>
+<a href="$(ROOT)/downloads/dbm-fc-solver/dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz">2fc results on Amadiro machine</a>
 </td>
 <td>
 See <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1099">the

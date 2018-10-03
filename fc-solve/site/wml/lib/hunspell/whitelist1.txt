@@ -91,6 +91,7 @@
 2Ftrunk
 2H
 2S
+2fc
 32K
 3C
 3D
