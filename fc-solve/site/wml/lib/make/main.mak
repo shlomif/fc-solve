@@ -279,7 +279,7 @@ $(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 
 TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/web-fc-solve-tests--fcs-validate.js
 
-TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST) $(call dest_jsify,fcs-base-ui.js web-fc-solve.js web-fc-solve--expand-moves.js)
+TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST) $(call dest_jsify,fcs-base-ui.js web-fc-solve.js web-fc-solve--expand-moves.js web-fcs-tests-strings.js)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
 TYPESCRIPT_COMMON_DEFS_FILES = src/js/jq_qs.d.ts
 
@@ -292,10 +292,15 @@ $(JS_DEST_FILES__NODE): lib/for-node/%.js: dest/%.js
 
 all: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
 
-$(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts src/js/web-fc-solve.ts
+TYPESCRIPT_COMMON_DEPS = src/js/web-fc-solve.ts src/js/web-fcs-tests-strings.ts
+
+src/js/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl lib/web-fcs-tests-strings/texts-lists.txt
+	perl $<
+
+$(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts $(TYPESCRIPT_COMMON_DEPS)
 	tsc --target es6 --module amd --moduleResolution node --out $@ $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
-$(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts src/js/web-fc-solve.ts
+$(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts $(TYPESCRIPT_COMMON_DEPS)
 	tsc --target es6 --moduleResolution node --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
