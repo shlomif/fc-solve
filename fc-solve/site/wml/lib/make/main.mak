@@ -295,7 +295,7 @@ all: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
 $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts src/js/web-fc-solve.ts
 	tsc --target es6 --module amd --moduleResolution node --out $@ $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
-$(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts
+$(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts src/js/web-fc-solve.ts
 	tsc --target es6 --moduleResolution node --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
