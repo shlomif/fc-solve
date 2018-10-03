@@ -2,12 +2,14 @@
 
 <latemp_subject "Contribute to Freecell Solver" />
 
+<h2_section id="about" title="About">
 <p>
 This page is intended to provide information about how to <b>contribute</b>
 to Freecell Solver.
 </p>
+</h2_section>
 
-<h2 id="vcs-version">Latest Version from Git (= the Version Control System)</h2>
+<h2_section id="vcs-version" title="Latest Version from Git (= the Version Control System)">
 
 <ul>
 <li>
@@ -21,7 +23,9 @@ up-and-running.
 </li>
 </ul>
 
-<h2 id="coding-conventions">Coding Conventions</h2>
+</h2_section>
+
+<h2_section id="coding-conventions" title="Coding Conventions">
 
 <p>
 One can read the
@@ -29,3 +33,5 @@ One can read the
 conventions</a> and contribution guidelines. Please follow them when sending
 a patch or pull-request.
 </p>
+
+</h2_section>
