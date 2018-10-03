@@ -120,6 +120,7 @@
 /fc-solve/site/wml/src/charts/dbm-solver-__int128-optimisation/typings.json
 /fc-solve/site/wml/src/js/typings
 /fc-solve/site/wml/src/js/typings.json
+/fc-solve/site/wml/src/js/web-fcs-tests-strings.ts
 /fc-solve/site/wml/tslint.json
 /fc-solve/source/.tidyall.d
 /fc-solve/source/AUTHORS.html
