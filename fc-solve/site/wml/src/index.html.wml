@@ -56,47 +56,76 @@ in the <a href="features.html"><b>Features List</b></a>.
 <h2_section id="links" title="Links">
 
 <ul>
+
 <li>
+<p>
 <a href="http://www.freecell.org/">Freecell.org</a> - a web-site dedicated
 to the game.
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://www.solitairelaboratory.com/freecell.html">Michael
 Keller’s Freecell site</a> -
 contains the
 <a href="http://www.solitairelaboratory.com/fcfaq.html">Freecell FAQ
 (Frequently Asked Questions)</a> and other resources.
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://pysolfc.sourceforge.net/">PySol Fan Club Edition</a> - a
 cross-platform, open-source implementation of many Solitaire games with
 a good integration of Freecell Solver.
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://people.cs.uu.nl/hansb/d.freecell/freecellhtml.html">
 An unsolvable instance of Freecell</a> - why not all possible initial Freecell
 boards can be solved.
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://www.heyes-jones.com/astar.html">Justin Heyes-Jones’s A* page</a> - a page about the A* scan.
+</p>
 </li>
+
 </ul>
 
 <ul>
+
 <li>
+<p>
 <a href="http://freecode.com/projects/freecellsolver/">Freecell Solver’s
 Freecode App-Index Record</a>
+</p>
 </li>
+
 <li>
+<p>
 <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">Freecell Solver's
 Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://fc-solve.blogspot.com/">The Freecell Solver Blog</a>
+</p>
 </li>
+
 <li>
+<p>
 <a href="<get-var presentation_url />">A Presentation about Freecell Solver</a>
+</p>
 </li>
+
 </ul>
 
 <h3 class="plain"><a href="links.html">More Links</a></h3>
