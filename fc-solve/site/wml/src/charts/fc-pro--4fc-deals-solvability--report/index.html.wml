@@ -12,7 +12,7 @@
 
 <toc />
 
-<h2 id="intro">Introduction</h2>
+<h2_section id="intro" title="Introduction">
 
 <p>
 <b>Publishing Date:</b> 12 December 2016.
@@ -63,7 +63,9 @@ to be impossible as well, thus yielding no remaining intractable deals in
 the FreeCell Pro range.
 </p>
 
-<h2 id="conclusions">Conclusions</h2>
+</h2_section>
+
+<h2_section id="conclusions" title="Conclusions">
 
 <p>
 Out of the 8.6 milliard Freecell Pro deals, there are 102,075 ones that
@@ -81,7 +83,7 @@ These deals are: 14720822, 647519280, 3015622123, 5705339228, 7273316239 and
 
 </p>
 
-<h3 id="reflections">Some Reflections</h3>
+<h3_section id="reflections" title="Some Reflections">
 
 <p>
 One surprising fact is that solving 4-freecells deals was
@@ -94,9 +96,13 @@ magnitude. Perhaps this can be explained by the fact that many more deals
 are winnable using 4 freecells.
 </p>
 
-<h2 id="charts">Charts</h2>
+</h3_section>
 
-<h3 id="queue-items">Queue Items Per Iterations for Each of the Deals</h3>
+</h2_section>
+
+<h2_section id="charts" title="Charts">
+
+<h3_section id="queue-items" title="Queue Items Per Iterations for Each of the Deals">
 
 <p>
 <b>Note:</b> the depth_dbm_fc_solver uses a variation on
@@ -106,7 +112,7 @@ count of states. The x-axis - "Iterations" roughly corresponds to time while
 the y-axis, corresponds to the number of states in the queue.
 </p>
 
-<h4 id="iters-summary-table">Iterations Summary Table</h4>
+<h4_section id="iters-summary-table" title="Iterations Summary Table">
 
 <:
 {
@@ -115,8 +121,13 @@ FreecellSolver::GenDealsCharts1->gen_summary_table({try2 => 1});
 FreecellSolver::GenDealsCharts1->gen_progress_charts({try2 => 1});
 }
 :>
+</h4_section>
 
-<h2 id="future_directions">Future Directions</h2>
+</h3_section>
+
+</h2_section>
+
+<h2_section id="future_directions" title="Future Directions">
 
 <p>
 The version of the depth_dbm_fc_solver that was used for solving the intractable
@@ -154,8 +165,9 @@ solvers just move cards on top of each others and into empty slots using
 reversible moves. We wish to investigate some potential prunes to detect such
 terminal positions and avoid traversing them further.
 </p>
+</h2_section>
 
-<h2 id="links">Links and References</h2>
+<h2_section id="links" title="Links and References">
 
 <ul>
 
@@ -199,3 +211,5 @@ the Microsoft deals</a> - entry in the Freecell Solver FAQ.
 </li>
 
 </ul>
+
+</h2_section>
