@@ -80,7 +80,7 @@ Binaries for x86-64 Windows.
 
 <h2_section id="distributions" title="How to install in various Linux/etc. distributions">
 
-<h3 id="distros_deb_ubuntu">Debian/Ubuntu/Linux Mint</h3>
+<h3_section id="distros_deb_ubuntu" title="Debian/Ubuntu/Linux Mint">
 
 <img src="$(ROOT)/images/50px-Debian-OpenLogo.svg.png" alt="Debian Logo"
     class="dist_logo"
@@ -95,7 +95,9 @@ somewhat old, but hopefully mostly bug-free. Also see the
 <a href="http://packages.debian.org/source/squeeze/freecell-solver">Debian Package page</a>.
 </p>
 
-<h3 id="distros_fedora">Fedora</h3>
+</h3_section>
+
+<h3_section id="distros_fedora" title="Fedora">
 
 <img src="$(ROOT)/images/fedora-logo.png" alt="Fedora Logo"
 class="dist_logo"
@@ -105,7 +107,9 @@ class="dist_logo"
 None yet.
 </p>
 
-<h3 id="distros_mandriva_mageia">Mandriva / Mageia</h3>
+</h3_section>
+
+<h3_section id="distros_mandriva_mageia" title="Mandriva / Mageia">
 
 <img src="$(ROOT)/images/100px-Mageia_logo.svg.png" alt="Mageia Logo"
     class="dist_logo" />
@@ -115,7 +119,9 @@ Type <code>urpmi freecell-solver</code>. You may need to configure the right
 appropriate networked repositories in the Mageia Control Centre.
 </p>
 
-<h3 id="distros_arch">Arch Linux</h3>
+</h3_section>
+
+<h3_section id="distros_arch" title="Arch Linux">
 
 <img src="$(ROOT)/images/Arch_Linux_logo.svg" alt="Arch Linux Logo"
     class="dist_logo" style="height:50px" />
@@ -125,7 +131,9 @@ See <a href="https://www.archlinux.org/packages/extra/x86_64/freecell-solver/">t
 package page</a>. <code>pacman -S freecell-solver</code> should work.
 </p>
 
-<h3 id="distros_freebsd">FreeBSD</h3>
+</h3_section>
+
+<h3_section id="distros_freebsd" title="FreeBSD">
 
 <img src="$(ROOT)/images/Freebsd_logo.svg.png" alt="FreeBSD Logo"
     class="dist_logo" />
@@ -134,6 +142,8 @@ package page</a>. <code>pacman -S freecell-solver</code> should work.
 See <a href="http://www.freshports.org/games/freecell-solver">the FreeBSD
 Freshports page</a>.
 </p>
+
+</h3_section>
 
 </h2_section>
 

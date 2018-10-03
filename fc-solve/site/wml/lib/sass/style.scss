@@ -59,7 +59,7 @@ body {
 #main {
     // width: 80%
     width: auto;
-    padding: 0.5em;
+    padding: 1em;
 
     @include cell;
 
@@ -220,7 +220,7 @@ table.downloads, .fcs_depth_dbm_deals {
 .downloads, .fcs_depth_dbm_deals {
     td, th {
         vertical-align: top;
-        padding: .2em .2em .2em .2em;
+        padding: 0.35em;
         border: #666 thin solid;
     }
 }
@@ -421,6 +421,15 @@ a.solve_online_button {
         height: auto;
     }
 }
+
+code {
+    background-color: PowderBlue;
+    padding: 0.3em;
+    &:hover {
+        background-color: LightBlue;
+    }
+}
+
 * {
     // outline: hotpink solid 2px;
 }
