@@ -1,7 +1,7 @@
 #include "template5.wml"
 <latemp_subject "Freecell Solver's Features List" />
 
-<h2>Usability Options</h2>
+<h2_section id="usability-opts" title="Usability Options">
 
 <ul>
 <li>
@@ -59,7 +59,9 @@ of iterations was reached without a conclusion (= "intractable").
 
 </ul>
 
-<h2>Development Features</h2>
+</h2_section>
+
+<h2_section id="dev-features" title="Development Features">
 
 <ul>
 
@@ -100,7 +102,9 @@ A test suite is included as part of the distribution.
 
 </ul>
 
-<h2>Scan Options</h2>
+</h2_section>
+
+<h2_section id="scam-opts" title="Scan Options">
 
 <ul>
 
@@ -182,7 +186,9 @@ for each depth in the DFS stack.
 
 </ul>
 
-<h2>Game Types</h2>
+</h2_section>
+
+<h2_section id="game-types" title="Game Types">
 
 <ul>
 <li>
@@ -279,3 +285,5 @@ command-line options.
 </p>
 </li>
 </ul>
+
+</h2_section>
