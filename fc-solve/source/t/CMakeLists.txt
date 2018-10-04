@@ -45,10 +45,13 @@ ENDMACRO ()
 
 IF (FCS_WITH_TEST_SUITE)
 
-    CHECK_FOR_MULTIPLE_PERL_MODULES("Task::FreecellSolver::Testing")
-
-    IF (NOT found_python3_random2)
-        MESSAGE (FATAL_ERROR "python3 and the random2 module from PyPI is required for running the test suite. Please install them.")
+    SET (MODULE "Task::FreecellSolver::Testing")
+    EXECUTE_PROCESS (
+        COMMAND "${PERL_EXECUTABLE}" "-M${MODULE}=" "-e" "exit(0)"
+        RESULT_VARIABLE "RESULT"
+    )
+    IF (NOT RESULT EQUAL 0)
+        MESSAGE(FATAL_ERROR "You need the Perl 5/CPAN distribution ${MODULE} to run the test suite. Either skip the test suite using -DFCS_WITH_TEST_SUITE=OFF or see http://perl-begin.org/topics/cpan/ for installing from CPAN.")
     ENDIF ()
 
     FIND_LIBRARY(LIBTAP_LIB tap)
