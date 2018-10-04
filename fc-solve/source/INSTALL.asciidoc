@@ -9,15 +9,14 @@ Quick and Dirty Compilation
 ---------------------------
 
 Freecell Solver was converted to use CMake ( http://www.cmake.org/ )
-starting from version 2.12.0. You'll need to install CMake version 2.6.3
+starting from version 2.12.0. You'll need to install CMake version 3
 or later from your distribution's repository or from its source
-distribution. *NOTE*: CMake 2.6.2 (that ships with some releases of Ubuntu)
-won't work due to a regression bug so please don't report any errors with
-it.
+distribution.
 
 If you are building from the repository, you also need to put the
 module +Shlomif_Common.cmake+ from
 https://bitbucket.org/shlomif/shlomif-cmake-modules in the CMake path.
+Normally the build process will try to download it and use it for you.
 
 Next, run:
 
@@ -42,14 +41,14 @@ this distribution.
 Changing the Maximal number of Freecells or Stacks or Cards per Stack
 ---------------------------------------------------------------------
 
-The following parameters to the cmake" script which accept an argument
+The following parameters to the CMake script, which accept an argument,
 control the hard-coded parameters of the Freecell Solver executables:
 
-* +-DMAX_NUM_FREECELLS:STRING=$NUM+ - The maximal number of freecells
+* +-DMAX_NUM_FREECELLS=$NUM+ - The maximal number of freecells
 
-* +-DMAX_NUM_STACKS:STRING=$NUM+ - The maximal number of stacks (columns)
+* +-DMAX_NUM_STACKS=$NUM+ - The maximal number of stacks (columns)
 
-* +-DMAX_NUM_INITIAL_CARDS_IN_A_STACK:STRING=$NUM+ - The maximal number of
+* +-DMAX_NUM_INITIAL_CARDS_IN_A_STACK=$NUM+ - The maximal number of
 initial cards per stack.
 
 Notice that it's very important to set the maximal number of initial cards
