@@ -2,7 +2,7 @@
 ;;; of the local definitions were set. It does the actual rendering of the page
 ;;; as part of the site common look and feel.
 
-#include "html5-shims.wml"
+#include "Inc/html5-shims.wml"
 
 #include "h_sections.wml"
 #include "latemp/latemp-driver.wml"
