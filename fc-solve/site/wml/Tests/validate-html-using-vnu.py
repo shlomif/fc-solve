@@ -42,10 +42,11 @@ import unittest
 
 class VnuValidate:
     """docstring for VnuValidate"""
-    def __init__(self, path, jar, non_xhtml_re):
+    def __init__(self, path, jar, non_xhtml_cb, skip_cb):
         self.path = path
         self.jar = jar
-        self.non_xhtml_re = non_xhtml_re
+        self.non_xhtml_cb = non_xhtml_cb
+        self.skip_cb = skip_cb
 
     def run(self):
         """docstring for run"""
@@ -55,9 +56,11 @@ class VnuValidate:
             os.makedirs(dn)
             for fn in fns:
                 path = join(dirpath, fn)
+                if self.skip_cb(path):
+                    continue
                 html = re.match(r'.*\.html?$', fn)
                 if re.match('.*\\.xhtml$', fn) or (
-                        html and not re.search(self.non_xhtml_re, path)):
+                        html and not self.non_xhtml_cb(path)):
                     open(join(dn, re.sub('\.[^\.]*$', '.xhtml',
                                          fn)), 'w').write(
                         open(join(dirpath, fn)).read())
@@ -74,8 +77,20 @@ class MyTests(unittest.TestCase):
         dir_ = './dest'
         key = 'HTML_VALID_VNU_JAR'
         if key in os.environ:
+            def _create_cb(s):
+                """docstring for _create_cb"""
+                _re = re.compile(s)
+
+                def _cb(path):
+                    return re.search(_re, path)
+                return _cb
+
+            def _skip_cb(path):
+                return False
+            _non_xhtml_cb = _create_cb('jquery-ui')
             self.assertTrue(
-                VnuValidate(dir_, os.environ[key], r'jquery-ui').run())
+                VnuValidate(dir_, os.environ[key], _non_xhtml_cb,
+                            _skip_cb).run())
         else:
             self.assertTrue(True, key + ' not set')
 
