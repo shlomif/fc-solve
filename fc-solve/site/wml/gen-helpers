@@ -36,7 +36,7 @@ _exec(
     ],
     'cookiecutter failed.'
 );
-_exec( [ "make", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
+_exec( [ "gmake", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
     "build-deps failed!" );
 require IO::All;
 
@@ -134,4 +134,4 @@ EOF
 );
 io()->file('Makefile')->print("include $DIR/main.mak\n");
 
-_exec( [ 'make', 'sects_cache' ], "sects_cache" );
+_exec( [ 'gmake', 'sects_cache' ], "sects_cache" );
