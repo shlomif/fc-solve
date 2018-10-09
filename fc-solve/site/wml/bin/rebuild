@@ -7,7 +7,6 @@ rebuild()
         git clean -dxf .
         bash -x bin/install-npm-deps.sh
         ./gen-helpers
-        gmake -j4
         gmake -j4 test
     )
 }
