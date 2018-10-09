@@ -266,7 +266,7 @@ FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
 
 TYPINGS =
 
-DEST_BABEL_JSES = $(call dest_jsify,find-fc-deal-ui.js jq_qs.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js web-fc-solve-ui.js web-fc-solve--expand-moves--mega-test.js web-fc-solve-tests.js)
+DEST_BABEL_JSES = $(call dest_jsify,find-fc-deal-ui.js jq_qs.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js web-fc-solve-ui.js web-fc-solve--expand-moves--mega-test.js)
 OUT_BABEL_JSES = $(patsubst $(DEST_JS_DIR)/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
 
 all: $(DEST_BABEL_JSES)
@@ -279,11 +279,11 @@ $(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 
 TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/web-fc-solve-tests--fcs-validate.js
 
-TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST) $(call dest_jsify,fcs-base-ui.js web-fc-solve.js web-fc-solve--expand-moves.js web-fcs-tests-strings.js)
+TYPESCRIPT_DEST_FILES = $(FCS_VALID_DEST) $(TEST_FCS_VALID_DEST) $(call dest_jsify,fcs-base-ui.js web-fc-solve.js web-fc-solve--expand-moves.js web-fcs-tests-strings.js web-fc-solve-tests.js)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst $(D)/%.js,lib/for-node/%.js,$(TYPESCRIPT_DEST_FILES))
 TYPESCRIPT_COMMON_DEFS_FILES = src/js/jq_qs.d.ts
 
-JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js lib/for-node/js/web-fc-solve-tests.js
+JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js
 
 all: $(JS_DEST_FILES__NODE)
 
