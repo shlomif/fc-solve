@@ -303,6 +303,7 @@ function _create_bmark_obj() {
             'stdin', 'preset', 'deal_number', 'one_based',
             'unicode_suits', 'string_params', 'game_type',
         ],
+        show: [],
     });
 }
 

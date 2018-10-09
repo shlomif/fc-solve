@@ -1,4 +1,4 @@
-import { jq_qs } from './jq_qs';
+import { jq_querystring } from './jq_qs';
 import * as w from './web-fc-solve';
 // import jq_querystring as jq_querystring;
 
@@ -62,7 +62,7 @@ export class FC_Solve_Bookmarking {
         });
 
         const bookmark_string = that._get_base_url() + '?' +
-            jq_qs.jq_querystring(control_values);
+            jq_querystring(control_values);
 
         $("#fcs_bm_results_input").val(bookmark_string);
 
@@ -85,7 +85,7 @@ export class FC_Solve_Bookmarking {
         }
 
         // Remove trailing 1.
-        const params = jq_qs.jq_querystring(qs.substr(1));
+        const params = jq_querystring(qs.substr(1));
 
         that._each_control((myid) => {
             const ctl = $('#' + myid);
