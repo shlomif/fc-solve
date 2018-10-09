@@ -357,7 +357,8 @@ $(T2_CACHE_ALL_STAMP): $(GEN_SECT_NAV_MENUS) $(FACTOIDS_NAV_JSON) $(ALL_SUBSECTS
 	perl $(GEN_SECT_NAV_MENUS) $(SRC_DOCS)
 	touch $@
 
-make-dirs:
+make-dirs: $(D) $(SUBDIRS)
+
 sects_cache: make-dirs $(T2_CACHE_ALL_STAMP)
 htaccesses_target: $(ALL_HTACCESSES)
 

@@ -134,4 +134,4 @@ EOF
 );
 io()->file('Makefile')->print("include $DIR/main.mak\n");
 
-_exec( [ 'gmake', 'sects_cache' ], "sects_cache" );
+_exec( [ 'gmake', 'make-dirs', 'sects_cache' ], "sects_cache" );
