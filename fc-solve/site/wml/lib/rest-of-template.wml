@@ -120,7 +120,9 @@ $(ROOT)/%0
 </define-tag>
 
 <define-tag my_extra_head_elements>
+<when>
 <js_script src="$(ROOT)/js/common-methods.js"></js_script>
+</when>
 <js_script src="$(ROOT)/js/jq.js"></js_script>
 <js_script src="$(ROOT)/js/toggler.js"></js_script>
 <js_script src="$(ROOT)/js/toggle_sect.js"></js_script>
