@@ -31,18 +31,22 @@ body {
     position: relative;
 }
 
+@mixin side-width {
+    width: 20%;
+}
+
 #show_navbar {
     font-size: 150%;
     width: 100%;
     height: 100px;
 
     &.on {
-        width: 20%;
+        @include side-width;
     }
 }
 #navbar_wrapper {
     @include cell;
-    width: 20%;
+    @include side-width;
     height: 100%;
     background-color: #C5CAE2;
 }
