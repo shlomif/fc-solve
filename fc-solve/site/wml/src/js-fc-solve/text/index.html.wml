@@ -96,7 +96,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 <define-tag opt>
 <preserve sel />
 <set-var %attributes />
-<input name="unicode_suits" id="unicode_suits__<get-var id_base />" type="radio" title="<get-var title />" class="phoenix" value="<get-var value />" <when <get-var sel /> > checked="checked"</when> /><label for="unicode_suits__<get-var id_base />"><get-var title /></label>
+<input name="unicode_suits" id="unicode_suits__<get-var id_base />" type="radio" title="<get-var title />" class="phoenix" value="<get-var value />" <when <get-var sel /> > checked="checked"</when> /><label for="unicode_suits__<get-var id_base />"><get-var title /></label><br />
 <restore sel />
 </define-tag>
 <opt id_base="ascii" value="0" title="ASCII" sel="true" />
