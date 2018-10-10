@@ -307,7 +307,7 @@ src/js/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl
 	perl $<
 
 $(TYPESCRIPT_DEST_FILES): $(D)/%.js: src/%.ts $(TYPESCRIPT_COMMON_DEPS)
-	tsc --target es6 --module amd --moduleResolution node --out $@ $(TYPESCRIPT_COMMON_DEFS_FILES) $<
+	tsc --target es6 --moduleResolution node --module amd --outDir $$(dirname $@) $<
 
 $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts $(TYPESCRIPT_COMMON_DEPS)
 	tsc --target es6 --moduleResolution node --module commonjs --outDir lib/for-node/js $(TYPESCRIPT_COMMON_DEFS_FILES) $<
