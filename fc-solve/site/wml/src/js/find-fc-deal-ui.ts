@@ -49,7 +49,10 @@ export function find_deal_ui() {
     function resume() {
         const ret_Deal = df.cont();
         if (ret_Deal.found) {
-            ctl.html("Found " + ret_Deal.result.toString());
+            ctl.html("Found: <input id=\"found_result\" " +
+                "name=\"found_result\" value=\"" +
+                ret_Deal.result.toString() +
+                "\" readonly=\"readonly\" />");
         } else if (ret_Deal.cont) {
             setTimeout(() => {
                 resume();
