@@ -3,6 +3,8 @@
 
 <latemp_subject "The Freecell Solver Frequently Asked Questions (F.A.Q.) List" />
 
+<div class="wrap-me">
+
 <section>
 <header>
 <h2* id="toc">Table of contents</h2*>
@@ -450,7 +452,7 @@ be:
 </p>
 
 <pre>
-pi-make-microsoft-freecell-board -t 24 | \
+pi-make-microsoft-freecell-board -t 24 | \\
     fc-solve -l ve --flares-choice fcpro -fif 10 -
 </pre>
 
@@ -1044,3 +1046,5 @@ As usual, patches/<a href="https://help.github.com/articles/about-pull-requests/
 </h3_section>
 
 </h2_section>
+
+</div>
