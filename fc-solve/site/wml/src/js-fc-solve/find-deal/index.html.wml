@@ -3,16 +3,14 @@
 
 <latemp_subject "Freecell Deal Finder" />
 
-<h2 id="about">About</h2>
-
-<div id="about_sect">
-
+<define-tag desc>
 <p>
 Find the deal number of a Microsoft
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> deal, a kind of
 card solitaire game. <span class="enable_js">Please enable
 <strong>JavaScript</strong>.</span>
 </p>
+</define-tag>
 
 <emscripten_common incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)" subject="Deal Finder" />
 

@@ -3,16 +3,14 @@
 
 <latemp_subject "Online Freecell solver (text based)" />
 
-<h2 id="about">About</h2>
-
-<div id="about_sect">
-
+<define-tag desc>
 <p>
 An online solver for
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
 card solitaire game, and <a href="#other_games">several related solitaire games</a>. <span class="enable_js">Please enable
 <strong>JavaScript</strong>.</span>
 </p>
+</define-tag>
 
 <emscripten_common incs="require([\"web-fc-solve-ui\"], function (web_fc_solve_ui)" subject="Solver" />
 

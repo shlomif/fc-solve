@@ -64,8 +64,20 @@ textarea.emscripten {
 }
 
 #status_wrap {
+    clear: none;
+    float: left;
     border: orange 1pt solid;
+    margin: 1em;
     padding: .5em;
+}
+
+.fc_solve_tabs {
+    float: left;
+    width: 50%;
+    * {
+    margin-right: auto;
+    clear: none;
+}
 }
 
 .fc_solve_tabs .tab {

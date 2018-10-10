@@ -31,13 +31,13 @@
 $(function() { $('.enable_js').addClass('ok'); })
 </js_script>
 
+<h2 id="ui"><get-var subject /></h2>
+
+<desc />
+
 <p>
 <a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>
 </p>
-
-</div>
-
-<h2 id="ui"><get-var subject /></h2>
 
 <div class="disabled">
 <div class="emscripten" id="status">Downloading...</div>
