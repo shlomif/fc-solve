@@ -62,13 +62,13 @@
 /fc-solve/site/wml/bin/translate-Vered-XML
 /fc-solve/site/wml/dest
 /fc-solve/site/wml/dest-prod
+/fc-solve/site/wml/lib/HTML/Latemp/GenWmlHSects.pm
 /fc-solve/site/wml/lib/Inc/cpan_dists.wml
 /fc-solve/site/wml/lib/Inc/html5-shims.wml
 /fc-solve/site/wml/lib/Shlomif/Spelling/Check.pm
 /fc-solve/site/wml/lib/Shlomif/Spelling/Iface.pm
 /fc-solve/site/wml/lib/babel/js/jquery.phoenix.js
 /fc-solve/site/wml/lib/babel/js/jquery.phoenix.min.js
-?? fc-solve/source/board_gen/__pycache__/
 /fc-solve/site/wml/lib/cache/
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/*.bc
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/CMAKE-BUILD-dir/
@@ -79,6 +79,7 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/fc-solve-test.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/fc-solve.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/fc-solve.js.mem
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/finish.stamp
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver-asm.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/my-modified-fc-solve-test.html
@@ -92,6 +93,7 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve-test.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/fc-solve.wasm
+/fc-solve/site/wml/lib/fc-solve-for-javascript/finish.stamp
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/fc-solve-for-javascript/my-modified-fc-solve-test.html
@@ -142,6 +144,7 @@
 /fc-solve/source/USAGE.html
 /fc-solve/source/USAGE.xml
 /fc-solve/source/asciidoctor.css
+/fc-solve/source/board_gen/__pycache__/
 /fc-solve/source/cmake/Shlomif_Common.cmake
 /fc-solve/source/cmd_line.gperf
 /fc-solve/source/cmd_line_inc.h
