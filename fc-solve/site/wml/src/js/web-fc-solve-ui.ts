@@ -49,7 +49,8 @@ class FC_Solve_UI {
         that._instance = new FC_Solve({
             cmd_line_preset: that._get_cmd_line_preset(),
             dir_base: 'fcs_ui',
-            is_unicode_cards: that._is_unicode_suits_checked(),
+            is_unicode_cards: (that._is_unicode_suits_checked() || that._is_unicode_cards_checked()),
+            is_unicode_cards_chars: that._is_unicode_cards_checked(),
             set_status_callback: (myclass, mylabel) => {
                 return that._webui_set_status_callback(
                     myclass, mylabel);
@@ -180,7 +181,10 @@ class FC_Solve_UI {
         return $("#one_based").is(':checked');
     }
     private _is_unicode_suits_checked() {
-        return $("#unicode_suits").is(':checked');
+        return $("#unicode_suits__unisuits").is(':checked');
+    }
+    private _is_unicode_cards_checked() {
+        return $("#unicode_suits__unicards").is(':checked');
     }
     private _webui_output_set_text(text) {
         $("#output").val(text);

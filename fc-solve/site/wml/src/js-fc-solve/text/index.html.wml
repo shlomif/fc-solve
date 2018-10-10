@@ -91,7 +91,18 @@ print FreecellSolver::ExtractGames->new->calc_html;
 <div class="controls">
 
 <input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
-<input id="unicode_suits" type="checkbox" title="Unicode suits" class="phoenix" checked="checked" /><label for="unicode_suits">Unicode suits</label>
+<fieldset>
+<legend>Cards display</legend>
+<define-tag opt>
+<preserve sel />
+<set-var %attributes />
+<input name="unicode_suits" id="unicode_suits__<get-var id_base />" type="radio" title="<get-var title />" class="phoenix" value="<get-var value />" <when <get-var sel /> > checked="checked"</when> /><label for="unicode_suits__<get-var id_base />"><get-var title /></label>
+<restore sel />
+</define-tag>
+<opt id_base="ascii" value="0" title="ASCII" sel="true" />
+<opt id_base="unisuits" value="1" title="Unicode Suits" />
+<opt id_base="unicards" value="2" title="Unicode Cards" />
+</fieldset>
 <br />
 <button id="clear_output" title="Clear the Output Box">Clear Output</button>
 </div>
