@@ -24,7 +24,7 @@
 </page_extra_head_elements>
 
 <define-tag emscripten_common>
-<preserve incs />
+<preserve incs subject />
 <set-var %attributes />
 
 <js_script>
@@ -37,7 +37,7 @@ $(function() { $('.enable_js').addClass('ok'); })
 
 </div>
 
-<h2 id="ui">Solver</h2>
+<h2 id="ui"><get-var subject /></h2>
 
 <div class="disabled">
 <div class="emscripten" id="status">Downloading...</div>
@@ -89,7 +89,7 @@ requirejs.config({
 });
 </js_script>
 
-<restore incs />
+<restore incs subject />
 </define-tag>
 
 <define-tag fc_solve_bookmark__form>
