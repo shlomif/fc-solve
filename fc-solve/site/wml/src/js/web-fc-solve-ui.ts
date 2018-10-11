@@ -305,7 +305,8 @@ function _create_bmark_obj() {
     return new base_ui.FC_Solve_Bookmarking({
         bookmark_controls: [
             'stdin', 'preset', 'deal_number', 'one_based',
-            'unicode_suits', 'string_params', 'game_type',
+            'unicode_suits__ascii', 'unicode_suits__unicards',
+            'unicode_suits__unisuits', 'string_params', 'game_type',
         ],
         show: [],
     });
