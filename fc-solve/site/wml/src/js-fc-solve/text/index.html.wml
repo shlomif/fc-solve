@@ -59,6 +59,12 @@ Input a card patience/solitaire layout in the <a href="$(ROOT)/docs/distro/READM
 
 </div>
 
+<p id="status_wrap">
+
+<strong>Status:</strong> <span id="fc_solve_status" class="not_started">Not started</span> <br />
+
+</p>
+
 <div id="fcs_advanced">
 <:{
 use FreecellSolver::ExtractGames;
@@ -72,12 +78,6 @@ print FreecellSolver::ExtractGames->new->calc_html;
 <a href="$(ROOT)/docs/">online documentation</a> for information regarding syntax.)
 </p>
 </div>
-
-<p id="status_wrap">
-
-<strong>Status:</strong> <span id="fc_solve_status" class="not_started">Not started</span> <br />
-
-</p>
 
 
 <label for="output">Output:</label><br />
