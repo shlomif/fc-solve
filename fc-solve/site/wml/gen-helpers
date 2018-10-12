@@ -135,4 +135,7 @@ EOF
 );
 io()->file('Makefile')->print("include $DIR/main.mak\n");
 
-_exec( [ 'gmake', 'make-dirs', 'sects_cache' ], "sects_cache" );
+foreach my $p ( ['PROD=1'], [] )
+{
+    _exec( [ 'gmake', @$p, 'make-dirs', 'sects_cache' ], "sects_cache" );
+}
