@@ -135,3 +135,4 @@ EOF
 io()->file('Makefile')->print("include $DIR/main.mak\n");
 
 _exec( [ 'gmake', 'make-dirs', 'sects_cache' ], "sects_cache" );
+_exec( [ $^X, 'bin/gen-deps-mak.pl' ], "gen-deps-mak" );

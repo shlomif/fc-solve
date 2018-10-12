@@ -62,6 +62,7 @@
 /fc-solve/site/wml/bin/translate-Vered-XML
 /fc-solve/site/wml/dest
 /fc-solve/site/wml/dest-prod
+/fc-solve/site/wml/lib/HTML/Latemp/GenDeps.pm
 /fc-solve/site/wml/lib/HTML/Latemp/GenWmlHSects.pm
 /fc-solve/site/wml/lib/Inc/cpan_dists.wml
 /fc-solve/site/wml/lib/Inc/html5-shims.wml
@@ -106,6 +107,7 @@
 /fc-solve/site/wml/lib/jquery/jquery-phoenix/
 /fc-solve/site/wml/lib/make/build-deps/build-deps.mak
 /fc-solve/site/wml/lib/make/build-deps/build-deps.stamp
+/fc-solve/site/wml/lib/make/deps.mak
 /fc-solve/site/wml/lib/make/include.mak
 /fc-solve/site/wml/lib/make/rules.mak
 /fc-solve/site/wml/lib/make/shlomif_common.mak
