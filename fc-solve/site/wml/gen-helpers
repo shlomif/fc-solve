@@ -38,6 +38,7 @@ _exec(
 );
 _exec( [ "gmake", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
     "build-deps failed!" );
+_exec( [ $^X, 'bin/gen-deps-mak.pl' ], "gen-deps-mak" );
 require IO::All;
 
 IO::All->import('io');
@@ -135,4 +136,3 @@ EOF
 io()->file('Makefile')->print("include $DIR/main.mak\n");
 
 _exec( [ 'gmake', 'make-dirs', 'sects_cache' ], "sects_cache" );
-_exec( [ $^X, 'bin/gen-deps-mak.pl' ], "gen-deps-mak" );
