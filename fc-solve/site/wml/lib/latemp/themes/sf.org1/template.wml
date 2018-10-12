@@ -16,11 +16,28 @@
 <latemp_get_breadcrumbs_trail />
 </div>
 <div id="faux">
-<button id="show_navbar" class="on">Hide NavBar ⬈</button>
-<div id="container-all" class="row">
 <p class="invisible">
 <a href="#main">Go to main content</a>
 </p>
+<div id="container-all" class="row">
+
+<button id="show_navbar" class="on">Hide NavBar ⬈</button>
+
+<main id="main" class="col s9">
+<latemp_before_main_title_text />
+</define-tag>
+
+<latemp_get_start_layout />
+
+<header>
+<latemp_default_h1_tag />
+<latemp_after_main_title_text />
+</header>
+{#LATEMP_BODY#}
+
+<define-tag latemp_end_layout>
+<latemp_after_body_text />
+</main>
 
 <div id="navbar_wrapper" class="col s3">
 <nav class="navbar" id="navbar">
@@ -38,22 +55,6 @@
 <latemp_get_html_body_nav_links place="bottom-left" />
 </nav>
 </div>
-
-<main id="main" class="col s9">
-<latemp_before_main_title_text />
-</define-tag>
-
-<latemp_get_start_layout />
-
-<header>
-<latemp_default_h1_tag />
-<latemp_after_main_title_text />
-</header>
-{#LATEMP_BODY#}
-
-<define-tag latemp_end_layout>
-<latemp_after_body_text />
-</main>
 <div id="container-footer">
 </div>
 </div> ;;; container-all

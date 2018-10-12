@@ -19,7 +19,7 @@ function build_main_nav_menu_toggler() {
     build_toggler({
         ls_key: toggle_main_key,
         toggler_selector: '#show_navbar',
-        toggled_selector: '#navbar , #navbar_wrapper',
+        toggled_selector: '#navbar , #navbar_wrapper, #main',
         toggled_class: 'novis',
         hide_text: 'Hide NavBar ⬈',
         show_text: 'Show NavBar ⬋',

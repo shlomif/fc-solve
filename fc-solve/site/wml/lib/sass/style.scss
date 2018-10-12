@@ -5,7 +5,7 @@
 }
 
 @mixin cell {
-    display: table-cell;
+    // display: table-cell;
 }
 
 @mixin wrap {
@@ -27,18 +27,21 @@ body {
 }
 #container-all {
     width: 100%;
-    display: table-row;
+    display: grid;
+    grid-template-columns: repeat(5, 2fr);
     position: relative;
 }
 
 @mixin side-width {
-    width: 20%;
+    // width: 20%;
+    grid-column: 1 / 2;
 }
 
 #show_navbar {
     font-size: 150%;
-    width: 100%;
     height: 100px;
+    grid-column: 1 / 6;
+    grid-row: 1;
 
     &.on {
         @include side-width;
@@ -47,7 +50,7 @@ body {
 #navbar_wrapper {
     @include cell;
     @include side-width;
-    height: 100%;
+    grid-row: 2;
     background-color: #C5CAE2;
 }
 #navbar_wrapper, #show_navbar {
@@ -60,11 +63,16 @@ body {
 }
 #main {
     // width: 80%
-    width: auto;
+    // width: auto;
     padding: 1em;
     padding-top: 0;
+    grid-column: 2 / 6;
+    grid-row: 2;
 
     @include cell;
+    &.novis {
+        grid-column: 1 / 6;
+    }
 
     h1 {
         // padding-top: 0;
