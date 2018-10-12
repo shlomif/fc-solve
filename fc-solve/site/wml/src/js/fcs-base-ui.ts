@@ -52,7 +52,7 @@ export class FC_Solve_Bookmarking {
         function get_v(myid: string): string {
             const ctl = $('#' + myid);
             return (
-                (ctl.is(':checkbox') || ctl.is(':radio')) ?
+                that._is_toggley(ctl) ?
                 (ctl.is(':checked') ? '1' : '0') :
                 (ctl.val() as string)
             );
@@ -92,7 +92,7 @@ export class FC_Solve_Bookmarking {
 
         that._each_control((myid) => {
             const ctl = $('#' + myid);
-            if (ctl.is(':checkbox')) {
+            if (that._is_toggley(ctl)) {
                 ctl.prop('checked', ((params[myid] === "1") ? true : false));
             } else {
                 ctl.val(params[myid]);
@@ -118,6 +118,9 @@ export class FC_Solve_Bookmarking {
         });
 
         return;
+    }
+    private _is_toggley(ctl) {
+        return (ctl.is(':checkbox') || ctl.is(':radio'));
     }
     private _get_loc() {
         return window.location;
