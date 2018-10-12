@@ -49,12 +49,12 @@ export class FC_Solve_Bookmarking {
     public on_bookmarking() {
         const that = this;
 
-        function get_v(myid) {
+        function get_v(myid: string): string {
             const ctl = $('#' + myid);
             return (
                 (ctl.is(':checkbox') || ctl.is(':radio')) ?
                 (ctl.is(':checked') ? '1' : '0') :
-                ctl.val()
+                (ctl.val() as string)
             );
         }
 
