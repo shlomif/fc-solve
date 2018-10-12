@@ -93,7 +93,8 @@ export class FC_Solve_Bookmarking {
         that._each_control((myid) => {
             const ctl = $('#' + myid);
             if (that._is_toggley(ctl)) {
-                ctl.prop('checked', ((params[myid] === "1") ? true : false));
+                ctl.prop('checked', ((String(params[myid]) === "1") ?
+                    true : false));
             } else {
                 ctl.val(params[myid]);
             }

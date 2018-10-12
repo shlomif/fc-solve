@@ -54,7 +54,12 @@ requirejs.config({
     });
     <get-var incs /> {
     $(function() {
-        $('.phoenix').phoenix();
+        const controls = $('.phoenix');
+        if (window.location.search.length) {
+            controls.phoenix('remove');
+        } else {
+            controls.phoenix();
+        }
         $( "#fc_solve_tabs" ).tabs({
             activate: function () {
                 web_fc_solve_ui.set_up_handlers();
