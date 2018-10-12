@@ -51,8 +51,11 @@ export class FC_Solve_Bookmarking {
 
         function get_v(myid) {
             const ctl = $('#' + myid);
-            return ctl.is(':checkbox') ?
-                (ctl.is(':checked') ? '1' : '0') : ctl.val();
+            return (
+                (ctl.is(':checkbox') || ctl.is(':radio')) ?
+                (ctl.is(':checked') ? '1' : '0') :
+                ctl.val()
+            );
         }
 
         const control_values = {};
