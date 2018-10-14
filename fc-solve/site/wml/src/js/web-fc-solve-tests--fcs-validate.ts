@@ -9,7 +9,7 @@ import {
     ParseErrorType,
 } from "./fcs-validate";
 
-export function test_fcs_validate() {
+export function test_fcs_validate(QUnit: any) {
     QUnit.module("FC_Solve.JavaScript.InputValidation");
 
     QUnit.test("verify_state Card class tests", (a: Assert) => {

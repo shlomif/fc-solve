@@ -6,9 +6,9 @@ define(["web-fc-solve-tests", "web-fc-solve-tests--fcs-validate", "qunit"], func
         });
         var test_js_fc_solve_class = t.test_js_fc_solve_class;
         try {
-            test_js_fc_solve_class(function () {
+            test_js_fc_solve_class(QUnit, function () {
                 var was_called = false;
-                fcs_valid.test_fcs_validate();
+                fcs_valid.test_fcs_validate(QUnit);
                 was_called = true;
                 $('#qunit-tests').addClass('hidepass');
                 return;
