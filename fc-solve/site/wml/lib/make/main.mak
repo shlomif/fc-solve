@@ -62,7 +62,7 @@ LIBFREECELL_SOLVER_ASMJS_JS = $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/libfreecell-sol
 DEST_LIBFREECELL_SOLVER_JS = $(DEST_JS_DIR)/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_ASMJS_JS = $(DEST_JS_DIR)/libfreecell-solver-asm.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(DEST_JS_DIR)/libfreecell-solver.js
-DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node .
+DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node/js/ .
 DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(DEST_mem_dirs))
 DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS = $(patsubst %,%/$(JS_MEM_BASE__ASMJS),$(DEST_mem_dirs))
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
@@ -364,7 +364,7 @@ all: min_svgs
 
 .PHONY:
 
-ALL_HTACCESSES = $(D)/.htaccess $(D)/michael_mann/.htaccess
+ALL_HTACCESSES = $(D)/.htaccess $(D)/js-fc-solve/automated-tests/.htaccess $(D)/michael_mann/.htaccess
 
 GEN_SECT_NAV_MENUS = ./bin/gen-sect-nav-menus.pl
 T2_CACHE_ALL_STAMP = lib/cache/STAMP.one
