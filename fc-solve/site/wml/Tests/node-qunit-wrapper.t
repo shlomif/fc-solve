@@ -4,7 +4,7 @@ use warnings;
 use Test::More tests => 2;
 
 my $CMD =
-    q#NODE_PATH="`pwd`"/lib/for-node/js qunit-cli lib/for-node/test-code.js#;
+    q#NODE_PATH="`pwd`"/lib/for-node/js qunit-cli lib/for-node/test-code.js #;
 
 my $output = `$CMD`;
 
