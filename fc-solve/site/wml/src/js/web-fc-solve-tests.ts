@@ -100,7 +100,7 @@ const my_func = (_my_mod, my_callback) =>
                 solution_for_deal_24__default,
                 "Solution is right.",
             ),
-                "do_solve was successful.",
+                "do_solve ASCII was successful.",
             );
         });
 
@@ -123,7 +123,7 @@ const my_func = (_my_mod, my_callback) =>
                 solution_for_deal_24__default__with_unicoded_suits,
                 "Unicoded solution was right",
             ),
-                "do_solve was successful.",
+                "do_solve unicoded was successful.",
             );
         });
 
@@ -147,7 +147,7 @@ const my_func = (_my_mod, my_callback) =>
                 solution_for_deal_24__default__with_unicoded_card_chars,
                 "Unicoded cards chars solution was right",
             ),
-                "do_solve was successful.",
+                "do_solve Unicoded cards  chars was successful.",
             );
         });
 
@@ -174,7 +174,7 @@ const my_func = (_my_mod, my_callback) =>
                         solution_for_pysol_simple_simon_deal_24__default,
                         "Simple Simon Solution is right",
                     ),
-                    "do_solve was successful.",
+                    "do_solve simpsim was successful.",
                 );
             });
 
@@ -201,7 +201,7 @@ const my_func = (_my_mod, my_callback) =>
                     solution_for_board_without_trailing_newline,
                     "Board without a trailing newline solution is right.",
                 ),
-                    "do_solve was successful.",
+                    "do_solve wo trailing newline was successful.",
                 );
             });
 
@@ -254,7 +254,7 @@ const my_func = (_my_mod, my_callback) =>
             );
 
             // TEST
-            assert.ok(success, "do_solve was successful.");
+            assert.ok(success, "do_solve expanded moves was successful.");
         });
 
         QUnit.test("FC_Solve get_num_stacks #1", (assert) => {
