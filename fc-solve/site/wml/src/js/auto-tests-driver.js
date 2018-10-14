@@ -1,5 +1,12 @@
 define(["web-fc-solve-tests", "web-fc-solve-tests--fcs-validate", "qunit"], function (t, fcs_valid, QUnit) {
     return function() {
+        QUnit.done(function( details ) {
+              alert( "Total: "+ details.total+ " Failed: "+ details.failed+ " Passed: "+ details.passed+ " Runtime: "+ details.runtime );
+        });
+        QUnit.moduleDone( ( { name, failed, total } ) => {
+              alert( `Finished running module : ${name} Failed/total: ${failed}, ${total}` );
+        });
+
         QUnit.module("BeforeMeta");
         QUnit.test("silence_qunit", function(assert) {
             assert.ok(true, "foo");
@@ -10,7 +17,7 @@ define(["web-fc-solve-tests", "web-fc-solve-tests--fcs-validate", "qunit"], func
                 var was_called = false;
                 fcs_valid.test_fcs_validate(QUnit);
                 was_called = true;
-                $('#qunit-tests').addClass('hidepass');
+                // $('#qunit-tests').addClass('hidepass');
                 return;
             });
         } catch (err) {
