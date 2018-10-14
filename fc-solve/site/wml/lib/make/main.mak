@@ -12,6 +12,7 @@ SKIP_EMCC = 0
 D = dest
 
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
+TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve--qunit-1
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-t2
 # TEMP_UPLOAD_URL = /var/www/html/shlomif/fc-solve-temp/
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
