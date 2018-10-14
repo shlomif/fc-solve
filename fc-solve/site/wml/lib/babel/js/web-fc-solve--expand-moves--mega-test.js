@@ -20,7 +20,7 @@ function test_idx(idx) {
         }).done(function(data) {
             let success = false;
 
-            let instance = new FC_Solve({
+            const instance = new FC_Solve({
                 cmd_line_preset: preset,
                 set_status_callback: function() {
                     return;

@@ -13,11 +13,11 @@
  * */
 
 function deal_ms_fc_board(seed) {
-    let randomizer = new MSRand({gamenumber: seed});
+    const randomizer = new MSRand({gamenumber: seed});
     const num_cols = 8;
 
     function _perl_range(start, end) {
-        let ret = [];
+        const ret = [];
 
         for (let i = start; i <= end; i++) {
             ret.push(i);
@@ -26,7 +26,7 @@ function deal_ms_fc_board(seed) {
         return ret;
     };
 
-    let columns = _perl_range(0, num_cols-1).map(function() {
+    const columns = _perl_range(0, num_cols-1).map(function() {
         return [];
     });
     let deck = _perl_range(0, 4*13-1);
@@ -39,14 +39,14 @@ function deal_ms_fc_board(seed) {
         columns[i % num_cols].push(deck[i]);
     }
 
-    let render_card = function(card) {
+    function render_card(card) {
         const suit = (card % 4);
         const rank = Math.floor(card / 4);
 
         return "A23456789TJQK".charAt(rank) + "CDHS".charAt(suit);
     };
 
-    let render_column = function(col) {
+    function render_column(col) {
         return ": " + col.map(render_card).join(" ") + "\n";
     };
 

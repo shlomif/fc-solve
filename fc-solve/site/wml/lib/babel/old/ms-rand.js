@@ -7,7 +7,7 @@
  * */
 class MSRand {
     constructor(args) {
-        let that = this;
+        const that = this;
         that.gamenumber = args.gamenumber;
         that.rander = fc_solve__hll_ms_rand__get_singleton();
         fc_solve__hll_ms_rand__init(that.rander, "" + that.gamenumber);
