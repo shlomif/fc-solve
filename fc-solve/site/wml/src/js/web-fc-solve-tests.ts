@@ -95,11 +95,14 @@ const my_func = (QUnit, _my_mod, my_callback) =>
             });
 
             // TEST*2
-            assert.ok(test_for_equal(assert, instance,
-                ms_deal_24,
-                solution_for_deal_24__default,
-                "Solution is right.",
-            ),
+            assert.ok(
+                test_for_equal(
+                    assert,
+                    instance,
+                    ms_deal_24,
+                    solution_for_deal_24__default,
+                    "Solution is right.",
+                ),
                 "do_solve ASCII was successful.",
             );
         });
@@ -116,13 +119,14 @@ const my_func = (QUnit, _my_mod, my_callback) =>
             });
 
             // TEST*2
-            assert.ok(test_for_equal(
-                assert,
-                instance,
-                ms_deal_24,
-                solution_for_deal_24__default__with_unicoded_suits,
-                "Unicoded solution was right",
-            ),
+            assert.ok(
+                test_for_equal(
+                    assert,
+                    instance,
+                    ms_deal_24,
+                    solution_for_deal_24__default__with_unicoded_suits,
+                    "Unicoded solution was right",
+                ),
                 "do_solve unicoded was successful.",
             );
         });
@@ -140,13 +144,14 @@ const my_func = (QUnit, _my_mod, my_callback) =>
             });
 
             // TEST*2
-            assert.ok(test_for_equal(
-                assert,
-                instance,
-                ms_deal_24,
-                solution_for_deal_24__default__with_unicoded_card_chars,
-                "Unicoded cards chars solution was right",
-            ),
+            assert.ok(
+                test_for_equal(
+                    assert,
+                    instance,
+                    ms_deal_24,
+                    solution_for_deal_24__default__with_unicoded_card_chars,
+                    "Unicoded cards chars solution was right",
+                ),
                 "do_solve Unicoded cards  chars was successful.",
             );
         });
@@ -194,13 +199,14 @@ const my_func = (QUnit, _my_mod, my_callback) =>
                 });
 
                 // TEST*2
-                assert.ok(test_for_equal(
-                    assert,
-                    instance,
-                    board_without_trailing_newline,
-                    solution_for_board_without_trailing_newline,
-                    "Board without a trailing newline solution is right.",
-                ),
+                assert.ok(
+                    test_for_equal(
+                        assert,
+                        instance,
+                        board_without_trailing_newline,
+                        solution_for_board_without_trailing_newline,
+                        "Board without a trailing newline solution is right.",
+                    ),
                     "do_solve wo trailing newline was successful.",
                 );
             });
@@ -249,7 +255,9 @@ const my_func = (QUnit, _my_mod, my_callback) =>
 
             success = true;
             // TEST
-            assert.equal(buffer, solution_for_deal_24__expanded_moves,
+            assert.equal(
+                buffer,
+                solution_for_deal_24__expanded_moves,
                 "Expanded-moves Solution is right",
             );
 
@@ -323,8 +331,11 @@ const my_func = (QUnit, _my_mod, my_callback) =>
             });
 
             // TEST
-            assert.equal(instance.get_num_freecells(), 4,
-                "get_num_freecells() returns 4.");
+            assert.equal(
+                instance.get_num_freecells(),
+                4,
+                "get_num_freecells() returns 4.",
+            );
         });
 
         QUnit.test("FC_Solve get_num_freecells #1", (assert) => {
@@ -400,13 +411,16 @@ const my_func = (QUnit, _my_mod, my_callback) =>
                     });
 
                     // TEST*2
-                    assert.ok((!test_for_equal(
-                        assert,
-                        instance,
-                        ms10_deal,
-                        '',
-                        '',
-                    )),
+                    assert.ok(
+                        (
+                            !test_for_equal(
+                                assert,
+                                instance,
+                                ms10_deal,
+                                '',
+                                '',
+                            )
+                        ),
                         "do_solve failed try=" + mytry,
                     );
                 }
