@@ -22,6 +22,9 @@ ifeq ($(PROD),1)
 	D = dest-prod
 	WML_FLAGS += -DPRODUCTION=1
 	UPLOAD_URL = hostgator:domains/fc-solve/public_html
+	MULTI_YUI = ./bin/Run-YUI-Compressor
+else
+	MULTI_YUI = ./bin/cat-o
 
 endif
 
@@ -219,7 +222,6 @@ $(STAMP2): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA__ASMJS)
 clean_js:
 	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.js $(LIBFREECELL_SOLVER_JS_DIR)/*.bc
 
-MULTI_YUI = ./bin/Run-YUI-Compressor
 
 $(DEST_LIBFREECELL_SOLVER_JS): $(STAMP1)
 	cp -f $(LIBFREECELL_SOLVER_JS) $@
