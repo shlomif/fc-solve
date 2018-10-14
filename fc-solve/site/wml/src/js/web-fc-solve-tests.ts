@@ -60,7 +60,7 @@ const my_func = (QUnit, _my_mod, my_callback) =>
         FC_Solve_init_wrappers_with_module(_my_mod[0] || this);
         const deal_ms_fc_board = w.deal_ms_fc_board;
 
-        QUnit.module("FC_Solve.Algorithmic");
+        QUnit.module("FC_Solve.Algorithmic", () => {
 
         function test_for_equal(assert, instance, board,
                                 expected_sol, blurb) {
@@ -154,7 +154,8 @@ const my_func = (QUnit, _my_mod, my_callback) =>
                 ),
                 "do_solve Unicoded cards  chars was successful.",
             );
-        });
+        },
+        );
 
         QUnit.test("FC_Solve arbitrary parameters " +
             "- Solve Simple Simon.",
@@ -181,7 +182,8 @@ const my_func = (QUnit, _my_mod, my_callback) =>
                     ),
                     "do_solve simpsim was successful.",
                 );
-            });
+            },
+        );
 
         QUnit.test("FC_Solve solve board without a trailing newline",
             (assert) => {
@@ -209,7 +211,8 @@ const my_func = (QUnit, _my_mod, my_callback) =>
                     ),
                     "do_solve wo trailing newline was successful.",
                 );
-            });
+            },
+        );
 
         QUnit.test("FC_Solve Expanded Moves test", (assert) => {
             assert.expect(4);
@@ -318,7 +321,8 @@ const my_func = (QUnit, _my_mod, my_callback) =>
                 assert.equal(instance.get_num_stacks(), 6,
                     "get_num_stacks() Returns 6 after command line.",
                 );
-            });
+            },
+        );
 
         QUnit.test("FC_Solve get_num_freecells #1", (assert) => {
             assert.expect(1);
@@ -353,7 +357,8 @@ const my_func = (QUnit, _my_mod, my_callback) =>
             // TEST
             assert.equal(instance.get_num_freecells(), 2,
                 "get_num_freecells() returns 2 after command line.");
-        });
+        },
+        );
 
         QUnit.test("FC_Solve deal_ms_fc_board", (assert) => {
             assert.expect(2);
@@ -383,7 +388,8 @@ const my_func = (QUnit, _my_mod, my_callback) =>
 : 6D QC 8S TH 7D 8H
 `,
                 "deal_ms_fc_board for 6e9");
-        });
+        },
+        );
 
         QUnit.test("FC_Solve custom baker's game preset twice",
             (assert) => {
@@ -424,7 +430,9 @@ const my_func = (QUnit, _my_mod, my_callback) =>
                         "do_solve failed try=" + mytry,
                     );
                 }
-            });
+            },
+        );
+        });
 
         my_callback();
         return;
