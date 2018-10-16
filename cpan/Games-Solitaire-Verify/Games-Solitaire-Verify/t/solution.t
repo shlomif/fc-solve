@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -7,20 +7,22 @@ use Test::More tests => 16;
 
 use Data::Dumper;
 
-use Games::Solitaire::Verify::Solution;
-use File::Spec;
+use Games::Solitaire::Verify::Solution ();
+use Path::Tiny qw/ path /;
+
+sub _samp_sol
+{
+    return
+        scalar Path::Tiny->cwd->child( qw/t data sample-solutions/, shift )
+        ->openr;
+}
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-freecell-24.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-freecell-24.txt"),
             variant  => "freecell",
         },
     );
@@ -30,21 +32,14 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Everything is OK." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-freecell-24-wrong-1.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-freecell-24-wrong-1.txt"),
             variant  => "freecell",
         },
     );
@@ -54,21 +49,14 @@ use File::Spec;
     # TEST
     ok( $verdict, "Solution is invalid" )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-freecell-24-wrong-2.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-freecell-24-wrong-2.txt"),
             variant  => "freecell",
         },
     );
@@ -78,21 +66,14 @@ use File::Spec;
     # TEST
     ok( $verdict, "Solution is invalid" )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-bakers-game-24.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-bakers-game-24.txt"),
             variant  => "bakers_game",
         },
     );
@@ -102,21 +83,14 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Everything is OK." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-freecell-24.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-freecell-24.txt"),
             variant  => "bakers_game",
         },
     );
@@ -126,21 +100,14 @@ use File::Spec;
     # TEST
     ok( $verdict, "bakers_game cannot solve a Freecell solution" )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-forecell-24.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-forecell-24.txt"),
             variant  => "forecell",
         },
     );
@@ -150,21 +117,14 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Everything is OK." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-freecell-24.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-freecell-24.txt"),
             variant  => "forecell",
         },
     );
@@ -174,21 +134,14 @@ use File::Spec;
     # TEST
     ok( $verdict, "forecell cannot solve a Freecell solution" )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-seahaven-towers-1977.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-seahaven-towers-1977.txt"),
             variant  => "seahaven_towers",
         },
     );
@@ -198,21 +151,14 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Seahaven Towers Solution is OK." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-relaxed-freecell-11982.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-relaxed-freecell-11982.txt"),
             variant  => "freecell",
         },
     );
@@ -222,21 +168,14 @@ use File::Spec;
     # TEST
     ok( $verdict, "Freecell cannot solve a Relaxed Freecell Game" )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-relaxed-freecell-11982.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-relaxed-freecell-11982.txt"),
             variant  => "relaxed_freecell",
         },
     );
@@ -246,21 +185,14 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Relaxed Freecell Solution is OK." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-eight-off-200.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-eight-off-200.txt"),
             variant  => "eight_off",
         },
     );
@@ -270,21 +202,14 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Eight Off Solution is OK." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-eight-off-200-l-gi.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-eight-off-200-l-gi.txt"),
             variant  => "eight_off",
         },
     );
@@ -294,16 +219,9 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Eight Off -l gi Solution is OK." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-relaxed-freecell-11982.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     my $relaxed_fc_variant_params =
         Games::Solitaire::Verify::VariantParams->new(
@@ -320,7 +238,7 @@ use File::Spec;
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh       => $input_fh,
+            input_fh       => _samp_sol("fcs-relaxed-freecell-11982.txt"),
             variant        => "custom",
             variant_params => $relaxed_fc_variant_params,
         },
@@ -331,16 +249,9 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Custom Relaxed Freecell Solution is OK." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-relaxed-freecell-11982.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     my $fc_variant_params = Games::Solitaire::Verify::VariantParams->new(
         {
@@ -356,7 +267,7 @@ use File::Spec;
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh       => $input_fh,
+            input_fh       => _samp_sol("fcs-relaxed-freecell-11982.txt"),
             variant        => "custom",
             variant_params => $fc_variant_params,
         },
@@ -367,22 +278,9 @@ use File::Spec;
     # TEST
     ok( $verdict, "Custom Freecell cannot solve a Relaxed Freecell Game" )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile(
-        File::Spec->curdir(),
-        qw(
-            t data sample-solutions
-            fcs-larrysan-kings-only-0-freecells-unlimited-move.txt
-            )
-    );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
-
     my $fc_variant_params = Games::Solitaire::Verify::VariantParams->new(
         {
             'num_decks'              => 1,
@@ -397,7 +295,8 @@ use File::Spec;
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh       => $input_fh,
+            input_fh => _samp_sol(
+                "fcs-larrysan-kings-only-0-freecells-unlimited-move.txt"),
             variant        => "custom",
             variant_params => $fc_variant_params,
         },
@@ -409,20 +308,13 @@ use File::Spec;
     ok( !$verdict,
         "Solution of Zero-freecell, unlimited move, kings-only freecell is OK."
     ) or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
 
 {
-    my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-        qw(t data sample-solutions fcs-simple-simon-24.txt) );
-
-    open( my $input_fh, "<", $input_filename )
-        or die "Cannot open file $!";
 
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
+            input_fh => _samp_sol("fcs-simple-simon-24.txt"),
             variant  => "simple_simon",
         },
     );
@@ -432,6 +324,4 @@ use File::Spec;
     # TEST
     ok( !$verdict, "Everything is OK with Simple Simon Deal No. 24." )
         or diag( "Verdict == " . Dumper($verdict) );
-
-    close($input_fh);
 }
