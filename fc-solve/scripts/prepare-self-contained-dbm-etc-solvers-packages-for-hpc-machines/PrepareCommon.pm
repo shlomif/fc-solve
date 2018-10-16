@@ -3,11 +3,7 @@ package PrepareCommon;
 use strict;
 use warnings;
 
-use File::Spec;
-use File::Basename ();
-use File::Temp qw / tempdir /;
-use Cwd qw / getcwd /;
-use File::Path qw/ mkpath /;
+use Path::Tiny qw/ path /;
 use IO::All qw/ io /;
 
 use Moose;
@@ -125,26 +121,26 @@ sub run
 {
     my $self = shift;
 
-    my $BIN_DIR       = File::Spec->rel2abs( File::Basename::dirname($0) );
+    my $BIN_DIR       = path($0)->parent->absolute;
     my $num_freecells = $ENV{NUM_FC} || $self->num_freecells;
-    my $temp_dir      = tempdir( CLEANUP => 1 );
+    my $temp_dir      = Path::Tiny->tempdir;
     my $dest_dir_base = $self->dest_dir_base;
-    my $dest_dir      = File::Spec->catdir( $temp_dir, $dest_dir_base );
-    my $build_dir     = File::Spec->catdir( $temp_dir, 'build' );
+    my $dest_dir      = $temp_dir->child($dest_dir_base);
+    my $build_dir     = $temp_dir->child('build');
 
-    my $src_path = getcwd();
+    my $src_path = Path::Tiny->cwd;
 
-    mkpath("$dest_dir");
-    mkpath("$dest_dir/fcs-libavl");
-    mkpath("$dest_dir/pthread");
+    $dest_dir->mkpath;
+    path("$dest_dir/fcs-libavl")->mkpath;
+    path("$dest_dir/pthread")->mkpath;
     if ( $self->fcc_solver )
     {
-        mkpath("$dest_dir/sys");
+        path("$dest_dir/sys")->mkpath;
     }
-    mkpath($build_dir);
+    $build_dir->mkpath;
 
     chdir($build_dir);
-    system( File::Spec->catdir( $src_path, "Tatzer" ),
+    system( $src_path->child("Tatzer"),
         qw{-l x64b}, "--nfc=$num_freecells",
         qw{--states-type=COMPACT_STATES --dbm=kaztree}, $src_path );
 
@@ -189,7 +185,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     }
 
     {
-        my $cwd = getcwd();
+        my $cwd = Path::Tiny->cwd;
         chdir($dest_dir);
         if ( system( $^X, "$src_path/scripts/gen-c-lookup-files.pl" ) != 0 )
         {

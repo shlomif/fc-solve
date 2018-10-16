@@ -150,9 +150,7 @@ sub trace_all
 
 package main;
 
-use Cwd qw(getcwd);
-use File::Path qw(rmtree);
-use File::Spec ();
+use Path::Tiny qw/ path /;
 
 use Term::ANSIColor qw(colored);
 
@@ -178,14 +176,10 @@ sub _calc_build_path
 {
     my ($idx) = @_;
 
-    return File::Spec->rel2abs(
-        File::Spec->catdir(
-            File::Spec->curdir(), File::Spec->updir(), "build-$idx"
-        )
-    );
+    return Path::Tiny->cwd->parent->child("build-$idx");
 }
 
-my $CWD = getcwd();
+my $CWD = Path::Tiny->cwd;
 
 sub _chdir_run
 {
@@ -240,7 +234,7 @@ sub run_tests
                 @{ $prepare_dist_args->{args} }
             ],
         );
-        my $DIR = 'dbm_fcs_dist';
+        my $DIR = path('dbm_fcs_dist');
         my $ARC = "$DIR.tar.xz";
         $run->( "untar", [ "tar", "-xvf", $ARC ] );
         _chdir_run(
@@ -249,7 +243,7 @@ sub run_tests
                 $run->( 'make', ['make'], );
             }
         );
-        rmtree( $DIR, 0, $SAFE );
+        $DIR->remove_tree( { safe => $SAFE } );
         unlink($ARC);
     }
     elsif ($website_args)
@@ -341,7 +335,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
 
             }
         );
-        rmtree( $build_path, 0, $SAFE );
+        $build_path->remove_tree( { safe => $SAFE } );
     }
 
     return;
@@ -370,7 +364,7 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
 q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
         );
     }
-    $ENV{LIBAVL2_SOURCE_DIR} = getcwd() . "/avl-2.0.3";
+    $ENV{LIBAVL2_SOURCE_DIR} = Path::Tiny->cwd->child("avl-2.0.3");
 }
 
 # This is just to test that the reporting is working fine.
