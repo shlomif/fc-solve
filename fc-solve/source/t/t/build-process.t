@@ -5,11 +5,9 @@ use warnings;
 
 use Test::More;
 use List::MoreUtils qw(none);
-use Cwd ();
-use File::Path qw/ mkpath rmtree /;
 use Env::Path ();
-use File::Temp qw/ tempdir /;
 use Path::Tiny qw/ path /;
+use Test::Differences qw/ eq_or_diff /;
 
 # Remove FCS_TEST_BUILD so we won't run the tests with infinite recursion.
 if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
@@ -47,8 +45,8 @@ sub test_cmd
 }
 
 {
-    my $temp_dir = tempdir( CLEANUP => 1 );
-    my $before_temp_cwd = Cwd::getcwd();
+    my $temp_dir        = Path::Tiny->tempdir;
+    my $before_temp_cwd = Path::Tiny->cwd->absolute;
 
     chdir($temp_dir);
 
@@ -61,7 +59,7 @@ sub test_cmd
 
     my ($version) = $src_path->child("ver.txt")->lines_utf8( { chomp => 1 } );
 
-    my $base     = "freecell-solver-$version";
+    my $base     = path("freecell-solver-$version");
     my $tar_arc  = "$base.tar";
     my $arc_name = "$tar_arc.xz";
 
@@ -75,7 +73,7 @@ sub test_cmd
     # TEST
     ok( scalar( -d $base ), "The directory was created" );
 
-    my $orig_cwd = Cwd::getcwd();
+    my $orig_cwd = Path::Tiny->cwd->absolute;
 
     chdir($base);
 
@@ -102,13 +100,16 @@ sub test_cmd
     );
 
     # TEST
-    ok( scalar( -f path($base)->child("HACKING.txt") ), "HACKING.txt exists", );
+    ok(
+        scalar( -f path($base)->child("HACKING.asciidoc") ),
+        "HACKING.asciidoc exists",
+    );
 
     chdir($orig_cwd);
 
     my $failing_asciidoc_dir = $orig_cwd->child("asciidoc-fail");
-    rmtree($failing_asciidoc_dir);
-    mkpath($failing_asciidoc_dir);
+    $failing_asciidoc_dir->remove_tree;
+    $failing_asciidoc_dir->mkpath;
 
     my $asciidoc_bin = $failing_asciidoc_dir->child("asciidoc");
     path($asciidoc_bin)->spew_utf8(<<"EOF");
@@ -118,7 +119,7 @@ EOF
     chmod( 0755, $asciidoc_bin );
 
     # Delete the unpacked directory.
-    rmtree($base);
+    $base->remove_tree;
 
     # Now test the rpm building.
     {
@@ -142,10 +143,8 @@ EOF
         chomp(@tar_lines);
 
         # TEST
-        ok(
-            ( none { m{/config\.h\z} } @tar_lines ),
-            "Archive does not contain config.h files"
-        );
+        eq_or_diff( [ grep { m{/config\.h\z} } @tar_lines ],
+            [], "Archive does not contain config.h files" );
 
         # TEST
         ok(
@@ -169,7 +168,7 @@ EOF
         );
     }
 
-    rmtree($failing_asciidoc_dir);
+    $failing_asciidoc_dir->remove_tree;
 
     chdir($before_temp_cwd);
 }
