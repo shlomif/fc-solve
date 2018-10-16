@@ -1,39 +1,23 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
+use 5.014;
 use strict;
 use warnings;
-
-require 5.008;
-
-use File::Spec;
-
 use autodie;
+use Path::Tiny qw/ path /;
 
 use Test::More tests => 6;
 
-use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves;
-use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves::Lax;
+use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves      ();
+use Games::Solitaire::Verify::Solution::ExpandMultiCardMoves::Lax ();
 
-my $input_filename = File::Spec->catfile( File::Spec->curdir(),
-    qw(t data sample-solutions fcs-freecell-9-orig.txt) );
-
-my $want_out_filename = File::Spec->catfile( File::Spec->curdir(),
-    qw(t data sample-solutions fcs-freecell-9-expanded.txt) );
-
-sub _slurp
+sub _samp_sol
 {
-    my $filename = shift;
-
-    open my $in, '<', $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $num_classesontents = <$in>;
-
-    close($in);
-
-    return $num_classesontents;
+    return scalar Path::Tiny->cwd->child( qw/t data sample-solutions/, shift );
 }
+my $input_filename = _samp_sol('fcs-freecell-9-orig.txt');
+
+my $want_out_filename = _samp_sol('fcs-freecell-9-expanded.txt');
 
 # TEST:$num_classes=2;
 foreach my $class (
@@ -66,7 +50,7 @@ foreach my $class (
     # TEST*$num_classes
     is(
         $got_buffer,
-        scalar( _slurp($want_out_filename) ),
+        scalar( $want_out_filename->slurp_utf8 ),
         "Class=$class Got the right results.",
     );
 
