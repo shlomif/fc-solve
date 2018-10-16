@@ -17,8 +17,20 @@ sub _samp_sol
         ->openr;
 }
 
+sub _solution_is_ok
 {
+    my ( $solution, $blurb ) = @_;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
+    my $verdict = $solution->verify();
+
+    ok( !$verdict, $blurb )
+        or diag( "Verdict == " . Dumper($verdict) );
+
+    return;
+}
+
+{
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
@@ -27,11 +39,8 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Everything is OK." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution, "freecell 24" );
 }
 
 {
@@ -78,11 +87,8 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Everything is OK." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution, 'bakers game 24' );
 }
 
 {
@@ -112,11 +118,8 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Everything is OK." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution, 'forecell 24' );
 }
 
 {
@@ -146,11 +149,8 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Seahaven Towers Solution is OK." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution, "Seahaven Towers Solution is OK." );
 }
 
 {
@@ -180,11 +180,8 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Relaxed Freecell Solution is OK." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution, "Relaxed Freecell Solution is OK." );
 }
 
 {
@@ -197,11 +194,8 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Eight Off Solution is OK." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution, "Eight Off Solution is OK." );
 }
 
 {
@@ -214,11 +208,8 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Eight Off -l gi Solution is OK." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution, "Eight Off -l gi Solution is OK." );
 }
 
 {
@@ -244,11 +235,8 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Custom Relaxed Freecell Solution is OK." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution, "Custom Relaxed Freecell Solution is OK." )
 }
 
 {
@@ -302,12 +290,10 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict,
+    _solution_is_ok( $solution,
         "Solution of Zero-freecell, unlimited move, kings-only freecell is OK."
-    ) or diag( "Verdict == " . Dumper($verdict) );
+    );
 }
 
 {
@@ -319,9 +305,7 @@ sub _samp_sol
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( !$verdict, "Everything is OK with Simple Simon Deal No. 24." )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_is_ok( $solution,
+        "Everything is OK with Simple Simon Deal No. 24." );
 }
