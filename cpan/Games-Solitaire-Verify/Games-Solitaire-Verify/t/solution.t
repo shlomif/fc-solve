@@ -44,7 +44,6 @@ sub _solution_fails
 }
 
 {
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-freecell-24.txt"),
@@ -57,8 +56,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-freecell-24-wrong-1.txt"),
@@ -71,8 +68,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-freecell-24-wrong-2.txt"),
@@ -85,8 +80,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-bakers-game-24.txt"),
@@ -99,8 +92,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-freecell-24.txt"),
@@ -114,8 +105,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-forecell-24.txt"),
@@ -128,8 +117,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-freecell-24.txt"),
@@ -142,8 +129,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-seahaven-towers-1977.txt"),
@@ -156,8 +141,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-relaxed-freecell-11982.txt"),
@@ -171,8 +154,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-relaxed-freecell-11982.txt"),
@@ -185,8 +166,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-eight-off-200.txt"),
@@ -199,8 +178,6 @@ sub _solution_fails
 }
 
 {
-
-    # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-eight-off-200-l-gi.txt"),
@@ -213,7 +190,6 @@ sub _solution_fails
 }
 
 {
-
     my $relaxed_fc_variant_params =
         Games::Solitaire::Verify::VariantParams->new(
         {
@@ -240,7 +216,6 @@ sub _solution_fails
 }
 
 {
-
     my $fc_variant_params = Games::Solitaire::Verify::VariantParams->new(
         {
             'num_decks'              => 1,
@@ -295,7 +270,6 @@ sub _solution_fails
 }
 
 {
-
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
             input_fh => _samp_sol("fcs-simple-simon-24.txt"),
