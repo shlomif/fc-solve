@@ -1,40 +1,22 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
+use autodie;
+use Path::Tiny qw/ path /;
 
 use Test::Differences (qw( eq_or_diff ));
 
 require 5.008;
 
-use File::Spec;
-
-use autodie;
-
 use Test::More tests => 6;
 
-use Games::Solitaire::Verify::App::CmdLine::From_Patsolve;
+use Games::Solitaire::Verify::App::CmdLine::From_Patsolve ();
 
-my $sol_fn = File::Spec->catfile( File::Spec->curdir(),
-    qw(t data sample-solutions patsolve-338741497-win-solution.txt) );
+my $sol_fn =
+    path('t/data/sample-solutions/patsolve-338741497-win-solution.txt');
 
-my $board_fn = File::Spec->catfile( File::Spec->curdir(),
-    qw(t data boards 338741497.board) );
-
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, '<', $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $num_classesontents = <$in>;
-
-    close($in);
-
-    return $num_classesontents;
-}
+my $board_fn = path('t/data/boards/338741497.board');
 
 {
     my $obj = Games::Solitaire::Verify::App::CmdLine::From_Patsolve->new(
