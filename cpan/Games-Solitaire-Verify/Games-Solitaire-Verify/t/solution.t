@@ -30,6 +30,19 @@ sub _solution_is_ok
     return;
 }
 
+sub _solution_fails
+{
+    my ( $solution, $blurb ) = @_;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my $verdict = $solution->verify();
+
+    ok( $verdict, $blurb )
+        or diag( "Verdict == " . Dumper($verdict) );
+
+    return;
+}
+
 {
     # Initialise a column
     my $solution = Games::Solitaire::Verify::Solution->new(
@@ -53,11 +66,8 @@ sub _solution_is_ok
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( $verdict, "Solution is invalid" )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_fails( $solution, "Solution is invalid" );
 }
 
 {
@@ -70,11 +80,8 @@ sub _solution_is_ok
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( $verdict, "Solution is invalid" )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_fails( $solution, "Solution is invalid" );
 }
 
 {
@@ -101,11 +108,9 @@ sub _solution_is_ok
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( $verdict, "bakers_game cannot solve a Freecell solution" )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_fails( $solution,
+        "bakers_game cannot solve a Freecell solution" );
 }
 
 {
@@ -132,11 +137,8 @@ sub _solution_is_ok
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( $verdict, "forecell cannot solve a Freecell solution" )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_fails( $solution, "forecell cannot solve a Freecell solution" );
 }
 
 {
@@ -163,11 +165,9 @@ sub _solution_is_ok
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( $verdict, "Freecell cannot solve a Relaxed Freecell Game" )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_fails( $solution,
+        "Freecell cannot solve a Relaxed Freecell Game" );
 }
 
 {
@@ -261,11 +261,9 @@ sub _solution_is_ok
         },
     );
 
-    my $verdict = $solution->verify();
-
     # TEST
-    ok( $verdict, "Custom Freecell cannot solve a Relaxed Freecell Game" )
-        or diag( "Verdict == " . Dumper($verdict) );
+    _solution_fails( $solution,
+        "Custom Freecell cannot solve a Relaxed Freecell Game" );
 }
 
 {
