@@ -1,16 +1,16 @@
 function chart_data(data_selector: string, chart_selector: string) {
     const series = [];
-    const lines = $(data_selector).text().split("\n");
+    const lines = $(data_selector)
+        .text()
+        .split("\n");
     lines.shift();
-    lines.forEach(
-        (l) => {
-            const fields = l.split("\t");
-            series.push([parseFloat(fields[0]), parseFloat(fields[1])]);
-        },
-    );
-    const plot = $.plot($(chart_selector), [
-            { data: series, label: "queue-items(iters)" },
-        ],
+    lines.forEach((l) => {
+        const fields = l.split("\t");
+        series.push([parseFloat(fields[0]), parseFloat(fields[1])]);
+    });
+    const plot = $.plot(
+        $(chart_selector),
+        [{ data: series, label: "queue-items(iters)" }],
         {
             grid: {
                 clickable: true,
@@ -27,14 +27,15 @@ function chart_data(data_selector: string, chart_selector: string) {
         },
     );
 
-    $("<div id='tooltip'></div>").css({
-        "background-color": "#fee",
-        'border': "1px solid #fdd",
-        'display': "none",
-        'opacity': 0.80,
-        'padding': "2px",
-        'position': "absolute",
-    }).appendTo("body");
+    $("<div id='tooltip'></div>")
+        .css({
+            'background-color': "#fee",
+            'border': "1px solid #fdd",
+            'display': "none",
+            'opacity': 0.80,
+            'padding': "2px",
+            'position': "absolute" })
+        .appendTo("body");
 
     $(chart_selector).bind("plothover", (event, pos, item) => {
 
