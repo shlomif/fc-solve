@@ -20,7 +20,7 @@ export as namespace myFuncLib;
 export = MyFunction;
 
 /*~ This example shows how to have multiple overloads for your function */
-declare function MyFunction(): (_: any) =>any;
+declare function MyFunction(): (_: any) => any;
 declare function MyFunction(length: number): MyFunction.LengthReturnType;
 
 /*~ If you want to expose types from your module as well, you can

@@ -1,11 +1,15 @@
 export function fc_solve_expand_move(
-    num_stacks, num_freecells,
-    initial_src_state_str, initial_move, initial_dest_state_str) {
+    num_stacks,
+    num_freecells,
+    initial_src_state_str,
+    initial_move,
+    initial_dest_state_str,
+) {
     const matched = initial_move.str.match(
         /^Move ([0-9]+) cards from stack ([0-9]+) to stack ([0-9]+)$/,
     );
 
-    if (! matched) {
+    if (!matched) {
         return [initial_move];
     }
 
@@ -26,7 +30,7 @@ export function fc_solve_expand_move(
     const empty_fc_indexes = [];
     const empty_stack_indexes = [];
 
-    const modified_state = {f: [], c: []};
+    const modified_state = { f: [], c: [] };
 
     const freecell_match = initial_src_state_str.match(
         /\nFreecells:([^\n]*)\n/,
@@ -42,18 +46,18 @@ export function fc_solve_expand_move(
     }
 
     for (let idx = 0; idx < num_freecells; ++idx) {
-        const fc_s = freecell_string.substring(idx * 4, (idx + 1)  * 4);
+        const fc_s = freecell_string.substring(idx * 4, (idx + 1) * 4);
         if (fc_s === "    ") {
             modified_state.f[idx] = null;
             empty_fc_indexes.push(idx);
         } else {
-            modified_state.f[idx] = {t: 's', s: fc_s};
+            modified_state.f[idx] = { t: "s", s: fc_s };
         }
     }
 
     const col_matches = initial_src_state_str.match(/(\n:[^\n]+)/g);
 
-    if ((!col_matches) || (col_matches.length !== num_stacks)) {
+    if (!col_matches || col_matches.length !== num_stacks) {
         throw "Miscount of stacks.";
     }
 
@@ -65,9 +69,12 @@ export function fc_solve_expand_move(
         }
 
         modified_state.c[idx] = cards;
-        if ((idx !== ultimate_dest) && (idx !== ultimate_source) &&
-            (cards.length === 0)) {
-                empty_stack_indexes.push(idx);
+        if (
+            idx !== ultimate_dest &&
+            idx !== ultimate_source &&
+            cards.length === 0
+        ) {
+            empty_stack_indexes.push(idx);
         }
     }
 
@@ -75,7 +82,7 @@ export function fc_solve_expand_move(
         /^(Foundations:[^\n]*\n)/,
     );
 
-    if (! foundations_match) {
+    if (!foundations_match) {
         throw "Cannot find foundations.";
     }
 
@@ -84,18 +91,15 @@ export function fc_solve_expand_move(
     const num_cards_moved_at_each_stage = [];
 
     let num_cards = 0;
-    num_cards_moved_at_each_stage.push( num_cards );
+    num_cards_moved_at_each_stage.push(num_cards);
     const step_width = 1 + empty_fc_indexes.length;
     while (
-        (num_cards = Math.min(
-                num_cards + step_width,
-                ultimate_num_cards,
-        ))
-        < ultimate_num_cards
+        (num_cards = Math.min(num_cards + step_width, ultimate_num_cards)) <
+        ultimate_num_cards
     ) {
-        num_cards_moved_at_each_stage.push( num_cards );
+        num_cards_moved_at_each_stage.push(num_cards);
     }
-    num_cards_moved_at_each_stage.push( num_cards );
+    num_cards_moved_at_each_stage.push(num_cards);
 
     const ret_array = [];
 
@@ -104,19 +108,25 @@ export function fc_solve_expand_move(
     };
 
     const past_first_output_state_promise = () => {
-        const state_string = foundations_str +
-            "Freecells:" + (modified_state.f.map((fc) => {
-            return ((!fc) ? '    ' : (fc.t === 's') ? fc.s : ("  " + fc.c));
-        }).join("")) + "\n" + (modified_state.c.map((col) => {
-            return ": " + col.join(" ") + "\n";
-        }).join(""));
+        const state_string =
+            foundations_str +
+            "Freecells:" +
+            modified_state.f
+                .map((fc) => {
+                    return !fc ? "    " : fc.t === "s" ? fc.s : "  " + fc.c;
+                })
+                .join("") +
+            "\n" +
+            modified_state.c
+                .map((col) => {
+                    return ": " + col.join(" ") + "\n";
+                })
+                .join("");
 
-        ret_array.push(
-            {
-                str: state_string,
-                type: 's',
-            },
-        );
+        ret_array.push({
+            str: state_string,
+            type: "s",
+        });
 
         return;
     };
@@ -124,26 +134,26 @@ export function fc_solve_expand_move(
     function render_move(my_move) {
         const src = my_move.src.toString();
         const dest = my_move.dest.toString();
-        if (my_move.t === 's2f') {
-            return ("Move a card from stack " + src + " to freecell " + dest);
-        } else if (my_move.t === 's2s') {
-            return ("Move 1 cards from stack " + src + " to stack " + dest);
+        if (my_move.t === "s2f") {
+            return "Move a card from stack " + src + " to freecell " + dest;
+        } else if (my_move.t === "s2s") {
+            return "Move 1 cards from stack " + src + " to stack " + dest;
         } else {
-            return ("Move a card from freecell " + src + " to stack " + dest);
+            return "Move a card from freecell " + src + " to stack " + dest;
         }
     }
     function perform_move(my_move) {
         const src = my_move.src;
         const dest = my_move.dest;
-        if (my_move.t === 's2f') {
+        if (my_move.t === "s2f") {
             modified_state.f[dest] = {
                 c: modified_state.c[src].pop(),
-                t: 'c',
+                t: "c",
             };
-        } else if (my_move.t === 's2s') {
+        } else if (my_move.t === "s2s") {
             modified_state.c[dest].push(modified_state.c[src].pop());
         } else {
-            if (modified_state.f[src].t !== 'c') {
+            if (modified_state.f[src].t !== "c") {
                 throw "Wrong val in " + src + "Freecell.";
             }
             modified_state.c[dest].push(modified_state.f[src].c);
@@ -155,12 +165,10 @@ export function fc_solve_expand_move(
     function add_move(my_move) {
         output_state_promise();
 
-        ret_array.push(
-            {
-                str: render_move(my_move),
-                type: 'm',
-            },
-        );
+        ret_array.push({
+            str: render_move(my_move),
+            type: "m",
+        });
 
         perform_move(my_move);
 
@@ -172,16 +180,12 @@ export function fc_solve_expand_move(
     function move_using_freecells(source, dest, count) {
         const num_cards_thru_freecell = count - 1;
         for (let i = 0; i < num_cards_thru_freecell; ++i) {
-            add_move(
-                {t: 's2f', src: source, dest: empty_fc_indexes[i]},
-            );
+            add_move({ t: "s2f", src: source, dest: empty_fc_indexes[i] });
         }
-        add_move({t: 's2s', src: source, dest});
+        add_move({ t: "s2s", src: source, dest });
 
         for (let i = num_cards_thru_freecell - 1; i >= 0; --i) {
-            add_move(
-                {t: 'f2s', src: empty_fc_indexes[i], dest},
-            );
+            add_move({ t: "f2s", src: empty_fc_indexes[i], dest });
         }
 
         return;
@@ -190,7 +194,7 @@ export function fc_solve_expand_move(
     function _find_max_step(n) {
         let x = 1;
 
-        while ((x << 1) < n) {
+        while (x << 1 < n) {
             x <<= 1;
         }
 
@@ -209,7 +213,7 @@ export function fc_solve_expand_move(
             while (Math.ceil(num_cards_r / step_width) > 1) {
                 // Top power of two in num_steps
                 const rec_num_steps = _find_max_step(
-                    Math.ceil( num_cards_r / step_width ),
+                    Math.ceil(num_cards_r / step_width),
                 );
                 const count_cards = rec_num_steps * step_width;
                 const temp_dest = running_empty_cols.shift();
@@ -230,12 +234,7 @@ export function fc_solve_expand_move(
             move_using_freecells(source, dest, num_cards_r);
 
             steps.reverse().forEach((s) => {
-                recursive_move(
-                    s.dest,
-                    dest,
-                    s.count,
-                    running_empty_cols,
-                );
+                recursive_move(s.dest, dest, s.count, running_empty_cols);
                 running_empty_cols.push(s.dest);
                 running_empty_cols.sort((a, b) => {
                     return a - b;
@@ -246,7 +245,8 @@ export function fc_solve_expand_move(
     };
 
     recursive_move(
-        ultimate_source, ultimate_dest,
+        ultimate_source,
+        ultimate_dest,
         ultimate_num_cards,
         empty_stack_indexes,
     );

@@ -9,9 +9,10 @@ const FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
 w.FC_Solve_init_wrappers_with_module(_my_module);
 
 function _increment_move_indices(move_s) {
-    return move_s.replace(/(stack|freecell)( )(\d+)/g,
+    return move_s.replace(
+        /(stack|freecell)( )(\d+)/g,
         (match, resource_s, sep_s, digit_s) => {
-            return (resource_s + sep_s + (1 + parseInt(digit_s, 10)));
+            return resource_s + sep_s + (1 + parseInt(digit_s, 10));
         },
     );
 }
@@ -30,7 +31,7 @@ class FC_Solve_UI {
     public toggle_expand() {
         const that = this;
 
-        const ret = (that._is_expanded = ! that._is_expanded);
+        const ret = (that._is_expanded = !that._is_expanded);
 
         that._webui_set_output();
 
@@ -48,12 +49,13 @@ class FC_Solve_UI {
 
         that._instance = new FC_Solve({
             cmd_line_preset: that._get_cmd_line_preset(),
-            dir_base: 'fcs_ui',
-            is_unicode_cards: (that._is_unicode_suits_checked() || that._is_unicode_cards_checked()),
+            dir_base: "fcs_ui",
+            is_unicode_cards:
+                that._is_unicode_suits_checked() ||
+                that._is_unicode_cards_checked(),
             is_unicode_cards_chars: that._is_unicode_cards_checked(),
             set_status_callback: (myclass, mylabel) => {
-                return that._webui_set_status_callback(
-                    myclass, mylabel);
+                return that._webui_set_status_callback(myclass, mylabel);
             },
             string_params: that._get_string_params(),
         });
@@ -77,8 +79,8 @@ class FC_Solve_UI {
     }
     public clear_output() {
         const that = this;
-        that._webui_output_set_text('');
-        that._set_html_output('');
+        that._webui_output_set_text("");
+        that._set_html_output("");
         return;
     }
     public update_output() {
@@ -88,8 +90,8 @@ class FC_Solve_UI {
             that._process_pristine_output(that._calc_pristine_output()),
         );
 
-        if (that._solve_err_code === FCS_STATE_WAS_SOLVED ) {
-            let html = '';
+        if (that._solve_err_code === FCS_STATE_WAS_SOLVED) {
+            let html = "";
 
             html += "<ol>\n";
 
@@ -98,19 +100,19 @@ class FC_Solve_UI {
 
             function _filt(str) {
                 return that._process_pristine_output(
-                    inst.unicode_preprocess(
-                        str,
-                    ),
+                    inst.unicode_preprocess(str),
                 );
             }
 
             function _render_state(s, pre_indexes) {
-                return "<li class=\"state\">" +
-                    "<strong class=\"step_idx\">" +
-                    pre_indexes.map((i) => (
-                        ((i >> 1) + 1) + "."),
-                    ).join('') + "</strong><pre>" + _filt(s.str) +
-                    "</pre></li>\n\n";
+                return (
+                    '<li class="state">' +
+                    '<strong class="step_idx">' +
+                    pre_indexes.map((i) => (i >> 1) + 1 + ".").join("") +
+                    "</strong><pre>" +
+                    _filt(s.str) +
+                    "</pre></li>\n\n"
+                );
             }
 
             function _out_state(i) {
@@ -119,72 +121,81 @@ class FC_Solve_UI {
 
             _out_state(0);
             for (let i = 1; i < seq.length - 1; i += 2) {
-                html += "<li id=\"move_" + i +
-                    "\" class=\"move unexpanded\">" +
-                    "<span class=\"mega_move\">" + _filt(seq[i].m.str) +
-                    "</span>\n<button id=\"expand_move_" + i +
-                    "\" class=\"expand_move\">Expand Move</button>\n</li>\n";
+                html +=
+                    '<li id="move_' +
+                    i +
+                    '" class="move unexpanded">' +
+                    '<span class="mega_move">' +
+                    _filt(seq[i].m.str) +
+                    '</span>\n<button id="expand_move_' +
+                    i +
+                    '" class="expand_move">Expand Move</button>\n</li>\n';
 
                 _out_state(i + 1);
             }
             html += "</ol>\n";
             that._set_html_output(html);
 
-            $("#dynamic_output").on("click", "button.expand_move",
-                function(event) {
-                    const button = $(this);
-                    const b_id = button.attr('id');
-                    const idx = parseInt(b_id.match(
-                        /^expand_move_([0-9]+)$/)[1], 10);
+            $("#dynamic_output").on("click", "button.expand_move", function(
+                event,
+            ) {
+                const button = $(this);
+                const b_id = button.attr("id");
+                const idx = parseInt(
+                    b_id.match(/^expand_move_([0-9]+)$/)[1],
+                    10,
+                );
 
-                    const move_ctl = $("#move_" + idx);
-                    const calc_class = 'calced';
-                    if (! move_ctl.hasClass(calc_class)) {
-                        const inner_moves = inst._calc_expanded_move(idx);
+                const move_ctl = $("#move_" + idx);
+                const calc_class = "calced";
+                if (!move_ctl.hasClass(calc_class)) {
+                    const inner_moves = inst._calc_expanded_move(idx);
 
-                        let inner_html = '';
+                    let inner_html = "";
 
-                        inner_html += "<ol class=\"inner_moves\">";
+                    inner_html += '<ol class="inner_moves">';
 
-                        function _out_inner_move(i) {
-                            inner_html += "<li class=\"move\">" +
-                                "<span class=\"inner_move\">" +
-                                _filt(inner_moves[i].str) +
-                                "</span>\n</li>\n";
-                            return;
-                        }
-
-                        for (let i = 0; i < inner_moves.length - 1;
-                            i += 2) {
-                            _out_inner_move(i);
-                            inner_html += _render_state(
-                                inner_moves[i + 1],
-                                [idx, i],
-                            );
-                        }
-                        _out_inner_move(inner_moves.length - 1);
-                        inner_html += "</ol>";
-                        move_ctl.append(inner_html);
-                        move_ctl.toggleClass(calc_class);
+                    function _out_inner_move(i) {
+                        inner_html +=
+                            '<li class="move">' +
+                            '<span class="inner_move">' +
+                            _filt(inner_moves[i].str) +
+                            "</span>\n</li>\n";
+                        return;
                     }
-                    move_ctl.toggleClass("expanded");
-                    move_ctl.toggleClass("unexpanded");
-                    button.text(move_ctl.hasClass("expanded") ?
-                        "Unexpand move" : "Expand move");
-                },
-            );
+
+                    for (let i = 0; i < inner_moves.length - 1; i += 2) {
+                        _out_inner_move(i);
+                        inner_html += _render_state(inner_moves[i + 1], [
+                            idx,
+                            i,
+                        ]);
+                    }
+                    _out_inner_move(inner_moves.length - 1);
+                    inner_html += "</ol>";
+                    move_ctl.append(inner_html);
+                    move_ctl.toggleClass(calc_class);
+                }
+                move_ctl.toggleClass("expanded");
+                move_ctl.toggleClass("unexpanded");
+                button.text(
+                    move_ctl.hasClass("expanded")
+                        ? "Unexpand move"
+                        : "Expand move",
+                );
+            });
         }
         return;
     }
 
     private _is_one_based_checked() {
-        return $("#one_based").is(':checked');
+        return $("#one_based").is(":checked");
     }
     private _is_unicode_suits_checked() {
-        return $("#unicode_suits__unisuits").is(':checked');
+        return $("#unicode_suits__unisuits").is(":checked");
     }
     private _is_unicode_cards_checked() {
-        return $("#unicode_suits__unicards").is(':checked');
+        return $("#unicode_suits__unicards").is(":checked");
     }
     private _webui_output_set_text(text) {
         $("#output").val(text);
@@ -192,15 +203,14 @@ class FC_Solve_UI {
         return;
     }
     private _one_based_process(text) {
-        return text.replace(/^Move[^\n]+$/mg, _increment_move_indices);
+        return text.replace(/^Move[^\n]+$/gm, _increment_move_indices);
     }
     private _process_pristine_output(text) {
         const that = this;
 
-        return (that._is_one_based_checked()
+        return that._is_one_based_checked()
             ? that._one_based_process(text)
-            : text
-        );
+            : text;
     }
     private _set_html_output(html) {
         $("#dynamic_output").html(html);
@@ -220,13 +230,13 @@ class FC_Solve_UI {
         ctl.addClass(myclass);
         ctl.html(base_ui.escapeHtml(mylabel));
 
-        const is_exceed = (myclass === "exceeded");
+        const is_exceed = myclass === "exceeded";
 
         if (is_exceed) {
             that._was_iterations_count_exceeded = true;
         }
 
-        if (is_exceed || (myclass === "impossible")) {
+        if (is_exceed || myclass === "impossible") {
             that._re_enable_output();
         }
 
@@ -235,18 +245,15 @@ class FC_Solve_UI {
     private _calc_pristine_output() {
         const that = this;
 
-        if (that._solve_err_code === FCS_STATE_WAS_SOLVED ) {
+        if (that._solve_err_code === FCS_STATE_WAS_SOLVED) {
             const _expand = that._is_expanded;
             const _k = _expand ? 1 : 0;
             const _o = that._pristine_outputs;
-            return (
-                _o[_k] = (_o[_k] || that._instance.generic_display_sol(
-                    {
-                        expand: _expand,
-                    },
-                )
-                )
-            );
+            return (_o[_k] =
+                _o[_k] ||
+                that._instance.generic_display_sol({
+                    expand: _expand,
+                }));
         } else {
             return "";
         }
@@ -263,21 +270,20 @@ class FC_Solve_UI {
     private _enqueue_resume() {
         const that = this;
 
-        setTimeout(
-            () => {
-                return that.do_resume();
-            },
-            50,
-        );
+        setTimeout(() => {
+            return that.do_resume();
+        }, 50);
 
         return;
     }
     private _handle_err_code() {
         const that = this;
-        if (that._solve_err_code === FCS_STATE_WAS_SOLVED ) {
+        if (that._solve_err_code === FCS_STATE_WAS_SOLVED) {
             that._webui_set_output();
-        } else if (that._solve_err_code === FCS_STATE_SUSPEND_PROCESS
-            && !that._was_iterations_count_exceeded) {
+        } else if (
+            that._solve_err_code === FCS_STATE_SUSPEND_PROCESS &&
+            !that._was_iterations_count_exceeded
+        ) {
             that._enqueue_resume();
         }
 
@@ -285,14 +291,18 @@ class FC_Solve_UI {
     }
     private _get_string_params() {
         const text = $("#string_params").val() as string;
-        return ('--game ' + $("#game_type").val() + ' ' +
-            (text.match(/\S/) ? text : ''));
+        return (
+            "--game " +
+            $("#game_type").val() +
+            " " +
+            (text.match(/\S/) ? text : "")
+        );
     }
     private _get_cmd_line_preset() {
         return $("#preset").val();
     }
     private _calc_initial_board_string() {
-        return ($("#stdin").val() as string).replace(/#[^\r\n]*\r?\n?/g, '');
+        return ($("#stdin").val() as string).replace(/#[^\r\n]*\r?\n?/g, "");
     }
     private _disable_output_display() {
         $("#output").attr("disabled", "true");
@@ -304,9 +314,15 @@ class FC_Solve_UI {
 function _create_bmark_obj() {
     return new base_ui.FC_Solve_Bookmarking({
         bookmark_controls: [
-            'stdin', 'preset', 'deal_number', 'one_based',
-            'unicode_suits__ascii', 'unicode_suits__unicards',
-            'unicode_suits__unisuits', 'string_params', 'game_type',
+            "stdin",
+            "preset",
+            "deal_number",
+            "one_based",
+            "unicode_suits__ascii",
+            "unicode_suits__unicards",
+            "unicode_suits__unisuits",
+            "string_params",
+            "game_type",
         ],
         show: [],
     });

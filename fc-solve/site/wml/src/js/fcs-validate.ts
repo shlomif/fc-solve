@@ -1,7 +1,7 @@
 // Adapted from http://www.inventpartners.com/javascript_is_int - thanks.
 function is_int(input: number): boolean {
     const value: string = "" + input;
-    if ((parseFloat(value) === parseInt(value, 10)) && !isNaN(input)) {
+    if (parseFloat(value) === parseInt(value, 10) && !isNaN(input)) {
         return true;
     } else {
         return false;
@@ -34,10 +34,10 @@ class Card {
     private suit: number;
 
     constructor(rank: number, suit: number) {
-        if (! is_int(rank)) {
+        if (!is_int(rank)) {
             throw "rank is not an integer.";
         }
-        if (! is_int(suit)) {
+        if (!is_int(suit)) {
             throw "suit is not an integer.";
         }
         if (rank < 1) {
@@ -65,8 +65,10 @@ class Card {
     }
 
     public toString(): string {
-        return _ranks__int_to_str.substring(this.rank, this.rank + 1) +
-            _suits__int_to_str.substring(this.suit, this.suit + 1);
+        return (
+            _ranks__int_to_str.substring(this.rank, this.rank + 1) +
+            _suits__int_to_str.substring(this.suit, this.suit + 1)
+        );
     }
 }
 
@@ -100,13 +102,13 @@ class Column {
     }
 }
 
-const suit_re: string = '[HCDS]';
-const rank_re: string = '[A23456789TJQK]';
-const card_re: string = '(' + rank_re + ')(' + suit_re + ')';
+const suit_re: string = "[HCDS]";
+const rank_re: string = "[A23456789TJQK]";
+const card_re: string = "(" + rank_re + ")(" + suit_re + ")";
 export function fcs_js__card_from_string(s: string): Card {
-    const m = s.match('^' + card_re + '$');
-    if (! m) {
-        throw "Invalid format for a card - \"" + s + "\"";
+    const m = s.match("^" + card_re + "$");
+    if (!m) {
+        throw 'Invalid format for a card - "' + s + '"';
     }
     return new Card(ranks__str_to_int[m[1]], _suits__str_to_int[m[2]]);
 }
@@ -117,7 +119,12 @@ class BaseResult {
     public num_consumed_chars: number;
     public error: string;
 
-    constructor(is_correct: boolean, start_char_idx: number, num_consumed_chars: number, error: string) {
+    constructor(
+        is_correct: boolean,
+        start_char_idx: number,
+        num_consumed_chars: number,
+        error: string,
+    ) {
         this.is_correct = is_correct;
         this.num_consumed_chars = num_consumed_chars;
         this.error = error;
@@ -125,15 +132,20 @@ class BaseResult {
     }
 
     public getEnd(): number {
-        return (this.start_char_idx + this.num_consumed_chars);
+        return this.start_char_idx + this.num_consumed_chars;
     }
 }
 
 class ColumnParseResult extends BaseResult {
     public col: Column;
 
-    constructor(is_correct: boolean, start_char_idx: number,
-                num_consumed_chars: number, error: string, cards: Card[]) {
+    constructor(
+        is_correct: boolean,
+        start_char_idx: number,
+        num_consumed_chars: number,
+        error: string,
+        cards: Card[],
+    ) {
         super(is_correct, start_char_idx, num_consumed_chars, error);
         this.col = new Column(cards);
     }
@@ -162,7 +174,7 @@ class StringParser {
     }
 
     public isNotEmpty(): boolean {
-        return (this.s.length > 0);
+        return this.s.length > 0;
     }
 
     public match(re: any): RegExpMatchArray {
@@ -198,12 +210,14 @@ class CardsStringParser<CardType> extends StringParser {
     }
 
     public getStartSpace(): string {
-        return (this.is_start ? '' : ' +');
+        return this.is_start ? "" : " +";
     }
 
     public should_loop(): boolean {
         const that = this;
-        return (that.isNotEmpty() && (!that.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)));
+        return (
+            that.isNotEmpty() && !that.consume_match(/^(\s*(?:#[^\n]*)?\n?)$/)
+        );
     }
 
     public add(m: RegExpMatchArray): void {
@@ -213,13 +227,15 @@ class CardsStringParser<CardType> extends StringParser {
         return;
     }
 
-    public loop(re: any, callback: (() => any)): any {
+    public loop(re: any, callback: (() => any)): any {
         const p = this;
 
         while (p.should_loop()) {
-            const m = p.consume_match('^(' + p.getStartSpace() + '(' + re + ')' + ')');
-            if (! m) {
-                p.consume_match('^( *)');
+            const m = p.consume_match(
+                "^(" + p.getStartSpace() + "(" + re + ")" + ")",
+            );
+            if (!m) {
+                p.consume_match("^( *)");
 
                 return callback();
             }
@@ -230,28 +246,44 @@ class CardsStringParser<CardType> extends StringParser {
 }
 
 export function fcs_js__column_from_string(
-    start_char_idx: number, orig_s: string, force_leading_colon: boolean):
-    ColumnParseResult {
+    start_char_idx: number,
+    orig_s: string,
+    force_leading_colon: boolean,
+): ColumnParseResult {
     const p = new CardsStringParser<Card>(orig_s, fcs_js__card_from_string);
 
-    const match = p.consume_match('^((?:\: +)?)');
+    const match = p.consume_match("^((?:: +)?)");
 
-    if (force_leading_colon && (!match[1].length)) {
+    if (force_leading_colon && !match[1].length) {
         return new ColumnParseResult(
-            false, start_char_idx, p.getConsumed(),
-            'Columns must start with a ":" in strict mode.', []);
+            false,
+            start_char_idx,
+            p.getConsumed(),
+            'Columns must start with a ":" in strict mode.',
+            [],
+        );
     }
 
     const ret = p.loop(card_re, () => {
         return new ColumnParseResult(
-            false, start_char_idx, p.getConsumed(),
-            'Wrong card format - should be [Rank][Suit]', []);
+            false,
+            start_char_idx,
+            p.getConsumed(),
+            "Wrong card format - should be [Rank][Suit]",
+            [],
+        );
     });
     if (ret) {
         return ret;
     }
 
-    return new ColumnParseResult(true, start_char_idx, p.getConsumed(), '', p.cards);
+    return new ColumnParseResult(
+        true,
+        start_char_idx,
+        p.getConsumed(),
+        "",
+        p.cards,
+    );
 }
 
 type MaybeCard = Card | null;
@@ -291,7 +323,7 @@ class Freecells {
         const that = this;
         return _perl_range(0, that.getNum() - 1).map((i) => {
             const card = that.getCard(i);
-            return ((card !== null) ? card.toString() : '-');
+            return card !== null ? card.toString() : "-";
         });
     }
 }
@@ -300,9 +332,14 @@ class Freecells {
 class FreecellsParseResult extends BaseResult {
     public freecells: Freecells;
 
-    constructor(is_correct: boolean, start_char_idx: number,
-                num_consumed_chars: number, error: string,
-                num_freecells: number, fc: MaybeCard[]) {
+    constructor(
+        is_correct: boolean,
+        start_char_idx: number,
+        num_consumed_chars: number,
+        error: string,
+        num_freecells: number,
+        fc: MaybeCard[],
+    ) {
         super(is_correct, start_char_idx, num_consumed_chars, error);
         if (is_correct) {
             this.freecells = new Freecells(num_freecells, fc);
@@ -311,26 +348,34 @@ class FreecellsParseResult extends BaseResult {
 }
 
 export function fcs_js__freecells_from_string(
-    num_freecells: number, start_char_idx: number, orig_s: string):
-    FreecellsParseResult {
+    num_freecells: number,
+    start_char_idx: number,
+    orig_s: string,
+): FreecellsParseResult {
     const p = new CardsStringParser<MaybeCard>(orig_s, (card_str) => {
-        return ((card_str === '-') ? null :
-            fcs_js__card_from_string(card_str));
+        return card_str === "-" ? null : fcs_js__card_from_string(card_str);
     });
 
     function make_ret(verdict: boolean, err_str: string) {
         return new FreecellsParseResult(
-            verdict, start_char_idx, p.getConsumed(), err_str,
-            num_freecells, verdict ? p.cards : []);
+            verdict,
+            start_char_idx,
+            p.getConsumed(),
+            err_str,
+            num_freecells,
+            verdict ? p.cards : [],
+        );
     }
 
     if (!p.consume_match(/^(Freecells\: +)/)) {
-        return make_ret(false, 'Wrong line prefix for freecells - should be "Freecells:"');
+        return make_ret(
+            false,
+            'Wrong line prefix for freecells - should be "Freecells:"',
+        );
     }
 
-    const ret = p.loop("\\-|(?:" + card_re + ')', () => {
-        return make_ret(
-            false, 'Wrong card format - should be [Rank][Suit]');
+    const ret = p.loop("\\-|(?:" + card_re + ")", () => {
+        return make_ret(false, "Wrong card format - should be [Rank][Suit]");
     });
 
     if (ret) {
@@ -342,10 +387,10 @@ export function fcs_js__freecells_from_string(
     }
 
     if (p.cards.length !== num_freecells) {
-        return make_ret(false, 'Too many cards specified in Freecells line.');
+        return make_ret(false, "Too many cards specified in Freecells line.");
     }
 
-    return make_ret(true, '');
+    return make_ret(true, "");
 }
 
 export class Foundations {
@@ -367,7 +412,7 @@ export class Foundations {
             throw "Rank must be an integer.";
         }
 
-        if (! ((rank >= 0 ) && (rank <= 13))) {
+        if (!(rank >= 0 && rank <= 13)) {
             throw "rank is out of range.";
         }
 
@@ -397,7 +442,7 @@ export class Foundations {
         if (!is_int(suit)) {
             throw "suit is not an integer.";
         }
-        if (! ((suit >= 0) && (suit < 4))) {
+        if (!(suit >= 0 && suit < 4)) {
             throw "suit is out of range.";
         }
 
@@ -409,9 +454,12 @@ class FoundationsParseResult extends BaseResult {
     public foundations: Foundations;
 
     constructor(
-        is_correct: boolean, start_char_idx: number,
-        num_consumed_chars: number, error: string,
-        foundations: Foundations) {
+        is_correct: boolean,
+        start_char_idx: number,
+        num_consumed_chars: number,
+        error: string,
+        foundations: Foundations,
+    ) {
         super(is_correct, start_char_idx, num_consumed_chars, error);
         if (is_correct) {
             this.foundations = foundations;
@@ -420,9 +468,10 @@ class FoundationsParseResult extends BaseResult {
 }
 
 export function fcs_js__foundations_from_string(
-    num_decks: number, start_char_idx: number, orig_s: string):
-    FoundationsParseResult {
-
+    num_decks: number,
+    start_char_idx: number,
+    orig_s: string,
+): FoundationsParseResult {
     if (num_decks !== 1) {
         throw "Can only handle 1 decks.";
     }
@@ -434,11 +483,20 @@ export function fcs_js__foundations_from_string(
         if (verdict) {
             founds.finalize();
         }
-        return new FoundationsParseResult(verdict, start_char_idx, p.getConsumed(), err_str, founds);
+        return new FoundationsParseResult(
+            verdict,
+            start_char_idx,
+            p.getConsumed(),
+            err_str,
+            founds,
+        );
     }
 
     if (!p.consume_match(/^(Foundations\:)/)) {
-        return make_ret(false, 'Wrong line prefix for freecells - should be "Freecells:"');
+        return make_ret(
+            false,
+            'Wrong line prefix for freecells - should be "Freecells:"',
+        );
     }
 
     while (p.isNotEmpty()) {
@@ -446,15 +504,24 @@ export function fcs_js__foundations_from_string(
             break;
         }
         const m = p.consume_match("^( +(" + suit_re + ")-(" + rank_re + "))");
-        if (! m) {
-            return make_ret(false, "Could not match a foundation string [HCDS]-[A23456789TJQK]");
+        if (!m) {
+            return make_ret(
+                false,
+                "Could not match a foundation string [HCDS]-[A23456789TJQK]",
+            );
         }
         const suit = m[2];
-        if (!founds.setByIdx(0, _suits__str_to_int[suit], ranks__str_to_int[m[3]])) {
-            return make_ret(false, "Suit \"" + suit + "\" was already set.");
+        if (
+            !founds.setByIdx(
+                0,
+                _suits__str_to_int[suit],
+                ranks__str_to_int[m[3]],
+            )
+        ) {
+            return make_ret(false, 'Suit "' + suit + '" was already set.');
         }
     }
-    return make_ret(true, '');
+    return make_ret(true, "");
 }
 
 export enum ErrorLocationType {
@@ -521,18 +588,20 @@ export class BoardParseResult {
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             const fo = fcs_js__foundations_from_string(1, start_char_idx, l);
             that.foundations = fo;
-            if (! fo.is_correct) {
-                that.errors.push(new ParseError(
-                    ParseErrorType.LINE_PARSE_ERROR,
-                    [new ErrorLocation(
-                        ErrorLocationType.ErrorLocationType_Foundations,
-                        0,
-                        start_char_idx,
-                        p.getConsumed(),
+            if (!fo.is_correct) {
+                that.errors.push(
+                    new ParseError(
+                        ParseErrorType.LINE_PARSE_ERROR,
+                        [
+                            new ErrorLocation(
+                                ErrorLocationType.ErrorLocationType_Foundations,
+                                0,
+                                start_char_idx,
+                                p.getConsumed(),
+                            ),
+                        ],
+                        fcs_js__card_from_string("AH"),
                     ),
-                    ],
-                    fcs_js__card_from_string('AH'),
-                ),
                 );
                 that.is_valid = false;
                 return;
@@ -541,20 +610,26 @@ export class BoardParseResult {
         if (p.match(/^Freecells:/)) {
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
-            const fc = fcs_js__freecells_from_string(num_freecells, start_char_idx, l);
+            const fc = fcs_js__freecells_from_string(
+                num_freecells,
+                start_char_idx,
+                l,
+            );
             that.freecells = fc;
-            if (! fc.is_correct) {
-                that.errors.push(new ParseError(
-                    ParseErrorType.LINE_PARSE_ERROR,
-                    [new ErrorLocation(
-                        ErrorLocationType.ErrorLocationType_Freecells,
-                        0,
-                        start_char_idx,
-                        p.getConsumed(),
+            if (!fc.is_correct) {
+                that.errors.push(
+                    new ParseError(
+                        ParseErrorType.LINE_PARSE_ERROR,
+                        [
+                            new ErrorLocation(
+                                ErrorLocationType.ErrorLocationType_Freecells,
+                                0,
+                                start_char_idx,
+                                p.getConsumed(),
+                            ),
+                        ],
+                        fcs_js__card_from_string("AH"),
                     ),
-                    ],
-                    fcs_js__card_from_string('AH'),
-                ),
                 );
                 that.is_valid = false;
                 return;
@@ -564,17 +639,19 @@ export class BoardParseResult {
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             const col = fcs_js__column_from_string(start_char_idx, l, true);
-            if (! col.is_correct) {
-                that.errors.push(new ParseError(
-                    ParseErrorType.LINE_PARSE_ERROR,
-                    [new ErrorLocation(
-                        ErrorLocationType.ErrorLocationType_Column,
-                        i,
-                        start_char_idx,
-                        p.getConsumed(),
-                    ),
-                    ],
-                    fcs_js__card_from_string('AH'),
+            if (!col.is_correct) {
+                that.errors.push(
+                    new ParseError(
+                        ParseErrorType.LINE_PARSE_ERROR,
+                        [
+                            new ErrorLocation(
+                                ErrorLocationType.ErrorLocationType_Column,
+                                i,
+                                start_char_idx,
+                                p.getConsumed(),
+                            ),
+                        ],
+                        fcs_js__card_from_string("AH"),
                     ),
                 );
                 that.is_valid = false;

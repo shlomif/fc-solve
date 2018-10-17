@@ -1,4 +1,4 @@
-import * as s2i from './dist/fc_solve_find_index_s2ints';
+import * as s2i from "./dist/fc_solve_find_index_s2ints";
 import * as base_ui from "./fcs-base-ui";
 import * as Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
@@ -8,7 +8,7 @@ w.FC_Solve_init_wrappers_with_module(_my_module);
 
 function _create_bmark_obj() {
     return new base_ui.FC_Solve_Bookmarking({
-        bookmark_controls: ['stdin', 'deal_number'],
+        bookmark_controls: ["stdin", "deal_number"],
         show: [],
     });
 }
@@ -27,32 +27,36 @@ const numberWithCommas = (x) => {
 };
 
 export function find_deal_ui() {
-    const deal_str = ($("#stdin").val() as string).replace(/#[^\r\n]*\r?\n?/g, '').
-        replace(/\r+\n/, "\n").replace(/([^\n])$/, "$1\n");
+    const deal_str = ($("#stdin").val() as string)
+        .replace(/#[^\r\n]*\r?\n?/g, "")
+        .replace(/\r+\n/, "\n")
+        .replace(/([^\n])$/, "$1\n");
     const ints = s2i.find_index__board_string_to_ints(deal_str);
-    const ints_s = ints.map((i) => {
-        const ret = i.toString();
-        return " ".repeat(10 - ret.length) + ret;
-    }).join('');
+    const ints_s = ints
+        .map((i) => {
+            const ret = i.toString();
+            return " ".repeat(10 - ret.length) + ret;
+        })
+        .join("");
     const df = new w.Freecell_Deal_Finder({});
     df.fill(ints_s);
     const ctl = $("#fc_solve_status");
-    df.run(1, '8589934591',
-        (args) => {
-            ctl.html(base_ui.escapeHtml(
-                "Reached No. " + numberWithCommas(args.start),
-            ));
-            return;
-        },
-    );
+    df.run(1, "8589934591", (args) => {
+        ctl.html(
+            base_ui.escapeHtml("Reached No. " + numberWithCommas(args.start)),
+        );
+        return;
+    });
 
     function resume() {
         const ret_Deal = df.cont();
         if (ret_Deal.found) {
-            ctl.html("Found: <input id=\"found_result\" " +
-                "name=\"found_result\" value=\"" +
-                ret_Deal.result.toString() +
-                "\" readonly=\"readonly\" />");
+            ctl.html(
+                'Found: <input id="found_result" ' +
+                    'name="found_result" value="' +
+                    ret_Deal.result.toString() +
+                    '" readonly="readonly" />',
+            );
         } else if (ret_Deal.cont) {
             setTimeout(() => {
                 resume();
