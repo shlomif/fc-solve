@@ -2,7 +2,7 @@
 
 <latemp_subject "The Freecell Solver Architecture Document" />
 
-<h2>Introduction</h2>
+<h2_section id="intro" title="Introduction">
 
 <p>
 This is the
@@ -14,19 +14,28 @@ to different formats. All the common formats you'd like to use are supplied
 here.
 </p>
 
-<h2>Formats</h2>
+</h2_section>
+
+<h2_section id="formats" title="Formats">
 
 <ul>
+
 <li>
-<a href="./fcs_arch_doc/index.html">HTML (read online)</a>
+<a href="fcs_arch_doc/index.html">HTML (read online)</a>
 </li>
+
 <li>
-<a href="./fcs_arch_doc.pdf">Acrobat Reader (PDF)</a>
+<a href="fcs_arch_doc.pdf">Acrobat Reader (PDF)</a>
 </li>
+
 <li>
-<a href="./fcs_arch_doc.rtf">Microsoft Word RTF</a>
+<a href="fcs_arch_doc.rtf">Microsoft Word RTF</a>
 </li>
+
 <li>
-<a href="http://developer.berlios.de/project/showfiles.php?group_id=66&amp;release_id=6099">The Original DocBook</a>
+<a href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/arch_doc">The Original DocBook</a>
 </li>
+
 </ul>
+
+</h2_section>
