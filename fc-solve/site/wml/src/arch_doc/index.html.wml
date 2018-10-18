@@ -21,11 +21,19 @@ here.
 <ul>
 
 <li>
-<a href="fcs_arch_doc/index.html">HTML (read online)</a>
+<a href="fcs_arch_doc/">HTML (read online)</a>
+</li>
+
+<li>
+<a href="fcs_arch_doc-all-on-one-page/">HTML on one page</a>
 </li>
 
 <li>
 <a href="fcs_arch_doc.pdf">Acrobat Reader (PDF)</a>
+</li>
+
+<li>
+<a href="fcs_arch_doc.epub">EPUB</a>
 </li>
 
 <li>

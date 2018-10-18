@@ -214,6 +214,7 @@ DocBook
 Doxygen
 EC2
 EE
+EPUB
 ESR
 EXE
 Egele
