@@ -423,7 +423,7 @@ a.solve_online_button {
     }
 }
 
-.invisible a {
+.invisible , .invisible a {
     position: absolute;
     left: -10000px;
     top: auto;
