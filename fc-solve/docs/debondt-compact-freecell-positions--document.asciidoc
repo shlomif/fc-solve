@@ -233,3 +233,53 @@ Best regards,
 > Best regards, Michiel
 >
 >
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Ian Gent was able to improve upon this scheme, quoting below:
+
+
+Hi Shlomi,
+
+I enjoyed reading the discussion you linked to and I thought about it some more and I think I can reduce the number of bits from there. Of course the saving may not be worth the extra computations required to recompute the states.
+
+For foundations, how many cards are on each of the foundations, S, H, C, D
+0 to 13 for four foundations:
+
+log2(14)*4 = 15.2294196882
+
+For each tableaux column, what is the length of the built sequence at the bottom, 0 to 12?  0 indicates space.  12 is max as we ignore aces.:
+
+Log2(13)*8 = 29.6035177451.
+
+For each tableaux column which is not a space, what is the top card of its built sequence at the bottom?
+
+For cards originally in that column except the top card, distinguish between they are in their original position or the column was previously emptied and that card is now at the top.
+As usual ignore aces.
+
+So there are 58 possibilities for the piles with 7 cards and 57 for the piles with 6.
+
+log2(58)*4+log2(57)*4 = 46.7634840372
+
+Total so far = log2(14)*4 + log2(13)*8 + log2(58)*4+log2(57)*4 = 91.5964214705 bits
+
+From this we now know each foundation and also each tableau in full EXCEPT for the choice of the two coloured cards at each point in its built sequence.  So e.g. if column 1 has a built sequence of length 4, with the top card of that sequence being the 7C in its original position, then we know that the column contains its original cards down to the 7C, followed by a red 6, a black 5, and a red 4.  So we have to determine whether it's 6H or 6D, 5S or 5C, and 4H or 4D.
+
+In fact we can do this very efficiently. We can ignore Ks and As so there are only 11 ranks, and two colours, for 22 choices to be made.  But we only need one bit for each one.
+
+For each rank/colour, e.g. black 6, the bit tells us whether the leftmost occurrence of the card in a built sequence is S or C (or H or D for red cards).  If there are two built black 6s then the second occurrence is determined.
+So we need 22 bits for this.
+
+Total so far = 113.5964214705
+
+And now we have done this we need zero more bits for the freecells! Every card in the tableau or foundations is determined so any cards not already placed are in freecells.
+
+So 114 bits can completely determine the state of a game, of course given the original layout, and assuming that aces are autoplayed.
+
+In fact this is not at all tight and the 114 bits can be reduced. We know that the foundations plus length of built sequences adds up to no more than 48, so a better encoding would need fewer bits than the almost 45 we use now.
+
+Furthermore we can do even better if you are prepared to accept symmetric equivalent of states instead of the original. I.e. there are more compact encodings possible if we say that two states with the same columns in different orders lead to the same encoding.
+
+Not sure if this is of any interest to you but I enjoyed thinking about it.
+
+Ian
