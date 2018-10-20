@@ -1,7 +1,7 @@
 #include "share-this.wml"
 
 <define-tag duck_duck_go_search>
-<h2 id="site-ddg-search">Duck Duck Go Search</h2>
+<h2 class="plain" id="site-ddg-search">Duck Duck Go Search</h2>
 <div class="search">
 <!-- DuckDuckGo Search -->
 <object data="https://duckduckgo.com/search.html?width=100&amp;site=fc-solve.shlomifish.org&amp;prefill=Search%20DuckDuckGo" type="text/html" style="overflow:hidden;margin:0;padding:0;width:160px;height:40px;"></object>
