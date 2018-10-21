@@ -4,6 +4,20 @@ include lib/make/shlomif_common.mak
 include lib/make/rules.mak
 include lib/make/include.mak
 
+PERL := perl
+DOCMAKE ?= docmake
+
+DOCBOOK5_XSL_STYLESHEETS_PATH := /usr/share/sgml/docbook/xsl-ns-stylesheets
+
+DOCBOOK5_XSL_STYLESHEETS_XHTML_PATH := $(DOCBOOK5_XSL_STYLESHEETS_PATH)/xhtml-1_1
+DOCBOOK5_XSL_STYLESHEETS_ONECHUNK_PATH := $(DOCBOOK5_XSL_STYLESHEETS_PATH)/onechunk
+DOCBOOK5_XSL_STYLESHEETS_FO_PATH := $(DOCBOOK5_XSL_STYLESHEETS_PATH)/fo
+
+DOCBOOK5_XSL_CUSTOM_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-xhtml.xsl
+DOCBOOK5_XSL_ONECHUNK_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-xhtml-onechunk.xsl
+DOCBOOK5_XSL_FO_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-fo.xsl
+DOCMAKE_PARAMS = -v
+DOCMAKE_WITH_PARAMS = $(DOCMAKE) $(DOCMAKE_PARAMS)
 # Toggle to generate production code with compressed and merged JS code/etc.
 PROD = 0
 
@@ -110,6 +124,9 @@ dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
 dummy: $(FIND_INDEX__PYJS__TARGETS)
 
 dummy: $(DEST_BROWSERIFY_JS)
+
+lib/docbook/5/xml/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xml
+	cp -f $< $@
 
 OUT_PREF = lib/out-babel/js
 OUT_BROWSERIFY_JS = $(patsubst %,$(OUT_PREF)/%,$(BASE_BROWSERIFY_JS))
@@ -400,3 +417,81 @@ clean:
 # A temporary target to edit the active files.
 edit:
 	gvim -o src/js/fcs-validate.ts src/js/web-fc-solve-tests--fcs-validate.ts
+
+DOCBOOK5_BASE_DIR = lib/docbook/5
+DOCBOOK5_ALL_IN_ONE_XHTML_DIR = $(DOCBOOK5_BASE_DIR)/essays
+DOCBOOK5_SOURCES_DIR = $(DOCBOOK5_BASE_DIR)/xml
+DOCBOOK5_EPUB_DIR = $(DOCBOOK5_BASE_DIR)/epub
+DOCBOOK5_FO_DIR = $(DOCBOOK5_BASE_DIR)/fo
+DOCBOOK5_PDF_DIR = $(DOCBOOK5_BASE_DIR)/pdf
+DOCBOOK5_RTF_DIR = $(DOCBOOK5_BASE_DIR)/rtf
+DOCBOOK5_FOR_OOO_XHTML_DIR = $(DOCBOOK5_BASE_DIR)/for-ooo-xhtml
+DOCBOOK5_RENDERED_DIR = $(DOCBOOK5_BASE_DIR)/rendered
+
+include lib/make/docbook/sf-homepage-docbooks-generated.mak
+
+DOCBOOK5_EPUBS = $(patsubst %,$(DOCBOOK5_EPUB_DIR)/%.epub,$(filter-out hebrew-html-tutorial ,$(DOCBOOK5_DOCS)))
+
+DOCBOOK5_FOS = $(patsubst %,$(DOCBOOK5_FO_DIR)/%.fo,$(DOCBOOK5_DOCS))
+
+DOCBOOK5_FOR_OOO_XHTMLS = $(patsubst %,$(DOCBOOK5_FOR_OOO_XHTML_DIR)/%.html,$(DOCBOOK5_DOCS))
+
+DOCBOOK5_PDFS = $(patsubst %,$(DOCBOOK5_PDF_DIR)/%.pdf,$(DOCBOOK5_DOCS))
+
+DOCBOOK5_RTFS = $(patsubst %,$(DOCBOOK5_RTF_DIR)/%.rtf,$(DOCBOOK5_DOCS))
+
+DOCBOOK5_INDIVIDUAL_XHTMLS = $(addprefix $(DOCBOOK5_INDIVIDUAL_XHTML_DIR)/,$(DOCBOOK5_DOCS))
+
+DOCBOOK5_ALL_IN_ONE_XHTMLS__DIRS = $(patsubst %,$(DOCBOOK5_ALL_IN_ONE_XHTML_DIR)/%,$(DOCBOOK5_DOCS))
+DOCBOOK5_ALL_IN_ONE_XHTMLS = $(patsubst %,$(DOCBOOK5_ALL_IN_ONE_XHTML_DIR)/%/all-in-one.xhtml,$(DOCBOOK5_DOCS))
+
+dummy: docbook_targets
+
+install_docbook5_epubs: make-dirs $(DOCBOOK5_INSTALLED_EPUBS)
+install_docbook5_htmls: make-dirs $(DOCBOOK5_INSTALLED_HTMLS)
+
+install_docbook4_pdfs: make-dirs $(DOCBOOK4_INSTALLED_PDFS)
+install_docbook5_pdfs: make-dirs $(DOCBOOK5_INSTALLED_PDFS)
+
+install_docbook4_xmls: make-dirs $(DOCBOOK4_INSTALLED_XMLS)
+install_docbook5_xmls: make-dirs $(DOCBOOK5_INSTALLED_XMLS)
+
+install_docbook4_rtfs: make-dirs  $(DOCBOOK4_INSTALLED_RTFS)
+install_docbook5_rtfs: make-dirs  $(DOCBOOK5_INSTALLED_RTFS)
+
+docbook_targets: docbook4_targets docbook5_targets \
+	install_docbook5_epubs \
+	install_docbook5_htmls \
+	install_docbook4_xmls install_docbook_individual_xhtmls \
+	install_docbook_css_dirs install_docbook5_xmls \
+
+docbook_extended: $(DOCBOOK4_FOS) $(DOCBOOK4_PDFS) \
+	$(DOCBOOK5_FOS) $(DOCBOOK5_PDFS) \
+	install_docbook4_pdfs install_docbook4_rtfs \
+	install_docbook5_pdfs install_docbook5_rtfs
+
+docbook4_targets: $(DOCBOOK4_TARGETS) $(DOCBOOK4_ALL_IN_ONE_XHTMLS) $(DOCBOOK4_ALL_IN_ONE_XHTMLS_CSS)
+
+docbook5_targets: $(DOCBOOK5_TARGETS) $(DOCBOOK5_ALL_IN_ONE_XHTMLS) $(DOCBOOK5_ALL_IN_ONE_XHTMLS_CSS) $(DOCBOOK5_RENDERED_HTMLS) $(DOCBOOK5_FOS) $(DOCBOOK5_FOR_OOO_XHTMLS)
+
+$(DOCBOOK5_ALL_IN_ONE_XHTMLS): $(DOCBOOK5_ALL_IN_ONE_XHTML_DIR)/%/all-in-one.xhtml: $(DOCBOOK5_SOURCES_DIR)/%.xml
+	# jing $(DOCBOOK5_RELAXNG) $<
+	$(DOCMAKE) --stringparam "docbook.css.source=" --stringparam "root.filename=$@.temp.xml" --basepath $(DOCBOOK5_XSL_STYLESHEETS_PATH) -x $(DOCBOOK5_XSL_ONECHUNK_XSLT_STYLESHEET) xhtml5 $<
+	xsltproc --output $@ ./bin/clean-up-docbook-xhtml-1.1.xslt $@.temp.xml.xhtml
+	rm -f $@.temp.xml.xhtml
+	$(PERL) -I./lib -MShlomif::DocBookClean -lpi -0777 -e 's/[ \t]+$$//gms; Shlomif::DocBookClean::cleanup_docbook(\$$_);' $@
+
+$(DOCBOOK5_FO_DIR)/%.fo: $(DOCBOOK5_SOURCES_DIR)/%.xml
+	$(DOCMAKE_WITH_PARAMS) --basepath $(DOCBOOK5_XSL_STYLESHEETS_PATH) -o $@ -x $(DOCBOOK5_XSL_FO_XSLT_STYLESHEET) fo $<
+	$(PERL) -lpi -e 's/[ \t]+\z//' $@
+
+$(DOCBOOK5_FOR_OOO_XHTML_DIR)/%.html: $(DOCBOOK5_ALL_IN_ONE_XHTML_DIR)/%/all-in-one.xhtml
+	cat $< | $(PERL) -lne 's{(</title>)}{$${1}<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />}; print unless m{\A<\?xml}' > $@
+
+$(DOCBOOK5_EPUBS): $(DOCBOOK5_EPUB_DIR)/%.epub: $(DOCBOOK5_XML_DIR)/%.xml
+	$(DBTOEPUB) -s $(EPUB_XSLT) -o $@ $<
+
+install_docbook_individual_xhtmls: make-dirs $(DOCBOOK4_INSTALLED_INDIVIDUAL_XHTMLS) $(DOCBOOK4_INSTALLED_INDIVIDUAL_XHTMLS_CSS) $(DOCBOOK5_INSTALLED_INDIVIDUAL_XHTMLS) $(DOCBOOK5_INSTALLED_INDIVIDUAL_XHTMLS_CSS)
+
+install_docbook_css_dirs: make-dirs $(DOCBOOK4_INSTALLED_CSS_DIRS)
+install_docbook_css_dirs: make-dirs $(DOCBOOK4_INSTALLED_CSS_DIRS)

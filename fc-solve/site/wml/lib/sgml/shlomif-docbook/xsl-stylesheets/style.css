@@ -1,0 +1,53 @@
+a:hover { background-color : palegreen; }
+.itemizedlist ul.centralized
+{
+    text-align: center;
+    list-style-type : none;
+    font-size: large;
+}
+.center
+{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+.site_nav_menu
+{
+    float: left;
+    width: 15%;
+    margin-right: 1%;
+
+}
+
+div.article, div.section, div.navheader, div.ads_top
+{
+    /*
+    margin-left: 17%;
+    border-left: solid 3pt black;
+    */
+    padding-left: 0.7%;
+}
+.section .section, .article .section
+{
+      margin-left:0;
+      border-left: none;
+}
+hr
+{
+    margin-bottom:0;
+}
+.article h2, .section h2, .navheader h2
+{
+    margin-top : 0;
+    padding-top : 1em;
+}
+.navheader
+{
+    margin-bottom:0;
+}
+.warning
+{
+    margin-top: 0.5em;
+    border: double red medium;
+    width: 40em;
+}

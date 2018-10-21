@@ -7,6 +7,7 @@ use HTML::Latemp::GenMakeHelpers ();
 use File::Find::Object::Rule     ();
 use File::Update qw/ write_on_change /;
 use Path::Tiny qw/ path /;
+use lib './lib';
 
 sub _exec
 {
@@ -36,6 +37,9 @@ _exec(
     ],
     'cookiecutter failed.'
 );
+require HTML::Latemp::DocBook::GenMake;
+HTML::Latemp::DocBook::GenMake->new(
+    { dest_var => '$(D)', post_dest_var => '$(D)' } )->generate;
 _exec( [ "gmake", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
     "build-deps failed!" );
 _exec( [ $^X, 'bin/gen-deps-mak.pl' ], "gen-deps-mak" );
