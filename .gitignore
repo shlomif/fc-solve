@@ -145,6 +145,7 @@
 /fc-solve/site/wml/lib/make/build-deps/build-deps.mak
 /fc-solve/site/wml/lib/make/build-deps/build-deps.stamp
 /fc-solve/site/wml/lib/make/deps.mak
+/fc-solve/site/wml/lib/make/docbook/sf-homepage-docbook-gen.tt
 /fc-solve/site/wml/lib/make/docbook/sf-homepage-docbooks-generated.mak
 /fc-solve/site/wml/lib/make/include.mak
 /fc-solve/site/wml/lib/make/rules.mak
