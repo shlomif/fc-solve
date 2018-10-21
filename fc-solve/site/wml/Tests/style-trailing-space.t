@@ -21,9 +21,13 @@ my $finder = Test::TrailingSpace->new(
         (?:
             (?:(?:src|dest(?:-prod)?).*?typings.*\.ts\z)
                 |
+            lib/docbook/5
+                |
             lib/fc-solve-for-javascript
                 |
             dest(?:-prod)?/(?:
+                (?:.*\.epub\z)
+                    |
                 (?:js/(?:(?:$lib)|$bigint))
                     |
                 (?:js-fc-solve/(?:text|automated-tests)/$lib\z)
