@@ -236,7 +236,12 @@ Best regards,
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-Ian Gent was able to improve upon this scheme, quoting below:
+[id="gent-blake--improvement"]
+The Ian Gent and Charles Blake Improved Encoding
+------------------------------------------------
+
+Ian Gent and Charles Blake were able to improve upon this scheme, quoting
+below:
 
 
 Hi Shlomi,
