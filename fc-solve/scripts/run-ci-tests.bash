@@ -9,6 +9,7 @@ set -e
 set -x
 set -o pipefail
 export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 SKIP_SPELL_CHECK=1
+which dbtoepub
 export DBTOEPUB="/usr/bin/ruby $(which dbtoepub)"
 export DOCBOOK5_XSL_STYLESHEETS_PATH=/usr/share/xml/docbook/stylesheet/docbook-xsl-ns
 cd fc-solve/source
