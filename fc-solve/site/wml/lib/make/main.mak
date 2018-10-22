@@ -413,6 +413,12 @@ DOCBOOK5_RENDERED_DIR = $(DOCBOOK5_BASE_DIR)/rendered
 
 include lib/make/docbook/sf-homepage-docbooks-generated.mak
 
+DOCBOOK4_INSTALLED_CSS_DIRS = $(DOCBOOK4_DIRS_LIST:%=$(T2_POST_DEST)/%/docbook-css)
+
+DOCBOOK4_BASE_DIR = lib/docbook/4
+DOCBOOK4_RENDERED_DIR = $(DOCBOOK4_BASE_DIR)/rendered
+DOCBOOK4_ALL_IN_ONE_XHTML_DIR = $(DOCBOOK4_BASE_DIR)/essays
+
 docbook4_targets = $(patsubst %,$(1)/%$(2),$(DOCBOOK4_DOCS))
 DOCBOOK4_TARGETS = $(call docbook4_targets,$(DOCBOOK4_RENDERED_DIR),.html)
 DOCBOOK4_XMLS = $(call docbook4_targets,$(DOCBOOK4_XML_DIR),.xml)
@@ -443,6 +449,22 @@ DOCBOOK5_INDIVIDUAL_XHTMLS = $(addprefix $(DOCBOOK5_INDIVIDUAL_XHTML_DIR)/,$(DOC
 DOCBOOK5_ALL_IN_ONE_XHTMLS__DIRS = $(patsubst %,$(DOCBOOK5_ALL_IN_ONE_XHTML_DIR)/%,$(DOCBOOK5_DOCS))
 DOCBOOK5_ALL_IN_ONE_XHTMLS = $(patsubst %,$(DOCBOOK5_ALL_IN_ONE_XHTML_DIR)/%/all-in-one.xhtml,$(DOCBOOK5_DOCS))
 
+install_docbook5_epubs: make-dirs $(DOCBOOK5_INSTALLED_EPUBS)
+install_docbook5_htmls: make-dirs $(DOCBOOK5_INSTALLED_HTMLS)
+
+install_docbook4_pdfs: make-dirs $(DOCBOOK4_INSTALLED_PDFS)
+install_docbook5_pdfs: make-dirs $(DOCBOOK5_INSTALLED_PDFS)
+
+install_docbook4_xmls: make-dirs $(DOCBOOK4_INSTALLED_XMLS)
+install_docbook5_xmls: make-dirs $(DOCBOOK5_INSTALLED_XMLS)
+
+install_docbook4_rtfs: make-dirs  $(DOCBOOK4_INSTALLED_RTFS)
+install_docbook5_rtfs: make-dirs  $(DOCBOOK5_INSTALLED_RTFS)
+
+install_docbook_individual_xhtmls: make-dirs $(DOCBOOK4_INSTALLED_INDIVIDUAL_XHTMLS) $(DOCBOOK4_INSTALLED_INDIVIDUAL_XHTMLS_CSS) $(DOCBOOK5_INSTALLED_INDIVIDUAL_XHTMLS) $(DOCBOOK5_INSTALLED_INDIVIDUAL_XHTMLS_CSS)
+
+install_docbook_css_dirs: make-dirs $(DOCBOOK4_INSTALLED_CSS_DIRS)
+
 dummy: docbook_targets
 
 DOCMAKE ?= docmake
@@ -461,15 +483,6 @@ DOCBOOK5_XSL_STYLESHEETS_FO_PATH := $(DOCBOOK5_XSL_STYLESHEETS_PATH)/fo
 DOCBOOK5_XSL_CUSTOM_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-xhtml.xsl
 DOCBOOK5_XSL_ONECHUNK_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-xhtml-onechunk.xsl
 DOCBOOK5_XSL_FO_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-fo.xsl
-
-install_docbook4_pdfs: make-dirs $(DOCBOOK4_INSTALLED_PDFS)
-install_docbook5_pdfs: make-dirs $(DOCBOOK5_INSTALLED_PDFS)
-
-install_docbook4_xmls: make-dirs $(DOCBOOK4_INSTALLED_XMLS)
-install_docbook5_xmls: make-dirs $(DOCBOOK5_INSTALLED_XMLS)
-
-install_docbook4_rtfs: make-dirs  $(DOCBOOK4_INSTALLED_RTFS)
-install_docbook5_rtfs: make-dirs  $(DOCBOOK5_INSTALLED_RTFS)
 
 docbook_targets: docbook4_targets docbook5_targets \
 	install_docbook5_epubs \
