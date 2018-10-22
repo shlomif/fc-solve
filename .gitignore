@@ -107,6 +107,7 @@
 /fc-solve/site/wml/lib/docbook/5/indiv-nodes/fcs_arch_doc/technique_the_states_graph_and_its_use.xhtml
 /fc-solve/site/wml/lib/docbook/5/indiv-nodes/fcs_arch_doc/techniques.xhtml
 /fc-solve/site/wml/lib/docbook/5/indiv-nodes/fcs_arch_doc/terms.xhtml
+/fc-solve/site/wml/lib/docbook/5/rendered/fcs_arch_doc.xhtml
 /fc-solve/site/wml/lib/docbook/5/xml/fcs_arch_doc.xml
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/*.bc
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/CMAKE-BUILD-dir/
@@ -145,6 +146,7 @@
 /fc-solve/site/wml/lib/make/build-deps/build-deps.mak
 /fc-solve/site/wml/lib/make/build-deps/build-deps.stamp
 /fc-solve/site/wml/lib/make/deps.mak
+/fc-solve/site/wml/lib/make/docbook/sf-docbook-common.mak
 /fc-solve/site/wml/lib/make/docbook/sf-homepage-docbook-gen.tt
 /fc-solve/site/wml/lib/make/docbook/sf-homepage-docbooks-generated.mak
 /fc-solve/site/wml/lib/make/include.mak
