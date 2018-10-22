@@ -408,12 +408,10 @@ edit:
 DOCBOOK5_BASE_DIR = lib/docbook/5
 DOCBOOK5_ALL_IN_ONE_XHTML_DIR = $(DOCBOOK5_BASE_DIR)/essays
 DOCBOOK5_SOURCES_DIR = $(DOCBOOK5_BASE_DIR)/xml
-DOCBOOK5_EPUB_DIR = $(DOCBOOK5_BASE_DIR)/epub
-DOCBOOK5_FO_DIR = $(DOCBOOK5_BASE_DIR)/fo
-DOCBOOK5_PDF_DIR = $(DOCBOOK5_BASE_DIR)/pdf
-DOCBOOK5_RTF_DIR = $(DOCBOOK5_BASE_DIR)/rtf
 DOCBOOK5_FOR_OOO_XHTML_DIR = $(DOCBOOK5_BASE_DIR)/for-ooo-xhtml
 DOCBOOK5_RENDERED_DIR = $(DOCBOOK5_BASE_DIR)/rendered
+
+include lib/make/docbook/sf-homepage-docbooks-generated.mak
 
 docbook4_targets = $(patsubst %,$(1)/%$(2),$(DOCBOOK4_DOCS))
 DOCBOOK4_TARGETS = $(call docbook4_targets,$(DOCBOOK4_RENDERED_DIR),.html)
@@ -447,7 +445,6 @@ DOCBOOK5_ALL_IN_ONE_XHTMLS = $(patsubst %,$(DOCBOOK5_ALL_IN_ONE_XHTML_DIR)/%/all
 
 dummy: docbook_targets
 
-include lib/make/docbook/sf-homepage-docbooks-generated.mak
 DOCMAKE ?= docmake
 
 DOCMAKE_PARAMS = -v
