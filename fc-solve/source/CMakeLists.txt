@@ -585,6 +585,7 @@ IF ("${FCS_WITHOUT_FC_PRO_MOVES_COUNT}")
 ENDIF ()
 FCS_ADD_EXEC(freecell-solver-fc-pro-range-solve ${_mods})
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
+FCS_ADD_EXEC_NO_INSTALL(fc-solve-multi multi_fc_solve_main.c)
 FCS_ADD_EXEC_NO_INSTALL(summary-fc-solve summarizing_solver.c)
 
 SET (DBM_FCC_COMMON card.c is_king.c is_king.h is_parent.c meta_alloc.c state.c)
