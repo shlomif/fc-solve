@@ -24,11 +24,11 @@ project also span some other code for testing and for support.
 
 # Repository structure
 
-## fc-solve/source/
+## [fc-solve/source/](./fc-solve/source/)
 
 This contains the source of the solver itself. One can use CMake to build it.
 
-## cpan/Games-Solitaire-Verify/Games-Solitaire-Verify
+## [cpan/Games-Solitaire-Verify/Games-Solitaire-Verify](./cpan/Games-Solitaire-Verify/Games-Solitaire-Verify)
 
 This is the Games-Solitaire-Verify CPAN module. For more information see:
 
