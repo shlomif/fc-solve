@@ -28,44 +28,44 @@ project also span some other code for testing and for support.
 
 This contains the source of the solver itself. One can use CMake to build it.
 
-## [cpan/Games-Solitaire-Verify/Games-Solitaire-Verify](./cpan/Games-Solitaire-Verify/Games-Solitaire-Verify)
+## [cpan/Games-Solitaire-Verify/Games-Solitaire-Verify](./cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/)
 
 This is the Games-Solitaire-Verify CPAN module. For more information see:
 
 * [Homepage](http://fc-solve.shlomifish.org/verify-code/)
 * [MetaCPAN](https://metacpan.org/release/Games-Solitaire-Verify)
 
-## Task-FreecellSolver-Testing
+## [Task-FreecellSolver-Testing](./Task-FreecellSolver-Testing/)
 
 This is a CPAN module for installing the various test dependencies that
 are found on CPAN.
 
-## cpan/Task-FreecellSolver-Testing-MultiConfig
+## [cpan/Task-FreecellSolver-Testing-MultiConfig](./cpan/Task-FreecellSolver-Testing-MultiConfig/)
 
 This is a CPAN module for installing the various test dependencies that
 are found on CPAN. More comprehensive.
 
-## fc-solve/arch\_doc
+## [fc-solve/arch\_doc](./fc-solve/arch\_doc/)
 
 The Freecell Solver Architecture Document. Somewhat out-of-date, but may
 be studied for general enlightenment.
 
-## fc-solve/presets
+## [fc-solve/presets](./fc-solve/presets/)
 
 Some code that is used in order to calculate the built-in command-line
 presets, like “-l good-intentions” or “-l maliciously-obscure”. Not very
 documented. This code is written in parts in Perl, Bash and Mono.NET.
 
-## fc-solve/rejects
+## [fc-solve/rejects](./fc-solve/rejects/)
 
 Contains code that is no longer used.
 
-## fc-solve/docs
+## [fc-solve/docs](./fc-solve/docs/)
 
 Contains various documents that are not part of the main source distribution.
 Mostly specifications and planning documents.
 
-## fc-solve/benchmarks
+## [fc-solve/benchmarks](./fc-solve/benchmarks/)
 
 Logs of various benchmarks of the code.
 
