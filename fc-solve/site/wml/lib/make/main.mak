@@ -110,9 +110,6 @@ dummy: $(FIND_INDEX__PYJS__TARGETS)
 
 dummy: $(DEST_BROWSERIFY_JS)
 
-lib/docbook/5/xml/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xml
-	cp -f $< $@
-
 OUT_PREF = lib/out-babel/js
 OUT_BROWSERIFY_JS = $(patsubst %,$(OUT_PREF)/%,$(BASE_BROWSERIFY_JS))
 
@@ -407,6 +404,5 @@ include lib/make/docbook/sf-docbook-common.mak
 
 dummy: docbook_targets
 
-install_docbook_individual_xhtmls: make-dirs $(DOCBOOK4_INSTALLED_INDIVIDUAL_XHTMLS) $(DOCBOOK4_INSTALLED_INDIVIDUAL_XHTMLS_CSS) $(DOCBOOK5_INSTALLED_INDIVIDUAL_XHTMLS) $(DOCBOOK5_INSTALLED_INDIVIDUAL_XHTMLS_CSS)
-
-install_docbook_css_dirs: make-dirs $(DOCBOOK4_INSTALLED_CSS_DIRS)
+$(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xml
+	cp -f $< $@
