@@ -4,7 +4,6 @@ include lib/make/shlomif_common.mak
 include lib/make/rules.mak
 include lib/make/include.mak
 
-PERL := perl
 # Toggle to generate production code with compressed and merged JS code/etc.
 PROD = 0
 
@@ -44,7 +43,6 @@ DOCS_AUX = $(patsubst %,$(DOCS_AUX_DIR)/%,$(DOCS_AUX_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
 SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
-
 
 WML_FLAGS += $(COMMON_PREPROC_FLAGS)
 
@@ -409,34 +407,6 @@ include lib/make/docbook/sf-docbook-common.mak
 
 dummy: docbook_targets
 
-DOCMAKE ?= docmake
-
-DOCMAKE_PARAMS = -v
-DOCMAKE_WITH_PARAMS = $(DOCMAKE) $(DOCMAKE_PARAMS)
-
-install_docbook5_epubs: make-dirs $(DOCBOOK5_INSTALLED_EPUBS)
-install_docbook5_htmls: make-dirs $(DOCBOOK5_INSTALLED_HTMLS)
-DOCBOOK5_XSL_STYLESHEETS_PATH := /usr/share/sgml/docbook/xsl-ns-stylesheets
-
-DOCBOOK5_XSL_STYLESHEETS_XHTML_PATH := $(DOCBOOK5_XSL_STYLESHEETS_PATH)/xhtml-1_1
-DOCBOOK5_XSL_STYLESHEETS_ONECHUNK_PATH := $(DOCBOOK5_XSL_STYLESHEETS_PATH)/onechunk
-DOCBOOK5_XSL_STYLESHEETS_FO_PATH := $(DOCBOOK5_XSL_STYLESHEETS_PATH)/fo
-
-DOCBOOK5_XSL_CUSTOM_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-xhtml.xsl
-DOCBOOK5_XSL_ONECHUNK_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-xhtml-onechunk.xsl
-DOCBOOK5_XSL_FO_XSLT_STYLESHEET := lib/sgml/shlomif-docbook/xsl-5-stylesheets/shlomif-essays-5-fo.xsl
-
-docbook_targets: docbook4_targets docbook5_targets \
-	install_docbook5_epubs \
-	install_docbook5_htmls \
-	install_docbook4_xmls install_docbook_individual_xhtmls \
-	install_docbook_css_dirs install_docbook5_xmls \
-
-docbook_extended: $(DOCBOOK4_FOS) $(DOCBOOK4_PDFS) \
-	$(DOCBOOK5_FOS) $(DOCBOOK5_PDFS) \
-	install_docbook4_pdfs install_docbook4_rtfs \
-	install_docbook5_pdfs install_docbook5_rtfs
-
 docbook4_targets: $(DOCBOOK4_TARGETS) $(DOCBOOK4_ALL_IN_ONE_XHTMLS) $(DOCBOOK4_ALL_IN_ONE_XHTMLS_CSS)
 
 docbook5_targets: $(DOCBOOK5_TARGETS) $(DOCBOOK5_ALL_IN_ONE_XHTMLS) $(DOCBOOK5_ALL_IN_ONE_XHTMLS_CSS) $(DOCBOOK5_RENDERED_HTMLS) $(DOCBOOK5_FOS) $(DOCBOOK5_FOR_OOO_XHTMLS)
@@ -458,21 +428,6 @@ $(DOCBOOK5_FO_DIR)/%.fo: $(DOCBOOK5_SOURCES_DIR)/%.xml
 	$(DOCMAKE_WITH_PARAMS) --basepath $(DOCBOOK5_XSL_STYLESHEETS_PATH) -o $@ -x $(DOCBOOK5_XSL_FO_XSLT_STYLESHEET) fo $<
 	$(PERL) -lpi -e 's/[ \t]+\z//' $@
 
-$(DOCBOOK5_PDF_DIR)/%.pdf: $(DOCBOOK5_FO_DIR)/%.fo
-	fop -fo $< -pdf $@
-
-EPUB_SCRIPT = $(DOCBOOK5_XSL_STYLESHEETS_PATH)/epub/bin/dbtoepub
-EPUB_XSLT = lib/sgml/shlomif-docbook/docbook-epub-preproc.xslt
-DBTOEPUB = ruby $(EPUB_SCRIPT)
-
-$(DOCBOOK5_EPUBS): $(DOCBOOK5_EPUB_DIR)/%.epub: $(DOCBOOK5_XML_DIR)/%.xml
-	$(DBTOEPUB) -s $(EPUB_XSLT) -o $@ $<
-
-$(DOCBOOK5_RTF_DIR)/%.rtf: $(DOCBOOK5_FO_DIR)/%.fo
-	fop -fo $< -rtf $@
-
-$(DOCBOOK5_FOR_OOO_XHTML_DIR)/%.html: $(DOCBOOK5_ALL_IN_ONE_XHTML_DIR)/%/all-in-one.xhtml
-	cat $< | $(PERL) -lne 's{(</title>)}{$${1}<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />}; print unless m{\A<\?xml}' > $@
 install_docbook_individual_xhtmls: make-dirs $(DOCBOOK4_INSTALLED_INDIVIDUAL_XHTMLS) $(DOCBOOK4_INSTALLED_INDIVIDUAL_XHTMLS_CSS) $(DOCBOOK5_INSTALLED_INDIVIDUAL_XHTMLS) $(DOCBOOK5_INSTALLED_INDIVIDUAL_XHTMLS_CSS)
 
 install_docbook_css_dirs: make-dirs $(DOCBOOK4_INSTALLED_CSS_DIRS)
