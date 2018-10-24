@@ -85,9 +85,10 @@ perl -Mlocal::lib -MCPAN -e 'install Task::FreecellSolver::Testing'
 ----------
 
 3. Install the development headers of
-libtap ( http://jc.ngo.org.uk/trac-bin/trac.cgi/wiki/LibTap ).
+libtap ( https://www.shlomifish.org/open-source/projects/libtap/ or perhaps
+https://github.com/mpapierski/libtap )
 +
-* On Mandriva:
+* On Mageia:
 +
 ----------------------
 urpmi libtap-devel
@@ -173,7 +174,7 @@ Style Guidelines
 Freecell Solver uses its own style (largely based on the Allman style:
 http://en.wikipedia.org/wiki/Indent_style#Allman_style ),
 based on the preferences of its primary author (Shlomi Fish). The style is
-largely enforced by the "clang-format" formatter (using its 6.0.1 version
+largely enforced by the "clang-format" formatter (using its 7.0.0 version
 currently). Some guidelines for the style will be given here.
 
 [id="four-spaces"]
