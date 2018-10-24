@@ -100,6 +100,7 @@ int main(const int argc, char **const argv)
     {
         fclose(output_fh);
     }
+
     freecell_solver_user_free(instance);
 
     return exit_code;
