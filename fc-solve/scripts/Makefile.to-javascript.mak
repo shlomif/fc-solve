@@ -88,7 +88,7 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_solve_board \
 	freecell_solver_user_stringify_move_ptr \
 	malloc \
-    fc_solve__hll_ms_rand__get_singleton \
+	fc_solve__hll_ms_rand__get_singleton \
 
 NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
 
@@ -110,7 +110,7 @@ PRESET_FILES_TO_EMBED := $(shell find $(DATA_DESTDIR)$(PRESET_DIR) -type f | (LC
 
 PRESET_FILES_LOCAL := $(shell perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR) $(PRESET_FILES_TO_EMBED) )
 
-EMCC_POST_FLAGS :=  $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
+EMCC_POST_FLAGS := $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
 
 $(LLVM_BITCODE_CMAKE_FILES): %.bc: $(CMAKE_DIR)/%.c
 	emcc $(EMCC_CFLAGS) $< -c -o $@
@@ -122,17 +122,17 @@ $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 LLVM_AND_FILES_TARGETS = $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
 
 $(RESULT_HTML): $(LLVM_AND_FILES_TARGETS)
-	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	emcc $(EMCC_CFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
 $(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS)
-	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	emcc $(EMCC_CFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
 PRE_JS = $(SRC_DIR)/scripts/pre.js
 POST_JS = $(SRC_DIR)/scripts/post.js
 $(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS)
-	# emcc $(EMCC_CFLAGS) --pre-js $(PRE_JS) --post-js $(POST_JS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
-	emcc $(EMCC_CFLAGS) -o $@  $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
-	cat $(SRC_DIR)/scripts/pre.js $@ $(SRC_DIR)/scripts/post.js > temp.$@
+	# emcc $(EMCC_CFLAGS) --pre-js $(PRE_JS) --post-js $(POST_JS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	emcc $(EMCC_CFLAGS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	cat $(PRE_JS) $@ $(POST_JS) > temp.$@
 	mv -f temp.$@ $@
 
 clean:
