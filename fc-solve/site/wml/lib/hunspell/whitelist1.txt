@@ -1143,6 +1143,7 @@ libtap
 libtap-devel
 max
 metacpan
+mpapierski
 ngo
 num_threads
 perl-5
