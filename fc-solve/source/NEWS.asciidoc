@@ -4,6 +4,22 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2018-07-24
 :Revision: $Id$
 
+Version 5.0.0: (27-Oct-2018)
+----------------------------
+
+1. *Breaking change*: made the userland headers +fcs_user.h+, +fcs_cl.h+, etc.
+includable only as +#include <freecell-solver/fcs_cl.h>+. The API and ABI
+should otherwis remain the same.
+
+2. Add the gen-multiple-pysol-layouts executable to generate several numbered
+deals as separate files.
+
+3. Added the experimental fc-solve-multi solver to solve several files in
+one go (not installed by default).
+
+4. Rename the AsciiDoc documents from +*.txt+ to +*.asciidoc+, in order to
+please GitHub/etc. ; updated them and fixed some formatting.
+
 Version 4.20.0: (25-Jul-2018)
 -----------------------------
 

@@ -541,7 +541,7 @@ ADD_LIBRARY (fcs_gen_ms_freecell_boards
     )
 
 SET_TARGET_PROPERTIES(freecell-solver
-    PROPERTIES VERSION 0.5.0 SOVERSION 0
+    PROPERTIES VERSION 0.6.0 SOVERSION 0
     )
 
 FIND_LIBM()
