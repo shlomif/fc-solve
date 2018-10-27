@@ -65,16 +65,16 @@ sub src_filenames
         $on_fcc->( [ 'depth_multi_queue.h', ] ),
         $on_fcc->( [ 'fcs_base64.h', ] ),
         'fcc_brfs_test.h',
-        'fcs_dllexport.h',
         'fcs-libavl/rb.c',
         'fcs-libavl/rb.h',
         'fcs_conf.h',
-        'fcs_enums.h',
         'fcs_err.h',
-        'fcs_limit.h',
-        'fcs_move.h',
         'game_type_limit.h',
         'generic_tree.h',
+        'include/freecell-solver/fcs_dllexport.h',
+        'include/freecell-solver/fcs_enums.h',
+        'include/freecell-solver/fcs_limit.h',
+        'include/freecell-solver/fcs_move.h',
         'indirect_buffer.h',
         'internal_move_struct.h',
         'is_parent.c',
@@ -132,6 +132,7 @@ sub run
 
     $dest_dir->mkpath;
     path("$dest_dir/fcs-libavl")->mkpath;
+    path("$dest_dir/include/freecell-solver")->mkpath;
     path("$dest_dir/pthread")->mkpath;
     if ( $self->fcc_solver )
     {
@@ -152,9 +153,14 @@ s{^(#define FCS_DBM_FREECELLS_NUM\s*)\d+(\s*)$}{$1$num_freecells$2}mrs
             );
     }
 
-    foreach my $fn ( 'config.h', 'fcs_back_compat.h', )
+    foreach my $fn ('config.h')
     {
         io("./$fn") > io("$dest_dir/$fn");
+    }
+    foreach my $fn ('fcs_back_compat.h')
+    {
+        io("./include/freecell-solver/$fn") >
+            io("$dest_dir/include/freecell-solver/$fn");
     }
 
     foreach my $fn (
@@ -234,7 +240,7 @@ MEM = $mem
 CPUS = $num_cpus
 HOURS = $num_hours
 
-CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I. -I./fcs-libavl
+CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I. -I./fcs-libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))

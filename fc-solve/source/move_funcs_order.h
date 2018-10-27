@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#include "fcs_back_compat.h"
+#include "freecell-solver/fcs_back_compat.h"
 #include "instance.h"
 
 static inline int fc_solve_string_to_move_num(const char needle)

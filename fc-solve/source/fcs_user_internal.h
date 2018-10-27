@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "fcs_dllexport.h"
+#include "freecell-solver/fcs_dllexport.h"
 
 #ifdef __cplusplus
 extern "C" {

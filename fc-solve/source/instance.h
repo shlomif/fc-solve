@@ -18,8 +18,8 @@ extern "C" {
 #include <math.h>
 
 #include "move.h"
-#include "fcs_enums.h"
-#include "fcs_user.h"
+#include "freecell-solver/fcs_enums.h"
+#include "freecell-solver/fcs_user.h"
 #include "rate_state.h"
 #include "indirect_buffer.h"
 #include "rand.h"

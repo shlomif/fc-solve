@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "state.h"
 
 typedef struct

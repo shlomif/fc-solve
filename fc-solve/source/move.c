@@ -10,7 +10,7 @@
 // move.c - move and move stacks routines for Freecell Solver
 #include "move.h"
 #include "state.h"
-#include "fcs_enums.h"
+#include "freecell-solver/fcs_enums.h"
 
 #ifdef FCS_WITH_MOVES
 

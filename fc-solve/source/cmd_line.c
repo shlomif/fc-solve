@@ -22,7 +22,7 @@
 #endif
 
 #include "set_weights.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "split_cmd_line.h"
 
 #include "prefix.h"

@@ -7,13 +7,10 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * measure_depth_dep_tests_order_performance.c - measure the relative
- * depth-dependent
- * performance of two scans.
- */
+// measure_depth_dep_tests_order_performance.c - measure the relative
+// depth-dependent performance of two scans.
 #include "rinutils.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "try_param.h"
 #include "range_solvers.h"

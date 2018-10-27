@@ -18,10 +18,10 @@ extern "C" {
 #include "fcs_conf.h"
 
 #ifdef FCS_WITH_MOVES
-#include "fcs_move.h"
+#include "freecell-solver/fcs_move.h"
 #endif
 
-#include "fcs_enums.h"
+#include "freecell-solver/fcs_enums.h"
 
 #include "rinutils.h"
 #include "game_type_limit.h"

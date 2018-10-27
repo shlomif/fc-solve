@@ -19,7 +19,7 @@ extern "C" {
 
 #include <Judy.h>
 #include "meta_alloc.h"
-#include "fcs_enums.h"
+#include "freecell-solver/fcs_enums.h"
 #include "dbm_common.h"
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"

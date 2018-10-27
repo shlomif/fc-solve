@@ -7,12 +7,10 @@
  *
  * Copyright (c) 2013 Shlomi Fish
  */
-/*
- * hacks_for_hlls.c - the Freecell Solver utility methods for high-level
- * languages.
- */
+// hacks_for_hlls.c - the Freecell Solver utility methods for high-level
+// languages.
 
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 
 DLLEXPORT void freecell_solver_user_stringify_move_ptr(
     void *const user_instance, char *const output_string,

@@ -505,10 +505,10 @@ IF (FCS_MAX_NUM_SCANS_BUCKETS)
 ENDIF ()
 
 # So it can find the includes when building fcs-libavl/rb.h.
-INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/include" ${CMAKE_CURRENT_SOURCE_DIR})
 
 # So it can find config.h
-INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_BINARY_DIR}")
+INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_BINARY_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}")
 
 SET (FREECELL_SOLVER_LIBS)
 
@@ -775,7 +775,7 @@ CONFIGURE_FILE(
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/fcs_back_compat.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/fcs_back_compat.h
+    ${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/fcs_back_compat.h
     )
 
 CONFIGURE_FILE(
@@ -828,12 +828,12 @@ INSTALL(
 SET (dest "include/freecell-solver")
 INSTALL(
     FILES
-        "fcs_cl.h"
-        "fcs_dllexport.h"
-        "fcs_enums.h"
-        "fcs_limit.h"
-        "fcs_move.h"
-        "fcs_user.h"
+        "include/freecell-solver/fcs_cl.h"
+        "include/freecell-solver/fcs_dllexport.h"
+        "include/freecell-solver/fcs_enums.h"
+        "include/freecell-solver/fcs_limit.h"
+        "include/freecell-solver/fcs_move.h"
+        "include/freecell-solver/fcs_user.h"
         "${p_dir}/fcs_pats_xy_param.h"
     DESTINATION
         "${dest}"
@@ -841,7 +841,7 @@ INSTALL(
 
 INSTALL(
     FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/fcs_back_compat.h"
+        "${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/fcs_back_compat.h"
     DESTINATION
         "${dest}"
 )
@@ -1148,7 +1148,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
     TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
 ENDIF ()
 
-INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
+INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}/include" "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
 INCLUDE("${private_mod_path}/xxhash_wrapper_bootstrap.cmake")
 
 ADD_SUBDIRECTORY ("t")

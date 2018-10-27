@@ -8,7 +8,7 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 // move_funcs_order.c - contains the fc_solve_apply_moves_order function.
-#include "fcs_back_compat.h"
+#include "freecell-solver/fcs_back_compat.h"
 #include "move_funcs_order.h"
 #include "set_weights.h"
 

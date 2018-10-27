@@ -11,12 +11,12 @@
 #pragma once
 #include <stddef.h>
 
-#include "fcs_dllexport.h"
-#include "fcs_enums.h"
-#include "fcs_move.h"
-#include "fcs_limit.h"
-#include "fcs_pats_xy_param.h"
-#include "fcs_back_compat.h"
+#include "freecell-solver/fcs_dllexport.h"
+#include "freecell-solver/fcs_enums.h"
+#include "freecell-solver/fcs_move.h"
+#include "freecell-solver/fcs_limit.h"
+#include "freecell-solver/fcs_pats_xy_param.h"
+#include "freecell-solver/fcs_back_compat.h"
 
 #ifdef __cplusplus
 extern "C" {

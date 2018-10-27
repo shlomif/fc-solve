@@ -15,8 +15,8 @@ extern "C" {
 #endif
 
 #include "rinutils.h"
-#include "fcs_enums.h"
-#include "fcs_user.h"
+#include "freecell-solver/fcs_enums.h"
+#include "freecell-solver/fcs_user.h"
 
 typedef struct
 {

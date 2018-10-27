@@ -9,7 +9,7 @@
  */
 #pragma once
 
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "rinutils.h"
 #include "output_to_file.h"
 #include "handle_parsing.h"

@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 #include "rinutils.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 
 typedef struct
 {

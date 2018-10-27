@@ -10,7 +10,7 @@
 // range_solvers.h - common routines for the range solvers.
 #pragma once
 #include "rinutils.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 

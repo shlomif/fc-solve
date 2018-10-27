@@ -10,7 +10,7 @@
 // lib.c - library interface functions of Freecell Solver.
 #include "instance_for_lib.h"
 #include "preset.h"
-#include "fcs_user.h"
+#include "freecell-solver/fcs_user.h"
 #include "move_funcs_order.h"
 #include "fcs_user_internal.h"
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT

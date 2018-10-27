@@ -20,7 +20,7 @@ extern "C" {
 
 #ifdef FCS_WITH_MOVES
 
-#include "fcs_move.h"
+#include "freecell-solver/fcs_move.h"
 
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
 typedef struct

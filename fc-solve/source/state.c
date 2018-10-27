@@ -9,7 +9,7 @@
  */
 // state.c - state functions module for Freecell Solver
 #include "state.h"
-#include "fcs_enums.h"
+#include "freecell-solver/fcs_enums.h"
 
 #ifdef COMPACT_STATES
 #define GET_CARD(s) (((const fcs_card *const)(s))[1])

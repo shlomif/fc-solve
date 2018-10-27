@@ -13,9 +13,9 @@
  */
 #pragma once
 
-#include "fcs_dllexport.h"
-#include "fcs_user.h"
-#include "fcs_back_compat.h"
+#include "freecell-solver/fcs_dllexport.h"
+#include "freecell-solver/fcs_user.h"
+#include "freecell-solver/fcs_back_compat.h"
 
 #ifdef __cplusplus
 extern "C" {

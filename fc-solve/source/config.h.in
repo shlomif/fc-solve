@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-#include "fcs_back_compat.h"
+#include "freecell-solver/fcs_back_compat.h"
 
 #cmakedefine COMPACT_STATES
 #cmakedefine INDIRECT_STACK_STATES
