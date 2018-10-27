@@ -1171,9 +1171,11 @@ x09
 ==== In: dest/docs/distro/NEWS.html
 
 2G
+ABI
 DD-MMM-YYYY
 PACKAGE_VERSION
 appveyor
+asciidoc
 cffi
 ci
 cyan4973
@@ -1182,7 +1184,10 @@ dbm-solver-__int128-optimisation
 depth_dbm_fc_solve
 depth_dbm_solver
 fc-pro-range-solver
+fc-solve-multi
 fc-solve-temp
+gen-multiple-pysol-layouts
+includable
 int128
 int128-optimisation
 io
@@ -1190,6 +1195,7 @@ libGMP
 obf
 solution_moves
 transpose-freecell-board
+userland
 usleep
 xxHash
 
