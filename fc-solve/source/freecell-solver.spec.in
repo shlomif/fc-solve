@@ -124,7 +124,7 @@ cd build
 /usr/bin/freecell-solver-fc-pro-range-solve
 /usr/bin/freecell-solver-multi-thread-solve
 /usr/bin/freecell-solver-range-parallel-solve
-/usr/bin/gen-multiple-pysol-layouts.py
+/usr/bin/gen-multiple-pysol-layouts
 /usr/bin/make_pysol_freecell_board.py
 /usr/bin/pi-make-microsoft-freecell-board
 /usr/bin/transpose-freecell-board.py

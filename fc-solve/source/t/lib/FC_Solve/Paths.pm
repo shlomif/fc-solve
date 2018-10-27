@@ -42,7 +42,7 @@ sub _board_gen
 }
 our $MAKE_PYSOL      = _board_gen('make_pysol_freecell_board.py');
 our $FIND_DEAL_INDEX = _board_gen('find-freecell-deal-index.py');
-our $GEN_MULTI       = _board_gen('gen-multiple-pysol-layouts.py');
+our $GEN_MULTI       = _board_gen('gen-multiple-pysol-layouts');
 
 sub _is_tag
 {

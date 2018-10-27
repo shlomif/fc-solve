@@ -2,12 +2,12 @@
 
 =head1 NAME
 
-gen-multiple-pysol-layouts.py. - generate multiple PySol / MS initial
+gen-multiple-pysol-layouts. - generate multiple PySol / MS initial
 solitaire deals.
 
 =head1 SYNOPSIS
 
-B<gen-multiple-pysol-layouts.py> I<--dir=[dir]> I<--prefix=[prefix]> I<--suffix=[suf]> B<[idxs...]>
+B<gen-multiple-pysol-layouts> I<--dir=[dir]> I<--prefix=[prefix]> I<--suffix=[suf]> B<[idxs...]>
 
 =head1 DESCRIPTION
 
@@ -16,15 +16,15 @@ inside the target directory.
 
 Some examples:
 
-    gen-multiple-pysol-layouts.py --dir foo/ --prefix "" --suffix .board --ms 24 42 100
+    gen-multiple-pysol-layouts --dir foo/ --prefix "" --suffix .board --ms 24 42 100
 
-    gen-multiple-pysol-layouts.py --dir foo/ --prefix "" --suffix .board --ms seq 1 32000
+    gen-multiple-pysol-layouts --dir foo/ --prefix "" --suffix .board --ms seq 1 32000
 
-    gen-multiple-pysol-layouts.py --dir foo/ --prefix "" --suffix .board --ms read /path/to/indexes-file.txt
+    gen-multiple-pysol-layouts --dir foo/ --prefix "" --suffix .board --ms read /path/to/indexes-file.txt
 
 Generate L<Black Hole solitaire|https://en.wikipedia.org/wiki/Black_Hole_%28solitaire%29> PySol FC deals:
 
-    gen-multiple-pysol-layouts.py --game black_hole --dir foo/ --prefix "" --suffix .board seq 100000 200000
+    gen-multiple-pysol-layouts --game black_hole --dir foo/ --prefix "" --suffix .board seq 100000 200000
 
 =head1 OPTIONS
 

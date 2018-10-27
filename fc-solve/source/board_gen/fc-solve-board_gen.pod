@@ -95,7 +95,7 @@ streets_and_alleys - Streets and Alleys
 
 B<fc-solve> (6)
 
-L<gen-multiple-pysol-layouts.py> (6)
+L<gen-multiple-pysol-layouts> (6)
 
 /usr/share/doc/freecell-solver-FCS_VERSION/board_gen/README
 
