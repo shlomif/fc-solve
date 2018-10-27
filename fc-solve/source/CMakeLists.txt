@@ -834,7 +834,7 @@ INSTALL(
         "include/freecell-solver/fcs_limit.h"
         "include/freecell-solver/fcs_move.h"
         "include/freecell-solver/fcs_user.h"
-        "${p_dir}/fcs_pats_xy_param.h"
+        "${p_dir}/include/freecell-solver/fcs_pats_xy_param.h"
     DESTINATION
         "${dest}"
 )

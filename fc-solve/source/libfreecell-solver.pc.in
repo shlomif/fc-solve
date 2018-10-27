@@ -9,4 +9,4 @@ Version: @VERSION@
 URL: http://fc-solve.shlomifish.org/
 Libs: -L${libdir} -lfreecell-solver
 Libs.private: -lm
-Cflags: -I${includedir}/freecell-solver/
+Cflags: -I${includedir}
