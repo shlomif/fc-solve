@@ -642,6 +642,7 @@ freecell-solver
 freecell-solver-2
 freecell-solver-3
 freecell-solver-4
+freecell-solver-5
 freecell-solver-config
 freecell-solver-fc-pro-range-solve
 freecell-solver-multi-thread-solve
