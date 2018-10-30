@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-"/usr/share/sgml/docbook/xml-dtd-4.1.2/docbookx.dtd"[
+<!DOCTYPE book [
 
 <!ENTITY fc "Freecell">
 <!ENTITY fcs "&fc; Solver">
@@ -22,8 +21,8 @@
 <!ENTITY O_n2logn "O(n<superscript>2</superscript>*log(n))">
 ]>
 
-<book id="index">
-    <bookinfo>
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="index" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en-GB">
+    <info>
         <title>&fcs; - Evolution of a C Program</title>
 
         <authorgroup>
@@ -58,13 +57,15 @@
                 This book is copyrighted by Shlomi Fish. All rights reserved.
             </para>
         </legalnotice>
-    </bookinfo>
+    </info>
 
-    <chapter id="introduction">
-        <title>Introduction</title>
+    <chapter xml:id="introduction">
+        <info>
+            <title>Introduction</title>
+        </info>
         <para> <!-- para, nidfoq eth kol ha'eder. ;-) -->
             One day in the spring break between two semesters I went out
-            running<footnote id="running">
+            running<footnote xml:id="running">
                 <para>
                     &fcs; is not the only good idea I got while going out to
                     run. Another one is "The One with the Fountainhead" which
@@ -105,12 +106,16 @@
         </para>
     </chapter>
 
-<chapter id="rules">
+<chapter xml:id="rules">
+    <info>
         <title>Rules of the Game</title>
-        <section id="basic_rules">
+    </info>
+        <section xml:id="basic_rules">
+        <info>
             <title>
                 Basic Rules of the &fc; Variant
             </title>
+                </info>
 
         <para>
             &fc; is played with a standard 52-card deck. At the beginning
@@ -180,10 +185,13 @@
             is already installed on your system)
         </para>
     </section>
-    <section id="techniques">
+    <section xml:id="techniques">
+        <info>
         <title>
             Techniques of Play
         </title>
+                        </info>
+
         <para>
             There are several strategies that become apparent after a large
             amount of playing &fc;. One of them, is uncovering top
@@ -203,10 +211,14 @@
         </para>
     </section>
 
-    <section id="variations">
+    <section xml:id="variations">
+                <info>
+
         <title>
             Variations on &fc;
         </title>
+                        </info>
+
         <para>
             The game &fc; is not the only Solitaire of its kind nor
             is the first historically. Using &fc; as a basis, several
@@ -260,7 +272,7 @@
             of a large number of Solitaire games similar to &fc;. Their
             names were taken from <ulink url="http://www.oberhumer.com/opensource/pysol/">PySol</ulink>, which is a free Solitaire suite written in Python.
 
-            <footnote id="pysol_variants">
+            <footnote xml:id="pysol_variants">
                 <para>
                 Not all of these variants appear in PySol under the
                 "FreeCell Type" category. As I noticed, many games were very
@@ -273,7 +285,11 @@
         <para>
             FILL IN the table
             <table frame="all">
-                <title>&fc; Variants</title>
+                        <info>
+
+                            <title>&fc; Variants</title>
+                                            </info>
+
                 <tgroup cols="7" align="left" colsep="1" rowsep="1">
                     <colspec colname="name"/>
                     <colspec colname="num_columns"/>
@@ -435,10 +451,18 @@
         </para>
     </section>
 </chapter>
-    <chapter id="first_arch">
-        <title>The Version 0.2 Architecture</title>
-        <section id="running_conclusions">
-            <title>Conclusions I Reached while Running</title>
+    <chapter xml:id="first_arch">
+                <info>
+
+                    <title>The Version 0.2 Architecture</title>
+                                    </info>
+
+        <section xml:id="running_conclusions">
+                    <info>
+
+                        <title>Conclusions I Reached while Running</title>
+                                        </info>
+
             <para>
                 As I ran and thought about solving &fc; I reached several
                 conclusions. One of them was that moving card at a time would
@@ -476,10 +500,14 @@
             </para>
 
         </section>
-        <section id="initial_perl_version">
+        <section xml:id="initial_perl_version">
+                    <info>
+
             <title>
                 Initial Version in Perl
             </title>
+                            </info>
+
             <para>
                 A short time after I ran, I started coding the solver in Perl 5. I
                 wrote classes to represent a card and an entire &fc; board, and
@@ -490,8 +518,12 @@
                 Then I started to write the algorithm. There were several
                 guiding prinicipals in the code:
             </para>
-            <section id="perl_state_collection_unordered_list">
-                <title>State Collection as an Unordered List</title>
+            <section xml:id="perl_state_collection_unordered_list">
+                        <info>
+
+                            <title>State Collection as an Unordered List</title>
+                                            </info>
+
                 <para>
                     I implemented the state collection as an unordered list of
                     states. A new element was added at the end of the list, and to
@@ -500,8 +532,12 @@
                 </para>
             </section>
 
-            <section id="perl_state_serialization">
-                <title>State Serialization and De-serialization</title>
+            <section xml:id="perl_state_serialization">
+                        <info>
+
+                            <title>State Serialization and De-serialization</title>
+                                            </info>
+
                 <para>
                     The states were serialized into a binary form, so they can be
                     stored and compared. They were de-serialized into a nested
@@ -510,8 +546,12 @@
                 </para>
             </section>
 
-            <section id="perl_monolithic_search_function">
-                <title>Monolithic Search Function</title>
+            <section xml:id="perl_monolithic_search_function">
+                        <info>
+
+                            <title>Monolithic Search Function</title>
+                                            </info>
+
                 <para>
                     The code had one monolithic function for performing the search
                     and trying the moves on the board. The function was recursive
@@ -521,8 +561,12 @@
                 </para>
             </section>
 
-            <section id="perl_conclusion">
-                <title>Conclusion</title>
+            <section xml:id="perl_conclusion">
+                        <info>
+
+                            <title>Conclusion</title>
+                                            </info>
+
 
                 <para>
                     I advanced well into writing the code, when I realized that it
@@ -542,20 +586,28 @@
                 </para>
             </section>
         </section>
-        <section id="converting_to_c">
+        <section xml:id="converting_to_c">
+                    <info>
+
             <title>
                 Converting to C
             </title>
+                            </info>
+
             <para>
                 The first C version I wrote was not identical to the Perl version
                 algorithmically. As some things were more accessible in C than
                 they were in Perl (or vice versa), I was able to take advantage
                 of them (or not).
             </para>
-            <section id="representing_cards_and_states">
+            <section xml:id="representing_cards_and_states">
+                        <info>
+
                 <title>
                     Representing Cards and States
                 </title>
+                                </info>
+
                 <para>
                     A card was represented as a C structure which contained two
                     elements of type <type>short</type>, one representing the rank
@@ -640,8 +692,12 @@ typedef struct struct_state_t state_t;
                     for a different order of their columns.
                 </para>
             </section>
-            <section id="algorithm">
-                <title>The Algorithm of the Scan</title>
+            <section xml:id="algorithm">
+                        <info>
+
+                            <title>The Algorithm of the Scan</title>
+                                            </info>
+
                 <para>
                     Following is pseudocode for the algorithm used by the scan:
                 </para>
@@ -680,8 +736,12 @@ Freecell-Solver(init_state)
                     pseudocode), so they won't be checked again.
                 </para>
             </section>
-            <section id="first_arch_states_collection">
-                <title>The States' Collection Implementation</title>
+            <section xml:id="first_arch_states_collection">
+                        <info>
+
+                            <title>The States' Collection Implementation</title>
+                                            </info>
+
                 <para>
                     The states' collection of the C version was implemented as a
                     sorted array of whole state structs
@@ -706,18 +766,22 @@ Freecell-Solver(init_state)
                     one.
                 </para>
             </section>
-            <section id="moves">
+            <section xml:id="moves">
+                        <info>
+
                 <title>The Moves</title>
+                </info>
+
                 <para>
                     The solver was built as one monolithic function
-                    (named &solve_for_state;). The function
+                    (named <function>solve_for_state</function>). The function
                     accepted a state and an integer that specified the depth
                     of the recursion, and returned a boolean verdict whether
                     the state was solvable or not. (<varname>prev_states</varname>
                     was implemented as a global variable)
                 </para>
                 <para>
-                    &solve_for_state; tried to do several
+                    <function>solve_for_state</function> tried to do several
                     moves on the board in the following order:
                 </para>
                 <para>
@@ -777,8 +841,12 @@ Freecell-Solver(init_state)
                     </orderedlist>
                 </para>
             </section>
-            <section id="code_org">
-                <title>Code Organization</title>
+            <section xml:id="code_org">
+                        <info>
+
+                            <title>Code Organization</title>
+                                            </info>
+
                 <para>
                     The code contained three modules and a header file that
                     implemented many macros. The module
@@ -801,16 +869,20 @@ Freecell-Solver(init_state)
                 </para>
                 <para>
                     The file <filename class="libraryfile">freecell.c</filename>
-                    contained the &solve_for_state;
+                    contained the <function>solve_for_state</function>
                     function and the <function>main</function> function.
-                    &solve_for_state; called itself
+                    <function>solve_for_state</function> called itself
                     recursively, and contained a lot of duplicate code that
                     searched for existing states and added them to the
                     collection. (I managed it using copy and paste)
                 </para>
             </section>
-            <section id="conclusion">
-                <title>Conclusion from the C Program</title>
+            <section xml:id="conclusion">
+                        <info>
+
+                            <title>Conclusion from the C Program</title>
+                                            </info>
+
                 <para>
                     The C Program ran quickly enough for most boards I tried it
                     with. I generated a 1000 random boards, and invoked it upon
@@ -834,12 +906,20 @@ Freecell-Solver(init_state)
             </section>
         </section>
     </chapter>
-    <chapter id="states_collection">
-        <title>The States Collection</title>
-        <section id="overview">
-            <title>Overview</title>
+    <chapter xml:id="states_collection">
+                <info>
+
+                    <title>The States Collection</title>
+                                    </info>
+
+        <section xml:id="overview">
+                    <info>
+
+                        <title>Overview</title>
+                                        </info>
+
             <para>
-                Implementing a game AI system requires collectings the
+                Implementing a game AI system requires collecting the
                 positions of the game that were reached so far, in order
                 to mark them and make sure they are not visited times and
                 again.
@@ -861,8 +941,12 @@ Freecell-Solver(init_state)
                 dictionary.
             </para>
         </section>
-        <section id="unordered_list">
-            <title>Initial Perl Version - Unordered List</title>
+        <section xml:id="unordered_list">
+                    <info>
+
+                        <title>Initial Perl Version - Unordered List</title>
+                                        </info>
+
             <para>
                 The initial perl version sported a states collection
                 implemented as an unordered list. I kept an array of states
@@ -888,8 +972,12 @@ Freecell-Solver(init_state)
                 very unacceptable and you should avoid it whenever possible.
             </para>
         </section>
-        <section id="sorted_array">
-            <title>Sorted Array with a Q-Sorted Sort Margin</title>
+        <section xml:id="sorted_array">
+                    <info>
+
+                        <title>Sorted Array with a Q-Sorted Sort Margin</title>
+                                        </info>
+
             <para>
                 The first C version featured a sorted array as a states
                 collection. In order to avoid the costy operation of
@@ -917,21 +1005,25 @@ Freecell-Solver(init_state)
                 k, then adding
                 k elements, would take
                 &O_nlogn; time, since the function <function>qsort()</function>
-                uses Quick-Sort which has this complexity on average.<footnote id="qsort_complexity">
+                uses Quick-Sort which has this complexity on average.<footnote xml:id="qsort_complexity">
                     <para>
-                        Quick-Sort has a worst time complexity of &O_n2;, but
+                        Quick-Sort has a worst time complexity of O(n<superscript>2</superscript>), but
                         it has an average of &O_nlogn;
                     </para>
                 </footnote> &O_nlogn; divided by a constant is still &O_nlogn;
                 so an insertion of an element is &O_nlogn;.
             </para>
             <para>
-                The accumulative time for adding n elements is &O_n2logn; which
+                The accumulative time for adding n elements is O(n<superscript>2</superscript>*log(n)) which
                 is the time for insertion multiplied by n.
             </para>
         </section>
-        <section id="merging_with_a_binsearch_merge">
-            <title>Merging the Sort Margin Using the "Merge" Algorithm</title>
+        <section xml:id="merging_with_a_binsearch_merge">
+                    <info>
+
+                        <title>Merging the Sort Margin Using the "Merge" Algorithm</title>
+                                        </info>
+
             <para>
                 Incidentally, I took a course about data structures and
                 algorithms, the semester after I coded the first version of
@@ -995,7 +1087,7 @@ Freecell-Solver(init_state)
                 Lookup now is still &O_logn;, but this time insertion was
                 reduced to &O_n; time. (the merging operation is &O_n; and it
                 is done every constant number of elements) The accumulative
-                time now is &O_n2; which is &O_n; multiplied by n.
+                time now is O(n<superscript>2</superscript>) which is &O_n; multiplied by n.
             </para>
             <para>
                 This scheme ran much faster than the qsort one - by a factor
@@ -1004,13 +1096,17 @@ Freecell-Solver(init_state)
                 was a much wiser choice, algorithmically.
             </para>
         </section>
-        <section id="array_of_pointers">
-            <title>Array of Pointers instead of Array of Structs</title>
+        <section xml:id="array_of_pointers">
+                    <info>
+
+                        <title>Array of Pointers instead of Array of Structs</title>
+                                        </info>
+
             <para>
                 Freecell Solver 0.2 managed the states collection as an
                 array in which the states' structs appeared one adjacent
                 to the other. I also passed the entire struct as a paremeter
-                to &solve_for_state;. When I tried to run it on NT I realized
+                to <function>solve_for_state</function>. When I tried to run it on NT I realized
                 that sometimes the program ran out of stack, because it
                 descended into a relatively large depth, while passing all
                 the structs in it. To avoid it, I decided to pass pass pointers
@@ -1034,7 +1130,7 @@ Freecell-Solver(init_state)
                 their size can be adjusted to accomodate for the whims of the
                 underlying memory management, it was a good solution as could
                 be found.
-                <footnote id="indices_instead_of_pointers">
+                <footnote xml:id="indices_instead_of_pointers">
                     <para>
                         What I could have also done was to manage indices to
                         the states inside the allocation block, instead of
@@ -1057,7 +1153,7 @@ Freecell-Solver(init_state)
             <para>
                 This time the algorithmical order of growth was not reduced,
                 but still there can be a difference of heaven and earth
-                between a large &O_n2; and a small &O_n2;...
+                between a large O(n<superscript>2</superscript>) and a small O(n<superscript>2</superscript>)...
             </para>
         </section>
     </chapter>
