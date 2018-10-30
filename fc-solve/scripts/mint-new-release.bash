@@ -6,6 +6,13 @@
 # Distributed under the terms of the MIT license.
 #
 
+# This script should be run from the fc-solve/source sub directory
+# of the fc-solve repository checkout. E.g:
+
+# shlomif[fcs]:$trunk/fc-solve/source$ pwd
+# /home/shlomif/progs/freecell/git/fc-solve/fc-solve/source
+# shlomif[fcs]:$trunk/fc-solve/source$ bash ../scripts/mint-new-release.bash ; notifier notify -m 'new fcs release'
+
 set -x
 set -e
 set -u
@@ -17,6 +24,8 @@ which qunit-cli
 which unxz
 which xz
 src="$(pwd)"
+test -f "$src/Tatzer"
+test -f "$src/freecell.c"
 build="$src/../prerel-build"
 assets_dir="$src/../../../../Arcs/fc-solve-site-assets/fc-solve-site-assets"
 mkdir "$build"
