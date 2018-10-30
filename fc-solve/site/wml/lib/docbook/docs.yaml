@@ -3,3 +3,8 @@
     db_ver: 5
     id: fcs_arch_doc
     path: arch_doc
+-
+    base: fcs-book
+    db_ver: 5
+    id: fcs-book
+    path: book--freecell-solver--evolution-of-a-c-program

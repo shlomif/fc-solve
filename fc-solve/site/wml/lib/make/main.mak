@@ -406,3 +406,6 @@ dummy: docbook_targets
 
 $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xml
 	cp -f $< $@
+
+$(DOCBOOK5_SOURCES_DIR)/fcs-book.xml: ../../docs/Freecell-Solver--Evolution-of-a-C-Program/text/fcs-book.xml
+	cp -f $< $@

@@ -21,7 +21,7 @@
 <!ENTITY O_n2logn "O(n<superscript>2</superscript>*log(n))">
 ]>
 
-<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="index" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en-GB">
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="index" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en">
     <info>
         <title>&fcs; - Evolution of a C Program</title>
 
