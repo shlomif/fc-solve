@@ -3,11 +3,17 @@
 <latemp_subject "Freecell Solver Book" />
 
 <div class="note">
+<h2>Recent Note (31 October 2018)</h2>
+<p>
+I have now placed what I ha written online.
+</p>
 <h2>Recent Note (13-June-2006)</h2>
+<p>
 I have stopped working on the book after only finishing a few chapters, and
 do not plan on resuming working on it in the near future. If you are interested
 in learning more about Freecell Solver see the <a href="./docs/">documentation
 page</a>.
+</p>
 </div>
 
 <p>
@@ -17,11 +23,8 @@ I learned by working on it.
 </p>
 
 <p>
-If you are interested in reviewing the intermediate copies of the book, please
-let me know by
-<a href="mailto:shlomif@shlomifish.org?subject=Freecell%20Solver%20Book">
-sending me an E-mail
-</a>.
+If you are interested in reviewing the intermediate copies of the book, then
+see the links below.
 </p>
 
 <p>
@@ -30,3 +33,35 @@ You may wish to refer to
 a lecture</a>
 I prepared about the subject.
 </p>
+
+<h2_section id="formats" title="Formats">
+
+<ul>
+
+<li>
+<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book/">HTML (read online)</a>
+</li>
+
+<li>
+<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book.raw.html">HTML on one page</a>
+</li>
+
+<li>
+<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book.pdf">Acrobat Reader (PDF)</a>
+</li>
+
+<li>
+<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book.epub">EPUB</a>
+</li>
+
+<li>
+<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book.rtf">Microsoft Word RTF</a>
+</li>
+
+<li>
+<a href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/docs/Freecell-Solver--Evolution-of-a-C-Program/">The Original DocBook</a>
+</li>
+
+</ul>
+
+</h2_section>
