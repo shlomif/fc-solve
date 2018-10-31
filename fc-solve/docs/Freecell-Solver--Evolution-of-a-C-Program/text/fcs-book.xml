@@ -85,7 +85,7 @@
 
         <para> <!-- normal -->
             I packaged the software, wrote a README, put it on my Technion
-            web-site and placed it on Freshmeat by labeling it simply as &fcs;
+            web-site and placed it on Freshmeat by labelling it simply as &fcs;
             version 0.2.0.
             Since then, &fcs; saw more than twenty releases, each one adding
             more features or improving speed, and has grown ten folds in its
@@ -170,7 +170,7 @@
             <para>
                 It is customary and helpful to group the movement of an entire
                 sequence of cards, by moving intermediate cards to freecells or
-                vacant columns. This will be refered to as a
+                vacant columns. This will be referred to as a
                 <glossterm>sequence move</glossterm>. If a sequence move involves
                 temporarily moving a card to an empty column, it is known
                 as a <glossterm>supermove</glossterm>.
@@ -259,7 +259,7 @@
                         <para>
                             <emphasis>Variations in the number of Freecells, Columns
                                 or Decks</emphasis> - Some &fc; variants are
-                            played with two decks of cards. Many others varry on the
+                            played with two decks of cards. Many others vary on the
                             number of columns or freecells. &fc; itself is often
                             played with less than 4 freecells, in order to make the
                             game more challenging. (or vice versa)
@@ -476,7 +476,7 @@
             <para>
                 Then, I speculated whether it would be better to searching
                 "Depth First" or "Breadth First". By depth first, I mean that
-                whenever the solver reachs a new state (a state is a particular
+                whenever the solver reaches a new state (a state is a particular
                 configuration of the cards on the board), it will try to recurse
                 into further states before withdrawing from it. Breadth first
                 means that the states would be scanned according to their
@@ -516,7 +516,7 @@
 
             <para>
                 Then I started to write the algorithm. There were several
-                guiding prinicipals in the code:
+                guiding principles in the code:
             </para>
             <section xml:id="perl_state_collection_unordered_list">
                 <info>
@@ -858,14 +858,14 @@
                 </para>
                 <para>
                     The header file <filename class="headerfile">state.h</filename>
-                    defined the data structures used to represnt cards, columns
+                    defined the data structures used to represent cards, columns
                     and states, and the macros that were used to query and
                     manipulate them. The module
                     <filename class="libraryfile">state.c</filename> implemented input
                     and output to entire states, as well as functions to compare
                     cards and columns, and a function to "canonize" states.
-                    (when canonizing means sorting the columns to avoid
-                    duplicacies)
+                    (Where "canonizing" means sorting the columns to avoid
+                    duplication.)
                 </para>
                 <para>
                     The file <filename class="libraryfile">freecell.c</filename>
@@ -894,7 +894,7 @@
                     to pure ANSI C (it has been C-ish C++ when I started
                     writing it), wrote a README file and prepared a package.
                     I named the program "&fcs;", placed it on a page of its
-                    own on my web-site, and posted an annoucement for it on
+                    own on my web-site, and posted an announcement for it on
                     <ulink url="http://freshmeat.net/">Freshmeat</ulink>.
                 </para>
                 <para>
@@ -980,7 +980,7 @@
 
             <para>
                 The first C version featured a sorted array as a states
-                collection. In order to avoid the costy operation of
+                collection. In order to avoid the costly operation of
                 incrementing all the positions of the higher states by 1,
                 whenever a new state was added, I kept a <glossterm>sort margin
                 </glossterm> that contained several unsorted states at the end.
@@ -993,7 +993,7 @@
                 an acceptable running time.
             </para>
             <para>
-                Let's analyze the complexity of everything involved. Lookup can
+                Let's analyse the complexity of everything involved. Lookup can
                 be done using a binary search on the sorted part followed by
                 a linear search on the unsorted part. Since the unsorted part
                 is at most a constant number of items, then going over it
@@ -1072,7 +1072,7 @@
                 margin could become so much smaller than the main array.
             </para>
             <para>
-                In my variation, the sort margin is scanned linearily, but
+                In my variation, the sort margin is scanned linearly, but
                 the index of the corresponding element in the main array
                 is found using a binary search. Once found, all the elements
                 up to it, are copied as is without comparison. That way, one
@@ -1105,7 +1105,7 @@
             <para>
                 Freecell Solver 0.2 managed the states collection as an
                 array in which the states' structs appeared one adjacent
-                to the other. I also passed the entire struct as a paremeter
+                to the other. I also passed the entire struct as a parameter
                 to <function>solve_for_state</function>. When I tried to run it on NT I realized
                 that sometimes the program ran out of stack, because it
                 descended into a relatively large depth, while passing all
@@ -1127,14 +1127,14 @@
                 To avoid this, I devised a better scheme, in which I allocate
                 the states in packs of constant size, and allocate more packs
                 as necessary. Since the packs contain more than one state, and
-                their size can be adjusted to accomodate for the whims of the
+                their size can be adjusted to accommodate for the whims of the
                 underlying memory management, it was a good solution as could
                 be found.
                 <footnote xml:id="indices_instead_of_pointers">
                     <para>
                         What I could have also done was to manage indices to
                         the states inside the allocation block, instead of
-                        pointers. However, I prefered not to use this scheme,
+                        pointers. However, I preferred not to use this scheme,
                         because I did not want the extra cost of looking up
                         the real pointer from the index.
                     </para>
@@ -1151,7 +1151,7 @@
                 passing and duplicating entire stacks.
             </para>
             <para>
-                This time the algorithmical order of growth was not reduced,
+                This time the algorithmic order of growth was not reduced,
                 but still there can be a difference of heaven and earth
                 between a large O(n<superscript>2</superscript>) and a small O(n<superscript>2</superscript>)...
             </para>

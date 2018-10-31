@@ -1018,6 +1018,39 @@ sudo
 sudo_renice
 wikibook
 
+==== In: dest/book--freecell-solver--evolution-of-a-c-program/fcs-book.raw.html , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/array_of_pointers.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/converting_to_c.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/first_arch.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/index.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/initial_perl_version.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/introduction.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/merging_with_a_binsearch_merge.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/rules.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/sorted_array.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/states_collection.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/techniques.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/unordered_list.xhtml , dest/book--freecell-solver--evolution-of-a-c-program/fcs-book/variations.xhtml
+
+Ayn
+C-ish
+Der
+Fountainhead
+Freecell-Solver
+Prev
+Structs
+card_num
+card_t
+empty_card
+empty_state
+fc_stack_t
+init_state
+new_state
+num_cards--
+num_cards-1
+pop_stack_card
+prev_states
+pseudocode
+qsort
+realloced
+ret
+solve_for_state
+stack_len
+state_t
+struct_card_t
+struct_stack_t
+struct_state_t
+supermove
+typedef
+
 ==== In: dest/charts/dbm-solver-__int128-optimisation/index.html
 
 BigInteger
