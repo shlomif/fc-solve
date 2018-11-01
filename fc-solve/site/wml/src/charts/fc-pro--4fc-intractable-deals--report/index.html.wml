@@ -5,8 +5,15 @@
 
 <page_extra_head_elements>
 <js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
-<js_script src="chart-using-flot.js"></js_script>
+<js_script src="$(ROOT)/js/require--debug.js"></js_script>
 </page_extra_head_elements>
+
+<js_script>
+requirejs.config({
+    baseUrl: '$(ROOT)/js',
+    });
+require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.chart_data); }) } );
+</js_script>
 
 <h2* id="toc">Table of contents</h2*>
 

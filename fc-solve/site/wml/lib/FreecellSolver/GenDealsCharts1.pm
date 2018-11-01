@@ -46,7 +46,7 @@ sub gen_progress_charts
     <div class="demo-container">
         <div id="$chart_id" class="demo-placeholder"></div>
     </div>
-    <script>function $func_id() { chart_data("#$data_id", "#$chart_id"); }</script>
+    <script>function $func_id(chart_data) { chart_data("#$data_id", "#$chart_id"); }</script>
     <br />
 EOF
         print
@@ -61,7 +61,7 @@ qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_da
     }
     print <<"EOF";
 <script>
-\$(function() {
+function _fcs_chart_all(chart_data) {
     var funcs = [@{[join",",@funcs]}];
     var call_func;
     call_func = function(idx) {
@@ -70,14 +70,14 @@ qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_da
             return;
         }
         window.setTimeout(function() {
-            funcs[idx]();
+            funcs[idx](chart_data);
             call_func(idx+1);
         }, 20);
         return;
     };
     call_func(0);
     return;
-});
+};
 </script>
 EOF
 }

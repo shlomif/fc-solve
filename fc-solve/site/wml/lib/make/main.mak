@@ -281,7 +281,8 @@ TYPINGS =
 TEST_FCS_VALID_BASENAME := web-fc-solve-tests--fcs-validate.js
 TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/$(TEST_FCS_VALID_BASENAME)
 
-TYPESCRIPT_basenames = fcs-validate.js $(TEST_FCS_VALID_BASENAME) fcs-base-ui.js find-fc-deal-ui.js web-fc-solve.js web-fc-solve--expand-moves.js web-fc-solve-ui.js web-fcs-tests-strings.js web-fc-solve-tests.js
+TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-chart--base.js fcs-validate.js $(TEST_FCS_VALID_BASENAME) fcs-base-ui.js find-fc-deal-ui.js web-fc-solve.js web-fc-solve--expand-moves.js web-fc-solve-ui.js web-fcs-tests-strings.js web-fc-solve-tests.js
+
 TYPESCRIPT_DEST_FILES = $(patsubst %.js,$(OUT_PREF)/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst %.js,lib/for-node/js/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_COMMON_DEFS_FILES = src/js/jq_qs.d.ts
@@ -322,14 +323,16 @@ $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts $(TYPESCRIPT_COMMON_
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
 TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js
 
-all: $(TS_CHART_DEST) $(TS_CHART2_DEST)
+# all: $(TS_CHART_DEST) $(TS_CHART2_DEST)
+
+ts_chart_common1 = ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts
 
 $(TS_CHART_DEST): $(D)/%.js: src/%.ts
-	tsc --module amd --out $@ ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
+	tsc --module amd --out $@  $(ts_chart_common1) $<
 	$(MULTI_YUI) -o $@ $@
 
 $(TS_CHART2_DEST): $(D)/%.js: src/%.ts
-	tsc --module amd --out $@ ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts $<
+	tsc --module amd --out $@ $(ts_chart_common1) $<
 	$(MULTI_YUI) -o $@ $@
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))

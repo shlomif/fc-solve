@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+      "baseUrl": ".",
+      "rootDirs":["src/js", "src/charts"]
+  }
+}
