@@ -13,6 +13,20 @@ export const PLOT_PARAMS = {
     },
 };
 
+export function fc_solve__chart__add_tooltip(): void {
+    $("<div id='tooltip'></div>")
+        .css({
+            "background-color": "#fee",
+            border: "1px solid #fdd",
+            display: "none",
+            opacity: 0.8,
+            padding: "2px",
+            position: "absolute",
+        })
+        .appendTo("body");
+
+    return;
+}
 export function fc_solve__chart_bind(chart_selector: string, plot): void {
     $(chart_selector).bind("plothover", (event, pos, item) => {
         {

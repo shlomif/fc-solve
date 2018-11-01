@@ -1,4 +1,8 @@
-import { PLOT_PARAMS, fc_solve__chart_bind } from "./fcs-chart--base";
+import {
+    PLOT_PARAMS,
+    fc_solve__chart__add_tooltip,
+    fc_solve__chart_bind,
+} from "./fcs-chart--base";
 import "./jquery.flot";
 
 export function chart_data(data_selector: string, chart_selector: string) {
@@ -17,17 +21,7 @@ export function chart_data(data_selector: string, chart_selector: string) {
         PLOT_PARAMS,
     );
 
-    $("<div id='tooltip'></div>")
-        .css({
-            "background-color": "#fee",
-            border: "1px solid #fdd",
-            display: "none",
-            opacity: 0.8,
-            padding: "2px",
-            position: "absolute",
-        })
-        .appendTo("body");
-
+    fc_solve__chart__add_tooltip();
     fc_solve__chart_bind(chart_selector, plot);
     // $("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
 }
