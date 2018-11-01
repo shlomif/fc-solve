@@ -22,11 +22,11 @@ function restore_bookmark() {
 }
 // Taken from https://stackoverflow.com/questions/2901102/
 // thanks.
-const numberWithCommas = (x) => {
+function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
+}
 
-export function find_deal_ui() {
+export function find_deal_ui(): void {
     const deal_str = ($("#stdin").val() as string)
         .replace(/#[^\r\n]*\r?\n?/g, "")
         .replace(/\r+\n/, "\n")
@@ -67,15 +67,21 @@ export function find_deal_ui() {
     }
 
     resume();
+
+    return;
 }
 
-export function set_up_handlers() {
+export function set_up_handlers(): void {
     $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
     $("#run_do_solve").click(find_deal_ui);
+
+    return;
 }
 
-export function set_up() {
+export function set_up(): void {
     restore_bookmark();
     set_up_handlers();
     $("#fc_solve_bookmark_button").click(on_bookmarking);
+
+    return;
 }
