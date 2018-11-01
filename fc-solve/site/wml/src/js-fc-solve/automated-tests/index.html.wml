@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="$(ROOT)/css/qunit.css" />
 <js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
 <jquery_ui_head_elements />
-<js_script src="$(ROOT)/js/require--debug.js"></js_script>
+<js_requirejs />
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
 </page_extra_head_elements>
 

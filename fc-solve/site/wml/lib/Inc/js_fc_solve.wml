@@ -10,7 +10,7 @@
 <jquery_ui_head_elements />
 <js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
 <js_script src="$(ROOT)/js/jquery.phoenix.js"></js_script>
-<js_script src="$(ROOT)/js/require--debug.js"></js_script>
+<js_requirejs />
 <define-tag expanded_scripts>
 </define-tag>
 <define-tag production_scripts>

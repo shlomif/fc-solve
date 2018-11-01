@@ -5,7 +5,7 @@
 
 <page_extra_head_elements>
 <js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
-<js_script src="$(ROOT)/js/require--debug.js"></js_script>
+<js_requirejs />
 </page_extra_head_elements>
 
 <js_script>

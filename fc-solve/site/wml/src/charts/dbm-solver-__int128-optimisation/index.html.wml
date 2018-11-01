@@ -1,3 +1,4 @@
+#include "prelude.wml"
 <set-var latemp_html_standard="xhtml5" />
 #include "Inc/html5-shims.wml"
 <?xml version="1.0" encoding="utf-8"?>
@@ -9,7 +10,7 @@
     <link href="$(ROOT)/css/flot/examples/examples.css" rel="stylesheet" type="text/css" />
     <js_script src="$(ROOT)/js/jq.js"></js_script>
     <js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
-    <js_script src="$(ROOT)/js/require--debug.js"></js_script>
+    <js_requirejs />
 </head>
 <body>
     <h1>Freecell Solver’s depth_dbm_solver’s Old-vs-New Benchmark Progress</h1>
