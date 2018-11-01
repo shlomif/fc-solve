@@ -22,8 +22,12 @@ function restore_bookmark() {
 }
 // Taken from https://stackoverflow.com/questions/2901102/
 // thanks.
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+function numberWithCommas(x: string): string {
+    return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function getRounderNumber(str: string): string {
+    return str.replace(/(000)1$/, "$10");
 }
 
 export function find_deal_ui(): void {
@@ -43,7 +47,10 @@ export function find_deal_ui(): void {
     const ctl = $("#fc_solve_status");
     df.run(1, "8589934591", (args) => {
         ctl.html(
-            base_ui.escapeHtml("Reached No. " + numberWithCommas(args.start)),
+            base_ui.escapeHtml(
+                "Reached No. " +
+                    numberWithCommas(getRounderNumber(args.start.toString())),
+            ),
         );
         return;
     });
