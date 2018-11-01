@@ -79,7 +79,7 @@ export class FC_Solve_Bookmarking {
 
         return;
     }
-    public restore_bookmark() {
+    public restore_bookmark(): void {
         const that = this;
 
         const qs = that._get_loc().search;
@@ -93,13 +93,11 @@ export class FC_Solve_Bookmarking {
 
         that._each_control((myid) => {
             const ctl = $("#" + myid);
+            const val = params[myid];
             if (that._is_toggley(ctl)) {
-                ctl.prop(
-                    "checked",
-                    String(params[myid]) === "1" ? true : false,
-                );
+                ctl.prop("checked", String(val) === "1" ? true : false);
             } else {
-                ctl.val(params[myid]);
+                ctl.val(val);
             }
         });
 
@@ -107,11 +105,8 @@ export class FC_Solve_Bookmarking {
             const id = rec.id;
             const deps = rec.deps;
 
-            let should_toggle = false;
-            deps.forEach((d) => {
-                if (($("#" + d).val() as string).length > 0) {
-                    should_toggle = true;
-                }
+            const should_toggle = deps.some((d) => {
+                return ($("#" + d).val() as string).length > 0;
             });
 
             if (should_toggle) {
@@ -129,7 +124,7 @@ export class FC_Solve_Bookmarking {
     private _get_loc() {
         return window.location;
     }
-    private _get_base_url() {
+    private _get_base_url(): string {
         const that = this;
 
         const loc = that._get_loc();
