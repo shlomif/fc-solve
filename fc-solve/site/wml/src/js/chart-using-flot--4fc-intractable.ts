@@ -1,4 +1,4 @@
-import { fc_solve__chart_bind } from "./fcs-chart--base";
+import { PLOT_PARAMS, fc_solve__chart_bind } from "./fcs-chart--base";
 import "./jquery.flot";
 
 export function chart_data(data_selector: string, chart_selector: string) {
@@ -14,20 +14,7 @@ export function chart_data(data_selector: string, chart_selector: string) {
     const plot = $.plot(
         $(chart_selector),
         [{ data: series, label: "queue-items(iters)" }],
-        {
-            grid: {
-                clickable: true,
-                hoverable: true,
-            },
-            series: {
-                lines: {
-                    show: true,
-                },
-                points: {
-                    show: true,
-                },
-            },
-        },
+        PLOT_PARAMS,
     );
 
     $("<div id='tooltip'></div>")

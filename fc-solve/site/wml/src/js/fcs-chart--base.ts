@@ -1,3 +1,18 @@
+export const PLOT_PARAMS = {
+    grid: {
+        clickable: true,
+        hoverable: true,
+    },
+    series: {
+        lines: {
+            show: true,
+        },
+        points: {
+            show: true,
+        },
+    },
+};
+
 export function fc_solve__chart_bind(chart_selector: string, plot): void {
     $(chart_selector).bind("plothover", (event, pos, item) => {
         {

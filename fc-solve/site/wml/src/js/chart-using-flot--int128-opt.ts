@@ -1,4 +1,4 @@
-import { fc_solve__chart_bind } from "./fcs-chart--base";
+import { PLOT_PARAMS, fc_solve__chart_bind } from "./fcs-chart--base";
 import "./jquery.flot";
 
 $(() => {
@@ -21,20 +21,7 @@ $(() => {
             { data: series[0], label: "old-time(iters)" },
             { data: series[1], label: "new-time(iters)" },
         ],
-        {
-            grid: {
-                clickable: true,
-                hoverable: true,
-            },
-            series: {
-                lines: {
-                    show: true,
-                },
-                points: {
-                    show: true,
-                },
-            },
-        },
+        PLOT_PARAMS,
     );
 
     $("<div id='tooltip'></div>")
