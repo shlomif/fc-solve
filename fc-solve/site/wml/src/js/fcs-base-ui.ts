@@ -11,13 +11,13 @@ const entityMap = {
     ">": "&gt;",
 };
 
-export function escapeHtml(string) {
-    return String(string).replace(/[&<>"'\/]/g, (s) => entityMap[s]);
+export function escapeHtml(str: string): string {
+    return String(str).replace(/[&<>"'\/]/g, (s) => entityMap[s]);
 }
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
-export function populate_input_with_numbered_deal() {
+export function populate_input_with_numbered_deal(): void {
     const input_s: string = $("#deal_number").val() as string;
     if (!input_s.match(/^[1-9][0-9]*$/)) {
         alert("Wrong input - please enter a positive integer.");
@@ -37,7 +37,7 @@ export function populate_input_with_numbered_deal() {
 }
 
 export class FC_Solve_Bookmarking {
-    private bookmark_controls;
+    private bookmark_controls: [string];
     private show;
     constructor(args) {
         const that = this;
@@ -47,7 +47,7 @@ export class FC_Solve_Bookmarking {
 
         return;
     }
-    public on_bookmarking() {
+    public on_bookmarking(): void {
         const that = this;
 
         function get_v(myid: string): string {
@@ -135,7 +135,7 @@ export class FC_Solve_Bookmarking {
         const loc = that._get_loc();
         return loc.protocol + "//" + loc.host + loc.pathname;
     }
-    private _each_control(cb) {
+    private _each_control(cb: ((string) => void)): void {
         const that = this;
 
         that.bookmark_controls.forEach(cb);
