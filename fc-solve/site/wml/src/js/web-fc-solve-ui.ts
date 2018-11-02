@@ -18,7 +18,7 @@ function _increment_move_indices(move_s) {
 }
 
 class FC_Solve_UI {
-    private _instance = null;
+    private _instance: w.FC_Solve = null;
     private _solve_err_code = null;
     private _was_iterations_count_exceeded = false;
     private _is_expanded = false;
@@ -50,10 +50,6 @@ class FC_Solve_UI {
         that._instance = new FC_Solve({
             cmd_line_preset: that._get_cmd_line_preset(),
             dir_base: "fcs_ui",
-            is_unicode_cards:
-                that._is_unicode_suits_checked() ||
-                that._is_unicode_cards_checked(),
-            is_unicode_cards_chars: that._is_unicode_cards_checked(),
             set_status_callback: (myclass, mylabel) => {
                 return that._webui_set_status_callback(myclass, mylabel);
             },
@@ -85,6 +81,7 @@ class FC_Solve_UI {
     }
     public update_output() {
         const that = this;
+        const displayer: w.DisplayFilter = that._calcDisplayFilter();
 
         that._webui_output_set_text(
             that._process_pristine_output(that._calc_pristine_output()),
@@ -96,11 +93,11 @@ class FC_Solve_UI {
             html += "<ol>\n";
 
             const inst = that._instance;
-            const seq = inst._proto_states_and_moves_seq;
+            const seq = inst.proto_states_and_moves_seq;
 
             function _filt(str) {
                 return that._process_pristine_output(
-                    inst.unicode_preprocess(str),
+                    inst.unicode_preprocess(str, displayer),
                 );
             }
 
@@ -149,7 +146,7 @@ class FC_Solve_UI {
                 const move_ctl = $("#move_" + idx);
                 const calc_class = "calced";
                 if (!move_ctl.hasClass(calc_class)) {
-                    const inner_moves = inst._calc_expanded_move(idx);
+                    const inner_moves = inst.calc_expanded_move(idx);
 
                     let inner_html = "";
 
@@ -252,6 +249,7 @@ class FC_Solve_UI {
             return (_o[_k] =
                 _o[_k] ||
                 that._instance.generic_display_sol({
+                    displayer: that._calcDisplayFilter(),
                     expand: _expand,
                 }));
         } else {
@@ -308,6 +306,15 @@ class FC_Solve_UI {
         $("#output").attr("disabled", "true");
 
         return;
+    }
+    private _calcDisplayFilter(): w.DisplayFilter {
+        const that = this;
+        return new w.DisplayFilter({
+            is_unicode_cards:
+                that._is_unicode_suits_checked() ||
+                that._is_unicode_cards_checked(),
+            is_unicode_cards_chars: that._is_unicode_cards_checked(),
+        });
     }
 }
 

@@ -59,7 +59,15 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
     const deal_ms_fc_board = w.deal_ms_fc_board;
 
     QUnit.module("FC_Solve.Algorithmic", () => {
-        function test_for_equal(assert, instance, board, expected_sol, blurb) {
+        function test_for_equal(
+            assert,
+            instance: w.FC_Solve,
+            is_unicode_cards: boolean,
+            is_unicode_cards_chars: boolean,
+            board,
+            expected_sol,
+            blurb,
+        ) {
             let success = false;
 
             let solve_err_code = instance.do_solve(board);
@@ -69,7 +77,12 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             }
 
             if (solve_err_code === FCS_STATE_WAS_SOLVED) {
-                const buffer = instance.display_solution({});
+                const buffer = instance.display_solution({
+                    displayer: new w.DisplayFilter({
+                        is_unicode_cards,
+                        is_unicode_cards_chars,
+                    }),
+                });
                 success = true;
                 assert.equal(buffer, expected_sol, blurb);
             }
@@ -83,7 +96,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             // TEST
             assert.ok(true, "True is, well, true.");
 
-            const instance = new FC_Solve({
+            const instance: w.FC_Solve = new FC_Solve({
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -95,6 +108,8 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                 test_for_equal(
                     assert,
                     instance,
+                    false,
+                    false,
                     ms_deal_24,
                     solution_for_deal_24__default,
                     "Solution is right.",
@@ -106,9 +121,8 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
         QUnit.test("FC_Solve unicoded solution", (assert) => {
             assert.expect(2);
 
-            const instance = new FC_Solve({
+            const instance: w.FC_Solve = new FC_Solve({
                 cmd_line_preset: "default",
-                is_unicode_cards: true,
                 set_status_callback: () => {
                     return;
                 },
@@ -119,6 +133,8 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                 test_for_equal(
                     assert,
                     instance,
+                    true,
+                    false,
                     ms_deal_24,
                     solution_for_deal_24__default__with_unicoded_suits,
                     "Unicoded solution was right",
@@ -130,10 +146,8 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
         QUnit.test("FC_Solve unicode cards solution", (assert) => {
             assert.expect(2);
 
-            const instance = new FC_Solve({
+            const instance: w.FC_Solve = new FC_Solve({
                 cmd_line_preset: "default",
-                is_unicode_cards: true,
-                is_unicode_cards_chars: true,
                 set_status_callback: () => {
                     return;
                 },
@@ -144,6 +158,8 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                 test_for_equal(
                     assert,
                     instance,
+                    true,
+                    true,
                     ms_deal_24,
                     solution_for_deal_24__default__with_unicoded_card_chars,
                     "Unicoded cards chars solution was right",
@@ -157,7 +173,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             (assert) => {
                 assert.expect(2);
 
-                const instance = new FC_Solve({
+                const instance: w.FC_Solve = new FC_Solve({
                     cmd_line_preset: "default",
                     dir_base: "fcs1",
                     set_status_callback: () => {
@@ -171,6 +187,8 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                     test_for_equal(
                         assert,
                         instance,
+                        false,
+                        false,
                         pysol_simple_simon_deal_24,
                         solution_for_pysol_simple_simon_deal_24__default,
                         "Simple Simon Solution is right",
@@ -188,9 +206,8 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                 // TEST
                 assert.ok(true, "True is, well, true.");
 
-                const instance = new FC_Solve({
+                const instance: w.FC_Solve = new FC_Solve({
                     cmd_line_preset: "as",
-                    is_unicode_cards: true,
                     set_status_callback: () => {
                         return;
                     },
@@ -201,6 +218,8 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                     test_for_equal(
                         assert,
                         instance,
+                        true,
+                        false,
                         board_without_trailing_newline,
                         solution_for_board_without_trailing_newline,
                         "Board without a trailing newline solution is right.",
@@ -218,7 +237,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
 
             let success = false;
 
-            const instance = new FC_Solve({
+            const instance: w.FC_Solve = new FC_Solve({
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -251,7 +270,12 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                 solve_err_code = instance.resume_solution();
             }
 
-            const buffer = instance.display_expanded_moves_solution({});
+            const buffer = instance.display_expanded_moves_solution({
+                displayer: new w.DisplayFilter({
+                    is_unicode_cards: false,
+                    is_unicode_cards_chars: false,
+                }),
+            });
 
             success = true;
             // TEST
@@ -268,7 +292,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
         QUnit.test("FC_Solve get_num_stacks #1", (assert) => {
             assert.expect(1);
 
-            const instance = new FC_Solve({
+            const instance: w.FC_Solve = new FC_Solve({
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -286,7 +310,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
         QUnit.test("FC_Solve get_num_stacks simple_simon", (assert) => {
             assert.expect(1);
 
-            const instance = new FC_Solve({
+            const instance: w.FC_Solve = new FC_Solve({
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -307,7 +331,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             (assert) => {
                 assert.expect(1);
 
-                const instance = new FC_Solve({
+                const instance: w.FC_Solve = new FC_Solve({
                     cmd_line_preset: "default",
                     dir_base: "fcs2",
                     set_status_callback: () => {
@@ -328,7 +352,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
         QUnit.test("FC_Solve get_num_freecells #1", (assert) => {
             assert.expect(1);
 
-            const instance = new FC_Solve({
+            const instance: w.FC_Solve = new FC_Solve({
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -346,7 +370,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
         QUnit.test("FC_Solve get_num_freecells #1", (assert) => {
             assert.expect(1);
 
-            const instance = new FC_Solve({
+            const instance: w.FC_Solve = new FC_Solve({
                 cmd_line_preset: "default",
                 dir_base: "fcs3",
                 set_status_callback: () => {
@@ -413,7 +437,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             assert.expect(2);
 
             for (let mytry = 1; mytry <= 2; ++mytry) {
-                const instance = new FC_Solve({
+                const instance: w.FC_Solve = new FC_Solve({
                     cmd_line_preset: "default",
                     set_status_callback: () => {
                         return;
@@ -423,7 +447,15 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
 
                 // TEST*2
                 assert.ok(
-                    !test_for_equal(assert, instance, ms10_deal, "", ""),
+                    !test_for_equal(
+                        assert,
+                        instance,
+                        false,
+                        false,
+                        ms10_deal,
+                        "",
+                        "",
+                    ),
                     "do_solve failed try=" + mytry,
                 );
             }

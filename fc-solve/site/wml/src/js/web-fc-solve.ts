@@ -219,16 +219,33 @@ function fc_solve_2uni_found(match, p1, p2, offset, mystring) {
     return fc_solve_2uni_suit_map[p1] + p2;
 }
 
+export class DisplayFilter {
+    public is_unicode_cards: boolean;
+    public is_unicode_cards_chars: boolean;
+    constructor(args) {
+        const that = this;
+        that.is_unicode_cards = args.is_unicode_cards;
+        that.is_unicode_cards_chars = args.is_unicode_cards_chars;
+        return;
+    }
+}
+
+interface DisplaySolutionArgs {
+    displayer: DisplayFilter;
+}
+interface DisplaySolArgs {
+    displayer: DisplayFilter;
+    expand: boolean;
+}
+
 export class FC_Solve {
+    public proto_states_and_moves_seq: any[];
     private dir_base: string;
     private string_params: string[];
     private set_status_callback: any;
-    private is_unicode_cards: boolean;
-    private is_unicode_cards_chars: boolean;
     private cmd_line_preset: string;
     private current_iters_limit: number;
     private obj: any;
-    private _proto_states_and_moves_seq: any[];
     private _pre_expand_states_and_moves_seq: any;
     private _post_expand_states_and_moves_seq: any;
     private _state_string_buffer: number;
@@ -240,8 +257,6 @@ export class FC_Solve {
         that.dir_base = args.dir_base;
         that.string_params = args.string_params;
         that.set_status_callback = args.set_status_callback;
-        that.is_unicode_cards = args.is_unicode_cards || false;
-        that.is_unicode_cards_chars = args.is_unicode_cards_chars || false;
         that.cmd_line_preset = args.cmd_line_preset;
         that.current_iters_limit = 0;
         that.obj = (() => {
@@ -265,7 +280,7 @@ export class FC_Solve {
 
             return ret_obj;
         })();
-        that._proto_states_and_moves_seq = null;
+        that.proto_states_and_moves_seq = null;
         that._pre_expand_states_and_moves_seq = null;
         that._post_expand_states_and_moves_seq = null;
         that._state_string_buffer = alloc_wrap(
@@ -365,22 +380,23 @@ export class FC_Solve {
             return;
         }
     }
-    public unicode_preprocess(out_buffer) {
+    public unicode_preprocess(out_buffer, display: DisplayFilter) {
         const that = this;
 
-        if (!that.is_unicode_cards) {
+        if (!display.is_unicode_cards) {
             return out_buffer;
         }
 
-        if (that.is_unicode_cards_chars) {
+        if (display.is_unicode_cards_chars) {
             return that._replace_found(that._replace_char_card(out_buffer));
         } else {
             return that._replace_found(that._replace_card(out_buffer));
         }
     }
-    public display_solution(args) {
+    public display_solution(args: DisplaySolutionArgs) {
         const that = this;
 
+        const displayer: DisplayFilter = args.displayer;
         let ret;
 
         try {
@@ -388,6 +404,7 @@ export class FC_Solve {
             that.set_status("solved", "Solved");
             ret = that._display_specific_sol(
                 that._pre_expand_states_and_moves_seq,
+                displayer,
             );
         } catch (e) {
             return;
@@ -395,16 +412,33 @@ export class FC_Solve {
 
         return ret;
     }
-    public display_expanded_moves_solution(args) {
+    public display_expanded_moves_solution(args: DisplaySolutionArgs) {
         const that = this;
 
         that._calc_expanded_seq();
         that.set_status("solved", "Solved");
         return that._display_specific_sol(
             that._post_expand_states_and_moves_seq,
+            args.displayer,
         );
     }
-    public generic_display_sol(args) {
+    public calc_expanded_move(idx) {
+        const that = this;
+
+        const states_and_moves_sequence = that.proto_states_and_moves_seq;
+
+        if (!states_and_moves_sequence[idx].exp) {
+            states_and_moves_sequence[idx].exp = fc_solve_expand_move(
+                8,
+                4,
+                states_and_moves_sequence[idx - 1].str,
+                states_and_moves_sequence[idx].m,
+                states_and_moves_sequence[idx + 1].str,
+            );
+        }
+        return states_and_moves_sequence[idx].exp;
+    }
+    public generic_display_sol(args: DisplaySolArgs) {
         const that = this;
 
         return args.expand
@@ -482,7 +516,7 @@ export class FC_Solve {
             _out_state(state_as_string);
         }
 
-        that._proto_states_and_moves_seq = states_and_moves_sequence;
+        that.proto_states_and_moves_seq = states_and_moves_sequence;
         that._pre_expand_states_and_moves_seq = states_and_moves_sequence.map(
             (item) => {
                 return item.type === "m" ? item.m : item;
@@ -501,22 +535,6 @@ export class FC_Solve {
 
         return;
     }
-    private _calc_expanded_move(idx) {
-        const that = this;
-
-        const states_and_moves_sequence = that._proto_states_and_moves_seq;
-
-        if (!states_and_moves_sequence[idx].exp) {
-            states_and_moves_sequence[idx].exp = fc_solve_expand_move(
-                8,
-                4,
-                states_and_moves_sequence[idx - 1].str,
-                states_and_moves_sequence[idx].m,
-                states_and_moves_sequence[idx + 1].str,
-            );
-        }
-        return states_and_moves_sequence[idx].exp;
-    }
     private _calc_expanded_seq() {
         const that = this;
 
@@ -526,10 +544,10 @@ export class FC_Solve {
 
         that._calc_states_and_moves_seq();
 
-        const states_and_moves_sequence = that._proto_states_and_moves_seq;
+        const states_and_moves_sequence = that.proto_states_and_moves_seq;
         const new_array = [states_and_moves_sequence[0]];
         for (let i = 1; i < states_and_moves_sequence.length - 1; i += 2) {
-            Array.prototype.push.apply(new_array, that._calc_expanded_move(i));
+            Array.prototype.push.apply(new_array, that.calc_expanded_move(i));
             new_array.push(states_and_moves_sequence[i + 1]);
         }
 
@@ -537,7 +555,7 @@ export class FC_Solve {
 
         return;
     }
-    private _display_specific_sol(seq) {
+    private _display_specific_sol(seq, displayer: DisplayFilter) {
         const that = this;
 
         let out_buffer = "";
@@ -558,6 +576,7 @@ export class FC_Solve {
 
         return that.unicode_preprocess(
             out_buffer.replace(remove_trailing_space_re, ""),
+            displayer,
         );
     }
     private _increase_iters_limit() {
