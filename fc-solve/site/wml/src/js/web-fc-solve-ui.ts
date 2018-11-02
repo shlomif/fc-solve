@@ -380,4 +380,7 @@ export function set_up() {
     $("#one_based").click(on_toggle_one_based);
     $("#clear_output").click(clear_output);
     $("#fc_solve_bookmark_button").click(on_bookmarking);
+    $('input[name="unicode_suits"]').change(() => {
+        fcs_ui.update_output();
+    });
 }
