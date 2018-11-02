@@ -387,11 +387,11 @@ export class FC_Solve {
             return out_buffer;
         }
 
-        if (display.is_unicode_cards_chars) {
-            return that._replace_found(that._replace_char_card(out_buffer));
-        } else {
-            return that._replace_found(that._replace_card(out_buffer));
-        }
+        return that._replace_found(
+            display.is_unicode_cards_chars
+                ? that._replace_char_card(out_buffer)
+                : that._replace_card(out_buffer),
+        );
     }
     public display_solution(args: DisplaySolutionArgs) {
         const that = this;
