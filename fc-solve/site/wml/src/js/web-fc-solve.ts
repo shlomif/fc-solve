@@ -228,6 +228,27 @@ export class DisplayFilter {
         that.is_unicode_cards_chars = args.is_unicode_cards_chars;
         return;
     }
+    public unicode_preprocess(out_buffer: string) {
+        const display = this;
+        if (!display.is_unicode_cards) {
+            return out_buffer;
+        }
+
+        return display._replace_found(
+            display.is_unicode_cards_chars
+                ? display._replace_char_card(out_buffer)
+                : display._replace_card(out_buffer),
+        );
+    }
+    private _replace_char_card(s) {
+        return s.replace(/\b([A2-9TJQK])([HCDS])\b/g, fc_solve_2uni_char_card);
+    }
+    private _replace_card(s) {
+        return s.replace(/\b([A2-9TJQK])([HCDS])\b/g, fc_solve_2uni_card);
+    }
+    private _replace_found(s) {
+        return s.replace(/\b([HCDS])(-[0A2-9TJQK])\b/g, fc_solve_2uni_found);
+    }
 }
 
 interface DisplaySolutionArgs {
@@ -383,15 +404,7 @@ export class FC_Solve {
     public unicode_preprocess(out_buffer, display: DisplayFilter) {
         const that = this;
 
-        if (!display.is_unicode_cards) {
-            return out_buffer;
-        }
-
-        return that._replace_found(
-            display.is_unicode_cards_chars
-                ? that._replace_char_card(out_buffer)
-                : that._replace_card(out_buffer),
-        );
+        return display.unicode_preprocess(out_buffer);
     }
     public display_solution(args: DisplaySolutionArgs) {
         const that = this;
@@ -723,15 +736,6 @@ export class FC_Solve {
             that.set_status("error", "Error");
             return -1;
         }
-    }
-    private _replace_char_card(s) {
-        return s.replace(/\b([A2-9TJQK])([HCDS])\b/g, fc_solve_2uni_char_card);
-    }
-    private _replace_card(s) {
-        return s.replace(/\b([A2-9TJQK])([HCDS])\b/g, fc_solve_2uni_card);
-    }
-    private _replace_found(s) {
-        return s.replace(/\b([HCDS])(-[0A2-9TJQK])\b/g, fc_solve_2uni_found);
     }
 }
 /*
