@@ -1,4 +1,5 @@
 #include "template5.wml"
+#include "Inc/db_formats.wml"
 
 <latemp_subject "The Freecell Solver Architecture Document" />
 
@@ -16,34 +17,4 @@ here.
 
 </h2_section>
 
-<h2_section id="formats" title="Formats">
-
-<ul>
-
-<li>
-<a href="fcs_arch_doc/">HTML (read online)</a>
-</li>
-
-<li>
-<a href="fcs_arch_doc-all-on-one-page/">HTML on one page</a>
-</li>
-
-<li>
-<a href="fcs_arch_doc.pdf">Acrobat Reader (PDF)</a>
-</li>
-
-<li>
-<a href="fcs_arch_doc.epub">EPUB</a>
-</li>
-
-<li>
-<a href="fcs_arch_doc.rtf">Microsoft Word RTF</a>
-</li>
-
-<li>
-<a href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/arch_doc">The Original DocBook</a>
-</li>
-
-</ul>
-
-</h2_section>
+<docbook_formats docbase="fcs_arch_doc" source_href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/arch_doc" />

@@ -1,4 +1,5 @@
 #include "template5.wml"
+#include "Inc/db_formats.wml"
 
 <latemp_subject "Freecell Solver Book" />
 
@@ -39,34 +40,4 @@ a lecture</a>
 I prepared about the subject.
 </p>
 
-<h2_section id="formats" title="Formats">
-
-<ul>
-
-<li>
-<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book/">HTML (read online)</a>
-</li>
-
-<li>
-<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book.raw.html">HTML on one page</a>
-</li>
-
-<li>
-<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book.pdf">Acrobat Reader (PDF)</a>
-</li>
-
-<li>
-<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book.epub">EPUB</a>
-</li>
-
-<li>
-<a href="book--freecell-solver--evolution-of-a-c-program/fcs-book.rtf">Microsoft Word RTF</a>
-</li>
-
-<li>
-<a href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/docs/Freecell-Solver--Evolution-of-a-C-Program/">The Original DocBook</a>
-</li>
-
-</ul>
-
-</h2_section>
+<docbook_formats docbase="book--freecell-solver--evolution-of-a-c-program/fcs-book" source_href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/docs/Freecell-Solver--Evolution-of-a-C-Program/" />
