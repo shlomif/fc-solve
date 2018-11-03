@@ -154,6 +154,7 @@ App-Index
 AppVeyor
 Ari
 AsciiDoc
+Attribution-NonCommercial-ShareAlike
 Autoconf
 Autoconf's
 Automake
@@ -163,6 +164,7 @@ BFS
 BINARY_DIR
 BUILDING_DLL
 BUILD_TYPE
+BY-NC-SA
 Barthlet
 BeFS
 Becker

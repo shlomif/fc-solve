@@ -27,8 +27,11 @@
 
         <authorgroup>
             <author>
-                <firstname>Shlomi</firstname>
-                <surname>Fish</surname>
+                <personname>
+                    <firstname>Shlomi</firstname>
+                    <surname>Fish</surname>
+                </personname>
+                <uri type="homepage">http://www.shlomifish.org/</uri>
                 <affiliation>
                     <!-- <orgname>Shlomi Fish Inc.</orgname> -->
                     <address>
@@ -54,7 +57,7 @@
             <!-- Ci vis pacem -->
             <para>
                 <!-- belum. ;-) -->
-                This book is copyrighted by Shlomi Fish. All rights reserved.
+                This book is copyrighted by Shlomi Fish, under <link xlink:href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license">the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</link> (or at your option any later version).
             </para>
         </legalnotice>
     </info>
@@ -64,14 +67,15 @@
             <title>Introduction</title>
         </info>
         <para> <!-- para, nidfoq eth kol ha'eder. ;-) -->
-            One day in the spring break between two semesters I went out
+            One day, during the spring break between two university studies'
+            semesters, I went out
             running<footnote xml:id="running">
                 <para>
                     &fcs; is not the only good idea I got while going out to
-                    run. Another one is "The One with the Fountainhead" which
-                    is a parody of Ayn Rand's book "The Fountainhead"
-                    modelled around an episode of the T.V. show "Friends".
-                    You can also find it on my homepage.
+                    run. Another one is <link xlink:href="https://www.shlomifish.org/humour/TOWTF/">“The One with the Fountainhead”</link> which
+                    is a parody of Ayn Rand's book <emphasis>The Fountainhead</emphasis>
+                    modelled around an episode of the Television show <emphasis>Friends</emphasis>.
+                    You can find it on my site as well.
                 </para>
             </footnote>
             and as I did,
@@ -102,7 +106,7 @@
             programming many other types of programs. This book is also
             about the dynamic of a small Open Source project. As you will
             see, many times, the input that I received from other users
-            and developers affected the development of the program.
+            and developers, has affected the development of the program.
         </para>
     </chapter>
 
@@ -126,7 +130,7 @@
             <para>
                 Besides the columns (which will also be referred to as stacks),
                 there are also four places to hold temporary cards (known as
-                freecells) and four foundations, in which it is possible to place
+                “freecells”) and four foundations, in which it is possible to place
                 cards of the same suit starting from Aces and ending with Kings.
             </para>
 
@@ -140,7 +144,6 @@
                 <orderedlist>
                     <listitem>
                         <para>
-
                             Moving one card from the top of a column or from a
                             freecell to the foundation. (which is possible only if
                             its corresponding foundation's value is lower than it
@@ -181,8 +184,8 @@
                 did not already, because knowing the rules alone is not
                 enough to have an intuitive feel of it. There are many available
                 &fc; implementations for various systems, and you should have
-                no problems finding one that you can use. (chances are that it
-                is already installed on your system)
+                no problems finding one that you can use. (Chances are that one
+                is already installed on your system.)
             </para>
         </section>
         <section xml:id="techniques">
