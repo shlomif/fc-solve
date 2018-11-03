@@ -184,7 +184,7 @@
                 did not already, because knowing the rules alone is not
                 enough to have an intuitive feel of it. There are many available
                 &fc; implementations for various systems, and you should have
-                no problems finding one that you can use. (Chances are that one
+                no problems finding one that you can use. (Chances are that it
                 is already installed on your system.)
             </para>
         </section>
@@ -601,11 +601,10 @@
                 The first C version I wrote was not identical to the Perl version
                 algorithmically. As some things were more accessible in C than
                 they were in Perl (or vice versa), I was able to take advantage
-                of them (or not).
+                of them (or was unable to).
             </para>
             <section xml:id="representing_cards_and_states">
                 <info>
-
                     <title>
                         Representing Cards and States
                     </title>
@@ -697,7 +696,6 @@
             </section>
             <section xml:id="algorithm">
                 <info>
-
                     <title>The Algorithm of the Scan</title>
                 </info>
 
@@ -741,7 +739,6 @@
             </section>
             <section xml:id="first_arch_states_collection">
                 <info>
-
                     <title>The States' Collection Implementation</title>
                 </info>
 
@@ -771,7 +768,6 @@
             </section>
             <section xml:id="moves">
                 <info>
-
                     <title>The Moves</title>
                 </info>
 
@@ -846,7 +842,6 @@
             </section>
             <section xml:id="code_org">
                 <info>
-
                     <title>Code Organization</title>
                 </info>
 
@@ -882,7 +877,6 @@
             </section>
             <section xml:id="conclusion">
                 <info>
-
                     <title>Conclusion from the C Program</title>
                 </info>
 
@@ -894,30 +888,28 @@
                 </para>
                 <para>
                     Being happy from its relative success, I converted the code
-                    to pure ANSI C (it has been C-ish C++ when I started
+                    to pure ANSI C (it has been C-like C++ when I started
                     writing it), wrote a README file and prepared a package.
                     I named the program "&fcs;", placed it on a page of its
                     own on my web-site, and posted an announcement for it on
-                    <ulink url="http://freshmeat.net/">Freshmeat</ulink>.
+                    <link xlink:href="http://freshmeat.net/">Freshmeat</link>.
                 </para>
                 <para>
                     That was the humble beginning of &fcs;: humble because
                     since then, it has grown ten-folds in speed, feature-set
                     and code size. But every journey of a thousand miles
-                    begins with one small step...
+                    begins with one small step…
                 </para>
             </section>
         </section>
     </chapter>
     <chapter xml:id="states_collection">
         <info>
-
             <title>The States Collection</title>
         </info>
 
         <section xml:id="overview">
             <info>
-
                 <title>Overview</title>
             </info>
 
@@ -946,7 +938,6 @@
         </section>
         <section xml:id="unordered_list">
             <info>
-
                 <title>Initial Perl Version - Unordered List</title>
             </info>
 
@@ -977,7 +968,6 @@
         </section>
         <section xml:id="sorted_array">
             <info>
-
                 <title>Sorted Array with a Q-Sorted Sort Margin</title>
             </info>
 
@@ -1023,16 +1013,16 @@
         </section>
         <section xml:id="merging_with_a_binsearch_merge">
             <info>
-
                 <title>Merging the Sort Margin Using the "Merge" Algorithm</title>
             </info>
 
             <para>
-                Incidentally, I took a course about data structures and
+                I took a course about data structures and
                 algorithms, the semester after I coded the first version of
                 &fcs;. There I learned about the large complexity involved
                 in quick-sorting, and that there was a better algorithm for
-                merging two arrays: Merge. The Merge algorithm works like this:
+                merging two arrays: <link xlink:href="https://en.wikipedia.org/wiki/Merge_algorithm">Merge</link>.
+                The Merge algorithm works like this:
             </para>
             <para>
                 <orderedlist>
@@ -1101,7 +1091,6 @@
         </section>
         <section xml:id="array_of_pointers">
             <info>
-
                 <title>Array of Pointers instead of Array of Structs</title>
             </info>
 
@@ -1109,15 +1098,16 @@
                 Freecell Solver 0.2 managed the states collection as an
                 array in which the states' structs appeared one adjacent
                 to the other. I also passed the entire struct as a parameter
-                to <function>solve_for_state</function>. When I tried to run it on NT I realized
-                that sometimes the program ran out of stack, because it
+                to <function>solve_for_state</function>. When I tried to run it on
+                Microsoft Windows NT, I realized
+                that sometimes the program ran out of stack. This was because it
                 descended into a relatively large depth, while passing all
                 the structs in it. To avoid it, I decided to pass pass pointers
                 to the stacks, and to store the states as an array of pointers.
             </para>
             <para>
                 I did not want to individually malloc the structs, because
-                I knew memory was allocated in powers of 2, and so I can have
+                I knew memory was often allocated in powers of 2, and so I can have
                 a lot of it wasted. I first tried to allocate the states by
                 allocating them
                 from the end of one array that was realloced when necessary.
