@@ -93,8 +93,8 @@ Binaries for x86-64 Windows.
 />
 
 <p>
-Type <code>apt-get install freecell-solver</code> as root. The version may be
-somewhat old, but hopefully mostly bug-free. Also see the
+Type <code>apt-get install freecell-solver-bin</code> as root. The version may
+be somewhat old, but hopefully mostly bug-free. Also see the
 <a href="http://packages.debian.org/source/squeeze/freecell-solver">Debian Package page</a>.
 </p>
 

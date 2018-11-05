@@ -1268,6 +1268,10 @@ var_base
 Der
 iterations's
 
+==== In: dest/download.html
+
+freecell-solver-bin
+
 ==== In: dest/faq.html
 
 5-freecells
