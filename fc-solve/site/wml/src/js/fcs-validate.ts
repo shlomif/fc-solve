@@ -582,6 +582,11 @@ export class BoardParseResult {
 
         that.errors = [];
         that.columns = [];
+        const counter = _perl_range(0, 3).map((i) => {
+            return _perl_range(0, 13).map((i) => {
+                return [];
+            });
+        });
         const p = new StringParser(orig_s);
         if (p.match(/^Foundations:/)) {
             const start_char_idx = p.getConsumed();
@@ -660,7 +665,66 @@ export class BoardParseResult {
             that.columns.push(col);
         }
         // TODO : Implement duplicate/missing cards.
+        if (that.foundations) {
+            _perl_range(0, 3).forEach((suit) => {
+                _perl_range(
+                    1,
+                    that.foundations.foundations.getByIdx(0, suit),
+                ).forEach((rank) => {
+                    counter[suit][rank].push([
+                        ErrorLocationType.ErrorLocationType_Foundations,
+                        0,
+                    ]);
+                });
+            });
+        }
+        if (that.freecells) {
+            _perl_range(0, that.freecells.freecells.getNum() - 1).forEach(
+                (i) => {
+                    const card = that.freecells.freecells.getCard(i);
+                    if (card) {
+                        counter[card.getSuit()][card.getRank()].push([
+                            ErrorLocationType.ErrorLocationType_Freecells,
+                            i,
+                        ]);
+                    }
+                },
+            );
+        }
+        that.columns.forEach((col_res, idx) => {
+            const col = col_res.col;
+            _perl_range(0, col.getLen() - 1).forEach((h) => {
+                const card = col.getCard(h);
+
+                counter[card.getSuit()][card.getRank()].push([
+                    ErrorLocationType.ErrorLocationType_Column,
+                    idx,
+                    h,
+                ]);
+            });
+        });
         that.is_valid = true;
+        _perl_range(0, 3).forEach((suit) => {
+            _perl_range(1, 13).map((rank) => {
+                const count = counter[suit][rank];
+                if (count.length > 1) {
+                    const locs: ErrorLocation[] = [];
+                    count.forEach((v) => {
+                        const t = v[0];
+                        locs.push(new ErrorLocation(t, v[1], 0, 0));
+                    });
+
+                    const error = new ParseError(
+                        ParseErrorType.TOO_MUCH_OF_CARD,
+                        locs,
+                        new Card(rank, suit),
+                    );
+                    that.errors.push(error);
+                    that.is_valid = false;
+                }
+            });
+        });
+
         return;
     }
 }
