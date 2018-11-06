@@ -705,11 +705,22 @@ export class BoardParseResult {
         });
         that.is_valid = true;
         const NUM_WANTED_CARDS: number = 1;
-        const too_many_cards__errors = [];
-        const not_enough_cards__errors = [];
+        const too_many_cards__errors: ParseError[] = [];
+        const not_enough_cards__errors: ParseError[] = [];
         _perl_range(0, 3).forEach((suit) => {
             _perl_range(1, 13).map((rank) => {
                 const count = counter[suit][rank];
+                function add_error(arr, type_, locs) {
+                    const error = new ParseError(
+                        type_,
+                        locs,
+                        new Card(rank, suit),
+                    );
+                    arr.push(error);
+                    that.is_valid = false;
+
+                    return;
+                }
                 if (count.length > NUM_WANTED_CARDS) {
                     const locs: ErrorLocation[] = [];
                     count.forEach((v) => {
@@ -717,21 +728,17 @@ export class BoardParseResult {
                         locs.push(new ErrorLocation(t, v[1], 0, 0));
                     });
 
-                    const error = new ParseError(
+                    add_error(
+                        too_many_cards__errors,
                         ParseErrorType.TOO_MUCH_OF_CARD,
                         locs,
-                        new Card(rank, suit),
                     );
-                    too_many_cards__errors.push(error);
-                    that.is_valid = false;
                 } else if (count.length < NUM_WANTED_CARDS) {
-                    const error = new ParseError(
+                    add_error(
+                        not_enough_cards__errors,
                         ParseErrorType.NOT_ENOUGH_OF_CARD,
                         [],
-                        new Card(rank, suit),
                     );
-                    not_enough_cards__errors.push(error);
-                    that.is_valid = false;
                 }
             });
         });
