@@ -705,8 +705,8 @@ export class BoardParseResult {
         });
         that.is_valid = true;
         const NUM_WANTED_CARDS: number = 1;
-        const too_many_errors = [];
-        const not_enough_errors = [];
+        const too_many_cards__errors = [];
+        const not_enough_cards__errors = [];
         _perl_range(0, 3).forEach((suit) => {
             _perl_range(1, 13).map((rank) => {
                 const count = counter[suit][rank];
@@ -722,7 +722,7 @@ export class BoardParseResult {
                         locs,
                         new Card(rank, suit),
                     );
-                    too_many_errors.push(error);
+                    too_many_cards__errors.push(error);
                     that.is_valid = false;
                 } else if (count.length < NUM_WANTED_CARDS) {
                     const error = new ParseError(
@@ -730,13 +730,13 @@ export class BoardParseResult {
                         [],
                         new Card(rank, suit),
                     );
-                    not_enough_errors.push(error);
+                    not_enough_cards__errors.push(error);
                     that.is_valid = false;
                 }
             });
         });
-        that.errors.push(...too_many_errors);
-        that.errors.push(...not_enough_errors);
+        that.errors.push(...too_many_cards__errors);
+        that.errors.push(...not_enough_cards__errors);
 
         return;
     }
