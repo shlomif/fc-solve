@@ -21,8 +21,11 @@ function _perl_range(start: number, end: number): number[] {
 }
 export const NUM_SUITS: number = 4;
 const _suits: number[] = _perl_range(0, NUM_SUITS - 1);
+export const MIN_RANK: number = 1;
+export const MAX_RANK: number = 13;
+const _ranks: number[] = _perl_range(MIN_RANK, MAX_RANK);
 
-_perl_range(1, 13).forEach((rank) => {
+_ranks.forEach((rank) => {
     ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
 });
 const _suits__int_to_str: string = "HCDS";
@@ -45,7 +48,7 @@ class Card {
         if (rank < 1) {
             throw "rank is too low.";
         }
-        if (rank > 13) {
+        if (rank > MAX_RANK) {
             throw "rank is too high.";
         }
         if (suit < 0) {
@@ -414,7 +417,7 @@ export class Foundations {
             throw "Rank must be an integer.";
         }
 
-        if (!(rank >= 0 && rank <= 13)) {
+        if (!(rank >= 0 && rank <= MAX_RANK)) {
             throw "rank is out of range.";
         }
 
@@ -585,7 +588,7 @@ export class BoardParseResult {
         that.errors = [];
         that.columns = [];
         const counter = _suits.map((i) => {
-            return _perl_range(0, 13).map((i) => {
+            return _perl_range(0, MAX_RANK).map((i) => {
                 return [];
             });
         });
@@ -710,7 +713,7 @@ export class BoardParseResult {
         const too_many_cards__errors: ParseError[] = [];
         const not_enough_cards__errors: ParseError[] = [];
         _suits.forEach((suit) => {
-            _perl_range(1, 13).map((rank) => {
+            _ranks.map((rank) => {
                 const count = counter[suit][rank];
                 function add_error(arr, type_, locs) {
                     arr.push(new ParseError(type_, locs, new Card(rank, suit)));
