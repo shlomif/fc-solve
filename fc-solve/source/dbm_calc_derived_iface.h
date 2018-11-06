@@ -18,13 +18,13 @@ extern "C" {
 
 typedef struct
 {
-    unsigned char s[RANK_KING];
+    uint8_t s[RANK_KING];
 } fcs_which_moves_bitmask;
 
 typedef struct
 {
     char *state_string;
-    unsigned char move;
+    uint8_t move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
     fcs_which_moves_bitmask which_irreversible_moves_bitmask;

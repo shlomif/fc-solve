@@ -78,7 +78,7 @@ static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const int key_depth GCC_UNUSED,
     fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
-    const unsigned char move GCC_UNUSED,
+    const uint8_t move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
 #ifdef FCS_DBM_CACHE_ONLY
@@ -264,11 +264,10 @@ static bool populate_instance_with_intermediate_input_line(
                 line_num);
         }
 #ifdef FCS_DEBONDT_DELTA_STATES
-        final_stack_encoded_state.s[(s_ptr - line) >> 1] =
-            (unsigned char)hex_digits;
+        final_stack_encoded_state.s[(s_ptr - line) >> 1] = (uint8_t)hex_digits;
 #else
         final_stack_encoded_state.s[++final_stack_encoded_state.s[0]] =
-            (unsigned char)hex_digits;
+            (uint8_t)hex_digits;
 #endif
         s_ptr += 2;
     }

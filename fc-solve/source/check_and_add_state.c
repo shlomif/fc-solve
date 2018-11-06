@@ -262,8 +262,8 @@ static inline void fc_solve_cache_stacks(
          * (It is not derived work however). */
         fcs_hash_value hash_value_int = 0;
         {
-            const char *s_ptr = (char *)(*(current_stack));
-            const char *s_end = s_ptr + fcs_col_len(s_ptr) + 1;
+            const int8_t *s_ptr = (int8_t *)(*(current_stack));
+            const int8_t *s_end = s_ptr + fcs_col_len(s_ptr) + 1;
             while (s_ptr < s_end)
             {
                 hash_value_int += (hash_value_int << 5) + *(s_ptr++);
@@ -344,8 +344,8 @@ static inline void fc_solve_cache_stacks(
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 guint fc_solve_hash_function(gconstpointer key)
 {
-    const char *s_ptr = (const char *)key;
-    const char *const s_end = s_ptr + sizeof(fcs_state);
+    const int8_t *s_ptr = (const int8_t *)key;
+    const int8_t *const s_end = s_ptr + sizeof(fcs_state);
     guint hash_value = 0;
     while (s_ptr < s_end)
     {
@@ -419,7 +419,7 @@ static inline bool handle_existing_void(fcs_instance *const instance,
             printf("%s", "\n\nAdded state: ");
             for (size_t i = 0; i < sizeof(new_state->key[0]); ++i)
             {
-                printf("\\x%02x", (int)((unsigned char *)(new_state->key))[i]);
+                printf("\\x%02x", (int)((uint8_t *)(new_state->key))[i]);
             }
             printf("\n\n");
         }
@@ -462,8 +462,8 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     fcs_hash_value hash_value_int = 0;
     {
-        const char *s_ptr = (char *)new_state_key;
-        const char *s_end = s_ptr + sizeof(*new_state_key);
+        const int8_t *s_ptr = (int8_t *)new_state_key;
+        const int8_t *s_end = s_ptr + sizeof(*new_state_key);
         while (s_ptr < s_end)
         {
             hash_value_int += (hash_value_int << 5) + *(s_ptr++);

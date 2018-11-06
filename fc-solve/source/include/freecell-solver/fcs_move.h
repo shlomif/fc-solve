@@ -17,6 +17,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 enum
 {
     FCS_MOVE_TYPE_STACK_TO_STACK,
@@ -38,7 +40,7 @@ enum
 
 typedef struct
 {
-    unsigned char c[4];
+    uint8_t c[4];
 } fcs_move_t;
 
 #define FCS_MOVE_TYPE 0

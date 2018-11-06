@@ -59,7 +59,7 @@ static inline void fc_solve_delta_stater_set_derived(
 
 typedef struct
 {
-    unsigned char s[FCS_ENCODED_STATE_COUNT_CHARS];
+    uint8_t s[FCS_ENCODED_STATE_COUNT_CHARS];
 } fcs_encoded_state_buffer;
 
 #if SIZEOF_VOID_P == 4
@@ -73,7 +73,7 @@ typedef struct
     fcs_encoded_state_buffer key;
     uintptr_t parent_and_refcount;
 #ifdef FCS_EXPLICIT_REFCOUNT
-    unsigned char refcount;
+    uint8_t refcount;
 #endif
 } fcs_dbm_record;
 
@@ -104,28 +104,28 @@ static inline void fcs_dbm_record_set_parent_ptr(
 }
 
 #ifdef FCS_EXPLICIT_REFCOUNT
-static inline unsigned char fcs_dbm_record_get_refcount(
+static inline uint8_t fcs_dbm_record_get_refcount(
     const fcs_dbm_record *const rec)
 {
     return rec->refcount;
 }
 #else
-static inline unsigned char fcs_dbm_record_get_refcount(
+static inline uint8_t fcs_dbm_record_get_refcount(
     const fcs_dbm_record *const rec)
 {
-    return (unsigned char)(rec->parent_and_refcount >> FCS_DBM_RECORD_SHIFT);
+    return (uint8_t)(rec->parent_and_refcount >> FCS_DBM_RECORD_SHIFT);
 }
 #endif
 
 #ifdef FCS_EXPLICIT_REFCOUNT
 static inline void fcs_dbm_record_set_refcount(
-    fcs_dbm_record *const rec, const unsigned char new_val)
+    fcs_dbm_record *const rec, const uint8_t new_val)
 {
     rec->refcount = new_val;
 }
 #else
 static inline void fcs_dbm_record_set_refcount(
-    fcs_dbm_record *const rec, const unsigned char new_val)
+    fcs_dbm_record *const rec, const uint8_t new_val)
 {
     rec->parent_and_refcount &=
         (~(((const uintptr_t)0xFF) << FCS_DBM_RECORD_SHIFT));
@@ -140,10 +140,10 @@ static inline void fcs_dbm_record_increment_refcount(fcs_dbm_record *const rec)
 }
 
 /* Returns the new value so we can tell if it is zero. */
-static inline unsigned char fcs_dbm_record_decrement_refcount(
+static inline uint8_t fcs_dbm_record_decrement_refcount(
     fcs_dbm_record *const rec)
 {
-    const unsigned char new_val = fcs_dbm_record_get_refcount(rec) - 1;
+    const uint8_t new_val = fcs_dbm_record_get_refcount(rec) - 1;
 
     fcs_dbm_record_set_refcount(rec, new_val);
 

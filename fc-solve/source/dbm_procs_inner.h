@@ -64,7 +64,7 @@ static inline void dbm__free_threads(dbm_solver_instance *const instance,
     TRACE("%s\n", "instance_run_all_threads end");
 }
 
-static unsigned char get_move_from_parent_to_child(
+static uint8_t get_move_from_parent_to_child(
     dbm_solver_instance *const instance, fcs_delta_stater *delta,
     fcs_encoded_state_buffer parent, fcs_encoded_state_buffer child)
 {
@@ -111,7 +111,7 @@ static void trace_solution(dbm_solver_instance *const instance,
     fcs_encoded_state_buffer *trace;
     int trace_num;
     fcs_state_keyval_pair state;
-    unsigned char move = '\0';
+    uint8_t move = '\0';
     char move_buffer[500];
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     fcs_state_locs_struct locs;

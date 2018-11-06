@@ -144,7 +144,7 @@ typedef struct
 static inline void instance_check_key(
     dbm_solver_thread *const thread, dbm_solver_instance *const instance,
     const int key_depth, fcs_encoded_state_buffer *const key,
-    fcs_dbm_record *const parent, const unsigned char move,
+    fcs_dbm_record *const parent, const uint8_t move,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
@@ -506,8 +506,7 @@ static inline fcs_dbm_record *cache_store__has_key(
 static inline fcs_cache_key_info *cache_store__insert_key(
     fcs_dbm__cache_store__common *const cache_store,
     fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
-    const fcs_fcc_move *const moves_to_parent,
-    const unsigned char move GCC_UNUSED)
+    const fcs_fcc_move *const moves_to_parent, const uint8_t move GCC_UNUSED)
 {
 #ifndef FCS_DBM_CACHE_ONLY
     pre_cache_insert(&(cache_store->pre_cache), key, &(parent->key));
