@@ -899,7 +899,7 @@ export function test_fcs_validate(QUnit: any) {
         }
     });
     QUnit.test("verify_state BoardParseResuls too many cards", (a: Assert) => {
-        a.expect(7);
+        a.expect(9);
         {
             const ms_deal_24_with_extra_8S_instead_of_3D =
                 ": 4C 2C 9C 8C QS 4S 2H\n" +
@@ -919,37 +919,50 @@ export function test_fcs_validate(QUnit: any) {
             // TEST
             a.ok(!result.is_valid, "there are errors.");
 
-            const error = result.errors[0];
-            // TEST
-            a.equal(
-                error.type_,
-                ParseErrorType.TOO_MUCH_OF_CARD,
-                "Error of right type.",
-            );
-            // TEST
-            a.equal(error.card.toString(), "8S", "right card");
-
             {
-                const loc = error.locs[0];
+                const error = result.errors[0];
                 // TEST
                 a.equal(
-                    loc.type_,
-                    ErrorLocationType.ErrorLocationType_Column,
-                    "Error location of right type.",
+                    error.type_,
+                    ParseErrorType.TOO_MUCH_OF_CARD,
+                    "Error of right type.",
                 );
                 // TEST
-                a.equal(loc.idx, 2, "Column index #1");
+                a.equal(error.card.toString(), "8S", "right card");
+
+                {
+                    const loc = error.locs[0];
+                    // TEST
+                    a.equal(
+                        loc.type_,
+                        ErrorLocationType.ErrorLocationType_Column,
+                        "Error location of right type.",
+                    );
+                    // TEST
+                    a.equal(loc.idx, 2, "Column index #1");
+                }
+                {
+                    const loc = error.locs[1];
+                    // TEST
+                    a.equal(
+                        loc.type_,
+                        ErrorLocationType.ErrorLocationType_Column,
+                        "Error location of right type.",
+                    );
+                    // TEST
+                    a.equal(loc.idx, 7, "Column index #7");
+                }
             }
             {
-                const loc = error.locs[1];
+                const error = result.errors[1];
                 // TEST
                 a.equal(
-                    loc.type_,
-                    ErrorLocationType.ErrorLocationType_Column,
-                    "Error location of right type.",
+                    error.type_,
+                    ParseErrorType.NOT_ENOUGH_OF_CARD,
+                    "NOT_ENOUGH_OF_CARD",
                 );
                 // TEST
-                a.equal(loc.idx, 7, "Column index #7");
+                a.equal(error.card.toString(), "3D", "right card");
             }
         }
     });

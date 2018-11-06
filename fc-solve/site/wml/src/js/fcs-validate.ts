@@ -704,10 +704,13 @@ export class BoardParseResult {
             });
         });
         that.is_valid = true;
+        const NUM_WANTED_CARDS: number = 1;
+        const too_many_errors = [];
+        const not_enough_errors = [];
         _perl_range(0, 3).forEach((suit) => {
             _perl_range(1, 13).map((rank) => {
                 const count = counter[suit][rank];
-                if (count.length > 1) {
+                if (count.length > NUM_WANTED_CARDS) {
                     const locs: ErrorLocation[] = [];
                     count.forEach((v) => {
                         const t = v[0];
@@ -719,11 +722,21 @@ export class BoardParseResult {
                         locs,
                         new Card(rank, suit),
                     );
-                    that.errors.push(error);
+                    too_many_errors.push(error);
+                    that.is_valid = false;
+                } else if (count.length < NUM_WANTED_CARDS) {
+                    const error = new ParseError(
+                        ParseErrorType.NOT_ENOUGH_OF_CARD,
+                        [],
+                        new Card(rank, suit),
+                    );
+                    not_enough_errors.push(error);
                     that.is_valid = false;
                 }
             });
         });
+        that.errors.push(...too_many_errors);
+        that.errors.push(...not_enough_errors);
 
         return;
     }
