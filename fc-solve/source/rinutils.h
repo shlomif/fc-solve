@@ -11,6 +11,7 @@
 #pragma once
 
 #include <limits.h>
+#include <stdint.h>
 #include <time.h>
 #ifdef __unix__
 #include <unistd.h>

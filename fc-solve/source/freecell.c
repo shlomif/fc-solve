@@ -246,7 +246,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
 #endif
 
 #ifdef INDIRECT_STACK_STATES
-    char *const indirect_stacks_buffer =
+    fcs_card *const indirect_stacks_buffer =
         HT_FIELD(soft_thread->hard_thread, indirect_stacks_buffer);
 #endif
 

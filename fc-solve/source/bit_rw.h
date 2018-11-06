@@ -9,12 +9,12 @@
  */
 // bit_rw.h - bit readers and writers. Used by delta_states.c .
 #pragma once
-#include <stddef.h>
+#include <stdint.h>
 
 #define NUM_BITS_IN_BYTES 8
 
 typedef size_t fcs_bit_data;
-typedef unsigned char fcs_uchar;
+typedef uint8_t fcs_uchar;
 
 typedef struct
 {

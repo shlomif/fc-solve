@@ -10,9 +10,10 @@
 // indirect_buffer.h - declare the dll_ind_buf type.
 #pragma once
 #include "fcs_conf.h"
+#include <stdint.h>
 
 #ifdef INDIRECT_STACK_STATES
-typedef char dll_ind_buf[MAX_NUM_STACKS << 7];
+typedef uint8_t dll_ind_buf[MAX_NUM_STACKS << 7];
 #define DECLARE_IND_BUF_T(ident) dll_ind_buf ident;
 #define IND_BUF_T_PARAM(ident) , dll_ind_buf ident
 #define PASS_IND_BUF_T(ident) , ident

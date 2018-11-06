@@ -248,8 +248,8 @@ static inline void fc_solve_cache_stacks(
         var_AUTO(column, fcs_state_get_col(*(new_state_key), i));
         const int col_len = (fcs_col_len(column) + 1);
 
-        char *const new_ptr =
-            (char *)fcs_compact_alloc_ptr(stacks_allocator, col_len);
+        fcs_cards_column new_ptr =
+            (fcs_cards_column)fcs_compact_alloc_ptr(stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
         *(current_stack) = new_ptr;
         column = fcs_state_get_col(*new_state_key, i);

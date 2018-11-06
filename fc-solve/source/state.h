@@ -48,7 +48,7 @@ extern "C" {
     ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id) >> FCS_CHAR_BIT_SIZE_LOG2] &    \
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1))))
 
-typedef char fcs_card;
+typedef uint8_t fcs_card;
 typedef fcs_card *fcs_cards_column;
 typedef const fcs_card *fcs_const_cards_column;
 typedef fcs_card fcs_state_foundation;

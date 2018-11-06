@@ -144,7 +144,7 @@ static inline void fc_solve_move_sequence_function(
 
 #ifdef INDIRECT_STACK_STATES
 #define tests_define_indirect_stack_states_accessors()                         \
-    char *indirect_stacks_buffer =                                             \
+    fcs_card *indirect_stacks_buffer =                                         \
         HT_FIELD(hard_thread, indirect_stacks_buffer);
 #else
 #define tests_define_indirect_stack_states_accessors()
