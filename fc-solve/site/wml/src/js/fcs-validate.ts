@@ -19,13 +19,15 @@ function _perl_range(start: number, end: number): number[] {
 
     return ret;
 }
+export const NUM_SUITS: number = 4;
+const _suits: number[] = _perl_range(0, NUM_SUITS - 1);
 
 _perl_range(1, 13).forEach((rank) => {
     ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
 });
 const _suits__int_to_str: string = "HCDS";
 const _suits__str_to_int = {};
-_perl_range(0, 3).forEach((suit) => {
+_suits.forEach((suit) => {
     _suits__str_to_int[_suits__int_to_str.substring(suit, suit + 1)] = suit;
 });
 
@@ -49,7 +51,7 @@ class Card {
         if (suit < 0) {
             throw "suit is negative.";
         }
-        if (suit > 3) {
+        if (suit >= NUM_SUITS) {
             throw "suit is too high.";
         }
         this.rank = rank;
@@ -427,7 +429,7 @@ export class Foundations {
 
     public finalize(): void {
         const that = this;
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < NUM_SUITS; i++) {
             if (that.getByIdx(0, i) < 0) {
                 that.setByIdx(0, i, 0);
             }
@@ -442,7 +444,7 @@ export class Foundations {
         if (!is_int(suit)) {
             throw "suit is not an integer.";
         }
-        if (!(suit >= 0 && suit < 4)) {
+        if (!(suit >= 0 && suit < NUM_SUITS)) {
             throw "suit is out of range.";
         }
 
@@ -582,7 +584,7 @@ export class BoardParseResult {
 
         that.errors = [];
         that.columns = [];
-        const counter = _perl_range(0, 3).map((i) => {
+        const counter = _suits.map((i) => {
             return _perl_range(0, 13).map((i) => {
                 return [];
             });
@@ -666,7 +668,7 @@ export class BoardParseResult {
         }
         // TODO : Implement duplicate/missing cards.
         if (that.foundations) {
-            _perl_range(0, 3).forEach((suit) => {
+            _suits.forEach((suit) => {
                 _perl_range(
                     1,
                     that.foundations.foundations.getByIdx(0, suit),
@@ -707,7 +709,7 @@ export class BoardParseResult {
         const NUM_WANTED_CARDS: number = 1;
         const too_many_cards__errors: ParseError[] = [];
         const not_enough_cards__errors: ParseError[] = [];
-        _perl_range(0, 3).forEach((suit) => {
+        _suits.forEach((suit) => {
             _perl_range(1, 13).map((rank) => {
                 const count = counter[suit][rank];
                 function add_error(arr, type_, locs) {
