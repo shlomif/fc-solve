@@ -725,92 +725,90 @@ export function test_fcs_validate(QUnit: any) {
         }
     });
     QUnit.test("verify_state BoardParseResult tests #1", (a: Assert) => {
-        a.expect(11);
-        {
-            const ms_deal_24 =
-                ": 4C 2C 9C 8C QS 4S 2H\n" +
-                ": 5H QH 3C AC 3H 4H QD\n" +
-                ": QC 9S 6H 9H 3S KS 3D\n" +
-                ": 5D 2S JC 5C JH 6D AS\n" +
-                ": 2D KD TH TC TD 8D\n" +
-                ": 7H JS KH TS KC 7C\n" +
-                ": AH 5S 6S AD 8H JD\n" +
-                ": 7S 6C 7D 4D 8S 9D\n";
-            const result = new BoardParseResult(8, 4, ms_deal_24);
+        a.expect(5);
+        const ms_deal_24 =
+            ": 4C 2C 9C 8C QS 4S 2H\n" +
+            ": 5H QH 3C AC 3H 4H QD\n" +
+            ": QC 9S 6H 9H 3S KS 3D\n" +
+            ": 5D 2S JC 5C JH 6D AS\n" +
+            ": 2D KD TH TC TD 8D\n" +
+            ": 7H JS KH TS KC 7C\n" +
+            ": AH 5S 6S AD 8H JD\n" +
+            ": 7S 6C 7D 4D 8S 9D\n";
+        const result = new BoardParseResult(8, 4, ms_deal_24);
 
-            // TEST
-            a.ok(result.is_valid, "parsed correctly.");
+        // TEST
+        a.ok(result.is_valid, "parsed correctly.");
 
-            // TEST
-            a.equal(result.columns.length, 8, "There are 8 columns");
+        // TEST
+        a.equal(result.columns.length, 8, "There are 8 columns");
 
-            // TEST
-            a.deepEqual(
-                result.columns[0].col.getArrOfStrs(),
-                "4C 2C 9C 8C QS 4S 2H".split(" "),
-                "column 0 was parsed fine.",
-            );
+        // TEST
+        a.deepEqual(
+            result.columns[0].col.getArrOfStrs(),
+            "4C 2C 9C 8C QS 4S 2H".split(" "),
+            "column 0 was parsed fine.",
+        );
 
-            // TEST
-            a.deepEqual(
-                result.columns[1].col.getArrOfStrs(),
-                "5H QH 3C AC 3H 4H QD".split(" "),
-                "column 1 was parsed fine.",
-            );
+        // TEST
+        a.deepEqual(
+            result.columns[1].col.getArrOfStrs(),
+            "5H QH 3C AC 3H 4H QD".split(" "),
+            "column 1 was parsed fine.",
+        );
 
-            // TEST
-            a.deepEqual(
-                result.columns[7].col.getArrOfStrs(),
-                "7S 6C 7D 4D 8S 9D".split(" "),
-                "column 7 was parsed fine.",
-            );
-        }
+        // TEST
+        a.deepEqual(
+            result.columns[7].col.getArrOfStrs(),
+            "7S 6C 7D 4D 8S 9D".split(" "),
+            "column 7 was parsed fine.",
+        );
+    });
+    QUnit.test("verify_state BoardParseResult nonsense line", (a: Assert) => {
+        a.expect(6);
+        const col1_s = ": 4C 2C 9C 8C QS 4S 2H\n";
+        const col2_s = "NONSENSE:: 5H QH 3C AC 3H 4H QD\n";
 
-        {
-            const col1_s = ": 4C 2C 9C 8C QS 4S 2H\n";
-            const col2_s = "NONSENSE:: 5H QH 3C AC 3H 4H QD\n";
+        const nonsense_deal_24 =
+            col1_s +
+            col2_s +
+            ": QC 9S 6H 9H 3S KS 3D\n" +
+            ": 5D 2S JC 5C JH 6D AS\n" +
+            ": 2D KD TH TC TD 8D\n" +
+            ": 7H JS KH TS KC 7C\n" +
+            ": AH 5S 6S AD 8H JD\n" +
+            ": 7S 6C 7D 4D 8S 9D\n";
+        const result = new BoardParseResult(8, 4, nonsense_deal_24);
 
-            const nonsense_deal_24 =
-                col1_s +
-                col2_s +
-                ": QC 9S 6H 9H 3S KS 3D\n" +
-                ": 5D 2S JC 5C JH 6D AS\n" +
-                ": 2D KD TH TC TD 8D\n" +
-                ": 7H JS KH TS KC 7C\n" +
-                ": AH 5S 6S AD 8H JD\n" +
-                ": 7S 6C 7D 4D 8S 9D\n";
-            const result = new BoardParseResult(8, 4, nonsense_deal_24);
+        // TEST
+        a.ok(!result.is_valid, "not validly parsed.");
 
-            // TEST
-            a.ok(!result.is_valid, "not validly parsed.");
+        const error = result.errors[0];
+        // TEST
+        a.equal(
+            error.type_,
+            ParseErrorType.LINE_PARSE_ERROR,
+            "Error of right type.",
+        );
+        const loc = error.locs[0];
+        // TEST
+        a.equal(
+            loc.type_,
+            ErrorLocationType.ErrorLocationType_Column,
+            "Error location of right type.",
+        );
+        // TEST
+        a.equal(loc.idx, 1, "Column index #1");
 
-            const error = result.errors[0];
-            // TEST
-            a.equal(
-                error.type_,
-                ParseErrorType.LINE_PARSE_ERROR,
-                "Error of right type.",
-            );
-            const loc = error.locs[0];
-            // TEST
-            a.equal(
-                loc.type_,
-                ErrorLocationType.ErrorLocationType_Column,
-                "Error location of right type.",
-            );
-            // TEST
-            a.equal(loc.idx, 1, "Column index #1");
+        // TEST
+        a.equal(loc.start, col1_s.length, "Location start is sane.");
 
-            // TEST
-            a.equal(loc.start, col1_s.length, "Location start is sane.");
-
-            // TEST
-            a.equal(
-                loc.end,
-                col1_s.length + col2_s.length,
-                "Location end is correct.",
-            );
-        }
+        // TEST
+        a.equal(
+            loc.end,
+            col1_s.length + col2_s.length,
+            "Location end is correct.",
+        );
     });
     QUnit.test("verify_state BoardParseResult - Freecells", (a: Assert) => {
         a.expect(11);
