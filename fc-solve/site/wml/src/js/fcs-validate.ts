@@ -711,12 +711,7 @@ export class BoardParseResult {
             _perl_range(1, 13).map((rank) => {
                 const count = counter[suit][rank];
                 function add_error(arr, type_, locs) {
-                    const error = new ParseError(
-                        type_,
-                        locs,
-                        new Card(rank, suit),
-                    );
-                    arr.push(error);
+                    arr.push(new ParseError(type_, locs, new Card(rank, suit)));
                     that.is_valid = false;
 
                     return;
