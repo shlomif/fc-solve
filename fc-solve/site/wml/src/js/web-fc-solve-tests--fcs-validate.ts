@@ -211,7 +211,7 @@ export function test_fcs_validate(QUnit: any) {
         }
     });
     QUnit.test("verify_state Freecells class tests", (a: Assert) => {
-        a.expect(43);
+        a.expect(40);
 
         {
             const start_char_idx = 10;
@@ -530,31 +530,31 @@ export function test_fcs_validate(QUnit: any) {
                 test_name + "fc.consumed is right on success.",
             );
         }
+    });
+    QUnit.test("freecells wrong prefix", (a: Assert) => {
+        a.expect(3);
+        const start_char_idx = 10;
+        const str = "F-Junk: 5C 2H 3D 9H";
+        const num_freecells = 4;
 
-        {
-            const start_char_idx = 10;
-            const str = "F-Junk: 5C 2H 3D 9H";
-            const num_freecells = 4;
+        const result = fcs_js__freecells_from_string(
+            num_freecells,
+            start_char_idx,
+            str,
+        );
 
-            const result = fcs_js__freecells_from_string(
-                num_freecells,
-                start_char_idx,
-                str,
-            );
+        // TEST
+        a.notOk(result.is_correct, "Freecells has wrong prefix.");
 
-            // TEST
-            a.notOk(result.is_correct, "Freecells has wrong prefix.");
+        // TEST
+        a.equal(
+            result.start_char_idx,
+            start_char_idx,
+            "start_char_idx is correct.",
+        );
 
-            // TEST
-            a.equal(
-                result.start_char_idx,
-                start_char_idx,
-                "start_char_idx is correct.",
-            );
-
-            // TEST
-            a.ok(result.error.match(/^Wrong line prefix/), "err-str");
-        }
+        // TEST
+        a.ok(result.error.match(/^Wrong line prefix/), "err-str");
     });
     QUnit.test("verify_state Foundations class tests", (a: Assert) => {
         a.expect(22);
