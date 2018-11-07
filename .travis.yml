@@ -1,5 +1,7 @@
 os: linux
 dist: trusty
+go:
+    - '1.11.x'
 language: c
 python:
     - '3.6'
@@ -36,8 +38,6 @@ install:
     - gem install compass compass-blueprint
 perl:
     - "5.24"
-python:
-    - "3.5"
 script:
     - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
     - bash fc-solve/scripts/run-ci-tests.bash
