@@ -38,9 +38,10 @@ enum
     FCS_MOVE_TYPE_NULL
 };
 
+typedef uint8_t fc_solve_move_component;
 typedef struct
 {
-    uint8_t c[4];
+    fc_solve_move_component c[4];
 } fcs_move_t;
 
 #define FCS_MOVE_TYPE 0
@@ -50,21 +51,21 @@ typedef struct
 #define FCS_MOVE_NUM_CARDS_FLIPPED 3
 
 #define fcs_move_set_src_stack(move, value)                                    \
-    (move).c[FCS_MOVE_SRC] = ((unsigned char)(value));
+    (move).c[FCS_MOVE_SRC] = ((fc_solve_move_component)(value));
 #define fcs_move_set_src_freecell(move, value)                                 \
-    (move).c[FCS_MOVE_SRC] = ((unsigned char)(value));
+    (move).c[FCS_MOVE_SRC] = ((fc_solve_move_component)(value));
 #define fcs_move_set_dest_stack(move, value)                                   \
-    (move).c[FCS_MOVE_DEST] = ((unsigned char)(value));
+    (move).c[FCS_MOVE_DEST] = ((fc_solve_move_component)(value));
 #define fcs_move_set_dest_freecell(move, value)                                \
-    (move).c[FCS_MOVE_DEST] = ((unsigned char)(value));
+    (move).c[FCS_MOVE_DEST] = ((fc_solve_move_component)(value));
 #define fcs_move_set_foundation(move, value)                                   \
-    (move).c[FCS_MOVE_DEST] = ((unsigned char)(value));
+    (move).c[FCS_MOVE_DEST] = ((fc_solve_move_component)(value));
 #define fcs_move_set_type(move, value)                                         \
-    (move).c[FCS_MOVE_TYPE] = ((unsigned char)(value));
+    (move).c[FCS_MOVE_TYPE] = ((fc_solve_move_component)(value));
 #define fcs_move_set_num_cards_in_seq(move, value)                             \
-    (move).c[FCS_MOVE_NUM_CARDS_IN_SEQ] = ((unsigned char)(value));
+    (move).c[FCS_MOVE_NUM_CARDS_IN_SEQ] = ((fc_solve_move_component)(value));
 #define fcs_move_set_num_cards_flipped(move, value)                            \
-    (move).c[FCS_MOVE_NUM_CARDS_FLIPPED] = ((unsigned char)(value));
+    (move).c[FCS_MOVE_NUM_CARDS_FLIPPED] = ((fc_solve_move_component)(value));
 
 #define fcs_move_get_src_stack(move) ((move).c[FCS_MOVE_SRC])
 #define fcs_move_get_src_freecell(move) ((move).c[FCS_MOVE_SRC])
