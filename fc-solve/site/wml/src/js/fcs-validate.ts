@@ -722,10 +722,8 @@ export class BoardParseResult {
                     return;
                 }
                 if (count.length > NUM_WANTED_CARDS) {
-                    const locs: ErrorLocation[] = [];
-                    count.forEach((v) => {
-                        const t = v[0];
-                        locs.push(new ErrorLocation(t, v[1], 0, 0));
+                    const locs: ErrorLocation[] = count.map((v) => {
+                        return new ErrorLocation(v[0], v[1], 0, 0);
                     });
 
                     add_error(
