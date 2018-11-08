@@ -964,4 +964,52 @@ export function test_fcs_validate(QUnit: any) {
             }
         }
     });
+    QUnit.test(
+        "verify_state BoardParseResult too many cards founds",
+        (a: Assert) => {
+            a.expect(4);
+            {
+                const ms_deal_24_with_foundations =
+                    "Foundations: H-3\n" +
+                    ": 4C 2C 9C 8C QS 4S\n" +
+                    ": 5H QH 3C AC 3H 4H QD\n" +
+                    ": QC 9S 6H 9H 3S KS 3D\n" +
+                    ": 5D 2S JC 5C JH 6D AS\n" +
+                    ": 2D KD TH TC TD 8D\n" +
+                    ": 7H JS KH TS KC 7C\n" +
+                    ": 5S 6S AD 8H JD\n" +
+                    ": 7S 6C 7D 4D 8S 9D\n";
+                const result = new BoardParseResult(
+                    8,
+                    4,
+                    ms_deal_24_with_foundations,
+                );
+
+                // TEST
+                a.notOk(result.is_valid, "there are errors.");
+
+                {
+                    const error = result.errors[0];
+                    // TEST
+                    a.equal(
+                        error.type_,
+                        ParseErrorType.TOO_MUCH_OF_CARD,
+                        "Error of right type.",
+                    );
+                    // TEST
+                    a.equal(error.card.toString(), "3H", "right card");
+
+                    {
+                        const loc = error.locs[0];
+                        // TEST
+                        a.equal(
+                            loc.type_,
+                            ErrorLocationType.ErrorLocationType_Foundations,
+                            "Error location of right type.",
+                        );
+                    }
+                }
+            }
+        },
+    );
 }
