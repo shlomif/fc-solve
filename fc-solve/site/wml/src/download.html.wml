@@ -107,7 +107,8 @@ class="dist_logo"
 />
 
 <p>
-None yet.
+Type <code>dnf install freecell-solver</code> as root. Also see the
+<a href="FILL_IN">Fedora Package page</a>.
 </p>
 
 </h3_section>

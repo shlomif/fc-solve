@@ -1270,6 +1270,7 @@ iterations's
 
 ==== In: dest/download.html
 
+dnf
 freecell-solver-bin
 
 ==== In: dest/faq.html
