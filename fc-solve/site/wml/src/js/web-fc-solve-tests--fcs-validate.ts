@@ -794,7 +794,7 @@ export function test_fcs_validate(QUnit: any) {
         // TEST
         a.equal(
             loc.type_,
-            ErrorLocationType.ErrorLocationType_Column,
+            ErrorLocationType.Column,
             "Error location of right type.",
         );
         // TEST
@@ -874,7 +874,7 @@ export function test_fcs_validate(QUnit: any) {
             // TEST
             a.equal(
                 loc.type_,
-                ErrorLocationType.ErrorLocationType_Freecells,
+                ErrorLocationType.Freecells,
                 "Error location of right type.",
             );
             // TEST
@@ -933,7 +933,7 @@ export function test_fcs_validate(QUnit: any) {
                     // TEST
                     a.equal(
                         loc.type_,
-                        ErrorLocationType.ErrorLocationType_Column,
+                        ErrorLocationType.Column,
                         "Error location of right type.",
                     );
                     // TEST
@@ -944,7 +944,7 @@ export function test_fcs_validate(QUnit: any) {
                     // TEST
                     a.equal(
                         loc.type_,
-                        ErrorLocationType.ErrorLocationType_Column,
+                        ErrorLocationType.Column,
                         "Error location of right type.",
                     );
                     // TEST
@@ -1004,7 +1004,7 @@ export function test_fcs_validate(QUnit: any) {
                         // TEST
                         a.equal(
                             loc.type_,
-                            ErrorLocationType.ErrorLocationType_Foundations,
+                            ErrorLocationType.Foundations,
                             "Error location of right type.",
                         );
                     }

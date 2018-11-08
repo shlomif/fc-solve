@@ -530,9 +530,9 @@ export function fcs_js__foundations_from_string(
 }
 
 export enum ErrorLocationType {
-    ErrorLocationType_Foundations,
-    ErrorLocationType_Freecells,
-    ErrorLocationType_Column,
+    Foundations,
+    Freecells,
+    Column,
 }
 
 class ErrorLocation {
@@ -604,7 +604,7 @@ export class BoardParseResult {
                         ParseErrorType.LINE_PARSE_ERROR,
                         [
                             new ErrorLocation(
-                                ErrorLocationType.ErrorLocationType_Foundations,
+                                ErrorLocationType.Foundations,
                                 0,
                                 start_char_idx,
                                 p.getConsumed(),
@@ -632,7 +632,7 @@ export class BoardParseResult {
                         ParseErrorType.LINE_PARSE_ERROR,
                         [
                             new ErrorLocation(
-                                ErrorLocationType.ErrorLocationType_Freecells,
+                                ErrorLocationType.Freecells,
                                 0,
                                 start_char_idx,
                                 p.getConsumed(),
@@ -655,7 +655,7 @@ export class BoardParseResult {
                         ParseErrorType.LINE_PARSE_ERROR,
                         [
                             new ErrorLocation(
-                                ErrorLocationType.ErrorLocationType_Column,
+                                ErrorLocationType.Column,
                                 i,
                                 start_char_idx,
                                 p.getConsumed(),
@@ -677,7 +677,7 @@ export class BoardParseResult {
                     that.foundations.foundations.getByIdx(0, suit),
                 ).forEach((rank) => {
                     counter[suit][rank].push([
-                        ErrorLocationType.ErrorLocationType_Foundations,
+                        ErrorLocationType.Foundations,
                         0,
                     ]);
                 });
@@ -689,7 +689,7 @@ export class BoardParseResult {
                     const card = that.freecells.freecells.getCard(i);
                     if (card) {
                         counter[card.getSuit()][card.getRank()].push([
-                            ErrorLocationType.ErrorLocationType_Freecells,
+                            ErrorLocationType.Freecells,
                             i,
                         ]);
                     }
@@ -702,7 +702,7 @@ export class BoardParseResult {
                 const card = col.getCard(h);
 
                 counter[card.getSuit()][card.getRank()].push([
-                    ErrorLocationType.ErrorLocationType_Column,
+                    ErrorLocationType.Column,
                     idx,
                     h,
                 ]);
