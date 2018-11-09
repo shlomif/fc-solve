@@ -210,8 +210,15 @@ demonstrated to them, they were in fact possible.
 <p>
 One can find the maximal number of cards that can be moved as a sequence
 in Freecell using the formula
-<code>max_cards = (1 + num_vacant_freecells) * (2 ^ num_vacant_columns)</code>
-(where “*” is multiplication and “^” is exponentiation.). One can also try using
+<code>max_cards = (1 + num_vacant_freecells) * (2 ^ num_columns)</code>
+(where “*” is multiplication and “^” is <a href="https://en.wikipedia.org/wiki/Exponentiation">exponentiation</a>.). Note that <code>num_columns</code>
+refers to the number of <b>intermediate/temporary</b> columns one uses in the
+the transfer and if you are trying to transfer cards to an empty column, the
+number will be smaller.
+</p>
+
+<p>
+One can also try using
 <a href="https://metacpan.org/module/expand-solitaire-multi-cards-moves">expand-solitaire-multi-cards-moves</a>
 from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
 in order to filter solutions and produce ones with multi-card moves

@@ -1282,6 +1282,7 @@ NNN
 NRG
 gen_ms_boards__rand
 mis-attributed
+num_columns
 patsolve-shlomif
 range_solvers_gen_ms_boards
 s3fs-fuse
