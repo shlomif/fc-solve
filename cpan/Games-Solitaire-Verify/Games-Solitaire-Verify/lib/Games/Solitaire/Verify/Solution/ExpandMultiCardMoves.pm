@@ -2,6 +2,7 @@ package Games::Solitaire::Verify::Solution::ExpandMultiCardMoves;
 
 use warnings;
 use strict;
+use 5.014;
 
 =head1 NAME
 
@@ -16,13 +17,12 @@ use parent 'Games::Solitaire::Verify::Solution::Base';
 # TODO : Merge with lib/Games/Solitaire/Verify/Solution.pm
 
 use POSIX qw( ceil );
-use IO::Handle;    # For $fh->print(...)
 
-use Games::Solitaire::Verify::Exception;
-use Games::Solitaire::Verify::Card;
-use Games::Solitaire::Verify::Column;
-use Games::Solitaire::Verify::Move;
-use Games::Solitaire::Verify::State;
+use Games::Solitaire::Verify::Exception ();
+use Games::Solitaire::Verify::Card      ();
+use Games::Solitaire::Verify::Column    ();
+use Games::Solitaire::Verify::Move      ();
+use Games::Solitaire::Verify::State     ();
 
 use List::Util qw( min );
 

@@ -3,12 +3,10 @@ package Shlomif::FCS::CalcMetaScan;
 use strict;
 use warnings;
 
-use IO::Handle;
-
 use Shlomif::FCS::CalcMetaScan::IterState;
 use Shlomif::FCS::CalcMetaScan::Structs;
 
-use base 'Shlomif::FCS::CalcMetaScan::Base';
+use parent 'Shlomif::FCS::CalcMetaScan::Base';
 
 use PDL ();
 

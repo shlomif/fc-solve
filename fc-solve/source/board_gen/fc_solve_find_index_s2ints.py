@@ -107,7 +107,7 @@ def find_index__board_string_to_ints(content):
             r'[ \t]*\n'
 
     complete_re = r'^' + string_repeat_for_transcrypt(make_line(7), 4) + \
-        string_repeat_for_transcrypt(make_line(6), 4) + '\s*$'
+        string_repeat_for_transcrypt(make_line(6), 4) + '\\s*$'
 
     m = re.match(complete_re, content)
     if not m:

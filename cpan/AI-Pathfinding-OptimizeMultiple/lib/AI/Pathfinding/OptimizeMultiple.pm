@@ -5,12 +5,10 @@ use warnings;
 
 use 5.012;
 
-use IO::Handle;
-
-use AI::Pathfinding::OptimizeMultiple::IterState;
-use AI::Pathfinding::OptimizeMultiple::Scan;
-use AI::Pathfinding::OptimizeMultiple::ScanRun;
-use AI::Pathfinding::OptimizeMultiple::SimulationResults;
+use AI::Pathfinding::OptimizeMultiple::IterState         ();
+use AI::Pathfinding::OptimizeMultiple::Scan              ();
+use AI::Pathfinding::OptimizeMultiple::ScanRun           ();
+use AI::Pathfinding::OptimizeMultiple::SimulationResults ();
 
 use MooX qw/late/;
 

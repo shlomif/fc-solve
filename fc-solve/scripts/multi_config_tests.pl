@@ -12,7 +12,6 @@ package Games::Solitaire::FC_Solve::Test::Trap::Obj;
 
 use Carp         ();
 use Data::Dumper ();
-use IO::Handle;
 
 use Term::ANSIColor qw(colored);
 

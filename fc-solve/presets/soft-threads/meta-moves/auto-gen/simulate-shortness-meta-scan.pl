@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Getopt::Long qw/ GetOptions /;
-use IO::Handle;
 use List::Util qw(min first);
 
 use PDL ();

@@ -42,7 +42,6 @@ EOF
 '-lfcs_delta_states_test -lfcs_debondt_delta_states_test -lfcs_dbm_calc_derived_test -lgmp',
 );
 
-use IO::Handle;
 use FC_Solve::DeltaStater          ();
 use FC_Solve::DeltaStater::DeBondt ();
 
