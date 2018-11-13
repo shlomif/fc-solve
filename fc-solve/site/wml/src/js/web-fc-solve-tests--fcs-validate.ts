@@ -211,124 +211,126 @@ export function test_fcs_validate(QUnit: any) {
         }
     });
     QUnit.test("verify_state Freecells class tests", (a: Assert) => {
-        a.expect(15);
+        a.expect(5);
 
-        {
-            const start_char_idx = 10;
-            const str = "Freecells: 5C 2H 3D 9H";
-            const num_freecells = 4;
+        const start_char_idx = 10;
+        const str = "Freecells: 5C 2H 3D 9H";
+        const num_freecells = 4;
 
-            const result = fcs_js__freecells_from_string(
-                num_freecells,
-                start_char_idx,
-                str,
-            );
+        const result = fcs_js__freecells_from_string(
+            num_freecells,
+            start_char_idx,
+            str,
+        );
 
-            // TEST
-            a.ok(result.is_correct, "Column was parsed correctly.");
+        // TEST
+        a.ok(result.is_correct, "Column was parsed correctly.");
 
-            // TEST
-            a.equal(
-                result.start_char_idx,
-                start_char_idx,
-                "start_char_idx is correct.",
-            );
+        // TEST
+        a.equal(
+            result.start_char_idx,
+            start_char_idx,
+            "start_char_idx is correct.",
+        );
 
-            // TEST
-            a.equal(result.getEnd(), start_char_idx + str.length);
+        // TEST
+        a.equal(result.getEnd(), start_char_idx + str.length);
 
-            // TEST
-            a.deepEqual(
-                result.freecells.getArrOfStrs(),
-                ["5C", "2H", "3D", "9H"],
-                "freecell contents is fine.",
-            );
+        // TEST
+        a.deepEqual(
+            result.freecells.getArrOfStrs(),
+            ["5C", "2H", "3D", "9H"],
+            "freecell contents is fine.",
+        );
 
-            // TEST
-            a.equal(
-                result.num_consumed_chars,
-                str.length,
-                "fc.consumed is right on success.",
-            );
-        }
+        // TEST
+        a.equal(
+            result.num_consumed_chars,
+            str.length,
+            "fc.consumed is right on success.",
+        );
+    });
 
-        {
-            const start_char_idx = 10;
-            const str = "Freecells: 5C 2H";
-            const num_freecells = 4;
+    QUnit.test("verify_state Freecells 2 out of 4", (a: Assert) => {
+        a.expect(5);
 
-            const result = fcs_js__freecells_from_string(
-                num_freecells,
-                start_char_idx,
-                str,
-            );
+        const start_char_idx = 10;
+        const str = "Freecells: 5C 2H";
+        const num_freecells = 4;
 
-            // TEST
-            a.ok(result.is_correct, "Column was parsed correctly.");
+        const result = fcs_js__freecells_from_string(
+            num_freecells,
+            start_char_idx,
+            str,
+        );
 
-            // TEST
-            a.equal(
-                result.start_char_idx,
-                start_char_idx,
-                "start_char_idx is correct.",
-            );
+        // TEST
+        a.ok(result.is_correct, "Column was parsed correctly.");
 
-            // TEST
-            a.equal(result.getEnd(), start_char_idx + str.length);
+        // TEST
+        a.equal(
+            result.start_char_idx,
+            start_char_idx,
+            "start_char_idx is correct.",
+        );
 
-            // TEST
-            a.deepEqual(
-                result.freecells.getArrOfStrs(),
-                ["5C", "2H", "-", "-"],
-                "freecell contents is fine.",
-            );
+        // TEST
+        a.equal(result.getEnd(), start_char_idx + str.length);
 
-            // TEST
-            a.equal(
-                result.num_consumed_chars,
-                str.length,
-                "fc.consumed is right on success.",
-            );
-        }
+        // TEST
+        a.deepEqual(
+            result.freecells.getArrOfStrs(),
+            ["5C", "2H", "-", "-"],
+            "freecell contents is fine.",
+        );
 
-        {
-            const start_char_idx = 39;
-            const str = "Freecells: - TC - 9H";
-            const num_freecells = 4;
+        // TEST
+        a.equal(
+            result.num_consumed_chars,
+            str.length,
+            "fc.consumed is right on success.",
+        );
+    });
 
-            const result = fcs_js__freecells_from_string(
-                num_freecells,
-                start_char_idx,
-                str,
-            );
+    QUnit.test("verify_state Freecells ; empty FC", (a: Assert) => {
+        a.expect(5);
 
-            // TEST
-            a.ok(result.is_correct, "Column was parsed correctly.");
+        const start_char_idx = 39;
+        const str = "Freecells: - TC - 9H";
+        const num_freecells = 4;
 
-            // TEST
-            a.equal(
-                result.start_char_idx,
-                start_char_idx,
-                "start_char_idx is correct.",
-            );
+        const result = fcs_js__freecells_from_string(
+            num_freecells,
+            start_char_idx,
+            str,
+        );
 
-            // TEST
-            a.equal(result.getEnd(), start_char_idx + str.length);
+        // TEST
+        a.ok(result.is_correct, "Column was parsed correctly.");
 
-            // TEST
-            a.deepEqual(
-                result.freecells.getArrOfStrs(),
-                ["-", "TC", "-", "9H"],
-                "freecell contents is fine.",
-            );
+        // TEST
+        a.equal(
+            result.start_char_idx,
+            start_char_idx,
+            "start_char_idx is correct.",
+        );
 
-            // TEST
-            a.equal(
-                result.num_consumed_chars,
-                str.length,
-                "fc.consumed is right on success.",
-            );
-        }
+        // TEST
+        a.equal(result.getEnd(), start_char_idx + str.length);
+
+        // TEST
+        a.deepEqual(
+            result.freecells.getArrOfStrs(),
+            ["-", "TC", "-", "9H"],
+            "freecell contents is fine.",
+        );
+
+        // TEST
+        a.equal(
+            result.num_consumed_chars,
+            str.length,
+            "fc.consumed is right on success.",
+        );
     });
 
     QUnit.test("verify_state Freecells ; two Empty FC", (a: Assert) => {
