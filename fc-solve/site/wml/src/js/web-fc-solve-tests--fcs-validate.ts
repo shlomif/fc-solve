@@ -211,7 +211,7 @@ export function test_fcs_validate(QUnit: any) {
         }
     });
     QUnit.test("verify_state Freecells class tests", (a: Assert) => {
-        a.expect(35);
+        a.expect(30);
 
         {
             const start_char_idx = 10;
@@ -450,46 +450,47 @@ export function test_fcs_validate(QUnit: any) {
                 test_name + "fc.consumed is right on success.",
             );
         }
+    });
 
-        {
-            const start_char_idx = 200;
-            const str = "Freecells: - JC  - 9H  # A comment";
-            const num_freecells = 4;
-            const test_name = "With comment. ";
+    QUnit.test("verify_state Freecells - With a comment", (a: Assert) => {
+        a.expect(5);
+        const start_char_idx = 200;
+        const str = "Freecells: - JC  - 9H  # A comment";
+        const num_freecells = 4;
+        const test_name = "With comment. ";
 
-            const result = fcs_js__freecells_from_string(
-                num_freecells,
-                start_char_idx,
-                str,
-            );
+        const result = fcs_js__freecells_from_string(
+            num_freecells,
+            start_char_idx,
+            str,
+        );
 
-            // TEST
-            a.ok(result.is_correct, test_name + "Column was parsed correctly.");
+        // TEST
+        a.ok(result.is_correct, test_name + "Column was parsed correctly.");
 
-            // TEST
-            a.equal(
-                result.start_char_idx,
-                start_char_idx,
-                test_name + "start_char_idx is correct.",
-            );
+        // TEST
+        a.equal(
+            result.start_char_idx,
+            start_char_idx,
+            test_name + "start_char_idx is correct.",
+        );
 
-            // TEST
-            a.equal(result.getEnd(), start_char_idx + str.length);
+        // TEST
+        a.equal(result.getEnd(), start_char_idx + str.length);
 
-            // TEST
-            a.deepEqual(
-                result.freecells.getArrOfStrs(),
-                ["-", "JC", "-", "9H"],
-                test_name + "freecell contents is fine.",
-            );
+        // TEST
+        a.deepEqual(
+            result.freecells.getArrOfStrs(),
+            ["-", "JC", "-", "9H"],
+            test_name + "freecell contents is fine.",
+        );
 
-            // TEST
-            a.equal(
-                result.num_consumed_chars,
-                str.length,
-                test_name + "fc.consumed is right on success.",
-            );
-        }
+        // TEST
+        a.equal(
+            result.num_consumed_chars,
+            str.length,
+            test_name + "fc.consumed is right on success.",
+        );
     });
 
     QUnit.test(
