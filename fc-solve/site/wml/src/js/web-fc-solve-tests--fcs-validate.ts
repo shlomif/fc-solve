@@ -211,7 +211,7 @@ export function test_fcs_validate(QUnit: any) {
         }
     });
     QUnit.test("verify_state Freecells class tests", (a: Assert) => {
-        a.expect(40);
+        a.expect(35);
 
         {
             const start_char_idx = 10;
@@ -490,8 +490,12 @@ export function test_fcs_validate(QUnit: any) {
                 test_name + "fc.consumed is right on success.",
             );
         }
+    });
 
-        {
+    QUnit.test(
+        "verify_state Freecells With a comment and a newline",
+        (a: Assert) => {
+            a.expect(5);
             const start_char_idx = 200;
             const str = "Freecells: - JC  - 9H  # A comment\n";
             const num_freecells = 5;
@@ -529,8 +533,9 @@ export function test_fcs_validate(QUnit: any) {
                 str.length,
                 test_name + "fc.consumed is right on success.",
             );
-        }
-    });
+        },
+    );
+
     QUnit.test("freecells wrong prefix", (a: Assert) => {
         a.expect(3);
         const start_char_idx = 10;
