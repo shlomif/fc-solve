@@ -211,7 +211,7 @@ export function test_fcs_validate(QUnit: any) {
         }
     });
     QUnit.test("verify_state Freecells class tests", (a: Assert) => {
-        a.expect(25);
+        a.expect(15);
 
         {
             const start_char_idx = 10;
@@ -329,87 +329,90 @@ export function test_fcs_validate(QUnit: any) {
                 "fc.consumed is right on success.",
             );
         }
+    });
 
-        {
-            const start_char_idx = 39;
-            const str = "Freecells: - - 6D 9H";
-            const num_freecells = 6;
+    QUnit.test("verify_state Freecells ; two Empty FC", (a: Assert) => {
+        a.expect(5);
 
-            const result = fcs_js__freecells_from_string(
-                num_freecells,
-                start_char_idx,
-                str,
-            );
+        const start_char_idx = 39;
+        const str = "Freecells: - - 6D 9H";
+        const num_freecells = 6;
 
-            // TEST
-            a.ok(result.is_correct, "Column was parsed correctly.");
+        const result = fcs_js__freecells_from_string(
+            num_freecells,
+            start_char_idx,
+            str,
+        );
 
-            // TEST
-            a.equal(
-                result.start_char_idx,
-                start_char_idx,
-                "start_char_idx is correct.",
-            );
+        // TEST
+        a.ok(result.is_correct, "Column was parsed correctly.");
 
-            // TEST
-            a.equal(result.getEnd(), start_char_idx + str.length);
+        // TEST
+        a.equal(
+            result.start_char_idx,
+            start_char_idx,
+            "start_char_idx is correct.",
+        );
 
-            // TEST
-            a.deepEqual(
-                result.freecells.getArrOfStrs(),
-                ["-", "-", "6D", "9H", "-", "-"],
-                "freecell contents is fine.",
-            );
+        // TEST
+        a.equal(result.getEnd(), start_char_idx + str.length);
 
-            // TEST
-            a.equal(
-                result.num_consumed_chars,
-                str.length,
-                "fc.consumed is right on success.",
-            );
-        }
+        // TEST
+        a.deepEqual(
+            result.freecells.getArrOfStrs(),
+            ["-", "-", "6D", "9H", "-", "-"],
+            "freecell contents is fine.",
+        );
 
-        {
-            const start_char_idx = 39;
-            const str = "Freecells: - - 6D 9H -";
-            const num_freecells = 6;
+        // TEST
+        a.equal(
+            result.num_consumed_chars,
+            str.length,
+            "fc.consumed is right on success.",
+        );
+    });
 
-            const result = fcs_js__freecells_from_string(
-                num_freecells,
-                start_char_idx,
-                str,
-            );
+    QUnit.test("verify_state Freecells ; Trailing Empty FC", (a: Assert) => {
+        a.expect(5);
+        const start_char_idx = 39;
+        const str = "Freecells: - - 6D 9H -";
+        const num_freecells = 6;
 
-            // TEST
-            a.ok(
-                result.is_correct,
-                "Trailing Empty FC - Column was parsed correctly.",
-            );
+        const result = fcs_js__freecells_from_string(
+            num_freecells,
+            start_char_idx,
+            str,
+        );
 
-            // TEST
-            a.equal(
-                result.start_char_idx,
-                start_char_idx,
-                "Trailing Empty FC -  start_char_idx is correct.",
-            );
+        // TEST
+        a.ok(
+            result.is_correct,
+            "Trailing Empty FC - Column was parsed correctly.",
+        );
 
-            // TEST
-            a.equal(result.getEnd(), start_char_idx + str.length);
+        // TEST
+        a.equal(
+            result.start_char_idx,
+            start_char_idx,
+            "Trailing Empty FC -  start_char_idx is correct.",
+        );
 
-            // TEST
-            a.deepEqual(
-                result.freecells.getArrOfStrs(),
-                ["-", "-", "6D", "9H", "-", "-"],
-                "Trailing Empty FC - freecell contents is fine.",
-            );
+        // TEST
+        a.equal(result.getEnd(), start_char_idx + str.length);
 
-            // TEST
-            a.equal(
-                result.num_consumed_chars,
-                str.length,
-                "Trailing Empty FC - fc.consumed is right on success.",
-            );
-        }
+        // TEST
+        a.deepEqual(
+            result.freecells.getArrOfStrs(),
+            ["-", "-", "6D", "9H", "-", "-"],
+            "Trailing Empty FC - freecell contents is fine.",
+        );
+
+        // TEST
+        a.equal(
+            result.num_consumed_chars,
+            str.length,
+            "Trailing Empty FC - fc.consumed is right on success.",
+        );
     });
 
     QUnit.test("verify_state Freecells with trailing newline", (a: Assert) => {
