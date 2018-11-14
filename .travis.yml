@@ -31,14 +31,12 @@ install:
       # For G-S-V dzil
     - cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website
-    - cpanm --quiet App::Deps::Verify
+    - cpanm --quiet App::Deps::Verify App::XML::DocBook::Builder
     - (cd fc-solve/site/wml/ && deps-app plinst -i bin/required-modules.yml )
     - cpanm --quiet --notest Task::FreecellSolver::Testing
     - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | cpanm --notest)
     - (cd .. && wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2 && tar -xvf libtap-1.12.0.tar.bz2 && ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install ) ; )
     - ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
-    # For the site
-    - gem install compass compass-blueprint
 perl:
     - "5.24"
 script:
