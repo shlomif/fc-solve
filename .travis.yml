@@ -1,5 +1,6 @@
 os: linux
-dist: trusty
+# dist: trusty
+dist: xenial
 go:
     - '1.11.x'
 language: c
