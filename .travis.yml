@@ -19,7 +19,7 @@ before_install:
     # For the fc-solve docs
     - gem install asciidoctor
     # For wml
-    - cpanm --notest Bit::Vector Carp::Always Class::XSAccessor GD Getopt::Long IO::All Image::Size Term::ReadKey
+    - cpanm --notest Bit::Vector Carp::Always Class::XSAccessor File::Which GD Getopt::Long IO::All Image::Size Path::Tiny Perl::Critic Perl::Tidy Test::Code::TidyAll Term::ReadKey
     - cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
