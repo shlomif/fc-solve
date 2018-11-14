@@ -1,0 +1,42 @@
+{
+  "name": "fc-solve-site",
+  "version": "0.0.1",
+  "description": "## Dependencies:",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "@types/jquery": "^3.3.22",
+    "@types/qunit": "^2.5.3",
+    "amdefine": "^1.0.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "big-integer": "^1.6.36",
+    "browserify": "^16.2.3",
+    "camel-case": "^3.0.0",
+    "coffeescript": "^2.3.2",
+    "eslint": "^5.9.0",
+    "eslint-config-google": "^0.11.0",
+    "html-minifier": "^3.5.21",
+    "node-qunit": "^1.0.0",
+    "prettier": "^1.15.2",
+    "qunit": "^2.8.0",
+    "qunit-cli": "^0.2.0",
+    "requirejs": "^2.3.6",
+    "sass": "^1.14.3",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "tslint-config-radiosilence": "^1.0.1",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.1.6",
+    "uglify-es": "^3.3.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shlomi Fish",
+  "license": "MIT"
+}
