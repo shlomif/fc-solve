@@ -4,7 +4,13 @@ if (process.env.SKIP_EMCC != '1') {
         return;
     });
 } else {
-    QUnit.test((a) => {
+    QUnit.module("SKIP_EMCC");
+    QUnit.test("dummy", (a) => {
+        a.expect(1);
+
+        a.ok(true, 'skipped');
+    });
+    QUnit.skip("SKIP_EMCC was set so skip emcc tests", (a) => {
         a.expect(1);
 
         a.ok(true, 'skipped');
