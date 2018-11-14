@@ -2,5 +2,7 @@
 
 use strict;
 use warnings;
-system(
-    q#NODE_PATH="`pwd`"/lib/for-node/js qunit lib/for-node/test-code-emcc.js #);
+use lib './lib';
+use FreecellSolver::QunitWrap ();
+FreecellSolver::QunitWrap->new( { tests => "lib/for-node/test-code-emcc.js" } )
+    ->run;
