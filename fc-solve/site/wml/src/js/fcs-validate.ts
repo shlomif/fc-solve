@@ -73,11 +73,7 @@ class Card {
 }
 
 class Column {
-    private cards: Card[];
-
-    constructor(cards: Card[]) {
-        this.cards = cards;
-    }
+    constructor(private cards: Card[]) {}
 
     public getLen(): number {
         return this.cards.length;
@@ -114,22 +110,12 @@ export function fcs_js__card_from_string(s: string): Card {
 }
 
 class BaseResult {
-    public is_correct: boolean;
-    public start_char_idx: number;
-    public num_consumed_chars: number;
-    public error: string;
-
     constructor(
-        is_correct: boolean,
-        start_char_idx: number,
-        num_consumed_chars: number,
-        error: string,
-    ) {
-        this.is_correct = is_correct;
-        this.num_consumed_chars = num_consumed_chars;
-        this.error = error;
-        this.start_char_idx = start_char_idx;
-    }
+        public is_correct: boolean,
+        public start_char_idx: number,
+        public num_consumed_chars: number,
+        public error: string,
+    ) {}
 
     public getEnd(): number {
         return this.start_char_idx + this.num_consumed_chars;
@@ -152,13 +138,9 @@ class ColumnParseResult extends BaseResult {
 }
 
 class StringParser {
-    private s: string;
-    private consumed: number;
+    private consumed: number = 0;
 
-    constructor(s: string) {
-        this.s = s;
-        this.consumed = 0;
-    }
+    constructor(private s: string) {}
 
     public consume(m: RegExpMatchArray): void {
         const that = this;
@@ -192,15 +174,11 @@ class StringParser {
 }
 
 class CardsStringParser<CardType> extends StringParser {
-    public cards: CardType[];
-    private is_start: boolean;
-    private card_mapper: ((string) => CardType);
+    public cards: CardType[] = [];
+    private is_start: boolean = true;
 
-    constructor(s: string, card_mapper) {
+    constructor(s: string, private card_mapper: ((string) => CardType)) {
         super(s);
-        this.is_start = true;
-        this.cards = [];
-        this.card_mapper = card_mapper;
     }
 
     public afterStart(): void {
