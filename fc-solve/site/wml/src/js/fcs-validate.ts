@@ -572,6 +572,17 @@ class ParseError {
     }
 }
 
+class ParseLocation {
+    public type_: ErrorLocationType;
+    public row: number;
+    public col: number;
+    constructor(t: ErrorLocationType, row: number, col: number) {
+        this.type_ = t;
+        this.row = row;
+        this.col = col;
+    }
+}
+
 export class BoardParseResult {
     public errors: ParseError[];
     public is_valid: boolean;
@@ -587,7 +598,7 @@ export class BoardParseResult {
 
         that.errors = [];
         that.columns = [];
-        const counter = _suits.map((i) => {
+        const counter: ParseLocation[][][] = _suits.map((i) => {
             return _perl_range(0, MAX_RANK).map((i) => {
                 return [];
             });
@@ -676,10 +687,9 @@ export class BoardParseResult {
                     1,
                     that.foundations.foundations.getByIdx(0, suit),
                 ).forEach((rank) => {
-                    counter[suit][rank].push([
-                        ErrorLocationType.Foundations,
-                        0,
-                    ]);
+                    counter[suit][rank].push(
+                        new ParseLocation(ErrorLocationType.Foundations, 0, 0),
+                    );
                 });
             });
         }
@@ -688,10 +698,13 @@ export class BoardParseResult {
                 (i) => {
                     const card = that.freecells.freecells.getCard(i);
                     if (card) {
-                        counter[card.getSuit()][card.getRank()].push([
-                            ErrorLocationType.Freecells,
-                            i,
-                        ]);
+                        counter[card.getSuit()][card.getRank()].push(
+                            new ParseLocation(
+                                ErrorLocationType.Freecells,
+                                i,
+                                0,
+                            ),
+                        );
                     }
                 },
             );
@@ -701,11 +714,9 @@ export class BoardParseResult {
             _perl_range(0, col.getLen() - 1).forEach((h) => {
                 const card = col.getCard(h);
 
-                counter[card.getSuit()][card.getRank()].push([
-                    ErrorLocationType.Column,
-                    idx,
-                    h,
-                ]);
+                counter[card.getSuit()][card.getRank()].push(
+                    new ParseLocation(ErrorLocationType.Column, idx, h),
+                );
             });
         });
         that.is_valid = true;
@@ -723,7 +734,7 @@ export class BoardParseResult {
                 }
                 if (count.length > NUM_WANTED_CARDS) {
                     const locs: ErrorLocation[] = count.map((v) => {
-                        return new ErrorLocation(v[0], v[1], 0, 0);
+                        return new ErrorLocation(v.type_, v.row, 0, 0);
                     });
 
                     add_error(
