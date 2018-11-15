@@ -7,7 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-// main.c - implement the "fc-solve" command line executable.
+// multi_fc_solve_main.c - implement the "fc-solve-multi" command line
+// executable, which accepts multiple starting layout filenames and solves them
+// all.
 //
 // It is documented in the documents "README", "USAGE", etc. in the
 // Freecell Solver distribution from http://fc-solve.shlomifish.org/ .
