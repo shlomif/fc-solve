@@ -35,10 +35,7 @@ _suits.forEach((suit) => {
 });
 
 class Card {
-    private rank: number;
-    private suit: number;
-
-    constructor(rank: number, suit: number) {
+    constructor(private rank: number, private suit: number) {
         if (!is_int(rank)) {
             throw "rank is not an integer.";
         }
@@ -57,8 +54,6 @@ class Card {
         if (suit >= NUM_SUITS) {
             throw "suit is too high.";
         }
-        this.rank = rank;
-        this.suit = suit;
     }
 
     public getRank(): number {
@@ -589,12 +584,12 @@ export class BoardParseResult {
     public foundations: FoundationsParseResult;
     public freecells: FreecellsParseResult;
     public columns: ColumnParseResult[];
-    public num_stacks: number;
-    public num_freecells: number;
-    constructor(num_stacks: number, num_freecells: number, orig_s: string) {
+    constructor(
+        public num_stacks: number,
+        public num_freecells: number,
+        orig_s: string,
+    ) {
         const that = this;
-        that.num_stacks = num_stacks;
-        that.num_freecells = num_freecells;
 
         that.errors = [];
         that.columns = [];
