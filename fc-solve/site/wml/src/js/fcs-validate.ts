@@ -267,19 +267,13 @@ export function fcs_js__column_from_string(
 type MaybeCard = Card | null;
 
 class Freecells {
-    private num_freecells: number;
-    private cards: MaybeCard[];
-
-    constructor(num_freecells: number, cards: MaybeCard[]) {
+    constructor(private num_freecells: number, private cards: MaybeCard[]) {
         if (!is_int(num_freecells)) {
             throw "num_freecells is not an integer.";
         }
-        this.num_freecells = num_freecells;
-
         if (cards.length !== num_freecells) {
             throw "cards length mismatch.";
         }
-        this.cards = cards;
     }
 
     public getNum(): number {
@@ -372,11 +366,9 @@ export function fcs_js__freecells_from_string(
 }
 
 export class Foundations {
-    private ranks: number[];
+    private ranks: number[] = [-1, -1, -1, -1];
 
-    constructor() {
-        this.ranks = [-1, -1, -1, -1];
-    }
+    constructor() {}
 
     public getByIdx(deck: number, suit: number) {
         this._validateDeckSuit(deck, suit);
@@ -509,18 +501,12 @@ export enum ErrorLocationType {
 }
 
 class ErrorLocation {
-    public type_: ErrorLocationType;
-    public idx: number;
-    public start: number;
-    public end: number;
-
-    constructor(t: ErrorLocationType, idx: number, start: number, end: number) {
-        this.type_ = t;
-        this.idx = idx;
-        this.start = start;
-        this.end = end;
-        return;
-    }
+    constructor(
+        public type_: ErrorLocationType,
+        public idx: number,
+        public start: number,
+        public end: number,
+    ) {}
 }
 
 export enum ParseErrorType {
@@ -533,27 +519,19 @@ export enum ParseErrorType {
 }
 
 class ParseError {
-    public type_: ParseErrorType;
-    public locs: ErrorLocation[];
-    public card: Card;
-
-    constructor(t: ParseErrorType, locs: ErrorLocation[], c: Card) {
-        this.type_ = t;
-        this.locs = locs;
-        this.card = c;
-        return;
-    }
+    constructor(
+        public type_: ParseErrorType,
+        public locs: ErrorLocation[],
+        public card: Card,
+    ) {}
 }
 
 class ParseLocation {
-    public type_: ErrorLocationType;
-    public row: number;
-    public col: number;
-    constructor(t: ErrorLocationType, row: number, col: number) {
-        this.type_ = t;
-        this.row = row;
-        this.col = col;
-    }
+    constructor(
+        public type_: ErrorLocationType,
+        public row: number,
+        public col: number,
+    ) {}
 }
 
 export class BoardParseResult {
