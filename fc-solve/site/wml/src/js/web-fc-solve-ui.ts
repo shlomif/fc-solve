@@ -23,11 +23,7 @@ class FC_Solve_UI {
     private _was_iterations_count_exceeded = false;
     private _is_expanded = false;
     private _pristine_outputs = null;
-    constructor() {
-        const that = this;
-
-        return;
-    }
+    constructor() {}
     public toggle_expand() {
         const that = this;
 
