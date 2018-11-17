@@ -70,6 +70,7 @@ static inline void fcs_depth_multi_queue__insert(
             &(queue->queues_by_depth[queue->max_depth - queue->min_depth]));
     }
 
+    assert(depth >= queue->min_depth);
     fcs_offloading_queue__insert(
         &(queue->queues_by_depth[depth - queue->min_depth]), item);
 
