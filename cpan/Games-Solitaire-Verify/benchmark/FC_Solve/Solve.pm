@@ -103,7 +103,7 @@ __C__
 
 #include <string.h>
 #include <stdio.h>
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "output_to_file.h"
 #include "range_solvers_gen_ms_boards.h"
 

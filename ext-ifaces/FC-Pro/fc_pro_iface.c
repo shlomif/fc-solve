@@ -9,8 +9,8 @@
 #include "main.h"
 #include "Fcsolve.h"
 #endif
-#include "fcs_user.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_user.h"
+#include "freecell-solver/fcs_cl.h"
 //extern int signal_step(int) ;
 int NumFCs ;
 char * moves_string;

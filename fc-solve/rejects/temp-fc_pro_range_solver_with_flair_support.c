@@ -29,8 +29,7 @@
 #include <sys/timeb.h>
 #endif
 
-#include "fcs_user.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 
 #include "fc_pro_iface_pos.h"
 #define FCS_WITHOUT_GET_BOARD
