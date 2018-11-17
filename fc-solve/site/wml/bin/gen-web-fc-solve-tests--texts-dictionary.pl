@@ -8,7 +8,7 @@ use warnings;
 use Path::Tiny qw/ path /;
 use JSON::MaybeXS ();
 
-my $dir = "lib/web-fcs-tests-strings/";
+my $dir   = "lib/web-fcs-tests-strings/";
 my %TEXTS = ( map { $_ => path("$dir/texts/$_")->slurp_utf8 }
         path("$dir/texts-lists.txt")->lines_utf8( { chomp => 1 } ) );
 

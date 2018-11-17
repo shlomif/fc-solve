@@ -50,7 +50,7 @@ m{\A\Q$ws_prefix\Eelse if \((?:$strcmp_regex *\|\| *)*$strcmp_regex\) *\n?\z}ms
                 }
             }
             my @strings = ( $line =~ m{"([^"]+)"}g );
-            my $first = first { m{\A--} } @strings;
+            my $first   = first { m{\A--} } @strings;
             if ( !defined($first) )
             {
                 $first = $strings[0];

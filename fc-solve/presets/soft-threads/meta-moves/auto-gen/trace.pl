@@ -74,7 +74,7 @@ my $runner = AI::Pathfinding::OptimizeMultiple->new(
 my $start_board = $input_obj->start_board();
 foreach my $board ( 0 .. $input_obj->num_boards() - 1 )
 {
-    my @info = PDL::list( $scans_lens_data->slice( ($board) . ",:" ) );
+    my @info    = PDL::list( $scans_lens_data->slice( ($board) . ",:" ) );
     my $results = $runner->simulate_board(
         $board,
         {

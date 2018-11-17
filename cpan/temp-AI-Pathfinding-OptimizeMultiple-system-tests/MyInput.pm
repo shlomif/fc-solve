@@ -70,7 +70,7 @@ sub _num_sel_scans
 
 sub _gen_initial_scans_tensor
 {
-    my $self = shift;
+    my $self       = shift;
     my $extra_dims = shift || [];
 
     return zeroes( $self->num_boards(), $self->_num_sel_scans, @$extra_dims );
@@ -101,7 +101,7 @@ sub _get_scans_data_helper
 
     my $start_board = $self->start_board();
 
-    my $scans_data = $self->_gen_initial_scans_tensor();
+    my $scans_data      = $self->_gen_initial_scans_tensor();
     my $scans_lens_data = $self->_gen_initial_scans_tensor( [3] );
 
     my $scan_idx = 0;
@@ -118,7 +118,7 @@ sub _get_scans_data_helper
             if ( $self->_should_update( $scan->data_file_path(), $dest_path ) )
             {
                 my $data_s = _slurp( $scan->data_file_path() );
-                my @array = unpack( "l*", $data_s );
+                my @array  = unpack( "l*", $data_s );
                 if (   ( $array[$HEADER_START_BOARD_IDX] != 1 )
                     || ( $array[$HEADER_NUM_BOARDS] < $self->num_boards )
                     || ( $array[$HEADER_ITERATIONS_LIMIT] != 100000 ) )

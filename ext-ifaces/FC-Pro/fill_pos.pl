@@ -20,7 +20,7 @@ sub card_to_num
 }
 
 my @foundation = ( 0, 0, 0, 0 );
-my @freecells = ();
+my @freecells  = ();
 
 my $stack = 0;
 PARSE:

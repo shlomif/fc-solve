@@ -22,7 +22,7 @@ package main;
 use lib './lib';
 
 my $T2_POST_DEST = 'dest/';
-my %whitelist = ( map { $_ => 1 } (), );
+my %whitelist    = ( map { $_ => 1 } (), );
 
 Test::HTML::Tidy::Recursive::Tidy5->new(
     {

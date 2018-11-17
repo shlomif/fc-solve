@@ -15,7 +15,7 @@ my $abs_bindir = $bindir->absolute;
 
 # Whether to use prove instead of runprove.
 my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
-my $num_jobs = $ENV{TEST_JOBS};
+my $num_jobs  = $ENV{TEST_JOBS};
 
 sub _is_parallized
 {
@@ -137,7 +137,7 @@ sub myglob
     );
 
     my $is_ninja = ( -e "build.ninja" );
-    my $MAKE = $IS_WIN ? 'gmake' : 'make';
+    my $MAKE     = $IS_WIN ? 'gmake' : 'make';
     if ($is_ninja)
     {
         system( "ninja", "boards" );

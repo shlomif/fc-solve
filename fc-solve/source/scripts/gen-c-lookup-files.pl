@@ -77,7 +77,7 @@ path('board_gen_lookup1.h')->spew_utf8(
     join(
         ',',
         map {
-            my $i = $_;
+            my $i   = $_;
             my $col = ( $i & ( 8 - 1 ) );
             3 *
                 ( $col * 7 - ( ( $col > 4 ) ? ( $col - 4 ) : 0 ) + ( $i >> 3 ) )

@@ -81,7 +81,7 @@ foreach my $host (qw(fc-solve))
                     'path_info'    => $filename,
                     'current_host' => $host,
                     MyNavData::get_params(),
-                    'ul_classes' => [ "navbarmain", ("navbarnested") x 10 ],
+                    'ul_classes'     => [ "navbarmain", ("navbarnested") x 10 ],
                     'no_leading_dot' => 1,
                 );
 

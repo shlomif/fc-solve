@@ -64,7 +64,7 @@ foreach my $b (@buckets_ids)
     print "Max: ",    $bucket->max(),                "\n";
 
     my @limits = ( 100, 1_000, 10_000, 100_000, 1_000_000, 1_500_000 );
-    my $f = $bucket->frequency_distribution_ref( \@limits );
+    my $f      = $bucket->frequency_distribution_ref( \@limits );
     foreach my $l (@limits)
     {
         print "Up to $l: $f->{$l} ("

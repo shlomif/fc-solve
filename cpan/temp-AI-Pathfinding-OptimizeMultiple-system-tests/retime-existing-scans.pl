@@ -9,7 +9,7 @@ my $prev_scans = MyInput::get_prev_scans();
 
 foreach my $scan_rec (@$prev_scans)
 {
-    my $id = $scan_rec->{'id'};
+    my $id       = $scan_rec->{'id'};
     my @cmd_line = split( / /, $scan_rec->{'cmd_line'} );
     print "Now doing Scan No. $id - '@cmd_line'\n";
 

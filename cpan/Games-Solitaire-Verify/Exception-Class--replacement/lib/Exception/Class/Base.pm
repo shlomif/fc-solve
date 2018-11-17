@@ -97,7 +97,7 @@ sub new
 sub _initialize
 {
     my $self = shift;
-    my %p = @_ == 1 ? ( error => $_[0] ) : @_;
+    my %p    = @_ == 1 ? ( error => $_[0] ) : @_;
 
     $self->{message} = $p{message} || $p{error} || '';
 
@@ -106,7 +106,7 @@ sub _initialize
     if ( $self->NoContextInfo() )
     {
         $self->{show_trace} = 0;
-        $self->{package} = $self->{file} = $self->{line} = undef;
+        $self->{package}    = $self->{file} = $self->{line} = undef;
     }
     else
     {

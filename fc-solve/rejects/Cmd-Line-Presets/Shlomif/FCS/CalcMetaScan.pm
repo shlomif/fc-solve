@@ -365,7 +365,7 @@ sub calc_flares_meta_scan
 
     $self->_status("iterating");
 
-    my $iters_quota = 0;
+    my $iters_quota      = 0;
     my $flares_num_iters = PDL::Core::pdl( [ (0) x $self->_get_num_scans() ] );
     my $ones_constant =
         PDL::Core::pdl( [ map { [1] } ( 1 .. $self->_get_num_scans() ) ] );

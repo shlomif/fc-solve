@@ -71,7 +71,7 @@ sub _init
                 my $t = readline( $args->{input_fh} );
                 $t =~ s/ +$//gms;
                 $t;
-                }
+            }
         ]
     );
     $self->_ln(0);

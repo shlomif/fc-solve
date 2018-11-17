@@ -23,7 +23,7 @@ package FindSeed::DealAndSeedResult;
 
 use MooX qw/late/;
 
-has 'deal' => ( is => 'ro' );
+has 'deal'   => ( is => 'ro' );
 has 'output' => ( is => 'ro', lazy => 1 );
 has 'iters' => (
     is      => 'ro',

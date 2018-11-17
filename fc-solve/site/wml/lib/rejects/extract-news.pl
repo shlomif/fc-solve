@@ -23,7 +23,7 @@ m[\A<h3 id="news-(\d{4})-(\d{1,2})-(\d{1,2})">([^<]+)</h3> *\z]
             )
             )
         {
-            my $time = mktime( 0, 30, 12, $d, $m - 1, $y - 1900 );
+            my $time       = mktime( 0, 30, 12, $d, $m - 1, $y - 1900 );
             my $exp_format = strftime( "%d-%b-%Y", localtime($time) );
             foreach my $f ( $exp_format, $formatted_date )
             {

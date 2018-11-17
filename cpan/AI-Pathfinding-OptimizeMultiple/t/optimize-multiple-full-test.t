@@ -30,7 +30,7 @@ sub test_based_on_data
             AI::Pathfinding::OptimizeMultiple::Scan->new(
                 id       => $id,
                 cmd_line => "-l $id",
-                )
+            )
         } @{$scans_aref},
     ];
 
@@ -62,7 +62,7 @@ sub test_based_on_data
             +{
                 name  => $scans_aref->[ $_->scan_idx ]->{name},
                 iters => $_->iters,
-                }
+            }
         } @{ $obj->chosen_scans() }
     );
 

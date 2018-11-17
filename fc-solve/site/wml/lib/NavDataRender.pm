@@ -31,7 +31,7 @@ sub nav_data_render
         'path_info'    => $filename,
         'current_host' => $host,
         MyNavData->get_params( { fully_expanded => 1 } ),
-        'ul_classes' => [ "navbarmain", ("navbarnested") x 10 ],
+        'ul_classes'     => [ "navbarmain", ("navbarnested") x 10 ],
         'no_leading_dot' => 1,
         );
 

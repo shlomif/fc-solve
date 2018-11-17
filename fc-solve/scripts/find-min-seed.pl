@@ -19,7 +19,7 @@ my $first_seed = $ENV{FIRST_SEED} || 1;
 my $check_seed = $ENV{CHECK_SEED} || $first_seed;
 
 my $LAST_SEED = ( ( 1 << 31 ) - 1 );
-my $iters = 100000;
+my $iters     = 100000;
 my @old_line;
 
 sub handle_seed

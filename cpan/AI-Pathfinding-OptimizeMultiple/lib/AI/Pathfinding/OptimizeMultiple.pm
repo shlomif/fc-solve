@@ -16,14 +16,14 @@ use PDL;
 use Scalar::Util qw/ blessed /;
 
 has chosen_scans => ( isa => 'ArrayRef', is => 'rw' );
-has _iter_idx => ( isa => 'Int', is => 'rw', default => sub { 0; }, );
+has _iter_idx    => ( isa => 'Int',      is => 'rw', default => sub { 0; }, );
 has _num_boards      => ( isa => 'Int', is => 'ro', init_arg => 'num_boards', );
 has _orig_scans_data => ( isa => 'PDL', is => 'rw' );
 has _optimize_for => ( isa => 'Str', is => 'ro', init_arg => 'optimize_for', );
 has _scans_data   => ( isa => 'PDL', is => 'rw' );
 has _selected_scans =>
     ( isa => 'ArrayRef', is => 'ro', init_arg => 'selected_scans', );
-has _status => ( isa => 'Str', is => 'rw' );
+has _status => ( isa => 'Str',           is => 'rw' );
 has _quotas => ( isa => 'ArrayRef[Int]', is => 'ro', init_arg => 'quotas' );
 has _total_boards_solved => ( isa => 'Int', is => 'rw' );
 has _total_iters         => ( isa => 'Int', is => 'rw' );
@@ -367,7 +367,7 @@ sub calc_flares_meta_scan
 
     $self->_status("iterating");
 
-    my $iters_quota = 0;
+    my $iters_quota      = 0;
     my $flares_num_iters = PDL::Core::pdl( [ (0) x $self->_get_num_scans() ] );
     my $ones_constant =
         PDL::Core::pdl( [ map { [1] } ( 1 .. $self->_get_num_scans() ) ] );

@@ -75,7 +75,7 @@ sub _num_sel_scans
 
 sub _gen_initial_scans_tensor
 {
-    my $self = shift;
+    my $self       = shift;
     my $extra_dims = shift || [];
 
     return zeroes( $self->num_boards(), $self->_num_sel_scans, @$extra_dims );
@@ -128,7 +128,7 @@ sub _get_scans_data_helper
                     )
                 {
                     my $data_s = _slurp( $scan->data_file_path() );
-                    my @array = unpack( "l*", $data_s );
+                    my @array  = unpack( "l*", $data_s );
                     if (   ( $array[$HEADER_START_BOARD_IDX] != 1 )
                         || ( $array[$HEADER_NUM_BOARDS] < $self->num_boards ) )
                     {
@@ -143,7 +143,7 @@ sub _get_scans_data_helper
             }
             {
                 my $start_idx = $NUM_NUMBERS_IN_HEADER + ( $start_board - 1 );
-                my $scan_vec = readfraw($dest_path);
+                my $scan_vec  = readfraw($dest_path);
                 $scans_data->{ $scan->id() } =
                     $scan_vec->slice( $start_idx . ":"
                         . ( $start_idx + $self->num_boards() - 1 ) );

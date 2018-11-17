@@ -383,7 +383,7 @@ MOVES:
 
         foreach my $idx ( 0 .. ( $running_state->num_columns() - 1 ) )
         {
-            my $col = $running_state->get_column($idx);
+            my $col  = $running_state->get_column($idx);
             my $card = $col->len ? $col->pos(0)->to_string() : '';
 
             push @{ $old_cols_map{$card} }, $idx;
@@ -391,7 +391,7 @@ MOVES:
 
         foreach my $idx ( 0 .. ( $running_state->num_columns() - 1 ) )
         {
-            my $col = $new_state->get_column($idx);
+            my $col  = $new_state->get_column($idx);
             my $card = $col->len ? $col->pos(0)->to_string() : '';
 
             # TODO: Fix edge cases.
@@ -423,7 +423,7 @@ MOVES:
         foreach my $idx ( 0 .. ( $running_state->num_freecells() - 1 ) )
         {
             my $card_obj = $running_state->get_freecell($idx);
-            my $card = defined($card_obj) ? $card_obj->to_string() : '';
+            my $card     = defined($card_obj) ? $card_obj->to_string() : '';
 
             push @{ $old_fc_map{$card} }, $idx;
         }
@@ -431,7 +431,7 @@ MOVES:
         foreach my $idx ( 0 .. ( $running_state->num_freecells() - 1 ) )
         {
             my $card_obj = $new_state->get_freecell($idx);
-            my $card = defined($card_obj) ? $card_obj->to_string() : '';
+            my $card     = defined($card_obj) ? $card_obj->to_string() : '';
 
             # TODO : Fix edge cases.
 

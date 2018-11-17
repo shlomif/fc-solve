@@ -20,7 +20,7 @@ sub _build_expander
 }
 
 has input_argv => ( is => 'ro', isa => 'ArrayRef[Str]', required => 1, );
-has _expander => (
+has _expander  => (
     is      => 'ro',
     isa     => 'FC_Solve::CmdLine::Expand',
     lazy    => 1,

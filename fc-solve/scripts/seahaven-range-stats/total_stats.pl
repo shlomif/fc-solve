@@ -77,7 +77,7 @@ while ( !eof($in) )
             $bucket++;
         }
         push @{ $which->{'stats'}->[$bucket] }, $num;
-        $which->{'sum'} += $num_iters;
+        $which->{'sum'}         += $num_iters;
         $which->{'sum_squares'} += ( $num_iters**2 );
         push @{ $which->{'all_iters'} }, $num_iters;
     }

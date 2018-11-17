@@ -7,7 +7,7 @@ sub arg_to_c
     return "\"$arg\"";
 }
 
-my @args = ( map { chomp($_); $_ } (<>) );
+my @args   = ( map { chomp($_); $_ } (<>) );
 my $length = 0;
 
 my @c_args = map { &arg_to_c($_) } @args;

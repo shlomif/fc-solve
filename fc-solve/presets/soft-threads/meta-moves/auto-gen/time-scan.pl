@@ -9,7 +9,7 @@ use FC_Solve::TimePresets;
 my $opt = ( ( $ARGV[0] eq "--gen-bat" ) ? shift : "" );
 
 my @scan_args = @ARGV;
-my $scan = join( " ", @scan_args );
+my $scan      = join( " ", @scan_args );
 
 sub get_scan_index_by_its_cmd_line
 {

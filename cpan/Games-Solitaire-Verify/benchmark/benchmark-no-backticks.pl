@@ -22,7 +22,7 @@ if ( $separator < 0 )
 "You must specify both [Game Params] and [Extra fc-solve Args]. See --help";
 }
 
-my @game_params = @args[ 0 .. $separator - 1 ];
+my @game_params   = @args[ 0 .. $separator - 1 ];
 my @fc_solve_args = ( @game_params, @args[ $separator + 1 .. $#args ] );
 
 my $FIRST_INDEX = ( $ENV{F} || 1 );
