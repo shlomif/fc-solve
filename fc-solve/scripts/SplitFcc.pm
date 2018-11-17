@@ -64,6 +64,12 @@ sub _map_existing_input
     return "$target_dir/input.txtish.$existing";
 }
 
+my $NUM_THREADS = $ENV{NUM_THREADS};
+my $THREADS_LINE =
+    +( defined($NUM_THREADS) && ( $NUM_THREADS =~ /\A[0-9]+\z/ ) )
+    ? "    --num-threads $NUM_THREADS \\\n"
+    : '';
+
 sub driver
 {
     my ( $self, $args ) = @_;
@@ -106,7 +112,7 @@ sub driver
 s="$status_output_fn"
 rm -f "\$s"
 (split_fcc_fc_solver \\
-    --offload-dir-path "$queue_dir" \\
+${THREADS_LINE}    --offload-dir-path "$queue_dir" \\
     --output "$output_dir" \\
     --board "$board_fn" \\
     --fingerprint "$fingerprint_encoded" \\

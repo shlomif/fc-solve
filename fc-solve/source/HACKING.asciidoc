@@ -167,6 +167,11 @@ a https://en.wikipedia.org/wiki/Heisenbug[Heisenbug] ) - at least on
 Shlomi Fish's local system. If you can investigate why it happens and propose a
 fix, we will appreciate it.
 
+*NOTE/Update:* the problem apparently disappears if one sets the +NUM_THREADS+
+https://en.wikipedia.org/wiki/Environment_variable[environment variable] to
++1+ before calling the script (which makes the solver use only one worker thread).
+This may indicate that there is a multithreading issue.
+
 [id="style_guidelines"]
 Style Guidelines
 ----------------

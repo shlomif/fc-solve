@@ -1163,6 +1163,7 @@ HT
 Heisenbug
 Indent_style
 LibTap
+NUM_THREADS
 PERL_MM_USE_DEFAULT
 bashrc
 caurea
@@ -1180,6 +1181,7 @@ libtap-devel
 max
 metacpan
 mpapierski
+multithreading
 ngo
 num_threads
 perl-5
