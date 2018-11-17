@@ -19,7 +19,7 @@ extern "C" {
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 #include "freecell-solver/fcs_cl.h"
 #else
-#include "fcs_user.h"
+#include "freecell-solver/fcs_user.h"
 #include "fc_solve__precompiled__theme.h"
 #endif
 enum
