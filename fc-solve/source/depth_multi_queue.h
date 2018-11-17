@@ -120,21 +120,15 @@ static inline bool fcs_depth_multi_queue__extract(
         return FALSE;
     }
 
-    while (q_stats_is_empty(&queue->queues_by_depth[0].stats))
+    int depth = 0;
+    while (q_stats_is_empty(&queue->queues_by_depth[depth].stats))
     {
-        var_AUTO(save_queue, queue->queues_by_depth[0]);
-        memmove(queue->queues_by_depth, queue->queues_by_depth + 1,
-            sizeof(queue->queues_by_depth[0]) *
-                (queue->max_depth - queue->min_depth));
-        queue->queues_by_depth[queue->max_depth - queue->min_depth] =
-            save_queue;
-        queue->max_depth++;
-        queue->min_depth++;
-        queue->max_depth_margin++;
+        ++depth;
     }
 
-    *return_depth = queue->min_depth;
-    fcs_offloading_queue__extract(&(queue->queues_by_depth[0]), return_item);
+    *return_depth = depth + queue->min_depth;
+    fcs_offloading_queue__extract(
+        &(queue->queues_by_depth[depth]), return_item);
     q_stats_extract(&queue->stats);
     return TRUE;
 }
