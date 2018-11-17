@@ -469,7 +469,7 @@ static inline void instance_check_key(
                     &(instance->fcc_entry_points), &fcc_entry_key);
                 if (!val_proto)
                 {
-                    return;
+                    goto cleanup;
                 }
                 const long location_in_file =
                     val_proto->kv.val.location_in_file;
@@ -504,7 +504,7 @@ static inline void instance_check_key(
                 moves_to_state_len + trace_num - 1;
             instance_alloc_num_moves(instance, added_moves_to_output);
             unsigned char *const moves_to_state = instance->moves_to_state;
-            for (int i = trace_num - 1; i > 0; i--)
+            for (int i = trace_num - 1; i > 0; --i)
             {
                 moves_to_state[moves_to_state_len + trace_num - 1 - i] =
                     get_move_from_parent_to_child(instance,
@@ -552,6 +552,7 @@ static inline void instance_check_key(
             }
 #endif
             fflush(instance->fcc_exit_points_out_fh);
+        cleanup:
             fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
             free(trace);
         }
