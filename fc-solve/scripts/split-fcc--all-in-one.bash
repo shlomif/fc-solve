@@ -3,7 +3,7 @@ set -e
 set -x
 mkdir -p ../B
 cd ../B
-../source/Tatzer -l pdfs
+../source/Tatzer -l extra_speed2 -l pdfs --nfc=2
 make
 # Defines startup() and depth_run()
 . ../scripts/split-fcc-SOURCE-ME.bash
