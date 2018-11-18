@@ -172,6 +172,8 @@ https://en.wikipedia.org/wiki/Environment_variable[environment variable] to
 +1+ before calling the script (which makes the solver use only one worker thread).
 This may indicate that there is a multithreading issue.
 
+*NOTE/Update No. 2:* the problem seems to have been fixed in
+https://github.com/shlomif/fc-solve/commit/6595a530b583462707b985b278d1b2c649c1ee42[this change-set].
 [id="style_guidelines"]
 Style Guidelines
 ----------------
