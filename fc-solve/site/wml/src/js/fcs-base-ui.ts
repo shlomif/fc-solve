@@ -101,7 +101,7 @@ export class FC_Solve_Bookmarking {
             }
         });
 
-        that.show.forEach((rec) => {
+        for (const rec of that.show) {
             const id = rec.id;
             const deps = rec.deps;
 
@@ -114,7 +114,7 @@ export class FC_Solve_Bookmarking {
                     rec.callback();
                 }
             }
-        });
+        }
 
         return;
     }

@@ -579,13 +579,13 @@ export class FC_Solve {
 
         my_append("-=-=-=-=-=-=-=-=-=-=-=-\n\n");
 
-        seq.forEach((x) => {
+        for (const x of seq) {
             const t_ = x.type;
             const str = x.str;
             my_append(
                 str + (t_ === "s" ? "\n\n====================\n\n" : "\n\n"),
             );
-        });
+        }
 
         return that.unicode_preprocess(
             out_buffer.replace(remove_trailing_space_re, ""),

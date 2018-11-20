@@ -11,10 +11,10 @@ export function chart_data(data_selector: string, chart_selector: string) {
         .text()
         .split("\n");
     lines.shift();
-    lines.forEach((l) => {
+    for (const l of lines) {
         const fields = l.split("\t");
         series.push([parseFloat(fields[0]), parseFloat(fields[1])]);
-    });
+    }
     const plot = $.plot(
         $(chart_selector),
         [{ data: series, label: "queue-items(iters)" }],

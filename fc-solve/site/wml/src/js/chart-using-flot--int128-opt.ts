@@ -11,14 +11,14 @@ $(() => {
         .text()
         .split("\n");
     lines.shift();
-    lines.forEach((l) => {
+    for (const l of lines) {
         const fields = l.split("\t");
         const x: number = parseFloat(fields[0]);
         const y1: number = parseFloat(fields[1]);
         const y2: number = parseFloat(fields[2]);
         series[0].push([x, y1]);
         series[1].push([x, y2]);
-    });
+    }
     const plot = $.plot(
         $("#placeholder"),
         [

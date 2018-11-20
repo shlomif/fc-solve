@@ -233,13 +233,13 @@ export function fc_solve_expand_move(
             }
             move_using_freecells(source, dest, num_cards_r);
 
-            steps.reverse().forEach((s) => {
+            for (const s of steps.reverse()) {
                 recursive_move(s.dest, dest, s.count, running_empty_cols);
                 running_empty_cols.push(s.dest);
                 running_empty_cols.sort((a, b) => {
                     return a - b;
                 });
-            });
+            }
             return;
         }
     };
