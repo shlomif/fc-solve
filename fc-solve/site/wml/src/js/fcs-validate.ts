@@ -25,9 +25,9 @@ export const MIN_RANK: number = 1;
 export const MAX_RANK: number = 13;
 const _ranks: number[] = _perl_range(MIN_RANK, MAX_RANK);
 
-_ranks.forEach((rank) => {
+for (const rank of _ranks) {
     ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
-});
+}
 const _suits__int_to_str: string = "HCDS";
 const _suits__str_to_int = {};
 _suits.forEach((suit) => {
