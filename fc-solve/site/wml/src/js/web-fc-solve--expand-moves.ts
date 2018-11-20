@@ -1,9 +1,9 @@
 export function fc_solve_expand_move(
-    num_stacks,
-    num_freecells,
-    initial_src_state_str,
+    num_stacks: number,
+    num_freecells: number,
+    initial_src_state_str: string,
     initial_move,
-    initial_dest_state_str,
+    initial_dest_state_str: string,
 ) {
     const matched = initial_move.str.match(
         /^Move ([0-9]+) cards from stack ([0-9]+) to stack ([0-9]+)$/,
