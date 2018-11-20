@@ -25,7 +25,7 @@
     "qunit": "^2.8.0",
     "qunit-cli": "^0.2.0",
     "requirejs": "^2.3.6",
-    "sass": "^1.14.3",
+    "sass": "^1.15.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-config-radiosilence": "^1.0.1",
