@@ -30,9 +30,9 @@ for (const rank of _ranks) {
 }
 const _suits__int_to_str: string = "HCDS";
 const _suits__str_to_int = {};
-_suits.forEach((suit) => {
+for (const suit of _suits) {
     _suits__str_to_int[_suits__int_to_str.substring(suit, suit + 1)] = suit;
-});
+}
 
 class Card {
     constructor(private rank: number, private suit: number) {
@@ -633,48 +633,45 @@ export class BoardParseResult {
         }
         // TODO : Implement duplicate/missing cards.
         if (that.foundations) {
-            _suits.forEach((suit) => {
-                _perl_range(
+            for (const suit of _suits) {
+                for (const rank of _perl_range(
                     1,
                     that.foundations.foundations.getByIdx(0, suit),
-                ).forEach((rank) => {
+                )) {
                     counter[suit][rank].push(
                         new ParseLocation(ErrorLocationType.Foundations, 0, 0),
                     );
-                });
-            });
+                }
+            }
         }
         if (that.freecells) {
-            _perl_range(0, that.freecells.freecells.getNum() - 1).forEach(
-                (i) => {
-                    const card = that.freecells.freecells.getCard(i);
-                    if (card) {
-                        counter[card.getSuit()][card.getRank()].push(
-                            new ParseLocation(
-                                ErrorLocationType.Freecells,
-                                i,
-                                0,
-                            ),
-                        );
-                    }
-                },
-            );
+            for (const i of _perl_range(
+                0,
+                that.freecells.freecells.getNum() - 1,
+            )) {
+                const card = that.freecells.freecells.getCard(i);
+                if (card) {
+                    counter[card.getSuit()][card.getRank()].push(
+                        new ParseLocation(ErrorLocationType.Freecells, i, 0),
+                    );
+                }
+            }
         }
         that.columns.forEach((col_res, idx) => {
             const col = col_res.col;
-            _perl_range(0, col.getLen() - 1).forEach((h) => {
+            for (const h of _perl_range(0, col.getLen() - 1)) {
                 const card = col.getCard(h);
 
                 counter[card.getSuit()][card.getRank()].push(
                     new ParseLocation(ErrorLocationType.Column, idx, h),
                 );
-            });
+            }
         });
         that.is_valid = true;
         const NUM_WANTED_CARDS: number = 1;
         const too_many_cards__errors: ParseError[] = [];
         const not_enough_cards__errors: ParseError[] = [];
-        _suits.forEach((suit) => {
+        for (const suit of _suits) {
             _ranks.map((rank) => {
                 const count = counter[suit][rank];
                 function add_error(arr, type_, locs) {
@@ -701,7 +698,7 @@ export class BoardParseResult {
                     );
                 }
             });
-        });
+        }
         that.errors.push(...too_many_cards__errors);
         that.errors.push(...not_enough_cards__errors);
 
