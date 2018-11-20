@@ -1,3 +1,29 @@
+function _to_int(s: string): number {
+    return parseInt(s, 10);
+}
+
+function _find_max_step(n: number): number {
+    let x: number = 1;
+
+    while (x << 1 < n) {
+        x <<= 1;
+    }
+
+    return x;
+}
+
+function _render_move(my_move): string {
+    const src = my_move.src.toString();
+    const dest = my_move.dest.toString();
+    if (my_move.t === "s2f") {
+        return "Move a card from stack " + src + " to freecell " + dest;
+    } else if (my_move.t === "s2s") {
+        return "Move 1 cards from stack " + src + " to stack " + dest;
+    } else {
+        return "Move a card from freecell " + src + " to stack " + dest;
+    }
+}
+
 export function fc_solve_expand_move(
     num_stacks: number,
     num_freecells: number,
@@ -13,18 +39,15 @@ export function fc_solve_expand_move(
         return [initial_move];
     }
 
-    function to_int(s) {
-        return parseInt(s, 10);
-    }
-    const ultimate_num_cards = to_int(matched[1]);
+    const ultimate_num_cards = _to_int(matched[1]);
 
     // TODO : Implement the case where the sequence move is unlimited.
     if (ultimate_num_cards === 1) {
         return [initial_move];
     }
 
-    const ultimate_source = to_int(matched[2]);
-    const ultimate_dest = to_int(matched[3]);
+    const ultimate_source = _to_int(matched[2]);
+    const ultimate_dest = _to_int(matched[3]);
 
     // Need to process this move.
     const empty_fc_indexes = [];
@@ -131,17 +154,6 @@ export function fc_solve_expand_move(
         return;
     };
 
-    function render_move(my_move) {
-        const src = my_move.src.toString();
-        const dest = my_move.dest.toString();
-        if (my_move.t === "s2f") {
-            return "Move a card from stack " + src + " to freecell " + dest;
-        } else if (my_move.t === "s2s") {
-            return "Move 1 cards from stack " + src + " to stack " + dest;
-        } else {
-            return "Move a card from freecell " + src + " to stack " + dest;
-        }
-    }
     function perform_move(my_move) {
         const src = my_move.src;
         const dest = my_move.dest;
@@ -166,7 +178,7 @@ export function fc_solve_expand_move(
         output_state_promise();
 
         ret_array.push({
-            str: render_move(my_move),
+            str: _render_move(my_move),
             type: "m",
         });
 
@@ -189,16 +201,6 @@ export function fc_solve_expand_move(
         }
 
         return;
-    }
-
-    function _find_max_step(n) {
-        let x = 1;
-
-        while (x << 1 < n) {
-            x <<= 1;
-        }
-
-        return x;
     }
 
     let recursive_move;
