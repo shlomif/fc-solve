@@ -50,8 +50,8 @@ export function fc_solve_expand_move(
     const ultimate_dest = _to_int(matched[3]);
 
     // Need to process this move.
-    const empty_fc_indexes = [];
-    const empty_stack_indexes = [];
+    const empty_fc_indexes: number[] = [];
+    const empty_stack_indexes: number[] = [];
 
     const modified_state = { f: [], c: [] };
 
