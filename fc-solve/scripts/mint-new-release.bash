@@ -16,6 +16,14 @@
 set -x
 set -e
 set -u
+cat <<'EOF'
+This script should be run from the fc-solve/source sub directory
+of the fc-solve repository checkout. E.g:
+
+shlomif[fcs]:$trunk/fc-solve/source$ pwd
+/home/shlomif/progs/freecell/git/fc-solve/fc-solve/source
+shlomif[fcs]:$trunk/fc-solve/source$ bash ../scripts/mint-new-release.bash ; notifier notify -m 'new fcs release'
+EOF
 which cookiecutter
 which git
 which make
